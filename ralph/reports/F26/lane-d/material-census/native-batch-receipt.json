@@ -1,5 +1,5 @@
 {
-  "scope": "F26#0 four-biome Forward+ mounted-binding census; final original verdict pending",
+  "scope": "F26#0 four-biome Forward+ mounted-binding census; original reviewer APPROVE literal render/material ask",
   "source_commit": "6898cccb1ae61d9cca42ae12d395622d46cd31f6",
   "engine": "Godot4.7.stable.official.5b4e0cb0f",
   "platform": "Windows/GTX1060 3GB",
@@ -136,5 +136,6 @@
     "failures": []
   },
   "summary": "medium-mounted-summary.json generated with existing tools/f26_low_census_summary.py; unbound surfaces and null uniforms are source-review prompts, not automatically missing bindings",
-  "limits": "Rendered named-site inspections and mounted binding graphs only. No fullHigh/Medium visualBar, gameplay matrix, traversal, performance, Ally, earned journey or universal loader-substitution claim. Stormpublishedrendercomplete1/1 butoperator-stoppedactualexit1; never terminalsmokePASS."
+  "limits": "Rendered named-site inspections and mounted binding graphs only. No fullHigh/Medium visualBar, gameplay matrix, traversal, performance, Ally, earned journey or universal loader-substitution claim. Stormpublishedrendercomplete1/1 butoperator-stoppedactualexit1; never terminalsmokePASS.",
+  "final_review": "final-review.json"
 }
