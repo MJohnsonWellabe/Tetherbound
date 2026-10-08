@@ -1,0 +1,42 @@
+{
+  "criterion": "F17#6 OPEN",
+  "authority": "issue572 comment6050501302: one corrected strict preflight/capture",
+  "failed_attempt": {
+    "receipt": {
+      "started_utc": "2026-10-08T01:44:35.7892011Z",
+      "finished_utc": "2026-10-08T01:44:57.0763761Z",
+      "exit_code": 1,
+      "stop_reason": "",
+      "source": "5c55b0a75df9c2fa2baf06ced6ecdb0c9877ca63",
+      "pid": 16916
+    },
+    "cause": "Actual failed operand was not retained; startup-order risk supported by source, not established actual root-size failure",
+    "args": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "tools/capture_f17_visual.gd",
+      "--",
+      "--preset=Medium",
+      "--paired-high",
+      "--source-commit=5c55b0a75df9c2fa2baf06ced6ecdb0c9877ca63",
+      "--output=D:/CodexTemp/tetherbound-proof/native-d-5c55b0a75d-f17-bar/frames"
+    ],
+    "source": "5c55b0a75df9c2fa2baf06ced6ecdb0c9877ca63",
+    "stdout": "Forward+ GTX1060 native; combined strict preflight failure",
+    "frames": 0
+  },
+  "source_review": {
+    "limits": "No root size normalization, image resize, guard relaxation, budget or circuit changes; actual corrected result required",
+    "named_unit": "tests/test_f17_capture_presets.gd",
+    "verdict": "APPROVE startup correction ONLY",
+    "change": "Await one process_frame before unchanged strict guards; retain observed display/preset/renderer/raster/source-validity/output facts on failure",
+    "agent": "/root/f42_visual_review"
+  },
+  "flags": "none",
+  "acceptance": "No criterion closure or successful capture claimed"
+}
