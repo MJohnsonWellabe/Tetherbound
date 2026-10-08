@@ -244,7 +244,11 @@ func _native_case_game_same_stream_fence_reset_replays_exactly() -> void:
 		assert_eq(card.distance_m_together, before.party[0].distance_m_together + 3.0, "stationary resume grants zero distance")
 	owner_session.blocked = true
 	game._process(0.75)
-	game.current_realm = "tidewake"
+	# This isolated Game case has no destination scene to mount its map.
+	# Reuse the existing real map while testing only realm continuity.
+	var existing_map: RefCounted = game.map
+	game.current_realm = "water"
+	game.map = existing_map
 	owner_session.blocked = false
 	game._process(0.5)
 	assert_false(owner_session.packets.back().travel_valid, "same coordinates in a new realm do not preserve continuity")
