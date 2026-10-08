@@ -16,6 +16,18 @@ static func prepare_host_spawn(host_identity: Dictionary, cfg: Dictionary = {}) 
 	return TRAITS.roll_spawn(host_identity.world_namespace,host_identity.spawn_id,
 		int(host_identity.spawn_generation),host_identity.alpha,host_identity.night,host_identity.weather,cfg)
 
+## Called by the actual host producer on a newly constructed wild instance.
+## A retained initialized individual is never rerolled by streaming or retry.
+static func initialize_host_instance(creature: RefCounted, host_identity: Dictionary) -> Dictionary:
+	if creature == null or bool(creature.get("traits_initialized")) or not TRAITS.runtime_enabled(): return {}
+	var packet := prepare_host_spawn(host_identity)
+	if packet.is_empty() or not TRAITS.project_instance(creature, packet): return {}
+	var hp_fraction: float = creature.call("hp_fraction")
+	creature.call("recompute_stats_from_base", preload("res://scripts/creatures/progression.gd").config())
+	creature.set("hp", float(creature.get("max_hp")) * hp_fraction)
+	creature.set_meta("ordinary_trait_packet", packet.duplicate(true))
+	return packet
+
 ## Catch producer copies the HOST retained packet; inspect requests and
 ## catch clients carry no trait rolls. Identity equality guards reused spawns.
 static func prepare_catch(host_identity: Dictionary, retained: Dictionary,

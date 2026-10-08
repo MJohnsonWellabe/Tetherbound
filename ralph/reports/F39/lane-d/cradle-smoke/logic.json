@@ -1,0 +1,17 @@
+{
+  "scope": "Cradle signal smoke initial config-naming logic pass; coherent camp batch pending",
+  "source_commit": "38c5da697a15145f7f9f8fb6c804cc6b9aceefb7",
+  "proof_commit": "2f903427851231aaeeea2280d9e40fae0619f002",
+  "run_id": 37694484851,
+  "artifact_id": 11514179403,
+  "proof": "tests/run_tests.gd --only=test_tidewake_b_four_character_ledger,test_water_lead_map_pins",
+  "result": {
+    "files": 2,
+    "tests": 10,
+    "assertions": 106,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 6
+  },
+  "remaining": "Changed-source wider shelter batch units/area plus camp/arrival pixels; full F39#0/#5 remain OPEN. No READY."
+}

@@ -1,0 +1,398 @@
+{
+  "scope": [
+    "F39 authored shelter second/final fix attempt",
+    "Cradle plume camp appearance"
+  ],
+  "source_commit": "b7cdd2dc803e89c1148c20108afc58c184af4b64",
+  "production_commits": [
+    "e2c7f475e25cbcbdc044d9d98e2ed9f19a41a93f",
+    "cc478c3913686a840ca1fe315ad885ae33ba1893",
+    "38c5da697a15145f7f9f8fb6c804cc6b9aceefb7"
+  ],
+  "run_id": 37696142482,
+  "artifact_id": 11515957131,
+  "proof": "capture_f39_catalogue --f39-shipping --subset=Saddle --times=day,night --preset=Low --low-resolution=1280x720",
+  "result": {
+    "complete": true,
+    "frames": 10,
+    "failures": [],
+    "exit": 0,
+    "seconds": 354
+  },
+  "graphics_capture": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "source_commit": "b7cdd2dc803e89c1148c20108afc58c184af4b64"
+  },
+  "material_verification": null,
+  "frames": [
+    {
+      "camera_player_distance_m": 5.8211464881897,
+      "camera_position": [
+        557.804443359375,
+        9.47976398468018,
+        1362.38903808594
+      ],
+      "consecutive_grounded_frames": 3,
+      "file": "res://shots/lane-d/f39-camp-batch-final/water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_0.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_0.0",
+      "observed_clock": {
+        "elapsed_seconds": 200.141824666667,
+        "f39_weather": "clear",
+        "hour": 8.00567298666667,
+        "requested": "day",
+        "time_of_day": "day"
+      },
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "day",
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        -0.336639702320099,
+        0.941633522510529
+      ]
+    },
+    {
+      "camera_player_distance_m": 5.82106399536133,
+      "camera_position": [
+        553.916259765625,
+        9.4797534942627,
+        1362.58117675781
+      ],
+      "consecutive_grounded_frames": 3,
+      "file": "res://shots/lane-d/f39-camp-batch-final/water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_minus45.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_minus45.0",
+      "observed_clock": {
+        "elapsed_seconds": 200.116666666667,
+        "f39_weather": "clear",
+        "hour": 8.00466666666667,
+        "requested": "day",
+        "time_of_day": "day"
+      },
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "day",
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        0.427795231342316,
+        0.903875648975372
+      ]
+    },
+    {
+      "camera_player_distance_m": 5.82122755050659,
+      "camera_position": [
+        560.689636230469,
+        9.47979164123535,
+        1365.00256347656
+      ],
+      "consecutive_grounded_frames": 3,
+      "file": "res://shots/lane-d/f39-camp-batch-final/water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_45.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_45.0",
+      "observed_clock": {
+        "elapsed_seconds": 200.127189,
+        "f39_weather": "clear",
+        "hour": 8.00508756,
+        "requested": "day",
+        "time_of_day": "day"
+      },
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "day",
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        -0.903875648975372,
+        0.427795231342316
+      ]
+    },
+    {
+      "camera_player_distance_m": 5.8212103843689,
+      "camera_position": [
+        560.881652832031,
+        9.47979164123535,
+        1368.89074707031
+      ],
+      "consecutive_grounded_frames": 3,
+      "file": "res://shots/lane-d/f39-camp-batch-final/water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_90.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_90.0",
+      "observed_clock": {
+        "elapsed_seconds": 200.133475333333,
+        "f39_weather": "clear",
+        "hour": 8.00533901333333,
+        "requested": "day",
+        "time_of_day": "day"
+      },
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "day",
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        -0.941633522510529,
+        -0.336639732122421
+      ]
+    },
+    {
+      "camera_player_distance_m": 5.82124853134155,
+      "camera_position": [
+        554.379943847656,
+        9.47980403900146,
+        1371.96801757812
+      ],
+      "consecutive_grounded_frames": 3,
+      "file": "res://shots/lane-d/f39-camp-batch-final/water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_180.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_180.0",
+      "observed_clock": {
+        "elapsed_seconds": 200.123957,
+        "f39_weather": "clear",
+        "hour": 8.00495828,
+        "requested": "day",
+        "time_of_day": "day"
+      },
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "day",
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        0.336639791727066,
+        -0.941633522510529
+      ]
+    },
+    {
+      "camera_player_distance_m": 5.82138967514038,
+      "camera_position": [
+        557.804504394531,
+        9.47981452941895,
+        1362.38879394531
+      ],
+      "consecutive_grounded_frames": 3,
+      "file": "res://shots/lane-d/f39-camp-batch-final/water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_0.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_0.0",
+      "observed_clock": {
+        "elapsed_seconds": 575.133333333333,
+        "f39_weather": "clear",
+        "hour": 23.0053333333333,
+        "requested": "night",
+        "time_of_day": "night"
+      },
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "night",
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        -0.336639702320099,
+        0.941633522510529
+      ]
+    },
+    {
+      "camera_player_distance_m": 5.82128190994263,
+      "camera_position": [
+        553.916259765625,
+        9.47980403900146,
+        1362.58093261719
+      ],
+      "consecutive_grounded_frames": 3,
+      "file": "res://shots/lane-d/f39-camp-batch-final/water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_minus45.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_minus45.0",
+      "observed_clock": {
+        "elapsed_seconds": 575.135946666667,
+        "f39_weather": "clear",
+        "hour": 23.0054378666667,
+        "requested": "night",
+        "time_of_day": "night"
+      },
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "night",
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        0.427795231342316,
+        0.903875648975372
+      ]
+    },
+    {
+      "camera_player_distance_m": 5.82117319107056,
+      "camera_position": [
+        560.689575195312,
+        9.47977924346924,
+        1365.00256347656
+      ],
+      "consecutive_grounded_frames": 3,
+      "file": "res://shots/lane-d/f39-camp-batch-final/water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_45.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_45.0",
+      "observed_clock": {
+        "elapsed_seconds": 575.129171,
+        "f39_weather": "clear",
+        "hour": 23.00516684,
+        "requested": "night",
+        "time_of_day": "night"
+      },
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "night",
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        -0.903875648975372,
+        0.427795231342316
+      ]
+    },
+    {
+      "camera_player_distance_m": 5.82121753692627,
+      "camera_position": [
+        560.881652832031,
+        9.47980690002441,
+        1368.89074707031
+      ],
+      "consecutive_grounded_frames": 3,
+      "file": "res://shots/lane-d/f39-camp-batch-final/water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_90.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_90.0",
+      "observed_clock": {
+        "elapsed_seconds": 575.126876,
+        "f39_weather": "clear",
+        "hour": 23.00507504,
+        "requested": "night",
+        "time_of_day": "night"
+      },
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "night",
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        -0.941633522510529,
+        -0.336639732122421
+      ]
+    },
+    {
+      "camera_player_distance_m": 5.82124853134155,
+      "camera_position": [
+        554.379943847656,
+        9.47980403900146,
+        1371.96801757812
+      ],
+      "consecutive_grounded_frames": 3,
+      "file": "res://shots/lane-d/f39-camp-batch-final/water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_180.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_180.0",
+      "observed_clock": {
+        "elapsed_seconds": 575.14268,
+        "f39_weather": "clear",
+        "hour": 23.0057072,
+        "requested": "night",
+        "time_of_day": "night"
+      },
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "night",
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        0.336639791727066,
+        -0.941633522510529
+      ]
+    }
+  ],
+  "fixture": "Unchanged authored centre/camera/seed and five headings day/night. Teleported visual fixture; production floor guard and shipping materials, no overrides. Named-NPC grass gate stillOFF on this cut. No earned/co-op/performance claim.",
+  "judge": "PENDING; full F39#5 matrix OPEN. Plume arrival proof pending."
+}

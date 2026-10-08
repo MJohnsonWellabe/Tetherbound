@@ -1,0 +1,45 @@
+{
+  "scope": "READY-eligible Cradle plume component only; full F39#5 and Bars A/B remain OPEN",
+  "source_commit": "38c5da697a15145f7f9f8fb6c804cc6b9aceefb7",
+  "source_scope": "data/config/water_local_chains.json tidal_cradle_rise signal_fire smoke-only hunk",
+  "logic": {
+    "run": 37695082721,
+    "artifact": 11515411206,
+    "files": 8,
+    "tests": 53,
+    "assertions": 4655,
+    "failed": 0,
+    "exit": 0
+  },
+  "area": {
+    "proof": "tests/smoke_water_camps.gd",
+    "run": 37695493438,
+    "artifact": 11514668206,
+    "checks": 129,
+    "failed": 0,
+    "exit": 0
+  },
+  "visual": {
+    "camp_run": 37696142482,
+    "camp_artifact": 11515957131,
+    "camp_frames": 10,
+    "arrival_run": 37699155036,
+    "arrival_artifact": 11517336486,
+    "arrival_frames": 2,
+    "reviewer": "/root/f26_presets_review",
+    "verdict": "PASS",
+    "reason": "Matched camp views remove broad pale wall while retaining visible fire. Arrival day banner and fire clearly readable; arrival night light pools and banner readable with translucent plume and surrounding shapes visible."
+  },
+  "independent_review": {
+    "reviewer": "/root/f39_visual_review",
+    "verdict": "APPROVE",
+    "scope": "Final smoke-only source and actual proof intake; excludes shelter and NPC candidate."
+  },
+  "limitations": [
+    "Stills do not prove smoke motion or earned travel.",
+    "Full F39#5 and release Bars A/B remain OPEN.",
+    "Capture cut contains failed shelter changes; those changes are excluded from landing and are not a smoke consumer dependency.",
+    "Existing smoke consumer matches main26540050262ca9351a60be50632d60c8ee61f09e. No unREADY call dependency."
+  ],
+  "shipping_flags": "none"
+}
