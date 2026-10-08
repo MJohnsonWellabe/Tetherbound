@@ -92,6 +92,8 @@ var _captured_library_slots: Dictionary = {}
 var _pending_library_captures := 0
 var _prove_utility := ""
 var _saved_live_moves: Array = []
+var _prove_canonical_wild := false
+var _saved_actor_vitals: Dictionary = {}
 
 func _init() -> void:
 	_run.call_deferred()
@@ -132,6 +134,12 @@ func _run() -> void:
 		candidate.enabled = true
 		ULTIMATES._config = candidate
 	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "actor_vitals gate must remain off")
+	_prove_canonical_wild = OS.get_cmdline_user_args().has("--prove-canonical-wild")
+	_check(not _prove_canonical_wild or _prove_utility == "heal_pulse", "canonical wild selector requires the bounded Heal proof")
+	_saved_actor_vitals = MATH.config().actor_vitals.duplicate(true)
+	if _prove_canonical_wild:
+		MATH.config().actor_vitals = _saved_actor_vitals.duplicate(true)
+		MATH.config().actor_vitals.runtime_enabled = true # Existing process-local simulation path; shipping remains unchanged.
 	_check(_prove_utility.is_empty() or _prove_utility in ["heal_pulse", "dash_strike"], "bounded authored utility selector")
 	_saved_live_moves = MATH.config().move_commit.live_moves.duplicate()
 	if not _prove_utility.is_empty() and not MATH.config().move_commit.live_moves.has(_prove_utility):
@@ -586,6 +594,7 @@ func _setup() -> void:
 	_session = FixtureSession.new()
 	_session.name = "Session"
 	_session.fixture = _game
+	if _prove_canonical_wild: _session.set("_altar_epoch", "resource-epoch") # Same epoch used by the inherited fixture's real save transactions.
 	_game.session = _session
 	_authority = AUTHORITY.new()
 	_session.set("_character_authority", _authority)
@@ -607,13 +616,13 @@ func _setup() -> void:
 	_check(_writer.save_character_prepared(_game, DATA.CHARACTER), "initial owner disk write")
 	_ally = _body(FOLLOWER, species, Vector3(-2.0, 0, 0))
 	_ally.set("owner_peer_id", 1)
-	var trainer: Dictionary = TRAINERS.trainer("practice_trainer") if not _prove_utility.is_empty() else {}
+	var trainer: Dictionary = TRAINERS.trainer("practice_trainer") if not _prove_utility.is_empty() and not _prove_canonical_wild else {}
 	_enemy = TRAINERS.creature_for(trainer.team[0]) if not trainer.is_empty() else SPECIES.spawn("staticub")
 	_wild = _body(WILD, str(_enemy.species_id), Vector3(2.0, 0, 0))
 	_enemy.max_hp = 600.0 # Disclosed long-lived named target; no in-flight HP edits.
 	_enemy.hp = 600.0
 	_wild.set("instance", _enemy)
-	_wild.set("trainer_owned", true)
+	_wild.set("trainer_owned", not _prove_canonical_wild)
 	_wild.call("set_engaged", true, _ally)
 	_wild.set("_intent", preload("res://scripts/combat/combat_ai.gd").Intent.TELEGRAPH)
 	_wild.set("_selected_attack", {"heavy": true, "telegraph": 1.1})
@@ -664,11 +673,23 @@ func _setup() -> void:
 		# as the production trainer send-out does, so Dash freezes this UID.
 		opponent["card"] = preload("res://scripts/save/water_capture_codec.gd").encode(_enemy)
 		opponent["body_generation"] = 1
-	var rec: Dictionary = _host.open(1, "meadows", "trainer", opponent, str(_creature.uid), DATA.CHARACTER)
-	_id = rec.encounter_id
-	_director.set("_encounter", rec)
-	_manager.call("bind_encounter", _director, _id, "trainer")
-	if not _prove_utility.is_empty():
+	if _prove_canonical_wild:
+		var canonical: Dictionary = _director.call("_canonical_wild_start_state", _wild)
+		_check(canonical.get("enabled") == true and canonical.get("ready") == true, "real canonical wild preflight admits the owned living actor")
+		_director.call("_open_encounter_if_networked", _wild, false)
+		var rec: Dictionary = _director.get("_encounter")
+		_id = str(rec.get("encounter_id", ""))
+		_check(not _id.is_empty() and rec.get("kind") == "wild" and rec.get("opponent", {}).get("owner_npc") == "", "production wild opener creates a wild encounter without trainer ownership")
+		_check(_director.call("uses_wild_actor_vitals", _id) == true and _director.call("uses_durable_trainer_rewards", _id) == false, "mounted wild Heal uses only the actual wild saved-vitals owner")
+		var runtime: Node = _director.call("_shared_host_fight", _id)
+		_check(runtime != null and runtime.call("body") == _wild and runtime.get_meta(&"canonical_wild_context", {}) == canonical.get("context"), "actual shared wild simulation retains its original epoch/world context")
+		if runtime != null: runtime.set_physics_process(false) # Existing static-opponent fixture; no autonomous damage during the save-refusal witness.
+	else:
+		var rec: Dictionary = _host.open(1, "meadows", "trainer", opponent, str(_creature.uid), DATA.CHARACTER)
+		_id = rec.encounter_id
+		_director.set("_encounter", rec)
+		_manager.call("bind_encounter", _director, _id, "trainer")
+	if not _prove_utility.is_empty() and not _prove_canonical_wild:
 		_check(_director.call("_install_ordinary_combat_reward_owner", _id) == true, "real authored trainer owner installer admits the mounted fixture")
 		_check(_director.call("uses_durable_trainer_rewards", _id) == true, "mounted utility uses the real durable trainer owner")
 	_manager.connect("attack_launched", _on_launch)
@@ -942,6 +963,7 @@ func _finish() -> void:
 	ULTIMATES._config = _saved_visual_config
 	MOVE_LIBRARY.config()["enabled"] = _saved_library_enabled
 	MATH.config().move_commit.live_moves = _saved_live_moves
+	if not _saved_actor_vitals.is_empty(): MATH.config().actor_vitals = _saved_actor_vitals
 	for button: JoyButton in [JOY_BUTTON_X, JOY_BUTTON_Y, JOY_BUTTON_B, JOY_BUTTON_A, JOY_BUTTON_RIGHT_SHOULDER]:
 		var event := InputEventJoypadButton.new()
 		event.button_index = button
@@ -951,6 +973,7 @@ func _finish() -> void:
 		"launches": _launches.size(), "impacts": _impacts.size(), "captures": _captures,
 		"visual_gate_override": OS.get_cmdline_user_args().has("--enable-ultimate-visual"),
 		"library_arrival_override": _prove_library_arrival, "arrival_records": _arrival_records,
+		"canonical_wild_override": _prove_canonical_wild,
 		"claim": "focused fixture; no campaign, co-op, device or visual acceptance"}))
 	if is_instance_valid(_world): _world.free()
 	if is_instance_valid(_session): _session.free()
