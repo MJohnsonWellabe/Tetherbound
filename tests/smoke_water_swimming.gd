@@ -74,10 +74,14 @@ func _run() -> void:
 		return
 	var config: Dictionary = world.get("config")
 	var rest_route_id := _rest_route_argument()
-	if not rest_route_id.is_empty() and _every_hop_argument():
+	var lesson_first := OS.get_cmdline_user_args().has("--lesson-first")
+	if lesson_first and not _expect(rest_route_id == "reedhaven_to_gull_rest_sheltered" and _every_hop_argument(),
+		"lesson-first requires the bounded Gull Rest every-hop segment"):
+		return
+	if not lesson_first and not rest_route_id.is_empty() and _every_hop_argument():
 		await _run_every_hop(game, config, rest_route_id)
 		return
-	if not rest_route_id.is_empty():
+	if not lesson_first and not rest_route_id.is_empty():
 		await _run_rest_route(game, config, rest_route_id)
 		return
 	var lesson: Dictionary = config.swim_lesson
@@ -162,6 +166,13 @@ func _run() -> void:
 	if not _expect(game.world.flags.has("water_swim_lesson_complete"), "physical lesson failed to commit its world objective"):
 		return
 	if not _expect(Vector2(swimming.state.safe_landing.x - east.x, swimming.state.safe_landing.z - east.z).length() < 0.1, "walking out of shallow water failed to earn the east recovery anchor"):
+		return
+	if lesson_first:
+		# The upstream gate is earned by all original lesson inputs/assertions,
+		# not granted as another fixture. The isolated route's original dry-start
+		# pose, natural regeneration and conservative level-zero guards follow.
+		print("WATER LESSON FIRST OK assertions=%d actual_lesson_swim_m=%.3f" % [assertions, lesson_distance])
+		await _run_every_hop(game, config, rest_route_id)
 		return
 	finished = true
 	print("WATER SWIMMING OK assertions=%d actual_lesson_swim_m=%.3f final_health=%.3f" % [assertions, lesson_distance, vitals.health])
