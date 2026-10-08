@@ -112,9 +112,9 @@ func replay_observed_lesson(lesson_id: String = "") -> bool:
 	var replay_row: Dictionary = _lesson_replay_row
 	var replay_identity: Dictionary = _lesson_replay_identity
 	if not lesson_id.is_empty():
-		var observed: Dictionary = _lesson_replay_rows.get(lesson_id, {})
+		var observed: Dictionary = _lesson_replay_rows.get(lesson_id, _lesson_observed_history.get(lesson_id, {}))
 		replay_row = observed.get("row", {})
-		replay_identity = observed.get("identity", {})
+		replay_identity = observed.get("identity", observed)
 	if replay_identity.get("character_id", "") != str(game.local.character_id) \
 		or replay_identity.get("party_uids", []) != _uids():
 		return _fail("F46 Help replay lost the natural lesson's original character or ordered party")
@@ -481,7 +481,7 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 				"identity":{"character_id":character_id,"party_uids":witness.party_uids.duplicate()}}
 		if options.replay and not replaying:
 			_lesson_observed_history[id] = {"character_id":character_id,
-				"party_uids":witness.party_uids.duplicate()}
+				"party_uids":witness.party_uids.duplicate(), "row":row.duplicate(true)}
 	_lesson_busy = false
 
 ## Only naturally completed cards from this reader; navigation resets its Help
