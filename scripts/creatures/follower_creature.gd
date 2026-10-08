@@ -399,7 +399,7 @@ func _station_validator_now(leader_position: Vector3) -> Callable:
 
 ## The requested flank if the companion's body fits there with a clear line
 ## from the trainer, else the nearest of seven turns round the trainer at the
-## same reach, else INF (the follower then closes on the trainer). At most
+## footprint clearance reach, else INF (the follower then closes on the trainer). At most
 ## eight candidates of one ray and two shape queries, on the
 ## STATION_VALIDATE_FRAMES cadence.
 func _indoor_station(_body: Node3D, trainer: Node3D, requested: Vector3, _snap: bool) -> Vector3:
@@ -411,7 +411,9 @@ func _indoor_station(_body: Node3D, trainer: Node3D, requested: Vector3, _snap: 
 	var reach := maxf(offset.length(), clearance + 0.6)
 	var first := offset.normalized() if offset.length() > 0.01 else Vector3.BACK
 	for turn: float in [0.0, 45.0, -45.0, 90.0, -90.0, 135.0, -135.0, 180.0]:
-		var spot := origin + first.rotated(Vector3.UP, deg_to_rad(turn)) * reach
+		# Keep the requested flank first; alternatives fit around the trainer indoors.
+		var candidate_reach := reach if turn == 0.0 else clearance + 0.6
+		var spot := origin + first.rotated(Vector3.UP, deg_to_rad(turn)) * candidate_reach
 		spot.y = origin.y
 		if _indoor_spot_clear(trainer, origin, spot, clearance):
 			return spot
