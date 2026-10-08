@@ -1,0 +1,25 @@
+{
+  "criteria": ["F23#2", "F23#5"],
+  "status": "OPEN; bounded admission repairs and logic witnesses only",
+  "source_components": [
+    {"commit":"fd26fd34ed0d29967e7b839b90aca33420e1261a", "change":"Mount existing Quake Ring swept target consumer", "review":"original f25_medium_review APPROVE"},
+    {"commit":"9897a226684e025d8eb2de21d523865e5b64f9f0", "change":"Mount existing Veil and Hearten host self-status consumers", "review":"original f25_medium_review APPROVE"},
+    {"commit":"3cb0d50ea2092ef7b93460348b5c05bd5538c617", "change":"Mount existing zero-damage Slow Field, Bramble Trap and Sap target consumers", "review":"original f25_medium_review APPROVE"},
+    {"commit":"5360c4fcda090fddef20fc71136f3f948b51a664", "change":"Host ultimate admission uses existing enabled/authored catalogue rather than utility whitelist; no flag flip", "review":"original f25_medium_review APPROVE"},
+    {"commit":"7e523869336cd7ec8a6c16708d82d2806bba436f", "change":"Self-cast assertion compares complete stored resources and absolute deadlines", "review":"original f25_medium_review APPROVE"}
+  ],
+  "proofs": [
+    {"run_id":37748404209, "artifact_id":11537261258, "commit":"fd26fd34ed0d29967e7b839b90aca33420e1261a", "file":"tests/test_f23_live_moves.gd", "result":"PASS", "tests":18, "assertions":265, "failed":0, "exit":0, "seconds":6},
+    {"run_id":37750182712, "artifact_id":11537328999, "commit":"9897a226684e025d8eb2de21d523865e5b64f9f0", "file":"tests/test_f23_live_moves.gd", "result":"PASS", "tests":18, "assertions":324, "failed":0, "exit":0, "seconds":6, "log_sha256":"23d2fd99c62912c43855b95e68444e7e1c38431323baee0132c931f3ce696769"},
+    {"run_id":37750673943, "artifact_id":11537682779, "commit":"3cb0d50ea2092ef7b93460348b5c05bd5538c617", "file":"tests/test_f23_live_moves.gd", "result":"FAIL", "tests":18, "assertions":373, "failed":1, "cause":"Self-cast assertion compared a live countdown: 7.220 versus 7.219 seconds. Control/body assertions passed; no production cause inferred.", "repair":"7e523869336cd7ec8a6c16708d82d2806bba436f", "log_sha256":"cbda43c77e65be7e730ed4cfa9580086bf2ef1ce0e7e500c215709389be415da"},
+    {"run_id":37751158432, "artifact_id":11538186748, "commit":"7e523869336cd7ec8a6c16708d82d2806bba436f", "file":"tests/test_f23_live_moves.gd", "result":"PASS", "tests":18, "assertions":466, "failed":0, "exit":0, "seconds":6, "log_sha256":"26df7021ba082f600eb02b3471523b1b36e4798b9bd42bb713c5cf93cc7e275e"}
+  ],
+  "logic_scope": "Existing test functions extended, no new test method/class/helper/fixture file. Retained starts own cost; self receipts match actor/opponent lifetime; early/replacement/replay refusals preserve state; Veil expires without defensive states; Hearten consumes once after positive landed debit; target controls preserve HP, geometry/range bounds, trap arming/resistance/one-trigger and expiry. All31 authored enabled ultimates reach empty-meter refusal without spending; original full-meter and disabled-presentation assertions retained.",
+  "shipping_flags": "actor_vitals.runtime_enabled, Tether command shipping flags, move_library.enabled and ultimate presentation remain OFF. Individual existing utility consumer IDs were added to move_commit.live_moves.",
+  "remaining_gates": [
+    "Named mounted gameplay proof for newly admitted utility consumers; logic bodies are not played-world evidence.",
+    "Ten live utilities and two equipable per role are not claimed; Heal Pulse and Dash Strike remain unmounted.",
+    "Catalogue gate consistency is not proof of every signature's mounted combat or ultimate release timing.",
+    "No fresh HUD capture needed: existing literal F42 seven-inch HUD blind PASS and10tests84assertions retained unchanged; coupled shipping/command behavior remains open."
+  ]
+}
