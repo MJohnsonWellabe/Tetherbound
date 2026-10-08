@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-08T08:15:29.640676+00:00",
- "main_sha": "d93567001 (PR #584)",
+ "generated_at": "2026-10-08T10:55:47.716008+00:00",
+ "main_sha": "c93bbe441 (PR #585)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -2371,9 +2371,9 @@
     {
      "text": "Every required water route stays human-swimmable without Ripplet.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
+     "evidence": "PR #585 (consolidation 10) merged 2026-10-08 3:41 AM CT: from tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
      "gap": "Rerun smoke_water_swimming.gd with the --original-five every-hop mode at b4e4897d5. Consider wiring that mode into CI.",
-     "note": "Landed: Evidenced on tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
+     "note": "Landed: PR #585 (consolidation 10) merged 2026-10-08 3:41 AM CT: from tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
      "audit_index": 2
     },
     {
@@ -2671,10 +2671,10 @@
    "criteria": [
     {
      "text": "Catalog UI rows (map without terrain context, bare menus, heavy HUD boxes, low-contrast text) are fixed with code-blind PASS.",
-     "status": "not_started",
-     "evidence": "ralph/reports/R2-F42/proof-manifest.json@b4e4897d5 (engine_runs 0)",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-d f440344302 (READY #572, 4:35 AM CT 10-08): 14 files/144 tests/910 assertions, controller 37752399076, paired 1080/720 capture 37752962313, blind judge PASS whole literal UI ask; review APPROVE. In consolidation 11.",
      "gap": "Capture each catalog UI row before and after, then a code-blind judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Source candidate only. No captures or judge.",
+     "note": "Landed: Evidenced on tb/codex-d f440344302 (READY #572, 4:35 AM CT 10-08): 14 files/144 tests/910 assertions, controller 37752399076, paired 1080/720 capture 37752962313, blind judge PASS whole literal UI ask; review APPROVE. In consolidation 11.",
      "audit_index": 0
     },
     {
