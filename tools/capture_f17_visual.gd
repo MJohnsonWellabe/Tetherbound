@@ -91,10 +91,11 @@ func _capture_matrix(label: String) -> void:
 		_failed = "ordinary production camera is not current"
 		return
 	for frame in 20:
-		await physics_frame
+		await process_frame
 	var body_at := _player.global_position
 	var yaw := float(_rig.get("yaw"))
 	var camera_at := camera.global_transform
+	var camera_reference_ready := false
 	var weather_processing := weather.is_processing()
 	weather.set_process(false)
 	for weather_name: String in ["clear", "rain"]:
@@ -111,13 +112,24 @@ func _capture_matrix(label: String) -> void:
 				look.call("refresh_graphics")
 				for frame in 12:
 					await process_frame
-				if _player.global_position.distance_to(body_at) > .005 \
-						or absf(angle_difference(float(_rig.get("yaw")), yaw)) > .001 \
-						or camera.global_position.distance_to(camera_at.origin) > .005 \
-						or camera.global_basis.get_rotation_quaternion().angle_to(camera_at.basis.get_rotation_quaternion()) > .001:
-					_failed = "ordinary body/camera pose changed between paired time/weather/preset views"
+				var body_delta := _player.global_position.distance_to(body_at)
+				var yaw_delta := absf(angle_difference(float(_rig.get("yaw")), yaw))
+				var camera_delta := camera.global_position.distance_to(camera_at.origin)
+				var camera_angle := camera.global_basis.get_rotation_quaternion().angle_to(camera_at.basis.get_rotation_quaternion())
+				if body_delta > .005 or yaw_delta > .001 \
+						or (camera_reference_ready and (camera_delta > .005 or camera_angle > .001)):
+					_failed = "ordinary body/camera pose changed between paired time/weather/preset views; observed=" + JSON.stringify({
+						"label": label, "time": time_name, "weather": weather_name, "preset": preset,
+						"body_delta_m": body_delta, "yaw_delta_rad": yaw_delta,
+						"camera_delta_m": camera_delta, "camera_angle_rad": camera_angle,
+						"camera_reference_ready": camera_reference_ready})
 					weather.set_process(weather_processing)
 					return
+				if not camera_reference_ready:
+					# Normal idle follow/recovery uses the existing first weather and
+					# preset settle window before the first view. Never rebase a pair.
+					camera_at = camera.global_transform
+					camera_reference_ready = true
 				if not await _save_view(label, time_name, weather_name):
 					weather.set_process(weather_processing)
 					return
