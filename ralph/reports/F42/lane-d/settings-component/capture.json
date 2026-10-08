@@ -1,0 +1,37 @@
+{
+  "scope": "F42#0 Settings readability/instructions component; not full row",
+  "source_commit": "6cb4a73444139fb44da5c1c7b4edf49106f38cfe",
+  "run": 37705761923,
+  "artifact": 11519434870,
+  "complete": true,
+  "failures": [],
+  "exit": 0,
+  "seconds": 752,
+  "all_frames": 8,
+  "component_frames": 6,
+  "raster_pairs": [
+    "1920x1080",
+    "1280x720"
+  ],
+  "renderer": "gl_compatibility",
+  "actual_args": "--biome=meadows --paired-720 --tabs=settings --output=res://ralph/reports/VISUAL/phase2/lane-d/f42-settings-paired",
+  "excluded": "Two incidental exploration HUD frames; all map/Players/Build/Save/othermenus/full Bars/device/campaign/co-op gates.",
+  "blind_review": {
+    "agent": "/root/f26_presets_review",
+    "verdict": "PASS pictured Settings text and essential instructions at both resolutions",
+    "inspected": "All six actual originals",
+    "findings": [
+      "Settings labels, Low-unavailable explanations and footer readable; disabled rows legible.",
+      "Controls remapping/reset instructions readable; binding columns separated; cyan focus outline clear.",
+      "Quickitems five slot labels and gamepad/keyboard bindings readable; explanatory sentence fits.",
+      "No essential overlap/viewport-edge clipping/internal engineering-history prose observed."
+    ],
+    "limits": [
+      "Controls has partially cropped subsequent row at scroll boundary.",
+      "Quickitems focused binding-cell state unwitnessed.",
+      "Stills do not prove scrolling/remapping/controller motion. Full F42#0/maps/HUD/othermenus/releaseBars OPEN."
+    ]
+  },
+  "logic": "Existing test_four_biome_debug_teleport in flight; reuse unchanged39-file menu/config/input PASS37657009651",
+  "area": "Retained actual menu/controller smoke37680516233 PASS104s; original reviewer must confirm applicability."
+}
