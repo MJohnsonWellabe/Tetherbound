@@ -1,0 +1,33 @@
+{
+  "reviewer": "/root/f42_visual_review",
+  "scope": "Read-only existing deployment/snap/footprint source audit against retained native overlap; not a confirmed sole cause or edit authorization",
+  "observed_source": "a5d36c54ce6c2428db615ee72b14629ca7144e68",
+  "source_facts": [
+    "Meadows encounter_director::_spawn_ally_body seats hidden follower via _stand_on_ground/place_on_ground at trainer -basis.z*2.4+basis.x*1.2 then enables following; no Hall-aware validator before seat.",
+    "Follower _tick_follow takes >45m leash branch before resolving _station_validator_now; _snap_near_leader asks only explicit station_validator (none in Meadows), then place_on_ground.",
+    "place_on_ground validates terrain/built-floor height and four radius samples, with no prop-overlap/rendered-footprint query.",
+    "Ordinary indoor following checks candidate destination with 1m ray and two clearance spheres; it does not verify current footprint or sweep full rendered footprint to destination. Collider radius and visible footprint differ, hysteresis can stop before exact station."
+  ],
+  "retained_frames": [
+    "0684",
+    "0686",
+    "0689"
+  ],
+  "identical_companion_root": [
+    112.51549,
+    0.910942,
+    -1.40445
+  ],
+  "identical_trainer_root": [
+    111.21297,
+    0.910941,
+    0.918494
+  ],
+  "missing_observations": [
+    "Conditional recall branch",
+    "Spawn/snap history",
+    "Requested/resolved station",
+    "Follower contacts and rendered extents"
+  ],
+  "limit": "Model overlap does not prove capsule penetration; manifest on_floor is trainer. No creature shrink, geometry workaround or guard weakening approved. Shared-file QUESTION572#6052417741 pending."
+}
