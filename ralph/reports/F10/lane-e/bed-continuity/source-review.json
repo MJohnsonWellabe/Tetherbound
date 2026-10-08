@@ -1,0 +1,25 @@
+{
+  "criterion": "F10#5 bounded Stormwood Surge bed continuity repair",
+  "verdict": "APPROVE",
+  "review_kind": "independent source only",
+  "review_base_commit": "351d348d9e035d57557fccee5c3fffe33bcbd9f0",
+  "reviewed_worktree_blobs": {
+    "scripts/world/stormwood_surge_audio.gd": "e43f9a943744477b1699fe53bc070aab638e8fb2",
+    "tests/smoke_stormwood_surge_audio.gd": "dd6e70392edbd201b141e70f05903749e83cec99"
+  },
+  "scope": "Only the two named files. No AudioManager, configuration, assets, import settings, gameplay, authority, save, strike timing or caption changes.",
+  "findings": [],
+  "source_assessment": [
+    "All five declared phase/release beds are non-positional loop cues. Their AudioStreamPlayer is now owned by the realm observer and cannot be replaced by the shared one-shot pool cursor.",
+    "The dedicated player uses the existing AudioManager stream cache and declared Ambience bus. Default volume 0 dB and pitch 1 match the previous play_file defaults; imported stream looping remains unchanged.",
+    "Phase replacement and Stormheart release stop and queue-free the previous dedicated bed. Observer teardown stops and queues the current bed before clearing logs and disconnecting Session.",
+    "Simulation-only silence, replicated phase selection, event deduplication and positional strike one-shot routing remain intact. This addresses AUDIO sections 4.3 and 12.1 without changing section 8 authority or one-shot routing.",
+    "The existing smoke exercises pool_size plus one ordinary one-shots, checks Calm stream identity and playback, checks phase/release frees and active replacement beds, and checks stopped/queued release-bed teardown. Existing timing, watchdog and event checks remain present; a missing Fading bed explicitly fails."
+  ],
+  "named_existing_logic_selector": "tests/test_stormwood_audio_assets.gd",
+  "required_runtime_proof": "Changed-source existing smoke_stormwood_surge_audio and named audio asset check remain pending. No local engine was run by the reviewer.",
+  "limits": [
+    "Source approval does not prove audible phase identity, mix, seamless loops, warning perception, fatigue, co-op listening or hardware behavior.",
+    "No full F10#5 acceptance claim; listening evidence remains unavailable."
+  ]
+}

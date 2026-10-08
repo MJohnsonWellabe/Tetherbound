@@ -17,9 +17,9 @@ extends Node
 ##   de-duplicated, so each warning and impact fires once per peer.
 ## A simulation-only shell (a host's realm with no local listener) is silent.
 ##
-## Teardown: `_exit_tree` stops every bed this node started (the AudioManager
-## pool lives under the tree root and would otherwise outlive the realm),
-## disconnects from Session and clears the log.
+## Continuous beds belong to this observer, outside the one-shot pool so an
+## ordinary effect cannot steal a phase bed. Teardown stops/frees the current
+## bed, disconnects from Session and clears the log.
 const CONFIG_PATH := "res://data/config/stormwood_audio.json"
 const AUDIO := preload("res://scripts/audio/audio_manager.gd")
 const LONG_STORM_ENDED := "stormwood:long_storm_ended"
@@ -33,7 +33,6 @@ var cue_log: Array[Dictionary] = []
 var _phase := ""
 var _released := false
 var _bed: Node = null
-var _bed_stream: Resource = null
 var _warned: Dictionary = {}
 var _impacted: Array[int] = []
 
@@ -128,15 +127,13 @@ func _start_bed(cue: Dictionary, phase: String) -> void:
 	var player: Node = _fire(cue, null, -1, phase)
 	if player != null:
 		_bed = player
-		_bed_stream = player.get("stream")
 
 
 func _stop_bed() -> void:
-	# The pool reuses players; stop only one still carrying this bed's stream.
-	if is_instance_valid(_bed) and _bed.get("stream") == _bed_stream:
+	if is_instance_valid(_bed):
 		_bed.call("stop")
+		_bed.queue_free()
 	_bed = null
-	_bed_stream = null
 
 
 ## Log one cue and play it only if its asset exists. Returns the player.
@@ -148,7 +145,17 @@ func _fire(cue: Dictionary, at: Variant, strike_id: int, phase: String = "") -> 
 	var positional := bool(cue.get("positional", false)) and at is Vector3
 	var player: Node = null
 	if present:
-		if positional:
+		if bool(cue.get("loop", false)) and not positional:
+			var stream := AUDIO.stream(path)
+			if stream != null:
+				var bed := AudioStreamPlayer.new()
+				bed.name = "SurgeBed"
+				bed.stream = stream
+				bed.bus = str(cue.get("bus", "Ambience"))
+				add_child(bed)
+				bed.play()
+				player = bed
+		elif positional:
 			player = AUDIO.play_file_at(path, str(cue.id), at, str(cue.get("bus", "SFX")))
 		else:
 			player = AUDIO.play_file(path, str(cue.id), str(cue.get("bus", "SFX")))

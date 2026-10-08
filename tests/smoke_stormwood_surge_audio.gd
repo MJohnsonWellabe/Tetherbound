@@ -10,7 +10,9 @@ extends SceneTree
 ## It does NOT prove what anything sounds like. The nine assets were authored
 ## from installed sources (owner, 2026-10-05; tools/audio/gen_stormwood.py) and
 ## are judged offline by tools/audio/check_stormwood.py; here every fired cue
-## must find its asset and hand it to the audio pool. A MISSING ASSETS list
+## must find its asset and start a player. Continuous beds must survive a full
+## ordinary one-shot pool cycle and stop at phase/release/realm transitions.
+## A MISSING ASSETS list
 ## below is an asset gap.
 ##
 ## Disclosed fixtures and time controls:
@@ -22,9 +24,12 @@ extends SceneTree
 ##   host Surge itself advances) is set to a few seconds before each phase
 ##   boundary; every boundary and the whole 120 s Break then run in real time.
 ## - The Long Storm's end is committed through the ledger's set_world_flag.
+## - During Calm, one full pool cycle of ordinary non-positional warning
+##   samples is injected to exercise voice stealing, without emitting strikes.
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const STORMWOOD_SCENE := preload("res://scenes/world/stormwood.tscn")
 const OBSERVER := preload("res://scripts/world/stormwood_surge_audio.gd")
+const AUDIO := preload("res://scripts/audio/audio_manager.gd")
 const TEST_SAVE_DIR := "user://stormwood_surge_audio_smoke"
 const OUT_DIR := "user://f10_audio_witness"
 const LEAD_S := 4.0
@@ -108,19 +113,38 @@ func _run() -> void:
 	# boundary crossed in real time.
 	_set_clock(0.0)
 	await _hold_until(8.0)
+	var calm_bed := observer.get("_bed") as AudioStreamPlayer
+	_expect(calm_bed != null and calm_bed.playing, "Calm has a playing continuous bed")
+	if calm_bed == null:
+		_finish()
+		return
+	var calm_stream := calm_bed.stream
+	var ordinary_path := str(OBSERVER.load_config().strike_chain.warning.asset_path)
+	var pool_cycle := maxi(4, int(AUDIO.section("sfx").get("pool_size", 16))) + 1
+	for _i in pool_cycle:
+		AUDIO.play_file(ordinary_path, "smoke_pool_cycle", "SFX")
+	await process_frame
+	_expect(calm_bed.playing and calm_bed.stream == calm_stream,
+		"Calm bed survives %d ordinary one-shots without stream replacement" % pool_cycle)
 	_set_clock(240.0 - LEAD_S)
 	await _hold_until(248.0)
+	_expect(not is_instance_valid(calm_bed), "Calm bed is freed on entering Building")
 	_set_clock(330.0 - LEAD_S)
 	_draws.clear()
 	_last_next = float(_lightning.get("_next"))
 	await _hold_until(450.0 + 8.0, true)
 	var draws := _draws.duplicate()
+	var fading_bed := observer.get("_bed") as AudioStreamPlayer
+	_expect(fading_bed != null and fading_bed.playing, "Fading has a playing continuous bed before release")
 	# The Long Storm ends: the release bed opens once.
 	var ledger: Node = _game.get("ledger")
 	var flag_ok := bool(ledger.call("submit", {"kind": "set_world_flag", "realm": "stormwood",
 		"id": OBSERVER.LONG_STORM_ENDED, "value": true}).get("ok", false))
 	_expect(flag_ok, "the Long Storm's end committed through the ledger")
 	await _hold_frames(30)
+	_expect(not is_instance_valid(fading_bed), "Fading bed is freed on Stormheart release")
+	var release_bed := observer.get("_bed") as AudioStreamPlayer
+	_expect(release_bed != null and release_bed.playing, "release bed plays after the oppressive bed stops")
 	# Replay the last impact through the replicated event: a duplicate must
 	# not fire a second strike chain.
 	var cues_before: Array = (observer.get("cue_log") as Array).duplicate(true)
@@ -143,6 +167,8 @@ func _run() -> void:
 	# Teardown: the realm leaves the tree; the observer clears and disconnects.
 	var session: Node = _game.get_node("Session")
 	root.remove_child(_world)
+	_expect(release_bed != null and not release_bed.playing and release_bed.is_queued_for_deletion(),
+		"realm teardown stops and frees the continuous release bed")
 	var cleared: bool = (observer.get("cue_log") as Array).is_empty()
 	var disconnected: bool = not session.stormwood_strike_received.is_connected(Callable(observer, "_on_strike"))
 	_expect(cleared, "the cue log is empty after realm teardown")
@@ -297,7 +323,7 @@ func _write(cues: Array, draws: Array, telegraph: float) -> void:
 		if not ResourceLoader.exists(str(cue.asset_path)):
 			missing.append(cue)
 	var md := "# Stormwood Surge audio witness: cue timeline\n\n"
-	md += "Headless, production Stormwood world, real Surge clock and host lightning. `surge_clock_s` is the replicated Surge clock; `t_msec` is `Time.get_ticks_msec()`. `played` means the cue's asset loaded and a pool player started it; what it sounds like is judged offline by tools/audio/check_stormwood.py.\n\n"
+	md += "Headless, production Stormwood world, real Surge clock and host lightning. `surge_clock_s` is the replicated Surge clock; `t_msec` is `Time.get_ticks_msec()`. `played` means the cue's asset loaded and a player started it; beds are realm-owned and strikes use the one-shot pool. This proves routing/continuity, not listener perception.\n\n"
 	md += "| # | surge clock s | t_msec | phase | cue | strike | position | asset present | played | caption |\n|---|---:|---:|---|---|---:|---|---|---|---|\n"
 	var n := 0
 	for row: Dictionary in cues:
