@@ -592,6 +592,8 @@ func _process(delta: float) -> void:
 	_draw_enemy()
 	_draw_ally()
 	_draw_grid()
+	_ultimate_readout.show()
+	_ultimate_meter.show()
 	if is_instance_valid(_system_overlay):
 		_system_overlay.hide()
 		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
@@ -601,6 +603,8 @@ func _process(delta: float) -> void:
 				_system_overlay.call("present_charged_energy", str(active.get("uid")), float(active.get("energy")),
 					float(_moves.move(charged_id).get("energy_cost", 100.0)))
 			_grid_panel.hide()
+			_ultimate_readout.hide()
+			_ultimate_meter.hide()
 			if _tether_meter != null: _tether_meter.hide()
 	_update_capture_reticle()
 	_handle_switch_input()
