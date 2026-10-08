@@ -534,7 +534,7 @@ func test_pouch_assignment_uses_original_character_journal_and_owner_save_withou
 	assert_eq(equip_rejoined.state("owner_a").equipment.backpack, "stormglass_command_pouch")
 	assert_false(equip_rejoined.stage_character_action("owner_a", 0, "trainer_equip", equip_intent, equip_context).ok)
 	# A later untyped local snapshot still cannot change admitted gear.
-	var untyped := equip_owner.state.duplicate(true)
+	var untyped: Dictionary = equip_owner.state.duplicate(true)
 	untyped.equipment.backpack = "tidesteel_command_pouch"
 	assert_true(equip_rejoined.refresh_host_local(untyped, "owner_a").ok)
 	assert_eq(equip_rejoined.state("owner_a").equipment.backpack, "stormglass_command_pouch")

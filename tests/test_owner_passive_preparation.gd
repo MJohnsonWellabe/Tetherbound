@@ -235,8 +235,11 @@ func test_request_codec_preserves_distinct_authenticated_source_kinds_and_exact_
 	var bag: RefCounted = rules.inventory_from(equip_before.inventory)
 	bag.call("add", "stormglass_command_pouch", 1)
 	equip_before.inventory = rules.slots(bag)
-	var equip_cursor: Dictionary = f.cursor.duplicate(true)
-	equip_cursor.state.inventory = equip_before.inventory.duplicate(true)
+	var equip_cursor := REPLAY.begin(equip_before, {})
+	var equip_applied := REPLAY.apply(equip_cursor, {"version": 1, "sequence": 1, "op": "condition", "delta": 0.1,
+		"uids": [equip_before.party[0].uid]}, {"max_elapsed": 1.0, "max_speed": 20.0, "realm": "meadows", "landmarks": {}})
+	assert_true(equip_applied.ok)
+	equip_cursor = equip_applied.cursor
 	var equip_request: Dictionary = f.request.duplicate(true)
 	equip_request.op = "trainer_equip"
 	equip_request.revision = 0
