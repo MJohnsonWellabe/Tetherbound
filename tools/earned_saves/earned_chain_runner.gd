@@ -30,6 +30,8 @@ extends SceneTree
 ##   TB_WORLD_SEED=<seed> godot --headless --path . \
 ##     --script tools/earned_saves/earned_chain_runner.gd -- \
 ##     --segment=<id> --save-dir=<abs dir> --receipt=<abs json>
+##   Hosted script dispatch may supply --world-seed=<positive integer> instead
+##   of the environment pin; a conflicting existing pin is refused.
 ##   The save dir for a resumed segment must already hold the previous
 ##   segment's save (run_chain.sh copies it), so every segment's output is kept
 ##   as a separate "last good save".
@@ -74,6 +76,7 @@ func _init() -> void:
 
 func _run() -> void:
 	started_ms = Time.get_ticks_msec()
+	var world_seed_arg := ""
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--segment="):
 			segment = arg.get_slice("=", 1)
@@ -81,10 +84,23 @@ func _run() -> void:
 			save_dir = arg.get_slice("=", 1)
 		elif arg.begins_with("--receipt="):
 			receipt_path = arg.get_slice("=", 1)
+		elif arg.begins_with("--world-seed="):
+			if not world_seed_arg.is_empty():
+				failures.append("world seed argument must be supplied once")
+			world_seed_arg = arg.get_slice("=", 1)
 	if not SEGMENTS.has(segment) or save_dir.is_empty() or receipt_path.is_empty():
 		failures.append("usage: --segment=<%s> --save-dir=<dir> --receipt=<json>" % "|".join(SEGMENTS))
 		_finish()
 		return
+	if not world_seed_arg.is_empty():
+		var existing_seed := OS.get_environment("TB_WORLD_SEED")
+		if not world_seed_arg.is_valid_int() or int(world_seed_arg) <= 0 \
+				or (not existing_seed.is_empty() and existing_seed != world_seed_arg):
+			failures.append("world seed argument must be positive and match any existing TB_WORLD_SEED pin")
+		if not failures.is_empty():
+			_finish()
+			return
+		OS.set_environment("TB_WORLD_SEED", world_seed_arg)
 	if OS.get_environment("TB_WORLD_SEED").is_empty():
 		failures.append("TB_WORLD_SEED must pin the world for a reproducible chain")
 		_finish()
