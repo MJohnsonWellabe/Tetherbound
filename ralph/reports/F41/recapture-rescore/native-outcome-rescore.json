@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "review_type": "bounded original outcome-pixels-only Stormwood catalogue supplement",
+  "reviewer": {
+    "name": "blind_listener_f10",
+    "id": "01a11667-4631-72b2-8fed-294999b8c043",
+    "role": "retained original independent code-blind visual judge"
+  },
+  "disposition": "ONE_SUPPORTED_ROW_ONE_UNASSESSED",
+  "scope": "P2-110 loss/out-of-fight clarity and P2-111 victory reward grouping only. Independent new pixel ratings; no prior-score transfer, no rerating of the original 36 or six context rows.",
+  "visible_outcome_classification": {
+    "classification": "VICTORY_PRESENTATION_VISIBLE; LOSS_PRESENTATION_NOT_VISIBLE",
+    "evidence": [
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H35.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H36.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H37.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H38.png"
+    ],
+    "reason": "H35 shows Voltarach with a nearly depleted health bar while Sparkit's visible health bar remains green. H36 shows Voltarach's health bar empty, its body lowered/fallen, and +bond won text beside the team roster. H37/H38 show the fallen blue creature, the explicit 'The wild creature is beaten.' headline, and the Hollows Alpha/Great Candy reward acknowledgement. These visible states support judging the victory presentation, not a player-party loss."
+  },
+  "scales": {
+    "severity": "1–5",
+    "exposure": "1–5: frequency/prominence of the subject in its gameplay context",
+    "importance": "1–5: player-facing consequence of presentation clarity",
+    "impact": "severity × exposure × importance"
+  },
+  "supported_row_count": 1,
+  "unassessed_row_count": 1,
+  "rows": [
+    {
+      "item_id": "P2-111",
+      "subject": "Hollows victory reward tiles",
+      "severity": 3,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 36,
+      "verdict": "FAIL",
+      "coverage": "BOUNDED_VISIBLE_VICTORY_PRESENTATION",
+      "reviewer": "01a11667-4631-72b2-8fed-294999b8c043",
+      "release_disposition": "OPEN",
+      "reason": "The victory itself reads clearly from the cyan headline and the text naming Great Candy. However, a colored item icon with x1 and four white cross-shaped empty binding markers form a single central row between that headline and the reward sentence. The same white markers are already visible in the ordinary HUD before combat (H01). In H37/H38 there is no clear receipt container or label separating the item reward from those persistent binding markers, so the row can still be read as a grouped set of earned reward tiles.",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H01.png",
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H36.png",
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H37.png",
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H38.png"
+      ],
+      "limits": [
+        "This score concerns visible acknowledgement/reward/quickbar grouping only; the explicit victory wording is readable.",
+        "Two end-state stills expose the layout, not its duration, dismissal behavior or controller interaction.",
+        "Pixels do not establish award persistence, participant eligibility, earned progression or the mechanical cause of the result."
+      ]
+    }
+  ],
+  "withheld_rows": [
+    {
+      "item_id": "P2-110",
+      "subject": "Hollows fight loss/out-of-fight clarity",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "verdict": "UNASSESSED",
+      "reviewer": "01a11667-4631-72b2-8fed-294999b8c043",
+      "release_disposition": "OPEN",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/contact_01.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/contact_02.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/contact_03.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/contact_04.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/contact_05.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H35.png",
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H36.png",
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H37.png",
+        "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H38.png"
+      ],
+      "reason": "The chronological contact views and inspected final full rasters expose a wild-enemy defeat/victory presentation. They do not expose a fallen owned creature, player-party loss, or a corresponding loss/out-of-fight acknowledgement. Green TEAM 5/5 bars in this victory context are not evidence of the original loss defect.",
+      "missing_context": "Actual visible Hollows loss sequence: owned-creature fall/defeat, ensuing out-of-fight or loss message, and the team roster/exploration HUD together at the immediate transition and settled result.",
+      "limits": [
+        "No loss rating is inferred from fixture names, the presence of a fallen wild creature, or a victory HUD."
+      ]
+    }
+  ],
+  "inspection": {
+    "contacts_inspected": [
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/contact_01.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/contact_02.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/contact_03.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/contact_04.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/contact_05.jpg"
+    ],
+    "chronological_frames_observed_via_contacts": "H01–H38",
+    "full_rasters_inspected": [
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H01.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H34.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H35.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H36.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H37.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H38.png"
+    ],
+    "full_raster_audit_claim": false,
+    "bar": "Previously inspected approved Stormwood boards and current written ART_DIRECTION readability/UI bar; this is a Low still-image subset, not full Bar A/B acceptance.",
+    "independence": "Only neutral image pixels were used; source/config/party/args/logs/receipts/private mapping/hashes/source reviews/claimed runtime outcomes and prior scores were not read."
+  },
+  "preservation": "Original 36 ratings, six context ratings and their evidence artifacts remain unchanged. This output is a separate supplement.",
+  "full_F41_0": "OPEN — P2-110 loss context remains unassessed; no whole catalogue/criterion completion is claimed.",
+  "full_visual_bar": "OPEN",
+  "limitations": [
+    "No earned combat, continuous motion, multiplayer, result mechanics, full matrix or target-hardware acceptance is inferred.",
+    "Outcome classification is the presentation visible in the supplied images; it does not independently verify runtime provenance."
+  ]
+}

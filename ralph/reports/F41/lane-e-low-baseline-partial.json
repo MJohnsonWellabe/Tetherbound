@@ -1,0 +1,39 @@
+{
+  "criterion": "F41#0/#3/#4/F10#3/#4 OPEN",
+  "source_commit": "16bfbb2d0581080517a9b0e3601d9435095e2b68",
+  "checkout_verified_in_job_log": true,
+  "run_id": 37637690708,
+  "artifact_id": 11492977662,
+  "renderer": "gl_compatibility",
+  "preset": "Low",
+  "resolution": [
+    1280,
+    720
+  ],
+  "planned_frames": 320,
+  "captured_frames": 103,
+  "per_stand": {
+    "forest": 32,
+    "giant": 23,
+    "glass": 16,
+    "rod_line": 16,
+    "stormheart": 16
+  },
+  "coverage": "80day storm frames plus23night storm frames; no released frames/fight; end receipt unavailable due timeout",
+  "raster_verified_all_captured_files": true,
+  "result": "FAIL exit124 at1800s; incomplete full matrix",
+  "world_mount_log_elapsed_s": 102.2,
+  "limits": "Raw files support partial visual diagnosis only; source/camera metadata not persisted by old wrapper at timeout. No full matrix, catalog rescore, earned progression, performance, audio or criterion acceptance",
+  "shipping_flags": "unchanged OFF",
+  "next_source_fix": {
+    "commit": "a402cace20bc7665929a225deb9a4a6a7334b0a7",
+    "scope": "R2 writes explicit partial per-frame metadata; existing80-frame quarters preserve full320 requirement",
+    "review": "APPROVE76496b47f9 progress receipt; unnecessary ancestor raster/HUD hunks removeda402cace20"
+  },
+  "remaining_gates": [
+    "All four required Low quarters for baseline/candidate, completed receipts",
+    "Independent before-after full-bar judges and catalog rescore",
+    "Actual fight and hero400m/100m/close captures",
+    "Named logic/behavior gates; High/Medium confirmation deferred by owner"
+  ]
+}

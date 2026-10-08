@@ -1,0 +1,99 @@
+{
+  "criteria": [
+    "F02#0",
+    "F02#1"
+  ],
+  "verdict": "PASS literal South Bridge and Quarry/Warrens route folds only",
+  "lane_source": "ba556ac7dd000a6eef0119f036851a7ce7f565ff",
+  "main": "068b5bb7c9b0926672d50ce846a768f92d4dc4ed",
+  "proof": {
+    "named_driver": "tools/earned_saves/earned_chain_runner.gd",
+    "opening": {
+      "run": 37677583782,
+      "source": "1861efb8c1d3254b01ed76d3594a336dfc96b51c",
+      "segment": "opening_team",
+      "exit_code": 0,
+      "elapsed_s": 582.749,
+      "record": "ralph/reports/F19/lane-b-prefix/canonical-opening-r1-pass.json"
+    },
+    "camp": {
+      "run": 37679254472,
+      "source": "1861efb8c1d3254b01ed76d3594a336dfc96b51c",
+      "segment": "camp_tournament",
+      "exit_code": 0,
+      "elapsed_s": 811.11,
+      "record": "ralph/reports/F19/lane-b-prefix/canonical-camp-r1-pass.json"
+    },
+    "bridge": {
+      "source": "55d59dd5d4e8ee4f950ebf25d808bd0c007dbee3",
+      "packet": "D:/CodexTemp/tetherbound-proof/native-b-55d59dd5d4-supported-bridge-r1",
+      "segment": "bridge",
+      "supervisor_exit": 0,
+      "elapsed_s": 743.09,
+      "checks": [
+        "Actual production Title Load of approved camp save",
+        "Two guardian victories and33real hits",
+        "Earned Bridge key consumed once",
+        "Actual far-bank crossing",
+        "Production slot0 export"
+      ],
+      "record": "ralph/reports/F19/lane-b-prefix/canonical-bridge-native-r3-pass.json"
+    },
+    "warrens": {
+      "source": "ad95e0dd6fe490cfb6f2d1bf6f09ae93d18b9cfe",
+      "packet": "D:/CodexTemp/tetherbound-proof/native-b-ad95e0dd6f-earned-warrens-r2",
+      "segment": "warrens",
+      "supervisor_exit": 0,
+      "elapsed_s": 942.723,
+      "checks": [
+        "Actual production Title Load of approved Bridge save",
+        "Two ordinary wild victories",
+        "Guardian victory with13observed hits",
+        "Earned rewards and warrens_cleared",
+        "Ordinary exit and slot0 export"
+      ],
+      "record": "ralph/reports/F19/lane-b-prefix/reviewed-cut-ad95-to-776-native.json"
+    },
+    "affected_logic": {
+      "run": 37694616002,
+      "tests": 476,
+      "assertions": 796753,
+      "failed": 0,
+      "exit_code": 0,
+      "scope": "Existing53testfiles naming Bridge affected source; unchanged relevant proof reused",
+      "warnings": "28 known fixture engine errors,0ScriptErrors; retained without clean-log claim"
+    }
+  },
+  "lineage": {
+    "journey_id": "1861efb8c1d3254b01ed76d3594a336dfc96b51c:/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F19/earned_piece_canonical_r1",
+    "save_slot": 0,
+    "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+    "world_seed": 59015681,
+    "seed_override": false,
+    "reward_namespace": "d3374d50ed084f0da03f42a78232f36b",
+    "original_ordered_five_retained": true,
+    "hand_off": "Existing strict disk handoff; original completed predecessor files retained without rewriting or rehashing unchanged inputs"
+  },
+  "review": {
+    "agent": "b_f49_review",
+    "verdict": "APPROVE",
+    "scope": "Original independent reviewer approved actual pieces and these two literal F02 folds; source prefix COMPATIBLE776/dd87->ba556",
+    "visual": "n/a: these literal route folds have no visual acceptance claim; offload frames cannot certify BarsA/B"
+  },
+  "disclosures": [
+    "Mapped controller/helper ordinary route, functional offload disables continuous drawing; no visual/audio/device/performance claim",
+    "Code changes between earned pieces are bound through reviewed strict compatibility manifests",
+    "Bridge and Warrens retained training reconciliation warnings; no clean authority-history claim",
+    "Interrupted Warrensr1 actualowner_game exit1 remains uncounted; only original terminalPASSr2 used"
+  ],
+  "remaining": [
+    "F02#2 Relay",
+    "F02#3 Hall",
+    "F02#4 all route transition/reward/recovery reload coverage",
+    "F02#6 no required repeat wilds across3seeds",
+    "F02#7 A7 and route spacing",
+    "FullF19#5 checkpoint regeneration",
+    "FullF49#0 and chapter gates"
+  ],
+  "flags": "none"
+}

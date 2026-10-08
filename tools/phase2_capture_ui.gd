@@ -17,6 +17,7 @@ var _output := ""
 var _seed := 2042
 var _map_cycle := false
 var _map_zoom_samples := false
+var _graphics_capture: Dictionary = {}
 var _paired_720 := false
 var _tabs: Array[String] = []
 var _idle_hud := false
@@ -33,6 +34,13 @@ func _init() -> void:
 
 
 func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self)
+			if _graphics_capture.is_empty():
+				quit(1)
+				return
+			break
 	if DisplayServer.get_name() == "headless":
 		push_error("Phase 2 UI capture requires a rendering display")
 		quit(1)
@@ -212,6 +220,8 @@ func _write_manifest(complete: bool) -> void:
 		"stage": _stage, "elapsed_ms": Time.get_ticks_msec(),
 		"complete": complete,
 	}
+	if not _graphics_capture.is_empty():
+		manifest["graphics_capture"] = _graphics_capture
 	var file := FileAccess.open("%s/manifest.json" % _output, FileAccess.WRITE)
 	if file == null:
 		_failures.append("UI capture manifest could not be opened")
@@ -420,10 +430,12 @@ func _stock_fixture(game: Node) -> void:
 
 
 func _shoot(frame_id: String, subject: String, world: Node) -> void:
-	await _shoot_raster(frame_id, subject, world, Vector2i(1920, 1080))
+	var declared: Array = _graphics_capture.get("resolution", [1920, 1080])
+	var primary_size := Vector2i(int(declared[0]), int(declared[1]))
+	await _shoot_raster(frame_id, subject, world, primary_size)
 	if _paired_720:
 		await _shoot_raster(frame_id + "_1280x720", subject, world, Vector2i(1280, 720))
-		root.size = Vector2i(1920, 1080)
+		root.size = primary_size
 		for frame in 4:
 			await process_frame
 

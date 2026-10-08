@@ -333,23 +333,27 @@ static func read_all_receipts(checkpoint: String) -> Dictionary:
 	return out
 
 
-## Commit of the running tree: TB_COMMIT_SHA wins (a caller that knows better),
-## then `git rev-parse HEAD`, then the .git HEAD file (worktree-aware).
+## A checkout must verify its own clean HEAD; an environment label cannot
+## override it. TB_COMMIT_SHA attests exported builds only when no .git exists.
 static func commit_sha() -> String:
 	var env := OS.get_environment("TB_COMMIT_SHA").strip_edges()
-	if not env.is_empty():
-		return env
 	var output: Array = []
 	var project := ProjectSettings.globalize_path("res://")
 	if OS.execute("git", ["-C", project, "rev-parse", "HEAD"], output, true) == 0 and not output.is_empty():
 		var sha := str(output[0]).strip_edges()
 		if sha.length() == 40:
+			if not env.is_empty() and env != sha:
+				return sha + "-environment-mismatch"
 			var status: Array = []
-			if OS.execute("git", ["-C", project, "status", "--porcelain", "--untracked-files=no"], status, true) == 0 \
-					and not status.is_empty() and not str(status[0]).strip_edges().is_empty():
+			if OS.execute("git", ["-C", project, "status", "--porcelain", "--untracked-files=no"], status, true) != 0:
+				return sha + "-unverified"
+			if not status.is_empty() and not str(status[0]).strip_edges().is_empty():
 				return sha + "-dirty"
 			return sha
-	return _sha_from_git_dir(project.path_join(".git"))
+	var git := project.path_join(".git")
+	if FileAccess.file_exists(git) or DirAccess.dir_exists_absolute(git):
+		return _sha_from_git_dir(git) + "-unverified"
+	return env if not env.is_empty() else "unknown"
 
 
 static func _sha_from_git_dir(git: String) -> String:

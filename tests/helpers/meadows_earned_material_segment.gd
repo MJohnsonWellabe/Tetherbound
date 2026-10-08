@@ -102,6 +102,8 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 	var nearest: Node3D = null
 	var distance := INF
+	var nearest_authored: Node3D = null
+	var authored_distance := INF
 	for candidate: Node in _tree.get_nodes_in_group(&"harvestable"):
 		if not candidate is Node3D or not candidate.has_method("resource_item"):
 			continue
@@ -125,10 +127,16 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 		if bool(route.required) and (route.points as Array).is_empty():
 			continue
 		var gap := _player.global_position.distance_squared_to(candidate.global_position)
-		if gap < distance:
+		# Prefer the world's authored harvest nodes only after every eligibility
+		# guard. Live scatter remains the fallback when no authored supply qualifies.
+		if script.resource_path == HARVEST_NODE_PATH:
+			if gap < authored_distance:
+				authored_distance = gap
+				nearest_authored = candidate
+		elif gap < distance:
 			distance = gap
 			nearest = candidate
-	return nearest
+	return nearest_authored if nearest_authored != null else nearest
 
 
 static func before_crossing(at: Vector3, crossing: Dictionary) -> bool:
@@ -146,7 +154,35 @@ static func before_crossing(at: Vector3, crossing: Dictionary) -> bool:
 
 
 func _walk_supply(node: Node3D, budget: int) -> bool:
-	return await _walk_target(node.global_position, budget)
+	var target := node.global_position
+	var target_path := str(node.get_path())
+	var start := _player.global_position
+	var started := Engine.get_physics_frames()
+	var reached := await _walk_target(target, budget)
+	if not reached:
+		# Observe the existing failed walk once, before any next supply is chosen.
+		# No extra movement, physics probes, recovery or changed refusal policy.
+		var contacts: Array[Dictionary] = []
+		for index in _player.get_slide_collision_count():
+			var contact := _player.get_slide_collision(index)
+			var collider: Object = contact.get_collider()
+			contacts.append({"collider": str(collider.get_path()) if collider is Node else str(collider),
+				"position": str(contact.get_position()), "normal": str(contact.get_normal())})
+		var provider: Object = _arbiter.call("winning_provider")
+		var observation := {"beat": "material_walk_refused", "target_path": target_path,
+			"target": str(target), "start_player": str(start), "player": str(_player.global_position),
+			"start_frame": started, "end_frame": Engine.get_physics_frames(), "budget": budget,
+			"used_frames": Engine.get_physics_frames() - started, "velocity": str(_player.velocity),
+			"on_floor": _player.is_on_floor(), "on_wall": _player.is_on_wall(), "contacts": contacts,
+			"input_owner": str(INPUT_OWNER.current(_tree)), "offer": _arbiter.call("winner"),
+			"winning_provider": str(provider.get_path()) if provider is Node else str(provider),
+			"can_walk": _nav.can_walk(), "nav_stall": _nav.get("_stall"), "nav_side": _nav.get("_side"),
+			"nav_detour": str(_nav.get("_detour")), "nav_detour_left": _nav.get("_detour_left"),
+			"nav_confined_resets": _nav.confined_resets()}
+		var evidence := JSON.stringify(observation)
+		transcript.append(evidence)
+		print("EARNED MATERIAL WALK REFUSED " + evidence)
+	return reached
 
 
 func _clear_a_statement_off_the_button() -> bool:
