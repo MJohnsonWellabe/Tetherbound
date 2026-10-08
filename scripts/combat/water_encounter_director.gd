@@ -295,6 +295,7 @@ func _spawn_available_sites() -> void:
 		for plan: Dictionary in plans:
 			var index := int(plan.member_index)
 			var opts: Dictionary = plan.opts.duplicate(true)
+			opts.ordinary_trait_alpha = not str(plan.id).is_empty()
 			var spawn_at := _vector3_of(plan.position)
 			if not authored_members.is_empty():
 				spawn_at.y = float(realm_world.call("ground_height_at", spawn_at.x, spawn_at.z))
@@ -364,6 +365,7 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 		if plan.is_empty(): return
 		var original_once := str(plan.opts.get("once_id", ""))
 		var opts: Dictionary = plan.opts.duplicate(true)
+		opts.retained_alpha_pending = true
 		# The original once flag continues to suppress first rewards. The new
 		# durable generation admits only this fresh authored body and UID.
 		if int(packet.captured_from.spawn_generation) > 1: opts.once_id = ""
@@ -451,6 +453,8 @@ func _spawn_surface_wild(species: String, spot: Vector3, opts: Dictionary,
 	wild.set("_target", wild.global_position)
 	_wild_homes[wild] = wild.global_position
 	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
+	if not bool(opts.get("retained_alpha_pending", false)):
+		_initialize_wild_traits(wild, bool(opts.get("ordinary_trait_alpha", false)))
 	_wild_creatures.append(wild)
 	if not once_id.is_empty():
 		_once_only[wild] = once_id

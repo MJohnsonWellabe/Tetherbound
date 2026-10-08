@@ -57,7 +57,7 @@
       "id": "tidal_cradle_rise", "chain": "side_water_cradle_care", "at_xz": [555.5, 1377.0],
       "_why_at": "On the walked route's climb from Otto's camp (plan point (552, 1376), 31 m from the landing camera), 3.5 m east of it, so the whole banner stands inside the landing frame beside Otto's camp; higher points of the climb leave the frame's top edge: the part of the way to the nest a player at the tidal_cradle landing can see inside the frame (the nest is 406 m on, behind the massif).",
       "pieces": [
-        {"kind": "signal_fire", "offset_xz": [-2.0, 1.0], "smoke_top_m": 16.0, "smoke_alpha": 0.7, "smoke_top_size_m": 9.0, "smoke_base_size_m": 2.6, "smoke_fade": 0.5},
+        {"kind": "signal_fire", "offset_xz": [-2.0, 1.0], "smoke_top_m": 16.0, "smoke_alpha": 0.16, "smoke_top_size_m": 9.0, "smoke_base_size_m": 2.6, "smoke_fade": 0.95, "_smoke_clearance": "Cradle rise only: layered smoke must remain translucent beside the camp rather than an opaque pale wall. Keep its 16m sightline height, footprint, fire, banner and lamp; arrival-lure readability still requires a paired witness."},
         {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [0, 0], "yaw_deg": 225, "height_m": 7.5, "sink_m": 0.3},
         {"kind": "lamp_post", "offset_xz": [1.4, -0.4], "yaw_deg": 225, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5000000000000004, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
       ]

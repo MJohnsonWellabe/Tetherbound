@@ -1,0 +1,23 @@
+{
+  "scope": [
+    "Authored Water shelter final wider shell",
+    "Cradle signal smoke presentation"
+  ],
+  "source_commits": [
+    "cc478c3913686a840ca1fe315ad885ae33ba1893",
+    "38c5da697a15145f7f9f8fb6c804cc6b9aceefb7"
+  ],
+  "proof_commit": "b7cdd2dc803e89c1148c20108afc58c184af4b64",
+  "run_id": 37695493438,
+  "artifact_id": 11514668206,
+  "proof": "tests/smoke_water_camps.gd",
+  "result": {
+    "checks": 129,
+    "failures": 0,
+    "exit": 0,
+    "seconds": 34
+  },
+  "covered": "Real mounted Water world/all eight built dry camps, production rest/craft offers, unique reserved beds, actual CraftPanel two driftwood to six wood, rest exactly one day, SaveGame slot2/load.",
+  "fixtures": "Teleported proximity, inventory/prerequisite fixtures. No earned campaign/co-op/arrival-lure/pixel claim.",
+  "remaining": "Matched final ten day/night camp frames, arrival plume/lure pair, original blind judge and final original review. Full F39#0/#5 OPEN."
+}

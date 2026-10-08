@@ -1376,16 +1376,28 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 ## Read every line through its actual controller binding before walking; the
 ## input owner correctly prevents locomotion while that card is on screen.
 func _complete_home_key_lesson() -> bool:
+	var lesson_args := OS.get_cmdline_user_args()
+	var lesson_witness := false
+	for arg: String in lesson_args:
+		if arg.begins_with("--lesson-controller-witness") or arg.begins_with("--lesson-replay-witness") \
+			or arg.begins_with("--lesson-skip-line") or arg.begins_with("--capture-lessons"):
+			lesson_witness = true
 	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
-	if rules.config().get("enabled") != true: return true
+	if rules.config().get("enabled") != true:
+		if lesson_witness: _fail("Requested Home Key lesson witness requires the enabled natural lesson")
+		return not lesson_witness
 	# Grandpa hands the Home Key over only while F18's portal runtime is on
 	# (sequence_director `finite_gift_enabled`); with it off there is no key
 	# and so no lesson to read.
 	var session: Node = _game.get("session")
-	if session == null or session.call("portal_runtime_ready") != true: return true
+	if session == null or session.call("portal_runtime_ready") != true:
+		if lesson_witness: _fail("Requested Home Key lesson witness requires the actual portal runtime handover")
+		return not lesson_witness
 	var local: RefCounted = _game.get("local")
 	var flag := rules.PREFIX + "home_key"
-	if local.get("flags").call("has", flag): return true
+	if local.get("flags").call("has", flag):
+		if lesson_witness: _fail("Requested Home Key lesson witness did not observe this character's natural card")
+		return not lesson_witness
 	var panel: CanvasLayer = null
 	for frame: int in 180:
 		var lessons := _game.get_node_or_null(^"OnboardingLessons")
@@ -1396,6 +1408,25 @@ func _complete_home_key_lesson() -> bool:
 	if panel == null or not panel.call("is_open") or panel.get("_row").get("id") != "home_key":
 		_fail("Home Key grant did not present its authored controller lesson")
 		return false
+	# Optional F46 observations share the existing reader only after this
+	# actual Home Key grant has naturally opened its own authored card.
+	if lesson_witness:
+		# This reader indirectly imports the opening helper through its care
+		# adapter. Resolve it only now, after the opening script is loaded.
+		var reader_script := load("res://tests/helpers/f20_portal_travel.gd") as GDScript
+		if reader_script == null:
+			_fail("Home Key lesson witness reader failed to load")
+			return false
+		var travel: RefCounted = reader_script.new(_tree, _game)
+		var witnessed: bool = await travel._with_navigation_lessons(func() -> bool: return true)
+		if witnessed and lesson_args.has("--lesson-replay-witness"):
+			witnessed = await travel.replay_observed_lesson()
+		if not witnessed or panel.call("owns_input") or not local.get("flags").call("has", flag):
+			for failure: String in travel.failures: _fail(failure)
+			_fail("Home Key lesson witness did not acknowledge and release controller input")
+			return false
+		_checkpoint("Home Key lesson completed its actual optional controller/capture witness")
+		return true
 	var observed: Array[String] = []
 	for line: int in 20:
 		if not panel.call("is_open"): break

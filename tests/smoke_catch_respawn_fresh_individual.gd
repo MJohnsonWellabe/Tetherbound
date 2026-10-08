@@ -138,6 +138,13 @@ func _run() -> void:
 		_report()
 		return
 	var wild_instance_before: RefCounted = _wild.get("instance") as RefCounted
+	var rolled_before: Array = wild_instance_before.get("rolled_traits").duplicate()
+	var trait_packet: Dictionary = _wild.get_meta("ordinary_trait_packet", {})
+	if not _require(bool(wild_instance_before.get("traits_initialized")) and not trait_packet.is_empty()
+			and trait_packet.get("rolled_traits") == rolled_before and rolled_before.size() <= 3,
+			"ordinary production spawn retains its host's zero-to-three trait roll"):
+		_report()
+		return
 	await _press_interact()
 	if not _require(bool(_manager.call("is_fighting")) and _director.get("_engaged_with") == _wild,
 			"physical interact did not enter production combat with %s" % TARGET_NAME):
@@ -176,6 +183,16 @@ func _run() -> void:
 	var caught_uid := str(caught.get("uid"))
 	var caught_species := str(caught.get("species_id"))
 	var caught_level := int(caught.get("level"))
+	var owned_traits: Dictionary = game.get("local").get("redesign_character").get("creatures", {}).get(caught_uid, {})
+	if not _require(owned_traits.get("traits_initialized") == true and owned_traits.get("rolled_traits") == rolled_before,
+			"actual catch admission retains the original spawn roll in its durable creature mirror"):
+		_report()
+		return
+	if not _require(preload("res://scripts/save/water_capture_codec.gd").valid_capture_traits(trait_packet)
+			and owned_traits.get("captured_from") == trait_packet.captured_from,
+			"actual solo catch admission retains its original wild provenance"):
+		_report()
+		return
 
 	# Before its respawn fires, the hidden body must already stop referencing
 	# the party's creature: anything that touches the body's instance (a
@@ -202,6 +219,13 @@ func _run() -> void:
 		_report()
 		return
 	var fresh: RefCounted = _wild.get("instance") as RefCounted
+	var refilled_traits: Dictionary = _wild.get_meta("ordinary_trait_packet", {})
+	if not _require(fresh != null and bool(fresh.get("traits_initialized"))
+			and int(refilled_traits.get("captured_from", {}).get("spawn_generation", 0)) == 2
+			and refilled_traits.get("rolled_traits") == fresh.get("rolled_traits"),
+			"refilled wild owns a fresh host roll at the next actual body generation"):
+		_report()
+		return
 	if not _require(fresh != null and fresh != caught and str(fresh.get("uid")) != caught_uid,
 			"the spawn point refilled with the caught individual itself (uid %s)" % caught_uid):
 		_report()
@@ -230,6 +254,8 @@ func _run() -> void:
 		"refilled_uid": str(fresh.get("uid")),
 		"species": caught_species,
 		"level": caught_level,
+		"caught_rolled_traits": rolled_before,
+		"refilled_trait_packet": refilled_traits,
 		"caught_hp_after_respawn": float(caught.get("hp")),
 		"party_size": members.size(),
 		"respawn_delay_s": delay,
