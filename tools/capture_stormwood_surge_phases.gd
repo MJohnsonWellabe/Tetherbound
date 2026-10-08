@@ -60,6 +60,7 @@ var _lightning: Node
 var _frames: Array[Dictionary] = []
 var _staged: Array[String] = []
 var _t0 := 0
+var _phase_graphics_capture: Dictionary = {}
 
 
 func _run() -> void:
@@ -154,7 +155,7 @@ func _log(text: String) -> void:
 
 func _done() -> void:
 	var receipt_path := "%s/frames_%s.json" % [_output_dir, _label]
-	var receipt := JSON.stringify({"label": _label, "frames": _frames,
+	var receipt := JSON.stringify({"label": _label, "frames": _frames, "graphics_capture": _phase_graphics_capture,
 		"failures": _failures}, "\t") + "\n"
 	var file := FileAccess.open(receipt_path, FileAccess.WRITE)
 	if file == null:

@@ -1,0 +1,231 @@
+{
+  "criterion": "F10#4",
+  "status": "PASS",
+  "owner_authority": "issue5726051787387: own criterion Low/Compatibility; full release art bar not a blocker; exact scope, one review, passing proof; no mergeback or proof reruns.",
+  "production_source": "19a96439638ffffaa9802737c66a11acf7f6710f",
+  "change": "Distinct existing terrain material slots, readable Break base lighting, restrained road current and low decorative shrubs; no collision/terrain/harvest/authority/durable changes.",
+  "proof": {
+    "run_id": 37725671536,
+    "artifact_id": 11527134418,
+    "actual_exit_code": 0,
+    "seconds": 622,
+    "frames": 8,
+    "failures": [],
+    "script_errors": 0,
+    "engine_errors": 0,
+    "graphics_capture": {
+      "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+      "preset": "Low",
+      "renderer": "gl_compatibility",
+      "resolution": [
+        1280,
+        720
+      ],
+      "source_commit": "19a96439638ffffaa9802737c66a11acf7f6710f"
+    },
+    "actual_per_frame": [
+      {
+        "id": "forest_calm",
+        "size": [
+          1280,
+          720
+        ],
+        "actual_shrub_size": 0.42,
+        "terrain_slot_count": 6,
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "phase": "calm",
+        "file_sha256": "1c92e367d8da6da1332f8b32233c808d783c8f718f8c95bed07785fc73470bd6"
+      },
+      {
+        "id": "forest_building",
+        "size": [
+          1280,
+          720
+        ],
+        "actual_shrub_size": 0.42,
+        "terrain_slot_count": 6,
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "phase": "building",
+        "file_sha256": "1546ec11b91fce3cce80224e8cdfb91a57499f0bd4d4f8a7d41fff8a99685215"
+      },
+      {
+        "id": "forest_break",
+        "size": [
+          1280,
+          720
+        ],
+        "actual_shrub_size": 0.42,
+        "terrain_slot_count": 6,
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "phase": "break",
+        "file_sha256": "1e67cbe99f6e8780112208941e091ee8b1bab96747a51a3247e3b234d11230cf"
+      },
+      {
+        "id": "forest_fading",
+        "size": [
+          1280,
+          720
+        ],
+        "actual_shrub_size": 0.42,
+        "terrain_slot_count": 6,
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "phase": "fading",
+        "file_sha256": "3555e51f92d82d0b36844f7df8d26aae70f20d326eee9a9411d1a80c15c643cf"
+      },
+      {
+        "id": "giant_calm",
+        "size": [
+          1280,
+          720
+        ],
+        "actual_shrub_size": 0.42,
+        "terrain_slot_count": 6,
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "phase": "calm",
+        "file_sha256": "82f26b392e23e006a2e552f7e29c80aa19e694de20f9015dc82cb2f7f7441cc4"
+      },
+      {
+        "id": "giant_building",
+        "size": [
+          1280,
+          720
+        ],
+        "actual_shrub_size": 0.42,
+        "terrain_slot_count": 6,
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "phase": "building",
+        "file_sha256": "1e40226197558f0c754dbd7e1df4e3931ceff41d47bca73f19c7f581880c6057"
+      },
+      {
+        "id": "giant_break",
+        "size": [
+          1280,
+          720
+        ],
+        "actual_shrub_size": 0.42,
+        "terrain_slot_count": 6,
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "phase": "break",
+        "file_sha256": "428275cdd076ccc6ad196f82723a060d26f3289c166f8d862f0a4839b97dd275"
+      },
+      {
+        "id": "giant_fading",
+        "size": [
+          1280,
+          720
+        ],
+        "actual_shrub_size": 0.42,
+        "terrain_slot_count": 6,
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "phase": "fading",
+        "file_sha256": "2597cf56d25d1bfc26079bef4eb2eae806f25fdddfcffad9553fdbca2f7dc4f7"
+      }
+    ],
+    "receipt_sha256": "58e30a31226bc46bb5cc64a1aff89e20a4c6fbdee91a452f7638d3a4571997d8",
+    "log_sha256": "a0c28fcd82c9fe51787f17843b08b04441b6924c8164d319773b5c9874202c14"
+  },
+  "reused_proofs": {
+    "ground_logic": {
+      "source": "9ca22f008e41a173f081afe7fd8d6c332d3365d8",
+      "run_id": 37720437149,
+      "tests": 54,
+      "assertions": 762,
+      "failed": 0
+    },
+    "area": {
+      "source": "9ca22f008e41a173f081afe7fd8d6c332d3365d8",
+      "run_id": 37721100541,
+      "passed": 105,
+      "failed": 0
+    },
+    "road_logic": {
+      "source": "4577b4fbb6ce13efa97eddebc4911d742a0776fc",
+      "run_id": 37722876639,
+      "tests": 8,
+      "assertions": 666,
+      "failed": 0
+    },
+    "road_visual": {
+      "source": "4577b4fbb6ce13efa97eddebc4911d742a0776fc",
+      "run_id": 37723181708,
+      "artifact_id": 11526463035,
+      "frames": 2,
+      "judge": "PASS"
+    },
+    "aftermath": {
+      "source": "68c6eca635da9e31b3c98e0d8ba80e189bcf34ee",
+      "packet": "D:/CodexTemp/tetherbound-proof/native-e-68c6eca635-f41-forest25",
+      "views": [
+        "forest_aftermath_calm",
+        "giant_aftermath_calm",
+        "rod_line_aftermath_calm",
+        "stormheart_aftermath_calm",
+        "glass_aftermath_calm"
+      ],
+      "rain_ratio": 0.04,
+      "recorded_flash_and_bolt": 0,
+      "judge": "PASS bounded retained five stills; purple sky and glass scars remain"
+    }
+  },
+  "judge": {
+    "reviewer": "/root/blind_listener_f10",
+    "verdict": "PASS whole F10#4 within supplied Low matrix",
+    "forest": "All four phases PASS: ground plants, trunk/canopy layers and trainer distinguishable, including darkest Break.",
+    "giant": "All four phases PASS: previous waist-through-legs shrub obstruction cleared. Grass overlaps ankles but does not erase lower-body silhouette or nearby floor. Prefer B.",
+    "rod": "Calm/Break PASS: grounded distinct gravel route, trainer readable during Break.",
+    "aftermath": "Five retained views PASS: light rain, purple sky, no visible lightning, retained glass/scar formation."
+  },
+  "independent_review": {
+    "reviewer": "/root/review_cloud_startup",
+    "verdict": "APPROVE whole F10#4",
+    "checks": "Actual terminal8/0, source/preset/raster, eight unique IDs/files, six bound terrain slots and actual shrub .42 per frame; reused proofs applicable unchanged paths; minimal six-path production scope."
+  },
+  "flags": {
+    "terrain_materials.enabled": true,
+    "understory_readability.enabled": true,
+    "road_current.finish_candidate.enabled": true,
+    "ground_finish.enabled": false,
+    "leaf_original_alpha.enabled": false,
+    "grounded_legacy_bases.enabled": false
+  },
+  "landing_scope": {
+    "baseline_main": "49654a6fc65c12e69787b92eca6f063bacdc15b7",
+    "production": [
+      {
+        "path": "scripts/world/stormwood_world.gd",
+        "hunks": "_apply_ground_materials optional six-slot finish; _stand_up_ground_cover independent understory only"
+      },
+      {
+        "path": "data/config/stormwood_ground_finish.json",
+        "hunks": "scope, terrain_materials and understory_readability; failed fullcover OFF and leaf absent/OFF"
+      },
+      {
+        "path": "data/config/stormwood_surge.json",
+        "hunks": "Break sun .22/fill .50 only; exclude leader candidate"
+      },
+      {
+        "path": "scripts/world/stormwood_road_current.gd",
+        "hunks": "halo/web bindings and in-tree clock polling guard"
+      },
+      {
+        "path": "data/config/stormwood_road_current.json",
+        "hunks": "finish candidate profile and halo/web numbers"
+      },
+      {
+        "path": "shaders/stormwood_road_current.gdshader",
+        "hunks": "halo/web uniforms replacing constants"
+      }
+    ],
+    "proof_hunks": "Existing F10 matrix ground/road observers and required parent surge-phases graphics declaration/metadata; existing bootstrap already main. Glass observer mode not needed for this cut.",
+    "exclude": "UnREADY Cloud/Fly/art/creature/bake/core ancestry; optional Image API repair and leaf experiment changes are separate from this F10 production cut."
+  },
+  "evidence_contacts": [
+    "ralph/reports/F41/ground-materials/forest-shrub-pair.jpg",
+    "ralph/reports/F41/ground-materials/giant-shrub-pair.jpg",
+    "ralph/reports/F41/road-current/matched-pair.jpg",
+    "ralph/reports/F41/ground-materials/retained-aftermath.jpg"
+  ],
+  "disclosure": "Production camera at staged stands/forced phases; health restored between Break frames. Before native NVIDIA, after hosted Mesa Low1280x720; instantaneous lightning/GPU limits brightness attribution. Aftermath is reused prior-source evidence. No earned route, sustained weather, motion, High/Medium, device or full release-art-bar claim.",
+  "other_criteria_closed": []
+}

@@ -1,20 +1,105 @@
 {
   "enabled": false,
-  "_comment": "F41/P2-039 realm-local profile using existing grass_field.configure_profile and installed cover meshes. Sparse damp moss-green grass and leaf litter replace the Meadows flower carpet. Presentation only; no scatter bake, terrain, collision or shared grass configuration edits. Native High/Medium judgment pending.",
+  "scope": "client_presentation",
+  "_comment": "F41/P2-039 realm-local profile through existing grass_field.configure_profile. Short dark ground cover, low clustered shrubs and wet litter on grass/soil/damp/forest_floor add understory layers without admitting path or rock. Uses the existing generated grass/shrub/litter families and retains the grass ring count; disables flower tiers and tunes cover size/density. No scatter bake, terrain, collision, authority or save edits. Candidate requires native before/after visual proof before landing; revert enabled on failure.",
   "grass": {
-    "height_near": 0.24,
-    "height_far": 0.38,
-    "tint_base": "#294d48",
-    "tint_tip": "#649082",
-    "density_gain": 0.65,
-    "clump_contrast": 0.78,
-    "clump_scale": 0.065,
-    "ground_blend": 0.72,
-    "translucency": 0.1
+    "height_near": 0.1,
+    "height_far": 0.18,
+    "tint_base": "#25392c",
+    "tint_tip": "#496344",
+    "density_gain": 0.42,
+    "clump_contrast": 0.95,
+    "clump_scale": 0.028,
+    "ground_blend": 0.8,
+    "translucency": 0.04
   },
   "tiers": {
-    "flowers": {"enabled": false},
-    "flowers_gold": {"enabled": false},
-    "litter": {"enabled": true}
+    "flowers": {
+      "enabled": false
+    },
+    "flowers_gold": {
+      "enabled": false
+    },
+    "bushes": {
+      "enabled": true,
+      "item_size": 0.52,
+      "size_jitter": 0.45,
+      "density_gain": 0.36,
+      "drift_scale": 0.035,
+      "drift_contrast": 1.0,
+      "drift_gate": 2.0,
+      "tint_base": "#273d32",
+      "tint_tip": "#57765b",
+      "tint_wood": "#454337",
+      "ground_blend": 0.45,
+      "contact_darken": 0.3,
+      "ground": [
+        "grass",
+        "soil",
+        "damp",
+        "forest_floor"
+      ]
+    },
+    "litter": {
+      "enabled": true,
+      "item_size": 0.4,
+      "sink": 0.025,
+      "density_gain": 0.75,
+      "drift_scale": 0.045,
+      "drift_contrast": 0.95,
+      "drift_gate": 1.5,
+      "tint_base": "#353e30",
+      "tint_tip": "#58624a",
+      "ground_blend": 0.55,
+      "ground": [
+        "grass",
+        "soil",
+        "damp",
+        "forest_floor"
+      ]
+    }
+  },
+  "terrain_materials": {
+    "enabled": true,
+    "scope": "client_presentation",
+    "_comment": "F41 ground clarity candidate: reuse installed stylised terrain albedo/normal slots and unchanged terrain/control maps. Distinct earth/moss/path tints, about2m tiling and per-surface normal relief replace the old common dim purple multiplier. Failed ground-cover profile above stays OFF. Native actualbinding/before-after judge required; turn this block OFF if it fails.",
+    "textures": {
+      "grass": {
+        "uv_scale": 0.5,
+        "normal_depth": 0.34,
+        "tint": "#99a77f"
+      },
+      "soil": {
+        "uv_scale": 0.45,
+        "normal_depth": 0.22,
+        "tint": "#b4b497"
+      },
+      "rock": {
+        "uv_scale": 0.24,
+        "normal_depth": 0.55,
+        "tint": "#aaaab3"
+      },
+      "path": {
+        "uv_scale": 0.5,
+        "normal_depth": 0.25,
+        "tint": "#bfb49c"
+      },
+      "damp": {
+        "uv_scale": 0.5,
+        "normal_depth": 0.18,
+        "tint": "#a6aaa0"
+      },
+      "forest_floor": {
+        "uv_scale": 0.5,
+        "normal_depth": 0.3,
+        "tint": "#b1b4a2"
+      }
+    }
+  },
+  "understory_readability": {
+    "enabled": true,
+    "scope": "client_presentation",
+    "bush_item_size": 0.42,
+    "_comment": "F10#4 Low normal-camera fix: cap decorative shrub height below trainer knees across Stormwood. Reuse existing bush mesh, density, lattice, seed and tier jitter; no harvestable plants, collision, terrain or durable state changes. Failed full ground-cover profile stays OFF; installed-leaf experiment remains OFF."
   }
 }
