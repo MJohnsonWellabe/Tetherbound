@@ -37,17 +37,18 @@
   },
   "counts": {
     "rows": 44,
-    "supported_assessments": 35,
+    "supported_assessments": 36,
     "fresh_shipping_assessments": 5,
     "retained_applicable_assessments": 6,
-    "current_unassessed": 9,
+    "current_unassessed": 8,
     "fresh_creature_assessments": 6,
     "fresh_ui_assessments": 6,
     "fresh_build_assessments": 2,
     "fresh_inventory_assessments": 4,
     "fresh_crown_assessments": 1,
     "fresh_catch_assessments": 3,
-    "fresh_fly_assessments": 2
+    "fresh_fly_assessments": 2,
+    "fresh_locations_assessments": 1
   },
   "criterion_status": {
     "recapture_minimum_200": "PASS bounded capture count/coverage",
@@ -342,15 +343,19 @@
       "item_id": "P2-038",
       "subject": "named destination identities",
       "original_defect": "Several named destinations read as similar grass and trees without a distinct subject in the captured close views",
-      "assessment": "UNASSESSED",
-      "severity": null,
+      "assessment": "PARTIAL",
+      "severity": 4,
       "exposure": 5,
       "importance": 4,
-      "impact": null,
-      "score_basis": "none_current",
-      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible.",
-      "evidence": [],
-      "coverage_gap": "Current approach/near/reverse views of all named destinations; five environment stands are incomplete coverage.",
+      "impact": 80,
+      "score_basis": "fresh_current_locations3_f547_partial",
+      "reason": "The supplied views do not establish a distinctive readable Heartstone subject. The hollow-crown approach is an open meadow with trees and nearby creatures; a small roofed wooden prop is distant. The landmark approach shows that roofed prop more clearly but no uniquely identifiable Heartstone focal subject or distinct destination composition. The intended close view is almost entirely occluded by a pink/purple creature body, with trainer and destination unavailable. Labels establish intended subjects, not their visibility.",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/stormwood__hollow_crown__08__the_crown_heartstone__day__approach.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/stormwood__hollow_crown__08__the_crown_heartstone__day__close.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/stormwood__landmark__crown_heartstone__day__approach.jpg"
+      ],
+      "coverage_gap": "Other named destination identities and an unobstructed Heartstone near/detail view remain unexposed.",
       "lane_owner": "E",
       "release_disposition": "OPEN",
       "prior_priority_floor": {
@@ -1377,6 +1382,18 @@
       "raster": "1920x1080",
       "scope": "Three launch/glide/grounded art-pose stills from successful second stand.",
       "limits": "Whole tool failed first stand; fixture elevates 60m with in-memory Galecrest/unlock/sealed state. No campaign reachability, earned traversal, continuous motion, bird landing or full Fly acceptance."
+    },
+    {
+      "id": "current_locations3_f547_partial",
+      "root": "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/",
+      "contact_sheets_inspected": 1,
+      "full_rasters_inspected": 3,
+      "raster": "1280x720",
+      "complete": false,
+      "exit": 124,
+      "verdict_artifact": "ralph/reports/F41/recapture-rescore/locations/blind-verdict.json",
+      "scope": "Crown Heartstone destination only; P2-038 partial numeric rescore.",
+      "limits": "No Glass Sink pixels: both stands refused. Other named destinations, unobstructed Heartstone detail and earned route unexposed; capture remains failed/incomplete."
     }
   ]
 }
