@@ -1,0 +1,38 @@
+{
+  "criterion": "F10#3",
+  "renderer": "gl_compatibility",
+  "runtime_seconds": 274,
+  "remaining_gates": [
+    "actual strike telegraph 1.2s/3m",
+    "reduced-motion and photosensitivity visuals",
+    "warning/cadence behavioral proof"
+  ],
+  "staging": [
+    "production player CameraRig",
+    "phase clock pinned and settled presentation",
+    "HUD hidden",
+    "not earned traversal or motion witness"
+  ],
+  "exit_code": 0,
+  "source_review": "review_cloud_startup APPROVE source and bounded merged receipt",
+  "judge": "PASS all four independently correctly named: A broken brighter purple clouds/steam; B sparse rain/subdued light; C heavy rain/dark surroundings/active ground disc; D denser rain/electrical illumination/gold traces.",
+  "resolution": [
+    1280,
+    720
+  ],
+  "status": "PARTIAL phase still readability PASS; lightning and reduced-motion/photosensitivity proof OPEN",
+  "flags": "none",
+  "source_commit": "7f8b6062d22a51fb88ac7455e42b527fc4e13548",
+  "failures": 0,
+  "blind_mapping": {
+    "A": "Fading",
+    "D": "Building",
+    "B": "Calm",
+    "C": "Break"
+  },
+  "run_id": 37699857855,
+  "preset": "Low",
+  "frames": 4,
+  "artifact_id": 11517028768,
+  "blind_judge": "blind_listener_f10 reused original"
+}

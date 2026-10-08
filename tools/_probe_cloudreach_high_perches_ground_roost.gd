@@ -21,7 +21,7 @@ func _run() -> void:
 	# script's full-world _ready coroutine is not invoked by this tiny fixture.
 	world.set_script(WORLD_SCRIPT)
 	var materials := {}
-	for key in ["stone", "wood", "masonry", "masonry_trim", "weathered_timber", "rope"]:
+	for key in ["stone", "cliff", "wood", "masonry", "masonry_trim", "weathered_timber", "rope"]:
 		materials[key] = StandardMaterial3D.new()
 	world.set("_materials", materials)
 	world.call("register_runtime_surface", {

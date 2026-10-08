@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-08T00:21:56.348321+00:00",
- "main_sha": "068b5bb7c (PR #579)",
+ "generated_at": "2026-10-08T02:47:28.618891+00:00",
+ "main_sha": "347e49098 (PR #580)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -91,18 +91,18 @@
    "criteria": [
     {
      "text": "Fresh ordinary save reaches and crosses the South Bridge with no teleport/state injection",
-     "status": "failing",
-     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-0.md",
+     "status": "in_progress",
+     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6049950428, 7:57 PM CT 10-07): earned chain opening/camp/bridge/Warrens terminal PASS, 476 bridge tests; review APPROVE",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-bridge from a fresh v28 save, TB_WORLD_SEED=15. Folds into F49.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "note": "READY 6049950428 held at consolidation 7 (10-07 9:20 PM CT): evidence-only, but the source it proves is not on main (55d59dd5d4 South Bridge arena bounds, ba556ac7d session training-ACK, ad95e0dd6 disk handoff, 1861efb8c1 runner). Lane B to READY that source.",
      "audit_index": 0
     },
     {
      "text": "Continues through Quarry/Warrens on the same fresh save",
-     "status": "failing",
-     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-1.md",
+     "status": "in_progress",
+     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6049950428, 7:57 PM CT 10-07): earned chain opening/camp/bridge/Warrens terminal PASS, 476 bridge tests; review APPROVE",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-warrens --reload-at-transitions. Folds into F49.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "note": "READY 6049950428 held at consolidation 7 (10-07 9:20 PM CT): evidence-only, but the source it proves is not on main (55d59dd5d4 South Bridge arena bounds, ba556ac7d session training-ACK, ad95e0dd6 disk handoff, 1861efb8c1 runner). Lane B to READY that source.",
      "audit_index": 1
     },
     {
@@ -574,9 +574,9 @@
     {
      "text": "Correct high-perch production camera",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-e e34776024f (READY #572 6048125089, 5:26 PM CT 10-07): settlement identities day/night run 37694787532, smoke 37693874191 21 PASS, judge PASS; review APPROVE",
+     "evidence": "PR #580 (consolidation 6) merged 2026-10-07 8:06 PM CT: from tb/codex-e e34776024f (READY #572 6048125089, 5:26 PM CT 10-07): settlement identities day/night run 37694787532, smoke 37693874191 21 PASS, judge PASS; review APPROVE",
      "gap": "Re-run tools/capture_cloudreach_high_perch_live.gd day/night; redo the code-blind camera judge. Folds into F40.",
-     "note": "Landed: Evidenced on tb/codex-e e34776024f (READY #572 6048125089, 5:26 PM CT 10-07): settlement identities day/night run 37694787532, smoke 37693874191 21 PASS, judge PASS; review APPROVE",
+     "note": "Landed: PR #580 (consolidation 6) merged 2026-10-07 8:06 PM CT: from tb/codex-e e34776024f (READY #572 6048125089, 5:26 PM CT 10-07): settlement identities day/night run 37694787532, smoke 37693874191 21 PASS, judge PASS; review APPROVE",
      "audit_index": 3
     },
     {
@@ -699,10 +699,10 @@
     },
     {
      "text": "Readable lightning (1.2 s/3 m) and phase cues without HUD",
-     "status": "failing",
-     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F10-3/VERDICT.md",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-e 3ae56ff58e (READY #572 6050449581, 8:43 PM CT 10-07): logic 54/0 run 37712875890, area 86/0, native 20/20, judge PASS four phases; review APPROVE",
      "gap": "Redo phase/strike capture plus code-blind judge (incl. reduced motion, photosensitivity) Folds into F41#3, F25#2.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "note": "Landed: Evidenced on tb/codex-e 3ae56ff58e (READY #572 6050449581, 8:43 PM CT 10-07): logic 54/0 run 37712875890, area 86/0, native 20/20, judge PASS four phases; review APPROVE",
      "audit_index": 3
     },
     {
@@ -1329,10 +1329,10 @@
     },
     {
      "text": "Using the fifth key at the fifth arch makes it stir (glow, sound, one line: not ready yet) but not open; no quest, cliffhanger or sequel prompt.",
-     "status": "in_progress",
-     "evidence": "F20 evidence arch-render r8 PASS @1a7b9ef728; smoke_f20_arch_presentation.gd",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-b 2ed0f57cbd (READY #572 6050270747, 8:26 PM CT 10-07): smoke_f20_arch_presentation 20/0 native, judge PASS; review APPROVE",
      "gap": "Enable portals; re-run smoke_f20_arch_presentation.gd with the audio verifier and a capture judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. PortalAction is not mounted on arches while the portal flag is false (crossing_hall.gd _mount_portal_actions).",
+     "note": "Landed: Evidenced on tb/codex-b 2ed0f57cbd (READY #572 6050270747, 8:26 PM CT 10-07): smoke_f20_arch_presentation 20/0 native, judge PASS; review APPROVE",
      "audit_index": 2
     },
     {
@@ -1687,10 +1687,10 @@
    "criteria": [
     {
      "text": "A Forward+ path renders the village, Hall and all four biomes with no missing materials; Compatibility remains selectable as the Low preset.",
-     "status": "partial",
-     "evidence": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/@5f4093ad54",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-d 5c55b0a75d (READY #572 6050216513, 8:21 PM CT 10-07): native Forward+ census Meadows/Water/Cloudreach/Crossing PASS, judge PASS literal materials; review APPROVE",
      "gap": "Re-run the Forward+ material census for the village, Hall and four biomes, plus the Compatibility Low route, at b4e4897d5.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. 166 shader, world, art.json and environment files changed since the census (e.g. terrain_ground and cloudreach shaders, world_look.gd).",
+     "note": "Landed: Evidenced on tb/codex-d 5c55b0a75d (READY #572 6050216513, 8:21 PM CT 10-07): native Forward+ census Meadows/Water/Cloudreach/Crossing PASS, judge PASS literal materials; review APPROVE",
      "audit_index": 0
     },
     {
@@ -1940,9 +1940,9 @@
     {
      "text": "About 30 traits in Common, Rare and Epic tiers; wild creatures roll 0–3; alphas and night or weather spawns roll better.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-c 62fca91325 (READY #572 6048263126, 5:35 PM CT 10-07): 1052 tests run 37640614467, spawn/refill run 37643018693; review APPROVE",
+     "evidence": "PR #580 (consolidation 6) merged 2026-10-07 8:06 PM CT: from tb/codex-c 62fca91325 (READY #572 6048263126, 5:35 PM CT 10-07): 1052 tests run 37640614467, spawn/refill run 37643018693; review APPROVE",
      "gap": "Wire the roll into ordinary wild spawns, then test the production spawn path for alpha, night and weather.",
-     "note": "Landed: Evidenced on tb/codex-c 62fca91325 (READY #572 6048263126, 5:35 PM CT 10-07): 1052 tests run 37640614467, spawn/refill run 37643018693; review APPROVE",
+     "note": "Landed: PR #580 (consolidation 6) merged 2026-10-07 8:06 PM CT: from tb/codex-c 62fca91325 (READY #572 6048263126, 5:35 PM CT 10-07): 1052 tests run 37640614467, spawn/refill run 37643018693; review APPROVE",
      "audit_index": 0
     },
     {
@@ -2982,9 +2982,9 @@
     {
      "text": "A four-peer session completes one biome boss with every participant receiving their own key and relic.",
      "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c 95af74bc60 (READY #572 6047512757, 4:47 PM CT 10-07): 79 peer rows run 37687259638 PASS; review APPROVE",
+     "evidence": "Evidenced on tb/codex-c 9c20f818d2 (READY #572 6050391956, 8:38 PM CT 10-07): boss_four 79 rows run 37687259638, 40 tests run 37686961386; review APPROVE",
      "gap": "Build a four-peer boss/key/relic smoke and run it in multiplayer-wide with a recorded pass.",
-     "note": "Landed in #579 (tool-only receipt lines), but the boss_four proof re-run on the #579 head failed (run 37698108958). Back with lane C to prove on main.",
+     "note": "READY 6050391956 held at consolidation 7 (10-07 9:25 PM CT): scope is the CI-FLAKE peer_runner fence (90a283b1fb + 7e05fdc3c3), which changes shared teleport/explore_at/trainer_battle/join_encounter steps used by 23 smokes; catch_race and forward_camp still fail under it. Land together with the CI-FLAKE repair set.",
      "audit_index": 2
     },
     {
