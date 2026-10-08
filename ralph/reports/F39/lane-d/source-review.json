@@ -98,15 +98,15 @@
     "production_commit": "94aabada76bae83651b59e422eef2894d7774ec5",
     "observer_commit": "17709a796cda8e0df1c7f292c144497fc5c8c95a",
     "reviewer": "/root/f39_visual_review",
-    "verdict": "SOURCE APPROVE",
+    "verdict": "Scoped SOURCE/runtime APPROVE + bank-texture PASS; wholeF39#2 OPEN",
     "observed_defect": "P2-008 repeated tall near-vertical Root Walk bank surfaces in shipping first3-island60-frame review; silhouette remains outside this material fix.",
     "change": "Existing optional weathering uses normal-weighted XY/XZ/ZY noise instead of XZ-only vertical columns. Installed material assets and all height/control/collision/dune/Veilfall exclusion settings retained.",
     "shipping_enabled": false,
     "opt_in": "--shore-weathering-candidate",
     "observer": "Existing F39 catalogue capture requires active Terrain3D shader override, installed slope-noise helper, and actual coast_weathering_enabled matching config/opt-in; original count/floor/body/camera/shipping material guards retained.",
     "remaining": [
-      "Independent texture verdict",
-      "Whole F39#2 per-biome required bars/catalogue/matrix; flag remains OFF"
+      "Required paired Medium/High source-pinned material/judge proof; shipping weathering remainsOFF",
+      "WholeF39#2 catalogue>12 fixes and main/fullbar evidence stillOPEN; longbankgeometry/nightdefects remain"
     ],
     "affected_existing_unit": {
       "source": "17709a796cda8e0df1c7f292c144497fc5c8c95a",
@@ -214,6 +214,20 @@
         "pose_differences": [],
         "contact": "root-walk-weathering-final-contact.jpg",
         "limits": "Candidateonlyoutputchanges guard-gated; OFFbaseline reused per originalreviewer, not same-source or whole-build equality. StagedRootWalkday/night only."
+      },
+      "runtime_review": {
+        "reviewer": "/root/f39_visual_review",
+        "verdict": "Final scoped SOURCE + runtime APPROVE",
+        "reason": "Actual10/10 complete, activeoverride/helper and ONgate, no shader errors, allmatchingposes/floor/time-weathercategories. Reusedunit4/27 retained."
+      },
+      "blind_judge": {
+        "reviewer": "/root/f26_presets_review",
+        "verdict": "Scoped bank-texture improvement PASS",
+        "inspected_originals": 20,
+        "reason": "Steepbank coarse repeatedripples visibly reduced on180,45,90,-45day/night; softer sandvariation, posts/shadowsclear. Flattersandripplesremain.",
+        "no_regression": "PASS pictured shore/trainer/water readability; no newseams/clipping/readabilityloss.",
+        "bars": "A/B BLOCK: longstraightbanks, sparsematerial/ecologicalvariation, broad darknight slopes remain.",
+        "limits": "Lowposedpairs only; no M/H, weather, earnedtraversal, motion or completematrix."
       }
     }
   }
