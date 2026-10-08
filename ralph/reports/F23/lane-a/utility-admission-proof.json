@@ -254,5 +254,39 @@
     "review": "APPROVE original source observer; independent cause confirmed. Runtime FAIL retained.",
     "log_sha256": "7aa096c0a95daa970c81db7d035c6d1ed0bc53bb82a90ebb3a41e8ab03d77e3b",
     "stop_rule": "STOP2 BLOCKED572 comment6058050471; supported physical-contact repair QUESTION6058088509 for ROOT rescope. No third unchanged run."
+  },
+  "canonical_wild_heal_mounted_attempt": {
+    "run_id": 37766671533,
+    "artifact_id": 11544373773,
+    "commit": "36b5a00ad1ab3cb9329d7b2aa851819cfbf89996",
+    "file": "tests/smoke_f23_live_moves.gd",
+    "args": "--prove-utility=heal_pulse --prove-canonical-wild",
+    "mode": "headless",
+    "result": "FAIL before input",
+    "checks": 15,
+    "failed_checks": 4,
+    "script_or_parse_errors": 0,
+    "log_sha256": "771cd2ce4008f4468639b8d369ed601cae569760d44e292ad685bf96db159cf5",
+    "source_findings": "Original reviewer REQUEST_CHANGES: final utility assertion expected gate OFF during opt-in preview. Retained boot log confirms Game autoload already exists; canonical preflight reads /root/Game, while the smoke adds a second fixture Game.",
+    "gate_repair": "338d6b59297c45fa8e7a1efd580e9c02cb46fffa; original f25_medium_review APPROVE selected-mode assertion, restoration and operand observer",
+    "obsolete_diagnostic": {
+      "run_id": 37767190268,
+      "commit": "338d6b59297c45fa8e7a1efd580e9c02cb46fffa",
+      "disposition": "Cancelled while queued after supported root-path correction; no engine proof claimed"
+    },
+    "root_path_repair": "7e90465558; canonical selector temporarily detaches untouched original autoload and mounts disclosed fixture at /root/Game, restores original at cleanup",
+    "status": "Original source APPROVE; corrected hosted behavior pending. No whole criterion, shipping or visual claim.",
+    "root_path_review": {
+      "reviewer": "/root/f25_medium_review",
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "verdict": "APPROVE",
+      "commit": "7e904655582999f7284ac74e966b693995058de2",
+      "limits": "Detaching invokes normal _exit_tree fallback/peer cleanup; fresh-boot production-node fixture only, not live-session lifecycle preservation."
+    },
+    "corrected_proof": {
+      "run_id": 37767627297,
+      "commit": "7e904655582999f7284ac74e966b693995058de2",
+      "status": "queued; actual canonical Heal runtime open"
+    }
   }
 }
