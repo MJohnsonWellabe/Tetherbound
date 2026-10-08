@@ -51,6 +51,10 @@ func _load_plan() -> bool:
 	var points: Array = [_route.start]
 	points.append_array(_route.waypoints)
 	for index in points.size():
+		# Honor the inherited, already-parsed named subset without changing
+		# authored points, indices, next-point headings or default coverage.
+		if not _matches_subset("%s__route_%02d" % [_biome_id, index]):
+			continue
 		var raw: Array = points[index]
 		var here := Vector2(float(raw[0]), float(raw[raw.size() - 1]))
 		var next_raw: Array = points[index + 1] if index + 1 < points.size() else points[index - 1]
@@ -63,7 +67,7 @@ func _load_plan() -> bool:
 				"biome_id": _biome_id, "route_point_index": index,
 				"route_point": raw, "position_xz": [here.x, here.y],
 				"view_heading_deg": rad_to_deg(atan2(forward.x, forward.y)), "time": time_name})
-	return true
+	return not _planned.is_empty()
 
 
 func _begin_manifest() -> void:
