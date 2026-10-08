@@ -209,6 +209,26 @@ func _windscar_couriers() -> void:
 func _aeries() -> void:
 	var row := {"region": "high_roost_sky_shrine (+ upper_cloudreach, summit_final_stronghold)"}
 	stage = "aeries"
+	if OS.get_cmdline_user_args().has("--master-perch"):
+		# Bounded F28 access segment: disclosed departure placement only; the
+		# detached Master pad must be reached by the original Fly/input helpers.
+		var sites := get_nodes_in_group("foundation_master_sites")
+		var master: Node3D = null
+		for site: Node in sites:
+			if site.get("master_id") == "master_t4" and site.get("_mounted") == true and world.is_ancestor_of(site):
+				if master != null:
+					_record("aeries", {"pass": false, "reason": "ambiguous actual Master4 site"})
+					return
+				master = site as Node3D
+		if master == null:
+			_record("aeries", {"pass": false, "reason": "actual mounted Master4 site absent"})
+			return
+		var target := master.global_position
+		row["master_position"] = [target.x, target.y, target.z]
+		row["master_flown_and_landed"] = await _fly_between(Vector3(900, 1020, 2700), target, target + Vector3(0, 35, 0))
+		row["pass"] = row.master_flown_and_landed and not failed and game.party.size() == 5
+		_record("aeries", row)
+		return
 	var surveys := {}
 	for survey: Dictionary in physical.config.get("landing_objectives", []):
 		if not str(survey.id).begins_with("survey_"):

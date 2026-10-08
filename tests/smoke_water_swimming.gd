@@ -102,10 +102,21 @@ func _run() -> void:
 		return
 	var config: Dictionary = world.get("config")
 	var rest_route_id := _rest_route_argument()
-	if not rest_route_id.is_empty() and _every_hop_argument():
+	var lesson_first := OS.get_cmdline_user_args().has("--lesson-first")
+	if lesson_first and not _expect(rest_route_id == "reedhaven_to_gull_rest_sheltered" and _every_hop_argument(),
+		"lesson-first requires the bounded Gull Rest every-hop segment"):
+		return
+	var lesson_party_species: Array[String] = []
+	if lesson_first and _original_five_argument():
+		# Bind the fresh level-zero fixture before the genuine lesson earns XP.
+		# The same five then survive the original lesson's save/load and route.
+		lesson_party_species = _grant_original_five(game)
+		if lesson_party_species.is_empty():
+			return
+	if not lesson_first and not rest_route_id.is_empty() and _every_hop_argument():
 		await _run_every_hop(game, config, rest_route_id)
 		return
-	if not rest_route_id.is_empty():
+	if not lesson_first and not rest_route_id.is_empty():
 		await _run_rest_route(game, config, rest_route_id)
 		return
 	var lesson: Dictionary = config.swim_lesson
@@ -159,11 +170,13 @@ func _run() -> void:
 	player.call("set_locomotion_enabled", false)
 	await _frames(2)
 	var saved_health: float = vitals.health
-	if not _expect(game.save_game(1), "midwater exhausted save failed"):
+	# The isolated directory owns the files; retained receipts keep the
+	# booted slot-0 world identity through this original resource round trip.
+	if not _expect(game.save_game(0), "midwater exhausted save failed"):
 		return
 	vitals.stamina = vitals.max_stamina
 	vitals.health = vitals.max_health
-	if not _expect(game.load_game(1), "midwater exhausted load failed"):
+	if not _expect(game.load_game(0), "midwater exhausted load failed"):
 		return
 	if not _expect(is_zero_approx(float(vitals.stamina)) and is_equal_approx(float(vitals.health), saved_health), "loading restored free swimming stamina or health"):
 		return
@@ -190,6 +203,13 @@ func _run() -> void:
 	if not _expect(game.world.flags.has("water_swim_lesson_complete"), "physical lesson failed to commit its world objective"):
 		return
 	if not _expect(Vector2(swimming.state.safe_landing.x - east.x, swimming.state.safe_landing.z - east.z).length() < 0.1, "walking out of shallow water failed to earn the east recovery anchor"):
+		return
+	if lesson_first:
+		# The upstream gate is earned by all original lesson inputs/assertions,
+		# not granted as another fixture. The isolated route's original dry-start
+		# pose, natural regeneration and conservative level-zero guards follow.
+		print("WATER LESSON FIRST OK assertions=%d actual_lesson_swim_m=%.3f" % [assertions, lesson_distance])
+		await _run_every_hop(game, config, rest_route_id, lesson_party_species)
 		return
 	finished = true
 	print("WATER SWIMMING OK assertions=%d actual_lesson_swim_m=%.3f final_health=%.3f" % [assertions, lesson_distance, vitals.health])
@@ -295,7 +315,7 @@ func _run_rest_route(game: Node, config: Dictionary, route_id: String) -> void:
 ## waits for full dry-land stamina regeneration (a player may rest on a shoal),
 ## then swims a ~15 percent commanded zigzag along the authored route polyline
 ## to the next dry stop with real movement input and level-0 swim efficiency.
-func _run_every_hop(game: Node, config: Dictionary, route_id: String) -> void:
+func _run_every_hop(game: Node, config: Dictionary, route_id: String, retained_species: Array[String] = []) -> void:
 	var route := _route(config, route_id)
 	if not _expect(not route.is_empty(), "every-hop %s is not authored" % route_id):
 		return
@@ -331,7 +351,10 @@ func _run_every_hop(game: Node, config: Dictionary, route_id: String) -> void:
 	var original_five := _original_five_argument()
 	var party_species: Array[String] = []
 	if original_five:
-		party_species = _grant_original_five(game)
+		if retained_species.is_empty():
+			party_species = _grant_original_five(game)
+		else:
+			party_species.assign(retained_species)
 		if party_species.is_empty():
 			return
 	if capture_water_route:
