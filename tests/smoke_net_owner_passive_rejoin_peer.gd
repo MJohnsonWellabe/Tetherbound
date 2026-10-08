@@ -379,10 +379,14 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var region_rects := {}
 			for region: String in hud_regions:
 				var control: Control = hud_regions[region]
-				var rect := control.get_global_rect()
+				# The project stretches its 1920x1080 canvas into the native
+				# window. Compare window pixels with window pixels, including
+				# the canvas layer and stretch transforms.
+				var rect: Rect2 = root.get_final_transform() * control.get_global_transform_with_canvas() \
+					* Rect2(Vector2.ZERO, control.size)
 				region_rects[region] = [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
 				if not control.is_visible_in_tree() or not rect.has_area() or not viewport_rect.encloses(rect):
-					return {"verdict":"FAIL", "detail":"HUD region is empty or outside viewport: " + region, "data":region_rects}
+					return {"verdict":"FAIL", "detail":"HUD region is empty or outside viewport: " + region + " " + JSON.stringify(region_rects), "data":region_rects}
 			var shot: Dictionary = await PROOF_STEPS.run(self, "screenshot", {"name":"hud-" + name})
 			if shot.get("verdict") != "PASS" or shot.get("data", {}).get("captured") != true: return {"verdict":"FAIL", "detail":"HUD screenshot was not captured", "data":shot}
 			var graphics := preload("res://scripts/ui/graphics_prefs.gd")

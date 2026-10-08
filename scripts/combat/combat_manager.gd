@@ -3465,6 +3465,21 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 				_consume_saved_tether_item_result()
 			var creature := active_creature()
 			var uid := str(creature.get("uid")) if creature != null else ""
+			# A first deployment can have an admitted actor baseline before its
+			# first move creates a pool. The host's move-start default is zero;
+			# acknowledge that only from this current owned actor's initial row.
+			var deployment: Dictionary = _encounter_link.call("tether_command_deployment") \
+				if _encounter_link.has_method("tether_command_deployment") else {}
+			var baseline: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+			if state == State.ACTIVE and rec.get("phase") == "active" and not uid.is_empty() \
+				and _party.has(creature) and participant.get("creature_uid") == uid \
+				and deployment.get("creature_uid") == uid and int(deployment.get("generation", 0)) > 0 \
+				and participant.get("character_id") == deployment.get("character_id") \
+				and not str(deployment.get("character_id", "")).is_empty() \
+				and baseline.get("creature_uid") == uid and int(baseline.get("body_generation", 0)) > 0 \
+				and baseline.get("revision") == 0 and baseline.get("fainted") == false \
+				and not participant.get("move_resources", {}).has(uid) and not _party_ultimate.has(uid):
+				_apply_move_resources({"creature_uid":uid, "energy":0.0, "ultimate_meter":0.0, "utility_cooldown_s":0.0})
 			var resource: Dictionary = participant.get("move_resources", {}).get(uid, {})
 			_sync_authoritative_wind(participant if resource.is_empty() else resource)
 			for resource_uid: String in participant.get("move_resources", {}):
