@@ -397,7 +397,7 @@
     "engage_return_observer": {
       "source_commit": "30d849c815a83af11c16454987f4a14860660e77",
       "change": "Call existing exact-host snapshot on existing failed Engage return and report actual ally/manager/trainer/selected target state. No actions/budgets changed.",
-      "review": "PENDING original f25_medium_review",
+      "review": "APPROVE original f25_medium_review; selected preparation target is not helper chosen target; live return-time snapshot only",
       "proof": "Not dispatched; ROOT bounded re-scope pending"
     }
   }
