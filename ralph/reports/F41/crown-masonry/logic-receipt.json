@@ -1,0 +1,21 @@
+{
+  "result": "PASS_LOGIC_ONLY",
+  "source_commit": "3bfbb4f81f120f6d9d82302b0d1b063b81d91158",
+  "production_unchanged_through": "762a25019d537186010777f7461c828ddab2fceb",
+  "run_id": 37731573631,
+  "job_id": 113161651021,
+  "artifact_id": 11530261440,
+  "tests": 51,
+  "assertions": 535,
+  "failures": 0,
+  "exit_code": 0,
+  "duration_seconds": 6,
+  "proof": "existing 10-file build/Stormwood-arch/catalogue selector",
+  "review": "same original review_cloud_startup APPROVE source and bounded proof",
+  "packaging_limit": "Artifact MANIFEST names run.log but ZIP omits it; actual job stdout independently confirms totals/source/exit.",
+  "remaining": [
+    "area smoke",
+    "matched before/after visual judgement",
+    "whole F41#1/#2 scope and main landing"
+  ]
+}

@@ -2,8 +2,8 @@
   "criterion": "F41#0",
   "result": "OPEN_PENDING_CATALOGUE_RESCORE",
   "source_commit": "1a6987a584e7db911e3299506c3cb0a406e0b3eb",
-  "reviewed_reuse_at": "48d2a9609b9df8b2b3c5881e0db6aafc80145337",
-  "source_review": "review_cloud_startup APPROVE240; production scripts/data/shaders unchanged",
+  "reviewed_reuse_at": "762a25019d537186010777f7461c828ddab2fceb",
+  "source_review": "review_cloud_startup APPROVE: landscape240/creature98 subjects unchanged; Crown localized outside landscape stands; build-only recorder correction",
   "frames": 240,
   "unique_ids": 240,
   "unique_image_sha256": 240,
@@ -314,5 +314,116 @@
     "run_id": 37727516762,
     "disposition": "cancelled after discovered same native quarter already dispatched; no evidence credited"
   },
-  "warnings": "Shared TwistedTree retint and wild-cluster spacing; original reviewer verified no SCRIPT ERROR."
+  "warnings": "Shared TwistedTree retint and wild-cluster spacing; original reviewer verified no SCRIPT ERROR.",
+  "supplemental_packets": [
+    {
+      "id": "creatures",
+      "packet": "D:\\CodexTemp\\tetherbound-proof\\native-e-d6272161ff-f41-creatures98-r2",
+      "summary": {
+        "exit_code": 0,
+        "script_parse_errors": 0,
+        "scope": "direct visual poses; not combat/traversal",
+        "preset": "Low",
+        "source_clean": true,
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source": "d6272161fffd5f1f9e937591c62033dc9830893d",
+        "renderer": "gl_compatibility",
+        "frames": 98,
+        "hash_preserved": true,
+        "species": 14,
+        "stop_reason": ""
+      },
+      "terminal_receipt": {
+        "pid": 22920,
+        "finished_utc": "2026-10-08T05:05:51.7662617Z",
+        "exit_code": 0,
+        "source": "d6272161fffd5f1f9e937591c62033dc9830893d",
+        "started_utc": "2026-10-08T05:02:43.2948516Z",
+        "stop_reason": ""
+      },
+      "manifest_sha256": "154dcb1f01b8a94efce34dd7eab332fe22981b64185bcfe5727b750252ae9084",
+      "frames": 98,
+      "unique_ids": 98,
+      "complete": true,
+      "failures": [],
+      "judge_contacts": "ralph\\reports\\F41\\recapture-rescore\\creatures",
+      "source_review": "same original review_cloud_startup APPROVE bounded packet",
+      "limits": "staged visual evidence; no earned motion/gameplay claim"
+    },
+    {
+      "id": "ui",
+      "packet": "D:\\CodexTemp\\tetherbound-proof\\native-e-d6272161ff-f41-ui",
+      "summary": {
+        "stop_reason": "",
+        "frames": 12,
+        "renderer": "gl_compatibility",
+        "source_clean": true,
+        "exit_code": 0,
+        "preset": "Low",
+        "scope": "stocked UI visual fixture; not save/progression",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source": "d6272161fffd5f1f9e937591c62033dc9830893d",
+        "script_parse_errors": 0,
+        "hash_preserved": true
+      },
+      "terminal_receipt": {
+        "started_utc": "2026-10-08T05:07:27.1177435Z",
+        "exit_code": 0,
+        "finished_utc": "2026-10-08T05:10:06.5160917Z",
+        "stop_reason": "",
+        "pid": 8944,
+        "source": "d6272161fffd5f1f9e937591c62033dc9830893d"
+      },
+      "manifest_sha256": "b9663c175989d113368f103e8ab6277eb5e6caebcaaf5012dd3e2912c0621740",
+      "frames": 12,
+      "unique_ids": 12,
+      "complete": true,
+      "failures": [],
+      "judge_contacts": "ralph\\reports\\F41\\recapture-rescore\\ui",
+      "source_review": "same original review_cloud_startup APPROVE bounded packet",
+      "limits": "staged visual evidence; no earned motion/gameplay claim"
+    },
+    {
+      "id": "build",
+      "packet": "D:\\CodexTemp\\tetherbound-proof\\native-e-762a25019d-f41-build4-r2",
+      "summary": {
+        "script_parse_errors": 0,
+        "frames": 4,
+        "exit_code": 0,
+        "hash_preserved": true,
+        "stop_reason": "",
+        "renderer": "gl_compatibility",
+        "scope": "existing visual fixture; craft uses campfire; not save/progression",
+        "preset": "Low",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source": "762a25019d537186010777f7461c828ddab2fceb",
+        "source_clean": true
+      },
+      "terminal_receipt": {
+        "source": "762a25019d537186010777f7461c828ddab2fceb",
+        "pid": 1852,
+        "stop_reason": "",
+        "finished_utc": "2026-10-08T05:19:52.9788492Z",
+        "started_utc": "2026-10-08T05:17:17.9557483Z",
+        "exit_code": 0
+      },
+      "manifest_sha256": "cabeba6adf7b40f5191abc97eeb2f68b6fccbd6830aa442d963901b53d1fede9",
+      "frames": 4,
+      "unique_ids": 4,
+      "complete": true,
+      "failures": [],
+      "judge_contacts": "ralph\\reports\\F41\\recapture-rescore\\build",
+      "source_review": "same original review_cloud_startup APPROVE bounded packet",
+      "limits": "Visual-only production-scene fixture: player debug-travels to an open authored spot; BuildPlacer creates real tent, campfire, bedroll, floor and wall nodes near the player; CraftPanel opened directly beside a campfire. Home-only Workbench is not staged outside its homestead. No placement cost, interaction, sleep, recipe result or saved state proof."
+    }
+  ]
 }

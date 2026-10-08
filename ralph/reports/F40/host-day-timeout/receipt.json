@@ -1,0 +1,43 @@
+{
+  "criterion": "F40#0",
+  "result": "FAIL_INCOMPLETE_HOST_TIMEOUT",
+  "source_commit": "cd09de0814e5e0ee33263cb0ed6ac94f8846702d",
+  "run_id": 37728782830,
+  "job_id": 113152930332,
+  "artifact_id": 11529519809,
+  "script": "tools/capture_cloudreach_f40_matrix.gd",
+  "segment": "day",
+  "planned": 96,
+  "captured": 8,
+  "complete": false,
+  "exit_code": 124,
+  "exit_provenance": "Job113152930332 Run step timestamp2026-10-08T05:15:00.5626955Z: Process completed with exit code124; actual timeout after1800s",
+  "preset": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "source_commit": "cd09de0814e5e0ee33263cb0ed6ac94f8846702d"
+  },
+  "manifest_sha256": "e044e8f8c03eb4a15862a53dbcaf3f661ca864c9a8c4858035e812f6cb7c2d38",
+  "frame_process_ms": [
+    6530.384,
+    6713.581,
+    811.273,
+    6753.228,
+    6625.37,
+    6668.404,
+    799.474,
+    6693.201
+  ],
+  "on_floor_all": true,
+  "failures": [],
+  "script_errors_observed": 0,
+  "packaging_limit": "Workflow bash -e exits immediately on timeout before appending exit/took or writing exit_code. Job log supplies actual124; completefalse retained.",
+  "judge": "not requested for incomplete catalogue proof",
+  "remaining": "Current >=200 frames plus all41 catalogue rows; native GPU queue needed; no unchanged hosted retry."
+}
