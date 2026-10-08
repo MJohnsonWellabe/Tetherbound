@@ -42,5 +42,156 @@
   "native_low_run": 37637690708,
   "native_low_checkout": "16bfbb2d0581080517a9b0e3601d9435095e2b68",
   "native_low_evidence": "ralph/reports/F41/lane-e-low-baseline-partial.json",
-  "visual_evidence": "ralph/reports/F41/lane-e-low-baseline-verdict.json"
+  "visual_evidence": "ralph/reports/F41/lane-e-low-baseline-verdict.json",
+  "source_command_applicability_8732": {
+    "agent": "/root/review_cloud_startup",
+    "verdict": "APPROVE",
+    "scope": "Existing fight, people and GlassSink commands/source applicability only; no runtime or visual verdict",
+    "source_commit": "8732ebd728c89e5328c4af187878d3e222ebaec9",
+    "unchanged_source_baseline": "41fa0d53c89b3ed06dee7eb7948ab221aae5ac53",
+    "source_comparison": "No changes across autoload, scripts, tools, data/config, project.godot, scenes or shaders between 41fa and 8732; evidence-only successor. Inspected working files hash to their exact pinned Git blobs.",
+    "retained_reviews": [
+      "c26dcd69859a7b25c1029108ada6e5e9bceb5429",
+      "f8789ac8aa3bcc9d8cddebcd12df0ffaaaef53eb"
+    ],
+    "reviewed_blobs": {
+      "tools/phase2_capture_stormwood_fights.gd": "2d96dd6794923f4dd4722001ec3283eefdf2f7e4",
+      "tests/capture_stormwood_b_named_fights.gd": "b795e20376d67ea2838ee340fe700c137bf7163f",
+      "tools/phase2_capture_stormwood_people.gd": "6f2aaeac78c617efa7f2143c8214edbd0d525e6b",
+      "tools/phase2_capture_dialogue.gd": "07f4431f99ed4ba0d61b1f3cbf9a8f88289e7ead",
+      "tools/phase2_capture_stormwood_glass_sink.gd": "7e0d3194168481c023a7634995c680f7c156b4c7",
+      "tools/phase2_capture_locations.gd": "663598fa0caf27fbb070e7c349169696ceef53a2",
+      "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1"
+    },
+    "validated_commands": [
+      {
+        "id": "fight_level80_all_six",
+        "argv": [
+          "Godot",
+          "--path",
+          "<pinned worktree>",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1920x1080",
+          "--fixed-fps",
+          "20",
+          "--script",
+          "res://tools/phase2_capture_stormwood_fights.gd",
+          "--",
+          "--preset=Low",
+          "--low-resolution=1920x1080",
+          "--source-commit=8732ebd728c89e5328c4af187878d3e222ebaec9",
+          "--out=res://.tmp/stormwood-phase2/f41-win-8732",
+          "--seed=2042",
+          "--party-level=80",
+          "--seconds=18",
+          "--interval=1.0"
+        ],
+        "selection": [
+          "hollows_alpha",
+          "capacitor_alpha",
+          "crown_guardian",
+          "old_rodfolk_hall_guardian",
+          "blackwater_elder",
+          "glass_field_alpha"
+        ],
+        "guards": "Approved Stormwood output root after absolute normalization; Low Compatibility native 1920x1080 bootstrap and fresh explicit directory; each requested fight must start and have nonzero interval frames; saved native PNG must load and match declared raster; child final failures determine nonzero exit, with receipt open/flush checks.",
+        "retained_path": "Five existing owned fixture creatures; production world/player/CameraRig/EncounterDirector/CombatManager, actionable ordinary Engage input and exact named enemy binding, real ally stick/quick inputs, original stands/camera, Calm pin and between-fight healing.",
+        "limits": "Level80 is a presentation fixture, not an observed win. Parent may resolve a still-active fight as fled at the original seconds cap. Before/after frames are not combat frames; native artifacts must establish actual outcomes and useful combat context. No earned route, balance, co-op, save or performance conclusion."
+      },
+      {
+        "id": "fight_level42_hollows_alpha",
+        "argv": [
+          "Godot",
+          "--path",
+          "<pinned worktree>",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1920x1080",
+          "--fixed-fps",
+          "20",
+          "--script",
+          "res://tools/phase2_capture_stormwood_fights.gd",
+          "--",
+          "--preset=Low",
+          "--low-resolution=1920x1080",
+          "--source-commit=8732ebd728c89e5328c4af187878d3e222ebaec9",
+          "--out=res://.tmp/stormwood-phase2/f41-loss-8732",
+          "--ids=hollows_alpha",
+          "--seed=2042",
+          "--party-level=42",
+          "--seconds=18",
+          "--interval=1.0"
+        ],
+        "selection": [
+          "hollows_alpha"
+        ],
+        "guards": "Same retained named native/source/raster, real Engage/input, requested-started/nonempty, PNG and child fail-exit checks; --ids and level42 are accepted by the original parser.",
+        "limits": "Original level42 fixture is not proof of loss. Filename loss and requested level do not establish an outcome; inspect the actual fight observations/terminal artifacts later."
+      },
+      {
+        "id": "people_all24_rows_48_frames",
+        "argv": [
+          "Godot",
+          "--path",
+          "<pinned worktree>",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1920x1080",
+          "--fixed-fps",
+          "20",
+          "--script",
+          "res://tools/phase2_capture_stormwood_people.gd",
+          "--",
+          "--biome=stormwood",
+          "--preset=Low",
+          "--low-resolution=1920x1080",
+          "--source-commit=8732ebd728c89e5328c4af187878d3e222ebaec9",
+          "--output=res://ralph/reports/VISUAL/phase2/stormwood/people-native-8732",
+          "--seed=2042"
+        ],
+        "expected_rows": 24,
+        "expected_frames": 48,
+        "guards": "Named bootstrap before directory creation; all original actor/state rows mandatory; existing post camera/floor and dialogue panel/camera blend guards; registered speaker check, before/after progression-flag comparison; final complete requires 24 rows, 48 saved records, no failures and manifest open/flush/exact readback success.",
+        "limits": "Direct dialogue and authored progression snapshots are disclosed fixtures. Progression callbacks are isolated, not an earned conversation/progression path. Dialogue save rejects null/empty/save errors but does not separately compare image dimensions to graphics metadata; actual saved headers must be verified. No new native result is claimed."
+      },
+      {
+        "id": "glass_sink_day_golden_approach_close",
+        "argv": [
+          "Godot",
+          "--path",
+          "<pinned worktree>",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1920x1080",
+          "--fixed-fps",
+          "20",
+          "--script",
+          "res://tools/phase2_capture_stormwood_glass_sink.gd",
+          "--",
+          "--biome=stormwood",
+          "--subset=glass_sink",
+          "--times=day,golden",
+          "--views=approach,close",
+          "--output=res://ralph/reports/VISUAL/phase2/stormwood/glass-native-8732",
+          "--seed=2042"
+        ],
+        "expected_frames": 4,
+        "guards": "Exact existing GlassSink landmark identity; two requested times and two views; original Hollow Crown stand offsets/laterals, heading220, pitch-22 and camera minimum distance retained. Production world/CameraRig, debug travel, stand retry, physical floor/state/normal and capture settling checks remain. Image null/empty/root-size/save failures reject records; final completion requires all planned records and no capture failures.",
+        "limits": "This exact command is legacy and invokes no named preset/source bootstrap. Manifest records actual renderer, adapter and root resolution but has no named graphics/source receipt. Legacy manifest writer does not turn an open/write failure into a final failure and its freshness check covers existing manifest/PNG paths, while captures save JPGs. ROOT must use an actually fresh output directory and verify persisted records, image hashes/headers, terminal log, clean pinned source and actual renderer/raster externally. No guaranteed supported stand or future successful capture is inferred."
+      }
+    ],
+    "cross_command_conditions": [
+      "Use an actual clean worktree pinned to the full SHA and fresh outputs. Bootstrap validates the supplied SHA format and records it; it does not independently verify Git HEAD. Actual checkout/import/source provenance must come from ROOT terminal evidence.",
+      "Commands 1-3 explicitly choose Low and native 1920x1080. Command4 only requests gl_compatibility and engine resolution1920x1080; do not label it a named Low-preset proof without external production-setting evidence.",
+      "Fixed-fps20 is the existing controlled capture invocation. Fight seconds follow original physics-tick accounting; no wall-clock or performance claim.",
+      "Requested fights, dialogue, or landmarks must later have real raw images/records and terminal provenance. These source approvals add no frames, scores, runtime passes or criterion closure.",
+      "No new runtime checks, engine execution, source edits, blind judgment, or repeat scenery/rescore/Overlook review was performed."
+    ],
+    "remaining_gates": "New native context results and applicable original blind visual assessment remain open; full F41 criteria and release visual bar are not approved by this entry."
+  }
 }
