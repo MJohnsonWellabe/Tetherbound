@@ -438,6 +438,8 @@ func _capture(id: String) -> Dictionary:
 	row.started = true
 	row["engaged_by"] = engaged_by
 	row["enemy_is_named"] = enemy == _named
+	row["initial_quick_reach_m"] = float(_manager.call("combat_move_reach", "quick"))
+	_note("%s pilot production quick reach=%.3f m" % [id, row.initial_quick_reach_m])
 	if _scale_audit:
 		var fight_scale := _scale_record(enemy)
 		row["travel_scale"] = travel_scale
@@ -486,7 +488,9 @@ func _capture(id: String) -> Dictionary:
 				_stick(_dodge_dir)
 			elif _phys < _dodge_until and _tell_open.is_empty():
 				_stick(_dodge_dir)
-			elif offset.length() > float(_manager.call("combat_move_reach", "quick")) * 0.8:
+			# The resolver's body-aware reach already clears contact spacing.
+			# Shrinking it can put this pilot's target inside the held-apart bodies.
+			elif offset.length() > float(_manager.call("combat_move_reach", "quick")):
 				_stick(offset)
 			else:
 				_stick(Vector3.ZERO)
