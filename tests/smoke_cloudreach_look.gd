@@ -1,10 +1,9 @@
 extends SceneTree
 
 ## CLOUDREACH-LOOK-0906 smoke. Builds the real Cloudreach scene (same harness
-## as smoke_cloudreach_foundation.gd), mounts scripts/world/cloudreach_look.gd
-## directly against the built world -- exactly what
-## cloudreach_world_runtime.gd::mount() does in production, without pulling in
-## the combat/encounter/Game-singleton machinery a full mount() needs -- and
+## as smoke_cloudreach_foundation.gd), waits for the production mount, and
+## inspects its scripts/world/cloudreach_look.gd dressing. Never mounts a
+## second copy that duplicates plants and consumes already-reused lamps. It
 ## checks the owner's 2026-09-06 addendum landed: rope rails on every bridge
 ## edge, mooring lines on every floating region/fly-only-destination/aerie/
 ## perches, a second raycast-placed ground-cover layer that actually plants
@@ -12,7 +11,6 @@ extends SceneTree
 ## cliffside settlement materials that no longer match the Meadows village.
 
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
-const LOOK := preload("res://scripts/world/cloudreach_look.gd")
 
 # The Meadows house kit's own authored roof retint (cottage_a's "MI_RoundTiles"
 # -> #8a6448 in data/config/building_prefabs.json) -- the value the cliffside
@@ -29,13 +27,18 @@ func _run() -> void:
 	var world := SCENE.instantiate()
 	root.add_child(world)
 	current_scene = world
-	for _frame in 8:
+	var deadline := Time.get_ticks_msec() + 600000
+	while not bool(world.call("shell_build_complete")) and Time.get_ticks_msec() < deadline:
 		await physics_frame
-
-	var look := LOOK.new()
-	look.name = "CloudreachLook"
-	world.add_child(look)
-	look.call("dress", world)
+	if not bool(world.call("shell_build_complete")):
+		push_error("CLOUDREACH LOOK: production world build did not complete")
+		quit(1)
+		return
+	var look := world.get_node_or_null("CloudreachLook")
+	if look == null:
+		push_error("CLOUDREACH LOOK: production dressing is absent")
+		quit(1)
+		return
 	for _frame in 2:
 		await physics_frame
 

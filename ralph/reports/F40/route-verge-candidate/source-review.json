@@ -51,5 +51,36 @@
     ],
     "proof_status": "Changed smoke execution pending; earlier unextended smoke does not establish these new assertions."
   },
-  "proof_status": "Source, proof extension and selected hosted logic APPROVE; changed area and matched visual proof pending. No local engine execution, performance acceptance or full F40 criterion claim."
+  "original_area_proof": {
+    "disposition": "Existing smoke assertions passed, with an actual lighting ERROR; not a clean area PASS.",
+    "source_commit": "2b7ea1e4273f769fe5e637321dc88e7941d6b3d6",
+    "run_id": 37743255526,
+    "job_id": 113198671530,
+    "artifact_id": 11534633566,
+    "checkout_verified_from_job_log": true,
+    "exit_code": 0,
+    "duration_seconds": 165,
+    "terminal_summary": "CLOUDREACH LOOK OK",
+    "actual_error": "Architectural lamp replacement count mismatch: SummitEyrieStronghold at cloudreach_landmark_lighting.gd:31; that site's replacement loop is skipped.",
+    "fixture_notice": "No CloudreachNoStronghold node; climax uses its existing fallback coordinates.",
+    "limits": "No changed route-verge placement assertions ran on this source. No complete architectural lighting, production chapter or clean-error-log claim.",
+    "run_log": ".tmp/e-cloud-verges-area-2b7/expanded/run.log",
+    "run_log_sha256": "134ee5b5d6cfbacf5ac2f774922a8a9c8320c45467a32d0c9d516525cee71407",
+    "job_log": ".tmp/e-cloud-verges-area-2b7/job.log",
+    "production_verge_config_builder_and_look_unchanged_through": "d44367cb8833ccc660cc7b83c6410d3f3ac701b9"
+  },
+  "production_mount_smoke_repair": {
+    "source_verdict": "APPROVE",
+    "base_commit": "d44367cb8833ccc660cc7b83c6410d3f3ac701b9",
+    "path": "tests/smoke_cloudreach_look.gd",
+    "findings": [
+      "cloudreach_world completes runtime.mount before setting _shell_ready; shell_build_complete therefore gates completed production dressing.",
+      "Runtime mounts CloudreachLook as a direct world child. Smoke now reads that existing node and does not create or dress a second LOOK.",
+      "Ten-minute monotonic-clock wait yields on physics frames, then hard-fails with exit1 for deadline or absent production dressing. Original and added verge assertions are unchanged.",
+      "No production lighting/source change, weakened lamp-count guard, new fixture or assertion suppression."
+    ],
+    "diagnostic_limit": "Old smoke creates a second LOOK after production mounting, a source-backed explanation for consumed/replaced original lamps. Changed execution must confirm the error is absent; no proved runtime cause or clean area PASS inferred yet.",
+    "proof_status": "Changed production-mounted smoke run required and pending; d443 duplicate-mount packet remains historical evidence."
+  },
+  "proof_status": "Source, proof extension, production-mount smoke repair and selected hosted logic APPROVE. Original area assertions passed with a lighting ERROR; corrected area execution and matched visual proof pending. No local engine execution, performance acceptance or full F40 criterion claim."
 }
