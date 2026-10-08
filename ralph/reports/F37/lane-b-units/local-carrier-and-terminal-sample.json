@@ -1,0 +1,30 @@
+{
+  "engine_error_disposition": "All 27 trace to detached harvest/scatter fixtures outside the changed LOS and navigation paths; original independent reviewer verified harmless to scoped logic verdict. This is not a clean engine-area or behavior proof.",
+  "engine_error_count": 27,
+  "exit_code": 0,
+  "review": {
+    "agent": "b_f37_review",
+    "verdict": "Scoped logic APPROVE; no initialized rerun necessary because it would not attach those fixture nodes"
+  },
+  "scope": [
+    "Existing unit files naming changed Interactable or Ripplet config",
+    "Existing opening_geometry_navigator_low_prop and deferral tests compile terminal refusal sample"
+  ],
+  "source_sha": "0a2c314dc47faf6855b3826657196d218c8c5815",
+  "mode": "headless",
+  "tests": 77,
+  "artifact_id": 11529870396,
+  "not_claimed": [
+    "Whole F37#1",
+    "Whole F37#4",
+    "Earned native route",
+    "Runtime restore or visual proof"
+  ],
+  "script_or_parse_errors": 0,
+  "duration_s": 379,
+  "assertions": 790519,
+  "failed": 0,
+  "selected_file_count": 10,
+  "script": "tests/run_tests.gd",
+  "run_id": 37729891287
+}
