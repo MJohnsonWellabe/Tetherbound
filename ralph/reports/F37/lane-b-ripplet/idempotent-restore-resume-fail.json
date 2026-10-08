@@ -26,5 +26,17 @@
   "review": "Original b_f37_review independently verified restore-fix runtime scope. Whole criterion remains FAIL; minimum next observation is existing failure data and retained host answers/pending state.",
   "preserved": "Original predicates/1800 restore polls/45 post-Jump frames, owned eligibility, host authority, exact debt, fixtures and all shipping flags. No retry, new fixture or visual claim.",
   "exit_note": "Workflow terminal failure; Bash Run step exits on original failure before an exit marker. No fabricated engine duration/exit code.",
-  "logic": "37736824292 on same0b source:58tests/3176assertions/0failed/exit0,14seconds"
+  "logic": "37736824292 on same0b source:58tests/3176assertions/0failed/exit0,14seconds",
+  "pending_observer": {
+    "source": "aafe6101567b7d95f2de9da0fd754bddc23ae511",
+    "verdict": "Original b_f37_review SOURCE APPROVE; actual observation not run",
+    "scope": "Failure-only existing returned data and readonly InputOwner/pending/canDive/authority observations. Original step36 remains counted FAIL; no retry or new waits."
+  },
+  "consolidation_merge_review": {
+    "merge": "a90af7769ec0ad9b0636455f460264fb461fcb75",
+    "main_parent": "d93567001615fcc7fb7de5fe625935a332f9f797",
+    "agent": "b_f37_review",
+    "verdict": "APPROVE scoped conflict resolution",
+    "scope": "Both resolved files byte-identical to B first parent. Existing readonly restore observations/failure-only print and explicit tested851 cue dependency retained. No predicates/actions/budgets/competing hunks changed; no rerun needed. Whole F37#4 OPEN."
+  }
 }
