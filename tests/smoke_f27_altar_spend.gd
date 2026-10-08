@@ -25,6 +25,10 @@ var _game: Node = null
 
 func _run() -> void:
 	var masters_witness := OS.get_cmdline_user_args().has("--lesson-masters-witness")
+	if OS.get_cmdline_user_args().has("--lesson-reload-witness") and not masters_witness:
+		_fail("This Altar smoke's reload endpoint requires its actual Masters witness")
+		_report()
+		return
 	if masters_witness and (not OS.get_cmdline_user_args().has("--lesson-controller-witness") \
 			or not OS.get_cmdline_user_args().has("--lesson-replay-witness")):
 		_fail("Masters witness requires the existing controller and Help replay options")
@@ -171,8 +175,108 @@ func _witness_masters_lesson(creature: RefCounted, panel: Node) -> bool:
 			or INPUT_OWNER.current(self) != null or str(local.character_id) != cid or _game.party.members() != retained:
 		_fail("Naturally unlocked Tam Masters lesson lacks controller Skip, Help replay or retained identity")
 		return false
+	if OS.get_cmdline_user_args().has("--lesson-reload-witness"):
+		return await _reload_masters_lesson(reader)
 	print("F46 MASTERS LESSON: PASS actual paid first cap, grounded Tam walk, mapped Skip and Settings Help; original essence fixture disclosed; disk reload/whole F46 open")
 	return true
+
+
+## Extend the same paid-unlock endpoint with production autosave/title Load.
+## A saved ACK must already exist before autosave; saving cannot mint the proof.
+func _reload_masters_lesson(reader: RefCounted) -> bool:
+	var before := _masters_retained_state()
+	var cid := str(before.character_id)
+	if not reader._saved_lesson_ack("masters", cid, before.party_uids).get("passed", false) \
+			or INPUT_OWNER.current(self) != null or paused:
+		_fail("Masters reload needs its actual saved acknowledgement and free unpaused world")
+		return false
+	var slot := int(_game.call("autosave_slot"))
+	if not _game.call("save_game", slot) or _masters_retained_state() != before:
+		_fail("Masters autosave refused or changed its retained rewards and identity")
+		return false
+	if change_scene_to_file("res://scenes/ui/title_screen.tscn") != OK:
+		_fail("Masters reload could not open production title")
+		return false
+	for frame: int in 10: await process_frame
+	var title := current_scene
+	if title == null or title.scene_file_path != "res://scenes/ui/title_screen.tscn":
+		_fail("Masters reload did not reach production title")
+		return false
+	_game.call("reset_for_new_game")
+	if _game.party.size() != 0 or _game.local.flags.call("has", "opening:lesson:masters"):
+		_fail("Masters reload did not clear the outgoing in-memory party and acknowledgement")
+		return false
+	var reopened: Array[bool] = [false]
+	var watch := func() -> void:
+		var service := _game.get_node_or_null("OnboardingLessons")
+		var panel: Node = service.get("_panel") if service != null else null
+		if is_instance_valid(panel) and panel.call("is_open") and service.get("_replaying") == false \
+				and panel.get("_row").get("id", "") == "masters": reopened[0] = true
+	process_frame.connect(watch)
+	reader.set("_lesson_controller_input", true)
+	var load_button := title.get("_load_button") as Button
+	for step: int in 8:
+		if root.gui_get_focus_owner() == load_button: break
+		await reader.tap("ui_down")
+	var selected: bool = load_button != null and not load_button.disabled and root.gui_get_focus_owner() == load_button
+	if selected:
+		await reader.tap("ui_accept")
+		var autosave := root.gui_get_focus_owner() as Button
+		selected = autosave != null and not autosave.disabled and autosave.text.begins_with("Autosave —")
+		if selected: await reader.tap("ui_accept")
+	reader.set("_lesson_controller_input", false)
+	var loaded := false
+	var ready_frames := 0
+	if selected and reader.failures.is_empty():
+		for frame: int in 7200:
+			await process_frame
+			if reopened[0]: break
+			if current_scene != title and reader._ready_world("meadows"):
+				loaded = true
+				ready_frames = frame + 1
+				break
+	if loaded:
+		_world = current_scene
+		_player = _world.get_node_or_null("Player") as CharacterBody3D
+		_rig = _world.get_node_or_null("CameraRig") as Node3D
+		for frame: int in 300: await process_frame
+	process_frame.disconnect(watch)
+	var after := _masters_retained_state()
+	var service := _game.get_node_or_null("OnboardingLessons")
+	var retained: bool = loaded and not reopened[0] and before == after and not paused \
+		and _player != null and is_instance_valid(_player) and _player.is_on_floor() \
+		and bool(_player.call("locomotion_enabled")) and reader._ready_world("meadows") \
+		and service != null and service.get("_identity") == cid and (service.get("_pending") as Dictionary).is_empty() \
+		and not Input.is_action_pressed("ui_down") and not Input.is_action_pressed("ui_accept")
+	print("F46 MASTERS RELOAD " + JSON.stringify({"passed":retained,"save_slot":slot,"ready_frames":ready_frames,
+		"memory_cleared":true,"physical_title_load":selected,"settle_frames":300,"reopened":reopened[0],
+		"before":before,"after":after,"scope":"Paid-unlock fixture's Masters ACK actual title Load; whole F46 remains open"}))
+	if not retained:
+		_fail("Masters actual disk Load lost retained state, reopened the card or failed free grounded input")
+		return false
+	if not await reader.replay_observed_lesson("masters"):
+		for failure: String in reader.failures: _fail(failure)
+		return false
+	print("F46 MASTERS LESSON: PASS paid first cap, controller Skip/Help, durable ACK, actual title Load without reopen and Help again; original fixture disclosed; whole F46 open")
+	return true
+
+
+func _masters_retained_state() -> Dictionary:
+	var members: Array = []
+	var uids: Array[String] = []
+	for member: RefCounted in _game.party.members():
+		var card := {}
+		for field: String in ["uid", "species_id", "level", "xp", "known_moves", "move_quick", "move_charged",
+				"move_utility", "move_ultimate", "move_mastery_uses", "move_mastery_receipts", "loadout_revision"]:
+			card[field] = member.get(field)
+		members.append(card)
+		uids.append(str(member.uid))
+	var inventory: Array = []
+	for slot: int in int(_game.inventory.call("slot_count")): inventory.append(_game.inventory.call("stack_at", slot))
+	var flags: Array = _game.local.flags.call("all_set").duplicate()
+	flags.sort()
+	return {"character_id":str(_game.local.character_id),"party_uids":uids,"party":members,
+		"inventory":inventory,"personal_flags":flags}.duplicate(true)
 
 
 ## Optional F46 witness reuses the original essence fixture and actual
