@@ -240,6 +240,8 @@
     {"at": [6.4, 3.4, 0], "yaw_deg": -90},
     {"at": [-6.4, 3.4, 6], "yaw_deg": 90},
     {"at": [6.4, 3.4, 6], "yaw_deg": -90},
+    {"at": [-3, 4.8, 14.8], "yaw_deg": 180, "_why": "F17#6 original source75a blind review: the night nave loses the farwall and upper detail. Installed Hall-family wall lantern, facing inward from the actual z=15 endwall; existing warm flame/energy/range, no ambient/exposure or floor/route changes. Hall-local peer presentation, all presets."},
+    {"at": [3, 4.8, 14.8], "yaw_deg": 180},
     {"at": [12, 3.0, -6.8], "yaw_deg": 0, "_why": "F17#6 r4: the Shrine Room had no warm light at night"},
     {"at": [12, 3.0, 6.8], "yaw_deg": 180},
     {"at": [16.8, 3.0, 0], "yaw_deg": -90}
