@@ -128,8 +128,19 @@
       "candidate_enabled": false,
       "inspection_evidence": "ralph/reports/F36/grandpa-face/preview-inspection.json",
       "disposition": "Two local body-fit candidates failed collar/proportion acceptance; parked OFF. No installed model/config change, native scale/pose/gameplay unassessed."
+    },
+    {
+      "reservation_id": "a811b179-36ae-438c-b599-f7e102203dd4",
+      "night": "2026-10-07",
+      "subject": "cloudfang",
+      "reference": "assets/creatures/tetherbound/cloudfang/reference/f36-material-v1.png",
+      "reference_sha256": "5a794f81c140013af93be661d6b14300e9988037427494d6aba0e900c3e4461b",
+      "endpoint": "/openapi/v1/retexture",
+      "submitted_utc": "2026-10-08T00:16:27.726911+00:00",
+      "task_id": "01a118de-4b9d-76e6-86be-22e68d544429",
+      "status": "submitted_pending_inspection"
     }
   ],
-  "actual_meshy_submissions": 8,
+  "actual_meshy_submissions": 9,
   "note": "Lane E is the attended generation owner. Every POST uses f36_meshy_guard.py. Current real task IDs and reference hashes are recorded below; mocked cap tests use a temporary ledger and create no Meshy tasks. Generation or a successful cap check does not certify art."
 }
