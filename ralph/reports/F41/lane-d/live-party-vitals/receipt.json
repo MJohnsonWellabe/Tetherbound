@@ -23,9 +23,21 @@
   },
   "lifecycle_proof": {
     "run": 37815272293,
+    "artifact": 11566388745,
+    "job": 113442191275,
+    "source": "8fc3ad91d1124633cdc88754f6891e9f59dde490",
     "script": "tests/smoke_hud_presentation_lifecycle.gd",
     "args": "--720p",
-    "status": "IN_PROGRESS exact8fc; retained cap50/tiers1..4 five-member isolated late-game fixture and original assertions"
+    "actual_result": "PASS79 checks",
+    "exit_code": 0,
+    "duration_seconds": 6,
+    "script_error_count": 0,
+    "warning_count": 1,
+    "warning": "HUD has no player; isolated fixture disclosed",
+    "log_sha256": "ab16b97a2a911d86230f5c2b4268fa49cbebe5f96377c21b3d4113d60818eaf5",
+    "checkout_excerpt": "lifecycle-checkout-excerpt.txt",
+    "independent_proof_review": "PENDING same original f42",
+    "fixtures": "Retained five-member isolated cap50/tiers1..4 shippingSaveData late-game fixture and every original attribution/reset/modal/no-duplicate guard. LoggedControlcanvas1920x1080 despite legacy --720p selector; headless no pixel proof."
   },
   "production_only_patch": {
     "path": "live-party-vitals-only.patch",
