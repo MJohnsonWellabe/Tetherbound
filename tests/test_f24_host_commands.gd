@@ -141,7 +141,13 @@ func test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant() 
 		assert_false(COMMANDS.stage_pouch_assignment([], int(profile.pouch_size), "potion_small", tier, items, true).get("ok") == true, "next pouch slot stays unavailable")
 		host = authority
 		id = str(record.encounter_id)
-		assert_true(_start(1).ok)
+		# Meter credit requires the production frozen actor binding, as in the
+		# existing single-tier meter proof; the generic _start helper omits it.
+		var frozen := MASTERY.freeze_action(MASTERY.owned_record(_owned()), "quick",
+			{"character_id": "owner_a", "creature_uid": "creature_a", "encounter_id": id, "generation": 1, "action": 1}, [], MOVES.load_default())
+		assert_true(frozen.ok)
+		var move := MANAGER.host_move_profile(MOVES.load_default(), "player_quick", "pebble_toss", 0.5, 0.5, 1.0, 0.0, frozen.move)
+		assert_true(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "quick"}, 1, _owned(), _binding(), move, WIND, 1000).ok)
 		assert_true(_arrive(1, 1300).ok)
 		host.credit_move_hit(id, 1, 1, 2.0, "opponent", 200.0, 1, 100.0)
 		assert_eq(_command_pool().meter, 8.0 * float(profile.meter_rate), "actual accepted quick credits the equipped tier once")
