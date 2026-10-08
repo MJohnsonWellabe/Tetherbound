@@ -189,7 +189,7 @@
     "finding": "Reference retains immense horns, pale coat, dark legs/muzzle and blue shoulder crystals. DCC soft muddy coat/horns and rounded crystals; native front loses coat layering/face detail; native rear jagged black inner-horn marks and harsh pale/dark coat/hind-leg fragments."
   },
   "provenance": "Existing accepted installed source/reference inventory; independently verified current model SHA matches source audit and unchanged native model. No new purchase/Meshy POST. Original generation task not newly asserted.",
-  "review": "OPEN original source review of blocked evidence",
+  "review": "APPROVE evidence only original review_f36_cap at236a83579f92e35a8c0802231beb7548005b393c: hashes/provenance/unchanged native apply; Stormcapra asset not approved; full F36 open",
   "limits": [
     "Historical 59,541-triangle installed model/topology warnings unchanged; no new candidate or clean-manifold claim",
     "No accepted finish improvement; existing baseline remains, no candidate shipping flag enabled",

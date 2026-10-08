@@ -1,0 +1,86 @@
+{
+  "criterion": "F36#0 asset component; full priority batch OPEN",
+  "run": 37714329995,
+  "artifact": 11522834460,
+  "whole_run": "FAIL other Staticub candidate reuses cached ordinary atlas; individual Cloudfang/Tanglevolt guards complete",
+  "source": "5bd2c4a225cb64621b961358f432696564500acd",
+  "subject": "cloudfang",
+  "receipt": {
+    "asset_active_albedos": [
+      {
+        "expected_path": "res://assets/creatures/tetherbound/cloudfang_f36_material_v1/models/cloudfang_f36_material_v1_extracted_base_color_vivid.png",
+        "imported_mipmaps": true,
+        "node": "Mesh_0_001",
+        "path": "res://assets/creatures/tetherbound/cloudfang_f36_material_v1/models/cloudfang_f36_material_v1_extracted_base_color_vivid.png",
+        "source_sha256": "922ad7cf5d11c9ac2d65d2954bac59db233b8a27aa6ee5c37c19cecf45e04730",
+        "surface": 0
+      }
+    ],
+    "asset_candidate": true,
+    "asset_path": "res://assets/creatures/tetherbound/cloudfang/models/creature_cloudfang_f36_material_v1.glb",
+    "asset_sha256": "b6c5f6e2ae03fc521dd4a6f0612142b825369b43ed140cc03f452b4e192fa57d",
+    "camera_fov": 42.0,
+    "camera_position": [
+      -1.14999997615814,
+      3.51455068588257,
+      21.9467811584473
+    ],
+    "candidate": false,
+    "frames": [
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-material-scale-5bd2/cloudfang-standing-000.png",
+        "phase": 0.0,
+        "role": "standing"
+      },
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-material-scale-5bd2/cloudfang-standing-100.png",
+        "phase": 1.0,
+        "role": "standing"
+      }
+    ],
+    "installed_model": false,
+    "installed_reference_height_m": 3.85000014305115,
+    "material_candidate": false,
+    "planned_frames": 2,
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "resting_size_m": [
+      3.63825011253357,
+      3.85000038146973,
+      6.36951541900635
+    ],
+    "scale_only": true,
+    "scale_scope": "Explicit asset preview standing stage; no fight-scale claim",
+    "selected_phases": [
+      0.0,
+      1.0
+    ],
+    "selected_roles": [
+      "standing"
+    ],
+    "source_commit": "5bd2c4a225cb64621b961358f432696564500acd",
+    "species": "cloudfang",
+    "stage_only": true,
+    "standing_height_m": 3.85000038146973,
+    "trainer_measured_height_m": 1.79999995231628,
+    "trainer_reference_height_m": 1.8,
+    "whole_body_camera": true
+  },
+  "judge": {
+    "agent": "blind_listener_f10",
+    "identity": "PASS",
+    "material": "PASS; prefer candidate B",
+    "limits": "Native standing only; no motion/hit/faint/habitat/full F36 claim"
+  },
+  "remaining": [
+    "Full mapped hit/faint native20 run37714741492",
+    "Original final asset source review and ordinary runtime binding/behavior before shipping"
+  ],
+  "flags": "Shipping species bindings unchanged; explicit asset preview only",
+  "contact": "ralph/reports/F36/cloudfang-material/native-standing-pair.jpg"
+}

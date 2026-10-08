@@ -188,7 +188,7 @@
     "finding": "DCC/native retain long cream body, bird face/dark eyes, orange beak, cyan crest, flowing blue/orange feather silhouette; coherent materials, no conspicuous fragments/seams/clipping. Coarser blade-like feathers, flatter native cream detail and fine-eye distance limit retained."
   },
   "provenance": "Existing accepted installed source/reference inventory; independently verified current model SHA matches source audit and unchanged native model. No new purchase/Meshy POST. Original generation task not newly asserted.",
-  "review": "OPEN original bounded cap/source review",
+  "review": "APPROVE evidence only original review_f36_cap at236a83579f92e35a8c0802231beb7548005b393c: hashes/provenance/unchanged native apply; Stormcapra asset not approved; full F36 open",
   "limits": [
     "Historical 68,865-triangle asset/topology warnings unchanged; no clean-manifold claim or regenerated candidate",
     "Unseen supported poses/deformation/continuous motion/Fly/world gameplay/full F36 acceptance OPEN"
