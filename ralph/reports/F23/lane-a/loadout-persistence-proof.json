@@ -1,7 +1,7 @@
 {
   "criterion": "F23#3",
   "criterion_text": "Loadouts change at the Altar or forward camp and persist through save/reload and two-peer rejoin.",
-  "status": "Affected proof PASS / whole original review pending",
+  "status": "WHOLE F23#3 APPROVE / MET",
   "source_commit": "4fd518b708f48ec51fd3dcc1a6baf354a53a959d",
   "change": "A single guest Equip press freezes its original creature, loadout, revision and edit ID; the existing service waits for a correlated fresh quote and submits once through unchanged Foundation journal, host CAS and owner save/ACK. Precommit quote refusal resolves without submission. Existing camp helper presses Equip exactly once and reconciles only the same original.",
   "source_review": {
@@ -43,5 +43,14 @@
   },
   "fixtures": "Existing fresh two-process simulation, party_grant Terrapups (guestL15), camp kits added directly to satchel, production placer terrain search with trainer positioned and preview aimed; helper positions trainer beside its owned camp and opens actual production companion panel. No direct equipped/known mutation. No earned campaign or device claim.",
   "proof_scope": "Opt-in existing smoke retains host and guest paid camps, one guest Equip press, exact saved loadout and original receipt, host world save/reload, guest character save/reload, leave and two-peer rejoin. Only independent F34 camp relocation block is excluded; its default assertions remain unchanged. Not an accepted boundary save or new harness.",
-  "guards": "Character/world scope, actual station source/range, owned UID, expected loadout revision, host registry CAS, original journal/save and saved durable ownerACK unchanged. All ten utility and actor motion guards remain unchanged; F23#2/Mastery PARK remains."
+  "guards": "Character/world scope, actual station source/range, owned UID, expected loadout revision, host registry CAS, original journal/save and saved durable ownerACK unchanged. All ten utility and actor motion guards remain unchanged; F23#2/Mastery PARK remains.",
+  "whole_review": {
+    "reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "candidate_commit": "99f2ead88a477a51a697f485f8bed21fb3b1dd1e",
+    "verdict": "WHOLE F23#3 APPROVE / MET",
+    "verified": "Run37809264550 30checks0errors exit0, one Equip, host and guest reload, new-peer-ID rejoin exactloadout/receipt; retainedsave revision1 matchingoriginalreceipt",
+    "blind_requirement": "No separate F23#3 blind proof required",
+    "limits": "Disclosed grants/positioning simulation only; no earned campaign/device/unrelatedcombat claim"
+  }
 }
