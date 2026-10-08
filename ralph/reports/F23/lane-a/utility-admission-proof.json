@@ -619,8 +619,74 @@
     "reviewer": "original /root/f25_medium_review 01a1168b-648a-7c33-8810-ae98609b293b",
     "source_verdict": "SOURCE APPROVE; inputs/fixtures/guards/budgets/hit verdicts preserved",
     "run_id": 37799961227,
-    "status": "RUNNING one changed shared_wild_fight headless observation",
+    "status": "FAIL retained live observation; no accepted save",
     "claim": "detached live post-checkpoint state; observation latency can advance gameplay, not refusal-time receipt or established production cause",
-    "production_change": "none; speculative zero-lunge bypass rejected by original reviewer because failed packet contains successful host zero-strength original"
-  }
+    "production_change": "none; speculative zero-lunge bypass rejected by original reviewer because failed packet contains successful host zero-strength original",
+    "artifact_id": 11560292783,
+    "result": "15failures; nofatal",
+    "log_sha256": "fb9429849dda60e524045b67037e29d82d95aa84c8a2bab4f53d53e1e8b8da53",
+    "observed": {
+      "at_ms": 89601,
+      "participant_uid": "",
+      "participant_actor_generation": null,
+      "participant_actor_bound_uid": null,
+      "participant_actor_vitals": {},
+      "admitted_body_binding_uid": "creature-c07478ee8659ac61ac0ec311ba6a09da",
+      "owned_matches": 1,
+      "deployment_generation": 1,
+      "motion_scope_valid": true,
+      "enemy_target_current": true,
+      "actor_current": false
+    },
+    "original_verdict": "SUPPORTED correction direction; executed repair unproved"
+  },
+  "returned_legacy_uid_correction": {
+    "source_commit": "f6efdb6a0e50f9e38b79cd35a55a6abab8bc8a20",
+    "status": "SOURCE APPROVE and UID correction independently verified; wholeOPEN after wild7/boss3remaining geometry failures",
+    "source_gap": "non-tournament _host_engage supplies emptyUID; _ordinary_bind_deployed_peer previously skipped non-saved-vitals encounters",
+    "correction": "Populate transient legacy participantUID from authenticated host body/card/binding and uniquelyadmitted livingownedUID. Dedicated host adapter preserves actor_current/tournament/pendingrules, rejects savedactor generations/rows, idempotent sameUID; savedHP binding unchanged.",
+    "state_scope": "Transient encounter membership UID+seq only; no durable state/schema/flag or savedHP mutation",
+    "proofs": [
+      "smoke_net_shared_wild_fight.gd",
+      "smoke_net_shared_boss.gd",
+      "test_move_commit_runtime.gd"
+    ],
+    "runs": {
+      "shared_wild_fight": 37801794084,
+      "shared_boss": 37801798698,
+      "move_commit_runtime": 37801802847
+    },
+    "unit_proof": {
+      "run_id": 37801802847,
+      "artifact_id": 11561825769,
+      "selector": "--only=test_move_commit_runtime",
+      "tests": 13,
+      "assertions": 122,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 7,
+      "log_sha256": "9a42cee043149e5448fc931b44b6b896af23c81e52cde8018ca778be5e9d0499"
+    },
+    "wild_runtime": {
+      "run_id": 37801794084,
+      "artifact_id": 11561447701,
+      "result": "FAIL 7failures nofatal",
+      "log_sha256": "ed4b60f1be6c0ccb473c797859967ad78aa19654c749a2095fffbfb6cfb78b6b",
+      "observation": "participantUID now matchesadmitted/body/binding; actor_currentTRUE, target/scopevalid; invalid_actor_move absent",
+      "limits": "No accepted save or boundary; remaining guesthit/friendlygeometry/window failures retained"
+    },
+    "boss_runtime": {
+      "run_id": 37801798698,
+      "artifact_id": 11560699195,
+      "result": "FAIL 3friendly/window failures nofatal; originalguesthit checks pass",
+      "log_sha256": "317e51c03ae6cf241911489963b59e6a2a57fc5c2f0358040501fbbf545dea42"
+    },
+    "original_runtime_review": {
+      "reviewer": "original /root/f25_medium_review",
+      "verdict": "UID correction verified; no further shipping correction supported; PARK pending proof re-scope",
+      "supported_source": "_step_place_creature changes guest local body; host movement follows physical inputs. Position is correction reference, not relocation authority; trusting fixture teleport would bypass authority.",
+      "remaining_scope": "Existing placement proofs need explicit adaptation to production input; no evidence physical-input movement is broken"
+    }
+  },
+  "proof_rescope_evaluation": "Originalreviewer evaluating reuse of existing NAVIGATOR/_drive_left physicalstick for SAME at coordinates under existingstepbudget, no fallbackteleport/guard/fixtureloosening. No newdispatch."
 }
