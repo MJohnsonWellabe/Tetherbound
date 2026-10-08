@@ -186,5 +186,11 @@
       "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
     ]
   },
-  "DCC_comparison": "Existing pose_check + same turntable helpers/camera/lighting; same installed geometry/rig, only base-color/emission texture image overridden to shipped vivid A versus isolated source-preserving vivid B. Idle1/attack10; no model export or scale change."
+  "DCC_comparison": "Existing pose_check + same turntable helpers/camera/lighting; same installed geometry/rig, only base-color/emission texture image overridden to shipped vivid A versus isolated source-preserving vivid B. Idle1/attack10; no model export or scale change.",
+  "blind_comparison": {
+    "agent": "blind_listener_f10",
+    "A": "Shipped vivid repaint: identity/deformation PASS, material BLOCK coarse peach/black patches",
+    "B": "Source-preserving candidate: identity/material/deformation PASS supplied idle1/attack10; fur, muzzle, eyes/lightning distinct",
+    "limits": "Dark featureless paw underside in bent view; native after/continuity/otherposes/worldplay OPEN"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "criterion": "F08#2",
-  "status": "OPEN affected roost day/night views pending; mapped logic and area PASS",
+  "status": "OPEN affected night views pending; mapped logic, area and affected day PASS",
   "source_capture": "7f8b6062d22a51fb88ac7455e42b527fc4e13548",
   "scope": "Literal high-perch camera still matrix, owner re-scope issue572#6048639441",
   "proofs": {
@@ -54,6 +54,23 @@
       "failed": 0,
       "exit": 0,
       "seconds": 26
+    },
+    "affected_day": {
+      "run": 37710821667,
+      "artifact": 11522305278,
+      "source": "9e65a0d6ba0d5fb790af372f68512782d8e82957",
+      "exit": 0,
+      "seconds": 508,
+      "frames": 2,
+      "skips": 0,
+      "rows": [
+        19,
+        20
+      ],
+      "graphics": "Low/Compatibility1280x720",
+      "camera": "Production CameraRig, actual trainer/follower, authored stands and floor guards",
+      "judge": "Same blind reviewer PASS both; clear landing, grounded low roost, no definite penetration/clipping, visible height/drop",
+      "limits": "Vista nearby creatures overlap visually; full finish/motion OPEN"
     }
   },
   "judge": {
@@ -64,7 +81,7 @@
   "review": {
     "agent": "review_cloud_startup",
     "source": "APPROVE ff341 repair and7f live recorder; final correctedarea pending",
-    "final": "OPEN affected visual; changed-world mapped logic and production roost area PASS"
+    "final": "OPEN affected night; all prior bounded gates PASS"
   },
   "limits": [
     "Direct staged scene/progression/clock and five-owned Galecrest, not earned unlock/trial/bond/save evidence",
