@@ -3,7 +3,7 @@
     "F23#2",
     "F23#5"
   ],
-  "status": "OPEN F23#2/#5; canonical mounted Heal and changed-source Dash physical-contact PASS; whole criterion review pending",
+  "status": "OPEN F23#2/#5; original independent APPROVE for mounted canonical Heal and changed-source mounted Dash. Whole F23#2 remains OPEN on guarded shipping admission and real role/loadout proof.",
   "source_components": [
     {
       "commit": "fd26fd34ed0d29967e7b839b90aca33420e1261a",
@@ -356,6 +356,21 @@
       "impacts": 1,
       "limits": "Disclosed flat stage/static600HP wild and process-local preview; not canonical-wild, campaign, co-op, shipping, device or visual acceptance. Existing utility logic and mounted Heal proofs reused."
     },
-    "runtime_review": "Pending same original reviewer; no component READY or whole closure claimed"
+    "runtime_review": {
+      "reviewer": "/root/f25_medium_review",
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "verdict": "APPROVE bounded mounted Dash behavior",
+      "commit": "f1b093c5f7123783d56bb9c2fc4963d0fbbd90d2",
+      "verified": "19checks0errors exit0, exact target collision and finite contact, retained1.9453125m advance within6m,24Wind,one launch/impact,600to593.956072106877foeHP; original safety/binding/one-hit guards retained",
+      "limits": "Disclosed static fixture only; no canonical wild, shipping, campaign, co-op, device or visual claim"
+    },
+    "whole_criterion_review": {
+      "criterion": "F23#2",
+      "reviewer": "/root/f25_medium_review",
+      "verdict": "OPEN",
+      "remaining_gate": "Guarded shipping admission of Heal/Dash plus every-role two-equipable proof through authored learnsets and loadout validation. Current eight shipping utilities; process-local previews do not satisfy this.",
+      "blind_requirement": "No additional F23#2-specific blind judge named",
+      "disposition": "Reuse passing Dash/Heal/utility logic. Preserve coupled runtime/actor-vitals guards and flags; no component READY or whole closure."
+    }
   }
 }
