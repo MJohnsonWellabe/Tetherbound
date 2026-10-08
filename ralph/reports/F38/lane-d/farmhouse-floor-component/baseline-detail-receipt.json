@@ -1,0 +1,18 @@
+{
+  "run": 37715594093,
+  "artifact": 11525448157,
+  "source": "7b66e678e30d88af0a35c4717a7c1ac80345759c",
+  "native_size": [
+    1280,
+    720
+  ],
+  "preset": "Low",
+  "renderer": "gl_compatibility",
+  "scope": "4native detail beforeframes fromincomplete48plan; day/nightclear/rain farmhouse, actualsavedvalidstands only; no wholematrixPASS",
+  "files": [
+    "farm_to_hall__day__clear__detail.jpg",
+    "farm_to_hall__day__rain__detail.jpg",
+    "farm_to_hall__night__clear__detail.jpg",
+    "farm_to_hall__night__rain__detail.jpg"
+  ]
+}

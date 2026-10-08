@@ -1,0 +1,6 @@
+{
+  "reviewer": "/root/f39_visual_review",
+  "source_commit": "a7f414c979439da35b10a2621d2348fceee34145",
+  "verdict": "APPROVE",
+  "scope": "Only source change shore_foam_enabled true to false; warp, patch mask and strength overrides bypassed; prior shoreline fallback and existing offshore depth treatment preserved. Both visual BLOCK verdicts retained. No READY or P2-009/fullF39 closure."
+}
