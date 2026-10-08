@@ -86,6 +86,7 @@ var _impacts: Array[Dictionary] = []
 var _captures: Array[String] = []
 var _saved_visual_config: Dictionary
 var _saved_library_enabled := false
+var _enabled_ultimate := false
 var _prove_library_arrival := false
 var _arrival_records: Dictionary = {}
 var _captured_library_slots: Dictionary = {}
@@ -134,9 +135,9 @@ func _run() -> void:
 		var candidate := _saved_visual_config.duplicate(true)
 		candidate.enabled = true
 		ULTIMATES._config = candidate
-	var enabled_ultimate := ULTIMATES.available("ultimate_ground_current")
+	_enabled_ultimate = ULTIMATES.available("ultimate_ground_current")
 	if OS.get_cmdline_user_args().has("--prove-shipping-ultimate"):
-		_check(bool(_saved_visual_config.get("enabled", false)) and enabled_ultimate
+		_check(bool(_saved_visual_config.get("enabled", false)) and _enabled_ultimate
 			and not visual_override and not _prove_library_arrival,
 			"shipping ultimate proof requires tracked enabled config without presentation overrides")
 	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "actor_vitals gate must remain off")
@@ -294,7 +295,7 @@ func _run() -> void:
 		_finish()
 		return
 	_check(is_equal_approx(shown_meter.value, 0.0), "mounted actual CombatHUD starts with an empty Ultimate meter")
-	if enabled_ultimate:
+	if _enabled_ultimate:
 		await _button(JOY_BUTTON_RIGHT_SHOULDER, true)
 		await _button(JOY_BUTTON_RIGHT_SHOULDER, false)
 		_check(not bool(_manager.call("ultimate_armed")) and _launches.is_empty() and _impacts.is_empty(),
@@ -635,7 +636,8 @@ func _setup() -> void:
 	_check(_writer.save_character_prepared(_game, DATA.CHARACTER), "initial owner disk write")
 	_ally = _body(FOLLOWER, species, Vector3(-2.0, 0, 0))
 	_ally.set("owner_peer_id", 1)
-	var trainer: Dictionary = TRAINERS.trainer("practice_trainer") if (not _prove_utility.is_empty() or _prove_mastery_transition) and not _prove_canonical_wild else {}
+	var needs_authored_trainer := (not _prove_utility.is_empty() or _prove_mastery_transition or _enabled_ultimate) and not _prove_canonical_wild
+	var trainer: Dictionary = TRAINERS.trainer("practice_trainer") if needs_authored_trainer else {}
 	_enemy = TRAINERS.creature_for(trainer.team[0]) if not trainer.is_empty() else SPECIES.spawn("staticub")
 	_wild = _body(WILD, str(_enemy.species_id), Vector3(2.0, 0, 0))
 	_enemy.max_hp = 600.0 # Disclosed long-lived named target; no in-flight HP edits.
@@ -687,7 +689,7 @@ func _setup() -> void:
 		"position": [target.x, target.y, target.z]}
 	if not trainer.is_empty():
 		opponent["owner_npc"] = trainer.id
-	if _prove_utility == "dash_strike" or _prove_mastery_transition:
+	if _prove_utility == "dash_strike" or _prove_mastery_transition or (_enabled_ultimate and _prove_utility.is_empty()):
 		# The one static opponent body is generation one. Carry its actual card,
 		# as the production trainer send-out does, so Dash freezes this UID.
 		opponent["card"] = preload("res://scripts/save/water_capture_codec.gd").encode(_enemy)
@@ -716,9 +718,9 @@ func _setup() -> void:
 		_id = rec.encounter_id
 		_director.set("_encounter", rec)
 		_manager.call("bind_encounter", _director, _id, "trainer")
-	if (not _prove_utility.is_empty() or _prove_mastery_transition) and not _prove_canonical_wild:
+	if needs_authored_trainer:
 		_check(_director.call("_install_ordinary_combat_reward_owner", _id) == true, "real authored trainer owner installer admits the mounted fixture")
-		_check(_director.call("uses_durable_trainer_rewards", _id) == true, "mounted utility uses the real durable trainer owner")
+		_check(_director.call("uses_durable_trainer_rewards", _id) == true, "mounted fixture uses the real durable trainer owner")
 	_manager.connect("attack_launched", _on_launch)
 	_manager.connect("impact_confirmed", _on_impact)
 	_capture_stage()
