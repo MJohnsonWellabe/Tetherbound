@@ -438,15 +438,15 @@ func _material(colour: Color) -> StandardMaterial3D:
 				m.normal_scale = clampf(float(_floor_presentation.get("normal_scale", 0.45)), 0.0, 2.0)
 			if bool(_floor_presentation.get("tile_cropped_band", false)):
 				var values: Array = _floor_presentation.get("tile_scale", [])
-				var scale := Vector3(float(values[0]), float(values[1]), float(values[2])) if values.size() == 3 else Vector3.ZERO
+				var tile_scale := Vector3(float(values[0]), float(values[1]), float(values[2])) if values.size() == 3 else Vector3.ZERO
 				var albedo := _floor_band_texture(m.albedo_texture, m.uv1_scale, m.uv1_offset)
 				var normal := _floor_band_texture(m.normal_texture, m.uv1_scale, m.uv1_offset)
-				if scale.is_finite() and scale.x > 0.0 and scale.y > 0.0 and scale.z > 0.0 \
+				if tile_scale.is_finite() and tile_scale.x > 0.0 and tile_scale.y > 0.0 and tile_scale.z > 0.0 \
 						and albedo != null and normal != null:
 					m.albedo_texture = albedo
 					m.normal_texture = normal
 					m.uv1_offset = Vector3.ZERO
-					m.uv1_scale = scale
+					m.uv1_scale = tile_scale
 					m.uv1_triplanar = true
 					m.uv1_world_triplanar = true
 					m.set_meta("floor_band_tiled", true)
@@ -456,15 +456,15 @@ func _material(colour: Color) -> StandardMaterial3D:
 	return m
 
 
-func _floor_band_texture(texture: Texture2D, scale: Vector3, offset: Vector3) -> Texture2D:
-	if texture == null or not scale.is_finite() or not offset.is_finite():
+func _floor_band_texture(texture: Texture2D, band_scale: Vector3, band_offset: Vector3) -> Texture2D:
+	if texture == null or not band_scale.is_finite() or not band_offset.is_finite():
 		return null
 	var image := texture.get_image()
 	if image == null or image.is_empty() or (image.is_compressed() and image.decompress() != OK):
 		return null
 	var size := image.get_size()
-	var region := Rect2i(Vector2i(roundi(offset.x * size.x), roundi(offset.y * size.y)),
-		Vector2i(roundi(scale.x * size.x), roundi(scale.y * size.y)))
+	var region := Rect2i(Vector2i(roundi(band_offset.x * size.x), roundi(band_offset.y * size.y)),
+		Vector2i(roundi(band_scale.x * size.x), roundi(band_scale.y * size.y)))
 	if region.size.x <= 0 or region.size.y <= 0 or not Rect2i(Vector2i.ZERO, size).encloses(region):
 		return null
 	var band := image.get_region(region)

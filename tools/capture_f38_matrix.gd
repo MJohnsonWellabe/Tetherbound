@@ -103,12 +103,18 @@ func _capture_row(row: Dictionary) -> void:
 		_write_manifest()
 		return
 	var requested: Dictionary = house.get("_floor_presentation")
-	var materials: Dictionary = house.get("_materials")
-	var tiled := false
-	for material: Variant in materials.values():
-		if material is StandardMaterial3D and bool(material.get_meta("floor_band_tiled", false)):
-			tiled = true
+	var tiled_bindings := 0
+	for node: Node in house.find_children("*", "MeshInstance3D", true, false):
+		var mesh := node as MeshInstance3D
+		if mesh.mesh == null:
+			continue
+		for surface: int in mesh.mesh.get_surface_count():
+			var material := mesh.get_active_material(surface)
+			if material is StandardMaterial3D and bool(material.get_meta("floor_band_tiled", false)):
+				tiled_bindings += 1
+	var tiled := tiled_bindings > 0
 	_manifest["f38_floor_band_tiled"] = tiled
+	_manifest["f38_floor_band_tiled_bindings"] = tiled_bindings
 	if tiled != bool(requested.get("tile_cropped_band", false)):
 		_failures.append("F38 actual farmhouse floor tiling differs from authored setting")
 		_write_manifest()
