@@ -679,7 +679,8 @@ func _prove_snare(commander: int) -> void:
 		check(not commander_character.is_empty(), "Snare: commander has its actual stable character")
 		var peer := int(owner.peer)
 		check(float(owner.commands.get("meter", -1.0)) == 0.0, "Snare: fresh admitted encounter starts with zero command meter")
-		if not _ok(await step(commander, "op_tonic_hits", {"command_id":"snare"}), "Snare: ordinary quick hits earn the authored cost within eight attempts"): break
+		var hit_slot := "charged" if OS.get_cmdline_user_args().has("--charged-command-hits") else "quick"
+		if not _ok(await step(commander, "op_tonic_hits", {"command_id":"snare", "slot":hit_slot}), "Snare: ordinary %s hits earn the authored cost within eight attempts" % hit_slot): break
 		var args := {"peer":peer, "character_id":commander_character, "request":{}, "snare":true}
 		var before: Dictionary = await probe(0, "op_tag_state", args)
 		var cost := float(preload("res://scripts/combat/tether_commands.gd").config().commands.snare.cost)

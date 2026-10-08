@@ -518,6 +518,8 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var director: Node = _encounter_director()
 			var manager: Node = _combat_manager()
 			var command := str(args.get("command_id", "item_throw"))
+			var slot := str(args.get("slot", "quick"))
+			if slot not in ["quick", "charged"]: return {"verdict":"FAIL", "detail":"unsupported ordinary command hit slot"}
 			var cost := float(preload("res://scripts/combat/tether_commands.gd").config().commands.get(command, {}).get("cost", INF))
 			if command not in ["item_throw", "snare", "rally"] or not is_finite(cost):
 				return {"verdict":"FAIL", "detail":"unknown authored command cost"}
@@ -566,13 +568,13 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 							"revision":actor.get("revision"), "settled_revision":actor.get("settled_revision")})
 				else:
 					pending["host_actor_vitals"] = "unavailable: remote host"
-				var observation: Dictionary = {"attempt":hit + 1, "pending_before_input":pending,
+				var observation: Dictionary = {"attempt":hit + 1, "slot":slot, "pending_before_input":pending,
 					"meter_before":float(manager.tether_command_snapshot().get("meter", 0.0)),
 					"foe_hp_before":float(manager.enemy().hp) if manager.enemy() != null else -1.0,
 					"refusal_before":(manager.get("last_encounter_refusal") as Dictionary).duplicate(true)}
 				attempts.append(observation)
 				print("TONIC_PRE_STRIKE " + JSON.stringify(observation))
-				var strike: Dictionary = await _step_strike({"facing":[0,0,-1], "settle":90})
+				var strike: Dictionary = await _step_strike({"slot":slot, "facing":[0,0,-1], "settle":90})
 				var strike_data: Dictionary = strike.get("data", {})
 				observation["strike"] = {"verdict":str(strike.get("verdict", "")), "reported_ok":strike_data.get("ok"),
 					"code":str(strike_data.get("code", "")), "submitted_action":strike_data.get("submitted_action")}
@@ -586,7 +588,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 					return strike
 			if float(manager.tether_command_snapshot().get("meter", 0.0)) < cost:
 				print("COMMAND precast observation: ", JSON.stringify({"command":command, "cost":cost, "attempts":attempts}))
-				return {"verdict":"FAIL", "detail":"eight accepted quick attempts did not earn %s meter (%s required)" % [command, cost],
+				return {"verdict":"FAIL", "detail":"eight accepted %s attempts did not earn %s meter (%s required)" % [slot, command, cost],
 					"data":{"command":command, "cost":cost, "attempts":attempts}}
 			var hud: Node = director.get_parent().get_node_or_null("CombatHUD")
 			var view: Dictionary = manager.new_system_combat_snapshot()
