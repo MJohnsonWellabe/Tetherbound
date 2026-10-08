@@ -450,6 +450,7 @@ func new_system_combat_snapshot() -> Dictionary:
 			"name":_moves.display_name(move_id) if _moves.has(move_id) else "No " + slot,
 			"ready":quick_ready() if slot == "quick" else (charged_ready() if slot == "charged" else utility_ready()),
 			"cooldown_remaining_s":maxf(0.0, remaining), "cooldown_total_s":float(move.get("cooldown", 0.0))}
+		if slot == "utility": slots[slot]["wind_cost"] = float(move.get("wind_cost", 24.0))
 	slots["dodge"] = {"glyph":glyphs.action_name("jump"), "name":"Dodge",
 		"ready":not player_is_committed() and wind_value() >= wind_cost("burst")}
 	var maximum := float(MATH.config().ultimate.maximum)

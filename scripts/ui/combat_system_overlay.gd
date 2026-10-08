@@ -161,6 +161,7 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 		var row: Dictionary = raw.slots[slot]
 		var label: Label = _cells[slot].title
 		label.text = "%s %s%s" % [row.glyph, row.name, "" if row.ready else " · Unavailable"]
+		if slot == "utility": label.text += "\nWind %s" % float(row.get("wind_cost", 24.0))
 		label.add_theme_color_override("font_color", TOKENS.TEAL_SOFT if row.ready else TOKENS.TEXT_SECONDARY)
 		var cooldown: ProgressBar = _cells[slot].cooldown
 		var total := float(row.get("cooldown_total_s", 0))

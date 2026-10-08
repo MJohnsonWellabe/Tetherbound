@@ -352,6 +352,11 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				return {"verdict":"FAIL", "detail":"Current owned charged move has no energy gate"}
 			var charged_cost := float(moves.move(charged_id).get("energy_cost", 100.0))
 			var energy := float(active.get("energy"))
+			var utility_id := str(active.get("move_utility"))
+			if not moves.has(utility_id): return {"verdict":"FAIL", "detail":"Current owned utility has no authored wind cost"}
+			var utility_cost := float(moves.move(utility_id).get("wind_cost", 24.0))
+			if not is_equal_approx(float(view.slots.utility.get("wind_cost", -1.0)), utility_cost):
+				return {"verdict":"FAIL", "detail":"Utility HUD cost differs from authored current owned move"}
 			if not energy_gate.is_visible_in_tree() or not is_equal_approx(energy_gate.max_value, charged_cost) \
 				or not is_equal_approx(energy_gate.value, clampf(energy, 0.0, charged_cost)):
 				return {"verdict":"FAIL", "detail":"Charged energy gate differs from current owned creature resource"}
@@ -372,6 +377,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				"charged_gate_value":energy_gate.value, "charged_gate_maximum":energy_gate.max_value,
 				"region_rects":region_rects,
 				"legacy_ultimate_visible":legacy_readout.is_visible_in_tree() or legacy_meter.is_visible_in_tree(),
+				"utility_wind_cost":utility_cost,
 				"frame":Engine.get_process_frames(), "physics_frame":Engine.get_physics_frames(),
 				"viewport":[root.size.x, root.size.y], "renderer":RenderingServer.get_current_rendering_method(),
 				"preset":graphics.selected(), "graphics":graphics.values(), "ring_fraction":float(ring.get("fraction")),
