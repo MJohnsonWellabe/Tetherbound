@@ -4,6 +4,9 @@ extends "res://tests/helpers/meadows_earned_relay_segment.gd"
 ## is not called: only its physical prompt, care, walking and combat observers
 ## are reused. Warden combat, riding and the legendary choice are later work.
 const HALL_CONFIG := "res://data/config/stronghold.json"
+const MATERIAL_GATHER := preload("res://tests/helpers/meadows_earned_material_segment.gd")
+const HOME_TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
+const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const CAPTAIN_IDS := ["captain_riverwatch", "captain_field", "captain_ridge"]
 const SIGILS := ["field_sigil", "ridge_sigil", "river_sigil"]
 const HALL_FLAGS := ["defeated_stronghold_patrol", "defeated_stronghold_courtyard", "defeated_stronghold_elite"]
@@ -454,12 +457,135 @@ func _earn_master_t1() -> bool:
 		"win": win, "chest": claim, "candy_before": candy_before, "candy_after": _count("tether_candy"),
 		"party_uids": uids, "caps_unchanged": true})
 	finish.call("")
+	# The learned recipe is only the beginning of a breakthrough. Fund the
+	# actual home stations and one matching feast with ordinary gathering.
+	# Cooking, feeding and chosen training remain separate production steps.
+	if not await _gather_first_feast_stock(band2, rim, quarry_join, master_join):
+		return false
 	route.reverse()
 	for point: Vector2 in route:
 		if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M,
 				OVERLOOK_BYPASS, _v2p(), point) or not await _walk_ground(point):
 			return false
 	return await _walk_ground(departure, 0.6)
+
+
+func _gather_first_feast_stock(band2: Array[Vector2], rim: Array[Vector2],
+		quarry_join: int, master_join: int) -> bool:
+	var inventory: RefCounted = _game.get("inventory")
+	var personal: Dictionary = _game.get("local").get("redesign_character")
+	if inventory == null or bool(_game.get("free_build")) \
+			or personal.get("feast_recipes", []).count("feast_t1") != 1:
+		return _fail("Earned feast materials require the actual learned recipe and paid inventory")
+	var needed := {}
+	for id: String in ["forge", "kitchen", "altar", "kitchen_meadows"]:
+		var costs: Array = _game.call("build_cost_for", id)
+		if costs.is_empty():
+			return _fail("The actual homestead catalogue has no paid cost for " + id)
+		for cost: Dictionary in costs:
+			var item := str(cost.get("id", ""))
+			var amount := int(cost.get("n", 0))
+			if item.is_empty() or amount <= 0:
+				return _fail("The homestead catalogue exposes an invalid material cost")
+			needed[item] = int(needed.get(item, 0)) + amount
+	var refining: Dictionary = _read("res://data/recipes/recipes_forge.json").get("recipes", {}).get("rootiron_ingot", {})
+	var output: Dictionary = refining.get("output", {})
+	if str(output.get("id", "")) != "rootiron_ingot" or int(output.get("n", 0)) <= 0 \
+			or int(needed.get("rootiron_ingot", 0)) <= 0:
+		return _fail("The Kitchen attachment lacks its real intermediate refining recipe")
+	var units := ceili(float(needed.rootiron_ingot) / float(output.n))
+	needed.erase("rootiron_ingot")
+	for cost: Dictionary in refining.get("cost", []):
+		var item := str(cost.get("id", ""))
+		if item.is_empty() or int(cost.get("n", 0)) <= 0:
+			return _fail("The refining recipe has an invalid paid input")
+		needed[item] = int(needed.get(item, 0)) + units * int(cost.n)
+	var feast: Dictionary = BREAKTHROUGH.feasts().get("recipes", {}).get("feast_t1_ground", {})
+	if feast.get("feast_id") != "feast_t1" or feast.get("attuned_type") != "ground" \
+			or feast.get("station_id") != "kitchen" or int(feast.get("station_tier", 0)) != 1:
+		return _fail("The learned first Ground feast lacks its actual Kitchen recipe")
+	for item: String in feast.get("cost", {}):
+		var amount := int(feast.cost[item])
+		if amount <= 0:
+			return _fail("The Ground feast has an invalid paid input")
+		needed[item] = int(needed.get(item, 0)) + amount
+	var attuned_required := int(needed.get("attuned_ground", 0))
+	var attuned_before := _count("attuned_ground")
+	var node_spec := {}
+	for row: Dictionary in _read("res://data/config/essence_nodes.json").get("nodes", []):
+		if row.get("id") == "essence_meadows_ground_01":
+			node_spec = row
+	if node_spec.get("item") != "essence_ground" or node_spec.get("realm") != "meadows" \
+			or int(node_spec.get("outputs", {}).get("attuned_ground", 0)) <= 0 \
+			or int(node_spec.get("outputs", {}).get("essence_ground", 0)) <= 0:
+		return _fail("The actual Ground source does not expose both primary essence and attuned yield")
+	needed.erase("attuned_ground")
+	if attuned_before < attuned_required:
+		var harvests := ceili(float(attuned_required - attuned_before) / float(node_spec.outputs.attuned_ground))
+		needed["essence_ground"] = _count("essence_ground") + harvests * int(node_spec.outputs.essence_ground)
+	var retained: Array[String] = []
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		retained.append(str(member.get("uid")))
+	var cid := str(_game.get("local").get("character_id"))
+	_nav.reset()
+	_unhook()
+	var home := HOME_TRAVEL.new(_tree, _game)
+	if not await home._with_navigation_lessons(Callable(home, "home_key")):
+		return _fail("The ordinary Master-to-homestead Home Key return failed: " + str(home.failures))
+	_collect(_tree.current_scene)
+	var after: Array[String] = []
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		after.append(str(member.get("uid")))
+	if after != retained or str(_game.get("local").get("character_id")) != cid \
+			or after.size() != 5 or _player == null or _rig == null:
+		return _fail("The actual homestead return changed its stable character or original five")
+	_initial_ids = _party_ids()
+	_hook()
+	var house := _world.find_child("GrandpaHouse", true, false)
+	if house == null or not house.has_method("marker"):
+		return _fail("The actual farmhouse has no authored exterior marker")
+	var door: Vector3 = house.call("marker", "door")
+	var inside: Vector3 = house.call("marker", "inside")
+	if door.distance_to(inside) <= 0.1:
+		return _fail("The farmhouse exterior direction is undefined")
+	var exterior := door + (door - inside).normalized() * 2.0
+	var gather := MATERIAL_GATHER.new()
+	var observation := {}
+	var gather_step := func() -> bool:
+		var actual: Dictionary = await gather.run(_tree, _world, _game, _player, _rig, false,
+			needed, Vector2(exterior.x, exterior.z))
+		observation["gathering"] = actual
+		return bool(actual.get("passed", false))
+	var gathered: bool = await home._with_navigation_lessons(gather_step)
+	var result: Dictionary = observation.get("gathering", {})
+	if not gathered or _count("attuned_ground") < attuned_required:
+		return _fail("The paid feast bill lacks actual harvests or secondary attuned yield: " + str(result))
+	for item: String in needed:
+		if _count(item) < int(needed[item]):
+			return _fail("The gathered homestead bill no longer covers " + item)
+	_receipt("first_feast_stock_gathered", {"character_id": cid, "party_uids": retained,
+		"needed": needed, "refining_units": units, "attuned_before": attuned_before,
+		"attuned_after": _count("attuned_ground"), "gathering": result,
+		"stations_built": false, "feast_cooked": false, "cap_lifted": false})
+	# Return by the existing earned roads, including the already-open Bridge;
+	# the Home Key never poses the trainer back at the Master or Mill.
+	var first := trail_points(_read(TERRAIN), "bands", "band1_lower_meadows")
+	if first.is_empty() or quarry_join < 0 or master_join < 0:
+		return _fail("The ordinary homestead departure lacks its authored return spine")
+	if not await gather._walk_target(Vector3(first[0].x,
+		float(_world.call("ground_height_at", first[0].x, first[0].y)), first[0].y),
+		gather._travel_budget(Vector3(first[0].x, _player.global_position.y, first[0].y))):
+		return _fail("The ordinary farmhouse departure could not reach its authored road through open gates")
+	for point: Vector2 in first.slice(1):
+		if not await _walk_ground(point):
+			return false
+	for index in range(1, quarry_join + 1):
+		if not await _walk_ground(band2[index]):
+			return false
+	for index in range(master_join + 1):
+		if not await _walk_ground(rim[index]):
+			return false
+	return true
 
 
 func _walk_marker(id: String, budget: int) -> bool:
