@@ -103,5 +103,12 @@
     "behavior_verdict": "BEHAVIOR FAIL 37809123925",
     "summary": "5 rounds, 4 wins/kills, 95 hits; all five fainted; 43 taps, zero observed accepted Bursts. Missing per-tap operands prevent distinguishing unread input, refusal or observer failure. Readiness precedes an extra physics frame; no cause established. No accepted handoff.",
     "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-warden-burst-terminal-r3.txt"
+  },
+  "source_restoration_review": {
+    "reviewer": "Original b_f49_review Bacon",
+    "verdict": "SOURCE RESTORATION APPROVE",
+    "source": "194c536dbd7b9557d050af94aeb9a03d7f89bca2",
+    "comparison": "Both modified helpers byte-identical to pre-Burst dadc2304ceb0391e9d27c1b15a3a031f007e54b5; failed candidate and receipts retained. No behavior PASS.",
+    "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-restoration-and-next-f46-r1.txt"
   }
 }
