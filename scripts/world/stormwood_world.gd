@@ -329,14 +329,21 @@ func _stand_up_ground_cover() -> void:
 	var cover := GROUND_COVER.new()
 	cover.name = "StormwoodGroundCover"
 	var finish: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_ground_finish.json"))
-	if bool(finish.get("enabled", false)):
+	var full_profile := bool(finish.get("enabled", false))
+	var understory: Dictionary = finish.get("understory_readability", {})
+	var low_shrubs := bool(understory.get("enabled", false))
+	if full_profile or low_shrubs:
 		var profile: Dictionary = GROUND_COVER.config().duplicate(true)
-		for key: String in finish.get("grass", {}):
-			profile[key] = finish.grass[key]
+		if full_profile:
+			for key: String in finish.get("grass", {}):
+				profile[key] = finish.grass[key]
 		for tier: Dictionary in profile.get("cover_tiers", []):
-			var overrides: Dictionary = finish.get("tiers", {}).get(str(tier.get("name", "")), {})
-			for key: String in overrides:
-				tier[key] = overrides[key]
+			if full_profile:
+				var overrides: Dictionary = finish.get("tiers", {}).get(str(tier.get("name", "")), {})
+				for key: String in overrides:
+					tier[key] = overrides[key]
+			if low_shrubs and str(tier.get("name", "")) == "bushes":
+				tier["item_size"] = float(understory.get("bush_item_size", 0.42))
 		var textures: Array = []
 		var terrain_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
 		for texture: Dictionary in terrain_config.textures:
@@ -387,6 +394,9 @@ func _model(parent: Node3D,path: String,at: Vector3,scale_factor: float,yaw: flo
 
 func _apply_ground_materials(budget: RefCounted) -> void:
 	var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+	var finish: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_ground_finish.json"))
+	var ground: Dictionary = finish.get("terrain_materials", {})
+	var overrides: Dictionary = ground.get("textures", {}) if bool(ground.get("enabled", false)) else {}
 	var assets: Object = ClassDB.instantiate("Terrain3DAssets")
 	var i := 0
 	for entry: Dictionary in source.textures:
@@ -395,9 +405,10 @@ func _apply_ground_materials(budget: RefCounted) -> void:
 		texture.set("name",str(entry.name))
 		texture.set("albedo_texture",load(str(entry.albedo)))
 		texture.set("normal_texture",load(str(entry.normal)))
-		texture.set("normal_depth",0.25)
-		texture.set("uv_scale",float(entry.get("uv_scale",0.1)))
-		texture.set("albedo_color",Color("63887b") if i==0 else Color("737080"))
+		var surface: Dictionary = overrides.get(str(entry.name), {})
+		texture.set("normal_depth",float(surface.get("normal_depth",0.25)))
+		texture.set("uv_scale",float(surface.get("uv_scale",entry.get("uv_scale",0.1))))
+		texture.set("albedo_color",Color(str(surface.tint)) if surface.has("tint") else (Color("63887b") if i==0 else Color("737080")))
 		assets.call("set_texture",i,texture)
 		i += 1
 		_build_note("texture %d"%i)

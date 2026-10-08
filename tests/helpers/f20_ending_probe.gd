@@ -18,7 +18,9 @@ var continuation_content_entered := false
 ## Hosted screenshots stay in the run artifact for independent visual review.
 func capture(tree: SceneTree, label: String, frame_ready: Callable = Callable()) -> bool:
 	if not OS.get_cmdline_user_args().has("--capture-ending") and not OS.get_cmdline_user_args().has("--capture-order-ui") \
-		and not (OS.get_cmdline_user_args().has("--capture-lessons") and label.begins_with("lesson-")): return true
+		and not (OS.get_cmdline_user_args().has("--capture-lessons") and label.begins_with("lesson-")) \
+		and not (OS.get_cmdline_user_args().has("--capture-surface") and label.begins_with("ripplet-surface-")) \
+		and not (OS.get_cmdline_user_args().has("--capture-dive") and label.begins_with("ripplet-dive-")): return true
 	# Explicit functional offload may draw this guarded lesson frame only. The
 	# original capture still observes a real completed native draw; ordinary
 	# physics, input and lesson state continue, and continuous drawing is restored.

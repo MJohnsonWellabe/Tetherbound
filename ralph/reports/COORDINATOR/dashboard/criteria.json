@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-08T04:24:10.890750+00:00",
- "main_sha": "49654a6fc (PR #582)",
+ "generated_at": "2026-10-08T06:24:02.637757+00:00",
+ "main_sha": "a46d70ce3 (PR #583)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -707,10 +707,10 @@
     },
     {
      "text": "Forest, rod line and restored-sky views pass visual matrix / Bars A/B",
-     "status": "failing",
-     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F10-4/VERDICT.md",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-e cd09de0814 (READY #572, 11:25 PM CT 10-07): changed 8/8 run 37725671536, logic 54/0, area 105/0, judge PASS whole Low matrix; review APPROVE",
      "gap": "Re-capture Deepwood, rod line and aftermath matrix; code-blind judge against the new §4 bar Folds into F41#3, F41#4.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "note": "Landed: Evidenced on tb/codex-e cd09de0814 (READY #572, 11:25 PM CT 10-07): changed 8/8 run 37725671536, logic 54/0, area 105/0, judge PASS whole Low matrix; review APPROVE",
      "audit_index": 4
     },
     {
@@ -2354,18 +2354,18 @@
    "criteria": [
     {
      "text": "An owned Ripplet can be ridden as a surface swimmer from Tidewake's opening, faster than human swimming and able to cross currents.",
-     "status": "not_started",
-     "evidence": "ripplet_traversal.json (6.0 vs 3.8 m/s); tests/smoke_f37_ripplet.gd (not in CI, unrun)",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-b c65d068470 (READY #572, 11:34 PM CT 10-07): run 37727411588 15+3 checks, owned dry-to-dry currents, judge PASS; review APPROVE",
      "gap": "Wire and run smoke_f37_ripplet.gd in CI. Add an ordinary-input witness from the Tidewake opening comparing speed and current crossing against a human swimmer.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Mechanics are live, but no CI test checks the speed, the current crossing, or the mount at the opening.",
+     "note": "Landed: Evidenced on tb/codex-b c65d068470 (READY #572, 11:34 PM CT 10-07): run 37727411588 15+3 checks, owned dry-to-dry currents, judge PASS; review APPROVE",
      "audit_index": 0
     },
     {
      "text": "At the L30 breakthrough Ripplet gains Dive, reaching sunken caches, nodes and hidden optional routes.",
-     "status": "not_started",
-     "evidence": "test_f37_ripplet_traversal.gd (gate, cache/node claims; CI unit)",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-b fe2642cab5 (READY #572, 12:29 AM CT 10-08): run 37731553596 13 checks, logic 77 run 37729891287, judge PASS Dive; review APPROVE",
      "gap": "Add an engine smoke for diving to each sunken site and route corridor after the actual feast. A pre-breakthrough attempt must be refused.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The unit tests cover the L30 gate and cache/node claims. Physically reaching sites and optional dive routes is not tested.",
+     "note": "Landed: Evidenced on tb/codex-b fe2642cab5 (READY #572, 12:29 AM CT 10-08): run 37731553596 13 checks, logic 77 run 37729891287, judge PASS Dive; review APPROVE",
      "audit_index": 1
     },
     {
@@ -2884,9 +2884,9 @@
     {
      "text": "No stacked modals; every prompt uses input_owner.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-c 7b71cc7dbe (READY #572 6050871000, 9:21 PM CT 10-07): 8 lesson exchanges PASS run 37636734289, 65 tests run 37637398666, judge PASS; review APPROVE",
+     "evidence": "PR #583 (consolidation 8) merged 2026-10-07 11:48 PM CT: from tb/codex-c 7b71cc7dbe (READY #572 6050871000, 9:21 PM CT 10-07): 8 lesson exchanges PASS run 37636734289, 65 tests run 37637398666, judge PASS; review APPROVE",
      "gap": "Add a lesson-panel case to smoke_modal_stacking (Altar/Masters lesson during combat/dialogue/menu).",
-     "note": "Landed: Evidenced on tb/codex-c 7b71cc7dbe (READY #572 6050871000, 9:21 PM CT 10-07): 8 lesson exchanges PASS run 37636734289, 65 tests run 37637398666, judge PASS; review APPROVE",
+     "note": "Landed: PR #583 (consolidation 8) merged 2026-10-07 11:48 PM CT: from tb/codex-c 7b71cc7dbe (READY #572 6050871000, 9:21 PM CT 10-07): 8 lesson exchanges PASS run 37636734289, 65 tests run 37637398666, judge PASS; review APPROVE",
      "audit_index": 2
     }
    ]

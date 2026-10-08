@@ -14,6 +14,9 @@ uniform float core_energy = 1.6;
 uniform float edge_energy = 0.55;
 uniform float vein_scale = 1.0;
 uniform float vein_width = 0.09;
+// Presentation-only halo/web strength; legacy values are preserved when the finish is off.
+uniform float vein_glow = 0.3;
+uniform float web_energy = 0.5;
 uniform float vein_breakup = 0.42;
 uniform float vein_lane_offset = 0.5;
 uniform float vein_wander = 0.12;
@@ -93,7 +96,7 @@ vec2 vein(float u, float v, float seed) {
 	float d = abs(v - centre - jag);
 	float width = vein_width * (0.55 + 0.9 * noise1(u * 0.8 + seed * 3.0));
 	float line = 1.0 - smoothstep(width * 0.3, width, d);
-	float glow = exp(-d * d / (width * width * 10.0)) * 0.3;
+	float glow = exp(-d * d / (width * width * 10.0)) * vein_glow;
 	float runs = smoothstep(vein_breakup - 0.08, vein_breakup + 0.08, noise1(u * 0.07 * vein_scale + seed * 53.0));
 	return vec2((line + glow) * runs, d);
 }
@@ -139,7 +142,7 @@ void fragment() {
 		float near = 1.0 - smoothstep(spur_near_m * 0.5, spur_near_m, UV2.y);
 		float spur_w = vein_width * 1.6 * mix(1.0, spur_near_width, near);
 		float spur_line = 1.0 - smoothstep(spur_w * 0.3, spur_w, spur_d);
-		float spur_glow = exp(-spur_d * spur_d / (spur_w * spur_w * 10.0)) * 0.3;
+		float spur_glow = exp(-spur_d * spur_d / (spur_w * spur_w * 10.0)) * vein_glow;
 		float spur_charge = (spur_line + spur_glow) * (0.5 + 1.2 * pulse_at(u - spur_d * 6.0, 1.0));
 		float spur_in = smoothstep(spur_start_m, spur_start_m + spur_fade_m, UV2.y);
 		ALBEDO = COLOR.rgb * mix(spur_energy, spur_near_energy, near) * spur_charge * feather * storm_intensity * distance_fade_all * spur_in;
@@ -157,7 +160,7 @@ void fragment() {
 		charge = max(charge, crack.x * (0.45 + 1.6 * pulse));
 	}
 	float web = 1.0 - abs(noise2(vec2(u * 0.9, v * 2.4) * vein_scale) * 2.0 - 1.0);
-	web = pow(web, 9.0) * 0.5 * smoothstep(0.45, 0.6, noise2(vec2(u * 0.23, v + 7.0)));
+	web = pow(web, 9.0) * web_energy * smoothstep(0.45, 0.6, noise2(vec2(u * 0.23, v + 7.0)));
 	charge += web * (0.35 + 0.8 * pulse_at(u, 4.0));
 	float crackle = 1.0 - flicker * step(0.72, hash21(vec2(floor(u * 0.5), floor((clock_override >= 0.0 ? clock_override : TIME) * 14.0))));
 	charge *= crackle;

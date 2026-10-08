@@ -1,7 +1,8 @@
 {
- "updated": "2026-10-08T04:40Z",
+ "updated": "2026-10-08T06:35Z",
  "headline": [
-  "11:40 PM CT Wed 07 Oct: 154 criteria met, 153 on main and F46#2 in consolidation 8.",
+  "1:35 AM CT Thu 08 Oct: 157 criteria met, 154 on main and 3 in consolidation 9 (F10#4, F37#0, F37#1).",
+  "11:10 PM–1:10 AM CT: 3 whole criteria (E F10#4, B F37#0, F37#1); lanes A, C, D none since 9:10 PM; 13 QUESTIONs despite the rule.",
   "Restored the 3:10–5:10 PM process at 10:50 PM CT: no QUESTIONs, READY = one whole criterion, criterion-only visuals, smallest closable first, park after 2 hours.",
   "Held: F43#0–#3 with the CI-FLAKE fence and shared-fence repairs (forward_camp still open; catch and party-count test fixes and 5e9e121a8 outside the scope), F48#2, F31#2, F02#0/#1.",
   "9:10–11:10 PM CT: lanes A, B, D and E posted no whole-criterion READYs; lane C re-READYed F46#2 and F43."
@@ -476,10 +477,16 @@
    "contents": "F26#0, F20#2, F10#3 plus F42#0 pieces, F24#2 repair, F08#2, F26#1 receipt."
   },
   {
-   "name": "Consolidation 8",
+   "name": "Consolidation 8 (PR #583)",
+   "sha": "",
+   "state": "Merged 10-07 11:48 PM CT",
+   "contents": "F46#2 modal ownership and the Meshy ledger snapshot. Met 154."
+  },
+  {
+   "name": "Consolidation 9",
    "sha": "",
    "state": "CI running",
-   "contents": "F46#2 modal ownership and the Meshy ledger snapshot."
+   "contents": "F10#4 Stormwood ground/road finish, F37#0 Ripplet currents, F37#1 Ripplet Dive."
   }
  ],
  "lanes": [
