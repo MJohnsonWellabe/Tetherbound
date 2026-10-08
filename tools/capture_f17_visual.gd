@@ -14,6 +14,9 @@ var _captured_companion: Node3D
 var _captured_member: RefCounted
 var _companion_required := false
 var _farm_diagnostic_only := false
+var _hall_stills_only := false
+var _hall_stills_finished := false
+const HALL_STILL_LABELS: Array[String] = ["inside Hall nave", "pedestal meadows", "companion in Shrine Room"]
 var _expected_resolution := Vector2i(1920, 1080)
 
 
@@ -29,6 +32,8 @@ func _run() -> void:
 			_paired_high = true
 		elif argument == "--farm-diagnostic-only":
 			_farm_diagnostic_only = true
+		elif argument == "--hall-stills-only":
+			_hall_stills_only = true
 		elif argument.begins_with("--expected-resolution="):
 			var dimensions := argument.trim_prefix("--expected-resolution=").split("x")
 			_expected_resolution = Vector2i(int(dimensions[0]), int(dimensions[1])) if dimensions.size() == 2 else Vector2i.ZERO
@@ -39,6 +44,7 @@ func _run() -> void:
 	# the initialized native window before checking its CLI-requested raster.
 	await process_frame
 	if DisplayServer.get_name() == "headless" or not GRAPHICS.PRESETS.has(_preset) \
+			or (_farm_diagnostic_only and _hall_stills_only) \
 			or (_paired_high and _preset != "Medium") \
 			or (_expected_resolution != Vector2i(1920, 1080) and not (_preset == "Low" and _expected_resolution == Vector2i(1280, 720))) \
 			or RenderingServer.get_current_rendering_method() != renderer \
@@ -65,6 +71,9 @@ func _run() -> void:
 
 
 func _capture(label: String) -> void:
+	if _hall_stills_only and label not in HALL_STILL_LABELS:
+		_release_all()
+		return
 	await _capture_matrix(label)
 	if not _failed.is_empty():
 		# Preserve the first capture failure before the inherited walk can
@@ -280,6 +289,20 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 	if not _failed.is_empty():
 		_write_manifest(false)
 		return false
+	if _hall_stills_only:
+		for expected_label: String in HALL_STILL_LABELS:
+			var count := 0
+			for view: Dictionary in _views:
+				if str(view.label) == expected_label:
+					count += 1
+			if count != 4 * _capture_presets().size():
+				_failed = "bounded Hall still matrix incomplete: " + expected_label
+				_write_manifest(false)
+				return false
+		_hall_stills_finished = true
+		_write_manifest(false)
+		print("F17 bounded Hall stills: physical8+8 and recall retained; selected3labels complete; no full visual matrix/motion claim")
+		return _failed.is_empty()
 	# Observe thirty wall-clock seconds of the live interior without disabling
 	# rendering or advancing the clock. Original frames retain HUD and actors.
 	var weather := _world.get_node("WorldWeather")
@@ -319,12 +342,13 @@ func _write_manifest(complete: bool) -> void:
 	if file == null:
 		_failed = "could not save visual manifest"
 		return
-	file.store_string(JSON.stringify({"source": _source, "complete": complete and not _farm_diagnostic_only,
+	file.store_string(JSON.stringify({"source": _source, "complete": complete and not _farm_diagnostic_only and not _hall_stills_only,
 		"presets": _capture_presets(), "renderer": RenderingServer.get_current_rendering_method(),
 		"resolution": [_expected_resolution.x, _expected_resolution.y], "views": _views, "failure": _failed,
 		"shortcuts": ["inherited post-opening flags and starter", "one inherited initial farmhouse placement", "injected physical joypad bindings including ordinary companion recall", "production frozen day/night and selected clear/rain weather; weather scheduler held only for stationary capture", "separately marked farmhouse-light-off diagnostic restores all original light energies; excluded from acceptance"],
 		"diagnostic_only": _farm_diagnostic_only,
-		"scope": "partial farm-door light diagnostic only; no Hall circuit, motion or acceptance claim" if _farm_diagnostic_only else "physical village/Hall circuit and native views; independent visual verdict required; no earned opening, device, fight or multiplayer proof"}, "\t") + "\n")
+		"hall_stills_only": _hall_stills_only, "hall_stills_finished": _hall_stills_finished,
+		"scope": "partial farm-door light diagnostic only; no Hall circuit, motion or acceptance claim" if _farm_diagnostic_only else "bounded3existing Hall still labels with physical8+8/recall; no full visual matrix/motion/wholecriterion claim" if _hall_stills_only else "physical village/Hall circuit and native views; independent visual verdict required; no earned opening, device, fight or multiplayer proof"}, "\t") + "\n")
 	file.flush()
 	var write_error := file.get_error()
 	file.close()
