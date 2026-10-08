@@ -32,6 +32,7 @@ var _player: Node3D
 var _command_tier_proof := false
 var _command_config_before: Dictionary = {}
 var _actor_vitals_before: Dictionary = {}
+var _gear_label_capture := ""
 
 
 func _init() -> void:
@@ -40,6 +41,38 @@ func _init() -> void:
 
 func _run() -> void:
 	_command_tier_proof = OS.get_cmdline_user_args().has("--prove-command-tier")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--gear-label-capture="):
+			var output := arg.trim_prefix("--gear-label-capture=")
+			if not _gear_label_capture.is_empty() or output.is_empty() or not output.is_absolute_path() \
+					or DirAccess.dir_exists_absolute(output) or FileAccess.file_exists(output) \
+					or DisplayServer.get_name() == "headless" or _command_tier_proof:
+				_fail("gear label capture needs one fresh absolute native output and no command-tier mode")
+				_report()
+				return
+			_gear_label_capture = output
+	if not _gear_label_capture.is_empty():
+		await process_frame
+		var game := root.get_node("Game")
+		var session: Node = game.get("session")
+		var party: RefCounted = game.get("party")
+		if session == null or session.call("is_active") == true or party.call("size") != 0:
+			_fail("gear label stock requires a fresh character before admission")
+			_report()
+			return
+		# Visual/mechanics setup only, never caught or earned campaign credit.
+		for species: String in ["terrapup", "bramblebun", "bramblebun", "mudsnout", "mosshell"]:
+			var creature := preload("res://scripts/creatures/creature_species.gd").spawn(species)
+			if species == "mosshell": creature.set("nickname", "Pip")
+			if party.call("add", creature) != true:
+				_fail("five-card gear-label fixture was refused")
+				_report()
+				return
+		for item: String in ["rootiron_harness", "rootiron_charm"]:
+			if game.get("inventory").call("add", item, 1) != 0:
+				_fail("carried gear-label stock did not fit")
+				_report()
+				return
 	if _command_tier_proof:
 		await process_frame
 		var game := root.get_node("Game")
@@ -313,9 +346,62 @@ func _check_remaining_stations_place() -> void:
 			continue
 		_player.global_position = cell + GHOST_TO_STANCE
 		for i in 10: await physics_frame
-		if await _check_paid_station_place(id) != null:
+		var placed := await _check_paid_station_place(id)
+		if placed != null:
 			await _press("build_cancel")
 			for i in 6: await physics_frame
+			if id == "den" and not _gear_label_capture.is_empty():
+				placed.call("_open")
+				var panel: Node = placed.get("_panel")
+				if panel == null:
+					_fail("actual paid Den has no mounted gear panel")
+					return
+				var view := {}
+				for frame in 240:
+					view = panel.call("_station_view")
+					if (view.get("party", []) as Array).size() == 5 and not panel.call("_gear_context", view).is_empty(): break
+					await physics_frame
+				var cards: Array = view.get("party", [])
+				if cards.size() != 5 or panel.call("is_open") != true \
+						or panel.get("_station") != placed or panel.get("_producer") != _game.get("session") \
+						or panel.call("_gear_context", view).is_empty() \
+						or preload("res://scripts/ui/input_owner.gd").current(self) != panel:
+					_fail("gear labels require the actual five-card paid Den/current Session/input owner")
+					return
+				if DirAccess.make_dir_recursive_absolute(_gear_label_capture) != OK:
+					_fail("fresh gear-label output could not be created")
+					return
+				var saved_size := root.size
+				for size: Vector2i in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+					root.size = size
+					root.content_scale_size = Vector2i.ZERO
+					for frame in 20: await process_frame
+					for index: int in cards.size():
+						var card: Dictionary = cards[index]
+						for slot: String in ["harness", "charm"]:
+							var key := JSON.stringify(["gear", "equip", str(card.uid), slot, "rootiron_" + slot])
+							var matches: Array[Button] = []
+							for button: Button in panel.get("_station_buttons"):
+								if button.get_meta("station_focus_key", "") == key and not button.disabled: matches.append(button)
+							if matches.size() != 1:
+								_fail("exact actual owned gear control unavailable: " + key)
+								panel.call("close")
+								return
+							matches[0].grab_focus()
+							for frame in 8: await process_frame
+							if root.gui_get_focus_owner() != matches[0] or panel.get("_station") != placed \
+									or preload("res://scripts/ui/input_owner.gd").current(self) != panel:
+								_fail("actual gear focus/context changed before native capture")
+								panel.call("close")
+								return
+							await RenderingServer.frame_post_draw
+							var path := _gear_label_capture.path_join("panel_%dx%d_%d_%s.png" % [size.x, size.y, index + 1, slot])
+							if root.get_texture().get_image().save_png(path) != OK: _fail("native gear frame write failed")
+							print("GEAR_LABEL_NATIVE ", JSON.stringify({"path": path, "character_id": view.get("character_id"),
+								"creature_uid": card.uid, "station_uid": placed.get_meta("building_uid", ""),
+								"focus_key": key, "text": matches[0].text, "fixture": "pre-admission cards/carried gear; paid Den"}))
+				root.size = saved_size
+				panel.call("close")
 
 
 ## The first open, level homestead cell (by the placer's own legality) along
