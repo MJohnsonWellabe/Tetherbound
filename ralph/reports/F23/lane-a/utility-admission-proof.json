@@ -212,6 +212,47 @@
       "test_f23_live_moves.gd",
       "test_f27_guest_wild_share.gd"
     ],
-    "status": "Affected selectors queued behind single A hosted observer. Mounted canonical wild and shipping admission remain unproved."
+    "status": "Bounded source/affected regression PASS. Canonical wild actual mounting remains gated by actor_vitals.runtime_enabled and wild_victory_runtime_enabled, both unchanged; no shipping/whole F23 claim.",
+    "affected_proof": {
+      "run_id": 37764895753,
+      "artifact_id": 11543997641,
+      "commit": "fbce4af31ae9b22ab61ae0cf1fbd622724c4ce10",
+      "files": [
+        "tests/test_f23_live_moves.gd",
+        "tests/test_f27_guest_wild_share.gd"
+      ],
+      "tests": 27,
+      "assertions": 515,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 8,
+      "errors": 0,
+      "review": "APPROVE original f25_medium_review bounded source and affected regression",
+      "log_sha256": "f2f8189f8525ce0d28835453764e08d3c95112d468d6067c2d4281030f6877f6"
+    }
+  },
+  "mounted_dash_observer_attempt": {
+    "run_id": 37764420479,
+    "artifact_id": 11543787098,
+    "commit": "a5b1db08bfdc7a3160ed90d1f8f978d6cd3c7bf0",
+    "checks": 18,
+    "failed_checks": 2,
+    "result": "FAIL",
+    "collider_instance_id": 341668006146,
+    "target_body_instance_id": 341668006146,
+    "advance_metres": 1.9453125,
+    "stopped_gap_metres": 2.054688,
+    "attacker_radius": 1.365488,
+    "target_radius": 0.66625,
+    "attacker_safe_margin": 0.001,
+    "target_safe_margin": 0.001,
+    "wind_before": 99.5,
+    "wind_after_start": 75.5,
+    "wind_final": 99.5,
+    "foe_hp": 600,
+    "cause": "Exact actual target collision passes all retained sweep bindings and safety, but extra center-gap predicate rejects 2.054688 against radius/margin bound2.033738",
+    "review": "APPROVE original source observer; independent cause confirmed. Runtime FAIL retained.",
+    "log_sha256": "7aa096c0a95daa970c81db7d035c6d1ed0bc53bb82a90ebb3a41e8ab03d77e3b",
+    "stop_rule": "STOP2 BLOCKED572 comment6058050471; supported physical-contact repair QUESTION6058088509 for ROOT rescope. No third unchanged run."
   }
 }
