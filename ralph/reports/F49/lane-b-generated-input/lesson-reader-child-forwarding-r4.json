@@ -234,12 +234,195 @@
     "run": {
       "id": 37819420632,
       "source": "800bfffce1f718a68da27004970db50ba31c8540",
-      "state_at_capture": "LIVE",
+      "state_at_capture": "terminal overallFAIL, scoped savedACKAPPROVE",
       "input_mode": "generated_fixture",
       "prior_earned_play": false,
       "continuous_fresh_save": false,
-      "scope": "New savedACK coverage only; R4 Skip/Help approval reused. Physical TitleLoad/blind/wholeF46 remainseparate, laterproviderguard unchanged, nofailedsaveinput orhandoff."
+      "scope": "New savedACK coverage only; R4 Skip/Help approval reused. Physical TitleLoad/blind/wholeF46 remainseparate, laterproviderguard unchanged, nofailedsaveinput orhandoff.",
+      "artifact_id": 11568633219,
+      "artifact_sha256": "68899206c0fcc702edb13dbd45148de763daa1dc0ea71b5e8a7e37550bee8a59",
+      "log": "ci-generated-tide-key-ack-37819420632.log.gz",
+      "log_sha256": "3177a6265812849f336401e6df3b24b615d8a21d9736fcf8efdf4fa11af7c6dc",
+      "new_saved_ack_witnesses": [
+        {
+          "tag": "F46 LESSON CONTROLLER WITNESS",
+          "lesson": "portals",
+          "passed": true,
+          "saved_ack_passed": true,
+          "bank_load_result": {
+            "code": "ok",
+            "message": "",
+            "ok": true
+          },
+          "personal_ack": true,
+          "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+          "party_uids": [
+            "creature-cf906fd5504c229a431c3b3202c3c2e2",
+            "creature-83d263c517d32cc6cb7beab6925d80c7",
+            "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+            "creature-afbd0d982b14221393f70c29863586a1",
+            "creature-c576f15db4b7f3ecf487a80de0169177"
+          ],
+          "same_character_and_ordered_five": true,
+          "portals_flag_in_saved_character": true,
+          "shrines_flag_in_saved_character": false,
+          "last_played": "2026-10-08T17:53:22",
+          "scope": "Validated production character-bank read only; actual title Load remains separate"
+        },
+        {
+          "tag": "F46 LESSON CONTROLLER WITNESS",
+          "lesson": "shrines",
+          "passed": true,
+          "saved_ack_passed": true,
+          "bank_load_result": {
+            "code": "ok",
+            "message": "",
+            "ok": true
+          },
+          "personal_ack": true,
+          "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+          "party_uids": [
+            "creature-cf906fd5504c229a431c3b3202c3c2e2",
+            "creature-83d263c517d32cc6cb7beab6925d80c7",
+            "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+            "creature-afbd0d982b14221393f70c29863586a1",
+            "creature-c576f15db4b7f3ecf487a80de0169177"
+          ],
+          "same_character_and_ordered_five": true,
+          "portals_flag_in_saved_character": true,
+          "shrines_flag_in_saved_character": true,
+          "last_played": "2026-10-08T17:53:26",
+          "scope": "Validated production character-bank read only; actual title Load remains separate"
+        },
+        {
+          "tag": "F46 LESSON OBSERVATION",
+          "lesson": "portals",
+          "passed": true,
+          "saved_ack_passed": true,
+          "bank_load_result": {
+            "code": "ok",
+            "message": "",
+            "ok": true
+          },
+          "personal_ack": true,
+          "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+          "party_uids": [
+            "creature-cf906fd5504c229a431c3b3202c3c2e2",
+            "creature-83d263c517d32cc6cb7beab6925d80c7",
+            "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+            "creature-afbd0d982b14221393f70c29863586a1",
+            "creature-c576f15db4b7f3ecf487a80de0169177"
+          ],
+          "same_character_and_ordered_five": true,
+          "portals_flag_in_saved_character": true,
+          "shrines_flag_in_saved_character": true,
+          "last_played": "2026-10-08T17:53:26",
+          "scope": "Validated production character-bank read only; actual title Load remains separate"
+        },
+        {
+          "tag": "F46 LESSON OBSERVATION",
+          "lesson": "shrines",
+          "passed": true,
+          "saved_ack_passed": true,
+          "bank_load_result": {
+            "code": "ok",
+            "message": "",
+            "ok": true
+          },
+          "personal_ack": true,
+          "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+          "party_uids": [
+            "creature-cf906fd5504c229a431c3b3202c3c2e2",
+            "creature-83d263c517d32cc6cb7beab6925d80c7",
+            "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+            "creature-afbd0d982b14221393f70c29863586a1",
+            "creature-c576f15db4b7f3ecf487a80de0169177"
+          ],
+          "same_character_and_ordered_five": true,
+          "portals_flag_in_saved_character": true,
+          "shrines_flag_in_saved_character": true,
+          "last_played": "2026-10-08T17:53:26",
+          "scope": "Validated production character-bank read only; actual title Load remains separate"
+        }
+      ],
+      "actual_packets": {
+        "F46 FIRST KEY LESSONS": {
+          "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+          "earned_warden_key_and_relic": false,
+          "input_mode": "generated_fixture",
+          "lessons": [
+            "portals",
+            "shrines"
+          ],
+          "party_uids": [
+            "creature-cf906fd5504c229a431c3b3202c3c2e2",
+            "creature-83d263c517d32cc6cb7beab6925d80c7",
+            "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+            "creature-afbd0d982b14221393f70c29863586a1",
+            "creature-c576f15db4b7f3ecf487a80de0169177"
+          ],
+          "physical_skip_and_help": true,
+          "whole_f46_proven": false
+        },
+        "FRESH CAMPAIGN RESULT": {
+          "campaign_complete": false,
+          "checkpoints": [],
+          "counts_as_proof": false,
+          "cumulative_elapsed_seconds": 139.445,
+          "dry_run": false,
+          "elapsed_seconds": 139.445,
+          "failures": [
+            "F49 ordinary capsule walk failed to /root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59827/Pedestal_meadows/@Node3D@59846"
+          ],
+          "local_chains": [],
+          "reached": "meadows_settled",
+          "requested_prefix_passed": false,
+          "resume": {
+            "boundary": "meadows_settled",
+            "continuous_fresh_save": false,
+            "generated_origin": {
+              "boundary": "meadows_settled",
+              "provenance": {
+                "continuous_fresh_save": false,
+                "generator": "tools/earned_saves/earned_chain_runner.gd:b25e1ed1eb820ff4c5cb58bcc7ccd1b8dcd3b6acf95bb6b876feaef273261f60:tidewake",
+                "owner_policy": "#5726060136810",
+                "prior_earned_play": false
+              }
+            },
+            "journey_id": "800bfffce1f718a68da27004970db50ba31c8540:/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-tide-key-ack-r5_generated_input",
+            "meadows_pieces": [
+              "opening_team",
+              "camp_tournament",
+              "bridge",
+              "warrens",
+              "relay",
+              "hall"
+            ],
+            "prior_earned_play": false,
+            "source": "/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-tide-key-ack-r5_generated_input/meadows_settled",
+            "source_kind": "generated_fixture"
+          },
+          "resumed_from": "meadows_settled",
+          "scratch": "user://f49_campaign_2382_8538"
+        },
+        "GENERATED CHAPTER PROCESS": {
+          "continuous_fresh_save": false,
+          "exit_code": 1,
+          "input_mode": "generated_fixture",
+          "prior_earned_play": false,
+          "segment": "tidewake",
+          "source": "800bfffce1f718a68da27004970db50ba31c8540"
+        }
+      },
+      "script_errors": 0,
+      "x11_no_grab_errors": 8
     },
-    "original_terminal_review_required": true
+    "original_terminal_review_required": false,
+    "terminal_review": {
+      "hubble": "NEW SAVED-ACK BEHAVIOR APPROVE: both validated bank reads passed in about3.04secs within30sec; v28 character file includes bothflags/matchingCID/unchangedfiveUIDorder. Physical TitleLoad remainsseparate.",
+      "bacon": "OVERALL FAIL: laterMeadows pedestal walk, grounded/free input, emptytargetoffer/EncounterDirectorwinning/activationnull; no establishednavigationcause,Tideentryorhandoff.",
+      "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-tide-key-ack-terminal-r5.txt"
+    },
+    "disposition": "Reuse R4 SkipHelp and R5 savedACK approvals. No unchanged repeats, failedsave input, acceptedhandoff, native/blind/physicalTitleLoad or wholecriterionclaim."
   }
 }
