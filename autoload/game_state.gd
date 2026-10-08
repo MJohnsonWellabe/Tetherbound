@@ -690,6 +690,8 @@ var _discovery_elapsed: float = 0.0
 ## far the player spawned from Vector3.ZERO.
 var _travel_pos: Vector3 = Vector3.ZERO
 var _travel_pos_valid: bool = false
+var _travel_fenced: bool = false
+var _travel_fence_realm: String = ""
 ## A single tick's honest walking distance at sprint speed is a few metres
 ## (see player_controller.gd's `_sprint_speed`) times `_DISCOVERY_INTERVAL_S`.
 ## Anything past this in one tick is a teleport/respawn/scene change, not
@@ -830,6 +832,8 @@ func reset_for_new_game() -> void:
 	_discovery_elapsed = 0.0
 	_autosave_elapsed = 0.0
 	_travel_pos_valid = false
+	_travel_fenced = false
+	_travel_fence_realm = ""
 
 
 ## D95/lane 2.A. The session node, mounted before the menu so anything the menu
@@ -1083,7 +1087,12 @@ func _exit_tree() -> void:
 func _process(delta: float) -> void:
 	_tick_orphaned_regional_acks(delta)
 	if session != null and session.has_method("_owner_training_mutation_blocked") 			and session.call("_owner_training_mutation_blocked", local) == true:
-		_travel_pos_valid = false # No delayed travel/bond grant on resume.
+		if not _travel_fenced: _travel_fence_realm = current_realm
+		_travel_fenced = true
+		var fenced_player := _find_player()
+		if fenced_player == null or fenced_player.global_position != _travel_pos \
+			or current_realm != _travel_fence_realm:
+			_travel_pos_valid = false
 		return # Session/Ledger child recovery still ticks; no care/bed/buff mutation.
 	var canonical_passive := _canonical_guest_passive()
 	var record_passive: bool = session != null and session.has_method("owner_passive_recording_active") \
@@ -1170,6 +1179,13 @@ func _process(delta: float) -> void:
 			discovery_cards.append({"source": source, "before": SAVE_GAME.new().call("_party_to_array", source)[0],
 				"buffs_before": (member.get("active_buffs") as Array).duplicate(true)})
 	var here := player.global_position
+	if _travel_fenced:
+		# A stationary fence creates no new baseline. Movement during the
+		# pause still needs the existing host reset proof and earns no distance.
+		if here != _travel_pos or current_realm != _travel_fence_realm:
+			_travel_pos_valid = false
+		_travel_fenced = false
+		_travel_fence_realm = ""
 	var travel_from := _travel_pos
 	var travel_was_valid := _travel_pos_valid
 	if not canonical_passive and _travel_pos_valid:

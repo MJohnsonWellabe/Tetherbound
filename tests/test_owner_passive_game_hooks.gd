@@ -164,7 +164,8 @@ func _native_case_game_same_stream_fence_reset_replays_exactly() -> void:
 	game._process(0.75)
 	assert_eq(owner_session.packets.size(), count, "fence emits no care input")
 	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), frozen, "fence applies no care or bond")
-	assert_false(game._travel_pos_valid)
+	assert_true(game._travel_pos_valid, "stationary fence preserves the last actual discovery baseline")
+	assert_true(game._travel_fenced)
 	assert_eq(game._discovery_elapsed, active_discovery_elapsed, "paused frames are absent from active discovery time")
 	game.actor.position = Vector3(-16.0, 1.11597406864166, 14.0)
 	owner_session.blocked = false
@@ -211,6 +212,49 @@ func _native_case_game_same_stream_fence_reset_replays_exactly() -> void:
 	assert_eq(var_to_bytes(cursor.state), var_to_bytes(live), "ordinary movement resumes exact full-record replay")
 	for card: Dictionary in live.party:
 		assert_eq(card.distance_m_together, before.party[0].distance_m_together + 3.0)
+	# The original camp refusal had exactly the same endpoint as its cursor.
+	# A stationary owner fence must not manufacture an unauthorized reset.
+	count = owner_session.packets.size()
+	frozen = var_to_bytes(live)
+	owner_session.blocked = true
+	game._process(0.75)
+	assert_eq(owner_session.packets.size(), count)
+	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), frozen)
+	assert_true(game._travel_pos_valid)
+	assert_true(game._travel_fenced)
+	owner_session.blocked = false
+	game._process(0.5)
+	var stationary: Dictionary = owner_session.packets.back()
+	assert_true(stationary.travel_valid)
+	assert_eq(stationary.from, stationary.to)
+	assert_false(game._travel_fenced)
+	# Exactly the added active half-second; blocked time remains excluded.
+	context.max_elapsed = 2.5
+	for index: int in range(count, owner_session.packets.size()):
+		var packet: Dictionary = owner_session.packets[index].duplicate(true)
+		packet.version = 1
+		packet.sequence = index + 1
+		var applied := REPLAY.apply(cursor, packet, context)
+		assert_true(applied.ok, str(applied))
+		if applied.get("ok") != true: return
+		cursor = applied.cursor
+	live = RECORD.portable_projection(game.local.save_data())
+	assert_eq(var_to_bytes(cursor.state), var_to_bytes(live), "stationary fence replays without any reset authorization")
+	for card: Dictionary in live.party:
+		assert_eq(card.distance_m_together, before.party[0].distance_m_together + 3.0, "stationary resume grants zero distance")
+	owner_session.blocked = true
+	game._process(0.75)
+	game.current_realm = "tidewake"
+	owner_session.blocked = false
+	game._process(0.5)
+	assert_false(owner_session.packets.back().travel_valid, "same coordinates in a new realm do not preserve continuity")
+	assert_eq(owner_session.packets.back().from, owner_session.packets.back().to)
+	owner_session.blocked = true
+	game._process(0.75)
+	game._travel_pos_valid = false # Existing arm/readmit invalidation.
+	owner_session.blocked = false
+	game._process(0.5)
+	assert_false(owner_session.packets.back().travel_valid, "fence completion never restores a baseline invalidated by stream admission")
 	_native_completed = true
 
 func test_actual_game_input_hooks_replay_identically() -> void:
