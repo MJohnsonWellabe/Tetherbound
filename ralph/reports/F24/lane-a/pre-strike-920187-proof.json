@@ -11,7 +11,8 @@
     "whole_criterion": "OPEN",
     "agent": "original f25_medium_review",
     "hud_source": "APPROVE e6c056 bounded presentation source",
-    "verdict": "APPROVE bounded observer source"
+    "verdict": "APPROVE bounded observer source",
+    "shipping_disposition": "Original reviewer: ui_enabled alone insufficient. Runtime+UI and valid acknowledged deployment/resource data required; saved-actor path can satisfy identity without unconditional actor_vitals activation. Ultimate/library activation unnecessary for unavailable HUD labels. No eligible shipping flip because shared runtime proof failed at Tag."
   },
   "unaffected_logic": {
     "assertions": 84,
