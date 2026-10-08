@@ -457,6 +457,7 @@ func _material(colour: Color) -> StandardMaterial3D:
 							m.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
 							m.detail_uv_layer = BaseMaterial3D.DETAIL_UV_1
 							m.detail_albedo = seams
+							m.detail_normal = m.normal_texture
 							m.set_meta("floor_board_seams", true)
 						else:
 							push_warning("Farmhouse board seams unavailable; cropped wood retained")

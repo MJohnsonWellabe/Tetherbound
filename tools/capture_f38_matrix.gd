@@ -113,7 +113,8 @@ func _capture_row(row: Dictionary) -> void:
 			var material := mesh.get_active_material(surface)
 			if material is StandardMaterial3D and bool(material.get_meta("floor_band_tiled", false)):
 				tiled_bindings += 1
-				if bool(material.get_meta("floor_board_seams", false)) and material.detail_enabled and material.detail_albedo != null:
+				if bool(material.get_meta("floor_board_seams", false)) and material.detail_enabled \
+						and material.detail_albedo != null and material.detail_normal == material.normal_texture:
 					seam_bindings += 1
 	var tiled := tiled_bindings > 0
 	_manifest["f38_floor_band_tiled"] = tiled
