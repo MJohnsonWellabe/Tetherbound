@@ -118,6 +118,11 @@
       }
     }
   ],
-  "scope": "4 debug-travel day/night rain stills, Low1280x720; route00 outside Hall (farmhouse), route03 inside Hall; not roof-general, earned route, motion, Medium/High or whole criterion",
-  "fixture_disclosure": "Production scene, CameraRig and ordinary HUD. Debug travel at each declared route point and audit-only clock pin. Meadows seeds the timed route's declared MEADOWS_OPENING_FLAGS to skip its opening modal; other biomes use the base catalogue character fixture. Not an earned opening, campaign, traversal, save or frame-time proof."
+  "scope": "4 debug-travel day/night rain stills, Low1280x720; route00 is outside Hall with street-facing view and visible rain, route03 inside Hall; not an unobstructed farmhouse interior witness or general outdoors/weather/motion/earned/MH/fullcriterion",
+  "fixture_disclosure": "Production scene, CameraRig and ordinary HUD. Debug travel at each declared route point and audit-only clock pin. Meadows seeds the timed route's declared MEADOWS_OPENING_FLAGS to skip its opening modal; other biomes use the base catalogue character fixture. Not an earned opening, campaign, traversal, save or frame-time proof.",
+  "warnings": [
+    "unsupportedVSync",
+    "physics interpolation deprecation"
+  ],
+  "elapsed_s": 467
 }
