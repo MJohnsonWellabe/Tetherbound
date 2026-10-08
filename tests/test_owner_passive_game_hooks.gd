@@ -233,6 +233,33 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	assert_eq(game.inventory.durability_at(tool_slot), game.inventory.max_durability_at(tool_slot),
 		"ordinary Use repairs the same tool after settlement")
 	assert_eq(game.inventory.count("axe"), 1, "repair keeps exactly the original tool")
+	var trade := preload("res://scripts/trade/trade_db.gd").new()
+	var coin: String = trade.currency_id()
+	var price: int = trade.buy_price("mira", "potion_small")
+	assert_eq(game.inventory.add(coin, price * 2), 0)
+	var shop := preload("res://scripts/ui/shop_panel.gd").new()
+	shop.game = game
+	shop.set("_trade", trade)
+	shop.set("_vendor_id", "mira")
+	var shop_message := Label.new()
+	shop.add_child(shop_message)
+	shop.set("_message", shop_message)
+	packed = var_to_bytes(RECORD.portable_projection(game.local.save_data()))
+	owner_session.blocked = true
+	assert_eq(shop.buy_one("potion_small"), "owner_save_pending")
+	assert_eq(shop.sell_one("berries"), "owner_save_pending")
+	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), packed,
+		"pending owner decision preserves every shop item and coin during buy and sell")
+	assert_eq(shop_message.text, "Saving your last action. Try again in a moment.")
+	owner_session.blocked = false
+	assert_eq(shop.buy_one("potion_small"), "")
+	assert_eq(game.inventory.count("potion_small"), 1, "ordinary purchase gives exactly one dose")
+	assert_eq(game.inventory.count(coin), price, "ordinary purchase keeps the configured price")
+	assert_eq(shop.sell_one("berries"), "")
+	assert_eq(game.inventory.count("berries"), 3, "ordinary sale takes exactly one berry")
+	assert_eq(game.inventory.count(coin), price + trade.sell_price("mira", "berries"),
+		"ordinary sale pays exactly the configured price")
+	shop.free()
 	tab.free()
 	menu.free()
 	_native_completed = true
