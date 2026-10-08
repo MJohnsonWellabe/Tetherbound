@@ -49,6 +49,10 @@ const VILLAGE_CONFIG := "res://data/config/village.json"
 var _house_lighting: Dictionary = {}
 var _floor_presentation: Dictionary = {}
 var _furniture_reference_wood_cache: Dictionary = {}
+var _interior_surface_roots: Array[Node3D] = []
+var _night_ambient_materials: Array[BaseMaterial3D] = []
+var _night_ambient_active := false
+var _night_ambient_elapsed := 0.0
 
 const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
 ## Quaternius furniture is authored at roughly 2x real scale (a 4.26m bed).
@@ -169,6 +173,7 @@ func _anchor(local: Vector3) -> Vector3:
 ## The world root calls this once terrain is solid; everything is positioned
 ## relative to this node, so standing the node on the pad stands the house.
 func build(camera_rig: Node, player: Node3D) -> void:
+	set_process(false)
 	_camera_rig = camera_rig
 	_player = player
 	_build_kit_shell()
@@ -177,6 +182,7 @@ func build(camera_rig: Node, player: Node3D) -> void:
 	_build_stairs()
 	_build_furniture()
 	_build_lights()
+	_build_night_ambient_candidate()
 	_build_interior_area()
 	_build_door_gate()
 	_build_home_creature_bed()
@@ -612,6 +618,7 @@ func _box(size: Vector3, at: Vector3, colour: Color, solid := true) -> void:
 	mesh.material_override = _material(colour)
 	mesh.position = at
 	add_child(mesh)
+	_interior_surface_roots.append(mesh)
 	if solid:
 		_collider(size, at)
 
@@ -824,6 +831,7 @@ func _raked_box(size: Vector3, at: Vector3, roll: float, colour: Color) -> void:
 	mesh.position = at
 	mesh.rotation.z = roll
 	add_child(mesh)
+	_interior_surface_roots.append(mesh)
 
 
 func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FURNITURE_SCALE,
@@ -874,6 +882,7 @@ func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FU
 	node.rotation.y = deg_to_rad(yaw_degrees)
 	node.scale = Vector3.ONE * scale_factor
 	add_child(node)
+	_interior_surface_roots.append(node)
 	if not solid:
 		return
 	# One simple blocker per piece: walking through a table breaks the room
@@ -1140,6 +1149,68 @@ func _build_lights() -> void:
 	# through the north wall onto the village square.
 	stair_head.shadow_enabled = true
 	add_child(stair_head)
+
+
+## Reuse the Hall's ambient-only AO technique on authored interior surfaces.
+## The shell, windows, exterior marker/bed and direct lights stay independent.
+func _build_night_ambient_candidate() -> void:
+	var args := OS.get_cmdline_user_args()
+	var raw: Variant = _house_lighting.get("night_ambient_shape", {})
+	if not raw is Dictionary or "--farmhouse-night-ambient-baseline" in args:
+		return
+	var config := raw as Dictionary
+	if config.get("enabled", false) != true and "--farmhouse-night-ambient-candidate" not in args:
+		return
+	var factor: Variant = config.get("night_factor", 0.65)
+	if typeof(factor) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(factor)):
+		return
+	var image := Image.create(4, 4, false, Image.FORMAT_L8)
+	image.fill(Color.from_hsv(0.0, 0.0, clampf(float(factor), 0.0, 1.0)))
+	var occlusion := ImageTexture.create_from_image(image)
+	var seen: Dictionary = {}
+	for root: Node3D in _interior_surface_roots:
+		var meshes: Array[Node] = root.find_children("*", "MeshInstance3D", true, false)
+		if root is MeshInstance3D:
+			meshes.push_front(root)
+		for raw_mesh: Node in meshes:
+			var mesh := raw_mesh as MeshInstance3D
+			if mesh.mesh == null:
+				continue
+			var uses_override := mesh.material_override != null
+			var surfaces := 1 if uses_override else mesh.mesh.get_surface_count()
+			for surface: int in surfaces:
+				var source := (mesh.material_override if uses_override else mesh.get_active_material(surface)) as BaseMaterial3D
+				if source == null or source.ao_enabled or source.ao_texture != null \
+					or source.emission_enabled or source.transparency != BaseMaterial3D.TRANSPARENCY_DISABLED:
+					continue
+				var copy: BaseMaterial3D = seen.get(source)
+				if copy == null:
+					copy = source.duplicate() as BaseMaterial3D
+					copy.ao_texture = occlusion
+					copy.ao_light_affect = 0.0
+					copy.ao_enabled = false
+					seen[source] = copy
+					_night_ambient_materials.append(copy)
+				if uses_override:
+					mesh.material_override = copy
+				else:
+					mesh.set_surface_override_material(surface, copy)
+	set_process(not _night_ambient_materials.is_empty())
+
+
+func _process(delta: float) -> void:
+	_night_ambient_elapsed += delta
+	if _night_ambient_materials.is_empty() or _night_ambient_elapsed < 0.2:
+		return
+	_night_ambient_elapsed = 0.0
+	var tree := get_tree()
+	var look: Node = tree.current_scene.get_node_or_null(^"WorldLook") if tree != null and tree.current_scene != null else null
+	var dark := look != null and look.has_method("is_dark") and bool(look.call("is_dark"))
+	if dark == _night_ambient_active:
+		return
+	_night_ambient_active = dark
+	for material: BaseMaterial3D in _night_ambient_materials:
+		material.ao_enabled = dark
 
 
 func _build_interior_area() -> void:

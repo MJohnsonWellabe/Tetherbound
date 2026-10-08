@@ -4814,6 +4814,12 @@
       "interior_lighting": {
         "scope": "world_presentation",
         "furniture_wood_lift": 0.0,
+        "night_ambient_shape": {
+          "scope": "farmhouse_interior_opaque_surfaces_peer_local_world_presentation_all_presets",
+          "enabled": false,
+          "night_factor": 0.65,
+          "_comment": "Distinct ambient-only material shaping for original flat/harsh night-light verdict, reusing Crossing Hall's existing AO technique; not a measured farmhouse cause or another room-energy lift. Process-only --farmhouse-night-ambient-candidate; baseline wins. Per-instance opaque interior box/rail/furniture copies, including floor slab faces and its narrow exterior rim; existing AO/emissive/transparent materials excluded. Sky ambient contribution only, ao_light_affect0; day restores original AO-disabled response, textures/colour/roughness/normal/detail untouched. Kit shell/windows/exterior marker/creature bed/world ambient/direct room and stair lights/geometry/collision/input/save/authority unchanged. No new assets/tools/testclasses/observer/harness. Shipping OFF pending original source/affected existing proof and ROOT native original runtime/blind review."
+        },
         "furniture_reference_wood": {
           "scope": "farmhouse_only_peer_local_world_presentation_all_presets",
           "enabled": false,
