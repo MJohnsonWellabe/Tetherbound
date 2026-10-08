@@ -98,6 +98,7 @@ func _build_arch(entry: Dictionary) -> void:
 	board.name = "BiomeSign"
 	var state := _label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked", Vector3(0, 2.95, .12))
 	state.name = "StateSign"
+	state.visible = state.text != board.text
 	var arrival := Marker3D.new()
 	arrival.name = "Approach"
 	arrival.position = Vector3(0, .05, 2.8)
@@ -138,7 +139,8 @@ func _build_pedestal(entry: Dictionary) -> void:
 	body.add_child(shape)
 	slot.add_child(body)
 	# Free-standing: readable from every side of the stand, never mirrored.
-	_label(slot, ORDER.display_name(str(entry.biome)), Vector3(0, 1.35, .15)).billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	var label_at := _position(_config.get("pedestal_label_at", [0, 1.35, .15]))
+	_label(slot, ORDER.display_name(str(entry.biome)), label_at).billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	var arrival := Marker3D.new()
 	arrival.name = "Approach"
 	arrival.position = Vector3(0, .05, 1.8)
@@ -428,7 +430,9 @@ func apply_display(display: Dictionary) -> void:
 		material.emission_enabled = state == "open" or state == "stirred"
 		material.emission = material.albedo_color
 		material.emission_energy_multiplier = OPEN_MEMBRANE_EMISSION if state == "open" else .1
-		(arch.get_node("StateSign") as Label3D).text = "Home arch" if id == "home" else state.capitalize()
+		var state_sign := arch.get_node("StateSign") as Label3D
+		state_sign.text = "Home arch" if id == "home" else state.capitalize()
+		state_sign.visible = state_sign.text != (arch.get_node("BiomeSign") as Label3D).text
 	_refresh_home_membrane()
 	for id: String in _pedestals:
 		var pedestal: Node3D = _pedestals[id]

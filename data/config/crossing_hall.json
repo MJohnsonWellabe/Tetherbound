@@ -2,6 +2,8 @@
   "schema_version": 1,
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
+  "pedestal_label_at": [0, 1.9, 0.15],
+  "_label_scope": "Peer-local Hall labels on all presets. Pedestal name baseline clears installed BookStand maximum Y1.44429; identical arch name/status renders once, with distinct Locked/Open/Stirred/Home states retained. No model/collider/approach/state/authority/transaction/save change. Actual label capture and judge required.",
   "rain_shelter_enabled": true,
   "_rain_shelter_scope": "Crossing Hall authored nave/Shrine Room interior boxes only, peer-local particle visibility on all presets; camera inside hides the local rain emitter. Outside particles and canonical weather/cycle/spawn conditions remain unchanged; no authority/transaction/durable state/save change. Candidate requires inside/outside rain capture and judge.",
   "arches": [
