@@ -241,7 +241,7 @@ func _one_throw(aim_frame: String, flight_frame: String,
 	_struck_flag[0] = false
 	_shook_flag[0] = false
 	var resolutions_before := _resolved.size()
-	await _press("combat_throw")
+	await _press("combat_orb_release")
 
 	if flight_frame != "":
 		# Past the release windup (0.18s ~ 11 ticks) with the trail drawn.
@@ -345,7 +345,7 @@ func _capture_chance_frame(hp_fraction: float, frame_name: String) -> void:
 		await physics_frame
 	await _capture(frame_name)
 	# Cancel rather than release: this throw was never meant to fly.
-	await _press("combat_run")
+	await _press("menu_cancel")
 	for i in 20:
 		await physics_frame
 
