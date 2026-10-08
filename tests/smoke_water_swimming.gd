@@ -47,6 +47,7 @@ var pinned_minimum_efficiency := 1.0
 ## Optional evidence only: retain the current native draw without steering,
 ## hiding HUD, resizing, pausing, or changing the existing route fixture.
 var capture_water_route := false
+var water_route_offload := false
 var _water_capture_observer: Callable
 var _water_capture_party_uids: Array[String] = []
 var _water_capture_identity := ""
@@ -65,6 +66,16 @@ func _run() -> void:
 			return
 		if not _expect(DisplayServer.get_name() != "headless" and RenderingServer.render_loop_enabled,
 			"--capture-water-route requires an actual drawing display; a headless/non-rendering offload cannot capture"):
+			return
+	# Explicit hosted route offload keeps all real movement, input and hop
+	# assertions. Each requested frame below still enables and guards a real
+	# completed native draw; no performance/continuous-motion claim follows.
+	water_route_offload = OS.get_cmdline_user_args().has("--functional-offload")
+	if water_route_offload:
+		if not _expect(capture_water_route, "water offload requires the explicit original-five route captures"):
+			return
+		if not _expect(preload("res://tests/helpers/f19_functional_offload.gd").configure("water_original_five_routes"),
+			"water offload requires the real Compatibility display"):
 			return
 	var watchdog := 1200.0 if _every_hop_argument() else 180.0
 	create_timer(watchdog).timeout.connect(func() -> void:
@@ -707,6 +718,8 @@ func _every_hop_argument() -> bool:
 func _capture_water_frame(game: Node, context: Dictionary, phase: String, finish: Vector3, receipt: Dictionary) -> bool:
 	if _water_capture_observer.is_valid():
 		return _fail("route capture overlapped another pending frame")
+	if water_route_offload:
+		RenderingServer.render_loop_enabled = true
 	var retained: Array[Image] = []
 	var record: Dictionary = {}
 	var deadline := Time.get_ticks_msec() + 30000
@@ -770,7 +783,8 @@ func _capture_water_frame(game: Node, context: Dictionary, phase: String, finish
 	record["fixture"] = {"earned_route": false, "realm_and_departure_flag_seeded": true,
 		"one_dry_start_position_write_per_hop": true, "swimming_xp_pinned_zero": true,
 		"original_five_granted": ORIGINAL_FIVE, "dry_recovery": "natural regeneration",
-		"input": "existing InputEventAction", "camera_and_hud": "unchanged"}
+		"input": "existing InputEventAction", "camera_and_hud": "unchanged",
+		"continuous_drawing": not water_route_offload, "guarded_native_frames": true}
 	var file := FileAccess.open(directory.path_join(stem + ".json"), FileAccess.WRITE)
 	if not _expect(file != null, "route capture state sidecar opened: " + stem):
 		return false
@@ -820,6 +834,8 @@ func _stop_water_capture() -> void:
 	if _water_capture_observer.is_valid() and RenderingServer.frame_post_draw.is_connected(_water_capture_observer):
 		RenderingServer.frame_post_draw.disconnect(_water_capture_observer)
 	_water_capture_observer = Callable()
+	if water_route_offload:
+		RenderingServer.render_loop_enabled = false
 
 
 func _vector(raw: Array) -> Vector3:
