@@ -3220,8 +3220,11 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 		return deny
 	move["mastery_context"] = {"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
 		"session_id": _session.call("_altar_current_epoch")}
-	if uses_saved_actor_vitals(id) and slot == "utility" \
-		and move.get("utility", {}).get("kind") == "heal" and move.get("utility", {}).get("scope") == "self":
+	if slot == "utility" and move.get("utility", {}).get("kind") == "heal":
+		if not uses_saved_actor_vitals(id) or move.utility.get("scope") != "self":
+			deny.code = "heal_scope_unavailable"
+			deny.reason = "That heal needs a fight with saved creature health."
+			return deny
 		return _stage_ordinary_self_heal(id, peer, intent, body, move, card)
 	if _combat_motion_transport_enabled():
 		var lunge_direction: Vector3 = (wild.call("centre") as Vector3) - (body.call("centre") as Vector3)

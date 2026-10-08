@@ -179,12 +179,19 @@ func test_unsupported_utility_and_low_wind_refuse_without_spending() -> void:
 	var owned := _new_owned()
 	owned.move_utility = "heal_pulse"
 	owned.known_moves.append("heal_pulse")
-	var move := _frozen("utility", 1)
-	move.move_id = "heal_pulse"
+	var frozen := MASTERY.freeze_action(MASTERY.owned_record(owned), "utility",
+		{"character_id": "owner_a", "creature_uid": owned.uid, "encounter_id": id,
+		"generation": 1, "action": 1}, [], MOVES.load_default())
+	assert_true(frozen.get("ok") == true)
+	var move := MANAGER.host_move_profile(MOVES.load_default(), "player_utility",
+		"heal_pulse", 0.5, 0.5, 1.0, 0.0, frozen.move)
+	assert_true(MANAGER.live_move_supported("utility", "heal_pulse"))
 	var before: Dictionary = host.record(id).duplicate(true)
 	assert_eq(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "utility"},
-		1, owned, _binding(), move, WIND, 1000).code, "move_not_mounted")
+		1, owned, _binding(), move, WIND, 1000).code, "heal_scope_unavailable")
 	assert_eq(host.record(id), before)
+	assert_true(host.move_commit(id, 1, 1).is_empty())
+	assert_true(host.move_resource_snapshot(id, 1, owned.uid).is_empty())
 	var short_wind := {"max": 20.0, "regen_per_second": 0.0}
 	assert_eq(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "utility"},
 		1, _new_owned(), _binding(), _frozen("utility", 1), short_wind, 1000).code, "insufficient_wind")
