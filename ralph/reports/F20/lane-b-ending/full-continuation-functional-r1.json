@@ -66,5 +66,11 @@
     "verdict": "BEHAVIOR APPROVE",
     "original_review": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-f20-full-verdict.txt",
     "scope": "Actual67/0 and named owned-companion rematch admission, no victory/rewards; whole F20#3 open"
+  },
+  "retained_log": "ralph/reports/F20/lane-b-ending/ci-full-continuation-functional-37771506596.log.gz",
+  "alpha_runtime_blocker": {
+    "path": "data/config/alpha_respawns.json",
+    "runtime_enabled": false,
+    "documented_reason": "Named Deep Watch Tidecoil did not become resident for a co-op client with runtime enabled; F44 enables when it lands. No B flag flip."
   }
 }
