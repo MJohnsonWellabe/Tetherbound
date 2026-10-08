@@ -1,0 +1,41 @@
+{
+  "subject": "tanglevolt",
+  "priority": "ART7.1 #13 existing Stormwood creature",
+  "tool": "built-in imagegen",
+  "output": "exec-410aa8d2-fec7-4e99-889f-61ec2c4173c7.png",
+  "prompt": "Create one identity-preserving materials reference for the existing game creature Tanglevolt, using the supplied original front and side references for identity and the supplied installed-model studio view only for its existing proportions and full-body silhouette. It is a dark charcoal/navy-violet wolf with pointed ears, silver-white muzzle and chest ruff, clear electric blue eyes, layered shaggy fur, four large clawed paws, and a thick wolf tail. Preserve its recognizable wolf face, pointed ears, mane, limbs, proportions and pale muzzle/chest patch placement. Retain its distinctive thin branching blue-violet lightning veins across shoulder/back/flanks and forehead; localized electric accents should not bleach the entire dark coat or hide eyes and anatomy. Refine the materials to coherent soft matte fur, with large readable dark value groups and soft violet highlights; fur must not look like shiny plastic, metal, armor or stone. Show a single complete full-body front three-quarter standing view, all four paws and entire tail visible, generous margin, neutral diffuse studio light on plain pale warm-grey background, no text, labels, panel divisions, props, landscape, clothing or new equipment. Appealing stylized game character with natural fur shading. Same established individual/species, no redesign, no extra limbs, no new colors or ornaments.",
+  "transparent_background": false,
+  "input_paths": [
+    "assets/creatures/tetherbound/tanglevolt/reference/front.png",
+    "assets/creatures/tetherbound/tanglevolt/reference/side.png",
+    ".tmp/tanglevolt-original-turntable/three_quarter.png"
+  ],
+  "inspection": "Inspected original crops, installed full-body DCC view and draft. Preserves recognizable charcoal/navy-violet wolf, silver muzzle/chest, pointed ears, four paws/full tail, blue eyes and branching lightning accents; material-only retexture will use installed geometry.",
+  "shipping": "No installed model/config binding changed; native scale/pose/colourway/gameplay and original before/after judge pending",
+  "balance_before": {
+    "balance": 13315
+  },
+  "sha256": {
+    "assets/creatures/tetherbound/tanglevolt/reference/front.png": "6237a2725b3fe5ca0fbf30701c60b9c72dae1ee6dcb2ec8210295bffd538d284",
+    "assets/creatures/tetherbound/tanglevolt/reference/side.png": "09137794a427ff69313364c8784d466063b0d1f4685a0150680d468207698922",
+    ".tmp/tanglevolt-original-turntable/three_quarter.png": "024a93d3ad4cf2651b6fb75564175e4fd7553bb115b4976cc357ee6b9e40eb4e",
+    "assets/creatures/tetherbound/tanglevolt/reference/f36-material-v1.png": "d424b5a1aa443eca2a85d6ae2c6deed0fcfa49187a74d4cd4e6500271488b52c",
+    "assets/creatures/tetherbound/tanglevolt/models/creature_tanglevolt_lod0.glb": "694daa6a8744d5c3d679c66a4afff1414fa2e198a319bec5f652c150e22d9b93"
+  },
+  "meshy": {
+    "task": "01a118fa-7050-7797-9dee-a4870e3437f5",
+    "endpoint": "/openapi/v1/retexture",
+    "texture_resolution": "2k",
+    "enable_pbr": true,
+    "enable_original_uv": false,
+    "ai_model": "latest",
+    "text_style_prompt_source": "Existing meshy.prompt_for(tanglevolt), first600characters",
+    "input": "Installed full-body GLB and inspected drafted image",
+    "night": "2026-10-07",
+    "attended_submissions": 10,
+    "cap": 30,
+    "status": "SUCCEEDED",
+    "balance_after": 13305,
+    "observed_cost": 10
+  }
+}
