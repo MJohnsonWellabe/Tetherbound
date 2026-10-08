@@ -1,0 +1,15 @@
+{
+  "reviewer": "/root/f26_presets_review",
+  "source_commit": "c4e35746db39308ec672265012fc0a5550312d69",
+  "inspected": "ALL3 matched BEFORE/AFTER native1280x720 JPGs; night rain missing",
+  "component_verdict": "BLOCK",
+  "bar_a": "BLOCK",
+  "bar_b": "BLOCK",
+  "findings": [
+    "Day clear/rain grain sharper and less smeared, but uninterrupted longitudinal streaks rather than joined boards. Ceiling/stair side oversized high-contrast grain with weak separation.",
+    "Night clear retains same scale/join issues, bright stair-side zigzags and broad ceiling pattern.",
+    "Trainer, doorway and furniture placements readable; no new clipping/substantial visibility regression. Existing black furniture silhouettes and bleached night trainer remain."
+  ],
+  "criterion_done": false,
+  "next": "Changed second board-joint/density candidate44f8b239e3; actual4conditions+judge required. No unchanged missing-night-rain rerun."
+}
