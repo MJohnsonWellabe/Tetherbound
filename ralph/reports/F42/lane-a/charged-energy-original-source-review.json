@@ -17,7 +17,9 @@
     "APPROVE: legacy ultimate controls restored each fighting frame and hidden only on accepted current-UID overlay refresh.",
     "APPROVE: existing capture rejects either duplicate visible legacy control; actual visibility receipt; actions/budgets unchanged.",
     "APPROVE: utility cell displays loaded authored wind cost; matching snapshot and native capture read the same current-owned move cost; spending/readiness unchanged.",
-    "APPROVE: successful native capture guest1 world boot draws once inside unchanged existing boot budget; elapsed preserved in result.data/detail; later HUD guards/actions/budgets unchanged. Startup remains an unproved hypothesis."
+    "APPROVE: successful native capture guest1 world boot draws once inside unchanged existing boot budget; elapsed preserved in result.data/detail; later HUD guards/actions/budgets unchanged. Startup remains an unproved hypothesis.",
+    "APPROVE: compare control-local bounds transformed through canvas and root stretch with physical window pixels; retain positive, visible and enclosed guards and failure coordinates.",
+    "APPROVE: initial zero reconciliation requires an explicit current owned initial host actor baseline, matching local character/deployment, fresh active record and neither host nor acknowledged local pool; existing missing-baseline HUD refusal remains."
   ],
   "retained_logic": {
     "failed": 0,
@@ -31,5 +33,14 @@
   "utility_wind_sha": "65641063b12ad8ed746c1baa671b77204cd7c6cc",
   "native_boot_warmup_sha": "bf675385735f91cb203b41e2d6092330052ada51",
   "integrated_main_sha": "49654a6fc65c12e69787b92eca6f063bacdc15b7",
-  "merge_sha": "3d76ea05c1adfc0a052f3df712b62ccf01ed5062"
+  "merge_sha": "3d76ea05c1adfc0a052f3df712b62ccf01ed5062",
+  "pixel_bounds_sha": "757dd96ed2dafdcf4333b345eddbd5939bbe086e",
+  "initial_host_pool_ack_sha": "757dd96ed2dafdcf4333b345eddbd5939bbe086e",
+  "latest_actual": {
+    "checkout_sha": "6956190cafa78144a85159250c53d5a093fc8bad",
+    "whole_criterion": "OPEN",
+    "behavior": "All non-HUD owner-passive/Item/Tag assertions passed; two HUD guard failures and zero frames",
+    "logic": "14files142tests880assertions0failed",
+    "run_id": 37725148334
+  }
 }
