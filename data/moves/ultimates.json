@@ -1,6 +1,6 @@
 {
-  "_comment": "F35 visual index only. F23 moves.json owns all IDs, species mapping, stats, mastery and accepted hits. No combat effect, slot, cost, damage or save data is copied here. OFF until F23/F25/F29 land and ROOT combined actual proof passes.",
-  "enabled": false,
+  "_comment": "F35 visual index only. F23 moves.json owns all IDs, species mapping, stats, mastery and accepted hits. No combat effect, slot, cost, damage or save data is copied here. Shipping activation follows owner proof-and-flip direction on issue572 comment6067331997; F35 visual acceptance remains independent.",
+  "enabled": true,
   "flag_scope": "local presentation only; every peer consumes accepted host action values",
   "producer": {
     "feature": "F23",

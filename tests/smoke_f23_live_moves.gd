@@ -134,6 +134,11 @@ func _run() -> void:
 		var candidate := _saved_visual_config.duplicate(true)
 		candidate.enabled = true
 		ULTIMATES._config = candidate
+	var enabled_ultimate := ULTIMATES.available("ultimate_ground_current")
+	if OS.get_cmdline_user_args().has("--prove-shipping-ultimate"):
+		_check(bool(_saved_visual_config.get("enabled", false)) and enabled_ultimate
+			and not visual_override and not _prove_library_arrival,
+			"shipping ultimate proof requires tracked enabled config without presentation overrides")
 	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "actor_vitals gate must remain off")
 	_prove_canonical_wild = OS.get_cmdline_user_args().has("--prove-canonical-wild")
 	_check(not _prove_canonical_wild or _prove_utility == "heal_pulse", "canonical wild selector requires the bounded Heal proof")
@@ -289,7 +294,7 @@ func _run() -> void:
 		_finish()
 		return
 	_check(is_equal_approx(shown_meter.value, 0.0), "mounted actual CombatHUD starts with an empty Ultimate meter")
-	if visual_override:
+	if enabled_ultimate:
 		await _button(JOY_BUTTON_RIGHT_SHOULDER, true)
 		await _button(JOY_BUTTON_RIGHT_SHOULDER, false)
 		_check(not bool(_manager.call("ultimate_armed")) and _launches.is_empty() and _impacts.is_empty(),
@@ -410,7 +415,7 @@ func _run() -> void:
 		_check(ready_image != null and ready_image.save_png(ready_path) == OK, "rendered actual full-meter CombatHUD capture " + ready_path)
 		_captures.append(ready_path)
 	var ultimate_event: Dictionary = {}
-	if visual_override:
+	if ultimate_available:
 		await _wait_ready()
 		await _button(JOY_BUTTON_RIGHT_SHOULDER, true)
 		_check(not bool(_manager.call("ultimate_armed")), "RB hold cannot arm an ultimate")
@@ -995,6 +1000,8 @@ func _finish() -> void:
 		Input.parse_input_event(event)
 	print("F23_LIVE_MOVES " + JSON.stringify({"checks": _checks, "errors": _errors,
 		"launches": _launches.size(), "impacts": _impacts.size(), "captures": _captures,
+		"shipping_ultimate_enabled": bool(_saved_visual_config.get("enabled", false)),
+		"shipping_ultimate_proof": OS.get_cmdline_user_args().has("--prove-shipping-ultimate"),
 		"visual_gate_override": OS.get_cmdline_user_args().has("--enable-ultimate-visual"),
 		"library_arrival_override": _prove_library_arrival, "arrival_records": _arrival_records,
 		"canonical_wild_override": _prove_canonical_wild,
