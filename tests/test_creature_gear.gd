@@ -103,25 +103,41 @@ func test_bonus_rises_with_tier_and_with_each_upgrade() -> void:
 
 func test_equip_at_the_den_then_upgrade_at_the_forge_to_plus_3() -> void:
 	var cfg := GEAR.config()
-	var record := _record({"rootiron_harness": 1, "rootiron_ingot": 20, "fiber": 10})
-	var uid := str(record.party[0].uid)
-	var equipped := GEAR.stage_core(record, CHARACTER, 0, _intent("equip", uid, "harness", "rootiron_harness", 1), _context("den"), _db(), cfg)
-	assert_true(equipped.get("ok") == true, str(equipped))
-	if equipped.get("ok") != true: return
-	var state: Dictionary = equipped.state
-	assert_eq(GEAR.gear_for(state, uid).harness, "rootiron_harness")
-	assert_eq(state.redesign_character.transaction_receipts.count(equipped.receipt), 1)
-	for upgrade in [1, 2, 3]:
-		var current := _id("Rootiron", "harness", upgrade - 1)
-		var staged := GEAR.stage_core(state, CHARACTER, 0, _intent("upgrade", uid, "harness", current, 10 + upgrade), _context("forge"), _db(), cfg)
-		assert_true(staged.get("ok") == true, "upgrade to +%d: %s" % [upgrade, str(staged)])
-		if staged.get("ok") != true: return
-		state = staged.state
-		assert_eq(GEAR.gear_for(state, uid).harness, _id("Rootiron", "harness", upgrade))
-	var low := GEAR.stage_core(equipped.state, CHARACTER, 0, _intent("upgrade", uid, "harness", "rootiron_harness", 30), _context("forge", 0), _db(), cfg)
-	assert_eq(low.get("reason", ""), "station_tier", "a Forge below the recipe tier refuses the upgrade")
-	var past := GEAR.stage_core(state, CHARACTER, 0, _intent("upgrade", uid, "harness", "rootiron_harness_plus_3", 20), _context("forge"), _db(), cfg)
-	assert_eq(past.get("code", past.get("reason", "")), "maximum_upgrade", "+3 is the cap: %s" % str(past))
+	for tier: int in LIVE.size():
+		var tier_row: Dictionary = cfg.tiers[tier]
+		for slot: String in GEAR.SLOTS:
+			var base := _id(LIVE[tier], slot, 0)
+			var record := _record({base: 1, tier_row.ingot: 20, tier_row.shed: 10})
+			# Disclosed personal prerequisite, matching the authenticated station
+			# context fixture. This is not an earned relic or controller route.
+			if not str(tier_row.unlock_relic).is_empty(): record.redesign_character.relics_hung.append(tier_row.unlock_relic)
+			var uid := str(record.party[0].uid)
+			var equipped := GEAR.stage_core(record, CHARACTER, 0, _intent("equip", uid, slot, base, 1), _context("den"), _db(), cfg)
+			assert_true(equipped.get("ok") == true, str(equipped))
+			if equipped.get("ok") != true: return
+			var state: Dictionary = equipped.state
+			assert_eq(GEAR.gear_for(state, uid)[slot], base)
+			assert_eq(state.redesign_character.transaction_receipts.count(equipped.receipt), 1)
+			var station := "forge" if slot == "harness" else "altar"
+			for upgrade in [1, 2, 3]:
+				var current := _id(LIVE[tier], slot, upgrade - 1)
+				var fields := {"action": "upgrade", "creature_uid": uid, "slot": slot, "item_id": current}
+				var before := state.duplicate(true)
+				var hint := GEAR.preflight(state, fields, _context(station, tier + 1), _db(), cfg)
+				assert_true(hint.available, "%s %s +%d: %s" % [LIVE[tier], slot, upgrade, str(hint)])
+				assert_eq(hint.output_id, _id(LIVE[tier], slot, upgrade))
+				assert_eq(state, before, "a gear hint writes no receipt or portable field")
+				var staged := GEAR.stage_core(state, CHARACTER, 0, _intent("upgrade", uid, slot, current, 10 + upgrade), _context(station, tier + 1), _db(), cfg)
+				assert_true(staged.get("ok") == true, "upgrade to +%d: %s" % [upgrade, str(staged)])
+				if staged.get("ok") != true: return
+				assert_eq(state, before, "staging leaves the caller record unchanged")
+				state = staged.state
+				assert_eq(GEAR.gear_for(state, uid)[slot], _id(LIVE[tier], slot, upgrade))
+				assert_eq(state.redesign_character.transaction_receipts.count(staged.receipt), 1)
+			var low := GEAR.stage_core(equipped.state, CHARACTER, 0, _intent("upgrade", uid, slot, base, 30), _context(station, tier), _db(), cfg)
+			assert_eq(low.get("reason", ""), "station_tier", "a station below the recipe tier refuses the upgrade")
+			var past := GEAR.stage_core(state, CHARACTER, 0, _intent("upgrade", uid, slot, _id(LIVE[tier], slot, 3), 20), _context(station, tier + 1), _db(), cfg)
+			assert_eq(past.get("code", past.get("reason", "")), "maximum_upgrade", "+3 is the cap: %s" % str(past))
 
 
 func test_gear_refusals() -> void:
