@@ -1,0 +1,53 @@
+{
+  "criterion": "F46#0/F46#1",
+  "whole_criterion_proven": false,
+  "original_reviewer": "b_f20_review",
+  "sources": [
+    {
+      "commit": "ad70c67fd5dd11e541187bdb97115493055fabe2",
+      "verdict": "SOURCE APPROVE",
+      "scope": "Existing Altar smoke, unchanged120 essence fixture, paid real first cap then Tam natural Masters Skip/Help; existing dual-clock mappedCancel",
+      "behavior_run": 37748475590,
+      "behavior": "LIVE; no runtime or visual verdict"
+    },
+    {
+      "commit": "afd43536493c9ba1a8bcd8cda6086b7d770b72b7",
+      "verdict": "SOURCE APPROVE",
+      "scope": "Per-ID natural lesson cache +earned firstWardenkey/relic Tam Portal/Shrine Skip/Help; default path and original identity/input/unlock guards unchanged",
+      "behavior": "OPEN; waits for actual earned Hall/Warden"
+    },
+    {
+      "commit": "a66bc9777942082740cb46108cc287460d516df9",
+      "verdict": "SOURCE APPROVE",
+      "scope": "Opt-in completed next-goal HUD frame with same actual character/orderedparty/goal/freeinput; no camera/UI/progression writes or comprehension claim",
+      "behavior": "Actual capture and agent next-goal verdict OPEN"
+    }
+  ],
+  "logic": {
+    "source": "4ee505ec04971b296b88d2fec29b1e22e5d79cfb",
+    "run": 37747978865,
+    "artifact": 11536567376,
+    "files": [
+      "test_f27_altar_first_send.gd",
+      "test_f27_essence_rules.gd"
+    ],
+    "tests": 20,
+    "assertions": 386,
+    "failed": 0,
+    "exit_code": 0,
+    "wall_seconds": 13,
+    "review": "Original scoped LOGIC PASS; not later helper behavior"
+  },
+  "rejected_extension": {
+    "commit": "4593ec9511d85a48db73c2ad5e75c5fa185e72c4",
+    "disposition": "Reverted atb14bea3dccfedbc158264f6fb63d3842acc57357 before dispatch",
+    "cause": "Unchanged ending fixture owns key but never earned home_key_given; cannot trigger actual Homestead lesson. No synthetic grant/flag allowed.",
+    "supported_homestead_path": "Existing earned Hall hook at51be286103 remains; actual behavior OPEN"
+  },
+  "remaining_gates": [
+    "Actual Masters runtime and code-blind captures",
+    "Actual earned Homestead, Portals and Shrines Skip/Help",
+    "Named per-card persistence proofs and whole F46#0 verdict",
+    "Actual gate HUD frames and independent new-player next-goal answers for F46#1"
+  ]
+}
