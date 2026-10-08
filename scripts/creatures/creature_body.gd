@@ -1443,7 +1443,7 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	if _shiny_swap_materials.has(key):
 		return _shiny_swap_materials[key]
 	var copy := source.duplicate() as BaseMaterial3D
-	copy.resource_name = "%s_%s" % [source.resource_name, suffix]
+	copy.resource_name = "%s_%s_%s" % [source.resource_name, species, suffix]
 	copy.albedo_texture = shiny_albedo
 	if copy.emission_enabled:
 		var shiny_emission := _texture_for(source.emission_texture, species, suffix, "emissive")
