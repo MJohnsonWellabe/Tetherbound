@@ -339,11 +339,23 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var fraction := clampf(float(view.ultimate_meter) / float(view.ultimate_maximum), 0.0, 1.0)
 			if not is_equal_approx(float(ring.get("fraction")), fraction):
 				return {"verdict":"FAIL", "detail":"HUD ring differs from actual meter"}
+			var moves: RefCounted = hud.get("_moves")
+			var charged_id := str(active.get("move_charged"))
+			var cells: Dictionary = overlay.get("_cells")
+			var energy_gate: ProgressBar = cells.get("charged", {}).get("cooldown")
+			if moves == null or not moves.has(charged_id) or not is_instance_valid(energy_gate):
+				return {"verdict":"FAIL", "detail":"Current owned charged move has no energy gate"}
+			var charged_cost := float(moves.move(charged_id).get("energy_cost", 100.0))
+			var energy := float(active.get("energy"))
+			if not energy_gate.is_visible_in_tree() or not is_equal_approx(energy_gate.max_value, charged_cost) \
+				or not is_equal_approx(energy_gate.value, clampf(energy, 0.0, charged_cost)):
+				return {"verdict":"FAIL", "detail":"Charged energy gate differs from current owned creature resource"}
 			var shot: Dictionary = await PROOF_STEPS.run(self, "screenshot", {"name":"hud-" + name})
 			if shot.get("verdict") != "PASS" or shot.get("data", {}).get("captured") != true: return {"verdict":"FAIL", "detail":"HUD screenshot was not captured", "data":shot}
 			var graphics := preload("res://scripts/ui/graphics_prefs.gd")
 			var receipt := _hud_capture_metadata.merged({"name":name, "snapshot":view,
-				"continuous_render_loop":false,
+				"continuous_render_loop":false, "charged_energy":energy, "charged_cost":charged_cost,
+				"charged_gate_value":energy_gate.value, "charged_gate_maximum":energy_gate.max_value,
 				"frame":Engine.get_process_frames(), "physics_frame":Engine.get_physics_frames(),
 				"viewport":[root.size.x, root.size.y], "renderer":RenderingServer.get_current_rendering_method(),
 				"preset":graphics.selected(), "graphics":graphics.values(), "ring_fraction":float(ring.get("fraction")),
