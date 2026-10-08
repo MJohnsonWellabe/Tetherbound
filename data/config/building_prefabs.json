@@ -4813,6 +4813,7 @@
       },
       "interior_lighting": {
         "scope": "world_presentation",
+        "furniture_wood_lift": 0.18,
         "room_colour": "#ffd8a5",
         "room_energy": 1.65,
         "room_range_m": 6.0,

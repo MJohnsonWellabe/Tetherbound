@@ -761,6 +761,19 @@ func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FU
 	if dir == FURNITURE_DIR:
 		var corrected := IMPORTED_MATERIALS.make_dielectric(node)
 		node.set_meta("farmhouse_furniture_dielectric_surfaces", corrected)
+		var raw_lift: Variant = _house_lighting.get("furniture_wood_lift", 0.0)
+		var lift := clampf(float(raw_lift), 0.0, 1.0) \
+			if typeof(raw_lift) in [TYPE_INT, TYPE_FLOAT] and is_finite(float(raw_lift)) else 0.0
+		if lift > 0.0 and model in ["Table", "Table2", "Chair", "Stool"] and node is MeshInstance3D:
+			var furniture := node as MeshInstance3D
+			for surface in furniture.mesh.get_surface_count():
+				var source := furniture.get_active_material(surface) as BaseMaterial3D
+				if source == null or source.resource_name not in ["Wood", "DarkWood"]:
+					continue
+				# Lift these dark wood colours locally; retain alpha and all shading fields.
+				var copy := source.duplicate() as BaseMaterial3D
+				copy.albedo_color = source.albedo_color.lerp(Color(1.0, 1.0, 1.0, source.albedo_color.a), lift)
+				furniture.set_surface_override_material(surface, copy)
 	node.position = at
 	node.rotation.y = deg_to_rad(yaw_degrees)
 	node.scale = Vector3.ONE * scale_factor
