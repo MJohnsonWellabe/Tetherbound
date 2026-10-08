@@ -1329,6 +1329,18 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 			var facts: Dictionary = route_operands.call(waypoint)
 			_nav.reset()
 			return _fail("The actual village gate closed during the installed-bed approach: " + str(facts))
+		# Finish the last pulse's physical release even if it reached the final
+		# heading. Reaching a waypoint cannot bypass the friction-stop phase.
+		if bool(stance.get("remote_north", false)) and waypoint >= points.size() - 1 and precision_braking:
+			_nav.reset()
+			# reset queues physical releases; the no-request native tick
+			# returns before its drive-frame flush. Deliver this release now
+			# so the ordinary controller can apply its ground friction.
+			Input.flush_buffered_events()
+			if Vector2(_player.velocity.x, _player.velocity.z).length() > 0.001:
+				await _tree.physics_frame
+				continue
+			precision_braking = false
 		# An offered bed is usable before reaching any geometric centre. Stop
 		# the actual stick here, and keep this same exterior stance for Wake.
 		if waypoint >= (boundary.points as Array).size() and not _nav.departure_pending(target) \
@@ -1360,16 +1372,6 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 			# separated by actual ground-friction stops. Every frame still
 			# spends the original budget and passes the same exterior guards.
 			var precision := bool(stance.get("remote_north", false)) and waypoint == points.size() - 1
-			if precision and precision_braking:
-				_nav.reset()
-				# reset queues physical releases; the no-request native tick
-				# returns before its drive-frame flush. Deliver this release now
-				# so the ordinary controller can apply its ground friction.
-				Input.flush_buffered_events()
-				if Vector2(_player.velocity.x, _player.velocity.z).length() > 0.001:
-					await _tree.physics_frame
-					continue
-				precision_braking = false
 			if here.distance_to(next) <= (0.05 if precision else 0.15):
 				waypoint += 1
 				_nav.reset()
