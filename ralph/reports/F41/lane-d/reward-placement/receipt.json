@@ -40,6 +40,44 @@
     "path": "reward-routing-only.patch",
     "source": "de50c185391edaa053c97d5fa746ee1e8afc2664",
     "scope": "Only scripts/ui/playground_hud.gd hunks; no other D-lane source/test/frame changes",
-    "integration_status": "Awaiting E exact integrated source and same original source/command approval"
+    "integration_status": "E exact combined source/command and bounded proof reuse APPROVE; ROOT native queued after C; actual changed aftermath/original blind pending"
+  },
+  "integrated_native_gate": {
+    "review_report_commit": "c1a627e6e1d45303f6286de4484c6ea65ac28a9f",
+    "verified_E_D_HUD_blob": "6a65e5aa929f20ccfe6e7fc28ef010afab67d552",
+    "portrait_difference": "Only creature_portrait_frames crop-map absent in E; removing that key from parsed D hud.json yields exact E JSON. This changes portrait content/framing, not the acknowledgement matcher or reward-summary payload/policy. E fixed portrait slot uses expand-ignore-size; no reward-card layout tuning differs. No concealment of E portrait difference or pixel proof reuse.",
+    "runtime_status": "ROOT queued; not yet a native result",
+    "source_verdict": "APPROVE",
+    "reviewer": "original review_cloud_startup01a11679-fc2c-7873-bccd-423c1e04476d",
+    "baseline": "native-e-b8523462de-f41-hollows-contact-r1 actual original victory; fiveLv80/seed2042/Calm/healing/fixedfps20/120cap, strict precleanup100 guard; later Lv42 run never treated as victory",
+    "proof_reuse_verdict": "APPROVE for retained selected lifecycle proof scope",
+    "command_verdict": "APPROVE",
+    "no_duplicate_dispatch": true,
+    "argv": [
+      "--path",
+      "<fresh pinnedbeed worktree>",
+      "--rendering-method",
+      "gl_compatibility",
+      "--resolution",
+      "1920x1080",
+      "--fixed-fps",
+      "20",
+      "--script",
+      "res://tools/phase2_capture_stormwood_fights.gd",
+      "--",
+      "--preset=Low",
+      "--low-resolution=1920x1080",
+      "--source-commit=beedcbfd3a57853d1629c41623d64a8f56b4169e",
+      "--out=res://.tmp/stormwood-phase2/f41-hollows-reward-route-beed",
+      "--ids=hollows_alpha",
+      "--seed=2042",
+      "--party-level=80",
+      "--input-policy=pilot",
+      "--seconds=120",
+      "--interval=10.0"
+    ],
+    "review_report": "ralph/reports/F41/lane-e-capture-source-review.json",
+    "source": "beedcbfd3a57853d1629c41623d64a8f56b4169e",
+    "visual_status": "Same original E blind changed-aftermath verdict required; no D blind substitution"
   }
 }
