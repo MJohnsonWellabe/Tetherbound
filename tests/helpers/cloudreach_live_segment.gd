@@ -15,6 +15,11 @@ const LIVE_BATTLE_FRAME_LIMIT := 36000
 class CampaignPilot extends PILOT:
 	var switch_input := false
 	var voluntary_switches := 0
+	# Harness-local Warden strategy; off for every other existing caller.
+	var burst_input := false
+	var burst_press_attempts := 0
+	var bursts_started := 0
+	var burst_receipts: Array[Dictionary] = []
 
 	func _reach(_ally_body: Node3D, _foe_body: Node3D) -> float:
 		var charged := bool(manager.call("charged_ready")) and _charged_is_worth_it()
@@ -93,6 +98,28 @@ class CampaignPilot extends PILOT:
 		var attack_distance := contact + (_reach(ally_body, foe_body) - contact) * 0.8
 		var retreat := bool(manager.call("enemy_is_winding_up")) \
 			and toward.length() < _enemy_reach(ally_body, foe_body) + 0.8
+		if burst_input and retreat:
+			var burst_creature: RefCounted = manager.call("active_creature")
+			var burst_reserve := float(manager.call("wind_cost", "burst")) \
+				+ maxf(float(manager.call("wind_cost", "quick")), float(manager.call("wind_cost", "charged")))
+			if is_instance_valid(burst_creature) and (bool(manager.call("quick_ready")) or bool(manager.call("charged_ready"))) \
+					and float(manager.call("wind_value")) >= burst_reserve:
+				var action_before := int(manager.get("_last_burst_action"))
+				var wind_before := float(manager.call("wind_value"))
+				_move_toward(-toward)
+				await tree.physics_frame
+				burst_press_attempts += 1
+				await press("jump")
+				if is_instance_valid(burst_creature) and is_instance_valid(ally_body) and ally_body.has_method("combat_burst_active") \
+						and bool(ally_body.call("combat_burst_active")) \
+						and manager.call("active_creature") == burst_creature \
+						and int(manager.get("_last_burst_action")) > action_before:
+					bursts_started += 1
+					burst_receipts.append({"creature_uid": str(burst_creature.get("uid")),
+						"body_path": str(ally_body.get_path()), "accepted_action": int(manager.get("_last_burst_action")),
+						"wind_before": wind_before, "wind_after": float(manager.call("wind_value"))})
+				_move_toward(Vector3.ZERO)
+				return
 		if retreat or toward.length() > attack_distance \
 				or not _faces_target(ally_body, foe_body):
 			_move_toward(-toward if retreat else toward)
