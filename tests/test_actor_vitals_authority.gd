@@ -527,6 +527,10 @@ func test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldow
 	assert_eq(rec, before, "refused uncommitted heal cannot charge Wind or HP")
 	rec.participants[1].wind = 100.0
 	before = rec.duplicate(true)
+	var array_origin_view := view.duplicate(true)
+	array_origin_view.origin = [0.0, 0.0, 0.0]
+	assert_eq(host.stage_actor_heal_utility(intent, 1, array_origin_view, "heal_pulse", profile, 16).code, "invalid_actor")
+	assert_eq(rec, before, "local Heal consumer requires Vector3; a wire array never changes HP or Wind")
 	var bundle := host.stage_actor_heal_utility(intent, 1, view, "heal_pulse", profile, 16)
 	assert_true(bundle.ok)
 	assert_eq(rec, before, "world-write refusal can discard the whole staged bundle without rollback")
