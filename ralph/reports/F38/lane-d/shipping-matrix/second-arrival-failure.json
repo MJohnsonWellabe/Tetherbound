@@ -1,0 +1,100 @@
+{
+  "complete": false,
+  "source_commit": "b6cd4439e8961fedece5f96dd2f074de9caba235",
+  "resolution": [
+    1280,
+    720
+  ],
+  "preset": "Low",
+  "renderer": "gl_compatibility",
+  "f38_arrival_clock": "20 process_frame ticks; other capture defaults remain20 physics_frame",
+  "planned_frame_count": 2,
+  "captured_frame_count": 0,
+  "failures": [
+    "farm_to_hall__day__clear__approach: no supported production-camera stand among 1 candidates",
+    "farm_to_hall__day__rain__approach: no supported production-camera stand among 1 candidates"
+  ],
+  "invalid_stands": [
+    {
+      "attempts": [
+        {
+          "camera_position": [
+            -23.7000007629395,
+            5.71339654922485,
+            17.5763511657715
+          ],
+          "frame_id": "farm_to_hall__day__clear__approach",
+          "ground_y": 3.18136835098267,
+          "lateral_m": 0.0,
+          "offset_m": 32.0,
+          "player_position": [
+            -23.7000007629395,
+            3.20321989059448,
+            14.0
+          ],
+          "reason": "no physical floor supports the resolved land stand",
+          "stage": "preflight",
+          "stand_xz": [
+            -23.7000007629395,
+            14.0
+          ],
+          "surface_state": {
+            "dead": false,
+            "floor_normal_y": 0.949357867240906,
+            "on_floor": true
+          },
+          "swimming": false,
+          "water_surface_y": null
+        }
+      ],
+      "frame_id": "farm_to_hall__day__clear__approach",
+      "reason": "all bounded stand candidates rejected"
+    },
+    {
+      "attempts": [
+        {
+          "camera_position": [
+            -23.7000007629395,
+            5.71333503723145,
+            17.5763530731201
+          ],
+          "frame_id": "farm_to_hall__day__rain__approach",
+          "ground_y": 3.18136835098267,
+          "lateral_m": 0.0,
+          "offset_m": 32.0,
+          "player_position": [
+            -23.7000007629395,
+            3.20315790176392,
+            14.0
+          ],
+          "reason": "no physical floor supports the resolved land stand",
+          "stage": "preflight",
+          "stand_xz": [
+            -23.7000007629395,
+            14.0
+          ],
+          "surface_state": {
+            "dead": false,
+            "floor_normal_y": 0.949357867240906,
+            "on_floor": true
+          },
+          "swimming": false,
+          "water_surface_y": null
+        }
+      ],
+      "frame_id": "farm_to_hall__day__rain__approach",
+      "reason": "all bounded stand candidates rejected"
+    }
+  ],
+  "run": 37724138973,
+  "artifact": 11527113349,
+  "exit_code": 1,
+  "wall_seconds": 446,
+  "attempt": 2,
+  "independent_review": {
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "FAIL accuratelyretained; stop2",
+    "cause": "20idleframes synchronized bodyon_floortrue/slope.949 andYwithin.022m, butindependentpointfloor-ray remainedEMPTY. Actualcontactidentity/mask/shape vsqueryunretained; no soleterrainstreaming claim."
+  },
+  "remaining_gates": "F38matrixcomplete/HighMediumbarstillOPEN; no thirdrayrerun/relaxedguard; independent4detailfloorcomponent next"
+}
