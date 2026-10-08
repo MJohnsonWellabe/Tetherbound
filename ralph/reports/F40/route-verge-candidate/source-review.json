@@ -177,5 +177,30 @@
     "useful_proof_changes_retained": "Existing smoke production-mount wait/reuse and route-verge mesh placement assertions.",
     "disposition": "Failed candidate restored and parked. Source/unit/area and saved-image validity approvals remain historical proof, not visual acceptance. No new flag or unchanged capture required. Full F40 remains OPEN."
   },
-  "proof_status": "APPROVE restoration and bounded historical proof validity. Candidate visual BLOCK and whole changed capture timeout FAIL retained; full F40 OPEN. No local engine execution or performance acceptance."
+  "shrub_candidate": {
+    "source_verdict": "APPROVE bounded ground-contact numeric candidate only",
+    "base_commit": "6413c847af85c1614d7d14fd2258f23516fb39e3",
+    "path": "data/config/cloudreach_visual.json",
+    "item": "route_details.pockets ArrivalStoneGarden items[4], bush at offset[6.4,11.0], height1.4, yaw30",
+    "change": "Add existing bury_m0.3 instead of fallback0.04; lower only this model placement0.26m.",
+    "findings": [
+      "Finite positive bury_m is read by the existing authored-detail builder. After scaling to the same1.4m asset bounds and fitting the bounds bottom, placement Y is ground minus bury_m.",
+      "XZ, height/scale, yaw, asset, geometry, materials, support query, counts, collision and durable/authority paths are unchanged. No new flag or asset introduced.",
+      "The change is coherent with owning ART_DIRECTION grounded upland dressing. It is a proposed contact correction, not proven identification of the shrub seen in the prior views or measured mesh-footprint support.",
+      "Earlier failed route-verge tuning remains restored; this separate item-specific candidate does not re-enable it."
+    ],
+    "existing_unit_selectors": [
+      "tests/test_cloudreach_cast_dialogue.gd",
+      "tests/test_cloudreach_counterweight_seal.gd",
+      "tests/test_cloudreach_environment.gd",
+      "tests/test_cloudreach_grass_roles.gd",
+      "tests/test_cloudreach_resource_node_reach.gd",
+      "tests/test_cloudreach_windscar_beacon_site.gd",
+      "tests/test_cloudreach_world_presets.gd",
+      "tests/test_realm_camera_far_floor.gd"
+    ],
+    "area_selector": "tests/smoke_cloudreach_look.gd, retained production-mount repair",
+    "proof_status": "Affected existing logic/area and one changed-source visual capture pending; no visual, whole F40#5 or full F40 acceptance."
+  },
+  "proof_status": "APPROVE failed verge restoration/historical proof validity and separate shrub source candidate. New shrub affected proofs/visual pending; earlier visual BLOCK/timeout FAIL retained. Full F40 OPEN; no local engine execution or performance acceptance."
 }
