@@ -20,14 +20,24 @@ var _pending_field: Dictionary = {}
 
 
 func _act(policy: String) -> void:
-	if policy == "SWITCH_READER" and _combo_hooked_manager != _manager.get_instance_id():
-		_combo_hooked_manager = _manager.get_instance_id()
-		# F24's joint attack is observed when it exists; until then the
-		# switching reader still has COMBAT §12.3's other two sources (type
-		# matchup, per-identity resources) through the D32 switch.
-		_tally["tag_combo_available"] = _manager.has_signal("tag_combo_resolved")
-		if bool(_tally.tag_combo_available):
-			_manager.connect("tag_combo_resolved", _on_tag_combo_resolved)
+	if policy == "SWITCH_READER":
+		var commands := preload("res://scripts/combat/tether_commands.gd")
+		var snapshot: Dictionary = _manager.tether_command_snapshot()
+		var mounted := false
+		for child: Node in _manager.get_children():
+			if child.get_script() == preload("res://scripts/ui/tether_command_input.gd"):
+				mounted = true
+				break
+		_tally["tag_combo_available"] = commands.enabled() and mounted \
+			and snapshot.get("unlocked_commands", []).has("tag_combo")
+		if bool(_tally.tag_combo_available) and snapshot.get("active") == true and _manager.can_switch() \
+			and not _manager.player_is_committed() and float(_manager.get("_hitstop_left")) <= 0.0 \
+			and not bool(_manager.get("_ultimate_waiting_release")) and not _manager.ultimate_armed() \
+			and int(_manager.call("_next_switchable_index", 1)) >= 0 \
+			and float(snapshot.get("meter", 0.0)) >= float(commands.config().get("commands", {}).get("tag_combo", {}).get("cost", INF)) \
+			and float(snapshot.get("combo_remaining_s", 0.0)) > 0.0:
+			_press(commands.input_action("tag_combo"))
+			return
 	if is_instance_valid(_wild) and _prepared_body != _wild.get_instance_id():
 		_prepared_body = _wild.get_instance_id()
 		_tell_seen_frame = -1
