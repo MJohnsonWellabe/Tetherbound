@@ -212,5 +212,21 @@
     "rollback": "Entire873 reverted: NPCgateOFF and both Waterlenssettings/existing-test assertions removed.",
     "diagnostic": "One unchanged-main068 existing Water area dispatched solely to establish baseline; no third candidate; no flake claim.",
     "full_F39_2": "OPEN"
+  },
+  "baseline_probe": {
+    "run": 37705159470,
+    "artifact": 11518709779,
+    "source_commit": "068b5bb7c9b0926672d50ce846a768f92d4dc4ed",
+    "proof": "tests/smoke_water_camps.gd unchanged; Compatibility1280x720",
+    "checks": 129,
+    "failed": 3,
+    "exit": 1,
+    "seconds": 144,
+    "failures": [
+      "Actual rest interaction passes exactly one day",
+      "Completed night records production rest progress",
+      "Production load restores the rested day"
+    ],
+    "observation": "Same three failures reproduced on unchanged main. [rest] rested; day2 again prints after assertions. Exact cause beyond expiration before callback remains unproved; no tolerance/production/wait changes. Candidate stays reverted, no READY."
   }
 }
