@@ -12,31 +12,24 @@ const COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 func test_observatory_paving_excludes_cover_only_on_its_own_court() -> void:
 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 	var world := WORLD.new()
-	var materials := _materials()
-	for key: String in ["stone", "stone_light", "tether", "leaf_gold"]:
-		materials[key] = materials.masonry
-	world.set("_materials", materials)
-	var landmark := Node3D.new()
-	landmark.position = Vector3(430.0, 920.0, 4500.0)
-	(Engine.get_main_loop() as SceneTree).root.add_child(landmark)
-	world.call("_build_observatory", landmark)
-	var exclusions: Array[Dictionary] = world.get("_cover_exclusions")
-	assert_eq(exclusions.size(), 1, "the production Observatory registers its dial footprint")
+	# The unit runner executes during SceneTree._init, before a main loop is
+	# available. Exercise the production descriptor without a scene fixture;
+	# actual landmark placement/registration belongs to the native area proof.
+	var centre := Vector3(430.0, 920.0, 4500.0)
+	var exclusion: Dictionary = world.call("_observatory_dial_cover_exclusion", centre)
+	assert_eq(exclusion.centre, centre, "the descriptor preserves the supplied world centre")
 	var cover := COVER.new()
-	cover.set("_exclusions", exclusions)
+	cover.set("_exclusions", [exclusion])
 	var radius := float(cfg.dial_radius_m)
 	for direction: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK,
 			Vector3(1.0, 0.0, 1.0).normalized()]:
-		assert_true(cover.call("_excluded", landmark.position + direction * (radius - 0.01)),
+		assert_true(cover.call("_excluded", centre + direction * (radius - 0.01)),
 			"paved court excludes cover right up to its configured edge")
-		assert_false(cover.call("_excluded", landmark.position + direction * (radius + 0.01)),
+		assert_false(cover.call("_excluded", centre + direction * (radius + 0.01)),
 			"unpaved crown outside the court remains eligible")
-	assert_false(cover.call("_excluded", landmark.position + Vector3.UP * 40.0),
+	assert_false(cover.call("_excluded", centre + Vector3.UP * 40.0),
 		"a different Cloudreach stratum remains eligible")
-	assert_true(landmark.find_children("*", "CollisionObject3D", true, false).is_empty(),
-		"the paving exclusion adds no collision")
 	cover.free()
-	landmark.free()
 	world.free()
 
 
