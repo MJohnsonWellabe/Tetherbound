@@ -247,10 +247,14 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 			# only after the original saved-UID/debt predicate succeeds. Headless
 			# mechanics keep their original data and cannot claim visual evidence.
 			if args.has("screenshot") and DisplayServer.get_name() != "headless":
+				var preset := preload("res://scripts/ui/graphics_prefs.gd").selected()
+				var renderer := RenderingServer.get_current_rendering_method()
+				if preset != "Low" or renderer != "gl_compatibility":
+					return {"verdict":"FAIL","detail":"F37 rejoin frames require actual Low Compatibility"}
 				var shot: Dictionary = await INPUT.run(runner, "screenshot", {"name":str(args.screenshot)})
 				if shot.get("verdict") != "PASS": return shot
 				data.screenshot = shot.get("data", {})
 				print("F37 SAVED DIVE FRAME " + JSON.stringify({"character_id":str(game.local.character_id),
-					"state":args.require_saved_dive,"observed":data}))
+					"state":args.require_saved_dive,"preset":preset,"renderer":renderer,"observed":data}))
 		return {"verdict":"PASS","data":data}
 	return {"verdict":"ERROR","detail":"unknown F37 action"}
