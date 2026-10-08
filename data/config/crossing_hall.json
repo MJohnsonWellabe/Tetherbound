@@ -2,6 +2,12 @@
   "schema_version": 1,
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
+  "arch_frame_depth": {
+    "enabled": false,
+    "factor": 5.0,
+    "scope": "Peer-local, all presets, installed Wall_Arch visual localZ depth only; X/Y and membrane/sign/Approach transforms stay fixed. Shipping OFF pending actual capture/judge. --hall-arch-depth-candidate and --hall-arch-depth-baseline are process-only; baseline wins. No new mesh/collider/interaction/state/authority/transaction/save change.",
+    "provenance": "Installed Wall_Arch.gltf POSITION bounds X[-1,1],Y[-0.000000119,3],Z[-0.000000037,0.06404569] metres; 5x depth grows64mm to320mm without changing native2m width/3m height."
+  },
   "pedestal_label_at": [0, 1.9, 0.15],
   "_label_scope": "Peer-local Hall labels on all presets. Pedestal name baseline clears installed BookStand maximum Y1.44429; identical arch name/status renders once, with distinct Locked/Open/Stirred/Home states retained. No model/collider/approach/state/authority/transaction/save change. Actual label capture and judge required.",
   "rain_shelter_enabled": true,

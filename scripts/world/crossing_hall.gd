@@ -97,7 +97,19 @@ func _build_arch(entry: Dictionary) -> void:
 	slot.set_meta("biome", str(entry.biome))
 	slot.add_to_group("crossing_hall_arches")
 	add_child(slot)
-	_add_model(slot, ARCH_MODEL)
+	var frame := _add_model(slot, ARCH_MODEL)
+	var depth: Dictionary = _config.get("arch_frame_depth", {})
+	var args := OS.get_cmdline_user_args()
+	if frame != null and not args.has("--hall-arch-depth-baseline") and \
+			(bool(depth.get("enabled", false)) or args.has("--hall-arch-depth-candidate")):
+		var factor := float(depth.get("factor", 1.0))
+		if not is_finite(factor) or factor < 1.0 or factor > 6.0:
+			push_error("Crossing Hall arch depth factor must be finite and within 1..6")
+		else:
+			# The installed frame is only64mm deep. Grow its existing depth;
+			# width/height, portal surface, signs and approach marker stay fixed.
+			frame.scale.z *= factor
+			frame.set_meta("hall_arch_depth_factor", factor)
 	var board := _label(slot, ORDER.display_name(str(entry.biome)), Vector3(0, 3.55, 0))
 	board.name = "BiomeSign"
 	var state := _label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked", Vector3(0, 2.95, .12))
@@ -160,12 +172,17 @@ func _build_pedestal(entry: Dictionary) -> void:
 	slot.add_child(prompt)
 
 
-func _add_model(parent: Node3D, path: String) -> void:
+func _add_model(parent: Node3D, path: String) -> Node3D:
 	var packed := load(path) as PackedScene
 	if packed == null:
 		push_error("Crossing Hall installed model missing: " + path)
-		return
-	parent.add_child(packed.instantiate())
+		return null
+	var model := packed.instantiate() as Node3D
+	if model == null:
+		push_error("Crossing Hall installed model is not spatial: " + path)
+		return null
+	parent.add_child(model)
+	return model
 
 
 func _label(parent: Node3D, text: String, at: Vector3) -> Label3D:
