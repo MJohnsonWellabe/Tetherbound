@@ -52,6 +52,26 @@
     "change": "Existing trainer_mira authored one BramblebunL4, fixture label and source-derived fixed seed. Five-card/source/current-body/durable owner/BOOL writer/input budgets and acceptancefalse unchanged.",
     "required_proof": "tests/smoke_f22_live_pattern_mount.gd --prove-canonical-floor-owner",
     "run_id": 37828102252,
-    "result": "Runtime pending; no proof credit"
+    "result": "FAIL before accepted combat: actual trainer owner installer refused",
+    "proof": {
+      "run_id": 37828102252,
+      "artifact_id": 11571738836,
+      "job_id": 113486086423,
+      "checkout_commit": "205e9b3fe27654ad42e4b83c35c090a4fe9535bd",
+      "log_sha256": "244f0b073e2eb4ee63edc44c04af7dd665716cf0fc13dcd734cb5fbc3e34ad15",
+      "checks": 6,
+      "owner_disk_party_count": 5,
+      "accepted_launches": 0,
+      "accepted_impacts": 0,
+      "saved_move_receipts": 0,
+      "actual_error": "real authored trainer owner installer refused",
+      "limit": "Authored single-source predicate and initial five-card BOOL writes reached. No accepted attack, move-use receipt, win or full-policy/whole credit."
+    }
+  },
+  "deployed_body_correction": {
+    "source_commit": "c047162296dcded2c19c849eb3dd5efe31b668d2",
+    "support": "Old base creates basic creature_body.gd; Director.ordinary_combat_vitals_ready calls deployed_body_for(peer), which scans deployed_creature group and owner_peer_id. Bare body lacks both. Production follower _ready joins deployed group and actual producer sets owner_peer_id. Necessary producer mismatch identified from exact construction/guard code; no unobserved sole refusal cause claimed.",
+    "change": "Base synchronous body factory keeps exact old default construction; opt-in overrides with actual Follower and peer1 before _ready/Manager.begin, no manual group faking. Real current deployed-body lookup must equal the actual body before existing installer. No live resource/time/state/flag or production guard changes.",
+    "disposition": "Distinct supported source correction; same original scope review before one changed existing named proof. Failed files preserved, no unchanged retry."
   }
 }

@@ -131,6 +131,7 @@ func _mount_owner() -> bool:
 	_owner_director.set("_session", _owner_session)
 	_owner_director.set("_manager", _manager)
 	_owner_director.set("_player", _manager.get("_player"))
+	_ally.set("leader", _manager.get("_player")) # Same producer-owned trainer as normal follower deployment.
 	_owner_director.set("_ally", _manager.active_creature())
 	_owner_director.set("_ally_body", _ally)
 	_owner_director.set("_engaged_with", _wild)
