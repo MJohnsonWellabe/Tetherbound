@@ -17,7 +17,7 @@ var _lesson_replay_rows: Dictionary = {}
 var _lesson_observed_history: Dictionary = {}
 
 static func lesson_witness_options() -> Dictionary:
-	var options := {"controller": false, "capture": false, "replay": false, "skip_line": 0, "failures": []}
+	var options := {"controller": false, "capture": false, "replay": false, "durable_ack": false, "skip_line": 0, "failures": []}
 	var seen := {}
 	for arg: String in OS.get_cmdline_user_args():
 		var key := ""
@@ -33,6 +33,10 @@ static func lesson_witness_options() -> Dictionary:
 			key = "capture"
 			if arg != "--capture-lessons": options.failures.append("Use --capture-lessons without a value")
 			options.capture = true
+		elif arg.begins_with("--lesson-reload-witness"):
+			key = "durable_ack"
+			if arg != "--lesson-reload-witness": options.failures.append("Use --lesson-reload-witness without a value")
+			options.durable_ack = true
 		elif arg.begins_with("--lesson-skip-line"):
 			key = "skip_line"
 			var value := arg.trim_prefix("--lesson-skip-line=")
@@ -46,6 +50,8 @@ static func lesson_witness_options() -> Dictionary:
 			seen[key] = true
 	if seen.has("skip_line") and not options.controller:
 		options.failures.append("--lesson-skip-line requires --lesson-controller-witness")
+	if options.durable_ack and (not options.controller or not options.replay):
+		options.failures.append("Lesson durability requires the existing controller and Help replay witnesses")
 	if options.capture and OS.get_cmdline_user_args().has("--functional-offload") \
 		and (DisplayServer.get_name() == "headless" or RenderingServer.get_current_rendering_method() != "gl_compatibility"):
 		options.failures.append("Offloaded --capture-lessons requires a real Compatibility display and a guarded native draw")
@@ -440,8 +446,13 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 	if is_instance_valid(owner): owner.disconnect("dismissed", dismissal_observer)
 	var receipt_began := Time.get_ticks_msec()
 	var deadline := receipt_began + 30000
+	var saved_ack := {}
 	while str(game.local.character_id) == character_id and Time.get_ticks_msec() < deadline \
-		and game.local.flags.call("has", "opening:lesson:" + id) != true:
+		and (game.local.flags.call("has", "opening:lesson:" + id) != true \
+			or (options.durable_ack and saved_ack.get("passed") != true)):
+		if options.durable_ack:
+			saved_ack = _saved_lesson_ack(id, character_id, witness.party_uids)
+			if saved_ack.get("passed") == true and game.local.flags.call("has", "opening:lesson:" + id): break
 		await tree.process_frame
 	var acknowledged: bool = str(game.local.character_id) == character_id \
 		and game.local.flags.call("has", "opening:lesson:" + id) == true
@@ -449,6 +460,7 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 		and str(owner.get("_row").get("id", "")) == id
 	var completed := input_ok and released and is_instance_valid(owner) and not original_open \
 		and dismissed == [id] and acknowledged
+	if options.durable_ack: completed = completed and saved_ack.get("passed") == true
 	if observing:
 		completed = completed and _uids() == witness.party_uids \
 			and str(game.local.character_id) == character_id \
@@ -461,6 +473,7 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 			"ack_after": acknowledged, "released": released, "original_open": original_open,
 			"party_uids_after": _uids(), "passed": completed,
 			"render_loop_enabled": RenderingServer.render_loop_enabled,
+			"saved_character_ack":saved_ack,
 			"scope": "Observed lesson lines only; Settings replay is reported separately and full F46 remains unproven"})
 		print(("F46 LESSON CONTROLLER WITNESS " if controller_witness else "F46 LESSON OBSERVATION ") + JSON.stringify(witness))
 	print("F20 LESSON result id=", id, " reader=", get_instance_id(), " generation=", generation,
@@ -488,6 +501,23 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 ## cache but must not erase the history needed by the existing disk boundary.
 func observed_lesson_history() -> Dictionary:
 	return _lesson_observed_history.duplicate(true)
+
+## Read the existing production character bank only. Avoid characters(), whose
+## accessor finalizes a pending fallback, and never save/flush to make this pass.
+func _saved_lesson_ack(id: String, character_id: String, party_uids: Array) -> Dictionary:
+	var saver: RefCounted = game.get("save_system")
+	var bank: RefCounted = saver.get("_characters") if saver != null else null
+	var data: Dictionary = bank.call("read", character_id) if bank != null else {}
+	var saved_uids: Array[String] = []
+	for member: Dictionary in data.get("party", []): saved_uids.append(str(member.get("uid", "")))
+	var flags: Variant = data.get("flags", {})
+	var raw_flags: Variant = flags.get("flags", []) if flags is Dictionary else []
+	var ack: bool = raw_flags is Array and raw_flags.has("opening:lesson:" + id)
+	var passed: bool = bank != null and saver == game.get("save_system") and not data.is_empty() \
+		and data.get("character_id") == character_id and str(game.local.character_id) == character_id \
+		and saved_uids == party_uids and _uids() == party_uids and ack
+	return {"passed":passed,"character_id":data.get("character_id", ""),"party_uids":saved_uids,
+		"personal_ack":ack,"scope":"Validated production character-bank read only; actual title Load remains separate"}
 
 func _activate_world(prompt: Node3D, approach_headings: Array[Vector3] = []) -> bool:
 	var bounty: Node = game.session.get_node_or_null("FoundationComposition/BountyInteraction")
