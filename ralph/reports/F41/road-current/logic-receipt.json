@@ -1,0 +1,36 @@
+{
+  "criterion": "F41/P2-040 road current component; whole F41#0/#1/#2/#3/#5 OPEN",
+  "source_commit": "4577b4fbb6ce13efa97eddebc4911d742a0776fc",
+  "status": "SOURCE_APPROVED_AFFECTED_LOGIC_RERUN_PENDING",
+  "initial_logic": {
+    "run_id": 37721602732,
+    "artifact_id": 11526028108,
+    "checkout_ref": "c19525a58b6c3873280d740a6f86bf12bf7153ef",
+    "combined_test_files": [
+      "test_stormwood_glass_field_identity.gd",
+      "test_stormwood_road_current.gd"
+    ],
+    "combined_tests": 11,
+    "combined_assertions": 9288,
+    "combined_failed": 0,
+    "actual_exit_code": 0,
+    "seconds": 4,
+    "log_sha256": "3697182df0e0918420862ff6704e19290061b3a06c9ecae30ea1b629490d8c72",
+    "caveat": "Road's existing outside-scene _poll Game lookup logged an engine error despite zero failed assertions. Road gate remains open for the reviewed guard and affected rerun; no clean combined-run claim."
+  },
+  "file_cases": 8,
+  "correction": "Guard root Game lookup with is_inside_tree(); outside-tree null fallback, in-tree motion/Surge behavior retained. No test/fixture/assertion changes.",
+  "review": {
+    "reviewer": "/root/review_cloud_startup",
+    "verdict": "APPROVE four road source files and one-line lookup guard"
+  },
+  "flags": {
+    "finish_candidate": "ON candidate, client_presentation"
+  },
+  "remaining": [
+    "Affected eight road cases, eliminate logged engine lookup error",
+    "Existing two-view road capture with production material/chunks/camera binding",
+    "Original code-blind before/after judgment",
+    "Flow/reduced-motion actual path evidence; full matrix/Bar OPEN"
+  ]
+}
