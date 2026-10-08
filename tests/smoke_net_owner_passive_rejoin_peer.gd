@@ -495,7 +495,25 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var player: Node3D = _probe.call("player")
 			player.global_position = selected.global_position + Vector3(2.0, 0, 0)
 			for frame in 6: await physics_frame
-			return await _step_engage_wild({})
+			var engage_result: Dictionary = await _step_engage_wild({})
+			if session.is_host() and engage_result.get("verdict") != "PASS":
+				# Observe the failed preparation where it actually returned. This
+				# is a live return-time snapshot, not a prior refusal-time claim.
+				var failed_offer: Dictionary = _tag_state({})
+				var ally: RefCounted = director.ally_instance()
+				var target: RefCounted = selected.get("instance") if is_instance_valid(selected) else null
+				failed_offer["engage_stage"] = {"observed_ms":Time.get_ticks_msec(),
+					"manager_fighting":_combat_manager().is_fighting(), "trainer_battle_active":director.trainer_battle_active(),
+					"ally_present":ally != null, "ally_hp":ally.hp if ally != null else null,
+					"ally_fainted":ally.fainted if ally != null else null,
+					"selected_body_instance":selected.get_instance_id() if is_instance_valid(selected) else 0,
+					"selected_uid":str(target.uid) if target != null else "",
+					"selected_visible":selected.visible if is_instance_valid(selected) else false,
+					"selected_alive":selected.is_alive() if is_instance_valid(selected) else false,
+					"selected_distance":player.global_position.distance_to(selected.global_position) if is_instance_valid(selected) else null,
+					"engage_range":director.get("_engage_range")}
+				print("TAG/TONIC failed Engage host observation: ", JSON.stringify(failed_offer))
+			return engage_result
 		"op_tonic_hits":
 			var director: Node = _encounter_director()
 			var manager: Node = _combat_manager()
