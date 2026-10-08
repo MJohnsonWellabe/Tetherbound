@@ -13,6 +13,18 @@ const OPEN_STANDS := {
 }
 
 var _craft_panel: CanvasLayer
+var _build_graphics: Dictionary = {}
+
+
+func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_build_graphics = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self)
+			if _build_graphics.is_empty():
+				quit(1)
+				return
+			break
+	await super._run()
 
 func _load_plan() -> bool:
 	_planned = [{"frame_id": "%s__system__build_suite" % _biome_id}]
@@ -21,6 +33,8 @@ func _load_plan() -> bool:
 
 func _begin_manifest() -> void:
 	super._begin_manifest()
+	if not _build_graphics.is_empty():
+		_manifest["graphics_capture"] = _build_graphics
 	_manifest["fixture_disclosure"] = "Visual-only production-scene fixture: player debug-travels to an open authored spot; BuildPlacer creates real tent, campfire, bedroll, floor, wall and workbench nodes near the player; CraftPanel opened directly. No placement cost, interaction, sleep, recipe result or saved state proof."
 
 

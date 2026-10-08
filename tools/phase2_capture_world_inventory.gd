@@ -6,6 +6,24 @@ extends "res://tools/phase2_capture_locations.gd"
 ## selected, and every frame retains its exact authored coordinate.
 
 const PLAN := "res://tools/phase2_world_inventory_plan.json"
+var _inventory_graphics: Dictionary = {}
+
+
+func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_inventory_graphics = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self)
+			if _inventory_graphics.is_empty():
+				quit(1)
+				return
+			break
+	await super._run()
+
+
+func _begin_manifest() -> void:
+	super._begin_manifest()
+	if not _inventory_graphics.is_empty():
+		_manifest["graphics_capture"] = _inventory_graphics
 
 
 func _plan_path() -> String:
