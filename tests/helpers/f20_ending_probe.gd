@@ -265,6 +265,47 @@ func ready(tree: SceneTree, game: Node, timeout_ms: int = 180000) -> bool:
 		" paused=", tree.paused, " owner=", owner.get_path() if owner != null else "none")
 	return check(false, "production world and personal ending context become ready")
 
+## F46-only endpoint on this exact existing fixture. Use the actual Home Key
+## and grounded farmhouse approach, without starting homecoming or credits.
+func homestead_lesson(tree: SceneTree, game: Node) -> bool:
+	var options := TRAVEL.lesson_witness_options()
+	if not check(options.failures.is_empty() and options.controller and options.replay,
+		"Homestead witness requires existing mapped Skip and Settings Help options"): return false
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	if not check(not rules.available("homestead", game.local) \
+		and not game.local.flags.call("has", rules.PREFIX + "homestead"),
+		"existing fixture has not earned or acknowledged its first Homestead lesson"): return false
+	if not await ready(tree, game): return false
+	# Reuse ending's exact authored aftermath input and original30s bound.
+	var owner := INPUT_OWNER.current(tree)
+	if owner != null:
+		var deadline := Time.get_ticks_msec() + 30000
+		var travel_after := TRAVEL.new(tree, game)
+		while owner != null and Time.get_ticks_msec() < deadline:
+			if not check(owner.get_script() == load("res://scripts/ui/dialogue_panel.gd") \
+				and owner.call("runner").call("conversation_id") == "stormwood_homecoming_aftermath",
+				"only the original settled-finale aftermath precedes the Homestead Home Key"): return false
+			await travel_after.tap("interact")
+			owner = INPUT_OWNER.current(tree)
+		if not check(owner == null, "original aftermath returns ordinary Home Key input"): return false
+	if not await return_home(tree, game): return false
+	var travel := TRAVEL.new(tree, game)
+	var cid := str(game.local.character_id)
+	var retained: Array[String] = travel._uids()
+	var grandpa: Node3D
+	for node: Node in tree.current_scene.find_children("*", "", true, false):
+		if node.has_method("interaction_offer") and node.get_parent().name == "Grandpa": grandpa = node as Node3D
+	if not check(grandpa != null and retained.size() == 5 and rules.available("homestead", game.local),
+		"actual Home Key arrival unlocked Homestead for the same saved five and installed Grandpa"): return false
+	if not await travel.approach_grandpa(grandpa) or not await travel.replay_observed_lesson("homestead"):
+		failures.append_array(travel.failures)
+		return false
+	var dialogue: Node = tree.current_scene.get_node_or_null("DialoguePanel")
+	return check(str(game.local.character_id) == cid and travel._uids() == retained \
+		and game.local.flags.call("has", rules.PREFIX + "homestead") and dialogue != null and not dialogue.call("is_open") \
+		and INPUT_OWNER.current(tree) == null and not HOME.context(game).get("homecoming_seen", false),
+		"natural Homestead Skip/Help retained identity and free input without opening homecoming")
+
 func ending(tree: SceneTree, game: Node, stir: bool = true) -> bool:
 	if not await ready(tree, game): return false
 	# A resumed Stormwood may offer the shipping aftermath automatically.

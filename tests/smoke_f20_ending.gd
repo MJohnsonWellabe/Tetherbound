@@ -13,10 +13,28 @@ func _init() -> void:
 func _run() -> void:
 	await process_frame
 	_credits_only = OS.get_cmdline_user_args().has("--through-credits")
+	var homestead_lesson := OS.get_cmdline_user_args().has("--homestead-lesson-witness")
 	var game := root.get_node("Game")
 	if not proof.fixture(game, "Solo"): finish(); return
 	var order_ui_only := OS.get_cmdline_user_args().has("--order-ui-only")
 	var order_journal_only := OS.get_cmdline_user_args().has("--order-journal-only")
+	if homestead_lesson:
+		if order_ui_only or order_journal_only or _credits_only:
+			proof.check(false, "Homestead lesson witness is exclusive of ending and order endpoints")
+			finish()
+			return
+		game.set("current_realm", "stormwood")
+		game.local.set("realm", "stormwood")
+		if change_scene_to_file("res://scenes/world/stormwood.tscn") != OK:
+			proof.check(false, "existing Homestead witness fixture loads its original Stormwood scene")
+		else:
+			_completed = await proof.homestead_lesson(self, game)
+		for failure: String in proof.failures: print("F46 HOMESTEAD FAIL ", failure)
+		print("F46 HOMESTEAD RESULT " + JSON.stringify({"passed":_completed and proof.failures.is_empty(),
+			"checks":proof.checks,"failures":proof.failures,"setup":"unchanged disclosed post-finale fixture",
+			"actual_home_key_return":true,"earned_campaign":false,"whole_f46_proven":false}))
+		quit(0 if _completed and proof.failures.is_empty() else 1)
+		return
 	if order_ui_only and order_journal_only:
 		proof.check(false, "order UI and journal extension endpoints are exclusive")
 		finish()
