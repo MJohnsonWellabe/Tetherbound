@@ -400,5 +400,52 @@
       "review": "APPROVE original f25_medium_review; selected preparation target is not helper chosen target; live return-time snapshot only",
       "proof": "Not dispatched; ROOT bounded re-scope pending"
     }
+  },
+  "changed_host_observer_tag_pass": {
+    "source_commit": "30d849c815a83af11c16454987f4a14860660e77",
+    "run_id": 37754362316,
+    "artifact_id": 11540215577,
+    "named_proof": "tests/smoke_net_owner_passive_rejoin.gd --prove-tag-combo",
+    "mode": "headless",
+    "result": "PASS",
+    "exit": 0,
+    "elapsed_seconds": 384,
+    "checks": 123,
+    "failed_checks": 0,
+    "script_parse_errors": 0,
+    "log_sha256": "23a2539153fe470aac70214aacc21c7edcafa41072fe600718ef1bdeaceb7ef9",
+    "before_host_settlement_snapshot": {
+      "bindings": [],
+      "encounter_id": "1:2",
+      "gate_pending": false,
+      "namespace_source": "current_host_world",
+      "observed_ms": 354008.0,
+      "pending_item_count": 0.0,
+      "scope": "live_host_snapshot_all_participants"
+    },
+    "passed_tag_checks": [
+      "PASS: Tag: host deploys its same actual owned companion -- a creature was already out",
+      "PASS: Tag: host normally engages an actual live wild -- engaged trailpup as encounter 1:2 (bound after 0 frame(s))",
+      "PASS: Tag: existing proximity setup reaches the actual host fight -- trainer stands at (25.37, -7.73, 7485.92)",
+      "PASS: Tag: guest deploys its same admitted owned companion -- a creature was already out",
+      "PASS: Tag: guest joins the exact host encounter -- joined 1:2 beside 'trailpup' at (28.2, 7490.0) after 865 ms",
+      "PASS: Tag: actual hits earn meter and fresh-hit command switches normally -- actual earned-meter Tag switched to the next owned companion",
+      "PASS: Tag: host retains one accepted parent with both actual child writes",
+      "PASS: Tag: both damage events belong to the owner's distinct creatures",
+      "PASS: Tag: both positive actual HP debits form one exact chain and parent final HP",
+      "PASS: Tag: outgoing half quick and incoming full one-and-a-half quick retain authored factors",
+      "PASS: Tag: owner and trusted host recast the same bodies once to the next owned UID",
+      "PASS: Tag: body switch preserves the admitted party without another creature",
+      "PASS: Tag: owner and host consume exactly the parent's command meter state",
+      "PASS: Tag: owner and joined observer consume the actual outgoing child impact once",
+      "PASS: Tag: owner and joined observer consume the actual incoming child impact once",
+      "PASS: Tag: the owner consumes the parent absolute HP without another debit",
+      "PASS: Tag: submit the same original again -- submitted the same original Tag request again",
+      "PASS: Tag: duplicate submission cannot debit HP or meter or replace the retained parent",
+      "PASS: Tag: peer 1 normally leaves the proof fight -- pressed 'combat_run' x1",
+      "PASS: Tag: peer 0 normally leaves the proof fight -- pressed 'combat_run' x1"
+    ],
+    "interpretation": "Actual mounted Tag path passed. Failed-Engage observer was not exercised; previous native refusal cause remains unproved. No production repair inferred. Rally/Snare optional paths were not selected; no whole F24#0/#5 or shipping flag claim.",
+    "review": "Original f25_medium_review pending bounded behavior verdict"
   }
 }
