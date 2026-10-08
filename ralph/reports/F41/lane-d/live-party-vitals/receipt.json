@@ -1,0 +1,38 @@
+{
+  "source": "8fc3ad91d1124633cdc88754f6891e9f59dde490",
+  "trigger": "Actual natural-loss original blind P2-110 BLOCK impact36: defeated Sparkit remained green/full-health in roster. Canonical HP/faint changes did not invalidate the default HUD cache because its candidate gate was OFF.",
+  "scope": "Peer-local canonical party-vitals presentation on all presets; existing five-member cache only",
+  "production_change": "Retire obsolete candidate gate explicitly. Always snapshot canonical HP fraction, fainted and resting in the cache key; preserve reveal/cycle behavior and unchanged-value caching. Missing and legacy-false config cannot restore stale rows.",
+  "authority": "No HP/faint mutation, combat, enemy role, inventory, save, input, layout or transaction change",
+  "source_review": "APPROVE same original f42_visual_review; F17/lane-d/portal-depth/original-native-and-vitals-source-review.txt Scope2. Selected proofs and native pixels are separately pending.",
+  "party_vitals_proof": {
+    "script": "tests/run_tests.gd",
+    "args": "--only=test_hud_party_vitals.gd",
+    "run": 37814682262,
+    "artifact": 11566029206,
+    "job": 113440160011,
+    "actual_result": "PASS: 3 tests, 22 assertions, 0 failed",
+    "exit_code": 0,
+    "duration_seconds": 6,
+    "script_error_count": 0,
+    "warning_count": 0,
+    "log_sha256": "1fb8b6752b78eba614c1dede333e14935045ced22b0f6f1e5ffe7221539a79fa",
+    "checkout_excerpt": "checkout-excerpt.txt",
+    "independent_proof_review": "PENDING same original f42",
+    "fixtures": "Existing isolated real Party/Creature instances and StripProbe; direct canonical damage/heal/resting mutations. No earned-save, actual-combat or visual claim. Existing default/legacy-false regression replaces obsolete stale-row expectation; other guards retained."
+  },
+  "lifecycle_proof": {
+    "run": 37815272293,
+    "script": "tests/smoke_hud_presentation_lifecycle.gd",
+    "args": "--720p",
+    "status": "IN_PROGRESS exact8fc; retained cap50/tiers1..4 five-member isolated late-game fixture and original assertions"
+  },
+  "production_only_patch": {
+    "path": "live-party-vitals-only.patch",
+    "sha256": "5ec67cf728d03a1f66ebb56b2f9118aed1b3e3e6e7501146e9df87d7b5fee3bd",
+    "scope": "Only scripts/ui/playground_hud.gd three cache/config hunks and data/config/hud.json obsolete-key retirement comment; no test or D portrait/role/fight integration",
+    "destination": "E approved253 natural-loss/role foundation only; E same-original exact combined source/command approval required before ROOT capture"
+  },
+  "limits": "Changed native loss pixels and original blind rescore pending. Do not run loss on D older enemy-role source. Prior actual13-hit natural defeat foundation retained by E; no distinct loss-layout or whole criterion claim.",
+  "whole_criterion_complete": false
+}

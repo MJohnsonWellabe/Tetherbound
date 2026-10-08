@@ -1,0 +1,15 @@
+Original reviewer: /root/f42_visual_review (01a1168a-2a2e-7243-aa7d-e655171c70fa)
+Original turn: 01a11c80-60d8-7032-875c-e6e5ff4e3cf2
+Retrieved from original completed final; parent routing remains active for the original blind reviewer.
+
+**Scope 1 — RUNTIME APPROVE:** frozen f2ef Hall packet.
+
+Verified all 42 hashes, 24 unique native 1920×1080 PNGs, twelve matching Medium/High body-camera pairs, grounded views and actual physical 8+8 access. Terminal exit 0 in 600.5s; no engine/script/shader error lines. Source/index cleanliness receipts match f2ef; initial generated-UID dirtiness and its archive are retained. Warnings remain: deprecated interpolation call and seven leaked Texture RIDs.
+
+Healthy active-companion identity and conditional ordinary-recall guards remain intact. Standalone mounting assertions are separate from the native overridden hook. `hall_stills_finished=true`, `complete=false`: no pixels, Low, motion, earned, device, performance or whole-criterion approval.
+
+**Scope 2 — SOURCE APPROVE:** `8fc3ad91d1124633cdc88754f6891e9f59dde490`.
+
+The cache now always compares canonical HP fraction, fainted and resting values for the five-member party. Vitals-only changes refresh rows without changing reveal/cycle policy; unchanged values retain the cache. Missing and legacy-false config regressions replace the obsolete stale-row expectation; other assertions remain. No gameplay, layout, authority or save mutation found.
+
+Affected proof and changed native pixels remain pending; no runtime or visual approval for Scope 2.

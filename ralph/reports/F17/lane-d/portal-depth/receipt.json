@@ -22,7 +22,35 @@
     "limits": "Headless mounting/state/walk only; does not establish GPU shader compile, native pixels, material quality, animation comfort, performance or whole criterion."
   },
   "source_command_review": "APPROVE same original f42: original-source-proof-command-review.txt. Initial remote-compaction and API-required-parent direct-resume rejection retained; required parent route recovered original reviewer without replacement/settings changes.",
-  "native_command": "proposed-native-command.json: APPROVE originalf42 exactf2ef Forward+ Medium pairedHigh existing24Hallstills, candidate argument only; ROOT sole writer, actual GPU/native/blind pending",
+  "native_command": "ROOT completed the original approved source/argv at native-d-f2ef6221d2-hall-depth-r1, not D proposed directory. ROOT operational wrapper2400s; internal guards unchanged. Existing proposed-native-command.json retained as proposal history.",
   "reuse": "a7 endwall24stills bounded original runtimeAPPROVE retained as existing before packet; Hall geometry/light matching and wording85c difference disclosed. Original physical8+8/healthyactiveUID/conditionalordinaryrecall guards unchanged.",
-  "whole_criterion_complete": false
+  "whole_criterion_complete": false,
+  "native_packet": {
+    "path": "D:/CodexTemp/tetherbound-proof/native-d-f2ef6221d2-hall-depth-r1",
+    "source": "f2ef6221d2421c5c37fb2a38ab54a82bedeb4ea8",
+    "pid": 39892,
+    "started_utc": "2026-10-08T16:47:44.7899877Z",
+    "finished_utc": "2026-10-08T16:57:45.3136744Z",
+    "exit_code": 0,
+    "stop_reason": "",
+    "seconds": 600.5,
+    "hashes": 42,
+    "actual_pngs": 24,
+    "width": 1920,
+    "height": 1080,
+    "paired_presets": [
+      "Medium",
+      "High"
+    ],
+    "matched_pairs": 12,
+    "script_shader_engine_errors": 0,
+    "warnings": "Deprecated interpolation call and seven leaked Texture RIDs; original reviewer disclosed both",
+    "runtime_verdict": "APPROVE same original f42 Scope1; original-native-and-vitals-source-review.txt",
+    "blind_verdict": "PENDING same original f26",
+    "complete": false,
+    "hall_stills_finished": true,
+    "source_clean_after_archive": true,
+    "generated_uid": "Initial generated hall_portal_depth.gdshader.uid dirtiness retained and archived before clean source/index receipts; not concealed",
+    "limits": "Source candidate OFF; process-only. Existing physical8+8/healthyUID/ordinary recall retained. No Low, motion, earned, device, performance, pixel or whole-criterion verdict."
+  }
 }
