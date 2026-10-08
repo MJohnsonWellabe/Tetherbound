@@ -135,11 +135,13 @@ func _run() -> void:
 	player.call("set_locomotion_enabled", false)
 	await _frames(2)
 	var saved_health: float = vitals.health
-	if not _expect(game.save_game(1), "midwater exhausted save failed"):
+	# The isolated directory owns the files; retained receipts keep the
+	# booted slot-0 world identity through this original resource round trip.
+	if not _expect(game.save_game(0), "midwater exhausted save failed"):
 		return
 	vitals.stamina = vitals.max_stamina
 	vitals.health = vitals.max_health
-	if not _expect(game.load_game(1), "midwater exhausted load failed"):
+	if not _expect(game.load_game(0), "midwater exhausted load failed"):
 		return
 	if not _expect(is_zero_approx(float(vitals.stamina)) and is_equal_approx(float(vitals.health), saved_health), "loading restored free swimming stamina or health"):
 		return
