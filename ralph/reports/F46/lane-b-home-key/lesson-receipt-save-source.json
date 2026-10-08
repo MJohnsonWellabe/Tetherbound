@@ -19,5 +19,21 @@
     "Actual paid savedACK/TitleLoad/Help results",
     "Earned Homestead, Portal, Shrine lesson witnesses",
     "Whole F46#0 original verdict and blind PASS"
-  ]
+  ],
+  "test_disposition": {
+    "source": "5e9ae3febe4891dbf75463fcf725b52bfe99ba46",
+    "original_verdict": "SOURCE REJECT new fixture/test scope; production unchanged from approved78f652",
+    "run": 37767534073,
+    "artifact": 11546975313,
+    "actual": "FAIL parse, ready redefines native Node signal;1test0assertions",
+    "test_only_correction": "17330b3b241b6bd73eaa886500369ed1bd9745fa",
+    "correction_retry": "37767890995 cancelled before execution because original reviewer rejected test fixture expansion; no passing check claimed",
+    "revert": "cd8e422655 removes only new rejected test work, preserving original existing production proofs",
+    "required_actual_proofs": {
+      "masters": 37767537654,
+      "altar": 37767541472,
+      "modal": 37767545374
+    },
+    "reuse_binding": "All3 run on5e9ae3febe with approved78f652 production bytes; rejected unit file is never selected by existing smokes; no duplicate runs required."
+  }
 }
