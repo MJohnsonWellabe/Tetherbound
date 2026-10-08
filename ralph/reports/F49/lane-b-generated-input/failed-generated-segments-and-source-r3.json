@@ -1,0 +1,516 @@
+{
+  "kind": "f49_failed_generated_segment_artifacts_and_original_source_reviews",
+  "owner_policy": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6060136810",
+  "runs": [
+    {
+      "run_id": 37784845949,
+      "artifact_id": 11554144562,
+      "checkout_source": "7034c247d88b5a47e22a76b6e66f11f0e2f90968",
+      "segment": "hall",
+      "artifact_sha256": "e0768754fe6cab6f4347f0e2605bc57fd36d4edeebe4366d617aaa41fdca0f4e",
+      "log": "ci-segment-37784845949.log.gz",
+      "log_sha256": "c0be11f10be05b4b50f26c483040e75c2491c952880683831d39707d4f27bdb7",
+      "observations": [
+        {
+          "tag": "EARNED CHAIN RESULT",
+          "result": {
+            "failures": [
+              "hall: Physical chest interaction lacks its durable personal completion"
+            ],
+            "location": {
+              "player": [
+                438.453460693359,
+                2.24178814888,
+                1782.83483886719
+              ],
+              "realm": "meadows",
+              "scene": "MeadowsPlayground"
+            },
+            "party": [
+              {
+                "hp": 111,
+                "level": 10,
+                "nickname": "Bud",
+                "species": "terrapup",
+                "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+              },
+              {
+                "hp": 147,
+                "level": 9,
+                "nickname": "",
+                "species": "bramblebun",
+                "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+              },
+              {
+                "hp": 141,
+                "level": 9,
+                "nickname": "",
+                "species": "bramblebun",
+                "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+              },
+              {
+                "hp": 141,
+                "level": 7,
+                "nickname": "",
+                "species": "mudsnout",
+                "uid": "creature-afbd0d982b14221393f70c29863586a1"
+              },
+              {
+                "hp": 136,
+                "level": 7,
+                "nickname": "",
+                "species": "bramblebun",
+                "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+              }
+            ],
+            "passed": false,
+            "segment": "hall",
+            "wall_seconds": 1165.914
+          }
+        }
+      ],
+      "failure_projection": [],
+      "workflow_conclusion": "failure",
+      "accepted_output": false
+    },
+    {
+      "run_id": 37785497728,
+      "artifact_id": 11555172122,
+      "checkout_source": "ef62bcc0f4769823e10fab3fe329a140e36df1d8",
+      "segment": "cloudreach",
+      "artifact_sha256": "7c9e18edd29d20f50bcb54ffdd26251c24467d13ee31dbec26a378b29d1b2a22",
+      "log": "ci-segment-37785497728.log.gz",
+      "log_sha256": "ade824a9c308753982f8784b4f271903c47277cc385722031e8e6ca83df4ff39",
+      "observations": [
+        {
+          "tag": "FRESH CAMPAIGN RESULT",
+          "result": {
+            "campaign_complete": false,
+            "counts_as_proof": false,
+            "elapsed_seconds": 912.696,
+            "failures": [],
+            "reached": "tidewake_settled",
+            "requested_prefix_passed": false,
+            "resume": {
+              "boundary": "tidewake_settled",
+              "continuous_fresh_save": false,
+              "generated_origin": {
+                "boundary": "tidewake_settled",
+                "provenance": {
+                  "continuous_fresh_save": false,
+                  "generator": "tools/earned_saves/earned_chain_runner.gd:5165aceae865747baaf524a1c94b87a7a808debedc24954d8e99ff4147149a7b:cloudreach",
+                  "owner_policy": "#5726060136810",
+                  "prior_earned_play": false
+                }
+              },
+              "journey_id": "ef62bcc0f4769823e10fab3fe329a140e36df1d8:/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-cloudreach-r1_generated_input",
+              "meadows_pieces": [
+                "opening_team",
+                "camp_tournament",
+                "bridge",
+                "warrens",
+                "relay",
+                "hall"
+              ],
+              "prior_earned_play": false,
+              "source": "/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-cloudreach-r1_generated_input/tidewake_settled",
+              "source_kind": "generated_fixture"
+            }
+          }
+        },
+        {
+          "tag": "GENERATED CHAPTER PROCESS",
+          "result": {
+            "continuous_fresh_save": false,
+            "exit_code": 1,
+            "input_mode": "generated_fixture",
+            "prior_earned_play": false,
+            "segment": "cloudreach"
+          }
+        }
+      ],
+      "failure_projection": [
+        "SCRIPT ERROR: Attempt to call function 'get_path' in base 'null instance' on a null instance."
+      ],
+      "workflow_conclusion": "failure",
+      "accepted_output": false
+    },
+    {
+      "run_id": 37789246405,
+      "artifact_id": 11555119552,
+      "checkout_source": "b5202f063586a2187f559d74ae992acc3beeb741",
+      "segment": "cloudreach",
+      "artifact_sha256": "d70ee10e446d0af8a6b0f1e9ffad76ab5f6323a307000a893c1432aeba92ad92",
+      "log": "ci-segment-37789246405.log.gz",
+      "log_sha256": "f9acb0cfaad623cc338f35a7cd6481dcff7246a7367ad3e45b145bed02a0ea48",
+      "observations": [
+        {
+          "tag": "FRESH CAMPAIGN RESULT",
+          "result": {
+            "campaign_complete": false,
+            "counts_as_proof": false,
+            "elapsed_seconds": 38.735,
+            "failures": [
+              "F49 reached provider without grounded, exact actionable ownership: /root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@62264/Pedestal_tidewake/@Node3D@62286"
+            ],
+            "reached": "tidewake_settled",
+            "requested_prefix_passed": false,
+            "resume": {
+              "boundary": "tidewake_settled",
+              "continuous_fresh_save": false,
+              "generated_origin": {
+                "boundary": "tidewake_settled",
+                "provenance": {
+                  "continuous_fresh_save": false,
+                  "generator": "tools/earned_saves/earned_chain_runner.gd:b25e1ed1eb820ff4c5cb58bcc7ccd1b8dcd3b6acf95bb6b876feaef273261f60:cloudreach",
+                  "owner_policy": "#5726060136810",
+                  "prior_earned_play": false
+                }
+              },
+              "journey_id": "b5202f063586a2187f559d74ae992acc3beeb741:/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-cloudreach-r2_generated_input",
+              "meadows_pieces": [
+                "opening_team",
+                "camp_tournament",
+                "bridge",
+                "warrens",
+                "relay",
+                "hall"
+              ],
+              "prior_earned_play": false,
+              "source": "/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-cloudreach-r2_generated_input/tidewake_settled",
+              "source_kind": "generated_fixture"
+            }
+          }
+        },
+        {
+          "tag": "GENERATED CHAPTER PROCESS",
+          "result": {
+            "continuous_fresh_save": false,
+            "exit_code": 1,
+            "input_mode": "generated_fixture",
+            "prior_earned_play": false,
+            "segment": "cloudreach"
+          }
+        }
+      ],
+      "failure_projection": [
+        "F20 INPUT TRACE expected=/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@62264/Pedestal_tidewake/@Node3D@62286 activated=<null> winner=Interactable:<Node3D#6534709069521> enabled=true fight_owns=false owner=none player_position=(105.4473, 0.910941, 6.947885) prompt_position=(105.5, 1.0, 4.8) floor=true offer={ \"label\": \"Hang your Tidewake relic\", \"distance\": 2.15037703514099, \"priority\": 0, \"actionable\": true } dock_complete=true"
+      ],
+      "workflow_conclusion": "failure",
+      "accepted_output": false
+    },
+    {
+      "run_id": 37788174174,
+      "artifact_id": 11555861465,
+      "checkout_source": "9d01be3af7695f87dbfeb7d5060ee89f74e8ce2f",
+      "segment": "stormwood",
+      "artifact_sha256": "def4263d20b9c694004602c206e29fe0680111bd48fe161d9c39ed28feb0d251",
+      "log": "ci-segment-37788174174.log.gz",
+      "log_sha256": "e9d9683e00e17d945dd9c2228409c188b0840ddae990b64bc07d1200b0d62903",
+      "observations": [
+        {
+          "tag": "FRESH CAMPAIGN RESULT",
+          "result": {
+            "campaign_complete": false,
+            "counts_as_proof": false,
+            "elapsed_seconds": 225.225,
+            "failures": [
+              "F49 reached provider without grounded, exact actionable ownership: /root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@66479/Pedestal_cloudreach/@Node3D@66504"
+            ],
+            "reached": "cloudreach_settled",
+            "requested_prefix_passed": false,
+            "resume": {
+              "boundary": "cloudreach_settled",
+              "continuous_fresh_save": false,
+              "generated_origin": {
+                "boundary": "cloudreach_settled",
+                "provenance": {
+                  "continuous_fresh_save": false,
+                  "generator": "tools/earned_saves/earned_chain_runner.gd:b25e1ed1eb820ff4c5cb58bcc7ccd1b8dcd3b6acf95bb6b876feaef273261f60:stormwood",
+                  "owner_policy": "#5726060136810",
+                  "prior_earned_play": false
+                }
+              },
+              "journey_id": "9d01be3af7695f87dbfeb7d5060ee89f74e8ce2f:/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-stormwood-r2_generated_input",
+              "meadows_pieces": [
+                "opening_team",
+                "camp_tournament",
+                "bridge",
+                "warrens",
+                "relay",
+                "hall"
+              ],
+              "prior_earned_play": false,
+              "source": "/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-stormwood-r2_generated_input/cloudreach_settled",
+              "source_kind": "generated_fixture"
+            }
+          }
+        },
+        {
+          "tag": "GENERATED CHAPTER PROCESS",
+          "result": {
+            "continuous_fresh_save": false,
+            "exit_code": 1,
+            "input_mode": "generated_fixture",
+            "prior_earned_play": false,
+            "segment": "stormwood"
+          }
+        }
+      ],
+      "failure_projection": [
+        "ERROR: NO GRAB",
+        "ERROR: NO GRAB",
+        "F20 INPUT TRACE expected=/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@66479/Pedestal_cloudreach/@Node3D@66504 activated=<null> winner=@Node3D@66501:<Node3D#20083485394949> enabled=true fight_owns=false owner=none player_position=(106.8852, 0.910942, 6.17892) prompt_position=(108.5, 1.0, 4.8) floor=true offer={ \"label\": \"Hang your Cloudreach Cliffs relic\", \"distance\": 2.12531232833862, \"priority\": 0, \"actionable\": true } dock_complete=true"
+      ],
+      "workflow_conclusion": "failure",
+      "accepted_output": false
+    },
+    {
+      "run_id": 37788166055,
+      "artifact_id": 11555054719,
+      "checkout_source": "9d01be3af7695f87dbfeb7d5060ee89f74e8ce2f",
+      "segment": "tidewake",
+      "artifact_sha256": "b4124d0b2528fc3d4e80f52b8919d1d1f8d619de71c8c4861125f1062cd6d940",
+      "log": "ci-segment-37788166055.log.gz",
+      "log_sha256": "c82fbd8e90af19b1707648f8ef122776291e477fc148ef4be47ea4d89f04b6b2",
+      "observations": [
+        {
+          "tag": "FRESH CAMPAIGN RESULT",
+          "result": {
+            "campaign_complete": false,
+            "counts_as_proof": false,
+            "elapsed_seconds": 473.166,
+            "failures": [
+              "water:reedhaven:harvest:019 never won and received the production interact press; winner=Interactable:<Node3D#9134388993922>"
+            ],
+            "reached": "water_pell_lesson_earned",
+            "requested_prefix_passed": false,
+            "resume": {
+              "boundary": "meadows_settled",
+              "continuous_fresh_save": false,
+              "generated_origin": {
+                "boundary": "meadows_settled",
+                "provenance": {
+                  "continuous_fresh_save": false,
+                  "generator": "tools/earned_saves/earned_chain_runner.gd:b25e1ed1eb820ff4c5cb58bcc7ccd1b8dcd3b6acf95bb6b876feaef273261f60:tidewake",
+                  "owner_policy": "#5726060136810",
+                  "prior_earned_play": false
+                }
+              },
+              "journey_id": "9d01be3af7695f87dbfeb7d5060ee89f74e8ce2f:/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-tidewake-r2_generated_input",
+              "meadows_pieces": [
+                "opening_team",
+                "camp_tournament",
+                "bridge",
+                "warrens",
+                "relay",
+                "hall"
+              ],
+              "prior_earned_play": false,
+              "source": "/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-tidewake-r2_generated_input/meadows_settled",
+              "source_kind": "generated_fixture"
+            }
+          }
+        },
+        {
+          "tag": "GENERATED CHAPTER PROCESS",
+          "result": {
+            "continuous_fresh_save": false,
+            "exit_code": 1,
+            "input_mode": "generated_fixture",
+            "prior_earned_play": false,
+            "segment": "tidewake"
+          }
+        }
+      ],
+      "failure_projection": [
+        "ERROR: NO GRAB",
+        "ERROR: NO GRAB"
+      ],
+      "workflow_conclusion": "failure",
+      "accepted_output": false
+    },
+    {
+      "run_id": 37789000398,
+      "artifact_id": 11556337396,
+      "checkout_source": "6187f94a7ac5ce7ffc4a255050c3184ef7dfadda",
+      "segment": "relay",
+      "artifact_sha256": "2f23be29dea72cb6c352db2655499fdd4c007101e01b8a3edb234dc8a8c5f3e1",
+      "log": "ci-segment-37789000398.log.gz",
+      "log_sha256": "7d0e11ed7db6d3125b7236ca0c7cfcf55d19b669d6b7e59653a5d0591ad77ca0",
+      "observations": [
+        {
+          "tag": "EARNED CHAIN RESULT",
+          "result": {
+            "failures": [
+              "relay: Riverwatch controller recovery failed: [\"The installed-bed prompt did not remain usable from the grounded exterior stance: { \\\"planned_points\\\": [(216.5126, 3697.129), (216.5126, 3705.485), (211.7656, 3704.043)], \\\"plan_from\\\": (228.727, 3669.361), \\\"current_waypoint\\\": (211.7656, 3704.043), \\\"nav_request\\\": \\\"(211.7656, -4.377464, 3704.043)\\\", \\\"nav_route\\\": [], \\\"observed_choice\\\": 0, \\\"heading\\\": \\\"(0.0, 0.0, 0.0)\\\", \\\"live_velocity\\\": \\\"(-2.809303, 0.0, -1.310655)\\\", \\\"planning_reserve\\\": 1.52480952981749, \\\"reserve_inputs\\\": { \\\"walk\\\": 5.0, \\\"sprint\\\": 8.6, \\\"scale\\\": 1.0, \\\"momentum\\\": 5.0, \\\"ceiling\\\": 120.0, \\\"delta\\\": 0.01666666666667, \\\"acceleration\\\": 42.0 } }\", \"Controller home-bed assignment failed: []\"]"
+            ],
+            "location": {
+              "player": [
+                211.513137817383,
+                -4.39520978927612,
+                3703.92529296875
+              ],
+              "realm": "meadows",
+              "scene": "MeadowsPlayground"
+            },
+            "party": [
+              {
+                "hp": 148,
+                "level": 10,
+                "nickname": "Bud",
+                "species": "terrapup",
+                "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+              },
+              {
+                "hp": 153,
+                "level": 10,
+                "nickname": "",
+                "species": "bramblebun",
+                "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+              },
+              {
+                "hp": 141,
+                "level": 9,
+                "nickname": "",
+                "species": "bramblebun",
+                "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+              },
+              {
+                "hp": 147,
+                "level": 8,
+                "nickname": "",
+                "species": "mudsnout",
+                "uid": "creature-afbd0d982b14221393f70c29863586a1"
+              },
+              {
+                "hp": 136,
+                "level": 7,
+                "nickname": "",
+                "species": "bramblebun",
+                "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+              }
+            ],
+            "passed": false,
+            "segment": "relay",
+            "wall_seconds": 550.413
+          }
+        }
+      ],
+      "failure_projection": [
+        "[meadows_earned_team] FAIL: The installed-bed prompt did not remain usable from the grounded exterior stance: { \"planned_points\": [(216.5126, 3697.129), (216.5126, 3705.485), (211.7656, 3704.043)], \"plan_from\": (228.727, 3669.361), \"current_waypoint\": (211.7656, 3704.043), \"nav_request\": \"(211.7656, -4.377464, 3704.043)\", \"nav_route\": [], \"observed_choice\": 0, \"heading\": \"(0.0, 0.0, 0.0)\", \"live_velocity\": \"(-2.809303, 0.0, -1.310655)\", \"planning_reserve\": 1.52480952981749, \"reserve_inputs\": { \"walk\": 5.0, \"sprint\": 8.6, \"scale\": 1.0, \"momentum\": 5.0, \"ceiling\": 120.0, \"delta\": 0.01666666666667, \"acceleration\": 42.0 } }",
+        "EARNED RELAY FAIL \u2014 Riverwatch controller recovery failed: [\"The installed-bed prompt did not remain usable from the grounded exterior stance: { \\\"planned_points\\\": [(216.5126, 3697.129), (216.5126, 3705.485), (211.7656, 3704.043)], \\\"plan_from\\\": (228.727, 3669.361), \\\"current_waypoint\\\": (211.7656, 3704.043), \\\"nav_request\\\": \\\"(211.7656, -4.377464, 3704.043)\\\", \\\"nav_route\\\": [], \\\"observed_choice\\\": 0, \\\"heading\\\": \\\"(0.0, 0.0, 0.0)\\\", \\\"live_velocity\\\": \\\"(-2.809303, 0.0, -1.310655)\\\", \\\"planning_reserve\\\": 1.52480952981749, \\\"reserve_inputs\\\": { \\\"walk\\\": 5.0, \\\"sprint\\\": 8.6, \\\"scale\\\": 1.0, \\\"momentum\\\": 5.0, \\\"ceiling\\\": 120.0, \\\"delta\\\": 0.01666666666667, \\\"acceleration\\\": 42.0 } }\", \"Controller home-bed assignment failed: []\"]"
+      ],
+      "workflow_conclusion": "failure",
+      "accepted_output": false
+    },
+    {
+      "run_id": 37788991863,
+      "artifact_id": 11555329591,
+      "checkout_source": "6187f94a7ac5ce7ffc4a255050c3184ef7dfadda",
+      "segment": "relay_prepared",
+      "artifact_sha256": "b6e2e04fbdf678113eb16486be7e2f159fef0fac938cd339200b75310b754984",
+      "log": "ci-segment-37788991863.log.gz",
+      "log_sha256": "672893c660584755ca003307f8e7c200cab7ede4380dfec8cb66a6a36e860e9b",
+      "observations": [
+        {
+          "tag": "EARNED CHAIN RESULT",
+          "result": {
+            "failures": [
+              "relay_prepared: Riverwatch controller recovery failed: [\"Installed-bed approach lost grounded exterior world input: { \\\"nav_refused\\\": true, \\\"nav_reason\\\": \\\"deep actual overlap: zero-motion recovery exceeds unchanged skin\\\", \\\"on_floor\\\": true, \\\"paused\\\": false, \\\"fighting\\\": false, \\\"input_owner\\\": \\\"<null>\\\", \\\"inside_bed_exclusion\\\": false, \\\"player\\\": \\\"(221.0612, -4.761573, 3687.073)\\\", \\\"target\\\": \\\"(211.7656, -4.512304, 3704.043)\\\", \\\"solid_bounds\\\": \\\"[P: (210.3223, -4.532207, 3699.155), S: (4.164429, 0.294345, 4.304688)]\\\", \\\"clearance\\\": 0.50100000600796, \\\"waypoint\\\": 0, \\\"frame\\\": 237, \\\"budget\\\": 3600, \\\"planned_points\\\": [(216.5126, 3697.129), (216.5126, 3705.485), (211.7656, 3704.043)], \\\"plan_from\\\": (228.6637, 3669.329), \\\"current_waypoint\\\": (216.5126, 3697.129), \\\"nav_request\\\": \\\"(216.5126, -4.755515, 3697.129)\\\", \\\"nav_route\\\": [(216.5126, 3697.129)], \\\"observed_choice\\\": 0, \\\"heading\\\": \\\"(-0.412033, 0.0, 0.911169)\\\", \\\"live_velocity\\\": \\\"(-2.060164, 0.0, 4.555845)\\\", \\\"planning_reserve\\\": 1.52480952981749, \\\"reserve_inputs\\\": { \\\"walk\\\": 5.0, \\\"sprint\\\": 8.6, \\\"scale\\\": 1.0, \\\"momentum\\\": 5.0, \\\"ceiling\\\": 120.0, \\\"delta\\\": 0.01666666666667, \\\"acceleration\\\": 42.0 } }\", \"Controller home-bed assignment failed: []\"]"
+            ],
+            "location": {
+              "player": [
+                221.061248779297,
+                -4.76157283782959,
+                3687.07250976562
+              ],
+              "realm": "meadows",
+              "scene": "MeadowsPlayground"
+            },
+            "party": [
+              {
+                "hp": 146,
+                "level": 10,
+                "nickname": "Bud",
+                "species": "terrapup",
+                "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+              },
+              {
+                "hp": 153,
+                "level": 10,
+                "nickname": "",
+                "species": "bramblebun",
+                "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+              },
+              {
+                "hp": 141,
+                "level": 9,
+                "nickname": "",
+                "species": "bramblebun",
+                "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+              },
+              {
+                "hp": 147,
+                "level": 8,
+                "nickname": "",
+                "species": "mudsnout",
+                "uid": "creature-afbd0d982b14221393f70c29863586a1"
+              },
+              {
+                "hp": 136,
+                "level": 7,
+                "nickname": "",
+                "species": "bramblebun",
+                "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+              }
+            ],
+            "passed": false,
+            "segment": "relay_prepared",
+            "wall_seconds": 516.519
+          }
+        }
+      ],
+      "failure_projection": [
+        "[meadows_earned_team] FAIL: Installed-bed approach lost grounded exterior world input: { \"nav_refused\": true, \"nav_reason\": \"deep actual overlap: zero-motion recovery exceeds unchanged skin\", \"on_floor\": true, \"paused\": false, \"fighting\": false, \"input_owner\": \"<null>\", \"inside_bed_exclusion\": false, \"player\": \"(221.0612, -4.761573, 3687.073)\", \"target\": \"(211.7656, -4.512304, 3704.043)\", \"solid_bounds\": \"[P: (210.3223, -4.532207, 3699.155), S: (4.164429, 0.294345, 4.304688)]\", \"clearance\": 0.50100000600796, \"waypoint\": 0, \"frame\": 237, \"budget\": 3600, \"planned_points\": [(216.5126, 3697.129), (216.5126, 3705.485), (211.7656, 3704.043)], \"plan_from\": (228.6637, 3669.329), \"current_waypoint\": (216.5126, 3697.129), \"nav_request\": \"(216.5126, -4.755515, 3697.129)\", \"nav_route\": [(216.5126, 3697.129)], \"observed_choice\": 0, \"heading\": \"(-0.412033, 0.0, 0.911169)\", \"live_velocity\": \"(-2.060164, 0.0, 4.555845)\", \"planning_reserve\": 1.52480952981749, \"reserve_inputs\": { \"walk\": 5.0, \"sprint\": 8.6, \"scale\": 1.0, \"momentum\": 5.0, \"ceiling\": 120.0, \"delta\": 0.01666666666667, \"acceleration\": 42.0 } }",
+        "EARNED RELAY FAIL \u2014 Riverwatch controller recovery failed: [\"Installed-bed approach lost grounded exterior world input: { \\\"nav_refused\\\": true, \\\"nav_reason\\\": \\\"deep actual overlap: zero-motion recovery exceeds unchanged skin\\\", \\\"on_floor\\\": true, \\\"paused\\\": false, \\\"fighting\\\": false, \\\"input_owner\\\": \\\"<null>\\\", \\\"inside_bed_exclusion\\\": false, \\\"player\\\": \\\"(221.0612, -4.761573, 3687.073)\\\", \\\"target\\\": \\\"(211.7656, -4.512304, 3704.043)\\\", \\\"solid_bounds\\\": \\\"[P: (210.3223, -4.532207, 3699.155), S: (4.164429, 0.294345, 4.304688)]\\\", \\\"clearance\\\": 0.50100000600796, \\\"waypoint\\\": 0, \\\"frame\\\": 237, \\\"budget\\\": 3600, \\\"planned_points\\\": [(216.5126, 3697.129), (216.5126, 3705.485), (211.7656, 3704.043)], \\\"plan_from\\\": (228.6637, 3669.329), \\\"current_waypoint\\\": (216.5126, 3697.129), \\\"nav_request\\\": \\\"(216.5126, -4.755515, 3697.129)\\\", \\\"nav_route\\\": [(216.5126, 3697.129)], \\\"observed_choice\\\": 0, \\\"heading\\\": \\\"(-0.412033, 0.0, 0.911169)\\\", \\\"live_velocity\\\": \\\"(-2.060164, 0.0, 4.555845)\\\", \\\"planning_reserve\\\": 1.52480952981749, \\\"reserve_inputs\\\": { \\\"walk\\\": 5.0, \\\"sprint\\\": 8.6, \\\"scale\\\": 1.0, \\\"momentum\\\": 5.0, \\\"ceiling\\\": 120.0, \\\"delta\\\": 0.01666666666667, \\\"acceleration\\\": 42.0 } }\", \"Controller home-bed assignment failed: []\"]"
+      ],
+      "workflow_conclusion": "failure",
+      "accepted_output": false
+    }
+  ],
+  "source_reviews": [
+    {
+      "source": "b5202f063586a2187f559d74ae992acc3beeb741",
+      "reviewer": "b_f49_review",
+      "reviewer_id": "01a1165d-ecfb-79d3-9355-1224723cdb53",
+      "verdict": "SOURCE APPROVE",
+      "summary": "Original F49 reviewer: **SOURCE APPROVE** `b5202f063586a2187f559d74ae992acc3beeb741`. Both contact recorders handle unavailable collider identities; scopes are valid, and contacts, normals and failure guards remain intact. Runtime remains open.\n\n**Hall `37784845949` remains FAIL.** Saved Master-win ACK passed, but the log does not isolate chest activation from `master_chest` completion. No supported correction, handoff or criterion PASS.\n\nRouter stopped read-only."
+    },
+    {
+      "source": "288e76f333b76867e6b2c40b219d0e6c797ab2fb",
+      "reviewer": "b_f49_review",
+      "reviewer_id": "01a1165d-ecfb-79d3-9355-1224723cdb53",
+      "verdict": "SOURCE APPROVE",
+      "summary": "Original F49 reviewer: **SOURCE APPROVE** `288e76f333b76867e6b2c40b219d0e6c797ab2fb`.\n\nThe 1m arrival applies only to directly parented Hall pedestal prompts and addresses the observed overlapping approach range. NAV, budget, eight-frame settle and exact provider/activation guards remain intact; other providers retain 2.5m.\n\nChanged-source activation and Cloud null-recorder runtime remain open. No segment or criterion PASS. Router stopped read-only."
+    },
+    {
+      "source": "4216ed374d9e3c79b60c06690838f30aaff717ce",
+      "reviewer": "b_f49_review",
+      "reviewer_id": "01a1165d-ecfb-79d3-9355-1224723cdb53",
+      "verdict": "SOURCE APPROVE",
+      "summary": "Original F49 reviewer: **SOURCE APPROVE** `4216ed374d9e3c79b60c06690838f30aaff717ce`.\n\nBoth diagnostics run only at existing terminal refusals and preserve hard failures. Reads introduce no save, finalization, retry, grant, action or budget changes. Lifetime checks are adequate; no concrete compiler hazard found.\n\nActual diagnostic results remain open; no route or criterion PASS. Router stopped read-only."
+    },
+    {
+      "source": "721443553a6d70f5ad290e37bbeaa117a8171406",
+      "reviewer": "b_f49_review",
+      "reviewer_id": "01a1165d-ecfb-79d3-9355-1224723cdb53",
+      "verdict": "SOURCE APPROVE",
+      "summary": "Original F49 reviewer: **SOURCE APPROVE** `721443553a6d70f5ad290e37bbeaa117a8171406`.\n\nRemote final-leg braking flushes physical releases and waits for actual friction stop before prompt settling, within the original budget. No velocity/pose writes; inherited guards and one-frame pulses remain intact.\n\nRelay runtime remains open. Preparation\u2019s earlier overlap failure is outside this fix and stays parked. Router stopped read-only."
+    }
+  ],
+  "whole_criterion_closed": false,
+  "blind_visual_proof": false,
+  "continuous_fresh_save": false,
+  "disclosure": "Generated input production save/Load and earned suffix observations remain distinct from prior earned play. Every recorded run failed. No failed output is accepted or used as a later input. Source reviews do not establish changed runtime success."
+}
