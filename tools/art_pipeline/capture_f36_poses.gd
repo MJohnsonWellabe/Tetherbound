@@ -117,6 +117,8 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	body.set_physics_process(false)
 	var installed_height := _measured_height(body)
 	var measured_trainer := RENDER_BOUNDS.measure(_trainer).size.y
+	# Use the installed envelope for both sides of a matched asset comparison.
+	var framing_bounds := RENDER_BOUNDS.measure(body)
 	var asset_path := ""
 	var asset_hash := ""
 	if _asset_candidate:
@@ -131,11 +133,16 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 			return
 		var preview_look := SPECIES.placeholder(id).duplicate(true)
 		preview_look["model"] = asset_path
+		preview_look["colourway_source_species"] = str(row.get("colourway_source_species", id))
 		if not bool(body.call("_build_model", preview_look)):
 			_pose_failures.append("%s: asset preview model failed to install" % id)
 			body.queue_free()
 			await process_frame
 			return
+		body.set("_ordinary_colourway_species", BODY.colourway_source_species(id, preview_look))
+		body.call("_refresh_shiny_tint")
+		body.call("_apply_ground_contact_shadow")
+		body.call("_apply_night_floor")
 	if candidate:
 		body.set_meta("f36_pose_preview", true)
 		body.call("_build_placeholder")
@@ -147,8 +154,8 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		# One conservative standing-envelope camera per species, shared by both
 		# variants and every sampled pose. Never rescale the creature or change
 		# FOV to fit; this is a full-body diagnostic stage, not gameplay framing.
-		var radius := resting_bounds.size.length() * 0.8 + measured_trainer
-		var target := Vector3(CAM_LOOK.x, measured_height * 0.75, CAM_LOOK.z)
+		var radius := framing_bounds.size.length() * 0.8 + measured_trainer
+		var target := Vector3(CAM_LOOK.x, installed_height * 0.75, CAM_LOOK.z)
 		var distance := radius / tan(deg_to_rad(FOV * 0.5))
 		_camera.global_position = target + (CAM_POS - CAM_LOOK).normalized() * distance
 		_camera.look_at(target, Vector3.UP)

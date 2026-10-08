@@ -200,5 +200,26 @@
     "deformation": "A PASS, B PASS for idle1 and attack10 only; no continuity/other poses claim",
     "notes": "Both stockier than reference; recognizable Cloudfang. Fur conceals some joint junctions."
   },
-  "shipping": "Installed model unchanged; candidate asset preview is explicit capture-only. Native/colourway/gameplay gates OPEN."
+  "shipping": "Installed model unchanged; candidate asset preview is explicit capture-only. Native/colourway/gameplay gates OPEN.",
+  "derived_colourways": {
+    "scope": "Explicit asset preview texture namespace only; no new species/ownership/production binding",
+    "rules_source": "Existing cloudfang entries in shiny_colourways/four_biome_colourways",
+    "tool": "Existing repaint_creature_textures.extract_from_glb/repaint and creature_anatomy_maps.build; candidate UV atlas only",
+    "outputs": [
+      {
+        "suffix": "vivid",
+        "path": "assets/creatures/tetherbound/cloudfang_f36_material_v1/models/cloudfang_f36_material_v1_extracted_base_color_vivid.png",
+        "sha256": "922ad7cf5d11c9ac2d65d2954bac59db233b8a27aa6ee5c37c19cecf45e04730",
+        "terrain_share": 4.976501581594409e-05,
+        "notes": []
+      },
+      {
+        "suffix": "shiny",
+        "path": "assets/creatures/tetherbound/cloudfang_f36_material_v1/models/cloudfang_f36_material_v1_extracted_base_color_shiny.png",
+        "sha256": "1f617226c860583c80f9689c71707c2035cdbf71de1b59125a094916a3fef073",
+        "terrain_share": 1.6721167221077867e-05,
+        "notes": []
+      }
+    ]
+  }
 }
