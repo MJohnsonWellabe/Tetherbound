@@ -22,7 +22,9 @@ const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 
 const TEST_DIR := "user://title_load_smoke_saves/"
-const TEST_SLOT := 3
+# The real boot's retained journals own slot-0; the directory isolates this
+# save, while the original world identity remains stable through title Load.
+const TEST_SLOT := 0
 const SETTLE_FRAMES := 240
 
 var _failures: Array[String] = []

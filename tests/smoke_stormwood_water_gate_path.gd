@@ -31,7 +31,9 @@ const STORMWOOD_SCENE := preload("res://scenes/world/stormwood.tscn")
 const STORMWOOD_DIALOGUE_PATH := "res://data/dialogue/stormwood.json"
 
 const TEST_SAVE_DIR := "user://stormwood_water_gate_path_smoke"
-const WORLD_ID := "stormwood-water-gate-path-world"
+# The isolated saver writes slot-0. Bind the fixture before host transactions
+# so the real gate save never needs to reassign their immutable world id.
+const WORLD_ID := "slot-0"
 const CHARACTER_ID := "stormwood-water-gate-path-character"
 const BUILD_DEADLINE_MS := 180000
 const TRANSITION_DEADLINE_MS := 180000
