@@ -2212,7 +2212,7 @@ func _authorize_actor_self_heal(intent: Dictionary, peer_id: int, view: Dictiona
 		return _refuse("utility_intent",peer_id,"invalid_heal","That heal could not commit safely.")
 	var now_ms := int(view.now_ms)
 	var action := int(intent.action)
-	var authority := strike_authority_state(id,peer_id)
+	var authority: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer_id, {}).duplicate(true)
 	if action <= maxi(int(authority.get("last_action",0)),int(participant.get("wind_last_action",0))):
 		return _refuse("utility_intent",peer_id,"replayed_action","That action was already handled.")
 	var deadlines: Dictionary = participant.get("utility_deadlines",{})
