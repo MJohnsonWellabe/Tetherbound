@@ -79,7 +79,7 @@ func _rebuild() -> void:
 			var nickname := str(card.get("nickname", ""))
 			var companion := species if nickname.strip_edges().is_empty() else "%s (%s)" % [nickname, species]
 			_button("%d · %s · Lv %d" % [slot, companion, int(card.level)],
-				func() -> void: _duel(uid), bool(card.get("fainted", false)) or bool(card.get("resting", false)) or float(card.get("hp", 0)) <= 0)
+				_duel.bind(uid), bool(card.get("fainted", false)) or bool(card.get("resting", false)) or float(card.get("hp", 0)) <= 0)
 	elif _mode == "cook":
 		for id: String in BREAKTHROUGH.feasts().get("recipes", {}):
 			var row: Dictionary = BREAKTHROUGH.feasts().recipes[id]
@@ -128,6 +128,10 @@ func _button(label: String, action: Callable, disabled: bool = false) -> void:
 	button.disabled = disabled
 	button.add_theme_font_size_override("font_size", 22)
 	button.pressed.connect(action)
+	var bound := action.get_bound_arguments()
+	if _mode == "duel" and action.get_object() == self and action.get_method() == "_duel" \
+			and bound.size() == 1 and bound[0] is String:
+		button.set_meta("master_challenger_uid", bound[0])
 	_list.add_child(button)
 
 func _cook(recipe: String) -> void:

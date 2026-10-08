@@ -36,12 +36,10 @@ def produce(source: Path, output: Path):
         owner=save_document.decode(json.loads(files[0].read_bytes())); cards=owner["party"]
         assert len(cards)==1 and cards[0]["species_id"]=="terrapup" and cards[0]["level"]==9
         uid=cards[0]["uid"]; nickname=cards[0]["nickname"]
-        species=json.loads((Path(__file__).resolve().parents[2]/"data/creatures/species.json").read_text(encoding="utf-8"))["species"][cards[0]["species_id"]]["display_name"]
-        challenger=species if not nickname.strip() else f"{nickname} ({species})"
         routes[f"hub_{peer}"]=copy.deepcopy(routes["essence_spend_prepare"])+[button("Ground Essence · Cost 20 · Have 100"),wait(120)]+close()
         routes[f"craft_{peer}"]=contact("forge")+[button("Refine Rootiron Ingot"),wait(150)]+close()
         routes[f"portal_{peer}"]=contact("home_arch")+[wait(180)]
-        routes[f"master_{peer}"]=contact("master_t1")+[button(f"1 · {challenger} · Lv 10"),wait(60),fight("master_t1"),wait(120)]+contact("master_t1_chest")
+        routes[f"master_{peer}"]=contact("master_t1")+[step("f48_button", master_creature_uid=uid),wait(60),fight("master_t1"),wait(120)]+contact("master_t1_chest")
         cook=contact("kitchen")+[button("Cook learned Ascension Feasts"),wait()]
         routes[f"feast_cook_{peer}"]=cook+[step("f48_button", feast_recipe="feast_t1_ground"),wait(120)]+close()
         feed=cook+[button("Feed creatures"),wait()]

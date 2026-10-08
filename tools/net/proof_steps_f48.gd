@@ -1924,7 +1924,32 @@ static func _button(tree: SceneTree, args: Dictionary) -> Dictionary:
 	# no Button.pressed.emit(), no private _cook/_feed/submit adapters.
 	var matches: Array[Button] = []
 	var text := str(args.get("text", ""))
-	if args.has("feast_recipe"):
+	var master_uid := str(args.get("master_creature_uid", ""))
+	var census_root: Node = tree.root
+	if args.has("master_creature_uid"):
+		var chooser: Node = INPUT_OWNER.current(tree)
+		var game := tree.root.get_node_or_null(^"Game")
+		var local: RefCounted = game.get("local") if game != null else null
+		if args.has("text") or args.has("feast_recipe") \
+				or not preload("res://scripts/creatures/creature_instance.gd").valid_uid(master_uid) \
+				or chooser == null or chooser.get_script() != preload("res://scripts/masters/breakthrough_panel.gd") \
+				or chooser.get("_mode") != "duel" or local == null:
+			return _result(false, "Master UID input requires the actual owned duel chooser")
+		var source: Node = chooser.get("_source")
+		var service: Node = chooser.get("_service")
+		if not is_instance_valid(source) or source.get_script() != preload("res://scripts/masters/master_site.gd") \
+				or source.get("_mounted") != true or source.get("master_id") != chooser.get("_master") \
+				or not is_instance_valid(service):
+			return _result(false, "Master UID input requires its actual mounted site and service")
+		var view: Dictionary = service.call("view")
+		var owned := 0
+		for card: Dictionary in view.get("party", []):
+			if card.get("uid") == master_uid and card.get("fainted") == false \
+					and card.get("resting") == false and float(card.get("hp", 0)) > 0: owned += 1
+		if view.get("character_id") != local.get("character_id") or owned != 1:
+			return _result(false, "Master UID input requires one conscious companion of the actual character")
+		census_root = chooser
+	elif args.has("feast_recipe"):
 		if args.get("feast_recipe") != "feast_t1_ground" or args.has("text"):
 			return _result(false, "Only exact original ground feast recipe label may be resolved")
 		var recipes: Dictionary = preload("res://scripts/creatures/breakthrough.gd").feasts().get("recipes", {})
@@ -1933,7 +1958,7 @@ static func _button(tree: SceneTree, args: Dictionary) -> Dictionary:
 		# Same visible shipping label construction, without assuming a cross-
 		# platform Dictionary number rendering; input still presses real button.
 		text = str(recipe.name) + " · " + str(recipe.cost)
-	_collect_buttons(tree.root, text, matches)
+	_collect_buttons(census_root, text, matches, master_uid)
 	if matches.size() != 1:
 		var failure: Dictionary = _result(false, "Need exactly one visible enabled button: " + str(args.get("text", "")))
 		var snapshot: Dictionary = _button_failure_snapshot(tree, text, matches)
@@ -2095,7 +2120,8 @@ static func _collect_choices(node: Node, uid: String, choices: Array[OptionButto
 				break
 	for child: Node in node.get_children(): _collect_choices(child, uid, choices)
 
-static func _collect_buttons(node: Node, text: String, matches: Array[Button]) -> void:
-	if node is Button and node.is_visible_in_tree() and not node.disabled and node.text == text:
-		matches.append(node)
-	for child: Node in node.get_children(): _collect_buttons(child, text, matches)
+static func _collect_buttons(node: Node, text: String, matches: Array[Button], master_uid: String = "") -> void:
+	if node is Button and node.is_visible_in_tree() and not node.disabled:
+		if (node.get_meta("master_challenger_uid", "") == master_uid if not master_uid.is_empty() else node.text == text):
+			matches.append(node)
+	for child: Node in node.get_children(): _collect_buttons(child, text, matches, master_uid)
