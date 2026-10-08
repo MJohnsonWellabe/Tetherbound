@@ -252,6 +252,7 @@ func _capture_actual_master_sites() -> void:
 		{"biome": "tidewake", "scene": "res://scenes/world/water_archipelago.tscn", "ids": ["master_t3"]},
 		{"biome": "cloudreach", "scene": "res://scenes/world/cloudreach_cliffs.tscn", "ids": ["master_t4"]},
 		{"biome": "stormwood", "scene": "res://scenes/world/stormwood.tscn", "ids": ["master_t5"]}]
+	var expected_observed := 0
 	for entry: Dictionary in cases:
 		# A named subset needs only scenes containing a requested site.
 		var selected_case := false
@@ -261,6 +262,7 @@ func _capture_actual_master_sites() -> void:
 				break
 		if not selected_case:
 			continue
+		expected_observed += entry.ids.size()
 		# Existing regional capture convention: bind the displayed realm so
 		# ordinary occupied-world mounting observes the matching live scene.
 		# This is capture setup, not a portal crossing or a permanent unlock.
@@ -421,7 +423,7 @@ func _capture_actual_master_sites() -> void:
 	game.set("current_realm", original_realm)
 	print("Master placement capture: capture-realm selection and trainer/camera pose only; no earned route, access, duel, recipe or reward claim.")
 	for failure: String in failures: push_error(failure)
-	quit(0 if failures.is_empty() and observed.size() == 5 and written.size() == capture_ids.size() * 2 else 1)
+	quit(0 if failures.is_empty() and observed.size() == expected_observed and written.size() == capture_ids.size() * 2 else 1)
 
 
 func _shoot(name: String, written: Array[String], failures: Array[String]) -> void:
