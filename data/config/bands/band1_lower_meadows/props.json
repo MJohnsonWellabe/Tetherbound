@@ -726,9 +726,9 @@
           "dir": "res://assets/props/quaternius_survival",
           "sink_m": 0.03,
           "glow": "campfire",
-          "glow_scale": 0.55,
-          "_glow_scope": "Meadows farmhouse doorstep prop only, peer-local presentation on all presets; existing glow_scale scales its light and particles, no geometry/collider/source membership or durable state/authority/transaction/save change. Candidate requires matched day/night capture and judge.",
-          "_why": "The door fire retains its installed mesh at0.22 scale and35degree yaw, position, warm colour, flicker and daytime dimming. The actual a5d native doorway night packet measured its nearby light at2.87-3.65 energy/range8 while the trainer bleached even in the separately marked house-lights-off diagnostic. Candidate glow_scale0.55 narrows this single practical pool to4.4m and baseenergy1.87; other campfires keep their original profiles. Actual interior/doorstep readability and night silhouette must be judged before credit."
+          "glow_light_scale": 0.55,
+          "_glow_scope": "Meadows farmhouse doorstep light only, peer-local presentation on all presets; optional glow_light_scale leaves the original halo/particles/mesh/collider/source membership unchanged. No durable state/authority/transaction/save change. Candidate requires matched day/night capture and judge.",
+          "_why": "The door fire retains its installed mesh at0.22 scale and35degree yaw, position, warm colour, flicker and daytime dimming. The actual a5d native doorway night packet measured its nearby light at2.87-3.65 energy/range8 while the trainer bleached even in the separately marked house-lights-off diagnostic. Candidate glow_light_scale0.55 narrows this single practical pool to4.4m and baseenergy1.87; other campfires keep their original profiles. Actual interior/doorstep readability and night silhouette must be judged before credit."
         }
       ]
     },
