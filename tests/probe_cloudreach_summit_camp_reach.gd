@@ -79,7 +79,9 @@ func _run() -> void:
 		elif arg.begins_with("--paths="):
 			for path_text: String in arg.trim_prefix("--paths=").split(";"):
 				var wps: Array[Vector2] = []
-				for wp: String in path_text.split("|", false):
+				# Colon passes the existing hosted argument whitelist; retain
+				# the original pipe form for local callers.
+				for wp: String in path_text.replace(":", "|").split("|", false):
 					wps.append(Vector2(float(wp.get_slice(",", 0)), float(wp.get_slice(",", 1))))
 				paths.append(wps)
 	for wps: Array in paths:
