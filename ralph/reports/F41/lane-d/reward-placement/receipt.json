@@ -34,5 +34,12 @@
   "limitations": "Actual changed-source Hollows aftermath needs ROOT/E scheduled native proof and the original independent blind reviewer. Isolated lifecycle checks do not prove natural combat victory, controller hardware, reward solvency or whole F41/F42 acceptance.",
   "whole_criterion_complete": false,
   "original_fixture_source_review": "original-cap-fixture-review.txt: SOURCE APPROVE",
-  "original_affected_proof_review": "original-affected-proof-review.txt: APPROVE"
+  "original_affected_proof_review": "original-affected-proof-review.txt: APPROVE",
+  "production_only_patch": {
+    "sha256": "94ae2205b79238b06888bce2d6bcf00ab2fd6f2a0b44f98051f8f149e04370d8",
+    "path": "reward-routing-only.patch",
+    "source": "de50c185391edaa053c97d5fa746ee1e8afc2664",
+    "scope": "Only scripts/ui/playground_hud.gd hunks; no other D-lane source/test/frame changes",
+    "integration_status": "Awaiting E exact integrated source and same original source/command approval"
+  }
 }
