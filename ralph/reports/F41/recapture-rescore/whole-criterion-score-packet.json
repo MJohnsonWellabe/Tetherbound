@@ -2,7 +2,7 @@
   "schema_version": 1,
   "criterion": "F41#0",
   "source_commit": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
-  "scope": "Assembly of original independent per-row scores with original evidence preserved, not a fresh broad rescore or full visual bar",
+  "scope": "Assembly of original reviewer-recorded per-row scores with original evidence and rating bases preserved; not a fresh broad rescore or full visual bar",
   "recapture": {
     "unique_ids": 240,
     "shipping_native": true,
@@ -17,12 +17,12 @@
   "counts": {
     "rows": 44,
     "natural_loss": 1,
-    "independent_numeric_rows": 44,
     "context_supplement": 6,
     "current_reward": 1,
-    "primary_retained": 36
+    "primary_retained": 36,
+    "original_reviewer_recorded_numeric_rows": 44
   },
-  "score_assembly_checks": "44unique IDs, all independent1..5scores, exact products; no score invented or previous failure promoted",
+  "score_assembly_checks": "44unique IDs, all original-recorded1..5scores, exact products; no score invented or previous failure promoted. Original primary exposure/importance preserved estimates explicitly disclosed.",
   "whole_criterion_verdict": "PENDING ORIGINAL INDEPENDENT APPROVE AND ORIGINAL BLIND COMPLETENESS PASS",
   "full_visual_bar": {
     "A": "BLOCK on supplied environmental presentation",
@@ -828,5 +828,11 @@
     "Original partial/bounded subject coverage and FAIL/BLOCK dispositions remain in source artifacts.",
     "F41#1 through#5 are separate; Low stills do not pass High/Medium matrix, full-bar, earned or device/performance proofs.",
     "Original shipping240recapture reused; no newGPU, no repeated passing batch."
-  ]
+  ],
+  "primary_score_basis": {
+    "source": "catalog-rescore.json/scoring",
+    "severity": "Original judge assessed severity",
+    "exposure_importance": "Original primary artifact preserves input priority estimates; do not claim fresh independent exposure/importance for these36",
+    "criterion_applicability": "Requires original whole review judgment, not assembly assumption"
+  }
 }
