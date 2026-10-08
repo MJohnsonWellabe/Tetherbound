@@ -235,11 +235,11 @@ func _capture_actual_master_sites() -> void:
 	var measure_clearance := false
 	for argument: String in OS.get_cmdline_user_args():
 		if not argument.begins_with("--master-sites="): continue
-		if measure_clearance or argument != "--master-sites=master_t1,master_t3,master_t4":
-			push_error("Master subset must be the three retained blocked signs, once")
+		if measure_clearance or argument not in ["--master-sites=master_t1,master_t3,master_t4", "--master-sites=master_t1,master_t4"]:
+			push_error("Master subset must be one retained blocked-sign set, once")
 			quit(1)
 			return
-		capture_ids = ["master_t1", "master_t3", "master_t4"]
+		capture_ids = ["master_t1", "master_t4"] if argument == "--master-sites=master_t1,master_t4" else ["master_t1", "master_t3", "master_t4"]
 		measure_clearance = true
 	var game := root.get_node_or_null(^"Game")
 	if game == null or game.get("local") == null:

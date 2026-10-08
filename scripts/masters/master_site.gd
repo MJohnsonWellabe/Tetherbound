@@ -123,7 +123,7 @@ func _build_sign(world: Node3D) -> void:
 	words.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	words.outline_size = int(presentation.outline_size)
 	words.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
-	words.position = _vec(presentation.text_offset_m)
+	words.position = _vec(_definition.get("sign_text_offset_m", presentation.text_offset_m))
 	sign.add_child(words)
 	var lead := NPC.new()
 	lead.name = "MasterLead"
