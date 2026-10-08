@@ -106,6 +106,7 @@ func _run() -> void:
 	_check_the_strip_clears_the_ally_panel()
 	_check_the_strip_holds_its_own_rows()
 	_check_the_ally_panel_holds_its_own_children()
+	_check_ultimate_projection_replaces_fallback()
 
 	print("")
 	print("combat HUD left column, measured at %s" % _screen)
@@ -116,6 +117,35 @@ func _run() -> void:
 	for line in _failures:
 		print("  FAIL: %s" % line)
 	quit(1)
+
+
+func _check_ultimate_projection_replaces_fallback() -> void:
+	# Disclosed presentation snapshot, not combat authority or gameplay proof.
+	var model := {"snapshot": {
+		"active": true, "input_context": "combat", "creature_uid": "hud-local",
+		"ultimate_meter": 100.0, "ultimate_maximum": 100.0, "commands": {},
+		"slots": {}
+	}}
+	for slot: String in ["quick", "charged", "utility", "dodge"]:
+		model.snapshot.slots[slot] = {"name": slot, "glyph": "X", "ready": true}
+	if not _hud.call("configure_new_system_view", func() -> Dictionary: return model.snapshot):
+		_failures.append("could not mount the production combat projection")
+		return
+	var readout := _hud.get("_ultimate_readout") as Control
+	var meter := _hud.get("_ultimate_meter") as Control
+	var overlay := _hud.get("_system_overlay") as Control
+	_hud.call("_refresh_system_overlay", "hud-local")
+	if not overlay.visible or readout.visible or meter.visible:
+		_failures.append("accepted projection must show one ultimate meter, without its legacy duplicate")
+	_hud.call("_refresh_system_overlay", "switched-local")
+	if overlay.visible or not readout.visible or not meter.visible:
+		_failures.append("stale creature projection must restore the ultimate fallback")
+	_hud.call("_refresh_system_overlay", "hud-local")
+	model.snapshot["input_context"] = "orb_aim"
+	_hud.call("_refresh_system_overlay", "hud-local")
+	if overlay.visible or not readout.visible or not meter.visible:
+		_failures.append("refused input context must restore the ultimate fallback")
+	print("  checked accepted, switched and refused ultimate projection presentation")
 
 
 ## The load-bearing one, and it is a check on WHICH EDGE, not on a gap.

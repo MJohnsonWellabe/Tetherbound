@@ -591,16 +591,26 @@ func _process(delta: float) -> void:
 	_draw_enemy()
 	_draw_ally()
 	_draw_grid()
-	if is_instance_valid(_system_overlay):
-		_system_overlay.hide()
-		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
-		if active != null and _system_overlay.call("refresh", str(active.get("uid")), not Input.get_connected_joypads().is_empty()) == true:
-			_grid_panel.hide()
-			if _tether_meter != null: _tether_meter.hide()
+	var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
+	_refresh_system_overlay(str(active.get("uid")) if active != null else "")
 	_update_capture_reticle()
 	_handle_switch_input()
 	_update_party_strip()
 	_update_subject_fade(delta)
+
+
+func _refresh_system_overlay(active_uid: String) -> void:
+	# The validated local projection replaces the legacy ultimate readout as
+	# well as the move grid. A missing or stale projection keeps the fallback.
+	_ultimate_readout.show()
+	_ultimate_meter.show()
+	if not is_instance_valid(_system_overlay): return
+	_system_overlay.hide()
+	if _system_overlay.call("refresh", active_uid, INPUT_GLYPH.using_gamepad()) != true: return
+	_grid_panel.hide()
+	_ultimate_readout.hide()
+	_ultimate_meter.hide()
+	if _tether_meter != null: _tether_meter.hide()
 
 
 ## F10#6 device profile (UX §1.4: the HUD supports direction, team state and
