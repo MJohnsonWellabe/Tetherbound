@@ -166,8 +166,128 @@
     }
   },
   "remaining_gates": [
-    "All nine exceeded unchanged30s case budget before complete observation:48..120physics samples; only normal/giant produced one PNG. Actual changed live clearance remains unproved.",
-    "Measured draw throughput is insufficient; this receipt has no CPU/GPU timing split and does not isolate GPU as the cause. No third unchanged rerun, wider budget, or weakened guard.",
-    "Full original code-blind size-matrix PASS absent; no whole criterion READY."
-  ]
+    "Changed transition source affected logic and actual nine-pair proof; native baseline214/216 visibility failures supports repair but does not evidence candidate.",
+    "Code-blind whole size-matrix PASS and performance remain open; no shipping flag or READY."
+  ],
+  "native_baseline": {
+    "source_commit": "97305ea96f9b38bac3520cc9321ae217c6a7d751",
+    "receipt": {
+      "stop_reason": "",
+      "started_utc": "2026-10-08T07:03:45.1188416Z",
+      "source": "97305ea96f9b38bac3520cc9321ae217c6a7d751",
+      "pid": 14896,
+      "exit_code": 1,
+      "finished_utc": "2026-10-08T07:14:41.1930328Z"
+    },
+    "summary": {
+      "criterion_pass": false,
+      "all_nine_complete": true,
+      "engine_terminal_pending": false,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "source": "97305ea96f9b38bac3520cc9321ae217c6a7d751",
+      "case_results": [
+        {
+          "pair": "small/small",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 24676,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "small/normal",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 22285,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "small/giant",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 20506,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "normal/small",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 25618,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "normal/normal",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 24168,
+          "visibility_fail": 22,
+          "pictures": 6
+        },
+        {
+          "pair": "normal/giant",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 22552,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "giant/small",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 26612,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "giant/normal",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 23629,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "giant/giant",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 23242,
+          "visibility_fail": 24,
+          "pictures": 6
+        }
+      ]
+    },
+    "matrix_sha256": "d0af2fe5e0fc4f8aeaad432d738222177ee80033c870d5bf2c8b7745e765a099",
+    "raw_location": "D:/CodexTemp/tetherbound-proof/native-a-97305ea96f-f21-camera9",
+    "source_tree": "eb99edf2507fe8278b67fb4a6810618565461a18",
+    "source_clean": true,
+    "actual_draws": 216,
+    "visibility_failures": 214,
+    "pictures": 54,
+    "diagnosis": "Actual lens agrees with selected transform; requested destination can pass while first admitted intermediate hides head/torso. No GPU cause inferred."
+  },
+  "transition_candidate": {
+    "source_commit": "c759ab8e263944d622267ef91d4049bd2580d979",
+    "change": "Compare existing admissible intermediates by nonnegative visibility penalty, stable route-order ties; zero penalty/manual early exit. Existing guard, speed and at-most20 budget preserved.",
+    "review_agent": "original f25_arrival_review",
+    "review": "APPROVE bounded source",
+    "logic": "PENDING affected test_fight_camera.gd",
+    "behavior": "PENDING ROOT native original nine-pair matrix",
+    "visual": "PENDING original code-blind review"
+  }
 }
