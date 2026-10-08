@@ -39,6 +39,10 @@ func _run() -> void:
 	var inventory: RefCounted = _game.get("inventory")
 	for need: Dictionary in WORLD.altar_recipe(): inventory.call("add", str(need.id), int(need.n))
 	inventory.call("add", "essence_water", ESSENCE_GRANT)
+	if OS.get_cmdline_user_args().has("--lesson-controller-witness"):
+		if not await _witness_altar_lesson():
+			_report()
+			return
 	for i in 30: await physics_frame
 
 	var altar := await _place_paid_altar()
@@ -95,6 +99,38 @@ func _run() -> void:
 	if _failures.is_empty():
 		print("F27_ALTAR_SPEND: PASS controller-path Altar level-up L%d->L%d for %d Water Essence" % [level_before, level_before + 1, cost])
 	_report()
+
+
+## Optional F46 witness reuses the original essence fixture and actual
+## Grandpa lesson. The existing reader supplies physical Skip/Help input and
+## completed-frame captures; no lesson flag, teacher pose or reward is staged.
+func _witness_altar_lesson() -> bool:
+	var options := preload("res://tests/helpers/f20_portal_travel.gd").lesson_witness_options()
+	if not options.failures.is_empty():
+		for failure: String in options.failures: _fail(failure)
+		return false
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	if not rules.available("altar", _game.local) or _game.local.flags.call("has", rules.PREFIX + "altar"):
+		_fail("Altar witness requires the original essence fixture's first unacknowledged lesson")
+		return false
+	var panel: Node = null
+	for frame: int in 180:
+		var service := _game.get_node_or_null("OnboardingLessons")
+		panel = service.get("_panel") if service != null else null
+		if panel != null and panel.call("is_open"): break
+		await physics_frame
+	if panel == null or not panel.call("is_open") or panel.get("_row").get("id") != "altar":
+		_fail("First essence pickup did not naturally open Grandpa's authored Altar lesson")
+		return false
+	var reader: RefCounted = preload("res://tests/helpers/f20_portal_travel.gd").new(self, _game)
+	var passed: bool = await reader._with_navigation_lessons(func() -> bool: return true)
+	if passed and options.replay: passed = await reader.replay_observed_lesson()
+	for failure: String in reader.failures: _fail(failure)
+	if not passed or panel.call("owns_input") or not _game.local.flags.call("has", rules.PREFIX + "altar"):
+		_fail("Altar lesson did not retain its personal acknowledgement and release input")
+		return false
+	print("F46 ALTAR LESSON: PASS actual Altar lesson from disclosed essence fixture; mapped Skip; Help replay=%s; disk reload/whole F46 open" % str(options.replay))
+	return true
 
 
 func _place_paid_altar() -> Node3D:
