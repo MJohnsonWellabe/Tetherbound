@@ -53,26 +53,34 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	visible = false
 	var cfg: Dictionary = SCREEN.config().get("combat", {})
-	var left := VBoxContainer.new()
-	left.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	left.offset_left = float(cfg.get("inset", 56))
-	left.offset_top = -float(cfg.get("command_bottom", 500))
+	var left := PanelContainer.new()
+	left.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	left.add_theme_stylebox_override("panel", TOKENS.panel_box(TOKENS.BG_DEEP))
+	# Commands have their own backed region above the lower-left party strip.
+	left.position = Vector2(float(cfg.get("inset", 56)), float(TOKENS.HUD_INSET))
 	add_child(left)
 	_commands = COMMAND_METER.new()
 	left.add_child(_commands)
 	var move_width: float = float(cfg.get("move_width", 420))
 	var inset: float = float(cfg.get("inset", 56))
+	var move_box := TOKENS.panel_box(TOKENS.BG_DEEP)
+	var move_panel := PanelContainer.new()
+	move_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	move_panel.add_theme_stylebox_override("panel", move_box)
+	move_panel.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	# Expand the backing around the existing move area; keep its content width
+	# and safe inset, with the Aim/Flee row above this separate panel.
+	move_panel.offset_left = -move_width-inset-move_box.content_margin_left
+	move_panel.offset_right = -inset+move_box.content_margin_right
+	move_panel.offset_top = -float(cfg.get("move_bottom", 380))-move_box.content_margin_top
+	move_panel.offset_bottom = -inset+move_box.content_margin_bottom
+	move_panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	move_panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	add_child(move_panel)
 	_moves = VBoxContainer.new()
 	_moves.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_moves.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	_moves.offset_left = -move_width-inset
-	_moves.offset_right = -inset
-	_moves.offset_top = -float(cfg.get("move_bottom", 380))
-	_moves.offset_bottom = -inset
-	_moves.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	_moves.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	_moves.custom_minimum_size.x = move_width
-	add_child(_moves)
+	move_panel.add_child(_moves)
 	var ultimate := HBoxContainer.new()
 	ultimate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_moves.add_child(ultimate)
