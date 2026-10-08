@@ -12,7 +12,6 @@
   "duration_seconds": 6,
   "proof": "tests/run_tests.gd --only=test_build_catalogue.gd,test_stormwood_arch_ledger.gd,test_stormwood_arch_piece.gd,test_stormwood_b_dark_arches_map.gd,test_stormwood_b_minimap_arch_glyph.gd,test_stormwood_capacitor_grove_identity.gd,test_stormwood_dark_arches.gd,test_stormwood_raise_a_road.gd,test_tidewake_return_cadence.gd,test_catalogue_capture_stand.gd",
   "review": "same original review_cloud_startup APPROVE source and bounded proof",
-  "packaging_limit": "Artifact MANIFEST names run.log but ZIP omits it; actual job stdout independently confirms totals/source/exit.",
   "remaining": [
     "matched before/after visual judgement",
     "whole F41#1/#2 scope and main landing"
@@ -33,5 +32,8 @@
       "two resources still in use"
     ],
     "clean_error_log": false
-  }
+  },
+  "extraction_note": "Artifact contains run.log and godot.log; Windows Expand-Archive omitted them locally. Python zipfile extracted both; actual job stdout corroborates totals.",
+  "logic_run_log_sha256": "150314abe3a94f390bd3e45207e541cf7928f29ef120f1a4c7b1f1ae1b99c426",
+  "area_run_log_sha256": "882ae1b4785dd038d7736d9a3284df5c36a847e4fafefe13109751ac6e242a49"
 }

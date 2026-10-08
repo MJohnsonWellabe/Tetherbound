@@ -37,13 +37,14 @@
   },
   "counts": {
     "rows": 44,
-    "supported_assessments": 24,
+    "supported_assessments": 29,
     "fresh_shipping_assessments": 5,
-    "retained_applicable_assessments": 5,
-    "current_unassessed": 20,
+    "retained_applicable_assessments": 6,
+    "current_unassessed": 15,
     "fresh_creature_assessments": 6,
     "fresh_ui_assessments": 6,
-    "fresh_build_assessments": 2
+    "fresh_build_assessments": 2,
+    "fresh_inventory_assessments": 4
   },
   "criterion_status": {
     "recapture_minimum_200": "PASS bounded capture count/coverage",
@@ -287,17 +288,20 @@
       "item_id": "P2-033",
       "subject": "ground pickup identity",
       "original_defect": "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance",
-      "assessment": "UNASSESSED",
-      "severity": null,
+      "assessment": "PARTIAL",
+      "severity": 2,
       "exposure": 5,
       "importance": 4,
-      "impact": null,
-      "score_basis": "none_current",
-      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible. The UI packet exposes one green Good Candy pickup only; it does not expose a comparison of unrelated pickups or Good/Great/Rare tiers.",
+      "impact": 40,
+      "score_basis": "fresh_current_inventory29_762a_visible_subset",
+      "reason": "On the actually visible subset, the wrapped green candies read as candy and differ clearly from the Static Snap sphere; Static Snap itself remains an ambiguous orb rather than a recognizable technique object. This is a bounded severity for visible item-class ambiguity only. The original broad many-unrelated-pickups pattern cannot be rejudged across the unexposed gated item rows. Empty terrain under an item label is not scored as an absent or generic pickup.",
       "evidence": [
-        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/exploration_hud.jpg"
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__good_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__great_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__rare_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__tm_static_snap.jpg"
       ],
-      "coverage_gap": "Current named unrelated ground pickups at ordinary camera distance.",
+      "coverage_gap": "Missing potion_small frame; 16 labeled gated item rows do not establish actual item exposure. Rootgate Release Key, Dynamo Core Key and Spark of Stormwood are disclosed event grants, deliberately not loose props, and excluded. No current complete pickup-family or earned acquisition proof.",
       "lane_owner": "C",
       "release_disposition": "OPEN",
       "prior_priority_floor": {
@@ -519,17 +523,21 @@
       "item_id": "P2-095",
       "subject": "craft recipe text",
       "original_defect": "Long recipe names and material preview lines are clipped in the crafting list",
-      "assessment": "UNASSESSED",
-      "severity": null,
+      "assessment": "PARTIAL",
+      "severity": 1,
       "exposure": 4,
       "importance": 4,
-      "impact": null,
-      "score_basis": "short_recipe_positive_only_original_long_name_defect_unexposed",
-      "reason": "Axe, Berry Seeds and Hoe names and their wrapped ingredient lines are legible without visible clipping in the current crafting frame. No long recipe name or lengthy material-preview stress row is exposed, so a current numerical rescore of the original long-name clipping defect is not possible.",
+      "impact": 16,
+      "score_basis": "retained_ui14_P2_095_common_text_applicability_only",
+      "reason": "Retained UI-only A cells show complete wrapped Ironwood Haft (Axe)/(Pickaxe) list labels and requirements in all three 1080 realm pairs. Four retained 720 stress pairs show complete Cliffglass Bracing (pickaxe), Riding Saddle, Reinforce Axe and Island Cloudberry Preserve rows with their material quantities, rather than the ambiguous/truncated B labels. I prefer A for the original text defect, consistent with the supplied original accepted verdict. The source reviewer's independent applicability finding authorizes reuse of the unchanged common legacy/nonstation name/material/detail rendering only. Severity 1 is the conservative floor for the original defect not observed in these applicable retained UI cells, not full current station acceptance.",
       "evidence": [
+        "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/_sheet1080.png: A cells meadows-1080, cloudreach-1080, stormwood-1080",
+        "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/_sheet720.png: A cells cloudreach_pickaxe_bracing, saddle, reinforce_axe, water_trail_preserve",
+        "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/blind-verdict.md",
+        "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/evidence-receipt.json",
         "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/stormwood__system__crafting.jpg"
       ],
-      "coverage_gap": "Current long recipe names and lengthy material previews, including last visible characters at the list edge; short-row positives cannot stand in for this original defect.",
+      "coverage_gap": "Retained contact-sheet UI inspection only; the 14 original rasters are not locally available and were not re-inspected. Old world/lighting, availability, station mode, full current station inventory, scrolling and craft transactions are excluded. Fresh short-row positives corroborate only basic text wrapping.",
       "lane_owner": "C",
       "release_disposition": "OPEN",
       "prior_priority_floor": {
@@ -544,15 +552,22 @@
       "item_id": "P2-046",
       "subject": "harvest resource identity",
       "original_defect": "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material",
-      "assessment": "UNASSESSED",
-      "severity": null,
+      "assessment": "ASSESSED",
+      "severity": 3,
       "exposure": 4,
       "importance": 4,
-      "impact": null,
-      "score_basis": "none_current",
-      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible.",
-      "evidence": [],
-      "coverage_gap": "Current named harvest nodes and ordinary-distance cue identification.",
+      "impact": 48,
+      "score_basis": "fresh_current_inventory29_762a_visible_subset",
+      "reason": "All six harvest-family views expose readable broad object classes, but named Stormwood-material cues remain weak. Conductor Vine reads as an ordinary dark rounded shrub; Glowmoss as pale-purple mushrooms rather than moss; Stormglass and Stormglass Crown as very similar opaque gray-brown stone blocks; Thunderwood as an ordinary dark tree trunk. Voltcap's orange mushroom form and golden glow are a positive pickup cue. The other materials are not visually identifiable by their names from these pictures alone.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__conductor_vine.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__glowmoss.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__stormglass.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__stormglass_crown.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__voltcap.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__thunderwood.jpg"
+      ],
+      "coverage_gap": "One view per family only, no harvesting/depletion response, tools, material yields, night variants or learned world familiarity.",
       "lane_owner": "C",
       "release_disposition": "OPEN",
       "prior_priority_floor": {
@@ -692,17 +707,19 @@
       "item_id": "P2-045",
       "subject": "candy pickup tiers",
       "original_defect": "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance",
-      "assessment": "UNASSESSED",
-      "severity": null,
+      "assessment": "ASSESSED",
+      "severity": 3,
       "exposure": 3,
       "importance": 4,
-      "impact": null,
-      "score_basis": "none_current",
-      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible. The UI packet exposes one green Good Candy pickup only; it does not expose a comparison of unrelated pickups or Good/Great/Rare tiers.",
+      "impact": 36,
+      "score_basis": "fresh_current_inventory29_762a_visible_subset",
+      "reason": "Good, Great and Rare Candy all use the same green round wrapped form and very similar apparent extent. Green, pale-purple and gold halos supply a positive tier cue at full raster, but the item's body/pattern/silhouette itself does not differentiate the tiers. Without labels, the visible halo variation is a weaker hierarchy than distinct designed wrappers or color blocks.",
       "evidence": [
-        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/exploration_hud.jpg"
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__good_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__great_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__rare_candy.jpg"
       ],
-      "coverage_gap": "Current Good/Great/Rare Candy matched pickup views.",
+      "coverage_gap": "Three actual visible props at their own stands, not identical lighting/depth calibration. No numerical scale equality, moving pickup, device-size readability or item-use behavior is inferred.",
       "lane_owner": "C",
       "release_disposition": "OPEN",
       "prior_priority_floor": {
@@ -1072,15 +1089,17 @@
       "item_id": "P2-047",
       "subject": "Static Snap technique pickup",
       "original_defect": "The Static Snap technique pickup reads as a generic blue centered capture orb rather than a technique item",
-      "assessment": "UNASSESSED",
-      "severity": null,
+      "assessment": "ASSESSED",
+      "severity": 2,
       "exposure": 2,
       "importance": 3,
-      "impact": null,
-      "score_basis": "none_current",
-      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible.",
-      "evidence": [],
-      "coverage_gap": "Current named Static Snap ground pickup.",
+      "impact": 12,
+      "score_basis": "fresh_current_inventory29_762a_visible_subset",
+      "reason": "The actual visible Static Snap pickup remains a segmented sphere with a bright blue center and pale glow. Its broad silhouette reads as an orb, with no visible technique-scroll/token distinction or specific Static Snap motif. Surface detail is readable at full raster, but does not resolve the original item-class ambiguity.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__tm_static_snap.jpg"
+      ],
+      "coverage_gap": "One ordinary-distance static view. Other technique rows are gated/unexposed and cannot establish a current technique-family comparison; no learned cue, pickup animation or acquisition behavior.",
       "lane_owner": "C",
       "release_disposition": "OPEN",
       "prior_priority_floor": {
@@ -1266,6 +1285,40 @@
         "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/stormwood__system__crafting.jpg"
       ],
       "limits": "Visual fixtures only; no cost, placement, sleep, recipe, transaction or save behavior. Short recipe text only, no original long-name clipping exposure."
+    },
+    {
+      "id": "current_inventory29_762a",
+      "root": "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/",
+      "raster": "1920x1080",
+      "renderer": "Low/Compatibility as supplied",
+      "contact_sheets_inspected": 4,
+      "contact_cells_inspected": 29,
+      "full_raster_checks": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__tm_static_snap.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__potion_large.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__revive.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__good_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__great_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__rare_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__conductor_vine.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__glowmoss.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__stormglass.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__voltcap.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__stormglass_crown.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__thunderwood.jpg"
+      ],
+      "survey_status": "FAIL 29/30; missing potion_small excluded",
+      "applicability": "Score visible candies, ungated Static Snap and six harvest families only. 16 gated item labels may show empty terrain and are not item exposure. Three story rewards are event grants, not loose pickups.",
+      "limits": "Staged snapshots, no earned pickup/harvest, unlock, inventory mutation or event-grant behavioral proof. potion_large/revive full rasters were inspected for visibility but not used to invent pickup-defect observations."
+    },
+    {
+      "id": "retained_P2_095_ui14",
+      "root": "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/",
+      "contact_sheets_inspected": 2,
+      "contact_cells_inspected": 14,
+      "original_rasters_reinspected": 0,
+      "scope": "Common legacy/nonstation name/material/detail text rendering only, reused under supplied independent applicability audit. A cells accepted; historical B cells illustrate original clipping.",
+      "limits": "No old world/lighting, availability/station mode/full current inventory or behavioral reuse; original raw rasters unavailable locally."
     }
   ]
 }

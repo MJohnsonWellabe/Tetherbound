@@ -424,6 +424,79 @@
       "judge_contacts": "ralph\\reports\\F41\\recapture-rescore\\build",
       "source_review": "same original review_cloud_startup APPROVE bounded packet",
       "limits": "Visual-only production-scene fixture: player debug-travels to an open authored spot; BuildPlacer creates real tent, campfire, bedroll, floor and wall nodes near the player; CraftPanel opened directly beside a campfire. Home-only Workbench is not staged outside its homestead. No placement cost, interaction, sleep, recipe result or saved state proof."
+    },
+    {
+      "id": "inventory",
+      "packet": "D:\\CodexTemp\\tetherbound-proof\\native-e-762a25019d-f41-inventory30",
+      "summary": {
+        "planned": 30,
+        "script_parse_errors": 0,
+        "renderer": "gl_compatibility",
+        "failure": "potion_small: no supported production-camera stand among 6 candidates",
+        "frames": 29,
+        "stop_reason": "",
+        "complete": false,
+        "source_clean": true,
+        "source": "762a25019d537186010777f7461c828ddab2fceb",
+        "preset": "Low",
+        "hash_preserved": true,
+        "resolution": [
+          1920,
+          1080
+        ],
+        "exit_code": 1
+      },
+      "terminal_receipt": {
+        "exit_code": 1,
+        "source": "762a25019d537186010777f7461c828ddab2fceb",
+        "finished_utc": "2026-10-08T05:30:52.5653137Z",
+        "stop_reason": "",
+        "pid": 9412,
+        "started_utc": "2026-10-08T05:27:26.4536820Z"
+      },
+      "manifest_sha256": "4d3d46bd7261c21be360b4579520fa5f43ce170153147b3b0eb5d38e5bcd897b",
+      "planned": 30,
+      "frames": 29,
+      "unique_ids": 29,
+      "complete": false,
+      "failures": [
+        "stormwood__inventory__pickup__potion_small: no supported production-camera stand among 6 candidates"
+      ],
+      "source_review": "same original review_cloud_startup APPROVE usable subset only; full surveyFAIL",
+      "guard_scope": "All29 uniqueJPEG1920 headers, supported living land states, productionCameraRig guards, exactclean762a LowCompatibilityNVIDIA,30 preserved hashes",
+      "errors": "No ScriptErrors; one deliberate failed potion capture ERROR plus six spacing warnings",
+      "judge_contacts": "ralph\\reports\\F41\\recapture-rescore\\inventory",
+      "provenance_limits": [
+        "No unlock flags granted:16 labelled gated items require crown_reached/rootgate_released; do not assume a named frame shows its pickup",
+        "rootgate_release_key/dynamo_core_key/spark_of_stormwood are event grants deliberately never loose props; exclude labels as observed items",
+        "Only actually visible candies, ungatedStaticSnap, harvest subjects and terrain support bounded rescore",
+        "Missing potion_small route13 authored[-650,3550] refused6stands; unseenitem UNKNOWN",
+        "No earned access/collection/save/transaction/fullsurvey claim"
+      ]
     }
-  ]
+  ],
+  "retained_ui_reuse": {
+    "row": "P2-095",
+    "accepted_fix_commit": "54b189254026ce25d86c975b0dae3a0041515210",
+    "source_applicability_review": "same original review_cloud_startup APPROVE common legacy/nonstation row/detail text rendering through87bed; source/config/display/textprefs unchanged for represented mode",
+    "reference_receipt": "ralph\\reports\\VISUAL\\phase2\\meadows\\fixes\\P2-095\\accepted-ui-comparison\\evidence-receipt.json",
+    "reference_verdict": "ralph\\reports\\VISUAL\\phase2\\meadows\\fixes\\P2-095\\accepted-ui-comparison\\blind-verdict.md",
+    "sheets": [
+      {
+        "path": "ralph\\reports\\VISUAL\\phase2\\meadows\\fixes\\P2-095\\accepted-ui-comparison\\_sheet1080.png",
+        "sha256": "4aec2ea1b5825da91f2e2864662aefe8eb7ce28b34a3572bf35b9b3a6dac75fb"
+      },
+      {
+        "path": "ralph\\reports\\VISUAL\\phase2\\meadows\\fixes\\P2-095\\accepted-ui-comparison\\_sheet720.png",
+        "sha256": "e8d5838b7a8fb4570085e554b886e009ae4707943045c17e7ef72aa6a14bc8e9"
+      }
+    ],
+    "judge": "same original blind_listener_f10 re-assessed both retained sheets against current rubric; PARTIAL severity1/impact16, original clipping notobserved",
+    "limits": [
+      "No current station-mode layout/recipe availability proof",
+      "Old world/lighting excluded",
+      "Raw14 original JPEGdirectory absent; no newly inspectedfullraster claim",
+      "Accepted original verdict reused; no new fixture or capture"
+    ]
+  }
 }
