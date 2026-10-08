@@ -266,7 +266,7 @@ func _first_key_lessons() -> bool:
 		return false
 	var player := game.call("find_player") as CharacterBody3D
 	var rig := driver.current_scene.get_node_or_null("CameraRig") as Node3D
-	var nav := travel.NAV.new(driver, player, rig, Callable(travel, "_stick"))
+	var nav := preload("res://tests/helpers/stick_navigator.gd").new(driver, player, rig, Callable(travel, "_stick"))
 	var recoveries_before := int(player.get("_unstick_count"))
 	var approach := func() -> bool:
 		var budget := maxi(1200, int(player.global_position.distance_to(teacher.global_position) * 65.0))
