@@ -722,6 +722,7 @@ func _capture_water_frame(game: Node, context: Dictionary, phase: String, finish
 		RenderingServer.render_loop_enabled = true
 	var retained: Array[Image] = []
 	var record: Dictionary = {}
+	var last_blocked_ray: Dictionary = {}
 	var deadline := Time.get_ticks_msec() + 30000
 	_water_capture_observer = func() -> void:
 		if finished or not retained.is_empty() or Time.get_ticks_msec() >= deadline:
@@ -759,7 +760,14 @@ func _capture_water_frame(game: Node, context: Dictionary, phase: String, finish
 				if view.is_position_behind(point): return
 				var ray := PhysicsRayQueryParameters3D.create(view.global_position, point,
 					player.collision_mask, [player.get_rid()])
-				if not player.get_world_3d().direct_space_state.intersect_ray(ray).is_empty(): return
+				var blocked := player.get_world_3d().direct_space_state.intersect_ray(ray)
+				if not blocked.is_empty():
+					var collider: Variant = blocked.get("collider")
+					last_blocked_ray.merge({"bone": bone_name, "frame": Engine.get_physics_frames(),
+						"player": str(player.global_position), "camera": str(view.global_position),
+						"bone_position": str(point), "hit_position": str(blocked.get("position")),
+						"collider": str(collider.get_path()) if collider is Node else str(collider)}, true)
+					return
 		var snapshot := _water_capture_snapshot(game)
 		if snapshot.character_id != _water_capture_identity or snapshot.player_instance_id != _water_capture_body_id \
 			or snapshot.party_uids != _water_capture_party_uids or snapshot.mounted or snapshot.mount_body_present \
@@ -780,6 +788,8 @@ func _capture_water_frame(game: Node, context: Dictionary, phase: String, finish
 	_stop_water_capture()
 	if finished:
 		return false
+	if retained.is_empty() and not last_blocked_ray.is_empty():
+		print("WATER CAPTURE LAST BLOCKED RAY " + JSON.stringify(last_blocked_ray))
 	if not _expect(not retained.is_empty(), "route capture %s hop %d %s needs a ready actual frame within 30 seconds" % [context.route_id, context.hop, phase]):
 		return false
 	var picture: Image = retained[0]

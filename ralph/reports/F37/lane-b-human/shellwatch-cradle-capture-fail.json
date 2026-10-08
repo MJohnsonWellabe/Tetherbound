@@ -1,0 +1,16 @@
+{
+  "criterion": "F37#2",
+  "verdict": "FAIL; whole criterion remains OPEN",
+  "source_sha": "fe2642cab55c0cefb932df5dda61c35d4baf174a",
+  "run_id": 37732861531,
+  "artifact_id": 11530961408,
+  "script": "tests/smoke_water_swimming.gd",
+  "args": "--rest-route=shellwatch_to_tidal_cradle_sheltered --every-hop --original-five --capture-water-route --functional-offload",
+  "renderer": "gl_compatibility",
+  "resolution": "1280x720",
+  "actual_failure": "route capture shellwatch_to_tidal_cradle_sheltered hop 1 midwater needs a ready actual frame within 30 seconds",
+  "exit_observation": "Failed hosted run; no engine exit_code marker. No invented complete-route result.",
+  "scope": "First hop capture observation failed; no complete route/stamina PASS. No guard, timer, route, movement or fixture changed.",
+  "retained": "Raw run.log and user save remain in artifact11530961408 and the untracked run directory",
+  "next": "Different approach: bounded read-only last blocked result from the original capture ray. F37#4 existing rejoin measurement may run independently; all seven mandatory routes remain required."
+}
