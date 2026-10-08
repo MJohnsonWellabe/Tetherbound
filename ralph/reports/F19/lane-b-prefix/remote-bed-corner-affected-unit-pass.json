@@ -1,0 +1,26 @@
+{
+  "criterion": "F49#0/F19#5",
+  "whole_criterion_proven": false,
+  "source": "d18bae407d62cf579bb0ac9ca27db3eb6111a938",
+  "run_id": 37745030835,
+  "artifact_id": 11535541571,
+  "proof": "tests/run_tests.gd --only=test_meadows_earned_team_segment.gd",
+  "tests": 22,
+  "assertions": 132,
+  "failed": 0,
+  "exit_code": 0,
+  "wall_seconds": 6,
+  "engine_errors": 0,
+  "negative_test_helper_fail_messages": 4,
+  "review": {
+    "agent": "b_f49_review",
+    "verdict": "APPROVE",
+    "scope": "Scoped logic only; all four helper FAIL messages expected negative cases for admission/missing live contexts. Refusal assertions passed. No engine/script errors. Physical approach still unproven."
+  },
+  "scope": "Only existing test family literally naming the changed helper; no claim of physical corner, bed assignment or recovery",
+  "remaining_gates": [
+    "Actual changed-source strictLoad and physical approach",
+    "Relay export, Hall and later continuous campaign boundaries",
+    "Whole criterion review and READY"
+  ]
+}

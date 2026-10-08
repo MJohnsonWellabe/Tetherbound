@@ -1,0 +1,285 @@
+{
+  "criterion": "F49#0/F19#5",
+  "whole_criterion_proven": false,
+  "packet": "D:/CodexTemp/tetherbound-proof/native-b-c863d9d7a3-earned-relay-pre-r2",
+  "process": {
+    "stop_reason": "",
+    "source": "c863d9d7a3568212a2880f3750d5614e3efeb415",
+    "exit_code": 1,
+    "pid": 9600,
+    "started_utc": "2026-10-08T07:20:32.8138711Z",
+    "finished_utc": "2026-10-08T07:30:30.3373678Z"
+  },
+  "source_after_import": {
+    "index_tree": "2c61d0a64653a63406289ef3bde8a3e6a034dbd2",
+    "dirty": [],
+    "source": "c863d9d7a3568212a2880f3750d5614e3efeb415",
+    "head_tree": "2c61d0a64653a63406289ef3bde8a3e6a034dbd2"
+  },
+  "proof": {
+    "disclosures": [],
+    "failures": [
+      "relay: Riverwatch controller recovery failed: [\"Installed-bed approach lost grounded exterior world input: { \\\"nav_refused\\\": false, \\\"nav_reason\\\": \\\"\\\", \\\"on_floor\\\": true, \\\"paused\\\": false, \\\"fighting\\\": false, \\\"input_owner\\\": \\\"<null>\\\", \\\"inside_bed_exclusion\\\": true, \\\"player\\\": \\\"(214.9685, -4.500023, 3699.333)\\\", \\\"target\\\": \\\"(211.7656, -4.512304, 3704.043)\\\", \\\"solid_bounds\\\": \\\"[P: (210.3223, -4.532207, 3699.155), S: (4.164429, 0.294345, 4.304688)]\\\", \\\"clearance\\\": 0.50100000600796, \\\"waypoint\\\": 0, \\\"frame\\\": 403, \\\"budget\\\": 3600 }\", \"Controller home-bed assignment failed: []\"]"
+    ],
+    "flags_gained": [],
+    "flags_total": 48,
+    "free_build": false,
+    "functional_offload": true,
+    "game_clock_seconds": 363.103786000028,
+    "game_day": 5,
+    "handoff_from": "D:/CodexTemp/tetherbound-proof/native-b-ad95e0dd6f-earned-warrens-r2/earned-pieces/earned_piece_native_warrens_r2/warrens",
+    "helper_receipts": [
+      {
+        "passed": false,
+        "receipts": [
+          {
+            "beat": "overlook_bypass",
+            "from": "(-159.4663, 3418.625)",
+            "to": "(-60.0, 3520.0)",
+            "via": [
+              "(-122.0, 3443.0)"
+            ]
+          },
+          {
+            "beat": "wild_victory",
+            "enemy_id": -9223370740714160000,
+            "frames": 706,
+            "guardian": false,
+            "hits": 10,
+            "switches": 0
+          }
+        ],
+        "segment": "relay"
+      }
+    ],
+    "inventory": {
+      "axe": 1,
+      "berries": 2,
+      "coin": 200,
+      "fiber": 3,
+      "hammer": 1,
+      "hide_vest": 1,
+      "home_key": 1,
+      "knife": 1,
+      "orb_basic": 41,
+      "orb_greater": 2,
+      "pickaxe": 1,
+      "potion_small": 3,
+      "revive": 9,
+      "rootstone": 19,
+      "torch": 1,
+      "wood": 2
+    },
+    "key_items": {
+      "home_key": 1
+    },
+    "location": {
+      "player": [
+        214.968536376953,
+        -4.50002288818359,
+        3699.33325195313
+      ],
+      "realm": "meadows",
+      "scene": "MeadowsPlayground"
+    },
+    "mode": "new_order_meadows_piece",
+    "party_after": [
+      {
+        "hp": 40,
+        "level": 9,
+        "nickname": "Bud",
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "hp": 26,
+        "level": 9,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "hp": 44,
+        "level": 9,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "hp": 31,
+        "level": 7,
+        "nickname": "",
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "hp": 75,
+        "level": 7,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ],
+    "party_before": [
+      {
+        "hp": 40,
+        "level": 9,
+        "nickname": "Bud",
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "hp": 26,
+        "level": 9,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "hp": 44,
+        "level": 9,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "hp": 31,
+        "level": 7,
+        "nickname": "",
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "hp": 75,
+        "level": 7,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ],
+    "passed": false,
+    "saved_world_seed": 59015681,
+    "segment": "relay",
+    "wall_seconds": 577.531,
+    "world_seed_env": ""
+  },
+  "strict_load_component": {
+    "verdict": "APPROVE",
+    "agent": "b_f49_review",
+    "scope": "Original immutable compatibility inputs, production title Load, exact reload comparison and original LOAD_SETTLE/free-input boundary returned successfully before after_load_before_piece observation",
+    "observations": [
+      {
+        "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+        "game_hint": "Follow the conduits out of the quarry to the relay station on the river. Fight in past the pickets: the one standing at the console is the one who matters.",
+        "game_text": "Defeat the Relay Captain.",
+        "gate": "relay",
+        "hint_text": "Follow the conduits out of the quarry to the relay station on the river. Fight in past the pickets: the one standing at the console is the one who matters.",
+        "hint_visible": false,
+        "hud_text": "Defeat the Relay Captain.",
+        "hud_visible": true,
+        "input_owner": "",
+        "kind": "next_goal_snapshot",
+        "lesson": {
+          "id": "",
+          "line": 0,
+          "open": false,
+          "owns_input": false,
+          "personal_ack": false,
+          "text": "",
+          "visible": false
+        },
+        "objective_is_posed": false,
+        "party_uids": [
+          "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "creature-afbd0d982b14221393f70c29863586a1",
+          "creature-c576f15db4b7f3ecf487a80de0169177"
+        ],
+        "paused": false,
+        "phase": "after_load_before_piece",
+        "physics_frame": 370,
+        "process_frame": 311,
+        "quest_text": "Defeat the Relay Captain.",
+        "realm": "meadows",
+        "render_loop_enabled": false,
+        "scene": "/root/MeadowsPlayground",
+        "scope": "Partial UI/state observation only; no readability, comprehension, replay or full F46 claim",
+        "tracked_id": "defeat_the_relay_captain",
+        "visible_text_matches": true
+      },
+      {
+        "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+        "game_hint": "Follow the conduits out of the quarry to the relay station on the river. Fight in past the pickets: the one standing at the console is the one who matters.",
+        "game_text": "Defeat the Relay Captain.",
+        "gate": "relay",
+        "hint_text": "Follow the conduits out of the quarry to the relay station on the river. Fight in past the pickets: the one standing at the console is the one who matters.",
+        "hint_visible": false,
+        "hud_text": "Defeat the Relay Captain.",
+        "hud_visible": true,
+        "input_owner": "",
+        "kind": "next_goal_snapshot",
+        "lesson": {
+          "id": "",
+          "line": 0,
+          "open": false,
+          "owns_input": false,
+          "personal_ack": false,
+          "text": "",
+          "visible": false
+        },
+        "objective_is_posed": false,
+        "party_uids": [
+          "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "creature-afbd0d982b14221393f70c29863586a1",
+          "creature-c576f15db4b7f3ecf487a80de0169177"
+        ],
+        "paused": false,
+        "phase": "piece_failed",
+        "physics_frame": 21257,
+        "process_frame": 2947,
+        "quest_text": "Defeat the Relay Captain.",
+        "realm": "meadows",
+        "render_loop_enabled": false,
+        "scene": "/root/MeadowsPlayground",
+        "scope": "Partial UI/state observation only; no readability, comprehension, replay or full F46 claim",
+        "tracked_id": "defeat_the_relay_captain",
+        "visible_text_matches": true
+      }
+    ]
+  },
+  "failure": {
+    "phase": "installed Riverwatch bed approach before assignment/recovery",
+    "original_pre_collision_refusal": false,
+    "nav_refused": false,
+    "on_floor": true,
+    "paused": false,
+    "fighting": false,
+    "input_owner": null,
+    "inside_bed_exclusion": true,
+    "waypoint": 0,
+    "frame": 403,
+    "budget": 3600,
+    "clearance": 0.50100000600796,
+    "original_corner_reserve": 0.2,
+    "last_sample_frame": 360,
+    "terminal_unobserved_frames": 43,
+    "cause_limits": "No frozen-heading, camera, missed-arrival or floor-overlap cause claimed. Exclusion entry is measured; final43frames unsampled."
+  },
+  "warnings": [
+    "instance_reset_physics_interpolation deprecated; playground_world.gd:1175"
+  ],
+  "script_or_parse_errors": 0,
+  "accepted_handoff": false,
+  "prefix_mutated": false,
+  "prefix_hashes_recomputed": false,
+  "bed_assigned": false,
+  "flags_gained": [],
+  "remaining_gates": [
+    "Changed corner candidate d18 affected logic and actual physical approach",
+    "Accepted Relay export and earned Hall",
+    "Later new-order boundaries, continuous credits and whole criterion review"
+  ]
+}
