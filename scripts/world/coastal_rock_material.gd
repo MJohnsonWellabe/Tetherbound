@@ -152,6 +152,10 @@ const MATERIAL := """
 		// Use Terrain3D's interpolated height normal, not raster triangle
 		// derivatives: slope tint must not outline every terrain triangle.
 		vec3 dune_normal = normalize(w_normal);
+		float weathered_bank = 1.0 - smoothstep(0.80, 0.98, abs(dune_normal.y));
+		if (coast_weathering_enabled) {
+			patch = mix(patch, coast_surface_noise(v_vertex * coast_weathering_scale, w_normal), weathered_bank);
+		}
 		vec3 dune_weights = abs(dune_normal);
 		dune_weights /= max(dot(dune_weights, vec3(1.0)), 0.001);
 		float grain = coast_noise(v_vertex.zy * 3.4) * dune_weights.x
@@ -170,6 +174,13 @@ const MATERIAL := """
 		float dune_tex = dot(texture(coast_dune_albedo, v_vertex.zy * dune_scale).rgb, vec3(0.299, 0.587, 0.114)) * dune_weights.x
 			+ dot(texture(coast_dune_albedo, v_vertex.xz * dune_scale).rgb, vec3(0.299, 0.587, 0.114)) * dune_weights.y
 			+ dot(texture(coast_dune_albedo, v_vertex.xy * dune_scale).rgb, vec3(0.299, 0.587, 0.114)) * dune_weights.z;
+		if (coast_weathering_enabled) {
+			// The final dune layer otherwise replaces the weathered bank below.
+			// Retain the installed sand grain, but soften its repeated ripples on
+			// inclined banks and let irregular surface patches carry the value.
+			dune_tex = mix(dune_tex, mix(0.70, dune_tex, coast_rock_detail), weathered_bank);
+			sand *= mix(1.0, mix(0.86, 1.10, patch), weathered_bank);
+		}
 		sand *= clamp(1.0 + (dune_tex - 0.70) * coast_dune_texture_strength, 0.68, 1.22);
 		// Long dune flanks need a broad value break at gameplay distance. Keep
 		// level paths and crests bright while softly shading inclined sand.
