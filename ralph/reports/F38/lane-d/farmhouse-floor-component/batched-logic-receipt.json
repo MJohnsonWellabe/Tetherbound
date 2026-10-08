@@ -1,0 +1,40 @@
+{
+  "source": "f9b6543b399b79dd7778e67b6ddcf1b3035c90f0",
+  "run": 37725358037,
+  "artifact": 11527423842,
+  "proof": "tests/run_tests.gd --only=20changedfile/config-named files",
+  "test_files": 20,
+  "tests": 143,
+  "assertions": 5918,
+  "failed": 0,
+  "exit_code": 0,
+  "seconds": 12,
+  "tests_per_file": {
+    "test_companion_presence.gd": 33,
+    "test_crossing_hall_portal_mount.gd": 2,
+    "test_crossing_hall_relic_hang.gd": 4,
+    "test_grandpa_yard_visual_identity.gd": 5,
+    "test_grandpas_village_visual_identity.gd": 5,
+    "test_loft_bed_reachable.gd": 6,
+    "test_meadows_banner_capture_0912.gd": 7,
+    "test_meadows_banner_standards_0912.gd": 2,
+    "test_meadows_south_trail_pulls_0912.gd": 6,
+    "test_opening_home_camera_guard.gd": 5,
+    "test_rise_cache_marker_clearance_0912.gd": 1,
+    "test_rise_visual_identity.gd": 13,
+    "test_tournament_ground_presentation.gd": 6,
+    "test_trail_camp_arrival_identity.gd": 5,
+    "test_village_main_street.gd": 11,
+    "test_village_redesign_topology.gd": 3,
+    "test_village_road_topology.gd": 15,
+    "test_water_offshore_material.gd": 2,
+    "test_water_surface_material.gd": 4,
+    "test_world_weather.gd": 8
+  },
+  "retained_diagnostics": [
+    "6off-tree creature_bed.occupant_index get_node errors in isolated test_loft_bed_reachable fixture",
+    "Terrain3Danchorwarning isolated water_terrain_factory",
+    "14ObjectDBleaks/1resourceinuse atexit"
+  ],
+  "limitations": "No parser/ScriptError/assertionfailure. Doesnot proveactivecroppedtexture/shader/rain/light pixels; actualcapturesrequired. 8dcb later3line rain/capture correction notcovered; affectedWorldWeather/Hallproof stillrequires actualupdatedsource."
+}

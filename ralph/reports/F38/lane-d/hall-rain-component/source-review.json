@@ -1,0 +1,16 @@
+{
+  "source": "8dcb190fb9da1f6d5feb4552fdfff5f06379e8d7",
+  "reviewer": "/root/f42_visual_review",
+  "verdict": "SOURCE APPROVE",
+  "scope": "HallauthoredinteriorAABBs registerlocalparticle-shelter group; activeviewportcamera onlywithin WorldWeather owningrealm hideslocalemitter; weather()/cycles/spawns unchanged. Optionalexistingroute_stills namedweatherfixtureholdsscheduler_orderempty+enablesidlefollow; defaultCLI unchanged.",
+  "corrected": [
+    "CaptureparentdisablesWeather_process; optionalfixture re-enablesit",
+    "ForeignsimulationHallvolumesexcluded byowningparentancestorfilter"
+  ],
+  "remaining_gates": [
+    "Updatedaffectednamedchecks",
+    "Actualinside/outsideinrainLownative8pointpacket",
+    "Codeblindverdict/independentfinalreview"
+  ],
+  "criterion_done": false
+}
