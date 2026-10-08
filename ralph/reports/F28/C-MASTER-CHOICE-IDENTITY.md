@@ -39,6 +39,30 @@ is preserved: run `37816902866`, artifact `11566934441`, 17 tests/442 assertions
 ZIP SHA256 `39797f575a2cfa550640f2a3c7efdf5908bf3491795c5c7d38abbf130bab776d`.
 No rerun of that passing source is requested or counted.
 
+## Existing producer expectation
+
+`209e3c33a3042b5e2d9d93eabb4c8a6176bcf7c8` updates only the original
+`tools/net/f48_prepare_profile.py` Master button expectation to the approved
+numbered/species/nickname label. It still derives the challenger from each
+original saved card, requires the existing single level-9 Terrapup setup and
+uses ordinary `f48_button` input. The actual input controls, fixture disclosure,
+wait/fight budgets and outcome guards are unchanged. Cross-lane NOTICE:
+`6065672171`, before the edit.
+
+The existing `tools/net/f48_produce_actual.py --prepare-only --producer loop`
+completed once, without an engine/native run, in the fresh preserved directory
+`D:/tetherbound/.tmp/c-master-choice-prepared-763-r1`. Its generated
+`producer-profile/profile.json` SHA256 is
+`359ad1d8ceeb7c51134cb07443e46df983f90606e75e810983179d71e63bfdcb`;
+`source.json` records that digest and the input profile digest. It is explicitly
+`acceptance_credit=false`, `ready_ci_bundle=false`, `native_run=false`.
+
+Original reviewer `01a1165d-703f-7073-809d-343d2e86961e` gave SOURCE +
+PREPARATION APPROVE for exact `209e3c33a3042b5e2d9d93eabb4c8a6176bcf7c8`.
+Verdict: `D:/tetherbound/.tmp/c-f28-2-209-profile-original-verdict.txt`.
+The 16-test/442-assertion UI evidence above remains applicable: neither its
+production source nor its existing test file changed in this producer update.
+
 **This does not close F28#2.** Its real five-Master duel/loss/retry/chest routes
 and required native blind proof remain open. This packet creates no accepted
 campaign boundary and promotes no failed save. Native GPU remains ROOT-scheduled
