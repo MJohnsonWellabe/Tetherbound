@@ -32,6 +32,7 @@ class QuestFixture extends RefCounted:
 		updates += 1
 		return "current objective"
 	func tracked_hint(_progression: RefCounted) -> String: return "current hint"
+	func lesson_goal_signature() -> String: return ""
 
 class GameFixture extends "res://autoload/game_state.gd":
 	var actor: Node3D

@@ -596,5 +596,26 @@
     "run_log_sha256": "3e13dbe7bf3e0dcb33f3c24650809a571403ac0a32fdbad6bc67dec979ad38bd",
     "interpretation": "Local submitted-action increments are not landed or host-accepted hits. Guest readiness exposes no host journal. Late pending_vitals refusal does not correlate original host action/proposal; no production repair or Rally criterion claim.",
     "next": "Original f25_medium_review APPROVE bounded existing host snapshot at failed common Item return; live return-time evidence, not first-refusal attribution. No actions/budgets/guards/success behavior changed."
+  },
+  "changed_failed_item_host_fact": {
+    "source_commit": "a045b5a9f96d049038f83bed61cc5ec83fcb047f",
+    "run_id": 37757637078,
+    "artifact_id": 11540444476,
+    "named_proof": "tests/smoke_net_owner_passive_rejoin.gd --prove-tether-rally",
+    "result": "FAIL common Item prerequisite; Rally never reached",
+    "passed_checks": 19,
+    "distinct_failures": 1,
+    "host_snapshot": {
+      "bindings": [],
+      "encounter_id": "1:1",
+      "gate_pending": false,
+      "namespace_source": "current_host_world",
+      "observed_ms": 235106.0,
+      "pending_item_count": 0.0,
+      "scope": "live_host_snapshot_all_participants"
+    },
+    "log_sha256": "b1d15a7c1bd7e28a1f3e850d5e800ad1e818c424f391f6c2be5c3c6f883d2d40",
+    "review": "Original f25_medium_review source APPROVE; runtime qualification pending",
+    "interpretation": "Return-time host all-participant gate false, no pending item or proposal/actor binding. No exact first-refusal receipt retained at this instant; prior pending_vitals cause remains unsupported. No third unchanged attempt or production gate repair."
   }
 }
