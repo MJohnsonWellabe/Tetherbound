@@ -1,5 +1,7 @@
 # Restored Ground node witness
 
+Production claimant presentation correction `140416be20075219f38f1e51094303d2cd3239c2` changes only `research_log_panel.gd::_claim`: the existing guest response with `resolved=false` and exact code `awaiting_saved_decision` shows the existing waiting-for-confirmation message. It is not a reward refusal or an accepted payment. Same original reviewer **SOURCE APPROVE** against Session's guest contract and TRAINING; payment, requests, refusals, refresh, ownership and flags are unchanged. Existing `smoke_f42_system_screen.gd` remains the affected runtime gate. The previously approved naturally earned research-source extension `caeec3ac74` is retained unchanged and still needs its original runtime proof; no F27 criterion closure follows from this presentation repair.
+
 Coordinator issue 572 `6039180994` allocated the historical placement restoration only. `4ecc804cea4e8f0f02c7616fa37a1db5b4ffa58a` moves essence_meadows_ground_01 to `[24,-33]`, with matching anchor offset and route-distance metadata. Rewards, IDs, timers, stock, authority and receipt semantics are unchanged. Independent source reviewer `/root/kitchen_review`: APPROVE.
 
 Hosted run `37631766934` never reached the engine: actions/checkout treated an abbreviated SHA as a branch pattern and found no ref. The corrected full-SHA run `37635976743`, artifact `11489472394`, passed the existing `smoke_f27_essence_node.gd --site=essence_meadows_ground_01` in 70 seconds.
