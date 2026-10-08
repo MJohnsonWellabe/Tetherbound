@@ -32,6 +32,20 @@ var _tonic_refusal_armed := false
 var _tag_request: Dictionary = {}
 var _hud_capture_metadata: Dictionary = {}
 
+func _step_boot(args: Dictionary) -> Dictionary:
+	var result: Dictionary = await super._step_boot(args)
+	if result.get("verdict") == "PASS" and args.get("scene") == "world" \
+		and _peer_index == 1 and OS.get_cmdline_user_args().has("--capture-combat-hud") \
+		and DisplayServer.get_name() != "headless":
+		# Pay the first actual world draw inside this existing boot's budget,
+		# before the later authoritative HUD witness. No gameplay step changes.
+		var started := Time.get_ticks_msec()
+		RenderingServer.force_draw(true, 0.0)
+		var elapsed := Time.get_ticks_msec() - started
+		result["data"] = (result.get("data", {}) as Dictionary).merged({"hud_world_warmup_ms":elapsed}, true)
+		result["detail"] = str(result.get("detail", "")) + "; native world draw warmup %dms" % elapsed
+	return result
+
 
 func _execute_step(msg: Dictionary) -> Dictionary:
 	var action := str(msg.get("action", ""))
