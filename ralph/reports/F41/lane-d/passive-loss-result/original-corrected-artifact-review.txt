@@ -1,0 +1,7 @@
+> **APPROVE — corrected affected artifact** for `eb1b2089b87a2065f5f5d2db036cf31eeeb4017c`.
+>
+> The checkout excerpt identifies exact eb1b. Preserved ZIP and extracted log match SHA256 `58902af9c6991d8fe16578ea8b5e153e618f44ced026116ffd7a57d08b8568f2`.
+>
+> Run `37819188358` passed **100 checks**, exit 0/6s, zero script errors. The isolated “HUD has no player” warning remains disclosed. Prior source review covers the retained guards and added widget-font, card-bounds, separation and cleanup assertions.
+>
+> This is headless evidence on a logged 1920×1080 Control canvas; 720p font floors are computed. No native 720 pixels, natural defeat, blind or whole-criterion approval. Prior 1809 typography rejection remains separate; E integration requires its original review.
