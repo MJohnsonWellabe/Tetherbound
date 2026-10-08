@@ -135,12 +135,14 @@ func _flush_receipts() -> void:
 		var saver: RefCounted = game.get("save_system")
 		var identity := _identity
 		var generation := _receipt_generation
-		if saver != null and not _identity.is_empty() \
-				and saver.call("save_character_prepared", game, identity) == true \
-				and _player() == player and str(player.get("character_id")) == identity \
-				and _identity == identity and _receipt_generation == generation \
-				and game.get("save_system") == saver and game.get("session") == session:
-			for flag: String in acknowledged: _pending.erase(flag)
+		if saver != null and not identity.is_empty():
+			var saved: bool = saver.call("save_character_prepared", game, identity) == true
+			if _player() != player or str(player.get("character_id")) != identity \
+					or _identity != identity or _receipt_generation != generation \
+					or game.get("save_system") != saver or game.get("session") != session:
+				return # Neither clear nor submit against an outgoing binding.
+			if saved:
+				for flag: String in acknowledged: _pending.erase(flag)
 	var ledger: Node = game.get("ledger")
 	if ledger == null: return
 	for flag: String in _pending.keys():
