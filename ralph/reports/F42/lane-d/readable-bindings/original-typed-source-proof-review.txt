@@ -1,0 +1,11 @@
+> **APPROVE bounded source, selected proofs and ROOT scheduling command at a7f96dfdf8dc9f9f6e485c02a12c4f8940e21279.**
+>
+> The explicit `valid: bool` declaration fixes the observed parse error. No other relevant source changed from reviewed f5e.
+>
+> - **37780281492:** verified exact a7 checkout; Godot 4.7, 41/41 tests PASS, exit0/6s. Log hash matches; no errors/warnings.
+> - **37780880935:** verified exact a7 checkout; populated 438px panel, five-row 311px strip, 26px clearance, A/Space bindings, prompt floor and accepted/stale/refused/duplicate guards PASS, exit0/7s. Log hash matches; no errors/warnings.
+> - Failed runs **37779330053**, **37778622105**, and script-error-containing **37779779313** remain rejected evidence.
+>
+> Hall/capture/circuit source is unchanged from approved b7a. APPROVE `receipt.json.current_native_command` for ROOT’s isolated clean a7 checkout: native Forward+, fullscreen1920×1080, Medium/High bounded Hall stills, exact SHA and currently fresh output. All original guards and fixture disclosures remain.
+>
+> These checks prove unit portrait behavior and snapshot binding/layout only. Changed-source native pixels and original blind readability PASS remain required. **F42#2 and F17#6 remain OPEN; no READY or whole-criterion PASS.**

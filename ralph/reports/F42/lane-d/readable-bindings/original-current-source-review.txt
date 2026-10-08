@@ -1,0 +1,7 @@
+> SOURCE APPROVE at **f5e29ec43ee7d2c1a3a987f0df7266890523db57** for the bounded binding, portrait-framing and escape changes. No supported defect found.
+>
+> - Binding names still use live InputMap and the existing 30px prompt font. `[lb]` matches [Godot’s documented escaping](https://docs.godotengine.org/en/stable/tutorials/ui/bbcode_in_richtextlabel.html).
+> - Inspected all five original portraits. Atlas regions frame their existing identities; finite, positive, in-bounds checks and original-texture fallback are sound. Layout, state shading and source art remain unchanged.
+> - APPROVE the supplied Hall command for ROOT scheduling with this full SHA. Relevant Hall/capture/circuit source matches approved b7a; the output directory is currently fresh. Native Forward+ and matching 1920×1080 window/root guards remain mandatory.
+>
+> Affected widget/binding proofs and new native pixels remain pending. Longer rebound names and portrait recognition at 720p still require rendered evidence. **F42#2 remains OPEN; no visual, whole-criterion or shipping-flag approval.**

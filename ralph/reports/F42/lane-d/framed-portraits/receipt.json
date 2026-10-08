@@ -1,0 +1,43 @@
+{
+  "source": "7aa6c042957fdab46b8e72763a637075afe06100",
+  "sparkit_measure": {
+    "raw_sha256": "dcc90998073e3ecc2762e15388c911ce0f0a11005648311624821711880a2995",
+    "contrast_threshold": 16,
+    "size": [
+      1024,
+      1024
+    ],
+    "corner": [
+      242,
+      242,
+      242,
+      255
+    ],
+    "content_rect": [
+      332,
+      344,
+      359,
+      336
+    ]
+  },
+  "scope": "deviceLocalHUD AtlasTexture views of5existinginspectedportraits; raw PNGs and compactlayout/state/shading unchanged",
+  "region_provenance": "Inspected originalSparkit,mudsnout,bramblebun,terrapup,brooktail references before framing; perpathface/earviews configuredinhud.json; originaltexturefallbackforunknown/invalidbounds",
+  "failure": {
+    "summary": "41tests,4failed, actualparseerror validboolinference line40; dependentcompileerrors/resourceleaks retained; correctedexplicitboola7, no assertion removals",
+    "run": 37779330053,
+    "log_sha256": "12089423d3f630e85660c9c5c8e669996bf00bac3a145c4fc0f41df4846a45c1",
+    "artifact": 11551233753
+  },
+  "typed_correction": "a7f96dfdf8dc9f9f6e485c02a12c4f8940e21279",
+  "status": "Original f42 APPROVE updateda7source and actual41/41typedproof; changednative original7inchblindPASS pending, noREADY/wholecriterionPASS",
+  "typed_proof": {
+    "warnings": 0,
+    "errors": 0,
+    "log_sha256": "26d21f946a9edfd3a2786f2eb957d12b1a3d7d676f7c76e04c803dff9f8a1c77",
+    "summary": "PASS41tests/0failed,Godot4.7headless,exit0/6s; originalcompactgeometry/occupancy/state/opacity/species/fallbackcases and new realAtlas identity/bounds/cache assertions",
+    "run": 37780281492,
+    "artifact": 11551692002,
+    "source": "a7f96dfdf8dc9f9f6e485c02a12c4f8940e21279"
+  },
+  "original_review": "../readable-bindings/original-typed-source-proof-review.txt"
+}

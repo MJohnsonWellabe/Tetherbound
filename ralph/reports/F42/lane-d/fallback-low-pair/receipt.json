@@ -1,0 +1,29 @@
+{
+  "criterion_status": "F42#2 OPEN; no READY, newoverlay/commandmeter/7inch/hardware/motion/earnedjourney/wholecriterionPASS inferred",
+  "blind_reviewer": "/root/f26_presets_review original child01a11660-2f3e-7e20-9136-0101e419c9e7",
+  "excluded": "44 requestedfullscreen720 PNGs actually1920x1080, retained rasterFAIL; excluded from720/blind acceptance",
+  "packet": "D:/CodexTemp/tetherbound-proof/native-d-5c8d7d0028-f42-low-pair-r1",
+  "pair_limit": "Different timing/hit outcomes, not exactposepairs",
+  "runtime_verdict": "APPROVE eligible fallbackHUD runtime evidence;88 distinct files/hashes verified, matching suppliedhashes/capturelogs, eligibleexit0, cleanpinnedsource",
+  "eligible": {
+    "low1080": "44 unique native1920x1080 PNGs, fullscreen",
+    "low720_windowed": "44 unique native1280x720 PNGs, windowed"
+  },
+  "runtime_reviewer": "/root/f42_visual_review original child01a1168a-2a2e-7243-aa7d-e655171c70fa",
+  "feature_limit": "command runtime/network/UI flagsOFF;producer refuses newoverlay; fallbackHUDonly",
+  "runtime_warnings": [
+    "interpolation deprecation",
+    "two shared-tree retint warnings",
+    "three cluster-spacing warnings"
+  ],
+  "source": "5c8d7d0028cfb7fa3bcc2e8190601812cb2766cd",
+  "blind_status": "BLOCK original blind inspected all88eligible originals; clutter/occlusion PASS, no textclipping/overlappinglabels; binding and rosteridentity defects remain",
+  "fixtures": "fivelevel42creatures, debugplacement, onehiddennearbywild, Calmcontinuouslypinned, healing, forcedfleeattimecap; movement/quickactioninjection, notwhollyphysicalcontroller",
+  "blind_defects": [
+    "MiniatureRB badge beside ultimate too weak at7inch",
+    "Dodge renders raw[jump] actiontoken, not controllerinstruction",
+    "SelectedSparkit speck in opaque square, othertinyunnamedportraits weak overgrass"
+  ],
+  "coverage_limits": "Ultimate remains0percent; charged/ready presentation not witnessed; command/runtime/UI flagsOFF; stillprofilejudgment, nohardware/motion/controlleroperation/earnedstate",
+  "exact_original_verdict": "original-review-packet.txt"
+}
