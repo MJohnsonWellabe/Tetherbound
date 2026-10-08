@@ -868,7 +868,7 @@ func _retint(mesh: Mesh, overrides: Dictionary, swaps: Dictionary = {}, needs_in
 ## the bible asks for ("deeper cooler greens under tree cover") needs a
 ## non-zero blue channel, which only a texture edit can supply.
 ##
-## `Image.adjust_bsc` does that edit in engine code at load time on a copy
+## `Image.adjust_bcs` does that edit in engine code at load time on a copy
 ## of the imported image: no new asset on disk, the pack's own leaf shapes,
 ## alpha untouched. One derived texture per (source, settings) pair, cached,
 ## so every material sharing the same adjustment shares one texture. Per
@@ -901,7 +901,7 @@ func _adjusted_texture(base: Texture2D, adjust: Dictionary) -> Texture2D:
 			push_warning("retexture_adjust: %s could not be decompressed; left as imported" % base.resource_path)
 			return base
 	image.convert(Image.FORMAT_RGBA8)
-	image.adjust_bsc(brightness, contrast, saturation)
+	image.adjust_bcs(brightness, contrast, saturation)
 	image.generate_mipmaps()
 	var derived := ImageTexture.create_from_image(image)
 	# VP3-FIX (pale-mint canopy regression). A `create_from_image()` texture

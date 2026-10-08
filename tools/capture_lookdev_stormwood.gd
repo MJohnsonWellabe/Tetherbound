@@ -52,6 +52,15 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		ground["camera_is_rendering"] = cover.get("_camera") == root.get_camera_3d()
 		if not bool(ground.terrain_bound) or not bool(ground.camera_is_rendering):
 			_failures.append(frame_id + ": forest profile is not bound to actual terrain/rendering camera")
+	if bool(finish.get("understory_readability", {}).get("enabled", false)):
+		var cover := _world.get_node_or_null("StormwoodGroundCover")
+		if cover == null or not cover.is_inside_tree() or not bool(cover.get("_bound")) \
+				or cover.get("_terrain") != _world.get("_terrain") or cover.get("_camera") != root.get_camera_3d():
+			_failures.append(frame_id + ": understory profile is not bound to production terrain/rendering camera")
+			return
+		ground["understory_readability"] = _ground_material_receipt(frame_id)
+		if (ground.understory_readability as Dictionary).is_empty():
+			return
 	await super._capture(frame_id, description, full_size, extra.merged({
 		"graphics_capture": _graphics_capture, "forest_ground_profile": ground}, true))
 	if not _frames.is_empty() and _frames.back().get("size", []) != _graphics_capture.get("resolution", []):

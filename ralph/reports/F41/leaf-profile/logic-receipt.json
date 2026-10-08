@@ -1,0 +1,27 @@
+{
+  "source_commit": "55cad3d3a4a870477b3a0f2f8e73e3eb337f310b",
+  "run_id": 37724902359,
+  "artifact_id": 11528060117,
+  "status": "FAIL_SCRIPT_ERROR_DESPITE_ZERO_ASSERTION_FAILURES",
+  "runner_summary": {
+    "tests": 184,
+    "assertions": 1097349,
+    "failed": 0,
+    "exit_code": 0,
+    "seconds": 358
+  },
+  "actual_script_errors": [
+    "SCRIPT ERROR: Invalid call. Nonexistent function 'adjust_bsc' in base 'Image'.",
+    "SCRIPT ERROR: Cannot call method 'get_image' on a null value.",
+    "SCRIPT ERROR: Invalid call. Nonexistent function 'adjust_bsc' in base 'Image'."
+  ],
+  "log_sha256": "5a90f7a38914b07eb49f33a4e2c00d7836c2604311f27da6527e73c296f51d01",
+  "cause": "Image.adjust_bsc nonexistent in Godot4; palette cases abort before alpha/mipmap checks. Other outside-tree absolute lookup and teardown leaks retained in run.log; no blanket clean proof claim.",
+  "response": "Correct API spelling to Image.adjust_bcs, preserve image-copy/decompress/RGBA8/mips/cache path. Leaf shippingflag OFF since19a964. Existing palette three cases need one affected changed-source proof; no repeat20/full suite.",
+  "source_review": {
+    "reviewer": "/root/review_cloud_startup",
+    "verdict": "APPROVE SOURCE small API/bindingguard correction; changed palette proof remains required"
+  },
+  "api_source": "https://docs.godotengine.org/en/stable/classes/class_image.html#class-image-method-adjust-bcs",
+  "criteria_closed": []
+}
