@@ -196,6 +196,27 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 			"dive_remaining_s":riding.dive_remaining_s,"swim_mode":player.swim_controller.snapshot().mode,
 			"uid":str(instance.uid) if instance != null else "", "stamina_fraction":float(instance.swim_stamina_fraction) if instance != null else -1.0,
 			"saddle_count":game.inventory.count("swim_saddle"),"stone":game.local.flags.has("water_swim_stone_earned")}
+		if args.get("observe_restore", false):
+			# Read existing restoration/authority results only. Never request a
+			# mount, retry restoration, clear pending state or advance a frame.
+			var saved: Dictionary = game.save_system.characters().read(str(game.local.character_id))
+			var mount: Dictionary = saved.get("player_pose", {}).get("aquatic", {}).get("mount", {})
+			var body: Node3D = director.ally_body()
+			var service: Node = world.get_node("RippletWaterService")
+			var peer := int(args.get("restore_peer", game.session.local_peer_id()))
+			var answers: Dictionary = {}
+			for token: String in service.get("_answered"):
+				if token.begins_with(str(peer) + ":"):
+					answers[token] = service.get("_answered")[token].duplicate(true)
+			data.restore_observation = {"observed_peer":peer, "character_id":str(game.local.character_id),
+				"saved_mount":mount, "pending_mount":player.swim_controller.get("_pending_mount").duplicate(true),
+				"saved_uid_index":preload("res://scripts/save/water_traversal_save.gd").mount_index(mount, game.party.members()),
+				"active_index":game.party.active_index(), "party_mutation_blocked":game.party._owner_mutation_blocked(),
+				"ally_body":str(body.get_path()) if is_instance_valid(body) else "none",
+				"ally_visible":is_instance_valid(body) and body.is_visible_in_tree(),
+				"riding_allowed":riding._riding_allowed(), "tack":riding._has_tack("ripplet"),
+				"ripplet_requesting":riding.get("_ripplet_requesting"), "actual_authority_answers":answers}
+			print("F37 RESTORE OBSERVATION " + JSON.stringify(data.restore_observation))
 		if args.get("remember_saved_dive", false):
 			var saved: Dictionary = game.save_system.characters().read(str(game.local.character_id))
 			var mount: Dictionary = saved.get("player_pose", {}).get("aquatic", {}).get("mount", {})
