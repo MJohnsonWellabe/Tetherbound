@@ -348,19 +348,51 @@ func _bark_visual(id: String,vertices: PackedVector3Array,normals: PackedVector3
 	arrays[Mesh.ARRAY_VERTEX] = vertices
 	arrays[Mesh.ARRAY_NORMAL] = normals
 	arrays[Mesh.ARRAY_TEX_UV] = uvs
+	if _bark.normal_enabled:
+		arrays[Mesh.ARRAY_TANGENT] = _bark_tangents(vertices, normals, uvs)
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
 	var visual := MeshInstance3D.new()
 	visual.name = id
-	if _bark.normal_enabled:
-		var surface := SurfaceTool.new()
-		surface.create_from(mesh, 0)
-		surface.generate_tangents()
-		visual.mesh = surface.commit()
-	else:
-		visual.mesh = mesh
+	visual.mesh = mesh
 	visual.material_override = _bark
 	add_child(visual)
+
+
+## Generate only the final four-float-per-vertex stream. The native Mikk pass
+## exhausted memory during world startup after copying this large bark mesh.
+## Positions, smooth normals, UVs and the enabled normal map remain authored.
+func _bark_tangents(vertices: PackedVector3Array, normals: PackedVector3Array,
+		uvs: PackedVector2Array) -> PackedFloat32Array:
+	var tangents := PackedFloat32Array()
+	tangents.resize(vertices.size() * 4)
+	for triangle in range(0, vertices.size(), 3):
+		var edge_a := vertices[triangle + 1] - vertices[triangle]
+		var edge_b := vertices[triangle + 2] - vertices[triangle]
+		var uv_a := uvs[triangle + 1] - uvs[triangle]
+		var uv_b := uvs[triangle + 2] - uvs[triangle]
+		var determinant := uv_a.x * uv_b.y - uv_b.x * uv_a.y
+		var along_u := Vector3.ZERO
+		var along_v := Vector3.ZERO
+		if absf(determinant) > 0.00000001:
+			along_u = (edge_a * uv_b.y - edge_b * uv_a.y) / determinant
+			along_v = (edge_b * uv_a.x - edge_a * uv_b.x) / determinant
+		for corner in 3:
+			var index := triangle + corner
+			var normal := normals[index].normalized()
+			var tangent := along_u - normal * normal.dot(along_u)
+			# Split lips have collapsed U coordinates. Supply a stable frame
+			# perpendicular to the existing normal instead of a zero tangent.
+			if tangent.length_squared() < 0.00000001:
+				var axis := Vector3.UP if absf(normal.y) < 0.9 else Vector3.RIGHT
+				tangent = axis - normal * normal.dot(axis)
+			tangent = tangent.normalized()
+			var offset := index * 4
+			tangents[offset] = tangent.x
+			tangents[offset + 1] = tangent.y
+			tangents[offset + 2] = tangent.z
+			tangents[offset + 3] = -1.0 if normal.cross(tangent).dot(along_v) < 0.0 else 1.0
+	return tangents
 
 
 func _wood_limb(id: String,points: Array[Vector3],radii: Array[float]) -> void:

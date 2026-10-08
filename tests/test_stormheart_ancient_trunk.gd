@@ -43,8 +43,10 @@ func test_articulated_bark_is_finite_and_preserves_full_upper_floor_clearance() 
 	var tree := CandidateTree.new()
 	tree._presentation = tree._read_presentation()
 	tree._bark = StandardMaterial3D.new()
+	tree._bark.normal_enabled = true
 	tree._split_bark_shell()
 	var finite := true
+	var tangent_stream_valid := true
 	var winding := 0
 	var smallest_radius := INF
 	for name: String in ["EastLivingTrunk","WestLivingTrunk"]:
@@ -52,6 +54,15 @@ func test_articulated_bark_is_finite_and_preserves_full_upper_floor_clearance() 
 		var arrays := mesh.surface_get_arrays(0)
 		var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
 		var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
+		var tangents: PackedFloat32Array = arrays[Mesh.ARRAY_TANGENT]
+		assert_eq(tangents.size(), vertices.size() * 4, "normal-enabled bark supplies every vertex tangent")
+		for vertex in vertices.size():
+			var offset := vertex * 4
+			var tangent := Vector3(tangents[offset], tangents[offset + 1], tangents[offset + 2])
+			tangent_stream_valid = tangent_stream_valid and tangent.is_finite() \
+				and absf(tangent.length() - 1.0) < 0.002 \
+				and absf(normals[vertex].dot(tangent)) < 0.002 \
+				and absf(tangents[offset + 3]) == 1.0
 		for index in range(0,vertices.size(),3):
 			var face := (vertices[index+2]-vertices[index]).cross(vertices[index+1]-vertices[index])
 			for corner in 3:
@@ -71,6 +82,7 @@ func test_articulated_bark_is_finite_and_preserves_full_upper_floor_clearance() 
 				var nearest := Geometry2D.get_closest_point_to_segment(Vector2.ZERO,polygon[edge],polygon[(edge+1)%polygon.size()])
 				smallest_radius = minf(smallest_radius,nearest.length())
 	assert_true(finite,"all generated bark vertices and smooth normals are finite")
+	assert_true(tangent_stream_valid, "bark normal-map tangents stay finite, unit, perpendicular and signed")
 	assert_eq(winding,0,"triangle winding must agree with every corner normal")
 	assert_true(smallest_radius>=45.8,"complete bark triangles, clipped to the upper-floor slab, retain the44m arena clearance")
 	_free_visuals(tree)
