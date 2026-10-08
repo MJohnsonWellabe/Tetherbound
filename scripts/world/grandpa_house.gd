@@ -460,6 +460,7 @@ func _apply_window_pane_detail_candidate(shell: Node3D) -> void:
 			var copy := source.duplicate() as BaseMaterial3D
 			copy.albedo_texture = textures.colour
 			copy.emission_texture = textures.colour
+			copy.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
 			copy.normal_enabled = true
 			copy.normal_texture = textures.normal
 			if mesh.material_override != null:
