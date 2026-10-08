@@ -248,6 +248,10 @@ func _run() -> void:
 		if _admitted(first): await _prove_snare(0)
 		quit(await finish())
 		return
+	if OS.get_cmdline_user_args().has("--prove-host-tether-rally"):
+		if _admitted(first): await _prove_rally(0)
+		quit(await finish())
+		return
 	var first_id := str(((first.guest as Dictionary).get("local", {}) as Dictionary).get("id", ""))
 	if not await _tonic_item_original():
 		quit(await finish())
@@ -476,77 +480,7 @@ func _run() -> void:
 		await _prove_snare(1)
 
 	if OS.get_cmdline_user_args().has("--prove-tether-rally"):
-		# The existing admitted party earns this command through ordinary hits.
-		# Observe the real host modifiers without firing another damaging move.
-		for _attempt in 1:
-			if not _ok(await step(0, "deploy_creature"), "Rally: host deploys its same admitted companion"): break
-			if not _ok(await step(0, "op_tonic_target"), "Rally: host normally engages an actual live wild"): break
-			var encounter: Dictionary = await probe(0, "encounter")
-			if not _ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "Rally: existing proximity setup reaches the host fight"): break
-			if not _ok(await step(1, "deploy_creature"), "Rally: guest deploys its same admitted companion"): break
-			if not _ok(await step(1, "join_encounter", {"encounter_id":str(encounter.get("id", ""))}), "Rally: guest joins the exact host encounter"): break
-			var owner: Dictionary = await probe(1, "op_tag_state", {"request":{}})
-			var peer := int(owner.peer)
-			check(float(owner.commands.get("meter", -1.0)) == 0.0, "Rally: fresh admitted encounter starts with zero command meter")
-			if float(owner.commands.get("meter", -1.0)) != 0.0: break
-			if not _ok(await step(1, "op_tonic_hits", {"command_id":"rally"}), "Rally: ordinary quick hits earn the authored cost within eight attempts"): break
-			var args := {"peer":peer, "character_id":_guest_character, "request":{}, "rally":true}
-			var before: Dictionary = await probe(0, "op_tag_state", args)
-			var row: Dictionary = preload("res://scripts/combat/tether_commands.gd").config().commands.rally
-			var cost := float(row.cost)
-			var commands_before: Dictionary = before.record.get("participants", {}).get(str(peer), {}).get("tether_commands", {})
-			var ready: bool = float(commands_before.get("meter", -1.0)) >= cost and before.record.get("phase") == "active" \
-				and before.record.get("kind") == "wild" and float(before.record.get("opponent", {}).get("hp", 0.0)) > 0.0
-			check(ready, "Rally: trusted host has earned meter and the same living admitted wild before the request")
-			if not ready: break
-			var cast: Dictionary = await step(1, "op_tonic_rally")
-			print("RALLY actual request observation: ", JSON.stringify(cast))
-			if not _ok(cast, "Rally: production TetherCommandInput request receives its accepted host receipt"): break
-			var request: Dictionary = cast.data.request
-			args.request = request
-			var host: Dictionary = await probe(0, "op_tag_state", args)
-			var observed: Dictionary = host.rally
-			var receipt: Dictionary = observed.get("last_receipt", {})
-			var commands_after: Dictionary = host.record.get("participants", {}).get(str(peer), {}).get("tether_commands", {})
-			var parent := "command:%s:%s:%d:%d" % [request.encounter_id, _guest_character, int(request.generation), int(request.sequence)]
-			check(receipt.get("command_committed") == true and receipt.get("command_id") == "rally" \
-				and receipt.get("action_id") == parent and receipt.get("encounter_id") == request.encounter_id \
-				and receipt.get("character_id") == _guest_character and receipt.get("attacker_uid") == owner.deployment.creature_uid \
-				and receipt.get("generation") == request.generation and receipt.get("sequence") == request.sequence,
-				"Rally: host retains the exact commander's accepted original receipt and deployment")
-			check(request.generation == owner.deployment.generation and request.encounter_id == before.encounter_id \
-				and observed.get("binding") == before.rally.get("binding") \
-				and observed.get("binding", {}).get("character_id") == _guest_character \
-				and observed.get("binding", {}).get("creature_uid") == owner.deployment.creature_uid \
-				and observed.get("binding", {}).get("deployment_generation") == request.generation \
-				and host.body_instance == before.body_instance and cast.data.after.body_instance == owner.body_instance \
-				and cast.data.after.deployment == owner.deployment and cast.data.after.party == owner.party,
-				"Rally: request preserves the admitted encounter, companion, body and party")
-			check(float(commands_before.get("meter", -1.0)) - float(commands_after.get("meter", -1.0)) == cost \
-				and cast.data.before.get("meter") == commands_before.get("meter") \
-				and cast.data.after.commands.get("meter") == commands_after.get("meter"),
-				"Rally: owner and trusted host observe exactly one authored command-meter debit")
-			check(host.record.get("phase") == "active" and float(host.record.opponent.get("hp", 0.0)) > 0.0 \
-				and host.record.opponent.get("card", {}).get("uid") == before.record.opponent.get("card", {}).get("uid") \
-				and host.record.opponent.get("body_generation") == before.record.opponent.get("body_generation") \
-				and host.record.opponent.get("hp") == before.record.opponent.get("hp") \
-				and cast.data.after.enemy_hp == host.record.opponent.get("hp"),
-				"Rally: the same living target loses no HP from the trainer's command")
-			var own: Dictionary = observed.get("modifiers", {}).get(_guest_character, {})
-			check(int(commands_after.get("rally_until_ms", 0)) > int(observed.get("observed_ms", 0)) \
-				and float(own.get("damage", 1.0)) > 1.0 and float(own.get("wind_regen", 1.0)) > 1.0 \
-				and is_equal_approx(float(own.get("damage", 1.0)), float(row.damage_multiplier)) \
-				and is_equal_approx(float(own.get("wind_regen", 1.0)), float(row.wind_regen_multiplier)),
-				"Rally: unexpired actual host readers return the commander's authored damage and wind bonuses")
-			check(observed.get("modifiers", {}).size() == 2, "Rally: host readers observe both actual participants")
-			for character: String in observed.get("modifiers", {}):
-				var baseline: Dictionary = before.rally.get("modifiers", {}).get(character, {})
-				check(baseline.get("damage") == 1.0 and baseline.get("wind_regen") == 1.0, "Rally: participant had no bonus before this request")
-				if character == _guest_character: continue
-				var other: Dictionary = observed.modifiers[character]
-				check(other.get("damage") == 1.0 and other.get("wind_regen") == 1.0, "Rally: other participant receives neither bonus")
-			print("RALLY actual host observation: ", JSON.stringify({"request":request, "before":before, "host":host}))
-			for i in [1, 0]: _ok(await step(i, "press", {"action":"combat_run"}), "Rally: peer %d normally leaves the proof fight" % i)
+		await _prove_rally(1)
 
 	# 5. Negative control: an invalid record is refused, never adopted.
 	if not _ok(await step(1, "leave"), "invalid: guest leaves"):
@@ -798,3 +732,79 @@ func _prove_snare(commander: int) -> void:
 				"Snare: participant without its own grant receives no catch bonus")
 		print("SNARE actual host observation: ", JSON.stringify({"request":request, "before":before, "host":host}))
 		for i in [1, 0]: _ok(await step(i, "press", {"action":"combat_run"}), "Snare: peer %d normally leaves the proof fight" % i)
+
+
+## Same Rally guards for the original guest proof and fresh host mode.
+## The guest remains the actual non-caster bonus control.
+func _prove_rally(commander: int) -> void:
+	for _attempt in 1:
+		if not _ok(await step(0, "deploy_creature"), "Rally: host deploys its same admitted companion"): break
+		if not _ok(await step(0, "op_tonic_target"), "Rally: host normally engages an actual live wild"): break
+		var encounter: Dictionary = await probe(0, "encounter")
+		if not _ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "Rally: existing proximity setup reaches the host fight"): break
+		if not _ok(await step(1, "deploy_creature"), "Rally: guest deploys its same admitted companion"): break
+		if not _ok(await step(1, "join_encounter", {"encounter_id":str(encounter.get("id", ""))}), "Rally: guest joins the exact host encounter"): break
+		var owner: Dictionary = await probe(commander, "op_tag_state", {"request":{}})
+		var commander_character := str(owner.get("character_id", ""))
+		check(not commander_character.is_empty(), "Rally: commander has its actual stable character")
+		var peer := int(owner.peer)
+		check(float(owner.commands.get("meter", -1.0)) == 0.0, "Rally: fresh admitted encounter starts with zero command meter")
+		if float(owner.commands.get("meter", -1.0)) != 0.0: break
+		if not _ok(await step(commander, "op_tonic_hits", {"command_id":"rally"}), "Rally: ordinary quick hits earn the authored cost within eight attempts"): break
+		var args := {"peer":peer, "character_id":commander_character, "request":{}, "rally":true}
+		var before: Dictionary = await probe(0, "op_tag_state", args)
+		var row: Dictionary = preload("res://scripts/combat/tether_commands.gd").config().commands.rally
+		var cost := float(row.cost)
+		var commands_before: Dictionary = before.record.get("participants", {}).get(str(peer), {}).get("tether_commands", {})
+		var ready: bool = float(commands_before.get("meter", -1.0)) >= cost and before.record.get("phase") == "active" \
+			and before.record.get("kind") == "wild" and float(before.record.get("opponent", {}).get("hp", 0.0)) > 0.0
+		check(ready, "Rally: trusted host has earned meter and the same living admitted wild before the request")
+		if not ready: break
+		var cast: Dictionary = await step(commander, "op_tonic_rally")
+		print("RALLY actual request observation: ", JSON.stringify(cast))
+		if not _ok(cast, "Rally: production TetherCommandInput request receives its accepted host receipt"): break
+		var request: Dictionary = cast.data.request
+		args.request = request
+		var host: Dictionary = await probe(0, "op_tag_state", args)
+		var observed: Dictionary = host.rally
+		var receipt: Dictionary = observed.get("last_receipt", {})
+		var commands_after: Dictionary = host.record.get("participants", {}).get(str(peer), {}).get("tether_commands", {})
+		var parent := "command:%s:%s:%d:%d" % [request.encounter_id, commander_character, int(request.generation), int(request.sequence)]
+		check(receipt.get("command_committed") == true and receipt.get("command_id") == "rally" \
+			and receipt.get("action_id") == parent and receipt.get("encounter_id") == request.encounter_id \
+			and receipt.get("character_id") == commander_character and receipt.get("attacker_uid") == owner.deployment.creature_uid \
+			and receipt.get("generation") == request.generation and receipt.get("sequence") == request.sequence,
+			"Rally: host retains the exact commander's accepted original receipt and deployment")
+		check(request.generation == owner.deployment.generation and request.encounter_id == before.encounter_id \
+			and observed.get("binding") == before.rally.get("binding") \
+			and observed.get("binding", {}).get("character_id") == commander_character \
+			and observed.get("binding", {}).get("creature_uid") == owner.deployment.creature_uid \
+			and observed.get("binding", {}).get("deployment_generation") == request.generation \
+			and host.body_instance == before.body_instance and cast.data.after.body_instance == owner.body_instance \
+			and cast.data.after.deployment == owner.deployment and cast.data.after.party == owner.party,
+			"Rally: request preserves the admitted encounter, companion, body and party")
+		check(float(commands_before.get("meter", -1.0)) - float(commands_after.get("meter", -1.0)) == cost \
+			and cast.data.before.get("meter") == commands_before.get("meter") \
+			and cast.data.after.commands.get("meter") == commands_after.get("meter"),
+			"Rally: owner and trusted host observe exactly one authored command-meter debit")
+		check(host.record.get("phase") == "active" and float(host.record.opponent.get("hp", 0.0)) > 0.0 \
+			and host.record.opponent.get("card", {}).get("uid") == before.record.opponent.get("card", {}).get("uid") \
+			and host.record.opponent.get("body_generation") == before.record.opponent.get("body_generation") \
+			and host.record.opponent.get("hp") == before.record.opponent.get("hp") \
+			and cast.data.after.enemy_hp == host.record.opponent.get("hp"),
+			"Rally: the same living target loses no HP from the trainer's command")
+		var own: Dictionary = observed.get("modifiers", {}).get(commander_character, {})
+		check(int(commands_after.get("rally_until_ms", 0)) > int(observed.get("observed_ms", 0)) \
+			and float(own.get("damage", 1.0)) > 1.0 and float(own.get("wind_regen", 1.0)) > 1.0 \
+			and is_equal_approx(float(own.get("damage", 1.0)), float(row.damage_multiplier)) \
+			and is_equal_approx(float(own.get("wind_regen", 1.0)), float(row.wind_regen_multiplier)),
+			"Rally: unexpired actual host readers return the commander's authored damage and wind bonuses")
+		check(observed.get("modifiers", {}).size() == 2, "Rally: host readers observe both actual participants")
+		for character: String in observed.get("modifiers", {}):
+			var baseline: Dictionary = before.rally.get("modifiers", {}).get(character, {})
+			check(baseline.get("damage") == 1.0 and baseline.get("wind_regen") == 1.0, "Rally: participant had no bonus before this request")
+			if character == commander_character: continue
+			var other: Dictionary = observed.modifiers[character]
+			check(other.get("damage") == 1.0 and other.get("wind_regen") == 1.0, "Rally: other participant receives neither bonus")
+		print("RALLY actual host observation: ", JSON.stringify({"request":request, "before":before, "host":host}))
+		for i in [1, 0]: _ok(await step(i, "press", {"action":"combat_run"}), "Rally: peer %d normally leaves the proof fight" % i)
