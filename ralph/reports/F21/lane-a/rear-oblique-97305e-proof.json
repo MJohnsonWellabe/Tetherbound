@@ -166,9 +166,8 @@
     }
   },
   "remaining_gates": [
-    "Native changed matrix all9FAIL despite 214→190 visibility-failure reduction; same-route camera repair parked, no unchanged or speculative next run.",
-    "ROOT terminal camera receipt and all original retained controls still pending.",
-    "Minimum exact-host Tag settlement fact is the next gameplay path; no source-supported production settlement bug yet.",
+    "Native changed matrix all9FAIL despite214→190 visibility-failure reduction; camera repair parked, no unchanged/speculative next run.",
+    "Minimum exact-host Tag settlement fact is next gameplay path; no source-supported production settlement bug yet.",
     "No original code-blind size-matrix PASS; no whole F21#4 READY."
   ],
   "native_baseline": {
@@ -306,7 +305,7 @@
       "source_commit": "c759ab8e263944d622267ef91d4049bd2580d979",
       "raw_location": "D:/CodexTemp/tetherbound-proof/native-a-c759ab8e26-f21-camera9-r2",
       "matrix_sha256": "74a637552e34cfc7d182eb6c877378082d858703eacb50e8e8f33dbd7cf70393",
-      "result": "FAIL all nine case visual gates; engine terminal pending",
+      "result": "FAIL all nine case visual gates; native terminal exit1, no operator stop",
       "actual_draws": 216,
       "visibility_failures": 190,
       "framing_failures": 0,
@@ -439,7 +438,15 @@
         }
       ],
       "baseline_visibility_failures": 214,
-      "qualification": "Partial measured improvement only. Unchanged case budgets all met; no full camera criterion, hardware FPS or visual PASS."
+      "qualification": "Partial measured improvement only. Unchanged case budgets all met; no full camera criterion, hardware FPS or visual PASS.",
+      "terminal_receipt": {
+        "started_utc": "2026-10-08T07:34:42.9174326Z",
+        "exit_code": 1,
+        "stop_reason": "",
+        "pid": 8608,
+        "source": "c759ab8e263944d622267ef91d4049bd2580d979",
+        "finished_utc": "2026-10-08T07:44:47.87483Z"
+      }
     },
     "visual": "PENDING original code-blind review"
   }
