@@ -1,0 +1,11 @@
+{
+  "reviewer": "/root/f42_visual_review",
+  "source_commit": "819fe39d39bc0649e17983ea16d286b804959699",
+  "verdict": "SOURCE APPROVE",
+  "scope": "Exact two-file Hall-sign delta only; actual checks and pixels pending. No F17/F38 READY.",
+  "facts": [
+    "Configured pedestal baseline1.35 to1.9 clears native BookStand maximumY1.44429; geometry/collider/Approach/font32/pixel_size.006/depth testing/billboard unchanged.",
+    "Initial build and apply_display recompute StateSign visibility from exact text equality. Reserved BiomeSign remains Sealed once; Stirred differs and reappears; Home/Locked/Open visible.",
+    "Canonical arch_state, membrane state, shrine display, host transactions and save data untouched; consistent WORLD2.6."
+  ]
+}
