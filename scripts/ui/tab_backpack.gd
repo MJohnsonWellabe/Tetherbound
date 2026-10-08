@@ -1286,6 +1286,12 @@ func _on_slot(index: int) -> void:
 		say("Put it back in slot %d." % (index + 1))
 		return
 
+	var owner_game := state()
+	var owner_session: Node = owner_game.get("session") as Node if owner_game != null else null
+	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
+		and owner_session.call("_owner_training_mutation_blocked", owner_game.get("local")) == true:
+		say("Saving your last action. Try again in a moment.")
+		return
 	var moving := _stack_label(_held)
 	var displaced := _stack_label(index)
 	var merging := _same_item(_held, index)
