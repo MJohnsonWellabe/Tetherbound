@@ -53,8 +53,7 @@ func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
 	var player := CharacterBody3D.new()
 	world.add_child(player)
 	player.position = Vector3(0.0, 0.0, 7.0)
-	_ally = SCENE.instantiate()
-	_ally.set_script(BODY)
+	_ally = _make_ally_body()
 	world.add_child(_ally)
 	_manager = MANAGER.new()
 	world.add_child(_manager)
@@ -165,6 +164,14 @@ func _neutral_worst_frac(creature: RefCounted) -> float:
 	var worst := MATH.rolled_damage(float(cfg.get("power", 8.0)), float(foe.call("effective_attack", prog)),
 		float(creature.call("effective_defence", prog, is_best, ability)), 1.0, float(moves.call("power", move_id)), 1.0)
 	return worst / maxf(1.0, float(_entry_maxima[creature.get_instance_id()]))
+
+
+## Default flat-diagnostic body is unchanged. An admitted owner fixture can
+## supply the production follower before its _ready and Manager.begin run.
+func _make_ally_body() -> CharacterBody3D:
+	var body: CharacterBody3D = SCENE.instantiate()
+	body.set_script(BODY)
+	return body
 
 
 func _on_hit(on_enemy: bool, damage: float) -> void:

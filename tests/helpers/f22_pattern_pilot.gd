@@ -34,6 +34,14 @@ var _owner_launches := 0
 var _owner_impacts := 0
 
 
+func _make_ally_body() -> CharacterBody3D:
+	if context.get("canonical_owner") != true: return super._make_ally_body()
+	var body: CharacterBody3D = SCENE.instantiate()
+	body.set_script(preload("res://scripts/creatures/follower_creature.gd"))
+	body.set("owner_peer_id", 1)
+	return body
+
+
 ## Opt-in admission witness on the existing flat fixture. The first supported
 ## source is the actual single-creature Meadows trainer; other sources refuse.
 ## No global gates, combat state or live resources are manufactured here.
@@ -142,6 +150,9 @@ func _mount_owner() -> bool:
 	var id := str(record.get("encounter_id", ""))
 	_owner_director.set("_encounter", record)
 	_manager.bind_encounter(_owner_director, id, "trainer")
+	if _owner_director.call("deployed_body_for", 1) != _ally:
+		_owner_error = "real deployed-body lookup refused the current owned follower"
+		return false
 	if id.is_empty() or _owner_director.call("_install_ordinary_combat_reward_owner", id) != true \
 		or _owner_director.call("uses_durable_trainer_rewards", id) != true:
 		_owner_error = "real authored trainer owner installer refused"
