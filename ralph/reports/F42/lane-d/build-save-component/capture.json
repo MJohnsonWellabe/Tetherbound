@@ -1,0 +1,89 @@
+{
+  "scope": "F42#0 Build launcher and Save rows presentation component only",
+  "source_commit": "6f648c6c1a21674dc14b1740d06eb3d2176bc130",
+  "run": 37707975989,
+  "artifact": 11521551022,
+  "script": "tools/phase2_capture_ui.gd",
+  "args": "--biome=meadows --paired-720 --tabs=build,save --build-states --save-state --output=res://ralph/reports/VISUAL/phase2/lane-d/f42-build-save-paired",
+  "renderer": "gl_compatibility",
+  "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "raster_pairs": ["1920x1080", "1280x720"],
+  "actual_result": {
+    "complete": true,
+    "stage": "finished",
+    "failures": [],
+    "exit": 0,
+    "seconds": 1098,
+    "all_frames": 12,
+    "component_frames": 10
+  },
+  "build_state_witness": "Existing Settings button pressed signal selects off/on; capture verifies real Game preference and Build banner visibility, then restores original preference.",
+  "save_state_witness": {
+    "operation": "Existing Save button writes first empty manual slot; refuses overwrite and verifies saved party_size against actual captured party.",
+    "zero_based_slot": 1,
+    "day": 1,
+    "party_size": 1,
+    "realm": "meadows",
+    "legacy": false,
+    "summary_load_result_ok": true,
+    "limits": "Slot summary is not a reload witness. Stocked visual party/satchel, not earned progress. Manifest's generic fixture description predates opt-in Save; actual annotated populated frames record the write."
+  },
+  "source_review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "SOURCE APPROVE",
+    "scope": "tab_build.gd, tab_save.gd and menu.json build_preview only relative to main068b5bb; native bounded Build scroll, first focus and callbacks unchanged; Save retains all five rows/callbacks/polling/focus policy."
+  },
+  "excluded": "Two incidental HUD frames; all Players/Settings/map/HUD/other unREADY ancestry; placement, physical Save/Load controller flow, scrolling, reload, earned campaign, co-op, device and release Bars.",
+  "blind_review": {
+    "agent": "/root/f26_presets_review",
+    "verdict": "PASS scoped useful content and essential-text readability",
+    "inspected": "All ten actual originals at both resolutions",
+    "findings": [
+      "Build Tent/Campfire/Bedroll thumbnails recognizable; descriptions, costs, placement instructions, focused opening CTA and free-on explanation readable.",
+      "All five Save rows fit; empty versus populated slot2, instructions, button labels, focus outline, confirmation and footer readable without overlap or clipping."
+    ],
+    "residuals": [
+      "Free-on Build introductory heading cropped at the upper scroll boundary in both rasters; essential banner, cards and CTA intact.",
+      "Populated Save grammar reads 1 creatures in both rasters."
+    ],
+    "limits": "Stills do not prove navigation, scrolling, placement or reload. Whole F42, HUD/context and release Bars remain open."
+  },
+  "logic": {
+    "run": 37709794024,
+    "artifact": 11520978748,
+    "source_commit": "a54c87c3bb0f88badfa3411dae4f12995e1f8201",
+    "script": "tests/run_tests.gd",
+    "args": "--only=test_menu_data,test_cloudreach_fly_build_shortcut,test_combat_hud_handheld_floors,test_dialogue_runner,test_hammer_keeps_the_interact_button,test_hud_party_vitals,test_hud_toast_and_drowning,test_hud_widgets,test_quest_log,test_world_verb_input_owner_enforcement",
+    "files": 10,
+    "tests": 197,
+    "assertions": 3231,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 4,
+    "direct_component_file": "test_menu_data.gd loads affected tab scripts/config; other nine files cover the independent HUD candidate in this bounded batch."
+  },
+  "area": {
+    "run": 37710071529,
+    "artifact": 11520898218,
+    "source_commit": "a54c87c3bb0f88badfa3411dae4f12995e1f8201",
+    "proof": "tests/smoke_free_build.gd",
+    "result": "free build smoke test passed",
+    "exit": 0,
+    "seconds": 115,
+    "coverage": "Actual pad navigation reaches preference, launcher handoff and build catalogue; free-build banner/persistence, placement and menu/story input ownership checked.",
+    "save_limit": "Retained37680516233 shell/menu ownership proof applies to unchanged Save presentation. No physical Save/Load or reload claim."
+  },
+  "independent_review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "APPROVE scoped component READY",
+    "actual_intake": "Exact production scope, actual paired manifest/log,197-test log and actual existing Build controller smoke log inspected; original blind PASS retained with both residuals.",
+    "area_diagnostics": "Dummy-renderer material-null diagnostics occurred; no assertion failure, named area proof passed and exited0.",
+    "dependencies": "Existing UITokens onmain; no other menu/config/HUD/map or unREADY ancestry included."
+  },
+  "integration": {
+    "production": "scripts/ui/tab_build.gd and scripts/ui/tab_save.gd production delta only; data/config/menu.json build_preview group only",
+    "base_main": "068b5bb7c9b0926672d50ce846a768f92d4dc4ed",
+    "flags": "none"
+  },
+  "disposition": "READY scoped Build/Save component only. Full F42#0 remains OPEN;0 new full criteria."
+}
