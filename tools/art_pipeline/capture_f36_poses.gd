@@ -121,6 +121,7 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	var framing_bounds := RENDER_BOUNDS.measure(body)
 	var asset_path := ""
 	var asset_hash := ""
+	var asset_albedos: Array[Dictionary] = []
 	if _asset_candidate:
 		var config: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/creatures/f36_pose_candidates.json"))
 		var row: Dictionary = config.get("species", {}).get(id, {}).get("asset_candidate", {}) if config is Dictionary else {}
@@ -143,6 +144,29 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		body.call("_refresh_shiny_tint")
 		body.call("_apply_ground_contact_shadow")
 		body.call("_apply_night_floor")
+		# Read the active materials after ordinary finishing. A candidate's new
+		# UV atlas must use its own repaint, and actual imported albedos need
+		# mipmaps; source sidecars alone do not establish either runtime fact.
+		var texture_species := str(preview_look["colourway_source_species"])
+		var expected_albedo := "res://assets/creatures/tetherbound/%s/models/%s_extracted_base_color_vivid.png" % [texture_species, texture_species]
+		for node: Node in (body.get("_model") as Node3D).find_children("*", "MeshInstance3D", true, false):
+			var mesh_instance := node as MeshInstance3D
+			if mesh_instance.mesh == null:
+				continue
+			for surface in mesh_instance.mesh.get_surface_count():
+				var material := mesh_instance.get_active_material(surface) as BaseMaterial3D
+				var texture := material.albedo_texture if material != null else null
+				var image := texture.get_image() if texture != null else null
+				var actual_path := texture.resource_path if texture != null else ""
+				var has_mipmaps := image != null and image.has_mipmaps()
+				asset_albedos.append({"node": str(node.name), "surface": surface,
+					"path": actual_path, "expected_path": expected_albedo,
+					"source_sha256": FileAccess.get_sha256(actual_path) if FileAccess.file_exists(actual_path) else "",
+					"imported_mipmaps": has_mipmaps})
+				if actual_path != expected_albedo or not has_mipmaps:
+					_pose_failures.append("%s: active candidate albedo must match its own atlas and have imported mipmaps" % id)
+		if asset_albedos.is_empty():
+			_pose_failures.append("%s: candidate has no active model albedo surfaces" % id)
 	if candidate:
 		body.set_meta("f36_pose_preview", true)
 		body.call("_build_placeholder")
@@ -216,6 +240,7 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		file.store_string(JSON.stringify({"species": id, "candidate": candidate, "stage_only": true,
 			"material_candidate": _material_candidate,
 			"asset_candidate": _asset_candidate, "asset_path": asset_path, "asset_sha256": asset_hash,
+			"asset_active_albedos": asset_albedos,
 			"installed_reference_height_m": installed_height,
 			"scale_only": _scale_only, "installed_model": bool(body.call("has_model")) and not _asset_candidate,
 			"source_commit": source, "renderer": RenderingServer.get_current_rendering_method(),
