@@ -1,0 +1,106 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-08T19:35:04.850480+00:00",
+  "merge_commit": "49d368232719d4e76bfe4db9911e0b12fa5000eb",
+  "actual_first_parent": "9822fb50c4a995aef1fd63a15f6a87c9ae1f8690",
+  "actual_second_parent": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+  "scope": "Changed-only MAIN integration and retained E evidence applicability; no new whole criterion/art review",
+  "bounded_integration_verdict": "APPROVE",
+  "findings": [],
+  "conflict_resolution_checks": [
+    {
+      "path": "ralph/reports/F41/lane-e-capture-source-review.json",
+      "E_and_merge_blob": "702011dac2dab3ce2093124c158430966e909512",
+      "main_blob": "28c719d56280da882ae479a72f675eb5dd6f25f4",
+      "ours_byte_preserved": true,
+      "main_extra_top_level_keys": [],
+      "all_main_common_top_level_values_preserved": true
+    },
+    {
+      "path": "ralph/reports/F41/recapture-rescore/whole-criterion-blind-completeness.json",
+      "E_and_merge_blob": "eccb511b6034931950c2210f5c9258b4c0f90e65",
+      "main_blob": "a5b2d534b313f3ef9c2dd55ab04f621bf9f8c92b",
+      "ours_byte_preserved": true,
+      "main_extra_top_level_keys": [],
+      "preservation": "All main top-level values remain equal except addenda; its original two addenda are the exact prefix of the current three."
+    },
+    {
+      "path": "ralph/reports/F41/recapture-rescore/whole-criterion-score-packet.json",
+      "E_and_merge_blob": "94eb2d9aec9603db94d0db0e9c1186d5fddec8ed",
+      "main_blob": "fb2e564dbbea8d1652c70f6ccf287afaf425679c",
+      "ours_byte_preserved": true,
+      "main_extra_top_level_keys": [],
+      "preservation": "Main/current ID sets are equal; a bounded structural equality comparison finds only P2-110 differs among the 44 rows. Old main original_whole_reviews is exactly retained as historical_main_integrated_whole_reviews. Current source/verdict/review fields preserve already accepted09b binding; no rescoring performed."
+    }
+  ],
+  "STATE_dashboard_identity_only": {
+    "docs/STATE.md": {
+      "merge_main_blob": "1287bfaba5df28ce9fd3f53cdb2d384d2d0fef8a",
+      "exact_main": true
+    },
+    "ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html": {
+      "merge_main_blob": "bc07d9f7ccdb7a0613c53f6c4d7b47ee1e4f2a31",
+      "E_blob": "2ad276f8d65cf689fa2ea8a1a5998c07c6e7359b",
+      "exact_main": true
+    },
+    "ralph/reports/COORDINATOR/dashboard/build_dashboard.py": {
+      "merge_main_blob": "4d4973423c90ee3b1e920f82e353f0682523cdbe",
+      "exact_main": true
+    },
+    "limit": "Only blob identities were checked for these paths, no contents read or authored changes made."
+  },
+  "scoped_E_parent_merge_identical_blobs": {
+    "scripts/world/stormwood_world.gd": "3a33f3fd9819135e588c7a37685402616354b0d6",
+    "scripts/combat/stormwood_encounter_director.gd": "05bbf0917b1151a461de6a11bc9fb39fdc9adc63",
+    "scripts/ui/playground_hud.gd": "5ce4082a96e0aff8b69ad68cd85ebdc6761392d3",
+    "scripts/ui/combat_hud.gd": "8c3d608204ce677eabaedbbe836416b68764c8c5",
+    "data/config/hud.json": "7b1437cbd84c91d27e6e078585979fce9aebaa92",
+    "scripts/world/stormheart_tree.gd": "a869d059a5c66e2be6f85e2c9d01f57bd991c1bf",
+    "scripts/creatures/creature_body.gd": "86291c35781e7385ffd8ea2da4fe883aa3c83aef",
+    "scripts/creatures/progression_feed.gd": "d1eb0013176a428bbdb7c7e8445f6628a7d1e14a",
+    "scripts/ui/hud_presentation_policy.gd": "2937e85fd39e83d3c9dabba45a048223b4a1ea10",
+    "data/config/stormwood_encounters.json": "f7339fff9b221706e87bb0fc473a8f80f7f28a63",
+    "data/config/victory_hierarchy_visual.json": "8abeebd40f29a7471d18f52defac298c57cef47e",
+    "data/config/progression_feedback.json": "be25701a791b2776302ab066b7713f025d2b7b96",
+    "scripts/world/stormwood_combat_runtime.gd": "0ca6ad0770664ec665dcffdd175dd12ba6a28de3",
+    "scripts/combat/encounter_director.gd": "fb1b688b7b07e0e5b3938f60e9a58f60a15ec8bc",
+    "scenes/world/stormwood.tscn": "9ece261e7c5e673c38e4344bec5eafa476dc7181",
+    "tests/test_hud_party_vitals.gd": "c8746a4600cf6e4947763024e5a4f91188f5ca2b",
+    "tests/smoke_hud_presentation_lifecycle.gd": "21dcd608202bbacf1fbe92d096ca81e57520d3c4",
+    "tests/test_hud_presentation_lifecycle.gd": "734f7597992448ebaab422256dda72d7a3d733ed",
+    "tests/capture_stormwood_b_named_fights.gd": "b8d22e35c143c0cc9fbf31a7facd260d5eb986bf",
+    "tools/phase2_capture_stormwood_fights.gd": "e19b014bc07f1cad3f83dc49d2f8fe34bf28527c",
+    "tools/capture_cloudreach_frame_matrix.gd": "221b0fe18cee1eb655044926bee409022c3dd200",
+    "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+    "scripts/world/cloudreach_world.gd": "b65107ac24413912ab6c7796faa5132d9a618694",
+    "scripts/world/cloudreach_ground_cover.gd": "cc276b1fdcc55a0a88529c2d24b6eec54f3ae426",
+    "shaders/cloudreach_arena_paving.gdshader": "78a708541dd147caa170c940fdb83d9006ca02dd",
+    "scripts/world/cloudreach_old_wind_observatory_presentation.gd": "c9e6536cf3f2f557a8b4be6f3d2e9e45a5c152ad",
+    "data/config/cloudreach_old_wind_observatory_visual.json": "9823e53d92b9342f0c0446b1f6bba7dd99a477b4",
+    "tests/test_cloudreach_old_wind_observatory_presentation.gd": "b03c63191d278e669d9292acf8a9731c2809c6d8",
+    "tests/test_cloudreach_summit_paving.gd": "bc2649d1703f47bbfe9d02f6348d3559a8487c5a",
+    "tests/test_cloudreach_grass_roles.gd": "f7c671f7c4d5325bbb94ed58e3b3bd226a34da22"
+  },
+  "incoming_combat_manager": {
+    "E_blob": "88ba05164306c4f2c804b33aa40825299198579e",
+    "merge_and_main_blob": "29f01068dbf73f2c43003ee59304a06504d05ce2",
+    "exact_main_received": true,
+    "bounded_semantics": [
+      "_arena_bounds retains world-host immediate-child spatial dispatch, now passing the maximum valid fighter body_radius to a new fighter-aware bounds hook when present, otherwise the existing hook. It returns >=0 as a claimed bound and -1 when unclaimed. _open_arena now clamps a zero claim instead of treating it as outdoor fallback; staging dispatch similarly distinguishes zero from -1.",
+      "The queried player parent is the Stormwood world in the accepted production scene. Its authored children, relevant mounted world builders and director/base/runtime paths provide neither combat_arena_bounds_at nor combat_arena_bounds_for_fighters_at. The arena itself is excluded. Source hook definitions are confined to other realm/chamber providers, not the mounted Stormwood query scope; no unrelated MasterSite/config implementation was audited.",
+      "The newly queried actual creature body_radius() is a pure return of cached _radius, with no mutation/input/clock effect. Under the unclaimed Stormwood path _arena_bounds still returns -1, _open_arena does not clamp, _staging_axis returns its original forward axis, and _staging_reach returns its original wanted reach. Thus this incoming change does not activate a new staging/containment path for the accepted ordinary Hollows fixture.",
+      "This is source compatibility and accepted-witness reuse, not a new runtime/native/loss/co-op result. No general acceptance verdict is issued on other realms zero-claim/fighter-footprint behavior."
+    ]
+  },
+  "retained_proof_applicability": {
+    "F41": "Current09b cache/canonical passive loss card and accepted role/contact/HP/body/UI foundation remain scoped-source compatible; the existing whole approval and all failed/pictured/partial limits remain preserved. Historical285/acaaba is retained separately, not substituted for current09b. No whole44 scoring/source/pixel loop is restarted.",
+    "F40_grass": "Reuse the original typed106 logic and completed original native grass-pair provenance plus bounded blind courtPASS24. Footprint world/cover/capture paths are unchanged; full P2-025/F40 remains OPEN.",
+    "F40_stone": "Reuse eb source/headless112/capture-command approvals: all four stone files and capture/bootstrap paths are unchanged. Tracked paving flag stays OFF. Original pinned-eb native proof remains applicable to the same scoped material code through this merge, provided its actual pin/argv are disclosed rather than relabeled as merge output. Native GPU/visual pair and original blind stone verdict remain pending."
+  },
+  "minimum_additional_integration_checks": [],
+  "minimum_gate_reason": "No concrete substantial rework risk is identified on the scoped E merge path: three evidence conflicts preserve accepted current files byte-for-byte, scoped code/tests are unchanged, and the only incoming relevant combat dependency follows the same -1 outdoor path here. No new test, full suite, default native rerun or unchanged accepted witness repeat is required solely for this merge SHA. Existing pending stone native/original blind gates remain required.",
+  "remaining_gates": [
+    "ROOT-owned complete stone native pair and actual GPU shader-rendering provenance, followed by same original blind visual verdict."
+  ],
+  "limits": "No engine/GPU/import/test/dispatch performed. No implementation/source edits or GitHub/STATE/dashboard/handoff/raw-thread content reads/writes; only this evidence file written. No unrelated C MasterSite/F28 audit, wholeF40/P2-025/fullbar claim, new F41 acceptance loop or READY posting. Main-authoritative changes outside this bounded review are not independently revalidated here."
+}
