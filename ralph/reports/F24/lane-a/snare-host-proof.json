@@ -1,7 +1,7 @@
 {
   "criterion": "F24#3",
   "criterion_text": "Tether Snare slows a wild creature and raises catch chance; it cannot target a trainer-owned creature.",
-  "status": "OPEN / changed host Snare functional33checksPASS; original runtime review and supported shipping activation pending",
+  "status": "PARKED OPEN: two actor-vitals-OFF precast attempts failed; shipping flags remain OFF",
   "source_commit": "6b4a4deb800480e09ae0ca2572458c9304c22766",
   "change": "Existing two-peer proof gains opt-in host commander with guest admitted noncaster catch-grant control; peer helper reads host actual engaged wild rather than guest mirror. Original guest path, eight strikes, budgets, physical strike inputs, exact receipt/identity/body/one-meter-debit/no-HP-damage, actual movement/catch consumers and HUD guards retained.",
   "source_review": {
@@ -32,7 +32,7 @@
   "reused": "Unchanged Snare refusal/immune/geometry/stable-character-grant unit cases in test_f24_host_commands.gd, passing affected34tests1568assertions batch37776228174, artifact11549154442; no repeat. Retained sharedwild f6efdb host strikes PASS supports host rescope, guest strike failures remain disclosed.",
   "fixtures": "Existing two real ENet processes/fresh Meadows boot; candidate runtime/network/UI and R2 actor-vitals gates enabled process-locally, creatures granted before admission, existing positioning and physical strike loop. No HP/status/meter/time grants, new harness, accepted boundary or native/GPU claim.",
   "preserved_failures": "Original guest Snare precast run37713501794 failed24/60 before command; unchanged guest movement and Mastery scopes stay PARKED OPEN. No guest Snare rerun.",
-  "shipping_disposition": "Do not close whole criterion or count candidate proof as shipping activation; original reviewer requires supported activation on actual shipped flags.",
+  "shipping_disposition": "No whole closure. Preserve both failed saves and raw artifacts; no accepted boundary, global actor-vitals activation, native/GPU proof or repeated passing batch. Resume only for distinct supported new code.",
   "fresh_join_rescope": {
     "source_commit": "4feaba5efd27f7ca9306e79b15a58fc34a1a455f",
     "change": "Same existing Snare assertions factored to _prove_snare(commander). Default guest proof remains at original location after unchanged Item/Mastery/rejoin path. New host mode calls it directly after fresh boot/host/join and actual owner-passive admission, then finishes; excludes unrelated Item proof without changing it. Same fixtures/guards/HUD/budgets, no save reuse or accepted boundary.",
@@ -59,6 +59,38 @@
         "Current target generation Snare status reaches actual wild movement consumer; actualhostcatch reader raises onlycasterstablecharacter chance withguestnoncaster no bonus",
         "Both peers normally leave proof fight; alloriginalHUD guards pass"
       ]
+    },
+    "runtime_review": {
+      "reviewer": "/root/f25_medium_review",
+      "candidate_commit": "c79ae7aed9a3abdd822aa4c1bb5238be32435e69",
+      "verdict": "RUNTIME APPROVE; whole OPEN pending actor-vitals-OFF path and supported shipping activation"
     }
+  },
+  "legacy_quick_proof": {
+    "run_id": 37816282045,
+    "artifact_id": 11567547480,
+    "job_id": 113445640474,
+    "checkout_commit": "f985ef83260b02113345cab20c15086898bc61f6",
+    "args": "--prove-host-tether-snare --without-actor-vitals",
+    "result": "FAIL before Snare cast; 20 passing checks, meter48/60 after eight attempts",
+    "log_sha256": "674c3ceba8a631d51620f5c6be93b01fefc9de00419dae7958b4a820697382fc",
+    "observed": "Six attempts changed foe HP and added8 meter; attempts1/5 changed neither. Refusals empty; observed input available/quick ready, no local vitals pending or awaiting move. No sole production cause established."
+  },
+  "legacy_charged_proof": {
+    "source_review": "Original SOURCE / PROOF-SCOPE APPROVE 986fa2dc770d13dbccc9a701c7a175b27e1d55ff",
+    "run_id": 37821570419,
+    "artifact_id": 11569204575,
+    "job_id": 113463642919,
+    "checkout_commit": "986fa2dc770d13dbccc9a701c7a175b27e1d55ff",
+    "args": "--prove-host-tether-snare --without-actor-vitals --charged-command-hits",
+    "result": "FAIL before Snare cast: no verdict",
+    "log_sha256": "213d7e02af1344952b0cb1b041d2a26c85b4fd95087ce90463038e48464a7435",
+    "observed": "Eight TONIC_PRE_STRIKE lines retained; all record meter0 and unchanged foe HP257.21381145525. Last pre-strike at216676ms. Coordinator s26 deadline223588ms, observed223595ms; host heartbeat known, receive age1084ms. No fatal or unexpected exit. This does not establish move refusal, a runtime cause, or Snare behavior. No budget extension or unchanged retry."
+  },
+  "shipping_guard": {
+    "commit": "7457d4aae3bcd545597efe503535773f8c4e6b56",
+    "original_source_review": "SOURCE APPROVE /root/f25_medium_review",
+    "required_affected_proof": "tests/run_tests.gd --only=test_f24_host_commands.gd",
+    "disposition": "New ingress/input/binding capability guard only; runtime/network/UI flags OFF, rollout all. Actual shipping activation withheld because legacy runtime gate failed. Durable continuations and command math unchanged."
   }
 }
