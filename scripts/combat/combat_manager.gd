@@ -572,6 +572,18 @@ func apply_tether_command_verdict(verdict: Dictionary) -> void:
 	if int(next.get("revision", -1)) >= int(_tether_command_view.get("revision", 0)):
 		_tether_command_view.merge(next.duplicate(true), true)
 	if tag:
+		# The reliable record can precede this verdict's local switch. Re-read
+		# only the record already stamped with this exact accepted parent, so
+		# the initial pool baseline is acknowledged in either delivery order.
+		var switched_uid := str(verdict.delta.switched_to_uid)
+		if verdict.delta.killed == false and not _party_ultimate.has(switched_uid) \
+			and _encounter_link.has_method("encounter_record") \
+			and _encounter_link.has_method("local_encounter_peer_id"):
+			var record: Dictionary = _encounter_link.call("encounter_record")
+			var own: Dictionary = record.get("participants", {}).get(int(_encounter_link.call("local_encounter_peer_id")), {})
+			if own.get("creature_uid") == switched_uid and own.get("tether_commands", {}).get("last_receipt") == next.last_receipt \
+				and record.get("opponent", {}).get("hp") == verdict.delta.hp:
+				apply_encounter_record(record, true)
 		if verdict.delta.killed == true:
 			_award_victory()
 			_begin_resolve("won")
