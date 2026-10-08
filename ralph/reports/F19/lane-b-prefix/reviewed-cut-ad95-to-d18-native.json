@@ -1,0 +1,32 @@
+{
+  "producer_commit": "ad95e0dd6fe490cfb6f2d1bf6f09ae93d18b9cfe",
+  "consumer_commit": "d18bae407d62cf579bb0ac9ca27db3eb6111a938",
+  "manifest": "ad95-to-d18-native-manifest.json",
+  "prior_reviewed_manifest": "ad95-to-c863-native-manifest.json",
+  "original_prefix_rows_value_identical": true,
+  "original_prefix_hashes_recomputed": false,
+  "source_review": {
+    "agent": "b_f49_review",
+    "verdict": "SOURCE APPROVE",
+    "scope": "Only remote-north corner reserve0.2→actual capsule clearance; all guards/input/provider/authority/sharedbudget intact"
+  },
+  "compatibility_review": {
+    "agent": "b_f49_review",
+    "verdict": "COMPATIBLE",
+    "scope": "Compared originalad95→exactd18; sincec863 production lesson/modal presentation/ackhandling, no savecodec/schema/identity/reward/Loadoracle edits; realm/identity transitions close lessons without ACK"
+  },
+  "affected_logic": "Existing test_meadows_earned_team_segment.gd queued; no new tests/fixtures",
+  "actual_prior_run": {
+    "packet": "D:/CodexTemp/tetherbound-proof/native-b-c863d9d7a3-earned-relay-pre-r2",
+    "source": "c863d9d7a3568212a2880f3750d5614e3efeb415",
+    "strict_load_component": "APPROVE",
+    "route": "FAIL before bedassignment, waypoint0/frame403, insideexclusion true, grounded/freeinput/navnotrefused",
+    "cause_limits": "Final43frames unsampled; no frozenheading/camera/missedarrival causeclaim"
+  },
+  "remaining_gates": [
+    "Changed-source affected unit",
+    "Actual d18 strictLoad/physical bedapproach/assignment/recovery",
+    "Relay earned completion, Hall and full new-order boundary chain",
+    "Whole F19#5/F49 verdict and READY"
+  ]
+}
