@@ -49,7 +49,7 @@
       "route_count describes planned route identities, while station_count describes stations with an accepted near or outer support anchor. Positive supported stations and positive committed plants/scree are global checks, not proof of supported vegetation on every route.",
       "No new fixture, class, gameplay mutation, assertion removal or reduced budget introduced."
     ],
-    "proof_status": "Changed smoke execution pending; earlier unextended smoke does not establish these new assertions."
+    "proof_status": "Added assertions passed ond443 with the retained lamp ERROR, then passed clean in the corrected production-mounted2086 proof."
   },
   "original_area_proof": {
     "disposition": "Existing smoke assertions passed, with an actual lighting ERROR; not a clean area PASS.",
@@ -80,7 +80,51 @@
       "No production lighting/source change, weakened lamp-count guard, new fixture or assertion suppression."
     ],
     "diagnostic_limit": "Old smoke creates a second LOOK after production mounting, a source-backed explanation for consumed/replaced original lamps. Changed execution must confirm the error is absent; no proved runtime cause or clean area PASS inferred yet.",
-    "proof_status": "Changed production-mounted smoke run required and pending; d443 duplicate-mount packet remains historical evidence."
+    "proof_status": "Corrected production-mounted2086 proof passed clean; d443 duplicate-mount packet remains historical evidence."
   },
-  "proof_status": "Source, proof extension, production-mount smoke repair and selected hosted logic APPROVE. Original area assertions passed with a lighting ERROR; corrected area execution and matched visual proof pending. No local engine execution, performance acceptance or full F40 criterion claim."
+  "extended_duplicate_mount_area": {
+    "disposition": "Original and added placement assertions passed; lighting ERROR retained, not clean area PASS.",
+    "source_commit": "d44367cb8833ccc660cc7b83c6410d3f3ac701b9",
+    "run_id": 37743979978,
+    "job_id": 113201009861,
+    "artifact_id": 11535575012,
+    "checkout_verified_from_job_log": true,
+    "exit_code": 0,
+    "duration_seconds": 114,
+    "planned_routes": 13,
+    "supported_stations": 163,
+    "plants": 1304,
+    "stones": 326,
+    "committed_instances": 1630,
+    "actual_error": "Architectural lamp replacement count mismatch: SummitEyrieStronghold; existing smoke explicitly dresses a second LOOK.",
+    "fixture_notice": "Missing CloudreachNoStronghold causes existing climax fallback coordinates.",
+    "run_log": ".tmp/e-cloud-verges-placement-d443/expanded/run.log",
+    "run_log_sha256": "9686401b630435a9cbca6ca009fd710e8be8ba1086c16fa4f51b7695a8d15a83",
+    "job_log": ".tmp/e-cloud-verges-placement-d443/job.log",
+    "followup": "Corrected production-mounted20865458af93843f389fbd6b140d802570fce7ce proof passed clean; see corrected_production_area_proof."
+  },
+  "corrected_production_area_proof": {
+    "verdict": "APPROVE bounded clean production-mounted area smoke",
+    "source_commit": "20865458af93843f389fbd6b140d802570fce7ce",
+    "run_id": 37744504428,
+    "job_id": 113202682849,
+    "artifact_id": 11535671021,
+    "checkout_verified_from_job_log": true,
+    "exit_code": 0,
+    "duration_seconds": 136,
+    "original_and_added_assertions_passed": true,
+    "planned_routes": 13,
+    "supported_stations": 163,
+    "plants": 1304,
+    "stones": 326,
+    "committed_instances": 1630,
+    "error_or_script_error_in_run_log": false,
+    "fixture_notice": "Missing CloudreachNoStronghold causes existing climax fallback coordinates; still not whole chapter/earned proof.",
+    "run_log": ".tmp/e-cloud-production-placement-2086/expanded/run.log",
+    "run_log_sha256": "9dc5b5e8e3c4837e5cab3a647f7dcc62de31b433df54c254656447cf81b353d5",
+    "job_log": ".tmp/e-cloud-production-placement-2086/job.log",
+    "source_applicability": "Relative tocd09, inspected Cloudreach runtime/config/scene/shader paths differ only in the two reviewed verge tunables; Cloudreach capture tools/bootstrap are byte-unchanged.",
+    "diagnostic_conclusion": "Removing the smoke's second LOOK mount eliminates the lamp replacement error on this changed proof; no production lighting patch was needed. Prior error packets remain retained."
+  },
+  "proof_status": "Source, selected logic and corrected production-mounted area APPROVE. Changed matched visual proof pending. No local engine execution, performance acceptance or full F40 criterion claim."
 }
