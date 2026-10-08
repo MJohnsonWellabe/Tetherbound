@@ -24,6 +24,8 @@ var _aftermath_on := true
 var _hud := false
 var _pad := false
 var _custom: Array[String] = []
+var _ground_readability := false
+var _road_readability := false
 
 
 func _run() -> void:
@@ -51,6 +53,10 @@ func _run() -> void:
 			_aftermath_on = false
 		elif arg == "--hud":
 			_hud = true
+		elif arg == "--ground-readability":
+			_ground_readability = true
+		elif arg == "--road-readability":
+			_road_readability = true
 		elif arg == "--pad":
 			# F10#6 device profile: the ROG Ally is a controller device, so
 			# glyphs follow a pad as the last input device (Game's own
@@ -62,6 +68,21 @@ func _run() -> void:
 				_custom.append(spec)
 	if _phases_only.is_empty():
 		_phases_only.assign(["calm", "break"])
+	if _ground_readability:
+		if _stands_only != ["forest", "giant"] or _phases_only != PHASES or _aftermath_on:
+			push_error("Ground readability needs forest,giant, all four phases and no aftermath (eight affected views)")
+			quit(2)
+			return
+	if _road_readability:
+		if _ground_readability or _stands_only != ["rod_line"] or _phases_only != ["calm", "break"] or _aftermath_on:
+			push_error("Road readability needs rod_line, Calm/Break and no aftermath (two affected views)")
+			quit(2)
+			return
+	if _ground_readability or _road_readability:
+		_phase_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self, "--out=")
+		if _phase_graphics_capture.is_empty():
+			quit(1)
+			return
 	_coarse()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir))
 	if not await _mount_production_world() or not _prepare_capture_shell():
@@ -145,9 +166,22 @@ func _matrix_pass(aftermath: bool) -> void:
 ## Native viewport size (1920x1080 on the documented command) instead of the
 ## parent's 1280x720, and the HUD state recorded as it really was.
 func _capture(frame_id: String, description: String, full_size: bool, extra: Dictionary = {}) -> void:
+	var ground: Dictionary = {}
+	if _ground_readability:
+		ground = _ground_material_receipt(frame_id)
+		if ground.is_empty():
+			return
+	var road: Dictionary = {}
+	if _road_readability:
+		road = _road_current_receipt(frame_id)
+		if road.is_empty():
+			return
 	var image := await _grab()
 	if image == null or image.is_empty():
 		_failures.append("%s: empty viewport image" % frame_id)
+		return
+	if (_ground_readability or _road_readability) and str(_surge.get("phase")) != frame_id.get_slice("_", frame_id.get_slice_count("_") - 1):
+		_failures.append(frame_id + ": actual Surge phase differs from requested capture phase")
 		return
 	var path := ProjectSettings.globalize_path("%s/%s.jpg" % [_output_dir, frame_id])
 	if image.save_jpg(path, 0.85) != OK:
@@ -163,7 +197,96 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		"region": _region(), "surge_phase": str(_surge.get("phase")), "surge_elapsed": _surge_elapsed(),
 		"long_storm_ended": bool(_game.get("progression").call("has", "stormwood:long_storm_ended")),
 		"presentation": _presentation_state(), "staged": _staged.duplicate(),
+		"ground_materials": ground,
+		"road_current": road,
 	}.merged(extra, true))
+	if (_ground_readability or _road_readability) and [image.get_width(), image.get_height()] != _phase_graphics_capture.resolution:
+		_failures.append(frame_id + ": raster differs from declared native preset")
+
+
+func _ground_material_receipt(frame_id: String) -> Dictionary:
+	var path := "res://data/config/stormwood_ground_finish.json"
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var candidate: Dictionary = config.get("terrain_materials", {})
+	var terrain: Node3D = _world.get("_terrain")
+	if terrain == null or not terrain.is_inside_tree() or _camera != root.get_camera_3d() \
+			or not bool(candidate.get("enabled", false)) or bool(config.get("enabled", true)):
+		_failures.append(frame_id + ": candidate terrain materials missing or failed cover profile enabled")
+		return {}
+	var assets: Object = terrain.get("assets")
+	var actual: Array[Dictionary] = []
+	for index: int in int(assets.call("get_texture_count")):
+		var texture: Object = assets.call("get_texture", index)
+		var name: String = texture.get("name")
+		var expected: Dictionary = candidate.textures.get(name, {})
+		if expected.is_empty() or not is_equal_approx(float(texture.get("uv_scale")), float(expected.uv_scale)) \
+				or not is_equal_approx(float(texture.get("normal_depth")), float(expected.normal_depth)) \
+				or (texture.get("albedo_color") as Color).to_html(false) != Color(str(expected.tint)).to_html(false):
+			_failures.append(frame_id + ": production terrain slot does not match override " + name)
+			return {}
+		var albedo: Texture2D = texture.get("albedo_texture")
+		actual.append({"name": name, "uv_scale": texture.get("uv_scale"), "normal_depth": texture.get("normal_depth"),
+			"tint": (texture.get("albedo_color") as Color).to_html(false), "albedo": albedo.resource_path})
+	if actual.size() != candidate.textures.size():
+		_failures.append(frame_id + ": production terrain slot count differs from overrides")
+		return {}
+	var shrub_size := -1.0
+	var understory: Dictionary = config.get("understory_readability", {})
+	if bool(understory.get("enabled", false)):
+		var shrub := _world.get_node_or_null("StormwoodGroundCover/Cover_bushes") as MultiMeshInstance3D
+		var material := shrub.material_override as ShaderMaterial if shrub != null else null
+		if material == null or not is_equal_approx(float(material.get_shader_parameter("item_size")), float(understory.bush_item_size)):
+			_failures.append(frame_id + ": production decorative shrub height differs from readability profile")
+			return {}
+		shrub_size = float(material.get_shader_parameter("item_size"))
+	return {"config_sha256": FileAccess.get_file_as_string(path).sha256_text(), "slots": actual,
+		"terrain_bound": terrain.is_inside_tree(), "camera_is_rendering": _camera == root.get_camera_3d(), "cover_enabled": false,
+		"decorative_shrub_item_size": shrub_size}
+
+
+func _done() -> void:
+	if _ground_readability or _road_readability:
+		var ids: Dictionary = {}
+		for frame: Dictionary in _frames:
+			ids[frame.id] = true
+		var expected := 8 if _ground_readability else 2
+		if _frames.size() != expected or ids.size() != expected:
+			_failures.append("Readability captured %d/%d unique views; %d required" % [_frames.size(), ids.size(), expected])
+	super._done()
+
+
+func _road_current_receipt(frame_id: String) -> Dictionary:
+	var current := _world.get_node_or_null("StormwoodRoadCurrent")
+	if current == null or _camera != root.get_camera_3d():
+		_failures.append(frame_id + ": production road current/camera missing")
+		return {}
+	var config: Dictionary = current.get("_config")
+	var material: ShaderMaterial = current.get("material")
+	if material == null or material.shader.resource_path != "res://shaders/stormwood_road_current.gdshader" \
+			or not bool(config.get("finish_candidate", {}).get("enabled", false)):
+		_failures.append(frame_id + ": production road finish not bound")
+		return {}
+	var actual: Dictionary = {}
+	for key: String in ["vein_width", "vein_glow", "web_energy", "core_energy", "edge_energy", "vein_breakup", "vein_wander", "pulse_sharpness"]:
+		var value := float(material.get_shader_parameter(key))
+		if not is_equal_approx(value, float(config[key])):
+			_failures.append(frame_id + ": road material differs from config " + key)
+			return {}
+		actual[key] = value
+	var chunks := 0
+	for node: Node in current.get_children():
+		if node is MeshInstance3D:
+			chunks += 1
+			if (node as MeshInstance3D).material_override != material:
+				_failures.append(frame_id + ": road chunk uses a different material")
+				return {}
+	if chunks < 400 or not current.find_children("*", "CollisionObject3D", true, false).is_empty():
+		_failures.append(frame_id + ": road chunks missing or collision added")
+		return {}
+	return {"config_sha256": FileAccess.get_file_as_string("res://data/config/stormwood_road_current.json").sha256_text(),
+		"material": actual, "chunks": chunks, "collision_count": 0, "storm_intensity": current.call("storm_intensity"),
+		"camera_is_rendering": true}
+
 
 
 ## Break's decorative sky lightning fires every 0.55-1.3 s; a still taken at a

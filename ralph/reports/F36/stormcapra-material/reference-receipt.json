@@ -1,0 +1,37 @@
+{
+  "subject": "stormcapra",
+  "priority": 18,
+  "tool": "built-in imagegen",
+  "prompt": "Create one identity-preserving materials reference for the existing Tetherbound game creature Stormcapra. Use the supplied original front and side artwork for identity and the supplied installed-model studio view only for its existing body proportions and complete silhouette. Preserve this same stocky four-legged ram individual: immense symmetrical dark charcoal/brown segmented curled horns, pointed ram ears, amber/gold eyes, dark brown muzzle and lower legs, large sturdy cloven hooves, layered cream-white shaggy coat, and exactly the existing small bright blue faceted crystal clusters at both shoulders. Preserve horn curl direction, their size, brow, eye placement, muzzle shape, shaggy fur layers, four legs and full body. Improve only material clarity: coherent cream fur with separated readable layers and warm neutral shadow, orderly horn segment surfaces with clean grooves rather than black jagged paint streaks, dark muzzle with readable eyes, crystals that read as small faceted blue clusters. No pink cast, disconnected black patches, shiny plastic fur, metal, armor or new ornaments. Show one complete full-body front three-quarter standing view, all four hooves visible with generous margins, soft diffuse neutral studio lighting on plain pale warm-grey background. Appealing stylized creature-adventure art, grounded anatomy, no text, labels, panels, props, landscape, people or new equipment. This is the established individual/species, not a redesign.",
+  "source": "C:/Users/mattj/.codex/generated_images/01a1165c-0a9f-7790-b465-9467a010ef37/exec-87891cb3-f32a-48e7-bbb2-54d5962068a3.png",
+  "input_paths": [
+    "assets/creatures/tetherbound/stormcapra/reference/front.png",
+    "assets/creatures/tetherbound/stormcapra/reference/side.png",
+    ".tmp/stormcapra-original-turntable/three_quarter.png"
+  ],
+  "sha256": {
+    "assets/creatures/tetherbound/stormcapra/reference/front.png": "7895aad6a3d36d87ceddccb3dc964ef9bdd4dbc86a8a201b37cb33fe8983ae3a",
+    "assets/creatures/tetherbound/stormcapra/reference/side.png": "e11b9ab33d01e565557492ab164e3c94ed091f878e6b5f1f97395ba424f99528",
+    ".tmp/stormcapra-original-turntable/three_quarter.png": "9778d3b831813ecd083b6ae833890119d404c465fd4fde2da682aaa583fbe0f3",
+    "assets/creatures/tetherbound/stormcapra/reference/f36-material-v1.png": "418e32ad77980d67b64d379c7e09c3a57b8e9fcf95acbb82cfdc52a8164a4147",
+    "assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_lod0.glb": "48962dac6bd2d3969b8b0e1008bac3e77f887fb20deb66ea988c5826716cbb78"
+  },
+  "inspection": "Inspected original front/side, actual installed DCC full-body, and complete generated reference. Same stocky ram, immense curled horns, cream shaggy coat, dark muzzle/legs, amber eyes and blue shoulder crystals. Four legs/full body preserved; material-only retexture of installed geometry.",
+  "shipping": "No source species/model binding changed; candidate native scale/poses/material/before-after judge remain required. Existing baseline material BLOCK recorded independently.",
+  "night": "2026-10-07",
+  "Meshy": {
+    "task": "01a11940-9171-7258-8fd9-f0638f5ba380",
+    "endpoint": "/openapi/v1/retexture",
+    "texture_resolution": "2k",
+    "enable_pbr": true,
+    "enable_original_uv": false,
+    "ai_model": "latest",
+    "attended_night_submissions": 11,
+    "cap": 30,
+    "credits": {
+      "before": 13305,
+      "after": 13295,
+      "observed_cost": 10
+    }
+  }
+}

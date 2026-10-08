@@ -4,8 +4,11 @@ signal dismissed(lesson_id: String)
 const OWNER := preload("res://scripts/ui/input_owner.gd")
 const TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 const GLYPH := preload("res://scripts/ui/input_glyph.gd")
+## Same membership contract as the dialogue panel and game_menu's guard.
+const STORY_MODAL_GROUP := &"story_modal"
 var _open := false
 var _closing := false
+var _opening_edge := false
 var _row: Dictionary = {}
 var _line := 0
 var _text: Label
@@ -15,6 +18,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 30
 	add_to_group(OWNER.GROUP)
+	add_to_group(STORY_MODAL_GROUP)
 	visible = false
 
 func open(row: Dictionary) -> bool:
@@ -54,6 +58,7 @@ func open(row: Dictionary) -> bool:
 	_mouse_before = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_open = true
+	_opening_edge = _answer_held()
 	visible = true
 	OWNER.set_world_hud_visible(get_tree(), false)
 	_show_line()
@@ -67,6 +72,10 @@ func is_open() -> bool: return _open
 
 func _input(event: InputEvent) -> void:
 	if not _open: return
+	if _opening_edge:
+		if event.is_action("menu_cancel") or event.is_action("menu_confirm") or event.is_action("ui_accept"):
+			get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("menu_cancel"):
 		get_viewport().set_input_as_handled()
 		close()
@@ -76,13 +85,13 @@ func _input(event: InputEvent) -> void:
 		if _line >= _row.lines.size(): close()
 		else: _show_line()
 
-func close() -> void:
+func close(acknowledge: bool = true) -> void:
 	if not _open: return
 	OWNER.suppress_pause_reopen(get_tree())
 	_open = false
 	_closing = true
 	visible = false
-	dismissed.emit(str(_row.id))
+	if acknowledge: dismissed.emit(str(_row.id))
 	_release_presentation()
 
 func _release_presentation() -> void:
@@ -93,8 +102,12 @@ func _release_presentation() -> void:
 	add_to_group(OWNER.GROUP)
 
 func _process(_delta: float) -> void:
-	if _closing and not Input.is_action_pressed("menu_cancel") and not Input.is_action_pressed("menu_confirm") and not Input.is_action_pressed("ui_accept"):
+	if _opening_edge and not _answer_held(): _opening_edge = false
+	if _closing and not _answer_held():
 		_closing = false
+
+func _answer_held() -> bool:
+	return Input.is_action_pressed("menu_cancel") or Input.is_action_pressed("menu_confirm") or Input.is_action_pressed("ui_accept")
 
 func _exit_tree() -> void:
 	if _open or _closing:

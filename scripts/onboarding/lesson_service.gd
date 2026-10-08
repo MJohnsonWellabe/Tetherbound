@@ -9,6 +9,7 @@ const OWNER := preload("res://scripts/ui/input_owner.gd")
 const HOLD := preload("res://scripts/ui/presentation_hold.gd")
 var _panel: CanvasLayer
 var _identity := ""
+var _realm := ""
 var _pending: Dictionary = {}
 var _retry_at := 0
 var _replay := ""
@@ -44,8 +45,14 @@ func _process(_delta: float) -> void:
 		# the new character. The dismissal callback checks this binding too.
 		_pending.clear()
 		_replay = ""
-		if _panel.call("is_open"): _panel.call("close")
+		if _panel.call("is_open"): _panel.call("close", false)
 		_identity = identity
+	var realm := str(get_parent().get("current_realm"))
+	if realm != _realm:
+		# Leaving the teacher is not a dismissal or a personal lesson receipt.
+		if _panel.call("is_open"): _panel.call("close", false)
+		_replay = ""
+		_realm = realm
 	if not _pending.is_empty():
 		_flush_receipts()
 		return
@@ -56,7 +63,14 @@ func _process(_delta: float) -> void:
 		for candidate: Dictionary in RULES.config().get("lessons", []):
 			if candidate.id == _replay: row = candidate.duplicate(true)
 	else:
-		row = RULES.due(player)
+		# A missed Grandpa lesson must not silence Tam when his own system
+		# unlocks. Preserve authored order among teachers actually present.
+		for due_candidate: Dictionary in RULES.config().get("lessons", []):
+			var id := str(due_candidate.id)
+			if player.get("flags").call("has", RULES.PREFIX + id) == true: continue
+			if RULES.available(id, player) and _teacher_near(due_candidate):
+				row = due_candidate.duplicate(true)
+				break
 	if row.is_empty() or not _teacher_near(row): return
 	# Content lives with its installed speaker's dialogue, with no reward effects.
 	var dialogue: Variant = preload("res://scripts/data/redesign_data.gd").json(str(row.dialogue_path))
@@ -111,7 +125,7 @@ func _flush_receipts() -> void:
 		ledger.call("submit", {"kind": "grant_player_flag", "realm": "meadows", "id": flag})
 
 func _arrival_result(result: Dictionary) -> void:
-	# F18 currently refuses finish because grounded arrival is not mounted.
+	# Only the authenticated, saved grounded arrival qualifies as a home return.
 	# A permit or mere `ok` must never stand in for a completed Home Key trip.
 	if RULES.config().get("enabled") != true or result.get("kind") != "home_key_finish" \
 			or result.get("ok") != true or result.get("arrival_applied") != true \
