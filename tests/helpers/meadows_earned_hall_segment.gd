@@ -7,6 +7,8 @@ const HALL_CONFIG := "res://data/config/stronghold.json"
 const MATERIAL_GATHER := preload("res://tests/helpers/meadows_earned_material_segment.gd")
 const HOME_TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
+const CAMP_INPUT := preload("res://tests/helpers/meadows_earned_camp_segment.gd")
+const BUILD_INPUT := preload("res://tests/helpers/gate_a_build_segment.gd")
 const CAPTAIN_IDS := ["captain_riverwatch", "captain_field", "captain_ridge"]
 const SIGILS := ["field_sigil", "ridge_sigil", "river_sigil"]
 const HALL_FLAGS := ["defeated_stronghold_patrol", "defeated_stronghold_courtyard", "defeated_stronghold_elite"]
@@ -567,10 +569,13 @@ func _gather_first_feast_stock(band2: Array[Vector2], rim: Array[Vector2],
 		"needed": needed, "refining_units": units, "attuned_before": attuned_before,
 		"attuned_after": _count("attuned_ground"), "gathering": result,
 		"stations_built": false, "feast_cooked": false, "cap_lifted": false})
+	if not await _place_first_home_stations():
+		return false
 	# Return by the existing earned roads, including the already-open Bridge;
 	# the Home Key never poses the trainer back at the Master or Mill.
 	var first := trail_points(_read(TERRAIN), "bands", "band1_lower_meadows")
-	if first.is_empty() or quarry_join < 0 or master_join < 0:
+	var lower_join := nearest_index(band2, rim[0]) if not rim.is_empty() else -1
+	if first.is_empty() or quarry_join < 0 or lower_join < 0 or master_join < 0:
 		return _fail("The ordinary homestead departure lacks its authored return spine")
 	if not await gather._walk_target(Vector3(first[0].x,
 		float(_world.call("ground_height_at", first[0].x, first[0].y)), first[0].y),
@@ -579,12 +584,85 @@ func _gather_first_feast_stock(band2: Array[Vector2], rim: Array[Vector2],
 	for point: Vector2 in first.slice(1):
 		if not await _walk_ground(point):
 			return false
-	for index in range(1, quarry_join + 1):
+	# The farm return enters the rim from below. The upper quarry junction
+	# belongs to the previous reverse route; it passes the obstructed main
+	# road vertex at (400, 1800) and would then double back to this entrance.
+	for index in range(1, lower_join + 1):
 		if not await _walk_ground(band2[index]):
 			return false
 	for index in range(master_join + 1):
 		if not await _walk_ground(rim[index]):
 			return false
+	return true
+
+
+func _place_first_home_stations() -> bool:
+	var camp := CAMP_INPUT.new()
+	camp._tree = _tree
+	camp._world = _world
+	camp._game = _game
+	camp._player = _player
+	camp._rig = _rig
+	camp._progression = _game.get("progression")
+	camp._party = _game.get("party")
+	if not camp._collect_nodes():
+		return _fail("The paid station catalogue lacks its existing controller context: " + str(camp.failures))
+	camp._resolve_move_bindings()
+	var builder := BUILD_INPUT.new()
+	builder._tree = _tree
+	builder._world = _world
+	builder._game = _game
+	builder._player = _player
+	builder._camera_rig = _rig
+	builder._resolve_move_bindings()
+	var placer := _tree.get_first_node_in_group(&"build_placer")
+	if placer == null or bool(_game.get("free_build")):
+		return _fail("Ordinary home stations require the actual paid build placer")
+	# These are requested anchors on the existing farmhouse pad. Only a real
+	# green ghost and paid producer record may establish that they are usable.
+	var plans: Array[Dictionary] = [{"id": "forge", "at": Vector2(-6, 12)},
+		{"id": "kitchen", "at": Vector2(-6, 20)}, {"id": "altar", "at": Vector2(-6, 8)}]
+	for plan: Dictionary in plans:
+		var id := str(plan.id)
+		var before: Array = _game.get("placed_buildings")
+		for record: Dictionary in before:
+			if record.get("id") == id:
+				return _fail("The earned first-station step started with an existing " + id)
+		var before_count := before.size()
+		var cost: Dictionary = camp._cost_snapshot(id)
+		var previous_nodes: Array[Node] = _tree.get_nodes_in_group(&"placed_building")
+		if not await camp._stow_piece() or not await camp._select_piece(id):
+			return _fail("Physical station catalogue selection failed: " + str(camp.failures))
+		var ghost := placer.get("_ghost") as Node3D
+		if ghost == null:
+			return _fail("The real catalogue did not arm a station preview")
+		var target := Vector3(plan.at.x, ghost.global_position.y, plan.at.y)
+		if not await builder._move_ghost_to(target):
+			return _fail("The existing controller could not aim the paid station: " + str(builder.failures))
+		ghost = placer.get("_ghost") as Node3D
+		if ghost == null or not bool(placer.get("_ghost_ok")) \
+				or Vector2(ghost.global_position.x, ghost.global_position.z).distance_to(plan.at) > builder.MOVE_EPSILON:
+			return _fail("The requested home anchor lacks its actual legal green ghost: " + str(placer.get("_ghost_reason")))
+		var placed: Variant = await builder._place_current(id)
+		var records: Array = _game.get("placed_buildings")
+		if not placed is Vector3 or records.size() != before_count + 1 \
+				or not camp._paid_exactly(id, cost):
+			return _fail("Physical station placement lacks its exact cost and one new record: " + str(builder.failures) + str(camp.failures))
+		var record: Dictionary = records.back()
+		var actual: Node3D
+		for node: Node in _tree.get_nodes_in_group(&"placed_building"):
+			if not previous_nodes.has(node) and int(node.get_meta("placed_index", -1)) == before_count \
+					and str(node.get_meta("building_id", "")) == id:
+				actual = node as Node3D
+		if actual == null or not camp._paid_record(actual, id) or str(record.get("uid", "")).is_empty() \
+				or absf(float(record.get("yaw_deg", INF))) > 0.01 \
+				or not retained_five(_initial_ids, _party_ids()):
+			return _fail("The paid station lacks its real node, stable UID, requested yaw or original five")
+		if not await camp._stow_piece() or not await camp._stow_hammer():
+			return _fail("The station controller did not return ordinary world input")
+		_receipt("first_home_station_paid", {"id": id, "record": record.duplicate(true),
+			"actual_node": str(actual.get_path()), "exact_cost": cost,
+			"controller_ghost_and_place": true, "free_build": false})
 	return true
 
 
