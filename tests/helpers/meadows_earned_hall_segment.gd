@@ -777,7 +777,10 @@ func _refine_first_rootiron() -> bool:
 
 func _cook_first_ground_feast() -> bool:
 	var session: Node = _game.get("session")
+	if not is_instance_valid(session): return _fail("The earned Kitchen has no actual Session")
 	var service: Node = session.call("homestead_breakthrough_service")
+	if not is_instance_valid(service): return _fail("The earned Kitchen has no actual breakthrough producer")
+	var cached_panel: Node = service.get("_panel")
 	var kitchen: Node3D
 	for node: Node in _tree.get_nodes_in_group(&"placed_building"):
 		if str(node.get_meta("building_id", "")) == "kitchen" and _world.is_ancestor_of(node):
@@ -785,8 +788,8 @@ func _cook_first_ground_feast() -> bool:
 			kitchen = node as Node3D
 	var prompt := kitchen.get_node_or_null(^"StationInteractable") as Node3D if kitchen != null else null
 	var recipe: Dictionary = BREAKTHROUGH.feasts().get("recipes", {}).get("feast_t1_ground", {})
-	if service == null or prompt == null or recipe.is_empty() or _count("feast_t1_ground") != 0 \
-			or not str(service.get("_panel").get("_pending_action")).is_empty():
+	if prompt == null or recipe.is_empty() or _count("feast_t1_ground") != 0 \
+			or (is_instance_valid(cached_panel) and not str(cached_panel.get("_pending_action")).is_empty()):
 		return _fail("First feast cooking requires the actual learned Kitchen and no pending craft or prior feast")
 	var before := {}
 	for item: String in recipe.get("cost", {}): before[item] = _count(item)
