@@ -1,0 +1,490 @@
+{
+  "reviewer": "blind_listener_f10 (retained original judge 01a11667-4631-72b2-8fed-294999b8c043)",
+  "task": "F40#0 bounded independent Cloudreach native Low recapture/rescore",
+  "verdict": "INCOMPLETE_WITHHELD",
+  "full_F40_0": "WITHHELD",
+  "whole_bar_or_F40_3_F40_5_closed": false,
+  "review_corpus": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/",
+  "superseded_corpus": "Discarded for ratings. Every saved rating was recomputed from the corrected Low-only pixels.",
+  "inspection": {
+    "contact_pages": "All 24 supplied Low contact pages opened with view_image.",
+    "full_rasters": [
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__summit_final_stronghold__11__summit_eyrie__approach__dawn__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__night__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__windscar_ravine__05__windscar_beacon__detail__night__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__night__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__upper_cloudreach__09__cliffhold__approach__dawn__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__night__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__night__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__night__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__broken_causeways__04__broken_skyroad_arch__detail__dawn__rain.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__dawn__rain.jpg"
+    ],
+    "inspection_limits": "Relevant original full-size Low rasters inspected; not a claim that every original was opened at full size. Contact pages cover ordinary scenery/exploration at dawn/night and clear/rain. Source identity, counts, renderer provenance and uniform current-shipping applicability were not verified by this judge."
+  },
+  "references": [
+    "D:/tetherbound/codex-e/docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png",
+    "D:/tetherbound/codex-e/docs/reference/boards-2026-09-06/cloudreach-cliffs-creature-roster-board.png",
+    "D:/tetherbound/codex-e/docs/design/ART_DIRECTION.md sections 4.1 and 4.2"
+  ],
+  "row_definition_input": "D:/tetherbound/codex-e/.tmp/e-f40-native-row-definitions.csv",
+  "supported_row_count": 10,
+  "supported_ids": [
+    "P2-021",
+    "P2-022",
+    "P2-024",
+    "P2-023",
+    "P2-004",
+    "P2-053",
+    "P2-025",
+    "P2-068",
+    "P2-049",
+    "P2-106"
+  ],
+  "partial_scored_ids": [
+    "P2-024",
+    "P2-053",
+    "P2-068",
+    "P2-106"
+  ],
+  "unassessed_row_count": 31,
+  "missing_ids": [
+    "P2-015",
+    "P2-016",
+    "P2-002",
+    "P2-017",
+    "P2-030",
+    "P2-033",
+    "P2-001",
+    "P2-007",
+    "P2-095",
+    "P2-060",
+    "P2-088",
+    "P2-018",
+    "P2-031",
+    "P2-032",
+    "P2-061",
+    "P2-069",
+    "P2-077",
+    "P2-094",
+    "P2-096",
+    "P2-076",
+    "P2-048",
+    "P2-054",
+    "P2-102",
+    "P2-105",
+    "P2-107",
+    "P2-112",
+    "P2-113",
+    "P2-114",
+    "P2-117",
+    "P2-118",
+    "P2-119"
+  ],
+  "missing_rows": [
+    {
+      "item_id": "P2-015",
+      "subject": "creature collapse and rest",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Named creature fainted and resting states with body/feet/floor visible across state phases; ordinary standing scenery cannot expose collapse or settling.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-016",
+      "subject": "creature hurt and movement poses",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Matched named idle, hurt and moving state views at readable creature distance; no labelled state sequence or continuous motion supplied.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-002",
+      "subject": "map",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Open map canvas with destination headings, roads and terrain context; the corner minimap does not expose this row.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-017",
+      "subject": "normal creature scale",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Named normal creatures and trainer near-framed on a shared visible ground plane with complete silhouettes; incidental cropped/distant creatures do not establish catalogue-wide relative scale.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-030",
+      "subject": "shiny creature finish",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Identified normal/shiny matched species views at readable material distance; no shiny state identification supplied.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-033",
+      "subject": "ground pickup identity",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Identified distinct pickup families at normal camera distance and close views as needed; anonymous glow/plant silhouettes cannot establish which unrelated items share a model.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-001",
+      "subject": "menu shell",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Full-screen menu shell and focus state; exploration HUD is not menu-shell evidence.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-007",
+      "subject": "secondary menu panels",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Opened Quests, Build and Players panels with their actual content; none pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-095",
+      "subject": "craft recipe text",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Crafting list exercising long recipe and material preview strings; no craft panel pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-060",
+      "subject": "catch effect finish",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Catch aim/throw/impact/absorb/rest/shake sequence with orb and ground effect visible; no catch pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-088",
+      "subject": "fight team roster contrast",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Active combat team roster over representative terrain; no active fight roster pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-018",
+      "subject": "shiny palette distinction",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Identified matched normal/shiny variants at device framing; incidental coloured creatures have no normal/shiny pairing.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-031",
+      "subject": "settings and binding instructions",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Settings/controls and quick binding instruction panels with readable text/focus; five exploration binding slots are insufficient.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-032",
+      "subject": "map active region",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Open region map with current heading and all active/inactive region tabs visible; not pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-061",
+      "subject": "catch result hierarchy",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Catch breakout/success/result views with persistent cards and nearby bodies; not pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-069",
+      "subject": "flight and landing pose read",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Actual airborne, descent, landing-transition and grounded return carrier poses; perched/floating incidental creatures in scenery are insufficient.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-077",
+      "subject": "dialogue foreground composition",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Actual named conversation frames including foreground trainer/posts and visible speaker; floating post text without a dialogue panel is insufficient.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-094",
+      "subject": "placed wall visual",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Placed build wall in a production build view with complete wall material/silhouette; no such wall fixture pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-096",
+      "subject": "craft action hint contrast",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Craft action/leave hint panel under actual crafting conditions; not pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-076",
+      "subject": "dialogue speaker visibility",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Actual conversation showing portrait, line and corresponding world speaker in the same frame; not pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-048",
+      "subject": "Cloudreach map region label",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Open discovered Cloudreach region map label at full native raster; exploration location header is a different context.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-054",
+      "subject": "mushroom pickup variants",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Identified Speed Mushroom and Wild Mushroom matched ground-pickup views; anonymous yellow clusters cannot prove variant identity.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-102",
+      "subject": "High Perches rim mushroom",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Readable High Perches rim mushroom side/near view exposing its stem and supporting ground. A tiny distant yellow shape in the reverse raster does not resolve attachment or prove suspension.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-105",
+      "subject": "mounted terrace edge and cloud crossing",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Mounted trainer/deer terrace descent and cloud crossing states with both bodies and terrain visible; no mounted traversal pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-107",
+      "subject": "riding camera over cloud void",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Mounted camera sequence across the cloud void; ordinary unmounted exploration cannot expose loss of rider and deer.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-112",
+      "subject": "captain fight camera orientation",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Captain fight incoming-warning camera frames with opponent/ally and exchange direction visible; no captain combat pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-113",
+      "subject": "catch camera distance",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Catch aim, strike and breakout framing with both creatures, trainer and orb path; no catch pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-114",
+      "subject": "catch chance HUD contrast",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Actual capture chance label/percentage over representative trainer and grass during aim; not pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-117",
+      "subject": "catch chance feedback timing",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Failed-catch handback followed by new aim/odds state; no catch feedback sequence pictured and timing cannot be inferred from scenery.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-118",
+      "subject": "full-party catch choice legibility",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Full-party caught-creature choice panel with battle HUD and bottom instructions; not pictured.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-119",
+      "subject": "Fly carrier grip pose",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Actual trainer/Galecrest carried Fly-grip pose, readable hands/arms/knees and supported body relation; no carried trainer pictured.",
+      "release_disposition": "OPEN"
+    }
+  ],
+  "scoring_anchors": {
+    "severity": "1 minimal/no material visible defect; 2 polish issue; 3 clear distracting/readability or finish defect; 4 major repeated shape/contact/visibility defect; 5 severe unreadability. Integer recommendations use only pictured contexts.",
+    "exposure": "1 isolated edge case; 2 occasional view; 3 localized recurring context; 4 prominent recurring destination or surface; 5 widespread/persistent in the supplied exploration views. Actual session frequency was not measured.",
+    "importance": "1 minor detail; 2 supporting detail; 3 environmental/route cue; 4 major region presentation, character guidance or persistent HUD; 5 hero landmark. Independent review recommendations, not recovered prior priorities.",
+    "verdict": "PASS means no material row defect observed in supported context; POLISH means a visible low-severity residual; FAIL means the supported context has a substantial defect. No row label implies release closure."
+  },
+  "largest_visible_gaps": [
+    {
+      "item_ids": [
+        "P2-021",
+        "P2-023"
+      ],
+      "finding": "Smooth broad grass foregrounds and long straight extruded cliff walls do not supply the target's layered weathered upland land."
+    },
+    {
+      "item_ids": [
+        "P2-025"
+      ],
+      "finding": "Old Wind Observatory grass emerges through stone paving around the narrow clear center aisle."
+    },
+    {
+      "item_ids": [
+        "P2-022",
+        "P2-024"
+      ],
+      "finding": "Aviary identity is readable but its sanctuary composition/material mass remains thin; some other destination views reveal meadow or blocking surfaces instead of architecture."
+    }
+  ],
+  "bounded_positives": [
+    "Aviary dome/towers read in the inspected clear-night view; the original dark-night-silhouette defect is not reproduced there.",
+    "Galefoot houses, tents, warm windows and communal fire form a recognizable lived camp.",
+    "Exploration center trainer and route remain readable despite heavy screen-edge HUD boxes."
+  ],
+  "remaining_partial_contexts": [
+    {
+      "item_id": "P2-024",
+      "missing": "Complete unobstructed near architectural views and earned approaches; blocked supplied shots do not establish absent landmarks."
+    },
+    {
+      "item_id": "P2-053",
+      "missing": "Close launch-platform yellow-pointer context and launch motion."
+    },
+    {
+      "item_id": "P2-068",
+      "missing": "Other named NPC posts and unobstructed costume/pose/face comparisons; dialogue context."
+    },
+    {
+      "item_id": "P2-106",
+      "missing": "Close terrace cliff-edge cloud context; distant cloud finish alone does not assess mounted crossing."
+    }
+  ],
+  "scope_limits": [
+    "No source, private mapping, receipts, SHA, implementation, engine, tests or live catalogue read/write used.",
+    "Scenery, incidental creatures and floating post labels cannot replace named fight, creature-state, menu, catch, mounted or carried-Fly contexts.",
+    "No earned travel, motion/timing, co-op, hardware, High/Medium, measured scale or complete visual-matrix claim.",
+    "All release dispositions remain OPEN. Full F40#0 is withheld because independent per-row rescoring is incomplete; recapture count/source verification is outside this review."
+  ]
+}

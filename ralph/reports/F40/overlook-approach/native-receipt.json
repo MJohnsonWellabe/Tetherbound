@@ -1,0 +1,190 @@
+{
+  "scope": "Existing affected-only native Stormward approach repair; no whole matrix or criterion claim",
+  "source_commit": "41fa0d53c89b3ed06dee7eb7948ab221aae5ac53",
+  "packet": "D:\\CodexTemp\\tetherbound-proof\\native-e-41fa0d53c8-overlook-eight-r1",
+  "result": "PASS",
+  "exit_code": 0,
+  "started_utc": "2026-10-08T11:35:30.3060626Z",
+  "finished_utc": "2026-10-08T11:39:41.1979879Z",
+  "frames": [
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear",
+      "source_png": "D:\\CodexTemp\\tetherbound-proof\\native-e-41fa0d53c8-overlook-eight-r1\\frames\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear.png",
+      "raw_sha256": "cb0a3dc6c1e5cd65d39c3800a54e27ce68ccc1208d948c8db9394c080278e4fb",
+      "neutral_jpeg": ".tmp\\e-overlook-native-anonymous\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear.jpg",
+      "neutral_sha256": "9be35a31e1baff057423a3a55c135ee6d005791592aab8e78148cab3f3fc3fc6",
+      "player_position": [
+        -424.395538330078,
+        1109.22583007813,
+        5634.61572265625
+      ],
+      "camera_position": [
+        -425.793029785156,
+        1112.05712890625,
+        5629.72509765625
+      ],
+      "on_floor": true,
+      "time": "dawn",
+      "weather": "clear"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain",
+      "source_png": "D:\\CodexTemp\\tetherbound-proof\\native-e-41fa0d53c8-overlook-eight-r1\\frames\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain.png",
+      "raw_sha256": "32228455baac9c1536c35d21357434c6c7ac2e663a7fa15ab3be51bfe05a1dff",
+      "neutral_jpeg": ".tmp\\e-overlook-native-anonymous\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain.jpg",
+      "neutral_sha256": "796061764f7c2e8f76d602191976a0e5bdd3a641c9ef1999a54db54eed55aec5",
+      "player_position": [
+        -424.395538330078,
+        1109.22583007813,
+        5634.61572265625
+      ],
+      "camera_position": [
+        -425.793029785156,
+        1112.05700683594,
+        5629.72509765625
+      ],
+      "on_floor": true,
+      "time": "dawn",
+      "weather": "rain"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear",
+      "source_png": "D:\\CodexTemp\\tetherbound-proof\\native-e-41fa0d53c8-overlook-eight-r1\\frames\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear.png",
+      "raw_sha256": "b001856dec8cc0cc90c367138e951809da5d84f82032c31e513c427438da2812",
+      "neutral_jpeg": ".tmp\\e-overlook-native-anonymous\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear.jpg",
+      "neutral_sha256": "3b8298b5ece669d08ebc966da3e265b5d3068af53c35bd67ce0f69135530d99b",
+      "player_position": [
+        -424.395538330078,
+        1109.22583007813,
+        5634.61572265625
+      ],
+      "camera_position": [
+        -425.793029785156,
+        1112.05725097656,
+        5629.72509765625
+      ],
+      "on_floor": true,
+      "time": "day",
+      "weather": "clear"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain",
+      "source_png": "D:\\CodexTemp\\tetherbound-proof\\native-e-41fa0d53c8-overlook-eight-r1\\frames\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain.png",
+      "raw_sha256": "78346d441b39e2082af65bf4bf61aa38f2b01692e8081b61342e945ee426faf5",
+      "neutral_jpeg": ".tmp\\e-overlook-native-anonymous\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain.jpg",
+      "neutral_sha256": "ab301d3f55c8b5d99a23f92c6abb76f49a4a269b260543c198d520785dd40532",
+      "player_position": [
+        -424.395538330078,
+        1109.22583007813,
+        5634.61572265625
+      ],
+      "camera_position": [
+        -425.793029785156,
+        1112.05725097656,
+        5629.72509765625
+      ],
+      "on_floor": true,
+      "time": "day",
+      "weather": "rain"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear",
+      "source_png": "D:\\CodexTemp\\tetherbound-proof\\native-e-41fa0d53c8-overlook-eight-r1\\frames\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear.png",
+      "raw_sha256": "215e97b192d721264c923f8ff5e6ed94a7fa49d41f30bf6cb63d91e1a2427bdf",
+      "neutral_jpeg": ".tmp\\e-overlook-native-anonymous\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear.jpg",
+      "neutral_sha256": "811133d0a854644a1134f8b0c50891e2fdd53e605c4ea4349645e570de770f1a",
+      "player_position": [
+        -424.395538330078,
+        1109.22583007813,
+        5634.61572265625
+      ],
+      "camera_position": [
+        -425.792907714844,
+        1112.05725097656,
+        5629.7255859375
+      ],
+      "on_floor": true,
+      "time": "golden",
+      "weather": "clear"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain",
+      "source_png": "D:\\CodexTemp\\tetherbound-proof\\native-e-41fa0d53c8-overlook-eight-r1\\frames\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain.png",
+      "raw_sha256": "97d1911a7e573a50be9cad634cf9964e5f330872cbfa088d1b1199e5e98ba574",
+      "neutral_jpeg": ".tmp\\e-overlook-native-anonymous\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain.jpg",
+      "neutral_sha256": "6fff1a72ebb01be130a2ad98713741477a1aa69dfbb259a42c3c66accc6ab84d",
+      "player_position": [
+        -424.395538330078,
+        1109.22583007813,
+        5634.61572265625
+      ],
+      "camera_position": [
+        -425.793029785156,
+        1112.05725097656,
+        5629.72509765625
+      ],
+      "on_floor": true,
+      "time": "golden",
+      "weather": "rain"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear",
+      "source_png": "D:\\CodexTemp\\tetherbound-proof\\native-e-41fa0d53c8-overlook-eight-r1\\frames\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear.png",
+      "raw_sha256": "c959581bd4b7c6c21c66fee6e1c10132a28cbec1e9669738d6ee3d359ce52666",
+      "neutral_jpeg": ".tmp\\e-overlook-native-anonymous\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear.jpg",
+      "neutral_sha256": "14163982fa5d223a015f3bfa0d977993c325343d3e401f904d693e66a0b5984a",
+      "player_position": [
+        -424.395538330078,
+        1109.22583007813,
+        5634.61572265625
+      ],
+      "camera_position": [
+        -425.792907714844,
+        1112.05725097656,
+        5629.7255859375
+      ],
+      "on_floor": true,
+      "time": "night",
+      "weather": "clear"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain",
+      "source_png": "D:\\CodexTemp\\tetherbound-proof\\native-e-41fa0d53c8-overlook-eight-r1\\frames\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain.png",
+      "raw_sha256": "f0efab657b62252ceccb7c10dd342b3553db84945da3d3039fc6eec3fb9204f4",
+      "neutral_jpeg": ".tmp\\e-overlook-native-anonymous\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain.jpg",
+      "neutral_sha256": "3ebbf45812d30474eb24bb2d30562f6d8afa1bd5f4c92ea5306cdebc69e4bb0f",
+      "player_position": [
+        -424.395538330078,
+        1109.22583007813,
+        5634.61572265625
+      ],
+      "camera_position": [
+        -425.793029785156,
+        1112.05725097656,
+        5629.72509765625
+      ],
+      "on_floor": true,
+      "time": "night",
+      "weather": "rain"
+    }
+  ],
+  "unique_frames": 8,
+  "planned_full_matrix": 384,
+  "complete_repair": true,
+  "full_matrix_complete": false,
+  "capture_scope": "Stormward approach repair only; no full-matrix claim",
+  "preset": "Low",
+  "renderer": "gl_compatibility",
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "fixture_disclosure": "Direct chapter mount, upper-route flags, catalogue teleports with default 12m/3m offsets except explicitly declared existing route/threshold stands in capture_plan.authored_stands (all Skyroad views use its flat crown); pinned production dawn/day/golden/night and clear/rain. Both sides of a comparison must use the same stand plan. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands still fail.",
+  "manifest_sha256": "1b7fdfcdfe81d94572b4443fdb9fc5ca804f98a3e7dfdd445bd04547bd7171b0",
+  "terminal_receipt_sha256": "f81a85c724e1d5fd8f8e0bf7a2f3877d8bf2cdddb56248cfca65bb4e63a04628",
+  "stdout_sha256": "ff3aad3670dc52de99aac96ad1ce8efc47044e48168cce2d2e512a1f36b03fd6",
+  "stderr_sha256": "310ea8e16d54ffe37e350c0bf26a24afbe5ad1f1cadab9a64b9a497f3a779daf",
+  "original_review": "Current stand/selector source and affected functional area APPROVE; original native provenance and original code-blind pixels pending.",
+  "reuse": "Retain94 original dawn and94 night views, including their FAIL quarters; do not rerun those passing saved pieces. WholeF40#0/#5 remain open."
+}

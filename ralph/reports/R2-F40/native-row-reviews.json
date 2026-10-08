@@ -1,0 +1,340 @@
+[
+  {
+    "item_id": "P2-021",
+    "subject": "open terrain",
+    "catalogue_defect": "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route",
+    "reviewer": "blind_listener_f10 (retained original judge 01a11667-4631-72b2-8fed-294999b8c043)",
+    "assessment": "ASSESSED_VISIBLE_SCENERY",
+    "severity": 4,
+    "exposure": 5,
+    "importance": 4,
+    "impact": 80,
+    "verdict": "FAIL",
+    "observed_finding": "The Realm Gate reverse foreground is a broad smooth green strip with isolated trees, boulders and a narrow dirt line. Sky Shrine approach is a large continuous grass field with scattered ordinary trees. Distant cliffs and a cloud floor establish height, but the walkable foreground does not carry the layered upland beds, ledges and route-leading land detail of the reference target.",
+    "native_frame": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg",
+    "native_frame_link": "[cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg)",
+    "evidence": [
+      {
+        "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg",
+        "link": "[cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg",
+        "link": "[cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      }
+    ],
+    "coverage_limits": "Only supplied scenery stands; no earned journey or continuous traversal.",
+    "release_disposition": "OPEN",
+    "rating_basis": "Independent recommendation for the pictured Low/Compatibility contexts only; no previous score carried over."
+  },
+  {
+    "item_id": "P2-022",
+    "subject": "summit aviary",
+    "catalogue_defect": "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark",
+    "reviewer": "blind_listener_f10 (retained original judge 01a11667-4631-72b2-8fed-294999b8c043)",
+    "assessment": "ASSESSED_VISIBLE_SCENERY",
+    "severity": 3,
+    "exposure": 4,
+    "importance": 5,
+    "impact": 60,
+    "verdict": "FAIL",
+    "observed_finding": "The gold cage/dome and flanking towers are distinct and readable, including the clear-night frame; the original dark-night-silhouette component is not observed there. The dome is nevertheless a comparatively skeletal cylinder on a grassy plateau, with a separate low court at left, rather than the reference's substantial layered stone sanctuary integrated into the cliff crown.",
+    "native_frame": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__summit_final_stronghold__11__summit_eyrie__approach__dawn__clear.jpg",
+    "native_frame_link": "[cloudreach__summit_final_stronghold__11__summit_eyrie__approach__dawn__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__summit_final_stronghold__11__summit_eyrie__approach__dawn__clear.jpg)",
+    "evidence": [
+      {
+        "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__dawn__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__summit_final_stronghold__11__summit_eyrie__approach__dawn__clear.jpg",
+        "link": "[cloudreach__summit_final_stronghold__11__summit_eyrie__approach__dawn__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__summit_final_stronghold__11__summit_eyrie__approach__dawn__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__clear.jpg",
+        "link": "[cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      }
+    ],
+    "coverage_limits": "Architecture composition/finish rescore only; no close entrance, ascent, fight, measured distance or full hero criterion acceptance.",
+    "release_disposition": "OPEN",
+    "rating_basis": "Independent recommendation for the pictured Low/Compatibility contexts only; no previous score carried over."
+  },
+  {
+    "item_id": "P2-024",
+    "subject": "architectural landmark read",
+    "catalogue_defect": "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail",
+    "reviewer": "blind_listener_f10 (retained original judge 01a11667-4631-72b2-8fed-294999b8c043)",
+    "assessment": "PARTIAL",
+    "severity": 3,
+    "exposure": 4,
+    "importance": 4,
+    "impact": 48,
+    "verdict": "FAIL",
+    "observed_finding": "Galefoot's houses, tents, windows and communal fire give a coherent lived camp. Windscar Beacon reads as an arch with hanging lights and banners but has little landmark-specific mass or surrounding built detail. Sky Shrine approach puts the column group at the far left of an ordinary meadow; its reverse view is entirely covered by a rock surface. Cliffhold approach is dominated by the corner of a house and does not reveal the settlement. These supplied viewpoints leave architectural destination identity uneven.",
+    "native_frame": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__night__clear.jpg",
+    "native_frame_link": "[cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__night__clear.jpg)",
+    "evidence": [
+      {
+        "frame": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__night__clear.jpg",
+        "link": "[cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__windscar_ravine__05__windscar_beacon__detail__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__windscar_ravine__05__windscar_beacon__detail__night__clear.jpg",
+        "link": "[cloudreach__windscar_ravine__05__windscar_beacon__detail__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__windscar_ravine__05__windscar_beacon__detail__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg",
+        "link": "[cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__night__clear.jpg",
+        "link": "[cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__upper_cloudreach__09__cliffhold__approach__dawn__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__upper_cloudreach__09__cliffhold__approach__dawn__clear.jpg",
+        "link": "[cloudreach__upper_cloudreach__09__cliffhold__approach__dawn__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__upper_cloudreach__09__cliffhold__approach__dawn__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      }
+    ],
+    "coverage_limits": "A covered viewpoint demonstrates poor visibility in that supplied shot, not absence of the destination. No complete close architectural survey or earned approach.",
+    "release_disposition": "OPEN",
+    "rating_basis": "Independent recommendation for the pictured Low/Compatibility contexts only; no previous score carried over."
+  },
+  {
+    "item_id": "P2-023",
+    "subject": "exposed landform edges",
+    "catalogue_defect": "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges",
+    "reviewer": "blind_listener_f10 (retained original judge 01a11667-4631-72b2-8fed-294999b8c043)",
+    "assessment": "ASSESSED_VISIBLE_SCENERY",
+    "severity": 4,
+    "exposure": 5,
+    "importance": 4,
+    "impact": 80,
+    "verdict": "FAIL",
+    "observed_finding": "The Galefoot reverse cliff is a long wall of straight tall extruded faces with narrow repeated vertical seams and sparse small shelf cuts. Stormward reverse repeats those large vertical courses and abrupt angular crest blocks. The Realm Gate reverse island has a broad blunt dark underside under its grass cap. Height is legible, but exposed edges lack the weathered beds, broken transitions and meter-scale rocky shaping required by the target.",
+    "native_frame": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__night__clear.jpg",
+    "native_frame_link": "[cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__night__clear.jpg)",
+    "evidence": [
+      {
+        "frame": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__night__clear.jpg",
+        "link": "[cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__night__clear.jpg",
+        "link": "[cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg",
+        "link": "[cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      }
+    ],
+    "coverage_limits": "Visible landform shape and material only; no collision or route reachability finding.",
+    "release_disposition": "OPEN",
+    "rating_basis": "Independent recommendation for the pictured Low/Compatibility contexts only; no previous score carried over."
+  },
+  {
+    "item_id": "P2-004",
+    "subject": "exploration HUD",
+    "catalogue_defect": "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view",
+    "reviewer": "blind_listener_f10 (retained original judge 01a11667-4631-72b2-8fed-294999b8c043)",
+    "assessment": "ASSESSED_EXPLORATION_ONLY",
+    "severity": 2,
+    "exposure": 5,
+    "importance": 4,
+    "impact": 40,
+    "verdict": "POLISH",
+    "observed_finding": "Persistent outlined clock/header text, a large opaque story card, minimap, separate health/food boxes and a bottom-right action strip create a substantial boxed screen edge. The center trainer and route remain clear and the text is readable in the inspected normal exploration frame. The visible defect is panel weight and scenic separation; a combat clutter failure is not established.",
+    "native_frame": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg",
+    "native_frame_link": "[cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg)",
+    "evidence": [
+      {
+        "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg",
+        "link": "[cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      }
+    ],
+    "coverage_limits": "Exploration HUD only; no combat, controller focus, menu, changing inventory or interaction overlap proof.",
+    "release_disposition": "OPEN",
+    "rating_basis": "Independent recommendation for the pictured Low/Compatibility contexts only; no previous score carried over."
+  },
+  {
+    "item_id": "P2-053",
+    "subject": "bright Cloudreach route markers",
+    "catalogue_defect": "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer",
+    "reviewer": "blind_listener_f10 (retained original judge 01a11667-4631-72b2-8fed-294999b8c043)",
+    "assessment": "PARTIAL",
+    "severity": 3,
+    "exposure": 4,
+    "importance": 3,
+    "impact": 36,
+    "verdict": "FAIL",
+    "observed_finding": "The High Perches foreground has a large saturated royal-blue flat ring with straight radial strips and a flat gold perimeter. Old Wind Observatory adds a solid cyan I-shaped post with a base ring and bright blue ground rails. These highly saturated simple shapes compete with stone architecture and natural terrain instead of reading as finished integrated route hardware.",
+    "native_frame": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__clear.jpg",
+    "native_frame_link": "[cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__clear.jpg)",
+    "evidence": [
+      {
+        "frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__clear.jpg",
+        "link": "[cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg",
+        "link": "[cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      }
+    ],
+    "coverage_limits": "Pictured marker finish only. The original flight launch yellow pointer is not close-framed in the inspected full rasters; no launch motion or functional route judgement.",
+    "release_disposition": "OPEN",
+    "rating_basis": "Independent recommendation for the pictured Low/Compatibility contexts only; no previous score carried over."
+  },
+  {
+    "item_id": "P2-025",
+    "subject": "grass and stone finish",
+    "catalogue_defect": "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites",
+    "reviewer": "blind_listener_f10 (retained original judge 01a11667-4631-72b2-8fed-294999b8c043)",
+    "assessment": "ASSESSED_VISIBLE_SCENERY",
+    "severity": 4,
+    "exposure": 4,
+    "importance": 4,
+    "impact": 64,
+    "verdict": "FAIL",
+    "observed_finding": "At Old Wind Observatory, dense tall grass and flower stems visibly emerge through the stone floor around the trainer and between the columns and rails. The narrow center aisle remains readable, but most surrounding paving is invaded. Across the supplied shrine meadow and paving views, repeated sharp grass blades and simple mottled stone do not provide convincing close material separation.",
+    "native_frame": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg",
+    "native_frame_link": "[cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg)",
+    "evidence": [
+      {
+        "frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg",
+        "link": "[cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg",
+        "link": "[cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__dawn__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      }
+    ],
+    "coverage_limits": "Static visible grass/paving intersections and finish only; no plant motion or material-source inference.",
+    "release_disposition": "OPEN",
+    "rating_basis": "Independent recommendation for the pictured Low/Compatibility contexts only; no previous score carried over."
+  },
+  {
+    "item_id": "P2-068",
+    "subject": "named NPC post readability",
+    "catalogue_defect": "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role",
+    "reviewer": "blind_listener_f10 (retained original judge 01a11667-4631-72b2-8fed-294999b8c043)",
+    "assessment": "PARTIAL",
+    "severity": 4,
+    "exposure": 3,
+    "importance": 4,
+    "impact": 48,
+    "verdict": "FAIL",
+    "observed_finding": "The High Perches reverse frame shows the readable portion of an Asten Windward name/role line over the right stone column and underneath the large story HUD card. No separately readable person is available at that labelled post in this shot, so costume, pose and role silhouette cannot be read. The scenery contact pages contain other small people, but do not provide a named-post comparison sufficient to judge their individual roles.",
+    "native_frame": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__night__clear.jpg",
+    "native_frame_link": "[cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__night__clear.jpg)",
+    "evidence": [
+      {
+        "frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__night__clear.jpg",
+        "link": "[cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      }
+    ],
+    "coverage_limits": "Only the pictured labelled post's visibility is scored. Other named NPCs, unobstructed costumes/faces, and dialogue composition remain unassessed; no cause or actor absence inferred.",
+    "release_disposition": "OPEN",
+    "rating_basis": "Independent recommendation for the pictured Low/Compatibility contexts only; no previous score carried over."
+  },
+  {
+    "item_id": "P2-049",
+    "subject": "floating dark strips",
+    "catalogue_defect": "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void",
+    "reviewer": "blind_listener_f10 (retained original judge 01a11667-4631-72b2-8fed-294999b8c043)",
+    "assessment": "ASSESSED_VISIBLE_SCENERY",
+    "severity": 3,
+    "exposure": 3,
+    "importance": 3,
+    "impact": 27,
+    "verdict": "FAIL",
+    "observed_finding": "Broken Skyroad Arch detail contains a small pair of disconnected black upright rail-like strips in open air to the right of the distant cliff view. Flight Aerie gameplay has a longer dark hanging strip near the upper-left distant cliff edge with no readable bridge or attached support. Their isolated dark silhouette reads as stray suspended pieces. The long dark stripe on the near grass is a cast shadow and is not counted as this defect.",
+    "native_frame": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__broken_causeways__04__broken_skyroad_arch__detail__dawn__rain.jpg",
+    "native_frame_link": "[cloudreach__broken_causeways__04__broken_skyroad_arch__detail__dawn__rain.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__broken_causeways__04__broken_skyroad_arch__detail__dawn__rain.jpg)",
+    "evidence": [
+      {
+        "frame": "cloudreach__broken_causeways__04__broken_skyroad_arch__detail__dawn__rain.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__broken_causeways__04__broken_skyroad_arch__detail__dawn__rain.jpg",
+        "link": "[cloudreach__broken_causeways__04__broken_skyroad_arch__detail__dawn__rain.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__broken_causeways__04__broken_skyroad_arch__detail__dawn__rain.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear.jpg",
+        "link": "[cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__dawn__rain.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__dawn__rain.jpg",
+        "link": "[cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__dawn__rain.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__dawn__rain.jpg)",
+        "inspection": "full original raster opened with view_image"
+      }
+    ],
+    "coverage_limits": "Apparent disconnected visual pieces only; no object identity, mesh cause, physical collision or proximity measurement.",
+    "release_disposition": "OPEN",
+    "rating_basis": "Independent recommendation for the pictured Low/Compatibility contexts only; no previous score carried over."
+  },
+  {
+    "item_id": "P2-106",
+    "subject": "terrace edge clouds",
+    "catalogue_defect": "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor",
+    "reviewer": "blind_listener_f10 (retained original judge 01a11667-4631-72b2-8fed-294999b8c043)",
+    "assessment": "PARTIAL",
+    "severity": 3,
+    "exposure": 3,
+    "importance": 3,
+    "impact": 27,
+    "verdict": "FAIL",
+    "observed_finding": "The distant cliff views at Broken Skyroad Arch and Windscar Beacon contain clusters of sharp pale oval/polygon cloud pieces detached in appearance from the softer continuous cloud bank beneath them. Their flat, outlined overlapping silhouettes read as loose cutout shapes around cliff edges rather than coherent volumetric cloud layering.",
+    "native_frame": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear.jpg",
+    "native_frame_link": "[cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear.jpg)",
+    "evidence": [
+      {
+        "frame": "cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear.jpg",
+        "link": "[cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      },
+      {
+        "frame": "cloudreach__windscar_ravine__05__windscar_beacon__detail__night__clear.jpg",
+        "path": "D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__windscar_ravine__05__windscar_beacon__detail__night__clear.jpg",
+        "link": "[cloudreach__windscar_ravine__05__windscar_beacon__detail__night__clear.jpg](D:/tetherbound/codex-e/.tmp/e-f40-low-anonymous/cloudreach__windscar_ravine__05__windscar_beacon__detail__night__clear.jpg)",
+        "inspection": "full original raster opened with view_image"
+      }
+    ],
+    "coverage_limits": "Only pictured distant cliff-edge cloud finish is scored. The catalogue's close terrace-edge and mounted traversal context is not supplied; no cloud crossing, motion, contact or riding finding.",
+    "release_disposition": "OPEN",
+    "rating_basis": "Independent recommendation for the pictured Low/Compatibility contexts only; no previous score carried over."
+  }
+]
