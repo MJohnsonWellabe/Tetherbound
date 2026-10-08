@@ -473,6 +473,93 @@
         "Missing potion_small route13 authored[-650,3550] refused6stands; unseenitem UNKNOWN",
         "No earned access/collection/save/transaction/fullsurvey claim"
       ]
+    },
+    {
+      "id": "catch",
+      "packet": "D:\\CodexTemp\\tetherbound-proof\\native-e-f5474bf1ac-f41-catch-r2",
+      "summary": {
+        "stop_reason": "",
+        "script_parse_errors": 0,
+        "renderer": "gl_compatibility",
+        "preset": "Low",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "complete": true,
+        "hash_preserved": true,
+        "scope": "existing staged catch visual fixture, odds/HP overrides; not earned/co-op proof",
+        "source_clean": true,
+        "exit_code": 0,
+        "source": "f5474bf1ac2ff9504457ea10cd1576ed4ff587e2",
+        "frames": 12
+      },
+      "frames": 12,
+      "unique_ids": 12,
+      "complete": true,
+      "failures": [],
+      "manifest_sha256": "5cff7a046338be37f29d61dab2103b5ecdcf65ca7b602253603e81d13faca9d2",
+      "source_review": "same original review_cloud_startup APPROVE exactcleanf547,exit0/118s,13hashes,actualPNG1920headers,logsnoerrors; release/cancelactions matchproduction",
+      "judge_contacts": "ralph\\reports\\F41\\recapture-rescore\\catch",
+      "limits": [
+        "Existing stagedHP/odds/orbfixture",
+        "No earned/co-op/catchmechanics criterion claim"
+      ],
+      "canceled_duplicate_run": 37734283286,
+      "canceled_duplicate_credit": false,
+      "terminal_receipt": {
+        "stop_reason": "",
+        "source": "f5474bf1ac2ff9504457ea10cd1576ed4ff587e2",
+        "exit_code": 0,
+        "finished_utc": "2026-10-08T05:46:13.2403346Z",
+        "started_utc": "2026-10-08T05:44:15.1717803Z",
+        "pid": 3052
+      }
+    },
+    {
+      "id": "fly",
+      "packet": "D:\\CodexTemp\\tetherbound-proof\\native-e-f5474bf1ac-f41-fly",
+      "summary": {
+        "renderer": "gl_compatibility",
+        "source": "f5474bf1ac2ff9504457ea10cd1576ed4ff587e2",
+        "preset": "Low",
+        "script_parse_errors": 0,
+        "resolution": [
+          1920,
+          1080
+        ],
+        "frames": 3,
+        "failure": "first stand (-320,240) double Jump denied",
+        "scope": "existing elevated60m Galecrest/unlock/sealedflag visual fixture; not reachable campaign traversal",
+        "stop_reason": "",
+        "hash_preserved": true,
+        "complete": false,
+        "source_clean": true,
+        "exit_code": 1
+      },
+      "frames": 3,
+      "unique_ids": 3,
+      "complete": false,
+      "failures": [
+        "At (-320.0, 240.0): double Jump denied: "
+      ],
+      "manifest_sha256": "7a388ec52d61a96cb562ffebb6dc47ab2d9a1f11e28f0a4babbc686f59308673",
+      "source_review": "same original review_cloud_startup APPROVE three-frameARTsubset; exactcleanf547/actual1920headers/4hashes/noERRORorSCRIPTERROR",
+      "judge_contacts": "ralph\\reports\\F41\\recapture-rescore\\fly",
+      "limits": [
+        "WHOLEtoolFAILexit1 firststand(-320,240)doubleJumpdenied noreason",
+        "Secondstand(-304,240)visualfixtureelevates60m and overrides Galecrest/unlock/sealedflag",
+        "launchalreadyglide; groundedposeafterdescent isnotlandingtransition",
+        "No reachablecampaign/earned/co-op/fullFly/mechanicsPASS"
+      ],
+      "terminal_receipt": {
+        "started_utc": "2026-10-08T05:47:21.3881768Z",
+        "stop_reason": "",
+        "pid": 4732,
+        "finished_utc": "2026-10-08T05:49:55.5966398Z",
+        "source": "f5474bf1ac2ff9504457ea10cd1576ed4ff587e2",
+        "exit_code": 1
+      }
     }
   ],
   "retained_ui_reuse": {
@@ -498,5 +585,11 @@
       "Raw14 original JPEGdirectory absent; no newly inspectedfullraster claim",
       "Accepted original verdict reused; no new fixture or capture"
     ]
+  },
+  "current_catalogue_counts": {
+    "rows": 44,
+    "supported_assessments": 35,
+    "unassessed": 9,
+    "whole_criterion": "OPEN"
   }
 }

@@ -1,0 +1,50 @@
+{
+  "reviewer": "same retained original code-blind visual judge",
+  "scope": "P2-041 own defect: Crown frame material identity, visible ground contact and grass penetration",
+  "inputs": [
+    "ralph/reports/F41/crown-masonry/pair-0.jpg",
+    "ralph/reports/F41/crown-masonry/pair-1.jpg"
+  ],
+  "full_rasters_inspected": {
+    "A": [
+      "stormwood__hollow_crown__07__the_crown_arch__day__approach.jpg",
+      "stormwood__hollow_crown__07__the_crown_arch__day__close.jpg",
+      "stormwood__landmark__crown_arch__day__approach.jpg",
+      "stormwood__landmark__crown_arch__day__close.jpg"
+    ],
+    "B": [
+      "stormwood__hollow_crown__07__the_crown_arch__day__approach.jpg",
+      "stormwood__hollow_crown__07__the_crown_arch__day__close.jpg",
+      "stormwood__landmark__crown_arch__day__approach.jpg",
+      "stormwood__landmark__crown_arch__day__close.jpg"
+    ]
+  },
+  "preference": "A",
+  "bounded_fix_verdict": {
+    "A": "PASS",
+    "B": "BLOCK"
+  },
+  "reason": "Blind preference A: neutral gray textured masonry replaces the flat blue appearance, and the close platform is clear of B's grass penetration. Frame-to-slab contact reads seated in the supplied close view, and the frontal view reads as a crenellated masonry arch. A passes the bounded material/grass correction. The broad exposed rectangular slab, small rectangular outer silhouette and narrow dark edge-on approach remain visible limitations; this does not close the full landmark/release row.",
+  "frame_specific": [
+    "A/B stormwood__landmark__crown_arch__day__close.jpg: A clear textured gray platform and seated frame; B grass crosses the blue platform and frame base.",
+    "A/B stormwood__hollow_crown__07__the_crown_arch__day__close.jpg: A frontal gray crenellated arch reads more like masonry than B blue surface.",
+    "Both stormwood__landmark__crown_arch__day__approach.jpg: edge-on frame reads as narrow dark pillar, limiting arch recognition."
+  ],
+  "remaining_limits": "Four static views at Low/Compatibility 1280x720 only; no motion, earned approach, night/other phases, revised silhouette/slab integration or full release-art acceptance.",
+  "mapping_disclosure": {
+    "received_after_blind_verdict": true,
+    "A": "AFTER@87bed",
+    "B": "BEFORE@d627",
+    "source": "parent-provided mapping; no source inspection"
+  },
+  "catalog_recommendation": {
+    "item_id": "P2-041",
+    "assessment": "PARTIAL",
+    "severity": 2,
+    "exposure": 3,
+    "importance": 3,
+    "impact": 18,
+    "release_disposition": "OPEN"
+  },
+  "no_full_row_or_release_closure": true
+}
