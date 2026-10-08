@@ -6,6 +6,12 @@
   "crown_half_extents_m": [19.0, 18.0],
   "_comment": "Collisionless presentation on the existing 38 x 36 m ObservatoryWalkableCrown. Coordinates below are landmark-local and do not change the grounded route, lift, survey target, pickup, NPC marker, encounter, Fly access, terrain or crown collision.",
   "dial_radius_m": 15.0,
+  "dial_paving": {
+    "enabled": false,
+    "scope": "peer_local_observatory_presentation_all_presets",
+    "tint": "#b4ae9e",
+    "_comment": "Pictured court stone-joint candidate, OFF until original matched native/blind PASS. Reuses installed Summit paving textures and shader at dial_radius_m; no collision, route, authority, save or transaction changes. Process-only --observatory-paving-candidate enables; --observatory-paving-baseline wins over both candidate and config."
+  },
   "tower_rib_count": 8,
   "tower_rib_radius_m": 6.45,
   "tower_rib_height_m": 13.4,

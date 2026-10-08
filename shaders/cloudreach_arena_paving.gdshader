@@ -8,25 +8,29 @@ uniform vec3 origin=vec3(100.0,1160.0,5450.0);
 // angle is -90 deg ran straight down the approach's centre line (x = origin.x)
 // as a seam through the cobbles (frame-matrix M1, frame 29).
 uniform float joint_outer_radius=36.5;
+// Preserve the Summit's 36 m design by default; other round courts may use
+// their authored radius without stretching the world-metre texture grain.
+uniform float layout_radius=36.0;
 varying vec3 world_at;
 void vertex(){world_at=(MODEL_MATRIX*vec4(VERTEX,1.0)).xyz;}
 void fragment(){
 	vec2 p=world_at.xz-origin.xz;
 	float r=length(p);
+	float layout_r=r*(36.0/max(layout_radius,0.01));
 	vec3 stone=texture(albedo_tex,world_at.xz*0.72).rgb;
 	float wear=0.5+0.5*sin(p.x*0.067+sin(p.y*0.093));
 	vec3 paving=mix(vec3(0.43),stone,0.66)*tint.rgb;
 	// A worked service perimeter, worn central court and narrow radial joints
 	// describe the actual arena without competing with timed hazard telegraphs.
-	float perimeter=smoothstep(25.0,33.0,r);
+	float perimeter=smoothstep(25.0,33.0,layout_r);
 	paving*=mix(1.10,0.80,perimeter)*(0.94+0.12*wear);
-	float ring=1.0-smoothstep(0.10,0.19,abs(r-25.0));
+	float ring=1.0-smoothstep(0.10,0.19,abs(layout_r-25.0));
 	float joint=1.0-smoothstep(0.035,0.10,abs(sin(atan(p.y,p.x)*6.0))*max(r,1.0));
 	joint*=1.0-smoothstep(joint_outer_radius-1.0,joint_outer_radius,r);
 	paving=mix(paving,paving*0.52,max(ring,joint*perimeter)*0.42);
 	float activity=sin(p.x*0.12+sin(p.y*0.16)*1.7)+sin(p.y*0.095-p.x*0.07)*0.7;
 	float dust=smoothstep(-0.40,1.10,activity)*0.84;
-	float service_arc=exp(-pow((r-23.4-sin(atan(p.y,p.x)*3.0)*1.3)/1.55,2.0));
+	float service_arc=exp(-pow((layout_r-23.4-sin(atan(p.y,p.x)*3.0)*1.3)/1.55,2.0));
 	service_arc*=smoothstep(-0.6,0.4,sin(atan(p.y,p.x)+0.5));
 	vec3 worn_soil=texture(soil_tex,world_at.xz*0.42).rgb*tint.rgb*0.72;
 	paving=mix(paving,worn_soil,max(dust,service_arc*0.72));
