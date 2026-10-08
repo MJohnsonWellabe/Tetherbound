@@ -11,6 +11,12 @@
     "_comment": "Healthy idle vitals remain readable over outdoor scenery. Relevant health, hunger and sprint states retain full opacity.",
     "idle_alpha": 0.85
   },
+  "exploration_hotbar": {
+    "scope": "device_local_presentation",
+    "panel_alpha": 0.10,
+    "slot_alpha": 0.22,
+    "_comment": "P2-004 candidate: let scenery show through the persistent Quick items fills. All five bindings, slot dimensions, icons, counts, text outlines and input remain unchanged. Objective and relevant-state backings retain their own contrast treatment. No durable state or authority changes."
+  },
   "toasts": {
     "_comment": "Hold durations in GAME seconds: the HUD advances its own clock by its process delta, so a slow frame (software GL at a fixed capture fps, a hitch) never eats the hold. Fallbacks: HOTBAR_MESSAGE_SECONDS 2.2, REGION_BANNER_SECONDS 3.2.",
     "hotbar_message_seconds": 2.2,

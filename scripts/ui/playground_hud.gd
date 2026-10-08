@@ -832,6 +832,8 @@ var _hud_clock := 0.0
 var _hotbar_message_seconds := HOTBAR_MESSAGE_SECONDS
 var _region_banner_seconds := REGION_BANNER_SECONDS
 var _vitals_idle_alpha := FADE_ALPHA
+var _hotbar_panel_alpha := UITokens.BG_DEEP.a
+var _hotbar_slot_alpha := UITokens.BG_PANEL_ALT.a
 var _exploration_show_empty_slots := true
 
 ## --- drowning cue (X03-WO4) ----------------------------------------------------
@@ -1185,6 +1187,7 @@ func _ready() -> void:
 ## rather than one repeated dark-navy box.
 func _style_hotbar() -> void:
 	var box := UITokens.panel_deep_box()
+	box.bg_color.a = _hotbar_panel_alpha
 	if _victory_hierarchy_candidate:
 		var layout := $Root/BottomDock/HotbarPanel/Margin/Layout as VBoxContainer
 		var margin := $Root/BottomDock/HotbarPanel/Margin as MarginContainer
@@ -1209,7 +1212,9 @@ func _style_hotbar() -> void:
 		box.content_margin_bottom = box.content_margin_top
 	_hotbar_panel.add_theme_stylebox_override("panel", box)
 	for chip in _hotbar_chips:
-		chip.add_theme_stylebox_override("panel", UITokens.slot_box(false))
+		var slot_box := UITokens.slot_box(false)
+		slot_box.bg_color.a = _hotbar_slot_alpha
+		chip.add_theme_stylebox_override("panel", slot_box)
 
 
 ## Builds `_prompt_measure`: see that field's own header for why it exists.
@@ -2626,6 +2631,10 @@ func _apply_hud_config(config: Dictionary) -> void:
 		_party_strip.set("show_empty_slots", _exploration_show_empty_slots)
 	_party_vitals_refresh_candidate = config.get("party_vitals_refresh_candidate", false) == true
 	_vitals_idle_alpha = clampf(hud_config_number(config, "exploration_vitals", "idle_alpha", FADE_ALPHA), FADE_ALPHA, 1.0)
+	# Local exploration styles only. Preserve legacy fills for absent/invalid
+	# config, including the existing positive/finite number guard.
+	_hotbar_panel_alpha = clampf(hud_config_number(config, "exploration_hotbar", "panel_alpha", UITokens.BG_DEEP.a), 0.02, 1.0)
+	_hotbar_slot_alpha = clampf(hud_config_number(config, "exploration_hotbar", "slot_alpha", UITokens.BG_PANEL_ALT.a), 0.02, 1.0)
 	_hotbar_message_seconds = hud_config_number(config, "toasts", "hotbar_message_seconds", HOTBAR_MESSAGE_SECONDS)
 	_region_banner_seconds = hud_config_number(config, "toasts", "region_banner_seconds", REGION_BANNER_SECONDS)
 	var cue: Variant = config.get("drowning_cue", {})
