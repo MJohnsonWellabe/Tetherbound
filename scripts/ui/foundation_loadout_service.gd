@@ -44,7 +44,7 @@ func _send() -> void:
 
 func _accept_quote(quote: Dictionary) -> void:
 	if _pending.is_empty() or _pending.phase != "quote": return
-	if quote.get("resolved") == false: return
+	if quote.get("resolved") == false and quote.get("code") == "awaiting_saved_decision": return
 	if quote.get("ok") != true or quote.get("creature_uid") != _pending.intent.get("creature_uid") \
 		or quote.get("loadout_revision") != _pending.intent.get("expected_revision"):
 		_settle({"ok": false, "resolved": true, "durable": false, "code": "quote_changed"})
