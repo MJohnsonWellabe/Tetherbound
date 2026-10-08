@@ -130,6 +130,9 @@ func bounty_context(peer: int) -> Dictionary:
 	var session := get_parent()
 	if session.call("is_host") != true or session.call("admitted_character_state", peer).is_empty(): return {}
 	var game: Node = session.call("_game")
+	var tree := get_tree()
+	if game == null or tree == null or not game.has_method("_realm_scene_ready") \
+		or game.call("_realm_scene_ready", tree.current_scene, str(game.get("current_realm"))) != true: return {}
 	var world: RefCounted = game.get("world")
 	var writer := session.get_node_or_null(^"LedgerRpc")
 	if writer == null: return {}
