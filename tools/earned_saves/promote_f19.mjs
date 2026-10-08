@@ -104,10 +104,15 @@ const root = process.cwd();
 assert.equal(fs.realpathSync(execFileSync('git', ['rev-parse', '--show-toplevel'], {encoding: 'utf8'}).trim()), fs.realpathSync(root), 'Run from the repository root');
 const sourceRoot = fs.realpathSync(handoffDirectory);
 const meadowsPieces = ['opening_team', 'camp_tournament', 'bridge', 'warrens', 'relay', 'hall'];
+// Preserve the original order unless the actual immutable preparation receipt
+// exists. This adds one real witness; it never substitutes for Relay or Hall.
+if (meadowsPrefix && fs.existsSync(path.join(sourceRoot, 'relay_prepared', 'receipt.json'))) {
+  meadowsPieces.splice(4, 0, 'relay_prepared');
+}
 if (meadowsPrefix) {
   assert.ok(meadowsPieces.every(boundary => fs.existsSync(path.join(sourceRoot, boundary, 'receipt.json'))),
-    'Complete six-piece Meadows prefix required; chapter receipts cannot replace original pieces');
-  assert.ok(pieceLogs.length === 6 && pieceLogs.every(Boolean), 'Provide all six ordered original Meadows piece logs');
+    'Complete Meadows prefix required; chapter receipts cannot replace original pieces');
+  assert.ok(pieceLogs.length === meadowsPieces.length && pieceLogs.every(Boolean), 'Provide every ordered original Meadows piece log');
 }
 const targetRoot = path.join(root, 'tests/fixtures/earned_saves/redesign');
 const sha256 = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
@@ -204,6 +209,15 @@ if (segmentOption) {
         const helpers = boundary === 'opening_team' ? ['opening', 'road_gate', 'village', 'team'] :
           boundary === 'camp_tournament' ? ['materials', 'camp', 'rest', 'tournament'] : [boundary];
         assert.deepEqual(proof.helper_receipts.map(row => row.segment), helpers, 'Every strict piece helper must pass in order');
+        if (boundary === 'relay_prepared') {
+          const beats = proof.helper_receipts[0].receipts;
+          assert.ok(Array.isArray(beats), 'Preparation requires actual ordered helper receipts');
+          const recovered = beats.findIndex(beat => object(beat) && beat.beat === 'pre_relay_riverwatch_recovery' &&
+            beat.inventory_unchanged === true && beat.xp_caps_unchanged === true);
+          assert.ok(recovered >= 0 && beats.some((beat, index) => index > recovered && object(beat) &&
+            beat.beat === 'relay_prepared' && beat.safe_join === true),
+          'Preparation must prove actual Riverwatch recovery followed by its safe join');
+        }
         for (const helper of proof.helper_receipts) {
           assert.equal(helper.passed, true);
           if (helper.segment === 'village') continue;
@@ -215,7 +229,7 @@ if (segmentOption) {
             // assertions. Bind only their exact owning helper and waypoint list.
             const authoredVia = helper.segment === 'warrens' && claim === 'spike_bypass' ? [[-409, 2512]] :
               helper.segment === 'warrens' && claim === 'station_bypass' ? [[405, 1796.8], [409.5, 1797], [409.5, 1808.5]] :
-              ['relay', 'hall'].includes(helper.segment) && claim === 'overlook_bypass' ? [[-122, 3443]] : null;
+              ['relay_prepared', 'relay', 'hall'].includes(helper.segment) && claim === 'overlook_bypass' ? [[-122, 3443]] : null;
             if (authoredVia) {
               assert.deepEqual(Object.keys(row).sort(), ['beat', 'from', 'to', 'via']);
               assert.ok(Array.isArray(row.via));

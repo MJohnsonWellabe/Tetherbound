@@ -164,7 +164,8 @@ func run(owner: SceneTree) -> void:
 			"source_kind": "f49_hash_linked_production_prefix", "journey_id": disk.journey_id}
 		if meadows_piece_prefix:
 			driver.resume_info.source_kind = "f49_complete_meadows_piece_and_chapter_prefix"
-			driver.resume_info.meadows_pieces = HANDOFF.MEADOWS_PIECES.duplicate()
+			driver.resume_info.meadows_pieces = (HANDOFF.MEADOWS_PREPARED_PIECES \
+				if disk.boundaries.has("relay_prepared") else HANDOFF.MEADOWS_PIECES).duplicate()
 		for index in from + 1: visited.append(["meadows", "tidewake", "cloudreach", "stormwood"][index])
 	if from < 0:
 		# A resumed Hall was earned, saved and loaded with its complete prefix.
