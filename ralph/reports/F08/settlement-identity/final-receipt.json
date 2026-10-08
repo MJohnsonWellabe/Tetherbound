@@ -1,0 +1,61 @@
+{
+  "proofs": {
+    "initial": {
+      "source": "e518ce404df71be4e7236ab3bd60c32f1612e3a3",
+      "run": 37690725109,
+      "artifact": 11514640398,
+      "visual": "8 retained PASS; initial Windwatch 2 BLOCK superseded by second reframe",
+      "skips": 0,
+      "seconds": 1172,
+      "exit": 0,
+      "frames": 10
+    },
+    "area": {
+      "scope": "Unchanged production geometry build and structural surfaces; standalone fixture",
+      "script": "tests/smoke_cloudreach_windwatch.gd",
+      "exit": 0,
+      "seconds": 3,
+      "checks": 21,
+      "failures": 0,
+      "artifact": 11514626516,
+      "run": 37693874191,
+      "source": "3d33995bfe3e65f1dda18bae40e775ba52560aa8"
+    },
+    "logic": "No existing unit file names changed settlement recorder, matrix recorder or bootstrap; actual capture exercises preflight, floor/native follower and strict complete receipt.",
+    "windwatch": {
+      "seconds": 346,
+      "frames": 2,
+      "resolution": [
+        1280,
+        720
+      ],
+      "preset": "Low",
+      "exit": 0,
+      "renderer": "gl_compatibility",
+      "skips": 0,
+      "artifact": 11515690704,
+      "run": 37694787532,
+      "source": "7b7818e30339f2285ee21f2967b937c49e56ec96"
+    }
+  },
+  "criterion": "F08#3",
+  "landing": {
+    "whole_file": "tools/capture_cloudreach_settlement_identity.gd@7b7818e30339f2285ee21f2967b937c49e56ec96",
+    "exclude": "All runtime, chapter pickups, personal Fly, F36/F29 and other unREADY ancestry",
+    "dependency": "tools/capture_cloudreach_frame_matrix.gd and tools/lookdev_capture_bootstrap.gd@6aa24ab2df1525761df3e0d95b946221a8364282 already READY F40#4"
+  },
+  "verdict": "Galefoot and Cliffhold retain their eight passing day/night views. Windwatch second reframe passes day/night: trainer fully visible, Galecrest to the side, tower/banner/open approach/cliff railing readable. Combined ten-view literal settlement identity coverage passes.",
+  "source_sha": "7b7818e30339f2285ee21f2967b937c49e56ec96",
+  "limits": [
+    "Literal F08#3 only; release visual finish remains OPEN",
+    "Staged five-owned party, progression and clock; not earned route, save/rejoin or gameplay travel evidence",
+    "No motion, High/Medium, target-device or full-region acceptance"
+  ],
+  "review": "APPROVE",
+  "base_sha": "26540050262ca9351a60be50632d60c8ee61f09e",
+  "judge": "/root/blind_listener_f10",
+  "flags": "None",
+  "judge_result": "PASS",
+  "reviewer": "/root/review_cloud_startup",
+  "review_verdict": "Verified exact-source Low720 two-view zero-skip native-follower supplement/exit0 and area21 zero failures; retained8 plus same-judge combinedPASS satisfy bounded literal gates. Only recorder/dependency/evidence cut approved."
+}
