@@ -413,8 +413,19 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 	travel.trace_input = false
 	print("F20 DIALOGUE input authored_lines=", line_count, " actual_presses=", presses)
 	var deadline := Time.get_ticks_msec() + 30000
-	while not panel.call("is_open") and HOME.context(game).get("homecoming_seen") != true \
-			and Time.get_ticks_msec() < deadline: await tree.process_frame
+	var ack_intent := HOME.acknowledgement_intent(expected, HOME.SEEN_FLAG)
+	var ack_decision: Dictionary = {}
+	var acknowledged := not first and HOME.context(game).get("homecoming_seen") == true
+	while not panel.call("is_open") and not acknowledged and Time.get_ticks_msec() < deadline:
+		# Owner apply installs the receipt before its host settlement. Observe
+		# the original intent's accepted saved decision, not that early flag.
+		var ack_row: Dictionary = game.session.call("_owner_training_row")
+		if ack_row.get("action") == "regional_ack" and ack_row.get("intent") == ack_intent:
+			ack_decision = game.session.call("_training_decision", game.session.call("local_peer_id"), ack_row)
+			acknowledged = ack_decision.get("ok") == true and ack_decision.get("resolved") == true \
+				and ack_decision.get("durable") == true and ack_decision.get("saved") == true \
+				and HOME.context(game).get("homecoming_seen") == true
+		if not acknowledged: await tree.process_frame
 	panel.disconnect("completed", completion_observer)
 	var dialogue_owner := INPUT_OWNER.current(tree)
 	var row: Dictionary = game.session.call("_owner_training_row")
@@ -424,10 +435,11 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 		" owner_script=", dialogue_owner.get_script().resource_path if dialogue_owner != null and dialogue_owner.get_script() != null else "none",
 		" context=", game.call("regional_ending_context"),
 		" ack_intents=", game.get("_regional_ack_intents"),
+		" observed_ack_decision=", ack_decision,
 		" training_action=", row.get("action", ""), " training_intent=", row.get("intent", {}),
 		" notice=", game.get("_pending_world_message"))
 	print("F20 DIALOGUE rendered ", _heard)
-	if not check(opened and HOME.context(game).get("homecoming_seen") == true, "natural Grandpa completion receives durable personal acknowledgement"): return false
+	if not check(opened and acknowledged, "natural Grandpa completion receives durable personal acknowledgement"): return false
 	if first:
 		for companion: String in HOME.party_names(game.party):
 			if not check(_heard.contains(companion), "Grandpa actually rendered " + companion): return false
