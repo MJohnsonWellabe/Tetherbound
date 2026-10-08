@@ -136,6 +136,7 @@ static func _trainer_equip(current: Dictionary, intent: Dictionary, context: Dic
 	if current.redesign_character.transaction_receipts.has(receipt): return deny("duplicate")
 	var next := current.duplicate(true)
 	next.equipment = equipment.save_data()
+	next.redesign_character.pouch_tier = equipment.command_pouch_tier()
 	next.inventory = rules.slots(bag)
 	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "station_craft", str(current.character_id))
 	next.redesign_character.transaction_receipts.append(receipt)
