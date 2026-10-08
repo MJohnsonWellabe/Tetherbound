@@ -446,6 +446,6 @@
       "PASS: Tag: peer 0 normally leaves the proof fight -- pressed 'combat_run' x1"
     ],
     "interpretation": "Actual mounted Tag path passed. Failed-Engage observer was not exercised; previous native refusal cause remains unproved. No production repair inferred. Rally/Snare optional paths were not selected; no whole F24#0/#5 or shipping flag claim.",
-    "review": "Original f25_medium_review pending bounded behavior verdict"
+    "review": "APPROVE original f25_medium_review: bounded runtime evidence123PASS0FAIL/ERROR, no whole F24#0/#5; failed-Engage observer unexercised, native a69 cause unknown."
   }
 }
