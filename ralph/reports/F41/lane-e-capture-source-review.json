@@ -1570,5 +1570,127 @@
       "Initial52cd crash remains terminalFAIL0 images and its diagnostics preserved. No confirmed memory fix or unavailable runtime/art PASS.",
       "All prior code/source/runtime/scenery/score witnesses and original failed raster/outcome dispositions remain unchanged; whole F41#0 and relevant release visual gates stay OPEN."
     ]
+  },
+  "b852_ancient_trunk_unit_and_deck_command_original_review": {
+    "reviewer": "original review_cloud_startup 01a11679-fc2c-7873-bccd-423c1e04476d",
+    "scope": "New immutable named headless proof and existing two-deck command applicability only; prior source/math review, failed captures and all earlier witnesses preserved.",
+    "source_commit": "b8523462de914850025fbc7ed085903be68a0c36",
+    "unit_verdict": "APPROVE",
+    "unit_evidence": {
+      "run_id": 37789223086,
+      "artifact_id": 11555272986,
+      "artifact_root": ".tmp/e-bark-b852-area-37789223086",
+      "checkout": "Actual checkout command, HEAD message and emitted full revision in 3_Run actions_checkout@v4.txt independently match b8523462de914850025fbc7ed085903be68a0c36.",
+      "invocation": {
+        "mode": "headless",
+        "script": "tests/run_tests.gd",
+        "args": [
+          "--only=stormheart_ancient_trunk"
+        ]
+      },
+      "engine": "Godot Engine v4.7.stable.official.5b4e0cb0f",
+      "tests": 4,
+      "assertions": 243,
+      "failed": 0,
+      "exit_code": 0,
+      "duration_seconds": 6,
+      "cases": [
+        "test_articulated_bark_is_finite_and_preserves_full_upper_floor_clearance",
+        "test_integrated_candidate_preserves_every_physical_shape",
+        "test_nested_detail_and_trunk_flags_cannot_override_disabled_master",
+        "test_oblique_supports_reach_both_endpoints_without_skew"
+      ],
+      "checks": "All MANIFEST.txt entries exist. Artifact run.log, boot_log.txt and user godot.log contain no ERROR/SCRIPT ERROR. Actual workflow Run output independently agrees with artifact totals and exit_code.",
+      "files": {
+        ".tmp/e-bark-b852-area-37789223086/MANIFEST.txt": {
+          "bytes": 131,
+          "sha256": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b"
+        },
+        ".tmp/e-bark-b852-area-37789223086/exit_code": {
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        ".tmp/e-bark-b852-area-37789223086/run.log": {
+          "bytes": 601,
+          "sha256": "fad617e686f33daa724469b45abfc1b90596c7c167afd669295a73aa8de98a26"
+        },
+        ".tmp/e-bark-b852-area-37789223086/user/godot/app_userdata/Tetherbound/boot_log.txt": {
+          "bytes": 219,
+          "sha256": "48435eeeaecce618d80ff39f8beb6b0e086ec284257acfc562ed53fa65f8e44c"
+        },
+        ".tmp/e-bark-b852-area-37789223086/user/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "bytes": 586,
+          "sha256": "e67900b10727a369a01fb9f2312c51adcc04ff8d5ef368845c0580a3489db793"
+        },
+        ".tmp/e-bark-b852-area-37789223086-logs/render/3_Run actions_checkout@v4.txt": {
+          "bytes": 14166,
+          "sha256": "3fe35a299f79863f9c8754abac8fd50d1de390bd19906d1851d7c0e0157f9850"
+        },
+        ".tmp/e-bark-b852-area-37789223086-logs/render/8_Run.txt": {
+          "bytes": 3321,
+          "sha256": "4a4e0d54e2b1a49d5d73859c3ba99f997bbdfc5b17bcb533f31831d6b7a96369"
+        }
+      },
+      "limits": "Headless named logic evidence only; no GPU renderer, native startup, combat contact/outcome, memory-root-cause or bark appearance claim."
+    },
+    "deck_command_verdict": "APPROVE",
+    "deck_command": {
+      "executable": "Godot",
+      "argv": [
+        "--path",
+        "<fresh pinned b852 worktree>",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1920x1080",
+        "--fullscreen",
+        "--fixed-fps",
+        "20",
+        "--script",
+        "res://tools/phase2_capture_stormheart_decks.gd",
+        "--",
+        "--source-commit=b8523462de914850025fbc7ed085903be68a0c36",
+        "--out=res://.tmp/stormwood-phase2/f41-bark-close-b852",
+        "--label=b852_bark_close",
+        "--stands=entry_deck,middle_ascent",
+        "--phases=calm",
+        "--no-aftermath"
+      ],
+      "reviewed_blobs": {
+        "tools/phase2_capture_stormheart_decks.gd": "ed8a5255b7567a8bcadfeffc861fdaee67c72b50",
+        "tools/capture_stormwood_f10_matrix.gd": "82f6e9efecc9052dd20e4b86204450b6b7b62442",
+        "tools/capture_stormwood_surge_phases.gd": "78a3a844d7b80ac1e93cfa6ac5c52777a3323ec9",
+        "data/config/stormheart_presentation.json": "99ea32f03feb7911f18a8de694f31d97d142c124"
+      },
+      "blob_check": "Read current producer/parent/config blobs match the pinned b852 blobs exactly.",
+      "retained_guards": [
+        "Production shell/player/CameraRig binding; no headless capture.",
+        "Known stand and phase validation; selected entry_deck/OuterWorks and middle_ascent/HollowTrunkAscent floors only.",
+        "Physical floor ray excludes player RID, requires intended height within 0.1m and exact StormheartTree floor collider; mounted player must remain within 0.65m of intended floor before and after phase staging.",
+        "Calm staging, between-leg healing and hidden HUD retained; no-aftermath excludes aftermath pass.",
+        "Viewport image null/empty and save failures are failures; zero captured deck frames fails.",
+        "Final receipt open/store/flush/error/close/exact-readback failures exit nonzero."
+      ],
+      "shipping_config": "No --f41-candidate argument: no presentation overlay, config write or candidate staging. Existing shipping hero flags remain unchanged.",
+      "expected_outputs": [
+        "entry_deck_calm.jpg",
+        "middle_ascent_calm.jpg",
+        "frames_b852_bark_close.json"
+      ],
+      "external_proof_requirements": [
+        "Fresh pinned b852 worktree and fresh output directory, actual clean source/import and terminal exit evidence.",
+        "Persisted two distinct expected JPEG/record pairs, actual JPEG headers 1920x1080, hashes, failures empty and actual phase Calm.",
+        "Actual gl_compatibility driver/adapter and viewport dimensions verified externally; legacy mode has no named preset/bootstrap/source-pin or declared-raster guard.",
+        "Legacy selected-deck mode does not have readability-mode strict numeric count guard; exact two unique expected frame IDs and record/image consistency must be independently established from terminal output."
+      ],
+      "fixture_limit": "Debug placement on verified floors with staged Calm/healing; not earned ascent, traversal or gameplay completion.",
+      "framing_limit": "These are interior deck bark views, not a guaranteed close exterior root/branch-junction pair. entry_deck is local (0,6,-35) focused toward (0,42,0); middle_ascent at fraction 0.38 is approximately (-3.258664,60.72,25.794982) focused toward (0,80,0). Exterior WestLow branch start (-62,82,8) is approximately 65m from the middle stand. Visible bark/junction coverage and tangent appearance require the actual two images; no root/branch-junction or full-hero visual PASS follows from command applicability."
+    },
+    "remaining_contexts": [
+      "Native startup/contact/hits and natural Hollows outcome pending; 52cd crash remains failed zero-image proof.",
+      "Changed bark visuals pending independent image review.",
+      "Whole F41 criterion, full matrix/full visual bar, High/Medium and earned mechanics remain open."
+    ],
+    "activity": "No engine, test execution, dispatch, source/config edits, GPU runs or judge contact by reviewer."
   }
 }
