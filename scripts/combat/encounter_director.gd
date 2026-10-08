@@ -3642,6 +3642,9 @@ func _host_tether_command(intent: Dictionary, peer: int) -> Dictionary:
 	denied["command_generation"] = int(request.generation)
 	denied["command_request"] = request.duplicate(true)
 	if not commands.enabled("network_enabled"): return denied
+	if not commands.command_enabled(request.command_id):
+		denied.code = "disabled"
+		return denied
 	var id: String = request.encounter_id
 	var body := deployed_body_for(peer)
 	if not is_instance_valid(body) or not _tournament_combat_identity_valid(id, peer) or _host_peer_staggered(id, peer) \

@@ -410,12 +410,17 @@ func tether_command_snapshot() -> Dictionary:
 	snapshot["input_context"] = "combat"
 	snapshot["encounter_id"] = _encounter_id
 	snapshot["wild_target"] = _encounter_kind == "wild"
-	snapshot["unlocked_commands"] = ["rally", "snare"]
+	var commands := preload("res://scripts/combat/tether_commands.gd")
+	snapshot["unlocked_commands"] = []
+	for id: String in ["rally", "snare"]:
+		if commands.command_enabled(id): snapshot.unlocked_commands.append(id)
 	if snapshot.get("item_consumer_ready") == true and is_instance_valid(_encounter_link) \
+		and commands.command_enabled("item_throw") \
 		and _encounter_link.has_method("tether_item_command_available") \
 		and _encounter_link.call("tether_item_command_available", _encounter_id) == true:
 		snapshot.unlocked_commands.append("item_throw")
 	if is_instance_valid(_encounter_link) and _encounter_link.has_method("tether_tag_command_available") \
+		and commands.command_enabled("tag_combo") \
 		and _encounter_link.call("tether_tag_command_available", _encounter_id) == true:
 		snapshot.unlocked_commands.append("tag_combo")
 	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) \
@@ -2719,7 +2724,7 @@ func _tick_active(delta: float) -> void:
 		return
 	_quick_cooldown = maxf(0.0, _quick_cooldown - delta)
 	_charged_cooldown = maxf(0.0, _charged_cooldown - delta)
-	if preload("res://scripts/combat/tether_commands.gd").enabled():
+	if preload("res://scripts/combat/tether_commands.gd").command_enabled("tag_combo"):
 		var active := active_creature()
 		for uid: String in _party_action_resources:
 			if active != null and uid == str(active.get("uid")): continue
@@ -5948,7 +5953,7 @@ func request_switch(index: int) -> bool:
 ## already refused this call unless the fight was between actions.
 func _activate_party_member(index: int) -> void:
 	_move_awaiting_host = false
-	var retain := preload("res://scripts/combat/tether_commands.gd").enabled()
+	var retain := preload("res://scripts/combat/tether_commands.gd").command_enabled("tag_combo")
 	var outgoing := active_creature()
 	if retain and outgoing != null:
 		_party_action_resources[str(outgoing.get("uid"))] = {"quick":_quick_cooldown, "charged":_charged_cooldown,
