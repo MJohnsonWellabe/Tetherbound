@@ -917,7 +917,21 @@
         "rear_upper_r",
         "rear_lower_r"
       ],
-      "profile": "quadruped_1"
+      "profile": "quadruped_1",
+      "asset_candidate": {
+        "model": "res://assets/creatures/tetherbound/staticub/models/creature_staticub_lod0.glb",
+        "source_sha256": "c2e42a53ebeb922b06564bd4ce210cb02b5d438bf0d816516cc327719d758c1a",
+        "colourway_source_species": "staticub_f36_source_finish_v1",
+        "colourway_finish": {
+          "despeckle": 0,
+          "posterize": 0,
+          "feature_percentile": 0,
+          "sat_ceiling": 0.58,
+          "output_size": 2048
+        },
+        "scope": "capture_preview_only",
+        "status": "OFF native source-preserving material preview pending; installed geometry/UV/clips and production binding unchanged"
+      }
     },
     "voltarach": {
       "model": "res://assets/creatures/tetherbound/voltarach/models/creature_voltarach_lod0.glb",
