@@ -1,0 +1,41 @@
+{
+  "source_commit": "b19a7a033fd6fee0ae260e83d67cef03338d466e",
+  "run": 37730511424,
+  "artifact": 11529239448,
+  "script": "tests/run_tests.gd",
+  "exit_code": 0,
+  "duration_seconds": 10,
+  "files": 16,
+  "tests": 136,
+  "assertions": 6850,
+  "failed": 0,
+  "tests_per_file": {
+    "test_companion_presence.gd": 33,
+    "test_companion_terrapup_capture_0912.gd": 9,
+    "test_follower_floor_station.gd": 7,
+    "test_gate_a_front_door_and_world.gd": 5,
+    "test_grandpas_village_visual_identity.gd": 5,
+    "test_inn_exterior_identity.gd": 4,
+    "test_loft_bed_reachable.gd": 6,
+    "test_opening_home_camera_guard.gd": 5,
+    "test_river_crossings_stay_open.gd": 5,
+    "test_stormwood_fenn_clearance.gd": 6,
+    "test_stormwood_settlement_grounding.gd": 3,
+    "test_telegraph_glow.gd": 7,
+    "test_village_main_street.gd": 11,
+    "test_village_redesign_topology.gd": 3,
+    "test_village_road_topology.gd": 15,
+    "test_village_street_0912.gd": 12
+  },
+  "scope": "Existing named house/config andfollower files for newboard/normal correction +ROOT grounded-snap patch; not active Hall snap footprint/pixels or newerFurniture32 proof",
+  "diagnostics": [
+    "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+    "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+    "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+    "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+    "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+    "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+    "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+    "ERROR: Can't use get_node() with absolute paths from outside the active scene tree."
+  ]
+}

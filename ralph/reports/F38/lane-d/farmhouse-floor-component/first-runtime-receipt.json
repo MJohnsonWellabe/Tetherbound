@@ -43,9 +43,11 @@
         3.84944486618042,
         14.0
       ],
-      "on_floor": null,
-      "floor_normal": null,
-      "dead": null,
+      "surface_state": {
+        "dead": false,
+        "floor_normal_y": 1.0,
+        "on_floor": true
+      },
       "observed_clock": {
         "actual_weather": "clear",
         "elapsed_seconds": 200.275244666667,
@@ -69,9 +71,11 @@
         3.84944486618042,
         14.0
       ],
-      "on_floor": null,
-      "floor_normal": null,
-      "dead": null,
+      "surface_state": {
+        "dead": false,
+        "floor_normal_y": 1.0,
+        "on_floor": true
+      },
       "observed_clock": {
         "actual_weather": "rain",
         "elapsed_seconds": 200.270398333333,
@@ -95,9 +99,11 @@
         3.84944486618042,
         14.0
       ],
-      "on_floor": null,
-      "floor_normal": null,
-      "dead": null,
+      "surface_state": {
+        "dead": false,
+        "floor_normal_y": 1.0,
+        "on_floor": true
+      },
       "observed_clock": {
         "actual_weather": "clear",
         "elapsed_seconds": 575.266666666667,
