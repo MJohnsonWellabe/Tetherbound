@@ -258,6 +258,17 @@ func activate(prompt: Node3D, approach_headings: Array[Vector3] = []) -> bool:
 		"unstick_count_before": recoveries_before, "unstick_count_after": int(_player.get("_unstick_count")),
 		"confined_resets": nav.confined_resets(), "headings": approach_headings.map(func(point: Vector3) -> String: return str(point))}
 	if not arrived:
+		var slide_colliders: Array[String] = []
+		if is_instance_valid(_player):
+			for index: int in _player.get_slide_collision_count():
+				var collision := _player.get_slide_collision(index)
+				if collision == null: continue
+				var collider: Object = collision.get_collider()
+				if is_instance_valid(collider) and collider is Node:
+					slide_colliders.append(str((collider as Node).get_path()))
+		last_approach["terminal_slide_colliders"] = slide_colliders
+		last_approach["current_scene"] = str(tree.current_scene.get_path()) if is_instance_valid(tree.current_scene) else ""
+		print("F49 APPROACH FAILURE " + JSON.stringify(last_approach))
 		_stick(0, 0)
 		return _fail("F49 ordinary capsule walk failed to " + str(prompt.get_path()))
 	_stick(0, 0)
