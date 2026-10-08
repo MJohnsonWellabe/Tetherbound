@@ -291,10 +291,13 @@ func _run() -> void:
 		if file == null:
 			errors.append("cannot write %s" % _json)
 		else:
-			file.store_string(JSON.stringify({"seeds": _seeds, "selection": _selection,
+			var report := {"seeds": _seeds, "selection": _selection,
 				"gear": GEAR.label(_gear_tier, _gear_upgrade), "party": {"lead": STARTERS, "retained": RETAINED, "level_override": _party_level_override},
 				"fixture": "production CombatManager + WildCreature bodies on a flat collider (combat_depth_pilot.gd)",
-				"rows": rows, "runs": runs, "errors": errors}, "  "))
+				"rows": rows, "runs": runs, "errors": errors}
+			if _compare_previous_gear:
+				report["comparison_gears"] = gear_tiers.map(func(tier: String) -> String: return GEAR.label(tier, _gear_upgrade))
+			file.store_string(JSON.stringify(report, "  "))
 	for e in errors: print("MEADOWS_C2C3 ERROR: %s" % e)
 	print("MEADOWS_C2C3 done: %d rows, %d failing rows, %d runs, %d errors" % [rows.size(), failures, runs.size(), errors.size()])
 	quit(0 if errors.is_empty() and failures == 0 else 1)
