@@ -13,6 +13,7 @@ const WEATHER_PRESENTATION := preload("res://scripts/world/world_weather.gd")
 const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 const PORTAL_ACTION := preload("res://scripts/world/portal_arch.gd")
+const PORTAL_DEPTH := preload("res://scripts/world/hall_portal_depth.gdshader")
 
 var _config: Dictionary = {}
 var _arches: Dictionary = {}
@@ -130,7 +131,45 @@ func _build_arch(entry: Dictionary) -> void:
 	material.roughness = .75
 	membrane.material_override = material
 	slot.add_child(membrane)
+	_build_arch_surface_depth(slot, membrane)
 	_arches[str(entry.id)] = slot
+
+
+func _build_arch_surface_depth(slot: Node3D, baseline: MeshInstance3D) -> void:
+	var cfg: Dictionary = _config.get("arch_surface_depth", {})
+	var args := OS.get_cmdline_user_args()
+	if args.has("--hall-surface-depth-baseline") or not (
+			bool(cfg.get("enabled", false)) or args.has("--hall-surface-depth-candidate")):
+		return
+	var speed := float(cfg.get("flow_speed", 0.12))
+	var depth := float(cfg.get("depth_strength", 0.5))
+	if not is_finite(speed) or speed < 0.0 or speed > 1.0 \
+			or not is_finite(depth) or depth < 0.0 or depth > 1.0:
+		push_error("Hall portal depth requires finite speed/depth within0..1")
+		return
+	var candidate := MeshInstance3D.new()
+	candidate.name = "PortalDepthSurface"
+	candidate.mesh = baseline.mesh
+	candidate.transform = baseline.transform
+	var material := ShaderMaterial.new()
+	material.shader = PORTAL_DEPTH
+	material.set_shader_parameter("flow_speed", speed)
+	material.set_shader_parameter("depth_strength", depth)
+	candidate.material_override = material
+	slot.add_child(candidate)
+	baseline.hide()
+
+
+func _refresh_arch_surface_depth(arch: Node3D) -> void:
+	var surface := arch.get_node_or_null(^"PortalDepthSurface") as MeshInstance3D
+	if surface == null:
+		return
+	var material := surface.material_override as ShaderMaterial
+	var original := (arch.get_node(^"PortalSurface") as MeshInstance3D).material_override as StandardMaterial3D
+	var state := str(arch.get_meta("arch_state", "sealed"))
+	material.set_shader_parameter("state_mode", float(["sealed", "locked", "open", "stirred"].find(state)))
+	material.set_shader_parameter("portal_tint", original.albedo_color)
+	material.set_shader_parameter("radiance", original.emission_energy_multiplier if original.emission_enabled else 0.0)
 
 
 func _build_pedestal(entry: Dictionary) -> void:
@@ -402,6 +441,7 @@ func _refresh_home_membrane() -> void:
 	var night_tint := Color(str(_config.get("home_membrane_night_tint", "#ffffff")))
 	material.albedo_color = Color(str((_config.get("arch_materials", {}) as Dictionary).get("open", "#303947"))) * (night_tint if dark else Color.WHITE)
 	material.emission = material.albedo_color
+	_refresh_arch_surface_depth(arch)
 
 
 func refresh_from_game() -> void:
@@ -451,6 +491,7 @@ func apply_display(display: Dictionary) -> void:
 		material.emission_enabled = state == "open" or state == "stirred"
 		material.emission = material.albedo_color
 		material.emission_energy_multiplier = OPEN_MEMBRANE_EMISSION if state == "open" else .1
+		_refresh_arch_surface_depth(arch)
 		var state_sign := arch.get_node("StateSign") as Label3D
 		state_sign.text = "Home arch" if id == "home" else state.capitalize()
 		state_sign.visible = state_sign.text != (arch.get_node("BiomeSign") as Label3D).text

@@ -2,6 +2,12 @@
   "schema_version": 1,
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
+  "arch_surface_depth": {
+    "enabled": false,
+    "flow_speed": 0.12,
+    "depth_strength": 0.5,
+    "scope": "Peer-local Hall portal presentation on all presets; three view-offset curtains in the existing aperture, no screen/depth reads or particles. Shipping OFF pending original native/blind judgment. --hall-surface-depth-candidate and --hall-surface-depth-baseline are process-only; baseline wins. Original material/plane retained; signs, geometry, colliders, approaches, states, interactions, authority and saves unchanged."
+  },
   "arch_frame_depth": {
     "enabled": false,
     "factor": 5.0,
