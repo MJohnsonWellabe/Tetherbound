@@ -1,0 +1,311 @@
+{
+  "scope": "Ten native Stairstones day/night views selected from retained completed60 shipping catalogue; before-only, no verdict or full criterion claim",
+  "source": "965256bf1ead834616673cd6a9b7a3b7367392a5",
+  "run": 37687054745,
+  "artifact": 11513007917,
+  "actual_process": {
+    "exit_code": 0,
+    "complete": true,
+    "captured": 60,
+    "planned": 60,
+    "failures": []
+  },
+  "graphics_capture": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "source_commit": "965256bf1ead834616673cd6a9b7a3b7367392a5"
+  },
+  "shipping": true,
+  "weather": "clear",
+  "frames": [
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__day__heading_0.0",
+      "file": "res://shots/lane-d/f39-shipping-catalogue-segment1/water__brine_steps__05__the_tidal_stairstones__day__heading_0.0.png",
+      "position_xz": [
+        329.729,
+        723.208
+      ],
+      "player_position": [
+        329.72900390625,
+        44.3182754516602,
+        723.2080078125
+      ],
+      "camera_position": [
+        327.409545898438,
+        47.1494178771973,
+        718.681274414062
+      ],
+      "f39_heading_offset_deg": 0.0,
+      "production_is_on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "observed_clock": {
+        "elapsed_seconds": 200.133333333333,
+        "f39_weather": "clear",
+        "hour": 8.00533333333333,
+        "requested": "day",
+        "time_of_day": "day"
+      }
+    },
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__day__heading_minus45.0",
+      "file": "res://shots/lane-d/f39-shipping-catalogue-segment1/water__brine_steps__05__the_tidal_stairstones__day__heading_minus45.0.png",
+      "position_xz": [
+        329.729,
+        723.208
+      ],
+      "player_position": [
+        329.72900390625,
+        44.3182754516602,
+        723.2080078125
+      ],
+      "camera_position": [
+        324.888000488281,
+        47.1494331359863,
+        721.647277832031
+      ],
+      "f39_heading_offset_deg": -45.0,
+      "production_is_on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "observed_clock": {
+        "elapsed_seconds": 200.137961,
+        "f39_weather": "clear",
+        "hour": 8.00551844,
+        "requested": "day",
+        "time_of_day": "day"
+      }
+    },
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__day__heading_45.0",
+      "file": "res://shots/lane-d/f39-shipping-catalogue-segment1/water__brine_steps__05__the_tidal_stairstones__day__heading_45.0.png",
+      "position_xz": [
+        329.729,
+        723.208
+      ],
+      "player_position": [
+        329.72900390625,
+        44.3182754516602,
+        723.2080078125
+      ],
+      "camera_position": [
+        331.289703369141,
+        47.1494026184082,
+        718.367004394531
+      ],
+      "f39_heading_offset_deg": 45.0,
+      "production_is_on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "observed_clock": {
+        "elapsed_seconds": 200.142178,
+        "f39_weather": "clear",
+        "hour": 8.00568712,
+        "requested": "day",
+        "time_of_day": "day"
+      }
+    },
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__day__heading_90.0",
+      "file": "res://shots/lane-d/f39-shipping-catalogue-segment1/water__brine_steps__05__the_tidal_stairstones__day__heading_90.0.png",
+      "position_xz": [
+        329.729,
+        723.208
+      ],
+      "player_position": [
+        329.72900390625,
+        44.3182754516602,
+        723.2080078125
+      ],
+      "camera_position": [
+        334.255737304688,
+        47.1494178771973,
+        720.888610839844
+      ],
+      "f39_heading_offset_deg": 90.0,
+      "production_is_on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "observed_clock": {
+        "elapsed_seconds": 200.125948,
+        "f39_weather": "clear",
+        "hour": 8.00503792,
+        "requested": "day",
+        "time_of_day": "day"
+      }
+    },
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__day__heading_180.0",
+      "file": "res://shots/lane-d/f39-shipping-catalogue-segment1/water__brine_steps__05__the_tidal_stairstones__day__heading_180.0.png",
+      "position_xz": [
+        329.729,
+        723.208
+      ],
+      "player_position": [
+        329.72900390625,
+        44.3182754516602,
+        723.2080078125
+      ],
+      "camera_position": [
+        332.048461914062,
+        47.1494102478027,
+        727.734741210938
+      ],
+      "f39_heading_offset_deg": 180.0,
+      "production_is_on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "observed_clock": {
+        "elapsed_seconds": 200.135416666667,
+        "f39_weather": "clear",
+        "hour": 8.00541666666667,
+        "requested": "day",
+        "time_of_day": "day"
+      }
+    },
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__night__heading_0.0",
+      "file": "res://shots/lane-d/f39-shipping-catalogue-segment1/water__brine_steps__05__the_tidal_stairstones__night__heading_0.0.png",
+      "position_xz": [
+        329.729,
+        723.208
+      ],
+      "player_position": [
+        329.72900390625,
+        44.3182754516602,
+        723.2080078125
+      ],
+      "camera_position": [
+        327.409515380859,
+        47.1494178771973,
+        718.681274414062
+      ],
+      "f39_heading_offset_deg": 0.0,
+      "production_is_on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "observed_clock": {
+        "elapsed_seconds": 575.139961,
+        "f39_weather": "clear",
+        "hour": 23.00559844,
+        "requested": "night",
+        "time_of_day": "night"
+      }
+    },
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__night__heading_minus45.0",
+      "file": "res://shots/lane-d/f39-shipping-catalogue-segment1/water__brine_steps__05__the_tidal_stairstones__night__heading_minus45.0.png",
+      "position_xz": [
+        329.729,
+        723.208
+      ],
+      "player_position": [
+        329.72900390625,
+        44.3182754516602,
+        723.2080078125
+      ],
+      "camera_position": [
+        324.887969970703,
+        47.1494178771973,
+        721.647277832031
+      ],
+      "f39_heading_offset_deg": -45.0,
+      "production_is_on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "observed_clock": {
+        "elapsed_seconds": 575.133333333333,
+        "f39_weather": "clear",
+        "hour": 23.0053333333333,
+        "requested": "night",
+        "time_of_day": "night"
+      }
+    },
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__night__heading_45.0",
+      "file": "res://shots/lane-d/f39-shipping-catalogue-segment1/water__brine_steps__05__the_tidal_stairstones__night__heading_45.0.png",
+      "position_xz": [
+        329.729,
+        723.208
+      ],
+      "player_position": [
+        329.72900390625,
+        44.3182754516602,
+        723.2080078125
+      ],
+      "camera_position": [
+        331.289764404297,
+        47.1494026184082,
+        718.367004394531
+      ],
+      "f39_heading_offset_deg": 45.0,
+      "production_is_on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "observed_clock": {
+        "elapsed_seconds": 575.133103666667,
+        "f39_weather": "clear",
+        "hour": 23.0053241466667,
+        "requested": "night",
+        "time_of_day": "night"
+      }
+    },
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__night__heading_90.0",
+      "file": "res://shots/lane-d/f39-shipping-catalogue-segment1/water__brine_steps__05__the_tidal_stairstones__night__heading_90.0.png",
+      "position_xz": [
+        329.729,
+        723.208
+      ],
+      "player_position": [
+        329.72900390625,
+        44.3182754516602,
+        723.2080078125
+      ],
+      "camera_position": [
+        334.255676269531,
+        47.1494140625,
+        720.888549804688
+      ],
+      "f39_heading_offset_deg": 90.0,
+      "production_is_on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "observed_clock": {
+        "elapsed_seconds": 575.136666666667,
+        "f39_weather": "clear",
+        "hour": 23.0054666666667,
+        "requested": "night",
+        "time_of_day": "night"
+      }
+    },
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__night__heading_180.0",
+      "file": "res://shots/lane-d/f39-shipping-catalogue-segment1/water__brine_steps__05__the_tidal_stairstones__night__heading_180.0.png",
+      "position_xz": [
+        329.729,
+        723.208
+      ],
+      "player_position": [
+        329.72900390625,
+        44.3182754516602,
+        723.2080078125
+      ],
+      "camera_position": [
+        332.048461914062,
+        47.1494102478027,
+        727.734741210938
+      ],
+      "f39_heading_offset_deg": 180.0,
+      "production_is_on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "observed_clock": {
+        "elapsed_seconds": 575.131203333333,
+        "f39_weather": "clear",
+        "hour": 23.0052481333333,
+        "requested": "night",
+        "time_of_day": "night"
+      }
+    }
+  ],
+  "contact": "before-contact.jpg",
+  "raw_location": "Original run artifact; raw PNGs excluded from commit",
+  "fixture_limit": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof."
+}
