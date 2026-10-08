@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "reviewer": {
+    "name": "blind_listener_f10",
+    "id": "01a11667-4631-72b2-8fed-294999b8c043",
+    "role": "retained original independent code-blind visual judge"
+  },
+  "item_id": "P2-110",
+  "subject": "Hollows visible loss/out-of-fight result clarity",
+  "scope": "Current four-frame pixels-only assessment of this row. No prior numeric rating or before/after comparison.",
+  "supported_context": true,
+  "visible_context_classification": "ACTIVE_CREATURE_OUT_OF_FIGHT_PRESENTATION_VISIBLE",
+  "context_reason": "i03 shows Sparkit's partly depleted orange health bar; i04 shows that bar nearly empty while Voltarach remains standing with a full green health bar. The two ending frames explicitly display 'Your creature is out of the fight.' and 'Sparkit is out of the fight.' These visible messages support judging the active-creature loss/out-of-fight presentation, without inferring a whole-party defeat or runtime cause.",
+  "verdict": "BLOCK",
+  "current_rating": {
+    "severity": 3,
+    "exposure": 3,
+    "importance": 4,
+    "impact": 36,
+    "verdict": "FAIL",
+    "coverage": "BOUNDED_CURRENT_VISIBLE_OUT_OF_FIGHT_RESULT",
+    "severity_reason": "The loss is stated clearly in readable text, but the same creature's green roster bar and unchanged exploration layout conflict with and dilute the result state. This is a material presentation inconsistency rather than an unreadable message.",
+    "exposure_reason": "This presentation is episodic at the end of an unsuccessful fight rather than a constantly visible HUD condition.",
+    "importance_reason": "Players need an unambiguous distinction between an unavailable creature and a ready one after combat ends.",
+    "independence": "Numeric values were independently assigned from these supplied pixels and the previously inspected written readability/UI bar; no prior score was read or transferred."
+  },
+  "reason": "Both ending frames show a large orange out-of-fight message over the world and repeat Sparkit's status near the lower exploration controls. At the same time, the TEAM 5/5 roster displays five green bars, including a full-looking green bar beside Sparkit. There is no visibly distinct loss/result container or unavailable-state treatment on that Sparkit roster row. The explicit text is readable, but the roster still presents the named unavailable creature like the other ready-looking entries, retaining the assessed clarity defect.",
+  "evidence": [
+    "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-i03.png",
+    "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-i04.png",
+    "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-99-after.png",
+    "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-100-aftermath.png"
+  ],
+  "per_frame": [
+    {
+      "frame": "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-i03.png",
+      "role": "pre-result health context",
+      "observation": "Sparkit's active card shows a partly depleted orange health bar; Voltarach is standing with a full-looking green bar. No ending result is visible."
+    },
+    {
+      "frame": "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-i04.png",
+      "role": "near-empty health context",
+      "observation": "Sparkit's active health bar is almost empty; the combat HUD remains present. This still does not by itself establish a fall animation or a completed result."
+    },
+    {
+      "frame": "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-99-after.png",
+      "role": "visible out-of-fight result",
+      "observation": "Orange 'Your creature is out of the fight.' and white 'Sparkit is out of the fight.' text appear over the exploration view. TEAM 5/5 and Sparkit's green roster bar remain ready-looking; no distinct loss container is visible."
+    },
+    {
+      "frame": "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-100-aftermath.png",
+      "role": "second visible out-of-fight result",
+      "observation": "The same explicit out-of-fight text, green roster presentation and ordinary exploration controls remain visible. The grouping/availability contradiction persists in this supplied second result view."
+    }
+  ],
+  "bounded_positive_findings": [
+    "The orange outcome headline is large and readable against the terrain.",
+    "The lower text names Sparkit explicitly, avoiding ambiguity about which creature is unavailable."
+  ],
+  "missing_paths": [],
+  "unassessed_contexts": [
+    "A clearly visible owned-creature fall/collapse animation and continuous transition are not supplied by these stills.",
+    "Whole-party defeat, switching/recovery options, result dismissal, later roster state and controller interaction are unexposed.",
+    "No runtime cause, actual defeat mechanics, health restoration rule, earned fight, persistence or multiplayer result is inferred."
+  ],
+  "limits": [
+    "TEAM 5/5 may denote ownership count; its count alone is not treated as proof that five creatures are combat-ready. The visible full-looking green Sparkit bar beside explicit out-of-fight text is the relevant inconsistency.",
+    "The trainer's separate 100/100 HUD is not mistaken for Sparkit's creature health.",
+    "These four full rasters support the current result-presentation score only; no before/after fix assessment, other-row rating, full bar or whole F41 acceptance claim is made."
+  ],
+  "references": "Previously inspected approved Stormwood boards and current written ART_DIRECTION UI/readability bar.",
+  "preservation": "All original ratings, witnesses, receipts and prior verdicts remain unchanged. Only this new bounded evidence artifact is written."
+}

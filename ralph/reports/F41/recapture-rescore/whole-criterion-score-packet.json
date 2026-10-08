@@ -1,0 +1,832 @@
+{
+  "schema_version": 1,
+  "criterion": "F41#0",
+  "source_commit": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+  "scope": "Assembly of original independent per-row scores with original evidence preserved, not a fresh broad rescore or full visual bar",
+  "recapture": {
+    "unique_ids": 240,
+    "shipping_native": true,
+    "reuse": "Existing original source applicability retained; final current applicability requires same original whole-criterion review",
+    "original_artifact": "native-receipt.json",
+    "renderer": "gl_compatibility",
+    "preset": "Low",
+    "source_commit": "1a6987a584e7db911e3299506c3cb0a406e0b3eb",
+    "unique_sha256": 240,
+    "frames": 240
+  },
+  "counts": {
+    "rows": 44,
+    "natural_loss": 1,
+    "independent_numeric_rows": 44,
+    "context_supplement": 6,
+    "current_reward": 1,
+    "primary_retained": 36
+  },
+  "score_assembly_checks": "44unique IDs, all independent1..5scores, exact products; no score invented or previous failure promoted",
+  "whole_criterion_verdict": "PENDING ORIGINAL INDEPENDENT APPROVE AND ORIGINAL BLIND COMPLETENESS PASS",
+  "full_visual_bar": {
+    "A": "BLOCK on supplied environmental presentation",
+    "B": "BLOCK on supplied environmental presentation",
+    "largest_gaps": [
+      "Repeated ground carpet and weak soil/moss/rock transitions",
+      "Stormheart bark/branch/crown/core finish below authored reference",
+      "Rigid glass slab/white strip and smooth cyan cone integration"
+    ]
+  },
+  "rows": [
+    {
+      "item_id": "P2-042",
+      "subject": "Surge phase presentation",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 2,
+      "exposure": 5,
+      "importance": 5,
+      "impact": 50,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "forest_forward_day_storm_calm",
+        "forest_forward_day_storm_building",
+        "forest_forward_day_storm_break",
+        "forest_left_day_storm_fading",
+        "rod_line_reverse_night_storm_break"
+      ],
+      "limits": "Motion, flash cadence, wind response, sound and continuous safe-radius readability."
+    },
+    {
+      "item_id": "P2-015",
+      "subject": "creature collapse and rest",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 5,
+      "exposure": 4,
+      "importance": 5,
+      "impact": 100,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__tanglevolt__fainted.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__stormraven__fainted.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__fulgocobra__resting.jpg",
+        "creatures/voltarach.jpg resting/fainted"
+      ],
+      "limits": "One supplied snapshot per state for 14 species only. Grass obscures some exact floor contacts; no continuous fall, settlement or rest animation is assessed."
+    },
+    {
+      "item_id": "P2-016",
+      "subject": "creature hurt and movement poses",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 5,
+      "impact": 100,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "creatures/craghorn.jpg idle/moving/hurt",
+        "creatures/sparkit.jpg idle/moving/hurt",
+        "creatures/tanglevolt.jpg idle/moving/hurt",
+        "creatures/voltarach.jpg idle/moving/attacking/hurt"
+      ],
+      "limits": "No chronological locomotion/hurt sequence, recovery timing or actual fight exposure. Only these selected snapshots are assessed."
+    },
+    {
+      "item_id": "P2-037",
+      "subject": "Stormheart finale",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 4,
+      "importance": 5,
+      "impact": 80,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "stormheart_forward_day_storm_calm",
+        "stormheart_forward_day_released_calm",
+        "stormheart_forward_night_storm_break"
+      ],
+      "limits": "Current calibrated distance, entrance/core detail and motion are not supplied by this five-stand heading fixture."
+    },
+    {
+      "item_id": "P2-092",
+      "subject": "named wild fight actor spacing",
+      "original_artifact": "native-context-rescore.json",
+      "original_assessment": "BOUNDED",
+      "severity": 1,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 16,
+      "verdict": "PASS",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-a-start.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-e-impact.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-f-recovery.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-i17.jpg"
+      ],
+      "limits": [
+        "Still samples cannot establish collision clearance or all spacing during continuous motion, other party formations or four-player combat.",
+        "Severity 1 is the requested scale minimum; it does not assert a residual observed spacing defect."
+      ]
+    },
+    {
+      "item_id": "P2-002",
+      "subject": "map",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 4,
+      "importance": 5,
+      "impact": 80,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_map.jpg"
+      ],
+      "limits": "One 0%-surveyed map state only. Explored terrain, populated destination lists, zoom/pan and other regions are unassessed."
+    },
+    {
+      "item_id": "P2-017",
+      "subject": "normal creature scale",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 4,
+      "importance": 5,
+      "impact": 80,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__sparkit__idle.jpg",
+        "creatures/stormtrail.jpg idle",
+        "creatures/voltarach.jpg idle",
+        "creatures/staticub.jpg idle"
+      ],
+      "limits": "Partial apparent-scale rescore for these 14 species. Exact 1.80m-relative physical height needs equal-depth whole-body comparisons; no inferred meters, shrink operation, whole-roster or combat continuity."
+    },
+    {
+      "item_id": "P2-030",
+      "subject": "shiny creature finish",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 80,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__voltwig__shiny_idle.jpg",
+        "creatures/craghorn.jpg idle/shiny_idle",
+        "creatures/pebbik.jpg idle/shiny_idle",
+        "creatures/voltarach.jpg idle/shiny_idle"
+      ],
+      "limits": "Only one shiny standing view per species and these 14 subjects; no shiny motion, multiple lighting conditions or all-roster finish assessment."
+    },
+    {
+      "item_id": "P2-033",
+      "subject": "ground pickup identity",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 2,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 40,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__good_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__great_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__rare_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__tm_static_snap.jpg"
+      ],
+      "limits": "Missing potion_small frame; 16 labeled gated item rows do not establish actual item exposure. Rootgate Release Key, Dynamo Core Key and Spark of Stormwood are disclosed event grants, deliberately not loose props, and excluded. No current complete pickup-family or earned acquisition proof."
+    },
+    {
+      "item_id": "P2-093",
+      "subject": "named wild danger and opening cues",
+      "original_artifact": "native-context-rescore.json",
+      "original_assessment": "BOUNDED",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 48,
+      "verdict": "FAIL",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-a-start.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-e-impact.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-f-recovery.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-i17.jpg"
+      ],
+      "limits": [
+        "Chronological stills support coexistence and sampled disappearance only; they do not prove cue duration, input windows or continuous timing.",
+        "No implementation or purpose of the residual glyph is inferred."
+      ]
+    },
+    {
+      "item_id": "P2-038",
+      "subject": "named destination identities",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 80,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/stormwood__hollow_crown__08__the_crown_heartstone__day__approach.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/stormwood__hollow_crown__08__the_crown_heartstone__day__close.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/stormwood__landmark__crown_heartstone__day__approach.jpg"
+      ],
+      "limits": "Other named destination identities and an unobstructed Heartstone near/detail view remain unexposed."
+    },
+    {
+      "item_id": "P2-039",
+      "subject": "forest ground and distance layers",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 80,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "forest_forward_day_storm_break",
+        "forest_reverse_day_released_calm",
+        "giant_reverse_day_released_calm"
+      ],
+      "limits": "Continuous route cohesion and vegetation motion."
+    },
+    {
+      "item_id": "P2-081",
+      "subject": "named trainer dialogue identity",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED_BOUNDED",
+      "severity": 1,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 16,
+      "verdict": "ASSESSED_BOUNDED",
+      "evidence": [
+        "people-matrix/contact-0.jpg F1 Rook/F3 Wen/F7 Lio",
+        "people-matrix/contact-2.jpg F5 Tamsin"
+      ],
+      "limits": "Uncaptured conversations and earned interaction paths."
+    },
+    {
+      "item_id": "P2-001",
+      "subject": "menu shell",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 60,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_backpack.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_creatures.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_skills.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_save.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_settings.jpg"
+      ],
+      "limits": "Only these captured open-menu states; no interaction, focus transitions, full content populations, device-screen or accessibility proof."
+    },
+    {
+      "item_id": "P2-007",
+      "subject": "secondary menu panels",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 2,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 40,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_build.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_quest_log.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_players.jpg"
+      ],
+      "limits": "One early quest state and solo Players state with a displayed network-port error. Populated/co-op variants, invitations or functional behavior are not assessed."
+    },
+    {
+      "item_id": "P2-055",
+      "subject": "named character silhouettes",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 80,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "people-matrix/contact-0.jpg F7 Lio",
+        "people-matrix/contact-1.jpg F1 Neri/F3 Maud",
+        "people-matrix/contact-2.jpg F3 Hesk/F7 Fenn",
+        "people-matrix/contact-3.jpg F5 Oswin",
+        "people-matrix/contact-4.jpg F3 Bryn"
+      ],
+      "limits": "Unpictured officers and Tidewake portion of shared row."
+    },
+    {
+      "item_id": "P2-063",
+      "subject": "shared fight tell and hit effects",
+      "original_artifact": "native-context-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 3,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 60,
+      "verdict": "FAIL",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-a-start.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-e-impact.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/A_blackwater_elder-i03.jpg"
+      ],
+      "limits": [
+        "Supported for inspected Voltarach tells and one Mosshock hit graphic, not every move/effect archetype or every encounter.",
+        "Hitstop, knockback weight, animation timing, sound and continuous response cannot be rated from these stills."
+      ]
+    },
+    {
+      "item_id": "P2-095",
+      "subject": "craft recipe text",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 1,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 16,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/_sheet1080.png: A cells meadows-1080, cloudreach-1080, stormwood-1080",
+        "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/_sheet720.png: A cells cloudreach_pickaxe_bracing, saddle, reinforce_axe, water_trail_preserve",
+        "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/blind-verdict.md",
+        "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/evidence-receipt.json",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/stormwood__system__crafting.jpg"
+      ],
+      "limits": "Retained contact-sheet UI inspection only; the 14 original rasters are not locally available and were not re-inspected. Old world/lighting, availability, station mode, full current station inventory, scrolling and craft transactions are excluded. Fresh short-row positives corroborate only basic text wrapping."
+    },
+    {
+      "item_id": "P2-046",
+      "subject": "harvest resource identity",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 48,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__conductor_vine.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__glowmoss.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__stormglass.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__stormglass_crown.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__voltcap.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__thunderwood.jpg"
+      ],
+      "limits": "One view per family only, no harvesting/depletion response, tools, material yields, night variants or learned world familiarity."
+    },
+    {
+      "item_id": "P2-060",
+      "subject": "catch effect finish",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 48,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/04-orb-resting.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/05-orb-shakes.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/catch_high.png"
+      ],
+      "limits": "Still samples expose finish and rest/shake appearance, not continuous shaking, timing or effect depth in motion."
+    },
+    {
+      "item_id": "P2-082",
+      "subject": "named character portrait identity",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED_BOUNDED",
+      "severity": 1,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 12,
+      "verdict": "ASSESSED_BOUNDED",
+      "evidence": [
+        "people-matrix/contact-0.jpg F1 Rook/F3 Wen",
+        "people-matrix/contact-1.jpg F3 Maud",
+        "people-matrix/contact-2.jpg F1 Ondra/F7 Fenn"
+      ],
+      "limits": "Unpictured speakers and uncaptured dialogue states."
+    },
+    {
+      "item_id": "P2-070",
+      "subject": "Glass Sink landmark",
+      "original_artifact": "native-context-rescore.json",
+      "original_assessment": "BOUNDED",
+      "severity": 4,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 64,
+      "verdict": "FAIL",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_stormwood__landmark__glass_sink__day__approach.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_stormwood__landmark__glass_sink__day__close.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_stormwood__landmark__glass_sink__golden__approach.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_stormwood__landmark__glass_sink__golden__close.jpg"
+      ],
+      "limits": [
+        "All four G full rasters were inspected; these two headings and their day/golden labels are not a complete rim, route or phase matrix.",
+        "Day/golden labels do not establish a Stormwood day/night cycle; both pictured views retain the purple storm sky.",
+        "The still images establish visible landmark-shape/material failure only; no reachability, collision, depth measurement or traversal mechanism is inferred."
+      ]
+    },
+    {
+      "item_id": "P2-004",
+      "subject": "exploration HUD",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 2,
+      "exposure": 5,
+      "importance": 3,
+      "impact": 30,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/exploration_hud.jpg"
+      ],
+      "limits": "Single exploration/pickup state and one owned creature; no full five-creature combat HUD, motion or device-scale assessment."
+    },
+    {
+      "item_id": "P2-040",
+      "subject": "charged road surface",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 1,
+      "exposure": 5,
+      "importance": 3,
+      "impact": 15,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "rod_line_forward_day_storm_calm",
+        "rod_line_reverse_night_storm_break",
+        "rod_line_forward_day_released_calm"
+      ],
+      "limits": "Wet-surface response and continuous travel."
+    },
+    {
+      "item_id": "P2-045",
+      "subject": "candy pickup tiers",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 36,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__good_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__great_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__rare_candy.jpg"
+      ],
+      "limits": "Three actual visible props at their own stands, not identical lighting/depth calibration. No numerical scale equality, moving pickup, device-size readability or item-use behavior is inferred."
+    },
+    {
+      "item_id": "P2-088",
+      "subject": "fight team roster contrast",
+      "original_artifact": "native-context-rescore.json",
+      "original_assessment": "BOUNDED",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 80,
+      "verdict": "FAIL",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-a-start.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-e-impact.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-f-recovery.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/A_blackwater_elder-i03.jpg"
+      ],
+      "limits": [
+        "No physical 7-inch display test or measured contrast ratio is claimed.",
+        "These are pictured combat backgrounds; all background/preset combinations are not exposed."
+      ]
+    },
+    {
+      "item_id": "P2-018",
+      "subject": "shiny palette distinction",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 36,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__sparkit__idle.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__sparkit__shiny_idle.jpg",
+        "creatures/stormtrail.jpg idle/shiny_idle",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__stormtrail__shiny_idle.jpg"
+      ],
+      "limits": "Low/Compatibility 1920x1080 supplied views only; no Ally-sized/device proof or lighting-invariant palette distinction."
+    },
+    {
+      "item_id": "P2-031",
+      "subject": "settings and binding instructions",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 3,
+      "impact": 36,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/settings_controls.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/quick_bindings.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_settings.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_map.jpg"
+      ],
+      "limits": "Quick-item binding rows below the heading are unexposed. Full settings scroll, actual rebinding, device-size reading and input behavior are unassessed."
+    },
+    {
+      "item_id": "P2-044",
+      "subject": "electric creature finish",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 36,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__fulgocobra__idle.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__stormraven__fainted.jpg",
+        "creatures/stormraven.jpg idle",
+        "creatures/tanglevolt.jpg idle",
+        "creatures/voltarach.jpg idle"
+      ],
+      "limits": "Ordinary staged views at this lighting/camera only; no activated move VFX, animated charge response, night habitat or full electric roster assessment."
+    },
+    {
+      "item_id": "P2-083",
+      "subject": "dialogue foreground obstruction",
+      "original_artifact": "native-context-rescore.json",
+      "original_assessment": "BOUNDED",
+      "severity": 1,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 16,
+      "verdict": "PASS",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/P_stormwood__inventory__character__keeper_ondra__dialogue.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/P_stormwood__inventory__character__trader_fenn__dialogue.jpg"
+      ],
+      "limits": [
+        "The dialogue panel intentionally covers the lower body; this is distinct from a creature or overhead object hiding the speaker.",
+        "No earned interaction, moving companion configurations or universal dialogue-camera coverage is claimed.",
+        "Severity 1 is the requested scale minimum; it does not assert a residual observed obstruction defect."
+      ]
+    },
+    {
+      "item_id": "P2-032",
+      "subject": "map active region",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 1,
+      "exposure": 3,
+      "importance": 3,
+      "impact": 9,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_map.jpg"
+      ],
+      "limits": "One active-region state only; switching regions and focus/selection behavior are unassessed."
+    },
+    {
+      "item_id": "P2-061",
+      "subject": "catch result hierarchy",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 2,
+      "exposure": 3,
+      "importance": 3,
+      "impact": 18,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/06-breakout.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/08-caught-verdict.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/09-caught-banner.png"
+      ],
+      "limits": "Staged success/breakout endpoint presentation only; no earned capture, save, probability or co-op outcome behavior assessment."
+    },
+    {
+      "item_id": "P2-041",
+      "subject": "Crown Arch",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 2,
+      "exposure": 3,
+      "importance": 3,
+      "impact": 18,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "D:/tetherbound/codex-e/ralph/reports/F41/crown-masonry/pair-0.jpg",
+        "D:/tetherbound/codex-e/ralph/reports/F41/crown-masonry/pair-1.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-crown-blind/A/stormwood__landmark__crown_arch__day__close.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-crown-blind/A/stormwood__hollow_crown__07__the_crown_arch__day__close.jpg"
+      ],
+      "limits": "Four static views at Low/Compatibility 1280x720 only; no motion, earned approach, night/other phases, revised silhouette/slab integration or full release-art acceptance."
+    },
+    {
+      "item_id": "P2-069",
+      "subject": "flight and landing pose read",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 48,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-fly/frames/01-launch.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-fly/frames/02-glide.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-fly/frames/03-landed.png"
+      ],
+      "limits": "Only three art-pose stills from the successful second stand. Landing bird pose, descent and continuous motion remain unexposed. Elevated/in-memory fixture is not campaign reachability, earned traversal or a whole Fly proof; failed first stand is not visually assessed."
+    },
+    {
+      "item_id": "P2-094",
+      "subject": "placed wall visual",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 3,
+      "importance": 3,
+      "impact": 27,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/stormwood__system__building.jpg"
+      ],
+      "limits": "One standalone panel, one side/angle and lighting state only; no completed shelter, back/edge inspection or placement/ground-contact behavior."
+    },
+    {
+      "item_id": "P2-096",
+      "subject": "craft action hint contrast",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 1,
+      "exposure": 4,
+      "importance": 3,
+      "impact": 12,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/stormwood__system__crafting.jpg"
+      ],
+      "limits": "One zero-ingredient selected-Axe frame only; enabled/disabled/focused hint variants, controller/device view and crafting behavior are unassessed."
+    },
+    {
+      "item_id": "P2-056",
+      "subject": "uniformed character readability",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 3,
+      "impact": 36,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "people-matrix/contact-0.jpg F1 Rook",
+        "people-matrix/contact-4.jpg F3 Bryn"
+      ],
+      "limits": "Unpictured officers; current world background separation at normal distance."
+    },
+    {
+      "item_id": "P2-043",
+      "subject": "Glass Field spike bases",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 3,
+      "exposure": 2,
+      "importance": 3,
+      "impact": 18,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "glass_forward_day_storm_calm",
+        "glass_forward_day_released_calm"
+      ],
+      "limits": "Near base detail and slope/contact motion; actual penetration cannot be established from these distant views."
+    },
+    {
+      "item_id": "P2-084",
+      "subject": "named character dialogue reuse",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED_BOUNDED",
+      "severity": 1,
+      "exposure": 3,
+      "importance": 3,
+      "impact": 9,
+      "verdict": "ASSESSED_BOUNDED",
+      "evidence": [
+        "people-matrix/contact-0.jpg F7 Lio",
+        "people-matrix/contact-1.jpg F1 Neri/F3-F6 Maud",
+        "people-matrix/contact-3.jpg F5-F8 Oswin",
+        "people-matrix/contact-5.jpg F2/F4/F6 Bryn"
+      ],
+      "limits": "Uncaptured dialogue and replay/earned progression."
+    },
+    {
+      "item_id": "P2-047",
+      "subject": "Static Snap technique pickup",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 2,
+      "exposure": 2,
+      "importance": 3,
+      "impact": 12,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__tm_static_snap.jpg"
+      ],
+      "limits": "One ordinary-distance static view. Other technique rows are gated/unexposed and cannot establish a current technique-family comparison; no learned cue, pickup animation or acquisition behavior."
+    },
+    {
+      "item_id": "P2-110",
+      "subject": "Hollows fight loss result clarity",
+      "original_artifact": "natural-loss-blind-verdict.json",
+      "original_assessment": "BOUNDED",
+      "severity": 3,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 36,
+      "verdict": "BLOCK",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-i03.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-i04.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-99-after.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-100-aftermath.png"
+      ],
+      "limits": [
+        "TEAM 5/5 may denote ownership count; its count alone is not treated as proof that five creatures are combat-ready. The visible full-looking green Sparkit bar beside explicit out-of-fight text is the relevant inconsistency.",
+        "The trainer's separate 100/100 HUD is not mistaken for Sparkit's creature health.",
+        "These four full rasters support the current result-presentation score only; no before/after fix assessment, other-row rating, full bar or whole F41 acceptance claim is made."
+      ]
+    },
+    {
+      "item_id": "P2-111",
+      "subject": "Hollows victory reward tiles",
+      "original_artifact": "reward-route-blind-verdict.json",
+      "original_assessment": "BOUNDED",
+      "severity": 1,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 12,
+      "verdict": "PASS",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-beedcbfd3a-reward-route-r1/frames/reward-route/hollows_alpha-99-after.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-beedcbfd3a-reward-route-r1/frames/reward-route/hollows_alpha-100-aftermath.png"
+      ],
+      "limits": [
+        "Only the supplied four before and two after full rasters were inspected for this task.",
+        "The screenshots support visible victory presentation and layout only; no earned combat, actual reward grant, inventory persistence, participant eligibility, result timing, dismissal or controller behavior is certified.",
+        "No motion, four-player, 7-inch physical display, other resolutions/presets, long reward lists or full visual matrix claim.",
+        "No judgement of other catalogue rows, loss presentation, bark, full F41 or whole release acceptance is made."
+      ]
+    },
+    {
+      "item_id": "P2-113",
+      "subject": "catch camera distance",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "ASSESSED",
+      "severity": 5,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 80,
+      "verdict": "ASSESSED",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/01-aiming-full-health.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/02-orb-in-flight.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/03-strike.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/06-breakout.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/07-aiming-weakened.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/09-caught-banner.png"
+      ],
+      "limits": "Framing in supplied staged still contexts only; no continuous camera jump, source of obstructing surface, route coverage or multiplayer inference."
+    },
+    {
+      "item_id": "P2-119",
+      "subject": "Fly carrier grip pose",
+      "original_artifact": "catalog-rescore.json",
+      "original_assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 64,
+      "verdict": "PARTIAL",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-fly/frames/01-launch.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-fly/frames/02-glide.png"
+      ],
+      "limits": "Two supplied aerial art-pose endpoints only; grip continuity, launch/descent transitions, animation and camera behavior in earned play are unexposed."
+    }
+  ],
+  "limits": [
+    "Original partial/bounded subject coverage and FAIL/BLOCK dispositions remain in source artifacts.",
+    "F41#1 through#5 are separate; Low stills do not pass High/Medium matrix, full-bar, earned or device/performance proofs.",
+    "Original shipping240recapture reused; no newGPU, no repeated passing batch."
+  ]
+}

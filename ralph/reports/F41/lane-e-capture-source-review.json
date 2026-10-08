@@ -2784,5 +2784,372 @@
       "WholeF41 open43of44,bark appearanceBLOCK,prior failed52cd/pilot/idle/raster/forced-ending witnesses and all approvals/scores preserved unchanged."
     ],
     "activity": "No engine/test/GPU/dispatch,source edit,newhelper/fixture,status/GitHub/raw-thread or judge contact."
+  },
+  "253574_director_exact_command_binding_original_review": {
+    "reviewer": "original review_cloud_startup01a11679-fc2c-7873-bccd-423c1e04476d",
+    "verdict": "APPROVE",
+    "scope": "Exact committed blob/argv binding only; prior05bb source verdict reused without source/pixel re-audit.",
+    "source_commit": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+    "director_blob": "05bbf0917b1151a461de6a11bc9fb39fdc9adc63",
+    "binding": "Actual pinned Git blob equals the originally approved director blob. Only changed production path is the director; other commit paths are evidence.",
+    "unchanged_from_approved_beed": [
+      "tools/phase2_capture_stormwood_fights.gd",
+      "tests/capture_stormwood_b_named_fights.gd",
+      "tools/lookdev_capture_bootstrap.gd",
+      "scripts/combat/encounter_director.gd",
+      "scripts/combat/combat_ai.gd",
+      "scripts/combat/combat_manager.gd",
+      "scripts/creatures/wild_creature.gd",
+      "scripts/world/stormheart_tree.gd",
+      "data/config/combat.json",
+      "data/config/stormwood_encounters.json",
+      "data/config/stormheart_presentation.json",
+      "scripts/ui/playground_hud.gd",
+      "tests/test_stormwood_b_named_lunge_lanes.gd",
+      "tests/test_stormwood_b_named_cues.gd",
+      "tests/test_charger_lunge.gd"
+    ],
+    "dependency_verification": "Exact Git blob equality verified for every listed dependency. Prior source/raster/start/capture/aftermath/failure/input-policy/fixture contracts retained.",
+    "command": {
+      "executable": "Godot",
+      "argv": [
+        "--path",
+        "<fresh pinned2535740dbd107c7b93bfc9e3a80aa2d0bd19929b>",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1920x1080",
+        "--fixed-fps",
+        "20",
+        "--script",
+        "res://tools/phase2_capture_stormwood_fights.gd",
+        "--",
+        "--preset=Low",
+        "--low-resolution=1920x1080",
+        "--source-commit=2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+        "--out=res://.tmp/stormwood-phase2/f41-hollows-pattern-fix",
+        "--ids=hollows_alpha",
+        "--seed=2042",
+        "--party-level=42",
+        "--input-policy=idle-after-engage",
+        "--seconds=120",
+        "--interval=10.0"
+      ]
+    },
+    "limits": "Three existing headless named checks dispatched but not reviewed/pass-claimed here. Actual native enemy hits, natural loss and visible defeat remain pending. No forced-fled ending promotion, whole criterion or earned/device claim.",
+    "preservation": "All earlier reviews preserved, including beed runtimeAPP and currentP2-111PASS12,prior failures/ratings/barkBLOCK; wholeF41 open.",
+    "activity": "Only local Git identity checks and original report append; no execution,dispatch,GPU,implementation or judge contact."
+  },
+  "253574_selected_headless_original_artifact_review": {
+    "reviewer": "original review_cloud_startup01a11679-fc2c-7873-bccd-423c1e04476d",
+    "verdict": "APPROVE bounded assertion/initialized-lunge evidence with explicit engine-error limitations",
+    "source_commit": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+    "scope": "Only new completed selected headless artifact and output-folder-name applicability; no live native packet inspection.",
+    "run": 37809647502,
+    "artifact": 11564372829,
+    "job": 113422870818,
+    "artifact_root": ".tmp/e-pattern-253574-area-37809647502",
+    "checkout": "Actual checkout log ref/fetch/checkout/HEAD/fullrev match exact2535740dbd107c7b93bfc9e3a80aa2d0bd19929b.",
+    "invocation": {
+      "mode": "headless",
+      "engine": "Godot4.7.stable.official.5b4e0cb0f",
+      "script": "tests/run_tests.gd",
+      "args": "--only=stormwood_b_named_lunge_lanes,stormwood_b_named_cues,test_charger_lunge.gd"
+    },
+    "tests": 21,
+    "assertions": 132,
+    "failed_assertions": 0,
+    "exit_code": 0,
+    "duration_seconds": 19,
+    "script_errors": 0,
+    "engine_errors": 5,
+    "files": {
+      ".tmp/e-pattern-253574-area-37809647502/MANIFEST.txt": {
+        "bytes": 196,
+        "sha256": "957b69bb362bfeaa11222809aac917699cbc119f4ce3a7b9d6790af079e89d20"
+      },
+      ".tmp/e-pattern-253574-area-37809647502/exit_code": {
+        "bytes": 2,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      ".tmp/e-pattern-253574-area-37809647502/run.log": {
+        "bytes": 4738,
+        "sha256": "1787536203e31b9035d2723c880b15c65f01a72c16ac3e110c5559e6b731a9c7"
+      },
+      ".tmp/e-pattern-253574-area-37809647502/user/godot/app_userdata/Tetherbound/boot_log.txt": {
+        "bytes": 438,
+        "sha256": "8b2e23fa5b1a75255feacd600989d150cde69198bb380f9e56e6abd1c8ed6706"
+      },
+      ".tmp/e-pattern-253574-area-37809647502/user/godot/app_userdata/Tetherbound/charger-lunge-smoke-2256.log": {
+        "bytes": 565,
+        "sha256": "88a1e5f2465ddebd53566a10fed4e820bcdaf644f5e759b742f6044deed4c98d"
+      },
+      ".tmp/e-pattern-253574-area-37809647502/user/godot/app_userdata/Tetherbound/logs/godot.log": {
+        "bytes": 4722,
+        "sha256": "a93c4e71f65c3e2ac6eff4689b1bfc7b9b7bbecefe43e30ac139a205ab23122c"
+      },
+      ".tmp/e-pattern-253574-area-37809647502-logs/render/3_Run actions_checkout@v4.txt": {
+        "bytes": 14103,
+        "sha256": "ec5b20bd91cd4c0432a1baa530a6dbd6a0fcfe664d8f83ede50e79bc8f7b9511"
+      },
+      ".tmp/e-pattern-253574-area-37809647502-logs/render/8_Run.txt": {
+        "bytes": 8607,
+        "sha256": "233974cc2dbd927fcc22a8249c1c5e3b0ca7bafd04e34b7665c06244f1778c0f"
+      }
+    },
+    "errors": {
+      "message": "Condition !is_inside_tree is true; returning Transform3D().",
+      "affected_cases": [
+        {
+          "case": "test_every_exit_from_a_tell_drops_the_cue_and_the_cone",
+          "errors": 1,
+          "trace": "set_engaged wild_creature.gd743 -> named_cues174: _target=global_position on unmounted released body."
+        },
+        {
+          "case": "test_route_cue_shows_the_route_first_then_the_ordinary_tell",
+          "errors": 4,
+          "traces": [
+            "facing creature_body1784 -> _begin_lunge1328 -> _enter1083 -> named_cues105",
+            "begin_combat_burst creature_body1838 -> _begin_lunge1338 -> _enter1083 -> named_cues105",
+            "face_towards creature_body2694 -> begin_combat_burst1838 -> _begin_lunge1338 -> named_cues105",
+            "_begin_lunge wild_creature1350 -> _enter1083 -> named_cues105"
+          ]
+        }
+      ],
+      "fixture_evidence": "Pinned named_cues::_wild constructs WILD.new(), adds an unmounted child Target and returns it; both cases call methods directly and never add this parent to the SceneTree. The actual error calls read global_transform/global_position. This directly supports detached-fixture transform-error classification for these five backtraces.",
+      "source_identity_vs_beed": {
+        "tests/test_stormwood_b_named_cues.gd": "5503a1c33c0a717a2a20c04b7466a73a930c0577",
+        "scripts/creatures/wild_creature.gd": "faf7bd410b02effeb145276acfcb15c91d5148da",
+        "scripts/creatures/creature_body.gd": "86291c35781e7385ffd8ea2da4fe883aa3c83aef"
+      },
+      "identity_limit": "Exact error-producing fixture/code blobs unchanged from beed verified locally. No previous execution/error-frequency claim inferred; no suppression or test edits.",
+      "proof_limit": "Reported assertions establish tested state/cue/lane opt-ins within those isolated fixtures, not trustworthy world transforms, mounted Stormwood override execution or live damage/contact. No error-free area or general native PASS claim."
+    },
+    "initialized_charger_child": {
+      "path": ".tmp/e-pattern-253574-area-37809647502/user/godot/app_userdata/Tetherbound/charger-lunge-smoke-2256.log",
+      "checks": 53,
+      "failed": 0,
+      "scope": "Separate initialized-tree physical lunge smoke logs ordinary hit, stationary target charge hit, full-distance miss, sidestep miss, wall stop and tell lock/recovery. This is existing test_charger_lunge subprocess evidence; not new mountedStormwood/natural-loss proof.",
+      "counts_limit": "Do not combine its53checks with suite132assertions as an invented total."
+    },
+    "output_name_applicability": {
+      "verdict": "APPROVE",
+      "actual_requested_out": "res://.tmp/stormwood-phase2/f41-hollows-pattern-loss-beed",
+      "previous_out": "res://.tmp/stormwood-phase2/f41-hollows-pattern-fix",
+      "source_commit": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+      "basis": "Only output-directory basename differs, still beneath the existing approved res://.tmp/stormwood-phase2 root. Fresh-folder bootstrap and exactsource requirement retained; dirname is not parsed as policy, party or outcome. All behavior args remain42/idle-after-engage/Low1920/fixedfps20/seed2042/120s/10s/Hollows.",
+      "limits": "The word beed in filename is not source evidence; actual receipt must pin253. Folder must genuinely be fresh. No live outputs read or capture/outcome promotion."
+    },
+    "remaining_gates": [
+      "Actual native enemy hit/contact, naturally stopped/authoritative or visible loss remains pending; idle/cap/headless green cannot establish defeat.",
+      "WholeF41 and original independent pixels remain open; source approvals/beed runtimeAPP/P2-111PASS12/barkBLOCK and all failed witnesses preserved."
+    ],
+    "activity": "Artifact/log/necessary existing fixture reads and original report append only; no engine/test/dispatch/GPU/source edit/live read or judge contact."
+  },
+  "253574_pattern_loss_original_native_runtime_review": {
+    "reviewer": "original review_cloud_startup01a11679-fc2c-7873-bccd-423c1e04476d",
+    "runtime_verdict": "APPROVE",
+    "outcome": "NATURAL_ACTIVE_CREATURE_LOSS_SUPPORTED",
+    "scope": "Only new completed253 single-Hollows idle native packet, source/record/image provenance and outcome classification. No accepted source re-audit or other packet/pixel review.",
+    "source_commit": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+    "source_tree": "0cf1cae1d09ac5b774244762dcaa21a05a6abd73",
+    "director_blob": "05bbf0917b1151a461de6a11bc9fb39fdc9adc63",
+    "packet_root": "D:\\CodexTemp\\tetherbound-proof\\native-e-2535740dbd-pattern-loss-r1",
+    "canonical_frames": "D:\\CodexTemp\\tetherbound-proof\\native-e-2535740dbd-pattern-loss-r1\\frames\\pattern-loss",
+    "provenance": {
+      "checkout": "Actual checkout/import/start/receipt/source metadata agree on exact253. Head/index tree after import equal local pinned Git tree; dirty[] and source-after-capture dirty[]/index_dirty[]. Pinned director Git blob matches originally approved05bb exactly.",
+      "actual_start": {
+        "stop_on_owner_game": true,
+        "source": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+        "args": [
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1920x1080",
+          "--fixed-fps",
+          "20",
+          "--script",
+          "res://tools/phase2_capture_stormwood_fights.gd",
+          "--",
+          "--preset=Low",
+          "--low-resolution=1920x1080",
+          "--source-commit=2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+          "--out=res://.tmp/stormwood-phase2/f41-hollows-pattern-loss-beed",
+          "--ids=hollows_alpha",
+          "--seed=2042",
+          "--party-level=42",
+          "--input-policy=idle-after-engage",
+          "--seconds=120",
+          "--interval=10.0"
+        ],
+        "started_utc": "2026-10-08T16:34:41.4364428Z",
+        "pid": 39176
+      },
+      "terminal_receipt": {
+        "exit_code": 0,
+        "pid": 39176,
+        "finished_utc": "2026-10-08T16:39:22.9257255Z",
+        "started_utc": "2026-10-08T16:34:41.4364428Z",
+        "stop_reason": "",
+        "source": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b"
+      },
+      "import_exit_code": 0,
+      "import_stop_reason": "",
+      "hash_manifest_entries": 49,
+      "hash_manifest_mismatches": 0,
+      "files": {
+        "terminal-summary.json": {
+          "bytes": 1073,
+          "sha256": "f8fc45b537b747ce10a0009b7dff0e2d0d9d4f7c9d8f1ed35f913e8dfc7cb6b7"
+        },
+        "proof-hashes.json": {
+          "bytes": 7386,
+          "sha256": "242ff188f598ebecacd8712f1d247b939cf0b5fa7ce80530edf5d66d4cd1a582"
+        },
+        "archive-path-map.json": {
+          "bytes": 309,
+          "sha256": "2ad62a245b864ae6658a8169fb7f6b3d98888ee1868ca4c1b02eb247a0cf2ad7"
+        },
+        "raster-headers.json": {
+          "bytes": 3824,
+          "sha256": "06d2076484a7586d9fc01f6c4ac60bf1fbf71f072e63903c166bac26fb2e2b4a"
+        },
+        "checkout.log": {
+          "bytes": 203,
+          "sha256": "68de63885f15a404353b5e0434152134297ad7d6221208d872d31f01afdff551"
+        },
+        "source-after-import.json": {
+          "bytes": 199,
+          "sha256": "ec41a70def30b600786a4f466a52040961811863a18da7cddba6567eb2a31b95"
+        },
+        "source-after-capture.json": {
+          "bytes": 100,
+          "sha256": "cfe83522d8fb5418fb1b3196a328401edfd3fe9c5e92bf431a3926dd527d8ac2"
+        },
+        "import-start.json": {
+          "bytes": 299,
+          "sha256": "8283b4727d27a95fbcc46ebbe9708c2c42b0666a2c69a6398c22435a3b1fe71e"
+        },
+        "import-receipt.json": {
+          "bytes": 221,
+          "sha256": "4916a78e23a14a68d4300b37cd785439410d831fd0cd14ac30ac0a2bd221d335"
+        },
+        "import.stdout.log": {
+          "bytes": 2355,
+          "sha256": "8578ab83fe7d010fd656e01adb1316f1474c8dccb69d4fa6bf179352e10e233c"
+        },
+        "import.stderr.log": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "hollows-pattern-loss-start.json": {
+          "bytes": 804,
+          "sha256": "f3b3ba69e781f78fd5ed2cd8db282bf2b4ac1dc2d9d63fcbc8ad6c8aa33580ea"
+        },
+        "hollows-pattern-loss-receipt.json": {
+          "bytes": 221,
+          "sha256": "067eb97ac26976d8d37c2f0fe7c35ea048fa88769fa790ae29766cf81cb38851"
+        },
+        "hollows-pattern-loss.stdout.log": {
+          "bytes": 10393,
+          "sha256": "19bb2c926464a4150e3114051b853d048b4893dbb9c4b6835983c4689a2a329b"
+        },
+        "hollows-pattern-loss.stderr.log": {
+          "bytes": 2927,
+          "sha256": "977264932ae8c5fbd10fb3b0fc8f0132578377c2d71a8335f69d0b10a35b2fe3"
+        },
+        "frames/pattern-loss/lookdev_fight.json": {
+          "bytes": 7998,
+          "sha256": "4b9adf1b17a2b57f291a9ab807039c5e49eb35fc319b82834c089fab129276c6"
+        },
+        "frames/pattern-loss/capture_log.json": {
+          "bytes": 10363,
+          "sha256": "9ef5f1797f3ae80514c2264f181bd7e0e7b32e3b662cfd8ff4cb57b5b53f3963"
+        },
+        "frames/pattern-loss/hollows_alpha-99-after.png": {
+          "bytes": 3469766,
+          "sha256": "62e5dc2e715b207b8561d2eead73ea5e5ff72f5e4c69bb4b4241e41f6cfb966b"
+        },
+        "frames/pattern-loss/hollows_alpha-100-aftermath.png": {
+          "bytes": 3482762,
+          "sha256": "6d92987dcc827bf722fd415862869148622df2e7c064c831d78fd483583fc7ca"
+        }
+      },
+      "archive_map": {
+        "original_manifests_unmodified": true,
+        "archived": "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss",
+        "actual_fresh_output_disclosed": true,
+        "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/stormwood-phase2/f41-hollows-pattern-loss-beed"
+      },
+      "original_archive_byte_matches": 34,
+      "original_archive_scope": "All32individualPNGs plus unchanged lookdev/capture_log manifests match still-present original files byte-for-byte."
+    },
+    "capture": {
+      "engine": "Godot v4.7.stable.official.5b4e0cb0f",
+      "actual_driver_stdout": "OpenGL API3.3.0 NVIDIA560.94 - Compatibility - NVIDIA GeForce GTX1060 3GB",
+      "graphics_capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+        "preset": "Low",
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source_commit": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b"
+      },
+      "input_policy": "idle-after-engage",
+      "party_level": 42,
+      "seed": 2042,
+      "unique_pngs": 32,
+      "unique_image_sha256": 32,
+      "actual_png_headers": [
+        1920,
+        1080
+      ],
+      "raster_header_manifest_agreement": true,
+      "unique_record_paths": 32,
+      "active_records": 29,
+      "file_record_log_match": true,
+      "complete": true,
+      "failures": [],
+      "script_or_engine_errors": 0,
+      "warnings": 6,
+      "warning_scope": "Deprecated interpolation,two shared-retint model warnings,three wild cluster fit warnings retained. Import logs have no engine/script errors.",
+      "counts": "Producer29activeperiodic/tell frames plusbefore+99-after+100-aftermath=32actualpersistedpairs. Separate disabledscale-audit saved_combat_frames0 not an absence of frames."
+    },
+    "actual_fight": {
+      "started": true,
+      "engaged_by": "Engage press",
+      "enemy_is_named": true,
+      "initial_quick_reach_m": 6.4075665,
+      "ally_hits": 0,
+      "enemy_hits": 13,
+      "enemy_misses": 1,
+      "ended_at_s": 42.07,
+      "requested_cap_s": 120,
+      "precleanup_fighting_at_end": false,
+      "99_after_time_s": 42.07,
+      "100_aftermath_time_s": 43.07,
+      "100_aftermath_present": true,
+      "mounted_path_applicability": "RealEngage/namedbody binding and exact approved source/call order establish use of the Stormwood admission override; observed14tell records include11lunge_started and3strike_ready callbacks.13real enemy->ally callbacks demonstrate damage in this mounted context. Source guard/fixtures reused; no new injection or forced outcome.",
+      "contact_limit": "Successful attack callbacks do not separately measure exact hull contact, swept path geometry or every named/trainer/ordinary role. No explicit runtime context-role/uniform readback exists; source binding plus observed attack events is narrower evidence than complete per-role coverage."
+    },
+    "ending_classification": {
+      "support": "Natural stopped precleanup row42.07<120 plus raw100-aftermath UI explicitly shows “Your creature is out of the fight.” and “Sparkit is out of the fight.” This supplies actual active-creature defeat/out-of-fight context, rather than inferring loss solely from stoppedfight or fixture label.",
+      "recorded_outcome_label": false,
+      "limits": [
+        "This is active-creature defeat; no five-party wipe is established.",
+        "No forced-fled cleanup needed while precleanup already stopped. Actual3d88 aftermath guard exercised; historical active-cap/fled/no100 failures preserved.",
+        "Existing placement/neighbour suppression, fivecreatedLv42 party,Calm pin,healing,idle-after-engage,seed2042 andfixedfps20 are disclosed fixtures; endingHP bars are not durable/resource proof.",
+        "No earned campaign,save/reconnect/reward/transaction/co-op,hardware,performance,balance or fullreleasebar claim.",
+        "Ending pixels viewed only for runtime/UI classification. Original blind P2-110 numeric/visual assessment remains required; no visual score or wholecriterion approval here."
+      ]
+    },
+    "output_name_binding": "Actual freshoutput res://.tmp/stormwood-phase2/f41-hollows-pattern-loss-beed matches the previously reviewed rename; source remains253,not filenamebeed. All behavioral args and original guards retained.",
+    "preservation": "Earlier21tests132assert0failed bounded assertionAPP withfive detached-fixtureERRORs preserved; all source/commands,beed runtimeAPP/P2-111PASS12,barkBLOCK,52cdcrash,pilot/idlefailedcontexts,ratings and oldreceipts unchanged. WholeF41 open pending original acceptance.",
+    "activity": "No engine/test/GPU/dispatch,implementation/source edit,helpers/fixtures,newagents,status/GitHub/raw-thread or judge contact."
   }
 }
