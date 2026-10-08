@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-08T10:55:47.716008+00:00",
- "main_sha": "c93bbe441 (PR #585)",
+ "generated_at": "2026-10-08T12:12:21.240100+00:00",
+ "main_sha": "ec9a73d7e (PR #587)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -1451,10 +1451,10 @@
     },
     {
      "text": "Switching has measurable value: tag-switch combos and type matchups let a switching reader beat a non-switching reader.",
-     "status": "in_progress",
-     "evidence": "scripts/combat/tether_commands.gd tag_combo",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-a 0ed7c6629d (READY #572, 6:17 AM CT 10-08): owner rule STATE.md:41 (switching value proven when F24 tag-switch combo lands); F24#2 landed in PR #568, two-peer Tag-combo run 37571192608 PASS; original f23_audit APPROVE. In consolidation 12.",
      "gap": "Turn on F24 tag combo, then add a switching-reader pilot comparison to the band smoke.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The tag-switch combo ships off: tether_commands.json feature_flags.runtime_enabled=false. No switching-vs-non-switching measurement exists.",
+     "note": "Landed: Evidenced on tb/codex-a 0ed7c6629d (READY #572, 6:17 AM CT 10-08): owner rule STATE.md:41 (switching value proven when F24 tag-switch combo lands); F24#2 landed in PR #568, two-peer Tag-combo run 37571192608 PASS; original f23_audit APPROVE. In consolidation 12.",
      "audit_index": 2
     },
     {
@@ -2672,9 +2672,9 @@
     {
      "text": "Catalog UI rows (map without terrain context, bare menus, heavy HUD boxes, low-contrast text) are fixed with code-blind PASS.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-d f440344302 (READY #572, 4:35 AM CT 10-08): 14 files/144 tests/910 assertions, controller 37752399076, paired 1080/720 capture 37752962313, blind judge PASS whole literal UI ask; review APPROVE. In consolidation 11.",
+     "evidence": "PR #587 (consolidation 11b) merged 2026-10-08 6:22 AM CT: from tb/codex-d f440344302 (READY #572, 4:35 AM CT 10-08): 14 files/144 tests/910 assertions, controller 37752399076, paired 1080/720 capture 37752962313, blind judge PASS whole literal UI ask; review APPROVE",
      "gap": "Capture each catalog UI row before and after, then a code-blind judge.",
-     "note": "Landed: Evidenced on tb/codex-d f440344302 (READY #572, 4:35 AM CT 10-08): 14 files/144 tests/910 assertions, controller 37752399076, paired 1080/720 capture 37752962313, blind judge PASS whole literal UI ask; review APPROVE. In consolidation 11.",
+     "note": "Landed: PR #587 (consolidation 11b) merged 2026-10-08 6:22 AM CT: from tb/codex-d f440344302 (READY #572, 4:35 AM CT 10-08): 14 files/144 tests/910 assertions, controller 37752399076, paired 1080/720 capture 37752962313, blind judge PASS whole literal UI ask; review APPROVE",
      "audit_index": 0
     },
     {

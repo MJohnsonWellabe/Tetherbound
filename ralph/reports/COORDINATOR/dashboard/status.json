@@ -1,11 +1,10 @@
 {
- "updated": "2026-10-08T11:00Z",
+ "updated": "2026-10-08T12:20Z",
  "headline": [
-  "6:00 AM CT Thu 08 Oct: 158 criteria met on main; F42#0 in consolidation 11b (159 when it merges).",
-  "Consolidation 11 (PR #586) failed two Stormwood/Tidewake save and ledger smokes in lane C's co-op repair set; 11b carries only D F42#0, and C F31#2 with its set goes back to lane C.",
-  "3:10–5:10 AM CT: 2 whole criteria (C F31#2, D F42#0) and 41 QUESTION posts; lane B had five full earned-run FAILs on the local GPU machine; D and E were blocked waiting for it.",
-  "Owner 5:36 AM CT: earned proofs run as parallel segments on hosted runners. Owner 5:37 AM CT: D and E get local GPU priority; every Codex session resets to a fresh context.",
-  "Since then: E's Cloudreach F40 High capture is running on the local GPU; A's mounted Heal proof passed (Dash still blocked)."
+  "7:12 AM CT Thu 08 Oct: 159 criteria met on main; A F22#2 in consolidation 12 (160 when it merges).",
+  "5:10–7:10 AM CT: 2 whole criteria READY (D F42#0, merged in #587; A F22#2). C's F31#2 co-op set bounced with 9 failing tests.",
+  "Since the 5:53 AM CT Codex reset: no QUESTION posts. D and E hold the local GPU: E Cloudreach dawn/night 94/96 then Stormward 8/8, F41 context packet running; D Hall 24 stills and F42#2 fallback 1080/720 done.",
+  "Lane A parked F24#4 after two crafted-tier failures and switched to a separate approach; C is fixing the stuck save transaction."
  ],
  "batches": [
   {
@@ -502,36 +501,42 @@
   },
   {
    "name": "Consolidation 11b",
+   "sha": "ec9a73d7",
+   "state": "Merged 6:22 AM CT",
+   "contents": "F42#0 map/UI (lane D)"
+  },
+  {
+   "name": "Consolidation 12",
    "sha": "pending",
    "state": "In CI",
-   "contents": "F42#0 map/UI (lane D)"
+   "contents": "F22#2 switching value (lane A, evidence; dependency F24#2 already on main)"
   }
  ],
  "lanes": [
   {
    "lane": "tb/codex-a (Codex A: combat, moves, commands)",
-   "now": "Mounted Heal proof PASS (run 37763319762); F23#2 Dash blocked after two attempts on a 2 cm contact gap.",
-   "next": "Close F23#2 or park it; next smallest A criterion after the reset."
+   "now": "F22#2 READY; F24#4 crafted-tier witness parked after two failures, new typed trainer_equip path.",
+   "next": "F24#4 via typed trainer_equip; F23#2 Dash parked."
   },
   {
    "lane": "tb/codex-b (Codex B: earned route, story, ending)",
-   "now": "Earned Relay preparation failed again at 5:25 AM CT (fifth full run); switching to parallel hosted segments.",
-   "next": "F49#0 segments in parallel; F02#0/#1 source to land."
+   "now": "Ending and Masters runs retained; earned segments on hosted runners.",
+   "next": "F49#0 segments in parallel; F20#1."
   },
   {
    "lane": "tb/codex-c (Codex C: power, homestead, economy, co-op)",
-   "now": "F31#2 with the co-op repair set failed Stormwood water gate and Tidewake swimming save smokes in PR #586; bounced.",
-   "next": "Fix the retained-transaction save conflict and Waterward ledger op, then re-READY the whole set."
+   "now": "Fixing the F31#2 set: full smoke_menu now passes; Waterward ledger diagnostic still failing.",
+   "next": "Clear the 9 failing tests, re-READY the whole set."
   },
   {
    "lane": "tb/codex-d (Codex D: Meadows, village, Tidewake visuals)",
-   "now": "F42#0 in PR #586; F38#3 farmhouse window glass fix waiting for the local GPU.",
-   "next": "F26#3/F17#6 Hall and F38#3 captures on the local GPU (priority)."
+   "now": "Hall 24 native stills judged BLOCK on Medium; F42#2 fallback 1080/720 captured (44+44 frames).",
+   "next": "F42#2 judge and READY."
   },
   {
    "lane": "tb/codex-e (Codex E: Cloudreach, Stormwood, art, audio)",
-   "now": "F40 Cloudreach High capture running on the local GPU now.",
-   "next": "F40#0 judge, then F41 views on the local GPU."
+   "now": "Stormward approach fixed (8/8 views); F41 context packet on the local GPU.",
+   "next": "F40#0 whole matrix and judge; F41 views."
   },
   {
    "lane": "tb/ci-speed (Claude)",
