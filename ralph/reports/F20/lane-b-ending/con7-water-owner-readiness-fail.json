@@ -1,0 +1,25 @@
+{
+  "scope": "CON7 water-return changed owner readiness; failure only, no acceptance claim",
+  "source_sha": "1bbe74fffc17e4e016b2abb8e596913c9505a861",
+  "run_id": 37721228097,
+  "artifact_id": 11526391847,
+  "workflow_conclusion": "failure",
+  "script": "tests/smoke_net_water_return.gd",
+  "renderer": "gl_compatibility",
+  "resolution": "1280x720",
+  "run_step_started_utc": "2026-10-08T03:09:52Z",
+  "run_step_finished_utc": "2026-10-08T03:14:53Z",
+  "driver_exit_marker_present": false,
+  "coordinator_failure": "retired gate refused; the client reached Stormwood by Home Key and the Hall Stormwood arch (no verdict)",
+  "observed_pass_scope": "two distinct peers booted Water, prepared disclosed fixtures, joined, reached retired gate by movement, pressed Interact",
+  "original_budget_preserved": "300s total smoke; REALM_STEP_BUDGET10000 frames; no new budget",
+  "peer_logs_uploaded": false,
+  "net_run_uploaded": false,
+  "output_limitation": "existing POSIX /tmp fallback omitted from render artifact; existing water proof output override now prepared",
+  "runtime_cause": "not established: no phase/request/reply facts in surviving artifact",
+  "source_reviews": {
+    "ending": "original b_f20_review SOURCE APPROVE1bbe",
+    "portal": "original b_ending_reattack SOURCE APPROVE1bbe"
+  },
+  "disposition": "BLOCKED; no third water attempt without scoped diagnostic direction; ending terminal oracle proof next"
+}
