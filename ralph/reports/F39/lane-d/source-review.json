@@ -186,7 +186,9 @@
       "reviewer": "/root/f39_visual_review",
       "verdict": "SOURCE APPROVE",
       "change": "Final dune layer now uses weathered_bank mask for patch replacement, photographic ripple attenuation using existing rock_detail and macrovalue. Flatground texture, OFF path and geometry retained.",
-      "required": "Affected unit/candidate capture and original blind judge; firstBLOCK retained. Stop after secondfailedtextureattempt."
+      "required": "Affected unit/candidate capture and original blind judge; firstBLOCK retained. Stop after secondfailedtextureattempt.",
+      "proof_reuse": "Originalreviewer approved17709a existing4/27 unit and OFFbaseline10: onlycandidate GLSL addition changes; factory/unit/config/capture unchanged, OFFoutput operations gated. Exact1c mountedONcapture required, not whole-build equivalence.",
+      "candidate_run": 37763616872
     }
   }
 }
