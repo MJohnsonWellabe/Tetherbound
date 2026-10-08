@@ -1,0 +1,23 @@
+{
+  "scope": "Existing production-mounted Cloudreach area smoke on one-shrub burial candidate; no visual or whole F40 acceptance",
+  "source_commit": "628ace1b6d01a0e586e977f10a7d5b10bb79d9a8",
+  "run_id": 37751360395,
+  "job_id": 113225115072,
+  "artifact_id": 11537862975,
+  "script": "tests/smoke_cloudreach_look.gd",
+  "exit_code": 0,
+  "duration_seconds": 139,
+  "route_verges": {
+    "routes": 13,
+    "supported_stations": 156,
+    "plants": 1240,
+    "stones": 311,
+    "committed_instances": 1551
+  },
+  "original_smoke": "CLOUDREACH LOOK OK",
+  "error_lines": [],
+  "notice": "Existing descriptive climax fallback retained; no CloudreachNoStronghold node.",
+  "run_log_sha256": "607ed08ee5cedcf480bfe622854c5c0b75273903d15b2ce750dfd878b7fe218c",
+  "job_log_sha256": "f5ee6b6af5adb73ef9ee06c8b60a023815165320f044e335c080bd4eefd5e3b5",
+  "visual": "pending"
+}

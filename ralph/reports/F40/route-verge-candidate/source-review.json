@@ -220,7 +220,29 @@
       "source_analysis": "The test creates an unmounted parent and TestMesa. _mesa reads root.global_position before checking label==LandmarkLedge; TestMesa therefore never enters the airborne-root branch. Returned fallback position does not decide the normals/surface-count assertions that passed. Test and world source are byte-unchanged cd09 to628a, and the test uses empty visual config; this diagnostic source predates the item bury_m edit.",
       "limits": "Actual ERROR retained. No historical clean-log or production runtime-error absence inferred; no unrelated source edit required for this item-only candidate review."
     },
-    "proof_status": "Selected48tests/3330assertions passed with disclosed unrelated unchanged-source test diagnostic. Changed production area and one changed-source visual capture pending; no visual, whole F40#5 or full F40 acceptance."
+    "production_area_proof": {
+      "verdict": "APPROVE bounded clean production-mounted area smoke",
+      "source_commit": "628ace1b6d01a0e586e977f10a7d5b10bb79d9a8",
+      "run_id": 37751360395,
+      "job_id": 113225115072,
+      "artifact_id": 11537862975,
+      "checkout_verified_from_job_log": true,
+      "exit_code": 0,
+      "duration_seconds": 139,
+      "original_and_added_assertions_passed": true,
+      "planned_routes": 13,
+      "supported_stations": 156,
+      "plants": 1240,
+      "stones": 311,
+      "committed_instances": 1551,
+      "error_or_script_error_in_run_log": false,
+      "fixture_notice": "Existing missing CloudreachNoStronghold climax fallback coordinates retained.",
+      "run_log": ".tmp/e-arrival-shrub-area-628a/expanded/run.log",
+      "run_log_sha256": "607ed08ee5cedcf480bfe622854c5c0b75273903d15b2ce750dfd878b7fe218c",
+      "job_log": ".tmp/e-arrival-shrub-area-628a/job.log",
+      "coverage_limit": "Existing world construction/dressing/route placement checks; no direct measurement of this authored shrub's mesh contact or visual improvement."
+    },
+    "proof_status": "Selected48tests/3330assertions passed with disclosed unchanged-source test diagnostic; production area passed clean. Changed Low capture/visual verdict pending; no visual, whole F40#5 or full F40 acceptance."
   },
   "proof_status": "APPROVE failed verge restoration/historical proof validity and separate shrub source candidate. New shrub affected proofs/visual pending; earlier visual BLOCK/timeout FAIL retained. Full F40 OPEN; no local engine execution or performance acceptance."
 }
