@@ -1,0 +1,12 @@
+{
+  "criterion": "F42#2",
+  "product_sha": "11eb7e773d939d6941b17822422a68263987662d",
+  "proof_extension_sha": "e243012d745f8752144b4c870d6e413454454e6c",
+  "reviewer": "same original f25_medium_review",
+  "source_verdict": "APPROVE",
+  "product_reason": "Current owned creature energy and authored charged cost fill the Y gate after valid matching-UID refresh; finite/clamped values; no authority/resource mutation",
+  "proof_reason": "Existing capture checks visible charged bar against current owned resource and loaded cost, after UID guard; synchronous native draws preserve observation",
+  "runtime_verdict": "PENDING",
+  "visual_verdict": "PENDING",
+  "whole_criterion": "OPEN"
+}
