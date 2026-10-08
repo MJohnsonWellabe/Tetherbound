@@ -98,7 +98,7 @@
     }
   ],
   "scope": "Godot-generated imports for existing Cloudfang/Tanglevolt flag-off candidates and Staticub source-preserving PNG. No model/image-source bytes or shipping bindings changed. No local Godot run by E.",
-  "review": "OPEN original cap/source review",
+  "review": "APPROVE original review_f36_cap at68c6eca635:18 exact producer files, distinctUIDs/path/cachedeps/scale1/namedskins/animation import, sourceimages/models/bindings unchanged; root clean reimport still pending",
   "native_capture": "NOTRUN source-identity preflight blocked; root requires stabilized imported source",
   "remaining": "Coordinator clean import/source check and existing25 nativeforest proof; no visual claim"
 }

@@ -1,0 +1,114 @@
+{
+  "criterion": "F36#0 asset component native standing PASS; wholebatch OPEN",
+  "subject": "staticub",
+  "run": 37716140298,
+  "artifact": 11523911190,
+  "source_commit": "0732106d42329b3c36d3d703ddaaa224a6003b1d",
+  "exit_code": 0,
+  "seconds": 15,
+  "frames": 2,
+  "native_receipt": {
+    "asset_active_albedos": [
+      {
+        "expected_path": "res://assets/creatures/tetherbound/staticub_f36_source_finish_v1/models/staticub_f36_source_finish_v1_extracted_base_color_vivid.png",
+        "imported_mipmaps": true,
+        "node": "Mesh_0",
+        "path": "res://assets/creatures/tetherbound/staticub_f36_source_finish_v1/models/staticub_f36_source_finish_v1_extracted_base_color_vivid.png",
+        "source_sha256": "0766f861bac4e6a83c8b3014825cdf433a87effc20f8e84b7976aefc5de87fdc",
+        "surface": 0
+      }
+    ],
+    "asset_candidate": true,
+    "asset_path": "res://assets/creatures/tetherbound/staticub/models/creature_staticub_lod0.glb",
+    "asset_sha256": "c2e42a53ebeb922b06564bd4ce210cb02b5d438bf0d816516cc327719d758c1a",
+    "camera_fov": 42.0,
+    "camera_position": [
+      -1.14999997615814,
+      2.99417304992676,
+      19.4835605621338
+    ],
+    "candidate": false,
+    "frames": [
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-staticub-material-scale-0732/staticub-standing-000.png",
+        "phase": 0.0,
+        "role": "standing"
+      },
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-staticub-material-scale-0732/staticub-standing-100.png",
+        "phase": 1.0,
+        "role": "standing"
+      }
+    ],
+    "installed_model": false,
+    "installed_reference_height_m": 3.25,
+    "material_candidate": false,
+    "planned_frames": 2,
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "resting_size_m": [
+      3.07124996185303,
+      3.25,
+      5.51833629608154
+    ],
+    "scale_only": true,
+    "scale_scope": "Explicit asset preview standing stage; no fight-scale claim",
+    "selected_phases": [
+      0.0,
+      1.0
+    ],
+    "selected_roles": [
+      "standing"
+    ],
+    "source_commit": "0732106d42329b3c36d3d703ddaaa224a6003b1d",
+    "species": "staticub",
+    "stage_only": true,
+    "standing_height_m": 3.25,
+    "trainer_measured_height_m": 1.79999995231628,
+    "trainer_reference_height_m": 1.8,
+    "whole_body_camera": true
+  },
+  "source_review": "APPROVE original review_f36_cap at0732106d: swap key and material name carry actual selected texture namespace through downstream field/night caches",
+  "judge": {
+    "agent": "blind_listener_f10",
+    "identity": "PASS",
+    "material": "A BLOCK/B PASS; prefer B",
+    "standing_contact": "PASS both",
+    "finding": "Continuous brown forehead/shoulder fur and textured rump/tail/hindlegs replace fragmented peach/black islands; blueeyes, pale muzzle, darknose and localized violet markings remain clear; no definite float/penetration/clipping"
+  },
+  "failure_history": {
+    "run": 37714329995,
+    "artifact": 11522834460,
+    "source": "5bd2c4a225cb64621b961358f432696564500acd",
+    "cause": "Staticub preview active old installed atlas and no mipmaps despite expected namespace; guard correctly failed",
+    "scope": "Cloudfang/Tanglevolt individual passing guards reused, no repeat"
+  },
+  "authorization": [
+    "issue572#6050532698 selected namespace cache key only",
+    "issue572#6050658645 adjacent namespacing resource_name only, failed Staticub-only retry"
+  ],
+  "named_logic": {
+    "run": 37715183944,
+    "artifact": 11523188348,
+    "source": "5395cd755e1dfbe0f6b4a2a7df15d9c767e4b22e",
+    "result": "FAIL",
+    "files": 15,
+    "tests": 128,
+    "assertions": 1666,
+    "failed_tests": 1,
+    "cause": "Parked test_f36_pose_candidates native helper:6 torso floor-contact failures, Terrapup292.5mm/Ripplet240mm. Not a claim unchanged main fails.",
+    "disposition": "No skip/weakening/repeat or core READY; source-name fix sourceAPPROVE is not named-logic closure"
+  },
+  "flags": "Shipping binding unchanged; candidate preview OFF",
+  "remaining": [
+    "Core readiness/named logic blocked by parked torso proof",
+    "Whole F36#0 batch, unseen pose/motion/habitat/fullF36 acceptance OPEN"
+  ],
+  "contact": "ralph/reports/F36/staticub-material/native-standing-pair.jpg",
+  "scope": "Exact same installed geometry/UV/rig/clips; source-preserving repaint only; no Staticub reference redraft/POST"
+}
