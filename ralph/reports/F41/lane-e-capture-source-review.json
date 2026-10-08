@@ -3759,5 +3759,95 @@
       "No new pixels,engine/GPU/test/dispatch/sourceimplementation/fullaudit/helpers/fixtures/agents/GitHub/status/STATE/dashboard/handoff/rawthreads/judgecontact; only newnumeric-record/affectedassembly verification and original report append."
     ],
     "preservation": "Every previous source-report entry unchanged. Assembly/status files not edited. Any separate original blind whole addendum is outside this source-review action."
+  },
+  "09b_combined_loss_HUD_original_source_command_review": {
+    "reviewer": "original review_cloud_startup01a11679-fc2c-7873-bccd-423c1e04476d",
+    "source_verdict": "APPROVE",
+    "command_verdict": "APPROVE",
+    "proof_reuse_verdict": "APPROVE retainedD3tests22assertions only; changed combined lifecycle/native pending",
+    "source_commit": "09b2982b74bcca66f930c45a1110bc7bb6c87393",
+    "source_tree": "ce580e1fafde3283f007439399be021148a6ccf1",
+    "scope": "Only authorized cache invalidation, canonical passive loss result, scoped HUD config and existing regressions; actual future natural loss/visual acceptance not assumed. Historical merged285 wholeF41(0) approval preserved.",
+    "reviewed_blobs": {
+      "scripts/ui/playground_hud.gd": "5ce4082a96e0aff8b69ad68cd85ebdc6761392d3",
+      "scripts/ui/combat_hud.gd": "8c3d608204ce677eabaedbbe836416b68764c8c5",
+      "tests/test_hud_party_vitals.gd": "c8746a4600cf6e4947763024e5a4f91188f5ca2b",
+      "tests/smoke_hud_presentation_lifecycle.gd": "21dcd608202bbacf1fbe92d096ca81e57520d3c4",
+      "data/config/hud.json": "7b1437cbd84c91d27e6e078585979fce9aebaa92"
+    },
+    "cache_findings": [
+      "ExactD8fc PlaygroundHUD/test blobs verified. Canonical member hp_fraction/fainted/resting snapshot always participates in existing cache key; missing/legacyfalse candidate config cannot restore stalehealthyrows.",
+      "Unchanged canonical snapshot still shortcircuits updates. Vitals-only refresh returns before existing roster reveal/cycle logic; no HP/faint/rest mutation,party cap,feed award or authority/save/transaction effect.",
+      "Only three cache/config hunks relative historicalE6a65. Named reward acknowledgement route,meter/glyph/overlay and remaining HUD production preserved."
+    ],
+    "passive_loss_findings": [
+      "Only canonical lost case invokes card. Existing relays/owned-victory relinquishment, caught/fled treatment and ordinary fallback are retained. Current detail is copied from the existing factual out-of-fight verdict, not a new recovery or five-partywipe decision.",
+      "Panel,VBox,title,detail all mouse-filterIGNORE; no input_owner/modal/controls/actions/state mutation introduced. Card hides existing banner to retain one owner; caught,fled,relay,reentry/timer expiry clear card and restore/clear fallback appropriately.",
+      "Finite numeric type guards/clamps: seconds2.5..8(default4.5),width320..640(default536),title36..40/detail27..28. Missing/invalid font values fallback to UITokens36/27; previous32/24font source is not approvedcurrent.",
+      "Centeredwidth=min(configwidth,Root.x*.48),quarter-height anchor and112authored-height are bounded within normal1920/1280 canvases; container wrapping/minimum sizing must be verified by actual changed lifecycle/native proof, not asserted PASS from source.",
+      "Font constants/defaults/minima and config36/27 produce24/18at1280/1920scale, matching established heading/body floors. Existing smoke checks actual constructedLabel override values, bounds and roster/hotbar separation; scaled headless assertions are not native720pixel/device proof.",
+      "loss_result declares peer-local/all-presets scope and tracked enabledtrue for held candidate. No process flag in approvednative command and no postpin config mutation. Existing candidate/baseline CLI semantics retained; baseline wins if explicitly supplied. Candidate must remain held frommain/READY pending actualnative/originalblind acceptance and returnOFFonfailure."
+    ],
+    "existing_regressions": {
+      "lifecycle": "Actual21dcd existing smoke retains prior case/assertions and adds passive-loss callbacks/defaultOFF/factualmessage/font floors/inputfilter/hold/bounds/no-overlap/reentry/flee/expiry/relay/unchangedHP, plus actualnamedHollowsack/noextraCandy/utilityfallback. No skips or production admission guard weakening.",
+      "fixture": "Existing five-member isolated cap50/tier1..4 serializedmirror uses real redesign validation; direct UI callbacks explicitly disclosed, not actual loss. Historicalde50cap29fails and e049correctedfixtureAPP retained, not re-audited/reinterpreted.",
+      "changed_proof": "09b selected tests/smoke_hud_presentation_lifecycle.gd --720p actualartifact required for combinedCombatHUD/cache/font/runtime parse. Dispatch or earlier e340precorrection result is not currentPASS."
+    },
+    "D_vitals_reuse": {
+      "evidence_git_commit": "20564ea075",
+      "source": "8fc3ad91d1124633cdc88754f6891e9f59dde490",
+      "original_receipt_sha256": "4c01eb45abd6e685d290bcebafe2757d7662cc67a8a4c61c315486398ab06928",
+      "original_affected_review_sha256": "3c9d82dc2ee95c02cf846071945e1f8a1061c1dd84810c51870989ee727ba224",
+      "run": 37814682262,
+      "artifact": 11566029206,
+      "job": 113440160011,
+      "tests": 3,
+      "assertions": 22,
+      "failed": 0,
+      "exit_code": 0,
+      "duration_seconds": 6,
+      "original_log_sha256": "1fb8b6752b78eba614c1dede333e14935045ced22b0f6f1e5ffe7221539a79fa",
+      "reuse_basis": "ReadacceptedDreceipt/originalaffectedreviewdirectGit, notlaneEselfreport. Exact matching PlaygroundHUD/test and Party/CreatureInstance/ProgressionFeed/UITokens/test_case dependency blobs support isolated3/22 reuse. Unitfixture uses explicitconfig dictionaries andStripProbe, not newLossResult config/combat renderer; no passingbatch rerun.",
+      "old_lifecycle": "OriginalD8fc79checks/run37815272293/exit0/sixsec/oneHUDnoplayerwarning preserved and scope reused as unchanged foundation; current21dcd smoke differs by loss/font cases, so old79 is not newcombinedPASS. Legacy--720p headless log had1920canvas; no native720credit."
+    },
+    "retained_foundation": {
+      "director": "05bbf0917b1151a461de6a11bc9fb39fdc9adc63",
+      "fight_producer": "e19b014bc07f1cad3f83dc49d2f8fe34bf28527c",
+      "pilot_fixture": "b8d22e35c143c0cc9fbf31a7facd260d5eb986bf",
+      "body": "86291c35781e7385ffd8ea2da4fe883aa3c83aef",
+      "comparison": "Focused production fight/config/body/capture dependencies emptydiff285..09b. Accepted native13enemyhit42.07natural active-creature loss foundation and3d88precleanup100guard reused; no guaranteed future loss/time from that witness.",
+      "scope": "No damage/HP/stats/body/collision/party/input/authority/payments/save/progression/timing mutation in new productionpatch. Only UI displays canonical values/outcome."
+    },
+    "ROOT_only_command": [
+      "Godot",
+      "--path",
+      "<fresh pinned09bworktree>",
+      "--rendering-method",
+      "gl_compatibility",
+      "--resolution",
+      "1920x1080",
+      "--fixed-fps",
+      "20",
+      "--script",
+      "res://tools/phase2_capture_stormwood_fights.gd",
+      "--",
+      "--preset=Low",
+      "--low-resolution=1920x1080",
+      "--source-commit=09b2982b74bcca66f930c45a1110bc7bb6c87393",
+      "--out=res://.tmp/stormwood-phase2/f41-hollows-loss-ui-09b298",
+      "--ids=hollows_alpha",
+      "--seed=2042",
+      "--party-level=42",
+      "--input-policy=idle-after-engage",
+      "--seconds=120",
+      "--interval=10.0"
+    ],
+    "command_limits": [
+      "Exact approvedexistingrecipe withfreshallowedroot,namedLow1080/fullSHA/fixed20/seed2042/42idlefixture; retainedproductionEngage/body/camera/input/requestedstarted/nonempty/nativePNG/fail-exitpaths andprecleanupaftermathguard. TrackedcandidateON, no baselineoverride.",
+      "Actualcleanpin/import/start/nativepairs/terminal,error-free scriptexecution,currentvitals and loss card must be demonstrated. Natural precleanup ending+actualauthoritative/UI loss necessary; stoppedfight/fixturelevel/label/cap cannot manufacture loss. Activecap forbids100aftermath/forcedfled is not defeat.",
+      "One affected loss comparison only; originalblind assessment of currentcard/vitals before READY/main. No new fullmatrix,oldgeometry/scenery/nativeor3/22passingbatch rerun required."
+    ],
+    "preservation": "Historical253/285wholeF41(0) approvals,all44ratings/currentbaseline110BLOCK36,original pairedbarkBLOCK,52cdcrash,oldcaps/fled/nooutcome/rasterFAIL,oldfontrejection/e340noncurrentartifact and every original scopedsource/unit/runtimeproof unchanged. No F41(2)/fullbar/earned/save/controller/device/performance approval.",
+    "activity": "Bounded localdiff/identities/source/acceptedDGitproofsummary only; originalreport append. No implementation/source edit,engine/GPU/test/dispatch/newhelper-fixture-agent/GitHub/STATE/dashboard/handoff/rawthread/judge contact."
   }
 }

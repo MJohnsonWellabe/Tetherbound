@@ -1,0 +1,66 @@
+{
+  "source_commit": "09b2982b74bcca66f930c45a1110bc7bb6c87393",
+  "gameplay_foundation": "28572ae0c9085de60db33f58b6407588c2d7f681",
+  "historical_completed_F41_0": "acaaba91d55a38bbf808c6e3abdd603b0c077552",
+  "scope": "Peer-local party-cache truth plus tracked passive canonical-loss candidate, all presets; batch held from main/READY until original native/blind PASS",
+  "candidate_config": {
+    "provenance": "ROOT explicit tracked candidate authorization; no post-pin mutation/extra capture flags",
+    "seconds": 4.5,
+    "detail_px": 27,
+    "loss_result_enabled": true,
+    "title_px": 36,
+    "max_width_px": 536
+  },
+  "existing_lifecycle_proof": {
+    "source": "09b2982b74bcca66f930c45a1110bc7bb6c87393",
+    "exit": 0,
+    "mode": "headless",
+    "checks": 100,
+    "run": 37819453549,
+    "script_errors": 0,
+    "log": ".tmp/e-loss-09b-floor-lifecycle-37819453549/run.log",
+    "artifact": 11568996324,
+    "args": "--720p",
+    "log_sha256": "0327dec5b60d79f697a761d8277cd8b42dba6fd0937273e658421e3cfb73f544",
+    "actual_checkout_verified": true,
+    "seconds": 7,
+    "warnings": [
+      "HUD has no player; isolated fixture"
+    ],
+    "script": "tests/smoke_hud_presentation_lifecycle.gd",
+    "original_artifact_verdict": "PENDING",
+    "limits": "Logged Control canvas1920x1080 despite legacy--720p selector; actual title/detail size assertions test scaling floor, no native720/physicaldevice/pixel proof"
+  },
+  "superseded_pre_floor": {
+    "log_sha256": "f348585d36b3068a85f782bb0e1f46ebe3ee116cd1ec8ff66d643c9122bd0564",
+    "checks": 98,
+    "run": 37819061720,
+    "source": "e340703390ff458585d64064054d633259f26da6",
+    "exit": 0,
+    "seconds": 6,
+    "artifact": 11567824293,
+    "disposition": "Passing lifecycle logic retained only; original D source rejected32/24 readabilityfloor, no native or originalcombinedAPP claimed"
+  },
+  "unchanged_cache_piece": {
+    "exit": 0,
+    "D_source": "8fc3ad91d1124633cdc88754f6891e9f59dde490",
+    "E_original_reuse_verdict": "APPROVE exactD script/test identities, sameoriginal09b_combined_loss_HUD_original_source_command_review",
+    "script_blob": "5ce4082a96e0aff8b69ad68cd85ebdc6761392d3",
+    "artifact": 11566029206,
+    "assertions": 22,
+    "tests": 3,
+    "original_D_verdict": "APPROVE",
+    "run": 37814682262,
+    "test_blob": "c8746a4600cf6e4947763024e5a4f91188f5ca2b"
+  },
+  "new_native_blind": "ROOT native-e-09b2982b74-loss-ui-r1 LIVE; original runtime/blind pending, no duplicate engine",
+  "whole_F41_2_complete": false,
+  "original_combined_source_command": {
+    "source_verdict": "APPROVE",
+    "command_verdict": "APPROVE",
+    "source": "09b2982b74bcca66f930c45a1110bc7bb6c87393",
+    "original_report": "lane-e-capture-source-review.json/09b_combined_loss_HUD_original_source_command_review",
+    "tracked_loss_result": true,
+    "out": "res://.tmp/stormwood-phase2/f41-hollows-loss-ui-09b298"
+  }
+}
