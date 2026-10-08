@@ -1,0 +1,405 @@
+{
+  "criterion": "F24#0/#3",
+  "status": "BLOCKED",
+  "checkout_sha": "f589ea37a5c9619e6c3374db15f16e74d82c92df",
+  "run_id": 37713501794,
+  "artifact_id": 11522589226,
+  "named_proof": "tests/smoke_net_owner_passive_rejoin.gd --prove-tether-snare",
+  "result": "FAIL before command cast; meter 24/60 after eight unchanged quick-input attempts",
+  "raw_peer_log_sha256": "e9386a5136865a35a0a928a87ce86cedfb66d1efba395878fa55ba7b3ec9b2dd",
+  "observations": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "foe_hp_after": 235.452874680002,
+        "foe_hp_before": 243.777852722168,
+        "meter_after": 8.0,
+        "meter_before": 0.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-de46c1bea3e95c07e1226d2944b92429",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-585ba955e0ad2ba77bf8fe8bfd857c55",
+              "revision": 0,
+              "settled_revision": 0
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 357943,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_after": {},
+        "refusal_before": {},
+        "refusal_unchanged": true,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 6,
+          "verdict": "PASS"
+        }
+      },
+      {
+        "attempt": 2,
+        "foe_hp_after": 227.243612519264,
+        "foe_hp_before": 235.452874680002,
+        "meter_after": 16.0,
+        "meter_before": 8.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-de46c1bea3e95c07e1226d2944b92429",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-585ba955e0ad2ba77bf8fe8bfd857c55",
+              "revision": 0,
+              "settled_revision": 0
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 362548,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_after": {},
+        "refusal_before": {},
+        "refusal_unchanged": true,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 7,
+          "verdict": "PASS"
+        }
+      },
+      {
+        "attempt": 3,
+        "foe_hp_after": 227.243612519264,
+        "foe_hp_before": 227.243612519264,
+        "meter_after": 16.0,
+        "meter_before": 16.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-de46c1bea3e95c07e1226d2944b92429",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-585ba955e0ad2ba77bf8fe8bfd857c55",
+              "revision": 0,
+              "settled_revision": 0
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 366905,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_after": {
+          "code": "pending_vitals",
+          "kind": "move_start",
+          "reason": "The original health change is still being saved."
+        },
+        "refusal_before": {},
+        "refusal_unchanged": false,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 8,
+          "verdict": "PASS"
+        }
+      },
+      {
+        "attempt": 4,
+        "foe_hp_after": 218.558861658186,
+        "foe_hp_before": 227.243612519264,
+        "meter_after": 24.0,
+        "meter_before": 16.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-de46c1bea3e95c07e1226d2944b92429",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-585ba955e0ad2ba77bf8fe8bfd857c55",
+              "revision": 1,
+              "settled_revision": 1
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 371160,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_after": {
+          "code": "pending_vitals",
+          "kind": "move_start",
+          "reason": "The original health change is still being saved."
+        },
+        "refusal_before": {
+          "code": "pending_vitals",
+          "kind": "move_start",
+          "reason": "The original health change is still being saved."
+        },
+        "refusal_unchanged": true,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 9,
+          "verdict": "PASS"
+        }
+      },
+      {
+        "attempt": 5,
+        "foe_hp_after": 218.558861658186,
+        "foe_hp_before": 218.558861658186,
+        "meter_after": 24.0,
+        "meter_before": 24.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-de46c1bea3e95c07e1226d2944b92429",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-585ba955e0ad2ba77bf8fe8bfd857c55",
+              "revision": 1,
+              "settled_revision": 1
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 374568,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_after": {
+          "code": "friendly_target",
+          "kind": "strike_intent",
+          "reason": "You can't attack your own side."
+        },
+        "refusal_before": {
+          "code": "pending_vitals",
+          "kind": "move_start",
+          "reason": "The original health change is still being saved."
+        },
+        "refusal_unchanged": false,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 10,
+          "verdict": "PASS"
+        }
+      },
+      {
+        "attempt": 6,
+        "foe_hp_after": 218.558861658186,
+        "foe_hp_before": 218.558861658186,
+        "meter_after": 24.0,
+        "meter_before": 24.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-de46c1bea3e95c07e1226d2944b92429",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-585ba955e0ad2ba77bf8fe8bfd857c55",
+              "revision": 1,
+              "settled_revision": 1
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 377292,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_after": {
+          "code": "pending_vitals",
+          "kind": "strike_intent",
+          "reason": "The original health change is still being saved."
+        },
+        "refusal_before": {
+          "code": "friendly_target",
+          "kind": "strike_intent",
+          "reason": "You can't attack your own side."
+        },
+        "refusal_unchanged": false,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 11,
+          "verdict": "PASS"
+        }
+      },
+      {
+        "attempt": 7,
+        "foe_hp_after": 218.558861658186,
+        "foe_hp_before": 218.558861658186,
+        "meter_after": 24.0,
+        "meter_before": 24.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-de46c1bea3e95c07e1226d2944b92429",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-585ba955e0ad2ba77bf8fe8bfd857c55",
+              "revision": 2,
+              "settled_revision": 2
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 379782,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_after": {
+          "code": "friendly_target",
+          "kind": "strike_intent",
+          "reason": "You can't attack your own side."
+        },
+        "refusal_before": {
+          "code": "pending_vitals",
+          "kind": "strike_intent",
+          "reason": "The original health change is still being saved."
+        },
+        "refusal_unchanged": false,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 12,
+          "verdict": "PASS"
+        }
+      },
+      {
+        "attempt": 8,
+        "foe_hp_after": 218.558861658186,
+        "foe_hp_before": 218.558861658186,
+        "meter_after": 24.0,
+        "meter_before": 24.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-de46c1bea3e95c07e1226d2944b92429",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-585ba955e0ad2ba77bf8fe8bfd857c55",
+              "revision": 2,
+              "settled_revision": 2
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 382039,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_after": {
+          "code": "friendly_target",
+          "kind": "strike_intent",
+          "reason": "You can't attack your own side."
+        },
+        "refusal_before": {
+          "code": "friendly_target",
+          "kind": "strike_intent",
+          "reason": "You can't attack your own side."
+        },
+        "refusal_unchanged": true,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 13,
+          "verdict": "PASS"
+        }
+      }
+    ],
+    "command": "snare",
+    "cost": 60.0
+  },
+  "qualification": [
+    "reported_ok denotes local action counter advancement, not a landed or host-accepted strike",
+    "Refusal snapshots lack action IDs; a changed refusal within the helper interval is not exact host-action correlation",
+    "The before_strike_step observation precedes the unchanged helper readiness wait and does not timestamp physical injection",
+    "Guest observations expose received actor revisions and local proposals only; remote host queue is unavailable",
+    "Only attempts 1, 2 and 4 show both foe HP debit and eight earned meter",
+    "Attempt 8 retains the prior refusal; no fresh refusal is established",
+    "friendly_target preserves the nearer admitted allied creature/trainer guard; no sole production cause or authority repair is established"
+  ],
+  "original_review": "APPROVE evidence qualification; no production repair supported",
+  "logic_reuse": "37705007967: 77 files, 601 tests, 9676 assertions PASS; no broad repeat",
+  "remaining_gates": [
+    "Snare actual mounted cast/slowing/catch modifier proof",
+    "Rally actual mounted cast proof",
+    "Shipping command flags and full F24 criteria"
+  ],
+  "next": "F42#2 actual HUD device-profile captures; no third unchanged Snare run"
+}
