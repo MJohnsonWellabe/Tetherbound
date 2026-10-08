@@ -273,7 +273,7 @@ func _tag_state(args: Dictionary) -> Dictionary:
 		# Detached live host snapshot, not a guest view or a refusal-time claim.
 		# Keep every participant's revision debt and unpresented original visible.
 		var world: RefCounted = game.get("world")
-		var namespace := str(world.get("reward_delivery_namespace"))
+		var namespace_id := str(world.get("reward_delivery_namespace"))
 		var deliveries: Dictionary = world.get("reward_deliveries")
 		var bindings: Array[Dictionary] = []
 		for retained: Dictionary in (director.get("_ordinary_actor_vitals_proposals") as Dictionary).values():
@@ -291,9 +291,9 @@ func _tag_state(args: Dictionary) -> Dictionary:
 				"revision":actor.get("revision"), "settled_revision":actor.get("settled_revision")})
 		for binding: Dictionary in bindings:
 			var delivery_id := preload("res://scripts/net/actor_vitals_delivery.gd").delivery_id(
-				namespace, str(binding.character_id), str(binding.creature_uid))
+				namespace_id, str(binding.character_id), str(binding.creature_uid))
 			var journal: Dictionary = deliveries.get(delivery_id, {})
-			binding["world_namespace"] = namespace
+			binding["world_namespace"] = namespace_id
 			binding["delivery_id"] = delivery_id
 			binding["journal_present"] = deliveries.has(delivery_id)
 			binding["journal_status"] = journal.get("status", "absent")
