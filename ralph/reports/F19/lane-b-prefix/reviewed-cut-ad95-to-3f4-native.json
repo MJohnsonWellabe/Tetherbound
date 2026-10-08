@@ -1,0 +1,41 @@
+{
+  "producer_commit": "ad95e0dd6fe490cfb6f2d1bf6f09ae93d18b9cfe",
+  "consumer_commit": "3f4eb490d808fbb83c836d5533de7b35d0458771",
+  "imported_boundary": "warrens",
+  "reviewer": "b_f49_review",
+  "verdict": "COMPATIBLE",
+  "source_verdict": "SOURCE APPROVE",
+  "source_scope": "Actual configured hybrid trainer round XP and unscaled completion bonus are limited by original typed cap room; five distinct originalUIDs and each admitted cap bind the window and are rechecked at each kill. Exact terminal XP/item/reward/count/identity/9000frame comparisons retained. Hall initializes the same inherited window. No save/schema/gameplay change beyond previously reviewed localACK+4.",
+  "actual_producer": {
+    "packet": "D:/CodexTemp/tetherbound-proof/native-b-ad95e0dd6f-earned-warrens-r2",
+    "supervisor_exit": 0,
+    "driver_elapsed_s": 942.723,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "earned": [
+      "Actual prior Bridge Load",
+      "Two ordinary wild victories",
+      "Guardian victory with13observed hits",
+      "Earned rewards and warrens_cleared",
+      "Ordinary exit and slot0 export"
+    ],
+    "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+    "original_ordered_five_retained": true,
+    "levels": [
+      9,
+      9,
+      9,
+      7,
+      7
+    ],
+    "world_seed": 59015681,
+    "namespace": "d3374d50ed084f0da03f42a78232f36b",
+    "next_goal": "Relay Captain",
+    "warnings": "Existing training reconciliation stall warnings retained; no clean-reconciliation claim"
+  },
+  "manifest": "ad95-to-3f4-native-manifest.json",
+  "binding_scope": "Four original completed prefix rows copied unchanged; no old disk/log/save hashes recomputed. First two old compatibility manifests retained. FailedRelayr1 contributes no row or imported state.",
+  "validation_scope": "Mechanical JSON/predecessor binding checks only; affected Relay/Hall controls, actual patched Load and changed-source RelayR2 remain OPEN.",
+  "retry": "Fresh output root earned_piece_native_relay_r2/relay from original completedWarrens only; no partialresume or priorfailedoutput.",
+  "criterion_scope": "FullF19#5/F49 and unfinishedRelay/allfuturefolds OPEN; F02#0/#1 separately approved/READY."
+}
