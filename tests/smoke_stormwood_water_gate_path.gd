@@ -188,6 +188,14 @@ func _run() -> void:
 		return
 
 	var transport := game.get("ledger") as Node
+	# The real morning producer also writes this isolated character. Authenticate
+	# its initial saved acceptance before observing the gate; otherwise its two
+	# unrelated bounty deltas contaminate the unchanged zero-operation guard.
+	_expect(await _wait_for_initial_bounty(game, session),
+		"initial canonical bounty rotation did not settle before gate observation")
+	if not _failures.is_empty():
+		_finish()
+		return
 	var published: Array[Dictionary] = []
 	transport.delta_applied.connect(func(delta: Dictionary) -> void:
 		published.append(delta.duplicate(true)))
@@ -342,6 +350,26 @@ func _wait_for_shell(world: Node, budget_ms: int) -> bool:
 func _wait_for_provider(arbiter: Node, provider: Node) -> bool:
 	for _frame in PROVIDER_WAIT_FRAMES:
 		if is_instance_valid(arbiter) and arbiter.call("winning_provider") == provider:
+			return true
+		await physics_frame
+	return false
+
+
+func _wait_for_initial_bounty(game: Node, session: Node) -> bool:
+	for _frame in PROVIDER_WAIT_FRAMES:
+		var row: Dictionary = session.call("_owner_training_row")
+		var personal: Dictionary = game.get("local").get("redesign_character")
+		var context: Dictionary = row.get("host_context", {})
+		var bounties: Dictionary = personal.get("bounties", {})
+		if row.get("status") == "accepted" and row.get("action") == "bounty_rotate" \
+				and row.get("character_id") == CHARACTER_ID and row.get("world_id") == WORLD_ID \
+				and row.get("world_namespace") == game.get("world").get("reward_delivery_namespace") \
+				and row.get("source_key") == "halda_bounty_clock" \
+				and not str(row.get("receipt", "")).is_empty() \
+				and (personal.get("transaction_receipts", []) as Array).has(row.receipt) \
+				and bounties.get("anchor_world") == row.world_namespace \
+				and bounties.get("anchor_day") == context.get("host_day") \
+				and session.call("_owner_training_mutation_blocked", game.get("local")) == false:
 			return true
 		await physics_frame
 	return false
