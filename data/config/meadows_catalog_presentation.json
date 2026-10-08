@@ -1,6 +1,8 @@
 {
   "schema_version": 1,
   "enabled": false,
+  "hall_endwall_enabled": false,
+  "hall_endwall_scope": "Peer-local, all presets, two installed Fantasy Props hanging cloth assets on the far nave wall only. Shipping OFF pending capture/judge; process-only --hall-endwall-candidate and --hall-endwall-baseline affect this anchor alone. No floor/collider/interaction/state/authority/transaction/save change; unrelated catalogue remains OFF.",
   "scope": "peer-local presentation; no durable state, RPC, transaction or save schema",
   "provenance": "Unmodified installed Quaternius Medieval Village/Fantasy Props/Stylized Nature. Duplicated banner tint only. No acquisition/generation.",
   "cover_layers": [
@@ -153,6 +155,26 @@
     }
   },
   "placements": [
+    {
+      "id": "nave_endwall_banner_west",
+      "anchor": "hall_endwall",
+      "path": "res://assets/props/quaternius_fantasy/Banner_1_Cloth.gltf",
+      "at": [-3.6, 6.1, 14.9],
+      "yaw_deg": 180,
+      "scale": 1.6,
+      "grounded": false,
+      "retint": {"MI_Banner": "#9db9b2"}
+    },
+    {
+      "id": "nave_endwall_banner_east",
+      "anchor": "hall_endwall",
+      "path": "res://assets/props/quaternius_fantasy/Banner_1_Cloth.gltf",
+      "at": [3.6, 6.1, 14.9],
+      "yaw_deg": 180,
+      "scale": 1.6,
+      "grounded": false,
+      "retint": {"MI_Banner": "#9db9b2"}
+    },
     {
       "id": "shop_bench",
       "anchor": "village",

@@ -9,7 +9,8 @@
   "player_position": [106.5661, 0.910804, 14.14628],
   "hall_local_position": [-0.146276, 0.060805, -0.433945],
   "maximum_offroad": 0.0,
-  "scope": "Existing parsed controller path with authored post-opening flags/starter and one initial farmhouse floor placement; headless. Covers combined house material, light, Hall label/rain and grounded companion snap source. Does not prove actual colors, shelter particles, companion clearance, earned opening, device input, frame time or Bars A/B.",
-  "diagnostics": "No ERROR/WARNING lines found in this run.log; no claim about unrelated logs.",
+  "scope": "Existing parsed controller path with authored post-opening flags/starter and one initial farmhouse floor placement; headless integration of combined house material, light, Hall label/rain and grounded companion snap source. Does not demonstrate the snap branch, actual colors, shelter particles, companion clearance, earned opening, device input, frame time or Bars A/B.",
+  "diagnostics": "run.log line3 retains instance_reset_physics_interpolation deprecation warning. No warning-free claim; engine terminal and path pass remain separate.",
+  "independent_review": "/root/f42_visual_review: bounded AREA APPROVE; pixels and applicable behavior gates remain open",
   "criterion_done": false
 }

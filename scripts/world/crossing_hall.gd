@@ -43,6 +43,10 @@ func build(config: Dictionary) -> bool:
 	catalog.name = "MeadowsCatalogPresentation"
 	add_child(catalog)
 	catalog.build("hall")
+	var endwall := CATALOG_PRESENTATION.new()
+	endwall.name = "MeadowsHallEndwallDressing"
+	add_child(endwall)
+	endwall.build("hall_endwall")
 	refresh_from_game()
 	set_process(true)
 	return true
