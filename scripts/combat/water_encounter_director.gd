@@ -151,7 +151,9 @@ func restore_swim_mount(saved: Dictionary) -> bool:
 	if is_instance_valid(_ally_body) and not dismiss_active_creature():
 		print("F37 RESTORE REFUSAL dismiss_active")
 		return false
-	if not party.set_active(index):
+	# Reconstructing the already-active owned individual does not select a new
+	# member or mutate the party revision during an owner transaction.
+	if party.active_index() != index and not party.set_active(index):
 		print("F37 RESTORE REFUSAL set_active")
 		return false
 	var raw: Array = saved.position
