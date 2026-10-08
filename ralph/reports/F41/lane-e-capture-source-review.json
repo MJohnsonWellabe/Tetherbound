@@ -3303,5 +3303,101 @@
       "No new pixels,source/math/corpus/engine/test/GPU/dispatch/implementation/status/GitHub/raw-thread/judge contact or new helper/fixture/agent activity; only numeric affected artifact checks and this original report append."
     ],
     "preservation": "Every prior report entry is unchanged, including historical whole_f41_0_253574_original_independent_review REQUEST_CHANGES."
+  },
+  "28572_main_merge_original_bounded_integration_review": {
+    "reviewer": "original review_cloud_startup01a11679-fc2c-7873-bccd-423c1e04476d",
+    "source_integration_verdict": "APPROVE",
+    "merged_current_whole_disposition": "PENDING focused combined-UI proof and current P2-002 applicability; original253 whole F41(0) APPROVE remains valid historical milestone.",
+    "scope": "Only exact two-parent integration, three authorized conflict resolutions, necessary source identities/current UI applicability and minimum existing proof recipe. No accepted source/pixel/runtime witness restart.",
+    "source_commit": "28572ae0c9085de60db33f58b6407588c2d7f681",
+    "tree": "dea81a8dab871d1bef257a85d672256d49118a81",
+    "parents": [
+      "e68066640d764c15b1519de299359a6aaad1d226",
+      "c7127e7dda9bc32cd1930d1672b90abb7ff9758c"
+    ],
+    "conflict_resolutions": {
+      "data/config/stormwood_ground_finish.json": {
+        "blob": "68b547d91182290435d474d1ae41c0b45b47c6e8",
+        "disposition": "Exact approved E file retained; master full-cover and independent leaf_original_alpha remainfalse. Main difference is only restored disabled leaf profile, not an enabled failed leaf experiment."
+      },
+      "tools/capture_stormwood_f10_matrix.gd": {
+        "blob": "82f6e9efecc9052dd20e4b86204450b6b7b62442",
+        "disposition": "Exact approved E file retained; glass candidate bindings/counts/noCollision/upload/phase/raster/unique-count guards unchanged. No additional runtime proof for this unchanged observer."
+      },
+      "tools/phase2_capture_ui.gd": {
+        "blob": "aaa0180ba79b2c8f5ec7a8b388eb08d44867a0f9",
+        "disposition": "Coherent combination: main UI capture code plus existing opt-in E bootstrap/graphics metadata and declaration-derived primary raster. Default fallback remains1920x1080; paired720 resizes to exact1280x720, checks actual image size, saves per-frame resolution and restores declared primary before next stage. Partial receipt stages never quit or claimcomplete; open/flush errors enter failures/nonzeroexit. No source bug found in these merge-relative changes.",
+        "guards": "Output whitelist/tab availability/build-save prerequisite checks/headless refusal/source-preset-fresh bootstrap and image/save failure paths retained. Main idle/build/save/map extension code inherited, not a new local E implementation. Legacy no-preset path skips bootstrap and uses main1920 default; named metadata declares primary raster while paired records declare their actual720 raster."
+      }
+    },
+    "retained_E_identities": {
+      "scripts/combat/stormwood_encounter_director.gd": "05bbf0917b1151a461de6a11bc9fb39fdc9adc63",
+      "scripts/ui/playground_hud.gd": "6a65e5aa929f20ccfe6e7fc28ef010afab67d552",
+      "scripts/world/stormwood_world.gd": "3a33f3fd9819135e588c7a37685402616354b0d6",
+      "scripts/world/stormwood_road_current.gd": "e0dc2a590433cd707f4be5b544d0df1047145f40",
+      "data/config/stormwood_road_current.json": "04e34c7e722cedb0885579196768ff5157bdb111",
+      "shaders/stormwood_road_current.gdshader": "dfbd4559053a30ca82a66382f19906c901633fb4",
+      "scripts/world/stormheart_tree.gd": "a869d059a5c66e2be6f85e2c9d01f57bd991c1bf",
+      "scripts/creatures/wild_creature.gd": "faf7bd410b02effeb145276acfcb15c91d5148da",
+      "scripts/creatures/creature_body.gd": "86291c35781e7385ffd8ea2da4fe883aa3c83aef",
+      "scripts/world/stormwood_arch_runtime.gd": "353e89b5653a9b8b558704beef6efa0ac76079cf",
+      "data/config/stormwood_arches.json": "b6b11c7343c35509e68b0602c477edd8c4c089fa",
+      "data/config/stormwood_encounters.json": "f7339fff9b221706e87bb0fc473a8f80f7f28a63",
+      "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+      "tools/phase2_capture_stormwood_fights.gd": "e19b014bc07f1cad3f83dc49d2f8fe34bf28527c",
+      "tests/capture_stormwood_b_named_fights.gd": "b8d22e35c143c0cc9fbf31a7facd260d5eb986bf"
+    },
+    "retained_shared_reward_dependencies": "progression_feed,hud_presentation_policy,hud.json and victory_hierarchy_visual exactE/main identities unchanged. New D loss-HUD revision not included: PlaygroundHUD remains accepted6a65. Native natural-loss baseline and result score remain original, not retrospectively updated.",
+    "inherited_main_UI": {
+      "scripts/ui/game_menu.gd": "88ff5f0c7d0642709ebd371665b154d619fd9b62",
+      "scripts/ui/tab_backpack.gd": "a50fa00b5f0f06f748f3c0bd40b0c63e2f1b72fa",
+      "scripts/ui/tab_map.gd": "d3e0ffff76f18c05d9d941508222e78cacd00342",
+      "identity": "These three are byte-identical to acceptedmain c712; no E-local modification. Other acceptedmain shared integration checks are reused, not re-executed or independently broadened here."
+    },
+    "whole_evidence_reuse": {
+      "unchanged": "Original postF26 shipping240 and complete44-score assembly, current253 three combat rows, reward111 and natural active-creature-loss110,21/132 selected logic withfive detached-fixtureERRORs and source/runtime/wholeblind witnesses remain preserved. No changed material/world/director/body/HUD/tangent source identified in this merge requiring their restart.",
+      "specific_current_limit": "P2-002 old map score cites d627 first-open map state. Inherited main changes initialzoom to32, label placement/maxzoom and map.json shipping margin behavior; these directly change the displayed terrain/road context being rated. Acceptedmain inheritance is source evidence, not automatically a current F41 numeric-score applicability finding. Supply specific existing accepted-main/current evidence establishing supported carry-forward, or bounded independent current P2-002 assessment. No whole44 regrade required.",
+      "other_UI_limits": "Backpack body now scrolls while generic shell style remains unchanged; P2-001 generic shell assessment retains other unaffected menu evidence, not an assertion that old Backpack pixels are identical. P2-032 active-region highlight has no changed selection/highlight code in inspected Map delta, so its narrowly bounded correspondence observation is retained. Main menu refusal layer change does not imply unshown error/modals were rescored."
+    },
+    "required_minimum_proof": {
+      "existing_script": "res://tools/phase2_capture_ui.gd",
+      "purpose": "One focused combined source/bootstrap/paired-native-raster execution and changed map/backpack views. Avoid separate headless/fullsuite/scenery/combat/matrix repetitions. Reuse acceptedmain legacy/idle/build/save/checks because their implementation is inherited unchanged.",
+      "ROOT_only_argv": [
+        "Godot",
+        "--path",
+        "<fresh pinned28572 worktree>",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1920x1080",
+        "--fullscreen",
+        "--fixed-fps",
+        "20",
+        "--script",
+        "res://tools/phase2_capture_ui.gd",
+        "--",
+        "--biome=stormwood",
+        "--tabs=backpack,map",
+        "--paired-720",
+        "--preset=Low",
+        "--low-resolution=1920x1080",
+        "--source-commit=28572ae0c9085de60db33f58b6407588c2d7f681",
+        "--output=res://ralph/reports/VISUAL/phase2/stormwood/ui-merge-28572",
+        "--seed=2042"
+      ],
+      "expected_ids": [
+        "exploration_hud",
+        "exploration_hud_1280x720",
+        "menu_backpack",
+        "menu_backpack_1280x720",
+        "menu_map",
+        "menu_map_1280x720"
+      ],
+      "verification": "Exactcleanpin/import, renderer, terminalexit0/noerrors, completefinalreceipt/failures[], sixunique persisted image-record pairs with primary1920x1080 and paired1280x720, bootstrapsource/presetmetadata plus per-frameactualresolution, and restoration before subsequent primary capture. Fresh output required. Parse/script/import/active outputs alone are notPASS.",
+      "current_map_score": "Use these or genuinely applicable existing acceptedmain map pixels for only P2-002 independent current-applicability/numeric determination. Full visual bar and fixing defects are separate from rescore completion.",
+      "status": "PENDING. Reviewer executed nothing; no additional shared/main full-suite proof named because no local shared production edit is introduced by the three merge resolutions."
+    },
+    "preservation": "All original report entries and final253 wholeAPP, failed receipts,partial coverage/priority-estimate basis,appearanceBLOCK/visualFAIL,legacy limits and pre-merge source witnesses are unchanged. Merged final handoff staysPENDING until minimum changed proof/current map applicability are supported.",
+    "activity": "Bounded localGit parents/relative3-filediffs/necessary exactsourceidentities and affected UI-row metadata only; only original report append. No engine/GPU/test/dispatch/implementation/source edit,GitHub/STATE/dashboard/handoff/rawthreads,blind pixels/judge contact,newhelpers/fixtures/agents."
   }
 }
