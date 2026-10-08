@@ -222,6 +222,8 @@ func _capture_actual_bounty(game: Node) -> void:
 ## No party, stock, recipe, win, clock, save or configuration grants; no
 ## earned travel, duel or access proof.
 func _capture_actual_master_sites() -> void:
+	# SceneTree._init runs before the actual Game autoload is mounted.
+	await process_frame
 	if DisplayServer.get_name() == "headless":
 		push_error("Master placement capture requires the existing render mode")
 		quit(1)
