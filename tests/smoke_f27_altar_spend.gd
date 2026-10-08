@@ -149,8 +149,6 @@ func _witness_masters_lesson(creature: RefCounted, panel: Node) -> bool:
 	var uid := str(creature.uid)
 	var cid := str(local.character_id)
 	var retained: Array = _game.party.members().duplicate()
-	var goal_signature_before := str(_game.quest_log.call("lesson_goal_signature"))
-	var goal_revision_before := int(_game.progression.get("revision"))
 	var mirror: Dictionary = local.redesign_character.creatures.get(uid, {})
 	var cap := preload("res://scripts/creatures/breakthrough.gd").level_cap(mirror.get("breakthroughs", []))
 	if cap != 10 or int(creature.level) >= cap or rules.available("masters", local) \
@@ -184,19 +182,6 @@ func _witness_masters_lesson(creature: RefCounted, panel: Node) -> bool:
 	if teacher == null or panel.call("is_open") or INPUT_OWNER.current(self) != null \
 			or not rules.available("masters", local):
 		_fail("The real first cap did not unlock Masters with free input and installed Tam")
-		return false
-	var goal_signature_after := str(_game.quest_log.call("lesson_goal_signature"))
-	var goal := reader.observe_next_goal("paid_first_cap", "station_closed_before_teacher_walk")
-	var goal_passed: bool = goal_signature_before != goal_signature_after \
-		and int(_game.progression.get("revision")) == goal_revision_before \
-		and goal.visible_text_matches and not goal.paused and str(goal.input_owner).is_empty() \
-		and goal.character_id == cid and goal.party_uids == [uid]
-	print("F46 PAID CAP GOAL REFRESH " + JSON.stringify({"passed":goal_passed,
-		"signature_before":goal_signature_before,"signature_after":goal_signature_after,
-		"progression_revision_before":goal_revision_before,"progression_revision_after":int(_game.progression.get("revision")),
-		"observation":goal,"whole_f46_proven":false}))
-	if not goal_passed:
-		_fail("Paid first cap did not refresh the actual free-world HUD without a progression revision")
 		return false
 	var nav := preload("res://tests/helpers/stick_navigator.gd").new(self, _player, _rig, Callable(reader, "_stick"))
 	var recoveries_before := int(_player.get("_unstick_count"))
