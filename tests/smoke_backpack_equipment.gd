@@ -9,9 +9,12 @@ func _init() -> void:
 func _run() -> void:
 	var game := root.get_node("Game")
 	game.call("reset_for_new_game")
-	var world := Node3D.new()
+	# Typed equipment requires the same actual combat-idle host context as
+	# other personal actions; an empty Node3D cannot prove that context.
+	var world := (load("res://scenes/world/meadows_playground.tscn") as PackedScene).instantiate()
 	root.add_child(world)
 	current_scene = world
+	for i in 240: await physics_frame
 	var inventory: RefCounted = game.get("inventory")
 	inventory.call("add", "insulated_vest", 1)
 	var menu: CanvasLayer = game.call("menu")
@@ -40,9 +43,11 @@ func _run() -> void:
 	_check(str(gear.call("equipped_in", "upper_body")) == "insulated_vest", "controller Use equips vest")
 	_check(int(inventory.call("count", "insulated_vest")) == 0, "worn vest left carried inventory")
 	var saver: RefCounted = load("res://scripts/save/save_game.gd").new("user://equipment_controller_saves/")
-	_check(bool(saver.call("save", game, 1)), "real Game saved worn equipment to disk")
+	# Retained journals keep their slot-0 world identity; the isolated writer
+	# changes only the directory, not the immutable target locator.
+	_check(bool(saver.call("save", game, 0)), "real Game saved worn equipment to disk")
 	gear.call("unequip_to_inventory", "upper_body", inventory)
-	_check(bool(saver.call("load_slot", game, 1)), "real Game loaded saved equipment")
+	_check(bool(saver.call("load_slot", game, 0)), "real Game loaded saved equipment")
 	_check(str(gear.call("equipped_in", "upper_body")) == "insulated_vest", "disk reload restored worn vest")
 	_check(int(inventory.call("count", "insulated_vest")) == 0, "disk reload did not duplicate vest into bag")
 	var gear_buttons: Dictionary = body.get("_equipment_buttons")
