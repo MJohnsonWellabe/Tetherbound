@@ -563,6 +563,13 @@ func _gather_first_feast_stock(band2: Array[Vector2], rim: Array[Vector2],
 	var result: Dictionary = observation.get("gathering", {})
 	if not gathered or _count("attuned_ground") < attuned_required:
 		return _fail("The paid feast bill lacks actual harvests or secondary attuned yield: " + str(result))
+	if OS.get_cmdline_user_args().has("--lesson-replay-witness"):
+		if home.get("_lesson_replay_row").get("id", "") != "homestead":
+			return _fail("First earned farm return did not observe its actual Homestead lesson")
+		if not await home.replay_observed_lesson():
+			return _fail("First Homestead Settings Help replay failed: " + str(home.failures))
+		_receipt("first_homestead_lesson_help", {"character_id": cid, "party_uids": retained,
+			"lesson": "homestead", "actual_home_return": true, "whole_f46_proven": false})
 	for item: String in needed:
 		if _count(item) < int(needed[item]):
 			return _fail("The gathered homestead bill no longer covers " + item)
