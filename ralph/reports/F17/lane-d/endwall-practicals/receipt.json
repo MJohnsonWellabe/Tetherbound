@@ -12,7 +12,7 @@
   "preserved": "8 arches,8 pedestals, floor/collider/layout, approaches, ordinary recall, weather, ambient strength, all production guards and capture fixtures",
   "limits": "Lighting candidate only; labels/companion overlap, sparse architecture, complete visual criterion and hardware proof remain open",
   "comparison": "Existing 24 source75a Hall stills retained; exact changed-source existing Hall stills with original guards, no unchanged sparse baseline repeat",
-  "status": "Original source/affectedproofs/command APPROVE atcurrenta7; exactchangedsource Hallpacket postedNOTICE for ROOTexclusive native scheduling; pixels/originalblindpending,wholeF17#6 OPEN",
+  "status": "Original runtime/source APPROVE currenta7 actualnative24; original blind serial resumed; wholeF17#6 OPEN",
   "artifact_id": 11548924332,
   "run_log_sha256": "6c0aa1703e9b3cafeb10c273e704e9270b6083947cd9384d6ba7b792e4b8d78c",
   "functional_result": "PASS actual Godot4.7 headless, exit0,114s; clean exact checkout confirmed in joblog; terrain64, director actualhouse/opendoor, physical farmhouse-road-nave onfloor, maximum_offroad0; interpolation deprecation retained, no errors. No visual/light/8+8/recall re-proof claimed.",
@@ -21,5 +21,7 @@
   "current_source_reuse": "Original f42 APPROVE exacta7source,bothactualcleanaffectedproofs,and currentROOTnativecommand. Hall/capture/circuit source unchangedfromapprovedb7; source75a physical8+8/recall guards/pieces preserved, nounchangedbaseline recapture.",
   "current_native_packet": "D:/CodexTemp/tetherbound-proof/native-d-a7f96dfdf8-hall-medium-high-endwall-r1",
   "current_native_command": "Godot4.7 --path <ROOTisolatedcleancheckoutofa7f96dfdf8dc9f9f6e485c02a12c4f8940e21279> --rendering-method forward_plus --fullscreen --resolution 1920x1080 --script tools/capture_f17_visual.gd -- --preset=Medium --paired-high --hall-stills-only --expected-resolution=1920x1080 --source-commit=a7f96dfdf8dc9f9f6e485c02a12c4f8940e21279 --output=D:/CodexTemp/tetherbound-proof/native-d-a7f96dfdf8-hall-medium-high-endwall-r1/frames",
-  "current_original_review": "../../../F42/lane-d/readable-bindings/original-typed-source-proof-review.txt"
+  "current_original_review": "../../../F42/lane-d/readable-bindings/original-typed-source-proof-review.txt",
+  "native_runtime_result": "APPROVE originalf42:52hashes/sizesmatch,24unique1920x1080 originals,MediumHighperpairbody/camerabasis match,24grounded;actualfarmhouseHall/8arches8pedestalsPASS<.6m;ordinaryconditionalrecall/healthyUIDguards retained;exit0/650s/0script errors;hall_stills_finishedtrue/fullcompletefalse;interpolationdeprecation+7TextureRIDleaks/fixtures retained",
+  "native_original_runtime": "original-native-runtime.txt"
 }

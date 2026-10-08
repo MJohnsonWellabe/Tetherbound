@@ -1,0 +1,11 @@
+> **APPROVE bounded Hall runtime evidence at a7f96dfdf8dc9f9f6e485c02a12c4f8940e21279.**
+>
+> - All **52 hashes/sizes match**. Verified **24 distinct PNGs, all1920×1080**, covering three labels × day/night × clear/rain × Medium/High.
+> - Every Medium/High pair has identical recorded body/camera positions and camera basis. All24 record grounded trainers.
+> - Actual farmhouse→Hall arrival and **8 arches +8 pedestals PASS**, all within0.6m on real floors. Original conditional ordinary-recall and healthy active-companion identity guards remain intact.
+> - Source/import trees match clean a7 receipts; terminal exit0, empty stop reason, approximately650s, no script errors. `hall_stills_finished=true`, full `complete=false`.
+> - Retain interpolation deprecation, seven leaked Texture RIDs, and all opening/starter/initial-placement/time/weather fixtures.
+>
+> **APPROVE the proposed ROOT-only HUD command pair** on clean a7: fullscreen1080 and windowed720, Compatibility, existing `capture_named_fights_f10_6.gd` arguments and fresh outputs. Producer/config source matches the retained5c8 proof. Flags remain OFF: fallback HUD only, with no charged/ultimate or command-system coverage implied. Actual receipts and PNG headers must establish its eventual raster/source results.
+>
+> No pixel, Low-Hall, motion, hardware, frame-time, earned or whole-criterion approval. **F17#6 and F42#2 remain OPEN.**
