@@ -106,6 +106,13 @@ class DetachedDuelChooser extends "res://scripts/masters/breakthrough_panel.gd":
 		_cancel_duel_preparation()
 		hide()
 
+class RecordedDuelChooser extends DetachedDuelChooser:
+	# Exercise the ordinary rebuild from saved cards without claiming native
+	# layout, controller focus, encounter admission or a real Master outcome.
+	var choices: Array[Dictionary] = []
+	func _button(label: String, action: Callable, disabled: bool = false) -> void:
+		choices.append({"label": label, "action": action, "disabled": disabled})
+
 func _player(level: int) -> RefCounted:
 	var player := preload("res://autoload/player_state.gd").new()
 	player.configure(preload("res://autoload/item_db.gd").new())
@@ -423,6 +430,42 @@ func test_master_selection_deploys_the_chosen_owned_companion_and_fences_context
 	director.free()
 	game.free()
 	site.free()
+
+func test_master_choices_identify_unnamed_duplicate_and_named_saved_companions() -> void:
+	var player := _player(9)
+	for id: String in ["terrapup", "ripplet", "terrapup", "ripplet"]:
+		player.party.add(SPECIES.spawn(id))
+	player.party.at(2).nickname = "River"
+	player.party.at(3).resting = true
+	player.party.at(4).hp = 0.0
+	var before: Dictionary = player.save_data()
+	var game := DuelGame.new()
+	game.local = player
+	var producer := DuelProducer.new()
+	producer.game = game
+	var service := SERVICE.new()
+	service.set("_view", producer.view)
+	var panel := RecordedDuelChooser.new()
+	panel.set("_service", service)
+	panel.set("_mode", "duel")
+	panel.set("_list", VBoxContainer.new())
+	panel.set("_message", Label.new())
+	panel.call("_rebuild")
+	assert_eq(panel.choices.size(), 6, "five saved companions and Back")
+	var members: Array = player.party.members()
+	for index: int in range(5):
+		var expected_name: String = members[index].label()
+		assert_true(str(panel.choices[index].label).begins_with("%d · %s" % [index + 1, expected_name]))
+		assert_eq(panel.choices[index].disabled, index >= 3, "only conscious awake challengers can be chosen")
+	assert_true(str(panel.choices[2].label).contains("(" + str(members[2].display_name) + ")"), "nickname keeps species visible")
+	assert_false(panel.choices[0].label == panel.choices[1].label, "duplicate unnamed species keep distinct visible slots")
+	assert_eq(player.save_data(), before, "choice presentation never edits durable state")
+	panel.get("_list").free()
+	panel.get("_message").free()
+	panel.free()
+	service.free()
+	producer.free()
+	game.free()
 
 func test_stormwood_master_uses_the_real_inherited_duel_instead_of_chapter_catalogue() -> void:
 	var world := Node3D.new()
