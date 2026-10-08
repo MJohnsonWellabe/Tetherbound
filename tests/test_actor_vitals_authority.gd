@@ -595,9 +595,10 @@ func test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldow
 	var started := host.authorize_move_start({"encounter_id":id, "action":3, "slot":"quick"},
 		1, first, binding, quick, profile, 12000)
 	assert_true(started.ok, str(started))
-	assert_true(host.validate_strike({"encounter_id":id, "action":3, "slot":"quick",
-		"move_id":str(first.move_quick), "facing":Vector3.RIGHT}, 1,
-		{"now_ms":12500, "origin":Vector3.ZERO, "bodies":[], "move_actor_binding":binding}).ok)
+	var arrived := host.validate_strike({"encounter_id":id, "action":3, "slot":"quick",
+		"move_id":str(first.move_quick), "move":started.delta.move, "facing":Vector3.RIGHT}, 1,
+		{"now_ms":12500, "origin":Vector3.ZERO, "bodies":[], "move_actor_binding":binding})
+	assert_true(arrived.ok, str(arrived))
 	assert_false(host.credit_move_hit(id, 1, 3, 2.0, "opponent", 100.0).is_empty())
 	var pending_mastery := host.move_mastery_outcome(id, 1, 3)
 	assert_false(pending_mastery.is_empty())
