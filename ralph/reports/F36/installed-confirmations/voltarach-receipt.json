@@ -1,0 +1,200 @@
+{
+  "criterion": "F36#0 asset component; whole25-30 batch OPEN",
+  "subject": "voltarach",
+  "priority": 20,
+  "mode": "Installed confirmation, no generation/model/material/config binding change",
+  "model": "assets/creatures/tetherbound/voltarach/models/creature_voltarach_lod0.glb",
+  "sha256": "9553774feaa50f04e566d70fbce18c2b76474a0d6cbd9a71498f9284bdde29f1",
+  "reference_sha256": {
+    "assets/creatures/tetherbound/voltarach/reference/front.png": "bff4a8277ef62384ba228316962e8f17ae83dda82f91c91b07077815c50ff63d",
+    "assets/creatures/tetherbound/voltarach/reference/side.png": "ff3c27f34f56dde21a2fcc0b2734ec9b431b4aa661a34a3b25b2221118ee52f2"
+  },
+  "native_proof": {
+    "run": 37669449150,
+    "source": "fa69cee0b4438023871a1d9dd0f2b7dee47a42d4",
+    "frames": [
+      "res://shots/lane-e/f36-installed-scale-fa69/voltarach-standing-000.png",
+      "res://shots/lane-e/f36-installed-scale-fa69/voltarach-standing-100.png"
+    ],
+    "standing_height_m": 4.25,
+    "trainer_height_m": 1.79999995231628,
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "scope": "Retained actual installed standing stage, not deformation/motion/gameplay"
+  },
+  "DCC": "Existing inspect_glb/turntable, raw diagnostic axis units not world scale",
+  "raw_inspection": {
+    "model": "D:\\tetherbound\\codex-e\\assets\\creatures\\tetherbound\\voltarach\\models\\creature_voltarach_lod0.glb",
+    "bounds": {
+      "min": [
+        -0.8149,
+        -0.9459,
+        -0.0
+      ],
+      "max": [
+        0.8149,
+        0.9421,
+        1.0858
+      ],
+      "size": [
+        1.6298,
+        1.888,
+        1.0858
+      ],
+      "height_m": 1.0858,
+      "longest_axis_m": 1.888,
+      "sits_on_origin": true,
+      "centred_on_origin": true
+    },
+    "meshes": [
+      {
+        "name": "Mesh_0",
+        "vertices": 38667,
+        "edges": 94240,
+        "faces": 56134,
+        "triangles": 56134,
+        "tris": 56134,
+        "quads": 0,
+        "ngons": 0,
+        "quad_fraction": 0.0,
+        "non_manifold_edges": 20078,
+        "boundary_edges": 20078,
+        "loose_vertices": 0,
+        "duplicate_vertices": 10565,
+        "components": 636,
+        "debris_components": 577,
+        "flipped_normals": 10439,
+        "uv_layers": 1,
+        "stretched_uv_faces": 37,
+        "materials": [
+          "Material_0"
+        ],
+        "shape_keys": 0,
+        "vertex_groups": 15
+      }
+    ],
+    "materials": [
+      {
+        "name": "Material_0",
+        "textures": [
+          "Image_0"
+        ],
+        "textured": true
+      }
+    ],
+    "armatures": [
+      {
+        "name": "Armature",
+        "bones": 15,
+        "bone_names": [
+          "root",
+          "pelvis",
+          "spine",
+          "neck",
+          "head",
+          "front_upper_l",
+          "front_lower_l",
+          "front_upper_r",
+          "front_lower_r",
+          "tail_1",
+          "tail_2",
+          "rear_upper_l",
+          "rear_lower_l",
+          "rear_upper_r",
+          "rear_lower_r"
+        ],
+        "roots": [
+          "root"
+        ],
+        "skinned_meshes": [
+          "Mesh_0"
+        ],
+        "max_depth": 4
+      }
+    ],
+    "animations": [
+      {
+        "name": "attack_Armature",
+        "frames": [
+          1.0,
+          23.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "faint_Armature",
+        "frames": [
+          1.0,
+          37.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "hit_Armature",
+        "frames": [
+          1.0,
+          13.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "idle_Armature",
+        "frames": [
+          1.0,
+          73.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "run_Armature",
+        "frames": [
+          1.0,
+          19.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "walk_Armature",
+        "frames": [
+          1.0,
+          33.0
+        ],
+        "channels": 150
+      }
+    ],
+    "totals": {
+      "meshes": 1,
+      "triangles": 56134,
+      "vertices": 38667,
+      "materials": 1,
+      "animations": 6
+    },
+    "problems": [
+      "56,134 triangles, over the 30,000 budget \u2014 needs a decimate or retopology pass",
+      "Mesh_0: 20078 non-manifold edges",
+      "Mesh_0: 10565 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 577 microscopic disconnected components",
+      "Mesh_0: ~10439 inward-facing faces",
+      "Mesh_0: 37 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ]
+  },
+  "judge": {
+    "agent": "blind_listener_f10",
+    "result": "PASS bounded identity/material",
+    "finding": "PASS DCC/native identity/material; charcoal/gold designed blocks and blue eye cluster readable. Native trainer occluded behind legs is separate camera/spacing concern. Softer DCC detail/less luminous eyes than ref, no blocking breakup."
+  },
+  "provenance": "Existing accepted installed source/reference inventory, source SHA independently matches bounded F36 audit and native unchanged model. No new purchases or Meshy POST. Original generation task not newly asserted.",
+  "review": "OPEN original cap/source review of confirmation evidence",
+  "limits": [
+    "Historical topology warnings unchanged; no clean-manifold claim",
+    "Unseen supported poses/deformation/continuousmotion/Fly/world gameplay/fullF36 acceptance OPEN",
+    "Voltarach historical56k triangle budget unchanged; new regenerated candidate budget is not applied to a nonexistent regeneration"
+  ],
+  "flags": "none",
+  "night_submissions": "Unchanged10/30; confirmation consumes no generation slot",
+  "contact": "ralph/reports/F36/installed-confirmations/voltarach-contact.jpg"
+}

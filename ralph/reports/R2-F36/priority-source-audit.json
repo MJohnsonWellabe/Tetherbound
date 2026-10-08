@@ -305,7 +305,13 @@
         "data/config/spawn_tables.json": 2
       },
       "status": "source_audited_visual_proof_pending",
-      "candidate_enabled": false
+      "candidate_enabled": false,
+      "identity_material_confirmation": {
+        "result": "PASS bounded sameblindjudge",
+        "evidence": "ralph/reports/F36/installed-confirmations/galecrest-receipt.json",
+        "model_sha256": "08b690381f612a995ec9974881e730adb2810167f8093443b7202a2455d42fa6",
+        "scope": "Installed unchanged; pose/motion/gameplay/fullF36 batch remainOPEN"
+      }
     },
     {
       "id": "mirejaw",
@@ -735,7 +741,13 @@
         "data/config/stormwood_trainers.json": 1
       },
       "status": "source_audited_visual_proof_pending",
-      "candidate_enabled": false
+      "candidate_enabled": false,
+      "identity_material_confirmation": {
+        "result": "PASS bounded sameblindjudge",
+        "evidence": "ralph/reports/F36/installed-confirmations/voltarach-receipt.json",
+        "model_sha256": "9553774feaa50f04e566d70fbce18c2b76474a0d6cbd9a71498f9284bdde29f1",
+        "scope": "Installed unchanged; pose/motion/gameplay/fullF36 batch remainOPEN"
+      }
     },
     {
       "id": "veridian",
