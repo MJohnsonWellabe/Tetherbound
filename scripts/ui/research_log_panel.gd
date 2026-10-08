@@ -95,7 +95,9 @@ func _reveal_species(scroll: ScrollContainer, selected: Button) -> void:
 func _claim(species: String, task: String) -> void:
 	if not claim_task.is_valid(): return
 	var result: Variant = claim_task.call(species, task)
-	status.text = "Claim submitted · waiting for confirmation" if result is Dictionary and result.get("ok") == true else str(result.get("code", "Research reward unavailable")) if result is Dictionary else "Research reward unavailable"
+	var awaiting: bool = result is Dictionary and result.get("resolved") == false \
+		and result.get("code") == "awaiting_saved_decision"
+	status.text = "Claim submitted · waiting for confirmation" if result is Dictionary and (result.get("ok") == true or awaiting) else str(result.get("code", "Research reward unavailable")) if result is Dictionary else "Research reward unavailable"
 
 func _process(delta: float) -> void:
 	super._process(delta)
