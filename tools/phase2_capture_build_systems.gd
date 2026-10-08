@@ -35,7 +35,7 @@ func _begin_manifest() -> void:
 	super._begin_manifest()
 	if not _build_graphics.is_empty():
 		_manifest["graphics_capture"] = _build_graphics
-	_manifest["fixture_disclosure"] = "Visual-only production-scene fixture: player debug-travels to an open authored spot; BuildPlacer creates real tent, campfire, bedroll, floor, wall and workbench nodes near the player; CraftPanel opened directly. No placement cost, interaction, sleep, recipe result or saved state proof."
+	_manifest["fixture_disclosure"] = "Visual-only production-scene fixture: player debug-travels to an open authored spot; BuildPlacer creates real tent, campfire, bedroll, floor and wall nodes near the player; CraftPanel opened directly beside a campfire. Home-only Workbench is not staged outside its homestead. No placement cost, interaction, sleep, recipe result or saved state proof."
 
 
 func _finish(_complete: bool) -> void:
@@ -109,7 +109,8 @@ func _capture_row(_row: Dictionary) -> void:
 	await _shoot("building", "building", "placed floor and wall visual fixture")
 	_clear(active)
 	await _settle()
-	_place(placer, game, "workbench", anchor, active)
+	if _place(placer, game, "campfire", anchor, active) == null:
+		return
 	await _settle()
 	placer.call("_open_craft_panel")
 	_craft_panel = placer.get("_craft_panel") as CanvasLayer
@@ -129,7 +130,7 @@ func _capture_row(_row: Dictionary) -> void:
 		_manifest["craft_readable_preview"] = readable_rows
 		_manifest["craft_hints_preview"] = readable_hints
 	await _settle()
-	await _shoot("crafting", "crafting", "workbench and production CraftPanel directly opened")
+	await _shoot("crafting", "crafting", "campfire and production CraftPanel directly opened")
 	_write_manifest()
 
 
