@@ -512,9 +512,13 @@ func import_prefix(source_boundary: String) -> String:
 func _relay_preparation_proof(proof: Dictionary) -> bool:
 	var recovery := false
 	var joined := false
-	for helper: Variant in proof.get("helper_receipts", []):
+	var helpers: Variant = proof.get("helper_receipts", [])
+	if not helpers is Array: return false
+	for helper: Variant in helpers:
 		if not helper is Dictionary or helper.get("segment") != "relay_prepared" or helper.get("passed") != true: continue
-		for beat: Variant in helper.get("receipts", []):
+		var beats: Variant = helper.get("receipts", [])
+		if not beats is Array: return false
+		for beat: Variant in beats:
 			if not beat is Dictionary: continue
 			if beat.get("beat") == "pre_relay_riverwatch_recovery" \
 					and beat.get("inventory_unchanged") == true and beat.get("xp_caps_unchanged") == true:
