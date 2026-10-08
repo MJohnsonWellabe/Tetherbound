@@ -473,6 +473,16 @@ func _activate_world(prompt: Node3D, approach_headings: Array[Vector3] = []) -> 
 	var bounty: Node = game.session.get_node_or_null("FoundationComposition/BountyInteraction")
 	if bounty != null and bounty.get("_prompt") == prompt:
 		return await _activate_bounty_via_road(prompt)
+	# Solo credits uses activate directly, unlike the separate co-op approach.
+	# Use the same live farmhouse doorway before asking for Grandpa's offer;
+	# all headings share super.activate's original walk budget and guard chain.
+	if prompt != null and prompt.get_parent().name == "Grandpa" and approach_headings.is_empty():
+		var house: Node = tree.current_scene.find_child("GrandpaHouse", true, false)
+		if house != null and house.has_method("marker"):
+			var door: Variant = house.call("marker", "door")
+			var inside: Variant = house.call("marker", "inside")
+			if door is Vector3 and inside is Vector3 and (door as Vector3).distance_to(inside) > 0.1:
+				approach_headings = [(door as Vector3) + ((door as Vector3) - (inside as Vector3)).normalized() * 2.0]
 	# Hall arches face an authored room approach. Reaching their coordinates
 	# from the exterior side of the wall does not establish a visible offer.
 	# Walk the installed marker through the original capsule navigator first.
