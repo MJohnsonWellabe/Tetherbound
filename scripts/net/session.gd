@@ -4971,6 +4971,10 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 	var character := _authority_character(peer)
 	if character.is_empty() or character != row.get("character_id"): return false
 	if not _tether_item_live_consumer_ready(row): return false
+	# Load can expose accepted history before this host's first lazy admission.
+	# Recover only its actual local player through the existing validated path.
+	if peer == local_peer_id() and int(_character_authority.call("revision", character)) < 0:
+		if admitted_character_state(peer).is_empty(): return false
 	var pending: bool = _character_authority.call("creature_training_is_pending", character) == true
 	if not pending and (row.get("action") != "tether_item" or not _tether_item_original_pending(row)):
 		# A recovered saved marker is history, not permission to rewrite live HP.
