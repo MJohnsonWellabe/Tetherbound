@@ -17,8 +17,26 @@
     "shared_batch": "5 files74tests1310assert0failed exit0/32s; includes unrelated affected Heal11",
     "log_sha256": "c89ae57d5bbf6e47c044e3fa9cad90f02667c239beaf6c101168083b04740c50"
   },
-  "behavior_scope": "Existing Game process canonical cases passed; actual lesson-only and posed branch extension pending targeted existing case. Actual B earned HUD/journal agreement and six-card witnesses remain open.",
+  "behavior_scope": "Existing Game process canonical cases, QuestLog/chain/device and targeted lesson-only/explicit posed-state branches passed. Actual B earned HUD/journal agreement and six-card witnesses remain open.",
   "capture": "No duplicate HUD capture; actual B witness required",
   "flags": "none",
-  "disclosed_error": "Shared actor test existing out-of-tree get_node ERROR, already present before cache change."
+  "disclosed_error": "Shared actor test existing out-of-tree get_node ERROR, already present before cache change.",
+  "targeted_process_branch_proof": {
+    "source_commit": "fb784d3e3fa1298b2baf447a9d2de1447c6a67a5",
+    "run_id": 37759810195,
+    "artifact_id": 11541134363,
+    "selector": "tests/test_canonical_guest_passive_fence.gd::test_canonical_guest_preserves_care_and_bond_but_runs_other_process_work",
+    "native_case_assertions": 27,
+    "native_case_completed": true,
+    "outer_tests": 1,
+    "outer_assertions": 6,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 11,
+    "errors": 0,
+    "result": "PASS",
+    "log_sha256": "58c5294a726e10a01ea7e0db087e5a2ee61318cd2235fd971192152fc87d321f",
+    "review": "APPROVE original f25_medium_review bounded runtime; lesson-only paired refresh and explicit posed-state lesson/device suppression",
+    "limits": "Public set_objective marker behavior and actual B HUD rendering are outside this proof."
+  }
 }
