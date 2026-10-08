@@ -1,5 +1,67 @@
 # Lane C trainer hazard evidence
 
+## Saved pouch tier and real Satchel reconnect proof
+
+`685d3e10beff5b031bebf4726ec5e284e33bbef7` fixes the Satchel's existing
+typed `_trainer_equip` planner: its same full-character candidate now derives
+the existing `pouch_tier` field from the actually equipped backpack piece,
+matching the station gear planner. The original journal, revision, ownership,
+owner BOOL-save, ACK, replay, inventory conservation and refusal rules remain.
+No schema, flag or migration change. NOTICE `6066904206` preceded the edit.
+Original `modal_review` gave SOURCE and narrow COMMAND APPROVE in
+`D:/tetherbound/.tmp/c-f33-4-pouch-source-original-verdict.txt`.
+
+The existing pouch-assignment/journal method in `test_f24_host_commands.gd`
+now also checks initial tier 1, swap tier 4, identical owner candidate and
+durable recovery tier 4, and removal tier 0. No new method/class/fixture.
+[Run 37828479404](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37828479404),
+job `113487381712`, artifact `11571713893`, exact source `685d3e10be`:
+**1 existing test / 70 assertions / 0 failures, exit 0**. Retained ZIP
+`D:/tetherbound/.tmp/c-f33-4-pouch-37828479404.zip` SHA256
+`2db4aba6429cad42a88c1426d5f0c3040bab3da24a774e5c7911f1181cbab95d`.
+Original `modal_review` verified its digest and exact source/selector and gave
+ARTIFACT APPROVE in `D:/tetherbound/.tmp/c-f33-4-c8-source-original-verdict.txt`.
+This result alone closes no criterion.
+
+`3f422a72476cd42be97e1bbe6d80c371d9e36c1a` extends the original
+`smoke_net_reconnect_keeps_character` and its existing equipment step.
+Four authored pouches are disclosed pre-admission stock. An optional
+`journaled=true` route opens the real Satchel, focuses its actual carried row
+and uses ordinary physical input, then checks the original host decision,
+owner disk, BOOL-save/ACK and exactly one original receipt. The existing
+drop/wipe/file-only rejoin and unsaved-character negative controls remain;
+they also compare the final guest pouch/tier and personal host separation.
+Original armor setup remains unchanged. NOTICE `6066985766` preceded the edit.
+Original `modal_review` gave SOURCE and COMMAND APPROVE for that exact cut in
+`D:/tetherbound/.tmp/c-f33-4-net-source-original-verdict.txt`. It was not run as
+a partial batch before the remaining gear persistence assertions were added.
+The actual co-op result remains pending. Whole **F33#4 is open**;
+no component READY, actor-vitals flip or new GPU dispatch is claimed.
+
+`c8f3a96e41cfe9f26d0a7924360a016cdadf2c02` extends the same existing proof
+with distinct host Rootiron +3 and guest Stormglass +3 Harness/Charm stock.
+The original party fixture accepts valid two-slot authored gear only before
+active-session admission and writes it on the actual owned UID within the
+canonical ceiling. Live/file readers expose actual owned gear without mutation.
+The original drop/wipe/rejoin compares both guest slots by the same UID and
+the host's separate pieces. No crafting, balance or earned-route credit.
+NOTICE `6067071414` preceded this extension; original `modal_review` gave
+SOURCE + COMMAND APPROVE for exact `c8f3a96e41` in that same verdict.
+
+Unchanged command-tier evidence is reused from the accepted F24#4 packet in
+main commit `383c3bdf35`, `ralph/reports/F24/lane-a/crafted-command-tier-proof.json`:
+original reviewer `01a10f41-743d-75d1-8867-bbd0b7df7abf` APPROVE/MET;
+four paid Workbench crafts and actual saved Satchel Equip/retained live tier 4
+in run `37775449228`, artifact `11549079450`, ZIP SHA256
+`3b7493f7f425a2c18b671734e67e6c70f2959710e4daadf33418ae1086e2e69f`;
+controller/disk run `37775445623`, artifact `11549668005`, 26 checks/0 failed;
+and unit run `37776228174`, artifact `11549154442`, 34 tests/1568 assertions/0
+failed, SHA256 `0ca43179aa11f4cbb4ca4a7b0e39042e3013d34ff0c1ea71d06f1b72d7fd5618`.
+The unchanged authored-pouch case binds every tier to the same participant and
+checks actual hit meter, Snare consumers, usable slot limits and replay refusal.
+These existing effects/crafting passes earn no co-op credit; the new real
+co-op persistence proof and original whole F33#4 assessment are still required.
+
 ## Backpack equipment edits during a pending owner save
 
 `a3bdf1759b` adds the existing Session `_owner_training_mutation_blocked` guard before backpack armor wear/removal, matching the tab's existing creature-item guard. Previously these routes wrote bag/equipment directly while the same owner could have an immutable training/ledger decision pending. The ordinary armor branch delegates to a production `_equip` handler; unblocked equipment transactions/messages remain unchanged. No projection, receipt, request, settlement or flag changes. Ownership hunk was posted before editing at issue572 comment6056626433.
