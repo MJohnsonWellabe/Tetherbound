@@ -1,7 +1,7 @@
 {
   "criterion": "F41 ground material/lighting component; whole F41#0/#1/#2/#3/#5 OPEN",
   "source_commit": "9ca22f008e41a173f081afe7fd8d6c332d3365d8",
-  "status": "LOGIC_PASS_VISUAL_AND_BEHAVIOR_PENDING",
+  "status": "LOGIC_AND_BEHAVIOR_PASS_VISUAL_PENDING",
   "logic": {
     "run_id": 37720437149,
     "artifact_id": 11526105788,
@@ -41,7 +41,37 @@
   "remaining": [
     "Coordinator native eight forest/giant views on all four actual phases with source/terrain/material binding guards",
     "Code-blind matched before/after judgment",
-    "Existing Stormwood Surge phase traversal smoke37721100541 in flight",
     "Full High/Medium matrix, catalog, real fight and complete Bar remain OPEN"
-  ]
+  ],
+  "behavior": {
+    "run_id": 37721100541,
+    "artifact_id": 11526391303,
+    "source_commit": "9ca22f008e41a173f081afe7fd8d6c332d3365d8",
+    "script": "tests/smoke_stormwood_b_surge_phase_traversal.gd",
+    "actual_exit_code": 0,
+    "seconds": 156,
+    "passed": 105,
+    "failed": 0,
+    "mode": "headless; no visual or audible claim",
+    "legs_m": {
+      "calm": 457,
+      "building": 457,
+      "break": 457,
+      "fading": 459
+    },
+    "break_warnings": 11,
+    "break_impacts": 11,
+    "break_delay_game_s": [
+      1.2,
+      1.25
+    ],
+    "other_phase_warnings": 0,
+    "staging": "Existing phase holds, placement, healing and forced radius-control attempts; original budgets and proof unchanged.",
+    "log_sha256": "188278805228fe3c5979c2902643706e843b7fc24392ce13a1491c3707ab1680"
+  },
+  "behavior_review": {
+    "reviewer": "/root/review_cloud_startup",
+    "verdict": "APPROVE new-source behavior and affected logic packets",
+    "limits": "Actual material binding and visual judgment remain open pending native eight views."
+  }
 }
