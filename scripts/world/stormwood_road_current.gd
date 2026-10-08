@@ -176,7 +176,7 @@ func _poll() -> void:
 	var phase := str(surge.get("phase")) if surge != null and surge.get("phase") != null else "calm"
 	# The Long Storm's end is a progression flag (the one stormwood_surge.gd
 	# itself reads); after it only a faint residual current remains.
-	var game := get_node_or_null("/root/Game")
+	var game := get_node_or_null("/root/Game") if is_inside_tree() else null
 	var flags: Variant = game.get("progression") if game != null else null
 	if flags is Object and bool((flags as Object).call("has", str(_config.storm_intensity.aftermath_flag))):
 		phase = "aftermath"
