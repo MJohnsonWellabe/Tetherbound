@@ -95,7 +95,35 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 		while Engine.get_physics_frames() < deadline and (arbiter == null or arbiter.winning_provider() != prompt):
 			await runner.physics_frame
 		if prompt == null or arbiter == null or arbiter.winning_provider() != prompt or not riding.is_mounted() or not riding.diving:
-			return {"verdict":"FAIL","detail":"actual sunken prompt never won Interact"}
+			var player: CharacterBody3D = world.local_rig()
+			var carrier: Node3D = player.carrier()
+			var winner: Node = arbiter.winning_provider() if arbiter != null else null
+			var data := {"site_id":id, "prompt_exists":prompt != null, "mounted":riding.is_mounted(),
+				"diving":riding.diving, "dive_remaining_s":riding.dive_remaining_s, "player_position":player.global_position,
+				"carrier":carrier.get_path() if is_instance_valid(carrier) else "none",
+				"winner":winner.get_path() if winner != null else "none",
+				"input_owner":str(preload("res://scripts/ui/input_owner.gd").current(runner))}
+			if prompt != null:
+				data.merge({"enabled":prompt.enabled, "radius_m":prompt.radius, "prompt_position":prompt.global_position,
+					"distance_m":player.global_position.distance_to(prompt.global_position),
+					"offer":prompt.interaction_offer(player.global_position),
+					"sight_clear":prompt.call("_has_line_of_sight", player.global_position)})
+				var interaction := preload("res://scripts/world/interactable.gd")
+				var sight: Vector3 = player.global_position + Vector3.UP * interaction.SIGHT_EYE_HEIGHT - prompt.global_position
+				if sight.length() > interaction.SIGHT_SELF_CLEARANCE + interaction.SIGHT_TRAINER_CLEARANCE:
+					var query := PhysicsRayQueryParameters3D.create(prompt.global_position + sight.normalized() * interaction.SIGHT_SELF_CLEARANCE,
+						prompt.global_position + sight.normalized() * (sight.length() - interaction.SIGHT_TRAINER_CLEARANCE))
+					query.collide_with_areas = false
+					query.collision_mask = 0x7FFFFFFF
+					var viewer: CollisionObject3D = arbiter.viewer() if arbiter != null else null
+					if viewer != null and viewer.global_position.is_equal_approx(player.global_position): query.exclude = [viewer.get_rid()]
+					var hit: Dictionary = player.get_world_3d().direct_space_state.intersect_ray(query)
+					var collider: Node = hit.get("collider")
+					data["first_sight_hit"] = collider.get_path() if collider != null else "none"
+					data["first_sight_hit_is_carrier"] = collider != null and collider == carrier
+					data["first_sight_rid"] = str(hit.get("rid", RID()))
+					data["first_sight_position"] = hit.get("position", Vector3.INF)
+			return {"verdict":"FAIL","detail":"actual sunken prompt never won Interact", "data":data}
 		var offer: Dictionary = prompt.call("interaction_offer", world.local_rig().global_position)
 		if not offer.get("actionable", false): return {"verdict":"FAIL","detail":"winning sunken prompt is not currently actionable"}
 		var key := SUNKEN.claim_key(row, game.world.flags, game.world.day)

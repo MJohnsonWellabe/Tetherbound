@@ -59,7 +59,7 @@ func run() -> void:
 	_dive_capture = OS.get_cmdline_user_args().has("--capture-dive")
 	_surface_offload = OS.get_cmdline_user_args().has("--functional-offload")
 	if (_surface_only and _dive_only) or (_surface_capture and not _surface_only) \
-		or (_dive_capture and not _dive_only) or (_surface_offload and not (_surface_capture or _dive_capture)):
+		or (_dive_capture and not _dive_only) or (_surface_offload and not (_surface_capture or _dive_only)):
 		check(false, "capture/offload requires one explicit matching traversal endpoint")
 		finish()
 		return
@@ -285,8 +285,8 @@ func _surface_stick(x: float, y: float) -> void:
 func _run_dive(player: CharacterBody3D, director: Node, riding: Node, creature: RefCounted,
 		body: CharacterBody3D) -> void:
 	var adapter := preload("res://tools/net/proof_steps_f37.gd")
-	check(preload("res://scripts/player/ripplet_traversal.gd").config().presentation_enabled,
-		"literal Dive content proof uses the installed cache and node presentation")
+	check(not _dive_capture or preload("res://scripts/player/ripplet_traversal.gd").config().presentation_enabled,
+		"requested Dive capture requires installed cache and node presentation")
 	if not failures.is_empty(): return
 	for request: Array in [["f37_sunken_claim", {"site_id":"lantern_arch_cache"}],
 		["f37_sunken_claim", {"site_id":"lantern_pearl_bed"}], ["f37_hidden_route", {}]]:
