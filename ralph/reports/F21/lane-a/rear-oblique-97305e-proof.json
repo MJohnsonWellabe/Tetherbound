@@ -1,0 +1,36 @@
+{
+  "criterion": "F21#4",
+  "status": "OPEN",
+  "production_commit": "97305ea96f9b38bac3520cc9321ae217c6a7d751",
+  "change": "Add four rear-oblique candidates to the existing constrained camera search. Preserve collision, overlap, full visibility, manual grace and distance constraints.",
+  "review": {
+    "agent": "original f25_arrival_review",
+    "verdict": "APPROVE bounded source",
+    "qualification": "13 to17 coarse candidates; synthetic routing assertion is not actual obstruction clearance or whole criterion proof."
+  },
+  "logic": {
+    "run_id": 37731698807,
+    "artifact_id": 11530111176,
+    "script": "tests/run_tests.gd",
+    "args": "--only=test_fight_camera.gd",
+    "tests": 7,
+    "assertions": 185,
+    "failed": 0,
+    "exit": 0,
+    "result": "PASS"
+  },
+  "behavior": {
+    "run_id": 37731972521,
+    "script": "tests/smoke_combat_camera.gd",
+    "args": "--matrix-dir=ralph/reports/F21/hosted-a-rear-oblique-97305e --matrix-live --matrix-preset=Low --source-commit=97305ea96f9b38bac3520cc9321ae217c6a7d751",
+    "renderer": "gl_compatibility",
+    "resolution": [1920, 1080],
+    "result": "PENDING",
+    "guards": "All original case30s and global900s budgets, physical actions and score guards unchanged."
+  },
+  "remaining_gates": [
+    "Actual all-nine live behavior and frames.",
+    "Original code-blind size-matrix PASS.",
+    "No whole criterion READY until all required evidence exists."
+  ]
+}
