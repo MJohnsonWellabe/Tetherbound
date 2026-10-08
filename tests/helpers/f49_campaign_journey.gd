@@ -314,7 +314,8 @@ func _first_key_lessons() -> bool:
 		_fail("First key lesson Skip/Help replay changed the earned character, five or free ready world")
 		return false
 	print("F46 FIRST KEY LESSONS " + JSON.stringify({"character_id":cid,"party_uids":retained,
-		"lessons":["portals","shrines"],"earned_warden_key_and_relic":true,
+		"lessons":["portals","shrines"],"earned_warden_key_and_relic":not generated_fixture_input,
+		"input_mode":"generated_fixture" if generated_fixture_input else "earned",
 		"physical_skip_and_help":true,"whole_f46_proven":false}))
 	return true
 
