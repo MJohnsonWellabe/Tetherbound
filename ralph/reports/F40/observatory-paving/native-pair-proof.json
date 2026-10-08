@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "item_id": "P2-025",
+  "scope": "Pictured Observatory central-court vegetation readability only; whole catalogue row and F40 remain OPEN",
+  "runtime_original_review": "source-review.json completed_native_pair_provenance",
+  "native_pair": {
+    "rows": [
+      {
+        "proof": "D:\\CodexTemp\\tetherbound-proof\\native-e-58e2bb1523-observatory-baseline-r2",
+        "png": "D:\\CodexTemp\\tetherbound-proof\\native-e-58e2bb1523-observatory-baseline-r2\\frames\\24_upper_cloudreach_detail-observatory_night.png",
+        "sha256": "74b612e3fdf731f77c49bf0ffad5ebc45d708d571adc8bd3306f34dd6da50043",
+        "raster": [
+          1920,
+          1080
+        ],
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Low",
+          "renderer": "gl_compatibility",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "58e2bb15233a083dd4d1132538e9e9934f7ef316"
+        },
+        "manifest_row": "MANIFEST 24_upper_cloudreach_detail-observatory_night | detail-observatory | trainer (430.0, 920.00, 4484.0) | yaw -180.0 pitch 3.6 | target (430.0, 932.00, 4500.0) | hour 23.00 | stand (430.0, 920.00, 4484.0) (1/3) | camera (430.0, 921.42, 4478.8) | trainer on screen (50%, 60%) | companion native follower (434.2, 920.03, 4488.9); trainer gap 6.47 m | flags boot | Old Wind Observatory dial court close; ObservatoryWalkableCrown stands from capture_cloudreach_old_wind_observatory.gd.",
+        "complete": true,
+        "written": 1,
+        "skipped": 0
+      },
+      {
+        "proof": "D:\\CodexTemp\\tetherbound-proof\\native-e-58bdad0d99-observatory-candidate-r1",
+        "png": "D:\\CodexTemp\\tetherbound-proof\\native-e-58bdad0d99-observatory-candidate-r1\\frames\\24_upper_cloudreach_detail-observatory_night.png",
+        "sha256": "86cc4b2807cc677421f14bf472727cbd7222c1772e15fb55171d69c70a1df44a",
+        "raster": [
+          1920,
+          1080
+        ],
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Low",
+          "renderer": "gl_compatibility",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "58bdad0d99093f0628677a600eab4c2bae3a5c77"
+        },
+        "manifest_row": "MANIFEST 24_upper_cloudreach_detail-observatory_night | detail-observatory | trainer (430.0, 920.00, 4484.0) | yaw -180.0 pitch 3.6 | target (430.0, 932.00, 4500.0) | hour 23.00 | stand (430.0, 920.00, 4484.0) (1/3) | camera (430.0, 921.42, 4478.8) | trainer on screen (50%, 60%) | companion native follower (434.2, 920.03, 4488.9); trainer gap 6.47 m | flags boot | Old Wind Observatory dial court close; ObservatoryWalkableCrown stands from capture_cloudreach_old_wind_observatory.gd.",
+        "complete": true,
+        "written": 1,
+        "skipped": 0
+      }
+    ],
+    "matching_recorded_stand_trainer_camera_yaw_pitch_hour": true,
+    "changed_pixels": 296470,
+    "weather_not_explicitly_pinned_or_recorded": true,
+    "sole_change_attribution": false,
+    "original_blind_pending": true,
+    "stopped_r1_retained": "D:\\CodexTemp\\tetherbound-proof\\native-e-58e2bb1523-observatory-baseline-r1"
+  },
+  "portable_originals": [
+    {
+      "file": "frames/baseline-night.png",
+      "sha256": "74b612e3fdf731f77c49bf0ffad5ebc45d708d571adc8bd3306f34dd6da50043",
+      "blind_label": "amber",
+      "source": "58e2bb15233a083dd4d1132538e9e9934f7ef316",
+      "case": "baseline"
+    },
+    {
+      "file": "frames/candidate-night.png",
+      "sha256": "86cc4b2807cc677421f14bf472727cbd7222c1772e15fb55171d69c70a1df44a",
+      "blind_label": "slate",
+      "source": "58bdad0d99093f0628677a600eab4c2bae3a5c77",
+      "case": "candidate"
+    }
+  ],
+  "blind_verdict": "blind-observatory-court-verdict.json",
+  "before_impact": 36,
+  "after_impact": 24,
+  "bounded_improvement": "PASS original blind",
+  "full_row_replacement": false,
+  "full_row_retained_verdict": "FAIL 64 from R2-F40/native-row-reviews.json",
+  "remaining": "Other shrine views, stone-joint/material finish, perimeter silhouette overlap; no whole row acceptance",
+  "functional_proof": {
+    "warnings": 0,
+    "seconds": 7,
+    "original_review": "source-review.json typed_fixture_3639815_and_affected_artifacts",
+    "failures": 0,
+    "exit_code": 0,
+    "tests": 6,
+    "run_id": 37825912444,
+    "run_log_sha256": "15e63fff271653ff507fb350635a60bc5fcae5587d37eea3334b4bd51d48d2cc",
+    "assertions": 106,
+    "job_id": 113478622820,
+    "artifact_id": 11571237511,
+    "errors": 0,
+    "source": "36398150662fac450a4d0ac240cb07d9f4e700a6"
+  },
+  "disclosures": [
+    "Static one-angle/night/Low gl_compatibility only; weather not explicitly pinned or recorded; no sole-change attribution",
+    "Two native warnings each retained: fail-closed authored wild-site resolutions; no clean-log claim",
+    "Original OWNER_GAME baseline-r1 exit1 retained and excluded",
+    "58bd native production semantics reviewed applicable to6c helper and363 fixture-only corrections",
+    "Blind independent qualitative pictured-context E/I; not measured campaign frequency",
+    "No original catalogue-row replacement or whole41-row validator/full F40 acceptance claim"
+  ],
+  "captured_metadata_limit": "ROOT native_pair metadata preserves original_blind_pending=true as its pre-review capture record; completed original verdict is the linked independent blind artifact."
+}

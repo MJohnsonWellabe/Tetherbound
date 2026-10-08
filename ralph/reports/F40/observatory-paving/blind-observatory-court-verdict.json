@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "item_id": "P2-025",
+  "subject": "Pictured Old Wind Observatory court paving/vegetation separation",
+  "reviewer": {
+    "name": "Hypatia",
+    "role": "retained original independent code-blind visual judge",
+    "agent_id": "01a11667-4631-72b2-8fed-294999b8c043"
+  },
+  "scope": "Anonymous label-bound static court comparison only: grass/flower intrusion, stone/grass material distinction and pictured court/architecture readability. Partial P2-025 scope.",
+  "inspection": {
+    "complete_images_inspected": [
+      "D:/tetherbound/codex-e/.tmp/e-observatory-original-blind/frame-amber.png",
+      "D:/tetherbound/codex-e/.tmp/e-observatory-original-blind/frame-slate.png"
+    ],
+    "missing_paths": [],
+    "reference_basis": "Previously inspected approved Cloudreach references and written ART_DIRECTION material/readability bar.",
+    "source_or_mapping_or_prior_numeric_scores_read": false,
+    "crops_or_thumbnails_used": false
+  },
+  "labels": [
+    {
+      "label": "amber",
+      "severity": 3,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 36,
+      "verdict": "FAIL",
+      "bounded_verdict": "BLOCK",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-observatory-original-blind/frame-amber.png"
+      ],
+      "findings": [
+        "A dense grass and small-flower layer spans the raised central court around the bird and benches, appearing to emerge across the paved plane. It hides much of the usable hard surface and obscures the bird's lower feet/contact.",
+        "The dark blue-black stepped rim is recognizable, but the vegetated interior weakens separation between court and surrounding grass.",
+        "The tall masonry structure and large orbital/crescent ornament identify an observatory-like landmark; this remains readable despite the paving problem.",
+        "Broad dark stone surfaces provide weak paving/stone detail. Perimeter blades also cross the front step silhouettes."
+      ],
+      "score_basis": "Severity 3: conspicuous local paving intrusion and loss of court/contact readability, while the main architecture remains recognizable. Exposure 3: qualitative estimate for this particular landmark-court view, not measured campaign frequency. Importance 4: a readable court surface and architecture support landmark and approach comprehension."
+    },
+    {
+      "label": "slate",
+      "severity": 2,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 24,
+      "verdict": "PASS",
+      "bounded_verdict": "PASS",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-observatory-original-blind/frame-slate.png"
+      ],
+      "findings": [
+        "The central court surface is visibly exposed rather than covered by the dense grass/flower layer. Bird toes, bench legs/bases and the hard court plane are substantially easier to identify.",
+        "The dark stepped stone rim and darker court plane separate clearly from the mottled green ground outside. This is a supported local paving/vegetation-readability improvement.",
+        "The masonry/large orbital ornament, banners and benches remain recognizable; no new gross trainer or companion clipping is visible in this static view.",
+        "Residual limits: the court's broad dark interior offers limited stone-joint/material detail, and perimeter grass blades still cross portions of the front/side step silhouettes. Their rooting versus foreground occlusion cannot be resolved from this angle.",
+        "The right-side human remains dark against vegetation, and the tower's upper extent is outside the image. These are retained visible/readability limits, not proof of a new regression."
+      ],
+      "score_basis": "Severity 2: the dense interior intrusion is not observed here, but local stone-finish/edge readability shortcomings remain. Exposure 3 and importance 4 are independent qualitative estimates for the same pictured court subject; they do not measure campaign frequency. PASS applies to the bounded central-court improvement, not full P2-025 stone finish or other shrine coverage."
+    }
+  ],
+  "pair": {
+    "preference": "slate",
+    "supported_improvement_verdict": "PASS",
+    "reason": "Slate exposes the hard court plane and actor/bench contact while preserving the pictured architecture identity. Amber retains the dense court-spanning vegetation defect. Residual dark stone finish and perimeter silhouette overlap remain disclosed.",
+    "visible_regression": "No new gross clipping or architecture-readability regression observed in the supplied slate view. Slight bird-pose differences do not establish a material or geometry regression.",
+    "whole_P2_025_disposition": "UNASSESSED: this pair cannot close the shared row's other shrine views or complete stone-finish requirement."
+  },
+  "limits": [
+    "Only these two complete original images were opened. No implementation direction, source identity, candidate assignment or causal change is inferred.",
+    "Static projected overlap does not prove mesh intersection or exact plant rooting. Perimeter blades crossing step silhouettes may be foreground vegetation; unseen contacts remain unassessed.",
+    "One court angle/lighting context only. No other shrine, reverse/detail angle, day variant, route traversal, continuous motion or campaign exposure claim.",
+    "These images do not certify collision, floor support mechanics, actor movement or controller/device readability.",
+    "Other court/stone finish shortcomings remain. No whole row, F40 criterion, full biome or commercial visual-bar acceptance follows.",
+    "Independent current label scores were assigned from the supplied pixels and previously inspected bar; no prior numeric scores read or transferred."
+  ],
+  "preservation": "Only this label-bound evidence artifact is written. No catalogue, assembly, source, prior witness or status file is edited."
+}

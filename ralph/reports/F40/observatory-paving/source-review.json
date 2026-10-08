@@ -238,5 +238,179 @@
       "Original blind visual verdict; blind remains idle, no contact by reviewer."
     ],
     "limits": "Only the test delta and supplied frozen affected artifacts were inspected; no engine/tests/import/GPU/dispatch performed. No native/art/whole criterion approval, no added review loop or broader passing suite required by this verdict. All prior approvals and failed receipts are preserved."
+  },
+  "completed_native_pair_provenance": {
+    "reviewed_at_utc": "2026-10-08T19:01:22.951093+00:00",
+    "runtime_provenance_verdict": "APPROVE",
+    "findings": [],
+    "scope": "Completed native row24 Observatory dial close/night Low1920 fixture only; no visual-quality disposition",
+    "completed_packets": [
+      {
+        "label": "baseline",
+        "packet": "D:\\CodexTemp\\tetherbound-proof\\native-e-58e2bb1523-observatory-baseline-r2",
+        "source_commit": "58e2bb15233a083dd4d1132538e9e9934f7ef316",
+        "head_index_tree": "e163bcb84f22cda20dacdf48264615f874a5b4ba",
+        "source_after_import_dirty": [],
+        "actual_argv": [
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "res://tools/capture_cloudreach_frame_matrix.gd",
+          "--",
+          "--only=24",
+          "--night",
+          "--preset=Low",
+          "--low-resolution=1920x1080",
+          "--source-commit=58e2bb15233a083dd4d1132538e9e9934f7ef316",
+          "--output=res://.tmp/f40-observatory-baseline-58e-r2"
+        ],
+        "terminal_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-e-58e2bb1523-observatory-baseline-r2\\observatory-baseline-receipt.json",
+        "terminal_receipt_sha256": "0fe14e6bbcca6d15bff7d93b2f8629ae7ee138c5557e1b550e61638af007d2e5",
+        "terminal_summary_sha256": "ba2d206769cb49eb7a816818efdd6fcf9d9e4012182d5774deefe950f4f4a825",
+        "png": "D:\\CodexTemp\\tetherbound-proof\\native-e-58e2bb1523-observatory-baseline-r2\\frames\\24_upper_cloudreach_detail-observatory_night.png",
+        "png_sha256": "74b612e3fdf731f77c49bf0ffad5ebc45d708d571adc8bd3306f34dd6da50043",
+        "decoded_raster": [
+          1920,
+          1080
+        ],
+        "producer_native_images": 1,
+        "rows_skipped": 0,
+        "exit_code": 0,
+        "stop_reason": "",
+        "manifest_row": "MANIFEST 24_upper_cloudreach_detail-observatory_night | detail-observatory | trainer (430.0, 920.00, 4484.0) | yaw -180.0 pitch 3.6 | target (430.0, 932.00, 4500.0) | hour 23.00 | stand (430.0, 920.00, 4484.0) (1/3) | camera (430.0, 921.42, 4478.8) | trainer on screen (50%, 60%) | companion native follower (434.2, 920.03, 4488.9); trainer gap 6.47 m | flags boot | Old Wind Observatory dial court close; ObservatoryWalkableCrown stands from capture_cloudreach_old_wind_observatory.gd.",
+        "manifest_sha256": "7625c3fa23a054806e98eb419e5f17aac7f5f17150e2934987135fbec77ca66d",
+        "stdout_sha256": "80c7b8fe93a370a510fcd61498f99eef4f4e60efccdc7ccd2fc1e156cb83c950",
+        "stderr_sha256": "310ea8e16d54ffe37e350c0bf26a24afbe5ad1f1cadab9a64b9a497f3a779daf",
+        "errors": [],
+        "warnings": [
+          "WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)",
+          "WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)"
+        ],
+        "sha256sums_entries_verified": 14,
+        "all_listed_hashes_match": true,
+        "all_four_original_pathmap_byte_pairs_match": true
+      },
+      {
+        "label": "candidate",
+        "packet": "D:\\CodexTemp\\tetherbound-proof\\native-e-58bdad0d99-observatory-candidate-r1",
+        "source_commit": "58bdad0d99093f0628677a600eab4c2bae3a5c77",
+        "head_index_tree": "db87214e5a62d7915d9680f87e796df1e294b214",
+        "source_after_import_dirty": [],
+        "actual_argv": [
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "res://tools/capture_cloudreach_frame_matrix.gd",
+          "--",
+          "--only=24",
+          "--night",
+          "--preset=Low",
+          "--low-resolution=1920x1080",
+          "--source-commit=58bdad0d99093f0628677a600eab4c2bae3a5c77",
+          "--output=res://.tmp/f40-observatory-candidate-58bd"
+        ],
+        "terminal_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-e-58bdad0d99-observatory-candidate-r1\\observatory-candidate-receipt.json",
+        "terminal_receipt_sha256": "d5a24959ab9569fe3b418196ff4bbc70a3ed9f0c9571a60ddef87fff8f3032c2",
+        "terminal_summary_sha256": "e73a2bddefe1ac4fff8d8cf8a71d46cb4fe28811646bce10316175ea607bbdf1",
+        "png": "D:\\CodexTemp\\tetherbound-proof\\native-e-58bdad0d99-observatory-candidate-r1\\frames\\24_upper_cloudreach_detail-observatory_night.png",
+        "png_sha256": "86cc4b2807cc677421f14bf472727cbd7222c1772e15fb55171d69c70a1df44a",
+        "decoded_raster": [
+          1920,
+          1080
+        ],
+        "producer_native_images": 1,
+        "rows_skipped": 0,
+        "exit_code": 0,
+        "stop_reason": "",
+        "manifest_row": "MANIFEST 24_upper_cloudreach_detail-observatory_night | detail-observatory | trainer (430.0, 920.00, 4484.0) | yaw -180.0 pitch 3.6 | target (430.0, 932.00, 4500.0) | hour 23.00 | stand (430.0, 920.00, 4484.0) (1/3) | camera (430.0, 921.42, 4478.8) | trainer on screen (50%, 60%) | companion native follower (434.2, 920.03, 4488.9); trainer gap 6.47 m | flags boot | Old Wind Observatory dial court close; ObservatoryWalkableCrown stands from capture_cloudreach_old_wind_observatory.gd.",
+        "manifest_sha256": "c098b8d98e9ea2b8ad09245415e65d584f1e7c295588bd8beec7643894ccad7c",
+        "stdout_sha256": "7164d27e40e1d3d44f9e69b00aeb732a794f04ed208686640ebea99568fccbc9",
+        "stderr_sha256": "310ea8e16d54ffe37e350c0bf26a24afbe5ad1f1cadab9a64b9a497f3a779daf",
+        "errors": [],
+        "warnings": [
+          "WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)",
+          "WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)"
+        ],
+        "sha256sums_entries_verified": 19,
+        "all_listed_hashes_match": true,
+        "all_four_original_pathmap_byte_pairs_match": true
+      }
+    ],
+    "matched_recorded_controls": {
+      "trainer": [
+        430,
+        920,
+        4484
+      ],
+      "requested_stand": [
+        430,
+        920,
+        4484
+      ],
+      "stand_candidate": "1/3",
+      "camera": [
+        430,
+        921.42,
+        4478.8
+      ],
+      "yaw_deg": -180.0,
+      "pitch_deg": 3.6,
+      "target": [
+        430,
+        932,
+        4500
+      ],
+      "hour": 23.0,
+      "trainer_screen_percent": [
+        50,
+        60
+      ],
+      "companion_position": [
+        434.2,
+        920.03,
+        4488.9
+      ],
+      "companion_gap_m": 6.47,
+      "flags": "boot",
+      "preset": "Low",
+      "renderer": "gl_compatibility",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "actual_driver": "OpenGL 3.3.0 NVIDIA 560.94 Compatibility",
+      "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54"
+    },
+    "independent_provenance_checks": [
+      "Both PNG signatures/IHDRs are 1920x1080 and both images successfully decode using System.Drawing.Bitmap. Original native images are distinct from downscaled sheet derivatives; one native PNG/row record per packet.",
+      "All 14 baseline and 19 candidate SHA256SUMS entries match actual bytes. All eight original-path-map entries match their recorded hashes and surviving original bytes, including the native image and manifest in each packet.",
+      "Actual start argv, import/process receipts, stdout metadata and manifests agree with exact source pins, native Compatibility driver, Low preset and declared raster. Both stdout streams contain the same final 1-written/0-skipped footer and one manifest row; terminal receipts have exit 0 and empty stop reason. Actual stderr contains two identical fail-closed wild-site warnings per run and no engine/script errors.",
+      "Queued/import source records have empty dirty sets and equal HEAD/index trees; those trees match local Git objects for the exact pins. Candidate checkout.log records switching from 58e to 58bd, and candidate source-after-archive is clean with the same HEAD/index. Baseline fresh r2 output reuses the successful same-pin original import; its clean same-tree rerun record and original r1 checkout/import bytes support this reuse. No new baseline import is claimed.",
+      "Matched-pair-headers-and-provenance.json native hashes, sizes, graphics records and exact manifest rows match actual packet bytes. Recorded row24 stand/trainer/camera/yaw/pitch/hour/follower controls are identical. The output suffix baseline-58e-r2 is a fresh-output-only correction and does not change the approved recipe.",
+      "Previously approved 58bd-to-6c pure helper equivalence and unchanged production at 363, plus verified six-test/106-assertion typed fixture proof, are reused without hunk/command/logic re-audit. Native source remains its actual 58bd pin, never relabeled as 363."
+    ],
+    "matched_pair_metadata_path": "D:\\CodexTemp\\tetherbound-proof\\native-e-58bdad0d99-observatory-candidate-r1\\matched-pair-headers-and-provenance.json",
+    "matched_pair_metadata_sha256": "0bb2f7a452bbb2f04fd2197a1abfc56f45f10bfde4e9eac60fc9a9fea03f4ddb",
+    "weather_and_pixel_limit": "Weather was neither explicitly pinned nor recorded by this producer. Metadata reports 296470 changed pixels; that metric was not independently recomputed in this provenance review and cannot be attributed solely to the cover fix. No image/art quality was judged.",
+    "stopped_attempt_preserved": {
+      "packet": "D:\\CodexTemp\\tetherbound-proof\\native-e-58e2bb1523-observatory-baseline-r1",
+      "receipt": "D:\\CodexTemp\\tetherbound-proof\\native-e-58e2bb1523-observatory-baseline-r1\\observatory-baseline-receipt.json",
+      "receipt_sha256": "cd60ee21b5b3fba9a301acf4c1d5eaf5e99312ffa0de066e2c98926973429fe3",
+      "source_commit": "58e2bb15233a083dd4d1132538e9e9934f7ef316",
+      "exit_code": 1,
+      "stop_reason": "owner_game",
+      "finished_utc": "2026-10-08T18:41:51.6430687Z",
+      "disposition": "Unaccepted interrupted baseline context, excluded from the completed two-packet comparison; not a third visual comparison."
+    },
+    "fixture_limits": "Five-creature/progression/debug stand, model-facing/rig snapping, clock pinning/hidden overlay and native follower presentation fixture. Seat/physics/camera guard passage is supported by the unchanged accepted producer and recorded successful row; no independently logged per-ray collider identity is invented. Staging does not prove earned campaign traversal, save/co-op/mechanics or device performance.",
+    "remaining_gates": [
+      "Original blind native visual verdict; no judge contact or mapping disclosure by reviewer."
+    ],
+    "exclusions": "No whole P2-025, full F40, dawn/all-areas/preset matrix, campaign/co-op/performance or full visual bar approval. Failed 58bd/6c unit artifacts and stopped baseline are preserved. No engine/GPU/import/test/dispatch performed by reviewer."
   }
 }
