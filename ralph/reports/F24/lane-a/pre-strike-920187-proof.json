@@ -1,0 +1,276 @@
+{
+  "criteria": [
+    "F24#0",
+    "F42#2",
+    "F23#5 HUD candidate"
+  ],
+  "status": "OPEN",
+  "source_commit": "920187dd62c197a11c5e42a42833ab9f3c974074",
+  "observer_change": "Print existing detached TONIC_PRE_STRIKE observation before unchanged await; no additional query/action/state/guard/budget.",
+  "review": {
+    "whole_criterion": "OPEN",
+    "agent": "original f25_medium_review",
+    "hud_source": "APPROVE e6c056 bounded presentation source",
+    "verdict": "APPROVE bounded observer source"
+  },
+  "unaffected_logic": {
+    "assertions": 84,
+    "result": "PASS reused; no replay",
+    "failed": 0,
+    "tests": 10,
+    "run_id": 37733858460,
+    "files": 2
+  },
+  "behavior": {
+    "result": "FAIL",
+    "interpretation": "Tonic progressed through five ordinary inputs and four retained positive-damage hits, earning32 meter. Local precast vitals settled/readiness true is not visibility into remote host queues. Later Tag timeout is separate; sole production cause not established.",
+    "tag_timeout": {
+      "action": "op_tag_combo",
+      "coordinator_deadline_ms": 599551.0,
+      "coordinator_observed_ms": 599555,
+      "heartbeat": {
+        "context": "combat",
+        "frame": 142593.0,
+        "physics_frame": 17580.0,
+        "pos": [
+          -287.12841796875,
+          -3.4822518825531,
+          5085.369140625
+        ],
+        "session_peers": [
+          1.0,
+          280985866.0
+        ],
+        "state_hash": 1619155054.0,
+        "t": 588.35,
+        "type": "heartbeat"
+      },
+      "heartbeat_known": true,
+      "heartbeat_receive_age_ms": 249.0,
+      "heartbeat_receive_time_known": true,
+      "heartbeat_received_ms": 599306.0,
+      "id": "s370",
+      "phase": "timeout_before_finish"
+    },
+    "pre_strike": [
+      {
+        "attempt": 1,
+        "foe_hp_before": 257.21381145525,
+        "meter_before": 0.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-b3c22a4558413ba0b351c01d2b0e1d37",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-88f3b193bf586fe6a5126259db6b88dd",
+              "revision": 0,
+              "settled_revision": 0
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 338815,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_before": {}
+      },
+      {
+        "attempt": 2,
+        "foe_hp_before": 249.515398694796,
+        "meter_before": 8.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-b3c22a4558413ba0b351c01d2b0e1d37",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-88f3b193bf586fe6a5126259db6b88dd",
+              "revision": 0,
+              "settled_revision": 0
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 345493,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_before": {}
+      },
+      {
+        "attempt": 3,
+        "foe_hp_before": 249.515398694796,
+        "meter_before": 8.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-b3c22a4558413ba0b351c01d2b0e1d37",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-88f3b193bf586fe6a5126259db6b88dd",
+              "revision": 1,
+              "settled_revision": 1
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 352177,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_before": {}
+      },
+      {
+        "attempt": 4,
+        "foe_hp_before": 242.307308090121,
+        "meter_before": 16.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-b3c22a4558413ba0b351c01d2b0e1d37",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-88f3b193bf586fe6a5126259db6b88dd",
+              "revision": 1,
+              "settled_revision": 1
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 355600,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_before": {}
+      },
+      {
+        "attempt": 5,
+        "foe_hp_before": 235.670107431363,
+        "meter_before": 24.0,
+        "pending_before_input": {
+          "actors": [
+            {
+              "creature_uid": "creature-b3c22a4558413ba0b351c01d2b0e1d37",
+              "revision": 1,
+              "settled_revision": 1
+            },
+            {
+              "creature_uid": "creature-88f3b193bf586fe6a5126259db6b88dd",
+              "revision": 1,
+              "settled_revision": 1
+            }
+          ],
+          "actors_scope": "received_record",
+          "host_actor_vitals": "unavailable: remote host",
+          "host_local": false,
+          "host_queues_available": false,
+          "input_available": true,
+          "move_awaiting_host": false,
+          "observed_ms": 363945,
+          "phase": "before_strike_step",
+          "proposals": [],
+          "quick_ready": true,
+          "vitals_pending_local": false
+        },
+        "refusal_before": {}
+      }
+    ],
+    "args": "--prove-tag-combo --capture-combat-hud --preset=Low --low-resolution=1280x720 --source-commit=920187dd62c197a11c5e42a42833ab9f3c974074 --out=ralph/reports/F24/hosted-a-pre-strike-fact",
+    "artifact_id": 11532556999,
+    "script": "tests/smoke_net_owner_passive_rejoin.gd",
+    "pass_lines": 109,
+    "fatal": "",
+    "run_id": 37736605838,
+    "tag_peer_log": "move_start refused: pending_vitals (The original health change is still being saved.)",
+    "failures": [
+      "Tag: actual hits earn meter and fresh-hit command switches normally -- no verdict"
+    ],
+    "retained_actual_hits": [
+      {
+        "action_id": "5333886896767972c88174c7cb291c7a:1:2b966636aec63ac6869a34bb",
+        "applied_damage": 7.69841276045383,
+        "attacker_uid": "creature-88f3b193bf586fe6a5126259db6b88dd",
+        "move_id": "pebble_toss",
+        "target_hp_before": 257.21381145525,
+        "target_uid": "creature-db6c366475135635a85b8eae789464e1"
+      },
+      {
+        "action_id": "5333886896767972c88174c7cb291c7a:3:a257a58280d4e283ca2dcca3",
+        "applied_damage": 7.20809060467465,
+        "attacker_uid": "creature-88f3b193bf586fe6a5126259db6b88dd",
+        "move_id": "pebble_toss",
+        "target_hp_before": 249.515398694796,
+        "target_uid": "creature-db6c366475135635a85b8eae789464e1"
+      },
+      {
+        "action_id": "5333886896767972c88174c7cb291c7a:4:4feb09995ac8431a0f26bcbd",
+        "applied_damage": 6.63720065875842,
+        "attacker_uid": "creature-88f3b193bf586fe6a5126259db6b88dd",
+        "move_id": "pebble_toss",
+        "target_hp_before": 242.307308090121,
+        "target_uid": "creature-db6c366475135635a85b8eae789464e1"
+      },
+      {
+        "action_id": "5333886896767972c88174c7cb291c7a:5:a7851f0ebaeaf125c328b0f6",
+        "applied_damage": 7.11478317102373,
+        "attacker_uid": "creature-88f3b193bf586fe6a5126259db6b88dd",
+        "move_id": "pebble_toss",
+        "target_hp_before": 235.670107431363,
+        "target_uid": "creature-db6c366475135635a85b8eae789464e1"
+      }
+    ],
+    "tonic_hit_step": "PASS"
+  },
+  "capture": {
+    "result": "actual earned HUD captured",
+    "judge": "pending original code-blind reviewer",
+    "command_meter": 32,
+    "contact_sheet": "ralph/reports/F42/lane-a/backed-920187-contact.jpg",
+    "preset": "Low",
+    "ultimate_percent": 24,
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ]
+  },
+  "remaining_gates": [
+    "Later op_tag_combo timed out at unchanged300s step deadline; C authority/vitals interpretation required before supported repair.",
+    "Original visual verdict and shipping flag activation qualification remain required; no whole READY.",
+    "No native engine, broad unit replay, new harness/fixture or unchanged third run."
+  ]
+}
