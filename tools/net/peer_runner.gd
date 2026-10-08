@@ -777,7 +777,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"storage_grant":
 			out = await _step_storage_grant(args)
 		"equipment_equip_from_satchel":
-			out = _step_equipment_equip_from_satchel(args)
+			out = await _step_equipment_equip_from_satchel(args)
 		"storage_transfer":
 			out = _step_storage_transfer(args)
 		"pickup_stand":
