@@ -303,8 +303,9 @@ func _snap_near_leader(target: Vector3, leader_position: Vector3) -> void:
 	if not leader_grounded():
 		place_on_ground(target)
 		return
-	if station_validator.is_valid():
-		var spot: Variant = station_validator.call(self, leader, target, true)
+	var validator := _station_validator_now(leader_position)
+	if validator.is_valid():
+		var spot: Variant = validator.call(self, leader, target, true)
 		if spot is Vector3 and (spot as Vector3).is_finite():
 			_seat_at(spot)
 			return
@@ -383,9 +384,9 @@ func _validated_station(requested: Vector3, leader_position: Vector3, validator:
 ## companion inside the arch wall (its head showing through the stone). Meadows
 ## has no realm `station_validator`, so while the trainer stands inside a
 ## declared interior (objective_beacon.gd INTERIOR_GROUP: the Hall's nave and
-## Shrine Room) the walking station goes through `_indoor_station`. Outdoors,
-## and wherever a realm validator is set, behaviour is unchanged. The leash
-## snap is untouched. Local follower only: no authority change.
+## Shrine Room) the walking station and grounded leash snap go through
+## `_indoor_station`. Outdoors, and wherever a realm validator is set,
+## behaviour is unchanged. Local follower only: no authority change.
 func _station_validator_now(leader_position: Vector3) -> Callable:
 	if station_validator.is_valid():
 		return station_validator
