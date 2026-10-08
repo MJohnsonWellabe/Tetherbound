@@ -34,5 +34,33 @@
     "scope": "tab_build.gd, tab_save.gd and menu.json build_preview only relative to main068b5bb; native bounded Build scroll, first focus and callbacks unchanged; Save retains all five rows/callbacks/polling/focus policy."
   },
   "excluded": "Two incidental HUD frames; all Players/Settings/map/HUD/other unREADY ancestry; placement, physical Save/Load controller flow, scrolling, reload, earned campaign, co-op, device and release Bars.",
-  "disposition": "Capture complete; blind review, named logic and existing Build area proof pending. Full F42#0 remains OPEN."
+  "blind_review": {
+    "agent": "/root/f26_presets_review",
+    "verdict": "PASS scoped useful content and essential-text readability",
+    "inspected": "All ten actual originals at both resolutions",
+    "findings": [
+      "Build Tent/Campfire/Bedroll thumbnails recognizable; descriptions, costs, placement instructions, focused opening CTA and free-on explanation readable.",
+      "All five Save rows fit; empty versus populated slot2, instructions, button labels, focus outline, confirmation and footer readable without overlap or clipping."
+    ],
+    "residuals": [
+      "Free-on Build introductory heading cropped at the upper scroll boundary in both rasters; essential banner, cards and CTA intact.",
+      "Populated Save grammar reads 1 creatures in both rasters."
+    ],
+    "limits": "Stills do not prove navigation, scrolling, placement or reload. Whole F42, HUD/context and release Bars remain open."
+  },
+  "logic": {
+    "run": 37709794024,
+    "artifact": 11520978748,
+    "source_commit": "a54c87c3bb0f88badfa3411dae4f12995e1f8201",
+    "script": "tests/run_tests.gd",
+    "args": "--only=test_menu_data,test_cloudreach_fly_build_shortcut,test_combat_hud_handheld_floors,test_dialogue_runner,test_hammer_keeps_the_interact_button,test_hud_party_vitals,test_hud_toast_and_drowning,test_hud_widgets,test_quest_log,test_world_verb_input_owner_enforcement",
+    "files": 10,
+    "tests": 197,
+    "assertions": 3231,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 4,
+    "direct_component_file": "test_menu_data.gd loads affected tab scripts/config; other nine files cover the independent HUD candidate in this bounded batch."
+  },
+  "disposition": "Capture, scoped blind review and named logic pass; existing Build area proof and final independent approval pending. Full F42#0 remains OPEN."
 }

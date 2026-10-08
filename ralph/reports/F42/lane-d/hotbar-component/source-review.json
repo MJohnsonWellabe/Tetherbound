@@ -23,5 +23,16 @@
     "Objective backing opacity and combat HUD",
     "Map context, other HUD plates, full F42#0 and release visual bar"
   ],
-  "disposition": "Source approval only; runtime logic, after-capture, blind verdict and final independent approval remain open."
+  "logic": {
+    "run": 37709794024,
+    "artifact": 11520978748,
+    "source_commit": "a54c87c3bb0f88badfa3411dae4f12995e1f8201",
+    "proof": "tests/run_tests.gd; nine existing HUD-referencing files plus test_menu_data in one bounded batch",
+    "tests": 197,
+    "assertions": 3231,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 4
+  },
+  "disposition": "Source and named logic pass; after-capture, blind verdict, applicable area intake and final independent approval remain open."
 }
