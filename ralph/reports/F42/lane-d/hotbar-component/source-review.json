@@ -34,5 +34,13 @@
     "exit": 0,
     "seconds": 4
   },
-  "disposition": "Source and named logic pass; after-capture, blind verdict, applicable area intake and final independent approval remain open."
+  "area_reuse": {
+    "run": 37680516233,
+    "artifact": 11507629839,
+    "proof": "tests/smoke_gate_a_map_cycle.gd",
+    "result": "PASS actual retained menu/controller shell/input-ownership paths104s",
+    "review": "Original f42 reviewer confirmed applicability after reading exact opacity-only delta and actual197-test log: geometry/input paths unchanged; no additional operation smoke required.",
+    "limits": "Does not establish physical Quick Items operation, the visual result or full HUD/F42."
+  },
+  "disposition": "Source, named logic and applicable retained area pass; after-capture, blind verdict and final independent approval remain open."
 }

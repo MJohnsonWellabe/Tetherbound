@@ -62,5 +62,28 @@
     "seconds": 4,
     "direct_component_file": "test_menu_data.gd loads affected tab scripts/config; other nine files cover the independent HUD candidate in this bounded batch."
   },
-  "disposition": "Capture, scoped blind review and named logic pass; existing Build area proof and final independent approval pending. Full F42#0 remains OPEN."
+  "area": {
+    "run": 37710071529,
+    "artifact": 11520898218,
+    "source_commit": "a54c87c3bb0f88badfa3411dae4f12995e1f8201",
+    "proof": "tests/smoke_free_build.gd",
+    "result": "free build smoke test passed",
+    "exit": 0,
+    "seconds": 115,
+    "coverage": "Actual pad navigation reaches preference, launcher handoff and build catalogue; free-build banner/persistence, placement and menu/story input ownership checked.",
+    "save_limit": "Retained37680516233 shell/menu ownership proof applies to unchanged Save presentation. No physical Save/Load or reload claim."
+  },
+  "independent_review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "APPROVE scoped component READY",
+    "actual_intake": "Exact production scope, actual paired manifest/log,197-test log and actual existing Build controller smoke log inspected; original blind PASS retained with both residuals.",
+    "area_diagnostics": "Dummy-renderer material-null diagnostics occurred; no assertion failure, named area proof passed and exited0.",
+    "dependencies": "Existing UITokens onmain; no other menu/config/HUD/map or unREADY ancestry included."
+  },
+  "integration": {
+    "production": "scripts/ui/tab_build.gd and scripts/ui/tab_save.gd production delta only; data/config/menu.json build_preview group only",
+    "base_main": "068b5bb7c9b0926672d50ce846a768f92d4dc4ed",
+    "flags": "none"
+  },
+  "disposition": "READY scoped Build/Save component only. Full F42#0 remains OPEN;0 new full criteria."
 }
