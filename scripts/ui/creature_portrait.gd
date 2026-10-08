@@ -37,7 +37,7 @@ static func texture_for_path(path: String) -> Texture2D:
 			if config is Dictionary and config.get("regions") is Dictionary:
 				_frames = config.regions
 	var coordinates: Variant = _frames.get(path)
-	var valid := coordinates is Array and coordinates.size() == 4
+	var valid: bool = coordinates is Array and coordinates.size() == 4
 	if valid:
 		for value: Variant in coordinates:
 			if (not value is int and not value is float) or not is_finite(float(value)):
