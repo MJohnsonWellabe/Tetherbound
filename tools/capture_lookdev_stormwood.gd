@@ -24,7 +24,36 @@ func _run() -> void:
 
 
 func _capture(frame_id: String, description: String, full_size: bool, extra: Dictionary = {}) -> void:
-	await super._capture(frame_id, description, full_size, extra.merged({"graphics_capture": _graphics_capture}, true))
+	var finish: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_ground_finish.json"))
+	var ground := {"enabled": bool(finish.get("enabled", false)),
+		"config_sha256": FileAccess.get_file_as_string("res://data/config/stormwood_ground_finish.json").sha256_text()}
+	if bool(ground.enabled):
+		var cover := _world.get_node_or_null("StormwoodGroundCover")
+		if cover == null or not bool(cover.get("_bound")):
+			_failures.append(frame_id + ": enabled forest profile has no bound production cover")
+			return
+		var profile: Dictionary = cover.get("_profile_config")
+		for key: String in finish.grass:
+			if profile.get(key) != finish.grass[key]:
+				_failures.append(frame_id + ": forest grass profile did not apply " + key)
+		for name: String in finish.tiers:
+			var matching := false
+			for tier: Dictionary in profile.get("cover_tiers", []):
+				if str(tier.get("name", "")) != name:
+					continue
+				matching = true
+				for key: String in finish.tiers[name]:
+					if tier.get(key) != finish.tiers[name][key]:
+						_failures.append(frame_id + ": forest cover tier did not apply " + name + "/" + key)
+			if not matching:
+				_failures.append(frame_id + ": forest cover tier is absent " + name)
+		ground["profile"] = profile
+		ground["terrain_bound"] = cover.get("_terrain") != null
+		ground["camera_is_rendering"] = cover.get("_camera") == root.get_camera_3d()
+		if not bool(ground.terrain_bound) or not bool(ground.camera_is_rendering):
+			_failures.append(frame_id + ": forest profile is not bound to actual terrain/rendering camera")
+	await super._capture(frame_id, description, full_size, extra.merged({
+		"graphics_capture": _graphics_capture, "forest_ground_profile": ground}, true))
 	if not _frames.is_empty() and _frames.back().get("size", []) != _graphics_capture.get("resolution", []):
 		_failures.append("Stormwood look-dev frame does not match its declared native preset raster")
 
@@ -38,14 +67,15 @@ func _done() -> void:
 	if file == null:
 		_failures.append("Stormwood matrix receipt could not be opened")
 	else:
-		file.store_string(JSON.stringify({"graphics_capture": _graphics_capture, "frames": _frames,
+		var text := JSON.stringify({"graphics_capture": _graphics_capture, "frames": _frames,
 			"failures": _failures, "complete": _failures.is_empty(), "planned_frames": expected,
-			"scope": "Production CameraRig, staged stand/phase and aftermath flag, health restoration between Break frames, hour pin with production always-purple grading, ordinary HUD. Existing physics catch-up cap retained. Visual audit only; no earned campaign, performance, Hall or owner Ally claim."}, "\t") + "\n")
+				"scope": "Production CameraRig, staged stand/phase and aftermath flag, health restoration between Break frames, hour pin with production always-purple grading, ordinary HUD. Existing physics catch-up cap retained. Visual audit only; no earned campaign, performance, Hall or owner Ally claim."}, "\t") + "\n"
+		file.store_string(text)
 		file.flush()
 		var error := file.get_error()
 		file.close()
-		if error != OK:
-			_failures.append("Stormwood matrix receipt flush failed")
+		if error != OK or FileAccess.get_file_as_string("%s/frames_%s.json" % [_output_dir, _label]) != text:
+			_failures.append("Stormwood matrix receipt flush/readback failed")
 	for failure: String in _failures:
 		push_error(failure)
 	quit(0 if _failures.is_empty() else 1)
