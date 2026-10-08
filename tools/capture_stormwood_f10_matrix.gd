@@ -166,6 +166,9 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 	if image == null or image.is_empty():
 		_failures.append("%s: empty viewport image" % frame_id)
 		return
+	if _ground_readability and str(_surge.get("phase")) != frame_id.get_slice("_", 1):
+		_failures.append(frame_id + ": actual Surge phase differs from requested capture phase")
+		return
 	var path := ProjectSettings.globalize_path("%s/%s.jpg" % [_output_dir, frame_id])
 	if image.save_jpg(path, 0.85) != OK:
 		_failures.append("%s: save_jpg failed" % frame_id)
