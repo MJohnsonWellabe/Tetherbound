@@ -77,5 +77,19 @@
   "follow_up": "Read-only installed live-bone camera ray guard source APPROVE; unchanged route/default camera/input/budgets; changed capture runtime pending, originalBLOCK retained",
   "contact": "reedhaven-contact.jpg",
   "raw": "Original4PNG/JSON only artifact11519866622",
-  "flags": "none; Ripplet presentation OFF"
+  "flags": "none; Ripplet presentation OFF",
+  "changed_capture_r2": {
+    "run": 37708373493,
+    "source": "7df3b7efb2a77b599404b6ab973c32a11e40edb2",
+    "artifact": 11520528563,
+    "verdict": "FAIL",
+    "failure": "Existing30second hop1 midwater readiness guard expired; no capture produced",
+    "engine_errors": 1,
+    "engine_error_scope": "One intentional _fail push_error rejecting missing evidence",
+    "script_errors": 0,
+    "reviewer": "b_f37_review",
+    "review": "VerifiedactualFAIL; sole refusingbone/ray/state/draw cause not evidenced",
+    "disposition": "F37#2 parked after2unsuccessfulcaptureattempts; no unchanged third run, timeout relaxation or fallback",
+    "prior": "OriginalR1 routebehavior124assertPASS retained; originalpierblindBLOCK retained; changedoffload/capture runtime remains unproved"
+  }
 }

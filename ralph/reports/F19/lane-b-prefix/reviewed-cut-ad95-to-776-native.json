@@ -1,0 +1,39 @@
+{
+  "producer_commit": "ad95e0dd6fe490cfb6f2d1bf6f09ae93d18b9cfe",
+  "consumer_commit": "776b287a12656c43a829dad98405b3cabfaaac15",
+  "imported_boundary": "warrens",
+  "reviewer": "b_f49_review",
+  "verdict": "COMPATIBLE",
+  "source_scope": "Same original reviewer compared save/schema/gameplay prefix; helper defaults retained and Ripplet presentation OFF cannot affect the original Terra/Bramble/Bramble/Mud/Bramble team. No source or saved state rewriting.",
+  "actual_producer": {
+    "packet": "D:/CodexTemp/tetherbound-proof/native-b-ad95e0dd6f-earned-warrens-r2",
+    "supervisor_exit": 0,
+    "driver_elapsed_s": 942.723,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "earned": [
+      "Actual prior Bridge Load",
+      "Two ordinary wild victories",
+      "Guardian victory with13observed hits",
+      "Earned rewards and warrens_cleared",
+      "Ordinary exit and slot0 export"
+    ],
+    "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+    "original_ordered_five_retained": true,
+    "levels": [
+      9,
+      9,
+      9,
+      7,
+      7
+    ],
+    "world_seed": 59015681,
+    "namespace": "d3374d50ed084f0da03f42a78232f36b",
+    "next_goal": "Relay Captain",
+    "warnings": "Existing training reconciliation stall warnings retained; no clean-reconciliation claim"
+  },
+  "manifest": "ad95-to-776-native-manifest.json",
+  "validation_scope": "Mechanical JSON/predecessor/native value binding checks only; exact engine manifest validation and actual Relay Load remain OPEN.",
+  "earlier_attempt": "Interrupted r1 owner_game actualexit1 remains uncounted; only original terminalPASS r2 is bound.",
+  "criterion_scope": "Covered earned-prefix behavior only; fullF19#5/F49 and all unearned future folds remain OPEN."
+}
