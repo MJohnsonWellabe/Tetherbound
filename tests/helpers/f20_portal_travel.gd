@@ -14,6 +14,7 @@ var _lesson_capture_probe: RefCounted
 var _lesson_replay_row: Dictionary = {}
 var _lesson_replay_identity: Dictionary = {}
 var _lesson_replay_rows: Dictionary = {}
+var _lesson_observed_history: Dictionary = {}
 
 static func lesson_witness_options() -> Dictionary:
 	var options := {"controller": false, "capture": false, "replay": false, "skip_line": 0, "failures": []}
@@ -478,7 +479,15 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 		if options.replay and not replaying and not _lesson_replay_rows.has(id):
 			_lesson_replay_rows[id] = {"row":row.duplicate(true),
 				"identity":{"character_id":character_id,"party_uids":witness.party_uids.duplicate()}}
+		if options.replay and not replaying:
+			_lesson_observed_history[id] = {"character_id":character_id,
+				"party_uids":witness.party_uids.duplicate()}
 	_lesson_busy = false
+
+## Only naturally completed cards from this reader; navigation resets its Help
+## cache but must not erase the history needed by the existing disk boundary.
+func observed_lesson_history() -> Dictionary:
+	return _lesson_observed_history.duplicate(true)
 
 func _activate_world(prompt: Node3D, approach_headings: Array[Vector3] = []) -> bool:
 	var bounty: Node = game.session.get_node_or_null("FoundationComposition/BountyInteraction")

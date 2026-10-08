@@ -26,6 +26,7 @@ var segmented := false
 var meadows_piece_prefix := false
 var compatibility_paths: Array[String] = []
 var observe_next_goal := false
+var observe_lesson_reload := false
 
 func run(owner: SceneTree) -> void:
 	driver = owner
@@ -34,6 +35,11 @@ func run(owner: SceneTree) -> void:
 	# Legacy checkpoint labels embed the old order. Never accept them silently.
 	for arg: String in OS.get_cmdline_user_args():
 		if arg == "--observe-next-goal": observe_next_goal = true
+		if arg.begins_with("--lesson-reload-witness"):
+			if arg != "--lesson-reload-witness" or observe_lesson_reload:
+				_fail("Lesson reload witness requires one valueless existing option")
+				return
+			observe_lesson_reload = true
 		if arg.begins_with("--resume-from=") or arg.begins_with("--stop-at=") \
 				or arg.begins_with("--checkpoint-dir=") or arg == "--dry-run-water-fixture" or arg == "--m4-finale":
 			_fail("F49 refuses legacy resume/setup options; use --legacy-order-diagnostic for isolated debugging")
@@ -70,6 +76,11 @@ func run(owner: SceneTree) -> void:
 	if OS.get_cmdline_user_args().has("--capture-next-goal") and not observe_next_goal:
 		_fail("Next-goal frames require the existing --observe-next-goal snapshots")
 		return
+	if observe_lesson_reload:
+		var lesson_options := TRAVEL.lesson_witness_options()
+		if not lesson_options.failures.is_empty() or not lesson_options.controller or not lesson_options.replay:
+			_fail("Lesson reload observation requires naturally observed controller Skip and Settings Help")
+			return
 	if not compatibility_paths.is_empty() and resume_source.is_empty():
 		_fail("F49 reviewed cut compatibility requires an actual imported prefix")
 		return
@@ -311,9 +322,40 @@ func _boundary(label: String, reload_disk: bool = true) -> bool:
 		_failures(disk.failures)
 		return false
 	if observe_next_goal: travel.observe_next_goal(label, "after_export")
-	if reload_disk and not await disk.reload_boundary(label, travel):
-		_failures(disk.failures)
-		return false
+	if reload_disk:
+		var observed: Dictionary = travel.observed_lesson_history() if observe_lesson_reload else {}
+		var reopened: Array[String] = []
+		var watch := func() -> void:
+			var service := game.get_node_or_null("OnboardingLessons")
+			var panel: Node = service.get("_panel") if service != null else null
+			if is_instance_valid(panel) and panel.call("is_open") and service.get("_replaying") == false:
+				var id := str(panel.get("_row").get("id", ""))
+				if observed.has(id) and not reopened.has(id): reopened.append(id)
+		if not observed.is_empty(): driver.process_frame.connect(watch)
+		var loaded: bool = await disk.reload_boundary(label, travel)
+		if loaded and not observed.is_empty():
+			# Same observation window as the existing Home Key disk witness.
+			# No dismissals, input or service/flag writes can conceal a reopen.
+			for frame: int in 300: await driver.process_frame
+		if not observed.is_empty(): driver.process_frame.disconnect(watch)
+		if not loaded:
+			_failures(disk.failures)
+			return false
+		if not observed.is_empty():
+			var retained := reopened.is_empty()
+			for id: String in observed:
+				retained = retained and str(game.local.character_id) == observed[id].character_id \
+					and travel._uids() == observed[id].party_uids \
+					and game.local.flags.call("has", "opening:lesson:" + id) == true
+			var service := game.get_node_or_null("OnboardingLessons")
+			retained = retained and service != null and service.get("_identity") == str(game.local.character_id) \
+				and (service.get("_pending") as Dictionary).is_empty() and travel._ready_world(str(game.current_realm))
+			print("F46 EARNED LESSON RELOAD " + JSON.stringify({"boundary":label,"observed":observed,
+				"reopened":reopened,"settle_frames":300,"passed":retained,
+				"scope":"Actual existing disk Load retains only naturally observed personal acknowledgements; teacher return and whole F46 remain open"}))
+			if not retained:
+				_fail("Existing earned boundary Load lost or naturally reopened this character's observed lesson")
+				return false
 	if reload_disk and not await _goal_witness(label, "after_boundary_reload"): return false
 	if label == "tidewake_settled" and not _dock_saved():
 		_fail("F49 Tidewake segment lost its saved conclusion on production reload")
