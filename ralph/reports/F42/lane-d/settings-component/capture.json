@@ -32,6 +32,39 @@
       "Stills do not prove scrolling/remapping/controller motion. Full F42#0/maps/HUD/othermenus/releaseBars OPEN."
     ]
   },
-  "logic": "Existing test_four_biome_debug_teleport in flight; reuse unchanged39-file menu/config/input PASS37657009651",
-  "area": "Retained actual menu/controller smoke37680516233 PASS104s; original reviewer must confirm applicability."
+  "logic": {
+    "fresh": {
+      "run": 37707216578,
+      "artifact": 11520326970,
+      "source_commit": "6cb4a73444139fb44da5c1c7b4edf49106f38cfe",
+      "proof": "tests/run_tests.gd --only=test_four_biome_debug_teleport",
+      "files": 1,
+      "tests": 10,
+      "assertions": 1094,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 5
+    },
+    "reused": "Unchanged menu/config/input39-file PASS37657009651:459tests11695assertions0failed/exit0"
+  },
+  "area": {
+    "run": 37680516233,
+    "artifact": 11507629839,
+    "proof": "tests/smoke_gate_a_map_cycle.gd",
+    "result": "PASS actual retained menu/controller shell/input-ownership paths104s; applicable to unchanged shell, not Settings scrolling/physicalremapping/focusedQuickitems"
+  },
+  "independent_review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "APPROVE pictured Settings component READY only",
+    "intake": "Exact current three-file scope, actual finished8-frame manifest/exit with6Settings scoped/2HUDexcluded, actual10/1094/0 logic, reused unchanged39-file coverage, retained shell/controller area and original blind PASS inspected.",
+    "dependencies": "UITokens onmain; callbacks/action arrays/graph/durable graphics/rebinding/preset behavior preserved."
+  },
+  "integration": {
+    "production": "scripts/ui/tab_settings.gd readability styles ONLY; EXACT FIVE player-facing note replacements data/config/menu.json from762afab7f2fe65190664f2d323daa71d5d4d45dc; ONE shared game_menu.gd footer TEXT_PRIMARY line alreadyPlayersREADY.",
+    "excluded": "Separate build_preview config hunk and ALL map/Build/Save/HUD/renderer callback/otherunREADY ancestry.",
+    "source_styles": "5c76bdf5c37b3a1b87bf8f80c5d80bfeb7b57276",
+    "base_main": "068b5bb7c9b0926672d50ce846a768f92d4dc4ed",
+    "flags": "none"
+  },
+  "disposition": "READY scoped component only; full F42#0 OPEN/BLOCK."
 }
