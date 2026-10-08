@@ -2,7 +2,8 @@ extends RefCounted
 
 ## Immutable byte-identical copies of the actual production split save.
 ## Hashes attest bytes, not earned play. Only the continuous caller can earn a
-## boundary. Segments accept only a complete, hash-linked production prefix.
+## boundary. Earned segments require a complete, hash-linked production prefix;
+## explicit generated inputs retain an unearned origin and only its real suffix.
 const SAVE := preload("res://scripts/save/save_game.gd")
 const DOCUMENT := preload("res://scripts/save/save_document.gd")
 const HOME := preload("res://scripts/story/regional_homecoming.gd")
@@ -32,6 +33,22 @@ var piece_prefix := false
 var compatibility_manifests: Dictionary = {}
 var compatibility_files: Dictionary = {}
 var compatibility_transition: Dictionary = {}
+var generated_origin: Dictionary = {}
+var prefix_start := 0
+
+## Generated inputs attest a declared fixture, never earlier earned play.
+static func _generated_fixture_valid(provenance: Dictionary) -> bool:
+	return provenance.size() == 4 and provenance.get("generator") is String \
+		and not str(provenance.generator).strip_edges().is_empty() \
+		and provenance.get("owner_policy") == "#5726060136810" \
+		and typeof(provenance.get("prior_earned_play")) == TYPE_BOOL and provenance.prior_earned_play == false \
+		and typeof(provenance.get("continuous_fresh_save")) == TYPE_BOOL and provenance.continuous_fresh_save == false
+
+func _generated_origin_valid(origin: Dictionary) -> bool:
+	var index := boundaries.find(origin.get("boundary"))
+	return piece_prefix and origin.size() == 2 and index >= boundaries.find("warrens") \
+		and index >= 0 and origin.get("boundary") != "completed_world" \
+		and origin.get("provenance") is Dictionary and _generated_fixture_valid(origin.provenance)
 
 ## Evidence only. Each immutable manifest authorizes one exact imported cut;
 ## supplying these never changes a save, receipt, schema or gameplay predicate.
@@ -249,8 +266,21 @@ func _fail(message: String) -> bool:
 	failures.append(message)
 	return false
 
-func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
+func export_boundary(label: String, piece_proof: Dictionary = {}, input_mode: String = "earned",
+		fixture_provenance: Dictionary = {}) -> bool:
 	if not failures.is_empty(): return false
+	var generated := input_mode == "generated_fixture"
+	if input_mode not in ["earned", "generated_fixture"]:
+		return _fail("F49 handoff input mode must be explicit earned or generated_fixture")
+	if generated:
+		var origin := {"boundary": label, "provenance": fixture_provenance.duplicate(true)}
+		if not history.is_empty() or not snapshots.is_empty() or not generated_origin.is_empty() \
+			or not piece_proof.is_empty() or not _generated_origin_valid(origin):
+			return _fail("F49 generated fixture requires a fresh post-Warrens input and explicit unearned provenance")
+		generated_origin = origin
+		prefix_start = boundaries.find(label)
+	elif not fixture_provenance.is_empty():
+		return _fail("F49 earned export cannot supply generated fixture provenance")
 	var commit := COMMITS.commit_sha()
 	var sha := RegEx.new()
 	sha.compile("^[0-9a-f]{40}$")
@@ -260,12 +290,12 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 	if not compatibility_transition.is_empty() and _reviewed_cut(base, history, commit, compatibility_transition.manifest_sha256).is_empty():
 		return _fail("F49 reviewed imported cut changed before export")
 	source_commit = commit
-	if boundaries.find(label) != history.size(): return _fail("F49 handoffs must be earned in declared order")
+	if boundaries.find(label) != prefix_start + history.size(): return _fail("F49 handoffs must follow their declared input in order")
 	var meadow_piece := piece_prefix and MEADOWS_PREPARED_PIECES.has(label)
-	if meadow_piece and (piece_proof.get("passed") != true or piece_proof.get("segment") != label \
+	if not generated and meadow_piece and (piece_proof.get("passed") != true or piece_proof.get("segment") != label \
 		or piece_proof.get("mode") != "new_order_meadows_piece"):
 		return _fail("Meadows piece needs its actual passed helper proof and authored realm")
-	if label == "relay_prepared" and not _relay_preparation_proof(piece_proof):
+	if not generated and label == "relay_prepared" and not _relay_preparation_proof(piece_proof):
 		return _fail("Relay preparation requires its completed real Riverwatch recovery and safe-join receipts")
 	if journey_id.is_empty(): journey_id = source_commit + ":" + base
 	var destination := base.path_join(label)
@@ -285,20 +315,21 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 			uids.append(str(member.uid))
 			distinct[str(member.uid)] = true
 		if uids.size() != 5 or distinct.size() != 5 or uids.has("") \
-			or current.realm != realms[history.size()] or OS.has_environment(SPAWNS.SEED_ENV_VAR) \
+			or current.realm != realms[prefix_start + history.size()] or OS.has_environment(SPAWNS.SEED_ENV_VAR) \
 			or SPAWNS.resolve_seed(int(current.world_seed)) != int(current.world_seed):
 			return _fail("Meadows-rooted handoff must retain five distinct UIDs, the authored realm and its saved population")
 		for field: String in ["character_id", "world_id", "reward_delivery_namespace"]:
 			if str(current.get(field, "")).is_empty(): return _fail("Meadows-rooted handoff has no stable " + field)
 		if not history.is_empty():
-			if not snapshots.has(boundaries[0]): return _fail("Reviewed handoff lost its original identity receipt")
-			var original: Dictionary = snapshots[boundaries[0]].state
+			var anchor: String = boundaries[prefix_start]
+			if not snapshots.has(anchor): return _fail("Reviewed handoff lost its original identity receipt")
+			var original: Dictionary = snapshots[anchor].state
 			var original_uids: Array = []
 			for member: Dictionary in original.party: original_uids.append(str(member.uid))
 			if uids != original_uids: return _fail("Meadows-rooted chapter replaced or reordered the original five")
 			for field: String in ["character_id", "world_id", "reward_delivery_namespace", "world_seed"]:
 				if current.get(field) != original.get(field): return _fail("Meadows-rooted chapter changed its original " + field)
-			if snapshots[boundaries[0]].journey_id != journey_id:
+			if snapshots[anchor].journey_id != journey_id:
 				return _fail("Meadows-rooted chapter changed its original journey identity")
 	# SaveSystem._dir is the actual installed scratch root, never a guessed
 	# slot file. Include portable characters/worlds/locator and all other files.
@@ -327,6 +358,15 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 			receipt.earned_claim = "ordinary-input chapter continuing the complete earned Meadows-piece prefix through production Load; hashes do not prove play"
 	if not piece_prefix and not compatibility_manifests.is_empty():
 		receipt.earned_claim = "ordinary-input chapter continuing its complete reviewed earned prefix through production Load; hashes do not prove play"
+	if not generated_origin.is_empty():
+		receipt.input_mode = "generated_fixture"
+		receipt.generated_origin = generated_origin.duplicate(true)
+		receipt.continuous_fresh_save = false
+		receipt.earned_claim = "only the current caller segment may be earned; generated predecessor input; no prior earned play or continuous fresh-save claim"
+		if generated:
+			receipt.kind = "f49_generated_fixture_handoff"
+			receipt.erase("piece_proof")
+			receipt.earned_claim = "generated fixture input only; no earned play or PASS claimed"
 	var output := FileAccess.open(destination.path_join("receipt.json"), FileAccess.WRITE)
 	if output == null: return _fail("F49 immutable receipt write failed")
 	# Receipt comparisons must retain the same exact numbers as the copied save.
@@ -339,15 +379,24 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 	snapshots[label] = receipt
 	compatibility_transition.clear()
 	history.append({"boundary": label, "receipt_sha256": FileAccess.get_sha256(destination.path_join("receipt.json"))})
-	print("F49 DISK HANDOFF " + JSON.stringify({"path": destination, "boundary": label, "commit": source_commit,
-		"files_sha256": hashes, "population_provenance": receipt.population_provenance}))
+	var observation := {"path": destination, "boundary": label, "commit": source_commit,
+		"files_sha256": hashes, "population_provenance": receipt.population_provenance}
+	if not generated_origin.is_empty():
+		observation.input_mode = "generated_fixture"
+		observation.generated_origin = generated_origin.duplicate(true)
+		observation.continuous_fresh_save = false
+		observation.kind = receipt.kind
+	print("F49 DISK HANDOFF " + JSON.stringify(observation))
 	return true
 
 ## Validate the entire prefix before copying or installing a writable save.
 ## Default source identity is strict. Explicit reviewed manifests authorize only
 ## the exact transition and preserve every original receipt and predecessor hash.
-func import_prefix(source_boundary: String) -> String:
+func import_prefix(source_boundary: String, input_mode: String = "earned") -> String:
 	if not failures.is_empty(): return ""
+	if input_mode not in ["earned", "generated_fixture"]:
+		_fail("F49 resume input mode must be explicit earned or generated_fixture")
+		return ""
 	if OS.has_environment(SPAWNS.SEED_ENV_VAR):
 		_fail("F49 receiving process must retain the saved population without an environment seed override")
 		return ""
@@ -369,6 +418,23 @@ func import_prefix(source_boundary: String) -> String:
 	if index < 0 or label == "completed_world":
 		_fail("F49 resume requires an unfinished new-order chapter boundary")
 		return ""
+	var origin: Dictionary = {}
+	var start := 0
+	var generated_terminal_hash := ""
+	if input_mode == "generated_fixture":
+		generated_terminal_hash = FileAccess.get_sha256(source.path_join("receipt.json"))
+		var terminal: Variant = DOCUMENT.parse(FileAccess.get_file_as_string(source.path_join("receipt.json")))
+		if not terminal is Dictionary or not terminal.get("generated_origin") is Dictionary \
+			or not _hex(generated_terminal_hash, 64) \
+			or FileAccess.get_sha256(source.path_join("receipt.json")) != generated_terminal_hash \
+			or not _generated_origin_valid(terminal.generated_origin):
+			_fail("F49 generated input lacks its explicit fixture origin and unearned provenance")
+			return ""
+		origin = terminal.generated_origin.duplicate(true)
+		start = boundaries.find(origin.boundary)
+		if start > index:
+			_fail("F49 generated origin follows its requested boundary")
+			return ""
 	var source_root := source.get_base_dir()
 	if source_root == base or source_root.begins_with(base + "/") or base.begins_with(source_root + "/") \
 		or DirAccess.dir_exists_absolute(base) or FileAccess.file_exists(base):
@@ -387,13 +453,14 @@ func import_prefix(source_boundary: String) -> String:
 	var identity: Array = []
 	var retained: Dictionary = {}
 	var chain: Array = []
-	for step in index + 1:
+	for step in range(start, index + 1):
 		var boundary: String = boundaries[step]
 		var meadow_piece := piece_prefix and MEADOWS_PREPARED_PIECES.has(boundary)
 		var directory := source_root.path_join(boundary)
 		var receipt_hash := FileAccess.get_sha256(directory.path_join("receipt.json"))
 		var parsed: Variant = DOCUMENT.parse(FileAccess.get_file_as_string(directory.path_join("receipt.json")))
 		if not parsed is Dictionary or receipt_hash.is_empty() \
+			or (not origin.is_empty() and boundary == label and receipt_hash != generated_terminal_hash) \
 			or FileAccess.get_sha256(directory.path_join("receipt.json")) != receipt_hash:
 			_fail("F49 resume has no readable exact receipt for " + boundary)
 			return ""
@@ -414,8 +481,19 @@ func import_prefix(source_boundary: String) -> String:
 			distinct_uids[member.uid] = true
 		var current_identity := [receipt.get("journey_id"), state.get("character_id"),
 			state.get("world_id"), state.get("reward_delivery_namespace"), state.get("world_seed"), uids]
-		if step == 0: identity = current_identity
-		if receipt.get("kind") != ("earned_meadows_piece" if meadow_piece else "f49_ordinary_input_handoff") \
+		var generated: bool = not origin.is_empty() and step == start
+		if origin.is_empty():
+			if receipt.has("generated_origin") or receipt.has("input_mode") or receipt.get("kind") == "f49_generated_fixture_handoff":
+				_fail("F49 earned mode refuses generated ancestry")
+				return ""
+		elif receipt.get("generated_origin") != origin or receipt.get("input_mode") != "generated_fixture" \
+			or typeof(receipt.get("continuous_fresh_save")) != TYPE_BOOL or receipt.continuous_fresh_save != false \
+			or receipt.get("commit") != commit or (generated and receipt.has("piece_proof")):
+			_fail("F49 generated lineage changed its exact source, origin or unearned claim")
+			return ""
+		if step == start: identity = current_identity
+		var expected_kind := "f49_generated_fixture_handoff" if generated else ("earned_meadows_piece" if meadow_piece else "f49_ordinary_input_handoff")
+		if receipt.get("kind") != expected_kind \
 			or receipt.get("boundary") != boundary or receipt.get("save_slot", -1 if piece_prefix else 0) != save_slot \
 			or not _hex(receipt.get("commit"), 40) or (compatibility_manifests.is_empty() and receipt.get("commit") != commit) \
 			or not receipt.get("journey_id") is String or receipt.journey_id.is_empty() \
@@ -430,7 +508,7 @@ func import_prefix(source_boundary: String) -> String:
 			_fail("F49 resume rejected mismatched source, identity, order, lineage or save hashes at " + boundary)
 			return ""
 		var transition: Variant = receipt.get("compatibility_transition", {})
-		var changed_cut: bool = step > 0 and retained[boundaries[step - 1]].commit != receipt.commit
+		var changed_cut: bool = step > start and retained[boundaries[step - 1]].commit != receipt.commit
 		if changed_cut or not transition is Dictionary or not transition.is_empty():
 			if not changed_cut or not transition is Dictionary \
 				or transition.get("consumer_commit") != receipt.commit \
@@ -444,7 +522,7 @@ func import_prefix(source_boundary: String) -> String:
 			if uids.size() != 5 or distinct_uids.size() != 5:
 				_fail("Reviewed or Meadows-rooted prefix requires the original five distinct UIDs through every chapter")
 				return ""
-		if meadow_piece:
+		if meadow_piece and not generated:
 			var proof: Variant = receipt.get("piece_proof")
 			if not proof is Dictionary or proof.get("passed") != true or proof.get("segment") != boundary \
 				or proof.get("mode") != "new_order_meadows_piece":
@@ -457,7 +535,7 @@ func import_prefix(source_boundary: String) -> String:
 		if population.get("saved_world_seed") != state.get("world_seed") \
 			or population.get("effective_encounter_seed") != state.get("world_seed") \
 			or population.get("has_environment_override") != false \
-			or (not compatibility_manifests.is_empty() and population.get("environment_override") != ""):
+			or ((not origin.is_empty() or not compatibility_manifests.is_empty()) and population.get("environment_override") != ""):
 			_fail("F49 segmented prefix requires its original reproducible population without seed overrides")
 			return ""
 		# Read through the same slot/locator/split validators as production Load.
@@ -486,27 +564,34 @@ func import_prefix(source_boundary: String) -> String:
 			return ""
 		compatibility_transition = {"manifest_sha256": digest, "imported_boundary": label,
 			"producer_commit": retained[label].commit, "consumer_commit": commit}
-	for step in index + 1:
+	for step in range(start, index + 1):
 		var boundary: String = boundaries[step]
 		if not tree.copy_tree(source_root.path_join(boundary), base.path_join(boundary)):
 			_fail("F49 resume immutable prefix copy failed at " + boundary)
 			return ""
 	# Recheck both complete trees after copying, including the original receipts.
-	for step in index + 1:
+	for step in range(start, index + 1):
 		var boundary: String = boundaries[step]
 		if _hash_tree(base.path_join(boundary + "/save")) != retained[boundary].files_sha256 \
 			or _hash_tree(source_root.path_join(boundary + "/save")) != retained[boundary].files_sha256 \
-			or FileAccess.get_sha256(base.path_join(boundary + "/receipt.json")) != chain[step].receipt_sha256 \
-			or FileAccess.get_sha256(source_root.path_join(boundary + "/receipt.json")) != chain[step].receipt_sha256:
+			or FileAccess.get_sha256(base.path_join(boundary + "/receipt.json")) != chain[step - start].receipt_sha256 \
+			or FileAccess.get_sha256(source_root.path_join(boundary + "/receipt.json")) != chain[step - start].receipt_sha256:
 			_fail("F49 resume immutable prefix copy changed bytes at " + boundary)
 			return ""
 	snapshots = retained
 	history = chain
 	source_commit = commit
 	journey_id = str(identity[0])
-	print("F49 SEGMENT INPUT " + JSON.stringify({"path": source, "boundary": label,
+	generated_origin = origin
+	prefix_start = start
+	var observation := {"path": source, "boundary": label,
 		"commit": commit, "journey_id": journey_id, "predecessors": history,
-		"compatibility_transition": compatibility_transition}))
+		"compatibility_transition": compatibility_transition}
+	if not generated_origin.is_empty():
+		observation.input_mode = "generated_fixture"
+		observation.generated_origin = generated_origin.duplicate(true)
+		observation.continuous_fresh_save = false
+	print("F49 SEGMENT INPUT " + JSON.stringify(observation))
 	return label
 
 func _relay_preparation_proof(proof: Dictionary) -> bool:
