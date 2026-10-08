@@ -108,5 +108,64 @@
       "Original blind native visual verdict remains pending; command approval does not establish visible paving improvement."
     ],
     "limits": "APPROVE exact invocation applicability only, no native run or pixels inspected. ROOT owns both captures. Scope is pictured P2-025 Observatory dial grass-through-paving at night; no dawn/all-area, full preset/matrix/F40, earned campaign, mechanical/controller, co-op, performance or visual-bar acceptance. Prior source/headless approvals remain unchanged; no unit result is claimed."
+  },
+  "pure_descriptor_correction_6c9f": {
+    "reviewed_at_utc": "2026-10-08T18:36:52.809809+00:00",
+    "source_commit": "6c9fefc20ed3392d3be5a55c16e00e7541420a13",
+    "base_commit": "58bdad0d99093f0628677a600eab4c2bae3a5c77",
+    "source_verdict": "APPROVE",
+    "exact_headless_command_verdict": "APPROVE",
+    "findings": [],
+    "changed_blobs": {
+      "scripts/world/cloudreach_world.gd": "b65107ac24413912ab6c7796faa5132d9a618694",
+      "tests/test_cloudreach_old_wind_observatory_presentation.gd": "153ef54e860c813b94049be1233cc54e81e365ff"
+    },
+    "semantic_equivalence": [
+      "The new pure _observatory_dial_cover_exclusion(centre: Vector3) reads the identical existing config/fallback and returns the same ellipse keys, radius and rotation. _build_observatory still appends exactly one descriptor using root.to_global(Vector3.ZERO), at the same point before all unchanged Observatory geometry. No await/state mutation is introduced between centre evaluation and config read.",
+      "Cover sampling, configured radius, original production build order, height tolerance, camera/capture/bootstrap and runner have no 58bd-to-6c delta. Geometry, collision, flags and gameplay semantics are unchanged.",
+      "The corrected existing test exercises the real production descriptor and real COVER._excluded without accessing the unavailable SceneTree main loop. It retains all five inside/outside edge pairs and the other-stratum assertion, adds supplied-centre preservation, and frees both locally created nodes. All four pre-existing Observatory tests remain unchanged.",
+      "The aborted new fixture registration-count assertion is replaced by descriptor-centre coverage; its new scene collision assertion and scene construction are removed. This corrected unit does not prove actual landmark registration or full production geometry/cover binding. Those remain native proof obligations, not unit claims."
+    ],
+    "failed_58bd_artifact": {
+      "verdict": "FAILED_PROOF",
+      "run_id": 37824454137,
+      "artifact_id": 11570643058,
+      "job_id": 113473557310,
+      "source_commit": "58bdad0d99093f0628677a600eab4c2bae3a5c77",
+      "run_log": ".tmp/e-observatory-58bd-37824454137/expanded/run.log",
+      "run_log_sha256": "b2e496f30d37367f4472a489de5f00b1d8314c16e5e15afee6565c42b13e305f",
+      "job_log": ".tmp/e-observatory-58bd-37824454137/job.log",
+      "job_log_sha256": "e4cdfd2cd0cdd33e9ac5417a34ad6de9e001e3aa08c9de3cf8a3dc4758693b44",
+      "actual_checkout_bound": true,
+      "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+      "physical_exit_code": 0,
+      "raw_elapsed_seconds": 7,
+      "reported_labels": 6,
+      "reported_assertions": 93,
+      "reported_assertion_failures": 0,
+      "errors": [
+        "SCRIPT ERROR Invalid access to property or key root on null instance, test_observatory_paving_excludes_cover_only_on_its_own_court line 21; caller tests/run_tests.gd _init line 120.",
+        "WARNING 7 ObjectDB instances leaked; ERROR 1 resource still in use at exit."
+      ],
+      "interpretation": "The new method aborts at its SceneTree-root access before descriptor/exclusion assertions and cleanup. The runner still emits an ok label because it only examines the test assertion failures after callv; those labels/exit 0 do not establish a passing affected proof. My earlier source approval incorrectly assumed main-loop availability for that mounted fixture; this actual failure supersedes that fixture assumption. Original source/headless applicability approvals remain historical, not runtime passes."
+    },
+    "approved_headless_argv": [
+      "Godot",
+      "--headless",
+      "--path",
+      "<fresh worktree pinned to 6c9fefc20ed3392d3be5a55c16e00e7541420a13>",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--only=test_cloudreach_old_wind_observatory_presentation.gd,test_cloudreach_grass_roles.gd::test_grounded_route_exclusions_use_corrected_height_without_crossing_strata"
+    ],
+    "corrected_runtime": "PENDING; dispatched elsewhere, not inspected or executed by reviewer",
+    "native_reuse_disposition": "APPROVE_APPLICABILITY: the already approved 58e/58bd native command pair can remain the changed-production comparison for corrected 6c. Descriptor extraction is synchronous and semantically equivalent; no concrete source delta warrants restarting that pair solely for SHA. Bind native evidence to its actual 58bd pin and explicitly disclose the pure-helper successor, rather than relabeling it as a 6c capture.",
+    "pending_gates": [
+      "Corrected affected headless terminal artifact with completed assertions and assessed script/engine diagnostics.",
+      "Actual production native registration/cover effect, original floor/camera/stand/raster and source provenance from the ROOT-owned pair.",
+      "Original blind visual verdict, still pending and not contacted."
+    ],
+    "limits": "Source/command/reuse applicability only. No engine/test/import/GPU/dispatch or pixels inspected. Failed 58bd artifact is preserved; no corrected runtime pass, visual improvement, P2-025/F40 criterion or whole-matrix acceptance is claimed."
   }
 }
