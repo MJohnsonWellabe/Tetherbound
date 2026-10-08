@@ -1,0 +1,4344 @@
+{
+  "source": "c9a780852bd1a0fbb1855a12fab2fe21495ad60e",
+  "native_packet": "D:\\CodexTemp\\tetherbound-proof\\native-d-c9a780852b-f17-hall24",
+  "renderer": "forward_plus",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "presets": [
+    "Medium",
+    "High"
+  ],
+  "exit_code": 0,
+  "elapsed_s": 582,
+  "complete": false,
+  "hall_stills_finished": true,
+  "source_clean": true,
+  "hashes_checked": 25,
+  "flags": [
+    "hall-endwall-candidate",
+    "hall-arch-depth-candidate"
+  ],
+  "physical_access": "all8arches+8pedestals floortrue joypad route; maxoffroad0; all8installed frameXYZ=1,1,5; inherited post-opening placement disclosed",
+  "scope": "3existing Hall labels only; no full matrix/motion/earned/device/co-op/wholecriterion; before/after physical poses differ slightly, internally paired all8poses fixed",
+  "warnings": [
+    "native physics interpolation deprecation",
+    "7 Texture RIDs leaked"
+  ],
+  "views": [
+    {
+      "body": [
+        106.825813293457,
+        0.910941660404205,
+        14.1389446258545
+      ],
+      "camera": [
+        101.783187866211,
+        3.74208164215088,
+        14.8046398162842
+      ],
+      "camera_basis": [
+        [
+          0.130878195166588,
+          3.64388386131509e-09,
+          0.991398513317108
+        ],
+        [
+          0.20612271130085,
+          0.978147745132446,
+          -0.0272110272198915
+        ],
+        [
+          -0.969734132289886,
+          0.207911044359207,
+          0.128018200397491
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 318620,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Normal",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "Medium",
+        "ssao": true,
+        "ssil": false,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 96.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0000-inside-Hall-nave-day-clear-medium.png",
+      "label": "inside Hall nave",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            106.825813293457,
+            2.21094155311584,
+            14.4889450073242
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59634",
+          "position": [
+            112.849998474121,
+            7.07000017166138,
+            14.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59640",
+          "position": [
+            101.0,
+            4.67000007629395,
+            19.5500011444092
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59646",
+          "position": [
+            107.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59652",
+          "position": [
+            113.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "Medium",
+      "time": "day",
+      "weather": "clear"
+    },
+    {
+      "body": [
+        106.825813293457,
+        0.910941660404205,
+        14.1389446258545
+      ],
+      "camera": [
+        101.783187866211,
+        3.74208164215088,
+        14.8046398162842
+      ],
+      "camera_basis": [
+        [
+          0.130878195166588,
+          3.64388386131509e-09,
+          0.991398513317108
+        ],
+        [
+          0.20612271130085,
+          0.978147745132446,
+          -0.0272110272198915
+        ],
+        [
+          -0.969734132289886,
+          0.207911044359207,
+          0.128018200397491
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 320224,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Far",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "High",
+        "ssao": true,
+        "ssil": true,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 128.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0001-inside-Hall-nave-day-clear-high.png",
+      "label": "inside Hall nave",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            106.825813293457,
+            2.21094155311584,
+            14.4889450073242
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59634",
+          "position": [
+            112.849998474121,
+            7.07000017166138,
+            14.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59640",
+          "position": [
+            101.0,
+            4.67000007629395,
+            19.5500011444092
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59646",
+          "position": [
+            107.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59652",
+          "position": [
+            113.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "High",
+      "time": "day",
+      "weather": "clear"
+    },
+    {
+      "body": [
+        106.825813293457,
+        0.910941660404205,
+        14.1389446258545
+      ],
+      "camera": [
+        101.783187866211,
+        3.74208164215088,
+        14.8046398162842
+      ],
+      "camera_basis": [
+        [
+          0.130878195166588,
+          3.64388386131509e-09,
+          0.991398513317108
+        ],
+        [
+          0.20612271130085,
+          0.978147745132446,
+          -0.0272110272198915
+        ],
+        [
+          -0.969734132289886,
+          0.207911044359207,
+          0.128018200397491
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 334476,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Normal",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "Medium",
+        "ssao": true,
+        "ssil": false,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 96.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0002-inside-Hall-nave-night-clear-medium.png",
+      "label": "inside Hall nave",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            106.825813293457,
+            2.21094155311584,
+            14.4889450073242
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59634",
+          "position": [
+            112.849998474121,
+            7.07000017166138,
+            14.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59640",
+          "position": [
+            101.0,
+            4.67000007629395,
+            19.5500011444092
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59646",
+          "position": [
+            107.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59652",
+          "position": [
+            113.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "Medium",
+      "time": "night",
+      "weather": "clear"
+    },
+    {
+      "body": [
+        106.825813293457,
+        0.910941660404205,
+        14.1389446258545
+      ],
+      "camera": [
+        101.783187866211,
+        3.74208164215088,
+        14.8046398162842
+      ],
+      "camera_basis": [
+        [
+          0.130878195166588,
+          3.64388386131509e-09,
+          0.991398513317108
+        ],
+        [
+          0.20612271130085,
+          0.978147745132446,
+          -0.0272110272198915
+        ],
+        [
+          -0.969734132289886,
+          0.207911044359207,
+          0.128018200397491
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 336177,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Far",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "High",
+        "ssao": true,
+        "ssil": true,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 128.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0003-inside-Hall-nave-night-clear-high.png",
+      "label": "inside Hall nave",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            106.825813293457,
+            2.21094155311584,
+            14.4889450073242
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59634",
+          "position": [
+            112.849998474121,
+            7.07000017166138,
+            14.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59640",
+          "position": [
+            101.0,
+            4.67000007629395,
+            19.5500011444092
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59646",
+          "position": [
+            107.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59652",
+          "position": [
+            113.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "High",
+      "time": "night",
+      "weather": "clear"
+    },
+    {
+      "body": [
+        106.825813293457,
+        0.910941660404205,
+        14.1389446258545
+      ],
+      "camera": [
+        101.783187866211,
+        3.74208164215088,
+        14.8046398162842
+      ],
+      "camera_basis": [
+        [
+          0.130878195166588,
+          3.64388386131509e-09,
+          0.991398513317108
+        ],
+        [
+          0.20612271130085,
+          0.978147745132446,
+          -0.0272110272198915
+        ],
+        [
+          -0.969734132289886,
+          0.207911044359207,
+          0.128018200397491
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 341972,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Normal",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "Medium",
+        "ssao": true,
+        "ssil": false,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 96.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0004-inside-Hall-nave-day-rain-medium.png",
+      "label": "inside Hall nave",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            106.825813293457,
+            2.21094155311584,
+            14.4889450073242
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59634",
+          "position": [
+            112.849998474121,
+            7.07000017166138,
+            14.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59640",
+          "position": [
+            101.0,
+            4.67000007629395,
+            19.5500011444092
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59646",
+          "position": [
+            107.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59652",
+          "position": [
+            113.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "Medium",
+      "time": "day",
+      "weather": "rain"
+    },
+    {
+      "body": [
+        106.825813293457,
+        0.910941660404205,
+        14.1389446258545
+      ],
+      "camera": [
+        101.783187866211,
+        3.74208164215088,
+        14.8046398162842
+      ],
+      "camera_basis": [
+        [
+          0.130878195166588,
+          3.64388386131509e-09,
+          0.991398513317108
+        ],
+        [
+          0.20612271130085,
+          0.978147745132446,
+          -0.0272110272198915
+        ],
+        [
+          -0.969734132289886,
+          0.207911044359207,
+          0.128018200397491
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 343498,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Far",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "High",
+        "ssao": true,
+        "ssil": true,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 128.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0005-inside-Hall-nave-day-rain-high.png",
+      "label": "inside Hall nave",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            106.825813293457,
+            2.21094155311584,
+            14.4889450073242
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59634",
+          "position": [
+            112.849998474121,
+            7.07000017166138,
+            14.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59640",
+          "position": [
+            101.0,
+            4.67000007629395,
+            19.5500011444092
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59646",
+          "position": [
+            107.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59652",
+          "position": [
+            113.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "High",
+      "time": "day",
+      "weather": "rain"
+    },
+    {
+      "body": [
+        106.825813293457,
+        0.910941660404205,
+        14.1389446258545
+      ],
+      "camera": [
+        101.783187866211,
+        3.74208164215088,
+        14.8046398162842
+      ],
+      "camera_basis": [
+        [
+          0.130878195166588,
+          3.64388386131509e-09,
+          0.991398513317108
+        ],
+        [
+          0.20612271130085,
+          0.978147745132446,
+          -0.0272110272198915
+        ],
+        [
+          -0.969734132289886,
+          0.207911044359207,
+          0.128018200397491
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 345024,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Normal",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "Medium",
+        "ssao": true,
+        "ssil": false,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 96.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0006-inside-Hall-nave-night-rain-medium.png",
+      "label": "inside Hall nave",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            106.825813293457,
+            2.21094155311584,
+            14.4889450073242
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59634",
+          "position": [
+            112.849998474121,
+            7.07000017166138,
+            14.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59640",
+          "position": [
+            101.0,
+            4.67000007629395,
+            19.5500011444092
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59646",
+          "position": [
+            107.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59652",
+          "position": [
+            113.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "Medium",
+      "time": "night",
+      "weather": "rain"
+    },
+    {
+      "body": [
+        106.825813293457,
+        0.910941660404205,
+        14.1389446258545
+      ],
+      "camera": [
+        101.783187866211,
+        3.74208164215088,
+        14.8046398162842
+      ],
+      "camera_basis": [
+        [
+          0.130878195166588,
+          3.64388386131509e-09,
+          0.991398513317108
+        ],
+        [
+          0.20612271130085,
+          0.978147745132446,
+          -0.0272110272198915
+        ],
+        [
+          -0.969734132289886,
+          0.207911044359207,
+          0.128018200397491
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 346494,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Far",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "High",
+        "ssao": true,
+        "ssil": true,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 128.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0007-inside-Hall-nave-night-rain-high.png",
+      "label": "inside Hall nave",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            106.825813293457,
+            2.21094155311584,
+            14.4889450073242
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59634",
+          "position": [
+            112.849998474121,
+            7.07000017166138,
+            14.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59640",
+          "position": [
+            101.0,
+            4.67000007629395,
+            19.5500011444092
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59646",
+          "position": [
+            107.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59652",
+          "position": [
+            113.0,
+            4.67000007629395,
+            19.5499992370605
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "High",
+      "time": "night",
+      "weather": "rain"
+    },
+    {
+      "body": [
+        102.750999450684,
+        0.910940587520599,
+        2.80866956710815
+      ],
+      "camera": [
+        107.655029296875,
+        3.7420825958252,
+        1.45898520946503
+      ],
+      "camera_basis": [
+        [
+          -0.265354216098785,
+          2.4735541614973e-08,
+          -0.964151084423065
+        ],
+        [
+          -0.200457662343979,
+          0.978147745132446,
+          0.0551700964570045
+        ],
+        [
+          0.94308215379715,
+          0.207911059260368,
+          -0.259555608034134
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 432094,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Normal",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "Medium",
+        "ssao": true,
+        "ssil": false,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 96.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0008-pedestal-meadows-day-clear-medium.png",
+      "label": "pedestal meadows",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            102.750999450684,
+            2.21094059944153,
+            3.15866947174072
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59658",
+          "position": [
+            101.050003051758,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "Medium",
+      "time": "day",
+      "weather": "clear"
+    },
+    {
+      "body": [
+        102.750999450684,
+        0.910940587520599,
+        2.80866956710815
+      ],
+      "camera": [
+        107.655029296875,
+        3.7420825958252,
+        1.45898520946503
+      ],
+      "camera_basis": [
+        [
+          -0.265354216098785,
+          2.4735541614973e-08,
+          -0.964151084423065
+        ],
+        [
+          -0.200457662343979,
+          0.978147745132446,
+          0.0551700964570045
+        ],
+        [
+          0.94308215379715,
+          0.207911059260368,
+          -0.259555608034134
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 433933,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Far",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "High",
+        "ssao": true,
+        "ssil": true,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 128.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0009-pedestal-meadows-day-clear-high.png",
+      "label": "pedestal meadows",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            102.750999450684,
+            2.21094059944153,
+            3.15866947174072
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59658",
+          "position": [
+            101.050003051758,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "High",
+      "time": "day",
+      "weather": "clear"
+    },
+    {
+      "body": [
+        102.750999450684,
+        0.910940587520599,
+        2.80866956710815
+      ],
+      "camera": [
+        107.655029296875,
+        3.7420825958252,
+        1.45898520946503
+      ],
+      "camera_basis": [
+        [
+          -0.265354216098785,
+          2.4735541614973e-08,
+          -0.964151084423065
+        ],
+        [
+          -0.200457662343979,
+          0.978147745132446,
+          0.0551700964570045
+        ],
+        [
+          0.94308215379715,
+          0.207911059260368,
+          -0.259555608034134
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 450550,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Normal",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "Medium",
+        "ssao": true,
+        "ssil": false,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 96.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0010-pedestal-meadows-night-clear-medium.png",
+      "label": "pedestal meadows",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            102.750999450684,
+            2.21094059944153,
+            3.15866947174072
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59658",
+          "position": [
+            101.050003051758,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "Medium",
+      "time": "night",
+      "weather": "clear"
+    },
+    {
+      "body": [
+        102.750999450684,
+        0.910940587520599,
+        2.80866956710815
+      ],
+      "camera": [
+        107.655029296875,
+        3.7420825958252,
+        1.45898520946503
+      ],
+      "camera_basis": [
+        [
+          -0.265354216098785,
+          2.4735541614973e-08,
+          -0.964151084423065
+        ],
+        [
+          -0.200457662343979,
+          0.978147745132446,
+          0.0551700964570045
+        ],
+        [
+          0.94308215379715,
+          0.207911059260368,
+          -0.259555608034134
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 452316,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Far",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "High",
+        "ssao": true,
+        "ssil": true,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 128.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0011-pedestal-meadows-night-clear-high.png",
+      "label": "pedestal meadows",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            102.750999450684,
+            2.21094059944153,
+            3.15866947174072
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59658",
+          "position": [
+            101.050003051758,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "High",
+      "time": "night",
+      "weather": "clear"
+    },
+    {
+      "body": [
+        102.750999450684,
+        0.910940587520599,
+        2.80866956710815
+      ],
+      "camera": [
+        107.655029296875,
+        3.7420825958252,
+        1.45898520946503
+      ],
+      "camera_basis": [
+        [
+          -0.265354216098785,
+          2.4735541614973e-08,
+          -0.964151084423065
+        ],
+        [
+          -0.200457662343979,
+          0.978147745132446,
+          0.0551700964570045
+        ],
+        [
+          0.94308215379715,
+          0.207911059260368,
+          -0.259555608034134
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 459286,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Normal",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "Medium",
+        "ssao": true,
+        "ssil": false,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 96.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0012-pedestal-meadows-day-rain-medium.png",
+      "label": "pedestal meadows",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            102.750999450684,
+            2.21094059944153,
+            3.15866947174072
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59658",
+          "position": [
+            101.050003051758,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "Medium",
+      "time": "day",
+      "weather": "rain"
+    },
+    {
+      "body": [
+        102.750999450684,
+        0.910940587520599,
+        2.80866956710815
+      ],
+      "camera": [
+        107.655029296875,
+        3.7420825958252,
+        1.45898520946503
+      ],
+      "camera_basis": [
+        [
+          -0.265354216098785,
+          2.4735541614973e-08,
+          -0.964151084423065
+        ],
+        [
+          -0.200457662343979,
+          0.978147745132446,
+          0.0551700964570045
+        ],
+        [
+          0.94308215379715,
+          0.207911059260368,
+          -0.259555608034134
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 460925,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Far",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "High",
+        "ssao": true,
+        "ssil": true,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 128.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0013-pedestal-meadows-day-rain-high.png",
+      "label": "pedestal meadows",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            102.750999450684,
+            2.21094059944153,
+            3.15866947174072
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59658",
+          "position": [
+            101.050003051758,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "High",
+      "time": "day",
+      "weather": "rain"
+    },
+    {
+      "body": [
+        102.750999450684,
+        0.910940587520599,
+        2.80866956710815
+      ],
+      "camera": [
+        107.655029296875,
+        3.7420825958252,
+        1.45898520946503
+      ],
+      "camera_basis": [
+        [
+          -0.265354216098785,
+          2.4735541614973e-08,
+          -0.964151084423065
+        ],
+        [
+          -0.200457662343979,
+          0.978147745132446,
+          0.0551700964570045
+        ],
+        [
+          0.94308215379715,
+          0.207911059260368,
+          -0.259555608034134
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 462696,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Normal",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "Medium",
+        "ssao": true,
+        "ssil": false,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 96.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0014-pedestal-meadows-night-rain-medium.png",
+      "label": "pedestal meadows",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            102.750999450684,
+            2.21094059944153,
+            3.15866947174072
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59658",
+          "position": [
+            101.050003051758,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "Medium",
+      "time": "night",
+      "weather": "rain"
+    },
+    {
+      "body": [
+        102.750999450684,
+        0.910940587520599,
+        2.80866956710815
+      ],
+      "camera": [
+        107.655029296875,
+        3.7420825958252,
+        1.45898520946503
+      ],
+      "camera_basis": [
+        [
+          -0.265354216098785,
+          2.4735541614973e-08,
+          -0.964151084423065
+        ],
+        [
+          -0.200457662343979,
+          0.978147745132446,
+          0.0551700964570045
+        ],
+        [
+          0.94308215379715,
+          0.207911059260368,
+          -0.259555608034134
+        ]
+      ],
+      "companion": {},
+      "diagnostic": "",
+      "elapsed_ms": 464400,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Far",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "High",
+        "ssao": true,
+        "ssil": true,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 128.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0015-pedestal-meadows-night-rain-high.png",
+      "label": "pedestal meadows",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            102.750999450684,
+            2.21094059944153,
+            3.15866947174072
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59643",
+          "position": [
+            101.0,
+            4.67000007629395,
+            8.45000076293945
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59658",
+          "position": [
+            101.050003051758,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "High",
+      "time": "night",
+      "weather": "rain"
+    },
+    {
+      "body": [
+        111.220550537109,
+        0.910940647125244,
+        0.915108442306519
+      ],
+      "camera": [
+        106.21923828125,
+        3.7420814037323,
+        1.84145998954773
+      ],
+      "camera_basis": [
+        [
+          0.182125732302666,
+          1.02275703284249e-06,
+          0.983275234699249
+        ],
+        [
+          0.20443306863308,
+          0.978147864341736,
+          -0.0378668382763863
+        ],
+        [
+          -0.961788654327393,
+          0.207910507917404,
+          0.178145706653595
+        ]
+      ],
+      "companion": {
+        "body": [
+          112.477577209473,
+          0.910941362380981,
+          -1.77144408226013
+        ],
+        "path": "/root/MeadowsPlayground/AllyCreature"
+      },
+      "diagnostic": "",
+      "elapsed_ms": 553770,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Normal",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "Medium",
+        "ssao": true,
+        "ssil": false,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 96.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0016-companion-in-Shrine-Room-day-clear-medium.png",
+      "label": "companion in Shrine Room",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            111.220550537109,
+            2.21094059944153,
+            1.26510846614838
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59661",
+          "position": [
+            112.949996948242,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "Medium",
+      "time": "day",
+      "weather": "clear"
+    },
+    {
+      "body": [
+        111.220550537109,
+        0.910940647125244,
+        0.915108442306519
+      ],
+      "camera": [
+        106.21923828125,
+        3.7420814037323,
+        1.84145998954773
+      ],
+      "camera_basis": [
+        [
+          0.182125732302666,
+          1.02275703284249e-06,
+          0.983275234699249
+        ],
+        [
+          0.20443306863308,
+          0.978147864341736,
+          -0.0378668382763863
+        ],
+        [
+          -0.961788654327393,
+          0.207910507917404,
+          0.178145706653595
+        ]
+      ],
+      "companion": {
+        "body": [
+          112.477577209473,
+          0.910941362380981,
+          -1.77144408226013
+        ],
+        "path": "/root/MeadowsPlayground/AllyCreature"
+      },
+      "diagnostic": "",
+      "elapsed_ms": 555440,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Far",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "High",
+        "ssao": true,
+        "ssil": true,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 128.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0017-companion-in-Shrine-Room-day-clear-high.png",
+      "label": "companion in Shrine Room",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            111.220550537109,
+            2.21094059944153,
+            1.26510846614838
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59661",
+          "position": [
+            112.949996948242,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "High",
+      "time": "day",
+      "weather": "clear"
+    },
+    {
+      "body": [
+        111.220550537109,
+        0.910940647125244,
+        0.915108442306519
+      ],
+      "camera": [
+        106.21923828125,
+        3.7420814037323,
+        1.84145998954773
+      ],
+      "camera_basis": [
+        [
+          0.182125732302666,
+          1.02275703284249e-06,
+          0.983275234699249
+        ],
+        [
+          0.20443306863308,
+          0.978147864341736,
+          -0.0378668382763863
+        ],
+        [
+          -0.961788654327393,
+          0.207910507917404,
+          0.178145706653595
+        ]
+      ],
+      "companion": {
+        "body": [
+          112.880706787109,
+          0.910941362380981,
+          -1.57226634025574
+        ],
+        "path": "/root/MeadowsPlayground/AllyCreature"
+      },
+      "diagnostic": "",
+      "elapsed_ms": 557315,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Normal",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "Medium",
+        "ssao": true,
+        "ssil": false,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 96.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0018-companion-in-Shrine-Room-night-clear-medium.png",
+      "label": "companion in Shrine Room",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            111.220550537109,
+            2.21094059944153,
+            1.26510846614838
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59661",
+          "position": [
+            112.949996948242,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "Medium",
+      "time": "night",
+      "weather": "clear"
+    },
+    {
+      "body": [
+        111.220550537109,
+        0.910940647125244,
+        0.915108442306519
+      ],
+      "camera": [
+        106.21923828125,
+        3.7420814037323,
+        1.84145998954773
+      ],
+      "camera_basis": [
+        [
+          0.182125732302666,
+          1.02275703284249e-06,
+          0.983275234699249
+        ],
+        [
+          0.20443306863308,
+          0.978147864341736,
+          -0.0378668382763863
+        ],
+        [
+          -0.961788713932037,
+          0.207910522818565,
+          0.178145706653595
+        ]
+      ],
+      "companion": {
+        "body": [
+          112.880706787109,
+          0.910941362380981,
+          -1.57226634025574
+        ],
+        "path": "/root/MeadowsPlayground/AllyCreature"
+      },
+      "diagnostic": "",
+      "elapsed_ms": 558970,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Far",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "High",
+        "ssao": true,
+        "ssil": true,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 128.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0019-companion-in-Shrine-Room-night-clear-high.png",
+      "label": "companion in Shrine Room",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            111.220550537109,
+            2.21094059944153,
+            1.26510846614838
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59661",
+          "position": [
+            112.949996948242,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "High",
+      "time": "night",
+      "weather": "clear"
+    },
+    {
+      "body": [
+        111.220550537109,
+        0.910940647125244,
+        0.915108442306519
+      ],
+      "camera": [
+        106.21923828125,
+        3.7420814037323,
+        1.84145998954773
+      ],
+      "camera_basis": [
+        [
+          0.182125732302666,
+          1.02275703284249e-06,
+          0.983275234699249
+        ],
+        [
+          0.20443306863308,
+          0.978147864341736,
+          -0.0378668382763863
+        ],
+        [
+          -0.961788713932037,
+          0.207910522818565,
+          0.178145706653595
+        ]
+      ],
+      "companion": {
+        "body": [
+          112.880706787109,
+          0.910941362380981,
+          -1.57226634025574
+        ],
+        "path": "/root/MeadowsPlayground/AllyCreature"
+      },
+      "diagnostic": "",
+      "elapsed_ms": 566372,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Normal",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "Medium",
+        "ssao": true,
+        "ssil": false,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 96.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0020-companion-in-Shrine-Room-day-rain-medium.png",
+      "label": "companion in Shrine Room",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            111.220550537109,
+            2.21094059944153,
+            1.26510846614838
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59661",
+          "position": [
+            112.949996948242,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "Medium",
+      "time": "day",
+      "weather": "rain"
+    },
+    {
+      "body": [
+        111.220550537109,
+        0.910940647125244,
+        0.915108442306519
+      ],
+      "camera": [
+        106.21923828125,
+        3.7420814037323,
+        1.84145998954773
+      ],
+      "camera_basis": [
+        [
+          0.182125732302666,
+          1.02275703284249e-06,
+          0.983275234699249
+        ],
+        [
+          0.20443306863308,
+          0.978147864341736,
+          -0.0378668382763863
+        ],
+        [
+          -0.961788713932037,
+          0.207910522818565,
+          0.178145706653595
+        ]
+      ],
+      "companion": {
+        "body": [
+          112.880706787109,
+          0.910941362380981,
+          -1.57226634025574
+        ],
+        "path": "/root/MeadowsPlayground/AllyCreature"
+      },
+      "diagnostic": "",
+      "elapsed_ms": 568046,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Far",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "High",
+        "ssao": true,
+        "ssil": true,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 128.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0021-companion-in-Shrine-Room-day-rain-high.png",
+      "label": "companion in Shrine Room",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            111.220550537109,
+            2.21094059944153,
+            1.26510846614838
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59661",
+          "position": [
+            112.949996948242,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "High",
+      "time": "day",
+      "weather": "rain"
+    },
+    {
+      "body": [
+        111.220550537109,
+        0.910940647125244,
+        0.915108442306519
+      ],
+      "camera": [
+        106.21923828125,
+        3.7420814037323,
+        1.84145998954773
+      ],
+      "camera_basis": [
+        [
+          0.182125732302666,
+          1.02275703284249e-06,
+          0.983275234699249
+        ],
+        [
+          0.20443306863308,
+          0.978147864341736,
+          -0.0378668382763863
+        ],
+        [
+          -0.961788654327393,
+          0.207910507917404,
+          0.178145706653595
+        ]
+      ],
+      "companion": {
+        "body": [
+          112.880706787109,
+          0.910941362380981,
+          -1.57226634025574
+        ],
+        "path": "/root/MeadowsPlayground/AllyCreature"
+      },
+      "diagnostic": "",
+      "elapsed_ms": 569940,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Normal",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "Medium",
+        "ssao": true,
+        "ssil": false,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 96.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0022-companion-in-Shrine-Room-night-rain-medium.png",
+      "label": "companion in Shrine Room",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            111.220550537109,
+            2.21094059944153,
+            1.26510846614838
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59661",
+          "position": [
+            112.949996948242,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "Medium",
+      "time": "night",
+      "weather": "rain"
+    },
+    {
+      "body": [
+        111.220550537109,
+        0.910940647125244,
+        0.915108442306519
+      ],
+      "camera": [
+        106.21923828125,
+        3.7420814037323,
+        1.84145998954773
+      ],
+      "camera_basis": [
+        [
+          0.182125732302666,
+          1.02275703284249e-06,
+          0.983275234699249
+        ],
+        [
+          0.20443306863308,
+          0.978147864341736,
+          -0.0378668382763863
+        ],
+        [
+          -0.961788654327393,
+          0.207910507917404,
+          0.178145706653595
+        ]
+      ],
+      "companion": {
+        "body": [
+          112.880706787109,
+          0.910941362380981,
+          -1.57226634025574
+        ],
+        "path": "/root/MeadowsPlayground/AllyCreature"
+      },
+      "diagnostic": "",
+      "elapsed_ms": 571592,
+      "encoding": "native-resolution PNG",
+      "equipped_tool": "",
+      "features": {
+        "cloudreach_rock_candidate": false,
+        "draw_distance": "Far",
+        "glow": true,
+        "renderer": "forward_plus",
+        "shadow_quality": "High",
+        "ssao": true,
+        "ssil": true,
+        "volumetric_fog": true,
+        "volumetric_fog_density": 0.0005,
+        "volumetric_fog_length": 128.0,
+        "volumetric_fog_sky_affect": 0.0
+      },
+      "image": "0023-companion-in-Shrine-Room-night-rain-high.png",
+      "label": "companion in Shrine Room",
+      "motion_sample": false,
+      "nearby_lights": [
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.701960802078247,
+            0.400000005960464
+          ],
+          "energy": 1.60000002384186,
+          "path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+          "position": [
+            111.220550537109,
+            2.21094059944153,
+            1.26510846614838
+          ],
+          "range": 6.0,
+          "shadows": false,
+          "visible": false
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59637",
+          "position": [
+            107.849998474121,
+            6.07000017166138,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59649",
+          "position": [
+            107.0,
+            4.67000007629395,
+            8.44999980926514
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59655",
+          "position": [
+            113.0,
+            4.67000007629395,
+            8.44999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59661",
+          "position": [
+            112.949996948242,
+            4.26999998092651,
+            2.0
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        },
+        {
+          "attenuation": 1.0,
+          "colour": [
+            1.0,
+            0.843137264251709,
+            0.643137276172638
+          ],
+          "energy": 1.14999997615814,
+          "path": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59591/@OmniLight3D@59664",
+          "position": [
+            107.0,
+            4.26999998092651,
+            -1.94999885559082
+          ],
+          "range": 8.5,
+          "shadows": false,
+          "visible": true
+        }
+      ],
+      "on_floor": true,
+      "preset": "High",
+      "time": "night",
+      "weather": "rain"
+    }
+  ],
+  "prior_before_source": "a5d36c54ce",
+  "before_pose_disclosure": {
+    "nave_before": [
+      106.808158874512,
+      0.910943806171417,
+      14.1370220184326
+    ],
+    "nave_after": [
+      106.825813293457,
+      0.910941660404205,
+      14.1389446258545
+    ],
+    "pedestal_before": [
+      102.714996337891,
+      0.910940587520599,
+      2.87550902366638
+    ],
+    "pedestal_after": [
+      102.750999450684,
+      0.910940587520599,
+      2.80866956710815
+    ],
+    "companion_before": [
+      111.212966918945,
+      0.910940647125244,
+      0.918493628501892
+    ],
+    "companion_after": [
+      111.220550537109,
+      0.910940647125244,
+      0.915108442306519
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "reviewer": "/root/f42_visual_review",
+  "verdict": "APPROVE",
+  "source": "c9a780852bd1a0fbb1855a12fab2fe21495ad60e",
+  "proofs": [
+    "native boundedHall24",
+    "hosted37735405724 physicalcircuit",
+    "hosted37734638476 selectedlogic22/2327/0"
+  ],
+  "finding": "24unique native1920x1080 PNG and24unique label/time/weather/preset keys; internally fixed poses each8, allfloortrue; physical8arches+8pedestals distances<=.594m, depthXYZ1,1,5, nativeconditionalrecall/healthyactiveidentity retained; sourceclean/hashreceipt. Hostedexit0/276s repeatsphysical8+8/depth, not recall. Nativeexit0/582s, deliberatecompletefalse/hall_stills_finishedtrue.",
+  "warnings": [
+    "native interpolation deprecation and7TextureRIDleaks",
+    "hosted interpolation deprecation",
+    "selectedlogic14ObjectDBleaks/1resourceexiterror"
+  ],
+  "excluded": "pixelappeal/endwallattachment/archappearance/rainshelter/companionclearance/fullmatrix/motion/earned/device/coop/fullbars/9ffurniture"
+}

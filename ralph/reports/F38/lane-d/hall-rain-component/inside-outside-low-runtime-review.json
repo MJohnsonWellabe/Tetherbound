@@ -1,0 +1,13 @@
+{
+  "reviewer": "/root/f42_visual_review",
+  "verdict": "APPROVE",
+  "source": "9f1eddb9b87034b1c2abc1583e2746d033a4f41c",
+  "run": 37737040752,
+  "artifact": 11532264440,
+  "finding": "Actual4/4PNG1280x720Lowglcompat/exit0/467s/complete/failuresempty; route00outsideHallrainvisible/emittingtrue bothtimes, route03insideHallbothfalse; canonicalrain/time remains.",
+  "warnings": [
+    "unsupportedVSync",
+    "interpolationdeprecation"
+  ],
+  "excluded": "floorassertions/earnedroute/continuousboundary/motion/weathercycle/save/coop/MH/fullbars/furnitureappearance"
+}

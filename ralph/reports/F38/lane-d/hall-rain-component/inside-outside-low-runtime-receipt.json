@@ -1,0 +1,123 @@
+{
+  "source": "9f1eddb9b87034b1c2abc1583e2746d033a4f41c",
+  "run": 37737040752,
+  "artifact": 11532264440,
+  "exit_code": 0,
+  "complete": true,
+  "frames": [
+    {
+      "file": "meadows__route_00__day.png",
+      "sha256": "581795687c989ed7e489ca6ab651882ce9212fabeb650ecf0f486ddaf92e1321",
+      "actual_capture": {
+        "camera_position": [
+          8.5860424041748,
+          2.84521126747131,
+          14.0
+        ],
+        "player_position": [
+          9.5,
+          0.900943517684937,
+          14.0
+        ],
+        "time": "day"
+      },
+      "capture_runtime": {
+        "observed_clock": {
+          "elapsed_seconds": 200.121473333333,
+          "hour": 8.00485893333333,
+          "rain_particles_emitting": true,
+          "rain_particles_visible": true,
+          "requested": "day",
+          "route_weather": "rain",
+          "time_of_day": "day"
+        }
+      }
+    },
+    {
+      "file": "meadows__route_00__night.png",
+      "sha256": "05abb25db2d7e4c64a871f251c5362eddfdd282526b1b962b077557607cac9af",
+      "actual_capture": {
+        "camera_position": [
+          8.5860424041748,
+          2.84521126747131,
+          14.0
+        ],
+        "player_position": [
+          9.5,
+          0.900943517684937,
+          14.0
+        ],
+        "time": "night"
+      },
+      "capture_runtime": {
+        "observed_clock": {
+          "elapsed_seconds": 575.141426666667,
+          "hour": 23.0056570666667,
+          "rain_particles_emitting": true,
+          "rain_particles_visible": true,
+          "requested": "night",
+          "route_weather": "rain",
+          "time_of_day": "night"
+        }
+      }
+    },
+    {
+      "file": "meadows__route_03__day.png",
+      "sha256": "095ebf4560880f2027e306a6454d0cf0b44f0e44647be025657ebc21b52b12ef",
+      "actual_capture": {
+        "camera_position": [
+          101.913635253906,
+          3.74207830429077,
+          14.0
+        ],
+        "player_position": [
+          107.0,
+          0.910940051078796,
+          14.0
+        ],
+        "time": "day"
+      },
+      "capture_runtime": {
+        "observed_clock": {
+          "elapsed_seconds": 200.14146,
+          "hour": 8.0056584,
+          "rain_particles_emitting": false,
+          "rain_particles_visible": false,
+          "requested": "day",
+          "route_weather": "rain",
+          "time_of_day": "day"
+        }
+      }
+    },
+    {
+      "file": "meadows__route_03__night.png",
+      "sha256": "915ad3f075a7ef3383ab58d68da7623ada82fdd23c288cf43f68399bc0bf1912",
+      "actual_capture": {
+        "camera_position": [
+          101.913635253906,
+          3.74207830429077,
+          14.0
+        ],
+        "player_position": [
+          107.0,
+          0.910940051078796,
+          14.0
+        ],
+        "time": "night"
+      },
+      "capture_runtime": {
+        "observed_clock": {
+          "elapsed_seconds": 575.144234333333,
+          "hour": 23.0057693733333,
+          "rain_particles_emitting": false,
+          "rain_particles_visible": false,
+          "requested": "night",
+          "route_weather": "rain",
+          "time_of_day": "night"
+        }
+      }
+    }
+  ],
+  "scope": "4 debug-travel day/night rain stills, Low1280x720; route00 outside Hall (farmhouse), route03 inside Hall; not roof-general, earned route, motion, Medium/High or whole criterion",
+  "fixture_disclosure": "Production scene, CameraRig and ordinary HUD. Debug travel at each declared route point and audit-only clock pin. Meadows seeds the timed route's declared MEADOWS_OPENING_FLAGS to skip its opening modal; other biomes use the base catalogue character fixture. Not an earned opening, campaign, traversal, save or frame-time proof."
+}
