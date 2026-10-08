@@ -627,7 +627,7 @@ func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 	# Heal has its own staged vitals/save/ACK producer. A generic hostile start
 	# cannot spend Wind or mint an action for a heal it cannot durably apply.
 	if slot == "utility" and move.get("utility", {}).get("kind") == "heal":
-		return _refuse("move_start", peer, "heal_scope_unavailable", "That heal needs a fight with saved creature health.")
+		return _refuse("move_start", peer, "heal_scope_unavailable", "Healing is unavailable in this fight.")
 	if slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id):
 		return _refuse("move_start", peer, "move_not_mounted", "That ultimate is not available in this build yet.")
 	var authority: Dictionary = _strike_state_for(id).get(peer, {})
