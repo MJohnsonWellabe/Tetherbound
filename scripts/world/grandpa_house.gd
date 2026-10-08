@@ -398,6 +398,7 @@ func _build_kit_shell() -> void:
 	shell.rotation.y = deg_to_rad(90.0)
 	add_child(shell)
 	_apply_window_glow_candidate(shell)
+	_apply_window_pane_detail_candidate(shell)
 
 
 func _apply_window_glow_candidate(shell: Node3D) -> void:
@@ -429,6 +430,65 @@ func _apply_window_glow_candidate(shell: Node3D) -> void:
 				mesh.material_override = copy
 				break
 			mesh.set_surface_override_material(surface, copy)
+
+
+## The failed uniform alpha/energy candidate remains independently available.
+## This adds static glass variation only to the inspected untextured panes;
+## retain their material identity, colour, alpha, emission energy and mesh.
+func _apply_window_pane_detail_candidate(shell: Node3D) -> void:
+	var args := OS.get_cmdline_user_args()
+	if "--farmhouse-window-pane-detail-baseline" in args:
+		return
+	if _house_lighting.get("window_pane_detail_enabled", false) != true \
+		and "--farmhouse-window-pane-detail-candidate" not in args:
+		return
+	var raw: Variant = _house_lighting.get("window_pane_detail_strength", 0.65)
+	if typeof(raw) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(raw)):
+		return
+	var textures := _window_pane_detail_textures(clampf(float(raw), 0.0, 0.85))
+	for found: Node in shell.find_children("*", "MeshInstance3D", true, false):
+		var mesh := found as MeshInstance3D
+		if mesh.mesh == null:
+			continue
+		for surface: int in mesh.mesh.get_surface_count():
+			var source := mesh.get_active_material(surface) as BaseMaterial3D
+			if source == null or source.resource_name != "MI_WindowGlass":
+				continue
+			# Do not replace authored texture maps if another kit pane has them.
+			if source.albedo_texture != null or source.emission_texture != null or source.normal_texture != null:
+				continue
+			var copy := source.duplicate() as BaseMaterial3D
+			copy.albedo_texture = textures.colour
+			copy.emission_texture = textures.colour
+			copy.normal_enabled = true
+			copy.normal_texture = textures.normal
+			if mesh.material_override != null:
+				mesh.material_override = copy
+				break
+			mesh.set_surface_override_material(surface, copy)
+
+
+func _window_pane_detail_textures(strength: float) -> Dictionary:
+	# Neutral modulation of the installed warm glass colour; two soft bands
+	# and shallow ripples, not a painted room or invented view through a wall.
+	var colour := Image.create(128, 128, false, Image.FORMAT_RGBA8)
+	var normal := Image.create(128, 128, false, Image.FORMAT_RGBA8)
+	for y: int in 128:
+		for x: int in 128:
+			var u := float(x) / 127.0
+			var v := float(y) / 127.0
+			var bend := sin(v * TAU) * 0.035
+			var band := 0.5 + 0.5 * cos((u + bend - v * 0.18) * TAU * 1.5)
+			var ripple := sin((u + bend) * TAU * 5.0)
+			var shade := lerpf(1.0, clampf(0.32 + band * 0.64 + ripple * 0.04, 0.0, 1.0), strength)
+			colour.set_pixel(x, y, Color(shade, shade, shade, 1.0))
+			var slope_x := strength * 0.16 * cos((u + bend) * TAU * 5.0)
+			var slope_y := strength * 0.05 * sin(v * TAU * 3.0)
+			var direction := Vector3(slope_x, slope_y, 1.0).normalized()
+			normal.set_pixel(x, y, Color(direction.x * 0.5 + 0.5, direction.y * 0.5 + 0.5, direction.z * 0.5 + 0.5, 1.0))
+	colour.generate_mipmaps()
+	normal.generate_mipmaps(true)
+	return {"colour": ImageTexture.create_from_image(colour), "normal": ImageTexture.create_from_image(normal)}
 
 
 var _materials: Dictionary = {}
