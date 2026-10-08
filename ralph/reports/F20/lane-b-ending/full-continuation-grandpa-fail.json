@@ -1,0 +1,28 @@
+{
+  "criterion": "F20#3",
+  "verdict": "FAIL; no READY",
+  "source_sha": "3c79ccea2cd485cfae13c8d5408d6fb688b45a31",
+  "run_id": 37725357003,
+  "artifact_id": 11527459496,
+  "script": "tests/smoke_f20_ending.gd",
+  "args": "--capture-ending",
+  "renderer": "gl_compatibility",
+  "resolution": "1280x720",
+  "actual_result": {"checks": 21, "failures": 1, "continuation_content_run": false, "counts_as_f20_3_proof": false},
+  "failed_gate": "F49 reached provider without grounded, exact actionable ownership: /root/MeadowsPlayground/Grandpa/Interactable",
+  "observations": {
+    "player_position": [0.265061, 0.900941, 17.51603],
+    "prompt_position": [-0.4, 2.052, 15.2],
+    "floor": true,
+    "input_owner": "none",
+    "prompt_offer": {},
+    "portal_lesson": "Actual two Continue presses completed its personal acknowledgement before the failed provider check",
+    "passing_prefix": "Saved Home Key arrival and actual once-only fifth-key stir; only fifth-arch-stir frame captured",
+    "script_errors": 0
+  },
+  "supported_source_fix": "Solo activate lacked the authored doorway heading used by the existing co-op approach. Add that same live heading to the original guided navigator; keep its shared budget, floor, collision, recovery, provider and input guards unchanged.",
+  "review": {"agent": "b_f20_review", "source_verdict": "APPROVE", "actual_verdict": "FAIL"},
+  "remaining": ["Actual credits, reload and full continuation proof", "Literal completed-world/bounty/rematch blind verdict", "Alpha respawn availability required by WORLD 2.8; shipping alpha flag remains off"],
+  "cancelled_launch": {"run_id": 37725016410, "reason": "Missing opt-in capture argument detected before completion; cancelled, never counted as a passing or failing runtime proof"},
+  "not_claimed": ["Earned finale", "F20#1", "F20#4", "F49", "Device or performance proof"]
+}
