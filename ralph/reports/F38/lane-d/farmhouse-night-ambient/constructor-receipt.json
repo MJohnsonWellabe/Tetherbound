@@ -1,0 +1,23 @@
+{
+  "elapsed_s": 85,
+  "checkout": "checkout-excerpt.txt",
+  "original_source": "APPROVE original-source-verdict.txt",
+  "script": "tests/smoke_village_hall_redesign.gd",
+  "raw": "run37828922131/artifact.zip + extracted/run.log preserved",
+  "warnings": [
+    "instance_reset_physics_interpolation deprecated"
+  ],
+  "scope": "Candidate constructor and actual existing door-route only; day clock. No mounted AO/dark activation/day-night transition/pixels/native/device/performance/fullbar/whole claim.",
+  "artifact": 11572069160,
+  "log_sha256": "20ece55b83cc9f3128d41755a9c2533c8f330eed14d2d0772a28db11b9de0568",
+  "fixture": "Original authored post-opening flags/starter/one initial farmhouse floor placement/parsed joypad-camera bounded route. No accepted-boundary or earned save.",
+  "job": 113488885566,
+  "script_errors": 0,
+  "mode": "headless",
+  "exit_code": 0,
+  "run": 37828922131,
+  "source": "535fe80dee242ecec6814ed6e078038635a414c1",
+  "actual": "F17 actual farmhouse door -> straight Main Street -> Hall nave PASS, maximum_offroad0.000",
+  "args": "--farmhouse-night-ambient-candidate",
+  "original_artifact": "PENDING"
+}

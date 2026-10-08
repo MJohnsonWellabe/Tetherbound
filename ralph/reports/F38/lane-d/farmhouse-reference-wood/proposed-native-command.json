@@ -4,7 +4,7 @@
     {
       "argv": [
         "--path",
-        "<ROOT fresh frozen writer pinned925fae787c431264ba74cb8b4d0ebafdc4a3bfaa>",
+        "<ROOT fresh frozen writer pinnedf009168ed9c65fd422db6afde073e39be7a6f82d>",
         "--rendering-method",
         "gl_compatibility",
         "--windowed",
@@ -19,8 +19,8 @@
         "--subset=farm_to_hall",
         "--views=close",
         "--times=day,night",
-        "--source-commit=925fae787c431264ba74cb8b4d0ebafdc4a3bfaa",
-        "--output=D:/CodexTemp/tetherbound-proof/native-d-925fae787c-reference-wood-low-r1/frames/baseline",
+        "--source-commit=f009168ed9c65fd422db6afde073e39be7a6f82d",
+        "--output=D:/CodexTemp/tetherbound-proof/native-d-f009168ed9-reference-wood-low-r2/frames/baseline",
         "--farmhouse-furniture-reference-baseline"
       ],
       "label": "reference-wood-baseline",
@@ -30,13 +30,14 @@
         "old_window_scalar": false,
         "frames": 4,
         "raster": "1280x720",
-        "shipping_flag": false
+        "shipping_flag": false,
+        "night_ambient_candidate": false
       }
     },
     {
       "argv": [
         "--path",
-        "<ROOT fresh frozen writer pinned925fae787c431264ba74cb8b4d0ebafdc4a3bfaa>",
+        "<ROOT fresh frozen writer pinnedf009168ed9c65fd422db6afde073e39be7a6f82d>",
         "--rendering-method",
         "gl_compatibility",
         "--windowed",
@@ -51,8 +52,8 @@
         "--subset=farm_to_hall",
         "--views=close",
         "--times=day,night",
-        "--source-commit=925fae787c431264ba74cb8b4d0ebafdc4a3bfaa",
-        "--output=D:/CodexTemp/tetherbound-proof/native-d-925fae787c-reference-wood-low-r1/frames/candidate",
+        "--source-commit=f009168ed9c65fd422db6afde073e39be7a6f82d",
+        "--output=D:/CodexTemp/tetherbound-proof/native-d-f009168ed9-reference-wood-low-r2/frames/candidate",
         "--farmhouse-furniture-reference-candidate"
       ],
       "label": "reference-wood-candidate",
@@ -62,19 +63,21 @@
         "old_window_scalar": false,
         "frames": 4,
         "raster": "1280x720",
-        "shipping_flag": false
+        "shipping_flag": false,
+        "night_ambient_candidate": false
       }
     }
   ],
-  "packet": "D:/CodexTemp/tetherbound-proof/native-d-925fae787c-reference-wood-low-r1",
-  "gate": "APPROVE SAME original f42 SOURCE925 and affected ARTIFACT37826494240 + exact two native COMMANDS. Native completion, original runtime and eight-original original blind still pending. ROOT ONLY queued, shipping OFF.",
+  "packet": "D:/CodexTemp/tetherbound-proof/native-d-f009168ed9-reference-wood-low-r2",
+  "gate": "PENDING SAME original f42 strict guard SOURCE, existing route reuse and exact corrected native commands. Previous925 baseline failed0/4 before candidate; raw preserved. One ROOT-only supported bounded rerun afterAPP; shipping wood and night ambient/window scalar/pane flags OFF.",
   "scope": "Eight native originals, four day/night clear/rain interior detail pairs from existing producer/plan. No full matrix/bar/High/Medium/device/performance/earned/whole claim.",
   "writer": "ROOT only, native GPU serialized fresh frozen/imported writer, no hosted GPU",
   "before": "Proposed same-source baseline. No stale failed scalar/before reuse requested.",
-  "source": "925fae787c431264ba74cb8b4d0ebafdc4a3bfaa",
+  "source": "f009168ed9c65fd422db6afde073e39be7a6f82d",
   "required_existing_plan": {
-    "requirement": "Existing tracked plan must be present byte-identical in ROOT frozen checkout before import/capture. Sparse hydration of this exact existing source dependency allowed, no new plan or changed row/stands.",
+    "requirement": "Existing tracked plan must be present byte-identical in ROOT frozen f009 checkout before import/capture; recorded blob unchanged. No new plan/rows/stands.",
     "path": "ralph/reports/R2-F38/capture-definition.json",
     "git_blob": "c41279e1303c3cee5619dc06dc53ee61646cea8c"
-  }
+  },
+  "guard_correction": "Strict imported mode operand4 canonical Godot4.7 BLEND. Alpha/energy/nonempty/window/floor/route/body-camera/clock/weather/obstruction/manifest/budget guards unchanged; no production glass/mode change or extra presentation flag. Candidate only reference wood; night ambient remains OFF in both."
 }

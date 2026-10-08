@@ -1,0 +1,37 @@
+{
+  "canonical": {
+    "asset": "assets/buildings/quaternius_medieval/Window_Wide_Flat1.gltf",
+    "enum": "https://github.com/godotengine/godot/blob/4.7-stable/scene/resources/material.h#L174",
+    "alphaMode": "BLEND",
+    "importer": "https://github.com/godotengine/godot/blob/4.7-stable/modules/gltf/gltf_document.cpp#L3019",
+    "locked_native": "Godot4.7.stable.official.5b4e0cb0f",
+    "material": "MI_WindowGlass",
+    "asset_sha256": "3850E618F4CE579995CBA03AD18D150126A70E2E62620A28DEE5338D308D07C6",
+    "mapping": "BLEND -> TRANSPARENCY_ALPHA_DEPTH_PRE_PASS=4; ALPHA=1"
+  },
+  "native_retry": "Pending original source/reuse/command approval; ROOT alone, one supported bounded rerun with unchanged baseline/candidate fixtures.",
+  "failure": "Original strict window mode guard failed every row before capture.",
+  "frames": 0,
+  "exit_code": 1,
+  "packet": "D:/CodexTemp/tetherbound-proof/native-d-925fae787c-reference-wood-low-r1",
+  "correction": "f009168ed9c65fd422db6afde073e39be7a6f82d changes only strict expected mode from1 to4. No alternate acceptable modes/guard removals/production glass mutation/new flag/harness/testclass/fixture. Earlier source-mode candidate proposal rejected before implementation.",
+  "expected": {
+    "energy": 0.85,
+    "transparency_mode": 1,
+    "alpha": 1.0
+  },
+  "actual": {
+    "panes": 9,
+    "energy": 0.850000023841858,
+    "transparency_mode": 4,
+    "alpha": 1.0
+  },
+  "source": "925fae787c431264ba74cb8b4d0ebafdc4a3bfaa",
+  "label": "reference-wood-baseline",
+  "planned": 4,
+  "attempt": 1,
+  "pid": 62260,
+  "raw": "ROOT original manifest/logs/start/receipt/source-clean/import sidecars preserved; no hosted GPU or guessed rerun.",
+  "conclusion": "Alpha and energy match existing approx checks; mode operand mismatched canonical import. No wood pixel/acceptance claim.",
+  "candidate_launched": false
+}
