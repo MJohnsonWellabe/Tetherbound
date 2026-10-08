@@ -1,0 +1,59 @@
+{
+  "scope": "Exact coordinator-preserved nine-file native import metadata repair; no E engine/import run",
+  "source_before_import": "9ca22f008e41a173f081afe7fd8d6c332d3365d8",
+  "producer": "Coordinator native63789, importexit0; sourceguard stopped before capture",
+  "files": [
+    {
+      "path": "assets/creatures/tetherbound/fulgocobra_f36_source_finish_v1/models/fulgocobra_f36_source_finish_v1_extracted_base_color_vivid.png.import",
+      "sha256": "3ce89b870a5bf9e92e2f09b57f01e67888e4b00c4b776409beaeda9c58f030dd",
+      "tracked_before": true
+    },
+    {
+      "path": "assets/creatures/tetherbound/stormcapra_f36_material_v1/models/stormcapra_f36_material_v1_extracted_base_color_vivid.png.import",
+      "sha256": "4caa073eae3f786388934e720484702773aa8599399c80a62b3e871ff81ec682",
+      "tracked_before": true
+    },
+    {
+      "path": "assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_f36_material_v1.glb.import",
+      "sha256": "481181de1e6f647ed707bf890ab034e7b7f6d867cf0c45800ac90b4fbb3d5a89",
+      "tracked_before": false
+    },
+    {
+      "path": "assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_f36_material_v1_Image_0.jpg",
+      "sha256": "cf61d34cd5df68b7bc92745b043821c75d13400e9360c9dca3c09f7a8772526b",
+      "tracked_before": false
+    },
+    {
+      "path": "assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_f36_material_v1_Image_0.jpg.import",
+      "sha256": "5926af21921e13f11c6ba5d7f244d27dcf5a136864bb74c4ef0825323128dfc7",
+      "tracked_before": false
+    },
+    {
+      "path": "assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_f36_material_v1_Image_1.jpg",
+      "sha256": "2c895dd0c3322217cfffdc7ca9dd7709c63c4ba560ffe652baa651a0ad393663",
+      "tracked_before": false
+    },
+    {
+      "path": "assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_f36_material_v1_Image_1.jpg.import",
+      "sha256": "715803f6dfa82e852e85fbf6ff5586fc1be1e22a70258b06f1504eefbd5f8ab0",
+      "tracked_before": false
+    },
+    {
+      "path": "assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_f36_material_v1_Image_2.jpg",
+      "sha256": "f19ce127ee9a59ea66794a16186eab7a832d385c2f966c46dae2412fa01dbe43",
+      "tracked_before": false
+    },
+    {
+      "path": "assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_f36_material_v1_Image_2.jpg.import",
+      "sha256": "49e6e336f771fee2d3585ecf204cac81263a53946e5226071f5a6d96914f9065",
+      "tracked_before": false
+    }
+  ],
+  "verification": "Every preserved/source and copied destination SHA256 matched exact manifest; two PNG.import changes UID-only; seven autoextracted Stormcapra GLB/JPG sidecars retained unchanged",
+  "unchanged": "GLB/namespacePNG bytes, geometry, rigs, shader bindings, candidateflags, capledger and capture guards unchanged",
+  "review": {
+    "reviewer": "/root/review_f36_cap",
+    "verdict": "APPROVE exact nine-file slice; UIDs distinct and paths/cache digests agree; tracked changes UID-only; GLB/PNG unchanged. Stable re-import/capture still pending."
+  },
+  "remaining": "New frozen source, stable import guard and actual forest8 capture; no visual/criterion PASS"
+}
