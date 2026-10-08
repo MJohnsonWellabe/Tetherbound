@@ -1,0 +1,72 @@
+{
+  "criterion": "F08#2",
+  "status": "BLOCKED named area proof after two attempts;12 visualviews PASS",
+  "source_capture": "7f8b6062d22a51fb88ac7455e42b527fc4e13548",
+  "scope": "Literal high-perch camera still matrix, owner re-scope issue572#6048639441",
+  "proofs": {
+    "retained": {
+      "run": 37689206699,
+      "artifact": 11512887909,
+      "source": "43b63 retained original11 views",
+      "result": "11 of12 initially; original day departure failed, not globalrunPASS"
+    },
+    "typed_array_failure": {
+      "run": 37695916870,
+      "artifact": 11516791644,
+      "result": "Compile/runtime typed assignment failed before frames; source7f fixes capture_times assignment; no exit_code file"
+    },
+    "corrected_day": {
+      "run": 37703639148,
+      "artifact": 11519136208,
+      "source": "1fa945c53587783b638ac59be6e1d8fb2410b67a",
+      "exit": 0,
+      "seconds": 345,
+      "frames": 1,
+      "failures": 0,
+      "departure_distance_m": 41.7058486938477,
+      "flying": true,
+      "repeated_ground_presses": 0
+    },
+    "area_first": {
+      "run": 37705246161,
+      "artifact": 11519138111,
+      "result": "Missing cliff material in existing probe causes builder failure; no exit_code file. One-key initialization fixff341."
+    },
+    "logic": "No existing unit file names changed live recorder or ground-roost probe; actual hosted capture/area exercise receipt/floor/native-camera guards.",
+    "area_corrected": {
+      "run": 37705591744,
+      "artifact": 11520000703,
+      "source": "ff341da325804b824f4c296b46daedc8acb5a88c",
+      "result": "FAIL actual racks2 logs2 sockets4 versus existing3/3/6 assertions; production builder declares two groundroosts. No exit_code file;workflowFAIL retained.",
+      "collisions": 0,
+      "landing_clearance_m": 7.524,
+      "shaft_gap_m": 0.893,
+      "visual_height_m": 0.311,
+      "guards": "Otherfloor/clearance/shaft/step/assetguards report no failures; no count assertion weakened."
+    }
+  },
+  "judge": {
+    "agent": "blind_listener_f10",
+    "result": "PASS",
+    "reason": "Missing day departure: airborne trainer/Galecrest, crown/cliff/drop clearly framed; no obstructive crowding/near-clipping. Combinedwithretained11 closesstill-viewcoverage."
+  },
+  "review": {
+    "agent": "review_cloud_startup",
+    "source": "APPROVE ff341 repair and7f live recorder; final correctedarea pending",
+    "final": "OPEN failed area proof; preserve rule/geometry until coordinatorre-scope"
+  },
+  "limits": [
+    "Direct staged scene/progression/clock and five-owned Galecrest, not earned unlock/trial/bond/save evidence",
+    "Camera motion/transitions and full release visual bar unassessed/open",
+    "Low Compatibility1280x720 hosted llvmpipe, no Ally hardware"
+  ],
+  "landing": {
+    "whole_files": [
+      "tools/capture_cloudreach_high_perch_live.gd@7f8b6062d22a51fb88ac7455e42b527fc4e13548",
+      "tools/_probe_cloudreach_high_perches_ground_roost.gd@ff341da325804b824f4c296b46daedc8acb5a88c"
+    ],
+    "dependencies": "Matrix/bootstrap already landedmain#579",
+    "exclude": "All Fly/world/pickup/art/unREADY ancestry"
+  },
+  "flags": "none"
+}
