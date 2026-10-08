@@ -1,0 +1,47 @@
+{
+  "kind": "existing_generated_child_lesson_witness_forwarding",
+  "source": "e26f827e9fdaec15e8c703bd8e4dea988815af58",
+  "receipt_ancestry_source": "731c169e7c1daa84541bc15d0484bef8039373c5",
+  "source_scope": [
+    "tools/earned_saves/earned_chain_runner.gd::_generated_chapter",
+    "tests/helpers/f49_campaign_journey.gd::_first_key_lessons receipt only"
+  ],
+  "supported_problem": "Parent accepts and validates existing reader options but chapter child previously received none. First-key lesson receipt previously unconditionally labelled generated predecessor as earned.",
+  "solution": "Forward exact existing validated controller/replay/capture/skip arguments; receipt uses existing generated_fixture_input to disclose origin. Actions, fixtures, guards, route, budgets and all durable gameplay state unchanged.",
+  "source_review": [
+    {
+      "reviewer": "Original b_f49_review Bacon",
+      "verdict": "SOURCE APPROVE",
+      "source": "e26f827e9fdaec15e8c703bd8e4dea988815af58"
+    },
+    {
+      "reviewer": "Original b_f49_review Bacon",
+      "verdict": "SOURCE APPROVE",
+      "source": "731c169e7c1daa84541bc15d0484bef8039373c5"
+    }
+  ],
+  "proof_scope_review": {
+    "reviewer": "Original b_f20_review Hubble",
+    "verdict": "ELIGIBILITY APPROVE",
+    "scope": "Existing Tidewake generated segment after actual Home Key uses existing Tam<=5m approach and both unacknowledged available Portals/Shrines Skip-and-Help hooks before the later provider guard. Stormwood proposal parked and never dispatched. No chapter/durability/blind/whole approval.",
+    "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-tide-lesson-forward-source-r1.txt"
+  },
+  "run": {
+    "id": 37817588085,
+    "source": "731c169e7c1daa84541bc15d0484bef8039373c5",
+    "label": "b-generated-tide-key-lessons-r4",
+    "state_at_capture": "LIVE",
+    "segment": "tidewake",
+    "input_boundary": "meadows_settled",
+    "input_mode": "generated_fixture",
+    "prior_earned_play": false,
+    "continuous_fresh_save": false,
+    "controller_witness": true,
+    "help_replay_witness": true,
+    "skip_line": 0,
+    "native_visual_claim": false,
+    "failed_save_input": false
+  },
+  "whole_criterion_closed": false,
+  "terminal_original_review_required": true
+}
