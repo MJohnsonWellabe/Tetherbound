@@ -1,0 +1,28 @@
+{
+  "source": "f2ef6221d2421c5c37fb2a38ab54a82bedeb4ea8",
+  "prior_failure": "Original75a Hall Medium/High blind BLOCK: flat portal panels. Source rendered uniform opaque QuadMesh with only tint/emission changes.",
+  "production_change": "Three view-offset portal curtains within the exact existing aperture; sealed/locked remain stationary, open/stirred animate slowly. Canonical state/tint/radiance and home-night treatment copied from retained original material. No screen/depth reads, particles, new collision, portal logic, interactions, save or authority mutation.",
+  "scope": "Peer-local Hall presentation on all presets",
+  "flag": "arch_surface_depth.enabled=false; process-only --hall-surface-depth-candidate; --hall-surface-depth-baseline wins. Shipping remains OFF until original native/blind approval.",
+  "proof": {
+    "script": "tests/smoke_village_hall_redesign.gd",
+    "args": "--hall-surface-depth-candidate",
+    "run": 37809132444,
+    "artifact": 11564896063,
+    "job": 113421118749,
+    "actual_result": "PASS farmhouse door -> Main Street -> Hall nave with maxoffroad0, and8actual mounted candidates sharing original mesh/transform plus canonical state uniforms",
+    "exit_code": 0,
+    "duration_seconds": 114,
+    "script_error_count": 0,
+    "warning_count": 1,
+    "log_sha256": "01fec91544b987bb650da230fbb4ab1bab40142619189ccb75ac74d68c0d54d7",
+    "checkout_excerpt": "checkout-excerpt.txt",
+    "fixtures": "Original post-opening flags/starter/one initial farmhouse floor placement/parsed joypad and camera inputs. Original route, terrain64, actual director/open-door, floor, distance, wall, timeout guards retained. No new state/creature/relic fixtures.",
+    "independent_artifact_verdict": "APPROVE same original f42 reviewer",
+    "limits": "Headless mounting/state/walk only; does not establish GPU shader compile, native pixels, material quality, animation comfort, performance or whole criterion."
+  },
+  "source_command_review": "APPROVE same original f42: original-source-proof-command-review.txt. Initial remote-compaction and API-required-parent direct-resume rejection retained; required parent route recovered original reviewer without replacement/settings changes.",
+  "native_command": "proposed-native-command.json: APPROVE originalf42 exactf2ef Forward+ Medium pairedHigh existing24Hallstills, candidate argument only; ROOT sole writer, actual GPU/native/blind pending",
+  "reuse": "a7 endwall24stills bounded original runtimeAPPROVE retained as existing before packet; Hall geometry/light matching and wording85c difference disclosed. Original physical8+8/healthyactiveUID/conditionalordinaryrecall guards unchanged.",
+  "whole_criterion_complete": false
+}

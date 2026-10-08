@@ -1,0 +1,13 @@
+> **APPROVE — bounded source, selected proof and proposed command** at `f2ef6221d2421c5c37fb2a38ab54a82bedeb4ea8`.
+>
+> Verified:
+>
+> - Exact parent `b7920808eb1df0d0144ebb37fcd4d46be0586aaf`; only the four reviewed files changed.
+> - Preserved checkout excerpt identifies full f2ef SHA.
+> - Run `37809132444` log matches SHA256 `01fec91544b987bb650da230fbb4ab1bab40142619189ccb75ac74d68c0d54d7`: exit 0, 114s, zero script errors, one interpolation deprecation warning.
+> - Actual farmhouse→road→nave walk passed with maximum off-road distance 0; all eight mounted candidates passed original mesh/transform, retained hidden baseline and canonical state-uniform checks.
+> - The JSON’s separate-argument Forward+ Medium/paired-High command uses the correct SHA and preserves existing capture/circuit/companion guards.
+>
+> Shipping remains OFF; baseline wins. Retained limitation: those new mounting assertions run in the standalone smoke, not the native circuit’s overridden arrival hook.
+>
+> Native GPU compilation, changed pixels and original blind judgment remain pending. No visual or whole-criterion approval.
