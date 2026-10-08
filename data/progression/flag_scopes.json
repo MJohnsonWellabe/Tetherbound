@@ -234,6 +234,12 @@
   },
   "_why_cloudreach_solmane": "Owner ruling 2026-09-27 (#356 5858140459): Solmane is Cloudreach's freed legendary, offered to each Veyra participant through stronghold_climax.gd with cloudreach:-prefixed receipts (data/config/cloudreach_solmane_climax.json). World: the freeing and settle, and per-character resolution receipts. Player: each character's own joined/refused answer and the world it was given in.",
   "durable_fields": {
+    "equipment": {
+      "scope": "character",
+      "authority": "host validates typed trainer_equip against admitted owner identity, revision, carried item and worn-slot CAS; owning peer persists",
+      "transaction": "craft:<character_id>:<sha256 trainer_equip original>; inventory and worn slot swap atomically through existing v3 creature_training journal; encounter tier remains frozen",
+      "persistence": "existing character field; no schema migration; prepared world save rollback, original owner save and ACK/reconnect retry"
+    },
     "reward_deliveries.actor_vitals:<sha256>": {
       "scope": "world",
       "authority": "host admitted character and retained actor revision only",

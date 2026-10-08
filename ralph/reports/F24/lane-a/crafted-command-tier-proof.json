@@ -1,0 +1,434 @@
+{
+  "criterion": "F24#4",
+  "criterion_text": "Workbench trainer-gear tiers upgrade commands (meter rate, pouch size, snare strength).",
+  "source_commit": "a3d17adcfac89b15195538e75f82c8ae32187c02",
+  "verdict": "APPROVE / MET \u2014 whole F24#4",
+  "independent_reviewer": {
+    "name": "original /root/f23_audit",
+    "thread_id": "01a10f41-743d-75d1-8867-bbd0b7df7abf",
+    "resumed_not_replaced": true,
+    "source_verdict": "APPROVE bounded source at672d512aa568e3027a0edad90b1a6105f51514a5",
+    "whole_criterion": "Original f23_audit APPROVE / MET wholeF24#4 ata3d17adcfac89b15195538e75f82c8ae32187c02; independently verified four paid crafts, owner-saved ACKed Backpack Equip, canonical retained/live tier4, Backpack26controller/diskchecks and final34tests1568assertions0failed.",
+    "blind_judge": "No separate code-blind proof required by F24#4; original reviewer explicitly confirmed. No blind PASS invented."
+  },
+  "affected_unit": {
+    "script": "tests/run_tests.gd --only=test_f24_host_commands.gd",
+    "source_commit": "1cfc6c0f00a632a7f743d53b26eb5d6468671a5f",
+    "run_id": 37772021432,
+    "artifact_id": 11548307523,
+    "result": "PASS",
+    "tests": 33,
+    "assertions": 1493,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 10,
+    "raw_log": "ralph/reports/F25/downloads/command-tiers-bound-37772021432/raw/run.log",
+    "sha256": "bb7b99e16e5eb416c228bfa2e618b3146750a0f3a47ab065704ece2590763cbb",
+    "coverage": "Authored tiers0..4: real frozen Quick/profile admission, original positive hit credits meter rate once and cannot replay; last pouch slot accepted, next unavailable; actual host Snare status and movement/catch consumers use admitted tier."
+  },
+  "crafted_tier_witness": {
+    "result": "PASS",
+    "run_id": 37775449228,
+    "artifact_id": 11549079450,
+    "source_commit": "e3758f63def42fb04f0bd48ed123d929cc392327",
+    "raw_log": "ralph/reports/F25/downloads/trainer-equip-37775449228/raw/run.log",
+    "sha256": "3b7493f7f425a2c18b671734e67e6c70f2959710e4daadf33418ae1086e2e69f",
+    "exit": 0,
+    "seconds": 108,
+    "script": "tests/smoke_f31_station_paid_path.gd --prove-command-tier",
+    "observed": {
+      "canonical_ready": true,
+      "crafted": [
+        {
+          "after": {
+            "fiber": 0,
+            "rootiron_ingot": 0
+          },
+          "before": {
+            "fiber": 4,
+            "rootiron_ingot": 2
+          },
+          "item": "rootiron_command_pouch",
+          "recipe": "craft_rootiron_command_pouch",
+          "result": {
+            "character_revision": 4,
+            "durable": true,
+            "journal_revision": 1,
+            "ok": true,
+            "owner_acknowledged": true,
+            "owner_saved": true,
+            "receipt": "craft:character-c2b578aab0ee67340606822a495d37f2:6a47603b82e31ad48afed8323039de6f",
+            "resolved": true,
+            "saved": true,
+            "settled": true
+          }
+        },
+        {
+          "after": {
+            "reed_fiber": 0,
+            "tidesteel_ingot": 0
+          },
+          "before": {
+            "reed_fiber": 4,
+            "tidesteel_ingot": 2
+          },
+          "item": "tidesteel_command_pouch",
+          "recipe": "craft_tidesteel_command_pouch",
+          "result": {
+            "character_revision": 6,
+            "durable": true,
+            "journal_revision": 2,
+            "ok": true,
+            "owner_acknowledged": true,
+            "owner_saved": true,
+            "receipt": "craft:character-c2b578aab0ee67340606822a495d37f2:aff0933c6c6b665311f981b93af74d89",
+            "resolved": true,
+            "saved": true,
+            "settled": true
+          }
+        },
+        {
+          "after": {
+            "skyglass_ingot": 0,
+            "skyplume": 0
+          },
+          "before": {
+            "skyglass_ingot": 2,
+            "skyplume": 4
+          },
+          "item": "skyglass_command_pouch",
+          "recipe": "craft_skyglass_command_pouch",
+          "result": {
+            "character_revision": 9,
+            "durable": true,
+            "journal_revision": 3,
+            "ok": true,
+            "owner_acknowledged": true,
+            "owner_saved": true,
+            "receipt": "craft:character-c2b578aab0ee67340606822a495d37f2:13749993c0a8e38ab520c8c681652f14",
+            "resolved": true,
+            "saved": true,
+            "settled": true
+          }
+        },
+        {
+          "after": {
+            "sparkfur": 0,
+            "stormglass_plate": 0
+          },
+          "before": {
+            "sparkfur": 4,
+            "stormglass_plate": 2
+          },
+          "item": "stormglass_command_pouch",
+          "recipe": "craft_stormglass_command_pouch",
+          "result": {
+            "character_revision": 11,
+            "durable": true,
+            "journal_revision": 4,
+            "ok": true,
+            "owner_acknowledged": true,
+            "owner_saved": true,
+            "receipt": "craft:character-c2b578aab0ee67340606822a495d37f2:5dce44fa39149526902070f252ee3a88",
+            "resolved": true,
+            "saved": true,
+            "settled": true
+          }
+        }
+      ],
+      "encounter_kind": "wild",
+      "equip_result": {
+        "character_revision": 13,
+        "durable": true,
+        "journal_revision": 5,
+        "ok": true,
+        "owner_acknowledged": true,
+        "owner_saved": true,
+        "receipt": "craft:character-c2b578aab0ee67340606822a495d37f2:35e35ff806f30f0761a3e1baf3d0f6bb",
+        "resolved": true,
+        "saved": true,
+        "settled": true
+      },
+      "equipment": {
+        "backpack": "stormglass_command_pouch",
+        "boots": "",
+        "helmet": "",
+        "lower_body": "",
+        "upper_body": ""
+      },
+      "fixtures": "regional relic receipts and pre-admission starter; funded costs; harness relocation/auto-engage; process-local gates",
+      "pool": {
+        "character_id": "character-c2b578aab0ee67340606822a495d37f2",
+        "combo": {},
+        "encounter_id": "1:1",
+        "last_sequence": 0,
+        "meter": 0.0,
+        "rally_until_ms": 0,
+        "revision": 0,
+        "switch_until_ms": 0,
+        "tier": 4
+      },
+      "snapshot": {
+        "active": true,
+        "character_id": "character-c2b578aab0ee67340606822a495d37f2",
+        "combo": {},
+        "combo_remaining_s": 0.0,
+        "encounter_id": "1:1",
+        "generation": 1,
+        "input_context": "combat",
+        "item_consumer_ready": false,
+        "last_sequence": 0,
+        "meter": 0.0,
+        "pouch_count": 0,
+        "rally_until_ms": 0,
+        "revision": 0,
+        "switch_until_ms": 0,
+        "tier": 4,
+        "unlocked_commands": [
+          "rally",
+          "snare"
+        ],
+        "wild_target": true
+      },
+      "tier_profile": {
+        "catch_bonus": 0.16,
+        "meter_rate": 1.45,
+        "movement_multiplier": 0.45,
+        "pouch_size": 3.0
+      }
+    }
+  },
+  "first_attempts": [
+    {
+      "run_id": 37771605539,
+      "artifact_id": 11548556690,
+      "result": "FAIL33tests1488assertions1failed",
+      "cause": "Generic _start helper omits frozen actor_binding required by host command meter credit.",
+      "supported_fix": "Reuse exact frozen/profile admission already covered by original meter test; no production guard changed.",
+      "sha256": "80edcc5e9e91e2811f01aaba2952c85d9d97eab19c5615f3bfde927b93a949f8"
+    },
+    {
+      "run_id": 37771608180,
+      "artifact_id": 11548721682,
+      "result": "FAIL at canonical preflight after paid Workbench craft loop",
+      "cause": "Owning the pre-admission creature did not recall a grounded ally body. Canonical admission requires the actual body.",
+      "supported_fix": "Await existing production summon_active_creature seam and retain refusal; report admission context/body.",
+      "sha256": "5b96185fcba762482c9eb347436f69f46772515825e3d74b4bf2132ca2c944c9"
+    }
+  ],
+  "fixtures": "Same paid-placement/crafting real path; disclosed regional relic receipt entitlements and pre-admission starter if empty, _fund ingredients, harness relocation and guarded auto-engage; process-local runtime/network/UI/actor_vitals config restored. No output grants or accepted campaign boundary.",
+  "limits": "Closes only F24#4. Hosted functional mechanics and simulated controller proof, with disclosed relic/ingredient/starter fixtures. No broader campaign, visual, device or co-op acceptance; no failed save promoted as boundary. Shipping flags unchanged/OFF. Original parked failure packets preserved.",
+  "reuse": "Both engine passes and83unchanged unit cases reused; final rerun only33command cases plus affected preparationcodec. Old parked packets and prior33/1493pass remain preserved; no failed save accepted as campaign boundary.",
+  "parked_witness": {
+    "script": "tests/smoke_f31_station_paid_path.gd --prove-command-tier",
+    "run_id": 37772241027,
+    "result": "FAIL",
+    "artifact_id": 11548009147,
+    "source_commit": "672d512aa568e3027a0edad90b1a6105f51514a5",
+    "sha256": "ab9a9ffb226abd5873900b250ac32ccaecf17ad971e8284777c948c15c093fa0",
+    "raw_log": "ralph/reports/F25/downloads/crafted-command-recall-37772241027/raw/run.log",
+    "observed": {
+      "canonical_ready": true,
+      "crafted": [
+        {
+          "after": {
+            "fiber": 0,
+            "rootiron_ingot": 0
+          },
+          "before": {
+            "fiber": 4,
+            "rootiron_ingot": 2
+          },
+          "item": "rootiron_command_pouch",
+          "recipe": "craft_rootiron_command_pouch",
+          "result": {
+            "character_revision": 4,
+            "durable": true,
+            "journal_revision": 1,
+            "ok": true,
+            "owner_acknowledged": true,
+            "owner_saved": true,
+            "receipt": "craft:character-6f649772faf5c4115505791117b759f7:24fe86dd3c1d3a7b3ef439e7cdb2c0f3",
+            "resolved": true,
+            "saved": true,
+            "settled": true
+          }
+        },
+        {
+          "after": {
+            "reed_fiber": 0,
+            "tidesteel_ingot": 0
+          },
+          "before": {
+            "reed_fiber": 4,
+            "tidesteel_ingot": 2
+          },
+          "item": "tidesteel_command_pouch",
+          "recipe": "craft_tidesteel_command_pouch",
+          "result": {
+            "character_revision": 6,
+            "durable": true,
+            "journal_revision": 2,
+            "ok": true,
+            "owner_acknowledged": true,
+            "owner_saved": true,
+            "receipt": "craft:character-6f649772faf5c4115505791117b759f7:b739c79973647b8c946c4071453f8998",
+            "resolved": true,
+            "saved": true,
+            "settled": true
+          }
+        },
+        {
+          "after": {
+            "skyglass_ingot": 0,
+            "skyplume": 0
+          },
+          "before": {
+            "skyglass_ingot": 2,
+            "skyplume": 4
+          },
+          "item": "skyglass_command_pouch",
+          "recipe": "craft_skyglass_command_pouch",
+          "result": {
+            "character_revision": 9,
+            "durable": true,
+            "journal_revision": 3,
+            "ok": true,
+            "owner_acknowledged": true,
+            "owner_saved": true,
+            "receipt": "craft:character-6f649772faf5c4115505791117b759f7:b9fba7a120cb4137cd81093b5d8c0046",
+            "resolved": true,
+            "saved": true,
+            "settled": true
+          }
+        },
+        {
+          "after": {
+            "sparkfur": 0,
+            "stormglass_plate": 0
+          },
+          "before": {
+            "sparkfur": 4,
+            "stormglass_plate": 2
+          },
+          "item": "stormglass_command_pouch",
+          "recipe": "craft_stormglass_command_pouch",
+          "result": {
+            "character_revision": 12,
+            "durable": true,
+            "journal_revision": 4,
+            "ok": true,
+            "owner_acknowledged": true,
+            "owner_saved": true,
+            "receipt": "craft:character-6f649772faf5c4115505791117b759f7:3ee28b3f05098f8b3414a9e370a88b27",
+            "resolved": true,
+            "saved": true,
+            "settled": true
+          }
+        }
+      ],
+      "encounter_kind": "wild",
+      "equipment": {
+        "backpack": "stormglass_command_pouch",
+        "boots": "",
+        "helmet": "",
+        "lower_body": "",
+        "upper_body": ""
+      },
+      "fixtures": "regional relic receipts and pre-admission starter; funded costs; harness relocation/auto-engage; process-local gates",
+      "pool": {
+        "character_id": "character-6f649772faf5c4115505791117b759f7",
+        "combo": {},
+        "encounter_id": "1:1",
+        "last_sequence": 0,
+        "meter": 0.0,
+        "rally_until_ms": 0,
+        "revision": 0,
+        "switch_until_ms": 0,
+        "tier": 0
+      },
+      "snapshot": {
+        "active": true,
+        "character_id": "character-6f649772faf5c4115505791117b759f7",
+        "combo": {},
+        "combo_remaining_s": 0.0,
+        "encounter_id": "1:1",
+        "generation": 1,
+        "input_context": "combat",
+        "item_consumer_ready": false,
+        "last_sequence": 0,
+        "meter": 0.0,
+        "pouch_count": 0,
+        "rally_until_ms": 0,
+        "revision": 0,
+        "switch_until_ms": 0,
+        "tier": 0,
+        "unlocked_commands": [
+          "rally",
+          "snare"
+        ],
+        "wild_target": true
+      },
+      "tier_profile": {
+        "catch_bonus": 0.16,
+        "meter_rate": 1.45,
+        "movement_multiplier": 0.45,
+        "pouch_size": 3.0
+      }
+    },
+    "failure": "Stormglass equipped in actual local equipment; canonical ready true and actual wild fight active; retained command pool and live snapshot remain tier0 instead of4. No sole production cause established."
+  },
+  "production_candidate": {
+    "authority": "ROOT NOTICE6059349165 after distinct supported production path, A/C NOTICE6059392292/6059430433/6059558028",
+    "change": "Typed trainer_equip through existing v3 FoundationActions character journal and real Backpack Equip/Unequip, exact character/world/epoch and worn-slot/revision CAS, detached inventory swap/capacity checks, original receipt, prepared BOOL world-save rollback, durable owner save/ACK and reconnect. Guest original passive checkpoint validates typed producer. CharacterAuthority refresh and EncounterHost frozen-tier guards unchanged.",
+    "source_commit": "e3758f63def42fb04f0bd48ed123d929cc392327",
+    "source_review": "Original f23_audit APPROVE SOURCE ONLY ate3758f63de; initial76408 blocked guest checkpoint codec and slot1 proof, corrected before execution.",
+    "unit_correction": "Original f23_audit APPROVE unit-source correction ata3d17adcfa; explicitDictionary typing and proper REPLAY.begin from pre-admission carried-ingredient fixture preserve exact base/state/hash guard. Production and both engine witnesses unchanged.",
+    "shipping": "No shipping config flag changes. Existing equipment character scope/transaction explicitly declared in flag_scopes; no new persisted field or schema migration."
+  },
+  "backpack_engine": {
+    "result": "PASS",
+    "run_id": 37775445623,
+    "artifact_id": 11549668005,
+    "source_commit": "e3758f63def42fb04f0bd48ed123d929cc392327",
+    "raw_log": "ralph/reports/F25/downloads/trainer-equip-37775445623/raw/run.log",
+    "sha256": "b5eb02ebc196bbbc7993aa33e09b7cbcf587318886c1435d7ba823072041d406",
+    "exit": 0,
+    "seconds": 71,
+    "script": "tests/smoke_backpack_equipment.gd",
+    "checks": 26,
+    "failed": 0,
+    "coverage": "Actual world idle context; configured controller input Equip/Unequip, atomic carried/worn counts, original character disk save/reload with immutable slot0 journal identity."
+  },
+  "typed_unit_first_attempt": {
+    "run_id": 37775441968,
+    "artifact_id": 11550037628,
+    "result": "FAIL85tests1428assertions2failed",
+    "raw_log": "ralph/reports/F25/downloads/trainer-equip-37775441968/raw/run.log",
+    "sha256": "39e4bc0a36f8ee64d19e6b1a54108657b73acc236dcec8ca709925369b84890d",
+    "causes": "test_f24_host_commands untyped variable inference parse error; owner-passive prep fixture inserted carried ingredient after cursor creation, violating exact before==cursor.base. Both test-only corrections original source APPROVE.",
+    "reused_passing_cases": {
+      "test_equipment_player_path.gd": 5,
+      "test_equipment_portable_save.gd": 5,
+      "test_flag_scopes.gd": 12,
+      "test_owner_passive_sync.gd": 50,
+      "test_prepared_training_owner_identity.gd": 2,
+      "test_owner_passive_preparation.gd unchanged cases": 9
+    },
+    "reuse_count": 83
+  },
+  "affected_unit_final": {
+    "result": "PASS",
+    "source_commit": "a3d17adcfac89b15195538e75f82c8ae32187c02",
+    "selectors": "test_f24_host_commands.gd,test_owner_passive_preparation.gd::test_request_codec_preserves_distinct_authenticated_source_kinds_and_exact_owner_state",
+    "run_id": 37776228174,
+    "artifact_id": 11549154442,
+    "sha256": "0ca43179aa11f4cbb4ca4a7b0e39042e3013d34ff0c1ea71d06f1b72d7fd5618",
+    "raw_log": "ralph/reports/F25/downloads/trainer-equip-37776228174/raw/run.log",
+    "tests": 34,
+    "assertions": 1568,
+    "failed": 0,
+    "exit": 0,
+    "distinct_passing_cases_with_reused": 117
+  }
+}

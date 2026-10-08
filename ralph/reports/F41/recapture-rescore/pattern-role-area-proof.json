@@ -1,0 +1,32 @@
+{
+  "source_commit": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+  "reviewed_director_blob": "05bbf0917b1151a461de6a11bc9fb39fdc9adc63",
+  "run_id": 37809647502,
+  "artifact_id": 11564372829,
+  "job_id": 113422870818,
+  "run_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37809647502",
+  "script": "tests/run_tests.gd",
+  "args": "--only=stormwood_b_named_lunge_lanes,stormwood_b_named_cues,test_charger_lunge.gd",
+  "mode": "headless",
+  "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+  "actual_checkout_verified": true,
+  "exit_code": 0,
+  "elapsed_seconds": 19,
+  "tests": 21,
+  "assertions": 132,
+  "failed": 0,
+  "run_log_path": ".tmp/e-pattern-253574-area-37809647502/run.log",
+  "run_log_sha256": "1787536203e31b9035d2723c880b15c65f01a72c16ac3e110c5559e6b731a9c7",
+  "engine_errors": {
+    "classification": "Original reviewer APPROVE bounded assertion evidence; all five errors traced to detached named_cues fixtures; not clean-log or mounted-contact proof.",
+    "count": 5,
+    "tests": [
+      "test_every_exit_from_a_tell_drops_the_cue_and_the_cone",
+      "test_route_cue_shows_the_route_first_then_the_ordinary_tell"
+    ],
+    "message": "Condition !is_inside_tree() is true. Returning Transform3D()"
+  },
+  "result": "Original independent APPROVE bounded affected assertion evidence,21tests132assertions0failed/exit0",
+  "limits": "Headless logic only; no mounted director path/native enemy-hit/natural loss proof; whole F41 OPEN.",
+  "original_independent_verdict": "APPROVE bounded assertion evidence: same original /root/review_cloud_startup; retained source report"
+}

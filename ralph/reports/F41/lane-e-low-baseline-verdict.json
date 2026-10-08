@@ -1,0 +1,29 @@
+{
+  "criterion": "F41#0/#3/#4/F10#3/#4 OPEN",
+  "source_commit": "16bfbb2d0581080517a9b0e3601d9435095e2b68",
+  "run_id": 37637690708,
+  "agent": "/root/blind_listener_f10",
+  "code_blind": true,
+  "verdict": "BLOCK partial baseline views",
+  "scope": "103 actual1280x720 Low Compatibility stills in five complete diagnostic contact sheets; no full320/released/fight/motion/device proof",
+  "domains": {
+    "terrain": "BLOCK: broad weak slopes/repeated ground and bare horizons; bright yellow road lines resemble paint rather than fused scars",
+    "vegetation_props": "BLOCK: uniform flower/grass carpet, open meadow-like woodland, weak roots/moss/fungi/copper/glass; cyan scar cones; readable rod pylons/cable are strengths",
+    "humans": "BLOCK obstructed views: Giant F9-F19 loses trainer/route behind black trunks, F3 shrub; RodF3 clear silhouette; named faces/ranks unassessed",
+    "creatures": "UNASSESSED: insufficient exposed creature for face/pose/scale/material verdict",
+    "sky_light_weather": "BLOCK: purple clouds and RodF9/F13 Break lightning communicate storm; ForestF1/F5/GiantF9/F17 crush trunks/ground/trainer; Building green cast substitutes for material lighting; static steam not motion proof",
+    "ui_effects": "BLOCK: large darkHUD/keyboard hints dominate, minimap lacks terrain context, time text weakcontrast; StormheartF9 flat pink-white disc cuts vegetation"
+  },
+  "largest_gaps": [
+    "Camera/value obstruction from giant/foreground trunks",
+    "Stormheart split slabs/cyan segments lack ancient branches/crown/living roots/inhabited platforms",
+    "Meadow-like vegetation lacks wet/scarred Stormwood ecology"
+  ],
+  "remaining_gates": [
+    "Matched candidate quarters and fixes re-captured against fullbar",
+    ">=200frames/all required320matrix + independent catalogrescore",
+    "Required real fight, aftermath, motion and landmark distances",
+    "Named logic/behavior/review and READYpost"
+  ],
+  "shipping_flags": "unchanged OFF"
+}

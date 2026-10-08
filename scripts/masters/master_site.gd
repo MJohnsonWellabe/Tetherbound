@@ -116,9 +116,14 @@ func _build_sign(world: Node3D) -> void:
 	sign.add_child(pole)
 	var words := Label3D.new()
 	words.text = str(_definition.sign_text) + "\nFollow the side path →"
-	words.font_size = 48
+	var presentation: Dictionary = BREAKTHROUGH.masters().sign_presentation
+	words.font_size = int(presentation.font_size)
+	words.pixel_size = float(presentation.pixel_size_m)
+	words.width = float(_definition.get("sign_width_px", presentation.width_px))
+	words.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	words.outline_size = int(presentation.outline_size)
 	words.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
-	words.position.y = 2.5
+	words.position = _vec(_definition.get("sign_text_offset_m", presentation.text_offset_m))
 	sign.add_child(words)
 	var lead := NPC.new()
 	lead.name = "MasterLead"

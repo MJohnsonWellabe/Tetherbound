@@ -1,0 +1,82 @@
+{
+  "source_commit": "7ee966a7fc7e2c957a177b4e33fce83821227028",
+  "run_id": 37740424746,
+  "artifact_id": 11533284875,
+  "script": "tools/phase2_capture_catch.gd",
+  "args": "--biome=stormwood --breakout-handback-only --preset=Low --low-resolution=1280x720",
+  "complete": true,
+  "failures": [],
+  "exit_code": 0,
+  "duration_seconds": 333,
+  "frames": {
+    "breakout-handback-live.png": "171ac0355f9d7e9c7de2b02b5fcadcc99e11149b04fc958271cbef0632e7407e",
+    "breakout-handback-settled.png": "7609b5cab5fe632a1ed9166072ac37c9a008336c2d28d27cdc0be8eae407c0ff"
+  },
+  "manifest_sha256": "a8f59b4acb253752d1f339c631d9978742b3feaa17b7624a3ac1c52193c84548",
+  "run_log_sha256": "f5246e4287f62242792938b4fe2f2d1520e09d3eaf4725dc468c36c270594426",
+  "graphics": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "source_commit": "7ee966a7fc7e2c957a177b4e33fce83821227028"
+  },
+  "fixture": "Existing staged full-health target, in-memory failure odds and supplied orbs; same ordinary fight/aim/throw/resolve path. Two unpaused handback views only; no earned catch, continuous motion, success sequence or whole twelve-frame proof.",
+  "observations": [
+    {
+      "ally_model_transform": "[X: (-0.999999, 0.0, 0.000436), Y: (0.0, 1.0, 0.0), Z: (-0.000436, 0.0, -0.999999), O: (-241.6546, 25.03052, 257.8759)]",
+      "ally_model_visible": true,
+      "ally_transform": "[X: (-0.999999, 0.0, 0.000436), Y: (0.0, 1.0, 0.0), Z: (-0.000436, 0.0, -0.999999), O: (-241.6546, 25.03052, 257.8759)]",
+      "ally_visible": true,
+      "camera_path": "/root/Stormwood/CameraRig/Camera3D",
+      "camera_target_path": "/root/Stormwood/AllyCreature",
+      "camera_target_transform": "[X: (-0.999999, 0.0, 0.000436), Y: (0.0, 1.0, 0.0), Z: (-0.000436, 0.0, -0.999999), O: (-241.6546, 25.03052, 257.8759)]",
+      "camera_transform": "[X: (-0.038893, -0.0, -0.999243), Y: (-0.453647, 0.891007, 0.017657), Z: (0.890333, 0.45399, -0.034654), O: (-227.9752, 33.99194, 254.2277)]",
+      "fighting": true,
+      "id": "breakout-handback-live",
+      "model_transform": "[X: (-0.447548, -0.062487, -0.892074), Y: (-0.014905, 0.997938, -0.062424), Z: (0.894136, -0.014642, -0.447557), O: (-244.0943, 25.49441, 255.2699)]",
+      "paused": false,
+      "physics_frame": 584,
+      "player_transform": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-244.0943, 25.49301, 255.2699)]",
+      "resolved_success": false,
+      "rig_has_current_camera": true,
+      "rig_transform": "[X: (-0.038892, 0.0, -0.999243), Y: (-0.453647, 0.891007, 0.017657), Z: (0.890332, 0.453991, -0.034653), O: (-241.6855, 27.00089, 254.7613)]",
+      "wild_model_transform": "[X: (0.973782, 0.0, -0.227467), Y: (0.0, 1.0, 0.0), Z: (0.227467, 0.0, 0.973782), O: (-241.7164, 25.42126, 251.6467)]",
+      "wild_model_visible": true,
+      "wild_transform": "[X: (0.973782, 0.0, -0.227467), Y: (0.0, 1.0, 0.0), Z: (0.227467, 0.0, 0.973782), O: (-241.7164, 25.42126, 251.6467)]",
+      "wild_visible": true
+    },
+    {
+      "ally_model_transform": "[X: (-0.999999, 0.0, 0.000436), Y: (0.0, 1.0, 0.0), Z: (-0.000436, 0.0, -0.999999), O: (-241.659, 25.00812, 258.2272)]",
+      "ally_model_visible": true,
+      "ally_transform": "[X: (-0.999999, 0.0, 0.000436), Y: (0.0, 1.0, 0.0), Z: (-0.000436, 0.0, -0.999999), O: (-241.659, 25.00812, 258.2272)]",
+      "ally_visible": true,
+      "camera_path": "/root/Stormwood/CameraRig/Camera3D",
+      "camera_target_path": "/root/Stormwood/AllyCreature",
+      "camera_target_transform": "[X: (-0.999999, 0.0, 0.000436), Y: (0.0, 1.0, 0.0), Z: (-0.000436, 0.0, -0.999999), O: (-241.659, 25.00812, 258.2272)]",
+      "camera_transform": "[X: (-0.038893, -0.0, -0.999243), Y: (-0.453647, 0.891007, 0.017657), Z: (0.890333, 0.45399, -0.034654), O: (-227.8409, 33.96101, 254.63)]",
+      "fighting": true,
+      "id": "breakout-handback-settled",
+      "model_transform": "[X: (-0.447548, -0.062487, -0.892074), Y: (-0.014905, 0.997938, -0.062424), Z: (0.894136, -0.014642, -0.447557), O: (-244.0943, 25.49441, 255.2699)]",
+      "paused": false,
+      "physics_frame": 632,
+      "player_transform": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (-244.0943, 25.49301, 255.2699)]",
+      "resolved_success": false,
+      "rig_has_current_camera": true,
+      "rig_transform": "[X: (-0.038892, 0.0, -0.999243), Y: (-0.453647, 0.891007, 0.017657), Z: (0.890332, 0.453991, -0.034653), O: (-241.5643, 26.96331, 255.1641)]",
+      "wild_model_transform": "[X: (0.999518, 0.0, 0.030888), Y: (0.0, 1.0, 0.0), Z: (-0.030888, 0.0, 0.999518), O: (-241.4696, 25.3685, 252.101)]",
+      "wild_model_visible": true,
+      "wild_transform": "[X: (0.999518, 0.0, 0.030888), Y: (0.0, 1.0, 0.0), Z: (-0.030888, 0.0, 0.999518), O: (-241.4696, 25.3685, 252.101)]",
+      "wild_visible": true
+    }
+  ],
+  "limit": "Two unpaused shutters only, physics584 and632 (48-frame delta including renderer waits), current camera targets deployed AllyCreature, ally/wild body AND Model visible at both shutters. No causal diagnosis of old paused dark frame, no motion/fullcatch/earned/co-op or wholecriterion claim.",
+  "raw_packet": ".tmp\\e-catch-handback-7ee-expanded\\tree\\ralph\\reports\\VISUAL\\phase2\\stormwood\\lane-e-catch-handback-7ee",
+  "job_id": 113189619028,
+  "original_review": "APPROVE bounded source/provenance/metadata only, review_cloud_startup",
+  "blind_judge": "BLOCK both: dark surface covers nearly whole world, actors/terrain/route not readable; current-camera/node-visible metadata does not substitute for pixels."
+}

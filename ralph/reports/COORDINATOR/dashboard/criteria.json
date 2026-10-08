@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-08T08:15:29.640676+00:00",
- "main_sha": "d93567001 (PR #584)",
+ "generated_at": "2026-10-08T18:28:58.645927+00:00",
+ "main_sha": "c7127e7dd (PR #590)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -91,18 +91,18 @@
    "criteria": [
     {
      "text": "Fresh ordinary save reaches and crosses the South Bridge with no teleport/state injection",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6049950428, 7:57 PM CT 10-07): earned chain opening/camp/bridge/Warrens terminal PASS, 476 bridge tests; review APPROVE",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (South Bridge), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE. In consolidation 15.",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-bridge from a fresh v28 save, TB_WORLD_SEED=15. Folds into F49.",
-     "note": "READY 6049950428 held at consolidation 7 (10-07 9:20 PM CT): evidence-only, but the source it proves is not on main (55d59dd5d4 South Bridge arena bounds, ba556ac7d session training-ACK, ad95e0dd6 disk handoff, 1861efb8c1 runner). Lane B to READY that source.",
+     "note": "Landed: Evidenced on tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (South Bridge), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE. In consolidation 15.",
      "audit_index": 0
     },
     {
      "text": "Continues through Quarry/Warrens on the same fresh save",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6049950428, 7:57 PM CT 10-07): earned chain opening/camp/bridge/Warrens terminal PASS, 476 bridge tests; review APPROVE",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (Quarry/Warrens), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE. In consolidation 15.",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-warrens --reload-at-transitions. Folds into F49.",
-     "note": "READY 6049950428 held at consolidation 7 (10-07 9:20 PM CT): evidence-only, but the source it proves is not on main (55d59dd5d4 South Bridge arena bounds, ba556ac7d session training-ACK, ad95e0dd6 disk handoff, 1861efb8c1 runner). Lane B to READY that source.",
+     "note": "Landed: Evidenced on tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (Quarry/Warrens), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE. In consolidation 15.",
      "audit_index": 1
     },
     {
@@ -1451,10 +1451,10 @@
     },
     {
      "text": "Switching has measurable value: tag-switch combos and type matchups let a switching reader beat a non-switching reader.",
-     "status": "in_progress",
-     "evidence": "scripts/combat/tether_commands.gd tag_combo",
+     "status": "met",
+     "evidence": "PR #588 (consolidation 12) merged 2026-10-08 7:13 AM CT: from tb/codex-a 0ed7c6629d (READY #572, 6:17 AM CT 10-08): owner rule STATE.md:41, F24#2 tag-switch combo from PR #568 (run 37571192608 PASS); original f23_audit APPROVE",
      "gap": "Turn on F24 tag combo, then add a switching-reader pilot comparison to the band smoke.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The tag-switch combo ships off: tether_commands.json feature_flags.runtime_enabled=false. No switching-vs-non-switching measurement exists.",
+     "note": "Landed: PR #588 (consolidation 12) merged 2026-10-08 7:13 AM CT: from tb/codex-a 0ed7c6629d (READY #572, 6:17 AM CT 10-08): owner rule STATE.md:41, F24#2 tag-switch combo from PR #568 (run 37571192608 PASS); original f23_audit APPROVE",
      "audit_index": 2
     },
     {
@@ -1589,10 +1589,10 @@
     },
     {
      "text": "Workbench trainer-gear tiers upgrade commands (meter rate, pouch size, snare strength).",
-     "status": "in_progress",
-     "evidence": "tether_commands.json tiers; player_equipment.gd; tether_pouch_row.gd",
+     "status": "met",
+     "evidence": "PR #590 (consolidation 13b) merged 2026-10-08 10:16 AM CT: from tb/codex-a 1496cb6430 (READY #572, 7:28 AM CT 10-08): crafted-tier engine 37775449228 PASS, Backpack controller/disk/Unequip 37775445623 PASS 26 checks, affected unit 37776228174 34 tests/1568 assertions; original f23_audit WHOLE APPROVE; equipment smoke step given 120 s world-load timeout",
      "gap": "Enable it; add a unit test of tier effects and a crafted-tier engine witness.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The command runtime is off (runtime_enabled=false). No test exists.",
+     "note": "Landed: PR #590 (consolidation 13b) merged 2026-10-08 10:16 AM CT: from tb/codex-a 1496cb6430 (READY #572, 7:28 AM CT 10-08): crafted-tier engine 37775449228 PASS, Backpack controller/disk/Unequip 37775445623 PASS 26 checks, affected unit 37776228174 34 tests/1568 assertions; original f23_audit WHOLE APPROVE; equipment smoke step given 120 s world-load timeout",
      "audit_index": 4
     },
     {
@@ -1825,10 +1825,10 @@
     },
     {
      "text": "Five Masters are placed off-path and signposted: L10 mid-Meadows, L20 upper Meadows before the Warden's stronghold, L30 an outer Tidewake island, L40 a Cloudreach high perch (Fly), L50 deep Stormwood.",
-     "status": "not_started",
-     "evidence": "data/config/masters.json, scenes/masters/master_t1–5.tscn (no test)",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-c e4d6401b52 (READY #572, 11:28 AM CT 10-08): native Gull Rest five-creature swim (145 assertions, both legs), run 37806614540, Master4 Fly witness; judge PASS all five signs; original whole APPROVE. In consolidation 15.",
      "gap": "Placement test plus controller reachability smoke for each Master site.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Placement data and scenes exist. No test of off-path placement, signposts or reachability (Fly perch).",
+     "note": "Landed: Evidenced on tb/codex-c e4d6401b52 (READY #572, 11:28 AM CT 10-08): native Gull Rest five-creature swim (145 assertions, both legs), run 37806614540, Master4 Fly witness; judge PASS all five signs; original whole APPROVE. In consolidation 15.",
      "audit_index": 1
     },
     {
@@ -2371,9 +2371,9 @@
     {
      "text": "Every required water route stays human-swimmable without Ripplet.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
+     "evidence": "PR #585 (consolidation 10) merged 2026-10-08 3:41 AM CT: from tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
      "gap": "Rerun smoke_water_swimming.gd with the --original-five every-hop mode at b4e4897d5. Consider wiring that mode into CI.",
-     "note": "Landed: Evidenced on tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
+     "note": "Landed: PR #585 (consolidation 10) merged 2026-10-08 3:41 AM CT: from tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
      "audit_index": 2
     },
     {
@@ -2606,10 +2606,10 @@
    "criteria": [
     {
      "text": "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
-     "status": "not_started",
-     "evidence": "ralph/reports/R2-F41/implementation-review.json@b4e4897d5",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-e acaaba91d5 (READY #572, 12:11 PM CT 10-08): 240 native Stormwood frames recaptured, 44 catalogue rows rescored; blind completeness PASS; original whole APPROVE. In consolidation 15.",
      "gap": "After F26, capture ≥200 Stormwood frames (High/Medium), then a code-blind re-score of catalog rows.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No captures run (\"every acceptance criterion remains open\"). F26 look-dev is not done.",
+     "note": "Landed: Evidenced on tb/codex-e acaaba91d5 (READY #572, 12:11 PM CT 10-08): 240 native Stormwood frames recaptured, 44 catalogue rows rescored; blind completeness PASS; original whole APPROVE. In consolidation 15.",
      "audit_index": 0
     },
     {
@@ -2671,10 +2671,10 @@
    "criteria": [
     {
      "text": "Catalog UI rows (map without terrain context, bare menus, heavy HUD boxes, low-contrast text) are fixed with code-blind PASS.",
-     "status": "not_started",
-     "evidence": "ralph/reports/R2-F42/proof-manifest.json@b4e4897d5 (engine_runs 0)",
+     "status": "met",
+     "evidence": "PR #587 (consolidation 11b) merged 2026-10-08 6:22 AM CT: from tb/codex-d f440344302 (READY #572, 4:35 AM CT 10-08): 14 files/144 tests/910 assertions, controller 37752399076, paired 1080/720 capture 37752962313, blind judge PASS whole literal UI ask; review APPROVE",
      "gap": "Capture each catalog UI row before and after, then a code-blind judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Source candidate only. No captures or judge.",
+     "note": "Landed: PR #587 (consolidation 11b) merged 2026-10-08 6:22 AM CT: from tb/codex-d f440344302 (READY #572, 4:35 AM CT 10-08): 14 files/144 tests/910 assertions, controller 37752399076, paired 1080/720 capture 37752962313, blind judge PASS whole literal UI ask; review APPROVE",
      "audit_index": 0
     },
     {

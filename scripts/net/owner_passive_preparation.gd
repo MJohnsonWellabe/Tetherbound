@@ -114,6 +114,11 @@ static func _action_request_valid(raw: Dictionary) -> bool:
 			and _fields(request.intent, ["assignment_id", "index", "item_id"]) \
 			and E._component(request.intent.assignment_id) and E._integer(request.intent.index, 0, 2) \
 			and request.intent.item_id is String
+	if raw.source_kind == "foundation_request" and request.op == "trainer_equip":
+		return request.station_key == "personal_equipment:" + str(raw.character_id) \
+			and E._integer(request.revision, 0, 2147483645) and request.revision == raw.revision \
+			and preload("res://scripts/net/foundation_actions.gd").stage(raw.after, int(raw.revision),
+				"trainer_equip", request.intent, raw.host_context, RECORD.errors).get("ok") == true
 	match raw.source_kind:
 		"foundation_request":
 			return request.op in ["station_craft", "feast_cook", "feast_feed", "candy_feed", "relic_hang", "relic_power", "master_chest", "essence_release"] \

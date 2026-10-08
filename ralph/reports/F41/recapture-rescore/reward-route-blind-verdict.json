@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "reviewer": {
+    "name": "blind_listener_f10",
+    "id": "01a11667-4631-72b2-8fed-294999b8c043",
+    "role": "retained original independent code-blind visual judge"
+  },
+  "item_id": "P2-111",
+  "scope": "Bounded before/after pixels-only review of visible victory acknowledgement, reward receipt and separation from quick bindings. Independent new current rating; other rows and previous evidence are unchanged.",
+  "visible_context": {
+    "before": "H35 shows a nearly depleted Voltarach health bar; H36 shows an empty bar and fallen/lowered wild creature; H37/H38 explicitly say 'The wild creature is beaten.' and name a Hollows Alpha/Great Candy reward.",
+    "after": "Both supplied after views show a fallen blue creature, the 'The wild creature is beaten.' headline and an explicitly titled 'Victory rewards' card. This supports assessing the visible victory acknowledgement layout, without inferring its runtime cause."
+  },
+  "before": {
+    "verdict": "BLOCK",
+    "reason": "In H37/H38 the colored item icon, x1 and four white empty binding markers form one central row between the victory headline and the Great Candy acknowledgement sentence. Neither a labeled receipt container nor spatial separation distinguishes that row from the acknowledgement. The explicit victory wording is readable, but the five markers can be read as grouped earned reward tiles.",
+    "evidence": [
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H37.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H38.png"
+    ],
+    "context_evidence": [
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H35.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H36.png"
+    ]
+  },
+  "after": {
+    "verdict": "PASS",
+    "reason": "Both after views place the reward acknowledgement inside a dark, gold-bordered card titled 'Victory rewards' at the upper right. The Hollows Alpha and Great Candy text wraps clearly and remains fully inside the card. The item icon/x1 and four empty binding markers sit together in a separate lower-right HUD area above exploration controls, with substantial space between them and the reward card. This makes the receipt and the quick-binding row visibly distinct.",
+    "evidence": [
+      "D:/CodexTemp/tetherbound-proof/native-e-beedcbfd3a-reward-route-r1/frames/reward-route/hollows_alpha-99-after.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-beedcbfd3a-reward-route-r1/frames/reward-route/hollows_alpha-100-aftermath.png"
+    ],
+    "bounded_positive_findings": [
+      "Explicit receipt heading and enclosing border establish a coherent reward group.",
+      "Readable text identifies Great Candy and its stated recipient condition.",
+      "Four empty binding markers no longer occupy the space between the victory headline and its reward sentence.",
+      "Both supplied after views retain the same clear separation."
+    ],
+    "finish_limits": [
+      "The receipt is textual; the pictured card does not itself display a dedicated item thumbnail or numeric quantity. That does not recreate the assessed binding/reward grouping defect.",
+      "No separate item-detail, long-reward-list or alternate-resolution receipt is supplied."
+    ]
+  },
+  "current_rating": {
+    "severity": 1,
+    "exposure": 3,
+    "importance": 4,
+    "impact": 12,
+    "verdict": "PASS",
+    "coverage": "BOUNDED_TWO_VISIBLE_VICTORY_RECEIPT_VIEWS",
+    "severity_reason": "The named grouping defect is not observed in the supplied after views. Severity 1 is the requested scale minimum, not a claim that an observed defect remains.",
+    "exposure_reason": "This is an episodic end-of-fight acknowledgement rather than continuously present combat UI; the receipt is prominent when shown.",
+    "importance_reason": "Players must distinguish rewards earned from existing quick bindings; reward comprehension is important to progression.",
+    "independence": "Current numeric values were assigned from these newly inspected pixels and the written UI/readability bar, without reading or transferring previous scores."
+  },
+  "inspection": {
+    "before_full_rasters_inspected": [
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H35.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H36.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H37.png",
+      "D:/tetherbound/codex-e/.tmp/e-f41-b852-hollows-anonymous/H38.png"
+    ],
+    "after_full_rasters_inspected": [
+      "D:/CodexTemp/tetherbound-proof/native-e-beedcbfd3a-reward-route-r1/frames/reward-route/hollows_alpha-99-after.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-beedcbfd3a-reward-route-r1/frames/reward-route/hollows_alpha-100-aftermath.png"
+    ],
+    "missing_paths": [],
+    "optional_context_raster_used": false,
+    "references": "Previously inspected approved Stormwood boards and current written ART_DIRECTION UI/readability bar.",
+    "pixel_comparison": "UI grouping/legibility comparison; no exact matched world pose or pixel-identical camera claim."
+  },
+  "limitations": [
+    "Only the supplied four before and two after full rasters were inspected for this task.",
+    "The screenshots support visible victory presentation and layout only; no earned combat, actual reward grant, inventory persistence, participant eligibility, result timing, dismissal or controller behavior is certified.",
+    "No motion, four-player, 7-inch physical display, other resolutions/presets, long reward lists or full visual matrix claim.",
+    "No judgement of other catalogue rows, loss presentation, bark, full F41 or whole release acceptance is made."
+  ],
+  "preservation": "All original catalogue ratings, prior verdicts, receipts and witnesses remain unchanged. Only this new evidence artifact is written."
+}
