@@ -1,0 +1,84 @@
+{
+  "criterion": "F37#2 component only; full criterion OPEN",
+  "source_sha": "7f9b0a115c4f3ebbea4eb32dfd2345c2d1cb969e",
+  "run_id": 37703956997,
+  "artifact_id": 11518819820,
+  "route": "first_shore_to_reedhaven_sheltered",
+  "actual_exit": 0,
+  "elapsed_s": 705,
+  "assertions": 85,
+  "failed": 0,
+  "engine_errors": 0,
+  "script_errors": 0,
+  "actual_swim_m": 90.0979060456157,
+  "path_m": 118.271743774414,
+  "commanded_ratio_vs_path": 1.155,
+  "minimum_stamina_pct": 31.26,
+  "health": 100,
+  "identity": {
+    "character_id": "character-ce6080d661e84147e79c0ea65e0d0676",
+    "party_uids": [
+      "creature-636aa99b643f6e1df36f3e2a475bd7d7",
+      "creature-e99aac45b69d8af44196300416630eff",
+      "creature-3f138613f5ed1367f2577c7e11ae9bd9",
+      "creature-c64be5065f0a85e328502bd12883d76e",
+      "creature-e1ffc8ab8826c4ccf0eb3313b61470a2"
+    ],
+    "same_ordered_uids_at_dry": true
+  },
+  "fixture": {
+    "camera_and_hud": "unchanged",
+    "dry_recovery": "natural regeneration",
+    "earned_route": false,
+    "input": "existing InputEventAction",
+    "one_dry_start_position_write_per_hop": true,
+    "original_five_granted": [
+      {
+        "level": 44,
+        "species": "terrapup"
+      },
+      {
+        "level": 43,
+        "species": "bramblebun"
+      },
+      {
+        "level": 42,
+        "species": "mudsnout"
+      },
+      {
+        "level": 42,
+        "species": "pipwing"
+      },
+      {
+        "level": 41,
+        "species": "trailpup"
+      }
+    ],
+    "realm_and_departure_flag_seeded": true,
+    "swimming_xp_pinned_zero": true
+  },
+  "warnings": "V-Sync/deprecation only; no engine/script errors",
+  "review": {
+    "reviewer": "b_f37_review",
+    "verdict": "APPROVE scoped actual route behavior"
+  },
+  "visual": {
+    "reviewer": "b_night_visual",
+    "verdict": "PASS endpoint views only",
+    "notes": [
+      "Recognizable unmounted trainer immersed in readable open-water view; upright arms-down pose does not demonstrate a swimming stroke.",
+      "Same trainer fully visible on dry sand near tent/fire; no obvious identity loss or body clipping."
+    ],
+    "open": [
+      "Continuous visible transition/swimming motion",
+      "Exact named destination visible attribution",
+      "Controller cues (shown keyboard cues)",
+      "Six remaining required routes",
+      "Full Visual Bars A/B"
+    ]
+  },
+  "shipping_flags": "none; Ripplet presentation remains OFF",
+  "logic_reuse": "37701115492: existing70affected files,608tests917217assertions0failed; unchanged human route source",
+  "raw": "Original nativePNG/JSON/run.log retained only in artifact11518819820",
+  "contact": "first-shore-contact.jpg"
+}
