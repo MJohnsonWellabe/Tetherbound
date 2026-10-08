@@ -908,7 +908,6 @@ var _party_strip: Control = null
 var _party_strip_script: Script = null
 var _party_strip_last_index := -999
 var _party_strip_last_revision := -999
-var _party_vitals_refresh_candidate := false
 var _party_strip_last_vitals: Array = []
 ## OP21-12: the last active creature's name, so a later cycle can say "Willow
 ## → Ashcap" instead of just lighting up a new row.
@@ -2115,10 +2114,12 @@ func _update_party_strip() -> void:
 	# entries built below -- so without this they would sit stale until the
 	# next catch or faint.
 	var feed_revision := PROGRESSION_FEED.revision()
+	# HP, faint and bed state can change without roster/feed revisions. These
+	# canonical values must invalidate the cache even in the default HUD;
+	# correctness is no longer gated by the retired visual candidate switch.
 	var vitals: Array = []
-	if _party_vitals_refresh_candidate:
-		for creature: RefCounted in _party.call("members"):
-			vitals.append([creature.call("hp_fraction"), creature.get("fainted"), creature.get("resting")])
+	for creature: RefCounted in _party.call("members"):
+		vitals.append([creature.call("hp_fraction"), creature.get("fainted"), creature.get("resting")])
 	if index == _party_strip_last_index and revision == _party_strip_last_revision \
 			and active_out == _party_strip_last_active_out \
 			and feed_revision == _party_strip_last_feed_revision \
@@ -2632,7 +2633,6 @@ func _apply_hud_config(config: Dictionary) -> void:
 	_exploration_show_empty_slots = roster.get("show_empty_slots", true) != false if roster is Dictionary else true
 	if is_instance_valid(_party_strip):
 		_party_strip.set("show_empty_slots", _exploration_show_empty_slots)
-	_party_vitals_refresh_candidate = config.get("party_vitals_refresh_candidate", false) == true
 	_vitals_idle_alpha = clampf(hud_config_number(config, "exploration_vitals", "idle_alpha", FADE_ALPHA), FADE_ALPHA, 1.0)
 	# Local exploration styles only. Preserve legacy fills for absent/invalid
 	# config, including the existing positive/finite number guard.
