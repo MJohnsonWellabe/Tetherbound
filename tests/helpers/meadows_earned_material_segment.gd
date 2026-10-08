@@ -9,7 +9,8 @@ var _crossing: Dictionary = {}
 
 
 func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
-		camera_rig: Node3D, lesson_mode: bool = false) -> Dictionary:
+		camera_rig: Node3D, lesson_mode: bool = false, required_stock_override: Dictionary = {},
+		return_target_xz: Vector2 = Vector2.INF) -> Dictionary:
 	_tree = tree
 	_world = world
 	_game = game
@@ -30,9 +31,12 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	for crossing: Dictionary in terrain.get("crossings", []):
 		if str(crossing.get("id", "")) == "south_bridge":
 			_crossing = crossing
-	var needed := CAMP.required_stock(game, lesson_mode)
+	var needed := CAMP.required_stock(game, lesson_mode) if required_stock_override.is_empty() else required_stock_override.duplicate(true)
 	for item: String in needed:
-		if not TOOL_ID.has(item):
+		if typeof(needed[item]) != TYPE_INT or int(needed[item]) <= 0:
+			_fail("earned material route requires a positive stock target: " + item)
+			return _result()
+		if not TOOL_ID.has(item) and item not in ["rootstone", "ironwood", "berries", "essence_ground"]:
 			_fail("campsite now requires an unimplemented gathering verb: " + item)
 			return _result()
 		var refused: Array[int] = []
@@ -88,15 +92,49 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 		if _count(item) < int(needed[item]):
 			_fail("64 physical harvests did not fund campsite " + item)
 			return _result()
-	transcript.append("actual campsite catalogue cost funded: " + str(needed))
-	var patch: Vector2 = CAMP.BUILD_PATCH_XZ
+	transcript.append(("actual campsite catalogue cost funded: " if required_stock_override.is_empty()
+		else "caller-declared stock physically gathered: ") + str(needed))
+	var patch: Vector2 = CAMP.BUILD_PATCH_XZ if return_target_xz == Vector2.INF else return_target_xz
+	if not patch.is_finite():
+		_fail("Invalid earned material return target")
+		return _result()
 	var destination := Vector3(patch.x, _world.ground_height_at(patch.x, patch.y), patch.y)
-	_active_walk_purpose = "return campsite materials"
+	_active_walk_purpose = "return campsite materials" if required_stock_override.is_empty() else "return gathered homestead materials"
 	if not await _walk_target(destination, _travel_budget(destination)):
 		_fail("earned campsite supply could not return through the actual village gate to the build patch")
 		return _result()
-	transcript.append("carried actual materials back to the campsite build patch")
+	transcript.append("carried actual materials back to the campsite build patch" if required_stock_override.is_empty()
+		else "carried actual materials back to the declared homestead return point")
 	return _result()
+
+
+func _equip(item_id: String) -> bool:
+	var items: RefCounted = _game.get("items")
+	if items == null or not items.has_method("gathered_with"):
+		_fail("earned material tool selection requires the actual item database")
+		return false
+	var required := str(items.call("gathered_with", item_id))
+	if not required.is_empty():
+		for alias: String in TOOL_ID:
+			if str(TOOL_ID[alias]) == required:
+				return await super._equip(alias)
+		_fail("earned material has no existing controller tool path: " + item_id)
+		return false
+	# Bare-handed gathering still uses the production hotbar toggle. Never
+	# assign a binding or change the equipped tool directly.
+	var held := str(_game.get("equipped_tool"))
+	if not held.is_empty():
+		var slot := int(_game.call("hotbar_slot_of", held))
+		if slot < 0:
+			_fail("cannot stow a tool without its existing quick binding: " + held)
+			return false
+		await _tap_action(StringName("hotbar_%d" % (slot + 1)))
+	for _frame in 45:
+		if str(_game.get("equipped_tool")).is_empty():
+			return true
+		await _tree.physics_frame
+	_fail("the controller could not stow its tool for " + item_id)
+	return false
 
 
 func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
