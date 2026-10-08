@@ -283,7 +283,122 @@
     "review": "APPROVE observer, namespace_id rename and bounded Windows spawn",
     "binding": "All same-encounter unpresented original proposals plus actor revision debt; original receipt/CID/UID/current host namespace and exact world.reward_deliveries key/status/receipt equality; pending item count and actual gate.",
     "qualification": "Detached live snapshot, not a refusal-time claim; pending alone does not prove save failure. No production cause inferred.",
-    "proof": "PENDING ROOT native existing --prove-tag-combo path; actions/guards/budgets/fixtures unchanged",
-    "unchanged_evidence": "Actual HUD blind PASS, 10 tests84 assertions PASS, prior77 files601 tests9676 assertions PASS reused."
+    "proof": {
+      "source_commit": "a69fd66ad0fe3f04406dc113445fb574e96ab69a",
+      "terminal": {
+        "finished_utc": "2026-10-08T07:55:26.612689Z",
+        "pid": 23764,
+        "stop_reason": "",
+        "source": "a69fd66ad0fe3f04406dc113445fb574e96ab69a",
+        "exit_code": 1,
+        "started_utc": "2026-10-08T07:46:28.7778851Z"
+      },
+      "summary": {
+        "failure": "original offline/held-record controls; Tag host could not engage actual wild",
+        "source": "a69fd66ad0fe3f04406dc113445fb574e96ab69a",
+        "script_parse_errors": 0,
+        "file_count": 20,
+        "native_output_preserved": "D:\\CodexTemp\\tetherbound-proof\\native-a-a69fd66ad0-f24-tag-host\\observer-output",
+        "exact_tag_host_observation_reached": false,
+        "source_dirty": [],
+        "operator_stop": false,
+        "exit_code": 1,
+        "native_output_original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F24\\native-a-host-settlement-a69fd6"
+      },
+      "pass_log_lines": 100,
+      "distinct_failures": [
+        "FAIL: offline change: a later find pays the guest and reaches the host's record (satchel not blocked): guest {\"attack_tonic\":1.0,\"berries\":5.0} host {\"items\":{\"attack_tonic\":1.0,\"berries\":3.0},\"levels\":[9.0,8.0],\"revision\":21.0}",
+        "FAIL: behind: the host's held record wins (held)",
+        "FAIL: behind: the guest adopted the held record, the find is back once ({\"attack_tonic\":1.0,\"berries\":3.0} vs {\"attack_tonic\":1.0,\"berries\":5.0})",
+        "FAIL: behind: the find is never paid a second time",
+        "FAIL: Tag: host normally engages an actual live wild -- could not stand where body 1692183585484 was the one on offer (offered nothing)"
+      ],
+      "raw_location": "D:/CodexTemp/tetherbound-proof/native-a-a69fd66ad0-f24-tag-host",
+      "host_snapshot_reached": false,
+      "windows_hello_save_paths_distinct": true,
+      "source_review": "original reviewer: no A-owned production cause proved; failed Engage lacks return-time state"
+    },
+    "unchanged_evidence": "Actual HUD blind PASS, 10 tests84 assertions PASS, prior77 files601 tests9676 assertions PASS reused.",
+    "terminal_saved_host_journal": {
+      "file_sha256": "d219bd6a8578591ceb7300517cbccd0b995a0a51d91503c571dc9839cf5e8001",
+      "namespace": "6668ab50abebb7419a2987eb410247bd",
+      "qualification": "Terminal saved journal only, not refusal-time or matched blocking proposal. Actor receipts accepted here do not establish host ACK/presentation completion at failed Engage.",
+      "entries": [
+        {
+          "delivery_id": "actor_vitals:5c45802b86edcb94aa6cfc6fe07d0c4863c79f7aa1d131f991a899c072886bc7",
+          "journal": {
+            "character_id": "character-5588e50bf0c53a595351bf778f9534d1",
+            "character_revision": 213,
+            "creature_uid": "creature-ba0ae7c64481f71b28710e1735787542",
+            "delivery_id": "actor_vitals:5c45802b86edcb94aa6cfc6fe07d0c4863c79f7aa1d131f991a899c072886bc7",
+            "expected_fainted": false,
+            "expected_hp": {
+              "$tb_float64": "fe05fe69ed866340"
+            },
+            "fainted": false,
+            "hp": {
+              "$tb_float64": "4b1c8a1de5af6140"
+            },
+            "journal_revision": 2,
+            "kind": "actor_vitals",
+            "max_hp": {
+              "$tb_float64": "cccccccccc4c6540"
+            },
+            "receipt": {
+              "body_generation": 2,
+              "creature_uid": "creature-ba0ae7c64481f71b28710e1735787542",
+              "encounter_id": "1:2",
+              "receipt_id": "70c63dc80b88c84bbb36fad0ae7e4e00:86e8ad3e8aca2022788dfcec4b8049784bea50a6d94538653cb7d499a579f77f",
+              "vitals_revision": 1
+            },
+            "session_id": "7919ca178d0e8828783f916108e2012e",
+            "status": "accepted",
+            "version": 1,
+            "world_id": "slot-0",
+            "world_namespace": "6668ab50abebb7419a2987eb410247bd"
+          }
+        },
+        {
+          "delivery_id": "actor_vitals:935fc78ee32cf3d4bbc6f339731286f49e90faf9c73358a54626dca8f9cf8cbd",
+          "journal": {
+            "character_id": "character-2069d88cc7e3cc01ab7aaad513088af7",
+            "character_revision": 2,
+            "creature_uid": "creature-5db3166008088182cfe54920c57ff398",
+            "delivery_id": "actor_vitals:935fc78ee32cf3d4bbc6f339731286f49e90faf9c73358a54626dca8f9cf8cbd",
+            "expected_fainted": false,
+            "expected_hp": {
+              "$tb_float64": "cccccccccc4c6540"
+            },
+            "fainted": false,
+            "hp": {
+              "$tb_float64": "377f8d9410aa6340"
+            },
+            "journal_revision": 1,
+            "kind": "actor_vitals",
+            "max_hp": {
+              "$tb_float64": "cccccccccc4c6540"
+            },
+            "receipt": {
+              "body_generation": 1,
+              "creature_uid": "creature-5db3166008088182cfe54920c57ff398",
+              "encounter_id": "1:1",
+              "receipt_id": "70c63dc80b88c84bbb36fad0ae7e4e00:7bb134e3df1ffa10648fea3463f0befdfd7366b9fd2d92663e166f6e278cf31b",
+              "vitals_revision": 1
+            },
+            "session_id": "7919ca178d0e8828783f916108e2012e",
+            "status": "accepted",
+            "version": 1,
+            "world_id": "slot-0",
+            "world_namespace": "6668ab50abebb7419a2987eb410247bd"
+          }
+        }
+      ]
+    },
+    "engage_return_observer": {
+      "source_commit": "30d849c815a83af11c16454987f4a14860660e77",
+      "change": "Call existing exact-host snapshot on existing failed Engage return and report actual ally/manager/trainer/selected target state. No actions/budgets changed.",
+      "review": "PENDING original f25_medium_review",
+      "proof": "Not dispatched; ROOT bounded re-scope pending"
+    }
   }
 }
