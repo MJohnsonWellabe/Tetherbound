@@ -1,0 +1,34 @@
+{
+  "criterion": "F35#3",
+  "status": "OPEN",
+  "checkout_sha": "0b901da718e3dd3d655863097e9009273a59b560",
+  "run_id": 37728972649,
+  "artifact_id": 11528931951,
+  "script": "tests/smoke_f23_live_moves.gd",
+  "args": "--prove-slot-inputs --enable-ultimate-visual --capture-dir=ralph/reports/F35/hosted-a-preconstruction-clock-0b901",
+  "conclusion": "failure",
+  "checks": 147,
+  "launches": 25,
+  "impacts": 25,
+  "errors": [
+    "actual ultimate commitment releases within its signature duration from accepted launch"
+  ],
+  "accepted_action": "1:1:1:26",
+  "presentation_seconds": 2.4,
+  "accepted_launch_ms": 31681,
+  "local_clock_started_ms": 31681,
+  "local_clock_deadline_ms": 34081,
+  "arrival_observed_ms": 32636,
+  "release_observed_ms": 34143,
+  "elapsed_since_launch_ms": 2462,
+  "released": true,
+  "source_review": "APPROVE original f25_medium_review: includes synchronous effect construction; successful presentation and owned UID/action/body/binding guards unchanged",
+  "reused_logic": "37705007967: 77 files / 601 tests / 9676 assertions PASS; no broad suite replay",
+  "limits": [
+    "This run aligned local clock birth with accepted launch; it did not pass the unchanged strict release oracle.",
+    "Frame-sampled release observation cannot establish an earlier control release.",
+    "Four-player readability and shipping activation remain OPEN.",
+    "Process-local ultimate visual gate only; no shipping flag flip.",
+    "No unchanged rerun, duration change or timing grace."
+  ]
+}
