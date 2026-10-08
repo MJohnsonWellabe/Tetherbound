@@ -135,6 +135,8 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 		for arg: String in OS.get_cmdline_user_args():
 			if arg.begins_with("--preset=") or arg.begins_with("--source-commit=") or arg.begins_with("--low-resolution="):
 				args.append(arg)
+	if OS.get_cmdline_user_args().has("--without-actor-vitals"):
+		args.append("--without-actor-vitals")
 	for extra in extra_args:
 		args.append(str(extra))
 	OS.set_environment("XDG_DATA_HOME", home)

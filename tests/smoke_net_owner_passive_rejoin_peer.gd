@@ -381,7 +381,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				commands._config.feature_flags[flag] = true
 			var math: Script = preload("res://scripts/combat/combat_math.gd")
 			math._config = math.config().duplicate(true)
-			math._config.actor_vitals.runtime_enabled = true
+			math._config.actor_vitals.runtime_enabled = not OS.get_cmdline_user_args().has("--without-actor-vitals")
 		"op_tonic_hud_capture":
 			var name := str(args.get("name", ""))
 			if args.size() != 1 or name not in ["earned-command", "after-tag"] \
