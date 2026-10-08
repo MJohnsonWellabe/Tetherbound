@@ -53,6 +53,18 @@ func _run()->void:
 	game.set_process(false)
 	for id:String in ["galecrest","mudsnout","bramblebun","terrapup","brooktail"]:
 		game.party.add(SPECIES.spawn(id))
+	# This isolated late-game layout fixture intentionally exercises Lv40 -> 41.
+	# Use the shipping serialization mirror and disclose its completed cap tiers;
+	# owned creatures must pass the real cap guard rather than a detached bypass.
+	game.local.redesign_character = game.local.save_data().redesign_character
+	var owned_uids: Array[String] = []
+	for creature: RefCounted in game.party.members():
+		owned_uids.append(creature.uid)
+		var record: Dictionary = game.local.redesign_character.creatures[creature.uid]
+		record.cap_level = 50
+		record.breakthroughs = [1, 2, 3, 4]
+	_check(preload("res://scripts/data/redesign_state.gd").validate("character",
+		game.local.redesign_character, owned_uids).is_empty(), "Late-game fixture has valid owned cap mirrors")
 	var world:=Node.new()
 	world.name="HudLifecycleFixture"
 	root.add_child(world)
