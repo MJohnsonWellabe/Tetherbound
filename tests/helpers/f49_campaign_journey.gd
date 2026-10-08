@@ -313,6 +313,142 @@ func _first_key_lessons() -> bool:
 	if str(game.local.character_id) != cid or travel._uids() != retained or not travel._ready_world("meadows"):
 		_fail("First key lesson Skip/Help replay changed the earned character, five or free ready world")
 		return false
+	if observe_lesson_reload:
+		# Reuse the existing isolated Altar/Masters Title transition seam.
+		# Only Load selection is mapped controller input; returning to Title
+		# here is test-controlled and proves no gameplay return action.
+		if disk.source_commit.is_empty() or preload("res://tests/helpers/four_biome_checkpoints.gd").commit_sha() != disk.source_commit:
+			_fail("First key lesson Load requires the unchanged clean consumer source")
+			return false
+		if not disk._recheck_compatibility():
+			_failures(disk.failures)
+			return false
+		var observed: Dictionary = travel.observed_lesson_history()
+		var distinct: Array[String] = []
+		for uid: String in retained:
+			if uid.is_empty() or distinct.has(uid):
+				_fail("First key lesson Load requires distinct original creature UIDs")
+				return false
+			distinct.append(uid)
+		var service := game.get_node_or_null("OnboardingLessons")
+		if retained.size() != 5 or cid.is_empty() or travel._lesson_active or travel._lesson_busy \
+				or not travel.failures.is_empty() or not disk.failures.is_empty() or driver.paused \
+				or not player.is_on_floor() or not player.call("locomotion_enabled") \
+				or player.global_position.distance_to(teacher.global_position) > 5.0 \
+				or int(player.get("_unstick_count")) != recoveries_before or game.pending_catch != null \
+				or service == null or service.get("_identity") != cid or not (service.get("_pending") as Dictionary).is_empty():
+			_fail("First key lesson Load requires the retained five at settled Tam with free input")
+			return false
+		for id: String in ["portals", "shrines"]:
+			if not observed.has(id):
+				_fail("First key lesson Load lacks its naturally observed " + id)
+				return false
+		for id: String in observed:
+			if observed[id].character_id != cid or observed[id].party_uids != retained \
+					or not travel._saved_lesson_ack(id, cid, retained).get("passed", false):
+				_fail("First key lesson Load requires the already saved personal ACK of " + id)
+				return false
+		# Exact existing portable codec and disk-state observations, including
+		# all paid receipts, flags and ordered carriers; no new exclusions.
+		var retained_state := func() -> Dictionary:
+			return {"disk":disk._state(), "portable":preload("res://scripts/net/character_record_rules.gd").portable_projection(game.local.call("save_data")),
+				"personal_flags":game.local.flags.call("save_data")}.duplicate(true)
+		var before: Dictionary = retained_state.call()
+		var saver: RefCounted = game.get("save_system")
+		var slot := int(game.call("autosave_slot"))
+		if not game.call("save_game", slot) or retained_state.call() != before:
+			_fail("First key lesson autosave refused or changed the retained state")
+			return false
+		if driver.change_scene_to_file("res://scenes/ui/title_screen.tscn") != OK:
+			_fail("Existing first key lesson test seam could not open production Title")
+			return false
+		for frame: int in 10: await driver.process_frame
+		var title := driver.current_scene
+		if title == null or title.scene_file_path != "res://scenes/ui/title_screen.tscn" or game.get("save_system") != saver:
+			_fail("First key lesson seam did not retain its writer at production Title")
+			return false
+		game.call("reset_for_new_game")
+		if game.party.size() != 0:
+			_fail("First key lesson Load did not clear the outgoing in-memory party")
+			return false
+		for id: String in observed:
+			if game.local.flags.call("has", rules.PREFIX + id):
+				_fail("First key lesson Load did not clear the outgoing in-memory ACK")
+				return false
+		var reopened: Array[String] = []
+		var watch := func() -> void:
+			var lessons := game.get_node_or_null("OnboardingLessons")
+			var panel: Node = lessons.get("_panel") if lessons != null else null
+			if is_instance_valid(panel) and panel.call("is_open") and lessons.get("_replaying") == false:
+				var id := str(panel.get("_row").get("id", ""))
+				if observed.has(id) and not reopened.has(id): reopened.append(id)
+		driver.process_frame.connect(watch)
+		travel._lesson_controller_input = true
+		var load_button := title.get("_load_button") as Button
+		for step: int in 8:
+			if driver.root.gui_get_focus_owner() == load_button: break
+			await travel.tap("ui_down")
+		var selected: bool = load_button != null and not load_button.disabled and driver.root.gui_get_focus_owner() == load_button
+		if selected:
+			await travel.tap("ui_accept")
+			var autosave := driver.root.gui_get_focus_owner() as Button
+			selected = autosave != null and not autosave.disabled and autosave.text.begins_with("Autosave —")
+			if selected: await travel.tap("ui_accept")
+		travel._lesson_controller_input = false
+		var loaded := false
+		var ready_frames := 0
+		if selected and travel.failures.is_empty():
+			for frame: int in 7200:
+				await driver.process_frame
+				if not reopened.is_empty(): break
+				if driver.current_scene != title and travel._ready_world("meadows"):
+					loaded = retained_state.call() == before
+					ready_frames = frame + 1
+					break
+		if loaded:
+			for frame: int in 300: await driver.process_frame
+		driver.process_frame.disconnect(watch)
+		var after: Dictionary = retained_state.call()
+		service = game.get_node_or_null("OnboardingLessons")
+		player = game.call("find_player") as CharacterBody3D
+		teacher = driver.current_scene.find_child("Tam", true, false) as Node3D
+		var passed: bool = loaded and reopened.is_empty() and before == after and not driver.paused \
+			and game.get("save_system") == saver and str(game.local.character_id) == cid and travel._uids() == retained \
+			and is_instance_valid(player) and player.is_on_floor() and player.call("locomotion_enabled") \
+			and is_instance_valid(teacher) and player.global_position.distance_to(teacher.global_position) <= 5.0 \
+			and travel._ready_world("meadows") and game.pending_catch == null \
+			and service != null and service.get("_identity") == cid and (service.get("_pending") as Dictionary).is_empty() \
+			and not Input.is_action_pressed("ui_down") and not Input.is_action_pressed("ui_accept")
+		for id: String in observed:
+			passed = passed and game.local.flags.call("has", rules.PREFIX + id) == true \
+				and travel._saved_lesson_ack(id, cid, retained).get("passed", false) \
+				and str(rules.due(game.local).get("id", "")) != id
+		print("F46 FIRST KEY LESSON TITLE LOAD " + JSON.stringify({"passed":passed,"save_slot":slot,"ready_frames":ready_frames,
+			"observed":observed,"reopened":reopened,"memory_cleared":true,"physical_title_load":selected,"settle_frames":300,
+			"before":before,"after":after,"input_mode":"generated_fixture" if generated_fixture_input else "earned",
+			"title_transition":"existing test-controlled scene transition; no controller return-to-title gameplay proof",
+			"accepted_world_handoff":false,"whole_f46_proven":false}))
+		if not passed:
+			_fail("First key lesson actual Title Load lost state/ACKs, reopened a card or failed settled Tam input")
+			return false
+		if not travel._bind():
+			_failures(travel.failures)
+			return false
+		driver.live = {"world":driver.current_scene,"game":game,"player":player,
+			"rig":driver.current_scene.get_node_or_null("CameraRig")}
+		for id: String in ["portals", "shrines"]:
+			if not await travel.replay_observed_lesson(id):
+				_failures(travel.failures)
+				return false
+		if retained_state.call() != before or str(game.local.character_id) != cid \
+				or travel._uids() != retained or not travel._ready_world("meadows") \
+				or not player.is_on_floor() or not player.call("locomotion_enabled") \
+				or player.global_position.distance_to(teacher.global_position) > 5.0:
+			_fail("First key lesson Help after actual Load changed state or settled Tam input")
+			return false
+		print("F46 FIRST KEY LESSON TITLE LOAD HELP " + JSON.stringify({"passed":true,
+			"character_id":cid,"party_uids":retained,"lessons":["portals","shrines"],
+			"accepted_world_handoff":false,"whole_f46_proven":false}))
 	print("F46 FIRST KEY LESSONS " + JSON.stringify({"character_id":cid,"party_uids":retained,
 		"lessons":["portals","shrines"],"earned_warden_key_and_relic":not generated_fixture_input,
 		"input_mode":"generated_fixture" if generated_fixture_input else "earned",
