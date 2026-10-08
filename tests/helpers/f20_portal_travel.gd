@@ -700,6 +700,8 @@ func observe_next_goal(gate: String, phase: String) -> Dictionary:
 		"realm": str(game.get("current_realm")), "scene": str(scene.get_path()) if scene != null else "",
 		"character_id": str(game.local.character_id), "party_uids": _uids(),
 		"process_frame": Engine.get_process_frames(), "physics_frame": Engine.get_physics_frames(),
+		"progression_revision": int(progression.get("revision")) if progression != null else -1,
+		"lesson_goal_signature": str(log.call("lesson_goal_signature")) if log != null else "",
 		"input_owner": str(owner.get_path()) if owner != null else "", "paused": tree.paused,
 		"tracked_id": str(log.call("tracked_id", progression)) if log != null and progression != null else "",
 		"quest_text": tracked, "game_text": text, "hud_text": label.text if label != null else "",
