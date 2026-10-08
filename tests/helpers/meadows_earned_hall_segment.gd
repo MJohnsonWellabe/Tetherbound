@@ -264,9 +264,8 @@ func _fight_named(body: Node3D, id: String) -> bool:
 	_captain_wins = 0
 	_captain_hits = 0
 	_captain_kills.clear()
-	_expected_xp.clear()
-	for member: int in before_xp:
-		_expected_xp[member] = 0
+	if not _bind_xp_window(before_xp):
+		return false
 	_named_trainer = id
 	_captain_active = true
 	if not await _talk(prompt, str(_captain_spec.get("challenge", ""))):

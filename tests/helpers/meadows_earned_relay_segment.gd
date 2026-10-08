@@ -3,6 +3,7 @@ extends "res://tests/helpers/meadows_earned_warrens_segment.gd"
 ## Retained-world continuation. Only the inherited walking, wild combat, care
 ## and controller seams are used; the Warrens run/setup is never entered.
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const RELAY_CONFIG := "res://data/config/tether_relay.json"
 const CAPTAIN := "relay_captain"
 const TRAINER_FRAMES := 9000  # Existing earned bridge/tournament round deadline.
@@ -21,6 +22,8 @@ var _captain_wins := 0
 var _captain_hits := 0
 var _captain_kills: Dictionary = {}
 var _expected_xp: Dictionary = {}
+var _xp_cap_room: Dictionary = {}
+var _xp_identity: Dictionary = {}
 var _dialogue_finished := ""
 var _activated_id := 0
 var _activated_name := ""
@@ -216,8 +219,8 @@ func _fight_captain() -> bool:
 	var reward: Dictionary = _captain_spec.get("reward", {})
 	var before_items := _captain_stock()
 	var before_xp := _xp_snapshot()
-	for id: int in before_xp:
-		_expected_xp[id] = 0
+	if not _bind_xp_window(before_xp):
+		return false
 	_captain_active = true
 	if not await _talk(prompt, str(_captain_spec.get("challenge", ""))):
 		return false
@@ -261,7 +264,8 @@ func _fight_captain() -> bool:
 			"items_match": exact_item_reward(before_items, _captain_stock(), reward),
 			"items_before": before_items, "items_after": _captain_stock(), "configured_reward": reward,
 			"xp_match": exact_captain_xp(before_xp, _xp_snapshot(), _expected_xp),
-			"xp_before": before_xp, "xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate()})
+			"xp_before": before_xp, "xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate(),
+			"xp_identity": _xp_identity.duplicate(true), "xp_cap_room": _xp_cap_room.duplicate()})
 		return _fail("Captain victory lacks exact admitted opponents, landed kills, configured items/XP or retained-five receipts")
 	_receipt("relay_captain_defeated", {"rounds": _captain_rounds, "wins": _captain_wins, "hits": _captain_hits,
 		"items_before": before_items, "items_after": _captain_stock(), "xp_before": before_xp,
@@ -415,11 +419,28 @@ func _on_hit(on_enemy: bool, amount: float) -> void:
 	_captain_kills[id] = true
 	var active: RefCounted = _combat.call("active_creature")
 	var survivors: Array[int] = []
+	var personal: Variant = _game.get("local").get("redesign_character")
+	if not personal is Dictionary:
+		_fail("Trainer XP lost the actual personal cap record")
+		return
 	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		var member_id := member.get_instance_id()
+		if not _xp_identity.has(member_id) \
+			or _xp_identity[member_id].uid != str(member.get("uid")) \
+			or _xp_identity[member_id].cap != ESSENCE.creature_cap(personal, str(member.get("uid"))):
+			_fail("Trainer XP changed its original creature identity or admitted cap")
+			return
 		if not bool(member.get("fainted")):
 			survivors.append(member.get_instance_id())
-	accumulate_xp(_expected_xp, active.get_instance_id(), survivors, int(_fight_enemy.get("level")),
-		TRAINERS.reward_xp_bonus(_captain_spec) if _captain_kills.size() == TRAINERS.team_of(_captain_spec).size() else 0, PROGRESSION.config())
+	var owner_id := str(_combat.get("_ordinary_reward_owned_id"))
+	var hybrid := not owner_id.is_empty()
+	if hybrid and owner_id != str(_combat.call("encounter_id")):
+		_fail("Trainer XP owner no longer binds the actual encounter")
+		return
+	if not accumulate_xp(_expected_xp, active.get_instance_id(), survivors, int(_fight_enemy.get("level")),
+		TRAINERS.reward_xp_bonus(_captain_spec) if _captain_kills.size() == TRAINERS.team_of(_captain_spec).size() else 0,
+		PROGRESSION.config(), hybrid, ESSENCE.config(), _xp_cap_room):
+		_fail("Trainer XP has invalid configured awards or original cap room")
 
 
 func _on_exit(outcome: String) -> void:
@@ -456,10 +477,46 @@ static func opponent_matches(creature: RefCounted, row: Dictionary) -> bool:
 		and int(creature.get("level")) == int(row.get("level", -1))
 
 
-static func accumulate_xp(expected: Dictionary, active: int, survivors: Array[int], level: int, bonus: int, cfg: Dictionary) -> void:
-	var award := PROGRESSION.xp_award_for(level, cfg)
+func _bind_xp_window(before: Dictionary) -> bool:
+	_expected_xp.clear()
+	_xp_cap_room.clear()
+	_xp_identity.clear()
+	var personal: Variant = _game.get("local").get("redesign_character")
+	if not personal is Dictionary or before.size() != 5:
+		return _fail("Trainer XP requires the actual five-member baseline and personal caps")
+	var cfg := PROGRESSION.config()
+	var seen := {}
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		var id := member.get_instance_id()
+		var uid := str(member.get("uid"))
+		var cap := ESSENCE.creature_cap(personal, uid)
+		if uid.is_empty() or seen.has(uid) or not before.has(id) or cap < int(member.get("level")) \
+			or int(before[id]) != total_xp(int(member.get("level")), int(member.get("xp")), cfg):
+			return _fail("Trainer XP baseline does not bind five distinct owned creatures and valid caps")
+		var room := total_xp(cap, 0, cfg) - int(before[id])
+		if room < 0:
+			return _fail("Trainer XP baseline already exceeds its admitted cap")
+		seen[uid] = true
+		_xp_identity[id] = {"uid": uid, "cap": cap}
+		_xp_cap_room[id] = room
+		_expected_xp[id] = 0
+	return _xp_identity.size() == 5 or _fail("Trainer XP baseline lost an original member")
+
+
+static func accumulate_xp(expected: Dictionary, active: int, survivors: Array[int], level: int, bonus: int,
+		cfg: Dictionary, hybrid: bool = false, essence_cfg: Dictionary = {}, cap_room: Dictionary = {}) -> bool:
+	var award := PROGRESSION.scaled_combat_xp(level, cfg, essence_cfg) if hybrid else PROGRESSION.xp_award_for(level, cfg)
+	var share := PROGRESSION.scaled_party_combat_xp(level, cfg, essence_cfg) if hybrid else PROGRESSION.party_share(award, cfg)
+	if award <= 0 or share <= 0 or bonus < 0:
+		return false
+	if not cap_room.is_empty():
+		for id: int in survivors:
+			if not expected.has(id) or not cap_room.has(id) or int(cap_room[id]) < 0:
+				return false
 	for id: int in survivors:
-		expected[id] = int(expected.get(id, 0)) + bonus + (award if id == active else PROGRESSION.party_share(award, cfg))
+		var cumulative := int(expected.get(id, 0)) + bonus + (award if id == active else share)
+		expected[id] = mini(cumulative, int(cap_room[id])) if not cap_room.is_empty() else cumulative
+	return true
 
 
 static func exact_captain_xp(before: Dictionary, after: Dictionary, expected: Dictionary) -> bool:
