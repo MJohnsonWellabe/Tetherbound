@@ -1921,6 +1921,21 @@ func _production_observe() -> void:
 		else:
 			_recorded_failure = true
 			record["refusal"] = _reason # Replace the queued sample, never a duplicate.
+			# The queued record may precede this callback's refusing live check.
+			# Retain that original record and add the exact terminal result; no
+			# extra query, callback, pose correction or admission follows.
+			if _observed_live != null:
+				var terminal_contacts: Array = []
+				for index in mini(CONTACTS, _observed_live.get_collision_count()):
+					terminal_contacts.append({"normal": _contact_vector(_observed_live.get_collision_normal(index)),
+						"point": _contact_vector(_observed_live.get_collision_point(index)),
+						"depth": _observed_live.get_collision_depth(index), "local_shape": _observed_live.get_collision_local_shape(index),
+						"collider_rid": str(_observed_live.get_collider_rid(index)), "collider_shape": _observed_live.get_collider_shape(index),
+						"collider_path": _production_collider_path(_observed_live.get_collider(index))})
+				record["terminal_refusal_sample"] = {"physics_frame": Engine.get_physics_frames(),
+					"live_state_phase": _production_live_phase, "player": _contact_vector(_body.global_position),
+					"live_recovery_travel": _contact_vector(_observed_live.get_travel()),
+					"live_contacts": terminal_contacts, "original_queued_record_preserved": true}
 		if not record.is_empty():
 			record["callback_own_us"] = _pre_observe_us + Time.get_ticks_usec() - began
 			record["checked_start"] = false
