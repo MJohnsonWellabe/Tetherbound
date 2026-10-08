@@ -90,6 +90,25 @@ func _run() -> void:
 	var defeat_receipts := new_receipts.filter(func(r: String) -> bool: return r.begins_with("defeat:"))
 	if defeat_receipts.size() != 1:
 		_fail("expected exactly one durable defeat receipt, saw %s" % str(new_receipts))
+	else:
+		# Read the actual canonical files after the original settlement allowance.
+		# Do not save/load/retry or manufacture a second source to prove persistence.
+		var character_disk: Dictionary = preload("res://scripts/save/character_save.gd").new().read(str(local.character_id))
+		var live_world: RefCounted = game.get("world")
+		var world_disk: Dictionary = preload("res://scripts/save/world_save.gd").new().read(str(live_world.get("world_id")))
+		var receipt: String = defeat_receipts[0]
+		if character_disk.is_empty() or (character_disk.get("redesign_character", {}).get("transaction_receipts", []) as Array).count(receipt) != 1:
+			_fail("the original defeat receipt is not present exactly once in the canonical character file")
+		var journal: Dictionary = world_disk.get("reward_deliveries", {}).get(ESSENCE.training_delivery_id(str(live_world.get("reward_delivery_namespace")), str(local.character_id)), {})
+		if journal.get("status") != "accepted" or journal.get("character_id") != str(local.character_id) \
+				or (journal.get("after", {}).get("redesign_character", {}).get("transaction_receipts", []) as Array).count(receipt) != 1:
+			_fail("the canonical host journal is not accepted for the original character with exactly one defeat receipt")
+		for item: String in essence_after:
+			var saved_count := 0
+			for slot: Variant in character_disk.get("inventory", []):
+				if slot is Dictionary and slot.get("id") == item: saved_count += int(slot.get("n", 0))
+			if saved_count != int(essence_after[item]):
+				_fail("canonical character %s count %d differs from original settled live count %d" % [item, saved_count, int(essence_after[item])])
 	var ally_after: RefCounted = _director.call("ally_instance")
 	var xp_gain := (int(ally_after.level) - level_before) * 1000000 + int(ally_after.xp) - xp_before
 	if xp_gain <= 0:
