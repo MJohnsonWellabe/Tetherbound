@@ -48,6 +48,7 @@ const REST_POINT := preload("res://scripts/world/rest_point.gd")
 const VILLAGE_CONFIG := "res://data/config/village.json"
 var _house_lighting: Dictionary = {}
 var _floor_presentation: Dictionary = {}
+var _furniture_reference_wood_cache: Dictionary = {}
 
 const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
 ## Quaternius furniture is authored at roughly 2x real scale (a 4.26m bed).
@@ -867,6 +868,8 @@ func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FU
 				var copy := source.duplicate() as BaseMaterial3D
 				copy.albedo_color = source.albedo_color.lerp(Color(1.0, 1.0, 1.0, source.albedo_color.a), lift)
 				furniture.set_surface_override_material(surface, copy)
+		if model in ["Table", "Table2", "Chair", "Stool"] and node is MeshInstance3D:
+			_apply_furniture_reference_wood_candidate(node as MeshInstance3D)
 	node.position = at
 	node.rotation.y = deg_to_rad(yaw_degrees)
 	node.scale = Vector3.ONE * scale_factor
@@ -884,6 +887,78 @@ func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FU
 	body.position = at + Vector3(0, aabb.size.y * 0.5 * scale_factor, 0)
 	body.rotation.y = deg_to_rad(yaw_degrees)
 	add_child(body)
+
+
+func _furniture_reference_vector(config: Dictionary, key: String, fallback: Vector3) -> Vector3:
+	var values: Variant = config.get(key)
+	if not values is Array or values.size() != 3:
+		return fallback
+	for value: Variant in values:
+		if typeof(value) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(value)):
+			return fallback
+	return Vector3(float(values[0]), float(values[1]), float(values[2]))
+
+
+func _furniture_reference_wood_textures(config: Dictionary) -> Dictionary:
+	if not _furniture_reference_wood_cache.is_empty():
+		return _furniture_reference_wood_cache
+	var albedo_path := str(config.get("albedo", ""))
+	var normal_path := str(config.get("normal", ""))
+	if not ResourceLoader.exists(albedo_path) or not ResourceLoader.exists(normal_path):
+		return {}
+	var albedo := load(albedo_path) as Texture2D
+	var normal := load(normal_path) as Texture2D
+	var result: Dictionary = {}
+	for role: String in ["Wood", "DarkWood"]:
+		var raw: Variant = config.get(role, {})
+		if not raw is Dictionary:
+			return {}
+		var band_scale := _furniture_reference_vector(raw, "band_scale", Vector3.ZERO)
+		var band_offset := _furniture_reference_vector(raw, "band_offset", Vector3.ZERO)
+		var colour_band := _floor_band_texture(albedo, band_scale, band_offset)
+		var normal_band := _floor_band_texture(normal, band_scale, band_offset, true)
+		if colour_band == null or normal_band == null:
+			return {}
+		result[role] = {"albedo": colour_band, "normal": normal_band}
+	_furniture_reference_wood_cache = result
+	return result
+
+
+func _apply_furniture_reference_wood_candidate(furniture: MeshInstance3D) -> void:
+	var args := OS.get_cmdline_user_args()
+	var raw: Variant = _house_lighting.get("furniture_reference_wood", {})
+	if not raw is Dictionary or "--farmhouse-furniture-reference-baseline" in args:
+		return
+	var config := raw as Dictionary
+	if config.get("enabled", false) != true and "--farmhouse-furniture-reference-candidate" not in args:
+		return
+	var uv_scale := _furniture_reference_vector(config, "world_scale", Vector3.ZERO)
+	var raw_normal: Variant = config.get("normal_strength", 0.45)
+	if uv_scale.x <= 0.0 or uv_scale.y <= 0.0 or uv_scale.z <= 0.0 \
+		or typeof(raw_normal) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(raw_normal)):
+		return
+	var textures := _furniture_reference_wood_textures(config)
+	if textures.is_empty():
+		return
+	for surface: int in furniture.mesh.get_surface_count():
+		var source := furniture.get_active_material(surface) as BaseMaterial3D
+		if source == null or not textures.has(source.resource_name) \
+			or source.albedo_texture != null or source.normal_texture != null:
+			continue
+		var maps: Dictionary = textures[source.resource_name]
+		var copy := source.duplicate() as BaseMaterial3D
+		# Replace palette-only wood with the inspected atlas's distinct grain
+		# roles; preserve alpha and the existing dielectric/roughness response.
+		copy.albedo_color = Color(1.0, 1.0, 1.0, source.albedo_color.a)
+		copy.albedo_texture = maps.albedo
+		copy.normal_enabled = true
+		copy.normal_texture = maps.normal
+		copy.normal_scale = clampf(float(raw_normal), 0.0, 1.0)
+		copy.uv1_triplanar = true
+		copy.uv1_world_triplanar = true
+		copy.uv1_scale = uv_scale
+		copy.uv1_offset = Vector3.ZERO
+		furniture.set_surface_override_material(surface, copy)
 
 
 ## OF8. `_furnish`'s own "one simple blocker per piece" collider boxes the

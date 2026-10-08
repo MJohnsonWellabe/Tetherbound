@@ -4814,6 +4814,17 @@
       "interior_lighting": {
         "scope": "world_presentation",
         "furniture_wood_lift": 0.0,
+        "furniture_reference_wood": {
+          "scope": "farmhouse_only_peer_local_world_presentation_all_presets",
+          "enabled": false,
+          "albedo": "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
+          "normal": "res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png",
+          "Wood": {"band_scale": [1.0, 0.27, 1.0], "band_offset": [0.0, 0.02, 0.0]},
+          "DarkWood": {"band_scale": [1.0, 0.27, 1.0], "band_offset": [0.0, 0.34, 0.0]},
+          "world_scale": [0.9, 3.2, 3.2],
+          "normal_strength": 0.45,
+          "_comment": "Distinct reference-material solution after two parked numeric lifts: inspected installed atlas light/dark longitudinal wood bands, no plaster/end-grain. Palette-only Furniture OBJ Wood/DarkWood on Table/Table2/Chair/Stool adopt these reference colours, mipmapped albedo and renormalized normal maps, world triplanar mapping. Cushions/mapped materials/Survival/Fantasy props unchanged; preserve alpha, dielectric, roughness, geometry/scale/AABB/blockers/lights/paths. Existing lift stays0.0. Two roles cached per farmhouse, no new asset file/observer/harness/authority/save/transaction. Process-only --farmhouse-furniture-reference-candidate; --farmhouse-furniture-reference-baseline wins. Shipping OFF until original source/affected proof and ROOT raw-pixel blind PASS."
+        },
         "window_glow_candidate_enabled": false,
         "window_pane_detail_enabled": false,
         "window_pane_detail_strength": 0.65,
