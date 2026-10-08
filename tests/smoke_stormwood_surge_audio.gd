@@ -185,6 +185,11 @@ func _run() -> void:
 		"real pool reuse replaces the playback even for the same cached clip")
 	var reclaimed_playback := reclaimed_voice.get_stream_playback()
 	var owned_tail := observer.call("_fire", decay_cue, _spot, -1) as AudioStreamPlayer3D
+	# 3D play() schedules its audio start for the physics tick. Let both probe
+	# voices start rather than proving only cancellation of pending playback.
+	await physics_frame
+	await physics_frame
+	_expect(reclaimed_voice.playing, "reclaimed positional voice is playing before realm teardown")
 	_expect(owned_tail != null and owned_tail.playing, "realm owns an active positional tail before teardown")
 
 	# Teardown: the realm leaves the tree; the observer clears and disconnects.
