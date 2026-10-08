@@ -1,0 +1,64 @@
+{
+  "criterion": "F24#3",
+  "criterion_text": "Tether Snare slows a wild creature and raises catch chance; it cannot target a trainer-owned creature.",
+  "status": "OPEN / changed host Snare functional33checksPASS; original runtime review and supported shipping activation pending",
+  "source_commit": "6b4a4deb800480e09ae0ca2572458c9304c22766",
+  "change": "Existing two-peer proof gains opt-in host commander with guest admitted noncaster catch-grant control; peer helper reads host actual engaged wild rather than guest mirror. Original guest path, eight strikes, budgets, physical strike inputs, exact receipt/identity/body/one-meter-debit/no-HP-damage, actual movement/catch consumers and HUD guards retained.",
+  "source_review": {
+    "reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "verdict": "SOURCE APPROVE",
+    "candidate_commit": "6b4a4deb800480e09ae0ca2572458c9304c22766",
+    "required_proof": "Existing headless smoke_net_owner_passive_rejoin.gd --prove-host-tether-snare",
+    "blind_requirement": "No separate blind proof specified",
+    "whole_gate": "Runtime PASS plus supported shipping activation; command flags OFF and actor-vitals locally enabled fixture, whole remains OPEN"
+  },
+  "proof": {
+    "run_id": 37811558294,
+    "script": "tests/smoke_net_owner_passive_rejoin.gd",
+    "args": "--prove-host-tether-snare",
+    "mode": "hosted headless",
+    "result": "FAIL before Snare; unrelated Item-meter prefix",
+    "artifact_id": 11564689715,
+    "job_id": 113429435844,
+    "checkout_commit": "6b4a4deb800480e09ae0ca2572458c9304c22766",
+    "checkout_verification": "Job git log -1 confirms exact candidate",
+    "passing_checks": 19,
+    "distinct_failure": "_tonic_item_original: eight accepted quick attempts did not earn item_throw meter25; logged twice",
+    "log_sha256": "d66f95047fcf6d36888624e2d9114d13a77d956bbf2ed353d12ce4a2d38b4cc8",
+    "log_path": "ralph/reports/F25/downloads/a-f24-host-snare-37811558294/raw/run.log",
+    "limit": "No Snare cast reached; no Snare cause/behavior inferred, no failed saves promoted"
+  },
+  "reused": "Unchanged Snare refusal/immune/geometry/stable-character-grant unit cases in test_f24_host_commands.gd, passing affected34tests1568assertions batch37776228174, artifact11549154442; no repeat. Retained sharedwild f6efdb host strikes PASS supports host rescope, guest strike failures remain disclosed.",
+  "fixtures": "Existing two real ENet processes/fresh Meadows boot; candidate runtime/network/UI and R2 actor-vitals gates enabled process-locally, creatures granted before admission, existing positioning and physical strike loop. No HP/status/meter/time grants, new harness, accepted boundary or native/GPU claim.",
+  "preserved_failures": "Original guest Snare precast run37713501794 failed24/60 before command; unchanged guest movement and Mastery scopes stay PARKED OPEN. No guest Snare rerun.",
+  "shipping_disposition": "Do not close whole criterion or count candidate proof as shipping activation; original reviewer requires supported activation on actual shipped flags.",
+  "fresh_join_rescope": {
+    "source_commit": "4feaba5efd27f7ca9306e79b15a58fc34a1a455f",
+    "change": "Same existing Snare assertions factored to _prove_snare(commander). Default guest proof remains at original location after unchanged Item/Mastery/rejoin path. New host mode calls it directly after fresh boot/host/join and actual owner-passive admission, then finishes; excludes unrelated Item proof without changing it. Same fixtures/guards/HUD/budgets, no save reuse or accepted boundary.",
+    "source_review": "SOURCE / PROOF-SCOPE APPROVE original f25_medium_review",
+    "proof": {
+      "run_id": 37813435723,
+      "script": "tests/smoke_net_owner_passive_rejoin.gd",
+      "args": "--prove-host-tether-snare",
+      "mode": "hosted headless",
+      "result": "PASS",
+      "artifact_id": 11566676363,
+      "job_id": 113435865287,
+      "checkout_commit": "4feaba5efd27f7ca9306e79b15a58fc34a1a455f",
+      "checkout_verification": "Job git log -1 confirms exact candidate",
+      "checks": 33,
+      "errors": 0,
+      "exit": 0,
+      "seconds": 170,
+      "log_sha256": "263549292e7eb05106c86eedbe88c8cb21bb99c0931e1923ababfddb37ef09fa",
+      "log_path": "ralph/reports/F25/downloads/a-f24-host-snare-37813435723/raw/run.log",
+      "coverage": [
+        "Actual host creature quick hits earn authored60 Snarecost within unchanged8 attempts",
+        "Actual TetherCommandInput cast/exact host receipt/current owned body/onecost60 debit/no targetHPdamage",
+        "Current target generation Snare status reaches actual wild movement consumer; actualhostcatch reader raises onlycasterstablecharacter chance withguestnoncaster no bonus",
+        "Both peers normally leave proof fight; alloriginalHUD guards pass"
+      ]
+    }
+  }
+}
