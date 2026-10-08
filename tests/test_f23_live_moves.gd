@@ -127,6 +127,20 @@ func test_ultimate_requires_real_landed_meter_spends_once_and_freezes_growth() -
 	ULTIMATES._config = enabled_visuals
 	for signature_id: String in enabled_visuals.visuals:
 		assert_true(MANAGER.live_move_supported("ultimate", signature_id), "authored signature mounted: " + signature_id)
+		var owned := _new_owned()
+		owned.move_ultimate = signature_id
+		if not owned.known_moves.has(signature_id): owned.known_moves.append(signature_id)
+		var frozen := MASTERY.freeze_action(MASTERY.owned_record(owned), "ultimate",
+			{"character_id":"owner_a", "creature_uid":owned.uid, "encounter_id":id,
+			"generation":1, "action":1}, [], MOVES.load_default())
+		assert_true(frozen.ok, signature_id)
+		var move := MANAGER.host_move_profile(MOVES.load_default(), "player_ultimate",
+			signature_id, 0.5, 0.5, 1.0, 0.0, frozen.move)
+		var before: Dictionary = host.record(id).duplicate(true)
+		assert_eq(host.authorize_move_start({"encounter_id":id, "action":1, "slot":"ultimate"},
+			1, owned, _binding(), move, WIND, 1000).code, "ultimate_not_ready",
+			"authored enabled signature reaches the meter gate: " + signature_id)
+		assert_eq(host.record(id), before, "empty-meter signature refuses without spending")
 	assert_false(MANAGER.live_move_supported("ultimate", "ultimate_unknown"))
 	assert_eq(_new_start("ultimate", 1, 1000, [1, 2]).code, "ultimate_not_ready")
 	# Build the actual host meter with seventeen separately accepted landed hits.
