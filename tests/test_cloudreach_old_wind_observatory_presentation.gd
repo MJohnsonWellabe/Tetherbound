@@ -19,7 +19,8 @@ func test_observatory_paving_excludes_cover_only_on_its_own_court() -> void:
 	var exclusion: Dictionary = world.call("_observatory_dial_cover_exclusion", centre)
 	assert_eq(exclusion.centre, centre, "the descriptor preserves the supplied world centre")
 	var cover := COVER.new()
-	cover.set("_exclusions", [exclusion])
+	cover._exclusions = [exclusion]
+	assert_eq(cover._exclusions.size(), 1, "the real sampler receives the typed exclusion array")
 	var radius := float(cfg.dial_radius_m)
 	for direction: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK,
 			Vector3(1.0, 0.0, 1.0).normalized()]:
