@@ -12,10 +12,10 @@ class Player extends RefCounted:
 	var flags := preload("res://autoload/progression_state.gd").new()
 
 class Session extends Node:
-	var ready := true
+	var snapshot_applied := true
 	var client := false
 	var admitted := true
-	func snapshot_ready() -> bool: return ready
+	func snapshot_ready() -> bool: return snapshot_applied
 	func mode() -> String: return "client" if client else "solo"
 	func handshake_snapshot_applied() -> bool: return admitted
 
@@ -101,7 +101,7 @@ func test_any_changed_save_binding_stops_both_clearing_and_submission() -> void:
 
 func test_unadmitted_or_foreign_snapshot_cannot_write_or_submit_a_receipt() -> void:
 	for gate: String in ["snapshot", "foreign", "handshake"]:
-		game.session.ready = gate != "snapshot"
+		game.session.snapshot_applied = gate != "snapshot"
 		game.owned = gate != "foreign"
 		game.host = gate != "handshake"
 		game.session.client = gate == "handshake"
