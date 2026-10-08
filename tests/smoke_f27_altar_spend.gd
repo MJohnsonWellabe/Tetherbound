@@ -37,6 +37,14 @@ func _run() -> void:
 		_fail("Masters witness requires the existing controller and Help replay options")
 		_report()
 		return
+	if OS.get_cmdline_user_args().has("--functional-offload"):
+		if not preload("res://tests/helpers/f19_functional_offload.gd").configure("altar_spend_driver"):
+			_fail("Altar functional offload requires its existing real Compatibility backend")
+			_report()
+			return
+		print("F46 LESSON OFFLOAD " + JSON.stringify({"continuous_drawing": false,
+			"guarded_lesson_frames": OS.get_cmdline_user_args().has("--capture-lessons"),
+			"scope": "Original disclosed Altar fixture, input, physics and production saves; guarded lesson captures judged separately; no motion/audio/performance proof"}))
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
