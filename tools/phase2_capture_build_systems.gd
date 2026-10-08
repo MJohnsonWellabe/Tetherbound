@@ -168,6 +168,11 @@ func _shoot(state: String, system: String, note: String) -> void:
 	var frame_id := "%s__system__%s" % [_biome_id, state]
 	var path := "%s/%s.jpg" % [_output_dir, frame_id]
 	var image := root.get_texture().get_image()
+	if not _build_graphics.is_empty():
+		var expected: Array = _build_graphics.resolution
+		if image == null or image.is_empty() or image.get_size() != Vector2i(int(expected[0]), int(expected[1])):
+			_failures.append("%s: declared graphics raster mismatch" % frame_id)
+			return
 	if image == null or image.is_empty() or image.save_jpg(path, 0.87) != OK:
 		_failures.append("%s: viewport save failed" % frame_id)
 		return
