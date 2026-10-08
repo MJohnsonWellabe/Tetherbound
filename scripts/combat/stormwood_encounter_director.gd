@@ -52,6 +52,26 @@ func _make_alpha(wild: Node3D, species: String, spawn: Dictionary, centre_z: flo
 	wild.set_meta("stormwood_behavior_profile", str(spawn.get("stormwood_behavior_profile", "")))
 	wild.set("trainer_owned", not bool(spawn.get("catchable", false)))
 
+
+func _configure_f22_patterns(wild: Node3D, opponent_owned: bool) -> void:
+	super._configure_f22_patterns(wild, opponent_owned)
+	if MATH.config().get("patterns", {}).get("runtime_enabled") != true \
+		or not wild.has_method("configure_patterns") or wild.get("instance") == null:
+		return
+	var patterns: Dictionary = (wild.get("_patterns") as Dictionary).duplicate(true)
+	var context: Dictionary = (wild.get("_pattern_context") as Dictionary).duplicate(true)
+	# Named Stormwood bodies retain their authored role rather than the
+	# placeholder species' role; all other context remains the shared source.
+	var role: String = COMBAT_AI.normalize_role(str(wild.get_meta("stormwood_behavior_profile", "")), patterns)
+	if not str(wild.get_meta("stormwood_named_encounter", "")).is_empty() and not role.is_empty():
+		context["role"] = role
+	# A cone/check must not inherit the legacy charger's travelling flag with
+	# its own zero lunge distance. Each selected pattern owns its movement.
+	for attack: Dictionary in patterns.get("attacks", {}).values():
+		attack["lunge_travels"] = attack.get("lunge_travels", false) == true
+	wild.call("configure_patterns", patterns, context, _f22_visible_observation.bind(wild))
+
+
 func can_challenge(spec: Dictionary) -> bool:
 	if str(spec.get("id", "")) == "captain_marrow_dynamo_core":
 		var dynamo := get_parent().get_node_or_null("StormwoodDynamo")
