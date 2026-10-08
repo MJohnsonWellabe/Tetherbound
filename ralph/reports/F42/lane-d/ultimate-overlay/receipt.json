@@ -1,0 +1,53 @@
+{
+  "criterion": "F42#2",
+  "criterion_status": "OPEN",
+  "source_commit": "1aa83d90a9f22314c550bef3ee2558eea93471e8",
+  "baseline": "75a797142066f1ba93c5eecedb954fe5cda81eb4",
+  "change": "The accepted local combat overlay suppresses the legacy ultimate readout and bar along with the already-suppressed legacy move grid and command bar. A missing, switched or refused projection restores the ultimate fallback.",
+  "scope": "device_local_presentation; no authority, transaction, durable state, config or flag changes",
+  "original_reviewer": {
+    "agent": "/root/f42_visual_review",
+    "session": "01a1168a-2a2e-7243-aa7d-e655171c70fa",
+    "source_verdict": "SOURCE APPROVE",
+    "production_and_proof_verdict": "APPROVE scoped production and proof",
+    "evidence": "original-source-review.txt",
+    "proof_evidence": "original-proof-review.txt",
+    "resumption": "Original child resumed through its preserved parent 01a1165c-08f4-7761-ba37-47700611e1b7; no replacement reviewer."
+  },
+  "affected_existing_proof": {
+    "script": "tests/smoke_combat_hud_left_column.gd",
+    "run": 37766934923,
+    "artifact": 11544653544,
+    "mode": "hosted headless",
+    "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+    "exit": 0,
+    "seconds": 5,
+    "result": "PASS",
+    "log_sha256": "7c5c521439b15ed682f656d0b08e19a2c47416834a9fe877d74b193f1eacc933",
+    "assertions": "Existing five-row/active-plate layout guards retained. Added accepted projection suppresses duplicate ultimate widgets, switched UID restores fallback, refused input context restores fallback.",
+    "fixture": "Existing instantiated production HUD and disclosed five-row roster. New presentation-only snapshot drives the existing overlay seam; no combat authority or live gameplay claim.",
+    "limits": "Headless layout and visibility only. No pixels, live combat transitions, handheld readability, post-toggle resize or whole-criterion proof."
+  },
+  "retained_failed_dispatch": {
+    "run": 37766710133,
+    "artifact": 11545125190,
+    "stage": "checkout",
+    "cause": "Short SHA 1aa83d90a9 was interpreted as a branch name by actions/checkout. Full 40-character source SHA used in corrected dispatch.",
+    "engine_ran": false,
+    "evidence": "checkout-job.log; first artifact retained locally"
+  },
+  "native_queue": {
+    "notice": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6058263650",
+    "source": "75a797142066f1ba93c5eecedb954fe5cda81eb4",
+    "script": "tools/capture_f17_visual.gd",
+    "arguments": "--preset=Medium --paired-high --hall-stills-only --expected-resolution=1920x1080 --source-commit=75a797142066f1ba93c5eecedb954fe5cda81eb4 --output=D:/tetherbound/shots/lane-d/hall-stills-75a7971420-medium-high-reset",
+    "scheduler": "ROOT only; temporary owner-game stop is queued",
+    "guards": "Original native raster/renderer/source/poses/companion/material guards, physical circuit and disclosed fixture retained. Partial 24 stills; no whole criterion claim.",
+    "launches_by_lane": 0
+  },
+  "remaining_gates": [
+    "Actual live combat/native capture evidence for F42#2",
+    "Required original blind 7-inch PASS against the whole criterion"
+  ],
+  "landing": "No criterion READY or acceptance count change. Pushed lane implementation only. F42#0 in PR586 and passing bank texture evidence were not repeated."
+}

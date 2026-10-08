@@ -1,0 +1,9 @@
+Original reviewer `/root/f42_visual_review` returned:
+
+> SOURCE APPROVE exact `75a7971420..1aa83d90a9`.
+>
+> Accepted local projections hide both legacy ultimate widgets; missing, stale, or refused projections restore them. The existing process order restores normal grid presentation before validation. Glyph selection now uses the established last-input helper.
+>
+> The smoke addition checks accepted, switched-UID, and refused-context presentation using a disclosed snapshot. It does not prove live combat transitions or layout after container resizing.
+>
+> Hosted proof `37766710133` and actual paired captures with the 7-inch judge remain pending. No visual PASS or whole F42#2 approval yet.

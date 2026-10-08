@@ -1,0 +1,7 @@
+Original `/root/f42_visual_review` verdict:
+
+> APPROVE scoped production and proof at `1aa83d90a9f22314c550bef3ee2558eea93471e8`.
+>
+> Corrected run `37766934923` passed Godot 4.7 headless, exit 0 in 5 seconds: five-row layout clearance, child containment, and accepted/stale/refused ultimate-projection visibility checks passed. No warnings or errors appear in this log. The first short-SHA checkout failure provides zero engine evidence.
+>
+> This snapshot proof does not establish live combat transitions, paired raster readability, or the required 7-inch visual PASS. Whole F42#2 remains **OPEN; no READY**.
