@@ -1,0 +1,32 @@
+{
+  "scope": "Source/asset facts for owner-rescoped mesh-root/actual-static-support candidate, not a visual proof",
+  "base_commit": "0b8a748ec12a58fdd470a1d885de5aae5dd99d3f",
+  "assets": [
+    {
+      "path": "assets/environment/stylized_nature/Bush_Common.gltf",
+      "sha256": "907bbcb33c284f1dea465319ff5598d0980f7d80c64db7edcf3a216f992ec88f"
+    },
+    {
+      "path": "assets/environment/stylized_nature/Bush_Common.bin",
+      "sha256": "a5e1a773c8ba78fd9c05a8b342131eba4879302a8fddd2c5186cab9ee1ef4966"
+    },
+    {
+      "path": "assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png",
+      "sha256": "44e7980538b3e06e554861135315bcb007933b7590f7251cfe3e46d641f4ae0e"
+    }
+  ],
+  "native_scene": "Single mesh node, no local transform; foliage-only MASK material cutoff0.2; native origin is an asset coordinate fact, not proof of a botanical root.",
+  "mesh_aabb_y": [
+    -0.234694704413414,
+    1.3470909595489502
+  ],
+  "current_texture_alpha_sample": {
+    "method": "Inline read of existing GLTF POSITION/UV/indices; 20 subdivision barycentric grid per triangle; texture alpha>=51/255, nearest texel sample. Analysis only, no committed tool/new harness.",
+    "opaque_min_y_estimate": -0.0470290444791317,
+    "transparent_aabb_extension_estimate": 0.1876656599342823,
+    "limit": "Approximate sampling, not exact filtered/mipped raster silhouette or native engine observation."
+  },
+  "support_source": "Legacy _route_detail_ground can return registered road/crown height; actual shoulder uses irregular/conformed surface_rows shared by rendered top/collision. Current candidate queries actual local static collision support instead.",
+  "candidate": "Per-item grounding=mesh_root; same asset size/XZ/yaw/palette/visibility; native Y origin placed at local static floor. Existing flags/collision/paths/state unchanged.",
+  "required_proofs": "Original source review; changed-file named units; existing area root/floor and mesh-height assertions; original blind matched forward/reverse/detail pixels. No whole F40 acceptance."
+}

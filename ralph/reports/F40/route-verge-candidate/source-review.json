@@ -290,5 +290,26 @@
     },
     "proof_status": "APPROVE exact source restoration and historical bounded proof validity. Original blind X/Y BLOCK and whole capture timeout FAIL retained; numerical candidate PARKED, whole F40#5/full F40 OPEN."
   },
-  "proof_status": "APPROVE failed verge and shrub restorations/historical bounded proof validity. Both numerical candidates PARKED with original visual BLOCKs and capture timeout FAILs retained. Whole F40#5/full F40 OPEN; no local engine execution or performance acceptance."
+  "mesh_root_candidate": {
+    "combined_source_verdict": "APPROVE",
+    "production_source_verdict": "APPROVE bounded opt-in native-origin grounding candidate",
+    "base_commit": "0b8a748ec12a58fdd470a1d885de5aae5dd99d3f",
+    "paths": ["scripts/world/cloudreach_world.gd", "data/config/cloudreach_visual.json", "tests/smoke_cloudreach_look.gd"],
+    "scope": "ArrivalStoneGarden items[4] grounding=mesh_root only; legacy bounds placement unchanged.",
+    "findings": [
+      "Installed Bush_Common glTF has one identity-transform mesh node, one MASK primitive and accessor Y bounds -0.2346947044 to1.3470909595. Transparent-card bounds need not describe the visible foliage bottom; native Y0 is an importer-origin presentation anchor, not a proven biological root.",
+      "Retains authored1.4m scaling, XZ bounds centering and yaw. Rotated model offset identifies the actual native-origin XZ sampled by the ray; mesh-root mode ignores bury_m while legacy mode retains exact bounds/bury behavior.",
+      "One Node-owned physics-frame wait precedes a mask1 plus/minus8m ray. Requires an owned StaticBody3D and normalY at least0.55, otherwise frees the unmounted model and omits the item with a warning.",
+      "Existing support lookup still gates the item before native-origin probing. No new collider, asset, material, count policy, input, save or authority change. Single origin support does not prove footprint-wide foliage contact or distinguish every stacked surface.",
+      "combined_aabb excludes the passed root transform, so smoke bounds.size.y times model.scale.y correctly measures the unchanged1.4m asset size."
+    ],
+    "corrected_finding": "Refreshed smoke requires exactly one imported child and validates the Node3D cast; missing/malformed children append failures. Floor and size probes run only on the validated non-null model.",
+    "required_corrections": [],
+    "asset_facts_receipt": "ralph/reports/F40/arrival-shrub/mesh-root/asset-facts.json",
+    "all_three_asset_fact_hashes_match_installed_files": true,
+    "asset_facts_limit": "Alpha subdivision sample is an approximate source analysis, not a filtered/mipped native silhouette or botanical-root proof.",
+    "existing_unit_mapping": "Twenty-four existing test_*.gd files match cloudreach_world.gd or cloudreach_visual.json; no new test method/class/fixture proposed.",
+    "proof_status": "Combined source APPROVE after smoke guard correction; affected selected logic, production area and changed visual proof pending. No native causal delta, biological-root or whole F40#5/full F40 acceptance claim."
+  },
+  "proof_status": "Prior numerical candidates PARKED; new mesh-root combined source APPROVE. Affected runtime/visual proofs pending; whole F40#5/full F40 OPEN. No local engine execution or performance acceptance."
 }

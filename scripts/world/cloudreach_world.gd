@@ -3062,13 +3062,33 @@ func _build_authored_route_details() -> void:
 			var span := maxf(bounds.size.x, bounds.size.z) if item.has("width_m") else bounds.size.y
 			var size_m := float(item.get("width_m", item.get("height_m", 1.0)))
 			var scale_value := size_m / maxf(span, 0.01)
+			var yaw := atan2(forward.x, forward.z) + deg_to_rad(float(item.get("yaw_deg", 0.0)))
+			var mesh_root_grounding := str(item.get("grounding", "bounds")) == "mesh_root"
+			var model_offset := -Vector3(bounds.get_center().x,
+				0.0 if mesh_root_grounding else bounds.position.y, bounds.get_center().z) * scale_value
+			if mesh_root_grounding:
+				# F40: masked foliage-card corners are not a plant base. Keep the
+				# imported root at the real local floor, not a registered road's
+				# centre height; synchronise the already-built static geometry first.
+				await get_tree().physics_frame
+				var root_at := at + Basis(Vector3.UP, yaw) * model_offset
+				var query := PhysicsRayQueryParameters3D.create(root_at + Vector3.UP * 8.0,
+					root_at - Vector3.UP * 8.0, 1)
+				var hit := get_world_3d().direct_space_state.intersect_ray(query)
+				if hit.is_empty() or not (hit.collider is StaticBody3D) \
+						or not is_ancestor_of(hit.collider) or hit.normal.y < 0.55:
+					push_warning("Cloudreach detail %s/%s has no local static root support" % [pocket.name, asset])
+					model.free()
+					continue
+				ground = hit.position.y
 			var placement := Node3D.new()
 			placement.name = "%s%02d" % [asset.capitalize(), pocket.get_child_count()]
-			placement.position = Vector3(at.x, ground - float(item.get("bury_m", 0.04)), at.z)
-			placement.rotation.y = atan2(forward.x, forward.z) + deg_to_rad(float(item.get("yaw_deg", 0.0)))
+			placement.position = Vector3(at.x,
+				ground if mesh_root_grounding else ground - float(item.get("bury_m", 0.04)), at.z)
+			placement.rotation.y = yaw
 			pocket.add_child(placement)
 			model.scale = Vector3.ONE * scale_value
-			model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * scale_value
+			model.position = model_offset
 			placement.add_child(model)
 			if asset == "bush" or asset == "flowers":
 				_apply_tree_palette(model, pocket.get_child_count())
