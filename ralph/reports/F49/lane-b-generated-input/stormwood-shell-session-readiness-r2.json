@@ -1,0 +1,52 @@
+{
+  "kind": "stormwood_shell_session_readiness_source_candidate",
+  "prior_run": 37785510398,
+  "prior_source": "ef62bcc0f4769823e10fab3fe329a140e36df1d8",
+  "prior_artifact_id": 11554047547,
+  "prior_artifact_sha256": "34b5519c8a85b5bb263eae4746f55d570ec7b22b94e56a0d4ec93b5497ff67bc",
+  "retained_timeline": [
+    {
+      "line_index": 52,
+      "line": "STORMWOOD READY realm=stormwood shell=false terrain_regions=108"
+    },
+    {
+      "line_index": 74,
+      "line": "STORMWOOD ENCOUNTERS READY wild=808"
+    },
+    {
+      "line_index": 137,
+      "line": "STORMWOOD READY realm=stormwood shell=false terrain_regions=108"
+    },
+    {
+      "line_index": 141,
+      "line": "FRESH CAMPAIGN RESULT {\"campaign_complete\":false,\"checkpoints\":[],\"counts_as_proof\":false,\"cumulative_elapsed_seconds\":6.516,\"dry_run\":false,\"elapsed_seconds\":6.516,\"failures\":[\"F49 Home Key refused in the actual position: Your travel state is not ready.\"],\"local_chains\":[],\"reached\":\"stormwood_settled\",\"requested_prefix_passed\":false,\"resume\":{\"boundary\":\"stormwood_settled\",\"continuous_fresh_save\":false,\"generated_origin\":{\"boundary\":\"stormwood_settled\",\"provenance\":{\"continuous_fresh_save\":false,\"generator\":\"tools/earned_saves/earned_chain_runner.gd:5165aceae865747baaf524a1c94b87a7a808debedc24954d8e99ff4147149a7b:homecoming\",\"owner_policy\":\"#5726060136810\",\"prior_earned_play\":false}},\"journey_id\":\"ef62bcc0f4769823e10fab3fe329a140e36df1d8:/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-homecoming-r1_generated_input\",\"meadows_pieces\":[\"opening_team\",\"camp_tournament\",\"bridge\",\"warrens\",\"relay\",\"hall\"],\"prior_earned_play\":false,\"source\":\"/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-homecoming-r1_generated_input/stormwood_settled\",\"source_kind\":\"generated_fixture\"},\"resumed_from\":\"stormwood_settled\",\"scratch\":\"user://f49_campaign_2385_8173\"}"
+    },
+    {
+      "line_index": 163,
+      "line": "STORMWOOD ENCOUNTERS READY wild=808"
+    }
+  ],
+  "supported_scope": "Stormwood shell build readiness must wait for mounted EncounterDirector binding exact live Game Session. Earlier timeline supports readiness seam, not sole-cause conclusion.",
+  "candidate": "4476d37ac865f8033c8d4b70fdbe8fd8d8501587",
+  "source_scope": "scripts/world/stormwood_world.gd::shell_build_complete",
+  "runtime": {
+    "run_id": 37813227735,
+    "source": "4476d37ac865f8033c8d4b70fdbe8fd8d8501587",
+    "label": "b-generated-homecoming-ready-r2",
+    "status_at_capture": "LIVE",
+    "segment": "homecoming",
+    "input_mode": "generated_fixture",
+    "continuous_fresh_save": false,
+    "prior_earned_play": false,
+    "scope": "Existing earned_chain_runner and authored generated boundary template; no failed-save input or fresh/native/visual acceptance. Terminal proof and original behavioral review required."
+  },
+  "invariants": "Original build/lifetime/Load equality, durable HomeKey/hanging/ending transactions, ordered five and generated-origin disclosures retained. No failed saves are inputs; no native or visual claim.",
+  "whole_criterion_closed": false,
+  "source_review": {
+    "reviewer": "Original b_f49_review Bacon 01a1165d-ecfb-79d3-9355-1224723cdb53",
+    "verdict": "SOURCE APPROVE",
+    "source": "4476d37ac865f8033c8d4b70fdbe8fd8d8501587",
+    "summary": "Exact live mounted director Session binding required; lifetime checks and typing sound. No circular wait, population-completion gate, state write or Load/input bypass. Prior refusal sole cause unproved.",
+    "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-stormwood-ready-source-r2.txt"
+  }
+}
