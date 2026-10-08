@@ -525,14 +525,20 @@ func _run() -> void:
 		# disclosed fixture encounter. Target HP and all actor histories survive;
 		# new encounter resources come only from the ordinary host opener.
 		var target: Vector3 = _wild.call("centre")
-		var rec: Dictionary = _host.open(1, "meadows", "trainer", {"species_id": "staticub",
+		var trainer: Dictionary = _director.get("_trainer_spec")
+		var rec: Dictionary = _host.open(1, "meadows", "trainer", {"species_id": str(_enemy.species_id),
 			"creature_uid": _enemy.uid, "hp": _enemy.hp, "hp_max": _enemy.max_hp,
-			"position": [target.x, target.y, target.z]}, str(_creature.uid), DATA.CHARACTER)
+			"position": [target.x, target.y, target.z], "owner_npc": trainer.id,
+			"card": preload("res://scripts/save/water_capture_codec.gd").encode(_enemy),
+			"body_generation": 1}, str(_creature.uid), DATA.CHARACTER)
 		_id = rec.encounter_id
 		_director.set("_encounter", rec)
 		_manager.call("bind_encounter", _director, _id, "trainer")
 		_manager.set("state", MANAGER.State.ACTIVE)
 		_manager.set_physics_process(true)
+		_check(_director.call("_install_ordinary_combat_reward_owner", _id) == true
+			and _director.call("uses_durable_trainer_rewards", _id) == true,
+			"next mastery encounter installs its own real saved trainer owner")
 		_check(_host.move_resource_snapshot(_id, 1, _creature.uid).is_empty(),
 			"next encounter retains no previous actor resource pool or Ultimate meter")
 		for hit in 17:
@@ -624,7 +630,7 @@ func _setup() -> void:
 	_check(_writer.save_character_prepared(_game, DATA.CHARACTER), "initial owner disk write")
 	_ally = _body(FOLLOWER, species, Vector3(-2.0, 0, 0))
 	_ally.set("owner_peer_id", 1)
-	var trainer: Dictionary = TRAINERS.trainer("practice_trainer") if not _prove_utility.is_empty() and not _prove_canonical_wild else {}
+	var trainer: Dictionary = TRAINERS.trainer("practice_trainer") if (not _prove_utility.is_empty() or _prove_mastery_transition) and not _prove_canonical_wild else {}
 	_enemy = TRAINERS.creature_for(trainer.team[0]) if not trainer.is_empty() else SPECIES.spawn("staticub")
 	_wild = _body(WILD, str(_enemy.species_id), Vector3(2.0, 0, 0))
 	_enemy.max_hp = 600.0 # Disclosed long-lived named target; no in-flight HP edits.
@@ -676,7 +682,7 @@ func _setup() -> void:
 		"position": [target.x, target.y, target.z]}
 	if not trainer.is_empty():
 		opponent["owner_npc"] = trainer.id
-	if _prove_utility == "dash_strike":
+	if _prove_utility == "dash_strike" or _prove_mastery_transition:
 		# The one static opponent body is generation one. Carry its actual card,
 		# as the production trainer send-out does, so Dash freezes this UID.
 		opponent["card"] = preload("res://scripts/save/water_capture_codec.gd").encode(_enemy)
