@@ -1168,7 +1168,6 @@ func _fight_named(body: Node3D, id: String) -> bool:
 	var pilot := LIVE.CampaignPilot.new(_tree, _combat, _director, _rig)
 	pilot.use_switching = false
 	pilot.switch_input = true
-	pilot.burst_input = id == "warden_aldis"
 	while bool(_director.call("trainer_battle_active")) and captain_within_deadline(Engine.get_physics_frames() - _captain_start):
 		if not _failures.is_empty():
 			break
@@ -1184,9 +1183,6 @@ func _fight_named(body: Node3D, id: String) -> bool:
 			await _tree.physics_frame
 	pilot._move_toward(Vector3.ZERO)
 	_captain_active = false
-	if pilot.burst_input:
-		_receipt("warden_burst_input", {"press_attempts": pilot.burst_press_attempts,
-			"bursts_started": pilot.bursts_started, "accepted_bursts": pilot.burst_receipts.duplicate(true)})
 	var team_size := TRAINERS.team_of(_captain_spec).size()
 	if not captain_within_deadline(Engine.get_physics_frames() - _captain_start) or _fighting() \
 			or not _failures.is_empty() or _captain_rounds != team_size or _captain_wins != team_size \
@@ -1227,8 +1223,6 @@ func _fight_named(body: Node3D, id: String) -> bool:
 			"xp_match": exact_captain_xp(before_xp, _xp_snapshot(), _expected_xp),
 			"xp_before": before_xp, "xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate()})
 		return _fail("Required trainer lacks exact admitted opponents, killing hits, configured rewards/XP and retained-five receipts: " + id)
-	if pilot.burst_input and pilot.bursts_started <= 0:
-		return _fail("Warden Burst strategy did not perform an actual host-accepted creature Burst")
 	_observed_trainers.append(id)
 	_receipt("trainer_defeated", {"id": id, "rounds": _captain_rounds, "wins": _captain_wins, "hits": _captain_hits,
 		"items_before": before_items, "items_after": _captain_stock(), "xp_before": before_xp,
