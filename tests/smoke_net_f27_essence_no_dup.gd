@@ -31,6 +31,8 @@ extends "res://tests/helpers/net_harness.gd"
 ##                   once. Releasing that untyped newcomer at once is a free,
 ##                   unpaid release with a reason. Reconnect and reload change
 ##                   nothing.
+##   spends:         (--case=spends) runs the original A/B/C spend cases only,
+##                   so separately passing release evidence need not repeat.
 const SPECIES := "bramblebun"
 const START_LEVEL := 5
 const PAYMENT := "essence_ground"
@@ -66,6 +68,7 @@ func _run() -> void:
 	# smoke_net_cloudreach_activity_payoffs does for its long run.
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 7200.0 * 1000.0
 	var cases: Array = ["settled", "host_before_delivery", "owner_before_ack", "release"] if selected == "all" else [selected]
+	if selected == "spends": cases = ["settled", "host_before_delivery", "owner_before_ack"]
 	for index: int in cases.size():
 		# Every case is the FIRST guest spend of a brand-new session on wiped
 		# homes, so one case's leftovers cannot hide another's duplication.
