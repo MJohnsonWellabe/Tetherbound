@@ -585,4 +585,41 @@ func test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldow
 	before = rec.duplicate(true)
 	assert_eq(host.stage_actor_heal_utility(intent, 1, view, "heal_pulse", profile, 16).code, "cooldown")
 	assert_eq(rec, before, "switching away and back cannot erase that creature's own utility cooldown")
+	# Use the same canonical actor after a normal committed move installs its
+	# UID resources. Heal must retain that charge and its pending mastery.
+	var manager := preload("res://scripts/combat/combat_manager.gd")
+	var moves := preload("res://scripts/creatures/move_db.gd").load_default()
+	var quick := manager.host_move_profile(moves, "player_quick", str(first.move_quick), 0.5, 0.5)
+	var binding := {"character_id":"owner_a", "creature_uid":first.uid,
+		"deployment_generation":5, "actor_generation":5, "body_instance_id":body.get_instance_id()}
+	var started := host.authorize_move_start({"encounter_id":id, "action":3, "slot":"quick"},
+		1, first, binding, quick, profile, 12000)
+	assert_true(started.ok, str(started))
+	assert_true(host.validate_strike({"encounter_id":id, "action":3, "slot":"quick",
+		"move_id":str(first.move_quick), "facing":Vector3.RIGHT}, 1,
+		{"now_ms":12500, "origin":Vector3.ZERO, "bodies":[], "move_actor_binding":binding}).ok)
+	assert_false(host.credit_move_hit(id, 1, 3, 2.0, "opponent", 100.0).is_empty())
+	var pending_mastery := host.move_mastery_outcome(id, 1, 3)
+	assert_false(pending_mastery.is_empty())
+	var pool_before: Dictionary = rec.participants[1].move_resources[first.uid].duplicate(true)
+	view.now_ms = 13000
+	intent.action = 4
+	before = rec.duplicate(true)
+	var pooled_heal := host.stage_actor_heal_utility(intent, 1, view, "heal_pulse", profile, 16)
+	assert_true(pooled_heal.ok, str(pooled_heal))
+	assert_eq(rec, before, "discarding mixed-path Heal leaves original pool and mastery untouched")
+	assert_true(host.commit_actor_heal_utility(pooled_heal).ok)
+	var pool_after: Dictionary = rec.participants[1].move_resources[first.uid]
+	assert_almost_eq(float(pool_after.wind), float(pool_before.wind) - 24.0, 0.0001)
+	assert_eq(pool_after.energy, pool_before.energy)
+	assert_eq(pool_after.ultimate_meter, pool_before.ultimate_meter)
+	assert_eq(pool_after.cooldowns.utility, 23000, "Heal and ordinary utilities share the current UID's cooldown")
+	assert_eq(host.move_mastery_outcome(id, 1, 3), pending_mastery, "Heal retains the original landed move history")
+	before = rec.duplicate(true)
+	assert_false(host.commit_actor_heal_utility(pooled_heal).ok)
+	assert_eq(rec, before, "mixed-path Heal replay cannot charge or heal twice")
+	view.now_ms = 13638
+	intent.action = 5
+	assert_eq(host.stage_actor_heal_utility(intent, 1, view, "heal_pulse", profile, 16).code, "cooldown")
+	assert_eq(rec, before, "shared recovery ending does not erase this UID's utility cooldown")
 	body.free()

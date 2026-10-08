@@ -2153,9 +2153,12 @@ func stage_actor_heal_utility(intent: Dictionary, peer_id: int, view: Dictionary
 	if not bool(verdict.get("ok", false)): return verdict
 	var after: Dictionary = (trial.encounters[id].participants[peer_id] as Dictionary)
 	var resource_fields := ["wind", "wind_max", "wind_regen_per_second", "wind_updated_ms",
-		"wind_last_action", "wind_ready_at_ms", "utility_deadlines"]
+		"wind_last_action", "wind_ready_at_ms", "utility_deadlines", "move_resources", "move_resource_uid"]
 	var resources := {}
-	for key: String in resource_fields: resources[key] = after[key]
+	for key: String in resource_fields:
+		if after.has(key):
+			var value: Variant = after[key]
+			resources[key] = value.duplicate(true) if value is Dictionary else value
 	# No self heal can mint hostile landed authorization or meter/mastery gain.
 	var authority: Dictionary = (trial._strike_authority[id][peer_id] as Dictionary).duplicate(true)
 	return {"ok": true, "encounter_id": id, "peer_id": peer_id,
@@ -2216,7 +2219,10 @@ func _authorize_actor_self_heal(intent: Dictionary, peer_id: int, view: Dictiona
 	var uid := str(view.get("source_uid", ""))
 	if not UTILITY_EFFECTS._identity(uid):
 		return _refuse("utility_intent",peer_id,"invalid_actor","That heal could not commit safely.")
-	if now_ms < int(authority.get("deadline_ms",0)) or now_ms < int(deadlines.get(uid,0)):
+	var pooled := not (participant.get("move_resources", {}) as Dictionary).is_empty()
+	var pool: Dictionary = participant.get("move_resources", {}).get(uid, {})
+	if now_ms < int(authority.get("deadline_ms",0)) or now_ms < int(deadlines.get(uid,0)) \
+		or now_ms < int(pool.get("cooldowns", {}).get("utility", 0)):
 		return _refuse("utility_intent",peer_id,"cooldown","That move is still recovering.")
 	var wind_cfg: Dictionary = MATH.config().get("wind",{})
 	var delay: Variant = wind_cfg.get("regen_delay")
@@ -2225,19 +2231,28 @@ func _authorize_actor_self_heal(intent: Dictionary, peer_id: int, view: Dictiona
 		or not UTILITY_EFFECTS._number(move.get("windup"),0.0,60.0) \
 		or not UTILITY_EFFECTS._number(recovery,0.0,60.0):
 		return _refuse("utility_intent",peer_id,"invalid_config","That heal could not commit safely.")
-	var preview := preview_wind(id,peer_id,wind_profile,float(move.wind_cost),now_ms)
+	var heal_wind_profile := wind_profile.duplicate(true)
+	# Once ordinary moves install UID pools, Heal must charge its canonical
+	# source rather than the last spent creature. Legacy-only encounters keep
+	# their existing participant pool until ordinary move admission migrates it.
+	if pooled: heal_wind_profile["creature_uid"] = uid
+	else: heal_wind_profile.erase("creature_uid")
+	var preview := preview_wind(id,peer_id,heal_wind_profile,float(move.wind_cost),now_ms)
 	if bool(preview.get("wind_exhausted",true)):
 		return _refuse("utility_intent",peer_id,"insufficient_wind","Your creature needs more Wind.")
-	var wind := commit_wind(id,peer_id,action,wind_profile,float(move.wind_cost),now_ms,
+	var wind := commit_wind(id,peer_id,action,heal_wind_profile,float(move.wind_cost),now_ms,
 		float(move.windup) + float(recovery),float(delay))
 	# Shared action recovery ends before this creature's separate utility
 	# cooldown. A tag switch must not inherit another creature's ten-second lock.
 	var lock_ms := ceili(1000.0 * maxf(0.05, float(move.windup) + float(recovery)))
 	var deadline := now_ms + lock_ms
-	_strike_state_for(id)[peer_id] = {"last_action":action,"accepted_at_ms":now_ms,
-		"deadline_ms":deadline,"cooldown_ms":lock_ms}
+	authority.merge({"last_action":action,"accepted_at_ms":now_ms,
+		"deadline_ms":deadline,"cooldown_ms":lock_ms}, true)
+	_strike_state_for(id)[peer_id] = authority
 	participant["utility_deadlines"] = deadlines.duplicate(true)
 	participant.utility_deadlines[uid] = now_ms + ceili(float(move.cooldown)*1000.0)
+	if pooled:
+		(participant.move_resources[uid].cooldowns as Dictionary)["utility"] = participant.utility_deadlines[uid]
 	var delta := {"encounter_id":id,"accepted_action":action,"accepted_at_ms":now_ms,
 		"cooldown_deadline_ms":deadline,"hit":false,"target":"self"}
 	delta.merge(wind,true)
