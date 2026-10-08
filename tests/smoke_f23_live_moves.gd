@@ -271,7 +271,9 @@ func _run() -> void:
 			_check(sweep.get("hit") == true and sweep.get("action_id") == accepted.get("action_id")
 				and sweep.get("binding") == accepted.get("binding") and sweep.get("target_uid") == str(_enemy.uid)
 				and sweep.get("target_generation") == accepted.get("utility_opponent", {}).get("body_generation")
-				and sweep.get("target_body_instance_id") == _wild.get_instance_id(),
+				and sweep.get("target_body_instance_id") == _wild.get_instance_id()
+				and sweep.get("collider_instance_id") == _wild.get_instance_id()
+				and sweep.get("contact") is Vector3 and (sweep.contact as Vector3).is_finite(),
 				"Dash sweep receipt binds the accepted action, attacker and actual opponent body")
 			_check(_impacts.size() == 1 and _enemy.hp < foe_before, "Dash lands one hostile HP debit")
 			_check(_ally.global_position.distance_to(position_before) > 0.0 and _ally.global_position.distance_to(position_before) <= 6.001,
