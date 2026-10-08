@@ -27,6 +27,6 @@
   "independent_review": {"agent": "b_f37_review, original reviewer", "verdict": "APPROVE whole F37#1 on source_sha; actual behavior, scoped logic and retained literal visual proof verified"},
   "flags": {"ripplet_traversal.presentation_enabled": true},
   "preserved_failures": {"37730715117": "Requested guarded native capture failed its unchanged30s observation; combined run remains FAIL. Mechanics passed. No deadline or timer changed.", "surface-dive-r3-scope-verdict.json": "Broader mounted-observation BLOCK retained. New literal PASS uses newest owner criterion-own-text scope."},
-  "exact_source_scope": "F37 endpoint/capture/physical-step extensions through0a and the seven-line Interactable carrier exclusion, plus presentation flag. Subsequent3fb restore-observation additions are separate and unclaimed.",
+  "exact_source_scope": "F37 endpoint/capture/physical-step extensions through0a and the seven-line Interactable carrier exclusion, plus presentation flag. Explicit tested visual dependency851e2a2d8cd176c5ed89e0f89c60d729738a66cb adds only three Dive/surface message cue lines in water_riding_controller.gd; original whole reviewer reconfirmed APPROVE with that dependency. Subsequent3fb restore-observation additions are separate and unclaimed.",
   "not_claimed": ["F37#4", "Earned L30 feast", "Earned campaign", "Two-peer rejoin", "Owner device or performance", "Full Visual Bars A/B", "All future content acceptance"]
 }
