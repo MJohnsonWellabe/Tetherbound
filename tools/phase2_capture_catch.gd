@@ -59,6 +59,8 @@ var _written: Array[String] = []
 var _failures: Array[String] = []
 var _start_ms: int = 0
 var _graphics_capture: Dictionary = {}
+var _breakout_handback_only := false
+var _handback_observations: Array[Dictionary] = []
 
 var _struck_flag := [false]
 var _shook_flag := [false]
@@ -84,6 +86,8 @@ func _run() -> void:
 			_seed = int(arg.trim_prefix("--seed="))
 		elif arg.begins_with("--biome="):
 			_biome = arg.trim_prefix("--biome=")
+		elif arg == "--breakout-handback-only":
+			_breakout_handback_only = true
 	if _biome == "tidewake":
 		_scene = TIDEWAKE_SCENE
 	elif _biome == "stormwood":
@@ -158,7 +162,8 @@ func _run() -> void:
 	# `chance.min`/`chance.max` for the dice — these two only need real,
 	# unclamped odds on screen, and by the far end of sequence B the fight
 	# has usually already resolved and ended.
-	await _capture_chance_frames()
+	if not _breakout_handback_only:
+		await _capture_chance_frames()
 
 	# The dice are stacked per sequence THROUGH THE CLAMPS the formula already
 	# has (`chance.min`/`chance.max`), because a frame named "breakout" showing
@@ -180,7 +185,7 @@ func _run() -> void:
 		_top_up()
 		var foe: RefCounted = _manager.call("enemy")
 		foe.hp = foe.max_hp
-		var first := attempt == 0
+		var first := attempt == 0 and not _breakout_handback_only
 		var outcome := await _one_throw("01-aiming-full-health" if first else "",
 			"02-orb-in-flight" if first else "", "03-strike" if first else "",
 			"04-orb-resting" if first else "", "05-orb-shakes" if first else "",
@@ -190,6 +195,11 @@ func _run() -> void:
 			break
 	if not got_failure:
 		_failures.append("sequence A never produced a breakout to photograph")
+	if _breakout_handback_only:
+		chance_cfg["min"] = real_min
+		chance_cfg["max"] = real_max
+		_finish()
+		return
 
 	# --- sequence B: a sliver of health, expect a catch ---------------------
 	chance_cfg["max"] = real_max
@@ -309,7 +319,16 @@ func _one_throw(aim_frame: String, flight_frame: String,
 	if verdict_frame != "":
 		for i in BEAT_FRAMES:
 			await physics_frame
-		await _capture_paused(verdict_frame)
+		if _breakout_handback_only:
+			# Observe the existing handback with physics and the camera compositor
+			# live. This diagnoses the paused beat; it never writes camera/body pose.
+			if not bool(_resolved[-1]):
+				await _capture("breakout-handback-live")
+				for i in 35:
+					await physics_frame
+				await _capture("breakout-handback-settled")
+		else:
+			await _capture_paused(verdict_frame)
 	# Let the aftermath (breakout pop, camera handback, cooldown) play out.
 	for i in 70:
 		await physics_frame
@@ -554,6 +573,21 @@ func _capture(name: String) -> void:
 		_failures.append("%s: save_png failed" % name)
 		return
 	_written.append(path)
+	if _breakout_handback_only:
+		var camera := root.get_camera_3d()
+		var model := _player.get_node_or_null(^"Model") as Node3D
+		_handback_observations.append({"id": name, "paused": paused,
+			"physics_frame": Engine.get_physics_frames(),
+			"fighting": bool(_manager.call("is_fighting")),
+			"resolved_success": bool(_resolved[-1]),
+			"player_transform": str(_player.global_transform),
+			"model_transform": str(model.global_transform) if model != null else "unavailable",
+			"ally_transform": str(_ally.global_transform) if is_instance_valid(_ally) else "unavailable",
+			"ally_visible": _ally.is_visible_in_tree() if is_instance_valid(_ally) else false,
+			"camera_path": str(camera.get_path()) if camera != null else "unavailable",
+			"camera_transform": str(camera.global_transform) if camera != null else "unavailable",
+			"rig_transform": str(_rig.global_transform),
+			"rig_has_current_camera": camera == _rig.get_node_or_null(^"Camera3D")})
 	print("  %-26s -> %s  (+%.1fs)" % [name, path, (Time.get_ticks_msec() - _start_ms) / 1000.0])
 
 
@@ -580,6 +614,13 @@ func _finish() -> void:
 		"failures": _failures, "complete": _failures.is_empty()}
 	if not _graphics_capture.is_empty():
 		manifest["graphics_capture"] = _graphics_capture
+	if _breakout_handback_only:
+		manifest["subset"] = "breakout-handback-only"
+		manifest["fixture"] = "Existing staged full-health target, in-memory failure odds and supplied orbs; same ordinary fight/aim/throw/resolve path. Two unpaused handback views only; no earned catch, continuous motion, success sequence or whole twelve-frame proof."
+		manifest["handback_observations"] = _handback_observations
+		if _written.size() != 2 or _handback_observations.size() != 2:
+			_failures.append("breakout handback subset requires both unpaused views")
+		manifest["complete"] = _failures.is_empty()
 	var manifest_file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	manifest_file.store_string(JSON.stringify(manifest, "\t") + "\n")
 	manifest_file.close()
