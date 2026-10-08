@@ -391,6 +391,16 @@ func submit(intent: Dictionary) -> Dictionary:
 ## local player and a remote one are arbitrated by literally the same lines.
 func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	var kind := str(intent.get("kind", ""))
+	var inventory_move := kind in ["transfer_item", "drop_item"] or (kind == "claim_pickup" and str(intent.get("flag", "")).begins_with("dropped:"))
+	var inventory_source := ""
+	if inventory_move:
+		var setup := _ledger_inventory_source(intent, peer_id)
+		if setup.get("ok") != true: return setup
+		intent = setup.intent
+		inventory_source = setup.source
+		var saver: RefCounted = _game().get("save_system")
+		if saver == null: return _pending(intent, false, "The world cannot save this move yet.")
+		saver.call("finish_fallback") # Before either the ledger or owner proposal freezes.
 	var altar: Dictionary = _altar_building_request(intent, peer_id)
 	if altar.get("intercept") == true:
 		var session: Node = _game().get("session")
@@ -407,7 +417,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		and WORLD_LEDGER.guest_pickup_routed(str(intent.get("flag", ""))) and not _registered_character(peer_id).is_empty() \
 		and not PICKUP_SPECS.lookup(str(intent.get("flag", ""))).is_empty() \
 		and not (str(intent.get("flag", "")).begins_with(WORLD_LEDGER.FELLED_FLAG_PREFIX) and GATHER_BATCHES.enabled())
-	var durable_world_transaction := satchel_transaction or guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim", "gather_flush"]
+	var durable_world_transaction := inventory_move or satchel_transaction or guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim", "gather_flush"]
 	var before_satchel: Dictionary = {}
 	if durable_world_transaction:
 		before_satchel = {"world": ledger.world.save_data(), "seq": ledger.seq,
@@ -466,15 +476,27 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	if not bool(verdict.get("ok", false)):
 		return verdict
 	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
+	if inventory_move:
+		var retained := _retain_ledger_inventory(intent, delta, inventory_source)
+		if retained.get("ok") != true:
+			ledger.world.load_data(before_satchel.world)
+			ledger.world.set("revision", int(before_satchel.world_revision))
+			ledger.seq = before_satchel.seq
+			ledger.set("_storage_revisions", before_satchel.revisions)
+			ledger.set("_seen_txns", before_satchel.seen)
+			return _pending(intent, false, str(retained.get("reason", "The owner inventory cannot accept this move yet.")))
+		delta = retained.delta
+		verdict.delta = delta
 	if durable_world_transaction:
 		var satchel_game := _game()
 		var world_id := str(satchel_game.get("world").world_id)
 		# Reward and dock publication always require a durable world file. Death-
 		# satchel fixtures historically allow an unnamed session, so preserve only
 		# that legacy path.
-		if guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim", "gather_flush"] or not world_id.is_empty():
+		if inventory_move or guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim", "gather_flush"] or not world_id.is_empty():
 			var saver: RefCounted = satchel_game.get("save_system")
-			if saver == null or not bool(saver.call("save_world", satchel_game, world_id)):
+			var method := "save_world_prepared" if inventory_move else "save_world"
+			if saver == null or not bool(saver.call(method, satchel_game, world_id)):
 				# No personal settlement or publication happened yet. Roll back
 				# the synchronous in-memory commit as one unit, including receipt
 				# bookkeeping, so a later retry cannot mistake it for durable work.
@@ -513,6 +535,106 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 			rpc("_rpc_delta", delta)
 	_gather_after_commit(delta)
 	return verdict
+
+
+## The original ledger transaction is the source, never a later client grant.
+## Retained rows also fence duplicates after the transient ledger set resets.
+func _ledger_inventory_source(intent: Dictionary, peer: int) -> Dictionary:
+	var event := preload("res://scripts/net/foundation_event.gd")
+	var world: RefCounted = ledger.world
+	var kind := str(intent.get("kind", ""))
+	var transaction := str(intent.get("txn_id", ""))
+	if kind == "claim_pickup": transaction = "pickup:" + str(intent.get("flag", ""))
+	if not ESSENCE._opaque_id(transaction) or world.world_id.is_empty() or world.reward_delivery_namespace.is_empty() \
+		or _registered_character(peer).is_empty(): return _pending(intent, false, "This move needs a saved world and admitted owner.")
+	var source := "ledger_inventory:" + transaction
+	for raw: Variant in world.reward_deliveries.values():
+		if event.valid(raw, world.reward_delivery_namespace, world.world_id) and raw.source_id == source:
+			var refusal := _pending(intent, false, "That inventory move is already recorded.")
+			refusal.code = "duplicate"
+			return refusal
+	var original := intent.duplicate(true)
+	if kind == "transfer_item":
+		var from_peer := int(intent.get("from", peer))
+		var to_peer := int(intent.get("to", 0))
+		if (peer != _local_peer_id() and from_peer != peer) or _registered_character(from_peer).is_empty() \
+			or _registered_character(to_peer).is_empty(): return _pending(intent, false, "Both trade owners must be admitted.")
+	elif kind == "claim_pickup":
+		# A dropped pickup's contents come from its original retained drop.
+		var drop_source := "ledger_inventory:" + str(intent.flag).trim_prefix("dropped:")
+		var drop: Dictionary = {}
+		for raw: Variant in world.reward_deliveries.values():
+			if event.valid(raw, world.reward_delivery_namespace, world.world_id) and raw.source_id == drop_source \
+				and raw.duties.size() == 1 and raw.duties[0].context.ledger_kind == "drop_item": drop = raw
+		if drop.is_empty() or str(drop.duties[0].context.get("realm", "")) != str(intent.get("realm", "")):
+			return _pending(intent, false, "That dropped stack has no original in this world.")
+		original.item = drop.duties[0].intent.ops[0].item
+		original.count = drop.duties[0].intent.ops[0].count
+	return {"ok": true, "source": source, "intent": original}
+
+
+## Append the exact original owner halves without applying them. The caller
+## saves this event and the original world effect together, or rolls both back.
+func _retain_ledger_inventory(intent: Dictionary, delta: Dictionary, source: String) -> Dictionary:
+	var session: Node = _game().get("session")
+	var world: RefCounted = ledger.world
+	if session == null: return {"ok": false}
+	var actions := preload("res://scripts/net/foundation_actions.gd")
+	var grouped := {}
+	var owners := {}
+	var published: Array = []
+	for op: Dictionary in delta.ops:
+		if op.get("scope") != "player" or op.get("op") not in ["item_take", "item_grant"]:
+			published.append(op.duplicate(true))
+			continue
+		if not op.get("peers") is Array or op.peers.size() != 1: return {"ok": false}
+		var peer := int(op.peers[0])
+		var character := _registered_character(peer)
+		if character.is_empty(): return {"ok": false}
+		if not grouped.has(character):
+			grouped[character] = []
+			owners[character] = peer
+		grouped[character].append({"op": op.op, "item": op.item, "count": int(op.count)})
+	if grouped.is_empty(): return {"ok": false}
+	var participants: Array = grouped.keys()
+	var epoch: String = session.call("_altar_current_epoch")
+	# Transport sequence resets when the host loads. These immutable retained
+	# originals are the durable order, including already-settled transactions.
+	var sequence := 1
+	for work: Dictionary in preload("res://scripts/net/foundation_retry_order.gd").ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
+		if work.duty.action == "ledger_inventory": sequence = maxi(sequence, int(work.duty.intent.source_sequence) + 1)
+	if sequence > 2147483647: return {"ok": false}
+	var duties: Array = []
+	for character: String in participants:
+		if (session.call("admitted_character_state", int(owners[character])) as Dictionary).is_empty(): return {"ok": false}
+		var current: Dictionary = session.get("_character_authority").call("state", character)
+		if current.is_empty(): return {"ok": false}
+		# Project only unpaid original inventory duties for debit/capacity checks;
+		# this detached copy never advances a canonical revision or owner ACK.
+		for work: Dictionary in preload("res://scripts/net/foundation_retry_order.gd").ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
+			var duty: Dictionary = work.duty
+			if duty.action != "ledger_inventory" or duty.character_id != character: continue
+			if current.redesign_character.transaction_receipts.has(actions.ledger_inventory_receipt(duty.intent, duty.context, character)): continue
+			if preload("res://scripts/net/retained_settlement.gd").duty_settled(world.redesign_world, work.event.delivery_id, duty): continue
+			var prior: Dictionary = actions.call("_ledger_inventory", current, duty.intent, duty.context)
+			if prior.get("ok") != true: return {"ok": false}
+			current = prior.state
+		var context := {"source_key": source, "world_namespace": world.reward_delivery_namespace,
+			"session_id": epoch, "participants": participants.duplicate(), "ledger_confirmed": true,
+			"ledger_kind": str(intent.kind), "realm": str(intent.get("realm", "")), "original_ops": grouped[character].duplicate(true)}
+		var original := {"transaction_id": source.trim_prefix("ledger_inventory:"), "source_sequence": sequence, "ops": grouped[character].duplicate(true)}
+		var plan: Dictionary = actions.call("_ledger_inventory", current, original, context)
+		if plan.get("ok") != true: return {"ok": false, "reason": "The original inventory move was refused: " + str(plan.get("code", ""))}
+		duties.append({"character_id": character, "action": "ledger_inventory", "intent": original, "context": context})
+	var row := preload("res://scripts/net/foundation_event.gd").make(world, epoch, source, duties)
+	if row.is_empty(): return {"ok": false}
+	var retained: Dictionary = ledger.call("commit_foundation_event", row)
+	if retained.get("ok") != true or retained.get("duplicate") == true: return {"ok": false}
+	published.append_array(retained.delta.ops)
+	var combined := delta.duplicate(true)
+	combined.ops = published
+	combined.seq = retained.delta.seq
+	return {"ok": true, "delta": combined}
 
 
 # --- coordinator ruling (b): a guest's batched gathers --------------------------

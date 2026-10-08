@@ -340,14 +340,14 @@ func _owner_passive_actor_vitals_context(peer: int, binding: Dictionary) -> Dict
 
 func _owner_passive_commit_retained(peer: int, binding: Dictionary) -> Dictionary:
 	if not is_host() or binding.get("character") != _authority_character(peer) \
-		or binding.get("action") not in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share"]:
+		or binding.get("action") not in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share", "ledger_inventory"]:
 		return FOUNDATION_ACTIONS.deny("owner_passive_original_duty_required")
 	var world: RefCounted = _game().get("world")
 	if binding.action == "boss_relic":
 		var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(binding.intent.trainer_id), str(binding.event.realm))
 		if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()):
 			return FOUNDATION_ACTIONS.deny("boss_settlement_world_pending")
-	if binding.action == "combat_mastery" and (_altar_peer_in_combat(peer) \
+	if binding.action in ["combat_mastery", "ledger_inventory"] and (_altar_peer_in_combat(peer) \
 		or _ordinary_round_pending_characters().has(binding.character)): return FOUNDATION_ACTIONS.deny("combat_still_active")
 	var context: Dictionary = binding.event.duplicate(true)
 	context.expected_revision = int(_character_authority.call("revision", binding.character))
@@ -682,7 +682,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if context.is_empty(): return _foundation_refusal("release_ceremony_unavailable") # Terminal: the guest releases unpaid.
 	if context.is_empty() or context.expected_revision != envelope.revision: return _foundation_refusal("source_or_revision_changed")
 	var cfg := STATION_RULES.config()
-	if envelope.op in ["boss_relic", "tether_item"]: return _foundation_refusal("host_outcome_required")
+	if envelope.op in ["boss_relic", "tether_item", "ledger_inventory"]: return _foundation_refusal("host_outcome_required")
 	if envelope.op == "station_craft" and cfg.get("craft_runtime_enabled") != true: return _foundation_refusal("craft_disabled")
 	if envelope.op == "feast_cook" and cfg.get("craft_runtime_enabled") != true: return _foundation_refusal("craft_disabled")
 	if envelope.op == "den" and cfg.get("den_runtime_enabled") != true: return _foundation_refusal("den_disabled")
@@ -1123,7 +1123,7 @@ func _retry_foundation_events() -> void:
 		if duty.action != "wild_defeat_share" and peer != local_peer_id():
 			if not share_wait.has(duty.character_id): share_wait[duty.character_id] = _guest_wild_share_outstanding(duty.character_id, world)
 			if share_wait[duty.character_id] == true: continue
-		if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
+		if duty.action in ["combat_mastery", "ledger_inventory"] and _altar_peer_in_combat(peer): continue
 		var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
 		var receipt := _foundation_duty_receipt(duty, world.reward_delivery_namespace)
 		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
@@ -1170,7 +1170,7 @@ func _retry_foundation_events() -> void:
 		else:
 			context.in_combat = false
 			context.foundation_runtime_authorized = true
-			if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share"]:
+			if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share", "ledger_inventory"]:
 				var ready: Dictionary = _owner_passive_service().call("gate", peer, duty.action, duty.intent, context)
 				if ready.get("ok") != true:
 					_note_duty_hold(duty, "owner passive gate " + str(ready.get("code", "")))
@@ -1223,6 +1223,7 @@ func _note_duty_released(duty: Dictionary) -> void:
 		print("[session] %s duty for %s released (t=%dms)" % [str(duty.action), str(duty.character_id), Time.get_ticks_msec()])
 
 func _foundation_duty_receipt(duty: Dictionary, world_namespace: String = "") -> String:
+	if duty.action == "ledger_inventory": return FOUNDATION_ACTIONS.ledger_inventory_receipt(duty.intent, duty.context, duty.character_id)
 	if duty.action == "combat_round_reward": return COMBAT_ROUND_REWARD.receipt(duty.character_id, duty.intent, duty.context)
 	if duty.action == "combat_mastery": return "craft:combat_mastery_%s:%s" % [str(duty.intent.action_id).sha256_text(), duty.character_id]
 	if duty.action == "rematch_win": return "rematch:%s:%s:%s:win:%s:%s:%s" % [duty.intent.trainer_id, duty.intent.tier, duty.character_id, duty.context.world_namespace, duty.context.session_id, str(duty.intent.encounter_id).sha256_text()]
@@ -5353,6 +5354,7 @@ func _owner_training_row() -> Dictionary:
 func _owner_training_mutation_blocked(player: RefCounted, ignore_untouched_groom: bool = false) -> bool:
 	var game := _game()
 	if game == null or player == null or player != game.get("local"): return false
+	if _owner_ledger_inventory_pending(player): return true
 	if _groom_passive != null and _groom_passive.call("blocked", player) == true \
 		and not (ignore_untouched_groom and _groom_passive.call("local_untouched", player) == true): return true
 	if _owner_passive != null and _owner_passive.call("blocked", player) == true: return true
@@ -5365,11 +5367,28 @@ func _owner_training_mutation_blocked(player: RefCounted, ignore_untouched_groom
 	return not _owner_training_retry.is_empty()
 
 
+## A published original reserves its source stacks before its owner freeze
+## arrives. Only the existing durable saved-ACK settlement releases this hold;
+## typed installation and exact checkpoint saves retain their own capabilities.
+func _owner_ledger_inventory_pending(player: RefCounted) -> bool:
+	var game := _game()
+	if game == null or player != game.get("local") or not game.get("world") is RefCounted: return false
+	var world: RefCounted = game.get("world")
+	for raw: Variant in world.reward_deliveries.values():
+		if not raw is Dictionary or not str(raw.get("source_id", "")).begins_with("ledger_inventory:"): continue
+		if not preload("res://scripts/net/foundation_event.gd").valid(raw, world.reward_delivery_namespace, world.world_id): continue
+		for duty: Dictionary in raw.duties:
+			if duty.action == "ledger_inventory" and duty.character_id == player.character_id \
+				and not RETAINED_SETTLEMENT.duty_settled(world.redesign_world, raw.delivery_id, duty): return true
+	return false
+
+
 ## Diagnostic only: which of `_owner_training_mutation_blocked`'s holds is set.
 func _owner_snapshot_block_reason(player: RefCounted, ignore_untouched_groom: bool = false) -> String:
 	# Mirrors _owner_training_mutation_blocked: an untouched groom (e.g. the
 	# resume opened on every snapshot apply) still holds owner mutations; a
 	# save's refusal (which ignores an untouched groom) passes true.
+	if _owner_ledger_inventory_pending(player): return "original ledger inventory duty pending saved ACK"
 	if _groom_passive != null and _groom_passive.call("blocked", player) == true \
 		and not (ignore_untouched_groom and _groom_passive.call("local_untouched", player) == true):
 		return "groom passive pending phase=%s%s" % [str((_groom_passive.get("pending") as Dictionary).get("phase", "")),

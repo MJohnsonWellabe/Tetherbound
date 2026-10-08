@@ -16,7 +16,7 @@ const FIELD := "retained_settlement"
 ## Only the high-frequency retained kinds are settled and retired; boss relics,
 ## Master wins, research, bounties, rematches and capture offers keep their
 ## receipt-based behaviour (their volume is bounded by content).
-const SAFE_ACTIONS := ["combat_mastery", "combat_round_reward"]
+const SAFE_ACTIONS := ["combat_mastery", "combat_round_reward", "ledger_inventory"]
 const MAX_KEYS_PER_EVENT := 16
 
 
@@ -53,6 +53,9 @@ static func after_accept(redesign_world: Dictionary, event: Dictionary, row: Dic
 		keys.append(settled)
 	var retire := true
 	for duty: Variant in event.duties:
+		# Original trade/drop identities must survive host restart, where the
+		# ledger's transient seen-txn set no longer fences a repeated intent.
+		if duty.get("action") == "ledger_inventory": retire = false
 		if not str(duty.get("action", "")) in SAFE_ACTIONS \
 				or not keys.has(key(str(duty.get("character_id", "")), str(duty.get("action", "")))):
 			retire = false

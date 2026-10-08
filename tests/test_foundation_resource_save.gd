@@ -249,6 +249,97 @@ func test_resource_world_bool_failure_rolls_back_then_owner_disk_retry_never_pay
 	assert_eq(authority.state(DATA.CHARACTER), {})
 	assert_eq(RECORD.portable_projection(game.local.save_data()), loaded)
 	assert_eq(var_to_bytes(game.world.reward_deliveries), immutable_journal)
+	# Reuse this admitted owner's existing hoe, BOOL writers and real disk
+	# stores for the original drop obligation. No extra stock or fixture class.
+	assert_true(session.host_ack_creature_training(1, board_row))
+	session.call("_bind_training_container_guards")
+	var original_hoe := game.local.inventory.count("hoe")
+	assert_true(original_hoe > 0)
+	var drop := {"kind": "drop_item", "realm": "meadows", "txn_id": DATA.TXN + "-drop",
+		"item": "hoe", "count": original_hoe, "position": Vector3.ZERO}
+	var before_drop := var_to_bytes(game.world.save_data())
+	var before_sequence := int(rpc.ledger.seq)
+	var before_seen := var_to_bytes(rpc.ledger.get("_seen_txns"))
+	var saved_world := FileAccess.get_file_as_bytes(world_path)
+	writer.refuse_world = true
+	var failed_drop: Dictionary = rpc.call("_commit_here", drop, 1)
+	assert_false(failed_drop.ok)
+	assert_eq(var_to_bytes(game.world.save_data()), before_drop, "failed world BOOL rolls back original drop and retained duty")
+	assert_eq(int(rpc.ledger.seq), before_sequence)
+	assert_eq(var_to_bytes(rpc.ledger.get("_seen_txns")), before_seen)
+	assert_eq(FileAccess.get_file_as_bytes(world_path), saved_world)
+	assert_eq(game.local.inventory.count("hoe"), original_hoe)
+	writer.refuse_world = false
+	var committed_drop: Dictionary = rpc.call("_commit_here", drop, 1)
+	assert_true(committed_drop.ok, str(committed_drop))
+	assert_eq(game.local.inventory.count("hoe"), original_hoe, "world commit publishes no bare owner debit")
+	assert_true(preload("res://scripts/net/world_ledger.gd").player_ops_for(committed_drop.delta, 1).is_empty())
+	assert_eq(preload("res://scripts/net/world_ledger.gd").scene_ops(committed_drop.delta).size(), 1)
+	var retained: Dictionary = {}
+	for raw: Variant in game.world.reward_deliveries.values():
+		if raw.get("source_id") == "ledger_inventory:" + drop.txn_id: retained = raw
+	assert_false(retained.is_empty())
+	assert_true(preload("res://scripts/net/foundation_event.gd").valid(retained, "resource-namespace", "resource-slot"))
+	assert_true(session.owns_input(), "original source is reserved before training row preparation")
+	assert_false(game.local.inventory.remove("hoe", original_hoe), "ordinary inventory spending cannot consume a committed source")
+	assert_eq(game.local.inventory.count("hoe"), original_hoe)
+	var disk_drop: Dictionary = writer.world_store.call("read", "resource-slot")
+	assert_true(E._equivalent(disk_drop.reward_deliveries[retained.delivery_id], retained))
+	rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(game.world)
+	assert_eq(int(rpc.ledger.seq), 0, "host transport counter resets in the existing restart seam")
+	var duplicate_drop: Dictionary = rpc.call("_commit_here", drop, 1)
+	assert_false(duplicate_drop.ok)
+	assert_eq(duplicate_drop.code, "duplicate", "durable original fences replay after transient txn set resets")
+	var unavailable := drop.duplicate(true)
+	unavailable.txn_id += "-second"
+	assert_false((rpc.call("_commit_here", unavailable, 1) as Dictionary).ok,
+		"a second original projects the first reserved debit and cannot spend that stock twice")
+	assert_eq(int(rpc.ledger.seq), 0, "refused second debit rolls back transport and world mutation")
+	assert_eq(game.local.inventory.count("hoe"), original_hoe)
+	var duty: Dictionary = retained.duties[0]
+	var context: Dictionary = duty.context.duplicate(true)
+	context.character_id = DATA.CHARACTER
+	context.expected_revision = authority.revision(DATA.CHARACTER)
+	context.in_range = true
+	context.in_combat = false
+	context.foundation_runtime_authorized = true
+	context.retained_event = retained.delivery_id
+	var token: Dictionary = authority.stage_character_action(DATA.CHARACTER, context.expected_revision, duty.action, duty.intent, context)
+	assert_true(token.ok, str(token))
+	var prepared_drop: Dictionary = authority.staged_creature_training(token)
+	var drop_journal: Dictionary = rpc.journal_creature_training_prepared(1, DATA.CHARACTER, prepared_drop)
+	assert_true(drop_journal.ok)
+	assert_true(authority.finish_creature_training(token, true))
+	var drop_row: Dictionary = game.world.reward_deliveries[drop_journal.delivery_id]
+	writer.refuse_owner = true
+	assert_eq(OWNER.apply_owner(game, drop_row).get("code"), "owner_action_save_failed")
+	assert_eq(game.local.inventory.count("hoe"), 0)
+	assert_true(session.owns_input())
+	writer.refuse_owner = false
+	assert_true(OWNER.apply_owner(game, drop_row).get("saved") == true)
+	assert_eq(game.local.inventory.count("hoe"), 0, "exact original owner retry never debits twice")
+	assert_true(rpc.ledger.accept_creature_training_delivery(drop_row.delivery_id, DATA.CHARACTER,
+		int(drop_row.journal_revision), drop_row.receipt, 1).ok)
+	drop_row = game.world.reward_deliveries[drop_row.delivery_id]
+	assert_true(writer.save_world_prepared(game, "resource-slot"))
+	assert_true(authority.acknowledge_creature_training(DATA.CHARACTER, drop_row))
+	assert_true(session.call("_settle_owner_training_accepted", game.local, game.world, drop_row))
+	assert_false(session.owns_input(), "only the saved world ACK releases the original source reservation")
+	assert_true(game.world.reward_deliveries.has(retained.delivery_id), "settlement keeps durable original txn replay fence")
+	assert_true(preload("res://scripts/net/retained_settlement.gd").duty_settled(game.world.redesign_world, retained.delivery_id, duty))
+	assert_true(RECORD.portable_projection(writer.character_store.call("read", DATA.CHARACTER)).redesign_character.transaction_receipts.has(drop_row.receipt))
+	var next_drop := drop.duplicate(true)
+	next_drop.txn_id += "-berries"
+	next_drop.item = "berry_seeds"
+	next_drop.count = game.local.inventory.count("berry_seeds")
+	assert_true(int(next_drop.count) > 0, "reuse the same admitted original berry stock")
+	assert_true((rpc.call("_commit_here", next_drop, 1) as Dictionary).ok)
+	var next_retained: Dictionary = {}
+	for raw: Variant in game.world.reward_deliveries.values():
+		if raw.get("source_id") == "ledger_inventory:" + next_drop.txn_id: next_retained = raw
+	assert_false(next_retained.is_empty())
+	assert_eq(int(next_retained.duties[0].intent.source_sequence), int(duty.intent.source_sequence) + 1,
+		"durable original ordering advances independently of restarted transport sequence")
 	_close(game, rpc, directory)
 
 func _close(game: FixtureGame, rpc: Node, directory: String) -> void:
