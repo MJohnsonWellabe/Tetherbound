@@ -574,6 +574,8 @@ func _gather_first_feast_stock(band2: Array[Vector2], rim: Array[Vector2],
 		return false
 	if not await _cook_first_ground_feast():
 		return false
+	if not await _train_first_breakthrough():
+		return false
 	# Return by the existing earned roads, including the already-open Bridge;
 	# the Home Key never poses the trainer back at the Master or Mill.
 	var first := trail_points(_read(TERRAIN), "bands", "band1_lower_meadows")
@@ -952,6 +954,135 @@ func _feed_first_ground_feast(chooser: Node, service: Node, pilot: RefCounted) -
 		"no_level_bonus": true, "original_five_retained": true, "other_caps_unchanged": true,
 		"controller_choice": label, "elapsed_frames": Engine.get_physics_frames() - started})
 	return true
+
+
+## One chosen level uses the Candy actually earned from Orin's chest. The
+## real Altar quote, controller payment and accepted saved row own the level.
+func _train_first_breakthrough() -> bool:
+	var session: Node = _game.get("session")
+	var before: Dictionary = session.call("homestead_personal_view")
+	var cards: Array = before.get("party", [])
+	var personal: Dictionary = before.get("redesign_character", {})
+	var chosen := {}
+	var caps := {}
+	var master := BREAKTHROUGH.master("master_t1")
+	for card: Dictionary in cards:
+		var uid := str(card.get("uid", ""))
+		caps[uid] = ESSENCE.creature_cap(personal, uid)
+		if int(caps[uid]) == int(master.get("next_cap", -1)) \
+				and personal.get("transaction_receipts", []).count("feast_feed:%s:1" % uid) == 1:
+			if not chosen.is_empty(): return _fail("The first chosen breakthrough is ambiguous")
+			chosen = card.duplicate(true)
+	var candy_before := _count("tether_candy")
+	if cards.size() != 5 or chosen.is_empty() or candy_before < 1 or not retained_five(_initial_ids, _party_ids()):
+		return _fail("Chosen Altar growth requires the actual first breakthrough and earned Candy")
+	var uid := str(chosen.uid)
+	var altar: Node3D
+	for node: Node in _tree.get_nodes_in_group(&"placed_building"):
+		if str(node.get_meta("building_id", "")) == "altar" and _world.is_ancestor_of(node):
+			if altar != null: return _fail("The earned Altar is ambiguous")
+			altar = node as Node3D
+	var prompt := altar.get_node_or_null(^"AltarInteraction/TrainingInteractable") as Node3D if altar != null else null
+	if prompt == null or not await _approach_prompt(prompt):
+		return _fail("The paid Altar lacks its real training provider or ordinary approach")
+	var pilot := LIVE.CampaignPilot.new(_tree, _combat, _director, _rig)
+	_activated_id = 0
+	await pilot.press("interact")
+	var panel: Node
+	for frame in 90:
+		var owner := INPUT_OWNER.current(_tree)
+		if owner != null and owner.get_script() == preload("res://scripts/ui/altar_panel.gd"):
+			panel = owner
+			break
+		await _tree.physics_frame
+	var key := "altar:meadows:" + str(altar.get_meta("building_uid", ""))
+	if panel == null or panel.get("_station_key") != key or _activated_id != prompt.get_instance_id() \
+			or not str(panel.get("_pending_id")).is_empty():
+		return _fail("Physical Altar interaction did not open its exact station-bound chooser")
+	if not await _altar_focus(panel, "creature:" + uid, "ui_down", pilot): return false
+	await pilot.press("ui_accept")
+	var quote: Dictionary = {}
+	for frame in 90:
+		quote = (panel.get("_quote") as Dictionary).duplicate(true)
+		if panel.get("_creature_uid") == uid and quote.get("creature_uid") == uid and not quote.is_empty(): break
+		await _tree.physics_frame
+	if quote.get("creature_uid") != uid or int(quote.get("level", -1)) != int(chosen.level) \
+			or int(quote.get("cap", -1)) != int(caps[uid]) or int(quote.level) >= int(quote.cap):
+		return _fail("The actual selected Altar quote changed UID, level or opened cap")
+	var permitted := false
+	for payment: Dictionary in quote.get("payments", []):
+		if payment.get("id") == "tether_candy" and int(payment.get("cost", 0)) == 1 \
+				and int(payment.get("available", 0)) == candy_before: permitted = true
+	if not permitted: return _fail("The real Altar quote does not offer the chest's actual Candy")
+	await pilot.press("ui_right")
+	if not await _altar_focus(panel, "payment:tether_candy", "ui_down", pilot): return false
+	var service: Node = panel.get("_service")
+	var scope: Dictionary = session.call("personal_tm_scope")
+	var observed := {"completed": [], "error": ""}
+	var completed := func(id: String, reply: Dictionary) -> void:
+		var row: Dictionary = session.call("_owner_training_row")
+		var intent: Dictionary = row.get("intent", {})
+		if row.get("action") != "altar_spend" or intent.get("spend_id") != id \
+				or intent.get("creature_uid") != uid or intent.get("payment_item") != "tether_candy" \
+				or int(intent.get("expected_level", -1)) != int(chosen.level) \
+				or int(intent.get("expected_character_revision", -1)) != int(quote.expected_character_revision): return
+		if session.call("personal_tm_scope") != scope:
+			observed.error = "Altar payment changed its actual character/session scope"
+		elif reply.get("resolved") == true and reply.get("ok") != true:
+			observed.error = str(reply.get("reason", reply.get("code", "Altar payment refused")))
+		elif reply.get("ok") == true and reply.get("resolved") == true \
+				and reply.get("saved") == true and reply.get("durable") == true:
+			var decision: Dictionary = session.call("_training_decision", session.call("local_peer_id"), row)
+			if decision.get("ok") == true and decision.get("saved") == true and decision.get("durable") == true:
+				observed.completed.append({"intent": intent.duplicate(true), "result": reply.duplicate(true)})
+	service.connect("essence_spend_completed", completed)
+	var started := Engine.get_physics_frames()
+	await pilot.press("ui_accept")
+	while captain_within_deadline(Engine.get_physics_frames() - started) \
+			and observed.completed.is_empty() and str(observed.error).is_empty():
+		await _tree.physics_frame
+	service.disconnect("essence_spend_completed", completed)
+	if not str(observed.error).is_empty() or observed.completed.size() != 1:
+		return _fail("The chosen Altar tap lacks one actual saved payment: " + str(observed))
+	var claim: Dictionary = observed.completed[0]
+	var spend_id := str(claim.intent.get("spend_id", ""))
+	var receipt := "essence_spend:%s:%s:%s:%d:tether_candy:1:%d" % [str(before.character_id), spend_id,
+		uid, int(chosen.level), int(quote.expected_character_revision)]
+	var after: Dictionary = session.call("homestead_personal_view")
+	personal = after.get("redesign_character", {})
+	if spend_id.length() != 32 or not spend_id.is_valid_hex_number(false) or claim.result.get("receipt") != receipt \
+			or personal.get("transaction_receipts", []).count(receipt) != 1 or _count("tether_candy") != candy_before - 1 \
+			or not retained_five(_initial_ids, _party_ids()) or after.get("party", []).size() != cards.size() \
+			or not str(panel.get("_pending_id")).is_empty():
+		return _fail("Chosen Altar growth lacks its exact Candy debit and once-only saved receipt")
+	for index in cards.size():
+		var old: Dictionary = cards[index]
+		var actual: Dictionary = after.party[index]
+		var member_uid := str(old.uid)
+		var expected_level := int(old.level) + (1 if member_uid == uid else 0)
+		var expected_xp := 0 if member_uid == uid else int(old.get("xp", 0))
+		if actual.get("uid") != member_uid or actual.get("species_id") != old.get("species_id") \
+				or int(actual.get("level", -1)) != expected_level or int(actual.get("xp", -1)) != expected_xp \
+				or ESSENCE.creature_cap(personal, member_uid) != caps[member_uid]:
+			return _fail("Altar payment altered identity/species/caps or an unchosen creature's level/XP")
+	_receipt("first_breakthrough_chosen_level", {"station_key": key, "quote": quote,
+		"completion": claim, "candy_before": candy_before, "candy_after": _count("tether_candy"),
+		"chosen_uid": uid, "level_before": chosen.level, "level_after": int(chosen.level) + 1,
+		"other_levels_unchanged": true, "caps_unchanged": true, "controller_payment_tap": true})
+	await pilot.press("menu_cancel")
+	return true if not panel.call("is_open") and INPUT_OWNER.current(_tree) == null \
+		else _fail("The saved Altar payment did not return ordinary world input")
+
+
+func _altar_focus(panel: Node, key: String, action: String, pilot: RefCounted) -> bool:
+	for step in 20:
+		if panel.call("is_open") != true or INPUT_OWNER.current(_tree) != panel:
+			return _fail("Altar selection lost its actual input owner")
+		var focus: Control = panel.get_viewport().gui_get_focus_owner()
+		if focus is Button and panel.is_ancestor_of(focus) and str(focus.get_meta("altar_focus_key", "")) == key:
+			return true if not focus.disabled else _fail("The actual Altar row is disabled: " + key)
+		await pilot.press(action)
+	return _fail("Physical Altar navigation did not select the requested row: " + key)
 
 
 func _breakthrough_focus(panel: Node, label: String, pilot: RefCounted) -> bool:
