@@ -1,0 +1,37 @@
+{
+  "source": "1809a90c85ba76f0b92addf9335abcac003e739b",
+  "trigger": "Original P2-110 actual natural-loss blind BLOCK impact36: no distinct readable loss result separated from exploration. Existing canonical lost uses an unbacked 2.5s outcome label.",
+  "ownership": "NOTICE6065428477; ROOT conveyed A no planned loss-callback edits and narrow carve-out clear",
+  "scope": "Peer-local passive loss-result HUD presentation, all presets",
+  "production_change": "Only canonical lost can show shared-token Fight lost card with original factual detail. Anchors and viewport-proportional bounded width adapt to resize. One visible result owner; timeout/new-fight/relay cleanup. Caught/fled/trainer-relay ownership retained.",
+  "flag": "hud.loss_result.enabled=false; process-only --loss-result-candidate, --loss-result-baseline wins; shipping OFF until original native/blind approval",
+  "authority": "No input/modal ownership, combat result, recovery, healing, stats, inventory, save, authority or transaction changes",
+  "tunables": "Finite/clamped duration/max-width/title/detail sizes read once from existing hud.json",
+  "original_source_review": "PENDING same original f42, active router83713",
+  "affected_proof": {
+    "source": "1809a90c85ba76f0b92addf9335abcac003e739b",
+    "script": "tests/smoke_hud_presentation_lifecycle.gd",
+    "args": "--720p",
+    "run": 37818195545,
+    "artifact": 11568890007,
+    "job": 113452161454,
+    "actual_result": "PASS98 checks; original79 unchanged plus19 loss presentation checks",
+    "duration_seconds": 7,
+    "exit_code": 0,
+    "script_error_count": 0,
+    "warning_count": 1,
+    "warning": "HUD has no player; retained isolated fixture warning",
+    "log_sha256": "2d448ecae89f837bdd98e54bc6126a751714f2199eeaeb935f1ea0fd98ffd34e",
+    "checkout_excerpt": "checkout-excerpt.txt",
+    "independent_artifact_review": "PENDING same original f42",
+    "fixtures": "Existing five-member isolated UI lifecycle/cap50/tiers1..4/SaveData fixture unchanged. Direct existing lost handler calls only for card ownership/bounds/cleanup and no HP/faint mutation checks; no new fixture/class/harness/observer or captures; not a natural defeat. Legacy720p selector logs1920x1080Controlcanvas; no native720 pixel claim."
+  },
+  "production_only_patch": {
+    "path": "passive-loss-result-only.patch",
+    "sha256": "15ad93b2fa979403bddf0bb1542e3a93b611a1caa6407f61b17debf177060cda",
+    "scope": "Only CombatHUD hunks and new loss_result config block. Patch context contains D portrait-map key: E inserts ONLY the new block, not D portrait context/tests/older enemy-role source."
+  },
+  "native_integration": "E approved253 natural-loss/role foundation + prior8fc truthful-cache-only patch + this production-only delta. E SAME original exact combined SOURCE/COMMAND must APPROVE before ONE ROOT-scheduled batched affected natural-loss capture. NEVER run new loss on D older enemy-role source.",
+  "native_blind": "PENDING actual natural loss, original E runtime and original P2-110 blind; no scripted outcome/heal, changed fixtures, baseline guard weakening or failed-save promotion",
+  "whole_criterion_complete": false
+}
