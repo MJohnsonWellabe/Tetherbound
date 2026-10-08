@@ -1,0 +1,176 @@
+{
+  "criterion": "F33#2",
+  "status": "OPEN",
+  "checkout_sha": "ea75d7c0aae75ebc4b0b0cc1bc18b6926c358b54",
+  "run_id": 37719356626,
+  "artifact_id": 11525124339,
+  "named_proof": "tests/smoke_meadows_named_c2c3.gd --seeds=1 --case=warden_aldis --starter=terrapup --gear-tier=rootiron --compare-previous-gear",
+  "raw_sha256": "bbb2b0cbb40a95f1a13cca4544dc1e96de1eef6d23f12bde8cad1b9b3ce36881",
+  "seeds": 1,
+  "rows": [
+    {
+      "band": "band5_stronghold_approach",
+      "case": "warden_aldis",
+      "gear": "rootiron",
+      "kind": "top",
+      "party_level": 18,
+      "pilots": {
+        "MASHER": {
+          "hits": 125,
+          "incoming_hits": 15,
+          "lead_faint_rate": 1.0,
+          "max_seconds": 100.633333333333,
+          "max_single_hit_by": {
+            "foe": "tuskroot",
+            "move": "earth_fist",
+            "target": "bramblebun",
+            "type_mult": 1.0
+          },
+          "max_single_hit_frac": 0.274463730508945,
+          "max_tell_s": 1.4,
+          "median_lead_cost": 1.0,
+          "median_party_cost": 0.431726907630522,
+          "median_seconds": 100.633333333333,
+          "min_diver_tell_s": -1.0,
+          "min_tell_s": 0.9,
+          "neutral_worst_hit_by": {
+            "foe": "tuskroot",
+            "move": "earth_fist",
+            "target": "bramblebun"
+          },
+          "neutral_worst_hit_frac": 0.285706594462673,
+          "party_wipe_rate": 0.0,
+          "runs": 1,
+          "stalled": 0,
+          "win_rate": 1.0,
+          "wins": 1
+        },
+        "READER": {
+          "hits": 101,
+          "incoming_hits": 8,
+          "lead_faint_rate": 0.0,
+          "max_seconds": 167.75,
+          "max_single_hit_by": {
+            "foe": "brooktail",
+            "move": "aqua_shot",
+            "target": "pipwing",
+            "type_mult": 0.8
+          },
+          "max_single_hit_frac": 0.411336675383894,
+          "max_tell_s": 1.4,
+          "median_lead_cost": 0.768898438930987,
+          "median_party_cost": 0.280759859604013,
+          "median_seconds": 167.75,
+          "min_diver_tell_s": -1.0,
+          "min_tell_s": 0.9,
+          "neutral_worst_hit_by": {
+            "foe": "brooktail",
+            "move": "aqua_shot",
+            "target": "pipwing"
+          },
+          "neutral_worst_hit_frac": 0.415782890921414,
+          "party_wipe_rate": 0.0,
+          "runs": 1,
+          "stalled": 0,
+          "win_rate": 1.0,
+          "wins": 1
+        }
+      },
+      "starter": "terrapup",
+      "verdict": {
+        "pass": false,
+        "reasons": [
+          "reader/masher party cost 0.281/0.432 > 0.55"
+        ]
+      }
+    },
+    {
+      "band": "band5_stronghold_approach",
+      "case": "warden_aldis",
+      "gear": "bare",
+      "kind": "top",
+      "party_level": 18,
+      "pilots": {
+        "MASHER": {
+          "hits": 149,
+          "incoming_hits": 22,
+          "lead_faint_rate": 1.0,
+          "max_seconds": 120.233333333333,
+          "max_single_hit_by": {
+            "foe": "tuskroot",
+            "move": "earth_fist",
+            "target": "pipwing",
+            "type_mult": 1.25
+          },
+          "max_single_hit_frac": 0.498838074985262,
+          "max_tell_s": 1.4,
+          "median_lead_cost": 1.0,
+          "median_party_cost": 0.769461363952061,
+          "median_seconds": 120.233333333333,
+          "min_diver_tell_s": -1.0,
+          "min_tell_s": 0.9,
+          "neutral_worst_hit_by": {
+            "foe": "tuskroot",
+            "move": "earth_fist",
+            "target": "pipwing"
+          },
+          "neutral_worst_hit_frac": 0.409141625445353,
+          "party_wipe_rate": 0.0,
+          "runs": 1,
+          "stalled": 0,
+          "win_rate": 1.0,
+          "wins": 1
+        },
+        "READER": {
+          "hits": 109,
+          "incoming_hits": 9,
+          "lead_faint_rate": 0.0,
+          "max_seconds": 178.333333333333,
+          "max_single_hit_by": {
+            "foe": "brooktail",
+            "move": "aqua_shot",
+            "target": "bramblebun",
+            "type_mult": 1.25
+          },
+          "max_single_hit_frac": 0.306279680544301,
+          "max_tell_s": 1.4,
+          "median_lead_cost": 0.744611126664507,
+          "median_party_cost": 0.370462116930181,
+          "median_seconds": 178.333333333333,
+          "min_diver_tell_s": -1.0,
+          "min_tell_s": 0.9,
+          "neutral_worst_hit_by": {
+            "foe": "brooktail",
+            "move": "aqua_shot",
+            "target": "pipwing"
+          },
+          "neutral_worst_hit_frac": 0.415782890921414,
+          "party_wipe_rate": 0.0,
+          "runs": 1,
+          "stalled": 0,
+          "win_rate": 1.0,
+          "wins": 1
+        }
+      },
+      "starter": "terrapup",
+      "verdict": {
+        "pass": true,
+        "reasons": []
+      }
+    }
+  ],
+  "completed_fights": 4,
+  "harness_errors": [],
+  "source_review": "APPROVE same original f25_medium_review for paired proof extension and actual-result qualification",
+  "qualification": [
+    "One starter and one seed only; matching Rootiron C2 failed party-cost ratio .650 against .55; bare passed .481.",
+    "Matching gear reduced absolute party cost for both pilots. This is not evidence of a source-supported balance repair.",
+    "No threshold, observation floor, budget, policy, authority or shipping flag changed.",
+    "No full-cohort C2, all-biome result, previous-tier clearly-harder verdict or whole criterion claimed."
+  ],
+  "remaining_gates": [
+    "24-seed all-starter matching-tier C2 for each biome boss",
+    "Previous-tier clearly-harder comparison",
+    "Original independent approval and READY on exact passing cuts"
+  ]
+}
