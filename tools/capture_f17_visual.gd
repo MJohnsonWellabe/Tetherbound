@@ -35,6 +35,9 @@ func _run() -> void:
 	var pattern := RegEx.new()
 	pattern.compile("^[0-9a-f]{40}$")
 	var renderer := "gl_compatibility" if _preset == "Low" else "forward_plus"
+	# The inherited run waits for startup only after this preflight. Observe
+	# the initialized native window before checking its CLI-requested raster.
+	await process_frame
 	if DisplayServer.get_name() == "headless" or not GRAPHICS.PRESETS.has(_preset) \
 			or (_paired_high and _preset != "Medium") \
 			or (_expected_resolution != Vector2i(1920, 1080) and not (_preset == "Low" and _expected_resolution == Vector2i(1280, 720))) \
@@ -43,7 +46,13 @@ func _run() -> void:
 			or root.size != _expected_resolution \
 			or pattern.search(_source) == null or not _output.is_absolute_path() \
 			or DirAccess.dir_exists_absolute(_output):
-		_finish_failure("require matching native raster (1080p or Low720), preset/renderer, exact source and fresh absolute output")
+		var facts := {"display": DisplayServer.get_name(), "preset": _preset,
+			"paired_high": _paired_high, "renderer": RenderingServer.get_current_rendering_method(),
+			"required_renderer": renderer, "expected_resolution": [_expected_resolution.x, _expected_resolution.y],
+			"window_resolution": [DisplayServer.window_get_size().x, DisplayServer.window_get_size().y],
+			"root_resolution": [root.size.x, root.size.y], "source_valid": pattern.search(_source) != null,
+			"output_absolute": _output.is_absolute_path(), "output_exists": DirAccess.dir_exists_absolute(_output)}
+		_finish_failure("require matching native raster (1080p or Low720), preset/renderer, exact source and fresh absolute output; observed=" + JSON.stringify(facts))
 		return
 	if DirAccess.make_dir_recursive_absolute(_output) != OK:
 		_finish_failure("could not create fresh evidence directory")
