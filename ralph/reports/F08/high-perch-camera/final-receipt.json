@@ -1,6 +1,6 @@
 {
   "criterion": "F08#2",
-  "status": "BLOCKED named area proof after two attempts;12 visualviews PASS",
+  "status": "OPEN affected roost views and changed-world mapped logic pending",
   "source_capture": "7f8b6062d22a51fb88ac7455e42b527fc4e13548",
   "scope": "Literal high-perch camera still matrix, owner re-scope issue572#6048639441",
   "proofs": {
@@ -53,7 +53,7 @@
   "review": {
     "agent": "review_cloud_startup",
     "source": "APPROVE ff341 repair and7f live recorder; final correctedarea pending",
-    "final": "OPEN failed area proof; preserve rule/geometry until coordinatorre-scope"
+    "final": "OPEN pending affected visual and mapped logic; original camera still PASS retained"
   },
   "limits": [
     "Direct staged scene/progression/clock and five-owned Galecrest, not earned unlock/trial/bond/save evidence",
@@ -66,7 +66,27 @@
       "tools/_probe_cloudreach_high_perches_ground_roost.gd@ff341da325804b824f4c296b46daedc8acb5a88c"
     ],
     "dependencies": "Matrix/bootstrap already landedmain#579",
-    "exclude": "All Fly/world/pickup/art/unREADY ancestry"
+    "exclude": "All Fly/world/pickup/art/unREADY ancestry",
+    "world_hunk": "scripts/world/cloudreach_world.gd: third ground_roosts entry/comment ONLY from f9f04d3af0; exclude WorldWeather block and all unrelated source"
   },
-  "flags": "none"
+  "flags": "none",
+  "rescoped_roost": {
+    "authorization": "issue572#6049430581",
+    "source_commit": "f9f04d3af0e1d2088820486a2b7e7bfa84b495bb",
+    "native_run": 37708340679,
+    "native_source": "9ac50e13a4a29384bc5ed1b660df1e89eaa9cd89",
+    "artifact": 11520443922,
+    "exit": 0,
+    "seconds": 7,
+    "result": "PASS",
+    "racks": 3,
+    "installed_logs": 3,
+    "sockets": 6,
+    "collisions": 0,
+    "minimum_landing_clearance_m": 7.524,
+    "minimum_shaft_gap_m": 0.893,
+    "maximum_visual_height_m": 0.311,
+    "failures": [],
+    "scope": "Actual production builder against existing registered-crown fixture; no full-world gameplay/visual claim"
+  }
 }
