@@ -30,7 +30,7 @@
     {"id":"east_warning", "at":[21.0,126.0], "height_m":8.0, "yaw_deg":-24.0}
   ],
   "grounded_legacy_bases": {
-    "enabled": true,
+    "enabled": false,
     "scope": "client_presentation",
     "clear_radius_fraction": 0.82,
     "fissure_width_m": 0.08,

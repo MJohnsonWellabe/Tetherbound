@@ -1,0 +1,106 @@
+{
+  "criterion": "F41/P2-043 Glass component; whole F41#0/#1/#2/#3/#5 OPEN",
+  "status": "BLOCKED_VISUAL",
+  "source_commit": "51f6094da9659a06a7cda6fd9c75bb57822d87ea",
+  "run_id": 37721888814,
+  "artifact_id": 11526855000,
+  "actual_exit_code": 0,
+  "seconds": 518,
+  "unique_views": 2,
+  "failures": [],
+  "graphics_capture": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "source_commit": "51f6094da9659a06a7cda6fd9c75bb57822d87ea"
+  },
+  "frames": [
+    {
+      "id": "glass_calm",
+      "sha256": "b9e0fdd20f1bcaf4ba18b6c52f34e3b1b940024e19a753d6339ab5d46d3bc7ec",
+      "player": [
+        -326.0,
+        61.4083480834961,
+        5036.0
+      ],
+      "camera_pos": [
+        -321.818054199219,
+        64.2394790649414,
+        5033.10498046875
+      ],
+      "surge_phase": "calm",
+      "glass_bases": {
+        "camera_is_rendering": true,
+        "clear_count": 8,
+        "collision_count": 0,
+        "config_sha256": "913d6f8fa52a2e84fe6924fd2f3bce77460e4e4596d1b1136722ec47c3996e95",
+        "cover_footprints": 4,
+        "fissure_count": 24,
+        "matched_scar_footprints": 4,
+        "scar_count": 8
+      }
+    },
+    {
+      "id": "glass_break",
+      "sha256": "b6c01cc217430e06e2ca67a3dfb97f7480f267f916e42bc112a48471a5d84ce9",
+      "player": [
+        -326.0,
+        61.4083480834961,
+        5036.0
+      ],
+      "camera_pos": [
+        -321.818054199219,
+        64.2394790649414,
+        5033.10498046875
+      ],
+      "surge_phase": "break",
+      "glass_bases": {
+        "camera_is_rendering": true,
+        "clear_count": 8,
+        "collision_count": 0,
+        "config_sha256": "913d6f8fa52a2e84fe6924fd2f3bce77460e4e4596d1b1136722ec47c3996e95",
+        "cover_footprints": 4,
+        "fissure_count": 24,
+        "matched_scar_footprints": 4,
+        "scar_count": 8
+      }
+    }
+  ],
+  "source_and_packet_review": {
+    "reviewer": "/root/review_cloud_startup",
+    "verdict": "APPROVE bounded completeness, Glass three-case logic reuse and bound collision-free presentation behavior",
+    "limits": "No traversal count transferred from9ca onto51f; no whole F41/earned route closure."
+  },
+  "judge": {
+    "reviewer": "/root/blind_listener_f10",
+    "preference": "B overall",
+    "bar_a": "BLOCK both",
+    "bar_b": "BLOCK both",
+    "terrain": "B preferred; blurred yellow-green/brown foreground lacks convincing soil/moss/rock transitions.",
+    "vegetation": "B preferred; repeated ground carpet and canopy masses retain weak shrub/sapling structure.",
+    "glass_scars": "B preferred; conspicuous straight white/dark strip no longer apparent. Tall smooth cyan cones lack fractured-glass shape/material; surrounding grass obscures scar/base transitions. P2-043 OPEN.",
+    "ground_contact": "B preferable; partly UNASSESSED because vegetation conceals bases. No obvious glass float or trainer floor penetration.",
+    "trainer": "PASS in both B views; route full bar BLOCK. Face/material unassessed from rear.",
+    "sky_weather": "B ground visibility preferable; full atmosphere/material BLOCK. Renderer and instantaneous lightning differences limit causal brightness comparison.",
+    "ui": "BLOCK retained large opaque panels",
+    "creatures": "UNASSESSED",
+    "limits": "Staged diagnostic stills; no motion, earned play, close-up, High/Medium or full matrix acceptance."
+  },
+  "comparison": {
+    "A_source": "68c6eca635da9e31b3c98e0d8ba80e189bcf34ee",
+    "A_renderer": "gl_compatibility NVIDIA native",
+    "B_renderer": "gl_compatibility llvmpipe hosted",
+    "contact_sha256": "8997df346012bc9fea77d5bbc70778d6e01cd55e545aee29e938902def282c25"
+  },
+  "disposition": "grounded_legacy_bases enabled reverted OFF after visual BLOCK; scorched_scars stays OFF. No repeated whole matrix or third unchanged attempt.",
+  "remaining": "Full Glass shape/material/terrain integration, visible close contact and regional Bar remain OPEN.",
+  "disposition_review": {
+    "reviewer": "/root/review_cloud_startup",
+    "verdict": "APPROVE failed-candidate disposition and evidence; only product revert grounded_legacy_bases false. Native/logic pass distinct from visualBLOCK; noREADY."
+  }
+}

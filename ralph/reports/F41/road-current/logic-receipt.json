@@ -1,7 +1,7 @@
 {
   "criterion": "F41/P2-040 road current component; whole F41#0/#1/#2/#3/#5 OPEN",
   "source_commit": "4577b4fbb6ce13efa97eddebc4911d742a0776fc",
-  "status": "SOURCE_APPROVED_AFFECTED_LOGIC_RERUN_PENDING",
+  "status": "CLEAN_AFFECTED_LOGIC_PASS_VISUAL_PENDING",
   "initial_logic": {
     "run_id": 37721602732,
     "artifact_id": 11526028108,
@@ -28,9 +28,25 @@
     "finish_candidate": "ON candidate, client_presentation"
   },
   "remaining": [
-    "Affected eight road cases, eliminate logged engine lookup error",
-    "Existing two-view road capture with production material/chunks/camera binding",
+    "Existing two-view road capture37723181708 at4577 with production material/chunks/camera binding in flight",
     "Original code-blind before/after judgment",
     "Flow/reduced-motion actual path evidence; full matrix/Bar OPEN"
-  ]
+  ],
+  "logic": {
+    "run_id": 37722876639,
+    "artifact_id": 11525659448,
+    "source_commit": "4577b4fbb6ce13efa97eddebc4911d742a0776fc",
+    "file": "test_stormwood_road_current.gd",
+    "tests": 8,
+    "assertions": 666,
+    "failed": 0,
+    "actual_exit_code": 0,
+    "seconds": 6,
+    "engine_errors": 0,
+    "log_sha256": "f8c2a1704321d39119637ab7f442b5b81bebf2f891b0c50fc5f74e11d0e15b35"
+  },
+  "logic_review": {
+    "reviewer": "/root/review_cloud_startup",
+    "verdict": "APPROVE clean affected rerun; visual acceptance remains pending."
+  }
 }

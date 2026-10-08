@@ -1,7 +1,7 @@
 {
   "criterion": "F41 Glass bases component; whole F41#0/#1/#2/#3/#5 OPEN",
   "source_commit": "51f6094da9659a06a7cda6fd9c75bb57822d87ea",
-  "status": "LOGIC_CASES_PASS_VISUAL_PENDING",
+  "status": "LOGIC_PASS_VISUAL_BLOCK_FLAG_OFF",
   "logic": {
     "run_id": 37721602732,
     "artifact_id": 11526028108,
@@ -25,13 +25,11 @@
     "verdict": "APPROVE source51f and reuse of actual Glass three-case named logic packet; no per-file assertion count invented."
   },
   "flags": {
-    "grounded_legacy_bases": "ON candidate, client_presentation",
+    "grounded_legacy_bases": "OFF after visual BLOCK",
     "scorched_scars": "OFF"
   },
   "remaining": [
-    "Actual two-view source/preset/raster and terrain/cover binding capture37721888814 in flight",
-    "Original code-blind before/after judgment",
-    "Affected area behavior disposition",
-    "Complete catalog/full matrix/Bar OPEN"
+    "P2-043 full Glass treatment visualBLOCK; see native-receipt.json",
+    "No whole F41 or earned-route closure"
   ]
 }
