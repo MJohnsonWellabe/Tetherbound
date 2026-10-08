@@ -1,0 +1,19 @@
+{
+  "reviewer": "/root/f26_presets_review",
+  "source_commit": "fb5bd00c3e9121973ddfa63e2739ab121f589190",
+  "run": 37725655338,
+  "artifact": 11527917448,
+  "inspected": "ALL10 BEFORE PNG, ALL10 AFTER PNG, ALL4 temporal JPEG",
+  "component_verdict": "BLOCK",
+  "bar_a": "BLOCK",
+  "bar_b": "BLOCK",
+  "findings": [
+    "Night heading180 retains regularly spaced bright beads tracing foreground shore and both islands as illuminated dotted ribbons.",
+    "Day heading180 somewhat finer and diffuse; day/night heading0 and45 retain conspicuous outlined sandbar rings. Shader phase differences limit subtle attribution.",
+    "Land-water separation and shoreline continuity readable across all ten after views; no new gross gaps observed.",
+    "Flat water, conspicuous perimeter foam, repetitive sand and harsh night reflection remain; cyan/navy identity, trainer visibility and recognizable landforms preserved."
+  ],
+  "temporal_scope": "Changing foam flecks with boundary retained at0/4.708/9.488/14.266s; no gross sampled flash/band disappearance. No between-sample or smooth-playback proof.",
+  "criterion_done": false,
+  "disposition": "Second failed visual attempt. Parked; shore_foam_enabled reverted false. No third capture. P2-009/full F39 OPEN."
+}
