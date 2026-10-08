@@ -1,0 +1,57 @@
+{
+  "criterion": "F26#1",
+  "verdict": "MET",
+  "source_commit": "1ac70327dca4f7ddda24bae8ea504b7dc4ac4e3e",
+  "proof": "tests/smoke_graphics_settings.gd --graphics-proof --graphics-forward-proof",
+  "run_id": "37623256097",
+  "artifact_id": "11482508848",
+  "run_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37623256097",
+  "pass_checks": 78,
+  "fail_checks": 0,
+  "exit_code": 0,
+  "elapsed_seconds": 55,
+  "log_sha256": "a90d9dc050759822dc4619aa1cc48e891de5f169cfc216b383377b346da3d186",
+  "renderers": [
+    "Forward+ Vulkan1.4.318 llvmpipe LLVM20.1.2",
+    "Compatibility OpenGL4.5 Mesa25.2.8 llvmpipe LLVM20.1.2"
+  ],
+  "parent_checks": 52,
+  "unforced_forward_child_checks": 7,
+  "isolated_low_child_checks": 19,
+  "behavior": [
+    "Injected controller events through actual production Settings focus/buttons",
+    "Settings.changed -> tab_settings day_cycle group -> WorldLook.refresh_graphics",
+    "Authored Environment/Sun/Camera nodes mounted without procedural world/terrain",
+    "Low/Medium/High environment controls and fog densities/lengths",
+    "Custom fog/SSAO/SSIL/glow reach active renderer environment",
+    "Shadow Off then restored Low opacity; complete quality cycling",
+    "Viewport LOD follows Near/Normal/Far without clipping declared Meadows vista floor",
+    "New native child omits renderer CLI override and boots persisted Forward+ Custom/all_features_false/ShadowOff/Near",
+    "Separate isolated native Low child verifies defaults, unavailable focus, persistence, explicit restart prompt and existing checked save routing"
+  ],
+  "warnings": [
+    "Four scene-owner consistency warnings from reparenting serialized presentation nodes",
+    "Compatibility driver cannot change VSync"
+  ],
+  "independent_review": {
+    "agent": "/root/f26_presets_review",
+    "verdict": "APPROVE / MET",
+    "contract": "ACCEPTANCE F26#1; UX18; ART_DIRECTION4.1 preset contract",
+    "scope": "Source + complete native logs + actual four persisted device documents; atlas/filter setters source-reviewed"
+  },
+  "judge": "n/a: preset control/persistence criterion; no biome appearance claim",
+  "flags": "none; Compatibility remains shipping default",
+  "not_certified": [
+    "Mounted world/terrain/missing-material proof",
+    "Shadow quality pixels",
+    "Biome visuals and frame timing",
+    "ROG Ally",
+    "Windows APPDATA branch execution",
+    "Actual game-session Restart now"
+  ],
+  "changed_production_files": [],
+  "balance": {
+    "game": 0,
+    "tests_tools": 121
+  }
+}

@@ -831,6 +831,10 @@ var _hotbar_message_until := 0.0
 var _hud_clock := 0.0
 var _hotbar_message_seconds := HOTBAR_MESSAGE_SECONDS
 var _region_banner_seconds := REGION_BANNER_SECONDS
+var _vitals_idle_alpha := FADE_ALPHA
+var _hotbar_panel_alpha := UITokens.BG_DEEP.a
+var _hotbar_slot_alpha := UITokens.BG_PANEL_ALT.a
+var _exploration_show_empty_slots := true
 
 ## --- drowning cue (X03-WO4) ----------------------------------------------------
 
@@ -1183,6 +1187,7 @@ func _ready() -> void:
 ## rather than one repeated dark-navy box.
 func _style_hotbar() -> void:
 	var box := UITokens.panel_deep_box()
+	box.bg_color.a = _hotbar_panel_alpha
 	if _victory_hierarchy_candidate:
 		var layout := $Root/BottomDock/HotbarPanel/Margin/Layout as VBoxContainer
 		var margin := $Root/BottomDock/HotbarPanel/Margin as MarginContainer
@@ -1207,7 +1212,9 @@ func _style_hotbar() -> void:
 		box.content_margin_bottom = box.content_margin_top
 	_hotbar_panel.add_theme_stylebox_override("panel", box)
 	for chip in _hotbar_chips:
-		chip.add_theme_stylebox_override("panel", UITokens.slot_box(false))
+		var slot_box := UITokens.slot_box(false)
+		slot_box.bg_color.a = _hotbar_slot_alpha
+		chip.add_theme_stylebox_override("panel", slot_box)
 
 
 ## Builds `_prompt_measure`: see that field's own header for why it exists.
@@ -1853,6 +1860,7 @@ func _mount_party_strip() -> void:
 		push_warning("HUD: party_strip.gd did not produce a Control")
 		return
 	_party_strip = inst
+	_party_strip.set("show_empty_slots", _exploration_show_empty_slots)
 	_party_strip_script = script
 	_party_strip.name = "PartyStrip"
 	_party_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -2539,11 +2547,11 @@ func _update_vitals_cluster(vitals: RefCounted, delta: float) -> void:
 
 	var sprinting: bool = bool(_player.call("is_sprinting")) if _player.has_method("is_sprinting") else false
 	var relevant := health_fraction < 0.999 or hunger != "ok" or sprinting
-	_fade_toward(_vitals_cluster, 1.0 if relevant else FADE_ALPHA, delta)
+	_fade_toward(_vitals_cluster, 1.0 if relevant else _vitals_idle_alpha, delta)
 	# HUD-BACKLOG-20: same idle-fade rule, retargeted -- the split moved the
 	# HP row out of `_vitals_cluster`, not out of the "safety information
 	# never fully fades" contract `relevant` encodes.
-	_fade_toward(_health_bar_cluster, 1.0 if relevant else FADE_ALPHA, delta)
+	_fade_toward(_health_bar_cluster, 1.0 if relevant else _vitals_idle_alpha, delta)
 
 
 # --- stamina arc -------------------------------------------------------------------
@@ -2617,7 +2625,16 @@ func _load_hud_config() -> void:
 
 
 func _apply_hud_config(config: Dictionary) -> void:
+	var roster: Variant = config.get("exploration_roster", {})
+	_exploration_show_empty_slots = roster.get("show_empty_slots", true) != false if roster is Dictionary else true
+	if is_instance_valid(_party_strip):
+		_party_strip.set("show_empty_slots", _exploration_show_empty_slots)
 	_party_vitals_refresh_candidate = config.get("party_vitals_refresh_candidate", false) == true
+	_vitals_idle_alpha = clampf(hud_config_number(config, "exploration_vitals", "idle_alpha", FADE_ALPHA), FADE_ALPHA, 1.0)
+	# Local exploration styles only. Preserve legacy fills for absent/invalid
+	# config, including the existing positive/finite number guard.
+	_hotbar_panel_alpha = clampf(hud_config_number(config, "exploration_hotbar", "panel_alpha", UITokens.BG_DEEP.a), 0.02, 1.0)
+	_hotbar_slot_alpha = clampf(hud_config_number(config, "exploration_hotbar", "slot_alpha", UITokens.BG_PANEL_ALT.a), 0.02, 1.0)
 	_hotbar_message_seconds = hud_config_number(config, "toasts", "hotbar_message_seconds", HOTBAR_MESSAGE_SECONDS)
 	_region_banner_seconds = hud_config_number(config, "toasts", "region_banner_seconds", REGION_BANNER_SECONDS)
 	var cue: Variant = config.get("drowning_cue", {})
