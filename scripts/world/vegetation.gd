@@ -102,7 +102,7 @@ func _stormwood_leaf_profile() -> Dictionary:
 	if _stormwood_leaf_profile_cache == null:
 		_stormwood_leaf_profile_cache = {}
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(STORMWOOD_LEAF_PRESENTATION_PATH))
-		if parsed is Dictionary and bool(parsed.get("enabled", false)):
+		if parsed is Dictionary:
 			var leaf: Dictionary = parsed.get("leaf_original_alpha", {})
 			if bool(leaf.get("enabled", false)):
 				_stormwood_leaf_profile_cache = leaf

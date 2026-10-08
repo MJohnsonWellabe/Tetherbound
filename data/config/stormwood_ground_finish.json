@@ -2,12 +2,12 @@
   "enabled": false,
   "scope": "client_presentation",
   "leaf_original_alpha": {
-    "enabled": false,
+    "enabled": true,
     "scope": "client_presentation",
     "tint": "#8eaa91",
     "brightness": 1.35,
     "contrast": 0.9,
-    "_comment": "Keep installed Leaves_TwistedTree_C original UV alpha; neutralize original crimsonRGB and green-tint using existing cached Image.adjust_bsc. No normal-tree atlas substitution. Full native/blind foliage gates still open."
+    "_comment": "Keep installed Leaves_TwistedTree_C original UV alpha; neutralize original crimsonRGB and green-tint using existing cached Image.adjust_bsc. No normal-tree atlas substitution. Independent flag-on leaf candidate; failedcover remains OFF. Full native/blind foliage gates open; turn leaf flag OFF on failure."
   },
   "_comment": "F41/P2-039 realm-local profile through existing grass_field.configure_profile. Short dark ground cover, low clustered shrubs and wet litter on grass/soil/damp/forest_floor add understory layers without admitting path or rock. Uses the existing generated grass/shrub/litter families and retains the grass ring count; disables flower tiers and tunes cover size/density. No scatter bake, terrain, collision, authority or save edits. Candidate requires native before/after visual proof before landing; revert enabled on failure.",
   "grass": {

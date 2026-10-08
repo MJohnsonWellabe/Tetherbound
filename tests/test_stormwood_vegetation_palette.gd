@@ -49,6 +49,8 @@ func test_bush_policy_replaces_crimson_sheet_with_existing_green_family() -> voi
 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 	var vegetation := VEGETATION.new()
 	vegetation.configure_realm_scatter(cfg, null, "stormwood", -1)
+	# Preserve the explicit OFF control even on a flag-on candidate cut.
+	vegetation._stormwood_leaf_profile_cache = {}
 	var layer: Dictionary = cfg.layers.storm_bush
 	var leaves := _material_after_policy(str(layer.models[0]), "Leaves_TwistedTree",
 			layer, vegetation)
@@ -58,7 +60,13 @@ func test_bush_policy_replaces_crimson_sheet_with_existing_green_family() -> voi
 			"res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png")
 	# Exercise the same realm-local hook on the installed material/UV sheet.
 	# No replacement atlas or recolored fixture can stand in for its alpha.
-	vegetation._stormwood_leaf_profile_cache = {"enabled":true,"tint":"#8eaa91","brightness":1.35,"contrast":0.9}
+	vegetation._stormwood_leaf_profile_cache = null
+	var actual_profile: Dictionary = vegetation._stormwood_leaf_profile()
+	var finish: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_ground_finish.json"))
+	assert_eq(bool(actual_profile.get("enabled", false)), bool(finish.get("leaf_original_alpha", {}).get("enabled", false)),
+			"the own leaf flag is independent of the failed cover flag")
+	# Keep all positive alpha/mip assertions when the shipping leaf flag is OFF.
+	vegetation._stormwood_leaf_profile_cache = actual_profile if not actual_profile.is_empty() else {"enabled":true,"tint":"#8eaa91","brightness":1.35,"contrast":0.9}
 	leaves = _material_after_policy(str(layer.models[0]),"Leaves_TwistedTree",layer,vegetation)
 	assert_true(leaves.albedo_color.is_equal_approx(Color("#8eaa91")))
 	var original: Image = (load("res://assets/environment/stylized_nature/Leaves_TwistedTree_C.png") as Texture2D).get_image()
