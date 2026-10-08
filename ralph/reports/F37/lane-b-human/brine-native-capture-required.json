@@ -1,0 +1,17 @@
+{
+  "criterion": "F37#2",
+  "verdict": "FAIL; hosted draw deadline missed; native hardware queued",
+  "source_sha": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+  "run_id": 37734807788,
+  "artifact_id": 11531581507,
+  "script": "tests/smoke_water_swimming.gd",
+  "args": "--rest-route=brine_steps_to_shellwatch_sheltered --every-hop --original-five --capture-water-route --functional-offload",
+  "actual_capture_observation": {"draw_callbacks": 1, "stage": "no_completed_draw", "terminal_gate": "deadline_or_finished"},
+  "actual_failure": "Original30s midwater capture deadline expired. Sole completed-draw callback reached the early deadline gate; no camera/model/readiness/bone/identity guard stage reached.",
+  "not_established": ["An occluder", "Input readiness failure", "Required route inaccessible", "Complete route/stamina PASS"],
+  "preserved": "Original capture deadline/predicates/rays, movement, camera, fixture, identity checks and1200s watchdog; no passing proof rerun or visual substitute",
+  "hardware_queue": "Coordinator issue6053442036; one native batch frozen at source_sha; B performs no native engine operation",
+  "missing_routes": ["brine_steps_to_shellwatch_sheltered", "shellwatch_to_tidal_cradle_sheltered", "tidal_cradle_to_salt_crown_sheltered", "salt_crown_to_sluice_isle_sheltered", "sluice_isle_to_veilfall_sheltered"],
+  "reuse": {"first_shore_to_reedhaven": "37703956997/art11518819820", "reedhaven_to_brine_steps": "37705701376/art11519866622"},
+  "open_gates": "All seven mandatory routes, literal combined blind visual PASS, whole original review and whole READY still required"
+}
