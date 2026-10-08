@@ -138,7 +138,7 @@
       "endpoint": "/openapi/v1/retexture",
       "submitted_utc": "2026-10-08T00:16:27.726911+00:00",
       "task_id": "01a118de-4b9d-76e6-86be-22e68d544429",
-      "status": "SUCCEEDED_DCC_material_identity_deformation_PASS_native_pending_OFF",
+      "status": "SUCCEEDED_native_standing_material_PASS_hit_faint_contact_BLOCK_OFF",
       "credits": {
         "before": 13325,
         "after": 13315,
@@ -156,7 +156,7 @@
       "endpoint": "/openapi/v1/retexture",
       "submitted_utc": "2026-10-08T00:47:12.248225+00:00",
       "task_id": "01a118fa-7050-7797-9dee-a4870e3437f5",
-      "status": "SUCCEEDED_DCC_material_identity_deformation_PASS_native_pending_OFF",
+      "status": "SUCCEEDED_native_standing_material_PASS_hit_faint_contact_BLOCK_OFF",
       "candidate_enabled": false,
       "credits": {
         "before": 13315,
@@ -164,8 +164,26 @@
         "observed_cost": 10
       },
       "inspection_evidence": "ralph/reports/F36/tanglevolt-material/preview-inspection.json"
+    },
+    {
+      "reservation_id": "e799165d-282a-4d67-b672-c69dd8e8fc14",
+      "night": "2026-10-07",
+      "subject": "stormcapra",
+      "reference": "assets/creatures/tetherbound/stormcapra/reference/f36-material-v1.png",
+      "reference_sha256": "418e32ad77980d67b64d379c7e09c3a57b8e9fcf95acbb82cfdc52a8164a4147",
+      "endpoint": "/openapi/v1/retexture",
+      "submitted_utc": "2026-10-08T02:03:43.989775+00:00",
+      "task_id": "01a11940-9171-7258-8fd9-f0638f5ba380",
+      "status": "SUCCEEDED_DCC_identity_material_sampled_deformation_PASS_native_pending_OFF",
+      "candidate_enabled": false,
+      "credits": {
+        "before": 13305,
+        "after": 13295,
+        "observed_cost": 10
+      },
+      "inspection_evidence": "ralph/reports/F36/stormcapra-material/preview-inspection.json"
     }
   ],
-  "actual_meshy_submissions": 10,
+  "actual_meshy_submissions": 11,
   "note": "Lane E is the attended generation owner. Every POST uses f36_meshy_guard.py. Current real task IDs and reference hashes are recorded below; mocked cap tests use a temporary ledger and create no Meshy tasks. Generation or a successful cap check does not certify art."
 }

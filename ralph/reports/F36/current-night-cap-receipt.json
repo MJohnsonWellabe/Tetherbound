@@ -2,7 +2,7 @@
   "criterion": "F36#3",
   "named_proof": "Attended Meshy ledger with task IDs and 30-generation cap",
   "source_sha": "a7ce4c115f0666b91464b2fdd04256dc343626fc",
-  "ledger_last_source": "a7ce4c115f0666b91464b2fdd04256dc343626fc",
+  "ledger_last_source": "Pending commit of attended task11, parent0732106d",
   "ledger": "ralph/reports/R2-F36/meshy-night-ledger.json",
   "night": "2026-10-07",
   "task_ids": [
@@ -15,13 +15,14 @@
     "01a118ab-c9e1-7121-b488-52473510552c",
     "01a118b6-747c-74f1-9546-87893540dfbc",
     "01a118de-4b9d-76e6-86be-22e68d544429",
-    "01a118fa-7050-7797-9dee-a4870e3437f5"
+    "01a118fa-7050-7797-9dee-a4870e3437f5",
+    "01a11940-9171-7258-8fd9-f0638f5ba380"
   ],
-  "real_submissions": 10,
+  "real_submissions": 11,
   "cap": 30,
-  "unique_task_ids": 10,
-  "unique_reservation_ids": 10,
-  "reference_hashes": "All ten independently match actual reference asset SHA-256",
+  "unique_task_ids": 11,
+  "unique_reservation_ids": 11,
+  "reference_hashes": "All eleven actual files match recorded SHA-256",
   "all_candidate_enabled": false,
   "guard_git_blob": "836a9fdcfb41313338385960ef1713e420e2bdee",
   "retained_proof": "ralph/reports/F36/lane-e-cap-proof.json",
@@ -38,22 +39,17 @@
     }
   ],
   "review": {
-    "verdict": "APPROVE source/provenance/accounting only",
-    "agent": "/root/review_f36_cap",
-    "findings": "Original review_f36_cap approves ten unique tasks/reservations within30, candidate/reference/installed/vivid hashes and task10 cost; native asset scale/poses/material/gameplay remain open.",
-    "source_sha": "a7ce4c115f0666b91464b2fdd04256dc343626fc"
+    "agent": "review_f36_cap",
+    "verdict": "OPEN task11 maintenance review; earlier guard/accounting APPROVE retained"
   },
   "visual_judge": "n/a accounting literal criterion",
   "engine_behavior": "unchanged; n/a",
   "limits": [
-    "F36#0 asset batch and F29 Stormursa art remain OPEN.",
-    "Retained one-task proof remains historical; this receipt covers current six-task ledger.",
-    "No new generation, credentials, purchase or runtime integration."
+    "Whole F36#0/poses and F29 Stormursa OPEN; every candidate binding remains OFF",
+    "Task11 uses existing license/credits; no purchases; no art acceptance from cap accounting"
   ],
   "landing_scope": [
-    "Current six-task ledger exact file at53b8a3345f179f6bad8c1323b28550f4ce7210b2; lastcandidate remainsOFF after identityBLOCK.",
-    "This accounting receipt only. Existing cap guard/tests and earlier cap proof already on main.",
-    "Exclude all unREADY F29/world/material/traversal ancestors."
+    "Current eleven-task ledger/receipt/reference/provenance only; candidate asset preview remains unREADY"
   ],
   "maintenance_review": {
     "scope": "Sixth-task disposition matches retained B BLOCK; count6/30/IDs/reference hashes/credits/allOFF unchanged; same UTC instants after timestamp normalization",
