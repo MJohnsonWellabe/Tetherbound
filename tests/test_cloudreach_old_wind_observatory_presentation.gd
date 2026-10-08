@@ -5,6 +5,39 @@ const WORLD_CONFIG_PATH := "res://data/config/cloudreach_world.json"
 const PHYSICAL_CONFIG_PATH := "res://data/config/cloudreach_physical_runtime.json"
 const NPC_CONFIG_PATH := "res://data/config/cloudreach_npc_runtime.json"
 const PRESENTATION := preload("res://scripts/world/cloudreach_old_wind_observatory_presentation.gd")
+const WORLD := preload("res://scripts/world/cloudreach_world.gd")
+const COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
+
+
+func test_observatory_paving_excludes_cover_only_on_its_own_court() -> void:
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	var world := WORLD.new()
+	var materials := _materials()
+	for key: String in ["stone", "stone_light", "tether", "leaf_gold"]:
+		materials[key] = materials.masonry
+	world.set("_materials", materials)
+	var landmark := Node3D.new()
+	landmark.position = Vector3(430.0, 920.0, 4500.0)
+	(Engine.get_main_loop() as SceneTree).root.add_child(landmark)
+	world.call("_build_observatory", landmark)
+	var exclusions: Array[Dictionary] = world.get("_cover_exclusions")
+	assert_eq(exclusions.size(), 1, "the production Observatory registers its dial footprint")
+	var cover := COVER.new()
+	cover.set("_exclusions", exclusions)
+	var radius := float(cfg.dial_radius_m)
+	for direction: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK,
+			Vector3(1.0, 0.0, 1.0).normalized()]:
+		assert_true(cover.call("_excluded", landmark.position + direction * (radius - 0.01)),
+			"paved court excludes cover right up to its configured edge")
+		assert_false(cover.call("_excluded", landmark.position + direction * (radius + 0.01)),
+			"unpaved crown outside the court remains eligible")
+	assert_false(cover.call("_excluded", landmark.position + Vector3.UP * 40.0),
+		"a different Cloudreach stratum remains eligible")
+	assert_true(landmark.find_children("*", "CollisionObject3D", true, false).is_empty(),
+		"the paving exclusion adds no collision")
+	cover.free()
+	landmark.free()
+	world.free()
 
 
 func test_observatory_visual_build_has_a_complete_collisionless_hierarchy() -> void:

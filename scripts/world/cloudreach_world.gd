@@ -4421,6 +4421,13 @@ func _build_ground_roost_rack(root: Node3D, index: int, at: Vector2, yaw_deg: fl
 
 
 func _build_observatory(root: Node3D) -> void:
+	# The collisionless dial lies over a grass-eligible walkable crown. Clear
+	# its configured paving footprint through the existing height-aware cover
+	# exclusions, keeping the surrounding crown and other strata planted.
+	var dial_config := _read_json("res://data/config/cloudreach_old_wind_observatory_visual.json")
+	var dial_radius := float(dial_config.get("dial_radius_m", 15.0))
+	_cover_exclusions.append({"kind":"ellipse", "centre":root.to_global(Vector3.ZERO),
+		"half":Vector2.ONE * dial_radius, "rotation":0.0})
 	# Keep the observatory legible from its walkable crown instead of presenting
 	# a forty-metre featureless drum at normal third-person distance. This is
 	# visual massing only; the supported crown owns traversal and collision.
