@@ -20,6 +20,19 @@ func test_nine_authored_pairs_project_both_bodies_without_silhouette_overlap() -
 				assert_true(float(fit.get("overlap", 1.0)) <= 0.0, pair)
 				assert_eq(a.size.y, float(heights[ally_class]), "fit never shrinks the actual actor")
 				assert_eq(b.size.y, float(heights[foe_class]))
+	# An obstruction can leave only a rear-oblique interval clear. The real
+	# constrained solver must still frame and separate both unchanged bodies.
+	var rear_a := _body(4.0, Vector3.ZERO)
+	var rear_b := _body(4.0, Vector3(0.0, 0.0, -4.0))
+	var rear_visibility := func(pose: Transform3D, _a: Rect2, _b: Rect2) -> Dictionary:
+		var bearing := rad_to_deg(atan2(pose.basis.z.x, pose.basis.z.z))
+		var clear := bearing >= 105.0 and bearing <= 165.0
+		return {"pass":clear,"penalty":0.0 if clear else 1.0}
+	var rear := FIT.solve(rear_a,rear_b,0.0,deg_to_rad(-25.0),68.0,16.0/9.0,9.5,cfg,
+		true,PackedVector3Array(),PackedVector3Array(),Callable(),rear_visibility)
+	assert_true(bool(rear.get("pass",false)),"a legal rear-oblique view remains reachable when front/side sightlines fail")
+	assert_eq(float(rear.get("overlap",1.0)),0.0,"rear recovery retains the zero-overlap requirement")
+	assert_true(float(rear.distance)<=float(cfg.max_distance_m),"rear recovery retains the distance cap")
 
 func test_pivot_uses_actual_body_midpoint_and_class_boundaries() -> void:
 	var cfg := FIT.config()
@@ -161,6 +174,9 @@ func test_rotated_model_corners_separate_without_world_aabb_inflation_or_false_l
 	var native_cfg := FIT.config().duplicate(true)
 	native_cfg["max_distance_m"] = 39.5
 	native_cfg["orbit_refinement_step_deg"] = 0.0
+	# Preserve the historical coarse search that produced this regression;
+	# newer authored recovery candidates must not redefine its original result.
+	native_cfg["orbit_candidates_deg"] = [0.0,15.0,-15.0,30.0,-30.0,45.0,-45.0,60.0,-60.0,75.0,-75.0,90.0,-90.0]
 	var coarse := FIT.solve(ally_box,foe_box,deg_to_rad(-6.502305985662403),deg_to_rad(-30),46,16.0/9.0,9.5,native_cfg,false,native_ally,native_foe,model_probe)
 	assert_false(bool(coarse.get("pass",false)),"original actual-body constrained coarse search remains a truthful failure")
 	native_cfg["orbit_refinement_step_deg"] = float(FIT.config().orbit_refinement_step_deg)

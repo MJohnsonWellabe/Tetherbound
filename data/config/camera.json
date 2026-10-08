@@ -93,6 +93,7 @@
     "orbit_refinement_max_candidates": 12,
     "tracking_dead_zone_deg": 0.0,
     "tracking_strength": 18.0,
+    "_comment_rear_oblique": "Rear-oblique recovery candidates use the same constrained lens, full body/foreground/HUD visibility and nearest-safe ordering. They do not override manual look or raise the distance cap.",
     "orbit_candidates_deg": [
       0.0,
       15.0,
@@ -106,7 +107,11 @@
       75.0,
       -75.0,
       90.0,
-      -90.0
+      -90.0,
+      120.0,
+      -120.0,
+      150.0,
+      -150.0
     ],
     "size_matrix": {
       "small/small": {
