@@ -12,8 +12,19 @@
     "source": "eb1b2089b87a2065f5f5d2db036cf31eeeb4017c",
     "script": "tests/smoke_hud_presentation_lifecycle.gd",
     "args": "--720p",
-    "status": "DISPATCHED: only this affected existing lifecycle, corrected36/27 actual labels/floor/wrapping/bounds checks; original98 guards retained",
-    "run": 37819188358
+    "run": 37819188358,
+    "artifact": 11569185801,
+    "job": 113455519586,
+    "actual_result": "PASS100 checks; original98 retained plus actual widget heading/body floor checks, actual wrapped card within viewport and separated from party/quick bindings",
+    "exit_code": 0,
+    "duration_seconds": 6,
+    "script_error_count": 0,
+    "warning_count": 1,
+    "warning": "HUD has no player; retained isolated fixture",
+    "log_sha256": "58902af9c6991d8fe16578ea8b5e153e618f44ced026116ffd7a57d08b8568f2",
+    "checkout_excerpt": "corrected-checkout-excerpt.txt",
+    "independent_artifact_review": "PENDING same original f42",
+    "fixtures": "Existing isolated five/cap50/tiers1..4/SaveData UI lifecycle retained. Direct handler/bounds/cleanup only, no new fixture/class/harness/observer/captures; no natural-defeat claim. Actual headless Controlcanvas1920x1080; computed720p raster floors, no native720 pixel claim."
   },
   "production_only_patch": {
     "path": "passive-loss-result-only.patch",
