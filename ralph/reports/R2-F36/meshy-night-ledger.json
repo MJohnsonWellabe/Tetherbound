@@ -156,7 +156,14 @@
       "endpoint": "/openapi/v1/retexture",
       "submitted_utc": "2026-10-08T00:47:12.248225+00:00",
       "task_id": "01a118fa-7050-7797-9dee-a4870e3437f5",
-      "status": "submitted_pending_inspection"
+      "status": "SUCCEEDED_DCC_material_identity_deformation_PASS_native_pending_OFF",
+      "candidate_enabled": false,
+      "credits": {
+        "before": 13315,
+        "after": 13305,
+        "observed_cost": 10
+      },
+      "inspection_evidence": "ralph/reports/F36/tanglevolt-material/preview-inspection.json"
     }
   ],
   "actual_meshy_submissions": 10,

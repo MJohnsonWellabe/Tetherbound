@@ -1078,7 +1078,14 @@
         "rear_upper_r",
         "rear_lower_r"
       ],
-      "profile": "quadruped_1"
+      "profile": "quadruped_1",
+      "asset_candidate": {
+        "model": "res://assets/creatures/tetherbound/tanglevolt/models/creature_tanglevolt_f36_material_v1.glb",
+        "source_sha256": "a93c890be8c21f1457af60aaf6a529d39204414b35bcb43d8adf03f246c5d37f",
+        "colourway_source_species": "tanglevolt_f36_material_v1",
+        "scope": "capture_only_client_presentation",
+        "status": "DCC_material_identity_deformation_PASS_native_pending_OFF"
+      }
     },
     "thundertunnel": {
       "model": "res://assets/creatures/tetherbound/thundertunnel/models/creature_thundertunnel_lod0.glb",
