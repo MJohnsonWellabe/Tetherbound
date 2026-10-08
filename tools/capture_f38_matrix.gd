@@ -104,6 +104,7 @@ func _capture_row(row: Dictionary) -> void:
 		return
 	var requested: Dictionary = house.get("_floor_presentation")
 	var tiled_bindings := 0
+	var seam_bindings := 0
 	for node: Node in house.find_children("*", "MeshInstance3D", true, false):
 		var mesh := node as MeshInstance3D
 		if mesh.mesh == null:
@@ -112,11 +113,18 @@ func _capture_row(row: Dictionary) -> void:
 			var material := mesh.get_active_material(surface)
 			if material is StandardMaterial3D and bool(material.get_meta("floor_band_tiled", false)):
 				tiled_bindings += 1
+				if bool(material.get_meta("floor_board_seams", false)) and material.detail_enabled and material.detail_albedo != null:
+					seam_bindings += 1
 	var tiled := tiled_bindings > 0
 	_manifest["f38_floor_band_tiled"] = tiled
 	_manifest["f38_floor_band_tiled_bindings"] = tiled_bindings
+	_manifest["f38_floor_board_seam_bindings"] = seam_bindings
 	if tiled != bool(requested.get("tile_cropped_band", false)):
 		_failures.append("F38 actual farmhouse floor tiling differs from authored setting")
+		_write_manifest()
+		return
+	if bool(requested.get("board_seams_enabled", false)) and (seam_bindings == 0 or seam_bindings != tiled_bindings):
+		_failures.append("F38 actual farmhouse board detail differs from authored setting")
 		_write_manifest()
 		return
 	_f38_weather = str(row.weather)

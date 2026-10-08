@@ -450,6 +450,16 @@ func _material(colour: Color) -> StandardMaterial3D:
 					m.uv1_triplanar = true
 					m.uv1_world_triplanar = true
 					m.set_meta("floor_band_tiled", true)
+					if bool(_floor_presentation.get("board_seams_enabled", false)):
+						var seams := _floor_board_seams()
+						if seams != null:
+							m.detail_enabled = true
+							m.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
+							m.detail_uv_layer = BaseMaterial3D.DETAIL_UV_1
+							m.detail_albedo = seams
+							m.set_meta("floor_board_seams", true)
+						else:
+							push_warning("Farmhouse board seams unavailable; cropped wood retained")
 				else:
 					push_warning("Farmhouse cropped-band tiling unavailable; original material retained")
 	_materials[colour] = m
@@ -471,6 +481,30 @@ func _floor_band_texture(texture: Texture2D, band_scale: Vector3, band_offset: V
 	if band.generate_mipmaps(renormalize) != OK:
 		return null
 	return ImageTexture.create_from_image(band)
+
+
+## Multiplicative UV1 detail: two board courses with staggered end joints.
+## White keeps the installed wood unchanged between narrow joint lines.
+func _floor_board_seams() -> Texture2D:
+	var width := float(_floor_presentation.get("board_seam_width_uv", .004))
+	if not is_finite(width) or width <= 0.0 or width > .03:
+		return null
+	var tint := Color(str(_floor_presentation.get("board_seam_tint", "#78654c")))
+	var image := Image.create(256, 256, false, Image.FORMAT_RGBA8)
+	image.fill(Color.WHITE)
+	var line := maxi(1, roundi(width * 256.0))
+	for y: int in 256:
+		var row := 0 if y < 128 else 1
+		var joint_x := 0 if row == 0 else 128
+		for x: int in 256:
+			var distance_x := absi(x - joint_x)
+			distance_x = mini(distance_x, 256 - distance_x)
+			var course_y := y % 128
+			if course_y < line or course_y >= 128 - line or distance_x < line:
+				image.set_pixel(x, y, tint)
+	if image.generate_mipmaps() != OK:
+		return null
+	return ImageTexture.create_from_image(image)
 
 
 ## A textured box with matching collision, positioned by its centre.
