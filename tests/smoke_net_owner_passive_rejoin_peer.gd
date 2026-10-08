@@ -320,7 +320,8 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				or _peer_index != 1 or DisplayServer.get_name() == "headless":
 				return {"verdict":"FAIL", "detail":"HUD capture requires an allowed witness name and prepared native guest1"}
 			await process_frame
-			await RenderingServer.frame_post_draw
+			# Same on-demand native rendering as the existing proof runner.
+			# Its screenshot helper forces two draws after current HUD validation.
 			var manager: Node = _combat_manager()
 			var director: Node = _encounter_director()
 			var hud: Node = director.get_parent().get_node_or_null("CombatHUD") if director != null else null
@@ -342,6 +343,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			if shot.get("verdict") != "PASS" or shot.get("data", {}).get("captured") != true: return {"verdict":"FAIL", "detail":"HUD screenshot was not captured", "data":shot}
 			var graphics := preload("res://scripts/ui/graphics_prefs.gd")
 			var receipt := _hud_capture_metadata.merged({"name":name, "snapshot":view,
+				"continuous_render_loop":false,
 				"frame":Engine.get_process_frames(), "physics_frame":Engine.get_physics_frames(),
 				"viewport":[root.size.x, root.size.y], "renderer":RenderingServer.get_current_rendering_method(),
 				"preset":graphics.selected(), "graphics":graphics.values(), "ring_fraction":float(ring.get("fraction")),

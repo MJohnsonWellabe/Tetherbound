@@ -128,7 +128,7 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 		"--scene=%s" % scene, "TB_NET_RUN_ID=%s" % _run_id]
 	if i == 1 and OS.get_cmdline_user_args().has("--capture-combat-hud"):
 		args = ["--path", ProjectSettings.globalize_path("res://"),
-			"--rendering-method", RenderingServer.get_current_rendering_method(), "--audio-driver", "Dummy",
+			"--rendering-method", RenderingServer.get_current_rendering_method(), "--disable-render-loop", "--audio-driver", "Dummy",
 			"--resolution", "%dx%d" % [root.size.x, root.size.y]] + args.slice(3)
 		args.append_array(["--capture-combat-hud", "--hud-output=" + OS.get_environment("TB_NET_OUT_DIR").path_join("combat-hud")])
 		for arg: String in OS.get_cmdline_user_args():
