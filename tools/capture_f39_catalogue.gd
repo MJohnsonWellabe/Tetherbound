@@ -164,6 +164,18 @@ func _capture_row(row: Dictionary) -> void:
 		_manifest["f39_material_observations"] = observations
 		_manifest["f39_matched_falls_nodes"] = falls_count
 		_manifest["f39_matched_flow_nodes"] = flow_count
+		var surface := _world.get_node_or_null("WaterSurface") as MeshInstance3D
+		var shore_settings: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_offshore_visual.json"))
+		var shore_enabled := bool(shore_settings.get("enabled", false)) and bool(shore_settings.get("shore_foam_enabled", false))
+		_manifest["f39_shipping_shore_foam_enabled"] = shore_enabled
+		if surface == null:
+			_failures.append("F39 production WaterSurface material was not found")
+		else:
+			var shore_uniforms := ["shore_foam_breakup_m", "shore_foam_breakup_scale", "shore_foam_strength"]
+			var expected := {"enabled": shore_enabled, "shader": {}}
+			for key: String in shore_uniforms:
+				expected.shader[key] = shore_settings.get(key)
+			observations.append(_observe_material(surface, [], shore_uniforms, expected))
 		if falls_count == 0 or flow_count == 0:
 			_failures.append("F39 production falls/current materials were not both found")
 		_candidate_verified = not observations.is_empty()

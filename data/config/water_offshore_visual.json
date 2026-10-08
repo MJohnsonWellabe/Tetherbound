@@ -1,6 +1,11 @@
 {
   "_comment": "Tidewake-only offshore depth treatment, enabled for the P2-008 full-scene review. Retains the physical depth ramp, near-shore foam, waterline and surface geometry; no current/restoration/physics or other-realm shader changes. The broader P2-009 sighting matrix still requires review and no P2-009 pass is claimed.",
   "enabled": true,
+  "_shore_scope": "Peer-local WaterSurface presentation on all presets; no durable state, authority, transaction or save schema. Candidate requires actual shoreline capture and independent judge.",
+  "shore_foam_enabled": true,
+  "shore_foam_breakup_m": 4.0,
+  "shore_foam_breakup_scale": 0.025,
+  "shore_foam_strength": 0.68,
   "deep_colour": "#123b50",
   "depth_start_m": 3.0,
   "depth_full_m": 24.0,
