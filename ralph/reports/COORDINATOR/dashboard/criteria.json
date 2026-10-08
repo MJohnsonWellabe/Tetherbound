@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-07T22:43:57.098526+00:00",
- "main_sha": "265400502 (PR #577)",
+ "generated_at": "2026-10-08T02:47:28.618891+00:00",
+ "main_sha": "347e49098 (PR #580)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -44,9 +44,9 @@
     {
      "text": "Normal-controller NIGHT walk reaches every opening NPC, camp and gate",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-b 2105bf4d44 (READY #572 6047274287, 4:32 PM CT 10-07): native 12 targets/97 frames, 580 tests run 37688016272, judge PASS night destinations; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-b 2105bf4d44 (READY #572 6047274287, 4:32 PM CT 10-07): native 12 targets/97 frames, 580 tests run 37688016272, judge PASS night destinations; review APPROVE",
      "gap": "Re-run capture_village_walk.gd --time=night; redo code-blind judge. Folds into F17#3.",
-     "note": "Landed: Evidenced on tb/codex-b 2105bf4d44 (READY #572 6047274287, 4:32 PM CT 10-07): native 12 targets/97 frames, 580 tests run 37688016272, judge PASS night destinations; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-b 2105bf4d44 (READY #572 6047274287, 4:32 PM CT 10-07): native 12 targets/97 frames, 580 tests run 37688016272, judge PASS night destinations; review APPROVE",
      "audit_index": 3
     },
     {
@@ -91,18 +91,18 @@
    "criteria": [
     {
      "text": "Fresh ordinary save reaches and crosses the South Bridge with no teleport/state injection",
-     "status": "failing",
-     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-0.md",
+     "status": "in_progress",
+     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6049950428, 7:57 PM CT 10-07): earned chain opening/camp/bridge/Warrens terminal PASS, 476 bridge tests; review APPROVE",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-bridge from a fresh v28 save, TB_WORLD_SEED=15. Folds into F49.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "note": "READY 6049950428 held at consolidation 7 (10-07 9:20 PM CT): evidence-only, but the source it proves is not on main (55d59dd5d4 South Bridge arena bounds, ba556ac7d session training-ACK, ad95e0dd6 disk handoff, 1861efb8c1 runner). Lane B to READY that source.",
      "audit_index": 0
     },
     {
      "text": "Continues through Quarry/Warrens on the same fresh save",
-     "status": "failing",
-     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-1.md",
+     "status": "in_progress",
+     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6049950428, 7:57 PM CT 10-07): earned chain opening/camp/bridge/Warrens terminal PASS, 476 bridge tests; review APPROVE",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-warrens --reload-at-transitions. Folds into F49.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "note": "READY 6049950428 held at consolidation 7 (10-07 9:20 PM CT): evidence-only, but the source it proves is not on main (55d59dd5d4 South Bridge arena bounds, ba556ac7d session training-ACK, ad95e0dd6 disk handoff, 1861efb8c1 runner). Lane B to READY that source.",
      "audit_index": 1
     },
     {
@@ -573,10 +573,10 @@
     },
     {
      "text": "Correct high-perch production camera",
-     "status": "failing",
-     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F08-3/VERDICT.md",
+     "status": "met",
+     "evidence": "PR #580 (consolidation 6) merged 2026-10-07 8:06 PM CT: from tb/codex-e e34776024f (READY #572 6048125089, 5:26 PM CT 10-07): settlement identities day/night run 37694787532, smoke 37693874191 21 PASS, judge PASS; review APPROVE",
      "gap": "Re-run tools/capture_cloudreach_high_perch_live.gd day/night; redo the code-blind camera judge. Folds into F40.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "note": "Landed: PR #580 (consolidation 6) merged 2026-10-07 8:06 PM CT: from tb/codex-e e34776024f (READY #572 6048125089, 5:26 PM CT 10-07): settlement identities day/night run 37694787532, smoke 37693874191 21 PASS, judge PASS; review APPROVE",
      "audit_index": 3
     },
     {
@@ -699,10 +699,10 @@
     },
     {
      "text": "Readable lightning (1.2 s/3 m) and phase cues without HUD",
-     "status": "failing",
-     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F10-3/VERDICT.md",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-e 3ae56ff58e (READY #572 6050449581, 8:43 PM CT 10-07): logic 54/0 run 37712875890, area 86/0, native 20/20, judge PASS four phases; review APPROVE",
      "gap": "Redo phase/strike capture plus code-blind judge (incl. reduced motion, photosensitivity) Folds into F41#3, F25#2.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "note": "Landed: Evidenced on tb/codex-e 3ae56ff58e (READY #572 6050449581, 8:43 PM CT 10-07): logic 54/0 run 37712875890, area 86/0, native 20/20, judge PASS four phases; review APPROVE",
      "audit_index": 3
     },
     {
@@ -1249,9 +1249,9 @@
     {
      "text": "The order Meadows → Tidewake → Cloudreach → Stormwood drives the config, map, journal, portal signs and credits.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-b 9f9555efe7 (READY #572 6047726722, 5:01 PM CT 10-07): 44/0 run 37685420467 and 46/0 run 37689647094, judge PASS order; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-b 9f9555efe7 (READY #572 6047726722, 5:01 PM CT 10-07): 44/0 run 37685420467 and 46/0 run 37689647094, judge PASS order; review APPROVE",
      "gap": "Enable portals (F18) so play follows the new order; verify the map and signs in engine.",
-     "note": "Landed: Evidenced on tb/codex-b 9f9555efe7 (READY #572 6047726722, 5:01 PM CT 10-07): 44/0 run 37685420467 and 46/0 run 37689647094, judge PASS order; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-b 9f9555efe7 (READY #572 6047726722, 5:01 PM CT 10-07): 44/0 run 37685420467 and 46/0 run 37689647094, judge PASS order; review APPROVE",
      "audit_index": 0
     },
     {
@@ -1322,17 +1322,17 @@
     {
      "text": "After the Stormwood finale the player uses the Home Key; Grandpa names the current five, the starter's status, one bond memory and chapter choices; credits roll once per character.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-b 2a1b4eac6e (READY #572 6046272686, 3:30 PM CT 10-07): 48/0 run 37677835870, judge PASS acknowledgement/credits; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-b 2a1b4eac6e (READY #572 6046272686, 3:30 PM CT 10-07): 48/0 run 37677835870, judge PASS acknowledgement/credits; review APPROVE",
      "gap": "Enable portals; re-run smoke_f20_ending.gd for the solo homecoming and credits.",
-     "note": "Landed: Evidenced on tb/codex-b 2a1b4eac6e (READY #572 6046272686, 3:30 PM CT 10-07): 48/0 run 37677835870, judge PASS acknowledgement/credits; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-b 2a1b4eac6e (READY #572 6046272686, 3:30 PM CT 10-07): 48/0 run 37677835870, judge PASS acknowledgement/credits; review APPROVE",
      "audit_index": 1
     },
     {
      "text": "Using the fifth key at the fifth arch makes it stir (glow, sound, one line: not ready yet) but not open; no quest, cliffhanger or sequel prompt.",
-     "status": "in_progress",
-     "evidence": "F20 evidence arch-render r8 PASS @1a7b9ef728; smoke_f20_arch_presentation.gd",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-b 2ed0f57cbd (READY #572 6050270747, 8:26 PM CT 10-07): smoke_f20_arch_presentation 20/0 native, judge PASS; review APPROVE",
      "gap": "Enable portals; re-run smoke_f20_arch_presentation.gd with the audio verifier and a capture judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. PortalAction is not mounted on arches while the portal flag is false (crossing_hall.gd _mount_portal_actions).",
+     "note": "Landed: Evidenced on tb/codex-b 2ed0f57cbd (READY #572 6050270747, 8:26 PM CT 10-07): smoke_f20_arch_presentation 20/0 native, judge PASS; review APPROVE",
      "audit_index": 2
     },
     {
@@ -1346,9 +1346,9 @@
     {
      "text": "Two peers each get their own homecoming acknowledgement and credits exactly once through disconnect/reload.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-b 2a1b4eac6e (READY #572 6046272686, 3:30 PM CT 10-07): 48/0 run 37677835870, judge PASS acknowledgement/credits; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-b 2a1b4eac6e (READY #572 6046272686, 3:30 PM CT 10-07): 48/0 run 37677835870, judge PASS acknowledgement/credits; review APPROVE",
      "gap": "Enable portals; run smoke_net_f20_ending.gd on the gate.",
-     "note": "Landed: Evidenced on tb/codex-b 2a1b4eac6e (READY #572 6046272686, 3:30 PM CT 10-07): 48/0 run 37677835870, judge PASS acknowledgement/credits; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-b 2a1b4eac6e (READY #572 6046272686, 3:30 PM CT 10-07): 48/0 run 37677835870, judge PASS acknowledgement/credits; review APPROVE",
      "audit_index": 4
     }
    ]
@@ -1639,17 +1639,17 @@
     {
      "text": "A code-blind judge identifies from frames: pebble toss shows several small stones in flight, rock throw one boulder, fireball a burning orb with a trail and explosion, lightning a bolt striking the target from above.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-a 2307d114c4 (READY #572 6046051755, 3:17 PM CT 10-07): four base-identity cases run 37679343126, judge PASS; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-a 2307d114c4 (READY #572 6046051755, 3:17 PM CT 10-07): four base-identity cases run 37679343126, judge PASS; review APPROVE",
      "gap": "Capture on the real world stage, then a fresh code-blind judge; flip the flag after it passes.",
-     "note": "Landed: Evidenced on tb/codex-a 2307d114c4 (READY #572 6046051755, 3:17 PM CT 10-07): four base-identity cases run 37679343126, judge PASS; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-a 2307d114c4 (READY #572 6046051755, 3:17 PM CT 10-07): four base-identity cases run 37679343126, judge PASS; review APPROVE",
      "audit_index": 2
     },
     {
      "text": "Damage resolves when the effect arrives (or the exception is documented per archetype); no damage number appears before the visible hit.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-a 59ebd8806f (READY #572 6046273285, 3:30 PM CT 10-07): 320 checks run 37681026999, judge PASS hit/number pair; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-a 59ebd8806f (READY #572 6046273285, 3:30 PM CT 10-07): 320 checks run 37681026999, judge PASS hit/number pair; review APPROVE",
      "gap": "Engine smoke with the flag on: in a real fight, check that HP and the damage number never come before the visible contact.",
-     "note": "Landed: Evidenced on tb/codex-a 59ebd8806f (READY #572 6046273285, 3:30 PM CT 10-07): 320 checks run 37681026999, judge PASS hit/number pair; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-a 59ebd8806f (READY #572 6046273285, 3:30 PM CT 10-07): 320 checks run 37681026999, judge PASS hit/number pair; review APPROVE",
      "audit_index": 3
     },
     {
@@ -1663,9 +1663,9 @@
     {
      "text": "Mastery ranks visibly upgrade the effect (size, count, trail).",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-a 6f3dc5a74f (READY #572 6046839488, 4:05 PM CT 10-07): 114 cases run 37685093632, judge PASS rank growth; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-a 6f3dc5a74f (READY #572 6046839488, 4:05 PM CT 10-07): 114 cases run 37685093632, judge PASS rank growth; review APPROVE",
      "gap": "Capture ranks 1–5 per family, then a code-blind judge, with the library on.",
-     "note": "Landed: Evidenced on tb/codex-a 6f3dc5a74f (READY #572 6046839488, 4:05 PM CT 10-07): 114 cases run 37685093632, judge PASS rank growth; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-a 6f3dc5a74f (READY #572 6046839488, 4:05 PM CT 10-07): 114 cases run 37685093632, judge PASS rank growth; review APPROVE",
      "audit_index": 5
     }
    ]
@@ -1687,10 +1687,10 @@
    "criteria": [
     {
      "text": "A Forward+ path renders the village, Hall and all four biomes with no missing materials; Compatibility remains selectable as the Low preset.",
-     "status": "partial",
-     "evidence": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/@5f4093ad54",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-d 5c55b0a75d (READY #572 6050216513, 8:21 PM CT 10-07): native Forward+ census Meadows/Water/Cloudreach/Crossing PASS, judge PASS literal materials; review APPROVE",
      "gap": "Re-run the Forward+ material census for the village, Hall and four biomes, plus the Compatibility Low route, at b4e4897d5.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. 166 shader, world, art.json and environment files changed since the census (e.g. terrain_ground and cloudreach shaders, world_look.gd).",
+     "note": "Landed: Evidenced on tb/codex-d 5c55b0a75d (READY #572 6050216513, 8:21 PM CT 10-07): native Forward+ census Meadows/Water/Cloudreach/Crossing PASS, judge PASS literal materials; review APPROVE",
      "audit_index": 0
     },
     {
@@ -1720,9 +1720,9 @@
     {
      "text": "Computer captures at 1920×1080 record frame time per preset for a scripted route in each biome.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-d e8d42ad84c (READY #572 6046533041, 3:46 PM CT 10-07): native 12/12 routes frame-time matrix at 1920x1080; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-d e8d42ad84c (READY #572 6046533041, 3:46 PM CT 10-07): native 12/12 routes frame-time matrix at 1920x1080; review APPROVE",
      "gap": "Re-run the twelve preset × biome 1920×1080 scripted-route frame-time captures.",
-     "note": "Landed: Evidenced on tb/codex-d e8d42ad84c (READY #572 6046533041, 3:46 PM CT 10-07): native 12/12 routes frame-time matrix at 1920x1080; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-d e8d42ad84c (READY #572 6046533041, 3:46 PM CT 10-07): native 12/12 routes frame-time matrix at 1920x1080; review APPROVE",
      "audit_index": 4
     },
     {
@@ -1939,10 +1939,10 @@
    "criteria": [
     {
      "text": "About 30 traits in Common, Rare and Epic tiers; wild creatures roll 0–3; alphas and night or weather spawns roll better.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c 3480f84d6a (READY #572 6046358561, 3:35 PM CT 10-07): 1052 tests run 37640614467, ordinary spawn/refill run 37643018693; review APPROVE",
+     "status": "met",
+     "evidence": "PR #580 (consolidation 6) merged 2026-10-07 8:06 PM CT: from tb/codex-c 62fca91325 (READY #572 6048263126, 5:35 PM CT 10-07): 1052 tests run 37640614467, spawn/refill run 37643018693; review APPROVE",
      "gap": "Wire the roll into ordinary wild spawns, then test the production spawn path for alpha, night and weather.",
-     "note": "READY 6046358561 bounced at consolidation 5 (10-07 5:40 PM CT): its commits depend on unREADY F28 commit 67631fb8d (breakthrough.initialize_owned_catch); lane C to widen scope or rebase.",
+     "note": "Landed: PR #580 (consolidation 6) merged 2026-10-07 8:06 PM CT: from tb/codex-c 62fca91325 (READY #572 6048263126, 5:35 PM CT 10-07): 1052 tests run 37640614467, spawn/refill run 37643018693; review APPROVE",
      "audit_index": 0
     },
     {
@@ -2012,10 +2012,10 @@
     },
     {
      "text": "Meadows (tier 1) attachments are available from the start; hanging a biome's relic in the Shrine Room unlocks the next tier's attachment recipes (Meadows relic → Tidewake tier, and so on; Stormwood's relic → reserved tier 5); the player then carries one chosen relic power.",
-     "status": "not_started",
-     "evidence": "partial: test_station_preview_personal_reads::test_attachment_preview_still_reads_current_personal_recipe_and_refuses_missing_unlock",
+     "status": "in_progress",
+     "evidence": "Evidenced on tb/codex-c 971615a6c1 (READY #572 6048907058, 6:26 PM CT 10-07): earned Shrine hang/power run 37699612835, 6 tests run 37699273278; review APPROVE",
      "gap": "Unit and engine smoke: hang each relic → next-biome attachment recipes once; one relic power; save/rejoin.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Only the missing-unlock refusal is tested. No shrine-hang → next-tier grant, reserved tier 5 or single relic power test.",
+     "note": "READY 6048907058 bounced at consolidation 6 (10-07 7:30 PM CT): its peer_runner placement fence is the code that broke smoke_net_catch_race on #578, and lane C's follow-up fixes (3205439a8, 7d22e88bc, 20f21f896) are outside the scope.",
      "audit_index": 2
     },
     {
@@ -2102,9 +2102,9 @@
     {
      "text": "Shed items (skyplume, sparkfur and others) drop after wins and from Den grooming; no item implies hunting or butchering (test).",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-c 273cdb24db (READY #572 6046974476, 4:13 PM CT 10-07): 40 tests run 37686961386, sixteen F32 functions PASS; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-c 273cdb24db (READY #572 6046974476, 4:13 PM CT 10-07): 40 tests run 37686961386, sixteen F32 functions PASS; review APPROVE",
      "gap": "Unit tests for the win-drop shed and a lexical scan of items for hunting or butchery terms.",
-     "note": "Landed: Evidenced on tb/codex-c 273cdb24db (READY #572 6046974476, 4:13 PM CT 10-07): 40 tests run 37686961386, sixteen F32 functions PASS; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-c 273cdb24db (READY #572 6046974476, 4:13 PM CT 10-07): 40 tests run 37686961386, sixteen F32 functions PASS; review APPROVE",
      "audit_index": 4
     },
     {
@@ -2265,9 +2265,9 @@
     {
      "text": "Each ultimate visibly grows at breakthroughs.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-a 3e80d0be9f (READY #572 6046934441, 4:11 PM CT 10-07): 186/0 run 37683407594, judge PASS 31/31 breakthrough growth; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-a 3e80d0be9f (READY #572 6046934441, 4:11 PM CT 10-07): 186/0 run 37683407594, judge PASS 31/31 breakthrough growth; review APPROVE",
      "gap": "Turn the feature on. Capture each ultimate at breakthroughs 0–5 and have a code-blind judge confirm visible growth.",
-     "note": "Landed: Evidenced on tb/codex-a 3e80d0be9f (READY #572 6046934441, 4:11 PM CT 10-07): 186/0 run 37683407594, judge PASS 31/31 breakthrough growth; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-a 3e80d0be9f (READY #572 6046934441, 4:11 PM CT 10-07): 186/0 run 37683407594, judge PASS 31/31 breakthrough growth; review APPROVE",
      "audit_index": 2
     },
     {
@@ -2281,9 +2281,9 @@
     {
      "text": "A code-blind judge distinguishes every unique ultimate from the others.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-a a117047994 (READY #572 6047514729, 4:47 PM CT 10-07): 6 cases run 37688940810, judge PASS 12/12 unique effects; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-a a117047994 (READY #572 6047514729, 4:47 PM CT 10-07): 6 cases run 37688940810, judge PASS 12/12 unique effects; review APPROVE",
      "gap": "Turn on. Capture all 12 uniques and have a code-blind judge identify each one.",
-     "note": "Landed: Evidenced on tb/codex-a a117047994 (READY #572 6047514729, 4:47 PM CT 10-07): 6 cases run 37688940810, judge PASS 12/12 unique effects; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-a a117047994 (READY #572 6047514729, 4:47 PM CT 10-07): 6 cases run 37688940810, judge PASS 12/12 unique effects; review APPROVE",
      "audit_index": 4
     }
    ]
@@ -2574,9 +2574,9 @@
     {
      "text": "The hero landmark (the Sky Aviary) reads at distance and up close.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-e d1589a0187 (READY #572 6046988875, 4:14 PM CT 10-07): close frame run 37685900569, judge PASS Aviary identity; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-e d1589a0187 (READY #572 6046988875, 4:14 PM CT 10-07): close frame run 37685900569, judge PASS Aviary identity; review APPROVE",
      "gap": "Recapture Aviary distance and close-up frames on High and Medium and run a fresh code-blind judge against the new bar.",
-     "note": "Landed: Evidenced on tb/codex-e d1589a0187 (READY #572 6046988875, 4:14 PM CT 10-07): close frame run 37685900569, judge PASS Aviary identity; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-e d1589a0187 (READY #572 6046988875, 4:14 PM CT 10-07): close frame run 37685900569, judge PASS Aviary identity; review APPROVE",
      "audit_index": 4
     },
     {
@@ -2639,9 +2639,9 @@
     {
      "text": "The hero landmark (the Stormheart tree) reads at distance and up close.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-e 6aa24ab2df (READY #572 6046610533, 3:51 PM CT 10-07): 22 tests run 37681914576, judge PASS tree identity; review APPROVE",
+     "evidence": "PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-e 6aa24ab2df (READY #572 6046610533, 3:51 PM CT 10-07): 22 tests run 37681914576, judge PASS tree identity; review APPROVE",
      "gap": "Capture the candidate at distance and up close on High/Medium, get a code-blind PASS, then set the flags true.",
-     "note": "Landed: Evidenced on tb/codex-e 6aa24ab2df (READY #572 6046610533, 3:51 PM CT 10-07): 22 tests run 37681914576, judge PASS tree identity; review APPROVE",
+     "note": "Landed: PR #579 (consolidation 5b) merged 2026-10-07 6:07 PM CT: from tb/codex-e 6aa24ab2df (READY #572 6046610533, 3:51 PM CT 10-07): 22 tests run 37681914576, judge PASS tree identity; review APPROVE",
      "audit_index": 4
     },
     {
@@ -2981,10 +2981,10 @@
     },
     {
      "text": "A four-peer session completes one biome boss with every participant receiving their own key and relic.",
-     "status": "met",
-     "evidence": "Evidenced on tb/codex-c 95af74bc60 (READY #572 6047512757, 4:47 PM CT 10-07): 79 peer rows run 37687259638 PASS; review APPROVE",
+     "status": "in_progress",
+     "evidence": "Evidenced on tb/codex-c 9c20f818d2 (READY #572 6050391956, 8:38 PM CT 10-07): boss_four 79 rows run 37687259638, 40 tests run 37686961386; review APPROVE",
      "gap": "Build a four-peer boss/key/relic smoke and run it in multiplayer-wide with a recorded pass.",
-     "note": "Landed: Evidenced on tb/codex-c 95af74bc60 (READY #572 6047512757, 4:47 PM CT 10-07): 79 peer rows run 37687259638 PASS; review APPROVE",
+     "note": "READY 6050391956 held at consolidation 7 (10-07 9:25 PM CT): scope is the CI-FLAKE peer_runner fence (90a283b1fb + 7e05fdc3c3), which changes shared teleport/explore_at/trainer_battle/join_encounter steps used by 23 smokes; catch_race and forward_camp still fail under it. Land together with the CI-FLAKE repair set.",
      "audit_index": 2
     },
     {

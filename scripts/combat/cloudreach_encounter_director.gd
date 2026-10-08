@@ -510,6 +510,7 @@ func _spawn_air_patrol(species: String, site: Dictionary, index: int, level: int
 	wild.set_meta("cloudreach_site_id", str(site.id))
 	wild.set_meta("placement_mode", "air_patrol")
 	_wild_homes[wild] = plan.position
+	_initialize_wild_traits(wild)
 	_wild_creatures.append(wild)
 	return wild
 
@@ -574,6 +575,8 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	_wild_homes[wild] = wild.global_position
 	wild.call("set_clearance_check", Callable(self, "_wild_destination_supported").bind(wild))
 	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
+	if not bool(opts.get("retained_alpha_pending", false)):
+		_initialize_wild_traits(wild, bool(opts.get("ordinary_trait_alpha", false)))
 	_wild_creatures.append(wild)
 	if not once_id.is_empty():
 		_once_only[wild] = once_id

@@ -1,0 +1,96 @@
+{
+  "scope": "F39 Cradle plume arrival-facing visibility component; full F39#5 remains OPEN",
+  "source_commit": "b7cdd2dc803e89c1148c20108afc58c184af4b64",
+  "production_commit": "38c5da697a15145f7f9f8fb6c804cc6b9aceefb7",
+  "run_id": 37699155036,
+  "artifact_id": 11517336486,
+  "proof": "tools/capture_f39_catalogue.gd --biome=water --preset=Low --low-resolution=1280x720 --f39-shipping --cand=535.497,1352.51,39.241343 --times=day,night",
+  "result": {
+    "complete": true,
+    "frames": 2,
+    "failures": [],
+    "exit": 0,
+    "seconds": 199
+  },
+  "graphics_capture": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "source_commit": "b7cdd2dc803e89c1148c20108afc58c184af4b64"
+  },
+  "shipping": true,
+  "candidate": false,
+  "material_verified": true,
+  "frames": [
+    {
+      "frame_id": "water__stand_00__day",
+      "file": "res://shots/lane-d/f39-cradle-plume-arrival/water__stand_00__day.png",
+      "time": "day",
+      "position_xz": [
+        535.497,
+        1352.51
+      ],
+      "player_position": [
+        535.497009277344,
+        1.93191719055176,
+        1352.51000976562
+      ],
+      "terrain_ground_y": 1.92853164672852,
+      "camera_position": [
+        532.279357910156,
+        4.7630729675293,
+        1348.57067871094
+      ],
+      "camera_player_distance_m": 5.82125902175903,
+      "production_is_on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "view_heading_deg": 39.241343,
+      "explicit_visual_stand": true,
+      "observed_clock": {
+        "elapsed_seconds": 200.128127333333,
+        "f39_weather": "clear",
+        "hour": 8.00512509333333,
+        "requested": "day",
+        "time_of_day": "day"
+      }
+    },
+    {
+      "frame_id": "water__stand_01__night",
+      "file": "res://shots/lane-d/f39-cradle-plume-arrival/water__stand_01__night.png",
+      "time": "night",
+      "position_xz": [
+        535.497,
+        1352.51
+      ],
+      "player_position": [
+        535.497009277344,
+        1.93191719055176,
+        1352.51000976562
+      ],
+      "terrain_ground_y": 1.92853164672852,
+      "camera_position": [
+        532.279357910156,
+        4.7630729675293,
+        1348.57067871094
+      ],
+      "camera_player_distance_m": 5.82125902175903,
+      "production_is_on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "view_heading_deg": 39.241343,
+      "explicit_visual_stand": true,
+      "observed_clock": {
+        "elapsed_seconds": 575.139773,
+        "f39_weather": "clear",
+        "hour": 23.00559092,
+        "requested": "night",
+        "time_of_day": "night"
+      }
+    }
+  ],
+  "disclosure": "Teleported to the authored Shellwatch-to-Cradle arrival stand and aimed toward the existing lure. This is current day/night visual evidence, not earned travel or smoke-motion evidence. Raw PNGs remain in hosted artifact. Historical landing JPG is not a pixel-matched before. Matched camp before/after10 separately proves plume-wall removal. Failed shelter changes on the capture cut are excluded from proposed landing scope."
+}

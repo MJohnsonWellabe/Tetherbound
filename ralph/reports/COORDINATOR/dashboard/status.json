@@ -1,11 +1,11 @@
 {
- "updated": "2026-10-07T22:25Z",
+ "updated": "2026-10-08T02:25Z",
  "headline": [
-  "5:50 PM CT Wed 07 Oct: 149 criteria met, 135 on main and 14 evidenced in consolidation 5b (CI running).",
-  "Pace: 16 READYs (19 new criteria) between 3:10 and 5:10 PM CT, against 6 the two hours before and 1 before that. Lanes are now above the 5-per-hour target.",
-  "Consolidation 5 (#578) went red on co-op smokes: lane C's flaky-smoke fix and F43 landed without lane C runner and owner-passive commits they depend on. Rebuilt as 5b without them; both bounced to lane C. F30#0 also bounced.",
-  "Landed today: #571, #574, #576, #573 (CI about 22 minutes), #577 (F35#0, F38#4, F14#2, F39#4, F36#2).",
-  "F46#2 is still with lane C (Home portal walk in smoke_f18_earned_loop)."
+  "9:25 PM CT Wed 07 Oct: 153 criteria met, 150 on main and 3 evidenced in consolidation 7 (F26#0, F20#2, F10#3).",
+  "Consolidation 7b also lands F42#0 Settings/Build/Save/QuickItems/roster pieces, the F24#2 repair, F08#2 (already met) and the F26#1 receipt. The F20#1/#4 guided-approach repair was dropped: it broke smoke_net_f20_ending and smoke_net_water_return on #581.",
+  "Held: F02#0/#1 (evidence only; the source it proves is not on main) and F48#2 (CI-FLAKE peer_runner fence, which still fails catch_race and forward_camp).",
+  "Guardrails withdrawn at 8:10 PM CT; pace back to 6 full criteria in the 7:10–9:10 PM window.",
+  "Main's 8-hourly earned-loop red is intermittent; lane A owns the catch-aim fix."
  ],
  "batches": [
   {
@@ -453,10 +453,28 @@
    "contents": "Red: lane C CI-FLAKE and F43 broke co-op smokes; rebuilt as 5b."
   },
   {
-   "name": "Consolidation 5b",
+   "name": "Consolidation 5b (PR #579)",
+   "sha": "",
+   "state": "Merged 10-07 6:07 PM CT",
+   "contents": "13 criteria; F48#2 proof red afterwards and reopened. Met 148."
+  },
+  {
+   "name": "Consolidation 6 (PR #580)",
+   "sha": "",
+   "state": "Merged 10-07 8:06 PM CT",
+   "contents": "F30#0, F08#3 and the F39#5, F46#0, F42#0 code pieces. Met 150."
+  },
+  {
+   "name": "Consolidation 7 (PR #581)",
+   "sha": "",
+   "state": "Closed 10-07",
+   "contents": "Red: F20#1/#4 portal helper repair broke f20_ending and water_return; rebuilt as 7b."
+  },
+  {
+   "name": "Consolidation 7b",
    "sha": "",
    "state": "CI running",
-   "contents": "14 criteria (lanes A, B, C F32#4/F48#2, D, E)."
+   "contents": "F26#0, F20#2, F10#3 plus F42#0 pieces, F24#2 repair, F08#2, F26#1 receipt."
   }
  ],
  "lanes": [

@@ -1,0 +1,20 @@
+{
+  "scope": "F39 Cradle signal smoke presentation regression; no full F39#0/#5 closure",
+  "source_commit": "38c5da697a15145f7f9f8fb6c804cc6b9aceefb7",
+  "source_files": [
+    "data/config/water_local_chains.json tidal_cradle_rise signal_fire only"
+  ],
+  "diagnosis": "Camp night45 source288881998e capture37685616751 shows opaque pale vertical signal plume. This is the 16m Cradle rise lure, not the authored camp small fire.",
+  "change": "Smoke alpha .7->.16 and top fade .5->.95; unchanged height/width/location/fire/banner/lamp and existing smoke consumer.",
+  "source_review": {
+    "agent": "/root/f39_visual_review",
+    "verdict": "APPROVE final smoke-only hunk",
+    "reason": "Values reach existing consumer, no gameplay/durable change; preserve arrival lure.",
+    "actual_proof_intake": "Original reviewer read retained unit/area and actual arrival log/manifest: exit0/199s/2frames/no failures/shipping materials verified/floor true and grounded3 per frame. Excludes failed shelter and NPC candidate."
+  },
+  "proof_status": "Scoped component proofs passed: eight config-naming unit files 53 tests/4655 assertions/0 failed; existing Water area smoke129/0; matched camp10 and authored arrival2 complete with original blind PASS. Full F39#0/#5 remain OPEN.",
+  "retained_before": [
+    "37685616751/11512056061 camp10 raw originals",
+    "ralph/reports/TIDEWAKE/b/f13_3_lures_r3/cradle_1_landing.jpg historical arrival view; historical mixed judgement, not fresh acceptance"
+  ]
+}

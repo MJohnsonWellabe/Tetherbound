@@ -1,0 +1,47 @@
+{
+  "criterion": "F26#0",
+  "source_commit": "6898cccb1ae61d9cca42ae12d395622d46cd31f6",
+  "integration_main": "347e490987e3cf8aaa46f5ba42ac6d3fb6eaab8d",
+  "lane_merge": "fc3523e75a2131755491193475408819393fdb6a",
+  "independent_review": {
+    "agent": "/root/f26_presets_review",
+    "verdict": "APPROVE literal render/material criterion",
+    "actual_intake": "All eight census PNGs, four raw mounted manifests, actual logs/process receipts, eight Crossing frames and retained Low-selectability proof inspected.",
+    "findings": [
+      "Medium Forward+ renders village/Hall and all four biomes at1920x1080 on Windows/GTX1060 3GB.",
+      "Meadows2/2, Tidewake2/2, Cloudreach3/3 and Stormwood1/1 captures complete with failures empty.",
+      "No missing source resources, empty shaders, logged shader/loading errors or visible missing-material fallback.",
+      "Unbound entries resolve to constructed primitive defaults or hidden meshes.",
+      "Cloudreach null texture uniforms belong to disabled device/turf branches, not required missing textures."
+    ]
+  },
+  "proofs": {
+    "census": "native-batch-receipt.json; medium-mounted-summary.json; four biome contact JPGs",
+    "crossing": "crossing-receipt.json; crossing-contact.jpg; actual8/8 day/night captures and exit0",
+    "low_selectability": "Retained37623256097/art11482508848 at1ac70327dca4f7ddda24bae8ea504b7dc4ac4e3e; actual78checks0failed/exit0/55s and originalF26 reviewer APPROVE; ../preset-controls-proof.json",
+    "logic_scope": "Evidence-only closure; no new production/config changes or additional unit suite. Actual mounted/captured renderer paths and retained existing graphics control proof supply the named behavior evidence."
+  },
+  "stormwood_process": {
+    "capture_complete": true,
+    "captured": 1,
+    "planned": 1,
+    "failures": [],
+    "actual_exit": 1,
+    "operator_stopped": true,
+    "terminal_process_pass": false,
+    "review_resolution": "Completed render/material artifact satisfies literal rendering ask; operator-stop is disclosed, never a terminal smoke PASS."
+  },
+  "integration": {
+    "production": "none; existing Forward+ path and selectable Low already onmain",
+    "adopt": "ONLY ralph/reports/F26/lane-d/material-census evidence plus separatelyREADY missing preset-controls-proof.json",
+    "flags": "none; Compatibility remains shipping default",
+    "excluded": "All other unREADY ancestry; no renderer-default switch or new scene/material changes."
+  },
+  "limits": [
+    "F26#3 High/Medium visual bar remains OPEN.",
+    "No performance, ROG Ally, full controller circuit or every unmounted asset claim.",
+    "Intentional primitive defaults are not a F38–F41 polish/placeholder-bar approval.",
+    "Hosted Forward+ Terrain crash receipts remain failures; this uses the actual coordinator-native packet."
+  ],
+  "disposition": "READY F26#0 literal criterion; original independent APPROVE and actual named rendered/material evidence retained."
+}

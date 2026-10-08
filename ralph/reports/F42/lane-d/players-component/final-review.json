@@ -1,0 +1,90 @@
+{
+  "scope": "F42#0 Players presentation component only; full row OPEN/BLOCK",
+  "integration": {
+    "base_main": "068b5bb7c9b0926672d50ce846a768f92d4dc4ed",
+    "production": "Exact net origin/main diff of scripts/ui/tab_players.gd, plus ONE scripts/ui/game_menu.gd footer TEXT_PRIMARY font-color line. No ancestry merge.",
+    "required_dependencies": "Main already contains UITokens and four installed playable portraits; original Game.local/Session registry, Invite/Remove/focus/status ownership preserved.",
+    "exclude": "All tab_map/config/HUD/Settings/Build/Save/unREADY changes. Match only two-file component and this evidence folder."
+  },
+  "capture": {
+    "run": 37659408179,
+    "artifact": 11500534312,
+    "source_commit": "f427628192e20818282fb38187cd965bf14e3417",
+    "complete": true,
+    "failures": [],
+    "all_frames": 14,
+    "component_frames": [
+      "menu_players.jpg",
+      "menu_players_1280x720.jpg"
+    ],
+    "rasters": [
+      [
+        1920,
+        1080
+      ],
+      [
+        1280,
+        720
+      ]
+    ],
+    "exit": 0,
+    "process_seconds": 943,
+    "reuse": "Current two production files unchanged from captured f427; no new capture or forced reveal."
+  },
+  "logic": [
+    {
+      "run": 37657009651,
+      "artifact": 11500025372,
+      "files": 39,
+      "tests": 459,
+      "assertions": 11695,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 25
+    },
+    {
+      "run": 37658917087,
+      "artifact": 11500148238,
+      "files": 15,
+      "tests": 134,
+      "assertions": 6742,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 10
+    }
+  ],
+  "named_logic_files": [
+    "test_controls",
+    "test_f19_order_consumers",
+    "test_look_prefs",
+    "test_map_realm_view",
+    "test_motion_prefs",
+    "test_text_prefs",
+    "test_steam_invite_ui",
+    "test_steam_lobby"
+  ],
+  "area": {
+    "proof": "tests/smoke_gate_a_map_cycle.gd",
+    "run": 37680516233,
+    "artifact": 11507629839,
+    "exit": 0,
+    "seconds": 104,
+    "result": "PASS actual menu Map/Back/LB/controller paths, not map16 pixel or four-peer Players proof"
+  },
+  "blind_review": {
+    "agent": "/root/f26_presets_review",
+    "verdict": "PASS pictured Players bare-menu headings/content/instructions/identity/status and contrast at both rasters",
+    "source": "Retained original scoped rejudgment under owner6045342186 in map32-players-paired/verdict.json",
+    "limits": "Solo/inactive stocked visual fixture; no earned/save/peer rendered-state claim"
+  },
+  "independent_review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "APPROVE Players-only component READY",
+    "actual_intake": "Actual14-frame manifest/exit, actual passing logic endings, retained104s controller proof, original blind scoped PASS, exact two-file diff and main dependencies checked."
+  },
+  "remaining": [
+    "Full F42#0 OPEN/BLOCK: map16/4/8 context and heavy HUD.",
+    "Settings/Build/Save/othermenus, four-peer/Steam rendered-state matrix, release Bars A/B/device/earned/co-op remain excluded."
+  ],
+  "flags": "none"
+}
