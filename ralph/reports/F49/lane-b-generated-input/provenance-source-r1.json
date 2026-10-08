@@ -1,0 +1,36 @@
+{
+  "kind": "f49_generated_input_source_and_existing_provenance_probe",
+  "owner_policy": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6060136810",
+  "probe": {
+    "run_id": 37783992046,
+    "source": "fa9ae870b3db4aef0aeb25345d199c6dfdbee5da",
+    "script": "tests/probe_f19_population_provenance.gd",
+    "checks": 29,
+    "failures": [],
+    "exit_code": 0,
+    "engine_errors": 0,
+    "artifact_id": 11553855604,
+    "artifact_sha256": "192b495c690015af3718dff6a9aa495ba91df917c3be7fabacf9a130b0e793e0",
+    "log": "ci-provenance-37783992046.log.gz",
+    "log_sha256": "9e8b82aa1270f2ef156185f6830ff814f921e549d7c7ba1098df222733528f9c",
+    "reuse": "Unchanged f74a disk helper and additive existing probe assertions; runner publication correction exercised separately by actual generated segment jobs."
+  },
+  "original_source_review": {
+    "reviewer": "b_f49_review",
+    "thread_id": "01a1165d-ecfb-79d3-9355-1224723cdb53",
+    "source": "7034c247d88b5a47e22a76b6e66f11f0e2f90968",
+    "verdict": "APPROVE",
+    "scope": [
+      "relay_prepared",
+      "relay",
+      "hall",
+      "warden"
+    ],
+    "summary": "Original F49 reviewer: **SOURCE APPROVE** `7034c247d88b5a47e22a76b6e66f11f0e2f90968`, limited to `relay_prepared`, `relay`, `hall` and `warden`.\n\nThe publication-order defect is fixed. Five ordered identities, generated ancestry, production save/Load, exact state checks and segment guards are preserved.\n\nLater profiles remain unreviewed. Actual generated export\u00e2\u2020\u2019Load\u00e2\u2020\u2019segment proofs remain open; no continuous-save or whole-criterion PASS. Router stopped read-only."
+  },
+  "whole_criterion_closed": false,
+  "blind_visual_proof": false,
+  "continuous_fresh_save": false,
+  "prior_earned_play_claim": false,
+  "disclosure": "Portable template copies the accepted ad95 Warrens bytes; target states are explicitly generated fixtures. Neither input production bytes nor the provenance probe establish prior earned play or segment gameplay PASS."
+}
