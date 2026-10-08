@@ -596,8 +596,16 @@ func _generate_boundary_fixture() -> bool:
 			record.breakthroughs = tiers
 			record.cap_level = preload("res://scripts/creatures/breakthrough.gd").level_cap(tiers)
 		if profile.heal_party: creature.heal_fully()
-	for flag: String in profile.world_flags: game.world.flags.set_flag(flag)
-	for flag: String in profile.personal_flags: game.local.flags.set_flag(flag)
+	for flag: String in profile.world_flags:
+		if preload("res://autoload/progression_state.gd").scope_of(flag) != "world":
+			failures.append("Generated world fact has an incorrect authored scope: " + flag)
+			return false
+		game.world.flags.set_flag(flag)
+	for flag: String in profile.personal_flags:
+		if preload("res://autoload/progression_state.gd").scope_of(flag) != "player":
+			failures.append("Generated personal fact has an incorrect authored scope: " + flag)
+			return false
+		game.local.flags.set_flag(flag)
 	# Only declared progress carriers; never fabricate transaction/delivery
 	# receipts or previous PASS evidence for a generated chapter input.
 	for field: String in profile.get("character_fields", {}):
@@ -649,9 +657,15 @@ func _generate_boundary_fixture() -> bool:
 			requested = current_scene.get_node("Stronghold").marker(str(profile.position.stronghold_marker)) + Vector3.UP * 0.15
 		elif profile.position.get("water_dock") == true:
 			var prompt: Node3D = current_scene.get_node("WaterChapter").get("_dock_prompt")
+			if prompt == null:
+				failures.append("Generated Tidewake boundary has no actual civilian dock provider")
+				return false
 			requested = prompt.global_position + Vector3(0.0, 0.15, 2.5)
 		elif profile.position.get("cloudreach_reward") == true:
 			var npc: Node3D = current_scene.get_node("CloudreachChapter").npc_bodies().get("warden_aila")
+			if npc == null:
+				failures.append("Generated Cloudreach boundary has no current reward actor")
+				return false
 			requested = npc.global_position + Vector3(0.0, 0.15, 2.5)
 		elif profile.position.get("stormheart_south_ring") == true:
 			requested = current_scene.get_node("StormheartTree").to_global(Vector3(0.0, 150.0, 26.0)) + Vector3.UP * 0.15
