@@ -11,6 +11,12 @@ var world: Node3D
 var game: Node
 var failures: Array[String] = []
 var finished := false
+# Proof endpoints only; no shipping flag, durable state or schema change.
+var _surface_only := false
+var _surface_capture := false
+var _surface_offload := false
+var _surface_deadline := 0
+var _surface_observed := {"distance_m": 0.0, "physics_s": 0.0, "currents": [], "captures": []}
 
 func _init() -> void:
 	run.call_deferred()
@@ -45,6 +51,18 @@ func tap(action: String) -> void:
 	await frames(3)
 
 func run() -> void:
+	_surface_only = OS.get_cmdline_user_args().has("--through-surface")
+	_surface_capture = OS.get_cmdline_user_args().has("--capture-surface")
+	_surface_offload = OS.get_cmdline_user_args().has("--functional-offload")
+	if (_surface_capture and not _surface_only) or (_surface_offload and not _surface_capture):
+		check(false, "surface capture/offload requires the explicit surface endpoint")
+		finish()
+		return
+	if _surface_offload and not preload("res://tests/helpers/f19_functional_offload.gd").configure("ripplet_surface_driver"):
+		check(false, "surface offload requires the real Compatibility display")
+		finish()
+		return
+	_surface_deadline = Time.get_ticks_msec() + 240000
 	create_timer(240).timeout.connect(func() -> void:
 		if not finished:
 			check(false,"watchdog")
@@ -57,14 +75,18 @@ func run() -> void:
 	game.world.world_id = "f37-ripplet-world"
 	game.save_system = SAVE.new("user://f37_ripplet_%d" % Time.get_ticks_usec())
 	var creature := SPECIES.spawn("ripplet")
-	creature.level = 30
-	creature.recompute_stats_from_base(preload("res://scripts/creatures/progression.gd").config())
+	# Surface endpoint retains this existing fixture's default starter level.
+	# The original default proof still stages its L30 Dive boundary unchanged.
+	if not _surface_only:
+		creature.level = 30
+		creature.recompute_stats_from_base(preload("res://scripts/creatures/progression.gd").config())
 	game.party.add(creature)
 	# Serialization returns a normalized COPY; it does not admit a live UID.
 	# Keep this pre-admission L30 fixture explicit, including its earlier caps.
 	game.local.redesign_character = game.local.save_data().redesign_character
-	game.local.redesign_character.creatures[creature.uid].breakthroughs = [1,2]
-	game.local.redesign_character.creatures[creature.uid].cap_level = 30
+	if not _surface_only:
+		game.local.redesign_character.creatures[creature.uid].breakthroughs = [1,2]
+		game.local.redesign_character.creatures[creature.uid].cap_level = 30
 	world = SCENE.instantiate()
 	root.add_child(world)
 	current_scene = world
@@ -85,6 +107,10 @@ func run() -> void:
 	await frames(10)
 	check(riding.is_mounted(),"ordinary Interact mounts with host authorization")
 	if not riding.is_mounted():
+		finish()
+		return
+	if _surface_only:
+		await _run_surface(player, camera, director, riding, swimming, creature, body)
 		finish()
 		return
 	body.global_position = Vector3(-215,-0.7,166)
@@ -118,9 +144,139 @@ func run() -> void:
 	check(is_equal_approx(creature.swim_stamina_fraction,float(world.get_node("MountedSwimming").state.stamina_fraction)),"stamina remains on owned creature")
 	finish()
 
+func _run_surface(player: CharacterBody3D, camera: Node3D, director: Node, riding: Node,
+		swimming: Node, creature: RefCounted, body: CharacterBody3D) -> void:
+	var route: Dictionary = {}
+	for candidate: Dictionary in world.config.get("water_routes", []):
+		if candidate.get("id") == "first_shore_to_lantern_cove_direct": route = candidate
+	check(not route.is_empty() and str(route.get("required_departure_flag", "")).is_empty() \
+		and route.get("required_equipment", []).is_empty(), "opening Lantern crossing is authored and ungated")
+	if not failures.is_empty(): return
+	var departure := Vector3.INF
+	var arrival := Vector3.INF
+	for anchor: Dictionary in world.config.anchors:
+		var at: Array = anchor.safe_position
+		if anchor.id == route.from_anchor: departure = Vector3(float(at[0]), float(at[1]), float(at[2]))
+		if anchor.id == route.to_anchor: arrival = Vector3(float(at[0]), float(at[1]), float(at[2]))
+	check(departure.is_finite() and arrival.is_finite(), "both actual dry Lantern anchors resolve")
+	if not failures.is_empty(): return
+	var uid := str(creature.uid)
+	var level_before := int(creature.level)
+	var cap_before: Dictionary = game.local.redesign_character.creatures[uid].duplicate(true)
+	var navigator := preload("res://tests/helpers/stick_navigator.gd").new(self, body, camera, _surface_stick)
+	if not await _surface_move(departure, navigator, player, director, riding, creature, body): return
+	check(body.is_on_floor() and not swimming.is_swimming(), "ordinary riding reaches the actual dry departure")
+	if not failures.is_empty(): return
+	# Cross the actual opening edge. No position, current,
+	# unlock, clock, resource, camera or ownership writes follow initial setup.
+	if not await _surface_move(arrival, navigator, player, director, riding, creature, body, 0): return
+	check(body.is_on_floor() and not swimming.is_swimming(), "ordinary mounted crossing reaches its real dry shore")
+	var human_speed := float((swimming.get("_config") as Dictionary).human.speed_m_s)
+	var measured_speed := float(_surface_observed.distance_m) / maxf(0.000001, float(_surface_observed.physics_s))
+	check(float(_surface_observed.physics_s) > 0.0 and measured_speed > human_speed,
+		"actual voluntary surface motion exceeds configured human swimming speed")
+	check(not _surface_observed.currents.is_empty(), "actual mounted movement crosses nonsealed Lantern currents")
+	check(not _surface_capture or not _surface_observed.captures.is_empty(), "requested surface capture observes the actual current crossing")
+	check(int(creature.level) == level_before and game.local.redesign_character.creatures[uid] == cap_before,
+		"surface riding keeps the starter's original level and breakthrough record")
+	check(game.inventory.count("swim_saddle") == 0 and not game.local.flags.has("water_swim_stone_earned"),
+		"opening current crossing needs neither saddle nor Swim Stone")
+	print("F37 SURFACE ENDPOINT " + JSON.stringify({"passed": failures.is_empty(), "owned_uid": uid,
+		"starter_level": level_before, "route": route.id, "observed": _surface_observed,
+		"measured_speed_m_s": measured_speed, "human_speed_m_s": human_speed,
+		"setup": "existing owned starter and initial prompt-reach fixture; no L30/Dive staging",
+		"earned_campaign": false, "dive_or_rejoin_proof": false}))
+
+func _surface_bound(player: CharacterBody3D, director: Node, riding: Node, creature: RefCounted,
+		body: CharacterBody3D) -> bool:
+	return not finished and current_scene == world and not paused and is_instance_valid(body) \
+		and game.party.size() == 1 and game.party.at(0) == creature \
+		and director.ally_instance() == creature and director.ally_body() == body \
+		and riding.is_mounted() and riding.mount_body() == body and player.get("_carrier") == body \
+		and not riding.diving and not director.trainer_battle_active() \
+		and not world.get_node("CombatManager").is_fighting() \
+		and preload("res://scripts/ui/input_owner.gd").current(self) == null
+
+func _surface_move(target: Vector3, navigator: RefCounted, player: CharacterBody3D, director: Node,
+		riding: Node, creature: RefCounted, body: CharacterBody3D, crossing: int = -1) -> bool:
+	var captured := false
+	var water: Node = world.get_node("MountedSwimming")
+	var human_speed := float((player.swim_controller.get("_config") as Dictionary).human.speed_m_s)
+	while not finished and Time.get_ticks_msec() < _surface_deadline:
+		if not _surface_bound(player, director, riding, creature, body):
+			check(false, "surface movement retains its actual owner, carrier and free input")
+			_surface_stick(0, 0)
+			return false
+		var offset: Vector3 = target - body.global_position
+		offset.y = 0
+		if offset.length() <= 1.0:
+			_surface_stick(0, 0)
+			await frames(8)
+			var settled: bool = _surface_bound(player, director, riding, creature, body)
+			check(settled, "surface shore settling retains its actual owner, carrier and free input")
+			return settled
+		var direction := offset.normalized()
+		var before := body.global_position
+		var sample: Dictionary = world.currents.sample(before)
+		var in_water: bool = water.state.mode == preload("res://scripts/player/swim_state.gd").Mode.MOUNTED \
+			and player.swim_controller.state.mode == preload("res://scripts/player/swim_state.gd").Mode.MOUNTED
+		navigator.call("push_once", direction)
+		await physics_frame
+		if not _surface_bound(player, director, riding, creature, body):
+			check(false, "surface physics retains its actual owner, carrier and free input")
+			_surface_stick(0, 0)
+			return false
+		var step: Vector3 = body.global_position - before
+		step.y = 0
+		if not step.is_finite() or step.length() > 3.0:
+			check(false, "ordinary riding has no teleport-sized movement sample")
+			_surface_stick(0, 0)
+			return false
+		if crossing >= 0 and in_water and water.state.mode == preload("res://scripts/player/swim_state.gd").Mode.MOUNTED \
+			and player.swim_controller.state.mode == preload("res://scripts/player/swim_state.gd").Mode.MOUNTED and step.dot(direction) > 0.001:
+			if riding.ride_speed_now() <= human_speed:
+				check(false, "live Ripplet surface speed exceeds human speed")
+				_surface_stick(0, 0)
+				return false
+			var delta: float = body.get_physics_process_delta_time()
+			var voluntary: Vector3 = step - world.current_at(before) * float(preload("res://scripts/player/ripplet_traversal.gd").config().current_multiplier) * delta
+			_surface_observed.distance_m += voluntary.dot(direction)
+			_surface_observed.physics_s += delta
+			var flow: Vector3 = sample.get("velocity", Vector3.ZERO)
+			var current_id := str(sample.get("id", ""))
+			if not sample.has("seal") and current_id.begins_with("first_shore_to_lantern_cove_") and flow.length() > 0.001:
+				if not _surface_observed.currents.has(current_id): _surface_observed.currents.append(current_id)
+				if _surface_capture and not captured and offset.length() < 80.0 and offset.length() > 30.0:
+					_surface_stick(0, 0)
+					var ready := func() -> bool:
+						return _surface_bound(player, director, riding, creature, body) and body.is_visible_in_tree() \
+							and water.state.mode == preload("res://scripts/player/swim_state.gd").Mode.MOUNTED
+					var drawing_before := RenderingServer.render_loop_enabled
+					RenderingServer.render_loop_enabled = true
+					var actual: bool = await preload("res://tests/helpers/f20_ending_probe.gd").new().capture(self,
+						"ripplet-surface-current-%d" % crossing, ready)
+					RenderingServer.render_loop_enabled = drawing_before
+					check(actual, "actual Low surface frame retains the owned rider and carrier")
+					if not actual: return false
+					_surface_observed.captures.append(Time.get_ticks_msec())
+					captured = true
+	_surface_stick(0, 0)
+	check(false, "ordinary surface route stays inside the original 240-second watchdog")
+	return false
+
+func _surface_stick(x: float, y: float) -> void:
+	for axis: int in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
+		var event := InputEventJoypadMotion.new()
+		event.device = 0
+		event.axis = axis
+		event.axis_value = x if axis == JOY_AXIS_LEFT_X else y
+		Input.parse_input_event(event)
+	Input.flush_buffered_events()
+
 func finish() -> void:
 	if finished: return
 	finished = true
+	_surface_stick(0, 0)
 	Input.action_release("move_forward")
 	print("F37 RIPPLET FIXTURE ","PASS" if failures.is_empty() else "FAIL", " ",JSON.stringify(failures))
 	quit(0 if failures.is_empty() else 1)
