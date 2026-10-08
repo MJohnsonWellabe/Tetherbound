@@ -20,6 +20,7 @@
     {
       "id": "master_t1",
       "sign_text_offset_m": [0, 4.6, 0.15],
+      "sign_width_px": 1280,
       "tier": 1,
       "cap_level": 10,
       "next_cap": 20,

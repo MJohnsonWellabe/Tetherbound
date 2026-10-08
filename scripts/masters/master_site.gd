@@ -119,7 +119,7 @@ func _build_sign(world: Node3D) -> void:
 	var presentation: Dictionary = BREAKTHROUGH.masters().sign_presentation
 	words.font_size = int(presentation.font_size)
 	words.pixel_size = float(presentation.pixel_size_m)
-	words.width = float(presentation.width_px)
+	words.width = float(_definition.get("sign_width_px", presentation.width_px))
 	words.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	words.outline_size = int(presentation.outline_size)
 	words.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
