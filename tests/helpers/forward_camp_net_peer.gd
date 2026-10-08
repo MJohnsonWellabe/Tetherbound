@@ -188,6 +188,8 @@ func _place(game: Node, away: float, presses: int = 1) -> Dictionary:
 			"close_enough": 0.8,
 			"budget_frames": maxi(0, 600 - int(Engine.get_physics_frames() - began))})
 		if stood_result.get("verdict") != "PASS": return stood_result
+		if Engine.get_physics_frames() - began > 600:
+			return {"verdict": "FAIL", "detail": "short camp approach exceeded the original 600-frame allowance"}
 		stood_result = await _await_owner_passive_caught_up(
 			maxi(0, 600 - int(Engine.get_physics_frames() - began)), true, binding)
 	else:
