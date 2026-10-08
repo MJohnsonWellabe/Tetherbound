@@ -31,9 +31,11 @@ var _spur_tints: Dictionary = {}
 static func config() -> Dictionary:
 	var resolved: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 	var finish: Dictionary = resolved.get("finish_candidate", {})
+	resolved["vein_glow"] = float(resolved.get("vein_glow", 0.3))
+	resolved["web_energy"] = float(resolved.get("web_energy", 0.5))
 	if bool(finish.get("enabled", false)):
 		for key: String in ["core_energy", "edge_energy", "vein_width", "vein_breakup",
-				"vein_wander", "pulse_spacing_m", "pulse_sharpness"]:
+				"vein_wander", "pulse_spacing_m", "pulse_sharpness", "vein_glow", "web_energy"]:
 			if finish.has(key):
 				resolved[key] = finish[key]
 	return resolved
@@ -113,7 +115,7 @@ func build(world: Node3D, height_at: Callable = Callable()) -> void:
 	material.set_shader_parameter("colour_core", Color(str(_config.colour_core)))
 	material.set_shader_parameter("colour_edge", Color(str(_config.colour_edge)))
 	for key: String in ["core_energy", "edge_energy", "vein_scale", "vein_width", "vein_breakup", "pulse_sharpness", "depth_pull",
-			"vein_lane_offset", "vein_wander"]:
+			"vein_lane_offset", "vein_wander", "vein_glow", "web_energy"]:
 		material.set_shader_parameter(key, float(_config[key]))
 	var spur: Dictionary = _config.get("spur", {})
 	material.set_shader_parameter("spur_energy", float(spur.get("energy", 0.55)))

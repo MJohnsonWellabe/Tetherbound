@@ -26,6 +26,7 @@ var _pad := false
 var _custom: Array[String] = []
 var _ground_readability := false
 var _glass_readability := false
+var _road_readability := false
 
 
 func _run() -> void:
@@ -57,6 +58,8 @@ func _run() -> void:
 			_ground_readability = true
 		elif arg == "--glass-readability":
 			_glass_readability = true
+		elif arg == "--road-readability":
+			_road_readability = true
 		elif arg == "--pad":
 			# F10#6 device profile: the ROG Ally is a controller device, so
 			# glyphs follow a pad as the last input device (Game's own
@@ -78,7 +81,12 @@ func _run() -> void:
 			push_error("Glass readability needs glass, Calm/Break and no aftermath (two affected views)")
 			quit(2)
 			return
-	if _ground_readability or _glass_readability:
+	if _road_readability:
+		if _ground_readability or _glass_readability or _stands_only != ["rod_line"] or _phases_only != ["calm", "break"] or _aftermath_on:
+			push_error("Road readability needs rod_line, Calm/Break and no aftermath (two affected views)")
+			quit(2)
+			return
+	if _ground_readability or _glass_readability or _road_readability:
 		_phase_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self, "--out=")
 		if _phase_graphics_capture.is_empty():
 			quit(1)
@@ -176,11 +184,16 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		glass = _glass_base_receipt(frame_id)
 		if glass.is_empty():
 			return
+	var road: Dictionary = {}
+	if _road_readability:
+		road = _road_current_receipt(frame_id)
+		if road.is_empty():
+			return
 	var image := await _grab()
 	if image == null or image.is_empty():
 		_failures.append("%s: empty viewport image" % frame_id)
 		return
-	if (_ground_readability or _glass_readability) and str(_surge.get("phase")) != frame_id.get_slice("_", 1):
+	if (_ground_readability or _glass_readability or _road_readability) and str(_surge.get("phase")) != frame_id.get_slice("_", frame_id.get_slice_count("_") - 1):
 		_failures.append(frame_id + ": actual Surge phase differs from requested capture phase")
 		return
 	var path := ProjectSettings.globalize_path("%s/%s.jpg" % [_output_dir, frame_id])
@@ -199,8 +212,9 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		"presentation": _presentation_state(), "staged": _staged.duplicate(),
 		"ground_materials": ground,
 		"glass_bases": glass,
+		"road_current": road,
 	}.merged(extra, true))
-	if (_ground_readability or _glass_readability) and [image.get_width(), image.get_height()] != _phase_graphics_capture.resolution:
+	if (_ground_readability or _glass_readability or _road_readability) and [image.get_width(), image.get_height()] != _phase_graphics_capture.resolution:
 		_failures.append(frame_id + ": raster differs from declared native preset")
 
 
@@ -235,7 +249,7 @@ func _ground_material_receipt(frame_id: String) -> Dictionary:
 
 
 func _done() -> void:
-	if _ground_readability or _glass_readability:
+	if _ground_readability or _glass_readability or _road_readability:
 		var ids: Dictionary = {}
 		for frame: Dictionary in _frames:
 			ids[frame.id] = true
@@ -243,6 +257,39 @@ func _done() -> void:
 		if _frames.size() != expected or ids.size() != expected:
 			_failures.append("Readability captured %d/%d unique views; %d required" % [_frames.size(), ids.size(), expected])
 	super._done()
+
+
+func _road_current_receipt(frame_id: String) -> Dictionary:
+	var current := _world.get_node_or_null("StormwoodRoadCurrent")
+	if current == null or _camera != root.get_camera_3d():
+		_failures.append(frame_id + ": production road current/camera missing")
+		return {}
+	var config: Dictionary = current.get("_config")
+	var material: ShaderMaterial = current.get("material")
+	if material == null or material.shader.resource_path != "res://shaders/stormwood_road_current.gdshader" \
+			or not bool(config.get("finish_candidate", {}).get("enabled", false)):
+		_failures.append(frame_id + ": production road finish not bound")
+		return {}
+	var actual: Dictionary = {}
+	for key: String in ["vein_width", "vein_glow", "web_energy", "core_energy", "edge_energy", "vein_breakup", "vein_wander", "pulse_sharpness"]:
+		var value := float(material.get_shader_parameter(key))
+		if not is_equal_approx(value, float(config[key])):
+			_failures.append(frame_id + ": road material differs from config " + key)
+			return {}
+		actual[key] = value
+	var chunks := 0
+	for node: Node in current.get_children():
+		if node is MeshInstance3D:
+			chunks += 1
+			if (node as MeshInstance3D).material_override != material:
+				_failures.append(frame_id + ": road chunk uses a different material")
+				return {}
+	if chunks < 400 or not current.find_children("*", "CollisionObject3D", true, false).is_empty():
+		_failures.append(frame_id + ": road chunks missing or collision added")
+		return {}
+	return {"config_sha256": FileAccess.get_file_as_string("res://data/config/stormwood_road_current.json").sha256_text(),
+		"material": actual, "chunks": chunks, "collision_count": 0, "storm_intensity": current.call("storm_intensity"),
+		"camera_is_rendering": true}
 
 
 func _glass_base_receipt(frame_id: String) -> Dictionary:
