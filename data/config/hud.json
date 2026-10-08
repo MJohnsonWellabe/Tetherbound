@@ -1,6 +1,17 @@
 {
   "_comment": "Presentation-only tuning for scripts/ui/playground_hud.gd. Nothing here is read by authority, reward, inventory or progression code. A missing or invalid value falls back to the constant named in playground_hud.gd.",
   "party_vitals_refresh_candidate": false,
+  "creature_portrait_frames": {
+    "scope": "device_local_hud_presentation",
+    "_comment": "F42 original Low pair: tiny full-canvas portraits cannot identify the compact combat roster. Atlas views of the existing inspected PNGs, preserving raw art, species, compact rows and state shades. Sparkit's opaque1024 canvas has measured picture rect332,344,359,336 (cornerRGB242, contrast>16); other four regions frame their existing faces/ears, not new art. Unlisted/invalid regions retain the original texture.",
+    "regions": {
+      "res://assets/ui/portraits/creatures/sparkit.png": [332, 344, 359, 336],
+      "res://assets/ui/portraits/creatures/mudsnout.png": [90, 120, 670, 650],
+      "res://assets/ui/portraits/creatures/bramblebun.png": [150, 0, 700, 700],
+      "res://assets/ui/portraits/creatures/terrapup.png": [215, 95, 565, 565],
+      "res://assets/ui/portraits/creatures/brooktail.png": [35, 150, 560, 560]
+    }
+  },
   "exploration_roster": {
     "scope": "device_local_presentation",
     "show_empty_slots": false,

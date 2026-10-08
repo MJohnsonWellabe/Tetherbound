@@ -1208,7 +1208,7 @@ func _set_portrait(i: int, path: String) -> void:
 	if _last_portrait[i] == path:
 		return
 	_last_portrait[i] = path
-	var texture := load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+	var texture := preload("res://scripts/ui/creature_portrait.gd").texture_for_path(path)
 	_portraits[i].texture = texture
 	_portraits[i].visible = texture != null
 

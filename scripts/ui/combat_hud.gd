@@ -997,7 +997,7 @@ func _draw_ally_portrait(species_id: String) -> void:
 		_ally_chip.add_child(_ally_portrait)
 		_ally_portrait.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var path := CREATURE_PORTRAIT.resolve(species_id)
-	var texture: Texture2D = load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+	var texture: Texture2D = CREATURE_PORTRAIT.texture_for_path(path)
 	_ally_portrait.texture = texture
 	_ally_portrait.visible = texture!=null
 	_ally_chip.color = Color.TRANSPARENT if texture!=null else _species_colour(species_id)
