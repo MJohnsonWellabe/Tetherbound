@@ -670,7 +670,9 @@ const PREF_AUTO_RUN := "auto_run"
 ## rebuilding its whole canvas every time the tab opens (`game_menu.gd` forces
 ## a rebuild on open/select), the same "one thing across scene loads" job this
 ## autoload already does for `map` itself.
-var map_last_zoom: float = 1.0
+## Negative until the first map open applies map.json's initial local scale.
+## This is session UI state; deliberate zoom changes still survive tab opens.
+var map_last_zoom: float = -1.0
 
 var _menu: CanvasLayer = null
 

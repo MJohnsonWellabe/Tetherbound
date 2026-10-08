@@ -43,6 +43,11 @@ var _tm_intent: Dictionary = {}
 var _tm_revision: int = -1
 var _tm_scope: Dictionary = {}
 var _tm_retry_at: int = 0
+var _equipment_producer: Node = null
+var _equipment_intent: Dictionary = {}
+var _equipment_revision := -1
+var _equipment_scope: Dictionary = {}
+var _equipment_retry_at := 0
 var _candy_producer: Node = null
 var _candy_intent: Dictionary = {}
 var _candy_revision: int = -1
@@ -752,10 +757,8 @@ func _unequip(slot: String) -> void:
 	var id := str(equipment.call("equipped_in", slot))
 	if id.is_empty():
 		say("This equipment slot is empty.")
-	elif bool(equipment.call("unequip_to_inventory", slot, _inventory())):
-		say("Removed %s." % str(_items().call("item_name", id)))
 	else:
-		say("Make room in your Satchel first.")
+		_begin_equipment_transaction(slot, "", id)
 
 func _equip(id: String) -> void:
 	var owner_game := state()
@@ -765,8 +768,10 @@ func _equip(id: String) -> void:
 		say("Saving your last action. Try again in a moment.")
 		return
 	var equipment := _equipment()
-	if equipment != null and bool(equipment.call("equip_from_inventory", id, _inventory())):
-		say("Equipped %s." % str(_items().call("item_name", id)))
+	if equipment != null:
+		var definition: Dictionary = _items().call("definition", id)
+		var slot := str(definition.get("armor_slot", ""))
+		_begin_equipment_transaction(slot, id, str(equipment.call("equipped_in", slot)))
 	else:
 		say("Cannot equip that now. Make room for the worn piece in your Satchel.")
 
@@ -1018,6 +1023,7 @@ func notify_shell_opened() -> void:
 
 
 func poll() -> void:
+	_poll_equipment_transaction()
 	_poll_tm_transaction()
 	_poll_candy_transaction()
 	var inventory: RefCounted = _inventory()
@@ -1456,6 +1462,9 @@ func _read_use() -> void:
 		return
 	if not _tm_intent.is_empty():
 		_retry_tm_transaction()
+		return
+	if not _equipment_intent.is_empty():
+		_retry_equipment_transaction()
 		return
 
 	var inventory: RefCounted = _inventory()
@@ -2600,7 +2609,75 @@ func _tm_completed(action: String, original: Dictionary, result: Dictionary) -> 
 	else:
 		say("Waiting for your original TM teaching decision to save.")
 
+func _bind_equipment_producer() -> bool:
+	var game := state()
+	var producer: Variant = game.get("session") if game != null else null
+	if not producer is Node or not producer.has_method("personal_equipment_submit") \
+		or not producer.has_method("retained_training_transaction") or not producer.has_method("homestead_personal_view") \
+		or not producer.has_method("personal_equipment_scope") or not producer.has_signal("homestead_action_completed"): return false
+	if is_instance_valid(_equipment_producer) and _equipment_producer != producer:
+		if _equipment_producer.is_connected("homestead_action_completed", _equipment_completed): _equipment_producer.disconnect("homestead_action_completed", _equipment_completed)
+		_equipment_intent = {}
+		_equipment_scope = {}
+		_equipment_revision = -1
+	_equipment_producer = producer
+	if not producer.is_connected("homestead_action_completed", _equipment_completed): producer.connect("homestead_action_completed", _equipment_completed)
+	return true
+
+func _poll_equipment_transaction() -> void:
+	if not _bind_equipment_producer() or Time.get_ticks_msec() < _equipment_retry_at: return
+	if _equipment_intent.is_empty():
+		_equipment_retry_at = Time.get_ticks_msec() + 1000
+		var retained: Dictionary = _equipment_producer.call("retained_training_transaction", ["trainer_equip"])
+		if retained.get("status") != "pending": return
+		_equipment_intent = retained.intent.duplicate(true)
+		_equipment_revision = int(retained.original_revision)
+		_equipment_scope = _equipment_producer.call("personal_equipment_scope")
+	_retry_equipment_transaction()
+
+func _begin_equipment_transaction(slot: String, item: String, expected: String) -> void:
+	if not _bind_equipment_producer():
+		say("Equipment is unavailable until your character is ready.")
+		return
+	_poll_equipment_transaction()
+	if not _equipment_intent.is_empty():
+		say("Waiting for your equipment change to save.")
+		return
+	var view: Dictionary = _equipment_producer.call("homestead_personal_view")
+	var revision: Variant = view.get("registry_revision")
+	if not preload("res://scripts/creatures/essence.gd")._integer(revision, 0, 2147483646):
+		say("Waiting for your character. Try Equip again.")
+		return
+	_equipment_intent = {"equip_id": Crypto.new().generate_random_bytes(16).hex_encode(), "slot": slot, "item_id": item, "expected_item": expected}
+	_equipment_revision = int(revision)
+	_equipment_scope = _equipment_producer.call("personal_equipment_scope")
+	_retry_equipment_transaction()
+
+func _retry_equipment_transaction() -> void:
+	if _equipment_intent.is_empty() or not is_instance_valid(_equipment_producer): return
+	_equipment_retry_at = Time.get_ticks_msec() + 1000
+	var original := _equipment_intent.duplicate(true)
+	var result: Variant = _equipment_producer.call("personal_equipment_submit", original, _equipment_revision, _equipment_scope.duplicate(true))
+	if result is Dictionary: _equipment_completed("trainer_equip", original, result)
+
+func _equipment_completed(action: String, original: Dictionary, result: Dictionary) -> void:
+	if action != "trainer_equip" or _equipment_intent.is_empty() or original != _equipment_intent: return
+	if result.get("ok") == true and result.get("settled") == true and result.get("durable") == true \
+		and result.get("owner_saved") == true and result.get("owner_acknowledged") == true:
+		var item: String = str(original.item_id) if not str(original.item_id).is_empty() else str(original.expected_item)
+		say("%s %s." % ["Equipped" if not str(original.item_id).is_empty() else "Removed", str(_items().call("item_name", item))])
+	elif result.get("ok") == false and result.get("terminal_refusal") == true:
+		say("Cannot change equipment now. %s" % str(result.get("reason", result.get("code", "Try again."))))
+	else:
+		say("Waiting for your equipment change to save.")
+		return
+	_equipment_intent = {}
+	_equipment_scope = {}
+	_equipment_revision = -1
+
 func _exit_tree() -> void:
+	if is_instance_valid(_equipment_producer) and _equipment_producer.is_connected("homestead_action_completed", _equipment_completed):
+		_equipment_producer.disconnect("homestead_action_completed", _equipment_completed)
 	if is_instance_valid(_candy_producer) and _candy_producer.is_connected("homestead_action_completed", _candy_completed):
 		_candy_producer.disconnect("homestead_action_completed", _candy_completed)
 	if is_instance_valid(_tm_producer) and _tm_producer.is_connected("homestead_action_completed", _tm_completed):

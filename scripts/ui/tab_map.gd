@@ -257,6 +257,13 @@ func build() -> void:
 	var map_config: Variant = JSON.parse_string(FileAccess.get_file_as_string(MAP_CONFIG_PATH))
 	_local_label_margin_zoom = float(map_config.get("local_label_margin_zoom", MAX_ZOOM)) if map_config is Dictionary else MAX_ZOOM
 	_local_label_margin_px = clampf(float(map_config.get("local_label_margin_px", 18.0)), 0.0, 64.0) if map_config is Dictionary else 18.0
+	if map_config is Dictionary and (
+		bool(map_config.get("local_label_margin_candidate_enabled", false))
+		or "--map-label-margin-candidate" in OS.get_cmdline_user_args()
+	):
+		var candidate_zoom := float(map_config.get("local_label_margin_candidate_zoom", 16.0))
+		if is_finite(candidate_zoom):
+			_local_label_margin_zoom = clampf(candidate_zoom, MIN_ZOOM, MAX_ZOOM)
 	if remembered_zoom < MIN_ZOOM:
 		remembered_zoom = float(map_config.get("initial_zoom", MAX_ZOOM)) if map_config is Dictionary else MAX_ZOOM
 		if state() != null:
@@ -1188,10 +1195,8 @@ func _draw_player_pin_cursor(canvas: Control, map_rect: Rect2) -> void:
 ## `placed` is every label rect already drawn this frame — a backstop against
 ## whatever gets authored into map_landmarks.json later (see the call site's
 ## own comment), not a fix for today's regions, which are spaced apart on
-## purpose. If this label's own rect would overlap a previously placed one,
-## it drops to just below that other rect's own bottom edge and re-checks —
-## bounded to a handful of tries so a pathological cluster degrades to
-## "stacked but readable" rather than an infinite loop.
+## purpose. Search the visible obstacles' edges for a readable placement;
+## exhausting a fixed number of nudges must never return overlapping text.
 func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, placed: Array[Rect2]) -> void:
 	var rect := _resolved_region_label_rect(canvas, map_rect, region, placed)
 	if rect.size == Vector2.ZERO:
@@ -1236,27 +1241,35 @@ func _resolved_region_label_rect(canvas: Control, map_rect: Rect2, region: Dicti
 		if not Rect2(Vector2.ZERO, canvas.size).has_point(point):
 			return Rect2()
 		top_left = Vector2(_local_label_margin_px, _local_label_margin_px)
-	var rect := Rect2(top_left, text_size)
-	var attempts := 0
-	while attempts < 6:
-		var collided := false
-		for other in occupied:
-			if rect.intersects(other):
-				# Drop straight to just under THIS collider's own bottom edge,
-				# not down by this label's own height -- two centres that are
-				# only a few pixels apart in Y mean a same-size blind shift
-				# can still leave the new top a few pixels inside the old
-				# bottom. Anchoring to the actual collider geometry is what
-				# guarantees real clearance regardless of how close the two
-				# centres started.
-				rect.position.y = other.position.y + other.size.y + PADDING
-				collided = true
-		if not collided:
-			break
-		attempts += 1
-	if not Rect2(Vector2.ZERO, canvas.size).encloses(rect):
-		return Rect2()
-	return rect
+	var viewport := Rect2(Vector2.ZERO, canvas.size).grow(-PADDING)
+	if not Rect2(Vector2.ZERO, canvas.size).has_point(point) \
+		or text_size.x>viewport.size.x or text_size.y>viewport.size.y: return Rect2()
+	var latest := viewport.end-text_size
+	top_left=top_left.clamp(viewport.position,latest)
+	var columns: Array[float] = [top_left.x,viewport.position.x,latest.x]
+	var blockers: Array[Rect2] = []
+	for other in occupied:
+		var padded := other.grow(PADDING)
+		if not viewport.intersects(padded): continue
+		blockers.append(padded)
+		for edge: float in [padded.position.x-text_size.x,padded.end.x]:
+			if edge>=viewport.position.x and edge<=latest.x and not columns.has(edge): columns.append(edge)
+	# Sorted obstacles make each column a single monotone pass, independent
+	# of marker draw order. Try above the preferred row too if its bottom fills.
+	blockers.sort_custom(func(a: Rect2,b: Rect2) -> bool: return a.position.y<b.position.y)
+	var best := Rect2()
+	var best_distance := INF
+	for x: float in columns:
+		for y: float in [top_left.y,viewport.position.y]:
+			var rect := Rect2(Vector2(x,y),text_size)
+			for other: Rect2 in blockers:
+				if rect.intersects(other): rect.position.y=other.end.y
+			if not viewport.encloses(rect): continue
+			var distance := rect.position.distance_squared_to(top_left)
+			if distance<best_distance:
+				best=rect
+				best_distance=distance
+	return best
 
 
 ## The player's dot, and which way they are facing.

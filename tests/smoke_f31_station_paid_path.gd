@@ -29,6 +29,9 @@ var _game: Node
 var _world: Node
 var _placer: Node
 var _player: Node3D
+var _command_tier_proof := false
+var _command_config_before: Dictionary = {}
+var _actor_vitals_before: Dictionary = {}
 
 
 func _init() -> void:
@@ -36,6 +39,38 @@ func _init() -> void:
 
 
 func _run() -> void:
+	_command_tier_proof = OS.get_cmdline_user_args().has("--prove-command-tier")
+	if _command_tier_proof:
+		await process_frame
+		var game := root.get_node("Game")
+		var local: RefCounted = game.get("local")
+		var session: Node = game.get("session")
+		var character_id: String = str(session.call("_local_character_id")) if session != null else ""
+		if session == null or session.call("is_active") == true or character_id.is_empty():
+			_fail("returning-character fixtures require a stable offline identity before admission")
+			_report()
+			return
+		# Existing returning-character fixture format from hall_agreement_net_peer::_seed_relic_hung.
+		# Unlocks and ingredients are setup only; no accepted campaign boundary is claimed.
+		var character: Dictionary = local.get("redesign_character")
+		for biome: String in ["meadows", "tidewake", "cloudreach"]:
+			if not (character.relics_hung as Array).has(biome): character.relics_hung.append(biome)
+			var receipt := "relic_hang:%s:%s" % [biome, character_id]
+			if not (character.transaction_receipts as Array).has(receipt): character.transaction_receipts.append(receipt)
+		local.set("redesign_character", character)
+		if int(game.get("party").call("size")) == 0:
+			if game.get("party").call("add", preload("res://scripts/creatures/creature_species.gd").spawn("terrapup")) != true:
+				_fail("disclosed pre-admission owned starter fixture was refused")
+				_report()
+				return
+		var commands := preload("res://scripts/combat/tether_commands.gd")
+		_command_config_before = commands.config()
+		commands._config = _command_config_before.duplicate(true)
+		for flag: String in ["runtime_enabled", "network_enabled", "ui_enabled"]: commands._config.feature_flags[flag] = true
+		var math := preload("res://scripts/combat/combat_math.gd")
+		_actor_vitals_before = math.config().actor_vitals.duplicate(true)
+		math.config().actor_vitals = _actor_vitals_before.duplicate(true)
+		math.config().actor_vitals.runtime_enabled = true
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	# The title enters this world with change_scene_to_file.
@@ -50,6 +85,11 @@ func _run() -> void:
 		return
 	_player.global_position = STANCE
 	for i in 10: await physics_frame
+	if _command_tier_proof:
+		await _check_crafted_command_tiers()
+		_check_saved_world_binding()
+		_report()
+		return
 	await _check_forged_legacy_station_intent_is_refused()
 	var forge := await _check_paid_station_place("forge")
 	if forge != null:
@@ -305,11 +345,127 @@ func _check_saved_world_binding() -> void:
 	else: print("saved world journal binds every station record")
 
 
+## F24#4: required crafted-tier witness; same paid placement/panel transaction as F31.
+## Fixtures: pre-admission regional relic entitlements/one owned starter if empty,
+## existing _fund ingredients, harness relocation and ordinary wild auto-engage callback.
+func _check_crafted_command_tiers() -> void:
+	var cell := _legal_cell("workbench")
+	if not cell.is_finite():
+		_fail("no legal Workbench cell for the command-tier witness")
+		return
+	_player.global_position = cell + GHOST_TO_STANCE
+	for i in 10: await physics_frame
+	var bench := await _check_paid_station_place("workbench")
+	if bench == null: return
+	await _press("build_cancel")
+	var gear := preload("res://scripts/creatures/creature_gear.gd").config()
+	var inventory: RefCounted = _game.get("inventory")
+	var equipment: RefCounted = _game.get("local").get("equipment")
+	var completed: Array[Dictionary] = []
+	for prefix: String in ["rootiron", "tidesteel", "skyglass", "stormglass"]:
+		var item := prefix + "_command_pouch"
+		var recipe_id := "craft_" + item
+		var recipe: Dictionary = gear.recipes[recipe_id]
+		_fund(recipe.cost) # Same disclosed paid-path supplies; output is never granted.
+		var before := _counts(recipe.cost)
+		var owned_before := int(inventory.call("count", item))
+		bench.call("_open")
+		for i in 20: await physics_frame
+		var panel: Node = bench.get("_panel")
+		if panel == null or not bool(panel.call("is_open")):
+			_fail("real Workbench panel did not open for " + recipe_id)
+			return
+		var reply := {"result": {}}
+		var on_complete := func(op: String, _intent: Dictionary, result: Dictionary) -> void:
+			if op == "station_craft": reply.result = result.duplicate(true)
+		_game.get("session").connect("homestead_action_completed", on_complete)
+		panel.call("_station_action", "station_craft", {"recipe_id": recipe_id})
+		for i in 600:
+			if reply.result.get("settled") == true or reply.result.get("terminal_refusal") == true: break
+			await physics_frame
+		_game.get("session").disconnect("homestead_action_completed", on_complete)
+		var after := _counts(recipe.cost)
+		if reply.result.get("ok") != true or reply.result.get("settled") != true or int(inventory.call("count", item)) != owned_before + 1:
+			_fail("Workbench craft failed to settle one " + item + ": " + str(reply.result))
+			panel.call("close")
+			return
+		for need: Dictionary in recipe.cost:
+			if int(after.get(need.id, 0)) != int(before.get(need.id, 0)) - int(need.n): _fail("pouch craft cost mismatch: " + str(need))
+		completed.append({"item": item, "recipe": recipe_id, "before": before, "after": after, "result": reply.result})
+		panel.call("close")
+		for i in 10: await physics_frame
+	# Use the actual Backpack Equip verb; local-only mutation cannot update
+	# admitted equipment and is deliberately refused by its refresh guard.
+	var menu: Node = _game.call("menu")
+	menu.call("open", "backpack")
+	for i in 10: await process_frame
+	var backpack: Node
+	for i in (menu.get("_tabs") as Array).size():
+		if menu.get("_tabs")[i].get("id") == "backpack": backpack = menu.get("_bodies")[i]
+	var equip_reply := {"result": {}}
+	var on_equip := func(op: String, _intent: Dictionary, result: Dictionary) -> void:
+		if op == "trainer_equip": equip_reply.result = result.duplicate(true)
+	if backpack == null:
+		_fail("actual Backpack did not open for crafted pouch Equip")
+		return
+	_game.get("session").connect("homestead_action_completed", on_equip)
+	backpack.get("_buttons")[int(inventory.call("find_slot", "stormglass_command_pouch"))].grab_focus()
+	await process_frame
+	await _press("interact")
+	for i in 600:
+		if equip_reply.result.get("settled") == true or equip_reply.result.get("terminal_refusal") == true: break
+		await physics_frame
+	_game.get("session").disconnect("homestead_action_completed", on_equip)
+	menu.call("close")
+	if equip_reply.result.get("settled") != true or equipment.call("equipped_in", "backpack") != "stormglass_command_pouch" \
+		or int(inventory.call("count", "stormglass_command_pouch")) != 0:
+		_fail("actual Backpack Equip did not settle crafted Stormglass: " + str(equip_reply.result))
+		return
+	var director: Node = _world.get_node("EncounterDirector")
+	var manager: Node = _world.get_node("CombatManager")
+	# Owning a creature is distinct from recalling its grounded body. Use the
+	# same production recall seam exercised by smoke_creature_control.
+	if director.call("ally_instance") == null and not await director.call("summon_active_creature"):
+		_fail("actual owned creature recall was refused before command admission")
+		return
+	var wild: Node3D = director.call("aggressive_creature")
+	if wild == null:
+		_fail("no authored wild body for crafted-pouch gameplay admission")
+		return
+	_player.global_position = wild.global_position + Vector3(3.0, 0.0, 3.0)
+	for i in 30: await physics_frame
+	var canonical: Dictionary = director.call("_canonical_wild_start_state", wild)
+	print("F24_COMMAND_ADMISSION " + JSON.stringify({"canonical": canonical,
+		"context": _game.get("session").call("_host_wild_training_context"),
+		"owned_uid": str(director.call("ally_instance").get("uid")),
+		"body_ready": director.get("_ally_ready_body") != null}))
+	if canonical.get("ready") != true:
+		_fail("crafted gear's canonical actor preflight refused: " + str(canonical))
+		return
+	director.call("_on_wild_wants_to_engage", wild)
+	for i in 180:
+		if manager.call("is_fighting") == true and int(manager.call("tether_command_snapshot").get("tier", -1)) == 4: break
+		await physics_frame
+	var snapshot: Dictionary = manager.call("tether_command_snapshot")
+	var host: RefCounted = director.get("_encounter_host")
+	var id: String = str(manager.call("encounter_id"))
+	var record: Dictionary = host.call("record", id) if host != null else {}
+	var pool: Dictionary = record.get("participants", {}).get(1, {}).get("tether_commands", {})
+	if manager.call("is_fighting") != true or pool.get("tier") != 4 or snapshot.get("tier") != 4:
+		_fail("real command admission did not consume the crafted/equipped tier: " + str(snapshot))
+	print("F24_CRAFTED_COMMAND_TIERS " + JSON.stringify({"crafted": completed, "equipment": equipment.call("save_data"),
+		"equip_result": equip_reply.result,
+		"canonical_ready": canonical.get("ready"), "encounter_kind": record.get("kind"), "pool": pool, "snapshot": snapshot,
+		"tier_profile": preload("res://scripts/combat/tether_commands.gd").tier_profile(4), "fixtures": "regional relic receipts and pre-admission starter; funded costs; harness relocation/auto-engage; process-local gates"}))
+
+
 func _fail(message: String) -> void:
 	_failures.append(message)
 
 
 func _report() -> void:
+	if not _command_config_before.is_empty(): preload("res://scripts/combat/tether_commands.gd")._config = _command_config_before
+	if not _actor_vitals_before.is_empty(): preload("res://scripts/combat/combat_math.gd").config().actor_vitals = _actor_vitals_before
 	print("")
 	if _failures.is_empty():
 		print("F31 station paid path smoke test passed")

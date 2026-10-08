@@ -128,18 +128,35 @@ func _check_actual_travel_drives_minimap() -> void:
 		_fail("minimap heading %.3f does not match resolved travel %.3f" % [movement_yaw, expected])
 		return
 
-	# Orbit with the real right stick while standing still. World orientation
-	# must retain travel-up; the independently drawn look marker must change.
+	# Orbit with the real right stick while standing still. Travel owns map-up;
+	# the marker follows the trainer's visible +Z heading, independently of camera.
 	var retained := movement_yaw
-	var look_before := float(_minimap.get("_look_yaw"))
+	var model := _player.get_node_or_null(^"Model") as Node3D
+	var camera := _world.get_node_or_null(^"CameraRig/Camera3D") as Camera3D
+	var facing_before: Variant = _minimap.get("_facing_yaw")
+	if model == null or camera == null or not (facing_before is float or facing_before is int):
+		_fail("real trainer model, camera or minimap facing sample is unavailable")
+		return
+	var model_before := atan2(model.global_basis.z.x, model.global_basis.z.z)
+	if absf(angle_difference(float(facing_before), model_before)) > 0.02:
+		_fail("minimap tip does not match the visible trainer heading before orbit")
+		return
+	var camera_before := atan2(camera.global_basis.z.x, camera.global_basis.z.z)
 	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 35)
-	var look_after := float(_minimap.get("_look_yaw"))
+	var camera_after := atan2(camera.global_basis.z.x, camera.global_basis.z.z)
+	var model_after := atan2(model.global_basis.z.x, model.global_basis.z.z)
+	var facing_after: Variant = _minimap.get("_facing_yaw")
+	if not (facing_after is float or facing_after is int):
+		_fail("minimap facing sample disappeared during real camera orbit")
+		return
 	if absf(angle_difference(retained, float(_minimap.get("_movement_yaw")))) > 0.02:
 		_fail("stationary camera orbit rotated the movement-up map")
-	elif absf(angle_difference(look_before, look_after)) < 0.15:
-		_fail("physical right stick did not update the minimap's independent look heading")
+	elif absf(angle_difference(camera_before, camera_after)) < 0.15:
+		_fail("physical right stick did not independently orbit the real camera")
+	elif absf(angle_difference(float(facing_after), model_after)) > 0.02:
+		_fail("minimap tip does not match the visible trainer heading after orbit")
 	else:
-		print("  ok    resolved travel stays map-up while stationary right-stick look remains independent")
+		print("  ok    resolved travel stays map-up; real camera orbits independently; tip follows trainer heading")
 
 
 func _check_full_map_controller_ownership_and_recovery() -> void:
@@ -152,8 +169,10 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 		return
 	var bodies: Array = _menu.get("_bodies")
 	var map_tab := bodies[int(_menu.get("_index"))] as Control
-	if map_tab == null or float(map_tab.get("_zoom")) != 1.0:
-		_fail("full map did not open at whole-world fit")
+	var map_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/map.json"))
+	var initial_zoom := clampf(float(map_config.get("initial_zoom", 32.0)), 1.0, 32.0)
+	if map_tab == null or not is_equal_approx(float(map_tab.get("_zoom")), initial_zoom):
+		_fail("first full map did not open at the configured local scale")
 		return
 	var controls := map_tab.get("_controls_label") as RichTextLabel
 	if controls == null or not controls.text.contains("Zoom") or not controls.text.contains("Pan"):
@@ -163,7 +182,28 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 	if canvas == null or not canvas.clip_contents:
 		_fail("full-map canvas does not clip scaled map content inside its panel")
 		return
+	var initial_rect: Rect2 = map_tab.call("_map_rect_for_canvas", canvas.size)
+	var initial_pan: Vector2 = map_tab.get("_pan_world")
+	map_tab.set("_pan_world", map_tab.call("_pan_world_for_player", _player.global_position))
+	map_tab.call("_clamp_pan")
+	var initial_follow_target: Vector2 = map_tab.get("_pan_world")
+	map_tab.set("_pan_world", initial_pan)
+	if initial_pan.distance_to(initial_follow_target) > 1.0:
+		_fail("initial local map did not follow the real player within world bounds")
+		return
+	# Preserve the whole-world/RT regression below after reaching overview with
+	# real LT presses. Each configured local step must remain reachable.
+	for step in 4:
+		if float(map_tab.get("_zoom")) <= 1.0:
+			break
+		await _pulse_motion_action("map_zoom_out")
+	if float(map_tab.get("_zoom")) != 1.0:
+		_fail("physical LT could not reach whole-world fit from the initial local scale")
+		return
 	var fit_rect: Rect2 = map_tab.call("_map_rect_for_canvas", canvas.size)
+	if initial_rect.size.distance_to(fit_rect.size * initial_zoom) > 1.0:
+		_fail("initial local scale did not visibly enlarge the real terrain rectangle")
+		return
 
 	await _pulse_motion_action("map_zoom_in")
 	if float(map_tab.get("_zoom")) <= 1.0:
@@ -260,6 +300,20 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 	await _press_action("party_cycle")
 	if int(_party.call("active_index")) != active_before:
 		_fail("party cycling leaked through while the full map owned input")
+	# LB is also the menu's previous-tab verb. Its party-owner check above
+	# legitimately left the map; restore it through the physical Map shortcut
+	# before asking RT to select a remembered map scale.
+	await _press_action("map")
+	if not bool(_menu.call("is_open")) or str(_menu.call("current_tab_id")) != "map":
+		_fail("physical Map shortcut could not return from the previous menu tab")
+		return
+	var current_bodies: Array = _menu.get("_bodies")
+	map_tab = current_bodies[int(_menu.get("_index"))] as Control
+	await _pulse_motion_action("map_zoom_in")
+	var remembered_zoom := float(map_tab.get("_zoom"))
+	if remembered_zoom <= 1.0:
+		_fail("physical RT could not select a non-fit scale before reopening")
+		return
 
 	await _press_action("menu_cancel")
 	if bool(_menu.call("is_open")) or paused:
@@ -277,6 +331,9 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 		return
 	var reopened_bodies: Array = _menu.get("_bodies")
 	var reopened_map := reopened_bodies[int(_menu.get("_index"))] as Control
+	if reopened_map == null or not is_equal_approx(float(reopened_map.get("_zoom")), remembered_zoom):
+		_fail("closing/reopening discarded the player's physically selected local zoom")
+		return
 	var reopened_canvas := reopened_map.get("_canvas") as Control if reopened_map != null else null
 	if reopened_map == null or reopened_canvas == null or not reopened_canvas.clip_contents:
 		_fail("second full-map open did not build a valid clipped map canvas")
