@@ -4141,7 +4141,9 @@ func _saved_actor_vitals_matches(creature: RefCounted, payload: Dictionary) -> b
 func apply_host_actor_heal(payload: Dictionary) -> void:
 	var creature: RefCounted = active_creature()
 	if state != State.ACTIVE or creature == null or not is_instance_valid(_ally_body) \
-		or not _durable_trainer_reward_owned() or payload.get("canonical_self_heal") != true \
+		or not (_durable_trainer_reward_owned() or (is_instance_valid(_encounter_link) \
+			and _encounter_link.has_method("uses_wild_actor_vitals") and _encounter_link.call("uses_wild_actor_vitals", _encounter_id) == true)) \
+		or payload.get("canonical_self_heal") != true \
 		or not _saved_actor_vitals_matches(creature, payload) or not payload.get("move") is Dictionary: return
 	var action_id: String = str(payload.actor_vitals_receipt.get("receipt_id", ""))
 	if action_id.is_empty() or _seen_impact_actions.has(action_id): return
