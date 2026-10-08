@@ -1,5 +1,44 @@
 # Lane C trainer hazard evidence
 
+## Current F33#0 proof and native capture candidate
+
+`5a61509e1807b36ea02723805d8649b17b5e8ca3` fixes the actual gear
+recipient labels in `craft_panel.gd`: a missing nickname now uses the authored
+species name, and each owned card has its numbered party slot. The same UID,
+gear fields, station context, payment and focus keys remain authoritative.
+NOTICE `6067226725` preceded the edit. The existing Den/Forge upgrade method
+now exercises all four live tiers and both slots through each +1..+3 link,
+retaining station-tier, maximum-upgrade, payment and receipt guards. Its
+declared relic/material stock is a mechanics fixture, not an earned route.
+
+[Run 37831138974](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37831138974),
+job `113496486976`, artifact `11574265767`, exact source `5a61509e18`:
+**1 existing test / 208 assertions / 0 failures, exit 0**. Retained ZIP
+`D:/tetherbound/.tmp/c-f33-0-37831138974.zip`, SHA256
+`84201cd1841bc802b60becfcbe4c92f63c7ac4114b1c2c6cdb1bccf3a0556fe4`.
+Original `modal_review` gave SOURCE + COMMAND APPROVE and then ARTIFACT
+APPROVE in `D:/tetherbound/.tmp/c-f33-0-affected-original-verdict.txt`.
+This is the affected mechanics result, not whole-criterion approval.
+
+`4d2f6ff2bbe43a39ff101fda022f745cf7ccd9d0` adds an optional native label
+capture to the existing paid-station smoke. It uses five disclosed
+pre-admission owned cards (including duplicate unnamed species and a named
+card), two carried gear pieces and the actual paid Den/current Session/input
+owner. It captures each actual enabled gear button at 1280x720 and 1920x1080,
+20 frames total. It rejects headless operation, command-tier mode, an existing
+output directory and a nonfresh character. Original paid station and world
+journal assertions remain. It grants no catch, crafting or accepted-boundary
+credit and changes no actor-vitals flags. NOTICE `6067515784` preceded the edit.
+
+Original `modal_review` gave SOURCE + COMMAND APPROVE for ROOT-scheduled D/E
+native Compatibility capture in
+`D:/tetherbound/.tmp/c-f33-native-capture-original-verdict.txt`. Command args:
+`--rendering-method gl_compatibility --resolution 1280x720 --script tests/smoke_f31_station_paid_path.gd -- --gear-label-capture=D:/CodexTemp/tetherbound-proof/c-f33-gear-labels-4d2f-r1`
+with exact checkout `4d2f6ff2bbe43a39ff101fda022f745cf7ccd9d0`, a fresh
+isolated user directory and a fresh absolute output. **UNRUN**: ROOT's native
+GPU hold remains in effect. Original `modal_visual` must judge only the native
+pixels, without producer logs or source hints. Whole **F33#0 remains open**.
+
 ## Saved pouch tier and real Satchel reconnect proof
 
 `685d3e10beff5b031bebf4726ec5e284e33bbef7` fixes the Satchel's existing
@@ -35,7 +74,7 @@ Original armor setup remains unchanged. NOTICE `6066985766` preceded the edit.
 Original `modal_review` gave SOURCE and COMMAND APPROVE for that exact cut in
 `D:/tetherbound/.tmp/c-f33-4-net-source-original-verdict.txt`. It was not run as
 a partial batch before the remaining gear persistence assertions were added.
-The actual co-op result remains pending. Whole **F33#4 is open**;
+The actual co-op attempts below failed. Whole **F33#4 is open**;
 no component READY, actor-vitals flip or new GPU dispatch is claimed.
 
 `c8f3a96e41cfe9f26d0a7924360a016cdadf2c02` extends the same existing proof
@@ -47,6 +86,31 @@ The original drop/wipe/rejoin compares both guest slots by the same UID and
 the host's separate pieces. No crafting, balance or earned-route credit.
 NOTICE `6067071414` preceded this extension; original `modal_review` gave
 SOURCE + COMMAND APPROVE for exact `c8f3a96e41` in that same verdict.
+
+The first combined attempt,
+[run 37829972396](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37829972396),
+job `113492477756`, artifact `11573525482`, failed before admission: the
+existing dispatcher called the newly asynchronous equipment step without
+`await`. Retained ZIP `D:/tetherbound/.tmp/c-f33-4-net-37829972396.zip`, SHA256
+`3d137a20c93f503730652852abd32b82274f5381f34d46b4850830234dd66689`.
+`4bff1a5e75b16c65199829df09f19f9cf2606051` corrects that single existing
+caller; NOTICE `6067301973` preceded the edit. Original `modal_review` approved
+the retained failure, exact correction and affected command.
+
+The corrected combined attempt,
+[run 37831612731](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37831612731),
+job `113498114542`, artifact `11574545164`, reached admission and passed the
+host gear fixture, then failed at the first actual guest Rootiron pouch wear.
+After 650 total step frames, original request and completion result were both
+empty; live and owner-disk backpack stayed empty and pouch tier stayed 0.
+No script/parse error was observed. This establishes no specific input,
+modal, fence or timer cause. Retained ZIP
+`D:/tetherbound/.tmp/c-f33-4-net-37831612731.zip`, SHA256
+`983f9235a486f048b4908345bf13284a4fd0d3935e2df47f11be1f029c488aa3`.
+Original `modal_review` confirmed this failed artifact and its digest in
+`D:/tetherbound/.tmp/c-f33-native-capture-original-verdict.txt`.
+**F33#4 is parked after two actual failures pending a distinct supported
+correction. No unchanged rerun or whole READY is authorized by these results.**
 
 Unchanged command-tier evidence is reused from the accepted F24#4 packet in
 main commit `383c3bdf35`, `ralph/reports/F24/lane-a/crafted-command-tier-proof.json`:
