@@ -257,6 +257,13 @@ func build() -> void:
 	var map_config: Variant = JSON.parse_string(FileAccess.get_file_as_string(MAP_CONFIG_PATH))
 	_local_label_margin_zoom = float(map_config.get("local_label_margin_zoom", MAX_ZOOM)) if map_config is Dictionary else MAX_ZOOM
 	_local_label_margin_px = clampf(float(map_config.get("local_label_margin_px", 18.0)), 0.0, 64.0) if map_config is Dictionary else 18.0
+	if map_config is Dictionary and (
+		bool(map_config.get("local_label_margin_candidate_enabled", false))
+		or "--map-label-margin-candidate" in OS.get_cmdline_user_args()
+	):
+		var candidate_zoom := float(map_config.get("local_label_margin_candidate_zoom", 16.0))
+		if is_finite(candidate_zoom):
+			_local_label_margin_zoom = clampf(candidate_zoom, MIN_ZOOM, MAX_ZOOM)
 	if remembered_zoom < MIN_ZOOM:
 		remembered_zoom = float(map_config.get("initial_zoom", MAX_ZOOM)) if map_config is Dictionary else MAX_ZOOM
 		if state() != null:
