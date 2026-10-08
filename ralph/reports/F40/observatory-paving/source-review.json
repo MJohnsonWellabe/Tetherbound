@@ -1,0 +1,112 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-08T18:27:22Z",
+  "criterion_scope": "F40 P2-025: isolated Observatory paving/ground-cover intersection candidate; independent source and command applicability only",
+  "source_commit": "58bdad0d99093f0628677a600eab4c2bae3a5c77",
+  "base_commit": "58e2bb15233a083dd4d1132538e9e9934f7ef316",
+  "source_verdict": "APPROVE",
+  "command_verdict": "APPROVE",
+  "reviewed_changed_blobs": {
+    "scripts/world/cloudreach_world.gd": "711b23138f2ec683b91fc6bb0e9ca3af45b561e6",
+    "tests/test_cloudreach_old_wind_observatory_presentation.gd": "490be5db85149547551285739b8fed1e6953f01c"
+  },
+  "bounded_dependency_blobs": {
+    "scripts/world/cloudreach_ground_cover.gd": "cc276b1fdcc55a0a88529c2d24b6eec54f3ae426",
+    "data/config/cloudreach_old_wind_observatory_visual.json": "3c258367482b8d3d73ea5e3ac34dca2f90f0fd5a",
+    "tests/run_tests.gd": "57e6fb0e1f3cd8494ca370df25a01255ff06bbbb"
+  },
+  "findings": [],
+  "verified_source_facts": [
+    "The base-to-candidate diff contains only seven production lines in _build_observatory and the added regression/preloads in the existing Observatory test file. Reviewed worktree files match the pinned changed/dependency blobs.",
+    "The configured dial_radius_m is 15.0. Existing ObservatoryDialCourt is centred locally at (0,0.055,0), height 0.11, using that same radius. The new ellipse uses the mounted landmark world origin (430,920,4500), radius 15, and lies inside the existing 38 by 36 m ObservatoryWalkableCrown with top at local Y=0. The existing ledge top is below that crown; no crown or paving geometry changes.",
+    "_build_landmarks registers this exclusion before _build_ground_cover passes _cover_exclusions to ProceduralGroundCover. All three procedural tiers use _build_patch_tier, which samples/corrects surface height before _excluded. Nearby exclusions use the existing surface-aware broad phase; ellipse narrow phase rejects roots more than 3 m from the exclusion height. The landmark patch roots at Y=920.08 are within that tolerance.",
+    "A circular ellipse needs no landmark-yaw adjustment here. Surrounding positions outside the configured footprint remain eligible; another stratum 40 m above remains eligible. The change does not alter colliders, traversal gates, survey/Fly/pickup data, materials, renderer flags, authority or durable state. Existing sampling/attempt caps remain unchanged; this is not a guarantee of identical surviving transforms/counts in affected RNG streams.",
+    "The new existing-file regression mounts the landmark before to_global, supplies every material key used by _build_observatory, and checks the actual generated exclusion on five directions immediately inside/outside the configured radius, cross-stratum rejection, and no added collision. World/cover are not mounted, avoiding full production-world startup in this bounded fixture; this unit does not itself demonstrate the full rendered build.",
+    "All four pre-existing Observatory tests remain unchanged. The selected existing grounded-route test separately exercises broad-phase retention after surface correction and narrow-phase rejection of other strata. The runner accepts comma-separated file and ::method selectors; the exact proposed names resolve to five Observatory methods and one grounded-route method.",
+    "ART_DIRECTION section 3.1 permits intentional courts/clearings while requiring coherent vegetation and ground transitions. This candidate addresses the observed P2-025 paving intrusion locally; it does not establish stone/material finish or fix other shrine views."
+  ],
+  "approved_command": {
+    "pinned_worktree_commit": "58bdad0d99093f0628677a600eab4c2bae3a5c77",
+    "argv": [
+      "Godot",
+      "--headless",
+      "--path",
+      "<fresh worktree pinned to 58bdad0d99093f0628677a600eab4c2bae3a5c77>",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--only=test_cloudreach_old_wind_observatory_presentation.gd,test_cloudreach_grass_roles.gd::test_grounded_route_exclusions_use_corrected_height_without_crossing_strata"
+    ],
+    "expected_scope": "five existing Observatory-file test methods (including added regression) plus the one named existing grass-role regression; actual execution/counts/failures must be verified from hosted artifact",
+    "execution": "not run by reviewer"
+  },
+  "pending_gates": [
+    "Affected hosted headless command terminal artifact, assertions and engine/script diagnostics.",
+    "ROOT-owned actual production Observatory capture showing cover exclusion applied on the rendered paving, with native source/camera/floor provenance.",
+    "Original code-blind visual verdict on changed native views. No judge contacted."
+  ],
+  "limits": "Source and command approval only. No engine/import/tests/GPU/dispatch performed. No pixels judged. P2-025/F40 visual criteria and full matrix/full bar remain open; no earned route, performance, save or co-op inference. Previously accepted F41 evidence is separate and was not re-audited.",
+  "native_command_applicability": {
+    "reviewed_at_utc": "2026-10-08T18:31:24.288031+00:00",
+    "source_verdict": "APPROVE",
+    "exact_capture_command_verdict": "APPROVE",
+    "findings": [],
+    "baseline_argv": [
+      "Godot",
+      "--path",
+      "<fresh clean worktree pinned to 58e2bb15233a083dd4d1132538e9e9934f7ef316>",
+      "--rendering-method",
+      "gl_compatibility",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_frame_matrix.gd",
+      "--",
+      "--only=24",
+      "--night",
+      "--preset=Low",
+      "--low-resolution=1920x1080",
+      "--source-commit=58e2bb15233a083dd4d1132538e9e9934f7ef316",
+      "--output=res://.tmp/f40-observatory-baseline-58e"
+    ],
+    "candidate_argv": [
+      "Godot",
+      "--path",
+      "<fresh clean worktree pinned to 58bdad0d99093f0628677a600eab4c2bae3a5c77>",
+      "--rendering-method",
+      "gl_compatibility",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_frame_matrix.gd",
+      "--",
+      "--only=24",
+      "--night",
+      "--preset=Low",
+      "--low-resolution=1920x1080",
+      "--source-commit=58bdad0d99093f0628677a600eab4c2bae3a5c77",
+      "--output=res://.tmp/f40-observatory-candidate-58bd"
+    ],
+    "identical_producer_blobs_at_both_pins": {
+      "tools/capture_cloudreach_frame_matrix.gd": "221b0fe18cee1eb655044926bee409022c3dd200",
+      "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+      "tools/capture_cloudreach_lane_common.gd": "f2e553be8920586cde1179c37fdef674f93784e9"
+    },
+    "verified_applicability": [
+      "The exact supported --only=24 selects the sole row 24, upper_cloudreach/detail-observatory. --night overrides its default day field, pins hour 23, and names the output 24_upper_cloudreach_detail-observatory_night.png. Ordered stands are (430,920,4484), (414,920,4512), (445,920,4511), targeting (430,932,4500). Neither command enables motion or changes these stands or the camera.",
+      "Named --preset=Low invokes the existing bootstrap before world boot. It accepts explicit --low-resolution=1920x1080, requires a native gl_compatibility renderer, applies the production Low graphics preference, sets root size to 1920 by 1080, validates a 40-character declared SHA, and rejects an existing output directory. Both exact output arguments are supported; source declaration does not independently query Git.",
+      "Production Player, CameraRig/Camera3D and EncounterDirector/mounted runtime are required with the existing 600-second boot deadline. The same five-creature, boot-progression/debug-stand fixture is retained. Capture remains a presentation fixture, not an earned campaign journey.",
+      "The existing seat checks require registered ground, reject a drawn surface more than 3 m above it, wait for a real physics floor within 1.5 m using the player collision mask, then verify settled position. Production rig yaw/pitch and model facing are set as before; follower settles normally. Capture rejects trainer movement off the stand, a camera more than 2 m below drawn ground, and a trainer chest behind or outside the frame. Suspended rig is a warning rather than a hard failure; on-screen projection is not an occlusion proof.",
+      "After the existing rendered-frame settling, hidden overlays, process frame and frame_post_draw await, save_frame saves the actual root image without resizing. PNG save failure or no passing stand creates a skip. Final completion requires at least one written image, no skips for named-preset invocations, manifest open/flush OK and readback containing final summary and graphics metadata. With the single unique selected row, successful completion entails one recorded image. Contact sheets are derivatives, not the native raster proof.",
+      "Both pinned capture/bootstrap/common producer paths and graphics-preference path have no base-to-candidate delta. The approved candidate production hunk was not re-audited and the active hosted headless run was not inspected."
+    ],
+    "required_terminal_provenance": [
+      "Actual original argv/checkout and clean tracked source/import identity for each exact pin; bootstrap SHA is a declared source receipt and must be externally bound.",
+      "Terminal exit, complete final manifest with one row-24 record and zero skips, no unassessed script/engine failures, actual adapter/rendering method and Low graphics hash.",
+      "Decode the original saved PNG to verify actual 1920x1080 raster; this legacy producer does not independently assert image dimensions. Preserve originals and SHA-256 hashes with canonical archive mapping.",
+      "For matched-comparison claims, verify actual selected stand, trainer/camera pose, heading/pitch, night hour and relevant weather/control state at capture. Identical ordered stands allow matching but fallback selection can differ. Weather is not explicitly pinned or recorded by this tool.",
+      "Original blind native visual verdict remains pending; command approval does not establish visible paving improvement."
+    ],
+    "limits": "APPROVE exact invocation applicability only, no native run or pixels inspected. ROOT owns both captures. Scope is pictured P2-025 Observatory dial grass-through-paving at night; no dawn/all-area, full preset/matrix/F40, earned campaign, mechanical/controller, co-op, performance or visual-bar acceptance. Prior source/headless approvals remain unchanged; no unit result is claimed."
+  }
+}
