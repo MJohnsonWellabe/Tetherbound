@@ -193,5 +193,742 @@
       "No new runtime checks, engine execution, source edits, blind judgment, or repeat scenery/rescore/Overlook review was performed."
     ],
     "remaining_gates": "New native context results and applicable original blind visual assessment remain open; full F41 criteria and release visual bar are not approved by this entry."
+  },
+  "terminal_context_runtime_8732_original_review": {
+    "agent": "/root/review_cloud_startup",
+    "scope": "Terminal8732 context provenance and two bounded follow-up source/command approvals only",
+    "verdict": "APPROVE completed source-bound subsets; REQUEST_CHANGES for observed-win/loss and Glass1080 claims",
+    "source_commit": "8732ebd728c89e5328c4af187878d3e222ebaec9",
+    "tree": "eb4802882cac240752987ea843b6799286201a8d",
+    "canonical_packet_path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1",
+    "import_receipt": {
+      "finished_utc": "2026-10-08T12:03:38.2560454Z",
+      "pid": 21216,
+      "stop_reason": "",
+      "started_utc": "2026-10-08T12:03:07.5774784Z",
+      "source": "8732ebd728c89e5328c4af187878d3e222ebaec9",
+      "exit_code": 0
+    },
+    "source_after_import": {
+      "dirty": [],
+      "index_tree": "eb4802882cac240752987ea843b6799286201a8d",
+      "source": "8732ebd728c89e5328c4af187878d3e222ebaec9",
+      "head_tree": "eb4802882cac240752987ea843b6799286201a8d"
+    },
+    "source_after_capture": {
+      "source": "8732ebd728c89e5328c4af187878d3e222ebaec9",
+      "dirty": [],
+      "index_tree": "eb4802882cac240752987ea843b6799286201a8d",
+      "head_tree": "eb4802882cac240752987ea843b6799286201a8d"
+    },
+    "source_and_archive_provenance": {
+      "queued-source.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\queued-source.json",
+        "bytes": 166,
+        "sha256": "c0c90a9572342596b2daaaadde7c479e6ac7ce18b97e8b6318f14f2802a0243f"
+      },
+      "checkout.log": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\checkout.log",
+        "bytes": 195,
+        "sha256": "b5d9f73857068a9dadee36f08a8d5e13f693acfdfb92d3f59e84b2e9ba2e9210"
+      },
+      "source-after-import.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\source-after-import.json",
+        "bytes": 199,
+        "sha256": "c3f4597cbb9aaaca19df6c2acafefdaccbec518ae8771f778f0f0f242a2d873d"
+      },
+      "source-after-capture.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\source-after-capture.json",
+        "bytes": 199,
+        "sha256": "c18cf96e5ffcfde37f26cd770f7734cfbd41746f4189d3cb19f451a241210d5f"
+      },
+      "archive-map.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\archive-map.json",
+        "bytes": 1378,
+        "sha256": "68e69ab5b6d1de936315992f52d4a688b19e1d3f0df6b9520568f314db3c7cd0"
+      },
+      "raster-verification.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\raster-verification.json",
+        "bytes": 734,
+        "sha256": "5409ae5df187d51f79bc4abf4051534df51e089460cbd8199513689c743afb19"
+      },
+      "import-start.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\import-start.json",
+        "bytes": 299,
+        "sha256": "6980298c752edce73418c27f49b019c2601f3c7ee527785c4eca834bdc35de1a"
+      },
+      "import-receipt.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\import-receipt.json",
+        "bytes": 221,
+        "sha256": "2658d68c734ed78eeb490d7f1d65f141c6f64cb29d8adc575181a619f97e4017"
+      },
+      "import.stdout.log": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\import.stdout.log",
+        "bytes": 9917,
+        "sha256": "f5e78734829784c440e2069456ffdfd662ad08935c873e705d344f1ad931aa3b"
+      },
+      "import.stderr.log": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\import.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "native_driver": "Godot4.7.stable.official.5b4e0cb0f; OpenGL3.3 NVIDIA560.94 Compatibility; NVIDIA GeForce GTX1060 3GB, recorded in every terminal stdout",
+    "verified_completion": "All four exact approved command arrays matched archived start args; exit0/no owner stop. Clean source and index/head tree agree before/after capture. Archived raw/metadata hashes match independently verified completed outputs. No active outputs promoted. Raw images were not re-audited after the parent follow-up; completed witnesses reused.",
+    "raw_image_record_pairs": 364,
+    "distinct_image_hashes_across_steps": 364,
+    "steps": {
+      "f41-win": {
+        "receipt": {
+          "pid": 15416,
+          "stop_reason": "",
+          "finished_utc": "2026-10-08T12:15:42.7413454Z",
+          "source": "8732ebd728c89e5328c4af187878d3e222ebaec9",
+          "started_utc": "2026-10-08T12:04:08.5763951Z",
+          "exit_code": 0
+        },
+        "output_directory": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\frames\\f41-win",
+        "manifest": {
+          "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\frames\\f41-win\\lookdev_fight.json",
+          "bytes": 57309,
+          "sha256": "4649c22fb39926cef91b53f890b9a71cf4a8c0911f47def2480fa3bcfb5889c7"
+        },
+        "frame_count": 267,
+        "distinct_image_hashes": 267,
+        "verified_image_inventory_sha256": "74e09ce83f85111ad1368a6bcf43ed1cb10469f252d1bb57f08215e651639665",
+        "terminal_provenance": {
+          "-start.json": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-win-start.json",
+            "bytes": 716,
+            "sha256": "511970fbc1c84fb41d17fe281006de401f125ff5c2885e38e13c3fbf524e815d"
+          },
+          "-receipt.json": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-win-receipt.json",
+            "bytes": 221,
+            "sha256": "d9fca35085cb4b482d6979ae03572ba9ef7374fb0c9c771ab76b75f2eca82fe6"
+          },
+          ".stdout.log": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-win.stdout.log",
+            "bytes": 49975,
+            "sha256": "03a7c96922df8b99a2386344db193c7a5ff4af0c007437d8282ac4bba3aed444"
+          },
+          ".stderr.log": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-win.stderr.log",
+            "bytes": 2927,
+            "sha256": "ad03d4712411022a465ae9265a3301f2d5b046ace532b7a8c5e8cca4aa1e9637"
+          }
+        },
+        "warnings": 6,
+        "errors_or_script_errors": false,
+        "verdict": "APPROVE completed native combat-context provenance only",
+        "requested_outcome_verdict": "REQUEST_CHANGES: no observed win or loss",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Low",
+          "renderer": "gl_compatibility",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "8732ebd728c89e5328c4af187878d3e222ebaec9"
+        },
+        "actual_raw_png_headers": [
+          1920,
+          1080
+        ],
+        "active_combat_frames": 252,
+        "capture_log": {
+          "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\frames\\f41-win\\capture_log.json",
+          "bytes": 59282,
+          "sha256": "2b7350e9f5d601cb86e9c1ddd0428adf8793e30b1ffb365a7403bc775db093da"
+        },
+        "pre_cleanup_summary": [
+          {
+            "id": "hollows_alpha",
+            "started": true,
+            "enemy_is_named": true,
+            "engaged_by": "Engage press",
+            "fighting_at_end": true,
+            "ended_at_s": 18.02,
+            "frames": 42
+          },
+          {
+            "id": "capacitor_alpha",
+            "started": true,
+            "enemy_is_named": true,
+            "engaged_by": "aggressive named wild initiated",
+            "fighting_at_end": true,
+            "ended_at_s": 18.0,
+            "frames": 42
+          },
+          {
+            "id": "crown_guardian",
+            "started": true,
+            "enemy_is_named": true,
+            "engaged_by": "Engage press",
+            "fighting_at_end": true,
+            "ended_at_s": 18.02,
+            "frames": 42
+          },
+          {
+            "id": "old_rodfolk_hall_guardian",
+            "started": true,
+            "enemy_is_named": true,
+            "engaged_by": "aggressive named wild initiated",
+            "fighting_at_end": true,
+            "ended_at_s": 18.0,
+            "frames": 42
+          },
+          {
+            "id": "blackwater_elder",
+            "started": true,
+            "enemy_is_named": true,
+            "engaged_by": "Engage press",
+            "fighting_at_end": true,
+            "ended_at_s": 18.02,
+            "frames": 39
+          },
+          {
+            "id": "glass_field_alpha",
+            "started": true,
+            "enemy_is_named": true,
+            "engaged_by": "aggressive named wild initiated",
+            "fighting_at_end": true,
+            "ended_at_s": 18.0,
+            "frames": 42
+          }
+        ],
+        "outcome": "Every requested fight started, remained active at the18s cap, then retained recorder requested forced fled cleanup. Stopped manager/99-after/100-aftermath do not establish victory or defeat. Level80/42 and win/loss output names are fixtures.",
+        "limitations": "Original five-creature party, live Engage/body binding/creature input, debug stands, Calm pin and between-fight healing retained. Unrequested scale-audit saved_combat_frames=0 is not zero native combat images. No earned route, balance, co-op/save or performance proof."
+      },
+      "f41-loss": {
+        "receipt": {
+          "pid": 20836,
+          "stop_reason": "",
+          "finished_utc": "2026-10-08T12:20:08.6853196Z",
+          "source": "8732ebd728c89e5328c4af187878d3e222ebaec9",
+          "started_utc": "2026-10-08T12:15:42.7524285Z",
+          "exit_code": 0
+        },
+        "output_directory": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\frames\\f41-loss",
+        "manifest": {
+          "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\frames\\f41-loss\\lookdev_fight.json",
+          "bytes": 9914,
+          "sha256": "68b20f4b0efdafd9da0a25ea956963d22d7abaf692483d67102fe4d2012122e1"
+        },
+        "frame_count": 45,
+        "distinct_image_hashes": 45,
+        "verified_image_inventory_sha256": "de89ba040fcf761c1dc3b9d105e776179142333f97ceeb2125f0b9535d68d150",
+        "terminal_provenance": {
+          "-start.json": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-loss-start.json",
+            "bytes": 745,
+            "sha256": "1a17acf0674ef848e85c3aa38d5b568f553307220537111dce2cd2cd7115f0bc"
+          },
+          "-receipt.json": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-loss-receipt.json",
+            "bytes": 221,
+            "sha256": "61be0238c7e1c7986a955f80a22bbea0450ce17ba3de83173594c61fdaf728bf"
+          },
+          ".stdout.log": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-loss.stdout.log",
+            "bytes": 9245,
+            "sha256": "0939b5fa4b5a74cf3940b475218b1eb9313824191b8950491a63cacedc5eaba2"
+          },
+          ".stderr.log": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-loss.stderr.log",
+            "bytes": 2927,
+            "sha256": "ad03d4712411022a465ae9265a3301f2d5b046ace532b7a8c5e8cca4aa1e9637"
+          }
+        },
+        "warnings": 6,
+        "errors_or_script_errors": false,
+        "verdict": "APPROVE completed native combat-context provenance only",
+        "requested_outcome_verdict": "REQUEST_CHANGES: no observed win or loss",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Low",
+          "renderer": "gl_compatibility",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "8732ebd728c89e5328c4af187878d3e222ebaec9"
+        },
+        "actual_raw_png_headers": [
+          1920,
+          1080
+        ],
+        "active_combat_frames": 42,
+        "capture_log": {
+          "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\frames\\f41-loss\\capture_log.json",
+          "bytes": 7848,
+          "sha256": "9332d374c03e0d66d7427bca7a82aab49d0db6693e5d38fac30103e5cb6021d1"
+        },
+        "pre_cleanup_summary": [
+          {
+            "id": "hollows_alpha",
+            "started": true,
+            "enemy_is_named": true,
+            "engaged_by": "Engage press",
+            "fighting_at_end": true,
+            "ended_at_s": 18.02,
+            "frames": 42
+          }
+        ],
+        "outcome": "Every requested fight started, remained active at the18s cap, then retained recorder requested forced fled cleanup. Stopped manager/99-after/100-aftermath do not establish victory or defeat. Level80/42 and win/loss output names are fixtures.",
+        "limitations": "Original five-creature party, live Engage/body binding/creature input, debug stands, Calm pin and between-fight healing retained. Unrequested scale-audit saved_combat_frames=0 is not zero native combat images. No earned route, balance, co-op/save or performance proof."
+      },
+      "f41-people": {
+        "receipt": {
+          "pid": 1252,
+          "stop_reason": "",
+          "finished_utc": "2026-10-08T12:23:44.0214176Z",
+          "source": "8732ebd728c89e5328c4af187878d3e222ebaec9",
+          "started_utc": "2026-10-08T12:20:08.6918148Z",
+          "exit_code": 0
+        },
+        "output_directory": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\frames\\f41-people",
+        "manifest": {
+          "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\frames\\f41-people\\manifest.json",
+          "bytes": 462321,
+          "sha256": "53a99741e35dede4d46b6259e6584a325c5d18d0fff67cb3bdee23340f153fb4"
+        },
+        "frame_count": 48,
+        "distinct_image_hashes": 48,
+        "verified_image_inventory_sha256": "91393fae8ad1acfcb60e322b510b2d5bd47828558021d80e1a8a95ab608b4c85",
+        "terminal_provenance": {
+          "-start.json": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-people-start.json",
+            "bytes": 697,
+            "sha256": "cd85c347b574f3cca5f143daf6b6b155981178038c8dd4406528a66dd01e1e77"
+          },
+          "-receipt.json": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-people-receipt.json",
+            "bytes": 220,
+            "sha256": "e8e190b60e6215602feb027921b7250f1a27e42e874ee2ecc156b1755c3f4b53"
+          },
+          ".stdout.log": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-people.stdout.log",
+            "bytes": 12211,
+            "sha256": "55cd77c53f19d72130af4a9104777463b294797a98f0be628a1e694736a7a351"
+          },
+          ".stderr.log": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-people.stderr.log",
+            "bytes": 3138,
+            "sha256": "dda174d5e415a0094fd276812e41efab244acdb25708025517bdd0a9f0a967bd"
+          }
+        },
+        "warnings": 6,
+        "errors_or_script_errors": false,
+        "verdict": "APPROVE completed24-row/48-frame native presentation provenance",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Low",
+          "renderer": "gl_compatibility",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "8732ebd728c89e5328c4af187878d3e222ebaec9"
+        },
+        "actual_raw_jpeg_headers": [
+          1920,
+          1080
+        ],
+        "expected_rows": 24,
+        "post_frames": 24,
+        "dialogue_frames": 24,
+        "production_camera": {
+          "far": 9000.0,
+          "fov": 70.0,
+          "instance_id": 440821352612,
+          "near": 0.0500000007450581,
+          "path": "CameraRig/Camera3D"
+        },
+        "capture_camera": {
+          "far": 9000.0,
+          "fov": 70.0,
+          "instance_id": 440821352612,
+          "near": 0.0500000007450581,
+          "path": "CameraRig/Camera3D",
+          "source": "production CameraRig/Camera3D"
+        },
+        "chapter_presentation_isolation": {
+          "arrival_process_disabled": true,
+          "dialogue_finished_progression_disconnected": true,
+          "flags_before_capture": []
+        },
+        "all_post_on_floor": true,
+        "minimum_post_floor_normal_y": 0.974981486797333,
+        "progression_snapshots_before_after_match": true,
+        "dialogue_speakers_match_registry": true,
+        "dialogue_camera_blends_complete": true,
+        "limitations": "Direct authored dialogue/progression snapshots; arrival process disabled and progression callback disconnected. No earned conversation/progression claim. Dialogue surface metadata inherits the post observation. JPEG headers checked against manifest1920x1080 and dialogue size fields; bytes records checked."
+      },
+      "f41-glass": {
+        "receipt": {
+          "pid": 11644,
+          "stop_reason": "",
+          "finished_utc": "2026-10-08T12:26:17.2269122Z",
+          "source": "8732ebd728c89e5328c4af187878d3e222ebaec9",
+          "started_utc": "2026-10-08T12:23:44.0258754Z",
+          "exit_code": 0
+        },
+        "output_directory": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\frames\\f41-glass",
+        "manifest": {
+          "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\frames\\f41-glass\\manifest.json",
+          "bytes": 40374,
+          "sha256": "c8136962defcdad22717a7f58f612b824f30fe3beb5cc48ee39a1af8c88fabf5"
+        },
+        "frame_count": 4,
+        "distinct_image_hashes": 4,
+        "verified_image_inventory_sha256": "4ab6204a8253d7285e5067c10188374917164e2e969035a913a94471510ec913",
+        "terminal_provenance": {
+          "-start.json": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-glass-start.json",
+            "bytes": 666,
+            "sha256": "329cee382396ee9dd365adc0102676beabaaa953a83818f789d15be90861a4d4"
+          },
+          "-receipt.json": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-glass-receipt.json",
+            "bytes": 221,
+            "sha256": "efd35967f470fe17750f35051573900731c7f936a493cb462a7e90819890d3c1"
+          },
+          ".stdout.log": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-glass.stdout.log",
+            "bytes": 3538,
+            "sha256": "ce5de4171f8ccab4edc8ce5e49db4639802fc5cf2feb743c659d883390190c76"
+          },
+          ".stderr.log": {
+            "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-8732ebd728-f41-contexts-r1\\f41-glass.stderr.log",
+            "bytes": 3001,
+            "sha256": "0004a8edde3936dc52ad45df09218d26bd062b95469d0264657209cf0a9fb451"
+          }
+        },
+        "warnings": 6,
+        "errors_or_script_errors": false,
+        "verdict": "APPROVE four completed legacy native records at actual1920x1061",
+        "requested_raster_verdict": "FAIL requested1920x1080; REQUEST_CHANGES for any1080 claim",
+        "actual_raw_jpeg_headers": [
+          1920,
+          1061
+        ],
+        "manifest_resolution": [
+          1920,
+          1061
+        ],
+        "graphics_capture_present": false,
+        "source_commit_in_manifest": false,
+        "production_camera": {
+          "far": 9000.0,
+          "fov": 70.0,
+          "instance_id": 436291504281,
+          "near": 0.0500000007450581,
+          "path": "CameraRig/Camera3D"
+        },
+        "capture_camera": {
+          "far": 9000.0,
+          "fov": 70.0,
+          "instance_id": 436291504281,
+          "near": 0.0500000007450581,
+          "path": "CameraRig/Camera3D",
+          "source": "production CameraRig/Camera3D"
+        },
+        "rows": [
+          {
+            "frame_id": "stormwood__landmark__glass_sink__day__approach",
+            "identity": "stormwood__landmark__glass_sink",
+            "time": "day",
+            "view": "approach",
+            "selected_stand_xz": [
+              841.413269042969,
+              2518.52978515625
+            ],
+            "selected_stand_offset_m": 220.0,
+            "selected_stand_lateral_m": 0.0,
+            "player_position": [
+              841.413269042969,
+              74.0009460449219,
+              2518.52978515625
+            ],
+            "camera_position": [
+              844.512145996094,
+              77.6987915039063,
+              2522.22290039063
+            ],
+            "camera_pitch_deg": -22.0,
+            "view_heading_deg": 220.0,
+            "camera_player_distance_m": 6.07587003707886,
+            "surface_state": {
+              "dead": false,
+              "floor_normal_y": 1.0,
+              "on_floor": true
+            },
+            "observed_clock": {
+              "elapsed_seconds": 200.2,
+              "hour": 8.008,
+              "requested": "day",
+              "time_of_day": "day"
+            },
+            "phase": "calm",
+            "rejected_stand_candidates": []
+          },
+          {
+            "frame_id": "stormwood__landmark__glass_sink__day__close",
+            "identity": "stormwood__landmark__glass_sink",
+            "time": "day",
+            "view": "close",
+            "selected_stand_xz": [
+              797.1669921875,
+              2496.91357421875
+            ],
+            "selected_stand_offset_m": 175.0,
+            "selected_stand_lateral_m": -20.0,
+            "player_position": [
+              797.1669921875,
+              74.0009460449219,
+              2496.91357421875
+            ],
+            "camera_position": [
+              800.26611328125,
+              77.6988830566406,
+              2500.60693359375
+            ],
+            "camera_pitch_deg": -22.0,
+            "view_heading_deg": 220.0,
+            "camera_player_distance_m": 6.07619905471802,
+            "surface_state": {
+              "dead": false,
+              "floor_normal_y": 1.0,
+              "on_floor": true
+            },
+            "observed_clock": {
+              "elapsed_seconds": 200.2,
+              "hour": 8.008,
+              "requested": "day",
+              "time_of_day": "day"
+            },
+            "phase": "calm",
+            "rejected_stand_candidates": [
+              {
+                "camera_position": [
+                  844.512145996094,
+                  77.6987915039063,
+                  2522.22290039063
+                ],
+                "frame_id": "stormwood__landmark__glass_sink__day__close",
+                "ground_y": null,
+                "lateral_m": 0.0,
+                "offset_m": 175.0,
+                "player_position": [
+                  841.413269042969,
+                  74.0009460449219,
+                  2518.52978515625
+                ],
+                "reason": "debug travel failed",
+                "stage": "travel",
+                "stand_xz": [
+                  812.487854003906,
+                  2484.05786132813
+                ],
+                "surface_state": {
+                  "dead": false,
+                  "floor_normal_y": 1.0,
+                  "on_floor": true
+                },
+                "swimming": false,
+                "water_surface_y": null
+              }
+            ]
+          },
+          {
+            "frame_id": "stormwood__landmark__glass_sink__golden__approach",
+            "identity": "stormwood__landmark__glass_sink",
+            "time": "golden",
+            "view": "approach",
+            "selected_stand_xz": [
+              841.413269042969,
+              2518.52978515625
+            ],
+            "selected_stand_offset_m": 220.0,
+            "selected_stand_lateral_m": 0.0,
+            "player_position": [
+              841.413269042969,
+              74.0009460449219,
+              2518.52978515625
+            ],
+            "camera_position": [
+              844.512145996094,
+              77.6987915039063,
+              2522.22290039063
+            ],
+            "camera_pitch_deg": -22.0,
+            "view_heading_deg": 220.0,
+            "camera_player_distance_m": 6.07587003707886,
+            "surface_state": {
+              "dead": false,
+              "floor_normal_y": 1.0,
+              "on_floor": true
+            },
+            "observed_clock": {
+              "elapsed_seconds": 450.2,
+              "hour": 18.008,
+              "requested": "golden",
+              "time_of_day": "golden"
+            },
+            "phase": "calm",
+            "rejected_stand_candidates": []
+          },
+          {
+            "frame_id": "stormwood__landmark__glass_sink__golden__close",
+            "identity": "stormwood__landmark__glass_sink",
+            "time": "golden",
+            "view": "close",
+            "selected_stand_xz": [
+              797.1669921875,
+              2496.91357421875
+            ],
+            "selected_stand_offset_m": 175.0,
+            "selected_stand_lateral_m": -20.0,
+            "player_position": [
+              797.1669921875,
+              74.0009460449219,
+              2496.91357421875
+            ],
+            "camera_position": [
+              800.26611328125,
+              77.6988830566406,
+              2500.60693359375
+            ],
+            "camera_pitch_deg": -22.0,
+            "view_heading_deg": 220.0,
+            "camera_player_distance_m": 6.07619905471802,
+            "surface_state": {
+              "dead": false,
+              "floor_normal_y": 1.0,
+              "on_floor": true
+            },
+            "observed_clock": {
+              "elapsed_seconds": 450.2,
+              "hour": 18.008,
+              "requested": "golden",
+              "time_of_day": "golden"
+            },
+            "phase": "calm",
+            "rejected_stand_candidates": [
+              {
+                "camera_position": [
+                  844.512145996094,
+                  77.6987915039063,
+                  2522.22290039063
+                ],
+                "frame_id": "stormwood__landmark__glass_sink__golden__close",
+                "ground_y": null,
+                "lateral_m": 0.0,
+                "offset_m": 175.0,
+                "player_position": [
+                  841.413269042969,
+                  74.0009460449219,
+                  2518.52978515625
+                ],
+                "reason": "debug travel failed",
+                "stage": "travel",
+                "stand_xz": [
+                  812.487854003906,
+                  2484.05786132813
+                ],
+                "surface_state": {
+                  "dead": false,
+                  "floor_normal_y": 1.0,
+                  "on_floor": true
+                },
+                "swimming": false,
+                "water_surface_y": null
+              }
+            ]
+          }
+        ],
+        "limitations": "External clean source/tree/start/terminal logs bind this legacy producer. Actual Compatibility/GTX1060 driver is recorded; no named Low/source/bootstrap receipt. Both close views rejected the first lateral0 stand and recovered at−20; selected floor normalY1, production CameraRig, day8.008h/golden18.008h. Four actual1920x1061 images cannot become a named Low1080, earned-travel or full landmark proof."
+      }
+    },
+    "actual_missing_requested_contexts": [
+      "No observed victory in any requested level80 fight",
+      "No observed defeat in level42 Hollows Alpha",
+      "GlassSink actual1920x1061 fails requested1920x1080"
+    ],
+    "diagnostics": "Six warning instances per step retained; no ERROR or SCRIPT ERROR in terminal capture/import logs. No warning-free/audible/visual judgment.",
+    "private_neutral_provenance": {
+      "verdict": "APPROVE mapped A267/B45/P48 persisted provenance; parent/source reviewer only",
+      "private_map_path": ".tmp/e-f41-contexts-private-map.json",
+      "private_map_sha256": "12fbd7919925729a7a77ce21a26d1cc5c463bccfdad934ed1d953385c10b2693",
+      "counts": {
+        "A": 267,
+        "B": 45,
+        "P": 48
+      },
+      "actual_neutral_headers": [
+        1920,
+        1080
+      ],
+      "neutral_inventory_sha256": "6896f74657b007873b59c2e2f77f5871ce798f930e98c551b908d5f3a44560ec",
+      "all_current_neutral_hashes_match_map": true,
+      "canonical_mapping_digests_match_previously_verified_raw_inventories": true,
+      "P_current_original_byte_hash_matches": 48,
+      "stale_private_preview_hash_count": 0,
+      "extra_contact_sheets_excluded_from_mapped_counts": 46,
+      "limitations": "A/B are mapped PNG-to-JPEG previews; canonical inventory digest reconciliation reused already verified raw hashes, without rereading267 raw pairs or decoded-pixel comparison. P48 actual JPEG hashes equal authoritative archived original JPEG hashes; old previews are not authoritative. Contact sheets were not judged. No private mapping disclosed to judge; cleanup views remain outcome-excluded."
+    },
+    "followup_source_reviews": [
+      {
+        "verdict": "APPROVE",
+        "source_commit": "3d88dacbfa792e3e7f5461841dad6b2fbe5c3bb6",
+        "path": "tools/phase2_capture_stormwood_fights.gd",
+        "reviewed_blob": "a73c0897f0efb42517f1d5f0750da2db36bafbd0",
+        "scope": "Exact five-line4-insert/1-delete hunk",
+        "reason": "100-aftermath requires started=true, explicit row.fighting_at_end==false sampled before inherited forced-fled cleanup, and stopped manager. Missing/null/true cannot satisfy the pre-cleanup gate. Original real-path/input/seconds/interval/preset/failure guards unchanged.",
+        "limits": "No runtime result. This gates100-aftermath, not observed outcome or overall completion. Base99-after/exit0 can still follow cap cleanup. Natural stop does not classify win/loss. Original8732 forced cleanup is never recategorized."
+      },
+      {
+        "verdict": "APPROVE source/command applicability only",
+        "source_commit": "8732ebd728c89e5328c4af187878d3e222ebaec9",
+        "path": "tools/phase2_capture_stormwood_glass_sink.gd",
+        "inherited_path": "tools/phase2_capture_locations.gd",
+        "reviewed_blobs": {
+          "child": "7e0d3194168481c023a7634995c680f7c156b4c7",
+          "parent": "663598fa0caf27fbb070e7c349169696ceef53a2",
+          "bootstrap": "8c1859c4094c5bce3030080831810a67cf0a06c1"
+        },
+        "argv": [
+          "Godot",
+          "--path",
+          "<pinned worktree>",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1920x1080",
+          "--fixed-fps",
+          "20",
+          "--script",
+          "res://tools/phase2_capture_stormwood_glass_sink.gd",
+          "--",
+          "--biome=stormwood",
+          "--subset=glass_sink",
+          "--times=day,golden",
+          "--views=approach,close",
+          "--preset=Low",
+          "--low-resolution=1920x1080",
+          "--source-commit=8732ebd728c89e5328c4af187878d3e222ebaec9",
+          "--output=res://ralph/reports/VISUAL/phase2/stormwood/glass-native-8732-named-r2",
+          "--seed=2042"
+        ],
+        "reason": "Inherited _run invokes existing bootstrap before directory creation when--preset is present. Low requires actual gl_compatibility/full-SHA format/fresh explicit output; production graphics chooser selects Low; explicit1920 option sets root.size1920x1080 and records graphics metadata. Existing actual-image declared-raster/root-size checks, four GlassSink selections, debug-travel/stand/floor/production-camera guards remain.",
+        "limits": "No new code/flags/fixtures or runtime. ROOT must still externally verify actual checkout/clean source, persisted headers/records and terminal receipts; bootstrap records supplied SHA rather than verifying Git HEAD. Legacy final manifest-write weakness remains externally checked. Original four1061 images/requested1080 FAIL preserved."
+      }
+    ],
+    "remaining_gates": "Whole F41#0 remains OPEN pending all independent numeric scores and whole acceptance. No new scenery audit, score, fullmatrix, earned-path, release bar or mechanics/co-op/save approval."
   }
 }
