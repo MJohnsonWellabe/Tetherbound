@@ -1,8 +1,9 @@
 {
   "criterion": "F33#2",
   "criterion_text": "Gear matters: a simulation of each biome's boss shows the matching tier passes C2 and the previous tier is clearly harder.",
-  "status": "OPEN. Actual authored L32 observed; existing live pattern/observer binding guard refuses. Supported single-peer host named admission correction pending original review; no fight/C2/whole pass.",
-  "source_commit": "e42f047df4860139d1958a08d6cc2b3cf7cf4f6d",
+  "status": "OPEN. Actual authored L32 observed; original single-peer host routing correction approved. Two required existing checks could not load their Director subclasses; 0 assertions, no engine proof of new routing. Original disposition pending; no fight/C2/whole pass.",
+  "source_commit": "37f76541b46f9cb39d99b14c638fd396c791643a",
+  "initial_preparation_source_commit": "e42f047df4860139d1958a08d6cc2b3cf7cf4f6d",
   "change": "Nerissa defaults to chapter_curve Tidewake Veilfall entry level; the batch forwards only explicit party-level overrides. Other trainer defaults and supplied overrides remain unchanged.",
   "source_review": {
     "reviewer": "/root/f25_medium_review",
@@ -67,7 +68,29 @@
     "observed": "Original isolated save, actual Session.host/registry and full admitted party checks passed; authored default32 and actual arena9 observed. Existing compound pattern/context/observer guard refused before pilot combat. No runtime script-error lines. No individual guard operand packet exists; no claimed pattern producer defect.",
     "disposition": "Failed proof retained; preparation entry32 observed, modern fight/settlement unearned. Original artifact review pending."
   },
-  "pending_supported_change": "Production _open_encounter_if_networked currently skips ordinary named encounter binding for the actual active listen host with only one peer: local_named admission is disabled for active hosts, while this gate requires multi-peer. Permit only opponent-owned active-host starts with tracked actor_vitals ON to reach the existing saved owner/vitals admission and record binding. Existing unprepared-owner refusals, guests, offline-local path, legacy Actor-OFF gate and canonical wild gate remain. This source routing defect is independently evident for this proof's actual Session.host and one-peer setup; no individual compound-guard operand claim. Original review pending before affected proof.",
+  "hosted_named_change": "Production _open_encounter_if_networked skipped ordinary named encounter binding for the actual active listen host with only one peer: local_named admission is disabled for active hosts, while this gate required multi-peer. Permit only opponent-owned active-host starts with tracked actor_vitals ON to reach the existing saved owner/vitals admission and record binding. Existing unprepared-owner refusals, guests, offline-local path, legacy Actor-OFF gate and canonical wild gate remain. This source routing defect is independently evident for this proof's actual Session.host and one-peer setup; no individual compound-guard operand claim.",
+  "hosted_named_source_review": {
+    "candidate_sha": "37f76541b46f9cb39d99b14c638fd396c791643a",
+    "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "review_turn": "01a11eb7-7428-7ad3-8efa-d8cbdb856fb8",
+    "verdict": "ARTIFACT / DISPOSITION APPROVE; SOURCE / PROOF-SCOPE APPROVE. Source-proven routing gap, not proven sole compound refusal cause. F33#2 OPEN.",
+    "minimum_checks": "test_director_join_snapshot.gd and test_water_encounter_runtime_data.gd, then identical one-seed in-world batch establishing actual one-peer record/owner/body binding and successful pilot admission."
+  },
+  "hosted_named_checks": {
+    "run_id": 37879922064,
+    "artifact_id": 11593868563,
+    "job_id": 113657017622,
+    "checkout_sha": "37f76541b46f9cb39d99b14c638fd396c791643a",
+    "script": "tests/run_tests.gd",
+    "args": "--only=test_director_join_snapshot.gd,test_water_encounter_runtime_data.gd",
+    "workflow_conclusion": "failure",
+    "tests": 2, "assertions": 0, "failed": 2,
+    "log_sha256": "a88baf9cea7c92644f00844614f9afe74b091eecc75f9a5b6348144a3cfee97d",
+    "raw_path": "ralph/reports/F25/downloads/a-onepeer-named-units-37879922064/raw/",
+    "original_diagnostic": "Could not resolve class res://scripts/combat/encounter_director.gd at test_director_join_snapshot.gd:52; could not resolve class res://scripts/combat/water_encounter_director.gd at test_water_encounter_runtime_data.gd:8. Both failed to load.",
+    "cause": "Unresolved. Log gives no specific error inside the Director. No syntax, inference, circular-load or infrastructure cause claimed.",
+    "disposition": "FAIL retained. No selected test skipped, disabled or quarantined; original disposition pending before further proof."
+  },
   "dispatch_note": "Initial API request with fixed_fps workflow input rejected422 before execution because main lacks that input; omitted it. Existing batch's child still uses native --fixed-fps60. No engine attempt was made by the rejected request.",
   "fixtures": "Existing actual Water world; original five granted; trainer proximity placement/pump flags; isolated canonical save and Session host admission; granted Harness/Charm merged into complete owner records. No earned gear or accepted campaign boundary claim.",
   "reused_evidence": "Prior flat Warden/Nerissa paired artifacts remain qualified historical evidence and were not rerun. C owns full F33#0 tier/upgrade proof; A's duplicate unit extension was withdrawn/reverted.",
