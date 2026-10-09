@@ -1,0 +1,22 @@
+[
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-high-perches-lift-401977-day-r2\\19_high_roost_sky_shrine_perch-landing_day.png",
+    "sha256": "b890e09b854454d07cf7d2f7e35aaf80288d8dfbcc23d203111c66fb6cffb1aa",
+    "bytes": 2576586,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-high-perches-lift-401977-day-r2\\20_high_roost_sky_shrine_perch-vista_day.png",
+    "sha256": "c6a1866f0e662b16d87551b35974cd8795794e1e06db9857d2994d9a5b7112d9",
+    "bytes": 2473619,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  }
+]

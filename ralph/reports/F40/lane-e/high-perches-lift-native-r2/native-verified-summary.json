@@ -1,0 +1,22 @@
+{
+  "source": "401977bce7041e4274f8e01e8075462ecd87a0de",
+  "exit": 0,
+  "frames": 2,
+  "selected_rows": [
+    19,
+    20
+  ],
+  "graphics": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "High",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "401977bce7041e4274f8e01e8075462ecd87a0de"
+  },
+  "manifest_sha256": "016009d355d15ca7c7d5c9aef59ab1407be60c0cbd83c6f3fe7a6be7b5b49e40",
+  "scope": "Two High Perches day rows only. Original staged chapter fixture, no whole criterion, blind PASS, earned route, motion or performance claim."
+}

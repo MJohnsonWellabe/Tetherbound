@@ -1,0 +1,247 @@
+{
+  "reviewer": "Original retained Ohm /root/review_cloud_startup",
+  "scope": "Bounded compass-surface presentation lift, existing headless selector and existing two-row native command applicability; no execution or pixel judgment.",
+  "source": "401977bce7041e4274f8e01e8075462ecd87a0de",
+  "base": "aa91638824ef23b2ed8f96b452aa4b8c2050d5c0",
+  "verdicts": {
+    "source": "APPROVE",
+    "headless_selector": "APPROVE",
+    "headless_artifact": "APPROVE independently verified run37892103104; 5 tests/48 assertions/0failed/exit0/6s",
+    "exact_two_row_native_command": "APPROVE applicability only",
+    "native_visual": "PENDING"
+  },
+  "reviewed_blobs": {
+    "scripts/world/cloudreach_high_perches_presentation.gd": {
+      "before": "88c06f04d5192d4205f17434263c970640e2f5ae",
+      "after": "cbd0c8437099315e03957714baad37315e98f47f"
+    },
+    "data/config/cloudreach_high_perches_visual.json": {
+      "before": "b6933e247dd92d48200147eff7b56c33790e4982",
+      "after": "d1d03807ea1f2d178452efd9a6b54c30724e6fc8"
+    },
+    "tests/test_cloudreach_high_perches_presentation.gd": {
+      "before": "6f07443e7871871140a771b4267c61d09223d7bf",
+      "after": "3a54f8d2133803387cd82ff8886115b82f835f29"
+    }
+  },
+  "verified_geometry": {
+    "production_world_unchanged_blob": "96ca7b933fac15081e8047671d21ab1d3e386348",
+    "ledge_local_height_m": 0.1,
+    "mesa_cap_lift_m": 0.03,
+    "guaranteed_cap_local_top_m": 0.13,
+    "old_apron_centre_y_m": 0.065,
+    "apron_height_m": 0.13,
+    "old_apron_top_m": 0.13,
+    "configured_lift_m": 0.03,
+    "new_apron_centre_y_m": 0.095,
+    "new_apron_top_m": 0.16,
+    "outer_ring_centre_before_after_m": [
+      0.145,
+      0.175
+    ],
+    "inner_ring_centre_before_after_m": [
+      0.15,
+      0.18
+    ],
+    "eight_ray_centres_before_after_y_m": [
+      0.15,
+      0.18
+    ],
+    "relative_inlays_preserved": "Identical Vector3.UP*lift is added to apron, both rings and all eight rays. Their XZ, rotation, size, mesh topology/materials, names/counts and relative Y offsets stay unchanged.",
+    "outer_ring_origin_gap_above_apron_top_m": 0.015,
+    "scope": "Actual _build_high_perches attaches presentation at the unchanged landmark root. _build_landmarks uses ledge_y=0.10; _mesa shared visible/collision crown emissions retain 0.03m lift. Configured value is finite positive float .03; no new input or gameplay flag.",
+    "perimeter_limit": "Apron radius7.15 exceeds the guaranteed flat cap radius6.56 (existing landing_size16*.41). The outer .59m band may meet terrain that follows surrounding source surfaces; raising its flat plane by .03m does not prove edge coverage/contact or absence of clipping. Original native picture check is required."
+  },
+  "test_delta": {
+    "existing_method": "test_high_perches_presentation_is_collision_free_and_player_scaled",
+    "added_checks": [
+      "Actual generated CylinderMesh apron top >0.135",
+      "Actual generated outer-ring centre retains .015m separation above raised apron top within .001"
+    ],
+    "retained": "All original composition/node/role counts, collision-free traversal-layer checks, sign message/interaction/font-scale guards, banner support and existing mount/survey checks remain; no new test method, class, fixture, skip or weakening.",
+    "limits": "Local isolated presentation mesh checks, not a mounted physical floor probe or GPU proof. New assertions check apron and outer-ring placement; equal inner-ring/ray lift follows reviewed source but is not independently asserted by these new two checks."
+  },
+  "headless_command": {
+    "script": "res://tests/run_tests.gd",
+    "args": [
+      "--only=test_cloudreach_high_perches_presentation.gd"
+    ],
+    "verdict": "APPROVE",
+    "artifact_status": "PENDING; no result inspected, waited for or claimed"
+  },
+  "native_command": {
+    "argv": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_frame_matrix.gd",
+      "--",
+      "--only=19,20",
+      "--preset=High",
+      "--source-commit=401977bce7041e4274f8e01e8075462ecd87a0de",
+      "--output=res://.tmp/e-high-perches-lift-401977-day-r1"
+    ],
+    "verdict": "APPROVE applicability only",
+    "producer_blob": "221b0fe18cee1eb655044926bee409022c3dd200",
+    "bootstrap_blob": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+    "selected_rows": [
+      {
+        "n": 19,
+        "row": "perch-landing",
+        "time": "day",
+        "stand_candidates": [
+          [
+            900,
+            1020,
+            2689
+          ],
+          [
+            907,
+            1020.13,
+            2700
+          ]
+        ],
+        "target": [
+          900,
+          1028,
+          2700
+        ]
+      },
+      {
+        "n": 20,
+        "row": "perch-vista",
+        "time": "day",
+        "stand_candidates": [
+          [
+            895,
+            1020,
+            2706
+          ],
+          [
+            900,
+            1020,
+            2700
+          ]
+        ],
+        "target": [
+          -340,
+          830,
+          3970
+        ]
+      }
+    ],
+    "expected_saved_frames": 2,
+    "supported_args": "Existing --only numeric parser selects19,20; --output chooses exact fresh folder; --preset invokes LOOKDEV source/preset/native1920/Forward+ preflight. No --night or --motion so original row-day10h still path runs.",
+    "retained_guards": "Each row tries its existing stands; registered ground/drawn-height checks, trainer-mask floor ray excluding player/ally, bounded floor wait, physical settle/sliding checks, normal production CameraRig yaw/pitch within limits, drawn crown over-camera check, trainer chest on-screen checks and native follower settle remain. Saved-image failure marks skip; named capture final receipt open/flush/readback/graphics summary and empty-skips are required for exit0.",
+    "fixture_disclosure": "Existing fixed PARTY=[galecrest,bramblebun,mudsnout,terrapup,brooktail], staged progression/realm flags, direct chapter mount, debug seating/zeroed trainer velocity, day clock freeze, production camera and native follower. No new fixture, earned Fly/route or gameplay input proof.",
+    "external_required_evidence": [
+      "ROOT alone: fresh exact clean pin/import/user/output and original terminal/hash/source wrapper",
+      "Exactly two original row records/image pairs at1920x1080 and complete persisted receipt; no skips/errors",
+      "Record chosen stand/camera/clock/actual weather; this command does not explicitly pin weather",
+      "Original independent visual assessment of the lifted apron and perimeter"
+    ],
+    "scope_limits": [
+      "Two-frame target, not DAY96 or full384",
+      "Different recorder/stand plan from253bd DAY catalogue; not a matched253 comparison",
+      "No dawn/night/weather matrix, sustained motion, device/performance/campaign/co-op/fullbar or whole criterion claim"
+    ]
+  },
+  "reuse_and_history": "Prior accepted source/logic/native witnesses including completed253bd DAY remain unchanged historical pieces. No restart/relabel or communication to the active original blind judge; source-only review is not a visual PASS.",
+  "remaining_gates": [
+    "ROOT completed two-row native proof",
+    "Original independent visual verdict; perimeter coverage remains unproved"
+  ],
+  "excluded_claims": [
+    "No headless/native result yet",
+    "No all-clipping or contact guarantee",
+    "No physics/collision/input/authority/save change or proof",
+    "No component READY or whole F40/F08 approval"
+  ],
+  "artifact_reviews": [
+    {
+      "verdict": "APPROVE bounded selected headless artifact",
+      "source": "401977bce7041e4274f8e01e8075462ecd87a0de",
+      "run_id": 37892103104,
+      "job_id": 113695103691,
+      "artifact_id": 11598198918,
+      "packet": "D:\\CodexTemp\\tetherbound-proof\\e-high-perches-lift-401977-r1",
+      "checkout_binding": {
+        "actual_job_checkout_lines": [
+          56,
+          68,
+          135,
+          147,
+          256,
+          273,
+          276
+        ],
+        "final_git_commit_line": 276,
+        "workflow_main_head_is_not_test_source": true,
+        "workflow_head_sha": "7c7d25873cec69c1720b1964af9fd4b94151bee5"
+      },
+      "selected_invocation": {
+        "script": "tests/run_tests.gd",
+        "args": "--only=test_cloudreach_high_perches_presentation.gd",
+        "mode": "headless",
+        "timeout_minutes": 10,
+        "job_env_lines": [
+          5022,
+          5023,
+          5025,
+          5026
+        ]
+      },
+      "actual_engine": "Godot Engine v4.7.stable.official.5b4e0cb0f",
+      "result": {
+        "tests": 5,
+        "assertions": 48,
+        "failed": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 6,
+        "selected_engine_errors": 0,
+        "selected_engine_warnings": 0,
+        "archived_godot_log_diagnostics": 0,
+        "skipped_selected_cases": 0
+      },
+      "executed_cases": [
+        "test_every_high_perches_banner_hangs_from_a_mast_or_the_arch",
+        "test_high_perches_config_names_a_complete_refuge_composition",
+        "test_high_perches_mount_preserves_the_survey_disc_and_clears_only_local_cover",
+        "test_high_perches_presentation_is_collision_free_and_player_scaled",
+        "test_master_sign_text_fits_a_physical_post_and_keeps_its_message_and_prompt"
+      ],
+      "scope": "Existing original fixture and guards reached: actual generated apron top and retained outer-ring offset, role counts/collision-free visual layer, banner support, composition, mount/survey/cover source checks, physical sign bounds and retained message/interaction. No selected case skip or rerun by reviewer.",
+      "hashes": {
+        "artifact\\run.log": "c36fd08bb74a6abd414cb394099cd077aa1f234d1e94f7887dca06b8ac93816c",
+        "artifact\\exit_code": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "artifact\\MANIFEST.txt": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b",
+        "artifact.zip": "b8233a06135b2094fd77cdf24a8c6c80ab377a07020f6382f56a6d5f700ee062",
+        "job.log": "7995f3352d03c09a343bfce3c912e5fcbea57fad192d7f29cc8c43f963cb5617",
+        "github-api-binding.json": "adfd2ba2cf3864256ea84d0e1ddc8ecd2ca25226bdb05dbbf18c5ad06ef14667",
+        "artifact\\user\\godot\\app_userdata\\Tetherbound\\logs\\godot.log": "ce3c3ac7ad6a0277075572811a0d9ef6ffb5e2005c1d42c21f6503e0b45dc535"
+      },
+      "zip_binding": {
+        "all_archived_file_bytes_match_extracted": {
+          "MANIFEST.txt": true,
+          "run.log": true,
+          "exit_code": true,
+          "user/godot/app_userdata/Tetherbound/boot_log.txt": true,
+          "user/godot/app_userdata/Tetherbound/logs/godot.log": true
+        },
+        "uploaded_zip_digest_matches_api_and_job_line5097": true,
+        "artifact_bytes": 1592,
+        "api_run_job_completed_success": true
+      },
+      "action_warning_disclosure": "Job contains five punycode DEP0040 and three url.parse DEP0169 deprecation warnings plus Node.js 20 action migration warning. These are action diagnostics, separate from the error/warning-free selected Godot run. No general all-job warning-free claim.",
+      "limits": [
+        "Headless isolated/source assertions do not establish GPU rendering, physical perimeter contact or clipping.",
+        "Apron radius7.15 versus guaranteed flat cap6.56 remains an unresolved native edge concern.",
+        "Actual ROOT two-row native provenance and original independent visual assessment remain pending; no whole matrix/criterion/device/earned route/performance/READY claim."
+      ]
+    }
+  ]
+}

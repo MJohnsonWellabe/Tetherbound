@@ -1,0 +1,151 @@
+{
+  "reviewer": "Original retained Ohm /root/review_cloud_startup",
+  "scope": "Only401977 failed two-row native capture and conditional one infrastructure-confirmation applicability; no execution/art judgment",
+  "runtime_verdict": "FAILED: original selected two-row capture incomplete; no promotion",
+  "source": "401977bce7041e4274f8e01e8075462ecd87a0de",
+  "actual_git_tree": "09bf7bd2975e869a08576e1321d08ca23542c4a2",
+  "packet": "D:/CodexTemp/tetherbound-proof/native-e-401977bce7-high-perches-lift-r1",
+  "raw_originals": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-high-perches-lift-401977-day-r1",
+  "capture_start": {
+    "deadline_minutes": 45,
+    "source": "401977bce7041e4274f8e01e8075462ecd87a0de",
+    "mode": "Capture",
+    "args": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_frame_matrix.gd",
+      "--",
+      "--only=19,20",
+      "--preset=High",
+      "--source-commit=401977bce7041e4274f8e01e8075462ecd87a0de",
+      "--output=res://.tmp/e-high-perches-lift-401977-day-r1"
+    ],
+    "started_utc": "2026-10-09T06:33:56.2877924Z",
+    "pid": 42284,
+    "fresh_user_directory": "D:/CodexTemp/tetherbound-proof/native-e-401977bce7-high-perches-lift-r1/capture-home"
+  },
+  "capture_terminal": {
+    "exit_code": 1,
+    "source": "401977bce7041e4274f8e01e8075462ecd87a0de",
+    "mode": "Capture",
+    "reason": "process_exit",
+    "ended_utc": "2026-10-09T06:44:04.2644970Z",
+    "pid": 42284
+  },
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "High",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "401977bce7041e4274f8e01e8075462ecd87a0de"
+  },
+  "source_binding": {
+    "before_after_capture_tracked_index_head_equal": true,
+    "historical_untracked_outputs_disclosed": [
+      "?? ralph/reports/F38/lane-d/exterior-cluster/",
+      "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+      "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+      "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+    ],
+    "import_engine_exit": 0,
+    "import_history": "Original source-after-import.json marks tracked_clean=true yet its status lists four modified .import files. Preserve that contradictory original field; only later explicit normalization/revalidation supports clean post-import/capture binding.",
+    "metadata_revalidation": "All four reported normalized metadata blobs independently equal exact401 Git object blobs; index/head tree unchanged before and after; no code/config change inferred from normalization."
+  },
+  "actual_outputs": [
+    {
+      "row": 19,
+      "name": "19_high_roost_sky_shrine_perch-landing_day.png",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "verdict": "INVALID zero-byte file; not an image/record pair",
+      "diagnostic": "save_png returned error20; original producer marked PNG write failed skip"
+    },
+    {
+      "row": 20,
+      "name": "20_high_roost_sky_shrine_perch-vista_day.png",
+      "bytes": 2425058,
+      "sha256": "cd263ef6c3d654300239850c3564174660f461eae706f6812d835937fb496c4c",
+      "width": 1920,
+      "height": 1080,
+      "png_chunks_crc_verified": 299,
+      "verdict": "APPROVE individually persisted PNG/record provenance only",
+      "record": "trainer895,1020.13,2706; stand895,1020,2706 candidate1/2; camera898.6,1022.96,2702.4; yaw135.7 pitch-12; clock10; trainer50%/60%; native follower gap3.55m; boot flags",
+      "limits": "No art judgment/perimeter/contact/whole capture PASS; weather not explicitly recorded/pinned"
+    }
+  ],
+  "manifest": {
+    "sha256": "ed200c898269aada76df2471aa62af102f06a312137b9f30615d50655bc8d1c3",
+    "actual_written": 1,
+    "actual_skipped": 1,
+    "exact_graphics_and_summary_persisted": true,
+    "scope": "Legacy text producer has no complete=true claim. Named skip failure correctly yields exit1. Two derivative contact sheets of the sole saved image add no independent frames."
+  },
+  "diagnostics": {
+    "engine_errors": 1,
+    "script_errors": 0,
+    "warnings": 2,
+    "error": "capture could not write row19 PNG (20)",
+    "warnings_scope": "Two known fail-closed wild-site exclusions: broken_causeway_main03 and windscar_floor_loop15",
+    "cause": "UNDETERMINED. File write failure plus owner-reported low disk chronology does not independently establish sole disk cause."
+  },
+  "disk_context": {
+    "owner_report_only": "D free-space15MB→7MB→0 during06:38–06:44;43 generated cache files moved from inactive checkout after capture ended, reportedly restoring~138MB at06:44:21.",
+    "independent_receipt_status": "No dedicated free-space/hash-preserving move receipt present among named supplied packet files. Chronology/bytes not independently verified here; no active/evidence modifications presumed or claimed.",
+    "adequate_retry_capacity_proven": false
+  },
+  "retry_applicability": {
+    "verdict": "APPROVE conditional applicability of at most ONE ROOT-only infrastructure confirmation; not authorized by this report as already ready to run",
+    "source": "401977bce7041e4274f8e01e8075462ecd87a0de",
+    "argv": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_frame_matrix.gd",
+      "--",
+      "--only=19,20",
+      "--preset=High",
+      "--source-commit=401977bce7041e4274f8e01e8075462ecd87a0de",
+      "--output=res://.tmp/e-high-perches-lift-401977-day-r2"
+    ],
+    "required_before_launch": [
+      "Retained actual evidence of stable sufficient free capacity for output/user/import/cache needs and ongoing writes;~138MB report alone does not satisfy this",
+      "Fresh exact clean401 checkout/import revalidation, new user directory and empty unique r2 output",
+      "Same original rows19,20/High1920/Forward+/stand-camera-floor/failure/PNG/receipt guards; no post-pin source/config/fixture change"
+    ],
+    "required_after": "Original terminal plus both original image/record/headers/CRC/hashes/persisted receipt and source snapshots; preserve r1 FAIL. If confirmation fails, re-scope rather than unchanged repeated runs.",
+    "pending": "Not launched or runtime approved by reviewer; original independent visual verdict only after genuine completed changed rows"
+  },
+  "reused_proofs": "Original401 SOURCE/exact command and actual5tests48assert headlessAPP reused without audit/rerun.",
+  "evidence_sha256": {
+    "capture-start.json": "49a276a745f3a36448a8563e5c1c0015d306a2a4dd723f19bbb7c464204862e4",
+    "capture-terminal.json": "b4df92c60b458b9a3830b24626d1bd86bf257d9cd9e91209608ccd297cb1dbe5",
+    "capture.stdout.log": "c3c41efd1d795618fee62724fd9a85775741b5f2852c7d10fa7eceb66e66ee7a",
+    "capture.stderr.log": "ece2740b502e4f2f2d11fa15b5b6dc0c41c84340dd9e232da2db9179f88fede2",
+    "source-before-capture.json": "8f17c8fbc036cb5ce0f6d106a76c0a3b6f23b856c0528ceb4d810ef6cc7b05dd",
+    "source-after-capture.json": "70b6388d156a0d94a5389ff8dd1550dce7e56da8b1bf4d1244b7997356556646",
+    "source-after-import.json": "e20ca5cefba243cbcf8d1f3b5728b80df2c4c3f9d1736ffba42be26f6e84a843",
+    "source-after-import-revalidated.json": "72094eceda77189bbdbde86b1e017fddae090b9ccdd228df3b542b20f5b5b9c3",
+    "import-start.json": "25aba44c86ee5f732a91040de4ab8d2e2f66ace658ca278fad85b4ab6a51aef0",
+    "import-terminal.json": "16fb6ec21c0b0da9f0a6af64806c8f7b157415ccee9456de1494baeea3715e7c",
+    "original-recipe.json": "4c1d234b44b03331a5771fde32ca32db4259f3fae99094bc406a921f7e5b13f5"
+  },
+  "limits": [
+    "Existing legal-five/debugmount/bootflags/dayclock/pose/follower fixtures preserved; no earned Fly/route/controller input demonstration",
+    "No new source/native/gameplay fix or disk/hardware/driver causal diagnosis",
+    "No full96/384/presetmatrix/weather/day-night/wholequality/F40/F08/device/performance/READY claim",
+    "Outer apron/perimeter visual concern remains pending; no blind contact or source disclosure"
+  ]
+}
