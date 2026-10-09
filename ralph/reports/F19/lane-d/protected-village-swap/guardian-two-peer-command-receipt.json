@@ -50,6 +50,16 @@
     },
     "two_peer_command": "GateSATISFIED01a11f13-ba42: exact8d9, original1800s scenario/40min outer limit; freshattempt8d9 dispatched, runtimepending",
     "original_source_command_approve": "SAME reviewer01a11f0e-7dba-7700-a91c-f32109c70ce9",
-    "change": "Remove only released owned training UID before synchronous capture save; restore full prior redesign dictionary on failure"
+    "change": "Remove only released owned training UID before synchronous capture save; restore full prior redesign dictionary on failure",
+    "participant_retry": {
+      "job": 113681919735,
+      "original_gate_satisfied": "01a11f13-ba42-76c1-b7aa-3899bad9c38f",
+      "output": "res://ralph/reports/F19/lane-d/guardian-two-peer/attempt8d9",
+      "run": 37887898409,
+      "runtime": "pending; no participant/save acceptance",
+      "excluded": "Failed96e3 saves/artifact not accepted boundaries or reuse",
+      "guards": "Unchanged original scenario1800s/outer40min, fixture/identity/controller/save/no-sixth/repeat-refusal guards; headless captured=false",
+      "source": "8d9fc5686fbcf7dfb59c0c27df7e161de1afe107"
+    }
   }
 }
