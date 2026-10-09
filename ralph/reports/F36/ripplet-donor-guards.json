@@ -1,7 +1,0 @@
-{
-  "default_guard_refusal": true,
-  "default_output_absent": true,
-  "same_path_refusal": true,
-  "source_sha_unchanged": true,
-  "source_sha256": "d97e234ad6754fde6555e6261531cf8969642c4f3a098ed59edfe2788884a8d5"
-}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "criterion": "F41#0",
-  "source_commit": "09b2982b74bcca66f930c45a1110bc7bb6c87393",
+  "source_commit": "28572ae0c9085de60db33f58b6407588c2d7f681",
   "scope": "Assembly of original reviewer-recorded per-row scores with original evidence and rating bases preserved; not a fresh broad rescore or full visual bar",
   "recapture": {
     "unique_ids": 240,
@@ -25,7 +25,7 @@
     "current_map": 1
   },
   "score_assembly_checks": "44unique IDs, all original-recorded1..5scores, exact products; no score invented or previous failure promoted. Original primary exposure/importance preserved estimates explicitly disclosed.",
-  "whole_criterion_verdict": "PASS literalWHOLEF41#0 current09b plus evidence-only commits: original whole SOURCEAPPROVE + original blind current-loss completenessPASS; no remainingliteralgap; F41#1..#5/fullbarOPEN",
+  "whole_criterion_verdict": "PASS literalWHOLEF41#0 at merged28572 plus evidence-only commits: original whole SOURCEAPPROVE + original blind currentMap completenessPASS; no remainingliteralgap; F41#1..#5/fullbarOPEN",
   "full_visual_bar": {
     "A": "BLOCK on supplied environmental presentation",
     "B": "BLOCK on supplied environmental presentation",
@@ -781,24 +781,23 @@
     {
       "item_id": "P2-110",
       "subject": "Hollows fight loss result clarity",
-      "original_artifact": "loss-ui-before-after-blind-verdict.json",
-      "original_assessment": "BOUNDED_CURRENT_TWO_VISIBLE_LOSS_RESULT_VIEWS",
-      "severity": 1,
+      "original_artifact": "natural-loss-blind-verdict.json",
+      "original_assessment": "BOUNDED",
+      "severity": 3,
       "exposure": 3,
       "importance": 4,
-      "impact": 12,
-      "verdict": "PASS",
+      "impact": 36,
+      "verdict": "BLOCK",
       "evidence": [
-        "D:/CodexTemp/tetherbound-proof/native-e-09b2982b74-loss-ui-r1/frames/loss-ui/hollows_alpha-99-after.png",
-        "D:/CodexTemp/tetherbound-proof/native-e-09b2982b74-loss-ui-r1/frames/loss-ui/hollows_alpha-100-aftermath.png"
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-i03.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-i04.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-99-after.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-100-aftermath.png"
       ],
       "limits": [
-        "The images support visible result wording, panel separation and roster-state consistency only. They do not establish natural cause, runtime outcome classification, damage/death correctness or an earned defeat.",
-        "No continuous fall animation, result timing, duration, dismissal, input behavior or recovery transition is assessed.",
-        "TEAM 5/5 may describe owned roster count; it is not treated as proof that all five are ready. The specific Sparkit row and KO treatment are the relevant visible cues.",
-        "The trainer's separate 100/100 heart display is not mistaken for Sparkit's creature health.",
-        "No other-party wipe, co-op eligibility, saved state, device readability, other resolutions, broad layout quality, full visual bar, READY or whole-criterion acceptance follows from this bounded PASS.",
-        "Before and after world framing differs; this is a visible UI/readiness comparison, not an exact world-pixel match or a cause assessment."
+        "TEAM 5/5 may denote ownership count; its count alone is not treated as proof that five creatures are combat-ready. The visible full-looking green Sparkit bar beside explicit out-of-fight text is the relevant inconsistency.",
+        "The trainer's separate 100/100 HUD is not mistaken for Sparkit's creature health.",
+        "These four full rasters support the current result-presentation score only; no before/after fix assessment, other-row rating, full bar or whole F41 acceptance claim is made."
       ]
     },
     {
@@ -872,17 +871,14 @@
   },
   "affected_applicability_resolution": "Same original judge independently re-scored only current253 P2-092/P2-093/P2-063 from all24 existing tell rasters; all3visualFAIL/BLOCK48 retained. Previous context scores preserved in original artifact, not currentassembly.",
   "original_whole_reviews": {
-    "source_report": "lane-e-capture-source-review.json/09b_whole_f41_0_original_final_loss_binding_review",
+    "source_report": "ralph/reports/F41/lane-e-capture-source-review.json/28572_whole_f41_0_original_final_map_binding_review",
     "source_verdict": "APPROVE",
-    "blind_report": "whole-criterion-blind-completeness.json/addenda/final-current-loss-binding-completeness",
+    "blind_report": "whole-criterion-blind-completeness.json/addenda/final-merged-current-map-applicability",
     "blind_verdict": "PASS",
-    "accepted_gameplay_source": "09b2982b74bcca66f930c45a1110bc7bb6c87393",
+    "accepted_gameplay_source": "28572ae0c9085de60db33f58b6407588c2d7f681",
     "main_ancestor": "c7127e7dda9bc32cd1930d1672b90abb7ff9758c",
-    "loss_result_enabled": true,
-    "affected_logic": "Original100-checkARTIFACTAPP plus originalD3/22reuseAPP",
-    "affected_native": "OriginalRUNTIMEAPP32PNG/49hash/13enemyhits/naturalactivecreaturedefeat43.92;0errors/sixwarningsretained",
-    "loss_visual": "OriginalbeforeBLOCK→afterPASS1/3/4impact12",
-    "scope": "LiteralF41#0 only; other43unchanged,17partialscopes andallhistoricalfailurespreserved"
+    "required_affected_ui_runtime": "APPROVE: sixJPEGs/23hashes,1080+720pairs/restoration,terminal0/noerrors,originalproducerarchivehistory preserved",
+    "scope": "Literal recapture/currentrowrescorecompleteness only;17partialscopes/allFAILBLOCKpreserved"
   },
   "main_integration_map_resolution": "Original samejudge P2-002 currentmap independently4/4/5=80FAIL, scoped two32xunsurveyedmaps at1080/720; historicalrow preserved in originalprimary artifact, not currentassembly",
   "historical_original_whole_reviews": {
@@ -892,16 +888,5 @@
     "blind_verdict": "PASS",
     "accepted_gameplay_source": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
     "scope": "Literal recapture and rowrescore completeness only;17partialscopes/allvisualFAIL/BLOCKpreserved"
-  },
-  "current_loss_resolution": "SameoriginalbeforeBLOCK→afterPASS current1/3/4=12 at09b, exacttwoaftermathviews; nativeoriginalAPP actualactive-creaturedefeat43.92/13hits/32PNG49hash; other43ratingsunchanged",
-  "historical_main_integrated_whole_reviews": {
-    "source_report": "ralph/reports/F41/lane-e-capture-source-review.json/28572_whole_f41_0_original_final_map_binding_review",
-    "source_verdict": "APPROVE",
-    "blind_report": "whole-criterion-blind-completeness.json/addenda/final-merged-current-map-applicability",
-    "blind_verdict": "PASS",
-    "accepted_gameplay_source": "28572ae0c9085de60db33f58b6407588c2d7f681",
-    "main_ancestor": "c7127e7dda9bc32cd1930d1672b90abb7ff9758c",
-    "required_affected_ui_runtime": "APPROVE: sixJPEGs/23hashes,1080+720pairs/restoration,terminal0/noerrors,originalproducerarchivehistory preserved",
-    "scope": "Literal recapture/currentrowrescorecompleteness only;17partialscopes/allFAILBLOCKpreserved"
   }
 }

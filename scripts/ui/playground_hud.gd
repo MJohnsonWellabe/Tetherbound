@@ -181,7 +181,6 @@ const BUILD_TOOL := "hammer"
 const HOTBAR_MESSAGE_SECONDS := 2.2
 const HUD_CONFIG_PATH := "res://data/config/hud.json"
 const VICTORY_HIERARCHY_CONFIG := "res://data/config/victory_hierarchy_visual.json"
-const NAMED_WILD_REWARD_CONFIG := "res://data/config/stormwood_encounters.json"
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
 
@@ -908,6 +907,7 @@ var _party_strip: Control = null
 var _party_strip_script: Script = null
 var _party_strip_last_index := -999
 var _party_strip_last_revision := -999
+var _party_vitals_refresh_candidate := false
 var _party_strip_last_vitals: Array = []
 ## OP21-12: the last active creature's name, so a later cycle can say "Willow
 ## → Ashcap" instead of just lighting up a new row.
@@ -1007,8 +1007,6 @@ var _moment_also: Label = null
 var _moment_separator: MarginContainer = null
 var _quick_items_heading: Label = null
 var _victory_hierarchy_candidate := false
-var _named_wild_reward_lines: Dictionary = {}
-var _named_wild_reward_lines_loaded := false
 var _moment_queue: Array = []
 var _moment_feed_seq: int = 0
 var _moment_feed_epoch: int = -1
@@ -2114,12 +2112,10 @@ func _update_party_strip() -> void:
 	# entries built below -- so without this they would sit stale until the
 	# next catch or faint.
 	var feed_revision := PROGRESSION_FEED.revision()
-	# HP, faint and bed state can change without roster/feed revisions. These
-	# canonical values must invalidate the cache even in the default HUD;
-	# correctness is no longer gated by the retired visual candidate switch.
 	var vitals: Array = []
-	for creature: RefCounted in _party.call("members"):
-		vitals.append([creature.call("hp_fraction"), creature.get("fainted"), creature.get("resting")])
+	if _party_vitals_refresh_candidate:
+		for creature: RefCounted in _party.call("members"):
+			vitals.append([creature.call("hp_fraction"), creature.get("fainted"), creature.get("resting")])
 	if index == _party_strip_last_index and revision == _party_strip_last_revision \
 			and active_out == _party_strip_last_active_out \
 			and feed_revision == _party_strip_last_feed_revision \
@@ -2633,6 +2629,7 @@ func _apply_hud_config(config: Dictionary) -> void:
 	_exploration_show_empty_slots = roster.get("show_empty_slots", true) != false if roster is Dictionary else true
 	if is_instance_valid(_party_strip):
 		_party_strip.set("show_empty_slots", _exploration_show_empty_slots)
+	_party_vitals_refresh_candidate = config.get("party_vitals_refresh_candidate", false) == true
 	_vitals_idle_alpha = clampf(hud_config_number(config, "exploration_vitals", "idle_alpha", FADE_ALPHA), FADE_ALPHA, 1.0)
 	# Local exploration styles only. Preserve legacy fills for absent/invalid
 	# config, including the existing positive/finite number guard.
@@ -5096,8 +5093,10 @@ func _arm_torch_placement() -> void:
 
 
 ## OF20. Polls `Game`'s one-shot toast queue (`take_pending_world_message()`)
-## every frame. Utility/refusal messages use the hotbar strip; authority's
-## exact reward receipts use the existing progression moment presenter.
+## every frame -- the same read-and-clear contract `_update_region_banner()`
+## already polls `map` through -- and surfaces it through the same message
+## strip a hotbar-triggered refusal (repair, heal) already uses, rather than
+## inventing a second banner for what is the same kind of event.
 func _update_world_message() -> void:
 	if _game == null:
 		return
@@ -5106,32 +5105,10 @@ func _update_world_message() -> void:
 		# The production payout source already reports only items that fitted.
 		# Route its existing exact reward receipt through the one progression
 		# presenter; do not reconstruct inventory awards or pay anything here.
-		if text.contains("'s reward:") or _is_named_wild_reward_message(text):
+		if text.contains("'s reward:"):
 			PROGRESSION_FEED.push("reward_summary", null, {"name": "Team", "receipt": text})
 		else:
 			_show_hotbar_message(text)
-
-
-## Peer-local presentation on all presets. Match the authored participant
-## acknowledgements exactly; the authority-delivered text remains untouched.
-## This lookup grants nothing and leaves generic messages on their usual route.
-func _is_named_wild_reward_message(text: String) -> bool:
-	if not _named_wild_reward_lines_loaded:
-		_named_wild_reward_lines_loaded = true
-		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(NAMED_WILD_REWARD_CONFIG))
-		if parsed is Dictionary:
-			var entries: Variant = parsed.get("named_encounters", [])
-			if entries is Array:
-				for entry: Variant in entries:
-					if not entry is Dictionary:
-						continue
-					var reward: Variant = entry.get("completion_reward", {})
-					if not reward is Dictionary:
-						continue
-					var line := str(reward.get("acknowledgement", ""))
-					if not line.is_empty():
-						_named_wild_reward_lines[line] = true
-	return _named_wild_reward_lines.has(text)
 
 
 func _show_hotbar_message(text: String) -> void:

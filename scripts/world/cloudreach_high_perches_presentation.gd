@@ -19,20 +19,6 @@ const CAMERA_RIG := preload("res://scripts/player/camera_rig.gd")
 var _built := false
 
 
-static func style_master_sign_text(post: Node3D) -> void:
-	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
-	var text_style: Dictionary = cfg.master_sign_text
-	for child: Node in post.get_children():
-		if child is Label3D:
-			var words := child as Label3D
-			words.font_size = int(text_style.font_size)
-			words.pixel_size = float(text_style.pixel_size_m)
-			words.width = float(text_style.width_px)
-			words.outline_size = int(text_style.outline_size)
-			words.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			words.position = _v3(text_style.offset_m)
-
-
 func build(materials: Dictionary) -> void:
 	if _built:
 		return
@@ -149,18 +135,15 @@ func _add_stop_shape(holder: StaticBody3D, label: String, centre: Vector3, exten
 
 
 func _add_compass(cfg: Dictionary, stone: Material, bronze: Material, blue: Material) -> void:
-	# The crown's 0.10 m ledge plus 0.03 m cap met the old apron top at
-	# exactly 0.13 m. Lift this decorative layer and its inlays together.
-	var lift := Vector3.UP * float(cfg.get("compass_surface_lift_m", 0.03))
-	_add_cylinder("LandingApron", Vector3(0.0, 0.065, 0.0) + lift, 7.15, 0.13, stone, "landing_apron")
+	_add_cylinder("LandingApron", Vector3(0.0, 0.065, 0.0), 7.15, 0.13, stone, "landing_apron")
 	_add_ring("OuterWindCompass", cfg.get("compass_outer_radii_m", [6.15, 6.65]) as Array,
-		Vector3(0.0, 0.145, 0.0) + lift, bronze, "wind_compass")
+		Vector3(0.0, 0.145, 0.0), bronze, "wind_compass")
 	_add_ring("InnerWindCompass", cfg.get("compass_inner_radii_m", [2.0, 2.35]) as Array,
-		Vector3(0.0, 0.15, 0.0) + lift, blue, "wind_compass")
+		Vector3(0.0, 0.15, 0.0), blue, "wind_compass")
 	for index in 8:
 		var angle := TAU * float(index) / 8.0
 		var direction := Vector3(sin(angle), 0.0, cos(angle))
-		var centre := direction * 4.35 + Vector3.UP * 0.15 + lift
+		var centre := direction * 4.35 + Vector3.UP * 0.15
 		var ray := _add_box("CompassRay%02d" % (index + 1), centre,
 			Vector3(0.22 if index % 2 else 0.34, 0.055, 3.8), bronze if index % 2 else blue,
 			"wind_compass")

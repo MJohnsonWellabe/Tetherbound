@@ -1,9 +1,10 @@
 extends SceneTree
 
 ## CLOUDREACH-LOOK-0906 smoke. Builds the real Cloudreach scene (same harness
-## as smoke_cloudreach_foundation.gd), waits for the production mount, and
-## inspects its scripts/world/cloudreach_look.gd dressing. Never mounts a
-## second copy that duplicates plants and consumes already-reused lamps. It
+## as smoke_cloudreach_foundation.gd), mounts scripts/world/cloudreach_look.gd
+## directly against the built world -- exactly what
+## cloudreach_world_runtime.gd::mount() does in production, without pulling in
+## the combat/encounter/Game-singleton machinery a full mount() needs -- and
 ## checks the owner's 2026-09-06 addendum landed: rope rails on every bridge
 ## edge, mooring lines on every floating region/fly-only-destination/aerie/
 ## perches, a second raycast-placed ground-cover layer that actually plants
@@ -11,6 +12,7 @@ extends SceneTree
 ## cliffside settlement materials that no longer match the Meadows village.
 
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
+const LOOK := preload("res://scripts/world/cloudreach_look.gd")
 
 # The Meadows house kit's own authored roof retint (cottage_a's "MI_RoundTiles"
 # -> #8a6448 in data/config/building_prefabs.json) -- the value the cliffside
@@ -27,18 +29,13 @@ func _run() -> void:
 	var world := SCENE.instantiate()
 	root.add_child(world)
 	current_scene = world
-	var deadline := Time.get_ticks_msec() + 600000
-	while not bool(world.call("shell_build_complete")) and Time.get_ticks_msec() < deadline:
+	for _frame in 8:
 		await physics_frame
-	if not bool(world.call("shell_build_complete")):
-		push_error("CLOUDREACH LOOK: production world build did not complete")
-		quit(1)
-		return
-	var look := world.get_node_or_null("CloudreachLook")
-	if look == null:
-		push_error("CLOUDREACH LOOK: production dressing is absent")
-		quit(1)
-		return
+
+	var look := LOOK.new()
+	look.name = "CloudreachLook"
+	world.add_child(look)
+	look.call("dress", world)
 	for _frame in 2:
 		await physics_frame
 
@@ -90,84 +87,6 @@ func _run() -> void:
 	_expect(roof_colour != MEADOWS_ROOF_COLOUR,
 		"cliffside settlement roof colour still matches the Meadows village roof colour", failures)
 	_expect(int(look.call("settlement_guy_rope_count")) > 0, "no settlement guy ropes were added", failures)
-
-	# 6. Route verges must survive production support checks and reach the
-	# committed mesh batches, not just the pure authored-data station plan.
-	var look_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
-		"res://data/config/cloudreach_look.json"))
-	var verge_config: Dictionary = look_config.get("route_verges", {})
-	var grounded_routes := 0
-	for raw: Variant in config_data.get("routes", []):
-		if str((raw as Dictionary).get("traversal_mode", "ground")) == "ground":
-			grounded_routes += 1
-	var verge_stations := int(look.call("route_verge_station_count"))
-	var verge_plants := int(look.call("route_verge_plant_count"))
-	var verge_stones := int(look.call("route_verge_stone_count"))
-	_expect(int(look.call("route_verge_route_count")) == grounded_routes,
-		"route verges did not plan every grounded route", failures)
-	_expect(verge_stations > 0 and verge_stations <= grounded_routes * int(
-		verge_config.get("max_stations_per_route", 16)), "route verge station budget/placement failed", failures)
-	_expect(verge_plants > 0 and verge_stones > 0, "route verges planted no vegetation or scree", failures)
-	var verge_node := look.get_node_or_null("RouteEcologyVerges")
-	var committed_instances := 0
-	if verge_node != null:
-		for child: Node in verge_node.get_children():
-			if child is MultiMeshInstance3D and child.multimesh != null and child.multimesh.mesh != null:
-				committed_instances += child.multimesh.instance_count
-	_expect(committed_instances == verge_plants + verge_stones and committed_instances > 0,
-		"route verge counters do not match committed mesh instances", failures)
-	print("  route verges: %d routes, %d supported stations, %d plants, %d stones, %d committed instances" % [
-		int(look.call("route_verge_route_count")), verge_stations, verge_plants, verge_stones, committed_instances])
-
-	# F40: inspect the real shrub roots against a short physical-floor probe,
-	# independently of the registered road height and transparent-card AABB.
-	for shrub: Dictionary in [{"node": "Bush04", "height_m": 1.4},
-			{"node": "Bush02", "height_m": 1.75}, {"node": "Flowers03", "height_m": 0.8}]:
-		var label := str(shrub.node)
-		var arrival_shrub := world.get_node_or_null("AuthoredRouteDetails/ArrivalStoneGarden/" + label) as Node3D
-		_expect(arrival_shrub != null, label + " has no supported production placement", failures)
-		var model: Node3D = null
-		if arrival_shrub != null:
-			_expect(arrival_shrub.get_child_count() == 1,
-				label + " must contain exactly one imported model", failures)
-			if arrival_shrub.get_child_count() == 1:
-				model = arrival_shrub.get_child(0) as Node3D
-			_expect(model != null, label + " imported model is not Node3D", failures)
-		if model != null:
-			var root_at := model.global_position
-			var query := PhysicsRayQueryParameters3D.create(root_at + Vector3.UP * 0.75,
-				root_at - Vector3.UP * 2.0, 1)
-			var hit := model.get_world_3d().direct_space_state.intersect_ray(query)
-			_expect(not hit.is_empty(), label + " root has no physical floor", failures)
-			if not hit.is_empty():
-				_expect(absf(root_at.y - hit.position.y) < 0.005,
-					label + " native root does not meet its physical floor", failures)
-				var bounds_tool := preload("res://scripts/world/building_prefabs.gd").new()
-				var bounds: AABB = bounds_tool.combined_aabb(model)
-				_expect(absf(bounds.size.y * model.scale.y - float(shrub.height_m)) < 0.0001,
-					label + " declared mesh size changed", failures)
-				var legacy_at := Vector3(arrival_shrub.global_position.x, 108.75, arrival_shrub.global_position.z)
-				print("  arrival shrub %s root: physical=%s native=%s registered=%s mesh_height=%s" % [
-					label, hit.position.y, root_at.y, world.call("_route_detail_ground", legacy_at), bounds.size.y * model.scale.y])
-
-	# F40's refused Overlook approach must use the existing incoming crown,
-	# with both registered travel height and actual collision support. This
-	# inspects the unchanged production world without bypassing a travel guard.
-	var capture: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
-		"res://data/config/cloudreach_f40_visual.json")).capture
-	var approach: Dictionary = capture.authored_stands.stormward_overlook.approach
-	var approach_at := Vector3(float(approach.position_xz[0]), 1110.0, float(approach.position_xz[1]))
-	var approach_ground := float(world.call("ground_height_at", approach_at.x, approach_at.z))
-	_expect(not is_nan(approach_ground), "Overlook approach has no registered travel ground", failures)
-	var approach_hit := (world as Node3D).get_world_3d().direct_space_state.intersect_ray(
-		PhysicsRayQueryParameters3D.create(approach_at + Vector3.UP * 3.0,
-			approach_at - Vector3.UP * 3.0, 1))
-	_expect(not approach_hit.is_empty(), "Overlook approach has no physical floor within 3m", failures)
-	if not approach_hit.is_empty():
-		_expect(not is_nan(approach_ground) and approach_ground - float(approach_hit.position.y) <= 3.0,
-			"Overlook approach physical floor is below the drawn crown", failures)
-		print("  Overlook approach: xz=%s registered=%s physical=%s" % [
-			Vector2(approach_at.x, approach_at.z), approach_ground, approach_hit.position.y])
 
 	if failures.is_empty():
 		var grid: Dictionary = look.call("cover_fill_grid")

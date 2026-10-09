@@ -17,20 +17,11 @@ class RecordingCover extends COVER:
 class CountingBudget extends RefCounted:
 	var tree: SceneTree
 	var calls := 0
-	var finished := 0
-	var coroutine_calls := 0
 	func _init(owner: SceneTree) -> void:
 		tree = owner
 	func breathe() -> void:
-		coroutine_calls += 1
-		await tree.process_frame
-	func take_breathe_frames() -> int:
 		calls += 1
-		return 1
-	func needs_render_release() -> bool:
-		return DisplayServer.get_name() != "headless" and RenderingServer.get_current_rendering_method() == "forward_plus"
-	func finish_release(frames: int) -> void:
-		finished += frames
+		await tree.process_frame
 
 var failures: Array[String] = []
 
@@ -68,8 +59,6 @@ func _run() -> void:
 		"slicing preserves exact grass, flower, and bush origin/yaw/scale fingerprints")
 	_check(sliced_counts[0] > 2048, "fixture exercises the MultiMesh upload release boundary")
 	_check(budget.calls >= 3, "visible sliced build released outer, candidate, and upload work")
-	_check(budget.finished == budget.calls, "every requested release resumed and completed")
-	_check(budget.coroutine_calls == 0, "production-budget signal suspension stays on the cover Node")
 	solo.queue_free()
 	sliced.queue_free()
 	await process_frame

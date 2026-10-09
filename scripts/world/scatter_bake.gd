@@ -148,8 +148,6 @@ static func _manifest_path(world_name: String) -> String:
 ## need to tell them apart.
 static func is_fresh(world_name: String, base_seed: int, expected_fingerprint: int = -1) -> bool:
 	var manifest := _read_manifest(world_name)
-	if _has_full_identity_generation(manifest):
-		return is_full_generation_usable(world_name, base_seed, expected_fingerprint)
 	if manifest.is_empty():
 		return false
 	if int(manifest.get("base_seed", -1)) != base_seed \
@@ -185,52 +183,9 @@ static func _read_manifest(world_name: String) -> Dictionary:
 static func is_usable(world_name: String, base_seed: int, fingerprint: int = -1) -> bool:
 	# A regional generation never bypasses its effective file/source receipt
 	# checks, even when the retained original fingerprint matches live source.
-	if _has_full_identity_generation(_read_manifest(world_name)):
-		return is_full_generation_usable(world_name, base_seed, fingerprint)
 	if has_stable_harvest_ids(world_name):
 		return is_incremental_usable(world_name, base_seed, fingerprint)
 	return is_fresh(world_name, base_seed, fingerprint)
-
-
-static func _has_full_identity_generation(manifest: Dictionary) -> bool:
-	var updates: Variant = manifest.get("regional_updates", [])
-	return updates is Array and not updates.is_empty() and updates.back() is Dictionary \
-		and str(updates.back().get("kind", "")) == "full_stormwood_identity_generation"
-
-
-## Full-generation provenance is distinct from the village's bounded patch
-## contract. Every catalog region must be covered by this exact source receipt.
-static func is_full_generation_usable(world_name: String, base_seed: int, fingerprint: int,
-		test_data_dir: String = "") -> bool:
-	if world_name != "stormwood" or fingerprint < 0:
-		return false
-	if not test_data_dir.is_empty() and (not OS.has_feature("debug") or not test_data_dir.begins_with("user://")):
-		return false
-	var data_dir := _bake_dir(world_name) if test_data_dir.is_empty() else test_data_dir
-	var manifest := TERRAIN_BAKE.read_manifest(data_dir)
-	if not _has_full_identity_generation(manifest) or not bool(manifest.get("stable_harvest_ids", false)) \
-			or int(manifest.get("base_seed", -1)) != base_seed:
-		return false
-	var receipt: Dictionary = manifest.regional_updates.back()
-	var catalog: Variant = manifest.get("regions", [])
-	var files: Variant = receipt.get("files", {})
-	if not TERRAIN_BAKE.valid_region_selection(catalog) or not files is Dictionary \
-			or int(receipt.get("config_fingerprint", -1)) != fingerprint \
-			or not TERRAIN_BAKE.same_regions(catalog, receipt.get("regions", [])) \
-			or files.size() != catalog.size() or not manifest.get("identity_high_water") is Dictionary:
-		return false
-	if manifest.identity_high_water != receipt.get("identity_high_water"):
-		return false
-	for value: Variant in manifest.identity_high_water.values():
-		if not (value is int or value is float) or not is_finite(float(value)) \
-				or float(value) < -1.0 or float(value) != floor(float(value)):
-			return false
-	for pair: Array in catalog:
-		var name := _region_path(world_name, Vector2i(int(pair[0]), int(pair[1]))).get_file()
-		if not files.has(name) or not files[name] is String or str(files[name]).length() != 64 \
-				or FileAccess.get_sha256(data_dir.path_join(name)) != files[name]:
-			return false
-	return true
 
 
 static func has_stable_harvest_ids(world_name: String) -> bool:
@@ -470,34 +425,8 @@ static func _read_placement(file: FileAccess, models: Array[String]) -> Dictiona
 ## it does not recompute or reorder anything within a placement.
 static func write_all(
 	world_name: String, by_layer: Dictionary, drained_out: Dictionary,
-	region_size: float, base_seed: int, source_fingerprint: int = -1,
-	preserve_harvest_identity: bool = false, test_data_dir: String = ""
+	region_size: float, base_seed: int, source_fingerprint: int = -1
 ) -> Dictionary:
-	if preserve_harvest_identity:
-		if world_name != "stormwood" or source_fingerprint < 0 or region_size != 512.0 \
-				or (not test_data_dir.is_empty() and (not OS.has_feature("debug") or not test_data_dir.begins_with("user://"))):
-			return {"ok": false, "code": "invalid_full_identity_scope"}
-		var data_dir := _bake_dir(world_name) if test_data_dir.is_empty() else test_data_dir
-		var prior := TERRAIN_BAKE.read_manifest(data_dir)
-		if not TERRAIN_BAKE.valid_region_selection(prior.get("regions", [])):
-			return {"ok": false, "code": "invalid_base_catalog"}
-		var all_regions := {}
-		for pair: Array in prior.regions:
-			all_regions[Vector2i(int(pair[0]), int(pair[1]))] = true
-		for group: Dictionary in [by_layer, drained_out]:
-			for layer: String in group:
-				for placement: Dictionary in group[layer]:
-					var point: Vector3 = placement.position
-					all_regions[region_of(Vector2(point.x, point.z), region_size)] = true
-		var cells: Array = all_regions.keys()
-		cells.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.x < b.x or (a.x == b.x and a.y < b.y))
-		var selection: Array = []
-		for cell: Vector2i in cells:
-			selection.append([cell.x, cell.y])
-		return _write_identity_regions(world_name, by_layer, drained_out, region_size,
-			base_seed, selection, test_data_dir, "", source_fingerprint)
-	if not test_data_dir.is_empty():
-		return {"ok": false, "code": "test_directory_requires_identity_mode"}
 	var dir_path := _bake_dir(world_name)
 	if has_stable_harvest_ids(world_name):
 		return {"ok":false,"code":"stable_ids_require_identity_preserving_writer"}
@@ -584,18 +513,8 @@ static func _identity_key(placement: Dictionary) -> String:
 ## additions use monotonically new slots, and removals leave retired holes.
 static func write_regions(world_name: String, by_layer: Dictionary, drained: Dictionary,
 		region_size: float, base_seed: int, selection: Array, test_data_dir: String = "", scope_file: String = "") -> Dictionary:
-	return _write_identity_regions(world_name, by_layer, drained, region_size, base_seed,
-		selection, test_data_dir, scope_file)
-
-
-static func _write_identity_regions(world_name: String, by_layer: Dictionary, drained: Dictionary,
-		region_size: float, base_seed: int, selection: Array, test_data_dir: String,
-		scope_file: String, full_fingerprint: int = -1) -> Dictionary:
 	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_BAKE.CONFIG_PATH))
-	if full_fingerprint >= 0:
-		if world_name != "stormwood" or region_size != 512.0 or not TERRAIN_BAKE.valid_region_selection(selection):
-			return {"ok": false, "code": "invalid_full_identity_scope"}
-	elif not config is Dictionary or not valid_world_selection(selection, config.get("world_bounds", {}), region_size):
+	if not config is Dictionary or not valid_world_selection(selection, config.get("world_bounds", {}), region_size):
 		return {"ok": false, "code": "invalid_region_selection"}
 	# Normalize once at the API boundary. Every subsequent selection, lookup,
 	# catalog and receipt uses the same validated integer-cell representation.
@@ -606,16 +525,13 @@ static func _write_identity_regions(world_name: String, by_layer: Dictionary, dr
 			return {"ok": false, "code": "invalid_test_directory"}
 		data_dir = test_data_dir
 	var scope := {}
-	if test_data_dir.is_empty() and full_fingerprint < 0:
+	if test_data_dir.is_empty():
 		scope = TERRAIN_BAKE.read_village_scope(scope_file, selection)
 		if scope.is_empty():
 			return {"ok":false,"code":"invalid_village_scope"}
 	var prior := TERRAIN_BAKE.read_manifest(data_dir)
 	if int(prior.get("base_seed", -1)) != base_seed or float(prior.get("region_size", -1)) != region_size:
 		return {"ok": false, "code": "incompatible_base_bake"}
-	if _has_full_identity_generation(prior) and not is_full_generation_usable(world_name,
-			base_seed, int(prior.regional_updates.back().get("config_fingerprint", -1)), test_data_dir):
-		return {"ok": false, "code": "corrupt_full_identity_generation"}
 	var prior_catalog := TERRAIN_BAKE.canonical_regions(prior.get("regions", []))
 	if prior_catalog.is_empty():
 		return {"ok": false, "code": "invalid_base_catalog"}
@@ -708,27 +624,12 @@ static func _write_identity_regions(world_name: String, by_layer: Dictionary, dr
 		var cell := [region.x,region.y]
 		if not catalog.has(cell):
 			catalog.append(cell)
-	if full_fingerprint >= 0:
-		catalog = selection.duplicate(true)
 	var patch := {"config_fingerprint": config_fingerprint(), "regions": selection.duplicate(true),
 		"identity_high_water": high_water, "region_catalog": catalog,
 		"scope": "explicit regional scatter update; outside bytes and base provenance retained"}
 	patch.merge(scope, true)
-	var kept_count := 0
-	var drained_count := 0
-	if full_fingerprint >= 0:
-		for layer: String in by_layer:
-			kept_count += (by_layer[layer] as Array).size()
-		for layer: String in drained:
-			drained_count += (drained[layer] as Array).size()
-		patch["kind"] = "full_stormwood_identity_generation"
-		patch["config_fingerprint"] = full_fingerprint
-		patch["placements_kept"] = kept_count
-		patch["placements_drained"] = drained_count
-		patch["scope"] = "complete Stormwood generation; matched harvest IDs retained, removals retired, additions above high-water"
 	var success := TERRAIN_BAKE.promote_regional_update(data_dir, stage, files, patch)
-	return {"ok": success, "code": "" if success else "promotion_failed", "regions": selection.size(),
-		"kept": kept_count, "drained": drained_count}
+	return {"ok": success, "code": "" if success else "promotion_failed", "regions": selection.size()}
 
 
 static func valid_world_selection(selection: Variant, bounds: Dictionary, region_size: float) -> bool:

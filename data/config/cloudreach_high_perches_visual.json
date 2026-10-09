@@ -1,23 +1,6 @@
 {
   "schema_version": 1,
   "landmark_id": "high_roost_perches",
-  "compass_surface_lift_m": 0.03,
-  "needle_surface": {
-    "scope": "cloudreach_client_presentation",
-    "_comment": "Only the six natural RoostNeedle shafts: reuse Rock030 with 2.78m grain instead of the cliff's 18.18m albedo repeat; the inherited grey-green granite palette owns hue, with restrained close normal relief. Original geometry, masonry collars, keeper fittings and shared cliff materials remain unchanged. Pending original native appearance verdict.",
-    "texture_scale": 0.36,
-    "normal_scale": 0.36,
-    "rock_texture_chroma": 0.0,
-    "rock_normal_strength": 0.18
-  },
-  "master_sign_text": {
-    "scope": "cloudreach_client_presentation",
-    "font_size": 96,
-    "pixel_size_m": 0.0012,
-    "width_px": 960,
-    "outline_size": 8,
-    "offset_m": [0.0, 2.1, 0.15]
-  },
   "design_intent": "A maintained high-altitude refuge: a complete south arrival portal, a stone wind compass, four elevated creature roosts, visible supplies and warm landing signals give the six inherited needles human and creature scale without changing the Fly route or survey landing disc.",
   "arrival_arch_position": [0.0, 0.0, -17.0],
   "arrival_arch_size_m": [14.8, 9.5, 2.8],

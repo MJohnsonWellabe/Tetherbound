@@ -178,7 +178,6 @@
   },
   "player": {
     "ids": [
-      "fly_tutorial_completed",
       "water_swim_stone_earned",
       "water_swim_saddle_recipe_learned",
       "water_swim_lesson_briefed",

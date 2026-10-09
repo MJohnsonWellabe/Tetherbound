@@ -157,8 +157,6 @@ static func merge(world: Dictionary, character: Dictionary, version: int) -> Dic
 	out["current_realm"] = str(character.get("realm", "meadows"))
 
 	var world_ids: Array = _flag_ids(world.get("flags", {}))
-	# The old unclassified world lesson is not evidence of this character's trial.
-	world_ids.erase("fly_tutorial_completed")
 	var player_ids: Array = _flag_ids(character.get("flags", {}))
 	out["progression"] = {"flags": world_ids + player_ids}
 

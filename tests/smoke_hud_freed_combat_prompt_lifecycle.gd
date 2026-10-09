@@ -11,21 +11,13 @@ extends SceneTree
 const HUD_SCENE := preload("res://scenes/ui/playground_hud.tscn")
 const ARBITER_SCRIPT := preload("res://scripts/world/interaction_arbiter.gd")
 const ENCOUNTER_DIRECTOR_SCRIPT := preload("res://scripts/combat/encounter_director.gd")
-const INTERACTABLE_SCRIPT := preload("res://scripts/world/interactable.gd")
 
 var _failures: Array[String] = []
 
 
 class CombatStub extends Node:
-	var fighting := false
 	func is_fighting() -> bool:
-		return fighting
-
-
-class TrainerBattleStub extends Node:
-	var active := false
-	func trainer_battle_active() -> bool:
-		return active
+		return false
 
 
 func _init() -> void:
@@ -120,43 +112,6 @@ func _run() -> void:
 		"stale-winner recovery does not invent an unavailable alternate-slot action")
 
 	manager.free()
-	# Cloudreach has no SequenceDirector to disable the world arbiter during
-	# combat. Its physical interact gate already refuses the NPC; the same
-	# context must remove the published prompt from the production HUD.
-	var combat_state := CombatStub.new()
-	combat_state.name = "CombatManager"
-	world.add_child(combat_state)
-	var trainer_state := TrainerBattleStub.new()
-	trainer_state.name = "EncounterDirector"
-	world.add_child(trainer_state)
-	var greet := INTERACTABLE_SCRIPT.new() as Node3D
-	greet.set("label", "Greet Captain Veyra")
-	world.add_child(greet)
-	arbiter.call("register", greet)
-	arbiter.call("_recompute")
-	_expect((arbiter.get("_providers") as Array).size() == 1
-		and (arbiter.get("_loose") as Array).is_empty(),
-		"recompute removes the freed director from registration and the loose index")
-	_expect(str(arbiter.call("prompt")).contains("Greet Captain Veyra")
-		and prompt.text.contains("Greet Captain Veyra"),
-		"the real world offer is visible on the production HUD before fighting")
-	combat_state.fighting = true
-	arbiter.call("_recompute")
-	_expect(str(arbiter.call("prompt")).is_empty() and prompt.text.is_empty(),
-		"active combat clears the arbiter and production HUD world prompt")
-	_expect(arbiter.call("winning_provider") == null and not bool(arbiter.call("activate")),
-		"no hidden world offer remains actionable during combat")
-	_expect(bool(arbiter.call("enabled")), "combat suppression preserves modal enable ownership")
-	combat_state.fighting = false
-	trainer_state.active = true
-	arbiter.call("_recompute")
-	_expect(str(arbiter.call("prompt")).is_empty() and prompt.text.is_empty(),
-		"the trainer battle still owns world prompts between creatures")
-	trainer_state.active = false
-	arbiter.call("_recompute")
-	_expect(str(arbiter.call("prompt")).contains("Greet Captain Veyra")
-		and prompt.text.contains("Greet Captain Veyra"),
-		"the world offer and production HUD return when the battle ends")
 	world.free()
 	_finish()
 

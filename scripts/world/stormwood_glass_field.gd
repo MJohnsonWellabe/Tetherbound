@@ -309,27 +309,15 @@ func _build_cluster_legacy(spec: Dictionary) -> void:
 	add_child(root)
 	var scar := MeshInstance3D.new()
 	scar.name = "FusedStrikeScar"
-	var grounded: Dictionary = config.get("grounded_legacy_bases", {})
-	if bool(grounded.get("enabled", false)):
-		# Reuse the installed scar pass; tall legacy shards keep their identity.
-		scar.mesh = _scar_patch_mesh(centre, float(spec.scar_radius_m), str(spec.id).hash())
-		scar.material_override = _fused_material()
-		var clearing := Node3D.new()
-		clearing.name = "ScarGrassClearance"
-		clearing.position = _local_grounded(centre, 0.0)
-		clearing.set_meta("grass_clear_radius", float(spec.scar_radius_m) * float(grounded.clear_radius_fraction))
-		root.add_child(clearing)
-		clearing.add_to_group("grass_clear")
-	else:
-		var scar_mesh := CylinderMesh.new()
-		scar_mesh.top_radius = float(spec.scar_radius_m)
-		scar_mesh.bottom_radius = float(spec.scar_radius_m) * 1.08
-		scar_mesh.height = 0.10
-		scar_mesh.radial_segments = 11
-		scar.mesh = scar_mesh
-		scar.material_override = _fused_material_legacy()
-		scar.position = _local_grounded(centre, 0.07)
-		scar.rotation.y = deg_to_rad(float(str(spec.id).hash() % 37))
+	var scar_mesh := CylinderMesh.new()
+	scar_mesh.top_radius = float(spec.scar_radius_m)
+	scar_mesh.bottom_radius = float(spec.scar_radius_m) * 1.08
+	scar_mesh.height = 0.10
+	scar_mesh.radial_segments = 11
+	scar.mesh = scar_mesh
+	scar.material_override = _fused_material_legacy()
+	scar.position = _local_grounded(centre, 0.07)
+	scar.rotation.y = deg_to_rad(float(str(spec.id).hash() % 37))
 	root.add_child(scar)
 	var count := int(spec.shards)
 	var spread := float(config.shard_spread_m)
@@ -373,7 +361,6 @@ func _add_shard_legacy(parent: Node3D, suffix: String, local: Vector2, height: f
 
 
 func _add_fissures_legacy(parent: Node3D, centre: Vector2, radius: float, seed_value: int) -> void:
-	var grounded: Dictionary = config.get("grounded_legacy_bases", {})
 	for index in 3:
 		var angle := float(seed_value % 31) * 0.09 + TAU * float(index) / 3.0
 		var start := centre + Vector2(cos(angle), sin(angle)) * radius * 0.18
@@ -391,29 +378,6 @@ func _add_fissures_legacy(parent: Node3D, centre: Vector2, radius: float, seed_v
 		segment.position = (a + b) * 0.5
 		segment.quaternion = Quaternion(Vector3.UP, (b - a).normalized())
 		segment.material_override = _glow_material_legacy()
-		if bool(grounded.get("enabled", false)):
-			var across := Vector2(-(finish - start).y, (finish - start).x).normalized()
-			var half_width := float(grounded.fissure_width_m) * 0.5
-			var sections := int(grounded.fissure_sections)
-			var st := SurfaceTool.new()
-			st.begin(Mesh.PRIMITIVE_TRIANGLES)
-			for section in sections:
-				var corners: Array[Vector3] = []
-				for step in [section, section + 1]:
-					var t := float(step) / float(sections)
-					var point := start.lerp(finish, t) + across * sin(t * PI) * float(grounded.fissure_curve_m)
-					for side in [-1.0, 1.0]:
-						corners.append(_local_grounded(point + across * half_width * side, float(grounded.fissure_lift_m)))
-				for corner in [0, 2, 1, 1, 2, 3]:
-					st.set_normal(Vector3.UP)
-					st.add_vertex(corners[corner])
-			segment.mesh = st.commit()
-			segment.position = Vector3.ZERO
-			segment.quaternion = Quaternion.IDENTITY
-			var material := _glow_material_legacy()
-			material.emission_energy_multiplier = float(grounded.fissure_emission)
-			material.cull_mode = BaseMaterial3D.CULL_DISABLED
-			segment.material_override = material
 		parent.add_child(segment)
 
 

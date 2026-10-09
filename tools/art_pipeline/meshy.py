@@ -2008,15 +2008,13 @@ HEAD_PROMPTS = {
         "face is hidden behind two solid layers. Strong jaw below the mask, "
         "short spiky swept hair, ears"),
     "grandpa": (
-        "the SAME Grandpa from the reference, stylised elderly man's HEAD "
-        "AND SHORT NECK ONLY, no shoulders or body. Preserve his face "
-        "likeness, head proportions, elderly age, kind slightly concerned "
-        "closed mouth, long rounded nose and softly squared jaw. Model deep "
-        "eye sockets, actual eyelids, warm dark eyes and thick grey eyebrows. "
-        "Preserve swept wavy silver hair with the reference's uneven side "
-        "curls and part, round ears, short full grey beard and moustache. "
-        "Clean softened game-sculpt forms with readable cheek and lip "
-        "geometry; no identity redesign or invented ornaments"),
+        "stylised elderly man's HEAD AND NECK ONLY, bust, no body. GAUNT "
+        "hollow-cheeked face, sharp cheekbones, lined and wrinkled, HIGH "
+        "RECEDING HAIRLINE with a bare forehead and only THIN SPARSE WISPY "
+        "grey hair swept back close to the skull, never thick, never a full "
+        "bouffant. Deep eye sockets with eyelids and heavy brows, projecting "
+        "bony nose, kind closed mouth, full grey beard and moustache in "
+        "combed directional strands covering the jaw, round ears"),
 }
 
 
@@ -2043,8 +2041,7 @@ def cmd_head(args) -> None:
     if args.species not in HEAD_PROMPTS:
         sys.exit(f"no head prompt for '{args.species}'. Known: "
                  f"{', '.join(HEAD_PROMPTS)}.")
-    crop = (generation_views(args.species, args.image)["source"] if args.image
-            else REFERENCE_ROOT / args.species / "reference" / "head.png")
+    crop = REFERENCE_ROOT / args.species / "reference" / "head.png"
     if not crop.exists():
         sys.exit(f"{args.species} has no head crop at {crop}. Add a 'head' entry "
                  f"to tools/art_pipeline/views.json and re-run crop_views.py.")
@@ -2059,7 +2056,7 @@ def cmd_head(args) -> None:
 
     manifest = {"species": args.species, "mode": "head-only", "prompt": prompt,
                 "negative_prompt": negative_for(args.species),
-                "views": {"head": _manifest_path(crop)}, "tasks": []}
+                "views": {"head": str(crop.relative_to(ROOT))}, "tasks": []}
     for index in range(args.candidates):
         result = request("POST", ENDPOINTS["generate"], {
             "mode": "preview",
@@ -2154,8 +2151,6 @@ def cmd_texture(args) -> None:
     description of the drawing. The words come along too, but the image is the
     stronger signal and it is the exact likeness being scored.
     """
-    if args.head_only and args.species not in HEAD_PROMPTS:
-        sys.exit(f"no inspected head identity prompt for '{args.species}'")
     model = pathlib.Path(args.model).resolve()
     if not model.exists():
         sys.exit(f"no such model: {model}")
@@ -2163,22 +2158,21 @@ def cmd_texture(args) -> None:
     # pass at a species that does, which is how thirteen separately-generated
     # animals end up looking like one pack.
     style_species = args.style_from or args.species
-    views = generation_views(style_species, args.image)
+    views = reference_views(style_species)
     # New replacement concepts can live beside the legacy turnaround crops.
     # Prefer the deliberately composed Meshy candidate for retexturing when
     # present; several older board crops are too tight to carry the full
     # palette and face treatment on their own.
     candidate_style = (REFERENCE_ROOT / style_species / "reference"
                        / "meshy_candidate_01.png")
-    style_image = (views["source"] if args.image else candidate_style if candidate_style.exists()
+    style_image = (candidate_style if candidate_style.exists()
                    else views.get("three_quarter") or views.get("front")
                    or next(iter(views.values())))
 
     payload = {
-        "model_url": ("data:application/octet-stream;base64,"
+        "model_url": ("data:model/gltf-binary;base64,"
                       + __import__("base64").b64encode(model.read_bytes()).decode()),
-        "text_style_prompt": (HEAD_PROMPTS[args.species] if args.head_only
-                              else prompt_for(args.species))[:600],
+        "text_style_prompt": prompt_for(args.species)[:600],
         "image_style_url": data_uri(style_image),
         "enable_pbr": True,
         "enable_original_uv": False,
@@ -2249,8 +2243,6 @@ def main() -> None:
     head.add_argument("--candidates", type=int, default=2)
     head.add_argument("--polycount", type=int, default=30000)
     head.add_argument("--budget", type=int, default=DEFAULT_BUDGET)
-    head.add_argument("--image", default=None,
-                      help="use one inspected head PNG without replacing the installed reference")
     head.add_argument("--yes", action="store_true")
     head.set_defaults(func=cmd_head)
 
@@ -2266,10 +2258,6 @@ def main() -> None:
     texture.add_argument("species")
     texture.add_argument("model", help="path to the winning candidate's GLB")
     texture.add_argument("--resolution", choices=["2k", "4k"], default="2k")
-    texture.add_argument("--image", default=None,
-                         help="one inspected PNG instead of the authored view set")
-    texture.add_argument("--head-only", action="store_true",
-                         help="use the installed head identity prompt without body/clothing instructions")
     texture.add_argument("--style-from", default=None,
                          help="take the style image from another species' crops")
     texture.set_defaults(func=cmd_texture)

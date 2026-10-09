@@ -807,14 +807,6 @@ func _build_row(action: String, label_text: String) -> Control:
 func _keep_visible(control: Control) -> void:
 	if _scroll != null:
 		_scroll.ensure_control_visible(control)
-		# A tab becoming visible can still have a container sort queued. Keep
-		# the immediate response, then use its settled layout for the same focus.
-		var scroll := _scroll
-		await get_tree().process_frame
-		if is_instance_valid(control) and is_instance_valid(scroll) and scroll == _scroll \
-				and is_visible_in_tree() and control.is_visible_in_tree() \
-				and get_viewport().gui_get_focus_owner() == control:
-			scroll.ensure_control_visible(control)
 
 
 ## Settings rows are separated by headings and variable-height notes. Leaving
@@ -1042,9 +1034,6 @@ func _link_horizontal_to_self(control: Control) -> void:
 
 func first_focus() -> Control:
 	if not _lesson_buttons.is_empty(): return _lesson_buttons[0]
-	if _graphics != null:
-		var graphics_focus: Control = _graphics.first_focus()
-		if graphics_focus != null: return graphics_focus
 	if not _rows.is_empty():
 		# Gamepad first (Controller first): the cursor lands where the
 		# left-most, first-drawn column now is.

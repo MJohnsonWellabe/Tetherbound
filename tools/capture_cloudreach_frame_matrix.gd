@@ -89,8 +89,6 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const LANE := preload("res://tools/capture_cloudreach_lane_common.gd")
 const LOOKDEV := preload("res://tools/lookdev_capture_bootstrap.gd")
-const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
-const SUPPORT_SAMPLER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 const DEFAULT_OUT := "res://ralph/reports/CLOUDREACH-LANE/captures/frame_matrix"
 ## `--output=<res:// dir>` renders a round into its own folder (F08#4 rounds).
 var OUT := DEFAULT_OUT
@@ -333,9 +331,6 @@ var _force_night := false
 var _active_species := "galecrest"
 var _flag_state := ""
 var _graphics_capture: Dictionary = {}
-var _gate_support_receipt := ""
-var _actor_snapshot_receipts: Array[String] = []
-var _actor_snapshot_ok := true
 
 
 func _init() -> void:
@@ -536,8 +531,6 @@ func _capture_row(row: Dictionary) -> void:
 		_hide_overlays()
 		await process_frame
 		await RenderingServer.frame_post_draw
-		# Read at the shutter without an extra tick or formation/validator call.
-		var actors := _perch_actor_snapshot(name) if n in [19, 20] else {}
 		var path: String = LANE.save_frame(self, OUT, name, _frames)
 		if path.is_empty():
 			_skips.append("%s: PNG write failed" % name)
@@ -545,20 +538,6 @@ func _capture_row(row: Dictionary) -> void:
 		var frame: Dictionary = _frames[_frames.size() - 1]
 		frame["n"] = n
 		frame["sheet"] = str(row.get("sheet", ""))
-		if n in [19, 20]:
-			actors["image_path"] = path
-			var actor_receipt := "# perch_actor_snapshot " + JSON.stringify(actors)
-			_actor_snapshot_receipts.append(actor_receipt)
-			_manifest_line(actor_receipt)
-			if str(actors.get("status", "")) != "sampled_mounted_actors":
-				_actor_snapshot_ok = false
-				_skips.append("%s: bounded actor snapshot incomplete" % name)
-		if n in [1, 4] and _gate_support_receipt.is_empty():
-			var support := _realm_gate_render_support({"frame_id": name})
-			_gate_support_receipt = "# realm_gate_render_support " + JSON.stringify(support)
-			_manifest_line(_gate_support_receipt)
-			if str(support.status) != "sampled_mounted_render_triangles":
-				_skips.append("%s: mounted gate render-support operands missing" % name)
 		_frame_by_row[n] = frame
 		_used_stand[n] = stand
 		_manifest_line("MANIFEST %s | %s | trainer %s | yaw %.1f pitch %.1f | target %s | hour %.2f | stand %s (%d/%d) | camera %s | trainer on screen %s | companion %s | flags %s | %s" % [
@@ -571,102 +550,6 @@ func _capture_row(row: Dictionary) -> void:
 	print(skip)
 	_skips.append(skip)
 	_manifest_line(skip)
-
-
-func _snapshot_vector(value: Vector3) -> Dictionary:
-	return {"status": "finite", "xyz": [value.x, value.y, value.z]} if value.is_finite() \
-		else {"status": "nonfinite_no_station", "xyz": null}
-
-
-func _snapshot_transform(node: Node3D) -> Dictionary:
-	var t := node.global_transform
-	return {"origin": _snapshot_vector(t.origin), "basis": [
-		_snapshot_vector(t.basis.x), _snapshot_vector(t.basis.y), _snapshot_vector(t.basis.z)]}
-
-
-func _perch_actor_snapshot(frame_id: String) -> Dictionary:
-	var result := {"frame_id": frame_id, "physics_tick": Engine.get_physics_frames(),
-		"drawn_frame": Engine.get_frames_drawn(), "status": "missing_world_or_camera", "actors": []}
-	if not is_instance_valid(_world) or not _world.is_inside_tree() \
-			or not is_instance_valid(_camera) or not _camera.is_inside_tree():
-		return result
-	result["camera"] = _snapshot_transform(_camera)
-	result["edge_nature"] = {"status": "missing"}
-	var pocket := _world.get_node_or_null(^"AuthoredRouteDetails/HighPerchesEdgeNature") as Node3D
-	if is_instance_valid(pocket) and not pocket.is_queued_for_deletion() and pocket.is_inside_tree():
-		var placements: Array[Dictionary] = []
-		for child: Node in pocket.get_children():
-			if not child is Node3D or child.is_queued_for_deletion():
-				continue
-			var placement := child as Node3D
-			var placed := {"path": str(placement.get_path()), "transform": _snapshot_transform(placement),
-				"children": placement.get_child_count(), "model_status": "missing"}
-			if placement.get_child_count() == 1 and placement.get_child(0) is Node3D:
-				var model := placement.get_child(0) as Node3D
-				placed["model_status"] = "present"
-				placed["model_transform"] = _snapshot_transform(model)
-			placements.append(placed)
-		result["edge_nature"] = {"status": "mounted", "path": str(pocket.get_path()),
-			"children": pocket.get_child_count(), "placements": placements}
-	result["scope"] = "Mounted creature bodies within 50m of current camera; visibility is not pixel/occlusion identity."
-	var ally := _ally()
-	result["director_ally_status"] = "present" if is_instance_valid(ally) else "missing"
-	var tick := Engine.get_physics_frames()
-	for candidate: Node in _world.find_children("*", "CharacterBody3D", true, false):
-		if not candidate is CREATURE_BODY or not is_instance_valid(candidate) \
-				or candidate.is_queued_for_deletion() or not candidate.is_inside_tree():
-			continue
-		var body := candidate as Node3D
-		if body.global_position.distance_to(_camera.global_position) > 50.0:
-			continue
-		if (result["actors"] as Array).size() >= 32:
-			result["status"] = "near_actor_limit_exceeded"
-			return result
-		var properties := {}
-		for property: Dictionary in body.get_property_list():
-			properties[str(property.name)] = true
-		var entry := {"path": str(body.get_path()), "runtime_instance_id": body.get_instance_id(),
-			"script": body.get_script().resource_path, "species_id": str(body.get("species_id")),
-			"role": "director_current_ally" if body == ally else "unknown",
-			"transform": _snapshot_transform(body), "visible_in_tree": body.is_visible_in_tree(),
-			"creature_uid": null, "creature_uid_source": "unavailable",
-			"owner_peer_id": body.get("owner_peer_id") if properties.has("owner_peer_id") else null,
-			"stable_character_uid": null, "stable_character_uid_source": "unavailable"}
-		var instance: RefCounted = null
-		if body == ally and is_instance_valid(_director) and _director.has_method("ally_instance"):
-			instance = _director.call("ally_instance") as RefCounted
-			entry["creature_uid_source"] = "matched EncounterDirector.ally_body/ally_instance"
-		elif properties.has("instance"):
-			instance = body.get("instance") as RefCounted
-			entry["creature_uid_source"] = "actual body.instance; ownership not inferred"
-		if is_instance_valid(instance):
-			for property: Dictionary in instance.get_property_list():
-				if str(property.name) == "uid":
-					entry["creature_uid"] = str(instance.get("uid"))
-		var model := body.get_node_or_null(^"Model") as Node3D
-		entry["model"] = {"status": "missing"}
-		if is_instance_valid(model) and not model.is_queued_for_deletion() and model.is_inside_tree():
-			entry["model"] = {"status": "present", "transform": _snapshot_transform(model),
-				"visible_in_tree": model.is_visible_in_tree()}
-		entry["station"] = {"status": "unavailable"}
-		if body == ally and properties.has("_station_offset") and properties.has("_station_requested") \
-				and properties.has("_station_leader") and properties.has("_station_checked_frame"):
-			var offset: Vector3 = body.get("_station_offset")
-			var requested: Vector3 = body.get("_station_requested")
-			var checked := int(body.get("_station_checked_frame"))
-			var leader: Node3D = body.get("leader") as Node3D if properties.has("leader") else null
-			entry["station"] = {"status": "cached_read_only", "validated_offset": _snapshot_vector(offset),
-				"requested_offset": _snapshot_vector(requested),
-				"leader_at_validation": _snapshot_vector(body.get("_station_leader")),
-				"validation_tick": checked, "age_physics_ticks": tick - checked,
-				"following": body.get("_following") if properties.has("_following") else null,
-				"resolved_now": {"status": "missing_leader"}}
-			if is_instance_valid(leader) and not leader.is_queued_for_deletion() and leader.is_inside_tree():
-				entry["station"]["current_leader"] = _snapshot_transform(leader)
-				entry["station"]["resolved_now"] = _snapshot_vector(leader.global_position + offset)
-		(result["actors"] as Array).append(entry)
-	result["status"] = "sampled_mounted_actors"
-	return result
 
 
 ## Seat the trainer, aim the production rig, and check what it sees.
@@ -910,13 +793,9 @@ func _finish(written: int) -> void:
 	receipt_ok = receipt_ok and receipt.contains("# " + summary)
 	if not _graphics_capture.is_empty():
 		receipt_ok = receipt_ok and receipt.contains("# graphics_capture " + JSON.stringify(_graphics_capture))
-	if not _gate_support_receipt.is_empty():
-		receipt_ok = receipt_ok and receipt.split("\n").has(_gate_support_receipt)
-	for actor_receipt: String in _actor_snapshot_receipts:
-		receipt_ok = receipt_ok and receipt.split("\n").has(actor_receipt)
 	if not receipt_ok:
 		push_error("frame matrix: final receipt open/write/flush/readback failed")
-	quit(0 if written > 0 and receipt_ok and _actor_snapshot_ok and (_graphics_capture.is_empty() or _skips.is_empty()) else 1)
+	quit(0 if written > 0 and receipt_ok and (_graphics_capture.is_empty() or _skips.is_empty()) else 1)
 
 
 ## --- motion witness -------------------------------------------------------------------
@@ -1009,119 +888,3 @@ func _run_motion() -> void:
 		_skips.append("motion stopped early: " + stop_reason)
 	LANE.contact_sheet(motion_frames, OUT + "/_sheet_frame_matrix_motion.png", 6, 320)
 	_finish(motion_frames.size())
-
-
-# Last-mile contact operands, sampled once at the original mounted gate frame.
-# These are geometric column intersections, not walkability or contact approval.
-func _realm_gate_render_support(row: Dictionary) -> Dictionary:
-	var out := {"frame_id": row.frame_id, "world_path": str(_world.get_path()),
-		"world_source_sha256": FileAccess.get_file_as_string("res://scripts/world/cloudreach_world.gd").sha256_text(),
-		"sampler_source_sha256": FileAccess.get_file_as_string("res://scripts/world/cloudreach_ground_cover.gd").sha256_text(),
-		"queries": [], "meshes": [], "targets": [], "status": "missing_mounted_gate"}
-	var gate := _world.get_node_or_null("Landmarks/RealmGateCrag")
-	if gate == null: return out
-	var targets: Array[MeshInstance3D] = []
-	for child: Node in gate.get_children():
-		if child is MeshInstance3D and child.mesh != null and child.mesh.resource_path in [
-			"res://assets/buildings/quaternius_castle/WallEntranceBricks.obj",
-			"res://assets/buildings/quaternius_castle/SmallSquareTowerBricks.obj"]:
-			targets.append(child)
-	var presentation := gate.get_node_or_null("RealmGateCragPresentation")
-	if presentation != null:
-		for child: Node in presentation.get_children():
-			if child is MeshInstance3D and child.get_meta("gate_role", "") == "approach_paver": targets.append(child)
-	var config_value: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_realm_gate_crag_visual.json"))
-	if not config_value is Dictionary:
-		out.status = "missing_authored_target_config"
-		return out
-	var expected := {"facade": 1, "tower": 2, "paver": (config_value.get("approach_pavers", []) as Array).size()}
-	var observed := {"facade": 0, "tower": 0, "paver": 0}
-	var all_targets_queried := true
-	out.expected_targets = expected
-	out.target_config_sha256 = FileAccess.get_file_as_string("res://data/config/cloudreach_realm_gate_crag_visual.json").sha256_text()
-	for target: MeshInstance3D in targets:
-		var role := "paver" if target.get_meta("gate_role", "") == "approach_paver" else ("facade" if target.mesh.resource_path.ends_with("WallEntranceBricks.obj") else "tower")
-		observed[role] += 1
-		var bounds := target.mesh.get_aabb()
-		var feet: Array[Vector3] = []
-		for surface in target.mesh.get_surface_count():
-			var arrays := target.mesh.surface_get_arrays(surface)
-			for vertex: Vector3 in arrays[Mesh.ARRAY_VERTEX]:
-				if is_equal_approx(vertex.y, bounds.position.y) and not feet.has(vertex): feet.append(vertex)
-		if target.get_meta("gate_role", "") == "approach_paver":
-			feet.append(Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z))
-		out.targets.append({"path": str(target.get_path()), "role": role, "bottom_query_count": feet.size()})
-		if feet.is_empty(): all_targets_queried = false
-		for foot: Vector3 in feet:
-			var at := target.to_global(foot)
-			out.queries.append({"target_path": str(target.get_path()), "target_mesh": target.mesh.resource_path,
-				"target_instance_id": str(target.get_instance_id()), "target_mesh_instance_id": str(target.mesh.get_instance_id()),
-				"target_transform_bytes": var_to_bytes(target.global_transform).hex_encode(),
-				"local_foot": [foot.x, foot.y, foot.z], "world_foot": [at.x, at.y, at.z],
-				"hits": [], "unsupported_xz": true, "no_support_below_foot": true})
-	out.observed_targets = observed
-	if observed != expected or not all_targets_queried:
-		out.status = "incomplete_mounted_target_roster_or_bottom_queries"
-		return out
-	# Only source-owned geological meshes and visible road overlays qualify.
-	# No physics shapes, hidden Ground/LedgeCap boxes, masonry or cloud meshes.
-	for candidate: Node in _world.find_children("*", "MeshInstance3D", true, false):
-		var mesh_node := candidate as MeshInstance3D
-		var parent_name := str(mesh_node.get_parent().name)
-		var label := str(mesh_node.name)
-		var geological := label in ["StratifiedCliffBody", "CarvedCrown"]
-		var ridge := parent_name.ends_with("CliffShoulders") and label.begins_with("Ridge")
-		var trail := parent_name == "AuthoredRoutes" and label.contains("Trail")
-		if not (geological or ridge or trail) or mesh_node.mesh is not ArrayMesh or not mesh_node.is_visible_in_tree(): continue
-		var support_mesh := mesh_node.mesh as ArrayMesh
-		var mesh_index: int = out.meshes.size()
-		var transform := mesh_node.global_transform
-		# Cull from the actual transformed mesh bounds before visiting its triangles.
-		var local_bounds := support_mesh.get_aabb()
-		var world_bounds := AABB(transform * local_bounds.position, Vector3.ZERO)
-		for x: float in [local_bounds.position.x, local_bounds.end.x]:
-			for y: float in [local_bounds.position.y, local_bounds.end.y]:
-				for z: float in [local_bounds.position.z, local_bounds.end.z]:
-					world_bounds = world_bounds.expand(transform * Vector3(x, y, z))
-		var near_query := false
-		for query: Dictionary in out.queries:
-			var point: Array = query.world_foot
-			if point[0] >= world_bounds.position.x and point[0] <= world_bounds.end.x \
-				and point[2] >= world_bounds.position.z and point[2] <= world_bounds.end.z: near_query = true
-		if not near_query: continue
-		var matched := false
-		for surface in support_mesh.get_surface_count():
-			if support_mesh.surface_get_primitive_type(surface) != Mesh.PRIMITIVE_TRIANGLES: continue
-			var arrays := support_mesh.surface_get_arrays(surface)
-			var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
-			var raw_indices: Variant = arrays[Mesh.ARRAY_INDEX]
-			var indices: PackedInt32Array = raw_indices if raw_indices is PackedInt32Array else PackedInt32Array()
-			var count := indices.size() if not indices.is_empty() else vertices.size()
-			for offset in range(0, count - 2, 3):
-				var ia := indices[offset] if not indices.is_empty() else offset
-				var ib := indices[offset + 1] if not indices.is_empty() else offset + 1
-				var ic := indices[offset + 2] if not indices.is_empty() else offset + 2
-				var a := transform * vertices[ia]
-				var b := transform * vertices[ib]
-				var c := transform * vertices[ic]
-				for query: Dictionary in out.queries:
-					var query_foot: Array = query.world_foot
-					if query_foot[0] < minf(a.x, minf(b.x, c.x)) or query_foot[0] > maxf(a.x, maxf(b.x, c.x)) \
-						or query_foot[2] < minf(a.z, minf(b.z, c.z)) or query_foot[2] > maxf(a.z, maxf(b.z, c.z)): continue
-					var height := SUPPORT_SAMPLER._triangle_height(Vector3(query_foot[0], query_foot[1], query_foot[2]), a, b, c)
-					if not is_finite(height): continue
-					matched = true
-					query.unsupported_xz = false
-					if height <= float(query_foot[1]): query.no_support_below_foot = false
-					query.hits.append({"mesh_index": mesh_index, "surface": surface, "triangle_vertex_offset": offset,
-						"vertex_indices": [ia, ib, ic], "height": height, "foot_minus_height": float(query_foot[1]) - height,
-						"triangle_world": [[a.x, a.y, a.z], [b.x, b.y, b.z], [c.x, c.y, c.z]]})
-		if matched:
-			out.meshes.append({"path": str(mesh_node.get_path()), "instance_id": str(mesh_node.get_instance_id()),
-				"mesh_instance_id": str(mesh_node.mesh.get_instance_id()), "mesh_resource": mesh_node.mesh.resource_path,
-				"transform": [[transform.basis.x.x, transform.basis.x.y, transform.basis.x.z],
-					[transform.basis.y.x, transform.basis.y.y, transform.basis.y.z],
-					[transform.basis.z.x, transform.basis.z.y, transform.basis.z.z],
-					[transform.origin.x, transform.origin.y, transform.origin.z]]})
-	out.status = "sampled_mounted_render_triangles" if not out.queries.is_empty() else "no_mesh_bottom_queries"
-	return out

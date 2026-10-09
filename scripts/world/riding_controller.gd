@@ -41,7 +41,6 @@ const CONFIG_PATH := "res://data/config/movement.json"
 ## of movement.json because that file is the TRAINER's locomotion sheet and the
 ## two drift apart -- see riding.json's own header.
 const RIDING_CONFIG_PATH := "res://data/config/riding.json"
-const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
 
 ## How close the trainer has to be for the mount prompt to appear. Generous for
 ## the same reason `interactable.gd`'s default radius is: a prompt that only
@@ -351,8 +350,6 @@ func mount() -> bool:
 	_mount = body
 	_riding_now = true
 	_last_mount_position = body.global_position
-	if body.has_method("set_traversal_pose"):
-		body.call("set_traversal_pose", "ride")
 
 	# The follower stops following. It is being driven by the stick now, and two
 	# things calling `request_move` on one creature in one frame is one of them
@@ -395,8 +392,6 @@ func dismount() -> bool:
 	var alive := is_instance_valid(body)
 	if alive:
 		_last_mount_position = body.global_position
-		if body.has_method("set_traversal_pose"):
-			body.call("set_traversal_pose", "")
 	_restore_climb_limit(body if alive else null)
 
 	if _player != null and is_instance_valid(_player):
@@ -486,17 +481,6 @@ func _physics_process(delta: float) -> void:
 	if not _riding_allowed():
 		dismount()
 		return
-
-	if _mount.has_method("set_traversal_pose"):
-		var pose := "ride"
-		var water: Variant = _mount.get_meta("water_aquatic", {})
-		if water is Dictionary:
-			match int(water.get("mode", SWIM_STATE.Mode.LAND)):
-				SWIM_STATE.Mode.HUMAN, SWIM_STATE.Mode.MOUNTED:
-					pose = "swim"
-				SWIM_STATE.Mode.COMBAT_PAUSED:
-					pose = ""
-		_mount.call("set_traversal_pose", pose)
 
 	_last_mount_position = _mount.global_position
 

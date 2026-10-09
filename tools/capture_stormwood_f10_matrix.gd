@@ -25,7 +25,6 @@ var _hud := false
 var _pad := false
 var _custom: Array[String] = []
 var _ground_readability := false
-var _glass_readability := false
 var _road_readability := false
 
 
@@ -56,8 +55,6 @@ func _run() -> void:
 			_hud = true
 		elif arg == "--ground-readability":
 			_ground_readability = true
-		elif arg == "--glass-readability":
-			_glass_readability = true
 		elif arg == "--road-readability":
 			_road_readability = true
 		elif arg == "--pad":
@@ -76,17 +73,12 @@ func _run() -> void:
 			push_error("Ground readability needs forest,giant, all four phases and no aftermath (eight affected views)")
 			quit(2)
 			return
-	if _glass_readability:
-		if _ground_readability or _stands_only != ["glass"] or _phases_only != ["calm", "break"] or _aftermath_on:
-			push_error("Glass readability needs glass, Calm/Break and no aftermath (two affected views)")
-			quit(2)
-			return
 	if _road_readability:
-		if _ground_readability or _glass_readability or _stands_only != ["rod_line"] or _phases_only != ["calm", "break"] or _aftermath_on:
+		if _ground_readability or _stands_only != ["rod_line"] or _phases_only != ["calm", "break"] or _aftermath_on:
 			push_error("Road readability needs rod_line, Calm/Break and no aftermath (two affected views)")
 			quit(2)
 			return
-	if _ground_readability or _glass_readability or _road_readability:
+	if _ground_readability or _road_readability:
 		_phase_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self, "--out=")
 		if _phase_graphics_capture.is_empty():
 			quit(1)
@@ -179,11 +171,6 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		ground = _ground_material_receipt(frame_id)
 		if ground.is_empty():
 			return
-	var glass: Dictionary = {}
-	if _glass_readability:
-		glass = _glass_base_receipt(frame_id)
-		if glass.is_empty():
-			return
 	var road: Dictionary = {}
 	if _road_readability:
 		road = _road_current_receipt(frame_id)
@@ -193,7 +180,7 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 	if image == null or image.is_empty():
 		_failures.append("%s: empty viewport image" % frame_id)
 		return
-	if (_ground_readability or _glass_readability or _road_readability) and str(_surge.get("phase")) != frame_id.get_slice("_", frame_id.get_slice_count("_") - 1):
+	if (_ground_readability or _road_readability) and str(_surge.get("phase")) != frame_id.get_slice("_", frame_id.get_slice_count("_") - 1):
 		_failures.append(frame_id + ": actual Surge phase differs from requested capture phase")
 		return
 	var path := ProjectSettings.globalize_path("%s/%s.jpg" % [_output_dir, frame_id])
@@ -211,10 +198,9 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		"long_storm_ended": bool(_game.get("progression").call("has", "stormwood:long_storm_ended")),
 		"presentation": _presentation_state(), "staged": _staged.duplicate(),
 		"ground_materials": ground,
-		"glass_bases": glass,
 		"road_current": road,
 	}.merged(extra, true))
-	if (_ground_readability or _glass_readability or _road_readability) and [image.get_width(), image.get_height()] != _phase_graphics_capture.resolution:
+	if (_ground_readability or _road_readability) and [image.get_width(), image.get_height()] != _phase_graphics_capture.resolution:
 		_failures.append(frame_id + ": raster differs from declared native preset")
 
 
@@ -259,7 +245,7 @@ func _ground_material_receipt(frame_id: String) -> Dictionary:
 
 
 func _done() -> void:
-	if _ground_readability or _glass_readability or _road_readability:
+	if _ground_readability or _road_readability:
 		var ids: Dictionary = {}
 		for frame: Dictionary in _frames:
 			ids[frame.id] = true
@@ -301,58 +287,6 @@ func _road_current_receipt(frame_id: String) -> Dictionary:
 		"material": actual, "chunks": chunks, "collision_count": 0, "storm_intensity": current.call("storm_intensity"),
 		"camera_is_rendering": true}
 
-
-func _glass_base_receipt(frame_id: String) -> Dictionary:
-	var field := _world.get_node_or_null("GlassFieldPresentation")
-	var cover := _world.get_node_or_null("StormwoodGroundCover")
-	if field == null or cover == null or not bool(cover.get("_bound")) or _camera != root.get_camera_3d() \
-			or cover.get("_camera") != _camera or cover.get("_terrain") != _world.get("_terrain"):
-		_failures.append(frame_id + ": production Glass Field/cover/camera not bound")
-		return {}
-	var config: Dictionary = field.get("config")
-	if bool(config.get("scorched_scars", true)) or not bool(config.get("grounded_legacy_bases", {}).get("enabled", false)):
-		_failures.append(frame_id + ": grounded legacy bases not active")
-		return {}
-	var scars := field.find_children("FusedStrikeScar", "MeshInstance3D", true, false)
-	var fissures := field.find_children("GlassFissure*", "MeshInstance3D", true, false)
-	var clearings := field.find_children("ScarGrassClearance", "Node3D", true, false)
-	if scars.size() != 8 or fissures.size() != 24 or clearings.size() != 8 \
-			or not field.find_children("*", "CollisionObject3D", true, false).is_empty():
-		_failures.append(frame_id + ": grounded base counts/collision contract failed")
-		return {}
-	for node: Node in scars + fissures:
-		if not (node as MeshInstance3D).mesh is ArrayMesh:
-			_failures.append(frame_id + ": rigid base/fissure remains " + str(node.name))
-			return {}
-	var built: PackedVector3Array = cover.get("_built")
-	var matched := 0
-	for node: Node3D in clearings:
-		for spot: Vector3 in built:
-			if Vector2(spot.x - node.global_position.x, spot.y - node.global_position.z).length() < 0.01 \
-					and absf(spot.z - float(node.get_meta("grass_clear_radius", 0.0))) < 0.01:
-				matched += 1
-	if matched < 1:
-		_failures.append(frame_id + ": no visible scar footprint reached the bound cover")
-		return {}
-	var materials: Array = cover.call("_field_materials")
-	if materials.is_empty():
-		_failures.append(frame_id + ": no bound cover shader materials")
-		return {}
-	for material: ShaderMaterial in materials:
-		if int(material.get_shader_parameter("built_count")) != built.size():
-			_failures.append(frame_id + ": cover shader footprint upload differs from bound list")
-			return {}
-		var uploaded: PackedVector3Array = material.get_shader_parameter("built")
-		if uploaded.size() < built.size():
-			_failures.append(frame_id + ": cover shader footprint array is truncated")
-			return {}
-		for index in built.size():
-			if not uploaded[index].is_equal_approx(built[index]):
-				_failures.append(frame_id + ": cover shader footprint coordinates differ from bound list")
-				return {}
-	return {"config_sha256": FileAccess.get_file_as_string("res://data/config/stormwood_glass_field.json").sha256_text(),
-		"scar_count": scars.size(), "fissure_count": fissures.size(), "clear_count": clearings.size(),
-		"cover_footprints": built.size(), "matched_scar_footprints": matched, "collision_count": 0, "camera_is_rendering": true}
 
 
 ## Break's decorative sky lightning fires every 0.55-1.3 s; a still taken at a

@@ -83,7 +83,7 @@ func _on_landed(at: Vector3, carrier: String) -> void:
 
 
 func _trial() -> bool:
-	if _resume_skip("trial", "fly_tutorial_completed"): return true
+	if _resume_skip("trial", "fly_traversal_unlocked"): return true
 	stage = "authored_flight_trial"
 	if not await _physical_action("flight_trial_start", "", false): return false
 	if not _require(physical.trial_active, "Marked trial input started"): return false
@@ -95,7 +95,6 @@ func _trial() -> bool:
 	await _capture("trial-airborne")
 	if not await _land(_vec(physical.config.trial.landing_position)): return false
 	if not _require(_has("fly_traversal_unlocked"), "Ordered airborne rings and landing unlocked Fly"): return false
-	if not _require(_has("fly_tutorial_completed"), "Actual trial landing earned this trainer's personal lesson"): return false
 	return await _sealed_upper_attempt()
 
 

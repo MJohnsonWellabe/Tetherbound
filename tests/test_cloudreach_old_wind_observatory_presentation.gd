@@ -5,53 +5,6 @@ const WORLD_CONFIG_PATH := "res://data/config/cloudreach_world.json"
 const PHYSICAL_CONFIG_PATH := "res://data/config/cloudreach_physical_runtime.json"
 const NPC_CONFIG_PATH := "res://data/config/cloudreach_npc_runtime.json"
 const PRESENTATION := preload("res://scripts/world/cloudreach_old_wind_observatory_presentation.gd")
-const WORLD := preload("res://scripts/world/cloudreach_world.gd")
-const COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
-
-
-func test_observatory_dial_paving_candidate_is_scoped_and_keeps_baseline_priority() -> void:
-	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
-	var visual := PRESENTATION.new()
-	assert_false(bool(cfg.dial_paving.enabled), "tracked material candidate stays OFF")
-	assert_eq(cfg.dial_paving.scope, "peer_local_observatory_presentation_all_presets")
-	assert_false(visual._dial_paving_enabled(cfg, PackedStringArray()))
-	assert_true(visual._dial_paving_enabled(cfg, PackedStringArray(["--observatory-paving-candidate"])))
-	cfg.dial_paving.enabled = true
-	assert_false(visual._dial_paving_enabled(cfg, PackedStringArray([
-		"--observatory-paving-candidate", "--observatory-paving-baseline"])),
-		"baseline wins over process candidate and enabled config")
-	var material := visual._dial_paving_material(cfg)
-	assert_eq(material.get_shader_parameter("layout_radius"), float(cfg.dial_radius_m))
-	assert_eq(material.get_shader_parameter("joint_outer_radius"), float(cfg.dial_radius_m))
-	assert_eq(material.get_shader_parameter("origin"), Vector3(430.0, 920.0, 4500.0))
-	assert_true(material.get_shader_parameter("albedo_tex") is Texture2D)
-	assert_true(material.get_shader_parameter("soil_tex") is Texture2D)
-	visual.free()
-
-
-func test_observatory_paving_excludes_cover_only_on_its_own_court() -> void:
-	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
-	var world := WORLD.new()
-	# The unit runner executes during SceneTree._init, before a main loop is
-	# available. Exercise the production descriptor without a scene fixture;
-	# actual landmark placement/registration belongs to the native area proof.
-	var centre := Vector3(430.0, 920.0, 4500.0)
-	var exclusion: Dictionary = world.call("_observatory_dial_cover_exclusion", centre)
-	assert_eq(exclusion.centre, centre, "the descriptor preserves the supplied world centre")
-	var cover := COVER.new()
-	cover._exclusions = [exclusion]
-	assert_eq(cover._exclusions.size(), 1, "the real sampler receives the typed exclusion array")
-	var radius := float(cfg.dial_radius_m)
-	for direction: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK,
-			Vector3(1.0, 0.0, 1.0).normalized()]:
-		assert_true(cover.call("_excluded", centre + direction * (radius - 0.01)),
-			"paved court excludes cover right up to its configured edge")
-		assert_false(cover.call("_excluded", centre + direction * (radius + 0.01)),
-			"unpaved crown outside the court remains eligible")
-	assert_false(cover.call("_excluded", centre + Vector3.UP * 40.0),
-		"a different Cloudreach stratum remains eligible")
-	cover.free()
-	world.free()
 
 
 func test_observatory_visual_build_has_a_complete_collisionless_hierarchy() -> void:

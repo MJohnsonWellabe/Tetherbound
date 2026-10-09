@@ -40,7 +40,7 @@ const FLAG_STRING_KEYS := [
 ## Keys whose ARRAY value is a list of flag ids.
 const FLAG_ARRAY_KEYS := [
 	"flags", "physical_state_flags", "requires_flags", "count_flags",
-	"reward_flags", "grants_flags",
+	"reward_flags",
 ]
 
 ## The writer-site literals that live in GDScript constants rather than in a

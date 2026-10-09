@@ -1,4 +1,0 @@
-SCRIPT ERROR: Parse Error: Could not resolve class "res://tools/capture_lookdev_catalogue.gd".
-   at: GDScript::reload (res://tools/capture_cloudreach_f40_matrix.gd:1)
-ERROR: Failed to load script "res://tools/capture_cloudreach_f40_matrix.gd" with error "Parse error".
-   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

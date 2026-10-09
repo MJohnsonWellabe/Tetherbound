@@ -71,10 +71,8 @@ func build(materials: Dictionary, simulation_only: bool = false,
 
 func _build_dial_court(cfg: Dictionary, stone: Material, trim: Material,
 		bronze: Material, blue: Material) -> void:
-	var court_stone := _dial_paving_material(cfg) \
-		if _dial_paving_enabled(cfg, OS.get_cmdline_user_args()) else stone
 	_add_cylinder("ObservatoryDialCourt", Vector3(0.0, 0.055, 0.0),
-		float(cfg.dial_radius_m), 0.11, court_stone, "dial_court")
+		float(cfg.dial_radius_m), 0.11, stone, "dial_court")
 	_add_ring("OuterCompassCourse", 13.5, 14.2, Vector3(0.0, 0.13, 0.0), trim, "wind_dial")
 	_add_ring("BronzeCompassCourse", 10.7, 11.05, Vector3(0.0, 0.15, 0.0), bronze, "wind_dial")
 	for index in 8:
@@ -84,28 +82,6 @@ func _build_dial_court(cfg: Dictionary, stone: Material, trim: Material,
 			Vector3(0.25 if index % 2 else 0.42, 0.055, 7.3),
 			bronze if index % 2 else blue, "wind_dial")
 		ray.rotation.y = angle
-
-
-func _dial_paving_enabled(cfg: Dictionary, args: PackedStringArray) -> bool:
-	if args.has("--observatory-paving-baseline"):
-		return false
-	return args.has("--observatory-paving-candidate") \
-		or bool(cfg.get("dial_paving", {}).get("enabled", false))
-
-
-func _dial_paving_material(cfg: Dictionary) -> ShaderMaterial:
-	var material := ShaderMaterial.new()
-	material.shader = preload("res://shaders/cloudreach_arena_paving.gdshader")
-	material.set_shader_parameter("albedo_tex",
-		preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png"))
-	material.set_shader_parameter("soil_tex",
-		preload("res://assets/environment/terrain/stylised/dirt_path_Color.png"))
-	material.set_shader_parameter("tint", Color(str(cfg.get("dial_paving", {}).get("tint", "#b4ae9e"))))
-	var at: Array = cfg.landmark_position
-	material.set_shader_parameter("origin", Vector3(float(at[0]), float(at[1]), float(at[2])))
-	material.set_shader_parameter("layout_radius", float(cfg.dial_radius_m))
-	material.set_shader_parameter("joint_outer_radius", float(cfg.dial_radius_m))
-	return material
 
 
 func _build_tower_ribs(cfg: Dictionary, trim: Material, bronze: Material) -> void:

@@ -327,17 +327,6 @@ func _mounts_on_the_interact_press() -> void:
 		_fail("the trainer's own body is not drawn while mounted; the rider is invisible on the creature")
 	if _player.call("carrier") != _director.call("ally_body"):
 		_fail("the player is mounted but is not being carried by the creature")
-	var mount: Node3D = _riding.call("mount_body")
-	var body_id := mount.get_instance_id()
-	var old_animator: RefCounted = mount.get("_animator")
-	mount.call("_build_placeholder")
-	for i in 3:
-		await physics_frame
-	var animator: RefCounted = mount.get("_animator")
-	if animator == null or animator == old_animator or str(animator.get("_traversal_role")) != "ride":
-		_fail("the rebuilt mounted animator did not recover its ride role from the current owner state")
-	if mount.get_instance_id() != body_id or _riding.call("mount_body") != mount or _player.call("carrier") != mount:
-		_fail("a cosmetic mount rebuild replaced the stable creature or detached its rider")
 	print("mounted: '%s' put the trainer on the %s" % [str(_arbiter.call("prompt")), MOUNT_SPECIES])
 
 

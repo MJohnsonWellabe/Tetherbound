@@ -87,8 +87,7 @@ var deploy_shiny: bool = false
 var net_position: Vector3 = Vector3.ZERO
 var net_yaw: float = 0.0
 var net_aquatic: Dictionary = {}
-const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
-var aquatic := SWIM_STATE.new()
+var aquatic := preload("res://scripts/player/swim_state.gd").new()
 
 ## The trainer body this creature belongs to, so the companion layer has
 ## somebody to look at and stand still beside. Resolved lazily from the
@@ -184,11 +183,6 @@ func setup(id: String, is_shiny: bool = false) -> void:
 	# A host-authorized switch keeps this node but starts a new creature sample.
 	# Comparing two owned creatures' HP would invent damage or level feedback.
 	_sampled.clear()
-	# Revision validation belongs to the creature being recast, not its reused
-	# proxy node. A new owner's LAND revision zero must not inherit old swim.
-	net_aquatic.clear()
-	aquatic = SWIM_STATE.new()
-	set_traversal_pose("")
 	super.setup(id, is_shiny)
 
 
@@ -481,7 +475,6 @@ func _follow(delta: float) -> void:
 	if not net_aquatic.is_empty():
 		aquatic.owner_peer_id = get_multiplayer_authority()
 		aquatic.apply_remote_snapshot(net_aquatic, get_multiplayer_authority())
-	_sync_traversal_pose()
 	if not _has_render:
 		_render_position = net_position
 		_has_render = true
@@ -513,20 +506,6 @@ func _follow(delta: float) -> void:
 		# this frame actually produced.
 		_resolve_leader()
 		_presence.call("tick", delta)
-
-
-## Same clips as the owning mount; existing validated aquatic state and the
-## owning trainer's replicated ride bit supply the picture, not new authority.
-func _sync_traversal_pose() -> void:
-	_resolve_leader()
-	var pose := "ride" if is_instance_valid(leader) and bool(leader.get("net_riding")) else ""
-	if not net_aquatic.is_empty():
-		if aquatic.mode in [SWIM_STATE.Mode.LAND, SWIM_STATE.Mode.COMBAT_PAUSED]:
-			if aquatic.mode == SWIM_STATE.Mode.COMBAT_PAUSED:
-				pose = ""
-		else:
-			pose = "swim"
-	set_traversal_pose(pose)
 
 
 # --- lane 6.D: the presentation channel -------------------------------------------

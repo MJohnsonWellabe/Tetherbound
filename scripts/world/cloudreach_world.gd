@@ -373,30 +373,6 @@ func _ready() -> void:
 		var atmosphere_delta := fold_atmosphere_into_base(local_look, _visual_config.get("atmosphere", {}))
 		look.set("_config", local_look)
 		look.call("set_weather", atmosphere_delta)
-		# Reuse the established visual weather runtime. Cloudreach's weather
-		# remains presentation-only: it never supplies canonical encounter weather,
-		# durable state or authority messages. Preview enables its episode timer;
-		# ordinary shipping stays clear while F40's presentation gate is open.
-		var weather := preload("res://scripts/world/world_weather.gd").new()
-		weather.name = "WorldWeather"
-		weather.set("look_path", NodePath("../WorldLook"))
-		weather.set("player_path", NodePath("../Player"))
-		add_child(weather)
-		weather.remove_from_group("weather")
-		var presets: Dictionary = (weather.get("_presets") as Dictionary).duplicate(true)
-		var realm_environment: Dictionary = atmosphere_delta.get("environment", {})
-		for weather_name: String in presets:
-			if not presets[weather_name] is Dictionary:
-				continue
-			var environment: Dictionary = presets[weather_name].get("environment", {}).duplicate(true)
-			environment["fog_density_add"] = float(environment.get("fog_density_add", 0.0)) \
-				+ float(realm_environment.get("fog_density_add", 0.0))
-			environment["ambient_energy_mult"] = float(environment.get("ambient_energy_mult", 1.0)) \
-				* float(realm_environment.get("ambient_energy_mult", 1.0))
-			presets[weather_name]["environment"] = environment
-		weather.set("_presets", presets)
-		weather.call("set_weather", "clear")
-		weather.set_process(bool(_visual_config.get("weather", {}).get("enabled", false)))
 	# D97 / lane MP-REALM-REOPEN. A shell builds in fine slices; a real arrival
 	# in a live session uses the coarser crossing slice so its connection keeps
 	# pumping. Solo still resumes every `await` below in the same frame.
@@ -795,6 +771,8 @@ func _build_materials() -> void:
 	_materials["upland"] = _textured_material(surface.get("upland", {}), Color("#e8dfbf"))
 	_materials["upland_dry"] = _textured_material(surface.get("upland_dry", {}), Color("#e4d5aa"))
 	_materials["path"] = _textured_material(surface.get("path", {}), Color("#caa77f"))
+	_materials["stone"] = _textured_material(_surface_tint(cliff_surface, "#906955"), Color("#906955"))
+	_materials["stone_light"] = _textured_material(_surface_tint(cliff_surface, "#cbae82"), Color("#cbae82"))
 	_materials["wood"] = _textured_material({"albedo":"res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png","normal":"res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png","tint":"#9b8b71","uv_scale":0.45,"normal_depth":0.35},Color.WHITE)
 	_materials["rope"] = _material(Color("#8f7048"), 1.0)
 	_materials["leaf"] = _material(Color("#4f623d"), 0.94)
@@ -836,13 +814,8 @@ func _build_materials() -> void:
 	# Far stone uses the geology material below, with two cooler palettes.
 	var relief_cfg: Dictionary = _visual_config.get("distant_relief", {})
 	for material_key: String in ["masonry", "masonry_trim"]:
-		var masonry := ENVIRONMENT_MATERIALS.masonry(material_key=="masonry_trim",
-			_visual_config.get("architecture_stone", {}))
+		var masonry := ENVIRONMENT_MATERIALS.masonry(material_key=="masonry_trim")
 		_materials[material_key] = masonry
-	# Quarried architecture must not fall back to the brown polygon-pattern
-	# terrain maps at the gateway, fallen crown or observatory stonework.
-	_materials["stone"] = _materials["masonry"]
-	_materials["stone_light"] = _materials["masonry_trim"]
 	_materials["bronze"] = _material(Color("#81704b"), 0.72)
 	var timber:=ShaderMaterial.new()
 	timber.shader=preload("res://shaders/cloudreach_timber.gdshader")
@@ -883,7 +856,6 @@ func _build_materials() -> void:
 		_materials[key] = distant_stone
 	var trail := ShaderMaterial.new()
 	trail.shader = TRAIL_SHADER
-	trail.render_priority = -1
 	trail.set_shader_parameter("grass_texture",preload("res://assets/environment/terrain/stylised/meadow_grass_Color.png"))
 	trail.set_shader_parameter("dirt_texture", load(str(surface.get("path", {}).get("albedo", "res://assets/environment/terrain/stylised/dirt_path_Color.png"))))
 	_materials["trail"] = trail
@@ -2902,11 +2874,7 @@ func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		# Bury the full-width surface at each end and let it emerge while its soil
 		# mask feathers in. Collapsing width made an icon-like arrowhead; a buried
 		# irregular lobe has no transverse or triangular silhouette to catch light.
-		# Match the shader's true-end flags: a continuous route joint must not
-		# sink below its landing while its end mask remains fully visible.
-		var start_distance := t * flat.length() if fade_start else 1000.0
-		var end_distance := (1.0 - t) * flat.length() if fade_end else 1000.0
-		var endpoint_distance := minf(start_distance, end_distance)
+		var endpoint_distance:=minf(t,1.0-t)*flat.length()
 		var endpoint_blend:=smoothstep(0.0,2.8,endpoint_distance)
 		var lift:=lerpf(-0.14,0.06,endpoint_blend)
 		var centre := a.lerp(b, t) + right * wander + up * lift
@@ -2930,8 +2898,6 @@ func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	var trail := MeshInstance3D.new()
 	trail.name = label
 	trail.mesh = mesh
-	# Use-wear is a surface overlay, not an object shadowing the ground below.
-	trail.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	trail.visibility_range_end = 1200.0
 	trail.visibility_range_end_margin = 100.0
 	parent.add_child(trail)
@@ -3072,33 +3038,13 @@ func _build_authored_route_details() -> void:
 			var span := maxf(bounds.size.x, bounds.size.z) if item.has("width_m") else bounds.size.y
 			var size_m := float(item.get("width_m", item.get("height_m", 1.0)))
 			var scale_value := size_m / maxf(span, 0.01)
-			var yaw := atan2(forward.x, forward.z) + deg_to_rad(float(item.get("yaw_deg", 0.0)))
-			var mesh_root_grounding := str(item.get("grounding", "bounds")) == "mesh_root"
-			var model_offset := -Vector3(bounds.get_center().x,
-				0.0 if mesh_root_grounding else bounds.position.y, bounds.get_center().z) * scale_value
-			if mesh_root_grounding:
-				# F40: masked foliage-card corners are not a plant base. Keep the
-				# imported root at the real local floor, not a registered road's
-				# centre height; synchronise the already-built static geometry first.
-				await get_tree().physics_frame
-				var root_at := at + Basis(Vector3.UP, yaw) * model_offset
-				var query := PhysicsRayQueryParameters3D.create(root_at + Vector3.UP * 8.0,
-					root_at - Vector3.UP * 8.0, 1)
-				var hit := get_world_3d().direct_space_state.intersect_ray(query)
-				if hit.is_empty() or not (hit.collider is StaticBody3D) \
-						or not is_ancestor_of(hit.collider) or hit.normal.y < 0.55:
-					push_warning("Cloudreach detail %s/%s has no local static root support" % [pocket.name, asset])
-					model.free()
-					continue
-				ground = hit.position.y
 			var placement := Node3D.new()
 			placement.name = "%s%02d" % [asset.capitalize(), pocket.get_child_count()]
-			placement.position = Vector3(at.x,
-				ground if mesh_root_grounding else ground - float(item.get("bury_m", 0.04)), at.z)
-			placement.rotation.y = yaw
+			placement.position = Vector3(at.x, ground - float(item.get("bury_m", 0.04)), at.z)
+			placement.rotation.y = atan2(forward.x, forward.z) + deg_to_rad(float(item.get("yaw_deg", 0.0)))
 			pocket.add_child(placement)
 			model.scale = Vector3.ONE * scale_value
-			model.position = model_offset
+			model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * scale_value
 			placement.add_child(model)
 			if asset == "bush" or asset == "flowers":
 				_apply_tree_palette(model, pocket.get_child_count())
@@ -3639,17 +3585,7 @@ func _build_landmarks() -> void:
 				_materials["upland_dry"], true)
 			west_crown.get_child(0).visible = false
 			east_crown.get_child(0).visible = false
-		if landmark_id == "sky_shrine_heartstone":
-			# Bind the existing shrine crown, not the regional floor 30m below it.
-			# The radius stays inside the same polygon emitted by _mesa; its
-			# inscribed disc is independent of the mesa's seeded yaw. This Fly-only
-			# crown has no ground-route reference line to change its flat height.
-			var shrine_sides := 48 + posmod(_landmark_count + 31, 6)
-			var shrine_radius := ledge_flat_radius * cos(PI / float(shrine_sides))
-			_surfaces.append({"kind": "ellipse", "centre": Vector2(at.x, at.z),
-				"half": Vector2.ONE * shrine_radius, "height": at.y + ledge_y})
-		else:
-			_surfaces.append({"kind": "rect", "centre": Vector2(at.x, at.z), "half": Vector2(17.0, 17.0), "height": at.y})
+		_surfaces.append({"kind": "rect", "centre": Vector2(at.x, at.z), "half": Vector2(17.0, 17.0), "height": at.y})
 		_cover_patches.append({"kind": "ellipse", "centre": at, "half": Vector2(25.5,25.5) if settlement else Vector2(16.5, 15.5),
 			# Settlement lanes are protected by their actual building, yard and
 			# path exclusions below. Do not cut one circular lawn out of the middle.
@@ -3918,13 +3854,8 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		var bounds: AABB = _building_prefabs.call("combined_aabb", model)
 		# A complete foundation is essential here: the source prefab is assembled
 		# wall-by-wall and the former 17 m ledge cut through its outer rooms.
-		var floor := _box(model, "ContinuousStoneFloor", Vector3(bounds.get_center().x, -0.10, bounds.get_center().z),
+		_box(model, "ContinuousStoneFloor", Vector3(bounds.get_center().x, -0.10, bounds.get_center().z),
 			Vector3(bounds.size.x, 0.22, bounds.size.z), _materials["stone_light"], true)
-		# Ground-level houses share a crown whose grass cap is local y=0.13.
-		# The foundation top is y=0.01, so expose its existing masonry mesh
-		# above that cap without moving its collision, doorway or route floor.
-		if not elevated:
-			(floor.get_child(0) as MeshInstance3D).position.y = float(settlement.get("floor_visual_lift_m", 0.15))
 		_cover_exclusions.append({"centre": model.global_position,
 			"half": Vector2(bounds.size.x, bounds.size.z) * 0.5 + Vector2.ONE * 1.0,
 			"rotation": model.global_rotation.y})
@@ -3990,9 +3921,8 @@ func _build_worn_activity_patch(parent: Node3D,label: String,at: Vector3,half: V
 	var tool:=SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var worn := ENVIRONMENT_MATERIALS.worn_ground(parent.to_global(at),maxf(half.x,half.y))
-	# Both occupied tiers use finite polygons. Fade before their irregular
-	# rims; altitude does not make a lower workshop's triangle edge disappear.
-	worn.set_shader_parameter("footprint_half", half)
+	if parent.global_position.y > 700.0:
+		worn.set_shader_parameter("footprint_half", half)
 	tool.set_material(worn)
 	for i in 28:
 		var a:=TAU*float(i)/28.0
@@ -4074,7 +4004,8 @@ func _build_settlement_yard(parent: Node3D) -> void:
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var worn := ENVIRONMENT_MATERIALS.worn_ground(parent.global_position+Vector3(0,0,-2),16.0)
-	worn.set_shader_parameter("footprint_half", Vector2(12.5,15.0))
+	if parent.global_position.y > 700.0:
+		worn.set_shader_parameter("footprint_half", Vector2(12.5,15.0))
 	tool.set_material(worn)
 	var centre := Vector3(0, 0.17, -2)
 	for i in 32:
@@ -4134,65 +4065,14 @@ func _build_realm_gate_crag(root: Node3D) -> void:
 	# on the 34 m higher crown made the landmark read as a rock stack with a tiny
 	# unrelated castle on top, whereas this facade is the portal the road meets.
 	var facade_origin := Vector3(-24.0, -34.0, -29.0)
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(REALM_GATE_CRAG_PRESENTATION.CONFIG_PATH))
-	var contact: Dictionary = parsed.get("ground_contact", {}) if parsed is Dictionary else {}
-	var triangles := _gate_render_support_triangles(root, contact)
-	var sampler := _gate_render_support_height.bind(triangles)
-	var facade := _castle_piece(root, "AncientCarvedGateway", CASTLE_GATE, facade_origin, Vector3(28, 27, 6), _materials["stone_light"])
-	REALM_GATE_CRAG_PRESENTATION.add_masonry_footing(facade, sampler, contact)
+	_castle_piece(root, "AncientCarvedGateway", CASTLE_GATE, facade_origin, Vector3(28, 27, 6), _materials["stone_light"])
 	for side: float in [-1.0, 1.0]:
-		var tower := _castle_piece(root, "GateWatchPillar", CASTLE_TOWER, facade_origin + Vector3(side * 12, 0, 0), Vector3(7, 33, 7), _materials["stone"])
-		REALM_GATE_CRAG_PRESENTATION.add_masonry_footing(tower, sampler, contact)
+		_castle_piece(root, "GateWatchPillar", CASTLE_TOWER, facade_origin + Vector3(side * 12, 0, 0), Vector3(7, 33, 7), _materials["stone"])
 	var presentation := REALM_GATE_CRAG_PRESENTATION.new()
 	presentation.name = "RealmGateCragPresentation"
 	presentation.position = facade_origin
 	root.add_child(presentation)
-	presentation.call("build", _materials, sampler)
-
-
-## Sample the same rendered columns measured by the retained native gate packet.
-## Registered road heights and collision boxes are not visual support operands.
-func _gate_render_support_triangles(gate: Node3D, cfg: Dictionary) -> Array[PackedVector3Array]:
-	var sources: Array[MeshInstance3D] = []
-	# The trail is an alpha overlay, not opaque ground. Every retained native
-	# query also hit this opaque ridge; include the measured crag faces too.
-	for path: String in ["AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge000"]:
-		var source := get_node_or_null(NodePath(path)) as MeshInstance3D
-		if source != null:
-			sources.append(source)
-	var ledge := gate.get_node_or_null("LandmarkLedge")
-	if ledge != null:
-		for source: MeshInstance3D in ledge.find_children("*", "MeshInstance3D", true, false):
-			if str(source.name) in ["StratifiedCliffBody", "CarvedCrown"]:
-				sources.append(source)
-	var triangles: Array[PackedVector3Array] = []
-	var bounds: Array = cfg.get("sample_bounds_xz", [-43.0, -47.0, -5.0, -23.0])
-	for source: MeshInstance3D in sources:
-		if source.mesh == null:
-			continue
-		var faces := source.mesh.get_faces()
-		for index in range(0, faces.size() - 2, 3):
-			var a := source.to_global(faces[index])
-			var b := source.to_global(faces[index + 1])
-			var c := source.to_global(faces[index + 2])
-			# Conservative bound around the unchanged gateway/tower/paver feet.
-			# Keep crossing triangles whole; only reject disjoint XZ bounds.
-			if maxf(a.x, maxf(b.x, c.x)) < gate.global_position.x + float(bounds[0]) \
-					or minf(a.x, minf(b.x, c.x)) > gate.global_position.x + float(bounds[2]) \
-					or maxf(a.z, maxf(b.z, c.z)) < gate.global_position.z + float(bounds[1]) \
-					or minf(a.z, minf(b.z, c.z)) > gate.global_position.z + float(bounds[3]):
-				continue
-			triangles.append(PackedVector3Array([a, b, c]))
-	return triangles
-
-
-func _gate_render_support_height(at: Vector3, triangles: Array[PackedVector3Array]) -> float:
-	var best := -INF
-	for triangle: PackedVector3Array in triangles:
-		var height := GROUND_COVER._triangle_height(at, triangle[0], triangle[1], triangle[2])
-		if is_finite(height) and height <= at.y + 0.005:
-			best = maxf(best, height)
-	return best if is_finite(best) else NAN
+	presentation.call("build", _materials)
 
 
 func _build_three_bells(root: Node3D) -> void:
@@ -4303,14 +4183,6 @@ func _build_high_perches(root: Node3D) -> void:
 	# arrival, landing and vista axes stay open; heights are unchanged.
 	var perch_cfg := _read_json(HIGH_PERCHES_VISUAL_PATH)
 	var feet := perch_cfg.get("needle_feet", []) as Array
-	# The narrow shafts need close stone grain instead of the realm cliff's
-	# 18 m albedo repeat. Keep the installed rock maps and authored granite
-	# palette, with local texture hue/relief controls; shared geology is untouched.
-	var needle_material := _materials["cliff"].duplicate() as ShaderMaterial
-	var needle_surface: Dictionary = perch_cfg.get("needle_surface", {})
-	for key: String in ["texture_scale", "normal_scale", "rock_texture_chroma", "rock_normal_strength"]:
-		if needle_surface.has(key):
-			needle_material.set_shader_parameter(key, float(needle_surface[key]))
 	for i in 6:
 		var height := 16.0 + float(posmod(i * 7, 5)) * 5.0
 		var radius := 1.8 + float(i % 2)
@@ -4329,7 +4201,7 @@ func _build_high_perches(root: Node3D) -> void:
 		# pale stratified cliff geology rather than the brown masonry tint that
 		# read as brick chimneys/silos beside the grey-green crags.
 		var needle := _cylinder(root, "RoostNeedle%d" % i,
-			foot + Vector3.UP * height * 0.5, radius, height, needle_material)
+			foot + Vector3.UP * height * 0.5, radius, height, _materials["cliff"])
 		# Few, uneven facets read as a weathered basalt stack, not a turned flue.
 		(needle.mesh as CylinderMesh).radial_segments = 7 + i % 3
 		needle.rotation.y = angle * 1.7
@@ -4457,7 +4329,6 @@ func _dress_master_signpost(definition: Dictionary) -> void:
 		var post := sign as Node3D
 		if Vector2(post.global_position.x - at.x, post.global_position.z - at.z).length() > 1.0:
 			continue
-		HIGH_PERCHES_PRESENTATION.style_master_sign_text(post)
 		for child: Node in post.get_children():
 			if child is MeshInstance3D and (child as MeshInstance3D).mesh is BoxMesh:
 				(child as MeshInstance3D).material_override = _materials["weathered_timber"]
@@ -4505,18 +4376,7 @@ func _build_ground_roost_rack(root: Node3D, index: int, at: Vector2, yaw_deg: fl
 	_set_geometry_visibility(log_model, 480.0)
 
 
-func _observatory_dial_cover_exclusion(centre: Vector3) -> Dictionary:
-	# The collisionless dial lies over a grass-eligible walkable crown. Clear
-	# its configured paving footprint through the existing height-aware cover
-	# exclusions, keeping the surrounding crown and other strata planted.
-	var dial_config := _read_json("res://data/config/cloudreach_old_wind_observatory_visual.json")
-	var dial_radius := float(dial_config.get("dial_radius_m", 15.0))
-	return {"kind":"ellipse", "centre":centre,
-		"half":Vector2.ONE * dial_radius, "rotation":0.0}
-
-
 func _build_observatory(root: Node3D) -> void:
-	_cover_exclusions.append(_observatory_dial_cover_exclusion(root.to_global(Vector3.ZERO)))
 	# Keep the observatory legible from its walkable crown instead of presenting
 	# a forty-metre featureless drum at normal third-person distance. This is
 	# visual massing only; the supported crown owns traversal and collision.
@@ -5644,13 +5504,9 @@ func _mesa(
 	var upper_tool := SurfaceTool.new()
 	upper_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	upper_tool.set_material(_materials["cliff_high"] if side_material != _materials["cliff_shadow"] else side_material)
-	# Crown render/collision already lift these rim vertices by 3 cm. Join
-	# the visual wall to that same edge instead of leaving an open sky seam.
-	var crown_rim_lift := Vector3.UP * 0.03
 	for i in sides:
 		var next := (i + 1) % sides
-		_add_geological_face(upper_tool, top_ring[i] + crown_rim_lift,
-			top_ring[next] + crown_rim_lift, upper_ring[i], upper_ring[next],
+		_add_geological_face(upper_tool, top_ring[i], top_ring[next], upper_ring[i], upper_ring[next],
 			Vector3(top_ring[i].x, 0, top_ring[i].z).normalized(), Vector3(top_ring[next].x, 0, top_ring[next].z).normalized(), minf(size.x * 0.055, 15.0))
 	var middle_tool := upper_tool
 	for i in sides:
@@ -5668,8 +5524,8 @@ func _mesa(
 	# collision copy below is still emitted from the crown alone, so nothing
 	# here can move the collider away from the render or reopen the hole class
 	# OP-0905-24/25 closed.
-	var airborne := label == "LandmarkLedge" \
-		and _is_airborne_mass(root.global_position.y - size.y * 0.5)
+	var mass_bottom_world := root.global_position.y - size.y * 0.5
+	var airborne := label == "LandmarkLedge" and _is_airborne_mass(mass_bottom_world)
 	if airborne:
 		var root_cfg: Dictionary = _visual_config.get("island_roots", {})
 		var root_depth := minf(size.y * float(root_cfg.get("root_depth_fraction", 0.85)),

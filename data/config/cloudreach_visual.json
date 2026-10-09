@@ -1,16 +1,4 @@
 {
-  "architecture_stone": {
-    "stone_tint": "#d6e2f0",
-    "trim_tint": "#f1f0e6",
-    "tile": 0.28,
-    "moss_amount": 0.16,
-    "up_moss": 0.28,
-    "streak_strength": 0.12,
-    "macro_strength": 0.18,
-    "stone_strength": 0.08,
-    "joint_threshold": 0.14,
-    "joint_softness": 0.04
-  },
   "_comment": "Tunable Phase 2 visual language for Cloudreach. It deliberately reuses the Meadows terrain textures and generated ground-cover meshes: one nature family, a different high-altitude composition.",
   "schema_version": 1,
   "camera": {
@@ -332,7 +320,6 @@
     "bush_tip": "#647a31"
   },
   "settlement": {
-    "floor_visual_lift_m": 0.15,
     "occupied_terrace": {
       "enabled": false,
       "_disposition": "Mixed native comparison; full Bars A/B NO. Candidate retained disabled for consolidation. Evidence: VISUAL/cloudreach-c2-candidate/occupied-street.",
@@ -406,9 +393,9 @@
         "items": [
           {"asset": "rock", "offset": [-7.8, 1.0], "height_m": 2.6, "yaw_deg": 74.0, "bury_m": 0.4},
           {"asset": "rock_low", "offset": [-5.5, -1.0], "height_m": 1.1, "yaw_deg": 8.0, "bury_m": 0.2},
-          {"asset": "bush", "offset": [-6.0, 3.0], "height_m": 1.75, "yaw_deg": 83.0, "grounding": "mesh_root"},
-          {"asset": "flowers", "offset": [-4.8, 1.0], "height_m": 0.8, "yaw_deg": 14.0, "grounding": "mesh_root"},
-          {"asset": "bush", "offset": [6.4, 11.0], "height_m": 1.4, "yaw_deg": 30.0, "grounding": "mesh_root"}
+          {"asset": "bush", "offset": [-6.0, 3.0], "height_m": 1.75, "yaw_deg": 83.0},
+          {"asset": "flowers", "offset": [-4.8, 1.0], "height_m": 0.8, "yaw_deg": 14.0},
+          {"asset": "bush", "offset": [6.4, 11.0], "height_m": 1.4, "yaw_deg": 30.0}
         ]
       },
       {
@@ -447,28 +434,6 @@
           {"asset": "bush", "offset": [7.6, 4.0], "height_m": 1.8, "yaw_deg": 61.0},
           {"asset": "flowers", "offset": [4.8, 2.0], "height_m": 0.75, "yaw_deg": -30.0},
           {"asset": "bush", "offset": [-8.0, 10.0], "height_m": 1.3, "yaw_deg": 76.0}
-        ]
-      },
-      {
-        "id": "HighPerchesEdgeNature", "anchor": [900.0, 1020.0, 2700.0], "forward": [0, 0, 1],
-        "scope": "cloudreach_client_presentation",
-        "_comment": "Low installed-family planting breaks the bare court lawn into perimeter pockets. Keep the 7.15m compass, south/north Fly lanes, keeper fittings and original court cover exclusions clear. Existing mesh_root placement probes each actual local static floor and refuses unsupported roots; no assumed flat height or new collision. Pending original native appearance verdict.",
-        "items": [
-          {"asset": "bush", "offset": [-16.0, -7.0], "height_m": 1.15, "yaw_deg": 35, "grounding": "mesh_root"},
-          {"asset": "flowers", "offset": [-15.0, -8.2], "height_m": 0.7, "yaw_deg": -20, "grounding": "mesh_root"},
-          {"asset": "flowers", "offset": [-16.7, -6.3], "height_m": 0.85, "yaw_deg": 72, "grounding": "mesh_root"},
-          {"asset": "bush", "offset": [-16.5, 2.5], "height_m": 1.25, "yaw_deg": -55, "grounding": "mesh_root"},
-          {"asset": "flowers", "offset": [-15.4, 3.5], "height_m": 0.75, "yaw_deg": 22, "grounding": "mesh_root"},
-          {"asset": "flowers", "offset": [-16.6, 1.2], "height_m": 0.6, "yaw_deg": 96, "grounding": "mesh_root"},
-          {"asset": "bush", "offset": [-12.0, 15.0], "height_m": 0.95, "yaw_deg": 16, "grounding": "mesh_root"},
-          {"asset": "flowers", "offset": [-10.8, 15.8], "height_m": 0.65, "yaw_deg": -38, "grounding": "mesh_root"},
-          {"asset": "flowers", "offset": [-13.0, 13.8], "height_m": 0.8, "yaw_deg": 82, "grounding": "mesh_root"},
-          {"asset": "bush", "offset": [17.0, 2.0], "height_m": 1.1, "yaw_deg": -28, "grounding": "mesh_root"},
-          {"asset": "flowers", "offset": [16.1, 3.3], "height_m": 0.8, "yaw_deg": 50, "grounding": "mesh_root"},
-          {"asset": "flowers", "offset": [16.6, 0.8], "height_m": 0.6, "yaw_deg": 112, "grounding": "mesh_root"},
-          {"asset": "bush", "offset": [15.0, 12.0], "height_m": 1.0, "yaw_deg": 68, "grounding": "mesh_root"},
-          {"asset": "flowers", "offset": [13.8, 12.8], "height_m": 0.7, "yaw_deg": -12, "grounding": "mesh_root"},
-          {"asset": "flowers", "offset": [15.6, 10.8], "height_m": 0.85, "yaw_deg": 126, "grounding": "mesh_root"}
         ]
       },
       {
@@ -533,6 +498,5 @@
       },
     {"id": "aviary_finale_road_sightline", "_comment": "F40#4: the Sky Aviary must read from the finale road at ~400 m (frame-matrix row 33 stand) -- three route trees stood on that line. Route trees within half_width_m of the segment are not planted.", "from_xz": [353.9, 5040.8], "to_xz": [100.0, 5350.0], "half_width_m": 9.0}
     ]
-  },
-  "weather": {"enabled": false, "scope": "client_presentation", "_comment": "Existing visual weather only; removed from canonical weather group. No durable state/RPC/encounter changes. Shipping timer off until F40 proof; matrix pins visual API."}
+  }
 }

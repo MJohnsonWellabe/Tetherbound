@@ -142,12 +142,6 @@ func test_save_then_load_round_trips_everything() -> void:
 	assert_true(restored.felled_vegetation.has("trees#3"))
 	assert_true(restored.flags.has("defeated_warden"))
 	assert_eq(restored.save_data(), payload, "the whole payload survives the round trip")
-	world.flags.set_flag("fly_traversal_unlocked")
-	world.flags.set_flag("fly_tutorial_completed")
-	restored.load_data(world.save_data())
-	assert_true(restored.flags.has("fly_traversal_unlocked"), "legacy snapshot keeps shared route access")
-	assert_false(restored.flags.has("fly_tutorial_completed"), "shared legacy lesson cannot train a joining character")
-	assert_true(restored.flags.has("defeated_warden"), "unrelated world facts remain untouched")
 
 
 func test_load_data_of_an_empty_dictionary_is_a_working_fresh_world() -> void:

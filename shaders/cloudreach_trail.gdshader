@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode blend_mix, depth_draw_never, diffuse_burley, specular_disabled;
+render_mode diffuse_burley, specular_disabled;
 uniform sampler2D dirt_texture : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 #include "res://shaders/cloudreach_turf.gdshaderinc"
 uniform vec4 tint : source_color = vec4(0.61,0.50,0.37,1.0);
@@ -31,8 +31,5 @@ void fragment() {
 	// its texture rotation, scale and broad variation aligned across the edge.
 	vec3 turf=cloudreach_turf(world_position);
 	ALBEDO=mix(turf,soil,edge);
-	// Wear feathers over the actual crown instead of replacing its lighting
-	// with an opaque lifted turf strip at the authored ribbon boundary.
-	ALPHA=edge;
 	ROUGHNESS = 0.98;
 }

@@ -985,9 +985,8 @@ func _apply_field_separation() -> void:
 func _apply_field_brightness() -> void:
 	if not _has_model:
 		return
-	var finish := VISUAL.material_finish(species_id)
-	var strength := clampf(float(finish.get("field_emission",
-		SPECIES.placeholder(species_id).get("field_emission", 0.0))), 0.0, FIELD_EMISSION_MAX)
+	var strength := clampf(
+		float(SPECIES.placeholder(species_id).get("field_emission", 0.0)), 0.0, FIELD_EMISSION_MAX)
 	var degreen := clampf(
 		float(SPECIES.placeholder(species_id).get("field_degreen", 0.0)), 0.0, FIELD_DEGREEN_MAX)
 	if strength <= 0.0:
@@ -1439,11 +1438,11 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	var shiny_albedo := _texture_for(source.albedo_texture, species, suffix, "base_color")
 	if shiny_albedo == null:
 		return null
-	var key := "%d:%s:%s" % [source.get_instance_id(), species, suffix]
+	var key := "%d:%s" % [source.get_instance_id(), suffix]
 	if _shiny_swap_materials.has(key):
 		return _shiny_swap_materials[key]
 	var copy := source.duplicate() as BaseMaterial3D
-	copy.resource_name = "%s_%s_%s" % [source.resource_name, species, suffix]
+	copy.resource_name = "%s_%s" % [source.resource_name, suffix]
 	copy.albedo_texture = shiny_albedo
 	if copy.emission_enabled:
 		var shiny_emission := _texture_for(source.emission_texture, species, suffix, "emissive")
@@ -1454,8 +1453,6 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 		# turns a saturated mid-brown map into a pale peach animal and flattens
 		# the value contrast a face needs. Tunable in creatures_visual.json.
 		copy.emission_energy_multiplier *= VISUAL.emission_scale()
-		copy.emission_energy_multiplier *= clampf(
-			float(VISUAL.material_finish(species).get("emission_gain", 1.0)), 0.0, 1.0)
 		copy.emission_energy_multiplier *= float(ASPECT_EMISSION_BOOST.get(suffix, 1.0))
 	_shiny_swap_materials[key] = copy
 	return copy

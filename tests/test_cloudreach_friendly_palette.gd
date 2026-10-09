@@ -42,13 +42,6 @@ func test_observatory_edge_trees_wear_the_green_region_leaf() -> void:
 					"%s still wears the crimson TwistedTree leaf sheet" % tree.name)
 				assert_false(_is_red(active.albedo_color),
 					"%s leaf tint %s is red" % [tree.name, active.albedo_color.to_html(false)])
-				assert_eq(active.texture_filter,
-					BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC,
-					"%s leaf cards retain distance/oblique filtering" % tree.name)
-				var leaf_image := active.albedo_texture.get_image() \
-					if active.albedo_texture != null else null
-				assert_true(leaf_image != null and leaf_image.has_mipmaps(),
-					"%s actual region leaf texture supplies the mip chain requested by its material" % tree.name)
 	assert_true(leaf_surfaces > 0, "observatory edge trees expose leaf surfaces to check")
 	visual.free()
 	world.free()

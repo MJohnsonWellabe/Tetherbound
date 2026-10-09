@@ -869,8 +869,7 @@ func _recall_path_on_level(trainer: PhysicsBody3D, from: Vector3, to: Vector3, l
 	return true
 
 
-## The body's own collision shape at `spot` touches neither world geometry
-## nor another physical actor; the trainer and this body are already excluded.
+## The body's own collision shape at `spot` touches no world geometry.
 func _recall_body_fits(trainer: PhysicsBody3D, spot: Vector3, body: Node3D) -> bool:
 	var collision := body.get_node_or_null(^"Collision") as CollisionShape3D
 	if collision == null or collision.shape == null:
@@ -882,7 +881,7 @@ func _recall_body_fits(trainer: PhysicsBody3D, spot: Vector3, body: Node3D) -> b
 		spot + Vector3.UP * 0.05 + (collision.global_position - body.global_position))
 	query.exclude = _recall_exclusions(trainer, body)
 	for hit: Dictionary in trainer.get_world_3d().direct_space_state.intersect_shape(query, 8):
-		if hit.collider is PhysicsBody3D:
+		if hit.collider is StaticBody3D:
 			return false
 	return true
 

@@ -1,5 +1,0 @@
-# Cloudreach frame matrix -- tools/capture_cloudreach_frame_matrix.gd (production CameraRig; fixture in the tool header)
-# graphics_capture {"adapter":"NVIDIA GeForce GTX 1060 3GB","graphics_config_sha256":"7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54","preset":"High","renderer":"forward_plus","resolution":[1920,1080],"source_commit":"401977bce7041e4274f8e01e8075462ecd87a0de"}
-# name | row | trainer feet | yaw/pitch deg | target | hour | stand (candidate) | camera | trainer on screen | companion | flags
-MANIFEST 20_high_roost_sky_shrine_perch-vista_day | perch-vista | trainer (895.0, 1020.13, 2706.0) | yaw 135.7 pitch -12.0 | target (-340.0, 830.00, 3970.0) | hour 10.00 | stand (895.0, 1020.00, 2706.0) (1/2) | camera (898.6, 1022.96, 2702.4) | trainer on screen (50%, 60%) | companion native follower (896.7, 1020.13, 2709.1); trainer gap 3.55 m | flags boot | High perch, correct camera, looking out over the drop at stacked cliff silhouettes toward Upper Cloudreach / Cliffhold.
-# frame matrix: 1 frames written, 1 rows skipped

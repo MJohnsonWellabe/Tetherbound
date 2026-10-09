@@ -72,7 +72,7 @@ func test_cloudreach_world_mounts_the_dedicated_gate_presentation() -> void:
 	assert_true(source.contains("var facade_origin := Vector3(-24.0, -34.0, -29.0)"),
 		"the gatehouse must meet the real arrival road on the crag face")
 	assert_true(source.contains("presentation.name = \"RealmGateCragPresentation\""))
-	assert_true(source.contains("presentation.call(\"build\", _materials, sampler)"))
+	assert_true(source.contains("presentation.call(\"build\", _materials)"))
 	assert_false(source.contains("\"GateFoundationCrag\""),
 		"a second nested crag would hide the arrival gate again")
 

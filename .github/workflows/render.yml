@@ -88,7 +88,7 @@ jobs:
           [[ "$CHECKOUT_REF" =~ ^[A-Za-z0-9._/-]{1,200}$ ]] || fail "checkout_ref has disallowed characters"
           [[ "$CHECKOUT_REF" != *..* ]] || fail "checkout_ref may not contain .."
           [[ "$CHECKOUT_REF" != -* ]] || fail "checkout_ref may not start with -"
-          [[ "$SCRIPT" =~ ^(tests|tools)/[A-Za-z0-9_/.-]+\.gd$ || "$SCRIPT" == scripts/world/bake_stormwood_scatter.gd ]] || fail "script must be tests/*.gd, tools/*.gd or the exact Stormwood scatter writer"
+          [[ "$SCRIPT" =~ ^(tests|tools)/[A-Za-z0-9_/.-]+\.gd$ ]] || fail "script must be tests/*.gd or tools/*.gd"
           [[ "$SCRIPT" != *..* ]] || fail "script may not contain .."
           [[ "$ARGS" =~ ^[A-Za-z0-9_=,./:@+\ -]*$ ]] || fail "args has disallowed characters"
           [[ "$RES" =~ ^[0-9]{3,4}x[0-9]{3,4}$ ]] || fail "resolution must look like 1280x720"

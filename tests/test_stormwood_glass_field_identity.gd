@@ -36,18 +36,6 @@ func test_glass_field_builds_a_readable_non_colliding_strike_corridor() -> void:
 			"local night emphasis escaped the bounded location-light budget")
 	assert_true(field.find_children("*", "CollisionObject3D", true, false).is_empty(),
 		"visual identity added collision to the road, fight, or final approach")
-	if bool(field.config.get("grounded_legacy_bases", {}).get("enabled", false)):
-		assert_eq(field.find_children("ScarGrassClearance", "Node3D", true, false).size(), 8,
-			"grounded bases must clear the grass inside every fused scar")
-		for scar: Node in field.find_children("FusedStrikeScar", "MeshInstance3D", true, false):
-			assert_true((scar as MeshInstance3D).mesh is ArrayMesh, "grounded scar cannot remain a rigid cylinder")
-			for vertex: Vector3 in (scar as MeshInstance3D).mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]:
-				assert_true(vertex.y >= -0.001 and vertex.y <= 0.081, "flat-world scar follows terrain within its surface lift")
-		for fissure: Node in field.find_children("GlassFissure*", "MeshInstance3D", true, false):
-			assert_true((fissure as MeshInstance3D).mesh is ArrayMesh, "grounded fissure cannot remain a floating straight cylinder")
-			for vertex: Vector3 in (fissure as MeshInstance3D).mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]:
-				assert_almost_eq(vertex.y, float(field.config.grounded_legacy_bases.fissure_lift_m), 0.001,
-					"fissure vertices follow the flat terrain at the configured lift")
 	world.free()
 
 

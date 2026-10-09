@@ -2,8 +2,8 @@ extends "res://tools/catalogue_survey.gd"
 
 ## Player-camera evidence for Stormwood Surge phase readability (ACCEPTANCE
 ## §6.1 F10 / S2): Calm, Building, Break and Fading must be nameable from the
-## normal camera without HUD phase text. The Long Storm aftermath retains the
-## purple sky and scars, with lighter rain and no lightning (WORLD §5.2).
+## normal camera without HUD phase text, and the Long Storm aftermath must
+## read as a restored sky.
 ##
 ##   xvfb-run -a -s "-screen 0 1280x720x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x720 \
@@ -90,13 +90,6 @@ func _run() -> void:
 		elif arg.begins_with("--motion-phases="):
 			for part: String in arg.trim_prefix("--motion-phases=").split(",", false):
 				_motion_phases.append(part.strip_edges())
-	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--preset="):
-			_phase_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self, "--out=")
-			if _phase_graphics_capture.is_empty():
-				quit(2)
-				return
-			break
 	if _motion_phases.is_empty():
 		_motion_phases.assign(PHASES)
 	if _strip_phases.is_empty():
@@ -371,13 +364,6 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 	var image := await _grab()
 	var width := FRAME_W_FULL if full_size else STRIP_W
 	var height := FRAME_H_FULL if full_size else STRIP_H
-	if full_size and not _phase_graphics_capture.is_empty():
-		var raster: Array = _phase_graphics_capture.resolution
-		width = int(raster[0])
-		height = int(raster[1])
-		if image == null or image.is_empty() or image.get_size() != Vector2i(width, height):
-			_failures.append(frame_id + ": named native raster missing or mismatched")
-			return
 	if not _save(image, "%s/%s.jpg" % [_output_dir, frame_id], width, height):
 		return
 	var record := {
@@ -830,14 +816,9 @@ func _diff_counts(a: Image, b: Image, mask_path: String) -> Dictionary:
 
 ## Tuning pass only (--only=quick): one settled frame per phase.
 func _quick() -> void:
-	var before := _frames.size()
 	for phase: String in PHASES:
 		await _enter_phase(phase, false)
-		await _capture("quick_%s" % phase, "%s, settled (tuning)" % phase.capitalize(), not _phase_graphics_capture.is_empty())
-		if str(_surge.get("phase")) != phase:
-			_failures.append("Quick phase did not settle to " + phase)
-	if _frames.size() - before != PHASES.size():
-		_failures.append("Quick phase capture requires all four images")
+		await _capture("quick_%s" % phase, "%s, settled (tuning)" % phase.capitalize(), false)
 
 
 ## ≥30 s per phase at 2 fps, 640x360, to a scratch directory outside the repo;

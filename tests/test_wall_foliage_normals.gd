@@ -8,36 +8,6 @@ const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const VINE := "res://assets/buildings/quaternius_medieval/Prop_Vine1.gltf"
 
 
-func test_cloudreach_cliff_vines_fit_outside_a_wall_cell_and_below_its_beam() -> void:
-	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
-		"res://data/config/cloudreach_look.json"))
-	var dressing: Dictionary = config.settlement_materials.cliff_dressing
-	# Inspect the selected imported geometry without loading the presentation
-	# script: Godot's script cache keeps its preloaded scenes alive afterwards.
-	var source := FileAccess.get_file_as_string("res://scripts/world/cloudreach_look.gd")
-	var choices := RegEx.new()
-	choices.compile("(?s)const LOOK_VINES: Array\\[PackedScene\\] = \\[(.*?)\\]")
-	var block := choices.search(source)
-	assert_true(block != null, "the production wall vine choices must be declared")
-	if block == null:
-		return
-	var paths := RegEx.new()
-	paths.compile("preload\\(\"([^\"]+)\"\\)")
-	var selected := paths.search_all(block.get_string(1))
-	assert_true(not selected.is_empty(), "production selected installed wall vine meshes")
-	var prefabs: RefCounted = PREFABS.new()
-	for choice: RegExMatch in selected:
-		var wall := Node3D.new()
-		var model := (load(choice.get_string(1)) as PackedScene).instantiate() as Node3D
-		model.position = Vector3(0.0, float(dressing.vine_height_m), float(dressing.vine_proud_m))
-		wall.add_child(model)
-		var bounds: AABB = prefabs.call("combined_aabb", wall)
-		assert_true(bounds.position.z > 0.0, "vine geometry must stay outside the wall plane")
-		assert_true(bounds.end.y <= 3.12, "vine must not rise through the wall's upper beam")
-		assert_true(bounds.size.x <= 2.0, "vine must fit its authored two-metre wall cell")
-		wall.free()
-
-
 func _first_mesh(node: Node) -> MeshInstance3D:
 	if node is MeshInstance3D:
 		return node as MeshInstance3D

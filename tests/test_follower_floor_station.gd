@@ -89,23 +89,6 @@ func test_validator_station_steers_and_is_not_rechecked_every_frame() -> void:
 	want.y = 0.0
 	assert_true(requested.normalized().dot(want.normalized()) > 0.99,
 		"it walks toward the verified station, not the raw flank (%s vs %s)" % [requested, want])
-	# A nearby body can occupy the old answer without either anchor moving.
-	var changed_answer := LEADER_AT + Vector3(3.0, 0.0, 0.0)
-	_answer = changed_answer
-	_body.set("_station_checked_frame", Engine.get_physics_frames() - FOLLOWER.STATION_VALIDATE_FRAMES + 1)
-	_body.call("_tick_follow")
-	assert_eq(_calls.size(), 1, "dynamic occupancy does not make validation run before its existing interval")
-	_body.set("_station_checked_frame", Engine.get_physics_frames() - FOLLOWER.STATION_VALIDATE_FRAMES)
-	_body.call("_tick_follow")
-	assert_eq(_calls.size(), 2, "an unchanged positive station is refreshed at the original interval")
-	assert_true((_body.get("_station_offset") as Vector3).is_equal_approx(changed_answer - LEADER_AT),
-		"the new validated answer replaces the occupied station without moving either actor directly")
-	_answer = Vector3.INF
-	_body.set("_station_checked_frame", Engine.get_physics_frames() - FOLLOWER.STATION_VALIDATE_FRAMES)
-	_body.call("_tick_follow")
-	assert_eq(_calls.size(), 3)
-	assert_false((_body.get("_station_offset") as Vector3).is_finite(), "loss of physical clearance restores the existing no-station fallback")
-
 
 
 func test_no_verified_station_closes_on_the_trainer_and_stops_clear() -> void:

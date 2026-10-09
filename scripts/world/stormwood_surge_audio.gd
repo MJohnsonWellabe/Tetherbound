@@ -17,9 +17,9 @@ extends Node
 ##   de-duplicated, so each warning and impact fires once per peer.
 ## A simulation-only shell (a host's realm with no local listener) is silent.
 ##
-## Continuous beds belong to this observer, outside the one-shot pool so an
-## ordinary effect cannot steal a phase bed. Teardown stops/frees the current
-## bed, disconnects from Session and clears the log.
+## Teardown: `_exit_tree` stops every bed this node started (the AudioManager
+## pool lives under the tree root and would otherwise outlive the realm),
+## disconnects from Session and clears the log.
 const CONFIG_PATH := "res://data/config/stormwood_audio.json"
 const AUDIO := preload("res://scripts/audio/audio_manager.gd")
 const LONG_STORM_ENDED := "stormwood:long_storm_ended"
@@ -33,9 +33,7 @@ var cue_log: Array[Dictionary] = []
 var _phase := ""
 var _released := false
 var _bed: Node = null
-## A pool node can be reused even for the same cached stream. Retain the exact
-## playback instance, not just its stream, to stop only this realm's voice.
-var _strike_players: Dictionary = {}
+var _bed_stream: Resource = null
 var _warned: Dictionary = {}
 var _impacted: Array[int] = []
 
@@ -130,13 +128,15 @@ func _start_bed(cue: Dictionary, phase: String) -> void:
 	var player: Node = _fire(cue, null, -1, phase)
 	if player != null:
 		_bed = player
+		_bed_stream = player.get("stream")
 
 
 func _stop_bed() -> void:
-	if is_instance_valid(_bed):
+	# The pool reuses players; stop only one still carrying this bed's stream.
+	if is_instance_valid(_bed) and _bed.get("stream") == _bed_stream:
 		_bed.call("stop")
-		_bed.queue_free()
 	_bed = null
+	_bed_stream = null
 
 
 ## Log one cue and play it only if its asset exists. Returns the player.
@@ -148,22 +148,8 @@ func _fire(cue: Dictionary, at: Variant, strike_id: int, phase: String = "") -> 
 	var positional := bool(cue.get("positional", false)) and at is Vector3
 	var player: Node = null
 	if present:
-		if bool(cue.get("loop", false)) and not positional:
-			var stream := AUDIO.stream(path)
-			if stream != null:
-				var bed := AudioStreamPlayer.new()
-				bed.name = "SurgeBed"
-				bed.stream = stream
-				bed.bus = str(cue.get("bus", "Ambience"))
-				add_child(bed)
-				bed.play()
-				player = bed
-		elif positional:
+		if positional:
 			player = AUDIO.play_file_at(path, str(cue.id), at, str(cue.get("bus", "SFX")))
-			var strike_player := player as AudioStreamPlayer3D
-			if strike_player != null and strike_player.has_stream_playback():
-				_strike_players[strike_player.get_instance_id()] = {
-					"player": strike_player, "playback": strike_player.get_stream_playback()}
 		else:
 			player = AUDIO.play_file(path, str(cue.id), str(cue.get("bus", "SFX")))
 	cue_log.append({
@@ -222,14 +208,6 @@ func _caption(text: String, at: Variant) -> String:
 
 func _exit_tree() -> void:
 	_stop_bed()
-	for voice: Dictionary in _strike_players.values():
-		if not is_instance_valid(voice.player):
-			continue
-		var player := voice.player as AudioStreamPlayer3D
-		if player != null and player.has_stream_playback() \
-				and player.get_stream_playback() == voice.playback:
-			player.stop()
-	_strike_players.clear()
 	if session != null and is_instance_valid(session) \
 			and session.stormwood_strike_received.is_connected(_on_strike):
 		session.stormwood_strike_received.disconnect(_on_strike)

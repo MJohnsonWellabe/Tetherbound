@@ -5,21 +5,17 @@ const HALL:=preload("res://assets/environment/team_tether/hall/hall_stone.gdshad
 const CLOTH:=preload("res://assets/environment/team_tether/hall/banner_cloth.gdshader")
 const SIGIL:=preload("res://scripts/world/tether_sigil.gd")
 
-static func masonry(trim: bool=false, surface: Dictionary={}) -> ShaderMaterial:
+static func masonry(trim: bool=false) -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=HALL
-	# Rectangular installed courses match the supplied Cloudreach stone board.
-	# All three maps change together; terrain geology keeps its separate family.
-	material.set_shader_parameter("albedo_tex",preload("res://assets/buildings/quaternius_medieval/T_Brick_BaseColor.png"))
-	material.set_shader_parameter("normal_tex",preload("res://assets/buildings/quaternius_medieval/T_Brick_Normal.png"))
-	material.set_shader_parameter("rough_tex",preload("res://assets/buildings/quaternius_medieval/T_Brick_Roughness.png"))
-	var tint_key := "trim_tint" if trim else "stone_tint"
-	material.set_shader_parameter("tint",Color(str(surface.get(tint_key, "#f1f0e6" if trim else "#d6e2f0"))))
-	var defaults := {"tile":0.28, "moss_amount":0.16, "up_moss":0.28,
-		"streak_strength":0.12, "macro_strength":0.18, "stone_strength":0.08,
-		"joint_threshold":0.14, "joint_softness":0.04}
-	for key: String in ["tile", "moss_amount", "up_moss", "streak_strength", "macro_strength", "stone_strength", "joint_threshold", "joint_softness"]:
-		material.set_shader_parameter(key, float(surface.get(key, defaults[key])))
+	material.set_shader_parameter("albedo_tex",preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png"))
+	material.set_shader_parameter("normal_tex",preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png"))
+	material.set_shader_parameter("rough_tex",preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png"))
+	material.set_shader_parameter("tint",Color("#b7b19e") if trim else Color("#8d927f"))
+	material.set_shader_parameter("tile",0.28)
+	material.set_shader_parameter("moss_amount",0.43)
+	material.set_shader_parameter("up_moss",0.35)
+	material.set_shader_parameter("streak_strength",0.24)
 	# Shared by architecture on six altitudes; do not treat lower realms as
 	# submerged beneath the summit's damp band.
 	material.set_shader_parameter("damp_strength",0.0)
@@ -28,7 +24,7 @@ static func masonry(trim: bool=false, surface: Dictionary={}) -> ShaderMaterial:
 ## Same installed stone family, with exposed highland stone separated from
 ## the darker occupied route wings. Config owns the visual tuning.
 static func aviary_masonry(trim: bool, surface: Dictionary) -> ShaderMaterial:
-	var material := masonry(trim, surface)
+	var material := masonry(trim)
 	var tint_key := "trim_tint" if trim else "stone_tint"
 	material.set_shader_parameter("tint", Color(str(surface.get(tint_key, "#b9b8aa"))))
 	for key: String in ["moss_amount", "up_moss", "streak_strength", "macro_strength", "tile"]:

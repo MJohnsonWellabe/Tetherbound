@@ -61,7 +61,6 @@ directional_shadow_max_distance = 420.0
 script = ExtResource("7_look")
 sun_path = NodePath("../Sun")
 environment_path = NodePath("../WorldEnvironment")
-realm_look_path = "res://data/config/cloudreach_look.json"
 
 [node name="CameraRig" type="SpringArm3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 60, 0)

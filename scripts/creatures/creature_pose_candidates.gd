@@ -49,9 +49,6 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 	var clips := original.duplicate(true)
 	var profiles: Dictionary = _data.get("profiles", {})
 	var roles: Dictionary = profiles.get(str(recipe.get("profile", "")), {})
-	var rotations_before: Array[Quaternion] = []
-	for bone_index in skeleton.get_bone_count():
-		rotations_before.append(skeleton.get_bone_pose_rotation(bone_index))
 	for role: String in roles:
 		var spec: Dictionary = roles[role]
 		var animation := Animation.new()
@@ -73,99 +70,18 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 			var rolled := pivot_before.basis * Basis(Vector3.BACK, deg_to_rad(float(frame.pivot_roll_deg)))
 			var position := pivot_before.origin
 			if role == "faint":
-				# The fitted bind envelope leaves folded bodies hovering. Sample
-				# the actual skin at this key, then translate without rescaling.
-				for bone: String in recipe.bones:
-					var bone_index := skeleton.find_bone(bone)
-					var degrees: Array = frame.bones[bone]
-					var delta := Quaternion.from_euler(Vector3(float(degrees[0]), float(degrees[1]), float(degrees[2])) * PI / 180.0)
-					var rest := skeleton.get_bone_rest(bone_index).basis.get_rotation_quaternion()
-					skeleton.set_bone_pose_rotation(bone_index, (rest * delta).normalized())
-				skeleton.force_update_all_bone_transforms()
-				var lowest := _posed_lowest_y(model, skeleton, rolled)
-				position.y = -lowest if is_finite(lowest) else -(Transform3D(rolled, Vector3.ZERO) * box).position.y
+				# Ground the rolled fitted envelope, rather than lifting by the
+				# gameplay radius (which ignores long/wide imported silhouettes).
+				# Native posed-vertex/slope contact remains a required visual proof.
+				var rolled_box := Transform3D(rolled, Vector3.ZERO) * box
+				position.y = -rolled_box.position.y
 			var time := float(frame.phase) * animation.length
 			animation.rotation_track_insert_key(rotation_track, time, rolled.get_rotation_quaternion())
 			animation.position_track_insert_key(position_track, time, position)
 		library.add_animation(StringName(role), animation)
 		clips[role] = "%s/%s" % [LIBRARY, role]
-	for bone_index in rotations_before.size():
-		skeleton.set_bone_pose_rotation(bone_index, rotations_before[bone_index])
-	skeleton.force_update_all_bone_transforms()
 	if player.has_animation_library(LIBRARY):
 		player.remove_animation_library(LIBRARY)
 	player.add_animation_library(LIBRARY, library)
 	body.set_meta("f36_pose_candidate_installed", true)
 	return clips
-
-
-static func _posed_lowest_y(model: Node3D, skeleton: Skeleton3D, root_basis: Basis) -> float:
-	return float(_posed_floor_contact(model, skeleton, root_basis).all_min_y)
-
-
-static func _posed_floor_contact(model: Node3D, skeleton: Skeleton3D, root_basis: Basis) -> Dictionary:
-	var lowest := INF
-	var torso_lowest := INF
-	var torso_vertices := 0
-	# The installed auto-rigs weight much of the body to neck. Restrict core
-	# samples to the anatomical pelvis-to-neck band in the bind pose so a head,
-	# wing tip, paw or tail cannot stand in for contact of the torso/flank.
-	var pelvis := skeleton.find_bone("pelvis")
-	var neck := skeleton.find_bone("neck")
-	var torso_start := skeleton.get_bone_global_rest(pelvis).origin if pelvis >= 0 else Vector3.ZERO
-	var torso_axis := skeleton.get_bone_global_rest(neck).origin - torso_start if neck >= 0 else Vector3.ZERO
-	var torso_length_sq := torso_axis.length_squared()
-	var root_pose := Transform3D(root_basis, Vector3.ZERO)
-	for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
-		var mesh := raw as MeshInstance3D
-		if mesh.mesh == null or not mesh.visible:
-			continue
-		var skin := mesh.skin
-		var palette: Array[Transform3D] = []
-		var rest_palette: Array[Transform3D] = []
-		var core_binds: Array[bool] = []
-		if skin != null and BOUNDS._skeleton_for(mesh) == skeleton:
-			for bind_index in skin.get_bind_count():
-				var bone := skin.get_bind_bone(bind_index)
-				if bone < 0:
-					bone = skeleton.find_bone(skin.get_bind_name(bind_index))
-				palette.append(skeleton.get_bone_global_pose(bone) * skin.get_bind_pose(bind_index)
-					if bone >= 0 and bone < skeleton.get_bone_count() else Transform3D.IDENTITY)
-				rest_palette.append(skeleton.get_bone_global_rest(bone) * skin.get_bind_pose(bind_index)
-					if bone >= 0 and bone < skeleton.get_bone_count() else Transform3D.IDENTITY)
-				core_binds.append(bone >= 0 and bone < skeleton.get_bone_count()
-					and skeleton.get_bone_name(bone) in ["pelvis", "spine", "neck"])
-		var skin_pose := root_pose * BOUNDS._chain(skeleton, model)
-		var plain_pose := root_pose * BOUNDS._render_transform(mesh, model)
-		for surface in mesh.mesh.get_surface_count():
-			var arrays := mesh.mesh.surface_get_arrays(surface)
-			var vertices := arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array
-			var bones: Variant = arrays[Mesh.ARRAY_BONES]
-			var weights: Variant = arrays[Mesh.ARRAY_WEIGHTS]
-			var weighted: bool = not palette.is_empty() and bones is PackedInt32Array \
-				and weights is PackedFloat32Array and not vertices.is_empty() \
-				and bones.size() == weights.size() and bones.size() % vertices.size() == 0
-			var stride := int(bones.size() / vertices.size()) if weighted else 0
-			for index in vertices.size():
-				var posed := Vector3.ZERO
-				var bind_point := Vector3.ZERO
-				var core_weight := 0.0
-				var total := 0.0
-				for influence in stride:
-					var offset := index * stride + influence
-					var bind_index := int(bones[offset])
-					var weight := float(weights[offset])
-					if weight > 0.0 and bind_index >= 0 and bind_index < palette.size():
-						posed += (palette[bind_index] * vertices[index]) * weight
-						bind_point += (rest_palette[bind_index] * vertices[index]) * weight
-						if core_binds[bind_index]:
-							core_weight += weight
-						total += weight
-				var at := skin_pose * (posed / total) if total > 0.0 else plain_pose * vertices[index]
-				lowest = minf(lowest, at.y)
-				if total > 0.0 and core_weight / total >= 0.65 and torso_length_sq > 0.000001:
-					var along := (bind_point / total - torso_start).dot(torso_axis) / torso_length_sq
-					if along >= 0.0 and along <= 1.0:
-						torso_lowest = minf(torso_lowest, at.y)
-						torso_vertices += 1
-	return {"all_min_y": lowest, "torso_min_y": torso_lowest, "torso_vertices": torso_vertices}

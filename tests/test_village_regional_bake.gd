@@ -163,51 +163,6 @@ func test_stable_generation_restores_old_bitset_prefix_and_empty_layer_bounds() 
 	var before := FileAccess.get_sha256(root.path_join("manifest.json"))
 	assert_eq(str(BAKE.write_regions("playground",{}, {},256,7,[[0,0]],root).code),"legacy_order_not_dense")
 	assert_eq(FileAccess.get_sha256(root.path_join("manifest.json")),before)
-	# The full Stormwood writer shares the proven identity/transaction path,
-	# without borrowing the village's bounded-source authorization.
-	root = "user://stormwood-full-identity-%d" % Time.get_ticks_usec()
-	DirAccess.make_dir_recursive_absolute(root)
-	_write(root.path_join("manifest.json"),JSON.stringify({"base_seed":7,"region_size":512,
-		"config_fingerprint":37,"regions":[[0,0]]}))
-	BAKE._write_region(root.path_join("region_0_0.bin"),{"trees":{"kept":old,"drained":[]}})
-	var result := BAKE.write_all("stormwood",{"trees":[_placement(20),_placement(23),_placement(28)]},
-		{},512,7,38,true,root)
-	assert_true(bool(result.get("ok",false)),str(result))
-	assert_true(BAKE.is_full_generation_usable("stormwood",7,38,root))
-	assert_false(BAKE.is_full_generation_usable("stormwood",7,37,root),"old full fingerprint cannot pass new source")
-	assert_false(BAKE.is_full_generation_usable("playground",7,38,root),"village never gains a full-generation bypass")
-	assert_eq(int(TERRAIN.read_manifest(root).config_fingerprint),37,"original provenance remains historical")
-	rows = {}
-	BAKE._read_region(FileAccess.open(root.path_join("region_0_0.bin"),FileAccess.READ),rows,{})
-	assert_eq((rows.trees as Array).map(func(row: Dictionary) -> int: return int(row.order)),[0,3,8],
-		"matched original keys survive removal/reorder; additions start above original seven")
-	bounds = BAKE.stable_identity_bounds(TERRAIN.read_manifest(root))
-	vegetation = VEGETATION.new()
-	vegetation._mark_harvestable({"trees":BAKE._reorder(rows.trees,true,int(bounds.trees))},bounds)
-	vegetation.restore_from_game(game)
-	assert_eq(vegetation.get("_harvested").trees,PackedByteArray([129,0]),"old durable bits remain attached to old identities")
-	vegetation.free()
-	assert_true(bool(BAKE.write_all("stormwood",{},{},512,7,39,true,root).get("ok",false)))
-	assert_eq(int(BAKE.stable_identity_bounds(TERRAIN.read_manifest(root)).trees),9,"fully retired layer keeps bitset bounds")
-	assert_true(BAKE.is_full_generation_usable("stormwood",7,39,root),"complete empty region is hashed too")
-	var intact_manifest := FileAccess.get_file_as_string(root.path_join("manifest.json"))
-	var forged := TERRAIN.read_manifest(root)
-	forged.identity_high_water.trees = 0
-	_write(root.path_join("manifest.json"),JSON.stringify(forged))
-	assert_false(BAKE.is_full_generation_usable("stormwood",7,39,root),"lowered retired bound cannot pass intact region hashes")
-	assert_eq(str(BAKE.write_all("stormwood",{}, {},512,7,40,true,root).get("code")),"corrupt_full_identity_generation")
-	_write(root.path_join("manifest.json"),intact_manifest)
-	assert_true(bool(BAKE.write_all("stormwood",{"trees":[_placement(40)]},{},512,7,40,true,root).get("ok",false)))
-	rows = {}
-	BAKE._read_region(FileAccess.open(root.path_join("region_0_0.bin"),FileAccess.READ),rows,{})
-	assert_eq(int(rows.trees[0].order),9,"full regeneration cannot reuse a retired slot")
-	assert_true(bool(BAKE.write_all("stormwood",{"trees":[_placement(40),_placement(-20)]},{},512,7,41,true,root).get("ok",false)))
-	assert_true(BAKE.is_full_generation_usable("stormwood",7,41,root),"new cell sorting before base catalog remains usable")
-	assert_false(BAKE.is_full_generation_usable("stormwood",8,41,root),"foreign seed refused")
-	_write(root.path_join("region_0_0.bin"),"corrupt complete-catalog bytes")
-	assert_false(BAKE.is_full_generation_usable("stormwood",7,41,root),"full hashes cannot be bypassed by source freshness")
-	assert_eq(str(BAKE.write_all("stormwood",{}, {},512,7,41,true,root).get("code")),
-		"corrupt_full_identity_generation","damaged prior identities are never reinterpreted")
 
 
 

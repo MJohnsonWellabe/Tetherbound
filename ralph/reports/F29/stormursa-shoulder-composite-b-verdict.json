@@ -1,9 +1,0 @@
-{
-  "agent": "/root/judge_stormursa_anatomy",
-  "scope": "all4neutral+8stressDCC views",
-  "rest_fit_sweep": "BLOCK",
-  "deformation_continuity": "PASS bounded",
-  "whole_identity_material_quality": "BLOCK",
-  "reason": "Rigid glass/copper retains shape across all4poses; no new tears/grossintersections. Upright ornaments/exposed hollow arch/abruptroots remain. Coarse triangular fur,muddy separation/residualcopperpatches/no fineseams failheldreference. Native unassessed; secondfitfailed; stopandre-scope.",
-  "shipping_enabled": false
-}

@@ -24,9 +24,7 @@ Order of operations, and why:
      heat — at the cost of destroying UVs, which these preview meshes do not
      have yet. Texturing happens AFTER cleanup (Meshy retexture re-unwraps),
      so nothing of value is lost. Do NOT run this on an already-textured
-     model. A separate-output --skin-donor instead discards materials on a
-     temporary weight donor only; skin_transfer.py keeps the textured original
-     surface. The donor is never a replacement art asset.
+     model.
   4. Smooth-corrective pass: voxel remesh leaves a faint lego-surface; one
      gentle smooth restores the sculpt read without melting edges.
   5. Decimate to the triangle target, shade smooth, normalise transforms.
@@ -37,8 +35,6 @@ manual pass. This gets the mesh through texturing, rigging and the visual
 gate without lying about being production topology.
 """
 
-import hashlib
-import json
 import math
 import pathlib
 import sys
@@ -104,7 +100,15 @@ def longest_axis(obj: bpy.types.Object) -> float:
     return max(high - low)
 
 
-def components(mesh: bmesh.types.BMesh) -> list[list[int]]:
+def merge_and_deburr(body: bpy.types.Object) -> tuple[int, int]:
+    mesh = bmesh.new()
+    mesh.from_mesh(body.data)
+
+    before = len(mesh.verts)
+    bmesh.ops.remove_doubles(mesh, verts=mesh.verts, dist=MERGE_DISTANCE)
+    merged = before - len(mesh.verts)
+
+    # Debris islands, found by flood fill, removed outright.
     mesh.verts.ensure_lookup_table()
     unvisited = set(v.index for v in mesh.verts)
     islands = []
@@ -120,37 +124,6 @@ def components(mesh: bmesh.types.BMesh) -> list[list[int]]:
                     stack.append(other)
                     members.append(other)
         islands.append(members)
-    return islands
-
-
-def primary_geometry(body: bpy.types.Object) -> tuple:
-    """Exact positions and oriented faces, independent of exporter indices."""
-    mesh = bmesh.new()
-    mesh.from_mesh(body.data)
-    primary = set(max(components(mesh), key=len))
-    positions = sorted(tuple(mesh.verts[i].co) for i in primary)
-    faces = []
-    for face in mesh.faces:
-        if not all(v.index in primary for v in face.verts):
-            continue
-        points = tuple(tuple(v.co) for v in face.verts)
-        # Cyclic index rotation is equivalent; reversed winding is not.
-        faces.append(min(points[i:] + points[:i] for i in range(len(points))))
-    mesh.free()
-    return tuple(positions), tuple(sorted(faces))
-
-
-def merge_and_deburr(body: bpy.types.Object, weld: bool = True) -> tuple[int, int]:
-    mesh = bmesh.new()
-    mesh.from_mesh(body.data)
-
-    before = len(mesh.verts)
-    if weld:
-        bmesh.ops.remove_doubles(mesh, verts=mesh.verts, dist=MERGE_DISTANCE)
-    merged = before - len(mesh.verts)
-
-    # Debris islands, found by flood fill, removed outright.
-    islands = components(mesh)
 
     total = len(mesh.verts)
     keep_threshold = max(total * DEBRIS_FRACTION, 4)
@@ -204,23 +177,9 @@ def main() -> None:
     # which is how it was finally pinned on the remesh rather than on thin
     # walls). Decimation alone preserves the topology it is given.
     skip_voxel = "--skip-voxel" in args
-    debris_only = "--debris-only" in args
-    skin_donor = "--skin-donor" in args
-    if skin_donor and (model == out or debris_only or skip_voxel):
-        raise SystemExit("--skin-donor requires a separate voxel-remeshed output; "
-                         "never overwrite the textured original or combine modes")
-    if debris_only and model == out:
-        raise SystemExit("--debris-only requires a separate output; preserve the input")
 
     load(model)
-    if debris_only:
-        meshes = [o for o in bpy.data.objects if o.type == "MESH"]
-        if len(meshes) != 1:
-            raise SystemExit("--debris-only requires one already-exported mesh; no join or transform normalization")
-        body = meshes[0]
-        original_transform = tuple(tuple(row) for row in body.matrix_world)
-    else:
-        body = join_all()
+    body = join_all()
 
     # The remesh destroys UVs, so a TEXTURED model in is a textured model
     # ruined. But the guard is on textures, not on UV layers: Meshy's preview
@@ -231,34 +190,16 @@ def main() -> None:
         node.type == "TEX_IMAGE" and node.image
         for material in bpy.data.materials if material.use_nodes
         for node in material.node_tree.nodes)
-    if textured and not skin_donor:
+    if textured:
         raise SystemExit(f"{model.name} carries image textures — refusing to "
                          f"voxel-remesh a textured model. Run cleanup before texturing.")
-    if skin_donor:
-        # This process-local copy only supplies weights. The original textured
-        # file remains the skin_transfer target, preserving its UVs/materials.
-        body.data.materials.clear()
-        print("SKIN DONOR ONLY: materials discarded on temporary output; "
-              "textured original preserved; never ship this donor")
 
     before_tris = sum(len(p.vertices) - 2 for p in body.data.polygons)
-    original_primary = primary_geometry(body) if debris_only else None
-    merged, debris = merge_and_deburr(body, weld=not debris_only)
-    if not skip_voxel and not debris_only:
+    merged, debris = merge_and_deburr(body)
+    if not skip_voxel:
         voxel_remesh(body, divisor)
-    if not debris_only:
-        decimate_to(body, target)
-        bpy.ops.object.shade_smooth()
-    elif body.data.validate(verbose=True):
-        raise SystemExit("--debris-only still contains invalid mesh data; refusing export")
-    if skin_donor:
-        # Remesh/decimation can leave duplicate or degenerate faces. Repair
-        # only this disposable donor before exporting it for bone heat.
-        repaired = body.data.validate(verbose=True, clean_customdata=False)
-        body.data.update()
-        if body.data.validate(clean_customdata=False):
-            raise SystemExit("--skin-donor remains invalid after validation; refusing export")
-        print(f"SKIN DONOR validation repaired={repaired}")
+    decimate_to(body, target)
+    bpy.ops.object.shade_smooth()
 
     after_tris = sum(len(p.vertices) - 2 for p in body.data.polygons)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -266,34 +207,9 @@ def main() -> None:
     body.select_set(True)
     bpy.ops.export_scene.gltf(filepath=str(out), export_format="GLB", use_selection=True)
 
-    if debris_only:
-        load(out)
-        exported = [o for o in bpy.data.objects if o.type == "MESH"]
-        if len(exported) != 1:
-            raise SystemExit("--debris-only export changed the mesh count")
-        exported_primary = primary_geometry(exported[0])
-        exported_transform = tuple(tuple(row) for row in exported[0].matrix_world)
-        if original_primary != exported_primary or original_transform != exported_transform:
-            raise SystemExit("--debris-only changed primary positions or oriented faces after export")
-        report = {
-            "mode": "debris_only_no_weld_voxel_smooth_decimation",
-            "input_sha256": hashlib.sha256(model.read_bytes()).hexdigest(),
-            "output_sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
-            "primary_vertices": len(original_primary[0]),
-            "primary_faces": len(original_primary[1]),
-            "primary_exact_positions_and_oriented_faces_unchanged": True,
-            "primary_exact_object_transform_unchanged": True,
-            "deleted_debris_vertices": debris,
-            "output_triangles": after_tris,
-        }
-        report_path = option(args, "--report")
-        if report_path:
-            pathlib.Path(report_path).write_text(json.dumps(report, indent=2) + "\n")
-        print(json.dumps(report))
-
     print(f"\n{model.name}: {before_tris:,} tris -> {after_tris:,}")
     print(f"  {merged} duplicate verts merged, {debris} debris verts removed, "
-          f"{'debris only; primary geometry verified after export' if debris_only else 'decimated only (--skip-voxel)' if skip_voxel else f'voxel-remeshed to one manifold surface (divisor {divisor:g})'}")
+          f"{'decimated only (--skip-voxel)' if skip_voxel else f'voxel-remeshed to one manifold surface (divisor {divisor:g})'}")
     print(f"  -> {out}")
 
 
