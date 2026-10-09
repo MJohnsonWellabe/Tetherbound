@@ -1,0 +1,25 @@
+{
+  "total_count": 1,
+  "artifacts": [
+    {
+      "id": 11612294613,
+      "node_id": "MDg6QXJ0aWZhY3QxMTYxMjI5NDYxMw==",
+      "name": "render-e-7227-station-cadence-37923291341",
+      "size_in_bytes": 2079,
+      "url": "https://api.github.com/repos/MJohnsonWellabe/Tetherbound/actions/artifacts/11612294613",
+      "archive_download_url": "https://api.github.com/repos/MJohnsonWellabe/Tetherbound/actions/artifacts/11612294613/zip",
+      "expired": false,
+      "digest": "sha256:bdd8bac0872e3169ed65756774a2ae35da671b41ddc99bb8f5fd84437106c981",
+      "created_at": "2026-10-09T11:24:16Z",
+      "updated_at": "2026-10-09T11:24:16Z",
+      "expires_at": "2026-10-16T11:24:16Z",
+      "workflow_run": {
+        "id": 37923291341,
+        "repository_id": 1319534705,
+        "head_repository_id": 1319534705,
+        "head_branch": "main",
+        "head_sha": "7dd4a777fbc11ce62c6747248b96d53e4a27a099"
+      }
+    }
+  ]
+}

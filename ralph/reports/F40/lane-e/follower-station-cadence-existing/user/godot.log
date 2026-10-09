@@ -1,0 +1,25 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_follower_floor_station.gd: 1 of 826 test files
+  ok    test_follower_floor_station.gd :: test_airborne_trainer_snap_skips_the_floor_rules
+  ok    test_follower_floor_station.gd :: test_default_snap_keeps_an_ordinary_seat
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _tick_follow (res://scripts/creatures/follower_creature.gd:276)
+       [1] test_no_verified_station_closes_on_the_trainer_and_stops_clear (res://tests/test_follower_floor_station.gd:123)
+       [2] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] face_towards (res://scripts/creatures/creature_body.gd:2694)
+       [1] _tick_follow (res://scripts/creatures/follower_creature.gd:276)
+       [2] test_no_verified_station_closes_on_the_trainer_and_stops_clear (res://tests/test_follower_floor_station.gd:123)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_follower_floor_station.gd :: test_no_verified_station_closes_on_the_trainer_and_stops_clear
+  ok    test_follower_floor_station.gd :: test_stopping_following_releases_the_footprint_exception
+  ok    test_follower_floor_station.gd :: test_validator_places_the_leash_snap
+  ok    test_follower_floor_station.gd :: test_validator_station_steers_and_is_not_rechecked_every_frame
+  ok    test_follower_floor_station.gd :: test_without_a_validator_the_station_is_unchanged
+
+7 tests, 21 assertions, 0 failed
