@@ -1,0 +1,35 @@
+{
+  "scope": "Bounded integration regression fix; no new whole feature or criterion credit.",
+  "source_commit": "3a981f021b1a943f918a276e29ef62efe6907745",
+  "path": "tests/smoke_net_split_realms.gd",
+  "change": "Existing host deploy_creature fixture passes owned:true, registering its disclosed Terrapup through existing PartySeam.add and real Game.party before canonical wild admission. Same deployment phase, five-creature cap, realm sequence, clocks and original assertions retained. No production/Session/Director/peer_runner edits.",
+  "notice_comment": 6074722792,
+  "source_review": {
+    "original_reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "review_turn": "01a11f13-4167-7713-964d-c774f04c83f6",
+    "verdict": "SOURCE / PROOF-SCOPE APPROVE",
+    "required_proof": "Existing headless tests/smoke_net_split_realms.gd including successful host engagement and all original realm-isolation assertions; no additional unit batch."
+  },
+  "proof": {
+    "checkout_sha": "3a981f021b1a943f918a276e29ef62efe6907745",
+    "run_id": 37887635636,
+    "artifact_id": 11597302228,
+    "job_id": 113681104241,
+    "script": "tests/smoke_net_split_realms.gd",
+    "mode": "headless",
+    "extra_args": [],
+    "checks": 49,
+    "failures": 0,
+    "exit": 0,
+    "raw_log": "ralph/reports/F25/downloads/a-split-realms-owned-fixture-37887635636/raw/run.log",
+    "log_sha256": "4e2fe9b66c556fca01b8b6f859397fe2b9bf4a0bab6a61494128e95661425e8e",
+    "actual_path": "Host deploys its actual owned creature and engages Bramblebun canonical encounter1:1 bound after0frames while Cloudreach shell remains active. All49 original crossing, registry, world-record, scene, shell-density, isolation and stale-node checks pass.",
+    "disclosed_fixture": "Original legacy_physical_crossings_fixture for split_realms remains enabled in the isolated debug peers. No claim about current campaign crossing UX or earned boundary saves."
+  },
+  "artifact_review": {
+    "review_turn": "01a11f1f-53a4-7050-923e-8f13ee91fdc6",
+    "verdict": "ARTIFACT APPROVE; scoped owned:true hunk eligible for integration. No further proof required for this hunk."
+  },
+  "limits": "Integrate only scoped3a981 hunk, not unrelated lane ancestry. ExactPR592 FullCI37883884033 separately FAILED; this narrow proof does not certify whole feature/FullCI/main activation/publication. No failed save or synthetic boundary promoted; no native/GPU run."
+}
