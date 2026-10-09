@@ -222,6 +222,8 @@ func _run() -> void:
 		quit(await finish())
 		return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 3600.0 * 1000.0
+	var host_commands: bool = OS.get_cmdline_user_args().has("--prove-host-tether-commands")
+	var command_setup_peer: int = 0 if host_commands else 1
 	for i in 2:
 		_ok(await step(i, "op_tonic_candidate"), "tonic: process-local candidate gates before world boot")
 		if not _ok(await step(i, "boot", {"scene": "world"}, BUILD_BUDGET), "SETUP: peer %d boots its own Meadows world" % i):
@@ -229,9 +231,10 @@ func _run() -> void:
 			return
 		await step(i, "dismiss_dialogue", {})
 		_ok(await step(i, "party_grant", {"species": "terrapup", "level": 8}), "SETUP: peer %d owns a terrapup" % i)
-		if i == 1 and OS.get_cmdline_user_args().has("--prove-tag-combo"):
-			_ok(await step(i, "party_grant", {"species":"ripplet", "level":8}), "Tag SETUP: guest owns one additional healthy companion before admission")
-	_ok(await step(1, "op_tonic_supply"), "tonic: guest saves its initial two-item stock before admission")
+		if (host_commands and i == 0) or (not host_commands and i == 1 \
+			and OS.get_cmdline_user_args().has("--prove-tag-combo")):
+			_ok(await step(i, "party_grant", {"species":"ripplet", "level":8}), "Tag SETUP: peer %d owns one additional healthy companion before admission" % i)
+	_ok(await step(command_setup_peer, "op_tonic_supply"), "tonic: peer %d saves its initial two-item stock before admission" % command_setup_peer)
 	if not _ok(await step(0, "host"), "peer 0 hosts"):
 		quit(await finish())
 		return
