@@ -1,0 +1,361 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-09T04:10:59.917740+00:00",
+  "source_commit": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+  "runtime_verdict": "REJECT / FAILED INCOMPLETE QUARTER",
+  "packet_path": "D:\\CodexTemp\\tetherbound-proof\\native-e-cdecc1afe1-cloudreach-quarters-r1",
+  "original_output_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1",
+  "actual_start": {
+    "output": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/f40-cluster-high-cdecc-night-r1",
+    "pid": 15176,
+    "fresh_user_directory": "D:/CodexTemp/tetherbound-proof/native-e-cdecc1afe1-cloudreach-quarters-r1/matrix-night-home",
+    "deadline_minutes": 45,
+    "args": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_matrix.gd",
+      "--",
+      "--biome=cloudreach",
+      "--preset=High",
+      "--source-commit=cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+      "--segment=night",
+      "--output=res://.tmp/f40-cluster-high-cdecc-night-r1"
+    ],
+    "started_utc": "2026-10-09T03:44:18.7640024Z",
+    "source": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+    "segment": "night",
+    "preset": "High"
+  },
+  "actual_terminal": {
+    "reason": "process_exit",
+    "segment": "night",
+    "pid": 15176,
+    "preset": "High",
+    "exit_code": -1073741795,
+    "ended_utc": "2026-10-09T03:54:48.6824105Z",
+    "source": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455"
+  },
+  "reported_wrapper_exit": 1,
+  "pid_discrepancy": "Task supplied PID19252; immutable start and terminal both bind PID15176. This report uses actual matching receipts.",
+  "source_binding": {
+    "before_after_source": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+    "before_after_head_index_tree": "06508685d93b66953459a818958ac0f821570859",
+    "after_tracked_clean": true,
+    "after_index_clean": true,
+    "untracked_history_retained": [
+      "?? ralph/reports/F38/lane-d/exterior-cluster/",
+      "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+      "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+      "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+    ],
+    "limits": "Frozen before/after receipts bind the capture; later cached checkout changes are not this run."
+  },
+  "manifest": {
+    "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\manifest.json",
+    "sha256": "c81396142c67b785478ad1b7ca45c2427282ef54f21d5e45c765018177bc2171",
+    "complete": false,
+    "failures": [],
+    "incremental_format_limit": "No final captured_frame_count or full_matrix_complete field in this interrupted progress manifest; empty failures[] does not supersede process crash or complete=false.",
+    "recorded_frames": 12,
+    "selected_planned_frames": 96,
+    "selected_equals_planned_ids": true,
+    "full_matrix_planned_frames": 384,
+    "missing_frames": 84,
+    "missing_frame_ids": [
+      "cloudreach__broken_causeways__03__three_bells_bridge__approach__night__clear",
+      "cloudreach__broken_causeways__03__three_bells_bridge__approach__night__rain",
+      "cloudreach__broken_causeways__03__three_bells_bridge__detail__night__clear",
+      "cloudreach__broken_causeways__03__three_bells_bridge__detail__night__rain",
+      "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__night__clear",
+      "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__night__rain",
+      "cloudreach__broken_causeways__03__three_bells_bridge__reverse__night__clear",
+      "cloudreach__broken_causeways__03__three_bells_bridge__reverse__night__rain",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__approach__night__clear",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__approach__night__rain",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__clear",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__detail__night__rain",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__gameplay__night__clear",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__gameplay__night__rain",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__reverse__night__clear",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__reverse__night__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__night__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__detail__night__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__night__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__night__rain",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__night__clear",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__night__rain",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__night__clear",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__night__rain",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__night__clear",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__night__rain",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__night__clear",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__night__rain",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__night__clear",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__night__rain",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__night__clear",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__night__rain",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__clear",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__rain",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__night__clear",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__night__rain",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__night__clear",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__night__rain",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__night__clear",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__night__rain",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__clear",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__rain",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__night__clear",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__night__rain",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__night__clear",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__night__rain",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__night__clear",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__night__rain",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__night__clear",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__night__rain",
+      "cloudreach__upper_cloudreach__09__cliffhold__approach__night__clear",
+      "cloudreach__upper_cloudreach__09__cliffhold__approach__night__rain",
+      "cloudreach__upper_cloudreach__09__cliffhold__detail__night__clear",
+      "cloudreach__upper_cloudreach__09__cliffhold__detail__night__rain",
+      "cloudreach__upper_cloudreach__09__cliffhold__gameplay__night__clear",
+      "cloudreach__upper_cloudreach__09__cliffhold__gameplay__night__rain",
+      "cloudreach__upper_cloudreach__09__cliffhold__reverse__night__clear",
+      "cloudreach__upper_cloudreach__09__cliffhold__reverse__night__rain",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__night__clear",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__night__rain",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__detail__night__clear",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__detail__night__rain",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__rain",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__night__clear",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__night__rain",
+      "cloudreach__windscar_ravine__05__windscar_beacon__approach__night__clear",
+      "cloudreach__windscar_ravine__05__windscar_beacon__approach__night__rain",
+      "cloudreach__windscar_ravine__05__windscar_beacon__detail__night__clear",
+      "cloudreach__windscar_ravine__05__windscar_beacon__detail__night__rain",
+      "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__night__clear",
+      "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__night__rain",
+      "cloudreach__windscar_ravine__05__windscar_beacon__reverse__night__clear",
+      "cloudreach__windscar_ravine__05__windscar_beacon__reverse__night__rain",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__approach__night__clear",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__approach__night__rain",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__detail__night__clear",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__detail__night__rain",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__night__clear",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__night__rain",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__reverse__night__clear",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__reverse__night__rain"
+    ],
+    "candidate_preview": false,
+    "stormward_approach_only": false,
+    "graphics_capture": {
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+      "preset": "High",
+      "renderer": "forward_plus",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "source_commit": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455"
+    }
+  },
+  "saved_subset_integrity": {
+    "disposition": "APPROVE individual saved byte/record provenance only; not quarter PASS or visual approval",
+    "unique_record_png_pairs": 12,
+    "unique_ids": [
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__night__clear",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__night__clear",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__night__clear",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__night__rain",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__night__rain",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__rain",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__night__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__night__clear",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__night__clear",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__night__clear",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__detail__night__clear"
+    ],
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "all_sha256_match_integrity_receipt": true,
+    "all_record_bytes_and_filenames_match_originals": true,
+    "all_png_chunk_crc_valid": true,
+    "verified_crc_chunks": 2750,
+    "total_bytes": 22218088,
+    "originals": [
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__night__clear.png",
+        "sha256": "54ba73ca59417616a0a89f00bdeb1503b42e3ac587958f332abc6ee6fd7a0075",
+        "bytes": 2011035,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true,
+        "decoded": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__night__rain.png",
+        "sha256": "a058028c49f7d03ded1775af33993488c805c3921957e0795abb1372d16bc854",
+        "bytes": 1796734,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true,
+        "decoded": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__night__clear.png",
+        "sha256": "e53ca5fa6193dc1ca9f1871eef1756d53dcdfbf7410517ed87082cd74b04a238",
+        "bytes": 1897585,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true,
+        "decoded": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__night__rain.png",
+        "sha256": "eea8224d0fd0b90f200155198c3f2b868b13acd6e17a735e6217944ec893d198",
+        "bytes": 1727960,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true,
+        "decoded": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__night__clear.png",
+        "sha256": "5581424d58741f64eb63b28405d84557c0f33fbd6b9c39d7d4f4942a4de4a0e6",
+        "bytes": 1869097,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true,
+        "decoded": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__night__rain.png",
+        "sha256": "f14d704c7ae92b9541e4ea73ca8cf2ce3657a2bb20851a4e5e9a3b439c523c1f",
+        "bytes": 1691490,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true,
+        "decoded": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear.png",
+        "sha256": "962607b7001fc77c69d0c5f9b4abcad6dae530e454c84e572d79f31d18a516bd",
+        "bytes": 1570130,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true,
+        "decoded": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__rain.png",
+        "sha256": "0668258b22ccf34a5c0bd4cc4559a8939cfa78bc061fbb45732d6e2574620245",
+        "bytes": 1343537,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true,
+        "decoded": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__night__clear.png",
+        "sha256": "f15cdc33cd9ce238cf077364ae86cd6e5e86e7f17637e6ed6d7ce58bf49fdfcb",
+        "bytes": 2069561,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true,
+        "decoded": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__detail__night__clear.png",
+        "sha256": "1be4edff1890f940971129bab8aa25b83d66ad3d300be26cf1b93011fdd6c344",
+        "bytes": 2136886,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true,
+        "decoded": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__night__clear.png",
+        "sha256": "5ae51695af6d84a9deb4f73c59d95a2b4036f2f4ef3a22ae699227835dc95d66",
+        "bytes": 2024853,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true,
+        "decoded": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-night-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__night__clear.png",
+        "sha256": "a451519a81e8e32adf06515847fc7535be7689da227519ac4d631e16a340fc58",
+        "bytes": 2079220,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true,
+        "decoded": true
+      }
+    ],
+    "recorded_controls": "All twelve trainer/debug_travel/on_floor true; production CameraRig/Camera3D; requested/observed night clocks23.0075236133333..23.0085634920635, requested/observed weather agrees (8clear/4rain).",
+    "coverage": "Realm Gate Crag all8 views/weather; Galefoot Waycamp four clear views. Remaining84 absent."
+  },
+  "diagnostics": {
+    "engine": "Godot4.7.stable.official.5b4e0cb0f",
+    "renderer": "Vulkan1.3.280 Forward+ NVIDIA GeForce GTX1060 3GB",
+    "warnings": "Two existing fail-closed Cloudreach wild-site placement warnings retained.",
+    "failure": "Actual stderr reports Vulkan device lost at command_queue_execute_and_present rendering_device_driver_vulkan.cpp:3263 and CrashHandlerException signal4, with C++ backtrace.",
+    "cause_limit": "No specific driver, hardware, game, or shader cause inferred from device-lost diagnostic/breadcrumbs.",
+    "engine_exit": -1073741795,
+    "wrapper_exit_reported": 1,
+    "warning_lines": [
+      "WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)",
+      "WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)"
+    ]
+  },
+  "receipt_log_hashes": {
+    "matrix-night-start.json": "5a12e9184efe900d88fbf2e511f0c2d24a4730c055d9359dae8e5fe9ccd78cd3",
+    "matrix-night-terminal.json": "7813328c8e726b830cc6ad7e9548659e417cf2e73821b4cbc1f4f01e7b527d09",
+    "source-before-night.json": "e906d08c912c815b69efe14b593997d6228d4996da374180607af18360926bb9",
+    "source-after-night.json": "4ab1e6cd68801d6891cb08dbd3f2bc228e50e68b1b26864936068b17381f76d5",
+    "matrix-night-failed-summary.json": "d675261808bf4b194d1861161d8ee1550389147c29a4636c6985e9f8088ebb72",
+    "matrix-night-partial-image-integrity.json": "67fc89a397c7abb546b351e0c2207a4b89c360c63f55d98d0cd23aa99b355ef9",
+    "matrix-night.stdout.log": "9ebf6092f611c3263ba1806e774c8ed96ece63831a4841767a8255a5498929ae",
+    "matrix-night.stderr.log": "959c6b0a54aefd7abc45cdd0e4aea0d717eb26e7bc2dfd4bae8e669c4642d72b"
+  },
+  "remaining_gates": [
+    "Night quarter incomplete/OPEN:84 required frames absent; no replay or partial promotion.",
+    "Current corrected scenery/prompt/wall/VFX not inferred from historical cdecc subset.",
+    "Whole F40#3/#5/F08#3 and F40#0 rows remain OPEN; prior fullHigh/day/fight visual FAILs remain.",
+    "No earned campaign/save/co-op/device/performance or art-bar claim; no judge contact or pixel judgment."
+  ]
+}

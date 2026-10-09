@@ -1,0 +1,1548 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-09T03:34:21.500219+00:00",
+  "verdict": "APPROVE",
+  "scope": "Actual completed High day quarter provenance/runtime only. Accepted cdecc source/command/3tests141 artifact and c427/3f7/e51 relevant pieces reused without new source or visual audit.",
+  "source_commit": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+  "source_tree": "06508685d93b66953459a818958ac0f821570859",
+  "packet": "D:\\CodexTemp\\tetherbound-proof\\native-e-cdecc1afe1-cloudreach-quarters-r1",
+  "raw_originals": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1",
+  "actual_terminal": {
+    "ended_utc": "2026-10-09T03:22:26.3920468Z",
+    "pid": 19272,
+    "exit_code": 0,
+    "reason": "process_exit",
+    "source": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+    "segment": "day",
+    "preset": "High"
+  },
+  "actual_start_argv": {
+    "preset": "High",
+    "started_utc": "2026-10-09T03:08:10.5634135Z",
+    "args": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_matrix.gd",
+      "--",
+      "--biome=cloudreach",
+      "--preset=High",
+      "--source-commit=cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+      "--segment=day",
+      "--output=res://.tmp/f40-cluster-high-cdecc-day-r1"
+    ],
+    "source": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+    "fresh_user_directory": "D:/CodexTemp/tetherbound-proof/native-e-cdecc1afe1-cloudreach-quarters-r1/matrix-day-home",
+    "output": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/f40-cluster-high-cdecc-day-r1",
+    "deadline_minutes": 45,
+    "segment": "day",
+    "pid": 19272
+  },
+  "source_binding": {
+    "before_import": {
+      "tracked_clean": true,
+      "source": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+      "head_tree": "06508685d93b66953459a818958ac0f821570859",
+      "declared_capture_artifacts_only": true,
+      "observed_utc": "2026-10-09T03:03:28.4615409Z",
+      "index_clean": true,
+      "status": [
+        "?? ralph/reports/F38/lane-d/exterior-cluster/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+      ],
+      "index_tree": "06508685d93b66953459a818958ac0f821570859"
+    },
+    "after_import_revalidated": {
+      "leaf_import_exact_git_blob": "7a64fbc99550b442aa24cf680fa18be4a8b8bada",
+      "declared_capture_artifacts_only": true,
+      "index_tree": "06508685d93b66953459a818958ac0f821570859",
+      "source": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+      "index_clean": true,
+      "status": [
+        "?? ralph/reports/F38/lane-d/exterior-cluster/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+      ],
+      "wrapper_failure_retained": true,
+      "observed_utc": "2026-10-09T03:08:09.3686939Z",
+      "tracked_clean": true,
+      "head_tree": "06508685d93b66953459a818958ac0f821570859"
+    },
+    "before_day": {
+      "status": [
+        "?? ralph/reports/F38/lane-d/exterior-cluster/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+      ],
+      "index_tree": "06508685d93b66953459a818958ac0f821570859",
+      "observed_utc": "2026-10-09T03:08:10.5634135Z",
+      "expected_capture_artifacts_only": true,
+      "source": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+      "head_tree": "06508685d93b66953459a818958ac0f821570859"
+    },
+    "after_day": {
+      "status": [
+        "?? ralph/reports/F38/lane-d/exterior-cluster/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+      ],
+      "index_clean": true,
+      "head_tree": "06508685d93b66953459a818958ac0f821570859",
+      "tracked_clean": true,
+      "observed_utc": "2026-10-09T03:25:46.3629860Z",
+      "index_tree": "06508685d93b66953459a818958ac0f821570859",
+      "declared_capture_artifacts_only": true,
+      "source": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455"
+    },
+    "independent_identity": "Frozen source/head/index tree values equal actual local Git object tree of cdecc. Tracked/index cleanliness at start/end retained; status includes declared historical F38/lane-d output and a990/e51 High/Medium fight directories. This is not silently relabelled wholly empty status. Ignored .tmp raw day output remains at its original URI. ROOT repins cached checkout after these receipts; later/current HEAD is not a capture pin and was not queried.",
+    "import_history": {
+      "terminal": {
+        "ended_utc": "2026-10-09T03:04:25.7012104Z",
+        "reason": "process_exit",
+        "exit_code": 0,
+        "mode": "Import",
+        "pid": 19676,
+        "capture_index": 0,
+        "source": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455"
+      },
+      "status_failure": {
+        "head_blob": "7a64fbc99550b442aa24cf680fa18be4a8b8bada",
+        "supervisor_exit": 1,
+        "actual_file_sha256": "bdf0caf6ae059c42e91814f83881ac13bded9dbab4b52302a266c95b51ef932d",
+        "leaf_path": "assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png.import",
+        "engine_exit": 0,
+        "failure": "Post-import status briefly reported leaf import settings modified; normalized worktree Git blob equals exact approved HEAD, no textual source delta",
+        "source": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+        "work_blob": "7a64fbc99550b442aa24cf680fa18be4a8b8bada",
+        "observed_utc": "2026-10-09T03:08:08.6914164Z",
+        "no_source_restore_or_edit": true
+      },
+      "disposition": "Engine import physically exited0/no engine errors or warnings. Import supervisor status guard initially failed1 because leaf import text was reported modified; this original failure is preserved. Captured normalized work blob7a64fbc99550b442aa24cf680fa18be4a8b8bada equals already approved cdecc HEAD import blob, and original post-import revalidation and pre-day tracked/index-clean tree receipts bind exact source before native launch. No new source restore/edit/import rerun or retroactive supervisorPASS is invented."
+    }
+  },
+  "actual_receipt": {
+    "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\manifest.json",
+    "sha256": "d568f07ecd141907d5f3ab8ba28c14fe4b7dcbc221a964611696d71cb75eb5c3",
+    "complete": true,
+    "failures": [],
+    "segment": "day",
+    "planned_frame_count": 96,
+    "captured_frame_count": 96,
+    "full_matrix_planned_frames": 384,
+    "full_matrix_complete": false,
+    "required_segments": [
+      "dawn",
+      "day",
+      "golden",
+      "night"
+    ],
+    "candidate_preview": false,
+    "stormward_approach_only": false,
+    "graphics_capture": {
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+      "preset": "High",
+      "renderer": "forward_plus",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "source_commit": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455"
+    },
+    "resolution": [
+      1920,
+      1080
+    ],
+    "rendering_method": "forward_plus",
+    "candidate_config_sha256": "eb8ed955d34b6ef8c708452e3251934832a13f1f97efd0e0b8a36b5f9c9bd553",
+    "capture_plan": {
+      "approach_offset_m": 12.0,
+      "authored_stands": {
+        "broken_skyroad_arch": {
+          "approach": {
+            "basis": "Existing south threshold on the 32m ledge centred at local z-4, inside its 15.04m flat crown; generic 12m extension passed beyond the severed road's edge. This is a threshold approach, not a distant route view.",
+            "position_xz": [
+              350.0,
+              1923.0
+            ],
+            "view_heading_deg": 0.0
+          },
+          "detail": {
+            "basis": "Existing flat crown, 5.83m from ledge centre (350,1936), approaching the gateway on the same south threshold. Original generic detail offset was outside its flat crown.",
+            "position_xz": [
+              353.0,
+              1931.0
+            ],
+            "view_heading_deg": -18.435
+          },
+          "gameplay": {
+            "basis": "Existing flat crown, 10.30m from ledge centre (350,1936), facing the arch. Native4ff found original catalogue gameplay/reverse/detail stands below the drawn crown; floor checks remain mandatory.",
+            "position_xz": [
+              355.0,
+              1927.0
+            ],
+            "view_heading_deg": -21.04
+          },
+          "reverse": {
+            "basis": "Same supported gameplay stand, reversed production-camera bearing; no independent convenient reverse placement.",
+            "position_xz": [
+              355.0,
+              1927.0
+            ],
+            "view_heading_deg": 158.96
+          }
+        },
+        "galefoot_waycamp": {
+          "approach": {
+            "basis": "Existing arrival_gate_road level entry and 48m SettlementWalkableTerrace; north-facing arrival. Generic backwards offset left the terrace at z545.88.",
+            "position_xz": [
+              -280.0,
+              502.0
+            ],
+            "view_heading_deg": 0.0
+          }
+        },
+        "stormward_overlook": {
+          "approach": {
+            "basis": "Existing summit_overlook_loop incoming centreline from (-520,1080,5300) to (-420,1110,5650), sixteen metres before its endpoint, on the aligned 32m-wide OverlookWalkableCrown and inside the landmark's registered 17m half-span. This is a threshold approach facing along the route. Native6413 dawn refused the generic twelve-metre look-bearing offset at (-416.745658,5622.065737), outside both the registered threshold and incoming road ribbon. Travel, floor and drawn-crown guards remain unchanged.",
+            "position_xz": [
+              -424.395539,
+              5634.615617
+            ],
+            "view_heading_deg": 15.945396
+          }
+        },
+        "three_bells_bridge": {
+          "approach": {
+            "basis": "Existing broken_causeway_main incoming centreline toward (-540,330,1280), before the bridge turn; previous offset followed the look bearing sideways off the ribbon.",
+            "position_xz": [
+              -526.89,
+              1265.65
+            ],
+            "view_heading_deg": 48.4
+          }
+        },
+        "windscar_flight_aerie": {
+          "approach": {
+            "basis": "Existing windscar_floor_loop incoming ground segment from (120,520,3380) to (373,610,3262.5357), twelve metres back along its centreline, facing the launch compass at (400,610,3250). Generic backwards look-bearing offset left this narrow ground route.",
+            "position_xz": [
+              362.11,
+              3267.59
+            ],
+            "view_heading_deg": 115.04
+          }
+        }
+      },
+      "detail_offset_m": 3.0,
+      "fight_fixture_level": 44.0,
+      "minimum_frames": 200.0,
+      "seed": 2042.0,
+      "times": [
+        "dawn",
+        "day",
+        "golden",
+        "night"
+      ],
+      "views": [
+        "approach",
+        "gameplay",
+        "reverse",
+        "detail"
+      ],
+      "weather": [
+        "clear",
+        "rain"
+      ],
+      "weather_settle_frames": 24.0
+    },
+    "selected_frame_ids": [
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__day__clear",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__day__clear",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__day__clear",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__detail__day__clear",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__day__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__day__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__day__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__detail__day__rain",
+      "cloudreach__broken_causeways__03__three_bells_bridge__approach__day__clear",
+      "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__day__clear",
+      "cloudreach__broken_causeways__03__three_bells_bridge__reverse__day__clear",
+      "cloudreach__broken_causeways__03__three_bells_bridge__detail__day__clear",
+      "cloudreach__broken_causeways__03__three_bells_bridge__approach__day__rain",
+      "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__day__rain",
+      "cloudreach__broken_causeways__03__three_bells_bridge__reverse__day__rain",
+      "cloudreach__broken_causeways__03__three_bells_bridge__detail__day__rain",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__approach__day__clear",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__gameplay__day__clear",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__reverse__day__clear",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__detail__day__clear",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__approach__day__rain",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__gameplay__day__rain",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__reverse__day__rain",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__detail__day__rain",
+      "cloudreach__windscar_ravine__05__windscar_beacon__approach__day__clear",
+      "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__clear",
+      "cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__clear",
+      "cloudreach__windscar_ravine__05__windscar_beacon__detail__day__clear",
+      "cloudreach__windscar_ravine__05__windscar_beacon__approach__day__rain",
+      "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__rain",
+      "cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__rain",
+      "cloudreach__windscar_ravine__05__windscar_beacon__detail__day__rain",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__approach__day__clear",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__day__clear",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__reverse__day__clear",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__detail__day__clear",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__approach__day__rain",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__day__rain",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__reverse__day__rain",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__detail__day__rain",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__day__clear",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__day__clear",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__day__clear",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__day__clear",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__day__rain",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__day__rain",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__day__rain",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__day__rain",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__day__clear",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__day__clear",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__day__clear",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__day__clear",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__day__rain",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__day__rain",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__day__rain",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__day__rain",
+      "cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear",
+      "cloudreach__upper_cloudreach__09__cliffhold__gameplay__day__clear",
+      "cloudreach__upper_cloudreach__09__cliffhold__reverse__day__clear",
+      "cloudreach__upper_cloudreach__09__cliffhold__detail__day__clear",
+      "cloudreach__upper_cloudreach__09__cliffhold__approach__day__rain",
+      "cloudreach__upper_cloudreach__09__cliffhold__gameplay__day__rain",
+      "cloudreach__upper_cloudreach__09__cliffhold__reverse__day__rain",
+      "cloudreach__upper_cloudreach__09__cliffhold__detail__day__rain",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__day__clear",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__day__clear",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__day__clear",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__detail__day__clear",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__day__rain",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__day__rain",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__day__rain",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__detail__day__rain",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__day__clear",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__day__clear",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__day__clear",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__day__clear",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__day__rain",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__day__rain",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__day__rain",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__day__rain",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__day__clear",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__day__clear",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__day__clear",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__day__rain",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__day__rain",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__day__rain"
+    ],
+    "planned_frame_ids": [
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain",
+      "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__day__clear",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__day__clear",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__day__clear",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__detail__day__clear",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__day__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__day__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__day__rain",
+      "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__detail__day__rain",
+      "cloudreach__broken_causeways__03__three_bells_bridge__approach__day__clear",
+      "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__day__clear",
+      "cloudreach__broken_causeways__03__three_bells_bridge__reverse__day__clear",
+      "cloudreach__broken_causeways__03__three_bells_bridge__detail__day__clear",
+      "cloudreach__broken_causeways__03__three_bells_bridge__approach__day__rain",
+      "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__day__rain",
+      "cloudreach__broken_causeways__03__three_bells_bridge__reverse__day__rain",
+      "cloudreach__broken_causeways__03__three_bells_bridge__detail__day__rain",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__approach__day__clear",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__gameplay__day__clear",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__reverse__day__clear",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__detail__day__clear",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__approach__day__rain",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__gameplay__day__rain",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__reverse__day__rain",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__detail__day__rain",
+      "cloudreach__windscar_ravine__05__windscar_beacon__approach__day__clear",
+      "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__clear",
+      "cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__clear",
+      "cloudreach__windscar_ravine__05__windscar_beacon__detail__day__clear",
+      "cloudreach__windscar_ravine__05__windscar_beacon__approach__day__rain",
+      "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__rain",
+      "cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__rain",
+      "cloudreach__windscar_ravine__05__windscar_beacon__detail__day__rain",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__approach__day__clear",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__day__clear",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__reverse__day__clear",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__detail__day__clear",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__approach__day__rain",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__day__rain",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__reverse__day__rain",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__detail__day__rain",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__day__clear",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__day__clear",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__day__clear",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__day__clear",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__day__rain",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__day__rain",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__day__rain",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__day__rain",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__day__clear",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__day__clear",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__day__clear",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__day__clear",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__day__rain",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__day__rain",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__day__rain",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__day__rain",
+      "cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear",
+      "cloudreach__upper_cloudreach__09__cliffhold__gameplay__day__clear",
+      "cloudreach__upper_cloudreach__09__cliffhold__reverse__day__clear",
+      "cloudreach__upper_cloudreach__09__cliffhold__detail__day__clear",
+      "cloudreach__upper_cloudreach__09__cliffhold__approach__day__rain",
+      "cloudreach__upper_cloudreach__09__cliffhold__gameplay__day__rain",
+      "cloudreach__upper_cloudreach__09__cliffhold__reverse__day__rain",
+      "cloudreach__upper_cloudreach__09__cliffhold__detail__day__rain",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__day__clear",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__day__clear",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__day__clear",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__detail__day__clear",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__day__rain",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__day__rain",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__day__rain",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__detail__day__rain",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__day__clear",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__day__clear",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__day__clear",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__day__clear",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__day__rain",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__day__rain",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__day__rain",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__day__rain",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__day__clear",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__day__clear",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__day__clear",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__day__rain",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__day__rain",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__day__rain"
+    ],
+    "binding": "Actual raw bytes match frozen summary manifest digest exactly. complete=true/failures[] is for96day rows only, while full384 remains explicitly incomplete. Selected/planned/saved IDs match exactly in order and no duplicate ID exists."
+  },
+  "image_verification": {
+    "actual_original_pngs": 96,
+    "unique_image_record_pairs": 96,
+    "actual_dimensions": [
+      1920,
+      1080
+    ],
+    "total_bytes": 195534190,
+    "actual_crc_chunks_verified": 24168,
+    "method": "Independently read every original PNG; signature/IHDR dimensions, recorded byte count/SHA256 and every chunk CRC through required zero-length IEND and exact EOF verified. Actual all96 manifest IDs/original filenames/byte counts match all96 integrity records and all96 original stdout CATALOGUE CAPTURE path lines.",
+    "individual_original_integrity": [
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__03__three_bells_bridge__approach__day__clear.png",
+        "sha256": "e1ed836ab3e690a562ca6f2bce087ec63eb9d40c0c12dbde5583e1ac8b6836b4",
+        "bytes": 2474472,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__03__three_bells_bridge__approach__day__rain.png",
+        "sha256": "53a03235e6fa3a150841b5372de823f730550bdc3aa768f1d2bcfe2594ea740c",
+        "bytes": 2053338,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__03__three_bells_bridge__detail__day__clear.png",
+        "sha256": "845f7ff71364b5680a6072a9b75b8300b8f9d956c6d6a81136247e521bbe5bbd",
+        "bytes": 2208560,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__03__three_bells_bridge__detail__day__rain.png",
+        "sha256": "4d25cd8d7b213b78d86635f14818f1c2808ff44ce897ec5ed3bc8c6c67bc6890",
+        "bytes": 1710830,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__03__three_bells_bridge__gameplay__day__clear.png",
+        "sha256": "15db6aea56b291d1a8d35434f77ccdeba0830a248411bbbfb2b5ef36353a99d7",
+        "bytes": 2319581,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__03__three_bells_bridge__gameplay__day__rain.png",
+        "sha256": "55b565e33effbed6b5c6262d6104d077b1949f0ccf55b0cfdcd73bd2353fe2f7",
+        "bytes": 1838704,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__03__three_bells_bridge__reverse__day__clear.png",
+        "sha256": "1f26f7a388ffc59d1d6765c93c51ed79496fa4e3f584764be41f755f73bbb1e3",
+        "bytes": 2411668,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__03__three_bells_bridge__reverse__day__rain.png",
+        "sha256": "176a692041402eac7f016042e34e1b9b77a31734a8fa4709ad61ac46d3a853be",
+        "bytes": 1945806,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__04__broken_skyroad_arch__approach__day__clear.png",
+        "sha256": "0d319f8762bc4c7e5dda9aea22ad6a8894baba98fa111988c785f426ff8dfca1",
+        "bytes": 2548990,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__04__broken_skyroad_arch__approach__day__rain.png",
+        "sha256": "07551767120b1489bc2ccf877baf69c878b75cb42c2345b720c3022aa840cbe1",
+        "bytes": 1882374,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__04__broken_skyroad_arch__detail__day__clear.png",
+        "sha256": "eaed69205c308295901bf7bfbb17badbbb4c61f649d50fb393ff61a0f0d64cca",
+        "bytes": 2562867,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__04__broken_skyroad_arch__detail__day__rain.png",
+        "sha256": "dd01fe7124918b03a358035f85064f4358a1236d391ccc272f5a935bd0caf26b",
+        "bytes": 1954782,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__04__broken_skyroad_arch__gameplay__day__clear.png",
+        "sha256": "525a9ac08e7811492580ba70452afdb2b7c1a1c63c068058484ad3b34fbd879c",
+        "bytes": 2494370,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__04__broken_skyroad_arch__gameplay__day__rain.png",
+        "sha256": "059b1b1fd66cfcf45fe1dae5c443cc343680b8c23c6ee67043b67e654ecc9573",
+        "bytes": 1880713,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__04__broken_skyroad_arch__reverse__day__clear.png",
+        "sha256": "acb2034d47650707cebf1daec5388c581ca0b2bb93032ac75a05bd4add8af5e6",
+        "bytes": 1504470,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__broken_causeways__04__broken_skyroad_arch__reverse__day__rain.png",
+        "sha256": "f4e4be028d5bd6766a8c4e423a4c0bac0bb31ca7b80861de3fd7054de0ee5660",
+        "bytes": 1160020,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.png",
+        "sha256": "5f9d6445e3befc31e434bbfe239fddb38cb83344af9ed01f0a34fa37f99cde71",
+        "bytes": 2272983,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.png",
+        "sha256": "97c8f5091a7d0e83f84a91916de7d28fe2b9b42a869260849d9d80101b2fd865",
+        "bytes": 1991196,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.png",
+        "sha256": "a43a5ee5b3501c2fde6aa88e188e7669b91c423de246da9522489d59948cdadd",
+        "bytes": 2121004,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.png",
+        "sha256": "ea28962f1647669454c28c3bf5d1d178370db54cf75cbc54f8158695a76039f3",
+        "bytes": 1894675,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.png",
+        "sha256": "ce83e62599178d7ec21d98155eff65989f1d61da9098f6c7435e2c9880c141ab",
+        "bytes": 2121470,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.png",
+        "sha256": "4e7364fada2ebda9444833273066e9489bf61719d5609e55befa6f32a315e7cc",
+        "bytes": 1861350,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.png",
+        "sha256": "c778816e37da43bb34a4a080afa7e748e6db078bdc6609fe9a1f245aac993f89",
+        "bytes": 1696695,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.png",
+        "sha256": "90e58c2759d031bddc0dd1b2403ae0fcb01c8cdf309e08cf7b2739b199de9c6d",
+        "bytes": 1528760,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__day__clear.png",
+        "sha256": "88cacd8699398f72d0e413b9c7e878c62d12bf0c84b590cea778f2099a6e5902",
+        "bytes": 2428770,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__day__rain.png",
+        "sha256": "9c020d19d3b6831841ce2d29ca1a06b64e73f9a9a58ae185e19307d0756cf4c5",
+        "bytes": 2101948,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__detail__day__clear.png",
+        "sha256": "75338e9b21fdb70242d0acbca2fe72315eae2fc9e967cec83192a4f598a35eb6",
+        "bytes": 2265256,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__detail__day__rain.png",
+        "sha256": "2bd1475a97e57d735873f242dc2997bf42b4ee8acfcfe66999b7d2c66318b0ee",
+        "bytes": 1991081,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__day__clear.png",
+        "sha256": "adaa25cbb06bd8bac73b5d7469a9ebc15db3a6a4beeb5b2061e6604b077db534",
+        "bytes": 2249126,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__day__rain.png",
+        "sha256": "cd057d09c06e140236a90d1d208377a44e92f42e4e0731ddc15771270a5b1dfb",
+        "bytes": 1957358,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__day__clear.png",
+        "sha256": "c3984b124e1be7c26b766707f68991d38e622f06475a43912e07ba1ddb78fb91",
+        "bytes": 2362375,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__day__rain.png",
+        "sha256": "78c22657be0f55549a948ee9fc79507806ec696d4324111016737d8c650198c1",
+        "bytes": 1989492,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__day__clear.png",
+        "sha256": "877e3c42d3a62c50f5eb1242d97fe7ed0e6281927bbba33a33a6d73859c3f1e0",
+        "bytes": 1826055,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__day__rain.png",
+        "sha256": "948340f6bc2b538168a5865c6a52cf48ea7c7bd730ff43af3e3049911a380198",
+        "bytes": 1530280,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__day__clear.png",
+        "sha256": "2640ea83b75fab82fcc5f530be997fdb292a47bfc210937910f7fdd66e519c22",
+        "bytes": 1326036,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__day__rain.png",
+        "sha256": "f5f769e842af2b7c8558e1962c95dadff1d1385179648a4b9505ecd197e6c859",
+        "bytes": 1191699,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__day__clear.png",
+        "sha256": "dfd46f9263cc8dbdbbc51a57b4bca46ddb2efb478e175e6bd64f0733a626b2d0",
+        "bytes": 1459420,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__day__rain.png",
+        "sha256": "5763e4016cf6dfd113f65630341ce4d778ffb6b039d35526d4c4fcb2676a3720",
+        "bytes": 1281394,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__day__clear.png",
+        "sha256": "d4139f7dfb2f7f7ae0760cfbd24afe15e04688e30b7bf6ff51e13bfba5df365f",
+        "bytes": 2221301,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__day__rain.png",
+        "sha256": "724da26595ec5c8fc9e566d1e71ba646154591dbc51382f81cc80f5b5ed076d4",
+        "bytes": 1882674,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__day__clear.png",
+        "sha256": "8f0d56ba732709ce5b6a34f6eaa1e875e25a042756d3257636cf5c3e85b19a87",
+        "bytes": 2280495,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__day__rain.png",
+        "sha256": "50ffcf9361ceb5384c03da28abf6e1b266bff4ad0ba77b8720528767f35c6b15",
+        "bytes": 1888769,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__day__clear.png",
+        "sha256": "e6b0b3b619bf6a0503bf86255f1d98052edb087b49c10308852af16c7f198d5a",
+        "bytes": 2483946,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__day__rain.png",
+        "sha256": "45aa4c31ad2a732e32c7607045a243ad90aab2848d1e80084aca22a48d174e72",
+        "bytes": 1822783,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__day__clear.png",
+        "sha256": "060ad20b0dc676c1b4fead37f53d22bdf5ef2f9872e432820485e9b133e5aaf4",
+        "bytes": 2541803,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__day__rain.png",
+        "sha256": "bf9b8005fc8c35350f3689e09378660a197367324149e5c2f0e38517296a923e",
+        "bytes": 1838799,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__day__clear.png",
+        "sha256": "00f48f5ed2df9c28ef33c5b8c62938e19596bc4275c55516b8e501fd8d9738aa",
+        "bytes": 2350139,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__day__rain.png",
+        "sha256": "15986213fd3841df95c594c547245c65cee33d249ee07349fb33f5c99982c5d4",
+        "bytes": 1788822,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__11__summit_eyrie__approach__day__clear.png",
+        "sha256": "b28d52b20df57770a677bdfbb64d568f89d13e42fab44d6c40e6ea2ad32a7465",
+        "bytes": 2611333,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__11__summit_eyrie__approach__day__rain.png",
+        "sha256": "41617598718bb8a4ed5faac5634f5be9be78cdbdf1f4b6c3bcd67ff87aeaf2ee",
+        "bytes": 2197919,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__11__summit_eyrie__detail__day__clear.png",
+        "sha256": "7c6d8f04a07038722babc403a67ee69243bee6637c85f89084de811fb134c021",
+        "bytes": 2572493,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__11__summit_eyrie__detail__day__rain.png",
+        "sha256": "3eb871f9347b710e2a603f3236b8170a4323601955b2b949bea8f26f14d1fc8a",
+        "bytes": 2160605,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__day__clear.png",
+        "sha256": "68670640a1e5334efeabd38655650ab5995f4e4bb198e88ba7031420489c5546",
+        "bytes": 2526247,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__day__rain.png",
+        "sha256": "6c6ce32cc02113273654ea3fd3ac976279ffa2472df51fdeb20c2da3b665aff7",
+        "bytes": 2140795,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__day__clear.png",
+        "sha256": "ba120029f8694bf28992efb1a76c311a0c175b80bd672487817c05a53aa29ae0",
+        "bytes": 2686294,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__day__rain.png",
+        "sha256": "b5da16290f51ab13e3034a6b2d170d43ba4d9567e0dfae99aef6a7d8e0eaa0b0",
+        "bytes": 2227648,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear.png",
+        "sha256": "d53986e6c97979334ad74f530e53c1462c26e29de8869f554bd93e3c5e6287e1",
+        "bytes": 2598154,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain.png",
+        "sha256": "611f59a15c08236e1074e01e3e49e5f958c37b4f8f97cb15b1637437bbfdf4f5",
+        "bytes": 2081856,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__detail__day__clear.png",
+        "sha256": "079a8a991e7e010f9bd21225c1199010c39e7835998a9fdd6e06e348a2365bf8",
+        "bytes": 2480168,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__detail__day__rain.png",
+        "sha256": "4b2710dfe3a035498ba45d1d1429135af73d120ba198d2ee1461187096a3d445",
+        "bytes": 1974551,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__day__clear.png",
+        "sha256": "e85fc6ae560e230d288bd6c72e89142d7cc4bb4e8c2bd5de0d84bbfaa5879cd2",
+        "bytes": 2438221,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__day__rain.png",
+        "sha256": "47dc4487ba7bdcf0bbadfae1af849b462efd51bb5e2d93a7527de02e130442aa",
+        "bytes": 1883663,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__day__clear.png",
+        "sha256": "76eb7d694c6a8f106bf27032011c8e568edaea048bdec9445ac74b81d5d97d3b",
+        "bytes": 2033653,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__day__rain.png",
+        "sha256": "1f1c1bf59947b9cffa2e187224c29d523a4ac67018798552329726c557606f05",
+        "bytes": 1544096,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear.png",
+        "sha256": "d84e94fad85798d0bd3f88667b4c2326da7874c0afe16ce86abcf3435c9ba1f4",
+        "bytes": 2491534,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__09__cliffhold__approach__day__rain.png",
+        "sha256": "d623621fda81b74f09f866096eb908f90e503f469df173cbb10957e3a68b5904",
+        "bytes": 1992809,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__09__cliffhold__detail__day__clear.png",
+        "sha256": "e16e13ce2c0b749d233569129f03a9510c2ebdd6f101a5545799e33d4ec32a2f",
+        "bytes": 2521526,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__09__cliffhold__detail__day__rain.png",
+        "sha256": "eec74006b42a2237f990eb35705fb2e033a55d577674a1e1213d5c3f13d51d0a",
+        "bytes": 2107677,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__09__cliffhold__gameplay__day__clear.png",
+        "sha256": "fb1b183f2da67fbb1526a27cc17ff9a3771438cdcebb04bbdf89d411a888ab90",
+        "bytes": 2594751,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__09__cliffhold__gameplay__day__rain.png",
+        "sha256": "5c7820ab80412cffc76311c77c57545c49918f7e02ec4c3b4c5f8a74fcd6d6a1",
+        "bytes": 2115130,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__09__cliffhold__reverse__day__clear.png",
+        "sha256": "3b44776d3a10443e659f3f5b0e356c53e823b87f183733c41965a0ce6dc972ee",
+        "bytes": 2330543,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__09__cliffhold__reverse__day__rain.png",
+        "sha256": "736ff146dad032e5bdccda61e4963ed4daac081b71a615694a102ff615976aa2",
+        "bytes": 1978901,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__10__old_wind_observatory__approach__day__clear.png",
+        "sha256": "8392c18695c0db9a84a55df595c4f70f9c902ad6d445b22bd1dd86c6726a22cf",
+        "bytes": 2648246,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__10__old_wind_observatory__approach__day__rain.png",
+        "sha256": "b77f40ce64befa8a9791a27af4087f1d89549fb7703da3d492748efbe6a5dfbd",
+        "bytes": 1999544,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__10__old_wind_observatory__detail__day__clear.png",
+        "sha256": "25216bc1816725a6dd08230778417bbed151f3a4dc1c604dbcfec0af2bf3f12b",
+        "bytes": 1972112,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__10__old_wind_observatory__detail__day__rain.png",
+        "sha256": "90e4c13db7fe15ae468ca052e9fe84fc847aaa0fd3824a2fafbb9b159d4d7aa5",
+        "bytes": 1795860,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__day__clear.png",
+        "sha256": "6a72a6fad3ede2b1f80f50d874b8fc1c777c953a67be9b420224d4e0c012ae9d",
+        "bytes": 2067309,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__day__rain.png",
+        "sha256": "861ea16f6a8ac349815dfe08cbfb1a9543adb63d757bd786b4cbc2e0049463a3",
+        "bytes": 1872919,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__day__clear.png",
+        "sha256": "5438bc619891dd00a311ae4a4c7e491484f6d201e37ac134eab0994c4731d23e",
+        "bytes": 1839731,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__day__rain.png",
+        "sha256": "33c636c5ede6f1ee1fa339b83afcc65105abf64ed3ffb0486389b7ec7fae6267",
+        "bytes": 1772336,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__05__windscar_beacon__approach__day__clear.png",
+        "sha256": "851be4e246355dffe8fb6ee13589064afce9a83a88af0c6928334b845fbe6d32",
+        "bytes": 2309324,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__05__windscar_beacon__approach__day__rain.png",
+        "sha256": "679afac350ceeca765001e6f0b9e68bfa5b75784075cd1487b8cb19ba4ee39bd",
+        "bytes": 1749282,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__05__windscar_beacon__detail__day__clear.png",
+        "sha256": "780ed76b6bbea5306816f1b336442baa85d8c5ba4334920f783b9564a6dcbc34",
+        "bytes": 2383237,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__05__windscar_beacon__detail__day__rain.png",
+        "sha256": "09a9ea44ee736a082bdf2376798160f7853b1f5ad092c5c42de9bba000a1fb71",
+        "bytes": 1796554,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__clear.png",
+        "sha256": "6c5e8a8ac783f0b73d7f18253110ca68156a79d5f50b86137228a581d3f46238",
+        "bytes": 2331652,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__rain.png",
+        "sha256": "a383b5f6ffc78f7927bb7749ecdd17743b73f6077ac13d68c42ac10aef3357b2",
+        "bytes": 1763410,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__clear.png",
+        "sha256": "b998cbaecf75f411c390a7a26a200ed31c7cc24edfea466afae290d3ebc3e30d",
+        "bytes": 1976789,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__rain.png",
+        "sha256": "87fa5ecd42d6042bd92ce6027d674f6390b61cb55228d590dd314d16d77d8ae4",
+        "bytes": 1623066,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__06__windscar_flight_aerie__approach__day__clear.png",
+        "sha256": "a0733559e909090168afa17cb0693b619d5265265cd7740c50746080e0457e9c",
+        "bytes": 2098456,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__06__windscar_flight_aerie__approach__day__rain.png",
+        "sha256": "750625e66bb578a0a3c96d1f3954cad85aba5047e6954e301edb20e3d5344ec6",
+        "bytes": 1536964,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__06__windscar_flight_aerie__detail__day__clear.png",
+        "sha256": "e49565c37bd55551b77a91d0bc4ff913240b3f9babe9f5bd914ee027b36acc2b",
+        "bytes": 1870052,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__06__windscar_flight_aerie__detail__day__rain.png",
+        "sha256": "8baee1de86ae1a39fee0d795d235e09b979a9602a1077a3afde91879caee0a59",
+        "bytes": 1350560,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__day__clear.png",
+        "sha256": "992ca86dbd9bd59febd1f5ea5f7877fc712c39a01d7240391592bef2e88d6b7b",
+        "bytes": 1937180,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__day__rain.png",
+        "sha256": "e679c988d33113d8d144a592b99bf0113d7492431af0fa0cf31fb96fb5e0c3dc",
+        "bytes": 1372395,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__06__windscar_flight_aerie__reverse__day__clear.png",
+        "sha256": "7be9882642b8be657a35378d3cf7c0ba80ab2f7e60007bbe5cf959c2765ddaa5",
+        "bytes": 2160523,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-cdecc-day-r1\\cloudreach__windscar_ravine__06__windscar_flight_aerie__reverse__day__rain.png",
+        "sha256": "5a50829a8f10beda56b2cdf4ddfc41c85c5ec6c2b529c591349c5b0c3e9c1d2d",
+        "bytes": 1516623,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      }
+    ],
+    "original_uri_prefix": "res://.tmp/f40-cluster-high-cdecc-day-r1/"
+  },
+  "actual_coverage": {
+    "destinations": {
+      "1": 8,
+      "2": 8,
+      "3": 8,
+      "4": 8,
+      "5": 8,
+      "6": 8,
+      "7": 8,
+      "8": 8,
+      "9": 8,
+      "10": 8,
+      "11": 8,
+      "12": 8
+    },
+    "view_counts": {
+      "approach": 24,
+      "gameplay": 24,
+      "reverse": 24,
+      "detail": 24
+    },
+    "weather_counts": {
+      "clear": 48,
+      "rain": 48
+    },
+    "unique_destination_view_weather_tuples": 96,
+    "clock": "All96 record.time=day,observed_clock.requested=day,time_of_day=day. Actual hour range8.00637135111111..8.00924052, not an invented frozen exact8.0. Actual recorded weather agrees across requested/observed/weather-scope fields for everyframe.",
+    "stand_basis": "All16 repeated clear/rain authored-plan records match exact requested XZ/heading in capture_plan; actual player drift from requested recorded XZ at most0.00014517645266161694m. Generic stand plan/guards unchanged source reused; no new favorable stands.",
+    "physical_camera": "All96 debug_travel=true,on_floor=true,trainer identity,trainer_visible_intent=true; actual camera_transform.origin equals camera_position and Euclidean player-camera distance agrees with recorded distance within.001m. Max actual playerY vsresolvedGround difference0.93664550781m within retained3m guard. Production CameraRig SpringArm3D margin/shape and actual CameraRig/Camera3D FOV/near/far/instance receipts present. Manifest intent is not pixel visibility/absence of occlusion.",
+    "legacy_metadata_limit": "requested_times=[day,night] legacy field retained. Explicit quarter/capture_plan four-clock declaration,96selected/planned/actualday IDs and observed day clocks govern this actual quarter; stale broad legacy field is not promoted to night coverage."
+  },
+  "camera_provenance": {
+    "bound_player_character": "trainer",
+    "camera_rig": {
+      "class": "SpringArm3D",
+      "has_shape": true,
+      "instance_id": 486774148181,
+      "margin": 0.600000023841858,
+      "path": "CameraRig",
+      "spring_length": 5.19999980926514
+    },
+    "production_camera": {
+      "far": 3500.0,
+      "fov": 70.0,
+      "instance_id": 486790925399,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D"
+    },
+    "capture_camera": {
+      "far": 3500.0,
+      "fov": 70.0,
+      "instance_id": 486790925399,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D",
+      "source": "production CameraRig/Camera3D"
+    }
+  },
+  "actual_renderer": {
+    "engine": "Godot4.7.stable.official.5b4e0cb0f",
+    "stdout": "Vulkan1.3.280 Forward+ NVIDIA GeForce GTX1060 3GB",
+    "preset": "High",
+    "native_raster": [
+      1920,
+      1080
+    ],
+    "limits": "One actual capture renderer/machine only; no default renderer authorization, owner Ally/device/performance proof."
+  },
+  "diagnostics": {
+    "engine_errors": 0,
+    "script_errors": 0,
+    "warnings": 2,
+    "details": [
+      "road_visibility_broken_causeway_main_03 resolved away from authored site; left out fail closed",
+      "road_visibility_windscar_floor_loop_15 resolved away from authored site; left out fail closed"
+    ],
+    "fallback_notice": "CloudreachNoStronghold absent; climax uses existing fallback coordinates.",
+    "import_supervisor_history": "Initial source-status supervisorfailure retained separately from completed engine import and successful source-revalidated daycapture."
+  },
+  "primary_hashes": {
+    "matrix-day-image-integrity.json": "09e14cd34e2fb0d0326448b3db5df6fb5c4c337aa0923dee3f559410c6523889",
+    "matrix-day-verified-summary.json": "082e4161835ca938458c8c9508f54dad6f64b3562623a071aeddb8217f4a1055",
+    "matrix-day-start.json": "51027e0a8432bdd827c84b381ebd3f8110a6272a67f1c6c137ec9c3226ae6977",
+    "matrix-day-terminal.json": "22f02a35c07615e6515321128080851a28ce8ecac2473c747bd57b3983d06514",
+    "source-after-day.json": "6c38f71a37658c2c4da65b6b3dcc3401b3317e77f8c791679b44dc03ae9827c0",
+    "source-before-day.json": "4cbf2423f00040471879ae290e3b4c1d0252710df9a0bc011ea592c2aac32509",
+    "source-before-import.json": "e026fc31b8912a77268f971e56e552694cb762690cdd1ab8ffd474b87f0ac579",
+    "source-after-import-revalidated.json": "07ff0538d10c61d6c4a6a7ba03611058786e8dba64563c89a69fe9ef94bb1bf2",
+    "import-source-status-failure.json": "9acbb45234996aba7ac972b18e6e308854b287355c27015f33cd3e201c5a1dfb",
+    "import-start.json": "eb6bef81f846e6497b97a19574354b0013eb016e5f4dc124d310d5f9f6fc1888",
+    "import-terminal.json": "96091f9ba9a88996312721f411fa2cccaf910b1ec29b487df9b25fbace004bce",
+    "import.stdout.log": "d9d43b3108d8882fffa8df26ce52d1f4d1698d508803fd0ac93f884fd7052311",
+    "import.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "matrix-day.stdout.log": "6a20480c6a93d2340abc6a798db671a40594467bf9e10e97a8738b4d6374d6b9",
+    "matrix-day.stderr.log": "4e90762376a14c77de403e7b590f4993cf79bfe4c989d4f19ae715649147895e",
+    "launch-matrix.ps1": "ae515951736aab476119d6f33f39d7b6da9950f9e31c61811145ac20a3f8ee7c"
+  },
+  "fixture_disclosure": "Direct chapter mount, upper-route flags, catalogue teleports with default 12m/3m offsets except explicitly declared existing route/threshold stands in capture_plan.authored_stands (all Skyroad views use its flat crown); pinned production dawn/day/golden/night and clear/rain. Both sides of a comparison must use the same stand plan. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands still fail.",
+  "scope_limits": [
+    "Direct chapter mount/upper-route flags and debug catalogue teleports with declared generic/authored thresholds, pinned visual clocks/weather and production camera: not an earned route, fight, save/transaction, co-op, device/performance or art-bar proof.",
+    "No five-creature current-band fixture or continuous real-input travel claim added to this scenery recorder.",
+    "f40b combat prompt and A9c9 VFX changes were not in cdecc and are not validated by this capture.",
+    "Original fullHigh scenery visualFAIL and High/Medium fight visualFAIL remain preserved beside independent runtimeAPPs. No pixel judging or blind contact.",
+    "Complete96day does not complete full384 or establish F40#0 row/script rescoring or whole F40#3/#5/F08#3."
+  ],
+  "remaining_gates": [
+    "Actual remaining quarters/full384 and required Medium current-source coverage.",
+    "Original independent blind changed-scene/full-bar judgments and affected prompt/VFX context where required.",
+    "Whole F40#3/#5/F08#3 remain OPEN; no READY or source visual PASS."
+  ]
+}

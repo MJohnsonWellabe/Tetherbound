@@ -1,0 +1,77 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_cloudreach_realm_gate_crag.gd: 1 of 826 test files
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _build_embedded_rock_shelves (res://scripts/world/cloudreach_world.gd:6298)
+       [1] _mesa (res://scripts/world/cloudreach_world.gd:5656)
+       [2] _route_ridge (res://scripts/world/cloudreach_world.gd:2650)
+       [3] test_cloudreach_world_mounts_the_dedicated_gate_presentation (res://tests/test_cloudreach_realm_gate_crag.gd:96)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _build_embedded_rock_shelves (res://scripts/world/cloudreach_world.gd:6305)
+       [1] _mesa (res://scripts/world/cloudreach_world.gd:5656)
+       [2] _route_ridge (res://scripts/world/cloudreach_world.gd:2650)
+       [3] test_cloudreach_world_mounts_the_dedicated_gate_presentation (res://tests/test_cloudreach_realm_gate_crag.gd:96)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _build_embedded_rock_shelves (res://scripts/world/cloudreach_world.gd:6298)
+       [1] _mesa (res://scripts/world/cloudreach_world.gd:5656)
+       [2] _route_ridge (res://scripts/world/cloudreach_world.gd:2650)
+       [3] test_cloudreach_world_mounts_the_dedicated_gate_presentation (res://tests/test_cloudreach_realm_gate_crag.gd:96)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _build_embedded_rock_shelves (res://scripts/world/cloudreach_world.gd:6305)
+       [1] _mesa (res://scripts/world/cloudreach_world.gd:5656)
+       [2] _route_ridge (res://scripts/world/cloudreach_world.gd:2650)
+       [3] test_cloudreach_world_mounts_the_dedicated_gate_presentation (res://tests/test_cloudreach_realm_gate_crag.gd:96)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _build_embedded_rock_shelves (res://scripts/world/cloudreach_world.gd:6298)
+       [1] _mesa (res://scripts/world/cloudreach_world.gd:5656)
+       [2] _route_ridge (res://scripts/world/cloudreach_world.gd:2650)
+       [3] test_cloudreach_world_mounts_the_dedicated_gate_presentation (res://tests/test_cloudreach_realm_gate_crag.gd:96)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _build_embedded_rock_shelves (res://scripts/world/cloudreach_world.gd:6305)
+       [1] _mesa (res://scripts/world/cloudreach_world.gd:5656)
+       [2] _route_ridge (res://scripts/world/cloudreach_world.gd:2650)
+       [3] test_cloudreach_world_mounts_the_dedicated_gate_presentation (res://tests/test_cloudreach_realm_gate_crag.gd:96)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: Realm Gate masonry has no exact arrival shoulder support
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _seat_realm_gate_base (res://scripts/world/cloudreach_world.gd:4156)
+         [1] test_cloudreach_world_mounts_the_dedicated_gate_presentation (res://tests/test_cloudreach_realm_gate_crag.gd:102)
+         [2] _init (res://tests/run_tests.gd:120)
+  FAIL  test_cloudreach_realm_gate_crag.gd :: test_cloudreach_world_mounts_the_dedicated_gate_presentation
+          expected true, got false  (the old fixed facade base was above the actual arrival shoulder)
+          expected true, got false  (the masonry base is seated beneath every supporting corner)
+          expected true, got false  (the masonry base is seated beneath every supporting corner)
+          expected true, got false  (every facade foot has actual emitted shoulder support)
+          expected true, got false  (the masonry base is seated beneath every supporting corner)
+          expected true, got false  (every facade foot has actual emitted shoulder support)
+          expected true, got false  (the masonry base is seated beneath every supporting corner)
+  ok    test_cloudreach_realm_gate_crag.gd :: test_named_location_catalogue_stands_on_the_approach_not_inside_the_gate
+  ok    test_cloudreach_realm_gate_crag.gd :: test_realm_gate_crag_presentation_has_complete_arrival_hierarchy
+
+3 tests, 108 assertions, 1 failed
+
+  test_cloudreach_realm_gate_crag.gd :: test_cloudreach_world_mounts_the_dedicated_gate_presentation — expected true, got false  (the old fixed facade base was above the actual arrival shoulder)
+  test_cloudreach_realm_gate_crag.gd :: test_cloudreach_world_mounts_the_dedicated_gate_presentation — expected true, got false  (the masonry base is seated beneath every supporting corner)
+  test_cloudreach_realm_gate_crag.gd :: test_cloudreach_world_mounts_the_dedicated_gate_presentation — expected true, got false  (the masonry base is seated beneath every supporting corner)
+  test_cloudreach_realm_gate_crag.gd :: test_cloudreach_world_mounts_the_dedicated_gate_presentation — expected true, got false  (every facade foot has actual emitted shoulder support)
+  test_cloudreach_realm_gate_crag.gd :: test_cloudreach_world_mounts_the_dedicated_gate_presentation — expected true, got false  (the masonry base is seated beneath every supporting corner)
+  test_cloudreach_realm_gate_crag.gd :: test_cloudreach_world_mounts_the_dedicated_gate_presentation — expected true, got false  (every facade foot has actual emitted shoulder support)
+  test_cloudreach_realm_gate_crag.gd :: test_cloudreach_world_mounts_the_dedicated_gate_presentation — expected true, got false  (the masonry base is seated beneath every supporting corner)

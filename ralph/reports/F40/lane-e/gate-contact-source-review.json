@@ -1,0 +1,162 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-09T04:17:29.471861+00:00",
+  "source_commit": "19ed7280ef80d9dc5f74fa6d25c9735cfb2b57e4",
+  "diff_base": "514049d83417029420e68abab07ce7d086ec3bc5",
+  "source_verdict": "APPROVE",
+  "headless_command_verdict": "APPROVE",
+  "artifact_verdict": "PENDING",
+  "native_visual_verdict": "PENDING",
+  "findings": [],
+  "scope": "Only gate facade/pillar vertical seating, three existing decorative paver vertex conformity, two existing worn-ground footprint uniform gates, and extension of existing gate test. No engine/test/import/GPU execution by reviewer.",
+  "reviewed_blobs": {
+    "scripts/world/cloudreach_world.gd": "01971deaf53edde283f312fe5e3c17c5b784ac79",
+    "scripts/world/cloudreach_realm_gate_crag.gd": "d97b1e1f91464f8e55d12c2dcabd0bc7c40b9100",
+    "data/config/cloudreach_realm_gate_crag_visual.json": "73f166b1d48e7513516003b2b61cc138928e6a14",
+    "tests/test_cloudreach_realm_gate_crag.gd": "83c9bc7118af8a459dcc828d5a90bb15c64122ae"
+  },
+  "unchanged_seams": {
+    "scripts/world/cloudreach_ground_cover.gd": "cc276b1fdcc55a0a88529c2d24b6eec54f3ae426",
+    "shaders/cloudreach_worn_ground.gdshader": "a409adde3af094f166636fc811e7d73cc96803de"
+  },
+  "source_geometry": {
+    "construction_order": "_ready builds routes before landmarks. _route_ridge returns seven-column rows from actual _walkable_height-clamped vertices; both render top and trimesh collision emit those same rows. _cover_patches retains surface_rows before _build_realm_gate_crag. Cover instances themselves build later; the sampler requires rows, not those instances.",
+    "coordinate_basis": "Current world/landmark roots are untranslated except configured landmark positions and identity rotation/scale. root.to_global supplies true masonry origins, presentation.global_position supplies paver origin. _ridge_surface_height samples actual XZ triangles and returns NAN outside them; its existing integer binary-search/index operations are unchanged. The new caller accepts only finite support within8m of requested height, choosing nearest stratum. No registered generic-floor fallback is substituted.",
+    "masonry": "_castle_piece fits imported AABB by size/bounds.size and offsets AABB centre XZ and minimumY. Thus the four sampled offsets +/-size.x/2,+/-size.z/2 are the actual axis-aligned fitted footprint corners, not unfitted source coordinates. Facade28x27x6 and each pillar7x33x7 retain XZ/scale/material; independent minimum supported corner height minus configured .03m seats the flat bottom below all four sampled corners. Missing support warns and retains original supplied height; that is not contact success.",
+    "pavers": "Current pavers are identity-transform BoxMesh children with no collision and material_override retained. For each source vertex, callback uses unchanged global XZ. New localY=sampledHeight-originY-paverPositionY+.02+(oldY-oldBoundsMaxY), so top vertices equal sample+.02 and bottom remains exactly original slab depth beneath same XZ. Original PackedInt32 indices feed triangle SurfaceTool in the original order, preserving winding; normals are recomputed from deformed faces. Existing path material uses world triplanar texture mapping, so removal of BoxMesh UV streams does not change its coordinate routing. Unsupported paver warns and retains original mesh.",
+    "limits": "Corner-supported masonry is not proof of continuous contact across the entire imported base or precise render-visible biological/architectural contact. Paver triangles interpolate sampled corners; fine terrain curvature within a paver can differ. No new mesh/collider/route/camera/stand/authority/save logic is introduced outside decorative paver mesh and vertical display placement."
+  },
+  "dressing_and_test_coverage": {
+    "existing_dressing": "Presentation origin follows seated facade. Other buttresses/beacon bases remain at their existing local offsets, not independently floor-conformed; they are outside the new facade-corner/paver-top coverage. Pillars are seated independently in production but new test does not directly assert their feet. Native mounted evidence must inspect applicable pictured dressing/contact.",
+    "test": "Existing test_cloudreach_world_mounts_the_dedicated_gate_presentation retains original source guards, constructs isolated actual Cloudreach world script/config/materials/route lines, emits real first arrival_gate_road ridge, installs its returned rows into the existing cover-patch field, and probes real floor/seating callbacks. It asserts finite facade-corner support and base below each, then actual three configured paver mesh top vertices against actual callback+.02 within .0001. Original separate hierarchy/three-paver counts/collision/route-clearance/catalogue guards remain.",
+    "fixture_limit": "Despite existing method name, this extension does not mount the entire production scene or invoke world _ready. It uses unmounted neutral parent, real route generator and real sampler rather than synthetic heights; source binding and isolated generated geometry only. No artifact success or absence of diagnostics presumed.",
+    "missing_coverage": "No direct new pillar/other dressing floor assertions, unsupported-support branch test, or lower-tier worn shader alpha test. Those limits do not defeat bounded facade/paver source correctness; native contact and original visual bar remain unproven."
+  },
+  "wear_mask_delta": {
+    "actual_change": "Both _build_worn_activity_patch and _build_settlement_yard now always set existing footprint_half; previously only parent.global_position.y>700 did. Shader/geometry/material implementation is unchanged; higher-tier behavior is the identical existing branch, lower tiers acquire the same local ellipse fade.",
+    "math": "Shader multiplies dirt by1-smoothstep(.46,.72,length(worldXZ-centreXZ)/half). Workshop rim normalized radii .74..98 and yard minimum axis-normalized rim>=.92 exceed .72, fading before finite polygon edge. Centre remains nonzero dirt rather than discarding all lower-tier wear. No shader/palette/new uniform/tunable change.",
+    "scope": "Existing local communal/workshop wear in Cloudreach; no global settlement material or other realm change. Actual GPU blend/contact finish still requires native judgment."
+  },
+  "owning_constraint": "ART_DIRECTION contact grounding may use geometry and must remain readable on Low; this uses existing installed masonry/path material and shoulder geometry, not a source-derived art PASS.",
+  "headless_command": {
+    "script": "tests/run_tests.gd",
+    "args": [
+      "--only=test_cloudreach_realm_gate_crag.gd"
+    ],
+    "pinned_source": "19ed7280ef80d9dc5f74fa6d25c9735cfb2b57e4",
+    "applicability": "Existing whole-file selector covers the extended existing method and original guards; exact new artifact diagnostics/result/checkout required. Dispatched elsewhere, no local execution, wait, or result claim."
+  },
+  "reuse": "514049 lazy height-query/source+4tests81assert artifact approval and unchanged route/collision/stand/camera/fight/fixture evidence remain applicable to unchanged branches. Prior gate hover/day full-bar findings and all failed packets remain; old scenery is not new gate contact proof.",
+  "pending_gates": [
+    "Frozen exact-pin selected headless artifact including diagnostics and original assertion completion.",
+    "ROOT actual mounted gate/paver/dressing contact and low-tier wear rendering; original independent blind verdict remains pending.",
+    "Whole F40#3/#5/F08#3 and F40#0 rows remain OPEN. No earned campaign/save/co-op/device/performance or pixel/art-bar approval."
+  ],
+  "correction_and_disposition_reviews": [
+    {
+      "reviewed_at_utc": "2026-10-09T04:26:20.446681+00:00",
+      "gate_candidate_disposition": "PARKED / WITHDRAWN AFTER TWO FAILED PROOFS",
+      "historical_source_approval_clarification": "Original19ed SOURCE approval was preliminary source/command applicability with explicit artifact/native pending, not verified four-corner support. Actual5d58 invalidates the assumed complete footprint support; it must not be cited as contact proof or current accepted candidate. The reviewer source assessment did not catch the untyped test-call argument or actual missing corner coverage; these failures supersede any implication of a working gate seating fix.",
+      "failed_artifacts": [
+        {
+          "source_commit": "19ed7280ef80d9dc5f74fa6d25c9735cfb2b57e4",
+          "run_id": 37882906528,
+          "job_id": 113666408910,
+          "artifact_id": 11594689588,
+          "directory": "D:\\tetherbound\\codex-e\\.tmp\\e-gate-seat-19ed728-37882906528",
+          "verdict": "WITHHELD",
+          "actual_printed_tests": 3,
+          "actual_printed_assertions": 36,
+          "actual_printed_failed": 0,
+          "engine": "Godot4.7.stable.official.5b4e0cb0f",
+          "script": "tests/run_tests.gd",
+          "args": "--only=test_cloudreach_realm_gate_crag.gd",
+          "hashes": {
+            "run.log": "87f19cd4bc1533be87e9d7d9be8c01f41656e4c068c82ae88ae55ef132781d8c",
+            "job.log": "c21b7951bc7007c71bb9d6d37928a9bebb0568ec69bcc9abacfcc277a3683c83",
+            "github-api-binding.json": "4035b80ea89904a2187d3d4feae8e84ab78d256d0d2465710f4331a93fb195f6"
+          },
+          "physical_exit": 0,
+          "diagnostic": "SCRIPT ERROR invalid typed argument11 to _route_ridge via call at testline96: untyped [] cannot bind Array[Dictionary]. New geometry assertions abort; green test label/exit0 cannot establish pass. Shutdown ObjectDB/resource/RID leaks retained.",
+          "printed_duration_seconds": 6
+        },
+        {
+          "source_commit": "5d58cfeaa1ea1f6fdfb449134b0ffb20fb36674d",
+          "run_id": 37883160723,
+          "job_id": 113667202742,
+          "artifact_id": 11594279521,
+          "directory": "D:\\tetherbound\\codex-e\\.tmp\\e-gate-seat-5d58c-37883160723",
+          "verdict": "FAILED",
+          "actual_printed_tests": 3,
+          "actual_printed_assertions": 108,
+          "actual_printed_failed": 1,
+          "engine": "Godot4.7.stable.official.5b4e0cb0f",
+          "script": "tests/run_tests.gd",
+          "args": "--only=test_cloudreach_realm_gate_crag.gd",
+          "hashes": {
+            "run.log": "4508246865cccb0d1f235bad5c150c820f15951d4046654a0bbd8bfb666c713e",
+            "job.log": "67a406c52ad778cb0c82e184898b1da0a87b25233db1f47fd754f46a0229d078",
+            "github-api-binding.json": "929718a9f260f67f6037763a26f82d0b54985876cb06bd9a6b1a76747b9975e3"
+          },
+          "process_step_exit": 1,
+          "exit_binding": "Original job.log reports Process completed with exit code1; frozen packet has no exit_code file or exit/took footer, so no invented artifact footer/duration.",
+          "diagnostic": "Six !is_inside_tree global-transform ERRORs from _build_embedded_rock_shelves via _mesa/_route_ridge; warning no exact arrival shoulder support. Existing new case FAIL includes exactly two every-facade-foot finite-support assertions plus all seating-below-corner/old-height assertions.",
+          "script_errors": 0,
+          "engine_errors": 6,
+          "warnings": 1
+        }
+      ],
+      "one_line_fixture_correction": "5d58 omitted optional untyped [] so actual existing Array[Dictionary] default is used; no production change. It exposes unsupported corner assertions/tree-dependent fixture diagnostics, not a passing correction.",
+      "withdrawal_commit": "3ca9eb093ee2c16373cfe18a1315f2b7d7002ec4",
+      "withdrawal_base": "514049d83417029420e68abab07ce7d086ec3bc5",
+      "withdrawal_verdict": "APPROVE EXACT SCOPED RESTORATION",
+      "verified_blobs": {
+        "scripts/world/cloudreach_world.gd": {
+          "base": "ead643f552f5018d529a3567b20618146cc860b8",
+          "current": "748d1ae7db2ae864ae73a623e0d162c548d53d3a"
+        },
+        "scripts/world/cloudreach_realm_gate_crag.gd": {
+          "base": "5af619907c11fc0ae0c41b7445c91d5fef56c785",
+          "current": "5af619907c11fc0ae0c41b7445c91d5fef56c785"
+        },
+        "data/config/cloudreach_realm_gate_crag_visual.json": {
+          "base": "1967b70e8ae25283081519b5085ed71fba5e916c",
+          "current": "1967b70e8ae25283081519b5085ed71fba5e916c"
+        },
+        "tests/test_cloudreach_realm_gate_crag.gd": {
+          "base": "b99a1dba019de52db6e9033b3952b19fd1bf0a0c",
+          "current": "b99a1dba019de52db6e9033b3952b19fd1bf0a0c"
+        },
+        "tools/capture_cloudreach_f40_matrix.gd": {
+          "base": "a31126604c6643e7e4368b859f5727ad9347a6a9",
+          "current": "a31126604c6643e7e4368b859f5727ad9347a6a9"
+        },
+        "data/config/cloudreach_f40_visual.json": {
+          "base": "0521bde4a400a4af3e1d4254b8289c94dd398cd3",
+          "current": "0521bde4a400a4af3e1d4254b8289c94dd398cd3"
+        },
+        "tools/lookdev_capture_bootstrap.gd": {
+          "base": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+          "current": "8c1859c4094c5bce3030080831810a67cf0a06c1"
+        }
+      },
+      "withdrawal_facts": "Realm gate presentation/config/test bytes exactly match514049. Whole world diff vs514049 is only8lines (4added4removed) always applying existing footprint_half for workshop wear and communal yard; all seating helpers/calls/config tunables/new test geometry are removed. No added flag or third retry/harness.",
+      "remaining_source_verdict": "APPROVE",
+      "remaining_delta": "Previously inspected existing footprint_half gate removal only: shader and high-tier behavior unchanged, lower-tier finite polygons receive same .46..72 normalized ellipse alpha fade. No claim that lower-tier native appearance is validated.",
+      "queued_day_command_verdict": "APPROVE APPLICABILITY ONLY",
+      "queued_day_command": "Godot --path <clean ROOT frozen3ca9checkout> --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=High --source-commit=3ca9eb093ee2c16373cfe18a1315f2b7d7002ec4 --segment=day --output=res://.tmp/f40-cluster-high-3ca9-day-r1",
+      "command_reuse": "Matrix/config/bootstrap blobs unchanged fromaccepted514049; existing original day96=12destinations x4views x2weather, authored stands/clock/weather/production camera/travel/floor/frame/preset/source/receipt guards retained. No subset/new harness/full384 claim or launch by reviewer.",
+      "reuse_limits": [
+        "Unchanged514049 seam4tests81assert artifact and other accepted unchanged paths are reused, no re-run or SHA-only witness restart.",
+        "Original gate hover finding remains unresolved; restored gate is not a new contact/visual PASS.",
+        "Queued current day native terminal/image/guard provenance and original blind judgment remain required; no runtime promotion.",
+        "Whole F40#3/#5/F08#3 and F40#0 rows remain OPEN; all earlier native failures/bar failures retained."
+      ]
+    }
+  ],
+  "current_gate_candidate_disposition": "PARKED / WITHDRAWN",
+  "current_gate_artifact_verdict": "FAILED / WITHHELD; NO PASS",
+  "current_remaining_source_commit": "3ca9eb093ee2c16373cfe18a1315f2b7d7002ec4",
+  "current_remaining_source_verdict": "APPROVE (wear-mask delta only)",
+  "current_day_command_verdict": "APPROVE (applicability only; runtime PENDING)"
+}

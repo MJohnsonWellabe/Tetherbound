@@ -1,0 +1,146 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-09T03:53:47.402267+00:00",
+  "source_commit": "d46b207e874abb280daed4bf871b9027dca1a3d4",
+  "diff_base": "f40b5b8a4b446780d3544cbbfe18814f6db78b94",
+  "source_verdict": "APPROVE",
+  "headless_selector_verdict": "APPROVE",
+  "artifact_verdict": "PENDING",
+  "findings": [],
+  "scope": "Only visual upper geological-wall rim operands and new exact generated-cap boundary assertions in existing Cloudreach environment case. No new native command, photo/raster judgment, whole or physical traversal review.",
+  "reviewed_blobs": {
+    "scripts/world/cloudreach_world.gd": {
+      "base": "08d9791819391c864abec44342cf5fd0900981b1",
+      "reviewed": "4ac19857c36436ffe16cffaeebc4290091398f24"
+    },
+    "tests/test_cloudreach_environment.gd": {
+      "base": "7372d99fcc4493ef0f34a3d3ea409548b195d8a2",
+      "reviewed": "1066e57f367a98a1773202e5d0a2f4cd44bca428"
+    },
+    "data/config/cloudreach_world.json": {
+      "base": "3fa41010c0ee74ebfbc6d92b2d390dd8a79c781e",
+      "reviewed": "3fa41010c0ee74ebfbc6d92b2d390dd8a79c781e"
+    },
+    "data/config/cloudreach_visual.json": {
+      "base": "a25e56b91f6dbda0a594ec511d772058c50eed24",
+      "reviewed": "a25e56b91f6dbda0a594ec511d772058c50eed24"
+    },
+    "data/config/cloudreach_f40_visual.json": {
+      "base": "0521bde4a400a4af3e1d4254b8289c94dd398cd3",
+      "reviewed": "0521bde4a400a4af3e1d4254b8289c94dd398cd3"
+    },
+    "tools/capture_cloudreach_f40_matrix.gd": {
+      "base": "a31126604c6643e7e4368b859f5727ad9347a6a9",
+      "reviewed": "a31126604c6643e7e4368b859f5727ad9347a6a9"
+    }
+  },
+  "actual_delta": {
+    "world": "Five added/one removed lines: declare crown_rim_lift=Vector3.UP*.03 and pass top_ring[i]+lift/top_ring[next]+lift as geological upper-face top endpoints; all upper_ring endpoints, outward XZ normal inputs, relief and remaining walls/material/mesh generation unchanged.",
+    "test": "Eleven additions inside existing test_cliff_walls_face_outward; derive actual noncentral cap vertices from existing TestMesa mesh, require nonempty rim set, require exact wall PackedVector3Array inclusion for every boundary vertex. No tolerance/new method/class/fixture introduced and original cap upward, two-surface count and outward-normal guards remain."
+  },
+  "verified_source_operands": {
+    "_emit_mesa_top": "Existing ordinary/eroded/rugged/transition render/collision top helpers add UP*.03 to raw top_ring rim vertices; center crown is already size.y*.5+.03.",
+    "_emit_flat_crown": "Existing chain appends raw top_ring then emits every ring/rim vertex+UP*.03; actual same helper is used by collision copy.",
+    "_emit_mesa_skirt": "Existing shallow collision skirt starts top_ring[i/next]+UP*.03 and extends downward. Collision code untouched.",
+    "_carve_mesa_top": "Existing natural top_a/top_b and natural rim basis also top_ring+UP*.03. Carved cells can change actual boundary heights and use existing bank/bridge strips; this patch only joins the natural wall edge, not a claim every carved boundary or fill transition is newly validated.",
+    "_add_geological_face": "Existing rows20 and columns determined by a.distance_to(b); lifting both top endpoints equally keeps that distance and counts. At v=0, relief*sin(PI*v)=0; _geological_point adds only outward-displacement times zero, so top boundary is emitted from lifted endpoints. Each face column0 supplies its exact own rim endpoint, supporting exact cap-vertex presence. Original triangle order/UV mapping and winding algorithm retained.",
+    "normals_limit": "No authored normals/winding algorithm changed. SurfaceTool.generate_normals still derives actual normals from changed visual upper-face geometry, so numerical upper-wall normals/interior relief samples are not claimed byte-identical."
+  },
+  "broken_arch_nominal_math": {
+    "config_position": [
+      350.0,
+      480.0,
+      1940.0
+    ],
+    "landmark_ledge_y": 0.1,
+    "existing_ledge_size": "LandmarkLedge72m height, BrokenArchz32/centrelocalz-4, existing flat radius15.04; no change.",
+    "math": "Landmark parent480 plus local center(-72/2+.10) plus halfheight36 gives raw natural crown480.10; existing cap/collision epsilon adds.03=480.13. Previous geological upper wall stopped at raw480.10. New wall uses480.13 at that nominal uneased crown. Route-eased rim heights retain their actual top_ring value plus the same.03; no flattening/clamp or camera/support alteration.",
+    "limits": "This is source operand math and generated-mesh check applicability, not native causal proof that a photographed daylight line was precisely this gap."
+  },
+  "fixture_and_headless_command": {
+    "command": "Godot --headless --path <clean worktree pinned d46b207e874abb280daed4bf871b9027dca1a3d4> --script res://tests/run_tests.gd -- --only=test_cloudreach_environment.gd",
+    "applicability": "Existing supported selector for full existing environment file, including changed original method; exact source regression assertion is generated mesh inclusion, not a copied source-string oracle.",
+    "fixture": "Existing unmounted neutral parent/TestMesa(40,60,40),collision=false,seed31,plain crown. Checks actual compiled SurfaceTool mesh surfaces; not actual BrokenArch flat-ring/carved crown, collision contacts, mounted scene, live route or GPU seam. Existing isolated global_position diagnostics, if present in later artifact, must be evaluated/disclosed; no clean result claimed.",
+    "artifact_pending": "No matching d46b frozen artifact directory/result/check-out metadata locally available at review; dispatched-run claim not promoted. No wait/rerun/GitHub fetch or engine execution."
+  },
+  "reuse_limits": {
+    "unchanged_physical_top": "Render/collision crown emitters, collision-only copy/skirt, route/floor/ground registration, rimXZ/yaw, material/cache, raycasts, camera/stand/capture plan, flags/save/authority/input and configs retain source. Relevant passing physical top/stand/collision evidence remains applicable to unchanged branches, without claiming new visual contour proven.",
+    "visual_scope": "Shared _mesa upper visual boundary changes on all existing masses using this helper, not just BrokenArch. Same topology/vertex counts; native affected upper contour and original independent visual judgment still required.",
+    "existing_evidence": "Accepted cdecc day96 runtime/source pin is historical pre-wall-correction evidence; day full-bar/five comparisons FAIL remain retained. f40b prompt source/artifact APP remains. Earlier failed packets and fullHigh/fight visualFAILs are not overwritten."
+  },
+  "remaining_gates": [
+    "Actual selected exactd46b headless artifact and diagnostics/checkout verification when frozen.",
+    "ROOT affected native visual context and original independent blind verdict; no live cdecc night files inspected/promoted.",
+    "Whole F40#3/#5/F08#3 and F40#0 row rescoring remain OPEN, no source pixelPASS/physicsPASS/READY."
+  ],
+  "correction_reviews": [
+    {
+      "reviewed_at_utc": "2026-10-09T04:10:59.917740+00:00",
+      "source_commit": "514049d83417029420e68abab07ce7d086ec3bc5",
+      "diff_base": "d46b207e874abb280daed4bf871b9027dca1a3d4",
+      "source_verdict": "APPROVE",
+      "headless_selector_verdict": "APPROVE",
+      "artifact_verdict": "APPROVE",
+      "reviewed_blobs": {
+        "scripts/world/cloudreach_world.gd": "ead643f552f5018d529a3567b20618146cc860b8",
+        "tests/test_cloudreach_environment.gd": "1066e57f367a98a1773202e5d0a2f4cd44bca428"
+      },
+      "delta": "Only defer root.global_position.y-size.y*.5 until short-circuit label==LandmarkLedge succeeds. LandmarkLedge predicate/height operand unchanged; other labels avoid global-transform query. Tests and previous geometry/assertions unchanged.",
+      "artifact": {
+        "run_id": 37881777328,
+        "job_id": 113662861659,
+        "artifact_id": 11594537807,
+        "directory": "D:\\tetherbound\\codex-e\\.tmp\\e-crown-wall-514049-37881777328",
+        "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+        "mode": "headless",
+        "script": "tests/run_tests.gd",
+        "args": "--only=test_cloudreach_environment.gd",
+        "tests": 4,
+        "assertions": 81,
+        "failed": 0,
+        "exit_code": 0,
+        "seconds": 6,
+        "errors": 0,
+        "warnings": 0,
+        "checkout_lines": [
+          135,
+          147,
+          255,
+          275
+        ],
+        "script_mode_terminal_lines": [
+          5015,
+          5016,
+          5019,
+          5022,
+          5031,
+          5091
+        ],
+        "hashes": {
+          "run.log": "330502bf2fc4baa0f23a74e63d03f942dddb3ffaacf2d807e03ff7998b8d3a07",
+          "exit_code": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "job.log": "1e11c13bba75f761683f1c90f5b68ba6acec85f1a4cefe31d868dc80d62885b6",
+          "github-api-binding.json": "e70333647131115a6a0e86aaed5aa4f9b00e0fd952efce0e68260c5c28b40248"
+        },
+        "zip_path": "D:\\tetherbound\\codex-e\\.tmp\\e-crown-wall-514049-37881777328-11594537807.zip",
+        "zip_sha256": "84da220ee8921f6923ce0cd5a7044f465e1f45d7e755ed92a7be28d1e378d369",
+        "zip_originals_equal_extracted": true
+      },
+      "historical_d46b_artifact": {
+        "run_id": 37880945630,
+        "verdict": "WITHHELD",
+        "actual_printed_tests": 4,
+        "actual_printed_assertions": 81,
+        "actual_printed_failed": 0,
+        "physical_exit_code": 0,
+        "diagnostic": "Engine ERROR !is_inside_tree(): get_global_transform -> _mesa line5597 -> isolated test_cliff_walls_face_outward line25. Printed green labels and exit0 do not establish clean artifact PASS.",
+        "log_path": "D:\\tetherbound\\codex-e\\.tmp\\e-crown-wall-d46b-37880945630\\run.log"
+      },
+      "limits": [
+        "Generated isolated TestMesa mesh/existing environment checks only; no new mounted BrokenArch physical/native visual proof.",
+        "Original geometry/source approval reused; no engine or test execution by reviewer.",
+        "Affected upper visual contour and independent original blind verdict remain pending; whole F40#3/#5/F08#3 and F40#0 rows remain OPEN."
+      ]
+    }
+  ]
+}
