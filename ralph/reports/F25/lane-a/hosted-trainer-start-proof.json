@@ -35,6 +35,10 @@
     "log_sha256": "57164639c62a57021baba92ede44c08ea7e96815e4787f3c327d4db67e5abd71",
     "result": "FAIL: client rejected host-authored round with start_refused/opponent_unavailable before physical action703. Two FAIL lines duplicate one failed assertion. First25 setup/ownership/realm/radius guards pass, including both bodies at2.94m challenge range and0.00m replication error. No action703, stale replay or round-transition runtime credit."
   },
-  "artifact_review": "SAME original failed-artifact/disposition review requested; pending. Runtime and integration remain unapproved.",
+  "artifact_review": {
+    "review_turn": "01a11f60-a5d0-7890-a8fb-2abbb90c3bb4",
+    "verdict": "FAILED ARTIFACT/DISPOSITION CONFIRMED; no runtime approval or action703 reached.",
+    "supported_correction": "Smoke joins with empty party then grants TerrapupL33. party_grant updates local party/history only, not host admitted guest party required by _owned_identity. Move exact same grant before join, preserving count/cap/history/assertions. Host _start_for failed fight.start emits observed refusal. Exact failed _next_round operand not logged; client codec failure unproven. Review distinct correction before changed existing proof."
+  },
   "limits": "Integrate only scoped77e181 after required proof and same original artifact approval; no whole lane ancestry, failed HP timing change or parked F33 source. No C ambient/riding/peerRunner edits; no save schema or flag overrides. Original disclosed retired-crossing fixture remains. No failed save/accepted boundary promoted, native/GPU, FullCI/main activation or publication credit."
 }

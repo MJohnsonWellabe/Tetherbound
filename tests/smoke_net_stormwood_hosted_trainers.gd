@@ -49,6 +49,25 @@ func _run() -> void:
 		if legacy.get("verdict") != "PASS":
 			quit(await finish())
 			return
+	# A fresh net-harness process has not played the opening, so it owns no
+	# party member. `deploy_creature` can build the sandbox fallback body, but
+	# `begin_hosted_round` correctly requires the Game.party record that every
+	# real Stormwood player acquired at the starter choice. Seed that state via
+	# the opening's production PartySeam before asking the production recall
+	# path to deploy it. The same owned UID must enter guest admission at join.
+	# This fixture skips the whole Meadows/Cloudreach progression and enters the
+	# chapter at its first authored level-32/33 trainer.  A starter-level (3)
+	# Terrapup is knocked out by Tamsin while the adversarial stale-action checks
+	# run, so the later real button press never has a living actor to execute it.
+	# Give the fixture the chapter-appropriate level a real arriving player has;
+	# HP, damage, cooldowns, movement and every outcome still go through shipping
+	# party/combat code, and the opponent is still host-owned.
+	var party_seeded := await step(1, "party_grant", {"species": "terrapup", "level": 33})
+	check(str(party_seeded.get("verdict", "")) == "PASS",
+		"client owns a real party member before the hosted challenge")
+	if str(party_seeded.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
 	var hosted := await step(0, "host")
 	check(str(hosted.get("verdict", "")) == "PASS", "peer 0 started the real listen host")
 	if str(hosted.get("verdict", "")) != "PASS":
@@ -100,25 +119,6 @@ func _run() -> void:
 		quit(await finish())
 		return
 
-	# A fresh net-harness process has not played the opening, so it owns no
-	# party member. `deploy_creature` can build the sandbox fallback body, but
-	# `begin_hosted_round` correctly requires the Game.party record that every
-	# real Stormwood player acquired at the starter choice. Seed that state via
-	# the opening's production PartySeam before asking the production recall
-	# path to deploy it.
-	# This fixture skips the whole Meadows/Cloudreach progression and enters the
-	# chapter at its first authored level-32/33 trainer.  A starter-level (3)
-	# Terrapup is knocked out by Tamsin while the adversarial stale-action checks
-	# run, so the later real button press never has a living actor to execute it.
-	# Give the fixture the chapter-appropriate level a real arriving player has;
-	# HP, damage, cooldowns, movement and every outcome still go through shipping
-	# party/combat code, and the opponent is still host-owned.
-	var party_seeded := await step(1, "party_grant", {"species": "terrapup", "level": 33})
-	check(str(party_seeded.get("verdict", "")) == "PASS",
-		"client owns a real party member before the hosted challenge")
-	if str(party_seeded.get("verdict", "")) != "PASS":
-		quit(await finish())
-		return
 	var deployed := await step(1, "deploy_creature", {"species": "terrapup"})
 	check(str(deployed.get("verdict", "")) == "PASS", "client deployed its own creature before challenging")
 	if str(deployed.get("verdict", "")) != "PASS":
