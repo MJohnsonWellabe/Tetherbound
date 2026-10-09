@@ -1,0 +1,180 @@
+{
+  "kind": "root_scheduled_f20_completed_native_original_four_distinct_forward_recipe_r1",
+  "criterion": "F20#3",
+  "source": "d0914a7ef3751bdff78fc77f1f08581b851135e8",
+  "source_tree": "2172f4943f0adfef037b8cbd5ee4ab5543812c9d",
+  "scheduling_owner": "ROOT exclusive D/E native GPU writer; B does not launch engine",
+  "output_root_must_be_absent": "C:/CodexTemp/tetherbound-proof/b-f20-completed-native-d091-forward-r1",
+  "ops_root_must_be_absent": "C:/CodexTemp/tetherbound-proof/b-f20-completed-native-d091-forward-r1-ops",
+  "structured_argv": [
+    "--path",
+    "<ROOT-scheduled D/E exact checkout>",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1280x720",
+    "--script",
+    "tests/smoke_f20_ending.gd",
+    "--",
+    "--completed-fixture",
+    "--capture-ending"
+  ],
+  "renderer": "forward_plus",
+  "resolution": [
+    1280,
+    720
+  ],
+  "fresh_storage": {
+    "APPDATA": "<ops_root>/capture-home/AppData/Roaming",
+    "LOCALAPPDATA": "<ops_root>/capture-home/AppData/Local",
+    "USERPROFILE": "<ops_root>/capture-home",
+    "capture_home_must_be_absent": true,
+    "import_home_separate": true,
+    "production_save_dir": "user://f20_completed_load_<engine_pid>",
+    "save_dir_must_be_absent": true
+  },
+  "import": {
+    "ROOT_only": true,
+    "exact_source_tracked_clean_before_after": true,
+    "argv": [
+      "--headless",
+      "--path",
+      "<ROOT-scheduled D/E exact checkout>",
+      "--editor",
+      "--import",
+      "--quit"
+    ],
+    "require_exit_zero_no_script_errors": true
+  },
+  "fixture": {
+    "directory": "res://tests/fixtures/f20_completed_input_377715",
+    "producer_source": "505d7e0729028b69cfd3a0a9a8e5c6463cd46dc2",
+    "producer_run": 37771506596,
+    "producer_artifact_id": 11547889318,
+    "producer_archive_sha256": "70a94352ef062fe435b62f5f939c318b4df4e05241b4e0c32aecbd5c27d9df6c",
+    "provenance_sha256": "49651652ec0592c8c64ddd2cb616d74f60d81c3f959eee427515e52d2183da8f",
+    "three_input_files_sha256": {
+      "characters/character-b42583ba54a405a9877e159fbee6af63/character.json": "62092bf38f5af95feac2080236f78958056b6b135e6fc8bd4e363849eefd4f5f",
+      "slot_0.json": "b18808dab276c4f8f9c4d5b50ab54e8afbc456f8c80148d00dc7b4921665e4c2",
+      "worlds/slot-0/world.json": "8fda759943ec395f5c6e9d8f01e1e62f73e84c53e783be7bf2763cd85ce49e8e"
+    },
+    "input_readonly_and_checked_before_after": true,
+    "disclosure": "Approved manually post-finale completed area fixture, five L1 Solo1..5 companions; not an earned campaign save or accepted chain boundary. Only isolated working copy loaded through actual production Title Load.",
+    "provenance_filtered_git_blob": "14b4c871bd45554c301c1e7b75c828be2e0a6fc8",
+    "provenance_raw_line_endings_binding": "Original recipe author CRLF rawsha49651652ec0592c8c64ddd2cb616d74f60d81c3f959eee427515e52d2183da8f; frozenLF rawshaf305d8356ee043c396c05247932cc37e82c1a294d4b282b329ae470537d1b080 is the same exact filtered Git blob. Record actual raw hash and source binding, no byte rewrite. The three protected Save file raw hashes remain exact, without line-ending exception."
+  },
+  "flags": {
+    "alpha_respawns_runtime_enabled": true,
+    "alpha_config_sha256": "b74c99600e39337b7ca655ee1298b494b9673b895095c4a0f118615b6f33b9dd",
+    "functional_offload": false,
+    "headless_capture": false,
+    "generated_fixture": false,
+    "through_credits": false,
+    "presentation_overrides": false,
+    "manual_position_hp_level_clock_generation_outcome_changes_after_copy": false,
+    "all_other_source_flags_unchanged": true
+  },
+  "expected_four_frames": [
+    {
+      "index": 0,
+      "label": "completed-world",
+      "guard": "After actual Title Load, saved credits retained, natural Grandpa repeat closes, grounded ordinary movement and free input."
+    },
+    {
+      "index": 1,
+      "label": "completed-research",
+      "guard": "Actual input opens production research screen; visible ready catalogue same character with incomplete tasks and claim route."
+    },
+    {
+      "index": 2,
+      "label": "completed-bounties",
+      "guard": "Actual input opens production bounty board; live panel owns input; unchanged ready view has three rows."
+    },
+    {
+      "index": 3,
+      "label": "completed-endgame-rematch",
+      "guard": "Actual owned conscious companion and canonical Bryn endgame admission; visible body, trainer battle active, real fight manager exact trainer/spec/enemy ownership. Quits during fight; no victory/reward claim."
+    }
+  ],
+  "capture_writer": "Unchanged tests/helpers/f20_ending_probe.gd::capture observes frame_post_draw with per-state guard within original30000ms; snapshots completed native framebuffer, saves shots/f20-ending-<engine_pid>/<index>-<label>.png",
+  "raster_guards": {
+    "original_expected_labels_order_count": true,
+    "native_display_non_headless": true,
+    "render_loop_continuously_enabled": true,
+    "same_completed_frame_per_state": true,
+    "png_crc_decode_sha256_required": true,
+    "dimensions": [
+      1280,
+      720
+    ],
+    "reject_partial_missing_duplicate_or_stale_frames": true,
+    "bind_engine_pid_exact_source_and_actual_paths": true,
+    "copy_originals_byte_exact_to_output_root": true,
+    "original_four_only_no_extra_alpha_shot": true,
+    "no_cached_image_reuse": true,
+    "retain_original_pixels_and_neutral_pixels_only_blind_copy": true,
+    "actual_forward_plus_renderer": true,
+    "actual_backend_verification": "Require actual native startup Vulkan Forward+ backend record for the exact PID/source/argv; reject fallback, headless or unexpected renderer. Existing continuously drawn framebuffer/state/deadline guards unchanged."
+  },
+  "terminal_guards": {
+    "actual_process_exit_zero": true,
+    "no_engine_or_script_errors": true,
+    "actual_full_continuation_endpoint_passed": true,
+    "all_59_functional_guards_retained_plus_capture_guards": true,
+    "actual_alpha_packet_current_world_epoch_traits_signal_witness": true,
+    "raw_three_fixture_input_blobs_immutable": true,
+    "no_working_or_failed_save_promoted_to_boundary": true,
+    "source_and_index_revalidated_after_import_and_capture": true
+  },
+  "prerequisite_functional": {
+    "run": 37900915929,
+    "source": "06de02cf99016c9265cf8a171f1f88d50ec72468",
+    "checks": 59,
+    "failures": 0,
+    "exit_code": 0,
+    "artifact_id": 11602821431,
+    "original_archive": "C:/CodexTemp/tetherbound-proof/b-run-artifact-11602821431.zip",
+    "archive_sha256": "f82f73ddf64cd6fba723018b14d7d424c5597ddae4e1978f00b39c0b323f377f",
+    "12_living_alphas_normally_streaming_asleep": true,
+    "both_original_runtime_approve": true,
+    "evidence": "ralph/reports/F20/lane-b-ending/completed-alpha-after-load-runtime-r1.json"
+  },
+  "original_native_command_approval": "**Bacon** `01a1165d-ecfb-79d3-9355-1224723cdb53` and **Hubble** `01a11667-9d3a-7a00-99c2-5d28ca7fc000` both approve the distinct ROOT D/E-only command:\n\n```text\ngodot --path <ROOT D/E frozen d0914a7ef3751bdff78fc77f1f08581b851135e8 checkout> --rendering-method forward_plus --resolution 1280x720 --script tests/smoke_f20_ending.gd -- --completed-fixture --capture-ending\n```\n\nUse separate `d091-forward-r1` evidence/output and fresh user storage. Preserve four labels, all guards, deadlines and fixture hashes; verify the actual backend.\n\nA verified run plus full-bar blind PASS can supply the remaining presentation evidence. No Compatibility, preset, Ally or performance claim. Both Compatibility failures remain parked; no diagnosis or whole closure claimed.",
+  "same_originals": {
+    "behavior": [
+      "Bacon/b_f49_review/01a1165d-ecfb-79d3-9355-1224723cdb53",
+      "Hubble/b_f20_review/01a11667-9d3a-7a00-99c2-5d28ca7fc000"
+    ],
+    "blind": "Sartre/b_night_visual/01a116e6-3a0e-7860-b032-74fdeb1b21e6; neutral pixels only, original criterion and full visual bar"
+  },
+  "whole_criterion_closed": false,
+  "required_blind_pass": false,
+  "native_dispatched_by_B": false,
+  "prior_actual_native_failure": "C:/CodexTemp/tetherbound-proof/b-f20-completed-native-d091-r2-ops",
+  "prior_failure_original_verdict": "Original Bacon `01a1165d-ecfb-79d3-9355-1224723cdb53` and Hubble `01a11667-9d3a-7a00-99c2-5d28ca7fc000` both confirm **RUNTIME FAIL; PARK** at `d0914a7\u00e2\u20ac\u00a6`.\n\nSource/input bindings verified. Exit 1; 15 checks/1 failure/**0 captures**. Readiness was 181268/180000 ms; shell and floor remained false. Cause **UNKNOWN**.\n\nTwo attempts retained. No unchanged third retry, selector replay or Sartre review. Functional 59/0 and caller 8/72 remain separate; whole F20#3 stays open.",
+  "consumer_correction": "ready() samples current shell/floor/ending context after one process boundary following the original physics_frame signal, which precedes node physics callbacks. All original predicates and180000ms budget preserved; no production, renderer, CPU-slicing, state or clock changes.",
+  "readiness_budget_ms_unchanged": 180000,
+  "prior_native_failure_cause_known": false,
+  "startup_or_performance_fix_claimed": false,
+  "new_selector_required": false,
+  "caller_parser_piece_reused": {
+    "run": 37904340445,
+    "source": "0b491737a3dbe71eff64c30569163b3092d1fc98",
+    "tests": 8,
+    "assertions": 72,
+    "failures": 0,
+    "exit_code": 0,
+    "both_original_approve": true
+  },
+  "distinct_backend_scope": {
+    "default_or_preset_changed": false,
+    "production_or_proof_source_changed": false,
+    "responsive_startup_flag_changed": false,
+    "existing_forward_startup_path_only": true,
+    "all_Compatibility_attempts_remain_failed_and_parked": true,
+    "Compatibility_or_Low_evidence_claimed": false,
+    "ROG_Ally_or_performance_claimed": false,
+    "cause_of_Compatibility_failure_known": false,
+    "requires_full_original_blind_bar": true
+  }
+}
