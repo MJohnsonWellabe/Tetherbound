@@ -89,6 +89,7 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const LANE := preload("res://tools/capture_cloudreach_lane_common.gd")
 const LOOKDEV := preload("res://tools/lookdev_capture_bootstrap.gd")
+const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const SUPPORT_SAMPLER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 const DEFAULT_OUT := "res://ralph/reports/CLOUDREACH-LANE/captures/frame_matrix"
 ## `--output=<res:// dir>` renders a round into its own folder (F08#4 rounds).
@@ -333,6 +334,8 @@ var _active_species := "galecrest"
 var _flag_state := ""
 var _graphics_capture: Dictionary = {}
 var _gate_support_receipt := ""
+var _actor_snapshot_receipts: Array[String] = []
+var _actor_snapshot_ok := true
 
 
 func _init() -> void:
@@ -533,6 +536,8 @@ func _capture_row(row: Dictionary) -> void:
 		_hide_overlays()
 		await process_frame
 		await RenderingServer.frame_post_draw
+		# Read at the shutter without an extra tick or formation/validator call.
+		var actors := _perch_actor_snapshot(name) if n in [19, 20] else {}
 		var path: String = LANE.save_frame(self, OUT, name, _frames)
 		if path.is_empty():
 			_skips.append("%s: PNG write failed" % name)
@@ -540,6 +545,14 @@ func _capture_row(row: Dictionary) -> void:
 		var frame: Dictionary = _frames[_frames.size() - 1]
 		frame["n"] = n
 		frame["sheet"] = str(row.get("sheet", ""))
+		if n in [19, 20]:
+			actors["image_path"] = path
+			var actor_receipt := "# perch_actor_snapshot " + JSON.stringify(actors)
+			_actor_snapshot_receipts.append(actor_receipt)
+			_manifest_line(actor_receipt)
+			if str(actors.get("status", "")) != "sampled_mounted_actors":
+				_actor_snapshot_ok = false
+				_skips.append("%s: bounded actor snapshot incomplete" % name)
 		if n in [1, 4] and _gate_support_receipt.is_empty():
 			var support := _realm_gate_render_support({"frame_id": name})
 			_gate_support_receipt = "# realm_gate_render_support " + JSON.stringify(support)
@@ -558,6 +571,85 @@ func _capture_row(row: Dictionary) -> void:
 	print(skip)
 	_skips.append(skip)
 	_manifest_line(skip)
+
+
+func _snapshot_vector(value: Vector3) -> Dictionary:
+	return {"status": "finite", "xyz": [value.x, value.y, value.z]} if value.is_finite() \
+		else {"status": "nonfinite_no_station", "xyz": null}
+
+
+func _snapshot_transform(node: Node3D) -> Dictionary:
+	var t := node.global_transform
+	return {"origin": _snapshot_vector(t.origin), "basis": [
+		_snapshot_vector(t.basis.x), _snapshot_vector(t.basis.y), _snapshot_vector(t.basis.z)]}
+
+
+func _perch_actor_snapshot(frame_id: String) -> Dictionary:
+	var result := {"frame_id": frame_id, "physics_tick": Engine.get_physics_frames(),
+		"drawn_frame": Engine.get_frames_drawn(), "status": "missing_world_or_camera", "actors": []}
+	if not is_instance_valid(_world) or not _world.is_inside_tree() \
+			or not is_instance_valid(_camera) or not _camera.is_inside_tree():
+		return result
+	result["camera"] = _snapshot_transform(_camera)
+	result["scope"] = "Mounted creature bodies within 50m of current camera; visibility is not pixel/occlusion identity."
+	var ally := _ally()
+	result["director_ally_status"] = "present" if is_instance_valid(ally) else "missing"
+	var tick := Engine.get_physics_frames()
+	for candidate: Node in _world.find_children("*", "CharacterBody3D", true, false):
+		if not candidate is CREATURE_BODY or not is_instance_valid(candidate) \
+				or candidate.is_queued_for_deletion() or not candidate.is_inside_tree():
+			continue
+		var body := candidate as Node3D
+		if body.global_position.distance_to(_camera.global_position) > 50.0:
+			continue
+		if (result["actors"] as Array).size() >= 32:
+			result["status"] = "near_actor_limit_exceeded"
+			return result
+		var properties := {}
+		for property: Dictionary in body.get_property_list():
+			properties[str(property.name)] = true
+		var entry := {"path": str(body.get_path()), "runtime_instance_id": body.get_instance_id(),
+			"script": body.get_script().resource_path, "species_id": str(body.get("species_id")),
+			"role": "director_current_ally" if body == ally else "unknown",
+			"transform": _snapshot_transform(body), "visible_in_tree": body.is_visible_in_tree(),
+			"creature_uid": null, "creature_uid_source": "unavailable",
+			"owner_peer_id": body.get("owner_peer_id") if properties.has("owner_peer_id") else null,
+			"stable_character_uid": null, "stable_character_uid_source": "unavailable"}
+		var instance: RefCounted = null
+		if body == ally and is_instance_valid(_director) and _director.has_method("ally_instance"):
+			instance = _director.call("ally_instance") as RefCounted
+			entry["creature_uid_source"] = "matched EncounterDirector.ally_body/ally_instance"
+		elif properties.has("instance"):
+			instance = body.get("instance") as RefCounted
+			entry["creature_uid_source"] = "actual body.instance; ownership not inferred"
+		if is_instance_valid(instance):
+			for property: Dictionary in instance.get_property_list():
+				if str(property.name) == "uid":
+					entry["creature_uid"] = str(instance.get("uid"))
+		var model := body.get_node_or_null(^"Model") as Node3D
+		entry["model"] = {"status": "missing"}
+		if is_instance_valid(model) and not model.is_queued_for_deletion() and model.is_inside_tree():
+			entry["model"] = {"status": "present", "transform": _snapshot_transform(model),
+				"visible_in_tree": model.is_visible_in_tree()}
+		entry["station"] = {"status": "unavailable"}
+		if body == ally and properties.has("_station_offset") and properties.has("_station_requested") \
+				and properties.has("_station_leader") and properties.has("_station_checked_frame"):
+			var offset: Vector3 = body.get("_station_offset")
+			var requested: Vector3 = body.get("_station_requested")
+			var checked := int(body.get("_station_checked_frame"))
+			var leader: Node3D = body.get("leader") as Node3D if properties.has("leader") else null
+			entry["station"] = {"status": "cached_read_only", "validated_offset": _snapshot_vector(offset),
+				"requested_offset": _snapshot_vector(requested),
+				"leader_at_validation": _snapshot_vector(body.get("_station_leader")),
+				"validation_tick": checked, "age_physics_ticks": tick - checked,
+				"following": body.get("_following") if properties.has("_following") else null,
+				"resolved_now": {"status": "missing_leader"}}
+			if is_instance_valid(leader) and not leader.is_queued_for_deletion() and leader.is_inside_tree():
+				entry["station"]["current_leader"] = _snapshot_transform(leader)
+				entry["station"]["resolved_now"] = _snapshot_vector(leader.global_position + offset)
+		(result["actors"] as Array).append(entry)
+	result["status"] = "sampled_mounted_actors"
+	return result
 
 
 ## Seat the trainer, aim the production rig, and check what it sees.
@@ -803,9 +895,11 @@ func _finish(written: int) -> void:
 		receipt_ok = receipt_ok and receipt.contains("# graphics_capture " + JSON.stringify(_graphics_capture))
 	if not _gate_support_receipt.is_empty():
 		receipt_ok = receipt_ok and receipt.split("\n").has(_gate_support_receipt)
+	for actor_receipt: String in _actor_snapshot_receipts:
+		receipt_ok = receipt_ok and receipt.split("\n").has(actor_receipt)
 	if not receipt_ok:
 		push_error("frame matrix: final receipt open/write/flush/readback failed")
-	quit(0 if written > 0 and receipt_ok and (_graphics_capture.is_empty() or _skips.is_empty()) else 1)
+	quit(0 if written > 0 and receipt_ok and _actor_snapshot_ok and (_graphics_capture.is_empty() or _skips.is_empty()) else 1)
 
 
 ## --- motion witness -------------------------------------------------------------------
