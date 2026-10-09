@@ -1,0 +1,37 @@
+{
+  "source": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+  "run": 37901427781,
+  "job": 113724659698,
+  "artifact": 11602293797,
+  "zip_sha256": "49da1f44e2c411618e8af48d83c9507682339f0166f52c5410558de7f702bad2",
+  "zip_original": "D:\\CodexTemp\\e-gate-render-contact-11bda-proof\\artifact.zip",
+  "crc": "PASS",
+  "scope": "Affected existing parser/normals/materials/consumer/hierarchy/route/collision guards; bare presentation fixture has invalid sampler so no mounted deformation/contact execution. No wholeclaim.",
+  "files": [
+    {
+      "file": "github-api-binding.json",
+      "bytes": 21550,
+      "sha256": "a3ef9a2ca129e65bd170d7beb6130d6094577ae9c7f6fb5d02058161f7a66924"
+    },
+    {
+      "file": "job.log",
+      "bytes": 473703,
+      "sha256": "d0dd65b28084e69eb50cbf89a775461c3dd4b3b961dc0caa4b1e1d83ca612e32"
+    },
+    {
+      "file": "run.log",
+      "bytes": 885,
+      "sha256": "c2444e6105a2521c87f7524ec453e08814b129a437c0c5acee8dad50b267384b"
+    },
+    {
+      "file": "exit_code",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "file": "MANIFEST.txt",
+      "bytes": 131,
+      "sha256": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "index_tree": "f5490849b04f4d55291e7c6bda6c9a6dab45eb89",
+  "source": "c1913a92fba3e7c8c3bc49c20d5b01551071c84b",
+  "checked_utc": "2026-10-09T07:56:03.4893155Z",
+  "tracked_clean": true,
+  "head_tree": "f5490849b04f4d55291e7c6bda6c9a6dab45eb89",
+  "status": [
+    " M assets/buildings/quaternius_medieval/T_Brick_BaseColor.png.import",
+    " M assets/buildings/quaternius_medieval/T_Brick_Normal.png.import",
+    " M assets/buildings/quaternius_medieval/T_Brick_Roughness.png.import",
+    " M assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png.import",
+    "?? ralph/reports/F17/lane-d/meadows-relic-display/",
+    "?? ralph/reports/F38/lane-d/exterior-cluster/",
+    "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+    "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+    "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+  ]
+}

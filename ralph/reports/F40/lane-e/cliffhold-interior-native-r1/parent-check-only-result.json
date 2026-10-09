@@ -1,0 +1,7 @@
+{
+  "mode": "headless check-only",
+  "script": "res://tools/capture_lookdev_catalogue.gd",
+  "exit": 1,
+  "source": "c1913a92fba3e7c8c3bc49c20d5b01551071c84b",
+  "checked_utc": "2026-10-09T08:00:07.2165814Z"
+}

@@ -1,0 +1,140 @@
+{
+  "reviewer": "original /root/review_cloud_startup (Ohm)",
+  "scope": "Frozen failed single-Cliffhold capture provenance only; no source re-audit, execution, parent check-only inspection or visual assessment.",
+  "source": "c1913a92fba3e7c8c3bc49c20d5b01551071c84b",
+  "packet": "C:/CodexTemp/tetherbound-proof/native-e-c1913a92fb-cliffhold-interior-r1",
+  "runtime_status": "FAILED",
+  "runtime_verdict": "REJECT as native capture proof",
+  "failure_class": "Script parse/load failure before producer world/capture execution",
+  "actual_capture": {
+    "pid": 38164,
+    "started_utc": "2026-10-09T07:56:53.9979283Z",
+    "ended_utc": "2026-10-09T07:57:00.1362708Z",
+    "exit_code": 1,
+    "reason": "process_exit",
+    "argv": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_matrix.gd",
+      "--",
+      "--biome=cloudreach",
+      "--preset=High",
+      "--source-commit=c1913a92fba3e7c8c3bc49c20d5b01551071c84b",
+      "--cliffhold-interior-only",
+      "--output=res://.tmp/e-cliffhold-interior-c1913-day-r1"
+    ],
+    "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-c1913a92fb-cliffhold-interior-r1/capture-home",
+    "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+    "renderer_header": "Vulkan 1.3.280 / Forward+ / NVIDIA GeForce GTX1060 3GB",
+    "valid_images": 0,
+    "producer_manifest": null,
+    "expected_images": 1
+  },
+  "diagnostics": [
+    "SCRIPT ERROR: Parse Error: Could not resolve class \"res://tools/capture_lookdev_catalogue.gd\".",
+    "   at: GDScript::reload (res://tools/capture_cloudreach_f40_matrix.gd:1)",
+    "ERROR: Failed to load script \"res://tools/capture_cloudreach_f40_matrix.gd\" with error \"Parse error\".",
+    "   at: load (modules/gdscript/gdscript_resource_format.cpp:46)"
+  ],
+  "diagnostic_limits": "The observed error is failure to resolve capture_lookdev_catalogue.gd at F40 extends line1, followed by Failed to load script / Parse error. No inner source/API/driver/hardware cause is inferred. Renderer startup is not producer/preset/floor/camera/image proof.",
+  "image_absence": "No PNG/JPEG is present in the frozen packet. The exact requested raw output directory .tmp/e-cliffhold-interior-c1913-day-r1 is absent at inspection. Capture stdout contains engine/renderer headers only; stderr reports script-loading failure. No complete receipt, actual matched camera/stand or native interior comparison exists.",
+  "import": {
+    "terminal": {
+      "mode": "Import",
+      "ended_utc": "2026-10-09T07:56:01.1845871Z",
+      "source": "c1913a92fba3e7c8c3bc49c20d5b01551071c84b",
+      "exit_code": 0,
+      "reason": "process_exit",
+      "pid": 22136
+    },
+    "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-c1913a92fb-cliffhold-interior-r1/import-home",
+    "stderr_bytes": 0,
+    "stdout_engine_error_warning_lines": 0,
+    "limitation": "Import exit0 did not parse/execute this requested native producer successfully."
+  },
+  "source_binding": {
+    "index_and_head_tree": "f5490849b04f4d55291e7c6bda6c9a6dab45eb89",
+    "tree_is_not_commit": true,
+    "git_pin_tree_independently_matches": true,
+    "source_before_after_capture_tracked_clean": true,
+    "untracked_history": [
+      "?? ralph/reports/F17/lane-d/meadows-relic-display/",
+      "?? ralph/reports/F38/lane-d/exterior-cluster/",
+      "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+      "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+      "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+    ],
+    "after_capture_status_matches_before": true,
+    "original_after_import_history": "Original source-after-import.json retains four modified .import metadata statuses despite its tracked_clean=true field; that field alone is not accepted as clean worktree evidence.",
+    "normalization_revalidation": {
+      "original_import_receipt_retained": true,
+      "source": "c1913a92fba3e7c8c3bc49c20d5b01551071c84b",
+      "index_before": "f5490849b04f4d55291e7c6bda6c9a6dab45eb89",
+      "checked_utc": "2026-10-09T07:56:51.9842704Z",
+      "engine_exit": 0,
+      "tracked_clean": true,
+      "index_after": "f5490849b04f4d55291e7c6bda6c9a6dab45eb89",
+      "metadata": [
+        {
+          "head_blob": "4a6970aff2c45871a2c1fcafc8a12665f9a3a36e",
+          "normalized_blob": "4a6970aff2c45871a2c1fcafc8a12665f9a3a36e",
+          "path": "assets/buildings/quaternius_medieval/T_Brick_BaseColor.png.import"
+        },
+        {
+          "head_blob": "1c36a40fbaf36ec5b0b1d1d8bbd00caa0ef58f7d",
+          "normalized_blob": "1c36a40fbaf36ec5b0b1d1d8bbd00caa0ef58f7d",
+          "path": "assets/buildings/quaternius_medieval/T_Brick_Normal.png.import"
+        },
+        {
+          "head_blob": "676075f3b3ac62a054fe8ed09f97ab1d50f3d42d",
+          "normalized_blob": "676075f3b3ac62a054fe8ed09f97ab1d50f3d42d",
+          "path": "assets/buildings/quaternius_medieval/T_Brick_Roughness.png.import"
+        },
+        {
+          "head_blob": "7a64fbc99550b442aa24cf680fa18be4a8b8bada",
+          "normalized_blob": "7a64fbc99550b442aa24cf680fa18be4a8b8bada",
+          "path": "assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png.import"
+        }
+      ]
+    },
+    "verified_normalized_metadata": "All four recorded normalized/head blobs independently match the exact c191 Git objects. Source-before-capture and source-after-capture statuses show no tracked modifications.",
+    "current_cached_checkout_not_used": true
+  },
+  "sha256": {
+    "capture-start.json": "5e502c89944597cc9285cd22db8cc9d43165efe2db3cac56572b8194b608d0ff",
+    "capture-terminal.json": "0b2cfe9af807d5d8f598253dba6a3706ac74bffc7ce8bdd952a46e37e54d2458",
+    "capture.stdout.log": "d0a3f9d5c1dd7422568b17fd6d4a73b4db3df3d82189105266c8013e432729b9",
+    "capture.stderr.log": "10baf35d28f695d0bdd966f49c128146108b877e704fec9320c550c8e4eeae66",
+    "import-start.json": "e89c2c1a9555bb00b0944fe6785c689d2e7ba10a558606916cce580a265d5dca",
+    "import-terminal.json": "7c5a18139ff24c6cf3b1753e3c184be8369cfddb690cb97075a02d3ab462ef7b",
+    "import.stdout.log": "53b2816e3537199e76790915aa47bf7d1ed9617529201444720cb8f0f1d64ab7",
+    "import.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source-before-import.json": "ea7b3eb1fe4f4826ecb81623fdae8ff607653188bbc2c03399afa1a55322c9b5",
+    "source-after-import.json": "1901cad0586ea29beac68105bb8398f71dc4e8ce60ca69ad9d1f93cda4df0370",
+    "source-after-import-revalidated.json": "5dcdef18bcc564f949917762e077f2c3a081daa414532f711d92377157661d53",
+    "source-before-capture.json": "859d03ada0507293a97004eb2f0b7d5a561bb7de82a7664eb163861a1ccfbc6f",
+    "source-after-capture.json": "40f516ae95d6385b6c63451836ab684722bf24c8ebacfdf8983e77df2cdd2a78",
+    "original-recipe.json": "88185bbfb9ba713956be21ff90e599945b03634d0a9292d017e2e1d440fe6055"
+  },
+  "preserved_approvals": [
+    "c191 SOURCE/exact-command applicability remains historical approval with parse/runtime pending; it was not a parser PASS.",
+    "021264 environment4tests81assert0fail artifact remains applicable to its original source/fixture scope and is not superseded by a capture-producer load failure.",
+    "UI48bd ancestor SOURCE approval has no successful native producer parse proof supplied by this attempt.",
+    "Gate11bda source/helper implementation was not executed by this earlier c191 pin."
+  ],
+  "remaining_gates": [
+    "Resolve supported inner parse failure under separately owned investigation; this review neither diagnoses nor patches it.",
+    "Actual exact-source producer load, one original interior PNG/record pair and terminal/receipt/source/raster/stand matching remain unproved.",
+    "Independent native pixel assessment remains absent."
+  ],
+  "excluded_claims": [
+    "No world/PNG/native floor-contact/preset/quality PASS",
+    "No source-derived pixel cause, earned arrival, doorway motion, campaign, co-op, save/device/performance or wholeF40/F08/READY claim",
+    "No unchanged recapture requested or performed by reviewer"
+  ]
+}

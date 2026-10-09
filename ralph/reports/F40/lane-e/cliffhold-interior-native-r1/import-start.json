@@ -1,0 +1,16 @@
+{
+  "mode": "Import",
+  "started_utc": "2026-10-09T07:53:30.6837219Z",
+  "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-c1913a92fb-cliffhold-interior-r1/import-home",
+  "source": "c1913a92fba3e7c8c3bc49c20d5b01551071c84b",
+  "deadline_minutes": 15,
+  "pid": 22136,
+  "args": [
+    "--headless",
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--editor",
+    "--import",
+    "--quit"
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "reviewer": "original /root/review_cloud_startup (Ohm)",
+  "scope": "Bounded Gate rendered-contact source, existing affected headless artifact and exact two-row native command applicability; no execution or visual judgment by reviewer.",
+  "source": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+  "parent": "7f0af96f2c8552f2bb922d946eef0dec405fdd2e",
+  "source_verdict": "APPROVE",
+  "headless_selector_verdict": "APPROVE",
+  "affected_artifact_verdict": "APPROVE",
+  "native_command_verdict": "APPROVE",
+  "git_blobs": {
+    "scripts/world/cloudreach_world.gd": "940c1adcc3bd604a141a0610d70f7ad3e07b1678",
+    "scripts/world/cloudreach_realm_gate_crag.gd": "3dd5ce08fd27eed534ccbbf5b61bb64dda35a310",
+    "data/config/cloudreach_realm_gate_crag_visual.json": "309f17b15af404a5eec27d63de4897935b1f8e76",
+    "tests/test_cloudreach_realm_gate_crag.gd": "150c46e2f51674e8a7589fac5e28da64cc70bcca"
+  },
+  "findings": [
+    "Routes are constructed before landmarks. Gate ledge meshes already exist when its builder collects support. The selected Ridge000 and StratifiedCliffBody/CarvedCrown world-space triangles exclude the alpha Trail overlay. Conservative XZ bounds retain crossing triangles; the callable appends the typed triangle array to the supplied Vector3 query. The maximum finite barycentric height not above the original foot +0.005 is returned; absent support returns NAN.",
+    "The installed original facade/tower mesh, transforms, dimensions, aperture and collider source are unchanged. The additive child inherits each original nonuniform transform. Source bottom-face triangulation is retained for lower caps, and only count-one boundary edges receive sides; no convex hull bridges the gate opening. Downward source bottom winding produces consistent extrusion-side orientation. Dominant-axis UVs supply the footing tangent generation; actual imported output and finite tangents remain a native gate.",
+    "Readonly installed OBJ topology: facade 8 bottom triangles, 12 unique minimum-Y points and 12 boundary edges; tower 2,4,4. Every minimum-Y point belongs to a bottom face, no bottom edge occurs more than twice, and all source bottom cross-product Y components are negative. Consequently this installed family has no unused partial-triangle minimum-Y points in the collected point set. These CPU source facts are not an engine-generated mesh assertion.",
+    "Pavers duplicate the original BoxMesh, subdivide only width/depth at configured 0.5m steps, follow original index order and UVs, preserve XZ, and cache one support height per local XZ. Top is support +0.03 and bottom support -0.06; recomputed visual normals/tangents are pending native verification. Mesh replacement occurs only after every sample succeeds. Footing addition also occurs only after every required sample succeeds. Missing bottom faces/support warn by target and preserve the original target.",
+    "The new config is consumed by collisionless realm-local presentation only; no route, existing collision, authority, save, input, camera, flag or terrain generation mutation is in the diff. The bounded triangle prefilter and XZ cache limit repeated queries, but mounted cost, curvature contact between sampled vertices, final winding/tangent quality and visual acceptance are not established by source review."
+  ],
+  "asset_source_topology": {
+    "root": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/assets/buildings/quaternius_castle",
+    "WallEntranceBricks.obj": {
+      "sha256": "4a348d644e7de07d591ab5c19efe44e560dbcf7fc618799a53d5651426622660",
+      "bottom_triangles": 8,
+      "minimum_y_points": 12,
+      "boundary_edges": 12
+    },
+    "SmallSquareTowerBricks.obj": {
+      "sha256": "0e1a8f215ede97f6125d5b2a96178f194dbddf9b686a22a45d692abf3143c81a",
+      "bottom_triangles": 2,
+      "minimum_y_points": 4,
+      "boundary_edges": 4
+    }
+  },
+  "affected_logic": {
+    "recipe": {
+      "script": "tests/run_tests.gd",
+      "args": "--only=test_cloudreach_realm_gate_crag.gd,test_cloudreach_environment.gd",
+      "headless": true,
+      "timeout_minutes": 10
+    },
+    "run_id": 37901427781,
+    "job_id": 113724659698,
+    "artifact_id": 11602293797,
+    "packet": "D:/CodexTemp/e-gate-render-contact-11bda-proof",
+    "verified_checkout": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+    "workflow_head_is_not_checkout": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+    "actual_result": {
+      "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+      "tests": 7,
+      "assertions": 116,
+      "failed": 0,
+      "exit_code": 0,
+      "seconds": 5,
+      "selected_runtime_errors": 0,
+      "selected_runtime_warnings": 0
+    },
+    "binding": "Actual checkout/ref/final rev-parse and selected script/args in original job log; API binds completed run/job/artifact. ZIP SHA256 equals API digest, all five member CRCs pass, exit/run/MANIFEST match ZIP members, and all five portable evidence files match originals byte-for-byte. Uploaded Godot log has no error/warning.",
+    "sha256": {
+      "artifact.zip": "49da1f44e2c411618e8af48d83c9507682339f0166f52c5410558de7f702bad2",
+      "run.log": "c2444e6105a2521c87f7524ec453e08814b129a437c0c5acee8dad50b267384b",
+      "exit_code": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "MANIFEST.txt": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b",
+      "job.log": "d0dd65b28084e69eb50cbf89a775461c3dd4b3b961dc0caa4b1e1d83ca612e32",
+      "github-api-binding.json": "a3ef9a2ca129e65bd170d7beb6130d6094577ae9c7f6fb5d02058161f7a66924"
+    },
+    "disclosed_job_warning": "Routine Node.js20 GitHub action deprecation; not a selected Godot runtime warning.",
+    "coverage_limits": "All three original Gate methods and four environment methods execute. Bare presenter uses invalid default sampler: existing count/route/no-collision fixtures and source-consumer assertion run, but neither new footing construction nor paver deformation executes. World preloading parses dependencies and environment geometry guards run. No mounted support/contact/opacity/tangents/performance/native proof."
+  },
+  "native_command": {
+    "argv": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_frame_matrix.gd",
+      "--",
+      "--only=1,4",
+      "--preset=High",
+      "--source-commit=11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+      "--output=res://.tmp/e-gate-render-contact-11bda-day-r1"
+    ],
+    "verdict": "APPROVE",
+    "conditions": [
+      "ROOT-only clean exact pin, fresh output/user/import, retained source-before/after, original start/terminal receipts and unmodified output hashes. No candidate flag or post-pin mutation.",
+      "Rows1 approach and4 detail-crag reuse unchanged stands, day clock, five-party/debug progression fixture, production CameraRig, debug travel, registered/physical floor and drawn-crown guards. Named High Forward+1920 expected-image checks and final graphics/footer/exact observer whole-line persistence remain unchanged.",
+      "Verify both actual image/record pairs, native renderer/raster, no skips/errors, exact source and final receipt. New helper warnings must be retained; a capture result alone does not establish complete geometric contact."
+    ]
+  },
+  "unchanged_dependencies": {
+    "tools/capture_cloudreach_frame_matrix.gd": "ccb98816fa7b84258337fd535b4d9a6f6781c6ac",
+    "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+    "tests/test_cloudreach_environment.gd": "1066e57f367a98a1773202e5d0a2f4cd44bca428"
+  },
+  "reuse_and_history": "Original 2c109 native35-query/82-triangle operand approval retained without re-audit. This is a different additive rendered-boundary solution; withdrawn19ed/5d58 seating failures remain parked, and none is recategorized as passed. No opacity or physical-floor claim follows from geometric triangle hits.",
+  "observer_limits": "Original observer excludes additive footing meshes and samples original masonry coordinates. Deformed paver ArrayMesh minimum-Y/AABB-centre queries do not cover every new contour vertex or triangle. Those records are operands, not full deformation/contact/walkability proof.",
+  "pending_gates": [
+    "ROOT actual import/mounted helper execution, final generated mesh and tangent behavior, callback failure diagnostics, bounded build time and actual two-row immutable provenance.",
+    "Same original blind visual judgment; no code-derived contact/readability PASS."
+  ],
+  "excluded_claims": [
+    "Native runtime not yet verified",
+    "No physics/walkability/earned arrival/campaign/co-op/save/device/performance acceptance",
+    "No full96/384 matrix, wholeP2-025/F40/F08/fullbar or READY approval"
+  ]
+}
