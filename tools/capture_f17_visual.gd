@@ -166,7 +166,7 @@ func _hang_fixture_relic() -> bool:
 			or not bool(_game.call("save_game", 0)):
 		_failed = "hung witness requires hidden mounted candidate, grounded real body, held relic and fresh production fixture save"
 		return false
-	var namespace := str(world.get("reward_delivery_namespace"))
+	var world_namespace := str(world.get("reward_delivery_namespace"))
 	var party := _relic_party_uids()
 	var director := _world.get_node_or_null("EncounterDirector")
 	if director == null:
@@ -201,7 +201,7 @@ func _hang_fixture_relic() -> bool:
 	var personal: Dictionary = local.get("redesign_character")
 	var disk_personal: Dictionary = disk_character.get("redesign_character", {})
 	if INPUT_OWNER.current(self) != null or not _player.is_on_floor() \
-			or str(local.get("character_id")) != character or str(world.get("reward_delivery_namespace")) != namespace \
+			or str(local.get("character_id")) != character or str(world.get("reward_delivery_namespace")) != world_namespace \
 			or _relic_party_uids() != party or not _companion_ready(director) \
 			or (personal.relics_held as Array).has("meadows") or (personal.relics_hung as Array).count("meadows") != 1 \
 			or (personal.transaction_receipts as Array).count(receipt) != 1 \
@@ -214,7 +214,7 @@ func _hang_fixture_relic() -> bool:
 			or not mount.is_visible_in_tree() or not bool(pedestal.get_meta("relic_displayed", false)):
 		_failed = "ordinary hang did not retain owner/world/party, release input and mount exactly one saved relic"
 		return false
-	_relic_witness.merge({"hung": true, "character_id": character, "world_namespace": namespace,
+	_relic_witness.merge({"hung": true, "character_id": character, "world_namespace": world_namespace,
 		"receipt": receipt, "party_uids": party, "disk_world_display": disk_world.get("redesign_world", {}).get("shrine_display", {}),
 		"disk_held": disk_personal.get("relics_held", []), "disk_hung": disk_personal.get("relics_hung", []),
 		"disk_receipt_count": (disk_personal.get("transaction_receipts", []) as Array).count(receipt),
