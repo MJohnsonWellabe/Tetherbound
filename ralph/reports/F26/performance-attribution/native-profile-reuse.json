@@ -1,0 +1,149 @@
+{
+  "classification": "Reuse retained clean DEBUG native-call attribution; no additional CPU native run",
+  "receipt": "C:\\CodexTemp\\owner-d-native-profile-water-r3\\receipt.json",
+  "receipt_sha256": "804858193886fd912c1944ecca590b172a56db8b4beac891e689111df111620e",
+  "actual_source": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+  "compared_main": "6add9d5f9b9f490bf8a77783d3afa21474cdb50d",
+  "native_calls_enabled": true,
+  "complete": true,
+  "profile_frames": 1332,
+  "frame_gaps": 0,
+  "saturated_frames": 0,
+  "engine_error_count": 0,
+  "raw_engine_errors": [],
+  "engine_exit_code": 0,
+  "warnings_preserved": 596,
+  "five_relevant_source_blob_checks": [
+    {
+      "path": "scripts/creatures/creature_body.gd",
+      "profile_source_blob": "bbdb6d961f655dbec571bda16e1d15a7f14e5c4f",
+      "main_blob": "bbdb6d961f655dbec571bda16e1d15a7f14e5c4f",
+      "equal": true
+    },
+    {
+      "path": "scripts/creatures/wild_creature.gd",
+      "profile_source_blob": "faf7bd410b02effeb145276acfcb15c91d5148da",
+      "main_blob": "faf7bd410b02effeb145276acfcb15c91d5148da",
+      "equal": true
+    },
+    {
+      "path": "scripts/combat/cloudreach_encounter_director.gd",
+      "profile_source_blob": "5124f892db348f5860e5bfa75372da8b86f993cd",
+      "main_blob": "5124f892db348f5860e5bfa75372da8b86f993cd",
+      "equal": true
+    },
+    {
+      "path": "scripts/combat/water_encounter_director.gd",
+      "profile_source_blob": "d28b89db5691cd7e798a023286b80b9773c7f78b",
+      "main_blob": "d28b89db5691cd7e798a023286b80b9773c7f78b",
+      "equal": true
+    },
+    {
+      "path": "project.godot",
+      "profile_source_blob": "426ef7f67e0cf3c74d97343630622bcb6a62fc93",
+      "main_blob": "426ef7f67e0cf3c74d97343630622bcb6a62fc93",
+      "equal": true
+    }
+  ],
+  "top_native_calls": [
+    {
+      "symbol": "CharacterBody3D.move_and_slide",
+      "calls": 28969,
+      "measured_native_ms_total": 27771.267999999935,
+      "retained_signatures": [
+        "res://scripts/player/player_controller.gd::0::CharacterBody3D.move_and_slide"
+      ],
+      "measured_native_ms_per_process_frame": 20.84930030030025
+    },
+    {
+      "symbol": "Object.call",
+      "calls": 1112686,
+      "measured_native_ms_total": 6718.9269999999915,
+      "retained_signatures": [
+        "res://scripts/ui/playground_hud.gd::0::Object.call"
+      ],
+      "measured_native_ms_per_process_frame": 5.044239489489483
+    },
+    {
+      "symbol": "Object.get",
+      "calls": 1548879,
+      "measured_native_ms_total": 1376.1159999999988,
+      "retained_signatures": [
+        "res://scripts/ui/playground_hud.gd::0::Object.get"
+      ],
+      "measured_native_ms_per_process_frame": 1.0331201201201192
+    },
+    {
+      "symbol": "JSON.parse_string",
+      "calls": 4935,
+      "measured_native_ms_total": 448.711,
+      "retained_signatures": [
+        "res://autoload/player_state.gd::0::JSON.parse_string",
+        "res://scripts/world/f32_world_mount.gd::0::JSON.parse_string",
+        "res://scripts/world/candy_pickup_presentation.gd::0::JSON.parse_string"
+      ],
+      "measured_native_ms_per_process_frame": 0.33687012012012013
+    },
+    {
+      "symbol": "FileAccess.open",
+      "calls": 3181,
+      "measured_native_ms_total": 314.11300000000034,
+      "retained_signatures": [
+        "res://autoload/player_state.gd::0::FileAccess.open"
+      ],
+      "measured_native_ms_per_process_frame": 0.23582057057057082
+    },
+    {
+      "symbol": "FileAccess.get_file_as_string",
+      "calls": 1754,
+      "measured_native_ms_total": 274.0260000000004,
+      "retained_signatures": [
+        "res://scripts/data/biome_order.gd::0::FileAccess.get_file_as_string",
+        "res://scripts/world/water_local_chain_rules.gd::0::FileAccess.get_file_as_string",
+        "res://scripts/world/f32_world_mount.gd::0::FileAccess.get_file_as_string",
+        "res://scripts/world/candy_pickup_presentation.gd::0::FileAccess.get_file_as_string"
+      ],
+      "measured_native_ms_per_process_frame": 0.20572522522522554
+    },
+    {
+      "symbol": "PhysicsServer3D.body_test_motion",
+      "calls": 3596,
+      "measured_native_ms_total": 236.47499999999872,
+      "retained_signatures": [
+        "res://scripts/player/player_controller.gd::0::PhysicsServer3D.body_test_motion"
+      ],
+      "measured_native_ms_per_process_frame": 0.17753378378378282
+    },
+    {
+      "symbol": "GodotPhysicsDirectSpaceState3D.intersect_ray",
+      "calls": 67121,
+      "measured_native_ms_total": 206.26399999999992,
+      "retained_signatures": [
+        "res://scripts/combat/water_encounter_director.gd::0::GodotPhysicsDirectSpaceState3D.intersect_ray"
+      ],
+      "measured_native_ms_per_process_frame": 0.1548528528528528
+    },
+    {
+      "symbol": "Node.get_node_or_null",
+      "calls": 838786,
+      "measured_native_ms_total": 180.7360000000001,
+      "retained_signatures": [
+        "res://scripts/ui/playground_hud.gd::0::Node.get_node_or_null"
+      ],
+      "measured_native_ms_per_process_frame": 0.13568768768768777
+    },
+    {
+      "symbol": "ImmediateMesh.surface_end",
+      "calls": 3596,
+      "measured_native_ms_total": 105.64399999999992,
+      "retained_signatures": [
+        "res://scripts/creatures/alpha_aura.gd::0::ImmediateMesh.surface_end"
+      ],
+      "measured_native_ms_per_process_frame": 0.07931231231231226
+    }
+  ],
+  "interpretation": "NativeClass.method is collated across callers: a retained player-controller path does not attribute all movement cost to the player. DEBUG ms per process frame includes profiler overhead and is not current release timing. No inherited sums or release speedup/60fps claim.",
+  "next": "Reuse movement-native attribution for source investigation; only the unmeasured GPU-pass surface still needs one later native profile under exclusive D lease.",
+  "no_new_native_run": true,
+  "updated_utc": "2026-10-09T22:52:54.9241796Z"
+}
