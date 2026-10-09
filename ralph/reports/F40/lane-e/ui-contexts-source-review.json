@@ -888,5 +888,118 @@
   "latest_ui_correction_source": {
     "source_commit": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
     "verdict": "APPROVE source only; settings smoke/static/import/native proof PENDING"
+  },
+  "affected_artifact_reviews": [
+    {
+      "artifact_verdict": "APPROVE affected Settings scene-smoke artifact; native UI remains PENDING",
+      "source_commit": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+      "run_id": 37918513611,
+      "job_id": 113780485773,
+      "artifact_id": 11610273223,
+      "artifact_name": "render-e-settings-focus-layout-1e2-r1-37918513611",
+      "packet": "C:/CodexTemp/tetherbound-proof/hosted-e-1e2-settings-focus",
+      "source_binding": {
+        "actual_checkout": "Job lines135/147 fetch/checkout exact1e2; lines273/276 actual HEAD/log SHA exact1e2. Distinct API workflow main head7dd4a777fbc11ce62c6747248b96d53e4a27a099 is not the proof source.",
+        "actual_recipe": [
+          "godot",
+          "--headless",
+          "--path",
+          ".",
+          "--script",
+          "tests/smoke_settings.gd"
+        ],
+        "job_mode": "headless",
+        "user_args": "empty",
+        "timeout_minutes": 10,
+        "engine": "Godot4.7.stable.official.5b4e0cb0f",
+        "job_resolution_env": "1280x720 wrapper variable is not an actual native framebuffer claim."
+      },
+      "terminal": {
+        "exit_code": 0,
+        "duration_seconds": 145,
+        "actual_log_result": "settings smoke test passed",
+        "actual_terminal_log_time": "2026-10-09T10:40:00.1949299Z"
+      },
+      "verified_behavior_log": [
+        "Settings reached on menu_tab_left with54rebindable rows; raw D-pad and left-stick move across columns/rows.",
+        "Physical D-pad reaches162binding actions and always-visible Settings actions, with scrolling; reduced motion/camera shake/look controls and all6volume rows are reached and changed/saved.",
+        "Key/pad rebind, B cancel, named clash, rebinding close without closing menu, single-row reset, two-step global reset and settings reload pass.",
+        "Physical D-pad expands4biomes and reaches58debug destinations at actual logged1280x800, scrolling follows; production debug teleport, row action and debug disable pass.",
+        "Panic chord restoration passes after90frames."
+      ],
+      "diagnostics": {
+        "script_errors": 0,
+        "engine_errors": 0,
+        "selected_runtime_warnings": 1,
+        "warning": "instance_reset_physics_interpolation deprecation in playground_world._build_terrain1173/_ready806.",
+        "job_only_warning": "Node20 action deprecation is separate from selected engine outcome; no error-free blanket claim."
+      },
+      "artifact_binding": {
+        "api_run_and_id_match": true,
+        "api_digest_and_size_match": true,
+        "all_zip_crc_valid": true,
+        "all7extracted_members_byte_equal": true,
+        "zip_sha256": "020d119d27c90d2a7d0f7ef00033ee4f63769653c8d83f7eb6bca754f418fcfa",
+        "job_sha256": "5ea5c77b62ebeb01c21a270025bd91f4a9fb30f4b92e30557191a656ac4e68b6",
+        "api_sha256": "339a20cfff509fb68b957b177cf2b3884e5c7041072ad537152bbb509d52aac5",
+        "members": [
+          {
+            "path": "exit_code",
+            "bytes": 2,
+            "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "run.log",
+            "bytes": 7729,
+            "sha256": "8f0ef347740364f21855a005149a2b5cf9c167a7f3247a6c9ed3ccc6bd0a2943",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "MANIFEST.txt",
+            "bytes": 251,
+            "sha256": "c7a15641154298f1d08da8ecee63851b6d9501c6a811cdde2211032de8a7378b",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "user/godot/app_userdata/Tetherbound/boot_log.txt",
+            "bytes": 2665,
+            "sha256": "c1989971660fd3bd9600251b5b6cfee42d5eb91ada838eca086e0e292d0bc321",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+            "bytes": 916609,
+            "sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+            "bytes": 48,
+            "sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "user/godot/app_userdata/Tetherbound/logs/godot.log",
+            "bytes": 7704,
+            "sha256": "8262fb86514119c20f52dc71032a398436980eec03e29dacd7a99e66ed7522a6",
+            "extracted_byte_equal": true
+          }
+        ],
+        "upload_binding": "Actual job lines5136/5140 bind same ZIP SHA and artifact11610273223/run37918513611."
+      },
+      "limits": [
+        "This existing headless scene smoke proves its actual pad/input/focus/scroll/rebinding paths only. No test count/assertion total invented for this smoke.",
+        "The first-open settled-layout retry is not isolated by every existing assertion; this successful smoke does not prove the specific old native Settings false operand or its cause.",
+        "user/cache/map_meadows.png is a headless-generated map cache, not a native UI/frame capture or pixel/readability proof.",
+        "Final1e2 diagnostics are not a craft fix. Failed9a menu/craft attempts, Settings/Controls absent images and craft zero UI images/unknown operand remain preserved.",
+        "No actual High native menu/craft completion, controller/device/pixel/art-bar/campaign/earned/save/co-op/performance/fullmatrix/wholecriterion/READY claim; ROOT native/static/import gates remain separate."
+      ]
+    }
+  ],
+  "latest_ui_correction_affected_artifact": {
+    "source_commit": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+    "run_id": 37918513611,
+    "verdict": "APPROVE existing Settings smoke artifact; native UI PENDING"
   }
 }
