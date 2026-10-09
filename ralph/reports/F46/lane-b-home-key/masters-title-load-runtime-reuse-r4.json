@@ -1,0 +1,189 @@
+{
+  "kind": "masters-paid-durable-ack-title-load-passing-runtime-reuse",
+  "criterion": "F46#0",
+  "source": "f003a3fe07b114731cac1f3369990d1a7de85b09",
+  "run_id": 37792354424,
+  "artifact_id": 11556877562,
+  "artifact_zip_sha256": "e72239d808f88d3bf39ec7a37ae3717909b49ded55e0cbed0c0af916cda5b78d",
+  "crc_verified": true,
+  "original_archive": "masters-title-load-reused-r4-producer.zip",
+  "log": "ci-masters-title-load-reused-r4-37792354424.log.gz",
+  "log_sha256": "87417b9a1b2cc9ccf3cca666058bc7edfa3a3486c28c7bfb32f88457575d457f",
+  "gzip_sha256": "99be67d40192ab1a56efe12f0fe6733085417c4bd5dfcb9f4fd49f356057c618",
+  "exit_code": 0,
+  "numeric_exit_sources": [
+    "actual exit_code member",
+    "run.log exit=0 took=134s"
+  ],
+  "engine_script_errors": 0,
+  "original_independent_reuse_verdict": "Both originals **SOURCE APPROVE** `efeef46d345e0bb1ef39ac50c08c6213466c6cbc`, but **BLOCK the fresh command as duplicate**.\n\nService and paid Masters smoke are byte-identical to passing `f003\u00e2\u20ac\u00a6`. Run `37792354424`, artifact `11556877562`, already covers paid progression, Skip line 1, saved ACK, actual Title Load, exact retained state, 300-frame no-reopen and Help again.\n\nReuse that approval. No new selector, functional replay or capture warranted. Whole six-lesson F46#0 remains open.",
+  "service_blob_identical_current_and_passed": "81fce0409930095cd1527acbc44a6e98fcc7eb03",
+  "paid_smoke_blob_identical_current_and_passed": "aac0784069b0d3f65b228a8f803e448ee61c5b8c",
+  "actual_retained_reload": {
+    "after": {
+      "character_id": "character-99367a23e7f7dd7f004f600e2ed7b465",
+      "inventory": [
+        {},
+        {},
+        {},
+        {
+          "id": "essence_water",
+          "n": 29
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ],
+      "party": [
+        {
+          "known_moves": [
+            "ripple_jab",
+            "undertow",
+            "ultimate_ripplet",
+            "dash_strike"
+          ],
+          "level": 10,
+          "loadout_revision": 0,
+          "move_charged": "undertow",
+          "move_mastery_receipts": {},
+          "move_mastery_uses": {},
+          "move_quick": "ripple_jab",
+          "move_ultimate": "ultimate_ripplet",
+          "move_utility": "",
+          "species_id": "ripplet",
+          "uid": "creature-cb1c3c001e4bbfc7478c2240baf7813e",
+          "xp": 0
+        }
+      ],
+      "party_uids": [
+        "creature-cb1c3c001e4bbfc7478c2240baf7813e"
+      ],
+      "personal_flags": [
+        "opening:beat:house",
+        "opening:beat:wake",
+        "opening:lesson:altar",
+        "opening:lesson:masters",
+        "opening:starter_granted"
+      ],
+      "transaction_receipts": [
+        "bounty:clock_47d2d5df28bc0f020a533504cec82cc3ba01dc67f50cd9ec8b6c81e81f7b1a36:character-99367a23e7f7dd7f004f600e2ed7b465",
+        "craft:character-99367a23e7f7dd7f004f600e2ed7b465:altar_build:2a19186c827a1c08cc52b86fd98000a4d7d37bdf8c32d2addc6998d4fc6176dd:756cf56459e843a8416da8fab28ef4e1:place_building:b1",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:d1527eefc1a476103b52a691e63c07c4:creature-cb1c3c001e4bbfc7478c2240baf7813e:3:essence_water:6:52",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:966eb13a1ad67f71243273b1286e1713:creature-cb1c3c001e4bbfc7478c2240baf7813e:4:essence_water:8:74",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:520a342a31ddf68f34643211d9ad1f67:creature-cb1c3c001e4bbfc7478c2240baf7813e:5:essence_water:11:94",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:caf01ead42a9fded3b27b3b8b50983fe:creature-cb1c3c001e4bbfc7478c2240baf7813e:6:essence_water:13:114",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:717b563c04de94b71ded2f7577747261:creature-cb1c3c001e4bbfc7478c2240baf7813e:7:essence_water:15:132",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:d6f604be5c4a5f556320145d4c791c47:creature-cb1c3c001e4bbfc7478c2240baf7813e:8:essence_water:18:152",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:6c5afd86368cf862247bddaf087a1ca2:creature-cb1c3c001e4bbfc7478c2240baf7813e:9:essence_water:20:170"
+      ]
+    },
+    "before": {
+      "character_id": "character-99367a23e7f7dd7f004f600e2ed7b465",
+      "inventory": [
+        {},
+        {},
+        {},
+        {
+          "id": "essence_water",
+          "n": 29
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ],
+      "party": [
+        {
+          "known_moves": [
+            "ripple_jab",
+            "undertow",
+            "ultimate_ripplet",
+            "dash_strike"
+          ],
+          "level": 10,
+          "loadout_revision": 0,
+          "move_charged": "undertow",
+          "move_mastery_receipts": {},
+          "move_mastery_uses": {},
+          "move_quick": "ripple_jab",
+          "move_ultimate": "ultimate_ripplet",
+          "move_utility": "",
+          "species_id": "ripplet",
+          "uid": "creature-cb1c3c001e4bbfc7478c2240baf7813e",
+          "xp": 0
+        }
+      ],
+      "party_uids": [
+        "creature-cb1c3c001e4bbfc7478c2240baf7813e"
+      ],
+      "personal_flags": [
+        "opening:beat:house",
+        "opening:beat:wake",
+        "opening:lesson:altar",
+        "opening:lesson:masters",
+        "opening:starter_granted"
+      ],
+      "transaction_receipts": [
+        "bounty:clock_47d2d5df28bc0f020a533504cec82cc3ba01dc67f50cd9ec8b6c81e81f7b1a36:character-99367a23e7f7dd7f004f600e2ed7b465",
+        "craft:character-99367a23e7f7dd7f004f600e2ed7b465:altar_build:2a19186c827a1c08cc52b86fd98000a4d7d37bdf8c32d2addc6998d4fc6176dd:756cf56459e843a8416da8fab28ef4e1:place_building:b1",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:d1527eefc1a476103b52a691e63c07c4:creature-cb1c3c001e4bbfc7478c2240baf7813e:3:essence_water:6:52",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:966eb13a1ad67f71243273b1286e1713:creature-cb1c3c001e4bbfc7478c2240baf7813e:4:essence_water:8:74",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:520a342a31ddf68f34643211d9ad1f67:creature-cb1c3c001e4bbfc7478c2240baf7813e:5:essence_water:11:94",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:caf01ead42a9fded3b27b3b8b50983fe:creature-cb1c3c001e4bbfc7478c2240baf7813e:6:essence_water:13:114",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:717b563c04de94b71ded2f7577747261:creature-cb1c3c001e4bbfc7478c2240baf7813e:7:essence_water:15:132",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:d6f604be5c4a5f556320145d4c791c47:creature-cb1c3c001e4bbfc7478c2240baf7813e:8:essence_water:18:152",
+        "essence_spend:character-99367a23e7f7dd7f004f600e2ed7b465:6c5afd86368cf862247bddaf087a1ca2:creature-cb1c3c001e4bbfc7478c2240baf7813e:9:essence_water:20:170"
+      ]
+    },
+    "memory_cleared": true,
+    "passed": true,
+    "physical_title_load": true,
+    "ready_frames": 3,
+    "reopened": false,
+    "save_slot": 0,
+    "scope": "Paid-unlock fixture's masters ACK actual title Load; whole F46 remains open",
+    "settle_frames": 300
+  },
+  "scope": "Original disclosed L3 owned canonical Ripplet and120WaterEssence/build materials/paid build-ghost fixture, paid3->10cost91, mapped Skip line1, natural Masters acknowledgement saved within original30s before autosave, actual production Title Load with exact paid state and receipts,300frame no-natural-reopen and actual Settings Help again. Drawing disabled; no new visual or physical-controller claim.",
+  "new_duplicate_runtime_dispatched": false,
+  "prior_failed_runtime_retained": 37758894767,
+  "prior_literal_blind_piece_reused": 37748475590,
+  "whole_six_lesson_f46_0_closed": false,
+  "earned_route_or_five_creature_claim": false,
+  "new_accepted_boundary": false,
+  "failed_save_input_used": false,
+  "whole_ready_posted": false
+}
