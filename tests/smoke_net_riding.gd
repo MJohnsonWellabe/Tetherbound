@@ -61,6 +61,9 @@ const SETTLE_FRAMES := 90
 ## a rider who is visibly not in it.
 const SEAT_TOLERANCE_M := 0.35
 
+# Original shared-wild presentation allowance; keep the same pose bar.
+const PROXY_POSE_TOLERANCE_M := 1.5
+
 ## Assertions actually evaluated, printed at the end. A test can pass while
 ## running FEWER checks than it should -- a null read through `get()` is 0 and
 ## aborts a branch rather than failing it -- so the count is reported and a run
@@ -73,7 +76,11 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	if not await launch(2, "world"):
+	# Optional existing-driver proof: one disclosed in-memory ActorON activation
+	# before either original boot. No config-file/save mutation or fixture bypass.
+	var prove_ambient := OS.get_cmdline_user_args().has("--prove-host-ambient-wild")
+	var proof_args: Array = ["--prove-host-ambient-wild"] if prove_ambient else []
+	if not await launch(2, "world", proof_args):
 		quit(await finish())
 		return
 
@@ -252,7 +259,7 @@ func _run() -> void:
 	var round_five: Array = await race([
 		{"peer": 0, "action": "stick", "args": {"stick": "left", "x": 0.0, "y": -1.0, "frames": 150}},
 		{"peer": 1, "action": "engage_wild",
-			"args": {"settle": 240, "require_record": false}, "budget_frames": 6000},
+			"args": {"settle": 240, "require_record": prove_ambient}, "budget_frames": 6000},
 	])
 	_check(_all_passed(round_five),
 		"peer 1 started a fight WHILE peer 0 rode: %s" % _verdicts(round_five))
@@ -268,6 +275,45 @@ func _run() -> void:
 	# is in a fight of its own while peer 0 is on an animal.
 	_check(str(await probe(1, "input_context")) == "combat",
 		"peer 1 is IN its fight, not merely reported as having started one")
+	if prove_ambient:
+		var guest: Dictionary = await probe(1, "encounter")
+		var host: Dictionary = await probe(0, "encounter", {"encounter_id": str(guest.get("id", ""))})
+		var runtime: Dictionary = host.get("requested_runtime", {})
+		_check(guest.get("actor_vitals_runtime_enabled") == true and host.get("actor_vitals_runtime_enabled") == true,
+			"both isolated peers exercised ActorON; production config stayed unchanged")
+		_check(not str(guest.get("id", "")).is_empty() and guest.get("id") == guest.get("bound_id") \
+			and guest.get("saved_wild_actor") == true and runtime.get("saved_wild_actor") == true,
+			"guest-originated entry bound the real host-owned saved wild actor")
+		_check(runtime.get("record_exists") == true and runtime.get("active_runtime") == true \
+			and runtime.get("body_valid") == true and runtime.get("ambient_source_body_matches") == true \
+			and int(runtime.get("ambient_source_generation", 0)) > 0,
+			"host runtime retains the actual registered ambient body and generation")
+		_check(not str(guest.get("ambient_source_token", "")).is_empty() \
+			and guest.get("ambient_source_token") == runtime.get("ambient_source_token") \
+			and guest.get("wild_actor_owner") == runtime.get("wild_actor_owner"),
+			"guest accepted the host-issued exact body token and world/epoch/realm scope")
+		_check(guest.get("presentation_script") == "res://scripts/creatures/shared_opponent_proxy.gd" \
+			and not str(runtime.get("body_uid", "")).is_empty() \
+			and guest.get("presentation_uid") == runtime.get("body_uid") \
+			and runtime.get("opponent_uid") == runtime.get("body_uid") \
+			and int(guest.get("presentation_body_generation", 0)) == int(runtime.get("body_generation", -1)),
+			"guest presents the host's actual canonical UID and fight body generation")
+		var owners: Array = runtime.get("owners", [])
+		_check(owners.size() == 1 and int(owners[0].get("peer", 0)) == ids[1] \
+			and not str(guest.get("local_character_id", "")).is_empty() \
+			and owners[0].get("character_id") == guest.get("local_character_id") \
+			and owners[0].get("character_id") == owners[0].get("admitted_character_id") \
+			and not str(guest.get("local_ally_uid", "")).is_empty() \
+			and owners[0].get("actor_bound_uid") == guest.get("local_ally_uid") \
+			and owners[0].get("actor_bound_uid") in owners[0].get("admitted_party_uids", []) \
+			and int(owners[0].get("actor_generation", 0)) > 0 and host.get("fighting") == false,
+			"only the admitted guest joined; the riding host did not cast a local fight")
+		var guest_feet: Array = guest.get("presentation_pos", [])
+		var host_feet: Array = runtime.get("body_feet", [])
+		_check(guest_feet.size() == 3 and host_feet.size() == 3 \
+			and Vector3(float(guest_feet[0]), float(guest_feet[1]), float(guest_feet[2])).distance_to(
+				Vector3(float(host_feet[0]), float(host_feet[1]), float(host_feet[2]))) <= PROXY_POSE_TOLERANCE_M,
+			"guest canonical presentation follows the real host body pose within the original 1.5m allowance")
 	# There is deliberately no `strike` here. `_step_strike` submits through
 	# `submit_encounter_intent()`, which refuses with "this peer is not in a
 	# networked fight" for want of the very record finding F3 is about -- so a

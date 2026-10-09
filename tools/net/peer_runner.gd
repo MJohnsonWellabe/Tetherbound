@@ -333,6 +333,18 @@ var _catch_foundation_observer: Callable
 
 func _initialize() -> void:
 	var args := _parse_args()
+	# Opt-in proof scope: these isolated test processes only. Match shipping
+	# ActorON without writing combat.json or altering any other production gate.
+	if args.has("prove-host-ambient-wild"):
+		var math := preload("res://scripts/combat/combat_math.gd")
+		var actor_on: Dictionary = math.config().duplicate(true)
+		if not actor_on.get("actor_vitals") is Dictionary:
+			push_error("ambient proof requires the original actor-vitals config")
+			quit(2)
+			return
+		actor_on.actor_vitals.runtime_enabled = true
+		math._config = actor_on
+		print("SETUP ambient guest proof: ActorVitalsON in-memory only; original config file and all other gates unchanged")
 	_role = str(args.get("role", ""))
 	_peer_index = int(args.get("peer", -1))
 	_control_port = int(args.get("control-port", 0))
@@ -7444,6 +7456,12 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				joinable.append(str((row as Dictionary).get("encounter_id", "")))
 			var out := {
 				"available": true,
+				"local_character_id": str(root.get_node(^"Game").get("local").get("character_id")),
+				"local_ally_uid": str(mine.get("uid")) if mine != null else "",
+				"actor_vitals_runtime_enabled": preload("res://scripts/combat/combat_math.gd").config().get("actor_vitals", {}).get("runtime_enabled") == true,
+				"ambient_source_token": str(edirector.get("_ambient_active_token")),
+				"wild_actor_owner": rec.get("wild_actor_owner", {}).duplicate(true),
+				"saved_wild_actor": edirector.call("uses_wild_actor_vitals", str(rec.get("encounter_id", ""))),
 				"fighting": bool(emanager.call("is_fighting")),
 				"id": str(rec.get("encounter_id", "")),
 				"bound_id": str(emanager.call("encounter_id")),
@@ -7483,6 +7501,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				out["presentation_species"] = str(enemy_node.get("species_id"))
 				if enemy_instance != null:
 					out["presentation_species"] = str(enemy_instance.get("species_id"))
+					out["presentation_uid"] = str(enemy_instance.get("uid"))
 				out["presentation_script"] = str(enemy_script.resource_path) if enemy_script != null else ""
 				out["presentation_pos"] = [enemy_node.global_position.x, enemy_node.global_position.y, enemy_node.global_position.z]
 				out["presentation_centre"] = [enemy_centre.x, enemy_centre.y, enemy_centre.z]
@@ -7513,6 +7532,10 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var runtime: Variant = runtime_map.get(requested_id)
 				var runtime_row := {
 					"id": requested_id,
+					"wild_actor_owner": requested_record.get("wild_actor_owner", {}).duplicate(true),
+					"opponent_uid": str(requested_record.get("opponent", {}).get("card", {}).get("uid", "")),
+					"saved_wild_actor": edirector.call("uses_wild_actor_vitals", requested_id),
+					"owners": [],
 					"record_exists": not requested_record.is_empty(),
 					"phase": str(requested_record.get("phase", "done")),
 					"participants": (requested_record.get("participants", {}) as Dictionary).keys(),
@@ -7522,6 +7545,15 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var runtime_receipts: Array[Dictionary] = []
 				for raw_runtime_peer: Variant in (requested_record.get("participants", {}) as Dictionary).keys():
 					var runtime_peer := int(raw_runtime_peer)
+					var member: Dictionary = requested_record.participants[raw_runtime_peer]
+					var admitted_owner: Dictionary = _session().call("admitted_character_state", runtime_peer)
+					var admitted_uids: Array[String] = []
+					for admitted_card: Dictionary in admitted_owner.get("party", []):
+						admitted_uids.append(str(admitted_card.get("uid", "")))
+					(runtime_row.owners as Array).append({"peer": runtime_peer,
+						"character_id": member.get("character_id", ""), "actor_bound_uid": member.get("actor_bound_uid", ""),
+						"actor_generation": member.get("actor_generation", 0),
+						"admitted_character_id": admitted_owner.get("character_id", ""), "admitted_party_uids": admitted_uids})
 					var runtime_receipt: Dictionary = encounter_host.call(
 						"latest_strike_receipt", requested_id, runtime_peer)
 					if not runtime_receipt.is_empty():
@@ -7536,6 +7568,12 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					runtime_row["body_valid"] = runtime_body != null and is_instance_valid(runtime_body)
 					if runtime_body != null and is_instance_valid(runtime_body):
 						runtime_row["body_instance_id"] = runtime_body.get_instance_id()
+						runtime_row["body_uid"] = str(runtime_body.get("instance").get("uid")) if runtime_body.get("instance") != null else ""
+						runtime_row["body_feet"] = [runtime_body.global_position.x, runtime_body.global_position.y, runtime_body.global_position.z]
+						var registered: Dictionary = (edirector.get("_ambient_host_sources") as Dictionary).get(str(runtime_body.get_meta(&"ambient_source_id", "")), {})
+						runtime_row["ambient_source_token"] = registered.get("token", "")
+						runtime_row["ambient_source_generation"] = registered.get("generation", 0)
+						runtime_row["ambient_source_body_matches"] = registered.get("body") is WeakRef and registered.body.get_ref() == runtime_body
 						runtime_row["body_species"] = str(runtime_body.get("species_id"))
 						var runtime_centre: Variant = runtime_body.call("centre") \
 							if runtime_body.has_method("centre") else runtime_body.global_position
