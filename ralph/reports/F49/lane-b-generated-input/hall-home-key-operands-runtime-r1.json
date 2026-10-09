@@ -1,0 +1,55 @@
+{
+  "kind": "changed_hall_operand_diagnostic_failed_before_home_key",
+  "source": "829469385f4d009e87461b7a32a7553a95274d53",
+  "run_id": 37877668049,
+  "artifact_id": 11594011598,
+  "artifact_zip_sha256": "21d1c79bf295bf382e0e39922814e0d41710dd4d04a82b5b4b6b53047d6cea12",
+  "log": "ci-hall-home-key-operands-37877668049.log.gz",
+  "log_sha256": "ced7958ad5c2f807afbb2ee1abeaacf86c00c85b29ce4de6bdb55b6fe7a018b1",
+  "gzip_sha256": "a81149b9f932ca8e7ca071213dd59b680381c7491df5638e008797923b20edc7",
+  "workflow_conclusion": "failure",
+  "numeric_exit_verified": false,
+  "exit_code_file": "absent",
+  "wall_seconds": 1150.418,
+  "engine_script_errors": 0,
+  "failed_gate": [
+    "hall: Physical chest interaction lacks its durable personal completion"
+  ],
+  "actual_chest_operands": {
+    "activated_id": 8660029819214.0,
+    "beat": "master_chest_refusal",
+    "durable_completion_seen": false,
+    "expected_provider_id": 11888217832350.0,
+    "observed_error": "",
+    "personal_scope": {
+      "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+      "session_epoch": "34cc6e79c4c6572c0d7440df84c6683f",
+      "world_namespace": "d3374d50ed084f0da03f42a78232f36b"
+    },
+    "player_position": "(438.4117, 2.235328, 1782.736)",
+    "target_offer": {
+      "actionable": true,
+      "distance": 2.42954707145691,
+      "label": "Open Orin Stonewake's recipe chest",
+      "priority": 0.0
+    },
+    "target_position": "(436.0, 2.105752, 1783.0)",
+    "winning_offer": {
+      "actionable": true,
+      "distance": 2.42767095565796,
+      "label": "Chop",
+      "priority": 0.0
+    },
+    "winning_path": "/root/MeadowsPlayground/Vegetation/@Node3D@98354/Interactable"
+  },
+  "home_key_reached": false,
+  "home_key_return_observed": false,
+  "home_key_failure_cause_established": false,
+  "failed_save_input_prohibited": true,
+  "output_boundary_accepted": false,
+  "original_master_win_and_chest_piece_37869946081_preserved": true,
+  "proposed_supported_source_fix": "Existing Interactable priority channel: config Masters chest priority1 over ambient harvesting0. No target/pose/range/helper/transaction override. Source832af5 requires independent review and actual affected proof.",
+  "whole_criterion_closed": false,
+  "prior_earned_play": false,
+  "continuous_fresh_save": false
+}
