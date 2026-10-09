@@ -10,6 +10,7 @@ var _f38_preset := "High"
 var _f38_source := ""
 var _f38_views_supplied := false
 var _f38_exterior_mode := ""
+var _f38_requested_views: Array[String] = []
 
 
 func _run() -> void:
@@ -21,7 +22,16 @@ func _run() -> void:
 func _parse_args() -> bool:
 	_biome_id = "meadows"
 	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--f38-exterior="):
+		if arg.begins_with("--f38-views="):
+			_f38_views_supplied = true
+			for view: String in arg.trim_prefix("--f38-views=").split(",", false):
+				if view not in ["approach", "gameplay", "reverse", "close"]:
+					push_error("F38 views must name an existing authored matrix view")
+					return false
+				_f38_requested_views.append(view)
+			if _f38_requested_views.is_empty():
+				return false
+		elif arg.begins_with("--f38-exterior="):
 			_f38_exterior_mode = arg.trim_prefix("--f38-exterior=")
 			if _f38_exterior_mode not in ["baseline", "candidate"]:
 				push_error("F38 exterior comparison requires baseline or candidate")
@@ -46,6 +56,10 @@ func _parse_args() -> bool:
 		return false
 	if not super._parse_args():
 		return false
+	# The inherited generic survey admits approach/close only. Select existing
+	# F38 reverse/gameplay rows here without weakening its argument validation.
+	if not _f38_requested_views.is_empty():
+		_views.assign(_f38_requested_views)
 	if not _f38_exterior_mode.is_empty():
 		var grass: Dictionary = preload("res://scripts/world/grass_field.gd").config()
 		var verge: Dictionary = grass.get("road_verge", {})
