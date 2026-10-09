@@ -621,6 +621,7 @@ func _refresh_system_overlay(active_uid: String) -> void:
 	if not is_instance_valid(_system_overlay): return
 	_system_overlay.hide()
 	if _system_overlay.call("refresh", active_uid, INPUT_GLYPH.using_gamepad()) != true: return
+	if not is_instance_valid(_manager): return
 	var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
 	if active != null and str(active.get("uid")) == active_uid:
 		var charged_id := str(active.get("move_charged"))
@@ -983,7 +984,7 @@ func _draw_ally() -> void:
 	var arm := _combat_binding_text("combat_ultimate_arm").replace("[", "[lb]")
 	var instruction := "release → move" if ultimate >= 1.0 else "%d%%" % roundi(ultimate * 100.0)
 	if not available: instruction = "Unavailable"
-	if bool(_manager.call("ultimate_armed")): instruction = "tap a move"
+	if available and bool(_manager.call("ultimate_armed")): instruction = "tap a move"
 	_ultimate_readout.text = "%s %s · %s" % [arm, signature, instruction]
 
 	# Once, not constantly: a bar that pulses every frame it happens to be full
