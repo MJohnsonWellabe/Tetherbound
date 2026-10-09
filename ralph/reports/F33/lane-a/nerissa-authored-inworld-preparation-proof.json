@@ -1,7 +1,7 @@
 {
   "criterion": "F33#2",
   "criterion_text": "Gear matters: a simulation of each biome's boss shows the matching tier passes C2 and the previous tier is clearly harder.",
-  "status": "OPEN. Authored Nerissa preparation source approved; first affected child failed before a result. No level, fight, C2 or whole criterion pass.",
+  "status": "OPEN. Original diagnostic revealed a wrong regional-list key; supported one-key correction pending original review. No level, fight, C2 or whole criterion pass.",
   "source_commit": "e42f047df4860139d1958a08d6cc2b3cf7cf4f6d",
   "change": "Nerissa defaults to chapter_curve Tidewake Veilfall entry level; the batch forwards only explicit party-level overrides. Other trainer defaults and supplied overrides remain unchanged.",
   "source_review": {
@@ -29,7 +29,26 @@
       "cause": "Not established; no gameplay, admission or parse cause claimed. No failed save or boundary promoted."
     }
   ],
-  "pending_diagnostic_change": "Existing collector prints already captured child output only when no result line exists. No new fixture, runner, action, budget, guard, production number or policy. Original review pending before changed rerun.",
+  "diagnostic_source_review": {
+    "candidate_sha": "0302b40053a465bf58da08043d78cf3c8aa14805",
+    "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "review_turn": "01a11eaa-55f3-7492-8966-6a28fd894c68",
+    "verdict": "ARTIFACT / DISPOSITION APPROVE; SOURCE / PROOF-SCOPE APPROVE for one changed minimum diagnostic batch; F33#2 OPEN."
+  },
+  "diagnostic_attempt": {
+    "run_id": 37878680575,
+    "artifact_id": 11594025802,
+    "job_id": 113653064445,
+    "checkout_sha": "0302b40053a465bf58da08043d78cf3c8aa14805",
+    "workflow_conclusion": "failure",
+    "log_sha256": "fd4744883adce602d842d212055a55b860422ae74b37744962c1253cc7b98367",
+    "raw_path": "ralph/reports/F25/downloads/a-nerissa-original-diagnostics-37878680575/raw/",
+    "original_diagnostic": "ERROR: Nerissa C2 requires the authored Veilfall entry level",
+    "result": "No child result or party level; child exit1, collector missing1/failed_children1.",
+    "supported_cause": "Lookup read tidewake.regions; authored chapter_curve.json uses tidewake.regional_targets, containing region_id veilfall and team [32,33].",
+    "disposition": "Failed preparation retained; no gameplay or accepted boundary claim. Original artifact review pending."
+  },
+  "pending_supported_change": "Read authored regional_targets instead of nonexistent regions. Preserve exact Veilfall selection, entry value, missing-entry refusal, explicit overrides, other trainer defaults and all original save/admission/action/clock guards. No numeric, fixture or pilot change.",
   "dispatch_note": "Initial API request with fixed_fps workflow input rejected422 before execution because main lacks that input; omitted it. Existing batch's child still uses native --fixed-fps60. No engine attempt was made by the rejected request.",
   "fixtures": "Existing actual Water world; original five granted; trainer proximity placement/pump flags; isolated canonical save and Session host admission; granted Harness/Charm merged into complete owner records. No earned gear or accepted campaign boundary claim.",
   "reused_evidence": "Prior flat Warden/Nerissa paired artifacts remain qualified historical evidence and were not rerun. C owns full F33#0 tier/upgrade proof; A's duplicate unit extension was withdrawn/reverted.",

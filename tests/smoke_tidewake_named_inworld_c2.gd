@@ -125,7 +125,7 @@ func _run() -> void:
 		# Other trainer defaults and explicit diagnostic overrides are unchanged.
 		var curve: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/chapter_curve.json")
 		level = 0
-		for region: Dictionary in curve.get("biomes", {}).get("tidewake", {}).get("regions", []):
+		for region: Dictionary in curve.get("biomes", {}).get("tidewake", {}).get("regional_targets", []):
 			if region.get("region_id") != "veilfall": continue
 			var team: Array = region.get("team", [])
 			if team.size() == 2: level = int(team[0])
