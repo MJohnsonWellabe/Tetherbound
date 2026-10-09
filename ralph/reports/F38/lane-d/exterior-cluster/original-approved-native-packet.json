@@ -103,9 +103,10 @@
     ]
   },
   "reused_pieces": [
-    "Original grass batch37868504336 supports unchanged paths only; corrected affected batch37872551158 pending after retained parse failure",
+    "Corrected grass+profiles batch37872551158 at fe51:22/87852 PASS; original ARTIFACT/REUSE APPROVE. Earlier batch37868504336 supports unchanged paths only;4eb failure retained and rejected.",
     "Beacon affected batch37870816494 13/201 PASS, original reuse APPROVE"
   ],
   "clock_limit": "Observed dynamic clock constituents not asserted equal; capture CPU/wall timing is not GPU/Ally performance proof",
-  "queue_status": "Original source/command APPROVE; HOLD native until corrected affected proof and original artifact disposition. ROOT exclusively; no whole criterion closed"
+  "affected_proof_original_review_turn": "01a11e68-492d-7523-8177-da1afeea8187",
+  "queue_status": "QUEUED FOR ROOT: original SOURCE/COMMAND and affected ARTIFACT/REUSE APPROVE. No D native dispatched; flags OFF; no whole criterion closed"
 }
