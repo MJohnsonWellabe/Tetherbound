@@ -1,0 +1,9 @@
+Both originals verify **FAIL** `37916113853`: hash/CRC match, 74 checks/29 assertion failures; four new hint checks did not fail. No numeric exit attestation.
+
+Both **SOURCE APPROVE** `043355fd2777cfc29d491515148cc2214b953eeb` and approve one headless:
+
+```text
+tests/smoke_hud_presentation_lifecycle.gd --720p
+```
+
+Original 74 checks remain, plus six admission guards. Runtime remains pending; isolated UI-fixture scope only. Parked earned HUD cause stays unknown; whole F46 remains open.
