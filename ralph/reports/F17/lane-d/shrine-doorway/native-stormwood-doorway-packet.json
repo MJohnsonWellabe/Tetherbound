@@ -13,10 +13,10 @@
     "--hall-endwall-baseline",
     "--hall-arch-depth-baseline",
     "--hall-surface-depth-baseline",
-    "--source-commit=c338f64255511e6f358ada03a286581dfb09840e",
-    "--output=res://ralph/reports/F17/lane-d/shrine-doorway/native-c338-stormwood"
+    "--source-commit=4ab4c5c82fbce5f80b12c66a32e3f592906a2cee",
+    "--output=res://ralph/reports/F17/lane-d/shrine-doorway/native-4ab-stormwood"
   ],
-  "checkout_ref": "c338f64255511e6f358ada03a286581dfb09840e",
+  "checkout_ref": "4ab4c5c82fbce5f80b12c66a32e3f592906a2cee",
   "source_preflight": "Use established exactHEADR2-F38 capture-definition and shots/.gdignore restore and ROOT serializedpin/import, freshrawoutput/HOME, original tracked/index/source hashes before/after. Preserve every failed/successful immutablepacket/untracked proof; no D engine/import/render/export or hostedGPU.",
   "changes": "Stormwood existing3pieceSpark mount; new bounded doorwayview label rather than pretending oldnave viewpoint unchanged; production candidate replaces only3upperwindow lintel modules with installed solidwall and matchingheadercollision, grows clearheight4.16→5.2 under nominal6.24ceiling. Width/floor/approaches/creature scale/authority/durable schemas unchanged. Actual fit/visibility remains unproven.",
   "expected": {
@@ -40,7 +40,7 @@
     ],
     "complete": false
   },
-  "source_command": "Originalc338 SOURCE/unitCOMMAND APPROVE, f2dbARTAPP retained; conditionalc338 nativeCOMMAND APPROVE parent01a11fff. Prerequisite UNSATISFIED: c3381/1FAIL run37911493695. Fixed4ab SOURCE/COMMAND review pending, no fixedproof dispatched, no ROOTqueue; this c338 argv cannot execute. Requires newpinnedSHA and passingactualARTAPP beforeupdatednativeCOMMAND.",
+  "source_command": "SAME original f42 via parent01a12001-f849-7b71-9767-d25ca2d59e45 FAILEDARTIFACT verifiedc338, passingreuseREJECTED; fixed4ab SOURCE+changedexistingpreset COMMAND APPROVE. Exact4ab affectedproof running. Repinned4ab nativeCOMMAND notyetreviewed, prerequisite UNSATISFIED, NOT ROOTqueued.",
   "flags": "All shipping enabledfalse. Doorgeometry argv optin only exact capture mainloop plus existing Hallstills/relicwitness. Normal game/network processes ignorecandidate/baseline flags and share config. Relic and other Hall flags separate; no automatic enablement follows.",
   "criterion": "F17#6 OPEN; pending bounded Stormwood mount plus supported shrine doorway witness",
   "fixture": "Existing disclosed fresh solo host, ordinary post-opening/starter/initial placement and ONE personal held Stormwood relic projected from authored captain_marrow_dynamo_core hand-off. No boss victory/key/hung flag/worlddisplay/receipt seed, no earned boundary.",

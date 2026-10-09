@@ -18,7 +18,8 @@
     "artifact": 11606956644,
     "job": 113757469631,
     "zip_sha256": "ca04988ede9e94df03e58510ddc0a3c7e36e3a0fd2be486a6f5691eb9152672c",
-    "observation": "Raised candidate returned unchanged source; expected3 changedmodules got0, expected1 changedcollider got0. Raw selectedtest + failingjob preserved. No native gate satisfaction."
+    "observation": "Raised candidate returned unchanged source; expected3 changedmodules got0, expected1 changedcollider got0. Raw selectedtest + failingjob preserved. No native gate satisfaction.",
+    "original_review": "SAME original f42 via parent01a12001-f849-7b71-9767-d25ca2d59e45 FAILEDARTIFACT VERIFIED, passingreuseREJECTED; ZIP/expanded/exactc338/genuine1test1FAIL/jobexit1/noexitfile/zeroengineerrorswarnings confirmed."
   },
   "doorway_view_proof": {
     "source": "f2dbd935b35aed9fa774e5067fdd2d2107d7b4d9",
@@ -39,5 +40,6 @@
   "native_command": "SAME original f42 via parent01a11fff-345e-71b3-80ba-86c689582a5a conditionalCOMMANDAPP for exactc338 packet, pendingc338actualARTAPP; UNSATISFIED duefailedproof. FixedSHA requires originalreviewandactualproof first; NOT ROOTqueued.",
   "shipping": "shrine_doorway.enabled=false, all relic candidatesfalse; shared config used by ordinarypeers, processcaptureflags ignored outsideexactexisting capture. Original guards/disclosedheldfixture and independentreviewers retained.",
   "supported_delta": "Only header recognition changes from whole numericJSONarray/mixedliteral equality to exact float component comparisons. No changed coordinates, tunables, fixtures or guards; current original SOURCE/COMMAND review pending.",
-  "source_review": "SAME original f42 via parent01a11ffc-f9aa-7613-8fd3-5c863f599dee SOURCE+changedexistingpreset COMMAND APPROVE; flagOFF and world-scope baseline limitation corrected"
+  "source_review": "SAME original f42 via parent01a11ffc-f9aa-7613-8fd3-5c863f599dee SOURCE+changedexistingpreset COMMAND APPROVE; flagOFF and world-scope baseline limitation corrected",
+  "current_fix_review": "Same parent01a12001 SOURCE APPROVE4ab and exactexistingpreset COMMAND APPROVE; numericcasts retainexactheadercoordinates/dimensions/guards, consistentwithfailedrecipe. Affectedrerun37912150637 running; no actualpass credit."
 }
