@@ -41,15 +41,6 @@ func _initialize() -> void:
 	_run()
 
 
-## Use the existing coordinator protocol, retaining hosted outputs alongside
-## F20's peer packet instead of its POSIX /tmp fallback. Explicit output env
-## supplied by CI still takes precedence; no proof budget or behavior changes.
-func _resolve_run_dir() -> String:
-	if not OS.get_environment("TB_NET_OUT_DIR").is_empty(): return super._resolve_run_dir()
-	var safe_id := _run_id.replace("/", "_").replace(":", "_").replace(" ", "_")
-	return ProjectSettings.globalize_path("res://ralph/reports/F20/water-return-runtime/").path_join("net-run-" + safe_id)
-
-
 func _run() -> void:
 	if not await launch(2, WATER):
 		quit(await finish())

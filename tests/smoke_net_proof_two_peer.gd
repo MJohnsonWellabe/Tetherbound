@@ -88,41 +88,6 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	# Hosted render dispatches carry arguments rather than the shell wrapper's
-	# environment. Keep the existing scenario runner and every proof assertion.
-	var supplied := {}
-	for argument: String in OS.get_cmdline_user_args():
-		var key := argument.get_slice("=", 0)
-		if key not in ["--scenario", "--proof-out", "--render-peers", "--peer-resolution"]: continue
-		if supplied.has(key):
-			check(false, "duplicate proof argument " + key)
-			await _end({}, "")
-			return
-		if key == "--render-peers" and argument != key:
-			check(false, "render-peers is a standalone proof switch")
-			await _end({}, "")
-			return
-		supplied[key] = argument.trim_prefix(key + "=")
-	if supplied.has("--scenario"):
-		OS.set_environment("TB_PROOF_SCENARIO", str(supplied["--scenario"]))
-	if supplied.has("--proof-out"):
-		var output := str(supplied["--proof-out"])
-		if not (output.begins_with("res://ralph/reports/") or output.begins_with("res://shots/")) or output.contains(".."):
-			check(false, "hosted proof output must stay under reports or shots")
-			await _end({}, "")
-			return
-		OS.set_environment("TB_PROOF_OUT", ProjectSettings.globalize_path(output))
-		OS.set_environment("TB_NET_OUT_DIR", ProjectSettings.globalize_path(output.path_join("net")))
-	if supplied.has("--render-peers"):
-		OS.set_environment("TB_NET_PROOF_RENDER", "1")
-	if supplied.has("--peer-resolution"):
-		var resolution := RegEx.new()
-		resolution.compile("^[0-9]{3,4}x[0-9]{3,4}$")
-		if resolution.search(str(supplied["--peer-resolution"])) == null:
-			check(false, "invalid peer capture resolution")
-			await _end({}, "")
-			return
-		OS.set_environment("TB_NET_PROOF_RESOLUTION", str(supplied["--peer-resolution"]))
 	var path := OS.get_environment("TB_PROOF_SCENARIO")
 	_proof_out = OS.get_environment("TB_PROOF_OUT")
 	var scenario: Variant = JSON.parse_string(FileAccess.get_file_as_string(path)) \

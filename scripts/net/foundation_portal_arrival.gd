@@ -8,8 +8,6 @@ var _remote: Dictionary = {}
 var _retry_left := 0.0
 
 func _ready() -> void:
-	add_to_group(preload("res://scripts/ui/input_owner.gd").GROUP)
-	add_to_group("story_modal")
 	var session: Node = get_parent().get_parent()
 	session.connect("peer_left", func(peer: int) -> void:
 		session.call("_owner_passive_service").call("portal_departed", peer)
@@ -18,15 +16,6 @@ func _ready() -> void:
 		_remote.clear()
 		_pending.clear()
 		_offered.clear())
-
-## Solo menus pause the controller, but the session's arrival deadline keeps
-## running. Retain ordinary input ownership until this exact travel settles;
-## the controller still applies gravity and measures real contact underneath.
-func owns_input() -> bool:
-	return not _pending.is_empty() and _same_owner()
-
-func is_open() -> bool:
-	return owns_input()
 
 func reset() -> void:
 	_remote.clear()

@@ -603,12 +603,6 @@ func _fight() -> bool:
 	var guardian_fight := _fight_enemy == _guardian_creature
 	if guardian_fight and not _allow_guardian:
 		return _fail("The guardian encounter began before the actual cave approach/preparation")
-	var goal_reader: RefCounted
-	var goal_before := {}
-	if OS.get_cmdline_user_args().has("--observe-next-goal"):
-		# Runtime load avoids the travel helper's inherited navigation preloads.
-		goal_reader = load("res://tests/helpers/f20_portal_travel.gd").new(_tree, _game)
-		goal_before = goal_reader.observe_next_goal("wild_victory", "before_fight")
 	var pilot := WildPilot.new(_tree, _combat, _director, _rig)
 	pilot.use_switching = false
 	pilot.switch_input = true
@@ -659,21 +653,6 @@ func _fight() -> bool:
 			return false
 	for _frame in 120:
 		if INPUT_OWNER.current(_tree) == null:
-			if goal_reader != null:
-				# Observe ordinary idle work; never invoke Game._process or set a goal.
-				await _tree.process_frame
-				await _tree.process_frame
-				var goal_after: Dictionary = goal_reader.observe_next_goal("wild_victory", "after_world_release")
-				var changed: bool = goal_before.lesson_goal_signature != goal_after.lesson_goal_signature
-				var same_revision: bool = goal_before.progression_revision == goal_after.progression_revision
-				_receipt("wild_guidance_transition", {"before": goal_before, "after": goal_after,
-					"signature_changed": changed, "progression_revision_unchanged": same_revision,
-					"forced_refresh": false})
-				if INPUT_OWNER.current(_tree) != null or _tree.paused \
-						or goal_before.character_id != goal_after.character_id or goal_before.party_uids != goal_after.party_uids:
-					return _fail("Observed wild guidance lost the original free world or character/team")
-				if changed and same_revision and goal_after.visible_text_matches != true:
-					return _fail("Actual revision-neutral wild guidance did not refresh the visible HUD")
 			return true
 		await _tree.physics_frame
 	return _fail("The actual wild victory did not release world input")

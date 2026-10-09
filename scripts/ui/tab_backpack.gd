@@ -1450,10 +1450,7 @@ func _read_use() -> void:
 	if id == "home_key":
 		var game := get_node_or_null(^"/root/Game")
 		if menu != null: menu.call("close")
-		if game != null:
-			var used: bool = game.call("use_home_key") == true
-			print("HOME KEY SATCHEL USE " + JSON.stringify({"returned": used,
-				"focused_slot": _focused, "selected_item": id, "selected_count": stack.get("n", 0)}))
+		if game != null: game.call("use_home_key")
 		return
 	if str(db.call("kind", id)) == "armor":
 		var equipment := _equipment()

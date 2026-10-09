@@ -95,24 +95,13 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 					break
 			if body == null:
 				return {"verdict": "FAIL", "detail": "Named Tidecoil body never became resident"}
-			var named_body_path := str(body.get_path())
-			# Sample after the original residency wait enters activation range,
-			# before the disclosed won-handler fixture can resolve anything.
-			var cycle: Dictionary = game.world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(TIDECOIL_ID, {}).duplicate(true)
-			var packet_valid := not preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, TIDECOIL_ID).is_empty()
-			if msg.get("args", {}).get("resident_shell") == true \
-				and (int(cycle.get("generation", 0)) < 1 or cycle.get("status") != "active" or not packet_valid):
-				return {"verdict": "FAIL", "detail": "Resident named body lacks its canonical alpha generation before resolution"}
 			director.set("_engaged_with", body)
 			director.call("_on_combat_exited", "won")
 			for frame in 10:
 				await physics_frame
 			var local: bool = game.world.flags.has(RESOLVED)
 			return {"verdict": "PASS" if local else "FAIL",
-				"detail": "Director terminal handler recorded Tidecoil on this peer: %s (host=%s)" % [local, game.is_host()],
-				"data": {"named_body_present": true, "named_body_path": named_body_path,
-					"alpha_generation": int(cycle.get("generation", 0)), "alpha_status": str(cycle.get("status", "")),
-					"alpha_packet_valid": packet_valid}}
+				"detail": "Director terminal handler recorded Tidecoil on this peer: %s (host=%s)" % [local, game.is_host()]}
 		"deep_watch_claim":
 			_pose(_cache_position() + Vector3(1.0, 0.0, 0.0))
 			var before := int(game.inventory.count("skill_candy_iii"))
@@ -145,12 +134,5 @@ func _execute_probe(msg: Dictionary) -> Variant:
 	for flag: Variant in game.world.flags.all_set():
 		if str(flag).begins_with("water_claim:") and str(flag).ends_with(":" + GATED):
 			receipts += 1
-	var world := _world()
-	var cycle: Dictionary = game.world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(TIDECOIL_ID, {})
 	return {"resolved": game.world.flags.has(RESOLVED), "receipts": receipts,
-		"character_id": str(game.local.character_id), "host": bool(game.is_host()),
-		"current_realm": str(game.current_realm),
-		"water_shell": world != null and world.get("simulation_only") == true and world.call("shell_build_complete") == true,
-		"water_look_absent": world != null and world.get_node_or_null("WorldLook") == null,
-		"alpha_generation": int(cycle.get("generation", 0)), "alpha_status": str(cycle.get("status", "")),
-		"alpha_packet_valid": not preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, TIDECOIL_ID).is_empty()}
+		"character_id": str(game.local.character_id), "host": bool(game.is_host())}

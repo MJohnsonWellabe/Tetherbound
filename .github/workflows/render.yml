@@ -58,14 +58,6 @@ on:
         description: Exact prior artifact to extract into .tmp/producer-source before running.
         required: false
         default: ""
-      reviewed_evidence_ref:
-        description: Optional exact committed SHA for reviewed evidence; supply reviewed_evidence_path too.
-        required: false
-        default: ""
-      reviewed_evidence_path:
-        description: Exact ralph/reports/F19/*.json sidecar to read from the evidence commit.
-        required: false
-        default: ""
 
 permissions:
   contents: read
@@ -89,8 +81,6 @@ jobs:
           LABEL: ${{ inputs.label }}
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
           SOURCE_ARTIFACT_NAME: ${{ inputs.source_artifact_name }}
-          REVIEWED_EVIDENCE_REF: ${{ inputs.reviewed_evidence_ref }}
-          REVIEWED_EVIDENCE_PATH: ${{ inputs.reviewed_evidence_path }}
           RENDERING_METHOD: ${{ inputs.rendering_method }}
         run: |
           set -euo pipefail
@@ -107,10 +97,6 @@ jobs:
           if [[ -n "$SOURCE_RUN_ID" || -n "$SOURCE_ARTIFACT_NAME" ]]; then
             [[ "$SOURCE_RUN_ID" =~ ^[1-9][0-9]{0,19}$ ]] || fail "source_run_id must be a positive decimal run ID; supply both source inputs"
             [[ "$SOURCE_ARTIFACT_NAME" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]{0,199}$ ]] || fail "source_artifact_name must be 1-200 of [A-Za-z0-9_.-], beginning with a letter or digit; supply both source inputs"
-          fi
-          if [[ -n "$REVIEWED_EVIDENCE_REF" || -n "$REVIEWED_EVIDENCE_PATH" ]]; then
-            [[ "$REVIEWED_EVIDENCE_REF" =~ ^[0-9a-f]{40}$ ]] || fail "reviewed_evidence_ref must be an exact committed SHA; supply both evidence inputs"
-            [[ "$REVIEWED_EVIDENCE_PATH" =~ ^ralph/reports/F19/([A-Za-z0-9_][A-Za-z0-9_.-]*/)*[A-Za-z0-9_][A-Za-z0-9_.-]*\.json$ && "$REVIEWED_EVIDENCE_PATH" != *..* && ${#REVIEWED_EVIDENCE_PATH} -le 240 ]] || fail "reviewed_evidence_path must be a bounded F19 JSON path without ..; supply both evidence inputs"
           fi
           [[ "$RENDERING_METHOD" = gl_compatibility || "$RENDERING_METHOD" = forward_plus ]] || fail "unknown rendering method"
 
@@ -135,28 +121,6 @@ jobs:
           SCRIPT: ${{ inputs.script }}
           CHECKOUT_REF: ${{ inputs.checkout_ref }}
         run: test -f "$SCRIPT" || { echo "::error::$SCRIPT not found on $CHECKOUT_REF"; exit 1; }
-
-      - name: Check out immutable reviewed evidence
-        if: inputs.reviewed_evidence_ref != ''
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.reviewed_evidence_ref }}
-          path: .tmp/reviewed-evidence
-          persist-credentials: false
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          # Exact-cut manifests may reference an earlier piece's original log.
-          # The latest source artifact retains its saves, but not that earlier
-          # run's console file. Hydrate only these immutable recorded log copies.
-          sparse-checkout: |
-            /${{ inputs.reviewed_evidence_path }}
-            /ralph/reports/F19/lane-b-prefix/producer-*-original.log
-
-      - name: Check the reviewed evidence is an ordinary file
-        if: inputs.reviewed_evidence_ref != ''
-        env:
-          REVIEWED_EVIDENCE_PATH: ${{ inputs.reviewed_evidence_path }}
-        run: test -f ".tmp/reviewed-evidence/$REVIEWED_EVIDENCE_PATH" && test ! -L ".tmp/reviewed-evidence/$REVIEWED_EVIDENCE_PATH"
 
       - name: Download original producer artifact
         if: inputs.source_run_id != ''

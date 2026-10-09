@@ -226,18 +226,8 @@ func _activate(prompt: Node3D, label: String) -> bool:
 		await _tap(&"interact")
 		if _activated == prompt:
 			return true
-	var winner: Object = _arbiter.call("winning_provider")
-	var target_live := is_instance_valid(prompt) and prompt.is_inside_tree()
-	print("WATER REEDHAVEN INTERACTION REFUSAL " + JSON.stringify({
-		"label": label, "player_position": str(_player.global_position),
-		"target_live": target_live, "target_path": str(prompt.get_path()) if target_live else "",
-		"target_position": str(prompt.global_position) if target_live else "",
-		"target_distance": _player.global_position.distance_to(prompt.global_position) if target_live else null,
-		"target_offer": prompt.call("interaction_offer", _player.global_position) if target_live else {},
-		"winning_path": str(winner.get_path()) if is_instance_valid(winner) and winner is Node else "",
-		"winning_offer": _arbiter.call("winner"),
-		"activated_id": _activated.get_instance_id() if is_instance_valid(_activated) else 0}))
-	return _fail("%s never won and received the production interact press; winner=%s" % [label, str(winner)])
+	return _fail("%s never won and received the production interact press; winner=%s" % [
+		label, str(_arbiter.call("winning_provider"))])
 
 
 func _equip_tool(tool: String) -> bool:

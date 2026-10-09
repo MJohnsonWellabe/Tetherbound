@@ -7,28 +7,13 @@ var dive_remaining_s := 0.0
 var _ripplet_approved := false
 var _ripplet_requesting := false
 var _ripplet_hint_shown := false
-var _restore_mount_guard: Variant = null
-
-func restore_mount(current: Variant) -> bool:
-	_restore_mount_guard = current
-	var attached := mount()
-	_restore_mount_guard = null
-	return attached
-
-func cancel_traversal_requests() -> void:
-	# Answers for a previous loaded pose must not attach its obsolete carrier.
-	var service := water_world.get_node_or_null("RippletWaterService") if water_world != null else null
-	if service != null: service.cancel_pending_requests()
-	_ripplet_requesting = false
-	for key: String in ["restored_dive_budget", "restored_dive_uid"]:
-		if has_meta(key): remove_meta(key)
 
 func mount() -> bool:
 	var candidate := _mountable_body()
 	if candidate != null and str(candidate.species_id) == "ripplet" and not _ripplet_approved:
 		if not _ripplet_requesting:
 			_ripplet_requesting = true
-			water_world.get_node("RippletWaterService").request("mount", str(_encounter.ally_instance().uid), _restore_mount_guard)
+			water_world.get_node("RippletWaterService").request("mount", str(_encounter.ally_instance().uid))
 		return is_mounted()
 	return super.mount()
 
@@ -50,13 +35,10 @@ func apply_ripplet_action(action: String, uid: String) -> void:
 			dive_remaining_s = minf(dive_remaining_s, float(get_meta("restored_dive_budget")))
 			remove_meta("restored_dive_budget")
 			remove_meta("restored_dive_uid")
-		get_node("/root/Game").push_world_message("Ripplet is diving. Tap Jump to surface.")
 	elif action == "surface":
 		surface()
 
 func surface() -> void:
-	if diving:
-		get_node("/root/Game").push_world_message("Ripplet has surfaced.")
 	diving = false
 	dive_remaining_s = 0.0
 

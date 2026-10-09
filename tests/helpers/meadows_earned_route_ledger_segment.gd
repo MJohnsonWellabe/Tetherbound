@@ -402,19 +402,6 @@ func _receipt(stage: String) -> void:
 	var game := _tree.root.get_node_or_null(^"Game")
 	var items := {}
 	var party: Array = []
-	# F46 observer: retain what the actual player-facing HUD said at this gate.
-	# A source objective or this snapshot alone is not comprehension proof.
-	var next_goal := {"realm": "", "hud_present": false, "visible": false, "text": "",
-		"counts_as_comprehension_proof": false}
-	if game != null: next_goal.realm = str(game.get("current_realm"))
-	var scene := _tree.current_scene
-	var hud := scene.get_node_or_null("PlaygroundHUD") if scene != null else null
-	if hud != null:
-		var label: Label = hud.get("_objective_text_label") as Label
-		if label != null:
-			next_goal.hud_present = true
-			next_goal.visible = label.is_visible_in_tree()
-			next_goal.text = label.text
 	if game != null:
 		var inventory: RefCounted = game.get("inventory")
 		if inventory != null:
@@ -433,8 +420,7 @@ func _receipt(stage: String) -> void:
 						"xp": int(c.get("xp")), "hp": snappedf(float(c.get("hp")), 0.1)})
 	var row := {"kind": "ledger", "stage": stage, "t": snappedf(_t, 0.1),
 		"path_m": snappedf(_path_m, 0.1), "beats": beats.size(),
-		"a7_longest_so_far_s": _worst_gap["seconds"], "items": items, "party": party,
-		"next_goal": next_goal}
+		"a7_longest_so_far_s": _worst_gap["seconds"], "items": items, "party": party}
 	ledger.append(row)
 	_write(row)
 	print("ROUTE LEDGER ", JSON.stringify(row))

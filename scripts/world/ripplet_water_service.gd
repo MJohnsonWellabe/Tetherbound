@@ -52,17 +52,9 @@ func _process(_delta: float) -> void:
 			if riding != null: riding.set("_ripplet_requesting", false)
 			get_node("/root/Game").push_world_message("Ripplet traversal timed out. Try again.")
 
-func cancel_pending_requests() -> void:
-	# Local answer bindings only; host permits and admission remain unchanged.
-	_pending.clear()
-
-func request(action: String, uid: String, current: Variant = null) -> bool:
+func request(action: String, uid: String) -> bool:
 	var token := Crypto.new().generate_random_bytes(16).hex_encode()
-	var game := get_node("/root/Game")
-	_pending[token] = {"action": action, "uid": uid, "started_ms":Time.get_ticks_msec(),
-		"owner": game.local, "character_id": str(game.local.character_id),
-		"world": game.world, "world_instance_id": str(game.world.reward_delivery_namespace),
-		"restore_current": current}
+	_pending[token] = {"action": action, "uid": uid, "started_ms":Time.get_ticks_msec()}
 	if get_node("/root/Game").is_host():
 		_handle(multiplayer.get_unique_id(), token, action, uid)
 	else:
@@ -149,24 +141,12 @@ func _accept(token: String, verdict: Dictionary) -> void:
 	if expected.is_empty(): return
 	_pending.erase(token)
 	var riding := world.get_node_or_null("RidingController")
-	if riding != null and _pending.is_empty(): riding.set("_ripplet_requesting", false)
-	# The reply's token can still exist after an owner/load transition. Check
-	# its captured owner and the restore fence at the actual attachment seam.
-	if not _pending_owner_current(expected): return
+	if riding != null: riding.set("_ripplet_requesting", false)
 	if not verdict.get("ok", false):
 		get_node("/root/Game").push_world_message(str(verdict.get("reason", "")))
 		return
 	if verdict.get("uid") != expected.uid or verdict.get("action") != expected.action: return
 	if riding != null: riding.apply_ripplet_action(expected.action, expected.uid)
-
-func _pending_owner_current(expected: Dictionary) -> bool:
-	var game := get_node_or_null("/root/Game")
-	if game == null or game.local == null or game.world == null \
-			or expected.get("owner") != game.local or expected.get("character_id") != str(game.local.character_id) \
-			or expected.get("world") != game.world or expected.get("world_instance_id") != str(game.world.reward_delivery_namespace):
-		return false
-	var current: Variant = expected.get("restore_current")
-	return current == null or (current is Callable and current.is_valid() and current.call() == true)
 
 func peer_in_combat(peer: int) -> bool:
 	# Water's director is a subclass. Inspect the inherited authority service,

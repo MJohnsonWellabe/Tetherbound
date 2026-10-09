@@ -7,7 +7,6 @@ var _interaction: Node
 var _board: WeakRef
 var _left := 0.0
 var _cached_view: Dictionary = {}
-var _cached_view_scope: Dictionary = {}
 
 func _ready() -> void:
 	# Install the refusal observer before the first successful key use. Defer
@@ -41,7 +40,6 @@ func _ready() -> void:
 	add_child(_interaction)
 	_interaction.call("bind_actions", bounty_claim, personal_view, bounty_reconcile)
 	get_parent().connect("foundation_reply_received", _reply)
-	get_parent().connect("homestead_action_completed", _bounty_completed)
 	preload("res://scripts/ui/bounty_board_panel.gd").attach(_interaction)
 	var rematches: Node = preload("res://scripts/net/foundation_rematches.gd").new()
 	rematches.name = "Rematches"
@@ -130,9 +128,6 @@ func bounty_context(peer: int) -> Dictionary:
 	var session := get_parent()
 	if session.call("is_host") != true or session.call("admitted_character_state", peer).is_empty(): return {}
 	var game: Node = session.call("_game")
-	var tree := get_tree()
-	if game == null or tree == null or not game.has_method("_realm_scene_ready") \
-		or game.call("_realm_scene_ready", tree.current_scene, str(game.get("current_realm"))) != true: return {}
 	var world: RefCounted = game.get("world")
 	var writer := session.get_node_or_null(^"LedgerRpc")
 	if writer == null: return {}
@@ -145,7 +140,7 @@ func bounty_context(peer: int) -> Dictionary:
 	return {"character_id": character, "expected_revision": registry.call("revision", character),
 		"source_key": preload("res://scripts/world/bounty_board.gd").config().board_key,
 		"in_range": nearby, "in_combat": session.call("_altar_peer_in_combat", peer),
-		"world_namespace": world.reward_delivery_namespace, "host_day": preload("res://scripts/world/bounty_board.gd").host_day(world.redesign_world),
+		"world_namespace": world.reward_delivery_namespace, "host_day": world.redesign_world.bounty_day,
 		"host_unlocks": world.redesign_world.portal_unlocks.duplicate(), "clock_confirmed": world.day >= 1}
 
 func accepted_bounty_event(peer: int, token: String) -> Dictionary:
@@ -166,20 +161,8 @@ func bounty_view() -> Dictionary:
 	return get_parent().call("_foundation_send", "bounty_view", "halda_bounty_board", {}, -1)
 
 func personal_view() -> Dictionary:
-	var session := get_parent()
-	if session.call("is_host") == true: return bounty_view()
-	var scope: Dictionary = session.call("_foundation_view_scope", session.call("_altar_envelope", "bounty_view", "halda_bounty_board"))
-	_bounty_view_for_scope(scope)
-	bounty_view()
-	return _bounty_view_for_scope(scope)
-
-func _bounty_view_for_scope(scope: Dictionary) -> Dictionary:
-	if scope.is_empty() or scope != _cached_view_scope \
-		or _cached_view.get("character_id") != scope.get("character_id") \
-		or _cached_view.get("world_namespace") != scope.get("world_namespace"):
-		_cached_view.clear()
-		_cached_view_scope.clear()
-	return _cached_view.duplicate(true)
+	var result := bounty_view()
+	return result if get_parent().call("is_host") == true else _cached_view.duplicate(true)
 
 func bounty_claim(intent: Dictionary) -> Dictionary:
 	return get_parent().call("_foundation_send", "bounty_claim", "halda_bounty_board", intent, -1)
@@ -190,48 +173,6 @@ func bounty_reconcile(pending: Dictionary) -> Dictionary:
 		or pending.get("world_namespace") != session.call("_game").get("world").reward_delivery_namespace: return {"ok": false, "resolved": false}
 	return session.call("_foundation_send", "bounty_reconcile", "halda_bounty_board", {"instance": pending.get("instance")}, -1)
 
-func _bounty_completed(action: String, intent: Dictionary, result: Dictionary) -> void:
-	# The first reply may only announce the care checkpoint. The original
-	# claim finishes through Session's exact owner-save/accepted-ACK signal.
-	if action != "bounty_claim" or intent.size() != 1 or not intent.get("instance") is String \
-		or result.get("ok") != true or result.get("resolved") != true or result.get("durable") != true \
-		or result.get("owner_saved") != true or result.get("owner_acknowledged") != true \
-		or not is_instance_valid(_interaction): return
-	var session := get_parent()
-	var game: Node = session.call("_game")
-	if game == null or game.get("session") != session: return
-	var original: Dictionary = session.call("_altar_envelope", action, "halda_bounty_board")
-	if original.is_empty(): return
-	original.intent = intent.duplicate(true)
-	original.revision = -1
-	# Compare against the actual retained request; this never sends one.
-	if session.call("_owner_passive_request_matches", "foundation_request", original) != true: return
-	var pending := {"instance": intent.instance, "character_id": original.character_id,
-		"world_namespace": original.world_namespace}
-	if _interaction.get("_pending") != pending: return
-	var row: Dictionary = session.call("_owner_training_row")
-	if row.get("action") != action or row.get("status") != "accepted" \
-		or row.get("session_id") != original.session_epoch or row.get("character_id") != original.character_id \
-		or row.get("source_key") != original.station_key or row.get("intent") != intent \
-		or row.get("receipt") != "bounty:%s:%s" % [intent.instance, original.character_id] \
-		or row.get("receipt") != result.get("receipt"): return
-	var accepted: Dictionary = session.call("_foundation_decision", int(session.call("local_peer_id")), row)
-	if accepted.get("ok") != true or accepted.get("owner_saved") != true \
-		or accepted.get("owner_acknowledged") != true or accepted.get("receipt") != result.receipt: return
-	_interaction.call("settled", result, pending)
-
 func _reply(envelope: Dictionary, result: Dictionary) -> void:
-	if envelope.op == "bounty_view":
-		# Session emits only after matching the original request and current
-		# character/world/epoch. Keep that same scope on the guest's UI cache.
-		var session := get_parent()
-		var scope: Dictionary = session.call("_foundation_view_scope", session.call("_altar_envelope", "bounty_view", "halda_bounty_board"))
-		_bounty_view_for_scope(scope)
-		if scope.is_empty() or session.call("_foundation_view_scope", envelope) != scope \
-			or result.get("character_id") != scope.character_id or result.get("world_namespace") != scope.world_namespace: return
-		_cached_view = result.duplicate(true)
-		_cached_view_scope = scope.duplicate(true)
-		_interaction.emit_signal("view_changed", _cached_view.duplicate(true))
-	elif envelope.op in ["bounty_claim", "bounty_reconcile"]:
-		_interaction.call("settled", result, {"instance": envelope.intent.get("instance"),
-			"character_id": envelope.character_id, "world_namespace": envelope.world_namespace})
+	if envelope.op == "bounty_view": _cached_view = result.duplicate(true)
+	elif envelope.op in ["bounty_claim", "bounty_reconcile"]: _interaction.call("settled", result)

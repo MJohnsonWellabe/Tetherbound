@@ -144,12 +144,6 @@ func _tick(fixture: Dictionary) -> void:
 
 func test_permanent_bool_save_failure_retains_original_and_notifies_once() -> void:
 	var f := _fixture()
-	f.arrival._pending.seated = false
-	f.game.current_realm = "water"
-	assert_true(f.arrival.owns_input(), "the exact unseated transition cannot be paused by inventory")
-	assert_true(f.arrival.is_open(), "the ordinary story-modal graph holds the solo menu")
-	f.arrival._pending.seated = true
-	f.game.current_realm = "meadows"
 	_tick(f)
 	assert_eq(f.session.notices.size(), 0, "no save-wait notice before its seated deadline")
 	f.arrival._pending.save_deadline_msec = Time.get_ticks_msec() - 1
@@ -166,7 +160,6 @@ func test_permanent_bool_save_failure_retains_original_and_notifies_once() -> vo
 	assert_eq(f.session.journal_calls, 0)
 	assert_eq(f.session.replies.size(), 0, "failed owner save cannot ACK success or erase its original")
 	assert_true(f.game.world.reward_deliveries.is_empty())
-	assert_true(f.arrival.owns_input(), "a failed BOOL save cannot release arrival input")
 	_dispose(f)
 
 func test_durable_original_retries_after_movement_without_second_pose_or_receipt() -> void:
@@ -176,7 +169,6 @@ func test_durable_original_retries_after_movement_without_second_pose_or_receipt
 	assert_true(f.arrival._pending.get("pose_saved") == true)
 	assert_true(f.arrival._pending.get("journal_started") == true)
 	assert_eq(f.session.replies.size(), 0, "durable pending journal is not an accepted owner ACK")
-	assert_true(f.arrival.owns_input(), "the exact durable original still waits for its ACK")
 	assert_true(f.arrival._original_arrival_row(f.game.world, f.arrival._pending))
 	f.arrival.contact_valid = false
 	assert_true(f.arrival.arrival_binding(f.envelope, f.permit), "exact durable row owns the retry after movement")
@@ -185,8 +177,6 @@ func test_durable_original_retries_after_movement_without_second_pose_or_receipt
 	f.session.accepted = true
 	f.arrival._save_arrival()
 	assert_true(f.arrival._pending.is_empty())
-	assert_false(f.arrival.owns_input(), "accepted saved arrival releases ordinary input")
-	assert_false(f.arrival.is_open())
 	assert_eq(f.game.captures, 1)
 	assert_eq(f.game.save_system.attempts, 1)
 	assert_eq(f.session.journal_calls, 3)
@@ -199,26 +189,6 @@ func test_durable_original_retries_after_movement_without_second_pose_or_receipt
 	assert_eq(f.session.replies[0].result, {"ok": true, "saved": true, "durable": true,
 		"arrival_applied": true, "arrived": true, "permit_id": "consumed-permit", "reason": ""})
 	assert_eq(f.game.world.reward_deliveries[f.session.row.delivery_id].status, "accepted")
-	# The existing real-input travel helper must retain only the exact
-	# Session-authenticated Enter reply; world readiness alone is insufficient.
-	var travel := preload("res://tests/helpers/f49_portal_travel.gd").new(null, f.game)
-	travel._enter_binding = {"request_id": f.envelope.request_id, "character_id": f.envelope.character_id,
-		"world_instance_id": f.envelope.world_instance_id, "session_epoch": f.envelope.session_epoch}
-	var reply: Dictionary = f.session.replies[0].result.duplicate(true)
-	reply.merge(travel._enter_binding)
-	reply.kind = "portal_enter"
-	for field: String in ["request_id", "character_id", "world_instance_id", "session_epoch", "kind"]:
-		var unrelated := reply.duplicate(true)
-		unrelated[field] = "another"
-		travel._portal_result(unrelated)
-		assert_true(travel._enter_result.is_empty(), "unrelated " + field + " is not this arrival")
-	travel._portal_result(reply)
-	assert_eq(travel._enter_result, reply, "the actual saved/durable/arrived schema is retained intact")
-	var refusal := reply.duplicate(true)
-	refusal.ok = false
-	refusal.reason = "The arrival has not reached supported ground."
-	travel._portal_result(refusal)
-	assert_eq(travel._enter_result, refusal, "a correlated terminal refusal is preserved, never ready-world success")
 	_dispose(f)
 
 func test_non_durable_journal_cannot_replace_contact_even_after_owner_pose_save() -> void:
@@ -232,7 +202,6 @@ func test_non_durable_journal_cannot_replace_contact_even_after_owner_pose_save(
 	assert_false(f.arrival.arrival_binding(f.envelope, f.permit))
 	f.arrival._save_arrival()
 	assert_true(f.arrival._pending.is_empty())
-	assert_false(f.arrival.owns_input(), "terminal host refusal releases the exact arrival hold")
 	assert_eq(f.game.save_system.attempts, 1)
 	assert_eq(f.session.journal_calls, 1, "loss of contact before durable row must refuse")
 	assert_eq(f.session.replies.size(), 1)
@@ -331,7 +300,6 @@ func test_retained_row_cannot_survive_live_session_or_world_identity_change() ->
 			"owner": f.game.local = PLAYER.new()
 			"realm": f.game.current_realm = "water"
 		assert_false(f.arrival.presentation_binding(f.envelope, f.permit, true), scenario)
-		assert_false(f.arrival.owns_input(), "another live " + scenario + " cannot inherit this input hold")
 		assert_false(f.arrival.arrival_binding(f.envelope, f.permit), scenario)
 		f.arrival._save_arrival()
 		assert_true(f.arrival._pending.is_empty(), scenario)

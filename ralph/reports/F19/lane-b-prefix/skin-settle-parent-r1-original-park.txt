@@ -1,7 +1,0 @@
-Bacon `01a1165d-ecfb-79d3-9355-1224723cdb53`: **comparison verified; PARK.**
-
-Parent hash/CRC verified; logs are byte-identical with the same two failures. No engine/script errors or numeric exit marker.
-
-Finite geometry and lateral unwedge behavior do not establish a detour without X/path/contact operands. **No specific correction or third measurement supported.**
-
-Candidate recovery remains unproved; arrival-support is unrun. Preparation still requires exact accepted-ad95 input and compatibility approval.

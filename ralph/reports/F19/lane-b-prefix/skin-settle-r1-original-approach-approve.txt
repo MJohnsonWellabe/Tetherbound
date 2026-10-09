@@ -1,9 +1,0 @@
-Bacon `01a1165d-ecfb-79d3-9355-1224723cdb53`: **APPROVE approach only.**
-
-Recorded penetration exceeds the skin threshold, while the finite server recovery is rejected solely for being shorter than `safe_margin`.
-
-Minimal correction: accept finite positive recovery only for depth `>safe_margin` and `≤.02m`; use bounded requery iterations with cumulative travel `≤.02m`. Stop on invalid, zero, deep or over-budget results. Preserve all existing guards.
-
-Affected checks: existing `smoke_step_up.gd`, `smoke_f18_arrival_support.gd`, then changed `relay_prepared` from original accepted ad95 after source/manifest review.
-
-Implementation/runtime pending; solver cause unknown. Failed7952 remains unaccepted.

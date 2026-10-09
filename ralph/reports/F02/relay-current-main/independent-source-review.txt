@@ -1,0 +1,11 @@
+Independent review by coordinator /root, 2026-10-09 15:09 CT.
+
+Scope reviewed: dc1140ecf4d6da6183050d48f395ba36d23f9384 against current main c927823d1b41e98b90d33181a07846e72dc6a27a. Eight changed files are only generated Relay fixture/profile/provenance, earned runner, disk handoff, and provenance probe. No gameplay config flag/default changes; fixture preparation levels and breakthrough caps must remain separately disclosed.
+
+Source finding: no blocking finding in the generated Relay scope. Generated input is explicit Relay-only, rejects Hall/legacy/reviewed-earn imports, verifies original three save-file hashes, preserves ordered five UIDs/species, validates production Save/Load, and publishes no boundary on setup failure. Generated ancestry remains prior_earned_play=false and continuous_fresh_save=false through immutable hash-linked predecessor import/export; earned mode refuses generated ancestry. The original gameplay Relay helper is unchanged. This proves no fresh continuous F02 route or earlier earned feast/XP/recovery.
+
+Actual exact-scope units verified independently from artifact11642705866/run37983416957:18 tests,146 assertions,0 failed, no SCRIPT ERROR or ERROR line. Actual provenance artifact11642556199/run37983419654:29 checks,failures[],exit0, declared fixtures no earned-route claim.
+
+Runtime whole F02#2 criterion approval remains contingent on actual terminal PASS of exact-scope Relay run37983413867 and independently inspected receipt/saved bytes/rewards. At review time it is live. Workflow green alone is insufficient. Do not promote this conditional source review to whole-criterion PASS.
+
+Separate F18 maintenance scope bac2e95eb43ddf3d224252d3fd4acc23579acf2f versus current main: physical obstacle navigation during catch-angle recovery retains the same90-frame budget, real inputs, live-wild/active-combat guards and strict shot predicate. No blocking source finding. Actual exact-current-main F18 run37981798386 artifact11642252149 independently inspected:30 phases,fixtures=false,failures[],no SCRIPT ERROR or ERROR, paid workbench, deep waystone, actual Home Key completion, station craft with receipt, save/reload and portal return to same meadows_trail_camp. This is a valid F18#5 maintenance reproof, already MET; no new whole-criterion count and no proof of reproducing the exact old Mudsnout blockage/flakiness rate.

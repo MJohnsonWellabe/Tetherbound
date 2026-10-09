@@ -31,7 +31,6 @@ const SHELLWATCH := preload("res://tests/helpers/water_shellwatch_segment.gd")
 const TIDAL := preload("res://tests/helpers/water_tidal_segment.gd")
 const SWIMMER := preload("res://tests/helpers/water_earned_swimmer_preparation_segment.gd")
 const LATE_WATER := preload("res://tests/helpers/water_earned_late_segment.gd")
-const HUMAN_LATE_WATER := preload("res://tests/helpers/water_human_late_segment.gd")
 const WATER_ENDING := preload("res://tests/helpers/water_earned_ending_segment.gd")
 const COVERAGE := preload("res://tests/helpers/four_biome_road_coverage_observer.gd")
 const ROUTE_LEDGER := preload("res://tests/helpers/meadows_earned_route_ledger_segment.gd")
@@ -435,24 +434,18 @@ func _stage_water_to_ending(game: Node, chapter_only: bool = false) -> void:
 			return
 		reached = str(entry[1])
 		# F13#3: Gull (Adair, Brine Steps) after the Brine trial; Cradle (Otto,
-		# Tidal Cradle) after Tidal, before the late crossing.
+		# Tidal Cradle) after Tidal, before the swimmer preparation.
 		if reached == "water_brine_trial_won" and not await _visit_local_chains(game, ["gull"]):
 			return
 		if reached == "water_swim_stone_and_recipe_earned" and not await _visit_local_chains(game, ["cradle"]):
 			return
-	# New-order F49 keeps the original five through the authored human route.
-	# The former release/catch/saddle route belongs to the legacy diagnostic.
-	var swimmer: RefCounted = null
-	if not chapter_only:
-		var preparation := SWIMMER.new()
-		if not _accepted(await preparation.run(self, live["world"], game), "passed"):
-			return
-		swimmer = preparation.swimmer
-		reached = "water_earned_swimmer_and_paid_saddle_mounted"
-	var late_water: RefCounted = HUMAN_LATE_WATER.new() if chapter_only else LATE_WATER.new()
+	var preparation := SWIMMER.new()
+	if not _accepted(await preparation.run(self, live["world"], game), "passed"):
+		return
+	reached = "water_earned_swimmer_and_paid_saddle_mounted"
+	var late_water := LATE_WATER.new()
 	late_water.setup(self, live["world"], live["player"], live["rig"])
-	var late_passed: bool = await late_water.run_human(_abort_late) if chapter_only \
-		else await late_water.run_from_mount(swimmer, _abort_late)
+	var late_passed: bool = await late_water.run_from_mount(preparation.swimmer, _abort_late)
 	if not _accepted(late_water.result(), "passed"):
 		return
 	if not late_passed:
@@ -463,8 +456,8 @@ func _stage_water_to_ending(game: Node, chapter_only: bool = false) -> void:
 	# and Lastlight (Halen, Veilfall) after Nerissa and the tether, before the
 	# Guardian invitation (Edda/Orsen/Halen stop offering leads once the
 	# ending restores the currents): leave the Veilfall interior by its own
-	# prompt, swim the sheltered routes (ride in the legacy diagnostic), walk back in.
-	if local_chains != null and not await _veilfall_out_and_back(game, swimmer):
+	# prompt, ride the earned saddled swimmer between islands, walk back in.
+	if local_chains != null and not await _veilfall_out_and_back(game, preparation.swimmer):
 		return
 	if not _accepted(await WATER_ENDING.new().run_earned(self, live["world"], game), "ok"):
 		return
@@ -523,9 +516,9 @@ func _chain_failed() -> bool:
 	return false
 
 
-## After the late segment: the same five inside the
+## After the late segment: the same five, the swimmer deployed, inside the
 ## Veilfall interior. Walk the interior back to its exit prompt, Interact, play
-## the three late chains by human swim (or the supplied diagnostic mount), walk to the entrance
+## the three late chains riding the earned swimmer, walk to the entrance
 ## prompt, Interact, and walk the interior to Nerissa's chamber again.
 func _veilfall_out_and_back(game: Node, swimmer: RefCounted) -> bool:
 	var world := live["world"] as Node3D

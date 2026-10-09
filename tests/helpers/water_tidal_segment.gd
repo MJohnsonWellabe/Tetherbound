@@ -117,29 +117,10 @@ func _activate_alpha_challenge(alpha: Node) -> bool:
 
 
 func _fight_alpha() -> bool:
-	var profile_path := "res://data/config/water_alpha.json"
-	var profile: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(profile_path))
-	var curve := preload("res://scripts/creatures/level_curve_policy.gd")
-	var curve_config := curve.config()
-	var enabled: Variant = curve_config.get("runtime_enabled")
-	var legacy_diagnostic := OS.get_cmdline_user_args().has("--legacy-order-diagnostic")
-	# Validate both exact manifest values even in the disabled legacy diagnostic.
-	# This detached copy only validates the raw profile; production loads that
-	# raw JSON unchanged, so its actor must still match the profile's exact level.
-	var validation_config := curve_config.duplicate(true)
-	validation_config["runtime_enabled"] = true
-	var canonical_profile := curve.apply(profile_path, profile, true, validation_config)
-	if profile.get("species_id") != "water_aquaryn" or not enabled is bool \
-			or (not enabled and not legacy_diagnostic) or canonical_profile.is_empty() \
-			or (enabled and canonical_profile != profile) \
-			or curve.apply(profile_path, profile, true, curve_config) != profile:
-		return _fail("Production Aquaryn profile does not match the authored RD-10 curve")
-	var expected_level := int(profile.get("level", 0))
 	var alpha := _world.get_node_or_null("WaterAlpha")
 	if alpha == null or not alpha.ready_for_intents or not is_instance_valid(alpha.body) \
-			or str(alpha.body.instance.species_id) != "water_aquaryn" \
-			or int(alpha.body.instance.level) != expected_level:
-		return _fail("Production Aquaryn does not match its authored level %d" % expected_level)
+			or str(alpha.body.instance.species_id) != "water_aquaryn" or int(alpha.body.instance.level) != 49:
+		return _fail("Production level-49 Aquaryn is missing")
 	if not await _ensure_ally_deployed("Aquaryn"):
 		return false
 	if not await _activate_alpha_challenge(alpha):

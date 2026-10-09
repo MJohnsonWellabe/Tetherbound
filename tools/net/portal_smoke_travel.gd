@@ -196,15 +196,6 @@ func _completed(value: Dictionary) -> void:
 
 func _home(tree: SceneTree, game: Node, started: int, budget: int) -> Dictionary:
 	var session: Node = game.get("session")
-	# Match the arch request's existing readiness wait. Public Home Key use
-	# refuses an owner hold; wait for it inside the same total travel budget.
-	while session != null and session.has_method("owns_input") and bool(session.call("owns_input")) \
-			and Engine.get_physics_frames() - started < budget:
-		await tree.physics_frame
-		if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game:
-			return {"ok": false, "reason": "Home Key source lifetime changed before use"}
-	if Engine.get_physics_frames() - started >= budget:
-		return {"ok": false, "reason": "Home Key owner readiness exhausted original travel budget"}
 	_home_scope = {"character_id": str(game.get("local").get("character_id")),
 		"world_instance_id": str(game.get("world").get("reward_delivery_namespace")),
 		"session_epoch": str(session.call("_altar_current_epoch"))}
@@ -222,15 +213,7 @@ func _home(tree: SceneTree, game: Node, started: int, budget: int) -> Dictionary
 		game.disconnect("portal_action_result", _home_completed)
 	var result: Dictionary = reply.duplicate(true)
 	reply.clear()
-	if result.is_empty():
-		var reason := "Actual Home Key raise/saved arrival did not complete within original budget"
-		if not used: reason = "Public Home Key use refused: " + str(game.call("home_key_refusal"))
-		elif request_id.is_empty(): reason = "Public Home Key use supplied no bound begin request"
-		print("PORTAL_SMOKE_ACTUAL_HOME_INCOMPLETE " + JSON.stringify({"used": used,
-			"begin_id": request_id, "use_id": _home_use_id, "elapsed_frames": Engine.get_physics_frames() - started,
-			"budget_frames": budget, "phase": key.get("_phase") if is_instance_valid(key) else "missing",
-			"pending": key.get("_pending") if is_instance_valid(key) else "", "reason": reason}))
-		return {"ok": false, "reason": reason}
+	if result.is_empty(): return {"ok": false, "reason": "Actual Home Key raise/saved arrival did not complete within original budget"}
 	print("PORTAL_SMOKE_ACTUAL_HOME_COMPLETION " + JSON.stringify({"begin_id": request_id, "use_id": _home_use_id, "reply": result}))
 	return {"ok": result.get("ok") == true and result.get("saved") == true and result.get("durable") == true \
 		and result.get("arrived") == true and result.get("arrival_applied") == true \

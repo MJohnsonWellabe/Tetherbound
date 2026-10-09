@@ -400,9 +400,7 @@ func _input(action: String, strength: float) -> void:
 ## by the feed road's gap. Witnesses that rest there call this, not
 ## `_navigate`, whose nearest-route snap aims at the loop's east leg.
 func _leave_summit_bivouac() -> bool:
-	# The authored lip rail leaves its west end (x < 131) open. Stay on
-	# the terrace until that gap instead of aiming over its southern bank.
-	for waypoint: Vector3 in [Vector3(129,1160,5342), Vector3(129,1160,5332), Vector3(116,1160,5332), Vector3(100,1160,5350)]:
+	for waypoint: Vector3 in [Vector3(132,1160,5330), Vector3(116,1160,5332), Vector3(100,1160,5350)]:
 		if not await _walk(waypoint):
 			return false
 	return true
@@ -555,11 +553,7 @@ func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) 
 				recent_mobile_blocker=collider as CharacterBody3D
 				mobile_contact_frame=frame
 			if is_mobile or absf(hit.get_normal().y) < 0.8:
-				# A resolved encounter can free its body before a retained slide
-				# contact is read. Keep the contact instead of aborting the walk
-				# while trying to format an identity that no longer exists.
-				var collider_path := str(collider.get_path()) if is_instance_valid(collider) and collider is Node else "<unavailable>"
-				recent_collisions.append({"position":str(body.global_position),"body":collider_path,"normal":str(hit.get_normal())})
+				recent_collisions.append({"position":str(body.global_position),"body":str(hit.get_collider().get_path()),"normal":str(hit.get_normal())})
 				if recent_collisions.size() > 24: recent_collisions.pop_front()
 		if frame % 120 == 119:
 			stalls = stalls + 1 if body.global_position.distance_to(previous) < 0.4 else 0
@@ -582,9 +576,7 @@ func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) 
 				var collisions: Array = []
 				for index in body.get_slide_collision_count():
 					var hit := body.get_slide_collision(index)
-					var collider := hit.get_collider()
-					var collider_path := str(collider.get_path()) if is_instance_valid(collider) and collider is Node else "<unavailable>"
-					collisions.append({"body": collider_path, "normal": str(hit.get_normal())})
+					collisions.append({"body": str(hit.get_collider().get_path()), "normal": str(hit.get_normal())})
 				_log("collision_block", {"target": str(target), "body_path":str(body.get_path()),"body_position":str(body.global_position),"collisions": collisions,"recent_wall_contacts":recent_collisions,"velocity":str(body.velocity),"last_motion":str(body.get_last_motion()),"floor_normal":str(body.get_floor_normal()),"locomotion_enabled":player.locomotion_enabled(),"carried":player.is_carried(),"physics_processing":player.is_physics_processing(),"can_process":player.can_process(),"process_mode":player.process_mode,"tree_paused":_tree.paused,"dialogue_open":world.get_node("DialoguePanel").is_open(),"input_owner":str(input_owner.get_path()) if input_owner != null else "","input_vector":str(Input.get_vector("move_left","move_right","move_forward","move_back")),"camera_basis":str(camera_basis),"wanted_dir":str(player.get("_wanted_dir")),"deflect_dir":str(player.get("_deflect")),"deflect_left":player.get("_deflect_left"),"walk_speed":player.get("_walk_speed"),"move_speed_scale":player.vitals.move_speed_scale(),"auto_run":game.auto_run,"time_scale":Engine.time_scale,"physics_hz":Engine.physics_ticks_per_second,"manager_state":manager.state if manager != null else -1,"manager_fighting":manager.is_fighting() if manager != null else false,"finale_phase":runtime.finale.phase if runtime != null and runtime.finale != null else "","hazard":hazard,"winner":str(world.get_node("InteractionArbiter").get("_winning_provider"))})
 				await _capture("blocked-"+stage)
 				return _fail("Walking stalled toward " + str(target))

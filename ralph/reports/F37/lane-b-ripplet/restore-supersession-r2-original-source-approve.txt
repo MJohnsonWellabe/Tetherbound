@@ -1,7 +1,0 @@
-Ohm `01a1167c-ec9f-75b0-af2e-2d8ea4a4f564`: **SOURCE APPROVE** `4edc0c6893cace8e3ec5602050d6183f95491fb1`.
-
-Both blockers are corrected: invalid supplied callbacks fail closed; replies validate captured owner/CID, world and restoration validity before attachment. Newer requests and bodies remain protected.
-
-**COMMAND APPROVE once B’s slot is free:** headless `tests/smoke_f37_ripplet.gd`, empty args, no functional-offload.
-
-Runtime pending. Do not promote the `e275` run. Whole F37#4 still requires Low post-rejoin blind evidence.

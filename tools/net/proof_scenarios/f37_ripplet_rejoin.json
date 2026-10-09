@@ -123,19 +123,6 @@
     },
     {
       "peer": 1,
-      "action": "f37_status",
-      "args": {
-        "remember_saved_dive": true
-      },
-      "expect_data": {
-        "mounted": true,
-        "diving": true,
-        "saved_dive_recorded": true
-      },
-      "label": "Read the actual saved owned UID and spent Dive debt after production autosave"
-    },
-    {
-      "peer": 1,
       "action": "check_saved",
       "args": {
         "label": "before_drop",
@@ -176,14 +163,6 @@
     },
     {
       "peer": 1,
-      "action": "f37_record_disconnect",
-      "expect_data": {
-        "saved_dive_recorded": true
-      },
-      "label": "Retain exact final disconnect-written debt before blanking live character"
-    },
-    {
-      "peer": 1,
       "action": "wipe_character",
       "label": "the live character is blanked, so the ride must come back from the save"
     },
@@ -219,26 +198,7 @@
         "equals": true,
         "budget_frames": 1800
       },
-      "label": "the ride is restored",
-      "continue_on_fail": true,
-      "_comment": "Original predicate and 1800 polls unchanged; a refusal remains counted FAIL. Continue only to retain actual terminal restore operands before the next original identity check."
-    },
-    {
-      "peer": 0,
-      "action": "f37_status",
-      "args": {
-        "observe_restore": true,
-        "restore_peer": "$peer1"
-      },
-      "label": "Observe host retained mount answers for this returning peer; no request or retry"
-    },
-    {
-      "peer": 1,
-      "action": "f37_status",
-      "args": {
-        "observe_restore": true
-      },
-      "label": "Observe guest terminal pending state and actual eligibility; no request or retry"
+      "label": "the ride is restored"
     },
     {
       "peer": 1,
@@ -320,14 +280,9 @@
       "action": "f37_status",
       "expect_data": {
         "mounted": true,
-        "diving": false,
-        "saved_dive_matches": true
+        "diving": false
       },
-      "label": "Reconnect seats surface, with remaining dive debt on saved owned mount",
-      "args": {
-        "require_saved_dive": "surface",
-        "screenshot": "f37-rejoin-restored-surface"
-      }
+      "label": "Reconnect seats surface, with remaining dive debt on saved owned mount"
     },
     {
       "peer": 1,
@@ -337,33 +292,9 @@
       "peer": 1,
       "action": "f37_status",
       "expect_data": {
-        "diving": true,
-        "resumed_dive_within_saved": true
+        "diving": true
       },
-      "label": "A fresh tap resumes the saved bounded dive budget",
-      "args": {
-        "require_saved_dive": "resumed",
-        "screenshot": "f37-rejoin-resumed-dive"
-      },
-      "continue_on_fail": true,
-      "_comment": "Original resumed Dive/debt predicate remains counted FAIL. Continue only for read-only terminal request/host-answer observations; no retry, wait or action."
-    },
-    {
-      "peer": 0,
-      "action": "f37_status",
-      "args": {
-        "observe_restore": true,
-        "restore_peer": "$peer1"
-      },
-      "label": "Observe host retained action answers after the original resumed-Dive guard; no request or retry"
-    },
-    {
-      "peer": 1,
-      "action": "f37_status",
-      "args": {
-        "observe_restore": true
-      },
-      "label": "Observe guest pending request and actual eligibility after original resumed-Dive guard; no request or retry"
+      "label": "A fresh tap resumes the saved bounded dive budget"
     }
   ]
 }

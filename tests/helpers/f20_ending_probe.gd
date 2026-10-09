@@ -19,14 +19,12 @@ var continuation_content_entered := false
 func capture(tree: SceneTree, label: String, frame_ready: Callable = Callable()) -> bool:
 	if not OS.get_cmdline_user_args().has("--capture-ending") and not OS.get_cmdline_user_args().has("--capture-order-ui") \
 		and not (OS.get_cmdline_user_args().has("--capture-lessons") and label.begins_with("lesson-")) \
-		and not (OS.get_cmdline_user_args().has("--capture-next-goal") and label.begins_with("next-goal-")) \
-		and not (OS.get_cmdline_user_args().has("--capture-relay") and label in ["relay-captain-fight", "relay-sela-exchange", "relay-sela-rescued", "relay-console-before", "relay-console-aftermath", "relay-mill-far-bank"]) \
 		and not (OS.get_cmdline_user_args().has("--capture-surface") and label.begins_with("ripplet-surface-")) \
 		and not (OS.get_cmdline_user_args().has("--capture-dive") and label.begins_with("ripplet-dive-")): return true
 	# Explicit functional offload may draw this guarded lesson frame only. The
 	# original capture still observes a real completed native draw; ordinary
 	# physics, input and lesson state continue, and continuous drawing is restored.
-	if (label.begins_with("lesson-") or label.begins_with("next-goal-")) and OS.get_cmdline_user_args().has("--functional-offload") \
+	if label.begins_with("lesson-") and OS.get_cmdline_user_args().has("--functional-offload") \
 		and not RenderingServer.render_loop_enabled:
 		if not check(DisplayServer.get_name() != "headless" and RenderingServer.get_current_rendering_method() == "gl_compatibility",
 			"offloaded lesson capture requires the real Compatibility display"): return false
@@ -165,8 +163,11 @@ func order_journals(tree: SceneTree, game: Node) -> bool:
 			"journal route retains its character and actual already-open arch " + arch_id): return false
 		var prompt := arch.get_node_or_null("Interactable") as Node3D
 		if not check(prompt != null, "already-open journal destination has its actual provider"): return false
-		if not await travel.enter_unlocked(arch_id, realm): failures.append_array(travel.failures); return false
-		var arrived: bool = travel._ready_world(realm)
+		if not await travel.activate(prompt): failures.append_array(travel.failures); return false
+		var arrived := false
+		for frame in 7200:
+			await tree.process_frame
+			if travel._ready_world(realm): arrived = true; break
 		if not check(arrived and str(game.local.character_id) == character_id and travel._uids() == original_uids,
 			"ordinary portal Enter reaches the ready journal realm with the same five: " + realm): return false
 		await travel.tap("inventory")
@@ -240,9 +241,6 @@ func ready(tree: SceneTree, game: Node, timeout_ms: int = 180000) -> bool:
 	var max_wait_ms := 0
 	while Time.get_ticks_msec() < deadline:
 		await tree.physics_frame
-		# physics_frame precedes node callbacks. Observe the completed tick,
-		# including the real player's move_and_slide, rather than its old floor.
-		await tree.process_frame
 		var now := Time.get_ticks_msec()
 		max_wait_ms = maxi(max_wait_ms, now - previous)
 		previous = now
@@ -420,19 +418,8 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 	travel.trace_input = false
 	print("F20 DIALOGUE input authored_lines=", line_count, " actual_presses=", presses)
 	var deadline := Time.get_ticks_msec() + 30000
-	var ack_intent := HOME.acknowledgement_intent(expected, HOME.SEEN_FLAG)
-	var ack_decision: Dictionary = {}
-	var acknowledged: bool = not first and HOME.context(game).get("homecoming_seen") == true
-	while not panel.call("is_open") and not acknowledged and Time.get_ticks_msec() < deadline:
-		# Owner apply installs the receipt before its host settlement. Observe
-		# the original intent's accepted saved decision, not that early flag.
-		var ack_row: Dictionary = game.session.call("_owner_training_row")
-		if ack_row.get("action") == "regional_ack" and ack_row.get("intent") == ack_intent:
-			ack_decision = game.session.call("_training_decision", game.session.call("local_peer_id"), ack_row)
-			acknowledged = ack_decision.get("ok") == true and ack_decision.get("resolved") == true \
-				and ack_decision.get("durable") == true and ack_decision.get("saved") == true \
-				and HOME.context(game).get("homecoming_seen") == true
-		if not acknowledged: await tree.process_frame
+	while not panel.call("is_open") and HOME.context(game).get("homecoming_seen") != true \
+			and Time.get_ticks_msec() < deadline: await tree.process_frame
 	panel.disconnect("completed", completion_observer)
 	var dialogue_owner := INPUT_OWNER.current(tree)
 	var row: Dictionary = game.session.call("_owner_training_row")
@@ -442,11 +429,10 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 		" owner_script=", dialogue_owner.get_script().resource_path if dialogue_owner != null and dialogue_owner.get_script() != null else "none",
 		" context=", game.call("regional_ending_context"),
 		" ack_intents=", game.get("_regional_ack_intents"),
-		" observed_ack_decision=", ack_decision,
 		" training_action=", row.get("action", ""), " training_intent=", row.get("intent", {}),
 		" notice=", game.get("_pending_world_message"))
 	print("F20 DIALOGUE rendered ", _heard)
-	if not check(opened and acknowledged, "natural Grandpa completion receives durable personal acknowledgement"): return false
+	if not check(opened and HOME.context(game).get("homecoming_seen") == true, "natural Grandpa completion receives durable personal acknowledgement"): return false
 	if first:
 		for companion: String in HOME.party_names(game.party):
 			if not check(_heard.contains(companion), "Grandpa actually rendered " + companion): return false
@@ -494,31 +480,13 @@ func revisit_completed(tree: SceneTree, game: Node) -> bool:
 	if not await travel.activate(prompt): failures.append_array(travel.failures); return false
 	if not check(panel.call("is_open") and panel.call("runner").call("conversation_id") == HOME.REPEAT_ID,
 		"ordinary Grandpa input selects the repeat conversation after credits"): return false
-	var completed: Array[String] = []
-	var completion_observer := func(id: String) -> void: completed.append(id)
-	panel.connect("completed", completion_observer)
-	# Match the first homecoming reader: a released controller edge can take
-	# more than 30 seconds to draw here. Bound input by the actual authored
-	# lines plus the panel's opening guard, then check the unchanged outcome.
-	var line_count := int(panel.call("runner").call("_line_count"))
-	var presses := 0
-	while panel.call("is_open") and presses < line_count + 2:
-		if panel.call("runner").call("conversation_id") != HOME.REPEAT_ID \
-				or INPUT_OWNER.current(tree) != panel: break
-		await travel.tap("interact")
-		presses += 1
-	panel.disconnect("completed", completion_observer)
+	var deadline := Time.get_ticks_msec() + 30000
+	while panel.call("is_open") and Time.get_ticks_msec() < deadline: await travel.tap("interact")
 	for frame in 8: await tree.process_frame
 	var credits_open := false
 	for node: Node in tree.get_nodes_in_group("story_modal"):
 		if node.get_script() == load("res://scripts/ui/regional_credits.gd") and node.call("is_open"): credits_open = true
-	print("F20 REPEAT " + JSON.stringify({"authored_lines": line_count, "actual_presses": presses,
-		"completed": completed, "panel_open": panel.call("is_open"), "credits_open": credits_open,
-		"input_released": not Input.is_action_pressed("interact"),
-		"world_input": INPUT_OWNER.current(tree) == null,
-		"receipts_unchanged": game.local.redesign_character.transaction_receipts == receipts}))
-	return check(completed == [HOME.REPEAT_ID] and not Input.is_action_pressed("interact") \
-		and not panel.call("is_open") and not credits_open and INPUT_OWNER.current(tree) == null \
+	return check(not panel.call("is_open") and not credits_open and INPUT_OWNER.current(tree) == null \
 		and game.local.redesign_character.transaction_receipts == receipts,
 		"natural repeat returns world input without credits or another personal receipt")
 
@@ -611,77 +579,6 @@ func retained_valid(value: Dictionary) -> bool:
 		and value.get("uids") is Array and value.uids.size() == value.names.size() \
 		and value.get("receipts") is Array and value.get("inventory") is Array and not value.inventory.is_empty()
 
-## Reuse the originally approved 67-check ending's actual completed disk.
-## This is a disclosed area fixture, never a new earned-chain boundary.
-## Only its isolated copy is exposed to the production title Load owner.
-func load_completed_fixture(tree: SceneTree, game: Node) -> bool:
-	var source := "res://tests/fixtures/f20_completed_input_377715"
-	if not check(FileAccess.file_exists(source.path_join("PROVENANCE.json")),
-		"approved completed fixture provenance is present in the runtime checkout"): return false
-	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(source.path_join("PROVENANCE.json")))
-	if not check(raw is Dictionary and raw.get("kind") == "f20_reviewed_completed_fixture"
-		and raw.get("producer_source") == "505d7e0729028b69cfd3a0a9a8e5c6463cd46dc2"
-		and raw.get("run_id") == 37771506596 and raw.get("exit_code") == 0
-		and raw.get("checks") == 67 and raw.get("failures") == 0
-		and raw.get("earned_finale") == false and raw.get("accepted_earned_boundary") == false,
-		"completed fixture retains its actual approved producer and disclosed origin"): return false
-	var manifest: Dictionary = raw
-	var before: Dictionary = manifest.get("retained", {}).duplicate(true)
-	if not check(retained_valid(before), "completed fixture has a detached identity/inventory/receipt oracle"): return false
-	# JSON manifest numbers are floats. The production loader restores stack
-	# integers; apply that same pure conversion only to this detached oracle.
-	var codec := SAVE.new()
-	for index: int in before.inventory.size():
-		var stack: Variant = before.inventory[index]
-		if stack == null: continue
-		var valid: bool = stack is Dictionary and stack.get("id") is String and not stack.id.is_empty() and stack.has("n")
-		if valid:
-			for field: String in ["n", "durability", "durability_bonus"]:
-				if not stack.has(field): continue
-				var value: Variant = stack[field]
-				valid = valid and (value is int or value is float) and is_finite(float(value)) \
-					and float(value) == float(int(value)) and int(value) >= (1 if field == "n" else 0)
-		var normalized: Variant = codec.call("_stack_from_json", stack) if valid else null
-		if not check(valid and normalized is Dictionary and normalized.size() == stack.size(),
-			"completed oracle retains exact integral stack fields at slot %d" % index): return false
-		before.inventory[index] = normalized
-	var paths: Array[String] = ["slot_0.json", "worlds/slot-0/world.json",
-		"characters/%s/character.json" % str(before.character)]
-	if not check(manifest.get("files_sha256") is Dictionary and manifest.files_sha256.size() == paths.size(),
-		"completed fixture binds all three production split files"): return false
-	for path: String in paths:
-		if not check(FileAccess.get_sha256(source.path_join("save").path_join(path)) == manifest.files_sha256.get(path),
-			"approved completed fixture bytes match: " + path): return false
-	var working := "user://f20_completed_load_%d" % OS.get_process_id()
-	if not check(not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(working)),
-		"completed fixture uses a fresh isolated working copy"): return false
-	if not check(preload("res://tests/helpers/four_biome_checkpoints.gd").copy_tree(source.path_join("save"), working),
-		"approved completed disk copied without state edits"): return false
-	game.call("reset_for_new_game")
-	game.set("save_system", SAVE.new(working))
-	if not check(tree.change_scene_to_file("res://scenes/ui/title_screen.tscn") == OK,
-		"completed fixture mounts the production title"): return false
-	for frame in 10: await tree.process_frame
-	var title := tree.current_scene
-	var load_button: Button = title.get("_load_button")
-	if not check(load_button != null and not load_button.disabled, "production title offers Load Game"): return false
-	load_button.pressed.emit() # Same producer as earned_chain_runner's existing Load path.
-	await tree.process_frame
-	var chosen: Button
-	for node: Node in (title.get("_load_box") as Node).get_children():
-		if node is Button and (node as Button).text.begins_with("Autosave") and not (node as Button).disabled:
-			chosen = node as Button
-	if not check(chosen != null, "production title offers the actual completed slot"): return false
-	chosen.pressed.emit()
-	if not await ready(tree, game): return false
-	if not check(tree.current_scene != title and str(game.current_realm) == "meadows"
-		and str(game.pending_realm_entry).is_empty(), "production Title Load enters completed Meadows"): return false
-	var passed: bool = await resumed(tree, game, before)
-	for path: String in paths:
-		if not check(FileAccess.get_sha256(source.path_join("save").path_join(path)) == manifest.files_sha256[path],
-			"completed input stays immutable after the live continuation: " + path): return false
-	return passed
-
 func resumed(tree: SceneTree, game: Node, before: Dictionary, continuation: bool = true) -> bool:
 	if not check(retained_valid(before), "reload proof starts with a complete detached character snapshot"): return false
 	if not await ready(tree, game): return false
@@ -710,7 +607,6 @@ func resumed(tree: SceneTree, game: Node, before: Dictionary, continuation: bool
 
 func continuation_content(tree: SceneTree, game: Node) -> bool:
 	continuation_content_entered = true
-	if not await research_available_after_credits(tree, game): return false
 	var journal := preload("res://scripts/world/quest_log.gd").new(game)
 	var unfinished := false
 	for entry: Dictionary in journal.call("local_entries", game.progression):
@@ -736,89 +632,10 @@ func continuation_content(tree: SceneTree, game: Node) -> bool:
 			" world_day=", game.world.day, " bounty_day=", game.world.redesign_world.bounty_day)
 	if not check(view.get("ready") == true and view.get("rows", []).size() == 3,
 		"reloaded character has three active bounties in the live board"): return false
-	var board_frame := func() -> bool:
-		return is_instance_valid(panel) and panel.call("is_open") == true \
-			and INPUT_OWNER.current(tree) == panel and adapter.call("view") == view
-	if not await capture(tree, "completed-bounties", board_frame): return false
+	if not await capture(tree, "completed-bounties"): return false
 	await travel.tap("menu_cancel")
 	if not check(INPUT_OWNER.current(tree) == null, "bounty screen returns ordinary world input"): return false
-	if not alpha_available_after_credits(tree, game): return false
 	return await admit_endgame_rematch(tree, game, rematches)
-
-## Availability of an actual published wild body after completed-save Load.
-## Normal distance streaming may sleep a distant body; no activation, clock,
-## generation, outcome, position or durable state is changed by this witness.
-func alpha_available_after_credits(tree: SceneTree, game: Node) -> bool:
-	var rules := preload("res://scripts/repeatables/alpha_respawns.gd")
-	if not check(rules.config().get("runtime_enabled") == true and HOME.journey_context(game).get("regional_credits_seen") == true,
-		"completed character keeps the enabled alpha route after credits"): return false
-	var alphas: Node = game.session.get_node_or_null("FoundationComposition/Alphas")
-	var director: Node = tree.current_scene.get_node_or_null("EncounterDirector")
-	if not check(alphas != null and director != null and INPUT_OWNER.current(tree) == null,
-		"loaded completed world retains its production alpha service and ordinary input"): return false
-	var available: Array[Dictionary] = []
-	for body: Node3D in director.get("_wild_creatures"):
-		if not is_instance_valid(body) or not tree.current_scene.is_ancestor_of(body) or not body.is_visible_in_tree(): continue
-		var id := str(body.get_meta("foundation_alpha_site", ""))
-		var site: Dictionary = rules.site(id)
-		if site.get("biome") != "meadows": continue
-		var packet: Dictionary = rules.retained_spawn(game.world.redesign_world, id)
-		var instance: RefCounted = body.get("instance") as RefCounted
-		var world_ref: WeakRef = body.get_meta("foundation_alpha_world", null) as WeakRef
-		if packet.is_empty() or instance == null or world_ref == null or world_ref.get_ref() != game.world: continue
-		if body.get_meta("foundation_alpha_packet", {}) != packet \
-			or int(body.get_meta("foundation_alpha_generation", 0)) != int(packet.captured_from.spawn_generation) \
-			or body.get_meta("foundation_alpha_epoch", "") != game.session.call("_altar_current_epoch"): continue
-		if float(instance.get("hp")) <= 0.0 or instance.get("fainted") == true or game.party.call("members").has(instance): continue
-		if instance.get("traits_initialized") != true or instance.get("rolled_traits") != packet.rolled_traits \
-			or instance.get("taught_traits") != packet.taught_traits: continue
-		if not body.is_connected("wants_to_engage", Callable(director, "_on_wild_wants_to_engage").bind(body)): continue
-		available.append({"site": id, "generation": int(packet.captured_from.spawn_generation),
-			"body": str(body.get_path()), "species": str(instance.get("species_id")),
-			"physics_awake": body.is_physics_processing(), "position": str(body.global_position)})
-	print("F20 COMPLETED ALPHAS " + JSON.stringify({"character": str(game.local.character_id),
-		"world_namespace": str(game.world.reward_delivery_namespace), "published_living_wild_bodies": available,
-		"scope": "Actual loaded completed-world availability; ordinary distance streaming unchanged; no fight, resolution, cooldown or payout claim"}))
-	return check(not available.is_empty(), "loaded completed world publishes a living canonical wild alpha with its production fight route")
-
-## Availability only. No research events, progress, claims or titles are seeded.
-func research_available_after_credits(tree: SceneTree, game: Node) -> bool:
-	var travel := TRAVEL.new(tree, game)
-	await travel.tap("inventory")
-	var menu: Node = game.get("_menu")
-	if not check(menu != null and menu.call("is_open") == true and INPUT_OWNER.current(tree) == menu,
-		"completed world opens its ordinary menu for remaining research"): return false
-	for step in 12:
-		if menu.call("current_tab_id") == "quest_log": break
-		await travel.tap("menu_tab_right")
-	if not check(menu.call("current_tab_id") == "quest_log", "completed-world menu reaches the Journal"): return false
-	var journal: Node = menu.get("_bodies")[int(menu.get("_index"))]
-	var button: Button = journal.get("_research_button")
-	if not check(button != null and button.is_visible_in_tree() and not button.disabled,
-		"reloaded Journal offers the production research log"): return false
-	button.grab_focus()
-	await tree.process_frame
-	await travel.tap("ui_accept")
-	var panel := INPUT_OWNER.current(tree)
-	if not check(panel != null and panel.get_script() == load("res://scripts/ui/research_log_panel.gd")
-		and panel.call("is_open") == true, "ordinary Journal input opens the live research screen"): return false
-	var view: Variant = JSON.parse_string(str(panel.get("_last_view")))
-	if not check(view is Dictionary and view.get("ready") == true and view.get("character_id") == str(game.local.character_id)
-		and view.get("claims_enabled") == true and view.get("species") is Array and not view.species.is_empty(),
-		"completed character retains its available canonical research catalogue and claim route"): return false
-	var unfinished := false
-	for species: Dictionary in view.species:
-		for task: Dictionary in species.get("tasks", []):
-			if int(task.get("progress", 0)) < int(task.get("required", 0)): unfinished = true
-	if not check(unfinished, "remaining research tasks stay incomplete and available without fabricated progress"): return false
-	var visible := func() -> bool:
-		return is_instance_valid(panel) and panel.call("is_open") == true and INPUT_OWNER.current(tree) == panel
-	if not await capture(tree, "completed-research", visible): return false
-	await travel.tap("menu_cancel")
-	if not check(menu.call("is_open") == true and INPUT_OWNER.current(tree) == menu,
-		"research Back returns to the ordinary Journal"): return false
-	await travel.tap("menu_cancel")
-	return check(INPUT_OWNER.current(tree) == null, "research and Journal release completed-world input")
 
 ## F20 checks continuation availability, not F44 victory or repeat rewards.
 ## The isolated proof finishes in this genuinely admitted trainer fight;
@@ -886,10 +703,5 @@ func admit_endgame_rematch(tree: SceneTree, game: Node, rematches: Node) -> bool
 			" enemy_owned=", manager.get("_enemy_owned"), " ally_blocker=", director.call("usable_ally_blocker"),
 			" can_challenge=", director.call("can_challenge", expected), " source_busy=", director.call("rematch_source_busy", source),
 			" pending_world_message=", game.get("_pending_world_message"))
-	if not check(admitted,
-		"ordinary input admits the actual canonical endgame rematch at its configured tier; isolated proof quits during fight"): return false
-	var rematch_frame := func() -> bool:
-		return is_instance_valid(body) and body.is_visible_in_tree() and director.call("trainer_battle_active") == true \
-			and manager.call("is_fighting") == true and director.get("_trainer_node") == source \
-			and director.get("_trainer_spec") == expected and manager.get("_enemy") == enemy and manager.get("_enemy_owned") == true
-	return await capture(tree, "completed-endgame-rematch", rematch_frame)
+	return check(admitted,
+		"ordinary input admits the actual canonical endgame rematch at its configured tier; isolated proof quits during fight")

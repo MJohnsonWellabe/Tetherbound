@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "_comment_runtime_enabled": "Unlanded F44 candidate: completed remote shells share host daylight, keep their own weather, and occupied peers project the validated retained host generation. Shipping restoration requires named-site runtime and original approval; generation, resolution, payout and saves stay host-owned.",
-  "runtime_enabled": true,
+  "_comment_runtime_enabled": "F44 alpha respawns are unfinished: with them on, the named Deep Watch Tidecoil (an alpha site) never became resident for a co-op client. Off, named sites spawn through the path main ships. F44 turns this on when it lands.",
+  "runtime_enabled": false,
   "day_seconds": 600,
   "respawn_days": 3,
   "requires_all_region_departures": true,

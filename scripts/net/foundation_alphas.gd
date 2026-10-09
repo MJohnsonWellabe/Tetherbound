@@ -47,7 +47,7 @@ func first_spawn(director: Node, id: String) -> Dictionary:
 	if realm == null or not realm.is_ancestor_of(director) or look == null: return {}
 	if not frozen.has("night"):
 		frozen.night = bool(look.call("is_dark"))
-		frozen.weather = _spawn_weather(site, look)
+		frozen.weather = unusual_weather(look.get("_weather"))
 	var plan := RULES.first_spawn(world.redesign_world, id, frozen.world_namespace, frozen.night, frozen.weather)
 	if plan.is_empty(): return {}
 	var result: Dictionary = _commit(plan)
@@ -111,27 +111,8 @@ func _realm_look(site: Dictionary) -> Node:
 			or candidate.get_script().resource_path != "res://scripts/world/world_look.gd": continue
 		if found != null: return null
 		found = candidate
-	# Occupied remote realms deliberately strip WorldLook presentation.
-	# Their completed host shell still shares the host's one live day clock.
-	if found == null and realm.has_method("shell_build_complete") \
-		and realm.get("simulation_only") == true and realm.call("shell_build_complete") == true:
-		var active_realm := str(session().call("_game").get("current_realm"))
-		if active_realm != realm_id:
-			return _realm_look({"biome": active_realm})
 	return found if found != null and found.has_method("is_dark") \
 		and found.has_method("elapsed_seconds") and found.get("_weather") is Dictionary else null
-
-func _spawn_weather(site: Dictionary, clock: Node) -> bool:
-	var realm_id := "water" if site.get("biome") == "tidewake" else str(site.get("biome", ""))
-	var realm: Node = session().call("_portal_world_node", realm_id)
-	if realm != null and realm.is_ancestor_of(clock): return unusual_weather(clock.get("_weather"))
-	# Sharing daylight must not copy the active biome's weather into a shell.
-	# Read its own installed weather producer, as ordinary wild traits do.
-	if realm != null:
-		for path: String in ["WorldWeather", "StormwoodSurge"]:
-			var weather := realm.get_node_or_null(NodePath(path))
-			if weather != null and weather.has_method("weather") and str(weather.call("weather")) != "clear": return true
-	return false
 
 static func unusual_weather(delta: Dictionary) -> bool:
 	# WorldWeather applies the whole preset, including clear's weight/comment
@@ -226,7 +207,7 @@ func _host_context(id: String) -> Dictionary:
 	if not _census(site).is_empty() or seconds < 0 or clock == null: return {}
 	host.world_seconds = seconds
 	host.night = bool(clock.call("is_dark"))
-	host.weather = _spawn_weather(site, clock)
+	host.weather = unusual_weather(clock.get("_weather"))
 	return host
 
 func _publish(id: String, packet: Dictionary) -> bool:

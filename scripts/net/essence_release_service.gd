@@ -332,8 +332,6 @@ func _release_unpaid(id: String, reason: String) -> void:
 		return
 	if party.call("remove_at", index) == null: return
 	party.call("add", pending)
-	var initialized := preload("res://scripts/creatures/breakthrough.gd").initialize_owned_catch(party, _game.get("local").get("redesign_character"), pending)
-	if not initialized.is_empty(): _game.get("local").set("redesign_character", initialized)
 	_game.set("pending_catch", null)
 	_requests.erase(id)
 	if _game.has_method("push_world_message"): _game.call("push_world_message", "Released with no essence: " + reason + ".")
@@ -375,8 +373,6 @@ func _finish(id: String, decision: Dictionary) -> void:
 		if not request.released_uid.is_empty():
 			if party.has_method("owner_mutation_blocked") and party.call("owner_mutation_blocked") == true: return
 			if not party.call("add", pending): return # Retried next frame; never a sixth.
-			var initialized := preload("res://scripts/creatures/breakthrough.gd").initialize_owned_catch(party, _game.get("local").get("redesign_character"), pending)
-			if not initialized.is_empty(): _game.get("local").set("redesign_character", initialized)
 		_game.set("pending_catch", null)
 	_requests.erase(id)
 	var result := decision.duplicate(true)

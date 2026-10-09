@@ -58,9 +58,6 @@ func mount(world: Node3D, player: Node3D) -> bool:
 	if packed is PackedScene: chest.add_child(packed.instantiate())
 	var chest_prompt := INTERACT.new()
 	chest_prompt.configure("Open %s's recipe chest" % str(_definition.name), float(_definition.prompt_radius_m), true)
-	# The authored recipe chest must beat ambient Chop/Pick offers in range.
-	# The host still owns earned-win, proximity and durable personal payment.
-	chest_prompt.priority = int(BREAKTHROUGH.masters().get("chest_interaction_priority", 0))
 	chest_prompt.connect("activated", func() -> void: chest_requested.emit(self))
 	chest.add_child(chest_prompt)
 	_build_sign(world)

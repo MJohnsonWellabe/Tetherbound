@@ -1,6 +1,6 @@
 {
   "name": "F37 rendered Ripplet surface, Dive and rejoin captures",
-  "claim": "Pending runtime fixture proof only. Owned Ripplet and L30 breakthrough are explicit pre-admission fixtures; existing summon alignment and host First Shore placement remain disclosed setup. Subsequent travel uses ordinary mapped movement. Actual current crossing is measured against configured human speed, not a paired human trial. Real Interact/Jump, sunken cache/node claims and duplicate refusal, host admission, replicated carrier identity, disk character save and new-peer returning join. Save restores the mount at the surface with its exact saved remaining dive debt, per WORLD 6.7. No earned feast, campaign, device or visual acceptance.",
+  "claim": "Pending runtime fixture proof only. Owned Ripplet and L30 breakthrough are explicit pre-admission fixtures. Real Interact/Jump, host admission, replicated carrier identity, disk character save and new-peer returning join. Save restores the mount at the surface with spent stamina and remaining dive debt, per WORLD 6.7. No earned feast, campaign, device or visual acceptance.",
   "peers": 2,
   "scene": "water",
   "budget_s": 1800,
@@ -64,53 +64,8 @@
     },
     {
       "peer": 1,
-      "action": "move_to",
-      "args": {
-        "x": -55,
-        "z": 134,
-        "close_enough": 1,
-        "budget_frames": 800
-      },
-      "label": "Ordinary mounted approach leg 1/3; original2400-frame allowance split800+800+800"
-    },
-    {
-      "peer": 1,
-      "action": "move_to",
-      "args": {
-        "x": -108,
-        "z": 106,
-        "close_enough": 1,
-        "budget_frames": 800
-      },
-      "label": "Ordinary mounted approach leg 2/3; original2400-frame allowance split800+800+800"
-    },
-    {
-      "peer": 1,
-      "action": "move_to",
-      "args": {
-        "x": -161.911,
-        "z": 78.643,
-        "close_enough": 1,
-        "budget_frames": 800
-      },
-      "label": "Ordinary mounted approach leg 3/3; original2400-frame allowance split800+800+800"
-    },
-    {
-      "peer": 1,
       "action": "f37_deep_fixture",
-      "args": {
-        "current_crossing": true,
-        "stop_after_crossing": true
-      },
-      "label": "Measured ordinary crossing of the authored current; shared2400-frame allowance begins"
-    },
-    {
-      "peer": 1,
-      "action": "f37_deep_fixture",
-      "args": {
-        "continue_after_crossing": true
-      },
-      "label": "Ordinary deep-water approach with the remainder of the same2400-frame allowance"
+      "label": "SETUP submerged-save area near Lantern Cove"
     },
     {
       "peer": "all",
@@ -118,48 +73,6 @@
       "args": {
         "frames": 90
       }
-    },
-    {
-      "peer": 1,
-      "action": "rider_self",
-      "expect_data": {
-        "character_id": "$character1",
-        "mounted": true,
-        "mount_species": "ripplet",
-        "swim_mode": 2,
-        "realm": "water"
-      },
-      "label": "Surface capture follows the real current crossing and completed deep-water approach"
-    },
-    {
-      "peer": 1,
-      "action": "f37_status",
-      "expect_data": {
-        "mounted": true,
-        "diving": false,
-        "swim_mode": 2
-      }
-    },
-    {
-      "peer": 1,
-      "action": "screenshot",
-      "args": {
-        "name": "f37_14_deep_surface"
-      },
-      "expect_data": {
-        "captured": true
-      },
-      "label": "Native deep-water surface capture; the original dry admission capture remains separate"
-    },
-    {
-      "peer": 1,
-      "action": "f37_status",
-      "expect_data": {
-        "mounted": true,
-        "diving": false,
-        "swim_mode": 2
-      },
-      "label": "Surface state still holds after the native capture"
     },
     {
       "peer": 1,
@@ -220,37 +133,6 @@
     },
     {
       "peer": 1,
-      "action": "f37_status",
-      "expect_data": {
-        "mounted": true,
-        "diving": true,
-        "swim_mode": 2
-      },
-      "label": "Active Dive after the original settling wait and seated, visible rider identity checks"
-    },
-    {
-      "peer": 1,
-      "action": "screenshot",
-      "args": {
-        "name": "f37_19_active_dive"
-      },
-      "expect_data": {
-        "captured": true
-      },
-      "label": "Native active Dive capture; no capture-only pose, camera or state changes"
-    },
-    {
-      "peer": 1,
-      "action": "f37_status",
-      "expect_data": {
-        "mounted": true,
-        "diving": true,
-        "swim_mode": 2
-      },
-      "label": "Mounted Dive state still holds after the native capture"
-    },
-    {
-      "peer": 1,
       "action": "save_character_here",
       "label": "the guest's character is written while mounted mid-water"
     },
@@ -260,19 +142,6 @@
       "args": {
         "label": "before_drop"
       }
-    },
-    {
-      "peer": 1,
-      "action": "f37_status",
-      "args": {
-        "remember_saved_dive": true
-      },
-      "expect_data": {
-        "mounted": true,
-        "diving": true,
-        "saved_dive_recorded": true
-      },
-      "label": "Read the actual character file after save_character_here and capture_saves' production autosave"
     },
     {
       "peer": 1,
@@ -313,14 +182,6 @@
       },
       "expect": "any",
       "label": "tear down if anything is left (after a dropped link there is no session, as smoke_net_reconnect_keeps_character expects)"
-    },
-    {
-      "peer": 1,
-      "action": "f37_record_disconnect",
-      "expect_data": {
-        "saved_dive_recorded": true
-      },
-      "label": "Read the final production disconnect-written character file before wiping live memory; retain exact spent UID/debt"
     },
     {
       "peer": 1,
@@ -439,13 +300,9 @@
     {
       "peer": 1,
       "action": "f37_status",
-      "args": {
-        "require_saved_dive": "surface"
-      },
       "expect_data": {
         "mounted": true,
-        "diving": false,
-        "saved_dive_matches": true
+        "diving": false
       },
       "label": "Reconnect seats surface, with remaining dive debt on saved owned mount"
     },
@@ -467,12 +324,8 @@
     {
       "peer": 1,
       "action": "f37_status",
-      "args": {
-        "require_saved_dive": "resumed"
-      },
       "expect_data": {
-        "diving": true,
-        "resumed_dive_within_saved": true
+        "diving": true
       },
       "label": "A fresh tap resumes the saved bounded dive budget"
     },
@@ -486,53 +339,6 @@
         "captured": true
       },
       "label": "Rendered evidence required; headless capture is a failure"
-    },
-    {
-      "peer": 1,
-      "action": "f37_sunken_claim",
-      "args": {
-        "site_id": "lantern_arch_cache"
-      },
-      "expect_data": {
-        "gained": 3,
-        "flag_commits": 1,
-        "duplicate_refused": true
-      },
-      "label": "Physical Interact opens the actual sunken cache once"
-    },
-    {
-      "peer": 1,
-      "action": "f37_sunken_claim",
-      "args": {
-        "site_id": "lantern_pearl_bed"
-      },
-      "expect_data": {
-        "gained": 4,
-        "flag_commits": 1,
-        "duplicate_refused": true
-      },
-      "label": "Ordinary nine-metre swim and physical Interact gather the nearby node once"
-    },
-    {
-      "peer": 1,
-      "action": "screenshot",
-      "args": {
-        "name": "f37_33_sunken_finds"
-      },
-      "expect_data": {
-        "captured": true
-      },
-      "label": "Installed sunken cache, flower bed and rock presentation candidate"
-    },
-    {
-      "peer": 1,
-      "action": "f37_hidden_route",
-      "expect_data": {
-        "route_id": "lantern_arch_cut",
-        "optional": true,
-        "owned_dive_retained": true
-      },
-      "label": "Ordinary submerged traversal of the authored optional arch cut after real sunken finds"
     }
   ]
 }

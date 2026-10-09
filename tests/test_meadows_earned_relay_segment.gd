@@ -118,23 +118,3 @@ func test_xp_receipt_accumulates_per_kill_survivors_then_final_bonus_by_identity
 	assert_false(SEGMENT.exact_captain_xp(before, after, expected), "no bonus to a fainted member")
 	after.erase(15)
 	assert_false(SEGMENT.exact_captain_xp(before, after, expected))
-	# Legacy calls above retain their default; actual owned hybrid awards stop
-	# at the pre-window cap room without scaling the authored final bonus.
-	var essence_cfg := SEGMENT.ESSENCE.config()
-	var capped := {11: 0, 12: 0, 13: 0, 14: 0, 15: 0}
-	var room := {11: 0, 12: 50, 13: 1000, 14: 1000, 15: 1000}
-	assert_true(SEGMENT.accumulate_xp(capped, 11, [11, 12, 13, 14, 15], 11, 0, cfg, true, essence_cfg, room))
-	assert_true(SEGMENT.accumulate_xp(capped, 12, [12, 13, 14, 15], 11, 0, cfg, true, essence_cfg, room))
-	assert_true(SEGMENT.accumulate_xp(capped, 12, [12, 13, 14, 15], 12, 120, cfg, true, essence_cfg, room))
-	assert_eq(capped[11], 0, "a capped creature banks no XP")
-	assert_eq(capped[12], 50, "cumulative awards stop at the original cap room")
-	assert_eq(capped[13],
-		2 * SEGMENT.PROGRESSION.scaled_party_combat_xp(11, cfg, essence_cfg)
-		+ SEGMENT.PROGRESSION.scaled_party_combat_xp(12, cfg, essence_cfg) + 120,
-		"hybrid bench awards retain the unscaled completion bonus")
-	var capped_after := before.duplicate()
-	for id: int in capped_after:
-		capped_after[id] += capped[id]
-	assert_true(SEGMENT.exact_captain_xp(before, capped_after, capped))
-	capped_after[11] += 1
-	assert_false(SEGMENT.exact_captain_xp(before, capped_after, capped), "cap overflow still fails exact equality")

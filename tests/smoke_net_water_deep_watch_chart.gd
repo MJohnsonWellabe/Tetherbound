@@ -33,20 +33,10 @@ func _run() -> void:
 	var resolver_name := OS.get_environment("TB_DEEP_WATCH_RESOLVER")
 	var resolver := 0 if resolver_name == "host" else 1
 	var observer := 1 - resolver
-	var resident_shell := OS.get_cmdline_user_args().has("--resident-shell")
-	if resident_shell and resolver != 1:
-		check(false, "Resident-shell witness requires the original client resolver")
-		quit(await finish())
-		return
 	print("deep watch co-op: resolver=%s" % ("host" if resolver == 0 else "client"))
-	if not await launch(2, "world" if resident_shell else "water"):
+	if not await launch(2, "water"):
 		quit(await finish())
 		return
-	if resident_shell:
-		# Reuse the existing water-alpha smoke's disclosed retired-route setup.
-		for peer in 2:
-			check((await step(peer, "legacy_physical_crossings_fixture", {"regression": "water_alpha"})).get("verdict") == "PASS",
-				"Resident witness enables the disclosed retired crossing fixture")
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 900000.0
 	check((await step(0, "host")).get("verdict") == "PASS", "Host starts production session")
 	var session: Variant = await probe(0, "session")
@@ -59,14 +49,6 @@ func _run() -> void:
 	if _stopped({}, "join"):
 		quit(await finish())
 		return
-	if resident_shell:
-		for flag: String in ["realm_key_water", "realm_gate_water_unlocked"]:
-			check((await step(0, "story_flag", {"flag": flag, "scope": "world"})).get("verdict") == "PASS", "Host opens explicit Water entry fixture")
-			check((await step(1, "wait_flag", {"flag": flag})).get("verdict") == "PASS", "Client receives Water entry fixture")
-		check((await step(1, "enter_realm", {"realm": "water"}, 18000)).get("verdict") == "PASS", "Client enters Water through the production realm router")
-		if _stopped({}, "resident realm entry"):
-			quit(await finish())
-			return
 	var locked: Dictionary = await step(1, "deep_watch_claim_locked", {}, 1200)
 	check(locked.get("verdict") == "PASS", "Client: cache withheld and host refuses it as locked before resolution: " + str(locked.get("detail", "")) + " " + str(locked.get("data", {})))
 	var host_state: Variant = await probe(0, "deep_watch")
@@ -74,18 +56,8 @@ func _run() -> void:
 		quit(await finish())
 		return
 	check(not bool((host_state as Dictionary).get("resolved", true)) and int((host_state as Dictionary).get("receipts", -1)) == 0, "Host world: unresolved and unclaimed before resolution")
-	if resident_shell:
-		check(host_state.get("current_realm") == "meadows" and host_state.get("water_shell") == true
-			and host_state.get("water_look_absent") == true, "Named alpha is served by the completed Water shell without local presentation")
-	var resolved: Dictionary = await step(resolver, "deep_watch_resolve", {"resident_shell": resident_shell}, 1200)
+	var resolved: Dictionary = await step(resolver, "deep_watch_resolve", {}, 1200)
 	check(resolved.get("verdict") == "PASS", "Resolver records Tidecoil locally: " + str(resolved.get("detail", "")))
-	if resident_shell:
-		check(resolved.get("data", {}).get("named_body_present") == true,
-			"Original client resolver observed the actual named Tidecoil body")
-		check(int(resolved.get("data", {}).get("alpha_generation", 0)) >= 1
-			and resolved.get("data", {}).get("alpha_status") == "active"
-			and resolved.get("data", {}).get("alpha_packet_valid") == true,
-			"Named residency wait observed the canonical generation before the original terminal fixture")
 	var carried: Dictionary = await step(observer, "wait_flag", {"flag": "water_named_deep_watch_tidecoil_resolved", "scope": "world", "budget_frames": 600}, 1200)
 	check(carried.get("verdict") == "PASS", "Resolution reaches the other peer's world store: " + str(carried.get("detail", "")))
 	host_state = await probe(0, "deep_watch")

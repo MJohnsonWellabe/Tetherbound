@@ -6,7 +6,6 @@ const PROOF := preload("res://tests/helpers/f20_ending_probe.gd")
 var proof := PROOF.new()
 var _completed := false
 var _credits_only := false
-var _completed_fixture := false
 
 func _init() -> void:
 	_run.call_deferred()
@@ -14,27 +13,7 @@ func _init() -> void:
 func _run() -> void:
 	await process_frame
 	_credits_only = OS.get_cmdline_user_args().has("--through-credits")
-	_completed_fixture = OS.get_cmdline_user_args().has("--completed-fixture")
-	if OS.get_cmdline_user_args().has("--functional-offload"):
-		if OS.get_cmdline_user_args().has("--capture-ending") or OS.get_cmdline_user_args().has("--capture-order-ui"):
-			proof.check(false, "ending and order captures require their original continuous drawing path")
-			finish()
-			return
-		if not preload("res://tests/helpers/f19_functional_offload.gd").configure("ending_fixture_driver"):
-			proof.check(false, "ending functional offload requires the existing real Compatibility backend")
-			finish()
-			return
-		print("F20 FUNCTIONAL FIXTURE " + JSON.stringify({"continuous_drawing": false,
-			"setup": "existing disclosed post-finale fixture", "earned_finale": false,
-			"scope": "Ordinary existing input, physics, authority and production disk; no ending visual/audio/motion/performance acceptance"}))
 	var game := root.get_node("Game")
-	if _completed_fixture:
-		if _credits_only or OS.get_cmdline_user_args().has("--order-ui-only") or OS.get_cmdline_user_args().has("--order-journal-only"):
-			proof.check(false, "completed fixture is exclusively the full post-credits continuation endpoint")
-		else:
-			_completed = await proof.load_completed_fixture(self, game)
-		finish()
-		return
 	if not proof.fixture(game, "Solo"): finish(); return
 	var order_ui_only := OS.get_cmdline_user_args().has("--order-ui-only")
 	var order_journal_only := OS.get_cmdline_user_args().has("--order-journal-only")
@@ -81,8 +60,8 @@ func finish() -> void:
 		proof.check(false, "ending proof aborted before all required phases completed")
 	for failure: String in proof.failures: print("F20 FAIL ", failure)
 	print("F20 SOLO: %d checks, %d failures; actual input/UI/authority/disk with disclosed post-finale fixture" % [proof.checks, proof.failures.size()])
-	print("F20 SOLO ENDPOINT " + JSON.stringify({"requested": "completed_fixture_load_and_continuation" if _completed_fixture else "credits_and_reload" if _credits_only else "full_continuation",
+	print("F20 SOLO ENDPOINT " + JSON.stringify({"requested": "credits_and_reload" if _credits_only else "full_continuation",
 		"passed": _completed and proof.failures.is_empty(), "continuation_content_run": proof.continuation_content_entered,
 		"counts_as_f20_3_proof": _completed and proof.failures.is_empty() and not _credits_only,
-		"earned_finale": false, "setup": "byte-identical approved completed fixture" if _completed_fixture else "disclosed post-finale fixture"}))
+		"earned_finale": false, "setup": "disclosed post-finale fixture"}))
 	quit(0 if proof.failures.is_empty() else 1)

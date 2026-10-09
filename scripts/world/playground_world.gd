@@ -896,9 +896,7 @@ func _ready() -> void:
 		# Otherwise the first resumed `move_and_slide()` can still read the
 		# one-frame apparent velocity of collision moved during construction.
 		await get_tree().physics_frame
-		# Complete readiness after existing node callbacks; background owners
-		# must not issue transactions halfway through releasing this shell.
-		await get_tree().create_timer(0.0, true, false).timeout
+		await get_tree().process_frame
 		restore_player_after_real_build(_player, held_player_mode)
 	# Readiness follows release. Realm entry must not dismiss its overlay while
 	# a real Player is still under the construction hold.

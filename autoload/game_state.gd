@@ -280,9 +280,6 @@ var objective_hint: String:
 ## `progression.revision` last seen by `_process()` — see `objective_text`'s
 ## own comment.
 var _last_progression_revision: int = -1
-## Personal training, key and relic guidance can change without a flag revision.
-## Match the journal/beacon cache; this is presentation state, never saved.
-var _last_lesson_goal_signature: String = ""
 
 ## A client may retain the host's snapshot in this autoload after its transport
 ## has closed and the title scene is back. Session ownership alone then reads
@@ -814,7 +811,6 @@ func reset_for_new_game() -> void:
 	objective_text = quest_log.call("tracked_text", progression)
 	objective_hint = quest_log.call("tracked_hint", progression)
 	_last_progression_revision = int(progression.get("revision"))
-	_last_lesson_goal_signature = str(quest_log.call("lesson_goal_signature"))
 	_last_hint_device_was_gamepad = _last_input_was_gamepad
 	_objective_is_posed = false
 
@@ -1137,9 +1133,7 @@ func _process(delta: float) -> void:
 			session.call("record_owner_passive_input", {"op": "condition", "delta": delta, "uids": passive_uids})
 	var progression_revision: int = int(progression.get("revision"))
 	var realm_changed: bool = bool(quest_log.call("set_realm", current_realm))
-	var lesson_goal_signature := str(quest_log.call("lesson_goal_signature"))
-	var rung_moved := progression_revision != _last_progression_revision or realm_changed \
-			or lesson_goal_signature != _last_lesson_goal_signature
+	var rung_moved := progression_revision != _last_progression_revision or realm_changed
 	# BINDINGS. A device flip re-resolves the hint's baked-in button names, but
 	# must NOT take a POSED objective down: `set_objective()`'s contract is that
 	# the capture tools' demo line sticks until the rung moves, and several of
@@ -1148,7 +1142,6 @@ func _process(delta: float) -> void:
 			and not _objective_is_posed
 	if rung_moved or device_flipped:
 		_last_progression_revision = progression_revision
-		_last_lesson_goal_signature = lesson_goal_signature
 		_last_hint_device_was_gamepad = _last_input_was_gamepad
 		_objective_is_posed = false
 		objective_text = quest_log.call("tracked_text", progression)

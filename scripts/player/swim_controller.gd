@@ -10,10 +10,6 @@ var _camera: Node3D
 var _config: Dictionary
 var _horizontal := Vector3.ZERO
 var _pending_mount: Dictionary = {}
-var _pending_mount_owner: RefCounted
-var _pending_mount_character := ""
-var _mount_restore_generation := 0
-var _mount_restore_busy := false
 
 
 func setup(player: CharacterBody3D, world: Node3D, camera: Node3D) -> void:
@@ -59,21 +55,11 @@ func save_data() -> Dictionary:
 
 func restore_save_data(raw: Dictionary) -> bool:
 	var clean := SAVE.sanitise(raw)
-	print("F37 AQUATIC RESTORE " + JSON.stringify({"accepted": not clean.is_empty(),
-		"payload_mount": raw.has("mount"), "clean_mount": clean.has("mount")}))
 	if clean.is_empty():
 		return false
-	# A later accepted pose supersedes queued and in-flight reconstruction,
-	# including a pose without a mount. Rejected data leaves the live restore.
-	_mount_restore_generation += 1
-	_pending_mount.clear()
-	_pending_mount_owner = null
-	_pending_mount_character = ""
 	# Slot loads can reuse the current world. Detach the old carrier before
 	# reconstructing the saved one, without replacing the just-loaded pose.
 	var riding := _world.get_node_or_null("RidingController")
-	if riding != null and riding.has_method("cancel_traversal_requests"):
-		riding.cancel_traversal_requests()
 	if riding != null and riding.is_mounted():
 		var saved_position := _player.global_position
 		riding.dismount()
@@ -90,10 +76,7 @@ func restore_save_data(raw: Dictionary) -> bool:
 		var ground: float = _world.ground_height_at(at.x, at.z)
 		if is_finite(ground) and ground >= float(_config.safe_landing.minimum_height_m):
 			state.reach_land(Vector3(at.x, ground, at.z))
-	var had_mount := clean.has("mount")
 	_refuse_closed_seal_placement(clean)
-	print("F37 AQUATIC PLACEMENT " + JSON.stringify({"mount_before_seal": had_mount,
-		"mount_after_seal": clean.has("mount"), "dead": vitals.is_dead()}))
 	if _world.water_depth_at(_player.global_position) >= float(_config.human.entry_depth_m):
 		state.enter_water(false, _world.field.water_level())
 		_player.global_position.y = state.surface_y + float(_config.human.surface_body_offset_m)
@@ -102,8 +85,6 @@ func restore_save_data(raw: Dictionary) -> bool:
 	_horizontal = Vector3.ZERO
 	if clean.has("mount") and not vitals.is_dead():
 		_pending_mount = clean.duplicate(true)
-		_pending_mount_owner = get_node("/root/Game").local
-		_pending_mount_character = str(_pending_mount_owner.character_id)
 		_restore_mount.call_deferred()
 	if vitals.is_dead():
 		_player.call_deferred("emit_signal", "died")
@@ -135,31 +116,14 @@ func _refuse_closed_seal_placement(clean: Dictionary) -> void:
 
 
 func _restore_mount() -> void:
-	if _pending_mount.is_empty() or _mount_restore_busy:
+	if _pending_mount.is_empty():
 		return
-	_mount_restore_busy = true
-	var generation := _mount_restore_generation
-	var owner := _pending_mount_owner
-	var current := _mount_restore_current.bind(generation, owner, _pending_mount_character)
 	var director := _world.get_node_or_null("EncounterDirector")
 	var restored := false
 	var mount_save: Dictionary = _pending_mount.mount.duplicate(true)
-	if director != null and current.call():
-		restored = await director.restore_swim_mount(mount_save, current)
-	print("F37 MOUNT RECONSTRUCTION " + JSON.stringify({"director_present": director != null,
-		"restored": restored, "uid": mount_save.get("creature_uid", ""),
-		"superseded": not current.call()}))
-	_mount_restore_busy = false
-	if not current.call():
-		if generation == _mount_restore_generation:
-			_pending_mount.clear()
-			_pending_mount_owner = null
-			_pending_mount_character = ""
-		elif not _pending_mount.is_empty(): _restore_mount.call_deferred()
-		return
+	if director != null:
+		restored = await director.restore_swim_mount(_pending_mount.mount)
 	_pending_mount.clear()
-	_pending_mount_owner = null
-	_pending_mount_character = ""
 	if restored and _world.water_depth_at(_player.global_position) >= float(_config.human.entry_depth_m):
 		state.enter_water(true, _world.field.water_level())
 		state.stamina_fraction = director.ally_instance().swim_stamina_fraction
@@ -167,14 +131,6 @@ func _restore_mount() -> void:
 		var riding := _world.get_node_or_null("RidingController")
 		if mount_save.has("dive") and riding != null and riding.has_method("restore_dive"):
 			riding.restore_dive(mount_save.dive)
-
-
-func _mount_restore_current(generation: int, owner: RefCounted, character: String) -> bool:
-	var game := get_node_or_null("/root/Game")
-	return generation == _mount_restore_generation and is_inside_tree() \
-		and is_instance_valid(_world) and _world.is_inside_tree() and not _world.is_queued_for_deletion() \
-		and is_instance_valid(_player) and not _player.is_queued_for_deletion() and _world.is_ancestor_of(_player) \
-		and game != null and owner != null and game.local == owner and str(owner.character_id) == character
 
 
 ## Called by the owner rig instead of its ground integrator, never in addition

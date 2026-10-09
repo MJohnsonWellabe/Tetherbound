@@ -1,5 +1,0 @@
-Both originals **RUNTIME APPROVE** `37918068826`, actual checkout `043355fd2777cfc29d491515148cc2214b953eeb`.
-
-Artifact hash/CRC and log copy verified: **80 checks PASS, exit 0, 6s, zero engine/script errors**. Original 74 checks plus six disclosed fixture-admission guards passed.
-
-Scope: isolated HUD hint/lifecycle behavior only. Earlier failed producer stays FAIL; earned HUD cause remains unknown. No native, visual, device or whole F46 approval.

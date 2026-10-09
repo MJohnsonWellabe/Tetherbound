@@ -418,8 +418,7 @@ func _run() -> void:
 	# Finish guest travel/settling before the host opens the boss attack window.
 	var walked: Dictionary = await step(1, "teleport", {"near_trainer": BOSS})
 	check(str(walked.get("verdict", "")) == "PASS",
-		"peer 1 travelled to the boss fight (%s)%s" % [str(walked.get("detail", "")),
-			" data=" + JSON.stringify(walked.get("data", {})) if walked.get("verdict") != "PASS" else ""])
+		"peer 1 travelled to the boss fight (%s)" % str(walked.get("detail", "")))
 
 	# --- peer 0 takes the challenge -------------------------------------------
 	var began: Dictionary = await step(0, "trainer_battle", {"trainer": BOSS})

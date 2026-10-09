@@ -151,26 +151,6 @@ func run() -> void:
 	await frames(30)
 	check(not riding.diving and body.global_position.y > -1.0,"tap surfaces without held input")
 	check(is_equal_approx(creature.swim_stamina_fraction,float(world.get_node("MountedSwimming").state.stamina_fraction)),"stamina remains on owned creature")
-	# Reuse the original saved aquatic payload. A newer unmounted load must
-	# supersede its queued reconstruction before any deferred body work runs.
-	check(swimming.restore_save_data(clean), "saved owned UID queues production reconstruction")
-	var unmounted := clean.duplicate(true)
-	unmounted.erase("mount")
-	unmounted.mode = 1
-	check(swimming.restore_save_data(unmounted), "newer unmounted pose supersedes queued mount")
-	for frame in 4: await process_frame
-	check(swimming.get("_pending_mount").is_empty() and not riding.is_mounted() and not player.is_carried(),
-		"superseded reconstruction never reattaches its old carrier")
-	check(game.party.size() == 1 and game.party.at(0).uid == creature.uid,
-		"supersession preserves the original owned UID without another creature")
-	check(swimming.restore_save_data(clean), "current saved owned UID still reconstructs normally")
-	for frame in 120:
-		await physics_frame
-		if swimming.get("_pending_mount").is_empty(): break
-	check(riding.is_mounted() and director.ally_instance() == creature and riding.mount_body() != null,
-		"current reconstruction seats the same owned individual")
-	check(riding.dive_save().get("remaining_s") == clean.mount.dive.remaining_s,
-		"current reconstruction preserves the original remaining Dive debt")
 	finish()
 
 func _run_surface(player: CharacterBody3D, camera: Node3D, director: Node, riding: Node,

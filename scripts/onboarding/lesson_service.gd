@@ -2,7 +2,7 @@ extends Node
 
 ## Mounted once by the ordinary objective beacon. No reward, level, travel,
 ## inventory or save-writer ownership. Personal acknowledgements use the
-## existing ledger flag operation and character-only save writer.
+## existing ledger flag operation and normal character save lifecycle.
 const RULES := preload("res://scripts/onboarding/lesson_rules.gd")
 const PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
 const OWNER := preload("res://scripts/ui/input_owner.gd")
@@ -11,7 +11,6 @@ var _panel: CanvasLayer
 var _identity := ""
 var _realm := ""
 var _pending: Dictionary = {}
-var _receipt_generation := 0
 var _retry_at := 0
 var _replay := ""
 var _replaying := false
@@ -45,7 +44,6 @@ func _process(_delta: float) -> void:
 		# Closing a departing character's card must never acknowledge it for
 		# the new character. The dismissal callback checks this binding too.
 		_pending.clear()
-		_receipt_generation += 1
 		_replay = ""
 		if _panel.call("is_open"): _panel.call("close", false)
 		_identity = identity
@@ -110,43 +108,19 @@ func _dismissed(id: String) -> void:
 	var player := _player()
 	if player == null or str(player.get("character_id")) != _identity or _replaying: return
 	_pending[RULES.PREFIX + id] = true
-	_receipt_generation += 1
 	_retry_at = 0
 	_flush_receipts()
 
 func _flush_receipts() -> void:
 	var player := _player()
 	if player == null or str(player.get("character_id")) != _identity: return
+	for flag: String in _pending.keys():
+		if player.get("flags").call("has", flag) == true: _pending.erase(flag)
 	if _pending.is_empty() or Time.get_ticks_msec() < _retry_at: return
 	_retry_at = Time.get_ticks_msec() + 3000
-	var game := get_parent()
-	var session: Node = game.get("session")
-	if session == null or session.call("snapshot_ready") != true: return
-	# Teardown can read as solo again while still holding a foreign snapshot.
-	if game.call("is_host") == true and game.call("world_save_owned") != true: return
-	if session.call("mode") == "client" and session.call("handshake_snapshot_applied") != true: return
-	var acknowledged: Array[String] = []
-	for flag: String in _pending.keys():
-		if player.get("flags").call("has", flag) == true: acknowledged.append(flag)
-	if not acknowledged.is_empty():
-		# A live ledger flag is not a durable lesson receipt. Keep it pending
-		# until this admitted character's existing writer succeeds. A busy
-		# fallback or failed write retries; neither can erase the receipt.
-		var saver: RefCounted = game.get("save_system")
-		var identity := _identity
-		var generation := _receipt_generation
-		if saver != null and not identity.is_empty():
-			var saved: bool = saver.call("save_character_prepared", game, identity) == true
-			if _player() != player or str(player.get("character_id")) != identity \
-					or _identity != identity or _receipt_generation != generation \
-					or game.get("save_system") != saver or game.get("session") != session:
-				return # Neither clear nor submit against an outgoing binding.
-			if saved:
-				for flag: String in acknowledged: _pending.erase(flag)
-	var ledger: Node = game.get("ledger")
+	var ledger: Node = get_parent().get("ledger")
 	if ledger == null: return
 	for flag: String in _pending.keys():
-		if player.get("flags").call("has", flag) == true: continue
 		# Omit peers: the authenticated submitter is the sole recipient.
 		ledger.call("submit", {"kind": "grant_player_flag", "realm": "meadows", "id": flag})
 
@@ -159,6 +133,5 @@ func _arrival_result(result: Dictionary) -> void:
 	var player := _player()
 	if player == null or str(player.get("character_id")) != _identity or not RULES.available("home_key", player): return
 	_pending[RULES.PREFIX + "trigger:home_return"] = true
-	_receipt_generation += 1
 	_retry_at = 0
 	_flush_receipts()

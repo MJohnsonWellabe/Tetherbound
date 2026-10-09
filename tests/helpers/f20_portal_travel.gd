@@ -13,11 +13,9 @@ var _lesson_controller_input := false
 var _lesson_capture_probe: RefCounted
 var _lesson_replay_row: Dictionary = {}
 var _lesson_replay_identity: Dictionary = {}
-var _lesson_replay_rows: Dictionary = {}
-var _lesson_observed_history: Dictionary = {}
 
 static func lesson_witness_options() -> Dictionary:
-	var options := {"controller": false, "capture": false, "replay": false, "durable_ack": false, "skip_line": 0, "failures": []}
+	var options := {"controller": false, "capture": false, "replay": false, "skip_line": 0, "failures": []}
 	var seen := {}
 	for arg: String in OS.get_cmdline_user_args():
 		var key := ""
@@ -33,10 +31,6 @@ static func lesson_witness_options() -> Dictionary:
 			key = "capture"
 			if arg != "--capture-lessons": options.failures.append("Use --capture-lessons without a value")
 			options.capture = true
-		elif arg.begins_with("--lesson-reload-witness"):
-			key = "durable_ack"
-			if arg != "--lesson-reload-witness": options.failures.append("Use --lesson-reload-witness without a value")
-			options.durable_ack = true
 		elif arg.begins_with("--lesson-skip-line"):
 			key = "skip_line"
 			var value := arg.trim_prefix("--lesson-skip-line=")
@@ -50,8 +44,6 @@ static func lesson_witness_options() -> Dictionary:
 			seen[key] = true
 	if seen.has("skip_line") and not options.controller:
 		options.failures.append("--lesson-skip-line requires --lesson-controller-witness")
-	if options.durable_ack and (not options.controller or not options.replay):
-		options.failures.append("Lesson durability requires the existing controller and Help replay witnesses")
 	if options.capture and OS.get_cmdline_user_args().has("--functional-offload") \
 		and (DisplayServer.get_name() == "headless" or RenderingServer.get_current_rendering_method() != "gl_compatibility"):
 		options.failures.append("Offloaded --capture-lessons requires a real Compatibility display and a guarded native draw")
@@ -66,11 +58,11 @@ func _portal_result(result: Dictionary) -> void:
 		and result.get("world_instance_id") == game.world.reward_delivery_namespace:
 		_home_result = result.duplicate(true)
 
-func activate(prompt: Node3D, approach_headings: Array[Vector3] = []) -> bool:
+func activate(prompt: Node3D) -> bool:
 	# A lesson may be due on this character's first walk past its teacher.
 	# Read/continue its real card; retain the original navigation budget and
 	# exact grounded/provider checks after ordinary world input returns.
-	return await _with_navigation_lessons(_activate_world.bind(prompt, approach_headings))
+	return await _with_navigation_lessons(_activate_world.bind(prompt))
 
 func _with_navigation_lessons(navigate: Callable) -> bool:
 	if _lesson_active or _lesson_busy: return _fail("F20 navigation re-entered its active lesson reader")
@@ -81,7 +73,6 @@ func _with_navigation_lessons(navigate: Callable) -> bool:
 	var failures_before := failures.size()
 	_lesson_replay_row = {}
 	_lesson_replay_identity = {}
-	_lesson_replay_rows = {}
 	_lesson_generation += 1
 	_lesson_active = true
 	var reader := _continue_navigation_lesson.bind(_lesson_generation)
@@ -108,27 +99,21 @@ func _with_navigation_lessons(navigate: Callable) -> bool:
 
 ## Explicit free-world boundary: a portal activation may still own a picker.
 ## Its caller must finish that modal before requesting this optional witness.
-func replay_observed_lesson(lesson_id: String = "") -> bool:
+func replay_observed_lesson() -> bool:
 	var options := lesson_witness_options()
 	if not options.failures.is_empty():
 		failures.append_array(options.failures)
 		return false
 	if _lesson_active or _lesson_busy or not failures.is_empty():
 		return _fail("F46 Help replay requires the completed natural reader")
-	var replay_row: Dictionary = _lesson_replay_row
-	var replay_identity: Dictionary = _lesson_replay_identity
-	if not lesson_id.is_empty():
-		var observed: Dictionary = _lesson_replay_rows.get(lesson_id, _lesson_observed_history.get(lesson_id, {}))
-		replay_row = observed.get("row", {})
-		replay_identity = observed.get("identity", observed)
-	if replay_identity.get("character_id", "") != str(game.local.character_id) \
-		or replay_identity.get("party_uids", []) != _uids():
+	if _lesson_replay_identity.get("character_id", "") != str(game.local.character_id) \
+		or _lesson_replay_identity.get("party_uids", []) != _uids():
 		return _fail("F46 Help replay lost the natural lesson's original character or ordered party")
 	var failures_before := failures.size()
-	if options.replay and not replay_row.is_empty():
+	if options.replay and not _lesson_replay_row.is_empty():
 		# The natural reader has finished. No background reader is connected
 		# while controller input traverses Settings and its real Help buttons.
-		var row := replay_row.duplicate(true)
+		var row := _lesson_replay_row.duplicate(true)
 		var reward_state := func() -> Dictionary:
 			var stacks: Array = []
 			for slot: int in int(game.inventory.call("slot_count")):
@@ -446,13 +431,8 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 	if is_instance_valid(owner): owner.disconnect("dismissed", dismissal_observer)
 	var receipt_began := Time.get_ticks_msec()
 	var deadline := receipt_began + 30000
-	var saved_ack := {}
 	while str(game.local.character_id) == character_id and Time.get_ticks_msec() < deadline \
-		and (game.local.flags.call("has", "opening:lesson:" + id) != true \
-			or (options.durable_ack and saved_ack.get("passed") != true)):
-		if options.durable_ack:
-			saved_ack = _saved_lesson_ack(id, character_id, witness.party_uids)
-			if saved_ack.get("passed") == true and game.local.flags.call("has", "opening:lesson:" + id): break
+		and game.local.flags.call("has", "opening:lesson:" + id) != true:
 		await tree.process_frame
 	var acknowledged: bool = str(game.local.character_id) == character_id \
 		and game.local.flags.call("has", "opening:lesson:" + id) == true
@@ -460,7 +440,6 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 		and str(owner.get("_row").get("id", "")) == id
 	var completed := input_ok and released and is_instance_valid(owner) and not original_open \
 		and dismissed == [id] and acknowledged
-	if options.durable_ack: completed = completed and saved_ack.get("passed") == true
 	if observing:
 		completed = completed and _uids() == witness.party_uids \
 			and str(game.local.character_id) == character_id \
@@ -473,7 +452,6 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 			"ack_after": acknowledged, "released": released, "original_open": original_open,
 			"party_uids_after": _uids(), "passed": completed,
 			"render_loop_enabled": RenderingServer.render_loop_enabled,
-			"saved_character_ack":saved_ack,
 			"scope": "Observed lesson lines only; Settings replay is reported separately and full F46 remains unproven"})
 		print(("F46 LESSON CONTROLLER WITNESS " if controller_witness else "F46 LESSON OBSERVATION ") + JSON.stringify(witness))
 	print("F20 LESSON result id=", id, " reader=", get_instance_id(), " generation=", generation,
@@ -489,53 +467,12 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 		if options.replay and not replaying and _lesson_replay_row.is_empty():
 			_lesson_replay_row = row.duplicate(true)
 			_lesson_replay_identity = {"character_id": character_id, "party_uids": witness.party_uids.duplicate()}
-		if options.replay and not replaying and not _lesson_replay_rows.has(id):
-			_lesson_replay_rows[id] = {"row":row.duplicate(true),
-				"identity":{"character_id":character_id,"party_uids":witness.party_uids.duplicate()}}
-		if options.replay and not replaying:
-			_lesson_observed_history[id] = {"character_id":character_id,
-				"party_uids":witness.party_uids.duplicate(), "row":row.duplicate(true)}
 	_lesson_busy = false
 
-## Only naturally completed cards from this reader; navigation resets its Help
-## cache but must not erase the history needed by the existing disk boundary.
-func observed_lesson_history() -> Dictionary:
-	return _lesson_observed_history.duplicate(true)
-
-## Read the existing production character bank only. Avoid characters(), whose
-## accessor finalizes a pending fallback, and never save/flush to make this pass.
-func _saved_lesson_ack(id: String, character_id: String, party_uids: Array) -> Dictionary:
-	var saver: RefCounted = game.get("save_system")
-	var bank: RefCounted = saver.get("_characters") if saver != null else null
-	var data: Dictionary = bank.call("read", character_id) if bank != null else {}
-	var saved_uids: Array[String] = []
-	for member: Dictionary in data.get("party", []): saved_uids.append(str(member.get("uid", "")))
-	var flags: Variant = data.get("flags", {})
-	var raw_flags: Variant = flags.get("flags", []) if flags is Dictionary else []
-	var ack: bool = raw_flags is Array and raw_flags.has("opening:lesson:" + id)
-	var passed: bool = bank != null and saver == game.get("save_system") and not data.is_empty() \
-		and data.get("character_id") == character_id and str(game.local.character_id) == character_id \
-		and saved_uids == party_uids and _uids() == party_uids and ack
-	return {"passed":passed,"character_id":data.get("character_id", ""),"party_uids":saved_uids,
-		"personal_ack":ack,"saved_personal_flags":raw_flags.duplicate() if raw_flags is Array else [],
-		"last_played":data.get("last_played", ""),
-		"bank_load_result":bank.get("last_load_result").duplicate(true) if bank != null else {},
-		"scope":"Validated production character-bank read only; actual title Load remains separate"}
-
-func _activate_world(prompt: Node3D, approach_headings: Array[Vector3] = []) -> bool:
+func _activate_world(prompt: Node3D) -> bool:
 	var bounty: Node = game.session.get_node_or_null("FoundationComposition/BountyInteraction")
 	if bounty != null and bounty.get("_prompt") == prompt:
 		return await _activate_bounty_via_road(prompt)
-	# Solo credits uses activate directly, unlike the separate co-op approach.
-	# Use the same live farmhouse doorway before asking for Grandpa's offer;
-	# all headings share super.activate's original walk budget and guard chain.
-	if prompt != null and prompt.get_parent().name == "Grandpa" and approach_headings.is_empty():
-		var house: Node = tree.current_scene.find_child("GrandpaHouse", true, false)
-		if house != null and house.has_method("marker"):
-			var door: Variant = house.call("marker", "door")
-			var inside: Variant = house.call("marker", "inside")
-			if door is Vector3 and inside is Vector3 and (door as Vector3).distance_to(inside) > 0.1:
-				approach_headings = [(door as Vector3) + ((door as Vector3) - (inside as Vector3)).normalized() * 2.0]
 	# Hall arches face an authored room approach. Reaching their coordinates
 	# from the exterior side of the wall does not establish a visible offer.
 	# Walk the installed marker through the original capsule navigator first.
@@ -549,7 +486,7 @@ func _activate_world(prompt: Node3D, approach_headings: Array[Vector3] = []) -> 
 			_stick(0, 0)
 			if not arrived or int(_player.get("_unstick_count")) != recoveries_before:
 				return _fail("F20 ordinary capsule walk failed to the authored Hall arch approach")
-	var passed := await super.activate(prompt, approach_headings)
+	var passed := await super.activate(prompt)
 	if not passed and tree.current_scene != null:
 		var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")
 		var owner := INPUT_OWNER.current(tree)
@@ -700,8 +637,6 @@ func observe_next_goal(gate: String, phase: String) -> Dictionary:
 		"realm": str(game.get("current_realm")), "scene": str(scene.get_path()) if scene != null else "",
 		"character_id": str(game.local.character_id), "party_uids": _uids(),
 		"process_frame": Engine.get_process_frames(), "physics_frame": Engine.get_physics_frames(),
-		"progression_revision": int(progression.get("revision")) if progression != null else -1,
-		"lesson_goal_signature": str(log.call("lesson_goal_signature")) if log != null else "",
 		"input_owner": str(owner.get_path()) if owner != null else "", "paused": tree.paused,
 		"tracked_id": str(log.call("tracked_id", progression)) if log != null and progression != null else "",
 		"quest_text": tracked, "game_text": text, "hud_text": label.text if label != null else "",
@@ -713,31 +648,6 @@ func observe_next_goal(gate: String, phase: String) -> Dictionary:
 		"scope": "Partial UI/state observation only; no readability, comprehension, replay or full F46 claim"}
 	print("F46 NEXT GOAL OBSERVATION " + JSON.stringify(observation))
 	return observation
-
-## Opt-in F46#1 proof frame, not a comprehension verdict. Keep the real HUD
-## and same identity/goal through the existing completed-frame capture.
-func capture_next_goal(gate: String, phase: String) -> bool:
-	if not OS.get_cmdline_user_args().has("--capture-next-goal"): return true
-	var observed := observe_next_goal(gate, phase)
-	if observed.visible_text_matches != true or not str(observed.input_owner).is_empty() or tree.paused:
-		return _fail("F46 next-goal capture requires the actual visible matching HUD and free input")
-	var scene := tree.current_scene
-	var label := scene.get_node("PlaygroundHUD").get("_objective_text_label") as Label
-	var stable := func() -> bool:
-		return tree.current_scene == scene and is_instance_valid(label) and label.is_visible_in_tree() \
-			and str(game.local.character_id) == observed.character_id and _uids() == observed.party_uids \
-			and label.text == observed.hud_text and str(game.get("objective_text")) == observed.game_text \
-			and INPUT_OWNER.current(tree) == null and not tree.paused
-	var probe_script := load("res://tests/helpers/f20_ending_probe.gd") as GDScript
-	if probe_script == null: return _fail("F46 next-goal capture lacks the existing completed-frame probe")
-	var probe: RefCounted = probe_script.new()
-	var passed: bool = await probe.capture(tree, "next-goal-" + gate + "-" + phase, stable)
-	if not passed or not stable.call(): return _fail("F46 next-goal frame lost its original HUD, goal or character")
-	print("F46 NEXT GOAL CAPTURE " + JSON.stringify({"gate":gate,"phase":phase,
-		"character_id":observed.character_id,"party_uids":observed.party_uids,
-		"actual_hud_text":observed.hud_text,"completed_frame":true,
-		"agent_next_goal_verdict":"pending; capture does not claim comprehension or whole F46"}))
-	return true
 
 func _trace_clock(action: String, pressed: bool, phase: String) -> void:
 	var input_owner := INPUT_OWNER.current(tree)

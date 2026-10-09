@@ -3,18 +3,12 @@ extends "res://tests/helpers/meadows_earned_warrens_segment.gd"
 ## Retained-world continuation. Only the inherited walking, wild combat, care
 ## and controller seams are used; the Warrens run/setup is never entered.
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
-const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const RELAY_CONFIG := "res://data/config/tether_relay.json"
 const CAPTAIN := "relay_captain"
 const TRAINER_FRAMES := 9000  # Existing earned bridge/tournament round deadline.
 const GEAR := "mill_bridge_gear"
 ## A player reading a victory line before pressing on (same pace as the Hall helper).
 const VICTORY_READ_FRAMES := 120
-## Optional saved cut; ordinary full Relay callers retain the existing route.
-var preparation_only := false
-var resume_prepared := false
-var prepared_character: Dictionary = {}
-var _preparation_caps: Dictionary = {}
 var _relay: Node3D
 var _mill: Node3D
 var _trainers: Node3D
@@ -27,13 +21,10 @@ var _captain_wins := 0
 var _captain_hits := 0
 var _captain_kills: Dictionary = {}
 var _expected_xp: Dictionary = {}
-var _xp_cap_room: Dictionary = {}
-var _xp_identity: Dictionary = {}
 var _dialogue_finished := ""
 var _activated_id := 0
 var _activated_name := ""
 var _supported_y := NAN
-var _relay_capture_probe: RefCounted
 
 
 func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
@@ -109,40 +100,12 @@ func _travel() -> bool:
 		return _fail("The authored Relay arch has no supported route")
 	var outside: Vector2 = _relay.call("world_of", gate[0])
 	var approach := approach_path(terrain, Vector2(_player.global_position.x, _player.global_position.z), outside)
-	var relay_road := trail_points(terrain, "loops", "relay_approach_loop")
-	if resume_prepared:
-		if preparation_only or prepared_character.is_empty() or relay_road.is_empty():
-			return _fail("Prepared Relay continuation requires its imported character and authored join")
-		for member: RefCounted in _game.get("party").call("members"):
-			var id := str(member.get("uid"))
-			_preparation_caps[id] = ESSENCE.creature_cap(prepared_character, id)
-		if not _preparation_join_ready(relay_road[0]): return false
-		_receipt("relay_preparation_loaded", {"join": relay_road[0], "party": _party_hp()})
-		# Continue the identical authored suffix after the saved recovery join.
-		for index in range(1, nearest_index(relay_road, outside) + 1):
-			var point := relay_road[index]
-			if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M, OVERLOOK_BYPASS, _v2p(), point) \
-					or not await _walk_ground(point):
-				return false
-	else:
-		if approach.is_empty() or not await _prepare():
-			return _fail("The current Warrens-to-Relay trail or actual care is unavailable")
-		var recovered := false
-		for point: Vector2 in approach:
-			if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M, OVERLOOK_BYPASS, _v2p(), point) \
-					or not await _walk_ground(point):
-				return false
-			if not relay_road.is_empty() and point == relay_road[0]:
-				if recovered or not await _recover_at_riverwatch(point):
-					return false
-				recovered = true
-				if preparation_only:
-					if not _preparation_join_ready(point): return false
-					_receipt("relay_prepared", {"join": point, "player": _player.global_position,
-						"party": _party_hp(), "caps": _preparation_caps.duplicate(), "safe_join": true})
-					return true
-		if not recovered:
-			return _fail("The earned Relay approach missed its authored recovery junction")
+	if approach.is_empty() or not await _prepare():
+		return _fail("The current Warrens-to-Relay trail or actual care is unavailable")
+	for point: Vector2 in approach:
+		if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M, OVERLOOK_BYPASS, _v2p(), point) \
+				or not await _walk_ground(point):
+			return false
 	for point: Vector2 in gate:
 		if not await _walk_ground(_relay.call("world_of", point), 0.6):
 			return false
@@ -171,13 +134,11 @@ func _travel() -> bool:
 			_supported_y = local.y
 	var lit := int(_relay.call("lit_conduit_count"))
 	var console := _relay.get_node_or_null("ApparatusSeam/Console/Interactable") as Node3D
-	if not await _capture_relay_frame("console-before", func() -> bool: return int(_relay.call("lit_conduit_count")) == lit and not _has("relay_disabled")): return false
 	if lit <= 0 or not await _press_prompt(console):
 		return _fail("The live lit Relay console could not be activated by ordinary input")
 	if not _has("relay_disabled") or not bool(_relay.call("is_disabled")) or int(_relay.call("lit_conduit_count")) != 0:
 		return _fail("The exact console press did not disable the real relay and its conduits")
 	_receipt("relay_disabled", {"lit_before": lit, "lit_after": 0, "player": _player.global_position})
-	if not await _capture_relay_frame("console-aftermath", func() -> bool: return _has("relay_disabled") and bool(_relay.call("is_disabled")) and int(_relay.call("lit_conduit_count")) == 0): return false
 	for index in range(deck_route.size() - 1, -1, -1):
 		var local := deck_route[index]
 		var at: Vector2 = _relay.call("world_of", Vector2(local.x, local.z))
@@ -213,179 +174,7 @@ func _travel() -> bool:
 			or _tree.current_scene != _world or str(_game.get("current_realm")) != "meadows" or _fighting():
 		return _fail("The same earned five did not physically complete the Mill crossing")
 	_receipt("mill_crossing_restored", {"gear_before": 1, "gear_after": _count(GEAR), "depth": depth, "party_ids": _party_ids()})
-	if not await _capture_relay_frame("mill-far-bank", func() -> bool: return mill_paid_receipt(_count(GEAR), _has("mill_crossing_restored"), bool(_mill.call("is_open"))) and float(_mill.call("depth_past_crossing", _v2p())) >= bank - 0.6 and not _fighting()): return false
 	return true
-
-
-## Test-local native pixels only. No pose, camera, state or render override.
-func _capture_relay_frame(label: String, phase_guard: Callable) -> bool:
-	if not OS.get_cmdline_user_args().has("--capture-relay"): return true
-	if DisplayServer.get_name() == "headless" or not RenderingServer.render_loop_enabled:
-		return _fail("Relay frames require the actual native drawing display")
-	if _relay_capture_probe == null:
-		_relay_capture_probe = load("res://tests/helpers/f20_ending_probe.gd").new()
-	var cid := str(_game.get("local").get("character_id"))
-	var owner := INPUT_OWNER.current(_tree)
-	var captures_before := int(_relay_capture_probe.get("_capture_index"))
-	var stable := func() -> bool:
-		return _tree.current_scene == _world and str(_game.get("current_realm")) == "meadows" \
-			and str(_game.get("local").get("character_id")) == cid and retained_five(_initial_ids, _party_ids()) \
-			and INPUT_OWNER.current(_tree) == owner and phase_guard.call() == true
-	if not await _relay_capture_probe.capture(_tree, "relay-" + label, stable) or not stable.call() \
-			or int(_relay_capture_probe.get("_capture_index")) != captures_before + 1:
-		return _fail("Relay native frame lost its actual phase, owner or retained five: " + label)
-	_receipt("relay_visual_capture", {"label": label, "character_id": cid, "party_ids": _party_ids(),
-		"completed_native_frame": true, "presentation_overrides": false, "blind_verdict": "pending"})
-	return true
-
-
-func preparation_ready() -> bool:
-	var road := trail_points(_read(TERRAIN), "loops", "relay_approach_loop")
-	return not road.is_empty() and _preparation_join_ready(road[0])
-
-
-func _preparation_join_ready(join: Vector2) -> bool:
-	var camp := _world.find_child("riverwatch_rest_Rest", true, false) as Node3D
-	var bed := camp.get_node_or_null("CampCreatureBed") as Node3D if camp != null else null
-	if _tree.current_scene != _world or str(_game.get("current_realm")) != "meadows" \
-			or _tree.paused or not _player.is_on_floor() or _v2p().distance_to(join) > 1.5 \
-			or _fighting() or INPUT_OWNER.current(_tree) != null \
-			or bed == null or int(bed.call("build_index")) != -13 or int(bed.call("occupant_index")) >= 0 \
-			or not retained_five(_initial_ids, _party_ids()) or _preparation_caps.size() != 5 \
-			or _count(GEAR) != 0 or bool(_relay.call("is_disabled")) or bool(_mill.call("is_open")):
-		return _fail("Prepared Relay requires its actual safe join, empty bed and unchanged retained-five world input")
-	for flag: String in ["relay_captain_defeated", "captive_rescued", "relay_disabled", "mill_crossing_restored"]:
-		if _has(flag): return _fail("Prepared Relay already contains a Captain/Mill departure fact: " + flag)
-	for member: RefCounted in _game.get("party").call("members"):
-		var id := str(member.get("uid"))
-		if bool(member.get("resting")) or bool(member.get("fainted")) \
-				or float(member.get("hp")) < float(member.get("max_hp")) - 0.01 \
-				or _preparation_caps.get(id, -1) != ESSENCE.creature_cap(_game.get("local").get("redesign_character"), id):
-			return _fail("Prepared Relay must retain all five awake at full HP with their exact recovery caps")
-	return true
-
-
-## Use the advertised bed before the first picket. Recover injured members
-## serially over real time; Wake early supplies no overnight/rested credit.
-func _recover_at_riverwatch(join: Vector2) -> bool:
-	var camp := _world.find_child("riverwatch_rest_Rest", true, false) as Node3D
-	var bed := camp.get_node_or_null("CampCreatureBed") as Node3D if camp != null else null
-	if camp == null or bed == null or int(bed.call("build_index")) != -13 \
-			or Vector2(camp.global_position.x, camp.global_position.z).distance_to(Vector2(211.0, 3700.0)) > 0.01 \
-			or Vector2(bed.global_position.x, bed.global_position.z).distance_to(Vector2(212.4, 3701.3)) > 0.01 \
-			or absf(bed.global_position.y - float(_world.call("ground_height_at", 212.4, 3701.3))) > 0.01 \
-			or int(bed.call("occupant_index")) >= 0 or _fighting() or INPUT_OWNER.current(_tree) != null \
-			or bool(_mill.call("is_open")) or not retained_five(_initial_ids, _party_ids()):
-		return _fail("Ordinary Relay preparation needs the actual grounded, available Riverwatch bed before the closed Mill")
-	var care := CARE.new()
-	care._tree = _tree
-	care._world = _world
-	care._game = _game
-	care._player = _player
-	care._rig = _rig
-	care._combat = _combat
-	care._arbiter = _arbiter
-	care._nav = CARE.NAV.new(_tree, _player, _rig, care._stick, true)
-	var party: RefCounted = _game.get("party")
-	var inventory_before := care._inventory_snapshot()
-	var xp_before := _xp_snapshot()
-	var personal: Dictionary = _game.get("local").get("redesign_character")
-	var caps_before := {}
-	for member: RefCounted in party.call("members"):
-		caps_before[str(member.get("uid"))] = ESSENCE.creature_cap(personal, str(member.get("uid")))
-	var day_before := int(_game.get("day"))
-	var carried_clock_before := float(_game.get("clock_elapsed_seconds"))
-	# Observe the actual scene clock, whose elapsed and roll counters receive
-	# the same _process delta; a carried save value is not the running clock.
-	var look := _world.get_node_or_null("WorldLook")
-	var cycle: RefCounted = look.get("_cycle") as RefCounted if look != null else null
-	var clock_binding_before: bool = _tree.current_scene == _world \
-		and _tree.root.get_node_or_null("Game") == _game and look != null \
-		and look.get_parent() == _world and look.get_script() == preload("res://scripts/world/world_look.gd") \
-		and look.is_in_group("day_cycle") and cycle != null \
-		and cycle.get_script() == preload("res://scripts/world/day_cycle.gd")
-	var clock_live_before: bool = clock_binding_before and look.is_processing() \
-		and look.process_mode == Node.PROCESS_MODE_ALWAYS and look.get("_clock_frozen") == false
-	var elapsed_before: float = float(look.get("_elapsed_seconds")) if clock_binding_before else NAN
-	var accum_before: float = float(look.get("_auto_day_accum")) if clock_binding_before else NAN
-	var length_before: float = float(cycle.get("day_length_seconds")) if clock_binding_before else NAN
-	var clock_values_before: bool = is_finite(elapsed_before) and elapsed_before >= 0.0 \
-		and is_finite(accum_before) and is_finite(length_before) and length_before > 0.0 \
-		and accum_before >= 0.0 and accum_before < length_before
-	var clock_before := {"day": day_before, "elapsed": elapsed_before,
-		"accumulator": accum_before, "day_length": length_before}
-	if not clock_live_before or not clock_values_before:
-		_receipt("riverwatch_recovery_guard_refusal", {"clock_binding": clock_binding_before,
-			"clock_live": clock_live_before, "clock_values": clock_values_before, "clock_before": clock_before})
-		return _fail("Riverwatch recovery requires its actual live, finite WorldLook clock")
-	var recovered_indices: Array[int] = []
-	for index in int(party.call("size")):
-		var member: RefCounted = party.call("at", index)
-		if not bool(member.get("fainted")) and float(member.get("hp")) >= float(member.get("max_hp")) - 0.01:
-			continue
-		if not await care._recover_at_home_bed(index, bed):
-			return _fail("Riverwatch controller recovery failed: " + str(care.result().failures))
-		recovered_indices.append(index)
-	var awake_full_hp: bool = true
-	var caps_unchanged: bool = true
-	for member: RefCounted in party.call("members"):
-		awake_full_hp = awake_full_hp and not bool(member.get("resting")) and not bool(member.get("fainted")) \
-			and float(member.get("hp")) >= float(member.get("max_hp")) - 0.01
-		caps_unchanged = caps_unchanged and caps_before.get(str(member.get("uid")), -1) \
-			== ESSENCE.creature_cap(_game.get("local").get("redesign_character"), str(member.get("uid")))
-	var clock_binding_after: bool = is_instance_valid(look) and _tree.current_scene == _world \
-		and _tree.root.get_node_or_null("Game") == _game and _world.get_node_or_null("WorldLook") == look \
-		and look.get_parent() == _world and look.get_script() == preload("res://scripts/world/world_look.gd") \
-		and look.is_in_group("day_cycle") and look.get("_cycle") == cycle \
-		and cycle.get_script() == preload("res://scripts/world/day_cycle.gd")
-	var clock_live_after: bool = clock_binding_after and look.is_processing() \
-		and look.process_mode == Node.PROCESS_MODE_ALWAYS and look.get("_clock_frozen") == false
-	var elapsed_after: float = float(look.get("_elapsed_seconds")) if clock_binding_after else NAN
-	var accum_after: float = float(look.get("_auto_day_accum")) if clock_binding_after else NAN
-	var length_after: float = float(cycle.get("day_length_seconds")) if clock_binding_after else NAN
-	var elapsed_delta := elapsed_after - elapsed_before
-	var clock_values_after: bool = is_finite(elapsed_after) and is_finite(accum_after) \
-		and is_finite(length_after) and length_after == length_before and is_finite(elapsed_delta) \
-		and accum_after >= 0.0 and accum_after < length_before and elapsed_delta >= 0.0 \
-		and (recovered_indices.is_empty() or elapsed_delta > 0.0)
-	var natural_rolls: int = int(floor((accum_before + elapsed_delta) / length_before)) if clock_values_after else -1
-	var expected_accum: float = fposmod(accum_before + elapsed_delta, length_before) if clock_values_after else NAN
-	var day_after := int(_game.get("day"))
-	var day_accounted: bool = clock_values_after and day_after == day_before + natural_rolls
-	var accumulator_accounted: bool = clock_values_after and absf(accum_after - expected_accum) <= 0.000001
-	var clock_after := {"day": day_after, "elapsed": elapsed_after,
-		"accumulator": accum_after, "day_length": length_after}
-	var checks := {"identity_unchanged": retained_five(_initial_ids, _party_ids()),
-		"inventory_unchanged": inventory_before == care._inventory_snapshot(), "xp_unchanged": xp_before == _xp_snapshot(),
-		"caps_unchanged": caps_unchanged, "awake_full_hp": awake_full_hp,
-		"bed_empty": int(bed.call("occupant_index")) < 0, "not_fighting": not _fighting(),
-		"ordinary_input": INPUT_OWNER.current(_tree) == null, "clock_binding": clock_binding_after,
-		"clock_live": clock_live_after, "clock_values": clock_values_after,
-		"day_accounted": day_accounted, "accumulator_accounted": accumulator_accounted}
-	if checks.values().has(false):
-		# Retain the exact failing boundary, not a guessed cause from the
-		# compound label. Only naturally accounted day rolls are permitted.
-		_receipt("riverwatch_recovery_guard_refusal", {"identity_unchanged":retained_five(_initial_ids, _party_ids()),
-			"party_before":_initial_ids.duplicate(),"party_after":_party_ids(),
-			"inventory_unchanged":inventory_before == care._inventory_snapshot(),
-			"inventory_before":inventory_before,"inventory_after":care._inventory_snapshot(),
-			"xp_unchanged":xp_before == _xp_snapshot(),"xp_before":xp_before,"xp_after":_xp_snapshot(),
-			"checks":checks,"day_accounted":day_accounted,"natural_day_rolls":natural_rolls,
-			"day_before":day_before,"day_after":day_after,
-			"clock_before":clock_before,"clock_after":clock_after,"expected_accumulator":expected_accum,
-			"carried_clock_before":carried_clock_before,"carried_clock_after":float(_game.get("clock_elapsed_seconds")),
-			"bed_occupant":int(bed.call("occupant_index")),"fighting":_fighting(),
-			"input_owner":str(INPUT_OWNER.current(_tree)),"recovered_indices":recovered_indices,
-			"care_receipts":care.result().receipts,"scope":"Read-only operands; HP-only and natural-clock guard FAIL"})
-		return _fail("Riverwatch HP-only recovery violated retained state, ordinary input or its accounted natural clock")
-	_receipt("pre_relay_riverwatch_recovery", {"party": _party_hp(), "recovered_indices": recovered_indices,
-		"care_receipts": care.result().receipts, "bed": str(bed.global_position), "join": join,
-		"inventory_unchanged": true, "xp_caps_unchanged": true, "natural_day_rolls": natural_rolls,
-		"clock_before": clock_before, "clock_after": clock_after,
-		"overnight_rest": false, "full_rest_bonus": false})
-	_nav.reset()
-	_preparation_caps = caps_before.duplicate()
-	return await _walk_ground(join)
 
 
 func _walk(target: Vector3, radius: float = 1.5, budget: int = -1, best_effort := false) -> bool:
@@ -427,8 +216,8 @@ func _fight_captain() -> bool:
 	var reward: Dictionary = _captain_spec.get("reward", {})
 	var before_items := _captain_stock()
 	var before_xp := _xp_snapshot()
-	if not _bind_xp_window(before_xp):
-		return false
+	for id: int in before_xp:
+		_expected_xp[id] = 0
 	_captain_active = true
 	if not await _talk(prompt, str(_captain_spec.get("challenge", ""))):
 		return false
@@ -437,7 +226,6 @@ func _fight_captain() -> bool:
 	var pilot := LIVE.CampaignPilot.new(_tree, _combat, _director, _rig)
 	pilot.use_switching = false
 	pilot.switch_input = true
-	var fight_captured := false
 	while bool(_director.call("trainer_battle_active")) and captain_within_deadline(Engine.get_physics_frames() - _captain_start):
 		if not _failures.is_empty():
 			break
@@ -445,9 +233,6 @@ func _fight_captain() -> bool:
 			var ally := _director.call("ally_body") as Node3D
 			var foe := _combat.call("enemy_body") as Node3D
 			if is_instance_valid(ally) and is_instance_valid(foe):
-				if not fight_captured:
-					if not await _capture_relay_frame("captain-fight", func() -> bool: return _fighting() and bool(_director.call("trainer_battle_active")) and str(_director.call("trainer_battle_id")) == CAPTAIN and _combat.call("enemy_body") == foe): return false
-					fight_captured = true
 				await pilot._act(ally, foe)
 				pilot._move_toward(Vector3.ZERO)
 			else:
@@ -463,21 +248,6 @@ func _fight_captain() -> bool:
 			or not retained_five(_initial_ids, _party_ids()) or _count(GEAR) != 0 \
 			or not exact_item_reward(before_items, _captain_stock(), reward) \
 			or not exact_captain_xp(before_xp, _xp_snapshot(), _expected_xp):
-		# Preserve the exact gate, but expose the rejecting operand on failure.
-		# A Captain flag alone is never an earned Relay handoff.
-		_receipt("captain_verification_failed", {
-			"elapsed_frames": Engine.get_physics_frames() - _captain_start,
-			"within_deadline": captain_within_deadline(Engine.get_physics_frames() - _captain_start),
-			"fighting": _fighting(), "prior_failures": _failures.duplicate(),
-			"required_rounds": team_size, "rounds": _captain_rounds, "wins": _captain_wins,
-			"kills": _captain_kills.size(), "hits": _captain_hits,
-			"defeat_flag": _has("relay_captain_defeated"),
-			"retained_five": retained_five(_initial_ids, _party_ids()), "gear": _count(GEAR),
-			"items_match": exact_item_reward(before_items, _captain_stock(), reward),
-			"items_before": before_items, "items_after": _captain_stock(), "configured_reward": reward,
-			"xp_match": exact_captain_xp(before_xp, _xp_snapshot(), _expected_xp),
-			"xp_before": before_xp, "xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate(),
-			"xp_identity": _xp_identity.duplicate(true), "xp_cap_room": _xp_cap_room.duplicate()})
 		return _fail("Captain victory lacks exact admitted opponents, landed kills, configured items/XP or retained-five receipts")
 	_receipt("relay_captain_defeated", {"rounds": _captain_rounds, "wins": _captain_wins, "hits": _captain_hits,
 		"items_before": before_items, "items_after": _captain_stock(), "xp_before": before_xp,
@@ -587,7 +357,6 @@ func _press_prompt(prompt: Node3D) -> bool:
 
 
 func _talk(prompt: Node3D, expected: String) -> bool:
-	var rescue_before := _has("captive_rescued")
 	_dialogue_finished = ""
 	if expected.is_empty() or not await _press_prompt(prompt):
 		return false
@@ -597,30 +366,12 @@ func _talk(prompt: Node3D, expected: String) -> bool:
 		await _tree.physics_frame
 	if not bool(_panel.call("is_open")):
 		return _fail("The exact interaction opened no authored dialogue")
-	if expected == "relay_captive_freed":
-		if not await _capture_relay_frame("sela-exchange", func() -> bool: return bool(_panel.call("is_open")) and _activated_id == prompt.get_instance_id()): return false
-	var speaker := prompt.get_parent() as Node3D
-	var rescued_frame := false
 	for _line in 64:
 		if not bool(_panel.call("is_open")):
 			break
-		# The production NPC leaves for the village on the first frame after
-		# dialogue closes. Observe the real rescue effect while she still speaks.
-		if expected == "relay_captive_freed" and not rescue_before and not rescued_frame \
-				and rescue_receipt(_has("relay_captain_defeated"), _has("captive_rescued"), _count(GEAR)):
-			var same_sela := func() -> bool:
-				return rescue_receipt(_has("relay_captain_defeated"), _has("captive_rescued"), _count(GEAR)) \
-					and bool(_panel.call("is_open")) and is_instance_valid(prompt) \
-					and prompt.is_inside_tree() and is_instance_valid(speaker) \
-					and prompt.get_parent() == speaker and speaker.is_visible_in_tree() \
-					and _world.is_ancestor_of(prompt) and _activated_id == prompt.get_instance_id()
-			if not await _capture_relay_frame("sela-rescued", same_sela): return false
-			rescued_frame = true
 		await _input._tap("interact")
 		for _frame in 6:
 			await _tree.physics_frame
-	if expected == "relay_captive_freed" and OS.get_cmdline_user_args().has("--capture-relay") and not rescued_frame:
-		return _fail("The actual rescue did not expose its earned effect before Sela's ordinary departure")
 	return (not bool(_panel.call("is_open")) and _dialogue_finished == expected) \
 		or _fail("Dialogue input finished '%s', expected '%s'" % [_dialogue_finished, expected])
 
@@ -650,28 +401,11 @@ func _on_hit(on_enemy: bool, amount: float) -> void:
 	_captain_kills[id] = true
 	var active: RefCounted = _combat.call("active_creature")
 	var survivors: Array[int] = []
-	var personal: Variant = _game.get("local").get("redesign_character")
-	if not personal is Dictionary:
-		_fail("Trainer XP lost the actual personal cap record")
-		return
 	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
-		var member_id := member.get_instance_id()
-		if not _xp_identity.has(member_id) \
-			or _xp_identity[member_id].uid != str(member.get("uid")) \
-			or _xp_identity[member_id].cap != ESSENCE.creature_cap(personal, str(member.get("uid"))):
-			_fail("Trainer XP changed its original creature identity or admitted cap")
-			return
 		if not bool(member.get("fainted")):
 			survivors.append(member.get_instance_id())
-	var owner_id := str(_combat.get("_ordinary_reward_owned_id"))
-	var hybrid := not owner_id.is_empty()
-	if hybrid and owner_id != str(_combat.call("encounter_id")):
-		_fail("Trainer XP owner no longer binds the actual encounter")
-		return
-	if not accumulate_xp(_expected_xp, active.get_instance_id(), survivors, int(_fight_enemy.get("level")),
-		TRAINERS.reward_xp_bonus(_captain_spec) if _captain_kills.size() == TRAINERS.team_of(_captain_spec).size() else 0,
-		PROGRESSION.config(), hybrid, ESSENCE.config(), _xp_cap_room):
-		_fail("Trainer XP has invalid configured awards or original cap room")
+	accumulate_xp(_expected_xp, active.get_instance_id(), survivors, int(_fight_enemy.get("level")),
+		TRAINERS.reward_xp_bonus(_captain_spec) if _captain_kills.size() == TRAINERS.team_of(_captain_spec).size() else 0, PROGRESSION.config())
 
 
 func _on_exit(outcome: String) -> void:
@@ -708,46 +442,10 @@ static func opponent_matches(creature: RefCounted, row: Dictionary) -> bool:
 		and int(creature.get("level")) == int(row.get("level", -1))
 
 
-func _bind_xp_window(before: Dictionary) -> bool:
-	_expected_xp.clear()
-	_xp_cap_room.clear()
-	_xp_identity.clear()
-	var personal: Variant = _game.get("local").get("redesign_character")
-	if not personal is Dictionary or before.size() != 5:
-		return _fail("Trainer XP requires the actual five-member baseline and personal caps")
-	var cfg := PROGRESSION.config()
-	var seen := {}
-	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
-		var id := member.get_instance_id()
-		var uid := str(member.get("uid"))
-		var cap := ESSENCE.creature_cap(personal, uid)
-		if uid.is_empty() or seen.has(uid) or not before.has(id) or cap < int(member.get("level")) \
-			or int(before[id]) != total_xp(int(member.get("level")), int(member.get("xp")), cfg):
-			return _fail("Trainer XP baseline does not bind five distinct owned creatures and valid caps")
-		var room := total_xp(cap, 0, cfg) - int(before[id])
-		if room < 0:
-			return _fail("Trainer XP baseline already exceeds its admitted cap")
-		seen[uid] = true
-		_xp_identity[id] = {"uid": uid, "cap": cap}
-		_xp_cap_room[id] = room
-		_expected_xp[id] = 0
-	return _xp_identity.size() == 5 or _fail("Trainer XP baseline lost an original member")
-
-
-static func accumulate_xp(expected: Dictionary, active: int, survivors: Array[int], level: int, bonus: int,
-		cfg: Dictionary, hybrid: bool = false, essence_cfg: Dictionary = {}, cap_room: Dictionary = {}) -> bool:
-	var award := PROGRESSION.scaled_combat_xp(level, cfg, essence_cfg) if hybrid else PROGRESSION.xp_award_for(level, cfg)
-	var share := PROGRESSION.scaled_party_combat_xp(level, cfg, essence_cfg) if hybrid else PROGRESSION.party_share(award, cfg)
-	if award <= 0 or share <= 0 or bonus < 0:
-		return false
-	if not cap_room.is_empty():
-		for id: int in survivors:
-			if not expected.has(id) or not cap_room.has(id) or int(cap_room[id]) < 0:
-				return false
+static func accumulate_xp(expected: Dictionary, active: int, survivors: Array[int], level: int, bonus: int, cfg: Dictionary) -> void:
+	var award := PROGRESSION.xp_award_for(level, cfg)
 	for id: int in survivors:
-		var cumulative := int(expected.get(id, 0)) + bonus + (award if id == active else share)
-		expected[id] = mini(cumulative, int(cap_room[id])) if not cap_room.is_empty() else cumulative
-	return true
+		expected[id] = int(expected.get(id, 0)) + bonus + (award if id == active else PROGRESSION.party_share(award, cfg))
 
 
 static func exact_captain_xp(before: Dictionary, after: Dictionary, expected: Dictionary) -> bool:

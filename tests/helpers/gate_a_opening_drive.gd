@@ -1714,23 +1714,7 @@ func _wander_for_a_new_angle() -> void:
 		to = Vector3.FORWARD
 	# A quarter turn around the creature, at a comfortable throwing radius.
 	var around := to.normalized().rotated(Vector3.UP, PI * 0.5) * THROW_RANGE_WANTED
-	var goal := _wild.global_position + around
-	# A neighbouring wild can stand on this recovery leg. Repeating the same
-	# straight heading left the trainer against its collider for all three
-	# retries while the strict shot verdict correctly remained blocked. Use
-	# the route's existing physical obstacle navigator within the same budget.
-	var navigator: RefCounted = (load("res://tests/helpers/stick_navigator.gd") as GDScript).new(
-		_tree, _player, _rig, _wander_stick)
-	for _frame in 90:
-		if not is_instance_valid(_wild) or not bool(_combat.call("is_fighting")):
-			break
-		var remaining := goal - _player.global_position
-		remaining.y = 0.0
-		if remaining.length() <= 0.8:
-			break
-		navigator.step(goal)
-		Input.flush_buffered_events()
-		await _tree.physics_frame
+	await _drive_body_toward(_player, _wild.global_position + around, 90)
 	_stop_left_stick()
 	for _i in 10:
 		await _tree.physics_frame
@@ -1742,11 +1726,6 @@ func _wander_for_a_new_angle() -> void:
 	# while aim remained active still re-aim here as before.
 	if bool(_combat.call("is_aiming")):
 		await _aim_camera_at(_wild, AIM_REAIM_SECONDS)
-
-
-func _wander_stick(x: float, y: float) -> void:
-	_send_axis(JOY_AXIS_LEFT_X, x)
-	_send_axis(JOY_AXIS_LEFT_Y, y)
 
 
 ## How close the trainer wants to be before hunting sideways for a clear line.

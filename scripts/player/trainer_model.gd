@@ -787,17 +787,16 @@ func _apply_human_swim_pose(rig: Skeleton3D, surface_y: float) -> void:
 	for side: String in ["Left", "Right"]:
 		var sign_side := 1.0 if side == "Left" else -1.0
 		var stroke := _human_swim_phase + (0.0 if side == "Left" else PI)
-		# The installed rigs have +Y toward the head and +Z toward the chest.
-		# Once pitched prone, positive Z pulls through water; negative Z lifts
-		# the recovering elbow. A fixed negative depth kept both hands aloft.
-		var upper := _human_swim_direction(stroke / TAU, "upper")
-		var forearm := _human_swim_direction(stroke / TAU, "forearm")
-		upper.x *= sign_side
-		forearm.x *= sign_side
+		var reach := cos(stroke)
+		var lateral := float(_human_swim_visual.get("arm_lateral", 0.45))
+		# Aim in the installed skeleton's frame, preserving each bone's rest
+		# roll. Positive Y extends toward the head; negative Y draws past hips.
 		_aim_hang_bone(rig, side + "Arm", side + "ForeArm",
-			upper)
+			Vector3(sign_side * lateral, reach, float(_human_swim_visual.get("arm_depth", -0.25))))
 		_aim_hang_bone(rig, side + "ForeArm", side + "Hand",
-			forearm)
+			Vector3(sign_side * lateral * float(_human_swim_visual.get("forearm_lateral_scale", 0.55)),
+			maxf(float(_human_swim_visual.get("forearm_minimum_reach", 0.15)), reach),
+			float(_human_swim_visual.get("forearm_depth", -0.45))))
 		_swim_flex(rig, side + "UpLeg", sin(stroke) * float(_human_swim_visual.get("kick_deg", 9.0)))
 		_swim_flex(rig, side + "Leg", float(_human_swim_visual.get("knee_deg", 14.0))
 			+ maxf(0.0, -sin(stroke)) * float(_human_swim_visual.get("kick_deg", 9.0)))
@@ -810,25 +809,6 @@ func _apply_human_swim_pose(rig: Skeleton3D, surface_y: float) -> void:
 			surface_y + float(_human_swim_visual.get("chest_above_surface_m", 0.10)),
 			_player.global_position.z)
 		_art.position += global_basis.inverse() * (target - chest_world)
-
-
-func _human_swim_direction(cycle: float, limb: String) -> Vector3:
-	var keys: Array = _human_swim_visual.get("stroke_keys", [])
-	if keys.size() < 2:
-		return Vector3.UP
-	var phase := fposmod(cycle, 1.0)
-	for index in keys.size():
-		var start: Dictionary = keys[index]
-		var finish: Dictionary = keys[(index + 1) % keys.size()]
-		var end_phase := float(finish.phase) if index + 1 < keys.size() else 1.0
-		if phase < float(start.phase) or phase >= end_phase:
-			continue
-		var weight := smoothstep(float(start.phase), end_phase, phase)
-		var from: Array = start[limb]
-		var to: Array = finish[limb]
-		return Vector3(float(from[0]), float(from[1]), float(from[2])).lerp(
-			Vector3(float(to[0]), float(to[1]), float(to[2])), weight).normalized()
-	return Vector3.UP
 
 
 static func _swim_flex(rig: Skeleton3D, bone_name: String, degrees: float) -> void:

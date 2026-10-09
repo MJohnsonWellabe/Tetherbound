@@ -1,0 +1,19 @@
+{
+  "scope": "Owner-requested capture-context re-READY of 77d99b71; restores ordinary trait catches on current main. No new whole F30 criterion count claimed.",
+  "base_sha": "7dd4a777fbc11ce62c6747248b96d53e4a27a099",
+  "scoped_commit": "67e00c05e2281b305f88f49b1e74fcce821f00f3",
+  "original_commit": "77d99b71a048685b3acfa3f2fa5ec5272318357e",
+  "config_default_changes": [],
+  "feature_flag_flips": 0,
+  "proof_defaults": {"traits.runtime_enabled": true, "alpha_respawns.runtime_enabled": false, "combat.actor_vitals.runtime_enabled": false, "tether_commands.rollout_mode": "snare_only"},
+  "proofs": [
+    {"name": "gate_a_opening_segment", "run_id": 37976742229, "artifact_id": 11638977869, "verdict": "PASS", "exit": 0, "observed": "Continuous parsed-input opening and physical catch; exploration resumed with two-creature party", "log_sha256": "4f8efa84a4a7a4dcff512792f52b72a0bf51a479875dfe0d617ee5c5caedf949"},
+    {"name": "verify-catching: catching", "run_id": 37976745215, "artifact_id": 11639558130, "verdict": "PASS", "exit": 0, "observed": "Physical throw aimed, missed and landed; the catch and faint opportunity assertions passed", "log_sha256": "4021f45572d97ac4cb86fbffe9d83fb452f614bbafb304ba752f30aae05806d7"},
+    {"name": "verify-catching: catch_aim_slowdown", "run_id": 37976748029, "artifact_id": 11639327198, "verdict": "PASS", "exit": 0, "observed": "Target covered 33% of baseline ground while aimed at; configured scale 0.35", "log_sha256": "1a0960a5c582a32609c333347630f3f2d4880cc1e21b6c7ae5669a25392b686f"},
+    {"name": "party_count_after_catches", "run_id": 37976750866, "artifact_id": 11638773374, "verdict": "PASS", "exit": 0, "observed": "Three real catches; TEAM 4/5 and four occupied portraits agree before and after save/reload", "log_sha256": "26e0af86099e6c64e38dea29bc7762561305fb6be10ae4947175b2d53caa1055"}
+  ],
+  "affected_units": {"runner": "tests/run_tests.gd", "only": ["test_foundation_capture_scope", "test_water_capture_transaction", "test_water_capture_codec", "test_catch_arbitration", "test_catch_math"], "tests": 65, "assertions": 528, "failed": 0, "verdict": "PASS", "log": "affected-units.log", "engine": "Godot 4.7.stable.official.5b4e0cb0f"},
+  "independent_review": {"reviewer": "/root/capture_review", "pinned_sha": "67e00c05e2281b305f88f49b1e74fcce821f00f3", "verdict": "APPROVE", "actionable_findings": [], "basis": "Eligibility matches the existing alpha OR traits presenter. Stable character/source/world/realm retained-offer binding, cap-five staging, receipt/revision/epoch validation and owner save ACK guards remain intact.", "limits": "Read-only source review; did not independently execute the named proofs. Fresh end-to-end guest disconnect/rejoin is not established by these solo proofs."},
+  "ready": true,
+  "landing": "Pending scoped PR CI; unrelated lane work remains reachable in parent Git history."
+}

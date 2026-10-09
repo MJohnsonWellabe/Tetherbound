@@ -130,32 +130,24 @@ static func site_spawn_plans(site: Dictionary, table: Dictionary,
 
 ## Rebuild the saved owner's existing party member through the deployment seam.
 ## A surface swimmer must not be placed on the seabed by the land spawn helper.
-func restore_swim_mount(saved: Dictionary, current: Variant = null) -> bool:
-	if not _swim_restore_current(current): return false
+func restore_swim_mount(saved: Dictionary) -> bool:
 	var party := _party()
 	var index := preload("res://scripts/save/water_traversal_save.gd").mount_index(saved, party.members()) if party != null else -1
 	var creature: RefCounted = party.at(index) if party != null and index >= 0 else null
 	if creature == null or str(creature.species_id) != str(saved.species_id) \
 			or creature.fainted or creature.resting:
-		print("F37 RESTORE REFUSAL owned_record_or_fainted_or_resting index=" + str(index))
 		return false
 	var definition: Dictionary = preload("res://scripts/creatures/creature_species.gd").definition(str(creature.species_id))
 	if not bool(definition.get("swim_mount", {}).get("compatible", false)):
-		print("F37 RESTORE REFUSAL incompatible_species")
 		return false
 	var riding: Node = get_parent().get_node("RidingController")
 	if not riding._has_tack(str(creature.species_id)):
-		print("F37 RESTORE REFUSAL tack")
 		return false
 	if riding.is_mounted():
 		riding.dismount()
 	if is_instance_valid(_ally_body) and not dismiss_active_creature():
-		print("F37 RESTORE REFUSAL dismiss_active")
 		return false
-	# Reconstructing the already-active owned individual does not select a new
-	# member or mutate the party revision during an owner transaction.
-	if party.active_index() != index and not party.set_active(index):
-		print("F37 RESTORE REFUSAL set_active")
+	if not party.set_active(index):
 		return false
 	var raw: Array = saved.position
 	_restoring_surface_position = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
@@ -165,43 +157,17 @@ func restore_swim_mount(saved: Dictionary, current: Variant = null) -> bool:
 	var spawned := await _spawn_ally_body(creature)
 	_restoring_surface_position = Vector3.INF
 	if not spawned:
-		print("F37 RESTORE REFUSAL spawn_ally")
-		return false
-	var restored_body := _ally_body
-	if not _swim_restore_current(current):
-		_cancel_swim_restore(creature, restored_body)
 		return false
 	# No frame advances between revealing the body and attaching its rider.
 	_player.global_position = _ally_body.global_position + Vector3.UP
 	_ally_body.velocity = Vector3.ZERO
-	var mounted: bool = riding.restore_mount(current)
+	var mounted: bool = riding.mount()
 	if not mounted and str(creature.species_id) == "ripplet":
 		for attempt in 120:
 			await get_tree().physics_frame
-			if not _swim_restore_current(current):
-				_cancel_swim_restore(creature, restored_body)
-				return false
-			if not is_instance_valid(_ally_body):
-				print("F37 RESTORE REFUSAL retired_ally")
-				return false
+			if not is_instance_valid(_ally_body): return false
 			if riding.is_mounted(): return true
 	return mounted
-
-
-func _swim_restore_current(current: Variant) -> bool:
-	# Null is the legacy caller with no continuation fence. A supplied but
-	# invalid callback is a retired restoration and must fail closed.
-	return current == null or (current is Callable and current.is_valid() and current.call() == true)
-
-
-func _cancel_swim_restore(creature: RefCounted, body: Node) -> void:
-	# Retire only this reconstruction; never recall a replacement deployment.
-	if _ally != creature or _ally_body != body: return
-	var riding: Node = get_parent().get_node_or_null("RidingController")
-	if riding != null:
-		riding.cancel_traversal_requests()
-		if riding.is_mounted() and riding.mount_body() == body: riding.dismount()
-	dismiss_active_creature()
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 	if _restoring_surface_position.is_finite() and body == _ally_body:
@@ -290,19 +256,9 @@ func _spawn_available_sites() -> void:
 		float(encounter_config.get("activation_distance_m", 100)),
 		int(encounter_config.get("active_wild_cap_per_peer", 16)))
 	for id: String in _wanted_sites:
-		var site: Dictionary = _wanted_sites[id]
-		var named_id := str(site.get("named_replacement_id", ""))
-		# Client presentation consumes an already replicated active packet. The
-		# authoritative cycle getter and first-generation writer remain host-only.
-		# Run before the site cache so a later retained generation can project too.
-		if not _is_host() and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
-				and not preload("res://scripts/repeatables/alpha_respawns.gd").site(named_id).is_empty():
-			var peer_packet: Dictionary = preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(
-				get_node("/root/Game").world.redesign_world, named_id)
-			if not peer_packet.is_empty(): foundation_publish_alpha(named_id, peer_packet)
-			continue
 		if _site_spawned.has(id) or _site_failures.has(id):
 			continue
+		var site: Dictionary = _wanted_sites[id]
 		var table := find_id(chapter.get("encounter_tables", []), str(site.table_id))
 		var centre := _vector3_of(site.position)
 		var members: Array = []
@@ -397,9 +353,7 @@ func _spawn_available_sites() -> void:
 			push_warning("Water site lacks a valid authored encounter or supported creature footing: " + id)
 
 func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
-	# Each occupied peer projects the already retained host generation into its
-	# local Water population. Generation, resolution and saves stay host-owned.
-	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
+	if not _is_host() or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
 	var game := get_node_or_null("/root/Game")
 	if game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return
 	for wild: Node3D in _wild_creatures:

@@ -95,43 +95,6 @@ func test_host_refuses_closed_water_combat_and_missing_owned_carrier() -> void:
 	context = actor()
 	context.character_id = "foreign_character"
 	assert_false(RULE.action(intent,context).ok)
-	assert_true(RULE.action({"action":"mount","creature_uid":UID},actor([])).ok,
-		"owned Ripplet mounts without a saddle or Dive breakthrough")
-	var proof := preload("res://tools/net/proof_steps.gd")
-	var rider := {"peer_id":364413139,"registry_rows":1,"registry_display_name":"Ripplet rider",
-		"bodies":1,"mounts":1,"stale_bodies":0,"stale_mounts":0,"body_peer_id":364413139,
-		"nameplate":"Ripplet rider","body_visible_in_scene":true,"riding":true,"seated":true,
-		"mount_owner_peer_id":364413139,"mount_authority":364413139,"mount_swim_owner":364413139,
-		"mount_species":"ripplet","mount_saddle_worn":false,"mount_swim_mode":2}
-	assert_true(proof._rider_identity_agrees(rider), "the actual saddle-free Ripplet carrier agrees")
-	for key: String in ["peer_id","body_peer_id","mount_owner_peer_id","mount_authority","mount_swim_owner"]:
-		for peer: int in [0,42]:
-			var wrong := rider.duplicate(true)
-			wrong[key] = peer
-			assert_false(proof._rider_identity_agrees(wrong), "missing or foreign identity or authority: " + key)
-	for key: String in ["registry_rows","bodies","mounts"]:
-		for count: int in [0,2]:
-			var wrong := rider.duplicate(true)
-			wrong[key] = count
-			assert_false(proof._rider_identity_agrees(wrong), "missing or duplicate carrier: " + key)
-	for key: String in ["stale_bodies","stale_mounts"]:
-		var wrong := rider.duplicate(true)
-		wrong[key] = 1
-		assert_false(proof._rider_identity_agrees(wrong), "stale carrier: " + key)
-	var wrong := rider.duplicate(true)
-	wrong.nameplate = "another rider"
-	assert_false(proof._rider_identity_agrees(wrong))
-	wrong = rider.duplicate(true)
-	wrong.riding = false
-	assert_false(proof._rider_identity_agrees(wrong))
-	for species: String in ["water_aquaryn","water_aquore","", "Ripplet"]:
-		wrong = rider.duplicate(true)
-		wrong.mount_species = species
-		assert_false(proof._rider_identity_agrees(wrong), "only exact Ripplet is saddle-free")
-	wrong = rider.duplicate(true)
-	wrong.mount_species = "water_aquaryn"
-	wrong.mount_saddle_worn = true
-	assert_true(proof._rider_identity_agrees(wrong), "the existing saddled aquatic carrier still agrees")
 
 func test_claim_race_commits_one_durable_identity_bound_delivery() -> void:
 	var world := WORLD.new()

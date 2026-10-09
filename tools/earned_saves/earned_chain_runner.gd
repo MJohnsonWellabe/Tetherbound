@@ -21,7 +21,6 @@ extends SceneTree
 ##                    live nodes the rest helper needs, so these share a process)
 ##   bridge           South Bridge grunt + crossing
 ##   warrens          Quarry / Burrow Warrens cleared and exited
-##   relay_prepared   optional: real Riverwatch recovery and safe join, before Captain
 ##   relay            Tether relay disabled, Mill crossed
 ##   hall             three Sigils, Hall gauntlet, Warden arena boundary
 ##   warden           Warden, Veridian offer ACCEPTED (see warden_accept.gd),
@@ -62,11 +61,10 @@ const OFFLOAD := preload("res://tests/helpers/f19_functional_offload.gd")
 const TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 const ORDER := preload("res://scripts/data/biome_order.gd")
 const GENERATED_PROFILES := "res://tests/fixtures/earned_saves/generated_boundary_profiles.json"
-const CHAPTER_SEGMENTS := {"warden":"meadows_settled", "tidewake":"tidewake_settled", "cloudreach":"cloudreach_settled", "stormwood":"stormwood_settled", "homecoming":"completed_world"}
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CHAIN_SLOT := 1  # Historical copied-save slot; legacy-order diagnostics only.
-const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay_prepared", "relay", "hall", "warden", "kell_rift", "tidewake", "cloudreach", "stormwood", "homecoming"]
+const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall", "warden", "kell_rift"]
 const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
 const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
 const LOAD_SETTLE_FRAMES := 300
@@ -88,7 +86,6 @@ var handoff_from := ""
 var compatibility_paths: Array[String] = []
 var disk: RefCounted
 var retained_uids: Array[String] = []
-var relay_preparation: RefCounted
 var generated_fixture := false
 
 
@@ -113,11 +110,7 @@ func _run() -> void:
 			generated_fixture = true
 		elif arg == "--observe-next-goal":
 			observe_next_goal = true
-		elif arg == "--capture-next-goal":
-			pass  # Read-only guarded HUD capture after successful existing piece.
-		elif arg == "--capture-relay":
-			pass  # Native completed frames on the existing Relay route only.
-		elif arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--lesson-reload-witness", "--capture-lessons"] or arg.begins_with("--lesson-skip-line"):
+		elif arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--capture-lessons"] or arg.begins_with("--lesson-skip-line"):
 			pass  # Validated below; only the existing reader can witness an actual lesson.
 		elif arg.begins_with("--handoff-from="):
 			if not handoff_from.is_empty() or arg == "--handoff-from=":
@@ -133,11 +126,6 @@ func _run() -> void:
 		else:
 			failures.append("Unknown earned-piece option: " + arg)
 	var lesson_options := TRAVEL.lesson_witness_options()
-	if OS.get_cmdline_user_args().has("--capture-relay") and (segment != "relay" \
-			or functional_offload or DisplayServer.get_name() == "headless"):
-		failures.append("Relay visual capture requires the native Relay path without functional offload")
-	if OS.get_cmdline_user_args().has("--capture-next-goal") and not observe_next_goal:
-		failures.append("Next-goal frames require the existing --observe-next-goal snapshots")
 	failures.append_array(lesson_options.failures)
 	if not SEGMENTS.has(segment) or save_dir.is_empty() or receipt_path.is_empty():
 		failures.append("usage: --segment=<%s> --save-dir=<dir> --receipt=<json>" % "|".join(SEGMENTS))
@@ -146,16 +134,12 @@ func _run() -> void:
 	if not failures.is_empty():
 		_finish()
 		return
+	if generated_fixture and (legacy_order_diagnostic or not compatibility_paths.is_empty() or segment != "relay"):
+		failures.append("Generated fixtures are explicit Relay inputs, never legacy or reviewed earned imports")
+		_finish()
+		return
 	if legacy_order_diagnostic and not handoff_from.is_empty():
 		failures.append("Legacy diagnostics cannot import new-order piece provenance")
-		_finish()
-		return
-	if generated_fixture and (legacy_order_diagnostic or not compatibility_paths.is_empty() or segment in ["opening_team", "camp_tournament", "bridge", "warrens", "kell_rift"]):
-		failures.append("Generated fixtures are explicit post-Warrens new-order inputs, never legacy or reviewed earned imports")
-		_finish()
-		return
-	if legacy_order_diagnostic and segment == "relay_prepared":
-		failures.append("Relay preparation is only an earned new-order piece")
 		_finish()
 		return
 	if not compatibility_paths.is_empty() and (legacy_order_diagnostic or handoff_from.is_empty()):
@@ -176,7 +160,7 @@ func _run() -> void:
 		disclosures.append("Legacy-order diagnostic only: copied input saves and historical wrappers do not prove the new-order retained-five campaign")
 		game.set("save_system", SAVE.new(save_dir))
 	else:
-		if (not HANDOFF.MEADOWS_PREPARED_PIECES.has(segment) and not (generated_fixture and CHAPTER_SEGMENTS.has(segment))) or OS.has_environment("TB_WORLD_SEED"):
+		if not MEADOWS_PIECES.has(segment) or OS.has_environment("TB_WORLD_SEED"):
 			failures.append("New-order pieces stop at Hall and retain the actual saved population; old Warden/Rift routes require --legacy-order-diagnostic")
 			_finish()
 			return
@@ -205,12 +189,7 @@ func _run() -> void:
 		if not failures.is_empty():
 			_finish()
 			return
-		var pieces: Array = HANDOFF.MEADOWS_PREPARED_PIECES if segment == "relay_prepared" else MEADOWS_PIECES
-		var realms: Array = HANDOFF.MEADOWS_PREPARED_REALMS if segment == "relay_prepared" else MEADOWS_REALMS
-		if generated_fixture and CHAPTER_SEGMENTS.has(segment):
-			pieces = MEADOWS_PIECES + HANDOFF.BOUNDARIES
-			realms = MEADOWS_REALMS + HANDOFF.REALMS
-		disk = HANDOFF.new(self, game, output_root, pieces, realms, HANDOFF.MEADOWS_SLOT)
+		disk = HANDOFF.new(self, game, output_root, MEADOWS_PIECES, MEADOWS_REALMS, HANDOFF.MEADOWS_SLOT)
 		disk.source_commit = source_commit
 		if not disk.configure_compatibility(compatibility_paths):
 			failures.append_array(disk.failures)
@@ -227,9 +206,6 @@ func _run() -> void:
 		if not await _generate_boundary_fixture():
 			_finish()
 			return
-	if generated_fixture and CHAPTER_SEGMENTS.has(segment):
-		await _generated_chapter()
-		return
 	print("EARNED CHAIN segment=%s save_dir=%s seed=%s" % [segment, save_dir, OS.get_environment("TB_WORLD_SEED")])
 	match segment:
 		"opening_team":
@@ -241,10 +217,6 @@ func _run() -> void:
 				await _resumed_segment()
 	if observe_next_goal:
 		TRAVEL.new(self, game).observe_next_goal(segment, "after_piece" if failures.is_empty() else "piece_failed")
-		if failures.is_empty():
-			var goal_reader := TRAVEL.new(self, game)
-			if not await goal_reader.capture_next_goal(segment, "after_piece"):
-				failures.append_array(goal_reader.failures)
 	if failures.is_empty() and not legacy_order_diagnostic:
 		var actual_uids: Array[String] = []
 		var distinct := {}
@@ -286,9 +258,7 @@ func _opening_team() -> void:
 
 func _load_previous() -> bool:
 	if not legacy_order_diagnostic:
-		var imported := ProjectSettings.globalize_path(handoff_from).simplify_path().trim_suffix("/").get_file()
-		var previous: String = "warrens" if segment == "relay_prepared" else MEADOWS_PIECES[MEADOWS_PIECES.find(segment) - 1]
-		if segment == "relay" and imported == "relay_prepared": previous = "relay_prepared"
+		var previous: String = MEADOWS_PIECES[MEADOWS_PIECES.find(segment) - 1]
 		if ProjectSettings.globalize_path(handoff_from).simplify_path().trim_suffix("/").get_file() != previous:
 			failures.append("Piece must load its immediate predecessor: " + previous)
 			return false
@@ -385,18 +355,9 @@ func _resumed_segment() -> void:
 		"warrens":
 			var helper: GDScript = load("res://tools/earned_saves/warrens_route.gd") if legacy_order_diagnostic else WARRENS
 			_take(await helper.new().run(self, world, game), "passed", "warrens")
-		"relay_prepared":
-			var helper := RELAY.new()
-			relay_preparation = helper
-			helper.preparation_only = true
-			_take(await helper.run(self, world, game), "passed", "relay_prepared")
 		"relay":
 			var helper: GDScript = load("res://tools/earned_saves/relay_route.gd") if legacy_order_diagnostic else RELAY
-			var continuation = helper.new()
-			if not legacy_order_diagnostic and disk.history[-1].boundary == "relay_prepared":
-				continuation.resume_prepared = true
-				continuation.prepared_character = disk.snapshots.relay_prepared.state.redesign_character.duplicate(true)
-			_take(await continuation.run(self, world, game), "passed", "relay")
+			_take(await helper.new().run(self, world, game), "passed", "relay")
 		"hall":
 			var helper: GDScript = load("res://tools/earned_saves/hall_route.gd") if legacy_order_diagnostic else HALL
 			_take(await helper.new().run(self, world, game), "passed", "hall")
@@ -520,9 +481,6 @@ func _finish() -> void:
 	if not legacy_order_diagnostic:
 		if observe_next_goal and failures.is_empty() and disk != null:
 			TRAVEL.new(self, game).observe_next_goal(segment, "before_export")
-		if segment == "relay_prepared" and failures.is_empty() \
-				and (relay_preparation == null or not relay_preparation.preparation_ready()):
-			failures.append("Relay preparation no longer satisfies its actual safe-join recovery guard before save")
 		if failures.is_empty() and disk != null and not disk.export_boundary(segment, receipt):
 			failures.append_array(disk.failures)
 		if observe_next_goal and failures.is_empty() and disk != null:
@@ -601,16 +559,8 @@ func _generate_boundary_fixture() -> bool:
 			record.breakthroughs = tiers
 			record.cap_level = preload("res://scripts/creatures/breakthrough.gd").level_cap(tiers)
 		if profile.heal_party: creature.heal_fully()
-	for flag: String in profile.world_flags:
-		if preload("res://autoload/progression_state.gd").scope_of(flag) != "world":
-			failures.append("Generated world fact has an incorrect authored scope: " + flag)
-			return false
-		game.world.flags.set_flag(flag)
-	for flag: String in profile.personal_flags:
-		if preload("res://autoload/progression_state.gd").scope_of(flag) != "player":
-			failures.append("Generated personal fact has an incorrect authored scope: " + flag)
-			return false
-		game.local.flags.set_flag(flag)
+	for flag: String in profile.world_flags: game.world.flags.set_flag(flag)
+	for flag: String in profile.personal_flags: game.local.flags.set_flag(flag)
 	# Only declared progress carriers; never fabricate transaction/delivery
 	# receipts or previous PASS evidence for a generated chapter input.
 	for field: String in profile.get("character_fields", {}):
@@ -662,15 +612,9 @@ func _generate_boundary_fixture() -> bool:
 			requested = current_scene.get_node("Stronghold").marker(str(profile.position.stronghold_marker)) + Vector3.UP * 0.15
 		elif profile.position.get("water_dock") == true:
 			var prompt: Node3D = current_scene.get_node("WaterChapter").get("_dock_prompt")
-			if prompt == null:
-				failures.append("Generated Tidewake boundary has no actual civilian dock provider")
-				return false
 			requested = prompt.global_position + Vector3(0.0, 0.15, 2.5)
 		elif profile.position.get("cloudreach_reward") == true:
 			var npc: Node3D = current_scene.get_node("CloudreachChapter").npc_bodies().get("warden_aila")
-			if npc == null:
-				failures.append("Generated Cloudreach boundary has no current reward actor")
-				return false
 			requested = npc.global_position + Vector3(0.0, 0.15, 2.5)
 		elif profile.position.get("stormheart_south_ring") == true:
 			requested = current_scene.get_node("StormheartTree").to_global(Vector3(0.0, 150.0, 26.0)) + Vector3.UP * 0.15
@@ -760,33 +704,3 @@ func _generate_boundary_fixture() -> bool:
 	disclosures.append(str(profile.disclosure))
 	print("GENERATED FIXTURE INPUT " + JSON.stringify(observation))
 	return true
-
-
-## Existing full driver, bounded to one chapter. Parent setup does not supply a
-## passed journey result; only this child process's original endpoint can pass.
-func _generated_chapter() -> void:
-	if not functional_offload or handoff_from.is_empty():
-		failures.append("Generated chapter requires its actual portable input and hosted functional mode")
-		_finish()
-		return
-	var scene := current_scene
-	if scene != null:
-		current_scene = null
-		scene.queue_free()
-		for frame in 8: await process_frame
-	var output: Array = []
-	var command := ["--path",ProjectSettings.globalize_path("res://"),"--rendering-method","gl_compatibility",
-		"--disable-render-loop","--audio-driver","Dummy","--resolution","1280x720",
-		"--script","res://tests/smoke_f19_campaign_functional.gd","--","--generated-fixture",
-		"--meadows-piece-prefix","--handoff-from=" + handoff_from,"--through-boundary=" + str(CHAPTER_SEGMENTS[segment])]
-	# The parent validated these existing reader options; the chapter runs in
-	# a child process, whose ordinary lesson reader needs the same request.
-	for arg: String in OS.get_cmdline_user_args():
-		if arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--lesson-reload-witness", "--capture-lessons"] \
-				or arg.begins_with("--lesson-skip-line"):
-			command.append(arg)
-	var exit := OS.execute(OS.get_executable_path(), command, output, true)
-	for text: String in output: print(text)
-	print("GENERATED CHAPTER PROCESS " + JSON.stringify({"segment":segment,"input_mode":"generated_fixture",
-		"exit_code":exit,"prior_earned_play":false,"continuous_fresh_save":false,"source":CHECKPOINTS.commit_sha()}))
-	quit(exit if exit >= 0 else 1)

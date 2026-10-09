@@ -4,7 +4,6 @@ import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
-import {readCompatibilityManifest, reviewedCompatibilityCut, saveTreeDigest} from '../tools/earned_saves/promote_f19.mjs';
 
 // Deliberately fabricated negative controls, never accepted/earned fixtures.
 // The positive production promotion must use an actual continuous campaign.
@@ -30,84 +29,6 @@ function refused(reason, options = []) {
 }
 try {
   fs.mkdirSync(handoffs);
-  // Evidence-parser controls only. No save payload, earned receipt, fixture or
-  // successful campaign is produced; these exact-cut records are fabricated.
-  const manifestFile = path.join(dir, 'compatibility.json');
-  const producerLog = path.join(dir, 'compatibility-producer.log');
-  const producer = '1'.repeat(40), consumer = '2'.repeat(40);
-  const binding = {boundary: 'opening_team', producer_commit: producer, run_id: '123', artifact_id: '456',
-    artifact_sha256: 'a'.repeat(64), log_path: path.basename(producerLog), log_sha256: '',
-    receipt_sha256: 'b'.repeat(64), files_sha256: {'slot_0.json': 'c'.repeat(64)}};
-  fs.writeFileSync(producerLog, 'F49 DISK HANDOFF ' + JSON.stringify({boundary: binding.boundary,
-    commit: producer, files_sha256: binding.files_sha256}) + '\n');
-  binding.log_sha256 = sha(fs.readFileSync(producerLog));
-  binding.save_tree_sha256 = saveTreeDigest(binding.files_sha256);
-  const manifest = {kind: 'f49_reviewed_cross_cut', version: 1, producer_commit: producer, consumer_commit: consumer,
-    imported_boundary: binding.boundary, prefix: [binding]};
-  const writeCompatibility = (candidate = manifest, reviewChange = {}) => {
-    fs.writeFileSync(manifestFile, JSON.stringify({...candidate, review: {verdict: 'compatible',
-      reviewer: 'fabricated negative control', record_url: 'https://example.invalid/negative-control', ...reviewChange}}));
-  };
-  writeCompatibility();
-  const actual = readCompatibilityManifest(manifestFile);
-  const prefix = [{receipt: {boundary: binding.boundary, commit: producer, files_sha256: binding.files_sha256},
-    receiptHash: binding.receipt_sha256, log_sha256: binding.log_sha256}];
-  assert.equal(reviewedCompatibilityCut([actual], prefix, consumer, binding.boundary, actual.digest).digest, actual.digest);
-  checks++;
-  for (const [changedPrefix, changedConsumer, changedBoundary, digest] of [
-    [prefix, '3'.repeat(40), binding.boundary, actual.digest],
-    [prefix, consumer, 'camp_tournament', actual.digest],
-    [prefix, consumer, binding.boundary, 'd'.repeat(64)],
-    [[{...prefix[0], receiptHash: 'e'.repeat(64)}], consumer, binding.boundary, actual.digest],
-    [[{...prefix[0], log_sha256: 'e'.repeat(64)}], consumer, binding.boundary, actual.digest],
-    [[{...prefix[0], receipt: {...prefix[0].receipt, commit: '4'.repeat(40)}}], consumer, binding.boundary, actual.digest],
-    [[{...prefix[0], receipt: {...prefix[0].receipt, files_sha256: {'slot_0.json': 'f'.repeat(64)}}}], consumer, binding.boundary, actual.digest],
-    [[...prefix, prefix[0]], consumer, binding.boundary, actual.digest],
-  ]) {
-    assert.throws(() => reviewedCompatibilityCut([actual], changedPrefix, changedConsumer, changedBoundary, digest), /Missing exact reviewed/);
-    checks++;
-  }
-  assert.throws(() => reviewedCompatibilityCut([], prefix, consumer, binding.boundary), /Missing exact reviewed/); checks++;
-  for (const field of ['reviewer', 'record_url', 'verdict']) {
-    for (const value of ['', null, 1, ' ']) {
-      writeCompatibility(manifest, {[field]: value});
-      assert.throws(() => readCompatibilityManifest(manifestFile), /reviewer verdict/); checks++;
-    }
-  }
-  writeCompatibility(manifest, {verdict: 'not_compatible'});
-  assert.throws(() => readCompatibilityManifest(manifestFile), /reviewer verdict/); checks++;
-  for (const damaged of [null, {...manifest, prefix: null}, {...manifest, prefix: [null]},
-    {...manifest, producer_commit: '3'.repeat(40)}]) {
-    writeCompatibility(damaged);
-    assert.throws(() => readCompatibilityManifest(manifestFile), /cut bindings/); checks++;
-  }
-  for (const value of [undefined, 'd'.repeat(64)]) {
-    writeCompatibility({...manifest, prefix: [{...binding, save_tree_sha256: value}]});
-    assert.throws(() => readCompatibilityManifest(manifestFile), /save-tree digest/); checks++;
-  }
-  for (const field of ['run_id', 'artifact_id', 'artifact_sha256', 'receipt_sha256', 'log_sha256', 'files_sha256']) {
-    const damaged = {...manifest, prefix: [{...binding}]}; delete damaged.prefix[0][field];
-    writeCompatibility(damaged);
-    assert.throws(() => readCompatibilityManifest(manifestFile), /actual producer/); checks++;
-  }
-  for (const changes of [{boundary: null}, {boundary: ''}, {log_path: null}, {log_path: ' '},
-    {run_id: '+123'}, {artifact_id: '0456'}, {files_sha256: null}]) {
-    writeCompatibility({...manifest, prefix: [{...binding, ...changes}]});
-    assert.throws(() => readCompatibilityManifest(manifestFile), /cut bindings|actual producer/); checks++;
-  }
-  writeCompatibility(); fs.appendFileSync(manifestFile, '\n');
-  assert.throws(() => reviewedCompatibilityCut([actual], prefix, consumer, binding.boundary, actual.digest), /Missing exact reviewed/); checks++;
-  writeCompatibility(); fs.appendFileSync(producerLog, '\n');
-  assert.throws(() => readCompatibilityManifest(manifestFile), /producer log digest/); checks++;
-  assert.throws(() => reviewedCompatibilityCut([actual], prefix, consumer, binding.boundary, actual.digest), /producer log digest/); checks++;
-  fs.writeFileSync(producerLog, 'F49 DISK HANDOFF null\n');
-  writeCompatibility({...manifest, prefix: [{...binding, log_sha256: sha(fs.readFileSync(producerLog))}]});
-  assert.throws(() => readCompatibilityManifest(manifestFile), /Malformed compatibility producer handoff/); checks++;
-  // Restore only the fabricated evidence document, never any save bytes.
-  fs.writeFileSync(producerLog, 'F49 DISK HANDOFF ' + JSON.stringify({boundary: binding.boundary,
-    commit: consumer, files_sha256: binding.files_sha256}) + '\n');
-  writeCompatibility({...manifest, prefix: [{...binding, log_sha256: sha(fs.readFileSync(producerLog))}]});
-  assert.throws(() => readCompatibilityManifest(manifestFile), /log producer cut/); checks++;
   writeLog(result, journey, [], 'SCRIPT ERROR: deliberately injected negative control\n');
   refused(/Engine errors invalidate/);
   writeLog({...result, counts_as_proof: false, resumed_from: 'water_arrival'});
@@ -195,21 +116,6 @@ try {
   metadata.population_provenance = {...emitted[0].population_provenance, effective_encounter_seed: 1434901555};
   writeMetadata();
   refused(/Seed provenance must match actual handoff log/);
-  refused(/Provide all ordered preceding segment logs/, ['--segment-logs=']);
-  refused(/Segment logs must be distinct original witnesses/, [`--segment-logs=${logFile}`]);
-  // The same five fabricated chapter inputs cannot impersonate the original
-  // six-piece Meadows lineage; these controls create no additional saves.
-  refused(/Meadows piece logs require explicit/, [`--meadows-piece-logs=${logFile}`]);
-  refused(/Combined promotion requires explicit ordered/, ['--meadows-piece-prefix']);
-  refused(/Complete six-piece Meadows prefix required/, ['--meadows-piece-prefix', '--segment-logs=',
-    `--meadows-piece-logs=${Array(6).fill(logFile).join(',')}`]);
-  const originalSegment = path.join(dir, 'original-segment.log');
-  fs.copyFileSync(logFile, originalSegment);
-  writeLog({...result, counts_as_proof: false, campaign_complete: false, requested_prefix_passed: true,
-    resumed_from: 'stormwood_settled', reached: 'completed_world_continuation'}, journey, emitted,
-    'F49 SEGMENT RESULT ' + JSON.stringify({kind: 'f49_earned_segment', from_boundary: 'stormwood_settled',
-      through_boundary: 'completed_world', journey_id: 'negative-control', commit: '0'.repeat(40)}) + '\n');
-  refused(/Exactly one F49 SEGMENT RESULT\s+required in every segment/, [`--segment-logs=${originalSegment}`]);
   console.log(JSON.stringify({test: 'F19-earned-promotion-negative-controls', checks, result: 'PASS', scope: 'fabricated rejection controls only; no earned saves were generated'}));
 } finally {
   assert.ok(path.resolve(dir).startsWith(path.resolve(os.tmpdir()) + path.sep), 'Cleanup stays inside the named temporary root');

@@ -352,12 +352,12 @@
         "_why": "F04#6 (X04 blind judge, #257): the win over Captain Vance changed nothing visible, and the one thing it unlocks is this console. tether_relay.gd::_build_console_beacon shows a warm light and a short shaft over the console while requires_flag is set and the relay is live; it goes out when the relay is disabled. Warm white-gold, not teal (the live conduit colour) and never oxblood. TUNABLE.",
         "enabled": true,
         "colour": "#ffd89a",
-        "light_energy": 1.25,
-        "light_range_m": 4.0,
-        "shaft_height_m": 1.2,
+        "light_energy": 3.0,
+        "light_range_m": 7.0,
+        "shaft_height_m": 3.5,
         "shaft_radius_m": 0.12,
-        "shaft_alpha": 0.18,
-        "shaft_emission": 0.65,
+        "shaft_alpha": 0.55,
+        "shaft_emission": 2.0,
         "poll_seconds": 0.5
       }
     },

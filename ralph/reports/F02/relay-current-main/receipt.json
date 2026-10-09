@@ -1,0 +1,142 @@
+{
+  "criterion": "F02#2",
+  "verdict": "READY",
+  "landing": "pending",
+  "proven_main": "c927823d1b41e98b90d33181a07846e72dc6a27a",
+  "proven_source": "dc1140ecf4d6da6183050d48f395ba36d23f9384",
+  "proven_tree": "92ee5245ebe84c55eb24f2611240ef8673e930e6",
+  "runtime_production_changes": [],
+  "config_flag_and_default_changes": [],
+  "feature_flag_flips": 0,
+  "proof_script": "tools/earned_saves/earned_chain_runner.gd",
+  "proof_args": "--segment=relay --generated-fixture --save-dir=user://owner-b-relay-only/relay/save --receipt=user://owner-b-relay-only/relay/receipt.json",
+  "proofs": [
+    {
+      "proof": "relay",
+      "run_id": 37983413867,
+      "artifact_id": 11643200232,
+      "archive_sha256": "2d86614a13a21290f0503611b7ee49f72ae1c59c5e92049709ed9b8cb5e9ef90",
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37983413867",
+      "exit_code": 0,
+      "script_errors": 0
+    },
+    {
+      "proof": "units",
+      "run_id": 37983416957,
+      "artifact_id": 11642705866,
+      "archive_sha256": "8bf00d7fcb54a791b92ff66fc8c17792579b515e1462467662165e7c98453322",
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37983416957",
+      "exit_code": 0,
+      "script_errors": 0
+    },
+    {
+      "proof": "provenance",
+      "run_id": 37983419654,
+      "artifact_id": 11642556199,
+      "archive_sha256": "b43d1b4de588d521f8d333832f442e8f2f278288b6448e0f9f68bda3d85f3f41",
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37983419654",
+      "exit_code": 0,
+      "script_errors": 0
+    }
+  ],
+  "affected_units": {
+    "tests": 18,
+    "assertions": 146,
+    "failed": 0,
+    "names": [
+      "test_meadows_earned_relay_segment",
+      "test_meadows_earned_hall_segment",
+      "test_meadows_economy_solvency"
+    ]
+  },
+  "provenance_checks": 29,
+  "independent_reviewer": "/root",
+  "independent_result": "PASS",
+  "generated_setup_defaults": [
+    {
+      "name": "--generated-fixture",
+      "old": "absent (ordinary earned mode)",
+      "new": false
+    },
+    {
+      "name": "Relay party_levels",
+      "old": [
+        9,
+        9,
+        9,
+        7,
+        7
+      ],
+      "new": [
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "name": "generated breakthrough cap",
+      "old": 10,
+      "new": 20
+    },
+    {
+      "name": "heal_party",
+      "old": true,
+      "new": true
+    }
+  ],
+  "generated_profile": {
+    "schema_version": 1,
+    "owner_policy": "#5726060136810",
+    "boundary": "warrens",
+    "realm": "meadows",
+    "day": 5,
+    "clock_elapsed_seconds": 500.0,
+    "position": "template",
+    "world_flags": [],
+    "personal_flags": [],
+    "inventory_add": {}
+  },
+  "ancestry": {
+    "prior_earned_play": false,
+    "continuous_fresh_save": false,
+    "saved_seed": 59015681,
+    "world_seed_environment_override": ""
+  },
+  "observed": {
+    "source": "dc1140ecf4d6da6183050d48f395ba36d23f9384",
+    "main": "c927823d1b41e98b90d33181a07846e72dc6a27a",
+    "run": 37983413867,
+    "artifact": 11643200232,
+    "reviewer": "/root",
+    "criterion": "F02#2",
+    "verdict": "PASS",
+    "checked_saved_files": 6,
+    "party_count": 5,
+    "captain_rounds": 5,
+    "captain_hits": 110.0,
+    "mill_depth_m": 9.40771484375,
+    "seconds": 946.232,
+    "prior_earned_play": false,
+    "continuous_fresh_save": false,
+    "excluded_claims": [
+      "F02#3",
+      "F02#4",
+      "F02#6",
+      "F02#7",
+      "continuous earned prefix"
+    ]
+  },
+  "excluded_claims": [
+    "F02#3",
+    "F02#4",
+    "F02#6",
+    "F02#7",
+    "continuous earned prefix"
+  ],
+  "balance": {
+    "game_lines": 0,
+    "tests_tools_lines": 6542
+  }
+}

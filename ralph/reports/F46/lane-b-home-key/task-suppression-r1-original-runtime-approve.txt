@@ -1,5 +1,0 @@
-Both originals **RUNTIME APPROVE** `37922657187 @75a8…`: checkout/hash/CRC verified, **84 checks PASS, exit 0, 5s**, zero engine/script errors. Headless canvas was 1920×1080; no-player warning retained. No native/device visual claim.
-
-**Next F46#0 scope: PARK.** Existing Hall helper needs a successful authenticated Home Key farm return with stable CID/five UIDs before its Homestead lesson witness. Refusal cause remains unknown; no supported correction or unchanged retry identified.
-
-Reuse existing lesson pieces without promoting generated lineage. Whole F46 remains open.

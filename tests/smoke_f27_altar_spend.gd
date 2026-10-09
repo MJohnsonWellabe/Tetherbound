@@ -10,8 +10,6 @@ extends "res://tests/smoke_combat.gd"
 ##
 ## Disclosed fixtures, none of which is the transaction under test:
 ##   - the starter is owned the way the opening owns it (party.add);
-##     reload witnesses also declare its canonical starter-granted fact before
-##     paid actions, as production opening restore does for an owned party;
 ##   - Altar materials and Water Essence are granted to the inventory before
 ##     any transaction starts (no earned-route claim);
 ##   - the build ghost is positioned on the first valid home-plot pose found
@@ -23,30 +21,9 @@ const BUDGET_FRAMES := 900
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 var _game: Node = null
-var _altar_lesson_reader: RefCounted = null
 
 
 func _run() -> void:
-	var masters_witness := OS.get_cmdline_user_args().has("--lesson-masters-witness")
-	if OS.get_cmdline_user_args().has("--lesson-reload-witness") \
-			and (not OS.get_cmdline_user_args().has("--lesson-controller-witness") \
-			or not OS.get_cmdline_user_args().has("--lesson-replay-witness")):
-		_fail("Lesson reload requires the actual controller and Help replay witnesses")
-		_report()
-		return
-	if masters_witness and (not OS.get_cmdline_user_args().has("--lesson-controller-witness") \
-			or not OS.get_cmdline_user_args().has("--lesson-replay-witness")):
-		_fail("Masters witness requires the existing controller and Help replay options")
-		_report()
-		return
-	if OS.get_cmdline_user_args().has("--functional-offload"):
-		if not preload("res://tests/helpers/f19_functional_offload.gd").configure("altar_spend_driver"):
-			_fail("Altar functional offload requires its existing real Compatibility backend")
-			_report()
-			return
-		print("F46 LESSON OFFLOAD " + JSON.stringify({"continuous_drawing": false,
-			"guarded_lesson_frames": OS.get_cmdline_user_args().has("--capture-lessons"),
-			"scope": "Original disclosed Altar fixture, input, physics and production saves; guarded lesson captures judged separately; no motion/audio/performance proof"}))
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
@@ -57,20 +34,11 @@ func _run() -> void:
 	var party: RefCounted = _game.get("party")
 	var director := _world.get_node(^"EncounterDirector")
 	if party.size() == 0: party.call("add", director.call("ally_instance"))
-	if OS.get_cmdline_user_args().has("--lesson-reload-witness"):
-		# This disclosed starter fixture must already carry the fact that
-		# production SequenceDirector restores from any nonempty owned party.
-		# Exact reload equality remains required, including every paid receipt.
-		_game.local.flags.call("set_flag", "opening:starter_granted", true)
 	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
 	_rig = _world.get_node_or_null(^"CameraRig") as Node3D
 	var inventory: RefCounted = _game.get("inventory")
 	for need: Dictionary in WORLD.altar_recipe(): inventory.call("add", str(need.id), int(need.n))
 	inventory.call("add", "essence_water", ESSENCE_GRANT)
-	if OS.get_cmdline_user_args().has("--lesson-controller-witness") and not masters_witness:
-		if not await _witness_altar_lesson():
-			_report()
-			return
 	for i in 30: await physics_frame
 
 	var altar := await _place_paid_altar()
@@ -126,222 +94,7 @@ func _run() -> void:
 	# The same panel must not let a second press mint a second level from one quote.
 	if _failures.is_empty():
 		print("F27_ALTAR_SPEND: PASS controller-path Altar level-up L%d->L%d for %d Water Essence" % [level_before, level_before + 1, cost])
-		if masters_witness: await _witness_masters_lesson(creature, panel)
-		elif OS.get_cmdline_user_args().has("--lesson-reload-witness"):
-			if _altar_lesson_reader == null:
-				_fail("Altar reload has no naturally observed lesson reader")
-			else:
-				_altar_lesson_reader.set("_lesson_controller_input", true)
-				await _altar_lesson_reader.tap("menu_cancel")
-				_altar_lesson_reader.set("_lesson_controller_input", false)
-				if panel.call("is_open"):
-					_fail("Altar reload could not release the actual paid station panel")
-				else: await _reload_observed_lesson(_altar_lesson_reader, "altar")
 	_report()
-
-
-## Continue the original paid panel to its first cap using only the fixture's
-## remaining essence. No extra stock, levels, teacher poses or lesson receipts.
-## The default one-spend proof and the separate Altar witness stay unchanged.
-func _witness_masters_lesson(creature: RefCounted, panel: Node) -> bool:
-	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
-	var local: RefCounted = _game.local
-	var uid := str(creature.uid)
-	var cid := str(local.character_id)
-	var retained: Array = _game.party.members().duplicate()
-	var mirror: Dictionary = local.redesign_character.creatures.get(uid, {})
-	var cap := preload("res://scripts/creatures/breakthrough.gd").level_cap(mirror.get("breakthroughs", []))
-	if cap != 10 or int(creature.level) >= cap or rules.available("masters", local) \
-			or local.flags.call("has", rules.PREFIX + "masters"):
-		_fail("Masters witness must start below its first unacknowledged real L10 cap")
-		return false
-	for before: int in range(int(creature.level), cap):
-		var cost := ESSENCE.level_cost(before, ESSENCE.config(), PROGRESSION.config())
-		var stock := int(_game.inventory.count("essence_water"))
-		var receipts_before: int = local.redesign_character.transaction_receipts.size()
-		if cost < 1 or stock < cost or not await _pay_with("Water Essence", panel):
-			_fail("The unchanged essence fixture cannot pay the next actual Master-unlock level")
-			return false
-		for frame: int in BUDGET_FRAMES:
-			if int(creature.level) == before + 1 and _accepted_training_row(local): break
-			await physics_frame
-		var receipts: Array = local.redesign_character.transaction_receipts.slice(receipts_before)
-		if int(creature.level) != before + 1 or not _accepted_training_row(local) \
-				or stock - int(_game.inventory.count("essence_water")) != cost \
-				or receipts.filter(func(r: String) -> bool: return r.begins_with("essence_spend:")).size() != 1 \
-				or str(local.character_id) != cid or str(creature.uid) != uid or _game.party.members() != retained:
-			_fail("Master unlock did not retain one paid saved level, exact debit, character and owned party")
-			return false
-		print("F46 MASTERS PAID UNLOCK " + JSON.stringify({"character_id":cid,"uid":uid,
-			"from_level":before,"to_level":int(creature.level),"cost":cost,"receipts":receipts}))
-	var reader: RefCounted = preload("res://tests/helpers/f20_portal_travel.gd").new(self, _game)
-	reader.set("_lesson_controller_input", true)
-	await reader.tap("menu_cancel")
-	reader.set("_lesson_controller_input", false)
-	var teacher := _world.find_child("Tam", true, false) as Node3D
-	if teacher == null or panel.call("is_open") or INPUT_OWNER.current(self) != null \
-			or not rules.available("masters", local):
-		_fail("The real first cap did not unlock Masters with free input and installed Tam")
-		return false
-	var nav := preload("res://tests/helpers/stick_navigator.gd").new(self, _player, _rig, Callable(reader, "_stick"))
-	var recoveries_before := int(_player.get("_unstick_count"))
-	var approach := func() -> bool:
-		var arrived: bool = await nav.walk_to(teacher.global_position, 2400, 3.5)
-		reader.call("_stick", 0.0, 0.0)
-		for frame: int in 180:
-			if local.flags.call("has", rules.PREFIX + "masters"): break
-			await physics_frame
-		return arrived and _player.is_on_floor() and int(_player.get("_unstick_count")) == recoveries_before \
-			and _player.global_position.distance_to(teacher.global_position) <= 5.0
-	var passed: bool = await reader._with_navigation_lessons(approach)
-	if passed and reader.get("_lesson_replay_row").get("id", "") == "masters":
-		passed = await reader.replay_observed_lesson()
-	else:
-		passed = false
-	for failure: String in reader.failures: _fail(failure)
-	if not passed or not local.flags.call("has", rules.PREFIX + "masters") \
-			or INPUT_OWNER.current(self) != null or str(local.character_id) != cid or _game.party.members() != retained:
-		_fail("Naturally unlocked Tam Masters lesson lacks controller Skip, Help replay or retained identity")
-		return false
-	if OS.get_cmdline_user_args().has("--lesson-reload-witness"):
-		return await _reload_observed_lesson(reader, "masters")
-	print("F46 MASTERS LESSON: PASS actual paid first cap, grounded Tam walk, mapped Skip and Settings Help; original essence fixture disclosed; disk reload/whole F46 open")
-	return true
-
-
-## Extend the same paid-unlock endpoint with production autosave/title Load.
-## A saved ACK must already exist before autosave; saving cannot mint the proof.
-func _reload_observed_lesson(reader: RefCounted, lesson_id: String) -> bool:
-	var before := _masters_retained_state()
-	var cid := str(before.character_id)
-	if lesson_id not in ["altar", "masters"] or reader.get("_lesson_replay_row").get("id", "") != lesson_id:
-		_fail("Lesson reload requires its actual observed Altar or Masters card")
-		return false
-	if not reader._saved_lesson_ack(lesson_id, cid, before.party_uids).get("passed", false) \
-			or INPUT_OWNER.current(self) != null or paused:
-		_fail(lesson_id + " reload needs its actual saved acknowledgement and free unpaused world")
-		return false
-	var slot := int(_game.call("autosave_slot"))
-	if not _game.call("save_game", slot) or _masters_retained_state() != before:
-		_fail(lesson_id + " autosave refused or changed its retained rewards and identity")
-		return false
-	if change_scene_to_file("res://scenes/ui/title_screen.tscn") != OK:
-		_fail(lesson_id + " reload could not open production title")
-		return false
-	for frame: int in 10: await process_frame
-	var title := current_scene
-	if title == null or title.scene_file_path != "res://scenes/ui/title_screen.tscn":
-		_fail(lesson_id + " reload did not reach production title")
-		return false
-	_game.call("reset_for_new_game")
-	if _game.party.size() != 0 or _game.local.flags.call("has", "opening:lesson:" + lesson_id):
-		_fail(lesson_id + " reload did not clear the outgoing in-memory party and acknowledgement")
-		return false
-	var reopened: Array[bool] = [false]
-	var watch := func() -> void:
-		var service := _game.get_node_or_null("OnboardingLessons")
-		var panel: Node = service.get("_panel") if service != null else null
-		if is_instance_valid(panel) and panel.call("is_open") and service.get("_replaying") == false \
-				and panel.get("_row").get("id", "") == lesson_id: reopened[0] = true
-	process_frame.connect(watch)
-	reader.set("_lesson_controller_input", true)
-	var load_button := title.get("_load_button") as Button
-	for step: int in 8:
-		if root.gui_get_focus_owner() == load_button: break
-		await reader.tap("ui_down")
-	var selected: bool = load_button != null and not load_button.disabled and root.gui_get_focus_owner() == load_button
-	if selected:
-		await reader.tap("ui_accept")
-		var autosave := root.gui_get_focus_owner() as Button
-		selected = autosave != null and not autosave.disabled and autosave.text.begins_with("Autosave —")
-		if selected: await reader.tap("ui_accept")
-	reader.set("_lesson_controller_input", false)
-	var loaded := false
-	var ready_frames := 0
-	if selected and reader.failures.is_empty():
-		for frame: int in 7200:
-			await process_frame
-			if reopened[0]: break
-			if current_scene != title and reader._ready_world("meadows"):
-				loaded = true
-				ready_frames = frame + 1
-				break
-	if loaded:
-		_world = current_scene
-		_player = _world.get_node_or_null("Player") as CharacterBody3D
-		_rig = _world.get_node_or_null("CameraRig") as Node3D
-		for frame: int in 300: await process_frame
-	process_frame.disconnect(watch)
-	var after := _masters_retained_state()
-	var service := _game.get_node_or_null("OnboardingLessons")
-	var retained: bool = loaded and not reopened[0] and before == after and not paused \
-		and _player != null and is_instance_valid(_player) and _player.is_on_floor() \
-		and bool(_player.call("locomotion_enabled")) and reader._ready_world("meadows") \
-		and service != null and service.get("_identity") == cid and (service.get("_pending") as Dictionary).is_empty() \
-		and not Input.is_action_pressed("ui_down") and not Input.is_action_pressed("ui_accept")
-	print("F46 " + lesson_id.to_upper() + " RELOAD " + JSON.stringify({"passed":retained,"save_slot":slot,"ready_frames":ready_frames,
-		"memory_cleared":true,"physical_title_load":selected,"settle_frames":300,"reopened":reopened[0],
-		"before":before,"after":after,"scope":"Paid-unlock fixture's " + lesson_id + " ACK actual title Load; whole F46 remains open"}))
-	if not retained:
-		_fail(lesson_id + " actual disk Load lost retained state, reopened the card or failed free grounded input")
-		return false
-	if not await reader.replay_observed_lesson(lesson_id):
-		for failure: String in reader.failures: _fail(failure)
-		return false
-	print("F46 " + lesson_id.to_upper() + " LESSON: PASS paid spend, controller Skip/Help, durable ACK, actual title Load without reopen and Help again; original fixture disclosed; whole F46 open")
-	return true
-
-
-func _masters_retained_state() -> Dictionary:
-	var members: Array = []
-	var uids: Array[String] = []
-	for member: RefCounted in _game.party.members():
-		var card := {}
-		for field: String in ["uid", "species_id", "level", "xp", "known_moves", "move_quick", "move_charged",
-				"move_utility", "move_ultimate", "move_mastery_uses", "move_mastery_receipts", "loadout_revision"]:
-			card[field] = member.get(field)
-		members.append(card)
-		uids.append(str(member.uid))
-	var inventory: Array = []
-	for slot: int in int(_game.inventory.call("slot_count")): inventory.append(_game.inventory.call("stack_at", slot))
-	var flags: Array = _game.local.flags.call("all_set").duplicate()
-	flags.sort()
-	return {"character_id":str(_game.local.character_id),"party_uids":uids,"party":members,
-		"inventory":inventory,"personal_flags":flags,
-		"transaction_receipts":_game.local.redesign_character.get("transaction_receipts", [])}.duplicate(true)
-
-
-## Optional F46 witness reuses the original essence fixture and actual
-## Grandpa lesson. The existing reader supplies physical Skip/Help input and
-## completed-frame captures; no lesson flag, teacher pose or reward is staged.
-func _witness_altar_lesson() -> bool:
-	var options := preload("res://tests/helpers/f20_portal_travel.gd").lesson_witness_options()
-	if not options.failures.is_empty():
-		for failure: String in options.failures: _fail(failure)
-		return false
-	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
-	if not rules.available("altar", _game.local) or _game.local.flags.call("has", rules.PREFIX + "altar"):
-		_fail("Altar witness requires the original essence fixture's first unacknowledged lesson")
-		return false
-	var panel: Node = null
-	for frame: int in 180:
-		var service := _game.get_node_or_null("OnboardingLessons")
-		panel = service.get("_panel") if service != null else null
-		if panel != null and panel.call("is_open"): break
-		await physics_frame
-	if panel == null or not panel.call("is_open") or panel.get("_row").get("id") != "altar":
-		_fail("First essence pickup did not naturally open Grandpa's authored Altar lesson")
-		return false
-	var reader: RefCounted = preload("res://tests/helpers/f20_portal_travel.gd").new(self, _game)
-	var passed: bool = await reader._with_navigation_lessons(func() -> bool: return true)
-	if passed and options.replay: passed = await reader.replay_observed_lesson()
-	for failure: String in reader.failures: _fail(failure)
-	if not passed or panel.call("owns_input") or not _game.local.flags.call("has", rules.PREFIX + "altar"):
-		_fail("Altar lesson did not retain its personal acknowledgement and release input")
-		return false
-	_altar_lesson_reader = reader
-	print("F46 ALTAR LESSON: PASS actual Altar lesson from disclosed essence fixture; mapped Skip; Help replay=%s; disk reload/whole F46 open" % str(options.replay))
-	return true
 
 
 func _place_paid_altar() -> Node3D:

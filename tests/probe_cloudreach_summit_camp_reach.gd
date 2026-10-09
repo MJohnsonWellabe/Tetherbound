@@ -13,10 +13,6 @@ const FLAGS: Array[String] = ["realm_key_cloudreach", "cloudreach_upper_route_un
 
 
 func _run() -> void:
-	# Diagnostic runtime scope only: retain real input/physics and the original
-	# disclosed fixture while omitting rasterization on hosted functional runs.
-	if "--functional-offload" in OS.get_cmdline_user_args():
-		RenderingServer.set_render_loop_enabled(false)
 	var spots: Array[Vector2] = []
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--spots="):
@@ -79,9 +75,7 @@ func _run() -> void:
 		elif arg.begins_with("--paths="):
 			for path_text: String in arg.trim_prefix("--paths=").split(";"):
 				var wps: Array[Vector2] = []
-				# Colon passes the existing hosted argument whitelist; retain
-				# the original pipe form for local callers.
-				for wp: String in path_text.replace(":", "|").split("|", false):
+				for wp: String in path_text.split("|", false):
 					wps.append(Vector2(float(wp.get_slice(",", 0)), float(wp.get_slice(",", 1))))
 				paths.append(wps)
 	for wps: Array in paths:

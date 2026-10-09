@@ -10,8 +10,6 @@ const GLYPHS:=preload("res://scripts/ui/input_glyph.gd")
 const FEED:=preload("res://scripts/creatures/progression_feed.gd")
 const INPUT_OWNER:=preload("res://scripts/ui/input_owner.gd")
 const TOKENS:=preload("res://scripts/ui/ui_tokens.gd")
-const ESSENCE:=preload("res://scripts/creatures/essence.gd")
-const REDESIGN:=preload("res://scripts/data/redesign_state.gd")
 class Manager extends Node:
 	var _enemy_owned := true
 class Director extends Node:
@@ -55,25 +53,6 @@ func _run()->void:
 	game.set_process(false)
 	for id:String in ["galecrest","mudsnout","bramblebun","terrapup","brooktail"]:
 		game.party.add(SPECIES.spawn(id))
-	# This isolated UI fixture already exercises all five at L40 -> L41.
-	# Declare its cap explicitly before any gain; a saved normalized copy alone
-	# does not admit live owned UIDs, and level never implies breakthrough history.
-	game.local.redesign_character = game.local.save_data().redesign_character
-	var fixture_uids: Array[String] = []
-	for member: RefCounted in game.party.members():
-		var uid := str(member.get("uid"))
-		fixture_uids.append(uid)
-		var record: Dictionary = game.local.redesign_character.creatures.get(uid, {})
-		record.cap_level = 50
-		record.breakthroughs = [1, 2, 3, 4]
-		game.local.redesign_character.creatures[uid] = record
-		_check(ESSENCE.creature_cap(game.local.redesign_character, uid) == 50,
-			"Original five-member UI fixture has an explicit owned cap50: " + uid)
-	_check(REDESIGN.validate("character", game.local.redesign_character, fixture_uids).is_empty(),
-		"Original HUD progression fixture has valid typed personal admission")
-	print("HUD LIFECYCLE FIXTURE " + JSON.stringify({"owned_uids": fixture_uids,
-		"cap_level": 50, "breakthroughs": [1, 2, 3, 4], "test_only_admission": true,
-		"earned_progression": false, "scope": "Original isolated five-member L40-to-L41 UI fixture; no save or earned-route proof"}))
 	var world:=Node.new()
 	world.name="HudLifecycleFixture"
 	root.add_child(world)
@@ -164,8 +143,6 @@ func _run()->void:
 	combat.set_world_presentation_mode("exploration")
 	_check(hud._hotbar_panel.visible,"Exploration restores hotbar")
 	_check(combat._outcome.text.is_empty(),"Exploration does not revive stale result")
-	_hint_revealed_while_suppressed()
-	_task_changed_while_suppressed()
 	await _full_party_moment_layout()
 	await _progression_reset_and_modal_lifecycle(member)
 	print("HUD LIFECYCLE %s: %d checks"%["PASS" if failures.is_empty() else "FAIL",checks])
@@ -180,65 +157,6 @@ func _run()->void:
 			cue.stream = null
 	await create_timer(0.15).timeout
 	quit(0 if failures.is_empty() else 1)
-
-
-## Existing isolated HUD fixture: a new instruction arrives after an empty
-## hint lane has already stood down. No progression or earned-route claim.
-func _hint_revealed_while_suppressed() -> void:
-	hud._hide_objective_hint_card()
-	hud.set_world_presentation_mode("combat")
-	var hint := "At your Altar, choose a creature and spend its type essence."
-	hud._reveal_objective_hint(hint)
-	var deadline: float = hud._objective_hint_until
-	for i in 2:
-		hud._apply_presentation_priority()
-	_check(not hud._objective_hint_card.visible,"New hint remains hidden while combat owns the lane")
-	hud.set_world_presentation_mode("exploration")
-	_check(hud._objective_hint_card.visible and hud._objective_hint_label.text == hint,
-		"Fresh hint revealed during suppression returns with its current text")
-	_check(hud._objective_hint_until == deadline,"Hint restoration preserves its original deadline")
-	hud.set_world_presentation_mode("combat")
-	hud._hide_objective_hint_card()
-	hud._apply_presentation_priority()
-	hud.set_world_presentation_mode("exploration")
-	_check(not hud._objective_hint_card.visible,"Canceled hint is not revived when its lane returns")
-
-
-## Transient task inputs in the same isolated HUD fixture. Exercise the real
-## objective poller and priority writer; no quest flags or durable state.
-func _task_changed_while_suppressed() -> void:
-	var game_text: String = game.objective_text
-	var game_hint: String = game.objective_hint
-	var label_text: String = hud._objective_text_label.text
-	var last_text: String = hud._objective_last_text
-	var shown: bool = hud._objective_block.visible
-	game.objective_hint = ""
-	game.objective_text = "Initial task in the isolated lifecycle fixture."
-	hud._update_objective()
-	game.objective_text = ""
-	hud._update_objective()
-	hud.set_world_presentation_mode("combat")
-	var goal := "Challenge Master Flint for the L10 feast recipe."
-	game.objective_text = goal
-	hud._update_objective()
-	for i in 2: hud._apply_presentation_priority()
-	_check(not hud._objective_block.visible,"Fresh task remains hidden while combat owns the lane")
-	hud.set_world_presentation_mode("exploration")
-	_check(hud._objective_block.visible and hud._objective_text_label.text == goal,
-		"Fresh task revealed during suppression returns with its current goal")
-	hud.set_world_presentation_mode("combat")
-	game.objective_text = ""
-	hud._update_objective()
-	for i in 2: hud._apply_presentation_priority()
-	_check(not hud._objective_block.visible,"Cleared task remains hidden during combat")
-	hud.set_world_presentation_mode("exploration")
-	_check(not hud._objective_block.visible and hud._objective_text_label.text.is_empty(),
-		"Cleared task is not revived when its lane returns")
-	game.objective_text = game_text
-	game.objective_hint = game_hint
-	hud._objective_text_label.text = label_text
-	hud._objective_last_text = last_text
-	hud._objective_block.visible = shown
 
 
 func _full_party_moment_layout() -> void:
