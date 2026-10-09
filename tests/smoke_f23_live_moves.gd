@@ -654,8 +654,6 @@ func _setup() -> void:
 	_wild.set("instance", _enemy)
 	_wild.set("trainer_owned", not _prove_canonical_wild)
 	_wild.call("set_engaged", true, _ally)
-	_wild.set("_intent", preload("res://scripts/combat/combat_ai.gd").Intent.TELEGRAPH)
-	_wild.set("_selected_attack", {"heavy": true, "telegraph": 1.1})
 	_ally.call("face_towards", _wild.global_position)
 	_wild.call("face_towards", _ally.global_position)
 	var player := CharacterBody3D.new()
@@ -730,6 +728,9 @@ func _setup() -> void:
 	if needs_authored_trainer:
 		_check(_director.call("_install_ordinary_combat_reward_owner", _id) == true, "real authored trainer owner installer admits the mounted fixture")
 		_check(_director.call("uses_durable_trainer_rewards", _id) == true, "mounted fixture uses the real durable trainer owner")
+	# Disclosed static tell follows the real opener/runtime initialization.
+	_wild.set("_intent", preload("res://scripts/combat/combat_ai.gd").Intent.TELEGRAPH)
+	_wild.set("_selected_attack", {"heavy": true, "telegraph": 1.1})
 	_manager.connect("attack_launched", _on_launch)
 	_manager.connect("impact_confirmed", _on_impact)
 	_capture_stage()
