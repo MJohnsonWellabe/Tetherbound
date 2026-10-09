@@ -101,10 +101,19 @@ const RESEND_LIMIT := 10
 ## replicated, so `peer_count()` still reads 1) is a client all the same, and a
 ## client must never take the solo path -- it would run a night whose day
 ## `advance_day()` correctly refuses to move.
-static func rest(host: Node) -> void:
-	var game := host.get_node_or_null(^"/root/Game")
+static func rest(host: Node, game: Node = null) -> void:
+	if game == null: game = host.get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; the night cannot pass")
+		return
+	if _owner_recovery_blocked(game):
+		# Withdrawing an existing vote changes no frozen character state.
+		var session: Node = game.get("session")
+		var existing := session.get_node_or_null(NodePath(NODE_NAME)) if session != null else game.get_node_or_null(NodePath(NODE_NAME))
+		if existing != null and existing.call("is_sleeping_here") == true:
+			existing.call("bed_down", host)
+			return
+		_pending_sleep_message(game)
 		return
 	if bool(game.call("is_multi_peer")) or not bool(game.call("is_host")):
 		var vote := attach(game)
@@ -112,6 +121,18 @@ static func rest(host: Node) -> void:
 			vote.call("bed_down", host)
 			return
 	_rest_alone(host, game)
+
+
+static func _owner_recovery_blocked(game: Node) -> bool:
+	var player: RefCounted = game.get("local")
+	var session: Node = game.get("session")
+	return player != null and session != null and session.has_method("_owner_training_mutation_blocked") \
+		and session.call("_owner_training_mutation_blocked", player) == true
+
+
+static func _pending_sleep_message(game: Node) -> void:
+	if game.has_method("push_world_message"):
+		game.call("push_world_message", "Your previous action is still saving. Rest when it finishes.")
 
 
 ## Today's rest, unchanged: the solo path, and the path every peer runs on its
@@ -147,6 +168,13 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	if game == null:
 		push_error("no Game autoload; the night cannot pass")
 		return 0
+	# Recheck after the fade: another accepted action may now hold the owner.
+	# A co-op night already has its host clock; preserve that shared decision
+	# while leaving this peer's frozen personal projection untouched.
+	var recover_owner := not _owner_recovery_blocked(game)
+	if not recover_owner and host_day <= 0:
+		_pending_sleep_message(game)
+		return int(game.get("day"))
 	# `host_day > 0` means the day has ALREADY been decided -- by the host, at
 	# the moment the vote passed, so that the number it broadcast and the number
 	# it keeps are the same one. Calling `advance_day()` again here would move
@@ -175,7 +203,7 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	# is exactly one player and this is byte-for-byte today's behaviour.
 	var sleeper_flags: RefCounted = game.call("player_flags") if game.has_method("player_flags") \
 		else game.get("progression") as RefCounted
-	if sleeper_flags != null:
+	if recover_owner and sleeper_flags != null:
 		sleeper_flags.call("set_flag", "player_slept_at_home")
 	# Gate A creature-bed contract: sleep completes only pals physically put
 	# to bed. Non-resting party members keep their current HP, which is the
@@ -184,10 +212,10 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	# Per-peer by construction: `Game.party` is this process's own five, so a
 	# co-op night heals each player's own bedded creatures on their own machine
 	# and nobody's team is completed by somebody else lying down.
-	game.call("complete_creature_bed_rests")
+	if recover_owner: game.call("complete_creature_bed_rests")
 	# The trainer too -- find them by the vitals they carry.
 	var player := _find_player(host)
-	if player != null:
+	if recover_owner and player != null:
 		var vitals: RefCounted = player.get("vitals")
 		if vitals != null and vitals.has_method("rest"):
 			vitals.call("rest")
@@ -218,6 +246,7 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	# `Session.is_host()`, and each peer's own character always. Solo is a
 	# one-peer session, so solo behaviour is byte-for-byte what it was.
 	game.call("autosave_here")
+	if not recover_owner: _pending_sleep_message(game)
 	print("[rest] rested; day %d" % day)
 	return day
 
@@ -307,6 +336,9 @@ func bed_down(bed: Node) -> void:
 		return
 	if _sleeping_here:
 		_stand_up(game)
+		return
+	if _owner_recovery_blocked(game):
+		_pending_sleep_message(game)
 		return
 	_sleeping_here = true
 	_bed = bed
