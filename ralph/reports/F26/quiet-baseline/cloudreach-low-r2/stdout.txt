@@ -1,0 +1,11 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+F26 EXPORT ENTRY: existing production route selected
+CATALOGUE BOOT cloudreach load begin t=4584
+CATALOGUE BOOT cloudreach instantiate begin t=7259
+CATALOGUE BOOT cloudreach attach begin t=7263
+[village_npcs] placed 11 of 11
+[climax] no 'CloudreachNoStronghold' node; standing the climax on its own fallback coordinates
+CATALOGUE BOOT cloudreach attached t=135256
+F26 route case Low: PASS

@@ -1,0 +1,16 @@
+{
+  "id": 364540334,
+  "tag_name": "latest",
+  "target_commitish": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+  "published_at": "2026-08-03T23:19:09Z",
+  "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/releases/tag/latest",
+  "assets": [
+    {
+      "id": 622823438,
+      "name": "Tetherbound-windows.zip",
+      "size": 790994938,
+      "digest": "sha256:55091796270befbea3a19dd55b015351db54b038c3d53c4d2961268603a47262",
+      "browser_download_url": "https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip"
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+diff --git a/export_presets.cfg b/export_presets.cfg
+index eba4dde7ac3..1427651912b 100644
+--- a/export_presets.cfg
++++ b/export_presets.cfg
+@@ -8,7 +8,7 @@ dedicated_server=false
+ custom_features=""
+ export_filter="all_resources"
+ include_filter="data/scatter/*.bin"
+-exclude_filter="docs/*, *.md"
++exclude_filter="docs/*, *.md, ralph/*, shots/*"
+ export_path="build/windows/Tetherbound.exe"
+ patches=PackedStringArray()
+ encryption_include_filters=""
+@@ -66,7 +66,7 @@ dedicated_server=false
+ custom_features=""
+ export_filter="all_resources"
+ include_filter="data/scatter/*.bin"
+-exclude_filter="docs/*, *.md"
++exclude_filter="docs/*, *.md, ralph/*, shots/*"
+ export_path="build/linux/Tetherbound.x86_64"
+ patches=PackedStringArray()
+ encryption_include_filters=""
+diff --git a/tools/capture_lookdev_route.gd b/tools/capture_lookdev_route.gd
+index 8c6c5cdac5e..8908ebde5fa 100644
+--- a/tools/capture_lookdev_route.gd
++++ b/tools/capture_lookdev_route.gd
+@@ -29,6 +29,8 @@ var _navigation: RefCounted
+ var _clock_start: Dictionary = {}
+ var _clock_end: Dictionary = {}
+ var _timed_out := false
++var _quiet_baseline := false
++var _warmup_elapsed_ms := 0.0
+ 
+ 
+ func _prepare_character_fixture(game: Node) -> void:
+@@ -44,7 +46,9 @@ func _prepare_character_fixture(game: Node) -> void:
+ 
+ func _run() -> void:
+ 	for arg: String in OS.get_cmdline_user_args():
+-		if arg.begins_with("--biome="):
++		if arg == "--quiet-baseline":
++			_quiet_baseline = true
++		elif arg.begins_with("--biome="):
+ 			_biome_id = arg.trim_prefix("--biome=")
+ 		elif arg.begins_with("--preset="):
+ 			_presets.assign(arg.trim_prefix("--preset=").split(",", false))
+@@ -128,6 +132,10 @@ func _capture_route_case() -> void:
+ 	# Apply the live preset before warmup, so each case includes its own
+ 	# shader/material preparation. A reused world retains normal ecology.
+ 	_look.call("refresh_graphics")
++	if _quiet_baseline:
++		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
++		Engine.max_fps = 0
++		RenderingServer.viewport_set_measure_render_time(root.get_viewport_rid(), true)
+ 	# Only declared evidence setup teleports. Every timed leg walks through
+ 	# the existing movement actions and live collision, without repairs.
+ 	var start := _route_point(_route.start)
+@@ -141,8 +149,14 @@ func _capture_route_case() -> void:
+ 	_rig.global_position = _player.global_position
+ 	_player.reset_physics_interpolation()
+ 	_rig.reset_physics_interpolation()
+-	for frame in int(_capture.warmup_frames):
+-		await process_frame
++	var warmup_started := Time.get_ticks_usec()
++	if _quiet_baseline:
++		while Time.get_ticks_usec() - warmup_started < 15000000:
++			await process_frame
++	else:
++		for frame in int(_capture.warmup_frames):
++			await process_frame
++	_warmup_elapsed_ms = (Time.get_ticks_usec() - warmup_started) / 1000.0
+ 	if not _player.is_on_floor():
+ 		_failures.append("initial trainer did not settle on a production collider")
+ 	if _biome_id != "stormwood":
+@@ -179,7 +193,8 @@ func _capture_route_case() -> void:
+ 			break
+ 		_waypoints_reached += 1
+ 	_release_route()
+-	while _failures.is_empty() and _samples.size() < int(_capture.minimum_timed_frames):
++	while _failures.is_empty() and (_samples.size() < int(_capture.minimum_timed_frames) \
++			or (_quiet_baseline and Time.get_ticks_usec() - _route_started_usec < 60000000)):
+ 		if _wall_budget_exceeded():
+ 			break
+ 		await process_frame
+@@ -253,6 +268,9 @@ func _record_frame() -> void:
+ 	_samples.append({"wall_ms": (now - _previous_frame_usec) / 1000.0,
+ 		"process_ms": Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
+ 		"physics_ms": Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0,
++		"render_cpu_ms": RenderingServer.viewport_get_measured_render_time_cpu(root.get_viewport_rid()) if _quiet_baseline else 0.0,
++		"render_setup_cpu_ms": RenderingServer.get_frame_setup_time_cpu() if _quiet_baseline else 0.0,
++		"render_gpu_ms": RenderingServer.viewport_get_measured_render_time_gpu(root.get_viewport_rid()) if _quiet_baseline else 0.0,
+ 		"position": _vec3(_player.global_position)})
+ 	_previous_frame_usec = now
+ 
+@@ -267,6 +285,9 @@ func _route_still(label: String) -> void:
+ 
+ func _write_route_receipt(complete: bool) -> void:
+ 	var data := {"complete": complete, "source_commit": _source_commit,
++		"quiet_baseline": _quiet_baseline, "is_debug_build": OS.is_debug_build(),
++		"warmup_elapsed_ms": _warmup_elapsed_ms,
++		"vsync_mode": DisplayServer.window_get_vsync_mode(), "max_fps": Engine.max_fps,
+ 		"process_presets": _presets, "case_index": _case_index,
+ 		"scene_reused_across_presets": _presets.size() > 1,
+ 		"opening_fixture_flags": MEADOWS_OPENING_FLAGS if _biome_id == "meadows" else [],
