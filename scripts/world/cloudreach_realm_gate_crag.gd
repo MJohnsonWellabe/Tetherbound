@@ -41,7 +41,7 @@ func build(materials: Dictionary, ground_sampler: Callable = Callable()) -> void
 	for index in (cfg.get("arrival_beacons", []) as Array).size():
 		_add_beacon(index, (cfg.arrival_beacons as Array)[index] as Dictionary,
 			cfg.get("beacon_light", {}) as Dictionary, materials,
-			float(cfg.get("beacon_scale", 1.0)))
+			float(cfg.get("beacon_scale", 1.0)), ground_sampler, cfg.get("ground_contact", {}))
 
 
 ## The existing bottom-face boundary defines each footing; the installed upper
@@ -203,10 +203,16 @@ func _add_emblem(cfg: Dictionary, materials: Dictionary) -> void:
 
 
 func _add_beacon(index: int, spec: Dictionary, light_cfg: Dictionary,
-		materials: Dictionary, k: float = 1.0) -> void:
+		materials: Dictionary, k: float = 1.0, ground_sampler: Callable = Callable(),
+		contact: Dictionary = {}) -> void:
 	var at := _v3(spec.get("position", [0.0, 0.0, 0.0]))
-	_add_cylinder("ArrivalBeaconPlinth%02d" % (index + 1), at + Vector3.UP * 0.65 * k,
+	var plinth := _add_cylinder("ArrivalBeaconPlinth%02d" % (index + 1), at + Vector3.UP * 0.65 * k,
 		1.15 * k, 1.3 * k, _material(materials, "masonry_trim"), "beacon_plinth")
+	# The lamps retained their old floor datum when the main gateway gained
+	# footings. Extend only their masonry bases to actual opaque render support;
+	# their cylinders, bowls, flames and lights keep their original placement.
+	if ground_sampler.is_valid():
+		add_masonry_footing(plinth, ground_sampler, contact)
 	_add_cylinder("ArrivalBeaconBowl%02d" % (index + 1), at + Vector3.UP * 1.65 * k,
 		0.82 * k, 0.35 * k, _material(materials, "bronze"), "beacon_bowl")
 	var flame := MeshInstance3D.new()
