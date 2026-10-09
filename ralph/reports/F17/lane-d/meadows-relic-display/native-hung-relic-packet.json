@@ -1,5 +1,5 @@
 {
-  "source": "d710824c3a70262217992c2cc0173498b2562536",
+  "source": "1de00af2b1ed5cf4f5b98a5d2dfaf88350d8e7e9",
   "criterion": "F17#6 OPEN; actual mounted Meadows relic witness only",
   "script": "tools/capture_f17_visual.gd",
   "engine_args": [
@@ -19,8 +19,8 @@
     "--hall-endwall-baseline",
     "--hall-arch-depth-baseline",
     "--hall-surface-depth-baseline",
-    "--source-commit=d710824c3a70262217992c2cc0173498b2562536",
-    "--output=res://ralph/reports/F17/lane-d/meadows-relic-display/native-d710-hung"
+    "--source-commit=1de00af2b1ed5cf4f5b98a5d2dfaf88350d8e7e9",
+    "--output=res://ralph/reports/F17/lane-d/meadows-relic-display/native-1de00-hung"
   ],
   "fixture": "Fresh solo host, unchanged portal runtime true. Existing post-opening/starter and initial placement retained; one authored Meadows relic appended to personal held list before world load, fresh production saver under output. No earned boss, key, hung flag, receipt or world display seeded.",
   "path": "Existing f49_portal_travel::hang_relic uses ordinary grounded controller navigation and exact actionable provider. Production Session request/authority/source/revision/transaction/save path unchanged; power modal cancelled through parsed pad.",
@@ -56,7 +56,7 @@
     "timeout_minutes": 10
   },
   "shipping": "Meadows relic display remains OFF outside explicit candidate argv; native/judge failure stays OFF",
-  "review": "SAME original f42 parent01a11f66-aec8-7fe1-924e-ef003dba6e78 SOURCE and exact unit/native COMMANDS APPROVE d710; closes both b9a6 findings, execution/artifact/blind/whole pending",
+  "review": "PENDING SAME original 1de00 source/exact commands after supported parser correction; prior d710 approval retained for unchanged parts, no runtime/native credit",
   "excluded": [
     "earned boundary promotion",
     "boss completion",
@@ -78,5 +78,14 @@
     "original": "SAME f42 parent01a11f6d-ff30-76b2-b6f8-b59ccf3719da failedfacts VERIFIED, REUSE REJECTED",
     "diagnostic": "SAME original COMMAND APPROVE directexistingproducer @d710 headless/Dummy/glcompat10m, reviewedargs/freshheadless-d710-load-diagnostic output; parsererror or nativepreflightrefusalexpected; no runtime/nativecredit",
     "native": "PAUSED pending diagnosis and required proof; no native launch"
+  },
+  "direct_diagnostic": {
+    "run": 37895840828,
+    "job": 113706877248,
+    "artifact": 11600486772,
+    "zip_sha256": "e489d6701711119db70ce50bc72e8a08065d45dda29f82b85db1f5fa9c1fea91",
+    "actual": "1SCRIPT Parse Error Expected variable name after var at capture_f17_visual.gd:169 (var namespace) and1loadERROR; nativepreflight/witness unexecuted; no exit_codefile",
+    "supported_code": "1de00 renames rejected local namespace to world_namespace at declaration and2uses; no predicate/fixture/path/budget change",
+    "review": "PENDING SAME original failedfacts/source/exactunit/native argv"
   }
 }
