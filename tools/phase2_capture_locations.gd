@@ -822,7 +822,7 @@ static func capture_stand_failure(stand: Vector2, player: Vector3, camera: Vecto
 			var clearance := float(shortened_arm.capsule_clearance)
 			var radius := float(shortened_arm.probe_radius)
 			var corners: Variant = shortened_arm.get("near_plane_corner_distances")
-			var covered := is_finite(radius) and radius > 0.0 and corners is Array and corners.size() == 4
+			var covered: bool = is_finite(radius) and radius > 0.0 and corners is Array and corners.size() == 4
 			if covered:
 				for corner: Variant in corners:
 					if typeof(corner) not in [TYPE_INT, TYPE_FLOAT] \
