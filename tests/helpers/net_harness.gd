@@ -402,7 +402,7 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 			push_error("F25 Medium host requires the existing rendered Forward+ offload")
 			return -1
 		args = ["--path", project_path, "--rendering-method", "forward_plus",
-			"--rendering-driver", "vulkan", "--audio-driver", "Dummy", "--resolution", "1280x720"]
+			"--rendering-driver", "vulkan", "--audio-driver", "Dummy", "--resolution", "1920x1080"]
 	if _is_windows():
 		# Godot 4.7 has no --user-data-dir command line option. On Windows its
 		# supported user-data lookup honors APPDATA, so set a fresh APPDATA root
@@ -423,7 +423,7 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 	for extra in extra_args:
 		args.append(str(extra))
 	if f25_render:
-		args.append("--f25-library-preview") # Process-only opt-in, never a shipping flag.
+		# All peers read the shipping library switch; no preview override.
 		if i == 0: args.append("--f25-capture-preset=Medium")
 	# Spike item 6: OS.set_environment() before OS.create_process() reaches the
 	# child. Isolation per peer (contract §2): its own XDG_DATA_HOME.

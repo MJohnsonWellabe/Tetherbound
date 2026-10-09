@@ -181,7 +181,7 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 			push_error("F25 Medium host requires the existing xvfb render offload")
 			return -1
 		args = ["--path", project_path, "--rendering-method", "forward_plus",
-			"--rendering-driver", "vulkan", "--audio-driver", "Dummy", "--resolution", "1280x720"]
+			"--rendering-driver", "vulkan", "--audio-driver", "Dummy", "--resolution", "1920x1080"]
 	if _is_windows():
 		args.append_array(["--log-file", log_path])
 	args.append_array([
@@ -194,7 +194,7 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 	for extra in extra_args:
 		args.append(str(extra))
 	if f25_render:
-		args.append("--f25-library-preview")
+		# All peers read the shipping library switch; no preview override.
 		if i == 0: args.append("--f25-capture-preset=Medium")
 	OS.set_environment("XDG_DATA_HOME", home)
 	if _is_windows():

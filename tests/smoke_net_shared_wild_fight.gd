@@ -360,13 +360,17 @@ func _fresh_accepted_receipt(state: Dictionary, encounter_id: String, peer_id: i
 
 
 func _run() -> void:
-	if not await launch(2, "world"):
+	# Optional F25 functional prerequisite. Four owned participants plus the
+	# live opponent; this does not certify the separate native cap/p95 guard.
+	var four_owned := OS.get_cmdline_user_args().has("--four-owned-fight")
+	var peers := 4 if four_owned else 2
+	if not await launch(peers, "world"):
 		quit(await finish())
 		return
 
 	# --- the handshake, copied verbatim from smoke_net_movement_two_peers.gd ---
-	check(_peers.size() == 2, "coordinator tracked 2 peers")
-	for i in 2:
+	check(_peers.size() == peers, "coordinator tracked %d peers" % peers)
+	for i in peers:
 		var ctx = await probe(i, "input_context")
 		check(str(ctx) == "world", "peer %d input_context is 'world' (got '%s')" % [i, str(ctx)])
 
@@ -381,7 +385,7 @@ func _run() -> void:
 	# Each player brings an owned creature into the session (see _run_guardian):
 	# the host admits a guest's party from its join snapshot, and an unowned
 	# fallback body is refused by the owned-loadout move admission.
-	for i in 2:
+	for i in peers:
 		var granted: Dictionary = await step(i, "party_grant", {"species": "terrapup"})
 		check(str(granted.get("verdict", "")) == "PASS",
 			"peer %d owns a creature before the session (%s)" % [i, str(granted.get("detail", ""))])
@@ -396,18 +400,21 @@ func _run() -> void:
 	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port})
 	check(str(joined.get("verdict", "")) == "PASS",
 		"peer 1 joined peer 0's world on port %d (%s)" % [port, str(joined.get("detail", ""))])
+	for i in range(2, peers):
+		var extra: Dictionary = await step(i, "join", {"host": "127.0.0.1", "port": port})
+		check(extra.get("verdict") == "PASS", "peer %d joined the actual host" % i)
 	var guest_session: Variant = await probe(1, "session")
 	var guest_peer_id := int((guest_session as Dictionary).get("peer_id", 0)) \
 		if guest_session is Dictionary else 0
 	check(guest_peer_id > 1, "the joiner has a real ENet peer id for host action authority")
-	for i in 2:
-		var seen: Dictionary = await step(i, "expect_peers", {"count": 2})
+	for i in peers:
+		var seen: Dictionary = await step(i, "expect_peers", {"count": peers})
 		check(str(seen.get("verdict", "")) == "PASS",
 			"peer %d's registry holds both players (%s)" % [i, str(seen.get("detail", ""))])
 	# --- end of the copied handshake block ------------------------------------
 
 	# Both players need a creature out before either can fight with one.
-	for i in 2:
+	for i in peers:
 		var deployed: Dictionary = await step(i, "deploy_creature", {})
 		check(str(deployed.get("verdict", "")) == "PASS",
 			"peer %d deployed its own creature (%s)" % [i, str(deployed.get("detail", ""))])
@@ -471,6 +478,10 @@ func _run() -> void:
 	var guest_after: Dictionary = await _encounter(1)
 	check(str(guest_after.get("bound_id", "")) == encounter_id,
 		"peer 1's fight is bound to the SAME record (got '%s')" % str(guest_after.get("bound_id", "")))
+	if four_owned:
+		await _four_owned_fight(encounter_id, full_hp)
+		quit(await finish())
+		return
 	# The joining peer must render the host's actual opponent presentation. The
 	# record fields above alone would also pass with a stale ambient wild body.
 	check(str(guest_after.get("presentation_script", ""))
@@ -1153,6 +1164,78 @@ func _run() -> void:
 		"A's real ambient body survived final last-leave with retained HP")
 
 	quit(await finish())
+
+
+## Existing setup expanded to four real owned pilots. No stat/mastery/meter
+## edits, forced outcomes or cap claim; the original native observer remains
+## the independent oracle for the separate worst-case presentation criterion.
+func _four_owned_fight(encounter_id: String, full_hp: float) -> void:
+	var shipping: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/vfx.json"))
+	check(shipping.get("move_library", {}).get("enabled") == true, "tracked shipping move library is ON")
+	check(preload("res://scripts/vfx/ultimates/ultimate_library.gd").config().get("enabled") == true,
+		"tracked shipping ultimates are ON; no process-local preview")
+	for peer in range(2, 4):
+		var view := await _encounter(peer)
+		for _poll in ANNOUNCE_POLLS:
+			if (view.get("joinable", []) as Array).has(encounter_id): break
+			await step(peer, "wait", {"frames": 15})
+			view = await _encounter(peer)
+		check((view.get("joinable", []) as Array).has(encounter_id), "peer %d receives the live fight announcement" % peer)
+		var opponent := _vec((await _encounter(0)).get("opponent_pos", []))
+		if opponent == Vector3.INF:
+			check(false, "additional participant needs the actual host opponent position")
+			return
+		var offset := -NEAR_Z if peer == 2 else NEAR_Z
+		var travel := await step(peer, "teleport", {"at": [opponent.x + offset, opponent.y + 1.0, opponent.z]})
+		check(travel.get("verdict") == "PASS", "peer %d travels to the same live fight (disclosed setup)" % peer)
+		var joined := await step(peer, "join_encounter", {"encounter_id": encounter_id})
+		check(joined.get("verdict") == "PASS", "peer %d joins through production admission" % peer)
+	var host := await _encounter(0)
+	check(host.get("phase") == "active" and (host.get("participants", []) as Array).size() == 4,
+		"one active host encounter contains four real participants")
+	check(float(host.get("opponent_hp", -1.0)) > 0.0 and float(host.get("opponent_hp", -1.0)) <= full_hp + 0.001,
+		"joining did not refill the real opponent")
+	var deployed: Dictionary = await probe(0, "deployed_creatures")
+	var visible_owners := {}
+	for body: Dictionary in deployed.values():
+		if body.get("visible") == true: visible_owners[int(body.get("owner", 0))] = true
+	check(visible_owners.size() == 4, "host has four visible deployed owner bodies; invisible outbound proxy excluded")
+	for peer in 4:
+		var session: Dictionary = await probe(peer, "session")
+		var peer_id := int(session.get("peer_id", 0))
+		var view := await _encounter(peer)
+		check(peer_id > 0 and visible_owners.has(peer_id) and (host.get("participants", []) as Array).has(peer_id),
+			"peer %d's admitted owner has an actual visible host body" % peer)
+		check(view.get("bound_id") == encounter_id and view.get("fighting") == true,
+			"peer %d pilots in the same live encounter" % peer)
+		var before := float((await _encounter(0)).get("opponent_hp", -1.0))
+		var after := before
+		for _swing in SWINGS:
+			if after < before - 0.001: break
+			var target := _vec((await _encounter(0)).get("opponent_pos", []))
+			if target == Vector3.INF: break
+			var radial := Vector3(0, 0, -NEAR_Z if peer == 0 else NEAR_Z) if peer < 2 else Vector3(-NEAR_Z if peer == 2 else NEAR_Z, 0, 0)
+			var stand := target + radial
+			var placed := await step(peer, "place_creature", {"at": [stand.x, stand.y, stand.z],
+				"face": [target.x, target.y, target.z], "settle": PLACE_SETTLE})
+			check(placed.get("verdict") == "PASS", "peer %d's real deployed body stands in range" % peer)
+			var pressed := await step(peer, "press", {"action": "quick"})
+			check(pressed.get("verdict") == "PASS", "peer %d sends the ordinary physical quick binding" % peer)
+			await step(peer, "wait", {"frames": STRIKE_SETTLE})
+			after = float((await _encounter(0)).get("opponent_hp", -1.0))
+		check(before > 0.0 and after >= 0.0 and after < before - 0.001,
+			"peer %d's controller strike reduces the same authoritative HP within original SWINGS" % peer)
+		var converged := false
+		for _poll in HP_CONVERGE_POLLS:
+			var hp := float((await _encounter(0)).get("opponent_hp", -1.0))
+			var remote_hp := float((await _encounter(peer)).get("opponent_hp", -2.0))
+			if absf(hp - remote_hp) < 0.001:
+				converged = true
+				break
+			await step(peer, "wait", {"frames": 3})
+		check(converged, "peer %d draws host HP within the original convergence budget" % peer)
+	print("F25_FOUR_OWNED_FUNCTIONAL " + JSON.stringify({"encounter": encounter_id,
+		"host": await _encounter(0), "deployed": deployed, "scope": "four real owned pilots plus opponent; no rank5/cap/p95/visual/earned proof"}))
 
 
 ## This peer's view of the fight, from `tools/net/peer_runner.gd`'s `encounter`
