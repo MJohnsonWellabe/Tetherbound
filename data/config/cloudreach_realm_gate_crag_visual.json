@@ -2,6 +2,8 @@
   "schema_version": 1,
   "landmark_id": "realm_gate_crag",
   "design_intent": "A ceremonial arrival threshold that reads as a complete landmark from the Meadows-entry road while preserving the open gate aperture and broad Cloudreach vista.",
+  "ground_contact": {"embed_m": 0.06, "paver_clearance_m": 0.03, "paver_step_m": 0.5,
+    "sample_bounds_xz": [-43.0, -47.0, -5.0, -23.0]},
   "approach_pavers": [
     {"position": [0.0, 0.10, -14.0], "size": [10.0, 0.20, 3.0]},
     {"position": [0.0, 0.12, -10.5], "size": [11.5, 0.24, 2.6]},

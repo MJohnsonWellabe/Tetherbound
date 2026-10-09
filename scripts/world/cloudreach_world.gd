@@ -4130,14 +4130,65 @@ func _build_realm_gate_crag(root: Node3D) -> void:
 	# on the 34 m higher crown made the landmark read as a rock stack with a tiny
 	# unrelated castle on top, whereas this facade is the portal the road meets.
 	var facade_origin := Vector3(-24.0, -34.0, -29.0)
-	_castle_piece(root, "AncientCarvedGateway", CASTLE_GATE, facade_origin, Vector3(28, 27, 6), _materials["stone_light"])
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(REALM_GATE_CRAG_PRESENTATION.CONFIG_PATH))
+	var contact: Dictionary = parsed.get("ground_contact", {}) if parsed is Dictionary else {}
+	var triangles := _gate_render_support_triangles(root, contact)
+	var sampler := _gate_render_support_height.bind(triangles)
+	var facade := _castle_piece(root, "AncientCarvedGateway", CASTLE_GATE, facade_origin, Vector3(28, 27, 6), _materials["stone_light"])
+	REALM_GATE_CRAG_PRESENTATION.add_masonry_footing(facade, sampler, contact)
 	for side: float in [-1.0, 1.0]:
-		_castle_piece(root, "GateWatchPillar", CASTLE_TOWER, facade_origin + Vector3(side * 12, 0, 0), Vector3(7, 33, 7), _materials["stone"])
+		var tower := _castle_piece(root, "GateWatchPillar", CASTLE_TOWER, facade_origin + Vector3(side * 12, 0, 0), Vector3(7, 33, 7), _materials["stone"])
+		REALM_GATE_CRAG_PRESENTATION.add_masonry_footing(tower, sampler, contact)
 	var presentation := REALM_GATE_CRAG_PRESENTATION.new()
 	presentation.name = "RealmGateCragPresentation"
 	presentation.position = facade_origin
 	root.add_child(presentation)
-	presentation.call("build", _materials)
+	presentation.call("build", _materials, sampler)
+
+
+## Sample the same rendered columns measured by the retained native gate packet.
+## Registered road heights and collision boxes are not visual support operands.
+func _gate_render_support_triangles(gate: Node3D, cfg: Dictionary) -> Array[PackedVector3Array]:
+	var sources: Array[MeshInstance3D] = []
+	# The trail is an alpha overlay, not opaque ground. Every retained native
+	# query also hit this opaque ridge; include the measured crag faces too.
+	for path: String in ["AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge000"]:
+		var source := get_node_or_null(NodePath(path)) as MeshInstance3D
+		if source != null:
+			sources.append(source)
+	var ledge := gate.get_node_or_null("LandmarkLedge")
+	if ledge != null:
+		for source: MeshInstance3D in ledge.find_children("*", "MeshInstance3D", true, false):
+			if str(source.name) in ["StratifiedCliffBody", "CarvedCrown"]:
+				sources.append(source)
+	var triangles: Array[PackedVector3Array] = []
+	var bounds: Array = cfg.get("sample_bounds_xz", [-43.0, -47.0, -5.0, -23.0])
+	for source: MeshInstance3D in sources:
+		if source.mesh == null:
+			continue
+		var faces := source.mesh.get_faces()
+		for index in range(0, faces.size() - 2, 3):
+			var a := source.to_global(faces[index])
+			var b := source.to_global(faces[index + 1])
+			var c := source.to_global(faces[index + 2])
+			# Conservative bound around the unchanged gateway/tower/paver feet.
+			# Keep crossing triangles whole; only reject disjoint XZ bounds.
+			if maxf(a.x, maxf(b.x, c.x)) < gate.global_position.x + float(bounds[0]) \
+					or minf(a.x, minf(b.x, c.x)) > gate.global_position.x + float(bounds[2]) \
+					or maxf(a.z, maxf(b.z, c.z)) < gate.global_position.z + float(bounds[1]) \
+					or minf(a.z, minf(b.z, c.z)) > gate.global_position.z + float(bounds[3]):
+				continue
+			triangles.append(PackedVector3Array([a, b, c]))
+	return triangles
+
+
+func _gate_render_support_height(at: Vector3, triangles: Array[PackedVector3Array]) -> float:
+	var best := -INF
+	for triangle: PackedVector3Array in triangles:
+		var height := GROUND_COVER._triangle_height(at, triangle[0], triangle[1], triangle[2])
+		if is_finite(height) and height <= at.y + 0.005:
+			best = maxf(best, height)
+	return best if is_finite(best) else NAN
 
 
 func _build_three_bells(root: Node3D) -> void:
