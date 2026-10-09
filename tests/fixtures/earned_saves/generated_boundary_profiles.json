@@ -9,12 +9,18 @@
       "day": 5,
       "clock_elapsed_seconds": 500.0,
       "position": "template",
-      "party_levels": [],
+      "party_levels": [
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
       "heal_party": true,
       "world_flags": [],
       "personal_flags": [],
       "inventory_add": {},
-      "disclosure": "Generated healthy post-Warrens state, retaining template five ordered UIDs/species, exact inventory and prior flags/day/position. Full HP is generated, not an earned recovery witness."
+      "disclosure": "Generated healthy post-Warrens five at L15 with generated breakthrough caps, matching the Relay officers band. Ordered UIDs/species, original inventory and prior route flags retained. Levels, caps and full HP are setup; no earned feast, XP or recovery witness is claimed."
     },
     "hall": {
       "boundary": "relay",
@@ -27,7 +33,13 @@
           4235.0
         ]
       },
-      "party_levels": [],
+      "party_levels": [
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
       "heal_party": true,
       "world_flags": [
         "relay_captain_defeated",
@@ -37,7 +49,7 @@
       ],
       "personal_flags": [],
       "inventory_add": {},
-      "disclosure": "Generated completed Relay/Mill far-bank state. All original Hall checks remain, including zero Mill gear, no next captain/sigil/Hall outcome. Exact live ground pose is resolved and saved during generation."
+      "disclosure": "Generated completed Relay/Mill far-bank five at L20 with generated breakthrough caps for the Hall band. Ordered UIDs/species and original inventory retained. Zero Mill gear and no next captain, Sigil or Hall outcome. Exact live ground pose saved during setup. No earned feast, XP or recovery witness is claimed."
     }
   }
 }
