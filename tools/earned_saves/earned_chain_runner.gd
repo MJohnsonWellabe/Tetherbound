@@ -115,6 +115,8 @@ func _run() -> void:
 			observe_next_goal = true
 		elif arg == "--capture-next-goal":
 			pass  # Read-only guarded HUD capture after successful existing piece.
+		elif arg == "--capture-relay":
+			pass  # Native completed frames on the existing Relay route only.
 		elif arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--lesson-reload-witness", "--capture-lessons"] or arg.begins_with("--lesson-skip-line"):
 			pass  # Validated below; only the existing reader can witness an actual lesson.
 		elif arg.begins_with("--handoff-from="):
@@ -131,6 +133,9 @@ func _run() -> void:
 		else:
 			failures.append("Unknown earned-piece option: " + arg)
 	var lesson_options := TRAVEL.lesson_witness_options()
+	if OS.get_cmdline_user_args().has("--capture-relay") and (segment != "relay" \
+			or functional_offload or DisplayServer.get_name() == "headless"):
+		failures.append("Relay visual capture requires the native Relay path without functional offload")
 	if OS.get_cmdline_user_args().has("--capture-next-goal") and not observe_next_goal:
 		failures.append("Next-goal frames require the existing --observe-next-goal snapshots")
 	failures.append_array(lesson_options.failures)

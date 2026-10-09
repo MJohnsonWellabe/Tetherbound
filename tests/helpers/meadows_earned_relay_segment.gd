@@ -33,6 +33,7 @@ var _dialogue_finished := ""
 var _activated_id := 0
 var _activated_name := ""
 var _supported_y := NAN
+var _relay_capture_probe: RefCounted
 
 
 func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
@@ -153,6 +154,7 @@ func _travel() -> bool:
 	if not rescue_receipt(_has("relay_captain_defeated"), _has("captive_rescued"), _count(GEAR)):
 		return _fail("Sela's actual completed rescue did not provide exactly one bridge gear")
 	_receipt("captive_rescued", {"conversation": _dialogue_finished, "gear": _count(GEAR)})
+	if not await _capture_relay_frame("sela-rescued", func() -> bool: return rescue_receipt(_has("relay_captain_defeated"), _has("captive_rescued"), _count(GEAR))): return false
 	var deck_route := deck_path(_config)
 	if deck_route.is_empty():
 		return _fail("The authored ramp/gantry/pad connection is unavailable")
@@ -170,11 +172,13 @@ func _travel() -> bool:
 			_supported_y = local.y
 	var lit := int(_relay.call("lit_conduit_count"))
 	var console := _relay.get_node_or_null("ApparatusSeam/Console/Interactable") as Node3D
+	if not await _capture_relay_frame("console-before", func() -> bool: return int(_relay.call("lit_conduit_count")) == lit and not _has("relay_disabled")): return false
 	if lit <= 0 or not await _press_prompt(console):
 		return _fail("The live lit Relay console could not be activated by ordinary input")
 	if not _has("relay_disabled") or not bool(_relay.call("is_disabled")) or int(_relay.call("lit_conduit_count")) != 0:
 		return _fail("The exact console press did not disable the real relay and its conduits")
 	_receipt("relay_disabled", {"lit_before": lit, "lit_after": 0, "player": _player.global_position})
+	if not await _capture_relay_frame("console-aftermath", func() -> bool: return _has("relay_disabled") and bool(_relay.call("is_disabled")) and int(_relay.call("lit_conduit_count")) == 0): return false
 	for index in range(deck_route.size() - 1, -1, -1):
 		var local := deck_route[index]
 		var at: Vector2 = _relay.call("world_of", Vector2(local.x, local.z))
@@ -210,6 +214,27 @@ func _travel() -> bool:
 			or _tree.current_scene != _world or str(_game.get("current_realm")) != "meadows" or _fighting():
 		return _fail("The same earned five did not physically complete the Mill crossing")
 	_receipt("mill_crossing_restored", {"gear_before": 1, "gear_after": _count(GEAR), "depth": depth, "party_ids": _party_ids()})
+	if not await _capture_relay_frame("mill-far-bank", func() -> bool: return mill_paid_receipt(_count(GEAR), _has("mill_crossing_restored"), bool(_mill.call("is_open"))) and float(_mill.call("depth_past_crossing", _v2p())) >= bank - 0.6 and not _fighting()): return false
+	return true
+
+
+## Test-local native pixels only. No pose, camera, state or render override.
+func _capture_relay_frame(label: String, phase_guard: Callable) -> bool:
+	if not OS.get_cmdline_user_args().has("--capture-relay"): return true
+	if DisplayServer.get_name() == "headless" or not RenderingServer.render_loop_enabled:
+		return _fail("Relay frames require the actual native drawing display")
+	if _relay_capture_probe == null:
+		_relay_capture_probe = load("res://tests/helpers/f20_ending_probe.gd").new()
+	var cid := str(_game.get("local").get("character_id"))
+	var owner := INPUT_OWNER.current(_tree)
+	var stable := func() -> bool:
+		return _tree.current_scene == _world and str(_game.get("current_realm")) == "meadows" \
+			and str(_game.get("local").get("character_id")) == cid and retained_five(_initial_ids, _party_ids()) \
+			and INPUT_OWNER.current(_tree) == owner and phase_guard.call() == true
+	if not await _relay_capture_probe.capture(_tree, "relay-" + label, stable) or not stable.call():
+		return _fail("Relay native frame lost its actual phase, owner or retained five: " + label)
+	_receipt("relay_visual_capture", {"label": label, "character_id": cid, "party_ids": _party_ids(),
+		"completed_native_frame": true, "presentation_overrides": false, "blind_verdict": "pending"})
 	return true
 
 
@@ -411,6 +436,7 @@ func _fight_captain() -> bool:
 	var pilot := LIVE.CampaignPilot.new(_tree, _combat, _director, _rig)
 	pilot.use_switching = false
 	pilot.switch_input = true
+	var fight_captured := false
 	while bool(_director.call("trainer_battle_active")) and captain_within_deadline(Engine.get_physics_frames() - _captain_start):
 		if not _failures.is_empty():
 			break
@@ -418,6 +444,9 @@ func _fight_captain() -> bool:
 			var ally := _director.call("ally_body") as Node3D
 			var foe := _combat.call("enemy_body") as Node3D
 			if is_instance_valid(ally) and is_instance_valid(foe):
+				if not fight_captured:
+					if not await _capture_relay_frame("captain-fight", func() -> bool: return _fighting() and bool(_director.call("trainer_battle_active")) and str(_director.call("trainer_battle_id")) == CAPTAIN and _combat.call("enemy_body") == foe): return false
+					fight_captured = true
 				await pilot._act(ally, foe)
 				pilot._move_toward(Vector3.ZERO)
 			else:
@@ -566,6 +595,8 @@ func _talk(prompt: Node3D, expected: String) -> bool:
 		await _tree.physics_frame
 	if not bool(_panel.call("is_open")):
 		return _fail("The exact interaction opened no authored dialogue")
+	if expected == "relay_captive_freed":
+		if not await _capture_relay_frame("sela-exchange", func() -> bool: return bool(_panel.call("is_open")) and _activated_id == prompt.get_instance_id()): return false
 	for _line in 64:
 		if not bool(_panel.call("is_open")):
 			break
