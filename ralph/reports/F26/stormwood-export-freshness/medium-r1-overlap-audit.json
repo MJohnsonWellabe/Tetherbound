@@ -1,0 +1,17 @@
+{
+  "start_png_last_write_utc": "2026-10-09T21:15:21.2049400Z",
+  "verdict": "D overlap during world startup, outside15s warmup/timed route",
+  "other_process": "Headless regional-body ray parity proof",
+  "metadata_correction": "Watcher resume incorrectly string-coerced a parsedDateTime and displayed futureUTC; authoritative first launch is original21:13:04.8009156Z and correctlaunchmanifest. Summary reads original launch JSON, not the defective watcher started_utc field.",
+  "preserved_overlap_note": "C:\\CodexTemp\\replacement-lane-d-e-overlap-note.json",
+  "source_gate": "capture_lookdev_route.gd writes start PNG before connecting recorder and setting _route_started_usec",
+  "other_lane": "D",
+  "minimum_seconds_before_timing": 51.20494,
+  "native_pid": 14152,
+  "native_case": "Medium-r1",
+  "timed_interval_begins_after_start_png": true,
+  "reported_utc_interval": [
+    "2026-10-09T21:14:28Z",
+    "2026-10-09T21:14:30Z"
+  ]
+}

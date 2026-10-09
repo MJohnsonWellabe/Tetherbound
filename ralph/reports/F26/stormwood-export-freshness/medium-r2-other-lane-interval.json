@@ -1,0 +1,15 @@
+{
+  "stop_recorded_utc": "2026-10-09T21:22:01.2636734Z",
+  "raw_log": "C:\\CodexTemp\\owner-a-revised-full-local-units-r2.log",
+  "sha256": "1110387C1B05D77999A3DFB265FEEE83947B6FB0CD7B0C77E051F06E3F0264F4",
+  "pid": 17596,
+  "command": "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe --headless --path . --script tests/run_tests.gd -- --only=test_actor_vitals_authority,test_ordinary_actor_vitals_recovery,test_combat_round_reward,test_catch_arbitration,test_catch_math,test_f24_host_commands,test_foundation_capture_scope,test_water_capture_transaction,test_water_capture_codec,test_process_exit_settlement,test_combat_mastery_delivery,test_stormwood_hosted_combat,test_local_trait_catch_settlement,test_local_trait_capture_source,test_f20_portal_save_identity,test_character_save_format",
+  "cwd": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa",
+  "last_output_utc": "2026-10-09T21:22:01.1810048Z",
+  "launch_lower_bound_utc": "2026-10-09T21:21:35.8935770Z",
+  "result": "ABORTED on first root E-window notice; no completion/PASS",
+  "no_more_native": true,
+  "duration_upper_bound_seconds": 25.3700964,
+  "E_medium2": "If window21:20:15–21:22:47, this second local engine overlapped; Medium2 CPU and wall quantiles require qualification/re-measurement. Earlier engine lastoutput21:19:13 outside this window",
+  "launch_time_exact": "No saved CIM creation time before termination; file created by fresh stdout redirect immediately before engine launch, conservative lower bound"
+}

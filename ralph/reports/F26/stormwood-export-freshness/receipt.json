@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "lane": "E",
+  "source_commit": "785e6f612e28a77075dd66684047628c2affbb13",
+  "main_commit": "549822b8da400b3eb9b23fe0feaca3c5f98bec97",
+  "preserved_lane_head": "aadd804d2e675ef671ff2f8a3fc954e7db0a334a",
+  "scope": "Only Windows Desktop and Linux Test export_presets.cfg script_export_mode 2->0",
+  "feature_flag_flips": 0,
+  "all_config_changes": [
+    {
+      "preset": "Windows Desktop",
+      "old": 2,
+      "new": 0,
+      "flag": "script_export_mode"
+    },
+    {
+      "preset": "Linux Test",
+      "old": 2,
+      "new": 0,
+      "flag": "script_export_mode"
+    }
+  ],
+  "native_acceptance": "PASS ALL4 RELEASE CONTENT/FRESHNESS ONLY",
+  "unit_run": 37990650109,
+  "graphics_smoke_run": 37990652785,
+  "current_main_release_cases": [
+    {
+      "case": "Medium-r1",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "actual_launch_utc": "2026-10-09T21:13:04.8009156Z",
+      "checks": {
+        "source": true,
+        "complete": true,
+        "release": true,
+        "renderer": true,
+        "raster": true,
+        "preset": true,
+        "warmup": true,
+        "timed": true,
+        "uncapped": true,
+        "raw_errors": true,
+        "terrain": true,
+        "start.png": true,
+        "end.png": true,
+        "samples": true
+      },
+      "content_gate": "PASS",
+      "sample_count": 5674,
+      "warmup_ms": 15005.594,
+      "elapsed_ms": 151701.496,
+      "mean_fps": 37.408466200471736,
+      "p95_ms": 33.90105,
+      "p99_ms": 39.10624999999997,
+      "mean_times_ms": {
+        "wall_ms": 26.731916637292912,
+        "process_ms": 28.34346069792034,
+        "physics_ms": 7.9634654564681,
+        "render_cpu_ms": 2.434419458921753,
+        "render_setup_cpu_ms": 0.2778540712019739,
+        "render_gpu_ms": 26.143422279048647
+      },
+      "start_png_utc": "2026-10-09T16:15:21.20494-05:00",
+      "end_png_utc": "2026-10-09T16:17:53.559206-05:00",
+      "raw_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r1-engine.log",
+      "raw_route": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r1\\route.json",
+      "raw_errors": [],
+      "timing_status": "No other native overlap reported in timed interval",
+      "timing_note": "D0.95s headless proof ended21:14:30, at least51.2s before startPNG/timed interval.",
+      "visual_scope": "Native route start/end integrity only; fullmatrix/fight/code-blind judgement remains required."
+    },
+    {
+      "case": "Medium-r2",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "actual_launch_utc": "2026-10-09T21:17:55.5490741Z",
+      "checks": {
+        "source": true,
+        "complete": true,
+        "release": true,
+        "renderer": true,
+        "raster": true,
+        "preset": true,
+        "warmup": true,
+        "timed": true,
+        "uncapped": true,
+        "raw_errors": true,
+        "terrain": true,
+        "start.png": true,
+        "end.png": true,
+        "samples": true
+      },
+      "content_gate": "PASS",
+      "sample_count": 5700,
+      "warmup_ms": 15004.147,
+      "elapsed_ms": 151724.428,
+      "mean_fps": 37.57381920614641,
+      "p95_ms": 32.05805,
+      "p99_ms": 37.10728,
+      "mean_times_ms": {
+        "wall_ms": 26.614276140350878,
+        "process_ms": 29.889419999999998,
+        "physics_ms": 5.7037268421052625,
+        "render_cpu_ms": 2.4079021058584513,
+        "render_setup_cpu_ms": 0.27571122807017545,
+        "render_gpu_ms": 26.170745440700596
+      },
+      "start_png_utc": "2026-10-09T16:20:11.372682-05:00",
+      "end_png_utc": "2026-10-09T16:22:43.761576-05:00",
+      "raw_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r2-engine.log",
+      "raw_route": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r2\\route.json",
+      "raw_errors": [],
+      "timing_status": "CONTAMINATED; do not use for QUIET/performance acceptance",
+      "timing_note": "A local engine PID17596 reportedly stopped21:22:01Z within this timed interval; raw content evidence remains valid.",
+      "visual_scope": "Native route start/end integrity only; fullmatrix/fight/code-blind judgement remains required."
+    },
+    {
+      "case": "High-r1",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "actual_launch_utc": "2026-10-09T21:22:48.2361362Z",
+      "checks": {
+        "source": true,
+        "complete": true,
+        "release": true,
+        "renderer": true,
+        "raster": true,
+        "preset": true,
+        "warmup": true,
+        "timed": true,
+        "uncapped": true,
+        "raw_errors": true,
+        "terrain": true,
+        "start.png": true,
+        "end.png": true,
+        "samples": true
+      },
+      "content_gate": "PASS",
+      "sample_count": 4619,
+      "warmup_ms": 15003.665,
+      "elapsed_ms": 151709.208,
+      "mean_fps": 30.452321938782973,
+      "p95_ms": 38.841699999999996,
+      "p99_ms": 43.24538,
+      "mean_times_ms": {
+        "wall_ms": 32.838218445550986,
+        "process_ms": 31.292989175146136,
+        "physics_ms": 4.877160857328426,
+        "render_cpu_ms": 2.4835771814417753,
+        "render_setup_cpu_ms": 0.28220718770296604,
+        "render_gpu_ms": 32.513958411290034
+      },
+      "start_png_utc": "2026-10-09T16:25:00.929785-05:00",
+      "end_png_utc": "2026-10-09T16:27:33.310923-05:00",
+      "raw_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r1-engine.log",
+      "raw_route": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r1\\route.json",
+      "raw_errors": [],
+      "timing_status": "No other native overlap reported in timed interval",
+      "timing_note": "Other lanes instructed to avoid local engines during E lease.",
+      "visual_scope": "Native route start/end integrity only; fullmatrix/fight/code-blind judgement remains required."
+    },
+    {
+      "case": "High-r2",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "actual_launch_utc": "2026-10-09T21:27:37.5527337Z",
+      "checks": {
+        "source": true,
+        "complete": true,
+        "release": true,
+        "renderer": true,
+        "raster": true,
+        "preset": true,
+        "warmup": true,
+        "timed": true,
+        "uncapped": true,
+        "raw_errors": true,
+        "terrain": true,
+        "start.png": true,
+        "end.png": true,
+        "samples": true
+      },
+      "content_gate": "PASS",
+      "sample_count": 4559,
+      "warmup_ms": 15019.529,
+      "elapsed_ms": 151740.082,
+      "mean_fps": 30.050248048681645,
+      "p95_ms": 39.5286,
+      "p99_ms": 43.54598,
+      "mean_times_ms": {
+        "wall_ms": 33.2775955253345,
+        "process_ms": 34.81041982890985,
+        "physics_ms": 5.668642246106602,
+        "render_cpu_ms": 2.5262706736823817,
+        "render_setup_cpu_ms": 0.28408071945602104,
+        "render_gpu_ms": 32.897581676977666
+      },
+      "start_png_utc": "2026-10-09T16:29:50.571418-05:00",
+      "end_png_utc": "2026-10-09T16:32:22.983788-05:00",
+      "raw_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r2-engine.log",
+      "raw_route": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r2\\route.json",
+      "raw_errors": [],
+      "timing_status": "No other native overlap reported in timed interval",
+      "timing_note": "Other lanes instructed to avoid local engines during E lease.",
+      "visual_scope": "Native route start/end integrity only; fullmatrix/fight/code-blind judgement remains required."
+    }
+  ],
+  "whole_criterion_closures": [],
+  "older_supplement": {
+    "source": "5d481d9d45d701ec557b098fe177080bd467f84e",
+    "case": "C:\\CodexTemp\\owner-e-stormwood-medium-r1\\route.json",
+    "proof_scope": "Older main with source-retention fix and disclosed measurement instrumentation, one Medium case; no current-main proof or performance-bar closure",
+    "p99_ms": 33.341,
+    "mean_fps": 38.167
+  },
+  "official_mode_reference": "https://github.com/godotengine/godot/blob/4.7-stable/editor/export/editor_export_preset.h#L54",
+  "queued_native": "Fourcontentcases complete; exclusive E quiet-correction3cases next, estimatedhandoff16:51CT",
+  "updated_utc": "2026-10-09T21:37:33.8011846Z",
+  "unit_result": {
+    "artifact": 11645047479,
+    "assertions": 40,
+    "verdict": "PASS",
+    "exit": 0,
+    "tests": 11,
+    "seconds": 6,
+    "script_errors": [],
+    "committed_raw_log": "ralph/reports/F26/stormwood-export-freshness/freshness-units.log",
+    "raw_log": "C:\\CodexTemp\\lane-e-549822-37990650109.log",
+    "failed": 0
+  },
+  "independent_source_review": {
+    "reviewer": "/root/e_export_review",
+    "scope": "SOURCE ONLY",
+    "file": "C:\\CodexTemp\\lane-e-export-independent-source-review.json",
+    "verdict": "APPROVE"
+  },
+  "graphics_smoke_result": {
+    "artifact": 11645072452,
+    "raw_log": "C:\\CodexTemp\\lane-e-549822-37990652785.log",
+    "verdict": "PASS",
+    "exit": 0,
+    "checks": 19,
+    "seconds": 6,
+    "scope": "Headless Settings persistence/restart routing only; no native release or Forward+ performance claim",
+    "failures": 0,
+    "script_errors": [],
+    "committed_raw_log": "ralph/reports/F26/stormwood-export-freshness/graphics-smoke.log",
+    "actual_renderer": "gl_compatibility"
+  },
+  "prior_affected_proofs": {
+    "graphics_smoke_result": {
+      "checks": 19,
+      "artifact": 11644277653,
+      "scope": "Headless production Settings/persistence/restart routing; no native Forward+ or release-render claim",
+      "verdict": "PASS",
+      "failures": 0,
+      "raw_log": "C:\\CodexTemp\\lane-e-graphics-smoke-37988888462.log",
+      "seconds": 6,
+      "exit": 0,
+      "actual_renderer": "gl_compatibility"
+    },
+    "graphics_smoke_run": 37988888462,
+    "source_commit": "70fb3e0b57258e074c5d9f586efa12fc6f28cd21",
+    "unit_run": 37988885752,
+    "main_commit": "c927823d1b41e98b90d33181a07846e72dc6a27a",
+    "unit_result": {
+      "tests": 11,
+      "assertions": 40,
+      "artifact": 11644866379,
+      "failed": 0,
+      "raw_log": "C:\\CodexTemp\\lane-e-freshness-units-37988885752.log",
+      "script_errors": [],
+      "exit": 0,
+      "verdict": "PASS",
+      "seconds": 5
+    },
+    "scope": "Previous main runtime-equivalent; exact fresh source checks queued"
+  },
+  "fresh_export": {
+    "source": "785e6f612e28a77075dd66684047628c2affbb13",
+    "native_cases": "PENDING",
+    "pack_source_inspection": "C:\\CodexTemp\\lane-e-fresh-pack-785e6-inspection.json",
+    "raw_errors": [],
+    "instrumentation": "QUIET measurement-source.patch; evidence-image exclusions; no runtime feature flip",
+    "savepack_complete": true,
+    "main": "549822b8da400b3eb9b23fe0feaca3c5f98bec97",
+    "whole_criterion_closures": [],
+    "finished_utc": "2026-10-09T21:13:04.5307992Z",
+    "companions": "Canonical release DLL additionally at addons/terrain_3d/bin",
+    "files": [
+      {
+        "name": "libterrain.windows.release.x86_64.dll",
+        "bytes": 3549184,
+        "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+      },
+      {
+        "name": "Tetherbound.exe",
+        "bytes": 109052928,
+        "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+      },
+      {
+        "name": "Tetherbound.pck",
+        "bytes": 1148979812,
+        "sha256": "d752d9ccfc593f6499c37d3ca08ac898fe6fc29bbae97a1e024a74cc43a9c654"
+      }
+    ]
+  },
+  "packed_fingerprint_sources": {
+    "verdict": "PASS",
+    "proof": "ralph/reports/F26/stormwood-export-freshness/fresh-pack-inspection.json",
+    "source": "785e6f612e28a77075dd66684047628c2affbb13",
+    "scatter_regions": 108,
+    "terrain_regions": 108,
+    "all_four_text_and_canonical_lf_equal": true,
+    "scope": "Fresh pack static source contract; runtime four cases pending"
+  },
+  "independent_native_review": {
+    "file": "ralph/reports/F26/stormwood-export-freshness/native-review.json",
+    "reviewer": "/root/e_export_review",
+    "verdict": "APPROVE ALL4CONTENT ONLY"
+  },
+  "performance_acceptance": false,
+  "quiet_followup": "Fresh Low-r1/r2 and replacement clean Medium-r3 required; Medium-r2contaminated, no High repeat needed"
+}

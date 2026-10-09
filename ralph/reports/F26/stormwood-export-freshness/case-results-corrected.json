@@ -1,0 +1,58 @@
+[
+  {
+    "pid": 14152,
+    "engine_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r1-engine.log",
+    "finished_utc": "2026-10-09T21:17:55.3911578Z",
+    "receipt_gate": "PASS",
+    "route": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r1\\route.json",
+    "started_utc": "2026-10-09T21:13:04.8009156Z",
+    "case": "Medium-r1",
+    "visual_inspection": "PENDING",
+    "samples": 5674,
+    "elapsed_ms": 151701.496,
+    "timestamp_provenance": "Original per-case launch manifest; first resume timestamp double-conversion repaired only in metadata; raw watcher preserved",
+    "timing_status": "No timed native overlap reported"
+  },
+  {
+    "pid": 4588,
+    "engine_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r2-engine.log",
+    "finished_utc": "2026-10-09T21:22:48.1154147Z",
+    "receipt_gate": "PASS",
+    "route": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r2\\route.json",
+    "started_utc": "2026-10-09T21:17:55.5490741Z",
+    "case": "Medium-r2",
+    "visual_inspection": "PENDING",
+    "samples": 5700,
+    "elapsed_ms": 151724.428,
+    "timestamp_provenance": "Original per-case launch manifest; first resume timestamp double-conversion repaired only in metadata; raw watcher preserved",
+    "timing_status": "CONTAMINATED; exclude QUIET/performance acceptance"
+  },
+  {
+    "pid": 47240,
+    "engine_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r1-engine.log",
+    "finished_utc": "2026-10-09T21:27:37.4520388Z",
+    "receipt_gate": "PASS",
+    "route": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r1\\route.json",
+    "started_utc": "2026-10-09T21:22:48.2361362Z",
+    "case": "High-r1",
+    "visual_inspection": "PENDING",
+    "samples": 4619,
+    "elapsed_ms": 151709.208,
+    "timestamp_provenance": "Original per-case launch manifest; first resume timestamp double-conversion repaired only in metadata; raw watcher preserved",
+    "timing_status": "No timed native overlap reported"
+  },
+  {
+    "pid": 6148,
+    "engine_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r2-engine.log",
+    "finished_utc": "2026-10-09T21:32:26.8564735Z",
+    "receipt_gate": "PASS",
+    "route": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r2\\route.json",
+    "started_utc": "2026-10-09T21:27:37.5527337Z",
+    "case": "High-r2",
+    "visual_inspection": "PENDING",
+    "samples": 4559,
+    "elapsed_ms": 151740.082,
+    "timestamp_provenance": "Original per-case launch manifest; first resume timestamp double-conversion repaired only in metadata; raw watcher preserved",
+    "timing_status": "No timed native overlap reported"
+  }
+]
