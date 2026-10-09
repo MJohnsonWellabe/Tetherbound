@@ -1,0 +1,71 @@
+{
+  "criterion": "F24#0",
+  "criterion_text": "A command meter fills from the piloted creature's hits and powers four commands: quick item throw, Rally (short team buff), tag-switch combo and Tether Snare.",
+  "source_commit": "ade3c8cfaba3bb78c9341c2a202d3bbb59ba804a",
+  "scoped_commits": ["9c04b7d0eb965b26e57efce7149604a5f436a618", "ade3c8cfaba3bb78c9341c2a202d3bbb59ba804a"],
+  "scoped_paths": ["tests/smoke_net_owner_passive_rejoin.gd", "tests/smoke_net_owner_passive_rejoin_peer.gd"],
+  "change": "Existing admitted-peer smoke gains an opt-in host Item/Rally/Tag route. The existing two-tonic stock and healthy second companion go to the selected host before admission. Host physical strike preparation faces the actual current wild after the unchanged15frames; synchronous Item refusal reads Manager's actual pending request. Default guest setup, original budgets, costs, stock, guards, party cap and negative controls remain intact. Tag verifies both actual joined-observer child impacts.",
+  "source_review": {
+    "reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "verdict": "SOURCE / PROOF-SCOPE APPROVE",
+    "review_turn": "01a11efe-ba47-7a20-b85e-7e1dacbd1e1b",
+    "required_proof": "tests/smoke_net_owner_passive_rejoin.gd --prove-host-tether-commands --prove-shipping-tether",
+    "required_blind": "No separate blind proof named."
+  },
+  "proof": {
+    "checkout_sha": "ade3c8cfaba3bb78c9341c2a202d3bbb59ba804a",
+    "run_id": 37886121443,
+    "artifact_id": 11596377645,
+    "job_id": 113676404708,
+    "log_sha256": "512fe2fcc03cf403cd8dd72c21ea6de97665f14d1562f25fafdd937a6154105b",
+    "raw_log": "ralph/reports/F25/downloads/a-shipping-host-command-meter-37886121443/raw/run.log",
+    "script": "tests/smoke_net_owner_passive_rejoin.gd",
+    "args": "--prove-host-tether-commands --prove-shipping-tether",
+    "mode": "headless",
+    "checks": 79,
+    "failures": 0,
+    "exit": 0,
+    "tracked_shipping_flags_on": true,
+    "feature_overrides": false,
+    "item": "Actual creature quick hits earn meter. Original owner writer refusal retains precisely the pending request, installs no effect or owner debit, preserves disk stock2 and fences it. Restored writer + same request saves one debit and original receipt, with no substitution/duplicate and the authored effect timer.",
+    "rally": {
+      "meter_before": 56.0,
+      "meter_after": 6.0,
+      "damage_modifier": 1.1,
+      "wind_regen_modifier": 1.25,
+      "noncaster_damage_modifier": 1.0,
+      "noncaster_wind_regen_modifier": 1.0,
+      "guards": "Fresh encounter meter0, ordinary actual hits within8attempts, exact request/receipt/deployment/body/party, onecost50 debit, unchanged enemy HP, unexpired actual live modifier readers and normal exit."
+    },
+    "tag": {
+      "meter_before": 40.0,
+      "meter_after": 0.0,
+      "outgoing_multiplier": 0.5,
+      "incoming_multiplier": 1.5,
+      "outgoing_actual_hp_debit": 4.32737332834532,
+      "incoming_actual_hp_debit": 16.8826676347756,
+      "parent_target_hp_before": 196.636671844009,
+      "parent_target_hp_after": 175.426630880888,
+      "parent_receipt": "command:1:3:character-d352f4a90a238d806e58100ba4035ca7:1:1",
+      "guards": "Actual earned hits/fresh window; two distinct owned creatures; exact child HP chain and parent finalHP; same actual body recast once/generation; unchanged2-member party; owner+joined observer each receive both child impacts; exact meter state; replay cannot debit HP/meter or replace parent; normal exit."
+    }
+  },
+  "reused_snare": {
+    "source_commit": "183e5f0d1cdbe3c551a9930bae179a75d429f4bd",
+    "run_id": 37875829066,
+    "artifact_id": 11592143237,
+    "checks": 33,
+    "failures": 0,
+    "verdict": "Original WHOLE F24#3 APPROVE / MET",
+    "receipt": "ralph/reports/F24/lane-a/snare-host-proof.json",
+    "exact_pr592_revalidation": "befd98f42c290ee5e469172b939c8190ee36eee6 run37885575165/art11595884313:33PASS/0FAIL; same original ARTIFACT APPROVE turn01a11f04-23d3-7eb0-b36b-5180414e2af5. Receipt snare-pr592-proof.json."
+  },
+  "independent_verdict": {
+    "review_turn": "01a11f0b-2d32-7352-96a6-a11e9e21350d",
+    "verdict": "ARTIFACT APPROVE; WHOLE F24#0 APPROVE / MET on the scoped candidate combining these shipping results with accepted shipping Snare evidence.",
+    "required_blind": "No separate blind proof named."
+  },
+  "integration": "Retain accepted production dependencycc31045690858c2c518647c4444af1997568498c + host-facing183e5f0d1c / READY cut3a2c0f8935d7ee5f2e8be97e4ae29ec4549f0a35, then only scoped proof commits9c04b7d0eb9 andade3c8cfaba. Do not merge unrelated F33 ancestry from lane HEAD.",
+  "limits": "F24#5 independently OPEN. Exact PR592 FullCI37883884033 separately FAILED; FullCI/landing/main activation/publication unearned. No additional native/GPU run, boundary-save promotion or failed-save acceptance."
+}
