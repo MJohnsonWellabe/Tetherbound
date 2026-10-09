@@ -48,6 +48,18 @@ const ORBIT_PERIOD := 7.0
 ## round rather than as a polygon.
 const MOTE_SEGMENTS := 8
 
+## A disc's unit-circle edges never change with phase, body size or camera.
+## Share their trig results; the closing endpoint still uses TAU, as before.
+static var _disc_edges: PackedVector2Array = _make_disc_edges()
+
+
+static func _make_disc_edges() -> PackedVector2Array:
+	var edges := PackedVector2Array()
+	for index in MOTE_SEGMENTS + 1:
+		var angle: float = TAU * float(index) / float(MOTE_SEGMENTS)
+		edges.append(Vector2(cos(angle), sin(angle)))
+	return edges
+
 var _colour: Color = Color("#ffd479")
 var _radius: float = 0.6
 var _height: float = 1.0
@@ -142,11 +154,11 @@ func _physics_process(delta: float) -> void:
 func _disc(centre: Vector3, right: Vector3, up: Vector3, colour: Color) -> void:
 	var rim := Color(colour.r, colour.g, colour.b, 0.0)
 	for i in MOTE_SEGMENTS:
-		var a0: float = TAU * float(i) / float(MOTE_SEGMENTS)
-		var a1: float = TAU * float(i + 1) / float(MOTE_SEGMENTS)
+		var edge0 := _disc_edges[i]
+		var edge1 := _disc_edges[i + 1]
 		_mesh.surface_set_color(colour)
 		_mesh.surface_add_vertex(centre)
 		_mesh.surface_set_color(rim)
-		_mesh.surface_add_vertex(centre + right * cos(a0) + up * sin(a0))
+		_mesh.surface_add_vertex(centre + right * edge0.x + up * edge0.y)
 		_mesh.surface_set_color(rim)
-		_mesh.surface_add_vertex(centre + right * cos(a1) + up * sin(a1))
+		_mesh.surface_add_vertex(centre + right * edge1.x + up * edge1.y)
