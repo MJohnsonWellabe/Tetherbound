@@ -1,0 +1,143 @@
+{
+  "kind": "personal_guidance_cache_affected_proofs",
+  "criterion": "F46#1",
+  "production_source": "9316b57b41ceb320308e7cec8889d49596a31911",
+  "transition_observer_source": "2af1deb4b8a8deb73c5be5ae50cb9c849eb4e9b4",
+  "original_reviewers": {
+    "b_f49_review": "01a1165d-ecfb-79d3-9355-1224723cdb53",
+    "b_f20_review": "01a11667-9d3a-7a00-99c2-5d28ca7fc000"
+  },
+  "source_verdict": "Both originals **SOURCE and COMMAND ELIGIBILITY APPROVE** `2af1deb4b8a8deb73c5be5ae50cb9c849eb4e9b4`.\n\nThe observation waits two **process frames**, preserves existing guards, and forces no refresh. Runtime coverage requires an actual receipt with changed signature, unchanged progression revision, retained identity and matching visible HUD. Green alone is insufficient.\n\nBoth **SCOPED LOGIC APPROVE** `37833091385@9316`, artifact `11574865485`: hash verified; **150 tests, 2539 assertions, zero failures, exit 0**, zero engine/script errors. No repeat unit batch required.\n\nActual transition behavior, comprehension, blind evidence and whole F46#1 remain open. Router stopped read-only.",
+  "logic": {
+    "artifact_id": 11574865485,
+    "artifact_zip_sha256": "e71ccaf130e4ff5690e3483b07587db1190bc85142c3b724e7c45582fa890959",
+    "log": "ci-hud-personal-guidance-units-37833091385.log.gz",
+    "log_sha256": "856c7dc246988e2cd67be58180b027d9aaaa0a273e76753308f4d220e21606ee",
+    "gzip_sha256": "c15465c77b963872aa893885665c21fd7ab52b7eaecde2ca8bb801071b63d65e",
+    "run_id": 37833091385,
+    "source": "9316b57b41ceb320308e7cec8889d49596a31911",
+    "tests": 150,
+    "assertions": 2539,
+    "failures": 0,
+    "exit_code": 0,
+    "engine_script_errors": 0,
+    "independent_verdict": "SCOPED LOGIC APPROVE"
+  },
+  "actual_transition": {
+    "artifact_id": 11574857825,
+    "artifact_zip_sha256": "fc6cdbc967c74293b677a13bee4dff828270e780a5aeab52fba07b3eeedb9680",
+    "log": "ci-hud-cap-transition-37834307714.log.gz",
+    "log_sha256": "1fb0daff0fcef8d44083c682b798523000ce79bbd2a88b7058044c718cb3f61b",
+    "gzip_sha256": "e09a927efb01c8e21a72e22e21be02a5609ffea54db0ddbacd01fdb1902b1385",
+    "run_id": 37834307714,
+    "source": "2af1deb4b8a8deb73c5be5ae50cb9c849eb4e9b4",
+    "workflow_conclusion": "failure",
+    "numeric_exit_record": null,
+    "engine_script_errors": 0,
+    "receipts": [
+      {
+        "after": {
+          "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+          "game_hint": "Challenge Orin Stonewake for the L10 feast recipe.",
+          "game_text": "Challenge Orin Stonewake for the L10 feast recipe.",
+          "gate": "wild_victory",
+          "hint_text": "Challenge Orin Stonewake for the L10 feast recipe.",
+          "hint_visible": false,
+          "hud_text": "Challenge Orin Stonewake for the L10 feast recipe.",
+          "hud_visible": false,
+          "input_owner": "",
+          "kind": "next_goal_snapshot",
+          "lesson": {
+            "id": "",
+            "line": 0.0,
+            "open": false,
+            "owns_input": false,
+            "personal_ack": false,
+            "text": "",
+            "visible": false
+          },
+          "lesson_goal_signature": "{\"conversation\":\"lesson_masters\",\"dialogue_path\":\"res://data/dialogue/village.json\",\"goal\":\"Challenge Orin Stonewake for the L10 feast recipe.\",\"goal_at\":[440.0,1780.0],\"goal_realm\":\"meadows\",\"id\":\"masters\",\"radius_m\":5.0,\"teacher_node\":\"Tam\",\"title\":\"Breakthroughs and Masters\"}",
+          "objective_is_posed": false,
+          "party_uids": [
+            "creature-cf906fd5504c229a431c3b3202c3c2e2",
+            "creature-83d263c517d32cc6cb7beab6925d80c7",
+            "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+            "creature-afbd0d982b14221393f70c29863586a1",
+            "creature-c576f15db4b7f3ecf487a80de0169177"
+          ],
+          "paused": false,
+          "phase": "after_world_release",
+          "physics_frame": 15847.0,
+          "process_frame": 2357.0,
+          "progression_revision": 6.0,
+          "quest_text": "Challenge Orin Stonewake for the L10 feast recipe.",
+          "realm": "meadows",
+          "render_loop_enabled": false,
+          "scene": "/root/MeadowsPlayground",
+          "scope": "Partial UI/state observation only; no readability, comprehension, replay or full F46 claim",
+          "tracked_id": "lesson:masters",
+          "visible_text_matches": false
+        },
+        "beat": "wild_guidance_transition",
+        "before": {
+          "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+          "game_hint": "Follow the conduits out of the quarry to the relay station on the river. Fight in past the pickets: the one standing at the console is the one who matters.",
+          "game_text": "Defeat the Relay Captain.",
+          "gate": "wild_victory",
+          "hint_text": "Follow the conduits out of the quarry to the relay station on the river. Fight in past the pickets: the one standing at the console is the one who matters.",
+          "hint_visible": false,
+          "hud_text": "Defeat the Relay Captain.",
+          "hud_visible": true,
+          "input_owner": "",
+          "kind": "next_goal_snapshot",
+          "lesson": {
+            "id": "",
+            "line": 0.0,
+            "open": false,
+            "owns_input": false,
+            "personal_ack": false,
+            "text": "",
+            "visible": false
+          },
+          "lesson_goal_signature": "{}",
+          "objective_is_posed": false,
+          "party_uids": [
+            "creature-cf906fd5504c229a431c3b3202c3c2e2",
+            "creature-83d263c517d32cc6cb7beab6925d80c7",
+            "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+            "creature-afbd0d982b14221393f70c29863586a1",
+            "creature-c576f15db4b7f3ecf487a80de0169177"
+          ],
+          "paused": false,
+          "phase": "before_fight",
+          "physics_frame": 14893.0,
+          "process_frame": 2233.0,
+          "progression_revision": 6.0,
+          "quest_text": "Defeat the Relay Captain.",
+          "realm": "meadows",
+          "render_loop_enabled": false,
+          "scene": "/root/MeadowsPlayground",
+          "scope": "Partial UI/state observation only; no readability, comprehension, replay or full F46 claim",
+          "tracked_id": "defeat_the_relay_captain",
+          "visible_text_matches": true
+        },
+        "forced_refresh": false,
+        "progression_revision_unchanged": true,
+        "signature_changed": true
+      }
+    ],
+    "original_verdict": "Both originals **BEHAVIOR FAIL** `37834307714@2af1deb4`, artifact `11574857825`; ZIP hash verified.\n\n**Partial text-sync approved:** natural Terrapup L9\u00e2\u2020\u2019L10 changed guidance to Masters while revision stayed `6`. CID/ordered five were retained; Game/HUD text and hint matched the journal without forced refresh.\n\n**Visibility failed:** `hud_visible=false`, `hint_visible=false`, so the original guard rejected the witness. Cause remains unestablished.\n\nOverall failure and no Relay export are verified; no numeric exit-code record was present to independently confirm reported exit 1. Zero engine/script errors.\n\n**PARK.** Retain the guard; no accepted boundary, visible/comprehension PASS or whole F46#1 closure. Router stopped read-only."
+  },
+  "retained_passing_relay": {
+    "run_id": 37794979390,
+    "source": "977e4853077a035dfa83177eea77d28e74cff96b",
+    "evidence": "ralph/reports/F49/lane-b-generated-input/relay-generated-suffix-pass-r4.json"
+  },
+  "paid_masters_hud_witness": "Deferred; original fixture lacks tournament_entered, and remains byte-identical. No fixture prerequisite/guard changed.",
+  "scope": "Generated healthy post-Warrens fixture; actual natural first cap transition only. No forced refresh, input/reward/budget bypass, prior earned play, continuous campaign, visual/native/comprehension acceptance.",
+  "whole_criterion_closed": false,
+  "blind_pass": false,
+  "accepted_boundary_exported": false,
+  "failed_save_used_as_input": false,
+  "parked": "Elapsed >2 hours. Original visible HUD guard failed despite revision-neutral text match; visibility cause unestablished. No rerun authorized by this report."
+}
