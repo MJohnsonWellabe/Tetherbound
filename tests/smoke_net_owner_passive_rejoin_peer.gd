@@ -522,10 +522,16 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var cost := float(preload("res://scripts/combat/tether_commands.gd").config().commands.get(command, {}).get("cost", INF))
 			if command not in ["item_throw", "snare", "rally"] or not is_finite(cost):
 				return {"verdict":"FAIL", "detail":"unknown authored command cost"}
+			# Snare needs eight tier-zero quick hits just to cover its cost.
+			# Earn two additional hits of headroom through the same physical
+			# input path, with room for misses; never assign the command meter.
+			var meter_config: Dictionary = preload("res://scripts/combat/tether_commands.gd").config().meter
+			var target_meter := minf(float(meter_config.maximum), cost + 2.0 * float(meter_config.gain.get(slot, 0.0))) if command == "snare" else cost
+			var attempt_limit := 16 if command == "snare" else 8
 			var attempts: Array[Dictionary] = []
-			for hit in 8:
+			for hit in attempt_limit:
 				var snapshot: Dictionary = manager.tether_command_snapshot()
-				if float(snapshot.get("meter", 0.0)) >= cost: break
+				if float(snapshot.get("meter", 0.0)) >= target_meter: break
 				if not manager.is_fighting(): return {"verdict":"FAIL", "detail":"fight ended before actual hits filled the command meter"}
 				# The host owns the actual engaged wild; guests use its mirrors.
 				var target: Node3D = director.get("_engaged_with") if session.is_host() else director.get("_shared_opponent_proxy")
@@ -630,10 +636,10 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 					strike_data["attempts"] = attempts
 					strike["data"] = strike_data
 					return strike
-			if float(manager.tether_command_snapshot().get("meter", 0.0)) < cost:
+			if float(manager.tether_command_snapshot().get("meter", 0.0)) < target_meter:
 				print("COMMAND precast observation: ", JSON.stringify({"command":command, "cost":cost, "attempts":attempts}))
-				return {"verdict":"FAIL", "detail":"eight accepted %s attempts did not earn %s meter (%s required)" % [slot, command, cost],
-					"data":{"command":command, "cost":cost, "attempts":attempts}}
+				return {"verdict":"FAIL", "detail":"%s physical %s attempts did not earn %s meter (%s required, including margin)" % [attempt_limit, slot, command, target_meter],
+					"data":{"command":command, "cost":cost, "target_meter":target_meter, "attempts":attempts}}
 			var hud: Node = director.get_parent().get_node_or_null("CombatHUD")
 			var view: Dictionary = manager.new_system_combat_snapshot()
 			var active: RefCounted = manager.active_creature()
