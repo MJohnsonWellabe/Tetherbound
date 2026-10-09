@@ -1,0 +1,43 @@
+{
+  "notice": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6078108132",
+  "production_source": "c338f64255511e6f358ada03a286581dfb09840e",
+  "remaining": "CurrentfixedSOURCE/COMMAND, ONEaffectedrerun, originalARTAPP, updatedexactnativeCOMMAND andROOTqueue, nativeactualconstruction/clearance/visibility + SAME blind. WholeF17#6 remainsOPEN; botholdblindHallbarsBLOCK; no STATE/dashboard/handoff/componentREADY.",
+  "pace": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6078279296",
+  "current_fix": "4ab4c5c82fbce5f80b12c66a32e3f592906a2cee",
+  "criterion": "F17#6 OPEN; supported shrine doorway height/doorway view, no native or whole credit",
+  "failed_attempt": {
+    "actual": {
+      "raw_exit_code_file": "absent, not inferred",
+      "warnings": 0,
+      "engine_script_errors": 0,
+      "tests": 1,
+      "failed": 1,
+      "workflow_process_exit": 1
+    },
+    "run": 37911493695,
+    "artifact": 11606956644,
+    "job": 113757469631,
+    "zip_sha256": "ca04988ede9e94df03e58510ddc0a3c7e36e3a0fd2be486a6f5691eb9152672c",
+    "observation": "Raised candidate returned unchanged source; expected3 changedmodules got0, expected1 changedcollider got0. Raw selectedtest + failingjob preserved. No native gate satisfaction."
+  },
+  "doorway_view_proof": {
+    "source": "f2dbd935b35aed9fa774e5067fdd2d2107d7b4d9",
+    "run": 37910608110,
+    "artifact": 11606311751,
+    "job": 113754579475,
+    "zip_sha256": "26561ea4f60a01c798b4944d958fdca01e5b7a73fe489f837b37c77841fdcb84",
+    "original_review": "SAME original f42 via parent01a11ffb-d6f5-7c03-90b2-b2893d53ce48 ARTIFACT/REUSE APPROVE exactf2db/ZIP/expanded/checkout/genuine1test; preload and intended geometric sightline only, no actual occlusion/doorway/blind/whole credit",
+    "actual": {
+      "seconds": 6,
+      "warnings": 0,
+      "exit": 0,
+      "engine_script_errors": 0,
+      "tests": 1,
+      "failed": 0
+    }
+  },
+  "native_command": "SAME original f42 via parent01a11fff-345e-71b3-80ba-86c689582a5a conditionalCOMMANDAPP for exactc338 packet, pendingc338actualARTAPP; UNSATISFIED duefailedproof. FixedSHA requires originalreviewandactualproof first; NOT ROOTqueued.",
+  "shipping": "shrine_doorway.enabled=false, all relic candidatesfalse; shared config used by ordinarypeers, processcaptureflags ignored outsideexactexisting capture. Original guards/disclosedheldfixture and independentreviewers retained.",
+  "supported_delta": "Only header recognition changes from whole numericJSONarray/mixedliteral equality to exact float component comparisons. No changed coordinates, tunables, fixtures or guards; current original SOURCE/COMMAND review pending.",
+  "source_review": "SAME original f42 via parent01a11ffc-f9aa-7613-8fd3-5c863f599dee SOURCE+changedexistingpreset COMMAND APPROVE; flagOFF and world-scope baseline limitation corrected"
+}
