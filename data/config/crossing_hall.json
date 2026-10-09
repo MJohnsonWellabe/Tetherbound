@@ -2,6 +2,14 @@
   "schema_version": 1,
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
+  "arch_labels": {
+    "enabled": false,
+    "biome_at": [0, 2.8, 0.12],
+    "state_at": [0, 2.35, 0.12],
+    "front_clearance_m": 0.03,
+    "scope": "Peer-local arch label anchors on all presets; shipping OFF pending original native/readability/blind proof. --hall-arch-labels-candidate opts in; --hall-arch-labels-baseline wins. Same biome/state text, duplicate-state suppression, font32/pixel_size.006, colour and depth testing; no hiding/culling, camera/FOV/staging, frame/portal/collider/Approach/input/state/authority/transaction/durable change.",
+    "provenance": "Original Stormwood doorway8/8 blind BLOCK: oversized Sealed title clipped above frame. Original titleY3.55 exceeds installed native Wall_Arch maximumY3.0. Place nameY2.8 on header and distinct stateY2.35, preserve native text scale. Both anchors stay .03m in front of actual measured frame depth, including optional5x depth; no text hidden inside wood. Actual clipping/readability and normal route remain native proofs."
+  },
   "nave_facing_displays": {
     "enabled": false,
     "yaw_deg": 180,

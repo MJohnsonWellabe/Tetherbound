@@ -159,9 +159,9 @@ func _build_arch(entry: Dictionary) -> void:
 			# width/height, portal surface, signs and approach marker stay fixed.
 			frame.scale.z *= factor
 			frame.set_meta("hall_arch_depth_factor", factor)
-	var board := _label(slot, ORDER.display_name(str(entry.biome)), Vector3(0, 3.55, 0))
+	var board := _label(slot, ORDER.display_name(str(entry.biome)), _arch_label_position("biome", frame))
 	board.name = "BiomeSign"
-	var state := _label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked", Vector3(0, 2.95, .12))
+	var state := _label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked", _arch_label_position("state", frame))
 	state.name = "StateSign"
 	state.visible = state.text != board.text
 	var arrival := Marker3D.new()
@@ -182,6 +182,24 @@ func _build_arch(entry: Dictionary) -> void:
 	_build_arch_surface_depth(slot, membrane)
 	_build_arch_sealed_infill(slot)
 	_arches[str(entry.id)] = slot
+
+
+## Put names on the installed header rather than above its three-metre frame.
+## Keep text in front of its actual depth, including the reviewed depth flag.
+func _arch_label_position(kind: String, frame: Node3D) -> Vector3:
+	var cfg: Dictionary = _config.get("arch_labels", {})
+	if not arch_labels_enabled(cfg, OS.get_cmdline_user_args()):
+		return Vector3(0, 3.55, 0) if kind == "biome" else Vector3(0, 2.95, .12)
+	var at := _position(cfg.get(kind + "_at", [0, 2.8, .12] if kind == "biome" else [0, 2.35, .12]))
+	if frame != null:
+		var bounds: AABB = frame.transform * BOUNDS.measure(frame)
+		at.z = maxf(at.z, bounds.end.z + float(cfg.get("front_clearance_m", .03)))
+	return at
+
+
+static func arch_labels_enabled(cfg: Dictionary, args: PackedStringArray) -> bool:
+	return not args.has("--hall-arch-labels-baseline") and (
+		bool(cfg.get("enabled", false)) or args.has("--hall-arch-labels-candidate"))
 
 
 ## Reserved roads read as masonry closures, not another flat dark portal.

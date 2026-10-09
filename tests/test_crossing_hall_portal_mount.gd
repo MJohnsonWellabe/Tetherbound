@@ -104,6 +104,37 @@ func test_late_admitted_session_mounts_original_canonical_input_once_per_actual_
 		assert_true(absf(body.position.x) + maxf(absf(bounds.position.x), absf(bounds.end.x)) < 7.0)
 	visual.call("_build_rear_seating")
 	assert_eq(seating.get_child_count(), 3, "repeat build cannot duplicate furniture/collision")
+	assert_false(config.arch_labels.enabled, "unjudged labels ship off")
+	assert_false(HALL.arch_labels_enabled(config.arch_labels, PackedStringArray()))
+	assert_true(HALL.arch_labels_enabled(config.arch_labels, PackedStringArray(["--hall-arch-labels-candidate"])))
+	assert_false(HALL.arch_labels_enabled(config.arch_labels, PackedStringArray(["--hall-arch-labels-candidate", "--hall-arch-labels-baseline"])))
+	var old_arch: Node3D = visual.call("arch", "biome5")
+	assert_eq((old_arch.get_node(^"BiomeSign") as Label3D).position, Vector3(0, 3.55, 0))
+	assert_eq((old_arch.get_node(^"StateSign") as Label3D).position, Vector3(0, 2.95, .12))
+	var signed: Node3D = HALL.new()
+	var signed_config := config.duplicate(true)
+	signed_config.arch_labels.enabled = true
+	signed_config.arch_frame_depth.enabled = true
+	signed.set("_config", signed_config)
+	for index: int in [0, 1, 4]:
+		signed.call("_build_arch", config.arches[index])
+		var arch: Node3D = signed.call("arch", str(config.arches[index].id))
+		var frame := arch.get_child(0) as Node3D
+		var bounds: AABB = frame.transform * BOUNDS.measure(frame)
+		var title := arch.get_node(^"BiomeSign") as Label3D
+		var status := arch.get_node(^"StateSign") as Label3D
+		assert_almost_eq(title.position.y, 2.8)
+		assert_almost_eq(status.position.y, 2.35)
+		assert_almost_eq(title.position.z, maxf(.12, bounds.end.z + .03))
+		assert_almost_eq(status.position.z, title.position.z)
+		assert_eq(title.font_size, 32)
+		assert_almost_eq(title.pixel_size, .006)
+		assert_false(title.no_depth_test, "ordinary geometry still occludes text")
+		assert_false(title.double_sided)
+		assert_eq(status.visible, status.text != title.text, "original deduplication remains")
+		assert_eq((arch.get_node(^"Approach") as Node3D).position, Vector3(0, .05, 2.8))
+		assert_eq((arch.get_node(^"PortalSurface") as Node3D).position, Vector3(0, 1.28, -.08))
+	signed.free()
 	visual.free()
 	hall.free()
 	session.free()
