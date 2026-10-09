@@ -1043,7 +1043,7 @@ func _link_horizontal_to_self(control: Control) -> void:
 func first_focus() -> Control:
 	if not _lesson_buttons.is_empty(): return _lesson_buttons[0]
 	if _graphics != null:
-		var graphics_focus := _graphics.first_focus()
+		var graphics_focus: Control = _graphics.first_focus()
 		if graphics_focus != null: return graphics_focus
 	if not _rows.is_empty():
 		# Gamepad first (Controller first): the cursor lands where the
