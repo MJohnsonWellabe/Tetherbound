@@ -190,6 +190,7 @@ var _ambient_publish_left := 0.0
 var _ambient_publish_serial := 0
 var _ambient_pending_token := ""
 var _ambient_pending_deadline := 0
+var _ambient_active_token := ""
 var _ambient_guest_body: WeakRef
 var _engaged_with: Node3D = null
 var _ally_body: Node3D = null
@@ -1833,10 +1834,16 @@ func _ambient_body(source_id: String) -> Node3D:
 	return found
 
 
+func _ambient_generation(body: Node3D) -> int:
+	return maxi(1, maxi(int(body.get_meta("ordinary_trait_generation", 0)),
+		int(body.get_meta("foundation_alpha_generation", 0))))
+
+
 func _tick_ambient_wild_sources(delta: float) -> void:
 	if not _ambient_pending_token.is_empty() and Time.get_ticks_msec() >= _ambient_pending_deadline:
 		_ambient_pending_token = ""
 		_ambient_pending_deadline = 0
+		_ambient_guest_body = null
 	if not _is_multi_peer(): return
 	var scope := _ambient_scope()
 	if scope.is_empty(): return
@@ -1877,19 +1884,20 @@ func _tick_ambient_wild_sources(delta: float) -> void:
 		var card: RefCounted = body.get("instance")
 		if card == null: continue
 		var uid := str(card.get("uid"))
+		var generation := _ambient_generation(body)
 		if not CREATURE_INSTANCE.valid_uid(uid): continue
 		var source: Dictionary = _ambient_host_sources.get(source_id, {})
-		if source.get("uid") != uid or source.get("scope") != scope \
+		if source.get("uid") != uid or source.get("generation") != generation or source.get("scope") != scope \
 			or not source.get("body") is WeakRef or source.body.get_ref() != body:
 			source = {"token": Crypto.new().generate_random_bytes(16).hex_encode(), "body": weakref(body),
-				"uid": uid, "scope": scope.duplicate(true), "context": context.duplicate(true)}
+				"uid": uid, "generation": generation, "scope": scope.duplicate(true), "context": context.duplicate(true)}
 			_ambient_host_sources[source_id] = source
 		var feet := body.global_position
 		var facing: Vector3 = body.call("facing")
 		source.foot_position = [feet.x, feet.y, feet.z]
 		packets.append({"source_id": source_id, "token": source.token, "scope": scope,
 			"sequence": _ambient_publish_serial, "retired": false, "card": WATER_CAPTURE_CODEC.encode(card),
-			"generation": maxi(1, int(body.get_meta("ordinary_trait_generation", body.get_meta("foundation_alpha_generation", 1)))),
+			"generation": generation,
 			"foot_position": [feet.x, feet.y, feet.z], "facing": [facing.x, facing.y, facing.z],
 			"visible": body.visible, "aggressive": bool(body.get("aggressive"))})
 	for peer: int in multiplayer.get_peers():
@@ -1952,6 +1960,7 @@ func _request_ambient_wild(body: Node3D) -> bool:
 	if not _send_realm_rpc(1, "_rpc_ambient_wild_engage", [packet.token]):
 		_ambient_pending_token = ""
 		_ambient_pending_deadline = 0
+		_ambient_guest_body = null
 		return false
 	return true
 
@@ -1966,7 +1975,7 @@ func _rpc_ambient_wild_engage(token: String) -> void:
 
 func _host_ambient_wild_engage(token: String, peer: int) -> Dictionary:
 	var scope := _ambient_scope()
-	if scope.is_empty() or peer <= 1 or not _realm_rpc_allowed(peer): return {}
+	if scope.is_empty() or token.length() != 32 or peer <= 1 or not _realm_rpc_allowed(peer): return {}
 	var source: Dictionary = {}
 	for candidate: Dictionary in _ambient_host_sources.values():
 		if candidate.get("token") == token:
@@ -1975,7 +1984,8 @@ func _host_ambient_wild_engage(token: String, peer: int) -> Dictionary:
 	if source.is_empty() or source.get("scope") != scope or not source.get("body") is WeakRef: return {}
 	var body: Node3D = source.body.get_ref()
 	if not is_instance_valid(body) or body.is_queued_for_deletion() or not body.is_inside_tree() \
-		or not body.visible or not bool(body.call("is_alive")) or body.get("instance").get("uid") != source.uid: return {}
+		or not body.visible or not bool(body.call("is_alive")) or body.get("instance").get("uid") != source.uid \
+		or _ambient_generation(body) != source.get("generation"): return {}
 	var character: String = _session.call("_authority_character", peer)
 	var admitted: Dictionary = _session.call("admitted_character_state", peer)
 	var deployed := deployed_body_for(peer)
@@ -2042,6 +2052,7 @@ func _rpc_ambient_wild_admitted(token: String, record: Dictionary) -> void:
 	if _is_host() or not _realm_rpc_allowed(1): return
 	var id := str(record.get("encounter_id", ""))
 	if token != _ambient_pending_token or _ambient_pending_token.is_empty():
+		if token == _ambient_active_token and id == _shared_active_id: return
 		if record.get("participants", {}).has(_local_peer_id()):
 			submit_encounter_intent({"kind": "disengage", "encounter_id": id})
 		return
@@ -2050,11 +2061,15 @@ func _rpc_ambient_wild_admitted(token: String, record: Dictionary) -> void:
 	if record.is_empty() or not WILD_ACTOR_SCOPE.owns(record.get("wild_actor_owner"), record, id) \
 		or record.wild_actor_owner.world_namespace != _ambient_scope().get("world_namespace") \
 		or record.wild_actor_owner.session_id != _ambient_scope().get("session_id") \
-		or record.get("participants", {}).get(_local_peer_id(), {}).get("character_id") != _local_character_id(): return
+		or record.get("participants", {}).get(_local_peer_id(), {}).get("character_id") != _local_character_id():
+		_ambient_guest_body = null
+		return
 	_note_host_xp_owner(record)
 	if not _begin_shared_guest_from_record(record):
+		_ambient_guest_body = null
 		submit_encounter_intent({"kind": "disengage", "encounter_id": id})
 		return
+	_ambient_active_token = token
 	if _ambient_guest_body != null and is_instance_valid(_ambient_guest_body.get_ref()):
 		_ambient_guest_body.get_ref().visible = false
 
@@ -2663,6 +2678,7 @@ func _on_net_session_ended(_reason: Variant = null) -> void:
 	_ambient_guest_sources.clear()
 	_ambient_pending_token = ""
 	_ambient_pending_deadline = 0
+	_ambient_active_token = ""
 	_ambient_guest_body = null
 	for body: Node3D in _wild_creatures:
 		if is_instance_valid(body): body.remove_meta(&"ambient_host_mirror")
@@ -7890,6 +7906,7 @@ func _cleanup_shared_guest_proxy() -> void:
 	# The next authentic ambient packet decides whether its original body is
 	# alive/visible again. Never restore a captured or defeated local stand-in.
 	_ambient_guest_body = null
+	_ambient_active_token = ""
 	var proxy := _shared_opponent_proxy
 	_shared_opponent_proxy = null
 	_shared_active_id = ""
