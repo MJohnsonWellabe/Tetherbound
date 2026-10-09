@@ -1,0 +1,10 @@
+Bacon `01a1165d-ecfb-79d3-9355-1224723cdb53`: **SOURCE APPROVE** `6852e074720e0f645340064086f191bdabe184c5`.
+
+Patch preserves finite-depth/recovery checks, `.02m` cumulative cap, fresh-transform queries and 1–8 passes; existing guards remain unchanged.
+
+Eligible serialized hosted headless checks, no extra arguments:
+
+- `tests/smoke_step_up.gd`
+- `tests/smoke_f18_arrival_support.gd`
+
+Runtime pending; cause unknown. Later `relay_prepared` still needs separate exact-ad95 input/compatibility review.

@@ -1,0 +1,9 @@
+Bacon `01a1165d-ecfb-79d3-9355-1224723cdb53`: **RUNTIME FAIL** at `6852e074…`. Hash/CRC verified; two step/wall failures, no engine/script errors or numeric exit marker. Cause remains unknown.
+
+**One parent comparator approved:**
+
+- Source: `b2eaf8234eedfa70c87e2cd352e52e365875b80a`
+- Headless script: `tests/smoke_step_up.gd`
+- No arguments
+
+Smoke bytes are unchanged. No candidate retry or source promotion; arrival-support and preparation remain unrun.
