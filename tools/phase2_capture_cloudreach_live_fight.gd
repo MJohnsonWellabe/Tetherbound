@@ -26,8 +26,8 @@ func _run() -> void:
 	seed(_phase2_seed)
 	start_usec = Time.get_ticks_usec()
 	output_dir = _phase2_output
-	if not _require(DirAccess.make_dir_recursive_absolute(output_dir) == OK,
-			"Fight capture output directory created"):
+	if DirAccess.make_dir_recursive_absolute(output_dir) != OK:
+		push_error("Cloudreach fight output directory cannot be created")
 		quit(1)
 		return
 	root.size = Vector2i(1920, 1080)
