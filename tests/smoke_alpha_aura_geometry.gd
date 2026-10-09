@@ -4,6 +4,10 @@ extends SceneTree
 ## A real renderer is required; dummy-renderer empty arrays cannot pass.
 ## No world/config/authority change and no FPS/screenshot judgement claim.
 const AURA := preload("res://scripts/creatures/alpha_aura.gd")
+const EXPECTED_CASES := 126
+# Per camera/size/color: 6+6+7+7+6+7+7 visible motes, 8 triangle wedges
+# of 3 vertices each; multiplied by 3 cameras * 3 sizes * 2 colors.
+const EXPECTED_VERTICES := 19872
 
 class OriginalAura extends "res://scripts/creatures/alpha_aura.gd":
 	func _disc(centre: Vector3, right: Vector3, up: Vector3, colour: Color) -> void:
@@ -21,7 +25,9 @@ class OriginalAura extends "res://scripts/creatures/alpha_aura.gd":
 var _failures := 0
 var _checks := 0
 var _cases := 0
+var _completed_cases := 0
 var _vertices := 0
+var _compared_vertices := 0
 
 
 func _init() -> void:
@@ -82,8 +88,16 @@ func _run() -> void:
 						"case %d phase %.8f" % [_cases, phase])
 	world.queue_free()
 	await process_frame
-	print("Alpha aura geometry parity: %d cases, %d vertices, %d/%d checks passed" % [
-		_cases, _vertices, _checks - _failures, _checks])
+	# A GDScript runtime error can abort a nested comparison while its caller
+	# continues. Require completed comparisons and actual vertex work before
+	# reporting PASS, rather than trusting only the failure counter.
+	_check(_cases == EXPECTED_CASES, "all requested cases ran")
+	_check(_completed_cases == EXPECTED_CASES, "every comparison completed")
+	_check(_vertices == EXPECTED_VERTICES, "exact expected generated vertex count")
+	_check(_compared_vertices == EXPECTED_VERTICES, "every expected vertex and RGBA compared")
+	print("Alpha aura geometry parity %s: %d/%d completed cases, %d/%d vertices, %d/%d checks passed" % [
+		"FAIL" if _failures else "PASS", _completed_cases, EXPECTED_CASES,
+		_compared_vertices, EXPECTED_VERTICES, _checks - _failures, _checks])
 	quit(1 if _failures else 0)
 
 
@@ -91,8 +105,14 @@ func _compare_meshes(current: ImmediateMesh, original: ImmediateMesh, label: Str
 	if not _check(current.get_surface_count() == 1 and original.get_surface_count() == 1,
 			label + " preserves one actual triangle surface"):
 		return
-	_check(current.surface_get_primitive_type(0) == Mesh.PRIMITIVE_TRIANGLES,
-		label + " triangle topology")
+	# Mesh exposes array readback, but primitive_type is bound on ArrayMesh
+	# only. RenderingServer exposes the actual ImmediateMesh RID surface.
+	# Godot4.7 servers/rendering/rendering_server.cpp::_mesh_get_surface.
+	var surface := RenderingServer.mesh_get_surface(current.get_rid(), 0)
+	var original_surface := RenderingServer.mesh_get_surface(original.get_rid(), 0)
+	_check(surface.get("primitive", -1) == RenderingServer.PRIMITIVE_TRIANGLES
+		and original_surface.get("primitive", -1) == RenderingServer.PRIMITIVE_TRIANGLES,
+		label + " actual triangle topology")
 	var seen := current.surface_get_arrays(0)
 	var expected := original.surface_get_arrays(0)
 	if not _check(seen.size() == Mesh.ARRAY_MAX and expected.size() == Mesh.ARRAY_MAX,
@@ -106,8 +126,10 @@ func _compare_meshes(current: ImmediateMesh, original: ImmediateMesh, label: Str
 			and colours.size() == vertices.size() and colours.size() == wanted_colours.size(),
 			label + " visible mote count and vertex/color order"):
 		return
-	_vertices += vertices.size()
 	for index in vertices.size():
 		_check(vertices[index].is_equal_approx(wanted_vertices[index]),
 			label + " vertex %d" % index)
 		_check(colours[index] == wanted_colours[index], label + " RGBA %d" % index)
+		_compared_vertices += 1
+	_vertices += vertices.size()
+	_completed_cases += 1
