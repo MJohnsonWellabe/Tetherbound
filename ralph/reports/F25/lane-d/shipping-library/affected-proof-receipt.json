@@ -1,0 +1,25 @@
+{
+  "authority": "owner6067331997 proof-and-flip;6068186835 D shared-fight cluster",
+  "flags": {
+    "move_library": true,
+    "actor_vitals": false,
+    "ultimates": true
+  },
+  "args": "--only=test_move_effects.gd,test_combat_vfx.gd,test_combat_hud_handheld_floors.gd,test_input_glyph_rebinding.gd",
+  "exit": 0,
+  "failed": 0,
+  "run": 37864205621,
+  "original_medium": "SOURCE/COMMAND APPROVE at c6069b; same f25_medium_review01a1168b-648a-7c33-8810-ae98609b293b",
+  "source": "c6069bb20fdb50f187963d37bc839122d2d47985",
+  "original_hud": "c6069b HUD SOURCE BLOCK retained;2 defects corrected c8c0813591c12b30cc992accf01cd75729ad5724, affected smoke pending",
+  "seconds": 6,
+  "assertions": 2246,
+  "mode": "headless",
+  "artifact_zip_sha256": "20a73f8bd059222ceac4dc315fb6de1edd260004f1719afd2d5b6691a93442b2",
+  "audio": "Dummy",
+  "scope": "shipping library/mapping/VFX and merge binding logic; no live four-participant/Medium/GPU/visual/Ally/whole acceptance",
+  "script": "tests/run_tests.gd",
+  "tests": 34,
+  "whole_criterion_closed": false,
+  "artifact": 11587352566
+}
