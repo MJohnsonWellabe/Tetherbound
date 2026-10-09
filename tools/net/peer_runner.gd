@@ -2630,6 +2630,14 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 		if not alpha_site.is_empty():
 			return {"verdict": "FAIL", "detail": "Exact retained Alpha was excluded; no legacy body substitution permitted"}
 		wild = _nearest_live_wild_excluding(director, excluded)
+	# The existing disclosed approach must precede interest-limited admission.
+	# This presentation is only a heading; the exact original offer and press
+	# below still require its genuine authenticated host packet and body.
+	if wild == null and alpha_site.is_empty() and args.get("approach_before_ambient_offer") == true \
+			and args.get("require_record") == true and OS.get_cmdline_user_args().has("--prove-host-ambient-wild"):
+		var session := _session()
+		if session != null and session.call("is_active") == true and session.call("is_host") != true:
+			wild = _nearest_live_wild_excluding(director, excluded)
 	if wild == null:
 		return {"verdict": "FAIL", "detail": "no live wild creature to engage"
 			+ (" other than body %d" % excluded if excluded != 0 else "")}

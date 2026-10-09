@@ -288,7 +288,8 @@ func _run() -> void:
 	var round_five: Array = await race([
 		{"peer": 0, "action": "stick", "args": {"stick": "left", "x": 0.0, "y": -1.0, "frames": 150}},
 		{"peer": 1, "action": "engage_wild",
-			"args": {"settle": 240, "require_record": prove_ambient}, "budget_frames": 6000},
+			"args": {"settle": 240, "require_record": prove_ambient,
+				"approach_before_ambient_offer": prove_ambient}, "budget_frames": 6000},
 	])
 	_check(_all_passed(round_five),
 		"peer 1 started a fight WHILE peer 0 rode: %s" % _verdicts(round_five))
