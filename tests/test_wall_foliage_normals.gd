@@ -6,6 +6,25 @@ extends "res://tests/test_case.gd"
 
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const VINE := "res://assets/buildings/quaternius_medieval/Prop_Vine1.gltf"
+const CLOUDREACH_LOOK := preload("res://scripts/world/cloudreach_look.gd")
+
+
+func test_cloudreach_cliff_vines_fit_outside_a_wall_cell_and_below_its_beam() -> void:
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/cloudreach_look.json"))
+	var dressing: Dictionary = config.settlement_materials.cliff_dressing
+	var look: Node3D = CLOUDREACH_LOOK.new()
+	var prefabs: RefCounted = PREFABS.new()
+	for scene: PackedScene in CLOUDREACH_LOOK.LOOK_VINES:
+		var wall := Node3D.new()
+		look.call("_place_module", wall, scene, "CliffVine",
+			Vector3(0.0, float(dressing.vine_height_m), float(dressing.vine_proud_m)), 0.0)
+		var bounds: AABB = prefabs.call("combined_aabb", wall)
+		assert_true(bounds.position.z > 0.0, "vine geometry must stay outside the wall plane")
+		assert_true(bounds.end.y <= 3.12, "vine must not rise through the wall's upper beam")
+		assert_true(bounds.size.x <= 2.0, "vine must fit its authored two-metre wall cell")
+		wall.free()
+	look.free()
 
 
 func _first_mesh(node: Node) -> MeshInstance3D:

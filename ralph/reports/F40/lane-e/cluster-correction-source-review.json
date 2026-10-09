@@ -214,5 +214,89 @@
     "No engine/import/GPU/tests/dispatch/source edits or new helpers/fixtures/classes by reviewer.",
     "No component READY, wholeF40#3/#5,F08#3,earned campaign,co-op or hardware-performance approval.",
     "Only this authorized evidence report is written."
-  ]
+  ],
+  "independent_artifact_reviews": [
+    {
+      "reviewed_at_utc": "2026-10-09T01:39:29.304444+00:00",
+      "artifact_assertion_verdict": "APPROVE_ACTUAL_COUNTS_AND_LOG_INTEGRITY",
+      "exact_checkout_binding_verdict": "REQUEST_CHANGES_MISSING_LOCAL_CHECKOUT_WITNESS",
+      "reported_run": 37870009529,
+      "reported_artifact": 11590200746,
+      "reported_source": "c4275c7de98de01932cccff36945296c65c378f2",
+      "actual_counts": {
+        "tests": 8,
+        "assertions": 64,
+        "failed": 0,
+        "exit": 0,
+        "seconds": 5
+      },
+      "engine": "Godot4.7.stable.official.5b4e0cb0f",
+      "selector": "test_cloudreach_high_perches_presentation.gd,test_cloudreach_sky_shrine_presentation.gd",
+      "actual_log_sha256": "d1caf8e903da3cd7cb2c80828f1a14c55ac60dc3f01269a73f230094e0c057f7",
+      "actual_frozen_paths": ".tmp\\e-cluster-shrine-sign-c427-37870009529",
+      "portable_log": "ralph/reports/F40/lane-e/cluster-corrections/headless-c427-run.log",
+      "zip_run_and_exit_bytes_match": true,
+      "zip_members": [
+        "MANIFEST.txt",
+        "exit_code",
+        "run.log",
+        "user/godot/app_userdata/Tetherbound/boot_log.txt",
+        "user/godot/app_userdata/Tetherbound/logs/godot.log"
+      ],
+      "diagnostics": "No ERROR/SCRIPT ERROR/WARNING in actual run.log.",
+      "executed_methods": [
+        "test_every_high_perches_banner_hangs_from_a_mast_or_the_arch",
+        "test_high_perches_config_names_a_complete_refuge_composition",
+        "test_high_perches_mount_preserves_the_survey_disc_and_clears_only_local_cover",
+        "test_high_perches_presentation_is_collision_free_and_player_scaled",
+        "test_master_sign_text_fits_a_physical_post_and_keeps_its_message_and_prompt",
+        "test_heartstone_owns_a_bounded_local_night_focal_light",
+        "test_sky_shrine_catalogue_uses_the_south_crown_overview",
+        "test_sky_shrine_retains_a_complete_authored_sanctuary_hierarchy"
+      ],
+      "unchanged_relevant_blobs_c427_to_a990": {
+        "scripts/world/cloudreach_world.gd": "08d9791819391c864abec44342cf5fd0900981b1",
+        "scripts/world/cloudreach_high_perches_presentation.gd": "88c06f04d5192d4205f17434263c970640e2f5ae",
+        "data/config/cloudreach_high_perches_visual.json": "b6933e247dd92d48200147eff7b56c33790e4982",
+        "tests/test_cloudreach_high_perches_presentation.gd": "6f07443e7871871140a771b4267c61d09223d7bf",
+        "tests/test_cloudreach_sky_shrine_presentation.gd": "621880f30372de3b6ad6e3a131d0a92384853df1"
+      },
+      "provenance_gap": "Supplied extracted packet and ZIP contain run.log,exit_code,manifest and user logs; neither run.log nor manifest identifies checkout SHA. No job/checkout log was present at the supplied paths. Actual8/64 result is verified, but reported exactc427 source/run binding is not independently established from these files. Provide existing checkout/job witness; no engine rerun needed.",
+      "limits": [
+        "Headless sign regression verifies config/helper/identity scope; no native glyph visibility/floor contact or full cluster claim.",
+        "Unchanged Sky Shrine tests do not exercise the newly registered ellipse at runtime.",
+        "Potential reuse at a990 requires authenticc427 checkout witness; exact relevant blobs already match."
+      ]
+    },
+    {
+      "reviewed_at_utc": "2026-10-09T01:40:49.429148+00:00",
+      "artifact_verdict": "APPROVE_EXACT_SOURCE_BOUND_HEADLESS_ARTIFACT",
+      "source_commit": "c4275c7de98de01932cccff36945296c65c378f2",
+      "run": 37870009529,
+      "job": 113625680189,
+      "artifact": 11590200746,
+      "scope": "Only resolution of previous missing exact checkout witness; no repeated source audit or engine execution.",
+      "checkout_evidence": "Supplied original job.log lines56/68/135/147 bind requested/fetched/checked-out exactc427,273 identifies HEADc427,276 emits full Git rev-parse. Run script line5014 and args lines58/5015 bind the exact existing two-file selector.",
+      "selector": "tests/run_tests.gd -- --only=test_cloudreach_high_perches_presentation.gd,test_cloudreach_sky_shrine_presentation.gd",
+      "terminal_evidence": "Job5021/5035 exit0 took5s and5034 actual8tests64assertions0failed match originalrun.log/exit_code; artifact upload5094/5095 identifies exactartifact11590200746.",
+      "actual_counts": {
+        "tests": 8,
+        "assertions": 64,
+        "failed": 0,
+        "exit_code": 0,
+        "seconds": 5
+      },
+      "job_log": ".tmp/e-cluster-shrine-sign-c427-37870009529/job.log",
+      "job_log_sha256": "1dd182039c0701bd23a7085c85410d5c36ed51c5739422faf68afebc598213e7",
+      "original_and_portable_run_log_sha256": "d1caf8e903da3cd7cb2c80828f1a14c55ac60dc3f01269a73f230094e0c057f7",
+      "previous_gap_disposition": "Resolved by original checkout/job log. Earlier missing-witness REQUEST_CHANGES remains historical.",
+      "reused_facts": "Previously verified log/ZIP integrity, zero producer errors/warnings and unchanged relevantc427-to-a990 blobs are reused. This proves the selected headless result applies atc427 and unchanged paths ina990.",
+      "limits": [
+        "No actual native Shrine support/sign visibility or whole-cluster claim.",
+        "Accepted a990 fight mount SOURCE/COMMAND approval remains unchanged; failedf03 native remains failed.",
+        "No source audit, test rerun, native, import or dispatch performed."
+      ]
+    }
+  ],
+  "current_headless_artifact_verdict": "APPROVE_EXACT_C427_SOURCE_BOUND_8_TESTS_64_ASSERTIONS"
 }

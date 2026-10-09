@@ -117,7 +117,7 @@
   },
   "settlement_materials": {
     "_comment": "Recolours the same Quaternius medieval prefabs the Meadows village uses -- duplicated materials, textures kept, classified by mesh/material name keyword (roof/tile, wood/beam/trim/corner/door/frame, else wall) -- so the two villages read as different places instead of literally the same houses moved uphill.",
-    "_comment_c8": "CLOUDREACH-DRESS-0906 / C8. The recolour alone did not separate these cottages from the Meadows village -- the blind judge still read stands 02/08/12 as the same houses moved uphill. timber_colour moved from #8a7d6a to #4b3a2b for a reason the judge stated exactly: it called the front of the cottage at 12 'an open timber lattice over a doorway'. Wall_Plaster_WoodGrid is a HALF-TIMBERED wall, not an opening (probed against the kit: both its primitives span the wall's full 0.00-3.12 m height, so there is no hole), but at #8a7d6a the timber sat within about 0.11 luminance of the #b9b4a8 plaster behind it, the infill stopped reading, and the eye filled the empty grid cells with shadow. Dark weathered oak on pale plaster is what makes half-timbering read as half-timbering rather than as a shopfront frame.",
+    "_comment_c8": "CLOUDREACH-DRESS-0906 / C8. The cottages retain dark weathered oak (#4b3a2b) against pale plaster (#b9b4a8). The installed Wall_Plaster_WoodGrid has plaster only below y=0.836 m and an open timber lattice above; the prior full-height-infill description was incorrect. Cloudreach vines use flat wall sheets on solid wall cells, preserving this lattice and all windows and doors.",
     "roof_colour": "#5a6572",
     "timber_colour": "#4b3a2b",
     "wall_colour": "#b9b4a8",
@@ -130,7 +130,7 @@
       "enabled": true,
       "balconies": true,
       "balcony_height_m": 1.6,
-      "vine_height_m": 2.6,
+      "vine_height_m": 2.5,
       "vine_proud_m": 0.12,
       "_comment_shutters": "Stand 12: the cottage front read as \"an open timber lattice over a doorway (a shopfront without a shop)\". That face is a wide window whose pale glass sits behind a timber grid, so at reading distance the grid loses its infill and the bay reads as an opening. Shutters give the bay a frame and a shadow line. Placed from each prefab's OWN recipe (every Window_* module it declares), so they cannot drift out of step with building_prefabs.json, and applied here rather than in the recipe so the Meadows village -- which shares cottage_a and cottage_b -- is untouched.",
       "window_shutters": true,

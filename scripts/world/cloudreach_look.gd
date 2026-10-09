@@ -61,9 +61,8 @@ const LOOK_BALCONIES: Array[PackedScene] = [
 ]
 const LOOK_VINES: Array[PackedScene] = [
 	preload("res://assets/buildings/quaternius_medieval/Prop_Vine4.gltf"),
-	preload("res://assets/buildings/quaternius_medieval/Prop_Vine5.gltf"),
-	preload("res://assets/buildings/quaternius_medieval/Prop_Vine6.gltf"),
-	preload("res://assets/buildings/quaternius_medieval/Prop_Vine9.gltf"),
+	preload("res://assets/buildings/quaternius_medieval/Prop_Vine2.gltf"),
+	preload("res://assets/buildings/quaternius_medieval/Prop_Vine1.gltf"),
 ]
 const LOOK_BRICK_PILES: Array[PackedScene] = [
 	preload("res://assets/buildings/quaternius_medieval/Prop_Brick3.gltf"),
@@ -1710,13 +1709,9 @@ func _add_guy_ropes(building: Node3D, rope_radius: float) -> void:
 ##
 ## Three separate reads, three fixes:
 ##
-##   * The lattice. `Wall_Plaster_WoodGrid` is a half-timbered wall, not an
-##     opening -- probed against the kit, its plaster infill is solid and full
-##     height (both primitives span y 0.00-3.12). It read as open because the
-##     recolour left timber (#8a7d6a) and plaster (#b9b4a8) within about 0.11
-##     of each other in luminance, so the grid lost its infill and the eye
-##     filled the cells with shadow. `timber_colour` is now a dark weathered
-##     oak, which is what makes half-timbering read AS half-timbering.
+##   * The lattice. The installed `Wall_Plaster_WoodGrid` has a plaster base
+##     ending at y=0.836 and an open timber grid above it. Its dark weathered
+##     oak remains distinct from plaster; vines must not occupy that opening.
 ##
 ##   * The pole. One thin rope from ridge to stake, alone on a wall, is a stray
 ##     line. The same rope repeated as a proper ridge lashing -- lines over the
@@ -1809,15 +1804,21 @@ func _dress_cliff_building(building: Node3D, cfg: Dictionary, rng: RandomNumberG
 
 	# Vines on the sheltered flank, so the two long walls of one cottage no
 	# longer match each other or the next cottage along.
-	# Vines HANG: `Prop_Vine4` spans y -1.01..0.57 about its origin and
-	# `Prop_Vine5` -1.95..1.03, so a vine placed at the wall cell's own y=0 is
-	# mostly underground. `cottage_a`'s recipe places its own `Prop_Vine2` at
-	# y 2.6, a hair proud of the wall plane; these follow that precedent.
-	var vines := mini(maxi(int(cfg.get("vines_per_building", 2)), 0), leeward.size())
+	# Only flat wall sheets fit the authored standoff: wrapping Vine5/6/9
+	# extend 0.75–1.37 m behind their origin and entered the cottage interior.
+	# The flat sheets hang just below the beam at the configured height.
+	# Keep windows, doors and the open upper WoodGrid clear, even on a flank
+	# where fewer solid wall cells exist than the configured maximum vines.
+	var vine_cells: Array[Dictionary] = []
+	for entry: Dictionary in leeward:
+		var module_name := str(entry["module"].get("module", ""))
+		if not module_name.contains("Window") and not module_name.contains("WoodGrid"):
+			vine_cells.append(entry)
+	var vines := mini(maxi(int(cfg.get("vines_per_building", 2)), 0), vine_cells.size())
 	var vine_height := float(cfg.get("vine_height_m", 2.6))
 	var vine_proud := float(cfg.get("vine_proud_m", 0.12))
 	for i in vines:
-		var cell: Dictionary = leeward[i]["module"]
+		var cell: Dictionary = vine_cells[i]["module"]
 		var cell_yaw := float(cell.get("yaw_deg", 0.0))
 		var out := Vector3(sin(deg_to_rad(cell_yaw)), 0.0, cos(deg_to_rad(cell_yaw)))
 		_place_module(building, LOOK_VINES[(index * 2 + i) % LOOK_VINES.size()], "CliffVine",
