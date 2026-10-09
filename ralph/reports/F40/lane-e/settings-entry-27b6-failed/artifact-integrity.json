@@ -1,0 +1,42 @@
+{
+  "source": "27b6b29849581baebecf8fd1e5730ca9b3a08576",
+  "run": 37925862299,
+  "artifact": 11614401010,
+  "zip_sha256": "fac49db9897568db5578dad918524f23356119b7759b20cb98b1be4a311f9595",
+  "zip_crc_pass": true,
+  "extracted_files": [
+    {
+      "path": "MANIFEST.txt",
+      "bytes": 241,
+      "sha256": "2bae0b96a7a1c8bef4eef512110092bdd7f2600b0b12c92b7b15eb00ecdf2426"
+    },
+    {
+      "path": "run.log",
+      "bytes": 7389,
+      "sha256": "60ced9d2faf20b5b24dd3d01dfc26a75360bd2dd31ccf590395db837f6e7d0e2"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 2663,
+      "sha256": "dea4c56efe9232dd2fc59766ecf9af8f76fdf8354316c788acf854e7732106cd"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "bytes": 916609,
+      "sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "bytes": 48,
+      "sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 7381,
+      "sha256": "84ff5ea12238b9e2fcbee5f84ecd26b0eb3f1eb6c6742959b3239fd7c043110f"
+    }
+  ],
+  "actual_terminal": "Job Process completed exit1 at2026-10-09T11:50:23.2025009Z",
+  "exit_code_file_present": false,
+  "scope": "FAILED existing Settings smoke: natural Settings entry could not walk visibly down to Controls, then could not return to first gamepad binding. No SCRIPT ERROR/ERROR in selected run log. No original artifact review or grade promotion; collected only during owner shutdown. No further fix/review/dispatch permitted."
+}

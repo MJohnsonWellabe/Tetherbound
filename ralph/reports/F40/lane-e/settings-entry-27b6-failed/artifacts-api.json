@@ -1,0 +1,25 @@
+{
+  "total_count": 1,
+  "artifacts": [
+    {
+      "id": 11614401010,
+      "node_id": "MDg6QXJ0aWZhY3QxMTYxNDQwMTAxMA==",
+      "name": "render-e-27b6-settings-entry-37925862299",
+      "size_in_bytes": 925254,
+      "url": "https://api.github.com/repos/MJohnsonWellabe/Tetherbound/actions/artifacts/11614401010",
+      "archive_download_url": "https://api.github.com/repos/MJohnsonWellabe/Tetherbound/actions/artifacts/11614401010/zip",
+      "expired": false,
+      "digest": "sha256:fac49db9897568db5578dad918524f23356119b7759b20cb98b1be4a311f9595",
+      "created_at": "2026-10-09T11:50:24Z",
+      "updated_at": "2026-10-09T11:50:24Z",
+      "expires_at": "2026-10-16T11:50:23Z",
+      "workflow_run": {
+        "id": 37925862299,
+        "repository_id": 1319534705,
+        "head_repository_id": 1319534705,
+        "head_branch": "main",
+        "head_sha": "7dd4a777fbc11ce62c6747248b96d53e4a27a099"
+      }
+    }
+  ]
+}
