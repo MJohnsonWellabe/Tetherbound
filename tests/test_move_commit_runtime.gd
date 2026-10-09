@@ -1,16 +1,26 @@
 extends "res://tests/test_case.gd"
 
 const HOST := preload("res://scripts/combat/accepted_action_host.gd")
+const LEGACY_ACTOR_MATH := preload("res://scripts/combat/combat_math.gd")
 const WIND := {"max": 100.0, "regen_per_second": 18.0}
 var host: RefCounted
 var id := ""
+var _saved_legacy_actor_config: Dictionary
 
 func before_each() -> void:
+	# Detached legacy resource mechanics: generation zero, no bound actor.
+	# Tracked-ON production admission is a separate gameplay proof.
+	_saved_legacy_actor_config = LEGACY_ACTOR_MATH.config().actor_vitals
+	LEGACY_ACTOR_MATH.config().actor_vitals = _saved_legacy_actor_config.duplicate(true)
+	LEGACY_ACTOR_MATH.config().actor_vitals.runtime_enabled = false
 	host = HOST.new(1)
 	var rec: Dictionary = host.open(1, "meadows", "wild", {
 		"species_id": "bramblebun", "hp": 200.0, "hp_max": 200.0,
 		"position": [2.0, 0.0, 0.0]}, "creature_a", "owner_a")
 	id = rec.encounter_id
+
+func after_each() -> void:
+	LEGACY_ACTOR_MATH.config().actor_vitals = _saved_legacy_actor_config
 
 func _owned(uid: String = "creature_a") -> Dictionary:
 	return {"uid": uid, "hp": 100.0, "fainted": false,
