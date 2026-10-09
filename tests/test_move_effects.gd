@@ -61,6 +61,9 @@ func test_shared_ultimate_catalogue_covers_every_live_species_type_and_role() ->
 		assert_true(shared.has(fallback[pair]), pair + " falls back to a shared row")
 
 func test_every_move_resolves_and_all_24_bodies_impacts_trails_and_cues_exist() -> void:
+	var shipping: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/vfx.json"))
+	assert_true(shipping.get("move_library", {}).get("enabled") == true,
+		"The shipped move library is enabled without a process-local preview override")
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/moves.json"))
 	var archetypes: Dictionary = LIBRARY.config().get("archetypes", {})
 	var audio: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/audio.json"))
