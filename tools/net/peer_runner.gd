@@ -4843,6 +4843,7 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 				"leave_transitions": actual_leaves, "terminal_checks": terminal_checks,
 				"retained_duties": actual_duties, "retained_duty_checks": duty_checks}
 			observed["round_present"] = not actual_round.is_empty()
+			observed["owner_passive_diagnostic"] = _f48_owner_passive_diagnostic()
 			observed["last_resolution_result_present"] = actual_round.has("last_resolution_result")
 			# Exact Variant bytes preserve numeric types, full records and vectors.
 			observed["portable_variant_hex"] = var_to_bytes(observed).hex_encode()
