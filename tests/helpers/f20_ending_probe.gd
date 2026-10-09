@@ -608,6 +608,58 @@ func retained_valid(value: Dictionary) -> bool:
 		and value.get("uids") is Array and value.uids.size() == value.names.size() \
 		and value.get("receipts") is Array and value.get("inventory") is Array and not value.inventory.is_empty()
 
+## Reuse the originally approved 67-check ending's actual completed disk.
+## This is a disclosed area fixture, never a new earned-chain boundary.
+## Only its isolated copy is exposed to the production title Load owner.
+func load_completed_fixture(tree: SceneTree, game: Node) -> bool:
+	var source := "res://ralph/reports/F20/lane-b-ending/completed-input-377715"
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(source.path_join("PROVENANCE.json")))
+	if not check(raw is Dictionary and raw.get("kind") == "f20_reviewed_completed_fixture"
+		and raw.get("producer_source") == "505d7e0729028b69cfd3a0a9a8e5c6463cd46dc2"
+		and raw.get("run_id") == 37771506596 and raw.get("exit_code") == 0
+		and raw.get("checks") == 67 and raw.get("failures") == 0
+		and raw.get("earned_finale") == false and raw.get("accepted_earned_boundary") == false,
+		"completed fixture retains its actual approved producer and disclosed origin"): return false
+	var manifest: Dictionary = raw
+	var before: Dictionary = manifest.get("retained", {})
+	if not check(retained_valid(before), "completed fixture has a detached identity/inventory/receipt oracle"): return false
+	var paths: Array[String] = ["slot_0.json", "worlds/slot-0/world.json",
+		"characters/%s/character.json" % str(before.character)]
+	if not check(manifest.get("files_sha256") is Dictionary and manifest.files_sha256.size() == paths.size(),
+		"completed fixture binds all three production split files"): return false
+	for path: String in paths:
+		if not check(FileAccess.get_sha256(source.path_join("save").path_join(path)) == manifest.files_sha256.get(path),
+			"approved completed fixture bytes match: " + path): return false
+	var working := "user://f20_completed_load_%d" % OS.get_process_id()
+	if not check(not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(working)),
+		"completed fixture uses a fresh isolated working copy"): return false
+	if not check(preload("res://tests/helpers/four_biome_checkpoints.gd").copy_tree(source.path_join("save"), working),
+		"approved completed disk copied without state edits"): return false
+	game.call("reset_for_new_game")
+	game.set("save_system", SAVE.new(working))
+	if not check(tree.change_scene_to_file("res://scenes/ui/title_screen.tscn") == OK,
+		"completed fixture mounts the production title"): return false
+	for frame in 10: await tree.process_frame
+	var title := tree.current_scene
+	var load_button: Button = title.get("_load_button")
+	if not check(load_button != null and not load_button.disabled, "production title offers Load Game"): return false
+	load_button.pressed.emit() # Same producer as earned_chain_runner's existing Load path.
+	await tree.process_frame
+	var chosen: Button
+	for node: Node in (title.get("_load_box") as Node).get_children():
+		if node is Button and (node as Button).text.begins_with("Save 0") and not (node as Button).disabled:
+			chosen = node as Button
+	if not check(chosen != null, "production title offers the actual completed slot"): return false
+	chosen.pressed.emit()
+	if not await ready(tree, game): return false
+	if not check(tree.current_scene != title and str(game.current_realm) == "meadows"
+		and str(game.pending_realm_entry).is_empty(), "production Title Load enters completed Meadows"): return false
+	var passed: bool = await resumed(tree, game, before)
+	for path: String in paths:
+		if not check(FileAccess.get_sha256(source.path_join("save").path_join(path)) == manifest.files_sha256[path],
+			"completed input stays immutable after the live continuation: " + path): return false
+	return passed
+
 func resumed(tree: SceneTree, game: Node, before: Dictionary, continuation: bool = true) -> bool:
 	if not check(retained_valid(before), "reload proof starts with a complete detached character snapshot"): return false
 	if not await ready(tree, game): return false
@@ -636,6 +688,7 @@ func resumed(tree: SceneTree, game: Node, before: Dictionary, continuation: bool
 
 func continuation_content(tree: SceneTree, game: Node) -> bool:
 	continuation_content_entered = true
+	if not await research_available_after_credits(tree, game): return false
 	var journal := preload("res://scripts/world/quest_log.gd").new(game)
 	var unfinished := false
 	for entry: Dictionary in journal.call("local_entries", game.progression):
@@ -668,6 +721,45 @@ func continuation_content(tree: SceneTree, game: Node) -> bool:
 	await travel.tap("menu_cancel")
 	if not check(INPUT_OWNER.current(tree) == null, "bounty screen returns ordinary world input"): return false
 	return await admit_endgame_rematch(tree, game, rematches)
+
+## Availability only. No research events, progress, claims or titles are seeded.
+func research_available_after_credits(tree: SceneTree, game: Node) -> bool:
+	var travel := TRAVEL.new(tree, game)
+	await travel.tap("inventory")
+	var menu: Node = game.get("_menu")
+	if not check(menu != null and menu.call("is_open") == true and INPUT_OWNER.current(tree) == menu,
+		"completed world opens its ordinary menu for remaining research"): return false
+	for step in 12:
+		if menu.call("current_tab_id") == "quest_log": break
+		await travel.tap("menu_tab_right")
+	if not check(menu.call("current_tab_id") == "quest_log", "completed-world menu reaches the Journal"): return false
+	var journal: Node = menu.get("_bodies")[int(menu.get("_index"))]
+	var button: Button = journal.get("_research_button")
+	if not check(button != null and button.is_visible_in_tree() and not button.disabled,
+		"reloaded Journal offers the production research log"): return false
+	button.grab_focus()
+	await tree.process_frame
+	await travel.tap("ui_accept")
+	var panel := INPUT_OWNER.current(tree)
+	if not check(panel != null and panel.get_script() == load("res://scripts/ui/research_log_panel.gd")
+		and panel.call("is_open") == true, "ordinary Journal input opens the live research screen"): return false
+	var view: Variant = JSON.parse_string(str(panel.get("_last_view")))
+	if not check(view is Dictionary and view.get("ready") == true and view.get("character_id") == str(game.local.character_id)
+		and view.get("claims_enabled") == true and view.get("species") is Array and not view.species.is_empty(),
+		"completed character retains its available canonical research catalogue and claim route"): return false
+	var unfinished := false
+	for species: Dictionary in view.species:
+		for task: Dictionary in species.get("tasks", []):
+			if int(task.get("progress", 0)) < int(task.get("required", 0)): unfinished = true
+	if not check(unfinished, "remaining research tasks stay incomplete and available without fabricated progress"): return false
+	var visible := func() -> bool:
+		return is_instance_valid(panel) and panel.call("is_open") == true and INPUT_OWNER.current(tree) == panel
+	if not await capture(tree, "completed-research", visible): return false
+	await travel.tap("menu_cancel")
+	if not check(menu.call("is_open") == true and INPUT_OWNER.current(tree) == menu,
+		"research Back returns to the ordinary Journal"): return false
+	await travel.tap("menu_cancel")
+	return check(INPUT_OWNER.current(tree) == null, "research and Journal release completed-world input")
 
 ## F20 checks continuation availability, not F44 victory or repeat rewards.
 ## The isolated proof finishes in this genuinely admitted trainer fight;
