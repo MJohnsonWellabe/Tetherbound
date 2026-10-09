@@ -15,6 +15,14 @@
     "provenance": "Installed Wall_Arch.gltf POSITION bounds X[-1,1],Y[-0.000000119,3],Z[-0.000000037,0.06404569] metres; 5x depth grows64mm to320mm without changing native2m width/3m height."
   },
   "pedestal_label_at": [0, 1.9, 0.15],
+  "stormwood_relic_visual": {
+    "enabled": false,
+    "at": [-0.0131231, 1.34151, 0.02178],
+    "pitch_deg": -41.035,
+    "scale": 0.44,
+    "scope": "Peer-local Stormwood pedestal presentation on all presets; read host shrine_display.stormwood only. No inventory, RPC, transaction, save schema, collider or prompt change. Shipping OFF; --hall-stormwood-relic-candidate opts in, --hall-stormwood-relic-baseline wins. Native and original blind/whole approval required.",
+    "provenance": "Reuse realm_heart_shrine existing three-piece Spark geometry and placed HEART_READY material (roughness .82, emission1.15). Same measured BookStand face/normal; uniform prop scale .44 and rear depth .0352m below .04225m normal clearance. No new asset or geometry identity."
+  },
   "cloudreach_relic_visual": {
     "enabled": false,
     "at": [-0.0131231, 1.34151, 0.02178],

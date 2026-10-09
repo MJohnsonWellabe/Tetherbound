@@ -94,9 +94,14 @@ func test_host_sends_directly_and_surfaces_refusal() -> void:
 	var cloud_baseline: Node3D = hall.get("_pedestals").cloudreach
 	assert_true(cloud_baseline.get_node_or_null(^"CloudreachRelicDisplay") == null, "Cloudreach shipping candidate remains off")
 	cloud_baseline.free()
+	hall.call("_build_pedestal", config.pedestals[3])
+	var storm_baseline: Node3D = hall.get("_pedestals").stormwood
+	assert_true(storm_baseline.get_node_or_null(^"StormwoodRelicDisplay") == null, "Stormwood shipping candidate remains off")
+	storm_baseline.free()
 	hall.get("_pedestals").clear()
 	config.meadows_relic_visual.enabled = true
 	config.cloudreach_relic_visual.enabled = true
+	config.stormwood_relic_visual.enabled = true
 	hall.set("_config", config)
 	hall.call("_build_pedestal", config.pedestals[0])
 	var pedestal: Node3D = hall.get("_pedestals").meadows
@@ -106,6 +111,26 @@ func test_host_sends_directly_and_surfaces_refusal() -> void:
 	var cloud_pedestal: Node3D = hall.get("_pedestals").cloudreach
 	var wings := cloud_pedestal.get_node(^"CloudreachRelicDisplay") as Node3D
 	var cloud_children: int = cloud_pedestal.get_child_count()
+	hall.call("_build_pedestal", config.pedestals[3])
+	var storm_pedestal: Node3D = hall.get("_pedestals").stormwood
+	var spark := storm_pedestal.get_node(^"StormwoodRelicDisplay") as Node3D
+	var storm_children: int = storm_pedestal.get_child_count()
+	assert_eq(spark.get_child_count(), 3, "reuse all three existing Spark pieces")
+	var spark_parts: Array[Dictionary] = [
+		{"at":Vector3(-0.06, 0.19, 0), "size":Vector3(0.16, 0.48, 0.16), "roll":-0.4},
+		{"at":Vector3(0.06, -0.18, 0), "size":Vector3(0.16, 0.48, 0.16), "roll":-0.4},
+		{"at":Vector3.ZERO, "size":Vector3(0.35, 0.13, 0.16), "roll":0.0}
+	]
+	for index: int in spark_parts.size():
+		var piece := spark.get_child(index) as MeshInstance3D
+		assert_eq(piece.position, spark_parts[index].at, "existing Spark position")
+		assert_eq(piece.scale, spark_parts[index].size, "existing Spark scale")
+		assert_true(is_equal_approx(piece.rotation.z, float(spark_parts[index].roll)), "existing Spark roll")
+		var sphere := piece.mesh as SphereMesh
+		assert_eq(sphere.radius, 0.5)
+		assert_eq(sphere.height, 1.0)
+		assert_eq(sphere.radial_segments, 12)
+		assert_eq(sphere.rings, 6)
 	assert_eq(wings.get_child_count(), 6, "reuse all six existing Cloudreach feathers")
 	var feather_index := 0
 	for side: float in [-1.0, 1.0]:
@@ -122,11 +147,13 @@ func test_host_sends_directly_and_surfaces_refusal() -> void:
 			feather_index += 1
 	assert_false(relic.visible, "empty pedestal has no phantom reward")
 	assert_false(wings.visible, "empty Cloudreach pedestal has no phantom reward")
+	assert_false(spark.visible, "empty Stormwood pedestal has no phantom reward")
 	var saved := {"shrine_display":{"meadows":true}}
 	var before: Dictionary = saved.duplicate(true)
 	hall.call("apply_display", saved)
 	assert_true(relic.visible, "saved host hang produces a physical display")
 	assert_false(wings.visible, "a Meadows hang does not display Cloudreach")
+	assert_false(spark.visible, "a Meadows hang does not display Stormwood")
 	assert_eq(saved, before, "presentation never mutates the host display")
 	hall.call("apply_display", saved)
 	assert_eq(pedestal.get_child_count(), children, "replayed view does not duplicate the relic")
@@ -135,14 +162,27 @@ func test_host_sends_directly_and_surfaces_refusal() -> void:
 	var cloud_before: Dictionary = cloud_saved.duplicate(true)
 	hall.call("apply_display", cloud_saved)
 	assert_true(wings.visible, "saved Cloudreach host hang displays the Wings")
+	assert_false(spark.visible, "a Cloudreach hang does not display Stormwood")
 	assert_false(relic.visible, "Cloudreach host state does not retain a stale Meadows display")
 	assert_eq(cloud_saved, cloud_before, "Cloudreach presentation never mutates the host view")
 	hall.call("apply_display", cloud_saved)
 	assert_eq(cloud_pedestal.get_child_count(), cloud_children, "replayed Cloudreach view does not duplicate the Wings")
 	assert_eq(session.calls, ["hang:meadows"] as Array[String], "Cloudreach repaint never sends a hang")
+	var storm_saved := {"shrine_display":{"stormwood":true}}
+	var storm_before: Dictionary = storm_saved.duplicate(true)
+	hall.call("apply_display", storm_saved)
+	assert_true(spark.visible, "saved Stormwood host hang displays the Spark")
+	assert_false(wings.visible, "Stormwood host state clears stale Cloudreach display")
+	assert_false(relic.visible, "Stormwood host state does not invent a Meadows display")
+	assert_eq(storm_saved, storm_before, "Stormwood presentation never mutates the host view")
+	hall.call("apply_display", storm_saved)
+	assert_eq(storm_pedestal.get_child_count(), storm_children, "replayed Stormwood view does not duplicate the Spark")
+	assert_eq(session.calls, ["hang:meadows"] as Array[String], "Stormwood repaint never sends a hang")
 	hall.call("apply_display", {})
 	assert_false(relic.visible, "an empty restored view removes the stale display")
 	assert_false(wings.visible, "empty restored host state clears Cloudreach display")
+	assert_false(spark.visible, "empty restored host state clears Stormwood display")
+	assert_false(bool(storm_pedestal.get_meta("relic_displayed")))
 	assert_false(bool(cloud_pedestal.get_meta("relic_displayed")))
 	assert_false(bool(pedestal.get_meta("relic_displayed")))
 	hall.free()

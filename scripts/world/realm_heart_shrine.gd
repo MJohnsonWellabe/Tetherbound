@@ -406,9 +406,7 @@ func _build_visual() -> void:
 	if heart_id == "cloudreach":
 		build_cloudreach_relic(_heart_visual, _heart_material)
 	elif heart_id == "stormwood":
-		_build_heart_piece(Vector3(-0.06,0.19,0),Vector3(0.16,0.48,0.16),-0.4)
-		_build_heart_piece(Vector3(0.06,-0.18,0),Vector3(0.16,0.48,0.16),-0.4)
-		_build_heart_piece(Vector3.ZERO,Vector3(0.35,0.13,0.16),0)
+		build_stormwood_relic(_heart_visual, _heart_material)
 	else:
 		_build_heart_piece(Vector3(-0.16, 0.10, 0.0), Vector3(0.25, 0.24, 0.16), 0.0)
 		_build_heart_piece(Vector3(0.16, 0.10, 0.0), Vector3(0.25, 0.24, 0.16), 0.0)
@@ -472,6 +470,13 @@ static func build_cloudreach_relic(parent: Node3D, material: StandardMaterial3D)
 			_build_relic_piece(parent, material,
 				Vector3(side * (0.12 + feather * 0.12), 0.15 - feather * 0.07, 0),
 				Vector3(0.13, 0.45 - feather * 0.05, 0.12), side * 0.65)
+
+
+static func build_stormwood_relic(parent: Node3D, material: StandardMaterial3D) -> void:
+	# Reuse the existing Spark, including its three authored piece transforms.
+	_build_relic_piece(parent, material, Vector3(-0.06, 0.19, 0), Vector3(0.16, 0.48, 0.16), -0.4)
+	_build_relic_piece(parent, material, Vector3(0.06, -0.18, 0), Vector3(0.16, 0.48, 0.16), -0.4)
+	_build_relic_piece(parent, material, Vector3.ZERO, Vector3(0.35, 0.13, 0.16), 0)
 
 
 func _build_heart_piece(at: Vector3, size: Vector3, roll: float) -> void:
