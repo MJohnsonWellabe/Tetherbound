@@ -1,6 +1,7 @@
 extends "res://tests/helpers/net_harness.gd"
 
 const ORIGINAL_STARTER_FIXTURE := preload("res://tests/helpers/net_original_starter_fixture.gd")
+const OWNER_POSE_PREFIX := preload("res://tests/helpers/net_owner_pose_prefix.gd")
 
 # peers: 2
 
@@ -416,6 +417,9 @@ func _run() -> void:
 			"peer %d's world does not say the Warden has fallen yet" % i)
 
 	# Finish guest travel/settling before the host opens the boss attack window.
+	if not await OWNER_POSE_PREFIX.await_before_placement(self):
+		quit(await finish())
+		return
 	var walked: Dictionary = await step(1, "teleport", {"near_trainer": BOSS})
 	check(str(walked.get("verdict", "")) == "PASS",
 		"peer 1 travelled to the boss fight (%s)" % str(walked.get("detail", "")))
