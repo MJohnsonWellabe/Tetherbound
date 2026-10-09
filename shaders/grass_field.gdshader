@@ -531,179 +531,194 @@ void vertex() {
 	bool off_map = coord.z < 0;
 	if (!off_map) {
 		ground_h = grass_surface_height(terrain_uv, coord);
-		control = floatBitsToUint(texelFetch(_control_maps, coord, 0)).r;
-		ground_col = texelFetch(_color_maps, coord, 0).rgb;
 	}
-	v_ground_colour = ground_col;
 
-	// What the terrain says is underfoot. Base texture id lives in the top five
-	// bits; this is the same decode the generated shader's fragment stage does.
-	int base_id = int(control >> 27u & 0x1Fu);
-	bool hole = bool(control >> 2u & 0x1u);
-	bool forbidden = ((forbidden_base_mask >> base_id) & 1) == 1;
-	bool dune_shape_active = dune_colony_shape && dune_gap_scale > 0.0
-			&& dune_gap_full > dune_gap_start && dune_stabilized_height_y > dune_shore_dry_full_y;
-	bool dune_shore = dune_shape_active && ((dune_pioneer_base_mask >> base_id) & 1) == 1
-			&& dune_shore_dry_full_y > dune_shore_dry_start_y;
-	// The opt-in mask resolves only the requested shore texture name on CPU.
-	// Water's painted shore already excludes slopes above its rock threshold.
-	forbidden = forbidden && !dune_shore;
-
-	// Coverage: two octaves of noise decide whether this blade exists at all,
-	// so the field reads as drifts with open ground between them rather than a
-	// uniform lawn. `hash12` on the blade's own position is the per-blade roll.
-	float drift = value_noise(world_xz * clump_scale);
-	if (dune_tussock) {
-		// Smaller pockets break up the broad colony's boundary without
-		// changing world-stable placement or terrain/landmark clearances.
-		drift = mix(drift, value_noise(world_xz * clump_scale * 3.8 + vec2(19.3, 7.1)), 0.30);
-	}
-	float colony_noise = drift;
-	if (clump_patch_full > clump_patch_start) {
-		drift = smoothstep(clump_patch_start, clump_patch_full, drift);
-	}
-	drift = mix(1.0, drift, clump_contrast);
-	// The bush tier's drift, evaluated with the bush tier's own numbers. Same
-	// `value_noise` and the same `mix(1.0, ...)` shape `cover_tier.gdshader`
-	// uses, so this is the identical field and not an approximation of it.
-	float clearing = 0.0;
-	if (clearing_strength > 0.001) {
-		float bush_drift = mix(1.0, value_noise(world_xz * clearing_scale), clearing_contrast);
-		clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
-	}
-	float keep = drift * density_gain * (1.0 - clearing);
-	if (dune_shape_active) {
-		vec2 warp = vec2(
-			value_noise(world_xz * dune_gap_warp_scale + dune_gap_offset),
-			value_noise(world_xz * dune_gap_warp_scale - dune_gap_offset.yx)) - vec2(0.5);
-		float gap = value_noise((world_xz + warp * dune_gap_warp_m) * dune_gap_scale + dune_gap_offset);
-		float gap_keep = 1.0 - smoothstep(dune_gap_start, dune_gap_full, gap);
-		float pioneer = 0.0;
-		if (clump_patch_start > dune_pioneer_start) {
-			pioneer = dune_pioneer_probability
-				* smoothstep(dune_pioneer_start, clump_patch_start, colony_noise);
-		}
-		// A common coastal transition crosses the painted shore/grass boundary.
-		// Its ceiling now limits only pioneers; colony area grows inland.
-		float coast_ceiling = mix(dune_shore_probability, 1.0,
-			smoothstep(dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
-		// Low coastal colonies occupy smaller areas with intact dense centres.
-		// Invalid/linear patch thresholds retain the original density expression.
-		float coastal_keep = min(max(drift * density_gain, pioneer), coast_ceiling);
-		bool valid_coastal_patch = clump_patch_full > clump_patch_start
-			&& dune_shore_dry_full_y > dune_shore_dry_start_y;
-		if (valid_coastal_patch) {
-			float coastal_shift = max(dune_coastal_colony_shift, 0.0) * (1.0 - smoothstep(
-				dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
-			float coastal_colony = smoothstep(clump_patch_start + coastal_shift,
-				clump_patch_full + coastal_shift, colony_noise);
-			coastal_colony = mix(1.0, coastal_colony, clump_contrast);
-			coastal_keep = max(coastal_colony * density_gain, min(pioneer, coast_ceiling));
-		}
-		// Pioneers remain sparse and no vegetation fills the blowout's zero core.
-		keep = coastal_keep
-			* gap_keep * (1.0 - clearing);
-		if (dune_shore || valid_coastal_patch) {
-			// Match density across shore/grass paint at the same low dry height.
-			keep *= smoothstep(dune_shore_dry_start_y, dune_shore_dry_full_y, ground_h);
-		}
-	}
-	v_drain = drain_at(world_xz);
-	bool culled = off_map || hole || forbidden || ground_h < min_ground_height || v_fade <= 0.001
-			|| item_presence <= 0.002
-			|| on_built_ground(world_xz)
-			|| (dune_shape_active && keep <= 0.0)
-			|| hash12(world_xz * 7.31) > keep
-			|| hash12(world_xz * 3.97) < v_drain * drain_thin;
-
-	v_shade = 1.0 + (hash12(world_xz * 2.17) - 0.5) * 2.0 * shade_jitter;
-	v_leaf_straw = dune_tussock ? mix(0.38, 1.0, hash12(blade_seed * 9.43)) : 1.0;
-
-	if (culled) {
-		// Collapse to a point. The cheapest cull available in a vertex shader,
-		// and it costs no branch in the fragment stage.
+	if (v_fade <= 0.001 || item_presence <= 0.002) {
+		// Preserve the original collapse position and renderer epilogue.
 		VERTEX = vec3(0.0);
 		v_blade_t = 0.0;
+		v_ground_colour = vec3(0.35, 0.40, 0.20);
+		v_shade = 1.0;
+		v_leaf_straw = 1.0;
+		v_drain = 0.0;
 	} else {
-		// UV.y runs 0 at the blade's base to 1 at its tip; the mesh is built
-		// that way in grass_field.gd.
-		float t = UV.y;
-		v_blade_t = t;
+		if (!off_map) {
 
-		float h = mix(height_near, height_far, smoothstep(0.0, field_radius, dist));
-		h *= 1.0 + (hash12(blade_seed * 3.77) - 0.5) * 2.0 * height_jitter;
-		// Shorter under a bush as well as sparser. Thinning alone leaves the
-		// survivors at full height, still standing through the leaves.
-		h *= 1.0 - clearing * clearing_shorten;
-		// And shorter at the ring's edge, for the same reason at a different
-		// scale -- see `edge_shorten_floor` above.
-		h *= mix(edge_shorten_floor, 1.0, pow(v_fade, edge_shorten_bias));
-		// And shorter while its lattice layer is still arriving, which is the
-		// only reason a blade's height changes as the player walks now.
-		h *= item_presence;
-		if (lens_clear_m > 0.0) {
-			float low_eye = 1.0 - smoothstep(1.5, 3.0, eye_height - ground_h);
-			float lens_keep = smoothstep(lens_clear_m, lens_clear_m + lens_clear_band, dist);
-			h *= mix(1.0, lens_keep, low_eye);
-		}
-		// VP2: a blade the far LOD mesh lacks grows in as the player closes on
-		// `lod_far_m`, dithered per blade so the ring does not swap in a band.
-		if (UV2.x >= lod_far_blade_frac - 0.001) {
-			float lod_jit = (hash12(blade_seed * 2.93) - 0.5) * lod_band_m;
-			h *= 1.0 - smoothstep(lod_far_m - lod_band_m, lod_far_m, dist + lod_jit);
-		}
+		control = floatBitsToUint(texelFetch(_control_maps, coord, 0)).r;
 
-		// Bend. A blade of grass is not a spike: it leans, and each one leans a
-		// different way. Without the per-blade term the whole field renders as
-		// parallel vertical strokes, which reads as a rice paddy rather than a
-		// meadow. `t * t` so the base stays planted and the tip does the
-		// travelling.
-		float wind = value_noise(world_xz * wind_scale + wind_dir * wind_time);
-		float lean = (wind - 0.5) * 2.0 * wind_strength;
-		// The front, projected onto the wind direction so it sweeps ACROSS the
-		// field rather than everything leaning at once. Half-wave rectified:
-		// grass is pushed over by a gust and springs back, it is not blown
-		// backwards between them.
-		if (gust > 0.001) {
-			float along = dot(world_xz, normalize(wind_dir));
-			float front = sin((along - wind_time * gust_speed) * 6.2831853 / gust_length);
-			lean += max(front, 0.0) * gust * wind_strength * 2.0;
+		ground_col = texelFetch(_color_maps, coord, 0).rgb;
 		}
-		float own_bend = (hash12(blade_seed * 11.13) - 0.5) * 2.0 * bend;
-		float own_dir = hash12(blade_seed * 5.91) * 6.2831853;
-		vec2 bend_dir = vec2(sin(own_dir), cos(own_dir));
-		// The mesh carries x in [-0.5, 0.5] scaled by its own taper and y in
-		// [0, 1]; width and height are applied here so one mesh serves every
-		// blade size in the field.
-		vec3 local = VERTEX;
-		local.x *= blade_width;
-		local.z *= blade_width;
-		// UV2.y carries stable mesh-level height variation. It is authored once
-		// per blade and therefore survives ring movement without per-frame noise.
-		if (blade_arc_angle <= 0.000001) {
-			// Preserve the legacy operation order exactly when the feature is off.
-			local.y = t * h * UV2.y;
-		} else {
-			vec2 blade_side = normalize(vec2(NORMAL.z, -NORMAL.x));
-			if (dune_tussock) {
-				blade_side = normalize(NORMAL.xz);
+		v_ground_colour = ground_col;
+
+		// What the terrain says is underfoot. Base texture id lives in the top five
+		// bits; this is the same decode the generated shader's fragment stage does.
+		int base_id = int(control >> 27u & 0x1Fu);
+		bool hole = bool(control >> 2u & 0x1u);
+		bool forbidden = ((forbidden_base_mask >> base_id) & 1) == 1;
+		bool dune_shape_active = dune_colony_shape && dune_gap_scale > 0.0
+				&& dune_gap_full > dune_gap_start && dune_stabilized_height_y > dune_shore_dry_full_y;
+		bool dune_shore = dune_shape_active && ((dune_pioneer_base_mask >> base_id) & 1) == 1
+				&& dune_shore_dry_full_y > dune_shore_dry_start_y;
+		// The opt-in mask resolves only the requested shore texture name on CPU.
+		// Water's painted shore already excludes slopes above its rock threshold.
+		forbidden = forbidden && !dune_shore;
+
+		// Coverage: two octaves of noise decide whether this blade exists at all,
+		// so the field reads as drifts with open ground between them rather than a
+		// uniform lawn. `hash12` on the blade's own position is the per-blade roll.
+		float drift = value_noise(world_xz * clump_scale);
+		if (dune_tussock) {
+			// Smaller pockets break up the broad colony's boundary without
+			// changing world-stable placement or terrain/landmark clearances.
+			drift = mix(drift, value_noise(world_xz * clump_scale * 3.8 + vec2(19.3, 7.1)), 0.30);
+		}
+		float colony_noise = drift;
+		if (clump_patch_full > clump_patch_start) {
+			drift = smoothstep(clump_patch_start, clump_patch_full, drift);
+		}
+		drift = mix(1.0, drift, clump_contrast);
+		// The bush tier's drift, evaluated with the bush tier's own numbers. Same
+		// `value_noise` and the same `mix(1.0, ...)` shape `cover_tier.gdshader`
+		// uses, so this is the identical field and not an approximation of it.
+		float clearing = 0.0;
+		if (clearing_strength > 0.001) {
+			float bush_drift = mix(1.0, value_noise(world_xz * clearing_scale), clearing_contrast);
+			clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
+		}
+		float keep = drift * density_gain * (1.0 - clearing);
+		if (dune_shape_active) {
+			vec2 warp = vec2(
+				value_noise(world_xz * dune_gap_warp_scale + dune_gap_offset),
+				value_noise(world_xz * dune_gap_warp_scale - dune_gap_offset.yx)) - vec2(0.5);
+			float gap = value_noise((world_xz + warp * dune_gap_warp_m) * dune_gap_scale + dune_gap_offset);
+			float gap_keep = 1.0 - smoothstep(dune_gap_start, dune_gap_full, gap);
+			float pioneer = 0.0;
+			if (clump_patch_start > dune_pioneer_start) {
+				pioneer = dune_pioneer_probability
+					* smoothstep(dune_pioneer_start, clump_patch_start, colony_noise);
 			}
-			vec2 arc = grass_blade_arc(h * UV2.y, t, blade_seed);
-			local.y = arc.x;
-			local.xz += blade_side * arc.y;
+			// A common coastal transition crosses the painted shore/grass boundary.
+			// Its ceiling now limits only pioneers; colony area grows inland.
+			float coast_ceiling = mix(dune_shore_probability, 1.0,
+				smoothstep(dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
+			// Low coastal colonies occupy smaller areas with intact dense centres.
+			// Invalid/linear patch thresholds retain the original density expression.
+			float coastal_keep = min(max(drift * density_gain, pioneer), coast_ceiling);
+			bool valid_coastal_patch = clump_patch_full > clump_patch_start
+				&& dune_shore_dry_full_y > dune_shore_dry_start_y;
+			if (valid_coastal_patch) {
+				float coastal_shift = max(dune_coastal_colony_shift, 0.0) * (1.0 - smoothstep(
+					dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
+				float coastal_colony = smoothstep(clump_patch_start + coastal_shift,
+					clump_patch_full + coastal_shift, colony_noise);
+				coastal_colony = mix(1.0, coastal_colony, clump_contrast);
+				coastal_keep = max(coastal_colony * density_gain, min(pioneer, coast_ceiling));
+			}
+			// Pioneers remain sparse and no vegetation fills the blowout's zero core.
+			keep = coastal_keep
+				* gap_keep * (1.0 - clearing);
+			if (dune_shore || valid_coastal_patch) {
+				// Match density across shore/grass paint at the same low dry height.
+				keep *= smoothstep(dune_shore_dry_start_y, dune_shore_dry_full_y, ground_h);
+			}
 		}
-		local.xz += (wind_dir * lean + bend_dir * own_bend) * t * t * h;
+		v_drain = drain_at(world_xz);
+		bool culled = off_map || hole || forbidden || ground_h < min_ground_height || v_fade <= 0.001
+				|| item_presence <= 0.002
+				|| on_built_ground(world_xz)
+				|| (dune_shape_active && keep <= 0.0)
+				|| hash12(world_xz * 7.31) > keep
+				|| hash12(world_xz * 3.97) < v_drain * drain_thin;
 
-		// Yaw, then stand it on its hashed spot rather than on its cell tag.
-		// Both were the instance transform's job before and are the shader's
-		// now, for the same reason: anything carried by the instance travels
-		// with the instance when the ring steps.
-		local.xz = lattice_yaw(local.xz, item_yaw) + lattice_shift;
-		VERTEX = local;
-		// The blade's own normal faces up-ish, which keeps a field of them from
-		// flickering as they turn edge-on to the sun.
-		NORMAL = normalize(vec3(NORMAL.x * 0.35, 1.0, NORMAL.z * 0.35));
-		NORMAL.xz = lattice_yaw(NORMAL.xz, item_yaw);
+		v_shade = 1.0 + (hash12(world_xz * 2.17) - 0.5) * 2.0 * shade_jitter;
+		v_leaf_straw = dune_tussock ? mix(0.38, 1.0, hash12(blade_seed * 9.43)) : 1.0;
+
+		if (culled) {
+			// Collapse to a point. The cheapest cull available in a vertex shader,
+			// and it costs no branch in the fragment stage.
+			VERTEX = vec3(0.0);
+			v_blade_t = 0.0;
+		} else {
+			// UV.y runs 0 at the blade's base to 1 at its tip; the mesh is built
+			// that way in grass_field.gd.
+			float t = UV.y;
+			v_blade_t = t;
+
+			float h = mix(height_near, height_far, smoothstep(0.0, field_radius, dist));
+			h *= 1.0 + (hash12(blade_seed * 3.77) - 0.5) * 2.0 * height_jitter;
+			// Shorter under a bush as well as sparser. Thinning alone leaves the
+			// survivors at full height, still standing through the leaves.
+			h *= 1.0 - clearing * clearing_shorten;
+			// And shorter at the ring's edge, for the same reason at a different
+			// scale -- see `edge_shorten_floor` above.
+			h *= mix(edge_shorten_floor, 1.0, pow(v_fade, edge_shorten_bias));
+			// And shorter while its lattice layer is still arriving, which is the
+			// only reason a blade's height changes as the player walks now.
+			h *= item_presence;
+			if (lens_clear_m > 0.0) {
+				float low_eye = 1.0 - smoothstep(1.5, 3.0, eye_height - ground_h);
+				float lens_keep = smoothstep(lens_clear_m, lens_clear_m + lens_clear_band, dist);
+				h *= mix(1.0, lens_keep, low_eye);
+			}
+			// VP2: a blade the far LOD mesh lacks grows in as the player closes on
+			// `lod_far_m`, dithered per blade so the ring does not swap in a band.
+			if (UV2.x >= lod_far_blade_frac - 0.001) {
+				float lod_jit = (hash12(blade_seed * 2.93) - 0.5) * lod_band_m;
+				h *= 1.0 - smoothstep(lod_far_m - lod_band_m, lod_far_m, dist + lod_jit);
+			}
+
+			// Bend. A blade of grass is not a spike: it leans, and each one leans a
+			// different way. Without the per-blade term the whole field renders as
+			// parallel vertical strokes, which reads as a rice paddy rather than a
+			// meadow. `t * t` so the base stays planted and the tip does the
+			// travelling.
+			float wind = value_noise(world_xz * wind_scale + wind_dir * wind_time);
+			float lean = (wind - 0.5) * 2.0 * wind_strength;
+			// The front, projected onto the wind direction so it sweeps ACROSS the
+			// field rather than everything leaning at once. Half-wave rectified:
+			// grass is pushed over by a gust and springs back, it is not blown
+			// backwards between them.
+			if (gust > 0.001) {
+				float along = dot(world_xz, normalize(wind_dir));
+				float front = sin((along - wind_time * gust_speed) * 6.2831853 / gust_length);
+				lean += max(front, 0.0) * gust * wind_strength * 2.0;
+			}
+			float own_bend = (hash12(blade_seed * 11.13) - 0.5) * 2.0 * bend;
+			float own_dir = hash12(blade_seed * 5.91) * 6.2831853;
+			vec2 bend_dir = vec2(sin(own_dir), cos(own_dir));
+			// The mesh carries x in [-0.5, 0.5] scaled by its own taper and y in
+			// [0, 1]; width and height are applied here so one mesh serves every
+			// blade size in the field.
+			vec3 local = VERTEX;
+			local.x *= blade_width;
+			local.z *= blade_width;
+			// UV2.y carries stable mesh-level height variation. It is authored once
+			// per blade and therefore survives ring movement without per-frame noise.
+			if (blade_arc_angle <= 0.000001) {
+				// Preserve the legacy operation order exactly when the feature is off.
+				local.y = t * h * UV2.y;
+			} else {
+				vec2 blade_side = normalize(vec2(NORMAL.z, -NORMAL.x));
+				if (dune_tussock) {
+					blade_side = normalize(NORMAL.xz);
+				}
+				vec2 arc = grass_blade_arc(h * UV2.y, t, blade_seed);
+				local.y = arc.x;
+				local.xz += blade_side * arc.y;
+			}
+			local.xz += (wind_dir * lean + bend_dir * own_bend) * t * t * h;
+
+			// Yaw, then stand it on its hashed spot rather than on its cell tag.
+			// Both were the instance transform's job before and are the shader's
+			// now, for the same reason: anything carried by the instance travels
+			// with the instance when the ring steps.
+			local.xz = lattice_yaw(local.xz, item_yaw) + lattice_shift;
+			VERTEX = local;
+			// The blade's own normal faces up-ish, which keeps a field of them from
+			// flickering as they turn edge-on to the sun.
+			NORMAL = normalize(vec3(NORMAL.x * 0.35, 1.0, NORMAL.z * 0.35));
+			NORMAL.xz = lattice_yaw(NORMAL.xz, item_yaw);
+		}
 	}
 
 	// Finally: sit the whole blade on the ground. Done after the local build so
