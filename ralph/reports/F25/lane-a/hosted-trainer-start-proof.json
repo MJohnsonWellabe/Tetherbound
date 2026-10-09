@@ -64,5 +64,29 @@
     "artifact_review_turn": "01a11f79-1dd0-77a0-abe0-a5113db44ef0",
     "artifact_review": "Failure confirmed. Distinct production gap: host_combat_motion_context selects shared runtime/_engaged_with while hosted rounds live in hub. Resolve same current hub-owned opponent as move_start, retaining identity/realm/scope/arena/status/walking guards. Source gap established, not sole historical failure cause. Review correction before one changed original proof; no runtime/integration approval."
   },
+  "motion_target_correction": {
+    "source_commit": "57c48a8aab49ce04bd30b96f708b6e365dfef0fb",
+    "path": "scripts/combat/encounter_director.gd",
+    "change": "Four lines resolve the exact current unfinished host-owned hub opponent inside host_combat_motion_context. All existing identity/realm/scope/arena/status/walking guards retained; no fixture, timer or flag changes.",
+    "source_review_turn": "01a11f7b-c87c-7fb1-9df6-d9e25ad88cb1",
+    "source_verdict": "SOURCE / PROOF-SCOPE APPROVE",
+    "proof": {
+      "run_id": 37897217283,
+      "artifact_id": 11601351583,
+      "job_id": 113711199881,
+      "checkout_sha": "57c48a8aab49ce04bd30b96f708b6e365dfef0fb",
+      "script": "tests/smoke_net_stormwood_hosted_trainers.gd",
+      "mode": "headless",
+      "extra_args": [],
+      "checks_passed": 43,
+      "unique_failed_assertions": 3,
+      "exit": 1,
+      "raw_log": "ralph/reports/F25/downloads/a-hosted-trainer-start-37897217283/raw/run.log",
+      "log_sha256": "5db3ce188b6a931cc730f0f3f0b4d4769f947d0d6a425ab61f0242bcf770e095",
+      "result": "FAIL: same guest placement, host transform and round0 follower synchronization. Admission, physical703 and stale guards pass. Source gap correction not established runtime repair; no completed-round credit."
+    },
+    "artifact_review_turn": "01a11f86-04c0-7753-b8a9-b575db8ad1ce",
+    "artifact_review": "ARTIFACT/DISPOSITION APPROVE as retained failure; PARK. Hub updates Manager only, but Director record RPC can populate its record and motion projection; retained evidence does not establish which path ran or which guard failed. Missing operands: guest Director record, received motion scope/body metadata and host input/correction sequence at failed placement. No further code correction supported by this packet; no unchanged retry. F24#5 OPEN."
+  },
   "limits": "Integrate only scoped77e181 after required proof and same original artifact approval; no whole lane ancestry, failed HP timing change or parked F33 source. No C ambient/riding/peerRunner edits; no save schema or flag overrides. Original disclosed retired-crossing fixture remains. No failed save/accepted boundary promoted, native/GPU, FullCI/main activation or publication credit."
 }
