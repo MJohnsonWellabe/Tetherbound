@@ -10,10 +10,12 @@ const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const TEMPLATE := "res://tests/fixtures/earned_saves/generated_input_base"
 
 class DataGame extends "res://autoload/game_state.gd":
-	func _ready() -> void:
+	func initialize_data() -> void:
 		# Keep the actual Game containers and Session; this test has no menu/world.
 		reset_for_new_game()
 		_mount_session()
+		# Session._ready normally reads this exact checked-in configuration.
+		session.set("_config", session.call("_load_config"))
 
 var _games: Array[Node] = []
 
@@ -21,10 +23,7 @@ func after_each() -> void:
 	for game: Node in _games:
 		game.free()
 	_games.clear()
-	var tree := Engine.get_main_loop() as SceneTree
-	var original := tree.root.get_node_or_null("Game")
-	if original != null:
-		preload("res://scripts/creatures/progression_feed.gd").set_active(original.get("local").feed)
+	preload("res://scripts/creatures/progression_feed.gd").set_active(null)
 
 func test_generated_levels_survive_same_process_and_fresh_offline_admission() -> void:
 	var directory := "user://generated_admission_%s/save" % Crypto.new().generate_random_bytes(12).hex_encode()
@@ -68,7 +67,9 @@ func test_generated_levels_survive_same_process_and_fresh_offline_admission() ->
 
 func _game(directory: String) -> DataGame:
 	var game := DataGame.new()
-	(Engine.get_main_loop() as SceneTree).root.add_child(game)
+	# run_tests executes in SceneTree._init before a main loop is installed.
+	# Detached production Game data and its real parented Session need no scene.
+	game.initialize_data()
 	game.save_system = SAVE.new(directory)
 	_games.append(game)
 	return game
