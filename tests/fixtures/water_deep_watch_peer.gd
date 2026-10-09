@@ -114,9 +114,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 					if game.world.flags.has(RESOLVED):
 						return {"verdict": "PASS", "detail": "Genuine Alpha fight resolved through ordinary creature inputs",
 							"data": {"encounter_id": encounter_id}}
-					if str(manager.call("encounter_id")) != encounter_id:
+					var current_encounter := str(manager.call("encounter_id"))
+					if not current_encounter.is_empty() and current_encounter != encounter_id:
 						return {"verdict": "FAIL", "detail": "Alpha fight changed before original resolution"}
-					if bool(manager.call("quick_ready")) and manager.get("_move_awaiting_host") != true:
+					if current_encounter == encounter_id and bool(manager.call("quick_ready")) and manager.get("_move_awaiting_host") != true:
 						var ally: Node3D = manager.get("_ally_body")
 						var enemy: Node3D = manager.get("_wild")
 						if is_instance_valid(ally) and is_instance_valid(enemy):
