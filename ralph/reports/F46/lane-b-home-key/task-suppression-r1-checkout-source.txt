@@ -1,0 +1,22 @@
+0_render.txt
+2026-10-09T11:16:02.0515652Z   CHECKOUT_REF: 75a8b409dd3d818a3c754c97984b330c2bd7055a
+2026-10-09T11:16:02.0801061Z   ref: 75a8b409dd3d818a3c754c97984b330c2bd7055a
+2026-10-09T11:16:02.4650460Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin 75a8b409dd3d818a3c754c97984b330c2bd7055a
+2026-10-09T11:16:03.7464652Z  * branch            75a8b409dd3d818a3c754c97984b330c2bd7055a -> FETCH_HEAD
+2026-10-09T11:16:03.7583547Z [command]/usr/bin/git checkout --progress --force 75a8b409dd3d818a3c754c97984b330c2bd7055a
+2026-10-09T11:17:10.1893915Z Note: switching to '75a8b409dd3d818a3c754c97984b330c2bd7055a'.
+2026-10-09T11:17:10.1898222Z HEAD is now at 75a8b409 fix(hud): restore current task after presentation suppression
+2026-10-09T11:17:10.2202311Z 75a8b409dd3d818a3c754c97984b330c2bd7055a
+2026-10-09T11:17:10.3155631Z   CHECKOUT_REF: 75a8b409dd3d818a3c754c97984b330c2bd7055a
+render/2_Validate inputs.txt
+2026-10-09T11:16:02.0515648Z   CHECKOUT_REF: 75a8b409dd3d818a3c754c97984b330c2bd7055a
+render/3_Run actions_checkout@v4.txt
+2026-10-09T11:16:02.0801058Z   ref: 75a8b409dd3d818a3c754c97984b330c2bd7055a
+2026-10-09T11:16:02.4650381Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin 75a8b409dd3d818a3c754c97984b330c2bd7055a
+2026-10-09T11:16:03.7464649Z  * branch            75a8b409dd3d818a3c754c97984b330c2bd7055a -> FETCH_HEAD
+2026-10-09T11:16:03.7583529Z [command]/usr/bin/git checkout --progress --force 75a8b409dd3d818a3c754c97984b330c2bd7055a
+2026-10-09T11:17:10.1893879Z Note: switching to '75a8b409dd3d818a3c754c97984b330c2bd7055a'.
+2026-10-09T11:17:10.1898220Z HEAD is now at 75a8b409 fix(hud): restore current task after presentation suppression
+2026-10-09T11:17:10.2202299Z 75a8b409dd3d818a3c754c97984b330c2bd7055a
+render/4_Check the script exists on that ref.txt
+2026-10-09T11:17:10.3155629Z   CHECKOUT_REF: 75a8b409dd3d818a3c754c97984b330c2bd7055a

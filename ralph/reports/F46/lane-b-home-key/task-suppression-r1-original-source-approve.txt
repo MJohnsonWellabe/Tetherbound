@@ -1,0 +1,11 @@
+Both originals **SOURCE/COMMAND APPROVE** `75a8b409dd3d818a3c754c97984b330c2bd7055a` for one headless:
+
+```text
+tests/smoke_hud_presentation_lifecycle.gd --720p
+```
+
+Expected 84 checks; runtime pending. Four new guards restore fixture state; original 80 checks remain.
+
+Both verify skin restoration: controller/config match parent `b2eaf823…` exactly. Failed measurements remain unpromoted; no third measurement approved.
+
+No earned, native, visual, device or whole F46 claim.
