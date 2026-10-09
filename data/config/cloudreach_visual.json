@@ -332,6 +332,7 @@
     "bush_tip": "#647a31"
   },
   "settlement": {
+    "floor_visual_lift_m": 0.15,
     "occupied_terrace": {
       "enabled": false,
       "_disposition": "Mixed native comparison; full Bars A/B NO. Candidate retained disabled for consolidation. Evidence: VISUAL/cloudreach-c2-candidate/occupied-street.",

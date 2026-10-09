@@ -3914,8 +3914,13 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		var bounds: AABB = _building_prefabs.call("combined_aabb", model)
 		# A complete foundation is essential here: the source prefab is assembled
 		# wall-by-wall and the former 17 m ledge cut through its outer rooms.
-		_box(model, "ContinuousStoneFloor", Vector3(bounds.get_center().x, -0.10, bounds.get_center().z),
+		var floor := _box(model, "ContinuousStoneFloor", Vector3(bounds.get_center().x, -0.10, bounds.get_center().z),
 			Vector3(bounds.size.x, 0.22, bounds.size.z), _materials["stone_light"], true)
+		# Ground-level houses share a crown whose grass cap is local y=0.13.
+		# The foundation top is y=0.01, so expose its existing masonry mesh
+		# above that cap without moving its collision, doorway or route floor.
+		if not elevated:
+			(floor.get_child(0) as MeshInstance3D).position.y = float(settlement.get("floor_visual_lift_m", 0.15))
 		_cover_exclusions.append({"centre": model.global_position,
 			"half": Vector2(bounds.size.x, bounds.size.z) * 0.5 + Vector2.ONE * 1.0,
 			"rotation": model.global_rotation.y})
