@@ -218,5 +218,122 @@
       "label": "a-nerissa-resumed-world-cdf065",
       "status": "DISPATCHED; runtime pending; no cohort or previous-tier acceptance"
     }
+  },
+  "resumed_world_cap_refusal": {
+    "source": "cdf065f952d50666507d70ac5fc58f572775e5ed",
+    "run": 37914691073,
+    "job": 113767918182,
+    "artifact": 11610100755,
+    "conclusion": "success",
+    "archive_sha256": "968bcdfc8ce6c22c3d1ee34ae990465ed85d34b8ae49738777543df8f8b25a6c",
+    "log_sha256": "b205863e55b84e7b4bd76cf6adb329286fcc3f9608b2fed98aa6558794de7f66",
+    "job_sha256": "4e31bc1854fd596ee7d551494fbcea610a3f884e35d5fd2768b3ed1e692d545b",
+    "result_count": 1,
+    "path": "ralph\\reports\\F25\\downloads\\a-nerissa-resumed-world-37914691073",
+    "status": "OPEN: collector success, capped incomplete fight; not gameplay/C2 PASS",
+    "actual_result": {
+      "arena_radius": 9.0,
+      "capped": true,
+      "error": "",
+      "faints": 0,
+      "fixture": "actual Water world; granted party; player placed at the trainer; pump flags set; isolated canonical save/admission; granted Harness/Charm gear merged into complete owner records; not earned gear",
+      "gear": "tidesteel",
+      "hits": 41,
+      "incoming_hits": 5,
+      "lead_lost_frac": 0.403897416576362,
+      "max_hit_frac": 0.104885981952972,
+      "max_observed_tell_s": 1.1,
+      "max_tell_s": 1.1,
+      "min_observed_tell_s": 0.9,
+      "min_tell_s": 0.9,
+      "observed_tells": 12,
+      "opponents_seen": 1,
+      "party_level": 32,
+      "party_lost_frac": 0.0910424504577865,
+      "party_wiped": false,
+      "pilot": "READER",
+      "seconds": 900.02,
+      "seed": 0,
+      "starter": "ripplet",
+      "terminal": {
+        "completion_resolved": false,
+        "manager_state": 2,
+        "resolution_result": {
+          "code": "round_owner_save_pending",
+          "durable": true,
+          "ok": true,
+          "resolved": false,
+          "source_id": "combat_round:19231493ae9693b50e5408bdfb318bade2916d1d95efac2a8efddf0055632228"
+        },
+        "round": 1,
+        "round_exit_pending": false,
+        "round_resolved": false,
+        "trainer_active": true
+      },
+      "terminal_outcome": "won",
+      "trainer": "water_trainer_nerissa",
+      "won": false
+    },
+    "decisive_log": {
+      "path": "ralph\\reports\\F25\\downloads\\a-nerissa-resumed-world-37914691073\\retained-godot.log",
+      "line": 11,
+      "message": "[session] combat_round_reward duty for inworld-c2-0 held: invalid_round_XP_or_cap (t=256005ms)"
+    },
+    "failed_save_operands_read_only": [
+      {
+        "uid": "creature-cf35b3b5f88320de23945cecf766da01",
+        "species_id": "ripplet",
+        "level": 32,
+        "xp": 0,
+        "cap_level": 10,
+        "breakthroughs": []
+      },
+      {
+        "uid": "creature-50e34b95f553c7b2b2deca6b1a5c4a29",
+        "species_id": "bramblebun",
+        "level": 32,
+        "xp": 0,
+        "cap_level": 10,
+        "breakthroughs": []
+      },
+      {
+        "uid": "creature-4f4425f178c9c95cdea08424a68f1213",
+        "species_id": "mudsnout",
+        "level": 32,
+        "xp": 0,
+        "cap_level": 10,
+        "breakthroughs": []
+      },
+      {
+        "uid": "creature-327faf12f07d9a83d88e8a2665a4f15f",
+        "species_id": "pipwing",
+        "level": 32,
+        "xp": 0,
+        "cap_level": 10,
+        "breakthroughs": []
+      },
+      {
+        "uid": "creature-a4bd0ecfb8dbe795e0189032ed0908a8",
+        "species_id": "trailpup",
+        "level": 32,
+        "xp": 0,
+        "cap_level": 10,
+        "breakthroughs": []
+      }
+    ],
+    "original_artifact_disposition": {
+      "reviewer": "/root/f25_medium_review",
+      "turn": "01a12036-d380-7a71-a248-018507ae99f4",
+      "verdict": "APPROVE as capped incomplete fight only"
+    },
+    "original_operand_confirmation": {
+      "reviewer": "/root/f25_medium_review",
+      "turn": "01a1203b-aa33-7b71-a6b4-0812d1746481",
+      "verdict": "confirmed L32/cap10/empty history fixture defect; no production repair approval"
+    },
+    "correction_source": "9f0ab3a77c70fca49e325553c984835d5bcbc906",
+    "correction_scope": "Existing granted party fixture only: canonical initialize_caught certificate producer before isolated save/admission, disclosed granted history/caps; no earned catch/feast history claimed",
+    "reused_control_evidence": "cdf065f952d50666507d70ac5fc58f572775e5ed: run37914043555 6 tests/38 outer assertions/0 failures with original APPROVE; unchanged water-data passing piece retained",
+    "criterion": "F33#2 OPEN; no gear tuning, failed-save promotion, accepted-boundary invention or native GPU claim"
   }
 }
