@@ -75,60 +75,6 @@ func test_cloudreach_world_mounts_the_dedicated_gate_presentation() -> void:
 	assert_true(source.contains("presentation.call(\"build\", _materials)"))
 	assert_false(source.contains("\"GateFoundationCrag\""),
 		"a second nested crag would hide the arrival gate again")
-	# Exercise the real first arrival shoulder and production support query,
-	# without a synthetic height callback or a different capture scene.
-	var world := preload("res://scripts/world/cloudreach_world.gd").new()
-	var world_cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
-	var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_visual.json"))
-	world.set("_config", world_cfg)
-	world.set("_visual_config", visual)
-	world.call("_build_materials")
-	world.call("_collect_all_route_lines")
-	var route: Dictionary = world_cfg.routes[0]
-	assert_eq(str(route.id), "arrival_gate_road")
-	var a := PRESENTATION._v3(route.polyline[0])
-	var b := PRESENTATION._v3(route.polyline[1])
-	var landmass: Dictionary = visual.landmass
-	var half_width := maxf(float(landmass.route_shoulder_min_half_width_m),
-		float(route.get("width_m", 7.5)) * float(landmass.route_shoulder_path_multiplier))
-	var parent := Node3D.new()
-	var materials: Dictionary = world.get("_materials")
-	var rows: Array = world.call("_route_ridge", parent, "Ridge000", a, b, half_width, 0,
-		materials["upland"], landmass, "arrival_gate_road")
-	var patches: Array[Dictionary] = [{"surface_rows": rows}]
-	world.set("_cover_patches", patches)
-	var at := Vector3(-24, 116, -159)
-	var size := Vector3(28, 27, 6)
-	var seated: float = world.call("_seat_realm_gate_base", at, size)
-	assert_true(seated < at.y, "the old fixed facade base was above the actual arrival shoulder")
-	for x: float in [-0.5, 0.5]:
-		for z: float in [-0.5, 0.5]:
-			var height: float = world.call("_realm_gate_floor_height", at + Vector3(x * size.x, 0, z * size.z))
-			assert_true(is_finite(height), "every facade foot has actual emitted shoulder support")
-			assert_true(seated < height, "the masonry base is seated beneath every supporting corner")
-	at.y = seated
-	var presentation := PRESENTATION.new()
-	presentation.build(_materials())
-	presentation.conform_to_floor(Callable(world, "_realm_gate_floor_height"), at)
-	var lift := float(_config().paver_lift_m)
-	for child: Node in presentation.get_children():
-		if str(child.get_meta("gate_role", "")) != "approach_paver":
-			continue
-		var paver := child as MeshInstance3D
-		assert_true(paver.mesh is ArrayMesh, "the actual existing paver conforms to the shoulder")
-		var arrays := paver.mesh.surface_get_arrays(0)
-		var points: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
-		var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
-		for index in points.size():
-			if normals[index].y <= 0.5:
-				continue
-			var point := at + paver.position + points[index]
-			var height: float = world.call("_realm_gate_floor_height", point)
-			assert_true(is_finite(height))
-			assert_almost_eq(point.y, height + lift, 0.0001, "paver top contacts the actual arrival shoulder")
-	presentation.free()
-	parent.free()
-	world.free()
 
 
 func test_named_location_catalogue_stands_on_the_approach_not_inside_the_gate() -> void:

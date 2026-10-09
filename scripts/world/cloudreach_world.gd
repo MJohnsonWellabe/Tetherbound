@@ -4119,45 +4119,14 @@ func _build_realm_gate_crag(root: Node3D) -> void:
 	# on the 34 m higher crown made the landmark read as a rock stack with a tiny
 	# unrelated castle on top, whereas this facade is the portal the road meets.
 	var facade_origin := Vector3(-24.0, -34.0, -29.0)
-	# The arrival shoulder climbs across this facade. Its rendered/collided
-	# rows, rather than the old fixed 116 m base, own every masonry foot.
-	facade_origin.y = _seat_realm_gate_base(root.to_global(facade_origin), Vector3(28, 27, 6)) - root.global_position.y
 	_castle_piece(root, "AncientCarvedGateway", CASTLE_GATE, facade_origin, Vector3(28, 27, 6), _materials["stone_light"])
 	for side: float in [-1.0, 1.0]:
-		var foot := facade_origin + Vector3(side * 12, 0, 0)
-		foot.y = _seat_realm_gate_base(root.to_global(foot), Vector3(7, 33, 7)) - root.global_position.y
-		_castle_piece(root, "GateWatchPillar", CASTLE_TOWER, foot, Vector3(7, 33, 7), _materials["stone"])
+		_castle_piece(root, "GateWatchPillar", CASTLE_TOWER, facade_origin + Vector3(side * 12, 0, 0), Vector3(7, 33, 7), _materials["stone"])
 	var presentation := REALM_GATE_CRAG_PRESENTATION.new()
 	presentation.name = "RealmGateCragPresentation"
 	presentation.position = facade_origin
 	root.add_child(presentation)
 	presentation.call("build", _materials)
-	presentation.call("conform_to_floor", Callable(self, "_realm_gate_floor_height"), presentation.global_position)
-
-
-func _realm_gate_floor_height(at: Vector3) -> float:
-	var best := NAN
-	for patch: Dictionary in _cover_patches:
-		if not patch.has("surface_rows"):
-			continue
-		var height := GROUND_COVER._ridge_surface_height(patch["surface_rows"], at)
-		if is_finite(height) and absf(height - at.y) < 8.0 \
-				and (is_nan(best) or absf(height - at.y) < absf(best - at.y)):
-			best = height
-	return best
-
-
-func _seat_realm_gate_base(at: Vector3, size: Vector3) -> float:
-	var floor_y := INF
-	for x: float in [-0.5, 0.5]:
-		for z: float in [-0.5, 0.5]:
-			var height := _realm_gate_floor_height(at + Vector3(x * size.x, 0, z * size.z))
-			if not is_finite(height):
-				push_warning("Realm Gate masonry has no exact arrival shoulder support")
-				return at.y
-			floor_y = minf(floor_y, height)
-	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(REALM_GATE_CRAG_PRESENTATION.CONFIG_PATH))
-	return floor_y - float(cfg.get("masonry_bury_m", 0.03))
 
 
 func _build_three_bells(root: Node3D) -> void:

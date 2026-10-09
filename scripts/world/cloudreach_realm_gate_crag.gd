@@ -42,39 +42,6 @@ func build(materials: Dictionary) -> void:
 			float(cfg.get("beacon_scale", 1.0)))
 
 
-func conform_to_floor(floor_height: Callable, world_origin: Vector3) -> void:
-	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
-	var lift := float(cfg.get("paver_lift_m", 0.02))
-	for child: Node in get_children():
-		if child is not MeshInstance3D or str(child.get_meta("gate_role", "")) != "approach_paver":
-			continue
-		var paver := child as MeshInstance3D
-		var source: PackedVector3Array = paver.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
-		var bounds := paver.mesh.get_aabb()
-		var vertices := PackedVector3Array()
-		var supported := true
-		for point: Vector3 in source:
-			var at := world_origin + paver.position + point
-			var height: float = floor_height.call(at)
-			if not is_finite(height):
-				supported = false
-				break
-			# Retain the existing slab depth; its top follows the actual ground
-			# at every corner, rather than hovering horizontally over a climb.
-			point.y = height - world_origin.y - paver.position.y + lift + point.y - bounds.end.y
-			vertices.append(point)
-		if not supported:
-			push_warning("Realm Gate paver has no exact arrival shoulder support: %s" % paver.name)
-			continue
-		var tool := SurfaceTool.new()
-		tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-		var indices: PackedInt32Array = paver.mesh.surface_get_arrays(0)[Mesh.ARRAY_INDEX]
-		for index in indices:
-			tool.add_vertex(vertices[index])
-		tool.generate_normals()
-		paver.mesh = tool.commit()
-
-
 func _add_banners(cfg: Dictionary, materials: Dictionary) -> void:
 	var cloth := StandardMaterial3D.new()
 	cloth.albedo_color = Color(str(cfg.get("cloth_colour", "#315f6c")))
