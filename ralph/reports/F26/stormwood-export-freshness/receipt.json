@@ -34,10 +34,18 @@
   },
   "official_mode_reference": "https://github.com/godotengine/godot/blob/4.7-stable/editor/export/editor_export_preset.h#L54",
   "queued_native": "D first/E second; stable source assets required",
-  "updated_utc": "2026-10-09T21:01:53.4695603Z",
+  "updated_utc": "2026-10-09T21:04:04.9550328Z",
   "unit_result": {
-    "reason": "Refresh on exact current-main scope",
-    "verdict": "PENDING"
+    "artifact": 11645047479,
+    "assertions": 40,
+    "verdict": "PASS",
+    "exit": 0,
+    "tests": 11,
+    "seconds": 6,
+    "script_errors": [],
+    "committed_raw_log": "ralph/reports/F26/stormwood-export-freshness/freshness-units.log",
+    "raw_log": "C:\\CodexTemp\\lane-e-549822-37990650109.log",
+    "failed": 0
   },
   "independent_source_review": {
     "reviewer": "/root/e_export_review",
@@ -46,8 +54,17 @@
     "verdict": "APPROVE"
   },
   "graphics_smoke_result": {
-    "reason": "Refresh on exact current-main scope",
-    "verdict": "PENDING"
+    "artifact": 11645072452,
+    "raw_log": "C:\\CodexTemp\\lane-e-549822-37990652785.log",
+    "verdict": "PASS",
+    "exit": 0,
+    "checks": 19,
+    "seconds": 6,
+    "scope": "Headless Settings persistence/restart routing only; no native release or Forward+ performance claim",
+    "failures": 0,
+    "script_errors": [],
+    "committed_raw_log": "ralph/reports/F26/stormwood-export-freshness/graphics-smoke.log",
+    "actual_renderer": "gl_compatibility"
   },
   "prior_affected_proofs": {
     "graphics_smoke_result": {
