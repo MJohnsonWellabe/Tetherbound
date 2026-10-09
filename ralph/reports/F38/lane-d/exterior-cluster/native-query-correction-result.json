@@ -1,0 +1,14 @@
+{
+  "criterion": "F38/F26 visual evidence remains OPEN",
+  "source": "326007ce411010ff55a0bfd764e63754805eed34",
+  "manifest_sha256": "29306b9a45892a19cf694e464e68900d9b38a5eca3ae08aec579321af8ec7eb4",
+  "terminal_exit": 1,
+  "planned_frames": 2,
+  "captured_frames": 0,
+  "original_factual_verdict": "FAILED artifact facts VERIFIED by same original f42 reviewer; parent01a11ee5-6266-7d81-bd8c-a415e944d4fd",
+  "floor_observation": "Both primary angled rays hit Terrain on same RID as body contact; y3.18122458 normal.y0.94902879. This is observed preflight progress, not floor-fix acceptance.",
+  "rejection": "Both original settled camera/player separation guards reject2.91m, minimum3.5m unchanged",
+  "source_guard": "Tracked/index clean; original import wrapper1 vs engine0 and later leaf/index revalidation retained",
+  "raw": "native-326007-failed (untracked immutable copies retained)",
+  "disposition": "Native sequence parked after failed captures. No unchanged rerun, guard lowering, collider inference, encoded raster/pixels or whole criterion PASS."
+}
