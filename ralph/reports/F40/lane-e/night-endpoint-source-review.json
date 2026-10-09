@@ -1,0 +1,147 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-09T02:02:37.798845+00:00",
+  "source_commit": "3f7c8bffa560030859076d9d3a0ee2b8818e7656",
+  "diff_base": "a74d0fdd1925662400ad938fc01048dcccf9ac81",
+  "scope": "Only exact authored night-colour endpoint and existing vine geometry test approach; named two-file headless selector and existing day/night quarter command bindings.",
+  "source_verdict": "APPROVE",
+  "headless_selector_verdict": "APPROVE",
+  "exact_day_quarter_command_verdict": "APPROVE",
+  "exact_night_quarter_command_verdict": "APPROVE",
+  "findings": [],
+  "changed_implementation_blobs": {
+    "scripts/world/world_look.gd": "d8c43d8bb42824839b9bb684518de9d2858eb8f3",
+    "tests/test_wall_foliage_normals.gd": "9cbfe6ec011b82d97a1e219703a8d540b1863f01"
+  },
+  "verified_unchanged_relevant_blobs": {
+    "scripts/world/cloudreach_look.gd": "bd0456c7c50b0106d0c2ec77e62bca5906d8951c",
+    "data/config/cloudreach_look.json": "24333968eb6117098676b627a9456b04542587d8",
+    "scenes/world/cloudreach_cliffs.tscn": "2a5d844287c370f2556e0203363b533e595db459",
+    "tests/test_world_look_fog_energy.gd": "2a35681292a00174e23d939fd3df5070400f3e01",
+    "tests/test_day_cycle_night_contrast.gd": "00f5ff4e852045163f8ba0d56c401adcf2914307",
+    "scripts/world/day_cycle.gd": "6f0b2fd6e9bc567c4b50c1f073a7400712e628b0",
+    "data/config/art.json": "d806b08949ff0dbd6b61dd6ffd4fe5e589fd15c4",
+    "data/config/weather.json": "75224b5e12bed8b1e3ee5c165c45a9767f0a7420",
+    "tools/capture_cloudreach_f40_matrix.gd": "a31126604c6643e7e4368b859f5727ad9347a6a9",
+    "data/config/cloudreach_f40_visual.json": "0521bde4a400a4af3e1d4254b8289c94dd398cd3",
+    "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1"
+  },
+  "night_endpoint_correction": {
+    "actual_delta": "After unchanged disabled/zero-weight default guard,night_weight>=1 returns _as_colour(time_colour) directly. The intermediate0<weight<1 lerp remains exact previous source.",
+    "semantics": "Ensures an authored full-night endpoint instead of subtraction/addition lerp rounding. Enabled flag,default other realms,weather energies/shadow/fog density,continuous interior clock weight and existing scene overlay remain unchanged.",
+    "test_preservation": "WorldLook fog-energy tests and exact Color assertions are unchanged; no precision tolerance weakening.",
+    "failed_artifact_limit": "Actual frozen log shows two exact Color assertions failed despite equal printed four-decimal RGBA. This is an endpoint equality failure, not a passing assertion; no numerical delta beyond the logged precision is invented."
+  },
+  "vine_geometry_test_correction": {
+    "actual_source_binding": "Reads productioncloudreach_look.gd LOOK_VINES Array[PackedScene] literal with RegEx,asserts block exists and selectedpreloads are nonempty,and imports each actual matched scene. Current list has all three direct preload paths, so all current selected meshes are checked.",
+    "geometry": "Native importedNode3D at configured height/standoff on a neutral zero-yaw wall; actualcombined_aabb preserves outside-wall positiveZ,top<=3.12,width<=2m assertions. Production_place_module geometry is unchanged and uses the same native origin/translation/zero-yaw basis in this fixture.",
+    "ownership": "No CloudreachLook Script is loaded or retained by the new test; transient selectedPackedScene instantiation and freed node tree do not introduce a new presentation-script owner across later methods. Original composer-release weakref assertion,method,order/filter and all existing normal/material/cache checks are unchanged.",
+    "limits": "This test now verifies selected imported geometry/configured placement without calling real_place_module; it does not prove production eligibility selection,visibility policy,scene placement or native obstruction. It depends on current directpreload declaration syntax; future declaration changes must remain observable by its found/nonempty guards.",
+    "runtime": "Changed test approach is source-approved only; new dispatched two-file result is pending, not claimed."
+  },
+  "historical_a74_failed_headless": {
+    "run": 37871760135,
+    "reported_source": "a74d0fdd1925662400ad938fc01048dcccf9ac81",
+    "frozen_run_log": ".tmp\\e-cluster-night-vines-a74-37871760135\\run.log",
+    "actual_run_log_sha256": "62f37f6dde2e5c7fe2505c77ee588e69343cdd8cfaae24a31d80021cb50be977",
+    "actual_counts": {
+      "tests": 13,
+      "assertions": 245,
+      "failed": 2
+    },
+    "failures": [
+      "Originaltest_repeated_prefab_placements_retain_modules_until_composer_release: composer release dropsPackedScene assertionFAIL",
+      "Newtest_cloudreach_rain_retains_night_colours_and_its_weather_energy_and_density: exact top/ambient Color endpoint equalityFAIL"
+    ],
+    "placement_default_continuity": "Log records vine geometry,original normal cases,weather default/continuity and existing fog cases as passing. None promotes the whole failed batch.",
+    "failure_disposition": "Retained real failure,not flake or unchanged retry. a74 SOURCE/COMMAND approvals remain historical applicability,not runtime success."
+  },
+  "day_cycle_piece_reuse": {
+    "actual_logged_passing_cases": [
+      "test_the_dark_window_does_not_open_before_the_light_has_actually_gone",
+      "test_the_night_look_is_held_across_the_middle_of_the_night_not_merely_touched",
+      "test_the_real_config_has_a_dark_window_and_keyframes_to_blend_across_it",
+      "test_true_dark_is_about_two_real_minutes_of_the_ten_minute_day"
+    ],
+    "cases": 4,
+    "verdict": "APPLICABLE_UNCHANGED_LOGGED_ASSERTION_PIECE_WITH_SOURCE_PROVENANCE_LIMIT",
+    "source_scope": "Day-cycle test/script/artconfig unchangeda74..3f7; WorldLooklight_budget_at/blended_config_at path used by these tests does not call changed_weather_colour. Therefore no automatic rerun is needed for this unaffected arithmetic piece.",
+    "provenance_limit": "Supplied frozenrun.log verifies fourpassing cases. No exactcheckout/job witness was supplied in this bounded task; reporteda74 identity is preserved separately and not claimed independently verified by the result text. No per-file assertion split is invented.",
+    "not_proven": "Does not prove mounted rain-night endpoint or native day/night appearance."
+  },
+  "headless_command": [
+    "Godot",
+    "--headless",
+    "--path",
+    "<clean pinned 3f7c8bffa560030859076d9d3a0ee2b8818e7656 worktree>",
+    "--script",
+    "res://tests/run_tests.gd",
+    "--",
+    "--only=test_wall_foliage_normals.gd,test_world_look_fog_energy.gd"
+  ],
+  "exact_native_commands": {
+    "day": [
+      "Godot",
+      "--path",
+      "<fresh clean ROOT worktree pinned to 3f7c8bffa560030859076d9d3a0ee2b8818e7656>",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_matrix.gd",
+      "--",
+      "--biome=cloudreach",
+      "--preset=High",
+      "--source-commit=3f7c8bffa560030859076d9d3a0ee2b8818e7656",
+      "--segment=day",
+      "--output=res://.tmp/f40-cluster-high-3f7-day-r1"
+    ],
+    "night": [
+      "Godot",
+      "--path",
+      "<fresh clean ROOT worktree pinned to 3f7c8bffa560030859076d9d3a0ee2b8818e7656>",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_matrix.gd",
+      "--",
+      "--biome=cloudreach",
+      "--preset=High",
+      "--source-commit=3f7c8bffa560030859076d9d3a0ee2b8818e7656",
+      "--segment=night",
+      "--output=res://.tmp/f40-cluster-high-3f7-night-r1"
+    ]
+  },
+  "quarter_applicability": "Matrix/bootstrap/config/stands/guards unchanged. Each command is one original96-row quarter=12destinations\u00d74views\u00d72weather. Full384/minimum200 plan remains before selection; required-four-clocks and full_matrix_complete=false partial scope retained. No subset,repair,candidateflag or invented harness.",
+  "historical_a990_fight_failure": {
+    "packet": "D:/CodexTemp/tetherbound-proof/native-e-a990d7f7e8-cloudreach-fights-r1",
+    "status": "ROOT-reported terminalexit1 at2026-10-09T01:55:56Z;not independently audited in this source task",
+    "reported_observations": {
+      "victory_coins": 150,
+      "ally_hits": 62,
+      "damage": 1065.9,
+      "saved_pngs": 53,
+      "error": "F40fightmanifestmissing at childline34; no finalF40graphics/source receipt"
+    },
+    "disposition": "Failed capture proof retained,distinct fromSOURCEAPP. Do not promote reported battlewin/basecomplete/rendering data into fullfight PASS or retry unchangedMedium. Exactfighthelper correction requires a separate bounded task; no cause guessed here."
+  },
+  "preserved_gates": [
+    "b317 production vine source/geometry approval unchanged; failedb317/a74 lifetime results retained.",
+    "c427 Shrine/sign8/64 artifact approval remains on unchanged relevant paths.",
+    "f03 native mount failure andeda High blindFAIL preserved; no completedfullcluster/READY claim."
+  ],
+  "pending_gates": [
+    "New affected3f7 two-file headless artifact",
+    "Actual3f7 Highday96/night96 source/driver/raster/clock/weather/physicalcamera guards and original independent visual review",
+    "Remaining currentfull384/Medium matrices and wholecluster acceptance",
+    "Separate corrected captain-fight source/receipt/native gates"
+  ],
+  "reviewer_limits": [
+    "No engines/import/GPU/tests/dispatch/newhelpers/source edits/judge contact.",
+    "Only this authorized evidence artifact written.",
+    "No current native/visual/wholeF40/F08 or earned/device/performance approval."
+  ]
+}

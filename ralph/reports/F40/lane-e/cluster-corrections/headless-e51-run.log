@@ -1,0 +1,14 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_phase2_fight_capture_lifecycle.gd: 1 of 826 test files
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_budget_stop_never_becomes_victory_even_at_won_boundary
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_complete_requires_all_three_saved_phases_and_no_failures
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_f40_fight_manifest_accepts_exact_json_resolution_roundtrip
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_hidden_panel_is_expired_only_after_queue_and_pause_clear
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_hidden_paused_or_modal_receipt_is_not_a_captureable_receipt
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_observer_rejection_and_image_failure_survive_terminal_export
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_partial_failure_keeps_valid_images_without_claiming_lifecycle_complete
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_receipt_must_be_new_visible_from_expected_trainer_and_in_banner
+
+8 tests, 69 assertions, 0 failed
+exit=0 took=9s

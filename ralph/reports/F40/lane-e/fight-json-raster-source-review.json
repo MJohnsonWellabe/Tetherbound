@@ -1,0 +1,182 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-09T02:10:49.026225+00:00",
+  "source_commit": "e51ccb09b649e2f240d37f247e0372ef9b49ffc3",
+  "diff_base": "3f7c8bffa560030859076d9d3a0ee2b8818e7656",
+  "scope": "Only F40 fight JSON raster decoder and existing lifecycle regression; original 3f7 frozen headless evidence and permitted failed a990 component provenance, plus unchanged scenery/argv bindings.",
+  "source_verdict": "APPROVE",
+  "exact_high_fight_command_verdict": "APPROVE",
+  "exact_medium_fight_command_verdict": "APPROVE",
+  "headless_lifecycle_selector_verdict": "APPROVE",
+  "exact_high_day_quarter_command_verdict": "APPROVE",
+  "exact_high_night_quarter_command_verdict": "APPROVE",
+  "findings": [],
+  "reviewed_blobs": {
+    "scripts/world/world_look.gd": {
+      "base": "d8c43d8bb42824839b9bb684518de9d2858eb8f3",
+      "reviewed": "d8c43d8bb42824839b9bb684518de9d2858eb8f3"
+    },
+    "scripts/world/cloudreach_look.gd": {
+      "base": "bd0456c7c50b0106d0c2ec77e62bca5906d8951c",
+      "reviewed": "bd0456c7c50b0106d0c2ec77e62bca5906d8951c"
+    },
+    "data/config/cloudreach_look.json": {
+      "base": "24333968eb6117098676b627a9456b04542587d8",
+      "reviewed": "24333968eb6117098676b627a9456b04542587d8"
+    },
+    "tests/test_wall_foliage_normals.gd": {
+      "base": "9cbfe6ec011b82d97a1e219703a8d540b1863f01",
+      "reviewed": "9cbfe6ec011b82d97a1e219703a8d540b1863f01"
+    },
+    "tests/test_world_look_fog_energy.gd": {
+      "base": "2a35681292a00174e23d939fd3df5070400f3e01",
+      "reviewed": "2a35681292a00174e23d939fd3df5070400f3e01"
+    },
+    "tools/capture_cloudreach_f40_matrix.gd": {
+      "base": "a31126604c6643e7e4368b859f5727ad9347a6a9",
+      "reviewed": "a31126604c6643e7e4368b859f5727ad9347a6a9"
+    },
+    "data/config/cloudreach_f40_visual.json": {
+      "base": "0521bde4a400a4af3e1d4254b8289c94dd398cd3",
+      "reviewed": "0521bde4a400a4af3e1d4254b8289c94dd398cd3"
+    },
+    "tools/lookdev_capture_bootstrap.gd": {
+      "base": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+      "reviewed": "8c1859c4094c5bce3030080831810a67cf0a06c1"
+    },
+    "tools/phase2_capture_cloudreach_live_fight.gd": {
+      "base": "de8d7f64a3aeb78814951ca2fb79b2979bb67c40",
+      "reviewed": "de8d7f64a3aeb78814951ca2fb79b2979bb67c40"
+    },
+    "tools/capture_manifest_writer.gd": {
+      "base": "8d4df196957c20b645845bcdd3c8382b0c559876",
+      "reviewed": "8d4df196957c20b645845bcdd3c8382b0c559876"
+    },
+    "tests/test_capture_manifest_writer.gd": {
+      "base": "ee752d5030ce7a5d87c9fb7b75c353721797e098",
+      "reviewed": "ee752d5030ce7a5d87c9fb7b75c353721797e098"
+    },
+    "tools/capture_cloudreach_f40_fight.gd": {
+      "base": "18ac77a796e682b8ebeafe77fa8a6b2f0a889edd",
+      "reviewed": "b6e1bdc7e134db01acbe56845787a665641c50e0"
+    },
+    "tests/test_phase2_fight_capture_lifecycle.gd": {
+      "base": "dda3ab5b9e0f74e283619ab820d3ea5c18919f3b",
+      "reviewed": "e181f42cde11580e88ea0dffaca478245723df95"
+    }
+  },
+  "correction": {
+    "implementation": "fight_manifest_matches requires a Dictionary, actual TYPE_BOOL complete=true, exact FIGHT_ID, nonempty TYPE_STRING expected renderer and matching actual rendering_method. Both raster arrays must have exactly two elements. Expected dimensions must be positive TYPE_INT; actual dimensions may only be TYPE_INT/TYPE_FLOAT, finite, and exactly equal to float(expected). JSON float decoding is accepted without tolerances or lossy rounding. Invalid length, missing dimensions, strings, booleans, fractions and NaN/Inf fail closed.",
+    "preserved": "Existing parent manifest production, failed short circuit, final graphics/source/fixture metadata, staged write_json result and exact byte readback remain unchanged. Scene/runtime readiness, captain interaction, live input, five current-band fixture, party/stat/seed/timing/budget, authority and writer are unchanged in this two-code-path delta.",
+    "regression": "Existing seven lifecycle methods unchanged. One new method proves native integer receipt plus JSON-decoded floating-number roundtrip, malformed/null arrays, wrong dimensions/fractions/strings/bools/nonfinite values, false/string complete, wrong fight/renderer, missing required fields, null receipt, empty graphics and floating expected bootstrap rejection. This is predicate logic only; new e51 selected runtime pending.",
+    "api": "Static inherited FIGHT_ID and Godot Variant typeof/is_finite guards are consistent with actual code; no new engine execution was performed."
+  },
+  "commands": {
+    "fight_high": "Godot --path <fresh clean ROOT worktree pinned e51ccb09b649e2f240d37f247e0372ef9b49ffc3> --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_fight.gd -- --preset=High --source-commit=e51ccb09b649e2f240d37f247e0372ef9b49ffc3 --seed=2042 --output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1",
+    "fight_medium": "Godot --path <fresh clean ROOT worktree pinned e51ccb09b649e2f240d37f247e0372ef9b49ffc3> --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_fight.gd -- --preset=Medium --source-commit=e51ccb09b649e2f240d37f247e0372ef9b49ffc3 --seed=2042 --output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1",
+    "matrix_day": "Godot --path <fresh clean ROOT worktree pinned e51ccb09b649e2f240d37f247e0372ef9b49ffc3> --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=High --source-commit=e51ccb09b649e2f240d37f247e0372ef9b49ffc3 --segment=day --output=res://.tmp/f40-cluster-high-e51-day-r1",
+    "matrix_night": "Godot --path <fresh clean ROOT worktree pinned e51ccb09b649e2f240d37f247e0372ef9b49ffc3> --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=High --source-commit=e51ccb09b649e2f240d37f247e0372ef9b49ffc3 --segment=night --output=res://.tmp/f40-cluster-high-e51-night-r1",
+    "headless_lifecycle": "Godot --headless --path <clean worktree pinned e51ccb09b649e2f240d37f247e0372ef9b49ffc3> --script res://tests/run_tests.gd -- --only=test_phase2_fight_capture_lifecycle.gd"
+  },
+  "command_limits": {
+    "matrix": "Each original quarter is 96 rows: 12 destinations x four views x two weather states, chosen only after the original full 384 plan/minimum-200 guards. Same stands/clock/weather/camera/floor/travel/preset/source/receipt guards. Partial quarter is not full384 approval. No candidate flags or post-pin mutations.",
+    "fight": "Existing supported source/preset/seed/output args only. In-memory summit flags and five directly created current-band creatures, production captain challenge and live controller-input pilot; no earned campaign, co-op, balance or device claim. Actual High/Medium current source PNG/readback/exit/native/visual evidence pending."
+  },
+  "actual_3f7_headless": {
+    "verdict": "APPROVE",
+    "run": 37872423117,
+    "job": 113633302179,
+    "artifact": 11590443298,
+    "source": "3f7c8bffa560030859076d9d3a0ee2b8818e7656",
+    "run_log": ".tmp\\e-cluster-endpoint-resources-3f7-37872423117\\run.log",
+    "run_log_sha256": "fe53a5715e36af9575294155bfba5a1dfebe273baddf9966b09b92888f09f8d5",
+    "portable_log": "ralph/reports/F40/lane-e/cluster-corrections/headless-3f7-run.log",
+    "portable_log_sha256": "fe53a5715e36af9575294155bfba5a1dfebe273baddf9966b09b92888f09f8d5",
+    "job_log": ".tmp\\e-cluster-endpoint-resources-3f7-37872423117\\job.log",
+    "job_log_sha256": "a07b9edad76d90f19360435a1f575a367aaaed0f53d8ed375a9cf8b910004398",
+    "actual": "Godot 4.7.stable.official.5b4e0cb0f; exact checkout/fetch/HEAD pin in job log, tests/run_tests.gd, exact --only=test_wall_foliage_normals.gd,test_world_look_fog_energy.gd, mode=headless. Nine named cases, 232 assertions, zero failed, exit_code file 0 and actual exit=0 took=8s footer. No ERROR/SCRIPT ERROR/warning in run.log. Artifact identity/upload matches supplied run/artifact.",
+    "coverage": "All four wall cases including geometry and original composer-release weakref, and five fog-energy/default/scoping/continuous/exact-night cases reached. These source/test blobs are identical at e51; reuse is supported. This artifact is not native rendering or placement visibility proof.",
+    "history": "Original b317 and a74 resource-ownership failures and a74 exact-endpoint failure remain failures, not flakes or retroactive PASS. Existing a74 four day-cycle passing math pieces and c427 eight-test/64-assert source-bound shrine/sign proof reuse remains unchanged; no new audit/rerun of them."
+  },
+  "failed_a990_component": {
+    "whole_capture_disposition": "FAILED_CAPTURE_PACKET, not promoted or repaired",
+    "source": "a990d7f7e8d7d9ddabac9dc2efcac2b03bf33d00",
+    "actual_process_exit_code": 1,
+    "source_after": "Head/index tree 1ce22a64fe119142dc51e14a1b155553e9c1e9dd; status contains only untracked producer-output directory, retained rather than called wholly clean. Frozen source identity is a990.",
+    "bounded_files": {
+      "failed-high-summary.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-a990d7f7e8-cloudreach-fights-r1\\failed-high-summary.json",
+        "sha256": "ce44f71cd719dabbf86bef91ab5d2969e0bbd8a8901e07742292800662a4817e"
+      },
+      "failed-high-base-manifest.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-a990d7f7e8-cloudreach-fights-r1\\failed-high-base-manifest.json",
+        "sha256": "856a2f340b37f714867c7eea7909233168d41084575e01a94df786426aa48ee3"
+      },
+      "failed-high-image-integrity.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-a990d7f7e8-cloudreach-fights-r1\\failed-high-image-integrity.json",
+        "sha256": "32b148c30e19a0001adb71172819147bad3c58806700282ec6286d0144e9fc8a"
+      },
+      "SHA256SUMS-failed-high.txt": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-a990d7f7e8-cloudreach-fights-r1\\SHA256SUMS-failed-high.txt",
+        "sha256": "44d6f8caa12ea76c88577f5d12ec99143106b2d3f6a15d8a5f4c1d8b58027bc9"
+      },
+      "source-after-failed-high.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-a990d7f7e8-cloudreach-fights-r1\\source-after-failed-high.json",
+        "sha256": "f89401fb5b5ee8b9db554029d1c05de6c5c06da7d8e5e83efa8ac94958942114"
+      },
+      "fight-high-start.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-a990d7f7e8-cloudreach-fights-r1\\fight-high-start.json",
+        "sha256": "5c634cadeee200f8a76c59883e34b7674ab8e92a99cb8459085324f32b7f9214"
+      },
+      "fight-high-terminal.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-a990d7f7e8-cloudreach-fights-r1\\fight-high-terminal.json",
+        "sha256": "4dc782c74b73a19ed7b9debda23c53ffcc2da81184102811845b9ff63561b396"
+      }
+    },
+    "independently_verified": "All 71 entries in SHA256SUMS-failed-high.txt exist and hash-match. All 53 image-integrity entries exist, byte counts and SHA256 match, actual PNG signature/header is 1920x1080 and every chunk CRC verifies through exact end of file. Base manifest has 53 unique IDs, all 53 original file names pair exactly with those images; complete=true, failure=false, victory=true, FIGHT_ID=captain_veyra_storm_anchor, seed2042, Windows/forward_plus, resolution[1920,1080]. First frame fighting/trainer active; aftermath both false. Native start has original High/source/seed/path argv; terminal physical exit1. Child graphics_capture/candidate_preview/fixture_level metadata is absent.",
+    "base_fixture_disclosure": "Base manifest explicitly discloses in-memory summit progression flags and five level-25 creatures, production captain challenge/live input. No reward transaction or earned progression assertion follows from victory=true.",
+    "not_independently_reaudited": "ROOT-reported mounted-ready583.856<600, coins150, hits62 and damage1065.9 are preserved reported context; permitted summaries/base manifest do not themselves supply these numerical observations. No whole stdout or live-file audit was performed.",
+    "decoder_compatibility": "The frozen complete/FIGHT_ID/rendering_method/resolution fields satisfy the corrected e51 predicate using exact bootstrap forward_plus/[1920,1080]. Old JSON decode uses numeric FLOATs whereas prior Array comparison matched numeric Variant types. This correction does not retroactively execute/read back a new child receipt or change exit1.",
+    "component_reuse_verdict": "APPROVE only historical actual-image integrity, producer victory/base-persistence and unchanged gameplay/pilot/source-footprint pieces. Final current-source F40 graphics/source metadata, child final write/readback, clean successful terminal and High/Medium native acceptance require new actual captures.",
+    "visual_reuse_limit": "Actual base/frame records have no clock/weather controls. Cloudreach palette/config differ from a990: enabled preservation changes positive-night weather colour. No current visual equivalence is established. Prior a990 visual reuse is conditional only on actual Clear or zero-night-weight evidence, which these records do not establish; no invented weather/clock or visual PASS.",
+    "history": "Prior f03 missing runtime/chapter native failure and historical source/command APPs, a990 exit1 and missing-child-metadata failure, eda High full384 valid runtime but blind bar FAIL remain separate retained history. No unchanged Medium retry credited."
+  },
+  "unchanged_evidence_reuse": {
+    "writer": "Six accepted writer cases: writer and writer-test blobs identical 3f7/e51 and to original42f6 passing pieces. No repeat requested. Lifecycle is a separate batch; new preload/decoder method does not convert writer proof into Cloudreach actual PNG/exit-path proof.",
+    "scenery": "3f7 WorldLook, CloudreachLook/config, F40 matrix/config/bootstrap, wall/fog cases unchanged at e51; exact e51 High day/night argv binding approved by identity, not a new rendering or full-matrix claim."
+  },
+  "remaining_gates": [
+    "Existing e51 selected lifecycle artifact verification when completed.",
+    "Actual current High and Medium fight PNG/manifest/final graphics-source/readback/terminal evidence.",
+    "Actual changed High day/night quarter rendering and original independent visual verdict; remaining full384/Medium cluster coverage and full bar.",
+    "F40#3, F40#5 and F08#3 whole cluster remain OPEN; no component READY or source visual PASS."
+  ],
+  "affected_artifact_reviews": [
+    {
+      "reviewed_at_utc": "2026-10-09T02:14:15.236215+00:00",
+      "verdict": "APPROVE",
+      "source": "e51ccb09b649e2f240d37f247e0372ef9b49ffc3",
+      "run": 37872826277,
+      "job": 113634542292,
+      "artifact": 11591206023,
+      "run_log": ".tmp\\e-cluster-json-raster-e51-37872826277\\run.log",
+      "run_log_sha256": "64cc3c4f90dde2c3c516a8bbe5111cbc6e8eb5af45affbaf774b199e571f4049",
+      "portable_log": "ralph\\reports\\F40\\lane-e\\cluster-corrections\\headless-e51-run.log",
+      "portable_sha256": "64cc3c4f90dde2c3c516a8bbe5111cbc6e8eb5af45affbaf774b199e571f4049",
+      "portable_binding": "Byte-identical to frozen run.log, not just matching reported text.",
+      "job_log": ".tmp\\e-cluster-json-raster-e51-37872826277\\job.log",
+      "job_log_sha256": "867a01e9ba447500b60dfdd35ddfb33ea35d5351566a21c38c48f1534c587e2e",
+      "exit_code": 0,
+      "tests": 8,
+      "assertions": 69,
+      "failed": 0,
+      "seconds": 9,
+      "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+      "exact_source_binding": "Actual fetch/checkout/HEAD and git log full pin in job lines135/147/271/274. SCRIPT tests/run_tests.gd and exact --only=test_phase2_fight_capture_lifecycle.gd in lines57/58 and5018/5019. Mode headless. Run/artifact upload matches37872826277/11591206023.",
+      "actual_coverage": "The new test_f40_fight_manifest_accepts_exact_json_resolution_roundtrip and all seven original lifecycle cases appear as ok. Accepted source review establishes actual new method includes positive native-integer/JSON-float roundtrip and malformed numeric/metadata negatives without skipped branches. No new hunk/source review or test execution was performed.",
+      "diagnostics": "No SCRIPT ERROR, ERROR or warnings in actual selected run.log.",
+      "proof_limits": "This completes only the existing affected headless JSON-predicate/lifecycle logic gate. Seven original lifecycle cases are retained Tidewake/receipt-state proof, not Cloudreach actual native PNG, child graphics/source metadata/readback or exit-path proof. Headless declared RES1280x720 does not establish GPU image/device evidence. Actual High/Medium native final receipt/terminal and original blind visual gates remain required.",
+      "history": "Earlier e51 runtime-pending statements are historical; this completed artifact supersedes only that pending affected logic gate. All prior source/command APPs, failed a990/b317/a74 packets and whole F40#3/#5/F08#3 OPEN limits remain intact."
+    }
+  ]
+}
