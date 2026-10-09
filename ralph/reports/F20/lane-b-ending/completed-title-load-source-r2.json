@@ -1,0 +1,12 @@
+{
+  "kind": "corrected_hydrated_completed_fixture_source_review",
+  "source": "da27096ee9e9c343094454866f938997a76d4d1c",
+  "original_source_verdict": "Both originals approve:\n\n- **F20 source/command:** `da27096ee9e9c343094454866f938997a76d4d1c`. The failed attempt stopped before copy/Title Load. Corrected fixture URI is hydrated; provenance and all three save blobs are unchanged. One fresh `--completed-fixture --functional-offload` run is eligible.\n- **Relay source:** `0e6ae707c6c0db8afd34d8159dafe64dc519ddd1`. Capture observes the actual rescue while Sela remains visible during dialogue. No repeated unit batch required; ROOT\u2019s same six-frame native recipe is eligible with fresh storage.\n\nF20#3 alpha/research/blind gates and all retained Sartre gaps remain open. **No visual PASS or READY.**",
+  "runtime_input": "tests/fixtures/f20_completed_input_377715/PROVENANCE.json",
+  "input_bytes": "Identical original377715@505d artifact11547889318 manifest+3Save files; original reported hashes retained.",
+  "command": "tests/smoke_f20_ending.gd --completed-fixture --functional-offload",
+  "whole_criterion_closed": false,
+  "earned_finale": false,
+  "accepted_earned_boundary": false,
+  "native_dispatched_by_B": false
+}

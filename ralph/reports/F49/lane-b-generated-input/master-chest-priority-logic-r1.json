@@ -28,5 +28,12 @@
   "hall_completion_proven": false,
   "whole_criterion_closed": false,
   "failed_save_input_used": false,
-  "functional_hall_dispatched": false
+  "functional_hall_dispatched": true,
+  "actual_invocation": {
+    "run_id": 37881826830,
+    "source": "832af5e440bf89ed6adffd9d6cf5e8e4388b3537",
+    "label": "b-hall-chest-priority-r1",
+    "generated_profile_unchanged": true,
+    "failed_save_input_used": false
+  }
 }

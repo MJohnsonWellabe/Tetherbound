@@ -1,0 +1,62 @@
+{
+  "kind": "relay_earned_sela_capture_source_timing_correction",
+  "source": "0e6ae707c6c0db8afd34d8159dafe64dc519ddd1",
+  "source_path": "tests/helpers/meadows_earned_relay_segment.gd",
+  "temp_patch_sha256": "dca4843a7b6160b3249fc1003c6f2a2d8913d5e5a9fe0fed11b45c5c4b78cf64",
+  "original_helper_before_sha256": "b8a5b80148a1bfc3e1fd56a1a0ffe9c794482fd5841abd42b14f0491a062fffc",
+  "supported_cause": "Second of four authored lines earns1gear+captive_rescued. Production relocation is postponed while dialogue remains open, then happens on first frame after close. Oldrescue snapshot after_talk+physics waits necessarily lost Sela.",
+  "source_change": "Capture same sela-rescued label on actual false->true rescue+exact1gear effect with same live visible speaker/prompt/activatedID and openpanel, then complete original dialogue. Final rescue/export/phase/CID/five/draw guards and same6labels/order/count retained.",
+  "staging_or_camera_or_production_relocation_changes": false,
+  "original_source_verdict": "Both originals approve:\n\n- **F20 source/command:** `da27096ee9e9c343094454866f938997a76d4d1c`. The failed attempt stopped before copy/Title Load. Corrected fixture URI is hydrated; provenance and all three save blobs are unchanged. One fresh `--completed-fixture --functional-offload` run is eligible.\n- **Relay source:** `0e6ae707c6c0db8afd34d8159dafe64dc519ddd1`. Capture observes the actual rescue while Sela remains visible during dialogue. No repeated unit batch required; ROOT\u2019s same six-frame native recipe is eligible with fresh storage.\n\nF20#3 alpha/research/blind gates and all retained Sartre gaps remain open. **No visual PASS or READY.**",
+  "checks_reused": [
+    "OriginalRelayfunctional37794979390@977 behaviorAPP",
+    "Originalsixframe1eaa native behaviorAPP; SartreBLOCK unchanged",
+    "Console92194 10tests245asserts0fail originalAPP",
+    "Caller/parser37864266366 6tests69asserts0fail originalAPP"
+  ],
+  "new_unit_batch_required_by_originals": false,
+  "root_native_recipe": {
+    "source": "0e6ae707c6c0db8afd34d8159dafe64dc519ddd1",
+    "scheduling_owner": "ROOT exclusively, D/E native GPU writer",
+    "checkout": "exact pinned source, tracked-clean; fresh isolated user directory",
+    "output_root_must_be_absent": "D:/CodexTemp/tetherbound-proof/b-f02-relay-native-0e6-r1",
+    "command_arguments": [
+      "--path",
+      "<ROOT-scheduled D/E exact checkout>",
+      "--rendering-method",
+      "gl_compatibility",
+      "--resolution",
+      "1280x720",
+      "--script",
+      "tools/earned_saves/earned_chain_runner.gd",
+      "--",
+      "--segment=relay",
+      "--generated-fixture",
+      "--capture-relay",
+      "--save-dir=D:/CodexTemp/tetherbound-proof/b-f02-relay-native-0e6-r1/relay/save",
+      "--receipt=D:/CodexTemp/tetherbound-proof/b-f02-relay-native-0e6-r1/relay/receipt.json"
+    ],
+    "expected_frame_labels": [
+      "relay-captain-fight",
+      "relay-sela-exchange",
+      "relay-sela-rescued",
+      "relay-console-before",
+      "relay-console-aftermath",
+      "relay-mill-far-bank"
+    ],
+    "capture_writer": "Existing tests/helpers/f20_ending_probe.gd completed-frame native framebuffer; shots/f20-ending-<pid>/<index>-<label>.png",
+    "presentation_overrides": false,
+    "same_original_blind_reviewer": "b_night_visual / Sartre / 01a116e6-3a0e-7860-b032-74fdeb1b21e6; pixels only",
+    "native_run_dispatched_by_B": false,
+    "input_disclosure": "Generated healthy post-Warrens, five original template UIDs/species/inventory/flags; no prior earned play or continuous-fresh-save claim. Reuse accepted real Relay suffix mechanics only.",
+    "original_source_verdict": "Both originals approve:\n\n- **F20 source/command:** `da27096ee9e9c343094454866f938997a76d4d1c`. The failed attempt stopped before copy/Title Load. Corrected fixture URI is hydrated; provenance and all three save blobs are unchanged. One fresh `--completed-fixture --functional-offload` run is eligible.\n- **Relay source:** `0e6ae707c6c0db8afd34d8159dafe64dc519ddd1`. Capture observes the actual rescue while Sela remains visible during dialogue. No repeated unit batch required; ROOT\u2019s same six-frame native recipe is eligible with fresh storage.\n\nF20#3 alpha/research/blind gates and all retained Sartre gaps remain open. **No visual PASS or READY.**",
+    "affected_logic_pass_condition_fulfilled": true,
+    "actual_native_capture_passed": false,
+    "required_blind_pass": false,
+    "prior_console_92194_recipe_disposition": "Superseded planned candidate by distinct supported capture-timing source, if ROOT has not started92194. ROOT alone decides serialized scheduling; no duplicate live native run."
+  },
+  "required_blind_pass": false,
+  "whole_criterion_closed": false,
+  "native_dispatched_by_B": false,
+  "remaining": "Original Sartre creature/world lighting gaps and required new actual packet/blind verdict remain open. No claim that timing alone resolves full Bars."
+}
