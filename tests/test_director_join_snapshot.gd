@@ -581,7 +581,8 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: b
 	var picker_host := preload("res://scripts/combat/accepted_action_host.gd").new(1)
 	var picker_record: Dictionary = picker_host.open(1, "meadows", "trainer",
 		{"hp": 200.0, "hp_max": 200.0, "species_id": "bramblebun",
-		 "owner_npc": str(trainer_spec.id)}, striker.uid, owners[1])
+		 "owner_npc": str(trainer_spec.id), "card": {"uid": enemy.uid},
+		 "body_generation": int(_native_host.get("_trainer_sent"))}, striker.uid, owners[1])
 	var picker_id := str(picker_record.encounter_id)
 	var saved_scopes: Dictionary = (_native_host.get("_ordinary_combat_reward_owners") as Dictionary).duplicate(true)
 	var picker_scope := preload("res://scripts/net/combat_round_reward.gd").scope(
@@ -838,6 +839,7 @@ func _case_native_guest_kill_advances_host_trainer_round() -> void:
 		"species_id": enemy.species_id, "level": enemy.level, "hp": enemy.hp,
 		"hp_max": enemy.max_hp, "owner_npc": "native-trainer-regression",
 		"card": NATIVE_CREATURE_CODEC.encode(enemy),
+		"body_generation": int(_native_host.get("_trainer_sent")),
 		"position": [foe.centre().x, foe.centre().y, foe.centre().z]}, host_creature.uid, owners[1])
 	var encounter_id := str(rec.encounter_id)
 	_native_host.set("_encounter", rec)
