@@ -1,0 +1,17 @@
+{
+  "criterion": "F19#4 OPEN; this is one fixture proof toward the whole criterion",
+  "source": "e4e739f690a4406441085f9c0d2beb90742035ed",
+  "script": "tests/smoke_f19_solmane_functional.gd",
+  "run": 37879213619,
+  "job": 113654759798,
+  "workflow": "render.yml dispatched from main with exact checkout SHA",
+  "mode": "render / gl_compatibility / Dummy audio; original helper disables continuous drawing before the inherited driver",
+  "arguments": "empty; no capture arguments or altered case selection",
+  "limit_minutes": 60,
+  "original_command_approve": "01a11eaf-cc2d-7523-be54-ce7f25a27b09; same original f42 reviewer",
+  "original_guards": "Compatibility display/backend requirement, capture/headless rejection, original six scenarios, settling/choice budgets, five-cap, live prompts/release ceremony, save/reload and no-reoffer checks",
+  "fixtures": "Original declared Veyra/aftermath flags, factory party, staged lever/prompt poses and in-process reload; no earned route or accepted boundary claimed",
+  "previous_rejected_piece": "37081327114 at1351af5394: completed choices but four engine errors; never reusable as clean evidence",
+  "runtime": "pending terminal, exact artifact and original artifact review; no passing credit",
+  "not_proven": ["all four legendary offers", "multiplayer participants", "earned journey", "GPU compilation/behavior", "pixels", "audio playback", "device performance", "whole F19#4"]
+}
