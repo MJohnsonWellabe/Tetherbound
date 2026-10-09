@@ -108,8 +108,53 @@
     "original_source_approve_turn": "01a11f9b-1ea4-7373-ac05-51dd2a22c6bb",
     "verdict": "SOURCE/COMMAND APPROVE only",
     "command": "tests/smoke_net_owner_passive_rejoin.gd --prove-shipping-tether --prove-tag-combo --prove-tether-snare --prove-tether-rally",
-    "runtime": "NOT RUN; deferred behind the higher-priority PR592 shared-boss bounce and the single A hosted slot.",
+    "runtime": {
+      "run_id": 37904625196,
+      "job_id": 113735002759,
+      "source_commit": "1418e2a8bc424cea426232d9d060405300b1b509",
+      "script": "tests/smoke_net_owner_passive_rejoin.gd",
+      "args": "--prove-shipping-tether --prove-tag-combo --prove-tether-snare --prove-tether-rally",
+      "mode": "headless",
+      "status": "completed",
+      "conclusion": "FAIL",
+      "artifact_id": 11604176719,
+      "artifact_sha256": "eadf1ec27f8dce10f22da24261cad0de967c6c5da57ee30747c9f15ba8400a62",
+      "artifact_digest_matched": true,
+      "checkout_exact": true,
+      "run_log_sha256": "5afa66bc68bf988ab03b186b1f45e65ee0257c73c621fb37b1a140b4b515acca",
+      "pass_lines": 21,
+      "unique_failures": 1,
+      "actual_failure": "Eight accepted quick attempts did not earn the required25 Item meter; no Item command submitted.",
+      "first_actual_submitted_zero_hp_strike": {
+        "action": 2.0,
+        "encounter_id": "1:1",
+        "finished": true,
+        "finished_ms": 220450.0,
+        "invoked": true,
+        "peer": 64372470.0,
+        "started_ms": 220421.0,
+        "verdict": {
+          "code": "",
+          "delta_connected": null,
+          "delta_damage": null,
+          "delta_hit": false,
+          "delta_hp": null,
+          "delta_scheduled": null,
+          "kind": "strike_intent",
+          "ok": true
+        }
+      },
+      "guest_reported_meter_at_return": 16,
+      "host_record_guest_meter_at_later_checkpoint": 24,
+      "local_artifact_root": "ralph/reports/F25/downloads/a-guest-command-host-strike-37904625196/raw",
+      "scope_limit": "Top-level host probe meter0/character/party are host-local mixed-view fields, not guest evidence. First observer key is actual guest peer64372470/action2. The later geometry receipt is action7 and cannot explain action2."
+    },
     "notice_comment": 6076589783,
-    "criterion_disposition": "F24#5 remains OPEN. No new F24#0 credit."
+    "criterion_disposition": "PARK/OPEN. The new observer proves a legal firstmiss; it does not establish the geometry cause or positive guestcommand ingress/saveACK/effects. Existing F24#0/hostcaster/Snare pieces remain reused; no duplicatecredit or failedsave promotion.",
+    "independent_artifact_verdict": {
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "turn_id": "01a11fca-8a07-7431-b491-c2568a6b8124",
+      "verdict": "ARTIFACT/DISPOSITION APPROVE as failed; legal missed firststrike, not Itemwriterstall. Guest return16/25 and laterhost24/25 bothbelowcost. PARK repair: missingaction2 originalhostorigin/facing/frozenmove/candidategeometry. No unchangedretry or WHOLE F24#5approval."
+    }
   }
 }

@@ -40,7 +40,12 @@
       "resolved": false,
       "source_id": "combat_round:f358eb5437c38a529c231bccf1b0c5b2a4035e17bc5aba811eb24d1e5fdd674d"
     },
-    "observed_duty_hold": "owner passive gate owner_passive_initial_pose_unconfirmed (t=93491ms)"
+    "observed_duty_hold": "owner passive gate owner_passive_initial_pose_unconfirmed (t=93491ms)",
+    "independent_operand_review": {
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "turn_id": "01a11fc7-78df-7ee0-b9c2-6114cfcdcf0f",
+      "verdict": "Original7776 hold reasonverified at93491ms. Exactsource errororigin initialdiscovery invalidinput.to or no matchingcurrent/recenthost-observedpose; rewardgate propagates retainedstreamerror. Originalfirst_input_refusal input/context/cursorsequence/timestamp, endpointvalidity andhostposesamples absent; safeproductionrepairPARK."
+    }
   },
   "proof": {
     "run_id": 37901332079,
@@ -116,5 +121,16 @@
     "path": ".tmp/a-shared-boss-consumer.patch",
     "sha256": "7fcd85eed186728edad415c2c99b50461892db955c66c94b91c4a325c8d45439",
     "integration_limit": "Only ordinary-round diagnostic insertion and missing-wire cleanup hunk apply to PR7776; nullable-probe hunk repairs an older A-only F23 diagnostic absent from PR7776. Do not copy whole lane files or unready ancestry."
+  },
+  "later_root_ci_context": {
+    "head_sha": "6bf90cb7130661f4f36cfe39a9819de538b3f164",
+    "run_id": 37903538177,
+    "conclusion": "success",
+    "job_conclusion_counts": {
+      "success": 15,
+      "skipped": 9
+    },
+    "receipt": "C:/CodexTemp/tetherbound-proof/pr592-6bf90-ci-green.json",
+    "limit": "Current ROOT candidateCI supersedes the need for an unchanged original7776 replay; originalfailedpacket/PARK retained. This is not F24#5 guest-command variant credit or an accepted earned-chain boundary."
   }
 }
