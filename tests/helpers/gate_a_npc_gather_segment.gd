@@ -50,10 +50,11 @@ class RoadRunTap extends RefCounted:
 	var _counted_frame := -1
 	func _init(cutoff: float) -> void:
 		_cutoff = cutoff
-	func advance(frame: int, z: float, driving: bool, running: bool, controllable: bool = true) -> int:
-		# The navigator's original budget counts walking ticks, excluding
-		# combat/UI holds. Service and stick callbacks share a physics tick.
-		if phase != Phase.ARMED and controllable and frame != _counted_frame:
+	func advance(frame: int, z: float, driving: bool, running: bool, controllable: bool = true, walking_allowed: bool = true) -> int:
+		# Use the navigator's exact walking clock, including enabled-locomotion
+		# UI holds. Input ownership separately guards physical presses. Service
+		# and stick callbacks share a tick, including before the first on tap.
+		if walking_allowed and frame != _counted_frame:
 			walked += 1
 			_counted_frame = frame
 		if phase == Phase.ARMED:
@@ -65,8 +66,6 @@ class RoadRunTap extends RefCounted:
 				else:
 					phase = Phase.ON_RELEASE
 					_edge_frame = frame
-					walked = 1
-					_counted_frame = frame
 					return Edge.PRESS
 		elif phase == Phase.ON_RELEASE and frame - _edge_frame >= 3:
 			phase = Phase.ON_GAP if running else Phase.FAILED
@@ -939,7 +938,7 @@ func _mira_road_run_edge(driving: bool) -> void:
 	var controllable := not _tree.paused and INPUT_OWNER.current(_tree) == null \
 		and bool(_player.call("locomotion_enabled"))
 	var edge := _mira_road_run.advance(Engine.get_physics_frames(), _player.global_position.z,
-		driving, bool(_game.get("auto_run")), controllable)
+		driving, bool(_game.get("auto_run")), controllable, bool(_nav.can_walk()))
 	if edge != RoadRunTap.Edge.NONE:
 		var event := _event_for(&"auto_run", edge == RoadRunTap.Edge.PRESS) as InputEventJoypadButton
 		_mira_run_trace.append({"physics_frame": Engine.get_physics_frames(), "pressed": event.pressed,
@@ -969,12 +968,14 @@ func _finish_mira_road_run() -> bool:
 		while _mira_road_run != null and _mira_road_run.walked < 900 and held <= 36000:
 			_stop_left_stick()
 			Input.flush_buffered_events()
-			if _tree.paused or INPUT_OWNER.current(_tree) != null or not bool(_player.call("locomotion_enabled")):
+			if not _nav.can_walk():
 				held += 1
 			await _tree.physics_frame
 		# Never extend the budget or accept an arrival with an owned run toggle.
 		if _mira_road_run != null:
-			_fail("Mira road run did not finish within the original standoff allowance")
+			_fail("Mira road run did not finish within the original standoff allowance: " + JSON.stringify({
+				"walked": _mira_road_run.walked, "phase": _mira_road_run.phase,
+				"input_owner": str(INPUT_OWNER.current(_tree)), "can_walk": _nav.can_walk(), "edges": _mira_run_trace}))
 			return false
 	if not _mira_run_trace.is_empty():
 		print("MIRA ROAD RUN INPUT ", JSON.stringify({"acceptance": false, "edges": _mira_run_trace,

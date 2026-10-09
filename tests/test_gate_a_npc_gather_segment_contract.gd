@@ -347,17 +347,17 @@ func test_meadow_auto_run_releases_failed_taps_and_cleans_up_a_refused_walk() ->
 
 func test_meadow_auto_run_does_not_press_off_or_spend_walking_budget_during_owned_input() -> void:
 	var tap := SEGMENT.RoadRunTap.new(-12.0)
-	assert_eq(tap.advance(0, -40.0, true, false, false), SEGMENT.RoadRunTap.Edge.NONE)
+	assert_eq(tap.advance(0, -40.0, true, false, false, false), SEGMENT.RoadRunTap.Edge.NONE)
 	assert_eq(tap.advance(1, -40.0, true, false, true), SEGMENT.RoadRunTap.Edge.PRESS)
 	tap.advance(4, -40.0, false, true, true)
 	tap.advance(9, -40.0, true, true, true)
 	var before := tap.walked
 	for frame in range(10, 3610):
-		assert_eq(tap.advance(frame, -40.0, false, true, false), SEGMENT.RoadRunTap.Edge.NONE)
+		assert_eq(tap.advance(frame, -40.0, false, true, false, false), SEGMENT.RoadRunTap.Edge.NONE)
 	assert_eq(tap.walked, before, "a held fight/UI cannot consume the navigator's walking allowance")
 	assert_eq(tap.phase, SEGMENT.RoadRunTap.Phase.RUNNING)
 	tap.finish = true
-	assert_eq(tap.advance(3610, -40.0, false, true, false), SEGMENT.RoadRunTap.Edge.NONE,
+	assert_eq(tap.advance(3610, -40.0, false, true, false, false), SEGMENT.RoadRunTap.Edge.NONE,
 		"failure cleanup cannot inject an ignored toggle under owned input")
 	assert_eq(tap.advance(3611, -40.0, false, true, true), SEGMENT.RoadRunTap.Edge.PRESS)
 	var counted := tap.walked
@@ -366,3 +366,15 @@ func test_meadow_auto_run_does_not_press_off_or_spend_walking_budget_during_owne
 	assert_eq(tap.advance(3614, -40.0, false, false, true), SEGMENT.RoadRunTap.Edge.RELEASE)
 	tap.advance(3619, -40.0, false, false, true)
 	assert_eq(tap.phase, SEGMENT.RoadRunTap.Phase.DONE)
+
+
+func test_meadow_auto_run_ui_ownership_does_not_extend_the_navigators_walking_budget() -> void:
+	var tap := SEGMENT.RoadRunTap.new(-12.0)
+	tap.advance(0, -40.0, true, false)
+	tap.advance(3, -40.0, false, true)
+	tap.advance(8, -40.0, true, true)
+	for frame in range(9, 909):
+		assert_eq(tap.advance(frame, -40.0, false, true, false, true), SEGMENT.RoadRunTap.Edge.NONE)
+	assert_true(tap.walked >= 900, "UI-owned ticks still consume walking allowance when locomotion is enabled")
+	assert_eq(tap.phase, SEGMENT.RoadRunTap.Phase.RUNNING,
+		"the expired allowance must fail cleanup rather than inject an ignored physical off tap")
