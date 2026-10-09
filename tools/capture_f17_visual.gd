@@ -242,7 +242,7 @@ func _hang_fixture_relic() -> bool:
 		"disk_receipt_count": (disk_personal.get("transaction_receipts", []) as Array).count(receipt),
 		"world_file": saver.call("worlds").call("path_for", str(world.get("world_id"))),
 		"character_file": saver.call("characters").call("path_for", character),
-		"pedestal": str(pedestal.get_path()), "mount": str(mount.get_path()), "mount_visible": mount.is_visible_in_tree()})
+		"pedestal": str(pedestal.get_path()), "mount": str(mount.get_path()), "mount_visible": mount.is_visible_in_tree()}, true)
 	_relic_hung = true
 	return true
 
