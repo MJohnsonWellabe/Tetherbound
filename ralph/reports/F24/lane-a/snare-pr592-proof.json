@@ -1,0 +1,48 @@
+{
+  "criterion": "F24#3",
+  "scope": "Exact PR592 Snare revalidation; separate from original lane READY cut3a2c0f8935d7ee5f2e8be97e4ae29ec4549f0a35 and later unready F33 source.",
+  "source_commit": "befd98f42c290ee5e469172b939c8190ee36eee6",
+  "proof": {
+    "run_id": 37885575165,
+    "artifact_id": 11595884313,
+    "job_id": 113674712390,
+    "checkout_sha": "befd98f42c290ee5e469172b939c8190ee36eee6",
+    "script": "tests/smoke_net_owner_passive_rejoin.gd",
+    "args": "--prove-host-tether-snare --prove-shipping-tether",
+    "mode": "headless",
+    "checks": 33,
+    "failures": 0,
+    "exit": 0,
+    "raw_log": "ralph/reports/F25/downloads/a-pr592-exact-host-snare-37885575165/raw/run.log",
+    "log_sha256": "ef998b201bd65fa53e9098922627aaa27152fb9366160da6b4f43c20cb3977a0",
+    "operands": {
+      "meter_before": 64.0,
+      "meter_after": 4.0,
+      "movement_multiplier": 0.6,
+      "caster_catch_bonus": 0.1,
+      "noncaster_catch_bonus": 0.0,
+      "target_hp_before": 197.326481721123,
+      "target_hp_after": 197.326481721123,
+      "receipt": "command:1:1:character-7725f0d59f0e481e0dd290ec66bd8561:1:1",
+      "generation": 1,
+      "sequence": 1
+    },
+    "guards": "Original physical-hit eight-attempt, exact binding/body/receipt, one debit, no command damage, actual movement/catch readers, noncaster and normal-exit guards retained. Tracked Actor and Tether flags ON; no feature override."
+  },
+  "reused_trainer_owned_refusal": {
+    "run_id": 37865821390,
+    "artifact_id": 11588476358,
+    "tests": 54,
+    "assertions": 2054,
+    "failures": 0,
+    "qualification": "Existing explicit Actor-OFF negative unit fixture; refusal coverage only."
+  },
+  "independent_review": {
+    "reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "review_turn": "01a11f04-23d3-7eb0-b36b-5180414e2af5",
+    "verdict": "ARTIFACT APPROVE; original WHOLE F24#3 APPROVE / MET disposition remains applicable to this exact candidate.",
+    "required_blind": "No separate blind proof named."
+  },
+  "limits": "Snare only. FullCI37883884033 separately COMPLETED / FAILURE. PR landing, main activation, publication and F24#0/#5 remain unearned. No failed save promoted."
+}
