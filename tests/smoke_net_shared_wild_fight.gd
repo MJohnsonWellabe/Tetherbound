@@ -1195,13 +1195,28 @@ func _four_owned_fight(encounter_id: String, full_hp: float) -> void:
 		"one active host encounter contains four real participants")
 	check(float(host.get("opponent_hp", -1.0)) > 0.0 and float(host.get("opponent_hp", -1.0)) <= full_hp + 0.001,
 		"joining did not refill the real opponent")
-	var deployed: Dictionary = await probe(0, "deployed_creatures")
+	var host_session_raw: Variant = await probe(0, "session")
+	var deployed_raw: Variant = await probe(0, "deployed_creatures")
+	if not host_session_raw is Dictionary or not deployed_raw is Dictionary:
+		check(false, "actual host session and deployed-body observations are required")
+		return
+	var host_id := int(host_session_raw.get("peer_id", 0))
+	var deployed: Dictionary = deployed_raw
 	var visible_owners := {}
 	for body: Dictionary in deployed.values():
-		if body.get("visible") == true: visible_owners[int(body.get("owner", 0))] = true
+		if body.get("visible") != true: continue
+		var owner := int(body.get("owner", 0))
+		# The actual local FollowerCreature deliberately has owner_peer_id=0;
+		# its existing is_local_deployment probe distinguishes it from proxies.
+		if owner == 0 and body.get("local") == true: owner = host_id
+		if owner > 0: visible_owners[owner] = true
 	check(visible_owners.size() == 4, "host has four visible deployed owner bodies; invisible outbound proxy excluded")
 	for peer in 4:
-		var session: Dictionary = await probe(peer, "session")
+		var session_raw: Variant = await probe(peer, "session")
+		if not session_raw is Dictionary:
+			check(false, "peer %d's actual session observation is required" % peer)
+			return
+		var session: Dictionary = session_raw
 		var peer_id := int(session.get("peer_id", 0))
 		var view := await _encounter(peer)
 		check(peer_id > 0 and visible_owners.has(peer_id) and (host.get("participants", []) as Array).has(peer_id),
@@ -1219,9 +1234,14 @@ func _four_owned_fight(encounter_id: String, full_hp: float) -> void:
 			var placed := await step(peer, "place_creature", {"at": [stand.x, stand.y, stand.z],
 				"face": [target.x, target.y, target.z], "settle": PLACE_SETTLE})
 			check(placed.get("verdict") == "PASS", "peer %d's real deployed body stands in range" % peer)
-			var pressed := await step(peer, "press", {"action": "quick"})
+			if placed.get("verdict") != "PASS": return
+			var pressed := await step(peer, "press", {"action": "combat_quick"})
 			check(pressed.get("verdict") == "PASS", "peer %d sends the ordinary physical quick binding" % peer)
-			await step(peer, "wait", {"frames": STRIKE_SETTLE})
+			if pressed.get("verdict") != "PASS": return
+			var settled := await step(peer, "wait", {"frames": STRIKE_SETTLE})
+			if settled.get("verdict") != "PASS":
+				check(false, "peer %d's existing strike settling step failed" % peer)
+				return
 			after = float((await _encounter(0)).get("opponent_hp", -1.0))
 		check(before > 0.0 and after >= 0.0 and after < before - 0.001,
 			"peer %d's controller strike reduces the same authoritative HP within original SWINGS" % peer)
