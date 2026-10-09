@@ -7,6 +7,7 @@ const REGIONS := preload("res://scripts/world/water_collision_regions.gd")
 var _checks := 0
 var _failures := 0
 var _rays := 0
+var _motions := 0
 var _reference: RID
 var _reference_shapes: Array[RID] = []
 
@@ -106,6 +107,36 @@ func _run() -> void:
 	terrain.physics_material.friction = 0.9
 	for body: RID in bodies:
 		_check(is_equal_approx(PhysicsServer3D.body_get_param(body, PhysicsServer3D.BODY_PARAM_FRICTION), -0.9), "live material changes preserved")
+	# Capsule sweeps exercise the body_test_motion path used by movement,
+	# across signed region seams and with human/large-creature sizes.
+	for radius in [0.35, 0.85, 1.3]:
+		var capsule := PhysicsServer3D.capsule_shape_create()
+		PhysicsServer3D.shape_set_data(capsule, {"radius": radius, "height": maxf(1.8, radius * 2.5)})
+		var actors: Array[RID] = []
+		for mask in [1, 2]:
+			var actor := PhysicsServer3D.body_create()
+			actors.append(actor)
+			PhysicsServer3D.body_set_mode(actor, PhysicsServer3D.BODY_MODE_KINEMATIC)
+			PhysicsServer3D.body_set_collision_layer(actor, 8)
+			PhysicsServer3D.body_set_collision_mask(actor, mask)
+			PhysicsServer3D.body_add_shape(actor, capsule)
+			PhysicsServer3D.body_set_space(actor, terrain.get_world_3d().space)
+		for x in [-15.0, -0.25, 0.0, 7.75, 8.0, 15.75, 16.0, 30.0]:
+			for z in [-15.0, -0.25, 0.0, 16.0, 30.0]:
+				var parameters := PhysicsTestMotionParameters3D.new()
+				parameters.from = Transform3D(Basis.IDENTITY, Vector3(x, 30.0, z))
+				parameters.motion = Vector3(0, -60, 0)
+				var a := PhysicsTestMotionResult3D.new()
+				var b := PhysicsTestMotionResult3D.new()
+				var a_hit := PhysicsServer3D.body_test_motion(actors[0], parameters, a)
+				var b_hit := PhysicsServer3D.body_test_motion(actors[1], parameters, b)
+				_motions += 1
+				_check(a_hit == b_hit, "capsule collision presence")
+				_check(a.get_travel().is_equal_approx(b.get_travel()), "capsule travel preserved")
+				_check(a.get_remainder().is_equal_approx(b.get_remainder()), "capsule remainder preserved")
+		for actor: RID in actors:
+			PhysicsServer3D.free_rid(actor)
+		PhysicsServer3D.free_rid(capsule)
 	regions.queue_free()
 	await process_frame
 	PhysicsServer3D.free_rid(_reference)
@@ -113,8 +144,8 @@ func _run() -> void:
 		PhysicsServer3D.free_rid(shape)
 	terrain.queue_free()
 	await process_frame
-	print("Water regional collider clone: %d checks, %d native ray pairs, %d failures" % [_checks, _rays, _failures])
-	quit(0 if _failures == 0 and _rays == 6912 else 1)
+	print("Water regional collider clone: %d checks, %d native ray pairs, %d capsule sweeps, %d failures" % [_checks, _rays, _motions, _failures])
+	quit(0 if _failures == 0 and _rays == 6912 and _motions == 120 else 1)
 
 func _body(terrain: Node3D, layer: int) -> RID:
 	var body := PhysicsServer3D.body_create()
