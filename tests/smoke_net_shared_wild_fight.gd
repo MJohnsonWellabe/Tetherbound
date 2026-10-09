@@ -1195,7 +1195,12 @@ func _four_owned_fight(encounter_id: String, full_hp: float) -> void:
 		var joined := await step(peer, "join_encounter", {"encounter_id": encounter_id})
 		check(joined.get("verdict") == "PASS", "peer %d joins through production admission" % peer)
 	var host := await _encounter(0)
-	check(host.get("phase") == "active" and (host.get("participants", []) as Array).size() == 4,
+	# JSON numbers arrive as floats; Array.has distinguishes float from int.
+	# Keep the actual host membership, normalized like the existing flee proof.
+	var participants: Array[int] = []
+	for raw_peer: Variant in (host.get("participants", []) as Array):
+		participants.append(int(raw_peer))
+	check(host.get("phase") == "active" and participants.size() == 4,
 		"one active host encounter contains four real participants")
 	check(float(host.get("opponent_hp", -1.0)) > 0.0 and float(host.get("opponent_hp", -1.0)) <= full_hp + 0.001,
 		"joining did not refill the real opponent")
@@ -1223,7 +1228,7 @@ func _four_owned_fight(encounter_id: String, full_hp: float) -> void:
 		var session: Dictionary = session_raw
 		var peer_id := int(session.get("peer_id", 0))
 		var view := await _encounter(peer)
-		check(peer_id > 0 and visible_owners.has(peer_id) and (host.get("participants", []) as Array).has(peer_id),
+		check(peer_id > 0 and visible_owners.has(peer_id) and participants.has(peer_id),
 			"peer %d's admitted owner has an actual visible host body" % peer)
 		check(view.get("bound_id") == encounter_id and view.get("fighting") == true,
 			"peer %d pilots in the same live encounter" % peer)
@@ -1237,8 +1242,13 @@ func _four_owned_fight(encounter_id: String, full_hp: float) -> void:
 			var stand := target + radial
 			var placed := await step(peer, "place_creature", {"at": [stand.x, stand.y, stand.z],
 				"face": [target.x, target.y, target.z], "settle": PLACE_SETTLE})
-			check(placed.get("verdict") == "PASS", "peer %d's real deployed body stands in range" % peer)
-			if placed.get("verdict") != "PASS": return
+			check(placed.get("verdict") == "PASS", "peer %d's real deployed body stands in range (%s)" % [peer, str(placed.get("detail", ""))])
+			if placed.get("verdict") != "PASS":
+				var placement_observation: Variant = await probe(0, "encounter", {"admission_peer_id": peer_id})
+				print("F25_FOUR_OWNED_PLACEMENT_FAILURE " + JSON.stringify({"peer": peer,
+					"scope": "LIVE post-checkpoint evidence, not refusal-time state",
+					"step": placed, "host": placement_observation, "pilot": await _encounter(peer)}))
+				return
 			var pressed := await step(peer, "press", {"action": "combat_quick"})
 			check(pressed.get("verdict") == "PASS", "peer %d sends the ordinary physical quick binding" % peer)
 			if pressed.get("verdict") != "PASS": return
@@ -1249,6 +1259,14 @@ func _four_owned_fight(encounter_id: String, full_hp: float) -> void:
 			after = float((await _encounter(0)).get("opponent_hp", -1.0))
 		check(before > 0.0 and after >= 0.0 and after < before - 0.001,
 			"peer %d's controller strike reduces the same authoritative HP within original SWINGS" % peer)
+		if after >= before - 0.001:
+			# Reuse the original two-peer proof's host admission observation.
+			# No extra swing, changed timing, or manufactured successful receipt.
+			var observation: Variant = await probe(0, "encounter", {"admission_peer_id": peer_id})
+			print("F25_FOUR_OWNED_CONTACT_FAILURE " + JSON.stringify({"peer": peer,
+				"scope": "LIVE post-checkpoint evidence, not refusal-time state",
+				"peer_id": peer_id, "before_hp": before, "after_hp": after,
+				"host": observation, "pilot": await _encounter(peer)}))
 		var converged := false
 		for _poll in HP_CONVERGE_POLLS:
 			var hp := float((await _encounter(0)).get("opponent_hp", -1.0))

@@ -1,0 +1,31 @@
+{
+  "failures": [
+    "local follower owner ID0 mistaken for remote owner",
+    "nonexistent InputMap action quick",
+    "nil session probe after fatal input error"
+  ],
+  "run": 37865227295,
+  "correction": "bb6072bb6ba876f6fc8d1b85a384ca785634d022: actual combat_quick; local0/localtrue resolved through actual host peer ID; failed step/null observation stops safely",
+  "passing_pieces": [
+    "four actual Session joins",
+    "four owned deployments",
+    "same active host encounter with four participants",
+    "additional joins do not refill target",
+    "four visible deployed bodies"
+  ],
+  "verdict": "FAIL",
+  "args": "--four-owned-fight",
+  "artifact_zip_sha256": "35111945b6d9cac24d5b30f4960be66e45f0f23e83d6ffd23a11b196d9565764",
+  "whole_criterion_closed": false,
+  "guards_preserved": [
+    "four participants",
+    "SWINGS",
+    "PLACE_SETTLE",
+    "STRIKE_SETTLE",
+    "HP_CONVERGE_POLLS",
+    "nativeR5/cap30/p95 untouched"
+  ],
+  "source": "519472e64733c92979ae49cd5fcb1c07fadb723e",
+  "artifact": 11587769964,
+  "script": "tests/smoke_net_shared_wild_fight.gd"
+}
