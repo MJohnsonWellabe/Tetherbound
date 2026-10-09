@@ -39,7 +39,10 @@ func _run() -> void:
 		return
 	if not _road_verge_mode.is_empty():
 		# Explicit process-local comparison; never edit tracked config or saves.
-		preload("res://scripts/world/grass_field.gd").config()["road_verge"]["enabled"] = _road_verge_mode == "candidate"
+		var grass_cfg: Dictionary = preload("res://scripts/world/grass_field.gd").config()
+		var verge_cfg: Dictionary = grass_cfg.get("road_verge", {})
+		verge_cfg["enabled"] = _road_verge_mode == "candidate"
+		grass_cfg["road_verge"] = verge_cfg
 	await super._run()
 
 
@@ -132,11 +135,15 @@ func _capture_row(row: Dictionary) -> void:
 				for key: String in ["road_verge_enabled", "road_verge_base_mask", "road_verge_strength", "road_verge_height_floor"]:
 					observed[key] = material.get_shader_parameter(key)
 			var expected := _road_verge_mode == "candidate"
-			var matched: bool = material != null and observed.get("road_verge_enabled") == expected \
-				and int(observed.get("road_verge_base_mask", 0)) == 8 \
-				and is_equal_approx(float(observed.get("road_verge_strength", -1.0)), 0.75) \
-				and is_equal_approx(float(observed.get("road_verge_height_floor", -1.0)), 0.35)
-			_records.back()["road_verge_observation"] = {"mode": _road_verge_mode, "uniforms": observed, "matches_requested": matched}
+			var expected_cfg: Dictionary = preload("res://scripts/world/grass_field.gd").config().get("road_verge", {})
+			var expected_mask: int = preload("res://scripts/world/grass_field.gd").texture_mask(field.call("_terrain_texture_names"), ["path"]) if field != null else 0
+			var matched: bool = material != null and material.shader.resource_path == "res://shaders/grass_field.gdshader" \
+				and observed.get("road_verge_enabled") == expected and expected_mask > 0 \
+				and int(observed.get("road_verge_base_mask", 0)) == expected_mask \
+				and is_equal_approx(float(observed.get("road_verge_strength", -1.0)), float(expected_cfg.get("strength", 0.75))) \
+				and is_equal_approx(float(observed.get("road_verge_height_floor", -1.0)), float(expected_cfg.get("height_floor", 0.35)))
+			var record: Dictionary = _records.back()
+			record["road_verge_observation"] = {"mode": _road_verge_mode, "uniforms": observed, "expected_mask": expected_mask, "matches_requested": matched}
 			if not matched:
 				_failures.append("%s: actual production grass road-verge uniforms mismatch" % str(row.frame_id))
 			_write_manifest()
