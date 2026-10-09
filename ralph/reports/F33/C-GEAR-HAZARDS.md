@@ -93,6 +93,19 @@ The original finite candidate grid, physical paid placement and four gear
 transaction guards remain. Other modes retain their existing cell helper.
 Both failed packets remain retained. **Whole F33#0 remains open.**
 
+[Run 37877670793](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37877670793),
+job `113649874704`, artifact `11593002096`, exact source `479cb12dd3`:
+**FAIL, exit 1**. ZIP `D:/tetherbound/.tmp/c-f33-paid-gear-37877670793.zip`,
+SHA256 `c371b6098441fceb81c2e3814df1180e587b50c02cac602ad32dbbf55f92e716`,
+matches the actual upload digest. The replacement paid Forge now passes with
+its original exact debit and accepted row; the next first guard fails because
+the Meadows attachment has no planted node/accepted row. **Zero gear actions
+were reached.** Its cause is not established. ROOT directed **PARK**, no fourth
+job; issue `572#6073486224` retains that first guard and packet locator. Original
+`modal_review` independently confirmed FAIL/PARK and whole F33#0 **NOT MET** in
+`D:/tetherbound/.tmp/c-f33-paid-gear-r3-artifact-original-verdict.txt`. The
+24-link mechanics result remains partial evidence only; no READY or flag flip.
+
 ## Saved pouch tier and real Satchel reconnect proof
 
 `685d3e10beff5b031bebf4726ec5e284e33bbef7` fixes the Satchel's existing
