@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "_comment_runtime_enabled": "F44 uses the completed occupied host shell and shared live host daylight when a remote realm omits WorldLook. Weather stays with the site's own realm; generation eligibility, paid-world day clock and saved resolution/departure guards remain authoritative.",
-  "runtime_enabled": true,
+  "_comment_runtime_enabled": "F44 resident-shell producer is retained but disabled pending named-site client residency and original approval. Shared live host daylight and the site's own weather preserve generation eligibility, paid-world day clock and saved resolution/departure guards.",
+  "runtime_enabled": false,
   "day_seconds": 600,
   "respawn_days": 3,
   "requires_all_region_departures": true,
