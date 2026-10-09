@@ -386,11 +386,17 @@ func test_feast_buttons_require_the_actual_locked_tier_and_never_reoffer_a_lifte
 		assert_true(cooked.get("ok") == true, "actual tier %d Kitchen planner: %s" % [tier, str(cooked)])
 		if cooked.get("ok") != true: continue
 		assert_eq(stocked, before_cook, "paid cooking stages a detached candidate")
-		assert_eq(cooked.state.inventory, [{"id": recipe_id, "n": 1}], "exact authored cost leaves one cooked feast")
+		var cooked_bag := BAG.inventory_from(cooked.state.inventory)
+		for item: String in recipe.cost:
+			assert_eq(cooked_bag.count(item), 0, "the exact authored ingredient was consumed: " + item)
+		assert_eq(cooked_bag.count(recipe_id), 1, "exact authored cost leaves one cooked feast")
 		assert_eq(cooked.state.redesign_character.transaction_receipts.count(cooked.receipt), 1)
+		var before_replay: Dictionary = cooked.state.duplicate(true)
 		var cook_replay: Dictionary = rules.prepare_cook(cooked.state, recipe_id, craft_id, context)
 		assert_true(cook_replay.get("duplicate") == true)
-		assert_eq(cook_replay.state, cooked.state, "the original cooking receipt cannot debit or grant again")
+		assert_false(cook_replay.get("ok") == true)
+		assert_eq(cook_replay.get("code"), "reconcile_original_delivery", "only Foundation can authenticate the original replay")
+		assert_eq(cooked.state, before_replay, "the original cooking receipt cannot debit or grant again")
 		var before_feed: Dictionary = cooked.state.duplicate(true)
 		var feed_context := {"in_combat": false, "owns_character": true}
 		var species_types := func(id: String) -> Array: return [SPECIES.definition(id).get("type", "")]
@@ -402,7 +408,7 @@ func test_feast_buttons_require_the_actual_locked_tier_and_never_reoffer_a_lifte
 			species_types, Callable(EVOLUTION, "prepare_feast_choice"), Callable(rules, "refresh_feast_moves"))
 		assert_true(fed.get("ok") == true, "actual tier %d matching feed planner: %s" % [tier, str(fed)])
 		if fed.get("ok") != true: continue
-		assert_eq(fed.state.inventory, [], "one creature consumes the one cooked feast")
+		assert_eq(BAG.inventory_from(fed.state.inventory).count(recipe_id), 0, "one creature consumes the one cooked feast")
 		assert_eq(int(fed.state.redesign_character.creatures[card.uid].cap_level), (tier + 1) * 10)
 		assert_eq(int(fed.state.party[0].level), tier * 10, "cap lift grants no unearned levels")
 		assert_eq(cooked.state, before_feed, "feeding stages a detached candidate")
