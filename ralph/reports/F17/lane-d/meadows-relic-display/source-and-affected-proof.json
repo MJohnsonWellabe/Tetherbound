@@ -40,5 +40,24 @@
       "seconds": 4
     },
     "source_review": "SAME original01a11f39 SOURCE+COMMAND APPROVE7e379"
+  },
+  "existing_witness_input_intake": {
+    "source_ref": "origin/tb/codex-b",
+    "world_path": "ralph/reports/F20/lane-b-ending/completed-input-377715/save/worlds/slot-0/world.json",
+    "character_path": "ralph/reports/F20/lane-b-ending/completed-input-377715/save/characters/character-b42583ba54a405a9877e159fbee6af63/character.json",
+    "world_shrine_display": {},
+    "personal_relics_held": [],
+    "personal_relics_hung": [],
+    "personal_portal_unlocks": [
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+    ],
+    "disposition": "Existing completed-world fixture cannot witness a hung relic or supply an accepted post-boss boundary. No grants, state edits, new fixture or boundary promotion performed.",
+    "existing_public_path": "tests/helpers/f49_portal_travel.gd::hang_relic retains ordinary interaction, grounded exact provider and portable saved-state checks. Fresh F49 campaign calls it after reviewed post-boss boundaries; no accepted usable boundary supplied to D.",
+    "inspected_source_commit": "96950debaf33604164c2b5a75dabd8acd5354a07",
+    "world_blob": "ef33e903a2802f1279785100c9fb7c29aa83cebe",
+    "character_blob": "635b24aa6a869997d0119e8fb3dca117bbbf066e",
+    "original_intake_review": "SAME f42 via parent01a11f51-ed71-7590-81a6-ef1bb0949793 INTAKE FACTS/SCOPE APPROVE; no native relic-display/blind/whole approval"
   }
 }
