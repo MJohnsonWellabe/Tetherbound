@@ -1,5 +1,56 @@
 # F28#2 — Master challenger identity, bounded evidence
 
+## Owner-authorized shipping Kitchen cluster
+
+Owner issue572 `6067331997`, narrowed to the Masters cluster by
+`6068186835`, requires shipping Forge recipes and attuned feast sources ON.
+`81addd20f94c1ff562fdb8e6f3fb80e7709a3168` enables those two actual JSON
+values, outside the original producer's six overlay paths. NOTICE
+`6071531956` preceded the edit. Original `kitchen_review` SOURCE + COMMAND
+APPROVE retains all seed fixtures, cost/type/payment/save/ACK/replay oracles
+and deadlines. Canonical F32 source gates remain necessary; enabling the
+retired garden switch does not itself prove ingredient sources.
+
+[Run 37863669399](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37863669399),
+job `113605164185`, exact `81addd20f9`, artifact `11587860937`, exits 1.
+Untouched ZIP SHA256
+`f3aa9df0aedf30c945bb54fc477ab32bcadd31b383601dc52673fa7fc2d5f174`;
+ROOT retains it at `D:/CodexTemp/tetherbound-proof/11587860937/extracted`.
+Step 25 guest catch created its source companion, accepted original capture
+row/receipt and normalized successful finish reply. Its close observer fails
+before taking any after-close ownership sample: frames 6862 (throw), 7437
+(ordinary close starts), 7485 (endpoint), 623 total against the unchanged
+615-frame allowance. The endpoint reports mutation fence false, snapshot
+ready and empty pending/retry collections. Original `kitchen_review` verifies
+the digest and these operands; they establish no production-modal cause.
+Forge, Master, cooking and feeding were not reached. No failed save is promoted.
+
+`555311af416809c3d99d4d50115bd7bedf67f30b` removes the mandatory wait before
+the first real release observation. It samples immediately after the same
+ordinary physical tap, then each eligible frame, preserving the exact original
+600+15 deadline, source identities and every input-owner/menu/pending/mutation
+predicate. NOTICE `6071728922` preceded this existing-observer correction.
+Original SOURCE + COMMAND review is pending; no rerun or runtime PASS follows.
+
+The existing five-tier feast-button test is extended at
+`b12252c7942d346d3af1c930042cfb4e01da2921` with actual detached Kitchen
+cooking and feeding planners. Same admitted Terrapup fixtures, disclosed
+recipe/material stock, all original presentation controls: exact paid cost,
+one cooked output/receipt, missing-attuned and field-Kitchen refusals,
+Foundation-only original replay reconciliation, wrong-type refusal, matching
+feed, one cap lift and zero unearned levels. No new test function/class/harness
+or production change. NOTICE `6071671265` precedes the extension; original
+`kitchen_review` SOURCE + narrow COMMAND APPROVE.
+
+[Affected run 37864853941](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37864853941),
+job `113609041531`, artifact `11587886822`, exact `b12252c794`:
+**one existing method / 135 assertions / zero failures, exit 0**. Actual job
+checkout and selector verified. ZIP
+`D:/tetherbound/.tmp/c-f28-cost-type-37864853941.zip`, SHA256
+`e725858760434ce165f6b49b0956032b8fe46b1974e22fc83013ac3e041abdfa`.
+Original artifact review remains pending; no whole F28#2/#3/#4 approval or
+READY follows. F28#0/#5 already landed in PR558 and are not recounted.
+
 Production source: `0f07a3f0c6fb55465027b68a981070ed82cedf8d` on `tb/codex-c`.
 
 The ordinary Master chooser previously rendered a saved empty nickname as a
