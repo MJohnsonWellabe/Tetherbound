@@ -185,6 +185,34 @@ func test_host_sends_directly_and_surfaces_refusal() -> void:
 	assert_false(bool(storm_pedestal.get_meta("relic_displayed")))
 	assert_false(bool(cloud_pedestal.get_meta("relic_displayed")))
 	assert_false(bool(pedestal.get_meta("relic_displayed")))
+	assert_false(config.relic_focus.enabled, "unjudged focus light remains shipping off")
+	assert_false(HALL.relic_focus_enabled(config.relic_focus, PackedStringArray()))
+	assert_true(HALL.relic_focus_enabled(config.relic_focus, PackedStringArray(["--hall-relic-focus-candidate"])))
+	assert_false(HALL.relic_focus_enabled(config.relic_focus, PackedStringArray(["--hall-relic-focus-candidate", "--hall-relic-focus-baseline"])))
+	var focus_config: Dictionary = hall.get("_config")
+	focus_config.relic_focus.enabled = true
+	for mount: Node3D in [relic, wings, spark]:
+		assert_false(mount.has_node(^"RelicFocus"), "old geometry and off branch add no light")
+		var count := mount.get_child_count()
+		hall.call("_build_relic_focus", mount)
+		var light := mount.get_node_or_null(^"RelicFocus") as OmniLight3D
+		assert_true(light != null)
+		if light == null:
+			continue
+		assert_eq(light.get_parent(), mount, "host mount visibility also owns light")
+		assert_eq(light.position, Vector3.ZERO, "existing glowing mesh centre")
+		assert_eq(light.light_energy, 0.75, "reuse placed shrine energy")
+		assert_almost_eq(light.omni_range, 4.2)
+		assert_false(light.shadow_enabled)
+		var original_piece := mount.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D
+		var original_material := original_piece.get_active_material(0) as BaseMaterial3D
+		assert_eq(light.light_color, original_material.emission, "derive colour from unchanged relic material")
+		assert_eq(mount.get_child_count(), count + 1)
+		hall.call("_build_relic_focus", mount)
+		assert_eq(mount.get_child_count(), count + 1, "repeat build cannot duplicate local light")
+		hall.call("apply_display", {})
+		assert_false(mount.visible, "restored empty host view hides light's parent")
+	assert_eq(session.calls, ["hang:meadows"] as Array[String], "focus presentation sends no request")
 	hall.free()
 	game.free()
 	session.free()

@@ -229,6 +229,7 @@ func _build_meadows_relic_visual(slot: Node3D, biome: String) -> void:
 	mount.visible = false
 	slot.add_child(mount)
 	preload("res://scripts/world/trainer_aftermath.gd")._build_heart(mount, Vector3.ZERO, float(cfg.get("scale", .85)))
+	_build_relic_focus(mount)
 
 
 func _build_cloudreach_relic_visual(slot: Node3D, biome: String) -> void:
@@ -252,6 +253,7 @@ func _build_cloudreach_relic_visual(slot: Node3D, biome: String) -> void:
 	mount.visible = false
 	slot.add_child(mount)
 	shrine.build_cloudreach_relic(mount, material)
+	_build_relic_focus(mount)
 
 
 func _build_stormwood_relic_visual(slot: Node3D, biome: String) -> void:
@@ -275,6 +277,38 @@ func _build_stormwood_relic_visual(slot: Node3D, biome: String) -> void:
 	mount.visible = false
 	slot.add_child(mount)
 	shrine.build_stormwood_relic(mount, material)
+	_build_relic_focus(mount)
+
+
+## Reuse the placed shrine's existing relic glow; the host-owned mount hides
+## its light with the relic. No new display state or active-power claim.
+func _build_relic_focus(mount: Node3D) -> void:
+	var cfg: Dictionary = _config.get("relic_focus", {})
+	if not relic_focus_enabled(cfg, OS.get_cmdline_user_args()) or mount.has_node(^"RelicFocus"):
+		return
+	var colour := Color.TRANSPARENT
+	for child: Node in mount.find_children("*", "MeshInstance3D", true, false):
+		var mesh := child as MeshInstance3D
+		if mesh.mesh == null or mesh.mesh.get_surface_count() == 0:
+			continue
+		var material := mesh.get_active_material(0) as BaseMaterial3D
+		if material != null and material.emission_enabled:
+			colour = material.emission
+			break
+	if colour.a == 0.0:
+		return
+	var light := OmniLight3D.new()
+	light.name = "RelicFocus"
+	light.light_color = colour
+	light.light_energy = float(cfg.get("energy", .75))
+	light.omni_range = float(cfg.get("range_m", 4.2))
+	light.shadow_enabled = false
+	mount.add_child(light)
+
+
+static func relic_focus_enabled(cfg: Dictionary, args: PackedStringArray) -> bool:
+	return not args.has("--hall-relic-focus-baseline") and (
+		bool(cfg.get("enabled", false)) or args.has("--hall-relic-focus-candidate"))
 
 
 func _add_model(parent: Node3D, path: String) -> Node3D:

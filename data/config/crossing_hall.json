@@ -2,6 +2,13 @@
   "schema_version": 1,
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
+  "relic_focus": {
+    "enabled": false,
+    "energy": 0.75,
+    "range_m": 4.2,
+    "scope": "Peer-local mounted-relic light on all presets, shipping OFF pending original native/blind judgment. --hall-relic-focus-candidate opts in; --hall-relic-focus-baseline wins. Light is a child of the existing host-display-controlled mount, at its glowing mesh centre, deriving colour from the original emissive material. No new mesh/material, interaction, collider, active-power state, authority or durable/schema change.",
+    "provenance": "realm_heart_shrine._set_visual uses .75 placed/inactive energy and existing4.2m OmniLight range, shadowOFF. Hall mounts reused luminous geometry but omitted local light; original Meadows/Cloudreach blind HallBarB BLOCK reports no distinct relic focus. Actual light range/occlusion/illumination and Low/device cost remain native proofs; no pixel improvement assumed."
+  },
   "shrine_doorway": {
     "enabled": false,
     "clear_height_m": 5.2,
