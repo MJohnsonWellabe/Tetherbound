@@ -1,0 +1,36 @@
+{
+  "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+  "scope": "ROOT two existingproducer headlesscheck-only commands actual0/0; parser only, noWorld/UI/graphics/scene/motion/interaction/contact/PNG/wholeproof. Failedc191packet and originalapprovalscopes retained.",
+  "files": [
+    {
+      "file": "f40-check-only.log",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\e-9a359dfd5c-static-namespace-r1\\f40-check-only.log",
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "file": "original-recipe.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\e-9a359dfd5c-static-namespace-r1\\original-recipe.json",
+      "bytes": 6094,
+      "sha256": "40400d767c1edc4581746ff592bf09b50ec3280b6f2b00d50db44edcd36c0a41"
+    },
+    {
+      "file": "source-after-static.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\e-9a359dfd5c-static-namespace-r1\\source-after-static.json",
+      "bytes": 297,
+      "sha256": "6962e21398105ef96950a89c0d22b9926501a549b1b9e22a07789f46991f6409"
+    },
+    {
+      "file": "static-results.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\e-9a359dfd5c-static-namespace-r1\\static-results.json",
+      "bytes": 464,
+      "sha256": "3f6fe55d2f7eb1766e6d6db70ce8050490590a6b2fbe7114cbf11bc25db5e53d"
+    },
+    {
+      "file": "ui-check-only.log",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\e-9a359dfd5c-static-namespace-r1\\ui-check-only.log",
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    }
+  ]
+}

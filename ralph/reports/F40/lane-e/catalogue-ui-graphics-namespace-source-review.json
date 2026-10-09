@@ -8,7 +8,7 @@
     "source": "APPROVE",
     "static_f40_command": "APPROVE applicability only",
     "static_catalogue_command": "APPROVE applicability only",
-    "actual_parser_checks": "PENDING"
+    "actual_parser_checks": "APPROVE static parse scope only"
   },
   "source_blobs": {
     "tools/catalogue_survey.gd": "22b93633205857383aaf8fa0f021e0f9de3f59d4",
@@ -82,12 +82,146 @@
     "limits": "Original map10/49 and floor4/81 fixture/source scopes remain preserved. Exact11bda Gate source and7/116 selected artifact remain unchanged; no repeat batch or mounted-contact inference. Base identifier-only change does not reclassify those as producer parser or native UI proof."
   },
   "pending_gates": [
-    "Actual ROOT static check terminal results for each requested script.",
-    "Actual exact-source native UI/interior/mounted Gate helper proofs and independent pixel acceptance remain separate and pending."
+    "ROOT actual exact9a interior, menu and craft native runs under the individually approved fresh-output recipes, with immutable source/terminal/image/manifest proof.",
+    "Mounted Gate helper execution/contact contour/tangents/performance and same original blind visual assessment remain separate. No384 or wholecriterion promotion."
   ],
   "excluded_claims": [
     "No parser PASS from source review or unrelated units/importexit0",
     "No native command execution, unchanged recapture, GPU proof, broad criterion/READY approval",
     "No speculative additional error cause or source-derived visual acceptance"
+  ],
+  "static_runtime_reviews": [
+    {
+      "verdict": "APPROVE static parse artifact only",
+      "packet": "C:/CodexTemp/tetherbound-proof/e-9a359dfd5c-static-namespace-r1",
+      "actual_results": [
+        {
+          "script": "res://tools/capture_cloudreach_f40_matrix.gd",
+          "mode": "headless check-only",
+          "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+          "exit": 0,
+          "checked_utc": "2026-10-09T08:10:04.2149805Z"
+        },
+        {
+          "script": "res://tools/catalogue_survey.gd",
+          "mode": "headless check-only",
+          "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+          "exit": 0,
+          "checked_utc": "2026-10-09T08:10:04.5827147Z"
+        }
+      ],
+      "source_after": {
+        "scope": "Static script parsing only; no world/capture/native/behavior/blind proof",
+        "index_tree": "12b17e6a02dbb65a8b0998ae3aa66a6afc7bc73c",
+        "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+        "tracked_clean": true,
+        "head_tree": "12b17e6a02dbb65a8b0998ae3aa66a6afc7bc73c"
+      },
+      "pin_tree_independently_matches": true,
+      "original_recipe_binding": "Frozen original-recipe.json equals original approved report bytes (SHA25640400d767c1edc4581746ff592bf09b50ec3280b6f2b00d50db44edcd36c0a41). It includes the two approved full --headless --path --script --check-only recipes; result receipts bind each exact script/mode/source and exit. The minimal stdout logs do not separately echo the process argv.",
+      "diagnostics": "Both73-byte logs contain only Godot4.7.stable.official.5b4e0cb0f header plus blank line; no SCRIPT ERROR/ERROR/warning.",
+      "hashes": {
+        "original-recipe.json": "40400d767c1edc4581746ff592bf09b50ec3280b6f2b00d50db44edcd36c0a41",
+        "static-results.json": "3f6fe55d2f7eb1766e6d6db70ce8050490590a6b2fbe7114cbf11bc25db5e53d",
+        "source-after-static.json": "6962e21398105ef96950a89c0d22b9926501a549b1b9e22a07789f46991f6409",
+        "f40-check-only.log": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+        "ui-check-only.log": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+      },
+      "limits": "Static --check-only loading/parsing only. No World boot, UI content, ownership/focus/cost, camera/floor, image, renderer presentation or final capture receipt was exercised. Earlier c191 parse/load failure and source approval remain historical."
+    }
+  ],
+  "initial_parser_status_history": "Original source/command report marked actual_parser_checks PENDING before these completed static receipts; that state is historical, not silently treated as proof.",
+  "native_command_binding_reviews": [
+    {
+      "id": "cliffhold-interior",
+      "verdict": "APPROVE applicability only",
+      "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+      "argv": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/capture_cloudreach_f40_matrix.gd",
+        "--",
+        "--biome=cloudreach",
+        "--preset=High",
+        "--source-commit=9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+        "--cliffhold-interior-only",
+        "--output=res://.tmp/e-cliffhold-interior-9a359-day-r1"
+      ],
+      "scope": "One exact original Cliffhold approach/day/clear row, expected1 original image/record; full384 plan constructed before selection, full_matrix_complete=false. No candidate CLI. Actual transform equality with original253 must later be verified.",
+      "proof_reuse": "Original c191 selector and48bd UI behavior/receipt/args guards reused. Base namespace-only rename and exact original child restoration were already approved; no new producer, stand, camera, UI fixture or gameplay grant. Original map10/49, floor4/81 and exact11bda Gate7/116 retained for their scopes, not native proof.",
+      "conditions": [
+        "ROOT-exclusive clean frozen exact9a checkout, fresh user/import/output, original start/terminal argv and source-before/after receipts. No candidate flags, post-pin edits, metadata substitution or receipt repair.",
+        "Verify actual output image-record counts, headers/CRC/hash/nativeHighForward+1920, relevant production camera/floor/clock/weather or UI content/focus/cost guards and exact persisted final manifest; no active output promotion.",
+        "Static parse success does not guarantee world mounting, helpers, UI private API execution or pixel validity. Actual Gate additive-contact helpers and their new warnings remain separately pending."
+      ],
+      "pending": "Actual native terminal/persistence/visibility and independent pixels; no fullmatrix/wholecriterion/device/campaign/save/co-op/performance claim."
+    },
+    {
+      "id": "cloudreach-menu",
+      "verdict": "APPROVE applicability only",
+      "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+      "argv": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/catalogue_survey.gd",
+        "--",
+        "--biome=cloudreach",
+        "--subset=Galefoot",
+        "--times=day",
+        "--ui-context=menu",
+        "--preset=High",
+        "--source-commit=9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+        "--output=res://.tmp/e-ui-cloudreach-menu-9a359-day-r1"
+      ],
+      "scope": "One existing Galefoot/day catalogue picture plus seven guarded menu UI images. Production panels/contents/focus/map realm-discovery checks and final expected UI count/persistence guards inherited from48bd.",
+      "proof_reuse": "Original c191 selector and48bd UI behavior/receipt/args guards reused. Base namespace-only rename and exact original child restoration were already approved; no new producer, stand, camera, UI fixture or gameplay grant. Original map10/49, floor4/81 and exact11bda Gate7/116 retained for their scopes, not native proof.",
+      "conditions": [
+        "ROOT-exclusive clean frozen exact9a checkout, fresh user/import/output, original start/terminal argv and source-before/after receipts. No candidate flags, post-pin edits, metadata substitution or receipt repair.",
+        "Verify actual output image-record counts, headers/CRC/hash/nativeHighForward+1920, relevant production camera/floor/clock/weather or UI content/focus/cost guards and exact persisted final manifest; no active output promotion.",
+        "Static parse success does not guarantee world mounting, helpers, UI private API execution or pixel validity. Actual Gate additive-contact helpers and their new warnings remain separately pending."
+      ],
+      "pending": "Actual native terminal/persistence/visibility and independent pixels; no fullmatrix/wholecriterion/device/campaign/save/co-op/performance claim."
+    },
+    {
+      "id": "meadows-craft",
+      "verdict": "APPROVE applicability only",
+      "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+      "argv": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/catalogue_survey.gd",
+        "--",
+        "--biome=meadows",
+        "--subset=South Bridge",
+        "--times=day",
+        "--ui-context=craft",
+        "--preset=High",
+        "--source-commit=9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+        "--output=res://.tmp/e-ui-meadows-craft-9a359-day-r1"
+      ],
+      "scope": "South Bridge remains one structured argument. One existing destination/day catalogue picture plus one guarded actual craft UI image. Existing nearest authored craft interaction, two-physics-tick tap, longest known recipe, preview/cost/action-hint owner-focus/full-clipping checks retained.",
+      "proof_reuse": "Original c191 selector and48bd UI behavior/receipt/args guards reused. Base namespace-only rename and exact original child restoration were already approved; no new producer, stand, camera, UI fixture or gameplay grant. Original map10/49, floor4/81 and exact11bda Gate7/116 retained for their scopes, not native proof.",
+      "conditions": [
+        "ROOT-exclusive clean frozen exact9a checkout, fresh user/import/output, original start/terminal argv and source-before/after receipts. No candidate flags, post-pin edits, metadata substitution or receipt repair.",
+        "Verify actual output image-record counts, headers/CRC/hash/nativeHighForward+1920, relevant production camera/floor/clock/weather or UI content/focus/cost guards and exact persisted final manifest; no active output promotion.",
+        "Static parse success does not guarantee world mounting, helpers, UI private API execution or pixel validity. Actual Gate additive-contact helpers and their new warnings remain separately pending."
+      ],
+      "pending": "Actual native terminal/persistence/visibility and independent pixels; no fullmatrix/wholecriterion/device/campaign/save/co-op/performance claim."
+    }
   ]
 }
