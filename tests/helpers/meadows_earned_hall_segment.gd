@@ -598,7 +598,9 @@ func _gather_first_feast_stock(band2: Array[Vector2], rim: Array[Vector2],
 	_nav.reset()
 	_unhook()
 	var home := HOME_TRAVEL.new(_tree, _game)
-	if not await home._with_navigation_lessons(Callable(home, "home_key")):
+	var returned: bool = await home._with_navigation_lessons(Callable(home, "home_key"))
+	_receipt("home_key_attempt", home.home_key_observation.duplicate(true))
+	if not returned:
 		return _fail("The ordinary Master-to-homestead Home Key return failed: " + str(home.failures))
 	_collect(_tree.current_scene)
 	var after: Array[String] = []

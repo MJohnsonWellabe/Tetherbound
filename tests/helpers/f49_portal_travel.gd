@@ -11,6 +11,7 @@ var _player: CharacterBody3D
 var _rig: Node3D
 var _activated: Object
 var _home_result: Dictionary = {}
+var home_key_observation: Dictionary = {}
 var last_approach: Dictionary = {}
 var _enter_binding: Dictionary = {}
 var _enter_result: Dictionary = {}
@@ -40,14 +41,25 @@ func _uids() -> Array[String]:
 
 func home_key() -> bool:
 	_home_result = {}
+	home_key_observation = {"replies": [], "snapshots": [],
+		"immediate_use_return_source": "HOME KEY SATCHEL USE event; not inferred from arrival."}
 	if not game.has_signal("portal_action_result"):
 		return _fail("F49 missing producer: Game has no authoritative portal result signal")
 	game.connect("portal_action_result", _portal_result)
 	var passed := await _use_home_key()
+	_observe_home_key("terminal")
+	home_key_observation["passed"] = passed
 	game.disconnect("portal_action_result", _portal_result)
 	return passed
 
 func _portal_result(result: Dictionary) -> void:
+	if not home_key_observation.is_empty() and result.get("kind") in ["home_key_begin", "home_key_cancel", "home_key_finish"]:
+		var reply := {}
+		for field: String in ["kind", "ok", "reason", "code", "request_id", "use_id", "permit_id",
+				"character_id", "world_instance_id", "session_epoch", "saved", "durable", "settled", "arrived", "arrival_applied", "cancelled"]:
+			if result.has(field): reply[field] = result[field]
+		home_key_observation.replies.append(reply)
+		print("F49 HOME KEY REPLY " + JSON.stringify(reply))
 	if result.get("kind") == "home_key_finish": _home_result = result.duplicate(true)
 	# Game emits only Session-authenticated replies. Bind this observer to the
 	# exact request queued by the actual arch, rather than scene/menu readiness.
@@ -75,7 +87,9 @@ func _use_home_key() -> bool:
 		return _fail("F49 controller focus could not reach the actual Home Key")
 	# Production Satchel Use must close the menu and route to HomeKey.use().
 	# This deliberately exposes the currently missing shared input producer.
+	_observe_home_key("before_satchel_use")
 	await tap("interact")
+	_observe_home_key("after_satchel_use")
 	for frame in 7200:
 		await tree.process_frame
 		if not _home_result.is_empty() and _home_result.get("ok") != true:
@@ -197,6 +211,62 @@ func hang_relic(biome: String) -> bool:
 		if (character.get("relics_hung", []) as Array).has(biome):
 			return _uids() == before or _fail("F49 relic hanging changed the actual party")
 	return _fail("F49 relic hanging produced no actual portable relics_hung state")
+
+## Read-only operands: no request dispatch, admission change or success inference.
+func _observe_home_key(phase: String) -> void:
+	var owner := INPUT_OWNER.current(tree)
+	var scene := tree.current_scene
+	var menu: Node = game.call("menu")
+	var session: Node = game.get("session")
+	var key := game.get_node_or_null(^"HomeKey")
+	var row := {"phase": phase, "paused": tree.paused,
+		"input_owner": str(owner.get_path()) if owner != null else "",
+		"menu_open": menu != null and menu.call("is_open") == true,
+		"realm": str(game.current_realm), "pending_entry": str(game.pending_realm_entry),
+		"scene": str(scene.get_path()) if scene != null else "",
+		"meadows_scene_ready": scene != null and game.call("_realm_scene_ready", scene, "meadows") == true,
+		"meadows_input_ready": _ready_world("meadows"), "home_key_present": key != null,
+		"story_modals": [], "session": {}}
+	for modal: Node in tree.get_nodes_in_group("story_modal"):
+		if modal.has_method("is_open") and modal.call("is_open") == true:
+			row.story_modals.append(str(modal.get_path()))
+	if key != null:
+		row["key"] = {}
+		var label: Label = key.get("_refusal_label")
+		row.key["last_refusal_text"] = label.text if is_instance_valid(label) else ""
+		for field: String in ["_phase", "_pending", "_use_id", "_elapsed", "_wait", "_fade_locked", "_closing_edge"]:
+			row.key[field] = key.get(field)
+	if session != null:
+		var peer: int = session.call("local_peer_id")
+		var blocked: bool = session.call("_owner_training_mutation_blocked", game.local) == true
+		row.session = {"host": session.call("is_host"), "active": session.call("is_active"),
+			"snapshot_ready": session.call("snapshot_ready"), "peer": peer,
+			"epoch": session.call("_altar_current_epoch"),
+			"admitted": not (session.call("admitted_character_state", peer) as Dictionary).is_empty(),
+			"runtime_ready": session.call("portal_runtime_ready"), "owner_mutation_blocked": blocked,
+			"owner_block_reason": session.call("_owner_snapshot_block_reason", game.local) if blocked else "",
+			"refusal": game.call("home_key_refusal"), "context": {}, "queued_requests": []}
+		var context: Dictionary = {}
+		if row.session.host == true:
+			context = session.call("_host_portal_context", peer)
+		else:
+			var lifecycle := session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
+			if lifecycle != null: context = lifecycle.call("local_sample")
+		for field: String in ["combat", "dialogue", "cutscene", "swimming", "flying", "downed", "home_key_owned", "realm", "damage_revision", "position"]:
+			if context.has(field): row.session.context[field] = context[field]
+		if context.get("arch_positions") is Dictionary:
+			row.session.context["home_arch"] = context.arch_positions.get("home")
+		for request: Variant in (session.get("_portal_requests") as Dictionary).values():
+			if request is Dictionary and request.get("payload", {}).get("kind", "") in ["home_key_begin", "home_key_finish", "home_key_cancel"]:
+				var queued := {}
+				for field: String in ["request_id", "character_id", "world_instance_id", "session_epoch"]:
+					if request.has(field): queued[field] = request[field]
+				queued["payload"] = {}
+				for field: String in ["kind", "use_id"]:
+					if request.payload.has(field): queued.payload[field] = request.payload[field]
+				row.session.queued_requests.append(queued)
+	home_key_observation.snapshots.append(row)
+	print("F49 HOME KEY OPERANDS " + JSON.stringify(row))
 
 ## Diagnostic only: which readiness condition a long Home Key wait is on.
 func _print_home_key_wait(frame: int) -> void:
