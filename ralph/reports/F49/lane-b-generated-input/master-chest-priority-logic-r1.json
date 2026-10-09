@@ -1,0 +1,32 @@
+{
+  "kind": "master_recipe_chest_production_priority_and_affected_existing_logic_proof",
+  "source": "832af5e440bf89ed6adffd9d6cf5e8e4388b3537",
+  "source_paths": [
+    "scripts/masters/master_site.gd",
+    "data/config/masters.json"
+  ],
+  "source_change": "Configured existing chest Interactable priority1 beats ambient harvest priority0 in the unchanged authored3.8m range. NPC/chest offset8m, no overlapping challenge range. Host admission/proximity/win/debit/save/ACK and world placements/physics unchanged. No new flags/durable state.",
+  "supported_failure": "hall-home-key-operands-runtime-r1.json: wrong Chop provider nearer by0.001876m at priority0; source tune uses existing production arbiter channel, no target override.",
+  "original_source_and_command_verdict": "Both original reviewers approve:\n\n- **F20 source/argv:** `7d65f3eea1276f0294db0600b4f34efaa43c2222`. One `tests/smoke_f20_ending.gd --completed-fixture --functional-offload` run is eligible with Compatibility 1280\u00d7720 and fresh isolated storage. Alpha, research completion and blind gates remain open.\n- **Master source:** `832af5e440bf89ed6adffd9d6cf5e8e4388b3537`. The proposed two-file unit batch is eligible; after PASS, one changed-source generated Hall run is eligible.\n\nHall artifact hash/CRC verified: nearer priority-0 Chop beat the chest. Home Key was never reached; no numeric exit asserted. Actual chest range is **3.8 m**, NPC/chest offset **8 m**.\n\nNo runtime fix or whole-criterion closure claimed.",
+  "run_id": 37880320013,
+  "artifact_id": 11593284642,
+  "artifact_zip_sha256": "c5e7764da066eaf2d1944c62f1a801a367cd4f2187b51e59ea83d49e957af912",
+  "log": "ci-master-chest-priority-units-37880320013.log.gz",
+  "log_sha256": "839da13e2f8824006e41b38af7f3d9742f47d2bdb20ec785872d1ad8c4a15e65",
+  "gzip_sha256": "6a33f08645fe200756baa7cd4e748f377694c95e074946bc81b5ae511b5c0517",
+  "tests": 15,
+  "assertions": 60,
+  "failures": 0,
+  "exit_code": 0,
+  "engine_script_errors": 0,
+  "duration_seconds": 6,
+  "dispatched_arguments": "--initialized --only=test_guest_master_admission.gd,test_prompt_arbiter.gd",
+  "initialized_independently_attested_by_artifact": false,
+  "original_logic_and_hall_command_verdict": "Bacon and Hubble: **LOGIC APPROVE** `37880320013 @832af5e440bf89ed6adffd9d6cf5e8e4388b3537`. Hash/CRC verified; 15 tests/60 assertions, exit 0, zero engine/script errors. `--initialized` is dispatch-reported, not printed in the artifact.\n\nOnce B\u2019s hosted slot is free, both approve:\n\n```text\ntools/earned_saves/earned_chain_runner.gd --segment=hall --generated-fixture --functional-offload --save-dir=res://ralph/reports/F49/generated-hall-chest-priority-r1/hall/save --receipt=res://ralph/reports/F49/generated-hall-chest-priority-r1/hall/receipt.json\n```\n\nRequire fresh outputs/userdir, Compatibility 1280\u00d7720 and unchanged generated post-Relay input. Actual chest selection, Home Key return and Hall completion remain open. No export approval or READY.",
+  "actual_chest_selection_proven": false,
+  "home_key_return_proven": false,
+  "hall_completion_proven": false,
+  "whole_criterion_closed": false,
+  "failed_save_input_used": false,
+  "functional_hall_dispatched": false
+}
