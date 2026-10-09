@@ -40,6 +40,30 @@
       {
         "proof": "f18_earned_loop",
         "run_id": 37978412976,
+        "status": "passed",
+        "actual_result": "failures [], 30 receipt phases, actual Home Key, paid craft, save/reload and portal return; exact nightly blocked-shot recovery branch was not exercised."
+      }
+    ],
+    "current_main_sha": "bac2e95eb43ddf3d224252d3fd4acc23579acf2f",
+    "current_main_proofs": [
+      {
+        "proof": "f18_earned_loop",
+        "run_id": 37981798386,
+        "status": "pending"
+      },
+      {
+        "proof": "gate_a_opening_segment",
+        "run_id": 37981802048,
+        "status": "pending"
+      },
+      {
+        "proof": "gate_b_continuous_CORE",
+        "run_id": 37981805364,
+        "status": "pending"
+      },
+      {
+        "proof": "existing aim/navigation units",
+        "run_id": 37981808578,
         "status": "pending"
       }
     ]
@@ -58,12 +82,13 @@
       {
         "proof": "generated Relay ordinary-input route",
         "run_id": 37979059041,
-        "status": "pending"
+        "status": "canceled_obsolete_underprepared_input"
       },
       {
         "proof": "generated Hall ordinary-input route",
         "run_id": 37979062394,
-        "status": "pending"
+        "status": "failed",
+        "actual_result": "First Riverwatch trainer defeated all five starting L9/L9/L9/L7/L7, cap10; no captain or Sigil earned."
       },
       {
         "proof": "existing population provenance probe",
@@ -75,7 +100,10 @@
       {
         "proof": "Relay, Hall and Meadows economy units",
         "run_id": 37979068346,
-        "status": "pending"
+        "status": "passed",
+        "tests": 18,
+        "assertions": 146,
+        "failed": 0
       }
     ],
     "continuous_fresh_save": false,
@@ -83,12 +111,46 @@
     "criteria_requested": [
       "F02#2",
       "F02#3"
-    ]
+    ],
+    "prepared_candidate": {
+      "proofs": [
+        {
+          "proof": "generated Relay ordinary-input route",
+          "run_id": 37980468549,
+          "status": "pending"
+        },
+        {
+          "actual_result": "First Riverwatch trainer defeated declared L20/cap20 five, no captain/Sigil earned. No accepted-strike/refusal counters in existing receipt.",
+          "artifact_id": 11641187532,
+          "proof": "generated Hall ordinary-input route",
+          "run_id": 37980471771,
+          "status": "failed"
+        }
+      ],
+      "diagnostic_limit": "Hall two failure-only attempts reached; no third unchanged diagnostic authorized.",
+      "current_main_sha": "f2cc27bf890485ba74baecb6f776bc5b571da1ed",
+      "setup_changes": {
+        "relay_party_levels": "[] (template9/9/9/7/7) -> [15,15,15,15,15]",
+        "generated_full_hp": "true -> true",
+        "runtime_flags": "none",
+        "hall_party_levels": "[] (template9/9/9/7/7) -> [20,20,20,20,20]",
+        "canonical_cap": "10 -> 20 via production caught_tiers(level)/level_cap"
+      },
+      "sha": "d2c211a2d621e5eae36afd5a355db6c942b8619c"
+    },
+    "obligations": {
+      "F02_3": "Blocked at first Riverwatch captain. Needs a concrete controller/combat fix supported by existing strike/refusal evidence before another Hall run, followed by actual all captains/Sigils/gate/shutters/arena receipts.",
+      "F02_6": "Excluded: no repeated-wild three-seed full route proof.",
+      "F02_2": "Pending actual Relay captain five admissions/kills/rewards/XP, Sela gear1, conduit shutdown, gear0 paid Mill opening and far-bank retained-five receipt.",
+      "F02_7": "Excluded: no full route spacing/dead-time proof.",
+      "F02_4": "Excluded: before-gate reload callback and final transition reload are not exercised by current segment."
+    }
   },
   "ready_eta_ct": "2026-10-09 15:45, conditional on named runtime receipts and independent recheck",
   "config_flags_and_defaults_changed": [],
-  "recorded_at": "2026-10-09T14:19:05-05:00",
+  "recorded_at": "2026-10-09T14:43:00-05:00",
   "feature_flag_flips": 0,
   "whole_criterion_ready": false,
-  "raw_logs": "D:\\tetherbound\\.artifacts\\owner-b-restart-20261009"
+  "raw_logs": "D:\\tetherbound\\.artifacts\\owner-b-restart-20261009",
+  "current_main": "c927823d1b41e98b90d33181a07846e72dc6a27a"
 }

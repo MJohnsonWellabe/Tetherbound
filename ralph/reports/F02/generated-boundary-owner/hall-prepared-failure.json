@@ -1,0 +1,148 @@
+{
+  "continuous_fresh_save": false,
+  "disclosures": [
+    "Generated completed Relay/Mill far-bank five at L20 with generated breakthrough caps for the Hall band. Ordered UIDs/species and original inventory retained. Zero Mill gear and no next captain, Sigil or Hall outcome. Exact live ground pose saved during setup. No earned feast, XP or recovery witness is claimed."
+  ],
+  "failures": [
+    "hall: The actual captain encounter ended without victory: lost",
+    "hall: Required trainer lacks exact admitted opponents, killing hits, configured rewards/XP and retained-five receipts: captain_riverwatch"
+  ],
+  "flags_gained": [],
+  "flags_total": 52,
+  "free_build": false,
+  "functional_offload": false,
+  "game_clock_seconds": 679.300105333319,
+  "game_day": 7,
+  "handoff_from": "/home/runner/work/_temp/userdata/godot/app_userdata/Tetherbound/owner-b-hall_generated_input/relay",
+  "helper_receipts": [
+    {
+      "passed": false,
+      "receipts": [
+        {
+          "beat": "trainer_top_up",
+          "party": [
+            "L20 257/257",
+            "L20 214/214",
+            "L20 205/205",
+            "L20 223/223",
+            "L20 214/214"
+          ],
+          "potions_left": 3.0
+        }
+      ],
+      "segment": "hall"
+    }
+  ],
+  "input_mode": "generated_fixture",
+  "inventory": {
+    "axe": 1,
+    "berries": 2,
+    "coin": 200,
+    "fiber": 3,
+    "hammer": 1,
+    "hide_vest": 1,
+    "home_key": 1,
+    "knife": 1,
+    "orb_basic": 41,
+    "orb_greater": 2,
+    "pickaxe": 1,
+    "potion_small": 3,
+    "revive": 9,
+    "rootstone": 19,
+    "torch": 1,
+    "wood": 2
+  },
+  "key_items": {
+    "home_key": 1
+  },
+  "location": {
+    "player": [
+      -104.218391418457,
+      -1.96262693405151,
+      4346.56591796875
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+  },
+  "mode": "new_order_meadows_piece",
+  "party_after": [
+    {
+      "hp": 0,
+      "level": 20,
+      "nickname": "Bud",
+      "species": "terrapup",
+      "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+    },
+    {
+      "hp": 0,
+      "level": 20,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+    },
+    {
+      "hp": 0,
+      "level": 20,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+    },
+    {
+      "hp": 0,
+      "level": 20,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-afbd0d982b14221393f70c29863586a1"
+    },
+    {
+      "hp": 0,
+      "level": 20,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+    }
+  ],
+  "party_before": [
+    {
+      "hp": 256,
+      "level": 20,
+      "nickname": "Bud",
+      "species": "terrapup",
+      "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+    },
+    {
+      "hp": 213,
+      "level": 20,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+    },
+    {
+      "hp": 205,
+      "level": 20,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+    },
+    {
+      "hp": 222,
+      "level": 20,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-afbd0d982b14221393f70c29863586a1"
+    },
+    {
+      "hp": 214,
+      "level": 20,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+    }
+  ],
+  "passed": false,
+  "prior_earned_play": false,
+  "saved_world_seed": 59015681,
+  "segment": "hall",
+  "wall_seconds": 285.52,
+  "world_seed_env": ""
+}
