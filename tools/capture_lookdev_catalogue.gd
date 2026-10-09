@@ -1,7 +1,6 @@
 extends "res://tools/catalogue_survey.gd"
 
 const BOOTSTRAP := preload("res://tools/lookdev_capture_bootstrap.gd")
-var _graphics_capture: Dictionary = {}
 
 
 func _run() -> void:
