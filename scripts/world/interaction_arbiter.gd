@@ -407,6 +407,13 @@ func activate() -> bool:
 func _recompute() -> void:
 	if not _enabled:
 		return
+	# The same combat context that refuses world interaction also owns its
+	# presentation, including the beat between a trainer's creatures.
+	if _fight_owns_the_world():
+		_winner = {}
+		_winning_provider = null
+		_publish("")
+		return
 	if _player == null or not is_instance_valid(_player):
 		_publish("")
 		return
