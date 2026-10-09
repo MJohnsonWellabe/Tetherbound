@@ -1,0 +1,162 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-09T00:19:55.448860+00:00",
+  "source_commit": "eda16a4ff7853ac8faac1583ab4d5c4a4c01e1ae",
+  "scope": "Exact shipping High/Medium full384 matrix and existing captain fight command applicability for whole E cluster F40#3/#5 plus F08#3; no actual criterion verdict",
+  "matrix_exact_commands_verdict": "APPROVE",
+  "fight_exact_commands_verdict": "REJECT",
+  "fight_supported_argv_verdict": "APPROVE_SYNTAX_AND_ROUTING_ONLY",
+  "commands": {
+    "matrix_high": [
+      "Godot",
+      "--path",
+      "<fresh clean worktree pinned to eda16a4ff7853ac8faac1583ab4d5c4a4c01e1ae>",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_matrix.gd",
+      "--",
+      "--biome=cloudreach",
+      "--preset=High",
+      "--source-commit=eda16a4ff7853ac8faac1583ab4d5c4a4c01e1ae",
+      "--output=res://.tmp/f40-cluster-high-eda-r1"
+    ],
+    "matrix_medium": [
+      "Godot",
+      "--path",
+      "<fresh clean worktree pinned to eda16a4ff7853ac8faac1583ab4d5c4a4c01e1ae>",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_matrix.gd",
+      "--",
+      "--biome=cloudreach",
+      "--preset=Medium",
+      "--source-commit=eda16a4ff7853ac8faac1583ab4d5c4a4c01e1ae",
+      "--output=res://.tmp/f40-cluster-medium-eda-r1"
+    ],
+    "fight_high": [
+      "Godot",
+      "--path",
+      "<fresh clean worktree pinned to eda16a4ff7853ac8faac1583ab4d5c4a4c01e1ae>",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_fight.gd",
+      "--",
+      "--preset=High",
+      "--source-commit=eda16a4ff7853ac8faac1583ab4d5c4a4c01e1ae",
+      "--seed=2042",
+      "--output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-eda-r1"
+    ],
+    "fight_medium": [
+      "Godot",
+      "--path",
+      "<fresh clean worktree pinned to eda16a4ff7853ac8faac1583ab4d5c4a4c01e1ae>",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_fight.gd",
+      "--",
+      "--preset=Medium",
+      "--source-commit=eda16a4ff7853ac8faac1583ab4d5c4a4c01e1ae",
+      "--seed=2042",
+      "--output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-eda-r1"
+    ]
+  },
+  "reviewed_blobs": {
+    "tools/capture_cloudreach_f40_matrix.gd": "a31126604c6643e7e4368b859f5727ad9347a6a9",
+    "tools/capture_cloudreach_f40_fight.gd": "cd5c33bb6240e7b74599928875a1d3e79dd61e15",
+    "tools/phase2_capture_cloudreach_live_fight.gd": "f9ec6d82184cc6a87e33f0fe6158aad39554d6cc",
+    "tests/smoke_cloudreach_continuous.gd": "dcb7ce9e4a1b8622351bdd33f175babedf79435c",
+    "tools/capture_lookdev_catalogue.gd": "1f040c90b9fa1e60179c474bc84e2c0f000b4e51",
+    "tools/catalogue_survey.gd": "b23de5c4c77e7bb2d540ae5a3f98a0e42b251494",
+    "data/config/cloudreach_f40_visual.json": "0521bde4a400a4af3e1d4254b8289c94dd398cd3"
+  },
+  "source_binding_reuse": [
+    "Exact full shipping pin resolves locally. Authoritative main7c7d is an ancestor; prior49d main integration source approval is reused. The relevant matrix/catalogue/bootstrap/world/config/fight/continuous producer files have no 49d-to-eda source delta, and inspected worktree paths match eda.",
+    "Reuse original full384/default-unmodified and complete-quarter matrix source approval at24aa2800e0365792f5c0b2e07d611bcb34a17233 in low-segment-source-review.json, plus accepted authored route stands/Overlook threshold and production camera/floor receipts. No former corpus or accepted assertion batch re-audited.",
+    "No --segment, --subset, --stormward-approach-only, --f40-candidate or Observatory material candidate flag occurs in these four exact commands. Aggregate F40 candidate config and dial_paving are tracked OFF; current shipping weather timer flag is OFF but the existing visual weather node supports the matrix explicit API pins. Stone polish remains deferred/OFF."
+  ],
+  "matrix_verified_applicability": {
+    "plan": {
+      "destinations": 12,
+      "times": [
+        "dawn",
+        "day",
+        "golden",
+        "night"
+      ],
+      "views": [
+        "approach",
+        "gameplay",
+        "reverse",
+        "detail"
+      ],
+      "weather": [
+        "clear",
+        "rain"
+      ],
+      "frames_per_preset": 384,
+      "minimum_before_selection": 200,
+      "segment": "",
+      "repair_selector": false
+    },
+    "destination_names": [
+      "Realm Gate Crag",
+      "Galefoot Waycamp",
+      "Three Bells Bridge",
+      "Broken Skyroad Arch",
+      "Windscar Beacon",
+      "Windscar Flight Aerie",
+      "Sky Shrine",
+      "The High Perches",
+      "Cliffhold",
+      "Old Wind Observatory",
+      "Summit Eyrie",
+      "Stormward Overlook"
+    ],
+    "preset_and_source": "Shared existing bootstrap accepts High/Medium only with native forward_plus, applies the corresponding production preference, declares exact source40SHA, sets root1920x1080 and requires a fresh explicit output folder. Both proposed matrix output roots are supported. Source identity must also be externally bound to actual checkout/clean index and original argv; SHA syntax alone is not proof.",
+    "fixture": "Matrix calls Game.reset_for_new_game, seeds CHAPTER.BOOT_FLAGS plus PRE_FINALE_FLAGS in memory, and directly mounts production Cloudreach. This catalogue matrix does NOT explicitly create/summon five current-band companions; no such matrix-party fact is claimed. The legal five/current-band setup belongs to the separate captain producer. Staged flags are not earned campaign evidence.",
+    "retained_guards": [
+      "Full plan loads all12 catalogue destinations and expands4 views x4 clocks x2weather, retaining existing explicit authored stand bases. Full>=200 plan check occurs before optional filtering; with no selection flags the entire384 plan remains.",
+      "Production shell build timeout and Player/Model/CameraRig/Camera3D binding are required. Actual Game.debug_teleport_to refusal, missing ground or clock failure append failures and cannot pass completion.",
+      "Every frame uses real player/body and production spring arm, with current terrain camera binding, recorded actual player/camera transforms and heading. Viewport must be nonempty and match actual root dimensions; failed PNG save appends a failure. Trainer visibility is an intent/recorded framing limit, not an unobstructed-pixel claim.",
+      "F40 child rejects a trainer not on floor or more than3m below drawn ground; records on_floor and observed_weather. Clock request and visual set_weather are pinned, settled and checked against observed requested weather. No canonical encounter-weather assertion is made.",
+      "Inherited final completion requires no failures and records==planned, with count fields in manifest. full_matrix_complete additionally requires defaultfull/nonrepair selection and full count. Manifest open/flush failures append failures and request nonzero exit. This source does not supply a full final-byte readback guard; original persisted receipt/image/hash verification remains mandatory."
+    ]
+  },
+  "fight_supported_real_path": [
+    "The child unconditionally invokes the same bootstrap. Exact High/Medium forward_plus1920 preset/source/fresh-output arguments are supported. Parent parses --output and --seed; both outputs meet the mandatory res://ralph/reports/VISUAL/phase2/cloudreach/ prefix. No unsupported duration/interval args are proposed.",
+    "Inherited producer resets Game, stages four summit progression flags, directly creates sparkit/mudsnout/bramblebun/terrapup/brooktail (exact five) and calls the child _fixture_level from existing config44, then mounts the actual Cloudreach world. Actual levels/party/starting state must be verified from output, not inferred from requested fixture metadata.",
+    "Actual captain relocation threshold is required. The continuous proof walks the actual central approach/deck, interacts with the actual production prompt, requires trainer_battle_active, and uses the existing live SPACER controller-input pilot. live_combat=true selects this real path, not the alternate lethal/resolver mechanics-only seam.",
+    "The live battle uses original normal clock/physics and existing36000-physics-frame budget. Actual started/victory/loss callbacks, round results and inventory delta are checked; timeout/loss/missing victory-start/reward callbacks fail _battle. Staged party/flags and pilot mean this is not earned campaign, balance/device/co-op or transaction acceptance."
+  ],
+  "fight_guard_findings": [
+    {
+      "severity": "required proof gating gap",
+      "path": "tools/phase2_capture_cloudreach_live_fight.gd::_shot and _run",
+      "fact": "_shot appends a frame only on save_png OK but otherwise does not set failed, log a capture failure or propagate rejection. _run exits 0 solely when won is true; it does not require any persisted frame, complete manifest, or failed==false. A genuine production victory can therefore exit0 with zero/missing capture frames; complete may be false without nonzero process exit."
+    },
+    {
+      "severity": "required final receipt gating gap",
+      "path": "tools/capture_cloudreach_f40_fight.gd::_write_manifest",
+      "fact": "Missing/unreadable base manifest, final open failure and store/flush error only push_error and return. They are not added to inherited failed nor propagated to _run final exit. No exact final readback is performed. A victory can therefore exit0 without a valid final named graphics/source receipt."
+    }
+  ],
+  "minimum_required_correction": "Use the existing producer paths only: propagate PNG and final receipt failures into the final nonzero disposition; require at least one successfully persisted frame and a complete, readable, correct final named/source/raster receipt. Preserve real interaction/input/party/stats/budget/authority/guard behavior. No new harness/helper/test class, broad suite or reviewer execution is requested. A corrected exact pinned source/command needs the narrow affected review before it becomes an approved fight proof command.",
+  "required_actual_runtime_gates": [
+    "ROOT-exclusive exact clean-source/import/driver/preset/raster/start-argv/terminal provenance and immutable originals/hashes for every complete384 High/Medium matrix, zero failures and full_matrix_complete true; stopping or failed/partial receipts remain failed.",
+    "After the supported fight failure-gating correction, actual real captain start/input/contact/outcome and nonempty complete original High/Medium fight captures with valid graphics receipts. No future win is promised from level44/pilot or output name.",
+    "Original independent runtime/provenance approvals and original blind full-bar acceptance of the actual whole cluster, including representative scenery/settlement/fight scopes. Existing local grassPASS24 or source approvals cannot substitute for whole High/Medium matrix/fight results."
+  ],
+  "limits": "No engine/GPU/import/test/dispatch, issue fetch, source/implementation/STATE/dashboard/handoff/raw-thread edits/reads, judge activation, new agents/helpers or hidden flag flips. Matrix command approval is applicability only; fullHigh/Medium runtime/artPASS is PENDING. Fight commands are rejected as proof commands due supported failure-path gaps despite valid argv. No wholeF40/P2-025/F08#3/fullbar/earned/save/co-op/balance/device/performance claim; no separate polish/loss READY."
+}
