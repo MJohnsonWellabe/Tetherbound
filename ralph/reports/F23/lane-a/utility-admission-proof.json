@@ -729,5 +729,41 @@
     },
     "accepted_boundary": "none; failed saves never promoted",
     "checkout_verification": "job113406158698 git log -1 confirmse8e2aab3f88f2776fabd828448f3369ce0d89333"
+  },
+  "shipping_canonical_heal": {
+    "source_sha": "cc31045690858c2c518647c4444af1997568498c",
+    "run_id": 37869795583,
+    "artifact_id": 11589569165,
+    "job_id": 113625004040,
+    "log_sha256": "2e723121d22ed0ebaee2df308cfa41639d39baeac37f0ad93f7baa8a992d4996",
+    "checks": 29,
+    "errors": 0,
+    "tracked_actor_vitals_on": true,
+    "tracked_heal_whitelist_unchanged": true,
+    "canonical_wild": true,
+    "overrides": false,
+    "action_id": "1:1:1:1:heal",
+    "committed": true,
+    "presented": true,
+    "source_and_frozen_sequence": 2,
+    "initial_tether_admitted_before_original": true,
+    "hp": [
+      96.6,
+      119.784
+    ],
+    "wind": [
+      79.6,
+      55.6
+    ],
+    "foe_hp": [
+      600.0,
+      600.0
+    ],
+    "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "artifact_verdict": "ARTIFACT APPROVE",
+    "review_turn": "01a11e4e-2d9d-70c2-9baf-d88ec7c00d98",
+    "whole_f23_2_verdict": "OPEN",
+    "literal_bounded_verdict": "ARTIFACT APPROVE for 37869795583 at cc31045690858c2c518647c4444af1997568498c: 29 checks, zero errors. Current WHOLE F23#2 remains OPEN. The literal ten-move catalogue and two equipable choices per role retain their unit and eight-receipt evidence. This Heal pass repairs one shipping path; it does not resolve current shipping Dash evidence or the returned guest combat/utility integration failures. No further gameplay repair is supported by this packet. The guest path remains PARKED pending the decisive host motion sample/acknowledgment/correction operands.",
+    "remaining": "Shipping Dash and returned guest utility integration evidence unresolved; guest path PARKED pending decisive host motion sample/acknowledgment/correction operands. No unchanged or passing rerun."
   }
 }

@@ -7,7 +7,7 @@
     "F24#5"
   ],
   "claim": "Bounded candidate evidence; no whole criterion or shipping acceptance claimed.",
-  "shipping_candidate": "a22a35175952f5e22f763521544b31ee8f825364",
+  "shipping_candidate": "cc31045690858c2c518647c4444af1997568498c",
   "tracked_shipping_switches": {
     "ultimates": true,
     "actor_vitals": true,
@@ -131,6 +131,30 @@
       "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
       "review_turn": "01a11e38-2689-7af1-b429-57036da6b640",
       "limit": "Runtime pending; no guaranteed hit or WHOLE acceptance."
+    },
+    "physical_approach_runtime": {
+      "run_id": 37869130265,
+      "artifact_id": 11589663104,
+      "job_id": 113622867123,
+      "checkout_sha": "0a3eab3d404c831fd073016a1cba137549e201b2",
+      "log_sha256": "fb6352cd232b55acec54987fc405b2380997ffda9450b040bc822d82677bfe11",
+      "passing_prefix_checks": 20,
+      "result": "FAIL; unchanged Item meter prerequisite failed after eight attempts.",
+      "guest_peer": 1936072378,
+      "last_action": 8,
+      "host_result": "REFUSED friendly_target",
+      "geometry": {
+        "range": 9.0,
+        "cone": 26.0,
+        "teammate_distance": 5.5248399,
+        "teammate_connects": true,
+        "opponent_distance": 13.0171175,
+        "opponent_connects": false
+      },
+      "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "original_artifact_disposition": "ARTIFACT/DISPOSITION APPROVE; PARK",
+      "review_turn": "01a11e46-a69c-7e30-8fb4-b1a0b144ebb0",
+      "limits": "No movement producer bug established. No unchanged rerun, preparation increase, range change or guard relaxation. Shipping Tether and WHOLE remain OPEN."
     }
   },
   "shipping_heal": {
@@ -168,6 +192,48 @@
       "review_turn": "01a11e3f-c72b-7f70-9c8a-d71edb7ce21d",
       "proof": "Existing shipping Heal smoke only; unchanged guard batches reused.",
       "limits": "Runtime and WHOLE pending. No frozen sequence rewrite, re-minted original, pending bypass or fake ACK."
+    },
+    "admission_order_runtime": {
+      "run_id": 37869795583,
+      "artifact_id": 11589569165,
+      "job_id": 113625004040,
+      "checkout_sha": "cc31045690858c2c518647c4444af1997568498c",
+      "log_sha256": "2e723121d22ed0ebaee2df308cfa41639d39baeac37f0ad93f7baa8a992d4996",
+      "checks": 29,
+      "errors": 0,
+      "exit": 0,
+      "shipping_utility_proof": true,
+      "shipping_canonical_wild": true,
+      "canonical_wild_override": false,
+      "visual_gate_override": false,
+      "library_arrival_override": false,
+      "operands": {
+        "hp_before": 96.6,
+        "hp_after": 119.784,
+        "wind_before": 79.6,
+        "wind_after": 55.6,
+        "wind_after_start": 79.6,
+        "foe_before": 600.0,
+        "foe_after": 600.0
+      },
+      "original": {
+        "action_id": "1:1:1:1:heal",
+        "committed": true,
+        "presented": true,
+        "expected_seq": 2,
+        "source_record_seq": 2,
+        "tether_admitted_before_freeze": true,
+        "body_generation": 1,
+        "vitals_revision": 1
+      },
+      "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "source_verdict": "SOURCE/PROOF-SCOPE APPROVE",
+      "source_review_turn": "01a11e3f-c72b-7f70-9c8a-d71edb7ce21d",
+      "artifact_verdict": "ARTIFACT APPROVE",
+      "guards": "Physical B and original failed-world/disk-preservation assertions unchanged; tracked Actor and Heal allowlist unmodified. No enemy-hit event.",
+      "artifact_review_turn": "01a11e4e-2d9d-70c2-9baf-d88ec7c00d98",
+      "whole_f23_2_verdict": "OPEN",
+      "whole_limits": "Shipping Dash and returned guest combat/utility integration failures remain unresolved. Ultimate clock and F24 Item failure are separate criteria. No new gameplay repair is supported by this packet; no passing rerun or historical WHOLE revival."
     }
   }
 }
