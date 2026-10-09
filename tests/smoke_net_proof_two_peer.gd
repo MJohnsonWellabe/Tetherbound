@@ -172,16 +172,6 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 		var resolution := OS.get_environment("TB_NET_PROOF_RESOLUTION")
 		args = ["--path", project_path, "--rendering-driver", "opengl3", "--disable-render-loop",
 			"--audio-driver", "Dummy", "--resolution", resolution if not resolution.is_empty() else "960x540"]
-	var f25_render := OS.get_cmdline_user_args().has("--f25-render-host=Medium")
-	if f25_render and i == 0:
-		# The actual-input producer keeps its coordinator headless inside xvfb.
-		# Only the host child draws continuously; its runner validates the real
-		# renderer/preset before accepting the read-only F25 capture command.
-		if not _is_windows() and OS.get_environment("DISPLAY").is_empty():
-			push_error("F25 Medium host requires the existing xvfb render offload")
-			return -1
-		args = ["--path", project_path, "--rendering-method", "forward_plus",
-			"--rendering-driver", "vulkan", "--audio-driver", "Dummy", "--resolution", "1280x720"]
 	if _is_windows():
 		args.append_array(["--log-file", log_path])
 	args.append_array([
@@ -193,9 +183,6 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 	])
 	for extra in extra_args:
 		args.append(str(extra))
-	if f25_render:
-		args.append("--f25-library-preview")
-		if i == 0: args.append("--f25-capture-preset=Medium")
 	OS.set_environment("XDG_DATA_HOME", home)
 	if _is_windows():
 		OS.set_environment("APPDATA", home)

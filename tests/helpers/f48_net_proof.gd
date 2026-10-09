@@ -400,16 +400,6 @@ func _outcome(transaction: String, since: String, peer: int = 1) -> Dictionary:
 	return fixed
 
 func _boss(steps: Array, peers: int) -> void:
-	var f25_capture: Dictionary = {}
-	if _profile.has("f25_capture"):
-		if peers != 4 or not _profile.f25_capture is Dictionary or _profile.f25_capture.is_empty():
-			_profile_errors.append("Optional F25 capture requires four peers and explicit capture arguments")
-			return
-		f25_capture = _profile.f25_capture.duplicate(true)
-		for key: Variant in f25_capture:
-			if key not in ["out", "frame_budget_ms", "sample_frames"]:
-				_profile_errors.append("Unsupported F25 capture argument: " + str(key))
-				return
 	for peer: int in peers:
 		steps.append(_entry(peer, "f48_assert", {"lacks": {"redesign_character/relics_held": "meadows"}, "equals": {"redesign_character/portal_unlocks": []}, "item_counts": {"tidewake_portal_key": 0}}))
 		steps.append_array(_route("boss_prepare_%d" % peer, peer))
@@ -419,14 +409,7 @@ func _boss(steps: Array, peers: int) -> void:
 	var participants: Array = []
 	for peer: int in peers: participants.append("$character%d" % peer)
 	steps.append(_entry(0, "f48_participants", {"characters": participants}))
-	if not f25_capture.is_empty():
-		f25_capture.lifecycle = "start"
-		var start := _entry(0, "f25_fight_capture", f25_capture, "START observer only; no capture PASS")
-		start.expect_data = {"status": "START", "capture_complete": false}
-		steps.append(start)
 	steps.append_array(_route("boss_fight", 0))
-	if not f25_capture.is_empty():
-		steps.append(_entry(0, "f25_fight_capture", {"lifecycle": "collect", "out": f25_capture.get("out", "")}, "Actual four-R5/cap/drawn-frame/p95 capture verdict"))
 	steps.append(_entry("all", "wait", {"frames": 240}))
 	steps.append(_entry("all", "f48_assert", {"boss_rewards": true}))
 	steps.append(_entry(0, "f48_assert", {"participants": participants}))

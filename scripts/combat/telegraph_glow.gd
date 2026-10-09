@@ -5,7 +5,7 @@ extends Node3D
 ## `R9.4-remainder-9-combat`: a blind critic covering the HUD text found the
 ## wind-up frame indistinguishable from ordinary standing — `combat_hud.gd`'s
 ## own comment already admits why, a placeholder creature has nothing built to
-## show a charge-up. This is that something: a pulsing warning crest at the
+## show a charge-up. This is that something: a pulsing warning ring at the
 ## creature's feet for the exact length of the telegraph beat, so the read
 ## survives even with the banner covered.
 ##
@@ -90,14 +90,11 @@ func _ready() -> void:
 
 func _material() -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	material.roughness = 0.85
-	material.emission_enabled = true
-	material.emission = _colour
-	material.emission_energy_multiplier = 0.12
+	material.disable_receive_shadows = true
 	material.vertex_color_use_as_albedo = true
 	# R9.4-remainder-9-combat-2: tried the same fix `impact_flash.gd`'s own
 	# `no_depth_test` comment documents (this ring spawns "at the creature's
@@ -203,9 +200,21 @@ func _water_depth(at: Vector3) -> float:
 	return depth if is_finite(depth) and depth > 0.0 else 0.0
 
 
-## A raised, lit crest has the same inner/outer ground footprint and pulse.
-## Both skirts meet the sampled terrain/water; only the middle rises. Colour
-## and opacity taper across the section instead of painting a flat annulus.
+## Flat on the ground rather than camera-facing: it is a mark on the terrain
+## under the creature, readable from the combat camera's own downward angle
+## the same way the arena boundary's ground line already is.
+## R9.4-remainder-9-combat-2: instrumented and confirmed CLEAN, not the bug.
+## A live smoke_combat.gd run (real fight, real signal chain, not a static
+## trace) showed telegraph_started emitting, _on_enemy_telegraph() firing,
+## and this function drawing with sane numbers every time -- radius ~0.46,
+## alpha ~0.9, `visible=true`, `_ring`'s own custom_aabb correctly set from
+## `reach` in _ready(). The signal/logic chain is not where this bug lives.
+## Whoever renders this next: the one real structural difference from its
+## working siblings (impact_flash.gd, target_marker.gd) is that those are
+## camera-facing billboards rebuilt from the camera basis every frame, and
+## this deliberately draws flat on the XZ ground plane instead (by design,
+## see the header comment above) -- that is the remaining lead, not a second
+## logic bug to hunt for blind.
 func _draw_ring(radius: float, alpha: float) -> void:
 	var origin := global_position if is_inside_tree() else position
 	var water: Object = water_depth_source
@@ -227,35 +236,13 @@ func _draw_ring(radius: float, alpha: float) -> void:
 	_ground_seen.clear()
 	var inner := radius * 0.72
 	_ring_mesh.clear_surfaces()
-	_ring_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
-	var foot := _colour.darkened(0.35)
-	foot.a = alpha * 0.2
-	var crest := _colour.lightened(0.3)
-	crest.a = alpha
-	var previous: Array[Vector3] = []
+	_ring_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLE_STRIP)
 	for i in SEGMENTS + 1:
 		var angle: float = TAU * float(i) / float(SEGMENTS)
 		var direction := Vector3(cos(angle), 0.0, sin(angle))
-		var section: Array[Vector3] = [_ground_vertex(direction * inner),
-			_ground_vertex(direction * lerpf(inner, radius, 0.5)) + Vector3.UP * (radius - inner) * 0.5,
-			_ground_vertex(direction * radius)]
-		if not previous.is_empty():
-			_crest_triangle(previous[0], section[0], section[1], foot, foot, crest)
-			_crest_triangle(previous[0], section[1], previous[1], foot, crest, crest)
-			_crest_triangle(previous[1], section[1], section[2], crest, crest, foot)
-			_crest_triangle(previous[1], section[2], previous[2], crest, foot, foot)
-		previous = section
+		var colour := Color(_colour.r, _colour.g, _colour.b, alpha)
+		_ring_mesh.surface_set_color(colour)
+		_ring_mesh.surface_add_vertex(_ground_vertex(direction * inner))
+		_ring_mesh.surface_set_color(colour)
+		_ring_mesh.surface_add_vertex(_ground_vertex(direction * radius))
 	_ring_mesh.surface_end()
-
-
-func _crest_triangle(a: Vector3, b: Vector3, c: Vector3, ca: Color, cb: Color, cc: Color) -> void:
-	var normal := (b - a).cross(c - a).normalized()
-	if normal.y < 0.0: normal = -normal
-	if normal.is_zero_approx(): normal = Vector3.UP
-	_ring_mesh.surface_set_normal(normal)
-	_ring_mesh.surface_set_color(ca)
-	_ring_mesh.surface_add_vertex(a)
-	_ring_mesh.surface_set_color(cb)
-	_ring_mesh.surface_add_vertex(b)
-	_ring_mesh.surface_set_color(cc)
-	_ring_mesh.surface_add_vertex(c)

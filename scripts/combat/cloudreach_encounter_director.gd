@@ -414,15 +414,6 @@ func _build_trainers() -> void:
 		trainer_prompts[id] = prompt
 
 
-## Water inherits this same chapter catalogue/mounted-NPC ownership boundary.
-## A caller-supplied id or altered spec cannot stand in for the original source.
-func _local_named_trainer_source_matches() -> bool:
-	var id := str(_trainer_spec.get("id", ""))
-	return not id.is_empty() and trainer_specs.has(id) and trainer_specs[id] == _trainer_spec \
-		and is_instance_valid(_trainer_node) and trainer_nodes.get(id) == _trainer_node \
-		and get_parent() != null and get_parent().is_ancestor_of(_trainer_node)
-
-
 func _challenge(id: String) -> void:
 	if not trainer_specs.has(id) or not trainer_nodes.has(id):
 		return

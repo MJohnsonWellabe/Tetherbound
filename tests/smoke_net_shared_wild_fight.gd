@@ -571,9 +571,6 @@ func _run() -> void:
 				"peer %d swung at the opponent (%s)" % [mover, str(struck.get("detail", ""))])
 			host_hp = float((await _encounter(0)).get("opponent_hp", -1.0))
 
-		if mover == 1 and host_hp >= hp_before - 0.001:
-			var observation: Dictionary = await probe(0, "encounter", {"admission_peer_id":guest_peer_id})
-			print("F23_ADMISSION_OBSERVATION " + JSON.stringify(observation.get("admission_observation", {})))
 		check(host_hp < hp_before - 0.001,
 			"peer %d landed a blow on the shared opponent within %d swings: %.1f -> %.1f on the host"
 				% [mover, swings, hp_before, host_hp])

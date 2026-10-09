@@ -106,34 +106,6 @@ func test_admission_refuses_unknown_loadout_without_any_mutation() -> void:
 		1, owned, _binding(), _move(), WIND, 1000).ok)
 	assert_eq(host.record(id), before)
 
-
-func test_legacy_join_gets_host_observed_uid_without_creating_saved_vitals() -> void:
-	assert_true(host.join(id, 2, "", "owner_b").ok)
-	var binding := {"character_id":"owner_b", "creature_uid":"creature_b",
-		"deployment_generation":1, "actor_generation":0, "body_instance_id":52}
-	var participant: Dictionary = host.record(id).participants[2]
-	var joined_seq: int = participant.joined_seq
-	assert_false(host._self_utility_actor_current(id, 2, binding))
-	assert_true(host.bind_legacy_actor_deployment(id, 2, binding))
-	assert_true(host._self_utility_actor_current(id, 2, binding))
-	assert_eq(participant.joined_seq, joined_seq, "binding does not re-seat the participant")
-	assert_false(participant.has("actor_vitals"), "legacy metadata does not mount saved HP")
-	var before: Dictionary = host.record(id).duplicate(true)
-	assert_true(host.bind_legacy_actor_deployment(id, 2, binding))
-	assert_eq(host.record(id), before, "same deployment is idempotent")
-	var forged := binding.duplicate(true)
-	forged.character_id = "other_owner"
-	assert_false(host.bind_legacy_actor_deployment(id, 2, forged))
-	assert_eq(host.record(id), before)
-	forged = binding.duplicate(true)
-	forged.deployment_generation = 0
-	assert_false(host.bind_legacy_actor_deployment(id, 2, forged))
-	assert_eq(host.record(id), before)
-	forged = binding.duplicate(true)
-	forged.actor_generation = 1
-	assert_false(host.bind_legacy_actor_deployment(id, 2, forged), "saved generations cannot use legacy adapter")
-	assert_eq(host.record(id), before)
-
 func test_unsaved_mastery_and_resources_survive_peer_replacement_and_close() -> void:
 	assert_true(host.join(id, 2, "creature_b", "owner_b").ok)
 	assert_true(_start(1).ok)
@@ -260,10 +232,6 @@ func test_f33_no_charm_keeps_the_ordinary_gain_and_power() -> void:
 
 
 func test_new_system_hud_never_exposes_unadmitted_or_foreign_uid_resources() -> void:
-	var ultimates := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
-	var previous_ultimates: Dictionary = ultimates.config()
-	ultimates._config = previous_ultimates.duplicate(true)
-	ultimates._config.enabled = false # Explicit negative control, independent of shipping rollout.
 	var commands := preload("res://scripts/combat/tether_commands.gd")
 	var previous: Dictionary = commands.config()
 	commands._config = previous.duplicate(true)
@@ -290,7 +258,7 @@ func test_new_system_hud_never_exposes_unadmitted_or_foreign_uid_resources() -> 
 	var view: Dictionary = manager.new_system_combat_snapshot()
 	assert_true(view.get("active") == true)
 	assert_eq(view.get("ultimate_meter"), 36.0)
-	assert_false(view.get("ultimate_available", true), "explicitly disabled ultimate is never presented as available")
+	assert_false(view.get("ultimate_available", true), "shipping flag-off ultimate is never presented as available")
 	assert_eq(view.get("creature_uid"), first.uid)
 	view.commands.meter = 100.0
 	assert_eq(manager._tether_command_view.meter, 25.0, "returned command view cannot mutate the manager")
@@ -309,7 +277,6 @@ func test_new_system_hud_never_exposes_unadmitted_or_foreign_uid_resources() -> 
 	director.free()
 	manager.free()
 	commands._config = previous
-	ultimates._config = previous_ultimates
 
 func test_accepted_manager_windup_waits_for_real_time_despite_physics_catchup() -> void:
 	var manager := preload("res://scripts/combat/combat_manager.gd").new()

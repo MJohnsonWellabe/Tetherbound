@@ -676,9 +676,6 @@ func _run() -> void:
 			if str(placed.get("verdict", "")) != "PASS":
 				check(false, "peer %d stood its creature beside the boss (%s)"
 					% [mover, str(placed.get("detail", ""))])
-				if placed.get("type") != "verdict":
-					quit(await finish())
-					return
 				break
 			# Where the HOST holds this peer's creature, and where it holds the
 			# boss, both read as late as possible.
@@ -712,12 +709,6 @@ func _run() -> void:
 				break
 			host_hp = float(((await _boss(0)).get("record", {}) as Dictionary).get("hp", -1.0))
 
-		if mover == 1 and host_hp >= hp_before - 0.001:
-			var live_guest: Variant = await probe(1, "session")
-			var observation: Variant = await probe(0, "encounter", {"admission_peer_id":int(live_guest.get("peer_id", 0))}) \
-				if live_guest is Dictionary else null
-			print("F23_ADMISSION_OBSERVATION " + JSON.stringify(observation.get("admission_observation", {}) \
-				if observation is Dictionary else {"unavailable": true, "guest_session": live_guest, "encounter": observation}))
 		check(host_hp < hp_before - 0.001,
 			"peer %d landed a blow on the SHARED boss: %.1f -> %.1f on the host, in %d swing(s)"
 				% [mover, hp_before, host_hp, swings]

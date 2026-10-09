@@ -31,15 +31,9 @@ var _tonic_blocker: Callable
 var _tonic_refusal_armed := false
 var _tag_request: Dictionary = {}
 var _hud_capture_metadata: Dictionary = {}
-var _host_strike_observations: Dictionary = {}
 
 func _step_boot(args: Dictionary) -> Dictionary:
 	var result: Dictionary = await super._step_boot(args)
-	if result.get("verdict") == "PASS" and args.get("scene") == "world" and _peer_index == 0:
-		var director: Node = _encounter_director()
-		if director != null and not director.is_connected("host_strike_started", _observe_host_strike_started):
-			director.connect("host_strike_started", _observe_host_strike_started)
-			director.connect("host_strike_finished", _observe_host_strike_finished)
 	if result.get("verdict") == "PASS" and args.get("scene") == "world" \
 		and _peer_index == 1 and OS.get_cmdline_user_args().has("--capture-combat-hud") \
 		and DisplayServer.get_name() != "headless":
@@ -51,37 +45,6 @@ func _step_boot(args: Dictionary) -> Dictionary:
 		result["data"] = (result.get("data", {}) as Dictionary).merged({"hud_world_warmup_ms":elapsed}, true)
 		result["detail"] = str(result.get("detail", "")) + "; native world draw warmup %dms" % elapsed
 	return result
-
-
-func _observe_host_strike_started(intent: Dictionary, peer: int) -> void:
-	var session: Node = root.get_node(^"Game/Session")
-	if not session.is_host() or peer == session.local_peer_id(): return
-	var key := "%s:%d:%d" % [str(intent.get("encounter_id", "")), peer, int(intent.get("action", 0))]
-	# Keep the first invocation: a replay must not replace this observation.
-	if _host_strike_observations.has(key):
-		if not _host_strike_observations[key].finished:
-			_host_strike_observations[key]["overlapping_replay"] = true
-		return
-	_host_strike_observations[key] = {"encounter_id":str(intent.get("encounter_id", "")),
-		"peer":peer, "action":int(intent.get("action", 0)), "invoked":true,
-		"finished":false, "started_ms":Time.get_ticks_msec()}
-
-
-func _observe_host_strike_finished(intent: Dictionary, peer: int, verdict: Dictionary) -> void:
-	var key := "%s:%d:%d" % [str(intent.get("encounter_id", "")), peer, int(intent.get("action", 0))]
-	if not _host_strike_observations.has(key) or _host_strike_observations[key].finished: return
-	var observation: Dictionary = _host_strike_observations[key]
-	# Signals cannot distinguish overlapping identical invocations. Preserve
-	# that ambiguity rather than attributing a replay's result to the original.
-	if observation.get("overlapping_replay") == true: return
-	observation["finished"] = true
-	observation["finished_ms"] = Time.get_ticks_msec()
-	var delta: Dictionary = verdict.get("delta", {})
-	# Copy actual producer operands; absent fields stay null, never inferred.
-	observation["verdict"] = {"ok":verdict.get("ok"), "code":verdict.get("code"),
-		"kind":verdict.get("kind"), "delta_connected":delta.get("connected"),
-		"delta_hit":delta.get("hit"), "delta_hp":delta.get("hp"),
-		"delta_damage":delta.get("damage"), "delta_scheduled":delta.get("scheduled")}
 
 
 func _execute_step(msg: Dictionary) -> Dictionary:
@@ -185,18 +148,6 @@ func _tag_step(action: String) -> Dictionary:
 	if action == "op_tag_target": return await _tonic_step("op_tonic_target", {})
 	if manager == null or director == null or not manager.is_fighting():
 		return {"verdict":"FAIL", "detail":"Tag requires the actual live fight"}
-	if action == "op_tag_shove":
-		# The same existing proximity setup, followed by the actual utility tap.
-		var target: Node3D = director.get("_shared_opponent_proxy")
-		if target == null: target = director.get("_legacy_mirror")
-		var body: Node3D = director.ally_body()
-		if target == null or body == null: return {"verdict":"FAIL", "detail":"actual Shove body missing"}
-		body.global_position = target.global_position + Vector3(0, 0, 3.0)
-		body.face_towards(target.global_position)
-		for frame in 15: await physics_frame
-		var pressed: Dictionary = await _step_press({"action":"combat_utility"})
-		for frame in 90: await physics_frame
-		return pressed
 	if action == "op_tag_replay":
 		if _tag_request.is_empty() or not manager.submit_tether_command(_tag_request):
 			return {"verdict":"FAIL", "detail":"same Tag request could not be submitted"}
@@ -394,18 +345,6 @@ func _tag_state(args: Dictionary) -> Dictionary:
 	if args.get("snare") == true: out["snare"] = snare
 	if args.get("rally") == true: out["rally"] = rally
 	if session.is_host(): out["host_settlement_snapshot"] = settlement
-	if session.is_host() and args.has("strike_action"):
-		var key := "%s:%d:%d" % [id, peer, int(args.strike_action)]
-		out["host_strike_observation"] = _host_strike_observations.get(key, {
-			"encounter_id":id, "peer":peer, "action":int(args.strike_action),
-			"invoked":false, "finished":false}).duplicate(true)
-	if session.is_host() and args.get("shove") == true:
-		var wild: Node3D = director.get("_engaged_with")
-		var target: RefCounted = wild.get("instance") if is_instance_valid(wild) else null
-		out["shove"] = {"target_uid":str(target.get("uid")) if target != null else "", "encounter_id":id,
-			"generation":int(wild.get_meta(&"tether_body_generation", 0)) if is_instance_valid(wild) else 0,
-			"receipts":(wild.get("_landed_utility_state") as Dictionary).get("receipts", {}).duplicate(true) \
-				if is_instance_valid(wild) else {}}
 	return out
 
 

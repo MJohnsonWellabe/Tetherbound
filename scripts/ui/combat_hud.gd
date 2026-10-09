@@ -319,13 +319,12 @@ func _ready() -> void:
 	_ultimate_readout.fit_content = true
 	_ultimate_readout.scroll_active = false
 	_ultimate_readout.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_ultimate_readout.add_theme_font_size_override("normal_font_size", UITokens.FONT_PROMPT)
+	_ultimate_readout.add_theme_font_size_override("normal_font_size", 22)
 	$Root/AllyPanel/AllyVBox.add_child(_ultimate_readout)
 	_ultimate_meter = ProgressBar.new()
 	_ultimate_meter.custom_minimum_size.y = 8.0
 	_ultimate_meter.show_percentage = false
 	_ultimate_meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_dress(_ultimate_meter, UITokens.fill_box(UITokens.WARNING))
 	$Root/AllyPanel/AllyVBox.add_child(_ultimate_meter)
 
 	_party_strip = PARTY_STRIP.new()
@@ -592,19 +591,11 @@ func _process(delta: float) -> void:
 	_draw_enemy()
 	_draw_ally()
 	_draw_grid()
-	_ultimate_readout.show()
-	_ultimate_meter.show()
 	if is_instance_valid(_system_overlay):
 		_system_overlay.hide()
 		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
-		if active != null and _system_overlay.call("refresh", str(active.get("uid")), INPUT_GLYPH.using_gamepad()) == true:
-			var charged_id := str(active.get("move_charged"))
-			if _moves != null and _moves.has(charged_id):
-				_system_overlay.call("present_charged_energy", str(active.get("uid")), float(active.get("energy")),
-					float(_moves.move(charged_id).get("energy_cost", 100.0)))
+		if active != null and _system_overlay.call("refresh", str(active.get("uid")), not Input.get_connected_joypads().is_empty()) == true:
 			_grid_panel.hide()
-			_ultimate_readout.hide()
-			_ultimate_meter.hide()
 			if _tether_meter != null: _tether_meter.hide()
 	_update_capture_reticle()
 	_handle_switch_input()
@@ -956,23 +947,10 @@ func _draw_ally() -> void:
 	var ultimate: float = float(_manager.call("ultimate_fraction"))
 	_ultimate_meter.value = ultimate * 100.0
 	var signature := _move_name(str(creature.get("move_ultimate")), "Ultimate")
-	var available: bool = bool(_manager.call("live_move_supported", "ultimate", str(creature.get("move_ultimate"))))
-	var ready := available and ultimate >= 1.0
-	var arm := INPUT_GLYPH.icon("combat_ultimate_arm", CELL_GLYPH_PX, VERB_READY if ready else VERB_DIMMED)
-	var instruction := "[font_size=%d]%d%%[/font_size]" % [UITokens.FONT_NUMBER, roundi(ultimate * 100.0)]
-	if not available: instruction = "Unavailable"
-	elif ready:
-		# Compact, rebound-aware face glyphs keep the sequence together at the
-		# handheld raster. The ready state never shrinks its instruction font.
-		var faces := ""
-		for action: String in ["quick", "charged", "combat_utility"]:
-			faces += INPUT_GLYPH.icon(action, CELL_GLYPH_PX, VERB_READY)
-		instruction = "Tap → %s" % faces
-		if bool(_manager.call("ultimate_armed")):
-			arm = ""
-			instruction = "Choose %s" % faces
-	_ultimate_readout.add_theme_color_override("default_color", UITokens.TEXT_PRIMARY if ready else UITokens.TEXT_SECONDARY)
-	_ultimate_readout.text = "%s\n%s %s" % [signature, arm, instruction]
+	var arm := INPUT_GLYPH.icon("combat_ultimate_arm", 22, VERB_READY if ultimate >= 1.0 else VERB_DIMMED)
+	var instruction := "release → move" if ultimate >= 1.0 else "%d%%" % roundi(ultimate * 100.0)
+	if bool(_manager.call("ultimate_armed")): instruction = "tap a move"
+	_ultimate_readout.text = "%s %s · %s" % [arm, signature, instruction]
 
 	# Once, not constantly: a bar that pulses every frame it happens to be full
 	# stops meaning anything. Only the RISING edge (not-full -> full) fires it.

@@ -80,22 +80,6 @@ func _ready() -> void:
 			return
 		var tint := Color(str(palette.get("accent", "#fff0c9"))) if str(part.phase) == "aftermath" else colour
 		node.material_override = GEOMETRY.material(tint, opacity, true)
-		# This shared ground candidate already reuses F25's rock geometry.
-		# Reuse its installed scree/mineral surface too, keeping the authored
-		# palette, choreography and leases. The opaque shader cannot represent
-		# peer attenuation, so peer bodies retain the existing alpha material.
-		if str(part.shape) == "rock" and opacity >= 0.999 \
-			and str(_row.get("visual", {}).get("material_archetype", "")) == "stone_throw" \
-			and ResourceLoader.exists(GEOMETRY.F25_GEOMETRY_PATH) and ResourceLoader.exists(ARCHETYPES_PATH):
-			var producer := load(GEOMETRY.F25_GEOMETRY_PATH) as Script
-			var library := load(ARCHETYPES_PATH) as Script
-			if producer != null and library != null:
-				var surface: Dictionary = library.call("config").get("archetypes", {}).get("stone_throw", {}).get("body", {}).duplicate(true)
-				if not surface.is_empty():
-					surface["stone_colour"] = tint.to_html()
-					surface["mineral_colour"] = str(palette.get("accent", "#fff0c9"))
-					var candidate := producer.call("authored_material", "stone", surface, tint) as Material
-					if candidate != null: node.material_override = candidate
 		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(node)
 		_nodes.append(node)

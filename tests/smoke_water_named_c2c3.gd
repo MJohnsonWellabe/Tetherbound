@@ -118,7 +118,6 @@ var _json := ""
 var _multiplier_override := 0.0
 ## F33#2: --gear-tier / --gear-upgrade (tests/helpers/f33_gear_fixture.gd).
 var _gear: Dictionary = GEAR.from_args()
-var _compare_previous_gear := OS.get_cmdline_user_args().has("--compare-previous-gear")
 
 
 func _init() -> void:
@@ -173,35 +172,15 @@ func _selected(id: String) -> bool:
 
 func _run() -> void:
 	var errors: Array[String] = []
-	var previous_tiers := {"rootiron":"", "tidesteel":"rootiron", "skyglass":"tidesteel", "stormglass":"skyglass"}
-	var gear_tiers: Array[String] = [str(_gear.tier)]
-	if _compare_previous_gear:
-		if not previous_tiers.has(str(_gear.tier)):
-			push_error("--compare-previous-gear requires --gear-tier=rootiron|tidesteel|skyglass|stormglass")
-			quit(1)
-			return
-		gear_tiers.append(str(previous_tiers[str(_gear.tier)]))
 	var cases := _cases(errors)
-	if _compare_previous_gear:
-		var paired_cases: Array[Dictionary] = []
-		for tier: String in gear_tiers:
-			for entry: Dictionary in cases:
-				var paired := entry.duplicate(true)
-				paired["gear_tier"] = tier
-				paired_cases.append(paired)
-		cases = paired_cases
 	var rows: Array[Dictionary] = []
 	var runs: Array[Dictionary] = []
 	for entry in cases:
 		if not _selected(str(entry.id)): continue
-		var run_tier := str(entry.get("gear_tier", _gear.tier))
-		var gear_label := GEAR.label(run_tier, int(_gear.upgrade))
-		if _compare_previous_gear: print("WATER_C2C3_GEAR %s %s" % [entry.id, gear_label])
 		for starter: String in STARTERS:
 			if not _starter_only.is_empty() and starter != _starter_only: continue
 			var row := {"case": entry.id, "kind": entry.kind, "starter": starter,
 				"party_level": _party_level, "pilots": {}}
-			if _compare_previous_gear: row["gear"] = gear_label
 			for policy in ["MASHER", "READER"]:
 				var s := {"wins": 0, "lead_cost": [], "party_cost": [], "seconds": [],
 					"lead_faints": 0, "party_wipes": 0, "max_hit": 0.0, "min_tell": INF,
@@ -223,7 +202,7 @@ func _run() -> void:
 							continue
 						foes.append(foe)
 					if party.size() != 5 or foes.size() != entry.foes.size(): break
-					GEAR.equip(self, party, run_tier, int(_gear.upgrade))
+					GEAR.equip(self, party, str(_gear.tier), int(_gear.upgrade))
 					var pilot: RefCounted
 					if entry.kind == "alpha":
 						pilot = AlphaPilot.new()
@@ -247,9 +226,6 @@ func _run() -> void:
 					result["tells"] = tells
 					result["case"] = entry.id
 					result["starter"] = starter
-					if _compare_previous_gear:
-						result["gear"] = gear_label
-						result["seed_index"] = seed_index
 					if entry.kind == "alpha": result["phases"] = pilot.phase_log
 					runs.append(result)
 					s.wins += int(result.won)
@@ -291,24 +267,15 @@ func _run() -> void:
 			rows.append(row)
 	if rows.is_empty(): errors.append("no cases matched: %s" % _selection)
 	if not _json.is_empty():
-		var output_parent: String = _json.get_base_dir()
-		if not output_parent.is_empty():
-			DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_parent))
 		var file := FileAccess.open(_json, FileAccess.WRITE)
 		if file == null:
 			errors.append("cannot write %s" % _json)
 		else:
-			var report := {"seeds": _seeds, "selection": _selection, "multiplier_override": _multiplier_override,
+			file.store_string(JSON.stringify({"seeds": _seeds, "selection": _selection, "multiplier_override": _multiplier_override,
 				"gear": GEAR.label(str(_gear.tier), int(_gear.upgrade)),
 				"party": {"lead": STARTERS, "retained": RETAINED, "level": _party_level},
 				"fixture": "production CombatManager + WildCreature bodies on a flat collider (combat_depth_pilot.gd)",
-				"rows": rows, "runs": runs, "errors": errors, "accepted": false}
-			if _compare_previous_gear:
-				report["matching_gear"] = report.gear
-				report.erase("gear")
-				report["comparison_tiers"] = []
-				for tier: String in gear_tiers: report.comparison_tiers.append(GEAR.label(tier, int(_gear.upgrade)))
-			file.store_string(JSON.stringify(report, "  "))
+				"rows": rows, "runs": runs, "errors": errors, "accepted": false}, "  "))
 	for e in errors: print("WATER_C2C3 ERROR: %s" % e)
 	print("WATER_C2C3 done: %d rows, %d runs, %d errors" % [rows.size(), runs.size(), errors.size()])
 	quit(0 if errors.is_empty() else 1)

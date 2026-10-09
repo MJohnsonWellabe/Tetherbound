@@ -12,12 +12,12 @@ var _lift := 0.09
 var _segments := 48
 var _fill_alpha := 0.18
 var _edge_width := 0.12
-var _colour := Color.WHITE
-var _water: Object
-## Adjacent sections share sampled ground points within an aim(). Identical
-## dry aims keep their mesh; a changing water surface must be sampled again.
+## Ground heights sampled during one aim(), by exact (x, z): neighbouring
+## quads and each quad's two triangles share corners. The last aim()'s inputs:
+## an aim() with identical inputs would rebuild the identical mesh. A wild
+## creature re-aims every physics tick of its telegraph, and each rebuild
+## sampled the ground ~400 times (PERF, 2026-10-05: ~125 ms a call on a host).
 var _ground_seen: Dictionary = {}
-var _terrain_seen: Dictionary = {}
 var _aimed: Array = []
 
 
@@ -31,21 +31,15 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	cue._segments = maxi(12, int(cfg.get("segments", 48)))
 	cue._fill_alpha = float(cfg.get("fill_alpha", 0.18))
 	cue._edge_width = float(cfg.get("edge_width_m", 0.12))
-	cue._colour = colour
 	body.get_parent().add_child(cue)
 	cue.top_level = true
 	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
 	material.vertex_color_use_as_albedo = true
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.no_depth_test = false
-	material.roughness = 0.85
-	material.emission_enabled = true
-	material.emission = colour
-	material.emission_energy_multiplier = 0.12
-	material.render_priority = 1
+	material.albedo_color = colour
 	cue._mesh = ImmediateMesh.new()
 	var visual := MeshInstance3D.new()
 	visual.mesh = cue._mesh
@@ -58,13 +52,8 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 
 func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
 	var inputs := [origin, heading, marker]
-	_water = get_tree().current_scene if is_inside_tree() else null
-	var queries_water := is_instance_valid(_water) and _water.has_method("water_depth_at")
-	if inputs == _aimed and not queries_water:
+	if inputs == _aimed:
 		return
-	# A water surface may change while a marker stays locked. Preserve its
-	# terrain samples on that path; only water offsets need refreshing.
-	if inputs != _aimed: _terrain_seen.clear()
 	_aimed = inputs
 	_ground_seen.clear()
 	_origin = origin
@@ -86,24 +75,25 @@ func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
 			var length := float(_profile.get("lunge", 0.0))
 			var left := _origin - side * half_width
 			var right := _origin + side * half_width
-			for rib: int in range(1, 3):
-				var advance := _heading * length * float(rib) / 3.0
-				_strip(left + advance, right + advance, _fill_alpha)
+			_quad(left, right, right + _heading * length, left + _heading * length, _fill_alpha)
 			_strip(left, left + _heading * length)
 			_strip(right, right + _heading * length)
 			_strip(left + _heading * length, right + _heading * length)
-			_strip(left, right)
 	_mesh.surface_end()
 
 
 func _disc(centre: Vector3, inner: float, outer: float, arc: float) -> void:
 	var count := maxi(2, int(ceil(float(_segments) * arc / TAU)))
-	# Keep every real strike boundary. Shallow interior ribs show the occupied
-	# area without covering the terrain in a uniform translucent wedge/disc.
-	_arc(centre, outer, arc, count, 0.9)
-	if inner > 0.0: _arc(centre, inner, arc, count, 0.9)
-	for rib: int in range(1, 3):
-		_arc(centre, lerpf(inner, outer, float(rib) / 3.0), arc, count, _fill_alpha)
+	for index: int in count:
+		var a := -arc * 0.5 + arc * float(index) / float(count)
+		var b := -arc * 0.5 + arc * float(index + 1) / float(count)
+		var da := _heading.rotated(Vector3.UP, a)
+		var db := _heading.rotated(Vector3.UP, b)
+		_quad(centre + da * inner, centre + da * outer,
+			centre + db * outer, centre + db * inner, _fill_alpha)
+		_strip(centre + da * outer, centre + db * outer)
+		if inner > 0.0:
+			_strip(centre + da * inner, centre + db * inner)
 	if arc < TAU:
 		_strip(centre + _heading.rotated(Vector3.UP, -arc * 0.5) * inner,
 			centre + _heading.rotated(Vector3.UP, -arc * 0.5) * outer)
@@ -111,64 +101,23 @@ func _disc(centre: Vector3, inner: float, outer: float, arc: float) -> void:
 			centre + _heading.rotated(Vector3.UP, arc * 0.5) * outer)
 
 
-func _arc(centre: Vector3, radius: float, arc: float, count: int, alpha: float) -> void:
-	var half_width := minf(_edge_width * 0.5, radius)
-	var previous: Array[Vector3] = []
-	for index: int in count + 1:
-		var angle := -arc * 0.5 + arc * float(index) / float(count)
-		var direction := _heading.rotated(Vector3.UP, angle)
-		var section: Array[Vector3] = [_ground_vertex(centre + direction * (radius - half_width)),
-			_ground_vertex(centre + direction * radius) + Vector3.UP * minf(_lift, half_width),
-			_ground_vertex(centre + direction * (radius + half_width))]
-		if not previous.is_empty(): _ridge(previous, section, alpha)
-		previous = section
-
-
-func _strip(start: Vector3, finish: Vector3, alpha: float = 0.9) -> void:
+func _strip(start: Vector3, finish: Vector3) -> void:
 	var side := (finish - start).normalized().cross(Vector3.UP) * _edge_width * 0.5
-	var height := minf(_lift, _edge_width * 0.5)
-	_ridge([_ground_vertex(start - side), _ground_vertex(start) + Vector3.UP * height, _ground_vertex(start + side)],
-		[_ground_vertex(finish - side), _ground_vertex(finish) + Vector3.UP * height, _ground_vertex(finish + side)], alpha)
+	_quad(start - side, start + side, finish + side, finish - side, 0.9)
 
 
-func _ridge(start: Array[Vector3], finish: Array[Vector3], alpha: float) -> void:
-	var foot := _colour.darkened(0.35)
-	foot.a = alpha * _colour.a * 0.2
-	var crest := _colour.lightened(0.3)
-	crest.a = alpha * _colour.a
-	_triangle(start[0], finish[0], finish[1], foot, foot, crest)
-	_triangle(start[0], finish[1], start[1], foot, crest, crest)
-	_triangle(start[1], finish[1], finish[2], crest, crest, foot)
-	_triangle(start[1], finish[2], start[2], crest, foot, foot)
-
-
-func _triangle(a: Vector3, b: Vector3, c: Vector3, ca: Color, cb: Color, cc: Color) -> void:
-	var normal := (b - a).cross(c - a).normalized()
-	if normal.y < 0.0: normal = -normal
-	if normal.is_zero_approx(): normal = Vector3.UP
-	_mesh.surface_set_normal(normal)
-	_mesh.surface_set_color(ca)
-	_mesh.surface_add_vertex(a)
-	_mesh.surface_set_color(cb)
-	_mesh.surface_add_vertex(b)
-	_mesh.surface_set_color(cc)
-	_mesh.surface_add_vertex(c)
-
-
-func _ground_vertex(point: Vector3) -> Vector3:
-	var key := Vector2(point.x, point.z)
-	if _ground_seen.has(key): return Vector3(point.x, float(_ground_seen[key]), point.z)
-	var ground := float(_terrain_seen.get(key, point.y))
-	if not _terrain_seen.has(key):
+func _quad(a: Vector3, b: Vector3, c: Vector3, d: Vector3, alpha: float) -> void:
+	for point: Vector3 in [a, b, c, a, c, d]:
+		var ground := point.y
 		if is_instance_valid(_body) and _body.has_method("_ground_height"):
-			var measured := float(_body.call("_ground_height", point.x, point.z))
-			if is_finite(measured): ground = measured
-		_terrain_seen[key] = ground
-	# Match the state tell on a water realm: the skirt meets the visible
-	# surface, while depth testing still lets creatures occlude the crest.
-	if is_instance_valid(_water) and _water.has_method("water_depth_at"):
-		var depth := float(_water.call("water_depth_at", Vector3(point.x, ground, point.z)))
-		if is_finite(depth) and depth > 0.0: ground += depth
-	ground += _lift
-	_ground_seen[key] = ground
-	return Vector3(point.x, ground, point.z)
+			var key := Vector2(point.x, point.z)
+			var measured: float
+			if _ground_seen.has(key):
+				measured = float(_ground_seen[key])
+			else:
+				measured = float(_body.call("_ground_height", point.x, point.z))
+				_ground_seen[key] = measured
+			if is_finite(measured):
+				ground = measured
+		_mesh.surface_set_color(Color(1.0, 1.0, 1.0, alpha))
+		_mesh.surface_add_vertex(Vector3(point.x, ground + _lift, point.z))

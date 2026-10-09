@@ -6,9 +6,6 @@ extends SceneTree
 ##   xvfb-run -a -s "-screen 0 1920x1080x24" \
 ##     godot --path . --rendering-driver opengl3 --resolution 1920x1080 \
 ##     --script tools/capture_f21_hit_presentation.gd -- --out=/abs/dir
-## Optional --medium requires a native Forward+ run and selects authored Medium
-## before world loading. Its frame timings include screenshot readback/write
-## stalls; this capture alone supplies neither a matched before nor an FPS pass.
 ##
 ## Shots (each at contact +2 frames, and +14 frames as the number rises):
 ##   quick      an ordinary quick hit (light weight)
@@ -24,7 +21,6 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const MATH := preload("res://scripts/combat/combat_math.gd")
-const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 const SETTLE_FRAMES := 240
 
 var _out := ""
@@ -38,36 +34,19 @@ var _log: Array[Dictionary] = []
 var _failures: Array[String] = []
 var _last_impact: Dictionary = {}
 var _missed := false
-var _medium := false
-var _frame_samples: Array[Dictionary] = []
-var _frame_sampler := Callable()
-var _entry: Dictionary = {}
 
 
 func _init() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
-		if arg == "--medium": _medium = true
 	if _out.is_empty(): _out = ProjectSettings.globalize_path("res://shots/_diag/f21")
 	_run()
 
 
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(_out)
-	if _medium:
-		if DisplayServer.get_name() == "headless" or RenderingServer.get_current_rendering_method() != "forward_plus" \
-				or GRAPHICS.choose("Medium") != OK or GRAPHICS.selected() != "Medium" or GRAPHICS.restart_required():
-			_failures.append("--medium requires a native Forward+ renderer and the actual authored Medium preset before world load")
-			_finish()
-			return
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
-	current_scene = _world
-	# Sliced Meadows construction disables the real Player until its final
-	# collision mutation settles. Physics ticks still run during that hold;
-	# they cannot count as an ordinary walk toward the encounter.
-	while not bool(_world.call("shell_build_complete")):
-		await process_frame
 	for i in SETTLE_FRAMES: await physics_frame
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	if director != null and director.call("ally_instance") == null:
@@ -81,20 +60,6 @@ func _run() -> void:
 		_failures.append("scene is missing the player, rig, manager or director")
 		_finish()
 		return
-	if _medium:
-		var clock := {"last_usec":Time.get_ticks_usec(),"last_frame":Engine.get_process_frames(),"was_fighting":false}
-		_frame_sampler = func() -> void:
-			var now: int = Time.get_ticks_usec()
-			var fighting: bool = is_instance_valid(_manager) and bool(_manager.call("is_fighting"))
-			# Include every whole process-frame wall interval begun in combat,
-			# including its exit boundary and any intervening PNG readback/write.
-			if bool(clock.was_fighting):
-				_frame_samples.append({"from_process_frame":int(clock.last_frame),"process_frame":Engine.get_process_frames(),
-					"wall_end_usec":now,"wall_dt_ms":float(now-int(clock.last_usec))/1000.0,"fighting_at_end":fighting})
-			clock.last_usec = now
-			clock.last_frame = Engine.get_process_frames()
-			clock.was_fighting = fighting
-		process_frame.connect(_frame_sampler)
 	_wild = _director.call("wild_creature") as Node3D
 	if _wild == null:
 		_failures.append("no wild creature spawned")
@@ -106,24 +71,11 @@ func _run() -> void:
 		_last_impact = {"on_enemy": on_enemy, "receipt": receipt, "where": where, "frame": Engine.get_process_frames()})
 	_manager.connect("attack_missed", func(by_player: bool) -> void:
 		if by_player: _missed = true)
-	if not await _walk_to_the_wild():
-		_failures.append("ordinary Engage entry preconditions not ready after walk")
-		_finish()
-		return
-	# Match the working combat-camera smoke's physical X delivery across both
-	# input clocks. Action state alone bypasses the ordinary controller event.
-	var down := InputEventJoypadButton.new()
-	down.device = 0
-	down.button_index = JOY_BUTTON_X
-	down.pressed = true
-	Input.parse_input_event(down)
-	await process_frame
-	await process_frame
-	var up := InputEventJoypadButton.new()
-	up.device = 0
-	up.button_index = JOY_BUTTON_X
-	up.pressed = false
-	Input.parse_input_event(up)
+	await _walk_to_the_wild()
+	Input.action_press("interact")
+	await physics_frame
+	await physics_frame
+	Input.action_release("interact")
 	for i in 45: await physics_frame
 	if not bool(_manager.call("is_fighting")):
 		_failures.append("could not enter combat")
@@ -138,8 +90,6 @@ func _run() -> void:
 		_wild.call("apply_poise_damage", 10000.0, true)
 	await _strike("crit", "combat_quick")
 	await _incoming()
-	# Observe the process-frame boundary after the final PNG write as well.
-	if _medium: await process_frame
 	_finish()
 
 
@@ -152,34 +102,17 @@ func _leave_the_farmhouse() -> void:
 	player.velocity = Vector3.ZERO
 
 
-func _walk_to_the_wild() -> bool:
+func _walk_to_the_wild() -> void:
 	var engage_range := float(MATH.config().get("flow", {}).get("engage_range", 6.0))
-	var arbiter := get_first_node_in_group("interaction_arbiter")
-	if arbiter == null: return false
 	for i in 1800:
 		var to := _wild.global_position - _player.global_position
 		to.y = 0.0
-		# A nearby harvest/NPC can win even inside engage range. Walk until the
-		# published provider AND its actual target agree, without forcing either.
-		if to.length() <= engage_range * 0.6 and arbiter.call("winning_provider") == _director \
-				and _director.call("_engageable") == _wild: break
+		if to.length() <= engage_range * 0.6: break
 		_rig.set("yaw", atan2(-to.x, -to.z))
 		Input.action_press("move_forward")
 		await physics_frame
 	Input.action_release("move_forward")
 	for i in 10: await physics_frame
-	var winner := arbiter.call("winning_provider") as Node
-	var candidate := _director.call("_engageable") as Node
-	var owner := preload("res://scripts/ui/input_owner.gd").current(self)
-	var canonical: Dictionary = _director.call("_canonical_wild_start_state", _wild)
-	_entry = {"winner": str(winner.get_path()) if winner != null else "",
-		"target": str(candidate.get_path()) if candidate != null else "",
-		"selected": str(_wild.get_path()), "input_owner": str(owner.get_path()) if owner != null else "",
-		"canonical_enabled": canonical.get("enabled", false), "canonical_ready": canonical.get("ready", false),
-		"distance": _player.global_position.distance_to(_wild.global_position)}
-	print("[f21] entry ", JSON.stringify(_entry))
-	return owner == null and winner == _director and candidate == _wild \
-		and (not bool(canonical.get("enabled", false)) or bool(canonical.get("ready", false)))
 
 
 func _prime_energy() -> void:
@@ -258,26 +191,9 @@ func _save(name: String) -> String:
 
 
 func _finish() -> void:
-	if _frame_sampler.is_valid() and process_frame.is_connected(_frame_sampler):
-		process_frame.disconnect(_frame_sampler)
-	var sorted: Array[float] = []
-	for sample: Dictionary in _frame_samples: sorted.append(float(sample.wall_dt_ms))
-	sorted.sort()
-	var performance := {"sampling_requested":_medium,"sample_count":sorted.size(),
-		"metric":"process-frame wall milliseconds; intervals begin while is_fighting is true; exit boundary included",
-		"includes_screenshot_readback_and_png_write_stalls":true,"percentile_method":"nearest rank",
-		"p50_ms":null,"p95_ms":null,"p99_ms":null,"raw_active_fight_frames":_frame_samples}
-	if not sorted.is_empty():
-		for percentile: int in [50,95,99]:
-			performance["p%d_ms" % percentile] = sorted[clampi(ceili(float(sorted.size())*float(percentile)/100.0)-1,0,sorted.size()-1)]
-	elif _medium:
-		_failures.append("Medium capture observed no active-fight process-frame wall intervals")
-	var resolution: Vector2 = root.get_visible_rect().size
 	var file := FileAccess.open(_out.path_join("receipts.json"), FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify({"renderer": RenderingServer.get_current_rendering_method(),
-			"preset":GRAPHICS.selected(),"requested_preset":"Medium" if _medium else "unchanged",
-			"resolution":[int(resolution.x),int(resolution.y)],"performance":performance,
-			"entry": _entry, "shots": _log, "failures": _failures}, "  "))
+			"shots": _log, "failures": _failures}, "  "))
 	for failure in _failures: printerr("[f21] FAIL ", failure)
 	quit(1 if not _failures.is_empty() else 0)

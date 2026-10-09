@@ -44,9 +44,6 @@ func _field_contact(_profile: Dictionary, _geometry: Dictionary) -> bool:
 
 
 func _run() -> void:
-	if OS.get_cmdline_user_args().has("--prove-canonical-floor-owner"):
-		await _prove_canonical_floor_owner()
-		return
 	_world = Node3D.new()
 	root.add_child(_world)
 	var patterns: Dictionary = MATH.config().get("patterns", {})
@@ -130,31 +127,4 @@ func _run() -> void:
 	await process_frame
 	print("F22_LIVE_PATTERN_MOUNT " + JSON.stringify({"pass": _errors.is_empty(), "checks": _checks,
 		"errors": _errors, "scope": "initialized production node mount; player/co-op and C2/C3 remain separate"}))
-	quit(0 if _errors.is_empty() else 1)
-
-
-func _prove_canonical_floor_owner() -> void:
-	var trainers := preload("res://scripts/world/trainer_npc.gd")
-	var spec: Dictionary = trainers.trainer("trainer_mira")
-	_check(not spec.is_empty() and spec.get("team", []).size() == 1, "existing Mira source is one authored Meadows trainer")
-	var party: Array[RefCounted] = []
-	for species: String in ["terrapup", "bramblebun", "mudsnout", "pipwing", "trailpup"]:
-		var creature: RefCounted = SPECIES.spawn(species)
-		creature.set_level(8, preload("res://scripts/creatures/progression.gd").config())
-		party.append(creature)
-	var foes: Array = []
-	if not spec.is_empty(): foes.append(trainers.creature_for(spec.team[0]))
-	var pilot := preload("res://tests/helpers/f22_pattern_pilot.gd").new()
-	pilot.context = {"chapter":"meadows", "band":"band1_lower_meadows", "floor_trainer":true,
-		"after_south_bridge":false, "canonical_owner":true, "trainer_spec":spec}
-	var result: Dictionary = await pilot.fight(self, party, foes, true, hash("f22/canonical-owner/trainer_mira"), "READER")
-	_check(result.get("fixture_error", "") == "", "actual canonical floor-owner fixture: " + str(result.get("fixture_error", "")))
-	_check(result.get("canonical_owner") == true and not result.get("owner_binding", {}).is_empty(), "real authority and current-body owner admission")
-	_check(int(result.get("accepted_launches", 0)) > 0 and int(result.get("accepted_impacts", 0)) > 0, "physical reader inputs freeze and land real host-owned actions")
-	_check(int(result.get("owner_disk_party_count", 0)) == 5 and int(result.get("saved_move_receipts", 0)) > 0, "actual disk retains five owned cards and original move-use receipts")
-	_check(MATH.config().actor_vitals.runtime_enabled == false, "canonical owner witness does not activate actor-vitals globally")
-	print("F22_CANONICAL_FLOOR_OWNER " + JSON.stringify({"pass":_errors.is_empty(), "checks":_checks,
-		"errors":_errors, "result":result, "acceptance":false,
-		"fixtures":"existing five level8 cards admitted before combat; authored Mira single-creature trainer; flat collision stage; physical READER; real BOOL stores; no live HP/energy/Wind/meter grants",
-		"scope":"owner admission only; full F22#1 three-starter 12-paired-seed all-band comparison remains OPEN"}))
 	quit(0 if _errors.is_empty() else 1)

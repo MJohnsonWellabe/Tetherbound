@@ -2,14 +2,8 @@
   "criterion": "F24#0",
   "criterion_text": "A command meter fills from the piloted creature's hits and powers four commands: quick item throw, Rally (short team buff), tag-switch combo and Tether Snare.",
   "source_commit": "ade3c8cfaba3bb78c9341c2a202d3bbb59ba804a",
-  "scoped_commits": [
-    "9c04b7d0eb965b26e57efce7149604a5f436a618",
-    "ade3c8cfaba3bb78c9341c2a202d3bbb59ba804a"
-  ],
-  "scoped_paths": [
-    "tests/smoke_net_owner_passive_rejoin.gd",
-    "tests/smoke_net_owner_passive_rejoin_peer.gd"
-  ],
+  "scoped_commits": ["9c04b7d0eb965b26e57efce7149604a5f436a618", "ade3c8cfaba3bb78c9341c2a202d3bbb59ba804a"],
+  "scoped_paths": ["tests/smoke_net_owner_passive_rejoin.gd", "tests/smoke_net_owner_passive_rejoin_peer.gd"],
   "change": "Existing admitted-peer smoke gains an opt-in host Item/Rally/Tag route. The existing two-tonic stock and healthy second companion go to the selected host before admission. Host physical strike preparation faces the actual current wild after the unchanged15frames; synchronous Item refusal reads Manager's actual pending request. Default guest setup, original budgets, costs, stock, guards, party cap and negative controls remain intact. Tag verifies both actual joined-observer child impacts.",
   "source_review": {
     "reviewer": "/root/f25_medium_review",
@@ -80,81 +74,5 @@
     "dry_apply": "Existing reviewed commit hunks apply cleanly to exact PR592 files. Result equals the reviewed ade3 files with PR592's existing unrelated Shove-helper exclusion retained, after CRLF normalization. This is a source-only packaging check, not runtime certification of the integrated PR.",
     "limits": "Whole F24#0 verdict remains bound to original ade3 runtime proof and scoped hunks. FullCI/landing/mainactivation/publication remain unearned."
   },
-  "co_op_criterion_review": {
-    "criterion": "F24#5",
-    "criterion_text": "Co-op: each player's commands affect only their own creature and are host-validated.",
-    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
-    "review_turn": "01a11f79-1dd0-77a0-abe0-a5113db44ef0",
-    "verdict": "WHOLE F24#5 OPEN",
-    "reused": "Retained shipping79 and33 prove host-caster ownership, remote observation and noncaster isolation. Actor-OFF refusal units remain qualified negative guards.",
-    "gap": "Successful guest-caster command ingress, owner save/ACK and own-creature effects with shipping flags.",
-    "minimum_existing_selector": "tests/smoke_net_owner_passive_rejoin.gd --prove-shipping-tether --prove-tag-combo --prove-tether-snare --prove-tether-rally",
-    "disposition": "Existing guest route remains PARK until distinct supported correction; no unchanged rerun or inferred closure. F24#0/#3 approvals remain separate."
-  },
-  "limits": "F24#5 independently OPEN. Exact PR592 FullCI37883884033 separately FAILED; FullCI/landing/main activation/publication unearned. No additional native/GPU run, boundary-save promotion or failed-save acceptance.",
-  "guest_command_observer_diagnostic": {
-    "source_commit": "1418e2a8bc424cea426232d9d060405300b1b509",
-    "scoped_commits": [
-      "e3f318d9a1466c435877d2b5362f37223616fab9",
-      "1418e2a8bc424cea426232d9d060405300b1b509"
-    ],
-    "paths": [
-      "tests/smoke_net_owner_passive_rejoin.gd",
-      "tests/smoke_net_owner_passive_rejoin_peer.gd"
-    ],
-    "change": "Existing host-strike start/finish signals retain the first actual matching submitted invocation for the failure-only guest Item diagnostic. A reported_ok=true guard prevents an old not_ready counter from being mislabeled as a new action. Unobserved, unfinished and overlapping replay states stay explicit; no production logic, assertion, fixture, timing or shipping flag changed.",
-    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
-    "original_source_revise_turn": "01a11f99-0365-7f92-a402-ae1c08894b66",
-    "original_source_approve_turn": "01a11f9b-1ea4-7373-ac05-51dd2a22c6bb",
-    "verdict": "SOURCE/COMMAND APPROVE only",
-    "command": "tests/smoke_net_owner_passive_rejoin.gd --prove-shipping-tether --prove-tag-combo --prove-tether-snare --prove-tether-rally",
-    "runtime": {
-      "run_id": 37904625196,
-      "job_id": 113735002759,
-      "source_commit": "1418e2a8bc424cea426232d9d060405300b1b509",
-      "script": "tests/smoke_net_owner_passive_rejoin.gd",
-      "args": "--prove-shipping-tether --prove-tag-combo --prove-tether-snare --prove-tether-rally",
-      "mode": "headless",
-      "status": "completed",
-      "conclusion": "FAIL",
-      "artifact_id": 11604176719,
-      "artifact_sha256": "eadf1ec27f8dce10f22da24261cad0de967c6c5da57ee30747c9f15ba8400a62",
-      "artifact_digest_matched": true,
-      "checkout_exact": true,
-      "run_log_sha256": "5afa66bc68bf988ab03b186b1f45e65ee0257c73c621fb37b1a140b4b515acca",
-      "pass_lines": 21,
-      "unique_failures": 1,
-      "actual_failure": "Eight accepted quick attempts did not earn the required25 Item meter; no Item command submitted.",
-      "first_actual_submitted_zero_hp_strike": {
-        "action": 2.0,
-        "encounter_id": "1:1",
-        "finished": true,
-        "finished_ms": 220450.0,
-        "invoked": true,
-        "peer": 64372470.0,
-        "started_ms": 220421.0,
-        "verdict": {
-          "code": "",
-          "delta_connected": null,
-          "delta_damage": null,
-          "delta_hit": false,
-          "delta_hp": null,
-          "delta_scheduled": null,
-          "kind": "strike_intent",
-          "ok": true
-        }
-      },
-      "guest_reported_meter_at_return": 16,
-      "host_record_guest_meter_at_later_checkpoint": 24,
-      "local_artifact_root": "ralph/reports/F25/downloads/a-guest-command-host-strike-37904625196/raw",
-      "scope_limit": "Top-level host probe meter0/character/party are host-local mixed-view fields, not guest evidence. First observer key is actual guest peer64372470/action2. The later geometry receipt is action7 and cannot explain action2."
-    },
-    "notice_comment": 6076589783,
-    "criterion_disposition": "PARK/OPEN. The new observer proves a legal firstmiss; it does not establish the geometry cause or positive guestcommand ingress/saveACK/effects. Existing F24#0/hostcaster/Snare pieces remain reused; no duplicatecredit or failedsave promotion.",
-    "independent_artifact_verdict": {
-      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
-      "turn_id": "01a11fca-8a07-7431-b491-c2568a6b8124",
-      "verdict": "ARTIFACT/DISPOSITION APPROVE as failed; legal missed firststrike, not Itemwriterstall. Guest return16/25 and laterhost24/25 bothbelowcost. PARK repair: missingaction2 originalhostorigin/facing/frozenmove/candidategeometry. No unchangedretry or WHOLE F24#5approval."
-    }
-  }
+  "limits": "F24#5 independently OPEN. Exact PR592 FullCI37883884033 separately FAILED; FullCI/landing/main activation/publication unearned. No additional native/GPU run, boundary-save promotion or failed-save acceptance."
 }

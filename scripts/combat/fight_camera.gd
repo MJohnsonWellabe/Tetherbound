@@ -136,17 +136,6 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 	var distance_scale := clampf(float(config.get("separation_distance_scale",1.2)),1.01,2.0)
 	var best: Dictionary = {}
 	var nearest_safe: Dictionary = {}
-	# A failed shot must not prefer one less overlapping pixel over a visible
-	# fighter/trainer. This orders failures only; every passing constraint below
-	# remains mandatory. Use the same ordering after angular/pitch refinement.
-	var better_failure := func(candidate: Dictionary, previous: Dictionary) -> bool:
-		if previous.is_empty(): return true
-		if bool(candidate.framed)!=bool(previous.framed): return bool(candidate.framed)
-		var candidate_penalty: float = float(candidate.overlap)+float((candidate.get("visibility",{}) as Dictionary).get("penalty",0.0))
-		var previous_penalty: float = float(previous.overlap)+float((previous.get("visibility",{}) as Dictionary).get("penalty",0.0))
-		if candidate_penalty!=previous_penalty: return candidate_penalty<previous_penalty
-		if float(candidate.overlap)!=float(previous.overlap): return float(candidate.overlap)<float(previous.overlap)
-		return float(candidate.distance)<float(previous.distance)
 	var near_slack: float = clampf(float(config.get("safe_fit_distance_slack_m",0.75)),0.0,3.0)
 	# Reserve separation beyond the exact measured edge so the live tracker can
 	# ease toward its chosen angle without spending its dead zone in overlap.
@@ -202,7 +191,10 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 			if not constraint_info.is_empty():
 				candidate["world_room"] = constraint_info.get("world_room",null)
 				candidate["model_room"] = constraint_info.get("model_room",INF)
-			if bool(better_failure.call(candidate,best)):
+			if best.is_empty() or (framed and not bool(best.framed)) \
+					or (framed == bool(best.framed) and (overlap < float(best.overlap)
+						or (overlap == float(best.overlap) and float(visibility.get("penalty",0.0))
+							< float((best.get("visibility",{}) as Dictionary).get("penalty",0.0))))):
 				best = candidate
 			if passed:
 				if nearest_safe.is_empty() or actual_distance<float(nearest_safe.distance)-near_slack \
@@ -218,89 +210,48 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 	var refine_step := float(config.get("orbit_refinement_step_deg",0.0))
 	var refine_span := float(config.get("orbit_refinement_span_deg",0.0))
 	var refine_cap := clampi(int(config.get("orbit_refinement_max_candidates",12)),0,12)
-	if not best.is_empty() and offsets.size()>1 and is_finite(refine_step) \
-		and is_finite(refine_span) and refine_step>0.0 and refine_span>0.0 and refine_cap>0:
-		refine_step = clampf(refine_step,0.5,15.0)
-		refine_span = clampf(refine_span,refine_step,30.0)
-		var refined_offsets: Array = []
-		for index: int in mini(60,int(floor(refine_span/refine_step))):
-			for direction: float in [-1.0,1.0]:
-				var refined := float(best.yaw_offset_deg)+direction*refine_step*float(index+1)
-				if not offsets.has(refined): refined_offsets.append(refined)
-		refined_offsets.sort_custom(func(a: Variant,b: Variant) -> bool: return absf(float(a)) < absf(float(b)))
-		if refined_offsets.size()>refine_cap: refined_offsets.resize(refine_cap)
-		if not refined_offsets.is_empty():
-			var refined_config := config.duplicate()
-			refined_config["orbit_candidates_deg"] = refined_offsets
-			refined_config["allow_pair_side_views"] = false
-			refined_config["orbit_refinement_step_deg"] = 0.0
-			refined_config["obstruction_pitch_offsets_deg"] = []
-			var refined_fit := solve(ally,foe,yaw,pitch,vertical_fov_deg,aspect,base_distance,
-				refined_config,apply_pitch_offset,ally_points,foe_points,constrain_pose,visibility_score)
-			if not refined_fit.is_empty() and (bool(refined_fit.get("pass",false)) \
-				or bool(better_failure.call(refined_fit,best))):
-				refined_fit["orbit_refined"] = true
-				refined_fit["coarse_yaw_offset_deg"] = best.yaw_offset_deg
-				refined_fit["refinement_candidate_count"] = refined_offsets.size()
-				best = refined_fit
-				if bool(best.get("pass",false)): return best
-	# Foreground bodies can obstruct every horizontal orbit at the normal
-	# elevation. Try only the authored raised alternatives after that search
-	# fails, with unchanged fit, HUD, support, model and world constraints.
-	# Recursive calls disable this branch and further angular refinement.
-	var pitch_offsets: Array = config.get("obstruction_pitch_offsets_deg",[]) as Array
-	for raw: Variant in pitch_offsets.slice(0,2):
-		var offset: float = float(raw)
-		if not is_finite(offset) or offset>=0.0: continue
-		var raised_pitch: float = clampf(start_pitch+deg_to_rad(offset),
-			float(config.get("min_pitch_radians",deg_to_rad(-60.0))),
-			float(config.get("max_pitch_radians",deg_to_rad(32.0))))
-		if raised_pitch>=start_pitch: continue
-		var raised_config := config.duplicate()
-		raised_config["obstruction_pitch_offsets_deg"] = []
-		raised_config["orbit_refinement_step_deg"] = 0.0
-		var raised_fit := solve(ally,foe,yaw,raised_pitch,vertical_fov_deg,aspect,base_distance,
-			raised_config,false,ally_points,foe_points,constrain_pose,visibility_score)
-		if raised_fit.is_empty(): continue
-		if bool(raised_fit.get("pass",false)) or bool(better_failure.call(raised_fit,best)):
-			raised_fit["obstruction_pitch_offset_deg"] = rad_to_deg(raised_pitch-start_pitch)
-			best = raised_fit
-			if bool(best.get("pass",false)): return best
+	if best.is_empty() or offsets.size()<2 or not is_finite(refine_step) \
+		or not is_finite(refine_span) or refine_step<=0.0 or refine_span<=0.0 or refine_cap==0:
+		return best
+	refine_step = clampf(refine_step,0.5,15.0)
+	refine_span = clampf(refine_span,refine_step,30.0)
+	var refined_offsets: Array = []
+	for index: int in mini(60,int(floor(refine_span/refine_step))):
+		for direction: float in [-1.0,1.0]:
+			var refined := float(best.yaw_offset_deg)+direction*refine_step*float(index+1)
+			if not offsets.has(refined): refined_offsets.append(refined)
+	refined_offsets.sort_custom(func(a: Variant,b: Variant) -> bool: return absf(float(a)) < absf(float(b)))
+	if refined_offsets.size()>refine_cap: refined_offsets.resize(refine_cap)
+	if refined_offsets.is_empty(): return best
+	var refined_config := config.duplicate()
+	refined_config["orbit_candidates_deg"] = refined_offsets
+	refined_config["allow_pair_side_views"] = false
+	refined_config["orbit_refinement_step_deg"] = 0.0
+	var refined_fit := solve(ally,foe,yaw,pitch,vertical_fov_deg,aspect,base_distance,
+		refined_config,apply_pitch_offset,ally_points,foe_points,constrain_pose,visibility_score)
+	if not refined_fit.is_empty() and (bool(refined_fit.get("pass",false)) \
+		or (bool(refined_fit.framed) and not bool(best.framed)) \
+		or (bool(refined_fit.framed)==bool(best.framed) and float(refined_fit.overlap)<float(best.overlap))):
+		refined_fit["orbit_refined"] = true
+		refined_fit["coarse_yaw_offset_deg"] = best.yaw_offset_deg
+		refined_fit["refinement_candidate_count"] = refined_offsets.size()
+		return refined_fit
 	return best
 
 
 ## Project the convex oriented envelope, preserving actual perspective/depth.
-## Actors must remain in front of the near plane. Occluders may cross it:
-## clip their box edges so an off-screen foreground body cannot hide everyone.
+## A near-plane crossing is unavailable rather than silently a clear view.
 static func _bounds_hull(points: PackedVector3Array, lens: Transform3D,
-		fov: float, aspect: float, near_plane: float, clip_near: bool = false) -> PackedVector2Array:
+		fov: float, aspect: float, near_plane: float) -> PackedVector2Array:
 	var inverse: Transform3D = lens.affine_inverse()
 	var tangent: float = tan(deg_to_rad(fov)*0.5)
-	var local_points := PackedVector3Array()
-	var visible_points := PackedVector3Array()
-	var plane := maxf(near_plane, 0.000001)
+	var projected := PackedVector2Array()
 	for point: Vector3 in points:
 		var local: Vector3 = inverse*point
-		local_points.append(local)
-		if -local.z > plane: visible_points.append(local)
-		elif not clip_near: return PackedVector2Array()
-	if clip_near and visible_points.size() < points.size():
-		if points.size() != 8: return PackedVector2Array()
-		# get_endpoint's three index bits identify the twelve box edges.
-		for index: int in 8:
-			for bit: int in [1, 2, 4]:
-				var other := index ^ bit
-				if other <= index: continue
-				var a := local_points[index]
-				var b := local_points[other]
-				if (-a.z > plane) == (-b.z > plane): continue
-				visible_points.append(a.lerp(b, (-plane-a.z)/(b.z-a.z)))
-	var projected := PackedVector2Array()
-	for local: Vector3 in visible_points:
 		var depth: float = -local.z
+		if depth<=near_plane: return PackedVector2Array()
 		projected.append(Vector2(0.5+local.x/(2.0*depth*tangent*aspect),
 			0.5-local.y/(2.0*depth*tangent)))
-	if projected.size()<3: return PackedVector2Array()
 	return Geometry2D.convex_hull(projected)
 
 ## Read-only conservative envelope occlusion. Projected overlap alone does
@@ -308,88 +259,27 @@ static func _bounds_hull(points: PackedVector3Array, lens: Transform3D,
 ## actual world-space rays through their shared projected polygon.
 static func bounds_occlude(lens: Transform3D, actor: Dictionary, other: Dictionary,
 		fov: float, aspect: float, near_plane: float) -> bool:
-	return projected_bounds_occlude(lens,
-		project_bounds(lens,actor,fov,aspect,near_plane),
-		project_bounds(lens,other,fov,aspect,near_plane,true),fov,aspect)
-
-## A fresh candidate-local projection. Reuse this validated result only for
-## this lens and these measured envelopes; nothing survives the score call.
-static func project_bounds(lens: Transform3D, envelope: Dictionary,
-		fov: float, aspect: float, near_plane: float, clip_near: bool = false) -> Dictionary:
-	if not envelope.get("points") is PackedVector3Array or envelope.points.size()!=8 \
-		or not envelope.get("box") is AABB or not envelope.get("pose") is Transform3D \
-		or not envelope.get("inverse") is Transform3D: return {"valid":false}
-	var bounds: AABB = envelope.box
-	if not bounds.position.is_finite() or not bounds.size.is_finite() \
-		or bounds.size.x<=0.0 or bounds.size.y<=0.0 or bounds.size.z<=0.0: return {"valid":false}
-	for point: Vector3 in envelope.points:
-		if not point.is_finite(): return {"valid":false}
-	for transform: Transform3D in [envelope.pose, envelope.inverse]:
-		var determinant := transform.basis.determinant()
-		if not transform.origin.is_finite() or not transform.basis.x.is_finite() \
-			or not transform.basis.y.is_finite() or not transform.basis.z.is_finite() \
-			or not is_finite(determinant) or absf(determinant)<=0.000001: return {"valid":false}
 	if not is_finite(fov) or not is_finite(aspect) or not is_finite(near_plane) \
 		or fov<=0.0 or fov>=179.0 or aspect<=0.0 or near_plane<0.0 \
 		or not lens.origin.is_finite() or not lens.basis.x.is_finite() \
 		or not lens.basis.y.is_finite() or not lens.basis.z.is_finite() \
-		or not is_finite(lens.basis.determinant()) or absf(lens.basis.determinant())<=0.000001: return {"valid":false}
-	var hull: PackedVector2Array = _bounds_hull(envelope.points,lens,fov,aspect,near_plane,clip_near)
-	# Only a validated envelope wholly behind the clipping plane is harmless.
-	# A collapsed/nonfinite projection in front is unavailable, never clear.
-	var lens_inverse := lens.affine_inverse()
-	var in_front := false
-	var reach: float = 1.0
-	var hull_lo := Vector2(INF,INF)
-	var hull_hi := Vector2(-INF,-INF)
-	for point: Vector3 in envelope.points:
-		var local: Vector3 = lens_inverse*point
-		if not local.is_finite(): return {"valid":false}
-		if -local.z>maxf(near_plane,0.000001): in_front = true
-		if not clip_near: reach=maxf(reach,lens.origin.distance_to(point)*2.0)
-	if hull.size()<3:
-		if not clip_near or in_front: return {"valid":false}
-	else:
-		var twice_area := 0.0
-		for index: int in hull.size():
-			if not hull[index].is_finite(): return {"valid":false}
-			hull_lo = hull_lo.min(hull[index])
-			hull_hi = hull_hi.max(hull[index])
-			twice_area += hull[index].cross(hull[(index+1)%hull.size()])
-		if not is_finite(twice_area) or twice_area==0.0: return {"valid":false}
-	var projection := {"valid":true,"in_front":in_front,"hull":hull,"envelope":envelope,"reach":reach}
-	if hull_lo.is_finite() and hull_hi.is_finite() and hull_hi.x>hull_lo.x and hull_hi.y>hull_lo.y:
-		# Keep exact extrema; reconstructing an end from position + size can
-		# round a touching edge into a false strict gap.
-		projection["hull_bounds"] = PackedVector2Array([hull_lo,hull_hi])
-	return projection
-
-static func projected_bounds_occlude(lens: Transform3D, actor_projection: Dictionary,
-		other_projection: Dictionary, fov: float, aspect: float) -> bool:
-	if not bool(actor_projection.get("valid",false)) or not bool(other_projection.get("valid",false)): return true
-	if not bool(other_projection.in_front): return false
-	# Candidate-local validated hull bounds can prove separation without polygon
-	# clipping. Touching edges and unavailable bounds retain the exact path.
-	if actor_projection.get("hull_bounds") is PackedVector2Array and other_projection.get("hull_bounds") is PackedVector2Array:
-		var a: PackedVector2Array = actor_projection.hull_bounds
-		var b: PackedVector2Array = other_projection.hull_bounds
-		if a.size()==2 and b.size()==2 and a[0].is_finite() and a[1].is_finite() \
-			and b[0].is_finite() and b[1].is_finite() \
-			and a[1].x>a[0].x and a[1].y>a[0].y and b[1].x>b[0].x and b[1].y>b[0].y \
-			and (a[1].x<b[0].x or b[1].x<a[0].x or a[1].y<b[0].y or b[1].y<a[0].y):
-			return false
-	var actor: Dictionary = actor_projection.envelope
-	var other: Dictionary = other_projection.envelope
-	var intersections: Array[PackedVector2Array] = Geometry2D.intersect_polygons(actor_projection.hull,other_projection.hull)
+		or absf(lens.basis.determinant())<=0.000001: return true
+	var actor_hull: PackedVector2Array = _bounds_hull(actor.points,lens,fov,aspect,near_plane)
+	var other_hull: PackedVector2Array = _bounds_hull(other.points,lens,fov,aspect,near_plane)
+	if actor_hull.size()<3: return true
+	if other_hull.size()<3:
+		var furthest_depth: float = -INF
+		var lens_inverse: Transform3D = lens.affine_inverse()
+		for point: Vector3 in other.points: furthest_depth=maxf(furthest_depth,-(lens_inverse*point).z)
+		return furthest_depth>near_plane # Entirely behind is harmless; straddling is unavailable.
+	var intersections: Array[PackedVector2Array] = Geometry2D.intersect_polygons(actor_hull,other_hull)
 	var tangent: float = tan(deg_to_rad(fov)*0.5)
-	var reach: float = float(actor_projection.reach)
+	var reach: float = 1.0
+	for point: Vector3 in actor.points: reach=maxf(reach,lens.origin.distance_to(point)*2.0)
 	var actor_inverse: Transform3D = actor.inverse
 	var other_inverse: Transform3D = other.inverse
 	var actor_box: AABB = actor.box
 	var other_box: AABB = other.box
-	var actor_start: Vector3 = actor_inverse*lens.origin
-	var other_start: Vector3 = other_inverse*lens.origin
-	var starts_inside_other: bool = other_box.has_point(other_start)
 	for polygon: PackedVector2Array in intersections:
 		if polygon.size()<3: continue
 		var centre := Vector2.ZERO
@@ -400,11 +290,11 @@ static func projected_bounds_occlude(lens: Transform3D, actor_projection: Dictio
 		for point: Vector2 in samples:
 			var ray: Vector3 = lens.basis*Vector3((point.x*2.0-1.0)*tangent*aspect,
 				(1.0-point.y*2.0)*tangent,-1.0).normalized()
-			var hit: Variant = actor_box.intersects_segment(actor_start,actor_inverse*(lens.origin+ray*reach))
+			var hit: Variant = actor_box.intersects_segment(actor_inverse*lens.origin,actor_inverse*(lens.origin+ray*reach))
 			if not hit is Vector3: continue
 			var actor_entry: Vector3 = (actor.pose as Transform3D)*(hit as Vector3)
-			if starts_inside_other: return true
-			var cover: Variant = other_box.intersects_segment(other_start,other_inverse*actor_entry)
+			if other_box.has_point(other_inverse*lens.origin): return true
+			var cover: Variant = other_box.intersects_segment(other_inverse*lens.origin,other_inverse*actor_entry)
 			if cover is Vector3:
 				var other_entry: Vector3 = (other.pose as Transform3D)*(cover as Vector3)
 				if lens.origin.distance_squared_to(other_entry)<lens.origin.distance_squared_to(actor_entry): return true

@@ -188,15 +188,10 @@ static func rumble_spec(impact: Dictionary, scale: float) -> Dictionary:
 static func defence_state(target_uid: String, now_ms: int, cfg: Dictionary) -> Dictionary:
 	return {"target_uid": target_uid, "poise": maxf(1.0, float(cfg.get("max", 40.0))),
 		"last_ms": now_ms, "quiet_until_ms": now_ms, "stagger_until_ms": now_ms,
-		"pause_until_ms": now_ms, "status_clock_ms": 0,
-		"stagger_active": false, "critical_ready": false, "actions": {}}
+		"pause_until_ms": now_ms, "stagger_active": false, "critical_ready": false, "actions": {}}
 
 static func advance_defence(state: Dictionary, now_ms: int, cfg: Dictionary) -> void:
 	now_ms = maxi(now_ms, int(state.last_ms))
-	# Utility durations share this actor's accepted hitstop leases. Strike
-	# scheduling still uses wall time; this clock counts only unpaused time.
-	state["status_clock_ms"] = int(state.get("status_clock_ms", 0)) \
-		+ maxi(0, now_ms - maxi(int(state.last_ms), int(state.pause_until_ms)))
 	if bool(state.get("stagger_active", false)) and now_ms >= int(state.stagger_until_ms):
 		# Match CombatManager._reset_player_poise at actual stagger recovery.
 		state.poise = maxf(1.0, float(cfg.get("max", 40.0)))
