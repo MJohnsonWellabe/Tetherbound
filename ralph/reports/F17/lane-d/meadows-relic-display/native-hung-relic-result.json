@@ -1,0 +1,30 @@
+{
+  "criterion": "F17#6 OPEN; actual Meadows mounted-relic fixture witness only",
+  "source": "1de00af2b1ed5cf4f5b98a5d2dfaf88350d8e7e9",
+  "immutable_packet": "C:/CodexTemp/tetherbound-proof/native-d-1de00af2b1-hung-relic-r2",
+  "raw_output": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/ralph/reports/F17/lane-d/meadows-relic-display/native-1de00-hung",
+  "actual_terminal": {"pid":3420,"exit":0,"started_utc":"2026-10-09T07:34:22.6182879Z","ended_utc":"2026-10-09T07:43:15.6881668Z","reason":"process_exit"},
+  "manifest": {"frames":16,"decoded_actual_png_1920x1080":16,"presets":["Medium","High"],"hall_stills_finished":true,"complete":false,"failure":"","raw_relic_hang_hung":false},
+  "physical_scope": "Original grounded/controller8arches+8pedestals and doorway/nave return; no mid-route teleport. Disclosed ONE personal held Meadows relic, ordinary public hang and saved receipt; no boss/key/earned-boundary grant. Original healthy-companion/identity/namespace/fullparty/camera/pairedpose/native-raster/weather guards retained.",
+  "actual_saved_payload": {
+    "format": "Original codec envelopes retained; facts read from payload, not absent top-level fields",
+    "character_id": "character-d1df04731c6f79f79b72a740b99c511b",
+    "world_id": "slot-0",
+    "namespace": "e69902dae63d9360c6349e1e86ef1ff0",
+    "held": [],
+    "hung": ["meadows"],
+    "hang_receipt_count": 1,
+    "world_display": {"meadows":true},
+    "manifest_mount_visible": true
+  },
+  "source_after_capture": {"tracked_clean":true,"index_tree":"7abefa148910be50387b5ae563a340c34e7d09fb","head_tree":"7abefa148910be50387b5ae563a340c34e7d09fb"},
+  "observed_diagnostics": {"engine_script_errors":0,"warnings":2,"warning_details":["instance_reset_physics_interpolation deprecation","7 texture RIDs leaked"]},
+  "producer_contradiction": {
+    "observed": "Initial relic_hang.hung=false survives Dictionary.merge default overwrite=false; verified disk fields and actual mount visibility are present. Raw manifest remains unchanged.",
+    "minimal_source_fix": "328e2a291113500b1ac11d91f2753cd91f29a17d changes merge(...,true) only versus approved912 adapter/evidence91cff; no guard/fixture/path/state change",
+    "original_review": "SAME original f42 runtime/applicability and minimal correction review requested; pending",
+    "reuse": "No silent hung-field rewrite or full native PASS. Actual frame/saved-hang applicability requires original independent verdict. No unchanged recapture requested."
+  },
+  "evidence_copy": "Untracked native-1de00-hung-r2 holds unchanged manifest, terminal/start/source logs, raw codec envelopes and16 actual image hashes; images remain in ROOT raw output",
+  "remaining": "Original runtime/applicability and SAME blind review; complete village/Hall full bar. No co-op, boss, earned save, performance/device/motion or whole criterion credit. Cloudreach source is separate and has no native image credit."
+}
