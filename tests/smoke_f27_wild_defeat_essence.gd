@@ -169,11 +169,14 @@ func _research_source(game: Node, local: RefCounted, session: Node, species: Str
 	print("DISCLOSED research source: public Session claim of naturally earned %s sight task" % species)
 	var journal: Node = null
 	var journal_deadline := 0
+	var original_world: RefCounted = null
+	var original_epoch := ""
+	var journal_context := {}
 	var result: Dictionary
 	if OS.get_cmdline_user_args().has("--research-journal"):
 		journal_deadline = Engine.get_physics_frames() + SETTLE_AFTER_VICTORY
-		var original_world: RefCounted = game.get("world")
-		var original_epoch: String = session.call("_altar_current_epoch")
+		original_world = game.get("world")
+		original_epoch = session.call("_altar_current_epoch")
 		var menu: Node = game.call("menu")
 		var pressed: Dictionary = await JOURNAL_PRESS.tap(self, JOURNAL_BINDINGS._physical_binding, "game_menu", 1)
 		if pressed.get("ok") != true or menu == null or menu.call("is_open") != true:
@@ -225,9 +228,10 @@ func _research_source(game: Node, local: RefCounted, session: Node, species: Str
 			return
 		claim_button.grab_focus()
 		await process_frame
-		if root.gui_get_focus_owner() != claim_button or game.get("session") != session \
+		journal_context = (journal.get("_opened_context") as Dictionary).duplicate(true)
+		if root.gui_get_focus_owner() != claim_button or game.get("local") != local or game.get("session") != session \
 			or game.get("world") != original_world or session.call("_altar_current_epoch") != original_epoch \
-			or journal.get("_opened_context") != preload("res://scripts/ui/system_screen.gd").character_context(game) \
+			or journal_context != preload("res://scripts/ui/system_screen.gd").character_context(game) \
 			or Engine.get_physics_frames() >= journal_deadline:
 			_fail("original journal focus/scope/240-frame claim allowance changed before A")
 			return
@@ -242,7 +246,17 @@ func _research_source(game: Node, local: RefCounted, session: Node, species: Str
 			actual_call.result = response.duplicate(true) if response is Dictionary else response
 			return response)
 		pressed = await JOURNAL_PRESS.tap(self, JOURNAL_BINDINGS._physical_binding, "ui_accept", 1)
+		if not is_instance_valid(journal):
+			_fail("original journal was replaced during Claim A")
+			return
 		journal.set("claim_task", producer)
+		if Engine.get_physics_frames() > journal_deadline or game.get("local") != local \
+			or game.get("session") != session or game.get("world") != original_world \
+			or session.call("_altar_current_epoch") != original_epoch \
+			or journal.get("_opened_context") != journal_context \
+			or journal_context != preload("res://scripts/ui/system_screen.gd").character_context(game):
+			_fail("original journal scope/240-frame claim allowance changed during A")
+			return
 		if pressed.get("ok") != true or actual_call.count != 1 or actual_call.intent != intent \
 			or not actual_call.result is Dictionary:
 			_fail("ordinary Claim A did not invoke exactly the original earned task producer")
@@ -266,6 +280,12 @@ func _research_source(game: Node, local: RefCounted, session: Node, species: Str
 		print("DISCLOSED research source: original retained claim awaits owner save within the unchanged 240-frame allowance")
 	var remaining := SETTLE_AFTER_VICTORY if journal == null else maxi(0, journal_deadline - Engine.get_physics_frames())
 	for i in remaining: await physics_frame
+	if journal != null and (not is_instance_valid(journal) or Engine.get_physics_frames() > journal_deadline \
+		or game.get("local") != local or game.get("session") != session or game.get("world") != original_world \
+		or session.call("_altar_current_epoch") != original_epoch or journal.get("_opened_context") != journal_context \
+		or journal_context != preload("res://scripts/ui/system_screen.gd").character_context(game)):
+		_fail("original journal completion observation exceeded its scope/240-frame allowance")
+		return
 	if journal != null and not (journal.get("_pending_claim") as Dictionary).is_empty():
 		_fail("actual journal did not consume the original saved completion within its shared 240-frame allowance")
 		return
