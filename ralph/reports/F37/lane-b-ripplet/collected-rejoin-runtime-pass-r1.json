@@ -1,0 +1,31 @@
+{
+  "criterion": "F37#4",
+  "kind": "collected-existing-two-peer-rejoin",
+  "source": "aafe6101567b7d95f2de9da0fd754bddc23ae511",
+  "run_id": 37768075780,
+  "artifact_id": 11546117694,
+  "archive": "collected-rejoin-r1-producer.zip",
+  "archive_sha256": "416a5e25abcc8a24e9bed0b61c4eddc707bd9d2fd7d1c88c4f2f3eacb59397af",
+  "crc_verified": true,
+  "actual_exit": 0,
+  "runtime_seconds": 132,
+  "actual_checkout": "collected-rejoin-r1-checkout-source.txt",
+  "original_review": "collected-rejoin-r1-original-runtime-approve.txt",
+  "verdict": "RUNTIME APPROVE; WHOLE OPEN",
+  "disclosure": "Existing owned L30 Ripplet and breakthroughs pre-admission fixtures; clean two-peer local ENet. No earned feast/campaign/device/visual claim.",
+  "identity": {
+    "character_id": "character-b099f9fa780f53d3f2b68ebf41c20fb7",
+    "owned_uid": "creature-9ed0d05ece4c3652434c2dd71aa117c9",
+    "departing_peer": 1377758119,
+    "returning_peer": 696186538,
+    "saved_remaining_s": 14.9833333333335
+  },
+  "passed": "Production character disk save, final disconnect write, live-party wipe, actual Title returning Join; same CID/UID/new peer, one body/mount/no stale, original surface exact-debt and resumed bounded Dive guards; host retained mount/Dive ok answers for restored UID.",
+  "expect_any": "Step21 leave returned FAIL because drop already closed session; original expect:any admits it. Not every step returned PASS.",
+  "logic_reused": "37736824292:58tests/3176assertions/0fail/exit0; unchanged scoped code.",
+  "earlier_failed_producer_retained": 37737239437,
+  "earlier_failure_cause": "UNKNOWN; readonly observation is not claimed as behavior fix.",
+  "remaining_whole_gate": "Actual Low post-rejoin surface/Dive frames plus original blind PASS using existing capture path; prior native failed before mount,0PNG,unknown cause and remains parked.",
+  "whole_criterion_closed": false,
+  "duplicate_run_dispatched": false
+}
