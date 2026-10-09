@@ -825,9 +825,421 @@
         "original-recipe.json": "094a146e9d50201a439d6814780a5ff03c17ec446bc1958d2f707018468258d7",
         "failed-native-summary.json": "6aea02906e61d0052b4329cf17942cc3f2a8110b02a59fd9f7326abf85879356"
       }
+    },
+    {
+      "runtime_verdict": "APPROVE bounded completed native menu artifact/provenance and actual guards; no pixel/whole acceptance",
+      "source_commit": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+      "packet": "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1",
+      "original_output_directory": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-cloudreach-menu-1e2-day-r1",
+      "exact_capture_start": {
+        "started_utc": "2026-10-09T11:15:27.0008326Z",
+        "source": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+        "pid": 45892,
+        "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/capture-home",
+        "deadline_minutes": 45,
+        "mode": "Capture",
+        "args": [
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--rendering-method",
+          "forward_plus",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "res://tools/catalogue_survey.gd",
+          "--",
+          "--biome=cloudreach",
+          "--subset=Galefoot",
+          "--times=day",
+          "--ui-context=menu",
+          "--preset=High",
+          "--source-commit=1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+          "--output=res://.tmp/e-ui-cloudreach-menu-1e2-day-r1"
+        ]
+      },
+      "actual_capture_terminal": {
+        "ended_utc": "2026-10-09T11:25:26.1966247Z",
+        "source": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+        "pid": 45892,
+        "exit_code": 0,
+        "reason": "process_exit",
+        "mode": "Capture"
+      },
+      "actual_static": {
+        "start_args": [
+          "--headless",
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--script",
+          "res://tools/catalogue_survey.gd",
+          "--check-only"
+        ],
+        "terminal": {
+          "source": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+          "pid": 10992,
+          "exit_code": 0,
+          "ended_utc": "2026-10-09T11:04:00.0669721Z",
+          "mode": "Static",
+          "reason": "process_exit"
+        },
+        "stderr_bytes": 0,
+        "scope": "Completed existing --check-only; no world/native proof by itself."
+      },
+      "actual_import": {
+        "terminal": {
+          "pid": 40692,
+          "reason": "process_exit",
+          "exit_code": 0,
+          "ended_utc": "2026-10-09T11:06:40.5639099Z",
+          "mode": "Import",
+          "source": "1e2cc89ae9e74fbd64f195616fba3fe37695774b"
+        },
+        "stderr_bytes": 0
+      },
+      "source_provenance": {
+        "head_and_index_tree": "bfed01d68907738cfd02bc8dc2ab943e56b07c18",
+        "meaning": "Git tree, not commit; independently matches locally resolved exact1e2 tree. Original before/after static and before/after capture snapshots bind exact source and matching tree/index. Generated outputs preserved at original paths; later cached source HEAD not substituted.",
+        "import_history": "Original source-after-import snapshot lists four M .import paths despite tracked_clean=true; this discrepancy is retained. Retained revalidation binds the same four pinned Git blobs and index tree, and actual before/after capture snapshots have no tracked modifications. No silent all-stages-clean reinterpretation/new import/test run.",
+        "untracked_history": "Eight untracked prior evidence/UID paths retained unchanged before/after capture; not silently removed.",
+        "owned_process_scope": "Actual capture PID45892 is bound to process_exit0 and terminal11:25:26.1966247Z. ROOT reports session71514/owned46096 also gone; no separate process-list receipt present or live query performed, so additional process absence is not independently promoted."
+      },
+      "graphics": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+        "preset": "High",
+        "renderer": "forward_plus",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source_commit": "1e2cc89ae9e74fbd64f195616fba3fe37695774b"
+      },
+      "actual_driver": "Actual stdout Godot4.7 stable official; Vulkan1.3.280 Forward+ NVIDIA GeForceGTX1060 3GB. Actual primary framebuffer1920x1080 verified in all8PNG; no on-device/default-renderer endorsement.",
+      "manifest": {
+        "original_path": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-cloudreach-menu-1e2-day-r1/manifest.json",
+        "sha256": "32455c2fc62842408486cb2c34b1c706e79a5cd0da8da37b870a1f5a1109d6e2",
+        "complete": true,
+        "failures": [],
+        "base_frames": 1,
+        "planned_base_frames": 1,
+        "ui_frames": 7,
+        "expected_ui_frames": 7,
+        "ui_contexts": [
+          "menu"
+        ],
+        "subsets": [
+          "galefoot"
+        ],
+        "requested_times": [
+          "day"
+        ],
+        "persistence": "Successful terminal under previously approved original open/store/flush/get_error/full intended UTF8 manifest readback guards, plus independent parsing/hash of final persisted complete manifest and all image-record bindings. No active/import/source success substituted for capture."
+      },
+      "actual_ui_records": [
+        {
+          "context": "ui-backpack",
+          "tab": "backpack",
+          "section": null,
+          "file": "res://.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-backpack.png",
+          "state_guard_pass": true,
+          "guard_checks": {
+            "content_present": true,
+            "content_text_present": true,
+            "content_visible": true,
+            "focus_owned": true,
+            "focus_present": true,
+            "focus_visible": true,
+            "input_owner_matches": true,
+            "owner_open": true
+          },
+          "input_owner": "/root/Game/GameMenu",
+          "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@6202/@HBoxContainer@6203/@PanelContainer@6239/@VBoxContainer@6238/@GridContainer@6237/@Button@6262",
+          "focus_visible_rect": "[P: (134.0, 577.0), S: (86.0, 86.0)]",
+          "visible_text_count": 13
+        },
+        {
+          "context": "ui-quest_log",
+          "tab": "quest_log",
+          "section": null,
+          "file": "res://.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-quest_log.png",
+          "state_guard_pass": true,
+          "guard_checks": {
+            "content_present": true,
+            "content_text_present": true,
+            "content_visible": true,
+            "focus_owned": true,
+            "focus_present": true,
+            "focus_visible": true,
+            "input_owner_matches": true,
+            "owner_open": true
+          },
+          "input_owner": "/root/Game/GameMenu",
+          "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@12/@Button@6421",
+          "focus_visible_rect": "[P: (116.0, 245.0), S: (1688.0, 66.0)]",
+          "visible_text_count": 9
+        },
+        {
+          "context": "ui-build",
+          "tab": "build",
+          "section": null,
+          "file": "res://.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-build.png",
+          "state_guard_pass": true,
+          "guard_checks": {
+            "content_present": true,
+            "content_text_present": true,
+            "content_visible": true,
+            "focus_owned": true,
+            "focus_present": true,
+            "focus_visible": true,
+            "input_owner_matches": true,
+            "owner_open": true
+          },
+          "input_owner": "/root/Game/GameMenu",
+          "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@14/@ScrollContainer@6467/@PanelContainer@6466/@VBoxContainer@6465/@Button@6462",
+          "focus_visible_rect": "[P: (134.0, 808.0), S: (1652.0, 66.0)]",
+          "visible_text_count": 12
+        },
+        {
+          "context": "ui-players",
+          "tab": "players",
+          "section": null,
+          "file": "res://.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-players.png",
+          "state_guard_pass": true,
+          "guard_checks": {
+            "content_present": true,
+            "content_text_present": true,
+            "content_visible": true,
+            "focus_owned": true,
+            "focus_present": true,
+            "focus_visible": true,
+            "input_owner_matches": true,
+            "owner_open": true
+          },
+          "input_owner": "/root/Game/GameMenu",
+          "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Tabs/@Button@17",
+          "focus_visible_rect": "[P: (1249.0, 145.0), S: (177.0, 60.0)]",
+          "visible_text_count": 4
+        },
+        {
+          "context": "ui-settings",
+          "tab": "settings",
+          "section": null,
+          "file": "res://.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-settings.png",
+          "state_guard_pass": true,
+          "guard_checks": {
+            "content_present": true,
+            "content_text_present": true,
+            "content_visible": true,
+            "focus_owned": true,
+            "focus_present": true,
+            "focus_visible": true,
+            "input_owner_matches": true,
+            "owner_open": true
+          },
+          "input_owner": "/root/Game/GameMenu",
+          "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@20/@ScrollContainer@6483/@VBoxContainer@6484/@HBoxContainer@6534/@Button@6531",
+          "focus_visible_rect": "[P: (568.0, 832.0), S: (320.0, 62.0)]",
+          "visible_text_count": 11
+        },
+        {
+          "context": "ui-settings-controls",
+          "tab": "settings",
+          "section": "controls",
+          "file": "res://.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-settings-controls.png",
+          "state_guard_pass": true,
+          "guard_checks": {
+            "content_present": true,
+            "content_text_present": true,
+            "content_visible": true,
+            "controls_hint_visible": true,
+            "focus_owned": true,
+            "focus_present": true,
+            "focus_visible": true,
+            "input_owner_matches": true,
+            "owner_open": true
+          },
+          "input_owner": "/root/Game/GameMenu",
+          "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@20/@ScrollContainer@6483/@VBoxContainer@6484/@HBoxContainer@6534/@Button@6531",
+          "focus_visible_rect": "[P: (568.0, 832.0), S: (320.0, 62.0)]",
+          "visible_text_count": 11
+        },
+        {
+          "context": "ui-map",
+          "tab": "map",
+          "section": null,
+          "file": "res://.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-map.png",
+          "state_guard_pass": true,
+          "guard_checks": {
+            "content_present": true,
+            "content_text_present": true,
+            "content_visible": true,
+            "focus_owned": true,
+            "focus_present": true,
+            "focus_visible": true,
+            "input_owner_matches": true,
+            "owner_open": true
+          },
+          "input_owner": "/root/Game/GameMenu",
+          "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@8/@PanelContainer@6893/@Control@6892",
+          "focus_visible_rect": "[P: (134.0, 392.0), S: (1652.0, 440.0)]",
+          "visible_text_count": 4
+        }
+      ],
+      "record_findings": [
+        "Seven unique original contexts: backpack,quest_log,build,players,settings,settings-controls,map. All state_guard_pass and all recorded owner/open/content/present/focus/visible-text operands true. Nonempty focus visible rectangles and visible text checked. Controls actual prefix A on a binding to change it appears in persisted visible_text and controls_hint_visible=true.",
+        "Settings and Controls target the same actual gamepad-binding focus in this fixture; successful current proof does not identify every false operand or prove the old9a cause.",
+        "Map actual display_realm=cloudreach, terrain_ready=true, realm_tabs_visible=true, available_realms meadows/cloudreach, gate region discovered with later regions undiscovered. This is initial/debug UI context, not earned/surveyed world access."
+      ],
+      "images": [
+        {
+          "context": "base",
+          "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-cloudreach-menu-1e2-day-r1/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+          "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\originals\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+          "neutral_pixel_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\blind\\01.png",
+          "sha256": "1e2f3efaccb729501b734dc9eb9234f9783ee41fee1d60f7107bfca5507e61ae",
+          "bytes": 2247650,
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "independent_integrity": "Original RGB8/noninterlaced PNG signature/IHDR/all chunk CRC/IEND/exact byte extent/full zlib scanline decode validated. Original/archive/neutral bytes equal."
+        },
+        {
+          "context": "ui-backpack",
+          "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-backpack.png",
+          "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\originals\\ui-backpack.png",
+          "neutral_pixel_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\blind\\02.png",
+          "sha256": "e378aff2181c646440f173d8a8521ac742e9d57685923cb9d7b97722455ec1e9",
+          "bytes": 700783,
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "independent_integrity": "Original RGB8/noninterlaced PNG signature/IHDR/all chunk CRC/IEND/exact byte extent/full zlib scanline decode validated. Original/archive/neutral bytes equal."
+        },
+        {
+          "context": "ui-quest_log",
+          "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-quest_log.png",
+          "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\originals\\ui-quest_log.png",
+          "neutral_pixel_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\blind\\03.png",
+          "sha256": "0c059cba854ce18e8762b73e83927f4cc0cb5d6fc7f87337597268b7b648cb03",
+          "bytes": 825064,
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "independent_integrity": "Original RGB8/noninterlaced PNG signature/IHDR/all chunk CRC/IEND/exact byte extent/full zlib scanline decode validated. Original/archive/neutral bytes equal."
+        },
+        {
+          "context": "ui-build",
+          "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-build.png",
+          "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\originals\\ui-build.png",
+          "neutral_pixel_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\blind\\04.png",
+          "sha256": "beb03f9ca9236cd350892e0f0c29fbb11b860faf0c4d8f64b8587c6155ffc450",
+          "bytes": 663757,
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "independent_integrity": "Original RGB8/noninterlaced PNG signature/IHDR/all chunk CRC/IEND/exact byte extent/full zlib scanline decode validated. Original/archive/neutral bytes equal."
+        },
+        {
+          "context": "ui-players",
+          "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-players.png",
+          "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\originals\\ui-players.png",
+          "neutral_pixel_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\blind\\05.png",
+          "sha256": "885b523b4bc4b99e105396ed7d85bc9d8da7103be78f296b236c44b3225dd744",
+          "bytes": 825391,
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "independent_integrity": "Original RGB8/noninterlaced PNG signature/IHDR/all chunk CRC/IEND/exact byte extent/full zlib scanline decode validated. Original/archive/neutral bytes equal."
+        },
+        {
+          "context": "ui-settings",
+          "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-settings.png",
+          "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\originals\\ui-settings.png",
+          "neutral_pixel_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\blind\\06.png",
+          "sha256": "04ace8d210dff0f5dd0874c405f27ce329a962f3ebc17bf1cd80240e0197a831",
+          "bytes": 1000694,
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "independent_integrity": "Original RGB8/noninterlaced PNG signature/IHDR/all chunk CRC/IEND/exact byte extent/full zlib scanline decode validated. Original/archive/neutral bytes equal."
+        },
+        {
+          "context": "ui-settings-controls",
+          "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-settings-controls.png",
+          "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\originals\\ui-settings-controls.png",
+          "neutral_pixel_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\blind\\07.png",
+          "sha256": "f4f738eaeb32d86127d228b86fd10268c0c7a66048b0b90ae8ef1bc495dac20d",
+          "bytes": 1002710,
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "independent_integrity": "Original RGB8/noninterlaced PNG signature/IHDR/all chunk CRC/IEND/exact byte extent/full zlib scanline decode validated. Original/archive/neutral bytes equal."
+        },
+        {
+          "context": "ui-map",
+          "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-cloudreach-menu-1e2-day-r1/ui-map.png",
+          "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\originals\\ui-map.png",
+          "neutral_pixel_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-1e2cc89ae9-ui-menu-r1\\blind\\08.png",
+          "sha256": "a38448308935b80f6d3af0f1c3370b6d284c99230c808e54eda43a10aee404e0",
+          "bytes": 638730,
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "independent_integrity": "Original RGB8/noninterlaced PNG signature/IHDR/all chunk CRC/IEND/exact byte extent/full zlib scanline decode validated. Original/archive/neutral bytes equal."
+        }
+      ],
+      "ops_verifier_history": "ROOT reports verifier-only expected subset case correction. Current retained verifier tests subsets==[subset.lower()], consistent with actual manifest galefoot and original producer argument normalization. Producer/source/guards were not changed by this verifier expectation correction; no image/receipt repair or promotion from active outputs. Prior verifier revision is not separately supplied as an immutable file.",
+      "diagnostics": {
+        "script_errors": 0,
+        "engine_errors": 0,
+        "warnings": 2,
+        "warning_sites": [
+          "road_visibility_broken_causeway_main_03 positional fail-closed refusal",
+          "road_visibility_windscar_floor_loop_15 positional fail-closed refusal"
+        ]
+      },
+      "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+      "scope_and_remaining_gates": [
+        "One existing Galefoot/day base through production CameraRig/debug catalogue travel and mounted production menu/current content/focus/owner. Existing chapter/party/debug fixture policies retained; no earned arrival or ordinary campaign/controller/save/co-op claim.",
+        "Headers/records/guards establish this bounded native capture, not pixel readability/fullbar/Settings accessibility/device/performance/fullmatrix/allmissingcontexts/wholecriterion/READY. Original blind pixels separate; reviewer did not inspect/grade images or contact judge.",
+        "Failed9a menu/craft/parse and old complete producer versus failed terminal witnesses remain preserved; accepted1e2 source/command/Settings smoke proofs stay separate. Craft diagnostic change still not a craft fix; no Craft native approval or result from this menu run.",
+        "7227 mounted station proof remains independent/pending; this1e2 capture predates that integrated physical-station change."
+      ],
+      "packet_hashes": {
+        "capture-start.json": "44c6e13621957327597b10e68cbf0af1e9c9754321a27cbf0bf4c65f6aab8dae",
+        "capture-terminal.json": "dfba516f66279747bf341ae761c7fa7bd638757a4f950ef38760c22823002818",
+        "capture.stdout.log": "7d17182da7bb5996b92674c11df6ae2abdc70b14610f66352e84d10c0a3228ab",
+        "capture.stderr.log": "b57244443e9479c10c20336d268e144bf5aa57198031ba4507c79fd6fbcc80e0",
+        "static-start.json": "2e03e97e796df77aecdcc71a6d16997cc9ac48ee7b527b291008a2a7f5df6478",
+        "static-terminal.json": "392f0844c11630dc0173adaae17646d8548cbc295e0d69694891284e9255194e",
+        "static.stdout.log": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+        "static.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "import-start.json": "be87b4225df642206d74153ffba1612a5f93023d07d442b8d3218411712bd052",
+        "import-terminal.json": "3f1d1659978f7728531aec27db3d7e30c9185f5f409d209282a0d2133fd91579",
+        "import.stdout.log": "8592c11b80fbd02410a6341df93e6f198f4ee1b63432cf04b479c1b74c5eb67b",
+        "import.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source-before-static.json": "09962c776225d910c63e417541cc7a6b4c7f4a3ef2b98d901b1fac57e76f6aef",
+        "source-after-static.json": "79d895e2e8e1e4066d91500a9d3a287b4c5f320877cbc2e285c0b828051de847",
+        "source-before-import.json": "20b95ca6b51c7445ab882a3b02d161523aed9ef10d85c049b6c92a016e2c4cfe",
+        "source-after-import.json": "a28020b315918edef728f49eaf3434f43ff628719630849cc625734b01a5731d",
+        "source-after-import-revalidated.json": "069b6412754938ca6e993a10f8344769256888ed5536e639d5dace6f56c5a7f4",
+        "source-before-capture.json": "1801af98fd8e5a170ab44dccf3bab438a53e49c6662d4351064182a828a3839d",
+        "source-after-capture.json": "eec7a2f54b5ed1cbbcb33ad94f06c8c232e9fe598a63ae541cb3fd208ff2eda6",
+        "original-recipe.json": "d27955807101cb08cb6bd0c24556a386cdb0f2b59b9ed745403d617038ee7679",
+        "native-verified-summary.json": "518125d4f3371bd130c3b8644ccbb7a87f80c2b19801d8d08fa742761725715a",
+        "blind-mapping-outside-input.json": "affa959c955a6a2244e9f5cf3b1be25c07ef1af72937907144c1852230f10131"
+      }
     }
   ],
-  "latest_menu_native_status": "FAILED9a359 process_exit1: Settings/Controls guard false; six originals diagnosis only",
+  "latest_menu_native_status": "APPROVE bounded1e2 native menu runtime: terminal0, onebase+sevenUI8actual1080PNG, all original guards true; original pixel review/whole scope separate",
   "source_correction_reviews": [
     {
       "source_commit": "4bf9f6f63480dc2b7772caaf67bc4452096bc47f",
@@ -1060,5 +1472,39 @@
     "menu": "APPROVE conditional applicability",
     "actual_execution": "PENDING ROOT only",
     "craft": "not requested/not approved in this entry"
-  }
+  },
+  "settings_entry_focus_source_reviews": [
+    {
+      "review_kind": "Bounded three-line Settings natural first_focus change",
+      "source_commit": "cb107eb59172f52c0964d2b2d3470cf1f59a9b7a",
+      "parent": "dc2655c93015f406e204c61f813b0493f1437580",
+      "notice": "6080062424 supplied as pre-edit ownership notice; no network fetch",
+      "reviewed_blobs": {
+        "scripts/ui/tab_settings.gd": "008b435397a7b79d1289ce5aff606cc486567ce5",
+        "scripts/ui/graphics_settings.gd": "07f4371525c9ed8fbbcbac07f823b24b65a2473a",
+        "scripts/ui/game_menu.gd": "88ff5f0c7d0642709ebd371665b154d619fd9b62",
+        "tests/smoke_settings.gd": "bdc4cc4347d81f2f5be8763dc382fff6d52e96c7",
+        "tools/catalogue_survey.gd": "fcddcb0c39c82b4c92966383e530634d89d97e99"
+      },
+      "source_verdict": "APPROVE",
+      "affected_smoke_applicability_verdict": "REQUEST_CHANGES existing smoke start-focus assumptions; recipe is relevant but unchanged assertion expectations do not cover the changed entry correctly",
+      "source_findings": [
+        "Only three added lines in Settings.first_focus: original available lesson button priority retained; otherwise call existing Graphics.first_focus and return non-null Control; original firstgamepad row/reset fallbacks unchanged.",
+        "Graphics is constructed and mounted as Settings child before menu entry; its existing first_focus returns preset Button initialized by _ready. Existing GameMenu.select makes chosen body visible, refreshes and grabs returned Control. No await/free, owner/input/graphics-setting mutation, producer guard or layout change in this hunk.",
+        "Existing Graphics buttons focus_entered already uses Settings._keep_visible; immediate plus valid same-focus next-frame scroll path remains byte-unchanged. Ordinary mounted lifetime supplies the child; no claim for invalid freed/manual fixtures."
+      ],
+      "affected_recipe": {
+        "script": "res://tests/smoke_settings.gd",
+        "mode": "headless",
+        "execution": "not performed; pending executor",
+        "minimum_supported_issue": "tests/smoke_settings.gd::_check_focus_can_be_driven requires D-pad Right to change natural entry focus. Graphics._wire_focus explicitly sets each graphics Button left/right neighbor to itself, so the new preset entry contradicts this assumption. The next _check_all_enabled_controls_are_reachable assumes that preceding sequence ended on binding row0 second column and returns left to firstgamepad; this also no longer describes natural Graphics entry.",
+        "required_proof_scope": "Adapt only these existing focus-walk assumptions to actual authorized Graphics-first entry and retain physical D-pad/stick reachability, all binding rows/actions, visibility/rebind/reset/panic/teleport/scroll assertions. No skipping, weakening or fixture hide. This is source-supported incompatibility, not an observed new run failure."
+      },
+      "reuse_limits": [
+        "Previous1e2 source/artifact/native bindings remain historical and apply to unchanged Settings scroll/rebind/reset/panic paths; changed natural tab entry requires affected existing smoke proof.",
+        "Current producer Controls target stays actual firstgamepad binding; Settings card entry now differs. No proof that Controls density, HUD/map/hints/readability or native appearance improved. Original menu visual FAIL preserved.",
+        "No source/test edit, engine/test/GPU/import/dispatch performed. No new native command, parse/runtime/visual/whole/READY approval."
+      ]
+    }
+  ]
 }

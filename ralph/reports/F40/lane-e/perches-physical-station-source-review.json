@@ -266,11 +266,171 @@
         "No unit rerun/fullsuite/new fixture required by this scoped assertion result; actual mounted/new query cost/occupancy behavior and ROOT native/independent pixels remain unverified."
       ],
       "limits": "Existing detached validator fixture proves cache cadence/steering/INF assertions only, not physics overlap/walkability/contact, native images, appearance cause/improvement, indoor/query performance, ownership, device/campaign/save/co-op/wholecriterion/READY. Prior source/integrationAPP, TEMP limits and all immutable failures/old visual outcomes preserved; no engine/test/dispatch/source edit by reviewer."
+    },
+    {
+      "artifact_verdict": "APPROVE bounded mounted follower/actor-query smoke artifact; no native/appearance/contact-wide acceptance",
+      "source_commit": "7227bf21934ff9c356baf5bbce2051fa976eaa15",
+      "run_id": 37923557627,
+      "job_id": 113797038167,
+      "artifact_id": 11613925066,
+      "packet": "C:/CodexTemp/tetherbound-proof/hosted-e-7227-mounted-station",
+      "actual_source_binding": "Job actual fetch/checkout lines135/147 and actual HEAD/log273/276 bind exact7227. Separate API workflow main head7dd4a777fbc11ce62c6747248b96d53e4a27a099 is not proof source. Already verified integrated four source objects reused; no source audit repeated.",
+      "actual_recipe": {
+        "script": "tests/smoke_cloudreach_follower_edge.gd",
+        "args": "empty",
+        "mode": "headless",
+        "engine": "Godot4.7.stable.official.5b4e0cb0f"
+      },
+      "actual_result": {
+        "checks": 18,
+        "failures": 0,
+        "exit_code": 0,
+        "duration_seconds": 235,
+        "terminal_log_utc": "2026-10-09T11:30:57.6071210Z",
+        "explicit_PASS_lines": 18,
+        "worst_snap_drop_m": 0.26,
+        "worst_walk_drop_m": 0.53
+      },
+      "verified_checks": [
+        "New two checks: production _recall_body_fits refuses actual already-mounted road_visibility_arrival_gate_road_01_0 with an actor-only shape-query operand and no StaticBody obstruction; existing wild supplies the operand. No new actor/movement fixture used for this probe.",
+        "Original12snap checks retained: three original road spots x four camera yaws, companion on trainer floor over90frames per snap, existing LEVEL_TOLERANCE_M1.5 unchanged. Worst recorded drop0.26m.",
+        "Original three follow checks retained: each road over8camera yaws/600frames; worst recorded following drop0.53m.",
+        "Original airborne-trainer check retained: existing floorless stand-in12m above road, companion seated on ground after snap; no new airborne fixture or guard relaxation."
+      ],
+      "diagnostics": {
+        "engine_errors": 0,
+        "script_errors": 0,
+        "warnings": 2,
+        "warning_sites": [
+          "road_visibility_broken_causeway_main_03 positional fail-closed refusal",
+          "road_visibility_windscar_floor_loop_15 positional fail-closed refusal"
+        ],
+        "notice": "The descriptive missing CloudreachNoStronghold fallback notice is retained in the log; it is not an engine error. Routine Node-action warning is job-only, separate from selected engine output."
+      },
+      "artifact_binding": {
+        "api_id_run_digest_size_match": true,
+        "jobs_api_id_run_completed_success_match": true,
+        "zip_sha256": "b091b4d5d0f96fd8bf8d85865a09a113600679d78c9d0cd48eeeb88a3161ce99",
+        "all_zip_members_crc_valid": true,
+        "all7extracted_members_byte_equal": true,
+        "members": [
+          {
+            "path": "MANIFEST.txt",
+            "bytes": 251,
+            "sha256": "c7a15641154298f1d08da8ecee63851b6d9501c6a811cdde2211032de8a7378b",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "exit_code",
+            "bytes": 2,
+            "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "run.log",
+            "bytes": 4412,
+            "sha256": "948c42b3a53e0d67b297730a4b3a2712930e3afa391f96d29b6d35e1628bc39c",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "user/godot/app_userdata/Tetherbound/boot_log.txt",
+            "bytes": 219,
+            "sha256": "087a566784ae0907eff9d3b31e7e9a1f8dfea42936b35c4a58f7359784b368fd",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+            "bytes": 88691,
+            "sha256": "2eee7cfbb96bb6f0bd96cd488075851d0c54f93f4234aa38e133d870b63a4618",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+            "bytes": 48,
+            "sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "user/godot/app_userdata/Tetherbound/logs/godot.log",
+            "bytes": 4367,
+            "sha256": "f44fdd776ba226387e5ff114b695fcd3946a00e7c3e357d9cafa6c97db939e77",
+            "extracted_byte_equal": true
+          }
+        ],
+        "job_sha256": "f3e9caf2f3f9686fa0ab25c830768f304680303289b9f9fcb77e80e9bcba176a",
+        "artifacts_api_sha256": "f0226a70b800f3bd555d3d2b50de57ca9ab2d02a69627729f96a7938e09879b6",
+        "jobs_api_sha256": "87281a8dad53151ba736c2abef54006bf43491414dd1ba86c0ffaceced11894d",
+        "upload_binding": "Actual job uploaded digest and artifact URL match11613925066/run37923557627."
+      },
+      "fixture_and_scope_limits": [
+        "Existing smoke seeds two-creature party meadowhart/bramblebun before direct scene mount, recalls real companion, teleports trainer and sets camera yaw; existing headless ground/recall/road/snap/airborne fixtures retained. This is not the Perches native five-creature/Galecrest fixture or ordinary earned campaign.",
+        "Actual body query proves refusal for this mounted physical wild and shape under existing mask/exclusions/hitcap, not every roster collision or natural contact/spacing at Perches. Existing road/frame/floor tolerance guards remain; no universal clearance/walkability proof.",
+        "Headless map_meadows.png in user/cache is generated map cache, not a native UI/frame or visual pixel proof. No native image credit.",
+        "Prior unit7tests21assertions with two detached-fixture engine diagnostics remain preserved separately; successful mounted smoke does not erase or relabel that log.",
+        "No appearance cause/improvement, cached-station Perches shutter identity, indoor/query cost/performance, ownership, device/save/co-op/earned/fullbar/fullmatrix/wholecriterion/READY approval."
+      ],
+      "remaining_gates": [
+        "ROOT actual Perches original two-row native at integrated pin and independent blind pixels remain pending. Exact proposed native argv/output must receive separate applicability binding; none is invented/approved by this artifact entry.",
+        "Actual Perches actor/camera/cache/identity/source/raster/receipt/terminal controls must be verified from completed native packet, not inferred from headless result."
+      ]
     }
   ],
   "latest_affected_unit_disposition": {
     "source_commit": "7227bf21934ff9c356baf5bbce2051fa976eaa15",
     "verdict": "APPROVE scoped cadence/unit assertions with disclosed engine diagnostics; NOT clean-log/mounted-runtime PASS",
     "mounted_smoke": "PENDING"
-  }
+  },
+  "latest_mounted_smoke_disposition": {
+    "source_commit": "7227bf21934ff9c356baf5bbce2051fa976eaa15",
+    "verdict": "APPROVE bounded mounted18checks/0fail artifact",
+    "native_command_binding": "APPROVE exact supplied7227 static/native applicability; completed native verification and blind remain pending"
+  },
+  "command_binding_reviews": [
+    {
+      "source_commit": "7227bf21934ff9c356baf5bbce2051fa976eaa15",
+      "review_kind": "Exact supplied static/native command applicability after verified mounted artifact",
+      "verdict": "APPROVE",
+      "static_command_verdict": "APPROVE applicability; execution/parse result pending ROOT",
+      "native_command_verdict": "APPROVE applicability; actual native and blind result pending ROOT",
+      "proposal_path": "C:\\CodexTemp\\tetherbound-proof\\native-e-7227bf2193-perches-actor-r1\\command-proposal.json",
+      "proposal_sha256": "ab3df84b951c0bf412f42226c7f94684d984ccce1aabf2f98b54f340f99c9af9",
+      "proposal_status": "PREPARED_NOT_LAUNCHED",
+      "static_argv": [
+        "--headless",
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--script",
+        "res://tools/capture_cloudreach_frame_matrix.gd",
+        "--check-only"
+      ],
+      "native_argv": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/capture_cloudreach_frame_matrix.gd",
+        "--",
+        "--only=19,20",
+        "--preset=High",
+        "--source-commit=7227bf21934ff9c356baf5bbce2051fa976eaa15",
+        "--output=res://.tmp/e-perches-actor-7227-day-r1"
+      ],
+      "producer_blob": "2e6a155e8a2203099d60fa253a6d5157b1babd31",
+      "reused_source_binding": "Existing producer exact byte-identical to accepted6a tool; integrated7227 four source/test blobs, cadence assertions and mounted18-check artifact already independently verified. No repeated source or proof audit.",
+      "selected_scope": "Exactly original rows19 perch-landing and20 perch-vista. No Gate rows, new stand, camera, fixture, roster, scale or follower hide. Original floor/crown/debug travel/High graphics/raster/image/read-only actor-cache-Model-pocket and exact persisted receipt guards retained.",
+      "required_conditions": [
+        "ROOT clean exact7227 frozen checkout, fresh import/user/output, successful pinned static check, source-before/after and original start/terminal receipts.",
+        "Actual two original1920x1080PNG/record pairs, renderer/preset/source, retained camera/stand/time controls, finite read-only actor and station records, hashes/CRC and exact final persisted receipt must be verified from completed output.",
+        "Legacy row weather is not explicitly pinned/recorded: preserve original policy without claiming matched weather."
+      ],
+      "limits": [
+        "No execution/import/static/native result follows from applicability approval.",
+        "Staged five-creature/debug travel fixtures remain disclosed; no earned route, ownership, contact/spacing/silhouette cause or improvement, device/performance/save/co-op/fullmatrix/wholecriterion/fullbar/READY claim.",
+        "Existing unit two detached-fixture engine errors and mounted smoke two fail-closed wild-site warnings remain preserved; no passing batch rerun."
+      ]
+    }
+  ]
 }
