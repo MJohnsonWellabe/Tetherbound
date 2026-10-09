@@ -1845,6 +1845,22 @@ func _ambient_generation(body: Node3D) -> int:
 		int(body.get_meta("foundation_alpha_generation", 0))))
 
 
+## A guest's ordinary population is a presentation of host-issued bodies.
+## A visible local spawn without that binding cannot make a usable offer.
+## Authored bodies outside the ambient registry keep their existing routes.
+func _ambient_guest_offerable(body: Node3D, scope: Dictionary) -> bool:
+	if scope.is_empty(): return true
+	var source_id := str(body.get_meta(&"ambient_source_id", ""))
+	if source_id.is_empty(): return true
+	var packet: Dictionary = _ambient_guest_sources.get(source_id, {})
+	var card: RefCounted = body.get("instance")
+	return packet.get("scope") == scope and packet.get("visible") == true \
+		and packet.get("token") is String and packet.token.length() == 32 \
+		and packet.get("card") is Dictionary and card != null \
+		and body.get_meta(&"ambient_host_mirror", false) == true \
+		and packet.card.get("uid") == card.get("uid")
+
+
 func _tick_ambient_wild_sources(delta: float) -> void:
 	if not _ambient_pending_token.is_empty() and Time.get_ticks_msec() >= _ambient_pending_deadline:
 		_ambient_guest_receipt_observation = {"outcome": "expired_without_receipt", "token": _ambient_pending_token,
@@ -6784,10 +6800,12 @@ func _engageable() -> Node3D:
 	if bool(_manager.call("is_fighting")) or trainer_battle_active():
 		return null
 
+	var guest_scope := _ambient_scope() if _is_multi_peer() and not _is_host() else {}
 	var candidates: Array = []
 	for wild in _wild_creatures:
 		if not is_instance_valid(wild) or not wild.visible or not bool(wild.call("is_alive")):
 			continue
+		if not _ambient_guest_offerable(wild, guest_scope): continue
 		candidates.append({
 			"body": wild,
 			"distance": _player.global_position.distance_to(wild.global_position),
@@ -7615,9 +7633,11 @@ func shared_opponent_presentation() -> Dictionary:
 func nearest_live_wild() -> Node3D:
 	var best: Node3D = null
 	var best_distance := INF
+	var guest_scope := _ambient_scope() if _is_multi_peer() and not _is_host() else {}
 	for wild: Node3D in _wild_creatures:
 		if not is_instance_valid(wild) or not wild.visible or not bool(wild.call("is_alive")):
 			continue
+		if not _ambient_guest_offerable(wild, guest_scope): continue
 		var distance: float = _player.global_position.distance_to(wild.global_position)
 		if distance < best_distance:
 			best_distance = distance
