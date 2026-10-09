@@ -31,9 +31,11 @@ const LOW_PROP_RISE := 0.05
 const MAX_DEFERRAL_FRAMES := 30
 
 ## A physics_frame signal resumes BEFORE NativeTick and the controller. A
-## submitted step is finished only by its corresponding actual callback epoch.
+## submitted attempt is finished only by its corresponding actual callback epoch.
 ## This keeps nested coroutine resumes from spending walking frames without
 ## crossing the real pre/controller/post movement callbacks.
+## Completion spends one attempt, including a deferred/refused pre check; only
+## the unchanged successful production post check can set _checked_start.
 class StepEpoch extends RefCounted:
 	var issued := 0
 	var completed := 0
@@ -914,6 +916,11 @@ func _native_tick_impl(_delta: float) -> void:
 			_owns_input = false
 		return
 	_requested = false
+	if not _step_epoch.begin(_requested_step, Engine.get_physics_frames()):
+		_stop_geometry("native walking request/callback epoch diverged")
+		return
+	_requested_step = 0
+	_checked_start = false
 	_requests += 1
 	_queries = 0
 	_deadline = Time.get_ticks_usec() + FRAME_QUERY_US
@@ -931,10 +938,6 @@ func _native_tick_impl(_delta: float) -> void:
 	if not _body.is_on_floor():
 		_stop_geometry("trainer not grounded; aerial/stream/recovery case is incomplete")
 		return
-	if not _step_epoch.begin(_requested_step, Engine.get_physics_frames()):
-		_stop_geometry("native walking request/callback epoch diverged")
-		return
-	_requested_step = 0
 	_checked_start = not _production_steering
 	if _production_steering:
 		if not _production_contract():
@@ -1428,10 +1431,10 @@ class ProductionObserve extends Node:
 		if nav == null:
 			queue_free()
 		else:
-			var pending := bool(nav.get("_production_pending"))
 			nav.call("_production_observe")
-			if pending:
-				nav.call("_finish_step_epoch")
+			# A deferred/refused pre check still spends its original one-frame
+			# attempt. It never earns _checked_start or an arrival witness.
+			nav.call("_finish_step_epoch")
 
 var _production_steering := false
 var _observer: ProductionObserve
