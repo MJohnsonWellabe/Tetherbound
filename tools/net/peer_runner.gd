@@ -5009,6 +5009,37 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 	var creature: RefCounted = SPECIES_DATA.spawn(species)
 	if creature == null:
 		return {"verdict": "ERROR", "detail": "species.json has no '%s'" % species}
+	# Optional existing F23 prior-history fixture, before transport admission.
+	# Scope: disclosed character setup only; not earned mastery or a boundary.
+	# Defaults, five-owned cap and live HP/meter/authority remain unchanged.
+	if args.get("f25_prior_mastery") == true:
+		var session := _session()
+		var manager := _combat_manager()
+		if session == null or bool(session.call("is_active")) \
+			or (manager != null and bool(manager.call("is_fighting"))):
+			return {"verdict": "ERROR", "detail": "Prior mastery fixture must precede admission/combat"}
+		var mastery := preload("res://scripts/creatures/move_mastery.gd")
+		var seeded := {}
+		for slot: String in ["quick", "charged", "utility", "ultimate"]:
+			var move_id := str(creature.get("move_" + slot))
+			if move_id.is_empty() or not (creature.get("known_moves") as Array).has(move_id):
+				return {"verdict": "ERROR", "detail": "Prior fixture requires an actually known equipped " + slot}
+			if seeded.has(move_id): continue
+			for index: int in 300:
+				var staged := mastery.stage_landed_use(creature, {
+					"action_id": "fixture-prior:%s:%d" % [move_id, index],
+					"move_id": move_id, "attacker_uid": creature.get("uid"),
+					"target_uid": "fixture-prior-opponent", "target_hp_before": 1.0,
+					"applied_damage": 1.0})
+				if staged.get("ok") != true:
+					return {"verdict": "ERROR", "detail": "Canonical prior mastery refused " + move_id}
+				creature.set("move_mastery_uses", staged.uses)
+				creature.set("move_mastery_receipts", staged.receipts)
+			seeded[move_id] = true
+		if not mastery.valid_document(creature.get("known_moves"), creature.get("move_mastery_uses"),
+			creature.get("move_mastery_receipts"), creature.get("known_moves")):
+			return {"verdict": "ERROR", "detail": "Complete canonical prior mastery document required"}
+		print("F25 SETUP: 300 prior uses per known equipped move via existing F23 history fixture; not earned")
 	var cfg: Dictionary = NET_PROGRESSION.config()
 	var level := int(args.get("level",
 		int((cfg.get("level", {}) as Dictionary).get("starter_level", 3))))

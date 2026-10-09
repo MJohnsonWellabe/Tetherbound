@@ -362,7 +362,8 @@ func _fresh_accepted_receipt(state: Dictionary, encounter_id: String, peer_id: i
 func _run() -> void:
 	# Optional F25 functional prerequisite. Four owned participants plus the
 	# live opponent; this does not certify the separate native cap/p95 guard.
-	var four_owned := OS.get_cmdline_user_args().has("--four-owned-fight")
+	var prior_rank5 := OS.get_cmdline_user_args().has("--four-owned-rank5")
+	var four_owned := OS.get_cmdline_user_args().has("--four-owned-fight") or prior_rank5
 	var peers := 4 if four_owned else 2
 	if not await launch(peers, "world"):
 		quit(await finish())
@@ -386,7 +387,10 @@ func _run() -> void:
 	# the host admits a guest's party from its join snapshot, and an unowned
 	# fallback body is refused by the owned-loadout move admission.
 	for i in peers:
-		var granted: Dictionary = await step(i, "party_grant", {"species": "terrapup"})
+		var grant := {"species": "terrapup"}
+		# Reuse F23's disclosed prior history before host/join; no live grants.
+		if prior_rank5: grant["f25_prior_mastery"] = true
+		var granted: Dictionary = await step(i, "party_grant", grant)
 		check(str(granted.get("verdict", "")) == "PASS",
 			"peer %d owns a creature before the session (%s)" % [i, str(granted.get("detail", ""))])
 
