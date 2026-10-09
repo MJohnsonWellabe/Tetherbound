@@ -108,5 +108,78 @@
     "No engine, tests, import, GPU, dispatch or source edits performed by reviewer.",
     "No native runtime, blind visual, whole F40/F08, READY, campaign or performance approval.",
     "Staged writer is a single-writer recoverable transaction, not an operating-system power-loss guarantee."
-  ]
+  ],
+  "correction_reviews": [
+    {
+      "reviewed_at_utc": "2026-10-09T00:32:34.843785+00:00",
+      "source_commit": "f03db2ec9e04bef600ade0cf9feff8a53e223271",
+      "diff_base": "42f6df95781a19991c5f7a888bc159b31f45a1b7",
+      "scope": "Only the newly corrected mkdir failure branch and exact corrected-source High/Medium command binding; original PNG/receipt/fixture findings and approvals reused without repeat audit.",
+      "source_verdict": "APPROVE",
+      "exact_capture_command_verdict": "APPROVE",
+      "verified_delta": "The only implementation change replaces the mkdir _require call with a direct non-OK branch setting failed=true, push_error, quit(1), return. It never enters inherited _require/_fail/_log/events.json writer on the unavailable-directory path. Successful directory creation proceeds unchanged.",
+      "finding_disposition": {
+        "directory_failure_calls_unavailable_events_writer": "RESOLVED_AT_F03"
+      },
+      "reviewed_blobs": {
+        "tools/phase2_capture_cloudreach_live_fight.gd": "391b43781b5efff5be3e11681616de6b93f722a2",
+        "tools/capture_cloudreach_f40_fight.gd": "18ac77a796e682b8ebeafe77fa8a6b2f0a889edd",
+        "tools/capture_manifest_writer.gd": "8d4df196957c20b645845bcdd3c8382b0c559876",
+        "tests/test_capture_manifest_writer.gd": "ee752d5030ce7a5d87c9fb7b75c353721797e098"
+      },
+      "diff_scope": "Full Git diff has the single implementation path plus the historical source-review report; no other implementation changes.",
+      "commands": {
+        "High": [
+          "Godot",
+          "--path",
+          "<fresh clean ROOT worktree pinned to f03db2ec9e04bef600ade0cf9feff8a53e223271>",
+          "--rendering-method",
+          "forward_plus",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "res://tools/capture_cloudreach_f40_fight.gd",
+          "--",
+          "--preset=High",
+          "--source-commit=f03db2ec9e04bef600ade0cf9feff8a53e223271",
+          "--seed=2042",
+          "--output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-f03-r1"
+        ],
+        "Medium": [
+          "Godot",
+          "--path",
+          "<fresh clean ROOT worktree pinned to f03db2ec9e04bef600ade0cf9feff8a53e223271>",
+          "--rendering-method",
+          "forward_plus",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "res://tools/capture_cloudreach_f40_fight.gd",
+          "--",
+          "--preset=Medium",
+          "--source-commit=f03db2ec9e04bef600ade0cf9feff8a53e223271",
+          "--seed=2042",
+          "--output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-f03-r1"
+        ]
+      },
+      "reused_applicability": "Named High/Medium forward_plus1920 bootstrap/source/fresh-output checks, live captain interaction/input pilot, legal five current-band creatures, persistence/raster/readback/final failure gates retain the prior bounded review. No candidate flags or post-pin changes are proposed.",
+      "historical_preservation": "Original 42f6 REQUEST_CHANGES and its superseded preliminary approval remain historical in this report; final corrected-source approval is this f03 entry.",
+      "proof_limits": [
+        "SOURCE/COMMAND approval only. No engine, headless tests, import, native or dispatch by reviewer.",
+        "Run37864887011 is reported completed but its artifact has not been independently verified in this correction entry; no test PASS is claimed.",
+        "Writer/test blobs are unchanged so a later genuine writer artifact may be reused. Tidewake lifecycle test does not prove actual Cloudreach PNG or exit paths.",
+        "Actual native High/Medium persisted image/manifest/source/renderer/terminal verification and original independent visual/criterion gates remain pending.",
+        "Existing in-memory summit flags/five current-band party fixture is not earned campaign, co-op, balance, save, device or performance proof."
+      ],
+      "pending_gates": [
+        "Independent completed writer artifact verification as applicable",
+        "ROOT actual High/Medium fight capture persistence and terminal receipts",
+        "Original independent whole-cluster visual and criterion-specific acceptance"
+      ],
+      "matrix_approval": "Existing exact eda16a4ff7853ac8faac1583ab4d5c4a4c01e1ae full384 High/Medium matrix command approvals remain unchanged; this is not a matrix repin."
+    }
+  ],
+  "current_final_source_commit": "f03db2ec9e04bef600ade0cf9feff8a53e223271",
+  "current_final_source_verdict": "APPROVE",
+  "current_final_exact_capture_command_verdict": "APPROVE"
 }
