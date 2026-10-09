@@ -52,6 +52,8 @@ var _colour: Color = Color("#ffd479")
 var _radius: float = 0.6
 var _height: float = 1.0
 var _life: float = 0.0
+var _mote_cos: PackedFloat64Array = PackedFloat64Array()
+var _mote_sin: PackedFloat64Array = PackedFloat64Array()
 
 var _mesh: ImmediateMesh = null
 var _instance: MeshInstance3D = null
@@ -71,6 +73,14 @@ static func attach(body: Node3D, radius: float, height: float, colour: Color) ->
 
 
 func _ready() -> void:
+	# Preserve double scalars and the exact closing TAU endpoint before vector multiplication.
+	_mote_cos.resize(MOTE_SEGMENTS + 1)
+	_mote_sin.resize(MOTE_SEGMENTS + 1)
+	for i in range(MOTE_SEGMENTS + 1):
+		var angle: float = TAU * float(i) / float(MOTE_SEGMENTS)
+		_mote_cos[i] = cos(angle)
+		_mote_sin[i] = sin(angle)
+
 	_mesh = ImmediateMesh.new()
 	_instance = MeshInstance3D.new()
 	_instance.mesh = _mesh
@@ -142,11 +152,9 @@ func _physics_process(delta: float) -> void:
 func _disc(centre: Vector3, right: Vector3, up: Vector3, colour: Color) -> void:
 	var rim := Color(colour.r, colour.g, colour.b, 0.0)
 	for i in MOTE_SEGMENTS:
-		var a0: float = TAU * float(i) / float(MOTE_SEGMENTS)
-		var a1: float = TAU * float(i + 1) / float(MOTE_SEGMENTS)
 		_mesh.surface_set_color(colour)
 		_mesh.surface_add_vertex(centre)
 		_mesh.surface_set_color(rim)
-		_mesh.surface_add_vertex(centre + right * cos(a0) + up * sin(a0))
+		_mesh.surface_add_vertex(centre + right * _mote_cos[i] + up * _mote_sin[i])
 		_mesh.surface_set_color(rim)
-		_mesh.surface_add_vertex(centre + right * cos(a1) + up * sin(a1))
+		_mesh.surface_add_vertex(centre + right * _mote_cos[i + 1] + up * _mote_sin[i + 1])
