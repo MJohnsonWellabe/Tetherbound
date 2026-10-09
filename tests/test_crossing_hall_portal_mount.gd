@@ -33,6 +33,49 @@ func test_late_admitted_session_mounts_original_canonical_input_once_per_actual_
 	session.set("enabled", false)
 	hall.call("_mount_portal_actions", session)
 	assert_eq(slot.get_child_count(), 1, "gate changes cannot replace a pending input carrier")
+	# The same Hall presentation keeps reserved stone closures separate from
+	# canonical portal inputs and host-owned unlock/stirred state.
+	var visual: Node3D = HALL.new()
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
+	visual.set("_config", config)
+	assert_false(config.arch_sealed_infill.enabled, "unjudged infill ships off")
+	for index: int in [1, 4, 5, 6, 7]:
+		visual.call("_build_arch", config.arches[index])
+		var arch: Node3D = visual.call("arch", str(config.arches[index].id))
+		assert_false(arch.has_node(^"SealedStoneInfill"))
+	config.arch_sealed_infill.enabled = true
+	for index: int in [1, 4, 5, 6, 7]:
+		var arch: Node3D = visual.call("arch", str(config.arches[index].id))
+		visual.call("_build_arch_sealed_infill", arch)
+		if index == 1:
+			assert_false(arch.has_node(^"SealedStoneInfill"), "locked live road keeps original surface")
+			continue
+		var infill := arch.get_node_or_null(^"SealedStoneInfill") as Node3D
+		assert_true(infill != null)
+		if infill != null:
+			assert_eq(infill.position, Vector3(0, .08, -.10))
+			assert_eq(infill.scale, Vector3(.725, .76856847, 1))
+		var count := arch.get_child_count()
+		visual.call("_build_arch_sealed_infill", arch)
+		assert_eq(arch.get_child_count(), count, "repeat build cannot duplicate closure")
+	visual.call("apply_display", {})
+	for index: int in [4, 5, 6, 7]:
+		var arch: Node3D = visual.call("arch", str(config.arches[index].id))
+		assert_eq(arch.get_meta("arch_state"), "sealed")
+		assert_true((arch.get_node(^"SealedStoneInfill") as Node3D).visible)
+		assert_false((arch.get_node(^"PortalSurface") as MeshInstance3D).visible)
+	var stirred := {"fifth_arch_stirred": true, "portal_unlocks": ["tidewake"]}
+	var before := stirred.duplicate(true)
+	visual.call("apply_display", stirred)
+	assert_eq(stirred, before, "presentation cannot mutate host gate state")
+	var fifth: Node3D = visual.call("arch", "biome5")
+	assert_eq(fifth.get_meta("arch_state"), "stirred")
+	assert_false((fifth.get_node(^"SealedStoneInfill") as Node3D).visible)
+	assert_true((fifth.get_node(^"PortalSurface") as MeshInstance3D).visible)
+	assert_eq((visual.call("arch", "tidewake") as Node3D).get_meta("arch_state"), "open")
+	visual.call("apply_display", {})
+	assert_true((fifth.get_node(^"SealedStoneInfill") as Node3D).visible, "restored host view re-seals reserved road")
+	visual.free()
 	hall.free()
 	session.free()
 

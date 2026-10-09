@@ -5,6 +5,7 @@ extends Node3D
 const ORDER := preload("res://scripts/data/biome_order.gd")
 const CONFIG_PATH := "res://data/config/crossing_hall.json"
 const ARCH_MODEL := "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf"
+const SEALED_INFILL_MODEL := "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf"
 const STAND_MODEL := "res://assets/props/quaternius_fantasy/BookStand.gltf"
 const OPEN_MEMBRANE_EMISSION := .25
 const RELIC_POWER_PANEL := preload("res://scripts/ui/relic_power_panel.gd")
@@ -132,7 +133,40 @@ func _build_arch(entry: Dictionary) -> void:
 	membrane.material_override = material
 	slot.add_child(membrane)
 	_build_arch_surface_depth(slot, membrane)
+	_build_arch_sealed_infill(slot)
 	_arches[str(entry.id)] = slot
+
+
+## Reserved roads read as masonry closures, not another flat dark portal.
+## Host display still decides when the fifth arch stirs; this owns no gate.
+func _build_arch_sealed_infill(slot: Node3D) -> void:
+	var cfg: Dictionary = _config.get("arch_sealed_infill", {})
+	var args := OS.get_cmdline_user_args()
+	var biome := str(slot.get_meta("biome", ""))
+	if not ORDER.ids(true).has(biome) or ORDER.ids(false).has(biome) or \
+			args.has("--hall-sealed-infill-baseline") or not (
+			bool(cfg.get("enabled", false)) or args.has("--hall-sealed-infill-candidate")) or \
+			slot.has_node(^"SealedStoneInfill"):
+		return
+	var infill := _add_model(slot, SEALED_INFILL_MODEL)
+	if infill == null:
+		return
+	infill.name = "SealedStoneInfill"
+	infill.position = _position(cfg.get("at", [0, .08, -.10]))
+	infill.scale = _position(cfg.get("scale", [.725, .76856847, 1]))
+	infill.visible = false
+
+
+func _refresh_arch_sealed_infill(arch: Node3D) -> void:
+	var infill := arch.get_node_or_null(^"SealedStoneInfill") as Node3D
+	if infill == null:
+		return
+	var sealed := str(arch.get_meta("arch_state", "sealed")) == "sealed"
+	infill.visible = sealed
+	var depth := arch.get_node_or_null(^"PortalDepthSurface") as MeshInstance3D
+	(arch.get_node(^"PortalSurface") as MeshInstance3D).visible = not sealed and depth == null
+	if depth != null:
+		depth.visible = not sealed
 
 
 func _build_arch_surface_depth(slot: Node3D, baseline: MeshInstance3D) -> void:
@@ -592,6 +626,7 @@ func apply_display(display: Dictionary) -> void:
 		material.emission = material.albedo_color
 		material.emission_energy_multiplier = OPEN_MEMBRANE_EMISSION if state == "open" else .1
 		_refresh_arch_surface_depth(arch)
+		_refresh_arch_sealed_infill(arch)
 		var state_sign := arch.get_node("StateSign") as Label3D
 		state_sign.text = "Home arch" if id == "home" else state.capitalize()
 		state_sign.visible = state_sign.text != (arch.get_node("BiomeSign") as Label3D).text

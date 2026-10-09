@@ -2,6 +2,13 @@
   "schema_version": 1,
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
+  "arch_sealed_infill": {
+    "enabled": false,
+    "at": [0, 0.08, -0.10],
+    "scale": [0.725, 0.76856847, 1],
+    "scope": "Peer-local reserved-arch presentation on all presets, shipping OFF pending original native/blind judgment. --hall-sealed-infill-candidate opts in; --hall-sealed-infill-baseline wins. Only biome5-8 receive installed stone infill; existing host arch_state controls visibility. Sealed hides its original flat surface/depth curtain; stirred fifth arch restores its existing membrane. No new mesh asset, state, collision, input, approach, unlock, transaction or durable schema.",
+    "provenance": "Original Meadows/Cloudreach HallBarA/B BLOCK names flat dark portal infills; ART_DIRECTION3.2 requires sealed/locked/open/stirred to read without text. Installed Hall-family Wall_UnevenBrick_Straight POSITION bounds X[-1,1],Y[0,3.12268877]; scaled to existing1.45x2.4m portal rectangle, behind original arch face. Actual seating/readability/lighting remains native proof; no improvement assumed."
+  },
   "relic_focus": {
     "enabled": false,
     "energy": 0.75,
