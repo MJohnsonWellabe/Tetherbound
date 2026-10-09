@@ -178,7 +178,7 @@ func load_recipes() -> bool:
 ## is confined to the existing solo capture; ordinary network play cannot opt
 ## into a different physical world with a peer-local command-line flag.
 static func hall_doorway_recipe(source: Dictionary, cfg: Dictionary, args: PackedStringArray, capture_scope: bool) -> Dictionary:
-	if args.has("--hall-doorway-baseline") or not (bool(cfg.get("enabled", false)) or (
+	if (capture_scope and args.has("--hall-doorway-baseline")) or not (bool(cfg.get("enabled", false)) or (
 			capture_scope and args.has("--hall-doorway-candidate") and
 			args.has("--hall-stills-only") and args.has("--hall-relic-hang-witness"))):
 		return source

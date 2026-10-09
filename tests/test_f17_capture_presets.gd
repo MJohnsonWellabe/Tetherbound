@@ -38,6 +38,7 @@ func test_native_capture_preset_branches_return_typed_strings() -> void:
 	var prefabs := preload("res://scripts/world/building_prefabs.gd")
 	var recipes: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/building_prefabs.json"))
 	var shell: Dictionary = recipes.prefabs.crossing_hall_shell
+	var shell_before := shell.duplicate(true)
 	var candidate_args := PackedStringArray(["--hall-doorway-candidate", "--hall-stills-only", "--hall-relic-hang-witness"])
 	assert_false(hall_config.shrine_doorway.enabled, "unjudged physical candidate remains off")
 	assert_eq(prefabs.hall_doorway_recipe(shell, hall_config.shrine_doorway, PackedStringArray(), false), shell)
@@ -45,6 +46,9 @@ func test_native_capture_preset_branches_return_typed_strings() -> void:
 	var baseline_args := candidate_args.duplicate()
 	baseline_args.append("--hall-doorway-baseline")
 	assert_eq(prefabs.hall_doorway_recipe(shell, hall_config.shrine_doorway, baseline_args, true), shell)
+	var shared_cfg: Dictionary = hall_config.shrine_doorway.duplicate(true)
+	shared_cfg.enabled = true
+	assert_ne(prefabs.hall_doorway_recipe(shell, shared_cfg, baseline_args, false), shell, "ordinary peers cannot disable shared geometry with a local baseline flag")
 	var raised: Dictionary = prefabs.hall_doorway_recipe(shell, hall_config.shrine_doorway, candidate_args, true)
 	assert_ne(raised, shell)
 	var changed_modules := 0
@@ -64,7 +68,7 @@ func test_native_capture_preset_branches_return_typed_strings() -> void:
 		assert_almost_eq(float(raised.colliders[index].at[1]) - float(raised.colliders[index].size[1]) * 0.5, 5.2, 0.00001)
 		assert_eq(raised.colliders[index].size[2], 4)
 	assert_eq(changed_boxes, 1)
-	assert_eq(shell, recipes.prefabs.crossing_hall_shell, "candidate does not mutate source recipe")
+	assert_eq(shell, shell_before, "candidate does not mutate source recipe")
 	for row: Dictionary in hall_config.pedestals.slice(0, 4):
 		var fraction := (doorway.x - view.x) / (float(row.at[0]) - view.x)
 		var crossing_z := view.z + (float(row.at[2]) - view.z) * fraction
