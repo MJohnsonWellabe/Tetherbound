@@ -1,0 +1,33 @@
+{
+  "criterion": "F38#3/#5 visual-cluster candidate; OPEN",
+  "source": "e8d72dbeed1df68faee3a16c26193bb7fc8906d9",
+  "run": 37868504336,
+  "artifact": 11588903574,
+  "artifact_zip_sha256": "cd344aa70a7315a254d61cbe556512d43353ce1d80bf535c79e1da8eda9cf79e",
+  "script": "tests/run_tests.gd",
+  "args": "--only=test_grass_field.gd,test_grass_field_profiles.gd",
+  "mode": "headless",
+  "audio": "Dummy",
+  "tests": 22,
+  "assertions": 87833,
+  "failed": 0,
+  "exit": 0,
+  "seconds": 8,
+  "guarded_paths": [
+    "suppression ownership",
+    "profile independence",
+    "Water texture masks and physical clearances",
+    "field shader resource and material construction",
+    "existing authored/lattice/mesh constraints"
+  ],
+  "shipping_flag": false,
+  "limits": [
+    "no native shader compilation claim",
+    "candidateON production path unproven",
+    "no GPU cost/frame time proof",
+    "no new visual or blind acceptance",
+    "no whole closure"
+  ],
+  "original_review": "same f42_visual_review source and artifact review pending; no replacement",
+  "whole_criterion_closed": false
+}
