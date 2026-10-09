@@ -85,7 +85,7 @@ func _run() -> void:
 		_check(data == expected, "exact native shape data including dimensions/heights/bounds")
 		_check(PhysicsServer3D.body_get_shape_transform(body, 0) == PhysicsServer3D.body_get_shape_transform(_reference, index), "exact native shape transform")
 		_check(PhysicsServer3D.body_get_collision_layer(body) == 2 and PhysicsServer3D.body_get_collision_mask(body) == 5, "layer/mask preserved")
-		_check(PhysicsServer3D.body_get_collision_priority(body) == 1.7, "priority preserved")
+		_check(PhysicsServer3D.body_get_collision_priority(body) == PhysicsServer3D.body_get_collision_priority(_reference), "priority preserved")
 		_check(is_equal_approx(PhysicsServer3D.body_get_param(body, PhysicsServer3D.BODY_PARAM_FRICTION), -0.6), "rough friction preserved")
 		_check(is_equal_approx(PhysicsServer3D.body_get_param(body, PhysicsServer3D.BODY_PARAM_BOUNCE), -0.2), "absorbing bounce preserved")
 	await physics_frame
