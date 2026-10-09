@@ -1,0 +1,56 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+F26 EXPORT ENTRY: existing production route selected
+CATALOGUE BOOT stormwood load begin t=4861
+CATALOGUE BOOT stormwood instantiate begin t=7631
+CATALOGUE BOOT stormwood attach begin t=7633
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+CATALOGUE BOOT stormwood attached t=7757
+STORMWOOD BUILD shell=false elapsed_ms=223 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=493 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=777 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=787 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=794 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=799 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=803 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=806 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=813 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=813 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=1157 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=1177 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=1178 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 43161 placements, 0 skipped]=133 reorder[8 layers]=27
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+WARNING: TwistedTree_2.gltf is in both 'storm_canopy' and 'giant_canopy'; only one layer's retint can apply
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+WARNING: TwistedTree_4.gltf is in both 'storm_canopy' and 'giant_canopy'; only one layer's retint can apply
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+[vegetation] boot phases (ms): placements=177 mark_harvestable=23 group_by_model=35 register_mesh_assets=23 build_batches_total=1355 (of which harvest_points[15940 nodes]=1159, initial_collision_stream[16002 solid]=47) update_mmis=384
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(8881992368214) region_map=1024 entries
+[village] placed 15 structures; static batch folded 402 module meshes in 260 ms
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+WARNING: wild cluster 1365603512 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+WARNING: wild cluster 1365603540 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+STORMWOOD ENCOUNTERS READY wild=808
+ERROR: Condition "br != variant_size" is true. Returning: false
+   at: _load_from_cache (drivers/gles3/shader_gles3.cpp:592)
+ERROR: Condition "br != variant_size" is true. Returning: false
+   at: _load_from_cache (drivers/gles3/shader_gles3.cpp:592)

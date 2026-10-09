@@ -1,0 +1,563 @@
+{
+  "schema": "lane-e-quiet-correction-independent-review/v1",
+  "reviewed_utc": "2026-10-09T21:56:39.8111574Z",
+  "source": "785e6f612e28a77075dd66684047628c2affbb13",
+  "main": "549822b8da400b3eb9b23fe0feaca3c5f98bec97",
+  "verdict": "APPROVE CORRECTED RELEASE CONTENT/RECEIPTS ONLY",
+  "cases": [
+    {
+      "case": "Low-r1",
+      "verdict": "PASS CONTENT/RECEIPT",
+      "checks": {
+        "complete": true,
+        "exact_source": true,
+        "selected_preset": true,
+        "actual_renderer": true,
+        "device_prefs": true,
+        "raster1080": true,
+        "debugfalse": true,
+        "warmup15s": true,
+        "timed60s": true,
+        "uncapped": true,
+        "finite_samples": true,
+        "physical_two_waypoints": true,
+        "unchanged_route": true,
+        "actual_export_entry": true,
+        "terrain108": true,
+        "scatter108_43161": true,
+        "raw_errors_empty": true,
+        "images_decode": true
+      },
+      "launch": {
+        "started_utc": "2026-10-09T21:39:02.9686275Z",
+        "pid": 6192,
+        "source": "785e6f612e28a77075dd66684047628c2affbb13"
+      },
+      "launch_manifest": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r1-launch.json",
+      "route": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r1\\route.json",
+      "route_sha256": "7382bbf05b7832a40892aefdd18e83b95f9716a66d111c016bef08239b177426",
+      "raw_log": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r1-engine.log",
+      "log_sha256": "ef0c38472ebd89fa98a0035b6ad9381035772d9d417b093c8a39c29eb27daf40",
+      "raw_errors": [],
+      "warnings": 6,
+      "warmup_ms": 15007.054,
+      "elapsed_ms": 155541.081,
+      "sample_count": 9604,
+      "sum_sample_wall_ms": 155528.9020000003,
+      "elapsed_minus_sum_wall_ms": 12.178999999712687,
+      "mean_times_ms": {
+        "wall_ms": 16.194179716784642,
+        "process_ms": 34.816562994587294,
+        "physics_ms": 3.401372448979553,
+        "render_cpu_ms": 5.742147950468735,
+        "render_setup_cpu_ms": 0.45402728029987527,
+        "render_gpu_ms": 14.06125801476475
+      },
+      "mean_fps": 61.75058060912703,
+      "p95_linear_ms": 23.482150000000008,
+      "p99_linear_ms": 28.53284999999987,
+      "p95_nearest_rank_ms": 23.485,
+      "p99_nearest_rank_ms": 28.539,
+      "owner_stat_comparison": {
+        "wall_ms": {
+          "independent": 16.194179716784642,
+          "owner": 16.194179716784674,
+          "absolute_delta": 3.197442310920451E-14,
+          "agrees": true
+        },
+        "process_ms": {
+          "independent": 34.816562994587294,
+          "owner": 34.81656299458559,
+          "absolute_delta": 1.7053025658242404E-12,
+          "agrees": true
+        },
+        "physics_ms": {
+          "independent": 3.401372448979553,
+          "owner": 3.4013724489795916,
+          "absolute_delta": 3.863576125695545E-14,
+          "agrees": true
+        },
+        "render_cpu_ms": {
+          "independent": 5.742147950468735,
+          "owner": 5.742147950468735,
+          "absolute_delta": 0.0,
+          "agrees": true
+        },
+        "render_setup_cpu_ms": {
+          "independent": 0.45402728029987527,
+          "owner": 0.45402728029987505,
+          "absolute_delta": 2.220446049250313E-16,
+          "agrees": true
+        },
+        "render_gpu_ms": {
+          "independent": 14.06125801476475,
+          "owner": 14.06125801476475,
+          "absolute_delta": 0.0,
+          "agrees": true
+        },
+        "mean_fps": {
+          "independent": 61.75058060912703,
+          "owner": 61.75058060912691,
+          "absolute_delta": 1.2079226507921703E-13,
+          "agrees": true
+        },
+        "p95_ms": {
+          "independent": 23.482150000000008,
+          "owner": 23.482150000000008,
+          "absolute_delta": 0.0,
+          "agrees": true
+        },
+        "p99_ms": {
+          "independent": 28.53284999999987,
+          "owner": 28.53284999999987,
+          "absolute_delta": 0.0,
+          "agrees": true
+        }
+      },
+      "cpu_monitor_fields_overlap_do_not_sum": true,
+      "quiet_flag_reported": true,
+      "environment_start": {
+        "hour": 8.62435107999976,
+        "position": [
+          -300.0,
+          32.2725982666016,
+          180.0
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 15.6087770000002,
+          "phase": "calm",
+          "remaining": 308.391223
+        },
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 14.6980000000001,
+        "position": [
+          -649.268249511719,
+          20.88232421875,
+          829.067077636719
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 167.449999999998,
+          "phase": "calm",
+          "remaining": 156.550000000002
+        },
+        "time_of_day": "day"
+      },
+      "screenshots": [
+        {
+          "path": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r1\\start.png",
+          "bytes": 3251281,
+          "sha256": "586f116e324efe353c24b9aeb81d366754db5a8a7816051f85a82a6747496622",
+          "width": 1920,
+          "height": 1080,
+          "full_image_decode_pass": true,
+          "written_utc": "2026-10-09T21:41:12.6647739Z",
+          "independently_viewed": true,
+          "observation": "Production terrain/road, trunks/canopies, grass/flowers/shrubs, rod-line props, player and HUD are present."
+        },
+        {
+          "path": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r1\\end.png",
+          "bytes": 3355963,
+          "sha256": "fca13b6553ec90f71b6c71c66e4f789015d7d3142729ded5d8bd1883bec1c6de",
+          "width": 1920,
+          "height": 1080,
+          "full_image_decode_pass": true,
+          "written_utc": "2026-10-09T21:43:49.0098795Z",
+          "independently_viewed": true,
+          "observation": "Production terrain/road, trunks/canopies, grass/flowers/shrubs, rod-line props, player and HUD are present."
+        }
+      ],
+      "raw_scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "userdata_root": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\userdata\\Low-r1\\roaming"
+    },
+    {
+      "case": "Medium-r3",
+      "verdict": "PASS CONTENT/RECEIPT",
+      "checks": {
+        "complete": true,
+        "exact_source": true,
+        "selected_preset": true,
+        "actual_renderer": true,
+        "device_prefs": true,
+        "raster1080": true,
+        "debugfalse": true,
+        "warmup15s": true,
+        "timed60s": true,
+        "uncapped": true,
+        "finite_samples": true,
+        "physical_two_waypoints": true,
+        "unchanged_route": true,
+        "actual_export_entry": true,
+        "terrain108": true,
+        "scatter108_43161": true,
+        "raw_errors_empty": true,
+        "images_decode": true
+      },
+      "launch": {
+        "source": "785e6f612e28a77075dd66684047628c2affbb13",
+        "pid": 35224,
+        "started_utc": "2026-10-09T21:46:16.3041919Z"
+      },
+      "launch_manifest": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Medium-r3-launch.json",
+      "route": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Medium-r3\\route.json",
+      "route_sha256": "01ba036210e7c77dcdbc4125e4e791d8105336fef557b8d852d5a3bde70e9379",
+      "raw_log": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Medium-r3-engine.log",
+      "log_sha256": "f5795ee7885092164c35d168805849cb43007a5685f7005a67fef99bfcfc2a9f",
+      "raw_errors": [],
+      "warnings": 6,
+      "warmup_ms": 15005.138,
+      "elapsed_ms": 151707.953,
+      "sample_count": 5697,
+      "sum_sample_wall_ms": 151683.47900000066,
+      "elapsed_minus_sum_wall_ms": 24.473999999347143,
+      "mean_times_ms": {
+        "wall_ms": 26.62514990345803,
+        "process_ms": 29.5550798665963,
+        "physics_ms": 5.670570826750872,
+        "render_cpu_ms": 2.383975777266966,
+        "render_setup_cpu_ms": 0.27575706512199183,
+        "render_gpu_ms": 26.213136210783922
+      },
+      "mean_fps": 37.55847398515949,
+      "p95_linear_ms": 31.6816,
+      "p99_linear_ms": 35.338719999999995,
+      "p95_nearest_rank_ms": 31.688,
+      "p99_nearest_rank_ms": 35.596,
+      "owner_stat_comparison": {
+        "wall_ms": {
+          "independent": 26.62514990345803,
+          "owner": 26.62514990345796,
+          "absolute_delta": 7.105427357601002E-14,
+          "agrees": true
+        },
+        "process_ms": {
+          "independent": 29.5550798665963,
+          "owner": 29.555079866596454,
+          "absolute_delta": 1.5276668818842154E-13,
+          "agrees": true
+        },
+        "physics_ms": {
+          "independent": 5.670570826750872,
+          "owner": 5.670570826750922,
+          "absolute_delta": 4.973799150320701E-14,
+          "agrees": true
+        },
+        "render_cpu_ms": {
+          "independent": 2.383975777266966,
+          "owner": 2.383975777266966,
+          "absolute_delta": 0.0,
+          "agrees": true
+        },
+        "render_setup_cpu_ms": {
+          "independent": 0.27575706512199183,
+          "owner": 0.27575706512199405,
+          "absolute_delta": 2.220446049250313E-15,
+          "agrees": true
+        },
+        "render_gpu_ms": {
+          "independent": 26.213136210783922,
+          "owner": 26.213136210783922,
+          "absolute_delta": 0.0,
+          "agrees": true
+        },
+        "mean_fps": {
+          "independent": 37.55847398515949,
+          "owner": 37.55847398515959,
+          "absolute_delta": 9.947598300641403E-14,
+          "agrees": true
+        },
+        "p95_ms": {
+          "independent": 31.6816,
+          "owner": 31.6816,
+          "absolute_delta": 0.0,
+          "agrees": true
+        },
+        "p99_ms": {
+          "independent": 35.338719999999995,
+          "owner": 35.338719999999995,
+          "absolute_delta": 0.0,
+          "agrees": true
+        }
+      },
+      "cpu_monitor_fields_overlap_do_not_sum": true,
+      "quiet_flag_reported": true,
+      "environment_start": {
+        "hour": 8.64493275999999,
+        "position": [
+          -300.0,
+          32.2725982666016,
+          180.0
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 16.1233189999999,
+          "phase": "calm",
+          "remaining": 307.876681
+        },
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 14.7176788799988,
+        "position": [
+          -649.268249511719,
+          20.8823146820068,
+          829.067199707031
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 167.941972,
+          "phase": "calm",
+          "remaining": 156.058028
+        },
+        "time_of_day": "day"
+      },
+      "screenshots": [
+        {
+          "path": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Medium-r3\\start.png",
+          "bytes": 2523267,
+          "sha256": "4b27a3372b6eddb90e23c0c77a5d137104746766cdd2ee2724ae5cf2448dd3a2",
+          "width": 1920,
+          "height": 1080,
+          "full_image_decode_pass": true,
+          "written_utc": "2026-10-09T21:48:31.0348912Z",
+          "independently_viewed": true,
+          "observation": "Production terrain/road, trunks/canopies, grass/flowers/shrubs, rod-line props, player and HUD are present."
+        },
+        {
+          "path": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Medium-r3\\end.png",
+          "bytes": 2653196,
+          "sha256": "9bca0c4d57e363563bbd94428e89648d532b38f239a5bb2ed952ac3839fef9a9",
+          "width": 1920,
+          "height": 1080,
+          "full_image_decode_pass": true,
+          "written_utc": "2026-10-09T21:51:03.4326586Z",
+          "independently_viewed": true,
+          "observation": "Production terrain/road, trunks/canopies, grass/flowers/shrubs, rod-line props, player and HUD are present."
+        }
+      ],
+      "raw_scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "userdata_root": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\userdata\\Medium-r3\\roaming",
+      "owner_finished_utc": "2026-10-09T21:51:05.6515048Z"
+    },
+    {
+      "case": "Low-r3",
+      "verdict": "PASS CONTENT/RECEIPT",
+      "checks": {
+        "complete": true,
+        "exact_source": true,
+        "selected_preset": true,
+        "actual_renderer": true,
+        "device_prefs": true,
+        "raster1080": true,
+        "debugfalse": true,
+        "warmup15s": true,
+        "timed60s": true,
+        "uncapped": true,
+        "finite_samples": true,
+        "physical_two_waypoints": true,
+        "unchanged_route": true,
+        "actual_export_entry": true,
+        "terrain108": true,
+        "scatter108_43161": true,
+        "raw_errors_empty": true,
+        "images_decode": true
+      },
+      "launch": {
+        "started_utc": "2026-10-09T21:51:36.4629768Z",
+        "source": "785e6f612e28a77075dd66684047628c2affbb13",
+        "pid": 36036
+      },
+      "launch_manifest": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r3-launch.json",
+      "route": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r3\\route.json",
+      "route_sha256": "81f98ad07475adc2b021fe4ef367348539edeb374bf8de9aa05a1556b14dc68b",
+      "raw_log": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r3-engine.log",
+      "log_sha256": "8222602f9df794718587084c6dfef0d39a205bda53edc8045c13dcc5f73a5c93",
+      "raw_errors": [],
+      "warnings": 6,
+      "warmup_ms": 15007.506,
+      "elapsed_ms": 151726.438,
+      "sample_count": 9701,
+      "sum_sample_wall_ms": 151715.05500000023,
+      "elapsed_minus_sum_wall_ms": 11.3829999997688,
+      "mean_times_ms": {
+        "wall_ms": 15.639115039686596,
+        "process_ms": 26.358151530769945,
+        "physics_ms": 3.4499616534378394,
+        "render_cpu_ms": 5.209346764407911,
+        "render_setup_cpu_ms": 0.45206782805896384,
+        "render_gpu_ms": 13.769200281560598
+      },
+      "mean_fps": 63.942236978393616,
+      "p95_linear_ms": 23.451,
+      "p99_linear_ms": 28.598,
+      "p95_nearest_rank_ms": 23.451,
+      "p99_nearest_rank_ms": 28.598,
+      "owner_stat_comparison": {
+        "wall_ms": {
+          "independent": 15.639115039686596,
+          "owner": 15.63911503968663,
+          "absolute_delta": 3.375077994860476E-14,
+          "agrees": true
+        },
+        "process_ms": {
+          "independent": 26.358151530769945,
+          "owner": 26.358151530770026,
+          "absolute_delta": 8.171241461241152E-14,
+          "agrees": true
+        },
+        "physics_ms": {
+          "independent": 3.4499616534378394,
+          "owner": 3.44996165343779,
+          "absolute_delta": 4.929390229335695E-14,
+          "agrees": true
+        },
+        "render_cpu_ms": {
+          "independent": 5.209346764407911,
+          "owner": 5.209346764407911,
+          "absolute_delta": 0.0,
+          "agrees": true
+        },
+        "render_setup_cpu_ms": {
+          "independent": 0.45206782805896384,
+          "owner": 0.452067828058963,
+          "absolute_delta": 8.326672684688674E-16,
+          "agrees": true
+        },
+        "render_gpu_ms": {
+          "independent": 13.769200281560598,
+          "owner": 13.769200281560598,
+          "absolute_delta": 0.0,
+          "agrees": true
+        },
+        "mean_fps": {
+          "independent": 63.942236978393616,
+          "owner": 63.94223697839348,
+          "absolute_delta": 1.3500311979441904E-13,
+          "agrees": true
+        },
+        "p95_ms": {
+          "independent": 23.451,
+          "owner": 23.451,
+          "absolute_delta": 0.0,
+          "agrees": true
+        },
+        "p99_ms": {
+          "independent": 28.598,
+          "owner": 28.598,
+          "absolute_delta": 0.0,
+          "agrees": true
+        }
+      },
+      "cpu_monitor_fields_overlap_do_not_sum": true,
+      "quiet_flag_reported": true,
+      "environment_start": {
+        "hour": 8.63253815999988,
+        "position": [
+          -300.0,
+          32.2725982666016,
+          180.0
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 15.8134540000001,
+          "phase": "calm",
+          "remaining": 308.186546
+        },
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 14.7056565656574,
+        "position": [
+          -649.268249511719,
+          20.88232421875,
+          829.067077636719
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 167.641414141412,
+          "phase": "calm",
+          "remaining": 156.358585858588
+        },
+        "time_of_day": "day"
+      },
+      "screenshots": [
+        {
+          "path": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r3\\start.png",
+          "bytes": 3248651,
+          "sha256": "2be430790cee39cceb0786913b9992cae0e6661d46d9748e72c0a2f4e2231b7d",
+          "width": 1920,
+          "height": 1080,
+          "full_image_decode_pass": true,
+          "written_utc": "2026-10-09T21:53:01.0017786Z",
+          "independently_viewed": true,
+          "observation": "Production terrain/road, trunks/canopies, grass/flowers/shrubs, rod-line props, player and HUD are present. Content presence only, no whole F41 visual verdict."
+        },
+        {
+          "path": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r3\\end.png",
+          "bytes": 3354118,
+          "sha256": "586e9f915085e6c36c376b8a884853bbdf638e89f21d3cdcfa4bef464e28dabc",
+          "width": 1920,
+          "height": 1080,
+          "full_image_decode_pass": true,
+          "written_utc": "2026-10-09T21:55:33.5024986Z",
+          "independently_viewed": true,
+          "observation": "Production terrain/road, trunks/canopies, grass/flowers/shrubs, rod-line props, player and HUD are present. Content presence only, no whole F41 visual verdict."
+        }
+      ],
+      "raw_scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "userdata_root": "C:\\CodexTemp\\eQL3\\r",
+      "terminal_owner_case_receipt": {
+        "engine_log": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r3-engine.log",
+        "finished_utc": "2026-10-09T21:55:37.5329774Z",
+        "route": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r3\\route.json",
+        "pid": 36036,
+        "receipt_gate": "PASS",
+        "started_utc": "2026-10-09T21:51:36.4629768Z",
+        "samples": 9701,
+        "visual_inspection": "PENDING",
+        "elapsed_ms": 151726.438,
+        "case": "Low-r3"
+      }
+    }
+  ],
+  "percentile_method": "Linear interpolation: sorted x, h=(n-1)q, x[floor(h)]+fraction(h)*(x[ceil(h)]-x[floor(h)]). Nearest rank also shown as a distinct method, not a mismatched result.",
+  "prior_exception": {
+    "case": "Low-r2",
+    "outcome": "FAILED BEFORE TIMED RECEIPT",
+    "raw_log": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r2-engine.log",
+    "preserved_cache": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\userdata\\Low-r2",
+    "independent_review": "C:\\CodexTemp\\lane-e-quiet-low-cache-review.json",
+    "cache_structure": "11 retained GLSC v3 files have payloads beyond EOF; post-stop snapshot does not prove causal truncation before stop.",
+    "root_cause": "Unknown; no demonstrated long-path/storage/game-source cause."
+  },
+  "low_r3_correction": "Single permitted infrastructure confirmation; fresh SHORT APPDATA C:\\CodexTemp\\eQL3\\r and LOCALAPPDATA C:\\CodexTemp\\eQL3\\l; frozen release/source, Low Compatibility and shader-cache policy unchanged.",
+  "predecessor_case_relationship": "Medium-r3 supplies clean replacement timing for contaminated original Medium-r2. Original four release-content passes remain valid; failed Low-r2 and contaminated Medium-r2 remain disclosed. Passed Low1/Highs were not repeated.",
+  "claim_limits": [
+    "Release content and recorded route receipt only; no full visual criterion or performance-bar acceptance.",
+    "No whole F26/F41 READY, earned campaign, physical four-creature fight, audio, Ally or device-general claim.",
+    "Exclusive lease/concurrency cleanliness uses owner launch/lease fencing; no concurrent native execution by reviewer.",
+    "No repository/source/game flags/renderer/cache policy mutation or cache deletion/move/recompression by reviewer.",
+    "All underlying proof artifacts preserved."
+  ],
+  "terminal_process_audit": {
+    "audited_utc": "2026-10-09T21:56:39.7958490Z",
+    "active_native_or_case_writer_processes": [],
+    "case_pids_35224_36036_terminal": true
+  },
+  "infrastructure_confirmation_result": "Low-r3 passed in fresh shorter userdata with zero raw shader-cache errors. This establishes the second Low release content case; it does not establish the prior cache truncation root cause or erase the retained failed Low-r2 exception."
+}
