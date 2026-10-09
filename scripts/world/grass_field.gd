@@ -1652,6 +1652,13 @@ func surface_tuft_mesh(blades: int = 4, segments: int = 3) -> ArrayMesh:
 
 
 func _apply_config(cfg: Dictionary) -> void:
+	# Cosmetic Meadows-only candidate. Realm profiles without this block reset
+	# it OFF; no terrain, collision, population, ownership or durable mutation.
+	var verge: Dictionary = cfg.get("road_verge", {})
+	_material.set_shader_parameter("road_verge_enabled", verge.get("enabled", false) == true)
+	_material.set_shader_parameter("road_verge_base_mask", texture_mask(_terrain_texture_names(), ["path"]))
+	_material.set_shader_parameter("road_verge_strength", clampf(float(verge.get("strength", 0.75)), 0.0, 1.0))
+	_material.set_shader_parameter("road_verge_height_floor", clampf(float(verge.get("height_floor", 0.35)), 0.0, 1.0))
 	if cfg.has("dune_tussock"):
 		_material.set_shader_parameter("dune_tussock", bool(cfg.dune_tussock))
 	if cfg.has("dune_colony_shape"):

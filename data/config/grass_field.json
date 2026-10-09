@@ -319,6 +319,12 @@
     "rock",
     "path"
   ],
+	"road_verge": {
+		"enabled": false,
+		"_comment": "F38 visual-cluster candidate for retained abrupt village road verges: thin and shorten allowed grass next to painted path cells, using world-stable decoded terrain control weights. Scope is cosmetic Meadows grass only; paths, holes, built clearances, terrain/collision and counts stay unchanged. OFF pending original runtime, blind and affected native cost proof; absent realm profiles disable it.",
+		"strength": 0.75,
+		"height_floor": 0.35
+	},
   "_comment_visual_pass_0923": "Meadows visual pass (ralph/reports/MEADOWS-VISUAL-PASS): a blind judge read the open meadow as 'an evenly scattered carpet of oversized single blades, bare ground between every clump, no flower colour' against the key art's purple/blue/gold drifts. blade_width 1.0 -> 0.8 so near blades stop reading as straps; density_gain 0.82 -> 0.92 for fewer bare gaps; the lilac flower tier doubles (count 6000 -> 12000, density_gain 0.34 -> 0.5) and a second, gold drift tier uses palette.json's reserved flower_gold accent with its own seed so the two colours form separate patches, not a mix.",
   "_comment_value_round2": "Meadows visual pass round 2: the blind judge still read the field as 'one yellow-olive mid-value... no darker grass clumps'. clump_contrast 0.78 -> 0.92 and a deeper tint_base (#354410 -> #2a380c) widen the value range between clumps and the tips without changing density or blade shape."
 }

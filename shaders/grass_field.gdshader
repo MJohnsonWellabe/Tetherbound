@@ -207,6 +207,13 @@ uniform float lod_band_m = 6.0;
 // default refuses rock and path. Set from config, not hardcoded here.
 uniform int forbidden_base_mask = 12;
 
+// Meadows road-verge candidate. Decode each packed control texel before
+// interpolating coverage; holes and the nearest forbidden mask remain strict.
+uniform bool road_verge_enabled = false;
+uniform int road_verge_base_mask = 0;
+uniform float road_verge_strength = 0.75;
+uniform float road_verge_height_floor = 0.35;
+
 varying float v_blade_t;
 varying vec3 v_ground_colour;
 varying float v_fade;
@@ -260,6 +267,23 @@ float grass_surface_height(const vec2 terrain_uv, const ivec3 nearest_coord) {
 	float h01 = texelFetch(_height_maps, c01, 0).r;
 	float h11 = texelFetch(_height_maps, c11, 0).r;
 	return mix(mix(h00, h10, blend.x), mix(h01, h11, blend.x), blend.y);
+}
+
+float road_texel_weight(ivec3 coord) {
+	if (coord.z < 0) { return 0.0; }
+	uint control_sample = floatBitsToUint(texelFetch(_control_maps, coord, 0)).r;
+	int id = int(control_sample >> 27u & 0x1Fu);
+	return float((road_verge_base_mask >> id) & 1);
+}
+
+float road_verge_weight(vec2 terrain_uv) {
+	vec2 base = floor(terrain_uv);
+	vec2 blend = fract(terrain_uv);
+	float a = road_texel_weight(get_index_coord(base, 0));
+	float b = road_texel_weight(get_index_coord(base + vec2(1.0, 0.0), 0));
+	float c = road_texel_weight(get_index_coord(base + vec2(0.0, 1.0), 0));
+	float d = road_texel_weight(get_index_coord(base + vec2(1.0), 0));
+	return mix(mix(a, b, blend.x), mix(c, d, blend.x), blend.y);
 }
 
 // Cheap value noise. Two octaves is enough for "drifts with clearings between
@@ -608,6 +632,11 @@ void vertex() {
 			keep *= smoothstep(dune_shore_dry_start_y, dune_shore_dry_full_y, ground_h);
 		}
 	}
+	float verge = 0.0;
+	if (road_verge_enabled && road_verge_base_mask != 0 && !off_map && !forbidden && !hole) {
+		verge = smoothstep(0.0, 0.5, road_verge_weight(terrain_uv)) * clamp(road_verge_strength, 0.0, 1.0);
+		keep *= 1.0 - verge;
+	}
 	v_drain = drain_at(world_xz);
 	bool culled = off_map || hole || forbidden || ground_h < min_ground_height || v_fade <= 0.001
 			|| item_presence <= 0.002
@@ -631,6 +660,7 @@ void vertex() {
 		v_blade_t = t;
 
 		float h = mix(height_near, height_far, smoothstep(0.0, field_radius, dist));
+		h *= mix(1.0, clamp(road_verge_height_floor, 0.0, 1.0), verge);
 		h *= 1.0 + (hash12(blade_seed * 3.77) - 0.5) * 2.0 * height_jitter;
 		// Shorter under a bush as well as sparser. Thinning alone leaves the
 		// survivors at full height, still standing through the leaves.
