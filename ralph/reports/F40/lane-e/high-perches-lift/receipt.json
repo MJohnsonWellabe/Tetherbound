@@ -1,0 +1,28 @@
+{
+  "job_id": 113695103691,
+  "selected_run_engine_script_diagnostics": 0,
+  "original_review": "../high-perches-lift-source-review.json",
+  "scope": "Existing affected High Perches selected headless proof only",
+  "script": "tests/run_tests.gd",
+  "run_id": 37892103104,
+  "whole_criteria": "OPEN",
+  "args": [
+    "--only=test_cloudreach_high_perches_presentation.gd"
+  ],
+  "assertions": 48,
+  "hashes": {
+    "exit_code": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "run.log": "c36fd08bb74a6abd414cb394099cd077aa1f234d1e94f7887dca06b8ac93816c",
+    "job.log": "7995f3352d03c09a343bfce3c912e5fcbea57fad192d7f29cc8c43f963cb5617",
+    "github-api-binding.json": "adfd2ba2cf3864256ea84d0e1ddc8ecd2ca25226bdb05dbbf18c5ad06ef14667",
+    "MANIFEST.txt": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b"
+  },
+  "tests": 5,
+  "mode": "headless",
+  "source_commit": "401977bce7041e4274f8e01e8075462ecd87a0de",
+  "exit_code": 0,
+  "failed": 0,
+  "native": "Pending ROOT-only original two-row command applicability approved; no visual promotion",
+  "seconds": 6,
+  "artifact_id": 11598198918
+}
