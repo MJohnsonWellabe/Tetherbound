@@ -65,8 +65,42 @@
   },
   "limits": [
     "WHOLE F23#0/#5 remain OPEN.",
-    "Shipping all-four-command co-op proof is separate and not yet verified.",
+    "Shipping all-four-command co-op proof failed the unchanged Item meter prerequisite; no downstream command or WHOLE acceptance.",
     "Required shipping-ON CI and any named native/blind gates remain unearned.",
     "Failure artifacts are retained under F25/downloads; no failed save is promoted."
-  ]
+  ],
+  "shipping_all_four_commands": {
+    "run_id": 37866645420,
+    "artifact_id": 11588219144,
+    "job_id": 113614833309,
+    "checkout_sha": "a22a35175952f5e22f763521544b31ee8f825364",
+    "log_sha256": "d4038568d0d8f8caba80aed51aaab4f5781ccd9ee5311eaa1b6243724124ae67",
+    "script": "tests/smoke_net_owner_passive_rejoin.gd",
+    "args": "--prove-shipping-tether --prove-tag-combo --prove-tether-snare --prove-tether-rally",
+    "passing_prefix_lines": 20,
+    "result": "FAIL at Item landed-hit meter prerequisite, before later command checks",
+    "attempts": 8,
+    "submitted_actions": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "command_meter": 0,
+    "required_meter": 25,
+    "opponent_hp_before_after": 257.21381145525,
+    "refusals": "empty; no pending vitals or return-time settlement binding",
+    "impact_history": "empty",
+    "original_artifact_disposition": "APPROVE failure/PARK, no supported gameplay cause inferred",
+    "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "review_turn": "01a11e28-9a94-7351-af75-c034b544d2bd",
+    "missing_operand": "Host action-correlated strike result; existing failed checkpoint accidentally observed host peer rather than guest.",
+    "failure_packet_source_verdict": "SOURCE/PROOF-SCOPE APPROVE",
+    "failure_packet_review_turn": "01a11e2a-edd5-7dd0-9033-b9f65d3c9f09",
+    "failure_packet_change": "Existing host body/original reader selects actual guest Session peer; existing encounter probe includes host originals and guest admission projection. Post-checkpoint state; host-local command/deployment fields are not guest claims."
+  }
 }

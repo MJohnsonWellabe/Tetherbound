@@ -598,8 +598,15 @@ func _tonic_item_original() -> bool:
 	if hits.get("verdict") != "PASS":
 		# Retain the exact live host proposal/journal bindings at this failed
 		# return; guest readiness does not expose the host settlement gate.
+		var guest: Dictionary = await probe(1, "op_tag_state")
+		var guest_peer := int(guest.get("peer", 0))
 		print("TONIC failed hits host observation: ", JSON.stringify(await probe(0,
-			"op_tag_state", {"encounter_id":str(encounter.get("id", ""))})))
+			"op_tag_state", {"encounter_id":id, "peer":guest_peer})))
+		# Existing read-only host probe retains original action/timing/geometry
+		# and the actual guest admission. This is post-checkpoint state, never
+		# a claim about the strike-time body or a new accepted boundary.
+		print("TONIC failed hits host encounter post-checkpoint: ", JSON.stringify(await probe(0,
+			"encounter", {"admission_peer_id":guest_peer})))
 	if not _ok(hits, "tonic: normal accepted quick hits earn Item meter"): return false
 	if OS.get_cmdline_user_args().has("--capture-combat-hud"):
 		_ok(await step(1, "op_tonic_hud_capture", {"name":"earned-command"}), "HUD: actual earned command and creature meters before Item")
