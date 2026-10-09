@@ -689,8 +689,25 @@ static func capture_surface_failure(spec: Dictionary, state: Dictionary, player_
 
 
 func _capture_settled_failure(at: Vector2, row: Dictionary, spec: Dictionary) -> String:
+	var shortened_arm := {}
+	var collision := _player.get_node_or_null(^"Collision") as CollisionShape3D
+	# An explicit authored framing minimum stays strict. The generic minimum
+	# must also admit the production arm's own safe collision retraction.
+	if not row.has("min_camera_player_distance_m") and _rig.get("_target") == _player \
+			and _camera.get_parent() == _rig and root.get_camera_3d() == _camera \
+			and collision != null and not collision.disabled and collision.shape is CapsuleShape3D \
+			and collision.global_basis.get_scale().is_equal_approx(Vector3.ONE) and _rig.shape is SphereShape3D:
+		var capsule := collision.shape as CapsuleShape3D
+		var probe := _rig.shape as SphereShape3D
+		var local_lens := collision.global_transform.affine_inverse() * _camera.global_position
+		var half_axis := maxf(0.0, capsule.height * 0.5 - capsule.radius)
+		var axis_point := Vector3(0.0, clampf(local_lens.y, -half_axis, half_axis), 0.0)
+		if capsule.radius > 0.0 and probe.radius >= _camera.near and _camera.near > 0.0:
+			shortened_arm = {"endpoint": _rig.global_position + _rig.global_basis.z * _rig.get_hit_length(),
+				"hit_length": _rig.get_hit_length(), "requested_length": _rig.spring_length,
+				"capsule_clearance": local_lens.distance_to(axis_point) - capsule.radius - probe.radius}
 	var failure := capture_stand_failure(at, _player.global_position, _camera.global_position,
-		float(row.get("min_camera_player_distance_m", 3.5)), _rig.spring_length + 3.0)
+		float(row.get("min_camera_player_distance_m", 3.5)), _rig.spring_length + 3.0, shortened_arm)
 	if not failure.is_empty():
 		return failure
 	return capture_surface_failure(spec, _capture_surface_record(), _player.global_position.y,
@@ -705,7 +722,9 @@ func _reject_stand(row: Dictionary, at: Vector2, offset: float, lateral: float,
 		"water_surface_y": spec.get("water_surface_y", null),
 		"player_position": _vec3(_player.global_position),
 		"camera_position": _vec3(_camera.global_position), "surface_state": _capture_surface_record(),
-		"physical_support": spec.get("physical_support", {})}
+		"physical_support": spec.get("physical_support", {}),
+		"camera_rig_position": _vec3(_rig.global_position), "camera_arm_hit_length": _rig.get_hit_length(),
+		"camera_arm_requested_length": _rig.spring_length}
 	rejected.append(receipt)
 	if not _manifest.has("rejected_stand_candidates"):
 		_manifest["rejected_stand_candidates"] = []
@@ -757,14 +776,27 @@ static func capture_yaw(forward: Vector2) -> float:
 
 
 static func capture_stand_failure(stand: Vector2, player: Vector3, camera: Vector3,
-		minimum_distance: float, maximum_distance: float) -> String:
+		minimum_distance: float, maximum_distance: float, shortened_arm: Dictionary = {}) -> String:
 	if not player.is_finite() or not camera.is_finite():
 		return "non-finite player or camera position"
 	var displacement := stand.distance_to(Vector2(player.x, player.z))
 	if displacement > 2.0:
 		return "player left staged stand by %.2fm (possible slide, encounter or respawn)" % displacement
 	var distance := camera.distance_to(player)
-	if distance < minimum_distance or distance > maximum_distance:
+	var collision_bound := false
+	var endpoint: Variant = shortened_arm.get("endpoint")
+	if endpoint is Vector3 and (endpoint as Vector3).is_finite() \
+			and (endpoint as Vector3).is_equal_approx(camera):
+		var numeric := true
+		for field: String in ["hit_length", "requested_length", "capsule_clearance"]:
+			if typeof(shortened_arm.get(field)) not in [TYPE_INT, TYPE_FLOAT]: numeric = false
+		if numeric:
+			var hit := float(shortened_arm.hit_length)
+			var requested := float(shortened_arm.requested_length)
+			var clearance := float(shortened_arm.capsule_clearance)
+			collision_bound = is_finite(hit) and is_finite(requested) and is_finite(clearance) \
+				and hit > 0.0 and hit < requested and clearance > 0.0
+	if distance > maximum_distance or (distance < minimum_distance and not collision_bound):
 		return "camera/player separation %.2fm outside the staged ordinary-camera range" % distance
 	return ""
 
