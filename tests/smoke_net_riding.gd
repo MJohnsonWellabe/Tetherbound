@@ -87,6 +87,12 @@ func _run() -> void:
 		quit(await finish())
 		return
 
+	# Peer 1's existing creature is owned before admission. It supplies the
+	# wrong mount answer and the real party UID for its later ordinary fight.
+	var theirs: Dictionary = await step(1, "deploy_creature", {"species": "terrapup", "owned": true})
+	_check(str(theirs.get("verdict", "")) == "PASS",
+		"SETUP: peer 1 has its own creature out (%s)" % str(theirs.get("detail", "")))
+
 	# --- the handshake, copied verbatim from smoke_net_movement_two_peers.gd ---
 	var hosted: Dictionary = await step(0, "host", {})
 	_check(str(hosted.get("verdict", "")) == "PASS",
@@ -123,12 +129,6 @@ func _run() -> void:
 		_check(str(cleared.get("verdict", "")) == "PASS",
 			"SETUP: peer %d is holding the world rather than a dialogue box (%s)"
 				% [i, str(cleared.get("detail", ""))])
-
-	# Peer 1 gets a creature of its own too. Not decoration: it is what makes
-	# the "which creature is the mount" question have a wrong answer available.
-	var theirs: Dictionary = await step(1, "deploy_creature", {"species": "terrapup"})
-	_check(str(theirs.get("verdict", "")) == "PASS",
-		"SETUP: peer 1 has its own creature out (%s)" % str(theirs.get("detail", "")))
 
 	# SETUP, and it says so: the saddle and the Meadowhart.
 	var setup: Dictionary = await step(0, "ride_setup", {"species": MOUNT_SPECIES})
