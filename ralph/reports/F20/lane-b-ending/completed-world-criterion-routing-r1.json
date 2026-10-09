@@ -1,0 +1,32 @@
+{
+  "kind": "original_independent_f20_3_acceptance_routing",
+  "reviewed_source": "da27096ee9e9c343094454866f938997a76d4d1c",
+  "original_reviewers": ["b_f20_review (Hubble)", "b_f49_review (Bacon)"],
+  "criterion": "F20#3: After credits, reload resumes a safe completed world with bounties, rematches and remaining activities available.",
+  "owning_contract": "docs/design/WORLD.md section 2.8: Bounties, endgame rematches, alpha respawns and research completion are available after credits.",
+  "research_requirement": "Originals agree availability of the research completion route is required. Completing a research task is not a F20#3 requirement; research credit/reward/persistence correctness remains separate F45 evidence.",
+  "required_remaining_gates": [
+    "Actual corrected completed-world Title Load functional runtime PASS",
+    "Post-credits alpha-respawn availability",
+    "Original independent blind PASS of actual completed-world, bounty, research and endgame-rematch presentation, including any claimed alpha presentation"
+  ],
+  "known_alpha_block": {
+    "path": "data/config/alpha_respawns.json",
+    "runtime_enabled": false,
+    "source_disclosure": "F44 alpha respawns are unfinished: with them on, named Deep Watch Tidecoil never became resident for a co-op client.",
+    "flag_changed": false,
+    "alpha_availability_proven": false
+  },
+  "prior_unchanged_continuation": {
+    "run_id": 37771506596,
+    "source": "505d7e0729028b69cfd3a0a9a8e5c6463cd46dc2",
+    "checks": 67,
+    "failures": 0,
+    "original_behavior_verdict": "APPROVE scoped availability paths, not whole F20#3"
+  },
+  "excluded_already_met_rows": ["F20#1", "F20#2", "F20#4"],
+  "blocked_full_homecoming_corpus_reused_as_pass": false,
+  "reviewer_replacement": false,
+  "new_hosted_run_dispatched_for_routing": false,
+  "whole_criterion_closed": false
+}
