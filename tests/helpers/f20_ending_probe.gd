@@ -739,7 +739,44 @@ func continuation_content(tree: SceneTree, game: Node) -> bool:
 	if not await capture(tree, "completed-bounties", board_frame): return false
 	await travel.tap("menu_cancel")
 	if not check(INPUT_OWNER.current(tree) == null, "bounty screen returns ordinary world input"): return false
+	if not alpha_available_after_credits(tree, game): return false
 	return await admit_endgame_rematch(tree, game, rematches)
+
+## Availability of an actual published wild body after completed-save Load.
+## Normal distance streaming may sleep a distant body; no activation, clock,
+## generation, outcome, position or durable state is changed by this witness.
+func alpha_available_after_credits(tree: SceneTree, game: Node) -> bool:
+	var rules := preload("res://scripts/repeatables/alpha_respawns.gd")
+	if not check(rules.config().get("runtime_enabled") == true and HOME.context(game).get("regional_credits_seen") == true,
+		"completed character keeps the enabled alpha route after credits"): return false
+	var alphas: Node = game.session.get_node_or_null("FoundationComposition/Alphas")
+	var director: Node = tree.current_scene.get_node_or_null("EncounterDirector")
+	if not check(alphas != null and director != null and INPUT_OWNER.current(tree) == null,
+		"loaded completed world retains its production alpha service and ordinary input"): return false
+	var available: Array[Dictionary] = []
+	for body: Node3D in director.get("_wild_creatures"):
+		if not is_instance_valid(body) or not tree.current_scene.is_ancestor_of(body) or not body.is_visible_in_tree(): continue
+		var id := str(body.get_meta("foundation_alpha_site", ""))
+		var site: Dictionary = rules.site(id)
+		if site.get("biome") != "meadows": continue
+		var packet: Dictionary = rules.retained_spawn(game.world.redesign_world, id)
+		var instance: RefCounted = body.get("instance") as RefCounted
+		var world_ref: WeakRef = body.get_meta("foundation_alpha_world", null) as WeakRef
+		if packet.is_empty() or instance == null or world_ref == null or world_ref.get_ref() != game.world: continue
+		if body.get_meta("foundation_alpha_packet", {}) != packet \
+			or int(body.get_meta("foundation_alpha_generation", 0)) != int(packet.captured_from.spawn_generation) \
+			or body.get_meta("foundation_alpha_epoch", "") != game.session.call("_altar_current_epoch"): continue
+		if float(instance.get("hp")) <= 0.0 or instance.get("fainted") == true or game.party.call("members").has(instance): continue
+		if instance.get("traits_initialized") != true or instance.get("rolled_traits") != packet.rolled_traits \
+			or instance.get("taught_traits") != packet.taught_traits: continue
+		if not body.is_connected("wants_to_engage", Callable(director, "_on_wild_wants_to_engage").bind(body)): continue
+		available.append({"site": id, "generation": int(packet.captured_from.spawn_generation),
+			"body": str(body.get_path()), "species": str(instance.get("species_id")),
+			"physics_awake": body.is_physics_processing(), "position": str(body.global_position)})
+	print("F20 COMPLETED ALPHAS " + JSON.stringify({"character": str(game.local.character_id),
+		"world_namespace": str(game.world.reward_delivery_namespace), "published_living_wild_bodies": available,
+		"scope": "Actual loaded completed-world availability; ordinary distance streaming unchanged; no fight, resolution, cooldown or payout claim"}))
+	return check(not available.is_empty(), "loaded completed world publishes a living canonical wild alpha with its production fight route")
 
 ## Availability only. No research events, progress, claims or titles are seeded.
 func research_available_after_credits(tree: SceneTree, game: Node) -> bool:
