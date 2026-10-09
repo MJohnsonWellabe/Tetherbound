@@ -76,6 +76,7 @@ func _run() -> void:
 
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
+	current_scene = world
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
