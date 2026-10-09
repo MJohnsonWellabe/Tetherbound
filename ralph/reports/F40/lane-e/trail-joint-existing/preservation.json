@@ -1,0 +1,53 @@
+{
+  "source_commit": "8cca04f2a5a91917652c8dc66842a38683105368",
+  "run_id": 37916170072,
+  "job_id": 113772771208,
+  "artifact_id": 11609314840,
+  "zip_sha256": "942207eee6d994adac66bf163c5d3079beacf6f4bdc9132f7d10f5df638be9ae",
+  "zip_crc": "PASS",
+  "raw_files": [
+    {
+      "file": "exit_code",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "file": "MANIFEST.txt",
+      "bytes": 131,
+      "sha256": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b"
+    },
+    {
+      "file": "run.log",
+      "bytes": 512,
+      "sha256": "95d80f7c60e9b3d9dcae5f752778be2e946781d91bb38695946f16f599ed4548"
+    },
+    {
+      "file": "user/godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 219,
+      "sha256": "5066e52a432a2958b29285ef5d442061bf769dd5708ddce8d7fd860db66509be"
+    },
+    {
+      "file": "user/godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 497,
+      "sha256": "a97d966acfab13eb17d164903e07621a085840106813d00c178062da343ce0ad"
+    },
+    {
+      "file": "job.log",
+      "bytes": 474659,
+      "sha256": "b8804a4ff418d11af98e1010ec52c22659774742e4a8cdc338af4f1291501c0c"
+    },
+    {
+      "file": "artifact-api.json",
+      "bytes": 731,
+      "sha256": "53f10a3919d12c9b386dda00012b522fe1301f6cb417a43d88c47483fdad4b06"
+    }
+  ],
+  "existing_selector": "--only=test_cloudreach_environment.gd",
+  "tests": 4,
+  "assertions": 81,
+  "failed": 0,
+  "exit_code": 0,
+  "seconds": 7,
+  "limits": "Existing source assertions and world parsing/crown/cloud checks. Does not generate/assert new false-end trail vertices or establish rendered continuity, pictured notch cause, native/blind/full-bar/whole-criterion PASS.",
+  "api_artifact_run_digest_match": true
+}
