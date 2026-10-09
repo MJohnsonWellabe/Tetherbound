@@ -181,5 +181,76 @@
   ],
   "current_final_source_commit": "f03db2ec9e04bef600ade0cf9feff8a53e223271",
   "current_final_source_verdict": "APPROVE",
-  "current_final_exact_capture_command_verdict": "APPROVE"
+  "current_final_exact_capture_command_verdict": "APPROVE",
+  "independent_artifact_reviews": [
+    {
+      "reviewed_at_utc": "2026-10-09T00:34:57.901469+00:00",
+      "artifact_verdict": "APPROVE_BOUNDED_HEADLESS_ASSERTION_PROOF",
+      "run": 37864887011,
+      "job": 113609155341,
+      "artifact": 11587921517,
+      "artifact_name": "render-e-fight-persistence-42f6-r1-37864887011",
+      "source_commit": "42f6df95781a19991c5f7a888bc159b31f45a1b7",
+      "reused_at_approved_source": "f03db2ec9e04bef600ade0cf9feff8a53e223271",
+      "exact_selector": "tests/run_tests.gd -- --only=test_capture_manifest_writer.gd,test_phase2_fight_capture_lifecycle.gd",
+      "provenance": {
+        "checkout": "Actual job checkout command, HEAD line and git rev-parse at lines 147,271,274 identify exact42f6. Run env identifies tests/run_tests.gd and the two exact selectors with MODE=headless.",
+        "terminal": "Original run.log, neighboring exit_code and job stdout agree: 13 tests,84 assertions,0 failed; exit0,took6s. Job upload identifies exactartifact11587921517.",
+        "engine": "Godot Engine v4.7.stable.official.5b4e0cb0f",
+        "platform": "Ubuntu24.04.5 hosted runner, headless; no native rendering or Windows device proof."
+      },
+      "counts": {
+        "tests": 13,
+        "assertions": 84,
+        "failed": 0,
+        "exit_code": 0,
+        "seconds": 6,
+        "writer_cases": 6,
+        "tidewake_lifecycle_cases": 7,
+        "per_file_assertions": "Not separately logged; no invented split."
+      },
+      "diagnostics": "No actual SCRIPT ERROR, ERROR or WARNING in producer run.log, archived godot.log or job diagnostic scan. Job line4946 is the shell import-error matching expression, not an emitted error.",
+      "writer_cases": [
+        "test_backup_failure_preserves_published_receipt_and_pending_bytes",
+        "test_interrupted_staging_preserves_published_frames",
+        "test_locked_pending_promotion_restores_previous_receipt",
+        "test_promotion_failure_retains_unpublished_candidate",
+        "test_repeated_publication_retains_previous_complete_snapshot",
+        "test_staging_open_failure_preserves_published_receipt"
+      ],
+      "tidewake_lifecycle_cases": [
+        "test_budget_stop_never_becomes_victory_even_at_won_boundary",
+        "test_complete_requires_all_three_saved_phases_and_no_failures",
+        "test_hidden_panel_is_expired_only_after_queue_and_pause_clear",
+        "test_hidden_paused_or_modal_receipt_is_not_a_captureable_receipt",
+        "test_observer_rejection_and_image_failure_survive_terminal_export",
+        "test_partial_failure_keeps_valid_images_without_claiming_lifecycle_complete",
+        "test_receipt_must_be_new_visible_from_expected_trainer_and_in_banner"
+      ],
+      "reuse_verified_git_blobs": {
+        "tools/capture_manifest_writer.gd": "8d4df196957c20b645845bcdd3c8382b0c559876",
+        "tests/test_capture_manifest_writer.gd": "ee752d5030ce7a5d87c9fb7b75c353721797e098",
+        "tests/test_phase2_fight_capture_lifecycle.gd": "dda3ab5b9e0f74e283619ab820d3ea5c18919f3b"
+      },
+      "reuse_identity": "git rev-parse of each named path at42f6 andf03 yields the same blob. Passing writer and lifecycle pieces apply unchanged without another batch.",
+      "proof_scope": [
+        "Six actual writer cases exercise repeated snapshots, interrupted staging and reported open/backup/promotion failures.",
+        "Locked-pending test ran its POSIX branch on Ubuntu, where an open reader permits rename; it does not establish Windows locked-file rollback behavior.",
+        "Seven lifecycle cases exercise Tidewake terminal/receipt functions. They are not direct Cloudreach PNG-save, live pilot, final metadata or quit-path proof.",
+        "Import/parse success and selected headless assertions do not establish native PNG persistence/readback, actual renderer/raster, fight outcome, whole-criterion or device performance."
+      ],
+      "evidence_paths": {
+        ".tmp\\e-fight-persistence-42f6-37864887011\\expanded\\run.log": "76a6301d3d6415ffd31a013a8ca315c11d897eace2ae5965abe6cdbc7647e7f3",
+        ".tmp\\e-fight-persistence-42f6-37864887011\\job.log": "2c80747163c3128378e7a97a8433e0e90cda934bc0b56ea773ca026195417ce1",
+        ".tmp\\e-fight-persistence-42f6-37864887011\\expanded\\exit_code": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        ".tmp\\e-fight-persistence-42f6-37864887011\\expanded\\MANIFEST.txt": "c89d8a99a2f816e4f4ca15204a6381ab2b180ea6ed4234c9cbbb902f9aaa2166"
+      },
+      "preserved_verdicts": "Original42f6 source REQUEST_CHANGES remains historical. Correctedf03 SOURCE and exact High/Medium COMMAND APPROVE remain unchanged. This selected artifact does not erase the42f6 mkdir finding.",
+      "remaining_gates": [
+        "ROOT actual corrected-source native High/Medium fight image/receipt/source/renderer/terminal verification",
+        "Original independent whole-cluster visual and criterion acceptance"
+      ],
+      "execution_limit": "Reviewer only read frozen artifacts and exact Git blob identities, and wrote this original evidence report; no engine/tests/import/dispatch performed."
+    }
+  ]
 }
