@@ -629,6 +629,7 @@ func _tonic_item_original(commander: int = 1) -> bool:
 		for attempt: Dictionary in hits.get("data", {}).get("attempts", []):
 			if float(attempt.get("foe_hp_before", -1.0)) >= 0.0 \
 					and attempt.get("foe_hp_after") == attempt.get("foe_hp_before") \
+					and attempt.get("strike", {}).get("reported_ok") == true \
 					and int(attempt.get("strike", {}).get("submitted_action", 0)) > 0:
 				strike_action = int(attempt.strike.submitted_action)
 				break
