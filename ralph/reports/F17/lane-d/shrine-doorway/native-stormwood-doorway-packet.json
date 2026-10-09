@@ -1,0 +1,69 @@
+{
+  "args": [
+    "--preset=Medium",
+    "--paired-high",
+    "--hall-stills-only",
+    "--hall-relic-hang-witness",
+    "--hall-relic-biome=stormwood",
+    "--hall-stormwood-relic-candidate",
+    "--hall-relic-doorway-view",
+    "--hall-doorway-candidate",
+    "--hall-cloudreach-relic-baseline",
+    "--hall-relic-display-baseline",
+    "--hall-endwall-baseline",
+    "--hall-arch-depth-baseline",
+    "--hall-surface-depth-baseline",
+    "--source-commit=c338f64255511e6f358ada03a286581dfb09840e",
+    "--output=res://ralph/reports/F17/lane-d/shrine-doorway/native-c338-stormwood"
+  ],
+  "checkout_ref": "c338f64255511e6f358ada03a286581dfb09840e",
+  "source_preflight": "Use established exactHEADR2-F38 capture-definition and shots/.gdignore restore and ROOT serializedpin/import, freshrawoutput/HOME, original tracked/index/source hashes before/after. Preserve every failed/successful immutablepacket/untracked proof; no D engine/import/render/export or hostedGPU.",
+  "changes": "Stormwood existing3pieceSpark mount; new bounded doorwayview label rather than pretending oldnave viewpoint unchanged; production candidate replaces only3upperwindow lintel modules with installed solidwall and matchingheadercollision, grows clearheight4.16→5.2 under nominal6.24ceiling. Width/floor/approaches/creature scale/authority/durable schemas unchanged. Actual fit/visibility remains unproven.",
+  "expected": {
+    "hall_stills_finished": true,
+    "frames": 16,
+    "labels": [
+      "pedestal stormwood",
+      "hung relic from shrine doorway"
+    ],
+    "weather": [
+      "clear",
+      "rain"
+    ],
+    "times": [
+      "day",
+      "night"
+    ],
+    "presets": [
+      "Medium",
+      "High"
+    ],
+    "complete": false
+  },
+  "source_command": "SAME original f42 currentc338 source+changedexistingpreset COMMAND pending; actual changedexistingpreset proof not dispatched. Native COMMAND review not yet requested; this packet prepared only, NOT ROOTqueued or executed.",
+  "flags": "All shipping enabledfalse. Doorgeometry argv optin only exact capture mainloop plus existing Hallstills/relicwitness. Normal game/network processes ignorecandidate/baseline flags and share config. Relic and other Hall flags separate; no automatic enablement follows.",
+  "criterion": "F17#6 OPEN; pending bounded Stormwood mount plus supported shrine doorway witness",
+  "fixture": "Existing disclosed fresh solo host, ordinary post-opening/starter/initial placement and ONE personal held Stormwood relic projected from authored captain_marrow_dynamo_core hand-off. No boss victory/key/hung flag/worlddisplay/receipt seed, no earned boundary.",
+  "guards": "Original full physical8arches+8pedestals, grounded actualcontroller Use/public hang/save/healthycompanion/actual stable character-worldnamespace-fullparty/camera-pairedpose/native encoded1080/weather/source/freshoutput guards retained. Explicit doorwayview derives actual boundary, controllerwalk, actualnave side and .75mper-image position guard; no teleport or companion/camera staging.",
+  "reuse": "Original 7af5Stormwood4/0ARTAPP and f596selector1/0ARTAPP; original f2dbdoorview1/0actual artifact pendingoriginalAPP. Original Meadows/Cloud runtimeAPP and16eachblind seatingPASS but nave8/8 andbothHallbarsBLOCK remainliteral, no unchangedrecapture. Existing bankLow10/10/runtime-blindPASS unchanged.",
+  "engine_args": [
+    "--rendering-method",
+    "forward_plus",
+    "--rendering-driver",
+    "vulkan",
+    "--fullscreen",
+    "--resolution",
+    "1920x1080"
+  ],
+  "script": "tools/capture_f17_visual.gd",
+  "exclusions": [
+    "whole criterion closure",
+    "component READY",
+    "earned accepted save boundary",
+    "boss journey",
+    "co-op",
+    "Low/device/performance",
+    "motion",
+    "whole village/Hall visual bar"
+  ]
+}

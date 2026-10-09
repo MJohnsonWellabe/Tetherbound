@@ -39,7 +39,7 @@
       },
       "run": 37906273583,
       "zip_sha256": "831f0579094b9429b8f62169ea675e2b7e5afb0301035c8aa9b873f2034a8544",
-      "original_artifact_review": "Requested from SAME original f42; pending; no inferred runtime/native credit",
+      "original_artifact_review": "SAME original f42 via parent01a11ff7-054d-76d3-a5cd-aa4c84ba8db6 ARTIFACT/REUSE APPROVE: expectedZIPhash/expandedraw/actualcheckout f596/1executed0failed/exit0/7s/zeroerrorswarnings; no native/hang/whole credit.",
       "artifact": 11604478267,
       "job": 113740392633,
       "source": "f596d766dc4a1e1381e580f511c42bd823a4ec2a"
