@@ -51,12 +51,16 @@ func _run() -> void:
 		_fail("solo host wild-training context is not ready: %s" % str(context))
 	var local: RefCounted = game.get("local")
 	var essence_before := _essence_counts(local)
-	var receipts_before: int = local.redesign_character.transaction_receipts.size()
+	var original_character_id := str(local.character_id)
+	# Canonical installs and receipt compaction do not promise a stable prefix.
+	# Freeze membership before input; an old defeat can never count as this win.
+	var receipts_before: Array = local.redesign_character.transaction_receipts.duplicate(true)
 	var ally_before: RefCounted = _director.call("ally_instance")
 	var level_before := int(ally_before.level)
 	var xp_before := int(ally_before.xp)
 	var battles_before := int(ally_before.battles_fought)
-	print("before: essence %s, receipts %d, ally L%d xp %d" % [essence_before, receipts_before, level_before, xp_before])
+	print("before: essence %s, receipts %d, ally L%d xp %d" % [essence_before, receipts_before.size(), level_before, xp_before])
+	print("F27_ORIGINAL_RECEIPTS ", JSON.stringify({"character_id": original_character_id, "receipts": receipts_before}))
 
 	await _walk_to_the_wild_creature()
 	await _engage()
@@ -90,9 +94,13 @@ func _run() -> void:
 		if not foe_types.has(type_id): _fail("essence %s does not match the defeated wild's types %s" % [item, foe_types])
 	if total != expected:
 		_fail("wild defeat paid %d essence, expected %d (base 1 + level bonus)" % [total, expected])
-	var new_receipts: Array = local.redesign_character.transaction_receipts.slice(receipts_before)
-	var defeat_receipts := new_receipts.filter(func(r: String) -> bool: return r.begins_with("defeat:"))
-	if defeat_receipts.size() != 1:
+	if game.get("local") != local or str(local.character_id) != original_character_id:
+		_fail("original fight character changed before defeat settlement observation")
+		_report()
+		return
+	var new_receipts: Array = local.redesign_character.transaction_receipts.filter(func(r: String) -> bool: return not receipts_before.has(r))
+	var defeat_receipts := new_receipts.filter(func(r: String) -> bool: return r.begins_with("defeat:" + original_character_id + ":"))
+	if defeat_receipts.size() != 1 or local.redesign_character.transaction_receipts.count(defeat_receipts[0]) != 1:
 		_fail("expected exactly one durable defeat receipt, saw %s" % str(new_receipts))
 	else:
 		# Read the actual canonical files after the original settlement allowance.
