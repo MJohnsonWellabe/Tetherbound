@@ -1,0 +1,42 @@
+{
+  "criterion": "F17#6 OPEN",
+  "production_source": "040e7b4526de1aacc57c79b6a7e56393ca0c4db7",
+  "tested_source": "474d277a542779727df17c51fb2334338f494963",
+  "candidate": "One rear waiting nook: installed native-scale Table_Large plus two Bench, measured grounding and matching static collision; normal peers share config, existing solo Hall capture alone accepts opt-in.",
+  "shipping_enabled": false,
+  "provenance": "Original Meadows/Cloudreach HallBarA BLOCK: broad empty nave floor. Existing coherent Quaternius Fantasy Props, no new asset.",
+  "affected_proof": {
+    "run_id": "37921420187",
+    "job_id": "113789997326",
+    "artifact_id": "11611558160",
+    "artifact_sha256": "e3e00c86d81194e668cb3791442fe18bf4a90d1838fad611b8e3d423dce7596b",
+    "command": "headless Compatibility/Dummy tools/run_one_test.gd -- res://tests/test_crossing_hall_portal_mount.gd",
+    "tests": 2,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 5,
+    "engine_errors": 0,
+    "engine_warnings": 0,
+    "raw": "run37921420187/expanded/run.log",
+    "checkout": "run37921420187/job.log"
+  },
+  "reuse_scope": "SAME original f42 via parent01a12053-d330-7a32-93c9-9d1b840e05f2 SOURCE/COMMAND APPROVE current040e, ARTIFACT/REUSE APPROVE exact474d and expectedZIP/archive/expanded/checkout/genuine2methods/exit0/5s/zeroerrorswarnings. Current040e only moves build call before existing Hall night AO collection; unchanged construction/config/assertions reused. Night-shading integration remains unproved.",
+  "guards": "Original canonical portal input/refusal/foreign component guards plus reserved host state retained; actual three native models, render bounds/collider/grounding/clearance/no duplication and normal-peer/capture-only admission checked.",
+  "pending": [
+    "ROOT scheduled actual native controller/contact/night-lighting proof",
+    "SAME original blind PASS",
+    "Whole Village and Hall F17#6 visual bar"
+  ],
+  "native_packet_queued": false,
+  "exclusions": [
+    "Whole closure",
+    "component READY",
+    "native contact",
+    "pixel improvement",
+    "controller reach",
+    "device/performance",
+    "earned boundary",
+    "co-op",
+    "durable state mutation"
+  ]
+}
