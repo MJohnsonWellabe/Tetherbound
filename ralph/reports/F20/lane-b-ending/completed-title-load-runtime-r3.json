@@ -20,12 +20,13 @@
   "completed_fixture_copy_run": false,
   "continuation_content_run": false,
   "inventory_numeric_sole_cause_confirmed": false,
-  "original_independent_review_pending": true,
+  "original_independent_review_pending": false,
   "supported_correction_source": "7b9dcd6ee35d1b08b35d0525c11c5285895aa6f2",
   "supported_correction": "Explicit bool type for existing valid expression only; no expression, codec, equality, saved file, timeout or production path changes.",
   "whole_criterion_closed": false,
   "blind_pass": false,
   "failed_save_input_used": false,
   "new_accepted_boundary": false,
-  "native_dispatched_by_B": false
+  "native_dispatched_by_B": false,
+  "original_independent_verdict": "Both originals confirm **FAIL** `37886426166`: hashes/CRC match; type-inference error at helper line 634, four script errors/one engine error, zero checks. No copy, Title Load or continuation ran; no numeric exit established.\n\nBoth **SOURCE APPROVE** `7b9dcd6ee35d1b08b35d0525c11c5285895aa6f2`.\n\nOne fresh F20 `--completed-fixture --functional-offload` run is conditionally eligible after B\u2019s slot is free **and** the live resident-shell proof receives scoped terminal APPROVE. No repeated unit batch needed.\n\nThat dependency does not approve shipping alpha restoration. Inventory cause, post-credits alpha availability, blind evidence and whole F20#3 remain open."
 }
