@@ -561,6 +561,9 @@
       "F02#0",
       "F02#1"
     ],
-    "retry": "Parked pending distinct supported visual fix; no B native writer or repeated hosted/native capture."
+    "retry": "Parked pending distinct supported visual fix; no B native writer or repeated hosted/native capture.",
+    "original_producer_archive": "relay-native-r1/original-producer-packet.zip",
+    "original_producer_archive_sha256": "2a1bece1243c9fef66f9f2b16439235b2eaf2771b8a1df4c2e6c8d94ecbea450",
+    "packet_byte_provenance": "ZIP preserves original CRLF/UTF8 metadata, logs, raw receipt and three save files. Repository JSON sidecars are navigation copies subject to Git line ending normalization; original PNG bytes remain individually hash-identical."
   }
 }
