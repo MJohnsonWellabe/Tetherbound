@@ -116,9 +116,9 @@ func _run() -> void:
 		# existing helper/cap/guard and verify its actual result before joining.
 		await step(1, "storage_grant", {"item": "wood", "n": 8})
 		var seeded_stock: Dictionary = await step(1, "assert", {"check": "inventory_count", "item": "wood", "equals": 8})
-		_check(seeded_stock.get("ok") == true,
-			"SETUP: original wood8 fixture is present before admission (%s)" % str(seeded_stock.get("actual", "")))
-		if seeded_stock.get("ok") != true:
+		_check(str(seeded_stock.get("verdict", "")) == "PASS",
+			"SETUP: original wood8 fixture is present before admission (%s)" % str(seeded_stock.get("detail", "")))
+		if str(seeded_stock.get("verdict", "")) != "PASS":
 			quit(await finish())
 			return
 
