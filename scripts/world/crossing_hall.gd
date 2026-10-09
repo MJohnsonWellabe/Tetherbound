@@ -41,6 +41,7 @@ func build(config: Dictionary) -> bool:
 		_add_light(_position(row.at), float(row.get("yaw_deg", 0)))
 	_build_frontage()
 	_close_shell()
+	_build_rear_seating()
 	_build_interior_ambient()
 	_declare_interior_volumes()
 	var catalog := CATALOG_PRESENTATION.new()
@@ -51,7 +52,6 @@ func build(config: Dictionary) -> bool:
 	endwall.name = "MeadowsHallEndwallDressing"
 	add_child(endwall)
 	endwall.build("hall_endwall")
-	_build_rear_seating()
 	refresh_from_game()
 	set_process(true)
 	return true
