@@ -10,6 +10,7 @@ const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const CAMP_INPUT := preload("res://tests/helpers/meadows_earned_camp_segment.gd")
 const BUILD_INPUT := preload("res://tests/helpers/gate_a_build_segment.gd")
 const HOME_STATIONS := preload("res://scripts/build/station_rules.gd")
+const MOVEMENT := preload("res://scripts/player/player_controller.gd")
 const CAPTAIN_IDS := ["captain_riverwatch", "captain_field", "captain_ridge"]
 const SIGILS := ["field_sigil", "ridge_sigil", "river_sigil"]
 const HALL_FLAGS := ["defeated_stronghold_patrol", "defeated_stronghold_courtyard", "defeated_stronghold_elite"]
@@ -307,7 +308,8 @@ func _earn_master_t1() -> bool:
 		if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M,
 				OVERLOOK_BYPASS, _v2p(), point) or not await _walk_ground(point):
 			return false
-	if not await _prepare_for_trainer() or not await _approach_prompt(master_prompt):
+	if not await _prepare_for_trainer() or not await _walk_onto_master_pad(site) \
+			or not await _approach_prompt(master_prompt):
 		return false
 	var view: Dictionary = service.call("view")
 	var cid := str(_game.get("local").get("character_id"))
@@ -479,6 +481,61 @@ func _earn_master_t1() -> bool:
 				OVERLOOK_BYPASS, _v2p(), point) or not await _walk_ground(point):
 			return false
 	return await _walk_ground(departure, 0.6)
+
+
+## Choose an actual grounded entrance to the installed pad, not its centre.
+## The original controller still performs every step and provider admission.
+func _walk_onto_master_pad(site: Node3D) -> bool:
+	var body := site.get_node_or_null("ArenaCollision") as StaticBody3D
+	var capsule := _player.get_node_or_null("Collision") as CollisionShape3D
+	if body == null or body.get_child_count() != 1 or capsule == null or not capsule.shape is CapsuleShape3D:
+		return _fail("Orin approach requires the installed arena and actual trainer capsule")
+	var collision := body.get_child(0) as CollisionShape3D
+	if collision == null or collision.disabled or not collision.shape is CylinderShape3D:
+		return _fail("Orin approach cannot infer a route through an unknown pad shape")
+	if _player.is_on_floor():
+		for index in _player.get_slide_collision_count():
+			var contact := _player.get_slide_collision(index)
+			if contact.get_collider() == body and contact.get_normal().angle_to(Vector3.UP) <= _player.floor_max_angle:
+				return true
+	var scale := collision.global_basis.get_scale()
+	if not scale.is_finite() or scale.x <= 0.0 or scale.y <= 0.0 \
+			or absf(scale.x - scale.z) > _player.safe_margin \
+			or collision.global_basis.y.normalized().dot(Vector3.UP) < 0.999:
+		return _fail("Orin approach requires the original upright circular pad")
+	var cylinder := collision.shape as CylinderShape3D
+	var top := collision.global_position.y + cylinder.height * scale.y * 0.5
+	var radius := cylinder.radius * scale.x
+	var trainer := capsule.shape as CapsuleShape3D
+	var clearance := trainer.radius * capsule.global_basis.x.length() + _player.safe_margin + MOVEMENT.STEP_FORWARD_PROBE
+	var feet_offset := _player.global_position.y - (capsule.global_position.y - trainer.height * capsule.global_basis.y.length() * 0.5)
+	if radius <= clearance or not is_finite(top) or not is_finite(feet_offset):
+		return _fail("Orin pad has no capsule-safe grounded entrance")
+	var entry := {}
+	var closest := INF
+	# A bounded read-only perimeter sample; never moves or recovers the body.
+	for index in 32:
+		var angle := TAU * float(index) / 32.0
+		var direction := Vector3(cos(angle), 0.0, sin(angle))
+		var outside := collision.global_position + direction * (radius + clearance)
+		var span := trainer.height * capsule.global_basis.y.length() * 2.0
+		var query := PhysicsRayQueryParameters3D.create(Vector3(outside.x, top + span, outside.z),
+			Vector3(outside.x, top - span, outside.z), _player.collision_mask, [_player.get_rid()])
+		var hit := _world.get_world_3d().direct_space_state.intersect_ray(query)
+		if hit.is_empty(): continue
+		var at: Vector3 = hit.position
+		var normal: Vector3 = hit.normal
+		if not at.is_finite() or not normal.is_finite() or normal.length_squared() == 0.0 \
+				or normal.angle_to(Vector3.UP) > _player.floor_max_angle or absf(top - at.y) > MOVEMENT.STEP_HEIGHT: continue
+		var inside := collision.global_position + direction * (radius - clearance)
+		inside.y = top + feet_offset
+		var distance := _player.global_position.distance_to(at)
+		if distance < closest:
+			closest = distance
+			entry = {"outside": Vector2(at.x, at.z), "inside": inside, "ground_y": at.y, "pad_top": top}
+	if entry.is_empty(): return _fail("No live grounded Orin pad entrance fits the unchanged controller step height")
+	_receipt("master_pad_ground_approach", entry)
+	return await _walk_ground(entry.outside, 0.6) and await _walk(entry.inside, 0.6)
 
 
 func _gather_first_feast_stock(band2: Array[Vector2], rim: Array[Vector2],
