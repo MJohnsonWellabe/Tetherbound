@@ -27,7 +27,14 @@
     "mode": "headless",
     "extra_args": [],
     "dispatched_at_utc": "2026-10-09T06:20:36Z",
-    "result": "PENDING; queued when this source-review receipt was written. No runtime approval."
+    "artifact_id": 11599068059,
+    "checks_passed": 25,
+    "unique_failed_assertions": 1,
+    "exit": 1,
+    "raw_log": "ralph/reports/F25/downloads/a-hosted-trainer-start-37893029380/raw/run.log",
+    "log_sha256": "57164639c62a57021baba92ede44c08ea7e96815e4787f3c327d4db67e5abd71",
+    "result": "FAIL: client rejected host-authored round with start_refused/opponent_unavailable before physical action703. Two FAIL lines duplicate one failed assertion. First25 setup/ownership/realm/radius guards pass, including both bodies at2.94m challenge range and0.00m replication error. No action703, stale replay or round-transition runtime credit."
   },
+  "artifact_review": "SAME original failed-artifact/disposition review requested; pending. Runtime and integration remain unapproved.",
   "limits": "Integrate only scoped77e181 after required proof and same original artifact approval; no whole lane ancestry, failed HP timing change or parked F33 source. No C ambient/riding/peerRunner edits; no save schema or flag overrides. Original disclosed retired-crossing fixture remains. No failed save/accepted boundary promoted, native/GPU, FullCI/main activation or publication credit."
 }
