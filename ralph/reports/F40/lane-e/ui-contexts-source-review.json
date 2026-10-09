@@ -1506,5 +1506,79 @@
         "No source/test edit, engine/test/GPU/import/dispatch performed. No new native command, parse/runtime/visual/whole/READY approval."
       ]
     }
+  ],
+  "settings_entry_focus_proof_correction_reviews": [
+    {
+      "review_kind": "Correction to historical cb107 affected smoke start-focus REQUEST_CHANGES",
+      "source_commit": "0516750b834da1df0b36b07901551b6b08229e02",
+      "parent": "b0c6da32816c7e1cde8aa053f8230209be45ad23",
+      "notice": "6080128448 supplied as pre-edit authorization; no fetch",
+      "reviewed_test_blob": "d16b8fa386bba96b941d291ae1698a783d59aa7a",
+      "test_delta_source_verdict": "APPROVE",
+      "affected_headless_recipe_verdict": "APPROVE applicability; actual result pending",
+      "recipe": {
+        "script": "res://tests/smoke_settings.gd",
+        "mode": "headless",
+        "source_commit": "0516750b834da1df0b36b07901551b6b08229e02"
+      },
+      "findings": [
+        "Exact diff adds25lines only to existing _check_focus_can_be_driven; no removed assertions/new test method/class/fixture. Settings/Graphics/GameMenu bytes unchanged relative to acceptedcb107.",
+        "Natural entry must equal actual optional first Help action or existing Graphics.first_focus; no direct grab_focus. First gamepad binding comes from actual already-admitted _rows fixture.",
+        "Physical D-pad Down uses unchanged _tap_pad with its two-frame press/three-frame release transport. Walk bounded by actual Control descendants, rejects null/repeated focus or control not fully inside current scroll rect under existing1px tolerance. Requires first binding reached; failure records and returns, no skip/suppression.",
+        "Once reached, start is read from current focus; all original horizontal/D-pad/stick/binding actions/rebind/cancel/clash/reset/panic/teleport/scroll checks and original starting-binding expectations remain unchanged. Additional walk proves changed natural entry connects to original tested path."
+      ],
+      "history_and_limits": [
+        "Historicalcb107 source approval and smoke applicability REQUEST_CHANGES retained. Oldcb107run37924904519 pending at task routing is not promoted, suppressed or canceled by reviewer.",
+        "Mounted original lesson/Graphics/rows/scroll fixture supplies valid objects; this addition is an affected existing-path guard, not a new malformed-object fixture. Parse/import/execution pending executor.",
+        "Existing1e2 proofs remain historical applicable to unchanged scopes; no passing batch repeated by reviewer. Current natural entry physical walk still requires actual corrected smoke result.",
+        "No native command/pixel/readability/wholecriterion/READY approval. No test/engine/GPU/import/dispatch/source edits performed."
+      ]
+    }
+  ],
+  "settings_entry_focus_failed_artifacts": [
+    {
+      "verdict": "FAILED; no Settings navigation proof",
+      "source_commit": "cb107eb59172f52c0964d2b2d3470cf1f59a9b7a",
+      "run": 37924904519,
+      "artifact": 11612849915,
+      "packet": "C:\\CodexTemp\\tetherbound-proof\\hosted-e-cb107-settings-entry",
+      "zip_sha256": "8e1a0add6783624f682eeddb2952189528f48217ecff3e2af6b8bb39c0c27c2f",
+      "API_digest_run_binding": true,
+      "all_zip_crc_and_extracted_bytes_match": true,
+      "run_sha256": "1ec7ec3154b8c2c439be163512827ca9a8a7b1c8c037514270ff61fd9339fdcb",
+      "job_sha256": "00df43d35000a41779fae11e455952fa44465d96d6396f392481cb485df136e3",
+      "actual_checkout": "job lines135/147 fetch/checkout fullcb107; line274 actualHEAD; workflowmain differs",
+      "actual_failure": "tab_settings.gd1046 Cannot infer graphics_focus type; script load parse error and follow-on nonexistent GDScript.new; final FAIL noSettingsTab. Navigation mismatch was source-supported potential, not this run failure.",
+      "actual_terminal": "job Process completed exit1 at2026-10-09T11:40:38.5511797Z",
+      "exit_footer": "ABSENT: workflow aborted before exit_code artifact footer. Do not infer success or completed test result.",
+      "warning": "Retained terrain physics interpolation deprecation warning; no error-free claim.",
+      "history": "Historicalcb107SOURCEAPP was static source judgment, not parser/runtimePASS. Unrun051675 retained physical test-delta approval but contains superseded inference error, no parserPASS. No oldpin rerun/promotion."
+    }
+  ],
+  "settings_entry_focus_typed_correction_reviews": [
+    {
+      "review_kind": "Explicit typed local correction plus unchanged approved physical entry smoke delta",
+      "source_commit": "27b6b29849581baebecf8fd1e5730ca9b3a08576",
+      "production_blob": "f8d40a859e518e4d2191586f7781afad39d73905",
+      "test_blob": "d16b8fa386bba96b941d291ae1698a783d59aa7a",
+      "source_verdict": "APPROVE corrected source applicability; parser/runtime result PENDING",
+      "test_delta_verdict": "APPROVE reuse exact051675physical entry-walk test blob",
+      "affected_headless_recipe_verdict": "APPROVE",
+      "affected_recipe": {
+        "script": "res://tests/smoke_settings.gd",
+        "mode": "headless",
+        "source_commit": "27b6b29849581baebecf8fd1e5730ca9b3a08576"
+      },
+      "findings": [
+        "Exact delta from051675 is one typed-local replacement var graphics_focus: Control = _graphics.first_focus(); no semantic focus, guard, await, owner, layout or fallback changes. Actual Graphics.first_focus returns Control/_preset; explicit type removes reliance on inferred return of VBoxContainer-typed member dynamic method.",
+        "Original lesson-first priority, graphics/control null fallback and originalControls/reset remain. Graphics/GameMenu bytes unchanged; mounted child lifecycle source review reused.",
+        "Existing smoke exact25line physical natural-entry-to-firstbinding guard correction retained byte-identically; no direct grab_focus/newfixture/assertion removal. All original horizontal/stick/binding/rebind/reset/panic/teleport/scroll checks remain."
+      ],
+      "required_proof": [
+        "One affected existing Settings headless smoke at exact corrected pin, actual clean diagnostic/terminal/result binding. No parser or physical navigation PASS from this source review.",
+        "Native entry/settings readability remains pending separate ROOT command/task; no new native command approved here."
+      ],
+      "history_limits": "Preserve failedcb107 observed ParseError/notnavigation classification, historical source and proof REQUEST_CHANGES/APP records. Superseded051675 was not run; no error-free/parserPASS claim. No engine/import/GPU/tests/dispatch/source edits performed; no whole/art/device/save/co-op/READY claim."
+    }
   ]
 }

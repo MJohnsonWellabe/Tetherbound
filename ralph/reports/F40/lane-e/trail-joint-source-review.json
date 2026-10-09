@@ -246,5 +246,224 @@
       ],
       "limits": "Current exact argv approves ROOT scheduling applicability only. No execution/import/static/native success, contact/physics/art-bar/device/performance/save/co-op/full384/wholeF40/F08/READY claim. ROOT live immutable1e2menu and E-owned prospective station integration are separate, unchanged by this review. No native dispatch or source edits performed."
     }
+  ],
+  "native_runtime_reviews": [
+    {
+      "review_kind": "Completed immutable eight original Stormward approach runtime; no new source/unit audit",
+      "verdict": "APPROVE bounded native runtime/provenance",
+      "source_commit": "8cca04f2a5a91917652c8dc66842a38683105368",
+      "packet": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1",
+      "original_output": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-stormward-approach-8cca-daycycle-r1",
+      "source_tree_index": "472a144e4619ea1ff0cb227460f3542b9a969062",
+      "source_binding": "Frozen source-before/after-static/import/capture all exact pin/tracked clean/head tree=index; local Git tree exact. Four imported metadata path blobs independently match pin in revalidated receipt. Tree is not a commit. Retained untracked prior evidence/uid paths remain disclosed; no claim of all-files-clean. Later cached checkout HEAD not used.",
+      "actual_static_import_capture": {
+        "static_exit": 0,
+        "import_exit": 0,
+        "capture_pid": 1272,
+        "start_utc": "2026-10-09T11:28:48.1321545Z",
+        "end_utc": "2026-10-09T11:38:53.2635148Z",
+        "exit": 0,
+        "reason": "process_exit",
+        "actual_native_argv": [
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--rendering-method",
+          "forward_plus",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "res://tools/capture_cloudreach_f40_matrix.gd",
+          "--",
+          "--biome=cloudreach",
+          "--preset=High",
+          "--source-commit=8cca04f2a5a91917652c8dc66842a38683105368",
+          "--stormward-approach-only",
+          "--output=res://.tmp/e-stormward-approach-8cca-daycycle-r1"
+        ],
+        "argv_matches_original_corrected_proposal": true,
+        "argc": 14
+      },
+      "graphics": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+        "preset": "High",
+        "renderer": "forward_plus",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source_commit": "8cca04f2a5a91917652c8dc66842a38683105368"
+      },
+      "actual_driver_log": "Godot4.7 stable; Vulkan1.3.280 Forward+ NVIDIA GeForceGTX1060 3GB; Windows display",
+      "manifest": {
+        "sha256": "e9764a40800c01d5c433fe74c184f287ff1b627d3bb43f0cccc9dba994709761",
+        "raw_packet_exact_bytes": true,
+        "complete": true,
+        "failures": [],
+        "captured": 8,
+        "selected_plan": 8,
+        "full_plan": 384,
+        "full_matrix_complete": false,
+        "selected_ids": [
+          "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear",
+          "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain",
+          "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear",
+          "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain",
+          "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear",
+          "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain",
+          "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear",
+          "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain"
+        ],
+        "candidate_preview": false,
+        "selector": "stormward_approach_only",
+        "scope": "Stormward approach repair only; no full-matrix claim"
+      },
+      "images": [
+        {
+          "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear",
+          "original_file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear.png",
+          "packet_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear.png",
+          "bytes": 1931961,
+          "sha256": "cd238ae9d99129b07ddb969bf88b3fb0123648f9e74c3368378e0ab4aab6d05d",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "all_chunk_crc_and_complete_zlib_scanlines_verified": true,
+          "original_archive_byte_equal": true
+        },
+        {
+          "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain",
+          "original_file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain.png",
+          "packet_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain.png",
+          "bytes": 1742351,
+          "sha256": "c79c6a32b3e23bbf00a2c9c6c8beecc300f3ce277c76db57da502bbb0201e2d9",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "all_chunk_crc_and_complete_zlib_scanlines_verified": true,
+          "original_archive_byte_equal": true
+        },
+        {
+          "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear",
+          "original_file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear.png",
+          "packet_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear.png",
+          "bytes": 2646084,
+          "sha256": "b7148ca2a715fca5894b51de145443a66497197c4a08b25f152601d4f4c858d4",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "all_chunk_crc_and_complete_zlib_scanlines_verified": true,
+          "original_archive_byte_equal": true
+        },
+        {
+          "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain",
+          "original_file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain.png",
+          "packet_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain.png",
+          "bytes": 2159145,
+          "sha256": "a73cb01e4173bb3a9fec090adcdd4df0ba667e5bb4b7b69c2a8d4790ec9119bc",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "all_chunk_crc_and_complete_zlib_scanlines_verified": true,
+          "original_archive_byte_equal": true
+        },
+        {
+          "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear",
+          "original_file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear.png",
+          "packet_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear.png",
+          "bytes": 2254127,
+          "sha256": "e0770315515486074961cde5b75f22713244a6ba40c90d2b1662fa1dfcb3d523",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "all_chunk_crc_and_complete_zlib_scanlines_verified": true,
+          "original_archive_byte_equal": true
+        },
+        {
+          "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain",
+          "original_file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain.png",
+          "packet_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain.png",
+          "bytes": 2016213,
+          "sha256": "fb212829465094dab237ec3253148e4f0a0c66714a2d0ff1527af9cd2cd6fa06",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "all_chunk_crc_and_complete_zlib_scanlines_verified": true,
+          "original_archive_byte_equal": true
+        },
+        {
+          "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear",
+          "original_file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear.png",
+          "packet_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear.png",
+          "bytes": 2111923,
+          "sha256": "3f1fabf45a4e560c1e1b108e18cd67ccc53042f5352b9fdbc7b8b3048fa70e9b",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "all_chunk_crc_and_complete_zlib_scanlines_verified": true,
+          "original_archive_byte_equal": true
+        },
+        {
+          "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain",
+          "original_file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain.png",
+          "packet_copy": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain.png",
+          "bytes": 1921525,
+          "sha256": "a02a23048388d7b78114d10f10640487f7bb303d66f6a19c073682a74ed27af7",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "all_chunk_crc_and_complete_zlib_scanlines_verified": true,
+          "original_archive_byte_equal": true
+        }
+      ],
+      "actual_record_controls": "Exactly original Stormward approach four clock labels x clear/rain; every observed clock request/time label and weather matches row, observed hours near5/8/18/23. All records debug_travel/on_floor=true, finite same player/camera positions, original authored threshold stand/yaw and production CameraRig source. Nearby creature count0 in these records; do not invent five-creature scene visibility or battle fixture. Retained runtime guards plus completed persisted receipt support only their bounded control scope.",
+      "persistence_and_ops": "Actual original/archived manifest exact bytes and eight records match eight independently CRC/inflate/hash-verified original PNGs. Existing lookdev parent _finish writes/flushes manifest and exits directly; it does not emit catalogue_survey optional success banner or claim exact-readback API absent there. OPS verifier success-banner expectation was corrected to actual eight CATALOGUE CAPTURE rows and final manifest/exit; no source/guard mutation. Independent raw/archive readback verified here.",
+      "diagnostics": {
+        "engine_errors": 0,
+        "script_errors": 0,
+        "warnings": 2,
+        "warning_sites": [
+          "BrokenCauseway main03",
+          "Windscar floorloop15"
+        ],
+        "descriptive_notice": "CloudreachNoStronghold fallback notice retained; not engine error"
+      },
+      "receipt_sha256": {
+        "capture-start.json": "c4d10ad6278dcfd5bd4b9aa5ea7c6443e5131ca7957efc7ec0864f7bbbcf59e3",
+        "capture-terminal.json": "3f5ad8c2ec89315cab92885853d58735e75d7f36a561aadd15b7c1826f14b426",
+        "capture.stdout.log": "6ea6003fffc929253ec673ca514dbeb7be041c43b6dbd6954f36ba1e24c16d6d",
+        "capture.stderr.log": "b57244443e9479c10c20336d268e144bf5aa57198031ba4507c79fd6fbcc80e0",
+        "command-proposal.json": "b73d4da46b03f87428892c082b72fc1f083ef55ac6ee6aa7644abf1d0921a1d6",
+        "static-start.json": "5539b5cf533089a499a4474f93a7d3b0aa00645524a36cbce93066dc73035710",
+        "static-terminal.json": "a7acb367569ec681b13986499071bf739117121eccc38657cca0968d8f65917e",
+        "static.stdout.log": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+        "static.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "import-start.json": "f7f94f2c1aa86f79754cc8dbaf61b76e02b2aae99a8cbf1d4f841f5c058962d5",
+        "import-terminal.json": "389d4054d6ab355f12ed846ce3d7ba74b69b3efdcc881272df97bba881d2c50a",
+        "import.stdout.log": "529ba63ee5a1dfb9fb7f498de54644318d09f9021202737e1185e66a063da762",
+        "import.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source-before-static.json": "7a7782501446b99549625c50b8ced3054ff7c46eca009793b3865ee09a0275b4",
+        "source-after-static.json": "9fa1e14f829b4146b60cfdca266e9ab107cdc11be2044c47512977075256a929",
+        "source-before-import.json": "bff59fcd8b5e55062d3504924f9492f57622e5e3b69748a86fe4d088c24ae4a4",
+        "source-after-import.json": "362c9896b7486d74332d054dacf9a5277c071438e1e4549b54b264d9efd475b2",
+        "source-after-import-revalidated.json": "c0f38d42b6cd3a87d1d327e87c12434667da430ed04caf19ea9f10f21115542f",
+        "source-before-capture.json": "af45b39ff777d0b4aed26546441f8f8ac09a43bce9ace1fbc5fd3d7106a4edab",
+        "source-after-capture.json": "f7f26ae29d2022ac5e44426b6e443890b14d2a6b7bb5c2cc8257e2eb1b252f71"
+      },
+      "limits": [
+        "Original direct chapter mount/upper-route flags/debug threshold teleport/production spring-arm framing and pinned visual clock/weather fixtures retained; no earned travel or canonical encounter-weather claim.",
+        "No pixel judging/obstruction or notch cause established, no contact/physics/motion/save/co-op/device/performance/fullbar/wholeF40/F08/READY claim. Eight selected frames are not200 or full384; all prior failures/bar verdicts remain.",
+        "Original requested_times legacy day/night metadata differs from matrix required_segments/allactual four-clock rows; coverage above is grounded in selected IDs and actual row clock observations, not that generic inherited field.",
+        "Source/unit/API/command approvals reused unchanged; actual blind visual judgment remains separate. No engine/import/GPU/tests/dispatch or source edits by reviewer."
+      ]
+    }
   ]
 }
