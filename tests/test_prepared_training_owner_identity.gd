@@ -243,7 +243,8 @@ func test_actual_rematch_owner_bool_retry_and_two_world_files_preserve_the_ownin
 		if proposal.get("ok") != true:
 			_close(game, directory)
 			return
-		assert_eq(proposal.get("reward_paid"), step.paid, "foreign clocks and the owning early clock cannot pay")
+		assert_eq(ESSENCE._equivalent(proposal.state.inventory, before.inventory), not step.paid,
+			"actual canonical inventory changes only on the owning paid cycles")
 		if index > 0 and not step.paid:
 			assert_true(ESSENCE._equivalent(proposal.state.inventory, paid_inventory), "no stock minted on the unpaid cycle")
 			assert_true(ESSENCE._equivalent(proposal.state.redesign_character.rematch_cooldowns, paid_clocks),
@@ -311,7 +312,8 @@ func test_actual_rematch_owner_bool_retry_and_two_world_files_preserve_the_ownin
 			assert_eq(paid_clocks[NAMESPACE + "-owning:relay_captain:r1"].next_eligible_seconds, 1300.0)
 		if index == steps.size() - 1:
 			assert_eq(disk_after.redesign_character.rematch_cooldowns[NAMESPACE + "-owning:relay_captain:r1"].next_eligible_seconds, 2500.0)
-			assert_false(proposal.get("unique_reward"), "returning due cycle is not a second unique reward")
+			assert_eq(disk_after.redesign_character.transaction_receipts.count("rematch:relay_captain:r1:" + CHARACTER), 1,
+				"the original unique reward marker remains singular on the due return")
 	assert_true(worlds.call("has", "slot-prepared-rematch-owning") and worlds.call("has", "slot-prepared-rematch-foreign"),
 		"both independent world documents persisted alongside the same stable character")
 	_close(game, directory)
