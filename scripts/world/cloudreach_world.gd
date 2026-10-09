@@ -3629,7 +3629,17 @@ func _build_landmarks() -> void:
 				_materials["upland_dry"], true)
 			west_crown.get_child(0).visible = false
 			east_crown.get_child(0).visible = false
-		_surfaces.append({"kind": "rect", "centre": Vector2(at.x, at.z), "half": Vector2(17.0, 17.0), "height": at.y})
+		if landmark_id == "sky_shrine_heartstone":
+			# Bind the existing shrine crown, not the regional floor 30m below it.
+			# The radius stays inside the same polygon emitted by _mesa; its
+			# inscribed disc is independent of the mesa's seeded yaw. This Fly-only
+			# crown has no ground-route reference line to change its flat height.
+			var shrine_sides := 48 + posmod(_landmark_count + 31, 6)
+			var shrine_radius := ledge_flat_radius * cos(PI / float(shrine_sides))
+			_surfaces.append({"kind": "ellipse", "centre": Vector2(at.x, at.z),
+				"half": Vector2.ONE * shrine_radius, "height": at.y + ledge_y})
+		else:
+			_surfaces.append({"kind": "rect", "centre": Vector2(at.x, at.z), "half": Vector2(17.0, 17.0), "height": at.y})
 		_cover_patches.append({"kind": "ellipse", "centre": at, "half": Vector2(25.5,25.5) if settlement else Vector2(16.5, 15.5),
 			# Settlement lanes are protected by their actual building, yard and
 			# path exclusions below. Do not cut one circular lawn out of the middle.
@@ -4373,6 +4383,7 @@ func _dress_master_signpost(definition: Dictionary) -> void:
 		var post := sign as Node3D
 		if Vector2(post.global_position.x - at.x, post.global_position.z - at.z).length() > 1.0:
 			continue
+		HIGH_PERCHES_PRESENTATION.style_master_sign_text(post)
 		for child: Node in post.get_children():
 			if child is MeshInstance3D and (child as MeshInstance3D).mesh is BoxMesh:
 				(child as MeshInstance3D).material_override = _materials["weathered_timber"]

@@ -1,6 +1,14 @@
 {
   "schema_version": 1,
   "landmark_id": "high_roost_perches",
+  "master_sign_text": {
+    "scope": "cloudreach_client_presentation",
+    "font_size": 96,
+    "pixel_size_m": 0.0012,
+    "width_px": 960,
+    "outline_size": 8,
+    "offset_m": [0.0, 2.1, 0.15]
+  },
   "design_intent": "A maintained high-altitude refuge: a complete south arrival portal, a stone wind compass, four elevated creature roosts, visible supplies and warm landing signals give the six inherited needles human and creature scale without changing the Fly route or survey landing disc.",
   "arrival_arch_position": [0.0, 0.0, -17.0],
   "arrival_arch_size_m": [14.8, 9.5, 2.8],

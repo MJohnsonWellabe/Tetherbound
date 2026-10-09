@@ -5,6 +5,29 @@ const PRESENTATION := preload("res://scripts/world/cloudreach_high_perches_prese
 const WORLD_PATH := "res://scripts/world/cloudreach_world.gd"
 
 
+func test_master_sign_text_fits_a_physical_post_and_keeps_its_message_and_prompt() -> void:
+	var post := Node3D.new()
+	var words := Label3D.new()
+	words.text = "Aster Windward — Lv 40 Master. Hold your footing.\nFollow the side path →"
+	words.font_size = 96
+	words.pixel_size = 0.006
+	words.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	post.add_child(words)
+	var prompt := Node3D.new()
+	prompt.name = "MasterLead"
+	post.add_child(prompt)
+	var message := words.text
+	PRESENTATION.style_master_sign_text(post)
+	assert_eq(words.text, message, "the Master route and advice remain available")
+	assert_true(post.get_node(^"MasterLead") == prompt, "presentation never replaces interaction")
+	assert_true(words.width * words.pixel_size <= 1.3, "label stays within a human-scale sign width")
+	assert_true(words.font_size * words.pixel_size <= 0.13, "glyph height cannot become a giant world overlay")
+	assert_true(words.position.y < 2.4, "text sits on the existing post instead of above the camera")
+	assert_eq(words.autowrap_mode, TextServer.AUTOWRAP_WORD_SMART)
+	assert_eq(words.billboard, BaseMaterial3D.BILLBOARD_FIXED_Y)
+	post.free()
+
+
 func test_high_perches_config_names_a_complete_refuge_composition() -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 	assert_true(parsed is Dictionary)

@@ -19,6 +19,20 @@ const CAMERA_RIG := preload("res://scripts/player/camera_rig.gd")
 var _built := false
 
 
+static func style_master_sign_text(post: Node3D) -> void:
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	var text_style: Dictionary = cfg.master_sign_text
+	for child: Node in post.get_children():
+		if child is Label3D:
+			var words := child as Label3D
+			words.font_size = int(text_style.font_size)
+			words.pixel_size = float(text_style.pixel_size_m)
+			words.width = float(text_style.width_px)
+			words.outline_size = int(text_style.outline_size)
+			words.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			words.position = _v3(text_style.offset_m)
+
+
 func build(materials: Dictionary) -> void:
 	if _built:
 		return
