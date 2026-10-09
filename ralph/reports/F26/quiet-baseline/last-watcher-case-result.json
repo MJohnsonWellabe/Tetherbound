@@ -1,0 +1,12 @@
+{
+  "engine_log": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r3-engine.log",
+  "finished_utc": "2026-10-09T21:55:37.5329774Z",
+  "route": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r3\\route.json",
+  "pid": 36036,
+  "receipt_gate": "PASS",
+  "started_utc": "2026-10-09T21:51:36.4629768Z",
+  "samples": 9701,
+  "visual_inspection": "PENDING",
+  "elapsed_ms": 151726.438,
+  "case": "Low-r3"
+}

@@ -669,11 +669,19 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			if not is_instance_valid(target) or not is_instance_valid(body):
 				return {"verdict":"FAIL", "detail":"Snare actual target or owned body missing"}
 			if session.is_host():
-				var actor: RefCounted = body.get("instance")
+				# Deployed CreatureBody has no wild-only `instance` member. Its
+				# identity is the production admitted deployment/card binding.
+				var actor: Dictionary = director.call("_strike_actor_binding", manager.encounter_id(), session.local_peer_id(), body)
 				var foe: RefCounted = target.get("instance")
-				if actor == null or manager.active_creature() == null or foe == null \
-					or str(actor.uid) != str(manager.active_creature().uid) or str(foe.uid) != str(manager.enemy().uid):
-					return {"verdict":"FAIL", "detail":"Snare authoritative bodies differ from the same actual encounter UIDs"}
+				var deployment: Dictionary = director.tether_command_deployment()
+				if actor.is_empty() or manager.active_creature() == null or foe == null \
+					or actor.get("body_instance_id") != body.get_instance_id() \
+					or actor.get("creature_uid") != str(manager.active_creature().uid) \
+					or actor.get("deployment_generation") != deployment.get("generation") \
+					or actor.get("character_id") != str(game.local.character_id) \
+					or str(foe.uid) != str(manager.enemy().uid):
+					return {"verdict":"FAIL", "detail":"Snare authoritative bodies differ from the same actual encounter UIDs",
+						"data":{"actor_binding":actor, "deployment":deployment, "target_uid":str(foe.uid) if foe != null else ""}}
 				# The same disclosed host-local proximity fixture used for earned
 				# hits must be current at the real command: the live wild moves
 				# during hit settlement and the coordinator's intervening probes.
@@ -690,10 +698,19 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var actor_centre: Vector3 = body.call("centre")
 			var actor_facing: Vector3 = body.call("facing")
 			var target_centre: Vector3 = target.call("centre")
+			var actor_radius := float(body.call("body_radius")) if body.has_method("body_radius") else 0.5
+			var target_radius := float(target.call("body_radius")) if target.has_method("body_radius") else 0.5
+			var contact_reach := preload("res://scripts/combat/contact_spacing.gd").pair_reach_need(body, target)
+			var profile := preload("res://scripts/combat/combat_manager.gd").host_move_profile(
+				preload("res://scripts/creatures/move_db.gd").load_default(), "player_utility", "snare",
+				actor_radius, target_radius, 1.0, contact_reach)
 			var geometry := {"actor_body":body.get_instance_id(), "target_body":target.get_instance_id(),
 				"actor_centre":[actor_centre.x, actor_centre.y, actor_centre.z],
 				"actor_facing":[actor_facing.x, actor_facing.y, actor_facing.z],
-				"target_centre":[target_centre.x, target_centre.y, target_centre.z]}
+				"target_centre":[target_centre.x, target_centre.y, target_centre.z],
+				"actor_radius":actor_radius, "target_radius":target_radius, "contact_reach":contact_reach,
+				"range":profile.get("range"), "cone_degrees":profile.get("cone_degrees"),
+				"move_connects":preload("res://scripts/combat/combat_math.gd").move_connects(profile, actor_centre, actor_facing, target_centre)}
 			if input == null or not input.request("snare"):
 				manager.disconnect("tether_command_refused", observe_refusal)
 				return {"verdict":"FAIL", "detail":"production TetherCommandInput refused Snare request", "data":{"refusals":refusals}}
