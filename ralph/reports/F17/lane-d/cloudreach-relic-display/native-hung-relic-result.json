@@ -1,0 +1,68 @@
+{
+  "evidence_copy": "Untracked native-328e-r1 preserves raw logs, manifest, terminal/source receipts and codec envelopes; PNG originals remain ROOT protected",
+  "raw_output": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/ralph/reports/F17/lane-d/cloudreach-relic-display/native-328e-hung",
+  "diagnostics": {
+    "warnings": [
+      "interpolation deprecation",
+      "seven Texture RIDs leaked"
+    ],
+    "engine_script_errors": 0
+  },
+  "actual_terminal": {
+    "ended_utc": "2026-10-09T08:39:46.1946835Z",
+    "pid": 65752,
+    "exit": 0
+  },
+  "scope": "Existing disclosed ONE personal held Cloudreach fixture, original physical circuit/public hang/save/companion/camera/pose/raster/weather guards. No earned boundary, boss victory, co-op, Low/device, motion, performance, village or whole criterion credit. Candidates remainOFF.",
+  "original_blind": {
+    "seating": "bounded PASS; supported by wooden tray, no visible obvious gap/gross penetration",
+    "reviewer": "SAME /root/f26_presets_review",
+    "nave": "BLOCK8/8; Terrapup fills opening, only tray fragment visible; label overlap and lintel cuts upper head",
+    "receipt": "parent01a11fec-c3d8-75b3-898c-4afbe35d1b01",
+    "hall_bar_a": "BLOCK; crowded shrine/rudimentary relic/empty floor/repetitive surfaces/flat portal infills",
+    "verdict": "BLOCK",
+    "task": "01a11fe6-77b2-7cf3-a0b5-bf09d7acef9a",
+    "pedestal": "bounded PASS8/8 regionalassociation; simple pale bent strip, specific identity depends heavily on Cloudreach Cliffs label",
+    "hall_bar_b": "BLOCK; readable warm night pools but insufficient relic focus/depth/atmospheric staging",
+    "inspected": 16
+  },
+  "criterion": "F17#6 OPEN; bounded Cloudreach held-fixture native witness",
+  "manifest_sha256": "3b987e236823feb6a229eadf3f358f531342b0a9067320f436f927597a1f666c",
+  "manifest": {
+    "presets": [
+      "Medium",
+      "High"
+    ],
+    "labels": [
+      "pedestal cloudreach",
+      "hung relic from nave"
+    ],
+    "hung": true,
+    "decoded_1920x1080": 16,
+    "failure": "",
+    "complete": false,
+    "frames": 16,
+    "hall_stills_finished": true
+  },
+  "source": "328e2a291113500b1ac11d91f2753cd91f29a17d",
+  "saved_payload": {
+    "held": [],
+    "hung": [
+      "cloudreach"
+    ],
+    "character_sha256": "473e8aca8aa1497aabb7b2ab7953e882b495d9642ae84dc41bf5be63db2714a5",
+    "receipt_count": 1,
+    "world_sha256": "ac9b8c05ac0099722fdb280639fdd893b4dc8b7a0a549803d00a95955a272a36",
+    "world_display": true,
+    "receipt": "relic_hang:cloudreach:character-46a9c0cc439a5f10b0c32ae836d0afe2",
+    "mount_visible": true
+  },
+  "original_runtime": {
+    "receipt": "parent01a11fe4-3063-70a3-b446-e3a943d9e5c5",
+    "verified": "Exact source/hash/unchanged raw copies/exit0/tracked-index clean/physical8+8 access/16 unique decoded originals and matching hashes/stable pairedposes/actual codec held removal/hung andreceipt once/worlddisplay/identity-fullparty-namespace/mountvisible; original guards applicable",
+    "verdict": "RUNTIME/ARTIFACT APPROVE",
+    "reviewer": "SAME /root/f42_visual_review",
+    "corrections": "failure=\"\", not failures[]; one interpolation deprecation plus seven-Texture-RID leak warning retained"
+  },
+  "immutable_packet": "C:/CodexTemp/tetherbound-proof/native-d-328e2a2911-cloudreach-hung-r1"
+}

@@ -13,18 +13,40 @@
     "source": "7af5cd6b554240f8526a38347425b439d5459ec1",
     "script": "tools/run_one_test.gd",
     "args": "res://tests/test_crossing_hall_relic_hang.gd",
-    "actual": {"tests":4,"failed":0,"exit":0,"seconds":6,"engine_script_errors":0,"warnings":0},
+    "actual": {
+      "tests": 4,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 6,
+      "engine_script_errors": 0,
+      "warnings": 0
+    },
     "scope": "Changed existing host method checks original Spark identity, shippingOFF/empty/per-biome/replay/read-only/restore. Existing guest/view/refusal guards/teardown retained; no new method/class or inferred assertion count. No actual saved public hang/transport/native fit credit.",
-    "original_artifact_review": "requested from SAME original f42; pending"
+    "original_artifact_review": "SAME original f42 via parent01a11fd4-58cb-7121-afdf-f49a5f2c712c ARTIFACT/REUSE APPROVE: exact7af5 checkout, ZIP hash, four executed methods/0fail/exit0/6s/0errorswarnings; unit evidence only."
   },
   "adapter": {
     "source": "f596d766dc4a1e1381e580f511c42bd823a4ec2a",
     "source_command_review": "SAME original f42 via parent01a11fc8-ebd7-71e1-84fb-e240bc0554a0 SOURCE+changed preload COMMAND APPROVE; exact five-line Stormwood selection and existing testmethod extension only, original guards retained",
     "identity": "captain_marrow_dynamo_core / StormwoodRelicDisplay / separate processcandidate-baseline",
-    "proof": "Changed existing test_f17_capture_presets dispatched only after production job terminated; actual result pending; one Dheadless job live, no native/GPU.",
+    "proof": {
+      "actual": {
+        "seconds": 7,
+        "engine_script_errors": 0,
+        "failed": 0,
+        "warnings": 0,
+        "exit": 0,
+        "tests": 1
+      },
+      "run": 37906273583,
+      "zip_sha256": "831f0579094b9429b8f62169ea675e2b7e5afb0301035c8aa9b873f2034a8544",
+      "original_artifact_review": "Requested from SAME original f42; pending; no inferred runtime/native credit",
+      "artifact": 11604478267,
+      "job": 113740392633,
+      "source": "f596d766dc4a1e1381e580f511c42bd823a4ec2a"
+    },
     "fixture_scope": "Existing disclosed ONE held selected relic, ordinary public Use, actual production disk receipt and per-image identity/fullparty/companion/camera/pose/raster/weather guards; no boss/key/hung/worlddisplay/receipt seed or accepted boundary"
   },
   "shipping": "stormwood_relic_visual.enabled=false, baselinewins; failure staysOFF; no authority/save/schema/prompt/collider changes",
   "reuse": "Cached3979 Cloudreach4/0 and328 adapter1/0 originalAPP unchanged; no unchanged proof/capture replay. ROOT exact328 Cloudreach native queue/import is separate, untouched; Meadows16 runtimeAPP remains literal with rawfalse-marker contradiction and2warnings preserved.",
-  "remaining": "Original artifact applicability; changed adapter proof+originalARTIFACT; exact ROOT native command if scoped; actual mount/readability and SAME blind; whole village/Hall visual bar. No componentREADY or whole closure."
+  "remaining": "Adapter original ARTIFACT review; exact ROOT native command if scoped; native mount/readability and SAME blind; whole village/Hall visual bar. No componentREADY or whole closure."
 }
