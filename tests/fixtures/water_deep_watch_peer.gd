@@ -98,7 +98,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			var named_body_path := str(body.get_path())
 			# Sample after the original residency wait enters activation range,
 			# before the disclosed won-handler fixture can resolve anything.
-			var cycle: Dictionary = game.world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(TIDECOIL_ID, {})
+			var cycle: Dictionary = game.world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(TIDECOIL_ID, {}).duplicate(true)
 			var packet_valid := not preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, TIDECOIL_ID).is_empty()
 			if msg.get("args", {}).get("resident_shell") == true \
 				and (int(cycle.get("generation", 0)) < 1 or cycle.get("status") != "active" or not packet_valid):
