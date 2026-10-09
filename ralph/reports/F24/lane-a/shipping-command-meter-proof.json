@@ -69,7 +69,6 @@
   "integration": "Retain accepted production dependencycc31045690858c2c518647c4444af1997568498c + host-facing183e5f0d1c / READY cut3a2c0f8935d7ee5f2e8be97e4ae29ec4549f0a35, then only scoped proof commits9c04b7d0eb9 andade3c8cfaba. Do not merge unrelated F33 ancestry from lane HEAD or replace the two complete proof files, which would restore Shove helpers already excluded from PR592.",
   "integration_hunks": {
     "base": "befd98f42c290ee5e469172b939c8190ee36eee6",
-    "patch": "ralph/reports/F24/lane-a/shipping-command-meter-reviewed-hunks.patch",
     "patch_sha256": "1f16825b691f95f3504c7be67b2f6ed2e29c38e97c8097166f409cef909de109",
     "generation": "git diff --binary 9c04b7d0eb965b26e57efce7149604a5f436a618^ ade3c8cfaba3bb78c9341c2a202d3bbb59ba804a -- tests/smoke_net_owner_passive_rejoin.gd tests/smoke_net_owner_passive_rejoin_peer.gd",
     "dry_apply": "Existing reviewed commit hunks apply cleanly to exact PR592 files. Result equals the reviewed ade3 files with PR592's existing unrelated Shove-helper exclusion retained, after CRLF normalization. This is a source-only packaging check, not runtime certification of the integrated PR.",
