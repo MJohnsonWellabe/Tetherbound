@@ -32,11 +32,13 @@
   },
   "blind": {
     "reviewer": "01a11660-2f3e-7e20-9136-0101e419c9e7",
-    "verdict": "PENDING",
-    "input": "ROOT pixels-only blind/pedestal and blind/doorway 01..08 byte-identical originals; source/context mapping withheld"
+    "verdict": "PASS bounded pedestal identity/contact; BLOCK8/8 doorway readability and companion presentation, clipped Sealed label, HallBarA/B BLOCK",
+    "input": "ROOT pixels-only blind/pedestal and blind/doorway 01..08 byte-identical originals; source/context mapping withheld",
+    "turn": "01a12059-96c3-7a93-b564-4351009dd875",
+    "findings": "Pale jagged bolt basic identity/contact passes8/8 close views, minimal surface detail. Doorway8/8 shows only thin pale edge; identifying jagged silhouette unreadable. Companion fragmented by wooden frame/panel; opaque occlusion alone does not prove physical penetration. Sealed label clipped aboveframe8/8. HallBarA crowded displays/fragmentation/flat infills; HallBarB insufficient relic focus/repetition/sparse staging. Meadows/Cloudreach unchanged."
   },
   "shipping_enabled": false,
-  "next_packets": "Conditional24Hall/glow UNQUEUED until original blind verdict and comparator context",
+  "next_packets": "Original runtime and blind verdicts complete; next source-change packets may be sent to ROOT with exact conditional command and comparator constraints. None gives whole or doorway PASS.",
   "exclusions": [
     "Whole closure",
     "component READY",
