@@ -1,0 +1,33 @@
+{
+  "scope": "Bounded hosted Stormwood trainer integration repair; no whole criterion credit.",
+  "source_commit": "77e181b7b7a4dc8244f9778867ec36cd4e90c8d8",
+  "paths": [
+    "scripts/combat/stormwood_hosted_trainer.gd",
+    "scripts/world/stormwood_encounter_hub.gd",
+    "scripts/combat/stormwood_encounter_director.gd",
+    "scripts/combat/encounter_director.gd",
+    "tests/smoke_net_stormwood_hosted_trainers.gd"
+  ],
+  "change": "Host-owned trainer rounds use canonical admitted character/owned deployed UID and actor binding. Real move_start uses the Director's accepted loadout/mastery/gear/resource freeze; strike uses that accepted start and publication binding, pays resources once, records actual damage and acknowledges the original publication. Host opponent card/generation is transmitted and decoded. Hub preserves accepted action IDs and delegates motion-original/current-vector validation to the existing Director with fail-closed missing-method guards. Shared Director change is only the four-line owned-round target lookup. Existing smoke replaces the formerly legal raw action with physical quick input while retaining forged/wrong-realm/stale controls and both round transitions.",
+  "notice_comment": 6075509104,
+  "source_review": {
+    "original_reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "first_review_turn": "01a11f4e-317e-7ee0-98f7-b30c3a72b3b9",
+    "first_verdict": "REVISE: mounted hub lacked combat_motion_original_current and _wire_vec3; corrected with guarded delegation, preserving existing guards and motion originals.",
+    "review_turn": "01a11f51-953c-79d3-b1f7-2d23bd9a1b09",
+    "verdict": "SOURCE / PROOF-SCOPE APPROVE exact77e181b7b7a4dc8244f9778867ec36cd4e90c8d8",
+    "required_proof": "Existing headless tests/smoke_net_stormwood_hosted_trainers.gd with shipping flags; physical action703, forged/wrong-realm/stale controls and both round transitions."
+  },
+  "proof": {
+    "run_id": 37893029380,
+    "job_id": 113697998575,
+    "checkout_sha": "77e181b7b7a4dc8244f9778867ec36cd4e90c8d8",
+    "script": "tests/smoke_net_stormwood_hosted_trainers.gd",
+    "mode": "headless",
+    "extra_args": [],
+    "dispatched_at_utc": "2026-10-09T06:20:36Z",
+    "result": "PENDING; queued when this source-review receipt was written. No runtime approval."
+  },
+  "limits": "Integrate only scoped77e181 after required proof and same original artifact approval; no whole lane ancestry, failed HP timing change or parked F33 source. No C ambient/riding/peerRunner edits; no save schema or flag overrides. Original disclosed retired-crossing fixture remains. No failed save/accepted boundary promoted, native/GPU, FullCI/main activation or publication credit."
+}
