@@ -101,7 +101,11 @@ func _run() -> void:
 	for _poll in 20:
 		await step(1, "wait", {"frames": 6})
 		after = await _hstep(1, "harness_read")
-		if float(after.get("hp", 0.0)) < float(before.get("hp", 0.0)) - 0.001: break
+		# ActorVitals applies HP before owner save/ACK completes. The host's
+		# subsequent hit feedback adopts its HP scale and emits hit_landed;
+		# sample that completed presentation, not the intermediate saved HP.
+		if float(after.get("hp", 0.0)) < float(before.get("hp", 0.0)) - 0.001 \
+			and float(after.get("incoming_total", 0.0)) > float(before.get("incoming_total", 0.0)): break
 	var stored_loss := float(before.get("hp", 0.0)) - float(after.get("hp", 0.0))
 	var rolled := float(after.get("last_incoming", -1.0))
 	print("harness hit: before %s | after %s" % [str(before.get("detail", "")), str(after.get("detail", ""))])

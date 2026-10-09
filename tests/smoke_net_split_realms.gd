@@ -267,7 +267,9 @@ func _run() -> void:
 			% str(guest_gathered.get("detail", "")))
 
 	# 6. The host fights in its own realm while it holds another as a shell.
-	var deployed: Dictionary = await step(0, "deploy_creature", {})
+	# The disclosed deployed starter must also belong to its real party;
+	# canonical wild admission refuses an unowned stand-in body.
+	var deployed: Dictionary = await step(0, "deploy_creature", {"owned": true})
 	check(str(deployed.get("verdict", "")) == "PASS",
 		"the host put a creature out in the Meadows (%s)" % str(deployed.get("detail", "")))
 	var engaged: Dictionary = await step(0, "engage_wild", {})

@@ -1,9 +1,9 @@
 {
- "updated": "2026-10-08T18:50Z",
+ "updated": "2026-10-09T06:13Z",
  "headline": [
-  "1:28 PM CT Thu 08 Oct: 161 criteria met on main; consolidation 15 carries 4 more (C F28#1, E F41#0, B F02#0/#1): 165 when it merges.",
-  "11:10 AM–1:10 PM CT: 3 whole READYs (C F28#1, E F41#0, A F23#3 re-proof of an already-met criterion) plus B's held F02#0/#1 under the segment-proof ruling.",
-  "Lanes are moving to their section 17 clusters: C started F28#2 (Masters), D Hall portal depth and F42#2, B route segments."
+  "1:13 AM CT Fri 09 Oct: 165 criteria met on main; 2 more evidenced on lane A (F24#3 Tether Snare, F24#0 command meter), both in draft consolidation 19 (#592).",
+  "#592's first full CI (37883884033) failed 9 shards with Tether Commands and actor_vitals ON: co-op engage, catch-to-party, HP scaling, host hit admission. Lane A fixture fixes and lane C's capture fix are added for a second run.",
+  "QUIET PC performance baseline (owner, 8:10 PM CT) still not started by the Codex coordinator; restated again."
  ],
  "batches": [
   {
@@ -40,7 +40,7 @@
    "name": "CI speedup (PR #240)",
    "sha": "bfbcbd94",
    "state": "Merged",
-   "contents": "Longest job 21.6→16.2 min; runner-min 269→249"
+   "contents": "Longest job 21.6\u219216.2 min; runner-min 269\u2192249"
   },
   {
    "name": "Batch 6 (PR #242)",
@@ -202,7 +202,7 @@
    "name": "Batch 30 (PR #316)",
    "sha": "7af7bfcf",
    "state": "Auto-merge on, fast-tier CI",
-   "contents": "F09#1, F12#0, F13#2, F14#2, F15#3, F01#4 fixture, herd fix, X05 camera/invite gaps, Cloudreach entry 159→20 s, Codex dock lanterns, Codex visual queue (batch 29)"
+   "contents": "F09#1, F12#0, F13#2, F14#2, F15#3, F01#4 fixture, herd fix, X05 camera/invite gaps, Cloudreach entry 159\u219220 s, Codex dock lanterns, Codex visual queue (batch 29)"
   },
   {
    "name": "Batch 31 (PR #327)",
@@ -226,7 +226,7 @@
    "name": "Batch 34 (PR #336)",
    "sha": "",
    "state": "Merged",
-   "contents": "VIS audit: Cloudreach/Tidewake judgements, Codex queue V13–V34"
+   "contents": "VIS audit: Cloudreach/Tidewake judgements, Codex queue V13\u2013V34"
   },
   {
    "name": "Batch 58",
@@ -334,7 +334,7 @@
    "name": "Codex evidence compaction (PR #408)",
    "sha": "8a91b67e",
    "state": "Merged, CI green",
-   "contents": "Phase 2 full-resolution captures replaced by indexed contact sheets (3.27 GB → 78 MB tree); unblocks lane pushes"
+   "contents": "Phase 2 full-resolution captures replaced by indexed contact sheets (3.27 GB \u2192 78 MB tree); unblocks lane pushes"
   },
   {
    "name": "Codex Tidewake 2c tooling (PR #409)",
@@ -343,19 +343,19 @@
    "contents": "Compact capture rounds for Phase 2c"
   },
   {
-   "name": "Phase 1 landings 14:24–15:36",
+   "name": "Phase 1 landings 14:24\u201315:36",
    "sha": "4b02032b",
    "state": "Merged, CI green",
    "contents": "#411 Fly (Cloudreach), #413 Balance F10#2/F04#7 C2, #415 Cloudreach done, #417/#419 Meadows F03#0 + F04#3, Codex #412/#418"
   },
   {
-   "name": "Phase 1 landings 16:52–18:26",
+   "name": "Phase 1 landings 16:52\u201318:26",
    "sha": "6b85e6b0",
    "state": "Merged",
    "contents": "#423/#427 Meadows F01#2 and F01#3; #429 Tidewake F14 C2 (option c); #425 Stormwood card S1 and F10#2; Codex 2c #421/#422/#424/#426"
   },
   {
-   "name": "Landings 18:35–21:55",
+   "name": "Landings 18:35\u201321:55",
    "sha": "33afd91f",
    "state": "Merged",
    "contents": "#435 Cards M1; Codex #432/#433/#434 (Phase 2d rules, Meadows crafting P2-095/P2-096)"
@@ -364,10 +364,10 @@
    "name": "Re-proof and F32 (PRs #529, #530)",
    "sha": "",
    "state": "Merged 10-04",
-   "contents": "Re-proof fixes, gathering, cloud sea; F32 #0–#3/#5, F17 #2/#3/#5, F01#2. Met 66 → 82."
+   "contents": "Re-proof fixes, gathering, cloud sea; F32 #0\u2013#3/#5, F17 #2/#3/#5, F01#2. Met 66 \u2192 82."
   },
   {
-   "name": "Waves 1–2 landings (PRs #532–#547)",
+   "name": "Waves 1\u20132 landings (PRs #532\u2013#547)",
    "sha": "",
    "state": "Merged 10-05 to 10-06",
    "contents": "F22, F27, F30#1, F31, F33, F34, F18 portals, perf, rejoin."
@@ -412,7 +412,7 @@
    "name": "Consolidated (PR #571)",
    "sha": "",
    "state": "Merged 10-07 7:21 AM CT",
-   "contents": "All branches consolidated; lane history preserved. Codex sprint lanes A–E start."
+   "contents": "All branches consolidated; lane history preserved. Codex sprint lanes A\u2013E start."
   },
   {
    "name": "Consolidation 1 (PR #574)",
@@ -436,7 +436,7 @@
    "name": "CI speed (PR #573)",
    "sha": "",
    "state": "Merged 10-07 1:54 PM CT",
-   "contents": "Full CI about 32 → 22 minutes, 13 jobs; low-risk long checks moved to the 8-hourly run."
+   "contents": "Full CI about 32 \u2192 22 minutes, 13 jobs; low-risk long checks moved to the 8-hourly run."
   },
   {
    "name": "Consolidation 4 (PR #577)",
@@ -496,7 +496,7 @@
    "name": "Consolidation 11",
    "sha": "b60f53b5",
    "state": "Red: Stormwood/Tidewake save-ledger smokes (lane C set); replaced by 11b",
-   "contents": "F42#0 map/UI (lane D); F31#2 + complete C co-op repair set with F43#0–#3 and F48#2 (lane C)"
+   "contents": "F42#0 map/UI (lane D); F31#2 + complete C co-op repair set with F43#0\u2013#3 and F48#2 (lane C)"
   },
   {
    "name": "Consolidation 11b",
@@ -532,7 +532,7 @@
  "lanes": [
   {
    "lane": "tb/codex-a (Codex A: combat, moves, commands)",
-   "now": "F23#3 re-proof (already met, held); F23#2 parked.",
+   "now": "F24#0 + F24#3 evidenced; fixing #592 co-op fixtures, HP harness, hosted hit admission.",
    "next": "Named-fight C2/C3 cluster."
   },
   {
@@ -543,7 +543,7 @@
   {
    "lane": "tb/codex-c (Codex C: power, homestead, economy, co-op)",
    "now": "F28#1 in consolidation 15; F28#2 challenger UI approved.",
-   "next": "Masters cluster F28#2–#4."
+   "next": "Masters cluster F28#2\u2013#4."
   },
   {
    "lane": "tb/codex-d (Codex D: Meadows, village, Tidewake visuals)",
@@ -562,7 +562,7 @@
   }
  ],
  "decisions": [
-  "Owner redesign 2026-09-29: RD-01..RD-35 in CODEX_START_HERE §1 (grind loop, creature-power spine, hybrid leveling and breakthroughs via Masters and feasts, per-type essence, homestead with six stations, Crossing Hall with Home Key, portals and waystones, the new order Meadows→Tidewake→Cloudreach→Stormwood, three move slots plus ultimate, Tether Commands, effect archetypes, the Palworld+Valheim bar, Forward+ pending the Ally test, the Meshy overnight batch, evolution per biome with a new storm bear, traits, repeatables, the fifth-key ending, saves reset).",
+  "Owner redesign 2026-09-29: RD-01..RD-35 in CODEX_START_HERE \u00a71 (grind loop, creature-power spine, hybrid leveling and breakthroughs via Masters and feasts, per-type essence, homestead with six stations, Crossing Hall with Home Key, portals and waystones, the new order Meadows\u2192Tidewake\u2192Cloudreach\u2192Stormwood, three move slots plus ultimate, Tether Commands, effect archetypes, the Palworld+Valheim bar, Forward+ pending the Ally test, the Meshy overnight batch, evolution per biome with a new storm bear, traits, repeatables, the fifth-key ending, saves reset).",
   "Coordinator 2026-09-28 (delegated): new Combat Spacing lane owns contact-range body separation; new Cards lane owns M1/M2 integrated runs and T2/S2 non-fight clauses; biome lanes keep only their F rows (Meadows also M3).",
   "Owner 2026-09-28: the coordinator makes lane decisions. First: Tidewake lands #407's player-visible fixes now instead of holding them for a criterion close.",
   "Owner 2026-09-28 (F04#7): option (c). The Meadows top-fight C2 bar becomes a masher lead-faint rate plus a reader/masher party-cost ratio, with harder five-member captains at the level ceiling; the same bar applies to Tidewake F14#0.",
@@ -584,7 +584,7 @@
  "owner_needs": [
   "F26#5: Forward+ test on the ROG Ally once the Medium build is ready.",
   "F10#5: audio listening pass.",
-  "F47 and F49: owner play pass and 15–25 h route measurement after the route lands."
+  "F47 and F49: owner play pass and 15\u201325 h route measurement after the route lands."
  ],
  "four_chapter_run": null,
  "wip": [
