@@ -15,6 +15,8 @@ const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 const PORTAL_ACTION := preload("res://scripts/world/portal_arch.gd")
 const PORTAL_DEPTH := preload("res://scripts/world/hall_portal_depth.gdshader")
+const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const MATERIALS := preload("res://scripts/world/imported_materials.gd")
 
 var _config: Dictionary = {}
 var _arches: Dictionary = {}
@@ -49,9 +51,54 @@ func build(config: Dictionary) -> bool:
 	endwall.name = "MeadowsHallEndwallDressing"
 	add_child(endwall)
 	endwall.build("hall_endwall")
+	_build_rear_seating()
 	refresh_from_game()
 	set_process(true)
 	return true
+
+
+## Shared world furniture, not peer-local ghost dressing. Only the existing
+## solo Hall capture may opt in separately from the common configuration.
+func _build_rear_seating() -> void:
+	var cfg: Dictionary = _config.get("rear_seating", {})
+	var loop := Engine.get_main_loop()
+	var script := loop.get_script() as Script if loop != null else null
+	var capture_scope := script != null and script.resource_path == "res://tools/capture_f17_visual.gd"
+	if not rear_seating_enabled(cfg, OS.get_cmdline_user_args(), capture_scope) or has_node(^"RearSeating"):
+		return
+	var seating := Node3D.new()
+	seating.name = "RearSeating"
+	add_child(seating)
+	for row: Dictionary in cfg.get("placements", []):
+		var body := StaticBody3D.new()
+		body.name = str(row.id)
+		body.position = _position(row.at)
+		body.rotation.y = deg_to_rad(float(row.get("yaw_deg", 0)))
+		seating.add_child(body)
+		var model := _add_model(body, str(row.path))
+		if model == null:
+			body.free()
+			continue
+		MATERIALS.make_dielectric(model)
+		var bounds := BOUNDS.measure(model)
+		if bounds.size == Vector3.ZERO:
+			body.free()
+			continue
+		model.position.y = float(cfg.get("floor_m", .07)) - bounds.position.y
+		var collision := CollisionShape3D.new()
+		collision.name = "FurnitureCollision"
+		var shape := BoxShape3D.new()
+		shape.size = bounds.size
+		collision.shape = shape
+		collision.position = bounds.get_center() + model.position
+		body.add_child(collision)
+
+
+static func rear_seating_enabled(cfg: Dictionary, args: PackedStringArray, capture_scope: bool) -> bool:
+	if capture_scope and args.has("--hall-rear-seating-baseline"):
+		return false
+	return bool(cfg.get("enabled", false)) or (capture_scope and
+		args.has("--hall-stills-only") and args.has("--hall-rear-seating-candidate"))
 
 
 static func validate_layout(config: Dictionary) -> bool:

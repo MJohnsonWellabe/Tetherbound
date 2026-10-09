@@ -4,6 +4,7 @@ extends "res://tests/test_case.gd"
 ## transport, key debit, durable save or owner ACK proof.
 const HALL := preload("res://scripts/world/crossing_hall.gd")
 const ACTION := preload("res://scripts/world/portal_arch.gd")
+const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 
 class SessionGateDouble extends Node:
 	var enabled := false
@@ -75,6 +76,34 @@ func test_late_admitted_session_mounts_original_canonical_input_once_per_actual_
 	assert_eq((visual.call("arch", "tidewake") as Node3D).get_meta("arch_state"), "open")
 	visual.call("apply_display", {})
 	assert_true((fifth.get_node(^"SealedStoneInfill") as Node3D).visible, "restored host view re-seals reserved road")
+	# Furniture shares geometry/collision admission. No normal peer argv can
+	# opt into a different physical world or suppress enabled shared geometry.
+	assert_false(config.rear_seating.enabled, "unjudged seating ships off")
+	assert_false(HALL.rear_seating_enabled(config.rear_seating, PackedStringArray(["--hall-stills-only", "--hall-rear-seating-candidate"]), false))
+	assert_false(HALL.rear_seating_enabled(config.rear_seating, PackedStringArray(["--hall-rear-seating-candidate"]), true))
+	assert_true(HALL.rear_seating_enabled(config.rear_seating, PackedStringArray(["--hall-stills-only", "--hall-rear-seating-candidate"]), true))
+	visual.call("_build_rear_seating")
+	assert_false(visual.has_node(^"RearSeating"))
+	config.rear_seating.enabled = true
+	assert_true(HALL.rear_seating_enabled(config.rear_seating, PackedStringArray(["--hall-rear-seating-baseline"]), false))
+	assert_false(HALL.rear_seating_enabled(config.rear_seating, PackedStringArray(["--hall-rear-seating-baseline", "--hall-rear-seating-candidate", "--hall-stills-only"]), true))
+	visual.call("_build_rear_seating")
+	var seating: Node3D = visual.get_node(^"RearSeating")
+	assert_eq(seating.get_child_count(), 3)
+	for body: StaticBody3D in seating.get_children():
+		var model := body.get_child(0) as Node3D
+		var bounds := BOUNDS.measure(model)
+		var collider := body.get_node(^"FurnitureCollision") as CollisionShape3D
+		assert_eq(model.scale, Vector3.ONE, "installed furniture retains native scale")
+		assert_eq(body.collision_layer, 1)
+		assert_eq((collider.shape as BoxShape3D).size, bounds.size)
+		assert_eq(collider.position, bounds.get_center() + model.position)
+		assert_almost_eq(model.position.y + bounds.position.y, .07)
+		assert_true(body.position.z + bounds.position.z > 9.0 + float(config.clearance_m), "rear furniture leaves last arch approach clearance")
+		assert_true(body.position.z + bounds.end.z < 15.0, "rear furniture stays inside nave")
+		assert_true(absf(body.position.x) + maxf(absf(bounds.position.x), absf(bounds.end.x)) < 7.0)
+	visual.call("_build_rear_seating")
+	assert_eq(seating.get_child_count(), 3, "repeat build cannot duplicate furniture/collision")
 	visual.free()
 	hall.free()
 	session.free()

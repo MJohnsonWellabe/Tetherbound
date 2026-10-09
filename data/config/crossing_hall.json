@@ -2,6 +2,17 @@
   "schema_version": 1,
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
+  "rear_seating": {
+    "enabled": false,
+    "floor_m": 0.07,
+    "scope": "World geometry and measured static collision on all presets; ordinary peers use shared configuration only. Shipping OFF pending original native/controller and blind judgment. Candidate/baseline flags apply only in existing solo Hall-stills capture; baseline wins there. No interaction, station, base job, state, transaction or durable schema.",
+    "provenance": "Original Meadows/Cloudreach HallBarA BLOCK names broad empty nave floor. Installed Quaternius Fantasy Table_Large and Bench at native scale form one rear waiting nook. Nave floor module at .06 plus measured .01 mesh top=.07m. Nearest furniture Z11.08788 exceeds last arch approach Z9 plus1.5m clearance; central circuit, entrance and Shrine Room approach remain clear. Rendered grounding/contact/readability and controller reach remain actual native proofs.",
+    "placements": [
+      {"id": "WaitingTable", "path": "res://assets/props/quaternius_fantasy/Table_Large.gltf", "at": [0, 0, 12.5]},
+      {"id": "NearBench", "path": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [0, 0, 11.35]},
+      {"id": "FarBench", "path": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [0, 0, 13.65]}
+    ]
+  },
   "arch_sealed_infill": {
     "enabled": false,
     "at": [0, 0.08, -0.10],
