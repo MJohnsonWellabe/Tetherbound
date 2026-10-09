@@ -612,6 +612,8 @@ func _weather_colour(time_colour: Variant, weather_colour: Variant, night_weight
 	var palette: Dictionary = _config.get("weather_palette", {})
 	if not bool(palette.get("preserve_night_colour", false)) or night_weight <= 0.0:
 		return weather_colour
+	if night_weight >= 1.0:
+		return _as_colour(time_colour)
 	return _as_colour(weather_colour).lerp(_as_colour(time_colour), clampf(night_weight, 0.0, 1.0))
 
 

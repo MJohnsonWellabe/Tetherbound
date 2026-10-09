@@ -1,0 +1,157 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-09T01:55:05.421323+00:00",
+  "source_commit": "a74d0fdd1925662400ad938fc01048dcccf9ac81",
+  "diff_base": "b3174a46480fde8d0e0cb8fb43644121e2c43bba",
+  "scope": "Cloudreach opt-in authored-night weather colours plus existing wall-foliage fixture resource ownership correction; exact High day/night quarter and named headless command applicability.",
+  "source_verdict": "APPROVE",
+  "exact_day_quarter_command_verdict": "APPROVE",
+  "exact_night_quarter_command_verdict": "APPROVE",
+  "headless_selector_verdict": "APPROVE",
+  "findings": [],
+  "reviewed_changed_blobs": {
+    "scripts/world/world_look.gd": "03007aef768e62bda99a3c32c2da9c272cd49e59",
+    "data/config/cloudreach_look.json": "24333968eb6117098676b627a9456b04542587d8",
+    "scenes/world/cloudreach_cliffs.tscn": "2a5d844287c370f2556e0203363b533e595db459",
+    "tests/test_world_look_fog_energy.gd": "2a35681292a00174e23d939fd3df5070400f3e01",
+    "tests/test_wall_foliage_normals.gd": "4aa7e0a60e121ecd9b995ac4cb38d40a9b22e847"
+  },
+  "verified_unchanged_dependency_blobs": {
+    "scripts/world/cloudreach_look.gd": "bd0456c7c50b0106d0c2ec77e62bca5906d8951c",
+    "scripts/world/cloudreach_world.gd": "08d9791819391c864abec44342cf5fd0900981b1",
+    "scripts/world/cloudreach_world_runtime.gd": "ab6427ebdcebe046e032f21d89127f225f64c18b",
+    "scripts/world/cloudreach_high_perches_presentation.gd": "88c06f04d5192d4205f17434263c970640e2f5ae",
+    "data/config/cloudreach_high_perches_visual.json": "b6933e247dd92d48200147eff7b56c33790e4982",
+    "tests/test_cloudreach_high_perches_presentation.gd": "6f07443e7871871140a771b4267c61d09223d7bf",
+    "tests/test_cloudreach_sky_shrine_presentation.gd": "621880f30372de3b6ad6e3a131d0a92384853df1",
+    "tools/capture_cloudreach_f40_matrix.gd": "a31126604c6643e7e4368b859f5727ad9347a6a9",
+    "tools/capture_cloudreach_f40_fight.gd": "18ac77a796e682b8ebeafe77fa8a6b2f0a889edd",
+    "tools/phase2_capture_cloudreach_live_fight.gd": "de8d7f64a3aeb78814951ca2fb79b2979bb67c40",
+    "tests/smoke_cloudreach_continuous.gd": "dcb7ce9e4a1b8622351bdd33f175babedf79435c",
+    "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+    "tools/capture_manifest_writer.gd": "8d4df196957c20b645845bcdd3c8382b0c559876",
+    "data/config/art.json": "d806b08949ff0dbd6b61dd6ffd4fe5e589fd15c4",
+    "data/config/weather.json": "75224b5e12bed8b1e3ee5c165c45a9767f0a7420",
+    "scripts/world/day_cycle.gd": "6f0b2fd6e9bc567c4b50c1f073a7400712e628b0",
+    "tests/test_day_cycle_night_contrast.gd": "00f5ff4e852045163f8ba0d56c401adcf2914307"
+  },
+  "scoped_overlay": {
+    "config": {
+      "scope": "cloudreach_client_presentation",
+      "preserve_night_colour": true
+    },
+    "scene": "Existing CloudreachCliffs WorldLook node now sets realm_look_path=res://data/config/cloudreach_look.json; no new scene or node.",
+    "merge_api": "Existing WorldLook._load -> merged_look recursively duplicates/deep-merges dictionaries. New overlay shares only_comment withart.json, so no authored sun/sky/environment/times value is replaced by the dressing config.",
+    "default": "Without preserve_night_colour, _weather_colour returns the exact prior weather override. Other realms retain existing defaults. Config scope is descriptive; actual realm isolation is the scene-local overlay assignment.",
+    "palette": "No new colour literals are introduced. Existing authored art.json time/blended colours are the target.",
+    "weather_scope": "The new helper applies to any active weather colour override, including cloudy/fog/rain at positive night weight; it is not limited to rain. Clear has no colour override and remains unchanged."
+  },
+  "math_and_api": {
+    "weather_layer": "weather_colour.lerp(already-authored-or-blended-time-colour,clamp(night_weight,0,1));_as_colour accepts existing Color or hex-string inputs, consistent with shared colour application.",
+    "named_time": "apply_time passes weight1 fornight and0 otherwise. It preserves the existing preset selection and existing elapsed-hour synchronization; the correction does not add a reset.",
+    "live_clock": "_apply_blended uses existing day_cycle.interpolate_at via blended_config_at. Weight=(1-t if from=night else0)+(t if to=night else0), including midnight wrapping, reaching1 atnight keyframe and0 when neither endpoint is night. Both time_colour and weight evolve continuously.",
+    "set_weather": "Existing set_weather still uses current live clock through _apply_blended; no snap to a new time/preset.",
+    "energies_and_mechanics": "Sun energy multiplication,angular distance/shadow settings,ambient energy multiplication,fog density addition and all unchanged weather/particles/canonical logic remain. No timing/camera/route/material/authority/scene-fixture change is introduced by this source delta."
+  },
+  "existing_test_scope": {
+    "fog_energy_new_methods": [
+      "test_cloudreach_rain_retains_night_colours_and_its_weather_energy_and_density",
+      "test_weather_palette_is_realm_scoped_and_continuous_at_dawn_and_dusk"
+    ],
+    "assertions": "Direct real_layer_weather calls check night sky/ambient colours derived fromart.json,existing rain sun/ambient-energy/fog-density/shadow values,default-other-realm weather colour and lerp channels atweights0,.001,.5,.999,1. Original fog/energy cases remain.",
+    "limits": "These direct helper tests do not alone establish mounted scene overlay loading,actual live transition/raster/pictured night identity. Existing day-cycle contrast cases retain separate clock math coverage; actual day/night native quarters remain required."
+  },
+  "wall_foliage_resource_correction": {
+    "historical_failed_source": "b3174a46480fde8d0e0cb8fb43644121e2c43bba",
+    "run": 37871271869,
+    "reported_artifact": 11591011041,
+    "frozen_run_log": ".tmp\\e-cluster-wall-vines-b317-37871271869\\run.log",
+    "actual_run_log_sha256": "32f19f67b7a44a80a7830fed474b28259bcecf855da592cbfcbf0e0346aff096",
+    "actual_failed_result": {
+      "tests": 4,
+      "assertions": 197,
+      "failed": 1,
+      "placed_geometry_method": "PASS",
+      "composer_release_method": "FAIL"
+    },
+    "failure": "Original composer-release weakref assertion observed another owner ofProp_Vine1PackedScene. This is retained as a genuine failed selected proof, not flake or PASS. Physical exit metadata is absent from the supplied frozen folder; no new terminal code is inferred.",
+    "source_ownership_path": "New previousglobal CLOUDREACH_LOOK preload keeps itsLOOK_VINES PackedScenes, includingVine1, alive across all methods. Correction removes only that global constant; new geometry method loads the script in a local variable, instantiates/frees look, and ends that owner lifetime on function return before the original composer-release method.",
+    "preservation": "Geometry assertions and every original lifetime/normal/material/cache assertion,method name,execution selection and fixture remain; no weakened/omitted assertions. Function-local lifetime correction remains unrun in this source review.",
+    "production_vines": "b317 production CloudreachLook vine algorithm/assets unchanged; prior source/geometry approval reused, not repeated."
+  },
+  "headless_command": [
+    "Godot",
+    "--headless",
+    "--path",
+    "<clean pinned a74d0fdd1925662400ad938fc01048dcccf9ac81 worktree>",
+    "--script",
+    "res://tests/run_tests.gd",
+    "--",
+    "--only=test_wall_foliage_normals.gd,test_world_look_fog_energy.gd,test_day_cycle_night_contrast.gd"
+  ],
+  "exact_native_commands": {
+    "day": [
+      "Godot",
+      "--path",
+      "<fresh clean ROOT worktree pinned to a74d0fdd1925662400ad938fc01048dcccf9ac81>",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_matrix.gd",
+      "--",
+      "--biome=cloudreach",
+      "--preset=High",
+      "--source-commit=a74d0fdd1925662400ad938fc01048dcccf9ac81",
+      "--segment=day",
+      "--output=res://.tmp/f40-cluster-high-a74-day-r1"
+    ],
+    "night": [
+      "Godot",
+      "--path",
+      "<fresh clean ROOT worktree pinned to a74d0fdd1925662400ad938fc01048dcccf9ac81>",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_matrix.gd",
+      "--",
+      "--biome=cloudreach",
+      "--preset=High",
+      "--source-commit=a74d0fdd1925662400ad938fc01048dcccf9ac81",
+      "--segment=night",
+      "--output=res://.tmp/f40-cluster-high-a74-night-r1"
+    ]
+  },
+  "quarter_limits": "Each declared quarter retains original full384/minimum200 planning before clock filtering,then12destinations x4views x2weather=96 rows,matching original stands/guards. No subset/repair/candidate flags. Complete quarter never means full_matrix_complete; full384/Medium/full bar remain pending.",
+  "a990_fight_footprint_reuse": {
+    "source_commit": "a990d7f7e8d7d9ddabac9dc2efcac2b03bf33d00",
+    "verdict": "APPROVE_UNCHANGED_BEHAVIOUR_PERSISTENCE_PIECES_WITH_CONDITIONAL_VISUAL_LIGHTING_REUSE",
+    "approved_report": "ralph/reports/F40/lane-e/fight-mount-source-review.json",
+    "footprint": "Actor/arena/geometry/live input/fivecurrent-band fixture/timing/mount/persistence remain unchanged; live fight files were not inspected.",
+    "lighting_delta": "WorldLook shared code,Cloudreach scene overlay and look config differ. Olda990 visual evidence is not automatically currenta74 night/weather evidence.",
+    "clear_applicability": "Actual clear weather remains colour-equivalent at any clock because there are no weather colour overrides; source overlay does not replace authored look values.",
+    "day_weather_applicability": "At actual zero night-keyframe weight,weather colours match the prior override. Namedday or live intervals with neither endpointnight have weightzero.",
+    "changed_contexts": "Cloudy/fog/rain at night or dusk/dawn intervals with positive night weight are visually changed and need actual current-source proof; no old lighting reuse without actual clock/weather binding.",
+    "pending": "Actuala990 fight outcome/receipt integrity and any visual reuse are pending authentic terminal evidence with actual clock/weather. No outcome,night-lighting or whole-cluster claim from source.",
+    "fixture_limits": "Original in-memory flags/current-band five and production input battle remain a fixture,not earned/campaign/co-op/save/device proof."
+  },
+  "preserved_history": [
+    "c427 Shrine/sign8tests64assert source-bound artifact approval reused on byte-identical relevant files.",
+    "f03 pre-mount native failure retained; latera990 source/command mount correction is not a runtime PASS.",
+    "eda High384 actualruntime/source is historical and original High blindFAIL remains; no art judgment or rerate here."
+  ],
+  "pending_gates": [
+    "Actual selecteda74 headless artifact with exact source/diagnostics/terminal",
+    "Actuala74 High day96/night96 source/raster/weather/clock/production guard receipts",
+    "Independent current-source visual review and remaining fullHigh/Medium matrices",
+    "Actual corrected fight outcomes/persistence plus scope-valid clock/weather visual binding"
+  ],
+  "reviewer_limits": [
+    "No engine/import/GPU/tests/dispatch/helper execution/source edits/judge contact.",
+    "No componentREADY/fullF40/F08/art bar/device/performance/earned claim.",
+    "Only this authorized evidence report written."
+  ]
+}
