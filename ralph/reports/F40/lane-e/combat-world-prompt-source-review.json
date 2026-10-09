@@ -1,0 +1,95 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-09T03:12:31.218765+00:00",
+  "source_commit": "f40b5b8a4b446780d3544cbbfe18814f6db78b94",
+  "diff_base": "cdecc1afe1fce4cf1324d779a1692f3c6c7f7455",
+  "source_verdict": "APPROVE",
+  "artifact_verdict": "APPROVE",
+  "scope": "Only existing InteractionArbiter combat-prompt suppression and safe stale-provider identity cleanup, plus extension of existing production-HUD/director smoke and frozen affected artifact. No native command task, art-bar or whole criterion review.",
+  "reviewed_blobs": {
+    "scripts/world/interaction_arbiter.gd": {
+      "base": "683dd5e3fbac2021b4fda864271cd40090b00642",
+      "reviewed": "75577299ef1f7416234364f3c7cd64edff4c97a2"
+    },
+    "tests/smoke_hud_freed_combat_prompt_lifecycle.gd": {
+      "base": "1760dc1987016031a2bc4af62d50ec2097f7bbaf",
+      "reviewed": "258f8a1fc59286a9883f90eedda804ce0e883703"
+    }
+  },
+  "findings": [],
+  "actual_source_review": {
+    "gate": "_recompute retains _enabled early return, then uses existing _fight_owns_the_world before player/provider polling. CombatManager.is_fighting or EncounterDirector.trainer_battle_active clear _winner Dictionary, _winning_provider and _publish empty prompt, then return. During normal exploration original provider selection/order/offer/format paths remain unchanged, so ending ownership restores the actual eligible offer on recompute.",
+    "ordering_ownership": "Same existing read-only helper already gates real physics interact input. New presentation gate does not write _enabled, modal/input_owner, SequenceDirector, input map, combat authority or durable state. Cached provider/offer cleared before empty prompt publication. Disabled modal path still uses original set_enabled cleanup. This is recompute/update ownership, not an added claim that arbitrary direct activate() calls recheck fight state independently.",
+    "identity_cleanup": "_deindex changes formal parameter Object->Variant and continues only dictionary/array key identity removal without casts, class/type checks or provider dereference. _forget removes provider membership then delegates to that identity-only path, covering both cell and loose indexes. This avoids prior freed-instance is/cast fault. Normal register/unregister/cell index/order/query-radius semantics and code otherwise unchanged.",
+    "fixture": "Original12freed-director/HUD/availability checks unchanged. Same smoke adds real Interactable GreetCaptainVeyra and explicit mounted CombatStub state plus local TrainerBattleStub for existing ownership APIs. Manual state fixtures, not a new engine/world/combat harness or real authoritative enemy/battle sequence. It tests beforefight->managerfight->trainerroundgap->afterfight restoration and stale loose-index removal without directly mutating HUD prompt; actual signal drives production HUD.",
+    "test_limits": "Smoke contains one owned available party creature and neutral CharacterBody3D world, not full five-current-band captainfixture. Production EncounterDirector script is attached after entering tree to avoid full population_ready; state booleans explicitly simulate manager/trainer ownership. Newly mounted Greet Interactable and actual production HUD establish behavior at these API seams. Cell-bucket stale cleanup branch is preserved/source-reviewed but new stale cleanup assertion specifically exercises loose index."
+  },
+  "actual_functional_artifact": {
+    "run": 37877441617,
+    "job": 113649163820,
+    "artifact": 11592748740,
+    "source": "f40b5b8a4b446780d3544cbbfe18814f6db78b94",
+    "actual_script": "tests/smoke_hud_freed_combat_prompt_lifecycle.gd",
+    "mode": "headless",
+    "engine": "Godot4.7.stable.official.5b4e0cb0f",
+    "behavioral_checks": 19,
+    "failures": 0,
+    "exit_code": 0,
+    "seconds": 6,
+    "check_labels": [
+      "Game autoload is available",
+      "Game party is available",
+      "the production party holds an available ally",
+      "the production HUD built its exploration legend and contextual prompt",
+      "the real EncounterDirector is the arbiter's published winner",
+      "the bound ally produces the director's real Put-away offer",
+      "PlaygroundHUD yields the director-owned prompt to CombatHUD",
+      "the live director prompt suppresses the duplicate legend action",
+      "the winning EncounterDirector is actually freed",
+      "a freed cached winner is treated as absent without touching its class",
+      "the available ally action returns after the stale director disappears",
+      "stale-winner recovery does not invent an unavailable alternate-slot action",
+      "recompute removes the freed director from registration and the loose index",
+      "the real world offer is visible on the production HUD before fighting",
+      "active combat clears the arbiter and production HUD world prompt",
+      "no hidden world offer remains actionable during combat",
+      "combat suppression preserves modal enable ownership",
+      "the trainer battle still owns world prompts between creatures",
+      "the world offer and production HUD return when the battle ends"
+    ],
+    "run_log": ".tmp\\e-worldprompt-f40b5-37877441617\\run.log",
+    "run_log_sha256": "9363d0596aa9a9beaebb104a7bb4e2341871093d2f6f738bfbb4078500eb526a",
+    "job_log": ".tmp\\e-worldprompt-f40b5-37877441617\\job.log",
+    "job_log_sha256": "d9632e6faeb558abfc47925a43fea154ec6078665affbdfbec7462d6c661aa03",
+    "github_api_binding": ".tmp\\e-worldprompt-f40b5-37877441617\\github-api-binding.json",
+    "github_api_binding_sha256": "2776165e60731e45d93b7e54552c712fbbfc3516d511c570259d8ba8bf23dfb2",
+    "zip": ".tmp\\e-worldprompt-f40b5-37877441617.zip",
+    "zip_sha256": "38e7e58bd42c040e928fa404a0eae347bbdc3057301aea9e0d3dbda3aaa9f841",
+    "source_binding": "Actual original fetch/checkout/fullHEAD lines135/147/273/276 bind fullf40b; script fields57/5025 matchsmoke,empty extraargs/headless. Actual terminal exit0/6s and upload11592748740 matchAPI run/job/artifact. Workflow headmain7c7d is not substituted for selected checkout.",
+    "copy_binding": "Actual ZIP digest equals API artifact digest; extractedrun.log/exit_code equalZIPoriginalbytes. No new execution occurred.",
+    "diagnostics": "No engine SCRIPT ERROR/ERROR/warnings in actual run.log. Workflow action Node.js deprecation notices are not silently counted as engine warnings or runtime failures.",
+    "claims": "19individual behavioral PASS lines plus one summary PASS (not20assertions). No assertion count invented. All original12checks and seven new checks reached."
+  },
+  "historical_failed_attempts": [
+    {
+      "run": 37876661888,
+      "disposition": "NO_ENGINE_PROOF",
+      "actual_job_log": ".tmp/e-worldprompt-c511-37876661888/job.log",
+      "job_log_sha256": "609fbf7aaadef27a11432617ff920265c2b2d78d512f55eb42730f92acd3ab23",
+      "observed": "Shortrefc5111b62a7 supplied tocheckout; actualrefs/heads/tags wildcardfetch retries failcode1 before engine/script. Only collection/manifest artifact retained; not a test PASS."
+    },
+    {
+      "run": 37876888764,
+      "disposition": "WITHHELD_SCRIPT_ERROR",
+      "run_log": ".tmp/e-worldprompt-c511-37876888764/run.log",
+      "run_log_sha256": "f9228a89579d0b5be2dea48466f1181e391faa87e698a18122f213b68715e364",
+      "actual": "Physicalexit0/7s and printedPASS lines coexist with two SCRIPT ERROR Left operand of is is a previously freed instance at _forgetline477, through_recomputeline429 and smoke136/153. This prior packet is not promoted; new identity cleanup/new assertion/source-run fix verified separately."
+    }
+  ],
+  "proof_reuse": "Unchanged provider registration/order/spatial-query and HUD/director/InputOwner dependencies remain source-compatible; original registration/performance/provider witnesses may only support those unchanged paths, not new per-frame combat ownership calls or native visual result. No broad batch rerun or performance guarantee inferred. cdecc leaf evidence and e51 fight/scenery proofs remain exact-source historical pieces; this smoke does not retroactively remove Greet text from them.",
+  "limits": [
+    "No earned campaign, actual battle/combat authority, payout/save, co-op, device/performance, input-controller hardware or pixel/art-bar PASS from this headless fixture.",
+    "Original High/Medium fight/scenery runtime APPs and independent visual FAILs remain distinct preserved evidence.",
+    "Actual changed native presentation and original blind visual confirmation remain separate requirements; F40#3/#5/F08#3 whole criteria OPEN, no READY."
+  ]
+}

@@ -1,0 +1,395 @@
+{
+  "reviewer": {
+    "name": "Hypatia",
+    "agent": "blind_listener_f10",
+    "id": "01a11667-4631-72b2-8fed-294999b8c043",
+    "method": "Independent pixels-only review; retained original reviewer."
+  },
+  "scope": "Medium captain-fight still sequence only. Independent assessment of pictured appearance, effects, pose, camera, HUD and context against the approved Cloudreach references and written visual bar.",
+  "verdict": "FAIL",
+  "inspection": {
+    "contact_pages_opened": 7,
+    "contact_pages": [
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/medium-blind-contacts//page-01.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/medium-blind-contacts//page-02.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/medium-blind-contacts//page-03.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/medium-blind-contacts//page-04.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/medium-blind-contacts//page-05.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/medium-blind-contacts//page-06.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/medium-blind-contacts//page-07.jpg"
+    ],
+    "represented_frames_inspected_in_contacts": 50,
+    "untouched_full_originals_opened": 16,
+    "full_originals": [
+      {
+        "id": "live-26561",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-26561.png"
+      },
+      {
+        "id": "live-26921",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-26921.png"
+      },
+      {
+        "id": "live-28181",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-28181.png"
+      },
+      {
+        "id": "live-28721",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-28721.png"
+      },
+      {
+        "id": "live-29621",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-29621.png"
+      },
+      {
+        "id": "live-30521",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-30521.png"
+      },
+      {
+        "id": "live-30881",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-30881.png"
+      },
+      {
+        "id": "live-31061",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-31061.png"
+      },
+      {
+        "id": "live-31421",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-31421.png"
+      },
+      {
+        "id": "live-32321",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-32321.png"
+      },
+      {
+        "id": "live-32501",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-32501.png"
+      },
+      {
+        "id": "live-32861",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-32861.png"
+      },
+      {
+        "id": "live-33041",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-33041.png"
+      },
+      {
+        "id": "live-34121",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-34121.png"
+      },
+      {
+        "id": "live-34481",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-34481.png"
+      },
+      {
+        "id": "aftermath",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\aftermath.png"
+      }
+    ],
+    "remaining_originals": "The other 34 originals were represented in contact pages only; no claim of full-raster inspection of all 50.",
+    "locating_index": "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/medium-blind-contacts//original-index.json"
+  },
+  "reference_basis": [
+    "docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png",
+    "docs/reference/boards-2026-09-06/cloudreach-cliffs-creature-roster-board.png",
+    "docs/design/ART_DIRECTION.md: approved appearance, creature readability, materials, VFX, UI and fight-action requirements.",
+    "docs/ACCEPTANCE.md: full visual bar and F40 literal prohibition on flat magenta rings/slabs and placeholder effects."
+  ],
+  "independent_portions": {
+    "full_bar_medium_fight": {
+      "verdict": "FAIL",
+      "reason": "Pictured effects and creature material/action readability do not meet the full visual bar."
+    },
+    "bar_a_appearance": {
+      "verdict": "FAIL",
+      "reason": "Flat abstract attack shapes, generic body-covering impact graphics and coarse creature material patches remain visible."
+    },
+    "bar_b_atmosphere": {
+      "verdict": "INCOMPLETE",
+      "reason": "This court sequence has visible cool/warm lighting and practical lamps, but cannot establish the required regional time/weather matrix."
+    },
+    "fight_action_readability": {
+      "verdict": "FAIL",
+      "reason": "Warning/opening labels are readable, but several effects hide faces or body contact and the endpoint collapsed-body silhouette is unclear."
+    },
+    "flat_magenta_literal_subset": {
+      "verdict": "FAIL",
+      "reason": "Magenta/pale-pink annuli, discs and sectors remain directly visible. This is a pictured subset finding, not a whole F40#5 judgment."
+    },
+    "hud_warning_and_result_text": {
+      "verdict": "PASS",
+      "scope": "Bounded static text readability only",
+      "reason": "Incoming/heavy warnings, opening/stagger labels, KO/empty party bars and the separate upper-right result card can be read in the inspected originals."
+    }
+  },
+  "largest_three_gaps": [
+    {
+      "rank": 1,
+      "subject": "Attack effect identity",
+      "reason": "Large flat magenta or pale-pink rings, discs and wedges dominate the attack area instead of reading as the intended type objects/effects.",
+      "evidence": [
+        {
+          "frame_id": "live-26921",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-26921.png"
+        },
+        {
+          "frame_id": "live-28181",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-28181.png"
+        },
+        {
+          "frame_id": "live-31421",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-31421.png"
+        },
+        {
+          "frame_id": "live-34121",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-34121.png"
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "subject": "Impact and body readability",
+      "reason": "Oversized ring/star graphics and smoke cover the active creature's torso, face or contact region. The endpoint Galecrest silhouette reads as an upright gray wing bundle with no clear head/chest/legs from this angle.",
+      "evidence": [
+        {
+          "frame_id": "live-29621",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-29621.png"
+        },
+        {
+          "frame_id": "live-31061",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-31061.png"
+        },
+        {
+          "frame_id": "live-32861",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-32861.png"
+        },
+        {
+          "frame_id": "live-34481",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-34481.png"
+        },
+        {
+          "frame_id": "aftermath",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\aftermath.png"
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "subject": "Material and silhouette finish",
+      "reason": "Cloudfang retains a wolf face but has coarse irregular lavender coat patches. Aeriex has a recognizable wind-serpent silhouette yet weak articulation of the reference's teal/gold/orange feather color blocks. The court's broad paving and abrupt strips remain visually plain.",
+      "evidence": [
+        {
+          "frame_id": "live-26561",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-26561.png"
+        },
+        {
+          "frame_id": "live-26921",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-26921.png"
+        },
+        {
+          "frame_id": "live-28721",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-28721.png"
+        },
+        {
+          "frame_id": "live-31421",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-31421.png"
+        },
+        {
+          "frame_id": "live-32501",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-32501.png"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "domain": "VFX",
+      "verdict": "FAIL",
+      "requirement": "Written effect bar prohibits flat magenta rings/slabs; real move identity and visible contact must remain readable.",
+      "observation": "Aeriex, Cloudfang and Galecrest attack views contain thick pale-pink/magenta annuli and discs; large sector wedges overlap the opponent's circular area.",
+      "evidence": [
+        {
+          "frame_id": "live-26921",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-26921.png"
+        },
+        {
+          "frame_id": "live-28181",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-28181.png"
+        },
+        {
+          "frame_id": "live-31421",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-31421.png"
+        },
+        {
+          "frame_id": "live-34121",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-34121.png"
+        }
+      ],
+      "limits": "Stills establish visible shape and obstruction, not duration, flashing, timing, damage arrival or sound."
+    },
+    {
+      "domain": "Impact visibility",
+      "verdict": "FAIL",
+      "requirement": "Fight feedback must preserve creature face/body/action readability.",
+      "observation": "Large pale ring/star graphics cover Aeriex, Cloudfang and Galecrest upper bodies. Smoke in live-32861 hides Terrapup's head and the Cloudfang contact region.",
+      "evidence": [
+        {
+          "frame_id": "live-29621",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-29621.png"
+        },
+        {
+          "frame_id": "live-31061",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-31061.png"
+        },
+        {
+          "frame_id": "live-32861",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-32861.png"
+        },
+        {
+          "frame_id": "live-34481",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-34481.png"
+        }
+      ],
+      "limits": "No temporal continuity, exact hit cause, screen-flash duration or numerical camera-shake claim."
+    },
+    {
+      "domain": "Creature identity/materials",
+      "verdict": "FAIL",
+      "requirement": "Clear faces/eyes, designed color blocks and coherent appealing materials.",
+      "observation": "Cloudfang's pointed ears, blue eye and wolf profile remain readable, but its pale coat contains coarse irregular lavender patches. Aeriex's eye and serpent silhouette remain recognizable, while the board's deliberate feather/color articulation is weak. Terrapup has a clear large eye, kind muzzle, cream chest and chunky rock-backed silhouette; its coarse coat/stones remain visible.",
+      "evidence": [
+        {
+          "frame_id": "live-26561",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-26561.png"
+        },
+        {
+          "frame_id": "live-26921",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-26921.png"
+        },
+        {
+          "frame_id": "live-31421",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-31421.png"
+        },
+        {
+          "frame_id": "live-32501",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-32501.png"
+        },
+        {
+          "frame_id": "live-33041",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-33041.png"
+        },
+        {
+          "frame_id": "aftermath",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\aftermath.png"
+        }
+      ],
+      "limits": "No unseen pose suite, F36 acceptance, exact scale, topology or material-source judgment."
+    },
+    {
+      "domain": "Poses and endpoint silhouette",
+      "verdict": "FAIL",
+      "requirement": "Pictured states should read from their body silhouette without relying only on labels.",
+      "observation": "Cloudfang's low crouch and raised foreleg show recognizable pose changes. Aeriex's low curled form is visible but reads weakly at distance. In aftermath, Galecrest behind Terrapup reads mainly as a small upright fan/bundle of gray wings; head, chest and legs are not clear.",
+      "evidence": [
+        {
+          "frame_id": "live-30521",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-30521.png"
+        },
+        {
+          "frame_id": "live-30881",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-30881.png"
+        },
+        {
+          "frame_id": "live-32321",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-32321.png"
+        },
+        {
+          "frame_id": "live-32501",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-32501.png"
+        },
+        {
+          "frame_id": "aftermath",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\aftermath.png"
+        }
+      ],
+      "limits": "Endpoint is not a landing/collapse transition. Hidden anatomy does not establish floor penetration or an incorrect runtime outcome; continuity is unassessed."
+    },
+    {
+      "domain": "Camera and actor framing",
+      "verdict": "FAIL",
+      "requirement": "Fight views should keep important actors/actions readable and avoid obstructed framing.",
+      "observation": "Most sampled views contain both active creature bodies. The wider live-28721 view makes human faces very small. In live-30881 the far-right trainer is cut by the raster edge and HUD is absent. In live-33041 a human behind Terrapup is largely occluded by its back/leg.",
+      "evidence": [
+        {
+          "frame_id": "live-28721",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-28721.png"
+        },
+        {
+          "frame_id": "live-30881",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-30881.png"
+        },
+        {
+          "frame_id": "live-33041",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-33041.png"
+        }
+      ],
+      "limits": "Projected overlap is not proof of 3D mesh interpenetration; no full camera trajectory, other fights, co-op or device claim."
+    },
+    {
+      "domain": "HUD and contextual prompts",
+      "verdict": "POLISH",
+      "requirement": "Fight state and prompts should remain readable without unnecessary competing context.",
+      "observation": "Incoming/heavy and opening/stagger text, creature names, health/energy, KO and empty bars remain legible. An exploration 'E Greet Captain Veyra' prompt is visible during fight views, adding competing context. Persistent panels consume substantial visual space. The aftermath result card is separate and readable: Captain Veyra defeated; reward 150 Coin and 1 Rare Candy; next objective disable three exposed relays.",
+      "evidence": [
+        {
+          "frame_id": "live-29621",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-29621.png"
+        },
+        {
+          "frame_id": "live-33041",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-33041.png"
+        },
+        {
+          "frame_id": "aftermath",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\aftermath.png"
+        }
+      ],
+      "limits": "Visible text does not prove grants or natural outcome. TEAM 5/5 is not treated as a claim all five are ready because orange KO/empty bars are visible. No controller/device usability certification or loss-row rescore."
+    },
+    {
+      "domain": "Arena context and lighting",
+      "verdict": "FAIL",
+      "requirement": "Coherent materials and intentional shape/lighting under the full appearance bar.",
+      "observation": "Fortress walls, cages, barrels and Team Tether banner establish a recognizable court. Warm lamps are visible against cool surroundings. The court floor is a broad flat paving plane with repeated small texture and abrupt beige/blue-gray/dark strips, limiting material/landform richness.",
+      "evidence": [
+        {
+          "frame_id": "live-28721",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-28721.png"
+        },
+        {
+          "frame_id": "live-30881",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-30881.png"
+        },
+        {
+          "frame_id": "live-33041",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-medium-e51-r1\\live-33041.png"
+        }
+      ],
+      "limits": "No independent full Medium scenery/time/weather matrix judgment; this does not rerate the prior High scenery corpus."
+    }
+  ],
+  "positives": [
+    "Creature species silhouettes remain distinct: wind serpent, wolf, moss boar, antlered rabbit and rock-backed Terrapup.",
+    "Most sampled camera views retain both active creature bodies and usable combat space.",
+    "Warning/opening labels and health/KO states are legible.",
+    "The aftermath has a distinct, readable result/reward/next-objective card."
+  ],
+  "limits": [
+    "Frozen stills only: no earned campaign, balance, duration, motion, sound, performance, device or co-op proof.",
+    "Context supplied as production captain challenge with direct-created five level-44 companions and in-memory summit flags; this is not earned progression.",
+    "No inference of implementation, runtime cause or source correctness.",
+    "No unseen attacks, poses, regions, terrain views or menu contexts are certified.",
+    "High fight FAIL and High scenery FAIL remain preserved; no High artifact is changed.",
+    "Whole F40#3, F40#5, F08#3 and other whole criteria remain OPEN. This separate Medium fight judgment does not close a full visual matrix or catalogue."
+  ]
+}

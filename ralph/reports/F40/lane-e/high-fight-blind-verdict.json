@@ -1,0 +1,607 @@
+{
+  "schema": "bounded-high-captain-fight-pixels-v1",
+  "reviewer": {
+    "name": "Hypatia",
+    "task": "blind_listener_f10",
+    "retained_id": "01a11667-4631-72b2-8fed-294999b8c043",
+    "method": "Same retained independent pixels-only reviewer. Index read solely to locate untouched originals; no source, runtime classification, private bindings or source-review conclusions read."
+  },
+  "scope": "Supplied High captain-fight still sequence only. Adds pictured fight context to the existing High scenery evidence without changing that verdict or any catalogue score.",
+  "verdict": "FAIL",
+  "reason": "Readable basic combat information is present, but flat magenta area shapes, body-obscuring generic impacts, weak reference-backed creature materials and unclear terminal bird body pose prevent the supplied High fight picture portion from passing the owning visual bar.",
+  "inspection": {
+    "contact_pages_opened": 7,
+    "represented_chronological_cells_inspected": 56,
+    "original_full_rasters_opened": 17,
+    "contact_pages": [
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/high-blind-contacts/page-01.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/high-blind-contacts/page-02.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/high-blind-contacts/page-03.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/high-blind-contacts/page-04.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/high-blind-contacts/page-05.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/high-blind-contacts/page-06.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-e51ccb09b6-cloudreach-fights-r1/high-blind-contacts/page-07.jpg"
+    ],
+    "full_originals": [
+      {
+        "id": "live-26441",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26441.png"
+      },
+      {
+        "id": "live-26801",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26801.png"
+      },
+      {
+        "id": "live-26981",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26981.png"
+      },
+      {
+        "id": "live-29681",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-29681.png"
+      },
+      {
+        "id": "live-30041",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-30041.png"
+      },
+      {
+        "id": "live-31481",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-31481.png"
+      },
+      {
+        "id": "live-32201",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-32201.png"
+      },
+      {
+        "id": "live-33101",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33101.png"
+      },
+      {
+        "id": "live-33461",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33461.png"
+      },
+      {
+        "id": "live-33821",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33821.png"
+      },
+      {
+        "id": "live-35261",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-35261.png"
+      },
+      {
+        "id": "live-35981",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-35981.png"
+      },
+      {
+        "id": "aftermath",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\aftermath.png"
+      },
+      {
+        "id": "live-28061",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-28061.png"
+      },
+      {
+        "id": "live-30941",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-30941.png"
+      },
+      {
+        "id": "live-34901",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-34901.png"
+      },
+      {
+        "id": "live-35801",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-35801.png"
+      }
+    ],
+    "represented_frames": [
+      {
+        "frame": "live-26441",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26441.png"
+      },
+      {
+        "frame": "battle_captain_veyra_storm_anchor",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\battle_captain_veyra_storm_anchor.png"
+      },
+      {
+        "frame": "live-26621",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26621.png"
+      },
+      {
+        "frame": "live-26801",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26801.png"
+      },
+      {
+        "frame": "live-26981",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26981.png"
+      },
+      {
+        "frame": "live-27161",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-27161.png"
+      },
+      {
+        "frame": "live-27341",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-27341.png"
+      },
+      {
+        "frame": "live-27521",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-27521.png"
+      },
+      {
+        "frame": "live-27701",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-27701.png"
+      },
+      {
+        "frame": "live-27881",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-27881.png"
+      },
+      {
+        "frame": "live-28061",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-28061.png"
+      },
+      {
+        "frame": "live-28241",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-28241.png"
+      },
+      {
+        "frame": "live-28421",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-28421.png"
+      },
+      {
+        "frame": "live-28601",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-28601.png"
+      },
+      {
+        "frame": "live-28781",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-28781.png"
+      },
+      {
+        "frame": "live-28961",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-28961.png"
+      },
+      {
+        "frame": "live-29141",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-29141.png"
+      },
+      {
+        "frame": "live-29321",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-29321.png"
+      },
+      {
+        "frame": "live-29501",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-29501.png"
+      },
+      {
+        "frame": "live-29681",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-29681.png"
+      },
+      {
+        "frame": "live-29861",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-29861.png"
+      },
+      {
+        "frame": "live-30041",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-30041.png"
+      },
+      {
+        "frame": "live-30221",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-30221.png"
+      },
+      {
+        "frame": "live-30401",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-30401.png"
+      },
+      {
+        "frame": "live-30581",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-30581.png"
+      },
+      {
+        "frame": "live-30761",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-30761.png"
+      },
+      {
+        "frame": "live-30941",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-30941.png"
+      },
+      {
+        "frame": "live-31121",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-31121.png"
+      },
+      {
+        "frame": "live-31301",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-31301.png"
+      },
+      {
+        "frame": "live-31481",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-31481.png"
+      },
+      {
+        "frame": "live-31661",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-31661.png"
+      },
+      {
+        "frame": "live-31841",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-31841.png"
+      },
+      {
+        "frame": "live-32021",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-32021.png"
+      },
+      {
+        "frame": "live-32201",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-32201.png"
+      },
+      {
+        "frame": "live-32381",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-32381.png"
+      },
+      {
+        "frame": "live-32561",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-32561.png"
+      },
+      {
+        "frame": "live-32741",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-32741.png"
+      },
+      {
+        "frame": "live-32921",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-32921.png"
+      },
+      {
+        "frame": "live-33101",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33101.png"
+      },
+      {
+        "frame": "live-33281",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33281.png"
+      },
+      {
+        "frame": "live-33461",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33461.png"
+      },
+      {
+        "frame": "live-33641",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33641.png"
+      },
+      {
+        "frame": "live-33821",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33821.png"
+      },
+      {
+        "frame": "live-34001",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-34001.png"
+      },
+      {
+        "frame": "live-34181",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-34181.png"
+      },
+      {
+        "frame": "live-34361",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-34361.png"
+      },
+      {
+        "frame": "live-34541",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-34541.png"
+      },
+      {
+        "frame": "live-34721",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-34721.png"
+      },
+      {
+        "frame": "live-34901",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-34901.png"
+      },
+      {
+        "frame": "live-35081",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-35081.png"
+      },
+      {
+        "frame": "live-35261",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-35261.png"
+      },
+      {
+        "frame": "live-35441",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-35441.png"
+      },
+      {
+        "frame": "live-35621",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-35621.png"
+      },
+      {
+        "frame": "live-35801",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-35801.png"
+      },
+      {
+        "frame": "live-35981",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-35981.png"
+      },
+      {
+        "frame": "aftermath",
+        "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\aftermath.png"
+      }
+    ],
+    "method": "All eight complete-frame cells per page inspected, then 17 relevant untouched 1920x1080 original PNGs opened with view_image. The other 39 originals were represented by contact cells rather than individually opened at full size.",
+    "references": "Reused independently inspected approved cloudreach-sky-aviary-stronghold-board.png and cloudreach-cliffs-creature-roster-board.png.",
+    "owning_visual_requirements": [
+      "ART_DIRECTION Bars A/B, per-domain creatures/terrain/VFX/UI bar",
+      "ART_DIRECTION 5.3 move effects and hit readability, section 6 world-space prompt clutter",
+      "ACCEPTANCE F40(3)/(5) visual portions"
+    ],
+    "bar_c_note": "No separately named Bar C definition was located in the permitted ART_DIRECTION/ACCEPTANCE text. Fight/action readability is explicitly judged below against their creature, VFX and UI requirements; no additional invented bar is applied."
+  },
+  "portions": {
+    "bar_a_fight_appeal": {
+      "verdict": "FAIL",
+      "reason": "Character identities often remain distinguishable, but Aeriex/Cloudfang materials and abstract area/impact graphics miss coherent reference-backed appeal."
+    },
+    "bar_b_fight_light": {
+      "verdict": "INCOMPLETE",
+      "reason": "Warm practical lights and changing cool/warm arena grades are visible, and actors generally separate from the floor. This one sequence does not establish the full day/night/weather atmospheric fight matrix. Its weak floor/contact/material presentation remains a visible limitation.",
+      "evidence": [
+        {
+          "frame": "live-26441",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26441.png"
+        },
+        {
+          "frame": "live-33461",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33461.png"
+        },
+        {
+          "frame": "aftermath",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\aftermath.png"
+        }
+      ]
+    },
+    "fight_action_readability": {
+      "verdict": "FAIL",
+      "positive": "Incoming, heavy, opening, stagger and damage information are legible; warning boundaries have strong contrast and separated actor silhouettes are usually clear.",
+      "reason": "Large generic hit graphics/smoke obscure bodies, contact overlap weakens face/action separation, and the terminal bird body pose is not clearly readable.",
+      "evidence": [
+        {
+          "frame": "live-30041",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-30041.png"
+        },
+        {
+          "frame": "live-33101",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33101.png"
+        },
+        {
+          "frame": "live-31481",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-31481.png"
+        },
+        {
+          "frame": "aftermath",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\aftermath.png"
+        }
+      ]
+    },
+    "literal_magenta_check_in_fight": {
+      "verdict": "FAIL",
+      "reason": "Actual flat magenta rings/discs/sectors are visibly present. This is a supported defect in this fight subset, not a whole F40(5) completeness judgment.",
+      "evidence": [
+        {
+          "frame": "live-26801",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26801.png"
+        },
+        {
+          "frame": "live-28061",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-28061.png"
+        },
+        {
+          "frame": "live-32201",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-32201.png"
+        }
+      ]
+    },
+    "framing_and_ground_contact": {
+      "verdict": "INCOMPLETE",
+      "positive": "Both active creature silhouettes remain within frame in most cells and opened originals; clearly separated ready views exist.",
+      "limits": "Contact overlap/occlusion is visible. Still projections and hidden anatomy do not certify collision, universal absence of floor penetration/floating, or continuity through attacks/collapse.",
+      "evidence": [
+        {
+          "frame": "live-26441",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26441.png"
+        },
+        {
+          "frame": "live-33101",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33101.png"
+        },
+        {
+          "frame": "live-33461",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33461.png"
+        },
+        {
+          "frame": "live-35261",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-35261.png"
+        },
+        {
+          "frame": "live-33821",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33821.png"
+        },
+        {
+          "frame": "aftermath",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\aftermath.png"
+        }
+      ]
+    },
+    "pictured_reward_context": {
+      "verdict": "PASS",
+      "bounded": true,
+      "reason": "The aftermath image visibly states 'Captain Veyra defeated', lists '150 Coin, 1 Rare Candy' and a next objective in a separate upper-right card. Party KO marks/empty bars remain legible.",
+      "evidence": [
+        {
+          "frame": "aftermath",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\aftermath.png"
+        }
+      ],
+      "limits": "Visible text only; no runtime outcome, actual grant or earned progression certification."
+    }
+  },
+  "findings": [
+    {
+      "rank": 1,
+      "domain": "VFX and tell material finish",
+      "verdict": "FAIL",
+      "requirement": "ART_DIRECTION per-domain VFX bar and 5.3: real move objects, trails and readable impacts; no flat magenta rings/slabs.",
+      "observation": "Saturated magenta ground discs, thick annular rings and translucent wedge sectors dominate several warning/contact states. They convey area boundaries but remain abstract flat shapes rather than a reference-backed move object. Broad pale rectangular ground lanes and generic ring/star flashes repeat across different pictured actors.",
+      "evidence": [
+        {
+          "frame": "live-26801",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26801.png"
+        },
+        {
+          "frame": "live-28061",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-28061.png"
+        },
+        {
+          "frame": "live-32201",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-32201.png"
+        },
+        {
+          "frame": "live-29681",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-29681.png"
+        },
+        {
+          "frame": "live-35981",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-35981.png"
+        }
+      ],
+      "limits": "Stills expose appearance and boundary visibility, not duration, arrival timing, fairness, audio or the full effect archetype library."
+    },
+    {
+      "rank": 2,
+      "domain": "Contact and impact readability",
+      "verdict": "FAIL",
+      "requirement": "ART_DIRECTION ordinary fight-camera face/pose readability and VFX object-first readability; effects must preserve the subject.",
+      "observation": "A large pale ring/star overlays Aeriex's torso/tail in live-30041 and fills much of the Cloudfang body/head area in live-33101. Smoke substantially veils Aeriex in live-31481. Bramblebun and Cloudfang overlap at contact, reducing separate face/body reads. The bodies are clearer in separated ready states.",
+      "evidence": [
+        {
+          "frame": "live-30041",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-30041.png"
+        },
+        {
+          "frame": "live-33101",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33101.png"
+        },
+        {
+          "frame": "live-31481",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-31481.png"
+        },
+        {
+          "frame": "live-26441",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26441.png"
+        },
+        {
+          "frame": "live-33461",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33461.png"
+        }
+      ],
+      "limits": "Projection overlap is supported; these views alone do not establish three-dimensional material penetration or collision behavior. No flash duration or motion-continuity conclusion."
+    },
+    {
+      "rank": 3,
+      "domain": "Creature face, color blocks and pose finish",
+      "verdict": "FAIL",
+      "requirement": "ART_DIRECTION creature appeal/clear face and eyes/designed color blocks/material coherence; readable hurt and grounded collapse poses; approved Cloudreach roster board.",
+      "observation": "Terrapup has a clear eye/muzzle, cream chest and chunky rock-backed silhouette; Sparkit, Mudsnout and Bramblebun remain distinguishable. Aeriex is largely a smooth pale serpentine body with streaky feather surfaces and dark eye dots, missing the board's articulated teal/gold/orange palette. Cloudfang preserves wolf proportions and blue eye but its fur reads as coarse pale lavender patchwork. The terminal pictured bird endpoint in aftermath is a low fan of wings with no clear head/chest/leg read, weakening body/state identification.",
+      "evidence": [
+        {
+          "frame": "live-26441",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26441.png"
+        },
+        {
+          "frame": "live-26801",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26801.png"
+        },
+        {
+          "frame": "live-29681",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-29681.png"
+        },
+        {
+          "frame": "live-32201",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-32201.png"
+        },
+        {
+          "frame": "live-33461",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33461.png"
+        },
+        {
+          "frame": "live-33821",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33821.png"
+        },
+        {
+          "frame": "aftermath",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\aftermath.png"
+        }
+      ],
+      "limits": "No model/source cause inferred. Cloudfang's horizontal endpoint is visibly different from standing; exact floor penetration and support beneath hidden anatomy cannot be certified. The collapsed bird is not treated as a complete pose suite or a mechanics result."
+    },
+    {
+      "rank": 4,
+      "domain": "HUD, warnings and context",
+      "verdict": "FAIL",
+      "requirement": "ART_DIRECTION UI: readable tokens, no heavy HUD boxes; world prompts should not create billboard clutter.",
+      "observation": "Enemy name/type/health, incoming/heavy/open/stagger text, damage numbers and KO entries are readable. However, the large fixed corner panels and recurring 'E Greet Captain Veyra' exploration prompt sit over the active fight; the prompt competes with combat context and in live-35261 crosses the actor/area region. TEAM 5/5 remains a roster count while KO marks and empty bars clearly identify unavailable entries. The aftermath reward card is distinct and readable.",
+      "evidence": [
+        {
+          "frame": "live-26801",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26801.png"
+        },
+        {
+          "frame": "live-28061",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-28061.png"
+        },
+        {
+          "frame": "live-30041",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-30041.png"
+        },
+        {
+          "frame": "live-34901",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-34901.png"
+        },
+        {
+          "frame": "live-35261",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-35261.png"
+        },
+        {
+          "frame": "aftermath",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\aftermath.png"
+        }
+      ],
+      "limits": "No control/device usability, prompt activation, actual item granting, progression, outcome cause or result timing certified."
+    },
+    {
+      "rank": 5,
+      "domain": "Arena/world material presentation",
+      "verdict": "FAIL",
+      "requirement": "ART_DIRECTION Bar A coherent world materials and terrain grammar: no flat tiled planes, abrupt unexplained rectangles or mismatched placeholder appearance.",
+      "observation": "The arena uses a repeated small paving texture over large flat regions with abrupt beige, gray-blue and dark rectangular/polygon divisions. Nearby walls/props identify a fortified occupied court, but the floor does not read as integrated worn stone and route material at the full bar.",
+      "evidence": [
+        {
+          "frame": "live-26441",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-26441.png"
+        },
+        {
+          "frame": "live-33461",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33461.png"
+        },
+        {
+          "frame": "live-33821",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\live-33821.png"
+        },
+        {
+          "frame": "aftermath",
+          "pixel_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\VISUAL\\phase2\\cloudreach\\f40-cluster-fight-high-e51-r1\\aftermath.png"
+        }
+      ],
+      "limits": "One captain court only; not a new scenery-matrix rescore or other-destination judgment."
+    }
+  ],
+  "limits": [
+    "Supplied context is production captain-challenge/live pilot fixture with five direct-created level-44 companions and in-memory upper-route flags; it does not establish an earned campaign or balance.",
+    "Chronological sampled stills are not a motion witness: no timing, input, hitstop, animation continuity, reaction speed, audio, frame rate or performance proof.",
+    "One captain court and pictured Aeriex/Cloudfang/Galecrest opponent states; no all-attacks, all-poses, other arenas or whole biome fight certification.",
+    "Medium fights/matrix, target-device evidence and co-op are not supplied.",
+    "Full High scenery FAIL is preserved; no F40(3), F40(5), F08(3), C2, catalogue or READY closure.",
+    "No implementation explanation or technical missing-material/collision diagnosis inferred from appearance."
+  ],
+  "final_disposition": "High captain-fight pictured visual portion FAIL. Actual fight context is now visually represented, but visible defects and unsupplied Medium/motion/device/other-context gates remain OPEN."
+}
