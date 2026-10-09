@@ -7,6 +7,7 @@
     "forward_plus",
     "--rendering-driver",
     "vulkan",
+    "--fullscreen",
     "--resolution",
     "1920x1080"
   ],
@@ -104,5 +105,31 @@
     "scope": "Existing capture preload and preset branch only, no hang/native/blind/wholecredit",
     "original_artifact": "SAME f42 parent01a11f78-7222-7343-9b56-e21f52e889ee ARTIFACT/REUSE APPROVE exact1de00, genuine1/0/exit0/5s/zeroerrorswarnings. Native16 conditional prerequisite SATISFIED; actualhang/native/blind/whole unproved."
   },
-  "native_queue": "ROOT-only queued exact1de00 source after original SOURCE/exactARGV/preloadART approval. No D native launch; new relic ON solely explicit reviewed candidate argv, shippingOFF. Old emptyHall7e379 remains separate."
+  "native_queue": "ROOT-only correctedfullscreen queue; original01a11f86 exactCOMMAND APPROVE, original1de00 SOURCE/preloadART reused. Rawoutputpath unchanged and absent; no world/hang/image executed firstattempt. Runtime/blind/whole pending.",
+  "native_raster_refusal": {
+    "immutable_packet": "C:/CodexTemp/tetherbound-proof/native-d-1de00af2b1-hung-relic-r1",
+    "actual_source": "1de00af2b1ed5cf4f5b98a5d2dfaf88350d8e7e9",
+    "pid": 30128,
+    "exit": 1,
+    "ended_utc": "2026-10-09T07:15:04.0998278Z",
+    "observed_window": [
+      1920,
+      1061
+    ],
+    "observed_root": [
+      1920,
+      1061
+    ],
+    "expected": [
+      1920,
+      1080
+    ],
+    "images": 0,
+    "world_hang_executed": false,
+    "guards": "Renderer/preset/source/freshoutput pass; raster guard correctly refuses before world/fixture/images",
+    "supported_command": "Add only documented engine --fullscreen, retain --resolution1920x1080 and all raster/image/pose/world/auth guards; same source16rows/fixture/userargv/rawoutput path; no source change",
+    "project_source": "project.godot display block authors1920x1080 viewport with canvas_items expand; no window mode override. Bounded startup/graphics source contains no window size/fullscreen setter.",
+    "official_cli": "https://docs.godotengine.org/en/stable/tutorials/editor/command_line_tutorial.html",
+    "original": "SAME f42 parent01a11f86-853a-7e82-974a-1467a539ed0d failed nativefacts VERIFIED, no passingreuse; exactfullscreen COMMAND APPROVE, freshattempt/HOME and failedimmutable preserved; strict1920 guard unchanged."
+  }
 }
