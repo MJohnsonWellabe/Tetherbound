@@ -79,6 +79,8 @@ func _run() -> void:
 	# Optional existing-driver proof: one disclosed in-memory ActorON activation
 	# before either original boot. No config-file/save mutation or fixture bypass.
 	var prove_ambient := OS.get_cmdline_user_args().has("--prove-host-ambient-wild")
+	var original_guest_uid := ""
+	var original_guest_character := ""
 	var proof_args: Array = ["--prove-host-ambient-wild"] if prove_ambient else []
 	if not await launch(2, "world", proof_args):
 		quit(await finish())
@@ -93,6 +95,22 @@ func _run() -> void:
 	if not have_session:
 		quit(await finish())
 		return
+	if prove_ambient:
+		# The original default fixture adopts an unowned presentation AFTER
+		# admission. ActorON requires an actual owned, admitted creature. Use
+		# the existing cap-enforced adoption seam BEFORE the join snapshot;
+		# the later deploy step retains this exact Terrapup rather than adding.
+		var owned_guest: Dictionary = await step(1, "deploy_creature", {"species": "terrapup", "owned": true})
+		_check(str(owned_guest.get("verdict", "")) == "PASS",
+			"SETUP: the same guest Terrapup is owned before admission (%s)" % str(owned_guest.get("detail", "")))
+		if str(owned_guest.get("verdict", "")) != "PASS":
+			quit(await finish())
+			return
+		var retained_guest: Dictionary = await probe(1, "encounter")
+		original_guest_uid = str(retained_guest.get("local_ally_uid", ""))
+		original_guest_character = str(retained_guest.get("local_character_id", ""))
+		_check(not original_guest_uid.is_empty() and not original_guest_character.is_empty(),
+			"SETUP: original guest UID and stable character are observed before admission")
 
 	# --- the handshake, copied verbatim from smoke_net_movement_two_peers.gd ---
 	var hosted: Dictionary = await step(0, "host", {})
@@ -302,10 +320,12 @@ func _run() -> void:
 		_check(owners.size() == 1 and int(owners[0].get("peer", 0)) == ids[1] \
 			and not str(guest.get("local_character_id", "")).is_empty() \
 			and owners[0].get("character_id") == guest.get("local_character_id") \
+			and owners[0].get("character_id") == original_guest_character \
 			and owners[0].get("character_id") == owners[0].get("admitted_character_id") \
 			and owners[0].get("character_id") == owners[0].get("authority_character_id") \
 			and not str(guest.get("local_ally_uid", "")).is_empty() \
 			and owners[0].get("actor_bound_uid") == guest.get("local_ally_uid") \
+			and owners[0].get("actor_bound_uid") == original_guest_uid \
 			and owners[0].get("actor_bound_uid") in owners[0].get("admitted_party_uids", []) \
 			and int(owners[0].get("actor_generation", 0)) > 0 and host.get("fighting") == false,
 			"only the admitted guest joined; the riding host did not cast a local fight")
