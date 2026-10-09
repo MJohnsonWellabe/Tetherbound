@@ -112,6 +112,36 @@ func _research_rows() -> void:
 		await process_frame
 		_check(_research_text(panel).contains("Meet this species in an encounter · 1 / 1"),
 			"focusing post-release history shows its retained task progress")
+	# Disclosed unresolved service replies exercise only the actual panel's
+	# consumer; Session still owns authentication, journal/BOOL-save and ACK.
+	var submissions: Array[Dictionary] = []
+	panel.claim_task = func(species: String, task: String) -> Dictionary:
+		submissions.append({"species_id": species, "task_id": task})
+		return {"ok": false, "resolved": false, "code": "awaiting_saved_decision"}
+	var original_claim := {"species_id": "bramblebun", "task_id": "sight"}
+	panel.call("_claim", "bramblebun", "sight")
+	_check(submissions == [original_claim] and panel.get("_pending_claim") == original_claim,
+		"unresolved claim retains its exact original intent")
+	panel.call("_claim", "terrapup", "signature")
+	_check(submissions == [original_claim] and panel.get("_pending_claim") == original_claim,
+		"a second task cannot submit or replace the original pending claim")
+	var context: Dictionary = panel.get("_opened_context")
+	var original_envelope := {"op": "research_claim", "station_key": "research_journal",
+		"intent": original_claim, "character_id": context.get("character_id"),
+		"world_namespace": context.get("world_namespace")}
+	var foreign_envelope := original_envelope.duplicate(true)
+	foreign_envelope.intent = {"species_id": "terrapup", "task_id": "signature"}
+	var refused := {"ok": false, "resolved": true, "terminal_refusal": true, "durable": false,
+		"code": "disclosed_component_refusal"}
+	panel.call("_claim_reply", foreign_envelope, refused)
+	_check(panel.get("_pending_claim") == original_claim,
+		"another task's terminal reply cannot release the original claim")
+	panel.call("_claim_reply", original_envelope, refused)
+	_check((panel.get("_pending_claim") as Dictionary).is_empty(),
+		"matching terminal refusal releases the original claim for retry")
+	panel.call("_claim", "bramblebun", "sight")
+	_check(submissions == [original_claim, original_claim] and panel.get("_pending_claim") == original_claim,
+		"ordinary retry submits the same task after its original refusal")
 	var claimed: Dictionary = actions.stage(model.record, 2, "research_claim",
 		{"species_id": "bramblebun", "task_id": "sight"},
 		{"character_id": model.record.character_id, "expected_revision": 2,
@@ -119,6 +149,9 @@ func _research_rows() -> void:
 	_check(claimed.get("ok") == true, "canonical component claim produces paid projection")
 	if claimed.get("ok") == true:
 		model.record = JSON.parse_string(JSON.stringify(claimed.state))
+		panel.call("_claim_reply", original_envelope, {"ok": true, "resolved": true})
+		_check((panel.get("_pending_claim") as Dictionary).is_empty(),
+			"matching resolved component reply releases the original pending claim")
 		panel.call("_process", 0.6)
 		await process_frame
 		_check(_research_text(panel).contains("Paid ✓"), "restored paid task renders its paid tick")

@@ -100,6 +100,9 @@ func _reveal_species(scroll: ScrollContainer, selected: Button) -> void:
 
 func _claim(species: String, task: String) -> void:
 	if not claim_task.is_valid(): return
+	if not _pending_claim.is_empty():
+		status.text = "Claim submitted · waiting for confirmation"
+		return
 	var result: Variant = claim_task.call(species, task)
 	var awaiting: bool = result is Dictionary and result.get("resolved") == false \
 		and result.get("code") == "awaiting_saved_decision"
