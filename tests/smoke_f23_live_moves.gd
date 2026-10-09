@@ -138,15 +138,20 @@ func _run() -> void:
 		ULTIMATES._config = candidate
 	_enabled_ultimate = ULTIMATES.available("ultimate_ground_current")
 	_saved_actor_vitals = MATH.config().actor_vitals.duplicate(true)
-	# Default shipping invocation follows the real ordinary-wild owner when
-	# both tracked systems are on. Legacy Heal's disclosed local selector remains.
-	_shipping_canonical_wild = _enabled_ultimate and bool(_saved_actor_vitals.get("runtime_enabled", false)) \
-		and _prove_utility.is_empty() and not _prove_mastery_transition and not visual_override
+	# Tracked shipping slots and saved Heal both use the real ordinary-wild
+	# owner. Preserve the disclosed actor-OFF legacy preview independently.
+	var shipping_heal := bool(_saved_actor_vitals.get("runtime_enabled", false)) \
+		and _prove_utility == "heal_pulse" and not _prove_mastery_transition and not visual_override and not _prove_library_arrival
+	_shipping_canonical_wild = shipping_heal or (_enabled_ultimate and bool(_saved_actor_vitals.get("runtime_enabled", false)) \
+		and _prove_utility.is_empty() and not _prove_mastery_transition and not visual_override)
 	_prove_canonical_wild = OS.get_cmdline_user_args().has("--prove-canonical-wild") or _shipping_canonical_wild
 	if OS.get_cmdline_user_args().has("--prove-shipping-ultimate"):
-		_check(bool(_saved_visual_config.get("enabled", false)) and _shipping_canonical_wild
+		_check(bool(_saved_visual_config.get("enabled", false)) and _shipping_canonical_wild and _prove_utility.is_empty()
 			and not visual_override and not _prove_library_arrival,
 			"shipping ultimate proof requires tracked ultimate/actor config and production wild admission without overrides")
+	if OS.get_cmdline_user_args().has("--prove-shipping-utility"):
+		_check(shipping_heal and MATH.config().move_commit.live_moves.has("heal_pulse"),
+			"shipping utility proof requires tracked saved-actor Heal admission without overrides")
 	_check(bool(_saved_actor_vitals.get("runtime_enabled", false)) == _shipping_canonical_wild,
 		"legacy fixture requires actor-vitals OFF; shipping wild requires tracked actor-vitals ON")
 	_check(not _prove_canonical_wild or _prove_utility == "heal_pulse" or _shipping_canonical_wild,
@@ -156,8 +161,10 @@ func _run() -> void:
 		MATH.config().actor_vitals.runtime_enabled = true # Existing process-local Heal path only.
 	_check(_prove_utility.is_empty() or _prove_utility in ["heal_pulse", "dash_strike"], "bounded authored utility selector")
 	_saved_live_moves = MATH.config().move_commit.live_moves.duplicate()
-	if not _prove_utility.is_empty() and not MATH.config().move_commit.live_moves.has(_prove_utility):
-		MATH.config().move_commit.live_moves.append(_prove_utility) # Process-local candidate; shipping remains unchanged.
+	if shipping_heal:
+		_check(_saved_live_moves.has("heal_pulse"), "shipping Heal uses the tracked live-move whitelist")
+	elif not _prove_utility.is_empty() and not MATH.config().move_commit.live_moves.has(_prove_utility):
+		MATH.config().move_commit.live_moves.append(_prove_utility) # Process-local legacy candidate only.
 	_check(_capture_dir.is_empty() or DisplayServer.get_name() != "headless", "render capture requires an actual display")
 	if not _errors.is_empty():
 		_finish()
@@ -294,7 +301,10 @@ func _run() -> void:
 			_check(_ally.global_position.distance_to(position_before) > 0.0 and _ally.global_position.distance_to(position_before) <= 6.001,
 				"Dash sweeps a supported advance within six metres")
 		await _wait_ready()
-		_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == _prove_canonical_wild, "mounted utilities preserve the selected process-local actor_vitals gate")
+		_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == _prove_canonical_wild, "mounted utilities preserve the selected actor-vitals gate")
+		if _shipping_canonical_wild:
+			_check(MATH.config().actor_vitals == _saved_actor_vitals and MATH.config().move_commit.live_moves == _saved_live_moves,
+				"shipping Heal preserves the complete tracked actor config and live-move whitelist")
 		_finish()
 		return
 	var shown_meter: ProgressBar = _hud.get("_ultimate_meter")
@@ -1050,6 +1060,7 @@ func _finish() -> void:
 		"launches": _launches.size(), "impacts": _impacts.size(), "captures": _captures,
 		"shipping_ultimate_enabled": bool(_saved_visual_config.get("enabled", false)),
 		"shipping_ultimate_proof": OS.get_cmdline_user_args().has("--prove-shipping-ultimate"),
+		"shipping_utility_proof": OS.get_cmdline_user_args().has("--prove-shipping-utility"),
 		"visual_gate_override": OS.get_cmdline_user_args().has("--enable-ultimate-visual"),
 		"library_arrival_override": _prove_library_arrival, "arrival_records": _arrival_records,
 		"canonical_wild_override": _prove_canonical_wild and not _shipping_canonical_wild,
