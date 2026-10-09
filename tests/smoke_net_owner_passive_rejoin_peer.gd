@@ -166,17 +166,27 @@ func _tag_step(action: String) -> Dictionary:
 	for hit in 8:
 		var target: Node3D = director.get("_shared_opponent_proxy")
 		if target == null: target = director.get("_legacy_mirror")
+		if director.call("_is_host") == true: target = director.get("_engaged_with")
 		var body: Node3D = director.ally_body()
 		if target == null or body == null or not manager.is_fighting():
 			return {"verdict":"FAIL", "detail":"actual Tag target or body lost before earned meter", "data":{"attempts":attempts}}
 		body.global_position = target.global_position + Vector3(0, 0, 3.0)
 		body.face_towards(target.global_position)
 		for frame in 15: await physics_frame
+		var strike_facing := Vector3(0, 0, -1)
+		if director.call("_is_host") == true:
+			if not is_instance_valid(target) or not is_instance_valid(body):
+				return {"verdict":"FAIL", "detail":"actual host Tag body lost during preparation"}
+			# Same ordinary live facing as the approved host command-hit path.
+			strike_facing = target.call("centre") - body.call("centre")
+			strike_facing.y = 0.0
+			if strike_facing.is_zero_approx(): strike_facing = body.call("facing")
+			strike_facing = strike_facing.normalized()
 		var meter := float(manager.tether_command_snapshot().get("meter", 0.0))
 		var observation: Dictionary = {"attempt":hit + 1, "meter_before":meter,
 			"foe_hp_before":float(manager.enemy().hp) if manager.enemy() != null else -1.0}
 		attempts.append(observation)
-		var strike: Dictionary = await _step_strike({"facing":[0,0,-1], "settle":1})
+		var strike: Dictionary = await _step_strike({"facing":[strike_facing.x,strike_facing.y,strike_facing.z], "settle":1})
 		var strike_data: Dictionary = strike.get("data", {})
 		observation["strike"] = {"verdict":str(strike.get("verdict", "")), "ok":strike_data.get("ok"),
 			"code":str(strike_data.get("code", "")), "submitted_action":strike_data.get("submitted_action")}
@@ -686,6 +696,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			# new enemy hit while the original Item's writer refusal is tested.
 			var director: Node = _encounter_director()
 			var target: Node3D = director.get("_shared_opponent_proxy")
+			if session.is_host(): target = director.get("_engaged_with")
 			var body: Node3D = director.ally_body()
 			if target == null or body == null: return {"verdict":"FAIL", "detail":"actual combat body missing"}
 			body.global_position = target.global_position + Vector3(0, 0, 18.0)
@@ -722,8 +733,15 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 					if not op is Dictionary or op.get("op") != "creature_training_settle": continue
 					var row: Dictionary = op.get("delivery", {})
 					if row.get("action") != "tether_item" or row.get("status") != "pending" \
-						or row.get("character_id") != game.local.character_id \
-						or row.get("intent", {}).get("request") != _tonic_request: continue
+						or row.get("character_id") != game.local.character_id: continue
+					if session.is_host():
+						# A local host publishes during request(), before it returns.
+						# Observe the actual request already installed by the manager.
+						var live: Dictionary = manager.get("_tether_command_view").get("pending_request", {})
+						if live.get("command_id") != "item_throw" \
+							or not preload("res://scripts/combat/tether_commands.gd").valid_intent(live): continue
+						_tonic_request = live.duplicate(true)
+					if row.get("intent", {}).get("request") != _tonic_request: continue
 					var blocked: Dictionary = await _tonic_step("op_tonic_writer", {"block":true})
 					_tonic_refusal_armed = blocked.get("verdict") == "PASS"
 			ledger.delta_applied.connect(_tonic_blocker)
