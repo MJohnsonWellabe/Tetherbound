@@ -1,0 +1,120 @@
+{
+  "reviewer": {
+    "name": "Hypatia",
+    "task": "blind_listener_f10",
+    "id": "01a11667-4631-72b2-8fed-294999b8c043",
+    "role": "Retained original independent pixels-only judge"
+  },
+  "scope": "Realm Gate masonry, visible ground/threshold contact and architecture/route readability in two previous and two current full static originals only.",
+  "inspection": {
+    "full_original_count": 4,
+    "previous": [
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-support-2c109-day-r1/01_gate_lower_cliffs_approach_day.png",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-support-2c109-day-r1/04_gate_lower_cliffs_detail-crag_day.png"
+    ],
+    "current": [
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/01_gate_lower_cliffs_approach_day.png",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/04_gate_lower_cliffs_detail-crag_day.png"
+    ],
+    "method": "All four complete originals opened through view_image; no crops or retouching."
+  },
+  "before": {
+    "appearance_verdict": "FAIL",
+    "visible_contact_verdict": "FAIL",
+    "architecture_identity": "PASS",
+    "near_route_readability": "PASS",
+    "findings": [
+      {
+        "reason": "Detail shows broad brown threshold/step pieces suspended above the grass approach, with open space beneath them. Lower gate masonry does not provide a coherent ground union on the right.",
+        "evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-support-2c109-day-r1/04_gate_lower_cliffs_detail-crag_day.png"
+      },
+      {
+        "reason": "Pale masonry, pointed arch, teal/gold banners and cyan lamps identify a gate from approach and detail. The dirt route and full trainer remain readable, though the near bird occupies part of the approach and distant actors gather at the gate.",
+        "evidence": [
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-support-2c109-day-r1/01_gate_lower_cliffs_approach_day.png",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-support-2c109-day-r1/04_gate_lower_cliffs_detail-crag_day.png"
+        ]
+      },
+      {
+        "reason": "Broad uniform turf, coarse blade grass and large cliff shelves with sharp triangular dark bands remain below the reference-backed terrain/material finish.",
+        "evidence": [
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-support-2c109-day-r1/01_gate_lower_cliffs_approach_day.png",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-support-2c109-day-r1/04_gate_lower_cliffs_detail-crag_day.png"
+        ]
+      }
+    ]
+  },
+  "current": {
+    "appearance_verdict": "FAIL",
+    "visible_contact_verdict": "FAIL",
+    "architecture_identity": "PASS",
+    "near_route_readability": "PASS",
+    "findings": [
+      {
+        "reason": "The brown threshold pieces now appear at the grass/path surface rather than as the prominent elevated staircase in the previous detail. The right gate base has a continuous visible masonry extension to the approach surface. These are clearer local ground-contact cues.",
+        "evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/04_gate_lower_cliffs_detail-crag_day.png",
+        "local_verdict": "PASS for the pictured threshold strips and right base"
+      },
+      {
+        "reason": "The left lamp pedestal still ends above the ground, with a dark tree-like vertical form behind/below it rather than a clear masonry-to-ground union. A rock shelf also crosses the lower arch opening. The whole gate/threshold composition therefore still does not read as a clean, coherently grounded architectural entrance.",
+        "evidence": [
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/01_gate_lower_cliffs_approach_day.png",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/04_gate_lower_cliffs_detail-crag_day.png"
+        ],
+        "local_verdict": "FAIL for complete entrance contact appearance",
+        "limits": "This reports the visible junction only, not absence of mechanical support or walkability."
+      },
+      {
+        "reason": "Gate identity and dirt approach remain legible. Trainer body/feet are visible without gross burial. Actors at the entrance obscure part of its lowest central contact, so that concealed segment is unassessed.",
+        "evidence": [
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/01_gate_lower_cliffs_approach_day.png",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/04_gate_lower_cliffs_detail-crag_day.png"
+        ]
+      },
+      {
+        "reason": "Uniform turf, coarse grass blades and broad stepped cliff planes/sharp dark triangular bands retain the full-appearance shortcomings. No large HUD overlay obscures these supplied images.",
+        "evidence": [
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/01_gate_lower_cliffs_approach_day.png",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/04_gate_lower_cliffs_detail-crag_day.png"
+        ]
+      }
+    ]
+  },
+  "pair_results": [
+    {
+      "view": "approach",
+      "previous_evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-support-2c109-day-r1/01_gate_lower_cliffs_approach_day.png",
+      "current_evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/01_gate_lower_cliffs_approach_day.png",
+      "previous_appearance": "FAIL",
+      "current_appearance": "FAIL",
+      "preference": "CURRENT, bounded ground-contact cues only",
+      "reason": "Gate identity/route remain readable in both. Current no longer presents the conspicuous elevated brown staircase at the gate, but the left pedestal/rock-opening union remains visually unresolved. Actor poses and foliage vary; no causal claim."
+    },
+    {
+      "view": "detail-crag",
+      "previous_evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-support-2c109-day-r1/04_gate_lower_cliffs_detail-crag_day.png",
+      "current_evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/04_gate_lower_cliffs_detail-crag_day.png",
+      "previous_appearance": "FAIL",
+      "current_appearance": "FAIL",
+      "preference": "CURRENT, bounded threshold/right-base contact only",
+      "reason": "Ground-level brown strips and the right masonry extension read more continuously than the previous elevated threshold. Left pedestal and rock ledge in the opening still prevent a complete clean-grounded-entrance appearance."
+    }
+  ],
+  "visible_regressions": {
+    "verdict": "No clear new broad architectural/material regression established in these two views",
+    "reason": "The principal pictured changes favor threshold/right-base contact. Different actor/foliage poses are not used as evidence of a source change. Hidden central contact is limited by pictured actors.",
+    "limits": "Only supplied headings; no all-side absence-of-regression certification."
+  },
+  "owning_requirements": [
+    "Coherent reference-backed masonry/terrain family and readable architecture.",
+    "Ground and threshold junctions must look intentionally integrated, without prominent suspended entrance pieces.",
+    "Readable trainer and route; these stills do not certify mechanics or complete traversal."
+  ],
+  "limits": [
+    "Static pictured appearance only. No mechanical support, collision, walkability, earned route, movement, timing or implementation cause inferred.",
+    "Only approach and detail-crag, day as supplied. No other headings, weather, night/Medium, fight, device, performance, whole row, full matrix or whole criterion claim.",
+    "Lower central junction is partly obscured by actors; concealed/rear/underside junctions remain unassessed.",
+    "No prior numeric grades or catalogue rerating. Original 253bd overall FAIL, five Bridge full-bar FAIL results and all other witnesses remain untouched.",
+    "Current preference is bounded local contact readability, not a full-bar PASS or READY."
+  ]
+}
