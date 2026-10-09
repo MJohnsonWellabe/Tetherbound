@@ -16,6 +16,10 @@ var _companion_required := false
 var _farm_diagnostic_only := false
 var _hall_stills_only := false
 var _hall_stills_finished := false
+var _relic_hang_witness := false
+var _relic_hung := false
+var _relic_witness: Dictionary = {}
+const HUNG_RELIC_LABELS: Array[String] = ["pedestal meadows", "hung relic from nave"]
 const HALL_STILL_LABELS: Array[String] = ["inside Hall nave", "pedestal meadows", "companion in Shrine Room"]
 var _expected_resolution := Vector2i(1920, 1080)
 
@@ -34,6 +38,8 @@ func _run() -> void:
 			_farm_diagnostic_only = true
 		elif argument == "--hall-stills-only":
 			_hall_stills_only = true
+		elif argument == "--hall-relic-hang-witness":
+			_relic_hang_witness = true
 		elif argument.begins_with("--expected-resolution="):
 			var dimensions := argument.trim_prefix("--expected-resolution=").split("x")
 			_expected_resolution = Vector2i(int(dimensions[0]), int(dimensions[1])) if dimensions.size() == 2 else Vector2i.ZERO
@@ -67,13 +73,31 @@ func _run() -> void:
 	if GRAPHICS.choose(_preset) != OK:
 		_finish_failure("could not select preset")
 		return
+	if _relic_hang_witness and not _prepare_relic_fixture():
+		_finish_failure(_failed)
+		return
 	await super._run()
 
 
 func _capture(label: String) -> void:
+	if _relic_hang_witness:
+		if label not in HUNG_RELIC_LABELS:
+			_release_all()
+			return
+		if label == "pedestal meadows" and not _relic_hung:
+			if not await _hang_fixture_relic():
+				_finish_failure(_failed)
+				return
+		if label == "hung relic from nave":
+			var target := root.get_node_or_null(str(_relic_witness.get("pedestal", ""))) as Node3D
+			if target == null:
+				_finish_failure("hung relic's actual pedestal disappeared before doorway view")
+				return
+			await _look_stick_to(_yaw_toward(_xz(), Vector2(target.global_position.x, target.global_position.z)))
 	if _hall_stills_only and label not in HALL_STILL_LABELS:
-		_release_all()
-		return
+		if not (_relic_hang_witness and label in HUNG_RELIC_LABELS):
+			_release_all()
+			return
 	await _capture_matrix(label)
 	if not _failed.is_empty():
 		# Preserve the first capture failure before the inherited walk can
@@ -84,6 +108,128 @@ func _capture(label: String) -> void:
 		_write_manifest(false)
 		print("F17 partial farm-door light diagnostic; complete=false; no Hall circuit, motion or acceptance claim")
 		quit(0 if _failed.is_empty() else 1)
+
+
+## Disclosed capture fixture: one held Meadows relic, not a completed boss or
+## earned boundary. Only ordinary Use may produce hung state/receipt/display.
+func _prepare_relic_fixture() -> bool:
+	var args := OS.get_cmdline_user_args()
+	var game := root.get_node_or_null(^"Game")
+	var session: Node = game.get("session") if game != null else null
+	if not _hall_stills_only or _farm_diagnostic_only or not args.has("--hall-relic-display-candidate") \
+			or args.has("--hall-relic-display-baseline") or session == null \
+			or session.call("is_active") == true or session.call("is_host") != true \
+			or session.call("portal_runtime_ready") != true:
+		_failed = "hung witness requires explicit mounted candidate ON, bounded Hall mode and unchanged solo host portal runtime"
+		return false
+	var personal: Dictionary = (game.get("local").get("redesign_character") as Dictionary).duplicate(true)
+	var display: Dictionary = game.get("world").get("redesign_world")
+	var grant := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off("warden_aldis", "meadows")
+	if grant.get("relic_biome") != "meadows" or not (personal.get("relics_held", []) as Array).is_empty() \
+			or not (personal.get("relics_hung", []) as Array).is_empty() \
+			or not (display.get("shrine_display", {}) as Dictionary).is_empty():
+		_failed = "held-relic fixture requires fresh empty personal/world shrine state and authored Meadows hand-off"
+		return false
+	var save_dir := _output.path_join("held-relic-fixture-save")
+	if DirAccess.dir_exists_absolute(save_dir):
+		_failed = "held-relic fixture save directory already exists"
+		return false
+	game.set("save_system", preload("res://scripts/save/save_game.gd").new(save_dir))
+	(personal.relics_held as Array).append("meadows")
+	game.get("local").set("redesign_character", personal)
+	_relic_witness = {"fixture": "one personal held Meadows relic from authored Warden hand-off; no boss win/key/hung flag/world display/receipt grant",
+		"save_dir": save_dir, "candidate_arg": "--hall-relic-display-candidate", "hung": false}
+	return true
+
+
+func _hang_fixture_relic() -> bool:
+	_release_all()
+	var session: Node = _game.get("session")
+	var local: RefCounted = _game.get("local")
+	var world: RefCounted = _game.get("world")
+	var character := str(local.get("character_id"))
+	var receipt := "relic_hang:meadows:" + character
+	var held: Array = local.get("redesign_character").get("relics_held", [])
+	var pedestals := get_nodes_in_group("crossing_hall_pedestals")
+	var pedestal: Node3D
+	for node: Node3D in pedestals:
+		if node.get_meta("biome", "") == "meadows":
+			if pedestal != null:
+				_failed = "hung witness found duplicate Meadows pedestal"
+				return false
+			pedestal = node
+	var mount := pedestal.get_node_or_null(^"MeadowsRelicDisplay") as Node3D if pedestal != null else null
+	if character.is_empty() or session.call("is_host") != true or not _player.is_on_floor() \
+			or held.count("meadows") != 1 or mount == null or mount.visible \
+			or not (world.get("redesign_world").get("shrine_display", {}) as Dictionary).is_empty() \
+			or local.get("redesign_character").get("transaction_receipts", []).has(receipt) \
+			or not bool(_game.call("save_game", 0)):
+		_failed = "hung witness requires hidden mounted candidate, grounded real body, held relic and fresh production fixture save"
+		return false
+	var namespace := str(world.get("reward_delivery_namespace"))
+	var party := _relic_party_uids()
+	var director := _world.get_node_or_null("EncounterDirector")
+	if director == null:
+		_failed = "hung witness lacks ordinary companion director"
+		return false
+	if director.call("ally_body") == null:
+		await _press("creature_recall")
+	for frame in 180:
+		if _companion_ready(director): break
+		await physics_frame
+	if not _companion_ready(director):
+		_failed = "hung witness did not retain the healthy actually owned companion"
+		return false
+	_captured_companion = director.call("ally_body") as Node3D
+	_captured_member = director.call("ally_instance") as RefCounted
+	_companion_required = true
+	var travel := preload("res://tests/helpers/f49_portal_travel.gd").new(self, _game)
+	if not await travel.hang_relic("meadows"):
+		_failed = "ordinary real pedestal hang refused: " + str(travel.failures)
+		return false
+	# The production success opens the power modal. Cancel with parsed pad
+	# edges on process frames so the panel's own pause/input release executes.
+	_pad_press("menu_cancel", 1.0)
+	Input.flush_buffered_events()
+	for frame in 3: await process_frame
+	_pad_release("menu_cancel")
+	Input.flush_buffered_events()
+	for frame in 30: await process_frame
+	var saver: RefCounted = _game.get("save_system")
+	var disk_world: Dictionary = saver.call("worlds").call("read", str(world.get("world_id")))
+	var disk_character: Dictionary = saver.call("characters").call("read", character)
+	var personal: Dictionary = local.get("redesign_character")
+	var disk_personal: Dictionary = disk_character.get("redesign_character", {})
+	if INPUT_OWNER.current(self) != null or not _player.is_on_floor() \
+			or str(local.get("character_id")) != character or str(world.get("reward_delivery_namespace")) != namespace \
+			or _relic_party_uids() != party or not _companion_ready(director) \
+			or (personal.relics_held as Array).has("meadows") or (personal.relics_hung as Array).count("meadows") != 1 \
+			or (personal.transaction_receipts as Array).count(receipt) != 1 \
+			or world.get("redesign_world").get("shrine_display", {}).get("meadows") != true \
+			or disk_world.get("redesign_world", {}).get("shrine_display", {}).get("meadows") != true \
+			or disk_character.get("character_id") != character \
+			or (disk_personal.get("relics_held", []) as Array).has("meadows") \
+			or (disk_personal.get("relics_hung", []) as Array).count("meadows") != 1 \
+			or (disk_personal.get("transaction_receipts", []) as Array).count(receipt) != 1 \
+			or not mount.is_visible_in_tree() or not bool(pedestal.get_meta("relic_displayed", false)):
+		_failed = "ordinary hang did not retain owner/world/party, release input and mount exactly one saved relic"
+		return false
+	_relic_witness.merge({"hung": true, "character_id": character, "world_namespace": namespace,
+		"receipt": receipt, "party_uids": party, "disk_world_display": disk_world.get("redesign_world", {}).get("shrine_display", {}),
+		"disk_held": disk_personal.get("relics_held", []), "disk_hung": disk_personal.get("relics_hung", []),
+		"disk_receipt_count": (disk_personal.get("transaction_receipts", []) as Array).count(receipt),
+		"world_file": saver.call("worlds").call("path_for", str(world.get("world_id"))),
+		"character_file": saver.call("characters").call("path_for", character),
+		"pedestal": str(pedestal.get_path()), "mount": str(mount.get_path()), "mount_visible": mount.is_visible_in_tree()})
+	_relic_hung = true
+	return true
+
+
+func _relic_party_uids() -> Array[String]:
+	var ids: Array[String] = []
+	for member: RefCounted in _game.get("party").call("members"):
+		ids.append(str(member.get("uid")))
+	return ids
 
 
 func _capture_matrix(label: String) -> void:
@@ -157,6 +303,13 @@ func _capture_matrix(label: String) -> void:
 func _save_view(label: String, time_name: String, weather_name: String = "clear", motion: bool = false, diagnostic: String = "") -> bool:
 	await RenderingServer.frame_post_draw
 	var captured_ms := Time.get_ticks_msec()
+	if _relic_hang_witness:
+		var mount := root.get_node_or_null(str(_relic_witness.get("mount", ""))) as Node3D
+		if not _relic_hung or mount == null or not mount.is_visible_in_tree() \
+				or str(_game.get("local").get("character_id")) != _relic_witness.get("character_id") \
+				or str(_game.get("world").get("reward_delivery_namespace")) != _relic_witness.get("world_namespace"):
+			_failed = "actual owned hung relic display changed before native capture"
+			return false
 	if _companion_required and not _companion_ready(_world.get_node_or_null("EncounterDirector")):
 		_failed = "the same healthy visible companion was not retained through its still/motion capture"
 		return false
@@ -289,8 +442,13 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 	if not _failed.is_empty():
 		_write_manifest(false)
 		return false
+	if _relic_hang_witness:
+		if not _relic_hung or not await _walk_to_target(hall, hall.global_position, Vector3.ZERO, "hung relic from nave"):
+			_write_manifest(false)
+			return false
 	if _hall_stills_only:
-		for expected_label: String in HALL_STILL_LABELS:
+		var labels: Array[String] = HUNG_RELIC_LABELS if _relic_hang_witness else HALL_STILL_LABELS
+		for expected_label: String in labels:
 			var count := 0
 			for view: Dictionary in _views:
 				if str(view.label) == expected_label:
@@ -301,7 +459,7 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 				return false
 		_hall_stills_finished = true
 		_write_manifest(false)
-		print("F17 bounded Hall stills: physical8+8 and recall retained; selected3labels complete; no full visual matrix/motion claim")
+		print("F17 bounded Hall stills: physical8+8 and recall retained; selected%dlabels complete; no full visual matrix/motion claim" % labels.size())
 		return _failed.is_empty()
 	# Observe thirty wall-clock seconds of the live interior without disabling
 	# rendering or advancing the clock. Original frames retain HUD and actors.
@@ -348,7 +506,8 @@ func _write_manifest(complete: bool) -> void:
 		"shortcuts": ["inherited post-opening flags and starter", "one inherited initial farmhouse placement", "injected physical joypad bindings including ordinary companion recall", "production frozen day/night and selected clear/rain weather; weather scheduler held only for stationary capture", "separately marked farmhouse-light-off diagnostic restores all original light energies; excluded from acceptance"],
 		"diagnostic_only": _farm_diagnostic_only,
 		"hall_stills_only": _hall_stills_only, "hall_stills_finished": _hall_stills_finished,
-		"scope": "partial farm-door light diagnostic only; no Hall circuit, motion or acceptance claim" if _farm_diagnostic_only else "bounded3existing Hall still labels with physical8+8/recall; no full visual matrix/motion/wholecriterion claim" if _hall_stills_only else "physical village/Hall circuit and native views; independent visual verdict required; no earned opening, device, fight or multiplayer proof"}, "\t") + "\n")
+		"relic_hang_witness": _relic_hang_witness, "relic_hang": _relic_witness,
+		"scope": "disclosed held-relic fixture, ordinary host hang and saved receipt, mounted candidate ON at pedestal and nave with same healthy companion/production camera; no earned boundary, boss, co-op, device, full matrix or whole criterion claim" if _relic_hang_witness else "partial farm-door light diagnostic only; no Hall circuit, motion or acceptance claim" if _farm_diagnostic_only else "bounded3existing Hall still labels with physical8+8/recall; no full visual matrix/motion/wholecriterion claim" if _hall_stills_only else "physical village/Hall circuit and native views; independent visual verdict required; no earned opening, device, fight or multiplayer proof"}, "\t") + "\n")
 	file.flush()
 	var write_error := file.get_error()
 	file.close()
