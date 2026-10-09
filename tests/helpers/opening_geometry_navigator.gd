@@ -418,6 +418,21 @@ func _finish_step_epoch() -> void:
 
 
 func _end_walk(arrived: bool) -> bool:
+	if not arrived and _active_walk_budget != null:
+		var owner: Node = preload("res://scripts/ui/input_owner.gd").current(_tree)
+		print("OPENING_WALK_TERMINAL ", JSON.stringify({"acceptance": false,
+			"limit": _active_walk_budget.limit, "walked": _active_walk_budget.walked,
+			"held": _active_walk_budget.held, "last_frame": _active_walk_budget.last_frame,
+			"exhausted": _active_walk_budget.exhausted, "physics_frame": Engine.get_physics_frames(),
+			"paused": _tree.paused, "can_walk": can_walk(),
+			"input_owner": str(owner.get_path()) if owner != null else "",
+			"tick_can_process": _tick.can_process(), "observer_can_process": _observer.can_process(),
+			"body_can_process": _body.can_process(), "requested": _requested,
+			"issued": _step_epoch.issued, "completed": _step_epoch.completed,
+			"in_flight": _step_epoch.in_flight, "pre_frame": _step_epoch.pre_frame,
+			"requested_step": _requested_step, "observed_frames": _observed_frames,
+			"requests": _requests, "pending_post": _production_pending, "refusal": _reason,
+			"position": [_body.global_position.x, _body.global_position.y, _body.global_position.z]}))
 	_active_walk_budget = null
 	_requested = false
 	_drive.call(0.0, 0.0)
