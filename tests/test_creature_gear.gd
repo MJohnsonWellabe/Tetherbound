@@ -101,27 +101,57 @@ func test_bonus_rises_with_tier_and_with_each_upgrade() -> void:
 		"empty slots give no bonus")
 
 
-func test_equip_at_the_den_then_upgrade_at_the_forge_to_plus_3() -> void:
+func test_equip_at_the_den_then_upgrade_both_slots_in_every_live_tier_to_plus_3() -> void:
 	var cfg := GEAR.config()
-	var record := _record({"rootiron_harness": 1, "rootiron_ingot": 20, "fiber": 10})
-	var uid := str(record.party[0].uid)
-	var equipped := GEAR.stage_core(record, CHARACTER, 0, _intent("equip", uid, "harness", "rootiron_harness", 1), _context("den"), _db(), cfg)
-	assert_true(equipped.get("ok") == true, str(equipped))
-	if equipped.get("ok") != true: return
-	var state: Dictionary = equipped.state
-	assert_eq(GEAR.gear_for(state, uid).harness, "rootiron_harness")
-	assert_eq(state.redesign_character.transaction_receipts.count(equipped.receipt), 1)
-	for upgrade in [1, 2, 3]:
-		var current := _id("Rootiron", "harness", upgrade - 1)
-		var staged := GEAR.stage_core(state, CHARACTER, 0, _intent("upgrade", uid, "harness", current, 10 + upgrade), _context("forge"), _db(), cfg)
-		assert_true(staged.get("ok") == true, "upgrade to +%d: %s" % [upgrade, str(staged)])
-		if staged.get("ok") != true: return
-		state = staged.state
-		assert_eq(GEAR.gear_for(state, uid).harness, _id("Rootiron", "harness", upgrade))
-	var low := GEAR.stage_core(equipped.state, CHARACTER, 0, _intent("upgrade", uid, "harness", "rootiron_harness", 30), _context("forge", 0), _db(), cfg)
-	assert_eq(low.get("reason", ""), "station_tier", "a Forge below the recipe tier refuses the upgrade")
-	var past := GEAR.stage_core(state, CHARACTER, 0, _intent("upgrade", uid, "harness", "rootiron_harness_plus_3", 20), _context("forge"), _db(), cfg)
-	assert_eq(past.get("code", past.get("reason", "")), "maximum_upgrade", "+3 is the cap: %s" % str(past))
+	for tier: String in LIVE:
+		for slot: String in GEAR.SLOTS:
+			var base := _id(tier, slot, 0)
+			var stock := {}
+			stock[base] = 1
+			for upgrade in 3:
+				var recipe: Dictionary = cfg.upgrades[_id(tier, slot, upgrade)]
+				for id: String in recipe.inputs:
+					stock[id] = int(stock.get(id, 0)) + int(recipe.inputs[id])
+			var record := _record(stock)
+			# Same disclosed returning-character entitlements as the existing
+			# paid command-tier smoke; no recipe/feature override. No played
+			# relic journey or durable publication is claimed by this unit.
+			for biome: String in ["meadows", "tidewake", "cloudreach"]:
+				record.redesign_character.relics_hung.append(biome)
+				record.redesign_character.transaction_receipts.append("relic_hang:%s:%s" % [biome, CHARACTER])
+			var uid := str(record.party[0].uid)
+			var equipped := GEAR.stage_core(record, CHARACTER, 0, _intent("equip", uid, slot, base, 1), _context("den"), _db(), cfg)
+			assert_true(equipped.get("ok") == true, str(equipped))
+			if equipped.get("ok") != true: return
+			var state: Dictionary = equipped.state
+			assert_eq(GEAR.gear_for(state, uid)[slot], base)
+			assert_eq(state.redesign_character.transaction_receipts.count(equipped.receipt), 1)
+			var station := str(cfg.upgrades[base].station_id)
+			for upgrade in [1, 2, 3]:
+				var current := _id(tier, slot, upgrade - 1)
+				var before := state.duplicate(true)
+				var intent := _intent("upgrade", uid, slot, current, 10 + upgrade)
+				var fields := intent.duplicate(true)
+				fields.erase("action_id")
+				var hint := GEAR.preflight(state, fields, _context(station), _db(), cfg)
+				assert_true(hint.get("available") == true, "%s +%d is selectable: %s" % [base, upgrade, str(hint)])
+				assert_eq(hint.get("output_id"), _id(tier, slot, upgrade))
+				assert_eq(state, before, "preflight never mutates the owner")
+				var staged := GEAR.stage_core(state, CHARACTER, 0, intent, _context(station), _db(), cfg)
+				assert_true(staged.get("ok") == true, "%s upgrade to +%d: %s" % [base, upgrade, str(staged)])
+				if staged.get("ok") != true: return
+				assert_eq(state, before, "staging never mutates the admitted original")
+				state = staged.state
+				assert_eq(GEAR.gear_for(state, uid)[slot], _id(tier, slot, upgrade))
+				assert_eq(state.redesign_character.transaction_receipts.count(staged.receipt), 1)
+				assert_eq(GEAR.gear_for(state, uid)["charm" if slot == "harness" else "harness"], "", "the other slot is unchanged")
+			var bag := GEAR._inventory(state.inventory, _db())
+			for id: String in stock:
+				assert_eq(int(bag.call("count", id)), 0, "the exact base piece and all three upgrade prices were spent: " + id)
+			var low := GEAR.stage_core(equipped.state, CHARACTER, 0, _intent("upgrade", uid, slot, base, 30), _context(station, 0), _db(), cfg)
+			assert_eq(low.get("reason", ""), "station_tier", "a station below the recipe tier refuses the upgrade")
+			var past := GEAR.stage_core(state, CHARACTER, 0, _intent("upgrade", uid, slot, _id(tier, slot, 3), 20), _context(station), _db(), cfg)
+			assert_eq(past.get("code", past.get("reason", "")), "maximum_upgrade", "+3 is the cap: %s" % str(past))
 
 
 func test_gear_refusals() -> void:
