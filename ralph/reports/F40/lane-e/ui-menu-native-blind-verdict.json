@@ -1,0 +1,171 @@
+{
+  "reviewer": {
+    "name": "Hypatia",
+    "task": "blind_listener_f10",
+    "id": "01a11667-4631-72b2-8fed-294999b8c043",
+    "role": "Retained original independent pixels-only judge"
+  },
+  "scope": "Eight current full menu/HUD pictures at supplied 1920x1080 only; no before images or catalogue grades.",
+  "inspection": {
+    "full_images_opened": 8,
+    "evidence": [
+      "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/01.png",
+      "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/02.png",
+      "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/03.png",
+      "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/04.png",
+      "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/05.png",
+      "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/06.png",
+      "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/07.png",
+      "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/08.png"
+    ],
+    "method": "All eight complete originals opened through view_image. No crops/retouching or additional screenshots."
+  },
+  "supplied_full_bar_verdict": "FAIL",
+  "reason": "Readable cyan focus and most primary text are positives, but the pictured map does not provide legible terrain/road context, action glyphs are inconsistent between controller and keyboard, Settings viewport instructions are dense/partially clipped, and the exploration HUD/panel presentation is heavy and bare. These eight pictures do not establish the complete controller/device/menu art bar.",
+  "images": [
+    {
+      "image": "01",
+      "subject": "Exploration HUD",
+      "verdict": "FAIL",
+      "focus": "INCOMPLETE: no menu selection pictured",
+      "labels": "PASS at supplied resolution",
+      "hints": "FAIL for controller-first obviousness",
+      "findings": [
+        "Health/food, time, story objective and keyboard shortcuts are readable.",
+        "Large dark story panel and separate shortcut strip cover substantial right-side architecture; the minimap is mostly a cyan field with little route detail.",
+        "Shortcut labels show M/I/B and five small numeric binding glyphs rather than an obvious pictured controller action set.",
+        "Trainer and near ground remain visible; no gross body burial is established."
+      ],
+      "limits": "No HUD behavior, binding availability, actual controller input, device readability or minimap navigation proof.",
+      "evidence": "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/01.png"
+    },
+    {
+      "image": "02",
+      "subject": "Satchel",
+      "verdict": "FAIL",
+      "focus": "PASS: cyan slot outline and selected Satchel tab",
+      "labels": "PASS",
+      "hints": "FAIL for complete controller action clarity",
+      "findings": [
+        "Empty-state text, slot count, equipment labels and selected empty slot are readable without visible text overflow.",
+        "Footer clearly supplies A/B/LB/RB navigation, but pick-up/put-down instructions use a small keyboard Enter glyph; Quick bar shows J/[L3]. The primary slot action is not consistently conveyed as a controller action.",
+        "Panels/grid are very bare in the pictured empty inventory; emptiness is explicitly labeled and is not itself asserted to be a placeholder asset.",
+        "Lowest inventory/equipment rows are cut at the scroll viewport; their offscreen content is unassessed."
+      ],
+      "limits": "Empty inventory only; item art, populated long names, full grid, equipment models and scrolling behavior are absent.",
+      "evidence": "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/02.png"
+    },
+    {
+      "image": "03",
+      "subject": "Quests",
+      "verdict": "PASS",
+      "focus": "PASS: Research log action cyan outlined; selected Quests tab",
+      "labels": "PASS",
+      "hints": "PASS bounded footer",
+      "findings": [
+        "Research log, current objective/route instruction, local requests and bounty empty-state text are readable.",
+        "No pictured long-line overflow or overlapping cards; footer controller tab/select/close hints remain readable.",
+        "Secondary headings/text are subdued but still legible in this full-resolution picture; presentation is a broad text-led dark panel."
+      ],
+      "limits": "Only this quest/empty-state content; no research-log screen, expanded quest details, selection movement or device proof.",
+      "evidence": "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/03.png"
+    },
+    {
+      "image": "04",
+      "subject": "Build overview",
+      "verdict": "PASS",
+      "focus": "PASS: Open Build Menu cyan outline",
+      "labels": "PASS",
+      "hints": "PASS bounded footer",
+      "findings": [
+        "Tent, Campfire and Bedroll names, descriptions and costs fit their cards; no visible text overflow.",
+        "Three object images distinguish the categories, though small/dark and coarse in finish, especially the faceted fire.",
+        "The instruction and primary button are readable; bottom A/B/LB/RB hints remain clear."
+      ],
+      "limits": "Overview only; no opened catalogue, placement preview, actual build interaction, populated recipe inventory or mechanics proof.",
+      "evidence": "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/04.png"
+    },
+    {
+      "image": "05",
+      "subject": "Players",
+      "verdict": "PASS",
+      "focus": "PASS: selected Players tab has cyan outline",
+      "labels": "PASS",
+      "hints": "PASS bounded footer",
+      "findings": [
+        "Trainer portrait and identity text are distinct and readable.",
+        "The pictured unavailable-joining message is readable and not clipped; no cause or actual networking outcome is inferred beyond the displayed text.",
+        "Large unused central area yields a bare presentation, but the single pictured player/status state is understandable."
+      ],
+      "limits": "No multiple-player roster, invitation/join controls in an available state, co-op or runtime network verification.",
+      "evidence": "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/05.png"
+    },
+    {
+      "image": "06",
+      "subject": "Settings/Controls viewport",
+      "verdict": "FAIL",
+      "focus": "PASS: Left stick up binding cyan outlined",
+      "labels": "PARTIAL",
+      "hints": "PARTIAL",
+      "findings": [
+        "Controls heading, reset button, rebinding instruction, Gamepad/Keyboard columns and Walk forward row are readable.",
+        "An instruction paragraph is clipped mid-line at the top of the content viewport; the visible remainder is dense and spans almost the whole width.",
+        "The viewport exposes only one movement binding after a large text area/vertical gap. The complete control list and earlier settings are absent.",
+        "Footer controller hints remain clear, but the pictured binding instructions mix pad, keyboard and long prose."
+      ],
+      "limits": "A partially scrolled viewport only; no assertion that hidden text is permanently clipped, no other control rows or changed binding behavior.",
+      "evidence": "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/06.png"
+    },
+    {
+      "image": "07",
+      "subject": "Settings/Controls viewport",
+      "verdict": "FAIL",
+      "focus": "PASS: Left stick up binding cyan outlined",
+      "labels": "PARTIAL",
+      "hints": "PARTIAL",
+      "findings": [
+        "Same visible Controls/Walk forward context as 06; selected binding and main labels are legible.",
+        "Top paragraph is again cut across a line at the viewport edge; dense full-width instructions and blank spacing limit the pictured hierarchy.",
+        "No additional binding/state coverage is supplied by this picture."
+      ],
+      "limits": "Independent pictured observation only; no byte-identity, before/after repair comparison or scroll behavior inference.",
+      "evidence": "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/07.png"
+    },
+    {
+      "image": "08",
+      "subject": "Map",
+      "verdict": "FAIL",
+      "focus": "PASS: selected map tab/region has cyan emphasis",
+      "labels": "PASS; bottom hints crowded",
+      "terrain_context": "FAIL for the pictured local map",
+      "hints": "FAIL for clear controller-only action grouping",
+      "findings": [
+        "Cloudreach Cliffs, Surveyed: 0% and 32x local view are legible.",
+        "The map shows a very small blurred cyan/green patch around the marker in a large black field; no road, terrain contour or landmark context is legible in that patch.",
+        "Action hints mix A/X/Right Stick with [Minus]/[Equal]/[Comma]/[Period]. The last pair wraps awkwardly over two lines and the common footer sits very close to the image bottom.",
+        "No terrain detail is assumed beyond what is visible; the unsurveyed black region is not automatically labeled a placeholder."
+      ],
+      "limits": "Only the pictured 0%-surveyed, 32x local view; no zoom/pan/surveyed-region, navigation, marker or motion proof.",
+      "evidence": "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/blind/08.png"
+    }
+  ],
+  "literal_artifacts": {
+    "gross_scene_body_burial": "Not visibly established in 01 or dimmed backgrounds",
+    "text_clipping": "Settings 06/07 show a partial line at the top content boundary; behavior outside these static viewports is unassessed",
+    "map_placeholder_claim": "Not asserted: black is explicitly unsurveyed; the visible local patch still lacks readable road/terrain detail",
+    "inventory_placeholder_claim": "Not asserted: slots/equipment are explicitly empty",
+    "other_floating_or_geometry_clipping": "No supported all-scene absence claim from menus; much of the world is obscured/dimmed."
+  },
+  "owning_requirements": [
+    "Controller focus and action hints must be obvious; labels/content must be legible.",
+    "UI/HUD should maintain clear hierarchy and readable world context without excessive heavy billboard clutter.",
+    "Reference-backed, intentional presentation; empty/unsurveyed state alone does not establish placeholder art."
+  ],
+  "limits": [
+    "Debug travel/staged chapter party with menus opened through the existing producer; not earned campaign or functional input proof.",
+    "One 1920x1080 resolution only. No seven-inch/device, alternate layout/text scale, motion, scrolling, focus traversal or co-op evidence.",
+    "No source/config/manifest/log/runtime-source/private binding or hypothesis read; no implementation cause inferred.",
+    "No before-repair comparison, particularly for Settings/Controls. No catalogue scores, whole F40/F42 or READY promotion.",
+    "Existing whole failures and previous diagnoses remain untouched."
+  ]
+}
