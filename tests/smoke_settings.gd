@@ -420,6 +420,31 @@ func _check_focus_can_be_driven() -> void:
 	if start == null:
 		_fail("nothing holds focus on the settings tab; a stick would move nothing")
 		return
+	# Natural entry is Help when available, otherwise Graphics. Reach Controls
+	# through the shipped vertical graph before checking its horizontal columns.
+	var lessons: Array = _tab.get("_lesson_buttons")
+	var graphics: Node = _tab.get("_graphics")
+	var entry: Control = lessons[0] if not lessons.is_empty() else graphics.call("first_focus")
+	if start != entry:
+		_fail("Settings did not enter at its first Help or Graphics action")
+		return
+	var first_binding: Control = (_rows[0] as Dictionary)["gamepad"]
+	var visited: Array[Control] = []
+	var scroll: ScrollContainer = _tab.get("_scroll")
+	for step in _tab.find_children("*", "Control", true, false).size():
+		var current := _focused()
+		if current == null or visited.has(current) or not _fully_visible_in(current, scroll):
+			_fail("natural Settings entry could not walk visibly down to Controls")
+			return
+		if current == first_binding:
+			break
+		visited.append(current)
+		await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	if _focused() != first_binding:
+		_fail("D-pad Down did not reach the first binding from Settings entry")
+		return
+	print("natural Settings entry reached Controls through %d physical D-pad steps" % visited.size())
+	start = _focused()
 	# Raw d-pad events, not InputEventAction: these must travel through the
 	# shipped InputMap and Godot's Control focus machinery exactly as hardware.
 	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
