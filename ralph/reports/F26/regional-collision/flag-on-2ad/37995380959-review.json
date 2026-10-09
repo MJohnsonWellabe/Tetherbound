@@ -1,0 +1,12 @@
+{
+  "artifact": 11647386314,
+  "errors": [],
+  "source": "2ad7d6dd787274290d71aed77bc6094ff4a3f20d",
+  "raw_log": "C:\\CodexTemp\\owner-d-on-37995380959-run.log",
+  "conclusion": "success",
+  "run": 37995380959,
+  "summary": [
+    "Native baked Tidewake regional collider clone: 31 regions, 810 checks, 186 ray pairs, 0 failures",
+    "exit=0 took=6s"
+  ]
+}

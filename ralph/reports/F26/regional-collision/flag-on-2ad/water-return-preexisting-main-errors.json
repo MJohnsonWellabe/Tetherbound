@@ -1,0 +1,24 @@
+{
+  "updated_utc": "2026-10-09T22:18:26.3633232Z",
+  "source": "2ad7d6dd787274290d71aed77bc6094ff4a3f20d",
+  "main_control_run": 37995336968,
+  "main_control_artifact": 11647378369,
+  "main_control_sha": "b19e902ecb34",
+  "main_control_path": "net-water_return-20261009T215918Z",
+  "main_control_terminal": "Both exited=true unexpected_exit=false; failures empty/fatal empty; gameplayALLPASS",
+  "on_run": 37995391419,
+  "on_artifact": 11646994949,
+  "comparison": "Same seven engine shutdown ERROR categories per peer. Main control host789/resources214material176textures vsON788/213/175; client802/226/182 exactlysame. Shader30Mesh88VariantPools same onboth sources.",
+  "verdict": "PREEXISTING_MAIN_SHUTDOWN_ERRORS; qualifiedgameplay/portalpass, do not call rawerror-free/cleanupfixed",
+  "limitations": [
+    "Does not prove currentcd5+onlyDscope rerun or hostMeadows/guestWaterfloor",
+    "D READY stillheldforactual60FPS/P99matchedtextrelease",
+    "No newdiagnosticrun waslaunched; retained fullCIartifact readinmemory becauseCfulldownloadfailed"
+  ],
+  "raw_control": [
+    "D:\\CodexTemp\\owner-d-retained-main-water-return-peer-0.log",
+    "D:\\CodexTemp\\owner-d-retained-main-water-return-peer-1.log",
+    "D:\\CodexTemp\\owner-d-retained-main-water-return-NET_RUN.json"
+  ],
+  "raw_on": "C:\\CodexTemp\\owner-d-on-37995391419-raw-review.json"
+}

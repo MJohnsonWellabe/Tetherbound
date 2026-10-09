@@ -1,0 +1,38 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=2504 control_port=33467 home=/tmp/net-run-local-6789759/home-0 log=/tmp/net-run-local-6789759/peer-0.log
+coordinator: launched peer 1 (client) pid=2505 control_port=37783 home=/tmp/net-run-local-6789759/home-1 log=/tmp/net-run-local-6789759/peer-1.log
+coordinator: peer 0 hello: {"enet_port":34201.0,"godot_version":"4.7-stable (official)","main_sha":"2ad7d6dd7872","peer":0.0,"pid":2504.0,"role":"host","type":"hello","user_data_dir":"/tmp/net-run-local-6789759/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":34202.0,"godot_version":"4.7-stable (official)","main_sha":"2ad7d6dd7872","peer":1.0,"pid":2505.0,"role":"client","type":"hello","user_data_dir":"/tmp/net-run-local-6789759/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracks exactly two Water peers
+PASS: peers use distinct isolated user-data directories
+PASS: peer 0 boots the production Water scene
+PASS: peer 1 boots the production Water scene
+PASS: peer 0: disclosed initial Hall route fixture (Disclosed initial actual ground/route fixture; return cases include an initial Home Key; no earned credit)
+PASS: peer 1: disclosed initial Hall route fixture (Disclosed initial actual ground/route fixture; return cases include an initial Home Key; no earned credit)
+PASS: host starts the real session (hosting udp/34201 as peer 1)
+PASS: host exposes a live Session after hosting
+PASS: client joins the host session (joined 127.0.0.1:34201 as peer 1440367161 after 13 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0 sees both connected session members (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 1 sees both connected session members (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: host has no realm shell while both peers occupy Water
+PASS: peer 0 holds none of the retired physical-route keys/unlocks
+PASS: peer 1 holds none of the retired physical-route keys/unlocks
+PASS: connected client reaches the retired Water return gate through ordinary movement (arrived within 0.90 m of (9.8, 162.7))
+PASS: connected client sends ordinary Interact at the retired physical gate (pressed 'interact' x1)
+PASS: retired gate refused; the client reached Stormwood by Home Key and the Hall's Stormwood arch (crossed 'water' -> 'stormwood' after 2469 observed physics frames / 80762 ms (budget 10000 physics frames); current scene is /root/Stormwood)
+WATER RETURN NET COMPLETION: explicit_wait_frames=0 budget_frames=10000
+PASS: the portal trip completes in the production Stormwood scene
+PASS: client arrival is grounded at the authored Stormwood portal entry or one of its co-op slots (0.00 m, at (-300.0, 32.27184, 180.0)); its height on that ground is checked on the client (arrival_ground_tolerance_m)
+PASS: host and other player remain in the production Water scene
+PASS: peer 0 registry records one member in Water and one in Stormwood
+PASS: peer 1 registry records one member in Water and one in Stormwood
+PASS: peer 0 keeps the two-peer session active through the trip
+PASS: peer 1 keeps the two-peer session active through the trip
+PASS: host owns one ready Stormwood shell containing the departed client
+PASS: client owns no simulation shells; shell authority remains on the host
+PASS: peer 0: the portal trip wrote none of the retired route facts
+PASS: peer 1: the portal trip wrote none of the retired route facts
+ALL CHECKS PASSED
+exit=0 took=151s

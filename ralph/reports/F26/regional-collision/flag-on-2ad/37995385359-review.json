@@ -1,0 +1,14 @@
+{
+  "zip_sha256": "586c57838d3714a903d78bb646fc2d43ceee17601fce8c178cd3b2199bdf6a29",
+  "acceptance": "Onlyaffectedscopedfunctionality; noFPS60/visualwholecriterion",
+  "logs_checked": 2,
+  "source": "2ad7d6dd787274290d71aed77bc6094ff4a3f20d",
+  "all_log_errors": [],
+  "summary": [
+    "  ok    test_water_heightfield.gd :: test_shellwatch_dune_passage_is_dry_and_framed_by_higher_sand",
+    "40 tests, 11229 assertions, 0 failed",
+    "exit=0 took=7s"
+  ],
+  "artifact": 11646604148,
+  "run": 37995385359
+}
