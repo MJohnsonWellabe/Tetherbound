@@ -12,7 +12,7 @@
   ],
   "lane": "B",
   "catch_aim_helper_candidate": {
-    "change": "Use existing physical obstacle navigator for blocked-shot movement recovery within unchanged90physics ticks; strict shot and trajectory readiness remain required.",
+    "change": "Use existing physical obstacle navigator for blocked-shot movement recovery within unchanged 90 physics ticks; strict shot and trajectory readiness remain required.",
     "sha": "997d5874d7e5ab079d7fd59febe16bad2f99c85f",
     "files": [
       "tests/helpers/gate_a_opening_drive.gd"
@@ -26,7 +26,8 @@
       {
         "proof": "gate_b_continuous",
         "run_id": 37978422978,
-        "status": "passed"
+        "status": "passed",
+        "scope": "Default CORE: opening, road gate, village tools and tournament readiness; no full-chain claim."
       },
       {
         "tests": 12,
@@ -67,7 +68,9 @@
       {
         "proof": "existing population provenance probe",
         "run_id": 37979065168,
-        "status": "passed"
+        "status": "passed",
+        "checks": 29,
+        "failures": []
       },
       {
         "proof": "Relay, Hall and Meadows economy units",
