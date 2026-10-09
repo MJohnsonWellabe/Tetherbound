@@ -9,6 +9,18 @@
   "original_command_approve": "01a11efc-79d3-7973-824a-67a3f0c5b500",
   "fixtures": "Existing explicit Water boot, Nerissa/fight-participant/party fixtures; original real prompt/controller/identity/save/no-sixth/repeatrefusal guards. Headless screenshot steps disclose captured=false",
   "scope": "Two participant accepts: guest full releasesRill, host withroom accepts; not refusal/nonparticipant/reconnect or earned portal route",
-  "runtime": "pending",
+  "runtime": {
+    "scope": "No offer/save PASS; failed saves not promoted; source correction pending independent review/affected proof",
+    "peer0": "one interpolation warning; no errors",
+    "failure": "Step19 capacity answer: guest party unchanged, Guardians0, receiptfalse; later host/completion checks unreached",
+    "exit": "PROOF.md/job exit1; no exit_code file",
+    "zip_sha256": "4808bdfa25ba4b2f39af879ce06a8f5c0aae01c8ecf57b450fc5c17e212970bf",
+    "job": 113675033093,
+    "original_review": "01a11f07-1f95-7672-9894-bfac29c02a53",
+    "artifact": 11596561267,
+    "supported_snapshot_detail": "unknown/unowned released UID creature-56ef11f9b7c30ae93e23df9ad43dc987 remains in redesign.creatures while prepared party contains new Guardian",
+    "peer1": "one interpolation warning; one ERROR Save refused: invalid redesign state",
+    "verdict": "FAILED artifact verified; passing reuse REJECTED"
+  },
   "not_dispatched": "Veridian same-five15min rejected (truncates1500s+hello allowance and covers party carry not capacity); full-refusal with4creatures approved but omitted as redundant space-refusal evidence"
 }

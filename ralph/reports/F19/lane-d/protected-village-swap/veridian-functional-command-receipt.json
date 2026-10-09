@@ -11,7 +11,22 @@
   "guards": "Original six cases, settling, collision movement, injected choice inputs, five-creature cap, save/reload and no-reoffer guards unchanged",
   "fixtures": "Disclosed victory/party/Home-Key/pose fixtures; no earned route or accepted boundary claim",
   "previous_rejected_piece": "37081325571:136 engine errors; excluded from reuse",
-  "runtime": "pending",
+  "runtime": {
+    "engine_script_parse_errors": 0,
+    "warnings": [
+      "unsupported VSync: nonblocking drawing-disabled mechanics",
+      "terrain interpolation deprecation: nonblocking completed assertions"
+    ],
+    "seconds": 847,
+    "exit": 0,
+    "zip_sha256": "33371054920d11a57fb519c93f213e1c61b910a11621dde5ee9642544792b322",
+    "job": 113668041630,
+    "original_review": "01a11f02-7953-7aa3-8397-2f2f2b116ec4",
+    "artifact": 11596005954,
+    "scope": "Solo fixture mechanics/save only; unchanged consumers reviewed; no multiplayer/earned/native/whole credit",
+    "cases": 6,
+    "verdict": "ARTIFACT/REUSE APPROVE"
+  },
   "not_proven": [
     "all four offers",
     "multiplayer participants",
