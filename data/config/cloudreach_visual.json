@@ -8,8 +8,8 @@
     "streak_strength": 0.12,
     "macro_strength": 0.18,
     "stone_strength": 0.08,
-    "joint_threshold": 0.18,
-    "joint_softness": 0.055
+    "joint_threshold": 0.14,
+    "joint_softness": 0.04
   },
   "_comment": "Tunable Phase 2 visual language for Cloudreach. It deliberately reuses the Meadows terrain textures and generated ground-cover meshes: one nature family, a different high-altitude composition.",
   "schema_version": 1,

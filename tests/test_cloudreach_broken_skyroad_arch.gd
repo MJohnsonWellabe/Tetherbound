@@ -89,6 +89,8 @@ func test_cloudreach_world_mounts_dedicated_broken_arch_presentation() -> void:
 			var texture := material.get_shader_parameter(map_key) as Texture2D
 			assert_true(texture != null and texture.resource_path.contains("/T_Brick_"),
 				"actual %s uses the same installed rectangular course maps" % map_key)
+			if texture != null:
+				assert_true(texture.get_image().has_mipmaps(), "actual %s supplies the mip chain requested by the stone sampler" % map_key)
 		var tile := float(material.get_shader_parameter("tile"))
 		assert_between(tile, 0.25, 0.35, "courses retain a metre-scale pitch across scaled architecture")
 		var albedo := material.get_shader_parameter("albedo_tex") as Texture2D
@@ -105,6 +107,6 @@ func test_cloudreach_world_mounts_dedicated_broken_arch_presentation() -> void:
 			luminance.sort()
 			var joint_end := float(material.get_shader_parameter("joint_threshold")) + float(material.get_shader_parameter("joint_softness"))
 			assert_true(not luminance.is_empty() and luminance[luminance.size() / 2] > joint_end,
-				"the actual linear stone-face median is beyond the mortar moss mask")
+				"the actual linear stone-face median %.6f is beyond the mortar moss mask %.6f" % [luminance[luminance.size() / 2], joint_end])
 	presentation.free()
 	world.free()

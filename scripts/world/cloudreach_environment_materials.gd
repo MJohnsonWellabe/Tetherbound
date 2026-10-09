@@ -17,7 +17,7 @@ static func masonry(trim: bool=false, surface: Dictionary={}) -> ShaderMaterial:
 	material.set_shader_parameter("tint",Color(str(surface.get(tint_key, "#f1f0e6" if trim else "#d6e2f0"))))
 	var defaults := {"tile":0.28, "moss_amount":0.16, "up_moss":0.28,
 		"streak_strength":0.12, "macro_strength":0.18, "stone_strength":0.08,
-		"joint_threshold":0.18, "joint_softness":0.055}
+		"joint_threshold":0.14, "joint_softness":0.04}
 	for key: String in ["tile", "moss_amount", "up_moss", "streak_strength", "macro_strength", "stone_strength", "joint_threshold", "joint_softness"]:
 		material.set_shader_parameter(key, float(surface.get(key, defaults[key])))
 	# Shared by architecture on six altitudes; do not treat lower realms as
