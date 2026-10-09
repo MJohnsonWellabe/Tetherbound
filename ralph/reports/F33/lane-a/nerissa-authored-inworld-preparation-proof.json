@@ -1,7 +1,7 @@
 {
   "criterion": "F33#2",
   "criterion_text": "Gear matters: a simulation of each biome's boss shows the matching tier passes C2 and the previous tier is clearly harder.",
-  "status": "OPEN. Actual authored L32 observed; original single-peer host routing correction approved. Two required existing checks could not load their Director subclasses; 0 assertions, no engine proof of new routing. Original disposition pending; no fight/C2/whole pass.",
+  "status": "OPEN. Production-load diagnostic exposes hosted_named type-inference compile error. Explicit Boolean correction pending original review and required affected checks. No successful fight/C2/whole pass; stop04:20Z retained.",
   "source_commit": "37f76541b46f9cb39d99b14c638fd396c791643a",
   "initial_preparation_source_commit": "e42f047df4860139d1958a08d6cc2b3cf7cf4f6d",
   "change": "Nerissa defaults to chapter_curve Tidewake Veilfall entry level; the batch forwards only explicit party-level overrides. Other trainer defaults and supplied overrides remain unchanged.",
@@ -90,6 +90,27 @@
     "original_diagnostic": "Could not resolve class res://scripts/combat/encounter_director.gd at test_director_join_snapshot.gd:52; could not resolve class res://scripts/combat/water_encounter_director.gd at test_water_encounter_runtime_data.gd:8. Both failed to load.",
     "cause": "Unresolved. Log gives no specific error inside the Director. No syntax, inference, circular-load or infrastructure cause claimed.",
     "disposition": "FAIL retained. No selected test skipped, disabled or quarantined; original disposition pending before further proof."
+  },
+  "additional_load_diagnostic_review": {
+    "review_turn": "01a11ebf-189e-7222-915e-23e1b843875c",
+    "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "verdict": "ARTIFACT / DISPOSITION APPROVE; one existing one-seed batch at exact37f supported as separate production-load diagnostic. Required two checks remain FAIL/OPEN, no passing substitution."
+  },
+  "additional_load_diagnostic": {
+    "run_id": 37880398211,
+    "artifact_id": 11595003368,
+    "job_id": 113658540780,
+    "checkout_sha": "37f76541b46f9cb39d99b14c638fd396c791643a",
+    "workflow_conclusion": "failure",
+    "exit": 124,
+    "wall_seconds": 1800,
+    "result_rows": 0,
+    "log_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2",
+    "child_log_sha256": "ff965d1836fd9202a9902b21145632b0989f63b39570be7a4ee05b981e1a525a",
+    "raw_path": "ralph/reports/F25/downloads/a-onepeer-named-world-37880398211/raw/",
+    "original_diagnostic": "Parse Error: Cannot infer the type of hosted_named variable because the value doesn't have a set type, encounter_director.gd:7023. Depended pilot/world/Director scripts fail compilation; subsequent invalid new errors repeat.",
+    "disposition": "FAIL retained; no level/fight/terminal/save boundary produced by this run. Required class-load failures are not passed by substitution. Original artifact review pending.",
+    "supported_correction": "Explicit hosted_named: bool = the unchanged approved Boolean condition. No routing, guard, numeric, fixture, clock or pilot change."
   },
   "dispatch_note": "Initial API request with fixed_fps workflow input rejected422 before execution because main lacks that input; omitted it. Existing batch's child still uses native --fixed-fps60. No engine attempt was made by the rejected request.",
   "fixtures": "Existing actual Water world; original five granted; trainer proximity placement/pump flags; isolated canonical save and Session host admission; granted Harness/Charm merged into complete owner records. No earned gear or accepted campaign boundary claim.",
