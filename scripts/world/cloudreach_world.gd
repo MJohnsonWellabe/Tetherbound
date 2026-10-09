@@ -5594,8 +5594,8 @@ func _mesa(
 	# collision copy below is still emitted from the crown alone, so nothing
 	# here can move the collider away from the render or reopen the hole class
 	# OP-0905-24/25 closed.
-	var mass_bottom_world := root.global_position.y - size.y * 0.5
-	var airborne := label == "LandmarkLedge" and _is_airborne_mass(mass_bottom_world)
+	var airborne := label == "LandmarkLedge" \
+		and _is_airborne_mass(root.global_position.y - size.y * 0.5)
 	if airborne:
 		var root_cfg: Dictionary = _visual_config.get("island_roots", {})
 		var root_depth := minf(size.y * float(root_cfg.get("root_depth_fraction", 0.85)),
