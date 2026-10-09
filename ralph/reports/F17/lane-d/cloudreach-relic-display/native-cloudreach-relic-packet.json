@@ -23,7 +23,7 @@
   "expected": {"frames":16,"labels":["pedestal cloudreach","hung relic from nave"],"times":["day","night"],"weather":["clear","rain"],"presets":["Medium","High"],"hall_stills_finished":true,"complete":false},
   "shipping": "Cloudreach enabled=false; candidate only through processargv, baselinewins. Meadows and three other Hall candidates explicitlybaseline; failure staysOFF.",
   "reuse": "Original3979 Cloudreach4/0 artifactAPP; default1de Meadows16frame runtimeAPP with retainedrawmetadata contradiction does NOT establish Cloudreach pixels or saved hang. No repeatedpassing4test/oldGPU batches.",
-  "review": "328e SOURCE+affected preload COMMAND APPROVE; exact nativeCOMMAND not yet reviewed. Only ROOT schedules native after genuine328e preload and originalARTIFACT approval plus exactnativeCOMMAND. No Dnative or hostedGPU.",
+  "review": "SAME original f42 child01a11fa9-208f-7d60-a75a-177b987e5311 ARTIFACT/REUSE APPROVE37901556569 exact328e1/0/exit0/7s/zeroerrorswarnings; exact nativeCOMMAND APPROVE, prerequisite gate SATISFIED. SOURCE328e approved via parent01a11fa2. Only ROOT schedules native; no Dnative or hostedGPU. Future execution/blind and whole remainOPEN.",
   "source_preflight": "ExactHEADR2-F38capture-definition andshots/.gdignore restoredbefore ROOTpin/import; normalize only owned4importmetadata after actualimport with HEAD/index match and retain generatedshaderUIDhash; freshHOME/rawoutput, trackedcleansource checks before/after. Previousimmutablefail/success packets retained.",
   "excluded": ["earned boundary","boss victory","co-op","device/performance","motion","whole F17#6"]
 }
