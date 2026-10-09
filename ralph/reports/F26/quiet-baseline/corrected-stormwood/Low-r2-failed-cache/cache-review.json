@@ -1,0 +1,166 @@
+{
+  "schema": "lane-e-quiet-low-cache-review/v1",
+  "reviewed_utc": "2026-10-09T21:50:58.3428628Z",
+  "scope": "READ-ONLY STATIC CACHE + LOW-R1 ACTUAL RELEASE ARTIFACT REVIEW",
+  "source_commit": "785e6f612e28a77075dd66684047628c2affbb13",
+  "release_unchanged": true,
+  "verdict": "APPROVE LOW-R1 CONTENT AND RECORDED RAW ROUTE METRICS; LOW-R2 FAILED BEFORE TIMED RECEIPT; CACHE ROOT CAUSE UNRESOLVED",
+  "low_r1": {
+    "launch": {
+      "started_utc": "2026-10-09T21:39:02.9686275Z",
+      "pid": 6192,
+      "source": "785e6f612e28a77075dd66684047628c2affbb13"
+    },
+    "route_path": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r1\\route.json",
+    "route_sha256": "7382bbf05b7832a40892aefdd18e83b95f9716a66d111c016bef08239b177426",
+    "raw_log": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r1-engine.log",
+    "errors": [],
+    "complete": true,
+    "failures": [],
+    "source_matches": true,
+    "preset": "Low",
+    "process_presets": [
+      "Low"
+    ],
+    "renderer": "gl_compatibility",
+    "renderer_raw_log_match": true,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "debug_false": true,
+    "vsync": 0,
+    "max_fps": 0,
+    "quiet_baseline_reported": true,
+    "warmup_ms": 15007.054,
+    "elapsed_ms": 155541.081,
+    "waypoints_reached": 2,
+    "route_revision": "F26-route-2",
+    "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+    "source_scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+    "terrain_108_marker": true,
+    "scatter_108_43161_marker": true,
+    "actual_export_entry": true,
+    "device_prefs": "[tetherbound_graphics]\n\npreset=\"Low\"\nbase=\"Low\"\ncustom={}\noverlay=false\n\n[rendering]\n\nrenderer/rendering_method=\"gl_compatibility\"\n",
+    "metrics": {
+      "sample_count": 9604,
+      "fps": 61.7505806091268,
+      "mean_wall_ms": 16.194179716784703,
+      "p95_nearest_rank_ms": 23.485,
+      "p99_nearest_rank_ms": 28.539,
+      "process_mean_ms": 34.816562994587294,
+      "render_gpu_mean_ms": 14.06125801476475,
+      "cpu_callbacks_not_summed": true,
+      "raw_60fps_p99_33ms_bar": true,
+      "percentile_note": "Nearest rank; owner interpolated percentiles differ slightly (P95 23.482, P99 28.533). Neither changes the raw bar result."
+    },
+    "screenshots": [
+      {
+        "path": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r1\\start.png",
+        "bytes": 3251281,
+        "sha256": "586f116e324efe353c24b9aeb81d366754db5a8a7816051f85a82a6747496622",
+        "width": 1920,
+        "height": 1080,
+        "viewed": true,
+        "observation": "Production textured terrain/road, trunks/canopies, grass/flowers/shrubs, rod-line props, player and HUD are present. Content presence only; no complete F41 visual verdict."
+      },
+      {
+        "path": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r1\\end.png",
+        "bytes": 3355963,
+        "sha256": "fca13b6553ec90f71b6c71c66e4f789015d7d3142729ded5d8bd1883bec1c6de",
+        "width": 1920,
+        "height": 1080,
+        "viewed": true,
+        "observation": "Production textured terrain/road, trunks/canopies, grass/flowers/shrubs, rod-line props, player and HUD are present. Content presence only; no complete F41 visual verdict."
+      }
+    ]
+  },
+  "low_r2": {
+    "launch": {
+      "started_utc": "2026-10-09T21:43:52.2660962Z",
+      "pid": 61704,
+      "source": "785e6f612e28a77075dd66684047628c2affbb13"
+    },
+    "raw_log": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r2-engine.log",
+    "error": "Two br != variant_size failures at drivers/gles3/shader_gles3.cpp:592",
+    "final_route_exists": false,
+    "case_content_or_performance_credit": false,
+    "no_native_execution_by_reviewer": true
+  },
+  "cache_static": {
+    "inspection_artifact": "C:\\CodexTemp\\lane-e-low-cache-static-inspection.json",
+    "parser": "C:\\CodexTemp\\lane-e-inspect-low-cache.ps1",
+    "format": "GLSC version 3; little-endian variant count, per-variant specialization count, u64 key/u32 size/u32 GL binary format/payload. No compressed container was observed or modified.",
+    "low_r1_files": 51,
+    "low_r1_malformed": 0,
+    "low_r2_files": 50,
+    "low_r2_malformed": 11,
+    "malformed_class": "All 11 have a declared nonzero GL binary payload extending past physical EOF; all SceneShaderGLES3, 240-character paths.",
+    "truncated_examples": [
+      {
+        "path": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\userdata\\Low-r2\\roaming\\Godot\\app_userdata\\Tetherbound\\shader_cache\\SceneShaderGLES3\\e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f\\0b52136668b1404e52bde3d36f3e5567e3a45a0b.cache",
+        "bytes": 1507328,
+        "sha256": "e71bbe446c984e71a4dd3a1724ac72d44f9a5b9e2a17aa26c2944971874ec35d",
+        "write_utc": "2026-10-09T21:44:59.6713889Z",
+        "declared_payload_bytes": 694843,
+        "available_payload_bytes": 49517
+      },
+      {
+        "path": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\userdata\\Low-r2\\roaming\\Godot\\app_userdata\\Tetherbound\\shader_cache\\SceneShaderGLES3\\e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f\\0deb7674b101eae2d9d03a11aa119ebfe1a92001.cache",
+        "bytes": 1769472,
+        "sha256": "c5d543e5e75920afd092223e5da5288cf11602f09f3820df8a3c4a1b978ea916",
+        "write_utc": "2026-10-09T21:44:59.7970553Z",
+        "declared_payload_bytes": 676528,
+        "available_payload_bytes": 10220
+      },
+      {
+        "path": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\userdata\\Low-r2\\roaming\\Godot\\app_userdata\\Tetherbound\\shader_cache\\SceneShaderGLES3\\e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f\\46256a5e5dd61baf8b9c471f97388e1b26f8f4d7.cache",
+        "bytes": 1128706,
+        "sha256": "5041618f4749f26d6fc1f715b6c4d686c31b41e7a633de072c7551da6ccd6c3d",
+        "write_utc": "2026-10-09T21:44:59.6644073Z",
+        "declared_payload_bytes": 617476,
+        "available_payload_bytes": 43684
+      }
+    ],
+    "min_path_chars": 238,
+    "max_path_chars": 248,
+    "exact_64k_multiple_truncated_files": 8,
+    "truncated_write_window": "2026-10-09T21:44:59.6244847Z through 21:44:59.8927683Z",
+    "low_r2_log_last_write": "2026-10-09T21:44:59.7730878Z",
+    "snapshots_after_process_stop": true,
+    "raw_error_has_no_cache_filename": true,
+    "not_equate_11_files_with_2_logged_errors": true
+  },
+  "engine_source": {
+    "official_url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88/drivers/gles3/shader_gles3.cpp",
+    "retained_copy": "C:\\CodexTemp\\lane-e-godot-5b4e-shader-gles3-reference.cpp",
+    "source_lines": 845,
+    "short_read_condition_line": 592,
+    "interpretation": "The loader opened the file, validated its GLSC header/version/count, then could not read the declared full payload. A simple path-open failure instead returns false without this br error. Writer writes directly to the final filename and this function has no atomic temp/rename or explicit post-write error check; this is a static reliability gap, not proof it caused this launch."
+  },
+  "causality": {
+    "confirmed": "Malformed/truncated retained cache structures match the short-read failure class.",
+    "long_path": "Not supported: same 238-248 path range passed Low-r1, all failed-structure files are 240 chars, below classic 260. Path issues cannot explain this branch as a simple open failure.",
+    "storage": "C had about 2GB before boot according to owner observation; later review snapshots about 1.1GB (owner reported 875MB during Medium). No historical full-disk or I/O error receipt proves storage caused Low-r2.",
+    "source": "No script parse/compile or missing production bake errors in these Low logs. Same frozen release source passed Low-r1 and original four content cases. No evidence supporting gameplay/source flag correction.",
+    "unknown": "Cannot distinguish incomplete writes caused by stopping the process, earlier writer/read overlap, driver/cache lifecycle defect, or storage/OS write interruption from this post-stop snapshot. The two raw errors do not name the files. Do not claim all 11 were already corrupt before the stop."
+  },
+  "correction": {
+    "recommendation": "One bounded infrastructure confirmation in a NEW shorter APPDATA/LOCALAPPDATA root after Medium-r3 finishes; same frozen EXE/PCK, shipping Low/Compatibility, args, route, source, cache policy and fail-closed error gates. Existing Low1/Low2 userdata remain untouched.",
+    "prerequisites": [
+      "Exclusive native lease and no overlapping engine/writer jobs.",
+      "Record disk free bytes before launch, after boot, and after terminal process exit; enough reserve for the fresh case and proof artifacts.",
+      "Record fresh empty userdata roots and selected Low device prefs; preserve complete raw log, launch/exit receipt, cache inventory and screenshots.",
+      "Do not shorten paths by moving existing directories; create a new isolated root."
+    ],
+    "interpretation": "This changes infrastructure path/freshness and tests reproducibility. A passing confirmation can establish the second content case with an explicit prior boot exception; it cannot prove long path was root cause.",
+    "if_repeat": "Stop; preserve new raw/cache proof. Mark second Low case failed/pending and disclose an unresolved GLES shader-cache defect. No third unchanged diagnostic rerun and no baseline cache-disable/renderer/source change.",
+    "engine_cache_policy_fix": "Not warranted for the frozen release from one failing launch. Any future atomic/write-validation engine fix is separate scope and requires its own export/runtime acceptance.",
+    "retained_passes": "Do not repeat passed Low-r1 or High cases. Complete unfinished clean Medium-r3 independently."
+  },
+  "limitations": [
+    "Raw Low-r1 performance bar credit applies only to this recorded desktop 1080p Compatibility route; no whole F26/F41 READY, earned campaign, four-creature fight, audio, Ally or device-general claim.",
+    "External concurrency cleanliness comes from the owner lease/overlap audit; reviewer did not run another native capture or monitor a fresh test.",
+    "No repository edits, native launch, cache deletion/move/recompression or source/renderer/cache-policy change performed."
+  ]
+}
