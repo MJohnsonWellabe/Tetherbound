@@ -1,0 +1,9 @@
+Original /root/f42_visual_review 01a1168a-2a2e-7243-aa7d-e655171c70fa, turn 01a11cff-96de-7093-a887-f62e5f047d4d
+
+**SOURCE APPROVE** for `6ff22c24d0aaee7653b07e5c4976ee9cb1c80664`.
+
+The helper affects only the six interior `COL_TIMBER` call sites, modifies a new per-house material before caching, and reuses the inspected DarkWood crop and normal mipmaps. Positive finite grain scale, clamped normal strength, baseline precedence and flag-off behavior are coherent. Alpha, roughness, dielectric response, geometry and collision remain preserved.
+
+**Bounded merge check passed.** ac2 is a merge of main7c7, not a rebase. House, prefab and F38 producer bytes were unchanged by that merge. The inherited capture additions activate only with explicit `--preset=`; existing `--f38-preset=` commands do not trigger them. No relevant integration blocker found.
+
+Affected constructor proof remains pending. Mounted timber, grain orientation, day/night readability, native pixels, performance, blind and whole acceptance remain unproved. No current native reuse approval is inferred.
