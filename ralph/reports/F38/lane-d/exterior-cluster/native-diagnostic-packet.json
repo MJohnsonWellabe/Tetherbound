@@ -15,7 +15,7 @@
   "original_source_command_approve": "01a11ea2-d687-7fc3-a33f-3e160b5d27fc; same original f42 reviewer",
   "affected_existing_proof": "headless/Dummy tools/run_one_test.gd -- res://tests/test_catalogue_capture_stand.gd; 10 minute limit, no FixedFPS",
   "affected_existing_proof_run": 37878224280,
-  "affected_existing_proof_runtime": "pending actual result and original artifact review",
+  "affected_existing_proof_runtime": "SUCCESS, six tests zero failed, actual exit0/6s, no errors or warnings; original ARTIFACT/REUSE APPROVE 01a11ea9-4e88-7021-81bc-9e8cbb59062e",
   "native_runtime": "not run by D; original command approved, queued for ROOT scheduling",
   "predecessor": {
     "source": "fe51ae4977ee990301a94eb9175e9dcc9d992cb6",

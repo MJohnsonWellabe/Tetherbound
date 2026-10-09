@@ -1,0 +1,23 @@
+{
+  "source": "8748bb788106d581a5e7b67cc62a11fa813216a7",
+  "script": "tools/run_one_test.gd -- res://tests/test_catalogue_capture_stand.gd",
+  "mode": "headless / Dummy audio; no FixedFPS; 10 minute limit",
+  "run": 37878224280,
+  "job": 113651608428,
+  "artifact": 11593615887,
+  "zip_sha256": "a77204f1512882123fe56036f10920db0276207f58e7ed45c1d4ff0bf930cba0",
+  "exact_checkout_confirmed": true,
+  "terminal": "SUCCESS",
+  "artifact_exit_code": 0,
+  "tests": 6,
+  "failed": 0,
+  "elapsed_seconds": 6,
+  "errors_warnings": 0,
+  "assertions": "Runner does not report a count; none claimed",
+  "source_command_approve": "01a11ea2-d687-7fc3-a33f-3e160b5d27fc; same original f42",
+  "original_artifact_reuse_approve": "01a11ea9-4e88-7021-81bc-9e8cbb59062e; same original f42",
+  "witnesses": "Existing static floor height/slope, pose, stale/obstructed production camera, live support and swim/waterline predicates",
+  "not_proven": ["native 1920x1080 capture", "actual physical ray/contact operands", "GPU compilation", "visual acceptance", "matched baseline", "whole F38 criterion"],
+  "retained_predecessors": "ROOT fe51 original failed packet and eight 1920x1061 JPEGs remain FAILED; no reuse as accepted baseline",
+  "root_queue_notice": 6073516392
+}
