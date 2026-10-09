@@ -4,6 +4,8 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 ## 0. Current integration (coordinator: Claude)
 
+**Owner 2026-10-09 capture re-READY:** current main `7dd4a777` plus only the capture-context hunk `67e00c05` (original `77d99b71`) passes gate A opening, verify-catching (catching and aim slowdown), and party-count after three real catches/save/reload. Affected units65/528 pass; pinned independent review approves. No config/default change or feature flip; main traits ON, alphas OFF, actor vitals OFF, Tether snare_only. Receipt: `ralph/reports/F30/capture-context-main-proof/receipt.json`. Scoped PR landing is pending; this restores catching integration and claims no additional whole F30 criterion.
+
 **Main (2026-10-07 closeout):** batches #553–#570 landed; 127 criteria met (board: `ralph/reports/COORDINATOR/dashboard/`, rebaselined plan, finish Thu 15 Oct). The owner archived every Codex lane on 10-07 and all other branches were consolidated. Each unlanded branch tip stays reachable from main through a tree-unchanged preservation merge that names the branch and SHA (`git log --merges --grep='Preserve branch'`). Unlanded work is not in the game; revive it by diffing its tip against main. PRs need the `full-ci` label: without it every engine job is skipped and the PR auto-merges on a docs-only green.
 
 **F18 portal runtime is ON** (`multiplayer.json session.redesign_portal_runtime_enabled=true`): station-craft co-op green (render 37401490374); post-rejoin relic/Home Key owner stalls fixed. Follow-up: hung-relic reload loss (F18 lane, next PR).
