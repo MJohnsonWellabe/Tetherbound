@@ -883,6 +883,7 @@ func _build_materials() -> void:
 		_materials[key] = distant_stone
 	var trail := ShaderMaterial.new()
 	trail.shader = TRAIL_SHADER
+	trail.render_priority = -1
 	trail.set_shader_parameter("grass_texture",preload("res://assets/environment/terrain/stylised/meadow_grass_Color.png"))
 	trail.set_shader_parameter("dirt_texture", load(str(surface.get("path", {}).get("albedo", "res://assets/environment/terrain/stylised/dirt_path_Color.png"))))
 	_materials["trail"] = trail
@@ -2925,6 +2926,8 @@ func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	var trail := MeshInstance3D.new()
 	trail.name = label
 	trail.mesh = mesh
+	# Use-wear is a surface overlay, not an object shadowing the ground below.
+	trail.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	trail.visibility_range_end = 1200.0
 	trail.visibility_range_end_margin = 100.0
 	parent.add_child(trail)
