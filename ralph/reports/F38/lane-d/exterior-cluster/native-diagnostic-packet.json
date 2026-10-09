@@ -1,0 +1,32 @@
+{
+  "source": "8748bb788106d581a5e7b67cc62a11fa813216a7",
+  "scheduler": "ROOT only; D runs no native or hosted GPU process",
+  "ownership": "ROOT relayed E explicit clear for both existing capture files; NOTICE6073437985 preceded edits",
+  "patch_sha256": "2fc5800e119c0f6c44e2bb3ecc128dc7e3d8e6f2acf2979f221f5e55dd5ef467",
+  "script": "tools/capture_f38_matrix.gd",
+  "engine_arguments": "--rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080",
+  "user_arguments": "--subset=farm_to_hall --f38-views=approach --times=day --f38-preset=Medium --f38-exterior=baseline --f38-tuft-patches=baseline --source-commit=8748bb788106d581a5e7b67cc62a11fa813216a7 --output=res://ralph/reports/F38/lane-d/exterior-cluster/native-8748-diagnostic/Medium/baseline",
+  "planned_frames": 2,
+  "weather": ["clear", "rain"],
+  "stand": "Original authored approach stand; original single candidate, production camera, capsule and floor/slope/ray tolerances",
+  "purpose": "Exact Medium viewport raster setup and strict image-raster guard; retain same primary physical floor-ray and body-contact operands on rejection",
+  "not_a_floor_fix": true,
+  "diagnostic_contacts": "Most recent body movement contacts are observations, never substitutes for the primary stand ray",
+  "original_source_command_approve": "01a11ea2-d687-7fc3-a33f-3e160b5d27fc; same original f42 reviewer",
+  "affected_existing_proof": "headless/Dummy tools/run_one_test.gd -- res://tests/test_catalogue_capture_stand.gd; 10 minute limit, no FixedFPS",
+  "affected_existing_proof_run": 37878224280,
+  "affected_existing_proof_runtime": "pending actual result and original artifact review",
+  "native_runtime": "not run by D; original command approved, queued for ROOT scheduling",
+  "predecessor": {
+    "source": "fe51ae4977ee990301a94eb9175e9dcc9d992cb6",
+    "packet": "D:/CodexTemp/tetherbound-proof/native-d-fe51ae4977-exterior-cluster-r1",
+    "root_reported_verdict": "FAILED; no matched comparison or full-bar credit",
+    "root_reported_images": "8/16 JPEGs decode/hash checked, actual1920x1061; required1920x1080 raster FAIL",
+    "root_reported_rejections": "farm_to_hall approach4 + village_road reverse4 rejected by original fixed production-camera stand guard",
+    "preserve": ["Original import wrapperExit1 versus actual engineExit0 and archived untracked shader UID provenance", "First missing sparse-excluded canonical F38 plan failure and exactHEAD restored-file provenance", "Corrected-plan baselineExit1, all original pixels/logs/manifests and resolution failure"],
+    "candidate_high_pair": "STOPPED; do not promote failed pixels or reuse them as an accepted baseline"
+  },
+  "reuse": "Prior original-approved grass and beacon affected proofs unchanged; bank Low10/10 and original runtime/blind PASS unchanged; no repeat",
+  "flags": "All pending exterior candidate production flags remain OFF",
+  "criterion": "F38 full criteria OPEN; diagnostic packet is not a READY or acceptance closure"
+}
