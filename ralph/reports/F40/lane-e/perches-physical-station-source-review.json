@@ -98,5 +98,75 @@
     "Actual query cost/occupancy/fallback behavior and any body-silhouette improvement remain unproved; no snapshot role/UID ownership or geometry-contact PASS."
   ],
   "reuse_limits": "Accepted unchanged 8b/f9/6a scenery/material/producer/test witnesses are preserved; no SHA-only reset, old accepted batch rerun or unrelated map/environment/fullsuite requested. Prior whole High/Medium barFAILs and parked seating attempts stay unchanged. No engine/import/GPU/tests/dispatch, live patch, source edit, helper/newagent or judge contact performed.",
-  "literal_remaining_limits": "No actual runtime/artifact/native/physical-interpenetration/appearance/campaign/earned/co-op/device/performance/fullmatrix/wholeF40/F08/READY approval."
+  "literal_remaining_limits": "No actual runtime/artifact/native/physical-interpenetration/appearance/campaign/earned/co-op/device/performance/fullmatrix/wholeF40/F08/READY approval.",
+  "integrated_binding_reviews": [
+    {
+      "integrated_source_commit": "7227bf21934ff9c356baf5bbce2051fa976eaa15",
+      "integrated_source_binding_verdict": "APPROVE",
+      "affected_command_verdict": "APPROVE exact source applicability; execution/artifacts PENDING",
+      "notice": "Parent supplied production integrationNOTICE6079852273; no external fetch.",
+      "binding": "All four actual Git objects and normalized-source SHA256 equal originally approved TEMP result objects. Prior source findings/ownership constraints/fixtures/limits reused without hunk re-audit.",
+      "objects": [
+        {
+          "path": "scripts/creatures/follower_creature.gd",
+          "actual_integrated_blob": "f2356de63e40d22cde7167bc38c6fb0ec1c5d9ab",
+          "approved_temporary_blob": "f2356de63e40d22cde7167bc38c6fb0ec1c5d9ab",
+          "byte_sha256": "a2ddfd724aa8633cbb3d7ee3ef578e885baf5046aa2d69c209b958bc4d50c3a3",
+          "exact_match": true
+        },
+        {
+          "path": "scripts/combat/cloudreach_encounter_director.gd",
+          "actual_integrated_blob": "69ab8b9de0c3ee06a1945dc996e93bb23f66c671",
+          "approved_temporary_blob": "69ab8b9de0c3ee06a1945dc996e93bb23f66c671",
+          "byte_sha256": "2c1caf7ab609e14404bcb9c5cbdce6b3327d5b127d9bf9a6bf0e2045d0467c63",
+          "exact_match": true
+        },
+        {
+          "path": "tests/test_follower_floor_station.gd",
+          "actual_integrated_blob": "df6ca76bb7958132852917c38cb399cb90076429",
+          "approved_temporary_blob": "df6ca76bb7958132852917c38cb399cb90076429",
+          "byte_sha256": "c7760b7d378c90d6cf6493255e4eb4c598e611935ed1b93a1335e2c411bb3056",
+          "exact_match": true
+        },
+        {
+          "path": "tests/smoke_cloudreach_follower_edge.gd",
+          "actual_integrated_blob": "94a919958bcc900580531857007cbca70fc66022",
+          "approved_temporary_blob": "94a919958bcc900580531857007cbca70fc66022",
+          "byte_sha256": "f3e8c71bf54e6c4fabf79c2b233393f4c1f27cc39dd8737266a51904286d55b7",
+          "exact_match": true
+        }
+      ],
+      "sequential_affected_existing_recipes": [
+        {
+          "argv": [
+            "--headless",
+            "--path",
+            "<clean exact pinned7227 worktree>",
+            "--script",
+            "res://tests/run_tests.gd",
+            "--",
+            "--only=test_follower_floor_station.gd"
+          ],
+          "scope": "Existing unit file including cadence-positive/INF boundaries, original floor/snap/fallback assertions. Exact same source; no new fixture/fullsuite."
+        },
+        {
+          "argv": [
+            "--headless",
+            "--path",
+            "<same clean exact pinned7227 worktree>",
+            "--script",
+            "res://tests/smoke_cloudreach_follower_edge.gd"
+          ],
+          "scope": "Existing mounted recall/follower smoke plus actual actor-only occupancy operand; original snap/walk/airborne fixtures/guards retained. No native GPU or independent pictured appearance proof."
+        }
+      ],
+      "pending_limits": "Source binding/command applicability only, no performed/passed proof claimed. Actual selected unit and mounted smoke artifacts must independently bind7227; ROOT native/cache/query behavior and original blind pictures remain pending. Cadence increases stationary and indoor validation cost; no actual performance/contact/ownership/spacing/visual/fullcriterion/READY approval. Immutable1e2 menu and8cca proposal unaffected."
+    }
+  ],
+  "latest_integrated_binding": {
+    "source_commit": "7227bf21934ff9c356baf5bbce2051fa976eaa15",
+    "source_binding": "APPROVE",
+    "affected_commands": "APPROVE",
+    "runtime": "PENDING"
+  }
 }
