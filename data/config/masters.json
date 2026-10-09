@@ -9,6 +9,7 @@
     100
   ],
   "duel_policy": "sequential_one_challenger",
+  "chest_interaction_priority": 1,
   "sign_presentation": {
     "font_size": 96,
     "pixel_size_m": 0.006,
