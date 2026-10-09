@@ -290,5 +290,55 @@
       ]
     }
   ],
-  "latest_exact_day_command_verdict": "APPROVE APPLICABILITY ONLY @4ca787; runtime/blind PENDING"
+  "latest_exact_day_command_verdict": "Historical4ca exact command applicabilityAPP preserved; repeated stale routing confirmation superseded/cancelled for scheduling. No current96 request from this review; currentc191 single-interior command is separately reported.",
+  "command_binding_confirmations": [
+    {
+      "scope": "Exact already-approved material-next command applicability confirmation only; no repeated source/reference/test/runtime review",
+      "source_commit": "4ca787d5640c0b2bc24e5db4ae45c5143b8534a1",
+      "command_verdict": "APPROVE APPLICABILITY ONLY",
+      "argv": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/capture_cloudreach_f40_matrix.gd",
+        "--",
+        "--biome=cloudreach",
+        "--preset=High",
+        "--source-commit=4ca787d5640c0b2bc24e5db4ae45c5143b8534a1",
+        "--segment=day",
+        "--output=res://.tmp/f40-cluster-high-4ca787-day-r1"
+      ],
+      "previous_identical_command_review_reused": true,
+      "verified_exact_pinned_blobs": {
+        "tools/capture_cloudreach_f40_matrix.gd": "a31126604c6643e7e4368b859f5727ad9347a6a9",
+        "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+        "data/config/cloudreach_f40_visual.json": "0521bde4a400a4af3e1d4254b8289c94dd398cd3",
+        "scripts/world/world_look.gd": "d8c43d8bb42824839b9bb684518de9d2858eb8f3",
+        "data/config/cloudreach_look.json": "24333968eb6117098676b627a9456b04542587d8"
+      },
+      "binding": "The proposed argv exactly matches the original approved command entry, and bounded Git object identities equal the reviewed producer/bootstrap/plan/lighting/realm-look blobs. Later workspace/current cached checkout is not a source substitute.",
+      "coverage": "Default full384 plan is validated before original day96 quarter selection (12destinations x4views x2weather). Selected completion does not imply full_matrix_complete; segment=day must retain full_matrix_complete=false. Same original authored stands, production camera, clock/weather APIs, travel/floor/visibility/count/PNG/source-renderer-receipt guards retained; no subset or candidate CLI.",
+      "fixture_limits": "Existing direct realm mount and in-memory catalogue/debug-travel/presentation fixture policy is reused without grants or mutation. Command approval itself establishes no actual party count/current-band level, earned route, campaign/co-op/save/controller outcome or runtime guards having passed.",
+      "required_root_provenance": [
+        "Exact fresh clean frozen4ca source/index/tree before/import/after; changed texture imports actually regenerated",
+        "Fresh user and empty unique output with existing45min terminal wrapper",
+        "Actual High Forward+ native1920x1080 renderer/start/terminal and all96 original unique records/images/header-CRC-hashes/selected-ID/clock-weather-floor-camera/receipt proof",
+        "Original independent affected native visual assessment"
+      ],
+      "runtime_and_visual_verdict": "PENDING; no new execution/output inspected or inferred",
+      "preserved_history": "Prior4ca SOURCE/3tests42assert artifactAPP and failed5a packet retained.3ca source/pixels remain independently bound to3ca; this command neither changes nor relabels them. No full384/wholecriterion/READY approval.",
+      "routing_status": "HISTORICAL / SUPERSEDED / CANCELLED scheduling scope only",
+      "scheduling_disposition": "This repeated4ca confirmation came from stale routing. No execution by this reviewer/router, no native request created from this review, and no current96-frame pending request follows it. Current queued ROOT request is the separate c191 single-interior selector command.",
+      "superseded_by": {
+        "source": "c1913a92fba3e7c8c3bc49c20d5b01551071c84b",
+        "scope": "Single original Cliffhold approach/day/clear interior frame only",
+        "report": "ralph/reports/F40/lane-e/cliffhold-interior-selector-source-review.json"
+      },
+      "finding_preservation": "Original exact argv/source applicability APPROVE remains a historical finding. Only this stale routing/scheduling request is cancelled; no original material SOURCE/artifact/witness/command review or prior material native history is erased, invalidated or cancelled."
+    }
+  ]
 }

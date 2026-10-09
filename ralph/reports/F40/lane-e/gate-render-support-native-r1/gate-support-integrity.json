@@ -1,0 +1,77 @@
+{
+  "source": "2c109ec7e65eda25a409a9a944b94015ceb3b345",
+  "frame_id": "01_gate_lower_cliffs_approach_day",
+  "observer_line_sha256": "cdd00b3d86cf4be10c5325f00de6dce3ba926f452b75a86df6df353eefa09963",
+  "queries": 35,
+  "meshes": 4,
+  "target_config_sha256": "0dbe06bf62d967d545b393b73c5426fd6dad1eebfd51f51e4f5aa85c385fc33e",
+  "targets": [
+    {
+      "path": "/root/CloudreachCliffs/Landmarks/RealmGateCrag/AncientCarvedGateway",
+      "role": "facade",
+      "queries": 12,
+      "unsupported_xz": 0,
+      "no_support_below_foot": 0,
+      "nearest_below_gap_range": [
+        2.33802933024056,
+        6.44164508428587
+      ]
+    },
+    {
+      "path": "/root/CloudreachCliffs/Landmarks/RealmGateCrag/GateWatchPillar",
+      "role": "tower",
+      "queries": 4,
+      "unsupported_xz": 0,
+      "no_support_below_foot": 0,
+      "nearest_below_gap_range": [
+        2.29945078873557,
+        3.91899167932461
+      ]
+    },
+    {
+      "path": "/root/CloudreachCliffs/Landmarks/RealmGateCrag/@MeshInstance3D@3993",
+      "role": "tower",
+      "queries": 4,
+      "unsupported_xz": 0,
+      "no_support_below_foot": 0,
+      "nearest_below_gap_range": [
+        3.11580133305912,
+        6.95912909242176
+      ]
+    },
+    {
+      "path": "/root/CloudreachCliffs/Landmarks/RealmGateCrag/RealmGateCragPresentation/ArrivalPaver01",
+      "role": "paver",
+      "queries": 5,
+      "unsupported_xz": 0,
+      "no_support_below_foot": 0,
+      "nearest_below_gap_range": [
+        3.70913524251202,
+        4.16769811393922
+      ]
+    },
+    {
+      "path": "/root/CloudreachCliffs/Landmarks/RealmGateCrag/RealmGateCragPresentation/ArrivalPaver02",
+      "role": "paver",
+      "queries": 5,
+      "unsupported_xz": 0,
+      "no_support_below_foot": 0,
+      "nearest_below_gap_range": [
+        3.42472085872578,
+        3.88526105834436
+      ]
+    },
+    {
+      "path": "/root/CloudreachCliffs/Landmarks/RealmGateCrag/RealmGateCragPresentation/ArrivalPaver03",
+      "role": "paver",
+      "queries": 5,
+      "unsupported_xz": 0,
+      "no_support_below_foot": 0,
+      "nearest_below_gap_range": [
+        3.14845257269366,
+        3.63068083681787
+      ]
+    }
+  ],
+  "scope": "Geometric column operands only; no walkability, contact, material, blind, earned, performance or whole acceptance claim."
+}

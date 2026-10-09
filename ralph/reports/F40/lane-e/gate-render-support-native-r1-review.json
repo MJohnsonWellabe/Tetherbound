@@ -1,0 +1,235 @@
+{
+  "reviewer": "Original retained Ohm /root/review_cloud_startup",
+  "verdict": "APPROVE completed two-row native provenance and read-only geometric operand measurement only",
+  "source": "2c109ec7e65eda25a409a9a944b94015ceb3b345",
+  "producer_git_blob": "ccb98816fa7b84258337fd535b4d9a6f6781c6ac",
+  "tree_not_commit": "41bc2153c7ca72a998d2645ddd4c3c4c4622f7f1",
+  "packet": "C:/CodexTemp/tetherbound-proof/native-e-2c109ec7e6-gate-support-r1",
+  "raw_originals": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-support-2c109-day-r1",
+  "capture_start": {
+    "started_utc": "2026-10-09T07:21:28.7946122Z",
+    "args": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_frame_matrix.gd",
+      "--",
+      "--only=1,4",
+      "--preset=High",
+      "--source-commit=2c109ec7e65eda25a409a9a944b94015ceb3b345",
+      "--output=res://.tmp/e-gate-render-support-2c109-day-r1"
+    ],
+    "mode": "Capture",
+    "pid": 5132,
+    "deadline_minutes": 45,
+    "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-2c109ec7e6-gate-support-r1/capture-home",
+    "source": "2c109ec7e65eda25a409a9a944b94015ceb3b345"
+  },
+  "capture_terminal": {
+    "ended_utc": "2026-10-09T07:31:27.6091862Z",
+    "reason": "process_exit",
+    "mode": "Capture",
+    "pid": 5132,
+    "exit_code": 0,
+    "source": "2c109ec7e65eda25a409a9a944b94015ceb3b345"
+  },
+  "actual_result": {
+    "original_frames": 2,
+    "selected_rows": [
+      1,
+      4
+    ],
+    "rows_skipped": 0,
+    "exit_code": 0,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "warnings": 2,
+    "renderer": "Vulkan1.3.280 Forward+",
+    "adapter": "NVIDIA GTX1060 3GB",
+    "raster": [
+      1920,
+      1080
+    ],
+    "preset": "High"
+  },
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "High",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "2c109ec7e65eda25a409a9a944b94015ceb3b345"
+  },
+  "actual_frame_records": [
+    "MANIFEST 01_gate_lower_cliffs_approach_day | approach | trainer (-8.0, 105.55, -248.0) | yaw 169.8 pitch -12.0 | target (-24.0, 130.00, -159.0) | hour 10.00 | stand (-8.0, 105.00, -248.0) (1/2) | camera (-7.1, 108.38, -253.0) | trainer on screen (50%, 60%) | companion native follower (-4.3, 105.98, -242.7); trainer gap 6.48 m | flags boot | Arrival from the Meadows gate (transition point 0,105,-260) toward Realm Gate Crag; stand from capture_cloudreach_realm_gate_crag.gd `arrival`.",
+    "MANIFEST 04_gate_lower_cliffs_detail-crag_day | detail-crag | trainer (-15.5, 109.53, -202.0) | yaw 168.8 pitch -5.9 | target (-24.0, 130.00, -159.0) | hour 10.00 | stand (-15.5, 110.00, -202.0) (1/2) | camera (-14.5, 111.81, -207.1) | trainer on screen (50%, 60%) | companion native follower (-7.2, 107.49, -224.9); trainer gap 24.40 m | flags boot | Close material view of the Realm Gate Crag masonry and strata; stand from capture_cloudreach_realm_gate_crag.gd `approach`."
+  ],
+  "manifest_sha256": "42b84f9ea6ed8229c7b4b4cf759691264560c886239e248feb60107b2a07d911",
+  "images_independently_verified": [
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-gate-render-support-2c109-day-r1\\01_gate_lower_cliffs_approach_day.png",
+      "sha256": "0a90a46036ddea8424b9ea52931b2062b8c5cf2590a962495599dc71e1e62353",
+      "bytes": 2407480,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "png_crc_verified": true,
+      "independently_verified_png_crc_chunks": 297,
+      "inflated_rgb_scanline_bytes": 6221880
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-gate-render-support-2c109-day-r1\\04_gate_lower_cliffs_detail-crag_day.png",
+      "sha256": "255fb346a3cee9cfbd07837bd4273cc9ee407d1a17316319c5c5590f9097035a",
+      "bytes": 2234038,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "png_crc_verified": true,
+      "independently_verified_png_crc_chunks": 276,
+      "inflated_rgb_scanline_bytes": 6221880
+    }
+  ],
+  "source_import_binding": "Exact start argv equals approved pinned command. Local exact2c109 Git tree matches before/after retained head/index tree; historical untracked output directories are preserved. Original import after receipt says tracked_clean=true despite listing four M metadata paths; retain that inconsistency. Later explicit revalidation has identical normalized/head blobs for all four, independently matching pinned Git objects; before/aftercapture snapshots have no tracked M entries. Later cached checkout repins cannot change this binding.",
+  "observer": {
+    "frame_id": "01_gate_lower_cliffs_approach_day",
+    "status": "sampled_mounted_render_triangles",
+    "exact_whole_line_sha256": "cdd00b3d86cf4be10c5325f00de6dce3ba926f452b75a86df6df353eefa09963",
+    "exact_persisted_line_occurrences": 1,
+    "same_line_in_stdout": true,
+    "expected_targets": {
+      "facade": 1,
+      "paver": 3,
+      "tower": 2
+    },
+    "observed_targets": {
+      "facade": 1,
+      "paver": 3,
+      "tower": 2
+    },
+    "queries": 35,
+    "source_meshes": 4,
+    "finite_triangle_hits": 82,
+    "source_hashes": {
+      "world_source_sha256": "1157761fc98003eb79d839623eb97eac5693f40e940a69521e50cfb5f0b73302",
+      "sampler_source_sha256": "8b565e69d3a3a26d9afc303ed3da3630e769d3c67969320912122843e5e78db9",
+      "target_config_sha256": "0dbe06bf62d967d545b393b73c5426fd6dad1eebfd51f51e4f5aa85c385fc33e"
+    },
+    "source_hashes_independently_match_pinned_git_bytes": true,
+    "targets": [
+      {
+        "path": "/root/CloudreachCliffs/Landmarks/RealmGateCrag/AncientCarvedGateway",
+        "role": "facade",
+        "queries": 12,
+        "unsupported_xz": 0,
+        "no_below_column_hit": 0,
+        "nearest_below_geometric_gap_range_m": [
+          2.3380293302409996,
+          6.4416450842859945
+        ]
+      },
+      {
+        "path": "/root/CloudreachCliffs/Landmarks/RealmGateCrag/GateWatchPillar",
+        "role": "tower",
+        "queries": 4,
+        "unsupported_xz": 0,
+        "no_below_column_hit": 0,
+        "nearest_below_geometric_gap_range_m": [
+          2.299450788735996,
+          3.9189916793250035
+        ]
+      },
+      {
+        "path": "/root/CloudreachCliffs/Landmarks/RealmGateCrag/@MeshInstance3D@3993",
+        "role": "tower",
+        "queries": 4,
+        "unsupported_xz": 0,
+        "no_below_column_hit": 0,
+        "nearest_below_geometric_gap_range_m": [
+          3.1158013330589966,
+          6.959129092422003
+        ]
+      },
+      {
+        "path": "/root/CloudreachCliffs/Landmarks/RealmGateCrag/RealmGateCragPresentation/ArrivalPaver01",
+        "role": "paver",
+        "queries": 5,
+        "unsupported_xz": 0,
+        "no_below_column_hit": 0,
+        "nearest_below_geometric_gap_range_m": [
+          3.709135242512005,
+          4.167698113938997
+        ]
+      },
+      {
+        "path": "/root/CloudreachCliffs/Landmarks/RealmGateCrag/RealmGateCragPresentation/ArrivalPaver02",
+        "role": "paver",
+        "queries": 5,
+        "unsupported_xz": 0,
+        "no_below_column_hit": 0,
+        "nearest_below_geometric_gap_range_m": [
+          3.4247208587260047,
+          3.8852610583439997
+        ]
+      },
+      {
+        "path": "/root/CloudreachCliffs/Landmarks/RealmGateCrag/RealmGateCragPresentation/ArrivalPaver03",
+        "role": "paver",
+        "queries": 5,
+        "unsupported_xz": 0,
+        "no_below_column_hit": 0,
+        "nearest_below_geometric_gap_range_m": [
+          3.148452572693998,
+          3.6306808368180015
+        ]
+      }
+    ],
+    "support_mesh_paths": [
+      "/root/CloudreachCliffs/AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge000",
+      "/root/CloudreachCliffs/AuthoredRoutes/ArrivalGateRoad_0Trail0",
+      "/root/CloudreachCliffs/Landmarks/RealmGateCrag/LandmarkLedge/StratifiedCliffBody",
+      "/root/CloudreachCliffs/Landmarks/RealmGateCrag/LandmarkLedge/VegetatedGeologicalShelf4/StratifiedCliffBody"
+    ]
+  },
+  "independent_operand_checks": [
+    "All six target paths unique, all1facade2tower3paver roles represented; per-target counts12/4/4/5/5/5 sum35 and actual local query coordinates unique per target; finite local/world XYZ.",
+    "Every actual52-byte encoded Transform3D type18 decoded to12 finite float operands; transformed local feet match recorded world coordinates within maximum6.160019182743781e-06m (float32 rounding).",
+    "All82 hits reference valid mesh indices, nonnegative surface/triangle/vertex indices and three finite world vertices. Recomputed existing XZ barycentric determinant/containment/interpolated height matches every recorded hit within maximum1.1937117960769683e-12m; foot-minus-height arithmetic and actual unsupported/no-below-hit booleans match actual lists.",
+    "All four support transform arrays finite. Completetarget set is valid even if no hit; this actual packet happens to have at least one lower geometric hit for every query.",
+    "Actual original PNG headers/hash/bytes/all573 chunkCRCs and completeIDAT inflates verified; complete exact graphics/summary/observer receipt persisted with terminal0. Derivative contact sheets add no original frames."
+  ],
+  "warnings_and_fixture_limits": "Two known fail-closed wild-site warnings broken_causeway_main03/Windscarloop15, no import/capture errors. Existing debugmount/bootflags/day10/productionCameraRig/physicalfloor/pose/follower fixtures preserved. Native follower gaps6.48m and24.40m recorded; latter is not concealed/converted to parked or earned following proof. Weather unpinned/unrecorded in legacy row receipt.",
+  "measurement_limits": [
+    "Geometric min-Y imported mesh vertices/paver underside and selected triangle columns only; not a biological-root/walkability/contact/material-opacity or pixel-surface approval.",
+    "One of four hit meshes is AuthoredRoutes/ArrivalGateRoad_0Trail0 transparent overlay; interpolation does not prove opaque rendered terrain or physical support at that location. Other hit meshes are ridge/stratified geology; normals/backface/clipping/visibility-range/framebuffer/colliders are not checked by this sampler.",
+    "Numericnearest-below differences are scoped column operands, not source-derived hovering diagnosis or a gameplay fix. No supported cause, contact solution, ROOTstand alteration or19ed/5d58 resurrection follows.",
+    "No new engine/measurement replay/96capture/source audit; accepted SOURCE/command R1R_C/R2APP/currentpin history preserved.",
+    "No picture/art bar judgment, fullF40/F08/route/earned/save/co-op/device/performance/READY claim; no blind contact/source disclosure"
+  ],
+  "evidence_sha256": {
+    "capture-start.json": "7fbe0d60de35da56a6259532dc3a7457c39ca6c77d89ca71f34c3fb5afde2e19",
+    "capture-terminal.json": "2f263518032f4ae435afce89cd17afa8e7cad17c76092bd4676cbbf884743dc8",
+    "capture.stdout.log": "7c5890064c60589e04605dfb8741b5244d060a18a54ff22cc3545d62939f7b76",
+    "capture.stderr.log": "b57244443e9479c10c20336d268e144bf5aa57198031ba4507c79fd6fbcc80e0",
+    "source-before-import.json": "de700b21b12e01e8401af51afecd1c1152d399f586f37c08dd7588882417c35c",
+    "source-after-import.json": "0168c9222db854643d89149f7be61c101d26789face6f074d017c255ef34fc33",
+    "source-after-import-revalidated.json": "2525f392534f24d13ec54136b2c7766a63735c65d7fb0aa73474307c0f72c2db",
+    "source-before-capture.json": "6e0d27c5026b3b673773891954d4daab65b18b524004d044da378f350c85b070",
+    "source-after-capture.json": "cfc4fb06b4adfce1cb12c9ac8c593f347921c78de1bff776a3dd350a2c7f8a39",
+    "import-start.json": "f3add9348d661e4535bb7d3b0085cec7210924ad19e968c0b82c87ee63ec25ab",
+    "import-terminal.json": "359f7816854db5b6e66bb568835f86b6231a28000ac76a0be20794e6f4e737a1",
+    "native-image-integrity.json": "652e88e7f2275d09905454a6ff93f727af9f064f2738343abdecf8f24425cf02",
+    "native-verified-summary.json": "5d6ed202f0732ed7d268270c272088d4475ebb1391500d139c35e2730a8cb4f1",
+    "gate-support-integrity.json": "2fa1b27f6ffc9f32fb66670fa6cc55e98e6b0f7bda18f56b18ac2864dcbbecdb",
+    "original-recipe.json": "a7bd440206d457dffc3c1be8546082a5550d045ab7fc0ce543363561dd48f635"
+  },
+  "remaining_gates": "Any future actual source geometry fix requires separate bounded review and original affected proof; current record approves only measurement/provenance, not contact or whole visual quality."
+}

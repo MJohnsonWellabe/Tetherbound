@@ -1,0 +1,138 @@
+{
+  "source": "2c109ec7e65eda25a409a9a944b94015ceb3b345",
+  "scope": "Original runtime/geometric-operand APPROVE only. Two staged native stills,35queries, fourhitmeshes; alphaTrail not opaque support, negative operands never contact/walkabilityPASS. Original raw PNGs retained at source paths, no wholecriterion or visualapproval.",
+  "files": [
+    {
+      "file": "capture-start.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\capture-start.json",
+      "bytes": 712,
+      "sha256": "7fbe0d60de35da56a6259532dc3a7457c39ca6c77d89ca71f34c3fb5afde2e19"
+    },
+    {
+      "file": "capture-terminal.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\capture-terminal.json",
+      "bytes": 196,
+      "sha256": "2f263518032f4ae435afce89cd17afa8e7cad17c76092bd4676cbbf884743dc8"
+    },
+    {
+      "file": "capture.stderr.log",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\capture.stderr.log",
+      "bytes": 1969,
+      "sha256": "b57244443e9479c10c20336d268e144bf5aa57198031ba4507c79fd6fbcc80e0"
+    },
+    {
+      "file": "capture.stdout.log",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\capture.stdout.log",
+      "bytes": 56353,
+      "sha256": "7c5890064c60589e04605dfb8741b5244d060a18a54ff22cc3545d62939f7b76"
+    },
+    {
+      "file": "gate-support-integrity.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\gate-support-integrity.json",
+      "bytes": 2394,
+      "sha256": "2fa1b27f6ffc9f32fb66670fa6cc55e98e6b0f7bda18f56b18ac2864dcbbecdb"
+    },
+    {
+      "file": "import-start.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\import-start.json",
+      "bytes": 440,
+      "sha256": "f3add9348d661e4535bb7d3b0085cec7210924ad19e968c0b82c87ee63ec25ab"
+    },
+    {
+      "file": "import-terminal.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\import-terminal.json",
+      "bytes": 196,
+      "sha256": "359f7816854db5b6e66bb568835f86b6231a28000ac76a0be20794e6f4e737a1"
+    },
+    {
+      "file": "import.stderr.log",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\import.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "import.stdout.log",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\import.stdout.log",
+      "bytes": 122305,
+      "sha256": "f206a5794bdfd6e3dee4bb8990f75356a79b61d09b72c2f1c7f51c3ac2048e00"
+    },
+    {
+      "file": "launch.ps1",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\launch.ps1",
+      "bytes": 4644,
+      "sha256": "9accd8918adc9f6b34661a0dba50bf39f1b584aa9a87c24ce6fdc32e6e2913a7"
+    },
+    {
+      "file": "native-image-integrity.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\native-image-integrity.json",
+      "bytes": 708,
+      "sha256": "652e88e7f2275d09905454a6ff93f727af9f064f2738343abdecf8f24425cf02"
+    },
+    {
+      "file": "native-two-frame-contact.jpg",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\native-two-frame-contact.jpg",
+      "bytes": 275141,
+      "sha256": "b47c0f0e702ad5e14de50cbae844b3a48c278fe6b6d578d8aedc0cd2c377586c"
+    },
+    {
+      "file": "native-verified-summary.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\native-verified-summary.json",
+      "bytes": 768,
+      "sha256": "5d6ed202f0732ed7d268270c272088d4475ebb1391500d139c35e2730a8cb4f1"
+    },
+    {
+      "file": "original-recipe.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\original-recipe.json",
+      "bytes": 13895,
+      "sha256": "a7bd440206d457dffc3c1be8546082a5550d045ab7fc0ce543363561dd48f635"
+    },
+    {
+      "file": "queue.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\queue.json",
+      "bytes": 186,
+      "sha256": "101cb92683d7c4db450eb4ee405a1f3eb6fe462ce4a2769d70d82e0ad297ba9f"
+    },
+    {
+      "file": "source-after-capture.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\source-after-capture.json",
+      "bytes": 579,
+      "sha256": "cfc4fb06b4adfce1cb12c9ac8c593f347921c78de1bff776a3dd350a2c7f8a39"
+    },
+    {
+      "file": "source-after-import-revalidated.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\source-after-import-revalidated.json",
+      "bytes": 1297,
+      "sha256": "2525f392534f24d13ec54136b2c7766a63735c65d7fb0aa73474307c0f72c2db"
+    },
+    {
+      "file": "source-after-import.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\source-after-import.json",
+      "bytes": 905,
+      "sha256": "0168c9222db854643d89149f7be61c101d26789face6f074d017c255ef34fc33"
+    },
+    {
+      "file": "source-before-capture.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\source-before-capture.json",
+      "bytes": 579,
+      "sha256": "6e0d27c5026b3b673773891954d4daab65b18b524004d044da378f350c85b070"
+    },
+    {
+      "file": "source-before-import.json",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\source-before-import.json",
+      "bytes": 579,
+      "sha256": "de700b21b12e01e8401af51afecd1c1152d399f586f37c08dd7588882417c35c"
+    },
+    {
+      "file": "verify-native.py",
+      "origin": "C:\\CodexTemp\\tetherbound-proof\\native-e-2c109ec7e6-gate-support-r1\\verify-native.py",
+      "bytes": 5758,
+      "sha256": "7f45f600bbb45c357deb60d972e3d21bc767f7691c44c03312e302533b24adff"
+    },
+    {
+      "file": "manifest.txt",
+      "origin": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-gate-render-support-2c109-day-r1\\manifest.txt",
+      "bytes": 50328,
+      "sha256": "42b84f9ea6ed8229c7b4b4cf759691264560c886239e248feb60107b2a07d911"
+    }
+  ]
+}
