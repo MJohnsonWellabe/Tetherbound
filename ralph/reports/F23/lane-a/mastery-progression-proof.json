@@ -1,0 +1,147 @@
+{
+  "criterion": "F23#4",
+  "criterion_text": "Move mastery ranks1\u20135 rise with use; each rank raises damage and upgrades the move effect tier; mastery persists.",
+  "status": "PARKED OPEN after two actual attempts; shipping F23#2 integration regression takes priority",
+  "source_commit": "3b3761cc33c2a199d0354389971298b5df7c51fa",
+  "original_direction": {
+    "reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "verdict": "APPROVE existing headless boundary path direction before actual proof; no unsupported production correction",
+    "required_proof": "All four actual predecessor boundaries24/74/149/299: one landed hit, saved original use/receipt through refusal/retry, next accepted higher damage/effect tier and restored preview flags",
+    "blind_requirement": "No separate F23#4 blind proof named"
+  },
+  "script": "tests/smoke_f23_live_moves.gd",
+  "args": "--enable-ultimate-visual --prove-mastery-transition --ultimate-prior-uses=<prior>",
+  "mode": "hosted headless, no native GPU",
+  "first_boundary_batch": [
+    {
+      "prior_uses": 24,
+      "run_id": 37791590947,
+      "artifact_id": 11555794844,
+      "result": "FAIL before mastery",
+      "checks": 19,
+      "errors": [
+        "host refuses an actual equipped ultimate below full meter",
+        "physical tap did not freeze expected utility: {  }",
+        "B must start and land admitted Snare"
+      ],
+      "first_refusal": "move_start invalid_actor_move",
+      "launches": 0,
+      "impacts": 0,
+      "log_sha256": "51e5d832f0ff418dc9e3daef6fe41734b45abaaad7afae731444c5ef4d2c702a"
+    },
+    {
+      "prior_uses": 74,
+      "run_id": 37791595615,
+      "artifact_id": 11557135530,
+      "result": "FAIL before mastery",
+      "checks": 19,
+      "errors": [
+        "host refuses an actual equipped ultimate below full meter",
+        "physical tap did not freeze expected utility: {  }",
+        "B must start and land admitted Snare"
+      ],
+      "first_refusal": "move_start invalid_actor_move",
+      "launches": 0,
+      "impacts": 0,
+      "log_sha256": "51e5d832f0ff418dc9e3daef6fe41734b45abaaad7afae731444c5ef4d2c702a"
+    },
+    {
+      "prior_uses": 149,
+      "run_id": 37791599946,
+      "artifact_id": 11556099903,
+      "result": "FAIL before mastery",
+      "checks": 19,
+      "errors": [
+        "host refuses an actual equipped ultimate below full meter",
+        "physical tap did not freeze expected utility: {  }",
+        "B must start and land admitted Snare"
+      ],
+      "first_refusal": "move_start invalid_actor_move",
+      "launches": 0,
+      "impacts": 0,
+      "log_sha256": "51e5d832f0ff418dc9e3daef6fe41734b45abaaad7afae731444c5ef4d2c702a"
+    },
+    {
+      "prior_uses": 299,
+      "run_id": 37791604790,
+      "artifact_id": 11555854849,
+      "result": "FAIL before mastery",
+      "checks": 19,
+      "errors": [
+        "host refuses an actual equipped ultimate below full meter",
+        "physical tap did not freeze expected utility: {  }",
+        "B must start and land admitted Snare"
+      ],
+      "first_refusal": "move_start invalid_actor_move",
+      "launches": 0,
+      "impacts": 0,
+      "log_sha256": "51e5d832f0ff418dc9e3daef6fe41734b45abaaad7afae731444c5ef4d2c702a"
+    }
+  ],
+  "cause_review": {
+    "reviewer": "original /root/f25_medium_review",
+    "verdict": "REQUEST_CHANGES",
+    "supported_source_gap": "Both Mastery openers lack actual opponent card.uid and positive body_generation required for retained motion original; trainer owner setup alone insufficient. Exact failed packet invalid_actor_move does not isolate the first executed guard.",
+    "supported_correction": "Reuse saved trainer-owner installer and existing Dash codec/generation for both openers. Second encounter gets its own owner scope; static600HP target, same targetUID across transitions, priorhistories and originalguardspreserved."
+  },
+  "retained_visual_bank": {
+    "run_id": 37685093632,
+    "cases": 114,
+    "failures": 0,
+    "exit": 0,
+    "scope": "synthetic_no_combat; not earned live mastery evidence",
+    "log_sha256": "fba905edb38aa97ba3441a0f2e75f8d6089e4953832af3298b110083a7467fe2"
+  },
+  "fixtures": "Original canonical prior-use histories, one owned creature, original flat stage/static600HP target and real tap controls. First failed batch reaches no casts or mastery award.",
+  "limits": "F23#4 remains open. Previous accepted F23#1/#2/controllers/Heal/Dash/role proofs stand; no device/visual/campaign/unrestrictedco-op claim.",
+  "changed_source": {
+    "status": "SOURCE APPROVE; changed24 actual proof FAIL; remaining3 not dispatched",
+    "paths": [
+      "tests/smoke_f23_live_moves.gd"
+    ],
+    "change": "Mastery uses existing authored practice-trainer fixture/600HP static body, initial opponent codec/bodygeneration, and next opener retains actual species/UID/HP/card/bodygeneration/ownerNPC and installs its own saved trainer owner. No production edit or threshold/guard change.",
+    "retry_plan": "One changed24 boundary first; remaining74/149/299 only after exact24 PASS. No unchanged rerun.",
+    "commit": "5f07768c91ced356514152962f0ee9f06fa48f64",
+    "source_correction": "Initial installer guard includes Mastery and retains original installer/saved-owner assertions. Both actual card/generation openers and second encounter saved owner scope preserved.",
+    "review_limits": "Actual success and whole F23#4 remain unproved"
+  },
+  "changed_boundary_attempt": {
+    "source_commit": "5f07768c91ced356514152962f0ee9f06fa48f64",
+    "prior_uses": 24,
+    "run_id": 37795682248,
+    "artifact_id": 11558930414,
+    "result": "FAIL",
+    "checks": 134,
+    "launches": 20,
+    "impacts": 20,
+    "errors": [
+      "ultimate commitment exceeds original accepted-launch deadline",
+      "real quick1 does not refill next encounter meter",
+      "only landed hits refill new encounter ultimate meter fails",
+      "new ultimate tap returns last retained quick receipt",
+      "fresh RB release then Y does not land next rank signature"
+    ],
+    "refusals": [
+      "cooldown",
+      "insufficient_energy"
+    ],
+    "ultimate_control": {
+      "accepted_launch_ms": 16451,
+      "deadline_ms": 18851,
+      "release_observed_ms": 18851,
+      "released": false,
+      "local_started_ms": 16452,
+      "local_deadline_ms": 18852
+    },
+    "last_retained_quick": {
+      "action": 20,
+      "started_at_ms": 21846,
+      "ready_at_ms": 22152,
+      "cooldown_seconds": 0.4
+    },
+    "log_sha256": "5a54e033db431fd812ac51915c6b931e825fb7f99a83c331900761296115accf",
+    "artifact_limits": "Only MANIFEST.txt/run.log/boot_log.txt/godot.log retained; no character/world files. No failed save promoted or accepted boundary invented."
+  },
+  "stop_disposition": "Parked at two actual attempts. Any continuation requires distinct supported new code and original independent review; no unchanged rerun or relaxed proof guard."
+}

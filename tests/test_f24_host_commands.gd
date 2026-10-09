@@ -31,6 +31,7 @@ func before_each() -> void:
 	_saved_commands = COMMANDS.config()
 	COMMANDS._config = _saved_commands.duplicate(true)
 	COMMANDS._config.feature_flags.runtime_enabled = true
+	COMMANDS._config.rollout_mode = "all" # Existing all-command library fixture.
 
 func after_each() -> void:
 	COMMANDS._config = _saved_commands
@@ -1398,3 +1399,40 @@ func test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_t
 			before.party[0].hp = before.party[0].max_hp
 			view.actor.hp = before.party[0].hp
 			assert_false(COMMANDS.stage_item_use(before, effect, view).ok, "full creature consumes no potion")
+
+
+func test_snare_only_rollout_gates_ingress_input_sequence_and_only_its_binding() -> void:
+	COMMANDS._config.feature_flags.network_enabled = true
+	COMMANDS._config.rollout_mode = "snare_only"
+	assert_true(COMMANDS.valid_config(COMMANDS._config))
+	for malformed: Variant in ["other", 0, false, null]:
+		var bad := COMMANDS._config.duplicate(true)
+		bad.rollout_mode = malformed
+		assert_false(COMMANDS.valid_config(bad))
+	var director := preload("res://scripts/combat/encounter_director.gd").new()
+	for disabled: String in ["item_throw", "rally", "tag_combo"]:
+		assert_false(COMMANDS.command_enabled(disabled))
+		assert_false(COMMANDS.owns_combat_binding(COMMANDS.input_action(disabled)), "unselected directions retain their existing behavior")
+		var before: Dictionary = director._deployment_identity.duplicate(true)
+		var result: Dictionary = director._host_tether_command({"kind":"tether_command", "encounter_id":id,
+			"request":COMMANDS.intent(id, 1, 1, disabled)}, 1)
+		assert_false(result.ok)
+		assert_eq(result.code, "disabled", "new RPC ingress refuses before actor lookup or commitment")
+		assert_eq(director._deployment_identity, before)
+	director.free()
+	assert_true(COMMANDS.command_enabled("snare"))
+	assert_true(COMMANDS.owns_combat_binding("hotbar_5"))
+	assert_false(COMMANDS.owns_combat_binding("hotbar_1"))
+	var input := preload("res://scripts/ui/tether_command_input.gd").new()
+	var view := {"active":true, "input_context":"combat", "encounter_id":id,
+		"generation":1, "last_sequence":0, "unlocked_commands":COMMANDS.COMMAND_IDS.duplicate()}
+	var submitted: Array[Dictionary] = []
+	input.configure(func() -> Dictionary: return view,
+		func(request: Dictionary) -> bool: submitted.append(request.duplicate(true)); return true)
+	for disabled: String in ["item_throw", "rally", "tag_combo"]:
+		assert_false(input._request_snapshot(disabled, view), "an overbroad presentation cannot enable a disabled command")
+	assert_eq(input._sequence, 0)
+	assert_true(submitted.is_empty())
+	assert_true(input._request_snapshot("snare", view))
+	assert_eq(submitted, [COMMANDS.intent(id, 1, 1, "snare")])
+	input.free()

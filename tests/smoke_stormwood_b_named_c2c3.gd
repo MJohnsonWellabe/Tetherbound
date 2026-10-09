@@ -5,7 +5,8 @@ extends SceneTree
 ## and the measurable half of C3 (single-hit ceiling, tell floors)?
 ##
 ##   godot --headless --path . --fixed-fps 60 --script tests/smoke_stormwood_b_named_c2c3.gd \
-##       -- --seeds=24 [--case=<substring>[,...]] [--starter=<id>] [--party-level=<n>] --json=<path>
+##       -- --seeds=24 [--case=<substring>[,...]] [--starter=<id>] [--party-level=<n>] --json=<path> \
+##       [--gear-tier=<rootiron|tidesteel|skyglass|stormglass>] [--gear-upgrade=0..3]
 ##
 ## Same method as tests/smoke_water_named_c2c3.gd (F14#0): the shared paired
 ## pilot tests/helpers/combat_depth_pilot.gd, unmodified -- real CombatManager,
@@ -35,6 +36,7 @@ extends SceneTree
 ## co-op scaling, framing (a rendered capture), an earned-save party.
 
 const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
+const GEAR := preload("res://tests/helpers/f33_gear_fixture.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
@@ -53,6 +55,9 @@ var _selection := ""
 var _starter_only := ""
 var _party_level_override := 0
 var _json := ""
+## F33#2: the existing disclosed gear fixture; empty tier preserves bare state.
+var _gear: Dictionary = GEAR.from_args()
+var _compare_previous_gear := OS.get_cmdline_user_args().has("--compare-previous-gear")
 
 
 func _init() -> void:
@@ -107,16 +112,35 @@ func _selected(id: String) -> bool:
 
 func _run() -> void:
 	var errors: Array[String] = []
+	var matching_gear_label: String = GEAR.label(str(_gear.tier), int(_gear.upgrade))
+	var previous_tiers := {"rootiron":"", "tidesteel":"rootiron", "skyglass":"tidesteel", "stormglass":"skyglass"}
+	var gear_tiers: Array[String] = [str(_gear.tier)]
+	if _compare_previous_gear:
+		if not previous_tiers.has(str(_gear.tier)):
+			push_error("--compare-previous-gear requires --gear-tier=rootiron|tidesteel|skyglass|stormglass")
+			quit(1)
+			return
+		gear_tiers.append(str(previous_tiers[str(_gear.tier)]))
 	var cases := _cases(errors)
+	if _compare_previous_gear:
+		var paired_cases: Array[Dictionary] = []
+		for tier: String in gear_tiers:
+			for entry: Dictionary in cases:
+				var paired := entry.duplicate(true)
+				paired["gear_tier"] = tier
+				paired_cases.append(paired)
+		cases = paired_cases
 	var rows: Array[Dictionary] = []
 	var runs: Array[Dictionary] = []
 	var failures := 0
 	for entry in cases:
 		if not _selected(str(entry.id)): continue
+		var run_tier := str(entry.get("gear_tier", _gear.tier))
+		var gear_label := GEAR.label(run_tier, int(_gear.upgrade))
 		for starter: String in STARTERS:
 			if not _starter_only.is_empty() and starter != _starter_only: continue
 			var row := {"case": entry.id, "profile": entry.profile, "region": entry.region,
-				"starter": starter, "party_level": entry.party_level, "pilots": {}}
+				"starter": starter, "party_level": entry.party_level, "gear": gear_label, "pilots": {}}
 			for policy in ["MASHER", "READER"]:
 				var s := {"wins": 0, "lead_cost": [], "party_cost": [], "seconds": [],
 					"lead_faints": 0, "party_wipes": 0, "max_hit": 0.0, "min_tell": INF,
@@ -138,6 +162,7 @@ func _run() -> void:
 							continue
 						foes.append(foe)
 					if party.size() != 5 or foes.size() != entry.foes.size(): break
+					GEAR.equip(self, party, run_tier, int(_gear.upgrade))
 					var pilot: RefCounted = PILOT.new()
 					var result: Dictionary = await pilot.fight(self, party, foes, false,
 						hash("stormwood/%s/%s/%d" % [entry.id, starter, seed_index]), policy)
@@ -148,6 +173,8 @@ func _run() -> void:
 					result["tells"] = tells
 					result["case"] = entry.id
 					result["starter"] = starter
+					result["gear"] = gear_label
+					if _compare_previous_gear: result["seed_index"] = seed_index
 					runs.append(result)
 					s.wins += int(result.won)
 					s.lead_cost.append(float(result.lead_lost_frac))
@@ -174,12 +201,12 @@ func _run() -> void:
 					"max_tell_s": s.max_tell, "stalled": s.stalled,
 					"incoming_hits": s.incoming_hits, "hits": s.hits}
 				row.pilots[policy] = summary
-				print("STORMWOOD_C2C3 %s %s %s L%d runs=%d win=%.2f med_lead=%.3f med_party=%.3f med_s=%.1f max_s=%.1f lead_faint=%.2f wipe=%.2f max_hit=%.3f tell=[%.2f,%.2f] incoming=%d stalled=%d" % [
+				print("STORMWOOD_C2C3 %s %s %s L%d runs=%d win=%.2f med_lead=%.3f med_party=%.3f med_s=%.1f max_s=%.1f lead_faint=%.2f wipe=%.2f max_hit=%.3f tell=[%.2f,%.2f] incoming=%d stalled=%d gear=%s" % [
 					entry.id, starter, policy, int(entry.party_level), summary.runs, summary.win_rate,
 					summary.median_lead_cost, summary.median_party_cost, summary.median_seconds,
 					summary.max_seconds, summary.lead_faint_rate, summary.party_wipe_rate,
 					summary.max_single_hit_frac, summary.min_tell_s, summary.max_tell_s,
-					summary.incoming_hits, summary.stalled])
+					summary.incoming_hits, summary.stalled, gear_label])
 			var m: Dictionary = row.pilots.get("MASHER", {})
 			var r: Dictionary = row.pilots.get("READER", {})
 			if not m.is_empty() and not r.is_empty():
@@ -196,13 +223,20 @@ func _run() -> void:
 		if file == null:
 			errors.append("cannot write %s" % _json)
 		else:
-			file.store_string(JSON.stringify({"seeds": _seeds, "selection": _selection,
+			var report := {"seeds": _seeds, "selection": _selection,
+				"gear": matching_gear_label,
 				"party": {"lead": STARTERS, "retained": RETAINED, "level_rule": "region Calm band midpoint + 1",
 					"override": _party_level_override},
 				"fixture": "production CombatManager + WildCreature bodies on a flat collider (combat_depth_pilot.gd)",
 				"rules": {"ratio_max": RATIO_MAX, "reader_win_min": READER_WIN_MIN, "hit_ceiling": HIT_CEILING,
 					"tell_floor": TELL_FLOOR, "heavy_tell": HEAVY_TELL},
-				"rows": rows, "runs": runs, "errors": errors}, "  "))
+				"rows": rows, "runs": runs, "errors": errors}
+			if _compare_previous_gear:
+				report["matching_gear"] = report.gear
+				report.erase("gear")
+				report["comparison_tiers"] = []
+				for tier: String in gear_tiers: report.comparison_tiers.append(GEAR.label(tier, int(_gear.upgrade)))
+			file.store_string(JSON.stringify(report, "  "))
 	for e in errors: print("STORMWOOD_C2C3 ERROR: %s" % e)
 	print("STORMWOOD_C2C3 done: %d rows, %d runs, %d failing rows, %d errors" % [rows.size(), runs.size(), failures, errors.size()])
 	# Exit reflects the harness, not the verdict: a FAIL row is evidence.

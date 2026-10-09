@@ -90,6 +90,8 @@ func refresh_projection() -> void:
 
 func _installed_matches() -> bool:
 	for row: Dictionary in _restore:
+		if not is_instance_valid(row.get("mesh")) or not row.get("mesh") is MeshInstance3D:
+			return false
 		var mesh: MeshInstance3D = row.mesh
 		if not is_instance_valid(mesh):
 			return false
@@ -102,6 +104,8 @@ func _installed_matches() -> bool:
 
 func clear() -> void:
 	for row: Dictionary in _restore:
+		if not is_instance_valid(row.get("mesh")) or not row.get("mesh") is MeshInstance3D:
+			continue
 		var mesh: MeshInstance3D = row.mesh
 		if not is_instance_valid(mesh):
 			continue

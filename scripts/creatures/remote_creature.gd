@@ -87,6 +87,15 @@ var deploy_shiny: bool = false
 var net_position: Vector3 = Vector3.ZERO
 var net_yaw: float = 0.0
 var net_aquatic: Dictionary = {}
+## The existing owner synchronizer carries input and a prediction reference.
+## Position is never an authorization to move the host body during combat.
+var net_combat_motion: Dictionary = {}
+var _motion_scope: Dictionary = {}
+var _motion_sequence := 0
+var _motion_ack := 0
+var _motion_received := 0
+var _motion_input := Vector3.ZERO
+var _motion_correction: Dictionary = {}
 var aquatic := preload("res://scripts/player/swim_state.gd").new()
 
 ## The trainer body this creature belongs to, so the companion layer has
@@ -254,7 +263,7 @@ func _resolve_leader() -> void:
 func _physics_process(delta: float) -> void:
 	_apply_ownership()
 	if bool(_owned_here):
-		_push_from_local_creature()
+		_push_from_local_creature(delta)
 		return
 	_follow(delta)
 
@@ -265,10 +274,26 @@ func _physics_process(delta: float) -> void:
 ## `deployed_creature` group rather than reaching into the encounter director:
 ## the same decoupling `playground_hud.gd` keeps, and it survives a world that
 ## mounts its director somewhere else.
-func _push_from_local_creature() -> void:
+func _push_from_local_creature(delta: float = 0.0) -> void:
 	var body := _local_deployed_body()
 	if body == null:
 		return
+	if _director == null or not is_instance_valid(_director):
+		_director = PRESENTATION.find_encounter_director(self)
+	var sample: Dictionary = _director.call("local_combat_motion_sample", body, delta) if _director != null else {}
+	if sample.is_empty():
+		net_combat_motion = {}
+		_motion_scope = {}
+		_motion_ack = 0
+	else:
+		if sample.scope != _motion_scope:
+			_motion_scope = sample.scope.duplicate(true)
+			_motion_sequence = 0
+			_motion_ack = 0
+		_motion_sequence += 1
+		sample["sequence"] = _motion_sequence
+		sample["correction_ack"] = _motion_ack
+		net_combat_motion = sample
 	net_position = body.global_position
 	net_yaw = body.rotation.y
 	net_aquatic = body.get_meta("water_aquatic", {}).duplicate(true)
@@ -369,6 +394,102 @@ func _local_deployed_body() -> Node3D:
 
 
 # --- every other peer's side --------------------------------------------------
+
+## One current scope/correction on the existing body, not another action or
+## distance ledger. Scope replacement retires old input, impulses and ACKs.
+func bind_host_combat_motion(scope: Dictionary) -> bool:
+	if scope == _motion_scope: return false
+	_motion_scope = scope.duplicate(true)
+	_motion_received = 0
+	_motion_input = Vector3.ZERO
+	_motion_correction = {}
+	_impulse = Vector3.ZERO
+	velocity = Vector3.ZERO
+	cancel_combat_burst()
+	return true
+
+
+func host_combat_motion_correction() -> Dictionary:
+	return _motion_correction.duplicate(true)
+
+
+func apply_owner_combat_correction(projection: Dictionary, body: Node3D) -> void:
+	if not is_multiplayer_authority() or not is_instance_valid(body) or _director == null \
+		or not _director.call("_guest_combat_motion_current", projection.get("scope", {}), body): return
+	var scope: Dictionary = projection.scope
+	if scope != _motion_scope:
+		_motion_scope = scope.duplicate(true)
+		_motion_sequence = 0
+		_motion_ack = 0
+	var correction: Dictionary = projection.get("correction", {})
+	if correction.is_empty(): return
+	var sequence: Variant = correction.get("sequence")
+	var accepted: Variant = correction.get("position")
+	var reference: Variant = correction.get("sample_position")
+	if not sequence is int or sequence <= _motion_ack or sequence > _motion_sequence \
+		or not accepted is Vector3 or not reference is Vector3 \
+		or not accepted.is_finite() or not reference.is_finite(): return
+	# Keep prediction made AFTER the acknowledged sample. Applying the raw
+	# older host position here would repeatedly erase one network trip of input.
+	teleport_body(body, body.global_position + (accepted as Vector3) - (reference as Vector3))
+	_motion_ack = sequence
+
+
+func _follow_combat(delta: float) -> bool:
+	if _director == null or not is_instance_valid(_director):
+		_director = PRESENTATION.find_encounter_director(self)
+	if _director == null: return false
+	var context: Dictionary = _director.call("host_combat_motion_context", owner_peer_id, self)
+	if context.get("combat") != true:
+		if not _motion_scope.is_empty():
+			bind_host_combat_motion({})
+			set_contact_partner(null)
+			arena = null
+			collision_layer = _layer
+		return false
+	if context.get("valid") != true:
+		_motion_input = Vector3.ZERO
+		velocity = Vector3.ZERO
+		return true
+	var changed := bind_host_combat_motion(context.scope)
+	collision_layer = 1 # Same combat layer as the owner's follower body.
+	if contact_partner != context.opponent: set_contact_partner(context.opponent, CONTACT_SPACING.ROLE_ALLY)
+	arena = context.arena
+	var sample := net_combat_motion
+	var fresh := false
+	var reference := global_position
+	var sequence: Variant = sample.get("sequence")
+	var direction: Variant = sample.get("direction")
+	var position: Variant = sample.get("position")
+	var yaw: Variant = sample.get("yaw")
+	var valid: bool = sample.size() == 6 and sample.get("scope") == _motion_scope \
+		and sequence is int and sequence > 0 and direction is Vector3 and direction.is_finite() \
+		and absf(float(direction.y)) <= 0.000001 and direction.length_squared() <= 1.000001 \
+		and position is Vector3 and position.is_finite() and (yaw is int or yaw is float) and is_finite(float(yaw)) \
+		and sample.get("correction_ack") is int
+	if not valid:
+		_motion_input = Vector3.ZERO
+	elif sequence > _motion_received and sample.correction_ack == int(_motion_correction.get("sequence", 0)):
+		_motion_received = sequence
+		_motion_input = direction
+		reference = position
+		fresh = true
+	elif sequence < _motion_received or int(sample.correction_ack) > int(_motion_correction.get("sequence", 0)):
+		_motion_input = Vector3.ZERO
+	# An outstanding correction cannot admit a replacement input. Existing
+	# accepted input and authored Burst/impulse still advance on host physics.
+	if context.paused != true:
+		request_move(_motion_input if context.walking == true else Vector3.ZERO, float(context.speed))
+		super._physics_process(delta)
+	_render_position = global_position
+	_has_render = true
+	if fresh:
+		_motion_correction = {"sequence":_motion_received, "position":global_position, "sample_position":reference}
+	if fresh or changed: _director.call("publish_host_combat_motion", owner_peer_id, self)
+	if _presence != null and is_instance_valid(_presence):
+		_resolve_leader()
+		_presence.call("tick", delta)
+	return true
 
 ## Whether this proxy must be PLACED at `target` rather than driven toward it.
 ##
@@ -472,6 +593,7 @@ func _hold_replicated_ground_plane() -> void:
 
 
 func _follow(delta: float) -> void:
+	if _follow_combat(delta): return
 	if not net_aquatic.is_empty():
 		aquatic.owner_peer_id = get_multiplayer_authority()
 		aquatic.apply_remote_snapshot(net_aquatic, get_multiplayer_authority())

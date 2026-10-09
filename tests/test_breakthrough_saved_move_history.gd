@@ -4,6 +4,29 @@ extends "res://tests/test_case.gd"
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 
+func test_every_species_has_authored_level_moves_that_unlock_at_the_original_gate() -> void:
+	var species := preload("res://scripts/creatures/creature_species.gd")
+	var rows := TEACHING.learnsets()
+	for id: String in species.table():
+		assert_true(rows.has(id), id + " has an authored learnset")
+	for id: String in rows:
+		var row: Dictionary = rows[id]
+		if row.get("reserved", false): continue
+		var level_options := 0
+		for unlock: Dictionary in row.unlocks:
+			if not unlock.has("level") or int(unlock.level) <= 1: continue
+			level_options += 1
+			var gate := int(unlock.level)
+			var earlier := false
+			for other: Dictionary in row.unlocks:
+				if other.get("move_id") == unlock.move_id and other.has("level") and int(other.level) < gate:
+					earlier = true
+			assert_eq(TEACHING.available_moves(id, gate - 1, []).has(str(unlock.move_id)), earlier,
+				"%s %s cannot unlock before its original level %d" % [id, unlock.move_id, gate])
+			assert_true(TEACHING.available_moves(id, gate, []).has(str(unlock.move_id)),
+				"%s %s unlocks at its authored level %d" % [id, unlock.move_id, gate])
+		assert_true(level_options >= 2, id + " has both authored level utility options")
+
 func test_every_authored_tier_move_preserves_eligibility_after_canonical_json_reload() -> void:
 	var tiers: Array = []
 	for master: Dictionary in BREAKTHROUGH.masters().masters:

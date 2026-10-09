@@ -1,0 +1,38 @@
+F21/F25 production tell material correction
+Base: 016dc1de3e3a619828f0bc202489ead62169143c
+Trigger: production37644899549 code-blind full-bar BLOCK, Views04-06 flat
+magenta ring/wedge. Owning COMBAT13.3/ART_DIRECTION5.1 requires shaped forms.
+
+Scope: telegraph_glow.gd and enemy_pattern_telegraph.gd only. Raised bevelled
+contours with lit rough material and low emission replace broad unshaded fill;
+two subdued interior ribs retain area reading. Configured hue, authored shape
+boundaries, pulse, lifetime, state/depth and ground alignment remain. Pattern
+skirt follows the existing available water surface. No shader/light/config,
+strike logic, damage/arrival rule or shipping flag changes.
+
+Independent reviewer: /root/f25_arrival_review
+Initial REQUEST_CHANGES: restore lane rear boundary and avoid repeated terrain
+sampling for identical water aims. Corrected: rear strip restored; per-aim
+terrain samples reused during water-offset refresh, changed aims clear terrain
+cache; unchanged dry aims skip rebuilding.
+Source final verdict APPROVE. No engine executed.
+
+Existing flat-only assertion allocation: issue5726042048300.
+Exactly four existing functions updated in test_telegraph_glow.gd and
+test_enemy_pattern_telegraph.gd, no new functions/classes/fixtures. Require
+exact ground skirts, positive bounded crests and every triangle attached to
+ground support. Preserve footprint/body clearance/real boundaries, terrain
+resampling, cache, water, bounds and lifecycle checks; collapsed-ring test
+unchanged. Same independent reviewer final test-update verdict APPROVE.
+
+Open: hosted affected checks, matched Low actual production Views04-06,
+night/slope/water/shape readability and code-blind full-bar verdict. Pale
+contact disc is outside this correction. No visual PASS or criterion READY.
+
+Existing opening capture optional --with-tell-units preflight runs the four
+rg-mapped existing test files (combat_feedback, enemy_pattern_telegraph,
+stormwood_surge_presentation, telegraph_glow) through tests/run_tests.gd before
+preview gates or ordinary inputs, fails nonzero and retains request/selectors/
+exit code in the successful capture manifest. Same reviewer APPROVE; default
+unchanged. This adds a bounded step to the existing proof, no new runner/tool/
+fixture/class/test function. Actual hosted unit/capture results remain pending.

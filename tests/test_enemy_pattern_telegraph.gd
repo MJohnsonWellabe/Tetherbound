@@ -5,6 +5,28 @@ extends "res://tests/test_case.gd"
 ## rebuild whose inputs are unchanged; the mesh it draws is unchanged.
 
 const TELEGRAPH := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
+const BAND_PROOF := preload("res://tests/smoke_f22_pattern_bands.gd")
+
+
+func test_floor_band_coverage_requires_executed_unique_cohorts_for_every_starter() -> void:
+	var cases := [{"id":"band1_lower_meadows"}, {"id":"band2_stone_and_root"}]
+	var rows: Array[Dictionary] = []
+	for entry: Dictionary in cases:
+		for starter: String in BAND_PROOF.STARTERS:
+			rows.append({"band":entry.id, "starter":starter})
+	assert_true(BAND_PROOF.floor_band_cohorts_complete(cases, rows, [], ""))
+	assert_false(BAND_PROOF.floor_band_cohorts_complete(cases, rows, [], "band1_lower_meadows"), "a selected diagnostic is not the complete sweep")
+	var missing := rows.slice(0, 3)
+	assert_false(BAND_PROOF.floor_band_cohorts_complete(cases, missing, ["band2_stone_and_root"], ""), "reported gaps cannot count as completed cohorts")
+	var duplicate := rows.duplicate(true)
+	duplicate[5] = duplicate[0].duplicate(true)
+	assert_false(BAND_PROOF.floor_band_cohorts_complete(cases, duplicate, [], ""), "correct row count cannot hide a missing starter cohort")
+	for foreign: Dictionary in [{"band":"unknown_band", "starter":"galewisp"}, {"band":"band2_stone_and_root", "starter":"unknown_starter"}]:
+		var changed := rows.duplicate(true)
+		changed[5] = foreign
+		assert_false(BAND_PROOF.floor_band_cohorts_complete(cases, changed, [], ""))
+	assert_false(BAND_PROOF.floor_band_cohorts_complete([], [], [], ""))
+	assert_false(BAND_PROOF.floor_band_cohorts_complete([cases[0], cases[0]], rows, [], ""))
 
 
 class CountingBody extends Node3D:
@@ -34,9 +56,48 @@ func test_every_vertex_sits_on_the_measured_ground() -> void:
 		var made := _cue(shape)
 		var verts := _vertices(made[2])
 		assert_true(verts.size() > 0, shape + " drew geometry")
+		var supports: Array[bool] = []
+		var base_present := false
+		var raised_present := false
+		var outer_present := false
+		var inner_present := false
+		var left_present := false
+		var right_present := false
 		for v: Vector3 in verts:
-			assert_between(v.y, sin(v.x * 0.7) + cos(v.z * 0.3) + 0.09 - 0.0001,
-				sin(v.x * 0.7) + cos(v.z * 0.3) + 0.09 + 0.0001)
+			var ground := sin(v.x * 0.7) + cos(v.z * 0.3) + 0.09
+			var elevation: float = v.y - ground
+			var base := absf(elevation) <= 0.0001
+			if base:
+				assert_almost_eq(v.y, ground, 0.0001, "the skirt meets its own measured terrain point exactly")
+				base_present = true
+			else:
+				assert_between(elevation, 0.001, 0.09 + 0.0001, "only a bounded crest may rise above its measured support")
+				raised_present = true
+			supports.append(base)
+			var offset := Vector2(v.x - 1.0, v.z - 2.0)
+			var radius := offset.length()
+			# The existing 0.12 m border straddles the authored edge by 0.06 m.
+			# Raised presentation cannot turn it into additional attack reach.
+			assert_between(radius, 1.5 - 0.06 - 0.0001 if shape == "ring" else 0.0, 6.0 + 0.06 + 0.0001)
+			outer_present = outer_present or (not base and absf(radius - 6.0) <= 0.0001)
+			if shape == "ring":
+				inner_present = inner_present or (not base and absf(radius - 1.5) <= 0.0001)
+			else:
+				var half_angle := deg_to_rad(35.0)
+				var right_distance := offset.x * cos(half_angle) - offset.y * sin(half_angle)
+				var left_distance := -offset.x * cos(half_angle) - offset.y * sin(half_angle)
+				assert_true(right_distance <= 0.06 + 0.0001 and left_distance <= 0.06 + 0.0001,
+					"the 70-degree cone keeps its authored sides and original border width")
+				if not base and radius > 1.0:
+					left_present = left_present or absf(left_distance) <= 0.0001
+					right_present = right_present or absf(right_distance) <= 0.0001
+		assert_true(base_present and raised_present, "both ground support and raised geometry must be present")
+		assert_true(outer_present and (inner_present if shape == "ring" else left_present and right_present),
+			"every authored strike boundary remains visibly represented")
+		assert_eq(verts.size() % 3, 0)
+		for first: int in range(0, verts.size() - 2, 3):
+			assert_true(supports[first] or supports[first + 1] or supports[first + 2], "every raised face reaches a ground skirt")
+			assert_false(supports[first] and supports[first + 1] and supports[first + 2], "no broad flat fill remains")
 		(made[0] as Node).free()
 
 

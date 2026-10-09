@@ -1,0 +1,7 @@
+Code-blind reviewer: /root/f25_visual_judge
+Input: native Low Compatibility1280x720 stills from hosted37641089339; uncropped/unresized contact sheets, labels only. No code/log/change narrative supplied. Scope: static visual findings only.
+F25#3 contact presentation: PASS static visibility. Gold/light flashes and readable3,3/11,22 numbers. Stills cannot establish causal arrival timing; criterion remains open.
+F23#5 ultimate HUD: PASS visible empty/intermediate/ready states and native labels/glyphs. EmptyRB0%, intermediate10%/48%, fullTap-then-move state legible. Ready instruction wraps, fullmeter mutedgrey, unlabeledotherbars and heavy dark panels remain. Stills do not prove fill causality/full-only firing.
+F35 signature: BLOCK. Coarse flat tan polygonal debris, weak material detail/setpiece composition, earliest chunk occludes contact. Only one signature; uniqueness/growth/duration/control recovery unjudged.
+Full ACCEPTANCE§4 world bar: BLOCK, BarA andBarB. Plain greenplane/bluegreybackground, absent finished terrain/vegetation/sky/depth/weather, small blotchy creatures, humans/architecture/props/ordinaryworld integration absent. High/Medium absence is not a gate under owner10-07 Low update.
+No criterion closure or shipping flag flip. Production path, full-bar world/signature and explicit Medium performance remain open.

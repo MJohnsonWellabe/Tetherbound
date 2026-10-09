@@ -38,6 +38,9 @@ const GLYPHS := {
 	## button at all any more, which is why their gamepad halves are gone.
 	"interact": {"keyboard": "keyboard_e.png", "gamepad": "xbox_button_x.png"},
 	"confirm": {"keyboard": "keyboard_return.png", "gamepad": "xbox_button_a.png"},
+	# Jump is also combat's tap Dodge. The installed subset has no Space
+	# keycap; icon() names the real keyboard binding through its fallback.
+	"jump": {"gamepad": "xbox_button_a.png"},
 	"cancel": {"keyboard": "keyboard_escape.png", "gamepad": "xbox_button_b.png"},
 	# Dialogue consent reads the real action id directly. Keep its presentation
 	# on the same Escape/B art as the generic cancel glyph.
@@ -336,6 +339,8 @@ static func key_name_for_action(action: String) -> String:
 	if not InputMap.has_action(action):
 		return action
 	for event in InputMap.action_get_events(action):
+		if event is InputEventMouseButton:
+			return event.as_text()
 		var key := event as InputEventKey
 		if key != null:
 			# Godot 4.7 marks a physical binding as "Q - Physical", not the

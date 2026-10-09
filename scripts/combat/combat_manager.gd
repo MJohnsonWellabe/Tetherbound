@@ -410,12 +410,17 @@ func tether_command_snapshot() -> Dictionary:
 	snapshot["input_context"] = "combat"
 	snapshot["encounter_id"] = _encounter_id
 	snapshot["wild_target"] = _encounter_kind == "wild"
-	snapshot["unlocked_commands"] = ["rally", "snare"]
+	var commands := preload("res://scripts/combat/tether_commands.gd")
+	snapshot["unlocked_commands"] = []
+	for id: String in ["rally", "snare"]:
+		if commands.command_enabled(id): snapshot.unlocked_commands.append(id)
 	if snapshot.get("item_consumer_ready") == true and is_instance_valid(_encounter_link) \
+		and commands.command_enabled("item_throw") \
 		and _encounter_link.has_method("tether_item_command_available") \
 		and _encounter_link.call("tether_item_command_available", _encounter_id) == true:
 		snapshot.unlocked_commands.append("item_throw")
 	if is_instance_valid(_encounter_link) and _encounter_link.has_method("tether_tag_command_available") \
+		and commands.command_enabled("tag_combo") \
 		and _encounter_link.call("tether_tag_command_available", _encounter_id) == true:
 		snapshot.unlocked_commands.append("tag_combo")
 	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) \
@@ -450,6 +455,7 @@ func new_system_combat_snapshot() -> Dictionary:
 			"name":_moves.display_name(move_id) if _moves.has(move_id) else "No " + slot,
 			"ready":quick_ready() if slot == "quick" else (charged_ready() if slot == "charged" else utility_ready()),
 			"cooldown_remaining_s":maxf(0.0, remaining), "cooldown_total_s":float(move.get("cooldown", 0.0))}
+		if slot == "utility": slots[slot]["wind_cost"] = float(move.get("wind_cost", 24.0))
 	slots["dodge"] = {"glyph":glyphs.action_name("jump"), "name":"Dodge",
 		"ready":not player_is_committed() and wind_value() >= wind_cost("burst")}
 	var maximum := float(MATH.config().ultimate.maximum)
@@ -571,6 +577,18 @@ func apply_tether_command_verdict(verdict: Dictionary) -> void:
 	if int(next.get("revision", -1)) >= int(_tether_command_view.get("revision", 0)):
 		_tether_command_view.merge(next.duplicate(true), true)
 	if tag:
+		# The reliable record can precede this verdict's local switch. Re-read
+		# only the record already stamped with this exact accepted parent, so
+		# the initial pool baseline is acknowledged in either delivery order.
+		var switched_uid := str(verdict.delta.switched_to_uid)
+		if verdict.delta.killed == false and not _party_ultimate.has(switched_uid) \
+			and _encounter_link.has_method("encounter_record") \
+			and _encounter_link.has_method("local_encounter_peer_id"):
+			var record: Dictionary = _encounter_link.call("encounter_record")
+			var own: Dictionary = record.get("participants", {}).get(int(_encounter_link.call("local_encounter_peer_id")), {})
+			if own.get("creature_uid") == switched_uid and own.get("tether_commands", {}).get("last_receipt") == next.last_receipt \
+				and record.get("opponent", {}).get("hp") == verdict.delta.hp:
+				apply_encounter_record(record, true)
 		if verdict.delta.killed == true:
 			_award_victory()
 			_begin_resolve("won")
@@ -634,6 +652,7 @@ func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 
 
 func unbind_encounter() -> void:
+	_pending_move.erase("ultimate_presentation_clock")
 	_move_awaiting_host = false
 	_tether_command_view.clear()
 	_encounter_link = null
@@ -1751,14 +1770,30 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var cfg: Dictionary = MATH.config().get("camera", {})
 	var manual := float(_camera_rig.get("_tracking_manual_left")) > 0.0
 	var yaw := float(_camera_rig.get("yaw"))
+	var pitch := float(_camera_rig.get("pitch"))
+	# Follow and the spring arm may already have shortened this idle frame.
+	# Admission starts at the last drawn lens, never at a new clamped probe.
+	var current: Dictionary = (_fight_camera_solution.get("drawn_pose",{}) as Dictionary).duplicate()
+	var current_yaw: float = float(_fight_camera_solution.get("selected_yaw",yaw))
+	var current_pitch: float = float(_fight_camera_solution.get("selected_pitch",pitch))
+	if current.is_empty():
+		current = {"transform":camera.get_camera_transform(),"pivot":(_camera_rig as Node3D).global_position,
+			"distance":maxf(camera.position.z,0.01)}
+	# Preserve the pair's takeover pitch and subsequent manual look. Automatic
+	# obstruction elevation is relative to that baseline, never compounded.
+	var base_pitch: float = pitch if manual else float(_fight_camera_solution.get("base_pitch",pitch))
+	var recovery_direction: float = 0.0 if manual else signf(float(_fight_camera_solution.get("recovery_orbit_direction",0.0)))
 	var local := fight.duplicate()
 	var existing_max := float(cfg.get("distance",6.0)) + maxf(0.0,float((cfg.get("framing",{}) as Dictionary).get("max_extra_distance",0.0)))
 	local["max_distance_m"] = minf(float(fight.get("max_distance_m",48.0)),existing_max)
 	local["roll_radians"] = (_camera_rig as Node3D).rotation.z
+	local["min_pitch_radians"] = deg_to_rad(float(_camera_rig.get("_pitch_min")))
+	local["max_pitch_radians"] = deg_to_rad(float(_camera_rig.get("_pitch_max")))
 	if manual:
 		local["orbit_candidates_deg"] = [0.0]
 		local["allow_pair_side_views"] = false
 		local["orbit_refinement_step_deg"] = 0.0
+		local["obstruction_pitch_offsets_deg"] = []
 	var weight := 1.0-exp(-maxf(float(fight.get("lag",4.0)),0.01)*delta)
 	_update_combat_top_band(cfg.get("hud_safe",{}) as Dictionary,weight)
 	var clear: Dictionary = cfg.get("body_clear",{})
@@ -1774,34 +1809,121 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var visibility_context := _fight_visibility_context(camera, fight.get("readability",{}) as Dictionary)
 	var visibility_score := func(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2) -> Dictionary:
 		return _fight_visibility_score(transform,ally_rect,foe_rect,visibility_context)
-	var solution := FIGHT_CAMERA.solve(ally,foe,yaw,float(_camera_rig.get("pitch")),camera.fov,
+	var solution := FIGHT_CAMERA.solve(ally,foe,yaw,base_pitch,camera.fov,
 		aspect,float(cfg.get("distance",6.0)),local,false,ally_points,foe_points,probe,visibility_score)
 	if solution.is_empty(): return false
 	_fight_camera_solution = solution
-	# Retain smooth follow/current yaw whenever its freshly queried constrained
-	# lens is already framed and clear. A bad view is corrected to the nearest
-	# scored safe candidate; invalid interpolation is never drawn as a success.
-	var selected: Dictionary = solution
-	var selected_yaw := yaw + deg_to_rad(float(solution.yaw_offset_deg))
-	var current := probe.call((_camera_rig as Node3D).global_position,
-		(_camera_rig as Node3D).global_basis,minf(float(_camera_rig.get("_distance")),float(local.max_distance_m))) as Dictionary
-	if not current.is_empty():
-		var current_a := FIGHT_CAMERA.project_points(ally_points,current.transform,camera.fov,aspect,camera.near)
-		var current_b := FIGHT_CAMERA.project_points(foe_points,current.transform,camera.fov,aspect,camera.near)
-		if bool(current_a.get("in_frame",false)) and bool(current_b.get("in_frame",false)) \
-			and FIGHT_CAMERA.overlap_ratio(current_a.rect,current_b.rect)<=float(local.max_actor_overlap) \
-			and bool((_fight_visibility_score(current.transform,current_a.rect,current_b.rect,visibility_context)).get("pass",false)) \
-			and (manual or not bool(solution.get("pass",false)) or float(current.distance)<=float(solution.distance)+float(local.get("safe_fit_distance_slack_m",0.75))):
-			selected = current
-			selected_yaw = yaw
-	var offset: Vector3 = solution.pivot-_ally_body.global_position-Vector3.UP*float(_camera_rig.get("_height"))
+	_fight_camera_solution["base_pitch"] = base_pitch
+	_fight_camera_solution["destination_pass"] = bool(solution.get("pass",false))
+	# Lens lift can change before this call. Reconstruct the pivot that retains
+	# the drawn lens under today's offsets; every proposed move is still probed.
+	var current_transform: Transform3D = current.transform
+	# Keep this frame's authored impact roll when retaining the drawn lens.
+	# Its position stays fixed; the rolled view is scored before admission.
+	current_transform.basis = Basis.from_euler(Vector3(current_pitch,current_yaw,float(local.roll_radians)))
+	current["transform"] = current_transform
+	current["pivot"] = current_transform.origin-current_transform.basis.z*float(current.distance) \
+		-current_transform.basis.x*camera.h_offset-current_transform.basis.y*camera.v_offset
+	var current_a := FIGHT_CAMERA.project_points(ally_points,current.transform,camera.fov,aspect,camera.near)
+	var current_b := FIGHT_CAMERA.project_points(foe_points,current.transform,camera.fov,aspect,camera.near)
+	var current_framed: bool = bool(current_a.get("in_frame",false)) and bool(current_b.get("in_frame",false))
+	var current_overlap := FIGHT_CAMERA.overlap_ratio(current_a.get("rect",Rect2()),current_b.get("rect",Rect2()))
+	var current_visibility := _fight_visibility_score(current.transform,current_a.get("rect",Rect2()),current_b.get("rect",Rect2()),visibility_context)
+	var current_clear: bool = current_framed and current_overlap<=float(local.max_actor_overlap) \
+		and bool(current_visibility.get("pass",false))
+	if current_clear: recovery_direction = 0.0
+	var manual_settled: bool = absf(wrapf(yaw-current_yaw,-PI,PI))<=0.000001 and absf(pitch-current_pitch)<=0.000001
+	var retain: bool = current_clear and ((manual and manual_settled) or (not manual \
+		and (not bool(solution.get("pass",false)) \
+		or float(current.distance)<=float(solution.distance)+float(local.get("safe_fit_distance_slack_m",0.75)))))
+	var selected: Dictionary = current
+	var selected_yaw: float = current_yaw
+	var selected_pitch: float = current_pitch
+	var motion_blocked: bool = false
+	if not retain:
+		# Orbit and elevation obey the existing speed limit; pivot/zoom use the
+		# existing lag. Probe the intermediate pose, then sweep the lens movement
+		# itself so a legal destination cannot cut through a tree or room wall.
+		var max_turn: float = deg_to_rad(maxf(0.0,float(fight.get("orbit_speed_deg_s",180.0))))*maxf(delta,0.0)
+		# A HUD-only failure must not authorize cropping either actor or losing
+		# clear foreground/support. Shorten the same constrained step when its
+		# intermediate orbit crosses a blocked arm; never snap to the endpoint.
+		var turn: float = wrapf(yaw+deg_to_rad(float(solution.yaw_offset_deg))-current_yaw,-PI,PI)
+		var other_turn: float = turn-TAU if turn>0.0 else turn+TAU
+		# The shortest orbit can initially increase overlap even when its endpoint
+		# is clear. Try the other route to that same angle and separate orbit from
+		# zoom/pivot recovery. Every route keeps the same speed and admission gates.
+		var routes: Array[Vector2] = [Vector2(turn,1.0)]
+		if not manual:
+			routes.append(Vector2(other_turn,1.0))
+			routes.append(Vector2(turn,0.0))
+			routes.append(Vector2(other_turn,0.0))
+			routes.append(Vector2(0.0,1.0))
+			# An admitted opposite-side escape must not reverse next frame merely
+			# because the shortest route is tried first again. Prefer both variants
+			# of the last admitted direction toward today's scored destination.
+			if recovery_direction!=0.0 and absf(turn)>0.000001:
+				var preferred_turn: float = turn if signf(turn)==recovery_direction else other_turn
+				var fallback_turn: float = other_turn if signf(turn)==recovery_direction else turn
+				routes = [Vector2(preferred_turn,1.0),Vector2(preferred_turn,0.0),
+					Vector2(fallback_turn,1.0),Vector2(fallback_turn,0.0),Vector2(0.0,1.0)]
+		var admitted: bool = false
+		for attempt: int in routes.size()*4:
+			var route: Vector2 = routes[attempt >> 2]
+			var step_scale: float = [1.0,0.5,0.25,0.125][attempt%4]
+			var next_yaw: float = yaw if manual else current_yaw+clampf(route.x,-max_turn,max_turn)*step_scale
+			var target_pitch: float = pitch if manual else float(solution.pitch)
+			var next_pitch: float = pitch if manual else move_toward(current_pitch,target_pitch,max_turn*step_scale)
+			var next_basis := Basis.from_euler(Vector3(next_pitch,next_yaw,float(local.roll_radians)))
+			var next_pivot: Vector3 = (current.pivot as Vector3).lerp(solution.pivot as Vector3,weight*step_scale*route.y)
+			var next_distance: float = lerpf(float(current.distance),float(solution.get("requested_distance",solution.distance)),weight*step_scale*route.y)
+			var next := probe.call(next_pivot,next_basis,next_distance) as Dictionary
+			if next.is_empty() or not (next.transform as Transform3D).is_finite(): continue
+			var travel: Vector3 = (next.transform as Transform3D).origin-(current.transform as Transform3D).origin
+			var length: float = travel.length()
+			if length<=0.000001 and absf(next_yaw-current_yaw)<=0.000001 \
+				and absf(next_pitch-current_pitch)<=0.000001: continue
+			motion_blocked = length>0.0 and float(_camera_rig.call("_free_distance_behind",
+				(current.transform as Transform3D).origin,travel/length,length))<length
+			if motion_blocked: continue
+			var next_a := FIGHT_CAMERA.project_points(ally_points,next.transform,camera.fov,aspect,camera.near)
+			var next_b := FIGHT_CAMERA.project_points(foe_points,next.transform,camera.fov,aspect,camera.near)
+			var next_framed: bool = bool(next_a.get("in_frame",false)) and bool(next_b.get("in_frame",false))
+			var next_overlap := FIGHT_CAMERA.overlap_ratio(next_a.get("rect",Rect2()),next_b.get("rect",Rect2()))
+			var preserves_readability: bool = (not current_framed or next_framed) \
+				and next_overlap<=maxf(current_overlap,float(local.max_actor_overlap))
+			if not manual and not preserves_readability: continue
+			var next_visibility := _fight_visibility_score(next.transform,next_a.get("rect",Rect2()),next_b.get("rect",Rect2()),visibility_context)
+			if not bool(next_visibility.get("geometry_valid",false)): continue
+			for guard: String in ["geometry_valid","foreground_clear","support_clear","hud_clear","pass"]:
+				if bool(current_visibility.get(guard,false)) and not bool(next_visibility.get(guard,false)):
+					preserves_readability = false
+			# Manual look may deliberately hide an actor (COMBAT §5). Finite
+			# geometry, collision probes and the full lens sweep still apply.
+			if not motion_blocked and (manual or preserves_readability):
+				selected = next
+				selected_yaw = next_yaw
+				selected_pitch = next_pitch
+				admitted = true
+				break
+		if admitted: motion_blocked = false
+	# The rig's next follow must continue from the pose actually admitted here,
+	# not independently ease toward an endpoint whose intermediate was refused.
+	var offset: Vector3 = selected.pivot-_ally_body.global_position-Vector3.UP*float(_camera_rig.get("_height"))
 	_camera_rig.call("set_framing_pivot_offset",offset)
-	_camera_rig.set("_distance",float(solution.get("requested_distance",solution.distance)))
+	_camera_rig.set("_distance",float(selected.distance))
 	_camera_rig.set("_shoulder",0.0)
+	_camera_rig.set("pitch",selected_pitch)
 	_camera_rig.call("apply_fight_camera_pose",selected,selected_yaw)
+	_fight_camera_solution["motion_blocked"] = motion_blocked
 	_fight_camera_solution["selected_pivot"] = selected.pivot
 	_fight_camera_solution["selected_distance"] = selected.distance
 	_fight_camera_solution["selected_transform"] = selected.transform
+	_fight_camera_solution["selected_yaw"] = selected_yaw
+	_fight_camera_solution["selected_pitch"] = selected_pitch
+	var drawn_pose: Dictionary = selected.duplicate()
+	drawn_pose["transform"] = camera.get_camera_transform()
+	_fight_camera_solution["drawn_pose"] = drawn_pose
 	_fight_camera_solution["selected_world_room"] = selected.get("world_room",null)
 	var model_room := float(selected.get("model_room",INF))
 	_fight_camera_solution["selected_model_room"] = model_room if is_finite(model_room) else null
@@ -1812,6 +1934,15 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 		if bool(actual_a.get("valid",false)) and bool(actual_b.get("valid",false)) else 1.0
 	_fight_camera_solution["actual_visibility"] = _fight_visibility_score(camera.get_camera_transform(),
 		actual_a.get("rect",Rect2()),actual_b.get("rect",Rect2()),visibility_context)
+	# A clear destination never certifies an obstructed intermediate frame.
+	_fight_camera_solution["pass"] = bool(_fight_camera_solution.actual_framed) \
+		and float(_fight_camera_solution.actual_overlap)<=float(local.max_actor_overlap) \
+		and bool((_fight_camera_solution.actual_visibility as Dictionary).get("pass",false))
+	if manual or bool(_fight_camera_solution["pass"]):
+		recovery_direction = 0.0
+	elif absf(selected_yaw-current_yaw)>0.000001:
+		recovery_direction = signf(selected_yaw-current_yaw)
+	_fight_camera_solution["recovery_orbit_direction"] = recovery_direction
 	_fight_camera_solution["clock"] = "final_idle_after_physics_follow_and_roll"
 	return true
 
@@ -2589,6 +2720,11 @@ func _tick_active(delta: float) -> void:
 	for uid: String in _party_utility_cooldown:
 		_party_utility_cooldown[uid] = maxf(0.0, float(_party_utility_cooldown[uid]) - delta)
 	_buffer_flee_while_input_unread(delta)
+	# The accepted ultimate's presentation clock continues through impact
+	# hitstop. Expire only its recovery here; hitstop still gates input/motion.
+	if _action == Action.RECOVERY and _pending_move.get("slot") == "ultimate" \
+		and _pending_move.has("ultimate_presentation_clock"):
+		_tick_action(0.0)
 	if _hitstop_left > 0.0:
 		_buffer_attack_while_hitstopped()
 		_hitstop_left = maxf(0.0, _hitstop_left - delta)
@@ -2597,7 +2733,7 @@ func _tick_active(delta: float) -> void:
 		return
 	_quick_cooldown = maxf(0.0, _quick_cooldown - delta)
 	_charged_cooldown = maxf(0.0, _charged_cooldown - delta)
-	if preload("res://scripts/combat/tether_commands.gd").enabled():
+	if preload("res://scripts/combat/tether_commands.gd").command_enabled("tag_combo"):
 		var active := active_creature()
 		for uid: String in _party_action_resources:
 			if active != null and uid == str(active.get("uid")): continue
@@ -2661,7 +2797,38 @@ func _tick_action(delta: float) -> void:
 	if _action == Action.WINDUP and _ally_body != null and _wild != null:
 		_ally_body.call("face_towards", _wild.call("centre"))
 
-	_action_timer -= delta
+	var presentation_recovery: bool = false
+	if _action == Action.RECOVERY and _pending_move.get("slot") == "ultimate" \
+		and _pending_move.get("ultimate_presentation_clock") is Dictionary:
+		var clock: Dictionary = _pending_move.ultimate_presentation_clock
+		var launch: Dictionary = clock.get("launch", {})
+		var frozen: Dictionary = launch.get("move", {})
+		var binding: Dictionary = frozen.get("actor_binding", {})
+		var creature := active_creature()
+		var duration: float = float(frozen.get("ultimate", {}).get("presentation_seconds", NAN))
+		var matching: bool = state == State.ACTIVE and is_instance_valid(_ally_body) and creature != null \
+			and is_instance_valid(_wild) and _enemy != null and is_instance_valid(_encounter_link) \
+			and _encounter_link.has_method("presentation_move_actor") \
+			and int(clock.get("local_body_id", 0)) == _ally_body.get_instance_id() \
+			and launch.get("encounter_id") == _encounter_id and launch.get("slot") == "ultimate" \
+			and launch.get("attacker_uid") == creature.get("uid") and launch.get("target_uid") == _enemy.get("uid") \
+			and launch.get("move_id") == _pending_move.get("move_id") and frozen.get("move_id") == launch.get("move_id") \
+			and frozen.get("slot") == "ultimate" and binding == _pending_move.get("actor_binding", {}) \
+			and int(_pending_move.get("accepted_action", 0)) > 0 \
+			and binding.get("action") == _pending_move.accepted_action \
+			and is_finite(duration) and duration >= 2.0 and duration <= 3.0 \
+			and frozen.get("ultimate") == _pending_move.get("ultimate") \
+			and clock.get("started_ms") is int and clock.get("deadline_ms") is int \
+			and int(clock.deadline_ms) == int(clock.started_ms) + floori(duration * 1000.0)
+		if matching:
+			var current: Variant = _encounter_link.call("presentation_move_actor", launch, _ally_body)
+			matching = current is Dictionary and preload("res://scripts/vfx/move_presentation_contract.gd").same_actor(binding, current)
+		if not matching:
+			_pending_move.erase("ultimate_presentation_clock")
+			return # A stale clock cannot release this or a replacement action.
+		_action_timer = maxf(0.0, float(int(clock.deadline_ms) - Time.get_ticks_msec()) / 1000.0)
+		presentation_recovery = true
+	if not presentation_recovery: _action_timer -= delta
 	if _action_timer > 0.0:
 		return
 
@@ -3056,6 +3223,27 @@ func _submit_strike_intent() -> void:
 ## A refusal never arrives here -- it goes to `_note_encounter_refusal()` -- so
 ## this function is only ever the performance of a decision already made.
 func apply_host_strike_verdict(payload: Dictionary) -> void:
+	if payload.get("utility_committed") == true:
+		if state != State.ACTIVE or active_creature() == null: return
+		var launch: Dictionary = payload.get("launch", {})
+		var receipt: Dictionary = payload.get("utility_receipt", {})
+		var uid := str(active_creature().get("uid"))
+		if payload.get("encounter_id") != _encounter_id or payload.get("creature_uid") != uid \
+			or receipt.get("encounter_id") != _encounter_id or receipt.get("source_uid") != uid \
+			or receipt.get("target_uid") != uid or receipt.get("kind") not in ["movement_buff", "next_hit_buff"] \
+			or receipt.get("kind") != launch.get("move", {}).get("utility", {}).get("kind") \
+			or receipt.get("move_id") != launch.get("move_id") \
+			or receipt.get("action_id") != launch.get("move", {}).get("action_id") \
+			or receipt.get("original", {}).get("action_id") != receipt.get("action_id") \
+			or receipt.get("original", {}).get("binding") != launch.get("attacker_binding") \
+			or payload.get("accepted_action") != launch.get("move", {}).get("actor_binding", {}).get("action") \
+			or not _self_utility_launch_current(launch, _ally_body): return
+		if not _admit_host_feedback(_seen_impact_actions, launch): return
+		_sync_authoritative_wind(payload)
+		_apply_move_resources(payload)
+		present_host_attack_launch(launch, _ally_body)
+		state_changed.emit()
+		return
 	if bool(payload.get("scheduled", false)):
 		if state == State.ACTIVE:
 			_sync_authoritative_wind(payload)
@@ -3122,6 +3310,12 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		stagger_crit = bool(_wild.call("consume_stagger_critical"))
 	var move_id: String = str(impact.get("move_id", creature.move_quick if is_quick else creature.move_charged))
 	if not impact.is_empty() and not _admit_host_feedback(_seen_impact_actions, impact): return
+	if bool(impact.get("utility_only", false)):
+		# A host-confirmed status contact has its authored effect, but is not
+		# an HP hit: no flinch, poise, energy, hitstop or damage number.
+		_confirm_host_contact(str(impact.get("action_id", "")))
+		state_changed.emit()
+		return
 	var cfg: Dictionary = PROGRESSION.config()
 	var is_best := _is_best(creature)
 	var ability: Dictionary = SPECIES.best_creature_ability(creature.species_id) if is_best else {}
@@ -3297,6 +3491,21 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 				_consume_saved_tether_item_result()
 			var creature := active_creature()
 			var uid := str(creature.get("uid")) if creature != null else ""
+			# A first deployment can have an admitted actor baseline before its
+			# first move creates a pool. The host's move-start default is zero;
+			# acknowledge that only from this current owned actor's initial row.
+			var deployment: Dictionary = _encounter_link.call("tether_command_deployment") \
+				if _encounter_link.has_method("tether_command_deployment") else {}
+			var baseline: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+			if state == State.ACTIVE and rec.get("phase") == "active" and not uid.is_empty() \
+				and _party.has(creature) and participant.get("creature_uid") == uid \
+				and deployment.get("creature_uid") == uid and int(deployment.get("generation", 0)) > 0 \
+				and participant.get("character_id") == deployment.get("character_id") \
+				and not str(deployment.get("character_id", "")).is_empty() \
+				and baseline.get("creature_uid") == uid and int(baseline.get("body_generation", 0)) > 0 \
+				and baseline.get("revision") == 0 and baseline.get("fainted") == false \
+				and not participant.get("move_resources", {}).has(uid) and not _party_ultimate.has(uid):
+				_apply_move_resources({"creature_uid":uid, "energy":0.0, "ultimate_meter":0.0, "utility_cooldown_s":0.0})
 			var resource: Dictionary = participant.get("move_resources", {}).get(uid, {})
 			_sync_authoritative_wind(participant if resource.is_empty() else resource)
 			for resource_uid: String in participant.get("move_resources", {}):
@@ -3408,16 +3617,34 @@ func _admit_host_feedback(history: Dictionary, value: Dictionary, commit: bool =
 
 
 func _new_impact(move_id: String, slot: String, damage: float, type_mult: float,
-		critical: bool, direction: Vector3, target_body: Node3D, action_id: String = "") -> Dictionary:
+		critical: bool, direction: Vector3, target_body: Node3D, action_id: String = "",
+		trusted_context: Dictionary = {}) -> Dictionary:
 	var feedback := _shared_hit_feedback()
 	if feedback == null: return {}
+	var target_uid := ""
+	if not trusted_context.is_empty():
+		var scope: Dictionary = trusted_context.get("scope", {})
+		if not direction.is_finite() or not is_finite(damage) or damage < 0.0 or not is_finite(type_mult) or type_mult < 0.0 \
+			or not action_id.is_empty() or scope.is_empty() or str(scope.get("encounter_id", "")).is_empty() \
+			or scope.get("encounter_id") != _encounter_id or not is_instance_valid(_wild) or _enemy == null \
+			or not is_instance_valid(target_body) or str(scope.get("creature_uid", "")).is_empty() \
+			or scope.get("opponent_uid") != _enemy.get("uid") or int(scope.get("opponent_generation", 0)) < 1 \
+			or trusted_context.get("source_body_instance_id") != _wild.get_instance_id() \
+			or trusted_context.get("target_body_instance_id") != target_body.get_instance_id() \
+			or trusted_context.get("move_id") != move_id: return {}
+		# The actual host pick fixes the issuer and target before receipt(). A
+		# remote target never borrows this manager's local active creature UID.
+		_impact_serial += 1
+		action_id = "%s:incoming:%s:%d" % [str(scope.encounter_id), JSON.stringify([
+			scope, trusted_context.source_body_instance_id, trusted_context.target_body_instance_id]).sha256_text(), _impact_serial]
+		target_uid = str(scope.creature_uid)
 	if action_id.is_empty():
 		_impact_serial += 1
 		action_id = "%s:impact:%d" % [_encounter_id, _impact_serial]
 	var height := float(target_body.call("body_height")) if is_instance_valid(target_body) and target_body.has_method("body_height") else 0.0
 	var profile: Dictionary = target_body.call("combat_config") if is_instance_valid(target_body) and target_body.has_method("combat_config") else {}
 	var target_instance := _enemy if target_body == _wild else active_creature()
-	var target_uid := str(target_instance.get("uid")) if target_instance != null else ""
+	if trusted_context.is_empty(): target_uid = str(target_instance.get("uid")) if target_instance != null else ""
 	var move: Dictionary = _moves.move(move_id)
 	var contact := Vector3.INF
 	if is_instance_valid(target_body):
@@ -3434,14 +3661,38 @@ func _host_body_hitstop(body: Node3D, impact: Dictionary) -> void:
 
 
 ## Admission and damage belong to Director's host timer; this only draws launch.
+## A host self-cast still uses the ordinary reliable launch envelope. Match
+## stable deployment identity; a host body instance ID is not a client ID.
+func _self_utility_launch_current(launch: Dictionary, striker: Node3D) -> bool:
+	if launch.get("self_utility") != true or not is_instance_valid(striker) \
+		or launch.get("encounter_id") != _encounter_id or launch.get("slot") != "utility" \
+		or _encounter_link == null or not _encounter_link.has_method("presentation_move_actor"): return false
+	var move: Dictionary = launch.get("move", {})
+	var binding: Dictionary = move.get("actor_binding", {})
+	var utility: Dictionary = move.get("utility", {})
+	var uid := str(binding.get("creature_uid", ""))
+	if uid.is_empty() or launch.get("attacker_uid") != uid or launch.get("target_uid") != uid \
+		or move.get("slot") != "utility" or move.get("move_id") != launch.get("move_id") \
+		or utility.get("scope") != "self" or utility.get("kind") not in ["movement_buff", "next_hit_buff"] \
+		or float(move.get("base_power", -1.0)) != 0.0 or float(move.get("power", -1.0)) != 0.0: return false
+	var current: Dictionary = _encounter_link.call("presentation_move_actor", launch, striker)
+	return preload("res://scripts/vfx/move_presentation_contract.gd").same_actor(binding, current)
+
+
 func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_enemy: bool = true) -> void:
 	var target_body := _wild if on_enemy else _ally_body
 	var target_instance := _enemy if on_enemy else active_creature()
-	if state != State.ACTIVE or not is_instance_valid(target_body) or target_instance == null: return
-	if str(launch.get("encounter_id", "")) != _encounter_id \
-		or str(launch.get("target_uid", "")) != str(target_instance.get("uid")): return
+	if state != State.ACTIVE: return
 	if striker == null: striker = _ally_body if on_enemy else _wild
 	if not is_instance_valid(striker): return
+	if launch.get("self_utility") == true:
+		if not _self_utility_launch_current(launch, striker): return
+		target_body = striker
+		on_enemy = false
+	else:
+		if not is_instance_valid(target_body) or target_instance == null: return
+		if str(launch.get("encounter_id", "")) != _encounter_id \
+			or str(launch.get("target_uid", "")) != str(target_instance.get("uid")): return
 	if not _admit_host_feedback(_seen_launch_actions, launch): return
 	var parent: Node = _arena if is_instance_valid(_arena) else get_parent()
 	var move: Dictionary = launch.get("move", _moves.move(str(launch.get("move_id", "")))).duplicate(true)
@@ -3455,13 +3706,37 @@ func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_e
 		if move.get("slot") == "ultimate":
 			var session := get_node_or_null(^"/root/Session")
 			context["recipient_character_id"] = str(session.call("_local_character_id")) if session != null and session.has_method("_local_character_id") else str(move.get("actor_binding", {}).get("character_id", ""))
+	# Effect construction can load meshes/materials synchronously. Include that
+	# work in this accepted launch's local presentation duration, rather than
+	# adding a fresh full duration after the constructor returns.
+	var presentation_started_ms: int = Time.get_ticks_msec()
 	var presentation: Node3D = PROJECTILE.launch(parent,
 		launch.get("from", striker.global_position), launch.get("to", target_body.global_position),
 		move, context)
+	if is_instance_valid(presentation) and presentation.is_inside_tree() and not presentation.is_queued_for_deletion() \
+		and on_enemy and striker == _ally_body and move.get("slot") == "ultimate" and launch.get("slot") == "ultimate" \
+		and _action in [Action.WINDUP, Action.RECOVERY] and not _pending_move.has("ultimate_presentation_clock"):
+		var creature := active_creature()
+		var binding: Dictionary = move.get("actor_binding", {})
+		var duration: float = float(move.get("ultimate", {}).get("presentation_seconds", NAN))
+		if creature != null and launch.get("attacker_uid") == creature.get("uid") \
+			and _pending_move.get("slot") == "ultimate" and _pending_move.get("move_id") == launch.get("move_id") \
+			and move.get("move_id") == launch.get("move_id") and binding == _pending_move.get("actor_binding", {}) \
+			and int(_pending_move.get("accepted_action", 0)) > 0 and binding.get("action") == _pending_move.accepted_action \
+			and move.get("ultimate") == _pending_move.get("ultimate") \
+			and is_finite(duration) and duration >= 2.0 and duration <= 3.0 \
+			and preload("res://scripts/vfx/move_presentation_contract.gd").same_actor(binding, context.get("current_actor", {})):
+			# Device-local, transient presentation state only: never serialized or
+			# sent to authority. Guests use their own validated local launch clock.
+			var started_ms: int = presentation_started_ms
+			_pending_move["ultimate_presentation_clock"] = {"launch":launch.duplicate(true),
+				"local_body_id":_ally_body.get_instance_id(),"started_ms":started_ms,
+				"deadline_ms":started_ms + floori(duration * 1000.0)}
 	attack_launched.emit(on_enemy, launch, presentation)
 
 
 func _emit_host_impact(on_enemy: bool, impact: Dictionary, target_body: Node3D, own_hit: bool = true) -> void:
+	if bool(impact.get("utility_only", false)): return
 	var bounds := _body_world_bounds(target_body)
 	var feedback := _shared_hit_feedback()
 	var cfg: Dictionary = feedback.call("config") if feedback != null else {}
@@ -3482,6 +3757,7 @@ func present_host_peer_impact(impact: Dictionary) -> void:
 	if str(impact.get("target_uid", "")) != str(_enemy.get("uid")): return
 	if not _admit_host_feedback(_seen_impact_actions, impact): return
 	_confirm_host_contact(str(impact.get("action_id", "")))
+	if bool(impact.get("utility_only", false)): return
 	_host_body_hitstop(_wild, impact)
 	_flash_host_impact(_wild.call("centre"), str(impact.get("weight", "light")) in ["heavy", "ultimate"],
 		VFX.tint_for_type(_moves.type_of(str(impact.get("move_id", "")))), _wild,
@@ -3509,6 +3785,24 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		return {}
 	# A delayed shared strike requires the consolidated receipt dependency.
 	if not impact_context.is_empty() and _shared_hit_feedback() == null: return {}
+	var frozen: Dictionary = impact_context.get("move", {})
+	var slot := str(frozen.get("slot", "charged" if charged else "quick"))
+	var physical_utility: bool = slot == "utility" and frozen.get("utility", {}).get("kind") in ["push", "quake_ring"]
+	if physical_utility and not _host_landed_target_utility(card, frozen, impact_context, float(_enemy.hp), false):
+		return {}
+	if slot == "utility" and float(frozen.get("base_power", -1.0)) == 0.0:
+		# Generic rolled_damage has a minimum HP hit. Non-damaging utilities
+		# must instead commit their live host target consumer, or fail closed.
+		if not _host_landed_target_utility(card, frozen, impact_context, float(_enemy.hp)): return {}
+		_confirm_host_contact(str(impact_context.get("action_id", "")))
+		var contact := _new_impact(move_id, slot, 0.0, 1.0, false,
+			impact_context.get("direction", Vector3.ZERO), _wild, str(impact_context.get("action_id", ""))).duplicate()
+		contact["utility_only"] = true
+		for key: String in ["hitstop_seconds", "knockback_m", "recoil_m", "recoil_up_m", "recoil_degrees", "reaction_out_seconds", "reaction_back_seconds"]:
+			contact[key] = 0.0
+		contact.make_read_only()
+		return {"damage": 0.0, "killed": false, "hp": _enemy.hp, "hp_max": _enemy.max_hp,
+			"type_mult": 1.0, "impact": contact, "utility_applied": true}
 	var cfg: Dictionary = PROGRESSION.config()
 	var type_mult: float = TYPE_CHART.multiplier_dual(
 		_moves.type_of(move_id), str(_enemy.creature_type), str(_enemy.get("secondary_type"))
@@ -3530,8 +3824,6 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		if stagger_crit:
 			encounter_bonus *= _poise_crit_scale()
 	damage *= minf(encounter_bonus, float(MATH.config().get("damage", {}).get("max_bonus_product", 1.6)))
-	var frozen: Dictionary = impact_context.get("move", {})
-	var slot := str(frozen.get("slot", "charged" if charged else "quick"))
 	var named := is_instance_valid(_wild) and _wild.has_method("named_combat_target") and bool(_wild.call("named_combat_target"))
 	if slot == "ultimate" and named:
 		damage = minf(damage, float(_enemy.max_hp) * float(MATH.config().get("ultimate", {}).get("max_fraction_of_named_hp", 0.2)))
@@ -3547,20 +3839,18 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
 	if hp_before > float(_enemy.hp) and not killed and is_instance_valid(_wild):
 		if slot == "utility" and _wild.has_method("apply_landed_utility"):
-			var source := impact_context.get("striker_body") as Node3D
-			var actor: Dictionary = frozen.get("actor_binding", {})
-			if is_instance_valid(source):
-				_wild.call("apply_landed_utility", frozen, {"action_id": str(frozen.get("action_id", "")),
-					"encounter_id": str(actor.get("encounter_id", "")), "generation": int(impact_context.get("body_generation", 0)),
-					"source_uid": str(card.get("creature_uid", "")), "target_uid": str(_enemy.get("uid")),
-					"source_position": source.global_position, "target_position": _wild.global_position,
-					"source_hp": float(card.get("hp", 0.0)), "source_max_hp": float(card.get("hp_max", card.get("max_hp", 0.0))),
-					"target_hp": hp_before, "hostile": true, "geometry_connected": true, "target_is_boss": named})
+			_host_landed_target_utility(card, frozen, impact_context, hp_before)
 		elif slot == "ultimate" and _wild.has_method("hold_ultimate_reaction"):
 			_wild.call("hold_ultimate_reaction", maxf(0.0, float(frozen.get("ultimate", {}).get("presentation_seconds", 2.4)) - float(impact_context.get("travel_seconds", 0.0))))
 	var direction: Vector3 = impact_context.get("direction", Vector3.ZERO)
 	var impact: Dictionary = {} if impact_context.is_empty() else _new_impact(move_id, slot, damage, type_mult,
 		stagger_crit, direction, _wild, str(impact_context.get("action_id", "")))
+	if physical_utility and not impact.is_empty():
+		# The utility's swept metres replace this hit's ordinary knockback.
+		# Keep damage/hitstop/poise feedback, with no second impulse tail.
+		impact = impact.duplicate(true)
+		impact["knockback_m"] = 0.0
+		impact.make_read_only()
 	if not impact.is_empty():
 		var feedback := _shared_hit_feedback()
 		if is_instance_valid(_wild):
@@ -3575,6 +3865,28 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		"critical_ready": stagger_triggered, "stagger_crit": stagger_crit,
 		"stagger_triggered": stagger_triggered,
 		"stagger_left": float(_wild.call("stagger_seconds_left")) if _wild != null and _wild.has_method("stagger_seconds_left") else 0.0}
+
+
+## Only Director's admitted, geometry-resolved original reaches this seam.
+## Field placement uses its frozen launch point, never the foe's later seat.
+func _host_landed_target_utility(card: Dictionary, frozen: Dictionary,
+		impact_context: Dictionary, target_hp_before: float, commit: bool = true) -> bool:
+	var source := impact_context.get("striker_body") as Node3D
+	var actor: Dictionary = frozen.get("actor_binding", {})
+	if not is_instance_valid(source) or not is_instance_valid(_wild) or _enemy == null \
+		or not _wild.has_method("apply_landed_utility") \
+		or str(actor.get("creature_uid", "")) != str(card.get("creature_uid", "")) \
+		or str(actor.get("encounter_id", "")) != _encounter_id:
+		return false
+	var context := {"action_id": str(frozen.get("action_id", "")),
+		"encounter_id": str(actor.get("encounter_id", "")), "generation": int(impact_context.get("body_generation", 0)),
+		"source_uid": str(card.get("creature_uid", "")), "target_uid": str(_enemy.get("uid")),
+		"source_position": impact_context.get("source_position", source.global_position), "target_position": _wild.global_position,
+		"source_hp": float(card.get("hp", 0.0)), "source_max_hp": float(card.get("hp_max", card.get("max_hp", 0.0))),
+		"target_hp": target_hp_before, "hostile": true, "geometry_connected": true,
+		"target_is_boss": _wild.has_method("named_combat_target") and bool(_wild.call("named_combat_target"))}
+	if impact_context.get("target_point") is Vector3: context["target_point"] = impact_context.target_point
+	return _wild.call("apply_landed_utility", frozen, context, commit) == true
 
 
 ## The move profile the HOST tests a strike against: its own `combat.json`, its
@@ -3615,7 +3927,9 @@ static func host_move_profile(moves: RefCounted, block: String, move_id: String,
 ## before authorization, spending, or presentation until their own path exists.
 static func live_move_supported(slot: String, move_id: String) -> bool:
 	if slot in ["quick", "charged"]: return true
-	if slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id): return false
+	# Every authored signature uses the same accepted-action host consumer.
+	# The presentation catalogue remains the flag and unknown-ID gate.
+	if slot == "ultimate": return preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id)
 	return (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id)
 
 
@@ -3674,15 +3988,23 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 		maxf(1.0, float(card.get("defence", 1.0))),
 		_rng.randf(), _moves.power(move_id), type_mult
 	)
-	_encounter_link.call("host_deliver_enemy_hit", _encounter_id,
-		int(pick.get("peer_id", 0)), {
-			"damage": damage,
-			"type_mult": type_mult,
-			"move_id": move_id,
-			"lunge": float(cfg.get("lunge", 3.4)),
-			"hp_scale": maxf(1.0, float(card.get("hp_scale", 1.0))),
-			"creature_uid": str(card.get("creature_uid", "")),
-		})
+	var payload := {"damage":damage, "type_mult":type_mult, "move_id":move_id,
+		"lunge":float(cfg.get("lunge", 3.4)), "hp_scale":maxf(1.0, float(card.get("hp_scale", 1.0))),
+		"creature_uid":str(card.get("creature_uid", ""))}
+	var context: Dictionary = pick.get("motion_context", {})
+	if not context.is_empty():
+		var scope: Dictionary = context.get("scope", {})
+		var target: Node3D = pick.get("body")
+		if scope.get("encounter_id") != _encounter_id or scope.get("peer_id") != pick.get("peer_id") \
+			or scope.get("creature_uid") != card.get("creature_uid") or scope.get("opponent_uid") != _enemy.get("uid") \
+			or not is_instance_valid(target) or not is_instance_valid(_wild) \
+			or context.get("source_body_instance_id") != _wild.get_instance_id() \
+			or context.get("target_body_instance_id") != target.get_instance_id(): return true
+		var impact := _new_impact(move_id, "quick", damage, type_mult, false, facing, target, "", context)
+		if impact.is_empty(): return true
+		payload["impact"] = impact
+		payload["motion_context"] = context
+	_encounter_link.call("host_deliver_enemy_hit", _encounter_id, int(pick.get("peer_id", 0)), payload)
 	return true
 
 
@@ -3709,27 +4031,74 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	# saved the host's vitals row, carrying that receipt (wild_actor_scope.gd).
 	var canonical: bool = _durable_trainer_reward_owned() or payload.get("actor_vitals_receipt") is Dictionary
 	if canonical and not _saved_actor_vitals_matches(creature, payload): return
-	if canonical and not _admit_host_feedback(_seen_impact_actions, payload.get("impact", {})): return
-	# Host rolls the base strike; this character's one active relic applies
-	# once at the owning health mutation, also for a host on another island.
-	var damage: float = float(payload.get("damage", 0.0)) if canonical else _incoming_owned_damage(float(payload.get("damage", 0.0)))
+	if not payload.get("motion_original", {}) is Dictionary or not payload.get("impact", {}) is Dictionary: return
+	var motion: Dictionary = payload.get("motion_original", {})
+	var incoming: Dictionary = payload.get("impact", {})
+	var resolved_legacy: bool = not canonical and not motion.is_empty()
+	var defence: Dictionary = payload.get("defence", {}) if payload.get("defence", {}) is Dictionary else {}
+	if not motion.is_empty():
+		if motion.get("kind") != "knockback" or motion.get("action_id") != incoming.get("action_id") \
+			or incoming.get("target_uid") != creature.get("uid") or payload.get("creature_uid") != creature.get("uid") \
+			or incoming.get("move_id") != payload.get("move_id") \
+			or not (incoming.get("hitstop_seconds") is int or incoming.get("hitstop_seconds") is float) \
+			or not is_finite(float(incoming.hitstop_seconds)) or float(incoming.hitstop_seconds) < 0.0 \
+			or _encounter_link == null or _encounter_link.call("combat_motion_original_current", motion, _ally_body) != true: return
+		if not canonical and (incoming.get("damage") != payload.get("damage") \
+			or incoming.get("type_mult") != payload.get("type_mult")): return
+	if resolved_legacy:
+		if payload.get("host_resolved_defence") != true or incoming.get("host_resolved_defence") != true \
+			or not defence.get("critical") is bool or not defence.get("staggered") is bool \
+			or not defence.get("critical_ready") is bool or defence.get("critical") != incoming.get("critical") \
+			or defence.get("critical") != payload.get("critical") or defence.get("damage") != payload.get("damage"): return
+		for key: String in ["poise", "quiet_left", "stagger_left"]:
+			if not (defence.get(key) is int or defence.get(key) is float) \
+				or not is_finite(float(defence[key])) or float(defence[key]) < 0.0: return
+	if (canonical or not motion.is_empty()) and not _admit_host_feedback(_seen_impact_actions, incoming): return
+	# Resolved host hits already include the proved relic and critical once.
+	# Older session payloads retain the owning character's existing formula.
+	var damage: float = float(payload.get("damage", 0.0)) if canonical or resolved_legacy else _incoming_owned_damage(float(payload.get("damage", 0.0)))
 	var move_id := str(payload.get("move_id", ""))
-	var stagger_crit: bool = bool(payload.get("critical", false)) if canonical else _consume_player_stagger_critical()
-	if stagger_crit and not canonical:
+	var stagger_crit: bool = bool(payload.get("critical", false)) if canonical or resolved_legacy else _consume_player_stagger_critical()
+	if stagger_crit and not canonical and not resolved_legacy:
 		damage *= _poise_crit_scale()
 	_adopt_host_hp_scale(creature, payload)
 	var killed: bool = bool(payload.get("actor_vitals_fainted")) if canonical else creature.take_damage(damage / _gear_hp_scale(creature))
-	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
+	var stagger_triggered := false
+	if not killed and resolved_legacy:
+		# The host already consumed this hit's critical window and poise once.
+		# Adopt its remaining actor-clock durations after ordinary interruption.
+		_clear_move_input()
+		if _action == Action.WINDUP:
+			_pending_move = {}
+			_buffered_attack = ""
+			_buffer_left = 0.0
+			_action = Action.READY
+			_action_timer = 0.0
+		_player_poise = float(defence.poise)
+		_player_poise_quiet_left = float(defence.quiet_left)
+		_player_stagger_critical_ready = bool(defence.critical_ready)
+		stagger_triggered = bool(defence.staggered)
+		if stagger_triggered:
+			if _action == Action.BURST and _ally_body.has_method("cancel_combat_burst"):
+				_ally_body.call("cancel_combat_burst")
+			_action = Action.STAGGER
+			_action_timer = float(defence.stagger_left)
+		elif _action == Action.STAGGER:
+			_action = Action.READY
+			_action_timer = 0.0
+	elif not killed:
+		stagger_triggered = _take_player_poise_damage(damage)
 	var facing: Vector3 = _ally_body.call("facing")
-	_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
+	if not motion.is_empty():
+		_ally_body.call("add_impulse", _encounter_link.call("_wire_vec3", motion.direction), float(motion.strength))
+	else:
+		_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
 	if killed:
 		_ally_body.call("play_faint")
 	else:
 		_play_combat_flinch(_ally_body, -facing)
-	# F21#0/#1: a canonical host hit carries its frozen receipt; the legacy
-	# session payload gets one built here for presentation (flash class, own
-	# number, shake/rumble). Displacement above stays the session's own.
-	var incoming: Dictionary = payload.get("impact", {})
+	# Canonical and mounted legacy hits carry the host's original receipt.
+	# Older session payloads retain their local presentation receipt fallback.
 	if incoming.is_empty():
 		incoming = _new_impact(move_id, "quick", damage, float(payload.get("type_mult", 1.0)), stagger_crit, -facing, _ally_body)
 	_present_local_contact(_ally_body.call("centre"), str(incoming.get("weight", "light")) in ["heavy", "ultimate"],
@@ -3738,7 +4107,7 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	if stagger_triggered:
 		_announce_stagger(false)
 	hit_landed.emit(false, damage)
-	_begin_hitstop(_hitstop_seconds(true, stagger_crit))
+	_begin_hitstop(float(incoming.hitstop_seconds) if not motion.is_empty() else _hitstop_seconds(true, stagger_crit))
 	state_changed.emit()
 	if killed:
 		if not canonical: CONDITION.note_faint(creature, CONDITION.config())
@@ -3786,7 +4155,9 @@ func _saved_actor_vitals_matches(creature: RefCounted, payload: Dictionary) -> b
 func apply_host_actor_heal(payload: Dictionary) -> void:
 	var creature: RefCounted = active_creature()
 	if state != State.ACTIVE or creature == null or not is_instance_valid(_ally_body) \
-		or not _durable_trainer_reward_owned() or payload.get("canonical_self_heal") != true \
+		or not (_durable_trainer_reward_owned() or (is_instance_valid(_encounter_link) \
+			and _encounter_link.has_method("uses_wild_actor_vitals") and _encounter_link.call("uses_wild_actor_vitals", _encounter_id) == true)) \
+		or payload.get("canonical_self_heal") != true \
 		or not _saved_actor_vitals_matches(creature, payload) or not payload.get("move") is Dictionary: return
 	var action_id: String = str(payload.actor_vitals_receipt.get("receipt_id", ""))
 	if action_id.is_empty() or _seen_impact_actions.has(action_id): return
@@ -3903,6 +4274,9 @@ func _drive_player_creature() -> void:
 	var creature_for_speed := active_creature()
 	var speed_scale: float = float(creature_for_speed.call("buff_scale", "speed")) \
 			if creature_for_speed != null else 1.0
+	if creature_for_speed != null and _encounter_link != null and _encounter_link.has_method("local_self_utility_movement"):
+		speed_scale *= float(_encounter_link.call("local_self_utility_movement",
+			str(creature_for_speed.get("uid")), _ally_body))
 	if speed_scale != 1.0 and _ally_body.has_method("base_speed"):
 		_ally_body.call("request_move", direction, float(_ally_body.call("base_speed")) * speed_scale)
 	else:
@@ -4460,6 +4834,7 @@ func apply_host_move_start(payload: Dictionary) -> void:
 func _begin_move_presentation(move: Dictionary) -> void:
 	_clear_move_input()
 	_pending_move = move.duplicate(true)
+	_pending_move.erase("ultimate_presentation_clock") # Only the local validated launch may create this clock.
 	var slot := str(move.get("slot", "quick" if move.get("is_quick") == true else "charged"))
 	if slot == "quick": _quick_cooldown = float(move.get("cooldown", 0.45))
 	elif slot == "charged": _charged_cooldown = float(move.get("cooldown", 1.2))
@@ -4478,8 +4853,15 @@ func _begin_move_presentation(move: Dictionary) -> void:
 	# wind-up and genuinely closes the gap the test will be run over. The
 	# animation starts here too, so the body moves when the motion does.
 	if _ally_body != null and _wild != null:
-		_ally_body.call("face_towards", _wild.call("centre"))
-		_ally_body.call("add_impulse", _ally_body.call("facing"), float(_pending_move.get("lunge", 0.0)))
+		var motion: Dictionary = move.get("motion_original", {})
+		if not motion.is_empty():
+			if _encounter_link != null and _encounter_link.call("combat_motion_original_current", motion, _ally_body):
+				var direction: Vector3 = _encounter_link.call("_wire_vec3", motion.direction)
+				_ally_body.call("face_towards", _ally_body.global_position + direction)
+				_ally_body.call("add_impulse", direction, float(motion.strength))
+		else:
+			_ally_body.call("face_towards", _wild.call("centre"))
+			_ally_body.call("add_impulse", _ally_body.call("facing"), float(_pending_move.get("lunge", 0.0)))
 		_ally_body.call("play_attack")
 	state_changed.emit()
 
@@ -4776,6 +5158,7 @@ func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node
 
 
 func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, struck: Node3D = null, damage_fraction: float = 0.0, impact: Dictionary = {}, shake_camera: bool = true) -> void:
+	if bool(impact.get("utility_only", false)): return
 	# Parented into the WORLD, not to this manager. CombatManager is a plain
 	# Node, and a Node3D hung under one is outside the 3D transform chain: the
 	# burst was created correctly twelve times in a row and rendered none of
@@ -4803,18 +5186,37 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 	var feedback := _shared_hit_feedback() if not impact.is_empty() else null
 	if feedback != null: style = feedback.call("flash_style", impact)
 	if style.has("colour"): colour = colour.lerp(Color(str(style.colour)), 0.6)
+	# An arrived library object already supplies the main contact silhouette.
+	# Keep the class-coloured flash as a small accent instead of covering it;
+	# missing, cancelled and legacy presentations retain the full fallback.
+	var authored: Dictionary = cfg.get("authored_contact", {}) if _has_authored_contact(impact) else {}
 	FLASH.burst(
 		host,
 		where,
 		colour,
-		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)),
-		float(spec.get("duration", 0.34)) * float(style.get("duration_scale", 1.0)),
-		float(spec.get("strength", 1.0)) * float(style.get("strength_scale", 1.0)),
-		# N14: the attack path reads the same opt-in key from `combat.json`'s own
-		# `impact.quick` / `impact.charged`. Neither sets it today, so every blow
-		# in the game draws exactly the spike it always has.
-		float(spec.get("spike_softness", 0.0))
+		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)) * float(authored.get("radius_scale", 1.0)),
+		float(spec.get("duration", 0.34)) * float(style.get("duration_scale", 1.0)) * float(authored.get("duration_scale", 1.0)),
+		float(spec.get("strength", 1.0)) * float(style.get("strength_scale", 1.0)) * float(authored.get("strength_scale", 1.0)),
+		float(authored.get("spike_softness", spec.get("spike_softness", 0.0)))
 	)
+
+
+func _has_authored_contact(impact: Dictionary) -> bool:
+	var action := str(impact.get("action_id", ""))
+	if action.is_empty() or not is_inside_tree(): return false
+	for node: Node in get_tree().get_nodes_in_group("move_effect_presentation"):
+		if not is_instance_valid(node) or node.is_queued_for_deletion() or not node is Node3D: continue
+		var script := node.get_script() as Script
+		if script == null: continue
+		var arrived_key := ""
+		match script.resource_path:
+			"res://scripts/vfx/move_effect.gd": arrived_key = "_arrived"
+			"res://scripts/vfx/ultimates/ultimate_effect.gd": arrived_key = "_did_arrive"
+			_: continue
+		if not (node as Node3D).is_visible_in_tree() or node.get(arrived_key) != true: continue
+		if str(node.call("action_id")) == action and str(node.call("encounter_id")) == _encounter_id:
+			return true
+	return false
 
 
 func _nudge_camera_on_landing(charged: bool) -> void:
@@ -5095,7 +5497,9 @@ func _on_orb_missed(message: String) -> void:
 func _on_aim_exited() -> void:
 	if state != State.ACTIVE:
 		return
-	if bool(_throw.call("is_busy")):
+	# Cancel stays input-busy until B is released, but its camera ownership
+	# ends when aim exits. Only an actual throw retains the aim shot.
+	if int(_throw.get("state")) != THROW_AIM.State.IDLE:
 		return
 	_take_camera()
 
@@ -5331,6 +5735,7 @@ func caught_instance() -> RefCounted:
 ## --- resolution -----------------------------------------------------------
 
 func _begin_resolve(outcome: String) -> void:
+	_pending_move.erase("ultimate_presentation_clock")
 	if state == State.RESOLVING:
 		return
 	_outcome = outcome
@@ -5557,7 +5962,7 @@ func request_switch(index: int) -> bool:
 ## already refused this call unless the fight was between actions.
 func _activate_party_member(index: int) -> void:
 	_move_awaiting_host = false
-	var retain := preload("res://scripts/combat/tether_commands.gd").enabled()
+	var retain := preload("res://scripts/combat/tether_commands.gd").command_enabled("tag_combo")
 	var outgoing := active_creature()
 	if retain and outgoing != null:
 		_party_action_resources[str(outgoing.get("uid"))] = {"quick":_quick_cooldown, "charged":_charged_cooldown,
@@ -5912,6 +6317,7 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 		var rect := Rect2((lo-Vector2.ONE*margin)/extent, (hi-lo+Vector2.ONE*margin*2.0)/extent)
 		if rect.has_area(): rectangles.append(rect)
 	var occluders: Array = []
+	var support: Dictionary = {}
 	var overflow: bool = false
 	var geometry_valid: bool = extent.is_finite() and extent.x>0.0 and extent.y>0.0
 	var centre: Vector3 = (_ally_body.global_position+_wild.global_position)*0.5
@@ -5945,6 +6351,7 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 			continue
 		occluders.append({"box":bounds,"pose":pose,"inverse":pose.affine_inverse(),
 			"points":FIGHT_CAMERA.box_points(bounds,pose),"body_id":candidate.get_instance_id()})
+		if candidate==_player: support = occluders[-1]
 	# Conservative whole model envelopes replace the inscribed ellipsoid and
 	# sparse head/torso rays that missed feet. These bounds are not a claim of
 	# exact skinned pixels: blind review still owns whole-silhouette quality.
@@ -5961,8 +6368,150 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 			geometry_valid = false
 			continue
 		subjects.append({"box":bounds,"pose":pose,"inverse":pose.affine_inverse(),
-			"points":FIGHT_CAMERA.box_points(bounds,pose)})
-	return {"hud_rects":rectangles,"occluders":occluders,"subjects":subjects,
+			"points":FIGHT_CAMERA.box_points(bounds,pose),"body_id":body.get_instance_id()})
+	# The trainer is support, never a replacement anchor. Only request its
+	# visibility when its entire render envelope already lies within the
+	# fighters' world extent; a distant trainer cannot widen the encounter.
+	if not support.is_empty() and subjects.size()==2:
+		var pair_bounds: AABB = (subjects[0].pose as Transform3D) * (subjects[0].box as AABB)
+		pair_bounds = pair_bounds.merge((subjects[1].pose as Transform3D) * (subjects[1].box as AABB))
+		if not pair_bounds.encloses((support.pose as Transform3D) * (support.box as AABB)):
+			support = {}
+	else:
+		support = {}
+	# These spheres depend only on this freshly measured context, not on the
+	# candidate lens or each nearby scenery envelope.
+	var sight_subjects: Array = subjects.duplicate()
+	if not support.is_empty(): sight_subjects.append(support)
+	var sight_spheres: Array[Dictionary] = []
+	for subject: Dictionary in sight_subjects:
+		var world_box: AABB = (subject.pose as Transform3D) * (subject.box as AABB)
+		sight_spheres.append({"centre":world_box.get_center(),"radius":world_box.size.length()*0.5})
+	var occupied_records: Array = []
+	for rect: Rect2 in rectangles:
+		occupied_records.append([rect.position.x,rect.position.y,rect.size.x,rect.size.y])
+	# These are concrete opaque render meshes, not collision cylinders or a
+	# scene-wide bounding box. Cache the static Props inventory per encounter;
+	# transforms, visibility and material opacity are read again on each use.
+	var world: Node = (_camera_rig as Node).get_parent()
+	var props: Node = world.get_node_or_null(^"Props")
+	var cache: Dictionary = get_meta(&"fight_scenery_visibility", {})
+	var props_id: int = props.get_instance_id() if props!=null else 0
+	var props_children: int = props.get_child_count() if props!=null else 0
+	if int(cache.get("world",0))!=world.get_instance_id() \
+		or int(cache.get("foe",0))!=_wild.get_instance_id() \
+		or int(cache.get("props",0))!=props_id or int(cache.get("props_children",-1))!=props_children:
+		cache = {"world":world.get_instance_id(),"foe":_wild.get_instance_id(),
+			"props":props_id,"props_children":props_children,"prop_meshes":[],"registered":{}}
+		if props!=null: cache.prop_meshes = props.find_children("*","MeshInstance3D",true,false)
+		set_meta(&"fight_scenery_visibility",cache)
+	var opaque_mesh: Callable = func(mesh: Mesh, instance: MeshInstance3D = null) -> bool:
+		if mesh==null or mesh.get_surface_count()==0: return false
+		for surface: int in mesh.get_surface_count():
+			var material: Material = instance.get_active_material(surface) if instance!=null else mesh.surface_get_material(surface)
+			# Cutouts, transparency and shaders do not provide an opaque whole
+			# envelope. Their visibility remains outside this bounded coverage.
+			if material!=null and (not material is BaseMaterial3D \
+				or (material as BaseMaterial3D).transparency!=BaseMaterial3D.TRANSPARENCY_DISABLED): return false
+		return true
+	var scenery: Array[Dictionary] = []
+	var scenery_bounds: Callable = func(box: AABB, pose: Transform3D) -> Dictionary:
+		var determinant: float = pose.basis.determinant()
+		if not box.position.is_finite() or not box.size.is_finite() \
+			or box.size.x<=0.0 or box.size.y<=0.0 or box.size.z<=0.0 \
+			or not pose.origin.is_finite() or not pose.basis.x.is_finite() \
+			or not pose.basis.y.is_finite() or not pose.basis.z.is_finite() \
+			or not is_finite(determinant) or absf(determinant)<=0.000001: return {"valid":false}
+		var world_box: AABB = pose * box
+		var bound_centre: Vector3 = world_box.get_center()
+		var bound_radius: float = world_box.size.length()*0.5
+		var inverse: Transform3D = pose.affine_inverse()
+		var points: PackedVector3Array = FIGHT_CAMERA.box_points(box,pose)
+		if not world_box.position.is_finite() or not world_box.size.is_finite() \
+			or not world_box.end.is_finite() or world_box.size.x<=0.0 \
+			or world_box.size.y<=0.0 or world_box.size.z<=0.0 \
+			or not bound_centre.is_finite() or not is_finite(bound_radius) or bound_radius<=0.0 \
+			or not inverse.origin.is_finite() or not inverse.basis.x.is_finite() \
+			or not inverse.basis.y.is_finite() or not inverse.basis.z.is_finite(): return {"valid":false}
+		for point: Vector3 in points:
+			if not point.is_finite(): return {"valid":false}
+		# Invalid covered geometry must fail visibility; only valid geometry
+		# outside the configured discovery radius may be omitted harmlessly.
+		if bound_centre.distance_to(centre)>radius+bound_radius: return {"valid":true,"in_range":false}
+		return {"valid":true,"in_range":true,"box":box,"pose":pose,"inverse":inverse,
+			"points":points,"centre":bound_centre,"radius":bound_radius}
+	for entry: Variant in cache.prop_meshes:
+		if not is_instance_valid(entry) or not entry is MeshInstance3D: continue
+		var mesh_node: MeshInstance3D = entry as MeshInstance3D
+		if not mesh_node.is_inside_tree() or mesh_node.is_queued_for_deletion() \
+			or not mesh_node.is_visible_in_tree() or mesh_node.skin!=null or mesh_node.transparency>0.0 \
+			or not bool(opaque_mesh.call(mesh_node.mesh,mesh_node)): continue
+		var record: Dictionary = scenery_bounds.call(mesh_node.mesh.get_aabb(),mesh_node.global_transform)
+		if not bool(record.get("valid",false)):
+			geometry_valid = false
+			continue
+		if not bool(record.get("in_range",false)): continue
+		record["range_begin"] = maxf(0.0,mesh_node.visibility_range_begin-mesh_node.visibility_range_begin_margin)
+		record["range_end"] = mesh_node.visibility_range_end+mesh_node.visibility_range_end_margin if mesh_node.visibility_range_end>0.0 else 0.0
+		scenery.append(record)
+	# Vegetation already owns the spatial index and residency. Read only the
+	# nearby indexed cells, then require the current resident shape as lifetime
+	# evidence. The shape's dimensions never stand in for the rendered rock.
+	for provider: Node in get_tree().get_nodes_in_group(&"harvest_state"):
+		if not provider is Node3D or not provider.is_inside_tree() or provider.is_queued_for_deletion() \
+			or not world.is_ancestor_of(provider) or not (provider as Node3D).is_visible_in_tree() \
+			or not provider.has_method("registered_mesh"): continue
+		var batches: Variant = provider.get("_collision_batches")
+		var assets: Object = provider.get("_assets") as Object
+		var instancer: Object = provider.get("_instancer") as Object
+		var mesh_ids: Dictionary = provider.get("_mesh_ids")
+		var constants: Dictionary = (provider.get_script() as Script).get_script_constant_map()
+		var sink: float = float(constants.get("SINK",NAN))
+		var cell_size: float = float(provider.get("COLLISION_STREAM_CELL"))
+		if not batches is Array or not is_instance_valid(assets) or not is_instance_valid(instancer) or not is_finite(sink) \
+			or not is_finite(cell_size) or cell_size<=0.0: continue
+		var cell_centre := Vector2i(floori(centre.x/cell_size),floori(centre.z/cell_size))
+		var cell_reach: int = ceili(radius/cell_size)+1
+		for batch: Dictionary in batches:
+			var model_path: String = str(batch.get("model",""))
+			if not mesh_ids.has(model_path) or (constants.get("RIDGELINE_CLOVER_MODELS",[]) as Array).has(model_path): continue
+			var asset: Object = assets.call("get_mesh_asset",int(mesh_ids[model_path])) as Object
+			if not is_instance_valid(asset): continue
+			var scene: PackedScene = asset.get("scene_file") as PackedScene
+			if scene==null: continue
+			var key: String = "%d:%s" % [provider.get_instance_id(),model_path]
+			var registered: Dictionary = cache.registered.get(key,{})
+			if int(registered.get("scene",0))!=scene.get_instance_id():
+				registered = {"scene":scene.get_instance_id(),"mesh":provider.call("registered_mesh",model_path)}
+				cache.registered[key] = registered
+			var mesh: Mesh = registered.get("mesh") as Mesh
+			if not bool(opaque_mesh.call(mesh)): continue
+			var placements: Array = batch.get("placements",[])
+			var residents: Array = batch.get("resident",[])
+			var cells: Dictionary = batch.get("cells",{})
+			for dx: int in range(-cell_reach,cell_reach+1):
+				for dz: int in range(-cell_reach,cell_reach+1):
+					for index: int in (cells.get(cell_centre+Vector2i(dx,dz),PackedInt32Array()) as PackedInt32Array):
+						if index<0 or index>=placements.size() or index>=residents.size(): continue
+						if not is_instance_valid(residents[index]): continue
+						var resident: CollisionShape3D = residents[index] as CollisionShape3D
+						if not is_instance_valid(resident) or not resident.is_inside_tree() or resident.is_queued_for_deletion(): continue
+						var placement: Dictionary = placements[index]
+						var basis := Basis(Vector3.UP,float(placement.get("yaw",0.0)))
+						if placement.has("normal"):
+							basis = Basis(Quaternion(Vector3.UP,placement.normal as Vector3))*basis
+						basis = basis.scaled(Vector3.ONE*float(placement.get("scale",1.0)))
+						# Matches _build_batch's world-space submitted transform.
+						var pose := Transform3D(basis,(placement.position as Vector3)-Vector3.UP*sink)
+						var record: Dictionary = scenery_bounds.call(mesh.get_aabb(),pose)
+						if not bool(record.get("valid",false)):
+							geometry_valid = false
+							continue
+						if bool(record.get("in_range",false)): scenery.append(record)
+	return {"hud_rects":rectangles,"hud_records":occupied_records,
+		"occluders":occluders,"subjects":subjects,"support":support,
+		"sight_subjects":sight_subjects,"sight_spheres":sight_spheres,
+		"scenery":scenery,"occluder_limit":cap,
 		"overflow":overflow,"hud_available":hud!=null and hud_valid,"geometry_valid":geometry_valid,
 		"invalid_hud_paths":invalid_hud,"viewport":extent,"fov":camera.fov,"near":camera.near}
 
@@ -5972,27 +6521,102 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 ## fresh independent pixels still decide whether the actual view is readable.
 func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2,
 		context: Dictionary) -> Dictionary:
+	var projections_valid: bool = true
+	for rect: Rect2 in [ally_rect,foe_rect]:
+		if not rect.position.is_finite() or not rect.size.is_finite() or not rect.end.is_finite() \
+			or rect.size.x<=0.0 or rect.size.y<=0.0:
+			projections_valid = false
 	var hud_overlap := 0.0
-	for occupied: Rect2 in context.hud_rects:
-		for subject: Rect2 in [ally_rect,foe_rect]:
-			hud_overlap += subject.intersection(occupied).get_area()
+	if projections_valid:
+		for occupied: Rect2 in context.hud_rects:
+			for subject: Rect2 in [ally_rect,foe_rect]:
+				hud_overlap += subject.intersection(occupied).get_area()
+	var aspect: float = float(context.viewport.x)/maxf(float(context.viewport.y),0.000001)
+	var sight_subjects: Array = context.sight_subjects
+	var support: Dictionary = context.get("support",{})
+	var support_in_frame: bool = true
+	var support_hud_overlap: float = 0.0
+	if not support.is_empty():
+		var projected: Dictionary = FIGHT_CAMERA.project_points(support.points,transform,
+			float(context.fov),aspect,float(context.near))
+		support_in_frame = bool(projected.get("valid",false)) and bool(projected.get("in_frame",false))
+		if support_in_frame:
+			for occupied: Rect2 in context.hud_rects:
+				support_hud_overlap += (projected.rect as Rect2).intersection(occupied).get_area()
+	var relevant: Array = context.occluders.duplicate()
+	var scenery_overflow: bool = false
+	var scenery_count: int = 0
+	var sight_axes: Array[Dictionary] = []
+	for sphere: Dictionary in context.sight_spheres:
+		var axis: Vector3 = (sphere.centre as Vector3)-transform.origin
+		sight_axes.append({"axis":axis,"length_squared":maxf(axis.length_squared(),0.000001),"radius":sphere.radius})
+	# A sightline to any subject point lies inside this conservative capsule.
+	# Reject scenery wholly outside it before the exact projected-envelope
+	# check; a radius/candidate cap must not count irrelevant distant rocks.
+	for scenery: Dictionary in context.get("scenery",[]):
+		var scenery_radius: float = float(scenery.radius)
+		var lens_distance: float = transform.origin.distance_to(scenery.centre as Vector3)
+		var range_begin: float = float(scenery.get("range_begin",0.0))
+		var range_end: float = float(scenery.get("range_end",0.0))
+		if lens_distance+scenery_radius<range_begin \
+			or (range_end>0.0 and lens_distance-scenery_radius>range_end): continue
+		var may_occlude: bool = false
+		var offset: Vector3 = (scenery.centre as Vector3)-transform.origin
+		for sight_axis: Dictionary in sight_axes:
+			var axis: Vector3 = sight_axis.axis
+			var fraction: float = clampf(offset.dot(axis)/float(sight_axis.length_squared),0.0,1.0)
+			var combined_radius: float = float(sight_axis.radius)+scenery_radius
+			if (offset-axis*fraction).length_squared()<=combined_radius*combined_radius:
+				may_occlude = true
+				break
+		if not may_occlude: continue
+		if relevant.size()>=int(context.get("occluder_limit",32)):
+			scenery_overflow = true
+			break
+		relevant.append(scenery)
+		scenery_count += 1
 	var hidden: int = 0
-	if not bool(context.overflow) and bool(context.geometry_valid):
-		for subject: Dictionary in context.subjects:
-			for occluder: Dictionary in context.occluders:
-				if FIGHT_CAMERA.bounds_occlude(transform,subject,occluder,float(context.fov),
-					float(context.viewport.x)/float(context.viewport.y),float(context.near)):
-					hidden += 1
+	var support_hidden: bool = false
+	if not bool(context.overflow) and not scenery_overflow and bool(context.geometry_valid):
+		# Indices refer only to this score's immutable foreground inventory.
+		# Project lazily, retaining every validation and exact intersection while
+		# avoiding repeated hulls for the same occluder against both fighters.
+		var foreground: Array = relevant+context.subjects
+		var foreground_projections: Dictionary = {}
+		for subject: Dictionary in sight_subjects:
+			var is_support: bool = not support.is_empty() and int(subject.get("body_id",0))==int(support.body_id)
+			var subject_projection: Dictionary = FIGHT_CAMERA.project_bounds(transform,subject,
+				float(context.fov),aspect,float(context.near))
+			# The trainer can be hidden by either fighter. Their own mutual
+			# overlap remains the solver's existing two-body constraint.
+			var foreground_count: int = foreground.size() if is_support else relevant.size()
+			for index: int in foreground_count:
+				var occluder: Dictionary = foreground[index]
+				if int(subject.get("body_id",0))!=0 \
+					and int(subject.get("body_id",0))==int(occluder.get("body_id",0)): continue
+				if not foreground_projections.has(index):
+					foreground_projections[index] = FIGHT_CAMERA.project_bounds(transform,occluder,
+						float(context.fov),aspect,float(context.near),true)
+				if FIGHT_CAMERA.projected_bounds_occlude(transform,subject_projection,
+					foreground_projections[index],float(context.fov),aspect):
+					if is_support: support_hidden = true
+					else: hidden += 1
 					break
-	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0
-	var sight_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and hidden==0
-	var occupied_records: Array = []
-	for rect: Rect2 in context.hud_rects:
-		occupied_records.append([rect.position.x,rect.position.y,rect.size.x,rect.size.y])
-	return {"pass":hud_clear and sight_clear,"hud_clear":hud_clear,
+	var hud_clear: bool = projections_valid and bool(context.hud_available) and is_finite(hud_overlap) and hud_overlap==0.0
+	var sight_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and not scenery_overflow and hidden==0
+	var support_clear: bool = support.is_empty() or (bool(context.geometry_valid) \
+		and not bool(context.overflow) and not scenery_overflow \
+		and support_in_frame and support_hud_overlap==0.0 and not support_hidden)
+	return {"pass":hud_clear and sight_clear and support_clear,"hud_clear":hud_clear,
 		"hud_overlap":hud_overlap,"foreground_clear":sight_clear,
 		"hidden_head_torso_points":hidden,"occluder_overflow":bool(context.overflow),
-		"hud_rectangle_count":context.hud_rects.size(),"hud_rectangles":occupied_records,
+		"hud_rectangle_count":context.hud_rects.size(),"hud_rectangles":context.hud_records,
 		"hud_available":bool(context.hud_available),"invalid_hud_paths":context.invalid_hud_paths,
 		"occluder_count":context.occluders.size(),"geometry_valid":bool(context.geometry_valid),
-		"penalty":hud_overlap+float(hidden)+(1.0 if bool(context.overflow) or not bool(context.hud_available) or not bool(context.geometry_valid) else 0.0)}
+		"scenery_candidate_count":(context.get("scenery",[]) as Array).size(),
+		"scenery_relevant_count":scenery_count,"scenery_overflow":scenery_overflow,
+		"scenery_coverage":"opaque_props_and_resident_scatter",
+		"support_requested":not support.is_empty(),"support_in_frame":support_in_frame,
+		"support_clear":support_clear,"support_hidden":support_hidden,"support_hud_overlap":support_hud_overlap,
+		"penalty":hud_overlap+support_hud_overlap+float(hidden)+(0.0 if support_clear else 1.0)
+			+(1.0 if bool(context.overflow) or scenery_overflow or not bool(context.hud_available) or not bool(context.geometry_valid) else 0.0)}

@@ -1,0 +1,482 @@
+{
+  "criterion": "F21#4",
+  "status": "OPEN",
+  "production_commit": "97305ea96f9b38bac3520cc9321ae217c6a7d751",
+  "change": "Add four rear-oblique candidates to the existing constrained camera search. Preserve collision, overlap, full visibility, manual grace and distance constraints.",
+  "review": {
+    "agent": "original f25_arrival_review",
+    "verdict": "APPROVE bounded source",
+    "qualification": "13 to17 coarse candidates; synthetic routing assertion is not actual obstruction clearance or whole criterion proof."
+  },
+  "logic": {
+    "run_id": 37731698807,
+    "artifact_id": 11530111176,
+    "script": "tests/run_tests.gd",
+    "args": "--only=test_fight_camera.gd",
+    "tests": 7,
+    "assertions": 185,
+    "failed": 0,
+    "exit": 0,
+    "result": "PASS"
+  },
+  "behavior": {
+    "run_id": 37731972521,
+    "script": "tests/smoke_combat_camera.gd",
+    "args": "--matrix-dir=ralph/reports/F21/hosted-a-rear-oblique-97305e --matrix-live --matrix-preset=Low --source-commit=97305ea96f9b38bac3520cc9321ae217c6a7d751",
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "result": "FAIL",
+    "guards": "All original case30s and global900s budgets, physical actions and score guards unchanged.",
+    "artifact_id": 11531105693,
+    "actual": {
+      "source_commit": "97305ea96f9b38bac3520cc9321ae217c6a7d751",
+      "renderer": "gl_compatibility",
+      "preset": "Low",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "case_wall_budget_ms": 30000,
+      "all_nine_complete": true,
+      "cases": [
+        {
+          "pair": "small/small",
+          "pass": false,
+          "elapsed_ms": 30493,
+          "physics_samples": 48,
+          "render_samples": 7,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "small/normal",
+          "pass": false,
+          "elapsed_ms": 32993,
+          "physics_samples": 72,
+          "render_samples": 9,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "small/giant",
+          "pass": false,
+          "elapsed_ms": 30178,
+          "physics_samples": 48,
+          "render_samples": 6,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "normal/small",
+          "pass": false,
+          "elapsed_ms": 30396,
+          "physics_samples": 64,
+          "render_samples": 8,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "normal/normal",
+          "pass": false,
+          "elapsed_ms": 31834,
+          "physics_samples": 64,
+          "render_samples": 8,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "normal/giant",
+          "pass": false,
+          "elapsed_ms": 32283,
+          "physics_samples": 120,
+          "render_samples": 15,
+          "scored_render_count": 1,
+          "pictures": 1,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "giant/small",
+          "pass": false,
+          "elapsed_ms": 32970,
+          "physics_samples": 80,
+          "render_samples": 10,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "giant/normal",
+          "pass": false,
+          "elapsed_ms": 30248,
+          "physics_samples": 72,
+          "render_samples": 9,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "giant/giant",
+          "pass": false,
+          "elapsed_ms": 32616,
+          "physics_samples": 72,
+          "render_samples": 9,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        }
+      ],
+      "failures": [
+        "live matrix small/small ended or exceeded its 30s budget at physics boundary 48",
+        "live matrix small/small failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix small/normal ended or exceeded its 30s budget at physics boundary 72",
+        "live matrix small/normal failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix small/giant ended or exceeded its 30s budget at physics boundary 48",
+        "live matrix small/giant failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix normal/small ended or exceeded its 30s budget at physics boundary 64",
+        "live matrix normal/small failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix normal/normal ended or exceeded its 30s budget at physics boundary 64",
+        "live matrix normal/normal failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix normal/giant ended or exceeded its 30s budget at physics boundary 120",
+        "live matrix normal/giant failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix giant/small ended or exceeded its 30s budget at physics boundary 80",
+        "live matrix giant/small failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix giant/normal ended or exceeded its 30s budget at physics boundary 72",
+        "live matrix giant/normal failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix giant/giant ended or exceeded its 30s budget at physics boundary 72",
+        "live matrix giant/giant failed strict rendered framing/live motion/quick evidence; input travel=0.0"
+      ],
+      "matrix_sha256": "7702292d2f146069242f47ca06d273e4cc18a240c016283c73261fc05897aa71"
+    }
+  },
+  "remaining_gates": [
+    "Native changed matrix all9FAIL despite214→190 visibility-failure reduction; camera repair parked, no unchanged/speculative next run.",
+    "Minimum exact-host Tag settlement fact is next gameplay path; no source-supported production settlement bug yet.",
+    "No original code-blind size-matrix PASS; no whole F21#4 READY."
+  ],
+  "native_baseline": {
+    "source_commit": "97305ea96f9b38bac3520cc9321ae217c6a7d751",
+    "receipt": {
+      "stop_reason": "",
+      "started_utc": "2026-10-08T07:03:45.1188416Z",
+      "source": "97305ea96f9b38bac3520cc9321ae217c6a7d751",
+      "pid": 14896,
+      "exit_code": 1,
+      "finished_utc": "2026-10-08T07:14:41.1930328Z"
+    },
+    "summary": {
+      "criterion_pass": false,
+      "all_nine_complete": true,
+      "engine_terminal_pending": false,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "source": "97305ea96f9b38bac3520cc9321ae217c6a7d751",
+      "case_results": [
+        {
+          "pair": "small/small",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 24676,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "small/normal",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 22285,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "small/giant",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 20506,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "normal/small",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 25618,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "normal/normal",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 24168,
+          "visibility_fail": 22,
+          "pictures": 6
+        },
+        {
+          "pair": "normal/giant",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 22552,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "giant/small",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 26612,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "giant/normal",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 23629,
+          "visibility_fail": 24,
+          "pictures": 6
+        },
+        {
+          "pair": "giant/giant",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "elapsed_ms": 23242,
+          "visibility_fail": 24,
+          "pictures": 6
+        }
+      ]
+    },
+    "matrix_sha256": "d0af2fe5e0fc4f8aeaad432d738222177ee80033c870d5bf2c8b7745e765a099",
+    "raw_location": "D:/CodexTemp/tetherbound-proof/native-a-97305ea96f-f21-camera9",
+    "source_tree": "eb99edf2507fe8278b67fb4a6810618565461a18",
+    "source_clean": true,
+    "actual_draws": 216,
+    "visibility_failures": 214,
+    "pictures": 54,
+    "diagnosis": "Actual lens agrees with selected transform; requested destination can pass while first admitted intermediate hides head/torso. No GPU cause inferred."
+  },
+  "transition_candidate": {
+    "source_commit": "c759ab8e263944d622267ef91d4049bd2580d979",
+    "change": "Compare existing admissible intermediates by nonnegative visibility penalty, stable route-order ties; zero penalty/manual early exit. Existing guard, speed and at-most20 budget preserved.",
+    "review_agent": "original f25_arrival_review",
+    "review": "APPROVE bounded source",
+    "logic": {
+      "run_id": 37743291715,
+      "artifact_id": 11535175715,
+      "source_commit": "625408728a2efa954c3705133c986884c782af5a",
+      "file": "tests/test_fight_camera.gd",
+      "tests": 7,
+      "assertions": 185,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 5,
+      "result": "PASS",
+      "camera_manager_blob": "802c25165cdbed9f31c5dd77c05798036d9fbe58",
+      "same_reviewed_source_at625": true
+    },
+    "behavior": {
+      "source_commit": "c759ab8e263944d622267ef91d4049bd2580d979",
+      "raw_location": "D:/CodexTemp/tetherbound-proof/native-a-c759ab8e26-f21-camera9-r2",
+      "matrix_sha256": "74a637552e34cfc7d182eb6c877378082d858703eacb50e8e8f33dbd7cf70393",
+      "result": "FAIL all nine case visual gates; native terminal exit1, no operator stop",
+      "actual_draws": 216,
+      "visibility_failures": 190,
+      "framing_failures": 0,
+      "cases": [
+        {
+          "pair": "small/small",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 23,
+          "framing_failures": 0,
+          "destination_passes": 17,
+          "hidden_points_max": 1.0,
+          "pictures": 6,
+          "elapsed_ms": 25624,
+          "quick_action_observed": true,
+          "input_travel_m": 3.73163628578186
+        },
+        {
+          "pair": "small/normal",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 24,
+          "framing_failures": 0,
+          "destination_passes": 9,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 24650,
+          "quick_action_observed": true,
+          "input_travel_m": 3.21935963630676
+        },
+        {
+          "pair": "small/giant",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 24,
+          "framing_failures": 0,
+          "destination_passes": 13,
+          "hidden_points_max": 1.0,
+          "pictures": 6,
+          "elapsed_ms": 21858,
+          "quick_action_observed": true,
+          "input_travel_m": 2.74092292785645
+        },
+        {
+          "pair": "normal/small",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 24,
+          "framing_failures": 0,
+          "destination_passes": 12,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 26826,
+          "quick_action_observed": true,
+          "input_travel_m": 3.67875695228577
+        },
+        {
+          "pair": "normal/normal",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 15,
+          "framing_failures": 0,
+          "destination_passes": 10,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 23393,
+          "quick_action_observed": true,
+          "input_travel_m": 3.84170389175415
+        },
+        {
+          "pair": "normal/giant",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 18,
+          "framing_failures": 0,
+          "destination_passes": 9,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 23563,
+          "quick_action_observed": true,
+          "input_travel_m": 4.02565717697144
+        },
+        {
+          "pair": "giant/small",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 24,
+          "framing_failures": 0,
+          "destination_passes": 12,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 23876,
+          "quick_action_observed": true,
+          "input_travel_m": 2.58818650245667
+        },
+        {
+          "pair": "giant/normal",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 23,
+          "framing_failures": 0,
+          "destination_passes": 7,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 23760,
+          "quick_action_observed": true,
+          "input_travel_m": 2.4925525188446
+        },
+        {
+          "pair": "giant/giant",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 15,
+          "framing_failures": 0,
+          "destination_passes": 11,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 23949,
+          "quick_action_observed": true,
+          "input_travel_m": 2.82465243339539
+        }
+      ],
+      "baseline_visibility_failures": 214,
+      "qualification": "Partial measured improvement only. Unchanged case budgets all met; no full camera criterion, hardware FPS or visual PASS.",
+      "terminal_receipt": {
+        "started_utc": "2026-10-08T07:34:42.9174326Z",
+        "exit_code": 1,
+        "stop_reason": "",
+        "pid": 8608,
+        "source": "c759ab8e263944d622267ef91d4049bd2580d979",
+        "finished_utc": "2026-10-08T07:44:47.87483Z"
+      },
+      "retained_original_failures": [
+        "FAIL: live matrix small/small failed strict rendered framing/live motion/quick evidence; input travel=3.73163628578186",
+        "FAIL: live matrix small/normal failed strict rendered framing/live motion/quick evidence; input travel=3.21935963630676",
+        "FAIL: live matrix small/giant failed strict rendered framing/live motion/quick evidence; input travel=2.74092292785645",
+        "FAIL: live matrix normal/small failed strict rendered framing/live motion/quick evidence; input travel=3.67875695228577",
+        "FAIL: live matrix normal/normal failed strict rendered framing/live motion/quick evidence; input travel=3.84170389175415",
+        "FAIL: live matrix normal/giant failed strict rendered framing/live motion/quick evidence; input travel=4.02565717697144",
+        "FAIL: live matrix giant/small failed strict rendered framing/live motion/quick evidence; input travel=2.58818650245667",
+        "FAIL: live matrix giant/normal failed strict rendered framing/live motion/quick evidence; input travel=2.4925525188446",
+        "FAIL: live matrix giant/giant failed strict rendered framing/live motion/quick evidence; input travel=2.82465243339539",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (28.00987, 754.7871) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (-73.70785, 732.7769) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (42.4898, 426.7187) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (-60.18745, 456.879) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (-421.1436, 786.1235) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (-456.3858, 754.0958) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (-394.8831, 384.037) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (-434.4891, 427.6636) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: neutral combat camera did not keep the opponent framed at 95 degrees for 10 frames within 193 (screen=(-396.8218, 532.6393) viewport=(1920.0, 1080.0), final streak 0)"
+      ],
+      "source_clean": true,
+      "script_errors_observed": 0
+    },
+    "visual": "PENDING original code-blind review",
+    "rollback": {
+      "commit": "87084ddee2e22f2cc3b679c85c1928760967d7d8",
+      "review": "original f25_arrival_review APPROVE bounded rollback",
+      "reason": "Changed native source added neutral95-degree failure absent from prior97305 native result; both had8crop failures. Reduced visibility counts do not justify retaining the candidate.",
+      "scope": "Only4285540+c759 transition ranking hunk reversed. Pushed commits/evidence, observer, Windows launcher, prior camera guards/config/tests preserved.",
+      "no_third_run": true
+    }
+  }
+}

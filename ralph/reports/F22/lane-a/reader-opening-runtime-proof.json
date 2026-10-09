@@ -1,0 +1,87 @@
+{
+  "evidence_kind": "Existing production-body flat-fixture Reader reaction witness",
+  "checkout_sha": "b08380bdf4b5063164d1599dcfe475fb3ae36247",
+  "run_id": 37710427536,
+  "artifact_id": 11522647021,
+  "script": "tests/smoke_f22_wild_reactions.gd",
+  "args": "--json=res://ralph/reports/F22/hosted-a-reader-openings.json",
+  "exit_code": 0,
+  "elapsed_seconds": 1801,
+  "pass": true,
+  "errors": [],
+  "reader_observation_s": 0.25,
+  "reader_opening_responses": 353,
+  "dodges": 6,
+  "punishes": 3,
+  "roles": [
+    {
+      "role": "ACE",
+      "pass": true,
+      "fights": 6,
+      "authored_pattern_count": 2,
+      "recoveries": 68,
+      "repositions_moved": 63,
+      "responses": 103,
+      "minimum_response_delay_s": 0.266666666666667,
+      "reasons": []
+    },
+    {
+      "role": "CHARGER",
+      "pass": true,
+      "fights": 6,
+      "authored_pattern_count": 3,
+      "recoveries": 118,
+      "repositions_moved": 85,
+      "responses": 122,
+      "minimum_response_delay_s": 0.266666666666667,
+      "reasons": []
+    },
+    {
+      "role": "CURRENT",
+      "pass": true,
+      "fights": 6,
+      "authored_pattern_count": 2,
+      "recoveries": 92,
+      "repositions_moved": 91,
+      "responses": 20,
+      "minimum_response_delay_s": 0.266666666666667,
+      "reasons": []
+    },
+    {
+      "role": "DIVER",
+      "pass": true,
+      "fights": 6,
+      "authored_pattern_count": 2,
+      "recoveries": 55,
+      "repositions_moved": 54,
+      "responses": 26,
+      "minimum_response_delay_s": 0.266666666666667,
+      "reasons": []
+    },
+    {
+      "role": "WALL",
+      "pass": true,
+      "fights": 6,
+      "authored_pattern_count": 3,
+      "recoveries": 131,
+      "repositions_moved": 129,
+      "responses": 82,
+      "minimum_response_delay_s": 0.266666666666667,
+      "reasons": []
+    }
+  ],
+  "review": {
+    "reviewer": "original f25_medium_review",
+    "verdict": "APPROVE",
+    "scope": "Reaction-delay witness and unavailable-utility regression only"
+  },
+  "unproved": [
+    "Admitted utility/ultimate/Tag policy branches",
+    "Later caf7a15e43/644b4ce565/28a4729e06 source execution",
+    "WorldPilot adoption and actual world fights",
+    "12+ seeds per band, all starter comparisons and named C2/C3",
+    "Full F22#1/#2/#4 acceptance"
+  ],
+  "raw_artifact": "render-a-reader-openings-37710427536",
+  "raw_sha256": "0aff6d75283606eef25d736b0c01aadbc714c24397715f52d026b3e2a4f3716d"
+}

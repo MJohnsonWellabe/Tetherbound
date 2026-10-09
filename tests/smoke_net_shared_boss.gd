@@ -709,6 +709,10 @@ func _run() -> void:
 				break
 			host_hp = float(((await _boss(0)).get("record", {}) as Dictionary).get("hp", -1.0))
 
+		if mover == 1 and host_hp >= hp_before - 0.001:
+			var live_guest: Dictionary = await probe(1, "session")
+			var observation: Dictionary = await probe(0, "encounter", {"admission_peer_id":int(live_guest.get("peer_id", 0))})
+			print("F23_ADMISSION_OBSERVATION " + JSON.stringify(observation.get("admission_observation", {})))
 		check(host_hp < hp_before - 0.001,
 			"peer %d landed a blow on the SHARED boss: %.1f -> %.1f on the host, in %d swing(s)"
 				% [mover, hp_before, host_hp, swings]

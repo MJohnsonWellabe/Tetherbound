@@ -66,11 +66,11 @@ func _action_id(id: String, peer: int, action: int, binding: Dictionary,
 	return ""
 
 
-func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dictionary:
+func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary, dash_sweep: Callable = Callable()) -> Dictionary:
 	var id := str(intent.get("encounter_id", ""))
 	if move_action_publication_pending(id):
 		return _refuse("strike_intent", peer_id, "pending_action", "The original hit is still being published.")
-	if not _tracking_enabled_for(id): return super.validate_strike(intent, peer_id, view)
+	if not _tracking_enabled_for(id): return super.validate_strike(intent, peer_id, view, dash_sweep)
 	var binding: Dictionary = view.get("f22_actor_binding", {})
 	if not _binding_current(id, peer_id, binding):
 		return _refuse("strike_intent", peer_id, "stale_actor", "Your deployed creature is no longer current.")
@@ -78,7 +78,7 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 	var limit := int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 0))
 	if limit < 1 or actions.size() >= limit:
 		return _refuse("strike_intent", peer_id, "receipt_budget", "This encounter cannot accept another action safely.")
-	var verdict: Dictionary = super.validate_strike(intent, peer_id, view)
+	var verdict: Dictionary = super.validate_strike(intent, peer_id, view, dash_sweep)
 	# The base validator replaces cooldown state. Restore the SAME originals,
 	# including misses, before appending this first actual accepted decision.
 	if (_strike_authority.get(id, {}) as Dictionary).has(peer_id):
@@ -154,11 +154,26 @@ func prepare_tether_tag_command(request: Dictionary, peer: int, binding: Diction
 		"action":-int(request.sequence), "action_id":parent, "request":request, "binding":binding,
 		"target_uid":plan.effect.target_uid, "target_generation":plan.effect.target_generation,
 		"incoming":host.incoming, "moves":frozen_moves, "plan":plan,
+		"outgoing_utility":_tether_tag_self_utility(id, binding, host.get("outgoing_status_now_ms", -1)),
 		"command_before":participant.tether_commands, "accepted_at_ms":now_ms}
 	if not _strike_state_for(id).has(peer): _strike_authority[id][peer] = {}
 	_strike_authority[id][peer]["accepted_actions"] = actions
 	actions[parent] = {"phase":"admitted", "admission":_original(admission)}
 	return {"ok":true, "duplicate":false, "original":admission.duplicate(true)}
+
+
+## Only the currently bound outgoing actor can lend a cast to this parent.
+## The director supplies its pause-aware status clock; absent clocks are neutral.
+func _tether_tag_self_utility(id: String, binding: Dictionary, status_now_ms: Variant) -> Dictionary:
+	if not status_now_ms is int or status_now_ms < 0: return {}
+	var uid := str(binding.get("creature_uid", ""))
+	var status := _current_self_utility(id, uid, "next_hit_buff", status_now_ms, binding)
+	if status.is_empty(): return {}
+	var state: Dictionary = encounters[id].utility_state
+	var power := UTILITY_EFFECTS.power_multiplier(state, uid, status_now_ms)
+	if not is_finite(power) or power <= 0.0: return {}
+	return {"status":status.duplicate(true), "status_now_ms":status_now_ms, "power":power,
+		"receipt":state.receipts[str(status.original.action_id)].duplicate(true)}
 
 
 ## One parent enters resolution once. Recompute arrival geometry from the
@@ -186,6 +201,19 @@ func begin_tether_tag_resolution(id: String, peer: int, parent: String,
 	if joint.get("ok") != true:
 		entry["phase"] = "cancelled"
 		return joint
+	var outgoing_utility: Dictionary = {}
+	var accepted_utility: Dictionary = original.get("outgoing_utility", {})
+	if not accepted_utility.is_empty():
+		var current := _tether_tag_self_utility(id, binding, view.get("outgoing_status_now_ms", -1))
+		if not current.is_empty() and current.status == accepted_utility.status \
+			and current.receipt == accepted_utility.receipt \
+			and int(current.status_now_ms) >= int(accepted_utility.status_now_ms):
+			outgoing_utility = current
+	# A later cast cannot replace this parent's original. The incoming bench
+	# creature has no current binding here, so its old deployment stays neutral.
+	joint["outgoing_utility"] = outgoing_utility
+	joint.strikes[0]["source_utility_power"] = float(outgoing_utility.get("power", 1.0))
+	joint.strikes[1]["source_utility_power"] = 1.0
 	entry["arrival"] = _original(joint)
 	entry["phase"] = "resolving"
 	return {"ok":true, "action_id":parent, "original":original.duplicate(true), "joint":joint}
@@ -234,6 +262,33 @@ func record_tether_tag_outcome(id: String, peer: int, parent: String,
 		hp = float(rolled.hp)
 	if not is_finite(maximum) or maximum <= 0.0 or opponent.get("hp") != hp:
 		return {"ok":false, "code":"uncommitted_debit"}
+	var utility_next: Dictionary = {}
+	var utility_consumed: Dictionary = {}
+	var outgoing_utility: Dictionary = entry.arrival.get("outgoing_utility", {})
+	if not outgoing_utility.is_empty() and strikes[0].landed:
+		# Both live HP results and the real incoming binding are now validated.
+		# Spend only the cast frozen while the outgoing actor was current; do
+		# not query or recreate that actor's clock after the actual tag-away.
+		var utility_state: Dictionary = encounters[id].get("utility_state", {})
+		var uid := str(original.binding.creature_uid)
+		var guard: Dictionary = outgoing_utility.status.original
+		var cast_id := str(guard.action_id)
+		if utility_state.get("encounter_id") != id or utility_state.get("generation") != 0 \
+			or guard.get("binding") != original.binding \
+			or guard.get("opponent") != {"uid":original.target_uid, "body_generation":original.target_generation} \
+			or utility_state.get("statuses", {}).get(uid, {}).get("next_hit_buff") != outgoing_utility.status \
+			or utility_state.get("receipts", {}).get(cast_id) != outgoing_utility.receipt \
+			or outgoing_utility.receipt.has("consumed_by"):
+			return {"ok":false, "code":"stale_utility"}
+		var consumed := UTILITY_EFFECTS.stage_consume_next_hit(utility_state, uid, int(outgoing_utility.status_now_ms))
+		if consumed.get("ok") != true: return {"ok":false, "code":"stale_utility"}
+		utility_consumed = {"action_id":str(strikes[0].action_id), "parent_action_id":parent,
+			"cast_action_id":cast_id, "source_uid":uid, "binding":original.binding.duplicate(true),
+			"target_uid":original.target_uid, "target_generation":original.target_generation,
+			"actual_hp_debit":strikes[0].actual_hp_debit, "accepted_at_ms":outgoing_utility.status_now_ms}
+		utility_next = consumed.state
+		(utility_next.receipts[cast_id] as Dictionary)["consumed_by"] = utility_consumed.duplicate(true)
+		strikes[0]["utility_consumed"] = utility_consumed.duplicate(true)
 	var state: Dictionary = original.plan.state.duplicate(true)
 	state["switch_until_ms"] = now_ms + int(float(TETHER_COMMANDS.config().switch_lockout_s) * 1000)
 	state["last_receipt"] = original.plan.receipt.duplicate(true)
@@ -250,9 +305,10 @@ func record_tether_tag_outcome(id: String, peer: int, parent: String,
 			"action_id":parent, "creature_uid":original.incoming.creature_uid, "hp":hp, "hp_max":maximum,
 			"damage":before - hp, "killed":family_roll.killed, "impact":family_roll.get("impact", {}).duplicate(true)}}
 	participant["tether_commands"] = state
+	if not utility_next.is_empty(): encounters[id]["utility_state"] = utility_next
 	entry["outcome"] = _original({"action_id":parent, "actual_hp_debit":before - hp,
 		"target_hp_before":before, "target_hp_after":hp, "rolled":family_roll, "verdict":verdict,
-		"joint_mastery":outcomes})
+		"joint_mastery":outcomes, "utility_consumed":utility_consumed})
 	entry["mastery_pending"] = not outcomes.is_empty()
 	entry["phase"] = "body_publication_pending"
 	seq += 1
@@ -449,11 +505,13 @@ func join(id: String, peer: int, uid: String = "", character: String = "") -> Di
 
 
 func authorize_burst(id: String, peer: int, intent: Dictionary, profile: Dictionary,
-		cost: float, now_ms: int, distance: float, duration: float, regen_delay_seconds: float) -> Dictionary:
+		cost: float, now_ms: int, distance: float, duration: float, regen_delay_seconds: float,
+		motion_original: Dictionary = {}) -> Dictionary:
 	if move_action_publication_pending(id):
 		return _refuse("burst_intent", peer, "pending_action", "The original hit is still being published.")
 	var before: Dictionary = (_strike_authority.get(id, {}) as Dictionary).duplicate()
-	var verdict: Dictionary = super.authorize_burst(id, peer, intent, profile, cost, now_ms, distance, duration, regen_delay_seconds)
+	var verdict: Dictionary = super.authorize_burst(id, peer, intent, profile, cost, now_ms,
+		distance, duration, regen_delay_seconds, motion_original)
 	_retain_originals(id, before)
 	return verdict
 

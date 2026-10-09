@@ -1,0 +1,111 @@
+{
+  "criterion": "F22#1",
+  "criterion_text": "Across 12+ seeds per biome band, a reader pilot beats a masher pilot (reader win >=0.9; masher loses the lead creature materially more often).",
+  "status": "F22#1 admission scope PARKED OPEN; no whole criterion credit, unchanged retry prohibited",
+  "source_commit": "f0f77c4c2c8c09e9cfdf84faf30cc163519670ee",
+  "change": "Ordinary trainer floor sweep requires unique executed expected band x three-starter cohorts; missing trainer roster gaps, duplicates and foreign rows cannot count as coverage. Named/F33 gear and wild modes retain existing path. Existing min12 seeds/stat thresholds and acceptance=false/full-policy admission guard retained.",
+  "original_source_review": {
+    "reviewer": "/root/f25_medium_review",
+    "thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "verdict": "SOURCE APPROVE",
+    "required_proof": "tests/run_tests.gd --only=test_enemy_pattern_telegraph.gd"
+  },
+  "proof": {
+    "run_id": 37825441865,
+    "artifact_id": 11571540657,
+    "job_id": 113476986090,
+    "checkout_commit": "f0f77c4c2c8c09e9cfdf84faf30cc163519670ee",
+    "tests": 4,
+    "assertions": 7573,
+    "failed": 0,
+    "exit": 0,
+    "log_sha256": "1d38deb2f7d292e362f426940949a00f3c478d4353f395b4e6b695117df6da2b",
+    "log_path": "ralph/reports/F25/downloads/a-f22-band-cohort-guards-37825441865/raw/run.log",
+    "coverage": "Existing telegraph regressions and new incomplete/missing/duplicate/foreign band cohort regression. No fights, accepted saves or native/GPU/visual claim.",
+    "original_artifact_review": {
+      "reviewer": "/root/f25_medium_review",
+      "verdict": "ARTIFACT APPROVE",
+      "verified": "Exact selected4tests7573assertions0failed exit0; new cohort regression executed; no gameplay/canonical runtime/whole claim"
+    }
+  },
+  "remaining": "Real admitted fights, full COMBAT7 policy, all required bands x three starters x >=12 paired seeds and win/loss/cost thresholds; no entire criterion closure from this test. Existing prototype full-policy admission guard remains.",
+  "canonical_owner_extension": {
+    "source_commit": "5a6381bf44dfb15dae497b8c41349bc85c74e1e7",
+    "original_source_review": "SOURCE / PROOF-SCOPE APPROVE /root/f25_medium_review",
+    "scope": "Opt-in existing reader fight uses reused Live FixtureGame/Session/Rpc, real five-card CharacterAuthority admission, initial BOOL world/character writes, installed authored Meadows Director/AcceptedActionHost/current actor-body binding, original physical READER input and actual receipt arrays on disk. Default diagnostic unchanged. Restricts witness to a single authored Meadows opponent; no source/global flag/resource/time/damage override, accepted boundary or whole stats."
+  },
+  "preserved_owner_failure": {
+    "run_id": 37827136068,
+    "artifact_id": 11572605949,
+    "job_id": 113482779436,
+    "checkout_commit": "5a6381bf44dfb15dae497b8c41349bc85c74e1e7",
+    "script": "tests/smoke_f22_live_pattern_mount.gd",
+    "args": "--prove-canonical-floor-owner",
+    "checks": 6,
+    "result": "FAIL before owner setup: practice_trainer authored team2 does not meet unchanged required single-opponent predicate",
+    "log_sha256": "c868458930bdd27488360f35af072e64e7d4572811df187dfd23a20ea76ea1f7",
+    "limit": "No owner/Game/authority/fight/hit/save admission; no runtime or production cause inferred. Artifact retained; no unchanged retry or weakened guard."
+  },
+  "corrected_owner_source": {
+    "source_commit": "205e9b3fe27654ad42e4b83c35c090a4fe9535bd",
+    "original_source_review": "SOURCE / PROOF-SCOPE APPROVE /root/f25_medium_review",
+    "change": "Existing trainer_mira authored one BramblebunL4, fixture label and source-derived fixed seed. Five-card/source/current-body/durable owner/BOOL writer/input budgets and acceptancefalse unchanged.",
+    "required_proof": "tests/smoke_f22_live_pattern_mount.gd --prove-canonical-floor-owner",
+    "run_id": 37828102252,
+    "result": "FAIL before accepted combat: actual trainer owner installer refused",
+    "proof": {
+      "run_id": 37828102252,
+      "artifact_id": 11571738836,
+      "job_id": 113486086423,
+      "checkout_commit": "205e9b3fe27654ad42e4b83c35c090a4fe9535bd",
+      "log_sha256": "244f0b073e2eb4ee63edc44c04af7dd665716cf0fc13dcd734cb5fbc3e34ad15",
+      "checks": 6,
+      "owner_disk_party_count": 5,
+      "accepted_launches": 0,
+      "accepted_impacts": 0,
+      "saved_move_receipts": 0,
+      "actual_error": "real authored trainer owner installer refused",
+      "limit": "Authored single-source predicate and initial five-card BOOL writes reached. No accepted attack, move-use receipt, win or full-policy/whole credit."
+    }
+  },
+  "deployed_body_correction": {
+    "source_commit": "c047162296dcded2c19c849eb3dd5efe31b668d2",
+    "support": "Old base creates basic creature_body.gd; Director.ordinary_combat_vitals_ready calls deployed_body_for(peer), which scans deployed_creature group and owner_peer_id. Bare body lacks both. Production follower _ready joins deployed group and actual producer sets owner_peer_id. Necessary producer mismatch identified from exact construction/guard code; no unobserved sole refusal cause claimed.",
+    "change": "Base synchronous body factory keeps exact old default construction; opt-in overrides with actual Follower and peer1 before _ready/Manager.begin, no manual group faking. Real current deployed-body lookup must equal the actual body before existing installer. No live resource/time/state/flag or production guard changes.",
+    "disposition": "Distinct supported source correction; same original scope review before one changed existing named proof. Failed files preserved, no unchanged retry."
+  },
+  "follower_owner_proof": {
+    "checkout_commit": "692ee53ff509235935fdb46fe15b7b6d3c537445",
+    "original_source_review": "SOURCE / PROOF-SCOPE APPROVE /root/f25_medium_review",
+    "run_id": 37830017264,
+    "artifact_id": 11572709055,
+    "job_id": 113492633444,
+    "log_sha256": "804d342b06156b0a109aea4eebe95ce82cd72a265aca6d7cc00ed2005691f428",
+    "log_path": "ralph/reports/F25/downloads/a-f22-follower-canonical-owner-37830017264/raw/run.log",
+    "result": "FAIL saved move receipt check; real owned-body admission and positive impacts reached, fight stalled",
+    "canonical_owner": true,
+    "accepted_launches": 9,
+    "accepted_impacts": 9,
+    "owner_disk_party_count": 5,
+    "saved_move_receipts": 0,
+    "stalled": true,
+    "won": false,
+    "faints": 3,
+    "physics_frames": 14431,
+    "runtime_actor_vitals_flag": false,
+    "scope": "Disclosed fresh five-card fixture, authored trainer_mira, unchanged existing reader/time/guard inputs. No durable move settlement, successful ending, accepted boundary, all-band cohort or full COMBAT7 credit. Raw failed files retained."
+  },
+  "original_failure_disposition": {
+    "reviewer": "/root/f25_medium_review",
+    "thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "verdict": "ARTIFACT / DISPOSITION APPROVE",
+    "disposition": "F22#1 admission scope PARKED OPEN; no unchanged retry",
+    "required_supported_operand": "One hit exact action/mastery original, settlement status and matching world/owner-save decision before teardown; zero receipts alone identifies no cause."
+  },
+  "main_integration": {
+    "main_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+    "merge_commit": "d9351e30bc11d6aaa1c78421c58a2a442f4091e9",
+    "method": "merge, no rebase",
+    "original_verdict": "Merge does not invalidate these bounded observations; unchanged guard evidence remains reusable."
+  }
+}

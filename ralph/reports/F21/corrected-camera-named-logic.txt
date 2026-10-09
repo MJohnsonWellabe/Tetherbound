@@ -1,0 +1,11 @@
+F21#4 corrected camera candidate — logic PASS; behavior/visual remain OPEN
+
+Production source: 7a494951ace20163e1bea78415a4495a866dec0a.
+Hosted checkout: 0df83b23c93cb0f289fdbc41022608e85493bc92 (also contains the F42 diamond layout).
+Named proof: render.yml 37677815059, tests/run_tests.gd, 51 existing files selected by references to combat_manager.gd, fight_camera.gd, camera.json or combat_system_overlay.gd.
+Result: 412 tests, 5488 assertions, 0 failed; exit=0, 132 seconds. Artifact 11508050937 retains the run.log and child logs.
+The JSON parse error is deliberately exercised by test_controls.gd::test_a_corrupt_file_falls_back_to_defaults_and_carries_on, not a script parse failure. Three ObjectDB instances were reported leaked at exit.
+
+Independent source review: f25_arrival_review APPROVE on the corrected combined batch, after repairing the near-plane fail-open case. Camera movement scores the actual interpolated pose; near-plane clipping validates finite box/pose inputs and fails closed on invalid front hulls. Existing smoke baseline now advances the actual draw solver without weakening its assertions. Aim exit restores follow only when THROW_AIM has actually reached IDLE.
+No scale, renderer, scoring threshold, time budget or shipping flag changed.
+The original live nine-pair Low matrix and LT/B/3m/9m behavior proof are queued in the coordinator's authorized native slot. This lane ran no native engine. No criterion READY is claimed here.

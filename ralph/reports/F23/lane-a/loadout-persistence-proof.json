@@ -1,0 +1,56 @@
+{
+  "criterion": "F23#3",
+  "criterion_text": "Loadouts change at the Altar or forward camp and persist through save/reload and two-peer rejoin.",
+  "status": "WHOLE F23#3 APPROVE / MET",
+  "source_commit": "4fd518b708f48ec51fd3dcc1a6baf354a53a959d",
+  "change": "A single guest Equip press freezes its original creature, loadout, revision and edit ID; the existing service waits for a correlated fresh quote and submits once through unchanged Foundation journal, host CAS and owner save/ACK. Precommit quote refusal resolves without submission. Existing camp helper presses Equip exactly once and reconciles only the same original.",
+  "source_review": {
+    "reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "verdict": "SOURCE APPROVE",
+    "candidate_commit": "4fd518b708f48ec51fd3dcc1a6baf354a53a959d",
+    "required_proof": "Existing headless smoke_net_forward_camp.gd --prove-loadout-persistence",
+    "blind_requirement": "Original reviewer: no separate F23#3 blind proof required",
+    "prior_revision": "REQUEST_CHANGES on184ae0e59c: host quote refusal resolvedfalse must terminate, corrected by4fd518b708."
+  },
+  "proof": {
+    "run_id": 37809264550,
+    "script": "tests/smoke_net_forward_camp.gd",
+    "args": "--prove-loadout-persistence",
+    "mode": "hosted headless",
+    "result": "PASS",
+    "artifact_id": 11564676757,
+    "job_id": 113421591049,
+    "checkout_commit": "4fd518b708f48ec51fd3dcc1a6baf354a53a959d",
+    "checkout_verification": "Job git log -1 confirms exact source; both process hellos report4fd518b708f4",
+    "checks": 30,
+    "errors": 0,
+    "exit": 0,
+    "seconds": 144,
+    "log_sha256": "391342165fa59c35741cbb8577c9d08bf35d8ce13c11ed313fab0fab2069fedf",
+    "log_path": "ralph/reports/F25/downloads/a-f23-loadout-37809264550/raw/run.log",
+    "coverage": [
+      "Actual production camp panel: exactly one Equip call, reconcile same original only, utility revision0to1 with original receipt",
+      "Host admitted saved loadout before reload",
+      "Host world and guest character save/reload preserve exact loadout projection",
+      "Guest leaves cleanly and rejoins with new peer ID; host admitted and guest saved seven-field projection exactly preserved"
+    ]
+  },
+  "superseded_run": {
+    "run_id": 37808920063,
+    "source_commit": "184ae0e59c98ec1a6878342ff45595e615f3e0d6",
+    "result": "CANCELLED during setup after refusal correction; no passing or accepted proof"
+  },
+  "fixtures": "Existing fresh two-process simulation, party_grant Terrapups (guestL15), camp kits added directly to satchel, production placer terrain search with trainer positioned and preview aimed; helper positions trainer beside its owned camp and opens actual production companion panel. No direct equipped/known mutation. No earned campaign or device claim.",
+  "proof_scope": "Opt-in existing smoke retains host and guest paid camps, one guest Equip press, exact saved loadout and original receipt, host world save/reload, guest character save/reload, leave and two-peer rejoin. Only independent F34 camp relocation block is excluded; its default assertions remain unchanged. Not an accepted boundary save or new harness.",
+  "guards": "Character/world scope, actual station source/range, owned UID, expected loadout revision, host registry CAS, original journal/save and saved durable ownerACK unchanged. All ten utility and actor motion guards remain unchanged; F23#2/Mastery PARK remains.",
+  "whole_review": {
+    "reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "candidate_commit": "99f2ead88a477a51a697f485f8bed21fb3b1dd1e",
+    "verdict": "WHOLE F23#3 APPROVE / MET",
+    "verified": "Run37809264550 30checks0errors exit0, one Equip, host and guest reload, new-peer-ID rejoin exactloadout/receipt; retainedsave revision1 matchingoriginalreceipt",
+    "blind_requirement": "No separate F23#3 blind proof required",
+    "limits": "Disclosed grants/positioning simulation only; no earned campaign/device/unrelatedcombat claim"
+  }
+}

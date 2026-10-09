@@ -1,0 +1,46 @@
+{
+  "criterion": "F42#2",
+  "product_sha": "11eb7e773d939d6941b17822422a68263987662d",
+  "proof_extension_sha": "e243012d745f8752144b4c870d6e413454454e6c",
+  "reviewer": "same original f25_medium_review",
+  "source_verdict": "APPROVE",
+  "product_reason": "Current owned creature energy and authored charged cost fill the Y gate after valid matching-UID refresh; finite/clamped values; no authority/resource mutation",
+  "proof_reason": "Existing capture checks visible charged bar against current owned resource and loaded cost, after UID guard; synchronous native draws preserve observation",
+  "runtime_verdict": "PENDING",
+  "visual_verdict": "PENDING",
+  "whole_criterion": "OPEN",
+  "layout_sha": "ea75d7c0aae75ebc4b0b0cc1bc18b6926c358b54",
+  "duplicate_ultimate_sha": "6da6c3d9d901227ab0e1d68fc6a4f8c1ebf00626",
+  "duplicate_capture_guard_sha": "bc5b349e625d334d265ac20bb88dace0eb0813fb",
+  "additional_original_reviews": [
+    "APPROVE: full-rect offsets fit actual viewport; capture requires positive enclosed region bounds.",
+    "APPROVE: legacy ultimate controls restored each fighting frame and hidden only on accepted current-UID overlay refresh.",
+    "APPROVE: existing capture rejects either duplicate visible legacy control; actual visibility receipt; actions/budgets unchanged.",
+    "APPROVE: utility cell displays loaded authored wind cost; matching snapshot and native capture read the same current-owned move cost; spending/readiness unchanged.",
+    "APPROVE: successful native capture guest1 world boot draws once inside unchanged existing boot budget; elapsed preserved in result.data/detail; later HUD guards/actions/budgets unchanged. Startup remains an unproved hypothesis.",
+    "APPROVE: compare control-local bounds transformed through canvas and root stretch with physical window pixels; retain positive, visible and enclosed guards and failure coordinates.",
+    "APPROVE: initial zero reconciliation requires an explicit current owned initial host actor baseline, matching local character/deployment, fresh active record and neither host nor acknowledged local pool; existing missing-baseline HUD refusal remains."
+  ],
+  "retained_logic": {
+    "failed": 0,
+    "qualification": "Predates four legacy visibility lines; latest-source runtime and visual remain pending. Broad77 PASS retained, not repeated.",
+    "assertions": 452,
+    "checkout_sha": "ea75d7c0aae75ebc4b0b0cc1bc18b6926c358b54",
+    "files": 8,
+    "tests": 81,
+    "run_id": 37719067951
+  },
+  "utility_wind_sha": "65641063b12ad8ed746c1baa671b77204cd7c6cc",
+  "native_boot_warmup_sha": "bf675385735f91cb203b41e2d6092330052ada51",
+  "integrated_main_sha": "49654a6fc65c12e69787b92eca6f063bacdc15b7",
+  "merge_sha": "3d76ea05c1adfc0a052f3df712b62ccf01ed5062",
+  "pixel_bounds_sha": "757dd96ed2dafdcf4333b345eddbd5939bbe086e",
+  "initial_host_pool_ack_sha": "757dd96ed2dafdcf4333b345eddbd5939bbe086e",
+  "latest_actual": {
+    "checkout_sha": "6956190cafa78144a85159250c53d5a093fc8bad",
+    "whole_criterion": "OPEN",
+    "behavior": "All non-HUD owner-passive/Item/Tag assertions passed; two HUD guard failures and zero frames",
+    "logic": "14files142tests880assertions0failed",
+    "run_id": 37725148334
+  }
+}

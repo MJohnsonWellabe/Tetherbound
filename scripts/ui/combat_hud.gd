@@ -334,6 +334,7 @@ func _ready() -> void:
 	_ultimate_meter.custom_minimum_size.y = 8.0
 	_ultimate_meter.show_percentage = false
 	_ultimate_meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_dress(_ultimate_meter, UITokens.fill_box(UITokens.WARNING))
 	$Root/AllyPanel/AllyVBox.add_child(_ultimate_meter)
 
 	_party_strip = PARTY_STRIP.new()
@@ -620,6 +621,12 @@ func _refresh_system_overlay(active_uid: String) -> void:
 	if not is_instance_valid(_system_overlay): return
 	_system_overlay.hide()
 	if _system_overlay.call("refresh", active_uid, INPUT_GLYPH.using_gamepad()) != true: return
+	var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
+	if active != null and str(active.get("uid")) == active_uid:
+		var charged_id := str(active.get("move_charged"))
+		if _moves != null and _moves.has(charged_id):
+			_system_overlay.call("present_charged_energy", active_uid, float(active.get("energy")),
+				float(_moves.move(charged_id).get("energy_cost", 100.0)))
 	_grid_panel.hide()
 	_ultimate_readout.hide()
 	_ultimate_meter.hide()
@@ -970,10 +977,12 @@ func _draw_ally() -> void:
 	var ultimate: float = float(_manager.call("ultimate_fraction"))
 	_ultimate_meter.value = ultimate * 100.0
 	var signature := _move_name(str(creature.get("move_ultimate")), "Ultimate")
+	var available: bool = bool(_manager.call("live_move_supported", "ultimate", str(creature.get("move_ultimate"))))
 	# The padded RB art remained miniature inside a 40px box in the original
 	# Low handheld pair. Render the live binding at the readout's prompt font.
 	var arm := _combat_binding_text("combat_ultimate_arm").replace("[", "[lb]")
 	var instruction := "release → move" if ultimate >= 1.0 else "%d%%" % roundi(ultimate * 100.0)
+	if not available: instruction = "Unavailable"
 	if bool(_manager.call("ultimate_armed")): instruction = "tap a move"
 	_ultimate_readout.text = "%s %s · %s" % [arm, signature, instruction]
 

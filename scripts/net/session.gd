@@ -1341,8 +1341,10 @@ func ordinary_combat_reward_owner(director: Node, encounter_id: String) -> Dicti
 	var spec: Dictionary = director.get("_trainer_spec")
 	if world == null or host == null or host.get_script() not in [preload("res://scripts/net/encounter_host.gd"), preload("res://scripts/combat/accepted_action_host.gd")] \
 		or spec.is_empty() or spec.has("master") or spec.has("rematch") \
-		or preload("res://scripts/world/trainer_npc.gd").trainer(str(spec.get("id", ""))).is_empty() \
 		or not (director.get("_master_duel") as Dictionary).is_empty(): return unavailable
+	# The live allowlisted director owns its chapter's authored trainer source.
+	var source_matches: Variant = director.call("_local_named_trainer_source_matches")
+	if not source_matches is bool or source_matches != true: return unavailable
 	var record: Dictionary = host.call("record", encounter_id)
 	var realm: String = preload("res://scripts/data/biome_order.gd").canonical_id(str(director.call("_encounter_realm")))
 	if record.get("encounter_id") != encounter_id or record.get("kind") not in ["trainer", "boss"] \

@@ -457,7 +457,7 @@ func opponent_hp(encounter_id: String) -> float:
 ## `_rng` (the roll is deliberately NOT made here: the damage arithmetic lives
 ## in `combat_manager.gd` beside the creature stats it reads, and a second copy
 ## of it in this file would be a second copy that eventually disagrees).
-func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dictionary:
+func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary, dash_sweep: Callable = Callable()) -> Dictionary:
 	if not pending_tether_items(str(intent.get("encounter_id", ""))).is_empty():
 		return _refuse("strike_intent", peer_id, "item_save_pending", "The original item is still being saved.")
 	var encounter_id := str(intent.get("encounter_id", ""))
@@ -526,7 +526,53 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 			_refuse("strike_intent", peer_id, "friendly_target",
 				"You can't attack your own side."), true)
 
-	var connected := _connects_now_or_recently(move, host_origin, facing, rec, intent, now_ms)
+	var connected: Dictionary
+	var dash_receipt := {}
+	if move.get("utility", {}).get("kind") == "dash_strike":
+		# The callback is a separate, trusted Director argument, never an intent
+		# value. All ordinary admission/friendly/publication guards ran first.
+		if not from_start or not dash_sweep.is_valid() or started.get("slot") != "utility" \
+			or not UTILITY_EFFECTS.valid_definition(move) or move.utility.get("invulnerable") != false \
+			or not _self_utility_actor_current(encounter_id, peer_id, started.binding) \
+			or not _self_utility_opponent_current(rec, started.get("utility_opponent", {})):
+			return _refuse("strike_intent", peer_id, "dash_unavailable", "That dash cannot resolve from this creature.")
+		# Consume the retained start before physics can notify another caller.
+		# A failed/cancelled callback stays consumed and can never sweep again.
+		started["resolved"] = true
+		started["dash_resolution"] = {"phase": "sweeping"}
+		_strike_state_for(encounter_id)[peer_id]["move_start"] = started
+		_strike_state_for(encounter_id)[peer_id]["move_starts"][str(action)] = started
+		var swept: Variant = dash_sweep.call()
+		var retained := move_commit(encounter_id, peer_id, action)
+		if retained.get("action_id") != started.action_id or retained.get("binding") != started.binding \
+			or retained.get("move") != started.move or retained.get("cancelled") == true \
+			or retained.get("dash_resolution", {}).get("phase") != "sweeping" \
+			or strike_authority_state(encounter_id, peer_id).get("last_action") != action \
+			or not _self_utility_actor_current(encounter_id, peer_id, started.binding) \
+			or not _self_utility_opponent_current(encounters.get(encounter_id, {}), started.utility_opponent):
+			return _refuse("strike_intent", peer_id, "cancelled_dash", "That dash's original actor is no longer current.")
+		var valid: bool = swept is Dictionary and swept.get("ok") == true \
+			and swept.get("action_id") == started.action_id and swept.get("binding") == started.binding \
+			and swept.get("target_uid") == started.utility_opponent.uid \
+			and swept.get("target_generation") == started.utility_opponent.body_generation \
+			and swept.get("hit") is bool and swept.get("from") is Vector3 and swept.get("to") is Vector3 \
+			and (swept.from as Vector3).is_finite() and (swept.to as Vector3).is_finite() \
+			and swept.get("target_position") is Vector3 and (swept.target_position as Vector3).is_finite() \
+			and UTILITY_EFFECTS._number(swept.get("target_body_instance_id"), 1.0, INF) \
+			and swept.get("requested_advance_metres") == move.utility.advance_metres \
+			and UTILITY_EFFECTS._number(swept.get("applied_advance_metres"), 0.0, float(move.utility.advance_metres) + 0.001) \
+			and (swept.from as Vector3).distance_to(swept.to) <= float(move.utility.advance_metres) + 0.001 \
+			and absf(float(swept.applied_advance_metres) - (swept.from as Vector3).distance_to(swept.to)) <= 0.001
+		retained["dash_resolution"] = {"phase": "resolved" if valid else "failed"}
+		if valid: retained.dash_resolution["receipt"] = swept.duplicate(true)
+		_strike_state_for(encounter_id)[peer_id]["move_start"] = retained
+		_strike_state_for(encounter_id)[peer_id]["move_starts"][str(action)] = retained
+		if not valid: return _refuse("strike_intent", peer_id, "failed_dash", "That dash could not resolve safely.")
+		started = retained
+		dash_receipt = swept.duplicate(true)
+		connected = {"hit": bool(dash_receipt.hit), "at_ms": now_ms}
+	else:
+		connected = _connects_now_or_recently(move, host_origin, facing, rec, intent, now_ms)
 	var lock_ms := move_lock_ms(move)
 	var deadline_ms := int(authority.deadline_ms) if from_start else now_ms + lock_ms
 	var starts: Dictionary = _strike_state_for(encounter_id).get(peer_id, {}).get("move_starts", {})
@@ -541,8 +587,7 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 		_strike_state_for(encounter_id)[peer_id]["move_start"] = started
 		starts[str(action)] = started
 	_strike_state_for(encounter_id)[peer_id]["move_starts"] = starts
-	return _record_strike_receipt(intent, peer_id, view, rec,
-		_ok("strike_intent", peer_id, {
+	var delta := {
 		"encounter_id": encounter_id,
 		"hit": bool(connected.get("hit", false)),
 		"target": "opponent" if bool(connected.get("hit", false)) else "",
@@ -550,7 +595,10 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 		"accepted_action": action,
 		"accepted_at_ms": now_ms,
 		"cooldown_deadline_ms": deadline_ms,
-		}), true)
+		}
+	if not dash_receipt.is_empty(): delta["dash_strike"] = dash_receipt
+	return _record_strike_receipt(intent, peer_id, view, rec,
+		_ok("strike_intent", peer_id, delta), true)
 
 
 ## The director supplies the admitted owned row and actual body binding. The
@@ -574,8 +622,12 @@ func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 		or move.get("move_id") != move_id or move.get("slot") != slot \
 		or typeof(intent.get("action")) != TYPE_INT or int(intent.action) <= 0 or now_ms < 0:
 		return _refuse("move_start", peer, "invalid_actor_move", "That equipped move is unavailable.")
-	if slot in ["utility", "ultimate"] and not (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id):
+	if slot == "utility" and not (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id):
 		return _refuse("move_start", peer, "move_not_mounted", "That move is not available in this build yet.")
+	# Heal has its own staged vitals/save/ACK producer. A generic hostile start
+	# cannot spend Wind or mint an action for a heal it cannot durably apply.
+	if slot == "utility" and move.get("utility", {}).get("kind") == "heal":
+		return _refuse("move_start", peer, "heal_scope_unavailable", "Healing is unavailable in this fight.")
 	if slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id):
 		return _refuse("move_start", peer, "move_not_mounted", "That ultimate is not available in this build yet.")
 	var authority: Dictionary = _strike_state_for(id).get(peer, {})
@@ -631,6 +683,8 @@ func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 		"move_id": move_id, "slot": slot, "move": frozen, "started_at_ms": now_ms,
 		"strike_at_ms": now_ms + windup_ms, "ready_at_ms": ready_at,
 		"resolved": false, "credited": false,
+		"utility_opponent": {"uid": str(rec.get("opponent", {}).get("card", {}).get("uid", "")),
+			"body_generation": int(rec.get("opponent", {}).get("body_generation", 0))},
 		"mastery_uses": int(owned.get("move_mastery_uses", {}).get(move_id, 0)),
 		"action_id": action_identity}
 	# Preserve immutable accepted-action history owned by AcceptedActionHost.
@@ -656,6 +710,26 @@ func move_commit(id: String, peer: int, action: int = 0) -> Dictionary:
 	return started.duplicate(true)
 
 
+## Dash's source sweep is already consumed. Claim its same retained original
+## before the HP writer, including on an untracked local wild encounter.
+func begin_dash_damage(id: String, peer: int, action: int, binding: Dictionary, receipt: Dictionary) -> bool:
+	var started := move_commit(id, peer, action)
+	var rec: Dictionary = encounters.get(id, {})
+	if started.get("action") != action or started.get("binding") != binding \
+		or started.get("resolved") != true or started.get("cancelled") == true or started.get("credited") == true \
+		or started.get("slot") != "utility" or started.get("move", {}).get("utility", {}).get("kind") != "dash_strike" \
+		or started.get("dash_resolution", {}).get("phase") != "resolved" \
+		or started.get("dash_resolution", {}).get("receipt") != receipt or receipt.get("hit") != true \
+		or strike_authority_state(id, peer).get("last_action") != action \
+		or not _self_utility_actor_current(id, peer, binding) \
+		or not _self_utility_opponent_current(rec, started.get("utility_opponent", {})) \
+		or not UTILITY_EFFECTS._number(rec.get("opponent", {}).get("hp"), 0.001, INF): return false
+	started.dash_resolution["phase"] = "damage_committing"
+	_strike_state_for(id)[peer]["move_start"] = started
+	_strike_state_for(id)[peer]["move_starts"][str(action)] = started
+	return true
+
+
 func move_resource_snapshot(id: String, peer: int, uid: String) -> Dictionary:
 	var participant: Dictionary = encounters.get(id, {}).get("participants", {}).get(peer, {})
 	var actor: Dictionary = participant.get("move_resources", {}).get(uid, {})
@@ -677,7 +751,7 @@ func cancel_move_start(id: String, peer: int) -> void:
 ## actual HP debit. One retained action can credit these encounter meters once.
 func credit_move_hit(id: String, peer: int, action: int, actual_hp_debit: float,
 		target_uid: String = "", target_hp_before: float = 0.0, target_generation: int = 0,
-		source_hp: float = 0.0) -> Dictionary:
+		source_hp: float = 0.0, current_binding: Dictionary = {}, status_now_ms: int = -1) -> Dictionary:
 	var started: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {}).get("move_starts", {}).get(str(action), {})
 	if started.get("action") != action or started.get("resolved") != true or started.get("credited") == true \
 		or not is_finite(actual_hp_debit) or actual_hp_debit <= 0.0: return {}
@@ -703,6 +777,8 @@ func credit_move_hit(id: String, peer: int, action: int, actual_hp_debit: float,
 	actor.ultimate_meter = minf(float(ultimate.get("maximum", 100.0)), float(actor.ultimate_meter)
 		+ float(ultimate.get("landed_gain", {}).get(started.slot, 0.0)) * _gear_gain(started.move))
 	started.credited = true
+	var utility_consumed := _consume_landed_self_utility(id, peer, started, current_binding,
+		actual_hp_debit, target_uid, target_hp_before, target_generation, source_hp, status_now_ms)
 	if int(started.get("mastery_uses", 300)) < 300 and not target_uid.is_empty() \
 		and target_uid != started.creature_uid and is_finite(target_hp_before) and target_hp_before >= actual_hp_debit:
 		started["mastery_pending"] = true
@@ -711,7 +787,9 @@ func credit_move_hit(id: String, peer: int, action: int, actual_hp_debit: float,
 			"target_hp_before": target_hp_before, "applied_damage": actual_hp_debit}
 	seq += 1
 	encounters[id].seq = seq
-	return move_resource_snapshot(id, peer, str(started.creature_uid))
+	var snapshot := move_resource_snapshot(id, peer, str(started.creature_uid))
+	if not utility_consumed.is_empty(): snapshot["utility_consumed"] = utility_consumed
+	return snapshot
 
 
 ## F33: the Charm's ultimate gain, frozen into the accepted action on the
@@ -731,10 +809,186 @@ func move_mastery_outcome(id: String, peer: Variant, action: int) -> Dictionary:
 		"context": started.move.get("mastery_context", {}).duplicate(true)}
 
 
-## The director calls this after the live utility consumer committed its
-## original effect. Status casts earn mastery without inventing an HP debit.
-func self_utility_power(id: String, uid: String, now_ms: int) -> float:
-	return UTILITY_EFFECTS.power_multiplier(encounters.get(id, {}).get("utility_state", {}), uid, now_ms)
+## Resolve only the existing admitted self cast at its original strike tick.
+## The director supplies its current host body/card; no move or effect comes
+## from this call, and admission remains the sole resource/cooldown writer.
+func resolve_self_utility(id: String, peer: int, action: int, current_binding: Dictionary,
+		origin: Vector3, source_hp: float, source_max_hp: float, now_ms: int, status_now_ms: int = -1) -> Dictionary:
+	var rec: Dictionary = encounters.get(id, {})
+	var authority: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {})
+	var started: Dictionary = authority.get("move_starts", {}).get(str(action), {})
+	if not _self_utility_actor_current(id, peer, current_binding) \
+		or started.get("action") != action or started.get("binding") != current_binding \
+		or started.get("cancelled") == true or started.get("resolved") != false \
+		or authority.get("last_action") != action or now_ms < int(started.get("strike_at_ms", -1)) \
+		or not _self_utility_opponent_current(rec, started.get("utility_opponent", {})) \
+		or not origin.is_finite() or not UTILITY_EFFECTS._number(source_hp, 0.001, source_max_hp) \
+		or not UTILITY_EFFECTS._number(source_max_hp, 1.0, INF) or now_ms < 0 or status_now_ms < 0:
+		return _refuse("strike_intent", peer, "stale_self_utility", "That utility can no longer resolve from this creature.")
+	if not pending_tether_items(id).is_empty() \
+		or (has_method("move_action_publication_pending") and call("move_action_publication_pending", id) == true):
+		return _refuse("strike_intent", peer, "pending_action", "The original action is still being committed.")
+	var move: Dictionary = started.get("move", {})
+	if started.get("slot") != "utility" or not UTILITY_EFFECTS.valid_definition(move) \
+		or move.utility.get("scope") != "self" or move.utility.get("kind") not in ["movement_buff", "next_hit_buff"] \
+		or float(move.get("base_power", -1.0)) != 0.0 or float(move.get("power", -1.0)) != 0.0:
+		return _refuse("strike_intent", peer, "unsupported_self_utility", "That move does not use this utility effect.")
+	var uid := str(started.creature_uid)
+	# Generation zero is the shared encounter-state convention also used by
+	# durable heal. The exact deployment/opponent lifetime rides this receipt.
+	var state: Dictionary = rec.get("utility_state", UTILITY_EFFECTS.empty_state(id, 0))
+	# A redeployment starts a fresh actor clock. Do not refresh an old expiry
+	# from a different clock domain into this admitted lifetime. Keep original
+	# receipts and heal state; stale status removal stays detached until success.
+	state = state.duplicate(true)
+	var previous_statuses: Dictionary = state.get("statuses", {}).get(uid, {})
+	for previous_kind: String in ["movement_buff", "next_hit_buff"]:
+		var previous: Dictionary = previous_statuses.get(previous_kind, {})
+		var previous_original: Dictionary = previous.get("original", {})
+		if not previous.is_empty() and (previous_original.get("binding") != current_binding \
+			or previous_original.get("opponent") != started.utility_opponent):
+			previous_statuses.erase(previous_kind)
+	var host := {"encounter_id": id, "generation": 0, "action_id": str(started.action_id),
+		"source_uid": uid, "target_uid": uid, "source_position": origin, "target_position": origin,
+		"source_hp": source_hp, "source_max_hp": source_max_hp}
+	var effect := UTILITY_EFFECTS.stage_application(state, str(started.move_id), move, host, status_now_ms,
+		int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 0)))
+	if effect.get("ok") != true:
+		return _refuse("strike_intent", peer, str(effect.get("code", "invalid_self_utility")), "That utility could not commit safely.")
+	var guard := {"action_id": str(started.action_id), "binding": current_binding.duplicate(true),
+		"opponent": (started.utility_opponent as Dictionary).duplicate(true)}
+	var kind := str(move.utility.kind)
+	var next: Dictionary = effect.state
+	(next.statuses[uid][kind] as Dictionary)["original"] = guard.duplicate(true)
+	var receipt: Dictionary = effect.receipt.duplicate(true)
+	receipt["original"] = guard.duplicate(true)
+	next.receipts[str(started.action_id)] = receipt.duplicate(true)
+	# No callbacks or other writers intervene between status and resolution.
+	rec["utility_state"] = next
+	started["resolved"] = true
+	started["utility_receipt"] = receipt.duplicate(true)
+	seq += 1
+	rec.seq = seq
+	var delta := move_resource_snapshot(id, peer, uid)
+	delta.merge({"encounter_id": id, "accepted_action": action, "accepted_at_ms": now_ms,
+		"cooldown_deadline_ms": int(authority.get("deadline_ms", 0)), "hit": false,
+		"utility_committed": true, "utility_receipt": receipt}, true)
+	return _ok("strike_intent", peer, delta)
+
+
+## Legacy combat still needs the host-observed active UID for motion authority.
+## This changes transient membership only; it cannot create/rebind saved vitals.
+func bind_legacy_actor_deployment(id: String, peer: int, binding: Dictionary) -> bool:
+	var rec: Dictionary = encounters.get(id, {})
+	var participant: Dictionary = rec.get("participants", {}).get(peer, {})
+	var uid := str(binding.get("creature_uid", ""))
+	if rec.get("phase") != "active" or participant.is_empty() \
+		or participant.get("character_id") != binding.get("character_id") \
+		or not UTILITY_EFFECTS._identity(uid) or not UTILITY_EFFECTS._identity(binding.get("character_id")) \
+		or int(binding.get("deployment_generation", 0)) < 1 or int(binding.get("body_instance_id", 0)) < 1 \
+		or int(binding.get("actor_generation", 0)) != 0 \
+		or not participant.get("actor_vitals", {}).is_empty() or not pending_tether_items(id).is_empty(): return false
+	if participant.get("creature_uid") == uid: return true
+	participant["creature_uid"] = uid
+	seq += 1
+	rec["seq"] = seq
+	return true
+
+
+func _self_utility_actor_current(id: String, peer: int, binding: Dictionary) -> bool:
+	var rec: Dictionary = encounters.get(id, {})
+	var participant: Dictionary = rec.get("participants", {}).get(peer, {})
+	var uid := str(binding.get("creature_uid", ""))
+	if rec.get("phase") != "active" or participant.is_empty() \
+		or participant.get("character_id") != binding.get("character_id") \
+		or participant.get("creature_uid") != uid or not UTILITY_EFFECTS._identity(uid) \
+		or not UTILITY_EFFECTS._identity(binding.get("character_id")) \
+		or int(binding.get("deployment_generation", 0)) < 1 or int(binding.get("body_instance_id", 0)) < 1:
+		return false
+	var actor: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+	if not actor.is_empty():
+		return participant.get("actor_bound_uid") == uid and actor.get("fainted") == false \
+			and float(actor.get("hp", 0.0)) > 0.0 and actor.get("body_generation") == binding.get("actor_generation") \
+			and actor.get("body_instance_id") == binding.get("body_instance_id")
+	return true # Legacy deployment is re-observed by the director, never a packet.
+
+
+func _self_utility_opponent_current(rec: Dictionary, original: Dictionary) -> bool:
+	var opponent: Dictionary = rec.get("opponent", {})
+	return UTILITY_EFFECTS._identity(original.get("uid")) and int(original.get("body_generation", 0)) > 0 \
+		and original.uid == opponent.get("card", {}).get("uid") \
+		and original.body_generation == opponent.get("body_generation")
+
+
+func _current_self_utility(id: String, uid: String, kind: String, now_ms: int, binding: Dictionary) -> Dictionary:
+	var rec: Dictionary = encounters.get(id, {})
+	var state: Dictionary = rec.get("utility_state", {})
+	var status: Dictionary = state.get("statuses", {}).get(uid, {}).get(kind, {})
+	var original: Dictionary = status.get("original", {})
+	if binding.is_empty() or binding.get("creature_uid") != uid or now_ms < 0 \
+		or int(status.get("expires_at_ms", 0)) <= now_ms or original.get("binding") != binding \
+		or state.get("encounter_id") != id or state.get("generation") != 0 \
+		or not _self_utility_opponent_current(rec, original.get("opponent", {})): return {}
+	var receipt: Dictionary = state.get("receipts", {}).get(str(original.get("action_id", "")), {})
+	if receipt.get("kind") != kind or receipt.get("source_uid") != uid \
+		or receipt.get("target_uid") != uid or receipt.get("original") != original \
+		or receipt.has("consumed_by"): return {}
+	for peer: Variant in rec.get("participants", {}):
+		if peer is int and _self_utility_actor_current(id, peer, binding): return status
+	return {}
+
+
+func self_utility_power(id: String, uid: String, now_ms: int, current_binding: Dictionary = {}) -> float:
+	if _current_self_utility(id, uid, "next_hit_buff", now_ms, current_binding).is_empty(): return 1.0
+	return UTILITY_EFFECTS.power_multiplier(encounters[id].utility_state, uid, now_ms)
+
+
+func self_utility_movement(id: String, uid: String, origin: Vector3, now_ms: int,
+		current_binding: Dictionary = {}) -> float:
+	if not origin.is_finite() or _current_self_utility(id, uid, "movement_buff", now_ms, current_binding).is_empty(): return 1.0
+	return UTILITY_EFFECTS.movement_multiplier(encounters[id].utility_state, uid, origin, now_ms)
+
+
+## Owner presentation receives a remaining actor-clock duration, never the
+## private status map, host body IDs or a guest-authored movement multiplier.
+func self_utility_movement_projection(id: String, peer: int, binding: Dictionary, status_now_ms: int) -> Dictionary:
+	var neutral := {"cast_action_id":"", "multiplier":1.0, "remaining_ms":0}
+	if not _self_utility_actor_current(id, peer, binding): return neutral
+	var status := _current_self_utility(id, str(binding.get("creature_uid", "")),
+		"movement_buff", status_now_ms, binding)
+	if status.is_empty(): return neutral
+	var multiplier := float(status.get("value", 1.0))
+	if not is_finite(multiplier) or multiplier < 1.0: return neutral
+	return {"cast_action_id":str(status.original.action_id), "multiplier":multiplier,
+		"remaining_ms":maxi(0, int(status.expires_at_ms) - status_now_ms)}
+
+
+## The existing positive-debit credit gate is the only caller. A missed,
+## cancelled, duplicate or replacement-body result never consumes Hearten.
+func _consume_landed_self_utility(id: String, peer: int, started: Dictionary, binding: Dictionary,
+		actual_hp_debit: float, target_uid: String, target_hp_before: float, target_generation: int,
+		source_hp: float, now_ms: int) -> Dictionary:
+	if started.get("resolved") != true or started.get("credited") != true or started.get("cancelled") == true \
+		or started.get("binding") != binding or started.has("utility_consumed") \
+		or not _self_utility_actor_current(id, peer, binding) or not is_finite(source_hp) or source_hp <= 0.0 \
+		or not is_finite(actual_hp_debit) or actual_hp_debit <= 0.0 \
+		or not is_finite(target_hp_before) or target_hp_before < actual_hp_debit \
+		or target_uid == str(started.get("creature_uid", "")) \
+		or started.get("utility_opponent", {}) != {"uid": target_uid, "body_generation": target_generation}: return {}
+	var uid := str(started.creature_uid)
+	var status := _current_self_utility(id, uid, "next_hit_buff", now_ms, binding)
+	if status.is_empty(): return {}
+	var rec: Dictionary = encounters[id]
+	var consumed := UTILITY_EFFECTS.stage_consume_next_hit(rec.utility_state, uid, now_ms)
+	if consumed.get("ok") != true: return {}
+	var receipt := {"action_id": str(started.action_id), "cast_action_id": str(status.original.action_id),
+		"source_uid": uid, "target_uid": target_uid, "target_generation": target_generation,
+		"actual_hp_debit": actual_hp_debit, "accepted_at_ms": now_ms}
+	var next: Dictionary = consumed.state
+	(next.receipts[receipt.cast_action_id] as Dictionary)["consumed_by"] = receipt.duplicate(true)
+	rec["utility_state"] = next
+	started["utility_consumed"] = receipt.duplicate(true)
+	return receipt
 
 
 ## Tier is frozen once on the existing admitted participant, from host gear.
@@ -1007,7 +1261,7 @@ func pending_move_mastery() -> Array[Dictionary]:
 ## distance/duration/cost/profile are all host inputs.
 func authorize_burst(encounter_id: String, peer_id: int, intent: Dictionary,
 		profile: Dictionary, cost: float, now_ms: int, distance: float,
-		duration: float, regen_delay_seconds: float) -> Dictionary:
+		duration: float, regen_delay_seconds: float, motion_original: Dictionary = {}) -> Dictionary:
 	if not pending_tether_items(encounter_id).is_empty(): return _refuse("burst_intent", peer_id, "item_save_pending", "The original item is still being saved.")
 	var rec: Dictionary = encounters.get(encounter_id, {})
 	if rec.is_empty():
@@ -1061,15 +1315,26 @@ func authorize_burst(encounter_id: String, peer_id: int, intent: Dictionary,
 		(tired.get("delta", {}) as Dictionary).merge(wind_preview, true)
 		return tired
 	var safe_duration := maxf(0.01, duration)
+	if not motion_original.is_empty() and (motion_original.get("kind") != "burst" \
+		or motion_original.get("direction") != [direction.x, direction.y, direction.z] or motion_original.get("distance") != maxf(0.0, distance) \
+		or motion_original.get("duration") != safe_duration \
+		or motion_original.get("scope", {}).get("encounter_id") != encounter_id \
+		or motion_original.get("scope", {}).get("peer_id") != peer_id \
+		or motion_original.get("scope", {}).get("character_id") != row.get("character_id") \
+		or motion_original.get("scope", {}).get("creature_uid") != row.get("creature_uid") \
+		or motion_original.get("scope", {}).get("opponent_uid") != rec.get("opponent", {}).get("card", {}).get("uid") \
+		or motion_original.get("scope", {}).get("opponent_generation") != rec.get("opponent", {}).get("body_generation")):
+		return _refuse("burst_intent", peer_id, "stale_motion", "That movement belongs to another deployment.")
 	var wind_delta := commit_wind(encounter_id, peer_id, action, profile, cost,
 		now_ms, safe_duration, regen_delay_seconds)
 	var deadline_ms := now_ms + ceili(safe_duration * 1000.0)
 	var starts: Dictionary = _strike_state_for(encounter_id).get(peer_id, {}).get("move_starts", {})
-	_strike_state_for(encounter_id)[peer_id] = {
-		"last_action": action, "accepted_at_ms": now_ms,
-		"deadline_ms": deadline_ms, "cooldown_ms": ceili(safe_duration * 1000.0),
-		"move_starts": starts,
-	}
+	# Keep the original beside existing action authority. Do not discard
+	# publication originals when a legal ordinary Burst updates its deadline.
+	authority.merge({"last_action":action, "accepted_at_ms":now_ms,
+		"deadline_ms":deadline_ms, "cooldown_ms":ceili(safe_duration * 1000.0),
+		"move_starts":starts, "burst_motion":motion_original.duplicate(true)}, true)
+	_strike_state_for(encounter_id)[peer_id] = authority
 	var delta := {
 		"encounter_id": encounter_id,
 		"accepted_action": action,
@@ -1079,6 +1344,7 @@ func authorize_burst(encounter_id: String, peer_id: int, intent: Dictionary,
 		"distance": maxf(0.0, distance),
 		"duration": safe_duration,
 	}
+	if not motion_original.is_empty(): delta["motion_original"] = motion_original.duplicate(true)
 	delta.merge(wind_delta, true)
 	return _ok("burst_intent", peer_id, delta)
 
@@ -1910,9 +2176,12 @@ func stage_actor_heal_utility(intent: Dictionary, peer_id: int, view: Dictionary
 	if not bool(verdict.get("ok", false)): return verdict
 	var after: Dictionary = (trial.encounters[id].participants[peer_id] as Dictionary)
 	var resource_fields := ["wind", "wind_max", "wind_regen_per_second", "wind_updated_ms",
-		"wind_last_action", "wind_ready_at_ms", "utility_deadlines"]
+		"wind_last_action", "wind_ready_at_ms", "utility_deadlines", "move_resources", "move_resource_uid"]
 	var resources := {}
-	for key: String in resource_fields: resources[key] = after[key]
+	for key: String in resource_fields:
+		if after.has(key):
+			var value: Variant = after[key]
+			resources[key] = value.duplicate(true) if value is Dictionary else value
 	# No self heal can mint hostile landed authorization or meter/mastery gain.
 	var authority: Dictionary = (trial._strike_authority[id][peer_id] as Dictionary).duplicate(true)
 	return {"ok": true, "encounter_id": id, "peer_id": peer_id,
@@ -1966,14 +2235,17 @@ func _authorize_actor_self_heal(intent: Dictionary, peer_id: int, view: Dictiona
 		return _refuse("utility_intent",peer_id,"invalid_heal","That heal could not commit safely.")
 	var now_ms := int(view.now_ms)
 	var action := int(intent.action)
-	var authority := strike_authority_state(id,peer_id)
+	var authority: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer_id, {}).duplicate(true)
 	if action <= maxi(int(authority.get("last_action",0)),int(participant.get("wind_last_action",0))):
 		return _refuse("utility_intent",peer_id,"replayed_action","That action was already handled.")
 	var deadlines: Dictionary = participant.get("utility_deadlines",{})
 	var uid := str(view.get("source_uid", ""))
 	if not UTILITY_EFFECTS._identity(uid):
 		return _refuse("utility_intent",peer_id,"invalid_actor","That heal could not commit safely.")
-	if now_ms < int(authority.get("deadline_ms",0)) or now_ms < int(deadlines.get(uid,0)):
+	var pooled := not (participant.get("move_resources", {}) as Dictionary).is_empty()
+	var pool: Dictionary = participant.get("move_resources", {}).get(uid, {})
+	if now_ms < int(authority.get("deadline_ms",0)) or now_ms < int(deadlines.get(uid,0)) \
+		or now_ms < int(pool.get("cooldowns", {}).get("utility", 0)):
 		return _refuse("utility_intent",peer_id,"cooldown","That move is still recovering.")
 	var wind_cfg: Dictionary = MATH.config().get("wind",{})
 	var delay: Variant = wind_cfg.get("regen_delay")
@@ -1982,19 +2254,28 @@ func _authorize_actor_self_heal(intent: Dictionary, peer_id: int, view: Dictiona
 		or not UTILITY_EFFECTS._number(move.get("windup"),0.0,60.0) \
 		or not UTILITY_EFFECTS._number(recovery,0.0,60.0):
 		return _refuse("utility_intent",peer_id,"invalid_config","That heal could not commit safely.")
-	var preview := preview_wind(id,peer_id,wind_profile,float(move.wind_cost),now_ms)
+	var heal_wind_profile := wind_profile.duplicate(true)
+	# Once ordinary moves install UID pools, Heal must charge its canonical
+	# source rather than the last spent creature. Legacy-only encounters keep
+	# their existing participant pool until ordinary move admission migrates it.
+	if pooled: heal_wind_profile["creature_uid"] = uid
+	else: heal_wind_profile.erase("creature_uid")
+	var preview := preview_wind(id,peer_id,heal_wind_profile,float(move.wind_cost),now_ms)
 	if bool(preview.get("wind_exhausted",true)):
 		return _refuse("utility_intent",peer_id,"insufficient_wind","Your creature needs more Wind.")
-	var wind := commit_wind(id,peer_id,action,wind_profile,float(move.wind_cost),now_ms,
+	var wind := commit_wind(id,peer_id,action,heal_wind_profile,float(move.wind_cost),now_ms,
 		float(move.windup) + float(recovery),float(delay))
 	# Shared action recovery ends before this creature's separate utility
 	# cooldown. A tag switch must not inherit another creature's ten-second lock.
 	var lock_ms := ceili(1000.0 * maxf(0.05, float(move.windup) + float(recovery)))
 	var deadline := now_ms + lock_ms
-	_strike_state_for(id)[peer_id] = {"last_action":action,"accepted_at_ms":now_ms,
-		"deadline_ms":deadline,"cooldown_ms":lock_ms}
+	authority.merge({"last_action":action,"accepted_at_ms":now_ms,
+		"deadline_ms":deadline,"cooldown_ms":lock_ms}, true)
+	_strike_state_for(id)[peer_id] = authority
 	participant["utility_deadlines"] = deadlines.duplicate(true)
 	participant.utility_deadlines[uid] = now_ms + ceili(float(move.cooldown)*1000.0)
+	if pooled:
+		(participant.move_resources[uid].cooldowns as Dictionary)["utility"] = participant.utility_deadlines[uid]
 	var delta := {"encounter_id":id,"accepted_action":action,"accepted_at_ms":now_ms,
 		"cooldown_deadline_ms":deadline,"hit":false,"target":"self"}
 	delta.merge(wind,true)

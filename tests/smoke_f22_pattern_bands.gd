@@ -31,6 +31,7 @@ var _trainers := false
 var _named: PackedStringArray = []
 ## F33#2: --gear-tier / --gear-upgrade (tests/helpers/f33_gear_fixture.gd).
 var _gear: Dictionary = GEAR.from_args()
+var _compare_previous_gear := OS.get_cmdline_user_args().has("--compare-previous-gear")
 
 
 func _init() -> void:
@@ -125,11 +126,16 @@ func _trainer_rosters(patterns: Dictionary) -> Dictionary:
 	for row: Dictionary in _read("data/config/water_characters.json").get("trainers", []):
 		if island_band.has(str(row.get("island_id", ""))):
 			add.call(str(island_band[row.island_id]), str(row.id), str(row.get("rank", "")), row.get("team", []))
-	for row: Dictionary in _read("data/config/cloudreach_chapter.json").get("trainer_ladder", []):
-		var team: Array = []
-		for slot: Dictionary in (row.get("team_contract", {}) as Dictionary).get("slots", []):
-			team.append({"species": slot.get("placeholder_species", ""), "level": slot.get("level", 1)})
-		add.call("cloudreach/" + str(row.region_id), str(row.id), str(row.get("rank", "")), team)
+	var cloudreach := preload("res://scripts/combat/cloudreach_encounter_director.gd")
+	var cloudreach_chapter := _read("data/config/cloudreach_chapter.json")
+	var cloudreach_encounters := _read("data/config/cloudreach_encounters.json")
+	# Use the live placement-to-ladder mapping, retaining its per-send-out
+	# behavior_sequence combat profiles instead of rebuilding bare species.
+	for placement: Dictionary in cloudreach_encounters.get("trainers", []):
+		var authored: Dictionary = cloudreach.find_id(cloudreach_chapter.get("trainer_ladder", []), str(placement["id"]))
+		if authored.is_empty(): continue
+		var spec: Dictionary = cloudreach.trainer_spec(authored, placement, cloudreach_encounters)
+		add.call("cloudreach/" + str(spec.region_id), str(spec.id), str(spec.get("chapter_rank", "")), spec.get("team", []))
 	for row: Dictionary in _read("data/config/stormwood_trainers.json").get("trainers", []):
 		var team: Array = []
 		for member: Dictionary in row.get("party", []):
@@ -151,6 +157,14 @@ func _party(level: int, starter: String) -> Array[RefCounted]:
 
 func _run() -> void:
 	var errors: Array[String] = []
+	var previous_tiers := {"rootiron":"", "tidesteel":"rootiron", "skyglass":"tidesteel", "stormglass":"skyglass"}
+	var gear_tiers: Array[String] = [str(_gear.tier)]
+	if _compare_previous_gear:
+		if _named.is_empty() or not previous_tiers.has(str(_gear.tier)):
+			push_error("--compare-previous-gear requires nonempty --named and --gear-tier=rootiron|tidesteel|skyglass|stormglass")
+			quit(1)
+			return
+		gear_tiers.append(str(previous_tiers[str(_gear.tier)]))
 	var patterns: Dictionary = MATH.config().get("patterns", {})
 	var proof: Dictionary = patterns.get("proof", {})
 	if _seeds < maxi(12, int(proof.get("seeds_per_band", 12))):
@@ -158,6 +172,14 @@ func _run() -> void:
 	if patterns.get("runtime_enabled") != true:
 		errors.append("F22 runtime consumer is not enabled on integrated source")
 	var cases := _cases(errors)
+	if _compare_previous_gear:
+		var paired_cases: Array[Dictionary] = []
+		for tier: String in gear_tiers:
+			for entry: Dictionary in cases:
+				var paired := entry.duplicate(true)
+				paired["gear_tier"] = tier
+				paired_cases.append(paired)
+		cases = paired_cases
 	var rows: Array[Dictionary] = []
 	var runs: Array[Dictionary] = []
 	var rosters := _trainer_rosters(patterns) if _trainers else {}
@@ -168,6 +190,8 @@ func _run() -> void:
 			if _trainers and (rosters.get(entry.id, []) as Array).is_empty():
 				gaps.append(str(entry.id))
 				continue
+			var run_tier := str(entry.get("gear_tier", _gear.tier))
+			var gear_label := GEAR.label(run_tier, int(_gear.upgrade))
 			for starter: String in STARTERS:
 				var scores := {"MASHER": [], "READER": [], "SWITCH_READER": []}
 				for seed_index: int in _seeds:
@@ -192,7 +216,7 @@ func _run() -> void:
 						if party.size() != 5 or foes.is_empty():
 							errors.append("missing actual species in " + str(entry.id))
 							continue
-						GEAR.equip(self, party, str(_gear.tier), int(_gear.upgrade))
+						GEAR.equip(self, party, run_tier, int(_gear.upgrade))
 						var pilot := PILOT.new()
 						pilot.context = {"chapter": entry.chapter, "band": entry.id,
 							"floor_trainer": _trainers and _named.is_empty(),
@@ -205,6 +229,9 @@ func _run() -> void:
 						result["band"] = entry.id
 						result["species"] = sid
 						result["starter"] = starter
+						if _compare_previous_gear:
+							result["gear"] = gear_label
+							result["seed_index"] = seed_index
 						(scores[policy] as Array).append(result)
 						runs.append(result)
 				var masher := _score(scores.MASHER)
@@ -224,8 +251,10 @@ func _run() -> void:
 					if float(judged.win_rate) < 0.75: reasons.append("top: reader win below .75")
 					if float(masher.lead_faint_rate) < 1.0: reasons.append("top: masher kept its lead in some run")
 					if float(judged.median_cost) > float(masher.median_cost) * 0.55: reasons.append("top: reader party cost above .55x masher")
-					rows.append({"band": entry.id, "starter": starter, "masher": masher,
-						"reader": reader, "switch_reader": switch_reader, "pass": reasons.is_empty(), "reasons": reasons})
+					var row := {"band": entry.id, "starter": starter, "masher": masher,
+						"reader": reader, "switch_reader": switch_reader, "pass": reasons.is_empty(), "reasons": reasons}
+					if _compare_previous_gear: row["gear"] = gear_label
+					rows.append(row)
 					continue
 				if float(judged.win_rate) < float(proof.get("reader_win_min", 0.9)):
 					reasons.append("reader win rate below .9")
@@ -239,36 +268,71 @@ func _run() -> void:
 	if not gaps.is_empty(): print("F22_PATTERN_BANDS data gaps (no ordinary trainer roster): " + ", ".join(gaps))
 	var passed := errors.is_empty()
 	for row: Dictionary in rows: passed = passed and bool(row.pass)
-	var paired := {"READER": [], "SWITCH_READER": []}
-	for run: Dictionary in runs:
-		if paired.has(str(run.pilot)): (paired[str(run.pilot)] as Array).append(run)
-	var fixed_total := _score(paired.READER)
-	var switched_total := _score(paired.SWITCH_READER)
-	# F24's tag combo is one of three switching sources (COMBAT §12.3); while
-	# its runtime flag is off the comparison measures the other two and says so.
-	var combo_live := false
-	for run: Dictionary in paired.SWITCH_READER: combo_live = combo_live or bool(run.get("tag_combo_available", false))
-	var switch_value := (int(switched_total.tags) > 0 or not combo_live) \
-		and int(switched_total.errors) == 0 \
-		and float(switched_total.win_rate) >= float(fixed_total.win_rate) \
-		and float(switched_total.median_cost) < float(fixed_total.median_cost) \
-		and float(switched_total.median_cost) <= float(fixed_total.median_cost) * float(proof.get("switch_reader_hp_ratio_max", 0.9))
-	passed = passed and switch_value
+	var switch_values := {}
+	var switch_passed := true
+	for tier: String in gear_tiers:
+		var gear_label := GEAR.label(tier, int(_gear.upgrade))
+		var paired := {"READER": [], "SWITCH_READER": []}
+		for run: Dictionary in runs:
+			if _compare_previous_gear and run.gear != gear_label: continue
+			if paired.has(str(run.pilot)): (paired[str(run.pilot)] as Array).append(run)
+		var fixed_total := _score(paired.READER)
+		var switched_total := _score(paired.SWITCH_READER)
+		# F24's tag combo is one of three switching sources (COMBAT §12.3); while
+		# its runtime flag is off the comparison measures the other two and says so.
+		var combo_live := false
+		for run: Dictionary in paired.SWITCH_READER: combo_live = combo_live or bool(run.get("tag_combo_available", false))
+		var switch_value := (int(switched_total.tags) > 0 or not combo_live) \
+			and int(switched_total.errors) == 0 \
+			and float(switched_total.win_rate) >= float(fixed_total.win_rate) \
+			and float(switched_total.median_cost) < float(fixed_total.median_cost) \
+			and float(switched_total.median_cost) <= float(fixed_total.median_cost) * float(proof.get("switch_reader_hp_ratio_max", 0.9))
+		switch_passed = switch_passed and switch_value
+		switch_values[gear_label] = {"pass": switch_value, "tag_combo_live": combo_live,
+			"status": "full" if combo_live else "partial_no_f24: type matchup and per-identity HP only; F24 tag combo off, F22#2 not fully measured",
+			"fixed": fixed_total, "switched": switched_total}
+	passed = passed and switch_passed
 	var coverage := _selection.is_empty() and rows.size() + gaps.size() * STARTERS.size() == cases.size() * STARTERS.size()
+	if _trainers and _named.is_empty():
+		coverage = floor_band_cohorts_complete(cases, rows, gaps, _selection)
 	var receipt := {"kind": "actual flat-fixture C2; world/C3/authority proofs separate",
 		"pass": passed and coverage, "coverage": coverage, "seeds_per_band": _seeds,
 		"mode": "trainers" if _trainers else "wilds", "gear": GEAR.label(str(_gear.tier), int(_gear.upgrade)), "data_gaps": gaps,
 		"acceptance": false, "policy_scope": "quick/charged/spatial diagnostic; full F23/F24 policy and actual admission fixture required",
-		"switch_value": {"pass": switch_value, "tag_combo_live": combo_live,
-			"status": "full" if combo_live else "partial_no_f24: type matchup and per-identity HP only; F24 tag combo off, F22#2 not fully measured",
-			"fixed": fixed_total, "switched": switched_total},
+		"switch_value": switch_values[GEAR.label(str(_gear.tier), int(_gear.upgrade))],
 		"errors": errors, "rows": rows, "runs": runs}
+	if _compare_previous_gear:
+		receipt["matching_gear"] = receipt.gear
+		receipt.erase("gear")
+		receipt["comparison_tiers"] = []
+		for tier: String in gear_tiers: receipt.comparison_tiers.append(GEAR.label(tier, int(_gear.upgrade)))
+		receipt["switch_value"] = {"pass": switch_passed, "by_gear": switch_values}
 	if not _json.is_empty():
 		var output := FileAccess.open(_json, FileAccess.WRITE)
 		if output == null: passed = false
 		else: output.store_string(JSON.stringify(receipt, "\t"))
 	print("F22_PATTERN_BANDS " + JSON.stringify(receipt))
 	quit(0 if passed and coverage else 1)
+
+
+## F22#1 requires real cohorts for every band and every starter. A missing
+## authored roster is a disclosed data gap, never an executed cohort. Keep
+## named-fight/gear and wild diagnostic modes on their existing coverage path.
+static func floor_band_cohorts_complete(cases: Array, rows: Array, gaps: Array, selection: String) -> bool:
+	if not selection.is_empty() or not gaps.is_empty() or cases.is_empty(): return false
+	var required := {}
+	for entry: Variant in cases:
+		if not entry is Dictionary or not entry.get("id") is String or str(entry.id).is_empty(): return false
+		for starter: String in STARTERS:
+			var key := str(entry.id) + ":" + starter
+			if required.has(key): return false
+			required[key] = true
+	for row: Variant in rows:
+		if not row is Dictionary or not row.get("band") is String or not row.get("starter") is String: return false
+		var key := str(row.band) + ":" + str(row.starter)
+		if not required.has(key): return false # Duplicate/foreign rows cannot replace a missing cohort.
+		required.erase(key)
+	return required.is_empty()
 
 
 func _score(runs: Array) -> Dictionary:

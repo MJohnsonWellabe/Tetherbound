@@ -1,0 +1,37 @@
+Production opening arrival and visual evidence
+Source: a1b5369bd205848b432d6c407f6c59b3a894b274
+Hosted render.yml run37644899549: FAILURE (observer zero library launches).
+Artifact11494554925, render-a-f25-production-arrival-r1-37644899549.
+Script: tools/capture_f17_opening_fight.gd --through-opening --no-checkpoints
+--prove-library-arrival --preset=Low, Compatibility1280x720, timeout30.
+Contact sheet: production-opening-37644899549-contact.jpg, native nine views.
+Raw eight JPEG samples, native first fight PNG, manifest, log and earned saves
+remain in the hosted artifact. No raw PNG set committed.
+
+The actual fresh title, wake, Grandpa, selected/named Terrapup, earned Home Key
+and Orb lesson, field walk, Bramblebun engagement and actual catch completed.
+The strict arrival observer recorded no library launches and legacy empty-
+encounter :impact IDs. Library process opt-in alone does not mount canonical
+wild admission while actor_vitals is OFF. Do not interpret this as library
+arrival PASS. Coordinator6041849995 routes canonical-wild admission to Lane C;
+shipping flags remain OFF. No co-op or complete campaign evidence.
+
+Code-blind reviewer: /root/f25_visual_judge (frames and owning references only).
+Full-bar verdict BLOCKED. Bar A BLOCKED; Bar B BLOCKED.
+- Views04-06: flat magenta ring and broad wedge dominate combat ground, contrary
+  to the explicit full-bar prohibition. Views02/06: pale disc/radial contact
+  feedback lacks finished material/energy presentation.
+- Views00-02/08: overlapping large companion, smaller stone-backed bodies and
+  pale rock obscure trainer/action. Stills do not establish persistent clipping.
+- View07: foreground companion obstructs right side and story/quick panels.
+- Repetitive grass, mottled ground and abrupt clearing transitions lack authored
+  grove/edge rhythm. Coarse pale rocks lack coherent material integration.
+- Architecture family is coherent; inhabited detail/landmark composition remains
+  unproved. Weak atmospheric depth; night/weather samples absent.
+Narrow PASS: native View08 enemy/companion names, HP, move labels and X/Y/B/A
+prompts readable; highlighted Pebble Toss clear. Static large-companion face,
+stone armour and rabbit face/ears discernible.
+Uncluttered fight composition BLOCKED. Heavy rectangular HUD treatment remains;
+small warnings/numbers cannot be judged confidently from reduced sheet alone.
+Stills prove neither damage causality, motion/controls, camera matrix nor frame
+time. No criterion READY; visual and actual arrival gates remain open.

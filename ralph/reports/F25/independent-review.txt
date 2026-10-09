@@ -1,0 +1,82 @@
+F25#2 independent static review: APPROVE
+Reviewed commits: 68d0b5ad8d2397d9e884655d785b0064e4c658a3 and f7b465b6cd4b3a5b1c0eb64384a3adf65cd2f0ed.
+Reviewer: /root/f25_review; current combined tip a423358ec53e3780213269c08915764c3e1923cb.
+Ground support correctly uses transformed mesh bounds with mastery growth, per-mote scale and tumble. No arrival, lifetime, lease or particle-count change.
+Existing capture now honors requested resolution and fails if contact/impact inspect zero debris; empty aftermath is permitted.
+Required unrun logic selector: --only=test_move_effects.gd.
+Required unrun runtime: stone identities ranks 1/3/5, nonzero contact/impact debris checks, zero failures and released leases.
+Required unrun visual: current captures, full-bar code-blind verdict and Low readability; no criterion certified.
+
+F25#3 independent static review: APPROVE
+Reviewed commit: a423358ec53e3780213269c08915764c3e1923cb.
+Reviewer: /root/f25_arrival_review.
+No blocking syntax, immutable-row mutation, ordering or cleanup issue. Observer connects before deferred/timed arrival; contact checks precede HP debit; impact requires matching action contact; HUD verification reads actual number receipt.
+Coverage: Snare and quick; charged requires --prove-slot-inputs; ultimates excluded. Mounted geometry is not rendered visibility. Hosted execution and visual acceptance are required; no criterion certified.
+
+F25#3 capture follow-up independent review: APPROVE
+Reviewed commit: e8a64bf578a020cebbe6ff0bfd25800246b7d803.
+Reviewer: /root/f25_arrival_review.
+Capture requests originate from actual arrival, retain the corresponding action ID, assign filenames before awaiting draw and drain before normal cleanup; image-save failure is explicit.
+A PNG is the first draw after arrival and may include subsequent HP debit/HUD number. Temporal order rests on the signal/HP assertions, not the PNG alone. Hosted execution and visual verdict remain pending.
+
+F25 bounded geometry/capture correction: APPROVE
+Reviewed commit: d6343736d8a8d9be4994ffffb75cc5293cd10045.
+Reviewer: /root/f25_review.
+Stone profile changes preserve timings/counts/budgets and remain bounded at528 triangles per body. Shutter pause occurs after observed phase; action timers freeze, drawing continues, normal path resumes. This is a still-image proof, not motion certification. Hosted units/geometry/lease checks and current blind judgment remain required.
+
+F25#3 corrected action correlation: APPROVE
+Reviewed commit:1de708be41766a02fbfdab4d42f503fc308f762c.
+Reviewer:/root/f25_arrival_review.
+HUD correlation now uses the actual presentation identity encounter:peer:action while preserving the separate durable mastery receipt identity. No assertion weakened and no durable IDs rewritten.
+Hosted run37626617264 on that exact commit: SUCCESS;305 checks,24 launches,24 impacts,0errors. Actual physical taps cover Snare/quick/charged with library preview; every observed contact precedes HP debit and each actual HUD number matches the presentation action. Ultimate observer excluded. Flat fixture stage; no earned campaign, four-peer, Medium or Ally claim. Visual verdict pending.
+Preceding run37625866309 on76f14f8774eca2aa700638792792ba07538fba08: FAIL due23wrong-key HUD assertions; existing VFX selector independently PASS8tests/1217assertions/0failures. Preserved raw artifact11484112589. This does not certify the later stone-profile cut.
+
+F23#5 HUD prompt: APPROVE
+Reviewed commit:82bbc67bd674be6c6f0df7b64c61e5df6be700dd.
+Reviewer:/root/f25_arrival_review.
+Uses existing prompt/number/glyph tokens and tap-then-move language; no input/authority change. Rendered layout/readability and full-meter-only action witness remain required on this cut.
+Existing sequential unit batch: APPROVE c7ec7ad85021ea799e8ede1023cd731a0240fcc2 by the same reviewer. Named existing selectors combine into one child; failures propagate; gameplay setup follows isolated child completion. No new unit class or fixture file.
+
+F25#4 bounded sampler correction: APPROVE
+Reviewed commit:fd57339cee26008a1b8c67a74cea44145890a9d7.
+Reviewer:/root/f25_medium_review.
+Completed-draw priming removes the partial first interval. Visible geometry/MultiMesh counts distinguish drawing from stale reservations; no gameplay/durable mutation. Counts submitted geometry rather than frustum/occlusion-confirmed pixels; ribbon leases are not particles; faded-parent pruning conservatively undercounts opaque child materials. Existing proof coordinator launch override remains BLOCKED pending allocation/routing. No engine execution or criterion certification.
+All shipping flags remain OFF. No READY or criterion completion is asserted by this artifact.
+
+F23#5 below-full live-input extension:APPROVE
+Reviewed commit:fad962c6fe6fe031e51dbc4b5226b46335595722.
+Reviewer:/root/f25_arrival_review.
+Valid equipped preview ultimate reaches ultimate_not_ready before resource/frontier/original writes. Physical RB assertions and immediate synchronous resource/original comparisons are valid; subsequent lower-numbered actions check frontier preservation indirectly. Hosted execution and visual verdict pending.
+F25#4 existing proof launch override:APPROVE
+Reviewed commit:87f28c2999b3a4922c9f28caa8c75d93c53de8b4.
+Reviewer:/root/f25_medium_review.
+Continuous Forward+/Vulkan1280x720 host, all-peer library preview and host-only Medium selection preserve defaults/private homes/logs/PIDs/cleanup. f48_net_proof inherits this launch/capture dispatch. Producer forwarding/profile/concurrent inputs remain unresolved; no dispatch readiness or criterion certification.
+
+Additional independent source reviews:
+4be7d698aaf226c8999d642e504a0bc5fee5a75b — f25_review APPROVE: existing world-stage Medium selector refreshes active production WorldLook and binds live Environment, retains timing/shutters/leases/diagnostic scope. Actual Medium capture remains open.
+6da65712ed2d4c8888e16ffad26059e4c984f3f8 — f25_arrival_review APPROVE: authored_contact class accent requires arrived visible known F25/F35 object with matching action/encounter; class style/fallback preserved; configured0.35radius/0.7duration/1strength/0.85softness reaches existing FLASH. Existing62named selectors retain sequential nonzero failure gate. Hosted logic/contact capture pending37635757694.
+22757807069b13c60eef978524c9d27e3610a5ec — same f25_arrival_review APPROVE after actor-lifetime and lethal-draw corrections: actual admitted deployment/body/Director identity checked at launch/contact/impact/draw; overkill clamp and terminal RESOLVING identity validated; aborted/no-launch/mismatched observations fail closed. Actual production runtime/capture/judge pending.
+Resolution-only observer diff atop22757807069b13c60eef978524c9d27e3610a5ec — same reviewer APPROVE: supported1280x720/1920x1080 startup frozen; each native image/window must match; honest metadata; no resizing/newflag/order-guard weakening. Actual runtime pending.
+Hosted HUD/arrival rerun37635757694, checkout6da65712ed2d4c8888e16ffad26059e4c984f3f8:
+Existing62-file unit batch passed536tests/6177assertions/0failed. Live smoke then SCRIPT ERROR atsmoke_f23_live_moves.gd:187: move_resources absent before first accepted move; script eventually timed out. No runtime or visual pass. Artifact11491542440 retains original run.log; raw download remains uncommitted.
+Same reviewer f25_arrival_review APPROVE for corrected whole-participant comparison: absence preserved, synchronous refusal leaves entire participant and original unchanged; no initialization fixture/weakened check.
+Same reviewer APPROVE for existing selector extension: both flags give74 unique named existing files, ordered dedup; one sequential child/nonzero gate unchanged. Actual corrected runtime/capture pending.
+e68cd457c5781683afe5a984d54e013ec9b6bb7c — f25_medium_review APPROVE: known-library script guard before private effect context access; Medium runtime still open.
+1ca39b37eea42be374bd1d8ac6cdb76df6d78ed3 — f25_review APPROVE: bounded stone/fireball/lightning polish retains timing/mastery/body and particle/light budgets;9 affected existing VFX selectors. New engine/capture/full-bar judge still open.
+0d1fcb6ec4996acbde64630074de25f58551be30 — f25_arrival_review APPROVE: bounded wild target consumer validates definition/target UID, permits root/slow-field/trap/Sap only, trap polls first armed host target on hitstop-aware clock; Sap damage read mounted. Generic zero-damage/field point/self/travel consumers remain incomplete; shipping live moves unchanged.
+
+F23#2 bounded host target-utility contact source review — f25_arrival_review APPROVE:
+Zero-base-power utility exits before RNG/minimum damage/poise; target consumer success required. Utility-only local/peer receipt suppresses hit feedback/numbers/flinch and retains authored effect contact. Shared runtime encounter binding checked; damaging Snare keeps HP-first consumer order. Frozen Director field/source points, peer status sync and actual zero-damage original publication still require integration/runtime. No shipping flag flip or criterion claim.
+
+F33#2 admitted named-solo source adapter — f25_medium_review APPROVE:
+Authenticates mounted Session/world/character/epoch/prepared writer lifetimes; exact authored send-out UID/round/generation/owned deployment retained privately. Entry and per-round refresh reuse existing ordinary actor binding, BOOL/ACK retries, terminal round/completion and close/replay fences. _is_host/canonical-wild/catch gates unchanged. Existing utility host guards are outside this review. No engine/parser/runtime or earned-load C2 proof; F23/F35/F24 prerequisites and full C2 policy/gear matrix remain open.
+
+Hosted37641089339 checkoutabaf61ef63fadf3b15744f70468a9e09be64077f passed74 existing selected files:609tests/10525assertions/0failed, live335checks/25launches/25impacts/0errors. Original62 selectors passing on6da are superseded for changed VFX/wild paths. Deliberate corrupt JSON and off-tree unit fixture diagnostics remain in raw run.log; no live smoke SCRIPT ERROR. Focused fixture excludes campaign/co-op/device/full visual acceptance. Artifact11492806963 retains native PNGs, accepted-action.json and logs; raw files uncommitted.
+
+F35 Ground Current material candidate — f25_review APPROVE:
+Only data-opted-in opaque rock parts reuse existing F25 stone mineral/scree surface; authored ultimate palette retained. Peer opacity0.48 and missing resource/script/profile/material retain original alpha/fallback material. Geometry/choreography/timing/counts/leases unchanged; ultimates.enabled remains false. Source only; hosted material/runtime/capture/full§4 judge still required.
+
+F33#2 Stormwood existing-smoke gear step — f25_medium_review APPROVE:
+Bounded8-line extension to tests/smoke_stormwood_b_named_c2c3.gd against76a766ebd4320a84052d2c94de954f8dc54229e5. Reviewed file SHA256955cb51d1c402db84455c342c133cb50d36f7d07e19b155f7e61b22a017eb444. Reuses existing f33_gear_fixture preload/from_args/equip before each valid party's original pilot; records gear labels per run/row/report. Default bare remains no-op. Seeds, policies, levels, thresholds, cases and verdicts unchanged. No new fixture/function/class/tool. Existing helper save-detachment/partial-row admission limitations remain OPEN; no fake writer/receipt or authority bypass was added. No engine execution or F33/C2 certification; real admission and matching-vs-previous-tier simulations remain required.
+F22/F33 Cloudreach named-roster fidelity (bounded proof source):APPROVE
+Retained reviewer:/root/f25_arrival_review. Existing smoke_f22_pattern_bands::_trainer_rosters now uses the same production Cloudreach find_id/trainer_spec placement mapping, retaining per-send-out combat profiles. All seven trainer IDs/order preserved; Veyra Aeriex43 -> Cloudfang43 -> Galecrest44 with controller -> pursuer -> ace matches BOSSES. Other regions, seeds/policies/defaultbare, budgets, actual admission, fullcoverage and acceptance=false oracle unchanged. No new function/class/fixture/harness or production flag change. Actual runtime distribution/gear/full policy/admission and whole F22/F33 acceptance remain open; no READY from this source review.

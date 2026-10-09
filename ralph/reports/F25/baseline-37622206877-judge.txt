@@ -1,0 +1,15 @@
+F25 baseline capture / code-blind verdict
+Capture commit: b3ad69a6ff641d640ec6f7a48ee427c6030867aa
+Hosted run: 37622206877; artifact: 11484216574
+Contact sheet: baseline-37622206877-contact.jpg (original frames retained in hosted artifact)
+Reviewer: /root/f25_visual_judge
+Overall ACCEPTANCE section4 verdict: BLOCKED
+Literal object identities: PASS4/4
+Sequence00: several small faceted stones fly and fragment; clustered silhouettes weaken separation.
+Sequence01: one larger boulder flies and fragments with ground dust.
+Sequence02: burning orange orb with curling flame trail, flame burst/smoke and glowing ground.
+Sequence03: bright zigzag descends from above onto the target's back, followed by a localized strike.
+BarA: clustered stone silhouettes, unclear small-stone flight trail and coarse pale surfaces; translucent fire blends with the yellow-green field and has soft/flat contact; broad yellow-white lightning and needle impact read graphic/overexposed. Target creatures appear coarsely blotchy. Ground/path transitions lack authored banks/wear rhythm; repetitive flowers/grass and blank/repeated building surfaces fall below the references.
+BarB: shadows exist but atmospheric depth is weak; depth bands remain equally crisp, sky/haze/shafts are insufficient, and lightning lacks convincing atmospheric response. Daylight alone cannot establish time-of-day/weather quality.
+Limits: Compatibility stills at one setting; no High/Medium matrix, ordinary fight camera/reverse views, night/weather, motion, sound, damage ordering, frame-time or co-op certification. Literal identity PASS does not close F25#2 or authorize the library shipping flag.
+Runtime also FAILED two shutter checks: large-stone:r1 flight envelope and descending-bolt:r1 flight after contact. Baseline smoke overrode the requested raster to1920x1080. Candidate raster1280x720 is not a matched-resolution before/after pair.

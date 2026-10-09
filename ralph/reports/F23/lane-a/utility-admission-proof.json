@@ -1,0 +1,733 @@
+{
+  "criteria": [
+    "F23#2",
+    "F23#5"
+  ],
+  "status": "PARKED OPEN F23#2; historical WHOLE approval returned by integration, repaired UID verified but remaining movement proof fails",
+  "source_components": [
+    {
+      "commit": "fd26fd34ed0d29967e7b839b90aca33420e1261a",
+      "change": "Mount existing Quake Ring swept target consumer",
+      "review": "original f25_medium_review APPROVE"
+    },
+    {
+      "commit": "9897a226684e025d8eb2de21d523865e5b64f9f0",
+      "change": "Mount existing Veil and Hearten host self-status consumers",
+      "review": "original f25_medium_review APPROVE"
+    },
+    {
+      "commit": "3cb0d50ea2092ef7b93460348b5c05bd5538c617",
+      "change": "Mount existing zero-damage Slow Field, Bramble Trap and Sap target consumers",
+      "review": "original f25_medium_review APPROVE"
+    },
+    {
+      "commit": "5360c4fcda090fddef20fc71136f3f948b51a664",
+      "change": "Host ultimate admission uses existing enabled/authored catalogue rather than utility whitelist; no flag flip",
+      "review": "original f25_medium_review APPROVE"
+    },
+    {
+      "commit": "7e523869336cd7ec8a6c16708d82d2806bba436f",
+      "change": "Self-cast assertion compares complete stored resources and absolute deadlines",
+      "review": "original f25_medium_review APPROVE"
+    }
+  ],
+  "proofs": [
+    {
+      "run_id": 37748404209,
+      "artifact_id": 11537261258,
+      "commit": "fd26fd34ed0d29967e7b839b90aca33420e1261a",
+      "file": "tests/test_f23_live_moves.gd",
+      "result": "PASS",
+      "tests": 18,
+      "assertions": 265,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 6
+    },
+    {
+      "run_id": 37750182712,
+      "artifact_id": 11537328999,
+      "commit": "9897a226684e025d8eb2de21d523865e5b64f9f0",
+      "file": "tests/test_f23_live_moves.gd",
+      "result": "PASS",
+      "tests": 18,
+      "assertions": 324,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 6,
+      "log_sha256": "23d2fd99c62912c43855b95e68444e7e1c38431323baee0132c931f3ce696769"
+    },
+    {
+      "run_id": 37750673943,
+      "artifact_id": 11537682779,
+      "commit": "3cb0d50ea2092ef7b93460348b5c05bd5538c617",
+      "file": "tests/test_f23_live_moves.gd",
+      "result": "FAIL",
+      "tests": 18,
+      "assertions": 373,
+      "failed": 1,
+      "cause": "Self-cast assertion compared a live countdown: 7.220 versus 7.219 seconds. Control/body assertions passed; no production cause inferred.",
+      "repair": "7e523869336cd7ec8a6c16708d82d2806bba436f",
+      "log_sha256": "cbda43c77e65be7e730ed4cfa9580086bf2ef1ce0e7e500c215709389be415da"
+    },
+    {
+      "run_id": 37751158432,
+      "artifact_id": 11538186748,
+      "commit": "7e523869336cd7ec8a6c16708d82d2806bba436f",
+      "file": "tests/test_f23_live_moves.gd",
+      "result": "PASS",
+      "tests": 18,
+      "assertions": 466,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 6,
+      "log_sha256": "26df7021ba082f600eb02b3471523b1b36e4798b9bd42bb713c5cf93cc7e275e"
+    }
+  ],
+  "logic_scope": "Existing test functions extended, no new test method/class/helper/fixture file. Retained starts own cost; self receipts match actor/opponent lifetime; early/replacement/replay refusals preserve state; Veil expires without defensive states; Hearten consumes once after positive landed debit; target controls preserve HP, geometry/range bounds, trap arming/resistance/one-trigger and expiry. All31 authored enabled ultimates reach empty-meter refusal without spending; original full-meter and disabled-presentation assertions retained.",
+  "heal_components": {
+    "origin_repair": "a490c7b0905330d1b57dd8caf379b3e574174a50",
+    "origin_review": "original f25_medium_review APPROVE: direct local Host call requires finite Vector3, not wire array",
+    "origin_logic": {
+      "run_id": 37751701696,
+      "artifact_id": 11537784199,
+      "file": "tests/test_actor_vitals_authority.gd",
+      "tests": 11,
+      "assertions": 193,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 7,
+      "log_sha256": "73f5ffbfbb75af076974be3fa46f0d9d24a7d9d254789f7715958c3619a61e27"
+    },
+    "mixed_repair": "4415fc89e424e3cb29d5c3f709f8f3a2590bde4f",
+    "mixed_review": "original f25_medium_review APPROVE: keep canonical UID Wind/deadlines and prior move/mastery history in exact restaged bundle",
+    "mixed_first_attempt": {
+      "run_id": 37752895996,
+      "artifact_id": 11538965812,
+      "file": "tests/test_actor_vitals_authority.gd",
+      "tests": 11,
+      "assertions": 209,
+      "failed": 1,
+      "result": "FAIL",
+      "cause": "New arrival assertion omitted mandatory admitted move dictionary, so arrival/mastery assertions cascaded. No failed fixture or production cause inferred.",
+      "log_sha256": "02ea0e81a0e415bde5d43a6fa282c8a5f3ee202d9412ecc0cf544bbd855362d8"
+    },
+    "original_envelope_repair": "885dd1e25247b9d784be38420bdce3ec50bb33a3",
+    "envelope_review": "original f25_medium_review APPROVE; original admitted frozen move added, actions/slots/bindings/times unchanged",
+    "mixed_second_attempt": {
+      "run_id": 37753477702,
+      "artifact_id": 11539570722,
+      "commit": "885dd1e25247b9d784be38420bdce3ec50bb33a3",
+      "file": "tests/test_actor_vitals_authority.gd",
+      "tests": 11,
+      "assertions": 209,
+      "failed": 1,
+      "result": "FAIL",
+      "cause": "Sole failed assertion: original pending Quick mastery is lost after Heal. All new arrival, per-UID Wind, cooldown and replay assertions passed. Source merge still read the four-field public strike_authority_state projection.",
+      "log_sha256": "e5384e125a21a5be7ab0eded29f3dd66de5757bec0efe1757ed7d109612bbc45"
+    },
+    "complete_authority_repair": "97a5f70c8f49447380eaf6f0c3add93e63aef046",
+    "complete_authority_review": "original f25_medium_review APPROVE: detached complete private authority retains move_starts/mastery and existing action/deadline guards",
+    "stop_rule": "ROOT explicitly re-scoped one changed-source final authority repair, proved by37758784393. Previous two failures retained; no unchanged third attempt.",
+    "limits": "Heal stays unmounted. Existing full/fainted/legacy/rejoin assertions retained; unrelated existing out-of-tree get_node ERROR in trainer reseat remains disclosed. No actual mounted Heal/save/ACK acceptance claim.",
+    "final_changed_source_proof": {
+      "source_commit": "a82bc7776cf04d9fda4a8b10d92adffdd8d12b74",
+      "repair_commit": "97a5f70c8f49447380eaf6f0c3add93e63aef046",
+      "coordinator_rescope_comment": 6056954959,
+      "run_id": 37758784393,
+      "artifact_id": 11541417625,
+      "files": 5,
+      "tests": 74,
+      "assertions": 1310,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 32,
+      "heal_file": "tests/test_actor_vitals_authority.gd",
+      "heal_tests": 11,
+      "result": "PASS mixed resource/cooldown/replay/pending mastery retention",
+      "log_sha256": "c89ae57d5bbf6e47c044e3fa9cad90f02667c239beaf6c101168083b04740c50",
+      "review": "APPROVE original f25_medium_review bounded logic",
+      "disclosed_error": "Unchanged actor trainer-reseat test emits existing out-of-tree get_node ERROR; no Script/Parse failure.",
+      "shipping": "Heal remains unmounted; no actual mounted/save/ACK criterion claim."
+    }
+  },
+  "shipping_flags": "actor_vitals.runtime_enabled, Tether command shipping flags, move_library.enabled and ultimate presentation remain OFF. Individual existing utility consumer IDs were added to move_commit.live_moves.",
+  "remaining_gates": [
+    "F23#5 remains open: catalogue consistency is not proof of every signature mounted combat or release timing.",
+    "Retained F42 seven-inch HUD blind PASS and10tests84assertions remain applicable; F23#5 coupled shipping/meter behavior not claimed."
+  ],
+  "mounted_heal_proof": {
+    "run_id": 37763319762,
+    "artifact_id": 11543770337,
+    "commit": "2323b2eb407bf5f4019fd6bfb6aed95d178242eb",
+    "file": "tests/smoke_f23_live_moves.gd",
+    "args": "--prove-utility=heal_pulse",
+    "mode": "headless",
+    "checks": 22,
+    "errors": 0,
+    "exit": 0,
+    "hp_before": 96.6,
+    "hp_after": 119.784,
+    "maximum_hp": 193.2,
+    "foe_hp_before": 600,
+    "foe_hp_after": 600,
+    "wind_before": 79.6,
+    "wind_after": 55.6,
+    "launches": 0,
+    "impacts": 0,
+    "save_refusal": "Both disk originals and owned/enemy HP preserved on refused world save; real retained proposal retries",
+    "receipt": "Unique committed/presented Heal proposal, actual UID/body generation, exact accepted world row and settled owner marker",
+    "review": "APPROVE original f25_medium_review bounded mounted Heal",
+    "log_sha256": "b96112fd991c2f076d2a51383b4b14345018a495a7ca889d555b38d3ad13cb03",
+    "limits": "Disclosed production-node fixture; process-local mounting only. No campaign/co-op/shipping/whole F23 claim."
+  },
+  "mounted_dash_first_attempt": {
+    "run_id": 37763710239,
+    "artifact_id": 11543198984,
+    "commit": "47c758d450701a41d77effb0ad502066a0d37255",
+    "file": "tests/smoke_f23_live_moves.gd",
+    "args": "--prove-utility=dash_strike",
+    "checks": 18,
+    "failed_checks": 3,
+    "result": "FAIL",
+    "sweep_phase": "resolved",
+    "advance_metres": 1.9453125,
+    "hit": false,
+    "host_binding": "Accepted action, UID, positive generation and live target instance retained",
+    "foe_hp_before": 600,
+    "foe_hp_after": 600,
+    "launches": 1,
+    "impacts": 0,
+    "cause": "Collision collider/radii are absent from original receipt. Final Wind regenerated during five-second wait, so that Wind assertion does not establish failure to spend.",
+    "log_sha256": "c21a44023829f2ee0a6b6014a39d5b0e470d99a4918d26fa2c516c16bec7d490",
+    "next": "One original-approved changed observer a5b1db08bfdc7a3160ed90d1f8f978d6cd3c7bf0 retains collider/radii/margins and immediate post-tap Wind; gameplay guards unchanged."
+  },
+  "canonical_wild_heal_routing": {
+    "commit": "114972e8d4fe36969cfa95903be4247936db4034",
+    "change": "Director stages Heal for existing saved actor vitals ownership; Manager retains durable trainer or exact epoch/world-bound wild ownership and all settlement guards",
+    "review": "APPROVE original f25_medium_review source",
+    "minimum_affected_selectors": [
+      "test_f23_live_moves.gd",
+      "test_f27_guest_wild_share.gd"
+    ],
+    "status": "Bounded source/affected regression PASS. Canonical wild actual mounting remains gated by actor_vitals.runtime_enabled and wild_victory_runtime_enabled, both unchanged; no shipping/whole F23 claim.",
+    "affected_proof": {
+      "run_id": 37764895753,
+      "artifact_id": 11543997641,
+      "commit": "fbce4af31ae9b22ab61ae0cf1fbd622724c4ce10",
+      "files": [
+        "tests/test_f23_live_moves.gd",
+        "tests/test_f27_guest_wild_share.gd"
+      ],
+      "tests": 27,
+      "assertions": 515,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 8,
+      "errors": 0,
+      "review": "APPROVE original f25_medium_review bounded source and affected regression",
+      "log_sha256": "f2f8189f8525ce0d28835453764e08d3c95112d468d6067c2d4281030f6877f6"
+    }
+  },
+  "mounted_dash_observer_attempt": {
+    "run_id": 37764420479,
+    "artifact_id": 11543787098,
+    "commit": "a5b1db08bfdc7a3160ed90d1f8f978d6cd3c7bf0",
+    "checks": 18,
+    "failed_checks": 2,
+    "result": "FAIL",
+    "collider_instance_id": 341668006146,
+    "target_body_instance_id": 341668006146,
+    "advance_metres": 1.9453125,
+    "stopped_gap_metres": 2.054688,
+    "attacker_radius": 1.365488,
+    "target_radius": 0.66625,
+    "attacker_safe_margin": 0.001,
+    "target_safe_margin": 0.001,
+    "wind_before": 99.5,
+    "wind_after_start": 75.5,
+    "wind_final": 99.5,
+    "foe_hp": 600,
+    "cause": "Exact actual target collision passes all retained sweep bindings and safety, but extra center-gap predicate rejects 2.054688 against radius/margin bound2.033738",
+    "review": "APPROVE original source observer; independent cause confirmed. Runtime FAIL retained.",
+    "log_sha256": "7aa096c0a95daa970c81db7d035c6d1ed0bc53bb82a90ebb3a41e8ab03d77e3b",
+    "stop_rule": "STOP2 BLOCKED572 comment6058050471; supported physical-contact repair QUESTION6058088509 for ROOT rescope. No third unchanged run."
+  },
+  "canonical_wild_heal_mounted_attempt": {
+    "run_id": 37766671533,
+    "artifact_id": 11544373773,
+    "commit": "36b5a00ad1ab3cb9329d7b2aa851819cfbf89996",
+    "file": "tests/smoke_f23_live_moves.gd",
+    "args": "--prove-utility=heal_pulse --prove-canonical-wild",
+    "mode": "headless",
+    "result": "FAIL before input",
+    "checks": 15,
+    "failed_checks": 4,
+    "script_or_parse_errors": 0,
+    "log_sha256": "771cd2ce4008f4468639b8d369ed601cae569760d44e292ad685bf96db159cf5",
+    "source_findings": "Original reviewer REQUEST_CHANGES: final utility assertion expected gate OFF during opt-in preview. Retained boot log confirms Game autoload already exists; canonical preflight reads /root/Game, while the smoke adds a second fixture Game.",
+    "gate_repair": "338d6b59297c45fa8e7a1efd580e9c02cb46fffa; original f25_medium_review APPROVE selected-mode assertion, restoration and operand observer",
+    "obsolete_diagnostic": {
+      "run_id": 37767190268,
+      "commit": "338d6b59297c45fa8e7a1efd580e9c02cb46fffa",
+      "disposition": "Cancelled while queued after supported root-path correction; no engine proof claimed"
+    },
+    "root_path_repair": "7e90465558; canonical selector temporarily detaches untouched original autoload and mounts disclosed fixture at /root/Game, restores original at cleanup",
+    "status": "Original source and runtime APPROVE; canonical-wild mounted26check PASS. F23#2 remains open (Dash parked and no shipping flip).",
+    "root_path_review": {
+      "reviewer": "/root/f25_medium_review",
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "verdict": "APPROVE",
+      "commit": "7e904655582999f7284ac74e966b693995058de2",
+      "limits": "Detaching invokes normal _exit_tree fallback/peer cleanup; fresh-boot production-node fixture only, not live-session lifecycle preservation."
+    },
+    "corrected_proof": {
+      "run_id": 37767627297,
+      "artifact_id": 11547335639,
+      "commit": "7e904655582999f7284ac74e966b693995058de2",
+      "status": "PASS",
+      "checks": 26,
+      "failed_checks": 0,
+      "script_or_parse_errors": 0,
+      "exit": 0,
+      "seconds": 5,
+      "canonical_preflight": "enabled and ready through actual mounted Game/Session/actor and original resource-epoch/world context",
+      "hp_before": 96.6,
+      "hp_after": 119.784,
+      "foe_hp_before": 600.0,
+      "foe_hp_after": 600.0,
+      "wind_before": 79.6,
+      "wind_after": 55.6,
+      "retained_proposals": 1,
+      "launches": 0,
+      "impacts": 0,
+      "log_sha256": "d8d98ce0919876b2347a0566646046162f26a4c8200837baa60ef22f7f3ea2e3",
+      "save_refusal": "Initial world-save FALSE preserves owned/foe HP and both original disk records; retained exact proposal retries into world accepted and owner settled receipt",
+      "flags": "Existing process-local actor_vitals preview restored OFF; shipping Heal/actor_vitals gates unchanged",
+      "limits": "Fresh-boot disclosed production-node simulation, pre-admission injury, flat stage, static600HP wild. No campaign, co-op, device, visual or whole-F23 claim."
+    },
+    "runtime_review": {
+      "reviewer": "/root/f25_medium_review",
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "verdict": "APPROVE bounded mounted canonical-wild Heal",
+      "commit": "7e904655582999f7284ac74e966b693995058de2",
+      "run_id": 37767627297,
+      "verified": "26checks0errors exit0, exact world/epoch/Game/Session, original committed/presented receipt and saved owner settlement,12%maxHP Heal,24Wind, unchanged foe, save-refusal preservation and gate restoration",
+      "limits": "Static disclosed fixture only; autonomous combat, campaign, co-op, shipping and whole F23#2 remain open."
+    }
+  },
+  "mounted_dash_contact_repair": {
+    "commit": "f1b093c5f7123783d56bb9c2fc4963d0fbbd90d2",
+    "production_change": "Retained safe move_and_collide receipt must name exact target; remove only approximate centre-gap rejection that contradicted actual target shape contact. Nearby endpoints and other colliders still miss; original floor/arena/6m/binding/host one-hit guards retained.",
+    "authorization": "Original independent cause/direction APPROVE and current persistent-lane task; distinct supported production code after old parked attempts, no unchanged rerun.",
+    "notice_comment": 6060612762,
+    "source_review": {
+      "reviewer": "/root/f25_medium_review",
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "verdict": "SOURCE APPROVE",
+      "commit": "f1b093c5f7123783d56bb9c2fc4963d0fbbd90d2"
+    },
+    "proof": {
+      "run_id": 37782554101,
+      "artifact_id": 11553140677,
+      "script": "tests/smoke_f23_live_moves.gd",
+      "args": "--prove-utility=dash_strike",
+      "mode": "hosted headless",
+      "checkout_commit": "f1b093c5f7123783d56bb9c2fc4963d0fbbd90d2",
+      "checkout_verified": "render job113329040553 checkout and git log -1; workflow head fda4aa is dispatch main, not source candidate",
+      "result": "PASS",
+      "checks": 19,
+      "failed_checks": 0,
+      "exit": 0,
+      "log_sha256": "b6c06862b104dc665d9983a054de203697b70e9f9a04a616f392c662c634565e",
+      "collider_instance_id": 342003550466,
+      "target_body_instance_id": 342003550466,
+      "hit": true,
+      "requested_advance_metres": 6.0,
+      "applied_advance_metres": 1.9453125,
+      "contact": "(1.33375, 1.38375, -0.0)",
+      "wind_before": 99.5,
+      "wind_after_start": 75.5,
+      "foe_hp_before": 600.0,
+      "foe_hp_after": 593.956072106877,
+      "launches": 1,
+      "impacts": 1,
+      "limits": "Disclosed flat stage/static600HP wild and process-local preview; not canonical-wild, campaign, co-op, shipping, device or visual acceptance. Existing utility logic and mounted Heal proofs reused."
+    },
+    "runtime_review": {
+      "reviewer": "/root/f25_medium_review",
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "verdict": "APPROVE bounded mounted Dash behavior",
+      "commit": "f1b093c5f7123783d56bb9c2fc4963d0fbbd90d2",
+      "verified": "19checks0errors exit0, exact target collision and finite contact, retained1.9453125m advance within6m,24Wind,one launch/impact,600to593.956072106877foeHP; original safety/binding/one-hit guards retained",
+      "limits": "Disclosed static fixture only; no canonical wild, shipping, campaign, co-op, device or visual claim"
+    },
+    "whole_criterion_review": {
+      "criterion": "F23#2",
+      "reviewer": "/root/f25_medium_review",
+      "verdict": "OPEN",
+      "remaining_gate": "Guarded shipping admission of Heal/Dash plus every-role two-equipable proof through authored learnsets and loadout validation. Current eight shipping utilities; process-local previews do not satisfy this.",
+      "blind_requirement": "No additional F23#2-specific blind judge named",
+      "disposition": "Reuse passing Dash/Heal/utility logic. Preserve coupled runtime/actor-vitals guards and flags; no component READY or whole closure."
+    }
+  },
+  "role_loadout_proof": {
+    "criterion": "F23#2",
+    "source_commit": "4b01488f1cc330db0a3e4768eae8bcffd8f21e7f",
+    "source_review": "SOURCE APPROVE original /root/f25_medium_review",
+    "run_id": 37785611801,
+    "artifact_id": 11553749408,
+    "script": "tests/smoke_net_forward_camp.gd",
+    "args": "--prove-role-utilities",
+    "mode": "hosted headless two actual ENet processes",
+    "result": "PASS",
+    "checks": 43,
+    "failed_checks": 0,
+    "exit": 0,
+    "seconds": 209,
+    "log_sha256": "f9df3607a3dea828dd7ca7802def313d16613e41d5ecfa37f57aaeedb5117599",
+    "net_run_sha256": "c936b03b0e827b34fc169a767186d24f7e16146d93820d187bd2b020a382cee0",
+    "character_file_sha256": "83517a7378cd733f90cd2203871a9a4d01772c1d3f5d4cc7431f86710182fa2f",
+    "retained_disk_verification": "Four owned creatures, each final saved card exactly matches original revision2 receipt; all eight craft:<character>:loadout_<edit_id> receipts retained in character file",
+    "role_receipts": {
+      "CHARGER": {
+        "choices": [
+          "hearten",
+          "dash_strike"
+        ],
+        "receipts": [
+          {
+            "loadout_last_edit": {
+              "charged": "undertow",
+              "creature_uid": "creature-5cd68269c7da80877128fd24ce654d20",
+              "edit_id": "e0c0715a6f48422c8fe66202172df17b",
+              "expected_revision": 0.0,
+              "quick": "ripple_jab",
+              "utility": "hearten"
+            },
+            "loadout_revision": 1.0,
+            "move_charged": "undertow",
+            "move_quick": "ripple_jab",
+            "move_ultimate": "ultimate_ripplet",
+            "move_utility": "hearten",
+            "uid": "creature-5cd68269c7da80877128fd24ce654d20"
+          },
+          {
+            "loadout_last_edit": {
+              "charged": "undertow",
+              "creature_uid": "creature-5cd68269c7da80877128fd24ce654d20",
+              "edit_id": "9a1f7b01c300871cd09f7d8ab18840d1",
+              "expected_revision": 1.0,
+              "quick": "ripple_jab",
+              "utility": "dash_strike"
+            },
+            "loadout_revision": 2.0,
+            "move_charged": "undertow",
+            "move_quick": "ripple_jab",
+            "move_ultimate": "ultimate_ripplet",
+            "move_utility": "dash_strike",
+            "uid": "creature-5cd68269c7da80877128fd24ce654d20"
+          }
+        ],
+        "species": "ripplet"
+      },
+      "CURRENT": {
+        "choices": [
+          "bramble_trap",
+          "snare"
+        ],
+        "receipts": [
+          {
+            "loadout_last_edit": {
+              "charged": "warren_charge",
+              "creature_uid": "creature-8f4829ec5c711e05cdac7f62e2d6bac6",
+              "edit_id": "4354d34d0d7e0d6794b9a62723309e5c",
+              "expected_revision": 0.0,
+              "quick": "bramble_whip",
+              "utility": "bramble_trap"
+            },
+            "loadout_revision": 1.0,
+            "move_charged": "warren_charge",
+            "move_quick": "bramble_whip",
+            "move_ultimate": "ultimate_ground_current",
+            "move_utility": "bramble_trap",
+            "uid": "creature-8f4829ec5c711e05cdac7f62e2d6bac6"
+          },
+          {
+            "loadout_last_edit": {
+              "charged": "warren_charge",
+              "creature_uid": "creature-8f4829ec5c711e05cdac7f62e2d6bac6",
+              "edit_id": "01ba84da6a68d0966ab98aec687172e6",
+              "expected_revision": 1.0,
+              "quick": "bramble_whip",
+              "utility": "snare"
+            },
+            "loadout_revision": 2.0,
+            "move_charged": "warren_charge",
+            "move_quick": "bramble_whip",
+            "move_ultimate": "ultimate_ground_current",
+            "move_utility": "snare",
+            "uid": "creature-8f4829ec5c711e05cdac7f62e2d6bac6"
+          }
+        ],
+        "species": "bramblebun"
+      },
+      "DIVER": {
+        "choices": [
+          "heal_pulse",
+          "veil"
+        ],
+        "receipts": [
+          {
+            "loadout_last_edit": {
+              "charged": "sky_rend",
+              "creature_uid": "creature-fd79c6f709737209b1908ff67649ba9a",
+              "edit_id": "416db19b1479c468ccfa5cd891322c95",
+              "expected_revision": 0.0,
+              "quick": "gale_peck",
+              "utility": "heal_pulse"
+            },
+            "loadout_revision": 1.0,
+            "move_charged": "sky_rend",
+            "move_quick": "gale_peck",
+            "move_ultimate": "ultimate_galewisp",
+            "move_utility": "heal_pulse",
+            "uid": "creature-fd79c6f709737209b1908ff67649ba9a"
+          },
+          {
+            "loadout_last_edit": {
+              "charged": "sky_rend",
+              "creature_uid": "creature-fd79c6f709737209b1908ff67649ba9a",
+              "edit_id": "151e5552113983f1fbb1c89160c4d8f1",
+              "expected_revision": 1.0,
+              "quick": "gale_peck",
+              "utility": "veil"
+            },
+            "loadout_revision": 2.0,
+            "move_charged": "sky_rend",
+            "move_quick": "gale_peck",
+            "move_ultimate": "ultimate_galewisp",
+            "move_utility": "veil",
+            "uid": "creature-fd79c6f709737209b1908ff67649ba9a"
+          }
+        ],
+        "species": "galewisp"
+      },
+      "WALL": {
+        "choices": [
+          "quake_ring",
+          "shove"
+        ],
+        "receipts": [
+          {
+            "loadout_last_edit": {
+              "charged": "stone_rush",
+              "creature_uid": "creature-8d5cac06f3fd1ec7d6360247234c34f7",
+              "edit_id": "7095b09cf42eb23443ca76b17bde8407",
+              "expected_revision": 0.0,
+              "quick": "pebble_toss",
+              "utility": "quake_ring"
+            },
+            "loadout_revision": 1.0,
+            "move_charged": "stone_rush",
+            "move_quick": "pebble_toss",
+            "move_ultimate": "ultimate_terrapup",
+            "move_utility": "quake_ring",
+            "uid": "creature-8d5cac06f3fd1ec7d6360247234c34f7"
+          },
+          {
+            "loadout_last_edit": {
+              "charged": "stone_rush",
+              "creature_uid": "creature-8d5cac06f3fd1ec7d6360247234c34f7",
+              "edit_id": "e12b7c92d6119e369c9557adb637050d",
+              "expected_revision": 1.0,
+              "quick": "pebble_toss",
+              "utility": "shove"
+            },
+            "loadout_revision": 2.0,
+            "move_charged": "stone_rush",
+            "move_quick": "pebble_toss",
+            "move_ultimate": "ultimate_terrapup",
+            "move_utility": "shove",
+            "uid": "creature-8d5cac06f3fd1ec7d6360247234c34f7"
+          }
+        ],
+        "species": "terrapup"
+      }
+    },
+    "fixtures": "four pre-admission level15 creatures and two camp kits; production cap, known moves, camp placement, panel, host and owner save guards retained",
+    "limits": "Actual equip/host/save/ACK only; no guest Dash combat availability, unconverted wild Heal, controller mapping or skipped camp reload/rejoin claim",
+    "runtime_review": "APPROVE/MET as part of same original independent WHOLE F23#2 verdict",
+    "checkout_verification": "Job113339447898 git log -1 confirms4b01488f1cc330db0a3e4768eae8bcffd8f21e7f"
+  },
+  "guarded_shipping_admission": {
+    "source_commit": "e641620c7918a91e3e3ce4ee8b2d501907d75a69",
+    "source_review": "SOURCE APPROVE original /root/f25_medium_review",
+    "change": "Existing live_moves admits ten utilities. Director permits only saved self Heal; unsupported Heal returns heal_scope_unavailable before generic mutation; generic Host independently refuses Heal before resource/action mutation. Authored-Heal/no-spend/low-Wind existing case retained.",
+    "guards": "actor_vitals runtime OFF; saved stage/commit/ownerACK unchanged; guest Dash transport refusal and physical collision/safety/binding/one-hit guards unchanged",
+    "affected_proof": "Existing test_f23_live_moves.gd sufficient per original reviewer; prior Heal74/1310, affected27/515, canonical26, Dash19 and controller proofs reused",
+    "unit_run_id": 37786545300,
+    "result": "PASS affected18tests469assertions",
+    "limits": "Heal availability remains scoped to converted saved-health fights; Dash transport remains local-only. No general combat/device/visual/co-op acceptance.",
+    "unit_artifact_id": 11554268153,
+    "unit_tests": 18,
+    "unit_assertions": 469,
+    "unit_failed": 0,
+    "unit_exit": 0,
+    "unit_seconds": 7,
+    "unit_log_sha256": "85a58851977a900aefab0173129ed2856fd811109ff7b4898823ca1983e55517",
+    "checkout_verification": "Job113342662829 git log -1 confirmse641620c7918a91e3e3ce4ee8b2d501907d75a69"
+  },
+  "current_shipping_flags": "Existingproductionflags unchanged by UIDfix/observation/physicalinputproofrescope. F23#2 acceptance returnedOPEN; no repaired WHOLE claim.",
+  "criteria_status": {
+    "F23#2": "PARKED OPEN; no repaired WHOLE acceptance",
+    "F23#5": "OPEN"
+  },
+  "whole_f23_2_review": {
+    "reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "candidate_commit": "6cdb0e58d74fb624c2693408cbda7b1ed5f990ac",
+    "verdict": "WHOLE F23#2 APPROVE / MET",
+    "verified": "Ten shipping utility IDs; actual two-peer role43checksPASS all eight saved edit receipts and matchingrevision2cards; affected18tests469assertionsPASS; retained Heal/Dash/controller evidence applicable",
+    "blind_requirement": "No additional criterion-specific blind proof named",
+    "limits": "Literal F23#2 with disclosed fixtures. Heal requires saved-health scope, Dash transport local-only. No F23#5/unrestrictedco-op/campaign/device/visual acceptance."
+  },
+  "wording_only_followup": {
+    "commit": "f28a93236e",
+    "reviewer": "original /root/f25_medium_review",
+    "verdict": "APPROVE",
+    "change": "Unavailable-Heal feedback uses plain player language; refusalcodes/guards/resources unchanged",
+    "whole_disposition": "Original WHOLE F23#2 approval remains applicable without rerun"
+  },
+  "returned_integration": {
+    "reported_by": "ROOT urgent routing 2026-10-08",
+    "candidate": "Consolidation13 f3668748 PR589 CLOSED UNMERGED",
+    "proof": "verify-multiplayer-shard(3) shared_boss and shared_wild_fight fail; same original smokes PASS mainfda4",
+    "observed": "peer1 quick move_start invalid_actor_move; enemy HP unchanged and friendly_target checks unreachable",
+    "current_disposition": "Original approval/earlier passing pieces retained as history; whole acceptance returned. Inspect bounded shipping admission with SAME original reviewer; no unsupported cause or unchanged rerun.",
+    "verified_metadata": {
+      "sha": "f3668748a6edcd292e0191110c87b6cbb97edae3",
+      "pr": 589,
+      "merged": false,
+      "shard3_run": 37792546765,
+      "shard3_job": 113363723877,
+      "artifact_id": 11557353642
+    }
+  },
+  "returned_admission_observation": {
+    "source_commit": "1d116c5b426b2c1a08c6e23ff5618c65e80ffea9",
+    "reviewer": "original /root/f25_medium_review 01a1168b-648a-7c33-8810-ae98609b293b",
+    "source_verdict": "SOURCE APPROVE; inputs/fixtures/guards/budgets/hit verdicts preserved",
+    "run_id": 37799961227,
+    "status": "FAIL retained live observation; no accepted save",
+    "claim": "detached live post-checkpoint state; observation latency can advance gameplay, not refusal-time receipt or established production cause",
+    "production_change": "none; speculative zero-lunge bypass rejected by original reviewer because failed packet contains successful host zero-strength original",
+    "artifact_id": 11560292783,
+    "result": "15failures; nofatal",
+    "log_sha256": "fb9429849dda60e524045b67037e29d82d95aa84c8a2bab4f53d53e1e8b8da53",
+    "observed": {
+      "at_ms": 89601,
+      "participant_uid": "",
+      "participant_actor_generation": null,
+      "participant_actor_bound_uid": null,
+      "participant_actor_vitals": {},
+      "admitted_body_binding_uid": "creature-c07478ee8659ac61ac0ec311ba6a09da",
+      "owned_matches": 1,
+      "deployment_generation": 1,
+      "motion_scope_valid": true,
+      "enemy_target_current": true,
+      "actor_current": false
+    },
+    "original_verdict": "SUPPORTED correction direction; executed repair unproved"
+  },
+  "returned_legacy_uid_correction": {
+    "source_commit": "f6efdb6a0e50f9e38b79cd35a55a6abab8bc8a20",
+    "status": "SOURCE APPROVE and UID correction independently verified; wholeOPEN after wild7/boss3remaining geometry failures",
+    "source_gap": "non-tournament _host_engage supplies emptyUID; _ordinary_bind_deployed_peer previously skipped non-saved-vitals encounters",
+    "correction": "Populate transient legacy participantUID from authenticated host body/card/binding and uniquelyadmitted livingownedUID. Dedicated host adapter preserves actor_current/tournament/pendingrules, rejects savedactor generations/rows, idempotent sameUID; savedHP binding unchanged.",
+    "state_scope": "Transient encounter membership UID+seq only; no durable state/schema/flag or savedHP mutation",
+    "proofs": [
+      "smoke_net_shared_wild_fight.gd",
+      "smoke_net_shared_boss.gd",
+      "test_move_commit_runtime.gd"
+    ],
+    "runs": {
+      "shared_wild_fight": 37801794084,
+      "shared_boss": 37801798698,
+      "move_commit_runtime": 37801802847
+    },
+    "unit_proof": {
+      "run_id": 37801802847,
+      "artifact_id": 11561825769,
+      "selector": "--only=test_move_commit_runtime",
+      "tests": 13,
+      "assertions": 122,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 7,
+      "log_sha256": "9a42cee043149e5448fc931b44b6b896af23c81e52cde8018ca778be5e9d0499",
+      "checkout_verification": "job113395645514 git log -1 confirmsf6efdb6a0e50f9e38b79cd35a55a6abab8bc8a20"
+    },
+    "wild_runtime": {
+      "run_id": 37801794084,
+      "artifact_id": 11561447701,
+      "result": "FAIL 7failures nofatal",
+      "log_sha256": "ed4b60f1be6c0ccb473c797859967ad78aa19654c749a2095fffbfb6cfb78b6b",
+      "observation": "participantUID now matchesadmitted/body/binding; actor_currentTRUE, target/scopevalid; invalid_actor_move absent",
+      "limits": "No accepted save or boundary; remaining guesthit/friendlygeometry/window failures retained",
+      "checkout_verification": "job113395615863 git log -1 confirmsf6efdb6a0e50f9e38b79cd35a55a6abab8bc8a20"
+    },
+    "boss_runtime": {
+      "run_id": 37801798698,
+      "artifact_id": 11560699195,
+      "result": "FAIL 3friendly/window failures nofatal; originalguesthit checks pass",
+      "log_sha256": "317e51c03ae6cf241911489963b59e6a2a57fc5c2f0358040501fbbf545dea42",
+      "checkout_verification": "job113395632402 git log -1 confirmsf6efdb6a0e50f9e38b79cd35a55a6abab8bc8a20"
+    },
+    "original_runtime_review": {
+      "reviewer": "original /root/f25_medium_review",
+      "verdict": "UID correction verified; no further shipping correction supported; PARK pending proof re-scope",
+      "supported_source": "_step_place_creature changes guest local body; host movement follows physical inputs. Position is correction reference, not relocation authority; trusting fixture teleport would bypass authority.",
+      "remaining_scope": "Existing placement proofs need explicit adaptation to production input; no evidence physical-input movement is broken"
+    }
+  },
+  "proof_rescope_evaluation": "Direction/SOURCE APPROVE preserved as history; actualchangedwild FAIL8, originalreviewerPARK; no bossrun/no newdispatch until distinctsupportedcode.",
+  "physical_input_proof_rescope": {
+    "source_commit": "e8e2aab3f88f2776fabd828448f3369ce0d89333",
+    "source_verdict": "SOURCE APPROVE same original /root/f25_medium_review",
+    "changed_path": "tools/net/peer_runner.gd _step_place_creature only",
+    "scope": "Active networkguestcombat with mountedmotion; actualownedbody/camera sharedNAVIGATOR.step/_drive_left InputEventJoypadMotion. Same atx/z/face/settle, originalSWINGS/assertions/negativecontrols unchanged",
+    "guards": "bodyUID/encounter/sessionepoch throughout; axesrelease; travel+settle original3000physicsframes; unreachable/lostbinding FAIL; no fallbackteleport/forcedY. Otherplacementpaths unchanged",
+    "unit_reuse": "Shipping source unchanged from f6; previous13tests122assertions reused",
+    "run_id": 37804800865,
+    "status": "FAIL retained, PARK originalreviewer; boss notdispatched",
+    "artifact_id": 11563161588,
+    "failures": 8,
+    "fatal": "",
+    "log_sha256": "2329c5db43a46cfb878cdc57040da29db82e0c7267d02080324ee71c32bb0543",
+    "observed": "Admission/actor_current/motion/target valid; hoststrikeorigins remaininitialguestposition; friendlyseparation9.713060m; placementtimeout with recent911msheartbeat",
+    "timeout": {
+      "action": "place_creature",
+      "id": "s91",
+      "phase": "timeout_before_finish",
+      "coordinator_deadline_ms": 158601,
+      "coordinator_observed_ms": 158608,
+      "heartbeat_physics_frame": 4500,
+      "heartbeat_receive_age_ms": 911
+    },
+    "independent_verdict": {
+      "reviewer": "original /root/f25_medium_review",
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "verdict": "PARK; no distinct shipping correction supported yet",
+      "missing_decisive_operands": [
+        "guest projection/current scope",
+        "host motion context valid/walking/paused",
+        "received direction/sequence/ACK",
+        "host correction sequence"
+      ],
+      "limits": "Cannot distinguish scope rejection/input delivery/correction handling; no guard/positiontrust/tolerance/budgetchange justified. Nounchangedrerun."
+    },
+    "accepted_boundary": "none; failed saves never promoted",
+    "checkout_verification": "job113406158698 git log -1 confirmse8e2aab3f88f2776fabd828448f3369ce0d89333"
+  }
+}

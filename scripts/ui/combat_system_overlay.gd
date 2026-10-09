@@ -16,6 +16,7 @@ var _ring: Control
 var _cells: Dictionary = {}
 var _uid := ""
 var _meter_caption: Label
+var _ultimate_button: Label
 
 class UltimateRing extends Control:
 	var fraction := 0.0
@@ -35,47 +36,95 @@ func configure(read_local_snapshot: Callable) -> bool:
 	_read = read_local_snapshot
 	return true
 
+## Same local resource already drawn by CombatHUD's ally energy bar. The
+## acknowledged overlay UID must match before replacing the charged fill.
+func present_charged_energy(expected_uid: String, energy: float, required: float) -> bool:
+	if not visible or expected_uid != _uid or expected_uid.is_empty() \
+		or not is_finite(energy) or not is_finite(required) or required <= 0.0:
+		return false
+	var gate: ProgressBar = _cells.charged.cooldown
+	gate.visible = true
+	gate.max_value = required
+	gate.value = clampf(energy, 0.0, required)
+	return true
+
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	visible = false
 	var cfg: Dictionary = SCREEN.config().get("combat", {})
-	var left := VBoxContainer.new()
-	left.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	left.position = Vector2(float(cfg.get("inset", 56)), -float(cfg.get("command_bottom", 500)))
+	var left := PanelContainer.new()
+	left.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	left.add_theme_stylebox_override("panel", TOKENS.panel_box(TOKENS.BG_DEEP))
+	# Commands have their own backed region above the lower-left party strip.
+	left.position = Vector2(float(cfg.get("inset", 56)), float(TOKENS.HUD_INSET))
 	add_child(left)
 	_commands = COMMAND_METER.new()
 	left.add_child(_commands)
+	var move_width: float = float(cfg.get("move_width", 420))
+	var inset: float = float(cfg.get("inset", 56))
+	var move_box := TOKENS.panel_box(TOKENS.BG_DEEP)
+	var move_panel := PanelContainer.new()
+	move_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	move_panel.add_theme_stylebox_override("panel", move_box)
+	move_panel.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	# Expand the backing around the existing move area; keep its content width
+	# and safe inset, with the Aim/Flee row above this separate panel.
+	move_panel.offset_left = -move_width-inset-move_box.content_margin_left
+	move_panel.offset_right = -inset+move_box.content_margin_right
+	move_panel.offset_top = -float(cfg.get("move_bottom", 380))-move_box.content_margin_top
+	move_panel.offset_bottom = -inset+move_box.content_margin_bottom
+	move_panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	move_panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	add_child(move_panel)
 	_moves = VBoxContainer.new()
-	_moves.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	_moves.position = Vector2(-float(cfg.get("move_width", 420)) - float(cfg.get("inset", 56)), -float(cfg.get("move_bottom", 380)))
-	_moves.custom_minimum_size.x = float(cfg.get("move_width", 420))
-	add_child(_moves)
+	_moves.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_moves.custom_minimum_size.x = move_width
+	move_panel.add_child(_moves)
 	var ultimate := HBoxContainer.new()
+	ultimate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_moves.add_child(ultimate)
 	_ring = UltimateRing.new()
+	_ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_ring.custom_minimum_size = Vector2(80, 80)
 	ultimate.add_child(_ring)
 	var rb := Label.new()
-	rb.text = "RB"
+	_ultimate_button = rb
 	rb.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	rb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rb.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	rb.add_theme_font_size_override("font_size", TOKENS.FONT_HEADING)
 	_ring.add_child(rb)
 	_meter_caption = _label(ultimate, "Ultimate")
-	var grid := GridContainer.new()
-	grid.columns = 2
-	grid.add_theme_constant_override("h_separation", 12)
-	grid.add_theme_constant_override("v_separation", 8)
-	_moves.add_child(grid)
-	# Y above X/B; A is explicit dodge rather than a hidden fourth attack.
+	_meter_caption.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var diamond := VBoxContainer.new()
+	diamond.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	diamond.add_theme_constant_override("separation", 8)
+	_moves.add_child(diamond)
+	var top := CenterContainer.new()
+	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	diamond.add_child(top)
+	var middle := HBoxContainer.new()
+	middle.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	middle.add_theme_constant_override("separation", 12)
+	diamond.add_child(middle)
+	var bottom := CenterContainer.new()
+	bottom.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	diamond.add_child(bottom)
+	var rows: Dictionary = {"charged":top,"quick":middle,"utility":middle,"dodge":bottom}
+	# Same readable cell width in a face-button diamond: Y top, X left,
+	# B right, A bottom. Containers grow for wrapped names and state text;
+	# the bottom anchor keeps that growth above the configured safe inset.
 	for slot: String in ["charged", "quick", "utility", "dodge"]:
 		var cell := VBoxContainer.new()
-		cell.custom_minimum_size.x = float(cfg.get("move_width", 420)) * 0.5 - 6
-		grid.add_child(cell)
+		cell.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		cell.custom_minimum_size.x = move_width * 0.5 - 6
+		cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		(rows[slot] as Container).add_child(cell)
 		var title := _label(cell, "")
+		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		var cooldown := ProgressBar.new()
+		cooldown.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		cooldown.show_percentage = false
 		cooldown.custom_minimum_size.y = 8
 		cell.add_child(cooldown)
@@ -112,7 +161,7 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 	_ring.set("arm_fraction", clampf(float(raw.get("arm_fraction", 0)), 0, 1))
 	_ring.queue_redraw()
 	var arm_button := GLYPH.pad_button_name_for_action("combat_ultimate_arm") if using_pad else GLYPH.key_name_for_action("combat_ultimate_arm")
-	(_ring.get_child(0) as Label).text = arm_button
+	_ultimate_button.text = arm_button
 	var armed_buttons := "%s / %s / %s" % [raw.slots.quick.glyph, raw.slots.charged.glyph, raw.slots.utility.glyph]
 	_meter_caption.text = "Ultimate · %d%%\n%s" % [int(clampf(meter / maximum, 0, 1) * 100),
 		"Ultimate unavailable" if raw.get("ultimate_available", true) != true else \
@@ -122,6 +171,7 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 		var row: Dictionary = raw.slots[slot]
 		var label: Label = _cells[slot].title
 		label.text = "%s %s%s" % [row.glyph, row.name, "" if row.ready else " · Unavailable"]
+		if slot == "utility": label.text += "\nWind %s" % float(row.get("wind_cost", 24.0))
 		label.add_theme_color_override("font_color", TOKENS.TEAL_SOFT if row.ready else TOKENS.TEXT_SECONDARY)
 		var cooldown: ProgressBar = _cells[slot].cooldown
 		var total := float(row.get("cooldown_total_s", 0))

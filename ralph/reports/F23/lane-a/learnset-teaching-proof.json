@@ -1,0 +1,49 @@
+{
+  "criterion": "F23#1",
+  "criterion_text": "Every species has a learnset unlocking moves at levels and breakthroughs; TMs still work under the primary-type rule.",
+  "status": "WHOLE F23#1 APPROVE / MET",
+  "source_commit": "ce798428af3ad29831e0dfae97a41a8b46acff9a",
+  "source_review": {
+    "reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "verdict": "SOURCE APPROVE",
+    "required_proof": "One affected batch test_breakthrough_saved_move_history.gd and test_tm_teach_transaction.gd"
+  },
+  "change": "Two bounded cases extend existing authored move-history and canonical TM proofs: all catalogue species have learnsets, actual level availability checked before/at gates with earlier duplicate unlocks retained; actual host TM stage uses catalogue primary and refuses forged compatible saved type without mutation. No production behavior/schema/guard/flag change.",
+  "proof": {
+    "run_id": 37788695753,
+    "artifact_id": 11555232632,
+    "script": "tests/run_tests.gd",
+    "args": "--only=test_breakthrough_saved_move_history.gd,test_tm_teach_transaction.gd",
+    "mode": "hosted headless",
+    "checkout_commit": "ce798428af3ad29831e0dfae97a41a8b46acff9a",
+    "checkout_verification": "Job113350021773 git log -1 confirms exact candidate",
+    "result": "PASS",
+    "files": 2,
+    "tests": 12,
+    "assertions": 3000,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 7,
+    "log_sha256": "3e27f455f15742f0e51b60beed0f4e8c8303b738ec60f71d337d768bc572c683",
+    "coverage": [
+      "Every catalogue species has authored learnset; nonreserved level option eligibility before/at original gates",
+      "Exact authored union at completed breakthrough prefixes1..5, JSON integral tiers, malformed-prefix refusal, saved-loadout import and repeated Stormursa Hearten gate",
+      "Host paid TM stage: one disc/one chosen UID, knowledge-only and unchanged equipped/mastery fields, replay/unknown/foreign/incompatible/missing-disc/combat/stale-revision refusal",
+      "Failed world writer rollback, original journal JSON recovery and ownerACK; actual owner installer BOOL write failure retry without second debit/ACK; Backpack pending original and passive-care drift controls",
+      "Catalogue water primary refuses ground TM; forged compatible saved primary never grants knowledge or mutates source"
+    ]
+  },
+  "fixtures": "Detached authored eligibility and actual Foundation/owner/Backpack service controls; two owned Terrapups/carried disc and one owned Ripplet for primary-type refusal. No new native or ENet TM claim. Existing passing role/controller/utility/Heal/command evidence reused.",
+  "limits": "Literal learning/primary-type unit proof, not earned campaign leveling or new unrestricted co-op/device/visual acceptance. Source additionally contains f28a93236e wording-only unavailable-Heal messages, unchanged refusal codes/guards/resources.",
+  "whole_review": {
+    "reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "candidate_commit": "401adcf17575b41e536b747a2985f3c141d79112",
+    "verdict": "WHOLE F23#1 APPROVE / MET",
+    "verified": "Named12tests3000assertionsPASS covers catalogue learnsets, level/breakthrough eligibility and primary-type TM transactions including refusal/save/ACK controls",
+    "blind_requirement": "No separate criterion-specific blind proof named",
+    "limits": "No new campaign/device/visual/unrestrictedco-op claims"
+  },
+  "count_disposition": "Approved re-proof of already-MET main criterion per CONSOLIDATED13/6062061649; not a new closure, excluded from hourly new-criterion count."
+}
