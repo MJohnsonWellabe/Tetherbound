@@ -631,7 +631,7 @@ func load_completed_fixture(tree: SceneTree, game: Node) -> bool:
 	for index: int in before.inventory.size():
 		var stack: Variant = before.inventory[index]
 		if stack == null: continue
-		var valid := stack is Dictionary and stack.get("id") is String and not stack.id.is_empty() and stack.has("n")
+		var valid: bool = stack is Dictionary and stack.get("id") is String and not stack.id.is_empty() and stack.has("n")
 		if valid:
 			for field: String in ["n", "durability", "durability_bonus"]:
 				if not stack.has(field): continue
