@@ -262,7 +262,7 @@ func _capture_row(row: Dictionary) -> void:
 			var patch: Dictionary = cfg.get("tuft_patches", {})
 			var enabled := _f38_tuft_patch_mode == "candidate"
 			var observations := []
-			var matched := patch.get("enabled") == enabled
+			var matched: bool = patch.get("enabled") == enabled
 			for far: bool in [false, true]:
 				var material := field.get("_far_material" if far else "_material") as ShaderMaterial if field != null else null
 				var actual := {}

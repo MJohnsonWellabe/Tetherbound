@@ -1711,7 +1711,7 @@ static func apply_tuft_patches(material: ShaderMaterial, cfg: Dictionary, far: b
 	var patch: Dictionary = cfg.get("tuft_patches", {})
 	var start := float(patch.get("start", 0.35))
 	var full := float(patch.get("full", 0.65))
-	var enabled := patch.get("enabled", false) == true and is_finite(start) and is_finite(full) \
+	var enabled: bool = patch.get("enabled", false) == true and is_finite(start) and is_finite(full) \
 			and start >= 0.0 and full <= 1.0 and full > start
 	var contrast_key := "drift_contrast" if far else "clump_contrast"
 	var start_key := "drift_patch_start" if far else "clump_patch_start"
