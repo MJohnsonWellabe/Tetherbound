@@ -223,7 +223,9 @@ func _a_full_party_is_still_five_after_a_real_swap() -> void:
 	# live panel and verify no rotation flag or offered instance is consumed.
 	for species: String in ["terrapup", "ripplet", "galewisp", "veridian",
 			"abyssal_guardian", "water_abyssal_guardian", "solmane", "fulgocobra"]:
-		var protected: RefCounted = _game.call("make_creature", species, "")
+		# Same merged-catalogue factory as Water's actual guardian offer. The
+		# Game factory reads only the base table and cannot build Water ids.
+		var protected: RefCounted = preload("res://scripts/world/trainer_npc.gd").creature_for({"species": species, "level": 1})
 		if protected == null:
 			_fail("protected catalogue fixture missing: " + species)
 			continue
