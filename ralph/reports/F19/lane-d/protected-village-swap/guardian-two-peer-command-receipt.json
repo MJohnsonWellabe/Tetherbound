@@ -22,5 +22,21 @@
     "peer1": "one interpolation warning; one ERROR Save refused: invalid redesign state",
     "verdict": "FAILED artifact verified; passing reuse REJECTED"
   },
-  "not_dispatched": "Veridian same-five15min rejected (truncates1500s+hello allowance and covers party carry not capacity); full-refusal with4creatures approved but omitted as redundant space-refusal evidence"
+  "not_dispatched": "Veridian same-five15min rejected (truncates1500s+hello allowance and covers party carry not capacity); full-refusal with4creatures approved but omitted as redundant space-refusal evidence",
+  "supported_correction": {
+    "guards": "Original identity/world/receipt/five-creature cap/selection/flags/skills/schema/save validation unchanged; no schema change",
+    "source": "8d9fc5686fbcf7dfb59c0c27df7e161de1afe107",
+    "whole": "F19#4 OPEN",
+    "affected_existing_proof": {
+      "limit_minutes": 10,
+      "mode": "headless/Dummy",
+      "args": "res://tests/test_water_capture_transaction.gd",
+      "runtime": "pending",
+      "run": 37887168552,
+      "script": "tools/run_one_test.gd"
+    },
+    "two_peer_command": "Original unchanged Guardian40min scenario conditionally approved only after genuine affected proof reviewed; fresh dedicated output required",
+    "original_source_command_approve": "SAME reviewer01a11f0e-7dba-7700-a91c-f32109c70ce9",
+    "change": "Remove only released owned training UID before synchronous capture save; restore full prior redesign dictionary on failure"
+  }
 }
