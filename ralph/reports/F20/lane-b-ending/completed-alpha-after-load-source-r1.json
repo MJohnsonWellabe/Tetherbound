@@ -1,0 +1,30 @@
+{
+  "kind": "completed-world-alpha-availability-existing-proof-extension",
+  "criterion": "F20#3",
+  "initial_source": "887b5f97fe99359cbb40829b3a5b1ca8f0838620",
+  "initial_original_source_command_verdict": "Both Bacon and Hubble BLOCK: HOME.context requires proximity to Grandpa, while this witness executes after normal travel to the bounty board. They recommend existing HOME.journey_context for retained credits; remaining APIs and types match production.",
+  "initial_source_dispatched": false,
+  "supported_correction_source": "06de02cf99016c9265cf8a171f1f88d50ec72468",
+  "supported_correction": "One line: HOME.context(game) to existing validated HOME.journey_context(game), preserving all alpha body, packet, world, epoch, traits, signal and ordinary-input guards.",
+  "same_original_reviewers": [
+    "b_f49_review/Bacon",
+    "b_f20_review/Hubble"
+  ],
+  "corrected_source_review_pending": false,
+  "existing_command": "tests/smoke_f20_ending.gd --completed-fixture --functional-offload",
+  "scope": "Actual living published canonical Meadows alpha availability after production Title Load of the unmodified approved completed fixture. Normal distance streaming unchanged; physics awake state disclosed.",
+  "prior_load_run_reused": 37893313354,
+  "prior_named_alpha_run_reused": 37895473032,
+  "prior_rules_run_reused": 37886132051,
+  "fixture_bytes_changed": false,
+  "guard_deadlines_changed": false,
+  "forced_generation_clock_position_activation_outcome": false,
+  "earned_finale": false,
+  "accepted_boundary_created": false,
+  "played_alpha_admission_resolution_respawn_payout_proven": false,
+  "shipping_flag_restoration_approved": false,
+  "native_dispatched_by_B": false,
+  "blind_pass": false,
+  "whole_criterion_closed": false,
+  "corrected_original_source_command_verdict": "Bacon and Hubble both **SOURCE APPROVE** `06de02cf99016c9265cf8a171f1f88d50ec72468` and **COMMAND APPROVE** one fresh:\n\n```text\ntests/smoke_f20_ending.gd --completed-fixture --functional-offload\n```\n\nUse render mode, Compatibility 1280×720, timeout 60 and fresh isolated storage. No additional selector repeat needed.\n\nActual post-credits alpha availability remains pending. No respawn, payout, shipping, blind or whole F20#3 approval."
+}
