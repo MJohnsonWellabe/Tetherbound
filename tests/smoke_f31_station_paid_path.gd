@@ -146,6 +146,8 @@ func _run() -> void:
 	if _creature_gear_proof and _failures.is_empty():
 		await _check_paid_creature_gear()
 		if forge != null and attachment != null:
+			_player.global_position = forge.global_position + GHOST_TO_STANCE
+			for frame in 10: await physics_frame
 			await _check_dismantle_order_and_refund(forge, attachment)
 	_check_saved_world_binding()
 	_report()
