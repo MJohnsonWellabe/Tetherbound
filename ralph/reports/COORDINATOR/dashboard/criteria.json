@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-08T18:28:58.645927+00:00",
- "main_sha": "c7127e7dd (PR #590)",
+ "generated_at": "2026-10-09T06:13:16.063586+00:00",
+ "main_sha": "7c7d25873 (PR #591)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -92,17 +92,17 @@
     {
      "text": "Fresh ordinary save reaches and crosses the South Bridge with no teleport/state injection",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (South Bridge), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE. In consolidation 15.",
+     "evidence": "PR #591 (consolidation 15) merged 2026-10-08 2:14 PM CT: from tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (South Bridge), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE.",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-bridge from a fresh v28 save, TB_WORLD_SEED=15. Folds into F49.",
-     "note": "Landed: Evidenced on tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (South Bridge), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE. In consolidation 15.",
+     "note": "Landed: PR #591 (consolidation 15) merged 2026-10-08 2:14 PM CT: from tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (South Bridge), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE.",
      "audit_index": 0
     },
     {
      "text": "Continues through Quarry/Warrens on the same fresh save",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (Quarry/Warrens), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE. In consolidation 15.",
+     "evidence": "PR #591 (consolidation 15) merged 2026-10-08 2:14 PM CT: from tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (Quarry/Warrens), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE.",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-warrens --reload-at-transitions. Folds into F49.",
-     "note": "Landed: Evidenced on tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (Quarry/Warrens), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE. In consolidation 15.",
+     "note": "Landed: PR #591 (consolidation 15) merged 2026-10-08 2:14 PM CT: from tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (Quarry/Warrens), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE.",
      "audit_index": 1
     },
     {
@@ -1557,10 +1557,10 @@
    "criteria": [
     {
      "text": "A command meter fills from the piloted creature's hits and powers four commands: quick item throw, Rally (short team buff), tag-switch combo and Tether Snare.",
-     "status": "in_progress",
-     "evidence": "scripts/combat/tether_commands.gd, scripts/ui/tether_command_meter.gd",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-a ade3c8cfa (READY #572 6074675432, 12:06 AM CT 10-09): shipping host Item/Rally/Tag + Snare, smoke_net_owner_passive_rejoin 37886121443 79 PASS/0 FAIL; original WHOLE F24#0 APPROVE/MET; landing in consolidation 19 (#592) after full CI",
      "gap": "Enable the flags; add unit and engine tests for the meter and all four commands.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. tether_commands.json feature_flags runtime/network/ui_enabled=false. No test references tether_commands.",
+     "note": "Landed: Evidenced on tb/codex-a ade3c8cfa (READY #572 6074675432, 12:06 AM CT 10-09): shipping host Item/Rally/Tag + Snare, smoke_net_owner_passive_rejoin 37886121443 79 PASS/0 FAIL; original WHOLE F24#0 APPROVE/MET; landing in consolidation 19 (#592) after full CI",
      "audit_index": 0
     },
     {
@@ -1581,10 +1581,10 @@
     },
     {
      "text": "Tether Snare slows a wild creature and raises catch chance; it cannot target a trainer-owned creature.",
-     "status": "in_progress",
-     "evidence": "tether_commands.gd; catch_math.gd snare modifier",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-a 6b2723177 (READY #572 6073281957; PR592 exact-head rerun 37885575165 33 PASS/0 FAIL, shipping Tether flags ON; original WHOLE F24#3 APPROVE/MET); landing in consolidation 19 (#592) after full CI",
      "gap": "Enable it; add a unit test for slow, catch bonus and trainer-owned refusal, plus a catch smoke.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. Command snare is gated by tether_commands.json runtime_enabled=false. The live creature \"snare\" utility is a different move.",
+     "note": "Landed: Evidenced on tb/codex-a 6b2723177 (READY #572 6073281957; PR592 exact-head rerun 37885575165 33 PASS/0 FAIL, shipping Tether flags ON; original WHOLE F24#3 APPROVE/MET); landing in consolidation 19 (#592) after full CI",
      "audit_index": 3
     },
     {
@@ -1826,9 +1826,9 @@
     {
      "text": "Five Masters are placed off-path and signposted: L10 mid-Meadows, L20 upper Meadows before the Warden's stronghold, L30 an outer Tidewake island, L40 a Cloudreach high perch (Fly), L50 deep Stormwood.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-c e4d6401b52 (READY #572, 11:28 AM CT 10-08): native Gull Rest five-creature swim (145 assertions, both legs), run 37806614540, Master4 Fly witness; judge PASS all five signs; original whole APPROVE. In consolidation 15.",
+     "evidence": "PR #591 (consolidation 15) merged 2026-10-08 2:14 PM CT: from tb/codex-c e4d6401b52 (READY #572, 11:28 AM CT 10-08): native Gull Rest five-creature swim (145 assertions, both legs), run 37806614540, Master4 Fly witness; judge PASS all five signs; original whole APPROVE.",
      "gap": "Placement test plus controller reachability smoke for each Master site.",
-     "note": "Landed: Evidenced on tb/codex-c e4d6401b52 (READY #572, 11:28 AM CT 10-08): native Gull Rest five-creature swim (145 assertions, both legs), run 37806614540, Master4 Fly witness; judge PASS all five signs; original whole APPROVE. In consolidation 15.",
+     "note": "Landed: PR #591 (consolidation 15) merged 2026-10-08 2:14 PM CT: from tb/codex-c e4d6401b52 (READY #572, 11:28 AM CT 10-08): native Gull Rest five-creature swim (145 assertions, both legs), run 37806614540, Master4 Fly witness; judge PASS all five signs; original whole APPROVE.",
      "audit_index": 1
     },
     {
@@ -2607,9 +2607,9 @@
     {
      "text": "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-e acaaba91d5 (READY #572, 12:11 PM CT 10-08): 240 native Stormwood frames recaptured, 44 catalogue rows rescored; blind completeness PASS; original whole APPROVE. In consolidation 15.",
+     "evidence": "PR #591 (consolidation 15) merged 2026-10-08 2:14 PM CT: from tb/codex-e acaaba91d5 (READY #572, 12:11 PM CT 10-08): 240 native Stormwood frames recaptured, 44 catalogue rows rescored; blind completeness PASS; original whole APPROVE.",
      "gap": "After F26, capture ≥200 Stormwood frames (High/Medium), then a code-blind re-score of catalog rows.",
-     "note": "Landed: Evidenced on tb/codex-e acaaba91d5 (READY #572, 12:11 PM CT 10-08): 240 native Stormwood frames recaptured, 44 catalogue rows rescored; blind completeness PASS; original whole APPROVE. In consolidation 15.",
+     "note": "Landed: PR #591 (consolidation 15) merged 2026-10-08 2:14 PM CT: from tb/codex-e acaaba91d5 (READY #572, 12:11 PM CT 10-08): 240 native Stormwood frames recaptured, 44 catalogue rows rescored; blind completeness PASS; original whole APPROVE.",
      "audit_index": 0
     },
     {

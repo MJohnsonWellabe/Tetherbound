@@ -177,6 +177,7 @@ func test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature() 
 	var previous: Dictionary = commands.config()
 	commands._config = previous.duplicate(true)
 	commands._config.feature_flags.runtime_enabled = true
+	commands._config.rollout_mode = "all" # Tag-switch retention fixture, independent of the shipped rollout mask.
 	var manager := preload("res://scripts/combat/combat_manager.gd").new()
 	var throw_aim := preload("res://scripts/combat/throw_aim.gd").new()
 	manager._throw = throw_aim
