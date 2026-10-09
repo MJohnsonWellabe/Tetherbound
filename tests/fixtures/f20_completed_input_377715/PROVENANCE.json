@@ -1,0 +1,81 @@
+{
+  "kind": "f20_reviewed_completed_fixture",
+  "producer_source": "505d7e0729028b69cfd3a0a9a8e5c6463cd46dc2",
+  "run_id": 37771506596,
+  "artifact_id": 11547889318,
+  "artifact_zip_sha256": "70a94352ef062fe435b62f5f939c318b4df4e05241b4e0c32aecbd5c27d9df6c",
+  "log_sha256": "952334125ac46eceef6159b6fdbf0488af8a66cc9dbf827e01c2396979229857",
+  "checks": 67,
+  "failures": 0,
+  "exit_code": 0,
+  "original_behavior_verdict": "Original F20 reviewer: **BEHAVIOR APPROVE** `37771506596` at `505d7e0729028b69cfd3a0a9a8e5c6463cd46dc2`: 67 checks, zero failures, exit 0; log hash matches and no engine/script errors.\n\nContinuation passed unfinished activities, the three-row bounty board, restored menu input and owned-companion Bryn rematch admission. Victory/rewards remain unclaimed.\n\n**Whole F20#3 stays open** for alpha availability, research completion and applicable blind evidence. Drawing-off fixture scope retained; no READY. Router stopped read-only.",
+  "files_sha256": {
+    "characters/character-b42583ba54a405a9877e159fbee6af63/character.json": "62092bf38f5af95feac2080236f78958056b6b135e6fc8bd4e363849eefd4f5f",
+    "slot_0.json": "b18808dab276c4f8f9c4d5b50ab54e8afbc456f8c80148d00dc7b4921665e4c2",
+    "worlds/slot-0/world.json": "8fda759943ec395f5c6e9d8f01e1e62f73e84c53e783be7bf2763cd85ce49e8e"
+  },
+  "retained": {
+    "character": "character-b42583ba54a405a9877e159fbee6af63",
+    "world": "60fb50dd385ae70efc015a4ba0bf1759",
+    "names": [
+      "Solo1",
+      "Solo2",
+      "Solo3",
+      "Solo4",
+      "Solo5"
+    ],
+    "uids": [
+      "creature-ab0d4cc4fc4f3512d60940eb711082d7",
+      "creature-8c8191c7735f2de12ff22f0c601e4100",
+      "creature-66e6d59abece036f4752b188e00c4818",
+      "creature-b35418cdce040b081b5f00f8998afc59",
+      "creature-e24d669d1142fd80690f8c358ca8c22c"
+    ],
+    "inventory": [
+      {
+        "id": "home_key",
+        "n": 1
+      },
+      null,
+      {
+        "id": "potion_small",
+        "n": 3
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "receipts": [
+      "starter_choice:character-b42583ba54a405a9877e159fbee6af63:creature-ab0d4cc4fc4f3512d60940eb711082d7",
+      "craft:home_return_60fb50dd385ae70efc015a4ba0bf1759_before_finale:character-b42583ba54a405a9877e159fbee6af63",
+      "bounty:clock_8650cef51308ae25bacfae9c9264105c4c015febda9bb5e7a488bda6a7817f88:character-b42583ba54a405a9877e159fbee6af63",
+      "craft:portal_arrival_travel:60fb50dd385ae70efc015a4ba0bf1759:character-b42583ba54a405a9877e159fbee6af63:1:character-b42583ba54a405a9877e159fbee6af63",
+      "craft:home_return_60fb50dd385ae70efc015a4ba0bf1759_travel:60fb50dd385ae70efc015a4ba0bf1759:character-b42583ba54a405a9877e159fbee6af63:1:character-b42583ba54a405a9877e159fbee6af63",
+      "craft:ending_home_return_60fb50dd385ae70efc015a4ba0bf1759_44b234cb15638a2be2196e8d7ed959f7c9baf32a5f1c4262ea21918be0df0d79_travel:60fb50dd385ae70efc015a4ba0bf1759:character-b42583ba54a405a9877e159fbee6af63:1:character-b42583ba54a405a9877e159fbee6af63",
+      "portal_unlock:70751e051466997b592cd21555e5a2e2922f5d2ff3e2647ea46ebd1841a68511",
+      "craft:regional_ending_homecoming_seen:character-b42583ba54a405a9877e159fbee6af63",
+      "craft:regional_ending_regional_credits_seen:character-b42583ba54a405a9877e159fbee6af63"
+    ]
+  },
+  "scope": "Actual completed disk from originally approved disclosed post-finale ending smoke; original inputs/history unchanged. Not an accepted earned-chain boundary or earned finale. Whole F20#3 remains open for alpha availability, research and applicable blind evidence.",
+  "earned_finale": false,
+  "accepted_earned_boundary": false
+}

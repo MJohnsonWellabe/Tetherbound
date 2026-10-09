@@ -612,7 +612,9 @@ func retained_valid(value: Dictionary) -> bool:
 ## This is a disclosed area fixture, never a new earned-chain boundary.
 ## Only its isolated copy is exposed to the production title Load owner.
 func load_completed_fixture(tree: SceneTree, game: Node) -> bool:
-	var source := "res://ralph/reports/F20/lane-b-ending/completed-input-377715"
+	var source := "res://tests/fixtures/f20_completed_input_377715"
+	if not check(FileAccess.file_exists(source.path_join("PROVENANCE.json")),
+		"approved completed fixture provenance is present in the runtime checkout"): return false
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(source.path_join("PROVENANCE.json")))
 	if not check(raw is Dictionary and raw.get("kind") == "f20_reviewed_completed_fixture"
 		and raw.get("producer_source") == "505d7e0729028b69cfd3a0a9a8e5c6463cd46dc2"
