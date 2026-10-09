@@ -34,6 +34,17 @@ func test_cliff_walls_face_outward() -> void:
 		var positions: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
 		var outward := Vector3(positions[0].x, 0, positions[0].z).normalized()
 		assert_true(normals[0].dot(outward) > 0.1, "Cliff band %d must face the outer landscape" % surface)
+	# Check the generated meshes themselves: the previous cliff top stopped
+	# 3 cm below these crown vertices, exposing sky through the perimeter.
+	var wall_vertices: PackedVector3Array = mesh.surface_get_arrays(1)[Mesh.ARRAY_VERTEX]
+	var rim_vertices := {}
+	for point: Vector3 in cap[Mesh.ARRAY_VERTEX]:
+		if point.x != 0.0 or point.z != 0.0:
+			rim_vertices[point] = true
+	assert_true(not rim_vertices.is_empty(), "the actual crown exposes its rim")
+	for point: Vector3 in rim_vertices:
+		assert_true(wall_vertices.has(point),
+			"cliff wall shares the exact crown boundary vertex %s" % point)
 	parent.free()
 	world.free()
 

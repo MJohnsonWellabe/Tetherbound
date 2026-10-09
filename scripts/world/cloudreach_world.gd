@@ -5570,9 +5570,13 @@ func _mesa(
 	var upper_tool := SurfaceTool.new()
 	upper_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	upper_tool.set_material(_materials["cliff_high"] if side_material != _materials["cliff_shadow"] else side_material)
+	# Crown render/collision already lift these rim vertices by 3 cm. Join
+	# the visual wall to that same edge instead of leaving an open sky seam.
+	var crown_rim_lift := Vector3.UP * 0.03
 	for i in sides:
 		var next := (i + 1) % sides
-		_add_geological_face(upper_tool, top_ring[i], top_ring[next], upper_ring[i], upper_ring[next],
+		_add_geological_face(upper_tool, top_ring[i] + crown_rim_lift,
+			top_ring[next] + crown_rim_lift, upper_ring[i], upper_ring[next],
 			Vector3(top_ring[i].x, 0, top_ring[i].z).normalized(), Vector3(top_ring[next].x, 0, top_ring[next].z).normalized(), minf(size.x * 0.055, 15.0))
 	var middle_tool := upper_tool
 	for i in sides:
