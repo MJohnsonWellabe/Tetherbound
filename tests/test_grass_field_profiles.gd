@@ -32,6 +32,22 @@ func test_profiles_own_independent_copies() -> void:
 	assert_eq(second.profile_receipt().forbidden_mask, 4)
 	assert_almost_eq(GRASS_FIELD.profile_lattice_cell(source), 1.25, 0.001,
 			"A realm profile's lattice must not fall back to the shared static config")
+	# Stormwood uses this real clone path. An enabled Meadows candidate must
+	# not follow it; the copied realm must not mutate the source dictionary.
+	var cloned := GRASS_FIELD.config().duplicate(true)
+	cloned.road_verge.enabled = true
+	cloned.tuft_patches.enabled = true
+	first.configure_profile(cloned, ["grass", "rock", "path"])
+	var realm: Dictionary = first._active_config()
+	assert_false(bool(realm.road_verge.enabled))
+	assert_false(bool(realm.tuft_patches.enabled))
+	assert_true(bool(cloned.road_verge.enabled))
+	assert_true(bool(cloned.tuft_patches.enabled))
+	var material := ShaderMaterial.new()
+	material.shader = load(GRASS_FIELD.SHADER_PATH)
+	GRASS_FIELD.apply_tuft_patches(material, realm)
+	assert_almost_eq(float(material.get_shader_parameter("clump_contrast")), float(cloned.clump_contrast), 0.001)
+	assert_eq(material.get_shader_parameter("clump_patch_start"), 0.0)
 	first.free()
 	second.free()
 

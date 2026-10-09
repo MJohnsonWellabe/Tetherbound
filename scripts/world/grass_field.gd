@@ -59,6 +59,11 @@ var _profile_footprints: PackedVector3Array = PackedVector3Array()
 func configure_profile(profile: Dictionary, texture_names: Array,
 		authored_clearances: PackedVector3Array = PackedVector3Array()) -> void:
 	_profile_config = profile.duplicate(true)
+	# Realm worlds can clone the default Meadows config (Stormwood does).
+	# Neither Meadows-only visual gate may follow that clone into a realm.
+	for key: String in ["road_verge", "tuft_patches"]:
+		if _profile_config.get(key) is Dictionary:
+			_profile_config[key]["enabled"] = false
 	_profile_texture_names.clear()
 	for texture_name: Variant in texture_names:
 		_profile_texture_names.append(str(texture_name))
