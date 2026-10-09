@@ -59,7 +59,7 @@ var _planned: Array[Dictionary] = []
 var _all_destinations: Array[Dictionary] = []
 var _manifest: Dictionary = {}
 var _ui_contexts: Array[String] = []
-var _graphics_capture: Dictionary = {}
+var _ui_graphics_capture: Dictionary = {}
 
 
 func _init() -> void:
@@ -75,8 +75,8 @@ func _run() -> void:
 		quit(1)
 		return
 	if not _ui_contexts.is_empty():
-		_graphics_capture = LOOKDEV.prepare(self)
-		if _graphics_capture.is_empty():
+		_ui_graphics_capture = LOOKDEV.prepare(self)
+		if _ui_graphics_capture.is_empty():
 			quit(2)
 			return
 	if not _load_plan():
@@ -266,7 +266,7 @@ func _begin_manifest() -> void:
 		"rendering_method": RenderingServer.get_current_rendering_method(),
 		"adapter": RenderingServer.get_video_adapter_name(),
 		"resolution": [root.size.x, root.size.y],
-		"graphics_capture": _graphics_capture,
+		"graphics_capture": _ui_graphics_capture,
 		"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
 		"player_character": _character_id,
 		"subsets": _subsets,
