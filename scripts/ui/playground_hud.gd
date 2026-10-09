@@ -3832,7 +3832,10 @@ func _presentation_allow(widget: CanvasItem, allowed: bool) -> void:
 		# Do not overwrite that new state with the old (often empty) prompt.
 		widget.visible = widget.visible or bool(_presentation_suppressed[id])
 		if widget == _objective_hint_card:
-			widget.visible = widget.visible and Time.get_ticks_msec()/1000.0 < _objective_hint_until
+			# A hint can be revealed while combat or a reward still owns its lane.
+			# Repeated suppression hides that reveal, so the pre-combat visibility
+			# cache cannot decide whether its current, unchanged deadline is live.
+			widget.visible = Time.get_ticks_msec()/1000.0 < _objective_hint_until
 		elif widget == _region_banner:
 			widget.visible = widget.visible and _hud_clock < _region_banner_until
 		_presentation_suppressed.erase(id)

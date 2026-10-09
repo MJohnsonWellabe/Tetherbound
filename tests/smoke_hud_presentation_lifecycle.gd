@@ -143,6 +143,7 @@ func _run()->void:
 	combat.set_world_presentation_mode("exploration")
 	_check(hud._hotbar_panel.visible,"Exploration restores hotbar")
 	_check(combat._outcome.text.is_empty(),"Exploration does not revive stale result")
+	_hint_revealed_while_suppressed()
 	await _full_party_moment_layout()
 	await _progression_reset_and_modal_lifecycle(member)
 	print("HUD LIFECYCLE %s: %d checks"%["PASS" if failures.is_empty() else "FAIL",checks])
@@ -157,6 +158,28 @@ func _run()->void:
 			cue.stream = null
 	await create_timer(0.15).timeout
 	quit(0 if failures.is_empty() else 1)
+
+
+## Existing isolated HUD fixture: a new instruction arrives after an empty
+## hint lane has already stood down. No progression or earned-route claim.
+func _hint_revealed_while_suppressed() -> void:
+	hud._hide_objective_hint_card()
+	hud.set_world_presentation_mode("combat")
+	var hint := "At your Altar, choose a creature and spend its type essence."
+	hud._reveal_objective_hint(hint)
+	var deadline: float = hud._objective_hint_until
+	for i in 2:
+		hud._apply_presentation_priority()
+	_check(not hud._objective_hint_card.visible,"New hint remains hidden while combat owns the lane")
+	hud.set_world_presentation_mode("exploration")
+	_check(hud._objective_hint_card.visible and hud._objective_hint_label.text == hint,
+		"Fresh hint revealed during suppression returns with its current text")
+	_check(hud._objective_hint_until == deadline,"Hint restoration preserves its original deadline")
+	hud.set_world_presentation_mode("combat")
+	hud._hide_objective_hint_card()
+	hud._apply_presentation_priority()
+	hud.set_world_presentation_mode("exploration")
+	_check(not hud._objective_hint_card.visible,"Canceled hint is not revived when its lane returns")
 
 
 func _full_party_moment_layout() -> void:
