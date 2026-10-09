@@ -1,0 +1,173 @@
+{
+  "kind": "altar-paid-durable-ack-title-load-passing-runtime-reuse",
+  "criterion": "F46#0",
+  "source": "977e4853077a035dfa83177eea77d28e74cff96b",
+  "run_id": 37794986219,
+  "artifact_id": 11557404872,
+  "artifact_zip_sha256": "5b2cb4b4be1beebb0e20115efb19b4999ff91973bf3671088a635a1766beee36",
+  "crc_verified": true,
+  "original_archive": "altar-title-load-reused-r4-producer.zip",
+  "log": "ci-altar-title-load-reused-r4-37794986219.log.gz",
+  "log_sha256": "3eee14fd78cad1686190a77ac0206a354eddbb8315215fc049a2622568d4f825",
+  "exit_code": 0,
+  "elapsed_seconds": 163,
+  "engine_script_errors": 0,
+  "actual_retained_reload": {
+    "after": {
+      "character_id": "character-7e4f4a4d5fd93e3788fcb5c98349b711",
+      "inventory": [
+        {},
+        {},
+        {},
+        {
+          "id": "essence_water",
+          "n": 114
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ],
+      "party": [
+        {
+          "known_moves": [
+            "ripple_jab",
+            "undertow",
+            "ultimate_ripplet"
+          ],
+          "level": 4,
+          "loadout_revision": 0,
+          "move_charged": "undertow",
+          "move_mastery_receipts": {},
+          "move_mastery_uses": {},
+          "move_quick": "ripple_jab",
+          "move_ultimate": "ultimate_ripplet",
+          "move_utility": "",
+          "species_id": "ripplet",
+          "uid": "creature-d27dba8b9079fb793651686c83d93ef4",
+          "xp": 0
+        }
+      ],
+      "party_uids": [
+        "creature-d27dba8b9079fb793651686c83d93ef4"
+      ],
+      "personal_flags": [
+        "opening:beat:house",
+        "opening:beat:wake",
+        "opening:lesson:altar",
+        "opening:starter_granted"
+      ],
+      "transaction_receipts": [
+        "bounty:clock_128daee31b56bbdfd7303b849e897c915d0e079cc99e3afb934b813333c3f2dc:character-7e4f4a4d5fd93e3788fcb5c98349b711",
+        "craft:character-7e4f4a4d5fd93e3788fcb5c98349b711:altar_build:7081333aabef496c1db9f849135e9639fcce8b49ae97ae951905b0c173c11501:e7b085c2c9dca506f6dfc552162acf74:place_building:b1",
+        "essence_spend:character-7e4f4a4d5fd93e3788fcb5c98349b711:767a0f8f4dee8d1476fc454a32c03f54:creature-d27dba8b9079fb793651686c83d93ef4:3:essence_water:6:44"
+      ]
+    },
+    "before": {
+      "character_id": "character-7e4f4a4d5fd93e3788fcb5c98349b711",
+      "inventory": [
+        {},
+        {},
+        {},
+        {
+          "id": "essence_water",
+          "n": 114
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ],
+      "party": [
+        {
+          "known_moves": [
+            "ripple_jab",
+            "undertow",
+            "ultimate_ripplet"
+          ],
+          "level": 4,
+          "loadout_revision": 0,
+          "move_charged": "undertow",
+          "move_mastery_receipts": {},
+          "move_mastery_uses": {},
+          "move_quick": "ripple_jab",
+          "move_ultimate": "ultimate_ripplet",
+          "move_utility": "",
+          "species_id": "ripplet",
+          "uid": "creature-d27dba8b9079fb793651686c83d93ef4",
+          "xp": 0
+        }
+      ],
+      "party_uids": [
+        "creature-d27dba8b9079fb793651686c83d93ef4"
+      ],
+      "personal_flags": [
+        "opening:beat:house",
+        "opening:beat:wake",
+        "opening:lesson:altar",
+        "opening:starter_granted"
+      ],
+      "transaction_receipts": [
+        "bounty:clock_128daee31b56bbdfd7303b849e897c915d0e079cc99e3afb934b813333c3f2dc:character-7e4f4a4d5fd93e3788fcb5c98349b711",
+        "craft:character-7e4f4a4d5fd93e3788fcb5c98349b711:altar_build:7081333aabef496c1db9f849135e9639fcce8b49ae97ae951905b0c173c11501:e7b085c2c9dca506f6dfc552162acf74:place_building:b1",
+        "essence_spend:character-7e4f4a4d5fd93e3788fcb5c98349b711:767a0f8f4dee8d1476fc454a32c03f54:creature-d27dba8b9079fb793651686c83d93ef4:3:essence_water:6:44"
+      ]
+    },
+    "memory_cleared": true,
+    "passed": true,
+    "physical_title_load": true,
+    "ready_frames": 3,
+    "reopened": false,
+    "save_slot": 0,
+    "scope": "Paid-unlock fixture's altar ACK actual title Load; whole F46 remains open",
+    "settle_frames": 300
+  },
+  "original_independent_reuse_verdict": "Both confirm reusable **Altar durable Title Load PASS**:\n\n- Run `37794986219`\n- Artifact `11557404872`\n- Source `977e4853077a035dfa83177eea77d28e74cff96b`\n- Original Hubble **BEHAVIOR APPROVE**, exit 0\n\nCovered paid progression, saved ACK, Skip/Help, memory-cleared production Title Load, exact state/receipts, no reopening and Help again.\n\nSmoke and lesson service remain unchanged at `ab348c46\u00e2\u20ac\u00a6`; **reuse without replay**. Disclosed single-companion fixture only\u00e2\u20ac\u201dno earned five-team, blind or whole F46 claim.",
+  "prior_failed_run_preserved": 37767541472,
+  "new_replay_dispatched": false,
+  "disclosed_fixture": [
+    "One owned Ripplet, original120WaterEssence and granted Altar materials",
+    "Disclosed build ghost and approach start positions; paid Altar build/spend and mapped input unchanged",
+    "Canonical starter-granted fact set before transactions; production Load equality exact"
+  ],
+  "availability_limits": [
+    "No earned five-creature prefix or chain boundary",
+    "Prior Altar Skip/Help literal blind PASS separate; no new visual proof",
+    "Whole six-lesson F46#0 remains open"
+  ],
+  "whole_criterion_closed": false,
+  "paid_smoke_blob_identical_current_and_passed": "aac0784069b0d3f65b228a8f803e448ee61c5b8c",
+  "service_blob_identical_current_and_passed": "81fce0409930095cd1527acbc44a6e98fcc7eb03"
+}

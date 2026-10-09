@@ -1,0 +1,130 @@
+{
+  "kind": "root-native-completed-world-readiness-failure-preservation",
+  "source": "d0914a7ef3751bdff78fc77f1f08581b851135e8",
+  "criterion": "F20#3",
+  "root_original_packet": "C:/CodexTemp/tetherbound-proof/b-f20-completed-native-d091-r2-ops",
+  "preserved_allowlist": "C:\\CodexTemp\\tetherbound-proof\\b-f20-native-ready-failure-r2-preserved",
+  "files_sha256": {
+    "capture-start.json": "4f2b484ed54e17aaca0ac97bab60f6eb74f9503d9354c96504a0a839a60258fc",
+    "capture-terminal.json": "4f904182efa57ee12c68b75fd34fb90c248bff017959dbdc93a2c0ca0119904f",
+    "capture.stdout.log": "f16fa1b1ee40c741522e6eb6057e3f20fbc2555a9091f942dc010c3fb220acbd",
+    "capture.stderr.log": "f3fb616f45df7178d39a519d80106111fe6b6b7df1f4bf0d4e494b70807f4f8a",
+    "import-start.json": "b84e5d886876899de522b6ad9fe8c12c9386eb18d1b6cbadd50ece0fac42f7b1",
+    "import-terminal.json": "6925a4d0a28f482b8b9998c8337f536b5bd22042ac81f41b11f947b2447a5dda",
+    "import.stdout.log": "31249f29434b5368064f33cc8168f7e819d5a8547461e38fc6f7149b6f7a1663",
+    "import.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "launch.ps1": "bed86f68ea6ab8f08e9d5ed2f971fd4beb09d53981c02179c89b50f79d7757dd",
+    "original-recipe.json": "e305f811f5004735d32cf38581761a40dd44c387b5ffda10f72b6a8c9146881c",
+    "pin-preflight.json": "18dd2c97b826507f1c1650cfef1652b67d642056ef1c260c5b235f24f420d33e",
+    "protected-inputs-before.json": "de8ba6bcfeb42bdce08d58fd6e3ab6e8657ac9f07ab1407a8f98b028e8b149bc",
+    "provenance-runtime-byte-binding.json": "120debbf63eed165177546fd8118a78adc2d4d329ade36681ae839746e1f241e",
+    "raw-output-preflight.json": "9c98ceab7b4c128f68a3c369d92d386f1ada67482088600c487c49b7b6d87f6a",
+    "source-after-capture.json": "6e5217b473f183258432ddf885f996655e4718c60cb4b5e69fe13f1ba8711d02",
+    "source-after-import-revalidated.json": "4b26c57ab7c2b95442ada719dde5070fdebafd9dab0c4011cc36533811ece1a7",
+    "source-after-import.json": "92fdf825f92cca74126b7314650ce20d615aeb1056f43926bbeb2ab728e1ecfd",
+    "source-before-capture.json": "6dd5290eedb7568427c79854b49713ff8c032f51f9b3c197c7d3b6e96980d383",
+    "source-before-import.json": "662bb6b976417ab4f5709ab99cf58932a2ea8bbb0d6e5247836eb05eacf1f604",
+    "verify-native.py": "0f2101a7b1f93c61019df55da64624bea747e7103b352867e55c90efbbe80433",
+    "actual-boot-log.txt": "fde07be7003afa0332462e95d6ebee87da45acb95cfb654be43cda95b2157f96"
+  },
+  "capture_start": {
+    "mode": "Capture",
+    "started_utc": "2026-10-09T09:09:37.3475300Z",
+    "deadline_minutes": 60,
+    "source": "d0914a7ef3751bdff78fc77f1f08581b851135e8",
+    "args": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "gl_compatibility",
+      "--resolution",
+      "1280x720",
+      "--script",
+      "tests/smoke_f20_ending.gd",
+      "--",
+      "--completed-fixture",
+      "--capture-ending"
+    ],
+    "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/b-f20-completed-native-d091-r2-ops/capture-home",
+    "pid": 47876
+  },
+  "capture_terminal": {
+    "mode": "Capture",
+    "exit_code": 1,
+    "source": "d0914a7ef3751bdff78fc77f1f08581b851135e8",
+    "reason": "process_exit",
+    "ended_utc": "2026-10-09T09:13:00.4475561Z",
+    "pid": 47876
+  },
+  "actual_summary": {
+    "checks": 15,
+    "unique_failures": 1,
+    "native_frames": 0,
+    "elapsed_ms": 181268,
+    "readiness_budget_ms": 180000,
+    "physics_samples": 4,
+    "max_wait_ms": 118352,
+    "production_shell_complete": false,
+    "player_floor": false,
+    "journey_empty": false,
+    "paused": false,
+    "input_owner": "none",
+    "engine_script_errors": 0,
+    "deprecated_physics_warning_retained": true,
+    "tracked_source_and_index_clean": true,
+    "continuation_content_run": false
+  },
+  "protected_inputs_before": {
+    "producer_run": 37771506596,
+    "source": "d0914a7ef3751bdff78fc77f1f08581b851135e8",
+    "checked_utc": "2026-10-09T09:09:35.2797318Z",
+    "producer_source": "505d7e0729028b69cfd3a0a9a8e5c6463cd46dc2",
+    "files": [
+      {
+        "bytes": 2791841,
+        "sha256": "62092bf38f5af95feac2080236f78958056b6b135e6fc8bd4e363849eefd4f5f",
+        "path": "characters/character-b42583ba54a405a9877e159fbee6af63/character.json"
+      },
+      {
+        "bytes": 4245946,
+        "sha256": "b18808dab276c4f8f9c4d5b50ab54e8afbc456f8c80148d00dc7b4921665e4c2",
+        "path": "slot_0.json"
+      },
+      {
+        "bytes": 56001,
+        "sha256": "8fda759943ec395f5c6e9d8f01e1e62f73e84c53e783be7bf2763cd85ce49e8e",
+        "path": "worlds/slot-0/world.json"
+      }
+    ],
+    "phase": "before_capture"
+  },
+  "protected_inputs_post_capture_raw_hash_record_available_to_B": false,
+  "post_capture_raw_hash_limitation": "ROOT checkout was rebound for the next scheduled source before B attempted a raw after-read; no missing input is treated as unchanged. Actual source-after-capture tracked clean exact tree retained. Original reviewers verified source/input binding; full native proof failed.",
+  "actual_boot_log_scope": "Real capture userdir boot log: _ready complete waiting for first frame at04:12:05CT; no first-frame breadcrumb. Not a causal diagnosis.",
+  "provenance_runtime_byte_binding": {
+    "author_filtered_blob": "14b4c871bd45554c301c1e7b75c828be2e0a6fc8",
+    "only_LF_CRLF_variation": true,
+    "head_blob": "14b4c871bd45554c301c1e7b75c828be2e0a6fc8",
+    "frozen_filtered_blob": "14b4c871bd45554c301c1e7b75c828be2e0a6fc8",
+    "approved_recipe_raw_sha256": "49651652ec0592c8c64ddd2cb616d74f60d81c3f959eee427515e52d2183da8f",
+    "frozen_raw_sha256": "f305d8356ee043c396c05247932cc37e82c1a294d4b282b329ae470537d1b080",
+    "source": "d0914a7ef3751bdff78fc77f1f08581b851135e8",
+    "author_raw_sha256": "49651652ec0592c8c64ddd2cb616d74f60d81c3f959eee427515e52d2183da8f",
+    "no_fixture_bytes_written": true,
+    "frozen_CRLF_variant_sha256": "49651652ec0592c8c64ddd2cb616d74f60d81c3f959eee427515e52d2183da8f"
+  },
+  "original_independent_verdict": "Original Bacon `01a1165d-ecfb-79d3-9355-1224723cdb53` and Hubble `01a11667-9d3a-7a00-99c2-5d28ca7fc000` both confirm **RUNTIME FAIL; PARK** at `d0914a7\u00e2\u20ac\u00a6`.\n\nSource/input bindings verified. Exit 1; 15 checks/1 failure/**0 captures**. Readiness was 181268/180000 ms; shell and floor remained false. Cause **UNKNOWN**.\n\nTwo attempts retained. No unchanged third retry, selector replay or Sartre review. Functional 59/0 and caller 8/72 remain separate; whole F20#3 stays open.",
+  "park_after_two_actual_native_failures": true,
+  "prior_failure_source": "06de02cf99016c9265cf8a171f1f88d50ec72468",
+  "cause": "UNKNOWN; consumer sampling change did not satisfy actual native readiness. No supported production cause/correction established.",
+  "responsive_startup_flag_preserved_off": true,
+  "readiness_budget_preserved_ms": 180000,
+  "original_59_functional_preserved": 37900915929,
+  "original_8_tests_72_assertions_caller_preserved": 37904340445,
+  "zero_frames_no_blind_judgment": true,
+  "no_third_unchanged_retry": true,
+  "failed_save_input_used": false,
+  "new_accepted_boundary": false,
+  "whole_criterion_closed": false,
+  "native_dispatched_by_B": false
+}
