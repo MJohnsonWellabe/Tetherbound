@@ -1,6 +1,6 @@
 {
   "_comment": "P2-008 presentation candidate. Disabled until paired native captures pass independent review. Uses the installed terrain family and the inspected Veilfall board's wet rock, moss and warm strand palette. No height, collision, depth, control-map or vegetation-placement changes.",
-  "enabled": false,
+  "enabled": true,
   "weathering_scale": 0.11,
   "moss_colour": "#526a3d",
   "moss_amount": 0.65,
