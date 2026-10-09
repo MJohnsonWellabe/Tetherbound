@@ -1,7 +1,9 @@
 {
   "version": 1,
-  "feature_flags": {"runtime_enabled": false, "network_enabled": false, "ui_enabled": false},
+  "feature_flags": {"runtime_enabled": true, "network_enabled": true, "ui_enabled": true},
   "scope": "encounter_participant",
+  "rollout_scope": "encounter_participant",
+  "rollout_mode": "all",
   "meter": {"maximum": 100, "gain": {"quick": 8, "charged": 15, "utility": 5, "ultimate": 0, "tag_combo": 0}},
   "combo_window_s": 1.0,
   "switch_lockout_s": 1.5,

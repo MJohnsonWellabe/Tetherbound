@@ -4420,7 +4420,7 @@ func _read_hotbar_input() -> void:
 	if _aim_hotbar_latch:
 		return
 	for i in HOTBAR_SLOTS:
-		if i > 0 and _combat_is_running() and preload("res://scripts/combat/tether_commands.gd").enabled(): continue
+		if _combat_is_running() and preload("res://scripts/combat/tether_commands.gd").owns_combat_binding(HOTBAR_ACTIONS[i]): continue
 		var action: String = COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i]
 		if Input.is_action_just_pressed(action):
 			_use_hotbar_slot(i)

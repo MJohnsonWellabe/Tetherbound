@@ -30,6 +30,21 @@ var _tonic_request: Dictionary = {}
 var _tonic_blocker: Callable
 var _tonic_refusal_armed := false
 var _tag_request: Dictionary = {}
+var _hud_capture_metadata: Dictionary = {}
+
+func _step_boot(args: Dictionary) -> Dictionary:
+	var result: Dictionary = await super._step_boot(args)
+	if result.get("verdict") == "PASS" and args.get("scene") == "world" \
+		and _peer_index == 1 and OS.get_cmdline_user_args().has("--capture-combat-hud") \
+		and DisplayServer.get_name() != "headless":
+		# Pay the first actual world draw inside this existing boot's budget,
+		# before the later authoritative HUD witness. No gameplay step changes.
+		var started := Time.get_ticks_msec()
+		RenderingServer.force_draw(true, 0.0)
+		var elapsed := Time.get_ticks_msec() - started
+		result["data"] = (result.get("data", {}) as Dictionary).merged({"hud_world_warmup_ms":elapsed}, true)
+		result["detail"] = str(result.get("detail", "")) + "; native world draw warmup %dms" % elapsed
+	return result
 
 
 func _execute_step(msg: Dictionary) -> Dictionary:
@@ -234,18 +249,81 @@ func _tag_state(args: Dictionary) -> Dictionary:
 	var peer := int(args.get("peer", session.local_peer_id()))
 	var request: Dictionary = args.get("request", _tag_request)
 	var body: Node3D = director.deployed_body_for(peer)
-	var id := str(request.get("encounter_id", manager.encounter_id()))
+	var id := str(request.get("encounter_id", args.get("encounter_id", manager.encounter_id())))
 	var original := {}
+	var snare := {}
+	var rally := {}
+	var settlement := {}
 	var record: Dictionary = director.get("_encounter")
 	if session.is_host():
 		var host: RefCounted = director.get("_encounter_host")
 		record = host.record(id)
-		if not request.is_empty():
+		# Detached live host snapshot, not a guest view or a refusal-time claim.
+		# Keep every participant's revision debt and unpresented original visible.
+		var world: RefCounted = game.get("world")
+		var namespace_id := str(world.get("reward_delivery_namespace"))
+		var deliveries: Dictionary = world.get("reward_deliveries")
+		var bindings: Array[Dictionary] = []
+		for retained: Dictionary in (director.get("_ordinary_actor_vitals_proposals") as Dictionary).values():
+			if retained.get("encounter_id") != id or retained.get("presented") == true: continue
+			var proposal: Dictionary = retained.get("proposal", {})
+			bindings.append({"source":"unpresented_proposal",
+				"character_id":str(retained.get("binding", {}).get("character_id", "")),
+				"creature_uid":str(proposal.get("creature_uid", "")),
+				"settlement_receipt":proposal.get("settlement_receipt", {}).duplicate(true),
+				"committed":retained.get("committed"), "presented":retained.get("presented")})
+		for actor: Dictionary in host.call("pending_actor_vitals", id):
+			bindings.append({"source":"actor_revision_debt", "character_id":str(actor.get("character_id", "")),
+				"creature_uid":str(actor.get("creature_uid", "")),
+				"settlement_receipt":actor.get("settlement_receipt", {}).duplicate(true),
+				"revision":actor.get("revision"), "settled_revision":actor.get("settled_revision")})
+		for binding: Dictionary in bindings:
+			var delivery_id := preload("res://scripts/net/actor_vitals_delivery.gd").delivery_id(
+				namespace_id, str(binding.character_id), str(binding.creature_uid))
+			var journal: Dictionary = deliveries.get(delivery_id, {})
+			binding["world_namespace"] = namespace_id
+			binding["delivery_id"] = delivery_id
+			binding["journal_present"] = deliveries.has(delivery_id)
+			binding["journal_status"] = journal.get("status", "absent")
+			binding["journal_receipt"] = journal.get("receipt", {}).duplicate(true)
+			binding["journal_receipt_matches"] = not journal.is_empty() \
+				and journal.get("receipt", {}) == binding.settlement_receipt
+		settlement = {"observed_ms":Time.get_ticks_msec(), "encounter_id":id,
+			"scope":"live_host_snapshot_all_participants", "namespace_source":"current_host_world",
+			"gate_pending":director.call("_host_actor_settlement_pending", id),
+			"pending_item_count":(host.call("pending_tether_items", id) as Array).size(), "bindings":bindings}
+		if args.get("snare") == true:
+			var wild: Node3D = director.get("_engaged_with")
+			var target: RefCounted = wild.get("instance") if is_instance_valid(wild) else null
+			var current: bool = target != null and record.get("phase") == "active" \
+				and str(target.uid) == record.get("opponent", {}).get("card", {}).get("uid") \
+				and int(wild.get_meta(&"tether_body_generation", 0)) == int(record.get("opponent", {}).get("body_generation", -1))
+			var bonuses := {}
+			if current:
+				for participant: int in record.get("participants", {}):
+					var character := str(record.participants[participant].get("character_id", ""))
+					bonuses[character] = float(director.call("_host_command_catch_bonus", id, participant, wild, record))
+			snare = {"observed_ms":Time.get_ticks_msec(), "target_current":current, "target_uid":str(target.uid) if target != null else "",
+				"target_generation":int(wild.get_meta(&"tether_body_generation", 0)) if is_instance_valid(wild) else 0,
+				"movement_multiplier":float(wild.call("utility_movement_multiplier")) if current else 1.0,
+				"status":wild.get_meta(&"tether_snare", {}).duplicate(true) if is_instance_valid(wild) else {},
+				"catch_bonuses":bonuses,
+				"last_receipt":record.get("participants", {}).get(peer, {}).get("tether_commands", {}).get("last_receipt", {}).duplicate(true)}
+		if args.get("rally") == true:
+			var now_ms := Time.get_ticks_msec()
+			var modifiers := {}
+			for participant: int in record.get("participants", {}):
+				var character := str(record.participants[participant].get("character_id", ""))
+				modifiers[character] = host.call("tether_rally", id, participant, now_ms)
+			rally = {"observed_ms":now_ms, "modifiers":modifiers,
+				"binding":director.call("_strike_actor_binding", id, peer, body),
+				"last_receipt":record.get("participants", {}).get(peer, {}).get("tether_commands", {}).get("last_receipt", {}).duplicate(true)}
+		if not request.is_empty() and args.get("snare") != true and args.get("rally") != true:
 			var parent := "command:%s:%s:%d:%d" % [id, str(args.get("character_id", game.local.character_id)),
 				int(request.generation), int(request.sequence)]
 			original = host.move_action_original(id, peer, parent)
 	var pos := body.global_position if is_instance_valid(body) else Vector3.ZERO
-	return {"peer":session.local_peer_id(), "character_id":str(game.local.character_id),
+	var out := {"peer":session.local_peer_id(), "character_id":str(game.local.character_id),
 		"encounter_id":str(manager.encounter_id()), "deployment":director.tether_command_deployment(),
 		"body_instance":body.get_instance_id() if is_instance_valid(body) else 0, "position":[pos.x,pos.y,pos.z],
 		"commands":manager.tether_command_snapshot(), "record":record, "original":original,
@@ -254,6 +332,10 @@ func _tag_state(args: Dictionary) -> Dictionary:
 		"enemy_hp":float(manager.enemy().hp) if manager.enemy() != null else -1.0,
 		"combat_state":manager.state,
 		"party":game.party.members().map(func(c: RefCounted) -> String: return str(c.uid))}
+	if args.get("snare") == true: out["snare"] = snare
+	if args.get("rally") == true: out["rally"] = rally
+	if session.is_host(): out["host_settlement_snapshot"] = settlement
+	return out
 
 
 func _tonic_step(action: String, args: Dictionary) -> Dictionary:
@@ -261,15 +343,114 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 	var session: Node = game.get_node(^"Session")
 	match action:
 		"op_tonic_candidate":
-			# Disclosed process-local candidate gates, before actual world boot.
-			# No shipped flag, authored item, HP, meter or timer is modified.
+			if OS.get_cmdline_user_args().has("--capture-combat-hud"):
+				if _peer_index != 1 or DisplayServer.get_name() == "headless":
+					return {"verdict":"FAIL", "detail":"HUD capture requires the native guest1"}
+				var inherited_size := root.size
+				_hud_capture_metadata = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self, "--hud-output=")
+				if _hud_capture_metadata.is_empty() or root.size != inherited_size:
+					return {"verdict":"FAIL", "detail":"HUD bootstrap refused the preset/source/output or changed the parent resolution"}
+				for arg: String in OS.get_cmdline_user_args():
+					if arg.begins_with("--hud-output="): _hud_capture_metadata["output"] = arg.trim_prefix("--hud-output=")
+				if DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(str(_hud_capture_metadata.get("output", "")))) != OK:
+					return {"verdict":"FAIL", "detail":"HUD output directory could not be created"}
 			var commands: Script = preload("res://scripts/combat/tether_commands.gd")
-			commands._config = commands.config().duplicate(true)
-			for flag: String in ["runtime_enabled", "network_enabled", "ui_enabled"]:
-				commands._config.feature_flags[flag] = true
 			var math: Script = preload("res://scripts/combat/combat_math.gd")
-			math._config = math.config().duplicate(true)
-			math._config.actor_vitals.runtime_enabled = true
+			if OS.get_cmdline_user_args().has("--prove-shipping-tether"):
+				for flag: String in ["runtime_enabled", "network_enabled", "ui_enabled"]:
+					if commands.config().get("feature_flags", {}).get(flag) != true:
+						return {"verdict":"FAIL", "detail":"shipping Tether proof requires tracked " + flag}
+				var required_actor_vitals := not OS.get_cmdline_user_args().has("--without-actor-vitals")
+				if bool(math.config().get("actor_vitals", {}).get("runtime_enabled", false)) != required_actor_vitals:
+					return {"verdict":"FAIL", "detail":"shipping Tether proof refuses a local actor-vitals override"}
+			else:
+				# Existing disclosed mechanics selector only; shipping mode never mutates gates.
+				commands._config = commands.config().duplicate(true)
+				for flag: String in ["runtime_enabled", "network_enabled", "ui_enabled"]:
+					commands._config.feature_flags[flag] = true
+				math._config = math.config().duplicate(true)
+				math._config.actor_vitals.runtime_enabled = not OS.get_cmdline_user_args().has("--without-actor-vitals")
+
+		"op_tonic_hud_capture":
+			var name := str(args.get("name", ""))
+			if args.size() != 1 or name not in ["earned-command", "after-tag"] \
+				or not OS.get_cmdline_user_args().has("--capture-combat-hud") or _hud_capture_metadata.is_empty() \
+				or _peer_index != 1 or DisplayServer.get_name() == "headless":
+				return {"verdict":"FAIL", "detail":"HUD capture requires an allowed witness name and prepared native guest1"}
+			await process_frame
+			# Same on-demand native rendering as the existing proof runner.
+			# Its screenshot helper forces two draws after current HUD validation.
+			var manager: Node = _combat_manager()
+			var director: Node = _encounter_director()
+			var hud: Node = director.get_parent().get_node_or_null("CombatHUD") if director != null else null
+			var view: Dictionary = manager.new_system_combat_snapshot() if manager != null else {}
+			var active: RefCounted = manager.active_creature() if manager != null else null
+			var overlay: Control = hud.get("_system_overlay") if hud != null else null
+			var ring: Control = overlay.get("_ring") if is_instance_valid(overlay) else null
+			if active == null or not game.party.members().has(active) or view.get("active") != true \
+				or view.get("creature_uid") != str(active.get("uid")) or not is_instance_valid(overlay) \
+				or not overlay.is_visible_in_tree() or overlay.get("_uid") != view.creature_uid \
+				or not is_instance_valid(ring) or not ring.is_visible_in_tree() \
+				or float(view.get("ultimate_maximum", 0.0)) <= 0.0 \
+				or view.get("commands", {}).get("meter") != manager.tether_command_snapshot().get("meter"):
+				return {"verdict":"FAIL", "detail":"HUD capture has no visible current-owned-UID authoritative overlay", "data":view}
+			var fraction := clampf(float(view.ultimate_meter) / float(view.ultimate_maximum), 0.0, 1.0)
+			if not is_equal_approx(float(ring.get("fraction")), fraction):
+				return {"verdict":"FAIL", "detail":"HUD ring differs from actual meter"}
+			var legacy_readout: Control = hud.get("_ultimate_readout")
+			var legacy_meter: Control = hud.get("_ultimate_meter")
+			if not is_instance_valid(legacy_readout) or not is_instance_valid(legacy_meter) \
+				or legacy_readout.is_visible_in_tree() or legacy_meter.is_visible_in_tree():
+				return {"verdict":"FAIL", "detail":"Acknowledged combat overlay still shows duplicate legacy ultimate"}
+			var moves: RefCounted = hud.get("_moves")
+			var charged_id := str(active.get("move_charged"))
+			var cells: Dictionary = overlay.get("_cells")
+			var energy_gate: ProgressBar = cells.get("charged", {}).get("cooldown")
+			if moves == null or not moves.has(charged_id) or not is_instance_valid(energy_gate):
+				return {"verdict":"FAIL", "detail":"Current owned charged move has no energy gate"}
+			var charged_cost := float(moves.move(charged_id).get("energy_cost", 100.0))
+			var energy := float(active.get("energy"))
+			var utility_id := str(active.get("move_utility"))
+			if not moves.has(utility_id): return {"verdict":"FAIL", "detail":"Current owned utility has no authored wind cost"}
+			var utility_cost := float(moves.move(utility_id).get("wind_cost", 24.0))
+			if not is_equal_approx(float(view.slots.utility.get("wind_cost", -1.0)), utility_cost):
+				return {"verdict":"FAIL", "detail":"Utility HUD cost differs from authored current owned move"}
+			if not energy_gate.is_visible_in_tree() or not is_equal_approx(energy_gate.max_value, charged_cost) \
+				or not is_equal_approx(energy_gate.value, clampf(energy, 0.0, charged_cost)):
+				return {"verdict":"FAIL", "detail":"Charged energy gate differs from current owned creature resource"}
+			var viewport_rect := Rect2(Vector2.ZERO, Vector2(root.size))
+			var hud_regions := {"ultimate":ring, "commands":overlay.get("_commands"), "moves":overlay.get("_moves")}
+			var region_rects := {}
+			for region: String in hud_regions:
+				var control: Control = hud_regions[region]
+				# The project stretches its 1920x1080 canvas into the native
+				# window. Compare window pixels with window pixels, including
+				# the canvas layer and stretch transforms.
+				var rect: Rect2 = root.get_final_transform() * control.get_global_transform_with_canvas() \
+					* Rect2(Vector2.ZERO, control.size)
+				region_rects[region] = [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
+				if not control.is_visible_in_tree() or not rect.has_area() or not viewport_rect.encloses(rect):
+					return {"verdict":"FAIL", "detail":"HUD region is empty or outside viewport: " + region + " " + JSON.stringify(region_rects), "data":region_rects}
+			var shot: Dictionary = await PROOF_STEPS.run(self, "screenshot", {"name":"hud-" + name})
+			if shot.get("verdict") != "PASS" or shot.get("data", {}).get("captured") != true: return {"verdict":"FAIL", "detail":"HUD screenshot was not captured", "data":shot}
+			var graphics := preload("res://scripts/ui/graphics_prefs.gd")
+			var receipt := _hud_capture_metadata.merged({"name":name, "snapshot":view,
+				"continuous_render_loop":false, "charged_energy":energy, "charged_cost":charged_cost,
+				"charged_gate_value":energy_gate.value, "charged_gate_maximum":energy_gate.max_value,
+				"region_rects":region_rects,
+				"legacy_ultimate_visible":legacy_readout.is_visible_in_tree() or legacy_meter.is_visible_in_tree(),
+				"utility_wind_cost":utility_cost,
+				"frame":Engine.get_process_frames(), "physics_frame":Engine.get_physics_frames(),
+				"viewport":[root.size.x, root.size.y], "renderer":RenderingServer.get_current_rendering_method(),
+				"preset":graphics.selected(), "graphics":graphics.values(), "ring_fraction":float(ring.get("fraction")),
+				"png":str(shot.data.path)}, true)
+			var path := ProjectSettings.globalize_path(str(_hud_capture_metadata.output)).path_join(name + ".json")
+			var file := FileAccess.open(path, FileAccess.WRITE)
+			if file == null: return {"verdict":"FAIL", "detail":"HUD receipt could not open: " + path}
+			file.store_string(JSON.stringify(receipt, "\t"))
+			file.flush()
+			if file.get_error() != OK: return {"verdict":"FAIL", "detail":"HUD receipt write failed: " + path}
+			return {"verdict":"PASS", "detail":"captured actual combat HUD", "data":receipt}
 		"op_tonic_supply":
 			# The existing smoke already seeds a portable party before admission.
 			game.inventory.add("attack_tonic", 2)
@@ -303,25 +484,146 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var player: Node3D = _probe.call("player")
 			player.global_position = selected.global_position + Vector3(2.0, 0, 0)
 			for frame in 6: await physics_frame
-			return await _step_engage_wild({})
+			var engage_result: Dictionary = await _step_engage_wild({})
+			if session.is_host() and engage_result.get("verdict") != "PASS":
+				# Observe the failed preparation where it actually returned. This
+				# is a live return-time snapshot, not a prior refusal-time claim.
+				var failed_offer: Dictionary = _tag_state({})
+				var ally: RefCounted = director.ally_instance()
+				var target: RefCounted = selected.get("instance") if is_instance_valid(selected) else null
+				failed_offer["engage_stage"] = {"observed_ms":Time.get_ticks_msec(),
+					"manager_fighting":_combat_manager().is_fighting(), "trainer_battle_active":director.trainer_battle_active(),
+					"ally_present":ally != null, "ally_hp":ally.hp if ally != null else null,
+					"ally_fainted":ally.fainted if ally != null else null,
+					"selected_body_instance":selected.get_instance_id() if is_instance_valid(selected) else 0,
+					"selected_uid":str(target.uid) if target != null else "",
+					"selected_visible":selected.visible if is_instance_valid(selected) else false,
+					"selected_alive":selected.is_alive() if is_instance_valid(selected) else false,
+					"selected_distance":player.global_position.distance_to(selected.global_position) if is_instance_valid(selected) else null,
+					"engage_range":director.get("_engage_range")}
+				print("TAG/TONIC failed Engage host observation: ", JSON.stringify(failed_offer))
+			return engage_result
 		"op_tonic_hits":
 			var director: Node = _encounter_director()
 			var manager: Node = _combat_manager()
+			var command := str(args.get("command_id", "item_throw"))
+			var slot := str(args.get("slot", "quick"))
+			if slot not in ["quick", "charged"]: return {"verdict":"FAIL", "detail":"unsupported ordinary command hit slot"}
+			var cost := float(preload("res://scripts/combat/tether_commands.gd").config().commands.get(command, {}).get("cost", INF))
+			if command not in ["item_throw", "snare", "rally"] or not is_finite(cost):
+				return {"verdict":"FAIL", "detail":"unknown authored command cost"}
+			var attempts: Array[Dictionary] = []
 			for hit in 8:
 				var snapshot: Dictionary = manager.tether_command_snapshot()
-				if float(snapshot.get("meter", 0.0)) >= 25.0: break
+				if float(snapshot.get("meter", 0.0)) >= cost: break
 				if not manager.is_fighting(): return {"verdict":"FAIL", "detail":"fight ended before actual hits filled the command meter"}
-				var target: Node3D = director.get("_shared_opponent_proxy")
+				# The host owns the actual engaged wild; guests use its mirrors.
+				var target: Node3D = director.get("_engaged_with") if session.is_host() else director.get("_shared_opponent_proxy")
 				if target == null: target = director.get("_legacy_mirror")
 				var body: Node3D = director.ally_body()
 				if target == null or body == null: return {"verdict":"FAIL", "detail":"actual combat body missing"}
-				body.global_position = target.global_position + Vector3(0, 0, 3.0)
-				body.face_towards(target.global_position)
-				for frame in 15: await physics_frame
-				var strike: Dictionary = await _step_strike({"facing":[0,0,-1], "settle":90})
-				if strike.get("verdict") != "PASS": return strike
-			if float(manager.tether_command_snapshot().get("meter", 0.0)) < 25.0:
-				return {"verdict":"FAIL", "detail":"accepted hits did not earn Item meter"}
+				var strike_facing := Vector3(0, 0, -1)
+				if session.is_host():
+					# Preserve the disclosed local-authority proximity fixture.
+					body.global_position = target.global_position + Vector3(0, 0, 3.0)
+					body.face_towards(target.global_position)
+					for frame in 15: await physics_frame
+					if not is_instance_valid(target) or not is_instance_valid(body):
+						return {"verdict":"FAIL", "detail":"actual combat body lost during host preparation"}
+					# The live wild can move during preparation. Use its current
+					# direction for the ordinary physical input, as the guest does.
+					strike_facing = target.call("centre") - body.call("centre")
+					strike_facing.y = 0.0
+					if strike_facing.is_zero_approx(): strike_facing = body.call("facing")
+					strike_facing = strike_facing.normalized()
+				else:
+					# Local assignment cannot place the admitted host body. Use the
+					# existing physical navigator for exactly the same 15 frames.
+					_drive_left(0.0, 0.0)
+					var rig: Node3D = _probe.call("camera_rig")
+					var approach_id := str(manager.encounter_id())
+					var active: RefCounted = manager.active_creature()
+					var deployment: Dictionary = director.tether_command_deployment().duplicate(true)
+					if rig == null or active == null or int(deployment.get("generation", 0)) < 1:
+						return {"verdict":"FAIL", "detail":"actual owned approach camera or deployment missing"}
+					var approach_uid := str(active.uid)
+					var nav = NAVIGATOR.new(self, body, rig, Callable(self, "_drive_left"))
+					for frame in 15:
+						target = director.get("_shared_opponent_proxy")
+						if target == null: target = director.get("_legacy_mirror")
+						active = manager.active_creature()
+						if not is_instance_valid(target) or not is_instance_valid(body) or director.ally_body() != body \
+							or not manager.is_fighting() or str(manager.encounter_id()) != approach_id or active == null \
+							or str(active.uid) != approach_uid or director.tether_command_deployment() != deployment:
+							_drive_left(0.0, 0.0)
+							return {"verdict":"FAIL", "detail":"owned approach body or encounter changed"}
+						await nav.step(target.global_position)
+					_drive_left(0.0, 0.0)
+					if not is_instance_valid(target) or not is_instance_valid(body) or director.ally_body() != body \
+						or not manager.is_fighting() or str(manager.encounter_id()) != approach_id \
+						or manager.active_creature() == null or str(manager.active_creature().uid) != approach_uid \
+						or director.tether_command_deployment() != deployment:
+						return {"verdict":"FAIL", "detail":"owned approach changed before physical strike"}
+					# Facing remains an ordinary physical-input argument, not the
+					# runner's forged/target-aimed strike branch.
+					strike_facing = target.call("centre") - body.call("centre")
+					strike_facing.y = 0.0
+					if strike_facing.is_zero_approx(): strike_facing = body.call("facing")
+					strike_facing = strike_facing.normalized()
+				# Observe immediately before the existing strike step. Its unchanged
+				# readiness wait may precede physical injection; this is not a host queue.
+				var id := str(manager.encounter_id())
+				var host: RefCounted = director.get("_encounter_host")
+				var host_local: bool = director.call("_is_host") == true and host != null
+				var pending: Dictionary = {"observed_ms":Time.get_ticks_msec(), "phase":"before_strike_step",
+					"host_local":host_local, "host_queues_available":host_local,
+					"vitals_pending_local":director.call("ordinary_actor_vitals_pending", id),
+					"quick_ready":manager.quick_ready(), "input_available":manager.combat_input_available(),
+					"move_awaiting_host":manager.get("_move_awaiting_host"), "proposals":[], "actors":[]}
+				for original: Dictionary in (director.get("_ordinary_actor_vitals_proposals") as Dictionary).values():
+					if original.get("encounter_id") != id: continue
+					var proposal: Dictionary = original.get("proposal", {})
+					pending.proposals.append({"action_id":str(proposal.get("action_id", "")),
+						"committed":original.get("committed"), "presented":original.get("presented"),
+						"receipt_id":str(proposal.get("settlement_receipt", {}).get("receipt_id", ""))})
+				var record: Dictionary = host.call("record", id) if host_local else director.get("_encounter")
+				pending["actors_scope"] = "host_record" if host_local else "received_record"
+				var participants: Array = record.get("participants", {}).values()
+				participants.append_array(record.get("retained_actor_participants", {}).values())
+				for participant: Dictionary in participants:
+					for uid: String in participant.get("actor_vitals", {}):
+						var actor: Dictionary = participant.actor_vitals[uid]
+						pending.actors.append({"creature_uid":uid, "revision":actor.get("revision"),
+							"settled_revision":actor.get("settled_revision")})
+				if host_local:
+					pending["host_actor_vitals"] = []
+					for actor: Dictionary in host.call("pending_actor_vitals", id):
+						pending.host_actor_vitals.append({"creature_uid":actor.get("creature_uid"),
+							"revision":actor.get("revision"), "settled_revision":actor.get("settled_revision")})
+				else:
+					pending["host_actor_vitals"] = "unavailable: remote host"
+				var observation: Dictionary = {"attempt":hit + 1, "slot":slot, "pending_before_input":pending,
+					"meter_before":float(manager.tether_command_snapshot().get("meter", 0.0)),
+					"foe_hp_before":float(manager.enemy().hp) if manager.enemy() != null else -1.0,
+					"refusal_before":(manager.get("last_encounter_refusal") as Dictionary).duplicate(true)}
+				attempts.append(observation)
+				print("TONIC_PRE_STRIKE " + JSON.stringify(observation))
+				var strike: Dictionary = await _step_strike({"slot":slot, "facing":[strike_facing.x, 0, strike_facing.z], "settle":90})
+				var strike_data: Dictionary = strike.get("data", {})
+				observation["strike"] = {"verdict":str(strike.get("verdict", "")), "reported_ok":strike_data.get("ok"),
+					"code":str(strike_data.get("code", "")), "submitted_action":strike_data.get("submitted_action")}
+				observation["meter_after"] = float(manager.tether_command_snapshot().get("meter", 0.0))
+				observation["foe_hp_after"] = float(manager.enemy().hp) if manager.enemy() != null else -1.0
+				observation["refusal_after"] = (manager.get("last_encounter_refusal") as Dictionary).duplicate(true)
+				observation["refusal_unchanged"] = observation.refusal_after == observation.refusal_before
+				if strike.get("verdict") != "PASS":
+					strike_data["attempts"] = attempts
+					strike["data"] = strike_data
+					return strike
+			if float(manager.tether_command_snapshot().get("meter", 0.0)) < cost:
+				print("COMMAND precast observation: ", JSON.stringify({"command":command, "cost":cost, "attempts":attempts}))
+				return {"verdict":"FAIL", "detail":"eight accepted %s attempts did not earn %s meter (%s required)" % [slot, command, cost],
+					"data":{"command":command, "cost":cost, "attempts":attempts}}
 			var hud: Node = director.get_parent().get_node_or_null("CombatHUD")
 			var view: Dictionary = manager.new_system_combat_snapshot()
 			var active: RefCounted = manager.active_creature()
@@ -335,6 +637,50 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var expected_fraction := clampf(float(view.ultimate_meter) / float(view.ultimate_maximum), 0.0, 1.0)
 			if not overlay.visible or ring == null or not is_equal_approx(float(ring.get("fraction")), expected_fraction):
 				return {"verdict":"FAIL", "detail":"actual HUD did not display its acknowledged current-UID ultimate meter"}
+		"op_tonic_snare":
+			var manager: Node = _combat_manager()
+			if not manager.is_fighting() or manager.enemy() == null or float(manager.enemy().hp) <= 0.0:
+				return {"verdict":"FAIL", "detail":"Snare requires the same living actual wild target"}
+			var input: Node = null
+			for child: Node in manager.get_children():
+				if child.get_script() == preload("res://scripts/ui/tether_command_input.gd"): input = child
+			var before: Dictionary = manager.tether_command_snapshot()
+			if input == null or not input.request("snare"):
+				return {"verdict":"FAIL", "detail":"production TetherCommandInput refused Snare request"}
+			# Observe the exact four values the production input just submitted.
+			# Snare has no Item pending_request or Tag action-original journal.
+			var request := preload("res://scripts/combat/tether_commands.gd").intent(str(input.get("_encounter_id")),
+				int(before.get("generation", 0)), int(input.get("_sequence")), "snare")
+			for frame in 90:
+				await physics_frame
+				var receipt: Dictionary = manager.tether_command_snapshot().get("last_receipt", {})
+				if receipt.get("command_id") == "snare" and receipt.get("sequence") == request.sequence:
+					return {"verdict":"PASS", "detail":"actual Snare command acknowledged", "data":{"request":request,
+						"before":before, "after":_tag_state({"request":request})}}
+			return {"verdict":"FAIL", "detail":"Snare lacked an accepted receipt within the existing short step budget",
+				"data":{"request":request, "state":_tag_state({"request":request}), "refusal":manager.get("last_encounter_refusal")}}
+		"op_tonic_rally":
+			var manager: Node = _combat_manager()
+			if not manager.is_fighting() or manager.enemy() == null or float(manager.enemy().hp) <= 0.0:
+				return {"verdict":"FAIL", "detail":"Rally requires the same living actual wild encounter"}
+			var input: Node = null
+			for child: Node in manager.get_children():
+				if child.get_script() == preload("res://scripts/ui/tether_command_input.gd"): input = child
+			var before: Dictionary = manager.tether_command_snapshot()
+			if input == null or not input.request("rally"):
+				return {"verdict":"FAIL", "detail":"production TetherCommandInput refused Rally request"}
+			# Observe the production input's submitted identity; Rally retains its
+			# participant receipt, not an Item pending request or Tag journal.
+			var request := preload("res://scripts/combat/tether_commands.gd").intent(str(input.get("_encounter_id")),
+				int(before.get("generation", 0)), int(input.get("_sequence")), "rally")
+			for frame in 90:
+				await physics_frame
+				var receipt: Dictionary = manager.tether_command_snapshot().get("last_receipt", {})
+				if receipt.get("command_id") == "rally" and receipt.get("sequence") == request.sequence:
+					return {"verdict":"PASS", "detail":"actual Rally command acknowledged", "data":{"request":request,
+						"before":before, "after":_tag_state({"request":request, "rally":true})}}
+			return {"verdict":"FAIL", "detail":"Rally lacked an accepted receipt within the existing short step budget",
+				"data":{"request":request, "state":_tag_state({"request":request, "rally":true}), "refusal":manager.get("last_encounter_refusal")}}
 		"op_tonic_clear":
 			# Existing proximity fixture: stop exposing this owned actor to a
 			# new enemy hit while the original Item's writer refusal is tested.
