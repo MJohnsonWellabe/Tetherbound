@@ -350,6 +350,543 @@
     "menu_exact_command": "APPROVE applicability only",
     "craft_exact_command": "APPROVE applicability only",
     "parse_import_native_visual": "PENDING",
-    "map_dependency_artifact": "APPROVE 10tests49assert0fail exit0; reusable12d7→48bd"
+    "map_dependency_artifact": "APPROVE 10tests49assert0fail exit0; reusable12d7â†’48bd"
+  },
+  "native_attempt_reviews": [
+    {
+      "reviewed_utc": "2026-10-09T10:28:49.094080+00:00",
+      "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+      "packet": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-menu-r1",
+      "runtime_status": "FAILED",
+      "runtime_verdict": "REJECT as complete menu/native proof",
+      "saved_subset_provenance": "Verified six original PNGs for bounded retained diagnosis only; no UI/runtime or visual PASS",
+      "actual_start": {
+        "mode": "Capture",
+        "started_utc": "2026-10-09T10:14:55.9139671Z",
+        "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-9a359dfd5c-ui-menu-r1/capture-home",
+        "deadline_minutes": 45,
+        "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+        "args": [
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--rendering-method",
+          "forward_plus",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "res://tools/catalogue_survey.gd",
+          "--",
+          "--biome=cloudreach",
+          "--subset=Galefoot",
+          "--times=day",
+          "--ui-context=menu",
+          "--preset=High",
+          "--source-commit=9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+          "--output=res://.tmp/e-ui-cloudreach-menu-9a359-day-r1"
+        ],
+        "pid": 46932
+      },
+      "actual_terminal": {
+        "mode": "Capture",
+        "ended_utc": "2026-10-09T10:24:44.3019511Z",
+        "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+        "exit_code": 1,
+        "reason": "process_exit",
+        "pid": 46932
+      },
+      "actual_failure_class": "Two production owner/focus/content guards failed; normal process_exit1, not watchdog. No root cause or focus/teardown explanation inferred.",
+      "producer": {
+        "manifest_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\manifest.json",
+        "manifest_sha256": "c2dba4b2dd5a074a355dd4fc542aa554d1bdc19474d087e5a1a1557c6ef73067",
+        "complete": false,
+        "failures": [
+          "ui-settings: production owner/focus/content guard failed",
+          "ui-settings-controls: production owner/focus/content guard failed"
+        ],
+        "catalogue_records": 1,
+        "ui_records": 7,
+        "record_guard_true": 5,
+        "record_guard_false": 2,
+        "missing_files": [
+          "ui-settings.png",
+          "ui-settings-controls.png"
+        ],
+        "ui_guard_records": [
+          {
+            "context": "ui-backpack",
+            "state_guard_pass": true,
+            "input_owner": "/root/Game/GameMenu",
+            "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@6163/@HBoxContainer@6164/@PanelContainer@6200/@VBoxContainer@6199/@GridContainer@6198/@Button@6223",
+            "visible_text": [
+              "0 of 24 slots used",
+              "QUICK BAR",
+              "SATCHEL",
+              "Empty",
+              "WORN EQUIPMENT",
+              "D-pad / arrows: choose a slot",
+              "Helmet: Empty",
+              "Upper Body: Empty",
+              "Lower Body: Empty",
+              "Boots: Empty",
+              "Backpack: Empty",
+              "Empty",
+              "Slot 1, empty. Pick a stack up from a full slot to move it here."
+            ],
+            "file": "res://.tmp/e-ui-cloudreach-menu-9a359-day-r1/ui-backpack.png"
+          },
+          {
+            "context": "ui-quest_log",
+            "state_guard_pass": true,
+            "input_owner": "/root/Game/GameMenu",
+            "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@12/@Button@6382",
+            "visible_text": [
+              "Research log Â· Species and task rewards",
+              "QUEST LOG",
+              "Chapter 3 Â· Cloudreach Cliffs",
+              "â–¸  Enter Cloudreach and find the waycamp.",
+              "     Follow the rising road from the realm gate to the first camp.",
+              "LOCAL REQUESTS",
+              "Nothing outstanding right now.",
+              "ACTIVE BOUNTIES Â· Claim at Halda's board",
+              "Visit Halda's board to read your notices."
+            ],
+            "file": "res://.tmp/e-ui-cloudreach-menu-9a359-day-r1/ui-quest_log.png"
+          },
+          {
+            "context": "ui-build",
+            "state_guard_pass": true,
+            "input_owner": "/root/Game/GameMenu",
+            "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@14/@ScrollContainer@6428/@PanelContainer@6427/@VBoxContainer@6426/@Button@6423",
+            "visible_text": [
+              "Make a place to return to",
+              "Tent",
+              "A canvas shelter to sleep under.",
+              "Normal cost: 6.0 Wood + 4.0 Fiber",
+              "Campfire",
+              "Light and warmth, and somewhere to craft.",
+              "Normal cost: 2.0 Wood + 8.0 Stone",
+              "Bedroll",
+              "Somewhere to rest until morning.",
+              "Normal cost: 4.0 Wood + 6.0 Fiber",
+              "Open the catalogue to choose a piece and check its materials. Placement continues in the world.",
+              "  Open Build Menu"
+            ],
+            "file": "res://.tmp/e-ui-cloudreach-menu-9a359-day-r1/ui-build.png"
+          },
+          {
+            "context": "ui-players",
+            "state_guard_pass": true,
+            "input_owner": "/root/Game/GameMenu",
+            "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Tabs/@Button@17",
+            "visible_text": [
+              "Your expedition",
+              "This world is not open to anyone else.",
+              "Trainer Â· You\nYour trainer on this device",
+              "The network port could not be opened, so nobody can join this game. Everything else plays exactly as it always has."
+            ],
+            "file": "res://.tmp/e-ui-cloudreach-menu-9a359-day-r1/ui-players.png"
+          },
+          {
+            "context": "ui-settings",
+            "state_guard_pass": false,
+            "input_owner": "/root/Game/GameMenu",
+            "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@20/@ScrollContainer@6444/@VBoxContainer@6445/@HBoxContainer@6495/@Button@6492",
+            "visible_text": [
+              "Help Â· System lessons",
+              "Graphics",
+              "Preset: High",
+              "Volumetric fog: On",
+              "SSAO: On",
+              "SSIL: On",
+              "Glow: On",
+              "Shadow quality: High",
+              "Draw distance: Far",
+              "Frame-rate overlay: Off"
+            ],
+            "file": null
+          },
+          {
+            "context": "ui-settings-controls",
+            "state_guard_pass": false,
+            "input_owner": "/root/Game/GameMenu",
+            "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@20/@ScrollContainer@6444/@VBoxContainer@6445/@Button@6484",
+            "visible_text": [
+              "  Invert vertical look:  Off",
+              "  Aim assistance:  Full",
+              "  Dialogue text size:  100%",
+              "  Dialogue background:  [||||||||| ]  93%",
+              "Left and right on the camera shake and sensitivity rows change them. Camera shake scales the small roll a charged hit gives the camera; reduced motion turns it off whatever the level. Sensitivity changes how fast the camera turns, for the stick and the mouse alike. A on aim assistance steps through Full, Reduced and Off: it changes only how much an orb throw helps you onto a creature, never your creature's attacks. A on dialogue text size steps through 100%, 125% and 150%; left and right on dialogue background make the panel behind conversation text more or less see-through. Both inversions apply everywhere the camera is yours to turn, including flying and aiming.",
+              "Controls",
+              "  Reset every control to its default"
+            ],
+            "file": null
+          },
+          {
+            "context": "ui-map",
+            "state_guard_pass": true,
+            "input_owner": "/root/Game/GameMenu",
+            "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@8/@PanelContainer@6854/@Control@6853",
+            "visible_text": [
+              "CLOUDREACH CLIFFS",
+              "Surveyed: 0%   â€¢   32x local view",
+              "Meadows",
+              "Cloudreach Cliffs"
+            ],
+            "file": "res://.tmp/e-ui-cloudreach-menu-9a359-day-r1/ui-map.png"
+          }
+        ],
+        "ui_contexts": [
+          "menu"
+        ],
+        "map_bound_state": {
+          "display_realm": "cloudreach",
+          "terrain_ready": true,
+          "realm_tabs_visible": true,
+          "available_realms": [
+            "meadows",
+            "cloudreach"
+          ],
+          "regions": [
+            {
+              "centre": "(0.0, 300.0)",
+              "discovered": true,
+              "display_name": "Cloudreach Gate / Lower Cliffs",
+              "id": "gate_lower_cliffs",
+              "radius": 150.0
+            },
+            {
+              "centre": "(-240.0, 1600.0)",
+              "discovered": false,
+              "display_name": "Broken Causeways",
+              "id": "broken_causeways",
+              "radius": 150.0
+            },
+            {
+              "centre": "(-80.0, 2850.0)",
+              "discovered": false,
+              "display_name": "Windscar Ravine",
+              "id": "windscar_ravine",
+              "radius": 150.0
+            }
+          ]
+        },
+        "visible_text_limit": "Original encoded text retained as persisted, without rewriting/normalization or readability judgment."
+      },
+      "saved_images": [
+        {
+          "original_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+          "bytes": 2245823,
+          "sha256": "01de2dfd7efb59852acf86b7bb44acd822f00f56c7f1e191c97caa267e1589b4",
+          "width": 1920,
+          "height": 1080,
+          "bit_depth": 8,
+          "colour_type": 2,
+          "crc_chunks": 277,
+          "full_IEND_zlib_stream_valid": true
+        },
+        {
+          "original_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\ui-backpack.png",
+          "bytes": 699484,
+          "sha256": "f292234a07164b630cfa5327c0c5a288719044de8601538bb426e7e0db4f47c9",
+          "width": 1920,
+          "height": 1080,
+          "bit_depth": 8,
+          "colour_type": 2,
+          "crc_chunks": 89,
+          "full_IEND_zlib_stream_valid": true
+        },
+        {
+          "original_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\ui-build.png",
+          "bytes": 664438,
+          "sha256": "2e0188fedb53d6f59d572da0e9a1fc447b0c2264b1688109807ce2e23f0cd1b8",
+          "width": 1920,
+          "height": 1080,
+          "bit_depth": 8,
+          "colour_type": 2,
+          "crc_chunks": 84,
+          "full_IEND_zlib_stream_valid": true
+        },
+        {
+          "original_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\ui-map.png",
+          "bytes": 638243,
+          "sha256": "54209cea39c6146de1e1d433215f47d30cd45b92e9765ce9f315372e73267f2d",
+          "width": 1920,
+          "height": 1080,
+          "bit_depth": 8,
+          "colour_type": 2,
+          "crc_chunks": 81,
+          "full_IEND_zlib_stream_valid": true
+        },
+        {
+          "original_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\ui-players.png",
+          "bytes": 827466,
+          "sha256": "37bfa198bfc5be434993d00807a9a3bcf607368ed235d5c473a471acc0c54f21",
+          "width": 1920,
+          "height": 1080,
+          "bit_depth": 8,
+          "colour_type": 2,
+          "crc_chunks": 104,
+          "full_IEND_zlib_stream_valid": true
+        },
+        {
+          "original_path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\ui-quest_log.png",
+          "bytes": 822636,
+          "sha256": "3c81a8193fe19c549f36d6d05f4ed5f368875a2ff3986e5e4d84d66a1091b531",
+          "width": 1920,
+          "height": 1080,
+          "bit_depth": 8,
+          "colour_type": 2,
+          "crc_chunks": 104,
+          "full_IEND_zlib_stream_valid": true
+        }
+      ],
+      "graphics_capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+        "preset": "High",
+        "renderer": "forward_plus",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source_commit": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d"
+      },
+      "native_renderer_banner": [
+        "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org",
+        "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+      ],
+      "source_history": {
+        "exact_source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+        "tree_and_index": "12b17e6a02dbb65a8b0998ae3aa66a6afc7bc73c",
+        "tree_is_not_commit": true,
+        "before_after_tracked_clean": true,
+        "six_existing_untracked_outputs_preserved": true,
+        "post_import": "Four .import modifications remain in original after-import status despite tracked_clean flag. Revalidation binds exact pinned Git blobs; before/after capture statuses contain only identical untracked outputs.",
+        "revalidated_import_blobs": [
+          {
+            "path": "assets/buildings/quaternius_medieval/T_Brick_BaseColor.png.import",
+            "blob": "4a6970aff2c45871a2c1fcafc8a12665f9a3a36e"
+          },
+          {
+            "path": "assets/buildings/quaternius_medieval/T_Brick_Normal.png.import",
+            "blob": "1c36a40fbaf36ec5b0b1d1d8bbd00caa0ef58f7d"
+          },
+          {
+            "path": "assets/buildings/quaternius_medieval/T_Brick_Roughness.png.import",
+            "blob": "676075f3b3ac62a054fe8ed09f97ab1d50f3d42d"
+          },
+          {
+            "path": "assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png.import",
+            "blob": "7a64fbc99550b442aa24cf680fa18be4a8b8bada"
+          }
+        ],
+        "import_exit": 0,
+        "owned_process_absence": "Recorded by failed-native-summary; no separate process-list witness or live query performed."
+      },
+      "diagnostics": {
+        "explicit_guard_errors": 2,
+        "script_errors": 0,
+        "known_fail_closed_site_warnings": 2,
+        "warning_sites": [
+          "road_visibility_broken_causeway_main_03",
+          "road_visibility_windscar_floor_loop_15"
+        ]
+      },
+      "packet_hashes": {
+        "capture-start.json": "d309af389ba60d32443bbed9d85a4bae91acf40bdfd41f4e626998b60ed075ae",
+        "capture-terminal.json": "12e56bfa8a517be79e20eff7b1c83d5c02c9482e4c812bca9b5aa1b0ebd4697b",
+        "capture.stdout.log": "4caca1c0b0a10f4c106c0aba948fae7b3b6f7479da7737e26bfcb6004632f2f3",
+        "capture.stderr.log": "907c7d0a3ef5981f551caae9ebb854120e39876ffbd18018d8aec340d357b1ed",
+        "import-start.json": "ac39f070c000662d8eda800f42bb7489ce348248baa77a9eaecfbb007d7aef7b",
+        "import-terminal.json": "30be72c13e7b68314c989aa14b025ebb1c8ef3898a32c55fe4f3fc16db36e760",
+        "source-before-import.json": "edd025f02ce01b69361f5070dbc9f4367e9525527ff9ecd16b620605ea21e63a",
+        "source-after-import.json": "4d11cac023fb295548ad6cf8a3ccff8802e270a8fe0f7cb3812412b3c22acd92",
+        "source-after-import-revalidated.json": "e3f211ea56e02335a4e13ce6d465cd44ba7a9c1baaa9d743b66e90899414f84a",
+        "source-before-capture.json": "3d7e053e15f9bbefe5e09d4db99473959acd0655e7d426cfcfd0e413fdb653dd",
+        "source-after-capture.json": "e732cc28898f6b1305d552b5b20ea2a0c8aa608df521d545de486cf7c23ce147",
+        "failed-native-summary.json": "faf7926ceb287a4ebf7548ce8609f0042e054302216081233c0342d067abd1d3",
+        "original-recipe.json": "094a146e9d50201a439d6814780a5ff03c17ec446bc1958d2f707018468258d7"
+      },
+      "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+      "limits": [
+        "One existing Galefoot/day coordinate and production menu/contents/focus/map UI. Original debug travel/production CameraRig/owner-content-visibletext-focus guards retained.",
+        "Players records say network port unavailable; no network/co-op acceptance inferred.",
+        "Five saved UI contexts are backpack,quest_log,build,players,map. Settings/Controls guardfalse and files absent. Their recorded nonempty owner/focus/text do not identify which combined condition failed.",
+        "Headers/hashes/records do not establish pixel readability, complete seven-context UI, controller/device/performance, all31missingcontexts/fullmatrix/wholecriterion/READY.",
+        "Earlier12d failure,48source/command approval,9a namespace/static/source applicability,map10/49 and floor4/81 scopes preserved. No unchanged retry, new engine/test run, source edit or blind task."
+      ]
+    },
+    {
+      "source_commit": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+      "runtime_verdict": "FAILED; no native craft UI PASS",
+      "packet": "C:/CodexTemp/tetherbound-proof/native-e-9a359dfd5c-ui-craft-r1",
+      "original_output_directory": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-meadows-craft-9a359-day-r1",
+      "exact_capture_args": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/catalogue_survey.gd",
+        "--",
+        "--biome=meadows",
+        "--subset=South Bridge",
+        "--times=day",
+        "--ui-context=craft",
+        "--preset=High",
+        "--source-commit=9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+        "--output=res://.tmp/e-ui-meadows-craft-9a359-day-r1"
+      ],
+      "start": {
+        "pid": 51708,
+        "started_utc": "2026-10-09T10:27:01.7287276Z",
+        "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-9a359dfd5c-ui-craft-r1/capture-home"
+      },
+      "terminal": {
+        "reason": "process_exit",
+        "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+        "pid": 51708,
+        "exit_code": 1,
+        "ended_utc": "2026-10-09T10:30:47.6612743Z",
+        "mode": "Capture"
+      },
+      "manifest": {
+        "path": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-meadows-craft-9a359-day-r1/manifest.json",
+        "sha256": "6fa9f74bc24db7961bb12278eb6e26ca73317b049bdbac0b412fea12043a5c1e",
+        "complete": false,
+        "base_frame_count": 1,
+        "planned_base_frame_count": 1,
+        "ui_frame_count": 0,
+        "requested_ui_frame_count": 1,
+        "failures": [
+          "UI craft: focused recipe preview/material/action hint is missing or clipped",
+          "UI survey completed 0/1 requested frames"
+        ]
+      },
+      "verified_saved_original": {
+        "path": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-ui-meadows-craft-9a359-day-r1/meadows__band1_lower_meadows__02__the_south_bridge__day.png",
+        "bytes": 2759883,
+        "sha256": "39c3dd5231e744c94179ff152fe59969eebf0cd1434fcd6148c0a5a6a6790174",
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "format": "PNG RGB8 noninterlaced",
+        "independent_integrity": "All340chunk CRCs, IEND/end-of-file and full zlib decompression/scanline size verified. Exactly one PNG present; no craft UI image exists.",
+        "record_id": "meadows__band1_lower_meadows__02__the_south_bridge__day"
+      },
+      "source_provenance": {
+        "head_and_index_tree": "12b17e6a02dbb65a8b0998ae3aa66a6afc7bc73c",
+        "meaning": "Git tree, not commit; matches locally resolved pinned commit tree. All before/import/after/capture snapshots bind exact9a and tracked/index clean, retaining six unrelated untracked evidence directories. Later cached checkout is not substituted.",
+        "import_exit": 0,
+        "revalidation": "Retained source-after-import-revalidated receipt records original import and four imported metadata paths; their listed blobs match actual pinned Git objects.",
+        "owned_process_absence": "failed-native-summary records absence; no separate process-list witness or live query was used."
+      },
+      "graphics": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+        "preset": "High",
+        "renderer": "forward_plus",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source_commit": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d"
+      },
+      "actual_driver": "Actual stdout: Godot4.7 stable official, Vulkan1.3.280 Forward+ NVIDIA GeForceGTX1060 3GB. Import success is not UI capture success.",
+      "diagnostics": {
+        "guard_errors": 2,
+        "script_errors": 0,
+        "warnings": 1,
+        "warning": "Deprecated instance_reset_physics_interpolation in Meadows terrain build."
+      },
+      "failed_guard_binding": "At pinned9a original craft composite checks preview and hint existence/nonempty/visible area, actual selected index, material existence/nonempty/visible-line count/all lines visible/full clipped rectangle. Failure occurs before _shoot_ui, so ui_frames remains empty and no individual selection/focus/material/hint operands are recorded. Which condition failed and its cause are UNDETERMINED; no focus/layout/recipe/teardown hypothesis.",
+      "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+      "scope_limits": [
+        "One original South Bridge/day base catalogue image through production CameraRig and debug travel is retained for bounded diagnosis only. No craft PNG exists to grade.",
+        "Failure is process_exit1, not outer watchdog, regardless of one completed base image. Original owner/content/focus/cost/visibility/count/persistence guards are retained.",
+        "Accepted source/static9a, map10/49, floor4/81 and corrected4bf/1e2 source applicability remain separate; no runtime promotion or unchanged retry.",
+        "No UI/readability/controller/device/campaign/earned recipe/save/co-op/performance/fullmatrix/wholecriterion/READY claim."
+      ],
+      "packet_hashes": {
+        "capture-start.json": "25be32e2797ed464240e2f038abc4ed274117cd837017d5e53a05c091ad61714",
+        "capture-terminal.json": "b54b116f1db7a5c785940d286edbd4be74cf8df5694a6b3a4cae4f79dada8994",
+        "capture.stdout.log": "e0743cd7ed583d5d2e9f10de3319fa8324c479fc4323cd67a7bfeeefcae43af5",
+        "capture.stderr.log": "4d74ada27db4d789092c2051cedad9c782b31a000b665c59f0ee21c42197ef88",
+        "import-start.json": "5031ccddb9b4eb94cb0b809b3643075ea5b8472cb08ee09f2bb949059fb5f6ed",
+        "import-terminal.json": "f89921994c493927e04a767c65518ff55f6dcb075130ccb4e929ee785698bccc",
+        "source-before-import.json": "fd606aa0188ef310a1478042c6076c5a61be956f610b2bbe325d904060a89d7a",
+        "source-after-import.json": "9295a301cb568f46663b9bed0e350c9321d526f8f20293ca8ebb2262d797fd27",
+        "source-after-import-revalidated.json": "703b1503de2f72c7d677234e78428ceba827072115a708c12c3944a4e53842a2",
+        "source-before-capture.json": "3715d9b6dea176ef148f144a57299d8fdb49c010060914c740b793e0b53542e0",
+        "source-after-capture.json": "b95b0ab6e2a0904f65e4d5fd821f6909e46f279344c393ff957b93d15b27be1d",
+        "original-recipe.json": "094a146e9d50201a439d6814780a5ff03c17ec446bc1958d2f707018468258d7",
+        "failed-native-summary.json": "6aea02906e61d0052b4329cf17942cc3f2a8110b02a59fd9f7326abf85879356"
+      }
+    }
+  ],
+  "latest_menu_native_status": "FAILED9a359 process_exit1: Settings/Controls guard false; six originals diagnosis only",
+  "source_correction_reviews": [
+    {
+      "source_commit": "4bf9f6f63480dc2b7772caaf67bc4452096bc47f",
+      "base_commit": "7c8188ba92faa411cf3494487cfef8779faec807",
+      "source_verdict": "APPROVE",
+      "review_scope": "Exact two-file correction after failed9a menu guard evidence; no unseen proposal approval, runtime execution or cause attribution.",
+      "notice": "Parent supplied pre-edit cross-lane NOTICE6079140700; no issue fetch performed.",
+      "blobs": {
+        "scripts/ui/tab_settings.gd": "2a67ee10160ce208545d28abac857ca80c8a5718",
+        "tools/catalogue_survey.gd": "1b43f2730e032bd184555b6b3449fe6dbacb3694"
+      },
+      "findings": [
+        "Settings _keep_visible retains immediate ensure_control_visible, captures the same ScrollContainer, awaits one process_frame, then requires valid control/scroll, unchanged scroll, visible panel/control and identical current focus before repeating. Close/tab-switch/detachment or changed focus cancels the repeat; no focus grab, input-owner, binding, save or authority change.",
+        "GameMenu.select refreshes the selected panel and grabs its first_focus synchronously. Settings first_focus prioritizes lesson buttons, then the first gamepad row, then reset. The failed Settings record lacks individual operands; no particular condition or layout cause is established.",
+        "The failed Controls visible_text lacks its required A on a binding to change it prefix, establishing that predicate false. The old producer targeted reset above that hint. The corrected producer targets the installed _rows[0].gamepad, with empty/null refusal, rather than a synthetic binding. This does not promise the hint will be visible.",
+        "Original owner/open/content-visible/focus-present/focus-visible/descendant/nonempty-text composite and Controls hint predicate remain unchanged. New guard_checks and focus_visible_rect read the same conditions without changing focus, ownership, geometry, admission or save behavior. PNG/raster/failure/manifest readback guards remain unchanged."
+      ],
+      "official_api_reference": {
+        "url": "https://docs.godotengine.org/en/stable/classes/class_scrollcontainer.html#class-scrollcontainer-method-ensure-control-visible",
+        "finding": "Official documentation says ensure_control_visible cannot handle a node newly added in the same frame and recommends waiting for process_frame. This conditional API fact supports the bounded retry policy; it does not prove that newly-added layout caused either native failure."
+      },
+      "affected_proof_command": {
+        "verdict": "APPROVE applicability; execution PENDING",
+        "recipe": [
+          "Godot",
+          "--headless",
+          "--path",
+          "<fresh approved pinned worktree>",
+          "--script",
+          "res://tests/smoke_settings.gd"
+        ],
+        "source": "Existing smoke header declares this scene smoke recipe. It injects physical joypad events, checks all enabled row traversal/scroll and focused-control visibility at the existing resolutions, plus rebind/cancel/recovery/owner guards. No new harness/test or old environment/map rerun requested."
+      },
+      "required_pending_gates": [
+        "Existing smoke_settings.gd affected pad/scroll proof at the corrected pin, without skips or weakened assertions.",
+        "ROOT static/import and actual native menu capture: exact source, all original seven UI records plus base image, owner/content/focus/hint guards, complete persisted receipts and successful terminal. No parser/native claim follows from source review.",
+        "Failed-record diagnostics must preserve original guards and identify actual false operands before any further targeted change."
+      ],
+      "history_and_limits": "Failed9a menu terminal1 and absent Settings/Controls images remain FAILED. Historical12d rejection,48/9a source/static approvals and map10/49/floor4/81 witnesses are preserved. No claim of fixed Settings cause, all UI guards, pixels/readability/controller device, campaign/save/co-op/performance/fullmatrix/wholecriterion/READY."
+    },
+    {
+      "source_commit": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+      "base_commit": "4bf9f6f63480dc2b7772caaf67bc4452096bc47f",
+      "coherent_batch_base": "7c8188ba92faa411cf3494487cfef8779faec807",
+      "source_verdict": "APPROVE",
+      "catalogue_survey_blob": "fcddcb0c39c82b4c92966383e530634d89d97e99",
+      "settings_blob_unchanged_from_accepted_4bf": "2a67ee10160ce208545d28abac857ca80c8a5718",
+      "notice": "Parent supplied pre-edit NOTICE6079162171; no issue fetch.",
+      "findings": [
+        "Only additional28lines in existing craft failure branch; read-only actual recipe/selection, owner/focus, preview/hint/material existence/text/visible rectangles, material line counts/clip/overrun and viewport operands. Nullable Label/Control reads are guarded.",
+        "Original composite, original failure string, no failed UI PNG, empty UI frames, expected UI count, selection/interaction/close and persistence behavior remain unchanged. No guessed layout change or guard weakening.",
+        "Accepted4bf source/affected smoke_settings.gd recipe applicability reused without duplicate audit. Final exact corrected source is1e2; actual parser/static/import, affected Settings smoke and native menu/craft proof remain pending. This change supplies diagnostics, not a craft fix or native success."
+      ],
+      "scope_limits": "No new native command approval in this entry, no intermediate capture/test, no art/controller/device/campaign/save/co-op/performance/wholecriterion/READY claim."
+    }
+  ],
+  "latest_craft_native_status": "FAILED9a359 process_exit1: preview/material/action-hint composite rejected; one base PNG, zero UI PNG/records",
+  "latest_ui_correction_source": {
+    "source_commit": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+    "verdict": "APPROVE source only; settings smoke/static/import/native proof PENDING"
   }
 }

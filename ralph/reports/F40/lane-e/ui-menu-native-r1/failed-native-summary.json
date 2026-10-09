@@ -1,0 +1,177 @@
+{
+  "ui_records": [
+    {
+      "context": "ui-backpack",
+      "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@6163/@HBoxContainer@6164/@PanelContainer@6200/@VBoxContainer@6199/@GridContainer@6198/@Button@6223",
+      "state_guard_pass": true,
+      "visible_text": [
+        "0 of 24 slots used",
+        "QUICK BAR",
+        "SATCHEL",
+        "Empty",
+        "WORN EQUIPMENT",
+        "D-pad / arrows: choose a slot",
+        "Helmet: Empty",
+        "Upper Body: Empty",
+        "Lower Body: Empty",
+        "Boots: Empty",
+        "Backpack: Empty",
+        "Empty",
+        "Slot 1, empty. Pick a stack up from a full slot to move it here."
+      ],
+      "input_owner": "/root/Game/GameMenu",
+      "file": "res://.tmp/e-ui-cloudreach-menu-9a359-day-r1/ui-backpack.png"
+    },
+    {
+      "context": "ui-quest_log",
+      "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@12/@Button@6382",
+      "state_guard_pass": true,
+      "visible_text": [
+        "Research log · Species and task rewards",
+        "QUEST LOG",
+        "Chapter 3 · Cloudreach Cliffs",
+        "▸  Enter Cloudreach and find the waycamp.",
+        "     Follow the rising road from the realm gate to the first camp.",
+        "LOCAL REQUESTS",
+        "Nothing outstanding right now.",
+        "ACTIVE BOUNTIES · Claim at Halda's board",
+        "Visit Halda's board to read your notices."
+      ],
+      "input_owner": "/root/Game/GameMenu",
+      "file": "res://.tmp/e-ui-cloudreach-menu-9a359-day-r1/ui-quest_log.png"
+    },
+    {
+      "context": "ui-build",
+      "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@14/@ScrollContainer@6428/@PanelContainer@6427/@VBoxContainer@6426/@Button@6423",
+      "state_guard_pass": true,
+      "visible_text": [
+        "Make a place to return to",
+        "Tent",
+        "A canvas shelter to sleep under.",
+        "Normal cost: 6.0 Wood + 4.0 Fiber",
+        "Campfire",
+        "Light and warmth, and somewhere to craft.",
+        "Normal cost: 2.0 Wood + 8.0 Stone",
+        "Bedroll",
+        "Somewhere to rest until morning.",
+        "Normal cost: 4.0 Wood + 6.0 Fiber",
+        "Open the catalogue to choose a piece and check its materials. Placement continues in the world.",
+        "  Open Build Menu"
+      ],
+      "input_owner": "/root/Game/GameMenu",
+      "file": "res://.tmp/e-ui-cloudreach-menu-9a359-day-r1/ui-build.png"
+    },
+    {
+      "context": "ui-players",
+      "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Tabs/@Button@17",
+      "state_guard_pass": true,
+      "visible_text": [
+        "Your expedition",
+        "This world is not open to anyone else.",
+        "Trainer · You\nYour trainer on this device",
+        "The network port could not be opened, so nobody can join this game. Everything else plays exactly as it always has."
+      ],
+      "input_owner": "/root/Game/GameMenu",
+      "file": "res://.tmp/e-ui-cloudreach-menu-9a359-day-r1/ui-players.png"
+    },
+    {
+      "context": "ui-settings",
+      "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@20/@ScrollContainer@6444/@VBoxContainer@6445/@HBoxContainer@6495/@Button@6492",
+      "state_guard_pass": false,
+      "visible_text": [
+        "Help · System lessons",
+        "Graphics",
+        "Preset: High",
+        "Volumetric fog: On",
+        "SSAO: On",
+        "SSIL: On",
+        "Glow: On",
+        "Shadow quality: High",
+        "Draw distance: Far",
+        "Frame-rate overlay: Off"
+      ],
+      "input_owner": "/root/Game/GameMenu",
+      "file": null
+    },
+    {
+      "context": "ui-settings-controls",
+      "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@20/@ScrollContainer@6444/@VBoxContainer@6445/@Button@6484",
+      "state_guard_pass": false,
+      "visible_text": [
+        "  Invert vertical look:  Off",
+        "  Aim assistance:  Full",
+        "  Dialogue text size:  100%",
+        "  Dialogue background:  [||||||||| ]  93%",
+        "Left and right on the camera shake and sensitivity rows change them. Camera shake scales the small roll a charged hit gives the camera; reduced motion turns it off whatever the level. Sensitivity changes how fast the camera turns, for the stick and the mouse alike. A on aim assistance steps through Full, Reduced and Off: it changes only how much an orb throw helps you onto a creature, never your creature's attacks. A on dialogue text size steps through 100%, 125% and 150%; left and right on dialogue background make the panel behind conversation text more or less see-through. Both inversions apply everywhere the camera is yours to turn, including flying and aiming.",
+        "Controls",
+        "  Reset every control to its default"
+      ],
+      "input_owner": "/root/Game/GameMenu",
+      "file": null
+    },
+    {
+      "context": "ui-map",
+      "focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@8/@PanelContainer@6854/@Control@6853",
+      "state_guard_pass": true,
+      "visible_text": [
+        "CLOUDREACH CLIFFS",
+        "Surveyed: 0%   •   32x local view",
+        "Meadows",
+        "Cloudreach Cliffs"
+      ],
+      "input_owner": "/root/Game/GameMenu",
+      "file": "res://.tmp/e-ui-cloudreach-menu-9a359-day-r1/ui-map.png"
+    }
+  ],
+  "source_index_equal": true,
+  "tracked_clean": true,
+  "owned_godot_processes_absent": true,
+  "terminal": {
+    "mode": "Capture",
+    "ended_utc": "2026-10-09T10:24:44.3019511Z",
+    "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+    "exit_code": 1,
+    "reason": "process_exit",
+    "pid": 46932
+  },
+  "manifest_sha256": "c2dba4b2dd5a074a355dd4fc542aa554d1bdc19474d087e5a1a1557c6ef73067",
+  "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+  "manifest_complete": false,
+  "disposition": "FAILED native packet; six originals retained for diagnosis only; no blind/runtime/whole PASS",
+  "failures": [
+    "ui-settings: production owner/focus/content guard failed",
+    "ui-settings-controls: production owner/focus/content guard failed"
+  ],
+  "original_images": [
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "sha256": "01de2dfd7efb59852acf86b7bb44acd822f00f56c7f1e191c97caa267e1589b4",
+      "bytes": 2245823
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\ui-backpack.png",
+      "sha256": "f292234a07164b630cfa5327c0c5a288719044de8601538bb426e7e0db4f47c9",
+      "bytes": 699484
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\ui-build.png",
+      "sha256": "2e0188fedb53d6f59d572da0e9a1fc447b0c2264b1688109807ce2e23f0cd1b8",
+      "bytes": 664438
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\ui-map.png",
+      "sha256": "54209cea39c6146de1e1d433215f47d30cd45b92e9765ce9f315372e73267f2d",
+      "bytes": 638243
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\ui-players.png",
+      "sha256": "37bfa198bfc5be434993d00807a9a3bcf607368ed235d5c473a471acc0c54f21",
+      "bytes": 827466
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-cloudreach-menu-9a359-day-r1\\ui-quest_log.png",
+      "sha256": "3c81a8193fe19c549f36d6d05f4ed5f368875a2ff3986e5e4d84d66a1091b531",
+      "bytes": 822636
+    }
+  ]
+}

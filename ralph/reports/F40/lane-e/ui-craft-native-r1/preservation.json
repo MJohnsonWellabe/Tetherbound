@@ -1,0 +1,134 @@
+{
+  "source_commit": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+  "disposition": "FAILED craft guard; only original base PNG retained; no native UI/runtime/blind/whole PASS",
+  "actual_terminal": {
+    "reason": "process_exit",
+    "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+    "pid": 51708,
+    "exit_code": 1,
+    "ended_utc": "2026-10-09T10:30:47.6612743Z",
+    "mode": "Capture"
+  },
+  "raw_files": [
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\capture-start.json",
+      "file": "capture-start.json",
+      "bytes": 773,
+      "sha256": "25be32e2797ed464240e2f038abc4ed274117cd837017d5e53a05c091ad61714"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\capture-terminal.json",
+      "file": "capture-terminal.json",
+      "bytes": 197,
+      "sha256": "b54b116f1db7a5c785940d286edbd4be74cf8df5694a6b3a4cae4f79dada8994"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\capture.stderr.log",
+      "file": "capture.stderr.log",
+      "bytes": 1385,
+      "sha256": "4d74ada27db4d789092c2051cedad9c782b31a000b665c59f0ee21c42197ef88"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\capture.stdout.log",
+      "file": "capture.stdout.log",
+      "bytes": 220837,
+      "sha256": "e0743cd7ed583d5d2e9f10de3319fa8324c479fc4323cd67a7bfeeefcae43af5"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\failed-native-summary.json",
+      "file": "failed-native-summary.json",
+      "bytes": 1118,
+      "sha256": "6aea02906e61d0052b4329cf17942cc3f2a8110b02a59fd9f7326abf85879356"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\import-start.json",
+      "file": "import-start.json",
+      "bytes": 436,
+      "sha256": "5031ccddb9b4eb94cb0b809b3643075ea5b8472cb08ee09f2bb949059fb5f6ed"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\import-terminal.json",
+      "file": "import-terminal.json",
+      "bytes": 196,
+      "sha256": "f89921994c493927e04a767c65518ff55f6dcb075130ccb4e929ee785698bccc"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\import.stderr.log",
+      "file": "import.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\import.stdout.log",
+      "file": "import.stdout.log",
+      "bytes": 2355,
+      "sha256": "8578ab83fe7d010fd656e01adb1316f1474c8dccb69d4fa6bf179352e10e233c"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\launch.ps1",
+      "file": "launch.ps1",
+      "bytes": 4634,
+      "sha256": "c77006b58705b2bfdf81f09d8505eee7742d07214c1724e5909f8452b4922417"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\original-recipe.json",
+      "file": "original-recipe.json",
+      "bytes": 15539,
+      "sha256": "094a146e9d50201a439d6814780a5ff03c17ec446bc1958d2f707018468258d7"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\source-after-capture.json",
+      "file": "source-after-capture.json",
+      "bytes": 700,
+      "sha256": "b95b0ab6e2a0904f65e4d5fd821f6909e46f279344c393ff957b93d15b27be1d"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\source-after-import-revalidated.json",
+      "file": "source-after-import-revalidated.json",
+      "bytes": 944,
+      "sha256": "703b1503de2f72c7d677234e78428ceba827072115a708c12c3944a4e53842a2"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\source-after-import.json",
+      "file": "source-after-import.json",
+      "bytes": 700,
+      "sha256": "9295a301cb568f46663b9bed0e350c9321d526f8f20293ca8ebb2262d797fd27"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\source-before-capture.json",
+      "file": "source-before-capture.json",
+      "bytes": 700,
+      "sha256": "3715d9b6dea176ef148f144a57299d8fdb49c010060914c740b793e0b53542e0"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\source-before-import.json",
+      "file": "source-before-import.json",
+      "bytes": 700,
+      "sha256": "fd606aa0188ef310a1478042c6076c5a61be956f610b2bbe325d904060a89d7a"
+    },
+    {
+      "source": "C:\\CodexTemp\\tetherbound-proof\\native-e-9a359dfd5c-ui-craft-r1\\verify-native.py",
+      "file": "verify-native.py",
+      "bytes": 4664,
+      "sha256": "43169a40d95d5c6b45caceb834200a9291b3c26e2d0fb454dfaef8514c5a3e9b"
+    },
+    {
+      "source": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-meadows-craft-9a359-day-r1\\manifest.json",
+      "file": "manifest.json",
+      "bytes": 14895,
+      "sha256": "6fa9f74bc24db7961bb12278eb6e26ca73317b049bdbac0b412fea12043a5c1e"
+    }
+  ],
+  "original_images_referenced_not_duplicated": [
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-meadows-craft-9a359-day-r1\\meadows__band1_lower_meadows__02__the_south_bridge__day.png",
+      "bytes": 2759883,
+      "sha256": "39c3dd5231e744c94179ff152fe59969eebf0cd1434fcd6148c0a5a6a6790174"
+    }
+  ],
+  "original_reviews": [
+    "../ui-contexts-source-review.json"
+  ],
+  "limits": "One base retained original, no craftUI PNG. Exact composite preview/material/action-hint failure and0/1UIcount guard retained; individual operands absent in original packet, causeunknown. Actual process_exit1, not watchdog. No runtime/native/UI/blind/criterion PASS or unchanged retry.",
+  "whole_criteria_closed": 0
+}

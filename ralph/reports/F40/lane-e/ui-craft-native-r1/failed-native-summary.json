@@ -1,0 +1,29 @@
+{
+  "source_index_equal": true,
+  "manifest_sha256": "6fa9f74bc24db7961bb12278eb6e26ca73317b049bdbac0b412fea12043a5c1e",
+  "disposition": "FAILED craft guard; only original base PNG retained; no native UI/runtime/blind/whole PASS",
+  "manifest_complete": false,
+  "original_images": [
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-ui-meadows-craft-9a359-day-r1\\meadows__band1_lower_meadows__02__the_south_bridge__day.png",
+      "bytes": 2759883,
+      "sha256": "39c3dd5231e744c94179ff152fe59969eebf0cd1434fcd6148c0a5a6a6790174"
+    }
+  ],
+  "terminal": {
+    "reason": "process_exit",
+    "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+    "pid": 51708,
+    "exit_code": 1,
+    "ended_utc": "2026-10-09T10:30:47.6612743Z",
+    "mode": "Capture"
+  },
+  "ui_records": [],
+  "failures": [
+    "UI craft: focused recipe preview/material/action hint is missing or clipped",
+    "UI survey completed 0/1 requested frames"
+  ],
+  "owned_godot_processes_absent": true,
+  "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d",
+  "tracked_clean": true
+}

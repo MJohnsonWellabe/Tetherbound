@@ -1,0 +1,16 @@
+{
+  "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-9a359dfd5c-ui-craft-r1/import-home",
+  "pid": 27796,
+  "deadline_minutes": 15,
+  "args": [
+    "--headless",
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--editor",
+    "--import",
+    "--quit"
+  ],
+  "mode": "Import",
+  "started_utc": "2026-10-09T10:25:42.9495921Z",
+  "source": "9a359dfd5c545aa471f9dbe317ef063e0408dc1d"
+}

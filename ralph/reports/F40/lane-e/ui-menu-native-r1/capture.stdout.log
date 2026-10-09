@@ -1,0 +1,65 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+CATALOGUE BOOT cloudreach load begin t=13212
+CATALOGUE BOOT cloudreach instantiate begin t=23532
+CATALOGUE BOOT cloudreach attach begin t=23541
+[shell_build] CloudreachCliffs begin:forward_upload total=0ms slice=0ms
+[shell_build] CloudreachCliffs materials:begin total=8ms slice=8ms
+[shell_build] CloudreachCliffs complete:materials total=41ms slice=41ms
+CATALOGUE BOOT cloudreach attached t=23805
+[shell_build] CloudreachCliffs regions:begin total=54688ms slice=8ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:mesa:begin total=54691ms slice=11ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:strata:begin total=56599ms slice=0ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:satellites:begin total=56603ms slice=4ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:vegetation:begin total=56607ms slice=8ms
+[shell_build] CloudreachCliffs regions:broken_causeways:mesa:begin total=56764ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:strata:begin total=57144ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:satellites:begin total=57149ms slice=5ms
+[shell_build] CloudreachCliffs regions:broken_causeways:vegetation:begin total=57152ms slice=8ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:mesa:begin total=57156ms slice=12ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:strata:begin total=57291ms slice=0ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:satellites:begin total=57294ms slice=3ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:vegetation:begin total=57297ms slice=6ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:mesa:begin total=57302ms slice=11ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:strata:begin total=57427ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:satellites:begin total=57432ms slice=5ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:vegetation:begin total=57436ms slice=9ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:mesa:begin total=57440ms slice=13ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:strata:begin total=57563ms slice=0ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:satellites:begin total=57567ms slice=4ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:vegetation:begin total=57569ms slice=6ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:mesa:begin total=57574ms slice=11ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:strata:begin total=57999ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:satellites:begin total=58004ms slice=5ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:vegetation:begin total=58007ms slice=8ms
+[shell_build] CloudreachCliffs complete:regions total=58010ms slice=11ms
+[shell_build] CloudreachCliffs complete:ledges total=58078ms slice=53ms
+[shell_build] CloudreachCliffs routes:begin total=58095ms slice=0ms
+[shell_build] CloudreachCliffs routes:arrival_gate_road:begin total=58100ms slice=5ms
+[shell_build] CloudreachCliffs routes:lower_cliff_road:begin total=59744ms slice=3ms
+[shell_build] CloudreachCliffs routes:lower_overlook_loop:begin total=61946ms slice=2ms
+[shell_build] CloudreachCliffs routes:broken_causeway_main:begin total=65579ms slice=4ms
+[shell_build] CloudreachCliffs routes:causeway_west_loop:begin total=68651ms slice=5ms
+[shell_build] CloudreachCliffs routes:windscar_floor_loop:begin total=73774ms slice=5ms
+[shell_build] CloudreachCliffs routes:windscar_counterweight_pass:begin total=77030ms slice=5ms
+[shell_build] CloudreachCliffs routes:upper_plateau_circuit:begin total=80741ms slice=6ms
+[shell_build] CloudreachCliffs routes:upper_summit_road:begin total=87057ms slice=7ms
+[shell_build] CloudreachCliffs routes:summit_overlook_loop:begin total=91046ms slice=5ms
+[shell_build] CloudreachCliffs routes:windscar_counterweight_return:begin total=96698ms slice=7ms
+[shell_build] CloudreachCliffs routes:observatory_summit_link:begin total=98013ms slice=1ms
+[shell_build] CloudreachCliffs routes:observatory_latch_descent:begin total=98119ms slice=1ms
+[shell_build] CloudreachCliffs complete:routes total=98213ms slice=1ms
+[shell_build] CloudreachCliffs complete:gates total=98287ms slice=3ms
+[shell_build] CloudreachCliffs complete:bridges total=98778ms slice=414ms
+[shell_build] CloudreachCliffs complete:landmarks total=105110ms slice=2ms
+[shell_build] CloudreachCliffs complete:return_gate total=105325ms slice=123ms
+[shell_build] CloudreachCliffs complete:route_details total=106792ms slice=10ms
+[shell_build] CloudreachCliffs complete:resource_patches total=107498ms slice=8ms
+[shell_build] CloudreachCliffs complete:environment total=107872ms slice=259ms
+[village_npcs] placed 11 of 11
+[climax] no 'CloudreachNoStronghold' node; standing the climax on its own fallback coordinates
+[shell_build] CloudreachCliffs complete:mount total=548459ms slice=34689ms
+[cloudreach] shell build 550.9 s wall, 3557 yields at 16 ms/frame, 0 indivisible slices given a heartbeat window each, worst held slice 34689 ms (in the step following 'environment'); steps (ms wall, yields included): materials=41 regions=3330 ledges=53 routes=40118 gates=3 bridges=414 landmarks=6235 return_gate=123 route_details=10 resource_patches=615 environment=259 mount=440315
+CATALOGUE CAPTURE cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day -> res://.tmp/e-ui-cloudreach-menu-9a359-day-r1/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png
+CATALOGUE SURVEY FAILED: 1/1 frames in res://.tmp/e-ui-cloudreach-menu-9a359-day-r1
