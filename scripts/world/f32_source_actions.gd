@@ -268,6 +268,8 @@ static func refusal_text(code: String) -> String:
 		"resource_busy": "Wait for the current gathering to finish.",
 		"training_journal_failed": "That couldn't be saved. Try again.",
 		"world_save_failed": "That couldn't be saved. Try again.",
+		"foreign_care_day_unverified": "Care has already been counted in your previous world. Return there for its next day.",
+		"care_clock_regressed": "Care has already been counted for this day.",
 		"world_not_prepared": "The world is still saving. Try again."}
 	return str(messages.get(code, "That resource is unavailable right now."))
 

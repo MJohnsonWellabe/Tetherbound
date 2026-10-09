@@ -9,8 +9,8 @@ extends RefCounted
 ## and trainer rounds are retained world duties: they are windowed only because
 ## an accepted duty is now settled durably in the world (retained_settlement.gd,
 ## ruling R2), so the retry loop never re-stages one whose receipt was evicted
-## (review R1). NOT windowed: care (its receipt carries no world namespace;
-## review R4).
+## (review R1). NOT windowed: care retains its paying calendar anchor. Legacy
+## five-field receipts also remain exact (review R4).
 ## Why an evicted receipt cannot pay twice:
 ## - essence_spend, station_craft: a client request; character authority stages
 ##   only at the current character revision with `before` equal to the live

@@ -1005,10 +1005,31 @@ static func release_payout(owned: Dictionary, cfg: Dictionary) -> Array[Dictiona
 ## in-game day. No client day/event/care entitlement is accepted by this helper.
 ## Promote with the existing grooming receipt in the SAME character transaction.
 static func stage_care(admitted: Dictionary, character_id: String, uid: String,
-		host_day: int, character_revision: int, cfg: Dictionary) -> Dictionary:
+		host_day: int, character_revision: int, cfg: Dictionary, care_world_namespace: String = "") -> Dictionary:
 	if character_revision < 0 or not _integer(host_day, 0, 2147483647) or not _component(uid) \
-			or not _baseline_errors(admitted, character_id).is_empty() or not configuration_errors(cfg).is_empty():
+			or not _baseline_errors(admitted, character_id).is_empty() or not configuration_errors(cfg).is_empty() \
+			or (not care_world_namespace.is_empty() and not _opaque_id(care_world_namespace)):
 		return _refuse("invalid_care")
+	# New live contexts bind the paid calendar. A destination world's day is
+	# never evidence that the original paying world's next day has arrived.
+	# Empty scope preserves the exact callback of legacy frozen journals.
+	var world_hash := care_world_namespace.sha256_text() if not care_world_namespace.is_empty() else ""
+	if not world_hash.is_empty():
+		var paid_world_hash := ""
+		var last_paid_day := -1
+		for previous: String in admitted.redesign_character.transaction_receipts:
+			if not previous.begins_with("care:" + character_id + ":"): continue
+			var fields := previous.split(":")
+			if fields.size() == 5: continue # Legacy day/UID receipts remain owed.
+			if fields.size() != 6 or not fields[2].is_valid_int() or not _integer(int(fields[2]), 0, 2147483647) \
+				or not _component(fields[3]) or not fields[4].is_valid_int() or not _integer(int(fields[4]), 1, 2147483647) \
+				or fields[5].length() != 64 or not fields[5].is_valid_hex_number(false) or fields[5].to_lower() != fields[5]:
+				return _refuse("receipt_conflict")
+			if not paid_world_hash.is_empty() and paid_world_hash != fields[5]: return _refuse("receipt_conflict")
+			paid_world_hash = fields[5]
+			last_paid_day = maxi(last_paid_day, int(fields[2]))
+		if not paid_world_hash.is_empty() and paid_world_hash != world_hash: return _refuse("foreign_care_day_unverified")
+		if host_day < last_paid_day: return _refuse("care_clock_regressed")
 	var day_prefix := "care:%s:%d:" % [character_id, host_day]
 	var already_awarded := 0
 	var duplicate_receipt := ""
@@ -1016,9 +1037,11 @@ static func stage_care(admitted: Dictionary, character_id: String, uid: String,
 	for previous: String in admitted.redesign_character.transaction_receipts:
 		if not previous.begins_with(day_prefix): continue
 		var parts := previous.split(":")
-		if parts.size() != 5 or not _component(parts[3]) or not parts[4].is_valid_int() \
+		if parts.size() not in [5, 6] or not _component(parts[3]) or not parts[4].is_valid_int() \
 				or not _integer(int(parts[4]), 1, 2147483647) or seen_uids.has(parts[3]):
 			return _refuse("receipt_conflict")
+		if parts.size() == 6 and (parts[5].length() != 64 or not parts[5].is_valid_hex_number(false) \
+			or parts[5].to_lower() != parts[5]): return _refuse("receipt_conflict")
 		seen_uids[parts[3]] = true
 		already_awarded += int(parts[4])
 		if parts[3] == uid: duplicate_receipt = previous
@@ -1039,6 +1062,7 @@ static func stage_care(admitted: Dictionary, character_id: String, uid: String,
 	var next := admitted.duplicate(true)
 	next.inventory = RULES.slots(inventory).duplicate(true)
 	var receipt := day_prefix + "%s:%d" % [uid, amount]
+	if not world_hash.is_empty(): receipt += ":" + world_hash
 	next.redesign_character.transaction_receipts.append(receipt)
 	if not _baseline_errors(next, character_id).is_empty(): return _refuse("invalid_candidate")
 	return {"ok": true, "duplicate": false, "expected_character_revision": character_revision,

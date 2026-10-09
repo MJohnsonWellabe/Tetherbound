@@ -259,8 +259,12 @@ static func groom_plan(current: Dictionary, revision: int, intent: Dictionary, c
 		or not ESSENCE._component(context.get("source_id")) \
 		or context.get("source_key") != "den:meadows:" + str(context.get("source_id", "")):
 		return deny("actual_den_care_producer_required")
+	# Scope is frozen by the host producer, never accepted in the owner intent.
+	# Missing scope replays old pending/accepted five-field care rows unchanged.
+	if context.has("care_clock_scope") and context.care_clock_scope != "world": return deny("invalid_care_clock_scope")
+	var care_world := str(context.world_namespace) if context.get("care_clock_scope") == "world" else ""
 	return preload("res://scripts/world/f32_source_actions.gd").stage(current, revision,
-		"groom", intent, context, ESSENCE.stage_care.bind(ESSENCE.config()))
+		"groom", intent, context, ESSENCE.stage_care.bind(ESSENCE.config(), care_world))
 
 static func _tm_teach(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
 	if intent.size() != 3 or not ESSENCE._component(intent.get("creature_uid")) \

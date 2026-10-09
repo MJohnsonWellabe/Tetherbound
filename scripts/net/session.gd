@@ -2301,7 +2301,7 @@ func _foundation_groom_context(peer: int, key: String) -> Dictionary:
 	if not ESSENCE._integer(world.day, 1, 2147483646) or not ESSENCE._opaque_id(world.world_id) \
 		or not ESSENCE._opaque_id(world.reward_delivery_namespace) or key != "den:meadows:" + uid: return {}
 	source.merge({"source_id": uid, "source_generation": uid, "world_id": world.world_id,
-		"world_namespace": world.reward_delivery_namespace, "host_day": int(world.day),
+		"world_namespace": world.reward_delivery_namespace, "host_day": int(world.day), "care_clock_scope": "world",
 		"realm": "meadows", "actor_realm": "meadows", "registered_live_source": true,
 		"paid_den": true, "modal_open": false, "resource_runtime_authorized": true}, true)
 	return source
