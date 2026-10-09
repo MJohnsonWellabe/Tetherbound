@@ -1,0 +1,31 @@
+{
+  "job_id": 113699062429,
+  "exit_code": 0,
+  "original_verdict": "APPROVE bounded dependency artifact reusable; original fixture/guards untouched",
+  "scope": "Original unchanged realm-map selection dependency logic only",
+  "whole_criteria": "OPEN",
+  "run_id": 37893367481,
+  "mode": "headless",
+  "tests": 10,
+  "selected_run_engine_script_diagnostics": 0,
+  "original_review": "../ui-contexts-source-review.json correction_reviews[0].affected_artifact_reviews[0]",
+  "native": "ROOT-only original command applicability approved; actual UI import/capture/original pixels still pending",
+  "reuse_source": "48bd7b60343fba1727fafe08057585b3dfc553b5",
+  "artifact_id": 11599767975,
+  "failed": 0,
+  "hashes": {
+    "run.log": "1e4a3e68987a7a64981de362f4401fcd5dbb36870af1356f67d2f9c2b588414e",
+    "exit_code": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "github-api-binding.json": "ce07a29bae2691597575036de3163d92b9405330e601a1ad40bdebfe45a1e11f",
+    "MANIFEST.txt": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b",
+    "job.log": "ce71d286324ae9531773f44313b060254d9736e931d3da763daf39fd60a1c7c0"
+  },
+  "limits": "Not catalogue producer parsing/typechecking, mounted UI, rendering/pixel/readability/controller/native/source-save/co-op/device or whole criterion proof",
+  "seconds": 6,
+  "source_commit": "12d7aaeed2e6e922203f0e6da352b5185f22a83b",
+  "args": [
+    "--only=test_map_realm_view.gd"
+  ],
+  "script": "tests/run_tests.gd",
+  "assertions": 49
+}
