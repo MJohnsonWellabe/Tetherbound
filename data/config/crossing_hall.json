@@ -2,6 +2,12 @@
   "schema_version": 1,
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
+  "shrine_doorway": {
+    "enabled": false,
+    "clear_height_m": 5.2,
+    "scope": "World geometry/collision on all presets, resolved together from the Hall recipe. Shipping OFF pending native and original blind judgment. --hall-doorway-candidate is accepted only by existing solo Hall-stills relic-witness capture; normal game/network processes ignore it. --hall-doorway-baseline wins. Replace three low window lintel modules with the installed solid wall kit, scaled vertically to the unchanged 6.24m ceiling. Four-metre collision width, floors, approaches, creature scale, interactions, authority and durable schemas stay unchanged.",
+    "provenance": "Original Cloudreach blind16 frames: nave8/8 BLOCK, Terrapup fills opening and lintel cuts upper head. Original header collision bottom4.16/top6.24m; installed straight wall module3.12m high. Grow clear height to5.2m, with matching1.04m lintel geometry/collision. No new asset."
+  },
   "arch_surface_depth": {
     "enabled": false,
     "flow_speed": 0.12,
