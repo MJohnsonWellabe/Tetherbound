@@ -7546,14 +7546,22 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				for raw_runtime_peer: Variant in (requested_record.get("participants", {}) as Dictionary).keys():
 					var runtime_peer := int(raw_runtime_peer)
 					var member: Dictionary = requested_record.participants[raw_runtime_peer]
-					var admitted_owner: Dictionary = _session().call("admitted_character_state", runtime_peer)
+					# Observation never binds, refreshes or recovers admission. Read
+					# only the already-installed authority and registered stable CID.
+					var observed_session := _session()
+					var registered_character := str(observed_session.call("_authority_character", runtime_peer)) \
+						if observed_session != null else ""
+					var authority: Variant = observed_session.get("_character_authority") if observed_session != null else null
+					var admitted_owner: Dictionary = authority.call("state", registered_character) \
+						if authority != null else {}
 					var admitted_uids: Array[String] = []
 					for admitted_card: Dictionary in admitted_owner.get("party", []):
 						admitted_uids.append(str(admitted_card.get("uid", "")))
 					(runtime_row.owners as Array).append({"peer": runtime_peer,
 						"character_id": member.get("character_id", ""), "actor_bound_uid": member.get("actor_bound_uid", ""),
 						"actor_generation": member.get("actor_generation", 0),
-						"admitted_character_id": admitted_owner.get("character_id", ""), "admitted_party_uids": admitted_uids})
+						"admitted_character_id": registered_character,
+						"authority_character_id": admitted_owner.get("character_id", ""), "admitted_party_uids": admitted_uids})
 					var runtime_receipt: Dictionary = encounter_host.call(
 						"latest_strike_receipt", requested_id, runtime_peer)
 					if not runtime_receipt.is_empty():

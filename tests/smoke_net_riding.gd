@@ -303,6 +303,7 @@ func _run() -> void:
 			and not str(guest.get("local_character_id", "")).is_empty() \
 			and owners[0].get("character_id") == guest.get("local_character_id") \
 			and owners[0].get("character_id") == owners[0].get("admitted_character_id") \
+			and owners[0].get("character_id") == owners[0].get("authority_character_id") \
 			and not str(guest.get("local_ally_uid", "")).is_empty() \
 			and owners[0].get("actor_bound_uid") == guest.get("local_ally_uid") \
 			and owners[0].get("actor_bound_uid") in owners[0].get("admitted_party_uids", []) \
