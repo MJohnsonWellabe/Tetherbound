@@ -27,6 +27,7 @@ func _run() -> void:
 	start_usec = Time.get_ticks_usec()
 	output_dir = _phase2_output
 	if DirAccess.make_dir_recursive_absolute(output_dir) != OK:
+		failed = true
 		push_error("Cloudreach fight output directory cannot be created")
 		quit(1)
 		return

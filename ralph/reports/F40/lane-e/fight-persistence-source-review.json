@@ -1,0 +1,112 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-09T00:29:44.893939+00:00",
+  "source_commit": "42f6df95781a19991c5f7a888bc159b31f45a1b7",
+  "diff_base": "77422ea40219baa2db940467a91a9dda55d94cdf",
+  "scope": "Two-file correction to previously rejected Cloudreach captain fight persistence guards; exact High/Medium command applicability only",
+  "source_verdict": "REQUEST_CHANGES",
+  "exact_capture_command_verdict": "REJECT_PENDING_EARLY_DIRECTORY_FAILURE_CORRECTION",
+  "supported_argv_verdict": "APPROVE_SYNTAX_AND_ROUTING_ONLY",
+  "preliminary_verdict_history": "Preliminary SOURCE/COMMAND APPROVE message was superseded before finalization by the concrete mkdir failure-path finding below. It is not the final verdict.",
+  "commands": {
+    "High": [
+      "Godot",
+      "--path",
+      "<fresh clean ROOT worktree pinned to 42f6df95781a19991c5f7a888bc159b31f45a1b7>",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_fight.gd",
+      "--",
+      "--preset=High",
+      "--source-commit=42f6df95781a19991c5f7a888bc159b31f45a1b7",
+      "--seed=2042",
+      "--output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-42f6-r1"
+    ],
+    "Medium": [
+      "Godot",
+      "--path",
+      "<fresh clean ROOT worktree pinned to 42f6df95781a19991c5f7a888bc159b31f45a1b7>",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_fight.gd",
+      "--",
+      "--preset=Medium",
+      "--source-commit=42f6df95781a19991c5f7a888bc159b31f45a1b7",
+      "--seed=2042",
+      "--output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-42f6-r1"
+    ]
+  },
+  "reviewed_blobs": {
+    "tools/phase2_capture_cloudreach_live_fight.gd": "2b2c40424c92c98ed450018e291a4d1d657fd4b5",
+    "tools/capture_cloudreach_f40_fight.gd": "18ac77a796e682b8ebeafe77fa8a6b2f0a889edd",
+    "tools/capture_manifest_writer.gd": "8d4df196957c20b645845bcdd3c8382b0c559876",
+    "tests/smoke_cloudreach_continuous.gd": "dcb7ce9e4a1b8622351bdd33f175babedf79435c",
+    "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+    "tests/test_capture_manifest_writer.gd": "ee752d5030ce7a5d87c9fb7b75c353721797e098",
+    "tests/test_phase2_fight_capture_lifecycle.gd": "dda3ab5b9e0f74e283619ab820d3ea5c18919f3b"
+  },
+  "changed_paths": [
+    "tools/phase2_capture_cloudreach_live_fight.gd",
+    "tools/capture_cloudreach_f40_fight.gd"
+  ],
+  "resolved_original_findings": [
+    "Native PNG save errors, failed persisted Image.load, and persisted raster mismatch set failed and do not append a valid frame. Headless sets failed; empty frame list sets failed.",
+    "Parent final exit now requires won, not failed and nonempty frames. Base receipt complete also requires the authoritative fight victory callback, no failure and nonempty frames.",
+    "Both receipt generations use unchanged staged writer with write/flush/length/closed byte checks, backup/promotion errors and caller exact canonical text readback. Failures set failed; named child returns after base failure.",
+    "Child validates complete, exact captain fight_id, base raster equal to declared bootstrap raster and actual rendering method equal to bootstrap renderer before final named preset/source/adapter/config-SHA metadata is persisted and read back."
+  ],
+  "findings": [
+    {
+      "id": "directory_failure_calls_unavailable_events_writer",
+      "severity": "required_correction",
+      "path": "tools/phase2_capture_cloudreach_live_fight.gd",
+      "function": "_run",
+      "evidence": "The new directory creation condition is passed to inherited _require. On failure, _require calls _fail; _fail sets failed then calls _log; _log calls inherited _write_report. _write_report opens output_dir/events.json and calls file.store_string without checking for null. When directory creation failed, this path can raise a null-file SCRIPT ERROR before _require returns and before the new quit(1)/return is reached.",
+      "minimum_correction": "Handle a non-OK make_dir_recursive_absolute result directly: set failed, report the error without the inherited file-writing log, quit(1), and return. Do not call _require on this unavailable-output path.",
+      "limits": "This is a source-supported failure-path finding, not an assertion that any actual capture has encountered it."
+    }
+  ],
+  "unchanged_behavior_and_scope": [
+    "Diff contains no changes to real captain interaction, production live-input pilot, creature party composition, level override, stats, damage, authority, timing or 36000-physics-frame battle budget.",
+    "Inherited live_combat=true branch retains actual interaction/start, pilot round results, timeout/loss handling and production victory/reward callback requirements. The mechanics-only lethal seam remains unselected.",
+    "Bootstrap remains unchanged: native named High/Medium requires forward_plus, 40-hex declared source, explicit fresh output, production graphics preference selection and 1920x1080. Declared source is not a Git identity oracle; ROOT must externally pin and prove clean checkout/import/capture source.",
+    "Output paths satisfy existing Phase 2 Cloudreach report prefix; seed 2042 is supported; no unsupported seconds/interval or candidate flags are proposed.",
+    "Fixture retains in-memory summit progression flags and exactly five directly created installed creatures at configured current-band level 44. It does not prove earned campaign access, balance, co-op, save boundaries, device performance or full visual quality."
+  ],
+  "minimum_proof_requirements": {
+    "after_source_correction": "A bounded source recheck of the early directory error branch, preserving this historical finding.",
+    "existing_headless_recipe": "Godot --headless --path <clean pinned worktree> --script res://tests/run_tests.gd -- --only=test_capture_manifest_writer.gd",
+    "writer_scope": "Existing six writer cases cover repeated publication, interrupted staging, staging/backup/promotion failures and Windows locked-promotion rollback. Reuse genuine passing evidence if the exact unchanged writer and test source is supported; no automatic rerun or claimed result here.",
+    "lifecycle_scope": "test_phase2_fight_capture_lifecycle.gd targets Tidewake recorder/receipt lifecycle functions, not these Cloudreach producer classes. Its pass cannot directly prove the changed Cloudreach PNG and final-exit paths. No additional broad or Tidewake lifecycle run is required for this correction.",
+    "actual_native_each_preset": [
+      "Exact approved corrected source checkout/import and retained tracked identity before/after capture; actual forward_plus renderer/preset/adapter and 1920x1080 PNG decode headers.",
+      "Successful terminal exit with actual captain victory, nonempty individually persisted images matching manifest records and hashes, failed=false and complete=true.",
+      "Final canonical manifest exact bytes/readback, correct fight ID, source/preset/renderer/raster metadata and no producer errors. Preserve any partial/stopped/failed attempt as incomplete.",
+      "Original independent visual review and applicable whole-cluster criteria remain separate gates."
+    ],
+    "sufficiency": "The existing writer transaction proof plus source correction and actual changed producer native path/receipt verification is sufficient for this bounded persistence correction; no new harness, test class or broad suite is requested."
+  },
+  "matrix_approval_preserved": {
+    "source": "eda16a4ff7853ac8faac1583ab4d5c4a4c01e1ae",
+    "verdict": "APPROVE_EXACT_HIGH_MEDIUM_FULL384_COMMANDS",
+    "report": "ralph/reports/F40/lane-e/cluster-command-review.json",
+    "identity": "Matrix, bootstrap, F40 config and inherited battle fixture are unchanged between eda and this correction; original matrix pin remains eda."
+  },
+  "pending_gates": [
+    "Correct early directory failure propagation and bounded source recheck",
+    "Unrun selected logic evidence as needed, without claimed passing result",
+    "Actual High/Medium captain fight native capture and receipt verification",
+    "Original independent whole-cluster visual verdicts and criterion-specific acceptance"
+  ],
+  "limits": [
+    "No engine, tests, import, GPU, dispatch or source edits performed by reviewer.",
+    "No native runtime, blind visual, whole F40/F08, READY, campaign or performance approval.",
+    "Staged writer is a single-writer recoverable transaction, not an operating-system power-loss guarantee."
+  ]
+}
