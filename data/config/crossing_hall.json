@@ -2,6 +2,12 @@
   "schema_version": 1,
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
+  "nave_facing_displays": {
+    "enabled": false,
+    "yaw_deg": 180,
+    "scope": "Peer-local west-row tray and mounted-relic presentation on all presets; shipping OFF pending original native/contact/blind proof. --hall-nave-facing-candidate opts in; --hall-nave-facing-baseline wins. Half-turn only within existing symmetric .51m collider. Slot, collider, labels, Approach, interaction, scale, host display, transaction and durable schema unchanged; light remains child of host-controlled mount.",
+    "provenance": "Original Stormwood doorway8/8 blind BLOCK: identifying bolt becomes thin pale edge, close identity/contact PASS. Measured installed tray normal[0,.65654,.75429] under west-row yaw+90 points east[.75429,.65654,0]; nave doorway x7 is west of row x9.2. Half-turn the installed tray and its mounted geometry together to face nave, retaining measured contact/clearance. East row already faces west and stays unchanged. Does not resolve companion opaque occlusion or clipped arch label; no camera/FOV/creature staging."
+  },
   "rear_seating": {
     "enabled": false,
     "floor_m": 0.07,

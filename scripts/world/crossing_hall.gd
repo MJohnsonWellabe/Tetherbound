@@ -261,10 +261,11 @@ func _build_pedestal(entry: Dictionary) -> void:
 	slot.set_meta("biome", str(entry.biome))
 	slot.add_to_group("crossing_hall_pedestals")
 	add_child(slot)
-	_add_model(slot, STAND_MODEL)
+	var model := _add_model(slot, STAND_MODEL)
 	_build_meadows_relic_visual(slot, str(entry.biome))
 	_build_cloudreach_relic_visual(slot, str(entry.biome))
 	_build_stormwood_relic_visual(slot, str(entry.biome))
+	_face_pedestal_to_nave(slot, model, entry)
 	# Measured installed BookStand bounds, authored in config so physics and
 	# presentation share one native-scale footprint rather than a solid room.
 	var collider: Dictionary = _config.get("pedestal_collider", {})
@@ -293,6 +294,33 @@ func _build_pedestal(entry: Dictionary) -> void:
 	prompt.configure(offer, float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m), true)
 	prompt.connect("activated", func() -> void: hang_relic(str(entry.biome)))
 	slot.add_child(prompt)
+
+
+## The west row's original +90-degree tray faces east, away from the nave.
+## Turn the tray and mounted reward together, preserving their contact and
+## the symmetric native footprint; approaches, labels and host state stay put.
+func _face_pedestal_to_nave(slot: Node3D, model: Node3D, entry: Dictionary) -> void:
+	var cfg: Dictionary = _config.get("nave_facing_displays", {})
+	if model == null or not is_equal_approx(float(entry.get("yaw_deg", 0)), 90.0) or \
+			not nave_facing_displays_enabled(cfg, OS.get_cmdline_user_args()) or \
+			slot.has_meta("nave_facing_display"):
+		return
+	var degrees := float(cfg.get("yaw_deg", 180))
+	if not is_finite(degrees) or not is_equal_approx(absf(degrees), 180.0):
+		push_error("Hall display facing requires a half-turn within its unchanged collider footprint")
+		return
+	var turn := Transform3D(Basis(Vector3.UP, deg_to_rad(degrees)), Vector3.ZERO)
+	model.transform = turn * model.transform
+	for name: String in ["MeadowsRelicDisplay", "CloudreachRelicDisplay", "StormwoodRelicDisplay"]:
+		var mount := slot.get_node_or_null(NodePath(name)) as Node3D
+		if mount != null:
+			mount.transform = turn * mount.transform
+	slot.set_meta("nave_facing_display", true)
+
+
+static func nave_facing_displays_enabled(cfg: Dictionary, args: PackedStringArray) -> bool:
+	return not args.has("--hall-nave-facing-baseline") and (
+		bool(cfg.get("enabled", false)) or args.has("--hall-nave-facing-candidate"))
 
 
 func _build_meadows_relic_visual(slot: Node3D, biome: String) -> void:

@@ -213,6 +213,41 @@ func test_host_sends_directly_and_surfaces_refusal() -> void:
 		hall.call("apply_display", {})
 		assert_false(mount.visible, "restored empty host view hides light's parent")
 	assert_eq(session.calls, ["hang:meadows"] as Array[String], "focus presentation sends no request")
+	assert_false(config.nave_facing_displays.enabled, "unjudged facing remains off")
+	assert_false(HALL.nave_facing_displays_enabled(config.nave_facing_displays, PackedStringArray()))
+	assert_true(HALL.nave_facing_displays_enabled(config.nave_facing_displays, PackedStringArray(["--hall-nave-facing-candidate"])))
+	assert_false(HALL.nave_facing_displays_enabled(config.nave_facing_displays, PackedStringArray(["--hall-nave-facing-candidate", "--hall-nave-facing-baseline"])))
+	focus_config.nave_facing_displays.enabled = true
+	var half_turn := Transform3D(Basis(Vector3.UP, PI), Vector3.ZERO)
+	for index: int in [0, 2, 3]:
+		var stand: Node3D = hall.get("_pedestals")[str(config.pedestals[index].biome)]
+		var model := stand.get_child(0) as Node3D
+		var mount := stand.get_node(NodePath(["MeadowsRelicDisplay", "", "CloudreachRelicDisplay", "StormwoodRelicDisplay"][index])) as Node3D
+		var model_before := model.transform
+		var mount_before := mount.transform
+		var contact_before := model.transform.affine_inverse() * mount.transform
+		var approach_before := (stand.get_node(^"Approach") as Node3D).transform
+		var collider := stand.get_node(^"PedestalBody").get_child(0) as CollisionShape3D
+		var collision_before := collider.transform
+		var size_before := (collider.shape as BoxShape3D).size
+		hall.call("_face_pedestal_to_nave", stand, model, config.pedestals[index])
+		assert_true(model.transform.is_equal_approx(half_turn * model_before))
+		assert_true(mount.transform.is_equal_approx(half_turn * mount_before))
+		assert_true((model.transform.affine_inverse() * mount.transform).is_equal_approx(contact_before), "tray-relative relic contact/scale unchanged")
+		assert_eq((stand.get_node(^"Approach") as Node3D).transform, approach_before)
+		assert_eq(collider.transform, collision_before)
+		assert_eq((collider.shape as BoxShape3D).size, size_before)
+		var normal := stand.transform.basis * model.transform.basis * Vector3(0, .65654, .75429)
+		assert_true(normal.x < 0, "west-row tray faces west toward nave")
+		hall.call("_face_pedestal_to_nave", stand, model, config.pedestals[index])
+		assert_true(model.transform.is_equal_approx(half_turn * model_before), "repeat cannot turn display back")
+		hall.call("apply_display", storm_saved)
+		assert_eq(storm_saved, storm_before, "facing cannot mutate host hang state")
+	hall.call("_build_pedestal", config.pedestals[4])
+	var east: Node3D = hall.get("_pedestals").biome5
+	assert_false(east.has_meta("nave_facing_display"), "east row already faces nave")
+	assert_eq((east.get_child(0) as Node3D).transform, Transform3D.IDENTITY)
+	assert_eq(session.calls, ["hang:meadows"] as Array[String], "facing never sends a hang")
 	hall.free()
 	game.free()
 	session.free()
