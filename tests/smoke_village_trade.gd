@@ -203,7 +203,7 @@ func _a_full_party_is_still_five_after_a_real_swap() -> void:
 	var party: RefCounted = _game.get("party")
 	var progression: RefCounted = _game.get("progression")
 	# Fill to the cap. The opening leaves the player with one starter.
-	var filler := ["bramblebun", "mudsnout", "pipwing", "mosshell", "burrowlet"]
+	var filler := ["bramblebun", "mudsnout", "pipwing", "mosshell", "bramblebun"]
 	var i := 0
 	while int(party.call("size")) < PARTY.MAX_CREATURES and i < filler.size():
 		var creature: RefCounted = _game.call("make_creature", str(filler[i]), "")
