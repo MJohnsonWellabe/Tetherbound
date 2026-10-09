@@ -87,5 +87,22 @@
     "actual": "1SCRIPT Parse Error Expected variable name after var at capture_f17_visual.gd:169 (var namespace) and1loadERROR; nativepreflight/witness unexecuted; no exit_codefile",
     "supported_code": "1de00 renames rejected local namespace to world_namespace at declaration and2uses; no predicate/fixture/path/budget change",
     "review": "SAME original f42 parent01a11f73-b3bb-7213-95df-7a6fe63b4ed8 failedfacts VERIFIED; no passing reuse. Exactd710, parserline169 andjobexit1 confirmed."
-  }
+  },
+  "corrected_preload_proof": {
+    "source": "1de00af2b1ed5cf4f5b98a5d2dfaf88350d8e7e9",
+    "run": 37896386507,
+    "job": 113708588199,
+    "artifact": 11600362222,
+    "zip_sha256": "a9e21cde7457cdc61b11c443ef9915ce3cb7e96165fdb67dfeb7e373d83e0da3",
+    "tests": 1,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 5,
+    "engine_script_parse_errors": 0,
+    "engine_warnings": 0,
+    "assertion_count": "not inferred",
+    "scope": "Existing capture preload and preset branch only, no hang/native/blind/wholecredit",
+    "original_artifact": "SAME f42 parent01a11f78-7222-7343-9b56-e21f52e889ee ARTIFACT/REUSE APPROVE exact1de00, genuine1/0/exit0/5s/zeroerrorswarnings. Native16 conditional prerequisite SATISFIED; actualhang/native/blind/whole unproved."
+  },
+  "native_queue": "ROOT-only queued exact1de00 source after original SOURCE/exactARGV/preloadART approval. No D native launch; new relic ON solely explicit reviewed candidate argv, shippingOFF. Old emptyHall7e379 remains separate."
 }
