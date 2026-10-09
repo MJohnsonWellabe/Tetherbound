@@ -1,0 +1,29 @@
+{
+  "criterion": "F17#6 OPEN; selected Cloudreach physical relic witness only",
+  "source": "328e2a291113500b1ac11d91f2753cd91f29a17d",
+  "script": "tools/capture_f17_visual.gd",
+  "engine_args": ["--rendering-method","forward_plus","--rendering-driver","vulkan","--fullscreen","--resolution","1920x1080"],
+  "args": [
+    "--preset=Medium",
+    "--paired-high",
+    "--hall-stills-only",
+    "--hall-relic-hang-witness",
+    "--hall-relic-biome=cloudreach",
+    "--hall-cloudreach-relic-candidate",
+    "--hall-relic-display-baseline",
+    "--hall-endwall-baseline",
+    "--hall-arch-depth-baseline",
+    "--hall-surface-depth-baseline",
+    "--source-commit=328e2a291113500b1ac11d91f2753cd91f29a17d",
+    "--output=res://ralph/reports/F17/lane-d/cloudreach-relic-display/native-328e-hung"
+  ],
+  "fixture": "Fresh solo host, ordinary inherited post-opening/starter/initial placement; ONE personal held Cloudreach relic projected from authored captain_veyra_storm_anchor hand-off. No boss win/key/hung flag/world display/receipt seed; no earned boundary.",
+  "path": "Same original physical8arches/8pedestals; f49_portal_travel::hang_relic ordinary grounded exact provider/controller Use; actual production Session authority/revision/transaction/save and modal Cancel. Original doorway/aisle return to nave.",
+  "guards": "Selected candidate explicitON/baseline refusal, mount initiallyhidden, production savedheldremoval/hungonce/receiptonce/worlddisplay, stable actualcharacter/namespace/fullparty/healthyownedcompanion, per-image actual mountvisible, unchanged nativeencoded1920x1080/pairedpose/weather/actualcamera/source/freshoutput guards",
+  "expected": {"frames":16,"labels":["pedestal cloudreach","hung relic from nave"],"times":["day","night"],"weather":["clear","rain"],"presets":["Medium","High"],"hall_stills_finished":true,"complete":false},
+  "shipping": "Cloudreach enabled=false; candidate only through processargv, baselinewins. Meadows and three other Hall candidates explicitlybaseline; failure staysOFF.",
+  "reuse": "Original3979 Cloudreach4/0 artifactAPP; default1de Meadows16frame runtimeAPP with retainedrawmetadata contradiction does NOT establish Cloudreach pixels or saved hang. No repeatedpassing4test/oldGPU batches.",
+  "review": "328e SOURCE+affected preload COMMAND APPROVE; exact nativeCOMMAND not yet reviewed. Only ROOT schedules native after genuine328e preload and originalARTIFACT approval plus exactnativeCOMMAND. No Dnative or hostedGPU.",
+  "source_preflight": "ExactHEADR2-F38capture-definition andshots/.gdignore restoredbefore ROOTpin/import; normalize only owned4importmetadata after actualimport with HEAD/index match and retain generatedshaderUIDhash; freshHOME/rawoutput, trackedcleansource checks before/after. Previousimmutablefail/success packets retained.",
+  "excluded": ["earned boundary","boss victory","co-op","device/performance","motion","whole F17#6"]
+}

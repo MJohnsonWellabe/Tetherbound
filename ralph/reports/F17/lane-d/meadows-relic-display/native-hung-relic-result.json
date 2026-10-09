@@ -22,9 +22,9 @@
   "producer_contradiction": {
     "observed": "Initial relic_hang.hung=false survives Dictionary.merge default overwrite=false; verified disk fields and actual mount visibility are present. Raw manifest remains unchanged.",
     "minimal_source_fix": "328e2a291113500b1ac11d91f2753cd91f29a17d changes merge(...,true) only versus approved912 adapter/evidence91cff; no guard/fixture/path/state change",
-    "original_review": "SAME original f42 runtime/applicability and minimal correction review requested; pending",
-    "reuse": "No silent hung-field rewrite or full native PASS. Actual frame/saved-hang applicability requires original independent verdict. No unchanged recapture requested."
+    "original_review": "SAME original f42 via parent01a11fa2-bfa5-79b1-946f-b81a4a69fef7 bounded runtime evidence APPROVE: exact source/copies,16 decoded unique1080 originals and stable pairedposes; actual codec held removal/hung/receipt/worlddisplay/identity/party/namespace verified; rawhungfalse and2warnings retained. 328e SOURCE+existing preload COMMAND APPROVE. No corrected-source native credit.",
+    "reuse": "Original explicitly permits16originals for separate blind review; no unchanged recapture necessary solely for metadata typo. Raw hung=false remains unmodified; no earned/boss/co-op/device/performance/whole inference."
   },
   "evidence_copy": "Untracked native-1de00-hung-r2 holds unchanged manifest, terminal/start/source logs, raw codec envelopes and16 actual image hashes; images remain in ROOT raw output",
-  "remaining": "Original runtime/applicability and SAME blind review; complete village/Hall full bar. No co-op, boss, earned save, performance/device/motion or whole criterion credit. Cloudreach source is separate and has no native image credit."
+  "remaining": "SAME original f26 blind review of16validoriginals requested; complete village/Hall full bar. No co-op, boss, earned save, performance/device/motion or whole criterion credit. Cloudreach source is separate and has no native image credit."
 }
