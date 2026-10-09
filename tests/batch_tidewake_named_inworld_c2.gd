@@ -87,6 +87,9 @@ func _run() -> void:
 					line = row.trim_prefix("TIDEWAKE INWORLD C2 ")
 		if line.is_empty():
 			failures += 1
+			# Keep the failed child's original diagnostics in the uploaded log.
+			# The missing-result row alone cannot identify an admission or parse failure.
+			for chunk: Variant in output: print(str(chunk))
 			line = JSON.stringify({"trainer": trainer, "starter": starter, "pilot": policy, "seed": seed_value,
 				"gear": gear_label,
 				"error": "no result line (exit %d)" % code})
