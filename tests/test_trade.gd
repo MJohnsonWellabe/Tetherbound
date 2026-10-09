@@ -200,7 +200,9 @@ func _make(species_id: String) -> RefCounted:
 
 func _party_of(count: int) -> RefCounted:
 	var party: RefCounted = PARTY.new()
-	var roster := ["terrapup", "ripplet", "galewisp", "bramblebun", "mudsnout"]
+	# One starter plus ordinary companions; successful swaps exercise eligible
+	# slots rather than the former fixture's three player-exclusive starters.
+	var roster := ["terrapup", "bramblebun", "mudsnout", "pipwing", "mosshell"]
 	for i in count:
 		party.add(_make(str(roster[i % roster.size()])))
 	return party
@@ -286,6 +288,23 @@ func test_the_creature_you_gave_away_is_gone() -> void:
 	assert_eq(CREATURE_TRADE.swap(party, 1, _offered()), CREATURE_TRADE.OK)
 	assert_false(party.members().has(giving), "the creature you traded away is still in the party")
 	assert_eq(int(party.size()), 3, "a swap is one out, one in")
+	# Both directions must refuse before mutating the full roster. These ids
+	# come from the owning hard rule, independently of the configured policy.
+	for species: String in ["terrapup", "ripplet", "galewisp", "veridian",
+			"abyssal_guardian", "water_abyssal_guardian", "solmane", "fulgocobra"]:
+		var protected := preload("res://scripts/creatures/creature_species.gd").spawn(species)
+		assert_true(protected != null, "protected identity must exist in the production catalogue: " + species)
+		if protected == null:
+			continue
+		var full := _party_of(PARTY.MAX_CREATURES)
+		full.remove_at(4)
+		full.add(protected)
+		var before: Array = full.members().duplicate()
+		assert_eq(CREATURE_TRADE.swap(full, 4, _offered()), CREATURE_TRADE.REFUSED_PROTECTED, species)
+		assert_eq(full.members(), before, "refused outgoing trade must keep exact roster order and identities: " + species)
+		assert_eq(CREATURE_TRADE.swap(full, 1, protected), CREATURE_TRADE.REFUSED_PROTECTED, species)
+		assert_eq(full.members(), before, "refused incoming trade must keep exact roster order and identities: " + species)
+	assert_ne(CREATURE_TRADE.refusal_text(CREATURE_TRADE.REFUSED_PROTECTED), "", "existing UI refusal path explains the protected identity")
 
 
 ## The other end of the invariant: a swap must never empty the party.

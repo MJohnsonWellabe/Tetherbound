@@ -203,7 +203,7 @@ func _a_full_party_is_still_five_after_a_real_swap() -> void:
 	var party: RefCounted = _game.get("party")
 	var progression: RefCounted = _game.get("progression")
 	# Fill to the cap. The opening leaves the player with one starter.
-	var filler := ["terrapup", "ripplet", "galewisp", "bramblebun", "mudsnout"]
+	var filler := ["bramblebun", "mudsnout", "pipwing", "mosshell", "burrowlet"]
 	var i := 0
 	while int(party.call("size")) < PARTY.MAX_CREATURES and i < filler.size():
 		var creature: RefCounted = _game.call("make_creature", str(filler[i]), "")
@@ -215,6 +215,31 @@ func _a_full_party_is_still_five_after_a_real_swap() -> void:
 		return
 
 	var incoming: RefCounted = swap.call("offer_creature")
+	var period_before := int(CREATURE_TRADE.offer_for_day(
+		_trade.call("config"), "oskar", int(_game.get("day"))
+	).get("period", 0))
+	var ordinary: RefCounted = party.call("at", 4)
+	# Disclosed roster fixtures, not earned legendary freeings. Drive the same
+	# live panel and verify no rotation flag or offered instance is consumed.
+	for species: String in ["terrapup", "ripplet", "galewisp", "veridian",
+			"abyssal_guardian", "water_abyssal_guardian", "solmane", "fulgocobra"]:
+		var protected: RefCounted = _game.call("make_creature", species, "")
+		if protected == null:
+			_fail("protected catalogue fixture missing: " + species)
+			continue
+		party.call("remove_at", 4)
+		party.call("add", protected)
+		var before: Array = party.call("members")
+		swap.call("pick", 4)
+		var refused := str(swap.call("confirm_swap"))
+		await process_frame
+		if refused != CREATURE_TRADE.REFUSED_PROTECTED or party.call("members") != before:
+			_fail("protected trade altered roster or returned wrong refusal: " + species)
+		if swap.call("offer_creature") != incoming or bool(progression.call("has", CREATURE_TRADE.swap_flag("oskar", period_before))):
+			_fail("protected trade consumed the offer or its rotation: " + species)
+		print("swap: protected %s -> %s; exact roster/offer/rotation retained" % [species, refused])
+	party.call("remove_at", 4)
+	party.call("add", ordinary)
 	var giving: RefCounted = party.call("at", 1)
 	swap.call("pick", 1)
 	var reason := str(swap.call("confirm_swap"))

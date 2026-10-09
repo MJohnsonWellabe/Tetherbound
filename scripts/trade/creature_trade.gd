@@ -29,6 +29,8 @@ extends RefCounted
 
 const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const TRADE_DB := preload("res://scripts/trade/trade_db.gd")
+static var _trade_db: RefCounted = null
 
 ## Why a swap was refused. "" means it went through.
 const OK := ""
@@ -37,6 +39,7 @@ const REFUSED_BAD_SLOT := "bad_slot"
 const REFUSED_LAST_CREATURE := "last_creature"
 const REFUSED_NO_ROOM := "no_room"
 const REFUSED_TAKEN := "already_taken"
+const REFUSED_PROTECTED := "protected_creature"
 
 
 static func trader(config: Dictionary, trader_id: String) -> Dictionary:
@@ -143,6 +146,15 @@ static func swap(party: RefCounted, give_index: int, incoming: RefCounted) -> St
 	# stated here explicitly rather than assumed.
 	if int(party.call("size")) <= 1:
 		return REFUSED_LAST_CREATURE
+	# Starters have no alternate trade source; freed legendaries stay with the
+	# participant they chose. Refuse both directions before the first mutation.
+	if _trade_db == null:
+		_trade_db = TRADE_DB.new()
+	var protected_ids: Variant = _trade_db.call("config").get("protected_creature_species")
+	if not protected_ids is Array or protected_ids.is_empty():
+		return REFUSED_NO_OFFER # Missing policy must not open a protected trade.
+	if str(outgoing.get("species_id")) in protected_ids or str(incoming.get("species_id")) in protected_ids:
+		return REFUSED_PROTECTED
 
 	party.call("remove_at", give_index)
 	if not bool(party.call("add", incoming)):
@@ -182,6 +194,8 @@ static func refusal_text(reason: String) -> String:
 			return "Not your last one. You would be walking out of here alone."
 		REFUSED_NO_ROOM:
 			return "That trade cannot be made."
+		REFUSED_PROTECTED:
+			return "Starters and freed legendaries stay with the trainer they chose."
 		OK:
 			return ""
 		_:
