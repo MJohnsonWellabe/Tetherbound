@@ -57,6 +57,49 @@ class StepEpoch extends RefCounted:
 
 var _step_epoch := StepEpoch.new()
 var _requested_step := 0
+signal step_wake
+
+## One unchanged allowance for the whole walk, including callback waits.
+## UI ownership does not exempt a locomotion-enabled physics frame.
+class WalkBudget extends RefCounted:
+	var limit: int
+	var walked := 0
+	var held := 0
+	var last_frame := -1
+	var walking_this_frame := false
+	var exhausted := false
+	func _init(original_limit: int) -> void:
+		limit = original_limit
+	func advance(frame: int, walking_allowed: bool) -> bool:
+		if exhausted or frame < last_frame:
+			exhausted = true
+			return false
+		if frame == last_frame:
+			if not walking_allowed or walking_this_frame:
+				return true
+			# A late hand-back in this same actual frame counts as walking,
+			# not both a hold and a walking tick.
+			held -= 1
+		else:
+			if walked >= limit:
+				exhausted = true
+				return false
+			last_frame = frame
+			walking_this_frame = false
+		if walking_allowed:
+			if walked >= limit:
+				exhausted = true
+				return false
+			walked += 1
+			walking_this_frame = true
+		else:
+			held += 1
+			if held > 36000:
+				exhausted = true
+				return false
+		return true
+
+var _active_walk_budget: WalkBudget
 
 ## Frame-counted deferral ledger for the cooperative deadline (see
 ## MAX_DEFERRAL_FRAMES). One deferral per physics frame at most.
@@ -85,6 +128,12 @@ class NativeTick extends Node:
 	var navigator: WeakRef
 	var records: Array[Dictionary] = []
 	var flush_pending := false
+	func wake_step() -> void:
+		var nav: RefCounted = navigator.get_ref()
+		if nav == null:
+			queue_free()
+		else:
+			nav.call("_physics_frame_wake")
 	func flush_records() -> void:
 		# Snapshots contain values only. Never read a later body pose here.
 		flush_pending = false
@@ -207,6 +256,7 @@ func _init(tree: SceneTree, player: Node3D, rig: Node3D, drive: Callable, produc
 	_tick.process_thread_group = Node.PROCESS_THREAD_GROUP_INHERIT # Same group as the actual trainer.
 	_tick.process_physics_priority = _body.process_physics_priority - 1
 	_world.add_child(_tick)
+	_tree.connect("physics_frame", Callable(_tick, "wake_step"))
 	_progress_at = _player.global_position
 	if _production_steering:
 		_observer = ProductionObserve.new()
@@ -337,14 +387,13 @@ func step(point: Vector3) -> void:
 	_requested_step = token
 	var last_frame := Engine.get_physics_frames()
 	var waiting_frames := 0
-	while _step_epoch.completed < token and not refused():
-		await _tree.physics_frame
+	while _step_epoch.completed < token and not refused() \
+			and (_active_walk_budget == null or not _active_walk_budget.exhausted):
+		await step_wake
 		if _step_epoch.completed >= token or refused():
 			break
 		var frame := Engine.get_physics_frames()
 		if frame <= last_frame:
-			# Do not re-consume a physics-frame emission from a nested await.
-			await _tree.process_frame
 			continue
 		last_frame = frame
 		waiting_frames += 1
@@ -353,8 +402,27 @@ func step(point: Vector3) -> void:
 			break
 
 
+func _physics_frame_wake() -> void:
+	if _active_walk_budget != null:
+		_active_walk_budget.advance(Engine.get_physics_frames(), can_walk())
+		if _active_walk_budget.exhausted:
+			_requested = false
+			_drive.call(0.0, 0.0)
+			if _production_steering:
+				Input.flush_buffered_events()
+	step_wake.emit()
+
+
 func _finish_step_epoch() -> void:
 	_step_epoch.finish(Engine.get_physics_frames())
+	step_wake.emit()
+
+
+func _end_walk(arrived: bool) -> bool:
+	_active_walk_budget = null
+	_requested = false
+	_drive.call(0.0, 0.0)
+	return arrived
 
 
 func push_once(direction: Vector3) -> void:
@@ -398,27 +466,26 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_ro
 				_stop_geometry("missing/malformed bounded authored road prefix")
 				return false
 		_guided_label = authored_road
-	var walked := 0
-	var held := 0
-	while walked < budget and not refused():
+	if _active_walk_budget != null:
+		_stop_geometry("overlapping bounded native walks")
+		return false
+	_active_walk_budget = WalkBudget.new(budget)
+	while not _active_walk_budget.exhausted and not refused():
 		if not can_walk():
-			held += 1
+			_active_walk_budget.advance(Engine.get_physics_frames(), false)
 			_drive.call(0.0, 0.0)
 			_requested = false
-			if held > 36000:
-				return false
-			await _tree.physics_frame
+			if _active_walk_budget.exhausted:
+				break
+			await step_wake
 			continue
 		if _checked_start and not departure_pending(point) and not refused() \
 				and _xz(_player.global_position).distance_to(_xz(point)) <= close_enough:
-			_requested = false
-			_drive.call(0.0, 0.0)
-			return true
-		walked += 1
+			return _end_walk(true)
+		if not _active_walk_budget.advance(Engine.get_physics_frames(), true):
+			break
 		await step(point)
-	_requested = false
-	_drive.call(0.0, 0.0)
-	return false
+	return _end_walk(false)
 
 
 func authored_road_points(label: String) -> Array[Vector2]:
