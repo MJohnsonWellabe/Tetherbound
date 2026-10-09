@@ -10,6 +10,7 @@ class Local extends RefCounted:
 	var party := PARTY.new()
 	var flags := FLAGS.new()
 	var skills := preload("res://scripts/player/player_skills.gd").new()
+	var redesign_character: Dictionary = {"creatures":{}, "research":{"fixture":"preserve"}}
 
 class World extends RefCounted:
 	var world_id := "capture-world"
@@ -18,7 +19,10 @@ class Saver extends RefCounted:
 	var fail := false
 	var snapshots: Array = []
 	func save_character(game: Object, id: String) -> bool:
-		snapshots.append({"character_id":id, "members":game.local.party.members(), "flags":game.local.flags.save_data(), "skills":game.local.skills.save_data()})
+		snapshots.append({"character_id":id, "members":game.local.party.members(), "flags":game.local.flags.save_data(), "skills":game.local.skills.save_data(), "redesign_character":game.local.redesign_character.duplicate(true)})
+		# The real snapshot preparation mirrors the incoming creature. Exercise
+		# rollback of saver mutations as well as the released record removal.
+		game.local.redesign_character = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(preload("res://scripts/save/save_game.gd").new()._party_to_array(game.local.party), game.local.redesign_character)
 		return not fail
 
 class GameFixture extends RefCounted:
@@ -36,6 +40,7 @@ func fixture(count: int = 0) -> RefCounted:
 		game.local.party.add(SPECIES.spawn("water_mosshell"))
 	game.pending_catch = SPECIES.spawn("water_aquaryn")
 	game.local.flags.set_flag("existing")
+	game.local.redesign_character = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(preload("res://scripts/save/save_game.gd").new()._party_to_array(game.local.party), game.local.redesign_character)
 	return game
 
 func test_receipt_and_party_are_visible_in_one_save_and_replay_is_inert() -> void:
@@ -65,6 +70,7 @@ func test_failed_save_restores_exact_members_order_selection_and_flags() -> void
 		var party_revision: int = game.local.party.revision
 		var flag_revision: int = game.local.flags.revision
 		var flags_before: Dictionary = game.local.flags.save_data()
+		var redesign_before: Dictionary = game.local.redesign_character.duplicate(true)
 		game.save_system.fail = true
 		var result := TX.settle(game, claim(), game.pending_catch, 1)
 		assert_false(result.ok)
@@ -75,6 +81,9 @@ func test_failed_save_restores_exact_members_order_selection_and_flags() -> void
 		assert_eq(game.local.party.revision, party_revision)
 		assert_eq(game.local.flags.revision, flag_revision)
 		assert_eq(game.local.flags.save_data(), flags_before)
+		assert_eq(game.local.redesign_character, redesign_before)
+		if count == 5:
+			assert_false(game.save_system.snapshots.back().redesign_character.creatures.has(before[1].uid))
 		assert_false(game.local.party.members().has(game.pending_catch))
 		game.save_system.fail = false
 		assert_true(TX.settle(game, claim(), game.pending_catch, 1).ok)
@@ -89,16 +98,22 @@ func test_full_party_replacement_keeps_other_members_in_place_and_decline_is_dur
 	var result := TX.settle(game, claim(), game.pending_catch, 1)
 	assert_true(result.ok)
 	assert_true(result.released == before[1])
+	assert_false(game.save_system.snapshots.back().redesign_character.creatures.has(before[1].uid))
+	assert_false(game.local.redesign_character.creatures.has(before[1].uid))
+	assert_true(game.local.redesign_character.creatures.has(game.pending_catch.uid))
+	assert_eq(game.local.redesign_character.research, {"fixture":"preserve"})
 	assert_eq(game.local.party.size(), 5)
 	for i in 5: assert_true(game.local.party.at(i) == (game.pending_catch if i == 1 else before[i]))
 	assert_eq(game.local.party.active_index(), 4)
 	assert_eq(game.local.party.get("_best"), 3)
 	var declined := fixture(5)
 	var original: Array = declined.local.party.members()
+	var declined_redesign: Dictionary = declined.local.redesign_character.duplicate(true)
 	var declined_result := TX.settle(declined, claim(), declined.pending_catch, 5)
 	assert_true(declined_result.ok)
 	assert_true(declined_result.released == declined.pending_catch)
 	assert_eq(declined.local.party.members(), original)
+	assert_eq(declined.local.redesign_character, declined_redesign)
 	assert_true(declined.local.flags.has("water_capture_receipt:aquaryn-claim-1"))
 	assert_eq(declined.save_system.snapshots.size(), 1)
 	assert_true(TX.settle(declined, claim(), declined.pending_catch, 0).already)
