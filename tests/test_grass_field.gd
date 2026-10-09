@@ -245,6 +245,7 @@ func test_the_far_shader_exists_and_carries_its_uniforms() -> void:
 		"_vertex_density", "field_centre", "far_cell", "fade_in_start",
 		"fade_in_end", "fade_out_start", "far_radius", "strength", "lift",
 		"tint_base", "tint_tip", "ground_blend", "drift_scale", "drift_contrast",
+		"drift_patch_start", "drift_patch_full",
 		"mottle_scale", "mottle_strength", "mottle_value", "mottle_detail",
 		"mottle_detail_range", "forbidden_base_mask",
 		"built", "built_count", "built_bounds",
@@ -462,6 +463,33 @@ func test_shipped_config_thins_the_grass_and_caps_the_small_tiers() -> void:
 	assert_true(bool(lod.get("enabled", false)), "grass mesh LOD is off")
 	assert_true(float(lod.get("mid_m", 0.0)) > 10.0 and float(lod.get("far_m", 0.0)) > float(lod.get("mid_m", 0.0)),
 		"lod.mid_m/far_m are not in order")
+	assert_false(bool(cfg.get("tuft_patches", {}).get("enabled", true)),
+		"Meadows tuft patches must remain OFF before native/blind acceptance")
+	var near := ShaderMaterial.new()
+	near.shader = load(FIELD.SHADER_PATH)
+	var far := ShaderMaterial.new()
+	far.shader = load(FIELD.FAR_SHADER_PATH)
+	var candidate := cfg.duplicate(true)
+	candidate.tuft_patches.enabled = true
+	FIELD.apply_tuft_patches(near, candidate)
+	FIELD.apply_tuft_patches(far, candidate, true)
+	assert_eq(near.get_shader_parameter("clump_contrast"), 1.0)
+	assert_eq(far.get_shader_parameter("drift_contrast"), 1.0)
+	assert_eq(near.get_shader_parameter("clump_patch_start"), far.get_shader_parameter("drift_patch_start"))
+	assert_eq(near.get_shader_parameter("clump_patch_full"), far.get_shader_parameter("drift_patch_full"))
+	# A profile change must reset an already-used material and preserve Water's
+	# existing near thresholds without silently changing its far treatment.
+	var water := {"clump_contrast": 0.9, "clump_patch_start": 0.4, "clump_patch_full": 0.7}
+	FIELD.apply_tuft_patches(near, water)
+	FIELD.apply_tuft_patches(far, water, true)
+	assert_almost_eq(float(near.get_shader_parameter("clump_contrast")), 0.9, 0.001)
+	assert_almost_eq(float(near.get_shader_parameter("clump_patch_start")), 0.4, 0.001)
+	assert_eq(far.get_shader_parameter("drift_patch_start"), 0.0)
+	assert_eq(far.get_shader_parameter("drift_patch_full"), 0.0)
+	candidate.tuft_patches.full = candidate.tuft_patches.start
+	FIELD.apply_tuft_patches(near, candidate)
+	assert_almost_eq(float(near.get_shader_parameter("clump_contrast")), float(cfg.clump_contrast), 0.001)
+	assert_eq(near.get_shader_parameter("clump_patch_start"), 0.0)
 
 
 func test_ridgeline_flower_composition_is_local_and_well_formed() -> void:

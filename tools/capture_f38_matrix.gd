@@ -10,6 +10,7 @@ var _f38_preset := "High"
 var _f38_source := ""
 var _f38_views_supplied := false
 var _f38_exterior_mode := ""
+var _f38_tuft_patch_mode := ""
 var _f38_requested_views: Array[String] = []
 
 
@@ -30,6 +31,11 @@ func _parse_args() -> bool:
 					return false
 				_f38_requested_views.append(view)
 			if _f38_requested_views.is_empty():
+				return false
+		elif arg.begins_with("--f38-tuft-patches="):
+			_f38_tuft_patch_mode = arg.trim_prefix("--f38-tuft-patches=")
+			if _f38_tuft_patch_mode not in ["baseline", "candidate"]:
+				push_error("F38 tuft comparison requires baseline or candidate")
 				return false
 		elif arg.begins_with("--f38-exterior="):
 			_f38_exterior_mode = arg.trim_prefix("--f38-exterior=")
@@ -65,6 +71,11 @@ func _parse_args() -> bool:
 		var verge: Dictionary = grass.get("road_verge", {})
 		verge["enabled"] = _f38_exterior_mode == "candidate"
 		grass["road_verge"] = verge
+	if not _f38_tuft_patch_mode.is_empty():
+		var grass: Dictionary = preload("res://scripts/world/grass_field.gd").config()
+		var patch: Dictionary = grass.get("tuft_patches", {})
+		patch["enabled"] = _f38_tuft_patch_mode == "candidate"
+		grass["tuft_patches"] = patch
 	# Process-local fixture override, never persist the owner's device setting.
 	# Explicit renderer at launch must match this preset before world boot.
 	GRAPHICS.load_preferences()
@@ -135,6 +146,7 @@ func _begin_manifest() -> void:
 	_manifest["candidate"] = OS.get_cmdline_user_args().has("--f38-candidate")
 	_manifest["fixture_limit"] = "Debug travel with strict fixed stands; real fight and earned F17 walk are separate required proofs. Rejected stands are missing evidence."
 	_manifest["f38_exterior_fixture"] = _f38_exterior_mode
+	_manifest["f38_tuft_patch_fixture"] = _f38_tuft_patch_mode
 	_manifest["f38_exterior_scope"] = "Explicit process-local road-verge/nearby-beacon comparison. Tracked gates stay OFF. Original stands, camera, footing, time/weather and image guards retained. Changed exterior rows are missing cluster pieces, not full F38 or performance acceptance."
 
 
@@ -244,6 +256,30 @@ func _capture_row(row: Dictionary) -> void:
 				"matches_requested": matched}
 			if not matched:
 				_failures.append("%s: actual exterior candidate state mismatch" % str(row.frame_id))
+		if not _f38_tuft_patch_mode.is_empty():
+			var field := _world.get_node_or_null("GrassField")
+			var cfg: Dictionary = preload("res://scripts/world/grass_field.gd").config()
+			var patch: Dictionary = cfg.get("tuft_patches", {})
+			var enabled := _f38_tuft_patch_mode == "candidate"
+			var observations := []
+			var matched := patch.get("enabled") == enabled
+			for far: bool in [false, true]:
+				var material := field.get("_far_material" if far else "_material") as ShaderMaterial if field != null else null
+				var actual := {}
+				var expected := {
+					"drift_contrast" if far else "clump_contrast": 1.0 if enabled else float(cfg.clump_contrast),
+					"drift_patch_start" if far else "clump_patch_start": float(patch.start) if enabled else 0.0,
+					"drift_patch_full" if far else "clump_patch_full": float(patch.full) if enabled else 0.0,
+				}
+				var path := "res://shaders/far_cover.gdshader" if far else "res://shaders/grass_field.gdshader"
+				matched = matched and material != null and material.shader != null and material.shader.resource_path == path
+				for key: String in expected:
+					actual[key] = material.get_shader_parameter(key) if material != null else null
+					matched = matched and actual[key] != null and is_equal_approx(float(actual[key]), float(expected[key]))
+				observations.append({"far": far, "shader": material.shader.resource_path if material != null and material.shader != null else "", "actual": actual, "expected": expected})
+			_records.back()["tuft_patch_observation"] = {"mode": _f38_tuft_patch_mode, "materials": observations, "matches_requested": matched}
+			if not matched:
+				_failures.append("%s: actual near/far tuft-patch state mismatch" % str(row.frame_id))
 		_records.back()["capture_wall_ms"] = Time.get_ticks_msec() - started
 		_records.back()["process_cpu_ms"] = Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0
 		_records.back()["physics_cpu_ms"] = Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0

@@ -1039,6 +1039,7 @@ func _build_far_cover(cfg: Dictionary) -> void:
 	# different meadows meeting -- which is the line, with a softer edge.
 	_far_material.set_shader_parameter("drift_scale", float(cfg.get("clump_scale", 0.11)))
 	_far_material.set_shader_parameter("drift_contrast", float(cfg.get("clump_contrast", 0.78)))
+	apply_tuft_patches(_far_material, cfg, true)
 	# Same ground refusal as the grass, by NAME, and for the sharper reason
 	# here: a green wash over the paths at distance erases the lines the chapter
 	# is navigated by.
@@ -1679,6 +1680,7 @@ func _apply_config(cfg: Dictionary) -> void:
 	]:
 		if cfg.has(key):
 			_material.set_shader_parameter(key, float(cfg[key]))
+	apply_tuft_patches(_material, cfg)
 	for key: String in ["tint_base", "tint_tip"]:
 		if cfg.has(key):
 			_material.set_shader_parameter(key, Color(str(cfg[key])))
@@ -1695,6 +1697,25 @@ func _apply_config(cfg: Dictionary) -> void:
 		names.append(str(entry))
 	var mask := texture_mask(terrain_cfg, names)
 	_material.set_shader_parameter("forbidden_base_mask", mask)
+
+
+## Cosmetic Meadows proposal. Reuses the existing world-stable drift sample;
+## counts, lattice, paths and realm profiles keep their original ownership.
+## The far sheet uses the same threshold to avoid filling the near bare gaps.
+static func apply_tuft_patches(material: ShaderMaterial, cfg: Dictionary, far: bool = false) -> void:
+	var patch: Dictionary = cfg.get("tuft_patches", {})
+	var start := float(patch.get("start", 0.35))
+	var full := float(patch.get("full", 0.65))
+	var enabled := patch.get("enabled", false) == true and is_finite(start) and is_finite(full) \
+			and start >= 0.0 and full <= 1.0 and full > start
+	var contrast_key := "drift_contrast" if far else "clump_contrast"
+	var start_key := "drift_patch_start" if far else "clump_patch_start"
+	var full_key := "drift_patch_full" if far else "clump_patch_full"
+	# OFF/absent profiles reset the material to the original values, including
+	# Tidewake's existing near colonies and its unchanged far-sheet expression.
+	material.set_shader_parameter(contrast_key, 1.0 if enabled else float(cfg.get("clump_contrast", 0.78 if far else 0.55)))
+	material.set_shader_parameter(start_key, start if enabled else 0.0 if far else float(cfg.get("clump_patch_start", 0.0)))
+	material.set_shader_parameter(full_key, full if enabled else 0.0 if far else float(cfg.get("clump_patch_full", 0.0)))
 
 
 ## Tell the grass where the bushes gather, so it gives way to them.

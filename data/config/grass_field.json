@@ -58,6 +58,12 @@
   "density_gain": 0.92,
   "clump_scale": 0.11,
   "clump_contrast": 0.55,
+  "tuft_patches": {
+    "enabled": false,
+    "start": 0.35,
+    "full": 0.65,
+    "_comment": "F38 retained uniform-cover finding: existing linear drift always keeps a45percent floor. Cosmetic Meadows-only candidate gives the existing world-stable noise empty intervals and dense cores, mirrored by the far sheet. No new noise samples, instances, geometry, collision or durable state. Other realm profiles are unchanged. OFF pending original native/blind whole-cluster and cost proof."
+  },
   "_comment_colour": "Derived from measurement, not by eye. Sampled off-route on WORLD-GRASS's own frames, the meadow's ground reads #798732 (hue 68.3, value 0.529) against the owner reference's foreground grass at #7c8737 (hue 68.4, value 0.529) -- the palette was already right, so these sit around it rather than replacing it. `ground_blend` is the fix for the defect three blind rounds named: it mixes the terrain's OWN colour map into the base of every blade, so growth appears to come out of the ground instead of standing on a picture of it. `translucency` fakes the light through a blade; the Compatibility renderer has no subsurface scattering, so it lifts the tip rather than pretending to transmit.",
   "_comment_lens_clear": "MEADOWS-VISUAL-PASS round 5: the over-the-shoulder aim camera sits low enough that blades a metre from the lens rendered as giant flat cards over most of the frame (blind judge, combat 07). Blades within lens_clear_m of a low eye shrink away over lens_clear_band metres (grass_field.gdshader). TUNABLE.",
   "lens_clear_m": 1.1,
