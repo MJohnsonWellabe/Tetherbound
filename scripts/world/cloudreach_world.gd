@@ -795,8 +795,6 @@ func _build_materials() -> void:
 	_materials["upland"] = _textured_material(surface.get("upland", {}), Color("#e8dfbf"))
 	_materials["upland_dry"] = _textured_material(surface.get("upland_dry", {}), Color("#e4d5aa"))
 	_materials["path"] = _textured_material(surface.get("path", {}), Color("#caa77f"))
-	_materials["stone"] = _textured_material(_surface_tint(cliff_surface, "#906955"), Color("#906955"))
-	_materials["stone_light"] = _textured_material(_surface_tint(cliff_surface, "#cbae82"), Color("#cbae82"))
 	_materials["wood"] = _textured_material({"albedo":"res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png","normal":"res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png","tint":"#9b8b71","uv_scale":0.45,"normal_depth":0.35},Color.WHITE)
 	_materials["rope"] = _material(Color("#8f7048"), 1.0)
 	_materials["leaf"] = _material(Color("#4f623d"), 0.94)
@@ -838,8 +836,13 @@ func _build_materials() -> void:
 	# Far stone uses the geology material below, with two cooler palettes.
 	var relief_cfg: Dictionary = _visual_config.get("distant_relief", {})
 	for material_key: String in ["masonry", "masonry_trim"]:
-		var masonry := ENVIRONMENT_MATERIALS.masonry(material_key=="masonry_trim")
+		var masonry := ENVIRONMENT_MATERIALS.masonry(material_key=="masonry_trim",
+			_visual_config.get("architecture_stone", {}))
 		_materials[material_key] = masonry
+	# Quarried architecture must not fall back to the brown polygon-pattern
+	# terrain maps at the gateway, fallen crown or observatory stonework.
+	_materials["stone"] = _materials["masonry"]
+	_materials["stone_light"] = _materials["masonry_trim"]
 	_materials["bronze"] = _material(Color("#81704b"), 0.72)
 	var timber:=ShaderMaterial.new()
 	timber.shader=preload("res://shaders/cloudreach_timber.gdshader")

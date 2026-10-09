@@ -69,3 +69,42 @@ func test_cloudreach_world_mounts_dedicated_broken_arch_presentation() -> void:
 	assert_true(source.contains("const BROKEN_SKYROAD_ARCH_PRESENTATION := preload("))
 	assert_true(source.contains("presentation.name = \"BrokenSkyroadArchPresentation\""))
 	assert_false(source.contains("Vector3(-10.0, 10.0, 0.0), Vector3(5.0, 20.0, 6.0)"))
+	var world := preload("res://scripts/world/cloudreach_world.gd").new()
+	var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_visual.json"))
+	world.set("_visual_config", visual)
+	world.call("_build_materials")
+	var materials: Dictionary = world.get("_materials")
+	assert_eq(materials["stone"], materials["masonry"], "architectural blocks share the production coursed stone")
+	assert_eq(materials["stone_light"], materials["masonry_trim"], "gateway and fallen crown share its trim family")
+	var presentation := PRESENTATION.new()
+	presentation.build(materials)
+	var gateway := presentation.get_node("InstalledSkyroadGateway") as MeshInstance3D
+	assert_eq(gateway.material_override, materials["masonry_trim"], "the actual installed gateway receives the architectural stone")
+	for key: String in ["masonry", "masonry_trim"]:
+		var material := materials[key] as ShaderMaterial
+		assert_true(material != null)
+		if material == null:
+			continue
+		for map_key: String in ["albedo_tex", "normal_tex", "rough_tex"]:
+			var texture := material.get_shader_parameter(map_key) as Texture2D
+			assert_true(texture != null and texture.resource_path.contains("/T_Brick_"),
+				"actual %s uses the same installed rectangular course maps" % map_key)
+		var tile := float(material.get_shader_parameter("tile"))
+		assert_between(tile, 0.25, 0.35, "courses retain a metre-scale pitch across scaled architecture")
+		var albedo := material.get_shader_parameter("albedo_tex") as Texture2D
+		var image := albedo.get_image()
+		assert_true(image != null)
+		if image != null:
+			if image.is_compressed():
+				assert_eq(image.decompress(), OK)
+			var luminance: Array[float] = []
+			for y in range(0, image.get_height(), 32):
+				for x in range(0, image.get_width(), 32):
+					var colour := image.get_pixel(x, y).srgb_to_linear()
+					luminance.append(colour.r * 0.299 + colour.g * 0.587 + colour.b * 0.114)
+			luminance.sort()
+			var joint_end := float(material.get_shader_parameter("joint_threshold")) + float(material.get_shader_parameter("joint_softness"))
+			assert_true(not luminance.is_empty() and luminance[luminance.size() / 2] > joint_end,
+				"the actual linear stone-face median is beyond the mortar moss mask")
+	presentation.free()
+	world.free()
