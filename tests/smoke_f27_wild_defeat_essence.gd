@@ -7,6 +7,7 @@ extends "res://tests/smoke_combat.gd"
 ##   godot --headless --path . --script tests/smoke_f27_wild_defeat_essence.gd
 ##   godot --headless --path . --script tests/smoke_f27_wild_defeat_essence.gd -- --actor-vitals-override
 ##   ... -- --actor-vitals-override --research-source
+##   ... -- --actor-vitals-override --research-source --research-journal
 ##
 ## The canonical wild-victory transaction runs only while combat.json
 ## `actor_vitals.runtime_enabled` is true. With the shipped value false this
@@ -18,6 +19,8 @@ extends "res://tests/smoke_combat.gd"
 ## writer is EncounterDirector -> Session._host_wild_training_context ->
 ## essence.stage_captured_host_victory -> the prepared owner save.
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const JOURNAL_PRESS := preload("res://tools/net/press_inject.gd")
+const JOURNAL_BINDINGS := preload("res://tools/gate_f/operator_harness.gd")
 const SETTLE_AFTER_VICTORY := 240
 
 func _run() -> void:
@@ -137,8 +140,10 @@ func _run() -> void:
 
 
 ## Optional source segment: the original fight earns sight progress. The
-## claim uses the public production Session service, not GUI input. No task,
-## event, payout or receipt is injected; this is not an F45 UI witness.
+## Default claim uses the public production Session service. The explicit
+## journal opt-in reaches that same door through actual focused Controls and
+## physical input, sharing the original allowance including its UI setup.
+## Neither path injects a task, event, payout, receipt or saved boundary.
 func _research_source(game: Node, local: RefCounted, session: Node, species: String) -> void:
 	var research := preload("res://scripts/creatures/research_log.gd")
 	var definition: Dictionary = research.config().get("species", {}).get(species, {})
@@ -162,7 +167,92 @@ func _research_source(game: Node, local: RefCounted, session: Node, species: Str
 	var intent := {"species_id": species, "task_id": "sight"}
 	var receipt := "research:%s:sight:%s" % [species, str(local.character_id)]
 	print("DISCLOSED research source: public Session claim of naturally earned %s sight task" % species)
-	var result: Dictionary = session.call("request_research_claim", intent)
+	var journal: Node = null
+	var journal_deadline := 0
+	var result: Dictionary
+	if OS.get_cmdline_user_args().has("--research-journal"):
+		journal_deadline = Engine.get_physics_frames() + SETTLE_AFTER_VICTORY
+		var original_world: RefCounted = game.get("world")
+		var original_epoch: String = session.call("_altar_current_epoch")
+		var menu: Node = game.call("menu")
+		var pressed: Dictionary = await JOURNAL_PRESS.tap(self, JOURNAL_BINDINGS._physical_binding, "game_menu", 1)
+		if pressed.get("ok") != true or menu == null or menu.call("is_open") != true:
+			_fail("ordinary Menu input did not open the research claim route")
+			return
+		var quest_index := -1
+		var tabs: Array = menu.get("_tabs")
+		for index in tabs.size():
+			if tabs[index].get("id") == "quest_log": quest_index = index
+		if quest_index < 0:
+			_fail("actual Quest Log tab is unavailable")
+			return
+		var rail: Button = (menu.get("_tab_buttons") as Array)[quest_index]
+		rail.grab_focus()
+		await process_frame
+		if root.gui_get_focus_owner() != rail:
+			_fail("actual Quest Log tab did not receive focus")
+			return
+		pressed = await JOURNAL_PRESS.tap(self, JOURNAL_BINDINGS._physical_binding, "ui_accept", 1)
+		var quest: Node = (menu.get("_bodies") as Array)[quest_index]
+		var research_button: Button = quest.get("_research_button")
+		if pressed.get("ok") != true or not quest.visible or research_button == null:
+			_fail("ordinary A did not select the actual Quest Log research row")
+			return
+		research_button.grab_focus()
+		await process_frame
+		if root.gui_get_focus_owner() != research_button:
+			_fail("actual Research log button did not receive focus")
+			return
+		pressed = await JOURNAL_PRESS.tap(self, JOURNAL_BINDINGS._physical_binding, "ui_accept", 1)
+		journal = quest.get("_research_panel")
+		if pressed.get("ok") != true or journal == null or journal.call("is_open") != true:
+			_fail("ordinary A did not open the actual Research journal")
+			return
+		for frame in 2: await process_frame
+		var species_button: Button = null
+		for button: Button in journal.get("_buttons"):
+			if button.get_meta("system_focus_key", "") == "species:" + species: species_button = button
+		if species_button == null:
+			_fail("earned species is absent from the actual journal")
+			return
+		species_button.grab_focus()
+		for frame in 2: await process_frame
+		var claim_button: Button = null
+		for button: Button in journal.get("_buttons"):
+			if button.get_meta("system_focus_key", "") == "claim:" + species + ":sight": claim_button = button
+		if claim_button == null or claim_button.disabled:
+			_fail("naturally earned sight task lacks an enabled actual Claim button")
+			return
+		claim_button.grab_focus()
+		await process_frame
+		if root.gui_get_focus_owner() != claim_button or game.get("session") != session \
+			or game.get("world") != original_world or session.call("_altar_current_epoch") != original_epoch \
+			or journal.get("_opened_context") != preload("res://scripts/ui/system_screen.gd").character_context(game) \
+			or Engine.get_physics_frames() >= journal_deadline:
+			_fail("original journal focus/scope/240-frame claim allowance changed before A")
+			return
+		# Observe and forward the untouched actual producer Callable once. No
+		# fabricated service response, second request or private Claim call.
+		var actual_call := {"result": {}, "count": 0, "intent": {}}
+		var producer: Callable = journal.get("claim_task")
+		journal.set("claim_task", func(target_species: String, target_task: String) -> Variant:
+			actual_call.count += 1
+			actual_call.intent = {"species_id": target_species, "task_id": target_task}
+			var response: Variant = producer.call(target_species, target_task)
+			actual_call.result = response.duplicate(true) if response is Dictionary else response
+			return response)
+		pressed = await JOURNAL_PRESS.tap(self, JOURNAL_BINDINGS._physical_binding, "ui_accept", 1)
+		journal.set("claim_task", producer)
+		if pressed.get("ok") != true or actual_call.count != 1 or actual_call.intent != intent \
+			or not actual_call.result is Dictionary:
+			_fail("ordinary Claim A did not invoke exactly the original earned task producer")
+			return
+		result = actual_call.result
+		print("F45_JOURNAL_CLAIM_INPUT ", JSON.stringify({"deadline_frame": journal_deadline,
+			"after_press_frame": Engine.get_physics_frames(), "intent": actual_call.intent, "result": result,
+			"pending": journal.get("_pending_claim"), "context": journal.get("_opened_context")}))
+	else:
+		result = session.call("request_research_claim", intent)
 	if result.get("ok") != true:
 		# Host-local claims may return their retained unsaved decision before
 		# the real owner BOOL/ACK completes. Only that exact original receipt
@@ -174,7 +264,11 @@ func _research_source(game: Node, local: RefCounted, session: Node, species: Str
 			_fail("original research claim refused: " + str(result.get("code", "")))
 			return
 		print("DISCLOSED research source: original retained claim awaits owner save within the unchanged 240-frame allowance")
-	for i in SETTLE_AFTER_VICTORY: await physics_frame
+	var remaining := SETTLE_AFTER_VICTORY if journal == null else maxi(0, journal_deadline - Engine.get_physics_frames())
+	for i in remaining: await physics_frame
+	if journal != null and not (journal.get("_pending_claim") as Dictionary).is_empty():
+		_fail("actual journal did not consume the original saved completion within its shared 240-frame allowance")
+		return
 	var after := _essence_counts(local)
 	var character_disk: Dictionary = preload("res://scripts/save/character_save.gd").new().read(str(local.character_id))
 	if character_disk.get("character_id") != str(local.character_id):
@@ -201,6 +295,19 @@ func _research_source(game: Node, local: RefCounted, session: Node, species: Str
 		for slot: Variant in character_disk.get("inventory", []):
 			if slot is Dictionary and slot.get("id") == item: saved += int(slot.n)
 		if saved != int(after[item]): _fail("research essence disk differs for " + item)
+	if journal != null:
+		# Ordinary Back returns to Quest Log, then Back returns to the world.
+		var closed: Dictionary = await JOURNAL_PRESS.tap(self, JOURNAL_BINDINGS._physical_binding, "menu_cancel", 1)
+		for frame in 2: await process_frame
+		var menu: Node = game.call("menu")
+		if closed.get("ok") != true or journal.call("is_open") == true or menu.call("is_open") != true:
+			_fail("ordinary journal Back did not return to Quest Log")
+			return
+		closed = await JOURNAL_PRESS.tap(self, JOURNAL_BINDINGS._physical_binding, "menu_cancel", 1)
+		for frame in 2: await process_frame
+		if closed.get("ok") != true or menu.call("is_open") == true:
+			_fail("ordinary Quest Log Back did not release its menu")
+			return
 	# A second ordinary public request must retain the original accepted row.
 	session.call("request_research_claim", intent)
 	for i in SETTLE_AFTER_VICTORY: await physics_frame
