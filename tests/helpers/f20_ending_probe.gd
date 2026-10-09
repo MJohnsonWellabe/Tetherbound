@@ -647,7 +647,7 @@ func load_completed_fixture(tree: SceneTree, game: Node) -> bool:
 	await tree.process_frame
 	var chosen: Button
 	for node: Node in (title.get("_load_box") as Node).get_children():
-		if node is Button and (node as Button).text.begins_with("Save 0") and not (node as Button).disabled:
+		if node is Button and (node as Button).text.begins_with("Autosave") and not (node as Button).disabled:
 			chosen = node as Button
 	if not check(chosen != null, "production title offers the actual completed slot"): return false
 	chosen.pressed.emit()
