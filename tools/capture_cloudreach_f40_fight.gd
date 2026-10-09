@@ -26,10 +26,7 @@ func _write_manifest() -> void:
 		return
 	var path := output_dir.path_join("manifest.json")
 	var receipt: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-	if not receipt is Dictionary or not receipt.get("complete", false) \
-			or receipt.get("fight_id", "") != FIGHT_ID \
-			or receipt.get("resolution", []) != _graphics_capture.get("resolution", []) \
-			or receipt.get("rendering_method", "") != _graphics_capture.get("renderer", ""):
+	if not fight_manifest_matches(receipt, _graphics_capture):
 		failed = true
 		push_error("F40 fight manifest missing")
 		return
@@ -41,3 +38,26 @@ func _write_manifest() -> void:
 			or FileAccess.get_file_as_string(path) != JSON.stringify(receipt, "\t") + "\n":
 		failed = true
 		push_error("F40 fight receipt persistence/readback failed")
+
+
+static func fight_manifest_matches(receipt: Variant, graphics: Dictionary) -> bool:
+	if not receipt is Dictionary or typeof(receipt.get("complete")) != TYPE_BOOL \
+			or receipt.get("complete") != true or receipt.get("fight_id", "") != FIGHT_ID:
+		return false
+	var renderer: Variant = graphics.get("renderer")
+	if typeof(renderer) != TYPE_STRING or renderer.is_empty() \
+			or receipt.get("rendering_method") != renderer:
+		return false
+	var actual: Variant = receipt.get("resolution")
+	var expected: Variant = graphics.get("resolution")
+	if not actual is Array or not expected is Array or actual.size() != 2 or expected.size() != 2:
+		return false
+	for index: int in range(2):
+		if typeof(expected[index]) != TYPE_INT or expected[index] <= 0 \
+				or typeof(actual[index]) not in [TYPE_INT, TYPE_FLOAT]:
+			return false
+		# JSON decodes numbers as floats; Array equality compares their Variant types.
+		var dimension: float = float(actual[index])
+		if not is_finite(dimension) or dimension != float(expected[index]):
+			return false
+	return true

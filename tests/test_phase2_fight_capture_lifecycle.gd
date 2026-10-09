@@ -2,6 +2,7 @@ extends "res://tests/test_case.gd"
 
 const RECORDER := preload("res://tests/capture_tidewake_named_fights.gd")
 const CAPTURE := preload("res://tools/phase2_capture_tidewake_fights.gd")
+const F40_FIGHT := preload("res://tools/capture_cloudreach_f40_fight.gd")
 
 
 func test_budget_stop_never_becomes_victory_even_at_won_boundary() -> void:
@@ -99,3 +100,31 @@ func test_complete_requires_all_three_saved_phases_and_no_failures() -> void:
 		phases.append({"id": phase, "file": "res://shots/" + phase + ".png", "phase": phase})
 	assert_true(CAPTURE.lifecycle_manifest([], phases, [], "water_trainer_venn").complete)
 	assert_false(CAPTURE.lifecycle_manifest([], phases, ["manifest failure"], "water_trainer_venn").complete)
+
+
+func test_f40_fight_manifest_accepts_exact_json_resolution_roundtrip() -> void:
+	var graphics := {"resolution": [1920, 1080], "renderer": "forward_plus"}
+	var receipt := {"complete": true, "fight_id": "captain_veyra_storm_anchor",
+		"resolution": [1920, 1080], "rendering_method": "forward_plus"}
+	var decoded: Variant = JSON.parse_string(JSON.stringify(receipt))
+	assert_eq(typeof(decoded.resolution[0]), TYPE_FLOAT)
+	assert_true(F40_FIGHT.fight_manifest_matches(receipt, graphics))
+	assert_true(F40_FIGHT.fight_manifest_matches(decoded, graphics))
+	for resolution: Variant in [null, [], [1920], [1920, 1080, 1], [1080, 1920],
+			[1920.5, 1080], ["1920", 1080], [true, 1080], [NAN, 1080], [INF, 1080]]:
+		var malformed: Dictionary = receipt.duplicate(true)
+		malformed.resolution = resolution
+		assert_false(F40_FIGHT.fight_manifest_matches(malformed, graphics))
+	for override: Dictionary in [{"complete": false}, {"complete": "true"},
+			{"fight_id": "wrong"}, {"rendering_method": "gl_compatibility"}]:
+		var malformed: Dictionary = receipt.duplicate(true)
+		malformed.merge(override, true)
+		assert_false(F40_FIGHT.fight_manifest_matches(malformed, graphics))
+	for key: String in ["complete", "fight_id", "resolution", "rendering_method"]:
+		var missing: Dictionary = receipt.duplicate(true)
+		missing.erase(key)
+		assert_false(F40_FIGHT.fight_manifest_matches(missing, graphics))
+	assert_false(F40_FIGHT.fight_manifest_matches(null, graphics))
+	assert_false(F40_FIGHT.fight_manifest_matches(receipt, {}))
+	assert_false(F40_FIGHT.fight_manifest_matches(receipt,
+		{"resolution": [1920.0, 1080.0], "renderer": "forward_plus"}))

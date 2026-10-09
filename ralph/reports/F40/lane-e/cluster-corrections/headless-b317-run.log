@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_wall_foliage_normals.gd: 1 of 826 test files
+  ok    test_wall_foliage_normals.gd :: test_cloudreach_cliff_vines_fit_outside_a_wall_cell_and_below_its_beam
+  ok    test_wall_foliage_normals.gd :: test_every_vine_normal_faces_out_of_the_wall_and_nothing_else_changes
+  FAIL  test_wall_foliage_normals.gd :: test_repeated_prefab_placements_retain_modules_until_composer_release
+          expected true, got false  (composer release drops the PackedScene even with placed nodes alive)
+  ok    test_wall_foliage_normals.gd :: test_the_shipped_vine_really_faces_up
+
+4 tests, 197 assertions, 1 failed
+
+  test_wall_foliage_normals.gd :: test_repeated_prefab_placements_retain_modules_until_composer_release — expected true, got false  (composer release drops the PackedScene even with placed nodes alive)
