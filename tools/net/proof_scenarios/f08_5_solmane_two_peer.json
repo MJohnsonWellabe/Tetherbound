@@ -1,6 +1,6 @@
 {
   "name": "F08#5: Solmane, two peers -- each Veyra participant answers their own offer (host accepts with space, guest refuses at five), through disconnect/rejoin and a host restart, with no duplicate",
-  "claim": "Owner ruling 2026-09-27 (#356 5858140459): Solmane works exactly like the Meadows Veridian. Reuses stronghold_climax.gd (CloudreachSolmaneClimax). Fixtures (disclosed): story_flag world flags for the completed chapter through Veyra's defeat and the relays; veridian_fixture journals both peers as Veyra participants (the director's own reward_grant); the freeing is set as a world fact (the lever press itself is proven by smoke_cloudreach_solmane_offer_choice); party_grant fills the belts; teleports stand each trainer in the tether chamber; veridian_answer calls the climax's public accept_offer/refuse_offer (the prompts' own activated handlers). Loopback ENet. Current-order entry setup: the existing initial Hall ground/open-route fixture runs before host/join, explicitly without earned credit; initial Cloudreach crossings use the public portal request with original saved/arrived/ACK guards. No legacy crossing switch or synthetic travel permit.",
+  "claim": "Owner ruling 2026-09-27 (#356 5858140459): Solmane works exactly like the Meadows Veridian. Reuses stronghold_climax.gd (CloudreachSolmaneClimax). Fixtures (disclosed): story_flag world flags for the completed chapter through Veyra's defeat and the relays; veridian_fixture journals both peers as Veyra participants (the director's own reward_grant); the freeing is set as a world fact (the lever press itself is proven by smoke_cloudreach_solmane_offer_choice); party_grant fills the belts; teleports stand each trainer in the tether chamber; veridian_answer calls the climax's public accept_offer/refuse_offer (the prompts' own activated handlers). Loopback ENet.",
   "peers": 2,
   "scene": "title",
   "budget_s": 4800,
@@ -16,18 +16,6 @@
       "label": "each peer boots its own fresh Meadows world"
     },
     {
-      "peer": "all",
-      "action": "enter_realm",
-      "args": {
-        "realm": "cloudreach",
-        "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
-        "portal_regression": "f08_5_solmane_two_peer",
-        "portal_prepare_only": true
-      },
-      "budget_frames": 10000,
-      "label": "SETUP (disclosed): existing initial Hall ground/open-route fixture before host/join; no earned credit"
-    },
-    {
       "peer": 0,
       "action": "host"
     },
@@ -41,6 +29,15 @@
       "args": {
         "count": 2
       }
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "realm_key_cloudreach",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds realm_key_cloudreach (the earned play is card C1)"
     },
     {
       "peer": 0,
@@ -181,23 +178,17 @@
       "peer": 0,
       "action": "enter_realm",
       "args": {
-        "realm": "cloudreach",
-        "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
-        "portal_regression": "f08_5_solmane_two_peer"
+        "realm": "cloudreach"
       },
-      "budget_frames": 10000,
-      "label": "Actual public Cloudreach portal entry from disclosed initial Hall; original10000-frame budget includes preparation"
+      "budget_frames": 10000
     },
     {
       "peer": 1,
       "action": "enter_realm",
       "args": {
-        "realm": "cloudreach",
-        "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
-        "portal_regression": "f08_5_solmane_two_peer"
+        "realm": "cloudreach"
       },
-      "budget_frames": 10000,
-      "label": "Actual public Cloudreach portal entry from disclosed initial Hall; original10000-frame budget includes preparation"
+      "budget_frames": 10000
     },
     {
       "peer": 0,

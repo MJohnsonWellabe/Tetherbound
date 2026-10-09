@@ -1,3 +1,0 @@
-> **APPROVE.** The preserved checkout excerpt identifies job113347970406/run37788081219 and records `git log -1 --format=%H` returning85c23181564643cdf38b47951375cd7e6e2af62f. This closes the missing exact-checkout evidence.
->
-> Retain the source approval and verified114s/exit0 path proof, matching log hash, warning, fixtures and headless limits. No prompt-pixel or whole-criterion approval; Hall blind judgment remains pending.

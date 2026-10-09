@@ -20,8 +20,6 @@ extends "res://tests/helpers/net_harness.gd"
 
 const PEER_SCRIPT := "res://tests/helpers/forward_camp_net_peer.gd"
 const STEP_BUDGET := 3000
-const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ROLE_SPECIES := ["terrapup", "ripplet", "galewisp", "bramblebun"]
 
 
 func _init_budgets() -> void:
@@ -34,8 +32,6 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	var prove_roles := OS.get_cmdline_user_args().has("--prove-role-utilities")
-	var prove_persistence := OS.get_cmdline_user_args().has("--prove-loadout-persistence")
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
@@ -44,12 +40,6 @@ func _run() -> void:
 		if i == 1: grant["level"] = 15
 		var granted: Dictionary = await step(i, "party_grant", grant)
 		check(granted.get("verdict") == "PASS", "peer %d owns a creature" % i)
-		if prove_roles and i == 1:
-			# Existing pre-admission grant records the level's breakthroughs and
-			# authored known moves. Four total; no added move or cap bypass.
-			for species: String in ROLE_SPECIES.slice(1):
-				var role_grant: Dictionary = await step(1, "party_grant", {"species": species, "level": 15})
-				check(role_grant.get("verdict") == "PASS", "guest owns role representative " + species)
 		# The guest brings two: one for its camp, one to place a second (the
 		# pack-up offer applies when a kit is in hand to place).
 		var kit: Dictionary = await _cstep(i, "camp_grant_kit", {"n": 1 + i})
@@ -67,10 +57,6 @@ func _run() -> void:
 	var host_id := str((await _cstep(0, "camp_records")).get("character_id", ""))
 	var guest_id := str((await _cstep(1, "camp_records")).get("character_id", ""))
 	check(not host_id.is_empty() and not guest_id.is_empty() and host_id != guest_id, "two distinct characters")
-	if prove_roles:
-		await _prove_role_utilities(guest_id)
-		quit(await finish())
-		return
 
 	# --- the host places ------------------------------------------------------
 	var host_place: Dictionary = await _cstep(0, "camp_place", {}, STEP_BUDGET)
@@ -101,28 +87,26 @@ func _run() -> void:
 		await step(1, "wait", {"frames": 30})
 	check(settled.get("pending") == false, "the guest's camp request settles (no pending original left)")
 
-	# F23#3 keeps the original camp; relocation belongs to F34#4.
-	if not prove_persistence:
-		# --- the guest moves its camp (HOMESTEAD §8 pack-up offer) ------------------
-		var old_guest_uid := ""
-		for row: Dictionary in guest_view.get("records", []):
-			if row.character_id == guest_id: old_guest_uid = str(row.uid)
-		# Searched from beside the old camp (terrain collision streams around the
-		# player); 12 m clears the old camp's footprint, which still stands while
-		# the new ghost is validated.
-		var moved: Dictionary = await _cstep(1, "camp_place", {"away": 12.0, "presses": 2}, STEP_BUDGET)
-		check(moved.get("verdict") == "PASS" and str((moved.get("messages", [""]) as Array)[0]).contains("Press Place again to pack it up"),
-			"the guest is offered a pack-up and, pressing again, pitches a new camp (%s)" % str(moved.get("detail", "")).left(160))
-		host_view = await _await_records(0, 2)
-		var guest_uids := (host_view.get("records", []) as Array).filter(func(r: Dictionary) -> bool: return r.character_id == guest_id)
-		check(guest_uids.size() == 1 and str(guest_uids[0].uid) != old_guest_uid,
-			"the host holds exactly one guest camp, the new one (%s)" % str(host_view.get("detail", "")))
-		check(await _await_kits(1, 1) == 1, "the old camp's kit was refunded and one spent on the new camp (one left)")
+	# --- the guest moves its camp (HOMESTEAD §8 pack-up offer) ------------------
+	var old_guest_uid := ""
+	for row: Dictionary in guest_view.get("records", []):
+		if row.character_id == guest_id: old_guest_uid = str(row.uid)
+	# Searched from beside the old camp (terrain collision streams around the
+	# player); 12 m clears the old camp's footprint, which still stands while
+	# the new ghost is validated.
+	var moved: Dictionary = await _cstep(1, "camp_place", {"away": 12.0, "presses": 2}, STEP_BUDGET)
+	check(moved.get("verdict") == "PASS" and str((moved.get("messages", [""]) as Array)[0]).contains("Press Place again to pack it up"),
+		"the guest is offered a pack-up and, pressing again, pitches a new camp (%s)" % str(moved.get("detail", "")).left(160))
+	host_view = await _await_records(0, 2)
+	var guest_uids := (host_view.get("records", []) as Array).filter(func(r: Dictionary) -> bool: return r.character_id == guest_id)
+	check(guest_uids.size() == 1 and str(guest_uids[0].uid) != old_guest_uid,
+		"the host holds exactly one guest camp, the new one (%s)" % str(host_view.get("detail", "")))
+	check(await _await_kits(1, 1) == 1, "the old camp's kit was refunded and one spent on the new camp (one left)")
 
 	# F23: existing party_grant's level parameter unlocks the authored L15
 	# utility; same guest/camp, production panel equip -> journal -> owner ACK.
 	var edit := await _cstep(1, "camp_loadout_edit", {}, STEP_BUDGET)
-	check(edit.get("verdict") == "PASS", "one guest Equip press saves Quake Ring at its camp (%s)" % str(edit.get("detail", "")))
+	check(edit.get("verdict") == "PASS", "guest equips Quake Ring at its camp (%s)" % str(edit.get("detail", "")))
 	var expected: Dictionary = edit.get("card", {})
 	check(expected.get("move_utility") == "quake_ring" and int(expected.get("loadout_revision", 0)) == 1 and not expected.get("loadout_last_edit", {}).is_empty(),
 		"camp equip changes the guest utility and saves its original revision")
@@ -152,41 +136,6 @@ func _run() -> void:
 	check(await _await_loadout(0, view_args, expected), "host re-admits the guest's persisted loadout")
 	check(await _await_loadout(1, view_args, expected), "guest rejoin preserves the saved loadout and receipt")
 	quit(await finish())
-
-
-## Opt-in F23#2 segment: reuse placement and actual companion panel -> host
-## Foundation loadout -> durable guest save/ACK. No repeated camp reload or
-## relocation batch, combat preview override, direct equipped/known mutation.
-func _prove_role_utilities(guest_id: String) -> void:
-	var placed: Dictionary = await _cstep(1, "camp_place", {}, STEP_BUDGET)
-	check(placed.get("verdict") == "PASS", "guest pays for its actual loadout camp")
-	if placed.get("verdict") != "PASS": return
-	check(await _await_kits(1, 1) == 1, "exactly one guest camp kit spent")
-	var evidence := {}
-	for species: String in ROLE_SPECIES:
-		var row: Dictionary = TEACHING.learnsets().get(species, {})
-		var choices: Array[String] = []
-		# Choose L15 before L5 so both commands really change the slot.
-		for level: int in [15, 5]:
-			for unlock: Dictionary in row.get("unlocks", []):
-				if unlock.get("level") == level: choices.append(str(unlock.move_id))
-		check(choices.size() == 2 and choices[0] != choices[1], species + " has two distinct authored utility options")
-		if choices.size() != 2: return
-		var receipts: Array = []
-		for move: String in choices:
-			var edited: Dictionary = await _cstep(1, "camp_loadout_edit", {"species": species, "move": move}, STEP_BUDGET)
-			check(edited.get("verdict") == "PASS", "%s equips %s through its camp panel" % [species, move])
-			if edited.get("verdict") != "PASS": return
-			var card: Dictionary = edited.get("card", {})
-			check(card.get("move_utility") == move and int(card.get("loadout_revision", 0)) == receipts.size() + 1,
-				"each role choice has its own saved original revision")
-			check(await _await_loadout(0, {"character_id": guest_id, "uid": str(card.get("uid", ""))}, card),
-				"host admits exact guest loadout receipt for " + move)
-			receipts.append(card.duplicate(true))
-		evidence[str(row.get("role_family", ""))] = {"species": species, "choices": choices, "receipts": receipts}
-	check(evidence.size() == 4, "all four authored roles equip two utilities")
-	print("F23_ROLE_UTILITIES " + JSON.stringify({"character_id": guest_id, "roles": evidence,
-		"fixtures": "four pre-admission level15 creatures and two camp kits; production cap, known moves, camp placement, panel, host and owner save guards retained"}))
 
 
 func _await_loadout(peer: int, args: Dictionary, expected: Dictionary) -> bool:

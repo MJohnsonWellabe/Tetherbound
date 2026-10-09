@@ -1,9 +1,0 @@
-Original /root/f42_visual_review 01a1168a-2a2e-7243-aa7d-e655171c70fa, turn 01a11cf0-0818-7c71-8631-478d651c9f54
-
-**SOURCE APPROVE — f009.** The correction keeps a strict equality check and changes its expected operand to canonical Godot 4.7 depth-prepass alpha (**4**). The failed 925 packet records nine matching energy/alpha values but nine mode-4 values rejected by the stale mode-1 check; it remains failed, 0/4, exit 1. No production material or guard relaxation occurred. [Godot 4.7 enum](https://docs.godotengine.org/en/4.7/classes/class_basematerial3d.html#enum-basematerial3d-transparency).
-
-**ARTIFACT APPROVE — frozen 535, run37828922131.** Exact checkout, ZIP/extracted log and supplied hash match. Actual door→road→Hall path passed, exit 0/85s, maximum off-road distance 0, zero script errors, one interpolation warning. Day constructor/path evidence only; no mounted AO or night-effect credit.
-
-**REUSE APPROVE.** Relevant constructor/route source is unchanged from 535; wood source is unchanged from 925. Ambient shaping remains OFF in the wood commands. No repeat constructor walk is needed.
-
-**COMMAND APPROVE.** The f009 proposals preserve the same-source Low720 four-frame baseline/candidate pairing and other guards. ROOT must hydrate exact plan blob `c41279e1303c3cee5619dc06dc53ee61646cea8c`. Reference-wood bindings are not measured. Native completion, pixels, blind and whole acceptance remain pending.

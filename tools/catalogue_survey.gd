@@ -37,8 +37,6 @@ const POPULATE_FRAMES := 45
 const LIGHT_SETTLE_FRAMES := 12
 const POSE_FRAMES := 4
 const TRAINER_CLEARANCE := 0.4
-const FLOOR_SETTLE_FRAMES := 180
-const FLOOR_SETTLE_TIMEOUT_MSEC := 60000
 
 var _biome_id := ""
 var _output_dir := ""
@@ -348,28 +346,6 @@ func _capture_row(row: Dictionary) -> void:
 	var game := root.get_node_or_null(^"Game")
 	var moved := game != null and bool(game.call("debug_teleport_to", at.x, at.y, _biome_id, ""))
 	if not moved:
-		# Read the same production guards after refusal; do not bypass them or
-		# replace the requested stand with a successful neighbouring fixture.
-		var refusal := {"frame_id": str(row.frame_id), "requested_xz": [at.x, at.y],
-			"ground_height": str(_world.call("ground_height_at", at.x, at.y)),
-			"player_floor_max_angle_deg": rad_to_deg(_player.floor_max_angle),
-			"combat_running": bool(game.call("_debug_teleport_combat_running")) if game != null else false,
-			"walkable": bool(game.call("_debug_teleport_walkable", _world, _player, at.x, at.y)) if game != null else false}
-		var camps := _world.get_node_or_null(^"WaterCamps")
-		if camps != null:
-			var camp_samples: Array[Dictionary] = []
-			var built: Dictionary = camps.get("camps")
-			for id: String in built:
-				var camp := built[id] as Node3D
-				if camp != null:
-					var p := camp.global_position
-					camp_samples.append({"id": id, "position": _vec3(p),
-						"walkable": bool(game.call("_debug_teleport_walkable", _world, _player, p.x, p.z))})
-			refusal["authored_camp_samples"] = camp_samples
-		var refusals: Array = _manifest.get("refused_destinations", [])
-		refusals.append(refusal)
-		_manifest["refused_destinations"] = refusals
-		print("CATALOGUE REFUSAL ", JSON.stringify(refusal))
 		_failures.append("%s: Game.debug_teleport_to refused destination" % str(row.frame_id))
 		_write_manifest()
 		return
@@ -403,27 +379,9 @@ func _capture_row(row: Dictionary) -> void:
 	if observed_clock.is_empty():
 		_write_manifest()
 		return
-	# First-arrival terrain collision can still be streaming after clock/pose
-	# setup. Observe ordinary movement finish on its real floor; never snap the
-	# body again or report an airborne first-arrival image as settled footing.
-	var floor_deadline := Time.get_ticks_msec() + FLOOR_SETTLE_TIMEOUT_MSEC
-	var grounded_frames := 0
-	for _frame in FLOOR_SETTLE_FRAMES:
-		grounded_frames = grounded_frames + 1 if _player.is_on_floor() else 0
-		if grounded_frames >= 3 or Time.get_ticks_msec() >= floor_deadline:
-			break
-		await physics_frame
-	if grounded_frames < 3:
-		_failures.append("%s: production trainer did not settle on a real floor" % str(row.frame_id))
-		_write_manifest()
-		return
 	for _frame in POSE_FRAMES:
 		await process_frame
 	await RenderingServer.frame_post_draw
-	if not _player.is_on_floor():
-		_failures.append("%s: production trainer left its real floor before capture" % str(row.frame_id))
-		_write_manifest()
-		return
 	var image := root.get_texture().get_image()
 	var path := "%s/%s.png" % [_output_dir, str(row.frame_id)]
 	if image == null or image.is_empty() or image.get_width() != root.size.x or image.get_height() != root.size.y:
@@ -439,9 +397,6 @@ func _capture_row(row: Dictionary) -> void:
 		record["view_heading_xz"] = [forward.x, forward.y]
 		record["terrain_ground_y"] = terrain_ground
 		record["resolved_ground_y"] = resolved_ground
-		record["actual_position_ground_y"] = float(_world.call("ground_height_at", _player.global_position.x, _player.global_position.z))
-		record["production_is_on_floor"] = _player.is_on_floor()
-		record["consecutive_grounded_frames"] = grounded_frames
 		record["camera_rig_transform"] = _transform(_rig.global_transform)
 		record["camera_rig_spring_length"] = _rig.spring_length
 		record["camera_transform"] = _transform(_camera.global_transform)

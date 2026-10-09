@@ -1,8 +1,0 @@
-{
-  "reviewer": "/root/f42_visual_review",
-  "verdict": "APPROVE",
-  "scope": "SOURCE ONLY",
-  "source": "9f1eddb9b87034b1c2abc1583e2746d033a4f41c",
-  "config": "farmhouse_shell.interior_lighting.furniture_wood_lift=.18",
-  "finding": "Finite numeric-only default0/clamp0..1; Furniture_DIR exact Table/Table2/Chair/Stool bareMeshInstance Wood/DarkWood active already-dielectric material duplicated; RGB lerp toward white preserves alpha/otherfields/sharedoriginals/otherfamilies/geometry/collider/light/state. Installed-family value tuning fits ART_DIRECTION. No runtime/pixel/test credit."
-}

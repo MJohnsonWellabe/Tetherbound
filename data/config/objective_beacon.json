@@ -4,11 +4,6 @@
   "beam_height_m": 92.0,
   "beam_radius_m": 0.9,
   "beam_opacity": 0.26,
-  "nearby_occlusion": {
-    "enabled": false,
-    "distance_m": 40.0,
-    "_comment": "F38/F39 visual-cluster candidate: the nearby destination beam depth-tests so building walls and roofs can occlude it instead of drawing a cyan column over them. Cosmetic personal world-beacon scope only, no objective/map/save/authority changes. OFF pending original native/runtime/blind cluster proof. Reach clamps to60m to preserve accepted66m and distant canopy-proof guidance; existing camera-clear/interior/fight/hold gates remain."
-  },
   "distance_segment_base_m": 42.0,
   "distance_segment_height_m": 50.0,
   "distance_segment_radius_m": 2.0,

@@ -1,7 +1,0 @@
-{
-  "reviewer": "/root/f42_visual_review",
-  "verdict": "APPROVE",
-  "disposition": "Onlyfarmhouse_shell.interior_lighting.furniture_wood_lift .18->0.0",
-  "finding": "Finiteclampzero meanslift>0branchskipped; dielectricstillrunsbefore. ROOTliftcode/floordetail/normal/lighting/geometry/collision/otherfields unchanged. Existing32e area/construction and9f constructionevidence applicable; no thirdcapture/unchangedtestsneeded.",
-  "visual": "BothblindBLOCKretained; no fullbar/wholecriterionclosure."
-}

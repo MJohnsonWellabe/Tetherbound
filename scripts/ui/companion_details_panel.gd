@@ -212,9 +212,14 @@ func _equip(move: String) -> void:
 	if creature == null or not is_instance_valid(_loadout_service) or not _pending_edit.is_empty(): return
 	if not _slot in ["quick", "charged", "utility"] or _moves.call("slot", move) != _slot \
 			or not (creature.get("known_moves") as Array).has(move): return
+	var raw: Variant = _loadout_service.call("quote_loadout", _station_key, _uid)
+	if not raw is Dictionary or raw.get("ok") != true or raw.get("creature_uid") != _uid \
+			or raw.get("loadout_revision") != creature.get("loadout_revision"):
+		status.text = "Your loadout changed or the station is unavailable. Choose again."
+		return
 	_pending_edit = Crypto.new().generate_random_bytes(16).hex_encode()
 	_pending_durable = false
-	var request := {"edit_id": _pending_edit, "expected_revision": int(creature.get("loadout_revision")), "creature_uid": _uid}
+	var request := {"edit_id": _pending_edit, "expected_revision": int(raw.loadout_revision), "creature_uid": _uid}
 	for slot: String in ["quick", "charged", "utility"]:
 		request[slot] = move if slot == _slot else str(creature.get("move_" + slot))
 	_rebuild()

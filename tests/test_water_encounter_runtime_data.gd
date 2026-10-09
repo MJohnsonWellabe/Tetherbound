@@ -95,45 +95,6 @@ func test_trainer_levels_rewards_and_unique_defeat_flags_preserve_content() -> v
 			assert_eq(spec.team[index].species, CATALOG.runtime_id(source))
 	assert_eq(result.encounter_config.active_wild_cap_per_peer, 16)
 	assert_eq(result.encounter_config.activation_distance_m, 100)
-	var meadows := preload("res://scripts/combat/encounter_director.gd").new()
-	var known: Dictionary = preload("res://scripts/world/trainer_npc.gd").trainers()[0]
-	meadows.set("_trainer_spec", known.duplicate(true))
-	assert_true(meadows.call("_local_named_trainer_source_matches"), "Meadows keeps its authored band trainer membership")
-	meadows.set("_trainer_spec", {"id": "caller_only_trainer"})
-	assert_false(meadows.call("_local_named_trainer_source_matches"), "unknown Meadows identity refuses")
-	meadows.set("_trainer_spec", {"id": "water_trainer_nerissa"})
-	assert_false(meadows.call("_local_named_trainer_source_matches"), "Water membership cannot be borrowed by Meadows")
-	meadows.free()
-	# The real Water translation is authoritative even though Nerissa is not
-	# in Meadows' band registry. Membership still binds the exact mounted NPC.
-	var mounted_world := Node3D.new()
-	var director := DIRECTOR.new()
-	var trainer := Node3D.new()
-	mounted_world.add_child(director)
-	mounted_world.add_child(trainer)
-	var nerissa: Dictionary = result.trainer_specs.water_trainer_nerissa
-	director.trainer_specs = result.trainer_specs.duplicate(true)
-	director.trainer_nodes = {nerissa.id: trainer}
-	director.set("_trainer_spec", nerissa.duplicate(true))
-	director.set("_trainer_node", trainer)
-	assert_true(director.call("_local_named_trainer_source_matches"), "authored mounted Nerissa belongs to Water's registry")
-	var changed := nerissa.duplicate(true)
-	changed.team = []
-	director.set("_trainer_spec", changed)
-	assert_false(director.call("_local_named_trainer_source_matches"), "caller-only altered roster refuses")
-	changed.id = "caller_only_nerissa"
-	director.trainer_nodes[changed.id] = trainer
-	assert_false(director.call("_local_named_trainer_source_matches"), "mounted node alone cannot admit an unknown identity")
-	director.set("_trainer_spec", nerissa.duplicate(true))
-	var other_body := Node3D.new()
-	director.set("_trainer_node", other_body)
-	assert_false(director.call("_local_named_trainer_source_matches"), "another body cannot borrow Nerissa's authored identity")
-	other_body.free()
-	director.set("_trainer_node", trainer)
-	mounted_world.remove_child(trainer)
-	assert_false(director.call("_local_named_trainer_source_matches"), "unmounted original trainer refuses")
-	trainer.free()
-	mounted_world.free()
 ## F14: a trainer's `foe_power_multiplier` scales each member's strike power
 ## (the `enemy_trainer` baseline) into its `combat` block; a trainer without
 ## one keeps its members untouched.

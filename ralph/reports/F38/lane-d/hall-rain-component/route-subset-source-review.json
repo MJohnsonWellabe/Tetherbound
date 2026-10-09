@@ -1,9 +1,0 @@
-{
-  "source": "539c94b8fcf3cbf834f7dc803438a4ea215cc27d",
-  "reviewer": "/root/f42_visual_review",
-  "verdict": "SOURCE APPROVE",
-  "scope": "Existing already-parsed repeated --subset filters stable authored route IDs through inherited OR substring matcher. Full points remain for next/last headings and original indices. Omitted retains all original4points/alltimes; wholly unmatched plan fails. No new point/fixture/harness or support/raster/time/weather/camera guard change.",
-  "planned_selection": "route_00 and route_03/day+night/rain =4 named outside+inside stills; not a full-route/motion/performance/earned proof",
-  "runtime": "PENDING current-source actual camera/emitter and pixels",
-  "criterion_done": false
-}

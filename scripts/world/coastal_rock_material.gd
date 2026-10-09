@@ -58,15 +58,6 @@ float coast_noise(vec2 p) {
 	return mix(mix(coast_hash(i), coast_hash(i + vec2(1.0, 0.0)), f.x),
 		mix(coast_hash(i + vec2(0.0, 1.0)), coast_hash(i + vec2(1.0)), f.x), f.y);
 }
-
-// Weathering must vary up steep banks as well as along their footprint.
-// XZ-only noise stretches one value through an entire vertical rock face.
-float coast_surface_noise(vec3 p, vec3 surface_normal) {
-	vec3 weights = abs(surface_normal);
-	weights /= max(weights.x + weights.y + weights.z, 0.001);
-	return coast_noise(p.zy) * weights.x + coast_noise(p.xz) * weights.y
-		+ coast_noise(p.xy) * weights.z;
-}
 """
 const MATERIAL := """
 	// COASTAL-ROCK. Evaluate derivatives outside the slope branch.
@@ -110,8 +101,8 @@ const MATERIAL := """
 		if (coast_weathering_enabled) {
 			// Broad mineral planes, with irregular vegetation tongues at the
 			// slope transition; the real surface and its silhouette stay intact.
-			float patch = coast_surface_noise(v_vertex * coast_weathering_scale, w_normal);
-			float grain = coast_surface_noise(v_vertex * coast_weathering_scale * 3.7, w_normal);
+			float patch = coast_noise(v_vertex.xz * coast_weathering_scale);
+			float grain = coast_noise(v_vertex.xz * coast_weathering_scale * 3.7);
 			rock = mix(coast_tint * 0.42, rock, coast_rock_detail);
 			rock *= mix(0.78, 1.15, patch);
 			float moss = smoothstep(0.48, 0.91, abs(coast_face.y) + (patch - 0.5) * 0.32);
@@ -133,8 +124,8 @@ const MATERIAL := """
 	if (coast_weathering_enabled) {
 		// Sand and wet mineral stains soften the waterline without painting
 		// new walkable terrain or touching Veilfall's separate treatment.
-		float patch = coast_surface_noise(v_vertex * coast_weathering_scale, w_normal);
-		float grain = coast_surface_noise(v_vertex * coast_weathering_scale * 3.7, w_normal);
+		float patch = coast_noise(v_vertex.xz * coast_weathering_scale);
+		float grain = coast_noise(v_vertex.xz * coast_weathering_scale * 3.7);
 		float outside = smoothstep(coast_exclude_radius, coast_exclude_radius + 30.0, length(v_vertex.xz - coast_exclude_centre));
 		float strand = 1.0 - smoothstep(coast_sediment_height_m * 0.35, coast_sediment_height_m, v_vertex.y + (patch - 0.5) * 2.8);
 		strand *= smoothstep(0.25, 0.85, abs(coast_face.y)) * outside;
@@ -152,10 +143,6 @@ const MATERIAL := """
 		// Use Terrain3D's interpolated height normal, not raster triangle
 		// derivatives: slope tint must not outline every terrain triangle.
 		vec3 dune_normal = normalize(w_normal);
-		float weathered_bank = 1.0 - smoothstep(0.80, 0.98, abs(dune_normal.y));
-		if (coast_weathering_enabled) {
-			patch = mix(patch, coast_surface_noise(v_vertex * coast_weathering_scale, w_normal), weathered_bank);
-		}
 		vec3 dune_weights = abs(dune_normal);
 		dune_weights /= max(dot(dune_weights, vec3(1.0)), 0.001);
 		float grain = coast_noise(v_vertex.zy * 3.4) * dune_weights.x
@@ -174,13 +161,6 @@ const MATERIAL := """
 		float dune_tex = dot(texture(coast_dune_albedo, v_vertex.zy * dune_scale).rgb, vec3(0.299, 0.587, 0.114)) * dune_weights.x
 			+ dot(texture(coast_dune_albedo, v_vertex.xz * dune_scale).rgb, vec3(0.299, 0.587, 0.114)) * dune_weights.y
 			+ dot(texture(coast_dune_albedo, v_vertex.xy * dune_scale).rgb, vec3(0.299, 0.587, 0.114)) * dune_weights.z;
-		if (coast_weathering_enabled) {
-			// The final dune layer otherwise replaces the weathered bank below.
-			// Retain the installed sand grain, but soften its repeated ripples on
-			// inclined banks and let irregular surface patches carry the value.
-			dune_tex = mix(dune_tex, mix(0.70, dune_tex, coast_rock_detail), weathered_bank);
-			sand *= mix(1.0, mix(0.86, 1.10, patch), weathered_bank);
-		}
 		sand *= clamp(1.0 + (dune_tex - 0.70) * coast_dune_texture_strength, 0.68, 1.22);
 		// Long dune flanks need a broad value break at gameplay distance. Keep
 		// level paths and crests bright while softly shading inclined sand.
@@ -263,8 +243,7 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 	material.call("set_shader_param", "coast_exclude_radius", float(excluded.get("radius_m", 430.0)))
 	var shore: Variant = JSON.parse_string(FileAccess.get_file_as_string(SHORE_CONFIG))
 	if shore is Dictionary:
-		material.call("set_shader_param", "coast_weathering_enabled", bool(shore.get("enabled", false))
-			or "--shore-weathering-candidate" in OS.get_cmdline_user_args())
+		material.call("set_shader_param", "coast_weathering_enabled", bool(shore.get("enabled", false)))
 		for key: String in shore:
 			if key.begins_with("_") or key == "enabled":
 				continue

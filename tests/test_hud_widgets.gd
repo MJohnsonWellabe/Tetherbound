@@ -402,20 +402,6 @@ func test_update_from_party_with_three_creatures_and_two_vacants_does_not_crash(
 	assert_true(strip._portraits[0].visible, "an occupied slot should show its creature render")
 	assert_ne(strip._portraits[0].texture, strip._portraits[1].texture,
 		"different species should not collapse to the same abstract swatch")
-	# Existing real portrait composition witness: frame original art instead
-	# of enlarging the compact row or changing creature identity/state shades.
-	var framing := preload("res://scripts/ui/creature_portrait.gd")
-	for species: String in ["sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail"]:
-		var original_path := framing.resolve(species)
-		var framed := framing.texture_for_path(original_path) as AtlasTexture
-		assert_true(framed != null, "the pictured roster has a configured portrait frame: " + species)
-		if framed != null:
-			assert_eq(framed.atlas, load(original_path), "a frame uses the same species' original texture")
-			assert_true(Rect2(Vector2.ZERO, framed.atlas.get_size()).encloses(framed.region), "framing stays inside installed art")
-			assert_eq(framing.texture_for_path(original_path), framed, "HUD instances reuse the same framed texture")
-	var spark_frame := framing.texture_for_path(framing.resolve("sparkit")) as AtlasTexture
-	if spark_frame != null:
-		assert_true(spark_frame.get_width() < spark_frame.atlas.get_width() / 2, "opaque Sparkit canvas padding cannot consume the portrait chip")
 
 	# The two slots beyond the three real entries read as deliberately open:
 	# fixed labels and numbered chips, no stale level/portrait/HP from a prior

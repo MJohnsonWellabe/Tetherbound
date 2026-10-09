@@ -33,11 +33,6 @@ func build(owner_world: Node3D) -> void:
 		tent.name = str(row.id) + "_shelter"
 		add_child(tent)
 		tent.global_position = at
-		# Clear the standing trainer's head, sleeves and backpack under the
-		# sloping canvas. Scope is authored Water shelters only; preserve the
-		# shared placeable tent, non-blocking layer and rest/craft anchors.
-		var shelter_footprint := float(tuning.get("shelter_footprint_scale", 1.0))
-		tent.scale = Vector3(shelter_footprint, float(tuning.get("shelter_height_scale", 1.0)), shelter_footprint)
 		tent.build_real()
 		var sleeping_mat := PIECE.new()
 		sleeping_mat.name = str(row.id) + "_bedroll"

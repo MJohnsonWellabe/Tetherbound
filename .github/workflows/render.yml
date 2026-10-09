@@ -33,10 +33,6 @@ on:
         type: choice
         options: [render, headless]
         default: render
-      fixed_fps:
-        description: Headless simulation only; use the named proofs' native --fixed-fps 60 CLI.
-        type: boolean
-        default: false
       resolution:
         description: Window size for render mode.
         required: false
@@ -86,8 +82,6 @@ jobs:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
           SOURCE_ARTIFACT_NAME: ${{ inputs.source_artifact_name }}
           RENDERING_METHOD: ${{ inputs.rendering_method }}
-          MODE: ${{ inputs.mode }}
-          FIXED_FPS: ${{ inputs.fixed_fps }}
         run: |
           set -euo pipefail
           fail() { echo "::error::$1"; exit 1; }
@@ -105,8 +99,6 @@ jobs:
             [[ "$SOURCE_ARTIFACT_NAME" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]{0,199}$ ]] || fail "source_artifact_name must be 1-200 of [A-Za-z0-9_.-], beginning with a letter or digit; supply both source inputs"
           fi
           [[ "$RENDERING_METHOD" = gl_compatibility || "$RENDERING_METHOD" = forward_plus ]] || fail "unknown rendering method"
-          [[ "$FIXED_FPS" = true || "$FIXED_FPS" = false ]] || fail "fixed_fps must be boolean"
-          [[ "$FIXED_FPS" != true || "$MODE" = headless ]] || fail "fixed_fps is headless simulation only"
 
       - uses: actions/checkout@v4
         with:
@@ -123,15 +115,6 @@ jobs:
             !/shots/
             !/assets_raw/
             !/archive/
-            /ralph/reports/R2-F38/capture-definition.json
-            /ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R33/manifest.json
-            /ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R33/BLIND_REVIEW.md
-            /ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R55-DESKTOP-01/manifest.json
-            /ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R55-DESKTOP-01/independent-blind-review.md
-            /ralph/reports/MEADOWS-0912/final-old-mill-63-desktop-01/manifest.json
-            /ralph/reports/MEADOWS-0912/final-old-mill-63-desktop-01/BLIND_REVIEW.md
-            /ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/manifest.json
-            /ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/BLIND_REVIEW.md
 
       - name: Check the script exists on that ref
         env:
@@ -167,7 +150,6 @@ jobs:
           TMIN: ${{ inputs.timeout_minutes }}
           MODE: ${{ inputs.mode }}
           RENDERING_METHOD: ${{ inputs.rendering_method }}
-          FIXED_FPS: ${{ inputs.fixed_fps }}
         run: |
           set -uo pipefail
           export XDG_DATA_HOME="$RUNNER_TEMP/userdata"
@@ -177,19 +159,17 @@ jobs:
           [ ${#user_args[@]} -gt 0 ] && extra=(-- "${user_args[@]}")
           touch "$RUNNER_TEMP/start_marker"
           t0=$SECONDS
-          rc=0
           if [ "$MODE" = render ]; then
             driver=opengl3
             if [ "$RENDERING_METHOD" = forward_plus ]; then driver=vulkan; fi
             timeout "$((TMIN * 60))" xvfb-run -a -s "-screen 0 ${RES}x24" \
               godot --path . --rendering-method "$RENDERING_METHOD" --rendering-driver "$driver" --audio-driver Dummy --resolution "$RES" \
-              --script "$SCRIPT" "${extra[@]}" > "$RUNNER_TEMP/out/run.log" 2>&1 || rc=$?
+              --script "$SCRIPT" "${extra[@]}" > "$RUNNER_TEMP/out/run.log" 2>&1
           else
-            simulation_args=()
-            [ "$FIXED_FPS" = true ] && simulation_args=(--fixed-fps 60)
             timeout "$((TMIN * 60))" godot --headless --path . \
-              "${simulation_args[@]}" --script "$SCRIPT" "${extra[@]}" > "$RUNNER_TEMP/out/run.log" 2>&1 || rc=$?
+              --script "$SCRIPT" "${extra[@]}" > "$RUNNER_TEMP/out/run.log" 2>&1
           fi
+          rc=$?
           echo "exit=$rc took=$((SECONDS - t0))s" | tee -a "$RUNNER_TEMP/out/run.log"
           tail -60 "$RUNNER_TEMP/out/run.log"
           echo "$rc" > "$RUNNER_TEMP/out/exit_code"

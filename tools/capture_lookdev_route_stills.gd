@@ -15,34 +15,13 @@ const ROUTE_TOOL := preload("res://tools/capture_lookdev_route.gd")
 const ROUTES_PATH := "res://data/config/lookdev_routes.json"
 var _graphics_capture: Dictionary = {}
 var _route: Dictionary = {}
-var _requested_weather := ""
-var _road_verge_mode := ""
 
 
 func _run() -> void:
-	for argument: String in OS.get_cmdline_user_args():
-		if argument.begins_with("--f38-road-verge="):
-			_road_verge_mode = argument.trim_prefix("--f38-road-verge=")
-			if _road_verge_mode not in ["baseline", "candidate"] or not OS.get_cmdline_user_args().has("--biome=meadows"):
-				push_error("Road-verge stills require explicit Meadows baseline or candidate")
-				quit(1)
-				return
-		if argument.begins_with("--weather="):
-			_requested_weather = argument.trim_prefix("--weather=")
-			if _requested_weather not in ["clear", "rain"]:
-				push_error("Route still weather must be clear or rain when supplied")
-				quit(1)
-				return
 	_graphics_capture = BOOTSTRAP.prepare(self)
 	if _graphics_capture.is_empty():
 		quit(1)
 		return
-	if not _road_verge_mode.is_empty():
-		# Explicit process-local comparison; never edit tracked config or saves.
-		var grass_cfg: Dictionary = preload("res://scripts/world/grass_field.gd").config()
-		var verge_cfg: Dictionary = grass_cfg.get("road_verge", {})
-		verge_cfg["enabled"] = _road_verge_mode == "candidate"
-		grass_cfg["road_verge"] = verge_cfg
 	await super._run()
 
 
@@ -64,10 +43,6 @@ func _load_plan() -> bool:
 	var points: Array = [_route.start]
 	points.append_array(_route.waypoints)
 	for index in points.size():
-		# Honor the inherited, already-parsed named subset without changing
-		# authored points, indices, next-point headings or default coverage.
-		if not _matches_subset("%s__route_%02d" % [_biome_id, index]):
-			continue
 		var raw: Array = points[index]
 		var here := Vector2(float(raw[0]), float(raw[raw.size() - 1]))
 		var next_raw: Array = points[index + 1] if index + 1 < points.size() else points[index - 1]
@@ -80,7 +55,7 @@ func _load_plan() -> bool:
 				"biome_id": _biome_id, "route_point_index": index,
 				"route_point": raw, "position_xz": [here.x, here.y],
 				"view_heading_deg": rad_to_deg(atan2(forward.x, forward.y)), "time": time_name})
-	return not _planned.is_empty()
+	return true
 
 
 func _begin_manifest() -> void:
@@ -89,64 +64,12 @@ func _begin_manifest() -> void:
 	_manifest["route"] = _route
 	_manifest["fixture_disclosure"] = "Production scene, CameraRig and ordinary HUD. Debug travel at each declared route point and audit-only clock pin. Meadows seeds the timed route's declared MEADOWS_OPENING_FLAGS to skip its opening modal; other biomes use the base catalogue character fixture. Not an earned opening, campaign, traversal, save or frame-time proof."
 	_manifest["route_stills_scope"] = "Visual-only stills at declared route points with production camera/HUD. Debug travel and clock pin. No frame time, traversal, collision or performance claim."
-	_manifest["route_weather_fixture"] = _requested_weather
-	_manifest["route_weather_scope"] = "Optional named production weather held for stills by emptying its scheduler order; idle particle follow/visibility stays live. No earned/cycle/save/co-op claim. Omitted option preserves original behavior."
-	_manifest["road_verge_fixture"] = _road_verge_mode
-	_manifest["road_verge_scope"] = "Optional explicit Meadows grass shader baseline/candidate only; process-local config. Original camera, footing, weather, clock, source and pixel guards remain; no performance, full-matrix or whole claim."
-
-
-func _pin_time(time_name: String) -> Dictionary:
-	var observed: Dictionary = await super._pin_time(time_name)
-	if observed.is_empty() or _requested_weather.is_empty():
-		return observed
-	var weather := _world.get_node_or_null("WorldWeather")
-	if weather == null or not weather.has_method("set_weather"):
-		_failures.append("Route weather fixture requires production WorldWeather")
-		return {}
-	weather.set("_order", [])
-	weather.set_process(true)
-	weather.call("set_weather", _requested_weather)
-	weather.call("_follow_player")
-	for _frame in LIGHT_SETTLE_FRAMES:
-		await process_frame
-	if str(weather.call("weather")) != _requested_weather:
-		_failures.append("Route production weather differs from requested fixture")
-		return {}
-	var rain: GPUParticles3D = weather.get("_rain")
-	if rain == null:
-		_failures.append("Route production rain emitter unavailable")
-		return {}
-	observed["route_weather"] = str(weather.call("weather"))
-	observed["rain_particles_visible"] = rain.visible
-	observed["rain_particles_emitting"] = rain.emitting
-	return observed
 
 
 func _capture_row(row: Dictionary) -> void:
 	var raw: Array = row.route_point
 	if raw.size() == 2:
-		var before := _records.size()
 		await super._capture_row(row)
-		if not _road_verge_mode.is_empty() and _records.size() == before + 1:
-			var field := _world.get_node_or_null("GrassField")
-			var material := field.get("_material") as ShaderMaterial if field != null else null
-			var observed := {}
-			if material != null:
-				for key: String in ["road_verge_enabled", "road_verge_base_mask", "road_verge_strength", "road_verge_height_floor"]:
-					observed[key] = material.get_shader_parameter(key)
-			var expected := _road_verge_mode == "candidate"
-			var expected_cfg: Dictionary = preload("res://scripts/world/grass_field.gd").config().get("road_verge", {})
-			var expected_mask: int = preload("res://scripts/world/grass_field.gd").texture_mask(field.call("_terrain_texture_names"), ["path"]) if field != null else 0
-			var matched: bool = material != null and material.shader.resource_path == "res://shaders/grass_field.gdshader" \
-				and observed.get("road_verge_enabled") == expected and expected_mask > 0 \
-				and int(observed.get("road_verge_base_mask", 0)) == expected_mask \
-				and is_equal_approx(float(observed.get("road_verge_strength", -1.0)), float(expected_cfg.get("strength", 0.75))) \
-				and is_equal_approx(float(observed.get("road_verge_height_floor", -1.0)), float(expected_cfg.get("height_floor", 0.35)))
-			var record: Dictionary = _records.back()
-			record["road_verge_observation"] = {"mode": _road_verge_mode, "uniforms": observed, "expected_mask": expected_mask, "matches_requested": matched}
-			if not matched:
-				_failures.append("%s: actual production grass road-verge uniforms mismatch" % str(row.frame_id))
-			_write_manifest()
 		return
 	# Authored XYZ (stacked Cloudreach floors): travel by XZ for streaming,
 	# then stand on the declared height exactly as the timed route does.

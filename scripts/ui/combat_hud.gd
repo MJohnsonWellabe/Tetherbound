@@ -132,14 +132,6 @@ var _energy_fill: StyleBoxFlat = null
 var _wind_fill: StyleBoxFlat = null
 
 var _outcome_left: float = 0.0
-## Peer-local passive loss result; no input context or combat-state ownership.
-var _loss_result_candidate := false
-var _loss_result_seconds := 4.5
-var _loss_result_max_width := 536.0
-var _loss_result_title_size := UITokens.FONT_SECTION
-var _loss_result_detail_size := UITokens.FONT_READ
-var _loss_result: PanelContainer = null
-var _loss_result_detail: Label = null
 var _xp_left: float = 0.0
 ## PROGRESSION-VISIBLE: the feed `seq` when the current fight began.
 var _fight_feed_seq: int = 0
@@ -322,19 +314,17 @@ func _ready() -> void:
 	_orbs_panel.add_theme_stylebox_override("panel", UITokens.slot_box(false))
 	for cell in [_cell_quick, _cell_charged, _cell_throw, _cell_switch]:
 		(cell as PanelContainer).add_theme_stylebox_override("panel", UITokens.slot_box(false))
-	_cell_switch_content.add_theme_font_size_override("normal_font_size", UITokens.FONT_PROMPT)
 	_ultimate_readout = RichTextLabel.new()
 	_ultimate_readout.bbcode_enabled = true
 	_ultimate_readout.fit_content = true
 	_ultimate_readout.scroll_active = false
 	_ultimate_readout.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_ultimate_readout.add_theme_font_size_override("normal_font_size", UITokens.FONT_PROMPT)
+	_ultimate_readout.add_theme_font_size_override("normal_font_size", 22)
 	$Root/AllyPanel/AllyVBox.add_child(_ultimate_readout)
 	_ultimate_meter = ProgressBar.new()
 	_ultimate_meter.custom_minimum_size.y = 8.0
 	_ultimate_meter.show_percentage = false
 	_ultimate_meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_dress(_ultimate_meter, UITokens.fill_box(UITokens.WARNING))
 	$Root/AllyPanel/AllyVBox.add_child(_ultimate_meter)
 
 	_party_strip = PARTY_STRIP.new()
@@ -369,10 +359,6 @@ func _ready() -> void:
 	_build_effect_banner()
 	_build_wind_bar()
 	_build_poise_pips()
-	var hud_config: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
-	var loss_config: Variant = hud_config.get("loss_result", {}) if hud_config is Dictionary else {}
-	_apply_loss_result_config(loss_config if loss_config is Dictionary else {})
-	_build_loss_result()
 
 	UITokens.make_text_legible($Root)
 
@@ -605,32 +591,16 @@ func _process(delta: float) -> void:
 	_draw_enemy()
 	_draw_ally()
 	_draw_grid()
-	var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
-	_refresh_system_overlay(str(active.get("uid")) if active != null else "")
+	if is_instance_valid(_system_overlay):
+		_system_overlay.hide()
+		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
+		if active != null and _system_overlay.call("refresh", str(active.get("uid")), not Input.get_connected_joypads().is_empty()) == true:
+			_grid_panel.hide()
+			if _tether_meter != null: _tether_meter.hide()
 	_update_capture_reticle()
 	_handle_switch_input()
 	_update_party_strip()
 	_update_subject_fade(delta)
-
-
-func _refresh_system_overlay(active_uid: String) -> void:
-	# The validated local projection replaces the legacy ultimate readout as
-	# well as the move grid. A missing or stale projection keeps the fallback.
-	_ultimate_readout.show()
-	_ultimate_meter.show()
-	if not is_instance_valid(_system_overlay): return
-	_system_overlay.hide()
-	if _system_overlay.call("refresh", active_uid, INPUT_GLYPH.using_gamepad()) != true: return
-	var active: RefCounted = _manager.call("active_creature") if is_instance_valid(_manager) and _manager.has_method("active_creature") else null
-	if active != null and str(active.get("uid")) == active_uid:
-		var charged_id := str(active.get("move_charged"))
-		if _moves != null and _moves.has(charged_id):
-			_system_overlay.call("present_charged_energy", active_uid, float(active.get("energy")),
-				float(_moves.move(charged_id).get("energy_cost", 100.0)))
-	_grid_panel.hide()
-	_ultimate_readout.hide()
-	_ultimate_meter.hide()
-	if _tether_meter != null: _tether_meter.hide()
 
 
 ## F10#6 device profile (UX §1.4: the HUD supports direction, team state and
@@ -977,13 +947,9 @@ func _draw_ally() -> void:
 	var ultimate: float = float(_manager.call("ultimate_fraction"))
 	_ultimate_meter.value = ultimate * 100.0
 	var signature := _move_name(str(creature.get("move_ultimate")), "Ultimate")
-	var available: bool = bool(_manager.call("live_move_supported", "ultimate", str(creature.get("move_ultimate"))))
-	# The padded RB art remained miniature inside a 40px box in the original
-	# Low handheld pair. Render the live binding at the readout's prompt font.
-	var arm := _combat_binding_text("combat_ultimate_arm").replace("[", "[lb]")
+	var arm := INPUT_GLYPH.icon("combat_ultimate_arm", 22, VERB_READY if ultimate >= 1.0 else VERB_DIMMED)
 	var instruction := "release → move" if ultimate >= 1.0 else "%d%%" % roundi(ultimate * 100.0)
-	if not available: instruction = "Unavailable"
-	if available and bool(_manager.call("ultimate_armed")): instruction = "tap a move"
+	if bool(_manager.call("ultimate_armed")): instruction = "tap a move"
 	_ultimate_readout.text = "%s %s · %s" % [arm, signature, instruction]
 
 	# Once, not constantly: a bar that pulses every frame it happens to be full
@@ -1018,7 +984,7 @@ func _draw_ally_portrait(species_id: String) -> void:
 		_ally_chip.add_child(_ally_portrait)
 		_ally_portrait.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var path := CREATURE_PORTRAIT.resolve(species_id)
-	var texture: Texture2D = CREATURE_PORTRAIT.texture_for_path(path)
+	var texture: Texture2D = load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
 	_ally_portrait.texture = texture
 	_ally_portrait.visible = texture!=null
 	_ally_chip.color = Color.TRANSPARENT if texture!=null else _species_colour(species_id)
@@ -1100,9 +1066,8 @@ func _draw_grid() -> void:
 	_draw_cells(orbs)
 
 
-func _combat_binding_text(action: String, device_override: String = "") -> String:
-	var pad := device_override == "gamepad" or (device_override.is_empty() and INPUT_GLYPH.using_gamepad())
-	return INPUT_GLYPH.pad_button_name_for_action(action) if pad else INPUT_GLYPH.key_name_for_action(action)
+func _combat_binding_text(action: String) -> String:
+	return INPUT_GLYPH.pad_button_name_for_action(action) if INPUT_GLYPH.using_gamepad() else INPUT_GLYPH.key_name_for_action(action)
 
 
 func _draw_cells(_orbs_count: int) -> void:
@@ -1123,14 +1088,8 @@ func _draw_cells(_orbs_count: int) -> void:
 	_cell_throw_content.text = "[center]%s\n%s[/center]" % [INPUT_GLYPH.icon("combat_utility", CELL_GLYPH_PX), utility_name]
 	_cell_throw.modulate = CELL_READY if utility_ready else CELL_DIMMED
 	var burst_ready: bool = not bool(_manager.call("player_is_committed")) and float(_manager.call("wind_value")) >= float(_manager.call("wind_cost", "burst"))
-	_draw_dodge_cell(burst_ready)
-
-
-func _draw_dodge_cell(ready: bool, device_override: String = "") -> void:
-	# Jump owns the production Dodge binding; it has no authored glyph entry.
-	# Name its actual button/key rather than exposing the fallback [jump] token.
-	_cell_switch_content.text = "[center]%s\nDodge[/center]" % _combat_binding_text("jump", device_override).replace("[", "[lb]")
-	_cell_switch.modulate = CELL_READY if ready else CELL_DIMMED
+	_cell_switch_content.text = "[center]%s\nDodge[/center]" % INPUT_GLYPH.icon("jump", CELL_GLYPH_PX)
+	_cell_switch.modulate = CELL_READY if burst_ready else CELL_DIMMED
 
 
 func _move_name(move_id: String, fallback: String) -> String:
@@ -1694,10 +1653,6 @@ func _effect_banner_repeat_seconds() -> float:
 func _forget_the_last_verdict() -> void:
 	_effect_last_key = ""
 	_effect_last_shown.clear()
-	if _loss_result != null and _loss_result.visible:
-		_outcome.text = ""
-		_outcome_left = 0.0
-	_clear_loss_result()
 
 
 ## A miss has to be legible or it reads as the game dropping the input.
@@ -1723,7 +1678,6 @@ func _on_catch_resolved(success: bool, shakes: int) -> void:
 	if _capture_reticle != null:
 		_capture_reticle.call("play_success" if success else "play_break")
 	if success:
-		_clear_loss_result()
 		var foe: RefCounted = _manager.call("enemy")
 		_outcome.text = "Caught %s!" % (str(foe.display_name) if foe != null else "it")
 		# F30#1: the catch readout names the newcomer's rolled traits.
@@ -1751,7 +1705,6 @@ func _on_exited(outcome: String) -> void:
 	if _world_presentation_mode == "relays" or (outcome == "won" and _manager != null and bool(_manager.get("_enemy_owned"))):
 		relinquish_result_presentation()
 		return
-	_clear_loss_result()
 	match outcome:
 		"caught":
 			# Already announced by _on_catch_resolved, which knows the name.
@@ -1763,96 +1716,12 @@ func _on_exited(outcome: String) -> void:
 		"lost":
 			_outcome.text = "Your creature is out of the fight."
 			_outcome.add_theme_color_override("font_color", UITokens.DANGER)
-			if _show_loss_result():
-				_outcome_left = _loss_result_seconds
-				return
 		"fled":
 			_outcome.text = "You backed off."
 			_outcome.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 		_:
 			_outcome.text = ""
 	_outcome_left = 2.5
-
-
-func _loss_result_number(config: Dictionary, key: String, fallback: float, low: float, high: float) -> float:
-	var value: Variant = config.get(key, fallback)
-	if typeof(value) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(value)):
-		return fallback
-	return clampf(float(value), low, high)
-
-
-func _apply_loss_result_config(config: Dictionary) -> void:
-	var args := OS.get_cmdline_user_args()
-	_loss_result_candidate = (config.get("enabled", false) == true or "--loss-result-candidate" in args) \
-		and "--loss-result-baseline" not in args
-	_loss_result_seconds = _loss_result_number(config, "seconds", 4.5, 2.5, 8.0)
-	_loss_result_max_width = _loss_result_number(config, "max_width_px", 536.0, 320.0, 640.0)
-	_loss_result_title_size = int(_loss_result_number(config, "title_px", float(UITokens.FONT_SECTION), float(UITokens.FONT_SECTION), 40.0))
-	_loss_result_detail_size = int(_loss_result_number(config, "detail_px", float(UITokens.FONT_READ), float(UITokens.FONT_READ), 28.0))
-
-
-func _build_loss_result() -> void:
-	_loss_result = PanelContainer.new()
-	_loss_result.name = "LossResult"
-	_loss_result.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_loss_result.add_theme_stylebox_override("panel", UITokens.panel_box(UITokens.BG_PANEL, UITokens.DANGER))
-	$Root.add_child(_loss_result)
-	var rows := VBoxContainer.new()
-	rows.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rows.add_theme_constant_override("separation", 8)
-	_loss_result.add_child(rows)
-	var title := Label.new()
-	title.name = "LossResultTitle"
-	title.text = "Fight lost"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	title.add_theme_font_size_override("font_size", _loss_result_title_size)
-	title.add_theme_color_override("font_color", UITokens.DANGER)
-	rows.add_child(title)
-	_loss_result_detail = Label.new()
-	_loss_result_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_loss_result_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_loss_result_detail.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_loss_result_detail.add_theme_font_size_override("font_size", _loss_result_detail_size)
-	_loss_result_detail.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
-	rows.add_child(_loss_result_detail)
-	$Root.resized.connect(_layout_loss_result)
-	_layout_loss_result()
-	_clear_loss_result()
-
-
-func _show_loss_result() -> bool:
-	if not _loss_result_candidate or _loss_result == null:
-		return false
-	# Keep the existing factual verdict: this card grants no recovery action.
-	_loss_result_detail.text = _outcome.text
-	_layout_loss_result()
-	_loss_result.show()
-	_outcome.hide()
-	return true
-
-
-func _layout_loss_result() -> void:
-	if _loss_result == null:
-		return
-	var width := minf(_loss_result_max_width, $Root.size.x * 0.48)
-	_loss_result.anchor_left = 0.5
-	_loss_result.anchor_right = 0.5
-	_loss_result.anchor_top = 0.25
-	_loss_result.anchor_bottom = 0.25
-	_loss_result.offset_left = -width * 0.5
-	_loss_result.offset_right = width * 0.5
-	_loss_result.offset_top = 0.0
-	_loss_result.offset_bottom = 112.0
-
-
-func _clear_loss_result() -> void:
-	if _loss_result != null:
-		_loss_result.hide()
-	if _loss_result_detail != null:
-		_loss_result_detail.text = ""
-	if _outcome != null:
-		_outcome.show()
 
 
 ## Optional world phase hook. Ordinary Meadows reads its manager as before.
@@ -1872,7 +1741,6 @@ func set_world_presentation_mode(mode: String) -> void:
 
 
 func relinquish_result_presentation() -> void:
-	_clear_loss_result()
 	_outcome_left = 0.0
 	_xp_left = 0.0
 	_go_left = 0.0
@@ -1992,7 +1860,6 @@ func _celebrate_level_up() -> void:
 func _tick_outcome(delta: float) -> void:
 	if _outcome_left <= 0.0:
 		_outcome.text = ""
-		_clear_loss_result()
 		return
 	_outcome_left -= delta
 

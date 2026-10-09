@@ -702,7 +702,7 @@ func _prove_camera_fits_both_separations() -> void:
 
 
 ## Places the wild `gap` metres from the ally along X and drives the real
-## framing update and its final render-time solver in a tight synchronous loop -- no
+## `_update_combat_camera_framing()` in a tight synchronous loop -- no
 ## `await physics_frame` between calls, so nothing else (the wild's own AI
 ## included) gets a tick to move either body between one call and the next --
 ## enough times for `camera.framing.lag`'s exponential smoothing to settle.
@@ -718,7 +718,6 @@ func _measure_requested_framing(gap: float) -> float:
 		_ally.global_position = centre
 		_wild.global_position = centre + Vector3(gap, 0.0, 0.0)
 		_manager.call("_update_combat_camera_framing", 1.0 / 60.0)
-		_manager.call("_draw_fight_camera", 1.0 / 60.0)
 	var requested := float(_rig.get("_distance"))
 	var basis := _rig.global_basis.orthonormalized()
 	var pivot := _ally.global_position + Vector3.UP * float(_rig.get("_height"))

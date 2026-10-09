@@ -43,14 +43,7 @@ static func suppress_cover(layer: String, placement: Dictionary) -> bool:
 
 
 func build(anchor: String, ground: Callable = Callable()) -> void:
-	var active := enabled()
-	if anchor == "hall_endwall":
-		# Independent, bounded candidate: do not enable the old village/cover
-		# catalogue merely to inspect two hanging nave decorations.
-		var args := OS.get_cmdline_user_args()
-		active = not args.has("--hall-endwall-baseline") and \
-				(bool(settings().get("hall_endwall_enabled", false)) or args.has("--hall-endwall-candidate"))
-	if not active or has_node("CatalogDressing"):
+	if not enabled() or has_node("CatalogDressing"):
 		return
 	var dressing := Node3D.new()
 	dressing.name = "CatalogDressing"

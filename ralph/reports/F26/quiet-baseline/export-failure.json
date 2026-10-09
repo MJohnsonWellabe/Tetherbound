@@ -1,7 +1,0 @@
-{
-  "reason": "ERR_FILE_CANT_WRITE: disk C full while exporting local report/shot images",
-  "export_log": "C:/CodexTemp/quiet-baseline-20261009/export.log",
-  "result": "FAIL",
-  "exit_code": 1,
-  "failed_pck_bytes": 1976303728
-}

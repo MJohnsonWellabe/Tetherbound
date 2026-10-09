@@ -113,7 +113,7 @@ func _dress(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, si
 			site.add_child(post)
 			# Lanterns on the seaward pair and the landward pair.
 			if i == 0 or i == posts - 1:
-				add_lantern(site, lantern_cfg, Vector3(at.x, top, at.y), yaw + (PI if edge < 0.0 else 0.0))
+				_lantern(site, lantern_cfg, Vector3(at.x, top, at.y), yaw + (PI if edge < 0.0 else 0.0))
 	# A little working cargo at the seaward end of the deck itself.
 	var deck_items: Array = cfg.get("deck_cargo", [])
 	for item: Variant in deck_items:
@@ -149,8 +149,7 @@ func _dress(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, si
 		site.add_child(prop)
 
 
-## Shared installed fixture for Tidewake piers and pump work lights.
-func add_lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void:
+func _lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void:
 	var lantern := _fit_height(str(cfg.get("model", "")), float(cfg.get("height_m", 0.62)), "PierLantern")
 	if lantern == null:
 		return
@@ -168,11 +167,6 @@ func add_lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void
 	# Centre its light on the glass, not above the mounting point.
 	light.position = lantern.transform * glass.position
 	site.add_child(light)
-
-
-## Preserve the installed First Shore notice caller's existing entry point.
-func _lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void:
-	add_lantern(site, cfg, at, yaw)
 
 
 func _ground(world: Node3D, at: Vector2) -> float:

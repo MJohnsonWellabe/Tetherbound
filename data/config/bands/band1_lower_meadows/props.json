@@ -726,9 +726,7 @@
           "dir": "res://assets/props/quaternius_survival",
           "sink_m": 0.03,
           "glow": "campfire",
-          "glow_light_scale": 0.55,
-          "_glow_scope": "Meadows farmhouse doorstep light only, peer-local presentation on all presets; optional glow_light_scale leaves the original halo/particles/mesh/collider/source membership unchanged. No durable state/authority/transaction/save change. Candidate requires matched day/night capture and judge.",
-          "_why": "The door fire retains its installed mesh at0.22 scale and35degree yaw, position, warm colour, flicker and daytime dimming. The actual a5d native doorway night packet measured its nearby light at2.87-3.65 energy/range8 while the trainer bleached even in the separately marked house-lights-off diagnostic. Candidate glow_light_scale0.55 narrows this single practical pool to4.4m and baseenergy1.87; other campfires keep their original profiles. Actual interior/doorstep readability and night silhouette must be judged before credit."
+          "_why": "The door light itself. `scale` 0.22 -- roughly half band4's already-small 0.42 patrol posting -- keeps the log pile door-side-brazier small rather than reading as a hearth blocking the threshold; `glow_scale` deliberately left at the chapter's own 1.0 default (LIGHT_RANGE 8.0m, LIGHT_BASE_ENERGY 3.4, warm colour (1.0,0.68,0.32) -- campfire_glow.gd's own constants) rather than dimmed further, because the judge's finding was specifically that NPCs at the door are ILLEGIBLE at night: an 8m warm pool centred 1.24m from the door is what actually reads Oskar/Grandpa's faces, and every other camp in the chapter already proves this exact energy/range reads as a warm practical light rather than daylight at night without complaint. `yaw_deg` 35 (not a flat 0/90) so the log pile does not stand squared-off against the wall, matching this file's own 'not one more object than the yard needs, every object placed on purpose' convention for the rest of the dooryard."
         }
       ]
     },

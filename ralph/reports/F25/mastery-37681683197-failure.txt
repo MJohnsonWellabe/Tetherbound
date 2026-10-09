@@ -1,8 +1,0 @@
-F25#5 remains OPEN — named mastery capture FAILURE
-
-Checkout2d6b2280968101e6a89cf0912ed3b906f818743f; render.yml37681683197, Compatibility1280x720, existing smoke_move_effects_library.gd mastery/arena/ranks1,3,5. Artifact11509840939 retains raw PNGs/results/log.
-Actual result:54captured cases,18failures. The rejected archetypes are stone_throw,fireball,tidal_wave,wind_blade,ice_shard_volley,shadow_bolt, each at ranks1/3/5. All reject 'No usable clear transit interval' before launch. Eighteen other archetypes captured allthree selected ranks; no full24-archetype PASS or visual verdict is claimed.
-Current highest-count selector includes ultimate move rows, choosing fallback count4,size1.6 projectile specifications instead of routing those actions through their actual bespoke ultimate presentation. This is distinct from the earlier base-identity small-stones:r5 peak-spread-at-launch failure.
-Shutter correction2d6b228096 had same independent reviewer f25_arrival_review APPROVE after adding full arc/vertical-ratio/stagger bounds. The computed interval preserves clearance/minimum/maximum fractions and the unchanged actual-body post-draw assertion. Review is source-only, not a passing run.
-Issue5726046351295 parks this criterion after two attempts and gives the concrete new cause to the coordinator helper. No assertion/budget weakening, model/rank shrink, skipped test or new harness. Next lane criterion:F35#2 through the existing ultimate breakthrough capture path.
-F25#2's literal four-base-identity PASS and F25#3's arrival proof remain separate. Library shipping flag staysOFF; F25#0/#4/#5 and release Visualbar remain open.

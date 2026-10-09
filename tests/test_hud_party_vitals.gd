@@ -14,7 +14,7 @@ class StripProbe extends Control:
 	func show_strip() -> void:
 		reveals += 1
 
-func _fixture(config: Dictionary = {}) -> Dictionary:
+func _fixture(enabled: bool) -> Dictionary:
 	var party := PARTY.new()
 	for i in 2:
 		party.add(CREATURE.from_species("terrapup", {"display_name": "Probe%d" % i, "base_hp": 100}))
@@ -22,7 +22,7 @@ func _fixture(config: Dictionary = {}) -> Dictionary:
 	var strip := StripProbe.new()
 	hud.set("_party", party)
 	hud.set("_party_strip", strip)
-	hud.call("_apply_hud_config", config)
+	hud.call("_apply_hud_config", {"party_vitals_refresh_candidate": enabled})
 	hud.call("_update_party_strip")
 	return {"party": party, "hud": hud, "strip": strip}
 
@@ -31,7 +31,7 @@ func _dispose(f: Dictionary) -> void:
 	f.hud.free()
 
 func test_benched_damage_and_faint_refresh_without_roster_change_or_reveal() -> void:
-	var f := _fixture()
+	var f := _fixture(true)
 	var revision: int = f.party.revision
 	var benched: RefCounted = f.party.at(1)
 	benched.take_damage(benched.max_hp / 2.0)
@@ -49,7 +49,7 @@ func test_benched_damage_and_faint_refresh_without_roster_change_or_reveal() -> 
 	_dispose(f)
 
 func test_recovery_and_bed_assignment_refresh_existing_rows() -> void:
-	var f := _fixture()
+	var f := _fixture(true)
 	var creature: RefCounted = f.party.at(0)
 	creature.take_damage(creature.max_hp)
 	f.hud.call("_update_party_strip")
@@ -66,16 +66,12 @@ func test_recovery_and_bed_assignment_refresh_existing_rows() -> void:
 	assert_eq(f.strip.reveals, 1)
 	_dispose(f)
 
-func test_missing_and_legacy_false_config_cannot_leave_stale_healthy_rows() -> void:
-	for config: Dictionary in [{}, {"party_vitals_refresh_candidate": false}]:
-		var f := _fixture(config)
-		var creature: RefCounted = f.party.at(0)
-		creature.take_damage(creature.max_hp)
-		f.hud.call("_update_party_strip")
-		assert_eq(f.strip.updates, 2)
-		assert_eq(f.strip.entries[0].hp_fraction, 0.0)
-		assert_true(f.strip.entries[0].fainted)
-		assert_eq(f.strip.reveals, 1, "Live vitals must not change the reveal policy")
-		f.hud.call("_update_party_strip")
-		assert_eq(f.strip.updates, 2, "Unchanged faint state still uses the cache")
-		_dispose(f)
+func test_default_off_preserves_existing_refresh_behavior() -> void:
+	var f := _fixture(false)
+	var creature: RefCounted = f.party.at(0)
+	creature.take_damage(creature.max_hp)
+	f.hud.call("_update_party_strip")
+	assert_eq(f.strip.updates, 1)
+	assert_eq(f.strip.entries[0].hp_fraction, 1.0)
+	assert_false(f.strip.entries[0].fainted)
+	_dispose(f)

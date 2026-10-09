@@ -1,8 +1,0 @@
-{
-  "source": "733ccc639844f17d9750dbf6b66f136cd07fc09a",
-  "reviewer": "/root/f42_visual_review",
-  "verdict": "SOURCE APPROVE",
-  "scope": "Existing physical circuit checks each8actual installed frame's X/Yscale1 and authored Zfactor when independent depth candidate enabled; production-equivalent activation and baseline precedence. Source attaches native identity frame first. All canonical labels/states/8+8/model/Approach and physical route/collision/floor/distance/budgets unchanged.",
-  "runtime": "PENDING candidate-enabled physical circuit",
-  "criterion_done": false
-}

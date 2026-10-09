@@ -404,9 +404,13 @@ func _build_visual() -> void:
 	_heart_visual.name = "RealmHeart"
 	add_child(_heart_visual)
 	if heart_id == "cloudreach":
-		build_cloudreach_relic(_heart_visual, _heart_material)
+		for side: float in [-1.0, 1.0]:
+			for feather in 3:
+				_build_heart_piece(Vector3(side*(0.12+feather*0.12),0.15-feather*0.07,0),Vector3(0.13,0.45-feather*0.05,0.12),side*0.65)
 	elif heart_id == "stormwood":
-		build_stormwood_relic(_heart_visual, _heart_material)
+		_build_heart_piece(Vector3(-0.06,0.19,0),Vector3(0.16,0.48,0.16),-0.4)
+		_build_heart_piece(Vector3(0.06,-0.18,0),Vector3(0.16,0.48,0.16),-0.4)
+		_build_heart_piece(Vector3.ZERO,Vector3(0.35,0.13,0.16),0)
 	else:
 		_build_heart_piece(Vector3(-0.16, 0.10, 0.0), Vector3(0.25, 0.24, 0.16), 0.0)
 		_build_heart_piece(Vector3(0.16, 0.10, 0.0), Vector3(0.25, 0.24, 0.16), 0.0)
@@ -462,29 +466,7 @@ func _build_presentation_model(primitive_base: MeshInstance3D,
 		(get_node("StandingStone%d" % (i + 1)) as MeshInstance3D).visible = false
 
 
-static func build_cloudreach_relic(parent: Node3D, material: StandardMaterial3D) -> void:
-	# The existing Wings silhouette, shared by the old shrine and Hall display.
-	# Geometry only: no shrine, interaction, light or progression state is built.
-	for side: float in [-1.0, 1.0]:
-		for feather in 3:
-			_build_relic_piece(parent, material,
-				Vector3(side * (0.12 + feather * 0.12), 0.15 - feather * 0.07, 0),
-				Vector3(0.13, 0.45 - feather * 0.05, 0.12), side * 0.65)
-
-
-static func build_stormwood_relic(parent: Node3D, material: StandardMaterial3D) -> void:
-	# Reuse the existing Spark, including its three authored piece transforms.
-	_build_relic_piece(parent, material, Vector3(-0.06, 0.19, 0), Vector3(0.16, 0.48, 0.16), -0.4)
-	_build_relic_piece(parent, material, Vector3(0.06, -0.18, 0), Vector3(0.16, 0.48, 0.16), -0.4)
-	_build_relic_piece(parent, material, Vector3.ZERO, Vector3(0.35, 0.13, 0.16), 0)
-
-
 func _build_heart_piece(at: Vector3, size: Vector3, roll: float) -> void:
-	_build_relic_piece(_heart_visual, _heart_material, at, size, roll)
-
-
-static func _build_relic_piece(parent: Node3D, material: StandardMaterial3D,
-		at: Vector3, size: Vector3, roll: float) -> void:
 	var piece := MeshInstance3D.new()
 	var mesh := SphereMesh.new()
 	mesh.radius = 0.5
@@ -495,8 +477,8 @@ static func _build_relic_piece(parent: Node3D, material: StandardMaterial3D,
 	piece.position = at
 	piece.scale = size
 	piece.rotation.z = roll
-	piece.material_override = material
-	parent.add_child(piece)
+	piece.material_override = _heart_material
+	_heart_visual.add_child(piece)
 
 
 func _material(colour: Color) -> StandardMaterial3D:

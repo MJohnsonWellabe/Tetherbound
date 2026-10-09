@@ -1658,17 +1658,7 @@
       "name": "Sluice Isle",
       "peak_height_m": 45.0,
       "peak_power": 1.65,
-      "pump_assemblage": {"enabled": true, "work_lights": {
-        "_scope": "deterministic_world_presentation",
-        "_why": "F39 Low night catalogue: Twin Pumps read as unlit silhouettes. Reuse the installed dock lantern housing/glass at two machine mounting points, with bounded warm pools. Pump geometry, footprint and route remain unchanged. Dimensions below are local to the existing 2.5-scale pump assembly.",
-        "height_m": 0.30,
-        "light_energy": 1.15,
-        "light_range_m": 3.2,
-        "mounts": [
-          {"at": [-1.30, 2.10, 1.02], "yaw_deg": 0.0},
-          {"at": [1.30, 2.10, 1.02], "yaw_deg": 0.0}
-        ]
-      }, "units": [
+      "pump_assemblage": {"enabled": true, "units": [
         {"at_xz_m": [883.0, 2900.0], "yaw_deg": 35.0, "scale": 2.5, "sink_m": 0.45, "grass_clear_radius_m": 9.0},
         {"at_xz_m": [936.0, 2912.0], "yaw_deg": -30.0, "scale": 2.5, "sink_m": 0.45, "grass_clear_radius_m": 9.0}
       ]},

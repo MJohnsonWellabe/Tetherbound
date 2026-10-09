@@ -53,7 +53,8 @@ func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
 	var player := CharacterBody3D.new()
 	world.add_child(player)
 	player.position = Vector3(0.0, 0.0, 7.0)
-	_ally = _make_ally_body()
+	_ally = SCENE.instantiate()
+	_ally.set_script(BODY)
 	world.add_child(_ally)
 	_manager = MANAGER.new()
 	world.add_child(_manager)
@@ -166,21 +167,11 @@ func _neutral_worst_frac(creature: RefCounted) -> float:
 	return worst / maxf(1.0, float(_entry_maxima[creature.get_instance_id()]))
 
 
-## Default flat-diagnostic body is unchanged. An admitted owner fixture can
-## supply the production follower before its _ready and Manager.begin run.
-func _make_ally_body() -> CharacterBody3D:
-	var body: CharacterBody3D = SCENE.instantiate()
-	body.set_script(BODY)
-	return body
-
-
 func _on_hit(on_enemy: bool, damage: float) -> void:
 	if on_enemy:
 		_tally.hits += 1
-		var pending: Dictionary = _manager.get("_pending_move")
-		var slot := str(pending.get("slot", "quick" if bool(pending.get("is_quick", true)) else "charged"))
 		if _enemy_windup_before_tick and _wild.is_staggered() \
-				and slot == "charged":
+				and not bool((_manager.get("_pending_move") as Dictionary).get("is_quick", true)):
 			_tally.charged_interrupts += 1
 	else:
 		_tally.incoming_hits += 1
@@ -221,10 +212,8 @@ func _on_hit(on_enemy: bool, damage: float) -> void:
 func _on_state_changed() -> void:
 	var action := int(_manager.get("_action"))
 	if action == MANAGER.Action.WINDUP and _last_action != MANAGER.Action.WINDUP:
-		var pending: Dictionary = _manager.get("_pending_move")
-		var slot := str(pending.get("slot", "quick" if bool(pending.get("is_quick", true)) else "charged"))
-		if slot in ["quick", "charged", "utility", "ultimate"]:
-			_tally[slot + "_uses"] = int(_tally.get(slot + "_uses", 0)) + 1
+		var quick := bool((_manager.get("_pending_move") as Dictionary).get("is_quick", true))
+		_tally["quick_uses" if quick else "charged_uses"] += 1
 	_last_action = action
 
 

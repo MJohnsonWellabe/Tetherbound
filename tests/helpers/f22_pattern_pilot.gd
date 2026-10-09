@@ -5,213 +5,31 @@ extends "res://tests/helpers/combat_depth_pilot.gd"
 ## and past action state. Flat collider fixture does not prove world C3/co-op.
 const TYPE_GRAPH := preload("res://scripts/combat/type_chart.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
-const LIVE_FIXTURE := preload("res://tests/smoke_f23_live_moves.gd")
-const OWNER_SAVE := preload("res://tests/test_foundation_resource_save.gd")
-const OWNER_DATA := preload("res://tests/test_foundation_resources.gd")
-const OWNER_RECORD := preload("res://scripts/net/character_record_rules.gd")
-const OWNER_DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
 var context: Dictionary = {}
 var _prepared_body := 0
 var _combo_hooked_manager := 0
 var _tell_seen_frame := -1
-var _opening_seen_frame := -1
 const INTERRUPT_MARGIN_S := 0.15
 var _moves: RefCounted = MOVE_DB.new()
 var _escape_dir := Vector3.ZERO
 var _last_shape: Array = []
 var _fields: Array[Dictionary] = []
 var _pending_field: Dictionary = {}
-var _owner_tree: SceneTree
-var _owner_game: Node
-var _owner_session: Node
-var _owner_writer: RefCounted
-var _owner_director: Node
-var _saved_game: Node
-var _saved_scene: Node
-var _owner_error := ""
-var _owner_binding: Dictionary = {}
-var _owner_launches := 0
-var _owner_impacts := 0
-
-
-func _make_ally_body() -> CharacterBody3D:
-	if context.get("canonical_owner") != true: return super._make_ally_body()
-	var body: CharacterBody3D = SCENE.instantiate()
-	body.set_script(preload("res://scripts/creatures/follower_creature.gd"))
-	body.set("owner_peer_id", 1)
-	return body
-
-
-## Opt-in admission witness on the existing flat fixture. The first supported
-## source is the actual single-creature Meadows trainer; other sources refuse.
-## No global gates, combat state or live resources are manufactured here.
-func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
-		owned: bool, seed_value: int, policy: String) -> Dictionary:
-	if context.get("canonical_owner") != true:
-		return await super.fight(tree, party, foes, owned, seed_value, policy)
-	_owner_tree = tree
-	_saved_scene = tree.current_scene
-	var spec: Dictionary = context.get("trainer_spec", {})
-	if not owned or context.get("chapter") != "meadows" or party.size() != 5 \
-		or foes.size() != 1 or spec.get("team", []).size() != 1 \
-		or preload("res://scripts/world/trainer_npc.gd").trainer(str(spec.get("id", ""))) != spec:
-		return {"won":false, "fixture_error":"canonical floor-owner witness requires five owned cards and one authored Meadows trainer opponent"}
-	if not _prepare_owner(party):
-		_release_owner()
-		return {"won":false, "fixture_error":_owner_error}
-	var result: Dictionary = await super.fight(tree, party, foes, owned, seed_value, policy)
-	result["canonical_owner"] = not _owner_binding.is_empty() and _owner_error.is_empty()
-	result["owner_binding"] = _owner_binding.duplicate(true)
-	result["accepted_launches"] = _owner_launches
-	result["accepted_impacts"] = _owner_impacts
-	var disk: Dictionary = _owner_writer.get("character_store").call("read", OWNER_DATA.CHARACTER)
-	result["owner_disk_party_count"] = disk.get("party", []).size()
-	var saved_uses := 0
-	for card: Dictionary in disk.get("party", []):
-		for receipts: Variant in card.get("move_mastery_receipts", {}).values():
-			if receipts is Array: saved_uses += receipts.size()
-	result["saved_move_receipts"] = saved_uses
-	if not _owner_error.is_empty(): result["fixture_error"] = _owner_error
-	_release_owner()
-	return result
-
-
-func _prepare_owner(party: Array[RefCounted]) -> bool:
-	var fixture := OWNER_DATA.new()
-	_owner_game = LIVE_FIXTURE.FixtureGame.new()
-	_owner_game.name = "Game"
-	var local: RefCounted = fixture._player()
-	local.party.clear()
-	for creature: RefCounted in party:
-		if local.party.add(creature) != true:
-			_owner_error = "canonical five-card party admission refused"
-			return false
-	_owner_game.set("local", local)
-	_owner_game.set("world", fixture._world())
-	_saved_game = _owner_tree.root.get_node_or_null(^"Game")
-	if _saved_game != null: _owner_tree.root.remove_child(_saved_game)
-	_owner_tree.root.add_child(_owner_game)
-	_owner_session = LIVE_FIXTURE.FixtureSession.new()
-	_owner_session.name = "Session"
-	_owner_session.set("fixture", _owner_game)
-	_owner_game.set("session", _owner_session)
-	var authority := preload("res://scripts/net/character_authority.gd").new()
-	_owner_session.set("_character_authority", authority)
-	_owner_tree.root.add_child(_owner_session)
-	var directory := "user://f22_owner_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
-	_owner_writer = OWNER_SAVE.BoolWriter.new()
-	_owner_writer.set("world_store", preload("res://scripts/save/world_save.gd").new(directory.path_join("worlds")))
-	_owner_writer.set("character_store", preload("res://scripts/save/character_save.gd").new(directory.path_join("characters")))
-	_owner_game.set("save_system", _owner_writer)
-	var rpc := LIVE_FIXTURE.FixtureRpc.new()
-	rpc.name = "LedgerRpc"
-	rpc.fixture = _owner_game
-	rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(_owner_game.get("world"))
-	_owner_session.add_child(rpc)
-	var before := OWNER_RECORD.portable_projection(local.save_data())
-	if not authority.bind_world("resource-namespace") \
-		or authority.seed_admitted_character(before, OWNER_DATA.CHARACTER).get("ok") != true \
-		or _owner_writer.call("save_world_prepared", _owner_game, "resource-slot") != true \
-		or _owner_writer.call("save_character_prepared", _owner_game, OWNER_DATA.CHARACTER) != true:
-		_owner_error = "real authority or initial BOOL disk writes refused"
-		return false
-	return true
-
-
-func _mount_owner() -> bool:
-	var world := _manager.get_parent()
-	_owner_tree.current_scene = world
-	_owner_director = Node.new()
-	_owner_director.name = "EncounterDirector"
-	world.add_child(_owner_director)
-	_owner_director.set_script(OWNER_DIRECTOR)
-	_owner_director.call("_enter_tree") # Same installed source-index entry as the existing live-moves fixture.
-	_owner_director.set_process(false)
-	_owner_director.set_physics_process(false)
-	_owner_director.set("_session", _owner_session)
-	_owner_director.set("_manager", _manager)
-	_owner_director.set("_player", _manager.get("_player"))
-	_ally.set("leader", _manager.get("_player")) # Same producer-owned trainer as normal follower deployment.
-	_owner_director.set("_ally", _manager.active_creature())
-	_owner_director.set("_ally_body", _ally)
-	_owner_director.set("_engaged_with", _wild)
-	_owner_director.set("_trainer_body", _wild)
-	_owner_director.set("_trainer_spec", context.trainer_spec.duplicate(true))
-	_owner_director.call("_note_deployment_identity", 1, OWNER_DATA.CHARACTER, str(_manager.active_creature().uid))
-	_owner_director.call("_ensure_encounter_arbiters")
-	var host: RefCounted = _owner_director.get("_encounter_host")
-	var enemy: RefCounted = _wild.get("instance")
-	var target: Vector3 = _wild.call("centre")
-	var opponent := {"species_id":str(enemy.species_id), "creature_uid":str(enemy.uid),
-		"hp":enemy.hp, "hp_max":enemy.max_hp, "position":[target.x,target.y,target.z],
-		"owner_npc":str(context.trainer_spec.id), "round":1, "body_generation":1,
-		"card":preload("res://scripts/save/water_capture_codec.gd").encode(enemy)}
-	var record: Dictionary = host.open(1, "meadows", "trainer", opponent,
-		str(_manager.active_creature().uid), OWNER_DATA.CHARACTER)
-	var id := str(record.get("encounter_id", ""))
-	_owner_director.set("_encounter", record)
-	_manager.bind_encounter(_owner_director, id, "trainer")
-	if _owner_director.call("deployed_body_for", 1) != _ally:
-		_owner_error = "real deployed-body lookup refused the current owned follower"
-		return false
-	if id.is_empty() or _owner_director.call("_install_ordinary_combat_reward_owner", id) != true \
-		or _owner_director.call("uses_durable_trainer_rewards", id) != true:
-		_owner_error = "real authored trainer owner installer refused"
-		return false
-	_owner_binding = _owner_director.call("_ordinary_actor_binding", id, 1, _ally)
-	if _owner_binding.is_empty():
-		_owner_error = "real current owned actor/body binding refused"
-		return false
-	_manager.bind_encounter(_owner_director, id, "trainer")
-	_manager.creature_switched.connect(_owner_director._on_combat_creature_switched)
-	_manager.attack_launched.connect(func(on_enemy: bool, launch: Dictionary, _presentation: Node3D) -> void:
-		var original: Dictionary = host.move_commit(id, 1)
-		if on_enemy and not original.is_empty() and original.get("slot") == launch.get("slot"): _owner_launches += 1)
-	_manager.impact_confirmed.connect(func(on_enemy: bool, receipt: Dictionary, _where: Vector3) -> void:
-		if on_enemy and float(receipt.get("damage", 0.0)) > 0.0 and str(receipt.get("action_id", "")).begins_with(id + ":1:"):
-			_owner_impacts += 1)
-	print("F22_CANONICAL_OWNER " + JSON.stringify({"binding":_owner_binding, "encounter_id":id,
-		"trainer_id":context.trainer_spec.id, "party_count":_owner_session.call("admitted_character_state", 1).get("party", []).size(),
-		"actor_vitals":MATH.config().actor_vitals, "acceptance":false}))
-	return true
-
-
-func _release_owner() -> void:
-	if is_instance_valid(_owner_session): _owner_session.free()
-	if is_instance_valid(_owner_game): _owner_game.free()
-	if is_instance_valid(_saved_game) and not _saved_game.is_inside_tree(): _owner_tree.root.add_child(_saved_game)
-	if is_instance_valid(_saved_scene): _owner_tree.current_scene = _saved_scene
 
 
 
 func _act(policy: String) -> void:
-	if context.get("canonical_owner") == true and not is_instance_valid(_owner_director):
-		if not _mount_owner():
-			_tally["fixture_error"] = _owner_error
-			_manager.call("_begin_resolve", "fled")
-			return
-	if policy == "SWITCH_READER":
-		var commands := preload("res://scripts/combat/tether_commands.gd")
-		var snapshot: Dictionary = _manager.tether_command_snapshot()
-		var mounted := false
-		for child: Node in _manager.get_children():
-			if child.get_script() == preload("res://scripts/ui/tether_command_input.gd"):
-				mounted = true
-				break
-		_tally["tag_combo_available"] = commands.enabled() and mounted \
-			and snapshot.get("unlocked_commands", []).has("tag_combo")
-		if bool(_tally.tag_combo_available) and snapshot.get("active") == true and _manager.can_switch() \
-			and not _manager.player_is_committed() and float(_manager.get("_hitstop_left")) <= 0.0 \
-			and not bool(_manager.get("_ultimate_waiting_release")) and not _manager.ultimate_armed() \
-			and int(_manager.call("_next_switchable_index", 1)) >= 0 \
-			and float(snapshot.get("meter", 0.0)) >= float(commands.config().get("commands", {}).get("tag_combo", {}).get("cost", INF)) \
-			and float(snapshot.get("combo_remaining_s", 0.0)) > 0.0:
-			_press(commands.input_action("tag_combo"))
-			return
+	if policy == "SWITCH_READER" and _combo_hooked_manager != _manager.get_instance_id():
+		_combo_hooked_manager = _manager.get_instance_id()
+		# F24's joint attack is observed when it exists; until then the
+		# switching reader still has COMBAT §12.3's other two sources (type
+		# matchup, per-identity resources) through the D32 switch.
+		_tally["tag_combo_available"] = _manager.has_signal("tag_combo_resolved")
+		if bool(_tally.tag_combo_available):
+			_manager.connect("tag_combo_resolved", _on_tag_combo_resolved)
 	if is_instance_valid(_wild) and _prepared_body != _wild.get_instance_id():
 		_prepared_body = _wild.get_instance_id()
 		_tell_seen_frame = -1
-		_opening_seen_frame = -1
 		var patterns: Dictionary = MATH.config().get("patterns", {})
 		if patterns.get("runtime_enabled") != true or not _wild.has_method("configure_patterns"):
 			_tally["fixture_error"] = "actual F22 pattern consumer is disabled or absent"
@@ -227,6 +45,9 @@ func _act(policy: String) -> void:
 		current["sendout_index"] = int(_tally.get("f22_sendouts", 0))
 		_tally["f22_sendouts"] = int(current.sendout_index) + 1
 		_wild.call("configure_patterns", patterns, current, _visible_observation)
+	if policy == "MASHER":
+		super._act("MASHER")
+		return
 	if policy == "SWITCH_READER" and _manager.can_switch():
 		_switch_for_matchup()
 	_read(policy)
@@ -253,11 +74,6 @@ func _read(_policy: String) -> void:
 		_tell_seen_frame = -1
 	elif _tell_seen_frame < 0:
 		_tell_seen_frame = _frames
-	var opening: bool = _manager.enemy_is_staggered() or int(_wild.intent()) == AI.Intent.RECOVER
-	if not opening:
-		_opening_seen_frame = -1
-	elif _opening_seen_frame < 0:
-		_opening_seen_frame = _frames
 	if _manager.player_is_committed() or float(_manager.get("_hitstop_left")) > 0.0:
 		return
 	var delta := _wild.global_position - _ally.global_position
@@ -268,41 +84,8 @@ func _read(_policy: String) -> void:
 	var reserve: float = _manager.wind_cost("burst") + _manager.wind_cost("quick")
 	var observed := float(MATH.config().get("patterns", {}).get("reactions", {}).get("observation_s", 0.25))
 	var seen := float(_frames - _tell_seen_frame) / Engine.physics_ticks_per_second if telling else 0.0
-	var masher := _policy == "MASHER"
-	var waiting := bool(_manager.get("_ultimate_waiting_release"))
-	var armed: bool = _manager.ultimate_armed()
-	var latched := waiting or armed
-	if not masher: _note_fields(telling)
-	var ultimate_creature: RefCounted = _manager.active_creature()
-	if ultimate_creature != null and not waiting and not bool(_manager.get("_ultimate_face_release")) \
-		and not bool(_manager.get("_move_awaiting_host")) and _manager.ultimate_fraction() >= 1.0 \
-		and _manager.combat_input_available() and _manager.call("_uses_host_move_start") == true:
-		var ultimate_id := str(ultimate_creature.get("move_ultimate"))
-		var ultimate_row: Dictionary = _moves.move(ultimate_id)
-		if ultimate_row.get("slot") == "ultimate" and ultimate_creature.get("known_moves").has(ultimate_id) \
-			and MANAGER.live_move_supported("ultimate", ultimate_id) \
-			and _manager.wind_value() >= float(ultimate_row.get("wind_cost", INF)):
-			var profile: Dictionary = _manager.call("_with_reach_for_the_bodies", _manager.call("_move_profile", "player_ultimate", ultimate_id))
-			var read_opening: bool = not telling and opening \
-				and float(_frames - _opening_seen_frame) / Engine.physics_ticks_per_second >= observed
-			var fits: bool = read_opening and float(_wild.get("_beat_left")) > float(profile.get("windup", INF)) + (0.0 if armed else 2.0 / Engine.physics_ticks_per_second) \
-				and MATH.move_connects(profile, _ally.call("centre"), _ally.call("facing"), _wild.call("centre")) \
-				and _field_exit() == Vector3.ZERO and _manager.wind_value() >= float(ultimate_row.get("wind_cost", INF)) + _manager.wind_cost("burst")
-			if masher or fits:
-				_press("combat_quick" if armed else "combat_ultimate_arm")
-				return
-	if masher:
-		if not latched:
-			# COMBAT §7: spend an available utility without reading the foe.
-			if _manager.utility_ready() and not bool(_manager.get("_move_awaiting_host")):
-				var creature: RefCounted = _manager.active_creature()
-				var move_id := str(creature.get("move_utility"))
-				if _moves.move(move_id).get("slot") == "utility" and creature.get("known_moves").has(move_id):
-					_press("combat_utility")
-					return
-			super._act("MASHER")
-		return
-	if not latched and telling and seen >= observed and _manager.charged_ready() \
+	_note_fields(telling)
+	if telling and seen >= observed and _manager.charged_ready() \
 			and not bool(_wild.call("protected_heavy_committed") if _wild.has_method("protected_heavy_committed") else false) \
 			and distance < _manager.combat_move_reach("charged") - 0.15 \
 			and _manager.wind_value() >= _manager.wind_cost("charged"):
@@ -339,7 +122,7 @@ func _read(_policy: String) -> void:
 			return
 		# Outside the shown shape: strike if a quick lands first, else hold,
 		# never spending the burst the next exit may need.
-		if not latched and distance <= reach - 0.25 and _manager.quick_ready() \
+		if distance <= reach - 0.25 and _manager.quick_ready() \
 				and _manager.wind_value() >= reserve:
 			_press("combat_quick")
 		return
@@ -357,28 +140,10 @@ func _read(_policy: String) -> void:
 			_press("jump")
 			_tally.burst_uses += 1
 		return
-	if latched: return
+	var opening: bool = _manager.enemy_is_staggered() or int(_wild.intent()) == AI.Intent.RECOVER
 	if opening:
-		# Read the opening before committing; released field/fan evasion above still wins.
-		if float(_frames - _opening_seen_frame) / Engine.physics_ticks_per_second < observed:
-			return
-		var window := float(_wild.get("_beat_left"))
-		if _manager.utility_ready() and not bool(_manager.get("_move_awaiting_host")):
-			var active: RefCounted = _manager.active_creature()
-			var utility_id := str(active.get("move_utility"))
-			var row: Dictionary = _moves.move(utility_id)
-			var effect: Dictionary = row.get("utility", {})
-			var utility: Dictionary = _manager.call("_with_reach_for_the_bodies", _manager.call("_move_profile", "player_utility", utility_id))
-			var heal: bool = effect.get("kind") == "heal" and effect.get("scope") == "self" \
-				and float(active.call("hp_fraction")) <= 1.0 - float(effect.get("max_hp_fraction", 1.0))
-			var root_setup: bool = effect.get("kind") == "root" and effect.get("scope") == "target" \
-				and MATH.move_connects(utility, _ally.call("centre"), _ally.call("facing"), _wild.call("centre"))
-			if row.get("slot") == "utility" and active.get("known_moves").has(utility_id) and (heal or root_setup) \
-				and window >= float(utility.get("windup", INF)) + float(utility.get("recovery", INF)) \
-				and _manager.wind_value() >= float(row.get("wind_cost", INF)) + _manager.wind_cost("burst"):
-				_press("combat_utility")
-				return
 		var charged: Dictionary = _manager.call("_move_profile", "player_charged", str(_manager.active_creature().move_charged))
+		var window := float(_wild.get("_beat_left"))
 		if distance > reach - 0.25:
 			_walk(_around_fields(toward))
 			return

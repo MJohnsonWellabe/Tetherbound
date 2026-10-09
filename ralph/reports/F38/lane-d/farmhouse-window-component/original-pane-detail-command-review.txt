@@ -1,9 +1,0 @@
-> **COMMAND APPROVE** for the two JSON proposals pinned to `620cf7c561593b7e8aa82ad6530799a60ad8ccf6`.
->
-> Both correctly specify Low Compatibility, matching window resolution and explicit `--low-resolution`, route_00/night, fresh separate outputs and only the pane-detail candidate. Existing producer/bootstrap guards and budgets remain unchanged. ROOT alone executes them; shipping and old scalar flags remain OFF.
->
-> **BEFORE-REUSE APPROVE — glass comparison only.** Retained ece194 OFF720 and OFF1080 are eligible at their actual matching rasters. Their completed manifests show the same route point, grounded body and camera position. Relevant house/prefab/imported-material source differs only by the reviewed pane-detail candidate; named producer dependencies are unchanged.
->
-> Verify the new captures’ actual headers and poses before claiming matched comparisons. Broader HUD/campaign equivalence and sole-change attribution are not approved because other world/HUD source changed. Scalar-ON and stopped-ON packets remain excluded from baseline use.
->
-> This producer does not measure mounted texture/operator/alpha parameters. Native runtime, changed pixels, blind judgment and whole acceptance remain pending.

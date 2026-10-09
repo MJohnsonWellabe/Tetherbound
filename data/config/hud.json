@@ -1,26 +1,6 @@
 {
   "_comment": "Presentation-only tuning for scripts/ui/playground_hud.gd. Nothing here is read by authority, reward, inventory or progression code. A missing or invalid value falls back to the constant named in playground_hud.gd.",
-  "_comment_party_vitals_refresh": "Peer-local presentation on all presets: canonical HP/fainted/resting changes always invalidate the five-member HUD cache. The former candidate gate is retired after the actual natural-loss stale-green-row failure; legacy config values are ignored. No authoritative state, roster reveal/cycle, layout, save or transaction changes.",
-  "loss_result": {
-    "scope": "peer_local_hud_presentation_all_presets",
-    "enabled": false,
-    "seconds": 4.5,
-    "max_width_px": 536,
-    "title_px": 36,
-    "detail_px": 27,
-    "_comment": "P2-110 original natural-loss blind: a brief unbacked outcome reads as exploration. Passive shared-style Fight lost card for canonical lost only; no modal, input, healing, recovery, authority, save or transaction change. Process-only --loss-result-candidate; --loss-result-baseline wins. Shipping OFF until original native/blind approval. Caught, fled and trainer-relay verdict ownership retained."
-  },
-  "creature_portrait_frames": {
-    "scope": "device_local_hud_presentation",
-    "_comment": "F42 original Low pair: tiny full-canvas portraits cannot identify the compact combat roster. Atlas views of the existing inspected PNGs, preserving raw art, species, compact rows and state shades. Sparkit's opaque1024 canvas has measured picture rect332,344,359,336 (cornerRGB242, contrast>16); other four regions frame their existing faces/ears, not new art. Unlisted/invalid regions retain the original texture.",
-    "regions": {
-      "res://assets/ui/portraits/creatures/sparkit.png": [332, 344, 359, 336],
-      "res://assets/ui/portraits/creatures/mudsnout.png": [90, 120, 670, 650],
-      "res://assets/ui/portraits/creatures/bramblebun.png": [150, 0, 700, 700],
-      "res://assets/ui/portraits/creatures/terrapup.png": [215, 95, 565, 565],
-      "res://assets/ui/portraits/creatures/brooktail.png": [35, 150, 560, 560]
-    }
-  },
+  "party_vitals_refresh_candidate": false,
   "exploration_roster": {
     "scope": "device_local_presentation",
     "show_empty_slots": false,

@@ -140,8 +140,8 @@
     "no_depth_test": true
   },
   "move_library": {
-    "enabled": true,
-    "_comment": "Owner proof-and-flip 6067331997: shipping library enabled for the shared F25/F21/F35 fight proof. Whole acceptance remains open until original runtime/blind and Medium frame-time proofs pass. Presentation never owns damage; host receipt travel_seconds wins. Guard flash is visual only.",
+    "enabled": false,
+    "_comment": "F25 draft remains flag-off until real player paths, visual judgment and Medium frame-time proof pass. Presentation never owns damage; host receipt travel_seconds wins. Guard flash is visual only.",
     "ordinary_particle_limit": 48,
     "ultimate_particle_limit": 160,
     "encounter_particle_cap": 384,

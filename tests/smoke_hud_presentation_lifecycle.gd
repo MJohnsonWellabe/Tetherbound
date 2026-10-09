@@ -53,18 +53,6 @@ func _run()->void:
 	game.set_process(false)
 	for id:String in ["galecrest","mudsnout","bramblebun","terrapup","brooktail"]:
 		game.party.add(SPECIES.spawn(id))
-	# This isolated late-game layout fixture intentionally exercises Lv40 -> 41.
-	# Use the shipping serialization mirror and disclose its completed cap tiers;
-	# owned creatures must pass the real cap guard rather than a detached bypass.
-	game.local.redesign_character = game.local.save_data().redesign_character
-	var owned_uids: Array[String] = []
-	for creature: RefCounted in game.party.members():
-		owned_uids.append(creature.uid)
-		var record: Dictionary = game.local.redesign_character.creatures[creature.uid]
-		record.cap_level = 50
-		record.breakthroughs = [1, 2, 3, 4]
-	_check(preload("res://scripts/data/redesign_state.gd").validate("character",
-		game.local.redesign_character, owned_uids).is_empty(), "Late-game fixture has valid owned cap mirrors")
 	var world:=Node.new()
 	world.name="HudLifecycleFixture"
 	root.add_child(world)
@@ -155,9 +143,7 @@ func _run()->void:
 	combat.set_world_presentation_mode("exploration")
 	_check(hud._hotbar_panel.visible,"Exploration restores hotbar")
 	_check(combat._outcome.text.is_empty(),"Exploration does not revive stale result")
-	await _loss_result_lifecycle()
 	await _full_party_moment_layout()
-	await _named_wild_reward_layout()
 	await _progression_reset_and_modal_lifecycle(member)
 	print("HUD LIFECYCLE %s: %d checks"%["PASS" if failures.is_empty() else "FAIL",checks])
 	world.queue_free()
@@ -171,85 +157,6 @@ func _run()->void:
 			cue.stream = null
 	await create_timer(0.15).timeout
 	quit(0 if failures.is_empty() else 1)
-
-
-## The production named-wild acknowledgement uses the same passive reward
-## lane as trainer payouts, while utility refusals stay beside their controls.
-func _loss_result_lifecycle() -> void:
-	# Existing isolated UI lifecycle fixture only. Direct handler calls below
-	# test presentation ownership, never claim a natural defeat or emit captures.
-	var hp_before: Array = []
-	for member: RefCounted in game.party.members():
-		hp_before.append([member.hp, member.fainted])
-	combat._apply_loss_result_config({"enabled": false})
-	combat._on_exited("lost")
-	_check(not combat._loss_result.visible and combat._outcome.visible, "Default loss keeps original banner while candidate is OFF")
-	_check(is_equal_approx(combat._outcome_left, 2.5), "Default loss retains original hold")
-	combat._apply_loss_result_config({"enabled": true})
-	combat._on_exited("lost")
-	await _frames(2)
-	_check(combat._loss_result.visible and not combat._outcome.visible, "Loss candidate has one distinct passive result owner")
-	_check(combat._loss_result_detail.text == "Your creature is out of the fight.", "Loss detail retains original factual verdict")
-	var title := combat._loss_result.find_child("LossResultTitle", true, false) as Label
-	_check(title != null and title.get_theme_font_size("font_size") * (1280.0 / 1920.0) >= 24.0, "Actual loss title meets existing 720p heading floor")
-	_check(combat._loss_result_detail.get_theme_font_size("font_size") * (1280.0 / 1920.0) >= 18.0, "Actual loss detail meets existing 720p body floor")
-	_check(combat._loss_result.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Passive result does not consume input")
-	_check(combat._outcome_left == 4.5, "Candidate reads bounded configured hold")
-	var bounds: Rect2 = combat._loss_result.get_global_rect()
-	_check(Rect2(Vector2.ZERO, root.get_visible_rect().size).encloses(bounds), "Actual loss card fits existing viewport")
-	_check(not bounds.intersects(hud._party_strip.get_global_rect()), "Loss card separates from permanent party rows")
-	_check(not bounds.intersects(hud._hotbar_panel.get_global_rect()), "Loss card separates from exploration quick bindings")
-	combat._forget_the_last_verdict()
-	_check(not combat._loss_result.visible and combat._outcome.text.is_empty() and combat._outcome_left == 0.0, "New fight clears loss card and its fallback without stale verdict")
-	combat._on_exited("lost")
-	combat._on_exited("fled")
-	_check(not combat._loss_result.visible and combat._outcome.text == "You backed off." and combat._outcome_left == 2.5, "Flee retains its original banner and duration")
-	combat._on_exited("lost")
-	combat._tick_outcome(4.6)
-	combat._tick_outcome(0.0)
-	_check(not combat._loss_result.visible and combat._loss_result_detail.text.is_empty() and combat._outcome.text.is_empty(), "Expired result clears both presentation surfaces")
-	combat._on_exited("lost")
-	combat.set_world_presentation_mode("relays")
-	_check(not combat._loss_result.visible and combat._outcome_left == 0.0, "Relays still relinquish all loss presentation")
-	combat._on_exited("lost")
-	_check(not combat._loss_result.visible and combat._outcome.text.is_empty(), "Relay-owned loss cannot leak into exploration result")
-	combat.set_world_presentation_mode("exploration")
-	combat._apply_loss_result_config({"enabled": false})
-	for i: int in game.party.members().size():
-		var member: RefCounted = game.party.at(i)
-		_check([member.hp, member.fainted] == hp_before[i], "Presentation cannot alter creature HP or faint state")
-
-
-func _named_wild_reward_layout() -> void:
-	hud.set_world_presentation_mode("exploration")
-	FEED.clear()
-	hud._update_moment_banner()
-	hud._hotbar_message.hide()
-	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
-		"res://data/config/stormwood_encounters.json"))
-	var acknowledgement := ""
-	for encounter: Dictionary in parsed.get("named_encounters", []):
-		if str(encounter.get("id", "")) == "hollows_alpha":
-			acknowledgement = str(encounter.get("completion_reward", {}).get("acknowledgement", ""))
-	_check(not acknowledgement.is_empty(), "Named victory uses the actual authored Hollows acknowledgement")
-	if acknowledgement.is_empty():
-		return
-	var candy_before: int = game.inventory.count("great_candy")
-	game.push_world_message(acknowledgement)
-	hud._update_world_message()
-	hud._update_moment_banner()
-	hud._apply_presentation_priority()
-	await _frames(10)
-	_check(hud.moment_banner_visible(), "Named victory reaches the existing progression presenter")
-	_check(hud.moment_banner_text().contains(acknowledgement), "Named receipt preserves authority's exact acknowledgement")
-	_check(not hud._hotbar_message.visible, "Named receipt leaves the quick-binding message strip")
-	_check(not hud.moment_banner_rect().intersects(hud._hotbar_panel.get_global_rect()), "Named receipt clears the actual quick bindings")
-	_check(not hud.moment_banner_rect().intersects(hud._party_strip.get_global_rect()), "Named receipt clears the five-creature roster")
-	_check(game.inventory.count("great_candy") == candy_before, "Presenting a named acknowledgement grants no items")
-	await _capture("after-named-wild-reward")
-	game.push_world_message("No torch in the satchel.")
-	hud._update_world_message()
-	_check(hud._hotbar_message.visible and hud._hotbar_message.text == "No torch in the satchel.", "Utility refusal retains the existing hotbar route")
 
 
 func _full_party_moment_layout() -> void:

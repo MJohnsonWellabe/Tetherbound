@@ -76,30 +76,8 @@ func test_ground_ring_keeps_resampling_changed_heights_on_same_body() -> void:
 	glow.position += Vector3(2.0, 0.0, 1.0)
 	glow.call("_draw_ring", 3.2, 0.6)
 	assert_true(body.ground_calls > calls, "moving the same-sized ring resamples")
-	var points: PackedVector3Array = mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
-	var supports: Array[bool] = []
-	var inner_present := false
-	var outer_present := false
-	var raised_present := false
-	for point: Vector3 in points:
-		var radius := Vector2(point.x, point.z).length()
-		var elevation: float = (glow.position + point).y - ((glow.position.x + point.x) * 0.5 + 0.08)
-		var inner := absf(radius - 3.2 * 0.72) < 0.001
-		var outer := absf(radius - 3.2) < 0.001
-		assert_between(radius, 3.2 * 0.72 - 0.001, 3.2 + 0.001, "moved crest retains its full ground footprint")
-		if inner or outer:
-			assert_almost_eq(elevation, 0.0, 0.001, "both skirts follow the new ground exactly")
-			inner_present = inner_present or inner
-			outer_present = outer_present or outer
-		else:
-			assert_between(elevation, 0.001, 3.2 * 0.28 * 0.5 + 0.001, "crest is raised but stays within half the band width")
-			raised_present = true
-		supports.append(inner or outer)
-	assert_true(inner_present and outer_present and raised_present, "grounded skirts and raised body are all present")
-	assert_eq(points.size() % 3, 0)
-	for first: int in range(0, points.size() - 2, 3):
-		assert_true(supports[first] or supports[first + 1] or supports[first + 2], "every face meets its ground skirt")
-		assert_false(supports[first] and supports[first + 1] and supports[first + 2], "no flat replacement face")
+	for point: Vector3 in mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]:
+		assert_almost_eq((glow.position + point).y, (glow.position.x + point.x) * 0.5 + 0.08, 0.001)
 	parent.free()
 
 
@@ -128,39 +106,14 @@ func test_state_ring_clears_body_footprint_and_follows_sloped_ground() -> void:
 	glow.call("_physics_process", 0.01)
 	var mesh: ImmediateMesh = glow.get("_ring_mesh")
 	var points: PackedVector3Array = mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
-	assert_true(points.size() > 0)
-	var outer_radius := 0.0
-	for point: Vector3 in points:
-		outer_radius = maxf(outer_radius, Vector2(point.x, point.z).length())
-	assert_between(outer_radius, 3.0, 3.6 + 0.001, "the pulse keeps its original radius envelope")
-	var inner_radius := outer_radius * 0.72
 	var clears_body := true
-	var inner_present := false
-	var outer_present := false
-	var raised_present := false
-	var supports: Array[bool] = []
-	for point: Vector3 in points:
-		var radius := Vector2(point.x, point.z).length()
-		if radius <= body.body_radius(): clears_body = false
+	var follows_slope := true
+	for point in points:
+		if Vector2(point.x, point.z).length() <= body.body_radius(): clears_body = false
 		var world_point: Vector3 = glow.position + point
-		var elevation: float = world_point.y - (world_point.x * 0.5 + 0.08)
-		var inner := absf(radius - inner_radius) < 0.001
-		var outer := absf(radius - outer_radius) < 0.001
-		assert_between(radius, inner_radius - 0.001, outer_radius + 0.001)
-		if inner or outer:
-			assert_almost_eq(elevation, 0.0, 0.001, "the skirts conform to the slope rather than float above it")
-			inner_present = inner_present or inner
-			outer_present = outer_present or outer
-		else:
-			assert_between(elevation, 0.001, (outer_radius - inner_radius) * 0.5 + 0.001, "no submerged or excessively raised crest")
-			raised_present = true
-		supports.append(inner or outer)
+		if absf(world_point.y - (world_point.x * 0.5 + 0.08)) > 0.001: follows_slope = false
 	assert_true(clears_body, "the ring must remain outside the live body footprint throughout its pulse")
-	assert_true(inner_present and outer_present and raised_present, "both grounded edges support a raised crest")
-	assert_eq(points.size() % 3, 0)
-	for first: int in range(0, points.size() - 2, 3):
-		assert_true(supports[first] or supports[first + 1] or supports[first + 2], "every face attaches to grounded geometry")
-		assert_false(supports[first] and supports[first + 1] and supports[first + 2], "each face belongs to the raised section")
+	assert_true(follows_slope, "a flat ring disappears into the uphill terrain")
 	parent.free()
 
 class SeabedBody extends Node3D:
@@ -188,35 +141,10 @@ func test_state_ring_rides_the_water_surface_over_a_seabed() -> void:
 		var mesh: ImmediateMesh = glow.get("_ring_mesh")
 		var points: PackedVector3Array = mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
 		var want := (0.0 if with_water else -3.0) + 0.08
-		assert_true(points.size() > 0)
-		var outer_radius := 0.0
-		for point: Vector3 in points:
-			outer_radius = maxf(outer_radius, Vector2(point.x, point.z).length())
-		assert_between(outer_radius, 3.0, 3.6 + 0.001, "water does not enlarge the pulse footprint")
-		var inner_radius := outer_radius * 0.72
-		var inner_present := false
-		var outer_present := false
-		var raised_present := false
-		var supports: Array[bool] = []
-		for point: Vector3 in points:
-			var radius := Vector2(point.x, point.z).length()
-			var elevation: float = (glow.position + point).y - want
-			var inner := absf(radius - inner_radius) < 0.001
-			var outer := absf(radius - outer_radius) < 0.001
-			assert_between(radius, inner_radius - 0.001, outer_radius + 0.001)
-			if inner or outer:
-				assert_almost_eq(elevation, 0.0, 0.001, "skirt at %.2f m (%s)" % [want, "water surface over a 3 m seabed" if with_water else "dry ground"])
-				inner_present = inner_present or inner
-				outer_present = outer_present or outer
-			else:
-				assert_between(elevation, 0.001, (outer_radius - inner_radius) * 0.5 + 0.001, "crest is supported above the visible surface")
-				raised_present = true
-			supports.append(inner or outer)
-		assert_true(inner_present and outer_present and raised_present, "water and dry cases retain both skirts and the raised body")
-		assert_eq(points.size() % 3, 0)
-		for first: int in range(0, points.size() - 2, 3):
-			assert_true(supports[first] or supports[first + 1] or supports[first + 2], "no detached face above water/ground")
-			assert_false(supports[first] and supports[first + 1] and supports[first + 2], "no flattened water/ground replacement")
+		var on_level := points.size() > 0
+		for point in points:
+			if absf((glow.position + point).y - want) > 0.001: on_level = false
+		assert_true(on_level, "ring at %.2f m (%s)" % [want, "water surface over a 3 m seabed" if with_water else "dry ground"])
 		var aabb: AABB = (glow.get("_ring") as MeshInstance3D).custom_aabb
 		assert_true(aabb.end.y >= 3.1, "the ring's bounds reach a surface 3 m above the creature's feet")
 		parent.free()

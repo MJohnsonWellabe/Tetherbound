@@ -1,8 +1,0 @@
-{
-  "source": "89be4151ce079b569a1b798bef577203ade6ecf4",
-  "reviewer": "/root/f42_visual_review",
-  "verdict": "SOURCE APPROVE",
-  "scope": "Existing Hall circuit sign assertion now requires visible canonical BiomeSign, StateSign node and canonical state text; StateSign visibility must equal text inequality. Reserved identical Sealed renders once; distinct Home/Locked/Open remains visible. All8+8 slot/model/Approach identities and physical route/collision/floor/distance unchanged.",
-  "limits": "Authored initial four-sealed fixture only; no newly claimed stirred-state, actual run or pixel PASS.",
-  "criterion_done": false
-}

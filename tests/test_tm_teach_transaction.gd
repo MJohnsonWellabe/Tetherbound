@@ -36,26 +36,6 @@ func _context(revision: int = 0) -> Dictionary:
 	return {"character_id": CHARACTER, "expected_revision": revision, "source_key": "personal_tm:" + CHARACTER,
 		"in_range": true, "in_combat": false, "owns_character": true, "foundation_runtime_authorized": true}
 
-func test_tm_uses_catalogue_primary_type_and_never_a_forged_compatible_saved_type() -> void:
-	var player := PLAYER.new()
-	player.configure(preload("res://autoload/item_db.gd").new())
-	player.character_id = CHARACTER
-	player.party.add(SPECIES.spawn("ripplet"))
-	player.inventory.add("tm_burrow_strike", 1)
-	var before := RECORD.portable_projection(player.save_data())
-	before.redesign_character = TEACHING.character_loadout_mirror(before.party, before.redesign_character)
-	assert_true(RECORD.errors(before, CHARACTER).is_empty())
-	var intent := {"creature_uid": before.party[0].uid, "tm_id": "tm_burrow_strike", "teach_id": TEACH_ID}
-	var frozen := before.duplicate(true)
-	assert_eq(ACTIONS.stage(before, 0, "tm_teach", intent, _context(), RECORD.errors).code, "incompatible")
-	assert_eq(before, frozen, "incompatible primary type spends no disc or receipt")
-	var forged := before.duplicate(true)
-	forged.party[0].creature_type = "ground"
-	var forged_original := forged.duplicate(true)
-	assert_false(ACTIONS.stage(forged, 0, "tm_teach", intent, _context(), RECORD.errors).get("ok", false),
-		"saved compatible type cannot replace the catalogue's water primary type")
-	assert_eq(forged, forged_original, "refused forged primary leaves every field exact")
-
 func test_tm_stage_consumes_one_disc_teaches_only_chosen_uid_and_preserves_every_equipped_and_mastery_field() -> void:
 	var before := _before()
 	assert_true(RECORD.errors(before, CHARACTER).is_empty())

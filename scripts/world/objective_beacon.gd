@@ -140,14 +140,6 @@ static func distance_segment_opacity(distance_m: float, start_m: float,
 	return weight * max_opacity
 
 
-static func nearby_beam_depth_test(distance_m: float, config: Dictionary) -> bool:
-	var nearby: Dictionary = config.get("nearby_occlusion", {})
-	# The accepted 66m and distant canopy-proof treatment stays unchanged.
-	var reach := clampf(float(nearby.get("distance_m", 40.0)), 0.0, 60.0)
-	return nearby.get("enabled", false) == true and is_finite(distance_m) \
-		and distance_m >= 0.0 and reach > 0.0 and distance_m <= reach
-
-
 func active_objective_id() -> String:
 	return _active_id
 
@@ -414,9 +406,6 @@ func _update_distance_beam() -> void:
 	if _distance_beam == null or _distance_beam_material == null:
 		return
 	var camera := get_viewport().get_camera_3d()
-	if _beam_material != null:
-		var distance_m := camera.global_position.distance_to(global_position) if camera != null else INF
-		_beam_material.no_depth_test = not nearby_beam_depth_test(distance_m, _config)
 	if camera == null:
 		_distance_beam.visible = false
 		return

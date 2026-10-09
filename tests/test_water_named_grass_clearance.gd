@@ -22,15 +22,15 @@ func after_each() -> void:
 	_world.free()
 
 
-func test_shipping_setting_preserves_explicit_off_spawn_noop() -> void:
-	assert_false(bool(CLEARANCE.settings().get("enabled", false)))
+func test_default_off_is_an_exact_spawn_noop() -> void:
+	assert_false(bool(CLEARANCE.settings().get("enabled", true)))
 	var body := CharacterBody3D.new()
 	body.name = "water_adair"
 	body.position = Vector3(17.0, 3.0, 8.0)
 	body.set_meta("water_npc_id", "water_adair")
 	var before := body.transform
 	var metadata := body.get_meta_list()
-	assert_false(CLEARANCE.apply(body, _world, {"enabled": false}))
+	assert_false(CLEARANCE.apply(body, _world))
 	assert_eq(body.get_meta_list(), metadata)
 	assert_false(body.is_in_group(CLEARANCE.GROUP))
 	assert_true(body.transform.is_equal_approx(before))

@@ -163,54 +163,7 @@ func load_recipes() -> bool:
 		push_error("building_prefabs.json is not valid JSON")
 		return false
 	_recipes = (parsed as Dictionary).get("prefabs", {})
-	var hall_config: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
-	if hall_config is Dictionary and _recipes.has("crossing_hall_shell"):
-		var loop := Engine.get_main_loop()
-		var loop_script := loop.get_script() as Script if loop != null else null
-		var capture_scope := loop_script != null and loop_script.resource_path == "res://tools/capture_f17_visual.gd"
-		_recipes["crossing_hall_shell"] = hall_doorway_recipe(
-			_recipes["crossing_hall_shell"], hall_config.get("shrine_doorway", {}),
-			OS.get_cmdline_user_args(), capture_scope)
 	return not _recipes.is_empty()
-
-
-## Geometry and collision use the same resolved recipe. The process candidate
-## is confined to the existing solo capture; ordinary network play cannot opt
-## into a different physical world with a peer-local command-line flag.
-static func hall_doorway_recipe(source: Dictionary, cfg: Dictionary, args: PackedStringArray, capture_scope: bool) -> Dictionary:
-	if (capture_scope and args.has("--hall-doorway-baseline")) or not (bool(cfg.get("enabled", false)) or (
-			capture_scope and args.has("--hall-doorway-candidate") and
-			args.has("--hall-stills-only"))):
-		return source
-	var result := source.duplicate(true)
-	var ceiling := 0.0
-	var header: Dictionary = {}
-	for box: Dictionary in result.get("colliders", []):
-		var at: Array = box.get("at", [])
-		var size: Array = box.get("size", [])
-		if at.size() == 3 and size.size() == 3 and \
-				float(at[0]) == 7.0 and float(at[1]) == 5.2 and float(at[2]) == 0.0 and \
-				float(size[0]) == 0.45 and float(size[1]) == 2.08 and float(size[2]) == 4.0:
-			header = box
-			ceiling = float(box.at[1]) + float(box.size[1]) * 0.5
-	var height := float(cfg.get("clear_height_m", 5.2))
-	if header.is_empty() or height <= 4.16 or height >= ceiling:
-		return source
-	var pieces: Array[Dictionary] = []
-	for piece: Dictionary in result.get("modules", []):
-		var at: Array = piece.get("at", [])
-		if piece.get("module", "") == "Wall_UnevenBrick_Window_Wide_Flat" and \
-				at.size() == 3 and float(at[0]) == 7.0 and float(at[1]) == 3.12 and absf(float(at[2])) <= 2.0:
-			pieces.append(piece)
-	if pieces.size() != 3:
-		return source
-	for piece: Dictionary in pieces:
-		piece.module = "Wall_UnevenBrick_Straight"
-		piece.at[1] = height
-		piece.scale_y = (ceiling - height) / 3.12
-	header.at[1] = (height + ceiling) * 0.5
-	header.size[1] = ceiling - height
-	return result
 
 
 ## The raw recipe for a prefab, or an empty Dictionary. Read-only: callers that
@@ -337,7 +290,6 @@ func _build_template(prefab_name: String) -> Node3D:
 		)
 		var s := float(spec.get("scale", 1.0))
 		node.scale = Vector3.ONE * s
-		node.scale.y *= float(spec.get("scale_y", 1.0))
 		if WALL_FOLIAGE_MODULES.has(module):
 			_face_wall_foliage_outward(node)
 		root.add_child(node)

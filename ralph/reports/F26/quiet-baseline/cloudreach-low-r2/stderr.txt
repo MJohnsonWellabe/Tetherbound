@@ -1,6 +1,0 @@
-WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
-   at: push_warning (core/variant/variant_utility.cpp:1033)
-WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)
-   at: push_warning (core/variant/variant_utility.cpp:1033)
-WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)
-   at: push_warning (core/variant/variant_utility.cpp:1033)

@@ -1,7 +1,0 @@
-> APPROVE scoped code and proof at `f253d194165f88cab1241439e321b5b6b091f0ef`.
->
-> Ring and ready-caption labels now use the existing device-binding helpers; armed instructions use validated slot glyphs. Admission, producer, flags, and combat authority remain unchanged.
->
-> Actual run `37772293975` passed at 1920×1080, exit 0 in 6 seconds, retaining populated layout/font and duplicate/stale/refused checks, plus keyboard, pad, and disclosed Q/E/F assertions. No warnings or errors appear in the log.
->
-> This verifies display behavior with snapshots, not live remapping or combat. The producer remains parked. Dynamic-label wrapping, paired live captures, and the required 7-inch blind PASS remain unproved; whole F42#2 stays **OPEN, without visual PASS or READY**.

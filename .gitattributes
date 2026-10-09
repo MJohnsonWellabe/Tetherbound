@@ -2,10 +2,6 @@
 *.gd text eol=lf
 *.json text eol=lf
 *.sh text eol=lf
-# Keep quiet-baseline raw evidence identical to the hashed measurement bytes.
-ralph/reports/F26/quiet-baseline/** -text whitespace=cr-at-eol
-# Unified-diff context spaces are part of this byte-preserved evidence.
-ralph/reports/F26/quiet-baseline/measurement-source.patch -diff
 # Preserve original native evidence bytes and their recorded hashes.
 ralph/reports/TRAINING/f28/r5/parser-first/** -text
 ralph/reports/TRAINING/f28/r5/offload-first/** -text

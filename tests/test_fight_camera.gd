@@ -20,19 +20,6 @@ func test_nine_authored_pairs_project_both_bodies_without_silhouette_overlap() -
 				assert_true(float(fit.get("overlap", 1.0)) <= 0.0, pair)
 				assert_eq(a.size.y, float(heights[ally_class]), "fit never shrinks the actual actor")
 				assert_eq(b.size.y, float(heights[foe_class]))
-	# An obstruction can leave only a rear-oblique interval clear. The real
-	# constrained solver must still frame and separate both unchanged bodies.
-	var rear_a := _body(4.0, Vector3.ZERO)
-	var rear_b := _body(4.0, Vector3(0.0, 0.0, -4.0))
-	var rear_visibility := func(pose: Transform3D, _a: Rect2, _b: Rect2) -> Dictionary:
-		var bearing := rad_to_deg(atan2(pose.basis.z.x, pose.basis.z.z))
-		var clear := bearing >= 105.0 and bearing <= 165.0
-		return {"pass":clear,"penalty":0.0 if clear else 1.0}
-	var rear := FIT.solve(rear_a,rear_b,0.0,deg_to_rad(-25.0),68.0,16.0/9.0,9.5,cfg,
-		true,PackedVector3Array(),PackedVector3Array(),Callable(),rear_visibility)
-	assert_true(bool(rear.get("pass",false)),"a legal rear-oblique view remains reachable when front/side sightlines fail")
-	assert_eq(float(rear.get("overlap",1.0)),0.0,"rear recovery retains the zero-overlap requirement")
-	assert_true(float(rear.distance)<=float(cfg.max_distance_m),"rear recovery retains the distance cap")
 
 func test_pivot_uses_actual_body_midpoint_and_class_boundaries() -> void:
 	var cfg := FIT.config()
@@ -65,25 +52,6 @@ func test_impossible_and_near_plane_frames_never_report_a_pass() -> void:
 	assert_false(bool(FIT.project_box(body, Transform3D.IDENTITY, 68.0, 16.0/9.0, 0.05).get("valid", false)))
 	assert_almost_eq(FIT.overlap_ratio(Rect2(0,0,2,2), Rect2(1,0,1,2)), 1.0, 0.0001, "overlap denominator is the smaller actor")
 	assert_eq(FIT.overlap_ratio(Rect2(0,0,1,1), Rect2(2,0,1,1)), 0.0)
-	# Native f2e giant/giant64: both projections were invalid, but their empty
-	# fallback rectangles incorrectly became a HUD-clear recovery guard.
-	var manager := preload("res://scripts/combat/combat_manager.gd").new()
-	var context := {"hud_rects":[Rect2(0,0,1,0.1)],"hud_records":[[0,0,1,0.1]],
-		"viewport":Vector2(1280,720),"fov":68.0,"near":0.05,"hud_available":true,
-		"invalid_hud_paths":[],"subjects":[],"sight_subjects":[],"sight_spheres":[],
-		"support":{},"occluders":[],"scenery":[],"overflow":false,"geometry_valid":true}
-	var ally_rect := Rect2(0.2,0.3,0.2,0.4)
-	var foe_rect := Rect2(0.6,0.3,0.2,0.4)
-	var visible: Dictionary = manager._fight_visibility_score(Transform3D.IDENTITY,ally_rect,foe_rect,context)
-	assert_true(bool(visible.hud_clear) and bool(visible.pass),"valid separated projections below the HUD are clear")
-	for invalid: Rect2 in [Rect2(),Rect2(0.2,0.3,-0.2,0.4),
-		Rect2(NAN,0.3,0.2,0.4),Rect2(0.2,0.3,INF,0.4)]:
-		for ally_invalid: bool in [true,false]:
-			var rejected: Dictionary = manager._fight_visibility_score(Transform3D.IDENTITY,
-				invalid if ally_invalid else ally_rect,foe_rect if ally_invalid else invalid,context)
-			assert_false(bool(rejected.hud_clear),"an unavailable actor projection cannot certify HUD clearance")
-			assert_false(bool(rejected.pass),"invalid projected geometry never passes visibility")
-	manager.free()
 
 func test_rig_takeover_clears_midpoint_offset_and_runtime_pitch_is_not_accumulated() -> void:
 	var cfg := FIT.config()
@@ -174,9 +142,6 @@ func test_rotated_model_corners_separate_without_world_aabb_inflation_or_false_l
 	var native_cfg := FIT.config().duplicate(true)
 	native_cfg["max_distance_m"] = 39.5
 	native_cfg["orbit_refinement_step_deg"] = 0.0
-	# Preserve the historical coarse search that produced this regression;
-	# newer authored recovery candidates must not redefine its original result.
-	native_cfg["orbit_candidates_deg"] = [0.0,15.0,-15.0,30.0,-30.0,45.0,-45.0,60.0,-60.0,75.0,-75.0,90.0,-90.0]
 	var coarse := FIT.solve(ally_box,foe_box,deg_to_rad(-6.502305985662403),deg_to_rad(-30),46,16.0/9.0,9.5,native_cfg,false,native_ally,native_foe,model_probe)
 	assert_false(bool(coarse.get("pass",false)),"original actual-body constrained coarse search remains a truthful failure")
 	native_cfg["orbit_refinement_step_deg"] = float(FIT.config().orbit_refinement_step_deg)
@@ -199,51 +164,6 @@ func test_foreground_envelopes_cover_feet_but_bodies_behind_do_not_occlude() -> 
 	var cover_pose := Transform3D(Basis.IDENTITY,Vector3(0,0,-4))
 	var cover := {"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
 	assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"foreground lower body must count even with clear head and torso")
-	var actor_projection := FIT.project_bounds(Transform3D.IDENTITY,actor,68.0,16.0/9.0,0.05)
-	for case: Dictionary in [
-		{"name":"disjoint","origin":Vector3(10,0,-4),"occludes":false},
-		{"name":"touch","origin":Vector3(0,-0.6,-4),"occludes":false},
-		{"name":"overlap","origin":Vector3(0,0,-4),"occludes":true},
-		{"name":"behind","origin":Vector3(0,0,-12),"occludes":false}]:
-		var case_pose := Transform3D(Basis.IDENTITY,case.origin)
-		var envelope := {"box":cover_box,"pose":case_pose,"inverse":case_pose.affine_inverse(),"points":FIT.box_points(cover_box,case_pose)}
-		var projected := FIT.project_bounds(Transform3D.IDENTITY,envelope,68.0,16.0/9.0,0.05,true)
-		assert_true(projected.has("hull_bounds"),"valid front hull retains candidate-local bounds")
-		if case.name=="touch":
-			assert_eq(projected.hull_bounds[0].y,actor_projection.hull_bounds[1].y,"touch case shares the projected edge")
-		assert_eq(FIT.projected_bounds_occlude(Transform3D.IDENTITY,actor_projection,projected,68.0,16.0/9.0),case.occludes,case.name+" preserves exact visibility")
-		projected.erase("hull_bounds")
-		assert_eq(FIT.projected_bounds_occlude(Transform3D.IDENTITY,actor_projection,projected,68.0,16.0/9.0),case.occludes,case.name+" missing bounds uses exact fallback")
-		projected["hull_bounds"] = PackedVector2Array([Vector2(INF,0),Vector2.ONE])
-		assert_eq(FIT.projected_bounds_occlude(Transform3D.IDENTITY,actor_projection,projected,68.0,16.0/9.0),case.occludes,case.name+" nonfinite bounds uses exact fallback")
-		projected["valid"] = false
-		assert_true(FIT.projected_bounds_occlude(Transform3D.IDENTITY,actor_projection,projected,68.0,16.0/9.0),"invalid projection fails closed before any broad-phase rejection")
 	cover_pose.origin.z=-12.0
 	cover={"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
 	assert_false(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"a projected overlap behind the actor is not foreground cover")
-	cover_pose.origin=Vector3(10,0,0)
-	cover={"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
-	assert_false(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"an off-screen body crossing the near plane does not cover the actor")
-	cover_pose.origin=Vector3.ZERO
-	cover={"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
-	assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"near-plane clipping retains real foreground cover")
-	cover_pose.origin=Vector3(0,0,2)
-	cover={"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
-	assert_false(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"a body entirely behind the lens does not cover the actor")
-	var invalid := cover.duplicate(true)
-	var collapsed := PackedVector3Array()
-	for index: int in 8: collapsed.append(Vector3(0,0,-4))
-	invalid.points=collapsed
-	assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,invalid,68.0,16.0/9.0,0.05),"degenerate front geometry is unavailable, not an all-behind envelope")
-	invalid=cover.duplicate(true)
-	invalid.points[0]=Vector3(INF,0,0)
-	assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,invalid,68.0,16.0/9.0,0.05),"nonfinite envelope points fail closed even behind the lens")
-	for field: String in ["pose","inverse"]:
-		invalid=cover.duplicate(true)
-		invalid[field]=Transform3D(Basis.IDENTITY,Vector3(INF,0,0))
-		assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,invalid,68.0,16.0/9.0,0.05),"nonfinite "+field+" fails closed")
-	for invalid_box: AABB in [AABB(Vector3.ZERO,Vector3(INF,1,1)),AABB(Vector3.ZERO,Vector3.ZERO)]:
-		invalid=cover.duplicate(true)
-		invalid.box=invalid_box
-		assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,invalid,68.0,16.0/9.0,0.05),"nonfinite or degenerate box fails closed")
-	assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,invalid,cover,68.0,16.0/9.0,0.05),"actor envelopes use the same validation")

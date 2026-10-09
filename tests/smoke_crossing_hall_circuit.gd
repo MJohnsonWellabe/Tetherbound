@@ -35,16 +35,9 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 	for biome: String in expected:
 		var arch: Node3D = arch_by_biome[biome]
 		var state := str(arch.get_meta("arch_state", ""))
-		var name_sign := arch.get_node_or_null("BiomeSign") as Label3D
 		var sign := arch.get_node_or_null("StateSign") as Label3D
-		if name_sign == null or not name_sign.is_visible_in_tree() or name_sign.text != ORDER.display_name(biome):
-			return _circuit_fail("actual biome sign missing: " + biome)
-		if sign == null:
-			return _circuit_fail("actual state sign node missing: " + biome)
-		# One visible Sealed label conveys both identical name/state; distinct
-		# Home/Locked/Open states still need their own visible canonical text.
-		if sign.is_visible_in_tree() != (sign.text != name_sign.text):
-			return _circuit_fail("actual state sign visibility differs from name/state deduplication: " + biome)
+		if sign == null or not sign.is_visible_in_tree():
+			return _circuit_fail("actual state sign missing: " + biome)
 		if biome == "meadows":
 			if state != "open" or sign.text != "Home arch":
 				return _circuit_fail("home arch is not signed as home")
@@ -58,18 +51,6 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 			sealed += 1
 	if live != 3 or sealed != 4:
 		return _circuit_fail("Hall does not have three live-capable and four sealed biome arches")
-	var config: Dictionary = hall.get("_config")
-	var depth: Dictionary = config.get("arch_frame_depth", {})
-	var args := OS.get_cmdline_user_args()
-	if not args.has("--hall-arch-depth-baseline") and \
-			(bool(depth.get("enabled", false)) or args.has("--hall-arch-depth-candidate")):
-		var factor := float(depth.get("factor", 1.0))
-		for arch: Node3D in arch_by_biome.values():
-			var frame := arch.get_child(0) as Node3D
-			if frame == null or not is_equal_approx(frame.scale.x, 1.0) \
-					or not is_equal_approx(frame.scale.y, 1.0) or not is_equal_approx(frame.scale.z, factor):
-				return _circuit_fail("actual installed arch scale differs from bounded depth candidate: " + arch.name)
-		print("F17 Hall actual arch depth: all8 installed frames scaleZ=%.3f, scaleX/Y=1; appearance is separate" % factor)
 	var gallery_route := _gallery_route(hall, stand_by_biome)
 	if gallery_route.is_empty():
 		return false

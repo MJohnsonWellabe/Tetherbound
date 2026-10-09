@@ -124,27 +124,6 @@ func _run() -> void:
 
 
 func _after_hall_arrival(_hall: Node3D) -> bool:
-	var args := OS.get_cmdline_user_args()
-	if not args.has("--hall-surface-depth-candidate") or args.has("--hall-surface-depth-baseline"):
-		return true
-	var verified := 0
-	for arch: Node3D in get_nodes_in_group("crossing_hall_arches"):
-		var original := arch.get_node_or_null(^"PortalSurface") as MeshInstance3D
-		var candidate := arch.get_node_or_null(^"PortalDepthSurface") as MeshInstance3D
-		var material := candidate.material_override as ShaderMaterial if candidate != null else null
-		if original == null or candidate == null or material == null or original.visible \
-				or not candidate.visible or candidate.mesh != original.mesh or candidate.transform != original.transform:
-			_failed = "mounted Hall depth candidate did not preserve the original aperture/baseline"
-			return false
-		var expected := float(["sealed", "locked", "open", "stirred"].find(str(arch.get_meta("arch_state", ""))))
-		if expected < 0 or material.get_shader_parameter("state_mode") != expected:
-			_failed = "mounted Hall depth candidate diverged from the actual arch display state"
-			return false
-		verified += 1
-	if verified != 8:
-		_failed = "Hall depth witness did not verify all eight actual apertures"
-		return false
-	print("F17 actual mounted depth candidate PASS:8 identical apertures, retained hidden originals, canonical state uniforms; no pixel/renderer-performance claim")
 	return true
 
 

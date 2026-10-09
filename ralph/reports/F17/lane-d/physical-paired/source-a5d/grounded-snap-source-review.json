@@ -1,7 +1,0 @@
-{
-  "reviewer": "/root/f42_visual_review",
-  "source": "3073bcafeef83b03e8b219e8ce799ba3e7b1ec8f",
-  "origin": "ROOTissue572#6052571985/6052590487 patch adopted",
-  "verdict": "SOURCE APPROVE",
-  "scope": "Grounded snap usesexistingHall-aware lookup/call, preserves airborne firstreturn, explicitrealm callableprecedence, invalidresultfallback, fullbody/query/authority. Onlysnapbypassclosed; initialdeployment/currentfootprint limits remain. ActualHallpixels pending; no observedoverlapfix or wholeF17 claim."
-}

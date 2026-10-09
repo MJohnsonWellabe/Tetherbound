@@ -36,8 +36,6 @@ static func settle(game: Object, claim: Dictionary, pending: RefCounted, release
 	var skills: RefCounted = game.local.get("skills")
 	var skills_before: Dictionary = skills.save_data() if skills != null else {}
 	var skills_revision: int = int(skills.revision) if skills != null else 0
-	var redesign: Variant = game.local.get("redesign_character")
-	var redesign_before: Dictionary = redesign.duplicate(true) if redesign is Dictionary else {}
 	var released: RefCounted = null
 	if party.is_full():
 		if release_index == 5:
@@ -52,12 +50,6 @@ static func settle(game: Object, claim: Dictionary, pending: RefCounted, release
 			party.set("_best", -1 if best == release_index else best)
 	elif not party.add(pending):
 		return {"ok": false, "reason": "The capture could not join the party."}
-	# Ownership and its training mirror must change in the same save. The
-	# snapshot validator correctly rejects records for a released creature.
-	if released != null and released != pending and redesign is Dictionary:
-		var records: Variant = redesign.get("creatures")
-		if records is Dictionary:
-			records.erase(str(released.get("uid")))
 	flags.set_flag(receipt)
 	if str(claim.get("source", "")) == "guardian":
 		flags.set_flag("water:legendary_refused" if released == pending else "water:legendary_joined")
@@ -73,8 +65,6 @@ static func settle(game: Object, claim: Dictionary, pending: RefCounted, release
 		party.revision = party_revision
 		flags.load_data(flag_data)
 		flags.revision = flag_revision
-		if redesign is Dictionary:
-			game.local.set("redesign_character", redesign_before)
 		if skills != null:
 			skills.load_data(skills_before)
 			skills.revision = skills_revision

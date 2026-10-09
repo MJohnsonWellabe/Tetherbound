@@ -1,9 +1,0 @@
-Original /root/f42_visual_review 01a1168a-2a2e-7243-aa7d-e655171c70fa, turn 01a11ce5-8eab-7ba3-847a-7f5cba9e1069
-
-**SOURCE APPROVE** for `535fe80dee242ecec6814ed6e078038635a414c1`.
-
-The candidate is OFF, baseline wins, and finite `night_factor` is clamped to 0–1. Eligible opaque interior materials receive per-house duplicates; existing AO, emissive and transparent materials are excluded. Other material fields, geometry and collision remain unchanged.
-
-`ao_light_affect=0` preserves direct-light response. The 0.2s WorldLook check enables AO at night and disables it by day; missing WorldLook leaves it disabled. KitShell, windows, home marker and creature bed are excluded. The foundation’s narrow exterior rim is explicitly included.
-
-Affected constructor/path proof remains pending. Mounted AO behavior, doorway/rim readability, native appearance, blind judgment, performance and whole acceptance are unproved. This does not establish ambient light as the measured defect cause.

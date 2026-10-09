@@ -165,10 +165,6 @@ uniform float ground_blend : hint_range(0.0, 1.0) = 0.55;
 // hand-over does not read as a line.
 uniform float drift_scale = 0.11;
 uniform float drift_contrast : hint_range(0.0, 1.0) = 0.78;
-// Default-zero ramp retains the original expression. Meadows' gated tuft
-// patches share the near field's existing sample and thresholds at handover.
-uniform float drift_patch_start : hint_range(0.0, 1.0) = 0.0;
-uniform float drift_patch_full : hint_range(0.0, 1.0) = 0.0;
 // Mottle. The noise that moves the tint between base and tip and, through
 // `mottle_value`, moves its brightness too. It is what replaces the near
 // field's per-tuft shade jitter at a scale the eye can still see from an
@@ -398,11 +394,7 @@ void fragment() {
 	// The GRASS TIER'S drift field, at fragment resolution. This gates the
 	// alpha, so the far ground has genuinely open patches in the same
 	// world-space places the near field has them rather than a uniform veil.
-	float drift = value_noise(v_world_xz * drift_scale);
-	if (drift_patch_full > drift_patch_start) {
-		drift = smoothstep(drift_patch_start, drift_patch_full, drift);
-	}
-	drift = mix(1.0, drift, drift_contrast);
+	float drift = mix(1.0, value_noise(v_world_xz * drift_scale), drift_contrast);
 
 	// Two octaves. The fine one is dropped with distance -- see
 	// `mottle_detail_range` -- because past that it is smaller than a pixel and

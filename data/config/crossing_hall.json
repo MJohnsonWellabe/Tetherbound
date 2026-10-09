@@ -2,91 +2,6 @@
   "schema_version": 1,
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
-  "arch_labels": {
-    "enabled": false,
-    "biome_at": [0, 2.8, 0.12],
-    "state_at": [0, 2.35, 0.12],
-    "front_clearance_m": 0.03,
-    "scope": "Peer-local arch label anchors on all presets; shipping OFF pending original native/readability/blind proof. --hall-arch-labels-candidate opts in; --hall-arch-labels-baseline wins. Same biome/state text, duplicate-state suppression, font32/pixel_size.006, colour and depth testing; no hiding/culling, camera/FOV/staging, frame/portal/collider/Approach/input/state/authority/transaction/durable change.",
-    "provenance": "Original Stormwood doorway8/8 blind BLOCK: oversized Sealed title clipped above frame. Original titleY3.55 exceeds installed native Wall_Arch maximumY3.0. Place nameY2.8 on header and distinct stateY2.35, preserve native text scale. Both anchors stay .03m in front of actual measured frame depth, including optional5x depth; no text hidden inside wood. Actual clipping/readability and normal route remain native proofs."
-  },
-  "nave_facing_displays": {
-    "enabled": false,
-    "yaw_deg": 180,
-    "scope": "Peer-local west-row tray and mounted-relic presentation on all presets; shipping OFF pending original native/contact/blind proof. --hall-nave-facing-candidate opts in; --hall-nave-facing-baseline wins. Half-turn only within existing symmetric .51m collider. Slot, collider, labels, Approach, interaction, scale, host display, transaction and durable schema unchanged; light remains child of host-controlled mount.",
-    "provenance": "Original Stormwood doorway8/8 blind BLOCK: identifying bolt becomes thin pale edge, close identity/contact PASS. Measured installed tray normal[0,.65654,.75429] under west-row yaw+90 points east[.75429,.65654,0]; nave doorway x7 is west of row x9.2. Half-turn the installed tray and its mounted geometry together to face nave, retaining measured contact/clearance. East row already faces west and stays unchanged. Does not resolve companion opaque occlusion or clipped arch label; no camera/FOV/creature staging."
-  },
-  "rear_seating": {
-    "enabled": false,
-    "floor_m": 0.07,
-    "scope": "World geometry and measured static collision on all presets; ordinary peers use shared configuration only. Shipping OFF pending original native/controller and blind judgment. Candidate/baseline flags apply only in existing solo Hall-stills capture; baseline wins there. No interaction, station, base job, state, transaction or durable schema.",
-    "provenance": "Original Meadows/Cloudreach HallBarA BLOCK names broad empty nave floor. Installed Quaternius Fantasy Table_Large and Bench at native scale form one rear waiting nook. Nave floor module at .06 plus measured .01 mesh top=.07m. Nearest furniture Z11.08788 exceeds last arch approach Z9 plus1.5m clearance; central circuit, entrance and Shrine Room approach remain clear. Rendered grounding/contact/readability and controller reach remain actual native proofs.",
-    "placements": [
-      {"id": "WaitingTable", "path": "res://assets/props/quaternius_fantasy/Table_Large.gltf", "at": [0, 0, 12.5]},
-      {"id": "NearBench", "path": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [0, 0, 11.35]},
-      {"id": "FarBench", "path": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [0, 0, 13.65]}
-    ]
-  },
-  "arch_sealed_infill": {
-    "enabled": false,
-    "at": [0, 0.08, -0.10],
-    "scale": [0.725, 0.76856847, 1],
-    "scope": "Peer-local reserved-arch presentation on all presets, shipping OFF pending original native/blind judgment. --hall-sealed-infill-candidate opts in; --hall-sealed-infill-baseline wins. Only biome5-8 receive installed stone infill; existing host arch_state controls visibility. Sealed hides its original flat surface/depth curtain; stirred fifth arch restores its existing membrane. No new mesh asset, state, collision, input, approach, unlock, transaction or durable schema.",
-    "provenance": "Original Meadows/Cloudreach HallBarA/B BLOCK names flat dark portal infills; ART_DIRECTION3.2 requires sealed/locked/open/stirred to read without text. Installed Hall-family Wall_UnevenBrick_Straight POSITION bounds X[-1,1],Y[0,3.12268877]; scaled to existing1.45x2.4m portal rectangle, behind original arch face. Actual seating/readability/lighting remains native proof; no improvement assumed."
-  },
-  "relic_focus": {
-    "enabled": false,
-    "energy": 0.75,
-    "range_m": 4.2,
-    "scope": "Peer-local mounted-relic light on all presets, shipping OFF pending original native/blind judgment. --hall-relic-focus-candidate opts in; --hall-relic-focus-baseline wins. Light is a child of the existing host-display-controlled mount, at its glowing mesh centre, deriving colour from the original emissive material. No new mesh/material, interaction, collider, active-power state, authority or durable/schema change.",
-    "provenance": "realm_heart_shrine._set_visual uses .75 placed/inactive energy and existing4.2m OmniLight range, shadowOFF. Hall mounts reused luminous geometry but omitted local light; original Meadows/Cloudreach blind HallBarB BLOCK reports no distinct relic focus. Actual light range/occlusion/illumination and Low/device cost remain native proofs; no pixel improvement assumed."
-  },
-  "shrine_doorway": {
-    "enabled": false,
-    "clear_height_m": 5.2,
-    "scope": "World geometry/collision on all presets, resolved together from the Hall recipe. Shipping OFF pending native and original blind judgment. --hall-doorway-candidate is accepted only by existing solo Hall-stills capture; normal game/network processes ignore it. --hall-doorway-baseline wins within that capture only; normal peers always share the enabled configuration. Replace three low window lintel modules with the installed solid wall kit, scaled vertically to the unchanged 6.24m ceiling. Four-metre collision width, floors, approaches, creature scale, interactions, authority and durable schemas stay unchanged.",
-    "provenance": "Original Cloudreach blind16 frames: nave8/8 BLOCK, Terrapup fills opening and lintel cuts upper head. Original header collision bottom4.16/top6.24m; installed straight wall module3.12m high. Grow clear height to5.2m, with matching1.04m lintel geometry/collision. No new asset."
-  },
-  "arch_surface_depth": {
-    "enabled": false,
-    "flow_speed": 0.12,
-    "depth_strength": 0.5,
-    "scope": "Peer-local Hall portal presentation on all presets; three view-offset curtains in the existing aperture, no screen/depth reads or particles. Shipping OFF pending original native/blind judgment. --hall-surface-depth-candidate and --hall-surface-depth-baseline are process-only; baseline wins. Original material/plane retained; signs, geometry, colliders, approaches, states, interactions, authority and saves unchanged."
-  },
-  "arch_frame_depth": {
-    "enabled": false,
-    "factor": 5.0,
-    "scope": "Peer-local, all presets, installed Wall_Arch visual localZ depth only; X/Y and membrane/sign/Approach transforms stay fixed. Shipping OFF pending actual capture/judge. --hall-arch-depth-candidate and --hall-arch-depth-baseline are process-only; baseline wins. No new mesh/collider/interaction/state/authority/transaction/save change.",
-    "provenance": "Installed Wall_Arch.gltf POSITION bounds X[-1,1],Y[-0.000000119,3],Z[-0.000000037,0.06404569] metres; 5x depth grows64mm to320mm without changing native2m width/3m height."
-  },
-  "pedestal_label_at": [0, 1.9, 0.15],
-  "stormwood_relic_visual": {
-    "enabled": false,
-    "at": [-0.0131231, 1.34151, 0.02178],
-    "pitch_deg": -41.035,
-    "scale": 0.44,
-    "scope": "Peer-local Stormwood pedestal presentation on all presets; read host shrine_display.stormwood only. No inventory, RPC, transaction, save schema, collider or prompt change. Shipping OFF; --hall-stormwood-relic-candidate opts in, --hall-stormwood-relic-baseline wins. Native and original blind/whole approval required.",
-    "provenance": "Reuse realm_heart_shrine existing three-piece Spark geometry and placed HEART_READY material (roughness .82, emission1.15). Same measured BookStand face/normal; uniform prop scale .44 and rear depth .0352m below .04225m normal clearance. No new asset or geometry identity."
-  },
-  "cloudreach_relic_visual": {
-    "enabled": false,
-    "at": [-0.0131231, 1.34151, 0.02178],
-    "pitch_deg": -41.035,
-    "scale": 0.48,
-    "scope": "Peer-local Cloudreach pedestal presentation on all presets, reading host shrine_display.cloudreach only. No inventory, RPC, transaction, save schema, collider or prompt change. Shipping OFF; --hall-cloudreach-relic-candidate opts in, --hall-cloudreach-relic-baseline wins. Native and original blind review required.",
-    "provenance": "Reuse realm_heart_shrine existing six-feather Wings geometry and placed HEART_READY material (roughness .82, emission1.15). Same measured BookStand face/normal as Meadows; .48 uniform prop scale fits its .474m width, rear depth .0288m below the .04225m normal clearance. No new asset or geometry identity."
-  },
-  "meadows_relic_visual": {
-    "enabled": false,
-    "at": [-0.0131231, 1.34151, 0.02178],
-    "pitch_deg": -41.035,
-    "scale": 0.85,
-    "scope": "Peer-local Meadows pedestal presentation on all presets. Read only host shrine_display.meadows; no inventory, RPC, transaction, save schema, collider or prompt change. Shipping OFF pending actual runtime/blind proof. --hall-relic-display-candidate opts in; --hall-relic-display-baseline wins. Other seven shrines unchanged.",
-    "provenance": "Reuse existing trainer_aftermath._build_heart Meadows identity and material. BookStand installed POSITION/NORMAL face bounds X[-.25021,.22396],Y[1.183247,1.444293],Z[-.15089,.13071], normal[0,.65654,.75429]. Mount at face centre plus .04225m normal clearance; heart back face is .03825m behind centre at authored scale. No new asset."
-  },
-  "_label_scope": "Peer-local Hall labels on all presets. Pedestal name baseline clears installed BookStand maximum Y1.44429; identical arch name/status renders once, with distinct Locked/Open/Stirred/Home states retained. No model/collider/approach/state/authority/transaction/save change. Actual label capture and judge required.",
-  "rain_shelter_enabled": true,
-  "_rain_shelter_scope": "Crossing Hall authored nave/Shrine Room interior boxes only, peer-local particle visibility on all presets; camera inside hides the local rain emitter. Outside particles and canonical weather/cycle/spawn conditions remain unchanged; no authority/transaction/durable state/save change. Candidate requires inside/outside rain capture and judge.",
   "arches": [
     {
       "id": "home",
@@ -315,8 +230,6 @@
     {"at": [6.4, 3.4, 0], "yaw_deg": -90},
     {"at": [-6.4, 3.4, 6], "yaw_deg": 90},
     {"at": [6.4, 3.4, 6], "yaw_deg": -90},
-    {"at": [-3, 4.8, 14.8], "yaw_deg": 180, "_why": "F17#6 original source75a blind review: the night nave loses the farwall and upper detail. Installed Hall-family wall lantern, facing inward from the actual z=15 endwall; existing warm flame/energy/range, no ambient/exposure or floor/route changes. Hall-local peer presentation, all presets."},
-    {"at": [3, 4.8, 14.8], "yaw_deg": 180},
     {"at": [12, 3.0, -6.8], "yaw_deg": 0, "_why": "F17#6 r4: the Shrine Room had no warm light at night"},
     {"at": [12, 3.0, 6.8], "yaw_deg": 180},
     {"at": [16.8, 3.0, 0], "yaw_deg": -90}

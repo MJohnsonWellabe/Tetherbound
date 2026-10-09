@@ -115,7 +115,6 @@ var _light_time := 0.0
 ## pass anything else, because the audit found its glow legible but too small
 ## to register behind the player's own head at the site's own capture stand.
 var _glow_scale := 1.0
-var _light_scale := 1.0
 ## Per-prop smoke column (F03 lure cue, coordinator grant 2026-09-26). The
 ## defaults reproduce every existing campfire exactly; a signal fire that must
 ## be seen from a road passes a taller, denser column via `configure_smoke`.
@@ -172,19 +171,7 @@ func _process(delta: float) -> void:
 		return
 	_light_time += delta
 	var noise := sin(_light_time * FLICKER_SPEED) * 0.6 + sin(_light_time * FLICKER_SPEED * 2.7 + 1.3) * 0.4
-	_light.light_energy = LIGHT_BASE_ENERGY * _glow_scale * _light_scale * _daylight_scale() * (1.0 + noise * FLICKER_AMOUNT)
-
-
-## Optional local practical-light tuning; meshes, particle sizes and the prop's
-## generated collision bounds keep their original glow_scale.
-func configure_light_scale(value: float) -> void:
-	if not is_finite(value) or value <= 0.0:
-		push_warning("Campfire practical-light scale must be finite and positive")
-		return
-	_light_scale = clampf(value, 0.05, 2.0)
-	if _light != null:
-		_light.light_energy = LIGHT_BASE_ENERGY * _glow_scale * _light_scale
-		_light.omni_range = LIGHT_RANGE * _glow_scale * _light_scale
+	_light.light_energy = LIGHT_BASE_ENERGY * _glow_scale * _daylight_scale() * (1.0 + noise * FLICKER_AMOUNT)
 
 
 ## 1.0 at night, `DAY_ENERGY_SCALE` in daylight -- see that constant's own
@@ -447,8 +434,8 @@ func _build_light() -> void:
 	_light = OmniLight3D.new()
 	_light.name = "Glow"
 	_light.light_color = Color(1.0, 0.68, 0.32)
-	_light.light_energy = LIGHT_BASE_ENERGY * _glow_scale * _light_scale
-	_light.omni_range = LIGHT_RANGE * _glow_scale * _light_scale
+	_light.light_energy = LIGHT_BASE_ENERGY * _glow_scale
+	_light.omni_range = LIGHT_RANGE * _glow_scale
 	_light.omni_attenuation = LIGHT_ATTENUATION
 	_light.position = Vector3(0.0, LIGHT_HEIGHT, 0.0)
 	_light.shadow_enabled = false

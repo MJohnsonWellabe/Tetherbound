@@ -1,2 +1,0 @@
-WARNING: instance_reset_physics_interpolation() is deprecated.
-   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)

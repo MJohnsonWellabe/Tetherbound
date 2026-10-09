@@ -35,26 +35,19 @@ const REPOSITION_MIN_M := 0.75
 class Witness:
 	extends "res://tests/helpers/f22_pattern_pilot.gd"
 	var witnessed: Dictionary = {"tells": {}, "shapes": {}, "recoveries": 0, "repositions_moved": 0,
-		"dodges": 0, "punishes": 0, "min_tell_s": INF, "floor_breaches": [], "reader_opening_inputs": []}
+		"dodges": 0, "punishes": 0, "min_tell_s": INF, "floor_breaches": []}
 	var _last_intent := -1
 	var _reposition_from := Vector3.INF
 	var _hooked := 0
 
 	func _act(policy: String) -> void:
-		var reader_opening := false
 		if is_instance_valid(_wild):
 			if _hooked != _wild.get_instance_id():
 				_hooked = _wild.get_instance_id()
-				witnessed["reader_opening_frame"] = -1
 				_wild.connect("pattern_reacted", func(kind: String) -> void:
 					witnessed[kind + "es" if kind == "punish" else kind + "s"] += 1)
 				_wild.connect("telegraph_started", _on_tell)
 			var intent := int(_wild.intent())
-			reader_opening = policy != "MASHER" and (_manager.enemy_is_staggered() or intent == AI.Intent.RECOVER)
-			if not reader_opening:
-				witnessed["reader_opening_frame"] = -1
-			elif int(witnessed.get("reader_opening_frame", -1)) < 0:
-				witnessed["reader_opening_frame"] = _frames
 			if intent != _last_intent:
 				if _last_intent == AI.Intent.RECOVER and intent == AI.Intent.REPOSITION:
 					witnessed.recoveries += 1
@@ -68,13 +61,6 @@ class Witness:
 					_reposition_from = Vector3.INF
 				_last_intent = intent
 		super._act(policy)
-		if reader_opening:
-			# The fixture released the previous tap before this tick: these are fresh inputs.
-			for action: String in ["combat_quick", "combat_charged"]:
-				if Input.is_action_pressed(action):
-					(witnessed.reader_opening_inputs as Array).append({"seed": _tally.seed,
-						"frame": _frames, "observed_frame": int(witnessed.reader_opening_frame), "action": action,
-						"delay_s": float(_frames - int(witnessed.reader_opening_frame)) / Engine.physics_ticks_per_second})
 
 	func _on_tell(seconds: float) -> void:
 		var cfg: Dictionary = _wild.combat_config()
@@ -100,12 +86,11 @@ func _run() -> void:
 	var errors: Array[String] = []
 	var patterns: Dictionary = MATH.config().get("patterns", {})
 	if patterns.get("runtime_enabled") != true: errors.append("F22 pattern runtime disabled")
-	var observed := float(patterns.get("reactions", {}).get("observation_s", 0.25))
 	var rows := {}
 	for role: String in CASES:
 		var spec: Array = CASES[role]
 		var total := {"tells": {}, "shapes": {}, "recoveries": 0, "repositions_moved": 0,
-			"dodges": 0, "punishes": 0, "min_tell_s": INF, "floor_breaches": [], "fights": 0, "reader_opening_inputs": []}
+			"dodges": 0, "punishes": 0, "min_tell_s": INF, "floor_breaches": [], "fights": 0}
 		for seed_index: int in SEEDS:
 			for policy: String in ["MASHER", "READER"]:
 				var party: Array[RefCounted] = []
@@ -127,7 +112,6 @@ func _run() -> void:
 					total[key] = int(total[key]) + int(seen[key])
 				total.min_tell_s = minf(float(total.min_tell_s), float(seen.min_tell_s))
 				(total.floor_breaches as Array).append_array(seen.floor_breaches)
-				(total.reader_opening_inputs as Array).append_array(seen.reader_opening_inputs)
 				total.fights = int(total.fights) + 1
 		var authored: Array = AI.pattern_ids(patterns, role, {"role": role, "chapter": "water", "trainer_owned": bool(spec[2])})
 		var reasons: Array[String] = []
@@ -139,34 +123,20 @@ func _run() -> void:
 		if not (total.floor_breaches as Array).is_empty(): reasons.append("tell below chapter/heavy floor")
 		if int(total.recoveries) < 1 or float(total.repositions_moved) / maxf(1.0, total.recoveries) < 0.5:
 			reasons.append("recoveries mostly stood and traded")
-		for response: Dictionary in total.reader_opening_inputs:
-			if float(response.delay_s) < observed:
-				reasons.append("reader attacked an opening before its observation delay")
-				break
 		rows[role] = total.merged({"authored": authored, "pass": reasons.is_empty(), "reasons": reasons}, true)
 	var dodges := 0
 	var punishes := 0
-	var reader_opening_responses := 0
 	for role: String in rows:
 		dodges += int(rows[role].dodges)
 		punishes += int(rows[role].punishes)
-		reader_opening_responses += (rows[role].reader_opening_inputs as Array).size()
 	if dodges < 1: errors.append("no observed dodge across all roles")
 	if punishes < 1: errors.append("no observed punish across all roles")
-	if reader_opening_responses < 1: errors.append("no observed reader attack response to a recovery/stagger opening")
 	var passed := errors.is_empty()
 	for role: String in rows: passed = passed and bool(rows[role].pass)
 	var receipt := {"kind": "F22#0 live wild-behaviour witness (flat fixture, production bodies/manager/AI)",
-		"pass": passed, "errors": errors, "dodges": dodges, "punishes": punishes, "roles": rows,
-		"reader_observation_s": observed, "reader_opening_responses": reader_opening_responses}
+		"pass": passed, "errors": errors, "dodges": dodges, "punishes": punishes, "roles": rows}
 	if not _json.is_empty():
-		var directory_error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_json).get_base_dir())
 		var out := FileAccess.open(_json, FileAccess.WRITE)
-		if directory_error != OK or out == null:
-			errors.append("wild-reaction receipt could not be written")
-			passed = false
-			receipt.pass = false
-		else:
-			out.store_string(JSON.stringify(receipt, "\t"))
+		if out != null: out.store_string(JSON.stringify(receipt, "\t"))
 	print("F22_WILD_REACTIONS " + JSON.stringify(receipt))
 	quit(0 if passed else 1)

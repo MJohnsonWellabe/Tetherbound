@@ -1341,10 +1341,8 @@ func ordinary_combat_reward_owner(director: Node, encounter_id: String) -> Dicti
 	var spec: Dictionary = director.get("_trainer_spec")
 	if world == null or host == null or host.get_script() not in [preload("res://scripts/net/encounter_host.gd"), preload("res://scripts/combat/accepted_action_host.gd")] \
 		or spec.is_empty() or spec.has("master") or spec.has("rematch") \
+		or preload("res://scripts/world/trainer_npc.gd").trainer(str(spec.get("id", ""))).is_empty() \
 		or not (director.get("_master_duel") as Dictionary).is_empty(): return unavailable
-	# The live allowlisted director owns its chapter's authored trainer source.
-	var source_matches: Variant = director.call("_local_named_trainer_source_matches")
-	if not source_matches is bool or source_matches != true: return unavailable
 	var record: Dictionary = host.call("record", encounter_id)
 	var realm: String = preload("res://scripts/data/biome_order.gd").canonical_id(str(director.call("_encounter_realm")))
 	if record.get("encounter_id") != encounter_id or record.get("kind") not in ["trainer", "boss"] \
@@ -6781,7 +6779,10 @@ func _capture_newcomer_uid(row: Dictionary) -> String:
 	return str(row.get("host_context", {}).get("creature", {}).get("uid", ""))
 
 func _foundation_capture_context(peer: int, key: String) -> Dictionary:
-	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true \
+	# Ordinary trait catches retain the same typed offer while alpha respawns
+	# remain off. Match the capture presenter without enabling alpha content.
+	if (preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true \
+		and not preload("res://scripts/creatures/traits.gd").runtime_enabled()) \
 		or not is_host() or admitted_character_state(peer).is_empty() or _altar_peer_in_combat(peer): return {}
 	var world: RefCounted = _game().world
 	var character := _authority_character(peer)

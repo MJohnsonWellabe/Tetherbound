@@ -1,7 +1,0 @@
-> **REQUEST_CHANGES — source only** for `353806ee1b502e5e723f162d3fc8148e5df0bb9a`.
->
-> The emission texture is assigned without setting `emission_operator`. The installed untextured pane retains the default **ADD** operator, so the neutral texture adds grey/white emission instead of modulating the existing warm emission. Even strength `0` adds a white texture. Godot documents ADD versus MULTIPLY, and its 4.7 importer sets MULTIPLY when an authored emissive texture exists. [Material API](https://docs.godotengine.org/en/4.6/classes/class_basematerial3d.html), [4.7 importer](https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/gltf/gltf_document.cpp).
->
-> Set `copy.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY` on the candidate duplicate, retaining its emission colour and energy.
->
-> Otherwise, the bounded flag-off, per-instance material, mipmapped texture and geometry/state preservation paths look coherent. Constructor/path proof remains pending; no mounted-texture, native, pixel or whole-criterion approval.

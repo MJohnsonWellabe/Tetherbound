@@ -39,7 +39,6 @@ extends Node3D
 ## camera uses.
 
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
-const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NIGHT_REST := preload("res://scripts/world/night_rest.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
@@ -48,11 +47,6 @@ const REST_POINT := preload("res://scripts/world/rest_point.gd")
 const VILLAGE_CONFIG := "res://data/config/village.json"
 var _house_lighting: Dictionary = {}
 var _floor_presentation: Dictionary = {}
-var _furniture_reference_wood_cache: Dictionary = {}
-var _interior_surface_roots: Array[Node3D] = []
-var _night_ambient_materials: Array[BaseMaterial3D] = []
-var _night_ambient_active := false
-var _night_ambient_elapsed := 0.0
 
 const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
 ## Quaternius furniture is authored at roughly 2x real scale (a 4.26m bed).
@@ -138,8 +132,7 @@ const COL_FLOOR := Color("#7a5a35")
 
 ## The old reskin table is gone with the primitive shell it painted — walls,
 ## roof and windows are real kit modules now, and the few primitives left
-## (the loft beam and rail) default to flat colour; the timber-reference
-## candidate can opt into the inspected dark wood band. The floor crops a wood
+## (the loft beam and rail) stay flat colour. The floor recipe crops a wood
 ## band instead of sampling the full T_WoodTrim atlas. T_WoodTrim is
 ## a trim ATLAS: across the 4.2m loft beam it sampled its pale plaster
 ## patches and rendered the beam as a blue-grey band in the interior frame,
@@ -174,7 +167,6 @@ func _anchor(local: Vector3) -> Vector3:
 ## The world root calls this once terrain is solid; everything is positioned
 ## relative to this node, so standing the node on the pad stands the house.
 func build(camera_rig: Node, player: Node3D) -> void:
-	set_process(false)
 	_camera_rig = camera_rig
 	_player = player
 	_build_kit_shell()
@@ -183,7 +175,6 @@ func build(camera_rig: Node, player: Node3D) -> void:
 	_build_stairs()
 	_build_furniture()
 	_build_lights()
-	_build_night_ambient_candidate()
 	_build_interior_area()
 	_build_door_gate()
 	_build_home_creature_bed()
@@ -405,99 +396,6 @@ func _build_kit_shell() -> void:
 	shell.name = "KitShell"
 	shell.rotation.y = deg_to_rad(90.0)
 	add_child(shell)
-	_apply_window_glow_candidate(shell)
-	_apply_window_pane_detail_candidate(shell)
-
-
-func _apply_window_glow_candidate(shell: Node3D) -> void:
-	if not bool(_house_lighting.get("window_glow_candidate_enabled", false)) \
-		and "--farmhouse-window-glow-candidate" not in OS.get_cmdline_user_args():
-		return
-	var raw_energy: Variant = _house_lighting.get("window_glow_candidate_energy", 0.20)
-	var raw_alpha: Variant = _house_lighting.get("window_glow_candidate_alpha", 0.09545451402664185)
-	if typeof(raw_energy) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(raw_energy)):
-		return
-	if typeof(raw_alpha) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(raw_alpha)):
-		return
-	var energy := clampf(float(raw_energy), 0.0, 1.0)
-	var alpha := clampf(float(raw_alpha), 0.0, 1.0)
-	for found: Node in shell.find_children("*", "MeshInstance3D", true, false):
-		var mesh := found as MeshInstance3D
-		if mesh.mesh == null:
-			continue
-		for surface in mesh.mesh.get_surface_count():
-			var source := mesh.get_active_material(surface) as BaseMaterial3D
-			if source == null or source.resource_name != "MI_WindowGlass":
-				continue
-			var copy := source.duplicate() as BaseMaterial3D
-			copy.emission_energy_multiplier = energy
-			var pane_colour := copy.albedo_color
-			pane_colour.a = alpha
-			copy.albedo_color = pane_colour
-			if mesh.material_override != null:
-				mesh.material_override = copy
-				break
-			mesh.set_surface_override_material(surface, copy)
-
-
-## The failed uniform alpha/energy candidate remains independently available.
-## This adds static glass variation only to the inspected untextured panes;
-## retain their material identity, colour, alpha, emission energy and mesh.
-func _apply_window_pane_detail_candidate(shell: Node3D) -> void:
-	var args := OS.get_cmdline_user_args()
-	if "--farmhouse-window-pane-detail-baseline" in args:
-		return
-	if _house_lighting.get("window_pane_detail_enabled", false) != true \
-		and "--farmhouse-window-pane-detail-candidate" not in args:
-		return
-	var raw: Variant = _house_lighting.get("window_pane_detail_strength", 0.65)
-	if typeof(raw) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(raw)):
-		return
-	var textures := _window_pane_detail_textures(clampf(float(raw), 0.0, 0.85))
-	for found: Node in shell.find_children("*", "MeshInstance3D", true, false):
-		var mesh := found as MeshInstance3D
-		if mesh.mesh == null:
-			continue
-		for surface: int in mesh.mesh.get_surface_count():
-			var source := mesh.get_active_material(surface) as BaseMaterial3D
-			if source == null or source.resource_name != "MI_WindowGlass":
-				continue
-			# Do not replace authored texture maps if another kit pane has them.
-			if source.albedo_texture != null or source.emission_texture != null or source.normal_texture != null:
-				continue
-			var copy := source.duplicate() as BaseMaterial3D
-			copy.albedo_texture = textures.colour
-			copy.emission_texture = textures.colour
-			copy.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
-			copy.normal_enabled = true
-			copy.normal_texture = textures.normal
-			if mesh.material_override != null:
-				mesh.material_override = copy
-				break
-			mesh.set_surface_override_material(surface, copy)
-
-
-func _window_pane_detail_textures(strength: float) -> Dictionary:
-	# Neutral modulation of the installed warm glass colour; two soft bands
-	# and shallow ripples, not a painted room or invented view through a wall.
-	var colour := Image.create(128, 128, false, Image.FORMAT_RGBA8)
-	var normal := Image.create(128, 128, false, Image.FORMAT_RGBA8)
-	for y: int in 128:
-		for x: int in 128:
-			var u := float(x) / 127.0
-			var v := float(y) / 127.0
-			var bend := sin(v * TAU) * 0.035
-			var band := 0.5 + 0.5 * cos((u + bend - v * 0.18) * TAU * 1.5)
-			var ripple := sin((u + bend) * TAU * 5.0)
-			var shade := lerpf(1.0, clampf(0.32 + band * 0.64 + ripple * 0.04, 0.0, 1.0), strength)
-			colour.set_pixel(x, y, Color(shade, shade, shade, 1.0))
-			var slope_x := strength * 0.16 * cos((u + bend) * TAU * 5.0)
-			var slope_y := strength * 0.05 * sin(v * TAU * 3.0)
-			var direction := Vector3(slope_x, slope_y, 1.0).normalized()
-			normal.set_pixel(x, y, Color(direction.x * 0.5 + 0.5, direction.y * 0.5 + 0.5, direction.z * 0.5 + 0.5, 1.0))
-	colour.generate_mipmaps()
-	normal.generate_mipmaps(true)
-	return {"colour": ImageTexture.create_from_image(colour), "normal": ImageTexture.create_from_image(normal)}
 
 
 var _materials: Dictionary = {}
@@ -538,110 +436,8 @@ func _material(colour: Color) -> StandardMaterial3D:
 				m.normal_enabled = true
 				m.normal_texture = load(normal_path) as Texture2D
 				m.normal_scale = clampf(float(_floor_presentation.get("normal_scale", 0.45)), 0.0, 2.0)
-			if bool(_floor_presentation.get("tile_cropped_band", false)):
-				var values: Array = _floor_presentation.get("tile_scale", [])
-				var tile_scale := Vector3(float(values[0]), float(values[1]), float(values[2])) if values.size() == 3 else Vector3.ZERO
-				var albedo := _floor_band_texture(m.albedo_texture, m.uv1_scale, m.uv1_offset)
-				var normal := _floor_band_texture(m.normal_texture, m.uv1_scale, m.uv1_offset, true)
-				if tile_scale.is_finite() and tile_scale.x > 0.0 and tile_scale.y > 0.0 and tile_scale.z > 0.0 \
-						and albedo != null and normal != null:
-					m.albedo_texture = albedo
-					m.normal_texture = normal
-					m.uv1_offset = Vector3.ZERO
-					m.uv1_scale = tile_scale
-					m.uv1_triplanar = true
-					m.uv1_world_triplanar = true
-					m.set_meta("floor_band_tiled", true)
-					if bool(_floor_presentation.get("board_seams_enabled", false)):
-						var seams := _floor_board_seams()
-						if seams != null:
-							m.detail_enabled = true
-							m.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
-							m.detail_uv_layer = BaseMaterial3D.DETAIL_UV_1
-							m.detail_albedo = seams
-							m.detail_normal = m.normal_texture
-							m.set_meta("floor_board_seams", true)
-						else:
-							push_warning("Farmhouse board seams unavailable; cropped wood retained")
-				else:
-					push_warning("Farmhouse cropped-band tiling unavailable; original material retained")
-	if colour == COL_TIMBER:
-		_apply_interior_timber_reference_candidate(m)
 	_materials[colour] = m
 	return m
-
-
-func _apply_interior_timber_reference_candidate(material: StandardMaterial3D) -> void:
-	var args := OS.get_cmdline_user_args()
-	var raw: Variant = _house_lighting.get("interior_timber_reference", {})
-	if not raw is Dictionary or "--farmhouse-timber-reference-baseline" in args:
-		return
-	var config := raw as Dictionary
-	if config.get("enabled", false) != true and "--farmhouse-timber-reference-candidate" not in args:
-		return
-	var grain_scale := _furniture_reference_vector(config, "local_scale", Vector3.ZERO)
-	var strength: Variant = config.get("normal_strength", 0.35)
-	if grain_scale.x <= 0.0 or grain_scale.y <= 0.0 or grain_scale.z <= 0.0 \
-		or typeof(strength) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(strength)):
-		return
-	var wood_config: Variant = _house_lighting.get("furniture_reference_wood", {})
-	if not wood_config is Dictionary:
-		return
-	var textures := _furniture_reference_wood_textures(wood_config)
-	if not textures.has("DarkWood"):
-		return
-	var maps: Dictionary = textures.DarkWood
-	material.albedo_color = Color(1.0, 1.0, 1.0, material.albedo_color.a)
-	material.albedo_texture = maps.albedo
-	material.normal_enabled = true
-	material.normal_texture = maps.normal
-	material.normal_scale = clampf(float(strength), 0.0, 1.0)
-	material.uv1_triplanar = true
-	# Keep grain attached to a raked rail when the authored box rotates.
-	material.uv1_world_triplanar = false
-	material.uv1_scale = grain_scale
-	material.uv1_offset = Vector3.ZERO
-
-
-func _floor_band_texture(texture: Texture2D, band_scale: Vector3, band_offset: Vector3, renormalize := false) -> Texture2D:
-	if texture == null or not band_scale.is_finite() or not band_offset.is_finite():
-		return null
-	var image := texture.get_image()
-	if image == null or image.is_empty() or (image.is_compressed() and image.decompress() != OK):
-		return null
-	var size := image.get_size()
-	var region := Rect2i(Vector2i(roundi(band_offset.x * size.x), roundi(band_offset.y * size.y)),
-		Vector2i(roundi(band_scale.x * size.x), roundi(band_scale.y * size.y)))
-	if region.size.x <= 0 or region.size.y <= 0 or not Rect2i(Vector2i.ZERO, size).encloses(region):
-		return null
-	var band := image.get_region(region)
-	if band.generate_mipmaps(renormalize) != OK:
-		return null
-	return ImageTexture.create_from_image(band)
-
-
-## Multiplicative UV1 detail: two board courses with staggered end joints.
-## White keeps the installed wood unchanged between narrow joint lines.
-func _floor_board_seams() -> Texture2D:
-	var width := float(_floor_presentation.get("board_seam_width_uv", .004))
-	if not is_finite(width) or width <= 0.0 or width > .03:
-		return null
-	var tint := Color(str(_floor_presentation.get("board_seam_tint", "#78654c")))
-	var image := Image.create(256, 256, false, Image.FORMAT_RGBA8)
-	image.fill(Color.WHITE)
-	var line := maxi(1, roundi(width * 256.0))
-	for y: int in 256:
-		var row := 0 if y < 128 else 1
-		var joint_x := 0 if row == 0 else 128
-		for x: int in 256:
-			var distance_x := absi(x - joint_x)
-			distance_x = mini(distance_x, 256 - distance_x)
-			var course_y := y % 128
-			if course_y < line or course_y >= 128 - line or distance_x < line:
-				image.set_pixel(x, y, tint)
-	if image.generate_mipmaps() != OK:
-		return null
-	return ImageTexture.create_from_image(image)
 
 
 ## A textured box with matching collision, positioned by its centre.
@@ -653,7 +449,6 @@ func _box(size: Vector3, at: Vector3, colour: Color, solid := true) -> void:
 	mesh.material_override = _material(colour)
 	mesh.position = at
 	add_child(mesh)
-	_interior_surface_roots.append(mesh)
 	if solid:
 		_collider(size, at)
 
@@ -866,7 +661,6 @@ func _raked_box(size: Vector3, at: Vector3, roll: float, colour: Color) -> void:
 	mesh.position = at
 	mesh.rotation.z = roll
 	add_child(mesh)
-	_interior_surface_roots.append(mesh)
 
 
 func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FURNITURE_SCALE,
@@ -891,33 +685,10 @@ func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FU
 	else:
 		push_warning("house furniture missing: %s" % obj_path)
 		return
-	# Peer-local installed Furniture OBJ wood/cloth only, on all presets.
-	# Godot's OBJ importer maps MTL Ks to metalness; preserve authored Kd and
-	# roughness through the existing per-instance dielectric correction.
-	# Survival/Fantasy materials, geometry, bounds and blockers are untouched.
-	if dir == FURNITURE_DIR:
-		var corrected := IMPORTED_MATERIALS.make_dielectric(node)
-		node.set_meta("farmhouse_furniture_dielectric_surfaces", corrected)
-		var raw_lift: Variant = _house_lighting.get("furniture_wood_lift", 0.0)
-		var lift := clampf(float(raw_lift), 0.0, 1.0) \
-			if typeof(raw_lift) in [TYPE_INT, TYPE_FLOAT] and is_finite(float(raw_lift)) else 0.0
-		if lift > 0.0 and model in ["Table", "Table2", "Chair", "Stool"] and node is MeshInstance3D:
-			var furniture := node as MeshInstance3D
-			for surface in furniture.mesh.get_surface_count():
-				var source := furniture.get_active_material(surface) as BaseMaterial3D
-				if source == null or source.resource_name not in ["Wood", "DarkWood"]:
-					continue
-				# Lift these dark wood colours locally; retain alpha and all shading fields.
-				var copy := source.duplicate() as BaseMaterial3D
-				copy.albedo_color = source.albedo_color.lerp(Color(1.0, 1.0, 1.0, source.albedo_color.a), lift)
-				furniture.set_surface_override_material(surface, copy)
-		if model in ["Table", "Table2", "Chair", "Stool"] and node is MeshInstance3D:
-			_apply_furniture_reference_wood_candidate(node as MeshInstance3D)
 	node.position = at
 	node.rotation.y = deg_to_rad(yaw_degrees)
 	node.scale = Vector3.ONE * scale_factor
 	add_child(node)
-	_interior_surface_roots.append(node)
 	if not solid:
 		return
 	# One simple blocker per piece: walking through a table breaks the room
@@ -931,78 +702,6 @@ func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FU
 	body.position = at + Vector3(0, aabb.size.y * 0.5 * scale_factor, 0)
 	body.rotation.y = deg_to_rad(yaw_degrees)
 	add_child(body)
-
-
-func _furniture_reference_vector(config: Dictionary, key: String, fallback: Vector3) -> Vector3:
-	var values: Variant = config.get(key)
-	if not values is Array or values.size() != 3:
-		return fallback
-	for value: Variant in values:
-		if typeof(value) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(value)):
-			return fallback
-	return Vector3(float(values[0]), float(values[1]), float(values[2]))
-
-
-func _furniture_reference_wood_textures(config: Dictionary) -> Dictionary:
-	if not _furniture_reference_wood_cache.is_empty():
-		return _furniture_reference_wood_cache
-	var albedo_path := str(config.get("albedo", ""))
-	var normal_path := str(config.get("normal", ""))
-	if not ResourceLoader.exists(albedo_path) or not ResourceLoader.exists(normal_path):
-		return {}
-	var albedo := load(albedo_path) as Texture2D
-	var normal := load(normal_path) as Texture2D
-	var result: Dictionary = {}
-	for role: String in ["Wood", "DarkWood"]:
-		var raw: Variant = config.get(role, {})
-		if not raw is Dictionary:
-			return {}
-		var band_scale := _furniture_reference_vector(raw, "band_scale", Vector3.ZERO)
-		var band_offset := _furniture_reference_vector(raw, "band_offset", Vector3.ZERO)
-		var colour_band := _floor_band_texture(albedo, band_scale, band_offset)
-		var normal_band := _floor_band_texture(normal, band_scale, band_offset, true)
-		if colour_band == null or normal_band == null:
-			return {}
-		result[role] = {"albedo": colour_band, "normal": normal_band}
-	_furniture_reference_wood_cache = result
-	return result
-
-
-func _apply_furniture_reference_wood_candidate(furniture: MeshInstance3D) -> void:
-	var args := OS.get_cmdline_user_args()
-	var raw: Variant = _house_lighting.get("furniture_reference_wood", {})
-	if not raw is Dictionary or "--farmhouse-furniture-reference-baseline" in args:
-		return
-	var config := raw as Dictionary
-	if config.get("enabled", false) != true and "--farmhouse-furniture-reference-candidate" not in args:
-		return
-	var uv_scale := _furniture_reference_vector(config, "world_scale", Vector3.ZERO)
-	var raw_normal: Variant = config.get("normal_strength", 0.45)
-	if uv_scale.x <= 0.0 or uv_scale.y <= 0.0 or uv_scale.z <= 0.0 \
-		or typeof(raw_normal) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(raw_normal)):
-		return
-	var textures := _furniture_reference_wood_textures(config)
-	if textures.is_empty():
-		return
-	for surface: int in furniture.mesh.get_surface_count():
-		var source := furniture.get_active_material(surface) as BaseMaterial3D
-		if source == null or not textures.has(source.resource_name) \
-			or source.albedo_texture != null or source.normal_texture != null:
-			continue
-		var maps: Dictionary = textures[source.resource_name]
-		var copy := source.duplicate() as BaseMaterial3D
-		# Replace palette-only wood with the inspected atlas's distinct grain
-		# roles; preserve alpha and the existing dielectric/roughness response.
-		copy.albedo_color = Color(1.0, 1.0, 1.0, source.albedo_color.a)
-		copy.albedo_texture = maps.albedo
-		copy.normal_enabled = true
-		copy.normal_texture = maps.normal
-		copy.normal_scale = clampf(float(raw_normal), 0.0, 1.0)
-		copy.uv1_triplanar = true
-		copy.uv1_world_triplanar = true
-		copy.uv1_scale = uv_scale
-		copy.uv1_offset = Vector3.ZERO
-		furniture.set_surface_override_material(surface, copy)
 
 
 ## OF8. `_furnish`'s own "one simple blocker per piece" collider boxes the
@@ -1184,68 +883,6 @@ func _build_lights() -> void:
 	# through the north wall onto the village square.
 	stair_head.shadow_enabled = true
 	add_child(stair_head)
-
-
-## Reuse the Hall's ambient-only AO technique on authored interior surfaces.
-## The shell, windows, exterior marker/bed and direct lights stay independent.
-func _build_night_ambient_candidate() -> void:
-	var args := OS.get_cmdline_user_args()
-	var raw: Variant = _house_lighting.get("night_ambient_shape", {})
-	if not raw is Dictionary or "--farmhouse-night-ambient-baseline" in args:
-		return
-	var config := raw as Dictionary
-	if config.get("enabled", false) != true and "--farmhouse-night-ambient-candidate" not in args:
-		return
-	var factor: Variant = config.get("night_factor", 0.65)
-	if typeof(factor) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(factor)):
-		return
-	var image := Image.create(4, 4, false, Image.FORMAT_L8)
-	image.fill(Color.from_hsv(0.0, 0.0, clampf(float(factor), 0.0, 1.0)))
-	var occlusion := ImageTexture.create_from_image(image)
-	var seen: Dictionary = {}
-	for root: Node3D in _interior_surface_roots:
-		var meshes: Array[Node] = root.find_children("*", "MeshInstance3D", true, false)
-		if root is MeshInstance3D:
-			meshes.push_front(root)
-		for raw_mesh: Node in meshes:
-			var mesh := raw_mesh as MeshInstance3D
-			if mesh.mesh == null:
-				continue
-			var uses_override := mesh.material_override != null
-			var surfaces := 1 if uses_override else mesh.mesh.get_surface_count()
-			for surface: int in surfaces:
-				var source := (mesh.material_override if uses_override else mesh.get_active_material(surface)) as BaseMaterial3D
-				if source == null or source.ao_enabled or source.ao_texture != null \
-					or source.emission_enabled or source.transparency != BaseMaterial3D.TRANSPARENCY_DISABLED:
-					continue
-				var copy: BaseMaterial3D = seen.get(source)
-				if copy == null:
-					copy = source.duplicate() as BaseMaterial3D
-					copy.ao_texture = occlusion
-					copy.ao_light_affect = 0.0
-					copy.ao_enabled = false
-					seen[source] = copy
-					_night_ambient_materials.append(copy)
-				if uses_override:
-					mesh.material_override = copy
-				else:
-					mesh.set_surface_override_material(surface, copy)
-	set_process(not _night_ambient_materials.is_empty())
-
-
-func _process(delta: float) -> void:
-	_night_ambient_elapsed += delta
-	if _night_ambient_materials.is_empty() or _night_ambient_elapsed < 0.2:
-		return
-	_night_ambient_elapsed = 0.0
-	var tree := get_tree()
-	var look: Node = tree.current_scene.get_node_or_null(^"WorldLook") if tree != null and tree.current_scene != null else null
-	var dark := look != null and look.has_method("is_dark") and bool(look.call("is_dark"))
-	if dark == _night_ambient_active:
-		return
-	_night_ambient_active = dark
-	for material: BaseMaterial3D in _night_ambient_materials:
-		material.ao_enabled = dark
 
 
 func _build_interior_area() -> void:

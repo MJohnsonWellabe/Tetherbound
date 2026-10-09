@@ -1,9 +1,0 @@
-{
-  "reviewer": "/root/f42_visual_review",
-  "verdict": "APPROVE SOURCE ONLY",
-  "source": "77d52e5516259ee322701c4b2fae2ac5c89fff39",
-  "change": "Indoorcandidate turn0 retains max(requestedoffsetlength,fullclearance+.6);7samealternateangles nowfullclearance+.6 aroundactualtrainer",
-  "preserved": "Fullrendered/colliderclearance/size/ray/lowhighspheres/8attemptcap/mask/exclusions/15framecadence/verticalseat/orientation/INFfallback/explicitrealmvalidatorprecedence/outdoorbehavior; no combat/stat/authority/durablestate change",
-  "spec": "CREATURES currentbody-scale/noshrink andCOMBAT separation/fitintent",
-  "limitations": "No proofanyclearalternativeexists/deployment/currentfootprint/INFfallback overlap solved; affectedexistingchecks +actualscopedcompanionpixelsrequired. ROOTmeasuredoldseat1.378m vsrenderedhalfextents1.605/2.552 supportsboundedchange."
-}
