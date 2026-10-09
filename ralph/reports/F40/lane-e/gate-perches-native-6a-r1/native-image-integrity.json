@@ -1,0 +1,42 @@
+[
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-gate-perches-6a5f-day-r1\\01_gate_lower_cliffs_approach_day.png",
+    "sha256": "bdd21b01e6a86e05fd0f1dfbfe2654cf0d20bbc4f3c245a3aa0c1b9b51020c20",
+    "bytes": 2410125,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-gate-perches-6a5f-day-r1\\04_gate_lower_cliffs_detail-crag_day.png",
+    "sha256": "a06614018bd26d92b59bccaf92bb9aba0804e6c8a4416ecde56d85d37fb0ce14",
+    "bytes": 2245701,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-gate-perches-6a5f-day-r1\\19_high_roost_sky_shrine_perch-landing_day.png",
+    "sha256": "1e3eb70dc9e41cb743cdaeaff6213f4c4ea6f3ec1493c22943589769edf911f3",
+    "bytes": 2525626,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-gate-perches-6a5f-day-r1\\20_high_roost_sky_shrine_perch-vista_day.png",
+    "sha256": "0862b4a0e016c5586a6ee640c797612eea9a32b40a832bab898c0f114f0bf59b",
+    "bytes": 2535789,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  }
+]

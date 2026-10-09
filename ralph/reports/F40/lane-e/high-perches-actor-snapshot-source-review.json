@@ -153,5 +153,3319 @@
     "No earned route, ownership from runtime UID, device/default-renderer, campaign/co-op/save/performance or whole F40/F08 criterion inference.",
     "Original failed appearance/whole matrix and failed native packets remain historical; no READY or blind contact."
   ],
-  "pending": "ROOT static and combined two-row native proof; independent visual judgment"
+  "pending": "ROOT static and combined two-row native proof; independent visual judgment",
+  "native_runtime_reviews": [
+    {
+      "source_commit": "6a5f4bf281138b8560825725fca6eefaf8f7de82",
+      "runtime_verdict": "APPROVE bounded persisted original subset runtime/provenance; not visual/contact/whole acceptance",
+      "packet": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1",
+      "original_output_directory": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-perches-6a5f-day-r1",
+      "exact_argv": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/capture_cloudreach_frame_matrix.gd",
+        "--",
+        "--only=1,4,19,20",
+        "--preset=High",
+        "--source-commit=6a5f4bf281138b8560825725fca6eefaf8f7de82",
+        "--output=res://.tmp/e-gate-perches-6a5f-day-r1"
+      ],
+      "source_provenance": {
+        "pinned_head_and_index_tree": "f1323b48d1e920837c4a5d2198848a4d926de237",
+        "meaning": "Git tree, not commit. Locally resolved exact6a tree matches original before/after static/import/capture snapshots; each tracked/index clean. Six pre-existing unrelated untracked evidence directories are retained. Raw generated outputs remain at original paths; no silent cleanup/archival reinterpretation or later cached HEAD substitution.",
+        "import_metadata_revalidation": "Original import receipt retained; four existing import metadata paths revalidated against recorded pinned blobs. No new import or source change by reviewer."
+      },
+      "static": {
+        "exact_recipe": [
+          "--headless",
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--script",
+          "res://tools/capture_cloudreach_frame_matrix.gd",
+          "--check-only"
+        ],
+        "exit_code": 0,
+        "ended_utc": "2026-10-09T10:32:52.2212197Z",
+        "stderr_bytes": 0
+      },
+      "import": {
+        "exit_code": 0,
+        "ended_utc": "2026-10-09T10:34:05.9531867Z",
+        "stderr_bytes": 0
+      },
+      "capture_start": {
+        "pid": 6252,
+        "mode": "Capture",
+        "started_utc": "2026-10-09T10:34:44.1955384Z",
+        "deadline_minutes": 45,
+        "source": "6a5f4bf281138b8560825725fca6eefaf8f7de82",
+        "args": [
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--rendering-method",
+          "forward_plus",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "res://tools/capture_cloudreach_frame_matrix.gd",
+          "--",
+          "--only=1,4,19,20",
+          "--preset=High",
+          "--source-commit=6a5f4bf281138b8560825725fca6eefaf8f7de82",
+          "--output=res://.tmp/e-gate-perches-6a5f-day-r1"
+        ],
+        "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1/capture-home"
+      },
+      "capture_terminal": {
+        "pid": 6252,
+        "mode": "Capture",
+        "reason": "process_exit",
+        "exit_code": 0,
+        "source": "6a5f4bf281138b8560825725fca6eefaf8f7de82",
+        "ended_utc": "2026-10-09T10:44:37.5288941Z"
+      },
+      "graphics": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+        "preset": "High",
+        "renderer": "forward_plus",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source_commit": "6a5f4bf281138b8560825725fca6eefaf8f7de82"
+      },
+      "actual_driver": "Actual stdout Godot4.7.stable.official.5b4e0cb0f; Vulkan1.3.280 Forward+ NVIDIA GeForceGTX1060 3GB.",
+      "completion_binding": {
+        "manifest_path": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-perches-6a5f-day-r1/manifest.txt",
+        "manifest_sha256": "85d25950097cd00265dde869559304f2310bfa40cd6029a17530dde90757ff8a",
+        "actual_footer": "# frame matrix: 4 frames written, 0 rows skipped",
+        "originals_written": 4,
+        "skips": 0,
+        "all_original_record_and_observer_lines_present_in_stdout_and_persisted_manifest": true,
+        "terminal_process_exit": 0,
+        "scope": "Legacy original rows1/4/19/20 only; no full96/384 or complete-field invented."
+      },
+      "diagnostics": {
+        "engine_errors": 0,
+        "script_errors": 0,
+        "warnings": 2,
+        "warning_scope": [
+          "road_visibility_broken_causeway_main_03 fail-closed positional refusal",
+          "road_visibility_windscar_floor_loop_15 fail-closed positional refusal"
+        ],
+        "owned_process_absence": "Capture PID6252 has terminal process_exit0. ROOT reported all owned engines gone; no separate process-list receipt was supplied or live query performed, so broader absence is not independently promoted."
+      },
+      "fixture_disclosure": "Existing source-disclosed direct Cloudreach scene/reset, five directly-added creatures (galecrest active carrier plus bramblebun,mudsnout,terrapup,brooktail), staged progression/entry flags, debug stand travel, production CameraRig, native follower settling120physics ticks. Not earned chapter travel/party/campaign/fight proof. Original boot row records at day hour10; no candidate CLI flag.",
+      "packet_hashes": {
+        "capture-start.json": "307a430de01712fd54fba54fb2589c5e49067fe9957748a96bdd951698570ff7",
+        "capture-terminal.json": "c8bd2c397fc77cf91ba26470e62b62c76704b8afe2ba1643edba6ad2330bf0dc",
+        "capture.stdout.log": "62654499af89c49538c39c797a4c94bd41777ebcf6810501f5045f5989c9ce4e",
+        "capture.stderr.log": "b57244443e9479c10c20336d268e144bf5aa57198031ba4507c79fd6fbcc80e0",
+        "static-start.json": "edb65ed46f840da47b332260577719ed2171ead353dd6f0a76ed0cf65716aca3",
+        "static-terminal.json": "71241a94d4f4de73a4bacc18e465b493b5d98f0d951d9244b04537b033ad8bb4",
+        "static.stdout.log": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+        "static.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "import-start.json": "c5c0dbed6f63ae7d9004531d3bfb9124b1c802e55117e69e2ae7435489d3f500",
+        "import-terminal.json": "a5e187a9d8521d4c2b03a92d24aa2fe83d435846d0cc89f1e574c5cbd4c8f09b",
+        "import.stdout.log": "ba8f907a3dc806e9bc2dbfcd588ce5c0bfd205652b985976d799d116961db40e",
+        "import.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source-before-static.json": "b2fa7f3121d18029832b50405150b839a67dac172990154f5a635015f8d61b9f",
+        "source-after-static.json": "fd7bb7a9bfe82909de43d6af82348403bd0f80b71a7a64336e9724a398d78a49",
+        "source-before-import.json": "4aa46e3e46fd54b5ed955da51044a6f3c9cc9d2aa7d6bbb9fdfca2a4fbf4d7e0",
+        "source-after-import.json": "722b58620ea418b10d99bc357e97c30ffe75995226cdc103e8f2eca5e6a49b9f",
+        "source-after-import-revalidated.json": "3340949f99cf737c50ad29ee9b4a792aeacbe4f5abc63c1f3a455b9d6b54ff59",
+        "source-before-capture.json": "1bc0a0b83c45bba35dbf1d55c6f0e7b483bd1322facd2094a850f21198f640fa",
+        "source-after-capture.json": "f82b3dbdbd35415011767731e69212aa8ab291e54eb2c073c5d45e177b7d565e",
+        "original-recipe.json": "85b9277ac640659f44f06613b698372c5d8f707c1c80950e1adf5b242a9bfd7c",
+        "native-image-integrity.json": "fb88534cbed622685c3ca1a4d1a2ada74496bef7e7267bca62b191bc0350c5aa",
+        "native-verified-summary.json": "ff3a1ad65e9130280c352f878a944076e4a147347e235fb1e82afec617a49f76",
+        "original-and-neutral-copy-integrity.json": "605340340a8052c08f17332bd01c96474850a4e770871a8e9771a6518195238a"
+      },
+      "limits": [
+        "Source/logic approvals reused without re-audit. These records do not establish appearance, controller/device/performance/save/co-op/earned path/wholeF40/F08/fullbar/READY.",
+        "Weather unrecorded; reported pose equality is at manifest printed precision. Perches follower pose differs from401r2, preventing full creature-spacing-matched comparison.",
+        "Neutral copies are exact pixels only. Source/mapping/measurements remain in reviewer report for parent; no judge contact or visual grading."
+      ],
+      "independent_piece": "Perches rows19landing/20vista",
+      "images": [
+        {
+          "group": "perches",
+          "row": 19,
+          "frame_id": "19_high_roost_sky_shrine_perch-landing_day",
+          "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-perches-6a5f-day-r1/19_high_roost_sky_shrine_perch-landing_day.png",
+          "preserved": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1/originals/19_high_roost_sky_shrine_perch-landing_day.png",
+          "neutral_pixels_only": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1/blind/perches/01.png",
+          "bytes": 2525626,
+          "sha256": "1e3eb70dc9e41cb743cdaeaff6213f4c4ea6f3ec1493c22943589769edf911f3",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "independent_integrity": "Original PNG signature/IHDR, all chunks CRC, IEND/exact end and full IDAT zlib scanline size validated; original/archive/neutral files byte-identical.",
+          "before_original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-high-perches-lift-401977-day-r2/19_high_roost_sky_shrine_perch-landing_day.png",
+          "before_sha256": "b890e09b854454d07cf7d2f7e35aaf80288d8dfbcc23d203111c66fb6cffb1aa",
+          "comparison": {
+            "same_recorded_trainer_stand_target_yaw_pitch_hour_camera": true,
+            "matching_precision": "Legacy manifest printed precision only; old precise shutter transforms are not available in these records, so no exact floating-point zero-delta claim.",
+            "same_companion_record": false,
+            "weather": "No explicit weather pin/record; no sole-change pixel attribution."
+          }
+        },
+        {
+          "group": "perches",
+          "row": 20,
+          "frame_id": "20_high_roost_sky_shrine_perch-vista_day",
+          "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-perches-6a5f-day-r1/20_high_roost_sky_shrine_perch-vista_day.png",
+          "preserved": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1/originals/20_high_roost_sky_shrine_perch-vista_day.png",
+          "neutral_pixels_only": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1/blind/perches/02.png",
+          "bytes": 2535789,
+          "sha256": "0862b4a0e016c5586a6ee640c797612eea9a32b40a832bab898c0f114f0bf59b",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "independent_integrity": "Original PNG signature/IHDR, all chunks CRC, IEND/exact end and full IDAT zlib scanline size validated; original/archive/neutral files byte-identical.",
+          "before_original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-high-perches-lift-401977-day-r2/20_high_roost_sky_shrine_perch-vista_day.png",
+          "before_sha256": "c6a1866f0e662b16d87551b35974cd8795794e1e06db9857d2994d9a5b7112d9",
+          "comparison": {
+            "same_recorded_trainer_stand_target_yaw_pitch_hour_camera": true,
+            "matching_precision": "Legacy manifest printed precision only; old precise shutter transforms are not available in these records, so no exact floating-point zero-delta claim.",
+            "same_companion_record": false,
+            "weather": "No explicit weather pin/record; no sole-change pixel attribution."
+          }
+        }
+      ],
+      "actor_records": [
+        {
+          "frame_id": "19_high_roost_sky_shrine_perch-landing_day",
+          "image_path": "res://.tmp/e-gate-perches-6a5f-day-r1/19_high_roost_sky_shrine_perch-landing_day.png",
+          "persisted_exact_line_sha256": "237fc19ded780d02b4ca3a305e07c31de342b302da50cecf3ba642fc9c3a0eac",
+          "status": "sampled_mounted_actors",
+          "physics_tick": 24884,
+          "drawn_frame": 3852,
+          "camera": {
+            "basis": [
+              {
+                "status": "finite",
+                "xyz": [
+                  -1.0,
+                  0.0,
+                  -1.50995802528087e-07
+                ]
+              },
+              {
+                "status": "finite",
+                "xyz": [
+                  2.26181448570451e-10,
+                  0.999998867511749,
+                  -0.00149793201126158
+                ]
+              },
+              {
+                "status": "finite",
+                "xyz": [
+                  1.5099563199783e-07,
+                  -0.00149793201126158,
+                  -0.999998867511749
+                ]
+              }
+            ],
+            "origin": {
+              "status": "finite",
+              "xyz": [
+                900.0,
+                1021.87322998047,
+                2683.80004882813
+              ]
+            }
+          },
+          "actors": [
+            {
+              "creature_uid": "creature-1918e75b4af343cafa274a3f70d4e18c",
+              "creature_uid_source": "matched EncounterDirector.ally_body/ally_instance",
+              "model": {
+                "status": "present",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.756192088127136,
+                        0.0,
+                        0.65434592962265
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.65434592962265,
+                        0.0,
+                        -0.756192088127136
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      904.210815429688,
+                      1020.13079833984,
+                      2693.8662109375
+                    ]
+                  }
+                },
+                "visible_in_tree": true
+              },
+              "owner_peer_id": 1,
+              "path": "/root/CloudreachCliffs/AllyCreature",
+              "role": "director_current_ally",
+              "runtime_instance_id": 17493720631887,
+              "script": "res://scripts/creatures/follower_creature.gd",
+              "species_id": "galecrest",
+              "stable_character_uid": null,
+              "stable_character_uid_source": "unavailable",
+              "station": {
+                "age_physics_ticks": 139,
+                "current_leader": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      900.0,
+                      1020.13104248047,
+                      2689.0
+                    ]
+                  }
+                },
+                "following": true,
+                "leader_at_validation": {
+                  "status": "finite",
+                  "xyz": [
+                    900.0,
+                    1020.13104248047,
+                    2689.0
+                  ]
+                },
+                "requested_offset": {
+                  "status": "finite",
+                  "xyz": [
+                    4.5999755859375,
+                    0.0,
+                    5.10009765625
+                  ]
+                },
+                "resolved_now": {
+                  "status": "finite",
+                  "xyz": [
+                    904.599975585938,
+                    1020.13000488281,
+                    2694.10009765625
+                  ]
+                },
+                "status": "cached_read_only",
+                "validated_offset": {
+                  "status": "finite",
+                  "xyz": [
+                    4.5999755859375,
+                    -0.00103759765625,
+                    5.10009765625
+                  ]
+                },
+                "validation_tick": 24745
+              },
+              "transform": {
+                "basis": [
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      -0.756192088127136,
+                      0.0,
+                      0.65434592962265
+                    ]
+                  },
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  },
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      -0.65434592962265,
+                      0.0,
+                      -0.756192088127136
+                    ]
+                  }
+                ],
+                "origin": {
+                  "status": "finite",
+                  "xyz": [
+                    904.210815429688,
+                    1020.13079833984,
+                    2693.8662109375
+                  ]
+                }
+              },
+              "visible_in_tree": true
+            },
+            {
+              "creature_uid": "creature-4984a96f252d2f1abe148d7aafa7fd4a",
+              "creature_uid_source": "actual body.instance; ownership not inferred",
+              "model": {
+                "status": "present",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.960651159286499,
+                        0.0,
+                        0.277755051851273
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.277755051851273,
+                        0.0,
+                        -0.960651159286499
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      903.759887695313,
+                      1020.130859375,
+                      2714.16381835938
+                    ]
+                  }
+                },
+                "visible_in_tree": true
+              },
+              "owner_peer_id": null,
+              "path": "/root/CloudreachCliffs/roost_perches_0",
+              "role": "unknown",
+              "runtime_instance_id": 17760193155177,
+              "script": "",
+              "species_id": "ribbonray",
+              "stable_character_uid": null,
+              "stable_character_uid_source": "unavailable",
+              "station": {
+                "status": "unavailable"
+              },
+              "transform": {
+                "basis": [
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      -0.960651159286499,
+                      0.0,
+                      0.277755051851273
+                    ]
+                  },
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  },
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      -0.277755051851273,
+                      0.0,
+                      -0.960651159286499
+                    ]
+                  }
+                ],
+                "origin": {
+                  "status": "finite",
+                  "xyz": [
+                    903.759887695313,
+                    1020.130859375,
+                    2714.16381835938
+                  ]
+                }
+              },
+              "visible_in_tree": true
+            },
+            {
+              "creature_uid": "creature-0b988129eba8f859901718a54b3a8198",
+              "creature_uid_source": "actual body.instance; ownership not inferred",
+              "model": {
+                "status": "present",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.928284525871277,
+                        0.0,
+                        -0.371870070695877
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.371870070695877,
+                        0.0,
+                        -0.928284525871277
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      896.132934570313,
+                      1020.130859375,
+                      2714.66845703125
+                    ]
+                  }
+                },
+                "visible_in_tree": true
+              },
+              "owner_peer_id": null,
+              "path": "/root/CloudreachCliffs/roost_perches_1",
+              "role": "unknown",
+              "runtime_instance_id": 17763917697212,
+              "script": "",
+              "species_id": "stormcapra",
+              "stable_character_uid": null,
+              "stable_character_uid_source": "unavailable",
+              "station": {
+                "status": "unavailable"
+              },
+              "transform": {
+                "basis": [
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      -0.928284525871277,
+                      0.0,
+                      -0.371870070695877
+                    ]
+                  },
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  },
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      0.371870070695877,
+                      0.0,
+                      -0.928284525871277
+                    ]
+                  }
+                ],
+                "origin": {
+                  "status": "finite",
+                  "xyz": [
+                    896.132934570313,
+                    1020.130859375,
+                    2714.66845703125
+                  ]
+                }
+              },
+              "visible_in_tree": true
+            }
+          ],
+          "pocket": {
+            "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature",
+            "status": "mounted",
+            "actual_admitted_children": 15,
+            "actual_placements": 15,
+            "unique_paths": 15,
+            "all_actual_model_roots_present_and_finite": true,
+            "placements": [
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.59554523229599,
+                        0.0,
+                        -0.417005270719528
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.727026462554932,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.417005270719528,
+                        0.0,
+                        0.59554523229599
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.976379394531,
+                      1020.13000488281,
+                      2693.00927734375
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Bush00",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.819152057170868,
+                        0.0,
+                        -0.5735764503479
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.5735764503479,
+                        0.0,
+                        0.819152057170868
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      884.0,
+                      1020.13000488281,
+                      2693.0
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.415849506855011,
+                        0.0,
+                        0.15135683119297
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.442537814378738,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.15135683119297,
+                        0.0,
+                        0.415849506855011
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      884.987121582031,
+                      1020.13000488281,
+                      2691.79150390625
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers01",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.939692616462708,
+                        0.0,
+                        0.342020124197006
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.342020124197006,
+                        0.0,
+                        0.939692616462708
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      885.0,
+                      1020.13000488281,
+                      2691.80004882813
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.166055634617805,
+                        0.0,
+                        -0.511066734790802
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.537367343902588,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.511066734790802,
+                        0.0,
+                        0.166055634617805
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.290161132813,
+                      1020.13000488281,
+                      2693.7158203125
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers02",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.309016972780228,
+                        0.0,
+                        -0.95105654001236
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.95105654001236,
+                        0.0,
+                        0.309016972780228
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.299987792969,
+                      1020.13000488281,
+                      2693.69995117188
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.453266561031342,
+                        0.0,
+                        0.647331714630127
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.79024612903595,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.647331714630127,
+                        0.0,
+                        0.453266561031342
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.489929199219,
+                      1020.13000488281,
+                      2702.47436523438
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Bush03",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.5735764503479,
+                        0.0,
+                        0.819152057170868
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.819152057170868,
+                        0.0,
+                        0.5735764503479
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.5,
+                      1020.13000488281,
+                      2702.5
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.439622074365616,
+                        0.0,
+                        -0.177618846297264
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.47414767742157,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.177618846297264,
+                        0.0,
+                        0.439622074365616
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      884.583618164063,
+                      1020.13000488281,
+                      2703.50244140625
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers04",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.927183866500854,
+                        0.0,
+                        -0.37460657954216
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.37460657954216,
+                        0.0,
+                        0.927183866500854
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      884.599975585938,
+                      1020.13000488281,
+                      2703.5
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.039649561047554,
+                        0.0,
+                        -0.377240210771561
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.37931814789772,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.377240210771561,
+                        0.0,
+                        -0.039649561047554
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.398254394531,
+                      1020.13000488281,
+                      2701.21313476563
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers05",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.10452850908041,
+                        0.0,
+                        -0.994521915912628
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.994521915912628,
+                        0.0,
+                        -0.10452850908041
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.400024414063,
+                      1020.13000488281,
+                      2701.19995117188
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.577321350574493,
+                        0.0,
+                        -0.165544226765633
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.600587069988251,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.165544226765633,
+                        0.0,
+                        0.577321350574493
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      887.979064941406,
+                      1020.13000488281,
+                      2715.0009765625
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Bush06",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.961261689662933,
+                        0.0,
+                        -0.275637358427048
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.275637358427048,
+                        0.0,
+                        0.961261689662933
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      888.0,
+                      1020.13000488281,
+                      2715.0
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.323815673589706,
+                        0.0,
+                        0.252992540597916
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.410927981138229,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.252992540597916,
+                        0.0,
+                        0.323815673589706
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      889.191101074219,
+                      1020.13000488281,
+                      2715.78881835938
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers07",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.788010776042938,
+                        0.0,
+                        0.61566150188446
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.61566150188446,
+                        0.0,
+                        0.788010776042938
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      889.200012207031,
+                      1020.13000488281,
+                      2715.80004882813
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0703878402709961,
+                        0.0,
+                        -0.500835478305817
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.505757510662079,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.500835478305817,
+                        0.0,
+                        0.0703878402709961
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      886.993530273438,
+                      1020.13000488281,
+                      2713.81640625
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers08",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.139173105359077,
+                        0.0,
+                        -0.990268051624298
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.990268051624298,
+                        0.0,
+                        0.139173105359077
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      887.0,
+                      1020.13000488281,
+                      2713.80004882813
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.614016354084015,
+                        0.0,
+                        0.32647830247879
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.695416569709778,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.32647830247879,
+                        0.0,
+                        0.614016354084015
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      916.981811523438,
+                      1020.13000488281,
+                      2701.98388671875
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Bush09",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.882947564125061,
+                        0.0,
+                        0.469471573829651
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.469471573829651,
+                        0.0,
+                        0.882947564125061
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      917.0,
+                      1020.13000488281,
+                      2702.0
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.325094670057297,
+                        0.0,
+                        -0.387432724237442
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.505757510662079,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.387432724237442,
+                        0.0,
+                        0.325094670057297
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      916.085754394531,
+                      1020.13000488281,
+                      2703.310546875
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers10",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.642787635326386,
+                        0.0,
+                        -0.766044437885284
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.766044437885284,
+                        0.0,
+                        0.642787635326386
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      916.099975585938,
+                      1020.13000488281,
+                      2703.30004882813
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.14209508895874,
+                        0.0,
+                        -0.351697653532028
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.37931814789772,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.351697653532028,
+                        0.0,
+                        -0.14209508895874
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      916.601928710938,
+                      1020.13000488281,
+                      2700.81323242188
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers11",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.374606609344482,
+                        0.0,
+                        -0.927183866500854
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.927183866500854,
+                        0.0,
+                        -0.374606609344482
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      916.599975585938,
+                      1020.13000488281,
+                      2700.80004882813
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.236825153231621,
+                        0.0,
+                        -0.586162745952606
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.63219690322876,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.586162745952606,
+                        0.0,
+                        0.236825153231621
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      914.987182617188,
+                      1020.13000488281,
+                      2712.01806640625
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Bush12",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.374606639146805,
+                        0.0,
+                        -0.927183866500854
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.927183866500854,
+                        0.0,
+                        0.374606639146805
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      915.0,
+                      1020.13000488281,
+                      2712.0
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.4328673183918,
+                        0.0,
+                        0.0920087918639183
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.442537814378738,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.0920087918639183,
+                        0.0,
+                        0.4328673183918
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      913.786071777344,
+                      1020.13000488281,
+                      2712.79345703125
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers13",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.978147625923157,
+                        0.0,
+                        0.2079117000103
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.2079117000103,
+                        0.0,
+                        0.978147625923157
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      913.799987792969,
+                      1020.13000488281,
+                      2712.80004882813
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.315856575965881,
+                        0.0,
+                        -0.434739321470261
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.537367343902588,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.434739321470261,
+                        0.0,
+                        -0.315856575965881
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      915.607116699219,
+                      1020.13000488281,
+                      2710.8173828125
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers14",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.587785184383392,
+                        0.0,
+                        -0.80901700258255
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.80901700258255,
+                        0.0,
+                        -0.587785184383392
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      915.599975585938,
+                      1020.13000488281,
+                      2710.80004882813
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "interpretation": "Three mounted body records per shutter, only direct director ally role established; other roles/stable-character ownership unknown. body.instance is not ownership. Actual Model visibility is tree visibility, not pixel/occlusion. Cached requested/resolved stations and tick ages are snapshots, not new validation; current tick minus validation tick checked. Fifteen mounted pocket roots are actual records, not contact/all-footprint proof."
+        },
+        {
+          "frame_id": "20_high_roost_sky_shrine_perch-vista_day",
+          "image_path": "res://.tmp/e-gate-perches-6a5f-day-r1/20_high_roost_sky_shrine_perch-vista_day.png",
+          "persisted_exact_line_sha256": "230b47f635555fcf205502073b0fbe2d7c3ea8225cf0c3f55f1c95ea0e157635",
+          "status": "sampled_mounted_actors",
+          "physics_tick": 25040,
+          "drawn_frame": 3861,
+          "camera": {
+            "basis": [
+              {
+                "status": "finite",
+                "xyz": [
+                  -0.715264320373535,
+                  -6.44983941811006e-08,
+                  -0.698854029178619
+                ]
+              },
+              {
+                "status": "finite",
+                "xyz": [
+                  -0.145299971103668,
+                  0.978147625923157,
+                  0.148711770772934
+                ]
+              },
+              {
+                "status": "finite",
+                "xyz": [
+                  0.683582425117493,
+                  0.2079117000103,
+                  -0.699634075164795
+                ]
+              }
+            ],
+            "origin": {
+              "status": "finite",
+              "xyz": [
+                898.5546875,
+                1022.9619140625,
+                2702.36181640625
+              ]
+            }
+          },
+          "actors": [
+            {
+              "creature_uid": "creature-1918e75b4af343cafa274a3f70d4e18c",
+              "creature_uid_source": "matched EncounterDirector.ally_body/ally_instance",
+              "model": {
+                "status": "present",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.890525281429291,
+                        0.0,
+                        0.454927146434784
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.454927146434784,
+                        0.0,
+                        0.890525281429291
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      896.756042480469,
+                      1020.13079833984,
+                      2708.88916015625
+                    ]
+                  }
+                },
+                "visible_in_tree": true
+              },
+              "owner_peer_id": 1,
+              "path": "/root/CloudreachCliffs/AllyCreature",
+              "role": "director_current_ally",
+              "runtime_instance_id": 17493720631887,
+              "script": "res://scripts/creatures/follower_creature.gd",
+              "species_id": "galecrest",
+              "stable_character_uid": null,
+              "stable_character_uid_source": "unavailable",
+              "station": {
+                "age_physics_ticks": 140,
+                "current_leader": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      895.0,
+                      1020.130859375,
+                      2706.0
+                    ]
+                  }
+                },
+                "following": true,
+                "leader_at_validation": {
+                  "status": "finite",
+                  "xyz": [
+                    895.0,
+                    1020.130859375,
+                    2706.0
+                  ]
+                },
+                "requested_offset": {
+                  "status": "finite",
+                  "xyz": [
+                    -0.27392578125,
+                    0.0,
+                    6.86279296875
+                  ]
+                },
+                "resolved_now": {
+                  "status": "finite",
+                  "xyz": [
+                    894.72607421875,
+                    1020.13000488281,
+                    2712.86279296875
+                  ]
+                },
+                "status": "cached_read_only",
+                "validated_offset": {
+                  "status": "finite",
+                  "xyz": [
+                    -0.27392578125,
+                    -0.0008544921875,
+                    6.86279296875
+                  ]
+                },
+                "validation_tick": 24900
+              },
+              "transform": {
+                "basis": [
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      0.890525281429291,
+                      0.0,
+                      0.454927146434784
+                    ]
+                  },
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  },
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      -0.454927146434784,
+                      0.0,
+                      0.890525281429291
+                    ]
+                  }
+                ],
+                "origin": {
+                  "status": "finite",
+                  "xyz": [
+                    896.756042480469,
+                    1020.13079833984,
+                    2708.88916015625
+                  ]
+                }
+              },
+              "visible_in_tree": true
+            },
+            {
+              "creature_uid": "creature-4984a96f252d2f1abe148d7aafa7fd4a",
+              "creature_uid_source": "actual body.instance; ownership not inferred",
+              "model": {
+                "status": "present",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.960224807262421,
+                        0.0,
+                        0.27922534942627
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.27922534942627,
+                        0.0,
+                        -0.960224807262421
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      902.754272460938,
+                      1020.130859375,
+                      2710.67993164063
+                    ]
+                  }
+                },
+                "visible_in_tree": true
+              },
+              "owner_peer_id": null,
+              "path": "/root/CloudreachCliffs/roost_perches_0",
+              "role": "unknown",
+              "runtime_instance_id": 17760193155177,
+              "script": "",
+              "species_id": "ribbonray",
+              "stable_character_uid": null,
+              "stable_character_uid_source": "unavailable",
+              "station": {
+                "status": "unavailable"
+              },
+              "transform": {
+                "basis": [
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      -0.960224807262421,
+                      0.0,
+                      0.27922534942627
+                    ]
+                  },
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  },
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      -0.27922534942627,
+                      0.0,
+                      -0.960224807262421
+                    ]
+                  }
+                ],
+                "origin": {
+                  "status": "finite",
+                  "xyz": [
+                    902.754272460938,
+                    1020.130859375,
+                    2710.67993164063
+                  ]
+                }
+              },
+              "visible_in_tree": true
+            },
+            {
+              "creature_uid": "creature-0b988129eba8f859901718a54b3a8198",
+              "creature_uid_source": "actual body.instance; ownership not inferred",
+              "model": {
+                "status": "present",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.991407990455627,
+                        0.0,
+                        0.130803778767586
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.130803778767586,
+                        0.0,
+                        -0.991407990455627
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      896.141052246094,
+                      1020.130859375,
+                      2714.6484375
+                    ]
+                  }
+                },
+                "visible_in_tree": true
+              },
+              "owner_peer_id": null,
+              "path": "/root/CloudreachCliffs/roost_perches_1",
+              "role": "unknown",
+              "runtime_instance_id": 17763917697212,
+              "script": "",
+              "species_id": "stormcapra",
+              "stable_character_uid": null,
+              "stable_character_uid_source": "unavailable",
+              "station": {
+                "status": "unavailable"
+              },
+              "transform": {
+                "basis": [
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      -0.991407990455627,
+                      0.0,
+                      0.130803778767586
+                    ]
+                  },
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  },
+                  {
+                    "status": "finite",
+                    "xyz": [
+                      -0.130803778767586,
+                      0.0,
+                      -0.991407990455627
+                    ]
+                  }
+                ],
+                "origin": {
+                  "status": "finite",
+                  "xyz": [
+                    896.141052246094,
+                    1020.130859375,
+                    2714.6484375
+                  ]
+                }
+              },
+              "visible_in_tree": true
+            }
+          ],
+          "pocket": {
+            "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature",
+            "status": "mounted",
+            "actual_admitted_children": 15,
+            "actual_placements": 15,
+            "unique_paths": 15,
+            "all_actual_model_roots_present_and_finite": true,
+            "placements": [
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.59554523229599,
+                        0.0,
+                        -0.417005270719528
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.727026462554932,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.417005270719528,
+                        0.0,
+                        0.59554523229599
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.976379394531,
+                      1020.13000488281,
+                      2693.00927734375
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Bush00",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.819152057170868,
+                        0.0,
+                        -0.5735764503479
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.5735764503479,
+                        0.0,
+                        0.819152057170868
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      884.0,
+                      1020.13000488281,
+                      2693.0
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.415849506855011,
+                        0.0,
+                        0.15135683119297
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.442537814378738,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.15135683119297,
+                        0.0,
+                        0.415849506855011
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      884.987121582031,
+                      1020.13000488281,
+                      2691.79150390625
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers01",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.939692616462708,
+                        0.0,
+                        0.342020124197006
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.342020124197006,
+                        0.0,
+                        0.939692616462708
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      885.0,
+                      1020.13000488281,
+                      2691.80004882813
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.166055634617805,
+                        0.0,
+                        -0.511066734790802
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.537367343902588,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.511066734790802,
+                        0.0,
+                        0.166055634617805
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.290161132813,
+                      1020.13000488281,
+                      2693.7158203125
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers02",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.309016972780228,
+                        0.0,
+                        -0.95105654001236
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.95105654001236,
+                        0.0,
+                        0.309016972780228
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.299987792969,
+                      1020.13000488281,
+                      2693.69995117188
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.453266561031342,
+                        0.0,
+                        0.647331714630127
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.79024612903595,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.647331714630127,
+                        0.0,
+                        0.453266561031342
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.489929199219,
+                      1020.13000488281,
+                      2702.47436523438
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Bush03",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.5735764503479,
+                        0.0,
+                        0.819152057170868
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.819152057170868,
+                        0.0,
+                        0.5735764503479
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.5,
+                      1020.13000488281,
+                      2702.5
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.439622074365616,
+                        0.0,
+                        -0.177618846297264
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.47414767742157,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.177618846297264,
+                        0.0,
+                        0.439622074365616
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      884.583618164063,
+                      1020.13000488281,
+                      2703.50244140625
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers04",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.927183866500854,
+                        0.0,
+                        -0.37460657954216
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.37460657954216,
+                        0.0,
+                        0.927183866500854
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      884.599975585938,
+                      1020.13000488281,
+                      2703.5
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.039649561047554,
+                        0.0,
+                        -0.377240210771561
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.37931814789772,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.377240210771561,
+                        0.0,
+                        -0.039649561047554
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.398254394531,
+                      1020.13000488281,
+                      2701.21313476563
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers05",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.10452850908041,
+                        0.0,
+                        -0.994521915912628
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.994521915912628,
+                        0.0,
+                        -0.10452850908041
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      883.400024414063,
+                      1020.13000488281,
+                      2701.19995117188
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.577321350574493,
+                        0.0,
+                        -0.165544226765633
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.600587069988251,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.165544226765633,
+                        0.0,
+                        0.577321350574493
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      887.979064941406,
+                      1020.13000488281,
+                      2715.0009765625
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Bush06",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.961261689662933,
+                        0.0,
+                        -0.275637358427048
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.275637358427048,
+                        0.0,
+                        0.961261689662933
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      888.0,
+                      1020.13000488281,
+                      2715.0
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.323815673589706,
+                        0.0,
+                        0.252992540597916
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.410927981138229,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.252992540597916,
+                        0.0,
+                        0.323815673589706
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      889.191101074219,
+                      1020.13000488281,
+                      2715.78881835938
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers07",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.788010776042938,
+                        0.0,
+                        0.61566150188446
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.61566150188446,
+                        0.0,
+                        0.788010776042938
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      889.200012207031,
+                      1020.13000488281,
+                      2715.80004882813
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0703878402709961,
+                        0.0,
+                        -0.500835478305817
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.505757510662079,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.500835478305817,
+                        0.0,
+                        0.0703878402709961
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      886.993530273438,
+                      1020.13000488281,
+                      2713.81640625
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers08",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.139173105359077,
+                        0.0,
+                        -0.990268051624298
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.990268051624298,
+                        0.0,
+                        0.139173105359077
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      887.0,
+                      1020.13000488281,
+                      2713.80004882813
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.614016354084015,
+                        0.0,
+                        0.32647830247879
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.695416569709778,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.32647830247879,
+                        0.0,
+                        0.614016354084015
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      916.981811523438,
+                      1020.13000488281,
+                      2701.98388671875
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Bush09",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.882947564125061,
+                        0.0,
+                        0.469471573829651
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.469471573829651,
+                        0.0,
+                        0.882947564125061
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      917.0,
+                      1020.13000488281,
+                      2702.0
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.325094670057297,
+                        0.0,
+                        -0.387432724237442
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.505757510662079,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.387432724237442,
+                        0.0,
+                        0.325094670057297
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      916.085754394531,
+                      1020.13000488281,
+                      2703.310546875
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers10",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.642787635326386,
+                        0.0,
+                        -0.766044437885284
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.766044437885284,
+                        0.0,
+                        0.642787635326386
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      916.099975585938,
+                      1020.13000488281,
+                      2703.30004882813
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.14209508895874,
+                        0.0,
+                        -0.351697653532028
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.37931814789772,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.351697653532028,
+                        0.0,
+                        -0.14209508895874
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      916.601928710938,
+                      1020.13000488281,
+                      2700.81323242188
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers11",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.374606609344482,
+                        0.0,
+                        -0.927183866500854
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.927183866500854,
+                        0.0,
+                        -0.374606609344482
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      916.599975585938,
+                      1020.13000488281,
+                      2700.80004882813
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.236825153231621,
+                        0.0,
+                        -0.586162745952606
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.63219690322876,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.586162745952606,
+                        0.0,
+                        0.236825153231621
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      914.987182617188,
+                      1020.13000488281,
+                      2712.01806640625
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Bush12",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.374606639146805,
+                        0.0,
+                        -0.927183866500854
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.927183866500854,
+                        0.0,
+                        0.374606639146805
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      915.0,
+                      1020.13000488281,
+                      2712.0
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.4328673183918,
+                        0.0,
+                        0.0920087918639183
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.442537814378738,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.0920087918639183,
+                        0.0,
+                        0.4328673183918
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      913.786071777344,
+                      1020.13000488281,
+                      2712.79345703125
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers13",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.978147625923157,
+                        0.0,
+                        0.2079117000103
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.2079117000103,
+                        0.0,
+                        0.978147625923157
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      913.799987792969,
+                      1020.13000488281,
+                      2712.80004882813
+                    ]
+                  }
+                }
+              },
+              {
+                "children": 1,
+                "model_status": "present",
+                "model_transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.315856575965881,
+                        0.0,
+                        -0.434739321470261
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        0.537367343902588,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.434739321470261,
+                        0.0,
+                        -0.315856575965881
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      915.607116699219,
+                      1020.13000488281,
+                      2710.8173828125
+                    ]
+                  }
+                },
+                "path": "/root/CloudreachCliffs/AuthoredRouteDetails/HighPerchesEdgeNature/Flowers14",
+                "transform": {
+                  "basis": [
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        -0.587785184383392,
+                        0.0,
+                        -0.80901700258255
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ]
+                    },
+                    {
+                      "status": "finite",
+                      "xyz": [
+                        0.80901700258255,
+                        0.0,
+                        -0.587785184383392
+                      ]
+                    }
+                  ],
+                  "origin": {
+                    "status": "finite",
+                    "xyz": [
+                      915.599975585938,
+                      1020.13000488281,
+                      2710.80004882813
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "interpretation": "Three mounted body records per shutter, only direct director ally role established; other roles/stable-character ownership unknown. body.instance is not ownership. Actual Model visibility is tree visibility, not pixel/occlusion. Cached requested/resolved stations and tick ages are snapshots, not new validation; current tick minus validation tick checked. Fifteen mounted pocket roots are actual records, not contact/all-footprint proof."
+        }
+      ],
+      "history": "Accepted401lift runtime/test proofs and original Perches appearanceFAIL remain. Accepted8bshafts9/129, f9/6a pocket source and3486 read-only producer source reused. No ownership/contact/spacing/appearance PASS or failed history reset."
+    }
+  ],
+  "latest_native_runtime_disposition": {
+    "source_commit": "6a5f4bf281138b8560825725fca6eefaf8f7de82",
+    "verdict": "APPROVE bounded original subset runtime/provenance; visual and contact gates OPEN"
+  }
 }

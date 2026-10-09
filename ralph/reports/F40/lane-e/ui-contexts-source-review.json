@@ -1001,5 +1001,64 @@
     "source_commit": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
     "run_id": 37918513611,
     "verdict": "APPROVE existing Settings smoke artifact; native UI PENDING"
+  },
+  "exact_command_binding_reviews": [
+    {
+      "source_commit": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+      "source_reuse_verdict": "APPROVE exact previously approved1e2 source; no source/test witness restart",
+      "producer_blob": "fcddcb0c39c82b4c92966383e530634d89d97e99",
+      "static_command": {
+        "verdict": "APPROVE applicability only",
+        "argv": [
+          "--headless",
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--script",
+          "res://tools/catalogue_survey.gd",
+          "--check-only"
+        ],
+        "limits": "Godot existing --check-only validates script without running deferred _run. This is not ordinary headless capture: producer _run refuses headless. No actual static result asserted."
+      },
+      "menu_command": {
+        "verdict": "APPROVE applicability conditional on ROOT exact pin/import/static0/clean provenance",
+        "argv": [
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--rendering-method",
+          "forward_plus",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "res://tools/catalogue_survey.gd",
+          "--",
+          "--biome=cloudreach",
+          "--subset=Galefoot",
+          "--times=day",
+          "--ui-context=menu",
+          "--preset=High",
+          "--source-commit=1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+          "--output=res://.tmp/e-ui-cloudreach-menu-1e2-day-r1"
+        ]
+      },
+      "binding_findings": [
+        "Exact pinned producer blob equals accepted final1e2 including4bf Settings retry/actual firstgamepad Controls target and read-only failedguard/craft diagnostics; accepted Settingsrun37918513611 artifact remains separate affected-proof evidence.",
+        "Existing parser accepts cloudreach/Galefoot/day/menu; menu context requires exactly one existing catalogue destination/time. Existing shared LOOKDEV.prepare consumes High/source arguments and requires nonempty graphics receipt, actual declared root raster and native renderer checks. Source argument is declared metadata; ROOT actual clean Git checkout/source receipts must independently bind it.",
+        "Expected one base catalogue image plus seven UI records/images: backpack,quest_log,build,players,settings,map,settings-controls. Existing expected-count guard, actual production panels/map realm/terrain guards, owner/open/content/focus/visible-text/hint guards, full-frame PNG/raster/nonempty/fresh-output guards and exact manifest UTF8 readback/nonzero-final-failure semantics remain accepted.",
+        "New Controls target is installed firstgamepad binding; hint-prefix guard remains mandatory. Read-only guard operands help diagnose future refusal but do not guarantee success or establish the old Settings cause. No --f40-candidate, new stand, fixture, camera or layout override in argv."
+      ],
+      "required_runtime_provenance": [
+        "ROOT fresh clean exact1e2 checkout; actual import/static exit0 and tracked/index clean or explicit retained import normalization/revalidation history.",
+        "Fresh user/output, actual High Forward+ native1920x1080/driver receipts, original source-before/after/start/terminal records.",
+        "One base+allseven successfully guarded UI PNG/records, independent image headers/CRC/hash, original persisted manifest exact readback, complete failures[] and successful terminal; active/import/source success is not capture success."
+      ],
+      "fixture_and_limits": "Original single Galefoot/day debug catalogue travel, direct production scene/CameraRig/menu/current contents/focus/owner/map discovery scope. No earned arrival/party/progression injection claim, campaign/save/co-op/device/performance/visualbar/fullmatrix/wholecriterion/READY. Failed9a menu/craft history and source/static/artifact distinction preserved. No CRAFT command approval requested or issued. ROOT priority/scheduling remains its own; no engine/import/GPU/tests/dispatch performed by reviewer."
+    }
+  ],
+  "latest_menu_command_binding": {
+    "source_commit": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+    "static": "APPROVE applicability",
+    "menu": "APPROVE conditional applicability",
+    "actual_execution": "PENDING ROOT only",
+    "craft": "not requested/not approved in this entry"
   }
 }

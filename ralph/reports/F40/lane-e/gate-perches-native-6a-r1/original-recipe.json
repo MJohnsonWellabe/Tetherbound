@@ -1,0 +1,106 @@
+{
+  "reviewed_utc": "2026-10-09T04:33:09.409597-05:00",
+  "reviewer": "Original Ohm /root/review_cloud_startup",
+  "source": "6a5f4bf281138b8560825725fca6eefaf8f7de82",
+  "base": "12ade7cdb2ccecc5939cc785dc4f7993145db6a2",
+  "source_verdict": "APPROVE",
+  "static_command_verdict": "APPROVE",
+  "native_command_verdict": "APPROVE applicability only",
+  "config_blobs": {
+    "base": "4c056bc19b749b725bb9337908260c7523d8f160",
+    "current": "e066a2b7891ab521f29d701dc8a956b822b22843"
+  },
+  "verified_delta": "Only three flower offset X values change; parsed JSON equality verified after exactly these three substitutions. Fifteen-item count, height/yaw/asset/grounding/anchor/forward and all other values unchanged.",
+  "changed_items": [
+    {
+      "zero_based_index": 2,
+      "asset": "flowers",
+      "old_x": -17.2,
+      "new_x": -16.7,
+      "z": -6.3,
+      "registered_rect_x_margin_m": 0.3000000000000007
+    },
+    {
+      "zero_based_index": 5,
+      "asset": "flowers",
+      "old_x": -17.3,
+      "new_x": -16.6,
+      "z": 1.2,
+      "registered_rect_x_margin_m": 0.3999999999999986
+    },
+    {
+      "zero_based_index": 11,
+      "asset": "flowers",
+      "old_x": 17.8,
+      "new_x": 16.6,
+      "z": 0.8,
+      "registered_rect_x_margin_m": 0.3999999999999986
+    }
+  ],
+  "registered_ground_applicability": [
+    "Non-SkyShrine HighPerches registers a rect centred at landmark at.x/at.z with half(17,17), height at.y. ground_height_at uses inclusive <= boundary checks. All fifteen intended centres now lie inside both half axes.",
+    "_route_detail_ground first admits registered ground only when finite and abs(ground-at.y)<8m, then attempts existing segment-cover fallback. Old outside centres were not guaranteed this registered surface; no actual omission, native failure or cause is inferred.",
+    "This closes the static centre-domain concern only. Unchanged mesh_root grounding still centres/rotates actual model root and checks a local owned StaticBody/normal threshold; source inclusion does not establish complete plant footprints or all fifteen admissions.",
+    "Full court cover/exclusion, compass, Fly axes, keeper fittings, terrain/colliders, camera/lighting/party/route policies remain unchanged."
+  ],
+  "unchanged_reused_blobs": {
+    "scripts/world/cloudreach_world.gd": "c1b8222c2028204da2b3510701cdf29fd14e8351",
+    "scripts/world/cloudreach_realm_gate_crag.gd": "1c45b40965c90585c3ecb0fcb86ca318bc2f892f",
+    "tools/capture_cloudreach_frame_matrix.gd": "2e6a155e8a2203099d60fa253a6d5157b1babd31",
+    "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+    "tools/capture_cloudreach_lane_common.gd": "f2e553be8920586cde1179c37fdef674f93784e9",
+    "scripts/world/cloudreach_high_perches_presentation.gd": "cbd0c8437099315e03957714baad37315e98f47f",
+    "data/config/cloudreach_high_perches_visual.json": "c99b9207210477e07ec18722712f9f9d7f2b9a39",
+    "data/config/cloudreach_realm_gate_crag_visual.json": "309f17b15af404a5eec27d63de4897935b1f8e76",
+    "tests/test_cloudreach_high_perches_presentation.gd": "3a54f8d2133803387cd82ff8886115b82f835f29",
+    "tests/test_cloudreach_environment.gd": "1066e57f367a98a1773202e5d0a2f4cd44bca428",
+    "tests/test_cloudreach_realm_gate_crag.gd": "150c46e2f51674e8a7589fac5e28da64cc70bcca"
+  },
+  "commands": {
+    "static": {
+      "argv": [
+        "--headless",
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--script",
+        "res://tools/capture_cloudreach_frame_matrix.gd",
+        "--check-only"
+      ],
+      "externally_pinned_source": "6a5f4bf281138b8560825725fca6eefaf8f7de82",
+      "execution": "PENDING ROOT ONLY"
+    },
+    "native": {
+      "argv": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/capture_cloudreach_frame_matrix.gd",
+        "--",
+        "--only=1,4,19,20",
+        "--preset=High",
+        "--source-commit=6a5f4bf281138b8560825725fca6eefaf8f7de82",
+        "--output=res://.tmp/e-gate-perches-6a5f-day-r1"
+      ],
+      "execution": "PENDING ROOT ONLY after actual successful exact-source static/import",
+      "selection": "Four original rows 1 approach,4 detail-crag,19 perch landing,20 perch vista; default day; no motion/night/candidate CLI",
+      "guards": "Original stand/production CameraRig/travel/floor/ray/drawn crown/on-screen/legal-party fixtures and High/Forward+ raster/PNG/failure/final receipt retained. Per-image actor receipt only for successful19/20; Gate observer once at first valid1/4; exact whole-line receipt checks preserved.",
+      "batch": "One shared World mount is a bounded RD-36 validation batch. Gate and Perches native/provenance and original blind verdicts must be judged independently; no one-result substitution."
+    }
+  },
+  "proof_reuse": {
+    "shaft": "Accepted unchanged8b0099tests129assertions; no passing rerun",
+    "Gate": "Accepted unchanged7f0637tests116assertions; bare invalid-default-sampler fixture is not mounted beacon footing proof",
+    "actor_producer": "Final3486 unchanged blob2e6a155e8a2203099d60fa253a6d5157b1babd31",
+    "two_row_command_history": "Original3486Perches/7fGate two-row applicability findings retained as fallback/history; no intermediate capture requested here"
+  },
+  "required_runtime_limits": [
+    "ROOT must bind clean exact source/index, fresh import/user/output, actual static/native argv/renderer/raster/terminal, four original PNG headers/CRC/hash and persisted graphics/pose/observer records.",
+    "Compare actual mounted pocket children/model roots with authored15 only after run. No inferred admission/no-floating from source or no warning. Existing Gate observer excludes beacon footings; operands do not establish all-contour contact/walkability/opacity. Actor visibility/runtimeUID do not establish pixels/ownership.",
+    "No static/import/native/blind PASS claimed now; no96quarter/full384, wholeF40/F08, campaign/co-op/save/device/performance/earned or visual-bar/READY inference.",
+    "Prior Gate11 overall/contact failure, HighPerches appearance failures and all historical witness/rejection scopes preserved. No execution, source edit or blind contact by reviewer."
+  ]
+}

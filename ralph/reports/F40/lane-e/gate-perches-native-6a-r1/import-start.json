@@ -1,0 +1,16 @@
+{
+  "args": [
+    "--headless",
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--editor",
+    "--import",
+    "--quit"
+  ],
+  "deadline_minutes": 15,
+  "mode": "Import",
+  "source": "6a5f4bf281138b8560825725fca6eefaf8f7de82",
+  "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1/import-home",
+  "pid": 28828,
+  "started_utc": "2026-10-09T10:33:44.8240290Z"
+}

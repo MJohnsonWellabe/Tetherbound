@@ -237,5 +237,225 @@
     }
   ],
   "artifact_verdict": "APPROVE",
-  "current_pending_gates": "ROOT mounted native and original independent blind appearance/contact; source/command and affected headless artifact approved only"
+  "current_pending_gates": "ROOT mounted native and original independent blind appearance/contact; source/command and affected headless artifact approved only",
+  "native_runtime_reviews": [
+    {
+      "source_commit": "6a5f4bf281138b8560825725fca6eefaf8f7de82",
+      "runtime_verdict": "APPROVE bounded persisted original subset runtime/provenance; not visual/contact/whole acceptance",
+      "packet": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1",
+      "original_output_directory": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-perches-6a5f-day-r1",
+      "exact_argv": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/capture_cloudreach_frame_matrix.gd",
+        "--",
+        "--only=1,4,19,20",
+        "--preset=High",
+        "--source-commit=6a5f4bf281138b8560825725fca6eefaf8f7de82",
+        "--output=res://.tmp/e-gate-perches-6a5f-day-r1"
+      ],
+      "source_provenance": {
+        "pinned_head_and_index_tree": "f1323b48d1e920837c4a5d2198848a4d926de237",
+        "meaning": "Git tree, not commit. Locally resolved exact6a tree matches original before/after static/import/capture snapshots; each tracked/index clean. Six pre-existing unrelated untracked evidence directories are retained. Raw generated outputs remain at original paths; no silent cleanup/archival reinterpretation or later cached HEAD substitution.",
+        "import_metadata_revalidation": "Original import receipt retained; four existing import metadata paths revalidated against recorded pinned blobs. No new import or source change by reviewer."
+      },
+      "static": {
+        "exact_recipe": [
+          "--headless",
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--script",
+          "res://tools/capture_cloudreach_frame_matrix.gd",
+          "--check-only"
+        ],
+        "exit_code": 0,
+        "ended_utc": "2026-10-09T10:32:52.2212197Z",
+        "stderr_bytes": 0
+      },
+      "import": {
+        "exit_code": 0,
+        "ended_utc": "2026-10-09T10:34:05.9531867Z",
+        "stderr_bytes": 0
+      },
+      "capture_start": {
+        "pid": 6252,
+        "mode": "Capture",
+        "started_utc": "2026-10-09T10:34:44.1955384Z",
+        "deadline_minutes": 45,
+        "source": "6a5f4bf281138b8560825725fca6eefaf8f7de82",
+        "args": [
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--rendering-method",
+          "forward_plus",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "res://tools/capture_cloudreach_frame_matrix.gd",
+          "--",
+          "--only=1,4,19,20",
+          "--preset=High",
+          "--source-commit=6a5f4bf281138b8560825725fca6eefaf8f7de82",
+          "--output=res://.tmp/e-gate-perches-6a5f-day-r1"
+        ],
+        "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1/capture-home"
+      },
+      "capture_terminal": {
+        "pid": 6252,
+        "mode": "Capture",
+        "reason": "process_exit",
+        "exit_code": 0,
+        "source": "6a5f4bf281138b8560825725fca6eefaf8f7de82",
+        "ended_utc": "2026-10-09T10:44:37.5288941Z"
+      },
+      "graphics": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+        "preset": "High",
+        "renderer": "forward_plus",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source_commit": "6a5f4bf281138b8560825725fca6eefaf8f7de82"
+      },
+      "actual_driver": "Actual stdout Godot4.7.stable.official.5b4e0cb0f; Vulkan1.3.280 Forward+ NVIDIA GeForceGTX1060 3GB.",
+      "completion_binding": {
+        "manifest_path": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-perches-6a5f-day-r1/manifest.txt",
+        "manifest_sha256": "85d25950097cd00265dde869559304f2310bfa40cd6029a17530dde90757ff8a",
+        "actual_footer": "# frame matrix: 4 frames written, 0 rows skipped",
+        "originals_written": 4,
+        "skips": 0,
+        "all_original_record_and_observer_lines_present_in_stdout_and_persisted_manifest": true,
+        "terminal_process_exit": 0,
+        "scope": "Legacy original rows1/4/19/20 only; no full96/384 or complete-field invented."
+      },
+      "diagnostics": {
+        "engine_errors": 0,
+        "script_errors": 0,
+        "warnings": 2,
+        "warning_scope": [
+          "road_visibility_broken_causeway_main_03 fail-closed positional refusal",
+          "road_visibility_windscar_floor_loop_15 fail-closed positional refusal"
+        ],
+        "owned_process_absence": "Capture PID6252 has terminal process_exit0. ROOT reported all owned engines gone; no separate process-list receipt was supplied or live query performed, so broader absence is not independently promoted."
+      },
+      "fixture_disclosure": "Existing source-disclosed direct Cloudreach scene/reset, five directly-added creatures (galecrest active carrier plus bramblebun,mudsnout,terrapup,brooktail), staged progression/entry flags, debug stand travel, production CameraRig, native follower settling120physics ticks. Not earned chapter travel/party/campaign/fight proof. Original boot row records at day hour10; no candidate CLI flag.",
+      "packet_hashes": {
+        "capture-start.json": "307a430de01712fd54fba54fb2589c5e49067fe9957748a96bdd951698570ff7",
+        "capture-terminal.json": "c8bd2c397fc77cf91ba26470e62b62c76704b8afe2ba1643edba6ad2330bf0dc",
+        "capture.stdout.log": "62654499af89c49538c39c797a4c94bd41777ebcf6810501f5045f5989c9ce4e",
+        "capture.stderr.log": "b57244443e9479c10c20336d268e144bf5aa57198031ba4507c79fd6fbcc80e0",
+        "static-start.json": "edb65ed46f840da47b332260577719ed2171ead353dd6f0a76ed0cf65716aca3",
+        "static-terminal.json": "71241a94d4f4de73a4bacc18e465b493b5d98f0d951d9244b04537b033ad8bb4",
+        "static.stdout.log": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+        "static.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "import-start.json": "c5c0dbed6f63ae7d9004531d3bfb9124b1c802e55117e69e2ae7435489d3f500",
+        "import-terminal.json": "a5e187a9d8521d4c2b03a92d24aa2fe83d435846d0cc89f1e574c5cbd4c8f09b",
+        "import.stdout.log": "ba8f907a3dc806e9bc2dbfcd588ce5c0bfd205652b985976d799d116961db40e",
+        "import.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source-before-static.json": "b2fa7f3121d18029832b50405150b839a67dac172990154f5a635015f8d61b9f",
+        "source-after-static.json": "fd7bb7a9bfe82909de43d6af82348403bd0f80b71a7a64336e9724a398d78a49",
+        "source-before-import.json": "4aa46e3e46fd54b5ed955da51044a6f3c9cc9d2aa7d6bbb9fdfca2a4fbf4d7e0",
+        "source-after-import.json": "722b58620ea418b10d99bc357e97c30ffe75995226cdc103e8f2eca5e6a49b9f",
+        "source-after-import-revalidated.json": "3340949f99cf737c50ad29ee9b4a792aeacbe4f5abc63c1f3a455b9d6b54ff59",
+        "source-before-capture.json": "1bc0a0b83c45bba35dbf1d55c6f0e7b483bd1322facd2094a850f21198f640fa",
+        "source-after-capture.json": "f82b3dbdbd35415011767731e69212aa8ab291e54eb2c073c5d45e177b7d565e",
+        "original-recipe.json": "85b9277ac640659f44f06613b698372c5d8f707c1c80950e1adf5b242a9bfd7c",
+        "native-image-integrity.json": "fb88534cbed622685c3ca1a4d1a2ada74496bef7e7267bca62b191bc0350c5aa",
+        "native-verified-summary.json": "ff3a1ad65e9130280c352f878a944076e4a147347e235fb1e82afec617a49f76",
+        "original-and-neutral-copy-integrity.json": "605340340a8052c08f17332bd01c96474850a4e770871a8e9771a6518195238a"
+      },
+      "limits": [
+        "Source/logic approvals reused without re-audit. These records do not establish appearance, controller/device/performance/save/co-op/earned path/wholeF40/F08/fullbar/READY.",
+        "Weather unrecorded; reported pose equality is at manifest printed precision. Perches follower pose differs from401r2, preventing full creature-spacing-matched comparison.",
+        "Neutral copies are exact pixels only. Source/mapping/measurements remain in reviewer report for parent; no judge contact or visual grading."
+      ],
+      "independent_piece": "Gate rows1approach/4detail-crag",
+      "images": [
+        {
+          "group": "gate",
+          "row": 1,
+          "frame_id": "01_gate_lower_cliffs_approach_day",
+          "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-perches-6a5f-day-r1/01_gate_lower_cliffs_approach_day.png",
+          "preserved": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1/originals/01_gate_lower_cliffs_approach_day.png",
+          "neutral_pixels_only": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1/blind/gate/01.png",
+          "bytes": 2410125,
+          "sha256": "bdd21b01e6a86e05fd0f1dfbfe2654cf0d20bbc4f3c245a3aa0c1b9b51020c20",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "independent_integrity": "Original PNG signature/IHDR, all chunks CRC, IEND/exact end and full IDAT zlib scanline size validated; original/archive/neutral files byte-identical.",
+          "before_original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/01_gate_lower_cliffs_approach_day.png",
+          "before_sha256": "33b6339aeead610155193d7627efede290b0199c28bbbce8f5917d2605da96d9",
+          "comparison": {
+            "same_recorded_trainer_stand_target_yaw_pitch_hour_camera": true,
+            "matching_precision": "Legacy manifest printed precision only; old precise shutter transforms are not available in these records, so no exact floating-point zero-delta claim.",
+            "same_companion_record": true,
+            "weather": "No explicit weather pin/record; no sole-change pixel attribution."
+          }
+        },
+        {
+          "group": "gate",
+          "row": 4,
+          "frame_id": "04_gate_lower_cliffs_detail-crag_day",
+          "original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-perches-6a5f-day-r1/04_gate_lower_cliffs_detail-crag_day.png",
+          "preserved": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1/originals/04_gate_lower_cliffs_detail-crag_day.png",
+          "neutral_pixels_only": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1/blind/gate/02.png",
+          "bytes": 2245701,
+          "sha256": "a06614018bd26d92b59bccaf92bb9aba0804e6c8a4416ecde56d85d37fb0ce14",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "independent_integrity": "Original PNG signature/IHDR, all chunks CRC, IEND/exact end and full IDAT zlib scanline size validated; original/archive/neutral files byte-identical.",
+          "before_original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/04_gate_lower_cliffs_detail-crag_day.png",
+          "before_sha256": "433ae148178480be16c06bc0d7789de1e4d4c946befdc0f1b0eda5deb1b34c24",
+          "comparison": {
+            "same_recorded_trainer_stand_target_yaw_pitch_hour_camera": true,
+            "matching_precision": "Legacy manifest printed precision only; old precise shutter transforms are not available in these records, so no exact floating-point zero-delta claim.",
+            "same_companion_record": true,
+            "weather": "No explicit weather pin/record; no sole-change pixel attribution."
+          }
+        }
+      ],
+      "observer": {
+        "frame_id": "01_gate_lower_cliffs_approach_day",
+        "persisted_exact_line_sha256": "fc35a2a391a40646d2c1582c337889f3b6707053e90d2ee1622ee4a4641e7cd3",
+        "status": "sampled_mounted_render_triangles",
+        "expected_targets": {
+          "facade": 1,
+          "paver": 3,
+          "tower": 2
+        },
+        "observed_targets": {
+          "facade": 1,
+          "paver": 3,
+          "tower": 2
+        },
+        "target_count": 6,
+        "support_mesh_count": 4,
+        "unique_finite_queries": 26,
+        "triangle_hits": 73,
+        "unsupported_xz": 0,
+        "no_support_below_foot": 6,
+        "target_config_sha256": "18c9a28d408e32e857bb347136c8eaa7429e47b9b4527fd0936104d726e0cadd",
+        "world_source_sha256": "6de06916c3dfe01bb81c6b0ce84668c48dad96677416ac5b0e5f92d655210cba",
+        "sampler_source_sha256": "8b565e69d3a3a26d9afc303ed3da3630e769d3c67969320912122843e5e78db9",
+        "verification": "All6 target query counts and26unique query positions checked, finite feet/triangles/heights and below-foot booleans recomputed against stored hits; exact line appears in original persisted manifest and stdout. World/sampler/config hash equals pinned Git bytes.",
+        "limits": "Observer samples original facade/tower mesh bottom coordinates and deformed paver minima/AABB centre subset, not new beacon footings/all contours. Four rendered support meshes include Trail overlay; not an opacity guarantee. Six paver no-support-below-foot negatives are preserved. No contact/walkability/grounding PASS inferred."
+      },
+      "history": "Prior Gate11 runtime7/116/sourceAPP and original whole/contact blindFAIL remain; new beacon SOURCE/7tests116artifactAPP reused, no previous failure erased. Actual pictured appearance remains original-blind pending."
+    }
+  ],
+  "latest_native_runtime_disposition": {
+    "source_commit": "6a5f4bf281138b8560825725fca6eefaf8f7de82",
+    "verdict": "APPROVE bounded original subset runtime/provenance; visual and contact gates OPEN"
+  }
 }

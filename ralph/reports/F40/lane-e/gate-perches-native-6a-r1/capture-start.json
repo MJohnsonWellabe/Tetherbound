@@ -1,0 +1,23 @@
+{
+  "pid": 6252,
+  "mode": "Capture",
+  "started_utc": "2026-10-09T10:34:44.1955384Z",
+  "deadline_minutes": 45,
+  "source": "6a5f4bf281138b8560825725fca6eefaf8f7de82",
+  "args": [
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "res://tools/capture_cloudreach_frame_matrix.gd",
+    "--",
+    "--only=1,4,19,20",
+    "--preset=High",
+    "--source-commit=6a5f4bf281138b8560825725fca6eefaf8f7de82",
+    "--output=res://.tmp/e-gate-perches-6a5f-day-r1"
+  ],
+  "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-6a5f4bf281-gate-perches-r1/capture-home"
+}
