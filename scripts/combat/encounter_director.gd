@@ -1987,7 +1987,8 @@ func _host_ambient_wild_engage(token: String, peer: int) -> Dictionary:
 	var body: Node3D = source.body.get_ref()
 	if not is_instance_valid(body) or body.is_queued_for_deletion() or not body.is_inside_tree() \
 		or not body.visible or not bool(body.call("is_alive")) or body.get("instance").get("uid") != source.uid \
-		or _ambient_generation(body) != source.get("generation"): return {}
+		or _ambient_generation(body) != source.get("generation") \
+		or _ambient_body(str(body.get_meta(&"ambient_source_id", ""))) != body: return {}
 	var character: String = _session.call("_authority_character", peer)
 	var admitted: Dictionary = _session.call("admitted_character_state", peer)
 	var deployed := deployed_body_for(peer)
@@ -2003,7 +2004,8 @@ func _host_ambient_wild_engage(token: String, peer: int) -> Dictionary:
 	var live_id := _shared_host_id_for_body(body)
 	if not live_id.is_empty():
 		var existing: Dictionary = _encounter_host.call("record", live_id)
-		if existing.get("participants", {}).get(peer, {}).get("character_id") == character: return existing
+		if existing.get("participants", {}).get(peer, {}).get("character_id") == character:
+			return _with_host_xp_owner(live_id, existing)
 	var safety: Dictionary = _session.call("_host_portal_context", peer)
 	if safety.get("character_id") != character or safety.get("realm") != scope.realm \
 		or safety.get("world_instance_id") != scope.world_namespace or not safety.get("position") is Vector3 \
@@ -2017,7 +2019,7 @@ func _host_ambient_wild_engage(token: String, peer: int) -> Dictionary:
 		or not authority.call("pending_creature_vitals", character).is_empty(): return {}
 	if not live_id.is_empty():
 		var joined := _host_engage({"encounter_id": live_id, "kind": "engage"}, peer)
-		return _encounter_host.call("record", live_id) if joined.get("ok") == true else {}
+		return _with_host_xp_owner(live_id, _encounter_host.call("record", live_id)) if joined.get("ok") == true else {}
 	var context: Dictionary = _session.call("_host_wild_training_context")
 	if context != source.context or context.get("ready") != true: return {}
 	_configure_f22_patterns(body, false)
