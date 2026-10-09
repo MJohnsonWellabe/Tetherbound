@@ -522,10 +522,16 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var cost := float(preload("res://scripts/combat/tether_commands.gd").config().commands.get(command, {}).get("cost", INF))
 			if command not in ["item_throw", "snare", "rally"] or not is_finite(cost):
 				return {"verdict":"FAIL", "detail":"unknown authored command cost"}
+			# Snare needs eight tier-zero quick hits just to cover its cost.
+			# Earn two additional hits of headroom through the same physical
+			# input path, with room for misses; never assign the command meter.
+			var meter_config: Dictionary = preload("res://scripts/combat/tether_commands.gd").config().meter
+			var target_meter := minf(float(meter_config.maximum), cost + 2.0 * float(meter_config.gain.get(slot, 0.0))) if command == "snare" else cost
+			var attempt_limit := 16 if command == "snare" else 8
 			var attempts: Array[Dictionary] = []
-			for hit in 8:
+			for hit in attempt_limit:
 				var snapshot: Dictionary = manager.tether_command_snapshot()
-				if float(snapshot.get("meter", 0.0)) >= cost: break
+				if float(snapshot.get("meter", 0.0)) >= target_meter: break
 				if not manager.is_fighting(): return {"verdict":"FAIL", "detail":"fight ended before actual hits filled the command meter"}
 				# The host owns the actual engaged wild; guests use its mirrors.
 				var target: Node3D = director.get("_engaged_with") if session.is_host() else director.get("_shared_opponent_proxy")
@@ -630,10 +636,10 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 					strike_data["attempts"] = attempts
 					strike["data"] = strike_data
 					return strike
-			if float(manager.tether_command_snapshot().get("meter", 0.0)) < cost:
+			if float(manager.tether_command_snapshot().get("meter", 0.0)) < target_meter:
 				print("COMMAND precast observation: ", JSON.stringify({"command":command, "cost":cost, "attempts":attempts}))
-				return {"verdict":"FAIL", "detail":"eight accepted %s attempts did not earn %s meter (%s required)" % [slot, command, cost],
-					"data":{"command":command, "cost":cost, "attempts":attempts}}
+				return {"verdict":"FAIL", "detail":"%s physical %s attempts did not earn %s meter (%s required, including margin)" % [attempt_limit, slot, command, target_meter],
+					"data":{"command":command, "cost":cost, "target_meter":target_meter, "attempts":attempts}}
 			var hud: Node = director.get_parent().get_node_or_null("CombatHUD")
 			var view: Dictionary = manager.new_system_combat_snapshot()
 			var active: RefCounted = manager.active_creature()
@@ -651,12 +657,29 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var manager: Node = _combat_manager()
 			if not manager.is_fighting() or manager.enemy() == null or float(manager.enemy().hp) <= 0.0:
 				return {"verdict":"FAIL", "detail":"Snare requires the same living actual wild target"}
+			var director: Node = _encounter_director()
+			var target: Node3D = director.get("_engaged_with") if session.is_host() else director.get("_shared_opponent_proxy")
+			if target == null: target = director.get("_legacy_mirror")
+			var body: Node3D = director.ally_body()
+			if not is_instance_valid(target) or not is_instance_valid(body):
+				return {"verdict":"FAIL", "detail":"Snare actual target or owned body missing"}
+			if session.is_host():
+				# The same disclosed host-local proximity fixture used for earned
+				# hits must be current at the real command: the live wild moves
+				# during hit settlement and the coordinator's intervening probes.
+				# No meter, vitals, deployment, movement factor or timer is granted.
+				body.global_position = target.global_position + Vector3(0, 0, 3.0)
+				body.face_towards(target.global_position)
+			var refusals: Array[String] = []
+			var observe_refusal := func(reason: String) -> void: refusals.append(reason)
+			manager.connect("tether_command_refused", observe_refusal)
 			var input: Node = null
 			for child: Node in manager.get_children():
 				if child.get_script() == preload("res://scripts/ui/tether_command_input.gd"): input = child
 			var before: Dictionary = manager.tether_command_snapshot()
 			if input == null or not input.request("snare"):
-				return {"verdict":"FAIL", "detail":"production TetherCommandInput refused Snare request"}
+				manager.disconnect("tether_command_refused", observe_refusal)
+				return {"verdict":"FAIL", "detail":"production TetherCommandInput refused Snare request", "data":{"refusals":refusals}}
 			# Observe the exact four values the production input just submitted.
 			# Snare has no Item pending_request or Tag action-original journal.
 			var request := preload("res://scripts/combat/tether_commands.gd").intent(str(input.get("_encounter_id")),
@@ -665,10 +688,13 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				await physics_frame
 				var receipt: Dictionary = manager.tether_command_snapshot().get("last_receipt", {})
 				if receipt.get("command_id") == "snare" and receipt.get("sequence") == request.sequence:
+					manager.disconnect("tether_command_refused", observe_refusal)
 					return {"verdict":"PASS", "detail":"actual Snare command acknowledged", "data":{"request":request,
-						"before":before, "after":_tag_state({"request":request})}}
+						"before":before, "refusals":refusals, "after":_tag_state({"request":request})}}
+				if not refusals.is_empty(): break
+			manager.disconnect("tether_command_refused", observe_refusal)
 			return {"verdict":"FAIL", "detail":"Snare lacked an accepted receipt within the existing short step budget",
-				"data":{"request":request, "state":_tag_state({"request":request}), "refusal":manager.get("last_encounter_refusal")}}
+				"data":{"request":request, "state":_tag_state({"request":request}), "refusals":refusals}}
 		"op_tonic_rally":
 			var manager: Node = _combat_manager()
 			if not manager.is_fighting() or manager.enemy() == null or float(manager.enemy().hp) <= 0.0:

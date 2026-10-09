@@ -46,20 +46,27 @@ class RoadRunTap extends RefCounted:
 	var finish := false
 	var _cutoff: float
 	var _edge_frame := -1
-	var _started_frame := -1
+	var walked := 0
+	var _counted_frame := -1
 	func _init(cutoff: float) -> void:
 		_cutoff = cutoff
-	func advance(frame: int, z: float, driving: bool, running: bool) -> int:
+	func advance(frame: int, z: float, driving: bool, running: bool, controllable: bool = true) -> int:
+		# The navigator's original budget counts walking ticks, excluding
+		# combat/UI holds. Service and stick callbacks share a physics tick.
+		if phase != Phase.ARMED and controllable and frame != _counted_frame:
+			walked += 1
+			_counted_frame = frame
 		if phase == Phase.ARMED:
 			if finish or z >= _cutoff:
 				phase = Phase.DONE
-			elif driving:
+			elif driving and controllable:
 				if running:
 					phase = Phase.FAILED
 				else:
 					phase = Phase.ON_RELEASE
 					_edge_frame = frame
-					_started_frame = frame
+					walked = 1
+					_counted_frame = frame
 					return Edge.PRESS
 		elif phase == Phase.ON_RELEASE and frame - _edge_frame >= 3:
 			phase = Phase.ON_GAP if running else Phase.FAILED
@@ -75,7 +82,7 @@ class RoadRunTap extends RefCounted:
 			phase = Phase.DONE
 		# Reserve the existing3press+5release ticks and two callback-order ticks
 		# before the original900frame deadline; this never adds a tick.
-		if phase == Phase.RUNNING and (finish or (driving and z >= _cutoff) or frame - _started_frame >= 900 - 3 - 5 - 2):
+		if phase == Phase.RUNNING and controllable and (finish or (driving and z >= _cutoff) or walked >= 900 - 3 - 5 - 2):
 			if running:
 				phase = Phase.OFF_RELEASE
 				_edge_frame = frame
@@ -85,7 +92,6 @@ class RoadRunTap extends RefCounted:
 
 var _mira_road_run: RoadRunTap = null
 var _mira_run_refused := false
-var _mira_walk_started := -1
 var _mira_run_trace: Array[Dictionary] = []
 var _tree: SceneTree = null
 var _world: Node = null
@@ -918,7 +924,6 @@ func _begin_mira_road_run(hints: Array[Vector2]) -> bool:
 		_fail("Mira meadow return has no physical auto-run tap binding")
 		return false
 	_mira_road_run = RoadRunTap.new(-12.0)
-	_mira_walk_started = Engine.get_physics_frames()
 	_mira_run_trace.clear()
 	_tree.connect("physics_frame", Callable(self, "_service_mira_road_run"))
 	return true
@@ -931,12 +936,15 @@ func _service_mira_road_run() -> void:
 func _mira_road_run_edge(driving: bool) -> void:
 	if _mira_road_run == null:
 		return
+	var controllable := not _tree.paused and INPUT_OWNER.current(_tree) == null \
+		and bool(_player.call("locomotion_enabled"))
 	var edge := _mira_road_run.advance(Engine.get_physics_frames(), _player.global_position.z,
-		driving, bool(_game.get("auto_run")))
+		driving, bool(_game.get("auto_run")), controllable)
 	if edge != RoadRunTap.Edge.NONE:
 		var event := _event_for(&"auto_run", edge == RoadRunTap.Edge.PRESS) as InputEventJoypadButton
 		_mira_run_trace.append({"physics_frame": Engine.get_physics_frames(), "pressed": event.pressed,
 			"pad_button": event.button_index, "auto_run_before_dispatch": bool(_game.get("auto_run")),
+			"controllable": controllable, "walked": _mira_road_run.walked,
 			"player": [_player.global_position.x, _player.global_position.y, _player.global_position.z]})
 		Input.parse_input_event(event)
 		# The native movement callback flushes a press before the controller.
@@ -957,11 +965,12 @@ func _finish_mira_road_run() -> bool:
 		_mira_road_run_edge(false)
 		# A refused walk can finish its physical off tap using only unused
 		# ticks from the ORIGINAL900 allowance. It remains refused throughout.
-		var remaining := maxi(0, 900 - int(Engine.get_physics_frames() - _mira_walk_started))
-		while _mira_road_run != null and remaining > 0:
+		var held := 0
+		while _mira_road_run != null and _mira_road_run.walked < 900 and held <= 36000:
 			_stop_left_stick()
 			Input.flush_buffered_events()
-			remaining -= 1
+			if _tree.paused or INPUT_OWNER.current(_tree) != null or not bool(_player.call("locomotion_enabled")):
+				held += 1
 			await _tree.physics_frame
 		# Never extend the budget or accept an arrival with an owned run toggle.
 		if _mira_road_run != null:

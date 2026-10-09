@@ -546,3 +546,100 @@ func test_fixture_full_heal_refuses_foreign_peer_generation_epoch_amount_pending
 	foreign_provider.free()
 	foreign_director.free()
 	body.free()
+## Physical discovery only is detached. Session admission, registry identity,
+## the director's binding validation and AcceptedActionHost remain production.
+class RemoteBindingSession extends SAVE_FIXTURE.FixtureSession:
+	func is_active() -> bool: return true
+
+class RemoteBindingBody extends Node3D:
+	var owner_peer_id := 2
+
+class RemoteBindingDirector extends "res://scripts/combat/encounter_director.gd":
+	var fixture_body: Node3D
+	func _local_peer_id() -> int: return 1
+	func deployed_bodies() -> Array: return [fixture_body]
+
+class RemoteBindingHub extends Node:
+	var session: Node
+	var director: Node
+	func body_for(peer: int) -> Node3D: return director.call("deployed_body_for", peer)
+	func card_for(peer: int) -> Dictionary: return director.call("_creature_card_for", peer)
+
+func _remote_binding_fixture(empty_admitted_roster := false) -> Dictionary:
+	var data := DATA_FIXTURE.new()
+	var game := SAVE_FIXTURE.FixtureGame.new()
+	game.local = data._player()
+	game.world = data._world()
+	var session := RemoteBindingSession.new()
+	session.fixture = game
+	game.session = session
+	var authority := AUTH.new()
+	session.set("_character_authority", authority)
+	var registry: RefCounted = session.get("_registry")
+	assert_false(registry.call("add", 2, DATA_FIXTURE.CHARACTER, "Remote", "stormwood").is_empty())
+	var before := RECORD.portable_projection(game.local.save_data())
+	var uid: String = before.party[0].uid
+	if empty_admitted_roster:
+		before.party.clear()
+		before.redesign_character.creatures.clear()
+	assert_true(authority.bind_world(game.world.reward_delivery_namespace))
+	assert_true(authority.seed_admitted_character(before, DATA_FIXTURE.CHARACTER).get("ok") == true)
+	var body := RemoteBindingBody.new()
+	var director := RemoteBindingDirector.new()
+	director.fixture_body = body
+	director.set("_session", session)
+	var host := ACCEPTED.new()
+	director.set("_encounter_host", host)
+	director.set("_deployed_by", {2: {"creature_uid": uid, "card": {"creature_uid": uid, "hp": 120.0}}})
+	director.set("_deployment_identity", {2: {"character_id": DATA_FIXTURE.CHARACTER, "creature_uid": uid, "generation": 7}})
+	var record := host.open(2, "stormwood", "trainer", {"hp": 20.0, "owner_npc": "tamsin_surge_lesson"}, uid, DATA_FIXTURE.CHARACTER)
+	var hub := RemoteBindingHub.new()
+	hub.session = session
+	hub.director = director
+	var fight := preload("res://scripts/combat/stormwood_hosted_trainer.gd").new()
+	fight.hub = hub
+	return {"game": game, "session": session, "authority": authority, "before": before, "uid": uid,
+		"body": body, "director": director, "host": host, "record": record, "hub": hub, "fight": fight}
+
+func _free_remote_binding_fixture(f: Dictionary) -> void:
+	f.fight.free()
+	f.hub.free()
+	f.director.free()
+	f.body.free()
+	f.session.free()
+	f.game.free()
+
+func test_remote_actor_binding_requires_current_deployment_identity_before_admitting_body() -> void:
+	var f := _remote_binding_fixture()
+	var original: Dictionary = f.authority.state(DATA_FIXTURE.CHARACTER)
+	var correct := {"character_id": DATA_FIXTURE.CHARACTER, "creature_uid": f.uid, "generation": 7}
+	for stale: Dictionary in [{"character_id": "foreign_owner", "creature_uid": f.uid, "generation": 7},
+		{"character_id": DATA_FIXTURE.CHARACTER, "creature_uid": "foreign_uid", "generation": 7},
+		{"character_id": DATA_FIXTURE.CHARACTER, "creature_uid": f.uid, "generation": 0}]:
+		f.director.set("_deployment_identity", {2: stale})
+		assert_true(f.director.call("_ordinary_actor_binding", f.record.encounter_id, 2, f.body).is_empty())
+		assert_false(f.record.participants[2].has("actor_vitals"), "refusal cannot bind or mint actor health")
+	f.director.set("_deployment_identity", {2: correct})
+	var binding: Dictionary = f.director.call("_ordinary_actor_binding", f.record.encounter_id, 2, f.body)
+	assert_false(binding.is_empty())
+	if not binding.is_empty():
+		assert_eq(binding.character_id, DATA_FIXTURE.CHARACTER)
+		assert_eq(binding.creature_uid, f.uid)
+		assert_eq(binding.body_instance_id, f.body.get_instance_id())
+		assert_eq(binding.actor_generation, 1)
+		assert_eq(binding.deployment_generation, 7)
+		assert_eq(f.director.call("_ordinary_actor_binding", f.record.encounter_id, 2, f.body), binding,
+			"repeated admission keeps the same actual body lifetime")
+	assert_true(ACTOR.equivalent(f.authority.state(DATA_FIXTURE.CHARACTER), original), "body admission never grants a portable creature")
+	assert_eq(f.fight.call("_owned_identity", 2), {"character": DATA_FIXTURE.CHARACTER, "uid": f.uid})
+	_free_remote_binding_fixture(f)
+
+func test_deployed_local_fixture_cannot_admit_a_creature_missing_from_host_roster() -> void:
+	var f := _remote_binding_fixture(true)
+	assert_false(f.game.local.party.members().is_empty(), "owner has a local-only fixture grant")
+	assert_true(f.session.admitted_character_state(2).party.is_empty(), "host's actual admitted carrier still has no creature")
+	assert_true(f.fight.call("_owned_identity", 2).is_empty(), "healthy cached deployment cannot substitute for host admission")
+	assert_true(f.director.call("_ordinary_actor_binding", f.record.encounter_id, 2, f.body).is_empty())
+	assert_false(f.record.participants[2].has("actor_vitals"))
+	assert_true(f.authority.state(DATA_FIXTURE.CHARACTER).party.is_empty(), "refused hosted start grants nothing")
+	_free_remote_binding_fixture(f)

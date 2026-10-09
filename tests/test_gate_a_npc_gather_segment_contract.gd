@@ -336,10 +336,33 @@ func test_meadow_auto_run_releases_failed_taps_and_cleans_up_a_refused_walk() ->
 	assert_eq(near.phase, SEGMENT.RoadRunTap.Phase.DONE, "a return already inside the village needs no run tap")
 	var deadline := SEGMENT.RoadRunTap.new(-12.0)
 	deadline.advance(10, -40.0, true, false)
-	deadline.advance(13, -40.0, false, true)
-	deadline.advance(18, -40.0, true, true)
-	assert_eq(deadline.advance(900, -30.0, false, true), SEGMENT.RoadRunTap.Edge.PRESS,
+	for frame in range(11, 899):
+		deadline.advance(frame, -40.0, true, true)
+	assert_eq(deadline.advance(899, -30.0, false, true), SEGMENT.RoadRunTap.Edge.PRESS,
 		"off-tap cleanup begins before the unchanged900frame cap even if the cutoff was not reached")
-	assert_eq(deadline.advance(903, -30.0, false, false), SEGMENT.RoadRunTap.Edge.RELEASE)
-	deadline.advance(908, -30.0, false, false)
+	assert_eq(deadline.advance(902, -30.0, false, false), SEGMENT.RoadRunTap.Edge.RELEASE)
+	deadline.advance(907, -30.0, false, false)
 	assert_eq(deadline.phase, SEGMENT.RoadRunTap.Phase.DONE)
+
+
+func test_meadow_auto_run_does_not_press_off_or_spend_walking_budget_during_owned_input() -> void:
+	var tap := SEGMENT.RoadRunTap.new(-12.0)
+	assert_eq(tap.advance(0, -40.0, true, false, false), SEGMENT.RoadRunTap.Edge.NONE)
+	assert_eq(tap.advance(1, -40.0, true, false, true), SEGMENT.RoadRunTap.Edge.PRESS)
+	tap.advance(4, -40.0, false, true, true)
+	tap.advance(9, -40.0, true, true, true)
+	var before := tap.walked
+	for frame in range(10, 3610):
+		assert_eq(tap.advance(frame, -40.0, false, true, false), SEGMENT.RoadRunTap.Edge.NONE)
+	assert_eq(tap.walked, before, "a held fight/UI cannot consume the navigator's walking allowance")
+	assert_eq(tap.phase, SEGMENT.RoadRunTap.Phase.RUNNING)
+	tap.finish = true
+	assert_eq(tap.advance(3610, -40.0, false, true, false), SEGMENT.RoadRunTap.Edge.NONE,
+		"failure cleanup cannot inject an ignored toggle under owned input")
+	assert_eq(tap.advance(3611, -40.0, false, true, true), SEGMENT.RoadRunTap.Edge.PRESS)
+	var counted := tap.walked
+	tap.advance(3611, -40.0, false, true, true)
+	assert_eq(tap.walked, counted, "service and stick calls count each physical frame once")
+	assert_eq(tap.advance(3614, -40.0, false, false, true), SEGMENT.RoadRunTap.Edge.RELEASE)
+	tap.advance(3619, -40.0, false, false, true)
+	assert_eq(tap.phase, SEGMENT.RoadRunTap.Phase.DONE)
