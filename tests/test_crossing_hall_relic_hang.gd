@@ -58,6 +58,9 @@ func test_guest_refreshes_view_before_sending_and_hears_the_host_decision() -> v
 	assert_eq(game.messages, ["You have no relic for this shrine yet."] as Array[String], "the host's refusal reaches the guest")
 	hall.call("hang_relic", "meadows", game)
 	assert_eq(session.calls.size(), 4, "a decided press does not lock later presses")
+	hall.free()
+	game.free()
+	session.free()
 
 
 func test_guest_with_no_view_reply_does_not_send_a_stale_request() -> void:
@@ -66,6 +69,9 @@ func test_guest_with_no_view_reply_does_not_send_a_stale_request() -> void:
 	session.answer_view = false
 	rig[0].call("hang_relic", "meadows", rig[1])
 	assert_eq(session.calls, ["view"] as Array[String], "nothing is sent until the view arrives")
+	rig[0].free()
+	rig[1].free()
+	session.free()
 
 
 func test_host_sends_directly_and_surfaces_refusal() -> void:
@@ -116,3 +122,6 @@ func test_disabled_portal_runtime_explains_instead_of_sending() -> void:
 	rig[0].call("hang_relic", "meadows", game)
 	assert_true(session.calls.is_empty(), "no request while the shrine runtime is off")
 	assert_eq(game.messages.size(), 1)
+	rig[0].free()
+	game.free()
+	session.free()
