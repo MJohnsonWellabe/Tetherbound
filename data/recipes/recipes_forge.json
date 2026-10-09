@@ -116,5 +116,5 @@
       "blurb": "Refine stormglass with thunderwood into a plate at the Forge."
     }
   },
-  "runtime_enabled": false
+  "runtime_enabled": true
 }
