@@ -1,0 +1,283 @@
+diff --git a/tests/smoke_net_owner_passive_rejoin.gd b/tests/smoke_net_owner_passive_rejoin.gd
+index 122389e5e9c..c68718cbe72 100644
+--- a/tests/smoke_net_owner_passive_rejoin.gd
++++ b/tests/smoke_net_owner_passive_rejoin.gd
+@@ -222,6 +222,8 @@ func _run() -> void:
+ 		quit(await finish())
+ 		return
+ 	_step_phase_deadline_ms = Time.get_ticks_msec() + 3600.0 * 1000.0
++	var host_commands: bool = OS.get_cmdline_user_args().has("--prove-host-tether-commands")
++	var command_setup_peer: int = 0 if host_commands else 1
+ 	for i in 2:
+ 		_ok(await step(i, "op_tonic_candidate"), "tonic: process-local candidate gates before world boot")
+ 		if not _ok(await step(i, "boot", {"scene": "world"}, BUILD_BUDGET), "SETUP: peer %d boots its own Meadows world" % i):
+@@ -229,9 +231,10 @@ func _run() -> void:
+ 			return
+ 		await step(i, "dismiss_dialogue", {})
+ 		_ok(await step(i, "party_grant", {"species": "terrapup", "level": 8}), "SETUP: peer %d owns a terrapup" % i)
+-		if i == 1 and OS.get_cmdline_user_args().has("--prove-tag-combo"):
+-			_ok(await step(i, "party_grant", {"species":"ripplet", "level":8}), "Tag SETUP: guest owns one additional healthy companion before admission")
+-	_ok(await step(1, "op_tonic_supply"), "tonic: guest saves its initial two-item stock before admission")
++		if (host_commands and i == 0) or (not host_commands and i == 1 \
++			and OS.get_cmdline_user_args().has("--prove-tag-combo")):
++			_ok(await step(i, "party_grant", {"species":"ripplet", "level":8}), "Tag SETUP: peer %d owns one additional healthy companion before admission" % i)
++	_ok(await step(command_setup_peer, "op_tonic_supply"), "tonic: peer %d saves its initial two-item stock before admission" % command_setup_peer)
+ 	if not _ok(await step(0, "host"), "peer 0 hosts"):
+ 		quit(await finish())
+ 		return
+@@ -259,6 +262,19 @@ func _run() -> void:
+ 		if _admitted(first): await _prove_rally(0)
+ 		quit(await finish())
+ 		return
++	if OS.get_cmdline_user_args().has("--prove-host-tether-commands"):
++		# F24#0 uses the same first-admitted owner, actual wild encounters and
++		# command assertions. Shipping Snare is a separately retained proof.
++		if _admitted(first):
++			var failed_before: int = failures.size()
++			var item_ok: bool = await _tonic_item_original(0)
++			if item_ok and failures.size() == failed_before:
++				for i in [1, 0]:
++					_ok(await step(i, "press", {"action":"combat_run"}), "host Item: peer %d normally leaves the proof fight" % i)
++				if failures.size() == failed_before: await _prove_rally(0)
++				if failures.size() == failed_before: await _prove_tag_combo(0)
++		quit(await finish())
++		return
+ 	var first_id := str(((first.guest as Dictionary).get("local", {}) as Dictionary).get("id", ""))
+ 	if not await _tonic_item_original():
+ 		quit(await finish())
+@@ -501,17 +517,20 @@ func _run() -> void:
+ 	quit(await finish())
+ 
+ 
+-func _prove_tag_combo() -> void:
++func _prove_tag_combo(commander: int = 1) -> void:
+ 	_ok(await step(0, "deploy_creature"), "Tag: host deploys its same actual owned companion")
+ 	if not _ok(await step(0, "op_tag_target"), "Tag: host normally engages an actual live wild"): return
+ 	var encounter: Dictionary = await probe(0, "encounter")
+ 	_ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "Tag: existing proximity setup reaches the actual host fight")
+ 	_ok(await step(1, "deploy_creature"), "Tag: guest deploys its same admitted owned companion")
+ 	if not _ok(await step(1, "join_encounter", {"encounter_id":str(encounter.get("id", ""))}), "Tag: guest joins the exact host encounter"): return
+-	var owner: Dictionary = await probe(1, "op_tag_state")
++	var owner: Dictionary = await probe(commander, "op_tag_state")
++	var commander_character := _guest_character if commander == 1 else str(owner.get("character_id", ""))
++	check(not commander_character.is_empty(), "Tag: commander has its actual stable character")
++	if commander_character.is_empty(): return
+ 	var peer := int(owner.peer)
+ 	var host_before: Dictionary = await probe(0, "op_tag_state", {"peer":peer})
+-	var combo: Dictionary = await step(1, "op_tag_combo")
++	var combo: Dictionary = await step(commander, "op_tag_combo")
+ 	if combo.get("verdict") != "PASS":
+ 		var failed_data: Dictionary = combo.get("data", {})
+ 		var failed_request: Dictionary = failed_data.get("request", {})
+@@ -519,15 +538,16 @@ func _prove_tag_combo() -> void:
+ 		# A timeout has no returned request; keep the already-observed encounter
+ 		# binding so the existing host probe still retains its live saved proposal.
+ 		var failed_host: Dictionary = await probe(0, "op_tag_state", {"peer":peer,
+-			"request":failed_request, "character_id":_guest_character,
++			"request":failed_request, "character_id":commander_character,
+ 			"encounter_id":str(host_before.get("encounter_id", ""))})
+ 		print("TAG failed host observation: ", JSON.stringify(failed_host))
+ 	if not _ok(combo, "Tag: actual hits earn meter and fresh-hit command switches normally"): return
+ 	var data: Dictionary = combo.data
+ 	var request: Dictionary = data.request
+-	var args := {"peer":peer, "request":request, "character_id":_guest_character}
++	var args := {"peer":peer, "request":request, "character_id":commander_character}
+ 	var host: Dictionary = await probe(0, "op_tag_state", args)
+-	var after: Dictionary = await probe(1, "op_tag_state")
++	var after: Dictionary = await probe(commander, "op_tag_state")
++	var observer: Dictionary = await probe(1 - commander, "op_tag_state")
+ 	var original: Dictionary = host.original
+ 	var outcome: Dictionary = original.get("outcome", {})
+ 	var verdict: Dictionary = outcome.get("verdict", {})
+@@ -536,7 +556,7 @@ func _prove_tag_combo() -> void:
+ 	if strikes.size() != 2: return
+ 	check(strikes[0].source_kind == "creature" and strikes[1].source_kind == "creature" \
+ 		and strikes[0].attacker_uid == data.before.deployment.creature_uid and strikes[1].attacker_uid == data.incoming_uid \
+-		and strikes[0].character_id == _guest_character and strikes[1].character_id == _guest_character,
++		and strikes[0].character_id == commander_character and strikes[1].character_id == commander_character,
+ 		"Tag: both damage events belong to the owner's distinct creatures")
+ 	check(float(strikes[0].actual_hp_debit) > 0.0 and float(strikes[1].actual_hp_debit) > 0.0 \
+ 		and strikes[0].target_hp_after == strikes[1].target_hp_before \
+@@ -554,16 +574,17 @@ func _prove_tag_combo() -> void:
+ 		"Tag: owner and host consume exactly the parent's command meter state")
+ 	for index in 2:
+ 		var strike: Dictionary = strikes[index]
+-		var issuer := "command:%s:%s:%d:%s:%s:%d" % [request.encounter_id, _guest_character,
++		var issuer := "command:%s:%s:%d:%s:%s:%d" % [request.encounter_id, commander_character,
+ 			int(request.generation), strike.part, strike.attacker_uid, int(strike.generation)]
+ 		check(host.impact_history.get(issuer, {}).get("seen", {}).has(str(int(request.sequence))) \
+-			and after.impact_history.get(issuer, {}).get("seen", {}).has(str(int(request.sequence))),
++			and after.impact_history.get(issuer, {}).get("seen", {}).has(str(int(request.sequence))) \
++			and observer.impact_history.get(issuer, {}).get("seen", {}).has(str(int(request.sequence))),
+ 			"Tag: owner and joined observer consume the actual %s child impact once" % strike.part)
+ 	check(after.enemy_hp == verdict.delta.hp, "Tag: the owner consumes the parent absolute HP without another debit")
+ 	print("TAG actual family observation: ", JSON.stringify({"owner":after,"host":host,"before":host_before}))
+ 	if OS.get_cmdline_user_args().has("--capture-combat-hud"):
+-		_ok(await step(1, "op_tonic_hud_capture", {"name":"after-tag"}), "HUD: actual incoming creature after accepted Tag")
+-	_ok(await step(1, "op_tag_replay"), "Tag: submit the same original again")
++		_ok(await step(commander, "op_tonic_hud_capture", {"name":"after-tag"}), "HUD: actual incoming creature after accepted Tag")
++	_ok(await step(commander, "op_tag_replay"), "Tag: submit the same original again")
+ 	var replay: Dictionary = await probe(0, "op_tag_state", args)
+ 	check(replay.original.get("admission", {}) == original.get("admission", {}) \
+ 		and replay.original.get("outcome", {}) == original.get("outcome", {}) \
+@@ -581,8 +602,12 @@ func _tonic_seconds(state: Dictionary) -> float:
+ 	return 0.0
+ 
+ 
+-func _tonic_item_original() -> bool:
+-	if not _ok(await step(1, "op_tonic_pouch"), "tonic: production personal pouch assignment saves"): return false
++func _tonic_item_original(commander: int = 1) -> bool:
++	var owner_state: Dictionary = await _state(commander)
++	var commander_character := _guest_character if commander == 1 else str(owner_state.get("character_id", ""))
++	check(not commander_character.is_empty(), "tonic: commander has its actual stable character")
++	if commander_character.is_empty(): return false
++	if not _ok(await step(commander, "op_tonic_pouch"), "tonic: production personal pouch assignment saves"): return false
+ 	_ok(await step(0, "deploy_creature"), "tonic: host deploys its actual owned creature")
+ 	if not _ok(await step(0, "op_tonic_target"), "tonic: normal interact opens a real canonical wild fight"): return false
+ 	var encounter: Dictionary = await probe(0, "encounter")
+@@ -593,12 +618,12 @@ func _tonic_item_original() -> bool:
+ 	_ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "tonic: existing proximity fixture reaches the shared fight")
+ 	_ok(await step(1, "deploy_creature"), "tonic: guest deploys its same admitted owned creature")
+ 	if not _ok(await step(1, "join_encounter", {"encounter_id":id}), "tonic: guest joins the host's exact record"): return false
+-	var before_mastery: Dictionary = (await _state(1)).get("mastery", {}).get("live", {})
+-	var hits: Dictionary = await step(1, "op_tonic_hits")
++	var before_mastery: Dictionary = (await _state(commander)).get("mastery", {}).get("live", {})
++	var hits: Dictionary = await step(commander, "op_tonic_hits")
+ 	if hits.get("verdict") != "PASS":
+ 		# Retain the exact live host proposal/journal bindings at this failed
+ 		# return; guest readiness does not expose the host settlement gate.
+-		var guest: Dictionary = await probe(1, "op_tag_state")
++		var guest: Dictionary = await probe(commander, "op_tag_state")
+ 		var guest_peer := int(guest.get("peer", 0))
+ 		print("TONIC failed hits host observation: ", JSON.stringify(await probe(0,
+ 			"op_tag_state", {"encounter_id":id, "peer":guest_peer})))
+@@ -609,8 +634,8 @@ func _tonic_item_original() -> bool:
+ 			"encounter", {"admission_peer_id":guest_peer})))
+ 	if not _ok(hits, "tonic: normal accepted quick hits earn Item meter"): return false
+ 	if OS.get_cmdline_user_args().has("--capture-combat-hud"):
+-		_ok(await step(1, "op_tonic_hud_capture", {"name":"earned-command"}), "HUD: actual earned command and creature meters before Item")
+-	var retained: Array = (await _state(0)).get("mastery", {}).get("retained", {}).get(_guest_character, [])
++		_ok(await step(commander, "op_tonic_hud_capture", {"name":"earned-command"}), "HUD: actual earned command and creature meters before Item")
++	var retained: Array = (await _state(0)).get("mastery", {}).get("retained", {}).get(commander_character, [])
+ 	var seen := {}
+ 	for event: Dictionary in retained:
+ 		var uid := str(event.get("attacker_uid", ""))
+@@ -629,25 +654,25 @@ func _tonic_item_original() -> bool:
+ 			_earned_mastery.uses[move] = float(_earned_mastery.uses.get(move, 0.0)) + 1.0
+ 	check(not seen.is_empty(), "mastery: actual landed quick hits retain unique creature-owned mastery obligations")
+ 	print("MASTERY actual earned expectation: ", JSON.stringify({"uid":_mastery_uid, "before":before_mastery, "retained":retained, "earned":_earned_mastery}))
+-	_ok(await step(1, "op_tonic_clear"), "tonic: existing proximity fixture clears reach while previous actual HP writes settle")
++	_ok(await step(commander, "op_tonic_clear"), "tonic: existing proximity fixture clears reach while previous actual HP writes settle")
+ 	var ready := false
+ 	for poll in 20:
+-		var current: Dictionary = (await _state(0)).get("tonic", {}).get("readiness", {}).get(_guest_character, {})
++		var current: Dictionary = (await _state(0)).get("tonic", {}).get("readiness", {}).get(commander_character, {})
+ 		if current.get("admission") == true and current.get("vitals_pending") == false:
+ 			ready = true
+ 			break
+ 		await step(0, "wait", {"frames":30})
+ 	check(ready, "tonic: host confirms the actual previous owner HP saves are settled before writer refusal")
+ 	if not ready: return false
+-	var pending: Dictionary = await step(1, "op_tonic_item")
++	var pending: Dictionary = await step(commander, "op_tonic_item")
+ 	if not _ok(pending, "tonic: production Item request preserves its original while owner save refuses"): return false
+-	var guest: Dictionary = (await _state(1)).get("tonic", {})
++	var guest: Dictionary = (await _state(commander)).get("tonic", {})
+ 	var host: Dictionary = (await _state(0)).get("tonic", {})
+-	var original: Dictionary = host.get("rows", {}).get(_guest_character, {})
++	var original: Dictionary = host.get("rows", {}).get(commander_character, {})
+ 	print("TONIC original actual owner/host: ", JSON.stringify({"owner":guest, "host":host}))
+ 	check(original.get("status") == "pending" and not str(original.get("receipt", "")).is_empty(),
+ 		"tonic: host journal retains the precise original awaiting owner TRUE BOOL")
+-	check(_tonic_seconds(guest) == 0.0 and host.get("projected", {}).get(_guest_character, {}).is_empty(),
++	check(_tonic_seconds(guest) == 0.0 and host.get("projected", {}).get(commander_character, {}).is_empty(),
+ 		"tonic: owner save refusal installs no owner or authoritative effect")
+ 	check(int(guest.get("stock", -1)) == 1 and int(guest.get("disk_stock", -1)) == 2 \
+ 		and guest.get("fenced") == true and not (guest.get("disk_receipts", []) as Array).has(str(original.get("receipt", ""))) \
+@@ -655,12 +680,12 @@ func _tonic_item_original() -> bool:
+ 		"tonic: failed owner save fences the pending debit, keeps disk unchanged and produces no saved result")
+ 	_tonic_receipt = str(original.get("receipt", ""))
+ 	_tonic_uid = str(original.get("uid", ""))
+-	_ok(await step(1, "op_tonic_writer", {"block":false}), "tonic: original actual owner writer is restored")
+-	if not _ok(await step(1, "op_tonic_retry"), "tonic: retry sends the same original request"): return false
++	_ok(await step(commander, "op_tonic_writer", {"block":false}), "tonic: original actual owner writer is restored")
++	if not _ok(await step(commander, "op_tonic_retry"), "tonic: retry sends the same original request"): return false
+ 	for poll in 30:
+-		guest = (await _state(1)).get("tonic", {})
++		guest = (await _state(commander)).get("tonic", {})
+ 		host = (await _state(0)).get("tonic", {})
+-		if guest.get("saved_result", {}).get("saved") == true and host.get("rows", {}).get(_guest_character, {}).get("status") == "accepted": break
++		if guest.get("saved_result", {}).get("saved") == true and host.get("rows", {}).get(commander_character, {}).get("status") == "accepted": break
+ 		await step(0, "wait", {"frames":30})
+ 	check(guest.get("saved_result", {}).get("saved") == true \
+ 		and guest.get("saved_result", {}).get("receipt") == _tonic_receipt,
+@@ -668,8 +693,8 @@ func _tonic_item_original() -> bool:
+ 	check(int(guest.get("stock", -1)) == 1 and int(guest.get("disk_stock", -1)) == 1 \
+ 		and (guest.get("disk_receipts", []) as Array).has(_tonic_receipt),
+ 		"tonic: real owner disk holds one debit and the original receipt")
+-	check(host.get("rows", {}).get(_guest_character, {}).get("receipt") == _tonic_receipt \
+-		and host.get("rows", {}).get(_guest_character, {}).get("request") == original.get("request"),
++	check(host.get("rows", {}).get(commander_character, {}).get("receipt") == _tonic_receipt \
++		and host.get("rows", {}).get(commander_character, {}).get("request") == original.get("request"),
+ 		"tonic: retry neither substitutes nor duplicates the accepted original")
+ 	_tonic_remaining = _tonic_seconds(guest)
+ 	check(_tonic_remaining > 0.0 and _tonic_remaining <= 90.0, "tonic: actual saved effect starts its authored timer")
+diff --git a/tests/smoke_net_owner_passive_rejoin_peer.gd b/tests/smoke_net_owner_passive_rejoin_peer.gd
+index 861fa6e9d2f..a4ed25e048c 100644
+--- a/tests/smoke_net_owner_passive_rejoin_peer.gd
++++ b/tests/smoke_net_owner_passive_rejoin_peer.gd
+@@ -178,17 +178,27 @@ func _tag_step(action: String) -> Dictionary:
+ 	for hit in 8:
+ 		var target: Node3D = director.get("_shared_opponent_proxy")
+ 		if target == null: target = director.get("_legacy_mirror")
++		if director.call("_is_host") == true: target = director.get("_engaged_with")
+ 		var body: Node3D = director.ally_body()
+ 		if target == null or body == null or not manager.is_fighting():
+ 			return {"verdict":"FAIL", "detail":"actual Tag target or body lost before earned meter", "data":{"attempts":attempts}}
+ 		body.global_position = target.global_position + Vector3(0, 0, 3.0)
+ 		body.face_towards(target.global_position)
+ 		for frame in 15: await physics_frame
++		var strike_facing := Vector3(0, 0, -1)
++		if director.call("_is_host") == true:
++			if not is_instance_valid(target) or not is_instance_valid(body):
++				return {"verdict":"FAIL", "detail":"actual host Tag body lost during preparation"}
++			# Same ordinary live facing as the approved host command-hit path.
++			strike_facing = target.call("centre") - body.call("centre")
++			strike_facing.y = 0.0
++			if strike_facing.is_zero_approx(): strike_facing = body.call("facing")
++			strike_facing = strike_facing.normalized()
+ 		var meter := float(manager.tether_command_snapshot().get("meter", 0.0))
+ 		var observation: Dictionary = {"attempt":hit + 1, "meter_before":meter,
+ 			"foe_hp_before":float(manager.enemy().hp) if manager.enemy() != null else -1.0}
+ 		attempts.append(observation)
+-		var strike: Dictionary = await _step_strike({"facing":[0,0,-1], "settle":1})
++		var strike: Dictionary = await _step_strike({"facing":[strike_facing.x,strike_facing.y,strike_facing.z], "settle":1})
+ 		var strike_data: Dictionary = strike.get("data", {})
+ 		observation["strike"] = {"verdict":str(strike.get("verdict", "")), "ok":strike_data.get("ok"),
+ 			"code":str(strike_data.get("code", "")), "submitted_action":strike_data.get("submitted_action")}
+@@ -705,6 +715,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
+ 			# new enemy hit while the original Item's writer refusal is tested.
+ 			var director: Node = _encounter_director()
+ 			var target: Node3D = director.get("_shared_opponent_proxy")
++			if session.is_host(): target = director.get("_engaged_with")
+ 			var body: Node3D = director.ally_body()
+ 			if target == null or body == null: return {"verdict":"FAIL", "detail":"actual combat body missing"}
+ 			body.global_position = target.global_position + Vector3(0, 0, 18.0)
+@@ -741,8 +752,15 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
+ 					if not op is Dictionary or op.get("op") != "creature_training_settle": continue
+ 					var row: Dictionary = op.get("delivery", {})
+ 					if row.get("action") != "tether_item" or row.get("status") != "pending" \
+-						or row.get("character_id") != game.local.character_id \
+-						or row.get("intent", {}).get("request") != _tonic_request: continue
++						or row.get("character_id") != game.local.character_id: continue
++					if session.is_host():
++						# A local host publishes during request(), before it returns.
++						# Observe the actual request already installed by the manager.
++						var live: Dictionary = manager.get("_tether_command_view").get("pending_request", {})
++						if live.get("command_id") != "item_throw" \
++							or not preload("res://scripts/combat/tether_commands.gd").valid_intent(live): continue
++						_tonic_request = live.duplicate(true)
++					if row.get("intent", {}).get("request") != _tonic_request: continue
+ 					var blocked: Dictionary = await _tonic_step("op_tonic_writer", {"block":true})
+ 					_tonic_refusal_armed = blocked.get("verdict") == "PASS"
+ 			ledger.delta_applied.connect(_tonic_blocker)
