@@ -3,7 +3,7 @@
     "F23#2",
     "F23#5"
   ],
-  "status": "PARKED OPEN F23#2; historical WHOLE approval returned by integration, repaired UID verified but remaining movement proof fails",
+  "status": "OPEN F23#2: shipping canonical Heal29 and Dash25 passed with original ARTIFACT APPROVE; returned guest integration remains PARKED",
   "source_components": [
     {
       "commit": "fd26fd34ed0d29967e7b839b90aca33420e1261a",
@@ -765,5 +765,88 @@
     "whole_f23_2_verdict": "OPEN",
     "literal_bounded_verdict": "ARTIFACT APPROVE for 37869795583 at cc31045690858c2c518647c4444af1997568498c: 29 checks, zero errors. Current WHOLE F23#2 remains OPEN. The literal ten-move catalogue and two equipable choices per role retain their unit and eight-receipt evidence. This Heal pass repairs one shipping path; it does not resolve current shipping Dash evidence or the returned guest combat/utility integration failures. No further gameplay repair is supported by this packet. The guest path remains PARKED pending the decisive host motion sample/acknowledgment/correction operands.",
     "remaining": "Shipping Dash and returned guest utility integration evidence unresolved; guest path PARKED pending decisive host motion sample/acknowledgment/correction operands. No unchanged or passing rerun."
+  },
+  "shipping_canonical_dash": {
+    "source": "5d9a3ef95a0a9528870925d77dbcc411e908acd2",
+    "run": 37924135864,
+    "job": 113798926291,
+    "artifact": 11613187768,
+    "conclusion": "success",
+    "archive_sha256": "a06528dcde4ea5781bb4564c42aede85ed0bc78a93b8a77fbe9741ee87052f3b",
+    "log_sha256": "56bb4eb0d4efa5b976adfe745200566cbc03f437379dea604a1d3b345e84cb4f",
+    "job_sha256": "e083430c0d14faa2bf7e6be2a9ecccbbdaf6bdfbc3b80a94adfb22d13e1e1848",
+    "result": [
+      {
+        "arrival_records": {},
+        "canonical_wild_override": false,
+        "captures": [],
+        "checks": 25,
+        "claim": "focused fixture; no campaign, co-op, device or visual acceptance",
+        "errors": [],
+        "impacts": 1,
+        "launches": 1,
+        "library_arrival_override": false,
+        "shipping_canonical_wild": true,
+        "shipping_ultimate_enabled": true,
+        "shipping_ultimate_proof": false,
+        "shipping_utility_proof": true,
+        "visual_gate_override": false
+      }
+    ],
+    "path": "ralph\\reports\\F25\\downloads\\a-shipping-canonical-dash-37924135864",
+    "source_review": {
+      "reviewer": "/root/f25_medium_review",
+      "turn": "01a1206c-b2e3-7a11-9621-4c4b825ca430",
+      "verdict": "SOURCE/COMMAND APPROVE"
+    },
+    "script": "tests/smoke_f23_live_moves.gd",
+    "args": "--prove-utility=dash_strike --prove-shipping-utility",
+    "code_scope": "Existing shipping selector accepts tracked authored Dash as well as Heal; strict original gates/physics/binding/Wind/save/single-debit guards preserved; no production/config/HUD edit",
+    "actual_action": "00c899651ac3b230d9ae4f99d2299e6b:1:a7b92a7e1374f08b779f0e41",
+    "credited": true,
+    "retained_sweep": {
+      "action_id": "00c899651ac3b230d9ae4f99d2299e6b:1:a7b92a7e1374f08b779f0e41",
+      "applied_advance_metres": 1.46484375,
+      "binding": {
+        "actor_generation": 1,
+        "body_instance_id": 339570854101,
+        "character_id": "resource-owner",
+        "creature_uid": "creature-525b427161b543e07ce1d8b46f8f0d96",
+        "deployment_generation": 1
+      },
+      "collider_instance_id": 341986773250,
+      "contact": "(0.8625, 2.1125, -0.0)",
+      "from": "(-2.0, 0.0, 0.0)",
+      "hit": true,
+      "ok": true,
+      "requested_advance_metres": 6.0,
+      "target_body_instance_id": 341986773250,
+      "target_generation": 1,
+      "target_position": "(2.0, 0.0, 0.0)",
+      "target_uid": "creature-f924cdb1110f9026492c144bdec24519",
+      "to": "(-0.535156, 0.0, -0.0)"
+    },
+    "foe_hp": [
+      600.0,
+      594.294866605809
+    ],
+    "owner_hp": [
+      136.4,
+      136.4
+    ],
+    "wind": [
+      99.5,
+      75.5
+    ],
+    "original_artifact_verdict": {
+      "reviewer": "/root/f25_medium_review",
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "turn": "01a12072-8978-79b3-86ce-79324d0b7744",
+      "verdict": "ARTIFACT APPROVE: actual tracked canonical Dash25/0, exact contact/binding, one debit,24Wind, unchanged owner HP; bounded fixture only",
+      "whole_criterion": "F23#2 OPEN: returned guest integration remains PARKED; this pass does not replace it or prove unrestricted co-op"
+    },
+    "whole_f23_2_verdict": "OPEN: returned guest integration remains PARKED; local Dash proof cannot waive it",
+    "reuse": "Existing catalogue/two choices per role, mapped unit and Heal proofs retained within original limits; no repeated passing batch",
+    "claim_limits": "Focused canonical-wild fixture, granted party/long-lived target; no campaign/co-op/device/visual acceptance or accepted-boundary promotion"
   }
 }
