@@ -1,0 +1,37 @@
+{
+  "scope": "Protected NPC swap retention edge only; whole F19#4 remains open",
+  "fixtures": "Factory-created protected roster members are disclosed test fixtures, not earned participant legendary grants",
+  "first": {
+    "source": "05bcb7fb334d671b2331e507fdc87dab6bea655a",
+    "run": 37875763850,
+    "job": 113643878263,
+    "artifact": 11592104444,
+    "zip_sha256": "087f933eeb222550df930ece041996b78e96faa33796451ab5aa9b2990852ca0",
+    "terminal": "FAILURE",
+    "actual_job_exit": 1,
+    "artifact_exit_code_file": "absent",
+    "failures": ["Invalid fifth filler burrowlet prevented a five-member party; no protected cases executed", "Prefix cottage selector chose another cottage, failing ShopLight and Mira-local bounds"],
+    "warnings_retained": ["unknown species: burrowlet", "instance_reset_physics_interpolation() is deprecated"],
+    "source_corrections": ["c1977a24cb427e4f361c7b531e54c668cfdf1e52: registered ordinary bramblebun fifth filler", "fd846c48ab791d62557b910aee43faf848243dd9: exactly one authored village_role=mira_shop; original interior/light/collider/local-bound guards retained"],
+    "original_review": "01a11e91-9fe5-7ae3-b1bd-4117c3924d66: FIRST ARTIFACT FAILED; SOURCE/COMMAND APPROVE fd846",
+    "credit": "none"
+  },
+  "second": {
+    "source": "fd846c48ab791d62557b910aee43faf848243dd9",
+    "run": 37876502944,
+    "job": 113646228243,
+    "artifact": 11592069030,
+    "zip_sha256": "0874b2e9f0ce9ea1c697e362a222b9b11f275debc15699a7b8da55913756994d",
+    "terminal": "FAILURE",
+    "actual_job_exit": 1,
+    "artifact_exit_code_file": "absent",
+    "observations": ["Seven constructible protected species refused through live panel with exact roster/offer/rotation retained", "Ordinary swap remained five-to-five; rotation recorded; lone-creature refusal retained", "Authored Mira shop had light, 17 interior pieces, seven colliders, Mira-local 0.00,-1.40"],
+    "failure": "Game.make_creature could not construct namespaced water_abyssal_guardian; smoke recorded missing protected catalogue fixture",
+    "supported_cause": "PlayerState._species reads only base species.json; actual Water guardian offer uses trainer_npc.creature_for -> Species.spawn -> Water merged catalogue",
+    "warnings_retained": ["unknown species: water_abyssal_guardian", "instance_reset_physics_interpolation() is deprecated"],
+    "distinct_source_correction": "c2d19523306838306bc61d719e664a72f370e521: all protected fixtures use existing production guardian-offer factory; no IDs, assertions or thresholds removed",
+    "original_artifact_review": "01a11e98-0a21-7db0-93f5-253dc3dff33b: FAILED ARTIFACT no PASS; SOURCE/COMMAND APPROVE c2d195",
+    "credit": "none"
+  },
+  "not_proven": ["tests/test_trade.gd runtime", "stable participant earned offers", "co-op", "save/rejoin", "native visuals", "original blind PASS", "whole F19 acceptance"]
+}
