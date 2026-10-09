@@ -884,7 +884,6 @@ static func _finish_capture_presentation(tree: SceneTree, capture_started_frame:
 	if pressed.get("verdict") != "PASS":
 		data["pending_diagnostic"] = _capture_pending_diagnostic(game)
 		return _result(false, "Ordinary settled-catch menu close input failed", data)
-	var modal_frames_left := 15 # The original allowance, distinct from the catch's 600 frames.
 	var released := false
 	while true:
 		# This binding check follows the press await and every frame await.
@@ -894,16 +893,16 @@ static func _finish_capture_presentation(tree: SceneTree, capture_started_frame:
 			and session.call("_altar_current_epoch") == epoch and local.character_id == character and world.reward_delivery_namespace == namespace_id \
 			and game.get_node_or_null(^"Session/FoundationComposition/Captures") == captures
 		if not source_live: break
-		if modal_frames_left == 0:
-			if Engine.get_physics_frames() - capture_started_frame - 15 > 600: break
-			var after := _capture_input_state(tree)
-			data["after"] = after
-			released = INPUT_OWNER.current(tree) == null and after.context == "world" and owner.call("is_open") == false \
-				and game.pending_catch == null and after.capture_active.is_empty() and after.capture_requests == 0 \
-				and session.call("_owner_training_mutation_blocked", game.local) != true
-			if released or Engine.get_physics_frames() - capture_started_frame - 15 >= 600: break
-		else:
-			modal_frames_left -= 1
+		# Fifteen frames are a release allowance, not a mandatory delay before
+		# observing a real release. The physical tap already awaited its edge.
+		# Sample only inside the SAME original throw + 600 + 15 timeline.
+		if Engine.get_physics_frames() - capture_started_frame - 15 > 600: break
+		var after := _capture_input_state(tree)
+		data["after"] = after
+		released = INPUT_OWNER.current(tree) == null and after.context == "world" and owner.call("is_open") == false \
+			and game.pending_catch == null and after.capture_active.is_empty() and after.capture_requests == 0 \
+			and session.call("_owner_training_mutation_blocked", game.local) != true
+		if released or Engine.get_physics_frames() - capture_started_frame - 15 >= 600: break
 		await tree.physics_frame
 	data["observed_physics_frame"] = Engine.get_physics_frames()
 	if not released: data["pending_diagnostic"] = _capture_pending_diagnostic(game)
