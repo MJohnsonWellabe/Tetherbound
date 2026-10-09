@@ -541,9 +541,46 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				if target == null: target = director.get("_legacy_mirror")
 				var body: Node3D = director.ally_body()
 				if target == null or body == null: return {"verdict":"FAIL", "detail":"actual combat body missing"}
-				body.global_position = target.global_position + Vector3(0, 0, 3.0)
-				body.face_towards(target.global_position)
-				for frame in 15: await physics_frame
+				var strike_facing := Vector3(0, 0, -1)
+				if session.is_host():
+					# Preserve the disclosed local-authority proximity fixture.
+					body.global_position = target.global_position + Vector3(0, 0, 3.0)
+					body.face_towards(target.global_position)
+					for frame in 15: await physics_frame
+				else:
+					# Local assignment cannot place the admitted host body. Use the
+					# existing physical navigator for exactly the same 15 frames.
+					_drive_left(0.0, 0.0)
+					var rig: Node3D = _probe.call("camera_rig")
+					var approach_id := str(manager.encounter_id())
+					var active: RefCounted = manager.active_creature()
+					var deployment: Dictionary = director.tether_command_deployment().duplicate(true)
+					if rig == null or active == null or int(deployment.get("generation", 0)) < 1:
+						return {"verdict":"FAIL", "detail":"actual owned approach camera or deployment missing"}
+					var approach_uid := str(active.uid)
+					var nav = NAVIGATOR.new(self, body, rig, Callable(self, "_drive_left"))
+					for frame in 15:
+						target = director.get("_shared_opponent_proxy")
+						if target == null: target = director.get("_legacy_mirror")
+						active = manager.active_creature()
+						if not is_instance_valid(target) or not is_instance_valid(body) or director.ally_body() != body \
+							or not manager.is_fighting() or str(manager.encounter_id()) != approach_id or active == null \
+							or str(active.uid) != approach_uid or director.tether_command_deployment() != deployment:
+							_drive_left(0.0, 0.0)
+							return {"verdict":"FAIL", "detail":"owned approach body or encounter changed"}
+						await nav.step(target.global_position)
+					_drive_left(0.0, 0.0)
+					if not is_instance_valid(target) or not is_instance_valid(body) or director.ally_body() != body \
+						or not manager.is_fighting() or str(manager.encounter_id()) != approach_id \
+						or manager.active_creature() == null or str(manager.active_creature().uid) != approach_uid \
+						or director.tether_command_deployment() != deployment:
+						return {"verdict":"FAIL", "detail":"owned approach changed before physical strike"}
+					# Facing remains an ordinary physical-input argument, not the
+					# runner's forged/target-aimed strike branch.
+					strike_facing = target.call("centre") - body.call("centre")
+					strike_facing.y = 0.0
+					if strike_facing.is_zero_approx(): strike_facing = body.call("facing")
+					strike_facing = strike_facing.normalized()
 				# Observe immediately before the existing strike step. Its unchanged
 				# readiness wait may precede physical injection; this is not a host queue.
 				var id := str(manager.encounter_id())
@@ -582,7 +619,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 					"refusal_before":(manager.get("last_encounter_refusal") as Dictionary).duplicate(true)}
 				attempts.append(observation)
 				print("TONIC_PRE_STRIKE " + JSON.stringify(observation))
-				var strike: Dictionary = await _step_strike({"slot":slot, "facing":[0,0,-1], "settle":90})
+				var strike: Dictionary = await _step_strike({"slot":slot, "facing":[strike_facing.x, 0, strike_facing.z], "settle":90})
 				var strike_data: Dictionary = strike.get("data", {})
 				observation["strike"] = {"verdict":str(strike.get("verdict", "")), "reported_ok":strike_data.get("ok"),
 					"code":str(strike_data.get("code", "")), "submitted_action":strike_data.get("submitted_action")}
