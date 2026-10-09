@@ -3,19 +3,6 @@
   "owner_policy": "#5726060136810",
   "base_save": "res://tests/fixtures/earned_saves/generated_input_base/save",
   "profiles": {
-    "relay_prepared": {
-      "boundary": "warrens",
-      "realm": "meadows",
-      "day": 5,
-      "clock_elapsed_seconds": 500.0,
-      "position": "template",
-      "party_levels": [],
-      "heal_party": true,
-      "world_flags": [],
-      "personal_flags": [],
-      "inventory_add": {},
-      "disclosure": "Generated healthy post-Warrens state, retaining template five ordered UIDs/species, exact inventory and prior flags/day/position. Full HP is generated, not an earned recovery witness."
-    },
     "relay": {
       "boundary": "warrens",
       "realm": "meadows",
@@ -51,39 +38,6 @@
       "personal_flags": [],
       "inventory_add": {},
       "disclosure": "Generated completed Relay/Mill far-bank state. All original Hall checks remain, including zero Mill gear, no next captain/sigil/Hall outcome. Exact live ground pose is resolved and saved during generation."
-    },
-    "warden": {
-      "boundary": "hall",
-      "realm": "meadows",
-      "day": 7,
-      "clock_elapsed_seconds": 500.0,
-      "position": {
-        "stronghold_marker": "warden_arena"
-      },
-      "party_levels": [
-        20,
-        20,
-        20,
-        20,
-        20
-      ],
-      "heal_party": true,
-      "world_flags": [
-        "relay_captain_defeated",
-        "captive_rescued",
-        "relay_disabled",
-        "mill_crossing_restored",
-        "defeated_captain_riverwatch",
-        "defeated_captain_field",
-        "defeated_captain_ridge",
-        "hall_approach_open",
-        "defeated_stronghold_patrol",
-        "defeated_stronghold_courtyard",
-        "defeated_stronghold_elite"
-      ],
-      "personal_flags": [],
-      "inventory_add": {},
-      "disclosure": "Generated L20 Hall gauntlet completion at authored Warden arena, before Warden/legendary/acknowledgement rewards. Levels/caps are generated setup, not earned feasts or XP."
     }
   }
 }

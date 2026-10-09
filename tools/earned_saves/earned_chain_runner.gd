@@ -704,4 +704,3 @@ func _generate_boundary_fixture() -> bool:
 	disclosures.append(str(profile.disclosure))
 	print("GENERATED FIXTURE INPUT " + JSON.stringify(observation))
 	return true
-
