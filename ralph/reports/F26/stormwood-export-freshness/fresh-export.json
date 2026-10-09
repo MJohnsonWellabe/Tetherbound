@@ -1,0 +1,29 @@
+{
+  "source": "785e6f612e28a77075dd66684047628c2affbb13",
+  "native_cases": "PENDING",
+  "pack_source_inspection": "C:\\CodexTemp\\lane-e-fresh-pack-785e6-inspection.json",
+  "raw_errors": [],
+  "instrumentation": "QUIET measurement-source.patch; evidence-image exclusions; no runtime feature flip",
+  "savepack_complete": true,
+  "main": "549822b8da400b3eb9b23fe0feaca3c5f98bec97",
+  "whole_criterion_closures": [],
+  "finished_utc": "2026-10-09T21:13:04.5307992Z",
+  "companions": "Canonical release DLL additionally at addons/terrain_3d/bin",
+  "files": [
+    {
+      "name": "libterrain.windows.release.x86_64.dll",
+      "bytes": 3549184,
+      "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+    },
+    {
+      "name": "Tetherbound.exe",
+      "bytes": 109052928,
+      "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+    },
+    {
+      "name": "Tetherbound.pck",
+      "bytes": 1148979812,
+      "sha256": "d752d9ccfc593f6499c37d3ca08ac898fe6fc29bbae97a1e024a74cc43a9c654"
+    }
+  ]
+}

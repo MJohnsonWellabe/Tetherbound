@@ -1,0 +1,82 @@
+{
+  "pack": "C:\\CodexTemp\\owner-e-stormwood-release-5d481-r2\\Tetherbound.pck",
+  "pack_size": 1148981236,
+  "pack_version": 4,
+  "engine": [
+    4,
+    7,
+    0
+  ],
+  "flags": 2,
+  "directory_entries": 7125,
+  "sources": [
+    {
+      "path": "res://scripts/world/stormwood_heightfield.gd",
+      "exists": true,
+      "current_commit": "c927823d1b41e98b90d33181a07846e72dc6a27a",
+      "current_canonical_lf_sha256": "f86449d8b25da7fe983bdbe5345c7bbdc2daa7b247ca211bbfb1b8543c41ddd0",
+      "size": 4570,
+      "utf8_text": true,
+      "contains_nul": false,
+      "packed_sha256": "f86449d8b25da7fe983bdbe5345c7bbdc2daa7b247ca211bbfb1b8543c41ddd0",
+      "packed_canonical_lf_sha256": "f86449d8b25da7fe983bdbe5345c7bbdc2daa7b247ca211bbfb1b8543c41ddd0",
+      "directory_md5_valid": true,
+      "equals_current_main_canonical_lf": true
+    },
+    {
+      "path": "res://scripts/world/stormwood_scatter.gd",
+      "exists": true,
+      "current_commit": "c927823d1b41e98b90d33181a07846e72dc6a27a",
+      "current_canonical_lf_sha256": "80192626d3bc4d5a06c9c688430b2753cf304ded281ff57a6d50973a1e9c826f",
+      "size": 17520,
+      "utf8_text": true,
+      "contains_nul": false,
+      "packed_sha256": "80192626d3bc4d5a06c9c688430b2753cf304ded281ff57a6d50973a1e9c826f",
+      "packed_canonical_lf_sha256": "80192626d3bc4d5a06c9c688430b2753cf304ded281ff57a6d50973a1e9c826f",
+      "directory_md5_valid": true,
+      "equals_current_main_canonical_lf": true
+    },
+    {
+      "path": "res://scripts/world/stormwood_pocket_frame.gd",
+      "exists": true,
+      "current_commit": "c927823d1b41e98b90d33181a07846e72dc6a27a",
+      "current_canonical_lf_sha256": "409dd735080a6c99600c9ce18ae633b5d555a59da3a515e87bfeeafe7918a3a8",
+      "size": 925,
+      "utf8_text": true,
+      "contains_nul": false,
+      "packed_sha256": "409dd735080a6c99600c9ce18ae633b5d555a59da3a515e87bfeeafe7918a3a8",
+      "packed_canonical_lf_sha256": "409dd735080a6c99600c9ce18ae633b5d555a59da3a515e87bfeeafe7918a3a8",
+      "directory_md5_valid": true,
+      "equals_current_main_canonical_lf": true
+    },
+    {
+      "path": "res://scripts/world/build_stormwood_terrain.gd",
+      "exists": true,
+      "current_commit": "c927823d1b41e98b90d33181a07846e72dc6a27a",
+      "current_canonical_lf_sha256": "9f39610af3c8fec789938d3303fae6f5d9f8b507f3ccbc0f82892298db08e164",
+      "size": 17069,
+      "utf8_text": true,
+      "contains_nul": false,
+      "packed_sha256": "9f39610af3c8fec789938d3303fae6f5d9f8b507f3ccbc0f82892298db08e164",
+      "packed_canonical_lf_sha256": "9f39610af3c8fec789938d3303fae6f5d9f8b507f3ccbc0f82892298db08e164",
+      "directory_md5_valid": true,
+      "equals_current_main_canonical_lf": true
+    }
+  ],
+  "manifests": {
+    "data/scatter/stormwood/manifest.json": {
+      "sha256": "a8775035616184f168ccc80ce86e66634ef9046297ccfc24eb009b186db0058c",
+      "config_fingerprint": 7093781362005384,
+      "dependency_fingerprint": null,
+      "regions_count": 108
+    },
+    "data/terrain/stormwood/manifest.json": {
+      "sha256": "564f44e8e4703149d2b14962133cf17f12cfabda909af3726e5b36de27300d01",
+      "config_fingerprint": null,
+      "dependency_fingerprint": 2337163527,
+      "regions_count": 108
+    }
+  },
+  "all_four_text_and_current_main_lf_equal": true,
+  "limitation": "Pack identity is caller-supplied. Old-pack inspection is supplemental source availability evidence only; never current-main release freshness or performance acceptance."
+}

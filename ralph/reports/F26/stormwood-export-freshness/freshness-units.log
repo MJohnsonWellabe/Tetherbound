@@ -1,0 +1,17 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_stormwood_scatter_bake,test_stormwood_terrain_bake,test_scatter_fingerprint_covers_bands: 3 of 826 test files
+  ok    test_scatter_fingerprint_covers_bands.gd :: test_a_band_clearing_moves_the_scatter_fingerprint
+  ok    test_scatter_fingerprint_covers_bands.gd :: test_a_band_with_no_vegetation_file_does_not_void_the_fingerprint
+  ok    test_scatter_fingerprint_covers_bands.gd :: test_lf_and_crlf_band_configs_share_the_same_fingerprint
+  ok    test_scatter_fingerprint_covers_bands.gd :: test_the_fingerprint_ignores_crlf_line_endings
+  ok    test_scatter_fingerprint_covers_bands.gd :: test_the_fingerprint_survives_a_json_round_trip
+  ok    test_stormwood_scatter_bake.gd :: test_stormwood_scatter_bake_is_committed_and_fresh
+  ok    test_stormwood_terrain_bake.gd :: test_config_validation_accepts_authored_contract
+  ok    test_stormwood_terrain_bake.gd :: test_dependency_fingerprint_is_order_independent_and_source_sensitive
+  ok    test_stormwood_terrain_bake.gd :: test_explicit_regions_are_parsed_as_terrain_locations
+  ok    test_stormwood_terrain_bake.gd :: test_full_set_requires_exact_membership_and_no_duplicates
+  ok    test_stormwood_terrain_bake.gd :: test_stormwood_bounds_form_9_by_12_grid
+
+11 tests, 40 assertions, 0 failed
+exit=0 took=6s
