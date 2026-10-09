@@ -17,9 +17,9 @@ var _farm_diagnostic_only := false
 var _hall_stills_only := false
 var _hall_stills_finished := false
 var _relic_hang_witness := false
+var _relic_biome := "meadows"
 var _relic_hung := false
 var _relic_witness: Dictionary = {}
-const HUNG_RELIC_LABELS: Array[String] = ["pedestal meadows", "hung relic from nave"]
 const HALL_STILL_LABELS: Array[String] = ["inside Hall nave", "pedestal meadows", "companion in Shrine Room"]
 var _expected_resolution := Vector2i(1920, 1080)
 
@@ -40,6 +40,8 @@ func _run() -> void:
 			_hall_stills_only = true
 		elif argument == "--hall-relic-hang-witness":
 			_relic_hang_witness = true
+		elif argument.begins_with("--hall-relic-biome="):
+			_relic_biome = argument.trim_prefix("--hall-relic-biome=")
 		elif argument.begins_with("--expected-resolution="):
 			var dimensions := argument.trim_prefix("--expected-resolution=").split("x")
 			_expected_resolution = Vector2i(int(dimensions[0]), int(dimensions[1])) if dimensions.size() == 2 else Vector2i.ZERO
@@ -50,6 +52,7 @@ func _run() -> void:
 	# the initialized native window before checking its CLI-requested raster.
 	await process_frame
 	if DisplayServer.get_name() == "headless" or not GRAPHICS.PRESETS.has(_preset) \
+			or relic_witness_spec(_relic_biome).is_empty() or (_relic_biome != "meadows" and not _relic_hang_witness) \
 			or (_farm_diagnostic_only and _hall_stills_only) \
 			or (_paired_high and _preset != "Medium") \
 			or (_expected_resolution != Vector2i(1920, 1080) and not (_preset == "Low" and _expected_resolution == Vector2i(1280, 720))) \
@@ -59,6 +62,7 @@ func _run() -> void:
 			or pattern.search(_source) == null or not _output.is_absolute_path() \
 			or DirAccess.dir_exists_absolute(_output):
 		var facts := {"display": DisplayServer.get_name(), "preset": _preset,
+			"relic_biome": _relic_biome,
 			"paired_high": _paired_high, "renderer": RenderingServer.get_current_rendering_method(),
 			"required_renderer": renderer, "expected_resolution": [_expected_resolution.x, _expected_resolution.y],
 			"window_resolution": [DisplayServer.window_get_size().x, DisplayServer.window_get_size().y],
@@ -81,10 +85,10 @@ func _run() -> void:
 
 func _capture(label: String) -> void:
 	if _relic_hang_witness:
-		if label not in HUNG_RELIC_LABELS:
+		if label not in _hung_relic_labels():
 			_release_all()
 			return
-		if label == "pedestal meadows" and not _relic_hung:
+		if label == "pedestal " + _relic_biome and not _relic_hung:
 			if not await _hang_fixture_relic():
 				_finish_failure(_failed)
 				return
@@ -95,7 +99,7 @@ func _capture(label: String) -> void:
 				return
 			await _look_stick_to(_yaw_toward(_xz(), Vector2(target.global_position.x, target.global_position.z)))
 	if _hall_stills_only and label not in HALL_STILL_LABELS:
-		if not (_relic_hang_witness and label in HUNG_RELIC_LABELS):
+		if not (_relic_hang_witness and label in _hung_relic_labels()):
 			_release_all()
 			return
 	await _capture_matrix(label)
@@ -110,35 +114,53 @@ func _capture(label: String) -> void:
 		quit(0 if _failed.is_empty() else 1)
 
 
-## Disclosed capture fixture: one held Meadows relic, not a completed boss or
+## Disclosed capture fixture: one held selected relic, not a completed boss or
 ## earned boundary. Only ordinary Use may produce hung state/receipt/display.
+static func relic_witness_spec(biome: String) -> Dictionary:
+	if biome == "meadows":
+		return {"boss": "warden_aldis", "mount": "MeadowsRelicDisplay",
+			"candidate": "--hall-relic-display-candidate", "baseline": "--hall-relic-display-baseline"}
+	if biome == "cloudreach":
+		return {"boss": "captain_veyra_storm_anchor", "mount": "CloudreachRelicDisplay",
+			"candidate": "--hall-cloudreach-relic-candidate", "baseline": "--hall-cloudreach-relic-baseline"}
+	return {}
+
+
+func _hung_relic_labels() -> Array[String]:
+	var labels: Array[String] = []
+	labels.append("pedestal " + _relic_biome)
+	labels.append("hung relic from nave")
+	return labels
+
+
 func _prepare_relic_fixture() -> bool:
 	var args := OS.get_cmdline_user_args()
 	var game := root.get_node_or_null(^"Game")
 	var session: Node = game.get("session") if game != null else null
-	if not _hall_stills_only or _farm_diagnostic_only or not args.has("--hall-relic-display-candidate") \
-			or args.has("--hall-relic-display-baseline") or session == null \
+	var spec := relic_witness_spec(_relic_biome)
+	if spec.is_empty() or not _hall_stills_only or _farm_diagnostic_only or not args.has(spec.get("candidate", "")) \
+			or args.has(spec.get("baseline", "")) or session == null \
 			or session.call("is_active") == true or session.call("is_host") != true \
 			or session.call("portal_runtime_ready") != true:
 		_failed = "hung witness requires explicit mounted candidate ON, bounded Hall mode and unchanged solo host portal runtime"
 		return false
 	var personal: Dictionary = (game.get("local").get("redesign_character") as Dictionary).duplicate(true)
 	var display: Dictionary = game.get("world").get("redesign_world")
-	var grant := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off("warden_aldis", "meadows")
-	if grant.get("relic_biome") != "meadows" or not (personal.get("relics_held", []) as Array).is_empty() \
+	var grant := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(spec.boss), _relic_biome)
+	if grant.get("relic_biome") != _relic_biome or not (personal.get("relics_held", []) as Array).is_empty() \
 			or not (personal.get("relics_hung", []) as Array).is_empty() \
 			or not (display.get("shrine_display", {}) as Dictionary).is_empty():
-		_failed = "held-relic fixture requires fresh empty personal/world shrine state and authored Meadows hand-off"
+		_failed = "held-relic fixture requires fresh empty personal/world shrine state and authored " + _relic_biome + " hand-off"
 		return false
 	var save_dir := _output.path_join("held-relic-fixture-save")
 	if DirAccess.dir_exists_absolute(save_dir):
 		_failed = "held-relic fixture save directory already exists"
 		return false
 	game.set("save_system", preload("res://scripts/save/save_game.gd").new(save_dir))
-	(personal.relics_held as Array).append("meadows")
+	(personal.relics_held as Array).append(_relic_biome)
 	game.get("local").set("redesign_character", personal)
-	_relic_witness = {"fixture": "one personal held Meadows relic from authored Warden hand-off; no boss win/key/hung flag/world display/receipt grant",
-		"save_dir": save_dir, "candidate_arg": "--hall-relic-display-candidate", "hung": false}
+	_relic_witness = {"fixture": "one personal held %s relic from authored %s hand-off; no boss win/key/hung flag/world display/receipt grant" % [_relic_biome, spec.boss],
+		"biome": _relic_biome, "save_dir": save_dir, "candidate_arg": spec.candidate, "hung": false}
 	return true
 
 
@@ -148,19 +170,19 @@ func _hang_fixture_relic() -> bool:
 	var local: RefCounted = _game.get("local")
 	var world: RefCounted = _game.get("world")
 	var character := str(local.get("character_id"))
-	var receipt := "relic_hang:meadows:" + character
+	var receipt := "relic_hang:" + _relic_biome + ":" + character
 	var held: Array = local.get("redesign_character").get("relics_held", [])
 	var pedestals := get_nodes_in_group("crossing_hall_pedestals")
 	var pedestal: Node3D
 	for node: Node3D in pedestals:
-		if node.get_meta("biome", "") == "meadows":
+		if node.get_meta("biome", "") == _relic_biome:
 			if pedestal != null:
-				_failed = "hung witness found duplicate Meadows pedestal"
+				_failed = "hung witness found duplicate " + _relic_biome + " pedestal"
 				return false
 			pedestal = node
-	var mount := pedestal.get_node_or_null(^"MeadowsRelicDisplay") as Node3D if pedestal != null else null
+	var mount := pedestal.get_node_or_null(str(relic_witness_spec(_relic_biome).mount)) as Node3D if pedestal != null else null
 	if character.is_empty() or session.call("is_host") != true or not _player.is_on_floor() \
-			or held.count("meadows") != 1 or mount == null or mount.visible \
+			or held.count(_relic_biome) != 1 or mount == null or mount.visible \
 			or not (world.get("redesign_world").get("shrine_display", {}) as Dictionary).is_empty() \
 			or local.get("redesign_character").get("transaction_receipts", []).has(receipt) \
 			or not bool(_game.call("save_game", 0)):
@@ -184,7 +206,7 @@ func _hang_fixture_relic() -> bool:
 	_captured_member = director.call("ally_instance") as RefCounted
 	_companion_required = true
 	var travel := preload("res://tests/helpers/f49_portal_travel.gd").new(self, _game)
-	if not await travel.hang_relic("meadows"):
+	if not await travel.hang_relic(_relic_biome):
 		_failed = "ordinary real pedestal hang refused: " + str(travel.failures)
 		return false
 	# The production success opens the power modal. Cancel with parsed pad
@@ -203,13 +225,13 @@ func _hang_fixture_relic() -> bool:
 	if INPUT_OWNER.current(self) != null or not _player.is_on_floor() \
 			or str(local.get("character_id")) != character or str(world.get("reward_delivery_namespace")) != world_namespace \
 			or _relic_party_uids() != party or not _companion_ready(director) \
-			or (personal.relics_held as Array).has("meadows") or (personal.relics_hung as Array).count("meadows") != 1 \
+			or (personal.relics_held as Array).has(_relic_biome) or (personal.relics_hung as Array).count(_relic_biome) != 1 \
 			or (personal.transaction_receipts as Array).count(receipt) != 1 \
-			or world.get("redesign_world").get("shrine_display", {}).get("meadows") != true \
-			or disk_world.get("redesign_world", {}).get("shrine_display", {}).get("meadows") != true \
+			or world.get("redesign_world").get("shrine_display", {}).get(_relic_biome) != true \
+			or disk_world.get("redesign_world", {}).get("shrine_display", {}).get(_relic_biome) != true \
 			or disk_character.get("character_id") != character \
-			or (disk_personal.get("relics_held", []) as Array).has("meadows") \
-			or (disk_personal.get("relics_hung", []) as Array).count("meadows") != 1 \
+			or (disk_personal.get("relics_held", []) as Array).has(_relic_biome) \
+			or (disk_personal.get("relics_hung", []) as Array).count(_relic_biome) != 1 \
 			or (disk_personal.get("transaction_receipts", []) as Array).count(receipt) != 1 \
 			or not mount.is_visible_in_tree() or not bool(pedestal.get_meta("relic_displayed", false)):
 		_failed = "ordinary hang did not retain owner/world/party, release input and mount exactly one saved relic"
@@ -454,7 +476,7 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 			_write_manifest(false)
 			return false
 	if _hall_stills_only:
-		var labels: Array[String] = HUNG_RELIC_LABELS if _relic_hang_witness else HALL_STILL_LABELS
+		var labels: Array[String] = _hung_relic_labels() if _relic_hang_witness else HALL_STILL_LABELS
 		for expected_label: String in labels:
 			var count := 0
 			for view: Dictionary in _views:
