@@ -363,7 +363,9 @@ func _spawn_available_sites() -> void:
 			push_warning("Water site lacks a valid authored encounter or supported creature footing: " + id)
 
 func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
-	if not _is_host() or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
+	# Each occupied peer projects the already retained host generation into its
+	# local Water population. Generation, resolution and saves stay host-owned.
+	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
 	var game := get_node_or_null("/root/Game")
 	if game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return
 	for wild: Node3D in _wild_creatures:
