@@ -60,6 +60,65 @@ func _initialize() -> void:
 			quit(1)
 			return
 		OS.set_environment("TB_NET_OUT_DIR", absolute)
+	if OS.get_cmdline_user_args().has("--capture-combat-hud") \
+		and (DisplayServer.get_name() == "headless" or OS.get_environment("GITHUB_ACTIONS") != "true" \
+			or not OS.get_cmdline_user_args().has("--prove-tag-combo") or OS.get_environment("TB_NET_OUT_DIR").is_empty()):
+		push_error("Combat HUD capture requires a native hosted parent, --prove-tag-combo and TB_NET_OUT_DIR")
+		quit(1)
+		return
+	if OS.get_cmdline_user_args().has("--with-fight-camera-units") or OS.get_cmdline_user_args().has("--with-tag-units") \
+		or OS.get_cmdline_user_args().has("--with-combat-hud-units") \
+		or OS.get_cmdline_user_args().has("--with-shipping-command-units"):
+		var selectors := PackedStringArray()
+		if OS.get_cmdline_user_args().has("--with-shipping-command-units"):
+			selectors.append_array(PackedStringArray(["test_f24_host_commands.gd", "test_move_commit_runtime.gd"]))
+		if OS.get_cmdline_user_args().has("--with-tag-units"):
+			# Existing files naming either changed production combat script.
+			selectors = PackedStringArray([
+				"test_actor_vitals_authority.gd", "test_alpha_pins.gd", "test_characterize_flag_keys.gd",
+				"test_charger_lunge.gd", "test_client_trainer_victory.gd", "test_combat_aftermath_focus.gd",
+				"test_combat_burst.gd", "test_combat_camera_framing_tunables.gd", "test_combat_camera_shoulder.gd",
+				"test_combat_camera_top_band.gd", "test_combat_contact_spacing.gd", "test_combat_feedback.gd",
+				"test_combat_flee_buffer.gd", "test_combat_mastery_delivery.gd", "test_combat_progression.gd",
+				"test_combat_realm_owned_begin.gd", "test_combat_send_out_hold.gd", "test_combat_spaced_camera.gd",
+				"test_combat_stagger.gd", "test_combat_tell_swing.gd", "test_combat_vfx.gd",
+				"test_combat_wind.gd", "test_creature_gear.gd", "test_creature_history.gd",
+				"test_director_card_best_survivability.gd", "test_director_join_snapshot.gd", "test_director_legacy_mirror.gd",
+				"test_director_projectile_deployment_binding.gd", "test_enemy_named_attack.gd", "test_engage_offer_surface_distance.gd",
+				"test_f21_hit_presentation.gd", "test_f23_live_moves.gd", "test_f24_host_commands.gd",
+				"test_fight_camera.gd", "test_foundation_combat_manager_context.gd", "test_foundation_retry_admission.gd",
+				"test_guest_idle_combat_authority.gd", "test_guest_master_admission.gd", "test_harness_max_hp.gd",
+				"test_hit_feedback.gd", "test_hosted_combat_staging.gd", "test_livewire_cooldowns.gd",
+				"test_move_commit_runtime.gd", "test_named_tell_text.gd", "test_named_trainer_wild_clear.gd",
+				"test_net_boss_snapshot.gd", "test_net_strike_transaction.gd", "test_orb_passes_your_own_creature.gd",
+				"test_portal_director_lookup.gd", "test_practice_engage_priority.gd", "test_process_exit_settlement.gd",
+				"test_rematch_solo_admission.gd", "test_remote_rematch_runtime.gd", "test_scale_sensitive_gameplay.gd",
+				"test_shared_boss_authored_pipeline.gd", "test_shared_opponent_cue_shape.gd", "test_shared_opponent_presentation.gd",
+				"test_shared_wild_host_fight.gd", "test_shiny.gd", "test_stormwood_b_combat_camera_fit.gd",
+				"test_stormwood_hosted_combat.gd", "test_stormwood_realm_transition.gd", "test_tournament_network_selection.gd",
+				"test_trainer_aftermath_lifetime.gd", "test_trainer_aftermath.gd", "test_trainer_ally_lateral_ranks.gd",
+				"test_trainer_rules.gd", "test_trainers_data.gd", "test_tutorial_faint_floor.gd",
+				"test_water_encounter_runtime_data.gd", "test_water_guardian_solo_win.gd", "test_water_realm_transition.gd",
+				"test_water_tidal_guard_combat.gd", "test_wild_alphas.gd", "test_wild_cluster_body_spacing.gd",
+				"test_wild_once.gd", "test_world_verb_input_owner_enforcement.gd"])
+		if OS.get_cmdline_user_args().has("--with-fight-camera-units") and not selectors.has("test_fight_camera.gd"):
+			selectors.append("test_fight_camera.gd")
+		if OS.get_cmdline_user_args().has("--with-combat-hud-units"):
+			# Existing files naming the changed combat_hud.gd producer.
+			for file: String in ["test_combat_hud_handheld_floors.gd", "test_combat_wind.gd", "test_harness_max_hp.gd",
+				"test_hud_presentation_lifecycle.gd", "test_hud_widgets.gd", "test_level_up_announcement.gd",
+				"test_motion_prefs.gd", "test_world_verb_input_owner_enforcement.gd", "test_input_device.gd",
+				"test_move_commit_runtime.gd",
+				"test_input_glyph_rebinding.gd", "test_input_glyph_verbs.gd", "test_prompt_arbiter.gd", "test_stormwood_dynamo.gd"]:
+				if not selectors.has(file): selectors.append(file)
+		var unit_output: Array = []
+		var unit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
+			"--headless", "--path", ProjectSettings.globalize_path("res://"), "--audio-driver", "Dummy",
+			"--script", "res://tests/run_tests.gd", "--", "--only=" + ",".join(selectors)]), unit_output, true)
+		for chunk: Variant in unit_output: print(str(chunk))
+		if unit_code != 0:
+			quit(unit_code)
+			return
 	_run()
 
 
@@ -71,11 +130,37 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 		"--role=%s" % role, "--peer=%d" % i,
 		"--control-port=%d" % control_port, "--enet-port=%d" % enet_port,
 		"--scene=%s" % scene, "TB_NET_RUN_ID=%s" % _run_id]
+	if i == 1 and OS.get_cmdline_user_args().has("--capture-combat-hud"):
+		args = ["--path", ProjectSettings.globalize_path("res://"),
+			"--rendering-method", RenderingServer.get_current_rendering_method(), "--disable-render-loop", "--audio-driver", "Dummy",
+			"--resolution", "%dx%d" % [root.size.x, root.size.y]] + args.slice(3)
+		args.append_array(["--capture-combat-hud", "--hud-output=" + OS.get_environment("TB_NET_OUT_DIR").path_join("combat-hud")])
+		for arg: String in OS.get_cmdline_user_args():
+			if arg.begins_with("--preset=") or arg.begins_with("--source-commit=") or arg.begins_with("--low-resolution="):
+				args.append(arg)
+	if OS.get_cmdline_user_args().has("--without-actor-vitals"):
+		args.append("--without-actor-vitals")
+	if OS.get_cmdline_user_args().has("--prove-shipping-tether"):
+		args.append("--prove-shipping-tether")
 	for extra in extra_args:
 		args.append(str(extra))
 	OS.set_environment("XDG_DATA_HOME", home)
 	OS.set_environment("TB_NET_RUN_ID", _run_id)
 	OS.set_environment("TB_WORLD_SEED", "0")
+	if OS.has_feature("windows"):
+		var roaming := home.path_join("AppData/Roaming")
+		var local := home.path_join("AppData/Local")
+		for directory: String in [roaming, local]:
+			if DirAccess.make_dir_recursive_absolute(directory) != OK:
+				push_error("Cannot create peer profile directory: " + directory)
+				return -1
+		OS.set_environment("APPDATA", roaming)
+		OS.set_environment("LOCALAPPDATA", local)
+		OS.set_environment("USERPROFILE", home)
+		var separator := args.find("--")
+		args.insert(separator, "--log-file")
+		args.insert(separator + 1, log_path)
+		return OS.create_process(exe, args)
 	var parts: Array[String] = [_shq(exe)]
 	for a in args:
 		parts.append(_shq(str(a)))
@@ -137,6 +222,8 @@ func _run() -> void:
 		quit(await finish())
 		return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 3600.0 * 1000.0
+	var host_commands: bool = OS.get_cmdline_user_args().has("--prove-host-tether-commands")
+	var command_setup_peer: int = 0 if host_commands else 1
 	for i in 2:
 		_ok(await step(i, "op_tonic_candidate"), "tonic: process-local candidate gates before world boot")
 		if not _ok(await step(i, "boot", {"scene": "world"}, BUILD_BUDGET), "SETUP: peer %d boots its own Meadows world" % i):
@@ -144,9 +231,10 @@ func _run() -> void:
 			return
 		await step(i, "dismiss_dialogue", {})
 		_ok(await step(i, "party_grant", {"species": "terrapup", "level": 8}), "SETUP: peer %d owns a terrapup" % i)
-		if i == 1 and OS.get_cmdline_user_args().has("--prove-tag-combo"):
-			_ok(await step(i, "party_grant", {"species":"ripplet", "level":8}), "Tag SETUP: guest owns one additional healthy companion before admission")
-	_ok(await step(1, "op_tonic_supply"), "tonic: guest saves its initial two-item stock before admission")
+		if (host_commands and i == 0) or (not host_commands and i == 1 \
+			and OS.get_cmdline_user_args().has("--prove-tag-combo")):
+			_ok(await step(i, "party_grant", {"species":"ripplet", "level":8}), "Tag SETUP: peer %d owns one additional healthy companion before admission" % i)
+	_ok(await step(command_setup_peer, "op_tonic_supply"), "tonic: peer %d saves its initial two-item stock before admission" % command_setup_peer)
 	if not _ok(await step(0, "host"), "peer 0 hosts"):
 		quit(await finish())
 		return
@@ -164,6 +252,29 @@ func _run() -> void:
 	# 1. First join.
 	var first := await _await_admitted("first-join")
 	check(_admitted(first), "first join: the guest's owner-passive stream is admitted by the host")
+	if OS.get_cmdline_user_args().has("--prove-host-tether-snare"):
+		# Independent F24#3 fresh-join segment; the default Item/Mastery/rejoin
+		# path and its assertions remain below. No failed save is reused.
+		if _admitted(first): await _prove_snare(0)
+		quit(await finish())
+		return
+	if OS.get_cmdline_user_args().has("--prove-host-tether-rally"):
+		if _admitted(first): await _prove_rally(0)
+		quit(await finish())
+		return
+	if OS.get_cmdline_user_args().has("--prove-host-tether-commands"):
+		# F24#0 uses the same first-admitted owner, actual wild encounters and
+		# command assertions. Shipping Snare is a separately retained proof.
+		if _admitted(first):
+			var failed_before: int = failures.size()
+			var item_ok: bool = await _tonic_item_original(0)
+			if item_ok and failures.size() == failed_before:
+				for i in [1, 0]:
+					_ok(await step(i, "press", {"action":"combat_run"}), "host Item: peer %d normally leaves the proof fight" % i)
+				if failures.size() == failed_before: await _prove_rally(0)
+				if failures.size() == failed_before: await _prove_tag_combo(0)
+		quit(await finish())
+		return
 	var first_id := str(((first.guest as Dictionary).get("local", {}) as Dictionary).get("id", ""))
 	if not await _tonic_item_original():
 		quit(await finish())
@@ -352,6 +463,12 @@ func _run() -> void:
 	if OS.get_cmdline_user_args().has("--prove-tag-combo"):
 		await _prove_tag_combo()
 
+	if OS.get_cmdline_user_args().has("--prove-tether-snare"):
+		await _prove_snare(1)
+
+	if OS.get_cmdline_user_args().has("--prove-tether-rally"):
+		await _prove_rally(1)
+
 	# 5. Negative control: an invalid record is refused, never adopted.
 	if not _ok(await step(1, "leave"), "invalid: guest leaves"):
 		quit(await finish())
@@ -364,31 +481,37 @@ func _run() -> void:
 	quit(await finish())
 
 
-func _prove_tag_combo() -> void:
+func _prove_tag_combo(commander: int = 1) -> void:
 	_ok(await step(0, "deploy_creature"), "Tag: host deploys its same actual owned companion")
 	if not _ok(await step(0, "op_tag_target"), "Tag: host normally engages an actual live wild"): return
 	var encounter: Dictionary = await probe(0, "encounter")
 	_ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "Tag: existing proximity setup reaches the actual host fight")
 	_ok(await step(1, "deploy_creature"), "Tag: guest deploys its same admitted owned companion")
 	if not _ok(await step(1, "join_encounter", {"encounter_id":str(encounter.get("id", ""))}), "Tag: guest joins the exact host encounter"): return
-	var owner: Dictionary = await probe(1, "op_tag_state")
+	var owner: Dictionary = await probe(commander, "op_tag_state")
+	var commander_character := _guest_character if commander == 1 else str(owner.get("character_id", ""))
+	check(not commander_character.is_empty(), "Tag: commander has its actual stable character")
+	if commander_character.is_empty(): return
 	var peer := int(owner.peer)
 	var host_before: Dictionary = await probe(0, "op_tag_state", {"peer":peer})
-	var combo: Dictionary = await step(1, "op_tag_combo")
+	var combo: Dictionary = await step(commander, "op_tag_combo")
 	if combo.get("verdict") != "PASS":
 		var failed_data: Dictionary = combo.get("data", {})
 		var failed_request: Dictionary = failed_data.get("request", {})
 		print("TAG failed owner observation: ", JSON.stringify(failed_data))
-		if not failed_request.is_empty():
-			var failed_host: Dictionary = await probe(0, "op_tag_state", {"peer":peer,
-				"request":failed_request, "character_id":_guest_character})
-			print("TAG failed host observation: ", JSON.stringify(failed_host))
+		# A timeout has no returned request; keep the already-observed encounter
+		# binding so the existing host probe still retains its live saved proposal.
+		var failed_host: Dictionary = await probe(0, "op_tag_state", {"peer":peer,
+			"request":failed_request, "character_id":commander_character,
+			"encounter_id":str(host_before.get("encounter_id", ""))})
+		print("TAG failed host observation: ", JSON.stringify(failed_host))
 	if not _ok(combo, "Tag: actual hits earn meter and fresh-hit command switches normally"): return
 	var data: Dictionary = combo.data
 	var request: Dictionary = data.request
-	var args := {"peer":peer, "request":request, "character_id":_guest_character}
+	var args := {"peer":peer, "request":request, "character_id":commander_character}
 	var host: Dictionary = await probe(0, "op_tag_state", args)
-	var after: Dictionary = await probe(1, "op_tag_state")
+	var after: Dictionary = await probe(commander, "op_tag_state")
+	var observer: Dictionary = await probe(1 - commander, "op_tag_state")
 	var original: Dictionary = host.original
 	var outcome: Dictionary = original.get("outcome", {})
 	var verdict: Dictionary = outcome.get("verdict", {})
@@ -397,7 +520,7 @@ func _prove_tag_combo() -> void:
 	if strikes.size() != 2: return
 	check(strikes[0].source_kind == "creature" and strikes[1].source_kind == "creature" \
 		and strikes[0].attacker_uid == data.before.deployment.creature_uid and strikes[1].attacker_uid == data.incoming_uid \
-		and strikes[0].character_id == _guest_character and strikes[1].character_id == _guest_character,
+		and strikes[0].character_id == commander_character and strikes[1].character_id == commander_character,
 		"Tag: both damage events belong to the owner's distinct creatures")
 	check(float(strikes[0].actual_hp_debit) > 0.0 and float(strikes[1].actual_hp_debit) > 0.0 \
 		and strikes[0].target_hp_after == strikes[1].target_hp_before \
@@ -415,14 +538,17 @@ func _prove_tag_combo() -> void:
 		"Tag: owner and host consume exactly the parent's command meter state")
 	for index in 2:
 		var strike: Dictionary = strikes[index]
-		var issuer := "command:%s:%s:%d:%s:%s:%d" % [request.encounter_id, _guest_character,
+		var issuer := "command:%s:%s:%d:%s:%s:%d" % [request.encounter_id, commander_character,
 			int(request.generation), strike.part, strike.attacker_uid, int(strike.generation)]
 		check(host.impact_history.get(issuer, {}).get("seen", {}).has(str(int(request.sequence))) \
-			and after.impact_history.get(issuer, {}).get("seen", {}).has(str(int(request.sequence))),
+			and after.impact_history.get(issuer, {}).get("seen", {}).has(str(int(request.sequence))) \
+			and observer.impact_history.get(issuer, {}).get("seen", {}).has(str(int(request.sequence))),
 			"Tag: owner and joined observer consume the actual %s child impact once" % strike.part)
 	check(after.enemy_hp == verdict.delta.hp, "Tag: the owner consumes the parent absolute HP without another debit")
 	print("TAG actual family observation: ", JSON.stringify({"owner":after,"host":host,"before":host_before}))
-	_ok(await step(1, "op_tag_replay"), "Tag: submit the same original again")
+	if OS.get_cmdline_user_args().has("--capture-combat-hud"):
+		_ok(await step(commander, "op_tonic_hud_capture", {"name":"after-tag"}), "HUD: actual incoming creature after accepted Tag")
+	_ok(await step(commander, "op_tag_replay"), "Tag: submit the same original again")
 	var replay: Dictionary = await probe(0, "op_tag_state", args)
 	check(replay.original.get("admission", {}) == original.get("admission", {}) \
 		and replay.original.get("outcome", {}) == original.get("outcome", {}) \
@@ -440,8 +566,12 @@ func _tonic_seconds(state: Dictionary) -> float:
 	return 0.0
 
 
-func _tonic_item_original() -> bool:
-	if not _ok(await step(1, "op_tonic_pouch"), "tonic: production personal pouch assignment saves"): return false
+func _tonic_item_original(commander: int = 1) -> bool:
+	var owner_state: Dictionary = await _state(commander)
+	var commander_character := _guest_character if commander == 1 else str(owner_state.get("character_id", ""))
+	check(not commander_character.is_empty(), "tonic: commander has its actual stable character")
+	if commander_character.is_empty(): return false
+	if not _ok(await step(commander, "op_tonic_pouch"), "tonic: production personal pouch assignment saves"): return false
 	_ok(await step(0, "deploy_creature"), "tonic: host deploys its actual owned creature")
 	if not _ok(await step(0, "op_tonic_target"), "tonic: normal interact opens a real canonical wild fight"): return false
 	var encounter: Dictionary = await probe(0, "encounter")
@@ -452,9 +582,24 @@ func _tonic_item_original() -> bool:
 	_ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "tonic: existing proximity fixture reaches the shared fight")
 	_ok(await step(1, "deploy_creature"), "tonic: guest deploys its same admitted owned creature")
 	if not _ok(await step(1, "join_encounter", {"encounter_id":id}), "tonic: guest joins the host's exact record"): return false
-	var before_mastery: Dictionary = (await _state(1)).get("mastery", {}).get("live", {})
-	if not _ok(await step(1, "op_tonic_hits"), "tonic: normal accepted quick hits earn Item meter"): return false
-	var retained: Array = (await _state(0)).get("mastery", {}).get("retained", {}).get(_guest_character, [])
+	var before_mastery: Dictionary = (await _state(commander)).get("mastery", {}).get("live", {})
+	var hits: Dictionary = await step(commander, "op_tonic_hits")
+	if hits.get("verdict") != "PASS":
+		# Retain the exact live host proposal/journal bindings at this failed
+		# return; guest readiness does not expose the host settlement gate.
+		var guest: Dictionary = await probe(commander, "op_tag_state")
+		var guest_peer := int(guest.get("peer", 0))
+		print("TONIC failed hits host observation: ", JSON.stringify(await probe(0,
+			"op_tag_state", {"encounter_id":id, "peer":guest_peer})))
+		# Existing read-only host probe retains original action/timing/geometry
+		# and the actual guest admission. This is post-checkpoint state, never
+		# a claim about the strike-time body or a new accepted boundary.
+		print("TONIC failed hits host encounter post-checkpoint: ", JSON.stringify(await probe(0,
+			"encounter", {"admission_peer_id":guest_peer})))
+	if not _ok(hits, "tonic: normal accepted quick hits earn Item meter"): return false
+	if OS.get_cmdline_user_args().has("--capture-combat-hud"):
+		_ok(await step(commander, "op_tonic_hud_capture", {"name":"earned-command"}), "HUD: actual earned command and creature meters before Item")
+	var retained: Array = (await _state(0)).get("mastery", {}).get("retained", {}).get(commander_character, [])
 	var seen := {}
 	for event: Dictionary in retained:
 		var uid := str(event.get("attacker_uid", ""))
@@ -473,25 +618,25 @@ func _tonic_item_original() -> bool:
 			_earned_mastery.uses[move] = float(_earned_mastery.uses.get(move, 0.0)) + 1.0
 	check(not seen.is_empty(), "mastery: actual landed quick hits retain unique creature-owned mastery obligations")
 	print("MASTERY actual earned expectation: ", JSON.stringify({"uid":_mastery_uid, "before":before_mastery, "retained":retained, "earned":_earned_mastery}))
-	_ok(await step(1, "op_tonic_clear"), "tonic: existing proximity fixture clears reach while previous actual HP writes settle")
+	_ok(await step(commander, "op_tonic_clear"), "tonic: existing proximity fixture clears reach while previous actual HP writes settle")
 	var ready := false
 	for poll in 20:
-		var current: Dictionary = (await _state(0)).get("tonic", {}).get("readiness", {}).get(_guest_character, {})
+		var current: Dictionary = (await _state(0)).get("tonic", {}).get("readiness", {}).get(commander_character, {})
 		if current.get("admission") == true and current.get("vitals_pending") == false:
 			ready = true
 			break
 		await step(0, "wait", {"frames":30})
 	check(ready, "tonic: host confirms the actual previous owner HP saves are settled before writer refusal")
 	if not ready: return false
-	var pending: Dictionary = await step(1, "op_tonic_item")
+	var pending: Dictionary = await step(commander, "op_tonic_item")
 	if not _ok(pending, "tonic: production Item request preserves its original while owner save refuses"): return false
-	var guest: Dictionary = (await _state(1)).get("tonic", {})
+	var guest: Dictionary = (await _state(commander)).get("tonic", {})
 	var host: Dictionary = (await _state(0)).get("tonic", {})
-	var original: Dictionary = host.get("rows", {}).get(_guest_character, {})
+	var original: Dictionary = host.get("rows", {}).get(commander_character, {})
 	print("TONIC original actual owner/host: ", JSON.stringify({"owner":guest, "host":host}))
 	check(original.get("status") == "pending" and not str(original.get("receipt", "")).is_empty(),
 		"tonic: host journal retains the precise original awaiting owner TRUE BOOL")
-	check(_tonic_seconds(guest) == 0.0 and host.get("projected", {}).get(_guest_character, {}).is_empty(),
+	check(_tonic_seconds(guest) == 0.0 and host.get("projected", {}).get(commander_character, {}).is_empty(),
 		"tonic: owner save refusal installs no owner or authoritative effect")
 	check(int(guest.get("stock", -1)) == 1 and int(guest.get("disk_stock", -1)) == 2 \
 		and guest.get("fenced") == true and not (guest.get("disk_receipts", []) as Array).has(str(original.get("receipt", ""))) \
@@ -499,12 +644,12 @@ func _tonic_item_original() -> bool:
 		"tonic: failed owner save fences the pending debit, keeps disk unchanged and produces no saved result")
 	_tonic_receipt = str(original.get("receipt", ""))
 	_tonic_uid = str(original.get("uid", ""))
-	_ok(await step(1, "op_tonic_writer", {"block":false}), "tonic: original actual owner writer is restored")
-	if not _ok(await step(1, "op_tonic_retry"), "tonic: retry sends the same original request"): return false
+	_ok(await step(commander, "op_tonic_writer", {"block":false}), "tonic: original actual owner writer is restored")
+	if not _ok(await step(commander, "op_tonic_retry"), "tonic: retry sends the same original request"): return false
 	for poll in 30:
-		guest = (await _state(1)).get("tonic", {})
+		guest = (await _state(commander)).get("tonic", {})
 		host = (await _state(0)).get("tonic", {})
-		if guest.get("saved_result", {}).get("saved") == true and host.get("rows", {}).get(_guest_character, {}).get("status") == "accepted": break
+		if guest.get("saved_result", {}).get("saved") == true and host.get("rows", {}).get(commander_character, {}).get("status") == "accepted": break
 		await step(0, "wait", {"frames":30})
 	check(guest.get("saved_result", {}).get("saved") == true \
 		and guest.get("saved_result", {}).get("receipt") == _tonic_receipt,
@@ -512,9 +657,158 @@ func _tonic_item_original() -> bool:
 	check(int(guest.get("stock", -1)) == 1 and int(guest.get("disk_stock", -1)) == 1 \
 		and (guest.get("disk_receipts", []) as Array).has(_tonic_receipt),
 		"tonic: real owner disk holds one debit and the original receipt")
-	check(host.get("rows", {}).get(_guest_character, {}).get("receipt") == _tonic_receipt \
-		and host.get("rows", {}).get(_guest_character, {}).get("request") == original.get("request"),
+	check(host.get("rows", {}).get(commander_character, {}).get("receipt") == _tonic_receipt \
+		and host.get("rows", {}).get(commander_character, {}).get("request") == original.get("request"),
 		"tonic: retry neither substitutes nor duplicates the accepted original")
 	_tonic_remaining = _tonic_seconds(guest)
 	check(_tonic_remaining > 0.0 and _tonic_remaining <= 90.0, "tonic: actual saved effect starts its authored timer")
 	return _tonic_remaining > 0.0
+
+
+## Same Snare guards for the original guest proof and bounded host mode.
+## No catch roll, status refresh, HP, meter or timer grant.
+func _prove_snare(commander: int) -> void:
+	for attempt in 1:
+		if not _ok(await step(0, "deploy_creature"), "Snare: host deploys its same admitted companion"): break
+		if not _ok(await step(0, "op_tonic_target"), "Snare: host normally engages an actual live wild"): break
+		var encounter: Dictionary = await probe(0, "encounter")
+		if not _ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "Snare: existing proximity setup reaches the host fight"): break
+		if not _ok(await step(1, "deploy_creature"), "Snare: guest deploys its same admitted companion"): break
+		if not _ok(await step(1, "join_encounter", {"encounter_id":str(encounter.get("id", ""))}), "Snare: guest joins the exact host encounter"): break
+		var owner: Dictionary = await probe(commander, "op_tag_state", {"request":{}})
+		var commander_character := str(owner.get("character_id", ""))
+		check(not commander_character.is_empty(), "Snare: commander has its actual stable character")
+		var peer := int(owner.peer)
+		check(float(owner.commands.get("meter", -1.0)) == 0.0, "Snare: fresh admitted encounter starts with zero command meter")
+		var hit_slot := "charged" if OS.get_cmdline_user_args().has("--charged-command-hits") else "quick"
+		if not _ok(await step(commander, "op_tonic_hits", {"command_id":"snare", "slot":hit_slot}), "Snare: ordinary %s hits earn the authored cost within eight attempts" % hit_slot): break
+		var args := {"peer":peer, "character_id":commander_character, "request":{}, "snare":true}
+		var before: Dictionary = await probe(0, "op_tag_state", args)
+		var cost := float(preload("res://scripts/combat/tether_commands.gd").config().commands.snare.cost)
+		var commands_before: Dictionary = before.record.get("participants", {}).get(str(peer), {}).get("tether_commands", {})
+		check(float(commands_before.get("meter", -1.0)) >= cost and before.record.get("phase") == "active" \
+			and before.record.get("kind") == "wild" and float(before.record.get("opponent", {}).get("hp", 0.0)) > 0.0,
+			"Snare: trusted host has earned meter and the same living admitted wild before the request")
+		var cast: Dictionary = await step(commander, "op_tonic_snare")
+		print("SNARE actual request observation: ", JSON.stringify(cast))
+		if not _ok(cast, "Snare: production TetherCommandInput request receives its accepted host receipt"): break
+		var request: Dictionary = cast.data.request
+		args.request = request
+		var host: Dictionary = await probe(0, "op_tag_state", args)
+		var observed: Dictionary = host.snare
+		var receipt: Dictionary = observed.get("last_receipt", {})
+		var status: Dictionary = host.record.get("opponent", {}).get("tether_snare", {})
+		var commands_after: Dictionary = host.record.get("participants", {}).get(str(peer), {}).get("tether_commands", {})
+		var parent := "command:%s:%s:%d:%d" % [request.encounter_id, commander_character, int(request.generation), int(request.sequence)]
+		check(receipt.get("command_committed") == true and receipt.get("command_id") == "snare" \
+			and receipt.get("action_id") == parent and receipt.get("encounter_id") == request.encounter_id \
+			and receipt.get("character_id") == commander_character and receipt.get("attacker_uid") == owner.deployment.creature_uid \
+			and receipt.get("generation") == request.generation and receipt.get("sequence") == request.sequence,
+			"Snare: host retains the exact commander's accepted original receipt and deployment")
+		check(request.generation == owner.deployment.generation and request.encounter_id == before.encounter_id \
+			and host.body_instance == before.body_instance and cast.data.after.party == owner.party,
+			"Snare: request preserves the admitted encounter, companion and body")
+		check(float(commands_before.get("meter", -1.0)) - float(commands_after.get("meter", -1.0)) == cost \
+			and cast.data.before.get("meter") == commands_before.get("meter") \
+			and cast.data.after.commands.get("meter") == commands_after.get("meter"),
+			"Snare: owner and trusted host observe exactly one authored command-meter debit")
+		check(host.record.get("phase") == "active" and float(host.record.opponent.get("hp", 0.0)) > 0.0 \
+			and host.record.opponent.get("card", {}).get("uid") == before.record.opponent.get("card", {}).get("uid") \
+			and host.record.opponent.get("body_generation") == before.record.opponent.get("body_generation") \
+			and host.record.opponent.get("hp") == before.record.opponent.get("hp") \
+			and cast.data.after.enemy_hp == host.record.opponent.get("hp"),
+			"Snare: the same living target loses no HP from the command")
+		check(observed.get("target_current") == true and status.get("kind") == "snare" and status.get("character_id") == commander_character \
+			and status.get("target_uid") == host.record.opponent.get("card", {}).get("uid") \
+			and status.get("target_generation") == host.record.opponent.get("body_generation") \
+			and observed.get("target_uid") == status.get("target_uid") \
+			and observed.get("target_generation") == status.get("target_generation") \
+			and observed.get("status") == status and int(status.get("until_ms", 0)) > int(observed.get("observed_ms", 0)) \
+			and float(observed.get("movement_multiplier", 1.0)) > 0.0 and float(observed.get("movement_multiplier", 1.0)) < 1.0,
+			"Snare: unexpired admitted target status reaches the actual wild movement consumer")
+		check(float(observed.get("catch_bonuses", {}).get(commander_character, 0.0)) > 0.0 \
+			and status.get("catch_grants", {}).has(commander_character),
+			"Snare: actual host catch reader increases only the commander's stable-character chance")
+		check(observed.get("catch_bonuses", {}).size() == 2, "Snare: host catch reader observes both actual participants")
+		for character: String in observed.get("catch_bonuses", {}):
+			if character == commander_character: continue
+			check(float(observed.catch_bonuses[character]) == 0.0 and not status.get("catch_grants", {}).has(character),
+				"Snare: participant without its own grant receives no catch bonus")
+		print("SNARE actual host observation: ", JSON.stringify({"request":request, "before":before, "host":host}))
+		for i in [1, 0]: _ok(await step(i, "press", {"action":"combat_run"}), "Snare: peer %d normally leaves the proof fight" % i)
+
+
+## Same Rally guards for the original guest proof and fresh host mode.
+## The guest remains the actual non-caster bonus control.
+func _prove_rally(commander: int) -> void:
+	for _attempt in 1:
+		if not _ok(await step(0, "deploy_creature"), "Rally: host deploys its same admitted companion"): break
+		if not _ok(await step(0, "op_tonic_target"), "Rally: host normally engages an actual live wild"): break
+		var encounter: Dictionary = await probe(0, "encounter")
+		if not _ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "Rally: existing proximity setup reaches the host fight"): break
+		if not _ok(await step(1, "deploy_creature"), "Rally: guest deploys its same admitted companion"): break
+		if not _ok(await step(1, "join_encounter", {"encounter_id":str(encounter.get("id", ""))}), "Rally: guest joins the exact host encounter"): break
+		var owner: Dictionary = await probe(commander, "op_tag_state", {"request":{}})
+		var commander_character := str(owner.get("character_id", ""))
+		check(not commander_character.is_empty(), "Rally: commander has its actual stable character")
+		var peer := int(owner.peer)
+		check(float(owner.commands.get("meter", -1.0)) == 0.0, "Rally: fresh admitted encounter starts with zero command meter")
+		if float(owner.commands.get("meter", -1.0)) != 0.0: break
+		if not _ok(await step(commander, "op_tonic_hits", {"command_id":"rally"}), "Rally: ordinary quick hits earn the authored cost within eight attempts"): break
+		var args := {"peer":peer, "character_id":commander_character, "request":{}, "rally":true}
+		var before: Dictionary = await probe(0, "op_tag_state", args)
+		var row: Dictionary = preload("res://scripts/combat/tether_commands.gd").config().commands.rally
+		var cost := float(row.cost)
+		var commands_before: Dictionary = before.record.get("participants", {}).get(str(peer), {}).get("tether_commands", {})
+		var ready: bool = float(commands_before.get("meter", -1.0)) >= cost and before.record.get("phase") == "active" \
+			and before.record.get("kind") == "wild" and float(before.record.get("opponent", {}).get("hp", 0.0)) > 0.0
+		check(ready, "Rally: trusted host has earned meter and the same living admitted wild before the request")
+		if not ready: break
+		var cast: Dictionary = await step(commander, "op_tonic_rally")
+		print("RALLY actual request observation: ", JSON.stringify(cast))
+		if not _ok(cast, "Rally: production TetherCommandInput request receives its accepted host receipt"): break
+		var request: Dictionary = cast.data.request
+		args.request = request
+		var host: Dictionary = await probe(0, "op_tag_state", args)
+		var observed: Dictionary = host.rally
+		var receipt: Dictionary = observed.get("last_receipt", {})
+		var commands_after: Dictionary = host.record.get("participants", {}).get(str(peer), {}).get("tether_commands", {})
+		var parent := "command:%s:%s:%d:%d" % [request.encounter_id, commander_character, int(request.generation), int(request.sequence)]
+		check(receipt.get("command_committed") == true and receipt.get("command_id") == "rally" \
+			and receipt.get("action_id") == parent and receipt.get("encounter_id") == request.encounter_id \
+			and receipt.get("character_id") == commander_character and receipt.get("attacker_uid") == owner.deployment.creature_uid \
+			and receipt.get("generation") == request.generation and receipt.get("sequence") == request.sequence,
+			"Rally: host retains the exact commander's accepted original receipt and deployment")
+		check(request.generation == owner.deployment.generation and request.encounter_id == before.encounter_id \
+			and observed.get("binding") == before.rally.get("binding") \
+			and observed.get("binding", {}).get("character_id") == commander_character \
+			and observed.get("binding", {}).get("creature_uid") == owner.deployment.creature_uid \
+			and observed.get("binding", {}).get("deployment_generation") == request.generation \
+			and host.body_instance == before.body_instance and cast.data.after.body_instance == owner.body_instance \
+			and cast.data.after.deployment == owner.deployment and cast.data.after.party == owner.party,
+			"Rally: request preserves the admitted encounter, companion, body and party")
+		check(float(commands_before.get("meter", -1.0)) - float(commands_after.get("meter", -1.0)) == cost \
+			and cast.data.before.get("meter") == commands_before.get("meter") \
+			and cast.data.after.commands.get("meter") == commands_after.get("meter"),
+			"Rally: owner and trusted host observe exactly one authored command-meter debit")
+		check(host.record.get("phase") == "active" and float(host.record.opponent.get("hp", 0.0)) > 0.0 \
+			and host.record.opponent.get("card", {}).get("uid") == before.record.opponent.get("card", {}).get("uid") \
+			and host.record.opponent.get("body_generation") == before.record.opponent.get("body_generation") \
+			and host.record.opponent.get("hp") == before.record.opponent.get("hp") \
+			and cast.data.after.enemy_hp == host.record.opponent.get("hp"),
+			"Rally: the same living target loses no HP from the trainer's command")
+		var own: Dictionary = observed.get("modifiers", {}).get(commander_character, {})
+		check(int(commands_after.get("rally_until_ms", 0)) > int(observed.get("observed_ms", 0)) \
+			and float(own.get("damage", 1.0)) > 1.0 and float(own.get("wind_regen", 1.0)) > 1.0 \
+			and is_equal_approx(float(own.get("damage", 1.0)), float(row.damage_multiplier)) \
+			and is_equal_approx(float(own.get("wind_regen", 1.0)), float(row.wind_regen_multiplier)),
+			"Rally: unexpired actual host readers return the commander's authored damage and wind bonuses")
+		check(observed.get("modifiers", {}).size() == 2, "Rally: host readers observe both actual participants")
+		for character: String in observed.get("modifiers", {}):
+			var baseline: Dictionary = before.rally.get("modifiers", {}).get(character, {})
+			check(baseline.get("damage") == 1.0 and baseline.get("wind_regen") == 1.0, "Rally: participant had no bonus before this request")
+			if character == commander_character: continue
+			var other: Dictionary = observed.modifiers[character]
+			check(other.get("damage") == 1.0 and other.get("wind_regen") == 1.0, "Rally: other participant receives neither bonus")
+		print("RALLY actual host observation: ", JSON.stringify({"request":request, "before":before, "host":host}))
+		for i in [1, 0]: _ok(await step(i, "press", {"action":"combat_run"}), "Rally: peer %d normally leaves the proof fight" % i)

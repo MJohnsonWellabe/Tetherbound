@@ -96,6 +96,13 @@ func _run() -> void:
 		quit(await finish())
 		return
 
+	# Existing one-creature load fixture, prepared through the real party seam
+	# before host/join snapshots its owned UID for canonical wild admission.
+	for i in 2:
+		var deployed: Dictionary = await step(i, "deploy_creature", {"owned": true}, 6000)
+		check(str(deployed.get("verdict", "")) == "PASS",
+			"SETUP: peer %d has a creature out to fight with (%s)" % [i, str(deployed.get("detail", ""))])
+
 	var hosted: Dictionary = await step(0, "host", {"port": host_port})
 	check(str(hosted.get("verdict", "")) == "PASS",
 		"peer 0 hosted a listen server (%s)" % str(hosted.get("detail", "")))
@@ -121,18 +128,6 @@ func _run() -> void:
 		"the client had written no world autosave before the exit (%s)" % str(client_saved_before))
 
 	# --- the load ------------------------------------------------------------
-	# SETUP, not the feature under test: a peer cannot fight with an empty
-	# party, and every headless peer boots with one. `deploy_creature` is the
-	# same setup `smoke_net_shared_wild_fight.gd` does before its own
-	# `engage_wild`, and it goes through the game's own `encounter_director.gd`.
-	# Without it `engage_wild` answers "the engage press did not start a fight",
-	# which reads like the encounter path failing when it is really this line
-	# missing.
-	for i in 2:
-		var deployed: Dictionary = await step(i, "deploy_creature", {}, 6000)
-		check(str(deployed.get("verdict", "")) == "PASS",
-			"SETUP: peer %d has a creature out to fight with (%s)" % [i, str(deployed.get("detail", ""))])
-
 	# THE HOST engages and the client joins, which is the shape the game
 	# actually supports -- and, better for this row, it puts the exiting peer
 	# in the middle of a fight it is itself arbitrating.
