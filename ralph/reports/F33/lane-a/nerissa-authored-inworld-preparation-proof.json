@@ -24,7 +24,14 @@
       "args": "--trainer=water_trainer_nerissa --starter=ripplet --policy=READER --seeds=0 --gear-tier=tidesteel --out=ralph/reports/F33/nerissa_authored_l32_reader_seed0.jsonl",
       "mode": "headless; existing child --fixed-fps60 unchanged",
       "workflow_conclusion": "failure",
-      "result": {"error": "no result line (exit1)", "gear": "tidesteel", "pilot": "READER", "seed": 0, "starter": "ripplet", "trainer": "water_trainer_nerissa"},
+      "result": {
+        "error": "no result line (exit1)",
+        "gear": "tidesteel",
+        "pilot": "READER",
+        "seed": 0,
+        "starter": "ripplet",
+        "trainer": "water_trainer_nerissa"
+      },
       "log_sha256": "da4b807fbfcb2bff1d996e070e15c251349ca40c6cdd1728c7bc4c13f61ecdd6",
       "raw_path": "ralph/reports/F25/downloads/a-nerissa-authored-preparation-37878160008/raw/",
       "observed": "Collector missing1/failed_children1. No child result or level; child log contains only engine header. Existing collector captured child stdout/stderr but discarded it when the result line was absent.",
@@ -65,7 +72,17 @@
     "log_sha256": "86367211b3ce8796732e84b4263c579e6fcbb04bd030d3f99fa589a0e055f810",
     "child_log_sha256": "b376e7bbbf3d8cad0a15a58cf4e9a17b0249b546b092e52b509603505762cbd4",
     "raw_path": "ralph/reports/F25/downloads/a-nerissa-regional-key-37879151381/raw/",
-    "result": {"arena_radius": 9.0, "error": "world pilot requires the current Director's live pattern context and bound observer", "gear": "tidesteel", "party_level": 32, "pilot": "READER", "seed": 0, "starter": "ripplet", "trainer": "water_trainer_nerissa", "won": false},
+    "result": {
+      "arena_radius": 9.0,
+      "error": "world pilot requires the current Director's live pattern context and bound observer",
+      "gear": "tidesteel",
+      "party_level": 32,
+      "pilot": "READER",
+      "seed": 0,
+      "starter": "ripplet",
+      "trainer": "water_trainer_nerissa",
+      "won": false
+    },
     "observed": "Original isolated save, actual Session.host/registry and full admitted party checks passed; authored default32 and actual arena9 observed. Existing compound pattern/context/observer guard refused before pilot combat. No runtime script-error lines. No individual guard operand packet exists; no claimed pattern producer defect.",
     "disposition": "Failed proof retained; preparation entry32 observed, modern fight/settlement unearned. Original artifact review pending."
   },
@@ -85,7 +102,9 @@
     "script": "tests/run_tests.gd",
     "args": "--only=test_director_join_snapshot.gd,test_water_encounter_runtime_data.gd",
     "workflow_conclusion": "failure",
-    "tests": 2, "assertions": 0, "failed": 2,
+    "tests": 2,
+    "assertions": 0,
+    "failed": 2,
     "log_sha256": "a88baf9cea7c92644f00844614f9afe74b091eecc75f9a5b6348144a3cfee97d",
     "raw_path": "ralph/reports/F25/downloads/a-onepeer-named-units-37879922064/raw/",
     "original_diagnostic": "Could not resolve class res://scripts/combat/encounter_director.gd at test_director_join_snapshot.gd:52; could not resolve class res://scripts/combat/water_encounter_director.gd at test_water_encounter_runtime_data.gd:8. Both failed to load.",
@@ -130,13 +149,74 @@
     "script": "tests/run_tests.gd",
     "args": "--only=test_director_join_snapshot.gd,test_water_encounter_runtime_data.gd",
     "workflow_conclusion": "failure",
-    "tests": 16, "assertions": 2492, "failed": 2,
+    "tests": 16,
+    "assertions": 2492,
+    "failed": 2,
     "log_sha256": "c5e6d041dba4572f3e60290a7cca651c6463701f2f228040681bd5e9a821950b",
     "raw_path": "ralph/reports/F25/downloads/a-hosted-named-bool-units-37883051914/raw/",
-    "failed_methods": ["test_native_guest_killing_strike_advances_host_trainer_round_once", "test_native_trainer_hp_fixture_survives_projectile_snapshot"],
+    "failed_methods": [
+      "test_native_guest_killing_strike_advances_host_trainer_round_once",
+      "test_native_trainer_hp_fixture_survives_projectile_snapshot"
+    ],
     "observed": "Director subclasses now compile. Guest probe reports invalid_actor_move then move_start_required, enemyHP95/no faint/no round award; HP probe has actual host arrivals and faint but legacy selection count2 instead of3. Both tracked runtime true. No regression cause inferred and no fixture or assertion weakened.",
     "disposition": "FAIL retained; original artifact/disposition review requested. No passing substitution, unit retry or gameplay acceptance."
   },
   "park": "04:20Z two-hour cap reached. Source-approved f5 remains unlanded/unverified for actual one-peer named gameplay. No live A hosted run; all failures/artifacts/saves preserved, none accepted as a campaign boundary. F24#3 READY candidate3a remains separate; this F33 work is not included in that acceptance.",
-  "whole_verdict": "NONE; F33#2 remains OPEN."
+  "whole_verdict": "NONE; F33#2 remains OPEN.",
+  "controls_lifetime_correction": {
+    "source": "cdf065f952d50666507d70ac5fc58f572775e5ed",
+    "base": "d93b626fb63828e0569a47a347847b2c44a87606",
+    "paths": [
+      "tests/test_director_join_snapshot.gd"
+    ],
+    "change": "Retain actual opponent UID and existing trainer-send generation in the two handcrafted native controls. The existing fixed-geometry body now stores the validated host motion scope using detached-copy and unchanged/replaced binding semantics.",
+    "limits": "Test consumer only. All original guards, assertions, HP, clocks, flags and fixed-geometry disclosures preserved. No production Director edit, gear balance, C2, actual-world motion, activation or whole-criterion acceptance.",
+    "source_review": {
+      "original": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "turn": "01a12013-7e93-7472-9309-744d502837cc",
+      "verdict": "SOURCE/COMMAND APPROVE"
+    },
+    "proof": {
+      "source": "cdf065f952d50666507d70ac5fc58f572775e5ed",
+      "run": 37914043555,
+      "job": 113765799116,
+      "artifact": 11608486494,
+      "conclusion": "success",
+      "archive_sha256": "ad02e09dfe1b0d317a790defb2198e6e3f760bb7adec1b9c913408c5b5f7dbdf",
+      "log_sha256": "07d3251ef430699ef3b35873b108ec34db07f19205f61ead33f8315014224a6b",
+      "job_sha256": "5751efacb237b01a73059d2a39e443d51786a58b4e6fab30bcd44072bea80d5b",
+      "summary": [
+        "6 tests, 38 assertions, 0 failed"
+      ],
+      "path": "ralph\\reports\\F25\\downloads\\a-native-control-lifetime-37914043555",
+      "script": "tests/run_tests.gd",
+      "args": "--only=test_director_join_snapshot.gd",
+      "tests": 6,
+      "assertions": 38,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 28,
+      "scope": "Outer assertions validate the existing nested ENet guest-kill/round and trainer/boss HP-control results; nested assertion counts are not added to the reported total."
+    },
+    "artifact_review": {
+      "original": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "turn": "01a12018-4bd9-7d83-b8c1-6b3ae03dac47",
+      "verdict": "ARTIFACT APPROVE; both formerly failing controls PASS; fixture admission/round scope only"
+    },
+    "patch": {
+      "path": ".tmp\\a-native-control-lifetime-cdf.patch",
+      "sha256": "ef3de72007b617e366b08b5693254b94b5b5b34dd5ee8f301490b0901c81e9c3",
+      "scope": "Only the 10+/1- reviewed test-control hunks. Never copy full file or unready lane ancestry."
+    },
+    "next": "Original source/command applicability requested for one minimum authored L32 Nerissa Ripplet READER seed0 Tidesteel real-world path after original artifact approval. That path and whole F33#2 remain OPEN.",
+    "next_world_recipe": {
+      "source": "cdf065f952d50666507d70ac5fc58f572775e5ed",
+      "review_turn": "01a12016-e648-77d0-8e92-eed74105f2fa",
+      "source_command": "SOURCE/COMMAND APPLICABILITY APPROVE; conditional control proof and artifact approval now satisfied",
+      "script": "tests/batch_tidewake_named_inworld_c2.gd",
+      "args": "--trainer=water_trainer_nerissa --starter=ripplet --policy=READER --seeds=0 --gear-tier=tidesteel --out=ralph/reports/F33/nerissa_authored_l32_reader_seed0.jsonl",
+      "label": "a-nerissa-resumed-world-cdf065",
+      "status": "DISPATCHED; runtime pending; no cohort or previous-tier acceptance"
+    }
+  }
 }
