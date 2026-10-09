@@ -1,0 +1,2406 @@
+{
+  "schema_version": 2,
+  "complete": true,
+  "scope": "Qualified mixed-source quiet baseline. Three biomes retain the original release source; Stormwood replaces the invalid original six cases using the fresh export fix. Different sources and timed lengths are not an A/B performance comparison.",
+  "updated_utc": "2026-10-09T21:56:20.803762+00:00",
+  "original_baseline": {
+    "source": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+    "commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b",
+    "preserved_receipt": "ralph/reports/F26/quiet-baseline/original-receipt.json",
+    "preserved_receipt_sha256": "e49ae52c84edbfe05a8725768ea5dee61bd81995c3cce0310f772f5b31bbe794",
+    "raw_evidence": "https://github.com/MJohnsonWellabe/Tetherbound/tree/370b994e690f4a6d83e0674d0178a2bfed9ad84b/ralph/reports/F26/quiet-baseline"
+  },
+  "corrected_stormwood_source": "785e6f612e28a77075dd66684047628c2affbb13",
+  "corrected_main": "549822b8da400b3eb9b23fe0feaca3c5f98bec97",
+  "biome_display_names": {
+    "water": "Tidewake"
+  },
+  "low_cache_confirmation": {
+    "failed_case": "Low-r2",
+    "confirming_case": "Low-r3",
+    "fresh_APPDATA": "C:\\CodexTemp\\eQL3\\r",
+    "fresh_LOCALAPPDATA": "C:\\CodexTemp\\eQL3\\l",
+    "shipping_defaults_changed": false,
+    "shader_cache_policy_changed": false,
+    "existing_cache_cleanup": false,
+    "root_cause": "Unresolved; failed cache files are truncated but process termination may explain some truncation. No third diagnostic."
+  },
+  "corrected_pck_sha256": "d752d9ccfc593f6499c37d3ca08ac898fe6fc29bbae97a1e024a74cc43a9c654",
+  "hardware": {
+    "gpu": [
+      {
+        "Name": "NVIDIA GeForce GTX 1060 3GB",
+        "DriverVersion": "32.0.15.6094",
+        "CurrentHorizontalResolution": 1920,
+        "CurrentVerticalResolution": 1080,
+        "CurrentRefreshRate": 60
+      }
+    ],
+    "ram_bytes": 17092575232,
+    "power_plan": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+    "cpu": [
+      {
+        "Name": "Intel(R) Core(TM) i5-8400 CPU @ 2.80GHz",
+        "NumberOfCores": 6,
+        "NumberOfLogicalProcessors": 6
+      }
+    ],
+    "operating_system": {
+      "Caption": "Microsoft Windows 10 Home",
+      "Version": "10.0.19045",
+      "BuildNumber": "19045",
+      "OSArchitecture": "64-bit"
+    }
+  },
+  "cases": [
+    {
+      "biome": "meadows",
+      "preset": "Low",
+      "repeat": 1,
+      "complete": true,
+      "pid": 30404,
+      "arguments": "--rendering-method gl_compatibility --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-low-r1.engine.log\" -- --f26-route --quiet-baseline --biome=meadows --preset=Low --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/meadows-low-r1",
+      "started_utc": "2026-10-09T12:28:52.215446Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-low-r1\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-low-r1.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-low-r1.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-low-r1.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T12:31:44.9670573Z",
+      "frame_ms": {
+        "p95_ms": 33.4542,
+        "p99_ms": 38.6634000000001,
+        "mean_ms": 22.93429919755441,
+        "sample_count": 2617
+      },
+      "cpu_process": {
+        "p95_ms": 44.459,
+        "p99_ms": 71.783,
+        "mean_ms": 32.13680435613306,
+        "sample_count": 2617
+      },
+      "cpu_physics": {
+        "p95_ms": 4.196,
+        "p99_ms": 5.167,
+        "mean_ms": 3.7321623996942463,
+        "sample_count": 2617
+      },
+      "cpu_render": {
+        "p95_ms": 12.75419979095458,
+        "p99_ms": 13.664280128479039,
+        "mean_ms": 6.137497520556102,
+        "sample_count": 2617
+      },
+      "cpu_render_setup": {
+        "p95_ms": 1.031,
+        "p99_ms": 1.117,
+        "mean_ms": 0.8915548337791335,
+        "sample_count": 2617
+      },
+      "gpu_render": {
+        "p95_ms": 33.07659988403316,
+        "p99_ms": 34.281041412353495,
+        "mean_ms": 18.882506689407645,
+        "sample_count": 2617
+      },
+      "mean_fps": 43.602814779125,
+      "elapsed_ms": 60019.096,
+      "warmup_elapsed_ms": 15009.726,
+      "route_failures": [],
+      "waypoints_reached": 3,
+      "raw_sha256": "e0a4a8d0e5629ec4c2b2f8461844a6321497e492f258fa1f671ef7f5b91f0410",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/meadows-low-r1/route.json",
+      "committed_logs": [
+        {
+          "sha256": "151c9012df945e3287177d429b44738554d8649b06beae073d658b38b27e1c1f",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-low-r1/engine_log.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "cae9e2133e3f1cf5f48bab07a31c403daa0a58caa2f2a379ba89c6907cbe4fbf",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-low-r1/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-low-r1/stderr.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "meadows",
+      "preset": "Low",
+      "repeat": 2,
+      "complete": true,
+      "pid": 39416,
+      "arguments": "--rendering-method gl_compatibility --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-low-r2.engine.log\" -- --f26-route --quiet-baseline --biome=meadows --preset=Low --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/meadows-low-r2",
+      "started_utc": "2026-10-09T12:31:45.2891177Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-low-r2\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-low-r2.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-low-r2.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-low-r2.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T12:34:36.1049522Z",
+      "frame_ms": {
+        "p95_ms": 33.543549999999996,
+        "p99_ms": 36.51573,
+        "mean_ms": 22.988729501915767,
+        "sample_count": 2610
+      },
+      "cpu_process": {
+        "p95_ms": 35.799,
+        "p99_ms": 62.64,
+        "mean_ms": 26.16227586206901,
+        "sample_count": 2610
+      },
+      "cpu_physics": {
+        "p95_ms": 4.214,
+        "p99_ms": 7.568,
+        "mean_ms": 3.8205712643678065,
+        "sample_count": 2610
+      },
+      "cpu_render": {
+        "p95_ms": 12.710300111770604,
+        "p99_ms": 13.412829599380476,
+        "mean_ms": 6.098996168078134,
+        "sample_count": 2610
+      },
+      "cpu_render_setup": {
+        "p95_ms": 1.0085499999999996,
+        "p99_ms": 1.0929099999999998,
+        "mean_ms": 0.8779877394636009,
+        "sample_count": 2610
+      },
+      "gpu_render": {
+        "p95_ms": 33.04954948425292,
+        "p99_ms": 34.24973014831543,
+        "mean_ms": 18.910804960828173,
+        "sample_count": 2610
+      },
+      "mean_fps": 43.499576604120946,
+      "elapsed_ms": 60000.605,
+      "warmup_elapsed_ms": 15001.694,
+      "route_failures": [],
+      "waypoints_reached": 3,
+      "raw_sha256": "b7181a0ffbc46b90fe2e6796ed36b0b8dedc27661f7feb59a7165b98cd0cdeac",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/meadows-low-r2/route.json",
+      "committed_logs": [
+        {
+          "sha256": "b9651dc26fc7fa84de7a64daa45d2524919af868c91052a7d0a503e3d1659031",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-low-r2/engine_log.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "10ff1ff744c27d7d75f150d52b33ea387ab5e8caa16c957955f61491d6047b83",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-low-r2/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-low-r2/stderr.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "meadows",
+      "preset": "Medium",
+      "repeat": 1,
+      "complete": true,
+      "pid": 27436,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-medium-r1.engine.log\" -- --f26-route --quiet-baseline --biome=meadows --preset=Medium --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/meadows-medium-r1",
+      "started_utc": "2026-10-09T12:34:36.369367Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-medium-r1\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-medium-r1.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-medium-r1.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-medium-r1.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T12:38:05.1905024Z",
+      "frame_ms": {
+        "p95_ms": 32.84265,
+        "p99_ms": 37.38941,
+        "mean_ms": 23.77940095087163,
+        "sample_count": 2524
+      },
+      "cpu_process": {
+        "p95_ms": 33.352,
+        "p99_ms": 704.725,
+        "mean_ms": 34.05285419968303,
+        "sample_count": 2524
+      },
+      "cpu_physics": {
+        "p95_ms": 15.48,
+        "p99_ms": 16.749,
+        "mean_ms": 9.805449286846239,
+        "sample_count": 2524
+      },
+      "cpu_render": {
+        "p95_ms": 4.700550174713137,
+        "p99_ms": 4.990469994544984,
+        "mean_ms": 2.3984417559227738,
+        "sample_count": 2524
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.855,
+        "p99_ms": 0.9657699999999999,
+        "mean_ms": 0.7320942947702058,
+        "sample_count": 2524
+      },
+      "gpu_render": {
+        "p95_ms": 29.31585006713866,
+        "p99_ms": 30.128450489044198,
+        "mean_ms": 22.34327891511509,
+        "sample_count": 2524
+      },
+      "mean_fps": 42.05320403428183,
+      "elapsed_ms": 60019.229,
+      "warmup_elapsed_ms": 15016.496,
+      "route_failures": [],
+      "waypoints_reached": 3,
+      "raw_sha256": "50b80ec087c2fde9b1b0f37c0810b8715469bfd7876765b35de76fa21149f255",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/meadows-medium-r1/route.json",
+      "committed_logs": [
+        {
+          "sha256": "41f616904c1534a70dd8c1ddb7d5d146702956ff6310284b15f65146eb8621d2",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-medium-r1/engine_log.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "a63b8a307ce23fa6db7234f03f922055eb66800ca6e1e1e1cf63804c83e9d5f1",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-medium-r1/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-medium-r1/stderr.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "meadows",
+      "preset": "Medium",
+      "repeat": 2,
+      "complete": true,
+      "pid": 63536,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-medium-r2.engine.log\" -- --f26-route --quiet-baseline --biome=meadows --preset=Medium --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/meadows-medium-r2",
+      "started_utc": "2026-10-09T12:38:05.4225199Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-medium-r2\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-medium-r2.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-medium-r2.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-medium-r2.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T12:41:34.1739674Z",
+      "frame_ms": {
+        "p95_ms": 32.84,
+        "p99_ms": 38.342399999999984,
+        "mean_ms": 23.71857092058477,
+        "sample_count": 2531
+      },
+      "cpu_process": {
+        "p95_ms": 32.379,
+        "p99_ms": 708.081,
+        "mean_ms": 35.96992493085747,
+        "sample_count": 2531
+      },
+      "cpu_physics": {
+        "p95_ms": 15.895,
+        "p99_ms": 16.592,
+        "mean_ms": 9.868271829316516,
+        "sample_count": 2531
+      },
+      "cpu_render": {
+        "p95_ms": 4.629499912261965,
+        "p99_ms": 4.998799943923949,
+        "mean_ms": 2.35965112691244,
+        "sample_count": 2531
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.8234999999999999,
+        "p99_ms": 0.9323999999999997,
+        "mean_ms": 0.7082864480442509,
+        "sample_count": 2531
+      },
+      "gpu_render": {
+        "p95_ms": 29.3059997558594,
+        "p99_ms": 30.179699707031208,
+        "mean_ms": 22.3619375647127,
+        "sample_count": 2531
+      },
+      "mean_fps": 42.16105613395638,
+      "elapsed_ms": 60031.758,
+      "warmup_elapsed_ms": 15025.402,
+      "route_failures": [],
+      "waypoints_reached": 3,
+      "raw_sha256": "c974048329c774e088c04cbafadc0ad0b397f377852331230681acc8aa6e42bf",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/meadows-medium-r2/route.json",
+      "committed_logs": [
+        {
+          "sha256": "2b2f201f07212354e3dc4af7dd4aa8257342aed6609f786b7940303f6b494f74",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-medium-r2/engine_log.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "0641c56e5322d52bc7b7a0e4132f2c3372dffe33751a6678f24a9dbea0205558",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-medium-r2/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-medium-r2/stderr.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "meadows",
+      "preset": "High",
+      "repeat": 1,
+      "complete": true,
+      "pid": 65304,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-high-r1.engine.log\" -- --f26-route --quiet-baseline --biome=meadows --preset=High --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/meadows-high-r1",
+      "started_utc": "2026-10-09T12:41:34.3784785Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-high-r1\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-high-r1.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-high-r1.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-high-r1.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T12:45:09.2485382Z",
+      "frame_ms": {
+        "p95_ms": 33.965300000000006,
+        "p99_ms": 37.67619999999998,
+        "mean_ms": 27.54534098210184,
+        "sample_count": 2179
+      },
+      "cpu_process": {
+        "p95_ms": 32.839,
+        "p99_ms": 705.226,
+        "mean_ms": 34.298476365304374,
+        "sample_count": 2179
+      },
+      "cpu_physics": {
+        "p95_ms": 14.28,
+        "p99_ms": 15.217,
+        "mean_ms": 5.325305185865057,
+        "sample_count": 2179
+      },
+      "cpu_render": {
+        "p95_ms": 4.755200099945069,
+        "p99_ms": 5.173740015029906,
+        "mean_ms": 2.4418398331151527,
+        "sample_count": 2179
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.7710999999999999,
+        "p99_ms": 0.876099999999999,
+        "mean_ms": 0.663048187241856,
+        "sample_count": 2179
+      },
+      "gpu_render": {
+        "p95_ms": 33.47240028381347,
+        "p99_ms": 33.95519958496091,
+        "mean_ms": 27.092291858667842,
+        "sample_count": 2179
+      },
+      "mean_fps": 36.30378003488034,
+      "elapsed_ms": 60021.334,
+      "warmup_elapsed_ms": 15025.011,
+      "route_failures": [],
+      "waypoints_reached": 3,
+      "raw_sha256": "272b90f2ea59a61c565268b150677ddf065b94389bedeea79a8a228bef976668",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/meadows-high-r1/route.json",
+      "committed_logs": [
+        {
+          "sha256": "c3c44718a0a5c4ad80af6b19bb871789123d95af5b7b77a9418865a8a2cd3666",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-high-r1/engine_log.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "7fcb3c2a22ba55eb541f85d7c0bec982b03cedf0f9ce17ced23afc889514a918",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-high-r1/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-high-r1/stderr.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "meadows",
+      "preset": "High",
+      "repeat": 2,
+      "complete": true,
+      "pid": 47872,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-high-r2.engine.log\" -- --f26-route --quiet-baseline --biome=meadows --preset=High --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/meadows-high-r2",
+      "started_utc": "2026-10-09T12:45:09.4005821Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-high-r2\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-high-r2.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-high-r2.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\meadows-high-r2.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T12:48:44.3054747Z",
+      "frame_ms": {
+        "p95_ms": 34.008,
+        "p99_ms": 41.96359999999993,
+        "mean_ms": 27.515242090784014,
+        "sample_count": 2181
+      },
+      "cpu_process": {
+        "p95_ms": 30.062,
+        "p99_ms": 735.597,
+        "mean_ms": 34.00735534158633,
+        "sample_count": 2181
+      },
+      "cpu_physics": {
+        "p95_ms": 14.576,
+        "p99_ms": 16.218,
+        "mean_ms": 5.042219165520418,
+        "sample_count": 2181
+      },
+      "cpu_render": {
+        "p95_ms": 4.77500009536743,
+        "p99_ms": 5.177000141143801,
+        "mean_ms": 2.4333259976822976,
+        "sample_count": 2181
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.758,
+        "p99_ms": 0.8721999999999999,
+        "mean_ms": 0.6553521320495189,
+        "sample_count": 2181
+      },
+      "gpu_render": {
+        "p95_ms": 33.5670013427734,
+        "p99_ms": 33.98500137329104,
+        "mean_ms": 27.028293455701967,
+        "sample_count": 2181
+      },
+      "mean_fps": 36.34349269763253,
+      "elapsed_ms": 60010.763,
+      "warmup_elapsed_ms": 15003.5,
+      "route_failures": [],
+      "waypoints_reached": 3,
+      "raw_sha256": "7d1bf01af74fcf5b17226335bfbfb528690ad03960def2cd757b114f86776dcb",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/meadows-high-r2/route.json",
+      "committed_logs": [
+        {
+          "sha256": "4739dfb6251e34b61c08b484c4a0afb7cf316783c40a002179648861a6a37fb5",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-high-r2/engine_log.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "c529002af208da1e2cbd1f5ff4b61a06ff0542f0153bbbdeb19b08a589333705",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-high-r2/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+          "path": "ralph/reports/F26/quiet-baseline/meadows-high-r2/stderr.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "water",
+      "preset": "Low",
+      "repeat": 1,
+      "complete": true,
+      "pid": 52620,
+      "arguments": "--rendering-method gl_compatibility --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-low-r1.engine.log\" -- --f26-route --quiet-baseline --biome=water --preset=Low --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/water-low-r1",
+      "started_utc": "2026-10-09T12:48:44.4863984Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-low-r1\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-low-r1.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-low-r1.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-low-r1.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T12:50:45.0655966Z",
+      "frame_ms": {
+        "p95_ms": 83.52440000000001,
+        "p99_ms": 131.73708000000002,
+        "mean_ms": 45.217144687264486,
+        "sample_count": 1327
+      },
+      "cpu_process": {
+        "p95_ms": 20.235,
+        "p99_ms": 42.87,
+        "mean_ms": 20.618211755840004,
+        "sample_count": 1327
+      },
+      "cpu_physics": {
+        "p95_ms": 17.542,
+        "p99_ms": 18.606,
+        "mean_ms": 14.496665410700619,
+        "sample_count": 1327
+      },
+      "cpu_render": {
+        "p95_ms": 3.465400052070616,
+        "p99_ms": 3.6229600238800055,
+        "mean_ms": 3.4568846998308147,
+        "sample_count": 1327
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.487,
+        "p99_ms": 0.52622,
+        "mean_ms": 0.44889600602863666,
+        "sample_count": 1327
+      },
+      "gpu_render": {
+        "p95_ms": 14.35499973297116,
+        "p99_ms": 16.77336044311525,
+        "mean_ms": 13.90584627667494,
+        "sample_count": 1327
+      },
+      "mean_fps": 22.115505234050136,
+      "elapsed_ms": 60003.183,
+      "warmup_elapsed_ms": 15033.962,
+      "route_failures": [],
+      "waypoints_reached": 2,
+      "raw_sha256": "89d8fd6b2715131aa84674691a0bcc640f283c20adbccdf03d2473dfb3aa3b89",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/water-low-r1/route.json",
+      "committed_logs": [
+        {
+          "sha256": "b3cf8d6236af95d4f5edc20fe34223aa3d43cd90e056c6061cad700adfa240bc",
+          "path": "ralph/reports/F26/quiet-baseline/water-low-r1/engine_log.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "91350b871f4b5f893d148e55f18a1c6a48a560f3115a6f445e5800eeafdd8c51",
+          "path": "ralph/reports/F26/quiet-baseline/water-low-r1/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+          "path": "ralph/reports/F26/quiet-baseline/water-low-r1/stderr.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "water",
+      "preset": "Low",
+      "repeat": 2,
+      "complete": true,
+      "pid": 37132,
+      "arguments": "--rendering-method gl_compatibility --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-low-r2.engine.log\" -- --f26-route --quiet-baseline --biome=water --preset=Low --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/water-low-r2",
+      "started_utc": "2026-10-09T12:50:45.1777189Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-low-r2\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-low-r2.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-low-r2.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-low-r2.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T12:52:45.6591322Z",
+      "frame_ms": {
+        "p95_ms": 52.40575,
+        "p99_ms": 82.74553000000003,
+        "mean_ms": 30.310645959595853,
+        "sample_count": 1980
+      },
+      "cpu_process": {
+        "p95_ms": 22.744,
+        "p99_ms": 37.297,
+        "mean_ms": 18.180045454545436,
+        "sample_count": 1980
+      },
+      "cpu_physics": {
+        "p95_ms": 15.744,
+        "p99_ms": 18.025,
+        "mean_ms": 12.750340404040555,
+        "sample_count": 1980
+      },
+      "cpu_render": {
+        "p95_ms": 3.444100010395054,
+        "p99_ms": 3.548840086460114,
+        "mean_ms": 3.3770282866978887,
+        "sample_count": 1980
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.48,
+        "p99_ms": 0.517,
+        "mean_ms": 0.4449136363636379,
+        "sample_count": 1980
+      },
+      "gpu_render": {
+        "p95_ms": 14.57610020637508,
+        "p99_ms": 14.918359918594344,
+        "mean_ms": 13.949043925603233,
+        "sample_count": 1980
+      },
+      "mean_fps": 32.99170863375864,
+      "elapsed_ms": 60015.111,
+      "warmup_elapsed_ms": 15012.714,
+      "route_failures": [],
+      "waypoints_reached": 2,
+      "raw_sha256": "f9c017d884b9c909ccf0fa9772f386c16ba9a64a5cb79da86c1d9db4a672a275",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/water-low-r2/route.json",
+      "committed_logs": [
+        {
+          "sha256": "31ab06ed4965b8fa098242b559e819e5733dd7396eee19b779aa76e6ca33afec",
+          "path": "ralph/reports/F26/quiet-baseline/water-low-r2/engine_log.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "2c0f9ab837890f59ac076e0fdc9c1eb048a59b56be0815caf23e10ca4bed1d4a",
+          "path": "ralph/reports/F26/quiet-baseline/water-low-r2/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+          "path": "ralph/reports/F26/quiet-baseline/water-low-r2/stderr.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "water",
+      "preset": "Medium",
+      "repeat": 1,
+      "complete": true,
+      "pid": 22908,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-medium-r1.engine.log\" -- --f26-route --quiet-baseline --biome=water --preset=Medium --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/water-medium-r1",
+      "started_utc": "2026-10-09T12:52:45.8038891Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-medium-r1\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-medium-r1.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-medium-r1.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-medium-r1.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T12:54:52.2757762Z",
+      "frame_ms": {
+        "p95_ms": 62.79769999999997,
+        "p99_ms": 93.36695000000003,
+        "mean_ms": 33.68183782267109,
+        "sample_count": 1782
+      },
+      "cpu_process": {
+        "p95_ms": 16.002,
+        "p99_ms": 23.931,
+        "mean_ms": 18.50392031425364,
+        "sample_count": 1782
+      },
+      "cpu_physics": {
+        "p95_ms": 20.88,
+        "p99_ms": 30.027,
+        "mean_ms": 15.053666105499511,
+        "sample_count": 1782
+      },
+      "cpu_render": {
+        "p95_ms": 1.40400004386902,
+        "p99_ms": 1.4539999961853,
+        "mean_ms": 1.3519321009767578,
+        "sample_count": 1782
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.2469499999999998,
+        "p99_ms": 0.28857000000000016,
+        "mean_ms": 0.22355162738496095,
+        "sample_count": 1782
+      },
+      "gpu_render": {
+        "p95_ms": 22.34379987716675,
+        "p99_ms": 22.746330833435056,
+        "mean_ms": 21.901093714164965,
+        "sample_count": 1782
+      },
+      "mean_fps": 29.689591324108346,
+      "elapsed_ms": 60021.07,
+      "warmup_elapsed_ms": 15021.07,
+      "route_failures": [],
+      "waypoints_reached": 2,
+      "raw_sha256": "7584341a3a2e8dd82c946f1cb35b86c26deb3a5bd16fe5bde095dbd7d1e457c8",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/water-medium-r1/route.json",
+      "committed_logs": [
+        {
+          "sha256": "9d552dba251f243215ea6c1c089b3dd15b853cf15e6afdcfa817ab09e725bac0",
+          "path": "ralph/reports/F26/quiet-baseline/water-medium-r1/engine_log.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "4978c5bc9094c0f331f0e0df31f441fca9f856c5a7294b0d3c3303d3937e4518",
+          "path": "ralph/reports/F26/quiet-baseline/water-medium-r1/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+          "path": "ralph/reports/F26/quiet-baseline/water-medium-r1/stderr.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "water",
+      "preset": "Medium",
+      "repeat": 2,
+      "complete": true,
+      "pid": 48800,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-medium-r2.engine.log\" -- --f26-route --quiet-baseline --biome=water --preset=Medium --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/water-medium-r2",
+      "started_utc": "2026-10-09T12:54:52.4308872Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-medium-r2\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-medium-r2.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-medium-r2.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-medium-r2.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T12:56:57.011755Z",
+      "frame_ms": {
+        "p95_ms": 53.5675,
+        "p99_ms": 80.30717999999999,
+        "mean_ms": 33.36654085603113,
+        "sample_count": 1799
+      },
+      "cpu_process": {
+        "p95_ms": 17.21,
+        "p99_ms": 18.095,
+        "mean_ms": 16.996571428571475,
+        "sample_count": 1799
+      },
+      "cpu_physics": {
+        "p95_ms": 17.216,
+        "p99_ms": 32.385,
+        "mean_ms": 13.697674263479513,
+        "sample_count": 1799
+      },
+      "cpu_render": {
+        "p95_ms": 1.39499998092651,
+        "p99_ms": 1.4740199780464207,
+        "mean_ms": 1.3444419128487943,
+        "sample_count": 1799
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.25609999999999994,
+        "p99_ms": 0.297,
+        "mean_ms": 0.22925291828793898,
+        "sample_count": 1799
+      },
+      "gpu_render": {
+        "p95_ms": 22.2150001525879,
+        "p99_ms": 22.69324077606198,
+        "mean_ms": 21.889718748583537,
+        "sample_count": 1799
+      },
+      "mean_fps": 29.970142973908132,
+      "elapsed_ms": 60026.438,
+      "warmup_elapsed_ms": 15001.958,
+      "route_failures": [],
+      "waypoints_reached": 2,
+      "raw_sha256": "16dfcf3d5faa5839d28026eba6888fdf6869f194b564843d2fef63b2f6162394",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/water-medium-r2/route.json",
+      "committed_logs": [
+        {
+          "sha256": "1fdc4881291d4a4aaaf9cfa3b088bb542b560790a278074366e08442a24e1d89",
+          "path": "ralph/reports/F26/quiet-baseline/water-medium-r2/engine_log.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "0fd4971f05b5e557c39d843faa2392105c0c384da551c1db45622819f83b4b7f",
+          "path": "ralph/reports/F26/quiet-baseline/water-medium-r2/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+          "path": "ralph/reports/F26/quiet-baseline/water-medium-r2/stderr.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "water",
+      "preset": "High",
+      "repeat": 1,
+      "complete": true,
+      "pid": 59752,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-high-r1.engine.log\" -- --f26-route --quiet-baseline --biome=water --preset=High --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/water-high-r1",
+      "started_utc": "2026-10-09T12:56:57.1495449Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-high-r1\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-high-r1.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-high-r1.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-high-r1.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T12:59:01.6673859Z",
+      "frame_ms": {
+        "p95_ms": 71.90379999999998,
+        "p99_ms": 114.62635999999985,
+        "mean_ms": 40.204574681848605,
+        "sample_count": 1493
+      },
+      "cpu_process": {
+        "p95_ms": 17.066,
+        "p99_ms": 684.477,
+        "mean_ms": 27.481099129269914,
+        "sample_count": 1493
+      },
+      "cpu_physics": {
+        "p95_ms": 27.968,
+        "p99_ms": 32.37775999999995,
+        "mean_ms": 16.236480910917667,
+        "sample_count": 1493
+      },
+      "cpu_render": {
+        "p95_ms": 1.47800004482269,
+        "p99_ms": 1.53900003433228,
+        "mean_ms": 1.416208305936968,
+        "sample_count": 1493
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.271,
+        "p99_ms": 0.313,
+        "mean_ms": 0.23292766242464974,
+        "sample_count": 1493
+      },
+      "gpu_render": {
+        "p95_ms": 25.29160079956054,
+        "p99_ms": 25.707759475707956,
+        "mean_ms": 24.855364387496877,
+        "sample_count": 1493
+      },
+      "mean_fps": 24.87279141523852,
+      "elapsed_ms": 60025.464,
+      "warmup_elapsed_ms": 15021.259,
+      "route_failures": [],
+      "waypoints_reached": 2,
+      "raw_sha256": "4615282197da39364b3f4cd2128e1a67c5fc447b6ee8de5f056ed3ac6bcafd68",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/water-high-r1/route.json",
+      "committed_logs": [
+        {
+          "sha256": "7fe1dd8c4e3999d3c38db7d0ad50747b1c296b36f5d1ca41fbb45e7f178d7b75",
+          "path": "ralph/reports/F26/quiet-baseline/water-high-r1/engine_log.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "b0921c4475481168e46168129eeed539cf3d3db511e5820cc2e6b336543131c1",
+          "path": "ralph/reports/F26/quiet-baseline/water-high-r1/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+          "path": "ralph/reports/F26/quiet-baseline/water-high-r1/stderr.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "water",
+      "preset": "High",
+      "repeat": 2,
+      "complete": true,
+      "pid": 54724,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-high-r2.engine.log\" -- --f26-route --quiet-baseline --biome=water --preset=High --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/water-high-r2",
+      "started_utc": "2026-10-09T12:59:01.7813205Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-high-r2\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-high-r2.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-high-r2.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\water-high-r2.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T13:01:06.2639858Z",
+      "frame_ms": {
+        "p95_ms": 46.018,
+        "p99_ms": 59.651,
+        "mean_ms": 30.374774291497957,
+        "sample_count": 1976
+      },
+      "cpu_process": {
+        "p95_ms": 20.03,
+        "p99_ms": 675.645,
+        "mean_ms": 26.40009058704458,
+        "sample_count": 1976
+      },
+      "cpu_physics": {
+        "p95_ms": 16.999,
+        "p99_ms": 30.802,
+        "mean_ms": 13.591253542509936,
+        "sample_count": 1976
+      },
+      "cpu_render": {
+        "p95_ms": 1.46099996566772,
+        "p99_ms": 1.50899994373322,
+        "mean_ms": 1.4079549587689912,
+        "sample_count": 1976
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.252,
+        "p99_ms": 0.28474999999999995,
+        "mean_ms": 0.22741194331983958,
+        "sample_count": 1976
+      },
+      "gpu_render": {
+        "p95_ms": 25.424249649047873,
+        "p99_ms": 29.056000232696576,
+        "mean_ms": 25.063651314631166,
+        "sample_count": 1976
+      },
+      "mean_fps": 32.92205533457757,
+      "elapsed_ms": 60020.587,
+      "warmup_elapsed_ms": 15000.039,
+      "route_failures": [],
+      "waypoints_reached": 2,
+      "raw_sha256": "018f29fa75a0e8ea458239abb388779abb99bade3c539427b3faa0717ae9eee7",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/water-high-r2/route.json",
+      "committed_logs": [
+        {
+          "sha256": "d5e6323a42a5dc87dc6408637956010917054786bf98ae6f4fc2c5681d324be4",
+          "path": "ralph/reports/F26/quiet-baseline/water-high-r2/engine_log.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "fd4b0031a6b5ed9470ca64094c0afe06c7c7124d22a7a52bd176afa580343d27",
+          "path": "ralph/reports/F26/quiet-baseline/water-high-r2/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+          "path": "ralph/reports/F26/quiet-baseline/water-high-r2/stderr.txt",
+          "warning_count": 1,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "Low",
+      "repeat": 1,
+      "complete": true,
+      "pid": 10764,
+      "arguments": "--rendering-method gl_compatibility --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-low-r1.engine.log\" -- --f26-route --quiet-baseline --biome=cloudreach --preset=Low --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/cloudreach-low-r1",
+      "started_utc": "2026-10-09T13:01:06.4207851Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-low-r1\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-low-r1.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-low-r1.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-low-r1.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T13:06:38.016394Z",
+      "frame_ms": {
+        "p95_ms": 23.29625,
+        "p99_ms": 25.01835,
+        "mean_ms": 19.529045728306926,
+        "sample_count": 8966
+      },
+      "cpu_process": {
+        "p95_ms": 28.489,
+        "p99_ms": 68.194,
+        "mean_ms": 22.484436426500316,
+        "sample_count": 8966
+      },
+      "cpu_physics": {
+        "p95_ms": 4.861,
+        "p99_ms": 5.413,
+        "mean_ms": 3.6042667856345907,
+        "sample_count": 8966
+      },
+      "cpu_render": {
+        "p95_ms": 11.91100025177,
+        "p99_ms": 12.286749887466417,
+        "mean_ms": 11.279729868561036,
+        "sample_count": 8966
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.275,
+        "p99_ms": 0.308,
+        "mean_ms": 0.22176622797234175,
+        "sample_count": 8966
+      },
+      "gpu_render": {
+        "p95_ms": 18.7980003356934,
+        "p99_ms": 19.073349761962863,
+        "mean_ms": 15.700052083721923,
+        "sample_count": 8966
+      },
+      "mean_fps": 51.205779018199635,
+      "elapsed_ms": 175114.399,
+      "warmup_elapsed_ms": 15014.267,
+      "route_failures": [],
+      "waypoints_reached": 3,
+      "raw_sha256": "0b1d98ad51e54227b16f06cbfb3ec31d8e0aeec6bfdaa5bb5b463784116e9e1e",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/cloudreach-low-r1/route.json",
+      "committed_logs": [
+        {
+          "sha256": "83a560b02c906cbb91b1546eb68ae71fd63b6e469a05879f5b5c46bc1189344c",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-low-r1/engine_log.txt",
+          "warning_count": 3,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "9a6f359e7cf41ad0210c10e1d942f16f4d8243bfd61f14c4e1cdd6ce254f5827",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-low-r1/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "a1a0d79c079699e11f939bd814203c72f1f001225585fbb76b607aebdacc21d1",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-low-r1/stderr.txt",
+          "warning_count": 3,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "Low",
+      "repeat": 2,
+      "complete": true,
+      "pid": 37340,
+      "arguments": "--rendering-method gl_compatibility --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-low-r2.engine.log\" -- --f26-route --quiet-baseline --biome=cloudreach --preset=Low --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/cloudreach-low-r2",
+      "started_utc": "2026-10-09T13:06:38.8111998Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-low-r2\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-low-r2.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-low-r2.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-low-r2.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T13:12:10.4501586Z",
+      "frame_ms": {
+        "p95_ms": 22.5746,
+        "p99_ms": 24.20651999999999,
+        "mean_ms": 19.336450358917656,
+        "sample_count": 9055
+      },
+      "cpu_process": {
+        "p95_ms": 28.29,
+        "p99_ms": 64.522,
+        "mean_ms": 22.17929033683014,
+        "sample_count": 9055
+      },
+      "cpu_physics": {
+        "p95_ms": 5.384,
+        "p99_ms": 7.125,
+        "mean_ms": 3.6573897294311792,
+        "sample_count": 9055
+      },
+      "cpu_render": {
+        "p95_ms": 12.079900264740028,
+        "p99_ms": 12.830380153656042,
+        "mean_ms": 11.363664159664195,
+        "sample_count": 9055
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.275,
+        "p99_ms": 0.3104599999999991,
+        "mean_ms": 0.22128868028713602,
+        "sample_count": 9055
+      },
+      "gpu_render": {
+        "p95_ms": 18.7339992523193,
+        "p99_ms": 18.974460678100556,
+        "mean_ms": 15.709309110530894,
+        "sample_count": 9055
+      },
+      "mean_fps": 51.715800027320746,
+      "elapsed_ms": 175111.532,
+      "warmup_elapsed_ms": 15000.226,
+      "route_failures": [],
+      "waypoints_reached": 3,
+      "raw_sha256": "fec77b17fbf0ab25143e33755d0169df676f35f40a62336bcf92b013bb68926e",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/cloudreach-low-r2/route.json",
+      "committed_logs": [
+        {
+          "sha256": "f9069ecc4cd25d4b5f74f1454c484b69caa538defb45ff258cfbb673573112e5",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-low-r2/engine_log.txt",
+          "warning_count": 3,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "6fa3bf85f9fa340a73e07a74180aa6aa69495d20ae60f7ea44478e2630f6300a",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-low-r2/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "a1a0d79c079699e11f939bd814203c72f1f001225585fbb76b607aebdacc21d1",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-low-r2/stderr.txt",
+          "warning_count": 3,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "Medium",
+      "repeat": 1,
+      "complete": true,
+      "pid": 41700,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-medium-r1.engine.log\" -- --f26-route --quiet-baseline --biome=cloudreach --preset=Medium --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/cloudreach-medium-r1",
+      "started_utc": "2026-10-09T13:12:11.2710733Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-medium-r1\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-medium-r1.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-medium-r1.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-medium-r1.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T13:21:01.8626861Z",
+      "frame_ms": {
+        "p95_ms": 14.743,
+        "p99_ms": 17.124799999999997,
+        "mean_ms": 10.792792306269657,
+        "sample_count": 16221
+      },
+      "cpu_process": {
+        "p95_ms": 16.569,
+        "p99_ms": 30.816,
+        "mean_ms": 14.355022933234425,
+        "sample_count": 16221
+      },
+      "cpu_physics": {
+        "p95_ms": 5.576,
+        "p99_ms": 11.202,
+        "mean_ms": 3.7391677455149757,
+        "sample_count": 16221
+      },
+      "cpu_render": {
+        "p95_ms": 1.67400002479553,
+        "p99_ms": 1.7487999677658093,
+        "mean_ms": 1.2874334504987814,
+        "sample_count": 16221
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.115,
+        "p99_ms": 0.136,
+        "mean_ms": 0.09961377227051608,
+        "sample_count": 16221
+      },
+      "gpu_render": {
+        "p95_ms": 13.576000213623,
+        "p99_ms": 14.076599693298299,
+        "mean_ms": 10.551858147492458,
+        "sample_count": 16221
+      },
+      "mean_fps": 92.65442821679136,
+      "elapsed_ms": 175079.362,
+      "warmup_elapsed_ms": 15004.405,
+      "route_failures": [],
+      "waypoints_reached": 3,
+      "raw_sha256": "504565304745c413cc58e97d171ad221297b8880ccbf2a29ff2437992e6d1221",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/cloudreach-medium-r1/route.json",
+      "committed_logs": [
+        {
+          "sha256": "64556662805deea60a8650af9946ed36b7f73fde2df6d4e4738c74a574eb83d3",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-medium-r1/engine_log.txt",
+          "warning_count": 3,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "4917130ed3deb643454bb7ba6623549eca5d20eb61f309b612b51a5ec588442c",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-medium-r1/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "a1a0d79c079699e11f939bd814203c72f1f001225585fbb76b607aebdacc21d1",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-medium-r1/stderr.txt",
+          "warning_count": 3,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "Medium",
+      "repeat": 2,
+      "complete": true,
+      "pid": 44292,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-medium-r2.engine.log\" -- --f26-route --quiet-baseline --biome=cloudreach --preset=Medium --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/cloudreach-medium-r2",
+      "started_utc": "2026-10-09T13:21:03.2606865Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-medium-r2\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-medium-r2.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-medium-r2.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-medium-r2.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T13:29:51.701074Z",
+      "frame_ms": {
+        "p95_ms": 16.648199999999996,
+        "p99_ms": 19.22346,
+        "mean_ms": 11.067182628484698,
+        "sample_count": 15819
+      },
+      "cpu_process": {
+        "p95_ms": 17.23,
+        "p99_ms": 24.467,
+        "mean_ms": 14.840105253177398,
+        "sample_count": 15819
+      },
+      "cpu_physics": {
+        "p95_ms": 11.39,
+        "p99_ms": 13.009,
+        "mean_ms": 5.098070042353868,
+        "sample_count": 15819
+      },
+      "cpu_render": {
+        "p95_ms": 1.73800003528595,
+        "p99_ms": 2.38199996948242,
+        "mean_ms": 1.306323471970772,
+        "sample_count": 15819
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.125,
+        "p99_ms": 0.16,
+        "mean_ms": 0.10061337631961884,
+        "sample_count": 15819
+      },
+      "gpu_render": {
+        "p95_ms": 13.445099735259987,
+        "p99_ms": 14.1009998321533,
+        "mean_ms": 10.560516151784155,
+        "sample_count": 15819
+      },
+      "mean_fps": 90.3572330528098,
+      "elapsed_ms": 175080.491,
+      "warmup_elapsed_ms": 15006.952,
+      "route_failures": [],
+      "waypoints_reached": 3,
+      "raw_sha256": "b37d047bba0c212bb5d52c96f781f14d0efe24ce5515c7d7c13f3f9ffa2204e3",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/cloudreach-medium-r2/route.json",
+      "committed_logs": [
+        {
+          "sha256": "95ee45e1ab9c6e05eca368af7ace11fe63bf1d28a083a297adba19570bd8d2d0",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-medium-r2/engine_log.txt",
+          "warning_count": 3,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "73279e19cf64fe932500f1958f0eefd8bbe184954aefe8b6316ed6e598585e43",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-medium-r2/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "a1a0d79c079699e11f939bd814203c72f1f001225585fbb76b607aebdacc21d1",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-medium-r2/stderr.txt",
+          "warning_count": 3,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "High",
+      "repeat": 1,
+      "complete": true,
+      "pid": 33544,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-high-r1.engine.log\" -- --f26-route --quiet-baseline --biome=cloudreach --preset=High --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/cloudreach-high-r1",
+      "started_utc": "2026-10-09T13:29:53.1325547Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-high-r1\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-high-r1.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-high-r1.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-high-r1.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T13:38:39.5892322Z",
+      "frame_ms": {
+        "p95_ms": 17.35045,
+        "p99_ms": 19.01126000000003,
+        "mean_ms": 13.787975035438725,
+        "sample_count": 12698
+      },
+      "cpu_process": {
+        "p95_ms": 16.9,
+        "p99_ms": 22.385,
+        "mean_ms": 15.667757599622284,
+        "sample_count": 12698
+      },
+      "cpu_physics": {
+        "p95_ms": 5.527,
+        "p99_ms": 13.618,
+        "mean_ms": 4.135031501023757,
+        "sample_count": 12698
+      },
+      "cpu_render": {
+        "p95_ms": 1.77100002765656,
+        "p99_ms": 1.89699995517731,
+        "mean_ms": 1.3593460383246614,
+        "sample_count": 12698
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.117,
+        "p99_ms": 0.13303000000000068,
+        "mean_ms": 0.10180878878563629,
+        "sample_count": 12698
+      },
+      "gpu_render": {
+        "p95_ms": 16.8139991760254,
+        "p99_ms": 17.503120250701894,
+        "mean_ms": 13.580893130729773,
+        "sample_count": 12698
+      },
+      "mean_fps": 72.52696624629337,
+      "elapsed_ms": 175092.215,
+      "warmup_elapsed_ms": 15005.074,
+      "route_failures": [],
+      "waypoints_reached": 3,
+      "raw_sha256": "e9df71a77c1b3df69bc54421970c28fdc2e842c87ca344559bdf9b136151550c",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/cloudreach-high-r1/route.json",
+      "committed_logs": [
+        {
+          "sha256": "9936380aea12b0375426c3e0b29960f37f1a0dac0d885dad22e8ccac0cf0d585",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-high-r1/engine_log.txt",
+          "warning_count": 3,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "6a87f05b0ba61b11a576200263faa579dc9b1d2034184ebd213f7d10c7ae6d0b",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-high-r1/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "a1a0d79c079699e11f939bd814203c72f1f001225585fbb76b607aebdacc21d1",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-high-r1/stderr.txt",
+          "warning_count": 3,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "High",
+      "repeat": 2,
+      "complete": true,
+      "pid": 8412,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-high-r2.engine.log\" -- --f26-route --quiet-baseline --biome=cloudreach --preset=High --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/cloudreach-high-r2",
+      "started_utc": "2026-10-09T13:38:40.7404259Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-high-r2\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-high-r2.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-high-r2.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\cloudreach-high-r2.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T13:47:27.1437558Z",
+      "frame_ms": {
+        "p95_ms": 17.411,
+        "p99_ms": 20.13932,
+        "mean_ms": 13.83227960812197,
+        "sample_count": 12657
+      },
+      "cpu_process": {
+        "p95_ms": 17.411,
+        "p99_ms": 28.961,
+        "mean_ms": 16.773702141107098,
+        "sample_count": 12657
+      },
+      "cpu_physics": {
+        "p95_ms": 9.365,
+        "p99_ms": 13.481,
+        "mean_ms": 4.33493039424828,
+        "sample_count": 12657
+      },
+      "cpu_render": {
+        "p95_ms": 1.77799999713898,
+        "p99_ms": 2.0614400768280006,
+        "mean_ms": 1.3744012013971312,
+        "sample_count": 12657
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.12,
+        "p99_ms": 0.145,
+        "mean_ms": 0.10382041558031166,
+        "sample_count": 12657
+      },
+      "gpu_render": {
+        "p95_ms": 16.78519973754882,
+        "p99_ms": 17.43544006347657,
+        "mean_ms": 13.599198146370092,
+        "sample_count": 12657
+      },
+      "mean_fps": 72.29466352117585,
+      "elapsed_ms": 175087.497,
+      "warmup_elapsed_ms": 15009.278,
+      "route_failures": [],
+      "waypoints_reached": 3,
+      "raw_sha256": "797faadcdbb9a72e8a554adba5331456f35420ad518fa419dcc753382b5adbfe",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/cloudreach-high-r2/route.json",
+      "committed_logs": [
+        {
+          "sha256": "3dba8667c3218ce5e626147ac3dd81b0c1c9a862bb0603fa5c795b978311164d",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-high-r2/engine_log.txt",
+          "warning_count": 3,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "a3431c54a9d5227de22289a1e53665894bc256c4a38635c9d7f5ee0cd497d388",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-high-r2/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "a1a0d79c079699e11f939bd814203c72f1f001225585fbb76b607aebdacc21d1",
+          "path": "ralph/reports/F26/quiet-baseline/cloudreach-high-r2/stderr.txt",
+          "warning_count": 3,
+          "error_count": 0,
+          "error_examples": []
+        }
+      ],
+      "source_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+      "qualification": "Original quiet interval; unchanged original source; no current-main performance claim.",
+      "original_commit": "370b994e690f4a6d83e0674d0178a2bfed9ad84b"
+    },
+    {
+      "case": "Medium-r1",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "actual_launch_utc": "2026-10-09T21:13:04.8009156Z",
+      "checks": {
+        "source": true,
+        "complete": true,
+        "release": true,
+        "renderer": true,
+        "raster": true,
+        "preset": true,
+        "warmup": true,
+        "timed": true,
+        "uncapped": true,
+        "raw_errors": true,
+        "terrain": true,
+        "start.png": true,
+        "end.png": true,
+        "samples": true
+      },
+      "content_gate": "PASS",
+      "sample_count": 5674,
+      "warmup_ms": 15005.594,
+      "elapsed_ms": 151701.496,
+      "mean_fps": 37.408466200471736,
+      "p95_ms": 33.90105,
+      "p99_ms": 39.10624999999997,
+      "mean_times_ms": {
+        "wall_ms": 26.731916637292912,
+        "process_ms": 28.34346069792034,
+        "physics_ms": 7.9634654564681,
+        "render_cpu_ms": 2.434419458921753,
+        "render_setup_cpu_ms": 0.2778540712019739,
+        "render_gpu_ms": 26.143422279048647
+      },
+      "start_png_utc": "2026-10-09T21:15:21.204940+00:00",
+      "end_png_utc": "2026-10-09T21:17:53.559206+00:00",
+      "raw_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r1-engine.log",
+      "raw_route": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r1\\route.json",
+      "raw_errors": [],
+      "timing_status": "No other native overlap reported in timed interval",
+      "timing_note": "D0.95s headless proof ended21:14:30, at least51.2s before startPNG/timed interval.",
+      "visual_scope": "Native route start/end integrity only; fullmatrix/fight/code-blind judgement remains required.",
+      "biome": "stormwood",
+      "preset": "Medium",
+      "committed_evidence": "ralph/reports/F26/stormwood-export-freshness/native/Medium-r1",
+      "qualification": "Fresh release content PASS; exclusive native timed interval; desktop only. Individual CPU/GPU monitors overlap and cannot be added."
+    },
+    {
+      "case": "High-r1",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "actual_launch_utc": "2026-10-09T21:22:48.2361362Z",
+      "checks": {
+        "source": true,
+        "complete": true,
+        "release": true,
+        "renderer": true,
+        "raster": true,
+        "preset": true,
+        "warmup": true,
+        "timed": true,
+        "uncapped": true,
+        "raw_errors": true,
+        "terrain": true,
+        "start.png": true,
+        "end.png": true,
+        "samples": true
+      },
+      "content_gate": "PASS",
+      "sample_count": 4619,
+      "warmup_ms": 15003.665,
+      "elapsed_ms": 151709.208,
+      "mean_fps": 30.452321938782973,
+      "p95_ms": 38.841699999999996,
+      "p99_ms": 43.24538,
+      "mean_times_ms": {
+        "wall_ms": 32.838218445550986,
+        "process_ms": 31.292989175146136,
+        "physics_ms": 4.877160857328426,
+        "render_cpu_ms": 2.4835771814417753,
+        "render_setup_cpu_ms": 0.28220718770296604,
+        "render_gpu_ms": 32.513958411290034
+      },
+      "start_png_utc": "2026-10-09T21:25:00.929785+00:00",
+      "end_png_utc": "2026-10-09T21:27:33.310923+00:00",
+      "raw_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r1-engine.log",
+      "raw_route": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r1\\route.json",
+      "raw_errors": [],
+      "timing_status": "No other native overlap reported in timed interval",
+      "timing_note": "Other lanes instructed to avoid local engines during E lease.",
+      "visual_scope": "Native route start/end integrity only; fullmatrix/fight/code-blind judgement remains required.",
+      "biome": "stormwood",
+      "preset": "High",
+      "committed_evidence": "ralph/reports/F26/stormwood-export-freshness/native/High-r1",
+      "qualification": "Fresh release content PASS; exclusive native timed interval; desktop only. Individual CPU/GPU monitors overlap and cannot be added."
+    },
+    {
+      "case": "High-r2",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "actual_launch_utc": "2026-10-09T21:27:37.5527337Z",
+      "checks": {
+        "source": true,
+        "complete": true,
+        "release": true,
+        "renderer": true,
+        "raster": true,
+        "preset": true,
+        "warmup": true,
+        "timed": true,
+        "uncapped": true,
+        "raw_errors": true,
+        "terrain": true,
+        "start.png": true,
+        "end.png": true,
+        "samples": true
+      },
+      "content_gate": "PASS",
+      "sample_count": 4559,
+      "warmup_ms": 15019.529,
+      "elapsed_ms": 151740.082,
+      "mean_fps": 30.050248048681645,
+      "p95_ms": 39.5286,
+      "p99_ms": 43.54598,
+      "mean_times_ms": {
+        "wall_ms": 33.2775955253345,
+        "process_ms": 34.81041982890985,
+        "physics_ms": 5.668642246106602,
+        "render_cpu_ms": 2.5262706736823817,
+        "render_setup_cpu_ms": 0.28408071945602104,
+        "render_gpu_ms": 32.897581676977666
+      },
+      "start_png_utc": "2026-10-09T21:29:50.571418+00:00",
+      "end_png_utc": "2026-10-09T21:32:22.983788+00:00",
+      "raw_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r2-engine.log",
+      "raw_route": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r2\\route.json",
+      "raw_errors": [],
+      "timing_status": "No other native overlap reported in timed interval",
+      "timing_note": "Other lanes instructed to avoid local engines during E lease.",
+      "visual_scope": "Native route start/end integrity only; fullmatrix/fight/code-blind judgement remains required.",
+      "biome": "stormwood",
+      "preset": "High",
+      "committed_evidence": "ralph/reports/F26/stormwood-export-freshness/native/High-r2",
+      "qualification": "Fresh release content PASS; exclusive native timed interval; desktop only. Individual CPU/GPU monitors overlap and cannot be added."
+    },
+    {
+      "case": "Low-r1",
+      "biome": "stormwood",
+      "preset": "Low",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "actual_launch_utc": "2026-10-09T21:39:02.9686275Z",
+      "checks": {
+        "source": true,
+        "complete": true,
+        "release": true,
+        "renderer": true,
+        "preset": true,
+        "raster": true,
+        "warmup": true,
+        "timed": true,
+        "uncapped": true,
+        "raw_errors": true,
+        "terrain": true,
+        "samples": true,
+        "start.png": true,
+        "end.png": true
+      },
+      "content_gate": "PASS",
+      "sample_count": 9604,
+      "warmup_ms": 15007.054,
+      "elapsed_ms": 155541.081,
+      "mean_times_ms": {
+        "wall_ms": 16.194179716784674,
+        "process_ms": 34.81656299458559,
+        "physics_ms": 3.4013724489795916,
+        "render_cpu_ms": 5.742147950468735,
+        "render_setup_cpu_ms": 0.45402728029987505,
+        "render_gpu_ms": 14.06125801476475
+      },
+      "mean_fps": 61.75058060912691,
+      "p95_ms": 23.482150000000008,
+      "p99_ms": 28.53284999999987,
+      "raw_log": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r1-engine.log",
+      "raw_route": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r1\\route.json",
+      "route_sha256": "7382bbf05b7832a40892aefdd18e83b95f9716a66d111c016bef08239b177426",
+      "raw_errors": [],
+      "timing_note": "Exclusive E native lease; all other lanes instructed to stop local native engines. CPU monitor fields overlap and must not be summed.",
+      "committed_evidence": "ralph/reports/F26/quiet-baseline/corrected-stormwood/Low-r1",
+      "qualification": "Fresh release content PASS; exclusive native timed interval; desktop only. Individual CPU/GPU monitors overlap and cannot be added."
+    },
+    {
+      "case": "Low-r3",
+      "biome": "stormwood",
+      "preset": "Low",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "actual_launch_utc": "2026-10-09T21:51:36.4629768Z",
+      "checks": {
+        "source": true,
+        "complete": true,
+        "release": true,
+        "renderer": true,
+        "preset": true,
+        "raster": true,
+        "warmup": true,
+        "timed": true,
+        "uncapped": true,
+        "raw_errors": true,
+        "terrain": true,
+        "samples": true,
+        "start.png": true,
+        "end.png": true
+      },
+      "content_gate": "PASS",
+      "sample_count": 9701,
+      "warmup_ms": 15007.506,
+      "elapsed_ms": 151726.438,
+      "mean_times_ms": {
+        "wall_ms": 15.63911503968663,
+        "process_ms": 26.358151530770026,
+        "physics_ms": 3.44996165343779,
+        "render_cpu_ms": 5.209346764407911,
+        "render_setup_cpu_ms": 0.452067828058963,
+        "render_gpu_ms": 13.769200281560598
+      },
+      "mean_fps": 63.94223697839348,
+      "p95_ms": 23.451,
+      "p99_ms": 28.598,
+      "raw_log": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r3-engine.log",
+      "raw_route": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Low-r3\\route.json",
+      "route_sha256": "81f98ad07475adc2b021fe4ef367348539edeb374bf8de9aa05a1556b14dc68b",
+      "raw_errors": [],
+      "timing_note": "Exclusive E native lease; all other lanes instructed to stop local native engines. CPU monitor fields overlap and must not be summed.",
+      "committed_evidence": "ralph/reports/F26/quiet-baseline/corrected-stormwood/Low-r3",
+      "qualification": "Fresh release content PASS; exclusive native timed interval; desktop only. Individual CPU/GPU monitors overlap and cannot be added."
+    },
+    {
+      "case": "Medium-r3",
+      "biome": "stormwood",
+      "preset": "Medium",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "actual_launch_utc": "2026-10-09T21:46:16.3041919Z",
+      "checks": {
+        "source": true,
+        "complete": true,
+        "release": true,
+        "renderer": true,
+        "preset": true,
+        "raster": true,
+        "warmup": true,
+        "timed": true,
+        "uncapped": true,
+        "raw_errors": true,
+        "terrain": true,
+        "samples": true,
+        "start.png": true,
+        "end.png": true
+      },
+      "content_gate": "PASS",
+      "sample_count": 5697,
+      "warmup_ms": 15005.138,
+      "elapsed_ms": 151707.953,
+      "mean_times_ms": {
+        "wall_ms": 26.62514990345796,
+        "process_ms": 29.555079866596454,
+        "physics_ms": 5.670570826750922,
+        "render_cpu_ms": 2.383975777266966,
+        "render_setup_cpu_ms": 0.27575706512199405,
+        "render_gpu_ms": 26.213136210783922
+      },
+      "mean_fps": 37.55847398515959,
+      "p95_ms": 31.6816,
+      "p99_ms": 35.338719999999995,
+      "raw_log": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Medium-r3-engine.log",
+      "raw_route": "C:\\CodexTemp\\owner-e-quiet-corrected-785e6f\\Medium-r3\\route.json",
+      "route_sha256": "01ba036210e7c77dcdbc4125e4e791d8105336fef557b8d852d5a3bde70e9379",
+      "raw_errors": [],
+      "timing_note": "Exclusive E native lease; all other lanes instructed to stop local native engines. CPU monitor fields overlap and must not be summed.",
+      "committed_evidence": "ralph/reports/F26/quiet-baseline/corrected-stormwood/Medium-r3",
+      "qualification": "Fresh release content PASS; exclusive native timed interval; desktop only. Individual CPU/GPU monitors overlap and cannot be added."
+    }
+  ],
+  "excluded_original_stormwood": [
+    {
+      "biome": "stormwood",
+      "preset": "Low",
+      "repeat": 1,
+      "complete": true,
+      "pid": 36044,
+      "arguments": "--rendering-method gl_compatibility --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-low-r1.engine.log\" -- --f26-route --quiet-baseline --biome=stormwood --preset=Low --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/stormwood-low-r1",
+      "started_utc": "2026-10-09T13:47:28.2427838Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-low-r1\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-low-r1.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-low-r1.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-low-r1.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T13:51:19.3736908Z",
+      "frame_ms": {
+        "p95_ms": 16.69925,
+        "p99_ms": 18.17785,
+        "mean_ms": 14.027099112426065,
+        "sample_count": 10816
+      },
+      "cpu_process": {
+        "p95_ms": 19.727,
+        "p99_ms": 41.007,
+        "mean_ms": 18.448286889793426,
+        "sample_count": 10816
+      },
+      "cpu_physics": {
+        "p95_ms": 5.651,
+        "p99_ms": 6.15,
+        "mean_ms": 3.348570173816616,
+        "sample_count": 10816
+      },
+      "cpu_render": {
+        "p95_ms": 5.12200021743774,
+        "p99_ms": 5.407850003242496,
+        "mean_ms": 4.449318601843521,
+        "sample_count": 10816
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.49324999999999997,
+        "p99_ms": 0.544,
+        "mean_ms": 0.42966031804733873,
+        "sample_count": 10816
+      },
+      "gpu_render": {
+        "p95_ms": 14.9770002365112,
+        "p99_ms": 17.038549518585192,
+        "mean_ms": 13.091667991770795,
+        "sample_count": 10816
+      },
+      "mean_fps": 71.29057775845746,
+      "elapsed_ms": 151728.009,
+      "warmup_elapsed_ms": 15008.144,
+      "route_failures": [],
+      "waypoints_reached": 2,
+      "raw_sha256": "6afe0ddd1bfd43f3ea41efef3b689ab61ef901148c4ff5f9194e1f2df1b74bea",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/stormwood-low-r1/route.json",
+      "committed_logs": [
+        {
+          "sha256": "7139add2dd712a4bc595b7b4c96527c03d5222670bf5b4c3322c4597bc495edd",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-low-r1/engine_log.txt",
+          "warning_count": 4,
+          "error_count": 1,
+          "error_examples": [
+            "ERROR: Missing or stale stormwood scatter bake; rebuild before playing this realm."
+          ]
+        },
+        {
+          "sha256": "e99b4625d3fb79355f700ef661a1c3f933a3e59316296536e00c8990ee8f94eb",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-low-r1/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "2f1d2b6574acf8a3d86ea2871ed27c171a6b29dd3c737b8a46ecae1daa1243a2",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-low-r1/stderr.txt",
+          "warning_count": 4,
+          "error_count": 1,
+          "error_examples": [
+            "ERROR: Missing or stale stormwood scatter bake; rebuild before playing this realm."
+          ]
+        }
+      ],
+      "qualification": "INVALID: original release missing/stale scatter bake; preserved, excluded from qualified table."
+    },
+    {
+      "biome": "stormwood",
+      "preset": "Low",
+      "repeat": 2,
+      "complete": true,
+      "pid": 23136,
+      "arguments": "--rendering-method gl_compatibility --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-low-r2.engine.log\" -- --f26-route --quiet-baseline --biome=stormwood --preset=Low --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/stormwood-low-r2",
+      "started_utc": "2026-10-09T13:51:20.3665199Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-low-r2\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-low-r2.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-low-r2.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-low-r2.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T13:55:07.4551399Z",
+      "frame_ms": {
+        "p95_ms": 16.46885,
+        "p99_ms": 17.95518000000001,
+        "mean_ms": 13.964409977908723,
+        "sample_count": 10864
+      },
+      "cpu_process": {
+        "p95_ms": 19.286,
+        "p99_ms": 37.739,
+        "mean_ms": 18.207132824006017,
+        "sample_count": 10864
+      },
+      "cpu_physics": {
+        "p95_ms": 5.385,
+        "p99_ms": 5.939,
+        "mean_ms": 3.3802367452135003,
+        "sample_count": 10864
+      },
+      "cpu_render": {
+        "p95_ms": 5.01000022888184,
+        "p99_ms": 5.22874011039734,
+        "mean_ms": 4.430099593192909,
+        "sample_count": 10864
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.487,
+        "p99_ms": 0.535,
+        "mean_ms": 0.4284719256259216,
+        "sample_count": 10864
+      },
+      "gpu_render": {
+        "p95_ms": 15.0019998550415,
+        "p99_ms": 16.984180068969724,
+        "mean_ms": 13.047605669551114,
+        "sample_count": 10864
+      },
+      "mean_fps": 71.61061595742105,
+      "elapsed_ms": 151720.687,
+      "warmup_elapsed_ms": 15005.565,
+      "route_failures": [],
+      "waypoints_reached": 2,
+      "raw_sha256": "39eaf0744759d2d12c578ef9e70e1f649aaa64d281eaa14efd6b718abf97de5d",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/stormwood-low-r2/route.json",
+      "committed_logs": [
+        {
+          "sha256": "c6b98bc6430409321bfb5f1c7c7b80736f76ad932a5a6f1f94c11eee160a3f77",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-low-r2/engine_log.txt",
+          "warning_count": 4,
+          "error_count": 1,
+          "error_examples": [
+            "ERROR: Missing or stale stormwood scatter bake; rebuild before playing this realm."
+          ]
+        },
+        {
+          "sha256": "7d6d3919a76af24f0fcb291654d645772d9a07b99fd31cb9b40e4328c210abea",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-low-r2/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "2f1d2b6574acf8a3d86ea2871ed27c171a6b29dd3c737b8a46ecae1daa1243a2",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-low-r2/stderr.txt",
+          "warning_count": 4,
+          "error_count": 1,
+          "error_examples": [
+            "ERROR: Missing or stale stormwood scatter bake; rebuild before playing this realm."
+          ]
+        }
+      ],
+      "qualification": "INVALID: original release missing/stale scatter bake; preserved, excluded from qualified table."
+    },
+    {
+      "biome": "stormwood",
+      "preset": "Medium",
+      "repeat": 1,
+      "complete": true,
+      "pid": 51440,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-medium-r1.engine.log\" -- --f26-route --quiet-baseline --biome=stormwood --preset=Medium --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/stormwood-medium-r1",
+      "started_utc": "2026-10-09T13:55:08.381612Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-medium-r1\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-medium-r1.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-medium-r1.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-medium-r1.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T13:59:01.4696119Z",
+      "frame_ms": {
+        "p95_ms": 28.964,
+        "p99_ms": 30.369459999999997,
+        "mean_ms": 23.61809886345935,
+        "sample_count": 6423
+      },
+      "cpu_process": {
+        "p95_ms": 23.992,
+        "p99_ms": 24.224,
+        "mean_ms": 24.559079869220696,
+        "sample_count": 6423
+      },
+      "cpu_physics": {
+        "p95_ms": 6.167,
+        "p99_ms": 14.78,
+        "mean_ms": 4.306568425969241,
+        "sample_count": 6423
+      },
+      "cpu_render": {
+        "p95_ms": 2.41700005531311,
+        "p99_ms": 2.68455997467041,
+        "mean_ms": 2.075976491976653,
+        "sample_count": 6423
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.329,
+        "p99_ms": 0.37,
+        "mean_ms": 0.2709073641600491,
+        "sample_count": 6423
+      },
+      "gpu_render": {
+        "p95_ms": 25.6030006408691,
+        "p99_ms": 25.850119895935038,
+        "mean_ms": 23.32658384433885,
+        "sample_count": 6423
+      },
+      "mean_fps": 42.340410453067676,
+      "elapsed_ms": 151718.52,
+      "warmup_elapsed_ms": 15001.878,
+      "route_failures": [],
+      "waypoints_reached": 2,
+      "raw_sha256": "0d6e6f39d303e6f2e87fd9a3e7297680b716530865fda5ffe8a129bb6e931209",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/stormwood-medium-r1/route.json",
+      "committed_logs": [
+        {
+          "sha256": "57042bea9a27f967bdaebce4e05c36dc337337b82eb5dedbf258718e3c529fa2",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-medium-r1/engine_log.txt",
+          "warning_count": 4,
+          "error_count": 1,
+          "error_examples": [
+            "ERROR: Missing or stale stormwood scatter bake; rebuild before playing this realm."
+          ]
+        },
+        {
+          "sha256": "8f63f1e51b1c51ef703e84bc7e697195fe20771de440fd0bae6ef3ebb42fb7a8",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-medium-r1/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "2f1d2b6574acf8a3d86ea2871ed27c171a6b29dd3c737b8a46ecae1daa1243a2",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-medium-r1/stderr.txt",
+          "warning_count": 4,
+          "error_count": 1,
+          "error_examples": [
+            "ERROR: Missing or stale stormwood scatter bake; rebuild before playing this realm."
+          ]
+        }
+      ],
+      "qualification": "INVALID: original release missing/stale scatter bake; preserved, excluded from qualified table."
+    },
+    {
+      "biome": "stormwood",
+      "preset": "Medium",
+      "repeat": 2,
+      "complete": true,
+      "pid": 31092,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-medium-r2.engine.log\" -- --f26-route --quiet-baseline --biome=stormwood --preset=Medium --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/stormwood-medium-r2",
+      "started_utc": "2026-10-09T13:59:02.0092861Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-medium-r2\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-medium-r2.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-medium-r2.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-medium-r2.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T14:03:00.8446589Z",
+      "frame_ms": {
+        "p95_ms": 28.726,
+        "p99_ms": 29.9582,
+        "mean_ms": 23.55289194224501,
+        "sample_count": 6441
+      },
+      "cpu_process": {
+        "p95_ms": 24.083,
+        "p99_ms": 27.581,
+        "mean_ms": 25.398066759819788,
+        "sample_count": 6441
+      },
+      "cpu_physics": {
+        "p95_ms": 5.804,
+        "p99_ms": 13.916,
+        "mean_ms": 3.986191895668477,
+        "sample_count": 6441
+      },
+      "cpu_render": {
+        "p95_ms": 2.35599994659424,
+        "p99_ms": 2.564599990844726,
+        "mean_ms": 2.0360451806796447,
+        "sample_count": 6441
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.33,
+        "p99_ms": 0.3736000000000004,
+        "mean_ms": 0.26897624592454505,
+        "sample_count": 6441
+      },
+      "gpu_render": {
+        "p95_ms": 25.6499996185303,
+        "p99_ms": 25.938400650024402,
+        "mean_ms": 23.279863528852932,
+        "sample_count": 6441
+      },
+      "mean_fps": 42.45763120945572,
+      "elapsed_ms": 151724.726,
+      "warmup_elapsed_ms": 15025.01,
+      "route_failures": [],
+      "waypoints_reached": 2,
+      "raw_sha256": "5c57d2c92f4df32e10279a40d3a2616d00fe0c04a0961a174140ba1201e92f75",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/stormwood-medium-r2/route.json",
+      "committed_logs": [
+        {
+          "sha256": "7caae4762ca4a262c7cbe9c7ef1a437bebcceebf00a59c6835291e67a774810b",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-medium-r2/engine_log.txt",
+          "warning_count": 4,
+          "error_count": 1,
+          "error_examples": [
+            "ERROR: Missing or stale stormwood scatter bake; rebuild before playing this realm."
+          ]
+        },
+        {
+          "sha256": "42b6147a6ab8b8e5ab90aad42052adb40a4b478c48215eed8690d67b97f3144a",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-medium-r2/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "2f1d2b6574acf8a3d86ea2871ed27c171a6b29dd3c737b8a46ecae1daa1243a2",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-medium-r2/stderr.txt",
+          "warning_count": 4,
+          "error_count": 1,
+          "error_examples": [
+            "ERROR: Missing or stale stormwood scatter bake; rebuild before playing this realm."
+          ]
+        }
+      ],
+      "qualification": "INVALID: original release missing/stale scatter bake; preserved, excluded from qualified table."
+    },
+    {
+      "biome": "stormwood",
+      "preset": "High",
+      "repeat": 1,
+      "complete": true,
+      "pid": 18164,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-high-r1.engine.log\" -- --f26-route --quiet-baseline --biome=stormwood --preset=High --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/stormwood-high-r1",
+      "started_utc": "2026-10-09T14:03:01.360606Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-high-r1\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-high-r1.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-high-r1.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-high-r1.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T14:06:54.192907Z",
+      "frame_ms": {
+        "p95_ms": 32.6016,
+        "p99_ms": 33.88092,
+        "mean_ms": 27.433242901067082,
+        "sample_count": 5529
+      },
+      "cpu_process": {
+        "p95_ms": 28.252,
+        "p99_ms": 29.1,
+        "mean_ms": 29.156992584554413,
+        "sample_count": 5529
+      },
+      "cpu_physics": {
+        "p95_ms": 6.595,
+        "p99_ms": 11.857,
+        "mean_ms": 4.408748598299937,
+        "sample_count": 5529
+      },
+      "cpu_render": {
+        "p95_ms": 2.66799998283386,
+        "p99_ms": 3.0534399414062507,
+        "mean_ms": 2.167713511289837,
+        "sample_count": 5529
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.358,
+        "p99_ms": 0.413,
+        "mean_ms": 0.28026984988243686,
+        "sample_count": 5529
+      },
+      "gpu_render": {
+        "p95_ms": 29.86119995117192,
+        "p99_ms": 30.384800109863253,
+        "mean_ms": 27.17742321602926,
+        "sample_count": 5529
+      },
+      "mean_fps": 36.45212502241587,
+      "elapsed_ms": 151704.844,
+      "warmup_elapsed_ms": 15017.026,
+      "route_failures": [],
+      "waypoints_reached": 2,
+      "raw_sha256": "c7ff12dab56965fe268fe402ff883539e4f4e27df303c4c5e5af7d4497387855",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/stormwood-high-r1/route.json",
+      "committed_logs": [
+        {
+          "sha256": "6b67610fc7d19397b72f7136f50818e1ecb358b45a1f4243565be5326d12cbd0",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-high-r1/engine_log.txt",
+          "warning_count": 4,
+          "error_count": 1,
+          "error_examples": [
+            "ERROR: Missing or stale stormwood scatter bake; rebuild before playing this realm."
+          ]
+        },
+        {
+          "sha256": "6a79192eae7abf9246ef90eea6ef32a4e26f376ea619818d01cfa3adcfe67aca",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-high-r1/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "2f1d2b6574acf8a3d86ea2871ed27c171a6b29dd3c737b8a46ecae1daa1243a2",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-high-r1/stderr.txt",
+          "warning_count": 4,
+          "error_count": 1,
+          "error_examples": [
+            "ERROR: Missing or stale stormwood scatter bake; rebuild before playing this realm."
+          ]
+        }
+      ],
+      "qualification": "INVALID: original release missing/stale scatter bake; preserved, excluded from qualified table."
+    },
+    {
+      "biome": "stormwood",
+      "preset": "High",
+      "repeat": 2,
+      "complete": true,
+      "pid": 59276,
+      "arguments": "--rendering-method forward_plus --fullscreen --resolution 1920x1080 --disable-vsync --max-fps 0 --log-file \"C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-high-r2.engine.log\" -- --f26-route --quiet-baseline --biome=stormwood --preset=High --source-commit=7c7d25873cec69c1720b1964af9fd4b94151bee5 --output=C:/CodexTemp/quiet-baseline-20261009/measurements-r1/stormwood-high-r2",
+      "started_utc": "2026-10-09T14:06:54.6240003Z",
+      "raw_receipt": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-high-r2\\route.json",
+      "engine_log": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-high-r2.engine.log",
+      "stdout": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-high-r2.stdout.log",
+      "stderr": "C:\\CodexTemp\\quiet-baseline-20261009\\measurements-r1\\stormwood-high-r2.stderr.log",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T14:10:45.3918073Z",
+      "frame_ms": {
+        "p95_ms": 32.5165,
+        "p99_ms": 33.89566,
+        "mean_ms": 27.380168050541457,
+        "sample_count": 5540
+      },
+      "cpu_process": {
+        "p95_ms": 28.141,
+        "p99_ms": 28.683,
+        "mean_ms": 29.037565703970976,
+        "sample_count": 5540
+      },
+      "cpu_physics": {
+        "p95_ms": 6.025,
+        "p99_ms": 17.644,
+        "mean_ms": 4.331659927797883,
+        "sample_count": 5540
+      },
+      "cpu_render": {
+        "p95_ms": 2.64499998092651,
+        "p99_ms": 2.961659970283507,
+        "mean_ms": 2.162375632477151,
+        "sample_count": 5540
+      },
+      "cpu_render_setup": {
+        "p95_ms": 0.351,
+        "p99_ms": 0.3976099999999997,
+        "mean_ms": 0.2782684115523469,
+        "sample_count": 5540
+      },
+      "gpu_render": {
+        "p95_ms": 29.72205009460448,
+        "p99_ms": 30.230710735321054,
+        "mean_ms": 27.126344225466898,
+        "sample_count": 5540
+      },
+      "mean_fps": 36.522785329662156,
+      "elapsed_ms": 151712.838,
+      "warmup_elapsed_ms": 15020.509,
+      "route_failures": [],
+      "waypoints_reached": 2,
+      "raw_sha256": "b43e1bad8488c572098bd6a05e61d565952a0e351a8c9993908dbbc84145c7be",
+      "committed_raw_receipt": "ralph/reports/F26/quiet-baseline/stormwood-high-r2/route.json",
+      "committed_logs": [
+        {
+          "sha256": "34d7cf4f915e24aaa7970540bace5584126b3da828c94d69cb046f1fe9af3eac",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-high-r2/engine_log.txt",
+          "warning_count": 4,
+          "error_count": 1,
+          "error_examples": [
+            "ERROR: Missing or stale stormwood scatter bake; rebuild before playing this realm."
+          ]
+        },
+        {
+          "sha256": "4e9393e61991e3a35357a69fc9d5460b4b0f7bed05acc87f97542e8ef1545b2d",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-high-r2/stdout.txt",
+          "warning_count": 0,
+          "error_count": 0,
+          "error_examples": []
+        },
+        {
+          "sha256": "2f1d2b6574acf8a3d86ea2871ed27c171a6b29dd3c737b8a46ecae1daa1243a2",
+          "path": "ralph/reports/F26/quiet-baseline/stormwood-high-r2/stderr.txt",
+          "warning_count": 4,
+          "error_count": 1,
+          "error_examples": [
+            "ERROR: Missing or stale stormwood scatter bake; rebuild before playing this realm."
+          ]
+        }
+      ],
+      "qualification": "INVALID: original release missing/stale scatter bake; preserved, excluded from qualified table."
+    }
+  ],
+  "excluded_fresh_cases": [
+    {
+      "case": "Medium-r2",
+      "reason": "A local engine PID17596 overlapped timed interval; valid content only, timing excluded.",
+      "evidence": "ralph/reports/F26/stormwood-export-freshness/native/Medium-r2"
+    },
+    {
+      "case": "Low-r2",
+      "reason": "Stopped on shader_gles3.cpp _load_from_cache br != variant_size ERROR during boot. No complete timing receipt; raw log/cache preserved.",
+      "evidence": "ralph/reports/F26/quiet-baseline/corrected-stormwood/Low-r2-failed-cache"
+    }
+  ],
+  "changes": [
+    {
+      "setting": "Windows Desktop script_export_mode",
+      "old": 2,
+      "new": 0
+    },
+    {
+      "setting": "Linux Test script_export_mode",
+      "old": 2,
+      "new": 0
+    }
+  ],
+  "feature_flag_flips": [],
+  "measurement_instrumentation": "Existing route adds elapsed-time warmup/timing and individual CPU/GPU monitors; export omits proof/docs resources. Patch retained. Fullscreen1920x1080, vsync0/maxfps0, fresh APPDATA per case, debugfalse.",
+  "performance_acceptance": false,
+  "whole_criterion_closures": [],
+  "timing_definitions": {
+    "gpu": "Root viewport GPU render time; all-zero output means unavailable, never a measured zero cost",
+    "fps": "1000 / arithmetic mean wall-frame ms",
+    "percentiles": "P95/P99 wall-frame ms, linearly interpolated",
+    "cpu": "CPU process, physics, viewport render and render setup are separate monitors, not a non-overlapping total"
+  },
+  "notes": [
+    "Mean FPS =1000/mean wall frame ms. P95/P99 are frame times in ms with linear interpolation.",
+    "Original cases >=60s timed after15s warmup; corrected Stormwood cases >=151s timed after15s warmup.",
+    "CPU process, physics, render and setup monitor fields overlap. Report separately; do not sum or infer overall CPU utilization.",
+    "Desktop GTX1060 3GB/i5-8400 measurements do not certify Ally performance."
+  ]
+}

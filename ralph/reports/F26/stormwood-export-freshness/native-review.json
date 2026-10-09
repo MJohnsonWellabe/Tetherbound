@@ -1,0 +1,612 @@
+{
+  "reviewer": "Codex independent native-content reviewer /root/e_export_review",
+  "reviewed_utc": "2026-10-09T21:34:15.735176+00:00",
+  "verdict": "APPROVE FOUR ACTUAL RELEASE CONTENT/FRESHNESS CASES; PERFORMANCE NOT ACCEPTED",
+  "scope": "Current-source785e instrumented Windows release content only; no whole F26/F41 criterion READY or performance/visual-bar credit",
+  "source_commit": "785e6f612e28a77075dd66684047628c2affbb13",
+  "main_commit": "549822b8da400b3eb9b23fe0feaca3c5f98bec97",
+  "release_directory": "D:/CodexTemp/owner-e-release-785e6f",
+  "release_identity_review": "C:/CodexTemp/lane-e-fresh-export-independent-review.json",
+  "pack_sha256": "d752d9ccfc593f6499c37d3ca08ac898fe6fc29bbae97a1e024a74cc43a9c654",
+  "exe_sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c",
+  "all_four_content_cases_pass": true,
+  "high_r2_pending": false,
+  "cases": [
+    {
+      "case": "Medium-r1",
+      "launch": {
+        "provenance": "Original launcher stdout START record; watcher resumed same native run after shared-log reader correction",
+        "pid": 14152,
+        "started_utc": "2026-10-09T21:13:04.8009156Z",
+        "source": "785e6f612e28a77075dd66684047628c2affbb13"
+      },
+      "launch_manifest": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r1-launch.json",
+      "raw_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r1-engine.log",
+      "raw_log_sha256": "1e08bbcbf506bd52b4d62d8d52cd6f4706624a3fe6c47eec59c97ff0ecbdcba7",
+      "errors": [],
+      "scatter_load_observation": [
+        [
+          "108",
+          "43161"
+        ]
+      ],
+      "terrain_regions_loaded_marker": true,
+      "runtime_forward_plus_marker": true,
+      "engine_export_entry_marker": true,
+      "warnings": 6,
+      "pngs": [
+        {
+          "name": "start",
+          "path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r1\\start.png",
+          "bytes": 2523693,
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "5ecc7745bf73c6d569d2c4a2f2b8512bdbc1ee06ab6d6a6ca690729406f790de",
+          "last_write_utc": "2026-10-09T21:15:21.204940+00:00"
+        },
+        {
+          "name": "end",
+          "path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r1\\end.png",
+          "bytes": 2652557,
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "5003e7415ee1ed02848b812e6c4664a81366c5255f86f95feecdf534d2c37dc9",
+          "last_write_utc": "2026-10-09T21:17:53.559206+00:00"
+        }
+      ],
+      "device_override_path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\userdata\\Medium-r1\\roaming\\Godot\\app_userdata\\Tetherbound\\graphics_override.cfg",
+      "device_override": "[tetherbound_graphics]\n\npreset=\"Medium\"\nbase=\"Medium\"\ncustom={}\noverlay=false\n\n[rendering]\n\nrenderer/rendering_method=\"forward_plus\"\n",
+      "content_checks": {
+        "complete": true,
+        "empty_failures": true,
+        "source": true,
+        "preset": true,
+        "forward_plus": true,
+        "1080p": true,
+        "release_debug_false": true,
+        "warmup15s": true,
+        "timed60s": true,
+        "vsync0": true,
+        "maxfps0": true,
+        "physical_route": true,
+        "errors_empty": true,
+        "both_pngs1080p": true,
+        "packed_scatter_loaded": true,
+        "terrain_loaded": true,
+        "actual_export_entry": true,
+        "device_preset": true
+      },
+      "content_verdict": "PASS",
+      "route_path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r1\\route.json",
+      "route_sha256": "76ad66b0a06b9c0fa06181a41da6c4ff285e2badbe3e65543f8c6c6172dcec39",
+      "samples": 5674,
+      "elapsed_ms": 151701.496,
+      "warmup_elapsed_ms": 15005.594,
+      "renderer": "forward_plus",
+      "preset": "Medium",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "is_debug_build": false,
+      "source_commit": "785e6f612e28a77075dd66684047628c2affbb13",
+      "environment_start": {
+        "hour": 8.64457329333339,
+        "position": [
+          -300.0,
+          32.2725982666016,
+          180.0
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 16.1143323333332,
+          "phase": "calm",
+          "remaining": 307.885667666667
+        },
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 14.7170539333319,
+        "position": [
+          -649.268249511719,
+          20.88232421875,
+          829.067077636719
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 167.926348333337,
+          "phase": "calm",
+          "remaining": 156.073651666663
+        },
+        "time_of_day": "day"
+      },
+      "waypoints_reached": 2,
+      "reported_quiet_baseline": true,
+      "raw_performance": {
+        "fps": 37.408466200471736,
+        "mean_wall_ms": 26.731916637292915,
+        "p99_nearest_rank_ms": 39.161,
+        "sum_wall_ms": 151676.895,
+        "sample_count": 5674,
+        "cpu_gpu_means_ms": {
+          "process_ms": 28.34346069792034,
+          "physics_ms": 7.9634654564681,
+          "render_cpu_ms": 2.434419458921753,
+          "render_setup_cpu_ms": 0.2778540712019739,
+          "render_gpu_ms": 26.143422279048647
+        },
+        "overlapping_callbacks_not_summed": true
+      },
+      "performance_bar_met_raw": false,
+      "timing_validity": "NO REPORTED TIMED OVERLAP",
+      "performance_acceptance_credit": false,
+      "intact_terrain_scatter_png_review": "PASS: reviewer directly viewed start/end. Textured grounded road, tree trunks/canopies, shrubs/flowers/grass and rod-line props are present; no missing-world rendering. Bounded content observation only, no full visual-bar verdict.",
+      "timing_overlap_audit": {
+        "verdict": "Reported D headless overlap was before warmup/timing, not in timed interval",
+        "other_process_utc": [
+          "2026-10-09T21:14:28Z",
+          "2026-10-09T21:14:30Z"
+        ],
+        "start_png_last_write_utc": "2026-10-09T21:15:21.204940+00:00",
+        "timed_start_follows_png_write": true,
+        "minimum_seconds_between_overlap_end_and_start_png": 51.20494,
+        "evidence": [
+          "C:/CodexTemp/lane-e-medium-r1-overlap-audit.json",
+          "C:/CodexTemp/replacement-lane-d-e-overlap-note.json"
+        ],
+        "basis": "Independently read capture_lookdev_route.gd: warmup then start PNG saved before recording connection/_route_started_usec/_measuring. D ended51.2seconds before start PNG; warmup was15s."
+      }
+    },
+    {
+      "case": "Medium-r2",
+      "launch": {
+        "pid": 4588,
+        "started_utc": "2026-10-09T21:17:55.5490741Z",
+        "source": "785e6f612e28a77075dd66684047628c2affbb13"
+      },
+      "launch_manifest": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r2-launch.json",
+      "raw_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r2-engine.log",
+      "raw_log_sha256": "e81be22f4289121ad7c569ee69db285c0ed7ecedc9d1af861e3f216498eb92bb",
+      "errors": [],
+      "scatter_load_observation": [
+        [
+          "108",
+          "43161"
+        ]
+      ],
+      "terrain_regions_loaded_marker": true,
+      "runtime_forward_plus_marker": true,
+      "engine_export_entry_marker": true,
+      "warnings": 6,
+      "pngs": [
+        {
+          "name": "start",
+          "path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r2\\start.png",
+          "bytes": 2526803,
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "1b89e23d92e14fcc6022a5bf3fed3f9db4dddfdfc71c71f95081e403e08413b8",
+          "last_write_utc": "2026-10-09T21:20:11.372682+00:00"
+        },
+        {
+          "name": "end",
+          "path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r2\\end.png",
+          "bytes": 2646855,
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "d0cb340c3ec9d59139ce4084c4f19597bc7a3bbb807f46bd7f375c8a930eae3d",
+          "last_write_utc": "2026-10-09T21:22:43.761576+00:00"
+        }
+      ],
+      "device_override_path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\userdata\\Medium-r2\\roaming\\Godot\\app_userdata\\Tetherbound\\graphics_override.cfg",
+      "device_override": "[tetherbound_graphics]\n\npreset=\"Medium\"\nbase=\"Medium\"\ncustom={}\noverlay=false\n\n[rendering]\n\nrenderer/rendering_method=\"forward_plus\"\n",
+      "content_checks": {
+        "complete": true,
+        "empty_failures": true,
+        "source": true,
+        "preset": true,
+        "forward_plus": true,
+        "1080p": true,
+        "release_debug_false": true,
+        "warmup15s": true,
+        "timed60s": true,
+        "vsync0": true,
+        "maxfps0": true,
+        "physical_route": true,
+        "errors_empty": true,
+        "both_pngs1080p": true,
+        "packed_scatter_loaded": true,
+        "terrain_loaded": true,
+        "actual_export_entry": true,
+        "device_preset": true
+      },
+      "content_verdict": "PASS",
+      "route_path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\Medium-r2\\route.json",
+      "route_sha256": "023057eda517aea231bc6a34debb0b918e9c55323de2b3987f415e991d68f068",
+      "samples": 5700,
+      "elapsed_ms": 151724.428,
+      "warmup_elapsed_ms": 15004.147,
+      "renderer": "forward_plus",
+      "preset": "Medium",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "is_debug_build": false,
+      "source_commit": "785e6f612e28a77075dd66684047628c2affbb13",
+      "environment_start": {
+        "hour": 8.65590150531979,
+        "position": [
+          -300.0,
+          32.2725982666016,
+          180.0
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 16.3975376329966,
+          "phase": "calm",
+          "remaining": 307.602462367003
+        },
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 14.7295930933321,
+        "position": [
+          -649.268249511719,
+          20.88232421875,
+          829.067077636719
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 168.239827333334,
+          "phase": "calm",
+          "remaining": 155.760172666666
+        },
+        "time_of_day": "day"
+      },
+      "waypoints_reached": 2,
+      "reported_quiet_baseline": true,
+      "raw_performance": {
+        "fps": 37.57381920614641,
+        "mean_wall_ms": 26.614276140350878,
+        "p99_nearest_rank_ms": 37.107,
+        "sum_wall_ms": 151701.374,
+        "sample_count": 5700,
+        "cpu_gpu_means_ms": {
+          "process_ms": 29.88942,
+          "physics_ms": 5.703726842105263,
+          "render_cpu_ms": 2.4079021058584513,
+          "render_setup_cpu_ms": 0.27571122807017545,
+          "render_gpu_ms": 26.1707454407006
+        },
+        "overlapping_callbacks_not_summed": true
+      },
+      "performance_bar_met_raw": false,
+      "timing_validity": "CONTAMINATED",
+      "performance_acceptance_credit": false,
+      "intact_terrain_scatter_png_review": "PASS: reviewer directly viewed start/end. Textured grounded road, tree trunks/canopies, shrubs/flowers/grass and rod-line props are present; no missing-world rendering. Bounded content observation only, no full visual-bar verdict.",
+      "timing_overlap_audit": {
+        "verdict": "CONTAMINATED: content valid, no quiet/performance acceptance credit",
+        "reported_other_pid": 17596,
+        "reported_other_process_end_utc": "2026-10-09T21:22:01Z",
+        "start_png_last_write_utc": "2026-10-09T21:20:11.372682+00:00",
+        "end_png_last_write_utc": "2026-10-09T21:22:43.761576+00:00",
+        "basis": "Trusted parent reports A local engine work during this timed route; start PNG21:20:11.372680UTC precedes timing and end PNG21:22:47 follows timing. Reported engine start around21:20:45/end21:22:01 lies inside. No independent historical process event log was provided; retain contamination conservatively."
+      }
+    },
+    {
+      "case": "High-r1",
+      "launch": {
+        "pid": 47240,
+        "started_utc": "2026-10-09T21:22:48.2361362Z",
+        "source": "785e6f612e28a77075dd66684047628c2affbb13"
+      },
+      "launch_manifest": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r1-launch.json",
+      "raw_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r1-engine.log",
+      "raw_log_sha256": "a81b545083a7e10ae4cfe21f2e2b031f212afd204fa796f7d40cb1e3eca65df0",
+      "errors": [],
+      "scatter_load_observation": [
+        [
+          "108",
+          "43161"
+        ]
+      ],
+      "terrain_regions_loaded_marker": true,
+      "runtime_forward_plus_marker": true,
+      "engine_export_entry_marker": true,
+      "warnings": 6,
+      "pngs": [
+        {
+          "name": "start",
+          "path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r1\\start.png",
+          "bytes": 2513250,
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "54a327d625360b47a8c7af85e1917944f42e495f44c5142e36e3b3c6bd73acf4",
+          "last_write_utc": "2026-10-09T21:25:00.929785+00:00"
+        },
+        {
+          "name": "end",
+          "path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r1\\end.png",
+          "bytes": 2619788,
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "e41ff5c4ec3e93457d81a0dcdac8c59794d22267b257e84a1bd459b8f07e0b5a",
+          "last_write_utc": "2026-10-09T21:27:33.310923+00:00"
+        }
+      ],
+      "device_override_path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\userdata\\High-r1\\roaming\\Godot\\app_userdata\\Tetherbound\\graphics_override.cfg",
+      "device_override": "[tetherbound_graphics]\n\npreset=\"High\"\nbase=\"High\"\ncustom={}\noverlay=false\n\n[rendering]\n\nrenderer/rendering_method=\"forward_plus\"\n",
+      "content_checks": {
+        "complete": true,
+        "empty_failures": true,
+        "source": true,
+        "preset": true,
+        "forward_plus": true,
+        "1080p": true,
+        "release_debug_false": true,
+        "warmup15s": true,
+        "timed60s": true,
+        "vsync0": true,
+        "maxfps0": true,
+        "physical_route": true,
+        "errors_empty": true,
+        "both_pngs1080p": true,
+        "packed_scatter_loaded": true,
+        "terrain_loaded": true,
+        "actual_export_entry": true,
+        "device_preset": true
+      },
+      "content_verdict": "PASS",
+      "route_path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r1\\route.json",
+      "route_sha256": "796c4e77230a38a30af18ae7ffd1f668245c0862a86cf902ecbae1bfcc62cadf",
+      "samples": 4619,
+      "elapsed_ms": 151709.208,
+      "warmup_elapsed_ms": 15003.665,
+      "renderer": "forward_plus",
+      "preset": "High",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "is_debug_build": false,
+      "source_commit": "785e6f612e28a77075dd66684047628c2affbb13",
+      "environment_start": {
+        "hour": 8.65929747259257,
+        "position": [
+          -300.0,
+          32.2725982666016,
+          180.0
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 16.4824368148148,
+          "phase": "calm",
+          "remaining": 307.517563185185
+        },
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 14.7317992711115,
+        "position": [
+          -649.268249511719,
+          20.88232421875,
+          829.067077636719
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 168.294981777775,
+          "phase": "calm",
+          "remaining": 155.705018222226
+        },
+        "time_of_day": "day"
+      },
+      "waypoints_reached": 2,
+      "reported_quiet_baseline": true,
+      "raw_performance": {
+        "fps": 30.452321938782973,
+        "mean_wall_ms": 32.838218445550986,
+        "p99_nearest_rank_ms": 43.247,
+        "sum_wall_ms": 151679.731,
+        "sample_count": 4619,
+        "cpu_gpu_means_ms": {
+          "process_ms": 31.292989175146136,
+          "physics_ms": 4.877160857328426,
+          "render_cpu_ms": 2.4835771814417753,
+          "render_setup_cpu_ms": 0.282207187702966,
+          "render_gpu_ms": 32.513958411290034
+        },
+        "overlapping_callbacks_not_summed": true
+      },
+      "performance_bar_met_raw": false,
+      "timing_validity": "NO REPORTED TIMED OVERLAP",
+      "performance_acceptance_credit": false,
+      "intact_terrain_scatter_png_review": "PASS: reviewer directly viewed start/end. Textured grounded road, tree trunks/canopies, shrubs/flowers/grass and rod-line props are present; no missing-world rendering. Bounded content observation only, no full visual-bar verdict."
+    },
+    {
+      "case": "High-r2",
+      "launch": {
+        "pid": 6148,
+        "started_utc": "2026-10-09T21:27:37.5527337Z",
+        "source": "785e6f612e28a77075dd66684047628c2affbb13"
+      },
+      "launch_manifest": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r2-launch.json",
+      "raw_log": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r2-engine.log",
+      "raw_log_sha256": "85de7f4651d56874c6e80cc28ae7df82bf06660d8deccda677385dddb3cd79f5",
+      "errors": [],
+      "scatter_load_observation": [
+        [
+          "108",
+          "43161"
+        ]
+      ],
+      "terrain_regions_loaded_marker": true,
+      "runtime_forward_plus_marker": true,
+      "engine_export_entry_marker": true,
+      "warnings": 6,
+      "pngs": [
+        {
+          "name": "start",
+          "path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r2\\start.png",
+          "bytes": 2512878,
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "c38047f289bd8603c70cc1abe07e6dc6b3345ce7a867288b3194f871e7f26266",
+          "last_write_utc": "2026-10-09T21:29:50.571418+00:00"
+        },
+        {
+          "name": "end",
+          "path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r2\\end.png",
+          "bytes": 2615329,
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "f3627bb355c8fe71d7d4822479d1443da4621a796e370d74f394070059d0928e",
+          "last_write_utc": "2026-10-09T21:32:22.983788+00:00"
+        }
+      ],
+      "device_override_path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\userdata\\High-r2\\roaming\\Godot\\app_userdata\\Tetherbound\\graphics_override.cfg",
+      "device_override": "[tetherbound_graphics]\n\npreset=\"High\"\nbase=\"High\"\ncustom={}\noverlay=false\n\n[rendering]\n\nrenderer/rendering_method=\"forward_plus\"\n",
+      "content_checks": {
+        "complete": true,
+        "empty_failures": true,
+        "source": true,
+        "preset": true,
+        "forward_plus": true,
+        "1080p": true,
+        "release_debug_false": true,
+        "warmup15s": true,
+        "timed60s": true,
+        "vsync0": true,
+        "maxfps0": true,
+        "physical_route": true,
+        "errors_empty": true,
+        "both_pngs1080p": true,
+        "packed_scatter_loaded": true,
+        "terrain_loaded": true,
+        "actual_export_entry": true,
+        "device_preset": true
+      },
+      "content_verdict": "PASS",
+      "route_path": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\High-r2\\route.json",
+      "route_sha256": "c713ee596b8922c85e85f6602cbb63863c90401b674427577580d814db75fed9",
+      "samples": 4559,
+      "elapsed_ms": 151740.082,
+      "warmup_elapsed_ms": 15019.529,
+      "renderer": "forward_plus",
+      "preset": "High",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "is_debug_build": false,
+      "source_commit": "785e6f612e28a77075dd66684047628c2affbb13",
+      "environment_start": {
+        "hour": 8.65245385629626,
+        "position": [
+          -300.0,
+          32.2725982666016,
+          180.0
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 16.3113464074075,
+          "phase": "calm",
+          "remaining": 307.688653592593
+        },
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 14.7260644533337,
+        "position": [
+          -649.268249511719,
+          20.88232421875,
+          829.067077636719
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 168.151611333331,
+          "phase": "calm",
+          "remaining": 155.848388666669
+        },
+        "time_of_day": "day"
+      },
+      "waypoints_reached": 2,
+      "reported_quiet_baseline": true,
+      "raw_performance": {
+        "fps": 30.050248048681638,
+        "mean_wall_ms": 33.277595525334505,
+        "p99_nearest_rank_ms": 43.557,
+        "sum_wall_ms": 151712.558,
+        "sample_count": 4559,
+        "cpu_gpu_means_ms": {
+          "process_ms": 34.81041982890985,
+          "physics_ms": 5.668642246106602,
+          "render_cpu_ms": 2.5262706736823817,
+          "render_setup_cpu_ms": 0.28408071945602104,
+          "render_gpu_ms": 32.897581676977666
+        },
+        "overlapping_callbacks_not_summed": true
+      },
+      "performance_bar_met_raw": false,
+      "timing_validity": "NO REPORTED TIMED OVERLAP",
+      "performance_acceptance_credit": false,
+      "intact_terrain_scatter_png_review": "PASS: reviewer directly viewed start/end. Textured grounded road, tree trunks/canopies, shrubs/flowers/grass and rod-line props are present; no missing-world rendering. Bounded content observation only, no full visual-bar verdict."
+    }
+  ],
+  "userdata_provenance": "Reviewed actual launcher: unique previously absent APPDATA and LOCALAPPDATA directory per case, normal exported EXE with --f26-route --quiet-baseline; matching per-case production graphics_override.cfg contains requested preset. No reused scene across presets. Native High-r2 process command independently observed matching exe/source/Forward+/fullscreen1080 route args before termination.",
+  "png_review": "Reviewer directly viewed all eight raw start/end PNGs. Each shows textured road/terrain, populated trunks/canopies and grass/flowers/shrubs plus rod-line props and production HUD; no absent Stormwood terrain/scatter. This narrow content observation does not grade full art quality, clipping, placeholders or F41 matrix criteria.",
+  "raw_log_review": "All four raw logs have no SCRIPT ERROR/ERROR/parse/load/missing/stale bake markers. Each logs terrain regions loaded plus [scatter bake]108 regions/43161placements, VulkanForward+ and F26 EXPORT ENTRY. Existing deprecation/body-spacing warnings remain disclosed; no test or guard weakening.",
+  "performance": {
+    "acceptance": "NOT ACCEPTED",
+    "target": "At least60FPS and P99<=33ms; no performance-bar credit from this audit",
+    "medium_r2": "CONTAMINATED. quiet_baseline=true is a harness mode field, not independent quiet-run validation. Retain raw rates solely as contaminated telemetry.",
+    "clean_case_raw_rates": "Medium-r1 37.408FPS/P9939.161ms; High-r1 30.452FPS/P9943.247ms; High-r2 30.050FPS/P9943.557ms. None meets target.",
+    "percentile_method": "Nearest rank over wall_ms; FPS=1000/mean(wall_ms). CPU process/physics/render/setup and GPU callback means reported separately, never summed.",
+    "no_device_claim": "GTX1060desktop; not ROG Ally hardware."
+  },
+  "timestamp_correction": {
+    "raw_master_preserved": "C:\\CodexTemp\\owner-e-release-cases-785e6f\\case-results.json",
+    "raw_master_sha256": "2899be8bdf7c570f3b32b7bc61e022fcdd1f170ce6eba4e12a8f64d8837b2763",
+    "defect": "Medium-r1 summary double-converted UTC to2026-10-10T02:13:04Z. Authoritative original launch manifest is2026-10-09T21:13:04.8009156Z. Other starts likewise reconstructed from launch manifests, not watcher conversions.",
+    "corrected_receipt": "C:/CodexTemp/lane-e-native-case-results-corrected.json",
+    "writer_terminal_check": "C:/CodexTemp/lane-e-native-terminal-process-audit.json"
+  },
+  "remaining_gates": [
+    "Full selected CI and PR packaging/integration checks remain pending.",
+    "Required Cloudreach/Stormwood complete frame matrices, real fights, independent catalogue re-scoring and code-blind judge remain separate.",
+    "No whole criterion closure, rollout/default flip, feature flag flip or current release publication approval inferred."
+  ],
+  "review_constraints": "Read-only native artifacts/source/process observation and local review/summary artifacts only; no native jobs, repo edits, scene/UI control, cleanup or waits."
+}
