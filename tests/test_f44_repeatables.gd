@@ -204,6 +204,40 @@ func test_first_alpha_roll_is_durable_without_invented_resolution_and_rejects_fo
 	var resolved := ALPHA.resolve(reload, id, 1, 100, ["character_a"], "catch")
 	assert_false(resolved.is_empty())
 	if not resolved.is_empty(): assert_true(STATE.validate("world", resolved.state, [], "world_a").is_empty())
+	# F44 replaces F30's alpha weights. Measure the actual first-spawn planner,
+	# rather than treating the earlier default-profile distribution as evidence.
+	var cfg := TRAITS.config()
+	var totals: Array[int] = [0, 0, 0]
+	var epics: Array[int] = [0, 0, 0]
+	var counts: Array[Dictionary] = [{}, {}, {}]
+	for sample: int in 4096:
+		var namespace_id := "f44-distribution-%d" % sample
+		var ordinary := TRAITS.roll_spawn(namespace_id, id, 1, false, false, false, cfg)
+		var alpha := ALPHA.first_spawn(before, id, namespace_id, false, false)
+		var unusual := ALPHA.first_spawn(before, id, namespace_id, true, true)
+		assert_true(alpha.get("ok") == true and unusual.get("ok") == true)
+		if alpha.get("ok") != true or unusual.get("ok") != true: return
+		var packets: Array[Dictionary] = [ordinary, alpha.record.spawn_traits, unusual.record.spawn_traits]
+		for profile: int in packets.size():
+			var packet: Dictionary = packets[profile]
+			assert_true(TRAITS.trait_state_errors(packet).is_empty())
+			assert_eq(packet.captured_from, {"kind": "wild", "world_namespace": namespace_id,
+				"spawn_id": id, "spawn_generation": 1})
+			var rolled: Array = packet.rolled_traits
+			totals[profile] += rolled.size()
+			counts[profile][rolled.size()] = true
+			for trait_id: String in rolled:
+				if cfg.traits[trait_id].rarity == "epic": epics[profile] += 1
+	assert_eq(before, STATE.defaults("world"), "distribution planning never mutates the admitted carrier")
+	assert_eq(counts[0].size(), 4, "ordinary rolls still include every count from zero to three")
+	for profile: int in [1, 2]:
+		assert_eq(counts[profile].size(), 3, "effective F44 profiles include counts one, two and three")
+		assert_false(counts[profile].has(0), "F44's zero weight never yields an empty Alpha roll")
+	assert_true(totals[1] > totals[0] and totals[2] > totals[1], "effective F44 weights improve trait count")
+	assert_true(epics[1] > epics[0] and epics[2] > epics[1], "effective F44 weights improve Epic totals")
+	assert_true(epics[1] * totals[0] > epics[0] * totals[1], "Alpha Epic share improves over ordinary")
+	assert_true(epics[2] * totals[1] > epics[1] * totals[2], "unusual Alpha Epic share improves again")
+	print("F44 effective distribution: samples=4096 totals=%s epics=%s" % [totals, epics])
 
 func test_actual_clear_weather_metadata_does_not_choose_unusual_alpha_odds() -> void:
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/weather.json"))
