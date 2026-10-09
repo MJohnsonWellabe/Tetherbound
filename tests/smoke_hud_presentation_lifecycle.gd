@@ -10,6 +10,8 @@ const GLYPHS:=preload("res://scripts/ui/input_glyph.gd")
 const FEED:=preload("res://scripts/creatures/progression_feed.gd")
 const INPUT_OWNER:=preload("res://scripts/ui/input_owner.gd")
 const TOKENS:=preload("res://scripts/ui/ui_tokens.gd")
+const ESSENCE:=preload("res://scripts/creatures/essence.gd")
+const REDESIGN:=preload("res://scripts/data/redesign_state.gd")
 class Manager extends Node:
 	var _enemy_owned := true
 class Director extends Node:
@@ -53,6 +55,25 @@ func _run()->void:
 	game.set_process(false)
 	for id:String in ["galecrest","mudsnout","bramblebun","terrapup","brooktail"]:
 		game.party.add(SPECIES.spawn(id))
+	# This isolated UI fixture already exercises all five at L40 -> L41.
+	# Declare its cap explicitly before any gain; a saved normalized copy alone
+	# does not admit live owned UIDs, and level never implies breakthrough history.
+	game.local.redesign_character = game.local.save_data().redesign_character
+	var fixture_uids: Array[String] = []
+	for member: RefCounted in game.party.members():
+		var uid := str(member.get("uid"))
+		fixture_uids.append(uid)
+		var record: Dictionary = game.local.redesign_character.creatures.get(uid, {})
+		record.cap_level = 50
+		record.breakthroughs = [1, 2, 3, 4]
+		game.local.redesign_character.creatures[uid] = record
+		_check(ESSENCE.creature_cap(game.local.redesign_character, uid) == 50,
+			"Original five-member UI fixture has an explicit owned cap50: " + uid)
+	_check(REDESIGN.validate("character", game.local.redesign_character, fixture_uids).is_empty(),
+		"Original HUD progression fixture has valid typed personal admission")
+	print("HUD LIFECYCLE FIXTURE " + JSON.stringify({"owned_uids": fixture_uids,
+		"cap_level": 50, "breakthroughs": [1, 2, 3, 4], "test_only_admission": true,
+		"earned_progression": false, "scope": "Original isolated five-member L40-to-L41 UI fixture; no save or earned-route proof"}))
 	var world:=Node.new()
 	world.name="HudLifecycleFixture"
 	root.add_child(world)

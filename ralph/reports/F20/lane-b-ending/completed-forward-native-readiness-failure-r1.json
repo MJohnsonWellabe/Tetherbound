@@ -1,0 +1,72 @@
+{
+  "kind": "distinct-root-forward-native-failure-preservation",
+  "criterion": "F20#3",
+  "source": "d0914a7ef3751bdff78fc77f1f08581b851135e8",
+  "original_packet": "C:\\CodexTemp\\tetherbound-proof\\b-f20-completed-native-d091-forward-r1-ops",
+  "preserved_allowlist": "C:\\CodexTemp\\tetherbound-proof\\b-f20-forward-native-failure-r1-preserved",
+  "files_sha256": {
+    "failed-native-summary.json": "9d13cb3cee32b17a601e88b6d9d71f48c6869f3c6175681b1c4157a1e03bf163",
+    "capture-start.json": "f900af0266a23dc2fd2a36521af810d4117f54c252f0d9d64b0d068a0e403992",
+    "capture-terminal.json": "7d33d2fafab0095c06944176f27211d4d344b18d01b5a41fe0708828fadb3e46",
+    "capture.stdout.log": "6d5e2ef91d87b4df9fa7506ec8200b3855c99ca9ef58a448b2f9d035cf7660de",
+    "capture.stderr.log": "f3fb616f45df7178d39a519d80106111fe6b6b7df1f4bf0d4e494b70807f4f8a",
+    "import-start.json": "268ec40b972a7dfc333aa89e6bc054b5c6f6b7d6df3c3860f4420cb705480ba5",
+    "import-terminal.json": "b9d0fc69bb30405aec6bec5bd949097c707249804e484a3fd5d8905b5f565b23",
+    "import.stdout.log": "31249f29434b5368064f33cc8168f7e819d5a8547461e38fc6f7149b6f7a1663",
+    "import.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "launch.ps1": "621d30d474927ba7bbe43b3fe21a2edb1f5e25cc3fceafdbe1929c260b5735e1",
+    "original-recipe.json": "50afe3f363b863df0420c8b1bbc3aa816cfd1738ab16a584c0a8705aebd02854",
+    "protected-inputs-before.json": "ff9f40b993d1906f298dcf5f840cf37cdb7c9990b6dfad3d5eaca4386c2ed5e9",
+    "provenance-runtime-byte-binding.json": "dcc4d79b62cfa76b5f66fccb969e3c9e23c3531568195fcda24c5cc5d2b7c102",
+    "raw-output-preflight.json": "66ba05b6ffd0f79b0f29268ee5b8a8949491a55f48e9498b81df7442fad98763",
+    "source-after-capture.json": "955b50a9b2bc22b19421f7602c22da8c64949e3dece166da31044940c98fcae6",
+    "source-after-import-revalidated.json": "0ab6a811c0ffb40ce3a471a251bdf0f4a7f686698fc2571e8dcc961c9417ca06",
+    "source-after-import.json": "33cc631485a36bccd48eb5f79f18e63d882f15d002888b29006fadab0f59195a",
+    "source-before-capture.json": "fcceeea44100026d8166e51f920efa452ffec8a815accf9648e6fb2c8d884376",
+    "source-before-import.json": "84639bc7ac34522eab30d984c626155043127f3d4f192506ba303d4a550ea315",
+    "verify-native.py": "a367eab83e0834b6e1c8deed7472e56bb449a2bf54241870ef2d595a2bd0d246",
+    "actual-boot-log.txt": "77bb830ca6b48fb74d6445ba2d8f447850d71b442671040273530ae34c22dbfc"
+  },
+  "actual_summary": {
+    "source": "d0914a7ef3751bdff78fc77f1f08581b851135e8",
+    "terminal": {
+      "ended_utc": "2026-10-09T10:13:05.235509Z",
+      "pid": 34680,
+      "source": "d0914a7ef3751bdff78fc77f1f08581b851135e8",
+      "reason": "process_exit",
+      "exit_code": 1,
+      "mode": "Capture"
+    },
+    "actual_backend": [
+      "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+    ],
+    "readiness": [
+      "F20 READY TIMEOUT elapsed_ms=180046 budget_ms=180000 physics_samples=660 max_wait_ms=62877 scene=/root/MeadowsPlayground shell_complete=false player=/root/MeadowsPlayground/Player floor=false position=(1.092045, 1.020944, 15.02452) journey_empty=false paused=false owner=none"
+    ],
+    "totals": [
+      "F20 SOLO: 15 checks, 1 failures; actual input/UI/authority/disk with disclosed post-finale fixture"
+    ],
+    "endpoint": [
+      "F20 SOLO ENDPOINT {\"continuation_content_run\":false,\"counts_as_f20_3_proof\":false,\"earned_finale\":false,\"passed\":false,\"requested\":\"completed_fixture_load_and_continuation\",\"setup\":\"byte-identical approved completed fixture\"}"
+    ],
+    "captures": [],
+    "protected_inputs_unchanged": true,
+    "tracked_clean": true,
+    "source_index_equal": true,
+    "all_owned_godot_processes_absent": true,
+    "output_root_absent": true,
+    "disposition": "FAILED/PARK; no blind packet, native success, criterion credit or unchanged retry"
+  },
+  "original_independent_verdict": "Bacon `01a1165d-ecfb-79d3-9355-1224723cdb53` and Hubble `01a11667-9d3a-7a00-99c2-5d28ca7fc000` confirm **Forward+ RUNTIME FAIL/PARK** at `d0914a7\u00e2\u20ac\u00a6`.\n\nSource/input bindings verified. Exit 1; 15 checks/1 failure/**0 frames**. Readiness reached 180046/180000 ms; shell and floor remained false. Construction was still incomplete; underlying cause **UNKNOWN**.\n\nNo unchanged retry or deadline change approved. Functional 59/0 and caller 8/72 remain separate. Whole F20#3 and owner-required Low/full-bar blind proof remain open; no Sartre review.",
+  "cause": "UNKNOWN; construction still incomplete at original readiness deadline. No CPU/GPU/renderer causal diagnosis.",
+  "unchanged_Forward_retry_approved": false,
+  "Compatibility_failures_unchanged_parked": true,
+  "original_functional_59_reused": 37900915929,
+  "caller_8_tests_72_assertions_reused": 37904340445,
+  "owner_requires_blind_on_Low": true,
+  "zero_frames_no_blind_judgment": true,
+  "native_dispatched_by_B": false,
+  "failed_save_used_as_input": false,
+  "new_accepted_boundary": false,
+  "whole_criterion_closed": false
+}
