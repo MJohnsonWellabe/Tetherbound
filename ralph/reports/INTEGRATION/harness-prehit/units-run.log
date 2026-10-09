@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_harness_hp_pre_hit_witness,test_harness_max_hp: 2 of 827 test files
+  ok    test_harness_hp_pre_hit_witness.gd :: test_live_hit_before_manual_strike_keeps_the_exact_host_authority_witness
+  ok    test_harness_hp_pre_hit_witness.gd :: test_missing_counter_nonfinite_or_ended_fight_fails_closed
+  ok    test_harness_hp_pre_hit_witness.gd :: test_no_hit_requires_the_original_bare_maximum_and_unchanged_hp
+  ok    test_harness_hp_pre_hit_witness.gd :: test_partial_feedback_stays_unclassified_until_counter_and_hp_agree
+  ok    test_harness_hp_pre_hit_witness.gd :: test_wrong_scale_fraction_damage_or_saved_max_cannot_explain_a_prior_hit
+  ok    test_harness_max_hp.gd :: test_harness_max_hp_is_fight_scoped_on_the_production_combat_paths
+
+6 tests, 20 assertions, 0 failed
+exit=0 took=8s
