@@ -252,3 +252,16 @@ static func _integer(value: Variant, minimum: int) -> bool:
 
 static func _refusal(code: String, reason: String) -> Dictionary:
 	return {"ok": false, "submitted": false, "completed": false, "code": code, "reason": reason}
+
+
+## Read-only frozen night operand, derived from this same mounted canonical Den.
+func qualified_night_comfort_bonus(bed_index: int) -> float:
+	if not _enabled() or not is_inside_tree() or not is_instance_valid(_world) or not _world.is_inside_tree(): return 0.0
+	var game := get_node_or_null(^"/root/Game")
+	if game == null or game.get("world") == null: return 0.0
+	var cfg := POLICY.config()
+	var records: Array = game.get("placed_buildings")
+	var source := POLICY.record(cfg, records, _uid)
+	if source.get("ok") != true or source.index != bed_index or not _canonical_den(records): return 0.0
+	var tier := POLICY.effective_tier(cfg, records, _uid)
+	return float(cfg.den.comfort_bonus_per_tier) * int(tier.effective_tier) if tier.get("ok") == true else 0.0

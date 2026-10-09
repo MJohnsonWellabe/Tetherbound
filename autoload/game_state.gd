@@ -1172,7 +1172,7 @@ func _process(delta: float) -> void:
 	var landmarks_before := int(map.discovered_landmark_count())
 	var watch_discovery := not canonical_passive and party != null \
 		and not get_signal_connection_list("party_passive_tick").is_empty()
-	var discovered_before: Dictionary = (map.get("_discovered") as Dictionary).duplicate() if record_passive or watch_discovery else {}
+	var discovered_before: Dictionary = (map.get("_discovered") as Dictionary).duplicate() if record_passive or watch_discovery or is_host() else {}
 	var discovery_cards: Array[Dictionary] = []
 	if watch_discovery:
 		for member: Variant in (party.call("members") as Array):
@@ -1201,6 +1201,11 @@ func _process(delta: float) -> void:
 	map.mark_visited(here)
 	map.update_region(here)
 	var landmarks_gained := int(map.discovered_landmark_count()) - landmarks_before
+	if not canonical_passive and is_host() and session != null and session.has_method("foundation_host_discovery"):
+		var fresh_ids: Array = []
+		for id: String in (map.get("_discovered") as Dictionary):
+			if not discovered_before.has(id): fresh_ids.append(id)
+		if not fresh_ids.is_empty(): session.call("foundation_host_discovery", self, discovered_before, fresh_ids, here, current_realm)
 	if record_passive and not canonical_passive and landmarks_gained > 0:
 		# Owner-passive: a landmark the host already holds (its replay identity)
 		# is not replayed again, so it earns no visit credit here either.

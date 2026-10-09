@@ -2,6 +2,7 @@ extends RefCounted
 
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const BIOMES := preload("res://scripts/data/biome_order.gd")
+const RECEIPT_WINDOWS := preload("res://scripts/creatures/receipt_windows.gd")
 
 static func defaults(scope: String) -> Dictionary:
 	var value: Variant = DATA.json("res://data/schema/%s_state.json" % scope)
@@ -86,8 +87,10 @@ static func validate(scope: String, value: Variant, owned_uids: Array = [], worl
 			if not receipts is Array: continue
 			for receipt: Variant in receipts:
 				var pieces := str(receipt).split(":")
-				if pieces.size() < 2 or pieces[1].is_empty() or not pieces[0] in ["portal_unlock", "starter_choice", "relic_hang", "craft", "release", "essence_spend", "defeat", "care", "master_recipe", "feast_feed", "candy_feed", "trait_teach", "loadout", "bounty", "research", "rematch", "groom"]:
+				if pieces.size() < 2 or pieces[1].is_empty() or not pieces[0] in ["portal_unlock", "starter_choice", "relic_hang", "craft", "release", "essence_spend", "defeat", "care", "master_recipe", "feast_feed", "candy_feed", "trait_teach", "loadout", "bounty", "research", "rematch", "groom", "rest_activity", "rest_award", "rest_complete", "rest_discovery"]:
 					errors.append("unknown transaction receipt %s" % receipt)
+				elif pieces[0] in ["rest_activity", "rest_award", "rest_complete", "rest_discovery"] and not RECEIPT_WINDOWS.rest_marker_valid(str(receipt)):
+					errors.append("invalid rest receipt %s" % receipt)
 	return errors
 
 static func uids(party_payload: Variant) -> Array[String]:

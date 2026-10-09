@@ -433,11 +433,12 @@ static func stage_host_wild_victory(admitted: Dictionary, character_id: String,
 		host_revision: int, host_peer_id: int, world_namespace: String, session_epoch: String,
 		host_record: Dictionary, actual_dead_enemy: Dictionary, host_active_uid: String,
 		cfg: Dictionary, progression_cfg: Dictionary, available_moves: Callable,
-		mirror_provider: Callable) -> Dictionary:
+		mirror_provider: Callable, qualified_rest: bool = false) -> Dictionary:
 	var source := host_wild_defeat_event(admitted, character_id, host_peer_id,
 		world_namespace, session_epoch, host_record, actual_dead_enemy, host_active_uid, cfg)
 	if source.get("ok") != true: return source
 	var event: Dictionary = source.intent
+	if qualified_rest: event["rest_activity_version"] = 1
 	var proposal := stage_core_defeat(admitted, character_id, event, host_revision,
 		cfg, progression_cfg, available_moves, mirror_provider)
 	if proposal.get("ok") != true: return proposal
@@ -453,7 +454,7 @@ static func stage_accepted_host_wild_victory(admitted: Dictionary, character_id:
 		host_revision: int, recipient_peer_id: int, world_namespace: String, session_epoch: String,
 		host_record: Dictionary, actual_dead_enemy: Dictionary, host_active_uid: String,
 		accepted: Dictionary, cfg: Dictionary, progression_cfg: Dictionary,
-		available_moves: Callable, mirror_provider: Callable) -> Dictionary:
+		available_moves: Callable, mirror_provider: Callable, qualified_rest: bool = false) -> Dictionary:
 	if not accepted.get("ok") is bool or accepted.ok != true or accepted.get("kind") != "strike_intent" \
 			or not _integer(accepted.get("peer"), 1, 2147483647) or not accepted.get("delta") is Dictionary:
 		return _refuse("actual_accepted_killing_hit_required")
@@ -470,7 +471,7 @@ static func stage_accepted_host_wild_victory(admitted: Dictionary, character_id:
 		return _refuse("actual_accepted_killing_hit_required")
 	return stage_host_wild_victory(admitted, character_id, host_revision, recipient_peer_id,
 		world_namespace, session_epoch, host_record, actual_dead_enemy, host_active_uid,
-		cfg, progression_cfg, available_moves, mirror_provider)
+		cfg, progression_cfg, available_moves, mirror_provider, qualified_rest)
 
 ## Replayable host capture, never a wire-level owner reward claim. Its mode
 ## was frozen when the director committed the real killing hit. A config
@@ -484,6 +485,7 @@ static func stage_captured_host_victory(admitted: Dictionary, character_id: Stri
 			or not frozen.get("deployments") is Array or not frozen.get("xp_mode") in ["ordinary", "hybrid"] \
 			or not _opaque_id(frozen.get("world_namespace")) or not _opaque_id(frozen.get("session_id")):
 		return _refuse("invalid_frozen_host_defeat")
+	if frozen.has("rest_activity_version") and not _integer(frozen.rest_activity_version, 1, 1): return _refuse("invalid_frozen_rest_authorization")
 	var active_uid := ""
 	var seen := {}
 	for row: Variant in frozen.deployments:
@@ -501,7 +503,7 @@ static func stage_captured_host_victory(admitted: Dictionary, character_id: Stri
 	if source.intent.event_id != frozen.get("source_id"): return _refuse("invalid_frozen_host_defeat")
 	return stage_accepted_host_wild_victory(admitted, character_id, host_revision, recipient_peer_id,
 		frozen.world_namespace, frozen.session_id, frozen.record, frozen.enemy_record, active_uid,
-		frozen.accepted, original_cfg, progression_cfg, available_moves, mirror_provider)
+		frozen.accepted, original_cfg, progression_cfg, available_moves, mirror_provider, frozen.get("rest_activity_version") == 1)
 
 
 
@@ -517,8 +519,11 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	var keys := ["event_id", "world_namespace", "encounter_id", "enemy_uid", "enemy_record", "active_uid", "eligible_uids", "kind", "xp_mode"]
 	# F32#4 adds "realm" and the host-frozen "shed" outputs. A nine-key legacy
 	# row still validates, pays no shed and keeps its receipt signature.
-	var has_shed := host_event.size() == keys.size() + 2 and host_event.has("realm") and host_event.has("shed")
-	if host_event.size() != keys.size() and not has_shed: return _refuse("invalid_defeat_event")
+	var rest_authorized := _integer(host_event.get("rest_activity_version"), 1, 1)
+	if host_event.has("rest_activity_version") and not rest_authorized: return _refuse("invalid_frozen_rest_authorization")
+	var field_count := host_event.size() - (1 if rest_authorized else 0)
+	var has_shed := field_count == keys.size() + 2 and host_event.has("realm") and host_event.has("shed")
+	if field_count != keys.size() and not has_shed: return _refuse("invalid_defeat_event")
 	for key: String in keys:
 		if not host_event.has(key): return _refuse("invalid_defeat_event")
 	if has_shed and (not host_event.realm is String or not _shed_outputs_valid(host_event.shed)):
@@ -586,6 +591,8 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	next.inventory = RULES.slots(inventory).duplicate(true)
 	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "wild_defeat", character_id)
 	next.redesign_character.transaction_receipts.append(receipt)
+	if rest_authorized and load("res://scripts/creatures/rest_reward.gd").call("earn", next, receipt, "wild_encounter_win") != true:
+		return _refuse("invalid_rest_qualification")
 	# The foundation owner must admit the explicit defeat namespace; never
 	# disguise defeat XP as an Altar spend or bypass REDESIGN validation.
 	if not _baseline_errors(next, character_id).is_empty(): return _refuse("defeat_schema_or_candidate_unavailable")

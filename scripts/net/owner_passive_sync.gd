@@ -15,7 +15,7 @@ const CLOUD_MAP := preload("res://scripts/world/cloudreach_map_state.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const REQUEST_KINDS := ["foundation_request", "altar_spend", "manual_refine", "altar_traits", "portal_arrival", "waystone_touch", "home_key", "tether_item"]
 const REQUEST_ACTIONS := ["station_craft", "feast_cook", "feast_feed", "candy_feed", "relic_hang", "relic_power", "master_chest", "essence_release", "tether_pouch", "bounty_claim", "trainer_equip"]
-const RETAINED_ACTIONS := ["research_event", "master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share", "ledger_inventory"]
+const RETAINED_ACTIONS := ["research_event", "master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share", "ledger_inventory", "rest_complete", "rest_discovery"]
 const MAX_BUFFER := 120000
 const MAX_BATCH := 64
 ## Owner: without new acknowledgements for this long, resend the window.
@@ -740,6 +740,9 @@ func _inputs_host_batch(peer: int, stream: Dictionary, packet: Dictionary, batch
 			stream.first_input_refusal = {"input": input.duplicate(true), "context": input_context.duplicate(true),
 				"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
 			stream.error = str(applied.get("code", "owner_passive_replay_refused")); return false
+		if input.get("op") == "discovery" and not input.new_landmarks.is_empty():
+			var qualification: Dictionary = owner().call("foundation_owner_discovery", self, peer, stream, input, input_context)
+			if qualification.get("durable") != true: return false # Retry this SAME validated input, never lose the source.
 		if input.get("op") != "condition": stream.cursor = applied.cursor
 		else: (batch.tonic_ticks as Array).append(input.duplicate(true))
 		if input.get("op") == "actor_vitals_applied": stream.revision = applied.revision

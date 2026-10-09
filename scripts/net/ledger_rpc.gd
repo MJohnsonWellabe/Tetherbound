@@ -160,7 +160,11 @@ func journal_foundation_event(source: String, duties: Array) -> Dictionary:
 	var world: RefCounted = game.get("world")
 	var saver: RefCounted = game.get("save_system")
 	if saver == null or saver.call("fallback_busy") == true: return {"ok": false, "durable": false}
-	var row := preload("res://scripts/net/foundation_event.gd").make(world, game.get("session").call("_altar_current_epoch"), source, duties)
+	var epoch: String = game.get("session").call("_altar_current_epoch")
+	if source.begins_with("rest_night:") or source.begins_with("rest_discovery:"):
+		epoch = game.get("session").call("_qualified_rest_source_epoch", source, duties)
+		if not preload("res://scripts/creatures/essence.gd")._opaque_id(epoch): return {"ok": false, "durable": false}
+	var row := preload("res://scripts/net/foundation_event.gd").make(world, epoch, source, duties)
 	if row.is_empty(): return {"ok": false, "durable": false}
 	var before: Dictionary = world.call("save_data")
 	var revision := int(world.revision)

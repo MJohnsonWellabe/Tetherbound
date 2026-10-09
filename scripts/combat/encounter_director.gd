@@ -9819,6 +9819,8 @@ func _capture_wild_victory_source(encounter_id: String, accepted: Dictionary) ->
 			"accepted": accepted.duplicate(true),
 			"record": (_encounter_host.call("record", encounter_id) as Dictionary).duplicate(true)})
 		return
+	# Frozen only at this genuine accepted killing-hit capture; never on retry.
+	capture["rest_activity_version"] = 1
 	runtime.set_meta(&"wild_victory_source", capture.duplicate(true))
 	_session.call("foundation_alpha_resolution", self, encounter_id, "defeat")
 	_session.call("foundation_defeat_obligations", self, capture)

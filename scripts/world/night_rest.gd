@@ -195,7 +195,16 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	# `game_state.gd::advance_day` refuses on a client and hands back the day
 	# this peer is already holding), which is exactly the kind of asymmetry that
 	# reads fine until somebody hosts.
-	var day := host_day if host_day > 0 else int(game.call("advance_day"))
+	var session: Node = game.get("session")
+	var canonical_night := session != null and session.has_method("foundation_completed_night")
+	var day := host_day
+	if host_day <= 0:
+		if not canonical_night: return int(game.get("day")) # No authenticated night producer, no XP/healing fallback.
+		var original: Dictionary = session.call("foundation_completed_night", attach(game))
+		if original.get("durable") != true:
+			_pending_sleep_message(game)
+			return int(game.get("day"))
+		day = int(original.day)
 	# GATEB-FLAGS: `player_slept_at_home`, data/progression/objectives.json's
 	# ladder. Set here, on the actual completed rest, not on the interact
 	# prompt firing -- the objective asks for the sleep itself, not the
@@ -216,7 +225,7 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	# is exactly one player and this is byte-for-byte today's behaviour.
 	var sleeper_flags: RefCounted = game.call("player_flags") if game.has_method("player_flags") \
 		else game.get("progression") as RefCounted
-	if recover_owner and sleeper_flags != null:
+	if recover_owner and not canonical_night and sleeper_flags != null:
 		sleeper_flags.call("set_flag", "player_slept_at_home")
 	# Gate A creature-bed contract: sleep completes only pals physically put
 	# to bed. Non-resting party members keep their current HP, which is the
@@ -225,10 +234,10 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	# Per-peer by construction: `Game.party` is this process's own five, so a
 	# co-op night heals each player's own bedded creatures on their own machine
 	# and nobody's team is completed by somebody else lying down.
-	if recover_owner: game.call("complete_creature_bed_rests")
+	if recover_owner and not canonical_night: game.call("complete_creature_bed_rests")
 	# The trainer too -- find them by the vitals they carry.
 	var player := _find_player(host)
-	if recover_owner and player != null:
+	if recover_owner and not canonical_night and player != null:
 		var vitals: RefCounted = player.get("vitals")
 		if vitals != null and vitals.has_method("rest"):
 			vitals.call("rest")
@@ -445,7 +454,11 @@ func _evaluate() -> void:
 ## nobody is marked asleep any more and never flashes "waiting for" at a world
 ## that is already morning.
 func _night_falls(game: Node) -> void:
-	var day := int(game.call("advance_day"))
+	var session := _session()
+	if session == null or not session.has_method("foundation_completed_night"): return
+	var original: Dictionary = session.call("foundation_completed_night", self)
+	if original.get("durable") != true: return
+	var day := int(original.day)
 	if _can_rpc() and bool(game.call("is_multi_peer")):
 		rpc("_rpc_night_falls", day)
 	var registry: RefCounted = _registry()
@@ -570,6 +583,16 @@ func _repaint(force: bool) -> void:
 ## `session.gd` does not emit one for a replicated registry, and this is one
 ## integer compare on a peer that is asleep.
 func _process(_delta: float) -> void:
+	var retry_session := _session()
+	if retry_session != null and retry_session.has_method("foundation_completed_night") and retry_session.call("is_host") == true and not (retry_session.get("_qualified_night_original") as Dictionary).is_empty():
+		var original: Dictionary = retry_session.call("foundation_completed_night", self)
+		if original.get("durable") == true:
+			if _can_rpc() and bool(_game().call("is_multi_peer")): rpc("_rpc_night_falls", int(original.day))
+			var registry := _registry()
+			if registry != null:
+				for row: Dictionary in _rows(): registry.call("set_flag", int(row.peer_id), "sleeping", false)
+				_broadcast_registry()
+			_night_here(int(original.day))
 	if not _sleeping_here:
 		return
 	var game := _game()

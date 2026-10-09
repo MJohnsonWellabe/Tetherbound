@@ -50,7 +50,9 @@ static func make_duty(namespace_id: String, epoch: String, realm: String,
 		"settled_vitals": vitals.duplicate(true),
 		"validated_host_outcome": "win", "event_confirmed": true,
 		"world_namespace": namespace_id, "session_id": epoch, "realm": realm}
-	if phase == "completion": context.actual_host_trainer_won = true
+	if phase == "completion":
+		context.actual_host_trainer_won = true
+		context.rest_activity_version = 1
 	context.source_key = source_id(intent, context)
 	var duty := {"character_id": binding.get("character_id"), "action": "combat_round_reward",
 		"intent": intent, "context": context}
@@ -75,6 +77,7 @@ static func source_valid(intent: Dictionary, context: Dictionary, character: Str
 		or not E._integer(intent.get("round"), 1, 100) or not E._opaque_id(intent.get("enemy_uid")) \
 		or context.get("validated_host_outcome") != "win" or not context.get("event_confirmed") is bool or context.event_confirmed != true \
 		or context.get("source_key") != source_id(intent, context): return false
+	if context.has("rest_activity_version") and (intent.phase != "completion" or not E._integer(context.rest_activity_version, 1, 1)): return false
 	var ownership: Dictionary = context.reward_scope
 	for field: String in ["trainer_id", "encounter_id"]:
 		if intent.get(field) != ownership[field]: return false
@@ -201,6 +204,9 @@ static func stage(current: Dictionary, intent: Dictionary, context: Dictionary) 
 		awards = xp.awards.duplicate(true)
 	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "trainer_round", str(current.character_id))
 	next.redesign_character.transaction_receipts.append(decision)
+	if intent.phase == "completion" and context.get("rest_activity_version") == 1 \
+		and load("res://scripts/creatures/rest_reward.gd").call("earn", next, decision, "trainer_encounter_win") != true:
+		return _deny("invalid_rest_qualification")
 	next = E.refresh_training_moves(next, TEACHING.available_moves, TEACHING.character_loadout_mirror)
 	if next.is_empty(): return _deny("canonical_power_refresh_unavailable")
 	return {"ok": true, "state": next, "receipt": decision, "settled_before": settled, "awards": awards}

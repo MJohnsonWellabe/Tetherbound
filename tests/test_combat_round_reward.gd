@@ -3,6 +3,7 @@ extends "res://tests/test_case.gd"
 ## Actual canonical codecs, authority CAS, owner installer and split disk
 ## writer. Terminal actor/transport admission are disclosed source fixtures;
 ## these tests do not claim an actual encounter, ENet or controller route.
+const REST := preload("res://scripts/creatures/rest_reward.gd")
 const ROUND := preload("res://scripts/net/combat_round_reward.gd")
 const DATA := preload("res://tests/test_foundation_resources.gd")
 const SAVE := preload("res://tests/test_foundation_resource_save.gd")
@@ -260,6 +261,82 @@ func test_authored_completion_bonus_is_separate_without_an_extra_victory() -> vo
 	bad.context.source_key = ROUND.source_id(bad.intent, bad.context)
 	assert_false(ROUND.source_valid(bad.intent, bad.context, DATA.CHARACTER), "completion requires authored final round")
 	assert_false(ROUND.stage(result.state, duty.intent, duty.context).ok, "original receipt cannot pay bonus twice")
+	assert_eq(REST.generation(result.state.redesign_character, DATA.CHARACTER, REST.CLOCK), 1, "only an authenticated completion qualifies the next night")
+	var legacy_context: Dictionary = duty.context.duplicate(true)
+	legacy_context.erase("rest_activity_version")
+	var legacy := ROUND.stage(before, duty.intent, legacy_context)
+	assert_true(legacy.get("ok") == true)
+	assert_eq(REST.generation(legacy.state.redesign_character, DATA.CHARACTER, REST.CLOCK), 0, "old frozen completion reconstructs its original bytes")
+	var legacy_duty: Dictionary = duty.duplicate(true)
+	legacy_duty.context = legacy_context
+	var legacy_row := _row(before, legacy_duty)
+	assert_true(DELIVERY.valid(legacy_row, RECORD.errors, DATA.CHARACTER, "resource-namespace", "resource-slot"))
+	var night_before: Dictionary = result.state.duplicate(true)
+	night_before.party[0].resting = true
+	night_before.party[0].rest_bed_index = 0
+	night_before.party[0].hp = float(night_before.party[0].max_hp) * 0.5
+	var night_uids: Array = []
+	for card: Dictionary in night_before.party: night_uids.append(card.uid)
+	var night := {"rest_source_version": 1, "actual_completed_night": true,
+		"source_key": "rest_night:resource-slot:6", "world_id": "resource-slot",
+		"world_namespace": "resource-namespace", "session_id": "resource-epoch",
+		"participants": [DATA.CHARACTER], "night_day": 6, "eligible_generation": REST.generation(night_before.redesign_character, DATA.CHARACTER, "rest_activity"), "party_uids": night_uids,
+		"bed_roster": {night_uids[0]: {"bed_index": 0, "comfort_bonus": 0.0}}}
+	var night_intent := {"action_id": "11111111111111111111111111111111"}
+	var rested := REST.stage(night_before, night_intent, night)
+	assert_true(rested.get("ok") == true, str(rested))
+	if rested.get("ok") != true: return
+	for card: Dictionary in night_before.party:
+		assert_eq(rested.awards[card.uid], 5, "all owned cards receive flat five, including the fainted unbedded card")
+	assert_true(rested.state.party[4].fainted)
+	assert_eq(rested.state.party[4].hp, 0.0, "unbedded fainted creature receives XP without revival")
+	assert_eq(rested.state.party[0].hp, rested.state.party[0].max_hp)
+	assert_false(rested.state.party[0].resting)
+	assert_true(RECORD.errors(rested.state, DATA.CHARACTER).is_empty())
+	var delayed_before: Dictionary = night_before.duplicate(true)
+	assert_true(REST.earn(delayed_before, "disclosed-after-night-activity", "wild_encounter_win"))
+	var delayed := REST.stage(delayed_before, night_intent, night)
+	assert_true(delayed.get("ok") == true)
+	if delayed.get("ok") == true:
+		assert_eq(REST.generation(delayed.state.redesign_character, DATA.CHARACTER, "rest_award"), night.eligible_generation, "a delayed night consumes only its frozen cutoff")
+		assert_eq(REST.generation(delayed.state.redesign_character, DATA.CHARACTER, "rest_activity"), night.eligible_generation + 1, "later activity survives for a later night")
+	assert_false(REST.stage(rested.state, night_intent, night).ok, "the immutable original night cannot pay twice")
+	var night_duty := {"character_id": DATA.CHARACTER, "action": "rest_complete", "intent": night_intent, "context": night}
+	assert_true(EVENT.valid(_event(night_duty), "resource-namespace", "resource-slot"))
+	var rest_row := _row(night_before, night_duty)
+	assert_true(DELIVERY.valid(rest_row, RECORD.errors, DATA.CHARACTER, "resource-namespace", "resource-slot"), "rest uses the same exact v3 reconstruction")
+	var wrong_world: Dictionary = rest_row.duplicate(true)
+	wrong_world.host_context.world_id = "other-world"
+	assert_false(DELIVERY.valid(wrong_world, RECORD.errors, DATA.CHARACTER, "resource-namespace", "resource-slot"))
+
+	var visit: Dictionary = night.duplicate(true)
+	visit.world_namespace = "other-calendar"
+	visit.world_id = "other-world"
+	visit.night_day = 1
+	visit.source_key = "rest_night:other-world:1"
+	visit.bed_roster = {}
+	var other := REST.stage(rested.state, {"action_id": "22222222222222222222222222222222"}, visit)
+	assert_true(other.get("ok") == true)
+	assert_false(other.qualified, "unqualified visit cannot consume or replace a calendar anchor")
+	var new_activity: Dictionary = other.state.duplicate(true)
+	assert_true(REST.earn(new_activity, "disclosed-pure-source", "wild_encounter_win"))
+	var revisit: Dictionary = night.duplicate(true)
+	revisit.bed_roster = {}
+	revisit.eligible_generation = REST.generation(new_activity.redesign_character, DATA.CHARACTER, "rest_activity")
+	assert_true(revisit.eligible_generation > REST.generation(new_activity.redesign_character, DATA.CHARACTER, "rest_award"), "calendar refusal must test genuinely unconsumed eligibility")
+	var same_day := REST.stage(new_activity, {"action_id": "33333333333333333333333333333333"}, revisit)
+	assert_true(same_day.get("ok") == true)
+	assert_false(same_day.qualified, "A/day6 -> B/day1 -> A/day6 preserves A's paid anchor")
+	revisit.night_day = 7
+	revisit.source_key = "rest_night:resource-slot:7"
+	revisit.eligible_generation = REST.generation(same_day.state.redesign_character, DATA.CHARACTER, "rest_activity")
+	var next_day := REST.stage(same_day.state, {"action_id": "44444444444444444444444444444444"}, revisit)
+	assert_true(next_day.get("ok") == true)
+	assert_true(next_day.qualified, "activity refused on a paid day remains eligible for its next night")
+	var forged: Dictionary = night.duplicate(true)
+	forged.bed_roster[night_uids[0]].bed_index = 99
+	assert_false(REST.stage(night_before, night_intent, forged).ok, "the authentic occupied-bed assignment must match")
+
 
 func test_original_round_owner_BOOL_failure_retries_disk_once_without_replacing_creatures() -> void:
 	var directory := "user://test_combat_round_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()

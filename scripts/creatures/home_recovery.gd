@@ -2,10 +2,8 @@ extends RefCounted
 
 ## R4.8. What a creature_bed actually does to a party member: heal_fully()
 ## (which revives a fainted creature -- GAME_DESIGN.md 16/20's own phrase for
-## this) plus the same flat rest bonus XP camp.gd's overnight rest already
-## grants every party member (progression.gd::rest_xp), reused rather than a
-## second number so a creature bed reads as "the same kind of rest, on
-## demand" instead of a different mechanic that happens to look similar.
+## this). Qualified-night XP is a separate canonical personal award; ordinary
+## recovery cannot pay that award or consume its eligibility.
 ##
 ## Pure function over a creature instance and the shared progression config
 ## (D02: pure logic only) -- the caller (creature_bed_panel.gd) owns picking
@@ -39,12 +37,8 @@ static func recovery_allowed(creature: RefCounted, owner: Node = null) -> bool:
 		or session.call("_owner_training_mutation_blocked", player) != true
 
 
-static func rest(creature: RefCounted, cfg: Dictionary, personal: Variant = null, owner: Node = null) -> void:
+static func rest(creature: RefCounted, _cfg: Dictionary, _personal: Variant = null, owner: Node = null) -> void:
 	if creature == null or not recovery_allowed(creature, owner):
 		return
 	creature.call("heal_fully")
-	var training := training_config(creature, cfg, personal) if personal is Dictionary else cfg
-	if training.is_empty(): return # Recovery remains available during reconciliation.
-	var bonus := PROGRESSION.rest_xp(training)
-	if bonus > 0:
-		creature.call("gain_xp", bonus, training)
+	# Qualified-night XP is staged by the canonical v3 rest duty, never here.

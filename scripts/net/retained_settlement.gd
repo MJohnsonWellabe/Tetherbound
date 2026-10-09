@@ -17,8 +17,9 @@ const FIELD := "retained_settlement"
 ## Master wins, research, bounties, rematches and capture offers keep their
 ## receipt-based behaviour (their volume is bounded by content).
 const SAFE_ACTIONS := ["combat_mastery", "combat_round_reward"]
-## Original inventory txns settle too, but are never retired or windowed.
-const PERSISTENT_ACTIONS := ["ledger_inventory"]
+## Original inventory, night and discovery decisions settle only on real
+## accepted owner ACKs; their source identities are never retired/windowed.
+const PERSISTENT_ACTIONS := ["ledger_inventory", "rest_complete", "rest_discovery"]
 const MAX_KEYS_PER_EVENT := 16
 
 
