@@ -216,10 +216,10 @@ func test_actual_prepared_writer_preserves_full_v2_and_v3_pending_owner_projecti
 	]
 	for index: int in steps.size():
 		var step: Dictionary = steps[index]
-		var namespace := NAMESPACE + "-" + str(step.world)
+		var rematch_world_namespace := NAMESPACE + "-" + str(step.world)
 		var world_id := "slot-prepared-rematch-" + str(step.world)
 		game.world.world_id = world_id
-		game.world.reward_delivery_namespace = namespace
+		game.world.reward_delivery_namespace = rematch_world_namespace
 		var prior_world: Dictionary = worlds.call("read", world_id) if worlds.call("has", world_id) else {}
 		game.world.reward_deliveries = prior_world.get("reward_deliveries", {}).duplicate(true)
 		var disk_before: Dictionary = characters.call("read", CHARACTER)
@@ -231,7 +231,7 @@ func test_actual_prepared_writer_preserves_full_v2_and_v3_pending_owner_projecti
 		var context := {"character_id": CHARACTER, "expected_revision": index, "source_key": "rematch:relay_captain",
 			"in_range": true, "validated_host_outcome": "win", "encounter_id": encounter,
 			"trainer_id": "relay_captain", "tier": "r1", "participants": [CHARACTER],
-			"world_flags": ["defeated_warden"], "personal_flags": [], "world_namespace": namespace,
+			"world_flags": ["defeated_warden"], "personal_flags": [], "world_namespace": rematch_world_namespace,
 			"session_id": EPOCH, "world_seconds": step.seconds}
 		var proposal := ACTIONS.stage(before, index, "rematch_win", intent, context, RECORD.errors)
 		assert_true(proposal.get("ok") == true, "canonical rematch step %d %s" % [index, str(proposal)])
@@ -245,8 +245,8 @@ func test_actual_prepared_writer_preserves_full_v2_and_v3_pending_owner_projecti
 			assert_true(ESSENCE._equivalent(proposal.state.redesign_character.rematch_cooldowns, paid_clocks),
 				"actual saved owning clock is retained through foreign/early wins")
 		proposal.character_revision = index + 1
-		var delivery_id := ESSENCE.training_delivery_id(namespace, CHARACTER)
-		var row := DELIVERY.make_record(world_id, namespace, EPOCH, proposal,
+		var delivery_id := ESSENCE.training_delivery_id(rematch_world_namespace, CHARACTER)
+		var row := DELIVERY.make_record(world_id, rematch_world_namespace, EPOCH, proposal,
 			game.world.reward_deliveries.get(delivery_id), RECORD.errors)
 		assert_false(row.is_empty(), "same original full projection codec")
 		if row.is_empty():
@@ -259,7 +259,7 @@ func test_actual_prepared_writer_preserves_full_v2_and_v3_pending_owner_projecti
 		assert_true(ESSENCE._equivalent(pending, row), "exact pending row survived world disk reload")
 		game.world.reward_deliveries = pending_world.reward_deliveries.duplicate(true)
 		var authority := AUTHORITY.new()
-		assert_true(authority.bind_world(namespace))
+		assert_true(authority.bind_world(rematch_world_namespace))
 		assert_true(authority.seed_admitted_character(before, CHARACTER).get("ok") == true)
 		assert_true(authority.recover_durable_training(CHARACTER, pending_world.reward_deliveries).get("ok") == true)
 		assert_true(authority.creature_training_pending_matches(CHARACTER, pending))
