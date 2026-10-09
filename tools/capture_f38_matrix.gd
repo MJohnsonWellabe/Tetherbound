@@ -9,6 +9,7 @@ var _f38_weather := "clear"
 var _f38_preset := "High"
 var _f38_source := ""
 var _f38_views_supplied := false
+var _f38_exterior_mode := ""
 
 
 func _run() -> void:
@@ -20,7 +21,12 @@ func _run() -> void:
 func _parse_args() -> bool:
 	_biome_id = "meadows"
 	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--f38-preset="):
+		if arg.begins_with("--f38-exterior="):
+			_f38_exterior_mode = arg.trim_prefix("--f38-exterior=")
+			if _f38_exterior_mode not in ["baseline", "candidate"]:
+				push_error("F38 exterior comparison requires baseline or candidate")
+				return false
+		elif arg.begins_with("--f38-preset="):
 			_f38_preset = arg.trim_prefix("--f38-preset=")
 		elif arg.begins_with("--source-commit="):
 			_f38_source = arg.trim_prefix("--source-commit=")
@@ -40,6 +46,11 @@ func _parse_args() -> bool:
 		return false
 	if not super._parse_args():
 		return false
+	if not _f38_exterior_mode.is_empty():
+		var grass: Dictionary = preload("res://scripts/world/grass_field.gd").config()
+		var verge: Dictionary = grass.get("road_verge", {})
+		verge["enabled"] = _f38_exterior_mode == "candidate"
+		grass["road_verge"] = verge
 	# Process-local fixture override, never persist the owner's device setting.
 	# Explicit renderer at launch must match this preset before world boot.
 	GRAPHICS.load_preferences()
@@ -49,6 +60,21 @@ func _parse_args() -> bool:
 	if GRAPHICS.restart_required():
 		push_error("F38 launch renderer does not match requested preset")
 		return false
+	return true
+
+
+func _prepare_capture_shell() -> bool:
+	if not super._prepare_capture_shell():
+		return false
+	if not _f38_exterior_mode.is_empty():
+		var beacon := _world.get_node_or_null("ObjectiveBeacon")
+		if beacon == null:
+			_failures.append("F38 production objective beacon unavailable")
+			return false
+		var config: Dictionary = beacon.get("_config")
+		var nearby: Dictionary = config.get("nearby_occlusion", {})
+		nearby["enabled"] = _f38_exterior_mode == "candidate"
+		config["nearby_occlusion"] = nearby
 	return true
 
 
@@ -94,6 +120,8 @@ func _begin_manifest() -> void:
 	_manifest["renderer"] = RenderingServer.get_current_rendering_method()
 	_manifest["candidate"] = OS.get_cmdline_user_args().has("--f38-candidate")
 	_manifest["fixture_limit"] = "Debug travel with strict fixed stands; real fight and earned F17 walk are separate required proofs. Rejected stands are missing evidence."
+	_manifest["f38_exterior_fixture"] = _f38_exterior_mode
+	_manifest["f38_exterior_scope"] = "Explicit process-local road-verge/nearby-beacon comparison. Tracked gates stay OFF. Original stands, camera, footing, time/weather and image guards retained. Changed exterior rows are missing cluster pieces, not full F38 or performance acceptance."
 
 
 func _capture_row(row: Dictionary) -> void:
@@ -165,6 +193,37 @@ func _capture_row(row: Dictionary) -> void:
 	var started := Time.get_ticks_msec()
 	await super._capture_row(row)
 	if not _records.is_empty() and _records.back().get("frame_id") == row.frame_id:
+		if not _f38_exterior_mode.is_empty():
+			var field := _world.get_node_or_null("GrassField")
+			var material := field.get("_material") as ShaderMaterial if field != null else null
+			var beacon := _world.get_node_or_null("ObjectiveBeacon")
+			var beam := beacon.get("_beam_material") as StandardMaterial3D if beacon != null else null
+			var enabled := _f38_exterior_mode == "candidate"
+			var grass_actual := {}
+			if material != null:
+				for key: String in ["road_verge_enabled", "road_verge_base_mask", "road_verge_strength", "road_verge_height_floor"]:
+					grass_actual[key] = material.get_shader_parameter(key)
+			var grass_cfg: Dictionary = preload("res://scripts/world/grass_field.gd").config().get("road_verge", {})
+			var path_mask: int = preload("res://scripts/world/grass_field.gd").texture_mask(field.call("_terrain_texture_names"), ["path"]) if field != null else 0
+			var distance_m := _camera.global_position.distance_to(beacon.global_position) if beacon != null else INF
+			var beacon_cfg: Dictionary = beacon.get("_config") if beacon != null else {}
+			var expected_depth: bool = preload("res://scripts/world/objective_beacon.gd").nearby_beam_depth_test(distance_m, beacon_cfg)
+			var matched: bool = material != null and material.shader.resource_path == "res://shaders/grass_field.gdshader" \
+				and grass_actual.get("road_verge_enabled") == enabled and path_mask > 0 \
+				and int(grass_actual.get("road_verge_base_mask", 0)) == path_mask \
+				and is_equal_approx(float(grass_actual.get("road_verge_strength", -1.0)), float(grass_cfg.get("strength", 0.75))) \
+				and is_equal_approx(float(grass_actual.get("road_verge_height_floor", -1.0)), float(grass_cfg.get("height_floor", 0.35))) \
+				and beam != null and beacon_cfg.get("nearby_occlusion", {}).get("enabled") == enabled \
+				and beam.no_depth_test == not expected_depth
+			var record: Dictionary = _records.back()
+			record["exterior_observation"] = {"mode": _f38_exterior_mode, "grass_uniforms": grass_actual,
+				"path_mask": path_mask, "beacon_id": beacon.call("active_objective_id") if beacon != null else "",
+				"beacon_visible": beacon.call("beam_visible") if beacon != null else false,
+				"camera_beacon_distance_m": distance_m if is_finite(distance_m) else -1.0,
+				"expected_depth_test": expected_depth, "actual_no_depth_test": beam.no_depth_test if beam != null else null,
+				"matches_requested": matched}
+			if not matched:
+				_failures.append("%s: actual exterior candidate state mismatch" % str(row.frame_id))
 		_records.back()["capture_wall_ms"] = Time.get_ticks_msec() - started
 		_records.back()["process_cpu_ms"] = Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0
 		_records.back()["physics_cpu_ms"] = Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0
