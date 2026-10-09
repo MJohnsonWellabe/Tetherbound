@@ -41,5 +41,22 @@
   "shipping": "shrine_doorway.enabled=false, all relic candidatesfalse; shared config used by ordinarypeers, processcaptureflags ignored outsideexactexisting capture. Original guards/disclosedheldfixture and independentreviewers retained.",
   "supported_delta": "Only header recognition changes from whole numericJSONarray/mixedliteral equality to exact float component comparisons. No changed coordinates, tunables, fixtures or guards; current original SOURCE/COMMAND review pending.",
   "source_review": "SAME original f42 via parent01a11ffc-f9aa-7613-8fd3-5c863f599dee SOURCE+changedexistingpreset COMMAND APPROVE; flagOFF and world-scope baseline limitation corrected",
-  "current_fix_review": "Same parent01a12001 SOURCE APPROVE4ab and exactexistingpreset COMMAND APPROVE; numericcasts retainexactheadercoordinates/dimensions/guards, consistentwithfailedrecipe. Affectedrerun37912150637 running; no actualpass credit."
+  "current_fix_review": "Same parent01a12001 SOURCE APPROVE4ab and exactexistingpreset COMMAND APPROVE; numericcasts retainexactheadercoordinates/dimensions/guards, consistentwithfailedrecipe. Affectedrerun37912150637 running; no actualpass credit.",
+  "current_fix_proof": {
+    "actual": {
+      "exit": 0,
+      "seconds": 4,
+      "engine_script_errors": 0,
+      "failed": 0,
+      "warnings": 0,
+      "tests": 1
+    },
+    "zip_sha256": "6220a2b5d4afbd1af154299cc83718c7f5239cbef442d550ab6e27f4de6bd719",
+    "run": 37912150637,
+    "original_artifact_review": "Requested SAME original f42; pending",
+    "artifact": 11607521014,
+    "scope": "Changed existing ONEpresetmethod verifies candidate3module/1collider transform, shippingOFF/default/networkprocess/baseline/worldscope/deepcopy and preserved previouswitness selectors/targetchecks; no actualnativeconstruction/occlusion/wholecredit",
+    "source": "4ab4c5c82fbce5f80b12c66a32e3f592906a2cee",
+    "job": 113759608924
+  }
 }
