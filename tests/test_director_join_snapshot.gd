@@ -686,6 +686,7 @@ class NativeTrainerBody extends Node3D:
 	var engaged := false
 	var faint_presentations := 0
 	var faint_notifications := 0
+	var motion_scope: Dictionary = {}
 	func centre() -> Vector3:
 		return global_position + Vector3.UP
 	func facing() -> Vector3:
@@ -700,6 +701,12 @@ class NativeTrainerBody extends Node3D:
 		engaged = value
 	func add_impulse(_direction: Vector3, _amount: float) -> void:
 		pass
+	func bind_host_combat_motion(scope: Dictionary) -> bool:
+		# This transport fixture keeps fixed geometry, as add_impulse does.
+		# Admission still validates the original in the production Director.
+		if scope == motion_scope: return false
+		motion_scope = scope.duplicate(true)
+		return true
 	func face_towards(_point: Vector3) -> void:
 		pass
 	func play_attack() -> void:
