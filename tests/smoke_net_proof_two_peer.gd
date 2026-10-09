@@ -100,12 +100,14 @@ func _run() -> void:
 			var value := arg.trim_prefix(option)
 			if cli_inputs.has(option) or value.is_empty():
 				check(false, "proof CLI inputs must be nonempty and unique")
+				_proof_out = ""
 				await _end({}, path)
 				return
 			cli_inputs[option] = value
 	if not cli_inputs.is_empty():
 		if not cli_inputs.has("--proof-scenario=") or not cli_inputs.has("--proof-out="):
 			check(false, "proof CLI requires both scenario and output")
+			_proof_out = ""
 			await _end({}, path)
 			return
 		var cli_path: String = cli_inputs["--proof-scenario="]
@@ -114,10 +116,12 @@ func _run() -> void:
 				or (not _proof_out.is_empty() and ProjectSettings.globalize_path(_proof_out) != cli_out) \
 				or not OS.get_environment("TB_NET_OUT_DIR").is_empty():
 			check(false, "proof CLI must not override environment inputs")
+			_proof_out = ""
 			await _end({}, path)
 			return
 		if DirAccess.dir_exists_absolute(cli_out):
 			check(false, "proof CLI output must be fresh")
+			_proof_out = ""
 			await _end({}, path)
 			return
 		path = cli_path
