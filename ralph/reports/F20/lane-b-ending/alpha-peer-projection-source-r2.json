@@ -16,7 +16,7 @@
   "resolution_or_paid_clock_or_payout_or_save_guards_changed": false,
   "proof_fixture_or_pose_or_wait_or_failure_guard_changed": false,
   "existing_named_command": "tests/smoke_net_water_deep_watch_chart.gd --resident-shell",
-  "original_source_review_pending": true,
+  "original_source_review_pending": false,
   "new_runtime_dispatched": false,
   "existing_logic_reuse": "37886132051@936f: 12tests115assertions0fail; no change to pure alpha rules, service or selected unit file.",
   "runtime_sole_cause_confirmed": false,
@@ -26,5 +26,9 @@
   "whole_criterion_closed": false,
   "failed_save_input_used": false,
   "new_accepted_boundary": false,
-  "native_dispatched_by_B": false
+  "native_dispatched_by_B": false,
+  "original_source_verdict": "Bacon and Hubble both **SOURCE/COMMAND BLOCK** `9566aca1392e1859bda863fed8804e1922ca068d`.\n\nClient projection remains unreachable: inherited `foundation_alpha_cycle()` returns empty on non-hosts; host-only first-spawn also returns empty, causing `continue` before the publisher.\n\nRequired correction: a client presentation path reading the validated, already-replicated active packet, while generation creation, resolution, payouts and saves remain host-only.\n\nReuse 12/115 logic PASS; no repeated selector. Prior runtime cause remains unknown. Preserve alpha-OFF hold and queued F20 run. No shipping or whole-criterion approval.",
+  "original_source_disposition": "BLOCK; inherited host-only cycle getter made first proposed publisher-only change unreachable for clients",
+  "superseding_source": "a31fd3e29cdfe9267f469dfd48bb3541107ccd84",
+  "superseding_source_and_command_approved": true
 }

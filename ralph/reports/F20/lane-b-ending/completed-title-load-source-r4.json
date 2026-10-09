@@ -14,7 +14,7 @@
   "renderer": "gl_compatibility",
   "resolution": "1280x720",
   "dispatched_timeout_minutes": 60,
-  "runtime_result_collected": false,
+  "runtime_result_collected": true,
   "new_unit_batch_required": false,
   "whole_criterion_closed": false,
   "postcredits_alpha_availability_proven": false,
@@ -22,5 +22,11 @@
   "failed_save_input_used": false,
   "accepted_earned_boundary": false,
   "earned_finale": false,
-  "native_dispatched_by_B": false
+  "native_dispatched_by_B": false,
+  "runtime_status": "PASS",
+  "runtime_checks": 56,
+  "runtime_failures": 0,
+  "runtime_exit_code": 0,
+  "runtime_original_review_pending": false,
+  "original_runtime_verdict": "Both originals return **scoped RUNTIME APPROVE**:\n\n- F20 `37893313354 @96950\u2026`: hashes/CRC verified, 56 checks/0 failures, exit 0. Actual completed-save Load, identity/inventory retention, research, bounties and Bryn admission passed.\n- Alpha `37895473032 @a31\u2026`: hashes/CRC verified, all checks passed, exit 0. Named client-body projection and durable claim passed under disclosed teleport/manual-won setup.\n\n**Whole F20#3 remains BLOCKED.** First remaining proof: actual alpha availability after loading the completed world on the reviewed ON candidate. Both identify `continuation_content()` before rematch admission as the minimal existing extension, preserving all guards without forcing generation, clock or outcome.\n\nROOT-only four-frame `--completed-fixture --capture-ending` at validated OFF `96950\u2026` is eligible as an independent visual piece. Alpha, shipping restoration and whole-row blind approval remain open."
 }

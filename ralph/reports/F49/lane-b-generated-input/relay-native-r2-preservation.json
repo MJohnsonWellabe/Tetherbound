@@ -1,0 +1,76 @@
+{
+  "source": "0e6ae707c6c0db8afd34d8159dafe64dc519ddd1",
+  "root_ops": "D:\\CodexTemp\\tetherbound-proof\\b-f02-relay-native-0e6-r1-ops",
+  "preserved_packet": "C:\\CodexTemp\\tetherbound-proof\\b-f02-relay-native-0e6-r1-preserved",
+  "blind_pixels": "C:\\CodexTemp\\tetherbound-proof\\b-relay-six-visual-r2",
+  "receipt_sha256": "933e9be85300a6d1515c3bf658f021175b88e4c28d2eb1e3f85123c284002c26",
+  "files_sha256": {
+    "characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "8065f8a30ff531326dbc87a89e2b672c04011ab46ef3165d828d15c013d6a6ca",
+    "slot_0.json": "c9ba27a41dbf1b8d00c3094cab617db623e210efcf3a78b06dc21aaae3ba2ad1",
+    "worlds/slot-0/world.json": "ad775ac3fd9c3e7203a869ff4a5e0eaf9606c9bf84ddf84b4f0f7dd588106d2f"
+  },
+  "raw_pixel_records": [
+    {
+      "index": 1,
+      "label": "relay-captain-fight",
+      "sha256": "17645fe722811adaf7c337bfd45a22e56b7514e71949429937783106360aab64",
+      "private": "C:\\CodexTemp\\tetherbound-proof\\b-f02-relay-native-0e6-r1-preserved\\pixels\\01.png",
+      "blind": "C:\\CodexTemp\\tetherbound-proof\\b-relay-six-visual-r2\\01.png"
+    },
+    {
+      "index": 2,
+      "label": "relay-sela-exchange",
+      "sha256": "9202deff3828f0c746b08347da465b2b648f73fc702684b2d6874672ddf426e2",
+      "private": "C:\\CodexTemp\\tetherbound-proof\\b-f02-relay-native-0e6-r1-preserved\\pixels\\02.png",
+      "blind": "C:\\CodexTemp\\tetherbound-proof\\b-relay-six-visual-r2\\02.png"
+    },
+    {
+      "index": 3,
+      "label": "relay-sela-rescued",
+      "sha256": "935160b2ed28ddc88a73ab4259516d47e777ed5fd2a26ed06be24eed10d5ff45",
+      "private": "C:\\CodexTemp\\tetherbound-proof\\b-f02-relay-native-0e6-r1-preserved\\pixels\\03.png",
+      "blind": "C:\\CodexTemp\\tetherbound-proof\\b-relay-six-visual-r2\\03.png"
+    },
+    {
+      "index": 4,
+      "label": "relay-console-before",
+      "sha256": "ea15d717334d621d249bc8874aeb6e7b74db64ae3938a7188f3a3f07a86e1c2f",
+      "private": "C:\\CodexTemp\\tetherbound-proof\\b-f02-relay-native-0e6-r1-preserved\\pixels\\04.png",
+      "blind": "C:\\CodexTemp\\tetherbound-proof\\b-relay-six-visual-r2\\04.png"
+    },
+    {
+      "index": 5,
+      "label": "relay-console-aftermath",
+      "sha256": "fe1e294659543f6a017e3832fae42e7d51c7d345a3fd9bc8c7cb69ac5a961248",
+      "private": "C:\\CodexTemp\\tetherbound-proof\\b-f02-relay-native-0e6-r1-preserved\\pixels\\05.png",
+      "blind": "C:\\CodexTemp\\tetherbound-proof\\b-relay-six-visual-r2\\05.png"
+    },
+    {
+      "index": 6,
+      "label": "relay-mill-far-bank",
+      "sha256": "ba991dcbcffab06512529cdbbcde419673f2d5c7af08c917436b11b12a9c095e",
+      "private": "C:\\CodexTemp\\tetherbound-proof\\b-f02-relay-native-0e6-r1-preserved\\pixels\\06.png",
+      "blind": "C:\\CodexTemp\\tetherbound-proof\\b-relay-six-visual-r2\\06.png"
+    }
+  ],
+  "native_started_by_B": false,
+  "presentation_overrides": false,
+  "pixel_bytes_modified": false,
+  "runtime_original_review_pending": false,
+  "blind_original_review_pending": false,
+  "whole_criterion_closed": false,
+  "new_accepted_boundary_claimed": false,
+  "input_mode": "generated_fixture",
+  "prior_earned_play": false,
+  "continuous_fresh_save": false,
+  "preserved_scope": "All top-level ROOT proof files, actual6PNGs, receipt and3 protected save blobs, selected producer user logs; runtime/GPU caches excluded from new copy. Original ROOT packet untouched.",
+  "initial_D_copy_incomplete": true,
+  "initial_D_partial_copy_retained": true,
+  "new_packet_on_C_for_disk_space": true,
+  "original_runtime_verdict": "Both original Bacon/Hubble APPROVE exact0e6, exit0/source6frames/receipt3save hashes/route+identity guards; generated ancestry disclosed.",
+  "original_blind_verdict": "SAME Sartre BLOCK full BarsA/B: Sela payoff and console visibility bounded passes; creature materials, washed-out trainer lighting, unfinished console treatment, flat terrain/night atmosphere remain.",
+  "original_combined_verdict": "**Alpha source:** Bacon and Hubble APPROVE `a31fd3e29cdfe9267f469dfd48bb3541107ccd84`. One fresh resident-shell proof is eligible after B\u2019s slot frees. Prior cause remains unknown; no shipping approval.\n\n**Relay runtime:** both APPROVE `0e6ae707c6c0db8afd34d8159dafe64dc519ddd1`. Exit 0; source, six frames, receipt and three save hashes verified. Route and identity guards passed; generated ancestry remains disclosed.\n\n**Sartre blind verdict: BLOCK.** Sela payoff and console visibility now have bounded passes, but creature materials, washed-out trainer lighting, unfinished console treatment and flat terrain/night atmosphere still miss Bars A/B.\n\n**Whole F02#2 remains blocked. No READY.**",
+  "required_blind_pass": false,
+  "initial_partial_home_copies_moved_to": "C:/CodexTemp/tetherbound-proof/b-relay-incomplete-cache-copy",
+  "original_root_packet_changed": false
+}
