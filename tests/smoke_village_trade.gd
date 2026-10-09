@@ -309,11 +309,15 @@ func _miras_cottage_has_an_inside_and_she_is_in_it() -> void:
 		_fail("no Village node; nothing was placed")
 		return
 	var cottage: Node3D = null
+	var shop_matches := 0
 	for child in village.get_children():
-		if str(child.name).begins_with("cottage_a"):
+		# The straight-road village has several cottage_a instances. The old
+		# prefix loop picked the last unrelated house, not Mira's authored shop.
+		if str(child.get_meta("village_role", "")) == "mira_shop":
 			cottage = child as Node3D
-	if cottage == null:
-		_fail("cottage_a was never placed")
+			shop_matches += 1
+	if cottage == null or shop_matches != 1:
+		_fail("exactly one authored mira_shop must be placed")
 		return
 	var interior := cottage.get_node_or_null(^"Interior")
 	if interior == null:
