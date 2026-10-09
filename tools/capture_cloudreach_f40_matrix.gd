@@ -10,11 +10,18 @@ var _active_weather := "clear"
 var _segment := ""
 var _full_planned_frames := 0
 var _stormward_approach_only := false
+var _cliffhold_interior_only := false
 
 
 func _run() -> void:
 	_capture_config = JSON.parse_string(FileAccess.get_file_as_string(CANDIDATE_PATH)).get("capture", {})
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--cliffhold-interior-only":
+			if _cliffhold_interior_only:
+				push_error("F40 accepts one Cliffhold interior selector")
+				quit(2)
+				return
+			_cliffhold_interior_only = true
 		if arg == "--stormward-approach-only":
 			if _stormward_approach_only:
 				push_error("F40 accepts one Stormward approach repair selector")
@@ -27,6 +34,10 @@ func _run() -> void:
 				quit(2)
 				return
 			_segment = arg.trim_prefix("--segment=")
+	if _cliffhold_interior_only and (_stormward_approach_only or not _segment.is_empty()):
+		push_error("F40 Cliffhold interior selector cannot combine with a quarter or Stormward repair")
+		quit(2)
+		return
 	seed(int(_capture_config.get("seed", 2042)))
 	await super._run()
 
@@ -126,6 +137,16 @@ func _load_plan() -> bool:
 			_failures.append("F40 Stormward repair lacks every requested clock/weather approach")
 			return false
 		_planned = repair_rows
+	if _cliffhold_interior_only:
+		var interior_rows: Array[Dictionary] = []
+		for row: Dictionary in _planned:
+			if _slug(str(row.destination_display_name)) == "cliffhold" and str(row.view) == "approach" \
+					and str(row.time) == "day" and str(row.weather) == "clear":
+				interior_rows.append(row)
+		if interior_rows.size() != 1:
+			_failures.append("F40 Cliffhold interior selection requires exactly the original approach/day/clear row")
+			return false
+		_planned = interior_rows
 	return true
 
 
@@ -136,8 +157,13 @@ func _begin_manifest() -> void:
 	_manifest["capture_plan"] = _capture_config
 	_manifest["segment"] = _segment
 	_manifest["stormward_approach_only"] = _stormward_approach_only
+	_manifest["cliffhold_interior_only"] = _cliffhold_interior_only
 	_manifest["selected_frame_ids"] = _planned.map(func(row: Dictionary) -> String: return str(row.frame_id))
-	_manifest["capture_scope"] = "Stormward approach repair only; no full-matrix claim" if _stormward_approach_only else "Original full matrix or declared clock quarter"
+	_manifest["capture_scope"] = "Original full matrix or declared clock quarter"
+	if _stormward_approach_only:
+		_manifest["capture_scope"] = "Stormward approach repair only; no full-matrix claim"
+	if _cliffhold_interior_only:
+		_manifest["capture_scope"] = "Cliffhold original approach/day/clear interior picture only; no arrival or full-matrix claim"
 	_manifest["required_segments"] = _capture_config.times
 	_manifest["full_matrix_planned_frames"] = _full_planned_frames
 	_manifest["candidate_config_sha256"] = FileAccess.get_file_as_string(CANDIDATE_PATH).sha256_text()
@@ -145,7 +171,7 @@ func _begin_manifest() -> void:
 
 
 func _finish(complete: bool) -> void:
-	_manifest["full_matrix_complete"] = _segment.is_empty() and not _stormward_approach_only and complete and _failures.is_empty() \
+	_manifest["full_matrix_complete"] = _segment.is_empty() and not _stormward_approach_only and not _cliffhold_interior_only and complete and _failures.is_empty() \
 		and _records.size() == _full_planned_frames
 	super._finish(complete)
 
