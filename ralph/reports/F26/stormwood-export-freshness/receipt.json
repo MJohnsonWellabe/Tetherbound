@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "lane": "E",
+  "source_commit": "70fb3e0b57258e074c5d9f586efa12fc6f28cd21",
+  "main_commit": "c927823d1b41e98b90d33181a07846e72dc6a27a",
+  "preserved_lane_head": "df0996836d9a715b4fd3c0bf84fbd33578ff63f8",
+  "scope": "Only Windows Desktop and Linux Test export_presets.cfg script_export_mode 2->0",
+  "feature_flag_flips": 0,
+  "all_config_changes": [
+    {
+      "preset": "Windows Desktop",
+      "old": 2,
+      "new": 0,
+      "flag": "script_export_mode"
+    },
+    {
+      "preset": "Linux Test",
+      "old": 2,
+      "new": 0,
+      "flag": "script_export_mode"
+    }
+  ],
+  "native_acceptance": "PENDING",
+  "unit_run": 37988885752,
+  "graphics_smoke_run": 37988888462,
+  "current_main_release_cases": [],
+  "whole_criterion_closures": [],
+  "older_supplement": {
+    "source": "5d481d9d45d701ec557b098fe177080bd467f84e",
+    "case": "C:\\CodexTemp\\owner-e-stormwood-medium-r1\\route.json",
+    "proof_scope": "Older main with source-retention fix and disclosed measurement instrumentation, one Medium case; no current-main proof or performance-bar closure",
+    "p99_ms": 33.341,
+    "mean_fps": 38.167
+  },
+  "official_mode_reference": "https://github.com/godotengine/godot/blob/4.7-stable/editor/export/editor_export_preset.h#L54",
+  "queued_native": "D first/E second; stable source assets required",
+  "updated_utc": "2026-10-09T20:48:51.9338112Z"
+}

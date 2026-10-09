@@ -1,0 +1,80 @@
+{
+  "reviewer": "Codex independent read-only reviewer /root/e_export_review",
+  "reviewed_utc": "2026-10-09T20:50:03.6997765Z",
+  "verdict": "APPROVE",
+  "scope": "SOURCE ONLY",
+  "repository": "D:\\tetherbound\\codex-e",
+  "base_commit": "c927823d1b41e98b90d33181a07846e72dc6a27a",
+  "source_commit": "70fb3e0b57258e074c5d9f586efa12fc6f28cd21",
+  "lane_head": "df0996836d9a715b4fd3c0bf84fbd33578ff63f8",
+  "source_and_lane_tree": "39d7f5c5213d6ee4b8e7942e3fe8fd84f0c54ac5",
+  "permission_context": {
+    "sandbox_mode": "danger-full-access",
+    "approval_policy": "never",
+    "verified_in": "C:\\CodexTemp\\replacement-lane-e-status.json and effective developer permission context"
+  },
+  "findings": [],
+  "checks": [
+    {
+      "check": "Pinned scope",
+      "result": "PASS",
+      "observed": "git diff base source changes only export_presets.cfg, two deletions and two additions. Windows Desktop preset.0 and Linux Test preset.1 each change script_export_mode=2 to 0. No changed runtime script, feature flag, renderer, draw distance, bake bytes, data, save schema, authority logic, or gameplay default."
+    },
+    {
+      "check": "Preserved lane history",
+      "result": "PASS",
+      "observed": "Source and lane head have the identical complete Git tree 39d7f5c5213d6ee4b8e7942e3fe8fd84f0c54ac5. Older candidate 5d481d9d45d701ec557b098fe177080bd467f84e is an ancestor of lane head (git merge-base --is-ancestor exit 0)."
+    },
+    {
+      "check": "Godot 4.7 enum and exporter",
+      "result": "PASS",
+      "observed": "Official versioned docs and 4.7-stable engine source specify MODE_SCRIPT_TEXT=0, MODE_SCRIPT_BINARY_TOKENS=1, MODE_SCRIPT_BINARY_TOKENS_COMPRESSED=2. EditorExportGDScript bypasses token conversion for TEXT; other modes add .gdc with remapping. Therefore 2 to 0 preserves original .gd text for direct FileAccess reads.",
+      "sources": [
+        "https://docs.godotengine.org/en/4.7/classes/class_editorexportpreset.html",
+        "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/editor/export/editor_export_preset.h",
+        "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/gdscript/register_types.cpp"
+      ]
+    },
+    {
+      "check": "Stormwood scatter source contract",
+      "result": "PASS",
+      "observed": "stormwood_scatter.gd lines 9 and 26-31 hash config files plus original stormwood_heightfield.gd, stormwood_scatter.gd, stormwood_pocket_frame.gd via FileAccess.get_file_as_string. scatter_bake.gd mix_config_source line 119 normalizes CRLF to LF; bake freshness compares the expected fingerprint and requires named region files. stormwood_world.gd line 118 supplies this source fingerprint. vegetation.gd lines 574-583 refuses missing or stale regional scatter instead of silently rebuilding. Retaining text addresses missing raw source without weakening these guards."
+    },
+    {
+      "check": "Stormwood terrain source contract",
+      "result": "PASS",
+      "observed": "build_stormwood_terrain.gd dependency_paths lines 102-104 include itself and stormwood_heightfield.gd alongside terrain/world/surface/texture config files. current_fingerprint lines 108-113 opens them via FileAccess and reads text, using empty text on missing files. canonical_hash/dependency_fingerprint lines 58-68 normalize CRLF to LF before hashing. The patch preserves required source bytes and leaves dependency definitions and stored bake fingerprints untouched."
+    },
+    {
+      "check": "Old actual PCK supplement",
+      "result": "PASS",
+      "observed": "Standalone read-only PCK parser found all four requested original .gd paths as UTF-8 text, no NULs, valid per-entry directory MD5s, and canonical-LF SHA256 equal to pinned current-main blobs. PCK format 4, engine 4.7.0, 7125 entries, 1148981236 bytes. Supplemental only: this older pack is not a release built from source70fb3e0b.",
+      "artifact": "C:\\CodexTemp\\lane-e-old-pack-source-inspection.json"
+    }
+  ],
+  "changed_config_defaults": [
+    {
+      "path": "export_presets.cfg",
+      "section": "preset.0 Windows Desktop",
+      "key": "script_export_mode",
+      "old": 2,
+      "new": 0
+    },
+    {
+      "path": "export_presets.cfg",
+      "section": "preset.1 Linux Test",
+      "key": "script_export_mode",
+      "old": 2,
+      "new": 0
+    }
+  ],
+  "feature_flag_flips": 0,
+  "material_tradeoff": "Exported scripts become readable source text. Package size and load behavior may differ from compressed token export; no performance improvement is inferred from source review.",
+  "acceptance": {
+    "current_main_native_release": "PENDING",
+    "whole_criterion_ready": false,
+    "reason": "This verdict approves source correctness and scope only. A fresh current-main release still needs pack identity and artifact hashes, actual fresh Stormwood geometry/scatter, required affected checks, and two Medium plus two High release route measurements with debug false, fresh user data, 15-second warmup, at least 60-second measurement, and no missing/stale/SCRIPT ERROR failures. Performance thresholds remain >=60 FPS and P99 <=33ms where applicable; old pack evidence cannot satisfy them."
+  },
+  "review_constraints": "No repository edits, native Godot jobs, imports, exports, cache mutation, task creation/archive, or app-thread messaging performed. Only temporary review artifacts were written; existing proof artifacts retained.",
+  "reusable_pack_inspector": "C:\\CodexTemp\\lane-e-inspect-pack-sources.py"
+}
