@@ -94,7 +94,7 @@ func test_cloudreach_world_mounts_the_dedicated_gate_presentation() -> void:
 	var parent := Node3D.new()
 	var materials: Dictionary = world.get("_materials")
 	var rows: Array = world.call("_route_ridge", parent, "Ridge000", a, b, half_width, 0,
-		materials["upland"], landmass, "arrival_gate_road", [])
+		materials["upland"], landmass, "arrival_gate_road")
 	var patches: Array[Dictionary] = [{"surface_rows": rows}]
 	world.set("_cover_patches", patches)
 	var at := Vector3(-24, 116, -159)
