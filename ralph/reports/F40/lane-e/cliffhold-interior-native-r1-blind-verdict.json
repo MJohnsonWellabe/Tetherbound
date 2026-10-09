@@ -1,0 +1,68 @@
+{
+  "reviewer": {
+    "name": "Hypatia",
+    "task": "blind_listener_f10",
+    "id": "01a11667-4631-72b2-8fed-294999b8c043",
+    "role": "Retained original independent pixels-only judge"
+  },
+  "scope": "One complete Cliffhold approach/day/clear production-camera interior picture, diagnostic-only. Supplied capture attempt failed; no acceptance or runtime promotion.",
+  "inspection": {
+    "full_original_count": 1,
+    "evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-cliffhold-interior-9a359-day-r1/cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear.png",
+    "method": "Full original opened with view_image; no crops, retouching or additional images."
+  },
+  "disposition": "DIAGNOSTIC_ONLY",
+  "pictured_appearance": "FAIL against the full visual finish bar; not a criterion/runtime verdict",
+  "findings": [
+    {
+      "subject": "Cottage identity",
+      "observation": "Dark timber framing, pale plaster walls, gridded warm windows and a central door clearly read as a cottage interior.",
+      "bounded_result": "Readable",
+      "limits": "This interior view does not establish external Cliffhold settlement/cliff identity.",
+      "evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-cliffhold-interior-9a359-day-r1/cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear.png"
+    },
+    {
+      "subject": "Central floor",
+      "observation": "A large gray rectangular stone-paver pattern is visible under and around the trainer. The pictured central floor is not grass-covered, and no grass blades or flower geometry visibly pierce this central paving.",
+      "bounded_result": "Central floor readable; no visible central foliage intrusion",
+      "limits": "No all-perimeter, underside or hidden floor claim.",
+      "evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-cliffhold-interior-9a359-day-r1/cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear.png"
+    },
+    {
+      "subject": "Floor material junction",
+      "observation": "At the door and right wall, ochre/brown mottled areas interrupt or border the gray paver surface with abrupt, broad material boundaries. They do not read as a clearly designed matching stone-floor transition. The image alone does not identify those areas as terrain, grass or a specific material source.",
+      "bounded_result": "Visible finish shortcoming",
+      "evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-cliffhold-interior-9a359-day-r1/cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear.png"
+    },
+    {
+      "subject": "Trainer feet/body contact appearance",
+      "observation": "The trainer's head, torso, arms, legs and both dark boots are fully visible. No gross body burial, wall intersection or obvious large floating gap is visible. Exact sole-to-floor contact is difficult to resolve without a clear contact shadow.",
+      "bounded_result": "No gross pictured clipping established; exact contact unassessed",
+      "limits": "No supported-stand physics, collision or movement conclusion.",
+      "evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-cliffhold-interior-9a359-day-r1/cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear.png"
+    },
+    {
+      "subject": "Architecture material/light",
+      "observation": "Timber/plaster/stone families are distinguishable, but the windows are broad nearly uniform cream-lit panels, the room is dark, and the coarse floor/wall texture presentation lacks the reference finish.",
+      "bounded_result": "Readable identity with material/light polish defects",
+      "evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-cliffhold-interior-9a359-day-r1/cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear.png"
+    },
+    {
+      "subject": "Route and framing",
+      "observation": "The central door is recognizable, but it is closed and its lowest region is partly obscured by the trainer. The tight interior camera and large right-side story/shortcut overlays leave no visible onward route or exterior approach. The near standing area around the trainer remains readable.",
+      "bounded_result": "Near area readable; onward route/doorway traversal unassessed",
+      "evidence": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-cliffhold-interior-9a359-day-r1/cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear.png"
+    }
+  ],
+  "covered_surfaces": "Central gray paver floor, partial door-foot/right-wall floor border, visible timber/plaster/window walls and trainer silhouette.",
+  "unseen_contexts": [
+    "Floor beneath the trainer, behind the camera, under walls and full perimeter.",
+    "Exterior cottage-to-ground union, external approach, opened-door threshold and route continuation.",
+    "Movement, supported stand/collision, camera transitions, landing/traversal, other clocks/weather, Medium, fight, device/performance and full matrix."
+  ],
+  "limits": [
+    "Diagnostic-only original from a terminal-failed attempt. No native/runtime/blind acceptance PASS is promoted.",
+    "No presumed floor fix, prior grade transfer, physics/source/camera/teardown cause or implementation hypothesis.",
+    "No catalogue rerating, whole row/criterion/full-bar acceptance or READY. Existing whole failures and all other witnesses remain unchanged."
+  ]
+}

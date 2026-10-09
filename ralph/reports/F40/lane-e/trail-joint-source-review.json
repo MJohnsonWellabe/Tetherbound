@@ -1,0 +1,82 @@
+{
+  "reviewer": "Original Ohm /root/review_cloud_startup",
+  "reviewed_utc": "2026-10-09T10:14:39.057014+00:00",
+  "scope": "Single endpoint-burial equation change and existing proof command applicability, no execution or visual judgment",
+  "source": "8cca04f2a5a91917652c8dc66842a38683105368",
+  "base": "44415eba766e7d2ff14ebdc3146b919178b27057",
+  "changed_path": "scripts/world/cloudreach_world.gd",
+  "base_blob": "c1b8222c2028204da2b3510701cdf29fd14e8351",
+  "source_blob": "d9a4212710c833beab7814a805f18c400028e2d0",
+  "source_sha256": "fceb574998f071875f64e9a51d1e024d6972d6f6f2e3282751c05e4e18d41d5c",
+  "diff": "5 inserted lines,1 removed line; only world.gd",
+  "source_verdict": "APPROVE",
+  "headless_selector_verdict": "APPROVE applicability only",
+  "findings": [
+    "_path_ribbon already receives bool fade_start/fade_end (both default true). The new float start/end distances are t*flat_length or (1-t)*flat_length when that end fades, otherwise the same1000m sentinel already used for original UV/UV2 distances.",
+    "smoothstep(0,2.8,min(start_distance,end_distance)) and lerpf(-0.14,+0.06,blend) are unchanged. With both flags true this is the original min(t,1-t)*length equation mathematically; no bitwise floating-point identity claim.",
+    "With both ends false the minimum is1000 and blend saturates at1: +0.06 displacement rather than endpoint-0.14. With only one false, only the opposite real true end can produce a burial blend. On a section shorter than2.8m that opposite true end can still influence the joint; no universal continuity/gap-free claim.",
+    "Displacement stays along unchanged _segment_basis(a,b).y, not necessarily world-UP on a slope. Width, wander, stations, segment mesh generation/winding, materials, alpha/shadow/depth policy, UV/UV2 and shader equations are unchanged; generated overlay vertices and their derived normals do change where burial flags formerly disagreed.",
+    "_build_routes computes fade flags before existing landing joins: true route endpoints and real bridge-cut endpoints fade, ordinary intact polyline joints do not. It already passes these flags to the UV-distance path. New burial routing closes this source inconsistency without altering route config, landing crowns, collision ribbon, registered surfaces or terrain.",
+    "House threshold, arrival/shared yard, watch and workshop wear callers omit these optional flags and retain true/true semantic behaviour. No camera, fixture, HUD, lights, input, collision, authority or durable state changes.",
+    "This source consistency finding does not establish the cause of the pictured Stormward notch, a rendered fix, terrain/collision continuity or art acceptance."
+  ],
+  "unchanged_dependency_blobs": {
+    "shaders/cloudreach_trail.gdshader": "b1ded7de9098989dbb383c52266567fe0fc84238",
+    "tools/capture_cloudreach_f40_matrix.gd": "776b5dc97ce06cd7879711a9414f0efbd2d12652",
+    "tools/capture_lookdev_catalogue.gd": "1f040c90b9fa1e60179c474bc84e2c0f000b4e51",
+    "tools/catalogue_survey.gd": "22b93633205857383aaf8fa0f021e0f9de3f59d4",
+    "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+    "tests/test_cloudreach_environment.gd": "1066e57f367a98a1773202e5d0a2f4cd44bca428",
+    "data/config/cloudreach_chapter.json": "7308787cbbfa49cc8d68f60d9445b03c7fe93b63",
+    "data/config/cloudreach_visual.json": "e066a2b7891ab521f29d701dc8a956b822b22843"
+  },
+  "headless_command": {
+    "script": "res://tests/run_tests.gd",
+    "user_args": [
+      "--only=test_cloudreach_environment.gd"
+    ],
+    "source_pin": "8cca04f2a5a91917652c8dc66842a38683105368",
+    "execution": "PENDING elsewhere; reviewer performed no engine/test run",
+    "coverage": "Existing four methods with original fixtures/guards. World parsing, terrain/winding/crown/cloud checks and existing route fade source assertions. The existing route test does not directly generate/assert new false-end overlay vertices or rendered continuity."
+  },
+  "bounded_existing_native_option": {
+    "applicability": "APPROVE existing mode applicability only; no launch or current scheduling request by reviewer",
+    "producer": "res://tools/capture_cloudreach_f40_matrix.gd",
+    "source_pin": "8cca04f2a5a91917652c8dc66842a38683105368",
+    "engine_args": [
+      "--path",
+      "<fresh clean exact pinned8cca ROOT checkout>",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_matrix.gd"
+    ],
+    "user_args": [
+      "--biome=cloudreach",
+      "--preset=High",
+      "--source-commit=8cca04f2a5a91917652c8dc66842a38683105368",
+      "--stormward-approach-only",
+      "--output=<fresh unique res:// output directory>"
+    ],
+    "scope": "Existing authored Stormward approach rows across original four clocks and clear/rain: eight selected frames from original384 plan, full_matrix_complete=false. Existing camera/stand/travel/floor/raster/persistence guards and explicit debug-travel fixtures remain. Do not combine with other selectors or invent a new stand.",
+    "limits": "This mode can depict the existing threshold approach and retain original sampling controls. It does not guarantee a particular pictured notch/crown joint is visible, establish cause or test every changed internal joint. ROOT must bind actual import/source/argv/terminal/PNGheaders/hashes/records before any runtime approval; original blind pictures separate."
+  },
+  "reuse_limits": [
+    "Accepted unchanged material/crown/route/leaf/guards remain reusable in their original scopes; no new full suite or old witness restart requested.",
+    "Overlay geometry changed at flagged joints; old pictured continuity failures remain historical until actual affected images support a new verdict.",
+    "Prior failed9a terminal remains FAILED despite saved diagnostic image; no unchanged retry or teardown-cause inference from this source change."
+  ],
+  "pending_gates": [
+    "Affected existing headless artifact verification if supplied later",
+    "ROOT exact-source native parse/import/terminal/persistence and relevant actual joint images",
+    "Original independent visual judgment; no source-only pixel PASS"
+  ],
+  "prohibited_inferences": [
+    "No wholeF40/F08/fullmatrix/HighMediumbar/READY",
+    "No earned campaign/co-op/save/device/performance or physics proof",
+    "No engine/import/GPU/tests/dispatch/source edits/new helpers performed by reviewer",
+    "No blind contact or source information sent to judge"
+  ]
+}
