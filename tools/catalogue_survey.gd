@@ -529,6 +529,9 @@ func _capture_ui_craft() -> void:
 		return
 	Input.action_press("interact")
 	await physics_frame
+	# Match the existing poll-driven capture tap: leave one callback tick
+	# between the pre-callback physics signals before releasing the action.
+	await physics_frame
 	Input.action_release("interact")
 	for _frame in POSE_FRAMES:
 		await process_frame
@@ -561,14 +564,22 @@ func _capture_ui_craft() -> void:
 			await process_frame
 		var output: Label = panel.get("_output_line")
 		var hint: Label = panel.get("_craft_hint")
+		var cost := costs[longest] as Label
 		if output == null or output.text.is_empty() or hint == null or hint.text.is_empty() or int(panel.get("_selected")) != longest \
-				or not _ui_visible_rect(output).has_area() or not _ui_visible_rect(hint).has_area():
-			_failures.append("UI craft: focused recipe preview/action hint is missing")
+				or not _ui_visible_rect(output).has_area() or not _ui_visible_rect(hint).has_area() \
+				or cost == null or cost.text.is_empty() or cost.get_visible_line_count() < 1 \
+				or cost.get_line_count() > cost.get_visible_line_count() \
+				or not _ui_visible_rect(cost).grow(0.5).encloses(cost.get_global_rect()):
+			_failures.append("UI craft: focused recipe preview/material/action hint is missing or clipped")
 		else:
 			await _shoot_ui("ui-craft-longest-known", panel, panel.get("_root"), {
 				"fixture": str(prompt.get_path()), "recipe_id": ids[longest],
 				"recipe_count": rows.size(), "selection": "longest authored known name/blurb/material string",
-				"material_text": str(costs[longest].text), "output_text": output.text, "action_hint": hint.text})
+				"material_text": cost.text, "material_rect": str(cost.get_global_rect()),
+				"material_visible_rect": str(_ui_visible_rect(cost)),
+				"material_lines": cost.get_line_count(), "material_visible_lines": cost.get_visible_line_count(),
+				"material_clip_text": cost.clip_text, "material_overrun": cost.text_overrun_behavior,
+				"output_text": output.text, "action_hint": hint.text})
 	panel.call("close")
 
 
@@ -757,10 +768,17 @@ func _write_manifest() -> void:
 	_manifest["failures"] = _failures
 	var file := FileAccess.open("%s/manifest.json" % _output_dir, FileAccess.WRITE)
 	if file == null:
-		push_error("catalogue survey: could not write manifest")
+		_failures.append("could not write manifest")
 		return
-	file.store_string(JSON.stringify(_manifest, "\t") + "\n")
+	var intended := JSON.stringify(_manifest, "\t") + "\n"
+	file.store_string(intended)
+	file.flush()
+	if file.get_error() != OK:
+		_failures.append("manifest write/flush failed")
 	file.close()
+	if not _ui_contexts.is_empty() \
+			and FileAccess.get_file_as_bytes("%s/manifest.json" % _output_dir) != intended.to_utf8_buffer():
+		_failures.append("persisted UI manifest differs from the exact intended receipt")
 
 
 func _finish(complete: bool) -> void:
@@ -769,6 +787,9 @@ func _finish(complete: bool) -> void:
 	_manifest["captured_frame_count"] = _records.size()
 	_manifest["planned_frame_count"] = _planned.size()
 	_write_manifest()
+	# A framebuffer cannot be accepted without its final durable receipt.
+	complete = complete and _failures.is_empty()
+	_manifest["complete"] = complete
 	if not complete:
 		for failure: String in _failures:
 			push_error("catalogue survey: %s" % failure)
