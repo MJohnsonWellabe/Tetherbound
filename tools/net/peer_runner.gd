@@ -2678,11 +2678,25 @@ func _await_owner_passive_caught_up(budget_frames: int = 600) -> bool:
 	var passive: Variant = (session as Node).get("_owner_passive")
 	if passive == null:
 		return true
+	# Freeze the existing prefix, not a permanently empty live recorder. Care
+	# inputs continue during this wait, so requiring an empty queue can fail
+	# even when the original pose has already reached the host. Give discovery
+	# its ordinary tick first, then wait for every input at that boundary.
+	for frame in mini(45, budget_frames):
+		await physics_frame
+	var initial: Dictionary = passive.get("local")
+	var boundary := 0
+	for input: Dictionary in initial.get("inputs", []):
+		boundary = maxi(boundary, int(input.get("sequence", 0)))
 	for frame in budget_frames:
 		var local: Dictionary = passive.get("local")
 		if not str(local.get("error", "")).is_empty(): return false
-		if frame >= 45 and (local.is_empty() or (local.get("inputs", []) as Array).is_empty()):
-			return true
+		var old_pending := false
+		for input: Dictionary in local.get("inputs", []):
+			if int(input.get("sequence", 0)) <= boundary:
+				old_pending = true
+				break
+		if not old_pending: return true
 		await physics_frame
 	return false
 

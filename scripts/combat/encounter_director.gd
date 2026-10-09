@@ -9229,6 +9229,11 @@ func _canonical_wild_start_state(wild: Node3D) -> Dictionary:
 	var disabled := {"enabled": false, "ready": false}
 	if (MATH.config().get("actor_vitals", {}) as Dictionary).get("runtime_enabled") != true:
 		return disabled
+	# A guest's unreplicated local wild has no host-owned runtime to convert.
+	# Keep that existing fight path; host/shared wilds still require canonical
+	# ownership and the prepared writers below, with no refused-host fallback.
+	if _session != null and _session.call("is_active") == true and _session.call("is_host") != true:
+		return disabled
 	var essence: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/essence.json")) \
 		if FileAccess.file_exists("res://data/config/essence.json") else null
 	if not essence is Dictionary or essence.get("wild_victory_runtime_enabled") != true:
