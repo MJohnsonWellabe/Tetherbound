@@ -101,10 +101,19 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 					return {"verdict": "FAIL", "detail": "Declared owned level-55 input is not the active companion"}
 				var deployed := await _step_deploy_creature({})
 				if deployed.get("verdict") != "PASS": return deployed
-				var engaged := await _step_engage_wild({"foundation_alpha_site": TIDECOIL_ID})
+				# A client's resident body is not a host encounter. Join the exact
+				# already-announced record through the unchanged admission helper.
+				var host_encounter_id := str(msg.get("args", {}).get("host_encounter_id", ""))
+				var engaged: Dictionary
+				if host_encounter_id.is_empty():
+					engaged = await _step_engage_wild({"foundation_alpha_site": TIDECOIL_ID})
+				else:
+					engaged = await _step_join_encounter({"encounter_id": host_encounter_id})
 				if engaged.get("verdict") != "PASS": return engaged
 				var manager := _combat_manager()
 				var encounter_id := str(manager.call("encounter_id"))
+				if not host_encounter_id.is_empty() and encounter_id != host_encounter_id:
+					return {"verdict": "FAIL", "detail": "Client did not bind the exact announced Alpha encounter"}
 				var owner = game.local
 				var host_world = game.world
 				var session = game.session
@@ -213,5 +222,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 		"saved_cycle": disk.get("redesign_world", {}).get("alpha_cycles", {}).get("sites", {}).get(TIDECOIL_ID, {}),
 		"saved_retained": rules.retained_spawn(disk.get("redesign_world", {}), TIDECOIL_ID),
 		"victory_source": source.duplicate(true),
+		"canonical_actor_ready": world != null and game.is_host() and world.get_node("EncounterDirector").call("_owns_canonical_wild",
+			str(msg.get("args", {}).get("encounter_id", ""))) == true,
 		"accepted_kill": source.get("accepted", {}).get("delta", {}).get("killed") == true,
 		"enemy_fainted": source.get("enemy_record", {}).get("fainted") == true}

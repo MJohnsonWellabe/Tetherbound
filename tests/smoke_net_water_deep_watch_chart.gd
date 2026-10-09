@@ -71,7 +71,27 @@ func _run() -> void:
 		quit(await finish())
 		return
 	check(not bool((host_state as Dictionary).get("resolved", true)) and int((host_state as Dictionary).get("receipts", -1)) == 0, "Host world: unresolved and unclaimed before resolution")
-	var resolved: Dictionary = await step(resolver, "deep_watch_resolve", {"accepted_alpha_cycle": true}, 1200)
+	var resolution_args := {"accepted_alpha_cycle": true}
+	if resolver == 1:
+		check((await step(0, "deep_watch_visit_alpha")).get("verdict") == "PASS", "Host approaches the actual retained Alpha")
+		check((await step(0, "deploy_creature")).get("verdict") == "PASS", "Host deploys its admitted owned creature")
+		check((await step(0, "engage_wild", {"foundation_alpha_site": "water_deep_watch_tidecoil"})).get("verdict") == "PASS",
+			"Host opens the actual Alpha record without a client-local substitute")
+		var opened: Variant = await probe(0, "encounter")
+		if _stopped(opened, "host Alpha encounter"):
+			quit(await finish())
+			return
+		resolution_args["host_encounter_id"] = str((opened as Dictionary).get("id", ""))
+		var canonical: Variant = await probe(0, "deep_watch", {"encounter_id": resolution_args.host_encounter_id})
+		if _stopped(canonical, "canonical actor prerequisite"):
+			quit(await finish())
+			return
+		check(not resolution_args.host_encounter_id.is_empty() and canonical.get("canonical_actor_ready") == true,
+			"Legitimately integrated canonical actor source is required; legacy records cannot supply accepted Alpha defeat")
+		if not failures.is_empty():
+			quit(await finish())
+			return
+	var resolved: Dictionary = await step(resolver, "deep_watch_resolve", resolution_args, 1200)
 	check(resolved.get("verdict") == "PASS", "Resolver records Tidecoil locally: " + str(resolved.get("detail", "")))
 	var carried: Dictionary = await step(observer, "wait_flag", {"flag": "water_named_deep_watch_tidecoil_resolved", "scope": "world", "budget_frames": 600}, 1200)
 	check(carried.get("verdict") == "PASS", "Resolution reaches the other peer's world store: " + str(carried.get("detail", "")))
