@@ -180,7 +180,7 @@ func load_recipes() -> bool:
 static func hall_doorway_recipe(source: Dictionary, cfg: Dictionary, args: PackedStringArray, capture_scope: bool) -> Dictionary:
 	if (capture_scope and args.has("--hall-doorway-baseline")) or not (bool(cfg.get("enabled", false)) or (
 			capture_scope and args.has("--hall-doorway-candidate") and
-			args.has("--hall-stills-only") and args.has("--hall-relic-hang-witness"))):
+			args.has("--hall-stills-only"))):
 		return source
 	var result := source.duplicate(true)
 	var ceiling := 0.0
