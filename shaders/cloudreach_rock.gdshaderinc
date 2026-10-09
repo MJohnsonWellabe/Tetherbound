@@ -4,6 +4,9 @@ uniform sampler2D rock_normal : hint_normal, filter_linear_mipmap_anisotropic, r
 uniform vec3 stone_light : source_color = vec3(0.63, 0.53, 0.40);
 uniform vec3 stone_dark : source_color = vec3(0.32, 0.30, 0.24);
 uniform float texture_scale = 0.055;
+// Per-material controls; defaults preserve the existing cliff/crown response.
+uniform float rock_texture_chroma : hint_range(0.0, 1.0) = 1.0;
+uniform float rock_normal_strength : hint_range(0.0, 1.0) = 0.38;
 // CLOUDREACH-LOOK-0906: the owner's playtest read the cliff mass as "an
 // undifferentiated grey blob". These four groups give it readable geology
 // without a new texture: horizontal sedimentary banding by world Y, a
@@ -48,6 +51,7 @@ void cloudreach_rock(vec3 world_position, vec3 world_normal, float rock_footprin
 	vec3 tex = texture(rock_texture, world_position.zy * albedo_scale).rgb * weight.x;
 	tex += texture(rock_texture, world_position.xz * albedo_scale).rgb * weight.y;
 	tex += texture(rock_texture, world_position.xy * albedo_scale).rgb * weight.z;
+	tex = mix(vec3(dot(tex, vec3(0.2126, 0.7152, 0.0722))), tex, rock_texture_chroma);
 	float bend = noise3(world_position * 0.027) * 8.0;
 	float macro=clamp(noise3(world_position*0.016)*0.5+0.5,0.0,1.0);
 	float face=abs(sin(world_position.x*0.019-world_position.z*0.024+bend*0.04));
@@ -144,7 +148,7 @@ void cloudreach_rock(vec3 world_position, vec3 world_normal, float rock_footprin
 	vec3 detail=vec3(nx.z*sign(world_normal.x),nx.y,nx.x)*weight.x;
 	detail+=vec3(ny.x,ny.z*sign(world_normal.y),ny.y)*weight.y;
 	detail+=vec3(nz.x,nz.y,nz.z*sign(world_normal.z))*weight.z;
-	detail_normal=normalize(mix(world_normal,detail,0.38));
+	detail_normal=normalize(mix(world_normal,detail,rock_normal_strength));
 	if (candidate > 0.0) {
 		// Tangential perturbation preserves each authored face's hemisphere.
 		// A sampled normal must not turn a cliff into a lit horizontal shelf.

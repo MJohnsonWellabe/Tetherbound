@@ -4299,6 +4299,14 @@ func _build_high_perches(root: Node3D) -> void:
 	# arrival, landing and vista axes stay open; heights are unchanged.
 	var perch_cfg := _read_json(HIGH_PERCHES_VISUAL_PATH)
 	var feet := perch_cfg.get("needle_feet", []) as Array
+	# The narrow shafts need close stone grain instead of the realm cliff's
+	# 18 m albedo repeat. Keep the installed rock maps and authored granite
+	# palette, with local texture hue/relief controls; shared geology is untouched.
+	var needle_material := _materials["cliff"].duplicate() as ShaderMaterial
+	var needle_surface: Dictionary = perch_cfg.get("needle_surface", {})
+	for key: String in ["texture_scale", "normal_scale", "rock_texture_chroma", "rock_normal_strength"]:
+		if needle_surface.has(key):
+			needle_material.set_shader_parameter(key, float(needle_surface[key]))
 	for i in 6:
 		var height := 16.0 + float(posmod(i * 7, 5)) * 5.0
 		var radius := 1.8 + float(i % 2)
@@ -4317,7 +4325,7 @@ func _build_high_perches(root: Node3D) -> void:
 		# pale stratified cliff geology rather than the brown masonry tint that
 		# read as brick chimneys/silos beside the grey-green crags.
 		var needle := _cylinder(root, "RoostNeedle%d" % i,
-			foot + Vector3.UP * height * 0.5, radius, height, _materials["cliff"])
+			foot + Vector3.UP * height * 0.5, radius, height, needle_material)
 		# Few, uneven facets read as a weathered basalt stack, not a turned flue.
 		(needle.mesh as CylinderMesh).radial_segments = 7 + i % 3
 		needle.rotation.y = angle * 1.7

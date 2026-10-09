@@ -2,6 +2,14 @@
   "schema_version": 1,
   "landmark_id": "high_roost_perches",
   "compass_surface_lift_m": 0.03,
+  "needle_surface": {
+    "scope": "cloudreach_client_presentation",
+    "_comment": "Only the six natural RoostNeedle shafts: reuse Rock030 with 2.78m grain instead of the cliff's 18.18m albedo repeat; the inherited grey-green granite palette owns hue, with restrained close normal relief. Original geometry, masonry collars, keeper fittings and shared cliff materials remain unchanged. Pending original native appearance verdict.",
+    "texture_scale": 0.36,
+    "normal_scale": 0.36,
+    "rock_texture_chroma": 0.0,
+    "rock_normal_strength": 0.18
+  },
   "master_sign_text": {
     "scope": "cloudreach_client_presentation",
     "font_size": 96,
