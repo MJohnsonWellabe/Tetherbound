@@ -1,9 +1,9 @@
 extends "res://tests/helpers/net_harness.gd"
 
+# peers: 2
+
 const ORIGINAL_STARTER_FIXTURE := preload("res://tests/helpers/net_original_starter_fixture.gd")
 const OWNER_POSE_PREFIX := preload("res://tests/helpers/net_owner_pose_prefix.gd")
-
-# peers: 2
 
 ## Stage B row 8. **§17 ITEM 8: A BOSS ENCOUNTER TOGETHER.**
 ##
