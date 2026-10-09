@@ -89,15 +89,24 @@ func _run() -> void:
 		return
 	var encounter_id := str(resolved.get("data", {}).get("encounter_id", ""))
 	var waiting: Dictionary = {}
+	var cycle_sample: Variant
 	for poll in 20:
-		waiting = await probe(0, "deep_watch", {"encounter_id": encounter_id})
+		cycle_sample = await probe(0, "deep_watch", {"encounter_id": encounter_id})
+		if _stopped(cycle_sample, "accepted waiting cycle"):
+			quit(await finish())
+			return
+		waiting = cycle_sample as Dictionary
 		if waiting.get("cycle", {}).get("status") == "waiting" and waiting.get("saved_cycle") == waiting.get("cycle"): break
 		await step(0, "wait", {"frames": 30})
 	check(not encounter_id.is_empty() and waiting.get("accepted_kill") == true and waiting.get("enemy_fainted") == true,
 		"Original host source proves genuine accepted killing strike and faint")
 	check(waiting.get("cycle", {}).get("status") == "waiting" and waiting.get("cycle", {}).get("generation") == 1 \
 		and waiting.get("saved_cycle") == waiting.get("cycle"), "Production generation-1 resolution is saved before any later save action")
-	var client_waiting: Dictionary = await probe(1, "deep_watch")
+	cycle_sample = await probe(1, "deep_watch")
+	if _stopped(cycle_sample, "client waiting cycle"):
+		quit(await finish())
+		return
+	var client_waiting: Dictionary = cycle_sample as Dictionary
 	check(client_waiting.get("cycle", {}).get("status") == "waiting", "Client observes accepted waiting cycle before departure")
 	if not failures.is_empty():
 		quit(await finish())
@@ -109,7 +118,11 @@ func _run() -> void:
 		check((await step(peer, "deep_watch_depart_alpha")).get("verdict") == "PASS", "Peer reaches authored different region")
 	var departed: Dictionary = {}
 	for poll in 20:
-		departed = await probe(0, "deep_watch")
+		cycle_sample = await probe(0, "deep_watch")
+		if _stopped(cycle_sample, "accepted departure census"):
+			quit(await finish())
+			return
+		departed = cycle_sample as Dictionary
 		var row: Dictionary = departed.get("cycle", {})
 		if not row.get("required_departures", []).is_empty() and row.get("departed") == row.get("required_departures"): break
 		await step(0, "wait", {"frames": 30})
@@ -128,9 +141,16 @@ func _run() -> void:
 		await step(1, "wait", {"frames": 120})
 		var clock_host: Variant = await probe(0, "day")
 		var clock_client: Variant = await probe(1, "day")
+		if not _fatal_reason.is_empty():
+			quit(await finish())
+			return
 		check(int(clock_host) == initial_day + night + 1 and int(clock_client) == int(clock_host), "One actual host day transition reaches both peers")
 		if night + 1 < respawn_days:
-			var early: Dictionary = await probe(0, "deep_watch")
+			cycle_sample = await probe(0, "deep_watch")
+			if _stopped(cycle_sample, "pre-eligible cycle"):
+				quit(await finish())
+				return
+			var early: Dictionary = cycle_sample as Dictionary
 			check(early.get("cycle", {}).get("status") == "waiting" and early.get("cycle", {}).get("generation") == 1,
 				"Alpha cannot respawn before its configured day")
 		if not failures.is_empty():
@@ -138,7 +158,11 @@ func _run() -> void:
 			return
 	var born: Dictionary = {}
 	for poll in 20:
-		born = await probe(0, "deep_watch")
+		cycle_sample = await probe(0, "deep_watch")
+		if _stopped(cycle_sample, "saved fresh generation"):
+			quit(await finish())
+			return
+		born = cycle_sample as Dictionary
 		if born.get("cycle", {}).get("generation") == 2 and born.get("saved_retained") == born.get("retained") \
 				and not born.get("retained", {}).is_empty(): break
 		await step(0, "wait", {"frames": 30})
@@ -155,7 +179,11 @@ func _run() -> void:
 		check((await step(peer, "deep_watch_visit_alpha")).get("verdict") == "PASS", "Return to original Alpha activation radius")
 		var published: Dictionary = {}
 		for poll in 20:
-			published = await probe(peer, "deep_watch")
+			cycle_sample = await probe(peer, "deep_watch")
+			if _stopped(cycle_sample, "published fresh generation"):
+				quit(await finish())
+				return
+			published = cycle_sample as Dictionary
 			if published.get("bodies", []).size() == 1 and published.bodies[0].get("generation") == 2: break
 			await step(peer, "wait", {"frames": 30})
 		check(published.get("retained") == retained and published.get("bodies", []).size() == 1 \
@@ -163,12 +191,20 @@ func _run() -> void:
 			and published.bodies[0].get("rolled_traits") == retained.get("rolled_traits"),
 			"Host/client publish exactly the original saved generation-2 packet after waiting")
 	check((await step(0, "save_reload_here")).get("verdict") == "PASS", "Ordinary host save/reload retains accepted world")
-	var reloaded: Dictionary = await probe(0, "deep_watch")
+	cycle_sample = await probe(0, "deep_watch")
+	if _stopped(cycle_sample, "host reload generation"):
+		quit(await finish())
+		return
+	var reloaded: Dictionary = cycle_sample as Dictionary
 	check(reloaded.get("retained") == retained and reloaded.get("saved_retained") == retained, "Host reload does not reroll the fresh generation")
 	check((await step(1, "leave")).get("verdict") == "PASS", "Client ordinary leave")
 	check((await step(1, "join", {"host": "127.0.0.1", "port": (session as Dictionary).get("enet_port", 0)})).get("verdict") == "PASS", "Client ordinary rejoin")
 	check((await step(1, "deep_watch_visit_alpha")).get("verdict") == "PASS", "Rejoined client returns to retained Alpha")
-	var rejoined: Dictionary = await probe(1, "deep_watch")
+	cycle_sample = await probe(1, "deep_watch")
+	if _stopped(cycle_sample, "client rejoin generation"):
+		quit(await finish())
+		return
+	var rejoined: Dictionary = cycle_sample as Dictionary
 	check(rejoined.get("character_id") == client_state.get("character_id") and rejoined.get("retained") == retained \
 		and rejoined.get("bodies", []).size() == 1 and rejoined.bodies[0].get("packet") == retained,
 		"Same-character rejoin retains generation-2 body and exact saved traits without reroll")
