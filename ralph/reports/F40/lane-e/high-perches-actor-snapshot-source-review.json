@@ -1,0 +1,157 @@
+{
+  "reviewer": "Original Ohm /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "review_type": "Bounded independent source and command applicability; no execution or pixel judgment",
+  "recorded_utc": "2026-10-09T09:08:33.812819+00:00",
+  "source_verdict": "APPROVE",
+  "static_command_verdict": "APPROVE",
+  "native_command_verdict": "APPROVE",
+  "source_binding": {
+    "base": "f9c5ab2e2af37fbbc68974711078e520e78a023c",
+    "actor_snapshot_commit": "1641223e610c7be8fb758f0f50ae8288ecc7baa0",
+    "final_pocket_snapshot_commit": "3486b555d80f39a26daabb39b937c96730e4f1bc",
+    "file": "tools/capture_cloudreach_frame_matrix.gd",
+    "base_blob": "ccb98816fa7b84258337fd535b4d9a6f6781c6ac",
+    "actor_snapshot_blob": "971659c1285b51c0762d1776d3baf681d75f0b28",
+    "final_blob": "2e6a155e8a2203099d60fa253a6d5157b1babd31",
+    "final_source_sha256": "807d7988eab91f59377ff7e58adafa3d14ada4e4cc7cb1f3aebbc8002dda18c7",
+    "original_delta": "95 insertions, 1 deletion",
+    "final_delta": "17 insertions, no deletions",
+    "production_delta_only": "tools/capture_cloudreach_frame_matrix.gd"
+  },
+  "findings": [
+    "Snapshot is restricted to original rows 19 and 20. It runs after the existing frame_post_draw and immediately before synchronous LANE.save_frame, without a new await, tick, placement, pose, camera, formation_target, _validated_station or validator call.",
+    "Enumeration is limited to mounted CreatureBody-derived CharacterBody3D nodes in this world within 50 metres of the current camera. A 33rd nearby eligible actor produces an incomplete status and nonzero exit rather than silently truncating an accepted snapshot.",
+    "Directly matched EncounterDirector.ally_body alone receives director_current_ally role. ally_instance is a read-only existing RefCounted getter; other instance UIDs are marked as actual body.instance without ownership inference. owner_peer_id is separately nullable; stable character UID and unknown roles stay unavailable.",
+    "Body and Model transforms and is_visible_in_tree are recorded without mutation. Visibility does not establish pixel contribution, occlusion or the identity of an insect in a previous image.",
+    "Follower cache properties have the actual declared Vector3/integer types. The snapshot reads requested and validated offsets, validation leader and tick age. Current leader plus cached offset is labelled resolved_now, not a new validated station. Nonfinite values are encoded as explicit status plus null coordinates.",
+    "Final 17-line extension reads the existing mounted AuthoredRouteDetails/HighPerchesEdgeNature child only. It records current admitted child count, each Node3D placement transform, and a sole Node3D model root when present; missing pocket or model is explicit. It performs no grounding ray or placement and does not require or presume all 15 authored items were admitted.",
+    "Every successful target PNG receives its own image_path-associated exact JSON manifest line. Final flush/readback checks every whole snapshot line using split/newline membership. Missing world/camera or actor-cap failure additionally makes exit nonzero even in legacy mode; original named-preset skip and persistence guards remain.",
+    "No original row, stand, camera, time, fixture, party, geometry, visibility, PNG writer, selector or graphics bootstrap was changed. The final command binds the single combined shaft/edge/snapshot candidate; intermediate native commands are not requested by this review."
+  ],
+  "read_only_api_seams": {
+    "EncounterDirector.ally_instance": "returns _ally without mutation",
+    "WildCreature.instance": "RefCounted",
+    "FollowerCreature._station_offset": "Vector3",
+    "FollowerCreature._station_requested": "Vector3 (can be INF)",
+    "FollowerCreature._station_leader": "Vector3 (can be INF)",
+    "FollowerCreature._station_checked_frame": "int",
+    "LANE.save_frame": "synchronously reads current root viewport image and saves PNG; no await"
+  },
+  "unchanged_dependency_blobs": {
+    "scripts/world/cloudreach_world.gd": {
+      "accepted_f9c5_blob": "c1b8222c2028204da2b3510701cdf29fd14e8351",
+      "final_3486_blob": "c1b8222c2028204da2b3510701cdf29fd14e8351",
+      "unchanged": true
+    },
+    "data/config/cloudreach_visual.json": {
+      "accepted_f9c5_blob": "4c056bc19b749b725bb9337908260c7523d8f160",
+      "final_3486_blob": "4c056bc19b749b725bb9337908260c7523d8f160",
+      "unchanged": true
+    },
+    "data/config/cloudreach_high_perches_visual.json": {
+      "accepted_f9c5_blob": "c99b9207210477e07ec18722712f9f9d7f2b9a39",
+      "final_3486_blob": "c99b9207210477e07ec18722712f9f9d7f2b9a39",
+      "unchanged": true
+    },
+    "shaders/cloudreach_rock.gdshaderinc": {
+      "accepted_f9c5_blob": "0a94d8d477130454469c65b1829328444a17b774",
+      "final_3486_blob": "0a94d8d477130454469c65b1829328444a17b774",
+      "unchanged": true
+    },
+    "tools/capture_cloudreach_lane_common.gd": {
+      "accepted_f9c5_blob": "f2e553be8920586cde1179c37fdef674f93784e9",
+      "final_3486_blob": "f2e553be8920586cde1179c37fdef674f93784e9",
+      "unchanged": true
+    },
+    "tools/lookdev_capture_bootstrap.gd": {
+      "accepted_f9c5_blob": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+      "final_3486_blob": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+      "unchanged": true
+    },
+    "scripts/creatures/creature_body.gd": {
+      "accepted_f9c5_blob": "86291c35781e7385ffd8ea2da4fe883aa3c83aef",
+      "final_3486_blob": "86291c35781e7385ffd8ea2da4fe883aa3c83aef",
+      "unchanged": true
+    },
+    "scripts/creatures/follower_creature.gd": {
+      "accepted_f9c5_blob": "bb95ae59051ab8f470b9b47950759743d3c8c1f6",
+      "final_3486_blob": "bb95ae59051ab8f470b9b47950759743d3c8c1f6",
+      "unchanged": true
+    },
+    "scripts/creatures/wild_creature.gd": {
+      "accepted_f9c5_blob": "faf7bd410b02effeb145276acfcb15c91d5148da",
+      "final_3486_blob": "faf7bd410b02effeb145276acfcb15c91d5148da",
+      "unchanged": true
+    },
+    "scripts/combat/encounter_director.gd": {
+      "accepted_f9c5_blob": "fb1b688b7b07e0e5b3938f60e9a58f60a15ec8bc",
+      "final_3486_blob": "fb1b688b7b07e0e5b3938f60e9a58f60a15ec8bc",
+      "unchanged": true
+    },
+    "tests/test_cloudreach_high_perches_presentation.gd": {
+      "accepted_f9c5_blob": "3a54f8d2133803387cd82ff8886115b82f835f29",
+      "final_3486_blob": "3a54f8d2133803387cd82ff8886115b82f835f29",
+      "unchanged": true
+    },
+    "tests/test_cloudreach_environment.gd": {
+      "accepted_f9c5_blob": "1066e57f367a98a1773202e5d0a2f4cd44bca428",
+      "final_3486_blob": "1066e57f367a98a1773202e5d0a2f4cd44bca428",
+      "unchanged": true
+    }
+  },
+  "commands": {
+    "static": {
+      "argv": [
+        "--headless",
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--script",
+        "res://tools/capture_cloudreach_frame_matrix.gd",
+        "--check-only"
+      ],
+      "source_pin": "3486b555d80f39a26daabb39b937c96730e4f1bc",
+      "execution": "PENDING ROOT ONLY",
+      "scope": "Existing script --check-only parse/dependency validation; no World or native image proof"
+    },
+    "native": {
+      "argv": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/capture_cloudreach_frame_matrix.gd",
+        "--",
+        "--only=19,20",
+        "--preset=High",
+        "--source-commit=3486b555d80f39a26daabb39b937c96730e4f1bc",
+        "--output=res://.tmp/e-high-perches-3486-day-r1"
+      ],
+      "source_pin": "3486b555d80f39a26daabb39b937c96730e4f1bc",
+      "execution": "PENDING ROOT ONLY",
+      "scope": "Original row 19 perch landing and row 20 perch vista, default day, High Forward+ 1920x1080, original production CameraRig/physical-floor/debug travel and legal five-creature capture fixtures",
+      "expected": "Two original PNGs, original image/pose records, graphics metadata, one exact actor snapshot line per successful image, final persisted receipt and successful terminal; not a 96-row or 384-row proof"
+    }
+  },
+  "reuse": {
+    "shaft_source_and_existing_9_tests_129_assertions": "Accepted unchanged source/test-path evidence retained; no rerun requested",
+    "edge_nature_source": "Accepted f9c5 config and original mesh_root grounding path remain unchanged; no guarantee of complete admission",
+    "compass_401_lift": "Accepted source/runtime evidence retained; this snapshot does not reopen or replace its appearance verdict",
+    "no_added_logic_batch": "Read-only producer extension needs actual ROOT static/import and native persistence/snapshot proof, not an unchanged gameplay test rerun"
+  },
+  "required_runtime_gates": [
+    "ROOT must bind clean exact 3486 source/index, fresh import/user/output, actual static and native argv, renderer/raster, terminal logs, raw PNG headers/hashes and original guards.",
+    "Verify each persisted actor snapshot belongs to its same successful image shutter using actual frame/tick/camera/body records; source inspection alone cannot establish runtime shutter identity.",
+    "Compare actual mounted pocket children/model roots with authored config after the run. Missing or omitted items must remain explicit; no source or absence-of-warning inference of 15 admissions or no floating plants.",
+    "Original independent pixel judgment remains required for combined shaft/edge appearance. Static/body visibility/cache records do not establish spacing, rooting/contact, walkability, all-contour geometry, motion or a full visual bar."
+  ],
+  "limits": [
+    "SOURCE/COMMAND approval is not parser, import, runtime, native-image or appearance PASS.",
+    "No engine/import/test/GPU or dispatch was performed by this reviewer.",
+    "No earned route, ownership from runtime UID, device/default-renderer, campaign/co-op/save/performance or whole F40/F08 criterion inference.",
+    "Original failed appearance/whole matrix and failed native packets remain historical; no READY or blind contact."
+  ],
+  "pending": "ROOT static and combined two-row native proof; independent visual judgment"
+}
