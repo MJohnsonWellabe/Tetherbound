@@ -26,12 +26,17 @@
   "engine_script_errors": 0,
   "dispatched_args": "--initialized --only=test_f44_repeatables.gd",
   "initialized_printed_in_artifact": false,
-  "original_logic_review_pending": true,
-  "named_site_network_source": "88846d7ea2887863a4d5e092c0e040f8f6fab376",
-  "named_site_network_review_pending": true,
+  "original_logic_review_pending": false,
+  "named_site_network_source": "14cf31d6c57194986b3927bcf0b3f9f85fc87c82",
+  "named_site_network_review_pending": false,
   "named_site_runtime_pass": false,
   "postcredits_alpha_availability_proven": false,
   "blind_pass": false,
   "whole_criterion_closed": false,
-  "failed_save_input_used": false
+  "failed_save_input_used": false,
+  "original_logic_verdict": "Both originals **LOGIC APPROVE** `37886132051 @936f751\u2026`: hash/CRC verified, 12 tests/115 assertions, exit 0, zero errors. `--initialized` remains dispatch-reported. Scope is detached logic only.\n\nFor `88846d7\u2026`, verdicts differ:\n\n- **Hubble BLOCK:** generation assertion precedes the resolver\u2019s residency wait; client remains ~228 m away versus 100 m activation range. Move the assertion after that wait, before the unchanged won-handler.\n- **Bacon APPROVE:** resident-shell command eligible once B\u2019s slot is free, resolver unset or `client`.\n\n**Current cut lacks joint command approval.** Manual-won-handler coverage cannot prove played victory, accepted alpha resolution, generation-2 respawn/cooldown or post-credits availability. Shipping flip and whole F20#3 remain open.",
+  "original_named_source_and_command_verdict": "Hubble and Bacon both **SOURCE/COMMAND APPROVE** `14cf31d6c57194986b3927bcf0b3f9f85fc87c82`.\n\nSampling now follows the unchanged residency wait and precedes the won-handler fixture. Detached values and original guards remain intact.\n\nOnce B\u2019s slot is free, one fresh, headless run is eligible:\n\n```text\ntests/smoke_net_water_deep_watch_chart.gd --resident-shell\n```\n\nUse exact source and default/client resolver; reuse 12/115 logic PASS. Runtime remains unproved. Manual resolution does not prove played victory, accepted alpha resolution, respawn cooldown or post-credits availability. Shipping alpha stays OFF; F20#3 remains OPEN.",
+  "named_site_command": "tests/smoke_net_water_deep_watch_chart.gd --resident-shell",
+  "named_site_dispatched": false,
+  "named_scope": "Existing two-process named Deep Watch client residency/once-cache/claim proof; original poses and manual won-handler disclosed. Not played victory, accepted alpha resolution, generation2 or paid cooldown elapsed/postcredits availability."
 }
