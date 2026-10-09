@@ -660,10 +660,20 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var director: Node = _encounter_director()
 			var target: Node3D = director.get("_engaged_with") if session.is_host() else director.get("_shared_opponent_proxy")
 			if target == null: target = director.get("_legacy_mirror")
-			var body: Node3D = director.ally_body()
+			# Command authority resolves deployed_body_for and the shared runtime,
+			# rather than the director's exploration/presentation body references.
+			var body: Node3D = director.deployed_body_for(session.local_peer_id())
+			if session.is_host():
+				var runtime: Node = director.call("_shared_host_fight", manager.encounter_id())
+				if is_instance_valid(runtime): target = runtime.call("body")
 			if not is_instance_valid(target) or not is_instance_valid(body):
 				return {"verdict":"FAIL", "detail":"Snare actual target or owned body missing"}
 			if session.is_host():
+				var actor: RefCounted = body.get("instance")
+				var foe: RefCounted = target.get("instance")
+				if actor == null or manager.active_creature() == null or foe == null \
+					or str(actor.uid) != str(manager.active_creature().uid) or str(foe.uid) != str(manager.enemy().uid):
+					return {"verdict":"FAIL", "detail":"Snare authoritative bodies differ from the same actual encounter UIDs"}
 				# The same disclosed host-local proximity fixture used for earned
 				# hits must be current at the real command: the live wild moves
 				# during hit settlement and the coordinator's intervening probes.
@@ -677,6 +687,13 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			for child: Node in manager.get_children():
 				if child.get_script() == preload("res://scripts/ui/tether_command_input.gd"): input = child
 			var before: Dictionary = manager.tether_command_snapshot()
+			var actor_centre: Vector3 = body.call("centre")
+			var actor_facing: Vector3 = body.call("facing")
+			var target_centre: Vector3 = target.call("centre")
+			var geometry := {"actor_body":body.get_instance_id(), "target_body":target.get_instance_id(),
+				"actor_centre":[actor_centre.x, actor_centre.y, actor_centre.z],
+				"actor_facing":[actor_facing.x, actor_facing.y, actor_facing.z],
+				"target_centre":[target_centre.x, target_centre.y, target_centre.z]}
 			if input == null or not input.request("snare"):
 				manager.disconnect("tether_command_refused", observe_refusal)
 				return {"verdict":"FAIL", "detail":"production TetherCommandInput refused Snare request", "data":{"refusals":refusals}}
@@ -690,11 +707,11 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				if receipt.get("command_id") == "snare" and receipt.get("sequence") == request.sequence:
 					manager.disconnect("tether_command_refused", observe_refusal)
 					return {"verdict":"PASS", "detail":"actual Snare command acknowledged", "data":{"request":request,
-						"before":before, "refusals":refusals, "after":_tag_state({"request":request})}}
+						"before":before, "geometry":geometry, "refusals":refusals, "after":_tag_state({"request":request})}}
 				if not refusals.is_empty(): break
 			manager.disconnect("tether_command_refused", observe_refusal)
 			return {"verdict":"FAIL", "detail":"Snare lacked an accepted receipt within the existing short step budget",
-				"data":{"request":request, "state":_tag_state({"request":request}), "refusals":refusals}}
+				"data":{"request":request, "geometry":geometry, "state":_tag_state({"request":request}), "refusals":refusals}}
 		"op_tonic_rally":
 			var manager: Node = _combat_manager()
 			if not manager.is_fighting() or manager.enemy() == null or float(manager.enemy().hp) <= 0.0:
