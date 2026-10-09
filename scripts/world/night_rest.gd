@@ -72,8 +72,10 @@ extends Node
 ## own.
 
 const SESSION := preload("res://scripts/net/session.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 const FADE_SECONDS := 1.2
+const SOLO_REST_GROUP := &"solo_rest_fade"
 
 ## `/root/Game/Session/SleepVote`. Same-path-in-every-process is the whole
 ## requirement; the name is a constant so `attach()` and the tests agree.
@@ -138,8 +140,19 @@ static func _pending_sleep_message(game: Node) -> void:
 ## Today's rest, unchanged: the solo path, and the path every peer runs on its
 ## own process once the vote passes.
 static func _rest_alone(host: Node, game: Node, host_day: int = 0) -> void:
+	# One in-flight solo rest owns this Game until its fade has finished. A
+	# second bed activation must not schedule another calendar advance. Host
+	# clock applications remain separate authoritative decisions in co-op.
+	if host_day <= 0:
+		for active: Node in host.get_tree().get_nodes_in_group(SOLO_REST_GROUP):
+			if int(active.get_meta(&"rest_game_id", 0)) == game.get_instance_id():
+				return
 	var layer := CanvasLayer.new()
 	layer.layer = 15
+	layer.add_to_group(INPUT_OWNER.GROUP)
+	if host_day <= 0:
+		layer.add_to_group(SOLO_REST_GROUP)
+		layer.set_meta(&"rest_game_id", game.get_instance_id())
 	var rect := ColorRect.new()
 	rect.color = Color(0, 0, 0, 0)
 	rect.set_anchors_preset(Control.PRESET_FULL_RECT)

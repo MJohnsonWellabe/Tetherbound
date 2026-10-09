@@ -33,6 +33,8 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SEQUENCE_DIRECTOR_SCRIPT := "res://scripts/story/sequence_director.gd"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const STARTER_SPECIES := "terrapup"
+const NIGHT_REST := preload("res://scripts/world/night_rest.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 const SETTLE_FRAMES := 240
 ## The prompt's own radius is 2.2m; stood off far enough that the arbiter's
@@ -110,6 +112,17 @@ func _run() -> void:
 		_fail("pressing interact at the home bed activated nothing")
 		_finish()
 		return
+	# Repeat the same public bed activation before the first fade callback,
+	# then the shared public entry used by every bed. This is still the
+	# original actual-world trigger drive, not a private night-completion call.
+	if not bool(arbiter.call("activate")):
+		_fail("the repeated home-bed trigger was unavailable before an idle frame")
+	NIGHT_REST.rest(house)
+	var fades := get_nodes_in_group(NIGHT_REST.SOLO_REST_GROUP)
+	if fades.size() != 1:
+		_fail("repeated home-bed entries created %d solo fades instead of one" % fades.size())
+	elif INPUT_OWNER.current(self) != fades[0]:
+		_fail("the active sleep fade did not own world input")
 	# night_rest.gd's fade is 1.2s and the night passes at its midpoint; give
 	# it the whole tween plus a margin, the same budget the authored-camps
 	# and gateb-flags smokes give the shared path.
@@ -117,12 +130,16 @@ func _run() -> void:
 		await physics_frame
 
 	var day_after := int(game.get("day"))
-	if day_after <= day_before:
-		_fail("sleeping at home did not advance the day (%d -> %d)" % [day_before, day_after])
+	if day_after != day_before + 1:
+		_fail("repeated home-bed entries must advance exactly one day (%d -> %d)" % [day_before, day_after])
 	else:
 		print("slept at home: day %d -> %d" % [day_before, day_after])
 	if not bool(progression.call("has", "player_slept_at_home")):
 		_fail("sleeping at home did not clear the objective ladder's rest rung")
+	if not get_nodes_in_group(NIGHT_REST.SOLO_REST_GROUP).is_empty():
+		_fail("the completed sleep retained its solo admission guard")
+	if INPUT_OWNER.current(self) != null:
+		_fail("the completed sleep retained world input ownership")
 
 	_finish()
 
