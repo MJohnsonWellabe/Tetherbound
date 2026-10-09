@@ -130,7 +130,8 @@ static func site_spawn_plans(site: Dictionary, table: Dictionary,
 
 ## Rebuild the saved owner's existing party member through the deployment seam.
 ## A surface swimmer must not be placed on the seabed by the land spawn helper.
-func restore_swim_mount(saved: Dictionary) -> bool:
+func restore_swim_mount(saved: Dictionary, current: Callable = Callable()) -> bool:
+	if current.is_valid() and not current.call(): return false
 	var party := _party()
 	var index := preload("res://scripts/save/water_traversal_save.gd").mount_index(saved, party.members()) if party != null else -1
 	var creature: RefCounted = party.at(index) if party != null and index >= 0 else null
@@ -166,6 +167,10 @@ func restore_swim_mount(saved: Dictionary) -> bool:
 	if not spawned:
 		print("F37 RESTORE REFUSAL spawn_ally")
 		return false
+	var restored_body := _ally_body
+	if current.is_valid() and not current.call():
+		_cancel_swim_restore(creature, restored_body)
+		return false
 	# No frame advances between revealing the body and attaching its rider.
 	_player.global_position = _ally_body.global_position + Vector3.UP
 	_ally_body.velocity = Vector3.ZERO
@@ -173,11 +178,24 @@ func restore_swim_mount(saved: Dictionary) -> bool:
 	if not mounted and str(creature.species_id) == "ripplet":
 		for attempt in 120:
 			await get_tree().physics_frame
+			if current.is_valid() and not current.call():
+				_cancel_swim_restore(creature, restored_body)
+				return false
 			if not is_instance_valid(_ally_body):
 				print("F37 RESTORE REFUSAL retired_ally")
 				return false
 			if riding.is_mounted(): return true
 	return mounted
+
+
+func _cancel_swim_restore(creature: RefCounted, body: Node) -> void:
+	# Retire only this reconstruction; never recall a replacement deployment.
+	if _ally != creature or _ally_body != body: return
+	var riding: Node = get_parent().get_node_or_null("RidingController")
+	if riding != null:
+		riding.cancel_traversal_requests()
+		if riding.is_mounted() and riding.mount_body() == body: riding.dismount()
+	dismiss_active_creature()
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 	if _restoring_surface_position.is_finite() and body == _ally_body:

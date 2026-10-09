@@ -52,6 +52,10 @@ func _process(_delta: float) -> void:
 			if riding != null: riding.set("_ripplet_requesting", false)
 			get_node("/root/Game").push_world_message("Ripplet traversal timed out. Try again.")
 
+func cancel_pending_requests() -> void:
+	# Local answer bindings only; host permits and admission remain unchanged.
+	_pending.clear()
+
 func request(action: String, uid: String) -> bool:
 	var token := Crypto.new().generate_random_bytes(16).hex_encode()
 	_pending[token] = {"action": action, "uid": uid, "started_ms":Time.get_ticks_msec()}

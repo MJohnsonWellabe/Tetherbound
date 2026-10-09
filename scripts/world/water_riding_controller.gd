@@ -8,6 +8,14 @@ var _ripplet_approved := false
 var _ripplet_requesting := false
 var _ripplet_hint_shown := false
 
+func cancel_traversal_requests() -> void:
+	# Answers for a previous loaded pose must not attach its obsolete carrier.
+	var service := water_world.get_node_or_null("RippletWaterService") if water_world != null else null
+	if service != null: service.cancel_pending_requests()
+	_ripplet_requesting = false
+	for key: String in ["restored_dive_budget", "restored_dive_uid"]:
+		if has_meta(key): remove_meta(key)
+
 func mount() -> bool:
 	var candidate := _mountable_body()
 	if candidate != null and str(candidate.species_id) == "ripplet" and not _ripplet_approved:

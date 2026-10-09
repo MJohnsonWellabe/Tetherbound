@@ -1,0 +1,9 @@
+Ohm `01a1167c-ec9f-75b0-af2e-2d8ea4a4f564`: **APPROVE approach with supersession fences.**
+
+Verified stale pending restores and unconditional clearing. Capture immutable row/generation/owner; accepted restores invalidate older work. Stale completion must neither attach nor clear newer state.
+
+Fence genuine director yields. Late RPC attachment also requires the existing mount-answer path in `water_riding_controller.gd` / `ripplet_water_service.gd`.
+
+Extend the existing aquatic smoke for queued mount→no-mount supersession. Smallest hosted proof: **headless `tests/smoke_f37_ripplet.gd`, empty args**; functional-offload rejects headless.
+
+No prior-failure cause established. Rejoin PASS retained; whole F37#4 still lacks Low post-rejoin blind evidence.
