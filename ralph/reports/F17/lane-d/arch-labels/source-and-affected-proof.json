@@ -1,0 +1,34 @@
+{
+  "criterion": "F17#6 OPEN",
+  "source": "28b423c2a2c7553f2f07bba64424baf0cc3fd53e",
+  "shipping_enabled": false,
+  "provenance": "Original SAMEblind4ab Stormwooddoorway8/8 clippedSealedtitleBLOCK; originaltitleY3.55 aboveinstalledWallArchY3.0. Samefont/text anchors titleY2.8/stateY2.35 withfront=max(.12, actualtransformedframebounds.end.z+.03), includingreviewed5xdepth.",
+  "scope": "Peer-local label anchors only; no hiding/culling/textscale/camera/FOV/creature/fixture/frame/portal/collider/Approach/input/state/authority/transaction/durable changes.",
+  "original_source_command": "SAME originalf42 parent01a12073-6b9d-72e1-ac7e-af892c7654f9 SOURCE/affectedCOMMAND APPROVE exact28b4; measuredslot-spacebounds incl5x scale, frontclearance andbaselines/dedup/text/input preserved. Nativefit/readability/whole unproved.",
+  "affected_proof": {
+    "run_id": "37924791105",
+    "job_id": "113801034374",
+    "artifact_id": "11612984459",
+    "artifact_sha256": "99ab92b2dfd089bc4bacb6d36f98a66e7df47c784136b0da54c428d2682f00d4",
+    "tests": 2,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 5,
+    "engine_script_errors": 0,
+    "engine_warnings": 0,
+    "raw": "run37924791105/expanded/run.log",
+    "checkout": "run37924791105/job.log",
+    "original_artifact_review": "SAME originalf42 parent01a12079-651d-7003-b038-d2cedf745ef2 ARTIFACT/REUSE APPROVE expectedZIP/archive-expanded/fullcheckout/genuine2methods/exit0/5s/zeroerrorswarnings. FutureexactnativeCOMMAND conditionalAPPROVE; queuegate requires prior22c2 actualruntime+SAMEblind/comparatorcontext, beforeonlyactualpose/rastermatching/original4abBLOCKs retained. No native/header/wholecredit, flagsOFF."
+  },
+  "guards": "Originalcanonicalinput/refusal/foreigncomponent/reservedhoststate/seating checks retained; changedexistingmethod addsactual3arches/baseline/admission/headeranchors/measured5xdepth/font32/pixel.006/depthtesting/singleface/dedup/Approach/membrane. No newclasses/tools/methods/assertioncountclaim or repeatedpassingbatch.",
+  "native": "Owner shutdown: future28b4 nativepacket WILL NOT START. OriginalSOURCE/affectedART/futureCOMMAND receipts preserved; prior22c2 runtime/blind contextgate remains unsatisfied. ROOT drains already-running22native only. No newcapture/review/dispatch.",
+  "exclusions": [
+    "Wholecriterion closure",
+    "component READY",
+    "Actualnativeclipping/contact/readability/headerfit",
+    "Companionocclusion solved",
+    "Earnedboundary",
+    "Motion/co-op",
+    "Device/performance"
+  ]
+}

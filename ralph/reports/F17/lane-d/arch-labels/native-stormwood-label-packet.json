@@ -1,0 +1,75 @@
+{
+  "args": [
+    "--preset=Medium",
+    "--paired-high",
+    "--hall-stills-only",
+    "--hall-relic-hang-witness",
+    "--hall-relic-biome=stormwood",
+    "--hall-stormwood-relic-candidate",
+    "--hall-relic-doorway-view",
+    "--hall-doorway-candidate",
+    "--hall-cloudreach-relic-baseline",
+    "--hall-relic-display-baseline",
+    "--hall-endwall-baseline",
+    "--hall-arch-depth-baseline",
+    "--hall-surface-depth-baseline",
+    "--source-commit=28b423c2a2c7553f2f07bba64424baf0cc3fd53e",
+    "--output=res://ralph/reports/F17/lane-d/arch-labels/native-28b4-stormwood",
+    "--hall-nave-facing-candidate",
+    "--hall-relic-focus-baseline",
+    "--hall-rear-seating-baseline",
+    "--hall-sealed-infill-baseline",
+    "--hall-arch-labels-candidate"
+  ],
+  "checkout_ref": "28b423c2a2c7553f2f07bba64424baf0cc3fd53e",
+  "source_preflight": "Use established exactHEADR2-F38 capture-definition and shots/.gdignore restore and ROOT serializedpin/import, freshrawoutput/HOME, original tracked/index/source hashes before/after. Preserve every failed/successful immutablepacket/untracked proof; no D engine/import/render/export or hostedGPU.",
+  "changes": "Same approved22c2 facing16 witness plus supported arch-label anchors on native header, titleY2.8/stateY2.35 and .03m front clearance beyond actualframe geometry. Same font/text/depth-test/dedup, no hiding/culling/camera/actor/Approach/physics/authority/durable changes. Freshoutput, other Hallcandidatesbaseline. Earlier22c2 frozenqueue stays separate; this recipe is future-only.",
+  "expected": {
+    "hall_stills_finished": true,
+    "frames": 16,
+    "labels": [
+      "pedestal stormwood",
+      "hung relic from shrine doorway"
+    ],
+    "weather": [
+      "clear",
+      "rain"
+    ],
+    "times": [
+      "day",
+      "night"
+    ],
+    "presets": [
+      "Medium",
+      "High"
+    ],
+    "complete": false
+  },
+  "source_command": "SAME originalf42 parent01a12079 ARTIFACT/REUSE APPROVE exact28b4/expectedZIP/archive-expanded/fullcheckout/genuine2methods/exit0/5s/zeroerrorswarnings. FutureexactnativeCOMMAND conditionalAPPROVE: onlypin/freshoutput/archlabelsflag change against22c2; existingproducer/args/fixture/guards retained. Gate requires22c2 actualruntime+originalblind/comparatorcontext; beforeonlyactualpose/rastermatching, original4abBLOCKs retained. Owner shutdown prohibits launch; flagsOFF/no native/wholecredit.",
+  "flags": "All shipping enabledfalse; peer-local display half-turn only within symmetric existing collider footprint. Nave-facing process candidate/baseline flags separate from source pin and other Hall flags; baseline wins.",
+  "criterion": "F17#6 OPEN; future bounded arch-label readability candidate, not companion fit or whole visual bar",
+  "fixture": "Existing disclosed fresh solo host, ordinary post-opening/starter/initial placement and ONE personal held Stormwood relic projected from authored captain_marrow_dynamo_core hand-off. No boss victory/key/hung flag/worlddisplay/receipt seed, no earned boundary.",
+  "guards": "Original full physical8arches+8pedestals, grounded actualcontroller Use/public hang/save/healthycompanion/actual stable character-worldnamespace-fullparty/camera-pairedpose/native encoded1080/weather/source/freshoutput guards retained. Explicit doorwayview derives actual boundary, controllerwalk, actualnave side and .75mper-image position guard; no teleport or companion/camera staging.",
+  "reuse": "Original4ab actual16/exit0/runtimeAPPROVE, literalSAMEblindBLOCK remains comparator only actualpaired poses/raster matching; ordinarystage notearned. Header/preset/selector/doorway guards unchanged, no repeatedpassingbatches. Newexisting4method relic-host proof covers turned actualmodels/mountrelativecontact/Approach/collider/eastrow/hostreadonly/nohang.",
+  "engine_args": [
+    "--rendering-method",
+    "forward_plus",
+    "--rendering-driver",
+    "vulkan",
+    "--fullscreen",
+    "--resolution",
+    "1920x1080"
+  ],
+  "script": "tools/capture_f17_visual.gd",
+  "exclusions": [
+    "whole criterion closure",
+    "component READY",
+    "earned accepted save boundary",
+    "boss journey",
+    "co-op",
+    "Low/device/performance",
+    "motion",
+    "whole village/Hall visual bar"
+  ],
+  "root_queue": "Owner shutdown: WILL NOT START. Preserved conditionalfuture recipe only; prior22c2 contextgate unsatisfied, ROOTdrains alreadyrunning22native and cancelsqueuedcaptures. No newcode/dispatch/review/native/hostedGPU."
+}
