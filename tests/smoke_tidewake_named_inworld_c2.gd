@@ -23,6 +23,7 @@ const PILOT := preload("res://tests/helpers/f22_pattern_pilot.gd")
 const GEAR := preload("res://tests/helpers/f33_gear_fixture.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const RETAINED := ["bramblebun", "mudsnout", "pipwing", "trailpup"]
 const INTERIOR_FLAGS := ["water_veilfall_intake_stopped", "water_veilfall_return_opened"]
@@ -149,12 +150,24 @@ func _run() -> void:
 	# Ordinary named fights require the same complete owner carrier and saved
 	# authority as play. Keep this smoke's unique SaveSystem; never save the
 	# gear-only legacy fixture rows used by detached balance simulations.
-	game.local.redesign_character = game.local.save_data().redesign_character
+	var saved: Dictionary = game.local.save_data()
+	# The granted-level fixture needs matching canonical history before reward
+	# admission. This grants training, not a catch or earned Master/feast wins.
+	for card: Dictionary in saved.party:
+		saved.redesign_character = BREAKTHROUGH.initialize_caught(saved.redesign_character, card)
+		if saved.redesign_character.is_empty():
+			push_error("granted training fixture refused")
+			quit(1)
+			return
+	game.local.redesign_character = saved.redesign_character
 	GEAR.equip(self, party, str(gear.tier), int(gear.upgrade), false)
 	var result := {"trainer": trainer_id, "starter": starter, "pilot": policy, "seed": seed_value,
 		"gear": GEAR.label(str(gear.tier), int(gear.upgrade)),
 		"party_level": level, "fixture": "actual Water world; granted party; player placed at the trainer; pump flags set; isolated canonical save/admission",
+		"granted_training": {"breakthroughs": BREAKTHROUGH.caught_tiers(level),
+			"cap_level": BREAKTHROUGH.level_cap(BREAKTHROUGH.caught_tiers(level)), "earned": false},
 		"won": false, "error": ""}
+	result.fixture += "; granted matching breakthrough history/caps for all five; not earned training"
 	if not str(gear.tier).is_empty():
 		result.fixture += "; granted Harness/Charm gear merged into complete owner records; not earned gear"
 	var entry_max: Dictionary = {}
