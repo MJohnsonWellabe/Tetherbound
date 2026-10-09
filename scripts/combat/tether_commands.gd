@@ -25,6 +25,8 @@ static func valid_config(raw: Variant) -> bool:
 	if not raw.get("feature_flags") is Dictionary: return false
 	for flag: String in ["runtime_enabled", "network_enabled", "ui_enabled"]:
 		if not raw.feature_flags.get(flag) is bool: return false
+	if raw.get("rollout_mode", "all") not in ["all", "snare_only"] \
+		or raw.get("rollout_scope", raw.scope) != "encounter_participant": return false
 	if not raw.get("meter") is Dictionary or not raw.meter.get("gain") is Dictionary \
 		or not _number(raw.meter.get("maximum"), 1, 10000): return false
 	for slot: String in ["quick", "charged", "utility", "ultimate", "tag_combo"]:
@@ -70,6 +72,17 @@ static func valid_config(raw: Variant) -> bool:
 
 static func enabled(flag: String = "runtime_enabled") -> bool:
 	return bool(config().get("feature_flags", {}).get(flag, false))
+
+## Availability gates NEW requests within the declared encounter participant.
+## Existing durable continuation/math stays independent of this rollout mask.
+static func command_enabled(command_id: String, flag: String = "runtime_enabled") -> bool:
+	return enabled(flag) and command_id in COMMAND_IDS \
+		and (config().get("rollout_mode", "all") == "all" or command_id == "snare")
+
+static func owns_combat_binding(action: String) -> bool:
+	for id: String in COMMAND_IDS:
+		if command_enabled(id) and input_action(id) == action: return true
+	return false
 
 ## These authored slot bindings remain the single rebindable input source.
 ## Exploration uses items; enabled combat assigns the same directions here.
