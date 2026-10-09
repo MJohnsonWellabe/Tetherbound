@@ -149,6 +149,8 @@ func _research_rows() -> void:
 	_check(claimed.get("ok") == true, "canonical component claim produces paid projection")
 	if claimed.get("ok") == true:
 		var source: Node = root.get_node("Game").get("session")
+		_check(source.is_connected("homestead_action_completed", Callable(panel, "_claim_completed").bind(source)),
+			"real research panel binds the original Session's saved-completion signal")
 		var completion := {"ok": true, "resolved": true, "durable": true, "saved": true,
 			"owner_saved": true, "owner_acknowledged": true,
 			"receipt": preload("res://scripts/creatures/research_actions.gd")._receipt(
@@ -177,7 +179,7 @@ func _research_rows() -> void:
 			"a changed opened world cannot release the original claim")
 		panel.set("_opened_context", context)
 		model.record = JSON.parse_string(JSON.stringify(claimed.state))
-		panel.call("_claim_completed", "research_claim", original_claim, completion, source)
+		source.emit_signal("homestead_action_completed", "research_claim", original_claim, completion)
 		_check((panel.get("_pending_claim") as Dictionary).is_empty(),
 			"matching saved component completion releases the original pending claim")
 		panel.call("_process", 0.6)
