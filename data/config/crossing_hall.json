@@ -15,6 +15,14 @@
     "provenance": "Installed Wall_Arch.gltf POSITION bounds X[-1,1],Y[-0.000000119,3],Z[-0.000000037,0.06404569] metres; 5x depth grows64mm to320mm without changing native2m width/3m height."
   },
   "pedestal_label_at": [0, 1.9, 0.15],
+  "meadows_relic_visual": {
+    "enabled": false,
+    "at": [-0.0131231, 1.34151, 0.02178],
+    "pitch_deg": -41.035,
+    "scale": 0.85,
+    "scope": "Peer-local Meadows pedestal presentation on all presets. Read only host shrine_display.meadows; no inventory, RPC, transaction, save schema, collider or prompt change. Shipping OFF pending actual runtime/blind proof. --hall-relic-display-candidate opts in; --hall-relic-display-baseline wins. Other seven shrines unchanged.",
+    "provenance": "Reuse existing trainer_aftermath._build_heart Meadows identity and material. BookStand installed POSITION/NORMAL face bounds X[-.25021,.22396],Y[1.183247,1.444293],Z[-.15089,.13071], normal[0,.65654,.75429]. Mount at face centre plus .04225m normal clearance; heart back face is .03825m behind centre at authored scale. No new asset."
+  },
   "_label_scope": "Peer-local Hall labels on all presets. Pedestal name baseline clears installed BookStand maximum Y1.44429; identical arch name/status renders once, with distinct Locked/Open/Stirred/Home states retained. No model/collider/approach/state/authority/transaction/save change. Actual label capture and judge required.",
   "rain_shelter_enabled": true,
   "_rain_shelter_scope": "Crossing Hall authored nave/Shrine Room interior boxes only, peer-local particle visibility on all presets; camera inside hides the local rain emitter. Outside particles and canonical weather/cycle/spawn conditions remain unchanged; no authority/transaction/durable state/save change. Candidate requires inside/outside rain capture and judge.",

@@ -181,6 +181,7 @@ func _build_pedestal(entry: Dictionary) -> void:
 	slot.add_to_group("crossing_hall_pedestals")
 	add_child(slot)
 	_add_model(slot, STAND_MODEL)
+	_build_meadows_relic_visual(slot, str(entry.biome))
 	# Measured installed BookStand bounds, authored in config so physics and
 	# presentation share one native-scale footprint rather than a solid room.
 	var collider: Dictionary = _config.get("pedestal_collider", {})
@@ -209,6 +210,23 @@ func _build_pedestal(entry: Dictionary) -> void:
 	prompt.configure(offer, float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m), true)
 	prompt.connect("activated", func() -> void: hang_relic(str(entry.biome)))
 	slot.add_child(prompt)
+
+
+func _build_meadows_relic_visual(slot: Node3D, biome: String) -> void:
+	var cfg: Dictionary = _config.get("meadows_relic_visual", {})
+	var args := OS.get_cmdline_user_args()
+	if biome != "meadows" or args.has("--hall-relic-display-baseline") or \
+			not (bool(cfg.get("enabled", false)) or args.has("--hall-relic-display-candidate")):
+		return
+	# Reuse the Meadows reward's established silhouette; this node never owns
+	# a relic or submits a hang. Its visibility follows the host display only.
+	var mount := Node3D.new()
+	mount.name = "MeadowsRelicDisplay"
+	mount.position = _position(cfg.get("at", [-.0131231, 1.34151, .02178]))
+	mount.rotation.x = deg_to_rad(float(cfg.get("pitch_deg", -41.035)))
+	mount.visible = false
+	slot.add_child(mount)
+	preload("res://scripts/world/trainer_aftermath.gd")._build_heart(mount, Vector3.ZERO, float(cfg.get("scale", .85)))
 
 
 func _add_model(parent: Node3D, path: String) -> Node3D:
@@ -498,7 +516,11 @@ func apply_display(display: Dictionary) -> void:
 	_refresh_home_membrane()
 	for id: String in _pedestals:
 		var pedestal: Node3D = _pedestals[id]
-		pedestal.set_meta("relic_displayed", bool(shrine.get(id, false)))
+		var displayed := bool(shrine.get(id, false))
+		pedestal.set_meta("relic_displayed", displayed)
+		var relic := pedestal.get_node_or_null(^"MeadowsRelicDisplay") as Node3D
+		if relic != null:
+			relic.visible = displayed
 
 
 func home_arrival() -> Vector3:

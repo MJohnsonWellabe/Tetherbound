@@ -76,6 +76,33 @@ func test_host_sends_directly_and_surfaces_refusal() -> void:
 	hall.call("hang_relic", "meadows", game)
 	assert_eq(session.calls, ["hang:meadows"] as Array[String])
 	assert_eq(game.messages, ["You have no relic for this shrine yet."] as Array[String])
+	# The same host display may arrive on join, reload or later polling. It
+	# must repaint the physical relic without inventing a local hang/receipt.
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
+	hall.set("_config", config.duplicate(true))
+	hall.call("_build_pedestal", config.pedestals[0])
+	var baseline: Node3D = hall.get("_pedestals").meadows
+	assert_true(baseline.get_node_or_null(^"MeadowsRelicDisplay") == null, "shipping candidate remains off")
+	baseline.free()
+	hall.get("_pedestals").clear()
+	config.meadows_relic_visual.enabled = true
+	hall.set("_config", config)
+	hall.call("_build_pedestal", config.pedestals[0])
+	var pedestal: Node3D = hall.get("_pedestals").meadows
+	var relic := pedestal.get_node(^"MeadowsRelicDisplay") as Node3D
+	var children: int = pedestal.get_child_count()
+	assert_false(relic.visible, "empty pedestal has no phantom reward")
+	var saved := {"shrine_display":{"meadows":true}}
+	var before: Dictionary = saved.duplicate(true)
+	hall.call("apply_display", saved)
+	assert_true(relic.visible, "saved host hang produces a physical display")
+	assert_eq(saved, before, "presentation never mutates the host display")
+	hall.call("apply_display", saved)
+	assert_eq(pedestal.get_child_count(), children, "replayed view does not duplicate the relic")
+	assert_eq(session.calls, ["hang:meadows"] as Array[String], "repainting never sends a hang")
+	hall.call("apply_display", {})
+	assert_false(relic.visible, "an empty restored view removes the stale display")
+	assert_false(bool(pedestal.get_meta("relic_displayed")))
 	hall.free()
 	game.free()
 	session.free()
