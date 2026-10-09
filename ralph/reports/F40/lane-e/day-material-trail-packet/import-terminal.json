@@ -1,0 +1,9 @@
+{
+  "capture_index": 0,
+  "pid": 52484,
+  "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+  "ended_utc": "2026-10-09T05:39:27.1089659Z",
+  "mode": "Import",
+  "reason": "process_exit",
+  "exit_code": 0
+}

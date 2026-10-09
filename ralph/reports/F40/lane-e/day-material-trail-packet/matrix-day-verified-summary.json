@@ -1,0 +1,21 @@
+{
+  "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+  "segment": "day",
+  "exit": 0,
+  "captured": 96,
+  "planned": 96,
+  "full_matrix_complete": false,
+  "graphics": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "High",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "253bdbea032dfc49002e8d4469c66dce8412c53b"
+  },
+  "manifest_sha256": "376a5e11342617ca006e097ef289db5c7c471dac3ef9fc108b2ebcac51352b69",
+  "scope": "Declared day quarter only; no full-matrix, blind, motion, earned or whole-criterion claim"
+}

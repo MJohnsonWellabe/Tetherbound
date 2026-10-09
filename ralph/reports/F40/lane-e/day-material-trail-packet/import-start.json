@@ -1,0 +1,17 @@
+{
+  "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+  "mode": "Import",
+  "deadline_minutes": 15,
+  "started_utc": "2026-10-09T05:38:32.7974504Z",
+  "fresh_user_directory": "D:/CodexTemp/tetherbound-proof/native-e-253bdbea03-cloudreach-material-trail-day-r1/import-home",
+  "pid": 52484,
+  "capture_index": 0,
+  "output": null,
+  "args": [
+    "--headless",
+    "--editor",
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--quit"
+  ]
+}

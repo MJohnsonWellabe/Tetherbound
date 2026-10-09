@@ -1,0 +1,9 @@
+{
+  "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+  "segment": "day",
+  "ended_utc": "2026-10-09T05:55:21.6097680Z",
+  "reason": "process_exit",
+  "preset": "High",
+  "exit_code": 0,
+  "pid": 48404
+}

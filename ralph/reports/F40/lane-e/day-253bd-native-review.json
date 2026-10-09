@@ -1,0 +1,292 @@
+{
+  "reviewer": "Original retained Ohm /root/review_cloud_startup",
+  "verdict": "APPROVE bounded actual High DAY96 runtime/artifact provenance only",
+  "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+  "source_tree": "4f52b07f0cc902a3ce3da341bfe5bdcc4db4812d",
+  "packet": "D:\\CodexTemp\\tetherbound-proof\\native-e-253bdbea03-cloudreach-material-trail-day-r1",
+  "raw_originals": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\f40-cluster-high-253bd-day-r1",
+  "scope": "Completed original High day quarter; no pixels/art bar judgment, full384 or whole-criterion approval.",
+  "source_binding": {
+    "git_commit_tree_independently_matches_frozen_receipts": true,
+    "tree_is_not_commit": true,
+    "before_import": {
+      "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+      "declared_capture_artifacts_only": true,
+      "observed_utc": "2026-10-09T05:38:32.7853266Z",
+      "index_clean": true,
+      "tracked_clean": true,
+      "head_tree": "4f52b07f0cc902a3ce3da341bfe5bdcc4db4812d",
+      "index_tree": "4f52b07f0cc902a3ce3da341bfe5bdcc4db4812d",
+      "status": [
+        "?? ralph/reports/F38/lane-d/exterior-cluster/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+      ]
+    },
+    "after_import_revalidation": {
+      "tracked_clean": true,
+      "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+      "status": [
+        "?? ralph/reports/F38/lane-d/exterior-cluster/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+      ],
+      "index_before": "4f52b07f0cc902a3ce3da341bfe5bdcc4db4812d",
+      "engine_import_exit": 0,
+      "index_clean": true,
+      "observed_utc": "2026-10-09T05:40:49.6122175Z",
+      "original_failure": "Four import metadata line-ending/stat changes; original terminal/logs retained",
+      "head_tree": "4f52b07f0cc902a3ce3da341bfe5bdcc4db4812d",
+      "original_wrapper_exit": 1,
+      "index_after": "4f52b07f0cc902a3ce3da341bfe5bdcc4db4812d",
+      "metadata_bindings": [
+        {
+          "head_blob": "4a6970aff2c45871a2c1fcafc8a12665f9a3a36e",
+          "path": "assets/buildings/quaternius_medieval/T_Brick_BaseColor.png.import",
+          "normalized_working_blob": "4a6970aff2c45871a2c1fcafc8a12665f9a3a36e"
+        },
+        {
+          "head_blob": "1c36a40fbaf36ec5b0b1d1d8bbd00caa0ef58f7d",
+          "path": "assets/buildings/quaternius_medieval/T_Brick_Normal.png.import",
+          "normalized_working_blob": "1c36a40fbaf36ec5b0b1d1d8bbd00caa0ef58f7d"
+        },
+        {
+          "head_blob": "676075f3b3ac62a054fe8ed09f97ab1d50f3d42d",
+          "path": "assets/buildings/quaternius_medieval/T_Brick_Roughness.png.import",
+          "normalized_working_blob": "676075f3b3ac62a054fe8ed09f97ab1d50f3d42d"
+        },
+        {
+          "head_blob": "7a64fbc99550b442aa24cf680fa18be4a8b8bada",
+          "path": "assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png.import",
+          "normalized_working_blob": "7a64fbc99550b442aa24cf680fa18be4a8b8bada"
+        }
+      ]
+    },
+    "before_day": {
+      "head_tree": "4f52b07f0cc902a3ce3da341bfe5bdcc4db4812d",
+      "index_tree": "4f52b07f0cc902a3ce3da341bfe5bdcc4db4812d",
+      "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+      "expected_capture_artifacts_only": true,
+      "observed_utc": "2026-10-09T05:40:51.2384694Z",
+      "status": [
+        "?? ralph/reports/F38/lane-d/exterior-cluster/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+      ]
+    },
+    "after_day": {
+      "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+      "tree": "4f52b07f0cc902a3ce3da341bfe5bdcc4db4812d",
+      "index_tree": "4f52b07f0cc902a3ce3da341bfe5bdcc4db4812d",
+      "tracked_clean": true,
+      "checked_utc": "2026-10-09T05:55:44.5602948Z",
+      "native_terminal": {
+        "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+        "segment": "day",
+        "ended_utc": "2026-10-09T05:55:21.609768Z",
+        "reason": "process_exit",
+        "preset": "High",
+        "exit_code": 0,
+        "pid": 48404
+      },
+      "manifest_sha256": "376a5e11342617ca006e097ef289db5c7c471dac3ef9fc108b2ebcac51352b69"
+    },
+    "reviewed_source_blobs": {
+      "scripts/world/cloudreach_world.gd": "96ca7b933fac15081e8047671d21ab1d3e386348",
+      "shaders/cloudreach_trail.gdshader": "b1ded7de9098989dbb383c52266567fe0fc84238",
+      "tools/capture_cloudreach_f40_matrix.gd": "a31126604c6643e7e4368b859f5727ad9347a6a9",
+      "data/config/cloudreach_f40_visual.json": "0521bde4a400a4af3e1d4254b8289c94dd398cd3",
+      "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1"
+    },
+    "graphics_config_sha256_matches_exact_git_art_json": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "f40_config_sha256_matches_exact_git_bytes": "eb8ed955d34b6ef8c708452e3251934832a13f1f97efd0e0b8a36b5f9c9bd553",
+    "later_cached_checkout_repins_not_used_to_relabel_this_capture": true
+  },
+  "import_history": {
+    "engine_start": {
+      "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+      "mode": "Import",
+      "deadline_minutes": 15,
+      "started_utc": "2026-10-09T05:38:32.7974504Z",
+      "fresh_user_directory": "D:/CodexTemp/tetherbound-proof/native-e-253bdbea03-cloudreach-material-trail-day-r1/import-home",
+      "pid": 52484,
+      "capture_index": 0,
+      "output": null,
+      "args": [
+        "--headless",
+        "--editor",
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--quit"
+      ]
+    },
+    "engine_terminal": {
+      "capture_index": 0,
+      "pid": 52484,
+      "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+      "ended_utc": "2026-10-09T05:39:27.1089659Z",
+      "mode": "Import",
+      "reason": "process_exit",
+      "exit_code": 0
+    },
+    "engine_exit_code": 0,
+    "original_wrapper_exit": 1,
+    "disclosure": "The revalidation receipt retains an original wrapper failure for four import metadata line-ending/stat changes. Engine terminal remains exit0. Original wrapper failure is not erased or promoted to a clean first attempt.",
+    "normalized_metadata_bindings": "All four recorded HEAD/normalized working blob identities equal the independently queried exact source Git objects. Before/after index tree unchanged; tracked/index cleanliness is established by frozen revalidation/source receipts. Later current checkout status was not substituted.",
+    "preexisting_untracked_outputs_retained": "F38 exterior-cluster and prior a990/e51 fight output directories disclosed in before-import/before-day receipts; no claim of an empty filesystem."
+  },
+  "native_invocation": {
+    "started_utc": "2026-10-09T05:40:51.2384694Z",
+    "pid": 48404,
+    "fresh_user_directory": "D:/CodexTemp/tetherbound-proof/native-e-253bdbea03-cloudreach-material-trail-day-r1/matrix-day-home",
+    "args": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_f40_matrix.gd",
+      "--",
+      "--biome=cloudreach",
+      "--preset=High",
+      "--source-commit=253bdbea032dfc49002e8d4469c66dce8412c53b",
+      "--segment=day",
+      "--output=res://.tmp/f40-cluster-high-253bd-day-r1"
+    ],
+    "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+    "preset": "High",
+    "output": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/f40-cluster-high-253bd-day-r1",
+    "segment": "day",
+    "deadline_minutes": 45
+  },
+  "native_terminal": {
+    "source": "253bdbea032dfc49002e8d4469c66dce8412c53b",
+    "segment": "day",
+    "ended_utc": "2026-10-09T05:55:21.6097680Z",
+    "reason": "process_exit",
+    "preset": "High",
+    "exit_code": 0,
+    "pid": 48404
+  },
+  "renderer_evidence": {
+    "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+    "actual_stdout": "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB",
+    "graphics_capture": {
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+      "preset": "High",
+      "renderer": "forward_plus",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "source_commit": "253bdbea032dfc49002e8d4469c66dce8412c53b"
+    },
+    "display_server": "Windows"
+  },
+  "saved_output_verification": {
+    "manifest_sha256": "376a5e11342617ca006e097ef289db5c7c471dac3ef9fc108b2ebcac51352b69",
+    "image_integrity_sha256": "ac194400f0c0e5531bed4289e904cac84b5d2a1da3a0c1c2ee49ef8fb9beddcb",
+    "complete": true,
+    "failures": [],
+    "captured": 96,
+    "selected": 96,
+    "full_plan": 384,
+    "full_matrix_complete": false,
+    "unique_ids": 96,
+    "unique_image_hashes": 96,
+    "all_png_dimensions": [
+      1920,
+      1080
+    ],
+    "actual_total_png_bytes": 201419983,
+    "actual_verified_png_chunk_crcs": 24886,
+    "actual_checks": "Read all 96 original PNG bytes; signature/IHDR/IEND and every chunk CRC checked; each SHA256 and byte count equals integrity record and manifest file byte count. Exact res:// output basename mapping matches canonical original paths. No image decoding/visual rating performed.",
+    "selected_planned_record_ids": "All equal in original order; exact 12 destination indices x approach/gameplay/reverse/detail x clear/rain, each once; all DAY.",
+    "directory_png_count": 96,
+    "requested_times_disclosure": "Legacy requested_times metadata still contains day/night; actual segment, selected IDs, records and clock fields all day. This is not a night capture."
+  },
+  "runtime_record_guards": {
+    "all_on_floor_debug_travel_trainer_visible_intent": true,
+    "actual_player_character": "trainer",
+    "max_player_y_minus_registered_ground_abs_m": 0.9366455078099989,
+    "max_within_retained_3m_guard": true,
+    "observed_clock_hour_range": [
+      8.00606666666667,
+      8.00939393575758
+    ],
+    "weather": "Every requested clear/rain equals observed_weather and observed_clock.weather.",
+    "camera": "Every finite camera/rig transform and position recorded; camera_position equals camera_transform.origin and player distance agrees with recorded distance. Original production CameraRig/Camera3D path, SpringArm3D capsule shape, margin and 5.2m spring metadata retained.",
+    "production_camera": {
+      "far": 3500.0,
+      "fov": 70.0,
+      "instance_id": 487495568474,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D"
+    },
+    "camera_rig": {
+      "class": "SpringArm3D",
+      "has_shape": true,
+      "instance_id": 487478791256,
+      "margin": 0.600000023841858,
+      "path": "CameraRig",
+      "spring_length": 5.19999980926514
+    },
+    "visibility_limit": "trainer_visible_intent and spring-arm framing records do not prove unobstructed pixels; no such claim made."
+  },
+  "fixture_disclosure": {
+    "producer": "Direct chapter mount, upper-route flags, catalogue teleports with default 12m/3m offsets except explicitly declared existing route/threshold stands in capture_plan.authored_stands (all Skyroad views use its flat crown); pinned production dawn/day/golden/night and clear/rain. Both sides of a comparison must use the same stand plan. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands still fail.",
+    "weather_scope": "Production visual weather API, pinned fixture; no canonical encounter weather or earned travel claim",
+    "candidate_preview": false,
+    "fight_fixture_level_field_in_plan": 44.0,
+    "party_limit": "Scenery manifest does not contain an explicit owned five-member party seeding receipt. The plan fight_fixture_level=44 field is not proof of a live fight/five-party fixture; this report makes no such inference.",
+    "meaning": "Direct chapter mount, upper-route flags, supported catalogue debug travel, authored threshold stands, staged clocks and production visual weather. Not earned route, fight, save boundary or campaign evidence."
+  },
+  "diagnostics": {
+    "actual_engine_errors": 0,
+    "actual_script_errors": 0,
+    "actual_matrix_warnings": 2,
+    "warnings": [
+      "WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)",
+      "WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)"
+    ],
+    "scope": "Both fail-closed wild sites are omitted: road_visibility_broken_causeway_main_03 and road_visibility_windscar_floor_loop_15. No suppression or clean-warning claim.",
+    "import_stderr_bytes": 0,
+    "matrix_stdout_captured_ids": 96
+  },
+  "evidence_hashes": {
+    "import-start.json": "e1c1b7bd913203e49f12d9486c31e13023f047fb8d76484f06489fdba26ecd8a",
+    "import-terminal.json": "36926307831cbc1c396159b29cd6ccc8a92a27d92c582c80bae529cec7238926",
+    "import.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "import.stdout.log": "38fc67851c08b846aa8f5eee0eab789d0db9a62b4ceca90110fdb739535739dc",
+    "matrix-day-image-integrity.json": "ac194400f0c0e5531bed4289e904cac84b5d2a1da3a0c1c2ee49ef8fb9beddcb",
+    "matrix-day-start.json": "6e389a869cffe2b3654a69cdfeb4e4ac4125c776088f43c7306c436afb231338",
+    "matrix-day-terminal.json": "a437e4707c1e204a69aedeab606b935cdf610a0327f128f03838e3d0f433e651",
+    "matrix-day-verified-summary.json": "1125eaab52ee091143293b9ba081da8b6ba08c2c1cb26f96d710aa143f196a48",
+    "matrix-day.stderr.log": "b57244443e9479c10c20336d268e144bf5aa57198031ba4507c79fd6fbcc80e0",
+    "matrix-day.stdout.log": "6a8df14d263d5fe8cc4e04d174f27ed83cc17a34f70ca3bbc66b0c93f48afa16",
+    "original-material-source-review.json": "45b3d41003a8ffa261ee2630e4945df53630cf0e07f40a379241d3da04a9a888",
+    "original-trail-overlay-source-review.json": "6ff1f1b89cc9cfbf2e022e853804157a8f8261e2df8bb5a8762fd891920da4d9",
+    "source-after-day.json": "e621b6b384e07ffc23979c105e10c367e08323ad6a4ca220782ed02a3bd9bf84",
+    "source-after-import-revalidated.json": "5b52e98a2e4249bf3eccca62d52ca2df2419da204aba9697099801b0adbc8172",
+    "source-before-day.json": "51f858f963185b963c797450e3e02ac06351951d0de20e50d772d7ee3ac23729",
+    "source-before-import.json": "9996226f9eeba5ebdff32c6395e19f3eabd9db585e65f291b2b259d42c9d51b8"
+  },
+  "reuse": "Original 4ca material SOURCE/42-assertion ARTIFACT and 253bd trail SOURCE/81-assertion ARTIFACT/exact-command approvals reused without re-audit or execution. Earlier 3ca day runtime and failed day/full-bar dispositions retained separately. Evidence-only successors do not turn this source into a different runtime.",
+  "remaining_gates": [
+    "Original independent blind changed DAY picture verdict",
+    "Remaining affected clocks/Medium and any required actual fight witnesses for the complete cluster",
+    "Full384/full High-Medium bar and whole F40#3/#5/F08#3 remain OPEN"
+  ],
+  "excluded_claims": [
+    "No visual appearance improvement or material/trail cause inference",
+    "No native performance/device certification or default renderer change",
+    "No earned campaign/co-op/transaction/save boundary",
+    "No full matrix, whole criterion, component READY or passing blind result"
+  ]
+}
