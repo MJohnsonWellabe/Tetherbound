@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "landmark_id": "high_roost_perches",
+  "compass_surface_lift_m": 0.03,
   "master_sign_text": {
     "scope": "cloudreach_client_presentation",
     "font_size": 96,

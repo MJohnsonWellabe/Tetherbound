@@ -51,6 +51,12 @@ func test_high_perches_presentation_is_collision_free_and_player_scaled() -> voi
 	assert_true(presentation.get_node_or_null(^"HighPerchesArrivalArch") != null)
 	assert_true(presentation.get_node_or_null(^"OuterWindCompass") != null)
 	assert_true(presentation.get_node_or_null(^"InnerWindCompass") != null)
+	var apron := presentation.get_node(^"LandingApron") as MeshInstance3D
+	var apron_top := apron.position.y + (apron.mesh as CylinderMesh).height * 0.5
+	assert_true(apron_top > 0.135, "paving clears the real 0.13 m crown cap instead of sharing its depth")
+	var outer_compass := presentation.get_node(^"OuterWindCompass") as MeshInstance3D
+	assert_almost_eq(outer_compass.position.y - apron_top, 0.015, 0.001,
+		"inlay keeps its original separation from the raised apron")
 	var roles := {}
 	var collision_count := 0
 	var stack: Array[Node] = [presentation]
