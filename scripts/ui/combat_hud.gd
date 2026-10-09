@@ -621,8 +621,7 @@ func _refresh_system_overlay(active_uid: String) -> void:
 	if not is_instance_valid(_system_overlay): return
 	_system_overlay.hide()
 	if _system_overlay.call("refresh", active_uid, INPUT_GLYPH.using_gamepad()) != true: return
-	if not is_instance_valid(_manager): return
-	var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
+	var active: RefCounted = _manager.call("active_creature") if is_instance_valid(_manager) and _manager.has_method("active_creature") else null
 	if active != null and str(active.get("uid")) == active_uid:
 		var charged_id := str(active.get("move_charged"))
 		if _moves != null and _moves.has(charged_id):
