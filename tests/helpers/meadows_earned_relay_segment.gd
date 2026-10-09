@@ -154,7 +154,6 @@ func _travel() -> bool:
 	if not rescue_receipt(_has("relay_captain_defeated"), _has("captive_rescued"), _count(GEAR)):
 		return _fail("Sela's actual completed rescue did not provide exactly one bridge gear")
 	_receipt("captive_rescued", {"conversation": _dialogue_finished, "gear": _count(GEAR)})
-	if not await _capture_relay_frame("sela-rescued", func() -> bool: return rescue_receipt(_has("relay_captain_defeated"), _has("captive_rescued"), _count(GEAR))): return false
 	var deck_route := deck_path(_config)
 	if deck_route.is_empty():
 		return _fail("The authored ramp/gantry/pad connection is unavailable")
@@ -588,6 +587,7 @@ func _press_prompt(prompt: Node3D) -> bool:
 
 
 func _talk(prompt: Node3D, expected: String) -> bool:
+	var rescue_before := _has("captive_rescued")
 	_dialogue_finished = ""
 	if expected.is_empty() or not await _press_prompt(prompt):
 		return false
@@ -599,12 +599,28 @@ func _talk(prompt: Node3D, expected: String) -> bool:
 		return _fail("The exact interaction opened no authored dialogue")
 	if expected == "relay_captive_freed":
 		if not await _capture_relay_frame("sela-exchange", func() -> bool: return bool(_panel.call("is_open")) and _activated_id == prompt.get_instance_id()): return false
+	var speaker := prompt.get_parent() as Node3D
+	var rescued_frame := false
 	for _line in 64:
 		if not bool(_panel.call("is_open")):
 			break
+		# The production NPC leaves for the village on the first frame after
+		# dialogue closes. Observe the real rescue effect while she still speaks.
+		if expected == "relay_captive_freed" and not rescue_before and not rescued_frame \
+				and rescue_receipt(_has("relay_captain_defeated"), _has("captive_rescued"), _count(GEAR)):
+			var same_sela := func() -> bool:
+				return rescue_receipt(_has("relay_captain_defeated"), _has("captive_rescued"), _count(GEAR)) \
+					and bool(_panel.call("is_open")) and is_instance_valid(prompt) \
+					and prompt.is_inside_tree() and is_instance_valid(speaker) \
+					and prompt.get_parent() == speaker and speaker.is_visible_in_tree() \
+					and _world.is_ancestor_of(prompt) and _activated_id == prompt.get_instance_id()
+			if not await _capture_relay_frame("sela-rescued", same_sela): return false
+			rescued_frame = true
 		await _input._tap("interact")
 		for _frame in 6:
 			await _tree.physics_frame
+	if expected == "relay_captive_freed" and OS.get_cmdline_user_args().has("--capture-relay") and not rescued_frame:
+		return _fail("The actual rescue did not expose its earned effect before Sela's ordinary departure")
 	return (not bool(_panel.call("is_open")) and _dialogue_finished == expected) \
 		or _fail("Dialogue input finished '%s', expected '%s'" % [_dialogue_finished, expected])
 
