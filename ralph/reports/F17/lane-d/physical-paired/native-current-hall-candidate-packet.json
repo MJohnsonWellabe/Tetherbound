@@ -37,7 +37,7 @@
     "--hall-relic-display-baseline"
   ],
   "preserved": "Original controller farmdoor→road→nave and8arch/8pedestal circuit, unchanged stands/poses, samebody/healthydeployedcompanion/recall guards, sourcepin, nativeencodedraster and material/state bindings",
-  "before": "Original source75a24 OFFHallimages/runtimeAPP + originalblindBLOCK preserved. Reuse only after SAMEoriginal sourcebinding/pose/raster checks; no unchanged fullbar rerun/soleitemattribution claim from combinedcandidates.",
+  "before": "SAME original01a11f46 BEFORE-REUSE APPROVE conditionally: source75a24same labels/presets/raster; match actualnewposesbeforecomparison; no soleitemattribution",
   "engine_args": [
     "--rendering-method",
     "forward_plus",
@@ -46,9 +46,9 @@
     "--resolution",
     "1920x1080"
   ],
-  "command_review": "PENDING SAME original; do notlaunch until APPROVE",
+  "command_review": "SAME original01a11f46-0e40-7ed2-a940-83f5c8a4b595 COMMAND APPROVE exact7e379, clean pinned checkout/freshoutput",
   "source": "7e3791edaa9a7471f3af8b3ac7fb6a92acb9c1e3",
-  "related_unit": "7e379 shrine4-test37891179639 actual4/0/exit0/4s/0engineerrorswarnings; originalartifact review pending",
+  "related_unit": "SAME original01a11f45 ARTIFACT/REUSE APPROVE37891179639 genuine4/0/exit0/4s/0engineerrorswarnings; no repeatedguard job",
   "script": "tools/capture_f17_visual.gd",
   "excluded": [
     "furniture lift parked4/4",
@@ -60,5 +60,6 @@
     "earned route",
     "device"
   ],
-  "criterion": "F17#6 OPEN; bounded Hall visual candidate packet, notwhole acceptance"
+  "criterion": "F17#6 OPEN; bounded Hall visual candidate packet, notwhole acceptance",
+  "proof_limit": "Standalone village-smoke aperture-binding assertion overridden by circuit hook: do not credit it. No new native PASS/hung-relic witness/whole/performance/earned/device/motion."
 }

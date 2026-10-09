@@ -14,7 +14,7 @@
     "artifact": 11597753547,
     "args": "res://tests/test_crossing_hall_relic_hang.gd",
     "exit": 0,
-    "acceptance": "No clean-runtime credit; original factual verdict pending; raw preserved",
+    "acceptance": "SAME original01a11f39 verified4/0/exit0 plus14leaks/1resource-error; clean runtime withheld, not reused as clean proof",
     "script": "tools/run_one_test.gd",
     "zip_sha256": "c5621c3b2ae76dc31d660ce177bf037702d82693dd10d072568b4b468676b489",
     "tests": 4
@@ -23,7 +23,22 @@
   "supported_test_teardown": {
     "change": "9 exact frees after all assertions in existing3 methods that leave allocated detachedHall/Game/Session nodes alive; no guard/assertion suppression; production3c9 unchanged",
     "source": "7e3791edaa9a7471f3af8b3ac7fb6a92acb9c1e3",
-    "runtime": "pending affected rerun approval",
-    "source_review": "pending SAME original"
+    "runtime": {
+      "exit": 0,
+      "original_review": "01a11f45-1d1e-70e1-8953-cae20afd2be1 SAME f42",
+      "zip_sha256": "b56603f40df436ae2dbe5b47b7473e34db6434bef657af7af836637649e3e1ca",
+      "engine_script_parse_errors": 0,
+      "scope": "Focused headless logic and fixture teardown only; no native fit/blind/whole credit",
+      "engine_warnings": 0,
+      "verdict": "ARTIFACT/REUSE APPROVE",
+      "artifact": 11598542726,
+      "failed": 0,
+      "assertion_count": "not inferred",
+      "tests": 4,
+      "run": 37891179639,
+      "job": 113692247911,
+      "seconds": 4
+    },
+    "source_review": "SAME original01a11f39 SOURCE+COMMAND APPROVE7e379"
   }
 }
