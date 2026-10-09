@@ -94,6 +94,7 @@ var _pending_library_captures := 0
 var _prove_utility := ""
 var _saved_live_moves: Array = []
 var _prove_canonical_wild := false
+var _shipping_canonical_wild := false
 var _saved_actor_vitals: Dictionary = {}
 var _saved_autoload_game: Node
 
@@ -136,17 +137,23 @@ func _run() -> void:
 		candidate.enabled = true
 		ULTIMATES._config = candidate
 	_enabled_ultimate = ULTIMATES.available("ultimate_ground_current")
-	if OS.get_cmdline_user_args().has("--prove-shipping-ultimate"):
-		_check(bool(_saved_visual_config.get("enabled", false)) and _enabled_ultimate
-			and not visual_override and not _prove_library_arrival,
-			"shipping ultimate proof requires tracked enabled config without presentation overrides")
-	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "actor_vitals gate must remain off")
-	_prove_canonical_wild = OS.get_cmdline_user_args().has("--prove-canonical-wild")
-	_check(not _prove_canonical_wild or _prove_utility == "heal_pulse", "canonical wild selector requires the bounded Heal proof")
 	_saved_actor_vitals = MATH.config().actor_vitals.duplicate(true)
-	if _prove_canonical_wild:
+	# Default shipping invocation follows the real ordinary-wild owner when
+	# both tracked systems are on. Legacy Heal's disclosed local selector remains.
+	_shipping_canonical_wild = _enabled_ultimate and bool(_saved_actor_vitals.get("runtime_enabled", false)) \
+		and _prove_utility.is_empty() and not _prove_mastery_transition and not visual_override
+	_prove_canonical_wild = OS.get_cmdline_user_args().has("--prove-canonical-wild") or _shipping_canonical_wild
+	if OS.get_cmdline_user_args().has("--prove-shipping-ultimate"):
+		_check(bool(_saved_visual_config.get("enabled", false)) and _shipping_canonical_wild
+			and not visual_override and not _prove_library_arrival,
+			"shipping ultimate proof requires tracked ultimate/actor config and production wild admission without overrides")
+	_check(bool(_saved_actor_vitals.get("runtime_enabled", false)) == _shipping_canonical_wild,
+		"legacy fixture requires actor-vitals OFF; shipping wild requires tracked actor-vitals ON")
+	_check(not _prove_canonical_wild or _prove_utility == "heal_pulse" or _shipping_canonical_wild,
+		"canonical wild selector requires bounded Heal or tracked shipping slot proof")
+	if _prove_canonical_wild and not _shipping_canonical_wild:
 		MATH.config().actor_vitals = _saved_actor_vitals.duplicate(true)
-		MATH.config().actor_vitals.runtime_enabled = true # Existing process-local simulation path; shipping remains unchanged.
+		MATH.config().actor_vitals.runtime_enabled = true # Existing process-local Heal path only.
 	_check(_prove_utility.is_empty() or _prove_utility in ["heal_pulse", "dash_strike"], "bounded authored utility selector")
 	_saved_live_moves = MATH.config().move_commit.live_moves.duplicate()
 	if not _prove_utility.is_empty() and not MATH.config().move_commit.live_moves.has(_prove_utility):
@@ -575,7 +582,7 @@ func _run() -> void:
 			_check(float(_impacts.back().damage) > 0.0 and float(_impacts.back().damage) <= float(_enemy.max_hp) * 0.2 + 0.001,
 				"the upgraded signature commits a real positive HP debit within the unchanged named cap")
 			await create_timer(2.6).timeout
-	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "proof must not activate actor_vitals")
+	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == _saved_actor_vitals.get("runtime_enabled"), "slot proof preserves the tracked actor-vitals configuration")
 	while _pending_library_captures > 0: await process_frame
 	_finish()
 
@@ -711,7 +718,7 @@ func _setup() -> void:
 		var rec: Dictionary = _director.get("_encounter")
 		_id = str(rec.get("encounter_id", ""))
 		_check(not _id.is_empty() and rec.get("kind") == "wild" and rec.get("opponent", {}).get("owner_npc") == "", "production wild opener creates a wild encounter without trainer ownership")
-		_check(_director.call("uses_wild_actor_vitals", _id) == true and _director.call("uses_durable_trainer_rewards", _id) == false, "mounted wild Heal uses only the actual wild saved-vitals owner")
+		_check(_director.call("uses_wild_actor_vitals", _id) == true and _director.call("uses_durable_trainer_rewards", _id) == false, "mounted canonical wild uses only the actual wild saved-vitals owner")
 		var runtime: Node = _director.call("_shared_host_fight", _id)
 		_check(runtime != null and runtime.call("body") == _wild and runtime.get_meta(&"canonical_wild_context", {}) == canonical.get("context"), "actual shared wild simulation retains its original epoch/world context")
 		if runtime != null: runtime.set_physics_process(false) # Existing static-opponent fixture; no autonomous damage during the save-refusal witness.
@@ -996,7 +1003,7 @@ func _finish() -> void:
 	MATH.config().move_commit.live_moves = _saved_live_moves
 	if not _saved_actor_vitals.is_empty(): MATH.config().actor_vitals = _saved_actor_vitals
 	if _prove_canonical_wild:
-		_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "canonical wild proof restores the original shipping-OFF actor_vitals gate")
+		_check(MATH.config().actor_vitals == _saved_actor_vitals, "canonical wild proof preserves the exact original actor-vitals configuration")
 	for button: JoyButton in [JOY_BUTTON_X, JOY_BUTTON_Y, JOY_BUTTON_B, JOY_BUTTON_A, JOY_BUTTON_RIGHT_SHOULDER]:
 		var event := InputEventJoypadButton.new()
 		event.button_index = button
@@ -1008,7 +1015,8 @@ func _finish() -> void:
 		"shipping_ultimate_proof": OS.get_cmdline_user_args().has("--prove-shipping-ultimate"),
 		"visual_gate_override": OS.get_cmdline_user_args().has("--enable-ultimate-visual"),
 		"library_arrival_override": _prove_library_arrival, "arrival_records": _arrival_records,
-		"canonical_wild_override": _prove_canonical_wild,
+		"canonical_wild_override": _prove_canonical_wild and not _shipping_canonical_wild,
+		"shipping_canonical_wild": _shipping_canonical_wild,
 		"claim": "focused fixture; no campaign, co-op, device or visual acceptance"}))
 	if is_instance_valid(_world): _world.free()
 	if is_instance_valid(_session): _session.free()
