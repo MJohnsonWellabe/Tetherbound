@@ -266,9 +266,19 @@ func _spawn_available_sites() -> void:
 		float(encounter_config.get("activation_distance_m", 100)),
 		int(encounter_config.get("active_wild_cap_per_peer", 16)))
 	for id: String in _wanted_sites:
+		var site: Dictionary = _wanted_sites[id]
+		var named_id := str(site.get("named_replacement_id", ""))
+		# Client presentation consumes an already replicated active packet. The
+		# authoritative cycle getter and first-generation writer remain host-only.
+		# Run before the site cache so a later retained generation can project too.
+		if not _is_host() and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
+				and not preload("res://scripts/repeatables/alpha_respawns.gd").site(named_id).is_empty():
+			var peer_packet: Dictionary = preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(
+				get_node("/root/Game").world.redesign_world, named_id)
+			if not peer_packet.is_empty(): foundation_publish_alpha(named_id, peer_packet)
+			continue
 		if _site_spawned.has(id) or _site_failures.has(id):
 			continue
-		var site: Dictionary = _wanted_sites[id]
 		var table := find_id(chapter.get("encounter_tables", []), str(site.table_id))
 		var centre := _vector3_of(site.position)
 		var members: Array = []
