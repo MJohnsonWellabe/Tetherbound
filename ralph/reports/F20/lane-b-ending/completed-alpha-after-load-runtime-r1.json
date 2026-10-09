@@ -1,0 +1,144 @@
+{
+  "kind": "completed-world-alpha-after-production-title-load-runtime-r1",
+  "criterion": "F20#3",
+  "run_id": 37900915929,
+  "source": "06de02cf99016c9265cf8a171f1f88d50ec72468",
+  "artifact_id": 11602821431,
+  "artifact_zip_sha256": "f82f73ddf64cd6fba723018b14d7d424c5597ddae4e1978f00b39c0b323f377f",
+  "crc_verified": true,
+  "original_archive": "completed-alpha-after-load-runtime-r1-producer.zip",
+  "log": "ci-completed-alpha-after-load-runtime-r1-37900915929.log.gz",
+  "log_sha256": "cf9744c74c0fc123d08f2d328272c18f7e2ac94dc2515de17fcc22f2a80d2eed",
+  "gzip_sha256": "49e88343a17eb28d788668267feab013c8beab54c57b7bd94f7af8659ec949a1",
+  "status": "PASS",
+  "checks": 59,
+  "failures": 0,
+  "exit_code": 0,
+  "numeric_exit_sources": [
+    "actual exit_code member",
+    "run.log exit=0 took=286s"
+  ],
+  "engine_script_errors": 0,
+  "actual_completed_world_alpha_witness": {
+    "character": "character-b42583ba54a405a9877e159fbee6af63",
+    "published_living_wild_bodies": [
+      {
+        "body": "/root/MeadowsPlayground/Alpha_mosshell",
+        "generation": 1,
+        "physics_awake": false,
+        "position": "(-318.0, -13.51624, 505.0)",
+        "site": "wild_once_1900",
+        "species": "mosshell"
+      },
+      {
+        "body": "/root/MeadowsPlayground/Alpha_trailpup",
+        "generation": 1,
+        "physics_awake": false,
+        "position": "(-182.9145, 7.881427, 2245.415)",
+        "site": "wild_once_2011",
+        "species": "trailpup"
+      },
+      {
+        "body": "/root/MeadowsPlayground/Alpha_meadowhart",
+        "generation": 1,
+        "physics_awake": false,
+        "position": "(-150.414, -3.953779, 2655.13)",
+        "site": "wild_once_2012",
+        "species": "meadowhart"
+      },
+      {
+        "body": "/root/MeadowsPlayground/Alpha_burrowback2",
+        "generation": 1,
+        "physics_awake": false,
+        "position": "(271.6076, 0.966616, 3875.197)",
+        "site": "wild_once_3002",
+        "species": "burrowback"
+      },
+      {
+        "body": "/root/MeadowsPlayground/Alpha_brooktail",
+        "generation": 1,
+        "physics_awake": false,
+        "position": "(23.57373, -3.379284, 3562.836)",
+        "site": "wild_once_3102",
+        "species": "brooktail"
+      },
+      {
+        "body": "/root/MeadowsPlayground/Alpha_galecrest",
+        "generation": 1,
+        "physics_awake": false,
+        "position": "(156.4496, -0.901579, 4561.446)",
+        "site": "wild_once_3103",
+        "species": "galecrest"
+      },
+      {
+        "body": "/root/MeadowsPlayground/Alpha_galecrest2",
+        "generation": 1,
+        "physics_awake": false,
+        "position": "(-421.2, 4.879643, 5146.68)",
+        "site": "wild_once_4001",
+        "species": "galecrest"
+      },
+      {
+        "body": "/root/MeadowsPlayground/Alpha_burrowback3",
+        "generation": 1,
+        "physics_awake": false,
+        "position": "(-282.0839, -3.556674, 5085.836)",
+        "site": "wild_once_4007",
+        "species": "burrowback"
+      },
+      {
+        "body": "/root/MeadowsPlayground/Alpha_meadowhart2",
+        "generation": 1,
+        "physics_awake": false,
+        "position": "(-51.00146, 0.378173, 4792.486)",
+        "site": "wild_once_4075",
+        "species": "meadowhart"
+      },
+      {
+        "body": "/root/MeadowsPlayground/Alpha_meadowhart3",
+        "generation": 1,
+        "physics_awake": false,
+        "position": "(428.1541, -5.242559, 5851.079)",
+        "site": "wild_once_4101",
+        "species": "meadowhart"
+      },
+      {
+        "body": "/root/MeadowsPlayground/Alpha_galecrest3",
+        "generation": 1,
+        "physics_awake": false,
+        "position": "(-36.0, -0.045089, 7290.0)",
+        "site": "wild_once_5001",
+        "species": "galecrest"
+      },
+      {
+        "body": "/root/MeadowsPlayground/Alpha_burrowback4",
+        "generation": 1,
+        "physics_awake": false,
+        "position": "(-12.7954, -2.237678, 7492.24)",
+        "site": "wild_once_5015",
+        "species": "burrowback"
+      }
+    ],
+    "scope": "Actual loaded completed-world availability; ordinary distance streaming unchanged; no fight, resolution, cooldown or payout claim",
+    "world_namespace": "60fb50dd385ae70efc015a4ba0bf1759"
+  },
+  "all_actual_bodies_normally_physics_asleep": true,
+  "production_title_load_and_all_original_identity_inventory_receipt_research_bounty_rematch_guards_passed": true,
+  "raw_three_input_files_immutable_guards_passed": true,
+  "rematch_admission_proven": true,
+  "rematch_victory_reward_proven": false,
+  "played_alpha_fight_resolution_respawn_cooldown_payout_proven": false,
+  "original_independent_review_pending": false,
+  "blind_pass": false,
+  "whole_criterion_closed": false,
+  "shipping_flag_restoration_approved": false,
+  "earned_finale": false,
+  "new_accepted_boundary": false,
+  "failed_save_input_used": false,
+  "native_dispatched_by_B": false,
+  "new_ending_screenshots": false,
+  "disclosed_origin": "Byte-identical previously approved completed post-finale fixture; not an earned campaign or accepted chain boundary.",
+  "original_independent_verdict": "Both originals **RUNTIME APPROVE** `37900915929 @06de02cf99016c9265cf8a171f1f88d50ec72468`: hashes/CRC verified, 59 checks/0 failures, exit 0, zero errors.\n\nLiteral F20#3 availability behavior is approved, including 12 canonical living alphas with ordinary streaming sleep disclosed. No alpha combat, respawn, cooldown or payout claim.\n\n**Whole closure remains blocked by required native presentation and independent blind PASS.** Shipping/landing approval is unchanged.\n\nBoth approve ROOT-only:\n\n```text\ntests/smoke_f20_ending.gd --completed-fixture --capture-ending\n```\n\nExact source, fresh storage, Compatibility 1280\u00d7720, no offload/headless; original four-frame corpus and full visual bar. No READY.",
+  "literal_f20_3_availability_behavior_approved": true,
+  "whole_remaining_gap": "Required native presentation and independent blind PASS against the original four-frame corpus and full visual bar; shipping/landing approval unchanged."
+}
