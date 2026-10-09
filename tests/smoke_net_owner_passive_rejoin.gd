@@ -625,8 +625,15 @@ func _tonic_item_original(commander: int = 1) -> bool:
 		# return; guest readiness does not expose the host settlement gate.
 		var guest: Dictionary = await probe(commander, "op_tag_state")
 		var guest_peer := int(guest.get("peer", 0))
+		var strike_action := 0
+		for attempt: Dictionary in hits.get("data", {}).get("attempts", []):
+			if float(attempt.get("foe_hp_before", -1.0)) >= 0.0 \
+					and attempt.get("foe_hp_after") == attempt.get("foe_hp_before") \
+					and int(attempt.get("strike", {}).get("submitted_action", 0)) > 0:
+				strike_action = int(attempt.strike.submitted_action)
+				break
 		print("TONIC failed hits host observation: ", JSON.stringify(await probe(0,
-			"op_tag_state", {"encounter_id":id, "peer":guest_peer})))
+			"op_tag_state", {"encounter_id":id, "peer":guest_peer, "strike_action":strike_action})))
 		# Existing read-only host probe retains original action/timing/geometry
 		# and the actual guest admission. This is post-checkpoint state, never
 		# a claim about the strike-time body or a new accepted boundary.
