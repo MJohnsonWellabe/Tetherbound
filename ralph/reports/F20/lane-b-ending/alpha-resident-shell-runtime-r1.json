@@ -52,7 +52,7 @@
   "unchanged_deadlines_and_pose_fixtures": true,
   "source_runtime_enabled_was_true": true,
   "shipping_flag_restoration_approved": false,
-  "original_independent_review_pending": true,
+  "original_independent_review_pending": false,
   "same_originals": [
     "b_f49_review/Bacon",
     "b_f20_review/Hubble"
@@ -67,5 +67,6 @@
   "runtime_enabled_at_hold_checkpoint": false,
   "distinct_supported_candidate_source": "9566aca1392e1859bda863fed8804e1922ca068d",
   "candidate_change": "Water active retained-cycle path calls foundation_publish_alpha on every occupied peer, but publisher rejected non-hosts before local projection. Remove only that rejection; exact retained packet equality and existing registration/resolution/save guards unchanged.",
-  "missing_client_body_sole_cause_runtime_confirmed": false
+  "missing_client_body_sole_cause_runtime_confirmed": false,
+  "original_independent_verdict": "Both originals confirm **FAIL** `37891499576`: hashes/CRC verified, eight failures, no engine/script errors or numeric exit attestation. Saved generation-1 cycle persistence is verified; the client body was absent. Host publication/client receiver operands are missing, so **cause UNKNOWN; no supported correction established**.\n\nBoth **SOURCE/COMMAND APPROVE** alpha-OFF `96950debaf33604164c2b5a75dabd8acd5354a07` for one fresh:\n\n```text\ntests/smoke_f20_ending.gd --completed-fixture --functional-offload\n```\n\nUse isolated storage, Compatibility 1280\u00d7720 and a free B slot. This may independently collect Title Load/research/bounty/rematch evidence.\n\nAlpha availability, whole F20#3 and blind proof remain open. No READY."
 }

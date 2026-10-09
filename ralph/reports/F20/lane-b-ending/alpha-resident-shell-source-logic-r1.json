@@ -49,5 +49,7 @@
   "runtime_enabled_at_hold_checkpoint": false,
   "next_projection_source": "9566aca1392e1859bda863fed8804e1922ca068d",
   "next_projection_review_pending": true,
-  "next_projection_dispatched": false
+  "next_projection_dispatched": false,
+  "original_named_runtime_verdict": "Both originals confirm **FAIL** `37891499576`: hashes/CRC verified, eight failures, no engine/script errors or numeric exit attestation. Saved generation-1 cycle persistence is verified; the client body was absent. Host publication/client receiver operands are missing, so **cause UNKNOWN; no supported correction established**.\n\nBoth **SOURCE/COMMAND APPROVE** alpha-OFF `96950debaf33604164c2b5a75dabd8acd5354a07` for one fresh:\n\n```text\ntests/smoke_f20_ending.gd --completed-fixture --functional-offload\n```\n\nUse isolated storage, Compatibility 1280\u00d7720 and a free B slot. This may independently collect Title Load/research/bounty/rematch evidence.\n\nAlpha availability, whole F20#3 and blind proof remain open. No READY.",
+  "named_site_runtime_review_pending": false
 }
