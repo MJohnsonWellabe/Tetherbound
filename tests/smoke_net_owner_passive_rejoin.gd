@@ -67,8 +67,11 @@ func _initialize() -> void:
 		quit(1)
 		return
 	if OS.get_cmdline_user_args().has("--with-fight-camera-units") or OS.get_cmdline_user_args().has("--with-tag-units") \
-		or OS.get_cmdline_user_args().has("--with-combat-hud-units"):
+		or OS.get_cmdline_user_args().has("--with-combat-hud-units") \
+		or OS.get_cmdline_user_args().has("--with-shipping-command-units"):
 		var selectors := PackedStringArray()
+		if OS.get_cmdline_user_args().has("--with-shipping-command-units"):
+			selectors.append_array(PackedStringArray(["test_f24_host_commands.gd", "test_move_commit_runtime.gd"]))
 		if OS.get_cmdline_user_args().has("--with-tag-units"):
 			# Existing files naming either changed production combat script.
 			selectors = PackedStringArray([
@@ -137,6 +140,8 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 				args.append(arg)
 	if OS.get_cmdline_user_args().has("--without-actor-vitals"):
 		args.append("--without-actor-vitals")
+	if OS.get_cmdline_user_args().has("--prove-shipping-tether"):
+		args.append("--prove-shipping-tether")
 	for extra in extra_args:
 		args.append(str(extra))
 	OS.set_environment("XDG_DATA_HOME", home)

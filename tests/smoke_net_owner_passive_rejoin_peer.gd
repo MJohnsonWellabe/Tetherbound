@@ -373,15 +373,23 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 					if arg.begins_with("--hud-output="): _hud_capture_metadata["output"] = arg.trim_prefix("--hud-output=")
 				if DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(str(_hud_capture_metadata.get("output", "")))) != OK:
 					return {"verdict":"FAIL", "detail":"HUD output directory could not be created"}
-			# Disclosed process-local candidate gates, before actual world boot.
-			# No shipped flag, authored item, HP, meter or timer is modified.
 			var commands: Script = preload("res://scripts/combat/tether_commands.gd")
-			commands._config = commands.config().duplicate(true)
-			for flag: String in ["runtime_enabled", "network_enabled", "ui_enabled"]:
-				commands._config.feature_flags[flag] = true
 			var math: Script = preload("res://scripts/combat/combat_math.gd")
-			math._config = math.config().duplicate(true)
-			math._config.actor_vitals.runtime_enabled = not OS.get_cmdline_user_args().has("--without-actor-vitals")
+			if OS.get_cmdline_user_args().has("--prove-shipping-tether"):
+				for flag: String in ["runtime_enabled", "network_enabled", "ui_enabled"]:
+					if commands.config().get("feature_flags", {}).get(flag) != true:
+						return {"verdict":"FAIL", "detail":"shipping Tether proof requires tracked " + flag}
+				var required_actor_vitals := not OS.get_cmdline_user_args().has("--without-actor-vitals")
+				if bool(math.config().get("actor_vitals", {}).get("runtime_enabled", false)) != required_actor_vitals:
+					return {"verdict":"FAIL", "detail":"shipping Tether proof refuses a local actor-vitals override"}
+			else:
+				# Existing disclosed mechanics selector only; shipping mode never mutates gates.
+				commands._config = commands.config().duplicate(true)
+				for flag: String in ["runtime_enabled", "network_enabled", "ui_enabled"]:
+					commands._config.feature_flags[flag] = true
+				math._config = math.config().duplicate(true)
+				math._config.actor_vitals.runtime_enabled = not OS.get_cmdline_user_args().has("--without-actor-vitals")
+
 		"op_tonic_hud_capture":
 			var name := str(args.get("name", ""))
 			if args.size() != 1 or name not in ["earned-command", "after-tag"] \
