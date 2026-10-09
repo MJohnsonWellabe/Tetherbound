@@ -54,9 +54,15 @@ class StepEpoch extends RefCounted:
 		if in_flight > 0 and frame == pre_frame:
 			completed = in_flight
 		in_flight = 0
+	func retry_token(token: int) -> int:
+		# An abandoned pre/post pair has not earned completion. A later actual
+		# pair may retry its same pending input within the original walk clock.
+		return token if token > completed and token <= issued and in_flight == 0 else 0
 
 var _step_epoch := StepEpoch.new()
 var _requested_step := 0
+var _waiting_step := 0
+var _waiting_point := Vector3.INF
 signal step_wake
 
 ## One unchanged allowance for the whole walk, including callback waits.
@@ -326,6 +332,9 @@ func _stop_geometry(reason: String) -> void:
 
 
 func reset() -> void:
+	if _waiting_step > 0:
+		_stop_geometry("reset overlaps a pending private walking request")
+		return
 	# Sticky refusal, departure and all lifetime allowances survive reset.
 	_requested = false
 	_owns_input = false
@@ -380,6 +389,9 @@ func set_approach_radius(value: float) -> void:
 
 
 func step(point: Vector3) -> void:
+	if _waiting_step > 0:
+		_stop_geometry("public step overlaps a pending private walking request")
+		return
 	_request = point
 	_raw = false
 	_requested = not refused()
@@ -396,9 +408,13 @@ func _walk_step(point: Vector3) -> void:
 	_requested = not refused()
 	var token := _step_epoch.request()
 	_requested_step = token
+	_waiting_step = token
+	_waiting_point = point
 	while _step_epoch.completed < token and not refused() \
 			and not _active_walk_budget.exhausted:
 		await step_wake
+	_waiting_step = 0
+	_waiting_point = Vector3.INF
 
 
 func _physics_frame_wake() -> void:
@@ -409,6 +425,15 @@ func _physics_frame_wake() -> void:
 			_drive.call(0.0, 0.0)
 			if _production_steering:
 				Input.flush_buffered_events()
+		elif can_walk() and not refused() and not _requested and not _production_pending and not _raw:
+			var retry := _step_epoch.retry_token(_waiting_step)
+			if retry > 0:
+				if retry != _step_epoch.issued or _request != _waiting_point:
+					_stop_geometry("pending private walking request was replaced")
+				else:
+					_checked_start = false
+					_requested_step = retry
+					_requested = true
 	step_wake.emit()
 
 
@@ -440,6 +465,9 @@ func _end_walk(arrived: bool) -> bool:
 
 
 func push_once(direction: Vector3) -> void:
+	if _waiting_step > 0:
+		_stop_geometry("raw input overlaps a pending private walking request")
+		return
 	# Preserve deliberate prompt shuffles through the same real stick seam.
 	_request = direction
 	_raw = true

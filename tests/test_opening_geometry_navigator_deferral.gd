@@ -5,6 +5,74 @@ extends "res://tests/test_case.gd"
 ## consecutive deferred frames, never by wall time. Every deferral is counted.
 const NAV := preload("res://tests/helpers/opening_geometry_navigator.gd")
 
+## Exercise the real wake/retry handler without a mounted world or native
+## queries. Production callback epochs, walking counters and admission remain
+## the actual helper's implementations; only locomotion/input transport are fake.
+class RetryProbe extends "res://tests/helpers/opening_geometry_navigator.gd":
+	var walking_allowed := true
+	var last_drive := Vector2.INF
+	func _init() -> void:
+		_active_walk_budget = WalkBudget.new(5)
+		_drive = record_drive
+	func can_walk() -> bool:
+		return walking_allowed
+	func record_drive(x: float, y: float) -> void:
+		last_drive = Vector2(x, y)
+	func abandon_request() -> int:
+		_waiting_point = Vector3(27, 0.85, 7.6)
+		_request = _waiting_point
+		_waiting_step = _step_epoch.request()
+		_step_epoch.begin(_waiting_step, 41)
+		_step_epoch.finish(42)
+		_checked_start = true
+		return _waiting_step
+
+
+func test_actual_wake_resubmits_only_the_same_abandoned_private_input() -> void:
+	var probe := RetryProbe.new()
+	var token := probe.abandon_request()
+	probe._physics_frame_wake()
+	assert_true(probe._requested)
+	assert_eq(probe._requested_step, token)
+	assert_eq(probe._request, Vector3(27, 0.85, 7.6))
+	assert_eq(probe._step_epoch.issued, token, "no replacement epoch or allowance is created")
+	assert_eq(probe._step_epoch.completed, 0, "wake/retry is not a controller acknowledgement")
+	assert_false(probe._checked_start, "a stale landing cannot establish arrival after a retry")
+	assert_eq(probe._active_walk_budget.walked, 1)
+
+
+func test_actual_wake_keeps_inflight_queued_pending_raw_and_blocked_inputs_unsubmitted() -> void:
+	for blocked: String in ["in_flight", "queued", "post_pending", "raw", "locomotion", "refused", "budget"]:
+		var probe := RetryProbe.new()
+		var token := probe.abandon_request()
+		match blocked:
+			"in_flight": probe._step_epoch.begin(token, 43)
+			"queued": probe._requested = true
+			"post_pending": probe._production_pending = true
+			"raw": probe._raw = true
+			"locomotion": probe.walking_allowed = false
+			"refused": probe._reason = "existing refusal"
+			"budget": probe._active_walk_budget = NAV.WalkBudget.new(0)
+		probe._physics_frame_wake()
+		assert_eq(probe._requested_step, 0, blocked + " cannot submit a private retry")
+		assert_eq(probe._step_epoch.completed, 0, blocked + " cannot fabricate a post witness")
+		assert_eq(probe._step_epoch.issued, token, blocked + " cannot replenish the request")
+
+
+func test_actual_wake_refuses_replaced_target_or_newer_private_epoch() -> void:
+	for replacement: String in ["target", "epoch"]:
+		var probe := RetryProbe.new()
+		probe.abandon_request()
+		if replacement == "target":
+			probe._request = Vector3.ZERO
+		else:
+			probe._step_epoch.request()
+		probe._physics_frame_wake()
+		assert_true(probe.refused(), replacement + " replacement is not silently adopted")
+		assert_false(probe._requested)
+		assert_eq(probe.last_drive, Vector2.ZERO)
+		assert_eq(probe._step_epoch.completed, 0)
+
 
 func test_submitting_a_step_does_not_finish_before_its_native_callback() -> void:
 	var epoch := NAV.StepEpoch.new()
@@ -55,6 +123,28 @@ func test_callback_waits_spend_the_whole_walk_allowance_once_per_actual_frame() 
 	assert_eq(budget.walked, 3, "the original whole-walk limit is not replenished per request")
 	assert_true(budget.exhausted)
 	assert_eq(token, 1)
+
+
+func test_abandoned_post_retries_actual_input_without_manufacturing_completion() -> void:
+	var budget := NAV.WalkBudget.new(2)
+	var epoch := NAV.StepEpoch.new()
+	var token := epoch.request()
+	assert_true(budget.advance(41, true))
+	assert_true(epoch.begin(token, 41))
+	assert_eq(epoch.retry_token(token), 0, "a pending actual pre cannot be overwritten")
+	epoch.finish(42)
+	assert_eq(epoch.completed, 0, "a mismatched post never acknowledges the original input")
+	assert_eq(epoch.retry_token(token), token, "the abandoned input remains eligible for an actual fresh pair")
+	assert_true(budget.advance(42, true))
+	assert_true(epoch.begin(epoch.retry_token(token), 42))
+	assert_eq(epoch.completed, 0, "resubmitting alone still earns no movement witness")
+	epoch.finish(42)
+	assert_eq(epoch.completed, token, "only the fresh matching actual post acknowledges the input")
+	assert_eq(epoch.retry_token(token), 0, "a finished input cannot be replayed")
+	assert_eq(epoch.retry_token(0), 0, "no public/raw step is an outstanding private request")
+	assert_eq(epoch.retry_token(token + 1), 0, "an unissued future input cannot be submitted")
+	assert_eq(epoch.issued, 1, "retrying does not issue a replacement or replenish its allowance")
+	assert_false(budget.advance(43, true), "the retry consumed the last original walking tick")
 
 
 func test_only_nonwalking_holds_are_excluded_from_the_original_walk_allowance() -> void:
