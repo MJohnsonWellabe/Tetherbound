@@ -1,0 +1,22 @@
+{
+  "source": "22c2f2f148445e35ab8e22e1008a2aa56ec35383",
+  "actual_exit": 0,
+  "actual_process_exit_utc": "2026-10-09T11:50:57.2096363Z",
+  "root_cell": "33782",
+  "console_session": "50652",
+  "native_session": "64588",
+  "owned_process_status": "ROOT reports all Godot gone; D owns no running local/native/hosted process",
+  "manifest_sha256": "6324590e556edf93b5685284c140747a5f50f6e872cc0c586cbede62a2ba4f64",
+  "root_verifier": "Existing D16 OPS:16PNGCRC/PIL1920 M/H/source-indexclean/physical8+8/ordinaryStormwoodhang/actualcodec held[]hung[stormwood]/receipt/worlddisplay/manifesthungtrue. Raw facts only, no independent runtime/blind approval.",
+  "warnings": 2,
+  "engine_script_errors": 0,
+  "original_runtime_review": "NOT REQUESTED; NOT GRADED — OWNER SHUTDOWN",
+  "original_blind_review": "NOT REQUESTED; NOT GRADED — OWNER SHUTDOWN",
+  "root_originals": "C:/CodexTemp/tetherbound-proof/native-d-22c2f2f148-stormwood-facing-r1",
+  "pngs": "Remain untouched in ROOT original packet; no PNG committed or new image review performed",
+  "preserved": "Only non-PNG manifests/receipts/logs/source-integrity/contactJPG byteSHA-copied and pushed under shutdown authorization",
+  "flags": "Unchanged, shippingOFF",
+  "criterion": "No completion grade changed; F17#6 remainsOPEN",
+  "future_work": "Cancelled by owner; no new code/run/dispatch/review/capture",
+  "reviewers": "Originalparent01a12081 confirms f42 andf26 terminal/completed, shutdown delivered; no active reviewer work"
+}

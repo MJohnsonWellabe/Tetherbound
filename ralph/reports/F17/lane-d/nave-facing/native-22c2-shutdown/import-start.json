@@ -1,0 +1,16 @@
+{
+  "deadline_minutes": 15,
+  "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-d-22c2f2f148-stormwood-facing-r1/import-home",
+  "pid": 49508,
+  "args": [
+    "--headless",
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--editor",
+    "--import",
+    "--quit"
+  ],
+  "mode": "Import",
+  "source": "22c2f2f148445e35ab8e22e1008a2aa56ec35383",
+  "started_utc": "2026-10-09T11:40:53.6155339Z"
+}

@@ -1,0 +1,38 @@
+{
+  "source": "22c2f2f148445e35ab8e22e1008a2aa56ec35383",
+  "paired_view_operands": [
+    {
+      "label": "pedestal stormwood",
+      "views": 8,
+      "first_body": [
+        111.183113098145,
+        0.910940587520599,
+        3.05956792831421
+      ],
+      "first_camera": [
+        106.320617675781,
+        3.74208450317383,
+        1.56714570522308
+      ],
+      "maximum_body_delta_from_first": 0.0,
+      "maximum_camera_delta_from_first": 0.0
+    },
+    {
+      "label": "hung relic from shrine doorway",
+      "views": 8,
+      "first_body": [
+        107.124168395996,
+        0.910940647125244,
+        7.62553644180298
+      ],
+      "first_camera": [
+        102.700790405273,
+        3.74208068847656,
+        10.1364946365356
+      ],
+      "maximum_body_delta_from_first": 0.0,
+      "maximum_camera_delta_from_first": 0.0
+    }
+  ],
+  "scope": "Observed frame coordinates; exact producer pose/camera guards unchanged. Doorway side/distance guard enforced in producer but boundary transform is not persisted; no visibility/clearance/whole inference."
+}

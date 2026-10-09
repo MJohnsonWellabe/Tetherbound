@@ -1,0 +1,35 @@
+{
+  "criterion": "F17#6 OPEN",
+  "source": "22c2f2f148445e35ab8e22e1008a2aa56ec35383",
+  "shipping_enabled": false,
+  "provenance": "Original SAME blind Stormwood01a12059 doorway8/8 thin pale edge/identity unreadable BLOCK; close identity/contact PASS. Original installed traynormal[0,.65654,.75429] under westrowyaw90 points EAST awayfrom nave x7 (rowx9.2). Native tray/relic half-turn together retains contact and scale; eastrow alreadywestfacing untouched.",
+  "scope": "Peer-local display geometry only within unchanged symmetric collider footprint; no slot/Approach/collider/label/lightchild/hostvisibility/transaction/authority/durable/camera/FOV/creature staging changes. Half-turn restricted, baselinewins, idempotent.",
+  "original_source_command": "SAME originalf42 via parent01a12067-d594-78d2-8bb9-a5405cbb7fef SOURCE/COMMAND APPROVE exact22c2; existing4methodaffectedcommand appropriate. Nativefit/readability/occlusion/whole unproved.",
+  "affected_proof": {
+    "run_id": "37923475238",
+    "job_id": "113796758470",
+    "artifact_id": "11612284793",
+    "artifact_sha256": "71df04a4f8dfb7a2d6c23a738f08e3fe9a02accdd423aac661a8147fd3b9d793",
+    "tests": 4,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 3,
+    "engine_script_errors": 0,
+    "engine_warnings": 0,
+    "raw": "run37923475238/expanded/run.log",
+    "checkout": "run37923475238/job.log",
+    "original_artifact_review": "SAME originalf42 via parent01a1206b-6e12-7e31-aa64-039f925ce3d2 ARTIFACT/REUSE APPROVE expectedZIP/archive-expanded/checkout/full22c2/genuine4methods/exit0/3s/zeroerrorswarnings. Prospective exactnativeCOMMAND APPROVE; selectedproofgateSATISFIED, ROOTserialization/actualpose-rastercomparison stillrequired. No nativebenefit/earned/wholecredit, flagsOFF."
+  },
+  "guards": "Originalguestrevision/refusal/hostreadonlyreplay/restore/nohang/focusguards retained. Existinghostmethod adds actual3models/mountrelativecontact/scale/normal/collider/Approach/idempotence/eastrow/admission/no request assertions. No new testclass/tool/method orassertioncountclaim.",
+  "native": "Exact22c2 16partial nativepacket originalCOMMAND APPROVE and selectedproofgateSATISFIED; submittedonlyby authorizedNOTICE afterpush, ROOTalone schedulesGPU. Existing040e seatingpacket separate.",
+  "exclusions": [
+    "Wholecriterion closure",
+    "component READY",
+    "actual native contact/readability/fit",
+    "companion opaque occlusion proves physical penetration",
+    "clipped label solved",
+    "earnedboundary",
+    "performance/device",
+    "motion/co-op"
+  ]
+}

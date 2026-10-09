@@ -1,0 +1,162 @@
+[
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0000-pedestal-stormwood-day-clear-medium.png",
+    "sha256": "74d675fb1f46cac97bdcc19e1ee36c19e888c4960675ae3edb849775ccc05666",
+    "bytes": 2410572,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0001-pedestal-stormwood-day-clear-high.png",
+    "sha256": "94efa89900762af24073ef236dbcf91b49790e994cebf7910f05a5489df81b76",
+    "bytes": 2385426,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0002-pedestal-stormwood-night-clear-medium.png",
+    "sha256": "1fb2907933a4267ac0e0dfd8d5bc0dd1f7eb489ace9313fec031ed9637b68b1f",
+    "bytes": 2262183,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0003-pedestal-stormwood-night-clear-high.png",
+    "sha256": "8e6d2ca9414e3c7f176c48910db7cd5f387f1c8adf7f111a2ed689aee93ba1c4",
+    "bytes": 2253706,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0004-pedestal-stormwood-day-rain-medium.png",
+    "sha256": "eb1cd7ddd10db16914fba76d3f4915204f624ff38e2ec6a8b2115a1bb76e3024",
+    "bytes": 2391181,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0005-pedestal-stormwood-day-rain-high.png",
+    "sha256": "a35e7f7f16ea8e671d8c246cf3c948c2bdb208d4decc50aeb41e1e69624ede6f",
+    "bytes": 2377734,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0006-pedestal-stormwood-night-rain-medium.png",
+    "sha256": "2737485f4292551d8f9a68708dea027f2f6dc2649b120411edbf243f84432a22",
+    "bytes": 2285958,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0007-pedestal-stormwood-night-rain-high.png",
+    "sha256": "92ffc1ba541cc1880665fbbe3043e33597a0131aa6e24b637af05a0405ab7095",
+    "bytes": 2278533,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0008-hung-relic-from-shrine-doorway-day-clear-medium.png",
+    "sha256": "12479861a6aa6c537c7bd2d5a4517674cbb354852863d31d8ff82200632fef56",
+    "bytes": 2614125,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0009-hung-relic-from-shrine-doorway-day-clear-high.png",
+    "sha256": "1ea47422f63d1b440ac5d63fc30df19436e4108a2fe7f7f391ede9ed2980f76f",
+    "bytes": 2581901,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0010-hung-relic-from-shrine-doorway-night-clear-medium.png",
+    "sha256": "18c225910e6c6154c75b045b06da1192eb8faff73fd2d89620334b92e03951d1",
+    "bytes": 2554234,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0011-hung-relic-from-shrine-doorway-night-clear-high.png",
+    "sha256": "00c1c7e5b53d3e61f91a9beea9e3fb17dec2c88a0932dceef3dc384c04718deb",
+    "bytes": 2541481,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0012-hung-relic-from-shrine-doorway-day-rain-medium.png",
+    "sha256": "2148f6455488cb13ba649aeeba4c6003f39a269ef337e1892b6e3e67c9d08a71",
+    "bytes": 2524296,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0013-hung-relic-from-shrine-doorway-day-rain-high.png",
+    "sha256": "a2940989d91588790a6bb68fd9260b48b02a17c5e2211b3c3e0464e34733e2ea",
+    "bytes": 2500313,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0014-hung-relic-from-shrine-doorway-night-rain-medium.png",
+    "sha256": "03d4777b772c43ad619ae90c09b9429c8641317d657f8a58919456c2a1a3db61",
+    "bytes": 2541351,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0015-hung-relic-from-shrine-doorway-night-rain-high.png",
+    "sha256": "cc5537d946daa448967abea12b968852189864f7777dd7ed3c64d9b49a31d547",
+    "bytes": 2536305,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  }
+]

@@ -1,0 +1,121 @@
+[
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0000-pedestal-stormwood-day-clear-medium.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0000-pedestal-stormwood-day-clear-medium.png",
+    "bytes": 2410572,
+    "sha256": "74D675FB1F46CAC97BDCC19E1EE36C19E888C4960675AE3EDB849775CCC05666",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0001-pedestal-stormwood-day-clear-high.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0001-pedestal-stormwood-day-clear-high.png",
+    "bytes": 2385426,
+    "sha256": "94EFA89900762AF24073EF236DBCF91B49790E994CEBF7910F05A5489DF81B76",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0002-pedestal-stormwood-night-clear-medium.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0002-pedestal-stormwood-night-clear-medium.png",
+    "bytes": 2262183,
+    "sha256": "1FB2907933A4267AC0E0DFD8D5BC0DD1F7EB489ACE9313FEC031ED9637B68B1F",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0003-pedestal-stormwood-night-clear-high.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0003-pedestal-stormwood-night-clear-high.png",
+    "bytes": 2253706,
+    "sha256": "8E6D2CA9414E3C7F176C48910DB7CD5F387F1C8ADF7F111A2ED689AEE93BA1C4",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0004-pedestal-stormwood-day-rain-medium.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0004-pedestal-stormwood-day-rain-medium.png",
+    "bytes": 2391181,
+    "sha256": "EB1CD7DDD10DB16914FBA76D3F4915204F624FF38E2EC6A8B2115A1BB76E3024",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0005-pedestal-stormwood-day-rain-high.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0005-pedestal-stormwood-day-rain-high.png",
+    "bytes": 2377734,
+    "sha256": "A35E7F7F16EA8E671D8C246CF3C948C2BDB208D4DECC50AEB41E1E69624EDE6F",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0006-pedestal-stormwood-night-rain-medium.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0006-pedestal-stormwood-night-rain-medium.png",
+    "bytes": 2285958,
+    "sha256": "2737485F4292551D8F9A68708DEA027F2F6DC2649B120411EDBF243F84432A22",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0007-pedestal-stormwood-night-rain-high.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0007-pedestal-stormwood-night-rain-high.png",
+    "bytes": 2278533,
+    "sha256": "92FFC1BA541CC1880665FBBE3043E33597A0131AA6E24B637AF05A0405AB7095",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0008-hung-relic-from-shrine-doorway-day-clear-medium.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0008-hung-relic-from-shrine-doorway-day-clear-medium.png",
+    "bytes": 2614125,
+    "sha256": "12479861A6AA6C537C7BD2D5A4517674CBB354852863D31D8FF82200632FEF56",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0009-hung-relic-from-shrine-doorway-day-clear-high.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0009-hung-relic-from-shrine-doorway-day-clear-high.png",
+    "bytes": 2581901,
+    "sha256": "1EA47422F63D1B440AC5D63FC30DF19436E4108A2FE7F7F391EDE9ED2980F76F",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0010-hung-relic-from-shrine-doorway-night-clear-medium.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0010-hung-relic-from-shrine-doorway-night-clear-medium.png",
+    "bytes": 2554234,
+    "sha256": "18C225910E6C6154C75B045B06DA1192EB8FAFF73FD2D89620334B92E03951D1",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0011-hung-relic-from-shrine-doorway-night-clear-high.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0011-hung-relic-from-shrine-doorway-night-clear-high.png",
+    "bytes": 2541481,
+    "sha256": "00C1C7E5B53D3E61F91A9BEEA9E3FB17DEC2C88A0932DCEEF3DC384C04718DEB",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0012-hung-relic-from-shrine-doorway-day-rain-medium.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0012-hung-relic-from-shrine-doorway-day-rain-medium.png",
+    "bytes": 2524296,
+    "sha256": "2148F6455488CB13BA649AEEBA4C6003F39A269EF337E1892B6E3E67C9D08A71",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0013-hung-relic-from-shrine-doorway-day-rain-high.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0013-hung-relic-from-shrine-doorway-day-rain-high.png",
+    "bytes": 2500313,
+    "sha256": "A2940989D91588790A6BB68FD9260B48B02A17C5E2211B3C3E0464E34733E2EA",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0014-hung-relic-from-shrine-doorway-night-rain-medium.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0014-hung-relic-from-shrine-doorway-night-rain-medium.png",
+    "bytes": 2541351,
+    "sha256": "03D4777B772C43AD619AE90C09B9429C8641317D657F8A58919456C2A1A3DB61",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\0015-hung-relic-from-shrine-doorway-night-rain-high.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\0015-hung-relic-from-shrine-doorway-night-rain-high.png",
+    "bytes": 2536305,
+    "sha256": "CC5537D946DAA448967ABEA12B968852189864F7777DD7ED3C64D9B49A31D547",
+    "byte_identical": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\ralph\\reports\\F17\\lane-d\\nave-facing\\native-22c2-stormwood\\manifest.json",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-d-22c2f2f148-stormwood-facing-r1\\originals\\manifest.json",
+    "bytes": 69047,
+    "sha256": "6324590E556EDF93B5685284C140747A5F50F6E872CC0C586CBEDE62A2BA4F64",
+    "byte_identical": true
+  }
+]

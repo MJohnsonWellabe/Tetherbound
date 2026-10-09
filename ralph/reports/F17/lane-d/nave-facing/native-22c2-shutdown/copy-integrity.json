@@ -1,0 +1,128 @@
+[
+  {
+    "relative": "capture-start.json",
+    "bytes": 1329,
+    "sha256": "b452bc4375da657a5a23327acf33b9650de30d91c50ac5fe1864a30054ec03a3",
+    "byte_identical": true
+  },
+  {
+    "relative": "capture-terminal.json",
+    "bytes": 197,
+    "sha256": "99e559d8acf40fc100b8a9f401a1dcaeed105ae9f64725eb7477cb30e6c96cf5",
+    "byte_identical": true
+  },
+  {
+    "relative": "capture.stderr.log",
+    "bytes": 544,
+    "sha256": "ec94e5ed6e756a1843e03f8aa18565d8b96423c128ddf3823bb4d744b33cd833",
+    "byte_identical": true
+  },
+  {
+    "relative": "capture.stdout.log",
+    "bytes": 224689,
+    "sha256": "67e5d646ee10e5c42fe44676ad778838abc250fe15e2f548905759c08a1c664e",
+    "byte_identical": true
+  },
+  {
+    "relative": "doorway-paired-pose-operands.json",
+    "bytes": 1111,
+    "sha256": "4773346006cd05568a326b20f06391071b938810b48c982ad89510586ae37fa5",
+    "byte_identical": true
+  },
+  {
+    "relative": "import-start.json",
+    "bytes": 444,
+    "sha256": "5616f0841c312c3cd862e8c86c29f192028034e9be0e0d50dc6642cbb91de0ce",
+    "byte_identical": true
+  },
+  {
+    "relative": "import-terminal.json",
+    "bytes": 196,
+    "sha256": "ac2769dee4a2ef8c0a96952a9f366ec053c83d49ab24f98353179525351a7dfa",
+    "byte_identical": true
+  },
+  {
+    "relative": "import.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "byte_identical": true
+  },
+  {
+    "relative": "import.stdout.log",
+    "bytes": 14175,
+    "sha256": "5c8c97e288f82e22312a9c4e728be56ee0e92b464274c2c80b65d42ae2794fa1",
+    "byte_identical": true
+  },
+  {
+    "relative": "native-image-integrity.json",
+    "bytes": 6173,
+    "sha256": "5717a1a669fb913e545485e442954c9dd65619b4dfc855282797e7b6c73f7608",
+    "byte_identical": true
+  },
+  {
+    "relative": "native-sixteen-frame-contact.jpg",
+    "bytes": 860533,
+    "sha256": "68ddeb36c1e58c4c5f113c68bdb39331f471d814a0153cd27b5388d4d44c9808",
+    "byte_identical": true
+  },
+  {
+    "relative": "native-verified-summary.json",
+    "bytes": 1579,
+    "sha256": "3754c98d01a82a49c789100e07a3dbb9a092d5c0e4575c3547fbf7fa0887f67e",
+    "byte_identical": true
+  },
+  {
+    "relative": "original-recipe.json",
+    "bytes": 4472,
+    "sha256": "2e9612ed79f4cfeb4c29c10e74170089275e3646517140f93ddde44ce7d08e59",
+    "byte_identical": true
+  },
+  {
+    "relative": "original-source-proof.json",
+    "bytes": 2581,
+    "sha256": "63151bc966fb9bcc20491e0fbb44291210967487a4d6b3bc1a0936ca170f2f46",
+    "byte_identical": true
+  },
+  {
+    "relative": "shutdown-preservation.json",
+    "bytes": 8209,
+    "sha256": "ade54f7efa0008ef23dcbaa29a23ba9dc50fe6f2449c68acec892aa6f0361755",
+    "byte_identical": true
+  },
+  {
+    "relative": "source-after-capture.json",
+    "bytes": 1161,
+    "sha256": "3a5cf9b36bb681315453269560a6421b45582ad0e3788e89526d2ee6545fd20b",
+    "byte_identical": true
+  },
+  {
+    "relative": "source-after-import-revalidated.json",
+    "bytes": 944,
+    "sha256": "ce7988dd8dfc0d34f0ef0baad5432ff31edc74d0327c45a6d7e053ff82f7f44c",
+    "byte_identical": true
+  },
+  {
+    "relative": "source-after-import.json",
+    "bytes": 1438,
+    "sha256": "5bef3717f52df6403611fbc8bfb3d05c5f78ce194ac18215a5735d78cd0987c0",
+    "byte_identical": true
+  },
+  {
+    "relative": "source-before-capture.json",
+    "bytes": 1112,
+    "sha256": "a75572d31276ce73f82543a503dbd05431a7cfd3c62a815f1565b992b3b32134",
+    "byte_identical": true
+  },
+  {
+    "relative": "source-before-import.json",
+    "bytes": 1112,
+    "sha256": "3507ec4ce7625d78775d14f90ca1e82fdacf7b850c7debd7eac21ca904e0abfb",
+    "byte_identical": true
+  },
+  {
+    "relative": "originals\\manifest.json",
+    "bytes": 69047,
+    "sha256": "6324590e556edf93b5685284c140747a5f50f6e872cc0c586cbede62a2ba4f64",
+    "byte_identical": true
+  }
+]
