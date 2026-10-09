@@ -123,6 +123,9 @@ static func relic_witness_spec(biome: String) -> Dictionary:
 	if biome == "cloudreach":
 		return {"boss": "captain_veyra_storm_anchor", "mount": "CloudreachRelicDisplay",
 			"candidate": "--hall-cloudreach-relic-candidate", "baseline": "--hall-cloudreach-relic-baseline"}
+	if biome == "stormwood":
+		return {"boss": "captain_marrow_dynamo_core", "mount": "StormwoodRelicDisplay",
+			"candidate": "--hall-stormwood-relic-candidate", "baseline": "--hall-stormwood-relic-baseline"}
 	return {}
 
 
