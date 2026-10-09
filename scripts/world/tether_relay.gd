@@ -1404,7 +1404,7 @@ func _build_apparatus() -> void:
 					apparatus.get("finish", {}) as Dictionary)
 				# The clearance collider intentionally leaves room for the operator.
 				# The lens still needs the installed mesh's full visible envelope.
-				var camera_bounds := _local_visual_bounds(instance)
+				var camera_bounds := _model_bounds(instance)
 				if camera_bounds.size.x > 0.001 and camera_bounds.size.y > 0.001 and camera_bounds.size.z > 0.001:
 					_add_camera_occluder(instance, camera_bounds)
 				var collision_size := Vector3(tall * 1.15, tall, tall * 1.15)
