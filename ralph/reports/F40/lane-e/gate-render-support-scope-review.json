@@ -86,5 +86,64 @@
     }
   ],
   "current_adapted_temp_source_verdict": "APPROVE bounded R2 TEMP SOURCE only",
-  "current_pinned_native_command_verdict": "PENDING: no adapted-source pin or exact command approved"
+  "current_pinned_native_command_verdict": "APPROVE applicability only; actual parser/import/native/operand/persistence proof pending",
+  "pinned_source_command_reviews": [
+    {
+      "source": "2c109ec7e65eda25a409a9a944b94015ceb3b345",
+      "base": "48bd7b60343fba1727fafe08057585b3dfc553b5",
+      "verdicts": {
+        "pinned_source": "APPROVE exact approved R2 observer plus original comments restored",
+        "exact_command": "APPROVE applicability only",
+        "parser_import_native_operand_artifact": "PENDING"
+      },
+      "producer_git_blob": "ccb98816fa7b84258337fd535b4d9a6f6781c6ac",
+      "producer_sha256": "70266046227d48896a4103b3baff1e8848b80361bcef129a6e06ebe176ef530b",
+      "r3_temp_patch_sha256": "696ed33793091912dffec354d1035f36405909645a1cbd39dab766951dc332e9",
+      "source_binding": "Actual Git producer bytes exactly equal R3 TEMP producer. R2→Git differs only the three header Â§→§ reversions; restored header lines equal48bd base. Sole code path delta48bd→2c109 is126 additive lines in the existing frame matrix; two other changed paths are evidence reports.",
+      "unchanged_dependency_blobs": {
+        "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+        "tools/capture_cloudreach_lane_common.gd": "f2e553be8920586cde1179c37fdef674f93784e9",
+        "scripts/world/cloudreach_world.gd": "96ca7b933fac15081e8047671d21ab1d3e386348",
+        "scripts/world/cloudreach_ground_cover.gd": "cc276b1fdcc55a0a88529c2d24b6eec54f3ae426",
+        "scripts/world/cloudreach_realm_gate_crag.gd": "5af619907c11fc0ae0c41b7445c91d5fef56c785",
+        "data/config/cloudreach_realm_gate_crag_visual.json": "1967b70e8ae25283081519b5085ed71fba5e916c",
+        "tests/test_cloudreach_high_perches_presentation.gd": "3a54f8d2133803387cd82ff8886115b82f835f29",
+        "tests/test_map_realm_view.gd": "6b74c322a40ddb047f194b40c0ad1b5fbf6da470"
+      },
+      "argv": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/capture_cloudreach_frame_matrix.gd",
+        "--",
+        "--only=1,4",
+        "--preset=High",
+        "--source-commit=2c109ec7e65eda25a409a9a944b94015ceb3b345",
+        "--output=res://.tmp/e-gate-render-support-2c109-day-r1"
+      ],
+      "command_binding": "Existing numeric only parser selects original row1 gate approach and row4 detail-crag; default row day10 and original production stand candidates/CameraRig/registered-floor/drawn-crown/physical-ray/follower/PNG/named source-renderer-native-raster/fresh-output/final receipt guards retained. High1920 and Forward+ match unchanged bootstrap. No new selector or fixture.",
+      "observer_guard_reuse": "Approved R2 complete facade1/tower2/authored3-paver roster and per-target nonempty bottom-query guards unchanged. One sample occurs only after an original valid saved row1 or4, bound to the actual saved name. Missing operands mark original skips; exact entire observer line must survive final flush/error/readback; zero hits remain legitimate negative geometric operands.",
+      "proof_reuse": "Existing401 five presentation tests/48assertions and12d7 ten map tests/49assertions remain applicable to their exact unchanged dependencies only. Neither executes/parses this observer; no additional headless execution required or claimed for read-only measurement source.",
+      "pending_root_proofs": [
+        "Fresh exact clean2c109 pin/import/parser/user/output/start-terminal/source-before-after and adequate actual persistence capacity",
+        "Both selected original row-image records with native1920 headers/hashes and nonzero skip/failure honesty",
+        "One exact persisted observer line with actual complete target set/config hash/finite transformed geometric operands; absence of hits not repaired",
+        "Independent source/image/receipt/terminal verification; no art/contact determination by this reviewer"
+      ],
+      "limits": [
+        "Two targeted original rows, not full96/384",
+        "Geometric XZ columns only; existing trail-transparent-overlay/backface/material/framebuffer/collider limitations remain",
+        "No registered road-height or physics-box substitution",
+        "No measurement output yet; no walkability/contact/fix/art/P2/F40/whole/READY claim",
+        "401 failed native remains historical; no observer applied/engine run/dispatch by reviewer",
+        "R1 REQUEST_CHANGES and R2 unpinnedAPP history retained"
+      ]
+    }
+  ],
+  "current_pinned_source": "2c109ec7e65eda25a409a9a944b94015ceb3b345",
+  "current_pinned_source_verdict": "APPROVE"
 }
