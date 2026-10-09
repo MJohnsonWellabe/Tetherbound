@@ -34,5 +34,33 @@
   },
   "official_mode_reference": "https://github.com/godotengine/godot/blob/4.7-stable/editor/export/editor_export_preset.h#L54",
   "queued_native": "D first/E second; stable source assets required",
-  "updated_utc": "2026-10-09T20:48:51.9338112Z"
+  "updated_utc": "2026-10-09T20:57:48.9845532Z",
+  "unit_result": {
+    "tests": 11,
+    "assertions": 40,
+    "artifact": 11644866379,
+    "failed": 0,
+    "raw_log": "C:\\CodexTemp\\lane-e-freshness-units-37988885752.log",
+    "script_errors": [],
+    "exit": 0,
+    "verdict": "PASS",
+    "seconds": 5
+  },
+  "independent_source_review": {
+    "reviewer": "/root/e_export_review",
+    "scope": "SOURCE ONLY",
+    "file": "C:\\CodexTemp\\lane-e-export-independent-source-review.json",
+    "verdict": "APPROVE"
+  },
+  "graphics_smoke_result": {
+    "checks": 19,
+    "artifact": 11644277653,
+    "scope": "Headless production Settings/persistence/restart routing; no native Forward+ or release-render claim",
+    "verdict": "PASS",
+    "failures": 0,
+    "raw_log": "C:\\CodexTemp\\lane-e-graphics-smoke-37988888462.log",
+    "seconds": 6,
+    "exit": 0,
+    "actual_renderer": "gl_compatibility"
+  }
 }
