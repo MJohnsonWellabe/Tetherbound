@@ -1,0 +1,15 @@
+{
+  "source": "3ca9eb093ee2c16373cfe18a1315f2b7d7002ec4",
+  "index_tree": "71509ac189bc862a840df8efc2efea679e298d69",
+  "observed_utc": "2026-10-09T05:02:23.3970981Z",
+  "tracked_clean": true,
+  "status": [
+    "?? ralph/reports/F38/lane-d/exterior-cluster/",
+    "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+    "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+    "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+  ],
+  "index_clean": true,
+  "head_tree": "71509ac189bc862a840df8efc2efea679e298d69",
+  "declared_capture_artifacts_only": true
+}

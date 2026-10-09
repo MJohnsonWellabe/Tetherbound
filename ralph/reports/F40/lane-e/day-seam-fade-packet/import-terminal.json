@@ -1,0 +1,9 @@
+{
+  "ended_utc": "2026-10-09T04:45:07.1489538Z",
+  "capture_index": 0,
+  "pid": 40416,
+  "reason": "process_exit",
+  "source": "3ca9eb093ee2c16373cfe18a1315f2b7d7002ec4",
+  "exit_code": 0,
+  "mode": "Import"
+}

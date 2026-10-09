@@ -1,0 +1,26 @@
+{
+  "fresh_user_directory": "D:/CodexTemp/tetherbound-proof/native-e-3ca9eb093e-cloudreach-quarters-r1/matrix-day-home",
+  "args": [
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "res://tools/capture_cloudreach_f40_matrix.gd",
+    "--",
+    "--biome=cloudreach",
+    "--preset=High",
+    "--source-commit=3ca9eb093ee2c16373cfe18a1315f2b7d7002ec4",
+    "--segment=day",
+    "--output=res://.tmp/f40-cluster-high-3ca9-day-r1"
+  ],
+  "pid": 64796,
+  "output": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/f40-cluster-high-3ca9-day-r1",
+  "segment": "day",
+  "preset": "High",
+  "source": "3ca9eb093ee2c16373cfe18a1315f2b7d7002ec4",
+  "deadline_minutes": 45,
+  "started_utc": "2026-10-09T04:46:52.9504082Z"
+}
