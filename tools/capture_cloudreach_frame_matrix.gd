@@ -591,6 +591,23 @@ func _perch_actor_snapshot(frame_id: String) -> Dictionary:
 			or not is_instance_valid(_camera) or not _camera.is_inside_tree():
 		return result
 	result["camera"] = _snapshot_transform(_camera)
+	result["edge_nature"] = {"status": "missing"}
+	var pocket := _world.get_node_or_null(^"AuthoredRouteDetails/HighPerchesEdgeNature") as Node3D
+	if is_instance_valid(pocket) and not pocket.is_queued_for_deletion() and pocket.is_inside_tree():
+		var placements: Array[Dictionary] = []
+		for child: Node in pocket.get_children():
+			if not child is Node3D or child.is_queued_for_deletion():
+				continue
+			var placement := child as Node3D
+			var placed := {"path": str(placement.get_path()), "transform": _snapshot_transform(placement),
+				"children": placement.get_child_count(), "model_status": "missing"}
+			if placement.get_child_count() == 1 and placement.get_child(0) is Node3D:
+				var model := placement.get_child(0) as Node3D
+				placed["model_status"] = "present"
+				placed["model_transform"] = _snapshot_transform(model)
+			placements.append(placed)
+		result["edge_nature"] = {"status": "mounted", "path": str(pocket.get_path()),
+			"children": pocket.get_child_count(), "placements": placements}
 	result["scope"] = "Mounted creature bodies within 50m of current camera; visibility is not pixel/occlusion identity."
 	var ally := _ally()
 	result["director_ally_status"] = "present" if is_instance_valid(ally) else "missing"
