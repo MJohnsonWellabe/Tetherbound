@@ -422,7 +422,7 @@ func _check_remaining_stations_place() -> void:
 
 ## The first open, level homestead cell (by the placer's own legality) along
 ## the yard; the ghost then lands there from the trainer's ordinary stance.
-func _legal_cell(id: String) -> Vector3:
+func _legal_cell(id: String, live_preview: bool = false) -> Vector3:
 	var cfg := STATION_RULES.config()
 	for dz in [0, -4, 4, -8, 8]:
 		for dx in range(0, 40, 4):
@@ -430,6 +430,11 @@ func _legal_cell(id: String) -> Vector3:
 				var x: float = STANCE.x + sign * dx
 				var z: float = STANCE.z - GHOST_TO_STANCE.z + dz
 				var at := Vector3(x, float(_world.call("ground_height_at", x, z)), z)
+				if live_preview:
+					# Resolve the same grid/neighbor snap, live yaw, affordability,
+					# collision and homestead bounds as the mounted build ghost.
+					if _placer.call("preview_placement", _game, id, at).get("ok") == true: return at
+					continue
 				var legal: bool = _placer.call("_altar_pose_valid", _game, "meadows", at, 0.0).ok if id == "altar" else \
 					(STATION_RULES.placement(cfg, _game.get("placed_buildings"), id, "meadows", at, 0.0, {}, "").get("ok") == true \
 						and _placer.call("_station_pose_valid", _game, id, "meadows", at, 0.0).get("ok") == true)
@@ -450,11 +455,16 @@ func _check_paid_creature_gear() -> void:
 	var character := str(_game.get("local").get("character_id"))
 	# The first Forge retained its original dismantle/refund proof, freeing
 	# the Kitchen's original cell. Build this paid Forge on a legal free cell.
-	var cell := _legal_cell("forge")
+	_fund(DELIVERY.cost("forge"))
+	var cell := _legal_cell("forge", true)
 	if not cell.is_finite():
 		_fail("no legal homestead cell for the paid gear Forge")
 		return
-	_player.global_position = cell + GHOST_TO_STANCE
+	var forward := -_player.global_transform.basis.z
+	var camera: Node = _placer.get("_camera_rig")
+	if camera != null and camera.has_method("planar_basis"):
+		forward = -(camera.call("planar_basis") as Basis).z
+	_player.global_position = cell - forward * preload("res://scripts/build/build_placer.gd").PLACE_AHEAD + Vector3(0, 0.5, 0)
 	for frame in 10: await physics_frame
 	var forge := await _check_paid_station_place("forge")
 	if forge == null or await _check_paid_attachment_place(forge) == null: return
