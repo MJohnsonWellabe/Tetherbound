@@ -8,6 +8,47 @@ extends "res://tests/test_case.gd"
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
 
 
+func test_cloudreach_rain_retains_night_colours_and_its_weather_energy_and_density() -> void:
+	var art: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/art.json"))
+	var overlay: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_look.json"))
+	var weather: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/weather.json"))
+	var look: Node = WORLD_LOOK.new()
+	look.set("_config", WORLD_LOOK.merged_look(art, overlay))
+	look.set("_weather", weather.presets.rain)
+	var sun: Dictionary = art.times.night.sun.duplicate(true)
+	var sky: Dictionary = art.times.night.sky.duplicate(true)
+	var env: Dictionary = art.times.night.environment.duplicate(true)
+	look.call("_layer_weather", sun, sky, env, 1.0)
+	assert_eq(sky.top_colour, Color(str(art.times.night.sky.top_colour)))
+	assert_eq(sky.horizon_colour, Color(str(art.times.night.sky.horizon_colour)))
+	assert_eq(env.ambient_colour, Color(str(art.times.night.environment.ambient_colour)))
+	assert_almost_eq(float(sun.energy), float(art.times.night.sun.energy) * float(weather.presets.rain.sun.energy_mult))
+	assert_almost_eq(float(env.ambient_energy), float(art.times.night.environment.ambient_energy) * float(weather.presets.rain.environment.ambient_energy_mult))
+	assert_almost_eq(float(env.fog_density), float(art.times.night.environment.fog_density) + float(weather.presets.rain.environment.fog_density_add))
+	assert_eq(sun.shadow_opacity, weather.presets.rain.sun.shadow_opacity)
+	assert_eq(env.fog_colour, art.times.night.environment.fog_colour)
+	look.free()
+
+
+func test_weather_palette_is_realm_scoped_and_continuous_at_dawn_and_dusk() -> void:
+	var weather: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/weather.json"))
+	var look: Node = WORLD_LOOK.new()
+	look.set("_weather", weather.presets.rain)
+	var sky := {"top_colour": "#1b2d5c"}
+	look.call("_layer_weather", {}, sky, {}, 1.0)
+	assert_eq(sky.top_colour, weather.presets.rain.sky.top_colour, "other realms retain their original overrides")
+	look.set("_config", {"weather_palette": {"preserve_night_colour": true}})
+	for weight: float in [0.0, 0.001, 0.5, 0.999, 1.0]:
+		sky = {"top_colour": "#1b2d5c"}
+		look.call("_layer_weather", {}, sky, {}, weight)
+		var observed: Color = sky.top_colour if sky.top_colour is Color else Color(str(sky.top_colour))
+		var expected := Color(str(weather.presets.rain.sky.top_colour)).lerp(Color("#1b2d5c"), weight)
+		assert_almost_eq(observed.r, expected.r)
+		assert_almost_eq(observed.g, expected.g)
+		assert_almost_eq(observed.b, expected.b)
+	look.free()
+
+
 func test_fog_is_scaled_by_a_dimmed_sky() -> void:
 	var c: Color = WORLD_LOOK.fog_light_colour({"fog_colour": "#4d6a9e"}, {"energy": 0.75})
 	var raw := Color("#4d6a9e")

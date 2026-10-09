@@ -532,7 +532,7 @@ func apply_time(name: String) -> void:
 	var sun_cfg := _merged("sun", over)
 	var sky_cfg := _merged("sky", over)
 	var env_cfg := _merged("environment", over)
-	_layer_weather(sun_cfg, sky_cfg, env_cfg)
+	_layer_weather(sun_cfg, sky_cfg, env_cfg, 1.0 if name == "night" else 0.0)
 
 	_apply_sun(sun_cfg)
 	_apply_environment(env_cfg, sky_cfg)
@@ -570,7 +570,8 @@ func set_weather(delta: Dictionary) -> void:
 ## since the previous weather's multiplier is already baked into the node.
 ## Computing from the fresh per-call `_merged()` result is idempotent: the
 ## same weather delta on the same time of day always lands on the same value.
-func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionary) -> void:
+func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionary,
+		night_weight: float = 0.0) -> void:
 	if _weather.is_empty():
 		return
 	var sun_over: Dictionary = _weather.get("sun", {})
@@ -589,17 +590,29 @@ func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionar
 	var sky_over: Dictionary = _weather.get("sky", {})
 	for key: String in ["top_colour", "horizon_colour", "ground_horizon_colour"]:
 		if sky_over.has(key):
-			sky_cfg[key] = sky_over[key]
+			sky_cfg[key] = _weather_colour(sky_cfg.get(key, sky_over[key]), sky_over[key], night_weight)
 
 	var env_over: Dictionary = _weather.get("environment", {})
 	if env_over.has("ambient_energy_mult"):
 		env_cfg["ambient_energy"] = float(env_cfg.get("ambient_energy", 1.0)) * float(env_over["ambient_energy_mult"])
 	if env_over.has("ambient_colour"):
-		env_cfg["ambient_colour"] = env_over["ambient_colour"]
+		env_cfg["ambient_colour"] = _weather_colour(env_cfg.get("ambient_colour", env_over["ambient_colour"]),
+			env_over["ambient_colour"], night_weight)
 	if env_over.has("fog_density_add"):
 		env_cfg["fog_density"] = float(env_cfg.get("fog_density", 0.0016)) + float(env_over["fog_density_add"])
 	if env_over.has("fog_colour"):
-		env_cfg["fog_colour"] = env_over["fog_colour"]
+		env_cfg["fog_colour"] = _weather_colour(env_cfg.get("fog_colour", env_over["fog_colour"]),
+			env_over["fog_colour"], night_weight)
+
+
+## Cloudreach's realm overlay preserves its blue night identity under rain.
+## Other realms keep their exact existing override; energies/density still
+## express the weather. Weight follows the live clock's keyframe blend.
+func _weather_colour(time_colour: Variant, weather_colour: Variant, night_weight: float) -> Variant:
+	var palette: Dictionary = _config.get("weather_palette", {})
+	if not bool(palette.get("preserve_night_colour", false)) or night_weight <= 0.0:
+		return weather_colour
+	return _as_colour(weather_colour).lerp(_as_colour(time_colour), clampf(night_weight, 0.0, 1.0))
 
 
 func time_of_day() -> String:
@@ -785,7 +798,9 @@ func _apply_blended(hour: float) -> void:
 	var sun_cfg: Dictionary = blended.sun
 	var sky_cfg: Dictionary = blended.sky
 	var env_cfg: Dictionary = blended.environment
-	_layer_weather(sun_cfg, sky_cfg, env_cfg)
+	var night_weight := (1.0 - float(blended.t) if str(blended.from) == "night" else 0.0) \
+		+ (float(blended.t) if str(blended.to) == "night" else 0.0)
+	_layer_weather(sun_cfg, sky_cfg, env_cfg, night_weight)
 
 	_apply_sun(sun_cfg)
 	_apply_environment(env_cfg, sky_cfg)
