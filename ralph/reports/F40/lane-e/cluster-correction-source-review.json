@@ -1,0 +1,218 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-09T01:30:39.490101+00:00",
+  "source_commit": "c4275c7de98de01932cccff36945296c65c378f2",
+  "diff_base": "b7d999bff33ab05c9f084647af08e77cb2241853",
+  "scope": "Only Sky Shrine registered crown lookup and Cloudreach-local Master sign sizing plus existing scoped headless selector applicability and independent originalf03 captain fight reuse. No whole-cluster verdict.",
+  "source_correction_verdict": "APPROVE",
+  "headless_selector_applicability": "APPROVE",
+  "f03_independent_fight_reuse_verdict": "APPROVE",
+  "reviewed_blobs": {
+    "scripts/world/cloudreach_world.gd": "08d9791819391c864abec44342cf5fd0900981b1",
+    "scripts/world/cloudreach_high_perches_presentation.gd": "88c06f04d5192d4205f17434263c970640e2f5ae",
+    "data/config/cloudreach_high_perches_visual.json": "b6933e247dd92d48200147eff7b56c33790e4982",
+    "tests/test_cloudreach_high_perches_presentation.gd": "6f07443e7871871140a771b4267c61d09223d7bf",
+    "tests/test_cloudreach_sky_shrine_presentation.gd": "621880f30372de3b6ad6e3a131d0a92384853df1"
+  },
+  "implementation_diff_paths": [
+    "scripts/world/cloudreach_world.gd",
+    "scripts/world/cloudreach_high_perches_presentation.gd",
+    "data/config/cloudreach_high_perches_visual.json",
+    "tests/test_cloudreach_high_perches_presentation.gd"
+  ],
+  "evidence_only_diff_path": "ralph/reports/F40/lane-e/high-matrix-blind-verdict.json (not read/rated by this source review)",
+  "findings": [],
+  "sky_shrine_math": {
+    "configured_landmark": {
+      "id": "sky_shrine_heartstone",
+      "position": [
+        1110,
+        1050,
+        2940
+      ],
+      "traversal": "Fly-only"
+    },
+    "same_mesa_size": [
+      132,
+      1260,
+      126
+    ],
+    "same_flat_radius_m": 59.22,
+    "landmark_index": 6,
+    "mesa_seed": 37,
+    "mesa_sides": 49,
+    "registered_inscribed_radius_m": 59.098326158674915,
+    "registered_height_y": 1050.1,
+    "proof": "The changed _surfaces descriptor uses the exact seed-derived side count and R*cos(pi/n), a disc contained inside the same rotated regular crown polygon. Parent/ledge translation cancels half-height and leaves at.y+ledge_y. Existing circle/ellipse lookup seam consumes this descriptor; non-Shrine rect registration is unchanged.",
+    "physical_render_height_limit": "Existing mesa top/render/collision adds its established0.03m crown lift; descriptor is the existing base ledge height1050.1, not an invented exact equality to every rendered vertex.",
+    "ground_reference_scope": "Reference builder excludes non-ground traversal; the config route ending at this Shrine is traversal_mode=fly. No new grounded route, mesh, collider, camera or capture stand is introduced.",
+    "capture_support_scope": "Existing catalogue south stand55m from centre lies within the59.0983m inscribed radius. Actual runtime support/travel/on-floor guards still must pass.",
+    "coverage_limit": "Unchanged Sky Shrine unit file checks catalogue south overview, authored sanctuary hierarchy and local night light. It does not directly exercise this newly registered ground surface or actual collision contact."
+  },
+  "master_sign_scope": {
+    "config": {
+      "scope": "cloudreach_client_presentation",
+      "font_size": 96,
+      "pixel_size_m": 0.0012,
+      "width_px": 960,
+      "outline_size": 8,
+      "offset_m": [
+        0.0,
+        2.1,
+        0.15
+      ]
+    },
+    "nominal_wrap_width_m": 1.152,
+    "nominal_font_size_m": 0.1152,
+    "local_offset_m": [
+      0.0,
+      2.1,
+      0.15
+    ],
+    "preserved": "Only existing immediate Label3D children of the matching Cloudreach signpost are styled. Message, billboard, post identity, MasterLead child and all interaction callbacks remain; no shared Master source/config edits.",
+    "realm_limit": "The hook lives in CloudreachWorld and styles matching Cloudreach Master signs; it is not a global Masters default change. Current installed Cloudreach Master is Aster/master_t4 at High Perches.",
+    "new_existing_file_regression": "Real style helper is invoked on an existing Node3D/Label3D with MasterLead; asserts unchanged message/prompt/billboard, wrapped nominal width <=1.3m,font scale<=.13m,local y<2.4 and word-smart wrap. Prior presentation tests are retained.",
+    "limits": "These are nominal Label3D size/config/identity assertions, not measured glyph bounds or proof that a long message is unobstructed/readable at every camera. No sign asset replacement or whole-art approval."
+  },
+  "headless_command": [
+    "Godot",
+    "--headless",
+    "--path",
+    "<clean pinned c4275c7de98de01932cccff36945296c65c378f2 worktree>",
+    "--script",
+    "res://tests/run_tests.gd",
+    "--",
+    "--only=test_cloudreach_high_perches_presentation.gd,test_cloudreach_sky_shrine_presentation.gd"
+  ],
+  "headless_command_limits": "Both installed files match existing comma-separated runner selectors. No test execution/result is claimed. This named affected batch is applicable but is not actual Shrine support/visible sign proof.",
+  "f03_fight_reuse": {
+    "source_commit": "f03db2ec9e04bef600ade0cf9feff8a53e223271",
+    "accepted_report": "ralph/reports/F40/lane-e/fight-persistence-source-review.json correction_reviews sourcef03",
+    "exact_commands": {
+      "High": [
+        "Godot",
+        "--path",
+        "<fresh clean ROOT worktree pinned to f03db2ec9e04bef600ade0cf9feff8a53e223271>",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/capture_cloudreach_f40_fight.gd",
+        "--",
+        "--preset=High",
+        "--source-commit=f03db2ec9e04bef600ade0cf9feff8a53e223271",
+        "--seed=2042",
+        "--output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-f03-r1"
+      ],
+      "Medium": [
+        "Godot",
+        "--path",
+        "<fresh clean ROOT worktree pinned to f03db2ec9e04bef600ade0cf9feff8a53e223271>",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tools/capture_cloudreach_f40_fight.gd",
+        "--",
+        "--preset=Medium",
+        "--source-commit=f03db2ec9e04bef600ade0cf9feff8a53e223271",
+        "--seed=2042",
+        "--output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-f03-r1"
+      ]
+    },
+    "same_blob_dependencies": [
+      {
+        "path": "tools/capture_cloudreach_f40_fight.gd",
+        "f03_blob": "18ac77a796e682b8ebeafe77fa8a6b2f0a889edd",
+        "c427_blob": "18ac77a796e682b8ebeafe77fa8a6b2f0a889edd"
+      },
+      {
+        "path": "tools/phase2_capture_cloudreach_live_fight.gd",
+        "f03_blob": "391b43781b5efff5be3e11681616de6b93f722a2",
+        "c427_blob": "391b43781b5efff5be3e11681616de6b93f722a2"
+      },
+      {
+        "path": "tests/smoke_cloudreach_continuous.gd",
+        "f03_blob": "dcb7ce9e4a1b8622351bdd33f175babedf79435c",
+        "c427_blob": "dcb7ce9e4a1b8622351bdd33f175babedf79435c"
+      },
+      {
+        "path": "tools/lookdev_capture_bootstrap.gd",
+        "f03_blob": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+        "c427_blob": "8c1859c4094c5bce3030080831810a67cf0a06c1"
+      },
+      {
+        "path": "tools/capture_manifest_writer.gd",
+        "f03_blob": "8d4df196957c20b645845bcdd3c8382b0c559876",
+        "c427_blob": "8d4df196957c20b645845bcdd3c8382b0c559876"
+      },
+      {
+        "path": "data/config/cloudreach_f40_visual.json",
+        "f03_blob": "0521bde4a400a4af3e1d4254b8289c94dd398cd3",
+        "c427_blob": "0521bde4a400a4af3e1d4254b8289c94dd398cd3"
+      },
+      {
+        "path": "data/config/cloudreach_chapter.json",
+        "f03_blob": "7308787cbbfa49cc8d68f60d9445b03c7fe93b63",
+        "c427_blob": "7308787cbbfa49cc8d68f60d9445b03c7fe93b63"
+      },
+      {
+        "path": "data/config/masters.json",
+        "f03_blob": "21b861f710906c21d77a539023ffd86f8599aa79",
+        "c427_blob": "21b861f710906c21d77a539023ffd86f8599aa79"
+      },
+      {
+        "path": "scripts/masters/master_site.gd",
+        "f03_blob": "24bf8d86de9068cb7729d7f8e147f46d8d56cef1",
+        "c427_blob": "24bf8d86de9068cb7729d7f8e147f46d8d56cef1"
+      },
+      {
+        "path": "scripts/world/cloudreach_world_runtime.gd",
+        "f03_blob": "ab6427ebdcebe046e032f21d89127f225f64c18b",
+        "c427_blob": "ab6427ebdcebe046e032f21d89127f225f64c18b"
+      },
+      {
+        "path": "scripts/world/cloudreach_summit_presentation.gd",
+        "f03_blob": "eda45cf98ae817bccc7f863bbee6c514f8f6eeff",
+        "c427_blob": "eda45cf98ae817bccc7f863bbee6c514f8f6eeff"
+      },
+      {
+        "path": "scenes/world/cloudreach_cliffs.tscn",
+        "f03_blob": "01dee976fc32c2fd27a40a0f024bf3d83b1edc18",
+        "c427_blob": "01dee976fc32c2fd27a40a0f024bf3d83b1edc18"
+      }
+    ],
+    "other_relevant_scoped_identity": "git diff f03..c427 for scripts/combat, scripts/ui, HUD, chapter/runtime, Summit/Aviary presentation and global Masters defaults had no change. The world diff consists solely of Shrine ground registration and local sign hook; no captain arena path/geometry/actor/input/lighting edits.",
+    "fight_anchor": [
+      100,
+      1160.06,
+      5350
+    ],
+    "fight_id": "captain_veyra_storm_anchor",
+    "reuse_disposition": "Original cleanf03 High thenMedium exact arguments and original fresh output names may supply independent actual captain fight evidence. They do not recapture corrected Shrine/sign scenery or prove current full matrices/whole cluster.",
+    "fixture_disclosure": "Existing in-memory summit flags and five directly created installed current-bandlevel44 creatures; production captain interaction/live controller pilot, normal battle clock and original36000-frame budget. No earned campaign, balance, co-op, save or device claim.",
+    "native_state": "Unrun actualf03 fights and original independent visual acceptance remain pending; source approval is not an outcome promise."
+  },
+  "spec_applicability": [
+    "ART_DIRECTION\u00a74 Cloudreach plausible walkable surfaces/high-perch corrected camera and human-scale presentation; existing terrain/collision/identity preserved.",
+    "WORLD\u00a72.10/Cloudreach High Roost Shrine and Master retain Fly-only geography; no grounded shortcut/gate/authority/save change."
+  ],
+  "preserved_evidence": [
+    "Accepted eda full High runtime provenance remains historical; frozen High blind failure is not erased or rerated.",
+    "Accepted f03 SOURCE/COMMAND and42f6 bounded writer/lifecycle artifact remain unchanged with earlier rejected mkdir finding preserved.",
+    "Cliffhold diagnosis and any grass changes are outside this review; no unsupported corrective or quality claim."
+  ],
+  "remaining_gates": [
+    "Actual named affected headless results",
+    "Actual changed Shrine travel/registered-floor/physical-floor and sign visibility native evidence",
+    "Corrected current High/Medium scenery matrices and original independent full-bar visual acceptance",
+    "Actualf03 High/Medium fight persistence/terminal outcomes and original independent fight visual acceptance"
+  ],
+  "limits": [
+    "No engine/import/GPU/tests/dispatch/source edits or new helpers/fixtures/classes by reviewer.",
+    "No component READY, wholeF40#3/#5,F08#3,earned campaign,co-op or hardware-performance approval.",
+    "Only this authorized evidence report is written."
+  ]
+}

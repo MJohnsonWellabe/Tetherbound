@@ -6,6 +6,8 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 
 const FIGHT_ID := "captain_veyra_storm_anchor"
 const MANIFEST_WRITER := preload("res://tools/capture_manifest_writer.gd")
+## Same native world-build bound as capture_cloudreach_frame_matrix.gd.
+const BOOT_MAX_SECONDS := 600.0
 var _phase2_output := "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main"
 var _phase2_seed := 2042
 var _phase2_frames: Array[Dictionary] = []
@@ -45,19 +47,46 @@ func _run() -> void:
 	world = SCENE.instantiate()
 	root.add_child(world)
 	current_scene = world
-	player = world.get_node("Player")
-	runtime = world.get_node("CloudreachRuntime")
-	chapter = world.get_node("CloudreachChapter")
-	physical = chapter.get_node("PhysicalRuntime")
-	director = runtime.director
-	manager = runtime.manager
-	fly = player.fly_controller
-	combat_pilot = BALANCE.InputPilot.new(self, manager, director, world.get_node("CameraRig"))
+	# Production _ready yields during its build before mounting chapter/combat.
+	# Reuse the realm-entry completion seam, not a fixed settling frame count.
+	var boot_started := Time.get_ticks_msec()
+	while is_instance_valid(world) and current_scene == world \
+			and Time.get_ticks_msec() - boot_started < int(BOOT_MAX_SECONDS * 1000.0) \
+			and not bool(game.call("_realm_scene_ready", world, "cloudreach")):
+		await process_frame
+	if not _require(is_instance_valid(world) and current_scene == world \
+			and bool(game.call("_realm_scene_ready", world, "cloudreach")), "Production Cloudreach world finished mounting"):
+		_write_manifest()
+		quit(1)
+		return
+	player = world.get_node_or_null("Player") as CharacterBody3D
+	runtime = world.get_node_or_null("CloudreachRuntime")
+	chapter = world.get_node_or_null("CloudreachChapter")
+	if not _require(player != null and runtime != null and chapter != null \
+			and runtime.get("_mounted") == true and runtime.get("world") == world \
+			and runtime.get("chapter") == chapter and chapter.has_method("physical_runtime"), "Production Cloudreach runtime/chapter bindings"):
+		_write_manifest()
+		quit(1)
+		return
+	physical = chapter.call("physical_runtime") as Node
+	director = runtime.get("director") as Node
+	manager = runtime.get("manager") as Node
+	fly = player.get("fly_controller") as Node
+	var rig := world.get_node_or_null("CameraRig") as Node3D
+	var arbiter := world.get_node_or_null("InteractionArbiter")
+	if not _require(physical != null and physical.get_parent() == chapter \
+			and director != null and director == world.get_node_or_null("EncounterDirector") \
+			and manager != null and manager == world.get_node_or_null("CombatManager") \
+			and fly != null and rig != null and arbiter != null and arbiter.has_signal("activated"), "Production Cloudreach fight/input bindings"):
+		_write_manifest()
+		quit(1)
+		return
+	combat_pilot = BALANCE.InputPilot.new(self, manager, director, rig)
 	combat_pilot.pilot = PILOT.Pilot.SPACER
 	combat_pilot.switch_input = true
 	combat_pilot.use_switching = false
 	combat_pilot.listen()
-	world.get_node("InteractionArbiter").activated.connect(func(provider: Object) -> void:
+	arbiter.activated.connect(func(provider: Object) -> void:
 		interaction_activations += 1
 		last_activated_path = str(provider.get_path()))
 	director.trainer_started.connect(func(id: String) -> void: battle_starts.append(id))
