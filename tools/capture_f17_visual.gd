@@ -307,7 +307,8 @@ func _save_view(label: String, time_name: String, weather_name: String = "clear"
 		var mount := root.get_node_or_null(str(_relic_witness.get("mount", ""))) as Node3D
 		if not _relic_hung or mount == null or not mount.is_visible_in_tree() \
 				or str(_game.get("local").get("character_id")) != _relic_witness.get("character_id") \
-				or str(_game.get("world").get("reward_delivery_namespace")) != _relic_witness.get("world_namespace"):
+				or str(_game.get("world").get("reward_delivery_namespace")) != _relic_witness.get("world_namespace") \
+				or _relic_party_uids() != _relic_witness.get("party_uids"):
 			_failed = "actual owned hung relic display changed before native capture"
 			return false
 	if _companion_required and not _companion_ready(_world.get_node_or_null("EncounterDirector")):
@@ -443,7 +444,13 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 		_write_manifest(false)
 		return false
 	if _relic_hang_witness:
-		if not _relic_hung or not await _walk_to_target(hall, hall.global_position, Vector3.ZERO, "hung relic from nave"):
+		var stands: Dictionary = {}
+		for pedestal: Node3D in get_nodes_in_group("crossing_hall_pedestals"):
+			stands[str(pedestal.get_meta("biome", ""))] = pedestal
+		var route := _gallery_route(hall, stands)
+		if not _relic_hung or route.is_empty() \
+				or not await _walk_to_target(hall, hall.to_global(route.door), route.aisle, "hung relic return through shrine doorway") \
+				or not await _walk_to_target(hall, hall.global_position, Vector3.ZERO, "hung relic from nave"):
 			_write_manifest(false)
 			return false
 	if _hall_stills_only:
