@@ -1,0 +1,118 @@
+{
+  "source": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+  "origin_packet": "C:\\CodexTemp\\tetherbound-proof\\native-e-11bda8b52d-gate-contact-r1",
+  "raw_image_directory": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-gate-render-contact-11bda-day-r1",
+  "files": [
+    {
+      "file": "capture-start.json",
+      "bytes": 713,
+      "sha256": "35c09874d02770e4fb944047e2d3c4c226d839e24b6b498260dcdaa9cf9cf816"
+    },
+    {
+      "file": "capture-terminal.json",
+      "bytes": 197,
+      "sha256": "12641c1af40e003b90d15d756143390f485e8104910dad1a82afe1f5215766f8"
+    },
+    {
+      "file": "capture.stderr.log",
+      "bytes": 1969,
+      "sha256": "b57244443e9479c10c20336d268e144bf5aa57198031ba4507c79fd6fbcc80e0"
+    },
+    {
+      "file": "capture.stdout.log",
+      "bytes": 49125,
+      "sha256": "1814ed01670e095e6a482fb3cab29f5dc819a050530293f8162990c79b787bc0"
+    },
+    {
+      "file": "gate-support-integrity.json",
+      "bytes": 2217,
+      "sha256": "696e18a4f59dfbd00bdfbbfa84c54701d6266a4d662cc4bb3760801651f42d87"
+    },
+    {
+      "file": "import-start.json",
+      "bytes": 440,
+      "sha256": "ba50bfda1d1e33e2b8155fbbbb62b9d6d9e05327efc5275171b373b4ea174495"
+    },
+    {
+      "file": "import-terminal.json",
+      "bytes": 196,
+      "sha256": "dc6b4fbfb9081ddb6fcecb81e0ef5c0c2ec44518179e659f290f9b91a347d9cd"
+    },
+    {
+      "file": "import.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "import.stdout.log",
+      "bytes": 20005,
+      "sha256": "219d950f33a8b4c1942d590863282cc7feb475611655cef2d581b5385f8af114"
+    },
+    {
+      "file": "launch.ps1",
+      "bytes": 4700,
+      "sha256": "dc3fb6154c2993be5756f62cad1de2ece06baae84badee1e79b0712129159903"
+    },
+    {
+      "file": "native-image-integrity.json",
+      "bytes": 708,
+      "sha256": "039e293f04a14153662142990394e1ff05f031f7dffeb37b505c46ba5a8b20e7"
+    },
+    {
+      "file": "native-two-frame-contact.jpg",
+      "bytes": 275195,
+      "sha256": "4ea5d4ca7083ac76929229a5b561e4a75633d4e5d0e19842f96a6722dd75f89c"
+    },
+    {
+      "file": "native-verified-summary.json",
+      "bytes": 768,
+      "sha256": "919e9a890f2b9a1351b3e1d92e1db46a19676441360e97bd5d40a75a50556264"
+    },
+    {
+      "file": "original-recipe.json",
+      "bytes": 8946,
+      "sha256": "e840c1242e7d13b6cb0d16f70ddc13e03719441a866bc680c8e16bfee3956836"
+    },
+    {
+      "file": "pin-preflight.json",
+      "bytes": 188,
+      "sha256": "34adb5bb503b00817a6e63f736027a4b1324467a9521d82d7af0a9cecff7fa8d"
+    },
+    {
+      "file": "source-after-capture.json",
+      "bytes": 700,
+      "sha256": "61209b3b52a224d1218d64387448c3f3bfeee7b6b44752ebdef92b0628338e2b"
+    },
+    {
+      "file": "source-after-import-revalidated.json",
+      "bytes": 944,
+      "sha256": "bc14e6575e7ff1fdc888d0aebce4ad39c9c60bea998cd107c4e2b4d08caabdf2"
+    },
+    {
+      "file": "source-after-import.json",
+      "bytes": 1026,
+      "sha256": "1a484c69fefc625c9aae924ef535e12e525977815bfd7fd99225e720625733ae"
+    },
+    {
+      "file": "source-before-capture.json",
+      "bytes": 700,
+      "sha256": "f3fd3e82dc3e0058b61698e65c2697084ffe626b86c6408e619ba699cec4f604"
+    },
+    {
+      "file": "source-before-import.json",
+      "bytes": 700,
+      "sha256": "4478523044a427545f6709373153b74d59836eee199450a2aa717ee6c6c5aab6"
+    },
+    {
+      "file": "verify-native.py",
+      "bytes": 5760,
+      "sha256": "1559e9282212fa96cad83aeea1e16c68d68c602c551ccecaabc655fe6dc1ddbd"
+    },
+    {
+      "file": "manifest.txt",
+      "bytes": 43093,
+      "sha256": "05bd395b5334115ac07bfb669b9b9304753429f54fe312d2e35154643e5f6a72"
+    }
+  ],
+  "limits": "Original ROOT-native two-row receipt and metadata/log/observer operands only. Independent original runtime/pixel verdict pending; no blanket ground contact or whole criterion claim. Observer targets original masonry feet and paver minima/centre, not new footing/complete contour. Actual 26 queries, not former fixed35."
+}

@@ -1,0 +1,258 @@
+{
+  "reviewer": "original retained Ohm /root/review_cloud_startup",
+  "scope": "Only completed exact11bda two-row native artifact, source/receipt/image/operand provenance and original2c109 view-pose matching. No pixel-quality/contact judgment.",
+  "verdict": "APPROVE bounded runtime/provenance/operand artifact",
+  "source": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+  "packet": "C:/CodexTemp/tetherbound-proof/native-e-11bda8b52d-gate-contact-r1",
+  "raw_originals": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1",
+  "start": {
+    "mode": "Capture",
+    "deadline_minutes": 45,
+    "args": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_frame_matrix.gd",
+      "--",
+      "--only=1,4",
+      "--preset=High",
+      "--source-commit=11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+      "--output=res://.tmp/e-gate-render-contact-11bda-day-r1"
+    ],
+    "started_utc": "2026-10-09T08:43:18.4776688Z",
+    "pid": 60660,
+    "source": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+    "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-11bda8b52d-gate-contact-r1/capture-home"
+  },
+  "terminal": {
+    "mode": "Capture",
+    "ended_utc": "2026-10-09T08:53:23.5056320Z",
+    "pid": 60660,
+    "source": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+    "exit_code": 0,
+    "reason": "process_exit"
+  },
+  "source_binding": {
+    "before_capture": {
+      "status": [
+        "?? ralph/reports/F17/lane-d/cloudreach-relic-display/",
+        "?? ralph/reports/F17/lane-d/meadows-relic-display/",
+        "?? ralph/reports/F38/lane-d/exterior-cluster/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+      ],
+      "tracked_clean": true,
+      "index_tree": "981c506775505147cada82534fd296ab1c72ce07",
+      "checked_utc": "2026-10-09T08:43:18.4731900Z",
+      "source": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+      "head_tree": "981c506775505147cada82534fd296ab1c72ce07"
+    },
+    "after_capture": {
+      "status": [
+        "?? ralph/reports/F17/lane-d/cloudreach-relic-display/",
+        "?? ralph/reports/F17/lane-d/meadows-relic-display/",
+        "?? ralph/reports/F38/lane-d/exterior-cluster/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-a990-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-high-e51-r1/",
+        "?? ralph/reports/VISUAL/phase2/cloudreach/f40-cluster-fight-medium-e51-r1/"
+      ],
+      "tracked_clean": true,
+      "index_tree": "981c506775505147cada82534fd296ab1c72ce07",
+      "checked_utc": "2026-10-09T08:53:25.2599042Z",
+      "source": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+      "head_tree": "981c506775505147cada82534fd296ab1c72ce07"
+    },
+    "tree_independently_matches_pinned_git": "981c506775505147cada82534fd296ab1c72ce07",
+    "tree_not_commit": true,
+    "frozen_before_after_used_not_later_cached_HEAD": true,
+    "original_import_history": "Import exits0 with empty stderr. Original source-after-import.json retains four M.import statuses despite tracked_clean=true. Revalidated receipt preserves that history and lists normalization/pinned blob identity; all four independently match exact11bda Git objects. Before/after capture contain no tracked modifications, with unrelated prior untracked outputs disclosed unchanged.",
+    "revalidation": {
+      "tracked_clean": true,
+      "index_after": "981c506775505147cada82534fd296ab1c72ce07",
+      "index_before": "981c506775505147cada82534fd296ab1c72ce07",
+      "source": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+      "engine_exit": 0,
+      "original_import_receipt_retained": true,
+      "paths": [
+        {
+          "path": "assets/buildings/quaternius_medieval/T_Brick_BaseColor.png.import",
+          "blob": "4a6970aff2c45871a2c1fcafc8a12665f9a3a36e"
+        },
+        {
+          "path": "assets/buildings/quaternius_medieval/T_Brick_Normal.png.import",
+          "blob": "1c36a40fbaf36ec5b0b1d1d8bbd00caa0ef58f7d"
+        },
+        {
+          "path": "assets/buildings/quaternius_medieval/T_Brick_Roughness.png.import",
+          "blob": "676075f3b3ac62a054fe8ed09f97ab1d50f3d42d"
+        },
+        {
+          "path": "assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png.import",
+          "blob": "7a64fbc99550b442aa24cf680fa18be4a8b8bada"
+        }
+      ]
+    }
+  },
+  "actual_graphics": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "High",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "11bda8b52d9336e264df69b3fe0ee6c01987ef93"
+  },
+  "native_renderer_header": "Vulkan1.3.280 Forward+ NVIDIA GeForce GTX1060 3GB",
+  "actual_image_verification": {
+    "frames": 2,
+    "selected_rows": [
+      1,
+      4
+    ],
+    "header": [
+      1920,
+      1080,
+      8,
+      "RGB",
+      "noninterlaced"
+    ],
+    "all_PNG_chunks_CRC": true,
+    "complete_IEND_and_IDAT_inflate": true,
+    "inflated_bytes_per_image": 6221880,
+    "valid_scanline_filter_bytes": true,
+    "chunk_counts": [
+      297,
+      276
+    ],
+    "image_integrity_records_match_originals": true,
+    "images": [
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-gate-render-contact-11bda-day-r1\\01_gate_lower_cliffs_approach_day.png",
+        "sha256": "33b6339aeead610155193d7627efede290b0199c28bbbce8f5917d2605da96d9",
+        "bytes": 2406570,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      },
+      {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-gate-render-contact-11bda-day-r1\\04_gate_lower_cliffs_detail-crag_day.png",
+        "sha256": "433ae148178480be16c06bc0d7789de1e4d4c946befdc0f1b0eda5deb1b34c24",
+        "bytes": 2238850,
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "png_crc_verified": true
+      }
+    ],
+    "method": "Independent stdlib PNG header/chunk CRC/zlib/scanline framing and SHA256 verification; no reviewer engine, image transformation or art judgment."
+  },
+  "manifest": {
+    "sha256": "05bd395b5334115ac07bfb669b9b9304753429f54fe312d2e35154643e5f6a72",
+    "footer": "# frame matrix: 2 frames written, 0 rows skipped",
+    "graphics_exact_persisted_line": true,
+    "observer_exact_persisted_line_and_stdout_count1": true,
+    "observer_line_sha256": "01bb9b7c0e6a473da1834b934f57f4baaad4aed330652d2521a86674895f63c2",
+    "actual_record_lines": [
+      "MANIFEST 01_gate_lower_cliffs_approach_day | approach | trainer (-8.0, 105.55, -248.0) | yaw 169.8 pitch -12.0 | target (-24.0, 130.00, -159.0) | hour 10.00 | stand (-8.0, 105.00, -248.0) (1/2) | camera (-7.1, 108.38, -253.0) | trainer on screen (50%, 60%) | companion native follower (-4.3, 105.98, -242.7); trainer gap 6.48 m | flags boot | Arrival from the Meadows gate (transition point 0,105,-260) toward Realm Gate Crag; stand from capture_cloudreach_realm_gate_crag.gd `arrival`.",
+      "MANIFEST 04_gate_lower_cliffs_detail-crag_day | detail-crag | trainer (-15.5, 109.53, -202.0) | yaw 168.8 pitch -5.9 | target (-24.0, 130.00, -159.0) | hour 10.00 | stand (-15.5, 110.00, -202.0) (1/2) | camera (-14.5, 111.81, -207.1) | trainer on screen (50%, 60%) | companion native follower (-7.2, 107.49, -224.9); trainer gap 24.40 m | flags boot | Close material view of the Realm Gate Crag masonry and strata; stand from capture_cloudreach_realm_gate_crag.gd `approach`."
+    ],
+    "full_matrix_claim": false
+  },
+  "operands": {
+    "frame_id": "01_gate_lower_cliffs_approach_day",
+    "status": "sampled_mounted_render_triangles",
+    "expected_targets": {
+      "facade": 1,
+      "paver": 3,
+      "tower": 2
+    },
+    "observed_targets": {
+      "facade": 1,
+      "paver": 3,
+      "tower": 2
+    },
+    "target_count": 6,
+    "meshes": 4,
+    "queries": 26,
+    "actual_triangle_hits": 73,
+    "finite_vectors_heights_verified": true,
+    "every_transform_and_barycentric_hit_recomputed": true,
+    "maximum_transform_reconstruction_error_m": 6.160019182743781e-06,
+    "maximum_triangle_height_reconstruction_error_m": 1.1937117960769683e-12,
+    "world_sampler_config_SHA_match_exact_pin": {
+      "world": "48737067fd9d544e03c18996026946cd16db3d857b5a10658c7de1c18c9f9f55",
+      "sampler": "8b565e69d3a3a26d9afc303ed3da3630e769d3c67969320912122843e5e78db9",
+      "config": "18c9a28d408e32e857bb347136c8eaa7429e47b9b4527fd0936104d726e0cadd"
+    },
+    "per_target_queries": "Facade12; towers4+4; pavers2+2+2. Dynamic complete per-target guard remains valid; no obsolete fixed35-query requirement imposed.",
+    "negative_operands": "All26have XZ hits. Each of the six paver queries has no_support_below_foot=true, independently recomputed from its current sampled foot and returned heights. They remain valid negative measurements, not relabeled support/contact PASS.",
+    "geometry_limits": "Observer excludes additive footing children. Original masonry minima are unchanged and still show above-surface gaps; they do not measure their new footings. Deformed paver ArrayMesh minimum-Y/AABB-centre queries do not sample every contour or planted/surface contact. Measured triangles include alpha Trail; opaque-only helper selection is a separate already-approved source seam. No opaque/walkable/contact proof follows solely from these measurements."
+  },
+  "diagnostics": {
+    "engine_SCRIPT_ERROR_ERROR_count": 0,
+    "known_warnings": 2,
+    "warning_sites": [
+      "road_visibility_broken_causeway_main_03",
+      "road_visibility_windscar_floor_loop_15"
+    ],
+    "behavior": "Sites left out fail closed. Full original warning/backtrace stderr retained. No named footing/paver unsupported-source warning or helper/tangent error appears in supplied capture logs.",
+    "limits": "No final generated-footing vertex/normal/tangent stream serialization, contour contact or execution-time budget acceptance is supplied by this observer."
+  },
+  "private_parent_pair_binding": {
+    "purpose": "Parent routing provenance only; do not disclose source/mapping/contact measurements to blind judge.",
+    "pairs": [
+      {
+        "row": 1,
+        "current_original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/01_gate_lower_cliffs_approach_day.png",
+        "current_sha256": "33b6339aeead610155193d7627efede290b0199c28bbbce8f5917d2605da96d9",
+        "previous_original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-support-2c109-day-r1/01_gate_lower_cliffs_approach_day.png",
+        "previous_sha256": "0a90a46036ddea8424b9ea52931b2062b8c5cf2590a962495599dc71e1e62353"
+      },
+      {
+        "row": 4,
+        "current_original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-contact-11bda-day-r1/04_gate_lower_cliffs_detail-crag_day.png",
+        "current_sha256": "433ae148178480be16c06bc0d7789de1e4d4c946befdc0f1b0eda5deb1b34c24",
+        "previous_original": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/e-gate-render-support-2c109-day-r1/04_gate_lower_cliffs_detail-crag_day.png",
+        "previous_sha256": "255fb346a3cee9cfbd07837bd4273cc9ee407d1a17316319c5c5590f9097035a"
+      }
+    ],
+    "pose_match": "Both complete MANIFEST record lines byte-identical to original2c109 at their reported formatted precision: trainer/camera/stand/target/yaw/pitch/hour/on-screen/follower/flags. No unrounded runtime transform equivalence invented.",
+    "graphics_match": "SameHighForward+GTX1060/1920 and graphics configSHA7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54; source pins differ as intended.",
+    "weather_limit": "No independently pinned or explicitly recorded weather field in these legacy rows. Image differences cannot be attributed solely to the contact fix from pose/preset matches."
+  },
+  "proof_reuse": "Exact11bda SOURCE/7tests116assert artifact/exactcommand approvals reused without re-audit. Prior2c109 operand approval retained. Withdrawn19ed/5d58 failures and prior whole/art failures remain historical; no resurrection or changed ratings.",
+  "file_sha256": {
+    "capture-start.json": "35c09874d02770e4fb944047e2d3c4c226d839e24b6b498260dcdaa9cf9cf816",
+    "capture-terminal.json": "12641c1af40e003b90d15d756143390f485e8104910dad1a82afe1f5215766f8",
+    "capture.stdout.log": "1814ed01670e095e6a482fb3cab29f5dc819a050530293f8162990c79b787bc0",
+    "capture.stderr.log": "b57244443e9479c10c20336d268e144bf5aa57198031ba4507c79fd6fbcc80e0",
+    "import-start.json": "ba50bfda1d1e33e2b8155fbbbb62b9d6d9e05327efc5275171b373b4ea174495",
+    "import-terminal.json": "dc6b4fbfb9081ddb6fcecb81e0ef5c0c2ec44518179e659f290f9b91a347d9cd",
+    "import.stdout.log": "219d950f33a8b4c1942d590863282cc7feb475611655cef2d581b5385f8af114",
+    "import.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source-before-import.json": "4478523044a427545f6709373153b74d59836eee199450a2aa717ee6c6c5aab6",
+    "source-after-import.json": "1a484c69fefc625c9aae924ef535e12e525977815bfd7fd99225e720625733ae",
+    "source-after-import-revalidated.json": "bc14e6575e7ff1fdc888d0aebce4ad39c9c60bea998cd107c4e2b4d08caabdf2",
+    "source-before-capture.json": "f3fd3e82dc3e0058b61698e65c2697084ffe626b86c6408e619ba699cec4f604",
+    "source-after-capture.json": "61209b3b52a224d1218d64387448c3f3bfeee7b6b44752ebdef92b0628338e2b",
+    "original-recipe.json": "e840c1242e7d13b6cb0d16f70ddc13e03719441a866bc680c8e16bfee3956836",
+    "native-image-integrity.json": "039e293f04a14153662142990394e1ff05f031f7dffeb37b505c46ba5a8b20e7",
+    "native-verified-summary.json": "919e9a890f2b9a1351b3e1d92e1db46a19676441360e97bd5d40a75a50556264",
+    "gate-support-integrity.json": "696e18a4f59dfbd00bdfbbfa84c54701d6266a4d662cc4bb3760801651f42d87"
+  },
+  "remaining_gates": [
+    "Independent original blind pixels for pictured Gate appearance/contact quality.",
+    "Actual full contour/footing contact and generated mesh normals/tangents are not established exhaustively by this observer.",
+    "No wholeF40/F08/full384/earned arrival/physicswalkability/campaign/co-op/device/performance/READY claim."
+  ]
+}

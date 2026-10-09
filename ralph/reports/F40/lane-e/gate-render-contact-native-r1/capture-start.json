@@ -1,0 +1,23 @@
+{
+  "mode": "Capture",
+  "deadline_minutes": 45,
+  "args": [
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "res://tools/capture_cloudreach_frame_matrix.gd",
+    "--",
+    "--only=1,4",
+    "--preset=High",
+    "--source-commit=11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+    "--output=res://.tmp/e-gate-render-contact-11bda-day-r1"
+  ],
+  "started_utc": "2026-10-09T08:43:18.4776688Z",
+  "pid": 60660,
+  "source": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+  "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-11bda8b52d-gate-contact-r1/capture-home"
+}

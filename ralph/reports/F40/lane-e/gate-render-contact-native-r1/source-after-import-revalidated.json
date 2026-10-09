@@ -1,0 +1,26 @@
+{
+  "tracked_clean": true,
+  "index_after": "981c506775505147cada82534fd296ab1c72ce07",
+  "index_before": "981c506775505147cada82534fd296ab1c72ce07",
+  "source": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+  "engine_exit": 0,
+  "original_import_receipt_retained": true,
+  "paths": [
+    {
+      "path": "assets/buildings/quaternius_medieval/T_Brick_BaseColor.png.import",
+      "blob": "4a6970aff2c45871a2c1fcafc8a12665f9a3a36e"
+    },
+    {
+      "path": "assets/buildings/quaternius_medieval/T_Brick_Normal.png.import",
+      "blob": "1c36a40fbaf36ec5b0b1d1d8bbd00caa0ef58f7d"
+    },
+    {
+      "path": "assets/buildings/quaternius_medieval/T_Brick_Roughness.png.import",
+      "blob": "676075f3b3ac62a054fe8ed09f97ab1d50f3d42d"
+    },
+    {
+      "path": "assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png.import",
+      "blob": "7a64fbc99550b442aa24cf680fa18be4a8b8bada"
+    }
+  ]
+}

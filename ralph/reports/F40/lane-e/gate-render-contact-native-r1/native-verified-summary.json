@@ -1,0 +1,22 @@
+{
+  "source": "11bda8b52d9336e264df69b3fe0ee6c01987ef93",
+  "exit": 0,
+  "frames": 2,
+  "selected_rows": [
+    1,
+    4
+  ],
+  "graphics": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "High",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "11bda8b52d9336e264df69b3fe0ee6c01987ef93"
+  },
+  "manifest_sha256": "05bd395b5334115ac07bfb669b9b9304753429f54fe312d2e35154643e5f6a72",
+  "scope": "Two existing gate day rows and read-only render-triangle measurements only. Original staged chapter fixture, no whole criterion, blind PASS, earned route, motion or performance claim."
+}

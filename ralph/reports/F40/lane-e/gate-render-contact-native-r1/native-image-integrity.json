@@ -1,0 +1,22 @@
+[
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-gate-render-contact-11bda-day-r1\\01_gate_lower_cliffs_approach_day.png",
+    "sha256": "33b6339aeead610155193d7627efede290b0199c28bbbce8f5917d2605da96d9",
+    "bytes": 2406570,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-gate-render-contact-11bda-day-r1\\04_gate_lower_cliffs_detail-crag_day.png",
+    "sha256": "433ae148178480be16c06bc0d7789de1e4d4c946befdc0f1b0eda5deb1b34c24",
+    "bytes": 2238850,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "png_crc_verified": true
+  }
+]
