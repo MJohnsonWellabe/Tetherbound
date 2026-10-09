@@ -56,7 +56,16 @@
       "original_gate_satisfied": "01a11f13-ba42-76c1-b7aa-3899bad9c38f",
       "output": "res://ralph/reports/F19/lane-d/guardian-two-peer/attempt8d9",
       "run": 37887898409,
-      "runtime": "pending; no participant/save acceptance",
+      "runtime": {
+        "failure": "Step17 guardian_state returned both expected character IDs in reversed array order; original exact-data guard rejected. Capacity choice/save fix unexercised by this retry",
+        "verdict": "FAILED; original factual review pending; no passing reuse",
+        "job": 113681919735,
+        "disposition": "F19#4 parked at2h and two failed Guardian attempts; existing unit approval retained; no further implementation/rerun",
+        "scope": "No participant offer/save/whole PASS; all original guards retained; no failed boundary promotion",
+        "zip_sha256": "297e7eb64ba80a476ce063e18afaa5927c9b59c516c6d74aaad56aa715e031df",
+        "exit": "Actual jobexit1/PROOF FAIL; no fabricated exit_code",
+        "artifact": 11596663322
+      },
       "excluded": "Failed96e3 saves/artifact not accepted boundaries or reuse",
       "guards": "Unchanged original scenario1800s/outer40min, fixture/identity/controller/save/no-sixth/repeat-refusal guards; headless captured=false",
       "source": "8d9fc5686fbcf7dfb59c0c27df7e161de1afe107"
