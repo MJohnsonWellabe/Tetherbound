@@ -1,0 +1,16 @@
+{
+  "deadline_minutes": 15,
+  "args": [
+    "--headless",
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--script",
+    "res://tools/capture_cloudreach_f40_matrix.gd",
+    "--check-only"
+  ],
+  "started_utc": "2026-10-09T11:27:30.6804483Z",
+  "source": "8cca04f2a5a91917652c8dc66842a38683105368",
+  "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-8cca04f2a5-stormward-approach-r1/static-home",
+  "mode": "Static",
+  "pid": 23220
+}

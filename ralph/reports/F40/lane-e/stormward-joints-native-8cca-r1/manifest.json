@@ -1,0 +1,1000 @@
+{
+	"acceptance_scope": "Production-camera catalogue frame matrix with explicit staged poses and day/night clock. Visual evidence only; no earned campaign, frame-time route, Hall or owner Ally claim.",
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 486186945624,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"candidate_config_sha256": "eb8ed955d34b6ef8c708452e3251934832a13f1f97efd0e0b8a36b5f9c9bd553",
+	"candidate_preview": false,
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 486203722842,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-09T11:38:49",
+	"capture_plan": {
+		"approach_offset_m": 12.0,
+		"authored_stands": {
+			"broken_skyroad_arch": {
+				"approach": {
+					"basis": "Existing south threshold on the 32m ledge centred at local z-4, inside its 15.04m flat crown; generic 12m extension passed beyond the severed road's edge. This is a threshold approach, not a distant route view.",
+					"position_xz": [
+						350.0,
+						1923.0
+					],
+					"view_heading_deg": 0.0
+				},
+				"detail": {
+					"basis": "Existing flat crown, 5.83m from ledge centre (350,1936), approaching the gateway on the same south threshold. Original generic detail offset was outside its flat crown.",
+					"position_xz": [
+						353.0,
+						1931.0
+					],
+					"view_heading_deg": -18.435
+				},
+				"gameplay": {
+					"basis": "Existing flat crown, 10.30m from ledge centre (350,1936), facing the arch. Native4ff found original catalogue gameplay/reverse/detail stands below the drawn crown; floor checks remain mandatory.",
+					"position_xz": [
+						355.0,
+						1927.0
+					],
+					"view_heading_deg": -21.04
+				},
+				"reverse": {
+					"basis": "Same supported gameplay stand, reversed production-camera bearing; no independent convenient reverse placement.",
+					"position_xz": [
+						355.0,
+						1927.0
+					],
+					"view_heading_deg": 158.96
+				}
+			},
+			"galefoot_waycamp": {
+				"approach": {
+					"basis": "Existing arrival_gate_road level entry and 48m SettlementWalkableTerrace; north-facing arrival. Generic backwards offset left the terrace at z545.88.",
+					"position_xz": [
+						-280.0,
+						502.0
+					],
+					"view_heading_deg": 0.0
+				}
+			},
+			"stormward_overlook": {
+				"approach": {
+					"basis": "Existing summit_overlook_loop incoming centreline from (-520,1080,5300) to (-420,1110,5650), sixteen metres before its endpoint, on the aligned 32m-wide OverlookWalkableCrown and inside the landmark's registered 17m half-span. This is a threshold approach facing along the route. Native6413 dawn refused the generic twelve-metre look-bearing offset at (-416.745658,5622.065737), outside both the registered threshold and incoming road ribbon. Travel, floor and drawn-crown guards remain unchanged.",
+					"position_xz": [
+						-424.395539,
+						5634.615617
+					],
+					"view_heading_deg": 15.945396
+				}
+			},
+			"three_bells_bridge": {
+				"approach": {
+					"basis": "Existing broken_causeway_main incoming centreline toward (-540,330,1280), before the bridge turn; previous offset followed the look bearing sideways off the ribbon.",
+					"position_xz": [
+						-526.89,
+						1265.65
+					],
+					"view_heading_deg": 48.4
+				}
+			},
+			"windscar_flight_aerie": {
+				"approach": {
+					"basis": "Existing windscar_floor_loop incoming ground segment from (120,520,3380) to (373,610,3262.5357), twelve metres back along its centreline, facing the launch compass at (400,610,3250). Generic backwards look-bearing offset left this narrow ground route.",
+					"position_xz": [
+						362.11,
+						3267.59
+					],
+					"view_heading_deg": 115.04
+				}
+			}
+		},
+		"detail_offset_m": 3.0,
+		"fight_fixture_level": 44.0,
+		"minimum_frames": 200.0,
+		"seed": 2042.0,
+		"times": [
+			"dawn",
+			"day",
+			"golden",
+			"night"
+		],
+		"views": [
+			"approach",
+			"gameplay",
+			"reverse",
+			"detail"
+		],
+		"weather": [
+			"clear",
+			"rain"
+		],
+		"weather_settle_frames": 24.0
+	},
+	"capture_scope": "Stormward approach repair only; no full-matrix claim",
+	"capture_started_utc": "2026-10-09T11:29:13",
+	"captured_frame_count": 8,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"cliffhold_interior_only": false,
+	"complete": true,
+	"display_server": "Windows",
+	"f40_revision": "f40-sanctuary-and-route-masses-r1",
+	"failures": [],
+	"fixture_disclosure": "Direct chapter mount, upper-route flags, catalogue teleports with default 12m/3m offsets except explicitly declared existing route/threshold stands in capture_plan.authored_stands (all Skyroad views use its flat crown); pinned production dawn/day/golden/night and clear/rain. Both sides of a comparison must use the same stand plan. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands still fail.",
+	"frames": [
+		{
+			"authored_stand_basis": "Existing summit_overlook_loop incoming centreline from (-520,1080,5300) to (-420,1110,5650), sixteen metres before its endpoint, on the aligned 32m-wide OverlookWalkableCrown and inside the landmark's registered 17m half-span. This is a threshold approach facing along the route. Native6413 dawn refused the generic twelve-metre look-bearing offset at (-416.745658,5622.065737), outside both the registered threshold and incoming road ribbon. Travel, floor and drawn-crown guards remain unchanged.",
+			"band_display_name": "Region 6 — Summit / Final Stronghold",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1931961,
+			"camera_player_distance_m": 5.82129287719727,
+			"camera_position": [
+				-425.793029785156,
+				1112.05712890625,
+				5629.72509765625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177452802658,
+					0.978147625923157,
+					0.199912086129189
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.2079117000103,
+					-0.940512359142303
+				],
+				"origin": [
+					-424.395538330078,
+					1110.97595214844,
+					5634.61572265625
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0000000437266081121379,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177825331688,
+					0.978147625923157,
+					0.199912041425705
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.207911685109138,
+					-0.940512359142303
+				],
+				"origin": [
+					-425.793029785156,
+					1112.05712890625,
+					5629.72509765625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Stormward Overlook",
+			"destination_index": 12,
+			"file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear.png",
+			"frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear",
+			"frame_physics_ms": 2.903,
+			"frame_process_ms": 28.251,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 125.217647333333,
+				"hour": 5.00870589333334,
+				"requested": "dawn",
+				"time_of_day": "dawn",
+				"weather": "clear"
+			},
+			"observed_weather": "clear",
+			"on_floor": true,
+			"player_character": "trainer",
+			"player_position": [
+				-424.395538330078,
+				1109.22583007813,
+				5634.61572265625
+			],
+			"position_xz": [
+				-424.395539,
+				5634.615617
+			],
+			"resolved_ground_y": 1110.0,
+			"spot_index_in_band": 2,
+			"terrain_ground_y": 1110.0,
+			"time": "dawn",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": 15.945396,
+			"view_heading_xz": [
+				0.27472111582756,
+				0.961523950099945
+			],
+			"weather": "clear"
+		},
+		{
+			"authored_stand_basis": "Existing summit_overlook_loop incoming centreline from (-520,1080,5300) to (-420,1110,5650), sixteen metres before its endpoint, on the aligned 32m-wide OverlookWalkableCrown and inside the landmark's registered 17m half-span. This is a threshold approach facing along the route. Native6413 dawn refused the generic twelve-metre look-bearing offset at (-416.745658,5622.065737), outside both the registered threshold and incoming road ribbon. Travel, floor and drawn-crown guards remain unchanged.",
+			"band_display_name": "Region 6 — Summit / Final Stronghold",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1742351,
+			"camera_player_distance_m": 5.82129287719727,
+			"camera_position": [
+				-425.793029785156,
+				1112.05712890625,
+				5629.72509765625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177452802658,
+					0.978147625923157,
+					0.199912086129189
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.2079117000103,
+					-0.940512359142303
+				],
+				"origin": [
+					-424.395538330078,
+					1110.97595214844,
+					5634.61572265625
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0000000437266081121379,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177825331688,
+					0.978147625923157,
+					0.199912041425705
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.207911685109138,
+					-0.940512359142303
+				],
+				"origin": [
+					-425.793029785156,
+					1112.05712890625,
+					5629.72509765625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Stormward Overlook",
+			"destination_index": 12,
+			"file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain.png",
+			"frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain",
+			"frame_physics_ms": 2.723,
+			"frame_process_ms": 22.928,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 125.20625,
+				"hour": 5.00825,
+				"requested": "dawn",
+				"time_of_day": "dawn",
+				"weather": "rain"
+			},
+			"observed_weather": "rain",
+			"on_floor": true,
+			"player_character": "trainer",
+			"player_position": [
+				-424.395538330078,
+				1109.22583007813,
+				5634.61572265625
+			],
+			"position_xz": [
+				-424.395539,
+				5634.615617
+			],
+			"resolved_ground_y": 1110.0,
+			"spot_index_in_band": 2,
+			"terrain_ground_y": 1110.0,
+			"time": "dawn",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": 15.945396,
+			"view_heading_xz": [
+				0.27472111582756,
+				0.961523950099945
+			],
+			"weather": "rain"
+		},
+		{
+			"authored_stand_basis": "Existing summit_overlook_loop incoming centreline from (-520,1080,5300) to (-420,1110,5650), sixteen metres before its endpoint, on the aligned 32m-wide OverlookWalkableCrown and inside the landmark's registered 17m half-span. This is a threshold approach facing along the route. Native6413 dawn refused the generic twelve-metre look-bearing offset at (-416.745658,5622.065737), outside both the registered threshold and incoming road ribbon. Travel, floor and drawn-crown guards remain unchanged.",
+			"band_display_name": "Region 6 — Summit / Final Stronghold",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 2646084,
+			"camera_player_distance_m": 5.82129287719727,
+			"camera_position": [
+				-425.793029785156,
+				1112.05712890625,
+				5629.72509765625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177452802658,
+					0.978147625923157,
+					0.199912086129189
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.2079117000103,
+					-0.940512359142303
+				],
+				"origin": [
+					-424.395538330078,
+					1110.97595214844,
+					5634.61572265625
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0000000437266081121379,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177825331688,
+					0.978147625923157,
+					0.199912041425705
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.207911685109138,
+					-0.940512359142303
+				],
+				"origin": [
+					-425.793029785156,
+					1112.05712890625,
+					5629.72509765625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Stormward Overlook",
+			"destination_index": 12,
+			"file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear.png",
+			"frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear",
+			"frame_physics_ms": 7.304,
+			"frame_process_ms": 32.223,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.193387333333,
+				"hour": 8.00773549333334,
+				"requested": "day",
+				"time_of_day": "day",
+				"weather": "clear"
+			},
+			"observed_weather": "clear",
+			"on_floor": true,
+			"player_character": "trainer",
+			"player_position": [
+				-424.395538330078,
+				1109.22583007813,
+				5634.61572265625
+			],
+			"position_xz": [
+				-424.395539,
+				5634.615617
+			],
+			"resolved_ground_y": 1110.0,
+			"spot_index_in_band": 2,
+			"terrain_ground_y": 1110.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": 15.945396,
+			"view_heading_xz": [
+				0.27472111582756,
+				0.961523950099945
+			],
+			"weather": "clear"
+		},
+		{
+			"authored_stand_basis": "Existing summit_overlook_loop incoming centreline from (-520,1080,5300) to (-420,1110,5650), sixteen metres before its endpoint, on the aligned 32m-wide OverlookWalkableCrown and inside the landmark's registered 17m half-span. This is a threshold approach facing along the route. Native6413 dawn refused the generic twelve-metre look-bearing offset at (-416.745658,5622.065737), outside both the registered threshold and incoming road ribbon. Travel, floor and drawn-crown guards remain unchanged.",
+			"band_display_name": "Region 6 — Summit / Final Stronghold",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 2159145,
+			"camera_player_distance_m": 5.82129287719727,
+			"camera_position": [
+				-425.793029785156,
+				1112.05712890625,
+				5629.72509765625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177452802658,
+					0.978147625923157,
+					0.199912086129189
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.2079117000103,
+					-0.940512359142303
+				],
+				"origin": [
+					-424.395538330078,
+					1110.97595214844,
+					5634.61572265625
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0000000437266081121379,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177825331688,
+					0.978147625923157,
+					0.199912041425705
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.207911685109138,
+					-0.940512359142303
+				],
+				"origin": [
+					-425.793029785156,
+					1112.05712890625,
+					5629.72509765625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Stormward Overlook",
+			"destination_index": 12,
+			"file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain.png",
+			"frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain",
+			"frame_physics_ms": 2.683,
+			"frame_process_ms": 31.935,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.189166666667,
+				"hour": 8.00756666666667,
+				"requested": "day",
+				"time_of_day": "day",
+				"weather": "rain"
+			},
+			"observed_weather": "rain",
+			"on_floor": true,
+			"player_character": "trainer",
+			"player_position": [
+				-424.395538330078,
+				1109.22583007813,
+				5634.61572265625
+			],
+			"position_xz": [
+				-424.395539,
+				5634.615617
+			],
+			"resolved_ground_y": 1110.0,
+			"spot_index_in_band": 2,
+			"terrain_ground_y": 1110.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": 15.945396,
+			"view_heading_xz": [
+				0.27472111582756,
+				0.961523950099945
+			],
+			"weather": "rain"
+		},
+		{
+			"authored_stand_basis": "Existing summit_overlook_loop incoming centreline from (-520,1080,5300) to (-420,1110,5650), sixteen metres before its endpoint, on the aligned 32m-wide OverlookWalkableCrown and inside the landmark's registered 17m half-span. This is a threshold approach facing along the route. Native6413 dawn refused the generic twelve-metre look-bearing offset at (-416.745658,5622.065737), outside both the registered threshold and incoming road ribbon. Travel, floor and drawn-crown guards remain unchanged.",
+			"band_display_name": "Region 6 — Summit / Final Stronghold",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 2254127,
+			"camera_player_distance_m": 5.82129287719727,
+			"camera_position": [
+				-425.793029785156,
+				1112.05712890625,
+				5629.72509765625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177452802658,
+					0.978147625923157,
+					0.199912086129189
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.2079117000103,
+					-0.940512359142303
+				],
+				"origin": [
+					-424.395538330078,
+					1110.97595214844,
+					5634.61572265625
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0000000437266081121379,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177825331688,
+					0.978147625923157,
+					0.199912041425705
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.207911685109138,
+					-0.940512359142303
+				],
+				"origin": [
+					-425.793029785156,
+					1112.05712890625,
+					5629.72509765625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Stormward Overlook",
+			"destination_index": 12,
+			"file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear.png",
+			"frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear",
+			"frame_physics_ms": 2.738,
+			"frame_process_ms": 29.176,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 450.181859757576,
+				"hour": 18.007274390303,
+				"requested": "golden",
+				"time_of_day": "golden",
+				"weather": "clear"
+			},
+			"observed_weather": "clear",
+			"on_floor": true,
+			"player_character": "trainer",
+			"player_position": [
+				-424.395538330078,
+				1109.22583007813,
+				5634.61572265625
+			],
+			"position_xz": [
+				-424.395539,
+				5634.615617
+			],
+			"resolved_ground_y": 1110.0,
+			"spot_index_in_band": 2,
+			"terrain_ground_y": 1110.0,
+			"time": "golden",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": 15.945396,
+			"view_heading_xz": [
+				0.27472111582756,
+				0.961523950099945
+			],
+			"weather": "clear"
+		},
+		{
+			"authored_stand_basis": "Existing summit_overlook_loop incoming centreline from (-520,1080,5300) to (-420,1110,5650), sixteen metres before its endpoint, on the aligned 32m-wide OverlookWalkableCrown and inside the landmark's registered 17m half-span. This is a threshold approach facing along the route. Native6413 dawn refused the generic twelve-metre look-bearing offset at (-416.745658,5622.065737), outside both the registered threshold and incoming road ribbon. Travel, floor and drawn-crown guards remain unchanged.",
+			"band_display_name": "Region 6 — Summit / Final Stronghold",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 2016213,
+			"camera_player_distance_m": 5.82129287719727,
+			"camera_position": [
+				-425.793029785156,
+				1112.05712890625,
+				5629.72509765625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177452802658,
+					0.978147625923157,
+					0.199912086129189
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.2079117000103,
+					-0.940512359142303
+				],
+				"origin": [
+					-424.395538330078,
+					1110.97595214844,
+					5634.61572265625
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0000000437266081121379,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177825331688,
+					0.978147625923157,
+					0.199912041425705
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.207911685109138,
+					-0.940512359142303
+				],
+				"origin": [
+					-425.793029785156,
+					1112.05712890625,
+					5629.72509765625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Stormward Overlook",
+			"destination_index": 12,
+			"file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain.png",
+			"frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain",
+			"frame_physics_ms": 2.259,
+			"frame_process_ms": 25.524,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 450.189583333333,
+				"hour": 18.0075833333333,
+				"requested": "golden",
+				"time_of_day": "golden",
+				"weather": "rain"
+			},
+			"observed_weather": "rain",
+			"on_floor": true,
+			"player_character": "trainer",
+			"player_position": [
+				-424.395538330078,
+				1109.22583007813,
+				5634.61572265625
+			],
+			"position_xz": [
+				-424.395539,
+				5634.615617
+			],
+			"resolved_ground_y": 1110.0,
+			"spot_index_in_band": 2,
+			"terrain_ground_y": 1110.0,
+			"time": "golden",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": 15.945396,
+			"view_heading_xz": [
+				0.27472111582756,
+				0.961523950099945
+			],
+			"weather": "rain"
+		},
+		{
+			"authored_stand_basis": "Existing summit_overlook_loop incoming centreline from (-520,1080,5300) to (-420,1110,5650), sixteen metres before its endpoint, on the aligned 32m-wide OverlookWalkableCrown and inside the landmark's registered 17m half-span. This is a threshold approach facing along the route. Native6413 dawn refused the generic twelve-metre look-bearing offset at (-416.745658,5622.065737), outside both the registered threshold and incoming road ribbon. Travel, floor and drawn-crown guards remain unchanged.",
+			"band_display_name": "Region 6 — Summit / Final Stronghold",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 2111923,
+			"camera_player_distance_m": 5.82129287719727,
+			"camera_position": [
+				-425.793029785156,
+				1112.05712890625,
+				5629.72509765625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177452802658,
+					0.978147625923157,
+					0.199912086129189
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.2079117000103,
+					-0.940512359142303
+				],
+				"origin": [
+					-424.395538330078,
+					1110.97595214844,
+					5634.61572265625
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0000000437266081121379,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177825331688,
+					0.978147625923157,
+					0.199912041425705
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.207911685109138,
+					-0.940512359142303
+				],
+				"origin": [
+					-425.793029785156,
+					1112.05712890625,
+					5629.72509765625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Stormward Overlook",
+			"destination_index": 12,
+			"file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear.png",
+			"frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear",
+			"frame_physics_ms": 2.728,
+			"frame_process_ms": 24.305,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 575.193939393939,
+				"hour": 23.0077575757576,
+				"requested": "night",
+				"time_of_day": "night",
+				"weather": "clear"
+			},
+			"observed_weather": "clear",
+			"on_floor": true,
+			"player_character": "trainer",
+			"player_position": [
+				-424.395538330078,
+				1109.22583007813,
+				5634.61572265625
+			],
+			"position_xz": [
+				-424.395539,
+				5634.615617
+			],
+			"resolved_ground_y": 1110.0,
+			"spot_index_in_band": 2,
+			"terrain_ground_y": 1110.0,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": 15.945396,
+			"view_heading_xz": [
+				0.27472111582756,
+				0.961523950099945
+			],
+			"weather": "clear"
+		},
+		{
+			"authored_stand_basis": "Existing summit_overlook_loop incoming centreline from (-520,1080,5300) to (-420,1110,5650), sixteen metres before its endpoint, on the aligned 32m-wide OverlookWalkableCrown and inside the landmark's registered 17m half-span. This is a threshold approach facing along the route. Native6413 dawn refused the generic twelve-metre look-bearing offset at (-416.745658,5622.065737), outside both the registered threshold and incoming road ribbon. Travel, floor and drawn-crown guards remain unchanged.",
+			"band_display_name": "Region 6 — Summit / Final Stronghold",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1921525,
+			"camera_player_distance_m": 5.82129287719727,
+			"camera_position": [
+				-425.793029785156,
+				1112.05712890625,
+				5629.72509765625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177452802658,
+					0.978147625923157,
+					0.199912086129189
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.2079117000103,
+					-0.940512359142303
+				],
+				"origin": [
+					-424.395538330078,
+					1110.97595214844,
+					5634.61572265625
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.961523950099945,
+					0.0000000437266081121379,
+					0.274721175432205
+				],
+				"basis_y": [
+					0.0571177825331688,
+					0.978147625923157,
+					0.199912041425705
+				],
+				"basis_z": [
+					-0.268717855215073,
+					0.207911685109138,
+					-0.940512359142303
+				],
+				"origin": [
+					-425.793029785156,
+					1112.05712890625,
+					5629.72509765625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Stormward Overlook",
+			"destination_index": 12,
+			"file": "res://.tmp/e-stormward-approach-8cca-daycycle-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain.png",
+			"frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain",
+			"frame_physics_ms": 2.06,
+			"frame_process_ms": 27.0,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 575.200606,
+				"hour": 23.00802424,
+				"requested": "night",
+				"time_of_day": "night",
+				"weather": "rain"
+			},
+			"observed_weather": "rain",
+			"on_floor": true,
+			"player_character": "trainer",
+			"player_position": [
+				-424.395538330078,
+				1109.22583007813,
+				5634.61572265625
+			],
+			"position_xz": [
+				-424.395539,
+				5634.615617
+			],
+			"resolved_ground_y": 1110.0,
+			"spot_index_in_band": 2,
+			"terrain_ground_y": 1110.0,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": 15.945396,
+			"view_heading_xz": [
+				0.27472111582756,
+				0.961523950099945
+			],
+			"weather": "rain"
+		}
+	],
+	"full_matrix_complete": false,
+	"full_matrix_planned_frames": 384,
+	"graphics_capture": {
+		"adapter": "NVIDIA GeForce GTX 1060 3GB",
+		"graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+		"preset": "High",
+		"renderer": "forward_plus",
+		"resolution": [
+			1920,
+			1080
+		],
+		"source_commit": "8cca04f2a5a91917652c8dc66842a38683105368"
+	},
+	"planned_frame_count": 8,
+	"planned_frame_ids": [
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 486203722842,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"night"
+	],
+	"required_segments": [
+		"dawn",
+		"day",
+		"golden",
+		"night"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"segment": "",
+	"selected_frame_ids": [
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear",
+		"cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain"
+	],
+	"stormward_approach_only": true,
+	"subsets": [],
+	"weather_scope": "Production visual weather API, pinned fixture; no canonical encounter weather or earned travel claim"
+}

@@ -1,0 +1,80 @@
+{
+  "source": "8cca04f2a5a91917652c8dc66842a38683105368",
+  "exit_code": 0,
+  "frames": 8,
+  "manifest_sha256": "e9764a40800c01d5c433fe74c184f287ff1b627d3bb43f0cccc9dba994709761",
+  "source_and_index_clean": true,
+  "graphics": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "High",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "8cca04f2a5a91917652c8dc66842a38683105368"
+  },
+  "original_images": [
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear.png",
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear",
+      "sha256": "cd238ae9d99129b07ddb969bf88b3fb0123648f9e74c3368378e0ab4aab6d05d",
+      "bytes": 1931961,
+      "png_crc_and_decode_valid": true
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain.png",
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain",
+      "sha256": "c79c6a32b3e23bbf00a2c9c6c8beecc300f3ce277c76db57da502bbb0201e2d9",
+      "bytes": 1742351,
+      "png_crc_and_decode_valid": true
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear.png",
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear",
+      "sha256": "b7148ca2a715fca5894b51de145443a66497197c4a08b25f152601d4f4c858d4",
+      "bytes": 2646084,
+      "png_crc_and_decode_valid": true
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain.png",
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain",
+      "sha256": "a73cb01e4173bb3a9fec090adcdd4df0ba667e5bb4b7b69c2a8d4790ec9119bc",
+      "bytes": 2159145,
+      "png_crc_and_decode_valid": true
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear.png",
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear",
+      "sha256": "e0770315515486074961cde5b75f22713244a6ba40c90d2b1662fa1dfcb3d523",
+      "bytes": 2254127,
+      "png_crc_and_decode_valid": true
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain.png",
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain",
+      "sha256": "fb212829465094dab237ec3253148e4f0a0c66714a2d0ff1527af9cd2cd6fa06",
+      "bytes": 2016213,
+      "png_crc_and_decode_valid": true
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear.png",
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear",
+      "sha256": "3f1fabf45a4e560c1e1b108e18cd67ccc53042f5352b9fdbc7b8b3048fa70e9b",
+      "bytes": 2111923,
+      "png_crc_and_decode_valid": true
+    },
+    {
+      "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain.png",
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain",
+      "sha256": "a02a23048388d7b78114d10f10640487f7bb303d66f6a19c073682a74ed27af7",
+      "bytes": 1921525,
+      "png_crc_and_decode_valid": true
+    }
+  ],
+  "warnings": 2,
+  "full_matrix_complete": false,
+  "fixture_disclosure": "Direct chapter mount, upper-route flags, catalogue teleports with default 12m/3m offsets except explicitly declared existing route/threshold stands in capture_plan.authored_stands (all Skyroad views use its flat crown); pinned production dawn/day/golden/night and clear/rain. Both sides of a comparison must use the same stand plan. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands still fail.",
+  "scope": "Original Stormward approach across four clocks and clear/rain only. Runtime and blind review pending; no full384, earned route, physics contact, whole criterion, performance or device claim."
+}

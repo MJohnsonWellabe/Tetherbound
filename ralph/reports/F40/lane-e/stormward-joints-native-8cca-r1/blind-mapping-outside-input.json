@@ -1,0 +1,74 @@
+[
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear.png",
+    "neutral": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\blind\\01.png",
+    "sha256": "cd238ae9d99129b07ddb969bf88b3fb0123648f9e74c3368378e0ab4aab6d05d",
+    "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__clear",
+    "time": "dawn",
+    "weather": "clear"
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain.png",
+    "neutral": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\blind\\02.png",
+    "sha256": "c79c6a32b3e23bbf00a2c9c6c8beecc300f3ce277c76db57da502bbb0201e2d9",
+    "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__dawn__rain",
+    "time": "dawn",
+    "weather": "rain"
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear.png",
+    "neutral": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\blind\\03.png",
+    "sha256": "b7148ca2a715fca5894b51de145443a66497197c4a08b25f152601d4f4c858d4",
+    "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear",
+    "time": "day",
+    "weather": "clear"
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain.png",
+    "neutral": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\blind\\04.png",
+    "sha256": "a73cb01e4173bb3a9fec090adcdd4df0ba667e5bb4b7b69c2a8d4790ec9119bc",
+    "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain",
+    "time": "day",
+    "weather": "rain"
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear.png",
+    "neutral": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\blind\\05.png",
+    "sha256": "e0770315515486074961cde5b75f22713244a6ba40c90d2b1662fa1dfcb3d523",
+    "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear",
+    "time": "golden",
+    "weather": "clear"
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain.png",
+    "neutral": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\blind\\06.png",
+    "sha256": "fb212829465094dab237ec3253148e4f0a0c66714a2d0ff1527af9cd2cd6fa06",
+    "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain",
+    "time": "golden",
+    "weather": "rain"
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear.png",
+    "neutral": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\blind\\07.png",
+    "sha256": "3f1fabf45a4e560c1e1b108e18cd67ccc53042f5352b9fdbc7b8b3048fa70e9b",
+    "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear",
+    "time": "night",
+    "weather": "clear"
+  },
+  {
+    "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\e-stormward-approach-8cca-daycycle-r1\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain.png",
+    "preserved": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\originals\\cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain.png",
+    "neutral": "C:\\CodexTemp\\tetherbound-proof\\native-e-8cca04f2a5-stormward-approach-r1\\blind\\08.png",
+    "sha256": "a02a23048388d7b78114d10f10640487f7bb303d66f6a19c073682a74ed27af7",
+    "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__rain",
+    "time": "night",
+    "weather": "rain"
+  }
+]
