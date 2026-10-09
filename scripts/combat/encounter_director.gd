@@ -2053,6 +2053,12 @@ func _host_ambient_wild_engage(token: String, peer: int) -> Dictionary:
 func _rpc_ambient_wild_admitted(token: String, record: Dictionary) -> void:
 	if _is_host() or not _realm_rpc_allowed(1): return
 	var id := str(record.get("encounter_id", ""))
+	# RPC callbacks can run before the process tick that expires this request.
+	# The original deadline applies at receipt too, never just at polling time.
+	if not _ambient_pending_token.is_empty() and Time.get_ticks_msec() >= _ambient_pending_deadline:
+		_ambient_pending_token = ""
+		_ambient_pending_deadline = 0
+		_ambient_guest_body = null
 	if token != _ambient_pending_token or _ambient_pending_token.is_empty():
 		if token == _ambient_active_token and id == _shared_active_id: return
 		if record.get("participants", {}).has(_local_peer_id()):
