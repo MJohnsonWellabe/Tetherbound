@@ -1,0 +1,28 @@
+{
+  "boundary": "relay",
+  "commit": "1eaa6e268992065a2e03763d73b83c7bc6540c3d",
+  "continuous_fresh_save": false,
+  "files_sha256": {
+    "characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "1accc3042fb3a362d1ae5cda5a0c1c14ca8d97152787452a379b0195313542b1",
+    "slot_0.json": "5d5a61b1edae1c934a3f9d2800691d5c6bc7674245f9db7a16d63ebbe931ba61",
+    "worlds/slot-0/world.json": "17bd04f3d1c56d0f8fe1c2287b8a8e4fb9f06e5c1e3bffac10ecef2a3604646b"
+  },
+  "generated_origin": {
+    "boundary": "warrens",
+    "provenance": {
+      "continuous_fresh_save": false,
+      "generator": "tools/earned_saves/earned_chain_runner.gd:b25e1ed1eb820ff4c5cb58bcc7ccd1b8dcd3b6acf95bb6b876feaef273261f60:relay",
+      "owner_policy": "#5726060136810",
+      "prior_earned_play": false
+    }
+  },
+  "input_mode": "generated_fixture",
+  "kind": "earned_meadows_piece",
+  "path": "D:/CodexTemp/tetherbound-proof/b-f02-relay-native-1eaa-r1/relay",
+  "population_provenance": {
+    "effective_encounter_seed": 59015681,
+    "environment_override": "",
+    "has_environment_override": false,
+    "saved_world_seed": 59015681
+  }
+}

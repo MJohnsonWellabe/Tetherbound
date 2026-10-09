@@ -1,0 +1,403 @@
+[
+  {
+    "continuous_fresh_save": false,
+    "disclosures": [
+      "Generated healthy post-Warrens state, retaining template five ordered UIDs/species, exact inventory and prior flags/day/position. Full HP is generated, not an earned recovery witness."
+    ],
+    "failures": [],
+    "flags_gained": [
+      "captive_rescued",
+      "mill_crossing_restored",
+      "relay_captain_defeated",
+      "relay_disabled"
+    ],
+    "flags_total": 51,
+    "free_build": false,
+    "functional_offload": false,
+    "game_clock_seconds": 1220.55159588891,
+    "game_day": 7,
+    "handoff_from": "D:/CodexTemp/tetherbound-proof/b-f02-relay-native-1eaa-r1_generated_input/warrens",
+    "helper_receipts": [
+      {
+        "passed": true,
+        "receipts": [
+          {
+            "beat": "overlook_bypass",
+            "from": "(-159.4754, 3418.651)",
+            "to": "(-60.0, 3520.0)",
+            "via": [
+              "(-122.0, 3443.0)"
+            ]
+          },
+          {
+            "beat": "wild_victory",
+            "enemy_id": -9.223365061508931e+18,
+            "frames": 1188.0,
+            "guardian": false,
+            "hits": 14.0,
+            "switches": 0.0
+          },
+          {
+            "beat": "pre_relay_riverwatch_recovery",
+            "bed": "(212.4, -4.512304, 3701.3)",
+            "care_receipts": [
+              {
+                "approach_frames": 1514.0,
+                "beat": "home_bed_exterior_prompt",
+                "budget": 3600.0,
+                "capsule_clearance": 0.501000006007962,
+                "floor": true,
+                "player": "(212.0095, -4.378473, 3704.137)",
+                "provider": "/root/MeadowsPlayground/Props/riverwatch_rest/riverwatch_rest_Rest/CampCreatureBed/Interactable",
+                "solid_bounds": "[P: (210.3223, -4.532207, 3699.155), S: (4.164429, 0.294345, 4.304688)]"
+              },
+              {
+                "approach_frames": 0.0,
+                "beat": "home_bed_exterior_prompt",
+                "budget": 3600.0,
+                "capsule_clearance": 0.501000006007962,
+                "floor": true,
+                "player": "(212.0095, -4.378473, 3704.137)",
+                "provider": "/root/MeadowsPlayground/Props/riverwatch_rest/riverwatch_rest_Rest/CampCreatureBed/Interactable",
+                "solid_bounds": "[P: (210.3223, -4.532207, 3699.155), S: (4.164429, 0.294345, 4.304688)]"
+              },
+              {
+                "after_hp": 184.8,
+                "authored_full_heal_seconds": 120.0,
+                "beat": "authored_bed_hp_recovery",
+                "bed_index": -13.0,
+                "bed_path": "/root/MeadowsPlayground/Props/riverwatch_rest/riverwatch_rest_Rest/CampCreatureBed",
+                "before_hp": 129.133406999376,
+                "controller_assignment_and_early_wake": true,
+                "elapsed_wall_seconds": 51.408,
+                "full_rest_bonus": false,
+                "inventory_unchanged": true,
+                "max_hp": 184.8,
+                "party_ids_unchanged": true,
+                "party_index": 0.0,
+                "rested_after": false,
+                "rested_before": false,
+                "synthetic_recovery_ticks": false,
+                "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+              }
+            ],
+            "clock_after": {
+              "accumulator": 312.730141999999,
+              "day": 6.0,
+              "day_length": 600.0,
+              "elapsed": 912.730142
+            },
+            "clock_before": {
+              "accumulator": 249.183433666666,
+              "day": 6.0,
+              "day_length": 600.0,
+              "elapsed": 849.183433666667
+            },
+            "full_rest_bonus": false,
+            "inventory_unchanged": true,
+            "join": "(230.0, 3670.0)",
+            "natural_day_rolls": 0.0,
+            "overnight_rest": false,
+            "party": [
+              "L10 185/185",
+              "L9 148/148",
+              "L9 142/142",
+              "L7 142/142",
+              "L7 136/136"
+            ],
+            "recovered_indices": [
+              0.0
+            ],
+            "xp_caps_unchanged": true
+          },
+          {
+            "beat": "trainer_top_up",
+            "party": [
+              "L10 185/185",
+              "L9 148/148",
+              "L9 142/142",
+              "L7 142/142",
+              "L7 136/136"
+            ],
+            "potions_left": 3.0
+          },
+          {
+            "beat": "press_late_activation",
+            "id": 11057947176218.0,
+            "path": "/root/MeadowsPlayground/Trainers/Captain Vance/Interactable"
+          },
+          {
+            "beat": "relay_visual_capture",
+            "blind_verdict": "pending",
+            "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+            "completed_native_frame": true,
+            "label": "captain-fight",
+            "party_ids": [
+              -9.223365823144392e+18,
+              -9.223365822875956e+18,
+              -9.223365822607522e+18,
+              -9.223365822339086e+18,
+              -9.223365822070651e+18
+            ],
+            "presentation_overrides": false
+          },
+          {
+            "beat": "relay_captain_defeated",
+            "expected_xp": {
+              "-9223365822070650361": 1085.0,
+              "-9223365822339086464": 811.0,
+              "-9223365822607521272": 141.0,
+              "-9223365822875956727": 39.0,
+              "-9223365823144392182": 0.0
+            },
+            "gear": 0.0,
+            "hits": 108.0,
+            "items_after": {
+              "coin": 260.0,
+              "orb_greater": 5.0,
+              "revive": 10.0
+            },
+            "items_before": {
+              "coin": 200.0,
+              "orb_greater": 2.0,
+              "revive": 9.0
+            },
+            "rounds": 5.0,
+            "wins": 5.0,
+            "xp_after": {
+              "-9223365822070650361": 2344.0,
+              "-9223365822339086464": 2158.0,
+              "-9223365822607521272": 2344.0,
+              "-9223365822875956727": 2344.0,
+              "-9223365823144392182": 2344.0
+            },
+            "xp_before": {
+              "-9223365822070650361": 1259.0,
+              "-9223365822339086464": 1347.0,
+              "-9223365822607521272": 2203.0,
+              "-9223365822875956727": 2305.0,
+              "-9223365823144392182": 2344.0
+            }
+          },
+          {
+            "beat": "press_late_activation",
+            "id": 11053417327744.0,
+            "path": "/root/MeadowsPlayground/RelayNPCs/Sela/Interactable"
+          },
+          {
+            "beat": "relay_visual_capture",
+            "blind_verdict": "pending",
+            "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+            "completed_native_frame": true,
+            "label": "sela-exchange",
+            "party_ids": [
+              -9.223365823144392e+18,
+              -9.223365822875956e+18,
+              -9.223365822607522e+18,
+              -9.223365822339086e+18,
+              -9.223365822070651e+18
+            ],
+            "presentation_overrides": false
+          },
+          {
+            "beat": "captive_rescued",
+            "conversation": "relay_captive_freed",
+            "gear": 1.0
+          },
+          {
+            "beat": "relay_visual_capture",
+            "blind_verdict": "pending",
+            "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+            "completed_native_frame": true,
+            "label": "sela-rescued",
+            "party_ids": [
+              -9.223365823144392e+18,
+              -9.223365822875956e+18,
+              -9.223365822607522e+18,
+              -9.223365822339086e+18,
+              -9.223365822070651e+18
+            ],
+            "presentation_overrides": false
+          },
+          {
+            "beat": "relay_visual_capture",
+            "blind_verdict": "pending",
+            "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+            "completed_native_frame": true,
+            "label": "console-before",
+            "party_ids": [
+              -9.223365823144392e+18,
+              -9.223365822875956e+18,
+              -9.223365822607522e+18,
+              -9.223365822339086e+18,
+              -9.223365822070651e+18
+            ],
+            "presentation_overrides": false
+          },
+          {
+            "beat": "relay_disabled",
+            "lit_after": 0.0,
+            "lit_before": 18.0,
+            "player": "(342.5959, 10.00094, 3751.34)"
+          },
+          {
+            "beat": "relay_visual_capture",
+            "blind_verdict": "pending",
+            "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+            "completed_native_frame": true,
+            "label": "console-aftermath",
+            "party_ids": [
+              -9.223365823144392e+18,
+              -9.223365822875956e+18,
+              -9.223365822607522e+18,
+              -9.223365822339086e+18,
+              -9.223365822070651e+18
+            ],
+            "presentation_overrides": false
+          },
+          {
+            "beat": "mill_crossing_restored",
+            "depth": 9.4580078125,
+            "gear_after": 0.0,
+            "gear_before": 1.0,
+            "party_ids": [
+              -9.223365823144392e+18,
+              -9.223365822875956e+18,
+              -9.223365822607522e+18,
+              -9.223365822339086e+18,
+              -9.223365822070651e+18
+            ]
+          },
+          {
+            "beat": "relay_visual_capture",
+            "blind_verdict": "pending",
+            "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+            "completed_native_frame": true,
+            "label": "mill-far-bank",
+            "party_ids": [
+              -9.223365823144392e+18,
+              -9.223365822875956e+18,
+              -9.223365822607522e+18,
+              -9.223365822339086e+18,
+              -9.223365822070651e+18
+            ],
+            "presentation_overrides": false
+          }
+        ],
+        "segment": "relay"
+      }
+    ],
+    "input_mode": "generated_fixture",
+    "inventory": {
+      "axe": 1,
+      "berries": 2,
+      "coin": 260,
+      "fiber": 3,
+      "hammer": 1,
+      "hide_vest": 1,
+      "home_key": 1,
+      "knife": 1,
+      "orb_basic": 41,
+      "orb_greater": 5,
+      "pickaxe": 1,
+      "potion_small": 3,
+      "revive": 10,
+      "rootstone": 19,
+      "torch": 1,
+      "wood": 2
+    },
+    "key_items": {
+      "home_key": 1
+    },
+    "location": {
+      "player": [
+        -152.000015258789,
+        -1.99905824661255,
+        4213.16064453125
+      ],
+      "realm": "meadows",
+      "scene": "MeadowsPlayground"
+    },
+    "mode": "new_order_meadows_piece",
+    "party_after": [
+      {
+        "hp": 0,
+        "level": 10,
+        "nickname": "Bud",
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "hp": 0,
+        "level": 10,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "hp": 147,
+        "level": 10,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "hp": 113,
+        "level": 9,
+        "nickname": "",
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "hp": 8,
+        "level": 10,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ],
+    "party_before": [
+      {
+        "hp": 177,
+        "level": 9,
+        "nickname": "Bud",
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "hp": 147,
+        "level": 9,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "hp": 141,
+        "level": 9,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "hp": 141,
+        "level": 7,
+        "nickname": "",
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "hp": 136,
+        "level": 7,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ],
+    "passed": true,
+    "prior_earned_play": false,
+    "saved_world_seed": 59015681,
+    "segment": "relay",
+    "wall_seconds": 1519.858,
+    "world_seed_env": ""
+  }
+]

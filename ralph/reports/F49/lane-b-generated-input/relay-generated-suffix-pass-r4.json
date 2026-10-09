@@ -436,8 +436,8 @@
     "presentation_overrides": false,
     "same_original_blind_reviewer": "b_night_visual / Sartre / 01a116e6-3a0e-7860-b032-74fdeb1b21e6; pixels only",
     "native_run_dispatched_by_B": false,
-    "actual_native_capture_passed": false,
-    "blind_verdict": "not yet supplied",
+    "actual_native_capture_passed": true,
+    "blind_verdict": "Original Sartre blind BLOCK: creature lighting/separation; Sela absent from rescue frame; console glare/foreground occlusion; incohesive world/night light and depth. No whole F02#2 closure.",
     "input_disclosure": "Generated healthy post-Warrens, five original template UIDs/species/inventory/flags; no prior earned play or continuous-fresh-save claim. Reuse accepted real Relay suffix mechanics only."
   },
   "native_capture_caller_parser_proof": {
@@ -457,5 +457,110 @@
     "reuse_after_corrected_gate": "Both originals verified the archive and approved reuse; the conditional ROOT D/E native command at1eaa6e is now eligible. No duplicate batch.",
     "scope": "Existing helper contracts and GDScript load only; no CLI argument-parser execution or native pixels.",
     "original_scoped_logic_verdict": "Original Bacon and Hubble both return **scoped LOGIC APPROVE** for `37864266366 @4748925d`, artifact `11587138941`: hash verified, 6 tests/69 assertions, zero failures, exit 0, zero engine/script errors. The expected null-context refusal passed.\n\nThe check covers helper contracts, not CLI parsing or pixels. Its condition is fulfilled for the previously approved ROOT D/E native command at `1eaa6e268992065a2e03763d73b83c7bc6540c3d`; no duplicate batch needed.\n\nActual six-frame capture and Sartre\u00e2\u20ac\u2122s pixel-only PASS remain open. **No READY.**"
+  },
+  "native_capture_terminal_proof": {
+    "source": "1eaa6e268992065a2e03763d73b83c7bc6540c3d",
+    "terminal": {
+      "pid": 57020,
+      "ended_utc": "2026-10-09T01:21:39.2860742Z",
+      "exit_code": 0,
+      "reason": "COMPLETED"
+    },
+    "source_after_capture": {
+      "observed_utc": "2026-10-09T01:22:00.3077558Z",
+      "head_tree": "fb5aa7549dae580a236b7fa9a0ffc297f65ff2a8",
+      "source": "1eaa6e268992065a2e03763d73b83c7bc6540c3d",
+      "status": [],
+      "index_tree": "fb5aa7549dae580a236b7fa9a0ffc297f65ff2a8"
+    },
+    "frames": [
+      {
+        "label": "relay-captain-fight",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\shots\\f20-ending-29292\\000-relay-captain-fight.png",
+        "sha256": "b3da087cb8436efd8e910b4b6bdd5298db4bdba0169f29ecc2ebf35e1f9e4715",
+        "bytes": 1471171,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "png_crc_verified": true,
+        "persisted_repository_path": "ralph/reports/F49/lane-b-generated-input/relay-native-r1/000-relay-captain-fight.png"
+      },
+      {
+        "label": "relay-sela-exchange",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\shots\\f20-ending-29292\\001-relay-sela-exchange.png",
+        "sha256": "9179944a807cc3825e75ca06fc2b95aba16f85e910f930e526bd9b8c14f95147",
+        "bytes": 1146213,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "png_crc_verified": true,
+        "persisted_repository_path": "ralph/reports/F49/lane-b-generated-input/relay-native-r1/001-relay-sela-exchange.png"
+      },
+      {
+        "label": "relay-sela-rescued",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\shots\\f20-ending-29292\\002-relay-sela-rescued.png",
+        "sha256": "cd676811f11e83fbffa53abfec6b920878e8789193e407ce8ec116c80664421c",
+        "bytes": 1263872,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "png_crc_verified": true,
+        "persisted_repository_path": "ralph/reports/F49/lane-b-generated-input/relay-native-r1/002-relay-sela-rescued.png"
+      },
+      {
+        "label": "relay-console-before",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\shots\\f20-ending-29292\\003-relay-console-before.png",
+        "sha256": "ac7c3182e545035f187150fda32fc64fe297eb712c1850089465ee0c18f432cd",
+        "bytes": 1427977,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "png_crc_verified": true,
+        "persisted_repository_path": "ralph/reports/F49/lane-b-generated-input/relay-native-r1/003-relay-console-before.png"
+      },
+      {
+        "label": "relay-console-aftermath",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\shots\\f20-ending-29292\\004-relay-console-aftermath.png",
+        "sha256": "1fc5b13448705985a07af0f0999f8dfc26c5c2d0e905d56186b2c5401ee8cc17",
+        "bytes": 1365413,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "png_crc_verified": true,
+        "persisted_repository_path": "ralph/reports/F49/lane-b-generated-input/relay-native-r1/004-relay-console-aftermath.png"
+      },
+      {
+        "label": "relay-mill-far-bank",
+        "path": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\shots\\f20-ending-29292\\005-relay-mill-far-bank.png",
+        "sha256": "47f99f5b2bbd2ffd41204d9a1eb723dc49b4987b3d95786e044b4f050ffde3a3",
+        "bytes": 1504013,
+        "dimensions": [
+          1280,
+          720
+        ],
+        "png_crc_verified": true,
+        "persisted_repository_path": "ralph/reports/F49/lane-b-generated-input/relay-native-r1/005-relay-mill-far-bank.png"
+      }
+    ],
+    "persisted_packet": "relay-native-r1",
+    "original_review_verdict": "Bacon and Hubble: **RUNTIME APPROVE** at `1eaa6e268992065a2e03763d73b83c7bc6540c3d`. Exit 0, six verified captures, passing route/identity guards and matching Relay export hashes. Generated ancestry remains disclosed.\n\nSartre: **blind BLOCK** against Bars A/B. Creature lighting and separation fall short; Sela is absent from the rescue frame; beam glare and foreground geometry obscure the console; world/night lighting lacks cohesive grading and depth.\n\n**F02#2 closure remains blocked by the visual gate. No READY or additional folds.**",
+    "runtime_verdict": "Original Bacon and Hubble RUNTIME APPROVE",
+    "blind_verdict": "Original Sartre BLOCK",
+    "whole_criterion": "F02#2",
+    "whole_criterion_closed": false,
+    "required_blind_pass": false,
+    "prior_earned_play": false,
+    "continuous_fresh_save": false,
+    "other_whole_folds": [],
+    "already_met_excluded": [
+      "F02#0",
+      "F02#1"
+    ],
+    "retry": "Parked pending distinct supported visual fix; no B native writer or repeated hosted/native capture."
   }
 }

@@ -1,0 +1,24 @@
+{
+  "started_utc": "2026-10-09T00:55:52.7137396Z",
+  "pid": 57020,
+  "fresh_output": "D:/CodexTemp/tetherbound-proof/b-f02-relay-native-1eaa-r1",
+  "deadline_minutes": 45,
+  "fresh_user_directory": "D:/CodexTemp/tetherbound-proof/b-f02-relay-native-1eaa-r1-ops/capture-home",
+  "source": "1eaa6e268992065a2e03763d73b83c7bc6540c3d",
+  "args": [
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--rendering-method",
+    "gl_compatibility",
+    "--resolution",
+    "1280x720",
+    "--script",
+    "tools/earned_saves/earned_chain_runner.gd",
+    "--",
+    "--segment=relay",
+    "--generated-fixture",
+    "--capture-relay",
+    "--save-dir=D:/CodexTemp/tetherbound-proof/b-f02-relay-native-1eaa-r1/relay/save",
+    "--receipt=D:/CodexTemp/tetherbound-proof/b-f02-relay-native-1eaa-r1/relay/receipt.json"
+  ]
+}

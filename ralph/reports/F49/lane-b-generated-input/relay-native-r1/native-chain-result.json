@@ -1,0 +1,53 @@
+{
+  "failures": [],
+  "flags_gained": 4,
+  "location": {
+    "player": [
+      -152.000015258789,
+      -1.99905824661255,
+      4213.16064453125
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+  },
+  "party": [
+    {
+      "hp": 0,
+      "level": 10,
+      "nickname": "Bud",
+      "species": "terrapup",
+      "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+    },
+    {
+      "hp": 0,
+      "level": 10,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+    },
+    {
+      "hp": 147,
+      "level": 10,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+    },
+    {
+      "hp": 113,
+      "level": 9,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-afbd0d982b14221393f70c29863586a1"
+    },
+    {
+      "hp": 8,
+      "level": 10,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+    }
+  ],
+  "passed": true,
+  "segment": "relay",
+  "wall_seconds": 1519.858
+}
