@@ -216,14 +216,12 @@ func _run() -> void:
 	check(_vec(host_state.get("host_body_pos", [])).distance_to(stand) <= BODY_SYNC_M,
 		"host shell received the client's creature transform before a strike")
 
-	# One legal raw request consumes an action. Re-sending its action id after a
-	# real cooldown window must remain stale; the second request cannot change hp
-	# or roster state. The raw request still traverses Session and host validation.
+	# One real quick input admits move_start and consumes action 703, after the
+	# two adversarial fixture actions. Re-sending that id after its cooldown must
+	# remain stale; the raw replay still traverses Session and host validation.
 	var quick := str((client_state.get("local_card", {}) as Dictionary).get("quick", ""))
 	check(not quick.is_empty(), "client's deployed card has an authored quick move")
-	var legal := await step(1, "stormwood_hosted_raw_strike", {"trainer": TRAINER,
-		"encounter_id": str((host_state.get("record", {}) as Dictionary).get("id", "")), "action": 703,
-		"move_id": quick, "realm": STORMWOOD, "damage": 999999.0, "settle": 90})
+	var legal := await step(1, "stormwood_hosted_quick", {"settle": 90})
 	check(str(legal.get("verdict", "")) == "PASS", "client sent one host-validated action")
 	await step(1, "wait", {"frames": 180}) # longer than the action cooldown; stale must stay stale.
 	var before_stale := await _await_hosted(0, true)
