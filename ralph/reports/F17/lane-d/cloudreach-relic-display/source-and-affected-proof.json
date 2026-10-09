@@ -31,5 +31,17 @@
     "minimal_follow_on": "328e2a291113500b1ac11d91f2753cd91f29a17d fixes actual native manifest Dictionary.merge overwrite omission only. SAME original f42 via parent01a11fa2 SOURCE+exact328e existing preload COMMAND APPROVE; changed-source preload dispatched once, no912 duplicate or production4test rerun. Actual result pending.",
     "native": "not queued or run for Cloudreach; ROOT immutable1de Meadows attempt is separate"
   },
+  "corrected_adapter_affected_proof": {
+    "source": "328e2a291113500b1ac11d91f2753cd91f29a17d",
+    "run": 37901556569,
+    "job": 113725069870,
+    "artifact": 11602448962,
+    "zip_sha256": "85ae250ded5531186623730a6ae892454f687f2b2ff5edbcb9147bc0b53630a1",
+    "script": "tools/run_one_test.gd",
+    "args": "res://tests/test_f17_capture_presets.gd",
+    "actual": {"tests":1,"failed":0,"exit":0,"seconds":7,"engine_script_errors":0,"warnings":0},
+    "scope": "Existing method actually executes typed preset branches and both authored handoff mappings/rejected unsupported mounts; no assertion count inferred, actual hang/render/transport/whole credit",
+    "original_artifact_review": "requested from SAME original f42; pending"
+  },
   "remaining": "Genuine affected proof + original artifact approval; native actual saved ordinary hang/mount readability; original blind verdict; complete village/Hall full-bar criterion. No whole closure or component READY."
 }
