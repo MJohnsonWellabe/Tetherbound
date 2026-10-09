@@ -218,6 +218,18 @@ func test_wayfinding_visual_is_tunable_and_stays_lightweight() -> void:
 		"the far upper section must render after opaque route trees")
 	assert_false(source.contains("Light3D"), "objective beacon must not add a world-light budget")
 	assert_false(source.contains("Particles"), "objective beacon must remain a few cheap meshes")
+	var nearby := {"nearby_occlusion": {"enabled": true, "distance_m": 40.0}}
+	assert_true(OBJECTIVE_BEACON.nearby_beam_depth_test(24.0, nearby),
+		"nearby buildings must be allowed to occlude the candidate destination column")
+	assert_false(OBJECTIVE_BEACON.nearby_beam_depth_test(66.0, nearby),
+		"the accepted 66m guidance must keep its canopy-proof depth treatment")
+	nearby.nearby_occlusion.distance_m = 500.0
+	assert_false(OBJECTIVE_BEACON.nearby_beam_depth_test(66.0, nearby),
+		"an oversized tuning value must not erase accepted 66m guidance")
+	assert_false(OBJECTIVE_BEACON.nearby_beam_depth_test(INF, nearby),
+		"missing camera distance must preserve original guidance")
+	assert_false(OBJECTIVE_BEACON.nearby_beam_depth_test(24.0, config),
+		"shipping candidate stays OFF until original native and blind acceptance")
 
 
 func test_real_meadows_world_mounts_one_beacon_and_shells_do_not() -> void:
