@@ -96,6 +96,9 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			if body == null:
 				return {"verdict": "FAIL", "detail": "Named Tidecoil body never became resident"}
 			if msg.get("args", {}).get("accepted_alpha_cycle") == true:
+				var active: RefCounted = game.party.call("active")
+				if active == null or int(active.get("level")) != 55:
+					return {"verdict": "FAIL", "detail": "Declared owned level-55 input is not the active companion"}
 				var deployed := await _step_deploy_creature({})
 				if deployed.get("verdict") != "PASS": return deployed
 				var engaged := await _step_engage_wild({"foundation_alpha_site": TIDECOIL_ID})
@@ -125,7 +128,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 							ally.call("place_on_ground", target + Vector3(1.1, 0, 0))
 							ally.call("face_towards", target)
 							var pressed := await _inject("combat_quick", 1)
-							if pressed.get("verdict") != "PASS": return pressed
+							if pressed.get("ok") != true:
+								return {"verdict": "FAIL", "detail": "Ordinary creature input failed: " + str(pressed.get("why", "unknown"))}
 					await physics_frame
 				return {"verdict": "FAIL", "detail": "No genuine Alpha resolution within original bounded fight input",
 					"data": {"encounter_id": encounter_id}}

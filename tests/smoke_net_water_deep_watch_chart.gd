@@ -47,6 +47,11 @@ func _run() -> void:
 		if granted.get("verdict") != "PASS":
 			quit(await finish())
 			return
+		var saved: Dictionary = await step(peer, "save_character_here")
+		check(saved.get("verdict") == "PASS", "Disclosed owned fight input reaches its physical character file before admission")
+		if saved.get("verdict") != "PASS":
+			quit(await finish())
+			return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 900000.0
 	check((await step(0, "host")).get("verdict") == "PASS", "Host starts production session")
 	var session: Variant = await probe(0, "session")
