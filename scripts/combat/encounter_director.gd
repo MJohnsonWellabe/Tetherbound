@@ -1815,7 +1815,9 @@ func _initialize_wild_traits(wild: Node3D, alpha: bool = false) -> void:
 ## Same authenticated world/transport lifetime as the saved wild actor path.
 ## This does not enable the actor-vitals flag or create portable ambient state.
 func _ambient_scope() -> Dictionary:
-	if MATH.config().get("actor_vitals", {}).get("runtime_enabled") != true or _session == null: return {}
+	if MATH.config().get("actor_vitals", {}).get("runtime_enabled") != true \
+		or preload("res://scripts/creatures/essence.gd").config().get("wild_victory_runtime_enabled") != true \
+		or _session == null: return {}
 	var game: Node = _session.call("_game")
 	if game == null or game.get("session") != _session or game.get("world") == null: return {}
 	var epoch: String = _session.call("_altar_current_epoch")
