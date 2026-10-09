@@ -1,0 +1,37 @@
+{
+  "source": "0212643a77cda71a37b0dfc5e1d2e34c9281a99b",
+  "run": 37898594176,
+  "job": 113715612934,
+  "artifact": 11601527681,
+  "artifact_zip_sha256": "14329d21b58b23dd10574cc2733c9045d378fe7dcf3c0b20a56dea35cb69b56c",
+  "artifact_zip_original": "D:\\CodexTemp\\e-cliffhold-floor-021264-env-proof\\artifact.zip",
+  "crc": "PASS",
+  "files": [
+    {
+      "file": "github-api-binding.json",
+      "bytes": 21518,
+      "sha256": "b70857add1caa43e291200d3ad92372a66e0abf1f25f7351f7e3a4574279794c"
+    },
+    {
+      "file": "job.log",
+      "bytes": 473214,
+      "sha256": "0a4192ba5f8d715c4f3c91abe0ef9bcc45e861318d629e2db87c5cd42b79f8aa"
+    },
+    {
+      "file": "run.log",
+      "bytes": 512,
+      "sha256": "2b009602fa858be3f11d71b7c1eeccad0dd298e1dd6d2cd3779cc42ddd74a783"
+    },
+    {
+      "file": "exit_code",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "file": "MANIFEST.txt",
+      "bytes": 131,
+      "sha256": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b"
+    }
+  ],
+  "scope": "Existing unchanged environment4cases; not mounted cottages/native foot contact/wholecriterion"
+}
