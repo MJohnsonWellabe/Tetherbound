@@ -14,11 +14,6 @@
     "turn_speed": 11.0
   },
 
-  "skin_settle": {
-    "_comment": "Bounded zero-motion physics-server recovery for contacts deeper than the capsule skin. Each pass queries the actual updated pose; the existing controller .02m cap applies to cumulative travel. This does not change safe_margin, capsule geometry, step height or the independent strict contact guard.",
-    "max_passes": 8
-  },
-
   "unstick": {
     "_comment": "GATE-F-DEFECT-FIX. The player can become PERMANENTLY immobile in the open world. Measured, not theorised: Gate F S05 logged 1,019 consecutive route rows -- over eight minutes -- pinned at exactly (91.39, -6.00, 821.68) in the corridor, input_context 'world', heading swinging through more than twenty distinct values (so the stick was held and _face() was running) while x/z moved less than 2cm in total. The harness's selfcheck_walk froze the same way at (-161.03, 2.13, 286.01) for 120s. Two sites, so it is a class, not a one-off, and neither is recoverable without reloading. player_controller.gd::_recover_if_entombed is the failsafe; every number here is TUNABLE.",
     "enabled": true,
