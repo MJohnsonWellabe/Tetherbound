@@ -6781,7 +6781,10 @@ func _capture_newcomer_uid(row: Dictionary) -> String:
 	return str(row.get("host_context", {}).get("creature", {}).get("uid", ""))
 
 func _foundation_capture_context(peer: int, key: String) -> Dictionary:
-	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true \
+	# Ordinary trait catches retain the same typed offer while alpha respawns
+	# remain off. Match the capture presenter without enabling alpha content.
+	if (preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true \
+		and not preload("res://scripts/creatures/traits.gd").runtime_enabled()) \
 		or not is_host() or admitted_character_state(peer).is_empty() or _altar_peer_in_combat(peer): return {}
 	var world: RefCounted = _game().world
 	var character := _authority_character(peer)
