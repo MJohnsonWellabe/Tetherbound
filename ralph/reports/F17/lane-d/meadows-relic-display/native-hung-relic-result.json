@@ -26,5 +26,6 @@
     "reuse": "Original explicitly permits16originals for separate blind review; no unchanged recapture necessary solely for metadata typo. Raw hung=false remains unmodified; no earned/boss/co-op/device/performance/whole inference."
   },
   "evidence_copy": "Untracked native-1de00-hung-r2 holds unchanged manifest, terminal/start/source logs, raw codec envelopes and16 actual image hashes; images remain in ROOT raw output",
+  "original_blind": {"reviewer":"SAME /root/f26_presets_review","task":"01a11fa6-ae59-70d0-94e4-5e8bed08dd18","status":"PENDING","bounded_original_status":"Parent01a11fb2-a9e0-74f2-bd8f-fe0554d9ebef reports original stillrunning; no inspected-image count or unavailable-condition reply. Task16originals unchanged; no restart/interruption/substitute verdict.","inspected_count":"not reported; not inferred as zero"},
   "remaining": "SAME original f26 blind review of16validoriginals requested; complete village/Hall full bar. No co-op, boss, earned save, performance/device/motion or whole criterion credit. Cloudreach source is separate and has no native image credit."
 }
