@@ -5009,6 +5009,10 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 	var creature: RefCounted = SPECIES_DATA.spawn(species)
 	if creature == null:
 		return {"verdict": "ERROR", "detail": "species.json has no '%s'" % species}
+	var cfg: Dictionary = NET_PROGRESSION.config()
+	var level := int(args.get("level",
+		int((cfg.get("level", {}) as Dictionary).get("starter_level", 3))))
+	creature.call("set_level", level, cfg)
 	# Optional existing F23 prior-history fixture, before transport admission.
 	# Scope: disclosed character setup only; not earned mastery or a boundary.
 	# Defaults, five-owned cap and live HP/meter/authority remain unchanged.
@@ -5022,6 +5026,7 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 		var seeded := {}
 		for slot: String in ["quick", "charged", "utility", "ultimate"]:
 			var move_id := str(creature.get("move_" + slot))
+			if move_id.is_empty() and slot == "utility": continue
 			if move_id.is_empty() or not (creature.get("known_moves") as Array).has(move_id):
 				return {"verdict": "ERROR", "detail": "Prior fixture requires an actually known equipped " + slot}
 			if seeded.has(move_id): continue
@@ -5040,10 +5045,6 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 			creature.get("move_mastery_receipts"), creature.get("known_moves")):
 			return {"verdict": "ERROR", "detail": "Complete canonical prior mastery document required"}
 		print("F25 SETUP: 300 prior uses per known equipped move via existing F23 history fixture; not earned")
-	var cfg: Dictionary = NET_PROGRESSION.config()
-	var level := int(args.get("level",
-		int((cfg.get("level", {}) as Dictionary).get("starter_level", 3))))
-	creature.call("set_level", level, cfg)
 	if not bool(PARTY_SEAM.add(creature, str(args.get("nickname", "")))):
 		return {"verdict": "FAIL",
 			"detail": "party_seam.add('%s') refused -- the party is full (five, and there is no sixth slot)"
