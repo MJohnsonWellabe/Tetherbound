@@ -1,62 +1,17 @@
 {
   "criterion": "F02#2",
-  "verdict": "READY",
-  "landing": "pending",
-  "proven_main": "c927823d1b41e98b90d33181a07846e72dc6a27a",
-  "proven_source": "dc1140ecf4d6da6183050d48f395ba36d23f9384",
-  "proven_tree": "92ee5245ebe84c55eb24f2611240ef8673e930e6",
-  "runtime_production_changes": [],
+  "verdict": "Independent functional PASS F02#2 only; final READY/current-head CI and actual landing pending",
+  "source": "4aa71f010ba3a6945e929bd6d1063f9cf7c8c42c",
+  "tree": "e9669dc6a917dd072a85140f8a8f5bee16311e8d",
+  "base": "6add9d5f9b9f490bf8a77783d3afa21474cdb50d",
   "config_flag_and_default_changes": [],
   "feature_flag_flips": 0,
-  "proof_script": "tools/earned_saves/earned_chain_runner.gd",
-  "proof_args": "--segment=relay --generated-fixture --save-dir=user://owner-b-relay-only/relay/save --receipt=user://owner-b-relay-only/relay/receipt.json",
-  "proofs": [
-    {
-      "proof": "relay",
-      "run_id": 37983413867,
-      "artifact_id": 11643200232,
-      "archive_sha256": "2d86614a13a21290f0503611b7ee49f72ae1c59c5e92049709ed9b8cb5e9ef90",
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37983413867",
-      "exit_code": 0,
-      "script_errors": 0
-    },
-    {
-      "proof": "units",
-      "run_id": 37983416957,
-      "artifact_id": 11642705866,
-      "archive_sha256": "8bf00d7fcb54a791b92ff66fc8c17792579b515e1462467662165e7c98453322",
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37983416957",
-      "exit_code": 0,
-      "script_errors": 0
-    },
-    {
-      "proof": "provenance",
-      "run_id": 37983419654,
-      "artifact_id": 11642556199,
-      "archive_sha256": "b43d1b4de588d521f8d333832f442e8f2f278288b6448e0f9f68bda3d85f3f41",
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37983419654",
-      "exit_code": 0,
-      "script_errors": 0
-    }
-  ],
-  "affected_units": {
-    "tests": 18,
-    "assertions": 146,
-    "failed": 0,
-    "names": [
-      "test_meadows_earned_relay_segment",
-      "test_meadows_earned_hall_segment",
-      "test_meadows_economy_solvency"
-    ]
-  },
-  "provenance_checks": 29,
-  "independent_reviewer": "/root",
-  "independent_result": "PASS",
+  "scope": "Same22 Relay paths; 8producers byteidentical to bc/a493/dc; production/config/export match main. No helper/Hall scope.",
   "generated_setup_defaults": [
     {
       "name": "--generated-fixture",
-      "old": "absent (ordinary earned mode)",
-      "new": false
+      "old": "unavailable ordinary earned mode",
+      "new": "default false; explicitly true for this proof"
     },
     {
       "name": "Relay party_levels",
@@ -76,7 +31,7 @@
       ]
     },
     {
-      "name": "generated breakthrough cap",
+      "name": "breakthrough cap",
       "old": 10,
       "new": 20
     },
@@ -87,37 +42,346 @@
     }
   ],
   "generated_profile": {
-    "schema_version": 1,
-    "owner_policy": "#5726060136810",
     "boundary": "warrens",
     "realm": "meadows",
     "day": 5,
-    "clock_elapsed_seconds": 500.0,
+    "clock_elapsed_seconds": 500,
     "position": "template",
     "world_flags": [],
     "personal_flags": [],
     "inventory_add": {}
   },
-  "ancestry": {
-    "prior_earned_play": false,
-    "continuous_fresh_save": false,
-    "saved_seed": 59015681,
-    "world_seed_environment_override": ""
-  },
+  "prior_earned_play": false,
+  "continuous_fresh_save": false,
+  "saved_seed": 59015681,
+  "environment_override": "",
+  "proofs": [
+    {
+      "name": "Relay",
+      "run": 37998369923,
+      "artifact": 11647684633,
+      "source": "4aa71f010ba3a6945e929bd6d1063f9cf7c8c42c",
+      "zip": "C:\\CodexTemp\\b-4aa-37998369923-11647684633.zip",
+      "sha256": "0a7303b496425fdf29ed2f7c87120ea5242d40bd8e262ae353df0831d390bc49",
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37998369923",
+      "args": "--segment=relay --generated-fixture --save-dir=user://owner-b-relay-main-4aa71f010b/relay/save --receipt=user://owner-b-relay-main-4aa71f010b/relay/receipt.json"
+    },
+    {
+      "name": "units",
+      "run": 37998372597,
+      "artifact": 11648655970,
+      "actual_tests": 18,
+      "assertions": 146,
+      "failed": 0,
+      "independent_approval": "C:\\CodexTemp\\root-b-4aa-source-unit-review.json"
+    },
+    {
+      "name": "provenance",
+      "run": 37998712146,
+      "artifact": 11647728339,
+      "checks": 29,
+      "failures": [],
+      "independent_approval": "C:\\CodexTemp\\root-b-4aa-provenance-runtime-review.json"
+    }
+  ],
+  "six_saved_documents": [
+    {
+      "boundary": "warrens",
+      "archive_path": "user/godot/app_userdata/Tetherbound/owner-b-relay-main-4aa71f010b/warrens/save/characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json",
+      "sha256": "17fa257ae8de678f0919778eb5bb7e2422d509af83e3c67a2e96bb3cb4434b24",
+      "bytes": 2798334
+    },
+    {
+      "boundary": "warrens",
+      "archive_path": "user/godot/app_userdata/Tetherbound/owner-b-relay-main-4aa71f010b/warrens/save/slot_0.json",
+      "sha256": "27cb2c39066b24f764112b1161039f661f9372a6fb8fda9e5bef6df18340e3ef",
+      "bytes": 4266041
+    },
+    {
+      "boundary": "warrens",
+      "archive_path": "user/godot/app_userdata/Tetherbound/owner-b-relay-main-4aa71f010b/warrens/save/worlds/slot-0/world.json",
+      "sha256": "ac3827f3901a91a020801cb00997b8c5eda0f8ae4da91a4e000f8fbfe8a240b1",
+      "bytes": 66937
+    },
+    {
+      "boundary": "relay",
+      "archive_path": "user/godot/app_userdata/Tetherbound/owner-b-relay-main-4aa71f010b/relay/save/characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json",
+      "sha256": "f6fe387e8586215c64cf049c29f7a20b0642528df36887f62041c0131e670e38",
+      "bytes": 2801306
+    },
+    {
+      "boundary": "relay",
+      "archive_path": "user/godot/app_userdata/Tetherbound/owner-b-relay-main-4aa71f010b/relay/save/slot_0.json",
+      "sha256": "d5b775f1bd51d4ebc9e9bb9dd30d3a545b35d600ea5cdb2f4a2460aa2753a1ac",
+      "bytes": 4273052
+    },
+    {
+      "boundary": "relay",
+      "archive_path": "user/godot/app_userdata/Tetherbound/owner-b-relay-main-4aa71f010b/relay/save/worlds/slot-0/world.json",
+      "sha256": "ad7a4e33e5bf9f65d43b96b2052d7ff83a482072d1706fa4d201eaf503578525",
+      "bytes": 67042
+    }
+  ],
+  "party_before": [
+    {
+      "fainted": false,
+      "hp": 220.8,
+      "known_moves": [
+        "pebble_toss",
+        "stone_rush",
+        "ultimate_terrapup",
+        "shove"
+      ],
+      "level": 15,
+      "loadout_last_edit": {},
+      "loadout_revision": 0,
+      "move_charged": "stone_rush",
+      "move_mastery_receipts": {},
+      "move_mastery_uses": {},
+      "move_quick": "pebble_toss",
+      "move_ultimate": "ultimate_terrapup",
+      "move_utility": "",
+      "nickname": "Bud",
+      "species": "terrapup",
+      "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+      "xp": 0
+    },
+    {
+      "fainted": false,
+      "hp": 183.9,
+      "known_moves": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current",
+        "snare"
+      ],
+      "level": 15,
+      "loadout_last_edit": {},
+      "loadout_revision": 0,
+      "move_charged": "warren_charge",
+      "move_mastery_receipts": {},
+      "move_mastery_uses": {},
+      "move_quick": "bramble_whip",
+      "move_ultimate": "ultimate_ground_current",
+      "move_utility": "",
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+      "xp": 0
+    },
+    {
+      "fainted": false,
+      "hp": 176.3,
+      "known_moves": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current",
+        "snare"
+      ],
+      "level": 15,
+      "loadout_last_edit": {},
+      "loadout_revision": 0,
+      "move_charged": "warren_charge",
+      "move_mastery_receipts": {},
+      "move_mastery_uses": {},
+      "move_quick": "bramble_whip",
+      "move_ultimate": "ultimate_ground_current",
+      "move_utility": "",
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+      "xp": 0
+    },
+    {
+      "fainted": false,
+      "hp": 191.60000000000002,
+      "known_moves": [
+        "root_nibble",
+        "rootquake",
+        "ultimate_ground_wall",
+        "slow_field"
+      ],
+      "level": 15,
+      "loadout_last_edit": {},
+      "loadout_revision": 0,
+      "move_charged": "rootquake",
+      "move_mastery_receipts": {},
+      "move_mastery_uses": {},
+      "move_quick": "root_nibble",
+      "move_ultimate": "ultimate_ground_wall",
+      "move_utility": "",
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-afbd0d982b14221393f70c29863586a1",
+      "xp": 0
+    },
+    {
+      "fainted": false,
+      "hp": 184.3,
+      "known_moves": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current",
+        "snare"
+      ],
+      "level": 15,
+      "loadout_last_edit": {},
+      "loadout_revision": 0,
+      "move_charged": "warren_charge",
+      "move_mastery_receipts": {},
+      "move_mastery_uses": {},
+      "move_quick": "bramble_whip",
+      "move_ultimate": "ultimate_ground_current",
+      "move_utility": "",
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+      "xp": 0
+    }
+  ],
+  "party_after": [
+    {
+      "fainted": false,
+      "hp": 134.1,
+      "known_moves": [
+        "pebble_toss",
+        "stone_rush",
+        "ultimate_terrapup",
+        "shove",
+        "quake_ring"
+      ],
+      "level": 16,
+      "loadout_last_edit": {},
+      "loadout_revision": 0,
+      "move_charged": "stone_rush",
+      "move_mastery_receipts": {},
+      "move_mastery_uses": {},
+      "move_quick": "pebble_toss",
+      "move_ultimate": "ultimate_terrapup",
+      "move_utility": "",
+      "nickname": "Bud",
+      "species": "terrapup",
+      "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+      "xp": 410
+    },
+    {
+      "fainted": true,
+      "hp": 0.0,
+      "known_moves": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current",
+        "snare"
+      ],
+      "level": 15,
+      "loadout_last_edit": {},
+      "loadout_revision": 0,
+      "move_charged": "warren_charge",
+      "move_mastery_receipts": {},
+      "move_mastery_uses": {},
+      "move_quick": "bramble_whip",
+      "move_ultimate": "ultimate_ground_current",
+      "move_utility": "",
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+      "xp": 722
+    },
+    {
+      "fainted": false,
+      "hp": 139.1,
+      "known_moves": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current",
+        "snare",
+        "bramble_trap"
+      ],
+      "level": 16,
+      "loadout_last_edit": {},
+      "loadout_revision": 0,
+      "move_charged": "warren_charge",
+      "move_mastery_receipts": {},
+      "move_mastery_uses": {},
+      "move_quick": "bramble_whip",
+      "move_ultimate": "ultimate_ground_current",
+      "move_utility": "",
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+      "xp": 93
+    },
+    {
+      "fainted": false,
+      "hp": 129.4,
+      "known_moves": [
+        "root_nibble",
+        "rootquake",
+        "ultimate_ground_wall",
+        "slow_field",
+        "sap"
+      ],
+      "level": 16,
+      "loadout_last_edit": {},
+      "loadout_revision": 0,
+      "move_charged": "rootquake",
+      "move_mastery_receipts": {},
+      "move_mastery_uses": {},
+      "move_quick": "root_nibble",
+      "move_ultimate": "ultimate_ground_wall",
+      "move_utility": "",
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-afbd0d982b14221393f70c29863586a1",
+      "xp": 379
+    },
+    {
+      "fainted": false,
+      "hp": 159.9,
+      "known_moves": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current",
+        "snare",
+        "bramble_trap"
+      ],
+      "level": 16,
+      "loadout_last_edit": {},
+      "loadout_revision": 0,
+      "move_charged": "warren_charge",
+      "move_mastery_receipts": {},
+      "move_mastery_uses": {},
+      "move_quick": "bramble_whip",
+      "move_ultimate": "ultimate_ground_current",
+      "move_utility": "",
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+      "xp": 93
+    }
+  ],
   "observed": {
-    "source": "dc1140ecf4d6da6183050d48f395ba36d23f9384",
-    "main": "c927823d1b41e98b90d33181a07846e72dc6a27a",
-    "run": 37983413867,
-    "artifact": 11643200232,
-    "reviewer": "/root",
+    "source": "4aa71f010ba3a6945e929bd6d1063f9cf7c8c42c",
+    "main": "6add9d5f9b9f490bf8a77783d3afa21474cdb50d",
+    "run": 37998369923,
+    "artifact": 11647684633,
+    "reviewer": "lane B artifact verifier (independent approval still required)",
     "criterion": "F02#2",
     "verdict": "PASS",
+    "optional_authored_flags": [],
+    "flags_gained": [
+      "captive_rescued",
+      "mill_crossing_restored",
+      "relay_captain_defeated",
+      "relay_disabled"
+    ],
+    "archive_sha256": "0a7303b496425fdf29ed2f7c87120ea5242d40bd8e262ae353df0831d390bc49",
     "checked_saved_files": 6,
     "party_count": 5,
     "captain_rounds": 5,
-    "captain_hits": 110.0,
-    "mill_depth_m": 9.40771484375,
-    "seconds": 946.232,
+    "captain_hits": 111.0,
+    "mill_depth_m": 9.45166015625,
+    "seconds": 945.37,
     "prior_earned_play": false,
     "continuous_fresh_save": false,
     "excluded_claims": [
@@ -128,6 +392,10 @@
       "continuous earned prefix"
     ]
   },
+  "independent_runtime_approval": "independent-runtime-review.json",
+  "current_ci": 37998328617,
+  "landing_pr": 594,
+  "landing": "pending actual merge",
   "excluded_claims": [
     "F02#3",
     "F02#4",
@@ -135,8 +403,19 @@
     "F02#7",
     "continuous earned prefix"
   ],
-  "balance": {
-    "game_lines": 0,
-    "tests_tools_lines": 6542
-  }
+  "preservation": "Complete original six handoff SaveDocs frozen in saved-artifact-37998369923.zip. Prior dc114 proof receipt remains receipt-original-dc114.json and all prior original reports remain in Git history. Proofs qualify exact4aa oncurrentmain6add; evidence-only docs commits change no runtime/test/fixture blobs.",
+  "proven_main": "6add9d5f9b9f490bf8a77783d3afa21474cdb50d",
+  "proven_source": "4aa71f010ba3a6945e929bd6d1063f9cf7c8c42c",
+  "proven_tree": "e9669dc6a917dd072a85140f8a8f5bee16311e8d",
+  "independent_source_unit_approval": "independent-source-unit-review.json",
+  "independent_provenance_approval": "independent-provenance-review.json",
+  "full_section17_route_cluster_verdict": "not_ready",
+  "individual_criteria": {
+    "F02#2": "independent physical Relay/Sela/Mill proof PASS; finalREADY/CI/landing pending",
+    "F02#3": "source fix reviewed, actual corrected Hall proof not yet run",
+    "F02#4": "all route transition/reward/recovery reload proof still required",
+    "F02#6": "three-seed whole no-repeated-wild route proof still required",
+    "F02#7": "same complete route WORLD3.1 spacing/A7 strict recomputation still required"
+  },
+  "saved_artifact_committed_path": "ralph/reports/F02/relay-current-main/saved-artifact-37998369923.zip"
 }

@@ -1,0 +1,19 @@
+{
+  "reviewer": "/root",
+  "utc": "2026-10-09T22:27:54.0479236Z",
+  "verdict": "RUNTIME_APPROVE_PROVENANCE_ONLY",
+  "source": "4aa71f010ba3a6945e929bd6d1063f9cf7c8c42c",
+  "main": "6add9d5f9b9f490bf8a77783d3afa21474cdb50d",
+  "run": 37998712146,
+  "artifact": 11647728339,
+  "archive_sha256": "aea6fdb3188b2c986fab86034e15c29b1fe3ca072e6f1d20af78bc240f561abe",
+  "actual_checks": 29,
+  "failures": [],
+  "exit": 0,
+  "seconds": 5,
+  "raw_errors": 0,
+  "scope": "Actualsplitdiskseed/read-onlyprovenance,declaredfixtures,noearnedroute",
+  "ready_approved": false,
+  "pending": "ActualfreshRelaywholeproof/currentheadCI",
+  "raw": "C:/CodexTemp/root-fresh-proof-11647728339.log"
+}

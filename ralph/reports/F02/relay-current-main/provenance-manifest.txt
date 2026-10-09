@@ -1,5 +1,5 @@
-MANIFEST.txt
 exit_code
 run.log
+MANIFEST.txt
 user/godot/app_userdata/Tetherbound/boot_log.txt
 user/godot/app_userdata/Tetherbound/logs/godot.log

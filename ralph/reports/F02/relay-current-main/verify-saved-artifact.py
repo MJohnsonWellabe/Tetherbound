@@ -1,8 +1,18 @@
-import hashlib, json, math, struct, zipfile
+import hashlib, json, math, struct, zipfile, subprocess
 from pathlib import Path
 
-SOURCE = 'dc1140ecf4d6da6183050d48f395ba36d23f9384'
-ARCHIVE = Path('C:/CodexTemp/root-review-37983413867-11643200232.zip')
+import argparse
+parser=argparse.ArgumentParser()
+parser.add_argument('archive')
+parser.add_argument('--source',required=True)
+parser.add_argument('--main',required=True)
+parser.add_argument('--run',required=True,type=int)
+parser.add_argument('--artifact',required=True,type=int)
+parser.add_argument('--output',required=True)
+parser.add_argument('--repo',required=True)
+args=parser.parse_args()
+SOURCE=args.source
+ARCHIVE=Path(args.archive)
 
 def decode(value):
     if isinstance(value, list): return [decode(v) for v in value]
@@ -27,9 +37,12 @@ def document(raw):
     return outer
 
 with zipfile.ZipFile(ARCHIVE) as z:
-    prefix = 'user/godot/app_userdata/Tetherbound/'
-    base = prefix + 'owner-b-relay-only/'
-    generated = prefix + 'owner-b-relay-only_generated_input/'
+    paths=[name for name in z.namelist() if name.endswith('/relay/receipt.json')]
+    assert len(paths)==1
+    base=paths[0][:-len('relay/receipt.json')]
+    setup_paths=[name for name in z.namelist() if name.endswith('_generated_input/GENERATED_SETUP.json')]
+    assert len(setup_paths)==1
+    generated=setup_paths[0][:-len('GENERATED_SETUP.json')]
     relay = document(z.read(base + 'relay/receipt.json'))
     predecessor = document(z.read(base + 'warrens/receipt.json'))
     setup = document(z.read(generated + 'GENERATED_SETUP.json'))
@@ -71,9 +84,44 @@ with zipfile.ZipFile(ARCHIVE) as z:
     assert beats['relay_disabled']['lit_before'] == 18 and beats['relay_disabled']['lit_after'] == 0
     mill = beats['mill_crossing_restored']
     assert mill['gear_before'] == 1 and mill['gear_after'] == 0 and mill['depth'] >= 9
-    assert set(proof['flags_gained']) == {'captive_rescued', 'mill_crossing_restored', 'relay_captain_defeated', 'relay_disabled'}
+    required_flags = {'captive_rescued', 'mill_crossing_restored', 'relay_captain_defeated', 'relay_disabled'}
+    gained_flags = set(proof['flags_gained'])
+    assert required_flags <= gained_flags
+    optional_flags = gained_flags - required_flags
+    assert optional_flags <= {'wild_once_3100'}
+    assert gained_flags == set(after['flags']) - set(before['flags'])
+    assert set(before['flags']) <= set(after['flags'])
+    for boundary, receipt in [('warrens', predecessor), ('relay', relay)]:
+        world = document(z.read(base + boundary + '/save/worlds/slot-0/world.json'))
+        slot = document(z.read(base + boundary + '/save/slot_0.json'))
+        saved_flags = set(world['flags']['flags']) | set(slot['progression']['flags'])
+        assert saved_flags <= set(receipt['state']['flags'])
+        if boundary == 'relay':
+            assert gained_flags <= saved_flags
+        else:
+            assert gained_flags.isdisjoint(saved_flags)
+    if optional_flags:
+        # Accept only this source-authored optional alpha, whose weather-dependent
+        # appearance is allowed by the route. This adds no extra criterion claim.
+        raw = subprocess.check_output(['git', '-C', args.repo, 'show', SOURCE + ':data/config/bands/band3_the_river_lock/spawns.json'])
+        authored = json.loads(raw)
+        def rows(value):
+            if isinstance(value, dict):
+                if value.get('order') == 3100:
+                    yield value
+                for child in value.values():
+                    yield from rows(child)
+            elif isinstance(value, list):
+                for child in value:
+                    yield from rows(child)
+        matches = list(rows(authored))
+        assert len(matches) == 1
+        alpha = matches[0]
+        assert alpha['species'] == 'stormtrail' and alpha['alpha']
+        assert alpha['weather'] == ['rain'] and alpha['centre'] == [318.0, 0.0, 3830.0]
+        assert 'completion_reward' not in alpha['alpha']
     log = z.read('run.log').decode()
     assert 'SCRIPT ERROR' not in log and not any(l.startswith('ERROR:') for l in log.splitlines())
-    result = {'source': SOURCE, 'main': 'c927823d1b41e98b90d33181a07846e72dc6a27a', 'run': 37983413867, 'artifact': 11643200232, 'reviewer': '/root', 'criterion': 'F02#2', 'verdict': 'PASS', 'checked_saved_files': files, 'party_count': 5, 'captain_rounds': 5, 'captain_hits': captain['hits'], 'mill_depth_m': mill['depth'], 'seconds': proof['wall_seconds'], 'prior_earned_play': False, 'continuous_fresh_save': False, 'excluded_claims': ['F02#3', 'F02#4', 'F02#6', 'F02#7', 'continuous earned prefix']}
-    Path('C:/CodexTemp/owner-b-root-relay-runtime-review.json').write_text(json.dumps(result, indent=2) + '\n')
+    result = {'source': SOURCE, 'main': args.main, 'run': args.run, 'artifact': args.artifact, 'reviewer': 'lane B artifact verifier (independent approval still required)', 'criterion': 'F02#2', 'verdict': 'PASS', 'optional_authored_flags': sorted(optional_flags), 'flags_gained': sorted(gained_flags), 'archive_sha256': hashlib.sha256(ARCHIVE.read_bytes()).hexdigest(), 'checked_saved_files': files, 'party_count': 5, 'captain_rounds': 5, 'captain_hits': captain['hits'], 'mill_depth_m': mill['depth'], 'seconds': proof['wall_seconds'], 'prior_earned_play': False, 'continuous_fresh_save': False, 'excluded_claims': ['F02#3', 'F02#4', 'F02#6', 'F02#7', 'continuous earned prefix']}
+    Path(args.output).write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result, indent=2))

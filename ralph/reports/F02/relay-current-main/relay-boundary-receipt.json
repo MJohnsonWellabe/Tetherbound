@@ -3,13 +3,13 @@
 	"format": "tetherbound-save",
 	"payload": {
 		"boundary": "relay",
-		"commit": "dc1140ecf4d6da6183050d48f395ba36d23f9384",
+		"commit": "4aa71f010ba3a6945e929bd6d1063f9cf7c8c42c",
 		"continuous_fresh_save": false,
 		"earned_claim": "only the current caller segment may be earned; generated predecessor input; no prior earned play or continuous fresh-save claim",
 		"files_sha256": {
-			"characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "f7347701d57db9e108c83fb71d40cbc6d312f250d72883fdfaecc3ef3e7d76bb",
-			"slot_0.json": "5a4aacebc570e25b8166dd86892809263076a2a47ba65cba9ed64a461d059281",
-			"worlds/slot-0/world.json": "469f10d3aaab52ce6ad96df825e461e47f8e677d0c91be2f53a52098958f18c7"
+			"characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "f6fe387e8586215c64cf049c29f7a20b0642528df36887f62041c0131e670e38",
+			"slot_0.json": "d5b775f1bd51d4ebc9e9bb9dd30d3a545b35d600ea5cdb2f4a2460aa2753a1ac",
+			"worlds/slot-0/world.json": "ad7a4e33e5bf9f65d43b96b2052d7ff83a482072d1706fa4d201eaf503578525"
 		},
 		"generated_origin": {
 			"boundary": "warrens",
@@ -21,7 +21,7 @@
 			}
 		},
 		"input_mode": "generated_fixture",
-		"journey_id": "dc1140ecf4d6da6183050d48f395ba36d23f9384:/home/runner/work/_temp/userdata/godot/app_userdata/Tetherbound/owner-b-relay-only_generated_input",
+		"journey_id": "4aa71f010ba3a6945e929bd6d1063f9cf7c8c42c:/home/runner/work/_temp/userdata/godot/app_userdata/Tetherbound/owner-b-relay-main-4aa71f010b_generated_input",
 		"kind": "earned_meadows_piece",
 		"piece_proof": {
 			"continuous_fresh_save": false,
@@ -39,17 +39,17 @@
 			"free_build": false,
 			"functional_offload": false,
 			"game_clock_seconds": {
-				"$tb_float64": "d0c16352c60d9340"
+				"$tb_float64": "dc224a3aa83d9040"
 			},
 			"game_day": 7,
-			"handoff_from": "/home/runner/work/_temp/userdata/godot/app_userdata/Tetherbound/owner-b-relay-only_generated_input/warrens",
+			"handoff_from": "/home/runner/work/_temp/userdata/godot/app_userdata/Tetherbound/owner-b-relay-main-4aa71f010b_generated_input/warrens",
 			"helper_receipts": [
 				{
 					"passed": true,
 					"receipts": [
 						{
 							"beat": "overlook_bypass",
-							"from": "(-159.4566, 3418.611)",
+							"from": "(-159.4699, 3418.642)",
 							"to": "(-60.0, 3520.0)",
 							"via": [
 								"(-122.0, 3443.0)"
@@ -58,10 +58,10 @@
 						{
 							"beat": "wild_victory",
 							"enemy_id": {
-								"$tb_float64": "477fa26dfeffdfc3"
+								"$tb_float64": "47bf866dfeffdfc3"
 							},
 							"frames": {
-								"$tb_float64": "0000000000008b40"
+								"$tb_float64": "0000000000c08240"
 							},
 							"guardian": false,
 							"hits": {
@@ -74,14 +74,14 @@
 						{
 							"beat": "wild_victory",
 							"enemy_id": {
-								"$tb_float64": "48bf936dfeffdfc3"
+								"$tb_float64": "47ff776dfeffdfc3"
 							},
 							"frames": {
-								"$tb_float64": "0000000000208240"
+								"$tb_float64": "0000000000b49240"
 							},
 							"guardian": false,
 							"hits": {
-								"$tb_float64": "0000000000002240"
+								"$tb_float64": "0000000000002a40"
 							},
 							"switches": {
 								"$tb_float64": "0000000000000000"
@@ -90,7 +90,7 @@
 						{
 							"beat": "trainer_top_up",
 							"party": [
-								"L15 183/221",
+								"L15 185/221",
 								"L15 184/184",
 								"L15 176/176",
 								"L15 192/192",
@@ -103,19 +103,19 @@
 						{
 							"beat": "relay_captain_defeated",
 							"expected_xp": {
-								"-9223365879784273682": {
+								"-9223365877922002706": {
 									"$tb_float64": "0000000000588940"
 								},
-								"-9223365880052709665": {
+								"-9223365878190438689": {
 									"$tb_float64": "0000000000249140"
 								},
-								"-9223365880321144593": {
+								"-9223365878458873617": {
 									"$tb_float64": "0000000000588940"
 								},
-								"-9223365880589580048": {
+								"-9223365878727309072": {
 									"$tb_float64": "0000000000e08040"
 								},
-								"-9223365880858015503": {
+								"-9223365878995744527": {
 									"$tb_float64": "0000000000908d40"
 								}
 							},
@@ -123,7 +123,7 @@
 								"$tb_float64": "0000000000000000"
 							},
 							"hits": {
-								"$tb_float64": "0000000000805b40"
+								"$tb_float64": "0000000000c05b40"
 							},
 							"items_after": {
 								"coin": {
@@ -154,36 +154,36 @@
 								"$tb_float64": "0000000000001440"
 							},
 							"xp_after": {
-								"-9223365879784273682": {
+								"-9223365877922002706": {
 									"$tb_float64": "0000000000a7ba40"
 								},
-								"-9223365880052709665": {
+								"-9223365878190438689": {
 									"$tb_float64": "0000000000c5bb40"
 								},
-								"-9223365880321144593": {
+								"-9223365878458873617": {
 									"$tb_float64": "0000000000a7ba40"
 								},
-								"-9223365880589580048": {
+								"-9223365878727309072": {
 									"$tb_float64": "000000000098b940"
 								},
-								"-9223365880858015503": {
+								"-9223365878995744527": {
 									"$tb_float64": "0000000000e4bb40"
 								}
 							},
 							"xp_before": {
-								"-9223365879784273682": {
+								"-9223365877922002706": {
 									"$tb_float64": "00000000007cb740"
 								},
-								"-9223365880052709665": {
+								"-9223365878190438689": {
 									"$tb_float64": "00000000007cb740"
 								},
-								"-9223365880321144593": {
+								"-9223365878458873617": {
 									"$tb_float64": "00000000007cb740"
 								},
-								"-9223365880589580048": {
+								"-9223365878727309072": {
 									"$tb_float64": "00000000007cb740"
 								},
-								"-9223365880858015503": {
+								"-9223365878995744527": {
 									"$tb_float64": "000000000032b840"
 								}
 							}
@@ -203,12 +203,12 @@
 							"lit_before": {
 								"$tb_float64": "0000000000003240"
 							},
-							"player": "(342.5205, 10.00094, 3751.45)"
+							"player": "(342.5687, 10.00094, 3751.38)"
 						},
 						{
 							"beat": "mill_crossing_restored",
 							"depth": {
-								"$tb_float64": "00000000c0d02240"
+								"$tb_float64": "0000000040e72240"
 							},
 							"gear_after": {
 								"$tb_float64": "0000000000000000"
@@ -218,19 +218,19 @@
 							},
 							"party_ids": [
 								{
-									"$tb_float64": "fe7fac99feffdfc3"
+									"$tb_float64": "fdbf9099feffdfc3"
 								},
 								{
-									"$tb_float64": "fd7fa899feffdfc3"
+									"$tb_float64": "febf8c99feffdfc3"
 								},
 								{
-									"$tb_float64": "fe7fa499feffdfc3"
+									"$tb_float64": "febf8899feffdfc3"
 								},
 								{
-									"$tb_float64": "fe7fa099feffdfc3"
+									"$tb_float64": "febf8499feffdfc3"
 								},
 								{
-									"$tb_float64": "fe7f9c99feffdfc3"
+									"$tb_float64": "febf8099feffdfc3"
 								}
 							]
 						}
@@ -263,13 +263,13 @@
 			"location": {
 				"player": [
 					{
-						"$tb_float64": "000000a0ffff62c0"
+						"$tb_float64": "00000080ffff62c0"
 					},
 					{
-						"$tb_float64": "000000c0907fffbf"
+						"$tb_float64": "00000080a5fdffbf"
 					},
 					{
-						"$tb_float64": "000000606874b040"
+						"$tb_float64": "000000a07374b040"
 					}
 				],
 				"realm": "meadows",
@@ -278,7 +278,7 @@
 			"mode": "new_order_meadows_piece",
 			"party_after": [
 				{
-					"hp": 95,
+					"hp": 134,
 					"level": 16,
 					"nickname": "Bud",
 					"species": "terrapup",
@@ -292,21 +292,21 @@
 					"uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
 				},
 				{
-					"hp": 138,
+					"hp": 139,
 					"level": 16,
 					"nickname": "",
 					"species": "bramblebun",
 					"uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
 				},
 				{
-					"hp": 151,
+					"hp": 129,
 					"level": 16,
 					"nickname": "",
 					"species": "mudsnout",
 					"uid": "creature-afbd0d982b14221393f70c29863586a1"
 				},
 				{
-					"hp": 123,
+					"hp": 159,
 					"level": 16,
 					"nickname": "",
 					"species": "bramblebun",
@@ -355,7 +355,7 @@
 			"saved_world_seed": 59015681,
 			"segment": "relay",
 			"wall_seconds": {
-				"$tb_float64": "60e5d022db918d40"
+				"$tb_float64": "295c8fc2f58a8d40"
 			},
 			"world_seed_env": ""
 		},
@@ -368,7 +368,7 @@
 		"predecessors": [
 			{
 				"boundary": "warrens",
-				"receipt_sha256": "9a7f43914333ab0068a9f9fa9dedf88ccda3d5a416645b472ab547e4ea80da1e"
+				"receipt_sha256": "1ff88e17cdd5645d22b35d705d9c3f90c8dea0c85a8afa3437c6f8d74b013c2c"
 			}
 		],
 		"realm": "meadows",
@@ -518,7 +518,7 @@
 				{
 					"fainted": false,
 					"hp": {
-						"$tb_float64": "cdccccccccec5740"
+						"$tb_float64": "3333333333c36040"
 					},
 					"known_moves": [
 						"pebble_toss",
@@ -569,7 +569,7 @@
 				{
 					"fainted": false,
 					"hp": {
-						"$tb_float64": "0000000000506140"
+						"$tb_float64": "3333333333636140"
 					},
 					"known_moves": [
 						"bramble_whip",
@@ -595,7 +595,7 @@
 				{
 					"fainted": false,
 					"hp": {
-						"$tb_float64": "0000000000f06240"
+						"$tb_float64": "cdcccccccc2c6040"
 					},
 					"known_moves": [
 						"root_nibble",
@@ -621,7 +621,7 @@
 				{
 					"fainted": false,
 					"hp": {
-						"$tb_float64": "3433333333d35e40"
+						"$tb_float64": "cdccccccccfc6340"
 					},
 					"known_moves": [
 						"bramble_whip",
