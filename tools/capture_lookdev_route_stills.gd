@@ -16,10 +16,17 @@ const ROUTES_PATH := "res://data/config/lookdev_routes.json"
 var _graphics_capture: Dictionary = {}
 var _route: Dictionary = {}
 var _requested_weather := ""
+var _road_verge_mode := ""
 
 
 func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--f38-road-verge="):
+			_road_verge_mode = argument.trim_prefix("--f38-road-verge=")
+			if _road_verge_mode not in ["baseline", "candidate"] or not OS.get_cmdline_user_args().has("--biome=meadows"):
+				push_error("Road-verge stills require explicit Meadows baseline or candidate")
+				quit(1)
+				return
 		if argument.begins_with("--weather="):
 			_requested_weather = argument.trim_prefix("--weather=")
 			if _requested_weather not in ["clear", "rain"]:
@@ -30,6 +37,9 @@ func _run() -> void:
 	if _graphics_capture.is_empty():
 		quit(1)
 		return
+	if not _road_verge_mode.is_empty():
+		# Explicit process-local comparison; never edit tracked config or saves.
+		preload("res://scripts/world/grass_field.gd").config()["road_verge"]["enabled"] = _road_verge_mode == "candidate"
 	await super._run()
 
 
@@ -78,6 +88,8 @@ func _begin_manifest() -> void:
 	_manifest["route_stills_scope"] = "Visual-only stills at declared route points with production camera/HUD. Debug travel and clock pin. No frame time, traversal, collision or performance claim."
 	_manifest["route_weather_fixture"] = _requested_weather
 	_manifest["route_weather_scope"] = "Optional named production weather held for stills by emptying its scheduler order; idle particle follow/visibility stays live. No earned/cycle/save/co-op claim. Omitted option preserves original behavior."
+	_manifest["road_verge_fixture"] = _road_verge_mode
+	_manifest["road_verge_scope"] = "Optional explicit Meadows grass shader baseline/candidate only; process-local config. Original camera, footing, weather, clock, source and pixel guards remain; no performance, full-matrix or whole claim."
 
 
 func _pin_time(time_name: String) -> Dictionary:
@@ -110,7 +122,24 @@ func _pin_time(time_name: String) -> Dictionary:
 func _capture_row(row: Dictionary) -> void:
 	var raw: Array = row.route_point
 	if raw.size() == 2:
+		var before := _records.size()
 		await super._capture_row(row)
+		if not _road_verge_mode.is_empty() and _records.size() == before + 1:
+			var field := _world.get_node_or_null("GrassField")
+			var material := field.get("_material") as ShaderMaterial if field != null else null
+			var observed := {}
+			if material != null:
+				for key: String in ["road_verge_enabled", "road_verge_base_mask", "road_verge_strength", "road_verge_height_floor"]:
+					observed[key] = material.get_shader_parameter(key)
+			var expected := _road_verge_mode == "candidate"
+			var matched: bool = material != null and observed.get("road_verge_enabled") == expected \
+				and int(observed.get("road_verge_base_mask", 0)) == 8 \
+				and is_equal_approx(float(observed.get("road_verge_strength", -1.0)), 0.75) \
+				and is_equal_approx(float(observed.get("road_verge_height_floor", -1.0)), 0.35)
+			_records.back()["road_verge_observation"] = {"mode": _road_verge_mode, "uniforms": observed, "matches_requested": matched}
+			if not matched:
+				_failures.append("%s: actual production grass road-verge uniforms mismatch" % str(row.frame_id))
+			_write_manifest()
 		return
 	# Authored XYZ (stacked Cloudreach floors): travel by XZ for streaming,
 	# then stand on the declared height exactly as the timed route does.
