@@ -1,0 +1,72 @@
+{
+  "criteria": [
+    "F23#0",
+    "F23#5",
+    "F24#0",
+    "F24#3",
+    "F24#5"
+  ],
+  "claim": "Bounded candidate evidence; no whole criterion or shipping acceptance claimed.",
+  "shipping_candidate": "a22a35175952f5e22f763521544b31ee8f825364",
+  "tracked_shipping_switches": {
+    "ultimates": true,
+    "actor_vitals": true,
+    "tether_runtime": true,
+    "tether_network": true,
+    "tether_ui": true
+  },
+  "legacy_mechanics": {
+    "run_id": 37865821390,
+    "artifact_id": 11588476358,
+    "job_id": 113612183012,
+    "checkout_sha": "a22a35175952f5e22f763521544b31ee8f825364",
+    "log_sha256": "76749bd2197695975867f7f575bdb5676c462af7ce1755633469975fb658b22e",
+    "selectors": [
+      "test_f23_live_moves.gd",
+      "test_f24_host_commands.gd"
+    ],
+    "tests": 54,
+    "assertions": 2054,
+    "failed": 0,
+    "fixture": "Explicit saved/cloned/restored actor-OFF legacy mechanics; not shipping actor-ON evidence.",
+    "original_source_verdict": "APPROVE",
+    "original_artifact_verdict": "APPROVE",
+    "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "review_turn": "01a11e21-d9a3-7903-a89c-981a857a4a9e",
+    "reuse": "Unchanged input-context and move-effect files passed in37863859436; no repeated batch."
+  },
+  "shipping_canonical_wild": {
+    "run_id": 37864639884,
+    "artifact_id": 11587343130,
+    "job_id": 113608345686,
+    "checkout_sha": "e74704d8399434a6f2982fda4ca9de94ea944d03",
+    "log_sha256": "323334e63107abb880a9758a6ecd262fc4a20d0240854e354292449324a5ccd9",
+    "script": "tests/smoke_f23_live_moves.gd",
+    "args": "--prove-slot-inputs --prove-shipping-ultimate",
+    "checks": 147,
+    "errors": 4,
+    "launches": 25,
+    "impacts": 25,
+    "shipping_flags_on": true,
+    "canonical_wild_override": false,
+    "visual_override": false,
+    "library_arrival_override": false,
+    "failure_operands": [
+      "Legacy Ultimate widgets hidden by successfully refreshed actual F42 shipping overlay.",
+      "Accepted21130/localstart21131/localdeadline23531/hostdeadline23530; observation23532 remains committed."
+    ],
+    "hud_repair": "Reads mounted current-UID overlay ring, caption and rebound arm/face instructions; no manual refresh/resource mutation or production HUD edit.",
+    "control_scope": "PARK; no unchanged rerun, timing grace, timestamp substitution or acceptance.",
+    "original_clock_disposition": "PARK",
+    "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "review_turn": "01a11e26-5cb3-7450-bb49-9076343042d0",
+    "hud_original_source_verdict": "APPROVE",
+    "hud_original_review_turn": "01a11e27-45c7-7c92-9e80-9e8013d0ea0c"
+  },
+  "limits": [
+    "WHOLE F23#0/#5 remain OPEN.",
+    "Shipping all-four-command co-op proof is separate and not yet verified.",
+    "Required shipping-ON CI and any named native/blind gates remain unearned.",
+    "Failure artifacts are retained under F25/downloads; no failed save is promoted."
+  ]
+}

@@ -299,11 +299,19 @@ func _run() -> void:
 		return
 	var shown_meter: ProgressBar = _hud.get("_ultimate_meter")
 	var shown_readout: RichTextLabel = _hud.get("_ultimate_readout")
+	# Shipping UI uses the actual F42 overlay; legacy widgets are deliberately
+	# hidden after its acknowledged current-UID view refreshes. Read the mounted
+	# replacement, never manufacture a resource or call refresh from the proof.
+	var shown_overlay: Control = _hud.get("_system_overlay")
+	var use_overlay := preload("res://scripts/combat/tether_commands.gd").enabled("ui_enabled")
+	_check(not use_overlay or (is_instance_valid(shown_overlay) and shown_overlay.is_inside_tree()),
+		"shipping CombatHUD mounts its actual system overlay")
 	_check(shown_meter != null and shown_readout != null, "mounted actual CombatHUD creates its Ultimate controls")
 	if shown_meter == null or shown_readout == null:
 		_finish()
 		return
-	_check(is_equal_approx(shown_meter.value, 0.0), "mounted actual CombatHUD starts with an empty Ultimate meter")
+	_check(_mounted_ultimate_meter(shown_overlay, 0.0) if use_overlay else is_equal_approx(shown_meter.value, 0.0),
+		"mounted actual CombatHUD starts with an empty Ultimate meter")
 	if _enabled_ultimate:
 		await _button(JOY_BUTTON_RIGHT_SHOULDER, true)
 		await _button(JOY_BUTTON_RIGHT_SHOULDER, false)
@@ -410,10 +418,21 @@ func _run() -> void:
 	_check(is_equal_approx(float(_manager.call("ultimate_fraction")), 1.0), "Manager snapshot mirrors the host's full meter")
 	await process_frame
 	await process_frame
-	_check(shown_meter.is_visible_in_tree() and is_equal_approx(shown_meter.value, 100.0),
+	_check(_mounted_ultimate_meter(shown_overlay, 1.0) if use_overlay else
+		shown_meter.is_visible_in_tree() and is_equal_approx(shown_meter.value, 100.0),
 		"mounted actual CombatHUD shows the full landed-hit Ultimate meter")
 	var ultimate_available: bool = _manager.call("live_move_supported", "ultimate", str(_creature.move_ultimate))
-	_check(shown_readout.is_visible_in_tree() and (shown_readout.get_parsed_text().contains("Tap →")
+	var overlay_instruction := false
+	if use_overlay and is_instance_valid(shown_overlay):
+		var caption: Label = shown_overlay.get("_meter_caption")
+		var arm_button: Label = shown_overlay.get("_ultimate_button")
+		var glyphs := preload("res://scripts/ui/input_glyph.gd")
+		var actual_arm := glyphs.pad_button_name_for_action("combat_ultimate_arm") if glyphs.using_gamepad() else glyphs.key_name_for_action("combat_ultimate_arm")
+		overlay_instruction = shown_overlay.is_visible_in_tree() and shown_overlay.get("_uid") == str(_creature.uid) \
+			and is_instance_valid(caption) and caption.is_visible_in_tree() and is_instance_valid(arm_button) \
+			and arm_button.is_visible_in_tree() and arm_button.text == actual_arm \
+			and (caption.text.contains("Ready · Tap " + actual_arm) if ultimate_available else caption.text.contains("Ultimate unavailable"))
+	_check(overlay_instruction if use_overlay else shown_readout.is_visible_in_tree() and (shown_readout.get_parsed_text().contains("Tap →")
 		and shown_readout.text.contains(preload("res://scripts/ui/input_glyph.gd").icon("combat_utility", HUD_SCRIPT.CELL_GLYPH_PX, HUD_SCRIPT.VERB_READY))
 		if ultimate_available else shown_readout.get_parsed_text().contains("Unavailable")),
 		"mounted actual CombatHUD displays the actual full-meter availability and rebound-aware tap sequence")
@@ -431,6 +450,13 @@ func _run() -> void:
 		_check(not bool(_manager.call("ultimate_armed")), "RB hold cannot arm an ultimate")
 		await _button(JOY_BUTTON_RIGHT_SHOULDER, false)
 		_check(bool(_manager.call("ultimate_armed")), "RB release arms the next fresh face tap")
+		if use_overlay:
+			await process_frame
+			var caption: Label = shown_overlay.get("_meter_caption") if is_instance_valid(shown_overlay) else null
+			var glyphs := preload("res://scripts/ui/input_glyph.gd")
+			var choices := "Choose %s / %s / %s" % [glyphs.action_name("combat_quick"), glyphs.action_name("combat_charged"), glyphs.action_name("combat_utility")]
+			_check(_mounted_ultimate_meter(shown_overlay, 1.0) and is_instance_valid(caption) and caption.text.contains(choices),
+				"armed mounted shipping HUD shows all three rebound-aware face choices")
 		var ultimate := await _tap_move(JOY_BUTTON_Y, "ultimate")
 		_check(not ultimate.is_empty(), "released RB then Y must land the frozen signature")
 		if not ultimate.is_empty():
@@ -463,7 +489,7 @@ func _run() -> void:
 			_check(float(latest.damage) <= float(_enemy.max_hp) * 0.2 + 0.001, "ultimate respects the named-target HP cap")
 			_check(is_equal_approx(float(_host.move_resource_snapshot(_id, 1, _creature.uid).ultimate_meter), 0.0), "ultimate spends the full per-UID meter once")
 			await process_frame
-			_check(shown_meter.is_visible_in_tree() and is_equal_approx(shown_meter.value, 0.0)
+			_check(_mounted_ultimate_meter(shown_overlay, 0.0) if use_overlay else shown_meter.is_visible_in_tree() and is_equal_approx(shown_meter.value, 0.0)
 				and shown_readout.get_parsed_text().contains("0%"), "mounted actual CombatHUD redraws the spent Ultimate meter")
 			var admitted_rank := MASTERY.rank_from_uses(_ultimate_prior_uses)
 			_check(_launches.back().move.mastery_rank == admitted_rank and _launches.back().mastery_rank == admitted_rank,
@@ -786,6 +812,16 @@ func _tap_move(button: JoyButton, slot: String) -> Dictionary:
 				found = true
 		_check(found, "actual CombatHUD creates the landed action's number after contact")
 	return accepted
+
+func _mounted_ultimate_meter(overlay: Control, expected: float) -> bool:
+	if not is_instance_valid(overlay) or not overlay.is_visible_in_tree() \
+		or overlay.get("_uid") != str(_creature.uid): return false
+	var ring: Control = overlay.get("_ring")
+	var caption: Label = overlay.get("_meter_caption")
+	return is_instance_valid(ring) and ring.is_visible_in_tree() and is_equal_approx(float(ring.get("fraction")), expected) \
+		and is_instance_valid(caption) and caption.is_visible_in_tree() \
+		and caption.text.contains("Ultimate · %d%%" % int(expected * 100.0))
+
 
 func _wait_ready() -> void:
 	var until := Time.get_ticks_msec() + 6000
