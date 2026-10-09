@@ -134,8 +134,8 @@ func _run() -> void:
 	if not failures.is_empty():
 		_finish()
 		return
-	if generated_fixture and (legacy_order_diagnostic or not compatibility_paths.is_empty() or segment not in ["relay", "hall"]):
-		failures.append("Generated fixtures are explicit Relay/Hall inputs, never legacy or reviewed earned imports")
+	if generated_fixture and (legacy_order_diagnostic or not compatibility_paths.is_empty() or segment != "relay"):
+		failures.append("Generated fixtures are explicit Relay inputs, never legacy or reviewed earned imports")
 		_finish()
 		return
 	if legacy_order_diagnostic and not handoff_from.is_empty():
