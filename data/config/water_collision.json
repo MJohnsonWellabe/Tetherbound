@@ -1,5 +1,0 @@
-{
-  "_comment": "D F26 candidate. One static body per unchanged original baked region. Enabled on the lane candidate for real config-path proofs and release benchmarking; main landing requires affected traversal/co-op and release FPS/P99 gates.",
-  "regional_collision_enabled": true,
-  "build_budget_ms": 8.0
-}

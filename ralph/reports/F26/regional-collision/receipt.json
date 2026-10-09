@@ -37,11 +37,11 @@
     "old": "absent/defaultfalse onmain /false previousprototype"
   },
   "proof_limits": [
-    "Exact2ad prior-main flagON: sixraw-clean checks and qualified portal assertion pass;14shutdownERRORs also retained unchanged-main CI, never cleanup-fixed/error-free",
-    "Current6add+only6Dfiles source9d independentlySOURCEAPPROVED; current-tree affectedproof gate pending finalperformance scope",
-    "FreshWindows text9d fullpack VERIFIED13source/data+sameQUIETblob; baselineE785pack11source/data checks equals6addruntime/data/assets/tools/exportconfig (onlyreports/docs differ)",
-    "MatchedForward+ Medium release8cases runningserializedD lease; firsttextbeforeWater33.9132fps/P99 74.255ms isnotAFTER improvement or60FPS acceptance",
-    "No wholecriterion READY, mainlanding or visualacceptance"
+    "Preserved functional proofs establish only the tested historical candidate behavior, not performance acceptance.",
+    "Both matched Tidewake AFTER runs miss the 60fps/P99<=33ms criterion; no causal speedup claim from variable paired results.",
+    "Five valid actual cases; intended eight incomplete, three unchanged Meadows repeats cancelled after the second candidate performance failure.",
+    "All six candidate source/config/test paths restored to current main; no active production or config difference.",
+    "No whole-criterion READY, mainlanding or visual acceptance."
   ],
   "previous_failures": [
     {
@@ -86,7 +86,7 @@
   "main": "6add9d5f9b9f490bf8a77783d3afa21474cdb50d",
   "ready": false,
   "mechanical_source": "e58b115cc3f955ff2c68d915683901bb3982b8b5",
-  "updated_utc": "2026-10-09T22:34:14.3483768Z",
+  "updated_utc": "2026-10-09T22:46:35.4714877Z",
   "scope": [
     "data/config/water_collision.json",
     "scripts/world/water_collision_regions.gd",
@@ -341,5 +341,29 @@
       "D:\\CodexTemp\\owner-d-retained-main-water-return-NET_RUN.json"
     ],
     "raw_on": "C:\\CodexTemp\\owner-d-on-37995391419-raw-review.json"
+  },
+  "candidate_disposition": {
+    "decision": "REJECTED_AS_PERFORMANCE_FIX",
+    "frozen_source": "9d513c981830e9760e5fccc20dd4755e7003eab2",
+    "restored_to_main": "6add9d5f9b9f490bf8a77783d3afa21474cdb50d",
+    "restored_paths": [
+      "data/config/water_collision.json",
+      "scripts/world/water_collision_regions.gd",
+      "scripts/world/water_world.gd",
+      "tests/smoke_water_collision_regions.gd",
+      "tests/smoke_water_collision_regions_terrain.gd",
+      "tests/smoke_water_collision_rollout.gd"
+    ],
+    "original_candidate_configuration": {
+      "other_flags": "ALL unchanged fromcurrentmain: actor_vitals,capture,alpha,Tether",
+      "build_budget_ms": "absent ->8.0",
+      "path": "water_collision.json.regional_collision_enabled",
+      "new": true,
+      "old": "absent/defaultfalse onmain /false previousprototype"
+    },
+    "active_configuration_changes": [],
+    "measurements": "matched-text-partial/receipt.json",
+    "independent_review": "matched-text-partial/independent-runtime-review.json",
+    "next": "Distinct causal GPU-pass and native-actor attribution; no third unchanged collision diagnostic"
   }
 }

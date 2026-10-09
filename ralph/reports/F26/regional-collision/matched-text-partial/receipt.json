@@ -1,0 +1,1200 @@
+{
+  "classification": "Rescoped partial-five matched text-package native cases; intended eight incomplete",
+  "acceptance": false,
+  "measurement_gate_acceptance": true,
+  "intended_eight_complete": false,
+  "performance_target_acceptance": false,
+  "performance_target_mean_fps": 60,
+  "before_actual_package_source": "785e6f612e28a77075dd66684047628c2affbb13",
+  "before_equivalent_main": "6add9d5f9b9f490bf8a77783d3afa21474cdb50d",
+  "after_actual_package_source": "9d513c981830e9760e5fccc20dd4755e7003eab2",
+  "source_equivalence_qualification": {
+    "export_verified": true,
+    "start_cases_authorized": true,
+    "after_source": "9d513c981830e9760e5fccc20dd4755e7003eab2",
+    "before_actual_source": "785e6f612e28a77075dd66684047628c2affbb13",
+    "before_equivalent_main": "6add9d5f9b9f490bf8a77783d3afa21474cdb50d",
+    "provenance_paths": [
+      "C:\\CodexTemp\\owner-d-regional-on-release-export.json",
+      "C:\\CodexTemp\\owner-d-text-before-main-equivalence.json",
+      "C:\\CodexTemp\\owner-d-text-after-pinned-scope.json",
+      "C:\\CodexTemp\\root-d-9d-current-main-source-review.json"
+    ],
+    "no_engine_alive": true,
+    "measurement_blob": "8908ebde5fa64e6c0ddf5a2bf03428ea3b535916",
+    "checked_utc": "2026-10-09T22:26:21.3296278Z",
+    "savepack_complete": true
+  },
+  "source_provenance": [
+    {
+      "path": "C:\\CodexTemp\\owner-d-regional-on-release-export.json",
+      "sha256": "fbf0b6796bad2a6089bf5389cfde571c92f5221dfde0df32c22397b5892b32e8"
+    },
+    {
+      "path": "C:\\CodexTemp\\owner-d-text-before-main-equivalence.json",
+      "sha256": "fabf9ffe506cb7085abf5ea4cff606148d84df66e530e5db1c229bc916236d3b"
+    },
+    {
+      "path": "C:\\CodexTemp\\owner-d-text-after-pinned-scope.json",
+      "sha256": "00ea47134985a75ca0c0d52f0890bad386df49f4ad2a212403ce1f8f201203d8"
+    },
+    {
+      "path": "C:\\CodexTemp\\root-d-9d-current-main-source-review.json",
+      "sha256": "4f2939231380b57a896a7354e806154d490f0fc3b379ab4c5cb4a90df67ae085"
+    }
+  ],
+  "intended_case_count": 8,
+  "executed_case_count": 5,
+  "unrun_case_count": 3,
+  "unrun_cases": [
+    {
+      "phase": "BEFORE",
+      "biome": "meadows",
+      "repeat": 2,
+      "planned_root": "D:\\CodexTemp\\dt-bm2"
+    },
+    {
+      "phase": "AFTER",
+      "biome": "meadows",
+      "repeat": 1,
+      "planned_root": "D:\\CodexTemp\\dt-am1"
+    },
+    {
+      "phase": "AFTER",
+      "biome": "meadows",
+      "repeat": 2,
+      "planned_root": "D:\\CodexTemp\\dt-am2"
+    }
+  ],
+  "cases": [
+    {
+      "phase": "BEFORE",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "biome": "water",
+      "preset": "Medium",
+      "repeat": 1,
+      "pid": 26716,
+      "acceptance": true,
+      "checks": {
+        "process_terminal": true,
+        "route_json_parse": true,
+        "complete": true,
+        "failures_empty": true,
+        "release": true,
+        "forward_plus": true,
+        "resolution_1920x1080": true,
+        "vsync_0": true,
+        "max_fps_0": true,
+        "warmup_at_least_15s": true,
+        "timed_at_least_60s": true,
+        "source_matches": true,
+        "biome_matches": true,
+        "preset_matches": true,
+        "quiet_baseline": true,
+        "samples_present": true,
+        "runtime_raw_faults_empty": true,
+        "both_complete_pngs": true,
+        "fresh_environment_recorded": true,
+        "disk_guard_recorded": true
+      },
+      "failed_checks": [],
+      "runtime_failures": [],
+      "route_json_parse_failure": null,
+      "raw_faults": [],
+      "sample_count": 2035,
+      "warmup_elapsed_ms": 15016.5,
+      "timed_elapsed_ms": 60006.102,
+      "metrics": {
+        "mean_wall_ms": 29.487013267813296,
+        "mean_process_ms": 24.81374348894349,
+        "mean_physics_ms": 15.882156265356308,
+        "mean_render_cpu_ms": 1.387818673729018,
+        "mean_render_setup_cpu_ms": 0.24095036855036925,
+        "mean_render_gpu_ms": 21.991962651245718,
+        "mean_fps": 33.91323464732032,
+        "p95_wall_ms": 50.036,
+        "p99_wall_ms": 74.255,
+        "percentile_method": "Nearest rank over wall_ms samples",
+        "timing_interpretation": "Independent means; overlapping process/physics/render/setup/GPU timings are never added"
+      },
+      "pngs": [
+        {
+          "path": "D:\\CodexTemp\\dt-bw1\\route\\start.png",
+          "valid": true,
+          "bytes": 2279337,
+          "width": 1920,
+          "height": 1080,
+          "failure": null
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw1\\route\\end.png",
+          "valid": true,
+          "bytes": 2212696,
+          "width": 1920,
+          "height": 1080,
+          "failure": null
+        }
+      ],
+      "route_revision": "F26-route-2",
+      "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+      "route": {
+        "description": "First Shore beach to the departure pier approach, from the existing ordinary-camera stands; no open-water crossing or distant Veilfall claim.",
+        "height_mode": "ground",
+        "source": "res://tools/art_pipeline/capture_tidewake_matrix.gd",
+        "start": [
+          12.0,
+          150.0
+        ],
+        "waypoints": [
+          [
+            5.0,
+            174.0
+          ],
+          [
+            22.0,
+            168.0
+          ]
+        ]
+      },
+      "camera": {
+        "far": 6500.0,
+        "fov": 70.0,
+        "near": 0.0500000007450581,
+        "path": "CameraRig/Camera3D"
+      },
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "engine": {
+        "build": "official",
+        "hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+        "hex": 263936,
+        "major": 4,
+        "minor": 7,
+        "patch": 0,
+        "status": "stable",
+        "string": "4.7-stable (official)",
+        "timestamp": 0
+      },
+      "environment_start": {
+        "hour": 8.0401342,
+        "position": [
+          12.0,
+          3.4628279209137,
+          150.0
+        ],
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 10.4438618133333,
+        "position": [
+          21.1797637939453,
+          1.11810886859894,
+          168.265579223633
+        ],
+        "time_of_day": "day"
+      },
+      "waypoints_reached": 2,
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "launch_environment": {
+        "appdata": "D:\\CodexTemp\\dt-bw1\\r",
+        "localappdata": "D:\\CodexTemp\\dt-bw1\\l",
+        "userprofile": "C:\\Users\\mattj",
+        "environment_source": "Explicit Start-Process Environment APPDATA/LOCALAPPDATA overrides; other environment inherited, USERPROFILE unchanged"
+      },
+      "launch_path": "D:\\CodexTemp\\dt-bw1\\launch.json",
+      "route_path": "D:\\CodexTemp\\dt-bw1\\route\\route.json",
+      "log_paths": [
+        "D:\\CodexTemp\\dt-bw1\\engine.log",
+        "D:\\CodexTemp\\dt-bw1\\stdout.log",
+        "D:\\CodexTemp\\dt-bw1\\stderr.log"
+      ],
+      "artifacts": [
+        {
+          "path": "D:\\CodexTemp\\dt-bw1\\route\\route.json",
+          "bytes": 564308,
+          "sha256": "157d450eff7528362d950bfe2df31bd854dd71a983eed85a76d05f2a1ee7ff0f"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw1\\launch.json",
+          "bytes": 2310,
+          "sha256": "8f240671a1bf9643592625e24cb8976905354d5c16bf5c5dc9205c3c55220959"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw1\\engine.log",
+          "bytes": 2271,
+          "sha256": "b815809c84d8f6ca6a8bcfb8edbdec6fa9b5c26a4fb28af59ad8f3f04f5b0fb2"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw1\\stdout.log",
+          "bytes": 2109,
+          "sha256": "15385a10a42014a7e620ee12790d9a2c5aefffb49d7fd4e8cd6757ce9d9cfa4d"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw1\\stderr.log",
+          "bytes": 180,
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw1\\route\\start.png",
+          "bytes": 2279337,
+          "sha256": "05fbb73bdd749d31bff6ef3f3ca8253253756e21a15bfb6653c425de6a6108c5"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw1\\route\\end.png",
+          "bytes": 2212696,
+          "sha256": "d66f776f543fec8e95cecea50d300c5df65a094ba0be3a91a3d2b453629112aa"
+        }
+      ],
+      "export_go_record": "C:\\CodexTemp\\owner-d-matched-text-export-go.json",
+      "provenance_paths": [
+        "C:\\CodexTemp\\owner-d-regional-on-release-export.json",
+        "C:\\CodexTemp\\owner-d-text-before-main-equivalence.json",
+        "C:\\CodexTemp\\owner-d-text-after-pinned-scope.json",
+        "C:\\CodexTemp\\root-d-9d-current-main-source-review.json"
+      ],
+      "disk_c_free_at_receipt": 2726342656,
+      "receipt_utc": "2026-10-09T22:31:18.8752417Z"
+    },
+    {
+      "phase": "BEFORE",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "biome": "water",
+      "preset": "Medium",
+      "repeat": 2,
+      "pid": 54872,
+      "acceptance": true,
+      "checks": {
+        "process_terminal": true,
+        "route_json_parse": true,
+        "complete": true,
+        "failures_empty": true,
+        "release": true,
+        "forward_plus": true,
+        "resolution_1920x1080": true,
+        "vsync_0": true,
+        "max_fps_0": true,
+        "warmup_at_least_15s": true,
+        "timed_at_least_60s": true,
+        "source_matches": true,
+        "biome_matches": true,
+        "preset_matches": true,
+        "quiet_baseline": true,
+        "samples_present": true,
+        "runtime_raw_faults_empty": true,
+        "both_complete_pngs": true,
+        "fresh_environment_recorded": true,
+        "disk_guard_recorded": true
+      },
+      "failed_checks": [],
+      "runtime_failures": [],
+      "route_json_parse_failure": null,
+      "raw_faults": [],
+      "sample_count": 1492,
+      "warmup_elapsed_ms": 15000.422,
+      "timed_elapsed_ms": 60103.224,
+      "metrics": {
+        "mean_wall_ms": 40.283642761394084,
+        "mean_process_ms": 24.90874731903502,
+        "mean_physics_ms": 14.987368632707662,
+        "mean_render_cpu_ms": 1.380015415256848,
+        "mean_render_setup_cpu_ms": 0.23536461126005415,
+        "mean_render_gpu_ms": 22.093020083757253,
+        "mean_fps": 24.8239715043435,
+        "p95_wall_ms": 84.855,
+        "p99_wall_ms": 131.703,
+        "percentile_method": "Nearest rank over wall_ms samples",
+        "timing_interpretation": "Independent means; overlapping process/physics/render/setup/GPU timings are never added"
+      },
+      "pngs": [
+        {
+          "path": "D:\\CodexTemp\\dt-bw2\\route\\start.png",
+          "valid": true,
+          "bytes": 2283360,
+          "width": 1920,
+          "height": 1080,
+          "failure": null
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw2\\route\\end.png",
+          "valid": true,
+          "bytes": 2215321,
+          "width": 1920,
+          "height": 1080,
+          "failure": null
+        }
+      ],
+      "route_revision": "F26-route-2",
+      "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+      "route": {
+        "description": "First Shore beach to the departure pier approach, from the existing ordinary-camera stands; no open-water crossing or distant Veilfall claim.",
+        "height_mode": "ground",
+        "source": "res://tools/art_pipeline/capture_tidewake_matrix.gd",
+        "start": [
+          12.0,
+          150.0
+        ],
+        "waypoints": [
+          [
+            5.0,
+            174.0
+          ],
+          [
+            22.0,
+            168.0
+          ]
+        ]
+      },
+      "camera": {
+        "far": 6500.0,
+        "fov": 70.0,
+        "near": 0.0500000007450581,
+        "path": "CameraRig/Camera3D"
+      },
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "engine": {
+        "build": "official",
+        "hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+        "hex": 263936,
+        "major": 4,
+        "minor": 7,
+        "patch": 0,
+        "status": "stable",
+        "string": "4.7-stable (official)",
+        "timestamp": 0
+      },
+      "environment_start": {
+        "hour": 8.04023833333333,
+        "position": [
+          12.0,
+          3.4628279209137,
+          150.0
+        ],
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 10.43372404,
+        "position": [
+          21.1797637939453,
+          1.11810886859894,
+          168.265579223633
+        ],
+        "time_of_day": "day"
+      },
+      "waypoints_reached": 2,
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "launch_environment": {
+        "appdata": "D:\\CodexTemp\\dt-bw2\\r",
+        "localappdata": "D:\\CodexTemp\\dt-bw2\\l",
+        "userprofile": "C:\\Users\\mattj",
+        "environment_source": "Explicit Start-Process Environment APPDATA/LOCALAPPDATA overrides; other environment inherited, USERPROFILE unchanged"
+      },
+      "launch_path": "D:\\CodexTemp\\dt-bw2\\launch.json",
+      "route_path": "D:\\CodexTemp\\dt-bw2\\route\\route.json",
+      "log_paths": [
+        "D:\\CodexTemp\\dt-bw2\\engine.log",
+        "D:\\CodexTemp\\dt-bw2\\stdout.log",
+        "D:\\CodexTemp\\dt-bw2\\stderr.log"
+      ],
+      "artifacts": [
+        {
+          "path": "D:\\CodexTemp\\dt-bw2\\route\\route.json",
+          "bytes": 414378,
+          "sha256": "af33737347cd41ea7a3aadcdfc524c6070b3a9df102fd6d6d216022da8c903fa"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw2\\launch.json",
+          "bytes": 2311,
+          "sha256": "a9e1c0d9673db176872c8c39becbee3661fb1e118ea81e374eefe7a43fdf2fe9"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw2\\engine.log",
+          "bytes": 2270,
+          "sha256": "c9eb109c44eb4acef9c5d85599eb72433f39f1eaba8075959b47008b9b9e8fd4"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw2\\stdout.log",
+          "bytes": 2108,
+          "sha256": "4b425f41f67bcddf80e85ecea3dd4bb30181f01ad95d0874d3d4049f4329d56c"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw2\\stderr.log",
+          "bytes": 180,
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw2\\route\\start.png",
+          "bytes": 2283360,
+          "sha256": "9e46dad8874e0fb8a40d1bf5d416a8ea847584dfb8fb283c36e475d80f24ef80"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bw2\\route\\end.png",
+          "bytes": 2215321,
+          "sha256": "3b30c782ffca2e25c58216b321966fe1f706ca1581ab5e0f9cd58187a6c781ce"
+        }
+      ],
+      "export_go_record": "C:\\CodexTemp\\owner-d-matched-text-export-go.json",
+      "provenance_paths": [
+        "C:\\CodexTemp\\owner-d-regional-on-release-export.json",
+        "C:\\CodexTemp\\owner-d-text-before-main-equivalence.json",
+        "C:\\CodexTemp\\owner-d-text-after-pinned-scope.json",
+        "C:\\CodexTemp\\root-d-9d-current-main-source-review.json"
+      ],
+      "disk_c_free_at_receipt": 2700738560,
+      "receipt_utc": "2026-10-09T22:34:15.9701665Z"
+    },
+    {
+      "phase": "BEFORE",
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "biome": "meadows",
+      "preset": "Medium",
+      "repeat": 1,
+      "pid": 54012,
+      "acceptance": true,
+      "checks": {
+        "process_terminal": true,
+        "route_json_parse": true,
+        "complete": true,
+        "failures_empty": true,
+        "release": true,
+        "forward_plus": true,
+        "resolution_1920x1080": true,
+        "vsync_0": true,
+        "max_fps_0": true,
+        "warmup_at_least_15s": true,
+        "timed_at_least_60s": true,
+        "source_matches": true,
+        "biome_matches": true,
+        "preset_matches": true,
+        "quiet_baseline": true,
+        "samples_present": true,
+        "runtime_raw_faults_empty": true,
+        "both_complete_pngs": true,
+        "fresh_environment_recorded": true,
+        "disk_guard_recorded": true
+      },
+      "failed_checks": [],
+      "runtime_failures": [],
+      "route_json_parse_failure": null,
+      "raw_faults": [],
+      "sample_count": 2569,
+      "warmup_elapsed_ms": 15016.576,
+      "timed_elapsed_ms": 60022.852,
+      "metrics": {
+        "mean_wall_ms": 23.364277539898794,
+        "mean_process_ms": 27.877927209030485,
+        "mean_physics_ms": 8.199727909692484,
+        "mean_render_cpu_ms": 2.3983869198557466,
+        "mean_render_setup_cpu_ms": 0.6768976255352277,
+        "mean_render_gpu_ms": 22.297828343927094,
+        "mean_fps": 42.80038183471825,
+        "p95_wall_ms": 32.274,
+        "p99_wall_ms": 39.202,
+        "percentile_method": "Nearest rank over wall_ms samples",
+        "timing_interpretation": "Independent means; overlapping process/physics/render/setup/GPU timings are never added"
+      },
+      "pngs": [
+        {
+          "path": "D:\\CodexTemp\\dt-bm1\\route\\start.png",
+          "valid": true,
+          "bytes": 2845105,
+          "width": 1920,
+          "height": 1080,
+          "failure": null
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bm1\\route\\end.png",
+          "valid": true,
+          "bytes": 2819459,
+          "width": 1920,
+          "height": 1080,
+          "failure": null
+        }
+      ],
+      "route_revision": "F26-route-2",
+      "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+      "route": {
+        "description": "F17: outside Grandpa farmhouse east door, along the straight main road between eight native-scale homes, through the west entrance to the Crossing Hall nave. All walking uses the existing production navigator and collisions; no route teleports or speedup.",
+        "height_mode": "ground",
+        "source": "res://data/config/village.json road_plan; res://data/config/crossing_hall.json entrance and nave",
+        "start": [
+          9.5,
+          14.0
+        ],
+        "waypoints": [
+          [
+            48.0,
+            14.0
+          ],
+          [
+            91.0,
+            14.0
+          ],
+          [
+            107.0,
+            14.0
+          ]
+        ]
+      },
+      "camera": {
+        "far": 2000.0,
+        "fov": 70.0,
+        "near": 0.0500000007450581,
+        "path": "CameraRig/Camera3D"
+      },
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "engine": {
+        "build": "official",
+        "hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+        "hex": 263936,
+        "major": 4,
+        "minor": 7,
+        "patch": 0,
+        "status": "stable",
+        "string": "4.7-stable (official)",
+        "timestamp": 0
+      },
+      "environment_start": {
+        "hour": 8.04164676,
+        "position": [
+          9.5,
+          0.900942862033844,
+          14.0
+        ],
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "environment_end": {
+        "hour": 10.4464268012123,
+        "position": [
+          106.113227844238,
+          0.910941660404205,
+          14.0
+        ],
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "waypoints_reached": 3,
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "launch_environment": {
+        "appdata": "C:\\CodexTemp\\dt-bm1\\r",
+        "localappdata": "C:\\CodexTemp\\dt-bm1\\l",
+        "userprofile": "C:\\Users\\mattj",
+        "environment_source": "Explicit Start-Process Environment APPDATA/LOCALAPPDATA overrides; other environment inherited, USERPROFILE unchanged"
+      },
+      "launch_path": "D:\\CodexTemp\\dt-bm1\\launch.json",
+      "route_path": "D:\\CodexTemp\\dt-bm1\\route\\route.json",
+      "log_paths": [
+        "D:\\CodexTemp\\dt-bm1\\engine.log",
+        "D:\\CodexTemp\\dt-bm1\\stdout.log",
+        "D:\\CodexTemp\\dt-bm1\\stderr.log"
+      ],
+      "artifacts": [
+        {
+          "path": "D:\\CodexTemp\\dt-bm1\\route\\route.json",
+          "bytes": 681819,
+          "sha256": "d28242ef45426cd696e6199e17fbb7963e5d29857043c445f1334f5d89a22de8"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bm1\\launch.json",
+          "bytes": 2591,
+          "sha256": "5d911f81d6480ba289847efaac888bea02555971f9a7cb4a18d0129755249363"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bm1\\engine.log",
+          "bytes": 217775,
+          "sha256": "ccb455d013369bed372d64965807fbe70ba2422100612f166f26ecd11ecfc17d"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bm1\\stdout.log",
+          "bytes": 219561,
+          "sha256": "f6c4ebd97826099f18780c005b6d1963425e76b703b45b0706c89650628d11e3"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bm1\\stderr.log",
+          "bytes": 180,
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bm1\\route\\start.png",
+          "bytes": 2845105,
+          "sha256": "859a5358d4b198cee0429cb78295fa0fa769820b4f65f4295d7e8447a5b2f364"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-bm1\\route\\end.png",
+          "bytes": 2819459,
+          "sha256": "77fd3490f1a16e03786a7da047e9ff7218058d1fdee9f7b65aae0f28ce9e0647"
+        }
+      ],
+      "export_go_record": "C:\\CodexTemp\\owner-d-matched-text-export-go.json",
+      "provenance_paths": [
+        "C:\\CodexTemp\\owner-d-regional-on-release-export.json",
+        "C:\\CodexTemp\\owner-d-text-before-main-equivalence.json",
+        "C:\\CodexTemp\\owner-d-text-after-pinned-scope.json",
+        "C:\\CodexTemp\\root-d-9d-current-main-source-review.json"
+      ],
+      "disk_c_free_at_receipt": 2589650944,
+      "receipt_utc": "2026-10-09T22:38:56.3810047Z"
+    },
+    {
+      "phase": "AFTER",
+      "source": "9d513c981830e9760e5fccc20dd4755e7003eab2",
+      "biome": "water",
+      "preset": "Medium",
+      "repeat": 1,
+      "pid": 21792,
+      "acceptance": true,
+      "checks": {
+        "process_terminal": true,
+        "route_json_parse": true,
+        "complete": true,
+        "failures_empty": true,
+        "release": true,
+        "forward_plus": true,
+        "resolution_1920x1080": true,
+        "vsync_0": true,
+        "max_fps_0": true,
+        "warmup_at_least_15s": true,
+        "timed_at_least_60s": true,
+        "source_matches": true,
+        "biome_matches": true,
+        "preset_matches": true,
+        "quiet_baseline": true,
+        "samples_present": true,
+        "runtime_raw_faults_empty": true,
+        "both_complete_pngs": true,
+        "fresh_environment_recorded": true,
+        "disk_guard_recorded": true
+      },
+      "failed_checks": [],
+      "runtime_failures": [],
+      "route_json_parse_failure": null,
+      "raw_faults": [],
+      "sample_count": 1654,
+      "warmup_elapsed_ms": 15021.521,
+      "timed_elapsed_ms": 60004.432,
+      "metrics": {
+        "mean_wall_ms": 36.278358524788416,
+        "mean_process_ms": 19.645947400242015,
+        "mean_physics_ms": 14.268316203143877,
+        "mean_render_cpu_ms": 1.3731021790291118,
+        "mean_render_setup_cpu_ms": 0.24012212817412432,
+        "mean_render_gpu_ms": 22.041555025269073,
+        "mean_fps": 27.564642962462486,
+        "p95_wall_ms": 63.161,
+        "p99_wall_ms": 106.87,
+        "percentile_method": "Nearest rank over wall_ms samples",
+        "timing_interpretation": "Independent means; overlapping process/physics/render/setup/GPU timings are never added"
+      },
+      "pngs": [
+        {
+          "path": "D:\\CodexTemp\\dt-aw1\\route\\start.png",
+          "valid": true,
+          "bytes": 2276364,
+          "width": 1920,
+          "height": 1080,
+          "failure": null
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw1\\route\\end.png",
+          "valid": true,
+          "bytes": 2214938,
+          "width": 1920,
+          "height": 1080,
+          "failure": null
+        }
+      ],
+      "route_revision": "F26-route-2",
+      "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+      "route": {
+        "description": "First Shore beach to the departure pier approach, from the existing ordinary-camera stands; no open-water crossing or distant Veilfall claim.",
+        "height_mode": "ground",
+        "source": "res://tools/art_pipeline/capture_tidewake_matrix.gd",
+        "start": [
+          12.0,
+          150.0
+        ],
+        "waypoints": [
+          [
+            5.0,
+            174.0
+          ],
+          [
+            22.0,
+            168.0
+          ]
+        ]
+      },
+      "camera": {
+        "far": 6500.0,
+        "fov": 70.0,
+        "near": 0.0500000007450581,
+        "path": "CameraRig/Camera3D"
+      },
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "engine": {
+        "build": "official",
+        "hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+        "hex": 263936,
+        "major": 4,
+        "minor": 7,
+        "patch": 0,
+        "status": "stable",
+        "string": "4.7-stable (official)",
+        "timestamp": 0
+      },
+      "environment_start": {
+        "hour": 8.05766879259259,
+        "position": [
+          12.0,
+          3.4628279209137,
+          150.0
+        ],
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 10.4593868060606,
+        "position": [
+          21.1797637939453,
+          1.11810886859894,
+          168.265579223633
+        ],
+        "time_of_day": "day"
+      },
+      "waypoints_reached": 2,
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "launch_environment": {
+        "appdata": "D:\\CodexTemp\\dt-aw1\\r",
+        "localappdata": "D:\\CodexTemp\\dt-aw1\\l",
+        "userprofile": "C:\\Users\\mattj",
+        "environment_source": "Explicit Start-Process Environment APPDATA/LOCALAPPDATA overrides; other environment inherited, USERPROFILE unchanged"
+      },
+      "launch_path": "D:\\CodexTemp\\dt-aw1\\launch.json",
+      "route_path": "D:\\CodexTemp\\dt-aw1\\route\\route.json",
+      "log_paths": [
+        "D:\\CodexTemp\\dt-aw1\\engine.log",
+        "D:\\CodexTemp\\dt-aw1\\stdout.log",
+        "D:\\CodexTemp\\dt-aw1\\stderr.log"
+      ],
+      "artifacts": [
+        {
+          "path": "D:\\CodexTemp\\dt-aw1\\route\\route.json",
+          "bytes": 459043,
+          "sha256": "7bfdcf9bb21c3136ec42493d5b506a5760aef52126fb3906c9e078eb3ea8f639"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw1\\launch.json",
+          "bytes": 2606,
+          "sha256": "7bd1243e5984b346f51f653f00554bb771f8aacc66450ee264837ff979d843b6"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw1\\engine.log",
+          "bytes": 2270,
+          "sha256": "70e6394b1cf13fabfa2ac92337e2084f51f201a1bd262a8d8f2fc97663188036"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw1\\stdout.log",
+          "bytes": 2108,
+          "sha256": "50370a93fdb98e3daae3f66e60954304b42559e60295bead30dde79d1d13aa6a"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw1\\stderr.log",
+          "bytes": 180,
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw1\\route\\start.png",
+          "bytes": 2276364,
+          "sha256": "c70bf0359613482f6571e77df5deae57ef6285654ae6c9f44161baef6a6b4034"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw1\\route\\end.png",
+          "bytes": 2214938,
+          "sha256": "bf690f83bc7a2f666ef9ebcb2c3f92fa725ddf12bd1ffae79414de1b47ba4b0e"
+        }
+      ],
+      "export_go_record": "C:\\CodexTemp\\owner-d-matched-text-export-go.json",
+      "provenance_paths": [
+        "C:\\CodexTemp\\owner-d-regional-on-release-export.json",
+        "C:\\CodexTemp\\owner-d-text-before-main-equivalence.json",
+        "C:\\CodexTemp\\owner-d-text-after-pinned-scope.json",
+        "C:\\CodexTemp\\root-d-9d-current-main-source-review.json"
+      ],
+      "disk_c_free_at_receipt": 2591735808,
+      "receipt_utc": "2026-10-09T22:41:13.2826549Z"
+    },
+    {
+      "phase": "AFTER",
+      "source": "9d513c981830e9760e5fccc20dd4755e7003eab2",
+      "biome": "water",
+      "preset": "Medium",
+      "repeat": 2,
+      "pid": 34828,
+      "acceptance": true,
+      "checks": {
+        "process_terminal": true,
+        "route_json_parse": true,
+        "complete": true,
+        "failures_empty": true,
+        "release": true,
+        "forward_plus": true,
+        "resolution_1920x1080": true,
+        "vsync_0": true,
+        "max_fps_0": true,
+        "warmup_at_least_15s": true,
+        "timed_at_least_60s": true,
+        "source_matches": true,
+        "biome_matches": true,
+        "preset_matches": true,
+        "quiet_baseline": true,
+        "samples_present": true,
+        "runtime_raw_faults_empty": true,
+        "both_complete_pngs": true,
+        "fresh_environment_recorded": true,
+        "disk_guard_recorded": true
+      },
+      "failed_checks": [],
+      "runtime_failures": [],
+      "route_json_parse_failure": null,
+      "raw_faults": [],
+      "sample_count": 2150,
+      "warmup_elapsed_ms": 15014.938,
+      "timed_elapsed_ms": 60019.289,
+      "metrics": {
+        "mean_wall_ms": 27.915935813953492,
+        "mean_process_ms": 18.65630651162765,
+        "mean_physics_ms": 16.45884837209329,
+        "mean_render_cpu_ms": 1.3837116271396015,
+        "mean_render_setup_cpu_ms": 0.23947534883720986,
+        "mean_render_gpu_ms": 22.138263236644658,
+        "mean_fps": 35.82183333077304,
+        "p95_wall_ms": 39.18,
+        "p99_wall_ms": 72.307,
+        "percentile_method": "Nearest rank over wall_ms samples",
+        "timing_interpretation": "Independent means; overlapping process/physics/render/setup/GPU timings are never added"
+      },
+      "pngs": [
+        {
+          "path": "D:\\CodexTemp\\dt-aw2\\route\\start.png",
+          "valid": true,
+          "bytes": 2279088,
+          "width": 1920,
+          "height": 1080,
+          "failure": null
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw2\\route\\end.png",
+          "valid": true,
+          "bytes": 2206881,
+          "width": 1920,
+          "height": 1080,
+          "failure": null
+        }
+      ],
+      "route_revision": "F26-route-2",
+      "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+      "route": {
+        "description": "First Shore beach to the departure pier approach, from the existing ordinary-camera stands; no open-water crossing or distant Veilfall claim.",
+        "height_mode": "ground",
+        "source": "res://tools/art_pipeline/capture_tidewake_matrix.gd",
+        "start": [
+          12.0,
+          150.0
+        ],
+        "waypoints": [
+          [
+            5.0,
+            174.0
+          ],
+          [
+            22.0,
+            168.0
+          ]
+        ]
+      },
+      "camera": {
+        "far": 6500.0,
+        "fov": 70.0,
+        "near": 0.0500000007450581,
+        "path": "CameraRig/Camera3D"
+      },
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "engine": {
+        "build": "official",
+        "hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+        "hex": 263936,
+        "major": 4,
+        "minor": 7,
+        "patch": 0,
+        "status": "stable",
+        "string": "4.7-stable (official)",
+        "timestamp": 0
+      },
+      "environment_start": {
+        "hour": 8.07972804,
+        "position": [
+          12.0,
+          3.4628279209137,
+          150.0
+        ],
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 10.48311332,
+        "position": [
+          21.1797637939453,
+          1.11810886859894,
+          168.265579223633
+        ],
+        "time_of_day": "day"
+      },
+      "waypoints_reached": 2,
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "launch_environment": {
+        "appdata": "D:\\CodexTemp\\dt-aw2\\r",
+        "localappdata": "D:\\CodexTemp\\dt-aw2\\l",
+        "userprofile": "C:\\Users\\mattj",
+        "environment_source": "Explicit Start-Process Environment APPDATA/LOCALAPPDATA overrides; other environment inherited, USERPROFILE unchanged"
+      },
+      "launch_path": "D:\\CodexTemp\\dt-aw2\\launch.json",
+      "route_path": "D:\\CodexTemp\\dt-aw2\\route\\route.json",
+      "log_paths": [
+        "D:\\CodexTemp\\dt-aw2\\engine.log",
+        "D:\\CodexTemp\\dt-aw2\\stdout.log",
+        "D:\\CodexTemp\\dt-aw2\\stderr.log"
+      ],
+      "artifacts": [
+        {
+          "path": "D:\\CodexTemp\\dt-aw2\\route\\route.json",
+          "bytes": 596023,
+          "sha256": "d665bde50548ecca71cafc81412ae21acb1449df44f56a6d7a684345b1aff677"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw2\\launch.json",
+          "bytes": 2606,
+          "sha256": "88a2f73f9d2edba4eb6a5b3d876cc6a74629033883484e6a8a5b001669fa1507"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw2\\engine.log",
+          "bytes": 2268,
+          "sha256": "bbf49203a960de7bc2e8f3262886d75224077f7d1a4302ffc4a21ce5be257a6e"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw2\\stdout.log",
+          "bytes": 2106,
+          "sha256": "84a3969c3f14141bd3316ce5aa6800654c625c1f33161fee09418cce1cf1e4ca"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw2\\stderr.log",
+          "bytes": 180,
+          "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw2\\route\\start.png",
+          "bytes": 2279088,
+          "sha256": "c6dbf61ca7eec6afe1e4aa280a486c6b1fa2ebdb6257da08522a962d380eaf8d"
+        },
+        {
+          "path": "D:\\CodexTemp\\dt-aw2\\route\\end.png",
+          "bytes": 2206881,
+          "sha256": "e357228f55ead3e2870e07ed90ea6a409e580f1eee93ad7af88ca01de03e0a5e"
+        }
+      ],
+      "export_go_record": "C:\\CodexTemp\\owner-d-matched-text-export-go.json",
+      "provenance_paths": [
+        "C:\\CodexTemp\\owner-d-regional-on-release-export.json",
+        "C:\\CodexTemp\\owner-d-text-before-main-equivalence.json",
+        "C:\\CodexTemp\\owner-d-text-after-pinned-scope.json",
+        "C:\\CodexTemp\\root-d-9d-current-main-source-review.json"
+      ],
+      "disk_c_free_at_receipt": 2581393408,
+      "receipt_utc": "2026-10-09T22:44:07.5314935Z"
+    }
+  ],
+  "actual_launch_sequence": [
+    {
+      "phase": "BEFORE",
+      "biome": "water",
+      "repeat": 1,
+      "pid": 26716,
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "launch_utc": "2026-10-09T22:28:00.199183Z",
+      "route_output": "D:\\CodexTemp\\dt-bw1\\route",
+      "appdata": "D:\\CodexTemp\\dt-bw1\\r",
+      "localappdata": "D:\\CodexTemp\\dt-bw1\\l",
+      "environment_source": "Explicit Start-Process Environment APPDATA/LOCALAPPDATA overrides; other environment inherited, USERPROFILE unchanged"
+    },
+    {
+      "phase": "BEFORE",
+      "biome": "water",
+      "repeat": 2,
+      "pid": 54872,
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "launch_utc": "2026-10-09T22:31:48.3917959Z",
+      "route_output": "D:\\CodexTemp\\dt-bw2\\route",
+      "appdata": "D:\\CodexTemp\\dt-bw2\\r",
+      "localappdata": "D:\\CodexTemp\\dt-bw2\\l",
+      "environment_source": "Explicit Start-Process Environment APPDATA/LOCALAPPDATA overrides; other environment inherited, USERPROFILE unchanged"
+    },
+    {
+      "phase": "BEFORE",
+      "biome": "meadows",
+      "repeat": 1,
+      "pid": 54012,
+      "source": "785e6f612e28a77075dd66684047628c2affbb13",
+      "launch_utc": "2026-10-09T22:34:32.0857588Z",
+      "route_output": "D:\\CodexTemp\\dt-bm1\\route",
+      "appdata": "C:\\CodexTemp\\dt-bm1\\r",
+      "localappdata": "C:\\CodexTemp\\dt-bm1\\l",
+      "environment_source": "Explicit Start-Process Environment APPDATA/LOCALAPPDATA overrides; other environment inherited, USERPROFILE unchanged"
+    },
+    {
+      "phase": "AFTER",
+      "biome": "water",
+      "repeat": 1,
+      "pid": 21792,
+      "source": "9d513c981830e9760e5fccc20dd4755e7003eab2",
+      "launch_utc": "2026-10-09T22:39:00.645909Z",
+      "route_output": "D:\\CodexTemp\\dt-aw1\\route",
+      "appdata": "D:\\CodexTemp\\dt-aw1\\r",
+      "localappdata": "D:\\CodexTemp\\dt-aw1\\l",
+      "environment_source": "Explicit Start-Process Environment APPDATA/LOCALAPPDATA overrides; other environment inherited, USERPROFILE unchanged"
+    },
+    {
+      "phase": "AFTER",
+      "biome": "water",
+      "repeat": 2,
+      "pid": 34828,
+      "source": "9d513c981830e9760e5fccc20dd4755e7003eab2",
+      "launch_utc": "2026-10-09T22:41:32.6329076Z",
+      "route_output": "D:\\CodexTemp\\dt-aw2\\route",
+      "appdata": "D:\\CodexTemp\\dt-aw2\\r",
+      "localappdata": "D:\\CodexTemp\\dt-aw2\\l",
+      "environment_source": "Explicit Start-Process Environment APPDATA/LOCALAPPDATA overrides; other environment inherited, USERPROFILE unchanged"
+    }
+  ],
+  "water_matched_pairs": [
+    {
+      "biome": "water",
+      "repeat": 1,
+      "measurement_acceptance": true,
+      "route_hash_equal": true,
+      "target_mean_fps": 60,
+      "after_target_met": false,
+      "independent_metrics": {
+        "mean_fps": {
+          "before": 33.91323464732032,
+          "after": 27.564642962462486,
+          "change_percent": -18.72010072433322
+        },
+        "mean_wall_ms": {
+          "before": 29.487013267813296,
+          "after": 36.278358524788416,
+          "change_percent": 23.03164852707631
+        },
+        "p95_wall_ms": {
+          "before": 50.036,
+          "after": 63.161,
+          "change_percent": 26.231113598209287
+        },
+        "p99_wall_ms": {
+          "before": 74.255,
+          "after": 106.87,
+          "change_percent": 43.92296815029293
+        },
+        "mean_process_ms": {
+          "before": 24.81374348894349,
+          "after": 19.645947400242015,
+          "change_percent": -20.82634605699113
+        },
+        "mean_physics_ms": {
+          "before": 15.882156265356308,
+          "after": 14.268316203143877,
+          "change_percent": -10.161341037379756
+        },
+        "mean_render_cpu_ms": {
+          "before": 1.387818673729018,
+          "after": 1.3731021790291118,
+          "change_percent": -1.0604047184610499
+        },
+        "mean_render_setup_cpu_ms": {
+          "before": 0.24095036855036925,
+          "after": 0.24012212817412432,
+          "change_percent": -0.3437389953905745
+        },
+        "mean_render_gpu_ms": {
+          "before": 21.991962651245718,
+          "after": 22.041555025269073,
+          "change_percent": 0.22550226557676023
+        }
+      }
+    },
+    {
+      "biome": "water",
+      "repeat": 2,
+      "measurement_acceptance": true,
+      "route_hash_equal": true,
+      "target_mean_fps": 60,
+      "after_target_met": false,
+      "independent_metrics": {
+        "mean_fps": {
+          "before": 24.8239715043435,
+          "after": 35.82183333077304,
+          "change_percent": 44.30339369550607
+        },
+        "mean_wall_ms": {
+          "before": 40.283642761394084,
+          "after": 27.915935813953492,
+          "change_percent": -30.701560483733637
+        },
+        "p95_wall_ms": {
+          "before": 84.855,
+          "after": 39.18,
+          "change_percent": -53.82711684638502
+        },
+        "p99_wall_ms": {
+          "before": 131.703,
+          "after": 72.307,
+          "change_percent": -45.0984411896464
+        },
+        "mean_process_ms": {
+          "before": 24.90874731903502,
+          "after": 18.65630651162765,
+          "change_percent": -25.10138598029502
+        },
+        "mean_physics_ms": {
+          "before": 14.987368632707662,
+          "after": 16.45884837209329,
+          "change_percent": 9.818132691914606
+        },
+        "mean_render_cpu_ms": {
+          "before": 1.380015415256848,
+          "after": 1.3837116271396015,
+          "change_percent": 0.26783844889628483
+        },
+        "mean_render_setup_cpu_ms": {
+          "before": 0.23536461126005415,
+          "after": 0.23947534883720986,
+          "change_percent": 1.7465402105900196
+        },
+        "mean_render_gpu_ms": {
+          "before": 22.093020083757253,
+          "after": 22.138263236644658,
+          "change_percent": 0.2047848266822916
+        }
+      }
+    }
+  ],
+  "after_performance_attempt_count": 2,
+  "rescope_authority": "Explicit parent /root instruction received during final AFTER Water r2; no additional native run",
+  "rescope_reason": "First AFTER missed target and showed no clear physics gain; second is maximum two failure-only performance runs for this candidate. Meadows production unchanged by this D scope; stop remaining three native Meadows runs. Preserve five actual receipts/raw logs and incomplete intended-eight classification.",
+  "timing_interpretation": "FPS = 1000 / mean(wall_ms); nearest-rank wall P95/P99; individual process/physics/render/setup/GPU means are never summed",
+  "serialized": true,
+  "native_processes_alive": [],
+  "lease_path": "C:\\CodexTemp\\tetherbound-native-owner.json",
+  "lease_reserved": true,
+  "lease_owner": "D",
+  "pending_handoff": "Parent explicit E handoff",
+  "disk_c_free_at_receipt": 2579730432,
+  "disk_d_free_at_receipt": 816181248,
+  "prior_failed_binary_case_preserved": "C:\\CodexTemp\\d49-mm2a\\route",
+  "created_utc": "2026-10-09T22:44:45.2615325Z"
+}

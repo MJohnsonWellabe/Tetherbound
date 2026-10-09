@@ -1,0 +1,187 @@
+{
+  "phase": "AFTER",
+  "source": "9d513c981830e9760e5fccc20dd4755e7003eab2",
+  "biome": "water",
+  "preset": "Medium",
+  "repeat": 1,
+  "pid": 21792,
+  "acceptance": true,
+  "checks": {
+    "process_terminal": true,
+    "route_json_parse": true,
+    "complete": true,
+    "failures_empty": true,
+    "release": true,
+    "forward_plus": true,
+    "resolution_1920x1080": true,
+    "vsync_0": true,
+    "max_fps_0": true,
+    "warmup_at_least_15s": true,
+    "timed_at_least_60s": true,
+    "source_matches": true,
+    "biome_matches": true,
+    "preset_matches": true,
+    "quiet_baseline": true,
+    "samples_present": true,
+    "runtime_raw_faults_empty": true,
+    "both_complete_pngs": true,
+    "fresh_environment_recorded": true,
+    "disk_guard_recorded": true
+  },
+  "failed_checks": [],
+  "runtime_failures": [],
+  "route_json_parse_failure": null,
+  "raw_faults": [],
+  "sample_count": 1654,
+  "warmup_elapsed_ms": 15021.521,
+  "timed_elapsed_ms": 60004.432,
+  "metrics": {
+    "mean_wall_ms": 36.278358524788416,
+    "mean_process_ms": 19.645947400242015,
+    "mean_physics_ms": 14.268316203143877,
+    "mean_render_cpu_ms": 1.3731021790291118,
+    "mean_render_setup_cpu_ms": 0.24012212817412432,
+    "mean_render_gpu_ms": 22.041555025269073,
+    "mean_fps": 27.564642962462486,
+    "p95_wall_ms": 63.161,
+    "p99_wall_ms": 106.87,
+    "percentile_method": "Nearest rank over wall_ms samples",
+    "timing_interpretation": "Independent means; overlapping process/physics/render/setup/GPU timings are never added"
+  },
+  "pngs": [
+    {
+      "path": "D:\\CodexTemp\\dt-aw1\\route\\start.png",
+      "valid": true,
+      "bytes": 2276364,
+      "width": 1920,
+      "height": 1080,
+      "failure": null
+    },
+    {
+      "path": "D:\\CodexTemp\\dt-aw1\\route\\end.png",
+      "valid": true,
+      "bytes": 2214938,
+      "width": 1920,
+      "height": 1080,
+      "failure": null
+    }
+  ],
+  "route_revision": "F26-route-2",
+  "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+  "route": {
+    "description": "First Shore beach to the departure pier approach, from the existing ordinary-camera stands; no open-water crossing or distant Veilfall claim.",
+    "height_mode": "ground",
+    "source": "res://tools/art_pipeline/capture_tidewake_matrix.gd",
+    "start": [
+      12.0,
+      150.0
+    ],
+    "waypoints": [
+      [
+        5.0,
+        174.0
+      ],
+      [
+        22.0,
+        168.0
+      ]
+    ]
+  },
+  "camera": {
+    "far": 6500.0,
+    "fov": 70.0,
+    "near": 0.0500000007450581,
+    "path": "CameraRig/Camera3D"
+  },
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "engine": {
+    "build": "official",
+    "hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+    "hex": 263936,
+    "major": 4,
+    "minor": 7,
+    "patch": 0,
+    "status": "stable",
+    "string": "4.7-stable (official)",
+    "timestamp": 0
+  },
+  "environment_start": {
+    "hour": 8.05766879259259,
+    "position": [
+      12.0,
+      3.4628279209137,
+      150.0
+    ],
+    "time_of_day": "day"
+  },
+  "environment_end": {
+    "hour": 10.4593868060606,
+    "position": [
+      21.1797637939453,
+      1.11810886859894,
+      168.265579223633
+    ],
+    "time_of_day": "day"
+  },
+  "waypoints_reached": 2,
+  "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+  "launch_environment": {
+    "appdata": "D:\\CodexTemp\\dt-aw1\\r",
+    "localappdata": "D:\\CodexTemp\\dt-aw1\\l",
+    "userprofile": "C:\\Users\\mattj",
+    "environment_source": "Explicit Start-Process Environment APPDATA/LOCALAPPDATA overrides; other environment inherited, USERPROFILE unchanged"
+  },
+  "launch_path": "D:\\CodexTemp\\dt-aw1\\launch.json",
+  "route_path": "D:\\CodexTemp\\dt-aw1\\route\\route.json",
+  "log_paths": [
+    "D:\\CodexTemp\\dt-aw1\\engine.log",
+    "D:\\CodexTemp\\dt-aw1\\stdout.log",
+    "D:\\CodexTemp\\dt-aw1\\stderr.log"
+  ],
+  "artifacts": [
+    {
+      "path": "D:\\CodexTemp\\dt-aw1\\route\\route.json",
+      "bytes": 459043,
+      "sha256": "7bfdcf9bb21c3136ec42493d5b506a5760aef52126fb3906c9e078eb3ea8f639"
+    },
+    {
+      "path": "D:\\CodexTemp\\dt-aw1\\launch.json",
+      "bytes": 2606,
+      "sha256": "7bd1243e5984b346f51f653f00554bb771f8aacc66450ee264837ff979d843b6"
+    },
+    {
+      "path": "D:\\CodexTemp\\dt-aw1\\engine.log",
+      "bytes": 2270,
+      "sha256": "70e6394b1cf13fabfa2ac92337e2084f51f201a1bd262a8d8f2fc97663188036"
+    },
+    {
+      "path": "D:\\CodexTemp\\dt-aw1\\stdout.log",
+      "bytes": 2108,
+      "sha256": "50370a93fdb98e3daae3f66e60954304b42559e60295bead30dde79d1d13aa6a"
+    },
+    {
+      "path": "D:\\CodexTemp\\dt-aw1\\stderr.log",
+      "bytes": 180,
+      "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1"
+    },
+    {
+      "path": "D:\\CodexTemp\\dt-aw1\\route\\start.png",
+      "bytes": 2276364,
+      "sha256": "c70bf0359613482f6571e77df5deae57ef6285654ae6c9f44161baef6a6b4034"
+    },
+    {
+      "path": "D:\\CodexTemp\\dt-aw1\\route\\end.png",
+      "bytes": 2214938,
+      "sha256": "bf690f83bc7a2f666ef9ebcb2c3f92fa725ddf12bd1ffae79414de1b47ba4b0e"
+    }
+  ],
+  "export_go_record": "C:\\CodexTemp\\owner-d-matched-text-export-go.json",
+  "provenance_paths": [
+    "C:\\CodexTemp\\owner-d-regional-on-release-export.json",
+    "C:\\CodexTemp\\owner-d-text-before-main-equivalence.json",
+    "C:\\CodexTemp\\owner-d-text-after-pinned-scope.json",
+    "C:\\CodexTemp\\root-d-9d-current-main-source-review.json"
+  ],
+  "disk_c_free_at_receipt": 2591735808,
+  "receipt_utc": "2026-10-09T22:41:13.2826549Z"
+}

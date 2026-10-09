@@ -1,0 +1,40 @@
+{
+  "lane": "D",
+  "classification": "Distinct CPU/GPU bottleneck attribution after rejection of the regional-body candidate; not a third unchanged collision performance diagnostic",
+  "native_launch_authorized_by_this_plan": false,
+  "lease_order": "Finish current AFTER Tidewake r2; write partial-five receipt and explicitly hand off to E. No D native launch during E ownership. Obtain a later sole D lease for attribution.",
+  "candidate_disposition": "No 60fps READY. Preserve two actual AFTER cases and all earlier functional proofs. Do not run another unchanged candidate performance case.",
+  "gpu": {
+    "problem": "Actual independent release GPU mean remains approximately 22ms in Tidewake Medium; source cannot assign that time to terrain, grass, water, shadows or postprocessing.",
+    "maximum_initial_diagnostic_runs": 1,
+    "package": "D:/CodexTemp/owner-e-release-785e6f/Tetherbound.exe",
+    "actual_source": "785e6f612e28a77075dd66684047628c2affbb13",
+    "equivalent_main": "6add9d5f9b9f490bf8a77783d3afa21474cdb50d",
+    "package_provenance": "C:/CodexTemp/owner-d-text-before-main-equivalence.json",
+    "engine_argument_before_separator": "--gpu-profile",
+    "remaining_engine_arguments": ["--rendering-method", "forward_plus", "--fullscreen", "--resolution", "1920x1080", "--disable-vsync", "--max-fps", "0", "--log-file", "<fresh engine.log>"],
+    "user_arguments": ["--f26-route", "--quiet-baseline", "--biome=water", "--preset=Medium", "--source-commit=785e6f612e28a77075dd66684047628c2affbb13", "--output=<fresh route child>"],
+    "existing_entry": "tools/f26_export_bootstrap.gd dispatches tools/capture_lookdev_route.gd",
+    "instrumentation_changes": "None: existing Godot 4.7 release CLI emits GPU task profiles approximately once per second.",
+    "retain": ["Fresh launch.json with actual argv/environment/package hashes", "engine.log", "stdout.log", "stderr.log", "Complete route receipt and screenshots", "Raw per-pass GPU profile output and separately derived attribution"],
+    "interpretation": "Profiler output is attribution only, with instrumentation overhead; it is not performance acceptance. Select the next source change from actual dominant passes. Preserve all world content, geometry, lighting and preset features.",
+    "primary_source": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/servers/rendering/rendering_server_default.cpp"
+  },
+  "cpu": {
+    "problem": "Actual independent release physics mean remains approximately 14ms. Existing debug evidence implicates CreatureBody inheritance but overlaps SELF/inclusive clocks and does not separate native move_and_slide calls.",
+    "maximum_initial_diagnostic_runs": 1,
+    "existing_collector": "tools/performance/collect_script_profile.py",
+    "required_option": "--profile-native-calls",
+    "engine_requirement": "DEBUG engine supporting existing remote script profiler and native-call instrumentation; not a replacement acceptance engine",
+    "focus": ["CreatureBody movement/native move_and_slide integration", "CliffWild path validation and Water footprint rays", "Contact spacing and environment modifiers"],
+    "interpretation": "Do not sum inherited overlapping timings or equate debug profiler cost to release performance. Do not skip actor simulation, geometry residency or movement features from a source-only guess. Native-call attribution precedes a scoped equivalent optimization."
+  },
+  "guards": {
+    "sole_native_owner": true,
+    "fresh_namespace": true,
+    "minimum_C_and_D_free_bytes": 786432000,
+    "no_existing_artifact_cleanup_or_move": true,
+    "all_errors_and_failed_attempts_retained": true,
+    "after_two_failure_only_runs_per_problem": "Fix, rescope or exact BLOCKED; no third diagnostic"
+  }
+}
