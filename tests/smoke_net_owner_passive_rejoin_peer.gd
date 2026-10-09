@@ -547,6 +547,14 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 					body.global_position = target.global_position + Vector3(0, 0, 3.0)
 					body.face_towards(target.global_position)
 					for frame in 15: await physics_frame
+					if not is_instance_valid(target) or not is_instance_valid(body):
+						return {"verdict":"FAIL", "detail":"actual combat body lost during host preparation"}
+					# The live wild can move during preparation. Use its current
+					# direction for the ordinary physical input, as the guest does.
+					strike_facing = target.call("centre") - body.call("centre")
+					strike_facing.y = 0.0
+					if strike_facing.is_zero_approx(): strike_facing = body.call("facing")
+					strike_facing = strike_facing.normalized()
 				else:
 					# Local assignment cannot place the admitted host body. Use the
 					# existing physical navigator for exactly the same 15 frames.
