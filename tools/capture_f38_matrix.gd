@@ -196,7 +196,7 @@ func _capture_row(row: Dictionary) -> void:
 		if not _f38_exterior_mode.is_empty():
 			var field := _world.get_node_or_null("GrassField")
 			var material := field.get("_material") as ShaderMaterial if field != null else null
-			var beacon := _world.get_node_or_null("ObjectiveBeacon")
+			var beacon := _world.get_node_or_null("ObjectiveBeacon") as Node3D
 			var beam := beacon.get("_beam_material") as StandardMaterial3D if beacon != null else null
 			var enabled := _f38_exterior_mode == "candidate"
 			var grass_actual := {}
@@ -208,17 +208,23 @@ func _capture_row(row: Dictionary) -> void:
 			var distance_m := _camera.global_position.distance_to(beacon.global_position) if beacon != null else INF
 			var beacon_cfg: Dictionary = beacon.get("_config") if beacon != null else {}
 			var expected_depth: bool = preload("res://scripts/world/objective_beacon.gd").nearby_beam_depth_test(distance_m, beacon_cfg)
-			var matched: bool = material != null and material.shader.resource_path == "res://shaders/grass_field.gdshader" \
+			var matched: bool = material != null and material.shader != null and material.shader.resource_path == "res://shaders/grass_field.gdshader" \
 				and grass_actual.get("road_verge_enabled") == enabled and path_mask > 0 \
 				and int(grass_actual.get("road_verge_base_mask", 0)) == path_mask \
 				and is_equal_approx(float(grass_actual.get("road_verge_strength", -1.0)), float(grass_cfg.get("strength", 0.75))) \
 				and is_equal_approx(float(grass_actual.get("road_verge_height_floor", -1.0)), float(grass_cfg.get("height_floor", 0.35))) \
 				and beam != null and beacon_cfg.get("nearby_occlusion", {}).get("enabled") == enabled \
-				and beam.no_depth_test == not expected_depth
+				and beam.no_depth_test == (not expected_depth)
+			var beacon_id := str(beacon.call("active_objective_id")) if beacon != null else ""
+			var beacon_visible: bool = beacon.call("beam_visible") == true if beacon != null else false
+			if row.get("identity") == "farm_to_hall" and row.get("view") == "reverse" \
+				and (beacon_id.is_empty() or not beacon_visible or distance_m > 40.0):
+				matched = false
+				_failures.append("%s: nearby facade-obstruction witness is absent; no substituted stand" % str(row.frame_id))
 			var record: Dictionary = _records.back()
 			record["exterior_observation"] = {"mode": _f38_exterior_mode, "grass_uniforms": grass_actual,
-				"path_mask": path_mask, "beacon_id": beacon.call("active_objective_id") if beacon != null else "",
-				"beacon_visible": beacon.call("beam_visible") if beacon != null else false,
+				"path_mask": path_mask, "beacon_id": beacon_id,
+				"beacon_visible": beacon_visible,
 				"camera_beacon_distance_m": distance_m if is_finite(distance_m) else -1.0,
 				"expected_depth_test": expected_depth, "actual_no_depth_test": beam.no_depth_test if beam != null else null,
 				"matches_requested": matched}
