@@ -383,23 +383,22 @@ func step(point: Vector3) -> void:
 	_request = point
 	_raw = false
 	_requested = not refused()
+	_requested_step = 0
+	await _tree.physics_frame # Original single-step callers retain their allowances.
+
+
+func _walk_step(point: Vector3) -> void:
+	if _active_walk_budget == null:
+		_stop_geometry("native walking request has no original whole-walk allowance")
+		return
+	_request = point
+	_raw = false
+	_requested = not refused()
 	var token := _step_epoch.request()
 	_requested_step = token
-	var last_frame := Engine.get_physics_frames()
-	var waiting_frames := 0
 	while _step_epoch.completed < token and not refused() \
-			and (_active_walk_budget == null or not _active_walk_budget.exhausted):
+			and not _active_walk_budget.exhausted:
 		await step_wake
-		if _step_epoch.completed >= token or refused():
-			break
-		var frame := Engine.get_physics_frames()
-		if frame <= last_frame:
-			continue
-		last_frame = frame
-		waiting_frames += 1
-		if waiting_frames > MAX_DEFERRAL_FRAMES:
-			_stop_geometry("requested native walking step did not complete its callback epoch within 30 physics frames")
-			break
 
 
 func _physics_frame_wake() -> void:
@@ -484,7 +483,7 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_ro
 			return _end_walk(true)
 		if not _active_walk_budget.advance(Engine.get_physics_frames(), true):
 			break
-		await step(point)
+		await _walk_step(point)
 	return _end_walk(false)
 
 
