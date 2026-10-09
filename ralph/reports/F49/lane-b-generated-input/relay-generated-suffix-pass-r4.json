@@ -387,5 +387,73 @@
   "whole_criterion_closed": false,
   "accepted_native_campaign_boundary": false,
   "failed_save_used_as_input": false,
-  "scoped_generated_handoff_approved": true
+  "scoped_generated_handoff_approved": true,
+  "whole_literal_F02_2_review": {
+    "reviewer": "original b_f49_review / Bacon",
+    "verdict": "Original Bacon: **whole literal F02#2 behavior APPROVE** at `977e4853077a035dfa83177eea77d28e74cff96b`, run `37794979390`, artifact `11560090951`.\n\n**READY BLOCKED:** required code-blind PASS is missing. Minimum visual scope: Captain/Sela encounter and rescue, Relay/console aftermath, and restored crossing through the far bank, against ACCEPTANCE \u00c2\u00a74.\n\nGenerated post-Warrens input stays disclosed; no predecessor or continuous-fresh claim. No other requested row is wholly covered; no folds or recount of F02#0/#1.\n\nRouter stopped read-only.",
+    "owner_direction": "#5726068186835",
+    "new_eligible_behavior_rows": [
+      "F02#2"
+    ],
+    "other_whole_folds": [],
+    "already_met_excluded": [
+      "F02#0",
+      "F02#1"
+    ],
+    "required_blind_pass": false
+  },
+  "native_frame_capture_recipe": {
+    "source": "1eaa6e268992065a2e03763d73b83c7bc6540c3d",
+    "original_source_and_command_review": "Original Bacon and Hubble both **SOURCE APPROVE** `1eaa6e268992065a2e03763d73b83c7bc6540c3d` and approve the stated ROOT D/E native command conditionally: exact checkout, fresh user directory, absent output root, Compatibility 1280\u00c3\u2014720.\n\nThe exact label gate and +1 capture counter prevent silent opt-out receipts. Existing draw, phase, identity and save guards remain intact.\n\nIf `37864266366 @4748` passes, reuse its caller/parser coverage; no duplicate headless check required.\n\nPrior F02#2 behavior approval remains. Actual six-frame native capture and Sartre\u00e2\u20ac\u2122s pixel-only PASS are still required. **No READY yet.**",
+    "scheduling_owner": "ROOT exclusively, D/E native GPU writer",
+    "checkout": "exact pinned source, tracked-clean; fresh isolated user directory",
+    "output_root_must_be_absent": "D:/CodexTemp/tetherbound-proof/b-f02-relay-native-1eaa-r1",
+    "command_arguments": [
+      "--path",
+      "<ROOT-scheduled D/E exact checkout>",
+      "--rendering-method",
+      "gl_compatibility",
+      "--resolution",
+      "1280x720",
+      "--script",
+      "tools/earned_saves/earned_chain_runner.gd",
+      "--",
+      "--segment=relay",
+      "--generated-fixture",
+      "--capture-relay",
+      "--save-dir=D:/CodexTemp/tetherbound-proof/b-f02-relay-native-1eaa-r1/relay/save",
+      "--receipt=D:/CodexTemp/tetherbound-proof/b-f02-relay-native-1eaa-r1/relay/receipt.json"
+    ],
+    "expected_frame_labels": [
+      "relay-captain-fight",
+      "relay-sela-exchange",
+      "relay-sela-rescued",
+      "relay-console-before",
+      "relay-console-aftermath",
+      "relay-mill-far-bank"
+    ],
+    "capture_writer": "Existing tests/helpers/f20_ending_probe.gd completed-frame native framebuffer; shots/f20-ending-<pid>/<index>-<label>.png",
+    "presentation_overrides": false,
+    "same_original_blind_reviewer": "b_night_visual / Sartre / 01a116e6-3a0e-7860-b032-74fdeb1b21e6; pixels only",
+    "native_run_dispatched_by_B": false,
+    "actual_native_capture_passed": false,
+    "blind_verdict": "not yet supplied",
+    "input_disclosure": "Generated healthy post-Warrens, five original template UIDs/species/inventory/flags; no prior earned play or continuous-fresh-save claim. Reuse accepted real Relay suffix mechanics only."
+  },
+  "native_capture_caller_parser_proof": {
+    "run_id": 37864266366,
+    "source": "4748925d55fcb362e782e0cb616ab8cf87f1ac2f",
+    "artifact_id": 11587138941,
+    "artifact_zip_sha256": "a9ddf1640f7d612e005364eb71e76913de683dcd7e76500095ac83f0e765f0d6",
+    "log": "ci-relay-native-capture-parser-37864266366.log.gz",
+    "log_sha256": "c9d364120e94ca5c2d12b46613c8b8ab22301551029ac13ec1a69d6ed8ce90fa",
+    "gzip_sha256": "d0380436e61963ada67778d86c8afe02d080d9a31e4d78dd604dc1ce76a7a63b",
+    "tests": 6,
+    "assertions": 69,
+    "failures": 0,
+    "exit_code": 0,
+    "engine_script_errors": 0,
+    "selector": "--initialized --only=test_meadows_earned_relay_segment.gd",
+    "reuse_after_corrected_gate": "Original Bacon/Hubble approve reuse if PASS; this is caller/parser coverage only, not native capture."
+  }
 }
