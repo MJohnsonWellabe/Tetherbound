@@ -3177,6 +3177,10 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 		return deny
 	var runtime := _shared_host_fight(id)
 	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+	var hosted := get_parent().get_node_or_null("StormwoodEncounterHub")
+	if hosted != null:
+		var round_body: Node3D = hosted.call("opponent_for_record", id)
+		if round_body != null: wild = round_body
 	if not is_instance_valid(wild): return deny
 	# A tracked trainer/boss actor binds lazily on first publication, which
 	# advances its actor generation. Bind it here, before the start freezes its
