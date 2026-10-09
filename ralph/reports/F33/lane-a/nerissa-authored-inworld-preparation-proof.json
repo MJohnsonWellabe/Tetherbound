@@ -1,7 +1,7 @@
 {
   "criterion": "F33#2",
   "criterion_text": "Gear matters: a simulation of each biome's boss shows the matching tier passes C2 and the previous tier is clearly harder.",
-  "status": "PARKED / OPEN at04:20Z two-hour cap. Compiler correction approved and compiled; required affected16tests/2492assertions have2failures. No successful one-peer gameplay/C2/whole pass. No unchanged retry.",
+  "status": "PARKED / OPEN F33#2: corrected real-fight fixture cap refusal cleared, but workflow limit produced no final result; original failed/incomplete artifact APPROVE, no unchanged retry",
   "source_commit": "f5e34f421896fb6f03785d088d395ad9a720370d",
   "initial_hosted_named_source_commit": "37f76541b46f9cb39d99b14c638fd396c791643a",
   "initial_preparation_source_commit": "e42f047df4860139d1958a08d6cc2b3cf7cf4f6d",
@@ -349,7 +349,7 @@
     "review_turn": "01a12040-439f-7ba2-bbc4-137a912be236",
     "source_command_verdict": "APPROVE one pinned existing seed0 Nerissa/Ripplet/READER/Tidesteel headless batch only",
     "run": 37919184674,
-    "status": "RUNNING at dispatch; no gameplay PASS, whole criterion or accepted boundary claim",
+    "status": "PARKED / OPEN: workflow exit124 after30minutes; no result row; not fight/C2 PASS",
     "script": "tests/batch_tidewake_named_inworld_c2.gd",
     "args": "--trainer=water_trainer_nerissa --starter=ripplet --policy=READER --seeds=0 --gear-tier=tidesteel --out=ralph/reports/F33/nerissa_authored_l32_reader_seed0.jsonl",
     "grants": {
@@ -364,6 +364,95 @@
       "earned": false
     },
     "preserved": "original five, authored L32, moves/HP, gear, isolated canonical saver, registry/admission and actual input/reward/owner-save paths",
-    "criterion": "F33#2 OPEN"
-  }
+    "criterion": "F33#2 OPEN",
+    "job": 113782707884,
+    "artifact": 11612043230,
+    "conclusion": "failure",
+    "archive_sha256": "cb1c3dcaee006456fe963a62b15e2159595117774ec3ab9959b73b5c9314e33d",
+    "log_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2",
+    "job_sha256": "963be2bae5e7054f007c124c42525d7bed7171d753a5eff4f565d9b2eeada3a7",
+    "result_count": 0,
+    "path": "ralph\\reports\\F25\\downloads\\a-nerissa-training-world-37919184674",
+    "original_artifact_verdict": {
+      "reviewer": "/root/f25_medium_review",
+      "turn": "01a12060-f831-77c3-8c98-93a8fd6b1f63",
+      "verdict": "APPROVE as failed/incomplete only"
+    },
+    "retained_failed_save_only": [
+      {
+        "uid": "creature-b49ab7f924ce8610cb0e0e97537c4bac",
+        "species_id": "ripplet",
+        "level": 32,
+        "xp": 768,
+        "cap_level": 40,
+        "breakthroughs": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "uid": "creature-b200c2469c47eb704e1c94ee4a9e243d",
+        "species_id": "bramblebun",
+        "level": 32,
+        "xp": 382,
+        "cap_level": 40,
+        "breakthroughs": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "uid": "creature-f7ef7060dca82154d8dd98b42dc69a60",
+        "species_id": "mudsnout",
+        "level": 32,
+        "xp": 382,
+        "cap_level": 40,
+        "breakthroughs": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "uid": "creature-e2df1cfb1a340189eaa7002e04671938",
+        "species_id": "pipwing",
+        "level": 32,
+        "xp": 382,
+        "cap_level": 40,
+        "breakthroughs": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "uid": "creature-a1a515a34019bd32667332e790cd7ef3",
+        "species_id": "trailpup",
+        "level": 32,
+        "xp": 382,
+        "cap_level": 40,
+        "breakthroughs": [
+          1,
+          2,
+          3
+        ]
+      }
+    ],
+    "retained_round_receipts": [
+      "defeat:trainer_round_a23a40a0eb2098adde77b19c918287bc0b7317778ecf822b75bf9013b0d6e014:inworld-c2-0",
+      "defeat:trainer_round_6f84b4dc5a25f23ef7e7064f456898bea42b369ebfaca1345de617bd8e8c701d:inworld-c2-0",
+      "defeat:trainer_round_aae406412306440f1833f223c0ca4ae3f36b4ad06e66608514d4846398e3dcc6:inworld-c2-0",
+      "defeat:trainer_round_6bef7e4baae32a90b64230c5e4c66cb4aacc12b2a54bae3a661b1138eb8f3550:inworld-c2-0"
+    ],
+    "confirmed": "Prior cap refusal cleared: five canonical cap40/history[1,2,3] records, XP credited, four saved defeat receipts; fourth training delivery accepted (original verified)",
+    "missing_decisive_operands": [
+      "final manager/trainer state",
+      "current round/completion result",
+      "physics elapsed versus unchanged900s cap"
+    ],
+    "disposition": "No terminal-predicate defect proven. PARK further measurement; no timing increase, unchanged retry or accepted-boundary promotion"
+  },
+  "previous_preparation_status": "PARKED / OPEN at04:20Z two-hour cap. Compiler correction approved and compiled; required affected16tests/2492assertions have2failures. No successful one-peer gameplay/C2/whole pass. No unchanged retry."
 }
