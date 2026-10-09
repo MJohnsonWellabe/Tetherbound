@@ -7134,6 +7134,10 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool, local_name
 		_note_trainer_participants(str(rec["encounter_id"]))
 	_freeze_bounty_instances(str(rec["encounter_id"]), _local_peer_id())
 	_retain_research(str(rec["encounter_id"]), _local_peer_id(), "sight", str(opponent.species_id), "engage")
+	if preload("res://scripts/combat/tether_commands.gd").enabled():
+		# Complete existing command admission before the first saved-vitals
+		# original freezes this record. Late admission changes its exact seq.
+		_host_after_encounter_change(str(rec["encounter_id"]))
 	if _can_encounter_rpc():
 		for peer_id: int in multiplayer.get_peers():
 			_send_realm_rpc(peer_id, "_rpc_encounter_opened", [rec])

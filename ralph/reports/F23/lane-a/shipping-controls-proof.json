@@ -159,6 +159,15 @@
     "wind_before_after": 79.6,
     "staged_wind_after": 55.6,
     "failure_verdict": "pending_vitals",
-    "original_artifact_disposition": "Pending same original review; no retry or cause claim before verdict."
+    "original_artifact_disposition": "APPROVE retained failure; first command admission after frozen Heal invalidates exact re-stage sequence.",
+    "original_artifact_review_turn": "01a11e3a-b5c2-7220-a070-90afceac2b9f",
+    "admission_order_repair": {
+      "change": "Existing host carrier initializes Tether at new encounter/actor admission before first Heal freezes record; four Director lines, flag-OFF unchanged.",
+      "original_source_verdict": "SOURCE/PROOF-SCOPE APPROVE",
+      "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "review_turn": "01a11e3f-c72b-7f70-9c8a-d71edb7ce21d",
+      "proof": "Existing shipping Heal smoke only; unchanged guard batches reused.",
+      "limits": "Runtime and WHOLE pending. No frozen sequence rewrite, re-minted original, pending bypass or fake ACK."
+    }
   }
 }
