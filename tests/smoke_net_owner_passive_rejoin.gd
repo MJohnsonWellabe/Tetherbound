@@ -505,12 +505,6 @@ func _run() -> void:
 	if OS.get_cmdline_user_args().has("--prove-tether-rally"):
 		await _prove_rally(1)
 
-	if OS.get_cmdline_user_args().has("--prove-tether-snare"):
-		await _prove_snare(1)
-
-	if OS.get_cmdline_user_args().has("--prove-tether-rally"):
-		await _prove_rally(1)
-
 	# 5. Negative control: an invalid record is refused, never adopted.
 	if not _ok(await step(1, "leave"), "invalid: guest leaves"):
 		quit(await finish())
