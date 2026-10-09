@@ -3831,7 +3831,11 @@ func _presentation_allow(widget: CanvasItem, allowed: bool) -> void:
 		# A fresh contextual offer may have been drawn while changing modes.
 		# Do not overwrite that new state with the old (often empty) prompt.
 		widget.visible = widget.visible or bool(_presentation_suppressed[id])
-		if widget == _objective_hint_card:
+		if widget == _objective_block:
+			# A tracked goal can appear or clear while its lane is suppressed.
+			# Restore the current task, rather than its pre-combat visibility.
+			widget.visible = _objective_text_label != null and not _objective_text_label.text.strip_edges().is_empty()
+		elif widget == _objective_hint_card:
 			# A hint can be revealed while combat or a reward still owns its lane.
 			# Repeated suppression hides that reveal, so the pre-combat visibility
 			# cache cannot decide whether its current, unchanged deadline is live.
