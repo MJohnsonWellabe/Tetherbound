@@ -1,0 +1,146 @@
+{
+  "reviewer": "Codex independent read-only reviewer /root/e_export_review",
+  "reviewed_utc": "2026-10-09T21:01:12.005514+00:00",
+  "verdict": "APPROVE",
+  "scope": "SOURCE ONLY",
+  "repository": "D:\\tetherbound\\codex-e",
+  "base_commit": "549822b8da400b3eb9b23fe0feaca3c5f98bec97",
+  "source_commit": "785e6f612e28a77075dd66684047628c2affbb13",
+  "lane_head": "aadd804d2e675ef671ff2f8a3fc954e7db0a334a",
+  "permission_context": {
+    "sandbox_mode": "danger-full-access",
+    "approval_policy": "never",
+    "verified_in": "C:\\CodexTemp\\replacement-lane-e-status.json and effective developer permission context"
+  },
+  "findings": [],
+  "checks": [
+    {
+      "check": "Updated exact parent and export-only scope",
+      "result": "PASS",
+      "observed": "785e6f612e28a77075dd66684047628c2affbb13 has sole parent 549822b8da400b3eb9b23fe0feaca3c5f98bec97. Only export_presets.cfg differs: two script_export_mode=2 to0 changes for Windows Desktop and Linux Test. No runtime/data/flag/save changes."
+    },
+    {
+      "check": "Byte-identical previously approved export blob",
+      "result": "PASS",
+      "git_blob": "feed15b8075904968dbd5bfa943f2c463125565c",
+      "sha256": "beb2af1fa70261e15c5a3c8dcb9d67d20816cd7ea27e5019a84f37a3e19da259",
+      "bytes": 2606,
+      "lf_count": 88,
+      "cr_count": 0,
+      "observed": "Exact Git blob bytes equal approved 70fb3e0b57258e074c5d9f586efa12fc6f28cd21:export_presets.cfg. All LF, zero CR bytes; no mixed line endings."
+    },
+    {
+      "check": "Main advancement documentation/evidence only",
+      "result": "PASS",
+      "changed_paths": [
+        "docs/STATE.md",
+        "ralph/reports/F30/capture-context-main-proof/receipt.json"
+      ],
+      "observed": "Diff c927 to549822 updates PR593 landing wording in STATE and F30 receipt landing_verification only; runtime tree unaffected."
+    },
+    {
+      "check": "Preserved reachable history and lane evidence distinction",
+      "result": "PASS",
+      "observed": "git merge-base --is-ancestor verifies new source and earlier df099 lane history are reachable through aadd804d2e6. Lane head differs from source only in docs/STATE.md and five F26 evidence artifacts. Complete Git trees differ; runtime/export tree is unchanged. Review approves exact source785e, not a claim of byte-identical complete lane trees."
+    },
+    {
+      "check": "Godot 4.7 enum and exporter",
+      "result": "PASS",
+      "observed": "Official versioned docs and 4.7-stable engine source specify MODE_SCRIPT_TEXT=0, MODE_SCRIPT_BINARY_TOKENS=1, MODE_SCRIPT_BINARY_TOKENS_COMPRESSED=2. EditorExportGDScript bypasses token conversion for TEXT; other modes add .gdc with remapping. Therefore 2 to 0 preserves original .gd text for direct FileAccess reads.",
+      "sources": [
+        "https://docs.godotengine.org/en/4.7/classes/class_editorexportpreset.html",
+        "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/editor/export/editor_export_preset.h",
+        "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/gdscript/register_types.cpp"
+      ]
+    },
+    {
+      "check": "Stormwood scatter source contract",
+      "result": "PASS",
+      "observed": "stormwood_scatter.gd lines 9 and 26-31 hash config files plus original stormwood_heightfield.gd, stormwood_scatter.gd, stormwood_pocket_frame.gd via FileAccess.get_file_as_string. scatter_bake.gd mix_config_source line 119 normalizes CRLF to LF; bake freshness compares the expected fingerprint and requires named region files. stormwood_world.gd line 118 supplies this source fingerprint. vegetation.gd lines 574-583 refuses missing or stale regional scatter instead of silently rebuilding. Retaining text addresses missing raw source without weakening these guards."
+    },
+    {
+      "check": "Stormwood terrain source contract",
+      "result": "PASS",
+      "observed": "build_stormwood_terrain.gd dependency_paths lines 102-104 include itself and stormwood_heightfield.gd alongside terrain/world/surface/texture config files. current_fingerprint lines 108-113 opens them via FileAccess and reads text, using empty text on missing files. canonical_hash/dependency_fingerprint lines 58-68 normalize CRLF to LF before hashing. The patch preserves required source bytes and leaves dependency definitions and stored bake fingerprints untouched."
+    },
+    {
+      "check": "Old actual PCK supplement",
+      "result": "PASS",
+      "observed": "Standalone read-only PCK parser found all four requested original .gd paths as UTF-8 text, no NULs, valid per-entry directory MD5s, and canonical-LF SHA256 equal to pinned current-main blobs. PCK format 4, engine 4.7.0, 7125 entries, 1148981236 bytes. Supplemental only: this older pack is not a release built from source70fb3e0b.",
+      "artifact": "C:\\CodexTemp\\lane-e-old-pack-source-inspection.json"
+    }
+  ],
+  "changed_config_defaults": [
+    {
+      "path": "export_presets.cfg",
+      "section": "preset.0 Windows Desktop",
+      "key": "script_export_mode",
+      "old": 2,
+      "new": 0
+    },
+    {
+      "path": "export_presets.cfg",
+      "section": "preset.1 Linux Test",
+      "key": "script_export_mode",
+      "old": 2,
+      "new": 0
+    }
+  ],
+  "feature_flag_flips": 0,
+  "material_tradeoff": "Exported scripts become readable source text. Package size and load behavior may differ from compressed token export; no performance improvement is inferred from source review.",
+  "acceptance": {
+    "current_main_native_release": "PENDING",
+    "whole_criterion_ready": false,
+    "reason": "Source-only scope/correctness approved on exact source785e6f612e28a77075dd66684047628c2affbb13 over current main549822b8da400b3eb9b23fe0feaca3c5f98bec97. Fresh current-main actual native release pack identity, freshness, Medium/High cases and acceptance thresholds remain pending D native lease handoff. Old pack availability/hash evidence is supplemental only; no performance or whole-criterion READY claim."
+  },
+  "review_constraints": "No repository edits, native Godot jobs, imports, exports, cache mutation, task creation/archive, or app-thread messaging performed. Only temporary review artifacts were written; existing proof artifacts retained.",
+  "reusable_pack_inspector": "C:\\CodexTemp\\lane-e-inspect-pack-sources.py",
+  "previous_review": {
+    "reviewed_utc": "2026-10-09T20:50:03.6997765Z",
+    "base_commit": "c927823d1b41e98b90d33181a07846e72dc6a27a",
+    "source_commit": "70fb3e0b57258e074c5d9f586efa12fc6f28cd21",
+    "lane_head": "df0996836d9a715b4fd3c0bf84fbd33578ff63f8",
+    "source_and_lane_tree": "39d7f5c5213d6ee4b8e7942e3fe8fd84f0c54ac5",
+    "checks": [
+      {
+        "check": "Pinned scope",
+        "result": "PASS",
+        "observed": "git diff base source changes only export_presets.cfg, two deletions and two additions. Windows Desktop preset.0 and Linux Test preset.1 each change script_export_mode=2 to 0. No changed runtime script, feature flag, renderer, draw distance, bake bytes, data, save schema, authority logic, or gameplay default."
+      },
+      {
+        "check": "Preserved lane history",
+        "result": "PASS",
+        "observed": "Source and lane head have the identical complete Git tree 39d7f5c5213d6ee4b8e7942e3fe8fd84f0c54ac5. Older candidate 5d481d9d45d701ec557b098fe177080bd467f84e is an ancestor of lane head (git merge-base --is-ancestor exit 0)."
+      },
+      {
+        "check": "Godot 4.7 enum and exporter",
+        "result": "PASS",
+        "observed": "Official versioned docs and 4.7-stable engine source specify MODE_SCRIPT_TEXT=0, MODE_SCRIPT_BINARY_TOKENS=1, MODE_SCRIPT_BINARY_TOKENS_COMPRESSED=2. EditorExportGDScript bypasses token conversion for TEXT; other modes add .gdc with remapping. Therefore 2 to 0 preserves original .gd text for direct FileAccess reads.",
+        "sources": [
+          "https://docs.godotengine.org/en/4.7/classes/class_editorexportpreset.html",
+          "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/editor/export/editor_export_preset.h",
+          "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/gdscript/register_types.cpp"
+        ]
+      },
+      {
+        "check": "Stormwood scatter source contract",
+        "result": "PASS",
+        "observed": "stormwood_scatter.gd lines 9 and 26-31 hash config files plus original stormwood_heightfield.gd, stormwood_scatter.gd, stormwood_pocket_frame.gd via FileAccess.get_file_as_string. scatter_bake.gd mix_config_source line 119 normalizes CRLF to LF; bake freshness compares the expected fingerprint and requires named region files. stormwood_world.gd line 118 supplies this source fingerprint. vegetation.gd lines 574-583 refuses missing or stale regional scatter instead of silently rebuilding. Retaining text addresses missing raw source without weakening these guards."
+      },
+      {
+        "check": "Stormwood terrain source contract",
+        "result": "PASS",
+        "observed": "build_stormwood_terrain.gd dependency_paths lines 102-104 include itself and stormwood_heightfield.gd alongside terrain/world/surface/texture config files. current_fingerprint lines 108-113 opens them via FileAccess and reads text, using empty text on missing files. canonical_hash/dependency_fingerprint lines 58-68 normalize CRLF to LF before hashing. The patch preserves required source bytes and leaves dependency definitions and stored bake fingerprints untouched."
+      },
+      {
+        "check": "Old actual PCK supplement",
+        "result": "PASS",
+        "observed": "Standalone read-only PCK parser found all four requested original .gd paths as UTF-8 text, no NULs, valid per-entry directory MD5s, and canonical-LF SHA256 equal to pinned current-main blobs. PCK format 4, engine 4.7.0, 7125 entries, 1148981236 bytes. Supplemental only: this older pack is not a release built from source70fb3e0b.",
+        "artifact": "C:\\CodexTemp\\lane-e-old-pack-source-inspection.json"
+      }
+    ]
+  },
+  "source_tree": "2c2f2f1b81d0cbb88ca4b71c8ae01e1d16a8834c",
+  "lane_head_tree": "efca421599a5501ca6f2b75c3823659f953de716",
+  "old_pack_supplement_current_main_note": "Old PCK four-source canonicalLF comparisons remain applicable to549822 because c927-to549822 changes only documentation/evidence. This does not promote the older pack into current-main export or performance evidence."
+}
