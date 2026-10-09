@@ -21,6 +21,10 @@ func open(personal_view: Callable) -> bool:
 	var session: Node = game.get("session") if game != null else null
 	if session != null and not session.is_connected("foundation_reply_received", _claim_reply):
 		session.connect("foundation_reply_received", _claim_reply)
+	if session != null:
+		var completed := _claim_completed.bind(session)
+		if not session.is_connected("homestead_action_completed", completed):
+			session.connect("homestead_action_completed", completed)
 	_rebuild()
 	return true
 
@@ -121,6 +125,22 @@ func _claim_reply(envelope: Dictionary, result: Dictionary) -> void:
 	elif result.get("ok") == false and result.get("terminal_refusal") == true and result.get("durable") == false:
 		_pending_claim.clear()
 		status.text = str(result.get("reason", result.get("code", "Research reward unavailable")))
+
+func _claim_completed(action: String, intent: Dictionary, result: Dictionary, source: Node) -> void:
+	# Session emits this only after its original accepted owner BOOL/save ACK.
+	# The immediate foundation reply may still be unresolved; never resend it.
+	if not _shown or _pending_claim.is_empty() or action != "research_claim" or intent != _pending_claim \
+		or result.get("ok") != true or result.get("resolved") != true or result.get("durable") != true \
+		or result.get("saved") != true or result.get("owner_saved") != true \
+		or result.get("owner_acknowledged") != true: return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null or not is_instance_valid(source) or game.get("session") != source \
+		or _opened_context.is_empty() or character_context(game) != _opened_context: return
+	var receipt: String = preload("res://scripts/creatures/research_actions.gd")._receipt(
+		str(_opened_context.get("character_id", "")), action, intent, {})
+	if result.get("receipt") != receipt: return
+	_pending_claim.clear()
+	_rebuild()
 
 func _process(delta: float) -> void:
 	super._process(delta)

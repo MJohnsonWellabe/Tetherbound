@@ -148,10 +148,38 @@ func _research_rows() -> void:
 			"in_range": true, "source_key": "research_journal"}, records.errors)
 	_check(claimed.get("ok") == true, "canonical component claim produces paid projection")
 	if claimed.get("ok") == true:
+		var source: Node = root.get_node("Game").get("session")
+		var completion := {"ok": true, "resolved": true, "durable": true, "saved": true,
+			"owner_saved": true, "owner_acknowledged": true,
+			"receipt": preload("res://scripts/creatures/research_actions.gd")._receipt(
+				str(context.get("character_id", "")), "research_claim", original_claim, {})}
+		var incomplete := completion.duplicate(true)
+		incomplete.owner_acknowledged = false
+		panel.call("_claim_completed", "research_claim", original_claim, incomplete, source)
+		_check(panel.get("_pending_claim") == original_claim,
+			"completion without owner ACK cannot release the original claim")
+		panel.call("_claim_completed", "research_claim", foreign_envelope.intent, completion, source)
+		_check(panel.get("_pending_claim") == original_claim,
+			"another task's saved completion cannot release the original claim")
+		var wrong_receipt := completion.duplicate(true)
+		wrong_receipt.receipt = "foreign-receipt"
+		panel.call("_claim_completed", "research_claim", original_claim, wrong_receipt, source)
+		_check(panel.get("_pending_claim") == original_claim,
+			"a foreign receipt cannot release the original claim")
+		panel.call("_claim_completed", "research_claim", original_claim, completion, null)
+		_check(panel.get("_pending_claim") == original_claim,
+			"completion without the original source Session cannot release the claim")
+		var changed_context := context.duplicate(true)
+		changed_context.world_namespace = "disclosed-foreign-world"
+		panel.set("_opened_context", changed_context)
+		panel.call("_claim_completed", "research_claim", original_claim, completion, source)
+		_check(panel.get("_pending_claim") == original_claim,
+			"a changed opened world cannot release the original claim")
+		panel.set("_opened_context", context)
 		model.record = JSON.parse_string(JSON.stringify(claimed.state))
-		panel.call("_claim_reply", original_envelope, {"ok": true, "resolved": true})
+		panel.call("_claim_completed", "research_claim", original_claim, completion, source)
 		_check((panel.get("_pending_claim") as Dictionary).is_empty(),
-			"matching resolved component reply releases the original pending claim")
+			"matching saved component completion releases the original pending claim")
 		panel.call("_process", 0.6)
 		await process_frame
 		_check(_research_text(panel).contains("Paid ✓"), "restored paid task renders its paid tick")
