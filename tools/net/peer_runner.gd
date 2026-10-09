@@ -2667,12 +2667,17 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL", "detail": "could not stand where body %d was the one on offer (offered %s)"
 			% [int(body.get_instance_id()),
 				str(int((other as Object).get_instance_id())) if other != null else "nothing"]}
+	var ambient_request_before: Dictionary = director.get("_ambient_request_observation")
 	director.call("interaction_activate")
+	var ambient_request_after: Dictionary = director.get("_ambient_request_observation")
+	var ambient_request: Dictionary = ambient_request_after.duplicate(true)
+	ambient_request["invoked_during_press"] = not is_same(ambient_request_before, ambient_request_after)
 	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
 	var manager := _combat_manager()
 	if manager == null or not bool(manager.call("is_fighting")):
-		return {"verdict": "FAIL", "detail": "the engage press did not start a fight"}
+		return {"verdict": "FAIL", "detail": "the engage press did not start a fight; ambient request=%s receipt=%s" % [
+			JSON.stringify(ambient_request), JSON.stringify(director.get("_ambient_guest_receipt_observation"))]}
 	# Lane 7.A fix, kept, with lane 6.B's opt-out folded in AFTER it rather
 	# than instead of it. The binding is POLLED, not read once.
 	#
@@ -7460,6 +7465,14 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"local_ally_uid": str(mine.get("uid")) if mine != null else "",
 				"actor_vitals_runtime_enabled": preload("res://scripts/combat/combat_math.gd").config().get("actor_vitals", {}).get("runtime_enabled") == true,
 				"ambient_source_token": str(edirector.get("_ambient_active_token")),
+				"ambient_diagnostic": {"scope": edirector.call("_ambient_scope"),
+					"pending_token": edirector.get("_ambient_pending_token"), "deadline_ms": edirector.get("_ambient_pending_deadline"),
+					"host_source_count": (edirector.get("_ambient_host_sources") as Dictionary).size(),
+					"guest_source_count": (edirector.get("_ambient_guest_sources") as Dictionary).size(),
+					"publish_serial": edirector.get("_ambient_publish_serial"),
+					"request": (edirector.get("_ambient_request_observation") as Dictionary).duplicate(true),
+					"receipt": (edirector.get("_ambient_guest_receipt_observation") as Dictionary).duplicate(true),
+					"host_admission": (edirector.get("_ambient_host_admission_observation") as Dictionary).duplicate(true)},
 				"wild_actor_owner": rec.get("wild_actor_owner", {}).duplicate(true),
 				"saved_wild_actor": edirector.call("uses_wild_actor_vitals", str(rec.get("encounter_id", ""))),
 				"fighting": bool(emanager.call("is_fighting")),

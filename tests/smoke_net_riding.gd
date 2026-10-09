@@ -297,6 +297,7 @@ func _run() -> void:
 		var guest: Dictionary = await probe(1, "encounter")
 		var host: Dictionary = await probe(0, "encounter", {"encounter_id": str(guest.get("id", ""))})
 		var runtime: Dictionary = host.get("requested_runtime", {})
+		print("AMBIENT ADMISSION OBSERVATION " + JSON.stringify({"guest": guest.get("ambient_diagnostic", {}), "host": host.get("ambient_diagnostic", {})}))
 		_check(guest.get("actor_vitals_runtime_enabled") == true and host.get("actor_vitals_runtime_enabled") == true,
 			"both isolated peers exercised ActorON; production config stayed unchanged")
 		_check(not str(guest.get("id", "")).is_empty() and guest.get("id") == guest.get("bound_id") \

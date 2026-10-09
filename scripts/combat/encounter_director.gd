@@ -191,6 +191,10 @@ var _ambient_publish_serial := 0
 var _ambient_pending_token := ""
 var _ambient_pending_deadline := 0
 var _ambient_active_token := ""
+# Bounded read-only last-attempt observations; never used for admission.
+var _ambient_request_observation: Dictionary = {}
+var _ambient_host_admission_observation: Dictionary = {}
+var _ambient_guest_receipt_observation: Dictionary = {}
 var _ambient_guest_body: WeakRef
 var _engaged_with: Node3D = null
 var _ally_body: Node3D = null
@@ -1843,6 +1847,8 @@ func _ambient_generation(body: Node3D) -> int:
 
 func _tick_ambient_wild_sources(delta: float) -> void:
 	if not _ambient_pending_token.is_empty() and Time.get_ticks_msec() >= _ambient_pending_deadline:
+		_ambient_guest_receipt_observation = {"outcome": "expired_without_receipt", "token": _ambient_pending_token,
+			"deadline_ms": _ambient_pending_deadline, "sampled_ms": Time.get_ticks_msec()}
 		_ambient_pending_token = ""
 		_ambient_pending_deadline = 0
 		_ambient_guest_body = null
@@ -1951,19 +1957,30 @@ func _rpc_ambient_wild_sources(packets: Array) -> void:
 
 
 func _request_ambient_wild(body: Node3D) -> bool:
+	_ambient_request_observation = {"returned": false, "reason": "caller_gate",
+		"sampled_ms": Time.get_ticks_msec(), "pending_token": _ambient_pending_token,
+		"shared_join": _pending_shared_join_id, "active_id": _shared_active_id}
 	if body == null or not _ambient_pending_token.is_empty() or not _pending_shared_join_id.is_empty() \
 		or not _shared_active_id.is_empty() or _manager == null or bool(_manager.call("is_fighting")) \
 		or _ally == null or _ally.fainted or not is_instance_valid(_ally_body) or wild_engagement_deferred(): return false
+	_ambient_guest_receipt_observation = {}
+	_ambient_request_observation.merge({"reason": "packet_scope_visibility", "current_scope": _ambient_scope(),
+		"source_id": str(body.get_meta(&"ambient_source_id", "")), "body_id": str(body.get_instance_id()),
+		"body_generation": _ambient_generation(body), "body_visible": body.visible}, true)
 	var packet: Dictionary = _ambient_guest_sources.get(str(body.get_meta(&"ambient_source_id", "")), {})
+	_ambient_request_observation["packet"] = {"token": packet.get("token", ""), "scope": packet.get("scope", {}),
+		"generation": packet.get("generation", 0), "source_id": packet.get("source_id", "")}
 	if packet.is_empty() or packet.get("scope") != _ambient_scope() or not body.visible: return false
 	_ambient_pending_token = str(packet.token)
 	_ambient_pending_deadline = Time.get_ticks_msec() + int(1000.0 * float(ENCOUNTER_HOST_SCRIPT.config().get("shared_opponent_join_timeout_s", 5.0)))
 	_ambient_guest_body = weakref(body)
+	_ambient_request_observation.merge({"reason": "send_failed", "deadline_ms": _ambient_pending_deadline}, true)
 	if not _send_realm_rpc(1, "_rpc_ambient_wild_engage", [packet.token]):
 		_ambient_pending_token = ""
 		_ambient_pending_deadline = 0
 		_ambient_guest_body = null
 		return false
+	_ambient_request_observation.merge({"returned": true, "reason": "queued"}, true)
 	return true
 
 
@@ -1976,8 +1993,11 @@ func _rpc_ambient_wild_engage(token: String) -> void:
 
 
 func _host_ambient_wild_engage(token: String, peer: int) -> Dictionary:
+	_ambient_host_admission_observation = {"accepted": false, "reason": "scope_token_peer_rpc", "token": token, "peer": peer}
 	var scope := _ambient_scope()
+	_ambient_host_admission_observation["scope"] = scope.duplicate(true)
 	if scope.is_empty() or token.length() != 32 or peer <= 1 or not _realm_rpc_allowed(peer): return {}
+	_ambient_host_admission_observation["reason"] = "source_absent_duplicate_scope_or_weakref"
 	var source: Dictionary = {}
 	for candidate: Dictionary in _ambient_host_sources.values():
 		if candidate.get("token") == token:
@@ -1985,16 +2005,22 @@ func _host_ambient_wild_engage(token: String, peer: int) -> Dictionary:
 			source = candidate
 	if source.is_empty() or source.get("scope") != scope or not source.get("body") is WeakRef: return {}
 	var body: Node3D = source.body.get_ref()
+	_ambient_host_admission_observation.merge({"reason": "source_body_identity_lifetime_visibility_generation",
+		"source_uid": source.get("uid", ""), "source_generation": source.get("generation", 0)}, true)
 	if not is_instance_valid(body) or body.is_queued_for_deletion() or not body.is_inside_tree() \
 		or not body.visible or not bool(body.call("is_alive")) or body.get("instance").get("uid") != source.uid \
 		or _ambient_generation(body) != source.get("generation") \
 		or _ambient_body(str(body.get_meta(&"ambient_source_id", ""))) != body: return {}
+	_ambient_host_admission_observation["body_id"] = str(body.get_instance_id())
 	var character: String = _session.call("_authority_character", peer)
 	var admitted: Dictionary = _session.call("admitted_character_state", peer)
 	var deployed := deployed_body_for(peer)
 	var uid := str(_creature_card_for(peer).get("creature_uid", ""))
+	_ambient_host_admission_observation.merge({"reason": "admitted_character_party_or_deployed_body",
+		"character_id": character, "deployed_uid": uid, "deployed_body_id": str(deployed.get_instance_id()) if deployed != null else ""}, true)
 	if character.is_empty() or admitted.get("character_id") != character or deployed == null \
 		or not admitted.get("party") is Array or admitted.party.is_empty() or admitted.party.size() > 5: return {}
+	_ambient_host_admission_observation["reason"] = "owned_uid_absent_duplicate_or_fainted"
 	var owned: Dictionary = {}
 	for card: Variant in admitted.party:
 		if card is Dictionary and card.get("uid") == uid:
@@ -2005,22 +2031,34 @@ func _host_ambient_wild_engage(token: String, peer: int) -> Dictionary:
 	if not live_id.is_empty():
 		var existing: Dictionary = _encounter_host.call("record", live_id)
 		if existing.get("participants", {}).get(peer, {}).get("character_id") == character:
-			return _with_host_xp_owner(live_id, existing)
+			var existing_result := _with_host_xp_owner(live_id, existing)
+			_ambient_host_admission_observation.merge({"accepted": not existing_result.is_empty(), "reason": "existing_participant", "encounter_id": live_id}, true)
+			return existing_result
 	var safety: Dictionary = _session.call("_host_portal_context", peer)
+	_ambient_host_admission_observation["reason"] = "host_safety_identity_realm_position_or_range"
+	_ambient_host_admission_observation["safety"] = {}
+	for field: String in ["character_id", "realm", "world_instance_id", "position", "combat", "dialogue", "cutscene", "flying", "swimming", "downed"]:
+		if safety.has(field): _ambient_host_admission_observation.safety[field] = safety[field]
+	_ambient_host_admission_observation["body_position"] = body.global_position
+	_ambient_host_admission_observation["engage_range"] = _engage_range
 	if safety.get("character_id") != character or safety.get("realm") != scope.realm \
 		or safety.get("world_instance_id") != scope.world_namespace or not safety.get("position") is Vector3 \
 		or safety.get("combat") != false or safety.get("dialogue") != false or safety.get("cutscene") != false \
 		or safety.get("flying") != false or safety.get("swimming") != false or safety.get("downed") != false \
 		or safety.position.distance_to(body.global_position) > _engage_range: return {}
 	var authority: RefCounted = _session.get("_character_authority")
+	_ambient_host_admission_observation["reason"] = "authority_training_portal_loadout_or_vitals_pending"
 	if authority == null or authority.call("creature_training_is_pending", character) == true \
 		or authority.call("_portal_mutation_pending", character) == true \
 		or not authority.call("pending_creature_loadout", character).is_empty() \
 		or not authority.call("pending_creature_vitals", character).is_empty(): return {}
 	if not live_id.is_empty():
 		var joined := _host_engage({"encounter_id": live_id, "kind": "engage"}, peer)
-		return _with_host_xp_owner(live_id, _encounter_host.call("record", live_id)) if joined.get("ok") == true else {}
+		var join_result: Dictionary = _with_host_xp_owner(live_id, _encounter_host.call("record", live_id)) if joined.get("ok") == true else {}
+		_ambient_host_admission_observation.merge({"accepted": not join_result.is_empty(), "reason": "existing_encounter_join", "join_result": joined.duplicate(true), "encounter_id": live_id}, true)
+		return join_result
 	var context: Dictionary = _session.call("_host_wild_training_context")
+	_ambient_host_admission_observation.merge({"reason": "frozen_host_context_changed_or_unready", "current_context": context.duplicate(true), "source_context": source.context.duplicate(true)}, true)
 	if context != source.context or context.get("ready") != true: return {}
 	_configure_f22_patterns(body, false)
 	_ensure_encounter_arbiters()
@@ -2041,6 +2079,7 @@ func _host_ambient_wild_engage(token: String, peer: int) -> Dictionary:
 	var runtime := _shared_host_fight(live_id)
 	runtime.set_meta(&"canonical_wild_context", context.duplicate(true))
 	record.wild_actor_owner = WILD_ACTOR_SCOPE.make(scope.world_namespace, scope.session_id, scope.realm, live_id)
+	_ambient_host_admission_observation["reason"] = "ordinary_actor_binding_absent"
 	if _ordinary_actor_binding(live_id, peer, deployed).is_empty():
 		_ordinary_host_leave(live_id, peer)
 		_dispose_shared_host_fight(live_id, true)
@@ -2048,19 +2087,27 @@ func _host_ambient_wild_engage(token: String, peer: int) -> Dictionary:
 	_freeze_bounty_instances(live_id, peer)
 	_retain_research(live_id, peer, "sight", str(opponent.species_id), "engage")
 	_host_after_encounter_change(live_id)
-	return _with_host_xp_owner(live_id, record)
+	var opened_result := _with_host_xp_owner(live_id, record)
+	_ambient_host_admission_observation.merge({"accepted": not opened_result.is_empty(), "reason": "opened", "encounter_id": live_id,
+		"body_generation": int(runtime.get("body_generation")), "participant": record.get("participants", {}).get(peer, {}).duplicate(true)}, true)
+	return opened_result
 
 
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_ambient_wild_admitted(token: String, record: Dictionary) -> void:
+	_ambient_guest_receipt_observation = {"outcome": "sender_scope_guard", "token": token, "pending_token": _ambient_pending_token,
+		"sampled_ms": Time.get_ticks_msec(), "deadline_ms": _ambient_pending_deadline,
+		"record_id": record.get("encounter_id", ""), "record_empty": record.is_empty(), "wild_actor_owner": record.get("wild_actor_owner", {})}
 	if _is_host() or not _realm_rpc_allowed(1): return
 	var id := str(record.get("encounter_id", ""))
 	# RPC callbacks can run before the process tick that expires this request.
 	# The original deadline applies at receipt too, never just at polling time.
 	if not _ambient_pending_token.is_empty() and Time.get_ticks_msec() >= _ambient_pending_deadline:
+		_ambient_guest_receipt_observation["expired_at_receipt"] = true
 		_ambient_pending_token = ""
 		_ambient_pending_deadline = 0
 		_ambient_guest_body = null
+	_ambient_guest_receipt_observation["outcome"] = "token_mismatch_or_no_pending"
 	if token != _ambient_pending_token or _ambient_pending_token.is_empty():
 		if token == _ambient_active_token and id == _shared_active_id: return
 		if record.get("participants", {}).has(_local_peer_id()):
@@ -2068,6 +2115,7 @@ func _rpc_ambient_wild_admitted(token: String, record: Dictionary) -> void:
 		return
 	_ambient_pending_token = ""
 	_ambient_pending_deadline = 0
+	_ambient_guest_receipt_observation["outcome"] = "record_owner_scope_or_participant_refused"
 	if record.is_empty() or not WILD_ACTOR_SCOPE.owns(record.get("wild_actor_owner"), record, id) \
 		or record.wild_actor_owner.world_namespace != _ambient_scope().get("world_namespace") \
 		or record.wild_actor_owner.session_id != _ambient_scope().get("session_id") \
@@ -2075,10 +2123,12 @@ func _rpc_ambient_wild_admitted(token: String, record: Dictionary) -> void:
 		_ambient_guest_body = null
 		return
 	_note_host_xp_owner(record)
+	_ambient_guest_receipt_observation["outcome"] = "guest_presentation_binding_refused"
 	if not _begin_shared_guest_from_record(record):
 		_ambient_guest_body = null
 		submit_encounter_intent({"kind": "disengage", "encounter_id": id})
 		return
+	_ambient_guest_receipt_observation["outcome"] = "accepted"
 	_ambient_active_token = token
 	if _ambient_guest_body != null and is_instance_valid(_ambient_guest_body.get_ref()):
 		_ambient_guest_body.get_ref().visible = false
