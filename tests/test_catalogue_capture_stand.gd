@@ -25,11 +25,14 @@ func test_valid_stand_allows_small_settling_but_rejects_obstruction() -> void:
 		Vector3.ZERO, 3.5, 8.2).is_empty())
 	# A real collision-shortened arm can remain safely clear of the capsule.
 	var lens := player + Vector3(-1.9471245, 2.1638744, 0.0)
-	var arm := {"endpoint": lens, "hit_length": 2.0, "requested_length": 5.2, "capsule_clearance": 1.0}
+	var arm := {"endpoint": lens, "hit_length": 2.0, "requested_length": 5.2, "capsule_clearance": 1.0,
+		"probe_radius": 0.25, "near_plane_corner_distances": [0.087, 0.087, 0.087, 0.087]}
 	assert_false(CAPTURE.capture_stand_failure(stand, player, lens, 3.5, 8.2).is_empty())
 	assert_eq(CAPTURE.capture_stand_failure(stand, player, lens, 3.5, 8.2, arm), "")
 	for override: Dictionary in [{"endpoint": lens + Vector3.ONE}, {"hit_length": 0.0},
-			{"hit_length": 5.2}, {"capsule_clearance": 0.0}, {"capsule_clearance": NAN}]:
+			{"hit_length": 5.2}, {"capsule_clearance": 0.0}, {"capsule_clearance": NAN},
+			{"probe_radius": 0.05}, {"near_plane_corner_distances": [0.087, 0.087, 0.087]},
+			{"near_plane_corner_distances": [0.087, 0.087, 0.087, NAN]}]:
 		var invalid := arm.duplicate()
 		invalid.merge(override, true)
 		assert_false(CAPTURE.capture_stand_failure(stand, player, lens, 3.5, 8.2, invalid).is_empty())

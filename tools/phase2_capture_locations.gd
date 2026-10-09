@@ -551,6 +551,7 @@ func _capture_row(row: Dictionary) -> void:
 		record["rejected_stand_candidates"] = rejected.duplicate(true)
 		record["camera_rig_transform"] = _transform(_rig.global_transform)
 		record["camera_rig_spring_length"] = _rig.spring_length
+		record["camera_support"] = selected_spec.get("camera_support", {}).duplicate(true)
 		record["camera_transform"] = _transform(_camera.global_transform)
 		record["camera_player_distance_m"] = _camera.global_position.distance_to(_player.global_position)
 		record["observed_clock"] = observed_clock
@@ -690,22 +691,47 @@ static func capture_surface_failure(spec: Dictionary, state: Dictionary, player_
 
 func _capture_settled_failure(at: Vector2, row: Dictionary, spec: Dictionary) -> String:
 	var shortened_arm := {}
+	var endpoint := _rig.global_position + _rig.global_basis.z * _rig.get_hit_length()
+	spec["camera_support"] = {"pivot": _vec3(_rig.global_position), "endpoint": _vec3(endpoint),
+		"hit_length": _rig.get_hit_length(), "requested_length": _rig.spring_length,
+		"implicit_minimum": not row.has("min_camera_player_distance_m"), "collision_bound_context": false}
 	var collision := _player.get_node_or_null(^"Collision") as CollisionShape3D
 	# An explicit authored framing minimum stays strict. The generic minimum
 	# must also admit the production arm's own safe collision retraction.
 	if not row.has("min_camera_player_distance_m") and _rig.get("_target") == _player \
 			and _camera.get_parent() == _rig and root.get_camera_3d() == _camera \
 			and collision != null and not collision.disabled and collision.shape is CapsuleShape3D \
-			and collision.global_basis.get_scale().is_equal_approx(Vector3.ONE) and _rig.shape is SphereShape3D:
+			and collision.global_basis.get_scale().is_equal_approx(Vector3.ONE) and _rig.shape is SphereShape3D \
+			and _rig.global_basis.get_scale().is_equal_approx(Vector3.ONE) \
+			and _camera.global_basis.get_scale().is_equal_approx(Vector3.ONE):
 		var capsule := collision.shape as CapsuleShape3D
 		var probe := _rig.shape as SphereShape3D
 		var local_lens := collision.global_transform.affine_inverse() * _camera.global_position
 		var half_axis := maxf(0.0, capsule.height * 0.5 - capsule.radius)
 		var axis_point := Vector3(0.0, clampf(local_lens.y, -half_axis, half_axis), 0.0)
-		if capsule.radius > 0.0 and probe.radius >= _camera.near and _camera.near > 0.0:
-			shortened_arm = {"endpoint": _rig.global_position + _rig.global_basis.z * _rig.get_hit_length(),
+		var corners: Array[float] = []
+		var projection := _camera.get_camera_projection()
+		var near_plane := projection.get_projection_plane(Projection.PLANE_NEAR)
+		# Plane intersections use the actual projection, including FOV/aspect
+		# and frustum offsets; the camera transform also includes lens offsets.
+		for horizontal: int in [Projection.PLANE_LEFT, Projection.PLANE_RIGHT]:
+			for vertical: int in [Projection.PLANE_TOP, Projection.PLANE_BOTTOM]:
+				var corner: Variant = near_plane.intersect_3(projection.get_projection_plane(horizontal),
+					projection.get_projection_plane(vertical))
+				if corner is Vector3 and (corner as Vector3).is_finite():
+					var world_corner: Vector3 = _camera.get_camera_transform() * corner
+					var distance := world_corner.distance_to(_camera.global_position)
+					if is_finite(distance) and distance > 0.0: corners.append(distance)
+		var clearance := local_lens.distance_to(axis_point) - capsule.radius - probe.radius
+		spec.camera_support.merge({"probe_radius": probe.radius, "near_plane_corner_distances": corners,
+			"capsule_clearance": clearance}, true)
+		if capsule.radius > 0.0 and is_finite(_camera.near) and _camera.near > 0.0 \
+				and is_finite(probe.radius) and probe.radius > 0.0 and corners.size() == 4 \
+				and corners.all(func(distance: float) -> bool: return distance <= probe.radius):
+			shortened_arm = {"endpoint": endpoint,
 				"hit_length": _rig.get_hit_length(), "requested_length": _rig.spring_length,
-				"capsule_clearance": local_lens.distance_to(axis_point) - capsule.radius - probe.radius}
+				"capsule_clearance": clearance, "probe_radius": probe.radius, "near_plane_corner_distances": corners}
+			spec.camera_support.collision_bound_context = true
 	var failure := capture_stand_failure(at, _player.global_position, _camera.global_position,
 		float(row.get("min_camera_player_distance_m", 3.5)), _rig.spring_length + 3.0, shortened_arm)
 	if not failure.is_empty():
@@ -722,7 +748,7 @@ func _reject_stand(row: Dictionary, at: Vector2, offset: float, lateral: float,
 		"water_surface_y": spec.get("water_surface_y", null),
 		"player_position": _vec3(_player.global_position),
 		"camera_position": _vec3(_camera.global_position), "surface_state": _capture_surface_record(),
-		"physical_support": spec.get("physical_support", {}),
+		"physical_support": spec.get("physical_support", {}), "camera_support": spec.get("camera_support", {}),
 		"camera_rig_position": _vec3(_rig.global_position), "camera_arm_hit_length": _rig.get_hit_length(),
 		"camera_arm_requested_length": _rig.spring_length}
 	rejected.append(receipt)
@@ -788,14 +814,22 @@ static func capture_stand_failure(stand: Vector2, player: Vector3, camera: Vecto
 	if endpoint is Vector3 and (endpoint as Vector3).is_finite() \
 			and (endpoint as Vector3).is_equal_approx(camera):
 		var numeric := true
-		for field: String in ["hit_length", "requested_length", "capsule_clearance"]:
+		for field: String in ["hit_length", "requested_length", "capsule_clearance", "probe_radius"]:
 			if typeof(shortened_arm.get(field)) not in [TYPE_INT, TYPE_FLOAT]: numeric = false
 		if numeric:
 			var hit := float(shortened_arm.hit_length)
 			var requested := float(shortened_arm.requested_length)
 			var clearance := float(shortened_arm.capsule_clearance)
+			var radius := float(shortened_arm.probe_radius)
+			var corners: Variant = shortened_arm.get("near_plane_corner_distances")
+			var covered := is_finite(radius) and radius > 0.0 and corners is Array and corners.size() == 4
+			if covered:
+				for corner: Variant in corners:
+					if typeof(corner) not in [TYPE_INT, TYPE_FLOAT] \
+							or not is_finite(float(corner)) or float(corner) <= 0.0 or float(corner) > radius:
+						covered = false
 			collision_bound = is_finite(hit) and is_finite(requested) and is_finite(clearance) \
-				and hit > 0.0 and hit < requested and clearance > 0.0
+				and hit > 0.0 and hit < requested and clearance > 0.0 and covered
 	if distance > maximum_distance or (distance < minimum_distance and not collision_bound):
 		return "camera/player separation %.2fm outside the staged ordinary-camera range" % distance
 	return ""
