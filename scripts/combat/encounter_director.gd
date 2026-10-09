@@ -9902,6 +9902,10 @@ func host_combat_motion_context(peer: int, body: Node3D) -> Dictionary:
 	var scope := _combat_motion_scope(id, peer, binding)
 	var runtime := _shared_host_fight(id)
 	var opponent: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+	var hosted := get_parent().get_node_or_null("StormwoodEncounterHub")
+	if hosted != null:
+		var round_body: Node3D = hosted.call("opponent_for_record", id)
+		if round_body != null: opponent = round_body
 	if scope.is_empty() or not is_instance_valid(opponent) or not is_instance_valid(opponent.get("arena")): return denied
 	var status_tick := _host_self_utility_now(id, peer, str(binding.creature_uid), Time.get_ticks_msec())
 	if status_tick < 0: return denied

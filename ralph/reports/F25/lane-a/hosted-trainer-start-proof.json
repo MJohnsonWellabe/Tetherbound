@@ -40,5 +40,29 @@
     "verdict": "FAILED ARTIFACT/DISPOSITION CONFIRMED; no runtime approval or action703 reached.",
     "supported_correction": "Smoke joins with empty party then grants TerrapupL33. party_grant updates local party/history only, not host admitted guest party required by _owned_identity. Move exact same grant before join, preserving count/cap/history/assertions. Host _start_for failed fight.start emits observed refusal. Exact failed _next_round operand not logged; client codec failure unproven. Review distinct correction before changed existing proof."
   },
+  "admission_correction": {
+    "source_commit": "903dabc85e42e7030d937bee4ffcb3a4db60cc4d",
+    "path": "tests/smoke_net_stormwood_hosted_trainers.gd",
+    "change": "Identical single TerrapupL33 grant, history setup, original check/failure exit and fixture comments moved before host/join. One comment records admitted ownership. Production77e181 and all controls unchanged.",
+    "source_review_turn": "01a11f6f-7ca1-71a2-bf57-91f259e41590",
+    "source_verdict": "SOURCE / PROOF-SCOPE APPROVE exact903dabc85e42e7030d937bee4ffcb3a4db60cc4d",
+    "proof": {
+      "run_id": 37895966392,
+      "artifact_id": 11600342254,
+      "job_id": 113707266970,
+      "checkout_sha": "903dabc85e42e7030d937bee4ffcb3a4db60cc4d",
+      "script": "tests/smoke_net_stormwood_hosted_trainers.gd",
+      "mode": "headless",
+      "extra_args": [],
+      "checks_passed": 43,
+      "unique_failed_assertions": 3,
+      "exit": 1,
+      "raw_log": "ralph/reports/F25/downloads/a-hosted-trainer-start-37895966392/raw/run.log",
+      "log_sha256": "f4551355464a4e6a79aff6e9b1d7b87209e8b2a474b2a450bff0ddf13d8d6caf",
+      "result": "FAIL: guest placement, host body transform and round0 follower synchronization. Admission correction reaches actual guest record1:1, host-owned two-round roster, correct realm/card, wrong-realm/forged controls, physical703 acceptance and stale rejection; these pass. No completed-round runtime credit. Six FAIL lines duplicate three failed assertions."
+    },
+    "artifact_review_turn": "01a11f79-1dd0-77a0-abe0-a5113db44ef0",
+    "artifact_review": "Failure confirmed. Distinct production gap: host_combat_motion_context selects shared runtime/_engaged_with while hosted rounds live in hub. Resolve same current hub-owned opponent as move_start, retaining identity/realm/scope/arena/status/walking guards. Source gap established, not sole historical failure cause. Review correction before one changed original proof; no runtime/integration approval."
+  },
   "limits": "Integrate only scoped77e181 after required proof and same original artifact approval; no whole lane ancestry, failed HP timing change or parked F33 source. No C ambient/riding/peerRunner edits; no save schema or flag overrides. Original disclosed retired-crossing fixture remains. No failed save/accepted boundary promoted, native/GPU, FullCI/main activation or publication credit."
 }
