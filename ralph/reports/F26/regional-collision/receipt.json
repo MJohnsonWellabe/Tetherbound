@@ -1,0 +1,146 @@
+{
+  "mechanical_proofs": [
+    {
+      "run": 37994247992,
+      "raw_log": "C:\\CodexTemp\\owner-d-cloud-37994247992-run.log",
+      "raw_verified_pass": true,
+      "source": "e58b115cc3f955ff2c68d915683901bb3982b8b5",
+      "artifact": 11646038823,
+      "errors": [],
+      "summary": [
+        "Capsule sweep failures: 0",
+        "Water regional collider clone: 27175 checks, 6912 native ray pairs, 120 capsule sweeps, 0 failures",
+        "exit=0 took=3s"
+      ],
+      "zip_sha256": "a0fe68bc34c401e74fdb48715a4555eab8a6dca4749e236daa6f7e37ad384366"
+    },
+    {
+      "run": 37994250257,
+      "raw_log": "C:\\CodexTemp\\owner-d-cloud-37994250257-run.log",
+      "raw_verified_pass": true,
+      "source": "e58b115cc3f955ff2c68d915683901bb3982b8b5",
+      "artifact": 11646497067,
+      "errors": [],
+      "summary": [
+        "Native baked Tidewake regional collider clone: 31 regions, 810 checks, 186 ray pairs, 0 failures",
+        "exit=0 took=6s"
+      ],
+      "zip_sha256": "040d640b297d0316a63a560b08f3103877f3596955b7a8083e16f21b43deea7f"
+    }
+  ],
+  "lane": "D",
+  "configuration_changes": {
+    "other_flags": "ALL unchanged fromcurrentmain: actor_vitals,capture,alpha,Tether",
+    "build_budget_ms": "absent ->8.0",
+    "path": "water_collision.json.regional_collision_enabled",
+    "new": true,
+    "old": "absent/defaultfalse onmain /false previousprototype"
+  },
+  "proof_limits": [
+    "Direct mechanical fixtures; finalON config world-hook,traversal,co-op andunitbatch pending",
+    "No release FPS/P95/P99 orCPU/GPU improvement claim yet",
+    "No wholecriterion READY ormainland",
+    "Mainfeatureflags actor_vitals,capture,alpha,Tether unchanged"
+  ],
+  "previous_failures": [
+    {
+      "failures": 108,
+      "run": 37992880186,
+      "disposition": "Preserved failed exact-bit seam-normal tie assertions; no acceptance",
+      "raw_log": "C:\\CodexTemp\\owner-d-cloud-37992880186-run.log",
+      "artifact": 11646680289
+    },
+    {
+      "run": 37993645609,
+      "raw_log": "C:\\CodexTemp\\owner-d-cloud-37993645609-run.log",
+      "failures": 7,
+      "disposition": "Preserved failed seam-normal ties andmissingcameraERROR; fixedcamera andrequire original adjacent triangle normals +0.1mmfloor bounds",
+      "regions": 31,
+      "artifact": 11646900050
+    }
+  ],
+  "independent_source_review": {
+    "reviewer": "/root",
+    "source": "e58b115cc3f955ff2c68d915683901bb3982b8b5",
+    "base": "549822b8da400b3eb9b23fe0feaca3c5f98bec97",
+    "verdict": "SOURCE_APPROVE",
+    "ready_approval": false,
+    "previous_review": "C:\\CodexTemp\\root-d-regional-collision-406-review.json",
+    "scope": "Unchanged production/config plus two mechanical smoke fixtures",
+    "review": [
+      "Production/config exactly unchanged from406. Shape data and transforms remain exact comparisons; changed ray position tolerance0.1mm is bounded numerical comparison.",
+      "Normal comparison accepts only an actual original native normal sampled within1mm of ray point. This handles alternative triangle selection at shared edges without allowing arbitrary new normals. Native shape data equality remains the stronger geometry invariant.",
+      "Actual vendored terrain test supplies an explicit valid camera before loading all configured baked regions; compares pre-install native shapes/transform arrays to actual production clones and retained floor/hole presence, collider ID and sampled normals.",
+      "Ray count requires six points per actual region, not a hardcoded assumed count. Latest actual evidence reports31 loaded regions; report31 until actual source manifest establishes a different count. Do not claim32-region runtime coverage from an assumed count.",
+      "Fixture invokes production install directly while shipping flag remainsOFF. This is a mechanics proof; real water-world config hook, traversal,co-op and performance remain unproved."
+    ],
+    "pending": [
+      "Clean corrected exact-source mechanical proofs, preserving prior failed raw artifacts",
+      "Shipping water-world opt-in config path and affected traversal/co-op",
+      "Matched release FPS/P95/P99 CPU/GPU; whole criterion60fps/P99<=33 gate"
+    ],
+    "local_engine_runs": 0
+  },
+  "effective_behavior": "Only static-body grouping changes: each original full-region native heightmap remains unchanged in its own resident body; nativeTerraincollision_mode3->0 onlyafterallclonesprepared; no physics frame between floor removal and clone activation",
+  "main": "549822b8da400b3eb9b23fe0feaca3c5f98bec97",
+  "ready": false,
+  "mechanical_source": "e58b115cc3f955ff2c68d915683901bb3982b8b5",
+  "updated_utc": "2026-10-09T21:53:21.3423283Z",
+  "scope": [
+    "data/config/water_collision.json",
+    "scripts/world/water_collision_regions.gd",
+    "scripts/world/water_world.gd",
+    "tests/smoke_water_collision_regions.gd",
+    "tests/smoke_water_collision_regions_terrain.gd",
+    "tests/smoke_water_collision_rollout.gd"
+  ],
+  "blocker_comment": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6089471164",
+  "affected_flag_on_dispatches": [
+    {
+      "script": "tests/smoke_water_collision_regions.gd",
+      "label": "D-on-capsules",
+      "args": "",
+      "timeout": "10"
+    },
+    {
+      "script": "tests/smoke_water_collision_regions_terrain.gd",
+      "label": "D-on-terrain",
+      "args": "",
+      "timeout": "10"
+    },
+    {
+      "script": "tests/smoke_water_collision_rollout.gd",
+      "label": "D-on-rollout-swim",
+      "args": "",
+      "timeout": "15"
+    },
+    {
+      "script": "tests/run_tests.gd",
+      "label": "D-on-floor-swim-units",
+      "args": "--only=test_terrain_height.gd,test_water_heightfield.gd,test_water_encounter_residency.gd,test_swim_state.gd,test_riding_saddle.gd",
+      "timeout": "15"
+    },
+    {
+      "script": "tests/smoke_net_water_swimming.gd",
+      "label": "D-on-net-swim",
+      "args": "",
+      "timeout": "15"
+    },
+    {
+      "script": "tests/smoke_net_water_mounted_swimming.gd",
+      "label": "D-on-net-mount-swim",
+      "args": "",
+      "timeout": "15"
+    },
+    {
+      "script": "tests/smoke_net_water_return.gd",
+      "label": "D-on-net-return",
+      "args": "",
+      "timeout": "20"
+    }
+  ],
+  "performance_acceptance": false,
+  "visual_acceptance": false,
+  "flag_on_candidate": "2ad7d6dd787274290d71aed77bc6094ff4a3f20d",
+  "native": "E exclusive whilecorrectingStormwoodLow/Mediumquiet gaps; no localengine during E measuredintervals"
+}
