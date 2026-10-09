@@ -208,5 +208,6 @@ func _execute_probe(msg: Dictionary) -> Variant:
 		"retained": rules.retained_spawn(game.world.redesign_world, TIDECOIL_ID),
 		"saved_cycle": disk.get("redesign_world", {}).get("alpha_cycles", {}).get("sites", {}).get(TIDECOIL_ID, {}),
 		"saved_retained": rules.retained_spawn(disk.get("redesign_world", {}), TIDECOIL_ID),
+		"victory_source": source.duplicate(true),
 		"accepted_kill": source.get("accepted", {}).get("delta", {}).get("killed") == true,
 		"enemy_fainted": source.get("enemy_record", {}).get("fainted") == true}
