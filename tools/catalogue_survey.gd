@@ -18,6 +18,9 @@ extends SceneTree
 ## --times=day or --times=night, and --character=trainer|kael|sera|lyra. The
 ## character option writes the same Game.local.chosen_character field as the
 ## production title-screen picker before the world instantiates.
+## --ui-context=menu or --ui-context=craft adds full-frame production UI
+## evidence at ONE selected destination/time. Craft requires an existing
+## authored rest point in that world. No unlocks or inventory are granted.
 
 const CATALOGUE_PATH := "res://data/config/debug_teleport_spots.json"
 const DEFAULT_OUTPUT_ROOT := "res://shots/catalogue"
@@ -30,6 +33,7 @@ const SCENES := {
 const VALID_TIMES := ["day", "night"]
 const VALID_CHARACTERS := ["trainer", "kael", "sera", "lyra"]
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
+const LOOKDEV := preload("res://tools/lookdev_capture_bootstrap.gd")
 const BUILD_TIMEOUT_MSEC := 900000
 const BOOT_SETTLE_FRAMES := 24
 const ARRIVE_FRAMES := 20
@@ -54,6 +58,8 @@ var _failures: Array[String] = []
 var _planned: Array[Dictionary] = []
 var _all_destinations: Array[Dictionary] = []
 var _manifest: Dictionary = {}
+var _ui_contexts: Array[String] = []
+var _graphics_capture: Dictionary = {}
 
 
 func _init() -> void:
@@ -68,7 +74,16 @@ func _run() -> void:
 	if not _parse_args():
 		quit(1)
 		return
+	if not _ui_contexts.is_empty():
+		_graphics_capture = LOOKDEV.prepare(self)
+		if _graphics_capture.is_empty():
+			quit(2)
+			return
 	if not _load_plan():
+		quit(1)
+		return
+	if not _ui_contexts.is_empty() and _planned.size() != 1:
+		push_error("UI survey requires one existing catalogue destination and time")
 		quit(1)
 		return
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir))
@@ -86,6 +101,12 @@ func _run() -> void:
 	_capture_checkpoint("capture_shell_ready")
 	for row: Dictionary in _planned:
 		await _capture_row(row)
+	if _failures.is_empty() and not _ui_contexts.is_empty():
+		await _capture_ui_contexts()
+	var expected_ui := (7 if _ui_contexts.has("menu") else 0) + (1 if _ui_contexts.has("craft") else 0)
+	var ui_frames: Array = _manifest.get("ui_frames", [])
+	if ui_frames.size() != expected_ui:
+		_failures.append("UI survey completed %d/%d requested frames" % [ui_frames.size(), expected_ui])
 	_finish(_failures.is_empty() and _records.size() == _planned.size())
 
 
@@ -102,6 +123,12 @@ func _parse_args() -> bool:
 				_times.append(value.strip_edges().to_lower())
 		elif arg.begins_with("--character="):
 			_character_id = arg.trim_prefix("--character=").strip_edges().to_lower()
+		elif arg.begins_with("--ui-context="):
+			var context := arg.trim_prefix("--ui-context=")
+			if context not in ["menu", "craft"] or _ui_contexts.has(context):
+				push_error("--ui-context accepts menu or craft, once each")
+				return false
+			_ui_contexts.append(context)
 	if not SCENES.has(_biome_id):
 		push_error("catalogue survey: --biome must be meadows, cloudreach, stormwood, or water")
 		return false
@@ -239,6 +266,7 @@ func _begin_manifest() -> void:
 		"rendering_method": RenderingServer.get_current_rendering_method(),
 		"adapter": RenderingServer.get_video_adapter_name(),
 		"resolution": [root.size.x, root.size.y],
+		"graphics_capture": _graphics_capture,
 		"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
 		"player_character": _character_id,
 		"subsets": _subsets,
@@ -420,6 +448,178 @@ func _capture_row(row: Dictionary) -> void:
 		_records.append(record)
 		print("CATALOGUE CAPTURE %s -> %s" % [str(row.frame_id), path])
 	_write_manifest()
+
+
+## Optional context evidence at the existing catalogue fixture. This opens the
+## mounted production surfaces; it never supplies substitute panel contents.
+func _capture_ui_contexts() -> void:
+	_manifest["ui_contexts"] = _ui_contexts.duplicate()
+	_manifest["ui_frames"] = []
+	var game := root.get_node_or_null(^"Game")
+	var menu: Node = game.call("menu")
+	if _ui_contexts.has("menu"):
+		for tab: String in ["backpack", "quest_log", "build", "players", "settings", "map"]:
+			if menu == null or not bool(menu.call("open", tab)):
+				_failures.append("UI %s: production menu refused open" % tab)
+				break
+			for _frame in POSE_FRAMES:
+				await process_frame
+			if str(menu.call("current_tab_id")) != tab:
+				_failures.append("UI %s: production tab is unavailable" % tab)
+				menu.call("close")
+				break
+			var body: Control = (menu.get("_bodies") as Array)[int(menu.get("_index"))]
+			var state := {"tab": tab, "realm": _biome_id}
+			if tab == "map":
+				var map_state: RefCounted = body.call("_map_state")
+				var terrain: Texture2D = body.call("_terrain_texture", _world)
+				state["display_realm"] = str(body.call("_display_realm"))
+				state["available_realms"] = body.call("_available_realms")
+				state["regions"] = map_state.call("regions") if map_state != null else []
+				state["terrain_ready"] = terrain != null
+				state["realm_tabs_visible"] = (body.get("_realm_row") as Control).is_visible_in_tree()
+				var discovered := (state.regions as Array).any(func(region: Dictionary) -> bool: return bool(region.get("discovered", false)))
+				if terrain == null or state.display_realm != _biome_id or not discovered \
+						or (_biome_id == "cloudreach" and not bool(state.realm_tabs_visible)):
+					_failures.append("UI map: real terrain/realm/region content is absent")
+					menu.call("close")
+					break
+			await _shoot_ui("ui-" + tab, menu, body, state)
+			if tab == "settings":
+				var controls: Control = body.get("_reset_all_button")
+				if controls == null:
+					_failures.append("UI settings: production Controls section missing")
+				else:
+					controls.grab_focus()
+					body.call("_keep_visible", controls)
+					for _frame in POSE_FRAMES:
+						await process_frame
+					await _shoot_ui("ui-settings-controls", menu, body, {"tab": tab, "section": "controls"})
+			menu.call("close")
+			for _frame in POSE_FRAMES:
+				await process_frame
+	if _ui_contexts.has("craft"):
+		await _capture_ui_craft()
+	_write_manifest()
+
+
+func _capture_ui_craft() -> void:
+	# Only use an authored, already mounted rest-point offer. No camp, recipe,
+	# inventory or station is manufactured for the screenshot.
+	var prompt: Node3D = null
+	for candidate: Node in _world.find_children("CraftInteractable", "Node3D", true, false):
+		var script: Script = candidate.get_parent().get_script()
+		if script == null or script.resource_path != "res://scripts/world/rest_point.gd":
+			continue
+		if prompt == null or _player.global_position.distance_squared_to((candidate as Node3D).global_position) < _player.global_position.distance_squared_to(prompt.global_position):
+			prompt = candidate as Node3D
+	if prompt == null:
+		_failures.append("UI craft: no mounted authored CraftInteractable in this world")
+		return
+	var game := root.get_node_or_null(^"Game")
+	var at := prompt.global_position
+	if not bool(game.call("debug_teleport_to", at.x, at.z, _biome_id, "")):
+		_failures.append("UI craft: catalogue travel to authored offer refused")
+		return
+	for _frame in ARRIVE_FRAMES + POPULATE_FRAMES:
+		await physics_frame
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	if arbiter == null or arbiter.call("winning_provider") != prompt or not bool((arbiter.call("winner") as Dictionary).get("actionable", false)):
+		_failures.append("UI craft: authored craft offer does not own ordinary interaction")
+		return
+	Input.action_press("interact")
+	await physics_frame
+	Input.action_release("interact")
+	for _frame in POSE_FRAMES:
+		await process_frame
+	var panel: Node = prompt.get_parent().get("_craft_panel")
+	if panel == null or not bool(panel.call("is_open")):
+		_failures.append("UI craft: ordinary interaction did not open the real panel")
+		return
+	var rows: Array = panel.get("_rows")
+	var costs: Array = panel.get("_cost_labels")
+	var ids: Array = panel.get("_recipe_ids")
+	var items: RefCounted = panel.call("_items")
+	if items == null or rows.size() != costs.size() or rows.size() != ids.size():
+		_failures.append("UI craft: production recipe data is incomplete")
+		panel.call("close")
+		return
+	var longest := -1
+	var length := -1
+	for index in rows.size():
+		var recipe: Dictionary = items.call("recipe", ids[index])
+		var full_text := str(recipe.get("name", "")) + str(recipe.get("blurb", "")) + str(costs[index].text)
+		if full_text.length() > length:
+			length = full_text.length()
+			longest = index
+	if longest < 0:
+		_failures.append("UI craft: no production recipe rows")
+	else:
+		(rows[longest] as Control).grab_focus()
+		(panel.get("_list_scroll") as ScrollContainer).ensure_control_visible(rows[longest])
+		for _frame in POSE_FRAMES:
+			await process_frame
+		var output: Label = panel.get("_output_line")
+		var hint: Label = panel.get("_craft_hint")
+		if output == null or output.text.is_empty() or hint == null or hint.text.is_empty() or int(panel.get("_selected")) != longest \
+				or not _ui_visible_rect(output).has_area() or not _ui_visible_rect(hint).has_area():
+			_failures.append("UI craft: focused recipe preview/action hint is missing")
+		else:
+			await _shoot_ui("ui-craft-longest-known", panel, panel.get("_root"), {
+				"fixture": str(prompt.get_path()), "recipe_id": ids[longest],
+				"recipe_count": rows.size(), "selection": "longest authored known name/blurb/material string",
+				"material_text": str(costs[longest].text), "output_text": output.text, "action_hint": hint.text})
+	panel.call("close")
+
+
+func _shoot_ui(id: String, owner: Node, content: Control, state: Dictionary) -> void:
+	await RenderingServer.frame_post_draw
+	var focus := root.gui_get_focus_owner()
+	var current_owner: Node = preload("res://scripts/ui/input_owner.gd").current(self)
+	var visible_text: Array[String] = []
+	if content != null:
+		for node: Node in content.find_children("*", "Control", true, false):
+			var control := node as Control
+			if not _ui_visible_rect(control).has_area():
+				continue
+			if node is Label and not (node as Label).text.is_empty():
+				visible_text.append((node as Label).text)
+			elif node is Button and not (node as Button).text.is_empty():
+				visible_text.append((node as Button).text)
+	var valid := current_owner == owner and bool(owner.call("is_open")) and content != null and content.is_visible_in_tree() \
+		and focus != null and _ui_visible_rect(focus).has_area() and owner.is_ancestor_of(focus) and not visible_text.is_empty()
+	if id == "ui-settings-controls":
+		valid = valid and visible_text.any(func(value: String) -> bool: return value.begins_with("A on a binding to change it"))
+	state["context"] = id
+	state["input_owner"] = str(current_owner.get_path()) if current_owner != null else ""
+	state["focus"] = str(focus.get_path()) if focus != null else ""
+	state["visible_text"] = visible_text
+	state["state_guard_pass"] = valid
+	state["pixel_readability"] = "ungraded; original visual reviewer must inspect full framebuffer"
+	var path := "%s/%s.png" % [_output_dir, id]
+	var image := root.get_texture().get_image()
+	if not valid:
+		_failures.append("%s: production owner/focus/content guard failed" % id)
+	elif FileAccess.file_exists(path):
+		_failures.append("%s: refusing to overwrite UI evidence" % id)
+	elif image == null or image.is_empty() or image.get_size() != root.size or image.save_png(path) != OK:
+		_failures.append("%s: completed framebuffer missing/wrong size/save failed" % id)
+	else:
+		state["file"] = path
+	(_manifest["ui_frames"] as Array).append(state)
+	_write_manifest()
+
+
+func _ui_visible_rect(control: Control) -> Rect2:
+	if not control.is_visible_in_tree():
+		return Rect2()
+	var rect := control.get_global_rect().intersection(Rect2(Vector2.ZERO, Vector2(root.size)))
+	var parent := control.get_parent()
+	while parent != null:
+		if parent is Control and (parent as Control).clip_contents:
+			rect = rect.intersection((parent as Control).get_global_rect())
+		parent = parent.get_parent()
+	return rect
 
 
 func _capture_checkpoint(stage: String, row: Dictionary = {}) -> void:
