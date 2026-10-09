@@ -1,0 +1,65 @@
+{
+  "scoped_commits": [
+    "997d5874d7e5ab079d7fd59febe16bad2f99c85f"
+  ],
+  "feature_flag_flips": 0,
+  "balance": {
+    "tests_tools": 1,
+    "game": 0
+  },
+  "candidate": "997d5874d7e5ab079d7fd59febe16bad2f99c85f",
+  "engine_issues": [
+    "Deprecated physics interpolation warning"
+  ],
+  "qualification": "Passing fresh world did not need blocked-shot movement recovery. Exact nightly Mudsnout obstruction and flake-rate improvement remain unproven.",
+  "proofs": [
+    {
+      "whole_loop": [
+        "paid_workbench",
+        "deep_touch",
+        "actual_home_key_completion",
+        "station_craft",
+        "save_reload",
+        "portal_return"
+      ],
+      "fixtures": false,
+      "artifact": 11639847839,
+      "name": "smoke_f18_earned_loop",
+      "run": 37978412976,
+      "receipt_phases": 30,
+      "result": "PASS"
+    },
+    {
+      "run": 37978419923,
+      "result": "PASS",
+      "name": "gate_a_opening_segment"
+    },
+    {
+      "run": 37978422978,
+      "result": "PASS",
+      "scope": "Default CORE; no full-chain claim",
+      "name": "gate_b_continuous"
+    },
+    {
+      "tests": 12,
+      "failed": 0,
+      "result": "PASS",
+      "name": "existing aim/navigation units",
+      "run": 37978416456,
+      "assertions": 59
+    }
+  ],
+  "criterion": "F18#5",
+  "raw_evidence": {
+    "artifact_archive": "D:\\tetherbound\\.artifacts\\owner-b-restart-20261009\\37978412976.zip",
+    "engine_log": "D:\\tetherbound\\.artifacts\\owner-b-restart-20261009\\37978412976-engine.log",
+    "engine_sha256": "b3b8c35930c50f96b8582b1856c953e394bdd2a898b8c3e52a80c9ddb8951600"
+  },
+  "independent_review": "ROOT helper-source review and final receipt review pending",
+  "kind": "whole-criterion runtime reproof, no new criterion count",
+  "base_main": "7dd4a777fbc11ce62c6747248b96d53e4a27a099",
+  "config_flags_and_defaults_changed": [],
+  "changed_paths": [
+    "tests/helpers/gate_a_opening_drive.gd"
+  ]
+}

@@ -1,0 +1,5 @@
+READY B — F18#5 ordinary-input loop re-proof on main; nightly catch-aim helper candidate.
+Proven tree: current main 7dd4a777 + only 997d5874; production files unchanged. Config flags/defaults changed: NONE; zero feature flips. Recovery uses existing physical obstacle navigator within unchanged 90ticks; shot/trajectory readiness remains strict.
+PASS: full F18 earned loop 37978412976 (fixtures=false; deep touch → Home Key → paid homestead station Craft → Save/Load → portal to same waystone); Gate A 37978419923; GateB CORE 37978422978; units 37978416456 (12 tests / 59 assertions / 0 failed).
+Evidence: ralph/reports/F18/owner-main-reproof/receipt.json and runtime-result.json; raw log/ZIP retained locally; artifact 11639847839. Independent ROOT source/receipt review pending: this is prepared text, not a posted READY.
+Qualification: this fresh world needed no blocked-shot recovery; exact nightly Mudsnout case and flake-rate improvement are unproven. F18#5 was already met; no new count. Balance: game 0 / tests-tools 1.

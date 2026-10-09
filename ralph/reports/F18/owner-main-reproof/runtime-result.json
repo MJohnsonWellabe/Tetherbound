@@ -1,0 +1,3751 @@
+{
+  "failures": [],
+  "fixtures": false,
+  "input": "parsed harness actions/joypad axes through production UI",
+  "receipts": [
+    {
+      "home_keys": 1,
+      "phase": "opening",
+      "transcript": [
+        "title interactive",
+        "answered the character-choice step",
+        "confirmed the configured trainer-name prefill",
+        "new game world entered",
+        "wake/Get Up complete",
+        "Grandpa briefing and pack complete",
+        "starter picker order [\"terrapup\", \"ripplet\", \"galewisp\"]; 0 ui_right press(es) to 'terrapup'",
+        "starter selected and named (terrapup, uid creature-6687ff329045ef6e5f1ca6115197e045)",
+        "Grandpa's first-catch supplies received (50 Basic Orbs)",
+        "Home Key lesson read through physical confirm (2 lines), personal acknowledgement applied",
+        "usable house/front doorway exited",
+        "engaged exact live target Wild_bramblebun_0_2 (bramblebun)",
+        "tutorial Bramblebun combat entered",
+        "Bramblebun naturally weakened to 29/105 HP",
+        "live catch begins with 50 earned orbs; no HP or inventory fixture",
+        "catch complete; exploration resumed with two-creature party"
+      ]
+    },
+    {
+      "earned_basic_orbs": 50,
+      "home_keys": 1,
+      "hotbar": [
+        "home_key",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "owner": "character-72182430f93eaf582e7ab8666f91eebc",
+      "phase": "earned_key_starting_bindings"
+    },
+    {
+      "home_keys": 1,
+      "hotbar_before_drop": [
+        "home_key",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "hotbar_unchanged": true,
+      "input": [
+        "inventory",
+        "backpack_drop",
+        "ui_accept"
+      ],
+      "inventory_unchanged": true,
+      "phase": "protected_drop",
+      "reason": "Keys stay with their owner."
+    },
+    {
+      "catch_input": "combat_throw",
+      "catch_orb_source": "earned_inventory",
+      "home_keys": 1,
+      "hotbar_after_binding": [
+        "",
+        "",
+        "",
+        "",
+        "home_key"
+      ],
+      "hotbar_before_binding": [
+        "home_key",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "input": "backpack_assign",
+      "inventory_unchanged": true,
+      "owner": "character-72182430f93eaf582e7ab8666f91eebc",
+      "phase": "key_binding",
+      "production_catch_orb": "orb_basic",
+      "slot": 4,
+      "starting_hotbar": [
+        "home_key",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "actual_safety": {},
+      "binding": 4,
+      "channel_created": false,
+      "dialogue": "",
+      "epoch": "e7b4d42d67683873744d3a908eb8d077",
+      "expected_reason": "Not during a fight.",
+      "home_keys": 1,
+      "input": "hotbar_5",
+      "lesson_layer": -1,
+      "lesson_line": -1,
+      "owner": "character-72182430f93eaf582e7ab8666f91eebc",
+      "passed": true,
+      "phase": "combat_key_refusal",
+      "portal_actions": [],
+      "readable": true,
+      "realm": "meadows",
+      "reason": "Not during a fight.",
+      "refusal_layer": 21,
+      "source": "/root/MeadowsPlayground/CombatManager",
+      "traversal_after": {},
+      "traversal_before": {},
+      "unchanged": true,
+      "visibility_evidence": "structural visibility/layer observation; no rendered acceptance claim"
+    },
+    {
+      "actual_position": "(19.13372, 0.862157, -32.70337)",
+      "phase": "village_start"
+    },
+    {
+      "actual_position": "(22.24845, 0.697824, -31.13705)",
+      "arrived": true,
+      "confined_resets": 0,
+      "grounded": true,
+      "headings": [],
+      "original_frame_budget": 3600,
+      "phase": "ordinary_walk",
+      "target": "(24.0, 1.0, -32.0)",
+      "unstick_count_after": 0,
+      "unstick_count_before": 0
+    },
+    {
+      "actual_position": "(-5.975521, 0.900843, 21.54754)",
+      "arrived": true,
+      "confined_resets": 0,
+      "grounded": true,
+      "headings": [],
+      "original_frame_budget": 10021,
+      "phase": "ordinary_walk",
+      "target": "(-6.0, -0.424605, 22.0)",
+      "unstick_count_after": 0,
+      "unstick_count_before": 0
+    },
+    {
+      "before": {
+        "stone": 8,
+        "wood": 31
+      },
+      "phase": "paid_workbench",
+      "position": "(-6.0, 0.9, 18.0)"
+    },
+    {
+      "actual_position": "(345.1885, 2.143202, 927.7113)",
+      "arrived": true,
+      "confined_resets": 0,
+      "grounded": true,
+      "headings": [
+        "(13.79, 0.0, 14.0)",
+        "(14.0, 0.0, 20.0)",
+        "(13.79, 0.85, 22.4)",
+        "(8.0, 0.0, 90.0)",
+        "(-40.0, 0.0, 180.0)",
+        "(-120.0, 0.0, 270.0)",
+        "(-230.0, 0.0, 330.0)",
+        "(-360.0, 0.0, 400.0)",
+        "(-430.0, 0.0, 508.0)",
+        "(-458.0, 0.0, 518.0)",
+        "(-466.0, 0.0, 540.0)",
+        "(-469.0, 0.0, 572.0)",
+        "(-443.0, 0.0, 600.0)",
+        "(-400.0, 0.0, 605.0)",
+        "(-345.0, 0.0, 610.0)",
+        "(-322.0, 0.0, 594.0)",
+        "(-190.0, 0.0, 650.0)",
+        "(-50.0, 0.0, 700.0)",
+        "(90.0, 0.0, 760.0)",
+        "(230.0, 0.0, 830.0)",
+        "(360.0, 0.0, 910.0)"
+      ],
+      "original_frame_budget": 97293,
+      "phase": "ordinary_walk",
+      "target": "(344.3, 1.983212, 929.6)",
+      "unstick_count_after": 0,
+      "unstick_count_before": 0
+    },
+    {
+      "phase": "deep_touch",
+      "position": "(344.8611, 2.18041, 927.7106)",
+      "waystone": "meadows_trail_camp"
+    },
+    {
+      "after": {
+        "actor": {
+          "contact_generation": 38000,
+          "contact_position": [
+            96.1999969482422,
+            0.910941302776337,
+            14.0
+          ],
+          "instance_id": 480465914298,
+          "on_floor": true,
+          "physics_processing": true,
+          "position": [
+            96.1999969482422,
+            0.910941302776337,
+            14.0
+          ],
+          "present": true,
+          "unstick_count": 0
+        },
+        "arrival": {
+          "contact_generation": null,
+          "fields": [],
+          "journal_started": null,
+          "pending": false,
+          "present": true,
+          "save_wait_notified": null,
+          "seated": null
+        },
+        "character_id": "character-72182430f93eaf582e7ab8666f91eebc",
+        "home_keys": 1,
+        "input_owner": "",
+        "key": {
+          "elapsed_seconds": 2.122,
+          "fading": false,
+          "pending": "",
+          "phase": "idle",
+          "use_id": ""
+        },
+        "pending_realm_entry": "",
+        "physics_frame": 38550,
+        "portal_requests": [],
+        "process_frame": 19299,
+        "realm": "meadows",
+        "realm_scene_ready": true,
+        "scene": "res://scenes/world/meadows_playground.tscn",
+        "scene_instance": 480365250970
+      },
+      "before": {
+        "actor": {
+          "contact_generation": 37827,
+          "contact_position": [
+            344.861114501953,
+            2.18040990829468,
+            927.710632324219
+          ],
+          "instance_id": 480465914298,
+          "on_floor": true,
+          "physics_processing": true,
+          "position": [
+            344.861114501953,
+            2.18040990829468,
+            927.710632324219
+          ],
+          "present": true,
+          "unstick_count": 0
+        },
+        "arrival": {
+          "contact_generation": null,
+          "fields": [],
+          "journal_started": null,
+          "pending": false,
+          "present": true,
+          "save_wait_notified": null,
+          "seated": null
+        },
+        "character_id": "character-72182430f93eaf582e7ab8666f91eebc",
+        "home_keys": 1,
+        "input_owner": "",
+        "key": {
+          "elapsed_seconds": 0.0,
+          "fading": false,
+          "pending": "",
+          "phase": "idle",
+          "use_id": ""
+        },
+        "pending_realm_entry": "",
+        "physics_frame": 38367,
+        "portal_requests": [],
+        "process_frame": 19264,
+        "realm": "meadows",
+        "realm_scene_ready": true,
+        "scene": "res://scenes/world/meadows_playground.tscn",
+        "scene_instance": 480365250970
+      },
+      "driver_result": {
+        "arrival_applied": true,
+        "arrived": true,
+        "character_id": "character-72182430f93eaf582e7ab8666f91eebc",
+        "durable": true,
+        "kind": "home_key_finish",
+        "ok": true,
+        "permit_id": "travel:11cdcc2bdc0be5c520ee8bd576a85e27:character-72182430f93eaf582e7ab8666f91eebc:2",
+        "reason": "",
+        "request_id": "e7b4d42d67683873744d3a908eb8d077:3",
+        "saved": true,
+        "session_epoch": "e7b4d42d67683873744d3a908eb8d077",
+        "world_instance_id": "11cdcc2bdc0be5c520ee8bd576a85e27"
+      },
+      "observer": "read-only before/after; no additional await or input",
+      "original_process_frame_budget": 7200,
+      "passed": true,
+      "phase": "actual_home_key_completion"
+    },
+    {
+      "actual_safety": {
+        "combat": false,
+        "cutscene": true,
+        "dialogue": false
+      },
+      "binding": 4,
+      "channel_created": false,
+      "dialogue": "",
+      "epoch": "e7b4d42d67683873744d3a908eb8d077",
+      "expected_reason": "Wait until the scene finishes.",
+      "home_keys": 1,
+      "input": "hotbar_5",
+      "lesson_layer": 30,
+      "lesson_line": 0,
+      "owner": "character-72182430f93eaf582e7ab8666f91eebc",
+      "passed": true,
+      "phase": "cutscene_key_refusal",
+      "portal_actions": [],
+      "readable": true,
+      "realm": "meadows",
+      "reason": "Wait until the scene finishes.",
+      "refusal_layer": 31,
+      "source": "/root/Game/OnboardingLessons/@CanvasLayer@67506",
+      "traversal_after": {},
+      "traversal_before": {},
+      "unchanged": true,
+      "visibility_evidence": "structural visibility/layer observation; no rendered acceptance claim"
+    },
+    {
+      "confirmed_lines": 2,
+      "conversation": "lesson_home_key",
+      "epoch": "e7b4d42d67683873744d3a908eb8d077",
+      "flags_unchanged": true,
+      "input": [
+        "inventory",
+        "menu_tab_right",
+        "ui_accept",
+        "hotbar_5",
+        "menu_confirm"
+      ],
+      "lesson": "home_key",
+      "owner": "character-72182430f93eaf582e7ab8666f91eebc",
+      "passed": true,
+      "phase": "settings_home_key_replay",
+      "released": true,
+      "transaction_receipts_unchanged": true,
+      "unchanged": true
+    },
+    {
+      "actual_safety": {},
+      "binding": 4,
+      "channel_created": false,
+      "dialogue": "village_mira_shop_intro",
+      "epoch": "e7b4d42d67683873744d3a908eb8d077",
+      "expected_reason": "Finish the conversation first.",
+      "home_keys": 1,
+      "input": "hotbar_5",
+      "lesson_layer": -1,
+      "lesson_line": -1,
+      "owner": "character-72182430f93eaf582e7ab8666f91eebc",
+      "passed": true,
+      "phase": "dialogue_key_refusal",
+      "portal_actions": [],
+      "readable": true,
+      "realm": "meadows",
+      "reason": "Finish the conversation first.",
+      "refusal_layer": 21,
+      "source": "/root/MeadowsPlayground/DialoguePanel",
+      "traversal_after": {},
+      "traversal_before": {},
+      "unchanged": true,
+      "visibility_evidence": "structural visibility/layer observation; no rendered acceptance claim"
+    },
+    {
+      "character": "character-72182430f93eaf582e7ab8666f91eebc",
+      "elapsed_physics_frames": 0,
+      "elapsed_process_frames": 0,
+      "final": {
+        "holder_open": true,
+        "holder_owns_input": false,
+        "holder_path": "/root/ShopPanel",
+        "holder_script": "res://scripts/ui/shop_panel.gd",
+        "interact_just_pressed": false,
+        "interact_pressed": false,
+        "panel_open": true,
+        "panel_path": "/root/ShopPanel",
+        "physics_frame": 4172,
+        "process_frame": 4175,
+        "vendor": "mira"
+      },
+      "initial": {
+        "holder_open": true,
+        "holder_owns_input": false,
+        "holder_path": "/root/ShopPanel",
+        "holder_script": "res://scripts/ui/shop_panel.gd",
+        "interact_just_pressed": false,
+        "interact_pressed": false,
+        "panel_open": true,
+        "panel_path": "/root/ShopPanel",
+        "physics_frame": 4172,
+        "process_frame": 4175,
+        "vendor": "mira"
+      },
+      "original_process_budget": 90,
+      "passed": true,
+      "phase": "earned_shop_input_handoff"
+    },
+    {
+      "attempted_sale": false,
+      "home_key_in_traded_ids": false,
+      "home_key_name": "Home Key",
+      "home_keys": 1,
+      "inventory_unchanged": true,
+      "passed": true,
+      "phase": "shop_key_offer_absent",
+      "reachable_sell_offers": [
+        "Fiber x25",
+        "Berries x5",
+        "Orb x48",
+        "Small Potion x3",
+        "Revive x10"
+      ],
+      "vendor": "mira",
+      "vendor_buys_home_key": false,
+      "visible_sell_labels": [
+        "Fiber x25",
+        "+1",
+        "Berries x5",
+        "+2",
+        "Orb x48",
+        "+7",
+        "Small Potion x3",
+        "+9",
+        "Revive x10",
+        "+26"
+      ]
+    },
+    {
+      "assignment_presses": [
+        {
+          "action": "backpack_assign",
+          "after": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+            "gui_inventory_slot": 13,
+            "gui_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "hotbar": [
+              "hammer",
+              "",
+              "",
+              "",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4540,
+            "process_frame": 4464,
+            "selected_slot": 13,
+            "selected_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "status": "Hammer on slot 1.",
+            "tab": "backpack"
+          },
+          "before": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+            "gui_inventory_slot": 13,
+            "gui_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "",
+              "",
+              "",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4532,
+            "process_frame": 4444,
+            "selected_slot": 13,
+            "selected_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "status": "",
+            "tab": "backpack"
+          },
+          "edges": [
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": true,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+                "gui_inventory_slot": 13,
+                "gui_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "hotbar": [
+                  "hammer",
+                  "",
+                  "",
+                  "",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4535,
+                "process_frame": 4451,
+                "selected_slot": 13,
+                "selected_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "status": "Hammer on slot 1.",
+                "tab": "backpack"
+              },
+              "physics_start": 4532,
+              "pressed": true
+            },
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": false,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+                "gui_inventory_slot": 13,
+                "gui_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "hotbar": [
+                  "hammer",
+                  "",
+                  "",
+                  "",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4540,
+                "process_frame": 4464,
+                "selected_slot": 13,
+                "selected_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "status": "Hammer on slot 1.",
+                "tab": "backpack"
+              },
+              "physics_start": 4535,
+              "pressed": false
+            }
+          ]
+        },
+        {
+          "action": "backpack_assign",
+          "after": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+            "gui_inventory_slot": 13,
+            "gui_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "hammer",
+              "",
+              "",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4548,
+            "process_frame": 4483,
+            "selected_slot": 13,
+            "selected_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "status": "Hammer on slot 2.",
+            "tab": "backpack"
+          },
+          "before": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+            "gui_inventory_slot": 13,
+            "gui_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "hotbar": [
+              "hammer",
+              "",
+              "",
+              "",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4540,
+            "process_frame": 4464,
+            "selected_slot": 13,
+            "selected_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "status": "Hammer on slot 1.",
+            "tab": "backpack"
+          },
+          "edges": [
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": true,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+                "gui_inventory_slot": 13,
+                "gui_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "hotbar": [
+                  "",
+                  "hammer",
+                  "",
+                  "",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4543,
+                "process_frame": 4471,
+                "selected_slot": 13,
+                "selected_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "status": "Hammer on slot 2.",
+                "tab": "backpack"
+              },
+              "physics_start": 4540,
+              "pressed": true
+            },
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": false,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+                "gui_inventory_slot": 13,
+                "gui_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "hotbar": [
+                  "",
+                  "hammer",
+                  "",
+                  "",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4548,
+                "process_frame": 4483,
+                "selected_slot": 13,
+                "selected_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "status": "Hammer on slot 2.",
+                "tab": "backpack"
+              },
+              "physics_start": 4543,
+              "pressed": false
+            }
+          ]
+        },
+        {
+          "action": "backpack_assign",
+          "after": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+            "gui_inventory_slot": 13,
+            "gui_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "",
+              "hammer",
+              "",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4556,
+            "process_frame": 4502,
+            "selected_slot": 13,
+            "selected_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "status": "Hammer on slot 3.",
+            "tab": "backpack"
+          },
+          "before": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+            "gui_inventory_slot": 13,
+            "gui_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "hammer",
+              "",
+              "",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4548,
+            "process_frame": 4483,
+            "selected_slot": 13,
+            "selected_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "status": "Hammer on slot 2.",
+            "tab": "backpack"
+          },
+          "edges": [
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": true,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+                "gui_inventory_slot": 13,
+                "gui_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "hotbar": [
+                  "",
+                  "",
+                  "hammer",
+                  "",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4551,
+                "process_frame": 4490,
+                "selected_slot": 13,
+                "selected_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "status": "Hammer on slot 3.",
+                "tab": "backpack"
+              },
+              "physics_start": 4548,
+              "pressed": true
+            },
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": false,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+                "gui_inventory_slot": 13,
+                "gui_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "hotbar": [
+                  "",
+                  "",
+                  "hammer",
+                  "",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4556,
+                "process_frame": 4502,
+                "selected_slot": 13,
+                "selected_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "status": "Hammer on slot 3.",
+                "tab": "backpack"
+              },
+              "physics_start": 4551,
+              "pressed": false
+            }
+          ]
+        },
+        {
+          "action": "backpack_assign",
+          "after": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+            "gui_inventory_slot": 13,
+            "gui_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "",
+              "",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4564,
+            "process_frame": 4521,
+            "selected_slot": 13,
+            "selected_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "status": "Hammer on slot 4.",
+            "tab": "backpack"
+          },
+          "before": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+            "gui_inventory_slot": 13,
+            "gui_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "",
+              "hammer",
+              "",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4556,
+            "process_frame": 4502,
+            "selected_slot": 13,
+            "selected_stack": {
+              "id": "hammer",
+              "n": 1
+            },
+            "status": "Hammer on slot 3.",
+            "tab": "backpack"
+          },
+          "edges": [
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": true,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+                "gui_inventory_slot": 13,
+                "gui_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "hotbar": [
+                  "",
+                  "",
+                  "",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4559,
+                "process_frame": 4509,
+                "selected_slot": 13,
+                "selected_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "status": "Hammer on slot 4.",
+                "tab": "backpack"
+              },
+              "physics_start": 4556,
+              "pressed": true
+            },
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": false,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69737",
+                "gui_inventory_slot": 13,
+                "gui_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "hotbar": [
+                  "",
+                  "",
+                  "",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4564,
+                "process_frame": 4521,
+                "selected_slot": 13,
+                "selected_stack": {
+                  "id": "hammer",
+                  "n": 1
+                },
+                "status": "Hammer on slot 4.",
+                "tab": "backpack"
+              },
+              "physics_start": 4559,
+              "pressed": false
+            }
+          ]
+        },
+        {
+          "action": "backpack_assign",
+          "after": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69725",
+            "gui_inventory_slot": 11,
+            "gui_stack": {
+              "id": "knife",
+              "n": 1
+            },
+            "hotbar": [
+              "knife",
+              "",
+              "",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4612,
+            "process_frame": 4635,
+            "selected_slot": 11,
+            "selected_stack": {
+              "id": "knife",
+              "n": 1
+            },
+            "status": "Knife on slot 1.",
+            "tab": "backpack"
+          },
+          "before": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69725",
+            "gui_inventory_slot": 11,
+            "gui_stack": {
+              "id": "knife",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "",
+              "",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4604,
+            "process_frame": 4615,
+            "selected_slot": 11,
+            "selected_stack": {
+              "id": "knife",
+              "n": 1
+            },
+            "status": "Hammer on slot 4.",
+            "tab": "backpack"
+          },
+          "edges": [
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": true,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69725",
+                "gui_inventory_slot": 11,
+                "gui_stack": {
+                  "id": "knife",
+                  "n": 1
+                },
+                "hotbar": [
+                  "knife",
+                  "",
+                  "",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4607,
+                "process_frame": 4622,
+                "selected_slot": 11,
+                "selected_stack": {
+                  "id": "knife",
+                  "n": 1
+                },
+                "status": "Knife on slot 1.",
+                "tab": "backpack"
+              },
+              "physics_start": 4604,
+              "pressed": true
+            },
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": false,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69725",
+                "gui_inventory_slot": 11,
+                "gui_stack": {
+                  "id": "knife",
+                  "n": 1
+                },
+                "hotbar": [
+                  "knife",
+                  "",
+                  "",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4612,
+                "process_frame": 4635,
+                "selected_slot": 11,
+                "selected_stack": {
+                  "id": "knife",
+                  "n": 1
+                },
+                "status": "Knife on slot 1.",
+                "tab": "backpack"
+              },
+              "physics_start": 4607,
+              "pressed": false
+            }
+          ]
+        },
+        {
+          "action": "backpack_assign",
+          "after": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69725",
+            "gui_inventory_slot": 11,
+            "gui_stack": {
+              "id": "knife",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "knife",
+              "",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4620,
+            "process_frame": 4654,
+            "selected_slot": 11,
+            "selected_stack": {
+              "id": "knife",
+              "n": 1
+            },
+            "status": "Knife on slot 2.",
+            "tab": "backpack"
+          },
+          "before": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69725",
+            "gui_inventory_slot": 11,
+            "gui_stack": {
+              "id": "knife",
+              "n": 1
+            },
+            "hotbar": [
+              "knife",
+              "",
+              "",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4612,
+            "process_frame": 4635,
+            "selected_slot": 11,
+            "selected_stack": {
+              "id": "knife",
+              "n": 1
+            },
+            "status": "Knife on slot 1.",
+            "tab": "backpack"
+          },
+          "edges": [
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": true,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69725",
+                "gui_inventory_slot": 11,
+                "gui_stack": {
+                  "id": "knife",
+                  "n": 1
+                },
+                "hotbar": [
+                  "",
+                  "knife",
+                  "",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4615,
+                "process_frame": 4642,
+                "selected_slot": 11,
+                "selected_stack": {
+                  "id": "knife",
+                  "n": 1
+                },
+                "status": "Knife on slot 2.",
+                "tab": "backpack"
+              },
+              "physics_start": 4612,
+              "pressed": true
+            },
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": false,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69725",
+                "gui_inventory_slot": 11,
+                "gui_stack": {
+                  "id": "knife",
+                  "n": 1
+                },
+                "hotbar": [
+                  "",
+                  "knife",
+                  "",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4620,
+                "process_frame": 4654,
+                "selected_slot": 11,
+                "selected_stack": {
+                  "id": "knife",
+                  "n": 1
+                },
+                "status": "Knife on slot 2.",
+                "tab": "backpack"
+              },
+              "physics_start": 4615,
+              "pressed": false
+            }
+          ]
+        },
+        {
+          "action": "backpack_assign",
+          "after": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69725",
+            "gui_inventory_slot": 11,
+            "gui_stack": {
+              "id": "knife",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "",
+              "knife",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4628,
+            "process_frame": 4673,
+            "selected_slot": 11,
+            "selected_stack": {
+              "id": "knife",
+              "n": 1
+            },
+            "status": "Knife on slot 3.",
+            "tab": "backpack"
+          },
+          "before": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69725",
+            "gui_inventory_slot": 11,
+            "gui_stack": {
+              "id": "knife",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "knife",
+              "",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4620,
+            "process_frame": 4654,
+            "selected_slot": 11,
+            "selected_stack": {
+              "id": "knife",
+              "n": 1
+            },
+            "status": "Knife on slot 2.",
+            "tab": "backpack"
+          },
+          "edges": [
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": true,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69725",
+                "gui_inventory_slot": 11,
+                "gui_stack": {
+                  "id": "knife",
+                  "n": 1
+                },
+                "hotbar": [
+                  "",
+                  "",
+                  "knife",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4623,
+                "process_frame": 4661,
+                "selected_slot": 11,
+                "selected_stack": {
+                  "id": "knife",
+                  "n": 1
+                },
+                "status": "Knife on slot 3.",
+                "tab": "backpack"
+              },
+              "physics_start": 4620,
+              "pressed": true
+            },
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": false,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69725",
+                "gui_inventory_slot": 11,
+                "gui_stack": {
+                  "id": "knife",
+                  "n": 1
+                },
+                "hotbar": [
+                  "",
+                  "",
+                  "knife",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4628,
+                "process_frame": 4673,
+                "selected_slot": 11,
+                "selected_stack": {
+                  "id": "knife",
+                  "n": 1
+                },
+                "status": "Knife on slot 3.",
+                "tab": "backpack"
+              },
+              "physics_start": 4623,
+              "pressed": false
+            }
+          ]
+        },
+        {
+          "action": "backpack_assign",
+          "after": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69707",
+            "gui_inventory_slot": 8,
+            "gui_stack": {
+              "id": "pickaxe",
+              "n": 1
+            },
+            "hotbar": [
+              "pickaxe",
+              "",
+              "knife",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4660,
+            "process_frame": 4749,
+            "selected_slot": 8,
+            "selected_stack": {
+              "id": "pickaxe",
+              "n": 1
+            },
+            "status": "Pickaxe on slot 1.",
+            "tab": "backpack"
+          },
+          "before": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69707",
+            "gui_inventory_slot": 8,
+            "gui_stack": {
+              "id": "pickaxe",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "",
+              "knife",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4652,
+            "process_frame": 4730,
+            "selected_slot": 8,
+            "selected_stack": {
+              "id": "pickaxe",
+              "n": 1
+            },
+            "status": "Knife on slot 3.",
+            "tab": "backpack"
+          },
+          "edges": [
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": true,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69707",
+                "gui_inventory_slot": 8,
+                "gui_stack": {
+                  "id": "pickaxe",
+                  "n": 1
+                },
+                "hotbar": [
+                  "pickaxe",
+                  "",
+                  "knife",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4655,
+                "process_frame": 4737,
+                "selected_slot": 8,
+                "selected_stack": {
+                  "id": "pickaxe",
+                  "n": 1
+                },
+                "status": "Pickaxe on slot 1.",
+                "tab": "backpack"
+              },
+              "physics_start": 4652,
+              "pressed": true
+            },
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": false,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69707",
+                "gui_inventory_slot": 8,
+                "gui_stack": {
+                  "id": "pickaxe",
+                  "n": 1
+                },
+                "hotbar": [
+                  "pickaxe",
+                  "",
+                  "knife",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4660,
+                "process_frame": 4749,
+                "selected_slot": 8,
+                "selected_stack": {
+                  "id": "pickaxe",
+                  "n": 1
+                },
+                "status": "Pickaxe on slot 1.",
+                "tab": "backpack"
+              },
+              "physics_start": 4655,
+              "pressed": false
+            }
+          ]
+        },
+        {
+          "action": "backpack_assign",
+          "after": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69707",
+            "gui_inventory_slot": 8,
+            "gui_stack": {
+              "id": "pickaxe",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "pickaxe",
+              "knife",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4668,
+            "process_frame": 4768,
+            "selected_slot": 8,
+            "selected_stack": {
+              "id": "pickaxe",
+              "n": 1
+            },
+            "status": "Pickaxe on slot 2.",
+            "tab": "backpack"
+          },
+          "before": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69707",
+            "gui_inventory_slot": 8,
+            "gui_stack": {
+              "id": "pickaxe",
+              "n": 1
+            },
+            "hotbar": [
+              "pickaxe",
+              "",
+              "knife",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4660,
+            "process_frame": 4749,
+            "selected_slot": 8,
+            "selected_stack": {
+              "id": "pickaxe",
+              "n": 1
+            },
+            "status": "Pickaxe on slot 1.",
+            "tab": "backpack"
+          },
+          "edges": [
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": true,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69707",
+                "gui_inventory_slot": 8,
+                "gui_stack": {
+                  "id": "pickaxe",
+                  "n": 1
+                },
+                "hotbar": [
+                  "",
+                  "pickaxe",
+                  "knife",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4663,
+                "process_frame": 4756,
+                "selected_slot": 8,
+                "selected_stack": {
+                  "id": "pickaxe",
+                  "n": 1
+                },
+                "status": "Pickaxe on slot 2.",
+                "tab": "backpack"
+              },
+              "physics_start": 4660,
+              "pressed": true
+            },
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": false,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69707",
+                "gui_inventory_slot": 8,
+                "gui_stack": {
+                  "id": "pickaxe",
+                  "n": 1
+                },
+                "hotbar": [
+                  "",
+                  "pickaxe",
+                  "knife",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4668,
+                "process_frame": 4768,
+                "selected_slot": 8,
+                "selected_stack": {
+                  "id": "pickaxe",
+                  "n": 1
+                },
+                "status": "Pickaxe on slot 2.",
+                "tab": "backpack"
+              },
+              "physics_start": 4663,
+              "pressed": false
+            }
+          ]
+        },
+        {
+          "action": "backpack_assign",
+          "after": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69701",
+            "gui_inventory_slot": 7,
+            "gui_stack": {
+              "id": "axe",
+              "n": 1
+            },
+            "hotbar": [
+              "axe",
+              "pickaxe",
+              "knife",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4684,
+            "process_frame": 4807,
+            "selected_slot": 7,
+            "selected_stack": {
+              "id": "axe",
+              "n": 1
+            },
+            "status": "Axe on slot 1.",
+            "tab": "backpack"
+          },
+          "before": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69701",
+            "gui_inventory_slot": 7,
+            "gui_stack": {
+              "id": "axe",
+              "n": 1
+            },
+            "hotbar": [
+              "",
+              "pickaxe",
+              "knife",
+              "hammer",
+              "home_key"
+            ],
+            "menu_open": true,
+            "physics_frame": 4676,
+            "process_frame": 4787,
+            "selected_slot": 7,
+            "selected_stack": {
+              "id": "axe",
+              "n": 1
+            },
+            "status": "Pickaxe on slot 2.",
+            "tab": "backpack"
+          },
+          "edges": [
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": true,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69701",
+                "gui_inventory_slot": 7,
+                "gui_stack": {
+                  "id": "axe",
+                  "n": 1
+                },
+                "hotbar": [
+                  "axe",
+                  "pickaxe",
+                  "knife",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4679,
+                "process_frame": 4795,
+                "selected_slot": 7,
+                "selected_stack": {
+                  "id": "axe",
+                  "n": 1
+                },
+                "status": "Axe on slot 1.",
+                "tab": "backpack"
+              },
+              "physics_start": 4676,
+              "pressed": true
+            },
+            {
+              "event": "Joypad Button 7 (Left Stick, Sony L3, Xbox L/LS)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": false,
+                "gui_focus": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@4/@ScrollContainer@69599/@HBoxContainer@69600/@PanelContainer@69636/@VBoxContainer@69635/@GridContainer@69634/@Button@69701",
+                "gui_inventory_slot": 7,
+                "gui_stack": {
+                  "id": "axe",
+                  "n": 1
+                },
+                "hotbar": [
+                  "axe",
+                  "pickaxe",
+                  "knife",
+                  "hammer",
+                  "home_key"
+                ],
+                "menu_open": true,
+                "physics_frame": 4684,
+                "process_frame": 4807,
+                "selected_slot": 7,
+                "selected_stack": {
+                  "id": "axe",
+                  "n": 1
+                },
+                "status": "Axe on slot 1.",
+                "tab": "backpack"
+              },
+              "physics_start": 4679,
+              "pressed": false
+            }
+          ]
+        }
+      ],
+      "final": {
+        "action_just_pressed": false,
+        "action_pressed": false,
+        "gui_focus": "",
+        "gui_inventory_slot": -1,
+        "gui_stack": {},
+        "hotbar": [
+          "axe",
+          "pickaxe",
+          "knife",
+          "hammer",
+          "home_key"
+        ],
+        "menu_open": false,
+        "physics_frame": 4721,
+        "process_frame": 4826,
+        "selected_slot": 7,
+        "selected_stack": {
+          "id": "axe",
+          "n": 1
+        },
+        "status": "",
+        "tab": "backpack"
+      },
+      "home_key_slot": 4,
+      "initial": {
+        "action_just_pressed": false,
+        "action_pressed": false,
+        "gui_focus": "",
+        "gui_inventory_slot": -1,
+        "gui_stack": {},
+        "hotbar": [
+          "",
+          "",
+          "",
+          "",
+          "home_key"
+        ],
+        "menu_open": false,
+        "physics_frame": 4500,
+        "process_frame": 4402,
+        "selected_slot": 0,
+        "selected_stack": {
+          "id": "home_key",
+          "n": 1
+        },
+        "status": "",
+        "tab": "settings"
+      },
+      "input": "actual InputMap joypad edges, each flushed through a process frame; original 3/5 physics minima",
+      "inventory_unchanged": true,
+      "original_cycle_bound": 6,
+      "passed": true,
+      "phase": "earned_tool_bindings"
+    },
+    {
+      "character": "character-72182430f93eaf582e7ab8666f91eebc",
+      "elapsed_physics_frames": 0,
+      "elapsed_process_frames": 0,
+      "final": {
+        "holder_open": true,
+        "holder_owns_input": false,
+        "holder_path": "/root/ShopPanel",
+        "holder_script": "res://scripts/ui/shop_panel.gd",
+        "interact_just_pressed": false,
+        "interact_pressed": false,
+        "panel_open": true,
+        "panel_path": "/root/ShopPanel",
+        "physics_frame": 8305,
+        "process_frame": 6584,
+        "vendor": "bram"
+      },
+      "initial": {
+        "holder_open": true,
+        "holder_owns_input": false,
+        "holder_path": "/root/ShopPanel",
+        "holder_script": "res://scripts/ui/shop_panel.gd",
+        "interact_just_pressed": false,
+        "interact_pressed": false,
+        "panel_open": true,
+        "panel_path": "/root/ShopPanel",
+        "physics_frame": 8305,
+        "process_frame": 6584,
+        "vendor": "bram"
+      },
+      "original_process_budget": 90,
+      "passed": true,
+      "phase": "earned_shop_input_handoff"
+    },
+    {
+      "attempted_sale": false,
+      "home_key_in_traded_ids": false,
+      "home_key_name": "Home Key",
+      "home_keys": 1,
+      "inventory_unchanged": true,
+      "passed": true,
+      "phase": "shop_key_offer_absent",
+      "reachable_sell_offers": [
+        "Berries x5"
+      ],
+      "vendor": "bram",
+      "vendor_buys_home_key": false,
+      "visible_sell_labels": [
+        "Berries x5",
+        "+2"
+      ]
+    },
+    {
+      "character": "character-72182430f93eaf582e7ab8666f91eebc",
+      "elapsed_physics_frames": 0,
+      "elapsed_process_frames": 0,
+      "final": {
+        "holder_open": true,
+        "holder_owns_input": false,
+        "holder_path": "/root/ShopPanel",
+        "holder_script": "res://scripts/ui/shop_panel.gd",
+        "interact_just_pressed": false,
+        "interact_pressed": false,
+        "panel_open": true,
+        "panel_path": "/root/ShopPanel",
+        "physics_frame": 8398,
+        "process_frame": 6642,
+        "vendor": "bram"
+      },
+      "initial": {
+        "holder_open": true,
+        "holder_owns_input": false,
+        "holder_path": "/root/ShopPanel",
+        "holder_script": "res://scripts/ui/shop_panel.gd",
+        "interact_just_pressed": false,
+        "interact_pressed": false,
+        "panel_open": true,
+        "panel_path": "/root/ShopPanel",
+        "physics_frame": 8398,
+        "process_frame": 6642,
+        "vendor": "bram"
+      },
+      "original_process_budget": 90,
+      "passed": true,
+      "phase": "earned_shop_input_handoff"
+    },
+    {
+      "attempted_sale": false,
+      "home_key_in_traded_ids": false,
+      "home_key_name": "Home Key",
+      "home_keys": 1,
+      "inventory_unchanged": true,
+      "passed": true,
+      "phase": "shop_key_offer_absent",
+      "reachable_sell_offers": [
+        "Berries x5"
+      ],
+      "vendor": "bram",
+      "vendor_buys_home_key": false,
+      "visible_sell_labels": [
+        "Berries x5",
+        "+2"
+      ]
+    },
+    {
+      "character": "character-72182430f93eaf582e7ab8666f91eebc",
+      "elapsed_physics_frames": 0,
+      "elapsed_process_frames": 0,
+      "final": {
+        "holder_open": true,
+        "holder_owns_input": false,
+        "holder_path": "/root/ShopPanel",
+        "holder_script": "res://scripts/ui/shop_panel.gd",
+        "interact_just_pressed": false,
+        "interact_pressed": false,
+        "panel_open": true,
+        "panel_path": "/root/ShopPanel",
+        "physics_frame": 8495,
+        "process_frame": 6703,
+        "vendor": "bram"
+      },
+      "initial": {
+        "holder_open": true,
+        "holder_owns_input": false,
+        "holder_path": "/root/ShopPanel",
+        "holder_script": "res://scripts/ui/shop_panel.gd",
+        "interact_just_pressed": false,
+        "interact_pressed": false,
+        "panel_open": true,
+        "panel_path": "/root/ShopPanel",
+        "physics_frame": 8495,
+        "process_frame": 6703,
+        "vendor": "bram"
+      },
+      "original_process_budget": 90,
+      "passed": true,
+      "phase": "earned_shop_input_handoff"
+    },
+    {
+      "attempted_sale": false,
+      "home_key_in_traded_ids": false,
+      "home_key_name": "Home Key",
+      "home_keys": 1,
+      "inventory_unchanged": true,
+      "passed": true,
+      "phase": "shop_key_offer_absent",
+      "reachable_sell_offers": [
+        "Berries x5"
+      ],
+      "vendor": "bram",
+      "vendor_buys_home_key": false,
+      "visible_sell_labels": [
+        "Berries x5",
+        "+2"
+      ]
+    },
+    {
+      "final": {
+        "action_just_pressed": false,
+        "action_pressed": false,
+        "can_afford": true,
+        "category": "",
+        "cells": [],
+        "cost": [
+          {
+            "id": "wood",
+            "n": 10.0
+          },
+          {
+            "id": "stone",
+            "n": 4.0
+          }
+        ],
+        "earned_stock": {
+          "stone": 8,
+          "wood": 31
+        },
+        "free_build": false,
+        "gui_focus": "",
+        "gui_piece": "",
+        "inventory": [
+          {
+            "id": "home_key",
+            "n": 1
+          },
+          {
+            "id": "orb_basic",
+            "n": 20
+          },
+          {
+            "id": "orb_basic",
+            "n": 20
+          },
+          {
+            "id": "orb_basic",
+            "n": 8
+          },
+          {
+            "id": "potion_small",
+            "n": 3
+          },
+          {
+            "id": "berries",
+            "n": 5
+          },
+          {
+            "id": "revive",
+            "n": 10
+          },
+          {
+            "durability": 32,
+            "id": "axe",
+            "n": 1
+          },
+          {
+            "durability": 38,
+            "id": "pickaxe",
+            "n": 1
+          },
+          {
+            "id": "coin",
+            "n": 140
+          },
+          {
+            "id": "fiber",
+            "n": 37
+          },
+          {
+            "durability": 37,
+            "id": "knife",
+            "n": 1
+          },
+          {
+            "id": "torch",
+            "n": 1
+          },
+          {
+            "id": "hammer",
+            "n": 1
+          },
+          {
+            "id": "wood",
+            "n": 31
+          },
+          {
+            "id": "stone",
+            "n": 8
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "menu_open": false,
+        "message": "",
+        "pending_build": "workbench",
+        "physics_frame": 16865,
+        "process_frame": 10365,
+        "selected_piece": ""
+      },
+      "initial": {
+        "action_just_pressed": false,
+        "action_pressed": false,
+        "can_afford": true,
+        "category": "",
+        "cells": [],
+        "cost": [
+          {
+            "id": "wood",
+            "n": 10.0
+          },
+          {
+            "id": "stone",
+            "n": 4.0
+          }
+        ],
+        "earned_stock": {
+          "stone": 8,
+          "wood": 31
+        },
+        "free_build": false,
+        "gui_focus": "",
+        "gui_piece": "",
+        "inventory": [
+          {
+            "id": "home_key",
+            "n": 1
+          },
+          {
+            "id": "orb_basic",
+            "n": 20
+          },
+          {
+            "id": "orb_basic",
+            "n": 20
+          },
+          {
+            "id": "orb_basic",
+            "n": 8
+          },
+          {
+            "id": "potion_small",
+            "n": 3
+          },
+          {
+            "id": "berries",
+            "n": 5
+          },
+          {
+            "id": "revive",
+            "n": 10
+          },
+          {
+            "durability": 32,
+            "id": "axe",
+            "n": 1
+          },
+          {
+            "durability": 38,
+            "id": "pickaxe",
+            "n": 1
+          },
+          {
+            "id": "coin",
+            "n": 140
+          },
+          {
+            "id": "fiber",
+            "n": 37
+          },
+          {
+            "durability": 37,
+            "id": "knife",
+            "n": 1
+          },
+          {
+            "id": "torch",
+            "n": 1
+          },
+          {
+            "id": "hammer",
+            "n": 1
+          },
+          {
+            "id": "wood",
+            "n": 31
+          },
+          {
+            "id": "stone",
+            "n": 8
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "menu_open": false,
+        "message": "",
+        "pending_build": "",
+        "physics_frame": 16768,
+        "process_frame": 10304,
+        "selected_piece": ""
+      },
+      "input": "actual InputMap joypad edges, each flushed through a process frame; original 2/3 physics minima",
+      "inventory_unchanged": true,
+      "passed": true,
+      "phase": "earned_build_selection",
+      "physical_edges": [
+        {
+          "action": "menu_tab_right",
+          "after": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "can_afford": true,
+            "category": "crafting",
+            "cells": [
+              {
+                "alpha": 1.0,
+                "disabled": false,
+                "focused": true,
+                "id": "workbench",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73359"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "forge",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73362"
+              },
+              {
+                "alpha": 1.0,
+                "disabled": false,
+                "focused": false,
+                "id": "kitchen",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73365"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "altar",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73368"
+              },
+              {
+                "alpha": 1.0,
+                "disabled": false,
+                "focused": false,
+                "id": "den",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73371"
+              },
+              {
+                "alpha": 1.0,
+                "disabled": false,
+                "focused": false,
+                "id": "farm",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73374"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "forge_meadows",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73377"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "forge_tidewake",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73380"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "forge_cloudreach",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73383"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "forge_stormwood",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73386"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "kitchen_meadows",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73389"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "kitchen_tidewake",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73392"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "kitchen_cloudreach",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73395"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "kitchen_stormwood",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73398"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "altar_meadows",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73401"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "altar_tidewake",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73404"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "altar_cloudreach",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73407"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "altar_stormwood",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73410"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "den_meadows",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73413"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "den_tidewake",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73416"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "den_cloudreach",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73419"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "den_stormwood",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73422"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "greenhouse",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73425"
+              }
+            ],
+            "cost": [
+              {
+                "id": "wood",
+                "n": 10.0
+              },
+              {
+                "id": "stone",
+                "n": 4.0
+              }
+            ],
+            "earned_stock": {
+              "stone": 8,
+              "wood": 31
+            },
+            "free_build": false,
+            "gui_focus": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73359",
+            "gui_piece": "workbench",
+            "inventory": [
+              {
+                "id": "home_key",
+                "n": 1
+              },
+              {
+                "id": "orb_basic",
+                "n": 20
+              },
+              {
+                "id": "orb_basic",
+                "n": 20
+              },
+              {
+                "id": "orb_basic",
+                "n": 8
+              },
+              {
+                "id": "potion_small",
+                "n": 3
+              },
+              {
+                "id": "berries",
+                "n": 5
+              },
+              {
+                "id": "revive",
+                "n": 10
+              },
+              {
+                "durability": 32,
+                "id": "axe",
+                "n": 1
+              },
+              {
+                "durability": 38,
+                "id": "pickaxe",
+                "n": 1
+              },
+              {
+                "id": "coin",
+                "n": 140
+              },
+              {
+                "id": "fiber",
+                "n": 37
+              },
+              {
+                "durability": 37,
+                "id": "knife",
+                "n": 1
+              },
+              {
+                "id": "torch",
+                "n": 1
+              },
+              {
+                "id": "hammer",
+                "n": 1
+              },
+              {
+                "id": "wood",
+                "n": 31
+              },
+              {
+                "id": "stone",
+                "n": 8
+              },
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {}
+            ],
+            "menu_open": true,
+            "message": "",
+            "pending_build": "",
+            "physics_frame": 16844,
+            "process_frame": 10355,
+            "selected_piece": "workbench"
+          },
+          "before": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "can_afford": true,
+            "category": "survival",
+            "cells": [
+              {
+                "alpha": 1.0,
+                "disabled": false,
+                "focused": true,
+                "id": "tent",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73305"
+              },
+              {
+                "alpha": 1.0,
+                "disabled": false,
+                "focused": false,
+                "id": "campfire",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73308"
+              },
+              {
+                "alpha": 1.0,
+                "disabled": false,
+                "focused": false,
+                "id": "bedroll",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73311"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "forward_camp",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73314"
+              }
+            ],
+            "cost": [
+              {
+                "id": "wood",
+                "n": 10.0
+              },
+              {
+                "id": "stone",
+                "n": 4.0
+              }
+            ],
+            "earned_stock": {
+              "stone": 8,
+              "wood": 31
+            },
+            "free_build": false,
+            "gui_focus": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73305",
+            "gui_piece": "tent",
+            "inventory": [
+              {
+                "id": "home_key",
+                "n": 1
+              },
+              {
+                "id": "orb_basic",
+                "n": 20
+              },
+              {
+                "id": "orb_basic",
+                "n": 20
+              },
+              {
+                "id": "orb_basic",
+                "n": 8
+              },
+              {
+                "id": "potion_small",
+                "n": 3
+              },
+              {
+                "id": "berries",
+                "n": 5
+              },
+              {
+                "id": "revive",
+                "n": 10
+              },
+              {
+                "durability": 32,
+                "id": "axe",
+                "n": 1
+              },
+              {
+                "durability": 38,
+                "id": "pickaxe",
+                "n": 1
+              },
+              {
+                "id": "coin",
+                "n": 140
+              },
+              {
+                "id": "fiber",
+                "n": 37
+              },
+              {
+                "durability": 37,
+                "id": "knife",
+                "n": 1
+              },
+              {
+                "id": "torch",
+                "n": 1
+              },
+              {
+                "id": "hammer",
+                "n": 1
+              },
+              {
+                "id": "wood",
+                "n": 31
+              },
+              {
+                "id": "stone",
+                "n": 8
+              },
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {}
+            ],
+            "menu_open": true,
+            "message": "",
+            "pending_build": "",
+            "physics_frame": 16839,
+            "process_frame": 10352,
+            "selected_piece": "tent"
+          },
+          "edges": [
+            {
+              "event": "Joypad Button 10 (Right Shoulder, Sony R1, Xbox RB)",
+              "observed": {
+                "action_just_pressed": true,
+                "action_pressed": true,
+                "can_afford": true,
+                "category": "survival",
+                "cells": [
+                  {
+                    "alpha": 1.0,
+                    "disabled": false,
+                    "focused": true,
+                    "id": "tent",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73305"
+                  },
+                  {
+                    "alpha": 1.0,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "campfire",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73308"
+                  },
+                  {
+                    "alpha": 1.0,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "bedroll",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73311"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "forward_camp",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73314"
+                  }
+                ],
+                "cost": [
+                  {
+                    "id": "wood",
+                    "n": 10.0
+                  },
+                  {
+                    "id": "stone",
+                    "n": 4.0
+                  }
+                ],
+                "earned_stock": {
+                  "stone": 8,
+                  "wood": 31
+                },
+                "free_build": false,
+                "gui_focus": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73305",
+                "gui_piece": "tent",
+                "inventory": [
+                  {
+                    "id": "home_key",
+                    "n": 1
+                  },
+                  {
+                    "id": "orb_basic",
+                    "n": 20
+                  },
+                  {
+                    "id": "orb_basic",
+                    "n": 20
+                  },
+                  {
+                    "id": "orb_basic",
+                    "n": 8
+                  },
+                  {
+                    "id": "potion_small",
+                    "n": 3
+                  },
+                  {
+                    "id": "berries",
+                    "n": 5
+                  },
+                  {
+                    "id": "revive",
+                    "n": 10
+                  },
+                  {
+                    "durability": 32,
+                    "id": "axe",
+                    "n": 1
+                  },
+                  {
+                    "durability": 38,
+                    "id": "pickaxe",
+                    "n": 1
+                  },
+                  {
+                    "id": "coin",
+                    "n": 140
+                  },
+                  {
+                    "id": "fiber",
+                    "n": 37
+                  },
+                  {
+                    "durability": 37,
+                    "id": "knife",
+                    "n": 1
+                  },
+                  {
+                    "id": "torch",
+                    "n": 1
+                  },
+                  {
+                    "id": "hammer",
+                    "n": 1
+                  },
+                  {
+                    "id": "wood",
+                    "n": 31
+                  },
+                  {
+                    "id": "stone",
+                    "n": 8
+                  },
+                  {},
+                  {},
+                  {},
+                  {},
+                  {},
+                  {},
+                  {},
+                  {}
+                ],
+                "menu_open": true,
+                "message": "",
+                "pending_build": "",
+                "physics_frame": 16841,
+                "process_frame": 10353,
+                "selected_piece": "tent"
+              },
+              "physics_start": 16839,
+              "pressed": true
+            },
+            {
+              "event": "Joypad Button 10 (Right Shoulder, Sony R1, Xbox RB)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": false,
+                "can_afford": true,
+                "category": "crafting",
+                "cells": [
+                  {
+                    "alpha": 1.0,
+                    "disabled": false,
+                    "focused": true,
+                    "id": "workbench",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73359"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "forge",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73362"
+                  },
+                  {
+                    "alpha": 1.0,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "kitchen",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73365"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "altar",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73368"
+                  },
+                  {
+                    "alpha": 1.0,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "den",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73371"
+                  },
+                  {
+                    "alpha": 1.0,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "farm",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73374"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "forge_meadows",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73377"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "forge_tidewake",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73380"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "forge_cloudreach",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73383"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "forge_stormwood",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73386"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "kitchen_meadows",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73389"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "kitchen_tidewake",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73392"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "kitchen_cloudreach",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73395"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "kitchen_stormwood",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73398"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "altar_meadows",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73401"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "altar_tidewake",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73404"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "altar_cloudreach",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73407"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "altar_stormwood",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73410"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "den_meadows",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73413"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "den_tidewake",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73416"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "den_cloudreach",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73419"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "den_stormwood",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73422"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "greenhouse",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73425"
+                  }
+                ],
+                "cost": [
+                  {
+                    "id": "wood",
+                    "n": 10.0
+                  },
+                  {
+                    "id": "stone",
+                    "n": 4.0
+                  }
+                ],
+                "earned_stock": {
+                  "stone": 8,
+                  "wood": 31
+                },
+                "free_build": false,
+                "gui_focus": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73359",
+                "gui_piece": "workbench",
+                "inventory": [
+                  {
+                    "id": "home_key",
+                    "n": 1
+                  },
+                  {
+                    "id": "orb_basic",
+                    "n": 20
+                  },
+                  {
+                    "id": "orb_basic",
+                    "n": 20
+                  },
+                  {
+                    "id": "orb_basic",
+                    "n": 8
+                  },
+                  {
+                    "id": "potion_small",
+                    "n": 3
+                  },
+                  {
+                    "id": "berries",
+                    "n": 5
+                  },
+                  {
+                    "id": "revive",
+                    "n": 10
+                  },
+                  {
+                    "durability": 32,
+                    "id": "axe",
+                    "n": 1
+                  },
+                  {
+                    "durability": 38,
+                    "id": "pickaxe",
+                    "n": 1
+                  },
+                  {
+                    "id": "coin",
+                    "n": 140
+                  },
+                  {
+                    "id": "fiber",
+                    "n": 37
+                  },
+                  {
+                    "durability": 37,
+                    "id": "knife",
+                    "n": 1
+                  },
+                  {
+                    "id": "torch",
+                    "n": 1
+                  },
+                  {
+                    "id": "hammer",
+                    "n": 1
+                  },
+                  {
+                    "id": "wood",
+                    "n": 31
+                  },
+                  {
+                    "id": "stone",
+                    "n": 8
+                  },
+                  {},
+                  {},
+                  {},
+                  {},
+                  {},
+                  {},
+                  {},
+                  {}
+                ],
+                "menu_open": true,
+                "message": "",
+                "pending_build": "",
+                "physics_frame": 16844,
+                "process_frame": 10355,
+                "selected_piece": "workbench"
+              },
+              "physics_start": 16841,
+              "pressed": false
+            }
+          ]
+        },
+        {
+          "action": "ui_accept",
+          "after": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "can_afford": true,
+            "category": "",
+            "cells": [],
+            "cost": [
+              {
+                "id": "wood",
+                "n": 10.0
+              },
+              {
+                "id": "stone",
+                "n": 4.0
+              }
+            ],
+            "earned_stock": {
+              "stone": 8,
+              "wood": 31
+            },
+            "free_build": false,
+            "gui_focus": "",
+            "gui_piece": "",
+            "inventory": [
+              {
+                "id": "home_key",
+                "n": 1
+              },
+              {
+                "id": "orb_basic",
+                "n": 20
+              },
+              {
+                "id": "orb_basic",
+                "n": 20
+              },
+              {
+                "id": "orb_basic",
+                "n": 8
+              },
+              {
+                "id": "potion_small",
+                "n": 3
+              },
+              {
+                "id": "berries",
+                "n": 5
+              },
+              {
+                "id": "revive",
+                "n": 10
+              },
+              {
+                "durability": 32,
+                "id": "axe",
+                "n": 1
+              },
+              {
+                "durability": 38,
+                "id": "pickaxe",
+                "n": 1
+              },
+              {
+                "id": "coin",
+                "n": 140
+              },
+              {
+                "id": "fiber",
+                "n": 37
+              },
+              {
+                "durability": 37,
+                "id": "knife",
+                "n": 1
+              },
+              {
+                "id": "torch",
+                "n": 1
+              },
+              {
+                "id": "hammer",
+                "n": 1
+              },
+              {
+                "id": "wood",
+                "n": 31
+              },
+              {
+                "id": "stone",
+                "n": 8
+              },
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {}
+            ],
+            "menu_open": false,
+            "message": "",
+            "pending_build": "workbench",
+            "physics_frame": 16857,
+            "process_frame": 10361,
+            "selected_piece": ""
+          },
+          "before": {
+            "action_just_pressed": false,
+            "action_pressed": false,
+            "can_afford": true,
+            "category": "crafting",
+            "cells": [
+              {
+                "alpha": 1.0,
+                "disabled": false,
+                "focused": true,
+                "id": "workbench",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73359"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "forge",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73362"
+              },
+              {
+                "alpha": 1.0,
+                "disabled": false,
+                "focused": false,
+                "id": "kitchen",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73365"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "altar",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73368"
+              },
+              {
+                "alpha": 1.0,
+                "disabled": false,
+                "focused": false,
+                "id": "den",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73371"
+              },
+              {
+                "alpha": 1.0,
+                "disabled": false,
+                "focused": false,
+                "id": "farm",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73374"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "forge_meadows",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73377"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "forge_tidewake",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73380"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "forge_cloudreach",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73383"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "forge_stormwood",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73386"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "kitchen_meadows",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73389"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "kitchen_tidewake",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73392"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "kitchen_cloudreach",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73395"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "kitchen_stormwood",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73398"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "altar_meadows",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73401"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "altar_tidewake",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73404"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "altar_cloudreach",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73407"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "altar_stormwood",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73410"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "den_meadows",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73413"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "den_tidewake",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73416"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "den_cloudreach",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73419"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "den_stormwood",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73422"
+              },
+              {
+                "alpha": 0.400000005960464,
+                "disabled": false,
+                "focused": false,
+                "id": "greenhouse",
+                "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73425"
+              }
+            ],
+            "cost": [
+              {
+                "id": "wood",
+                "n": 10.0
+              },
+              {
+                "id": "stone",
+                "n": 4.0
+              }
+            ],
+            "earned_stock": {
+              "stone": 8,
+              "wood": 31
+            },
+            "free_build": false,
+            "gui_focus": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73359",
+            "gui_piece": "workbench",
+            "inventory": [
+              {
+                "id": "home_key",
+                "n": 1
+              },
+              {
+                "id": "orb_basic",
+                "n": 20
+              },
+              {
+                "id": "orb_basic",
+                "n": 20
+              },
+              {
+                "id": "orb_basic",
+                "n": 8
+              },
+              {
+                "id": "potion_small",
+                "n": 3
+              },
+              {
+                "id": "berries",
+                "n": 5
+              },
+              {
+                "id": "revive",
+                "n": 10
+              },
+              {
+                "durability": 32,
+                "id": "axe",
+                "n": 1
+              },
+              {
+                "durability": 38,
+                "id": "pickaxe",
+                "n": 1
+              },
+              {
+                "id": "coin",
+                "n": 140
+              },
+              {
+                "id": "fiber",
+                "n": 37
+              },
+              {
+                "durability": 37,
+                "id": "knife",
+                "n": 1
+              },
+              {
+                "id": "torch",
+                "n": 1
+              },
+              {
+                "id": "hammer",
+                "n": 1
+              },
+              {
+                "id": "wood",
+                "n": 31
+              },
+              {
+                "id": "stone",
+                "n": 8
+              },
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {}
+            ],
+            "menu_open": true,
+            "message": "",
+            "pending_build": "",
+            "physics_frame": 16852,
+            "process_frame": 10358,
+            "selected_piece": "workbench"
+          },
+          "edges": [
+            {
+              "event": "Joypad Button 0 (Bottom Action, Sony Cross, Xbox A, Nintendo B)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": true,
+                "can_afford": true,
+                "category": "crafting",
+                "cells": [
+                  {
+                    "alpha": 1.0,
+                    "disabled": false,
+                    "focused": true,
+                    "id": "workbench",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73359"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "forge",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73362"
+                  },
+                  {
+                    "alpha": 1.0,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "kitchen",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73365"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "altar",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73368"
+                  },
+                  {
+                    "alpha": 1.0,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "den",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73371"
+                  },
+                  {
+                    "alpha": 1.0,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "farm",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73374"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "forge_meadows",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73377"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "forge_tidewake",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73380"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "forge_cloudreach",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73383"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "forge_stormwood",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73386"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "kitchen_meadows",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73389"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "kitchen_tidewake",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73392"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "kitchen_cloudreach",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73395"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "kitchen_stormwood",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73398"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "altar_meadows",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73401"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "altar_tidewake",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73404"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "altar_cloudreach",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73407"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "altar_stormwood",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73410"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "den_meadows",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73413"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "den_tidewake",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73416"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "den_cloudreach",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73419"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "den_stormwood",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73422"
+                  },
+                  {
+                    "alpha": 0.400000005960464,
+                    "disabled": false,
+                    "focused": false,
+                    "id": "greenhouse",
+                    "path": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73425"
+                  }
+                ],
+                "cost": [
+                  {
+                    "id": "wood",
+                    "n": 10.0
+                  },
+                  {
+                    "id": "stone",
+                    "n": 4.0
+                  }
+                ],
+                "earned_stock": {
+                  "stone": 8,
+                  "wood": 31
+                },
+                "free_build": false,
+                "gui_focus": "/root/@CanvasLayer@73273/Dock/Row/@PanelContainer@73274/@VBoxContainer@73275/@ScrollContainer@73280/@GridContainer@73281/@Button@73359",
+                "gui_piece": "workbench",
+                "inventory": [
+                  {
+                    "id": "home_key",
+                    "n": 1
+                  },
+                  {
+                    "id": "orb_basic",
+                    "n": 20
+                  },
+                  {
+                    "id": "orb_basic",
+                    "n": 20
+                  },
+                  {
+                    "id": "orb_basic",
+                    "n": 8
+                  },
+                  {
+                    "id": "potion_small",
+                    "n": 3
+                  },
+                  {
+                    "id": "berries",
+                    "n": 5
+                  },
+                  {
+                    "id": "revive",
+                    "n": 10
+                  },
+                  {
+                    "durability": 32,
+                    "id": "axe",
+                    "n": 1
+                  },
+                  {
+                    "durability": 38,
+                    "id": "pickaxe",
+                    "n": 1
+                  },
+                  {
+                    "id": "coin",
+                    "n": 140
+                  },
+                  {
+                    "id": "fiber",
+                    "n": 37
+                  },
+                  {
+                    "durability": 37,
+                    "id": "knife",
+                    "n": 1
+                  },
+                  {
+                    "id": "torch",
+                    "n": 1
+                  },
+                  {
+                    "id": "hammer",
+                    "n": 1
+                  },
+                  {
+                    "id": "wood",
+                    "n": 31
+                  },
+                  {
+                    "id": "stone",
+                    "n": 8
+                  },
+                  {},
+                  {},
+                  {},
+                  {},
+                  {},
+                  {},
+                  {},
+                  {}
+                ],
+                "menu_open": true,
+                "message": "",
+                "pending_build": "",
+                "physics_frame": 16854,
+                "process_frame": 10359,
+                "selected_piece": "workbench"
+              },
+              "physics_start": 16852,
+              "pressed": true
+            },
+            {
+              "event": "Joypad Button 0 (Bottom Action, Sony Cross, Xbox A, Nintendo B)",
+              "observed": {
+                "action_just_pressed": false,
+                "action_pressed": false,
+                "can_afford": true,
+                "category": "",
+                "cells": [],
+                "cost": [
+                  {
+                    "id": "wood",
+                    "n": 10.0
+                  },
+                  {
+                    "id": "stone",
+                    "n": 4.0
+                  }
+                ],
+                "earned_stock": {
+                  "stone": 8,
+                  "wood": 31
+                },
+                "free_build": false,
+                "gui_focus": "",
+                "gui_piece": "",
+                "inventory": [
+                  {
+                    "id": "home_key",
+                    "n": 1
+                  },
+                  {
+                    "id": "orb_basic",
+                    "n": 20
+                  },
+                  {
+                    "id": "orb_basic",
+                    "n": 20
+                  },
+                  {
+                    "id": "orb_basic",
+                    "n": 8
+                  },
+                  {
+                    "id": "potion_small",
+                    "n": 3
+                  },
+                  {
+                    "id": "berries",
+                    "n": 5
+                  },
+                  {
+                    "id": "revive",
+                    "n": 10
+                  },
+                  {
+                    "durability": 32,
+                    "id": "axe",
+                    "n": 1
+                  },
+                  {
+                    "durability": 38,
+                    "id": "pickaxe",
+                    "n": 1
+                  },
+                  {
+                    "id": "coin",
+                    "n": 140
+                  },
+                  {
+                    "id": "fiber",
+                    "n": 37
+                  },
+                  {
+                    "durability": 37,
+                    "id": "knife",
+                    "n": 1
+                  },
+                  {
+                    "id": "torch",
+                    "n": 1
+                  },
+                  {
+                    "id": "hammer",
+                    "n": 1
+                  },
+                  {
+                    "id": "wood",
+                    "n": 31
+                  },
+                  {
+                    "id": "stone",
+                    "n": 8
+                  },
+                  {},
+                  {},
+                  {},
+                  {},
+                  {},
+                  {},
+                  {},
+                  {}
+                ],
+                "menu_open": false,
+                "message": "",
+                "pending_build": "workbench",
+                "physics_frame": 16857,
+                "process_frame": 10361,
+                "selected_piece": ""
+              },
+              "physics_start": 16854,
+              "pressed": false
+            }
+          ]
+        }
+      ],
+      "piece": "workbench"
+    },
+    {
+      "input": "interact",
+      "inventory_unchanged": true,
+      "phase": "locked_arch",
+      "portal_actions": [],
+      "realm": "meadows",
+      "reason": "Tidewake · Recommended Lv 20 · Needs the Tidewake Portal Key"
+    },
+    {
+      "actual_position": "(-6.013692, 0.900864, 21.32142)",
+      "arrived": true,
+      "confined_resets": 0,
+      "grounded": true,
+      "headings": [
+        "(96.2, 1.15, 14.0)",
+        "(92.0, 1.0, 14.0)",
+        "(89.6, 1.0, 14.0)",
+        "(13.79, 0.0, 14.0)",
+        "(-5.975521, 0.900843, 21.54754)"
+      ],
+      "original_frame_budget": 10345,
+      "phase": "ordinary_walk",
+      "target": "(-6.0, 1.8, 18.85)",
+      "unstick_count_after": 0,
+      "unstick_count_before": 0
+    },
+    {
+      "expected_counts": {
+        "axe": 2,
+        "fiber": 35,
+        "stone": 1,
+        "wood": 17
+      },
+      "phase": "station_craft",
+      "receipt": "craft:character-72182430f93eaf582e7ab8666f91eebc:7d4613ab7fb1c452a2b90f5750b2a1d1",
+      "recipe": "axe"
+    },
+    {
+      "phase": "save_reload",
+      "waystone": "meadows_trail_camp"
+    },
+    {
+      "arrival": "(344.3, 2.437186, 926.6)",
+      "phase": "portal_return",
+      "position": "(344.3, 2.457722, 926.6)"
+    }
+  ],
+  "setup": "private save-system directory, preserving developer saves"
+}
