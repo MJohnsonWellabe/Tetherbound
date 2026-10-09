@@ -574,6 +574,34 @@ func _capture_ui_craft() -> void:
 				or cost.get_line_count() > cost.get_visible_line_count() \
 				or not _ui_visible_rect(cost).grow(0.5).encloses(cost.get_global_rect()):
 			_failures.append("UI craft: focused recipe preview/material/action hint is missing or clipped")
+			# Preserve failure without inventing a screenshot or a passed UI row.
+			# The next correction must bind the actual false operand, not guess it.
+			var focus := root.gui_get_focus_owner()
+			var owner: Node = preload("res://scripts/ui/input_owner.gd").current(self)
+			_manifest["craft_guard_failure"] = {
+				"fixture": str(prompt.get_path()), "recipe_id": ids[longest],
+				"recipe_count": rows.size(), "expected_selection": longest,
+				"actual_selection": int(panel.get("_selected")),
+				"input_owner": str(owner.get_path()) if owner != null else "",
+				"focus": str(focus.get_path()) if focus != null else "",
+				"focus_visible_rect": str(_ui_visible_rect(focus)) if focus != null else "",
+				"output_present": output != null,
+				"output_text": output.text if output != null else "",
+				"output_visible_rect": str(_ui_visible_rect(output)) if output != null else "",
+				"hint_present": hint != null,
+				"action_hint": hint.text if hint != null else "",
+				"hint_visible_rect": str(_ui_visible_rect(hint)) if hint != null else "",
+				"material_present": cost != null,
+				"material_text": cost.text if cost != null else "",
+				"material_rect": str(cost.get_global_rect()) if cost != null else "",
+				"material_visible_rect": str(_ui_visible_rect(cost)) if cost != null else "",
+				"material_lines": cost.get_line_count() if cost != null else -1,
+				"material_visible_lines": cost.get_visible_line_count() if cost != null else -1,
+				"material_clip_text": cost.clip_text if cost != null else null,
+				"material_overrun": cost.text_overrun_behavior if cost != null else null,
+				"material_fully_visible": cost != null and _ui_visible_rect(cost).grow(0.5).encloses(cost.get_global_rect()),
+				"viewport_size": str(root.size), "state_guard_pass": false,
+			}
 		else:
 			await _shoot_ui("ui-craft-longest-known", panel, panel.get("_root"), {
 				"fixture": str(prompt.get_path()), "recipe_id": ids[longest],
