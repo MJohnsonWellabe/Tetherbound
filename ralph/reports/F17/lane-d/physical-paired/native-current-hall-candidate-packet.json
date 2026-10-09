@@ -1,0 +1,64 @@
+{
+  "guards": "2ef5 actualfloor/camera/raster diagnostic and37886379900 genuine6-test APPROVE retained for unchanged affected paths; no duplicateguard job",
+  "changes": "Existing source-approved endwall cloth, arch frame depth and aperture depth processcandidates only. New Meadowsrelic display explicitlybaseline/OFF and no hung-relic witness claim.",
+  "scheduler": "ROOT-only serialized native GPU; no hostedGPU",
+  "flags": "All shippingOFF",
+  "expected": {
+    "times": [
+      "day",
+      "night"
+    ],
+    "hall_stills_finished": true,
+    "complete": false,
+    "presets": [
+      "Medium",
+      "High"
+    ],
+    "frames": 24,
+    "weather": [
+      "clear",
+      "rain"
+    ],
+    "labels": [
+      "inside Hall nave",
+      "pedestal meadows",
+      "companion in Shrine Room"
+    ]
+  },
+  "args": [
+    "--preset=Medium",
+    "--paired-high",
+    "--hall-stills-only",
+    "--source-commit=7e3791edaa9a7471f3af8b3ac7fb6a92acb9c1e3",
+    "--output=res://ralph/reports/F17/lane-d/physical-paired/native-7e379-hall-candidates",
+    "--hall-endwall-candidate",
+    "--hall-arch-depth-candidate",
+    "--hall-surface-depth-candidate",
+    "--hall-relic-display-baseline"
+  ],
+  "preserved": "Original controller farmdoor→road→nave and8arch/8pedestal circuit, unchanged stands/poses, samebody/healthydeployedcompanion/recall guards, sourcepin, nativeencodedraster and material/state bindings",
+  "before": "Original source75a24 OFFHallimages/runtimeAPP + originalblindBLOCK preserved. Reuse only after SAMEoriginal sourcebinding/pose/raster checks; no unchanged fullbar rerun/soleitemattribution claim from combinedcandidates.",
+  "engine_args": [
+    "--rendering-method",
+    "forward_plus",
+    "--rendering-driver",
+    "vulkan",
+    "--resolution",
+    "1920x1080"
+  ],
+  "command_review": "PENDING SAME original; do notlaunch until APPROVE",
+  "source": "7e3791edaa9a7471f3af8b3ac7fb6a92acb9c1e3",
+  "related_unit": "7e379 shrine4-test37891179639 actual4/0/exit0/4s/0engineerrorswarnings; originalartifact review pending",
+  "script": "tools/capture_f17_visual.gd",
+  "excluded": [
+    "furniture lift parked4/4",
+    "parkedF19",
+    "Low bank37763616872 alreadyPASS, norepeat",
+    "hungrelic candidate witness",
+    "whole F17/F38/F26",
+    "performance",
+    "earned route",
+    "device"
+  ],
+  "criterion": "F17#6 OPEN; bounded Hall visual candidate packet, notwhole acceptance"
+}
