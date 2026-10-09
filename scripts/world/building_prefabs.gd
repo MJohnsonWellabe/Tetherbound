@@ -186,7 +186,11 @@ static func hall_doorway_recipe(source: Dictionary, cfg: Dictionary, args: Packe
 	var ceiling := 0.0
 	var header: Dictionary = {}
 	for box: Dictionary in result.get("colliders", []):
-		if box.at == [7, 5.2, 0] and box.size == [0.45, 2.08, 4]:
+		var at: Array = box.get("at", [])
+		var size: Array = box.get("size", [])
+		if at.size() == 3 and size.size() == 3 and \
+				float(at[0]) == 7.0 and float(at[1]) == 5.2 and float(at[2]) == 0.0 and \
+				float(size[0]) == 0.45 and float(size[1]) == 2.08 and float(size[2]) == 4.0:
 			header = box
 			ceiling = float(box.at[1]) + float(box.size[1]) * 0.5
 	var height := float(cfg.get("clear_height_m", 5.2))
