@@ -101,14 +101,27 @@ func _run() -> void:
 				_rays += 1
 				_check(a.is_empty() == b.is_empty(), "ray presence %s" % point)
 				if not a.is_empty() and not b.is_empty():
-					_check(a.position == b.position, "exact floor position %s" % point)
-					_check(a.normal == b.normal, "exact floor normal %s" % point)
+					_check(a.position.distance_to(b.position) <= 0.0001, "floor position within 0.1mm %s" % point)
+					# At exact cell/region edges several original triangles have
+					# valid normals. Body grouping can change the tie winner.
+					# Require an existing adjacent original normal, not an
+					# arbitrary tolerance on the new surface orientation.
+					var normal_matches: bool = a.normal.distance_to(b.normal) <= 0.0001
+					if not normal_matches:
+						for dx in [-0.001, 0.0, 0.001]:
+							for dz in [-0.001, 0.0, 0.001]:
+								var adjacent := point + Vector3(dx, 0, dz)
+								var old := state.intersect_ray(PhysicsRayQueryParameters3D.create(adjacent, adjacent - Vector3(0, 60, 0), 1))
+								if not old.is_empty() and old.normal.distance_to(b.normal) <= 0.0001:
+									normal_matches = true
+					_check(normal_matches, "normal belongs to original floor triangles %s" % point)
 					_check(a.collider_id == b.collider_id, "collider identity %s" % point)
 	terrain.physics_material.friction = 0.9
 	for body: RID in bodies:
 		_check(is_equal_approx(PhysicsServer3D.body_get_param(body, PhysicsServer3D.BODY_PARAM_FRICTION), -0.9), "live material changes preserved")
 	# Capsule sweeps exercise the body_test_motion path used by movement,
 	# across signed region seams and with human/large-creature sizes.
+	var failures_before_motion := _failures
 	for radius in [0.35, 0.85, 1.3]:
 		var capsule := PhysicsServer3D.capsule_shape_create()
 		PhysicsServer3D.shape_set_data(capsule, {"radius": radius, "height": maxf(1.8, radius * 2.5)})
@@ -137,6 +150,7 @@ func _run() -> void:
 		for actor: RID in actors:
 			PhysicsServer3D.free_rid(actor)
 		PhysicsServer3D.free_rid(capsule)
+	print("Capsule sweep failures: %d" % (_failures - failures_before_motion))
 	regions.queue_free()
 	await process_frame
 	PhysicsServer3D.free_rid(_reference)

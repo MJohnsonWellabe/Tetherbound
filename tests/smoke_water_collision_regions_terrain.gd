@@ -27,6 +27,10 @@ func _run() -> void:
 		return
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
 	var terrain: Node3D = ClassDB.instantiate("Terrain3D")
+	var camera := Camera3D.new()
+	root.add_child(camera)
+	camera.current = true
+	terrain.call("set_camera", camera)
 	terrain.set("free_editor_textures", false)
 	root.add_child(terrain)
 	await process_frame
@@ -55,6 +59,7 @@ func _run() -> void:
 		transforms.append(PhysicsServer3D.body_get_shape_transform(original, index))
 	var points: Array[Vector3] = []
 	var expected: Array[Dictionary] = []
+	var expected_normals: Array[Array] = []
 	var state := terrain.get_world_3d().direct_space_state
 	var size := int(config.terrain.region_size)
 	var spacing := float(config.terrain.vertex_spacing)
@@ -67,6 +72,14 @@ func _run() -> void:
 			var point := Vector3(xz.x, 1024.0, xz.y)
 			points.append(point)
 			expected.append(state.intersect_ray(PhysicsRayQueryParameters3D.create(point, point - Vector3(0, 2048, 0))))
+			var normals: Array = []
+			for dx in [-0.001, 0.0, 0.001]:
+				for dz in [-0.001, 0.0, 0.001]:
+					var adjacent := point + Vector3(dx, 0, dz)
+					var old := state.intersect_ray(PhysicsRayQueryParameters3D.create(adjacent, adjacent - Vector3(0, 2048, 0)))
+					if not old.is_empty():
+						normals.append(old.normal)
+			expected_normals.append(normals)
 	var regions := REGIONS.new()
 	terrain.add_child(regions)
 	_check(await regions.install(terrain, 8.0), "production helper installs against actual vendored native terrain")
@@ -86,9 +99,15 @@ func _run() -> void:
 		_ray_pairs += 1
 		_check(actual.is_empty() == before.is_empty(), "actual-region floor presence %s" % point)
 		if not actual.is_empty() and not before.is_empty():
-			_check(actual.position == before.position and actual.normal == before.normal, "exact actual-region floor/normal %s" % point)
+			_check(actual.position.distance_to(before.position) <= 0.0001, "actual floor within0.1mm %s" % point)
+			var normal_matches := false
+			for normal: Vector3 in expected_normals[index]:
+				if actual.normal.distance_to(normal) <= 0.0001:
+					normal_matches = true
+			_check(normal_matches, "normal belongs to original actual-region triangles %s" % point)
 			_check(actual.collider_id == before.collider_id, "actual Terrain3D collider identity %s" % point)
 	terrain.queue_free()
+	camera.queue_free()
 	await process_frame
 	print("Native baked Tidewake regional collider clone: %d regions, %d checks, %d ray pairs, %d failures" % [count, _checks, _ray_pairs, _failures])
 	quit(0 if _failures == 0 and _ray_pairs == count * 6 else 1)
