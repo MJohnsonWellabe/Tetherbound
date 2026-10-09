@@ -6,6 +6,8 @@ extends "res://tests/helpers/net_harness.gd"
 ## scenario of scripted steps, and each peer's saved world plus screenshots.
 ##
 ##   tools/net/run_two_peer_proof.sh <scenario.json> [--render] [--out=DIR]
+## Existing hosted offload may instead supply --proof-scenario=res://... and
+## --proof-out=res://ralph/reports/...; the environment launcher stays valid.
 ##
 ## The scenario is JSON (worked example: `tools/net/proof_scenarios/f11_stormheart_accept_refuse.json`):
 ##
@@ -90,6 +92,39 @@ func _initialize() -> void:
 func _run() -> void:
 	var path := OS.get_environment("TB_PROOF_SCENARIO")
 	_proof_out = OS.get_environment("TB_PROOF_OUT")
+	var cli_inputs := {}
+	for arg: String in OS.get_cmdline_user_args():
+		for option: String in ["--proof-scenario=", "--proof-out="]:
+			if not arg.begins_with(option):
+				continue
+			var value := arg.trim_prefix(option)
+			if cli_inputs.has(option) or value.is_empty():
+				check(false, "proof CLI inputs must be nonempty and unique")
+				await _end({}, path)
+				return
+			cli_inputs[option] = value
+	if not cli_inputs.is_empty():
+		if not cli_inputs.has("--proof-scenario=") or not cli_inputs.has("--proof-out="):
+			check(false, "proof CLI requires both scenario and output")
+			await _end({}, path)
+			return
+		var cli_path: String = cli_inputs["--proof-scenario="]
+		var cli_out: String = ProjectSettings.globalize_path(cli_inputs["--proof-out="])
+		if (not path.is_empty() and path != cli_path) \
+				or (not _proof_out.is_empty() and ProjectSettings.globalize_path(_proof_out) != cli_out) \
+				or not OS.get_environment("TB_NET_OUT_DIR").is_empty():
+			check(false, "proof CLI must not override environment inputs")
+			await _end({}, path)
+			return
+		if DirAccess.dir_exists_absolute(cli_out):
+			check(false, "proof CLI output must be fresh")
+			await _end({}, path)
+			return
+		path = cli_path
+		_proof_out = cli_out
+		OS.set_environment("TB_PROOF_SCENARIO", path)
+		OS.set_environment("TB_PROOF_OUT", _proof_out)
+		OS.set_environment("TB_NET_OUT_DIR", _proof_out.path_join("net"))
 	var scenario: Variant = JSON.parse_string(FileAccess.get_file_as_string(path)) \
 		if not path.is_empty() and FileAccess.file_exists(path) else null
 	if not (scenario is Dictionary):

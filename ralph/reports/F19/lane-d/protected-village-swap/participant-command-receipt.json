@@ -1,0 +1,28 @@
+{
+  "criterion": "F19#4 OPEN",
+  "source": "a51b158cbca05b0bebb2fa594b5528b8210f63b7",
+  "original_command_review": "01a11eea-9c03-7a03-854b-62fe823f84c3; same original f42 reviewer",
+  "commands": [
+    {
+      "status": "pending",
+      "args": "empty",
+      "run": 37884103324,
+      "script": "tests/smoke_water_guardian_ceremony.gd",
+      "limit_minutes": 10,
+      "mode": "headless/Dummy",
+      "scope": "Local space/capacity ceremony; not simultaneous entitlement"
+    },
+    {
+      "status": "pending",
+      "args": "empty",
+      "run": 37884105188,
+      "script": "tests/smoke_net_veridian_mixed.gd",
+      "limit_minutes": 15,
+      "mode": "headless/Dummy",
+      "scope": "Two-peer mixed with space; not capacity"
+    }
+  ],
+  "undispatched": "Stormheart15min rejected because it truncates3600s internal budget; empty args select mixed only; no run issued",
+  "ci_reuse": "37846358978 engine jobs green at7c7d25873; current Game/Session/director differences prevent green-only reuse",
+  "whole_gap": "Veridian solo pending, capacity participants; Guardian simultaneous entitlement; Solmane two-peer entitlement/reconnect; Stormheart mixed/reverse/both"
+}
