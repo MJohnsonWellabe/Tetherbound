@@ -363,6 +363,49 @@ func test_feast_buttons_require_the_actual_locked_tier_and_never_reoffer_a_lifte
 		if tier > 1:
 			assert_false(PANEL.feast_matches_current_cap(card, mirror, prior), "a cleared tier is never offered")
 		assert_eq(owner, original, "presentation cannot change personal state")
+		# The same admitted card exercises the cost/type clause for all five
+		# live tiers. Stock and learned recipe are disclosed planner fixtures.
+		var recipe_id := "feast_t%d_ground" % tier
+		var recipe: Dictionary = rules.feasts().recipes[recipe_id]
+		var stocked := owner.duplicate(true)
+		stocked.redesign_character.feast_recipes.append(recipe.feast_id)
+		stocked.inventory = []
+		for item: String in recipe.cost:
+			stocked.inventory.append({"id": item, "n": int(recipe.cost[item])})
+		var context := {"station_id": "kitchen", "homestead": true, "in_range": true,
+			"in_combat": false, "effective_tier": int(recipe.station_tier)}
+		var craft_id := "0123456789abcdef0123456789abcdef"
+		var before_cook := stocked.duplicate(true)
+		var poor := stocked.duplicate(true)
+		poor.inventory = poor.inventory.filter(func(slot: Dictionary) -> bool: return slot.id != "attuned_ground")
+		assert_eq(rules.prepare_cook(poor, recipe_id, craft_id, context).get("code"), "ingredients_or_satchel_room")
+		var field_context := context.duplicate(true)
+		field_context.homestead = false
+		assert_eq(rules.prepare_cook(stocked, recipe_id, craft_id, field_context).get("code"), "ascension_feasts_require_homestead_kitchen")
+		var cooked: Dictionary = rules.prepare_cook(stocked, recipe_id, craft_id, context)
+		assert_true(cooked.get("ok") == true, "actual tier %d Kitchen planner: %s" % [tier, str(cooked)])
+		if cooked.get("ok") != true: continue
+		assert_eq(stocked, before_cook, "paid cooking stages a detached candidate")
+		assert_eq(cooked.state.inventory, [{"id": recipe_id, "n": 1}], "exact authored cost leaves one cooked feast")
+		assert_eq(cooked.state.redesign_character.transaction_receipts.count(cooked.receipt), 1)
+		var cook_replay: Dictionary = rules.prepare_cook(cooked.state, recipe_id, craft_id, context)
+		assert_true(cook_replay.get("duplicate") == true)
+		assert_eq(cook_replay.state, cooked.state, "the original cooking receipt cannot debit or grant again")
+		var before_feed: Dictionary = cooked.state.duplicate(true)
+		var feed_context := {"in_combat": false, "owns_character": true}
+		var species_types := func(id: String) -> Array: return [SPECIES.definition(id).get("type", "")]
+		var wrong: Dictionary = rules.prepare_feed(cooked.state, str(card.uid), "feast_t%d_water" % tier,
+			"", feed_context, species_types, Callable(EVOLUTION, "prepare_feast_choice"), Callable(rules, "refresh_feast_moves"))
+		assert_eq(wrong.get("code"), "attuned_ingredient_must_match_creature")
+		assert_eq(cooked.state, before_feed, "a wrong-type refusal consumes no item or cap")
+		var fed: Dictionary = rules.prepare_feed(cooked.state, str(card.uid), recipe_id, "", feed_context,
+			species_types, Callable(EVOLUTION, "prepare_feast_choice"), Callable(rules, "refresh_feast_moves"))
+		assert_true(fed.get("ok") == true, "actual tier %d matching feed planner: %s" % [tier, str(fed)])
+		if fed.get("ok") != true: continue
+		assert_eq(fed.state.inventory, [], "one creature consumes the one cooked feast")
+		assert_eq(int(fed.state.redesign_character.creatures[card.uid].cap_level), (tier + 1) * 10)
+		assert_eq(int(fed.state.party[0].level), tier * 10, "cap lift grants no unearned levels")
+		assert_eq(cooked.state, before_feed, "feeding stages a detached candidate")
 	assert_false(PANEL.feast_matches_current_cap({}, {}, {}), "missing state has no offer")
 
 func test_guest_master_refusal_releases_only_the_matching_attempt() -> void:
