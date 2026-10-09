@@ -1,0 +1,90 @@
+{
+  "reviewer": "original /root/review_cloud_startup (Ohm), 01a11679-fc2c-7873-bccd-423c1e04476d",
+  "scope": "TEMP-only read-only gate geometric operand observer in the existing Cloudreach frame-matrix producer; no implementation or execution",
+  "scope_verdict": "ALLOW_BOUNDED_ADAPTATION",
+  "adapted_temp_source_verdict": "REQUEST_CHANGES",
+  "original_temp": {
+    "path": "D:/CodexTemp/e-gate-render-support-401977.patch",
+    "sha256": "f7af6f1050ad7b4801e3277bcd193de51b111d834357ff99cf0379bc1b991377",
+    "disposition": "Wrong producer/schema for the intended legacy frame matrix; superseded for adaptation assessment, never applied or source-approved"
+  },
+  "adapted_temp": {
+    "patch_path": "D:/CodexTemp/e-gate-frame-matrix-operand-candidate/gate-frame-matrix-operand.patch",
+    "patch_sha256": "a2f65c1f37dda88dc4fab90ca1d76babff230f725483f963f1e070229752cb6c",
+    "producer_path": "D:/CodexTemp/e-gate-frame-matrix-operand-candidate/capture_cloudreach_frame_matrix.gd",
+    "producer_sha256": "bc84c9dc7a9cf61ebc4f564965a220f2159a67a2d4de454b0fcd999ed4b3526c",
+    "workspace_base_producer_git_blob": "221b0fe18cee1eb655044926bee409022c3dd200",
+    "pinned_commit": null,
+    "parse_runtime_status": "UNRUN"
+  },
+  "supported_source_facts": [
+    "Hook is after the original valid pose and nonempty LANE.save_frame result for existing rows 1 or 4. The local name is the same string save_frame stores under frame.name; it is not a numeric F40 row ID.",
+    "Sampling occurs once through _gate_support_receipt. It reads mounted Landmarks/RealmGateCrag meshes, actual vertex arrays/AABBs and global transforms without changing player, camera, geometry, collider or world state.",
+    "Existing source builds one WallEntranceBricks gateway, two SmallSquareTowerBricks GateWatchPillars and three configured BoxMesh approach_pavers. _castle_piece preserves the imported resource and positions its native mesh bottom through the actual scale/transform.",
+    "Candidate source geology names match StratifiedCliffBody, CarvedCrown, parent *CliffShoulders/Ridge* and AuthoredRoutes/*Trail*. Indexed and unindexed PRIMITIVE_TRIANGLES are transformed to world space before the existing static GroundCover._triangle_height XZ barycentric interpolation.",
+    "No registered road-plan heights, hidden collision Ground/LedgeCap boxes or physics-support substitution are sampled.",
+    "Missing mounted gate/empty query status is appended to existing _skips; named High invocation would inherit nonzero failure when skips exist. Original PNG/production rig/stand/floor/receipt checks remain present."
+  ],
+  "required_changes": [
+    {
+      "id": "GATE-OPERANDS-01",
+      "finding": "Success status depends only on out.queries being nonempty. If one resource target or paver is missing/unqueryable, other targets can still yield sampled_mounted_render_triangles and no failure.",
+      "correction": "Validate and record the expected mounted target roster: one gateway, two source watch-pillars and all three configured approach_pavers. Require nonempty finite bottom queries per expected target, with explicit incomplete status and existing failure propagation for missing/malformed targets. Do not require a positive hit: no finite XZ hit may be a valid negative geometric observation."
+    },
+    {
+      "id": "GATE-OPERANDS-02",
+      "finding": "The added final receipt.contains(_gate_support_receipt) is substring membership, not exact persisted observer-line equality.",
+      "correction": "Use exact complete-line equality for the intended observer string in the persisted receipt, retaining the existing open/flush/get_error/readback failure exit. Record the successful captured frame name in that same line."
+    }
+  ],
+  "measurement_limits": [
+    "Local AABB minimum-Y mesh vertices and paver underside centre are imported geometric samples, not proof of biological root, alpha-visible foliage, walkability, physical contact or contact acceptance.",
+    "GroundCover._triangle_height interpolates finite XZ columns independent of normal/winding, collider, clipping, alpha, visibility range, back-face culling and actual framebuffer contribution.",
+    "is_visible_in_tree does not prove a triangle rendered into the shutter. AuthoredRoutes trails are transparent masked overlays; their hits must remain identifiable by mesh path/overlay provenance and must not be treated as opaque terrain/physical support.",
+    "unsupported_xz and no_support_below_foot are restricted to this selected source-mesh set. They do not establish absence of all world geometry/support or a defect cause.",
+    "Only matching meshes are indexed in the receipt. Zero matching support triangles with a complete target roster can be a legitimate measured negative; incomplete target collection cannot.",
+    "No parser/import/native/runtime/performance or pixel/art proof was run. After corrections, the complete actual adapted source must receive bounded source approval and a real pinned source identity before ROOT measurement."
+  ],
+  "allowed_next_scope": "Correct only this existing producer observer and persistence guards; a future ROOT-only existing --only=1,4 High1920 measurement may sample once after an original valid saved frame. No new harness, scene, class, fixture, selector bypass, gameplay patch or full96 recapture for logging.",
+  "commands": "No exact native command approval requested or granted; no source pin exists for the TEMP adaptation.",
+  "preserved_history": "19ed/5d58 Gate seating attempts remain parked/withdrawn. Existing401 pin and UI48bd source/commands remain separate and unchanged. No contact, P2-025, F40 or whole-cluster promotion.",
+  "correction_reviews": [
+    {
+      "verdict": "APPROVE bounded unpinned TEMP SOURCE adaptation; no parse/runtime/pin/command approval",
+      "patch_path": "D:/CodexTemp/e-gate-frame-matrix-operand-candidate/gate-frame-matrix-operand-r2.patch",
+      "patch_sha256": "4a48539bf80db878d348686c44046e21a1ef49ec6c9a6650b6e538c3b8661db2",
+      "producer_path": "D:/CodexTemp/e-gate-frame-matrix-operand-candidate/capture_cloudreach_frame_matrix-r2.gd",
+      "producer_sha256": "7234a78831fb3a71541c80f7f6c523a75c25d74a3a6880e4d20f4241a28acaef",
+      "immutable_r1_patch_sha256": "a2f65c1f37dda88dc4fab90ca1d76babff230f725483f963f1e070229752cb6c",
+      "immutable_r1_producer_sha256": "bc84c9dc7a9cf61ebc4f564965a220f2159a67a2d4de454b0fcd999ed4b3526c",
+      "review_scope": "R1→R2 complete-target and exact-line corrections only; prior geometry/sampling interpretation and scope reused without re-audit",
+      "closed_findings": [
+        {
+          "id": "GATE-OPERANDS-01",
+          "evidence": "Expected counts derive facade1/tower2 plus the actual authored approach_pavers array size3. Each child is collected once from its actual mounted parent; actual source resource paths distinguish facade/towers, approach_paver metadata identifies pavers. Observed role counts, unique NodePaths and per-target bottom query counts are recorded; empty per-target feet or mismatched roster returns incomplete_mounted_target_roster_or_bottom_queries. The existing hook appends this to skips, so named High final completion fails. Config parse failure returns explicit missing_authored_target_config and its exact text SHA256 is recorded."
+        },
+        {
+          "id": "GATE-OPERANDS-02",
+          "evidence": "Final readback uses receipt.split(\"\\n\").has(_gate_support_receipt), requiring exact entire line membership. Existing open/flush/get_error/close/readback and named skip failure gate are unchanged."
+        }
+      ],
+      "negative_operand_honesty": "Complete target/query set with no finite selected-mesh triangle intersections is still a valid negative geometric sample. No positive hit, contact, walkability or opaque rendered-surface PASS is required or inferred.",
+      "remaining_nonblocking_note": "R1→R2 also changes three header § comment tokens to Â§ (encoding artefact). Restore original comment bytes in the eventual transplant; this changes no GDScript logic and is not a guard blocker.",
+      "limits": [
+        "TEMP adaptation not applied to repository or engine",
+        "No parser/import/type/runtime validation",
+        "Actual native sample must independently verify finite query/transformed triangle records and actual target/config source identity",
+        "Existing trail-overlay/winding/visibility/collider/geometric-foot interpretation limits remain",
+        "No prospective contact fix, visual/P2/F40/wholecriteria or READY claim",
+        "Pinned complete-source identity and exact command applicability review remain required before ROOT measurement"
+      ],
+      "pending_gates": [
+        "Actual adapted-source pin/blob binding",
+        "Exact existing two-row native command applicability",
+        "ROOT parser/import and terminal immutable operand receipt/images/source verification"
+      ]
+    }
+  ],
+  "current_adapted_temp_source_verdict": "APPROVE bounded R2 TEMP SOURCE only",
+  "current_pinned_native_command_verdict": "PENDING: no adapted-source pin or exact command approved"
+}
