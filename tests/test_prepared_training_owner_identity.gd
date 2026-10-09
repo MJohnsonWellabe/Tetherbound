@@ -195,11 +195,6 @@ func test_actual_prepared_writer_preserves_full_v2_and_v3_pending_owner_projecti
 		assert_eq(FileAccess.get_file_as_bytes(store.call("path_for", CHARACTER)), bytes_before)
 		assert_true(game.session.call("owns_input") == true, "sleep cannot discard the original ACK hold")
 		_close(game, directory)
-
-func test_actual_rematch_owner_bool_retry_and_two_world_files_preserve_the_owning_paid_clock() -> void:
-	const ACTIONS = preload("res://scripts/net/character_action_rules.gd")
-	const DELIVERY = preload("res://scripts/net/character_action_delivery.gd")
-	const OWNER = preload("res://scripts/net/character_action_owner.gd")
 	const AUTHORITY = preload("res://scripts/net/character_authority.gd")
 	var directory := "user://test_prepared_rematch_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
 	var game := _game(directory)
