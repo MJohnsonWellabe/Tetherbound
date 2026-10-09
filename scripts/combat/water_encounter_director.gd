@@ -56,6 +56,7 @@ class SurfaceWild:
 		return true
 
 	func _physics_process(delta: float) -> void:
+		if has_meta(&"ambient_host_mirror"): return
 		super._physics_process(delta)
 		var at := global_position
 		at.y = surface_origin_y()
@@ -299,6 +300,7 @@ func _spawn_available_sites() -> void:
 		for plan: Dictionary in plans:
 			var index := int(plan.member_index)
 			var opts: Dictionary = plan.opts.duplicate(true)
+			opts.ambient_source_id = "site:%s:%d" % [id, index]
 			opts.ordinary_trait_alpha = not str(plan.id).is_empty()
 			var spawn_at := _vector3_of(plan.position)
 			if not authored_members.is_empty():
@@ -381,6 +383,7 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 		var original_once := str(plan.opts.get("once_id", ""))
 		var opts: Dictionary = plan.opts.duplicate(true)
 		opts.retained_alpha_pending = true
+		opts.ambient_source_id = "site:%s:0" % str(site.id)
 		# The original once flag continues to suppress first rewards. The new
 		# durable generation admits only this fresh authored body and UID.
 		if int(packet.captured_from.spawn_generation) > 1: opts.once_id = ""
@@ -442,6 +445,8 @@ func _spawn_surface_wild(species: String, spot: Vector3, opts: Dictionary,
 		return null
 	var wild: Node3D = CREATURE_SCENE.instantiate()
 	wild.set_script(SurfaceWild)
+	if opts.get("ambient_source_id") is String:
+		wild.set_meta(&"ambient_source_id", opts.ambient_source_id)
 	wild.name = str(opts.get("name", "SurfaceWild_%s_%d" % [species, _wild_creatures.size() + 1]))
 	var parent: Node = opts.get("parent", null) as Node
 	if not is_instance_valid(parent):

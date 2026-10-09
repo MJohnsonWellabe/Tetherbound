@@ -182,6 +182,15 @@ var _player: CharacterBody3D = null
 var _manager: Node = null
 var _camera_rig: Node = null
 var _wild_creatures: Array[Node3D] = []
+## Transient host-issued ambient lifetimes. Authored source ids locate presentation
+## slots; only the opaque host token can admit the host's actual body.
+var _ambient_host_sources: Dictionary = {}
+var _ambient_guest_sources: Dictionary = {}
+var _ambient_publish_left := 0.0
+var _ambient_publish_serial := 0
+var _ambient_pending_token := ""
+var _ambient_pending_deadline := 0
+var _ambient_guest_body: WeakRef
 var _engaged_with: Node3D = null
 var _ally_body: Node3D = null
 # Transient director-instance readiness; never serialized. Only the exact
@@ -1181,6 +1190,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			# already the identity this name wanted.
 			wild.name = "Wild_%s_%d_%d" % [species, int(spawn.get("order", index)), n + 1]
 			wild.set_script(WILD_SCRIPT)
+			wild.set_meta(&"ambient_source_id", "table:%d:%d" % [int(spawn.get("order", index)), n])
 			get_parent().add_child(wild)
 			var spot := _pick_clear_spot(centre, radius, rng)
 			# F03#0: an alpha whose block sets `stand_at_centre` stands on its
@@ -1801,6 +1811,254 @@ func _initialize_wild_traits(wild: Node3D, alpha: bool = false) -> void:
 	wild.set_meta("ordinary_trait_world", weakref(game.get("world")))
 	wild.set_meta("ordinary_trait_uid", str(creature.get("uid")))
 
+## Same authenticated world/transport lifetime as the saved wild actor path.
+## This does not enable the actor-vitals flag or create portable ambient state.
+func _ambient_scope() -> Dictionary:
+	if MATH.config().get("actor_vitals", {}).get("runtime_enabled") != true or _session == null: return {}
+	var game: Node = _session.call("_game")
+	if game == null or game.get("session") != _session or game.get("world") == null: return {}
+	var epoch: String = _session.call("_altar_current_epoch")
+	var namespace_id: String = game.get("world").reward_delivery_namespace
+	if epoch.is_empty() or namespace_id.is_empty(): return {}
+	return {"world_namespace": namespace_id, "session_id": epoch, "realm": _encounter_realm()}
+
+
+func _ambient_body(source_id: String) -> Node3D:
+	var found: Node3D
+	for body: Node3D in _wild_creatures:
+		if not is_instance_valid(body) or body.is_queued_for_deletion() \
+			or str(body.get_meta(&"ambient_source_id", "")) != source_id: continue
+		if found != null: return null
+		found = body
+	return found
+
+
+func _tick_ambient_wild_sources(delta: float) -> void:
+	if not _ambient_pending_token.is_empty() and Time.get_ticks_msec() >= _ambient_pending_deadline:
+		_ambient_pending_token = ""
+		_ambient_pending_deadline = 0
+	if not _is_multi_peer(): return
+	var scope := _ambient_scope()
+	if scope.is_empty(): return
+	_ambient_publish_left -= delta
+	if _ambient_publish_left > 0.0: return
+	_ambient_publish_left = 1.0 / maxf(1.0, float(ENCOUNTER_HOST_SCRIPT.config().get("shared_opponent_presentation_hz", 10.0)))
+	if not _is_host():
+		# Ambushes request the same token as a tap; they never start a local fight.
+		for packet: Dictionary in _ambient_guest_sources.values():
+			var body := _ambient_body(str(packet.source_id))
+			if body != null and body.visible and bool(body.get("aggressive")) and _player != null \
+				and _player.global_position.distance_to(body.global_position) <= _engage_range:
+				_on_wild_wants_to_engage(body)
+		return
+	var context: Dictionary = _session.call("_host_wild_training_context")
+	if context.get("ready") != true or context.get("world_namespace") != scope.world_namespace \
+		or context.get("session_id") != scope.session_id: return
+	_ambient_publish_serial += 1
+	var packets: Array[Dictionary] = []
+	for source_id: String in _ambient_host_sources.keys():
+		var source: Dictionary = _ambient_host_sources[source_id]
+		var retained: Node3D = source.body.get_ref()
+		if is_instance_valid(retained) and not retained.is_queued_for_deletion(): continue
+		packets.append({"source_id": source_id, "token": source.token, "scope": source.scope,
+			"sequence": _ambient_publish_serial, "retired": true, "foot_position": source.get("foot_position", [])})
+	# Build the authored slot index once; duplicate registrations cannot be
+	# published and the ordinary full population is never searched per member.
+	var by_source: Dictionary = {}
+	for body: Node3D in _wild_creatures:
+		if not is_instance_valid(body) or body.is_queued_for_deletion() or not body.is_inside_tree(): continue
+		var source_id := str(body.get_meta(&"ambient_source_id", ""))
+		if source_id.is_empty(): continue
+		if by_source.has(source_id): by_source[source_id] = null
+		else: by_source[source_id] = body
+	for source_id: String in by_source:
+		var body: Node3D = by_source[source_id]
+		if body == null: continue
+		var card: RefCounted = body.get("instance")
+		if card == null: continue
+		var uid := str(card.get("uid"))
+		if not CREATURE_INSTANCE.valid_uid(uid): continue
+		var source: Dictionary = _ambient_host_sources.get(source_id, {})
+		if source.get("uid") != uid or source.get("scope") != scope \
+			or not source.get("body") is WeakRef or source.body.get_ref() != body:
+			source = {"token": Crypto.new().generate_random_bytes(16).hex_encode(), "body": weakref(body),
+				"uid": uid, "scope": scope.duplicate(true), "context": context.duplicate(true)}
+			_ambient_host_sources[source_id] = source
+		var feet := body.global_position
+		var facing: Vector3 = body.call("facing")
+		source.foot_position = [feet.x, feet.y, feet.z]
+		packets.append({"source_id": source_id, "token": source.token, "scope": scope,
+			"sequence": _ambient_publish_serial, "retired": false, "card": WATER_CAPTURE_CODEC.encode(card),
+			"generation": maxi(1, int(body.get_meta("ordinary_trait_generation", body.get_meta("foundation_alpha_generation", 1)))),
+			"foot_position": [feet.x, feet.y, feet.z], "facing": [facing.x, facing.y, facing.z],
+			"visible": body.visible, "aggressive": bool(body.get("aggressive"))})
+	for peer: int in multiplayer.get_peers():
+		var actor: Dictionary = _session.get_node(^"LedgerRpc").call("_water_actor_context", peer, {})
+		if actor.get("realm") != scope.realm or not actor.get("position") is Vector3 \
+			or actor.get("character_id") != _session.call("_authority_character", peer): continue
+		var nearby: Array[Dictionary] = []
+		for packet: Dictionary in packets:
+			var feet: Variant = _wire_vec3(packet.foot_position)
+			if feet != null and actor.position.distance_to(feet) <= _activation_radius_margin() * 2.0: nearby.append(packet)
+		_send_realm_rpc(peer, "_rpc_ambient_wild_sources", [nearby])
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_ambient_wild_sources(packets: Array) -> void:
+	if _is_host() or not _realm_rpc_allowed(1): return
+	var scope := _ambient_scope()
+	if scope.is_empty(): return
+	for raw: Variant in packets:
+		if not raw is Dictionary or raw.get("scope") != scope or not raw.get("source_id") is String \
+			or not raw.get("token") is String or raw.token.length() != 32 \
+			or not raw.get("retired") is bool: continue
+		var packet: Dictionary = raw
+		var previous: Dictionary = _ambient_guest_sources.get(packet.source_id, {})
+		if previous.get("scope") == scope and int(packet.get("sequence", 0)) <= int(previous.get("sequence", 0)): continue
+		var body := _ambient_body(str(packet.source_id))
+		if packet.retired:
+			if previous.get("token") == packet.token and body != null:
+				body.visible = false
+				_ambient_guest_sources.erase(packet.source_id)
+			continue
+		if not packet.get("visible") is bool or not packet.get("aggressive") is bool \
+			or not packet.get("generation") is int or packet.generation < 1: continue
+		var card := WATER_CAPTURE_CODEC.decode(packet.get("card", {})) as RefCounted
+		var feet: Variant = _wire_vec3(packet.get("foot_position", []))
+		var facing: Variant = _wire_vec3(packet.get("facing", []))
+		if body == null or card == null or feet == null or facing == null \
+			or str(body.get("species_id")) != str(card.get("species_id")): continue
+		body.set_meta(&"ambient_host_mirror", true)
+		body.set("instance", card)
+		body.set("aggressive", packet.aggressive)
+		body.global_position = feet
+		body.rotation.y = atan2(facing.x, facing.z)
+		body.set("velocity", Vector3.ZERO)
+		body.call("set_shiny", bool(card.get("shiny")))
+		if _ambient_guest_body == null or _ambient_guest_body.get_ref() != body:
+			body.visible = packet.visible and not bool(card.get("fainted"))
+		_ambient_guest_sources[packet.source_id] = packet.duplicate(true)
+
+
+func _request_ambient_wild(body: Node3D) -> bool:
+	if body == null or not _ambient_pending_token.is_empty() or not _pending_shared_join_id.is_empty() \
+		or not _shared_active_id.is_empty() or _manager == null or bool(_manager.call("is_fighting")) \
+		or _ally == null or _ally.fainted or not is_instance_valid(_ally_body) or wild_engagement_deferred(): return false
+	var packet: Dictionary = _ambient_guest_sources.get(str(body.get_meta(&"ambient_source_id", "")), {})
+	if packet.is_empty() or packet.get("scope") != _ambient_scope() or not body.visible: return false
+	_ambient_pending_token = str(packet.token)
+	_ambient_pending_deadline = Time.get_ticks_msec() + int(1000.0 * float(ENCOUNTER_HOST_SCRIPT.config().get("shared_opponent_join_timeout_s", 5.0)))
+	_ambient_guest_body = weakref(body)
+	if not _send_realm_rpc(1, "_rpc_ambient_wild_engage", [packet.token]):
+		_ambient_pending_token = ""
+		_ambient_pending_deadline = 0
+		return false
+	return true
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_ambient_wild_engage(token: String) -> void:
+	if not _is_host(): return
+	var peer := multiplayer.get_remote_sender_id()
+	var record := _host_ambient_wild_engage(token, peer)
+	_send_realm_rpc(peer, "_rpc_ambient_wild_admitted", [token, record])
+
+
+func _host_ambient_wild_engage(token: String, peer: int) -> Dictionary:
+	var scope := _ambient_scope()
+	if scope.is_empty() or peer <= 1 or not _realm_rpc_allowed(peer): return {}
+	var source: Dictionary = {}
+	for candidate: Dictionary in _ambient_host_sources.values():
+		if candidate.get("token") == token:
+			if not source.is_empty(): return {}
+			source = candidate
+	if source.is_empty() or source.get("scope") != scope or not source.get("body") is WeakRef: return {}
+	var body: Node3D = source.body.get_ref()
+	if not is_instance_valid(body) or body.is_queued_for_deletion() or not body.is_inside_tree() \
+		or not body.visible or not bool(body.call("is_alive")) or body.get("instance").get("uid") != source.uid: return {}
+	var character: String = _session.call("_authority_character", peer)
+	var admitted: Dictionary = _session.call("admitted_character_state", peer)
+	var deployed := deployed_body_for(peer)
+	var uid := str(_creature_card_for(peer).get("creature_uid", ""))
+	if character.is_empty() or admitted.get("character_id") != character or deployed == null \
+		or not admitted.get("party") is Array or admitted.party.is_empty() or admitted.party.size() > 5: return {}
+	var owned: Dictionary = {}
+	for card: Variant in admitted.party:
+		if card is Dictionary and card.get("uid") == uid:
+			if not owned.is_empty(): return {}
+			owned = card
+	if owned.is_empty() or owned.get("fainted") != false: return {}
+	var live_id := _shared_host_id_for_body(body)
+	if not live_id.is_empty():
+		var existing: Dictionary = _encounter_host.call("record", live_id)
+		if existing.get("participants", {}).get(peer, {}).get("character_id") == character: return existing
+	var safety: Dictionary = _session.call("_host_portal_context", peer)
+	if safety.get("character_id") != character or safety.get("realm") != scope.realm \
+		or safety.get("world_instance_id") != scope.world_namespace or not safety.get("position") is Vector3 \
+		or safety.get("combat") != false or safety.get("dialogue") != false or safety.get("cutscene") != false \
+		or safety.get("flying") != false or safety.get("swimming") != false or safety.get("downed") != false \
+		or safety.position.distance_to(body.global_position) > _engage_range: return {}
+	var authority: RefCounted = _session.get("_character_authority")
+	if authority == null or authority.call("creature_training_is_pending", character) == true \
+		or authority.call("_portal_mutation_pending", character) == true \
+		or not authority.call("pending_creature_loadout", character).is_empty() \
+		or not authority.call("pending_creature_vitals", character).is_empty(): return {}
+	if not live_id.is_empty():
+		var joined := _host_engage({"encounter_id": live_id, "kind": "engage"}, peer)
+		return _encounter_host.call("record", live_id) if joined.get("ok") == true else {}
+	var context: Dictionary = _session.call("_host_wild_training_context")
+	if context != source.context or context.get("ready") != true: return {}
+	_configure_f22_patterns(body, false)
+	_ensure_encounter_arbiters()
+	_shared_body_generation += 1
+	var at: Vector3 = body.call("centre")
+	var feet := body.global_position
+	var facing: Vector3 = body.call("facing")
+	var opponent := {"species_id": str(body.get("instance").get("species_id")),
+		"display_name": str(body.get("instance").get("display_name")), "level": int(body.get("instance").get("level")),
+		"hp": float(body.get("instance").get("hp")), "hp_max": float(body.get("instance").get("max_hp")),
+		"owner_npc": "", "position": [at.x, at.y, at.z], "card": WATER_CAPTURE_CODEC.encode(body.get("instance")),
+		"body_scale": float(body.get("body_scale")), "alpha": bool(body.get("alpha")),
+		"foot_position": [feet.x, feet.y, feet.z], "facing": [facing.x, facing.y, facing.z],
+		"body_generation": _shared_body_generation, "presentation_seq": 1}
+	var record: Dictionary = _encounter_host.call("open", peer, scope.realm, "wild", opponent, uid, character)
+	live_id = str(record.encounter_id)
+	_start_shared_host_runtime(live_id, body, _shared_body_generation, deployed)
+	var runtime := _shared_host_fight(live_id)
+	runtime.set_meta(&"canonical_wild_context", context.duplicate(true))
+	record.wild_actor_owner = WILD_ACTOR_SCOPE.make(scope.world_namespace, scope.session_id, scope.realm, live_id)
+	if _ordinary_actor_binding(live_id, peer, deployed).is_empty():
+		_ordinary_host_leave(live_id, peer)
+		_dispose_shared_host_fight(live_id, true)
+		return {}
+	_freeze_bounty_instances(live_id, peer)
+	_retain_research(live_id, peer, "sight", str(opponent.species_id), "engage")
+	_host_after_encounter_change(live_id)
+	return _with_host_xp_owner(live_id, record)
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_ambient_wild_admitted(token: String, record: Dictionary) -> void:
+	if _is_host() or not _realm_rpc_allowed(1): return
+	var id := str(record.get("encounter_id", ""))
+	if token != _ambient_pending_token or _ambient_pending_token.is_empty():
+		if record.get("participants", {}).has(_local_peer_id()):
+			submit_encounter_intent({"kind": "disengage", "encounter_id": id})
+		return
+	_ambient_pending_token = ""
+	_ambient_pending_deadline = 0
+	if record.is_empty() or not WILD_ACTOR_SCOPE.owns(record.get("wild_actor_owner"), record, id) \
+		or record.wild_actor_owner.world_namespace != _ambient_scope().get("world_namespace") \
+		or record.wild_actor_owner.session_id != _ambient_scope().get("session_id") \
+		or record.get("participants", {}).get(_local_peer_id(), {}).get("character_id") != _local_character_id(): return
+	_note_host_xp_owner(record)
+	if not _begin_shared_guest_from_record(record):
+		submit_encounter_intent({"kind": "disengage", "encounter_id": id})
+		return
+	if _ambient_guest_body != null and is_instance_valid(_ambient_guest_body.get_ref()):
+		_ambient_guest_body.get_ref().visible = false
+
+
 func _roll_wild_level(wild: Node3D, species: String, rng: RandomNumberGenerator, centre_z: float) -> void:
 	var cfg: Dictionary = CHAPTER_CURVE.progression_config_at(
 		centre_z, PROGRESSION.config(), CHAPTER_CURVE.config())
@@ -2401,6 +2659,13 @@ func _on_net_peer_left(peer_id: int, _reason: Variant = null) -> void:
 ## and any body still tracked by the spawner is a spawn held under a peer that
 ## is not the one it was made under. Drop them all, on host and client alike.
 func _on_net_session_ended(_reason: Variant = null) -> void:
+	_ambient_host_sources.clear()
+	_ambient_guest_sources.clear()
+	_ambient_pending_token = ""
+	_ambient_pending_deadline = 0
+	_ambient_guest_body = null
+	for body: Node3D in _wild_creatures:
+		if is_instance_valid(body): body.remove_meta(&"ambient_host_mirror")
 	_pending_legacy_join_id = ""
 	_shared_catch_finish_pending = {}
 	_shared_catch_finish_reply = {}
@@ -6054,6 +6319,7 @@ func interaction_activate() -> void:
 
 
 func _process(delta: float) -> void:
+	_tick_ambient_wild_sources(delta)
 	if _catch_waiting_for_owner != null:
 		var waiting := _catch_waiting_for_owner
 		_catch_waiting_for_owner = null
@@ -6628,6 +6894,9 @@ static func guardian_admission_encounter_id(local_body_name: String, local_speci
 ## `opponent_owned` true — that flag is the whole of what a trainer's creature
 ## does differently once the fight is running.
 func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
+	if not opponent_owned and _is_multi_peer() and not _is_host() and not _ambient_scope().is_empty():
+		_request_ambient_wild(wild)
+		return
 	_configure_f22_patterns(wild, opponent_owned)
 	if not opponent_owned and _is_host():
 		var existing_id := _shared_host_id_for_body(wild)
@@ -6792,7 +7061,8 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 			_send_realm_rpc(peer_id, "_rpc_encounter_opened", [rec])
 
 
-func _start_shared_host_runtime(encounter_id: String, wild: Node3D, generation: int) -> void:
+func _start_shared_host_runtime(encounter_id: String, wild: Node3D, generation: int,
+		guest_target: Node3D = null) -> void:
 	# The actual lifecycle owns this generation. A returned ambient body never
 	# imports the previous encounter's short-lived target status.
 	wild.remove_meta(&"tether_snare")
@@ -6801,7 +7071,7 @@ func _start_shared_host_runtime(encounter_id: String, wild: Node3D, generation: 
 	runtime.name = "SharedWildHostFight_%s" % encounter_id
 	add_child(runtime)
 	_shared_host_fights[encounter_id] = runtime
-	var arena: Node3D = _manager.get("_arena") as Node3D
+	var arena: Node3D = _manager.get("_arena") as Node3D if guest_target == null else null
 	var centre := arena.global_position if arena != null else wild.call("centre") as Vector3
 	var radius := float(arena.get("radius")) if arena != null else float(
 		MATH.config().get("arena", {}).get("radius", 11.0))
@@ -6811,7 +7081,8 @@ func _start_shared_host_runtime(encounter_id: String, wild: Node3D, generation: 
 		var route_cue := _on_shared_host_route.bind(encounter_id)
 		if not wild.route_cue_started.is_connected(route_cue):
 			wild.route_cue_started.connect(route_cue)
-	runtime.call("start_shared", wild, _ally_body, centre, radius, self, encounter_id, generation)
+	runtime.call("start_shared", wild, guest_target if guest_target != null else _ally_body,
+		centre, radius, self, encounter_id, generation)
 	_manager.call("detach_realm_opponent_callbacks", wild)
 
 
@@ -7616,6 +7887,9 @@ func _cleanup_legacy_mirror() -> void:
 
 
 func _cleanup_shared_guest_proxy() -> void:
+	# The next authentic ambient packet decides whether its original body is
+	# alive/visible again. Never restore a captured or defeated local stand-in.
+	_ambient_guest_body = null
 	var proxy := _shared_opponent_proxy
 	_shared_opponent_proxy = null
 	_shared_active_id = ""
