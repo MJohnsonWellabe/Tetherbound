@@ -256,7 +256,11 @@ func _spawn_available_sites() -> void:
 		float(encounter_config.get("activation_distance_m", 100)),
 		int(encounter_config.get("active_wild_cap_per_peer", 16)))
 	for id: String in _wanted_sites:
-		if _site_spawned.has(id) or _site_failures.has(id):
+		# A waiting site is cached too. Reconsider its accepted cycle so a new
+		# active generation reaches clients; publication deduplicates the exact
+		# retained packet. Ordinary once-only sites keep their original cache.
+		var alpha_cycle := foundation_alpha_cycle(str(_wanted_sites[id].get("named_replacement_id", "")))
+		if (_site_spawned.has(id) and alpha_cycle.is_empty()) or _site_failures.has(id):
 			continue
 		var site: Dictionary = _wanted_sites[id]
 		var table := find_id(chapter.get("encounter_tables", []), str(site.table_id))
