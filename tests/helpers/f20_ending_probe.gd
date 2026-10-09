@@ -623,8 +623,25 @@ func load_completed_fixture(tree: SceneTree, game: Node) -> bool:
 		and raw.get("earned_finale") == false and raw.get("accepted_earned_boundary") == false,
 		"completed fixture retains its actual approved producer and disclosed origin"): return false
 	var manifest: Dictionary = raw
-	var before: Dictionary = manifest.get("retained", {})
+	var before: Dictionary = manifest.get("retained", {}).duplicate(true)
 	if not check(retained_valid(before), "completed fixture has a detached identity/inventory/receipt oracle"): return false
+	# JSON manifest numbers are floats. The production loader restores stack
+	# integers; apply that same pure conversion only to this detached oracle.
+	var codec := SAVE.new()
+	for index: int in before.inventory.size():
+		var stack: Variant = before.inventory[index]
+		if stack == null: continue
+		var valid := stack is Dictionary and stack.get("id") is String and not stack.id.is_empty() and stack.has("n")
+		if valid:
+			for field: String in ["n", "durability", "durability_bonus"]:
+				if not stack.has(field): continue
+				var value: Variant = stack[field]
+				valid = valid and (value is int or value is float) and is_finite(float(value)) \
+					and float(value) == float(int(value)) and int(value) >= (1 if field == "n" else 0)
+		var normalized: Variant = codec.call("_stack_from_json", stack) if valid else null
+		if not check(valid and normalized is Dictionary and normalized.size() == stack.size(),
+			"completed oracle retains exact integral stack fields at slot %d" % index): return false
+		before.inventory[index] = normalized
 	var paths: Array[String] = ["slot_0.json", "worlds/slot-0/world.json",
 		"characters/%s/character.json" % str(before.character)]
 	if not check(manifest.get("files_sha256") is Dictionary and manifest.files_sha256.size() == paths.size(),
