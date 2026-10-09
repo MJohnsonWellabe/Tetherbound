@@ -7018,8 +7018,13 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 ## local admission. Network authority and the canonical wild gate stay distinct.
 func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool, local_named: Dictionary = {}) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
+	# A listen host's first named fight needs the same saved authority before
+	# anyone joins. The ordinary owner/vitals admission below still fails closed.
+	var hosted_named := opponent_owned and _is_host() \
+		and MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true
 	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") \
 		and not bool(canonical.get("ready", false)) and local_named.get("ready") != true \
+		and not hosted_named \
 		and (not _is_multi_peer() or not _is_host()):
 		return
 	_ensure_encounter_arbiters()

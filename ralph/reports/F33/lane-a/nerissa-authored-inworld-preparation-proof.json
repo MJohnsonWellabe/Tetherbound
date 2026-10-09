@@ -1,7 +1,7 @@
 {
   "criterion": "F33#2",
   "criterion_text": "Gear matters: a simulation of each biome's boss shows the matching tier passes C2 and the previous tier is clearly harder.",
-  "status": "OPEN. Original diagnostic revealed a wrong regional-list key; supported one-key correction pending original review. No level, fight, C2 or whole criterion pass.",
+  "status": "OPEN. Actual authored L32 observed; existing live pattern/observer binding guard refuses. Supported single-peer host named admission correction pending original review; no fight/C2/whole pass.",
   "source_commit": "e42f047df4860139d1958a08d6cc2b3cf7cf4f6d",
   "change": "Nerissa defaults to chapter_curve Tidewake Veilfall entry level; the batch forwards only explicit party-level overrides. Other trainer defaults and supplied overrides remain unchanged.",
   "source_review": {
@@ -48,7 +48,26 @@
     "supported_cause": "Lookup read tidewake.regions; authored chapter_curve.json uses tidewake.regional_targets, containing region_id veilfall and team [32,33].",
     "disposition": "Failed preparation retained; no gameplay or accepted boundary claim. Original artifact review pending."
   },
-  "pending_supported_change": "Read authored regional_targets instead of nonexistent regions. Preserve exact Veilfall selection, entry value, missing-entry refusal, explicit overrides, other trainer defaults and all original save/admission/action/clock guards. No numeric, fixture or pilot change.",
+  "regional_key_source_review": {
+    "candidate_sha": "f132cf4c4e62c54b07ac3a7214e4ceafb26f29e9",
+    "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "review_turn": "01a11eb0-2321-7a31-b12e-1a8e78e82bf1",
+    "verdict": "ARTIFACT / DISPOSITION APPROVE; SOURCE / PROOF-SCOPE APPROVE for one changed identical minimum batch."
+  },
+  "regional_key_attempt": {
+    "run_id": 37879151381,
+    "artifact_id": 11593253238,
+    "job_id": 113654570643,
+    "checkout_sha": "f132cf4c4e62c54b07ac3a7214e4ceafb26f29e9",
+    "workflow_conclusion": "failure",
+    "log_sha256": "86367211b3ce8796732e84b4263c579e6fcbb04bd030d3f99fa589a0e055f810",
+    "child_log_sha256": "b376e7bbbf3d8cad0a15a58cf4e9a17b0249b546b092e52b509603505762cbd4",
+    "raw_path": "ralph/reports/F25/downloads/a-nerissa-regional-key-37879151381/raw/",
+    "result": {"arena_radius": 9.0, "error": "world pilot requires the current Director's live pattern context and bound observer", "gear": "tidesteel", "party_level": 32, "pilot": "READER", "seed": 0, "starter": "ripplet", "trainer": "water_trainer_nerissa", "won": false},
+    "observed": "Original isolated save, actual Session.host/registry and full admitted party checks passed; authored default32 and actual arena9 observed. Existing compound pattern/context/observer guard refused before pilot combat. No runtime script-error lines. No individual guard operand packet exists; no claimed pattern producer defect.",
+    "disposition": "Failed proof retained; preparation entry32 observed, modern fight/settlement unearned. Original artifact review pending."
+  },
+  "pending_supported_change": "Production _open_encounter_if_networked currently skips ordinary named encounter binding for the actual active listen host with only one peer: local_named admission is disabled for active hosts, while this gate requires multi-peer. Permit only opponent-owned active-host starts with tracked actor_vitals ON to reach the existing saved owner/vitals admission and record binding. Existing unprepared-owner refusals, guests, offline-local path, legacy Actor-OFF gate and canonical wild gate remain. This source routing defect is independently evident for this proof's actual Session.host and one-peer setup; no individual compound-guard operand claim. Original review pending before affected proof.",
   "dispatch_note": "Initial API request with fixed_fps workflow input rejected422 before execution because main lacks that input; omitted it. Existing batch's child still uses native --fixed-fps60. No engine attempt was made by the rejected request.",
   "fixtures": "Existing actual Water world; original five granted; trainer proximity placement/pump flags; isolated canonical save and Session host admission; granted Harness/Charm merged into complete owner records. No earned gear or accepted campaign boundary claim.",
   "reused_evidence": "Prior flat Warden/Nerissa paired artifacts remain qualified historical evidence and were not rerun. C owns full F33#0 tier/upgrade proof; A's duplicate unit extension was withdrawn/reverted.",
