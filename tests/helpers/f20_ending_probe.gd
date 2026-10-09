@@ -240,6 +240,9 @@ func ready(tree: SceneTree, game: Node, timeout_ms: int = 180000) -> bool:
 	var max_wait_ms := 0
 	while Time.get_ticks_msec() < deadline:
 		await tree.physics_frame
+		# physics_frame precedes node callbacks. Observe the completed tick,
+		# including the real player's move_and_slide, rather than its old floor.
+		await tree.process_frame
 		var now := Time.get_ticks_msec()
 		max_wait_ms = maxi(max_wait_ms, now - previous)
 		previous = now
