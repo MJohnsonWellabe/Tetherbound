@@ -111,6 +111,16 @@ func _run() -> void:
 		original_guest_character = str(retained_guest.get("local_character_id", ""))
 		_check(not original_guest_uid.is_empty() and not original_guest_character.is_empty(),
 			"SETUP: original guest UID and stable character are observed before admission")
+		# The same eight-wood fixture must enter the portable join snapshot.
+		# A later local add is not an admitted inventory reward. Keep the
+		# existing helper/cap/guard and verify its actual result before joining.
+		await step(1, "storage_grant", {"item": "wood", "n": 8})
+		var seeded_stock: Dictionary = await step(1, "assert", {"check": "inventory_count", "item": "wood", "equals": 8})
+		_check(seeded_stock.get("ok") == true,
+			"SETUP: original wood8 fixture is present before admission (%s)" % str(seeded_stock.get("actual", "")))
+		if seeded_stock.get("ok") != true:
+			quit(await finish())
+			return
 
 	# --- the handshake, copied verbatim from smoke_net_movement_two_peers.gd ---
 	var hosted: Dictionary = await step(0, "host", {})
@@ -219,7 +229,8 @@ func _run() -> void:
 
 	# Peer 1 has to have something to gather. SETUP, and it is peer 1's own
 	# satchel rather than anything the ride touches.
-	await step(1, "storage_grant", {"item": "wood", "n": 8})
+	if not prove_ambient:
+		await step(1, "storage_grant", {"item": "wood", "n": 8})
 	# And its screen has to be its own. The opening's dialogue box opens partway
 	# through the `house` beat rather than at boot, so clearing it once after
 	# the handshake is not enough -- see the finding at the first `for i in 2`

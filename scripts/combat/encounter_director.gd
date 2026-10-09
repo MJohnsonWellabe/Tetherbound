@@ -1847,11 +1847,11 @@ func _ambient_generation(body: Node3D) -> int:
 
 ## A guest's ordinary population is a presentation of host-issued bodies.
 ## A visible local spawn without that binding cannot make a usable offer.
-## Authored bodies outside the ambient registry keep their existing routes.
+## Separate authenticated host-record join callbacks keep their existing routes.
 func _ambient_guest_offerable(body: Node3D, scope: Dictionary) -> bool:
 	if scope.is_empty(): return true
 	var source_id := str(body.get_meta(&"ambient_source_id", ""))
-	if source_id.is_empty(): return true
+	if source_id.is_empty(): return false
 	var packet: Dictionary = _ambient_guest_sources.get(source_id, {})
 	var card: RefCounted = body.get("instance")
 	return packet.get("scope") == scope and packet.get("visible") == true \
