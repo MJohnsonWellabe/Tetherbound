@@ -1,0 +1,25 @@
+{
+  "kind": "focused_production_title_completed_world_load_source_review",
+  "source": "7d65f3eea1276f0294db0600b4f34efaa43c2222",
+  "original_source_and_command_verdict": "Both original reviewers approve:\n\n- **F20 source/argv:** `7d65f3eea1276f0294db0600b4f34efaa43c2222`. One `tests/smoke_f20_ending.gd --completed-fixture --functional-offload` run is eligible with Compatibility 1280\u00d7720 and fresh isolated storage. Alpha, research completion and blind gates remain open.\n- **Master source:** `832af5e440bf89ed6adffd9d6cf5e8e4388b3537`. The proposed two-file unit batch is eligible; after PASS, one changed-source generated Hall run is eligible.\n\nHall artifact hash/CRC verified: nearer priority-0 Chop beat the chest. Home Key was never reached; no numeric exit asserted. Actual chest range is **3.8 m**, NPC/chest offset **8 m**.\n\nNo runtime fix or whole-criterion closure claimed.",
+  "existing_producer_reused": {
+    "source": "505d7e0729028b69cfd3a0a9a8e5c6463cd46dc2",
+    "run_id": 37771506596,
+    "checks": 67,
+    "failures": 0,
+    "scope": "Originally approved actual continuation through incomplete activities, 3bounties, restored input and canonical owned Bryn endgame admission; disclosed post-finale fixture only."
+  },
+  "input": "completed-input-377715/PROVENANCE.json",
+  "command": "tests/smoke_f20_ending.gd --completed-fixture --functional-offload",
+  "source_scope": "Test-only endpoint and actual research-menu availability observation; no production ending/load/save changes, new seeded progress or accepted earned boundary. The production title buttons own the actual Load; button-signal producer, no physical device-input claim.",
+  "required_remaining": [
+    "Changed functional producer run",
+    "Alpha availability",
+    "Research completion evidence",
+    "Applicable original blind PASS"
+  ],
+  "whole_criterion_closed": false,
+  "earned_finale": false,
+  "accepted_earned_boundary": false,
+  "native_dispatched_by_B": false
+}
