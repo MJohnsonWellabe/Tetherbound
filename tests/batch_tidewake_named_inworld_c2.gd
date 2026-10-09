@@ -8,7 +8,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/batch_tidewake_named_inworld_c2.gd -- \
 ##     --trainer=water_trainer_nerissa --starter=ripplet --policy=READER \
-##     --seeds=1-24 [--party-level=43] [--gear-tier=<tier>] [--gear-upgrade=0..3] \
+##     --seeds=1-24 [--party-level=<override>] [--gear-tier=<tier>] [--gear-upgrade=0..3] \
 ##     --out=user://c2/nerissa_ripplet_READER.jsonl
 const SMOKE := "res://tests/smoke_tidewake_named_inworld_c2.gd"
 const GEAR := preload("res://tests/helpers/f33_gear_fixture.gd")
@@ -47,7 +47,7 @@ func _run() -> void:
 	var policy := "READER"
 	var first := 1
 	var last := 24
-	var level := 43
+	var level_arg := ""
 	var out := "user://c2_inworld.jsonl"
 	var gear: Dictionary = GEAR.from_args()
 	var gear_label: String = GEAR.label(str(gear.tier), int(gear.upgrade))
@@ -56,7 +56,7 @@ func _run() -> void:
 		if arg.begins_with("--trainer="): trainer = arg.trim_prefix("--trainer=")
 		elif arg.begins_with("--starter="): starter = arg.trim_prefix("--starter=")
 		elif arg.begins_with("--policy="): policy = arg.trim_prefix("--policy=")
-		elif arg.begins_with("--party-level="): level = int(arg.trim_prefix("--party-level="))
+		elif arg.begins_with("--party-level="): level_arg = arg
 		elif arg.begins_with("--gear-tier=") or arg.begins_with("--gear-upgrade="): gear_args.append(arg)
 		elif arg.begins_with("--out="): out = arg.trim_prefix("--out=")
 		elif arg.begins_with("--seeds="):
@@ -71,7 +71,10 @@ func _run() -> void:
 		var json := "user://c2_child_%d.json" % seed_value
 		var args := PackedStringArray(["--headless", "--path", ProjectSettings.globalize_path("res://"), "--fixed-fps", "60",
 			"--script", SMOKE, "--", "--trainer=" + trainer, "--starter=" + starter, "--policy=" + policy,
-			"--seed=%d" % seed_value, "--party-level=%d" % level, "--json=" + ProjectSettings.globalize_path(json)])
+			"--seed=%d" % seed_value, "--json=" + ProjectSettings.globalize_path(json)])
+		# The child owns its authored default. Forward an override only when
+		# actually supplied, rather than silently replacing it with legacy L43.
+		if not level_arg.is_empty(): args.append(level_arg)
 		args.append_array(gear_args)
 		var output: Array = []
 		var started := Time.get_ticks_msec()

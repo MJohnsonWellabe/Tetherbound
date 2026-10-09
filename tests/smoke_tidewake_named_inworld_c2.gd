@@ -13,7 +13,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --fixed-fps 60 --script tests/smoke_tidewake_named_inworld_c2.gd \
 ##     -- --trainer=water_trainer_nerissa --starter=ripplet --policy=READER --seed=0 \
-##        [--party-level=43] [--gear-tier=<tier>] [--gear-upgrade=0..3] --json=<file>
+##        [--party-level=<override>] [--gear-tier=<tier>] [--gear-upgrade=0..3] --json=<file>
 ##
 ## Preparation that is NOT ordinary play, disclosed in the JSON: the party is
 ## granted (the original five at --party-level, starter leading), the player
@@ -108,6 +108,7 @@ func _run() -> void:
 	var policy := "READER"
 	var seed_value := 0
 	var level := 43
+	var explicit_level := false
 	var out := ""
 	var gear: Dictionary = GEAR.from_args()
 	for arg: String in OS.get_cmdline_user_args():
@@ -115,8 +116,24 @@ func _run() -> void:
 		elif arg.begins_with("--starter="): starter = arg.trim_prefix("--starter=")
 		elif arg.begins_with("--policy="): policy = arg.trim_prefix("--policy=")
 		elif arg.begins_with("--seed="): seed_value = int(arg.trim_prefix("--seed="))
-		elif arg.begins_with("--party-level="): level = int(arg.trim_prefix("--party-level="))
+		elif arg.begins_with("--party-level="):
+			level = int(arg.trim_prefix("--party-level="))
+			explicit_level = true
 		elif arg.begins_with("--json="): out = arg.trim_prefix("--json=")
+	if not explicit_level and trainer_id == "water_trainer_nerissa":
+		# F33#2 uses the declared chapter entry, not the old L43 Water overlap.
+		# Other trainer defaults and explicit diagnostic overrides are unchanged.
+		var curve: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/chapter_curve.json")
+		level = 0
+		for region: Dictionary in curve.get("biomes", {}).get("tidewake", {}).get("regions", []):
+			if region.get("region_id") != "veilfall": continue
+			var team: Array = region.get("team", [])
+			if team.size() == 2: level = int(team[0])
+			break
+		if level < 1:
+			push_error("Nerissa C2 requires the authored Veilfall entry level")
+			quit(1)
+			return
 	await process_frame
 	var game := root.get_node("Game")
 	game.current_realm = "water"
