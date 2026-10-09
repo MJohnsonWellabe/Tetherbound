@@ -76,6 +76,12 @@ func _use_home_key() -> bool:
 	if slot < 0: return _fail("F49 missing producer: Grandpa's actual opening did not deliver the personal Home Key")
 	if not str(game.call("home_key_refusal")).is_empty():
 		return _fail("F49 Home Key refused in the actual position: " + str(game.call("home_key_refusal")))
+	var key: Node = game.get_node_or_null("HomeKey")
+	if key == null: return _fail("F49 Home Key lacks its production presentation owner")
+	var refusal_before: float = float(key.get("_refusal_at"))
+	var binding := {"character_id": str(game.local.character_id),
+		"world_instance_id": str(game.world.reward_delivery_namespace),
+		"session_epoch": str(game.session.call("_altar_current_epoch"))}
 	await tap("inventory")
 	var menu: Node = game.call("menu")
 	if menu == null or not menu.call("is_open") or menu.call("current_tab_id") != "backpack":
@@ -92,6 +98,22 @@ func _use_home_key() -> bool:
 	_observe_home_key("after_satchel_use")
 	for frame in 7200:
 		await tree.process_frame
+		# A local refusal resets the approved raise before a finish request.
+		# Retain failure instead of waiting for a reply that cannot be produced.
+		var approved_begin := false
+		for reply: Dictionary in home_key_observation.replies:
+			if reply.get("kind") == "home_key_begin" and reply.get("ok") == true \
+				and reply.get("character_id") == binding.character_id \
+				and reply.get("world_instance_id") == binding.world_instance_id \
+				and reply.get("session_epoch") == binding.session_epoch \
+				and not str(reply.get("request_id", "")).is_empty() and not str(reply.get("use_id", "")).is_empty():
+				approved_begin = true
+		if approved_begin and is_instance_valid(key) and game.get_node_or_null("HomeKey") == key \
+			and key.get("_phase") == "idle" and float(key.get("_refusal_at")) > refusal_before:
+			var label: Label = key.get("_refusal_label") as Label
+			if is_instance_valid(label) and not label.text.is_empty():
+				_observe_home_key("local_terminal_refusal")
+				return _fail("F49 Home Key approved raise ended with a new local refusal: " + label.text)
 		if not _home_result.is_empty() and _home_result.get("ok") != true:
 			return _fail("F49 Home Key authoritative refusal: " + str(_home_result.get("reason")))
 		if _home_result.get("ok") == true and _ready_world("meadows"):
@@ -224,6 +246,11 @@ func _observe_home_key(phase: String) -> void:
 		"realm": str(game.current_realm), "pending_entry": str(game.pending_realm_entry),
 		"scene": str(scene.get_path()) if scene != null else "",
 		"home_key_present": key != null, "session": {}}
+	var input_owner: Node = INPUT_OWNER.current(tree)
+	row["input_owner"] = _stored_modal_observation(input_owner) if input_owner != null else {}
+	row["story_modals"] = []
+	for modal: Node in tree.get_nodes_in_group("story_modal"):
+		row.story_modals.append(_stored_modal_observation(modal))
 	if is_instance_valid(_player): row["player_position"] = str(_player.global_position)
 	if key != null:
 		row["key"] = {}
@@ -248,6 +275,19 @@ func _observe_home_key(phase: String) -> void:
 				row.session.queued_requests.append(queued)
 	home_key_observation.snapshots.append(row)
 	print("F49 HOME KEY OPERANDS " + JSON.stringify(row))
+
+## Pure stored operands, including the actual conversation if still present.
+func _stored_modal_observation(node: Node) -> Dictionary:
+	var script: Script = node.get_script() as Script
+	var row := {"path": str(node.get_path()), "script": script.resource_path if script != null else ""}
+	for property: Dictionary in node.get_property_list():
+		var name: String = str(property.name)
+		if name in ["_open", "_line", "_guard", "_closing_interact"]: row[name] = node.get(name)
+		elif name == "_runner":
+			var runner: RefCounted = node.get(name) as RefCounted
+			if runner != null:
+				row["conversation"] = {"id": runner.get("_id"), "line": runner.get("_index"), "active": runner.get("_active")}
+	return row
 
 ## Diagnostic only: which readiness condition a long Home Key wait is on.
 func _print_home_key_wait(frame: int) -> void:
