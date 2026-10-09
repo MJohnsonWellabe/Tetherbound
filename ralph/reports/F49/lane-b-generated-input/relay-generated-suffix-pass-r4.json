@@ -454,6 +454,8 @@
     "exit_code": 0,
     "engine_script_errors": 0,
     "selector": "--initialized --only=test_meadows_earned_relay_segment.gd",
-    "reuse_after_corrected_gate": "Original Bacon/Hubble approve reuse if PASS; this is caller/parser coverage only, not native capture."
+    "reuse_after_corrected_gate": "Both originals verified the archive and approved reuse; the conditional ROOT D/E native command at1eaa6e is now eligible. No duplicate batch.",
+    "scope": "Existing helper contracts and GDScript load only; no CLI argument-parser execution or native pixels.",
+    "original_scoped_logic_verdict": "Original Bacon and Hubble both return **scoped LOGIC APPROVE** for `37864266366 @4748925d`, artifact `11587138941`: hash verified, 6 tests/69 assertions, zero failures, exit 0, zero engine/script errors. The expected null-context refusal passed.\n\nThe check covers helper contracts, not CLI parsing or pixels. Its condition is fulfilled for the previously approved ROOT D/E native command at `1eaa6e268992065a2e03763d73b83c7bc6540c3d`; no duplicate batch needed.\n\nActual six-frame capture and Sartre\u00e2\u20ac\u2122s pixel-only PASS remain open. **No READY.**"
   }
 }
