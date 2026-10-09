@@ -2902,7 +2902,11 @@ func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		# Bury the full-width surface at each end and let it emerge while its soil
 		# mask feathers in. Collapsing width made an icon-like arrowhead; a buried
 		# irregular lobe has no transverse or triangular silhouette to catch light.
-		var endpoint_distance:=minf(t,1.0-t)*flat.length()
+		# Match the shader's true-end flags: a continuous route joint must not
+		# sink below its landing while its end mask remains fully visible.
+		var start_distance := t * flat.length() if fade_start else 1000.0
+		var end_distance := (1.0 - t) * flat.length() if fade_end else 1000.0
+		var endpoint_distance := minf(start_distance, end_distance)
 		var endpoint_blend:=smoothstep(0.0,2.8,endpoint_distance)
 		var lift:=lerpf(-0.14,0.06,endpoint_blend)
 		var centre := a.lerp(b, t) + right * wander + up * lift
