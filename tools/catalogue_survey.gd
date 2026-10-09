@@ -486,9 +486,12 @@ func _capture_ui_contexts() -> void:
 					break
 			await _shoot_ui("ui-" + tab, menu, body, state)
 			if tab == "settings":
-				var controls: Control = body.get("_reset_all_button")
+				# Inspect the actual binding row below the Controls instructions,
+				# rather than the reset button above those instructions.
+				var rows: Array = body.get("_rows")
+				var controls: Control = null if rows.is_empty() else rows[0].get("gamepad")
 				if controls == null:
-					_failures.append("UI settings: production Controls section missing")
+					_failures.append("UI settings: production Controls binding missing")
 				else:
 					controls.grab_focus()
 					body.call("_keep_visible", controls)
@@ -605,6 +608,21 @@ func _shoot_ui(id: String, owner: Node, content: Control, state: Dictionary) -> 
 	state["input_owner"] = str(current_owner.get_path()) if current_owner != null else ""
 	state["focus"] = str(focus.get_path()) if focus != null else ""
 	state["visible_text"] = visible_text
+	# Keep the original guard expression above intact. Failed records need
+	# its operands so a nonempty path/text cannot be mistaken for visible focus.
+	state["guard_checks"] = {
+		"input_owner_matches": current_owner == owner,
+		"owner_open": bool(owner.call("is_open")),
+		"content_present": content != null,
+		"content_visible": content != null and content.is_visible_in_tree(),
+		"focus_present": focus != null,
+		"focus_visible": focus != null and _ui_visible_rect(focus).has_area(),
+		"focus_owned": focus != null and owner.is_ancestor_of(focus),
+		"content_text_present": not visible_text.is_empty(),
+	}
+	if id == "ui-settings-controls":
+		state.guard_checks["controls_hint_visible"] = visible_text.any(func(value: String) -> bool: return value.begins_with("A on a binding to change it"))
+	state["focus_visible_rect"] = str(_ui_visible_rect(focus)) if focus != null else ""
 	state["state_guard_pass"] = valid
 	state["pixel_readability"] = "ungraded; original visual reviewer must inspect full framebuffer"
 	var path := "%s/%s.png" % [_output_dir, id]
