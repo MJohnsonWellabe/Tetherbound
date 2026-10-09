@@ -139,16 +139,12 @@ func _run() -> void:
 	var attachment: Node3D = null
 	if forge != null:
 		attachment = await _check_paid_attachment_place(forge)
-		if attachment != null and not _creature_gear_proof:
+		if attachment != null:
 			await _check_dismantle_order_and_refund(forge, attachment)
 	await _check_host_station_craft_settles_the_panel()
 	await _check_remaining_stations_place()
 	if _creature_gear_proof and _failures.is_empty():
 		await _check_paid_creature_gear()
-		if forge != null and attachment != null:
-			_player.global_position = forge.global_position + GHOST_TO_STANCE
-			for frame in 10: await physics_frame
-			await _check_dismantle_order_and_refund(forge, attachment)
 	_check_saved_world_binding()
 	_report()
 
@@ -205,7 +201,9 @@ func _await_accepted(uid: String, action: String) -> Dictionary:
 
 
 func _check_paid_station_place(id: String) -> Node3D:
-	var cost := DELIVERY.cost(id)
+	# Altar placement has its original version-1 journal and settled price;
+	# HomesteadBuildingDelivery intentionally prices only its other stations.
+	var cost: Array = _placer.call("_altar_cost", _game) if id == "altar" else DELIVERY.cost(id)
 	_fund(cost)
 	var before := _counts(cost)
 	var uid := "b%d" % int(_game.get("world").next_building_uid)
@@ -445,11 +443,21 @@ func _legal_cell(id: String) -> Vector3:
 ## authenticated Session, exact payment and physical owner-save receipts.
 func _check_paid_creature_gear() -> void:
 	var party: RefCounted = _game.get("party")
-	if party.call("size") != 1 or not _gear_stations.has("den") or not _gear_stations.has("forge") or not _gear_stations.has("altar"):
+	if party.call("size") != 1 or not _gear_stations.has("den") or not _gear_stations.has("altar"):
 		_fail("gear path requires its one original owned creature and three paid stations")
 		return
 	var uid := str(party.call("at", 0).get("uid"))
 	var character := str(_game.get("local").get("character_id"))
+	# The first Forge retained its original dismantle/refund proof, freeing
+	# the Kitchen's original cell. Build this paid Forge on a legal free cell.
+	var cell := _legal_cell("forge")
+	if not cell.is_finite():
+		_fail("no legal homestead cell for the paid gear Forge")
+		return
+	_player.global_position = cell + GHOST_TO_STANCE
+	for frame in 10: await physics_frame
+	var forge := await _check_paid_station_place("forge")
+	if forge == null or await _check_paid_attachment_place(forge) == null: return
 	var altar: Node3D = _gear_stations.altar
 	_player.global_position = altar.global_position + GHOST_TO_STANCE
 	for frame in 10: await physics_frame
