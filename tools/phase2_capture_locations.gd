@@ -72,6 +72,7 @@ var _planned: Array[Dictionary] = []
 var _all_destinations: Array[Dictionary] = []
 var _manifest: Dictionary = {}
 var _location_graphics: Dictionary = {}
+var _required_capture_raster := Vector2i.ZERO
 
 
 func _init() -> void:
@@ -509,6 +510,11 @@ func _capture_row(row: Dictionary) -> void:
 		_write_manifest()
 		return
 	var image := root.get_texture().get_image()
+	if _required_capture_raster != Vector2i.ZERO \
+			and (image == null or image.is_empty() or image.get_size() != _required_capture_raster):
+		_failures.append("%s: required capture raster mismatch" % str(row.frame_id))
+		_write_manifest()
+		return
 	var path := "%s/%s.jpg" % [_output_dir, str(row.frame_id)]
 	if not _location_graphics.is_empty():
 		var expected: Array = _location_graphics.resolution
@@ -599,7 +605,23 @@ func _capture_support_preflight(spec: Dictionary) -> String:
 		var ground := Vector3(at.x, float(spec.ground_y), at.z)
 		var ray := PhysicsRayQueryParameters3D.create(ground + Vector3.UP * 1.5,
 			ground - Vector3.UP, _player.collision_mask, [_player.get_rid()])
-		var failure := capture_floor_failure(float(spec.ground_y), space.intersect_ray(ray), _player.floor_max_angle)
+		var hit := space.intersect_ray(ray)
+		spec["physical_support"] = {"ray_from": _vec3(ray.from), "ray_to": _vec3(ray.to),
+			"collision_mask": ray.collision_mask, "excluded_player_rid": str(_player.get_rid()),
+			"hit_from_inside": ray.hit_from_inside, "hit_back_faces": ray.hit_back_faces,
+			"hit_empty": hit.is_empty(), "slide_contacts": []}
+		if not hit.is_empty():
+			spec.physical_support["hit_position"] = _vec3(hit.position)
+			spec.physical_support["hit_normal"] = _vec3(hit.normal)
+			spec.physical_support["hit_rid"] = str(hit.rid)
+		for index: int in _player.get_slide_collision_count():
+			var contact := _player.get_slide_collision(index)
+			var collider: Object = contact.get_collider()
+			spec.physical_support.slide_contacts.append({"position": _vec3(contact.get_position()),
+				"normal": _vec3(contact.get_normal()), "rid": str(contact.get_collider_rid()),
+				"collider": str((collider as Node).get_path()) if collider is Node else "",
+				"note": "Most recent body movement contact; not a replacement for the stand ray"})
+		var failure := capture_floor_failure(float(spec.ground_y), hit, _player.floor_max_angle)
 		if not failure.is_empty():
 			return failure
 	var collision := _player.get_node_or_null(^"Collision") as CollisionShape3D
@@ -675,7 +697,8 @@ func _reject_stand(row: Dictionary, at: Vector2, offset: float, lateral: float,
 		"ground_y": spec.get("ground_y", null), "swimming": spec.get("swimming", false),
 		"water_surface_y": spec.get("water_surface_y", null),
 		"player_position": _vec3(_player.global_position),
-		"camera_position": _vec3(_camera.global_position), "surface_state": _capture_surface_record()}
+		"camera_position": _vec3(_camera.global_position), "surface_state": _capture_surface_record(),
+		"physical_support": spec.get("physical_support", {})}
 	rejected.append(receipt)
 	if not _manifest.has("rejected_stand_candidates"):
 		_manifest["rejected_stand_candidates"] = []

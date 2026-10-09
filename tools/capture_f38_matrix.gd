@@ -15,8 +15,18 @@ var _f38_requested_views: Array[String] = []
 
 
 func _run() -> void:
-	# Retain the initialized native raster in the inherited manifest.
+	# F38's preset argument does not enter the generic --preset bootstrap.
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--f38-preset="):
+			_f38_preset = arg.trim_prefix("--f38-preset=")
+	if _f38_preset in ["Medium", "High"]:
+		_required_capture_raster = Vector2i(1920, 1080)
+		root.size = _required_capture_raster
 	await process_frame
+	if _required_capture_raster != Vector2i.ZERO and root.size != _required_capture_raster:
+		push_error("F38 viewport did not accept the required 1920x1080 raster")
+		quit(1)
+		return
 	await super._run()
 
 
