@@ -326,14 +326,15 @@ func _settle_interaction(id: String, spec: Dictionary) -> void:
 func on_creature_bed_rest_completed(creature: RefCounted, bed_index: int) -> void:
 	var owner: RefCounted = _game.get("local") if _game != null else null
 	if owner == null: return
-	sheltered_rest_xp(creature, bed_index, _flags, config.get("sheltered_rest", {}), owner.get("redesign_character"))
+	sheltered_rest_xp(creature, bed_index, _flags, config.get("sheltered_rest", {}), owner.get("redesign_character"), _game)
 
 
-static func sheltered_rest_xp(creature: RefCounted, bed_index: int, flags: RefCounted, cfg: Dictionary, personal: Variant = null) -> int:
+static func sheltered_rest_xp(creature: RefCounted, bed_index: int, flags: RefCounted, cfg: Dictionary, personal: Variant = null, owner: Node = null) -> int:
 	if creature == null or flags == null or cfg.is_empty() or bed_index != int(cfg.get("bed_index", 0)):
 		return 0
 	if not bool(flags.call("has", str(cfg.get("requires_flag", "")))):
 		return 0
+	if not preload("res://scripts/creatures/home_recovery.gd").recovery_allowed(creature, owner): return 0
 	var progression_cfg := PROGRESSION_CONFIG.config()
 	if personal is Dictionary:
 		progression_cfg = preload("res://scripts/creatures/home_recovery.gd").training_config(creature, progression_cfg, personal)

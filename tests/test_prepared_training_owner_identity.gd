@@ -88,6 +88,8 @@ func test_actual_prepared_altar_owner_write_uses_local_identity_and_preserves_or
 	var game := _game(directory)
 	var saver: RefCounted = game.save_system
 	var store: RefCounted = saver.get("_characters")
+	var owned: RefCounted = game.local.party.at(0)
+	owned.set("hp", float(owned.get("max_hp")) * 0.5)
 	var before := RECORD.portable_projection(game.local.save_data())
 	assert_true(saver.call("save_character_prepared", game, CHARACTER) == true, "actual initial SaveGame writer")
 	var path: String = store.call("path_for", CHARACTER)
@@ -101,13 +103,25 @@ func test_actual_prepared_altar_owner_write_uses_local_identity_and_preserves_or
 	game.world.placed_buildings.append(row.intent.record.duplicate(true))
 	game.forwarded.placed_buildings = game.world.placed_buildings
 	store.set("refuse", true)
-	var owned: RefCounted = game.local.party.at(0)
 	var failed: Dictionary = game.session.call("apply_altar_building_owner", row)
 	assert_false(failed.get("ok") == true)
 	assert_true(failed.get("pending") == true and failed.get("code") == "owner_building_save_failed", str(failed))
 	assert_eq(FileAccess.get_file_as_bytes(path), original, "BOOL false retains original disk")
 	assert_true(ESSENCE._equivalent(ESSENCE.training_projection(game.local.save_data()), row.after))
 	assert_true(game.local.party.at(0) == owned)
+	assert_true(game.session.call("_owner_training_mutation_blocked", game.local) == true)
+	var frozen := ESSENCE.training_projection(game.local.save_data())
+	var recovery := preload("res://scripts/creatures/home_recovery.gd")
+	recovery.rest(owned, preload("res://scripts/creatures/progression.gd").config(), game.local.redesign_character, game)
+	assert_true(ESSENCE._equivalent(ESSENCE.training_projection(game.local.save_data()), frozen),
+		"direct story/home recovery cannot heal or grant XP over the failed original owner save")
+	var shelter := preload("res://scripts/world/cloudreach_physical_runtime.gd")
+	var shelter_cfg: Dictionary = preload("res://scripts/data/redesign_data.gd").json(shelter.DATA_PATH).sheltered_rest
+	var shelter_flags: RefCounted = preload("res://autoload/progression_state.gd").new()
+	shelter_flags.call("set_flag", str(shelter_cfg.requires_flag))
+	assert_eq(shelter.sheltered_rest_xp(owned, int(shelter_cfg.bed_index), shelter_flags,
+		shelter_cfg, game.local.redesign_character, game), 0, "the authored shelter cannot grant XP over that same owner freeze")
+	assert_true(ESSENCE._equivalent(ESSENCE.training_projection(game.local.save_data()), frozen))
 	var raw: Dictionary = saver.call("snapshot", game)
 	assert_false(raw.has("character_id"), "flat codec remains unchanged; identity belongs to split envelope")
 	assert_false(game.session.call("_owner_training_snapshot_allowed", game.local, raw) == true, "original identity-less guard input refuses")

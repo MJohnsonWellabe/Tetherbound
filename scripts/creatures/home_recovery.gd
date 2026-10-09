@@ -24,8 +24,23 @@ static func training_config(creature: RefCounted, cfg: Dictionary, personal: Dic
 	result.level.cap = cap
 	return result
 
-static func rest(creature: RefCounted, cfg: Dictionary, personal: Variant = null) -> void:
-	if creature == null:
+## A story/camp consumer may call this without Game's overnight wrapper.
+## Preserve the exact frozen owner projection through BOOL-save and ACK retry.
+static func recovery_allowed(creature: RefCounted, owner: Node = null) -> bool:
+	if owner == null:
+		var tree := Engine.get_main_loop() as SceneTree
+		owner = tree.root.get_node_or_null("Game") if tree != null and tree.root != null else null
+	if owner == null: return true # Detached pure recovery retains its supplied cap.
+	var player: RefCounted = owner.get("local")
+	var party: RefCounted = player.get("party") if player != null else null
+	if party == null or not (party.call("members") as Array).has(creature): return true
+	var session: Node = owner.get("session")
+	return session == null or not session.has_method("_owner_training_mutation_blocked") \
+		or session.call("_owner_training_mutation_blocked", player) != true
+
+
+static func rest(creature: RefCounted, cfg: Dictionary, personal: Variant = null, owner: Node = null) -> void:
+	if creature == null or not recovery_allowed(creature, owner):
 		return
 	creature.call("heal_fully")
 	var training := training_config(creature, cfg, personal) if personal is Dictionary else cfg
