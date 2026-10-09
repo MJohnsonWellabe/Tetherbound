@@ -227,11 +227,13 @@ func _capture_relay_frame(label: String, phase_guard: Callable) -> bool:
 		_relay_capture_probe = load("res://tests/helpers/f20_ending_probe.gd").new()
 	var cid := str(_game.get("local").get("character_id"))
 	var owner := INPUT_OWNER.current(_tree)
+	var captures_before := int(_relay_capture_probe.get("_capture_index"))
 	var stable := func() -> bool:
 		return _tree.current_scene == _world and str(_game.get("current_realm")) == "meadows" \
 			and str(_game.get("local").get("character_id")) == cid and retained_five(_initial_ids, _party_ids()) \
 			and INPUT_OWNER.current(_tree) == owner and phase_guard.call() == true
-	if not await _relay_capture_probe.capture(_tree, "relay-" + label, stable) or not stable.call():
+	if not await _relay_capture_probe.capture(_tree, "relay-" + label, stable) or not stable.call() \
+			or int(_relay_capture_probe.get("_capture_index")) != captures_before + 1:
 		return _fail("Relay native frame lost its actual phase, owner or retained five: " + label)
 	_receipt("relay_visual_capture", {"label": label, "character_id": cid, "party_ids": _party_ids(),
 		"completed_native_frame": true, "presentation_overrides": false, "blind_verdict": "pending"})

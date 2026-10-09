@@ -20,6 +20,7 @@ func capture(tree: SceneTree, label: String, frame_ready: Callable = Callable())
 	if not OS.get_cmdline_user_args().has("--capture-ending") and not OS.get_cmdline_user_args().has("--capture-order-ui") \
 		and not (OS.get_cmdline_user_args().has("--capture-lessons") and label.begins_with("lesson-")) \
 		and not (OS.get_cmdline_user_args().has("--capture-next-goal") and label.begins_with("next-goal-")) \
+		and not (OS.get_cmdline_user_args().has("--capture-relay") and label in ["relay-captain-fight", "relay-sela-exchange", "relay-sela-rescued", "relay-console-before", "relay-console-aftermath", "relay-mill-far-bank"]) \
 		and not (OS.get_cmdline_user_args().has("--capture-surface") and label.begins_with("ripplet-surface-")) \
 		and not (OS.get_cmdline_user_args().has("--capture-dive") and label.begins_with("ripplet-dive-")): return true
 	# Explicit functional offload may draw this guarded lesson frame only. The
