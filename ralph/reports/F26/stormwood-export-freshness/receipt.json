@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "lane": "E",
-  "source_commit": "70fb3e0b57258e074c5d9f586efa12fc6f28cd21",
-  "main_commit": "c927823d1b41e98b90d33181a07846e72dc6a27a",
-  "preserved_lane_head": "df0996836d9a715b4fd3c0bf84fbd33578ff63f8",
+  "source_commit": "785e6f612e28a77075dd66684047628c2affbb13",
+  "main_commit": "549822b8da400b3eb9b23fe0feaca3c5f98bec97",
+  "preserved_lane_head": "aadd804d2e675ef671ff2f8a3fc954e7db0a334a",
   "scope": "Only Windows Desktop and Linux Test export_presets.cfg script_export_mode 2->0",
   "feature_flag_flips": 0,
   "all_config_changes": [
@@ -21,8 +21,8 @@
     }
   ],
   "native_acceptance": "PENDING",
-  "unit_run": 37988885752,
-  "graphics_smoke_run": 37988888462,
+  "unit_run": 37990650109,
+  "graphics_smoke_run": 37990652785,
   "current_main_release_cases": [],
   "whole_criterion_closures": [],
   "older_supplement": {
@@ -34,17 +34,10 @@
   },
   "official_mode_reference": "https://github.com/godotengine/godot/blob/4.7-stable/editor/export/editor_export_preset.h#L54",
   "queued_native": "D first/E second; stable source assets required",
-  "updated_utc": "2026-10-09T20:57:48.9845532Z",
+  "updated_utc": "2026-10-09T21:01:53.4695603Z",
   "unit_result": {
-    "tests": 11,
-    "assertions": 40,
-    "artifact": 11644866379,
-    "failed": 0,
-    "raw_log": "C:\\CodexTemp\\lane-e-freshness-units-37988885752.log",
-    "script_errors": [],
-    "exit": 0,
-    "verdict": "PASS",
-    "seconds": 5
+    "reason": "Refresh on exact current-main scope",
+    "verdict": "PENDING"
   },
   "independent_source_review": {
     "reviewer": "/root/e_export_review",
@@ -53,14 +46,36 @@
     "verdict": "APPROVE"
   },
   "graphics_smoke_result": {
-    "checks": 19,
-    "artifact": 11644277653,
-    "scope": "Headless production Settings/persistence/restart routing; no native Forward+ or release-render claim",
-    "verdict": "PASS",
-    "failures": 0,
-    "raw_log": "C:\\CodexTemp\\lane-e-graphics-smoke-37988888462.log",
-    "seconds": 6,
-    "exit": 0,
-    "actual_renderer": "gl_compatibility"
+    "reason": "Refresh on exact current-main scope",
+    "verdict": "PENDING"
+  },
+  "prior_affected_proofs": {
+    "graphics_smoke_result": {
+      "checks": 19,
+      "artifact": 11644277653,
+      "scope": "Headless production Settings/persistence/restart routing; no native Forward+ or release-render claim",
+      "verdict": "PASS",
+      "failures": 0,
+      "raw_log": "C:\\CodexTemp\\lane-e-graphics-smoke-37988888462.log",
+      "seconds": 6,
+      "exit": 0,
+      "actual_renderer": "gl_compatibility"
+    },
+    "graphics_smoke_run": 37988888462,
+    "source_commit": "70fb3e0b57258e074c5d9f586efa12fc6f28cd21",
+    "unit_run": 37988885752,
+    "main_commit": "c927823d1b41e98b90d33181a07846e72dc6a27a",
+    "unit_result": {
+      "tests": 11,
+      "assertions": 40,
+      "artifact": 11644866379,
+      "failed": 0,
+      "raw_log": "C:\\CodexTemp\\lane-e-freshness-units-37988885752.log",
+      "script_errors": [],
+      "exit": 0,
+      "verdict": "PASS",
+      "seconds": 5
+    },
+    "scope": "Previous main runtime-equivalent; exact fresh source checks queued"
   }
 }
