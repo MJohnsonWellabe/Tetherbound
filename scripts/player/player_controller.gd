@@ -58,6 +58,7 @@ var _ground_accel: float = 42.0
 var _ground_friction: float = 38.0
 var _air_accel: float = 9.0
 var _turn_speed: float = 11.0
+var _skin_settle_max_passes: int = 8
 ## The runaway ceiling. See `_clamp_runaway_velocity()`.
 var _max_speed: float = 120.0
 
@@ -184,6 +185,8 @@ func _load_config() -> void:
 	_ground_friction = float(loco.get("ground_friction", _ground_friction))
 	_air_accel = float(loco.get("air_acceleration", _air_accel))
 	_turn_speed = float(loco.get("turn_speed", _turn_speed))
+	var skin_settle: Dictionary = config.get("skin_settle", {})
+	_skin_settle_max_passes = clampi(int(skin_settle.get("max_passes", _skin_settle_max_passes)), 1, 8)
 
 	var unstick: Dictionary = config.get("unstick", {})
 	_unstick_enabled = bool(unstick.get("enabled", _unstick_enabled))
@@ -328,21 +331,33 @@ const SKIN_SETTLE_MAX_M := 0.02
 ## step-up can end a frame a millimetre or two inside a concave shape, deeper
 ## than `safe_margin`; the next frame then starts in contact and the body
 ## catches. Apply the physics server's own zero-motion recovery -- the same
-## query every move starts from -- only when it exceeds the skin, and only by
-## that recovery vector, so nothing here can carry the body through anything.
+## query every move starts from -- when contact depth exceeds the skin. A
+## concave contact can report deep penetration with a shorter recovery vector;
+## apply only that finite server vector, then requery the actual new pose.
+## The existing .02m limit caps cumulative travel across every bounded pass.
 func _settle_skin_overlap() -> void:
 	var params := PhysicsTestMotionParameters3D.new()
-	params.from = global_transform
 	params.motion = Vector3.ZERO
 	params.margin = safe_margin
 	params.recovery_as_collision = true
-	var result := PhysicsTestMotionResult3D.new()
-	if not PhysicsServer3D.body_test_motion(get_rid(), params, result):
-		return
-	var travel := result.get_travel()
-	if travel.length() <= safe_margin or travel.length() > SKIN_SETTLE_MAX_M or not travel.is_finite():
-		return
-	global_position += travel
+	var travelled := 0.0
+	for _pass_index in _skin_settle_max_passes:
+		params.from = global_transform
+		var result := PhysicsTestMotionResult3D.new()
+		if not PhysicsServer3D.body_test_motion(get_rid(), params, result):
+			return
+		var deepest := 0.0
+		for contact_index in result.get_collision_count():
+			var depth := result.get_collision_depth(contact_index)
+			if not is_finite(depth): return
+			deepest = maxf(deepest, depth)
+		if deepest <= safe_margin or deepest > SKIN_SETTLE_MAX_M: return
+		var travel := result.get_travel()
+		if not travel.is_finite(): return
+		var distance := travel.length()
+		if distance <= 0.0 or distance > SKIN_SETTLE_MAX_M - travelled: return
+		global_position += travel
+		travelled += distance
 
 
 func register_environment_velocity_modifier(id: StringName, owner: Node, modifier: Callable, order: int = 0) -> bool:
