@@ -1,0 +1,22 @@
+{
+  "criterion": "F19#4 OPEN",
+  "source": "477fc355d75ac38d639766faaf75f621ecf3282f",
+  "script": "tests/smoke_f19_veridian_functional.gd",
+  "run": 37883433816,
+  "workflow": "render.yml from main with exact checkout SHA",
+  "mode": "render/gl_compatibility; original helper disables drawing; Dummy audio",
+  "arguments": "empty; TB_VERIDIAN_CASE_GROUP unset; no capture arguments",
+  "limit_minutes": 60,
+  "original_command_approve": "01a11ee1-d6ad-7663-b8e1-4a68e50cc9d6; same original f42 reviewer",
+  "guards": "Original six cases, settling, collision movement, injected choice inputs, five-creature cap, save/reload and no-reoffer guards unchanged",
+  "fixtures": "Disclosed victory/party/Home-Key/pose fixtures; no earned route or accepted boundary claim",
+  "previous_rejected_piece": "37081325571:136 engine errors; excluded from reuse",
+  "runtime": "pending",
+  "not_proven": [
+    "all four offers",
+    "multiplayer participants",
+    "earned travel",
+    "GPU or pixels",
+    "whole F19#4"
+  ]
+}
