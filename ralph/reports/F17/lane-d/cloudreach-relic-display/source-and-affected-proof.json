@@ -1,0 +1,32 @@
+{
+  "criterion": "F17#6 OPEN; Cloudreach-only physical relic display candidate",
+  "production_source": "3979b76218b45dd5f4ab23a0226659a71a267b5c",
+  "owning_contract": "WORLD2.6: an inventory relic appears on its pedestal; display is host world scope. ART_DIRECTION physical relic identity uses existing geometry here.",
+  "source_review": {
+    "original": "SAME /root/f42_visual_review via parent01a11f9a-062a-7bb0-a3fd-93b1cf584461",
+    "source": "APPROVE",
+    "affected_command": "APPROVE",
+    "scope": "Same six Cloudreach feathers and sphere parameters, shared geometry factory; existing shrine material/state/interaction/collision unchanged. Separate Hall mount flagOFF, host shrine_display.cloudreach only, baseline wins, no transaction or authority change."
+  },
+  "provenance": "Existing realm_heart_shrine six-feather Cloudreach geometry and placed HEART_READY material; native-scale installed BookStand measured face. No new mesh or asset.",
+  "cross_lane_notice": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6076585324",
+  "shipping": "cloudreach_relic_visual.enabled=false; process candidate opt-in; process baseline wins; visual failure staysOFF",
+  "affected_proof": {
+    "run": 37900434656,
+    "job": 113721458511,
+    "script": "tools/run_one_test.gd",
+    "args": "res://tests/test_crossing_hall_relic_hang.gd",
+    "source": "3979b76218b45dd5f4ab23a0226659a71a267b5c",
+    "command": "main render.yml headless/gl_compatibility/Dummy timeout10",
+    "status_at_record": "in_progress; no runtime verdict",
+    "scope": "Existing four methods; added six-feather identity and OFF/empty/per-biome/replay/restored-host-state checks. No new testclass/method; no transport or actual saved public hang credit."
+  },
+  "capture_adapter": {
+    "source": "912871dfbf92bcec87b164f601dc1bc50a7a6179",
+    "scope": "Existing capture_f17_visual selects explicit Cloudreach biome in existing relic witness. Default Meadows retained; only existing Meadows/Cloudreach mounts accepted; all original physical/auth/disk/identity/party/companion/camera/native-raster/weather guards retained.",
+    "fixture": "ONE disclosed personal held selected relic from authored hand-off; no boss/key/hung/world-display/receipt seed, no earned boundary",
+    "source_review": "requested from SAME original; pending",
+    "native": "not queued or run for Cloudreach; ROOT immutable1de Meadows attempt is separate"
+  },
+  "remaining": "Genuine affected proof + original artifact approval; native actual saved ordinary hang/mount readability; original blind verdict; complete village/Hall full-bar criterion. No whole closure or component READY."
+}
