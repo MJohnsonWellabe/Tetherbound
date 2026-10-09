@@ -1,0 +1,26 @@
+{
+  "started_utc": "2026-10-09T11:15:27.0008326Z",
+  "source": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+  "pid": 45892,
+  "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/capture-home",
+  "deadline_minutes": 45,
+  "mode": "Capture",
+  "args": [
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "res://tools/catalogue_survey.gd",
+    "--",
+    "--biome=cloudreach",
+    "--subset=Galefoot",
+    "--times=day",
+    "--ui-context=menu",
+    "--preset=High",
+    "--source-commit=1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+    "--output=res://.tmp/e-ui-cloudreach-menu-1e2-day-r1"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "pid": 40692,
+  "reason": "process_exit",
+  "exit_code": 0,
+  "ended_utc": "2026-10-09T11:06:40.5639099Z",
+  "mode": "Import",
+  "source": "1e2cc89ae9e74fbd64f195616fba3fe37695774b"
+}

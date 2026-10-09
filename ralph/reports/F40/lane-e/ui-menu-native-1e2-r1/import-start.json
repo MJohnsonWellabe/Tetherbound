@@ -1,0 +1,16 @@
+{
+  "args": [
+    "--headless",
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--editor",
+    "--import",
+    "--quit"
+  ],
+  "pid": 40692,
+  "started_utc": "2026-10-09T11:05:52.3874572Z",
+  "deadline_minutes": 15,
+  "fresh_user_directory": "C:/CodexTemp/tetherbound-proof/native-e-1e2cc89ae9-ui-menu-r1/import-home",
+  "mode": "Import",
+  "source": "1e2cc89ae9e74fbd64f195616fba3fe37695774b"
+}

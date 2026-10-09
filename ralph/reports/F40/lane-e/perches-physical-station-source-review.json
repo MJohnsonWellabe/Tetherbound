@@ -168,5 +168,109 @@
     "source_binding": "APPROVE",
     "affected_commands": "APPROVE",
     "runtime": "PENDING"
+  },
+  "affected_artifact_reviews": [
+    {
+      "artifact_verdict": "APPROVE scoped cadence/unit assertions with disclosed engine diagnostics; NOT clean-log/mounted-runtime PASS",
+      "source_commit": "7227bf21934ff9c356baf5bbce2051fa976eaa15",
+      "run_id": 37923291341,
+      "job_id": 113796148590,
+      "artifact_id": 11612294613,
+      "packet": "C:/CodexTemp/tetherbound-proof/hosted-e-7227-station-cadence",
+      "actual_source_binding": "Job actual fetch/forcecheckout lines135/147 and actual HEAD/log lines273/276 bind exact7227. API workflow main head7dd4a777fbc11ce62c6747248b96d53e4a27a099 is distinct and not the tested source.",
+      "actual_recipe": {
+        "script": "tests/run_tests.gd",
+        "user_args": [
+          "--only=test_follower_floor_station.gd"
+        ],
+        "mode": "headless",
+        "engine": "Godot4.7.stable.official.5b4e0cb0f"
+      },
+      "actual_result": {
+        "tests": 7,
+        "assertions": 21,
+        "failed": 0,
+        "exit_code": 0,
+        "duration_seconds": 5,
+        "terminal_log_utc": "2026-10-09T11:24:15.8315043Z",
+        "new_cadence_method": "Actual ok: test_validator_station_steers_and_is_not_rechecked_every_frame, including added boundary/positive/INF assertions. No skipped/quarantined/new fixture cases."
+      },
+      "diagnostics": {
+        "engine_errors": 2,
+        "script_errors": 0,
+        "selected_engine_warnings": 0,
+        "error": "Condition !is_inside_tree() at get_global_transform, returning Transform3D().",
+        "actual_backtraces": [
+          "follower_creature._tick_follow276 -> test_no_verified_station_closes_on_the_trainer_and_stops_clear123 -> runner_init120",
+          "creature_body.face_towards2694 -> follower_creature._tick_follow276 -> same test123 -> runner_init120"
+        ],
+        "job_only_warning": "Routine Node-action deprecation is distinct from engine output.",
+        "severity_scope": "Two actual nonfatal engine diagnostics remain in the immutable log. They are not ignored/suppressed, nor reclassified as a clean proof."
+      },
+      "bounded_fixture_attribution": {
+        "verified_source_context": "Existing before_each creates detached Node3D root/trainer/body and directly invokes _ready without mounting the root in SceneTree. On the no-station stop path, unchanged _tick_follow invokes face_towards(leader.global_position); unchanged face_towards reads own global_position. Actual current backtraces identify those accesses.",
+        "unchanged_comparison_base": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+        "unchanged_blocks": [
+          "test_no_verified_station_closes_on_the_trainer_and_stops_clear exact same function/fixture as base, only line numbers shifted",
+          "_tick_follow exact same source block as base",
+          "scripts/creatures/creature_body.gd byte-identical to base; face_towards global transform read unchanged"
+        ],
+        "history_limit": "This establishes unchanged detached-fixture/source context, not evidence that an earlier run actually logged these errors, and not a generalized production/collision cause. No prior runtime diagnostic history invented."
+      },
+      "artifact_binding": {
+        "api_artifact_name": "render-e-7227-station-cadence-37923291341",
+        "api_id_run_digest_size_verified": true,
+        "job_api_id_run_completed_success_verified": true,
+        "zip_sha256": "bdd8bac0872e3169ed65756774a2ae35da671b41ddc99bb8f5fd84437106c981",
+        "all_zip_members_crc_valid": true,
+        "all5extracted_member_bytes_equal": true,
+        "members": [
+          {
+            "path": "MANIFEST.txt",
+            "bytes": 131,
+            "sha256": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "exit_code",
+            "bytes": 2,
+            "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "run.log",
+            "bytes": 1743,
+            "sha256": "b3cfadc24920b1b36c415147e19f03931cb0545b9405ef24cd7ae205f88a70d3",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "user/godot/app_userdata/Tetherbound/boot_log.txt",
+            "bytes": 219,
+            "sha256": "8c08538b170c8dd8e2df91d81cf6650cedcda5539e2c545a13df76a4c2a76989",
+            "extracted_byte_equal": true
+          },
+          {
+            "path": "user/godot/app_userdata/Tetherbound/logs/godot.log",
+            "bytes": 1728,
+            "sha256": "dfafb33b82dce170123de06b3ba2eaeaa21ecd182d489ea2c0be18401b4912c4",
+            "extracted_byte_equal": true
+          }
+        ],
+        "job_sha256": "d60829e880096674ac1a7cd5f92983f735e60f12421e7ea490387f75c02394fe",
+        "artifacts_api_sha256": "a84bd1542a196088cc225f241af3ba6f292f2f57f4c8a4e25804da4799a5a507",
+        "jobs_api_sha256": "490d9d9d70d7539bf55aeeb2f35cd698d31ae5d4cd61c80472a239157ae8c832",
+        "upload_binding": "Actual job uploaded digest/URL bind same artifact11612294613/run37923291341."
+      },
+      "remaining_gates": [
+        "Second existing smoke_cloudreach_follower_edge.gd at same7227 is pending; requires actual mounted actor-only query/body-fit refusal plus original snap/walk/airborne guards and genuine artifact/source binding.",
+        "No unit rerun/fullsuite/new fixture required by this scoped assertion result; actual mounted/new query cost/occupancy behavior and ROOT native/independent pixels remain unverified."
+      ],
+      "limits": "Existing detached validator fixture proves cache cadence/steering/INF assertions only, not physics overlap/walkability/contact, native images, appearance cause/improvement, indoor/query performance, ownership, device/campaign/save/co-op/wholecriterion/READY. Prior source/integrationAPP, TEMP limits and all immutable failures/old visual outcomes preserved; no engine/test/dispatch/source edit by reviewer."
+    }
+  ],
+  "latest_affected_unit_disposition": {
+    "source_commit": "7227bf21934ff9c356baf5bbce2051fa976eaa15",
+    "verdict": "APPROVE scoped cadence/unit assertions with disclosed engine diagnostics; NOT clean-log/mounted-runtime PASS",
+    "mounted_smoke": "PENDING"
   }
 }
