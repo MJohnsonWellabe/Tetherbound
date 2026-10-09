@@ -134,6 +134,9 @@ func _run() -> void:
 	world.add_child(greet)
 	arbiter.call("register", greet)
 	arbiter.call("_recompute")
+	_expect((arbiter.get("_providers") as Array).size() == 1
+		and (arbiter.get("_loose") as Array).is_empty(),
+		"recompute removes the freed director from registration and the loose index")
 	_expect(str(arbiter.call("prompt")).contains("Greet Captain Veyra")
 		and prompt.text.contains("Greet Captain Veyra"),
 		"the real world offer is visible on the production HUD before fighting")

@@ -262,7 +262,9 @@ func _index(provider: Object) -> void:
 	_cell_of[provider] = cell
 
 
-func _deindex(provider: Object) -> void:
+func _deindex(provider: Variant) -> void:
+	# Index removal uses identity keys only, including a provider already freed
+	# before it could unregister. Do not cast or dereference that stale key.
 	if _cell_of.has(provider):
 		var cell: Vector2i = _cell_of[provider]
 		var bucket: Array = _cells.get(cell, [])
@@ -474,10 +476,7 @@ func _by_registration(a: Variant, b: Variant) -> bool:
 ## tree first. This stays as the belt to that braces.
 func _forget(provider: Variant) -> void:
 	_provider_set.erase(provider)
-	if provider is Object:
-		_deindex(provider as Object)
-	else:
-		_loose.erase(provider)
+	_deindex(provider)
 
 
 func _publish(text: String) -> void:
