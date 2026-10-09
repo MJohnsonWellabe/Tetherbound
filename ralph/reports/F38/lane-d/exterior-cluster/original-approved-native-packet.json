@@ -1,11 +1,11 @@
 {
-  "source": "d5ae2d5e781c83e7f17a72b3c21e6899fb6d3cd2",
+  "source": "fe51ae4977ee990301a94eb9175e9dcc9d992cb6",
   "branch": "tb/codex-d",
   "criterion": "F38#3/#5 Meadows visual cluster; OPEN",
-  "purpose": "Two supported missing exterior cluster pieces: road verge transition and cyan objective beam crossing nearby Hall facade",
+  "purpose": "Three supported missing exterior cluster pieces: road verge transition, cyan objective beam crossing nearby Hall facade, and uniform tuft carpet with matched near/far patches",
   "supersedes_priority": "road-verge/original-approved-native-packet.json isolated Low road comparison",
   "original_reviewer": "f42_visual_review 01a1168a-2a2e-7243-aa7d-e655171c70fa",
-  "original_review_turn": "01a11e57-d0c5-7442-8df6-7fbbf6459309",
+  "original_review_turn": "01a11e63-732d-7b42-8f0e-21838a9f1e52",
   "source_command_verdict": "SOURCE/COMMAND APPROVE",
   "script": "tools/capture_f38_matrix.gd",
   "engine_args": [
@@ -21,7 +21,7 @@
     "--subset=village_road",
     "--f38-views=approach,reverse",
     "--times=day,night",
-    "--source-commit=d5ae2d5e781c83e7f17a72b3c21e6899fb6d3cd2"
+    "--source-commit=fe51ae4977ee990301a94eb9175e9dcc9d992cb6"
   ],
   "processes": [
     {
@@ -30,7 +30,8 @@
       "args": [
         "--f38-preset=Medium",
         "--f38-exterior=baseline",
-        "--output=res://ralph/reports/F38/lane-d/exterior-cluster/native-d5ae/Medium/baseline"
+        "--f38-tuft-patches=baseline",
+        "--output=res://ralph/reports/F38/lane-d/exterior-cluster/native-fe51/Medium/baseline"
       ],
       "expected_images": 16
     },
@@ -40,7 +41,8 @@
       "args": [
         "--f38-preset=Medium",
         "--f38-exterior=candidate",
-        "--output=res://ralph/reports/F38/lane-d/exterior-cluster/native-d5ae/Medium/candidate"
+        "--f38-tuft-patches=candidate",
+        "--output=res://ralph/reports/F38/lane-d/exterior-cluster/native-fe51/Medium/candidate"
       ],
       "expected_images": 16
     },
@@ -50,7 +52,8 @@
       "args": [
         "--f38-preset=High",
         "--f38-exterior=baseline",
-        "--output=res://ralph/reports/F38/lane-d/exterior-cluster/native-d5ae/High/baseline"
+        "--f38-tuft-patches=baseline",
+        "--output=res://ralph/reports/F38/lane-d/exterior-cluster/native-fe51/High/baseline"
       ],
       "expected_images": 16
     },
@@ -60,7 +63,8 @@
       "args": [
         "--f38-preset=High",
         "--f38-exterior=candidate",
-        "--output=res://ralph/reports/F38/lane-d/exterior-cluster/native-d5ae/High/candidate"
+        "--f38-tuft-patches=candidate",
+        "--output=res://ralph/reports/F38/lane-d/exterior-cluster/native-fe51/High/candidate"
       ],
       "expected_images": 16
     }
@@ -70,13 +74,15 @@
   "native_owner": "ROOT exclusively; D has dispatched no native or hosted GPU",
   "shipping_flags": {
     "road_verge": false,
-    "nearby_beacon_occlusion": false
+    "nearby_beacon_occlusion": false,
+    "tuft_patches": false
   },
   "fixture_disclosure": "Existing F38 authored stands, declared progression/arrival fixtures, ordinary grounded trainer/camera, fixed named day/night times and clear/rain plan cases. Baseline/candidate cached configuration only; no file or durable-state write. Original source, footing, facade/furniture/window, camera, image and timing guards retained.",
   "required_comparison": [
     "Actual native renderer/preset/resolution and OS exits",
     "All original source/footing/camera/image guards",
     "Actual path texture mask, road gate/strength/height per saved row",
+    "Actual near/far shader resource paths and requested contrast/patch thresholds per saved row; realm clone gates fenced OFF",
     "Actual objective id, visible near beam <=40m in FarmToHall reverse, camera distance and no_depth_test state",
     "Actual day/night/weather/poses and all 64 pixels by SAME original blind f26_presets_review",
     "Original 66m/far objective visibility treatment remains required; source comments are not runtime proof"
@@ -85,6 +91,7 @@
     "changed_pieces": [
       "FarmToHall nearby facade obstruction",
       "VillageRoad grass verge transition",
+      "World-stable grass patches with matching near/far handover",
       "Authored approach/reverse, day/night, clear/rain, Medium/High"
     ],
     "whole_cluster_remaining": [
@@ -96,9 +103,9 @@
     ]
   },
   "reused_pieces": [
-    "Grass affected batch37868504336 22/87833 PASS, original reuse APPROVE",
+    "Original grass batch37868504336 supports unchanged paths only; corrected affected batch37872551158 pending after retained parse failure",
     "Beacon affected batch37870816494 13/201 PASS, original reuse APPROVE"
   ],
   "clock_limit": "Observed dynamic clock constituents not asserted equal; capture CPU/wall timing is not GPU/Ally performance proof",
-  "queue_status": "QUEUED FOR ROOT; no whole criterion closed"
+  "queue_status": "Original source/command APPROVE; HOLD native until corrected affected proof and original artifact disposition. ROOT exclusively; no whole criterion closed"
 }
