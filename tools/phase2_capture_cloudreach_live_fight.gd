@@ -5,6 +5,7 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## proof: summit flags and a legal five-creature party are seeded in memory.
 
 const FIGHT_ID := "captain_veyra_storm_anchor"
+const MANIFEST_WRITER := preload("res://tools/capture_manifest_writer.gd")
 var _phase2_output := "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main"
 var _phase2_seed := 2042
 var _phase2_frames: Array[Dictionary] = []
@@ -25,7 +26,10 @@ func _run() -> void:
 	seed(_phase2_seed)
 	start_usec = Time.get_ticks_usec()
 	output_dir = _phase2_output
-	DirAccess.make_dir_recursive_absolute(output_dir)
+	if not _require(DirAccess.make_dir_recursive_absolute(output_dir) == OK,
+			"Fight capture output directory created"):
+		quit(1)
+		return
 	root.size = Vector2i(1920, 1080)
 	live_combat = true
 	game = root.get_node("Game")
@@ -76,7 +80,7 @@ func _run() -> void:
 	await _shot("aftermath")
 	_write_manifest()
 	print("PHASE2 CLOUDREACH FIGHT won=%s captures=%d" % [str(won), _phase2_frames.size()])
-	quit(0 if won else 1)
+	quit(0 if won and not failed and not _phase2_frames.is_empty() else 1)
 
 
 func _sample_fight() -> void:
@@ -100,27 +104,40 @@ func _capture(label: String) -> void:
 
 func _shot(label: String) -> void:
 	if DisplayServer.get_name() == "headless":
+		failed = true
+		_phase2_shot_pending = false
 		return
 	await RenderingServer.frame_post_draw
 	var path := "%s/%s.png" % [output_dir, label]
-	var result := root.get_texture().get_image().save_png(path)
+	var captured := root.get_texture().get_image()
+	var result := captured.save_png(path)
+	var persisted := Image.new()
 	if result == OK:
+		result = persisted.load(path)
+	if result == OK and persisted.get_size() == root.size:
 		_phase2_frames.append({"id": label, "file": path, "stage": stage,
 			"simulated_seconds": simulated_seconds, "fighting": manager.is_fighting(),
 			"trainer_battle_active": director.trainer_battle_active()})
+	else:
+		failed = true
+		push_error("Cloudreach fight PNG persistence/raster failed: " + path)
 	_phase2_shot_pending = false
 
 
 func _write_manifest() -> void:
+	if _phase2_frames.is_empty():
+		failed = true
 	var manifest := {"biome": "cloudreach", "category": "systems", "system": "fight",
+		"fight_id": FIGHT_ID,
 		"seed": _phase2_seed, "scene": "res://scenes/world/cloudreach_cliffs.tscn",
 		"display_server": DisplayServer.get_name(),
 		"rendering_method": RenderingServer.get_current_rendering_method(),
 		"resolution": [root.size.x, root.size.y],
 		"fixture": "In-memory summit progression flags and five level-25 creatures; production captain challenge and live controller-input combat pilot",
 		"frames": _phase2_frames, "victory": FIGHT_ID in battle_wins,
-		"failure": failed, "complete": FIGHT_ID in battle_wins and not _phase2_frames.is_empty()}
-	var stream := FileAccess.open(output_dir + "/manifest.json", FileAccess.WRITE)
-	if stream != null:
-		stream.store_string(JSON.stringify(manifest, "\t") + "\n")
-		stream.close()
+		"failure": failed, "complete": FIGHT_ID in battle_wins and not failed and not _phase2_frames.is_empty()}
+	var path := output_dir.path_join("manifest.json")
+	if MANIFEST_WRITER.write_json(path, manifest) != OK \
+			or FileAccess.get_file_as_string(path) != JSON.stringify(manifest, "\t") + "\n":
+		failed = true
+		push_error("Cloudreach fight manifest persistence/readback failed")
