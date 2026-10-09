@@ -1,0 +1,14 @@
+{
+  "criterion": "F19#4 OPEN",
+  "source": "96e33c7b87d099f212d1d70620bdf903a3a2aa21",
+  "run": 37885675944,
+  "script": "tests/smoke_net_proof_two_peer.gd",
+  "args": "--proof-scenario=res://tools/net/proof_scenarios/f14_guardian_offer_capacity_space.json --proof-out=res://ralph/reports/F19/lane-d/guardian-two-peer/attempt96e3",
+  "mode": "headless/Dummy",
+  "limit_minutes": 40,
+  "original_command_approve": "01a11efc-79d3-7973-824a-67a3f0c5b500",
+  "fixtures": "Existing explicit Water boot, Nerissa/fight-participant/party fixtures; original real prompt/controller/identity/save/no-sixth/repeatrefusal guards. Headless screenshot steps disclose captured=false",
+  "scope": "Two participant accepts: guest full releasesRill, host withroom accepts; not refusal/nonparticipant/reconnect or earned portal route",
+  "runtime": "pending",
+  "not_dispatched": "Veridian same-five15min rejected (truncates1500s+hello allowance and covers party carry not capacity); full-refusal with4creatures approved but omitted as redundant space-refusal evidence"
+}

@@ -1,0 +1,35 @@
+{
+  "kind": "Exact ROOT-only native diagnostic packet; pending affected guard proof",
+  "source_commit": "73d8e98723a55f3a24fd946d2279eb1a9749cb9e",
+  "original_source_command_approve": "01a11efa-30e4-7c60-a49c-983304d9d5fe",
+  "script": "tools/capture_f38_matrix.gd",
+  "engine_args": [
+    "--rendering-method",
+    "forward_plus",
+    "--rendering-driver",
+    "vulkan",
+    "--resolution",
+    "1920x1080"
+  ],
+  "user_args": [
+    "--subset=farm_to_hall",
+    "--f38-views=approach",
+    "--times=day",
+    "--f38-preset=Medium",
+    "--f38-exterior=baseline",
+    "--f38-tuft-patches=baseline",
+    "--source-commit=73d8e98723a55f3a24fd946d2279eb1a9749cb9e",
+    "--output=res://ralph/reports/F38/lane-d/exterior-cluster/native-73d8-arm-clearance/Medium/baseline"
+  ],
+  "planned_frames": 2,
+  "weather": [
+    "clear",
+    "rain"
+  ],
+  "affected_proof_run": 37885673847,
+  "native_precondition": "Fresh six-test affected guard proof must pass, clean exact-source import/guards, fresh output, ROOT scheduling. D does not launch native.",
+  "guards": "Actual sole floor ray, physical floor/normal/capsule, same actual trainer/current production camera, explicit framing minima, max distance/fixedstand displacement, exact1920x1080 encodedraster. Generic-min exception requires exact real retracted endpoint, finite four actual near-plane corners covered by actual probe, positive actual capsule clearance and unscaled contexts.",
+  "diagnostics": "Actual pivot/endpoint/hit/requested/probe/corner/clearance operands retained on successful and rejected rows; no retrospective safety claim for326007",
+  "unchanged_failures": "fe51,8748,326007/import failures preserved; no unchanged native retry",
+  "acceptance": "Not wholeF38/F26, pairedHigh, blind, audio, performance or earned journey evidence; candidate flagsOFF"
+}
