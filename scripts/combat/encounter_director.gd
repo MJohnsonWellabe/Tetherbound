@@ -6794,8 +6794,9 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		and MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true:
 		# Complete existing command admission before the first saved-vitals
 		# original freezes this record. Late admission changes its exact seq.
-		# Without saved vitals there is no original to freeze; commands bind
-		# on the next encounter change as before.
+		# The OFF path retains ordinary trainer reward originals, but skips
+		# this eager record application; commands bind on the next change.
+		# Owner-pose/save admission still fences either path independently.
 		_host_after_encounter_change(str(rec["encounter_id"]))
 	if _can_encounter_rpc():
 		for peer_id: int in multiplayer.get_peers():
