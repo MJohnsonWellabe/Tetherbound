@@ -35,6 +35,7 @@ func before_each() -> void:
 
 func after_each() -> void:
 	COMMANDS._config = _saved_commands
+	super()
 
 func _admitted(character: String = "owner_a") -> Dictionary:
 	var admitted: Dictionary = DATA.new()._before()

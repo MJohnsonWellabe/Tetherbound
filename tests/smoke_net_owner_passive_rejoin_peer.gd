@@ -148,18 +148,6 @@ func _tag_step(action: String) -> Dictionary:
 	if action == "op_tag_target": return await _tonic_step("op_tonic_target", {})
 	if manager == null or director == null or not manager.is_fighting():
 		return {"verdict":"FAIL", "detail":"Tag requires the actual live fight"}
-	if action == "op_tag_shove":
-		# The same existing proximity setup, followed by the actual utility tap.
-		var target: Node3D = director.get("_shared_opponent_proxy")
-		if target == null: target = director.get("_legacy_mirror")
-		var body: Node3D = director.ally_body()
-		if target == null or body == null: return {"verdict":"FAIL", "detail":"actual Shove body missing"}
-		body.global_position = target.global_position + Vector3(0, 0, 3.0)
-		body.face_towards(target.global_position)
-		for frame in 15: await physics_frame
-		var pressed: Dictionary = await _step_press({"action":"combat_utility"})
-		for frame in 90: await physics_frame
-		return pressed
 	if action == "op_tag_replay":
 		if _tag_request.is_empty() or not manager.submit_tether_command(_tag_request):
 			return {"verdict":"FAIL", "detail":"same Tag request could not be submitted"}
@@ -178,17 +166,27 @@ func _tag_step(action: String) -> Dictionary:
 	for hit in 8:
 		var target: Node3D = director.get("_shared_opponent_proxy")
 		if target == null: target = director.get("_legacy_mirror")
+		if director.call("_is_host") == true: target = director.get("_engaged_with")
 		var body: Node3D = director.ally_body()
 		if target == null or body == null or not manager.is_fighting():
 			return {"verdict":"FAIL", "detail":"actual Tag target or body lost before earned meter", "data":{"attempts":attempts}}
 		body.global_position = target.global_position + Vector3(0, 0, 3.0)
 		body.face_towards(target.global_position)
 		for frame in 15: await physics_frame
+		var strike_facing := Vector3(0, 0, -1)
+		if director.call("_is_host") == true:
+			if not is_instance_valid(target) or not is_instance_valid(body):
+				return {"verdict":"FAIL", "detail":"actual host Tag body lost during preparation"}
+			# Same ordinary live facing as the approved host command-hit path.
+			strike_facing = target.call("centre") - body.call("centre")
+			strike_facing.y = 0.0
+			if strike_facing.is_zero_approx(): strike_facing = body.call("facing")
+			strike_facing = strike_facing.normalized()
 		var meter := float(manager.tether_command_snapshot().get("meter", 0.0))
 		var observation: Dictionary = {"attempt":hit + 1, "meter_before":meter,
 			"foe_hp_before":float(manager.enemy().hp) if manager.enemy() != null else -1.0}
 		attempts.append(observation)
-		var strike: Dictionary = await _step_strike({"facing":[0,0,-1], "settle":1})
+		var strike: Dictionary = await _step_strike({"facing":[strike_facing.x,strike_facing.y,strike_facing.z], "settle":1})
 		var strike_data: Dictionary = strike.get("data", {})
 		observation["strike"] = {"verdict":str(strike.get("verdict", "")), "ok":strike_data.get("ok"),
 			"code":str(strike_data.get("code", "")), "submitted_action":strike_data.get("submitted_action")}
@@ -347,13 +345,6 @@ func _tag_state(args: Dictionary) -> Dictionary:
 	if args.get("snare") == true: out["snare"] = snare
 	if args.get("rally") == true: out["rally"] = rally
 	if session.is_host(): out["host_settlement_snapshot"] = settlement
-	if session.is_host() and args.get("shove") == true:
-		var wild: Node3D = director.get("_engaged_with")
-		var target: RefCounted = wild.get("instance") if is_instance_valid(wild) else null
-		out["shove"] = {"target_uid":str(target.get("uid")) if target != null else "", "encounter_id":id,
-			"generation":int(wild.get_meta(&"tether_body_generation", 0)) if is_instance_valid(wild) else 0,
-			"receipts":(wild.get("_landed_utility_state") as Dictionary).get("receipts", {}).duplicate(true) \
-				if is_instance_valid(wild) else {}}
 	return out
 
 
@@ -373,15 +364,23 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 					if arg.begins_with("--hud-output="): _hud_capture_metadata["output"] = arg.trim_prefix("--hud-output=")
 				if DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(str(_hud_capture_metadata.get("output", "")))) != OK:
 					return {"verdict":"FAIL", "detail":"HUD output directory could not be created"}
-			# Disclosed process-local candidate gates, before actual world boot.
-			# No shipped flag, authored item, HP, meter or timer is modified.
 			var commands: Script = preload("res://scripts/combat/tether_commands.gd")
-			commands._config = commands.config().duplicate(true)
-			for flag: String in ["runtime_enabled", "network_enabled", "ui_enabled"]:
-				commands._config.feature_flags[flag] = true
 			var math: Script = preload("res://scripts/combat/combat_math.gd")
-			math._config = math.config().duplicate(true)
-			math._config.actor_vitals.runtime_enabled = not OS.get_cmdline_user_args().has("--without-actor-vitals")
+			if OS.get_cmdline_user_args().has("--prove-shipping-tether"):
+				for flag: String in ["runtime_enabled", "network_enabled", "ui_enabled"]:
+					if commands.config().get("feature_flags", {}).get(flag) != true:
+						return {"verdict":"FAIL", "detail":"shipping Tether proof requires tracked " + flag}
+				var required_actor_vitals := not OS.get_cmdline_user_args().has("--without-actor-vitals")
+				if bool(math.config().get("actor_vitals", {}).get("runtime_enabled", false)) != required_actor_vitals:
+					return {"verdict":"FAIL", "detail":"shipping Tether proof refuses a local actor-vitals override"}
+			else:
+				# Existing disclosed mechanics selector only; shipping mode never mutates gates.
+				commands._config = commands.config().duplicate(true)
+				for flag: String in ["runtime_enabled", "network_enabled", "ui_enabled"]:
+					commands._config.feature_flags[flag] = true
+				math._config = math.config().duplicate(true)
+				math._config.actor_vitals.runtime_enabled = not OS.get_cmdline_user_args().has("--without-actor-vitals")
+
 		"op_tonic_hud_capture":
 			var name := str(args.get("name", ""))
 			if args.size() != 1 or name not in ["earned-command", "after-tag"] \
@@ -533,9 +532,54 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				if target == null: target = director.get("_legacy_mirror")
 				var body: Node3D = director.ally_body()
 				if target == null or body == null: return {"verdict":"FAIL", "detail":"actual combat body missing"}
-				body.global_position = target.global_position + Vector3(0, 0, 3.0)
-				body.face_towards(target.global_position)
-				for frame in 15: await physics_frame
+				var strike_facing := Vector3(0, 0, -1)
+				if session.is_host():
+					# Preserve the disclosed local-authority proximity fixture.
+					body.global_position = target.global_position + Vector3(0, 0, 3.0)
+					body.face_towards(target.global_position)
+					for frame in 15: await physics_frame
+					if not is_instance_valid(target) or not is_instance_valid(body):
+						return {"verdict":"FAIL", "detail":"actual combat body lost during host preparation"}
+					# The live wild can move during preparation. Use its current
+					# direction for the ordinary physical input, as the guest does.
+					strike_facing = target.call("centre") - body.call("centre")
+					strike_facing.y = 0.0
+					if strike_facing.is_zero_approx(): strike_facing = body.call("facing")
+					strike_facing = strike_facing.normalized()
+				else:
+					# Local assignment cannot place the admitted host body. Use the
+					# existing physical navigator for exactly the same 15 frames.
+					_drive_left(0.0, 0.0)
+					var rig: Node3D = _probe.call("camera_rig")
+					var approach_id := str(manager.encounter_id())
+					var active: RefCounted = manager.active_creature()
+					var deployment: Dictionary = director.tether_command_deployment().duplicate(true)
+					if rig == null or active == null or int(deployment.get("generation", 0)) < 1:
+						return {"verdict":"FAIL", "detail":"actual owned approach camera or deployment missing"}
+					var approach_uid := str(active.uid)
+					var nav = NAVIGATOR.new(self, body, rig, Callable(self, "_drive_left"))
+					for frame in 15:
+						target = director.get("_shared_opponent_proxy")
+						if target == null: target = director.get("_legacy_mirror")
+						active = manager.active_creature()
+						if not is_instance_valid(target) or not is_instance_valid(body) or director.ally_body() != body \
+							or not manager.is_fighting() or str(manager.encounter_id()) != approach_id or active == null \
+							or str(active.uid) != approach_uid or director.tether_command_deployment() != deployment:
+							_drive_left(0.0, 0.0)
+							return {"verdict":"FAIL", "detail":"owned approach body or encounter changed"}
+						await nav.step(target.global_position)
+					_drive_left(0.0, 0.0)
+					if not is_instance_valid(target) or not is_instance_valid(body) or director.ally_body() != body \
+						or not manager.is_fighting() or str(manager.encounter_id()) != approach_id \
+						or manager.active_creature() == null or str(manager.active_creature().uid) != approach_uid \
+						or director.tether_command_deployment() != deployment:
+						return {"verdict":"FAIL", "detail":"owned approach changed before physical strike"}
+					# Facing remains an ordinary physical-input argument, not the
+					# runner's forged/target-aimed strike branch.
+					strike_facing = target.call("centre") - body.call("centre")
+					strike_facing.y = 0.0
+					if strike_facing.is_zero_approx(): strike_facing = body.call("facing")
+					strike_facing = strike_facing.normalized()
 				# Observe immediately before the existing strike step. Its unchanged
 				# readiness wait may precede physical injection; this is not a host queue.
 				var id := str(manager.encounter_id())
@@ -574,7 +618,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 					"refusal_before":(manager.get("last_encounter_refusal") as Dictionary).duplicate(true)}
 				attempts.append(observation)
 				print("TONIC_PRE_STRIKE " + JSON.stringify(observation))
-				var strike: Dictionary = await _step_strike({"slot":slot, "facing":[0,0,-1], "settle":90})
+				var strike: Dictionary = await _step_strike({"slot":slot, "facing":[strike_facing.x, 0, strike_facing.z], "settle":90})
 				var strike_data: Dictionary = strike.get("data", {})
 				observation["strike"] = {"verdict":str(strike.get("verdict", "")), "reported_ok":strike_data.get("ok"),
 					"code":str(strike_data.get("code", "")), "submitted_action":strike_data.get("submitted_action")}
@@ -652,6 +696,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			# new enemy hit while the original Item's writer refusal is tested.
 			var director: Node = _encounter_director()
 			var target: Node3D = director.get("_shared_opponent_proxy")
+			if session.is_host(): target = director.get("_engaged_with")
 			var body: Node3D = director.ally_body()
 			if target == null or body == null: return {"verdict":"FAIL", "detail":"actual combat body missing"}
 			body.global_position = target.global_position + Vector3(0, 0, 18.0)
@@ -688,8 +733,15 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 					if not op is Dictionary or op.get("op") != "creature_training_settle": continue
 					var row: Dictionary = op.get("delivery", {})
 					if row.get("action") != "tether_item" or row.get("status") != "pending" \
-						or row.get("character_id") != game.local.character_id \
-						or row.get("intent", {}).get("request") != _tonic_request: continue
+						or row.get("character_id") != game.local.character_id: continue
+					if session.is_host():
+						# A local host publishes during request(), before it returns.
+						# Observe the actual request already installed by the manager.
+						var live: Dictionary = manager.get("_tether_command_view").get("pending_request", {})
+						if live.get("command_id") != "item_throw" \
+							or not preload("res://scripts/combat/tether_commands.gd").valid_intent(live): continue
+						_tonic_request = live.duplicate(true)
+					if row.get("intent", {}).get("request") != _tonic_request: continue
 					var blocked: Dictionary = await _tonic_step("op_tonic_writer", {"block":true})
 					_tonic_refusal_armed = blocked.get("verdict") == "PASS"
 			ledger.delta_applied.connect(_tonic_blocker)
