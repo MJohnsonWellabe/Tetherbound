@@ -30,6 +30,32 @@ const LOW_PROP_RISE := 0.05
 ## contact-saturation guards stay hard refusals.
 const MAX_DEFERRAL_FRAMES := 30
 
+## A physics_frame signal resumes BEFORE NativeTick and the controller. A
+## submitted step is finished only by its corresponding actual callback epoch.
+## This keeps nested coroutine resumes from spending walking frames without
+## crossing the real pre/controller/post movement callbacks.
+class StepEpoch extends RefCounted:
+	var issued := 0
+	var completed := 0
+	var in_flight := 0
+	var pre_frame := -1
+	func request() -> int:
+		issued += 1
+		return issued
+	func begin(token: int, frame: int) -> bool:
+		if frame < 0 or token < 0 or token > issued or (token > 0 and token <= completed) or in_flight > 0:
+			return false
+		in_flight = token
+		pre_frame = frame
+		return true
+	func finish(frame: int) -> void:
+		if in_flight > 0 and frame == pre_frame:
+			completed = in_flight
+		in_flight = 0
+
+var _step_epoch := StepEpoch.new()
+var _requested_step := 0
+
 ## Frame-counted deferral ledger for the cooperative deadline (see
 ## MAX_DEFERRAL_FRAMES). One deferral per physics frame at most.
 class DeadlineDeferral extends RefCounted:
@@ -77,6 +103,8 @@ class NativeTick extends Node:
 			queue_free()
 		else:
 			nav.call("_native_tick", delta)
+			if not bool(nav.get("_production_steering")):
+				nav.call("_finish_step_epoch")
 
 var _body: CharacterBody3D
 var _cap: CollisionShape3D
@@ -303,7 +331,28 @@ func step(point: Vector3) -> void:
 	_request = point
 	_raw = false
 	_requested = not refused()
-	await _tree.physics_frame # Queries execute only in NativeTick, after this signal.
+	var token := _step_epoch.request()
+	_requested_step = token
+	var last_frame := Engine.get_physics_frames()
+	var waiting_frames := 0
+	while _step_epoch.completed < token and not refused():
+		await _tree.physics_frame
+		if _step_epoch.completed >= token or refused():
+			break
+		var frame := Engine.get_physics_frames()
+		if frame <= last_frame:
+			# Do not re-consume a physics-frame emission from a nested await.
+			await _tree.process_frame
+			continue
+		last_frame = frame
+		waiting_frames += 1
+		if waiting_frames > MAX_DEFERRAL_FRAMES:
+			_stop_geometry("requested native walking step did not complete its callback epoch within 30 physics frames")
+			break
+
+
+func _finish_step_epoch() -> void:
+	_step_epoch.finish(Engine.get_physics_frames())
 
 
 func push_once(direction: Vector3) -> void:
@@ -311,6 +360,7 @@ func push_once(direction: Vector3) -> void:
 	_request = direction
 	_raw = true
 	_requested = not refused()
+	_requested_step = 0
 
 
 func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false, provisional_path: Array[Vector2] = []) -> bool:
@@ -881,6 +931,10 @@ func _native_tick_impl(_delta: float) -> void:
 	if not _body.is_on_floor():
 		_stop_geometry("trainer not grounded; aerial/stream/recovery case is incomplete")
 		return
+	if not _step_epoch.begin(_requested_step, Engine.get_physics_frames()):
+		_stop_geometry("native walking request/callback epoch diverged")
+		return
+	_requested_step = 0
 	_checked_start = not _production_steering
 	if _production_steering:
 		if not _production_contract():
@@ -1374,7 +1428,10 @@ class ProductionObserve extends Node:
 		if nav == null:
 			queue_free()
 		else:
+			var pending := bool(nav.get("_production_pending"))
 			nav.call("_production_observe")
+			if pending:
+				nav.call("_finish_step_epoch")
 
 var _production_steering := false
 var _observer: ProductionObserve
