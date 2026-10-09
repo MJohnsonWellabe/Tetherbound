@@ -747,7 +747,7 @@ func continuation_content(tree: SceneTree, game: Node) -> bool:
 ## generation, outcome, position or durable state is changed by this witness.
 func alpha_available_after_credits(tree: SceneTree, game: Node) -> bool:
 	var rules := preload("res://scripts/repeatables/alpha_respawns.gd")
-	if not check(rules.config().get("runtime_enabled") == true and HOME.context(game).get("regional_credits_seen") == true,
+	if not check(rules.config().get("runtime_enabled") == true and HOME.journey_context(game).get("regional_credits_seen") == true,
 		"completed character keeps the enabled alpha route after credits"): return false
 	var alphas: Node = game.session.get_node_or_null("FoundationComposition/Alphas")
 	var director: Node = tree.current_scene.get_node_or_null("EncounterDirector")
