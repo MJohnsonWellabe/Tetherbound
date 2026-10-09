@@ -130,8 +130,8 @@ static func site_spawn_plans(site: Dictionary, table: Dictionary,
 
 ## Rebuild the saved owner's existing party member through the deployment seam.
 ## A surface swimmer must not be placed on the seabed by the land spawn helper.
-func restore_swim_mount(saved: Dictionary, current: Callable = Callable()) -> bool:
-	if current.is_valid() and not current.call(): return false
+func restore_swim_mount(saved: Dictionary, current: Variant = null) -> bool:
+	if not _swim_restore_current(current): return false
 	var party := _party()
 	var index := preload("res://scripts/save/water_traversal_save.gd").mount_index(saved, party.members()) if party != null else -1
 	var creature: RefCounted = party.at(index) if party != null and index >= 0 else null
@@ -168,17 +168,17 @@ func restore_swim_mount(saved: Dictionary, current: Callable = Callable()) -> bo
 		print("F37 RESTORE REFUSAL spawn_ally")
 		return false
 	var restored_body := _ally_body
-	if current.is_valid() and not current.call():
+	if not _swim_restore_current(current):
 		_cancel_swim_restore(creature, restored_body)
 		return false
 	# No frame advances between revealing the body and attaching its rider.
 	_player.global_position = _ally_body.global_position + Vector3.UP
 	_ally_body.velocity = Vector3.ZERO
-	var mounted: bool = riding.mount()
+	var mounted: bool = riding.restore_mount(current)
 	if not mounted and str(creature.species_id) == "ripplet":
 		for attempt in 120:
 			await get_tree().physics_frame
-			if current.is_valid() and not current.call():
+			if not _swim_restore_current(current):
 				_cancel_swim_restore(creature, restored_body)
 				return false
 			if not is_instance_valid(_ally_body):
@@ -186,6 +186,12 @@ func restore_swim_mount(saved: Dictionary, current: Callable = Callable()) -> bo
 				return false
 			if riding.is_mounted(): return true
 	return mounted
+
+
+func _swim_restore_current(current: Variant) -> bool:
+	# Null is the legacy caller with no continuation fence. A supplied but
+	# invalid callback is a retired restoration and must fail closed.
+	return current == null or (current is Callable and current.is_valid() and current.call() == true)
 
 
 func _cancel_swim_restore(creature: RefCounted, body: Node) -> void:

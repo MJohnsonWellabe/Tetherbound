@@ -7,6 +7,13 @@ var dive_remaining_s := 0.0
 var _ripplet_approved := false
 var _ripplet_requesting := false
 var _ripplet_hint_shown := false
+var _restore_mount_guard: Variant = null
+
+func restore_mount(current: Variant) -> bool:
+	_restore_mount_guard = current
+	var attached := mount()
+	_restore_mount_guard = null
+	return attached
 
 func cancel_traversal_requests() -> void:
 	# Answers for a previous loaded pose must not attach its obsolete carrier.
@@ -21,7 +28,7 @@ func mount() -> bool:
 	if candidate != null and str(candidate.species_id) == "ripplet" and not _ripplet_approved:
 		if not _ripplet_requesting:
 			_ripplet_requesting = true
-			water_world.get_node("RippletWaterService").request("mount", str(_encounter.ally_instance().uid))
+			water_world.get_node("RippletWaterService").request("mount", str(_encounter.ally_instance().uid), _restore_mount_guard)
 		return is_mounted()
 	return super.mount()
 
