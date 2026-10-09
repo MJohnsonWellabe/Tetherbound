@@ -96,6 +96,13 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			if body == null:
 				return {"verdict": "FAIL", "detail": "Named Tidecoil body never became resident"}
 			var named_body_path := str(body.get_path())
+			# Sample after the original residency wait enters activation range,
+			# before the disclosed won-handler fixture can resolve anything.
+			var cycle: Dictionary = game.world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(TIDECOIL_ID, {})
+			var packet_valid := not preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, TIDECOIL_ID).is_empty()
+			if msg.get("args", {}).get("resident_shell") == true \
+				and (int(cycle.get("generation", 0)) < 1 or cycle.get("status") != "active" or not packet_valid):
+				return {"verdict": "FAIL", "detail": "Resident named body lacks its canonical alpha generation before resolution"}
 			director.set("_engaged_with", body)
 			director.call("_on_combat_exited", "won")
 			for frame in 10:
@@ -103,7 +110,9 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			var local: bool = game.world.flags.has(RESOLVED)
 			return {"verdict": "PASS" if local else "FAIL",
 				"detail": "Director terminal handler recorded Tidecoil on this peer: %s (host=%s)" % [local, game.is_host()],
-				"data": {"named_body_present": true, "named_body_path": named_body_path}}
+				"data": {"named_body_present": true, "named_body_path": named_body_path,
+					"alpha_generation": int(cycle.get("generation", 0)), "alpha_status": str(cycle.get("status", "")),
+					"alpha_packet_valid": packet_valid}}
 		"deep_watch_claim":
 			_pose(_cache_position() + Vector3(1.0, 0.0, 0.0))
 			var before := int(game.inventory.count("skill_candy_iii"))

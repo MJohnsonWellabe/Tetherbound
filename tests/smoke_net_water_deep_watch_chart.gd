@@ -77,13 +77,15 @@ func _run() -> void:
 	if resident_shell:
 		check(host_state.get("current_realm") == "meadows" and host_state.get("water_shell") == true
 			and host_state.get("water_look_absent") == true, "Named alpha is served by the completed Water shell without local presentation")
-		check(int(host_state.get("alpha_generation", 0)) >= 1 and host_state.get("alpha_status") == "active"
-			and host_state.get("alpha_packet_valid") == true, "Host retains the canonical named alpha generation before client resolution")
-	var resolved: Dictionary = await step(resolver, "deep_watch_resolve", {}, 1200)
+	var resolved: Dictionary = await step(resolver, "deep_watch_resolve", {"resident_shell": resident_shell}, 1200)
 	check(resolved.get("verdict") == "PASS", "Resolver records Tidecoil locally: " + str(resolved.get("detail", "")))
 	if resident_shell:
 		check(resolved.get("data", {}).get("named_body_present") == true,
 			"Original client resolver observed the actual named Tidecoil body")
+		check(int(resolved.get("data", {}).get("alpha_generation", 0)) >= 1
+			and resolved.get("data", {}).get("alpha_status") == "active"
+			and resolved.get("data", {}).get("alpha_packet_valid") == true,
+			"Named residency wait observed the canonical generation before the original terminal fixture")
 	var carried: Dictionary = await step(observer, "wait_flag", {"flag": "water_named_deep_watch_tidecoil_resolved", "scope": "world", "budget_frames": 600}, 1200)
 	check(carried.get("verdict") == "PASS", "Resolution reaches the other peer's world store: " + str(carried.get("detail", "")))
 	host_state = await probe(0, "deep_watch")
