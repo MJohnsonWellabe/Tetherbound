@@ -1,7 +1,7 @@
 {
   "criterion": "F24#3",
   "criterion_text": "Tether Snare slows a wild creature and raises catch chance; it cannot target a trainer-owned creature.",
-  "status": "OPEN: changed shipping Actor/Tether-ON host path failed at earned-meter prerequisite; no Snare cast or whole acceptance.",
+  "status": "WHOLE F24#3 APPROVE / MET on shipping candidate183e5f0d1c; required FullCI, landing and main activation pending.",
   "source_commit": "6b4a4deb800480e09ae0ca2572458c9304c22766",
   "change": "Existing two-peer proof gains opt-in host commander with guest admitted noncaster catch-grant control; peer helper reads host actual engaged wild rather than guest mirror. Original guest path, eight strikes, budgets, physical strike inputs, exact receipt/identity/body/one-meter-debit/no-HP-damage, actual movement/catch consumers and HUD guards retained.",
   "source_review": {
@@ -151,6 +151,59 @@
     "next_source": "183e5f0d1cdbe3c551a9930bae179a75d429f4bd",
     "artifact_disposition": "ARTIFACT / DISPOSITION APPROVE; failed before Snare, miss cause unproven",
     "review_turn": "01a11e88-fd28-7cf2-a1e8-b4cb682af45a",
-    "next_source_review": "SOURCE / PROOF-SCOPE APPROVE; one changed existing shipping-host proof supported, no hit guarantee"
+    "next_source_review": "SOURCE / PROOF-SCOPE APPROVE; one changed existing shipping-host proof supported, no hit guarantee",
+    "changed_facing_proof": {
+      "checkout_sha": "183e5f0d1cdbe3c551a9930bae179a75d429f4bd",
+      "run_id": 37875829066,
+      "artifact_id": 11592143237,
+      "job_id": 113644088538,
+      "log_sha256": "12eaf0774ec48bd2fb2b96a1b017a21f23b2008f0ad146b7e2c8378120056422",
+      "script": "tests/smoke_net_owner_passive_rejoin.gd",
+      "args": "--prove-host-tether-snare --prove-shipping-tether",
+      "checks": 33,
+      "failures": 0,
+      "exit": 0,
+      "wall_seconds": 264,
+      "tracked_actor_and_tether_flags_on": true,
+      "feature_overrides": false,
+      "source_review": "SOURCE / PROOF-SCOPE APPROVE",
+      "source_review_turn": "01a11e88-fd28-7cf2-a1e8-b4cb682af45a",
+      "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "command_receipt": {
+        "action_id": "command:1:1:character-1c7893be02f62377b9461279960e5d5b:1:1",
+        "command_id": "snare",
+        "committed": true,
+        "generation": 1,
+        "sequence": 1
+      },
+      "operands": {
+        "meter_before": 64.0,
+        "meter_after": 4.0,
+        "authored_cost": 60.0,
+        "movement_multiplier": 0.6,
+        "caster_catch_bonus": 0.1,
+        "noncaster_catch_bonus": 0.0,
+        "target_current": true,
+        "target_hp_before": 210.884822364646,
+        "target_hp_after": 210.884822364646
+      },
+      "guards": "Original eight attempts, physical input, body/generation, one cost debit, no target HP damage, actual movement/catch consumers, noncaster and HUD/normal-exit guards retained.",
+      "reused_refusal_proof": {
+        "run_id": 37865821390,
+        "artifact_id": 11588476358,
+        "tests": 54,
+        "assertions": 2054,
+        "failed": 0,
+        "original_verdict": "ARTIFACT APPROVE",
+        "review_turn": "01a11e21-d9a3-7903-a89c-981a857a4a9e",
+        "fixture": "Explicit legacy Actor-OFF unit fixture; refusal/owned-target guards only, not positive shipping-runtime evidence."
+      },
+      "required_blind": "No separate blind proof named by original source/criterion review.",
+      "artifact_verdict": "ARTIFACT APPROVE",
+      "whole_f24_3_verdict": "WHOLE F24#3 APPROVE / MET",
+      "limits": "No F24#0/#5 or other command-path acceptance. Required shipping-ON FullCI, landing and publication remain unearned. Failed Actor-OFF/guest/first-shipping artifacts retained; no failed save promoted.",
+      "final_review_turn": "01a11e92-184d-72c0-bb41-d9215ae018e0",
+      "final_review_literal": "WHOLE F24#3 APPROVE / MET on candidate 183e5f0d1cdbe3c551a9930bae179a75d429f4bd, combining this tracked shipping-path proof with unchanged trainer-owned refusal coverage. No separate blind proof is named. Full CI and landing remain pending; this does not certify activation on main, F24#0/#5, or all command paths. Prior failures remain retained."
+    }
   }
 }
