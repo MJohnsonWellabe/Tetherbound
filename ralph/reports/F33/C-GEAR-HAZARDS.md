@@ -39,6 +39,60 @@ isolated user directory and a fresh absolute output. **UNRUN**: ROOT's native
 GPU hold remains in effect. Original `modal_visual` must judge only the native
 pixels, without producer logs or source hints. Whole **F33#0 remains open**.
 
+## Mounted paid gear path
+
+The original whole-criterion review identified the remaining F33#0 gap as
+mounted Den equip and home Forge/Altar upgrade transactions. The retained
+24-link mechanics proof above remains valid. Under coordinator comment
+`6072835614`, F33#0 has no visual clause; its functional grade does not invent
+a blind visual PASS or import F33#1's separate accent criterion.
+
+`a53e67e3ad4583b2c03c7aa36a6d9b94955a073c` extends the existing paid-station
+smoke with `--prove-creature-gear`. It uses one disclosed pre-admission owned
+creature, carried Rootiron base pieces and original supplied materials. Four
+physical mounted button actions exercise Den Harness/Charm equip, Forge
+Harness +1 and Altar Charm +1 through the current authenticated Session.
+Exact original intent, UID, payment, durable owner-save ACK, once receipt,
+canonical live gear and physical owner-file inventory are required. It grants
+no catch/craft-route or accepted-boundary credit and changes no actor flags.
+The original station, refusal, refund and world-binding checks remain.
+
+[Run 37875492290](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37875492290),
+job `113643017260`, artifact `11591638643`, source `8b2b45a0ef29b256603c3ccfe71e3f3e5e759bc1`:
+**FAIL, exit 1, before any gear action**. Retained ZIP
+`D:/tetherbound/.tmp/c-f33-paid-gear-37875492290.zip`, SHA256
+`2ef24ac964c907823e0065813a66396c5b71efef5e50a88190a3d3c3ddbf07e0`.
+Deferring the initial Forge teardown occupied the original Kitchen cell.
+The placement helper also funded `DELIVERY.cost("altar")`, which returns no
+price for the original version-1 Altar path; the real placer uses `_altar_cost`.
+
+`bf23b2c95ac5978b8b1233625efc0b7fa9fc1910` restores the original Forge and
+attachment teardown/refund before Kitchen, prices Altar from that actual
+contract with the same exact-debit checks, and places a fresh paid Forge and
+paid Meadows attachment on a legal cell before the four gear actions. It
+preserves all original gear/save/ACK guards and frame budgets. Original
+`modal_review` independently confirmed the first failure and gave SOURCE +
+COMMAND APPROVE for one supported headless retry in
+`D:/tetherbound/.tmp/c-f33-paid-gear-r2-source-original-verdict.txt`.
+[Run 37876900709](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37876900709),
+job `113647460182`, artifact `11592433729`, exact source `bf23b2c95a`:
+**FAIL, exit 1, before any gear action**. ZIP
+`D:/tetherbound/.tmp/c-f33-paid-gear-37876900709.zip`, SHA256
+`969cb9d3561ba4f56ac7f4bbb30714f122fa20cfb36cbe98c57713a7a730fbb8`,
+matches the actual upload digest. Original Forge/attachment refunds, paid
+Kitchen/craft once, Workbench/Altar/Den/Farm and world-binding checks passed.
+The replacement Forge's live ghost refused homestead bounds. `_legal_cell`
+had checked the unsnapped point at yaw zero; the live ghost uses production
+`preview_placement` including snapping and live yaw. The helper's 2 m stance
+offset also differs from actual `BuildPlacer.PLACE_AHEAD = 3.0`.
+
+`479cb12dd325ca33ff90afb8223b200712fcd66c` changes the gear-only replacement
+Forge selection to that production preview after funding its original cost,
+then derives its stance from the actual camera basis and placement distance.
+The original finite candidate grid, physical paid placement and four gear
+transaction guards remain. Other modes retain their existing cell helper.
+Both failed packets remain retained. **Whole F33#0 remains open.**
+
 ## Saved pouch tier and real Satchel reconnect proof
 
 `685d3e10beff5b031bebf4726ec5e284e33bbef7` fixes the Satchel's existing
