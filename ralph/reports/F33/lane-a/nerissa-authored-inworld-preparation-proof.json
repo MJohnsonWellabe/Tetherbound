@@ -1,8 +1,9 @@
 {
   "criterion": "F33#2",
   "criterion_text": "Gear matters: a simulation of each biome's boss shows the matching tier passes C2 and the previous tier is clearly harder.",
-  "status": "OPEN. Production-load diagnostic exposes hosted_named type-inference compile error. Explicit Boolean correction pending original review and required affected checks. No successful fight/C2/whole pass; stop04:20Z retained.",
-  "source_commit": "37f76541b46f9cb39d99b14c638fd396c791643a",
+  "status": "PARKED / OPEN at04:20Z two-hour cap. Compiler correction approved and compiled; required affected16tests/2492assertions have2failures. No successful one-peer gameplay/C2/whole pass. No unchanged retry.",
+  "source_commit": "f5e34f421896fb6f03785d088d395ad9a720370d",
+  "initial_hosted_named_source_commit": "37f76541b46f9cb39d99b14c638fd396c791643a",
   "initial_preparation_source_commit": "e42f047df4860139d1958a08d6cc2b3cf7cf4f6d",
   "change": "Nerissa defaults to chapter_curve Tidewake Veilfall entry level; the batch forwards only explicit party-level overrides. Other trainer defaults and supplied overrides remain unchanged.",
   "source_review": {
@@ -115,5 +116,27 @@
   "dispatch_note": "Initial API request with fixed_fps workflow input rejected422 before execution because main lacks that input; omitted it. Existing batch's child still uses native --fixed-fps60. No engine attempt was made by the rejected request.",
   "fixtures": "Existing actual Water world; original five granted; trainer proximity placement/pump flags; isolated canonical save and Session host admission; granted Harness/Charm merged into complete owner records. No earned gear or accepted campaign boundary claim.",
   "reused_evidence": "Prior flat Warden/Nerissa paired artifacts remain qualified historical evidence and were not rerun. C owns full F33#0 tier/upgrade proof; A's duplicate unit extension was withdrawn/reverted.",
+  "explicit_boolean_source_review": {
+    "candidate_sha": "f5e34f421896fb6f03785d088d395ad9a720370d",
+    "original_reviewer": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "review_turn": "01a11edf-5c33-7262-b881-00c1404d7460",
+    "verdict": "ARTIFACT / DISPOSITION APPROVE; SOURCE / PROOF-SCOPE APPROVE for explicit bool; only two required existing files, no long in-world run beforecap. Actual one-peer gameplay/F33#2 OPEN."
+  },
+  "explicit_boolean_checks": {
+    "run_id": 37883051914,
+    "artifact_id": 11595138741,
+    "job_id": 113666864338,
+    "checkout_sha": "f5e34f421896fb6f03785d088d395ad9a720370d",
+    "script": "tests/run_tests.gd",
+    "args": "--only=test_director_join_snapshot.gd,test_water_encounter_runtime_data.gd",
+    "workflow_conclusion": "failure",
+    "tests": 16, "assertions": 2492, "failed": 2,
+    "log_sha256": "c5e6d041dba4572f3e60290a7cca651c6463701f2f228040681bd5e9a821950b",
+    "raw_path": "ralph/reports/F25/downloads/a-hosted-named-bool-units-37883051914/raw/",
+    "failed_methods": ["test_native_guest_killing_strike_advances_host_trainer_round_once", "test_native_trainer_hp_fixture_survives_projectile_snapshot"],
+    "observed": "Director subclasses now compile. Guest probe reports invalid_actor_move then move_start_required, enemyHP95/no faint/no round award; HP probe has actual host arrivals and faint but legacy selection count2 instead of3. Both tracked runtime true. No regression cause inferred and no fixture or assertion weakened.",
+    "disposition": "FAIL retained; original artifact/disposition review requested. No passing substitution, unit retry or gameplay acceptance."
+  },
+  "park": "04:20Z two-hour cap reached. Source-approved f5 remains unlanded/unverified for actual one-peer named gameplay. No live A hosted run; all failures/artifacts/saves preserved, none accepted as a campaign boundary. F24#3 READY candidate3a remains separate; this F33 work is not included in that acceptance.",
   "whole_verdict": "NONE; F33#2 remains OPEN."
 }
