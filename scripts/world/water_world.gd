@@ -83,6 +83,15 @@ func _ready() -> void:
 	if int(terrain.get("collision_mode")) != int(config.terrain.collision_mode):
 		push_error("Water full-world collision was not accepted")
 		return
+	var collision_config: Dictionary = JSON.parse_string(
+		FileAccess.get_file_as_string("res://data/config/water_collision.json"))
+	if bool(collision_config.get("regional_collision_enabled", false)):
+		var collision_regions := preload("res://scripts/world/water_collision_regions.gd").new()
+		collision_regions.name = "WaterCollisionRegions"
+		add_child(collision_regions)
+		if not await collision_regions.install(terrain, float(collision_config.build_budget_ms)):
+			push_warning("Water regional collision unavailable; retaining full-world floor")
+			collision_regions.queue_free()
 	if not simulation_only:
 		_build_materials()
 		var vegetation := WATER_VEGETATION.new()
