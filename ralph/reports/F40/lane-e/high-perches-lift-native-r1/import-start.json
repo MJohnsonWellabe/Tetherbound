@@ -1,0 +1,16 @@
+{
+  "pid": 37940,
+  "deadline_minutes": 15,
+  "fresh_user_directory": "D:/CodexTemp/tetherbound-proof/native-e-401977bce7-high-perches-lift-r1/import-home",
+  "started_utc": "2026-10-09T06:31:06.7692178Z",
+  "args": [
+    "--headless",
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--editor",
+    "--import",
+    "--quit"
+  ],
+  "source": "401977bce7041e4274f8e01e8075462ecd87a0de",
+  "mode": "Import"
+}

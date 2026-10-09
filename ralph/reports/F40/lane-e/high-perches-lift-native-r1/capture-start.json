@@ -1,0 +1,23 @@
+{
+  "deadline_minutes": 45,
+  "source": "401977bce7041e4274f8e01e8075462ecd87a0de",
+  "mode": "Capture",
+  "args": [
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "res://tools/capture_cloudreach_frame_matrix.gd",
+    "--",
+    "--only=19,20",
+    "--preset=High",
+    "--source-commit=401977bce7041e4274f8e01e8075462ecd87a0de",
+    "--output=res://.tmp/e-high-perches-lift-401977-day-r1"
+  ],
+  "started_utc": "2026-10-09T06:33:56.2877924Z",
+  "pid": 42284,
+  "fresh_user_directory": "D:/CodexTemp/tetherbound-proof/native-e-401977bce7-high-perches-lift-r1/capture-home"
+}
