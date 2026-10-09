@@ -101,7 +101,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 				await physics_frame
 			var local: bool = game.world.flags.has(RESOLVED)
 			return {"verdict": "PASS" if local else "FAIL",
-				"detail": "Director terminal handler recorded Tidecoil on this peer: %s (host=%s)" % [local, game.is_host()]}
+				"detail": "Director terminal handler recorded Tidecoil on this peer: %s (host=%s)" % [local, game.is_host()],
+				"data": {"named_body_present": true, "named_body_path": str(body.get_path())}}
 		"deep_watch_claim":
 			_pose(_cache_position() + Vector3(1.0, 0.0, 0.0))
 			var before := int(game.inventory.count("skill_candy_iii"))
@@ -134,5 +135,9 @@ func _execute_probe(msg: Dictionary) -> Variant:
 	for flag: Variant in game.world.flags.all_set():
 		if str(flag).begins_with("water_claim:") and str(flag).ends_with(":" + GATED):
 			receipts += 1
+	var world := _world()
 	return {"resolved": game.world.flags.has(RESOLVED), "receipts": receipts,
-		"character_id": str(game.local.character_id), "host": bool(game.is_host())}
+		"character_id": str(game.local.character_id), "host": bool(game.is_host()),
+		"current_realm": str(game.current_realm),
+		"water_shell": world != null and world.get("simulation_only") == true and world.call("shell_build_complete") == true,
+		"water_look_absent": world != null and world.get_node_or_null("WorldLook") == null}
