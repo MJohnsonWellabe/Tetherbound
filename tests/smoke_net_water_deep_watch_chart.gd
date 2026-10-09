@@ -77,6 +77,8 @@ func _run() -> void:
 	if resident_shell:
 		check(host_state.get("current_realm") == "meadows" and host_state.get("water_shell") == true
 			and host_state.get("water_look_absent") == true, "Named alpha is served by the completed Water shell without local presentation")
+		check(int(host_state.get("alpha_generation", 0)) >= 1 and host_state.get("alpha_status") == "active"
+			and host_state.get("alpha_packet_valid") == true, "Host retains the canonical named alpha generation before client resolution")
 	var resolved: Dictionary = await step(resolver, "deep_watch_resolve", {}, 1200)
 	check(resolved.get("verdict") == "PASS", "Resolver records Tidecoil locally: " + str(resolved.get("detail", "")))
 	if resident_shell:
