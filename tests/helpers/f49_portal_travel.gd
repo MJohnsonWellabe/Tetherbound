@@ -285,7 +285,8 @@ func _stored_modal_observation(node: Node) -> Dictionary:
 		if name in ["_open", "_line", "_guard", "_closing_interact"]: row[name] = node.get(name)
 		elif name == "_runner":
 			var runner: RefCounted = node.get(name) as RefCounted
-			if runner != null:
+			var runner_script: Script = runner.get_script() as Script if runner != null else null
+			if runner_script != null and runner_script.resource_path == "res://scripts/story/dialogue_runner.gd":
 				row["conversation"] = {"id": runner.get("_id"), "line": runner.get("_index"), "active": runner.get("_active")}
 	return row
 
