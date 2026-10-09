@@ -5,7 +5,6 @@ extends Node
 const BOARD := preload("res://scripts/world/bounty_board.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 signal open_requested(view: Dictionary, adapter: Node)
-signal view_changed(view: Dictionary)
 signal action_completed(result: Dictionary)
 var _submit: Callable
 var _view: Callable
@@ -49,9 +48,9 @@ func claim(instance: String) -> Dictionary:
 	var raw: Variant = _submit.call({"instance": instance})
 	var result: Dictionary = raw if raw is Dictionary else {"ok": false, "code": "invalid_verdict"}
 	if result.get("ok") == false and result.get("durable") == false \
-		and result.get("resolved") == false and result.get("code") not in ["reconcile_original_decision", "owner_passive_checkpoint_pending"]:
+		and result.get("resolved") == false and result.get("code") != "reconcile_original_decision":
 		_pending.clear()
-	settled(result, _pending.duplicate(true))
+	settled(result)
 	return result
 
 func reconcile() -> void:
@@ -60,23 +59,16 @@ func reconcile() -> void:
 		action_completed.emit({"ok": false, "code": "original_character_required", "recoverable": true})
 		return
 	var raw: Variant = _reconcile.call(_pending.duplicate(true))
-	if raw is Dictionary: settled(raw, _pending.duplicate(true))
+	if raw is Dictionary: settled(raw)
 
-func settled(result: Dictionary, original: Dictionary = {}) -> void:
-	var reply := result.duplicate(true)
+func settled(result: Dictionary) -> void:
 	# Durable host acceptance is not a completed payment until exact owner's
 	# bool-save and host ACK finish. Disconnect leaves the ORIGINAL instance.
-	# The saved care checkpoint is also pending; a terminal no-effect releases
-	# only this consumer, without paying or pretending a journal was accepted.
-	if result.get("terminal_refusal") == true and result.get("resolved") == true and result.get("durable") == false \
-		and not _pending.is_empty() and original == _pending and _same_owner():
-		_pending.clear()
-		reply["terminal"] = true # Existing panel's presentation-only waiting flag.
 	if result.get("ok") == true and result.get("durable") == true \
 		and result.get("owner_saved") == true and result.get("owner_acknowledged") == true:
 		if not _pending.is_empty() and _same_owner() \
 			and result.get("receipt") == "bounty:%s:%s" % [_pending.instance, _pending.character_id]: _pending.clear()
-	action_completed.emit(reply)
+	action_completed.emit(result.duplicate(true))
 
 func _same_owner() -> bool:
 	var current := view()

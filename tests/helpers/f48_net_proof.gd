@@ -121,11 +121,7 @@ func _route(name: String, peer: int) -> Array:
 			_profile_errors.append("Route cannot supply its own outcome or suppress failure: " + name)
 			continue
 		if raw.action == "f48_button":
-			if raw.args.has("master_creature_uid"):
-				if raw.args.has("text") or raw.args.has("feast_recipe") \
-						or not preload("res://scripts/creatures/creature_instance.gd").valid_uid(str(raw.args.master_creature_uid)):
-					_profile_errors.append("Invalid original owned Master UID target: " + name)
-			elif raw.args.has("feast_recipe"):
+			if raw.args.has("feast_recipe"):
 				if raw.args.feast_recipe != "feast_t1_ground" or raw.args.has("text"):
 					_profile_errors.append("Invalid exact ground feast button target: " + name)
 			elif str(raw.args.get("text", "")).is_empty():

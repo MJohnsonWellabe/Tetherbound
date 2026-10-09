@@ -91,12 +91,6 @@ func _run() -> void:
 	# so it could only assert that a Session class existed; with 2.A merged the
 	# two processes must really host and join, or every check below reads "0
 	# remote bodies" and means only that nobody ever connected.
-	# The same disclosed stock belongs to each owner before admission. A local
-	# after-join Inventory.add cannot replace a guest's canonical baseline.
-	for i in 2:
-		var granted: Dictionary = await step(i, "storage_grant", {"item": ITEM, "n": EACH})
-		check(str(granted.get("verdict", "")) == "PASS",
-			"peer %d holds %d %s (%s)" % [i, EACH, ITEM, str(granted.get("detail", ""))])
 	var hosted: Dictionary = await step(0, "host", {})
 	check(str(hosted.get("verdict", "")) == "PASS",
 		"peer 0 hosted a world (%s)" % str(hosted.get("detail", "")))
@@ -121,6 +115,11 @@ func _run() -> void:
 	if ids[0] == 0 or ids[1] == 0 or ids[0] == ids[1]:
 		quit(await finish())
 		return
+
+	for i in 2:
+		var granted: Dictionary = await step(i, "storage_grant", {"item": ITEM, "n": EACH})
+		check(str(granted.get("verdict", "")) == "PASS",
+			"peer %d holds %d %s (%s)" % [i, EACH, ITEM, str(granted.get("detail", ""))])
 
 	var start := await _snapshot()
 	check(not start.is_empty(), "both peers report a trade state to start from")

@@ -135,11 +135,6 @@ const CLIENT_ARMOR := "insulated_vest"
 const CLIENT_SLOT := "upper_body"
 const HOST_ARMOR := "insulated_helm"
 const HOST_SLOT := "helmet"
-## F33#4 disclosed pre-admission stock; wear is actual post-join Satchel input.
-const COMMAND_POUCHES := ["rootiron_command_pouch", "tidesteel_command_pouch", "skyglass_command_pouch", "stormglass_command_pouch"]
-## Portable gear fixture only; no crafting, stat/balance or earned-route credit.
-const CLIENT_GEAR := {"harness": "stormglass_harness_plus_3", "charm": "stormglass_charm_plus_3"}
-const HOST_GEAR := {"harness": "rootiron_harness_plus_3", "charm": "rootiron_charm_plus_3"}
 
 ## Excluded from the world diff, `smoke_net_late_join_modified_world.gd`'s own
 ## exclusion for contract §7's own reason: it advances with wall time in both
@@ -182,11 +177,6 @@ func _run() -> void:
 	# 1. Seed both independent homes through production autosave before either
 	# peer joins. Each process mints its own stable identity and writes its own
 	# ordinary slot-0 character file.
-	var host_creature: Dictionary = await step(0, "party_grant", {"species": "terrapup", "gear": HOST_GEAR})
-	check(host_creature.get("verdict") == "PASS", "F33: host carries its distinct owned gear fixture before admission")
-	if host_creature.get("verdict") != "PASS":
-		quit(await finish())
-		return
 	var host_armor_given: Dictionary = await step(0, "storage_grant", {"item": HOST_ARMOR, "n": 1})
 	check(str(host_armor_given.get("verdict", "")) == "PASS",
 		"host's saved character carries its distinct armor (%s)" % str(host_armor_given.get("detail", "")))
@@ -236,13 +226,6 @@ func _run() -> void:
 	var first_peer_id := int(first_session.get("peer_id", 0))
 	check(first_peer_id > 1,
 		"the joiner holds a real assigned ENet id (%d)" % first_peer_id)
-	for tier: int in COMMAND_POUCHES.size():
-		var worn: Dictionary = await step(1, "equipment_equip_from_satchel", {"item": COMMAND_POUCHES[tier], "journaled": true})
-		check(worn.get("verdict") == "PASS" and worn.get("data", {}).get("tier") == tier + 1,
-			"F33: actual guest Satchel equips and owner-saves pouch tier %d: %s" % [tier + 1, str(worn)])
-		if worn.get("verdict") != "PASS":
-			quit(await finish())
-			return
 
 	# The first join must use the file seeded in this peer's independent home.
 	var opening: Dictionary = await _character(1)
@@ -257,11 +240,6 @@ func _run() -> void:
 	var party_before: Array = live_before.get("party", []) as Array
 	var satchel_before: Dictionary = live_before.get("satchel", {}) as Dictionary
 	var equipment_before: Dictionary = live_before.get("equipment", {}) as Dictionary
-	var creature_gear_before: Dictionary = live_before.get("creature_gear", {})
-	check(creature_gear_before.size() == 1 and creature_gear_before.values() == [CLIENT_GEAR],
-		"F33: guest carries both upgraded slots on its actual owned UID")
-	check(equipment_before.get("backpack") == COMMAND_POUCHES[3] and live_before.get("pouch_tier") == 4,
-		"F33: worn pouch and saved personal tier agree before disconnect")
 	check(party_before.size() > 0,
 		"its party is real, and named: %s" % str(party_before))
 	check(satchel_before.size() > 0,
@@ -273,7 +251,6 @@ func _run() -> void:
 	check(not equipment_before.values().has(HOST_ARMOR),
 		"the client's equipment never received the host's helm: %s" % str(equipment_before))
 	var host_before: Dictionary = (await _character(0)).get("live", {}) as Dictionary
-	check(host_before.get("creature_gear", {}).values() == [HOST_GEAR], "F33: host retains its distinct owned gear")
 	check(str((host_before.get("equipment", {}) as Dictionary).get(HOST_SLOT, "")) == HOST_ARMOR,
 		"the host wears its distinct helm: %s" % str(host_before.get("equipment", {})))
 	check(not (host_before.get("equipment", {}) as Dictionary).values().has(CLIENT_ARMOR),
@@ -289,8 +266,6 @@ func _run() -> void:
 			% str(wrote.get("detail", "")))
 	var written: Dictionary = await _character(1)
 	var file_written: Dictionary = written.get("file", {}) as Dictionary
-	check(file_written.get("creature_gear", {}) == creature_gear_before,
-		"F33: both guest gear slots are in its original character file by UID")
 	check(bool(written.get("file_exists", false)),
 		"user://characters/%s/character.json exists now" % _character_id)
 	check((file_written.get("party", []) as Array) == party_before,
@@ -417,10 +392,6 @@ func _run() -> void:
 		"and its SATCHEL: %s (was %s)"
 			% [str(live_after.get("satchel", {})), str(live_blank.get("satchel", {}))])
 	var equipment_after: Dictionary = live_after.get("equipment", {}) as Dictionary
-	check(live_after.get("creature_gear", {}) == creature_gear_before,
-		"F33: disk-only rejoin restores both upgraded slots on the same owned UID")
-	check(equipment_after.get("backpack") == COMMAND_POUCHES[3] and live_after.get("pouch_tier") == 4,
-		"F33: disk-only rejoin restores the guest pouch and tier together")
 	check(equipment_after == equipment_before
 		and str(equipment_after.get(CLIENT_SLOT, "")) == CLIENT_ARMOR,
 		"and its WORN equipment identity came back from disk: %s (was blank %s)"
@@ -431,9 +402,6 @@ func _run() -> void:
 		"the restored client still has none of the host's gear")
 	var host_after: Dictionary = (await _character(0)).get("live", {}) as Dictionary
 	var host_equipment_after: Dictionary = host_after.get("equipment", {}) as Dictionary
-	check(host_after.get("creature_gear", {}).values() == [HOST_GEAR],
-		"F33: guest rejoin never changes the host creature gear")
-	check(not host_equipment_after.values().has(COMMAND_POUCHES[3]), "F33: the guest pouch never equips on the host")
 	check(str(host_equipment_after.get(HOST_SLOT, "")) == HOST_ARMOR
 		and not host_equipment_after.values().has(CLIENT_ARMOR),
 		"the host still wears only its own distinct gear after the client reconnects: %s"
@@ -559,10 +527,7 @@ func _run() -> void:
 ## Seed the client's saved character while it is still solo. Every operation
 ## uses the same peer-runner production doors used after reconnect.
 func _seed_client_character(peer: int) -> Dictionary:
-	for pouch: String in COMMAND_POUCHES:
-		var pouch_stock := await step(peer, "storage_grant", {"item": pouch, "n": 1})
-		if pouch_stock.get("verdict") != "PASS": return pouch_stock
-	var granted: Dictionary = await step(peer, "party_grant", {"species": PARTY_SPECIES, "gear": CLIENT_GEAR})
+	var granted: Dictionary = await step(peer, "party_grant", {"species": PARTY_SPECIES})
 	if str(granted.get("verdict", "")) != "PASS":
 		return granted
 	for row: Array in SATCHEL:

@@ -72,10 +72,8 @@ extends Node
 ## own.
 
 const SESSION := preload("res://scripts/net/session.gd")
-const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 const FADE_SECONDS := 1.2
-const SOLO_REST_GROUP := &"solo_rest_fade"
 
 ## `/root/Game/Session/SleepVote`. Same-path-in-every-process is the whole
 ## requirement; the name is a constant so `attach()` and the tests agree.
@@ -103,19 +101,10 @@ const RESEND_LIMIT := 10
 ## replicated, so `peer_count()` still reads 1) is a client all the same, and a
 ## client must never take the solo path -- it would run a night whose day
 ## `advance_day()` correctly refuses to move.
-static func rest(host: Node, game: Node = null) -> void:
-	if game == null: game = host.get_node_or_null(^"/root/Game")
+static func rest(host: Node) -> void:
+	var game := host.get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; the night cannot pass")
-		return
-	if _owner_recovery_blocked(game):
-		# Withdrawing an existing vote changes no frozen character state.
-		var session: Node = game.get("session")
-		var existing := session.get_node_or_null(NodePath(NODE_NAME)) if session != null else game.get_node_or_null(NodePath(NODE_NAME))
-		if existing != null and existing.call("is_sleeping_here") == true:
-			existing.call("bed_down", host)
-			return
-		_pending_sleep_message(game)
 		return
 	if bool(game.call("is_multi_peer")) or not bool(game.call("is_host")):
 		var vote := attach(game)
@@ -125,34 +114,11 @@ static func rest(host: Node, game: Node = null) -> void:
 	_rest_alone(host, game)
 
 
-static func _owner_recovery_blocked(game: Node) -> bool:
-	var player: RefCounted = game.get("local")
-	var session: Node = game.get("session")
-	return player != null and session != null and session.has_method("_owner_training_mutation_blocked") \
-		and session.call("_owner_training_mutation_blocked", player) == true
-
-
-static func _pending_sleep_message(game: Node) -> void:
-	if game.has_method("push_world_message"):
-		game.call("push_world_message", "Your previous action is still saving. Rest when it finishes.")
-
-
 ## Today's rest, unchanged: the solo path, and the path every peer runs on its
 ## own process once the vote passes.
 static func _rest_alone(host: Node, game: Node, host_day: int = 0) -> void:
-	# One in-flight solo rest owns this Game until its fade has finished. A
-	# second bed activation must not schedule another calendar advance. Host
-	# clock applications remain separate authoritative decisions in co-op.
-	if host_day <= 0:
-		for active: Node in host.get_tree().get_nodes_in_group(SOLO_REST_GROUP):
-			if int(active.get_meta(&"rest_game_id", 0)) == game.get_instance_id():
-				return
 	var layer := CanvasLayer.new()
 	layer.layer = 15
-	layer.add_to_group(INPUT_OWNER.GROUP)
-	if host_day <= 0:
-		layer.add_to_group(SOLO_REST_GROUP)
-		layer.set_meta(&"rest_game_id", game.get_instance_id())
 	var rect := ColorRect.new()
 	rect.color = Color(0, 0, 0, 0)
 	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -181,13 +147,6 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	if game == null:
 		push_error("no Game autoload; the night cannot pass")
 		return 0
-	# Recheck after the fade: another accepted action may now hold the owner.
-	# A co-op night already has its host clock; preserve that shared decision
-	# while leaving this peer's frozen personal projection untouched.
-	var recover_owner := not _owner_recovery_blocked(game)
-	if not recover_owner and host_day <= 0:
-		_pending_sleep_message(game)
-		return int(game.get("day"))
 	# `host_day > 0` means the day has ALREADY been decided -- by the host, at
 	# the moment the vote passed, so that the number it broadcast and the number
 	# it keeps are the same one. Calling `advance_day()` again here would move
@@ -195,16 +154,7 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	# `game_state.gd::advance_day` refuses on a client and hands back the day
 	# this peer is already holding), which is exactly the kind of asymmetry that
 	# reads fine until somebody hosts.
-	var session: Node = game.get("session")
-	var canonical_night := session != null and session.has_method("foundation_completed_night")
-	var day := host_day
-	if host_day <= 0:
-		if not canonical_night: return int(game.get("day")) # No authenticated night producer, no XP/healing fallback.
-		var original: Dictionary = session.call("foundation_completed_night", attach(game))
-		if original.get("durable") != true:
-			_pending_sleep_message(game)
-			return int(game.get("day"))
-		day = int(original.day)
+	var day := host_day if host_day > 0 else int(game.call("advance_day"))
 	# GATEB-FLAGS: `player_slept_at_home`, data/progression/objectives.json's
 	# ladder. Set here, on the actual completed rest, not on the interact
 	# prompt firing -- the objective asks for the sleep itself, not the
@@ -225,7 +175,7 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	# is exactly one player and this is byte-for-byte today's behaviour.
 	var sleeper_flags: RefCounted = game.call("player_flags") if game.has_method("player_flags") \
 		else game.get("progression") as RefCounted
-	if recover_owner and not canonical_night and sleeper_flags != null:
+	if sleeper_flags != null:
 		sleeper_flags.call("set_flag", "player_slept_at_home")
 	# Gate A creature-bed contract: sleep completes only pals physically put
 	# to bed. Non-resting party members keep their current HP, which is the
@@ -234,10 +184,10 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	# Per-peer by construction: `Game.party` is this process's own five, so a
 	# co-op night heals each player's own bedded creatures on their own machine
 	# and nobody's team is completed by somebody else lying down.
-	if recover_owner and not canonical_night: game.call("complete_creature_bed_rests")
+	game.call("complete_creature_bed_rests")
 	# The trainer too -- find them by the vitals they carry.
 	var player := _find_player(host)
-	if recover_owner and not canonical_night and player != null:
+	if player != null:
 		var vitals: RefCounted = player.get("vitals")
 		if vitals != null and vitals.has_method("rest"):
 			vitals.call("rest")
@@ -268,7 +218,6 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	# `Session.is_host()`, and each peer's own character always. Solo is a
 	# one-peer session, so solo behaviour is byte-for-byte what it was.
 	game.call("autosave_here")
-	if not recover_owner: _pending_sleep_message(game)
 	print("[rest] rested; day %d" % day)
 	return day
 
@@ -358,9 +307,6 @@ func bed_down(bed: Node) -> void:
 		return
 	if _sleeping_here:
 		_stand_up(game)
-		return
-	if _owner_recovery_blocked(game):
-		_pending_sleep_message(game)
 		return
 	_sleeping_here = true
 	_bed = bed
@@ -454,11 +400,7 @@ func _evaluate() -> void:
 ## nobody is marked asleep any more and never flashes "waiting for" at a world
 ## that is already morning.
 func _night_falls(game: Node) -> void:
-	var session := _session()
-	if session == null or not session.has_method("foundation_completed_night"): return
-	var original: Dictionary = session.call("foundation_completed_night", self)
-	if original.get("durable") != true: return
-	var day := int(original.day)
+	var day := int(game.call("advance_day"))
 	if _can_rpc() and bool(game.call("is_multi_peer")):
 		rpc("_rpc_night_falls", day)
 	var registry: RefCounted = _registry()
@@ -583,16 +525,6 @@ func _repaint(force: bool) -> void:
 ## `session.gd` does not emit one for a replicated registry, and this is one
 ## integer compare on a peer that is asleep.
 func _process(_delta: float) -> void:
-	var retry_session := _session()
-	if retry_session != null and retry_session.has_method("foundation_completed_night") and retry_session.call("is_host") == true and not (retry_session.get("_qualified_night_original") as Dictionary).is_empty():
-		var original: Dictionary = retry_session.call("foundation_completed_night", self)
-		if original.get("durable") == true:
-			if _can_rpc() and bool(_game().call("is_multi_peer")): rpc("_rpc_night_falls", int(original.day))
-			var registry := _registry()
-			if registry != null:
-				for row: Dictionary in _rows(): registry.call("set_flag", int(row.peer_id), "sleeping", false)
-				_broadcast_registry()
-			_night_here(int(original.day))
 	if not _sleeping_here:
 		return
 	var game := _game()

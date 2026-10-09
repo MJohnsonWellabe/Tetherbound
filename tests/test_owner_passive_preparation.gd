@@ -157,82 +157,6 @@ func test_capture_checkpoint_binds_original_offer_without_granting_its_creature(
 	var unsupported := capture.duplicate(true)
 	unsupported.duties[0].action = "wild_capture"
 	assert_true(PREP.make(unsupported, unsupported.duties[0], f.before, 0, "current-epoch", f.cursor, DATA.TXN).is_empty())
-	# The original capture stays visible until its ACK, but replacing the
-	# accepted journal with a later pending Altar must not present it again.
-	# Reuse the existing detached Session seam; these are real row/ledger
-	# transitions, not a disk-save or physical input proof.
-	const RECORD := preload("res://scripts/net/character_record_rules.gd")
-	const ACTIONS := preload("res://scripts/net/foundation_actions.gd")
-	const DELIVERY := preload("res://scripts/net/foundation_delivery.gd")
-	const TEACHING := preload("res://scripts/creatures/teaching.gd")
-	const PROGRESSION := preload("res://scripts/creatures/progression.gd")
-	var game := preload("res://autoload/game_state.gd").new()
-	game.local = GROOM.new()._player()
-	game.world = DATA.new()._world()
-	game.world.reward_deliveries[capture.delivery_id] = capture.duplicate(true)
-	var cfg := E.config()
-	game.local.inventory.add(str(cfg.tether_candy_item), int(cfg.tether_candy_cost))
-	var session := preload("res://tests/test_foundation_resource_save.gd").FixtureSession.new()
-	session.fixture = game
-	game.add_child(session)
-	var composition := Node.new()
-	session.add_child(composition)
-	var adapter := preload("res://scripts/net/foundation_capture.gd").new()
-	composition.add_child(adapter)
-	context.foundation_runtime_authorized = true
-	var choice := {"offer_id": offer.offer_id, "keep": true, "released_uid": ""}
-	var proposal := ACTIONS.stage(RECORD.portable_projection(game.local.save_data()), 0, "wild_capture", choice, context, RECORD.errors)
-	assert_true(proposal.get("ok") == true, str(proposal))
-	proposal.character_revision = 1
-	var row := DELIVERY.make_record(game.world.world_id, game.world.reward_delivery_namespace, "current-epoch", proposal, null, RECORD.errors)
-	assert_false(row.is_empty())
-	if row.is_empty():
-		game.free()
-		return
-	var ledger := preload("res://scripts/net/world_ledger.gd").new(game.world)
-	assert_true(ledger.commit_creature_training_delivery(row, 1).ok)
-	assert_eq(adapter._offer(), offer, "the original unsaved capture remains offered")
-	game.local.load_data(row.after)
-	assert_eq(adapter._offer(), offer, "owner receipt alone never substitutes for original host ACK")
-	assert_true(ledger.accept_creature_training_delivery(row.delivery_id, DATA.CHARACTER, int(row.journal_revision), row.receipt, 1).ok)
-	row = game.world.reward_deliveries[row.delivery_id].duplicate(true)
-	assert_true(adapter._offer().is_empty(), "the accepted original decision is hidden")
-	var initial := RECORD.portable_projection(game.local.save_data())
-	var spend := {"spend_id": "capture-later-altar", "creature_uid": initial.party[0].uid,
-		"expected_level": initial.party[0].level, "payment_item": str(cfg.tether_candy_item), "expected_character_revision": 1}
-	var altar := E.stage_core_spend(initial, DATA.CHARACTER, 1, spend, cfg,
-		PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
-	assert_true(altar.get("ok") == true, str(altar))
-	altar.merge({"character_id": DATA.CHARACTER, "character_revision": 2, "action": "altar_spend",
-		"action_id": spend.spend_id, "intent": spend})
-	var later := E.next_training_delivery(game.world.world_id, game.world.reward_delivery_namespace, "current-epoch", altar,
-		row, cfg, PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
-	assert_false(later.is_empty())
-	if later.is_empty():
-		game.free()
-		return
-	assert_true(ledger.commit_creature_training_delivery(later, 1).ok)
-	var frozen_journal := var_to_bytes(game.world.reward_deliveries)
-	var frozen_owner := var_to_bytes(game.local.save_data())
-	assert_true(adapter._offer().is_empty(), "a later pending Altar cannot resurrect an accepted catch")
-	assert_eq(adapter._offer(offer.offer_id, true), offer, "original reconciliation still reads the retained offer")
-	assert_eq(var_to_bytes(game.world.reward_deliveries), frozen_journal, "presentation never edits the journal")
-	assert_eq(var_to_bytes(game.local.save_data()), frozen_owner, "presentation never grants or changes the owner")
-	game.local.redesign_character.transaction_receipts.erase(row.receipt)
-	assert_eq(adapter._offer(), offer, "the live owner's exact original receipt is required")
-	game.local.redesign_character.transaction_receipts.append(row.receipt)
-	for field: String in ["before", "after", "character_id", "world_id", "world_namespace", "journal_revision"]:
-		var changed: Dictionary = later.duplicate(true)
-		if field in ["before", "after"]: changed[field].redesign_character.transaction_receipts.erase(row.receipt)
-		elif field == "journal_revision": changed[field] = 1
-		else: changed[field] = "foreign"
-		game.world.reward_deliveries[later.delivery_id] = changed
-		assert_eq(adapter._offer(), offer, "changed/foreign pending history cannot hide the catch: " + field)
-	game.world.reward_deliveries[later.delivery_id] = later.duplicate(true)
-	assert_true(ledger.accept_creature_training_delivery(later.delivery_id, DATA.CHARACTER, int(later.journal_revision), later.receipt, 1).ok)
-	assert_true(adapter._offer().is_empty(), "ordinary later ACK preserves original accepted suppression")
-	assert_eq(var_to_bytes(capture.duties[0].context), original_offer)
-	game.free()
 
 func _action_fixture() -> Dictionary:
 	var player: RefCounted = GROOM.new()._player()
@@ -304,71 +228,13 @@ func test_request_codec_preserves_distinct_authenticated_source_kinds_and_exact_
 	assert_false(PREP.make_action(request, f.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "altar_traits").is_empty())
 	request.intent.expected_character_revision = 1
 	assert_true(PREP.make_action(request, f.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "altar_traits").is_empty())
-	var clock_context: Dictionary = preload("res://tests/test_bounty_board.gd").new()._context(f.before, 0, 1, "resource-namespace")
-	clock_context.source_key = "halda_bounty_clock"
-	var clock_source := PREP.bounty_rotation_source(clock_context, "resource-slot", "current-epoch")
-	var clock_prepared := PREP.make_action(clock_source, clock_context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "bounty_rotation")
-	assert_false(clock_prepared.is_empty())
-	assert_true(PREP.valid_action_host(clock_prepared, f.cursor))
-	assert_false(PREP.valid(clock_prepared, {}), "the clock never fabricates a retained reward")
-	assert_true(PREP.owner_plan(f.cursor.state, clock_prepared, {}, {}).ok)
-	assert_false(PREP.owner_plan(f.before, clock_prepared, {}, {}).ok, "care must be the complete exact replay")
-	assert_true(PREP.make_action(clock_source, clock_context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN).is_empty(),
-		"a host clock descriptor cannot be used as a player request")
-	for field: String in ["session_epoch", "world_id", "world_namespace", "character_id", "host_day", "host_unlocks"]:
-		var foreign: Dictionary = clock_source.duplicate(true)
-		foreign[field] = 2 if field == "host_day" else (["tidewake"] if field == "host_unlocks" else "foreign")
-		assert_true(PREP.make_action(foreign, clock_context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "bounty_rotation").is_empty(), field)
-	var non_clock: Dictionary = clock_source.duplicate(true)
-	non_clock["intent"] = {"elapsed": 100}
-	assert_true(PREP.make_action(non_clock, clock_context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "bounty_rotation").is_empty())
-	# Extend this existing codec proof with the real board's unchanged -1
-	# request. Detached inventory/board setup is unit input, not gameplay proof.
-	const BOARD := preload("res://scripts/world/bounty_board.gd")
-	const BAG := preload("res://scripts/world/death_satchel_rules.gd")
-	var board_before: Dictionary = f.before.duplicate(true)
-	board_before.redesign_character.bounties = preload("res://tests/test_bounty_board.gd").new()._issued().redesign_character.bounties.duplicate(true)
-	board_before.redesign_character.bounties.anchor_world = "resource-namespace"
-	var material := BOARD.template("meadows_material_delivery")
-	var bag := BAG.inventory_from(board_before.inventory)
-	assert_true(BAG.give_stack(bag, {"id": material.item, "n": int(material.count)}))
-	board_before.inventory = BAG.slots(bag)
-	var board_cursor: Dictionary = REPLAY.apply(REPLAY.begin(board_before, {}), {"version": 1, "sequence": 1, "op": "condition", "delta": 0.1,
-		"uids": [board_before.party[0].uid]}, {"max_elapsed": 1.0, "max_speed": 20.0, "realm": "meadows", "landmarks": {}}).cursor
-	var claim := {"op": "bounty_claim", "session_epoch": "current-epoch", "world_namespace": "resource-namespace",
-		"character_id": DATA.CHARACTER, "station_key": "halda_bounty_board", "intent": {"instance": "delivery".sha256_text()}, "revision": -1}
-	var claim_bytes := var_to_bytes(claim)
-	var claim_context: Dictionary = preload("res://tests/test_bounty_board.gd").new()._context(board_before, 0, 1, "resource-namespace")
-	var claim_prepared := PREP.make_action(claim, claim_context, board_before, 0, "current-epoch", "resource-slot", board_cursor, DATA.TXN)
-	assert_false(claim_prepared.is_empty())
-	assert_true(PREP.valid_action_host(claim_prepared, board_cursor))
-	assert_true(PREP.owner_plan(board_cursor.state, claim_prepared, {}, {}).ok)
-	assert_false(PREP.owner_plan(board_before, claim_prepared, {}, {}).ok)
-	assert_eq(var_to_bytes(claim), claim_bytes, "checkpoint never rewrites the original sentinel quote")
-	for field: String in ["session_epoch", "world_namespace", "character_id", "station_key", "revision", "intent"]:
-		var forged_claim: Dictionary = claim.duplicate(true)
-		forged_claim[field] = 0 if field == "revision" else ({"instance": "foreign".sha256_text()} if field == "intent" else "foreign")
-		assert_true(PREP.make_action(forged_claim, claim_context, board_before, 0, "current-epoch", "resource-slot", board_cursor, DATA.TXN).is_empty(), field)
-	for field: String in ["character_id", "expected_revision", "source_key", "in_range", "in_combat", "world_namespace", "clock_confirmed"]:
-		var forged_context: Dictionary = claim_context.duplicate(true)
-		forged_context[field] = 1 if field == "expected_revision" else (true if field == "in_combat" else (false if field in ["in_range", "clock_confirmed"] else "foreign"))
-		assert_true(PREP.make_action(claim, forged_context, board_before, 0, "current-epoch", "resource-slot", board_cursor, DATA.TXN).is_empty(), field)
-	var extra_claim: Dictionary = claim.duplicate(true)
-	extra_claim.intent["day"] = 1
-	assert_true(PREP.make_action(extra_claim, claim_context, board_before, 0, "current-epoch", "resource-slot", board_cursor, DATA.TXN).is_empty(), "owner cannot add a clock to the one-field intent")
-	var paid := BOARD.stage(board_cursor.state, 0, "bounty_claim", claim.intent, claim_context)
-	assert_true(paid.ok)
-	assert_true(PREP.make_action(claim, claim_context, paid.state, 0, "current-epoch", "resource-slot", REPLAY.begin(paid.state, {}), DATA.TXN).is_empty(), "paid instance cannot prepare a new claim")
-	var poor: Dictionary = board_before.duplicate(true)
-	poor.inventory = BAG.slots(BAG.inventory_from([]))
-	assert_true(PREP.make_action(claim, claim_context, poor, 0, "current-epoch", "resource-slot", REPLAY.begin(poor, {}), DATA.TXN).is_empty(), "missing materials refuse before any checkpoint")
 	# Actual Backpack equipment enters through this authenticated guest
 	# checkpoint before the ordinary full-character journal may stage it.
 	var rules := preload("res://scripts/world/death_satchel_rules.gd")
 	var equip_before: Dictionary = f.before.duplicate(true)
-	var equip_bag: RefCounted = rules.inventory_from(equip_before.inventory)
-	equip_bag.call("add", "stormglass_command_pouch", 1)
-	equip_before.inventory = rules.slots(equip_bag)
+	var bag: RefCounted = rules.inventory_from(equip_before.inventory)
+	bag.call("add", "stormglass_command_pouch", 1)
+	equip_before.inventory = rules.slots(bag)
 	var equip_cursor := REPLAY.begin(equip_before, {})
 	var equip_applied := REPLAY.apply(equip_cursor, {"version": 1, "sequence": 1, "op": "condition", "delta": 0.1,
 		"uids": [equip_before.party[0].uid]}, {"max_elapsed": 1.0, "max_speed": 20.0, "realm": "meadows", "landmarks": {}})

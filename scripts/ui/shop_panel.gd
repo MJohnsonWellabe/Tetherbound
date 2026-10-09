@@ -457,7 +457,6 @@ func _empty_label(text: String) -> Label:
 ## tests/test_trade.gd tests the same code the button presses.
 
 func buy_one(item_id: String) -> String:
-	if _owner_save_pending(): return "owner_save_pending"
 	var reason := str(_trade.call("buy", _inventory(), _vendor_id, item_id, 1))
 	_say(reason, item_id, "Bought %s.")
 	_refresh()
@@ -465,19 +464,10 @@ func buy_one(item_id: String) -> String:
 
 
 func sell_one(item_id: String) -> String:
-	if _owner_save_pending(): return "owner_save_pending"
 	var reason := str(_trade.call("sell", _inventory(), _vendor_id, item_id, 1))
 	_say(reason, item_id, "Sold %s.")
 	_refresh()
 	return reason
-
-
-func _owner_save_pending() -> bool:
-	var owner_session: Node = game.get("session") as Node if game != null else null
-	if owner_session == null or not owner_session.has_method("_owner_training_mutation_blocked") \
-		or owner_session.call("_owner_training_mutation_blocked", game.get("local")) != true: return false
-	if _message != null: _message.text = "Saving your last action. Try again in a moment."
-	return true
 
 
 func _on_buy(item_id: String) -> void:

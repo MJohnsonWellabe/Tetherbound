@@ -61,14 +61,16 @@ func test_rest_resets_energy_the_same_way_heal_fully_does() -> void:
 
 
 func test_rest_grants_the_same_rest_bonus_xp_camp_gives() -> void:
-	# Recovery is healing only. The qualified host-night duty owns party XP.
 	var terrapup: RefCounted = SPECIES.spawn("terrapup")
-	var before_xp := int(terrapup.get("xp"))
-	var before_level := int(terrapup.get("level"))
-	assert_eq(PROGRESSION.rest_xp(cfg), 5)
+	var reference: RefCounted = SPECIES.spawn("terrapup")
+	var expected_bonus := PROGRESSION.rest_xp(cfg)
+	assert_true(expected_bonus > 0, "progression.json's xp_award.rest_bonus should be positive")
+	reference.call("gain_xp", expected_bonus, cfg)
+
 	HOME_RECOVERY.rest(terrapup, cfg)
-	assert_eq(int(terrapup.get("xp")), before_xp)
-	assert_eq(int(terrapup.get("level")), before_level)
+
+	assert_eq(int(terrapup.get("xp")), int(reference.get("xp")))
+	assert_eq(int(terrapup.get("level")), int(reference.get("level")))
 
 
 func test_rest_on_a_null_creature_does_nothing_and_does_not_crash() -> void:

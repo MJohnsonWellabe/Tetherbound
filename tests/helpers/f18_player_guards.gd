@@ -189,36 +189,7 @@ func bound_refusal(kind: String, source: Node) -> bool:
 	var observe := func(result: Dictionary) -> void: results.append(result.duplicate(true))
 	game.connect("portal_action_result", observe)
 	var action: String = "hotbar_%d" % (binding + 1)
-	# The production refusal expires by monotonic time. Observe its existing
-	# predicate on actual drawn frames during the unchanged tap, which can
-	# outlast the toast on a slow renderer. Never redraw or renew the refusal.
-	var rendered_refusal := {"tap_started_msec": Time.get_ticks_msec(), "readable": false,
-		"display_server": DisplayServer.get_name(), "samples": []}
-	var observe_refusal: Callable = func() -> void:
-		if not is_instance_valid(key) or game.get_node_or_null(^"HomeKey") != key or tree.current_scene != scene: return
-		var drawn_label: Label = key.get("_refusal_label")
-		var drawn_panel: Control = key.get("_refusal_panel")
-		var drawn_layer: CanvasLayer = key.get("_refusal_layer")
-		var drawn_readable: bool = is_instance_valid(drawn_label) and is_instance_valid(drawn_panel) \
-			and drawn_label.is_visible_in_tree() and drawn_panel.is_visible_in_tree() and drawn_label.text == expected
-		if kind == "cutscene": drawn_readable = drawn_readable and is_instance_valid(drawn_layer) \
-			and is_instance_valid(source) and drawn_layer.layer > (source as CanvasLayer).layer
-		var shown_seconds: float = key.get("_refusal_at")
-		(rendered_refusal.samples as Array).append({"sampled_msec": Time.get_ticks_msec(),
-			"production_refusal_at_msec": roundi(shown_seconds * 1000.0) if is_finite(shown_seconds) else -1,
-			"production_refusal_until_msec": key.get("_refusal_until_msec"),
-			"process_frame": Engine.get_process_frames(), "physics_frame": Engine.get_physics_frames(),
-			"reason": drawn_label.text if is_instance_valid(drawn_label) else "",
-			"label_visible": is_instance_valid(drawn_label) and drawn_label.is_visible_in_tree(),
-			"panel_visible": is_instance_valid(drawn_panel) and drawn_panel.is_visible_in_tree(),
-			"refusal_layer": drawn_layer.layer if is_instance_valid(drawn_layer) else -1,
-			"lesson_layer": (source as CanvasLayer).layer if kind == "cutscene" and is_instance_valid(source) else -1,
-			"readable": drawn_readable})
-		if drawn_readable: rendered_refusal.readable = true
-	if DisplayServer.get_name() != "headless": RenderingServer.frame_post_draw.connect(observe_refusal)
 	await travel.tap(action)
-	if RenderingServer.frame_post_draw.is_connected(observe_refusal): RenderingServer.frame_post_draw.disconnect(observe_refusal)
-	rendered_refusal["tap_completed_msec"] = Time.get_ticks_msec()
 	game.disconnect("portal_action_result", observe)
 	var label: Label = key.get("_refusal_label") if is_instance_valid(key) else null
 	var panel: Control = key.get("_refusal_panel") if is_instance_valid(key) else null
@@ -242,8 +213,6 @@ func bound_refusal(kind: String, source: Node) -> bool:
 	var refusal_layer: CanvasLayer = key.get("_refusal_layer") if is_instance_valid(key) else null
 	if kind == "cutscene": readable = readable and refusal_layer != null and is_instance_valid(source) \
 		and refusal_layer.layer > (source as CanvasLayer).layer
-	var post_tap_readable: bool = readable
-	readable = readable or rendered_refusal.readable
 	receipts.append({"phase": kind + "_key_refusal", "input": action, "binding": binding,
 		"reason": label.text if label != null else "", "expected_reason": expected,
 		"readable": readable, "unchanged": unchanged, "home_keys": inventory.call("count", "home_key"),
@@ -253,7 +222,6 @@ func bound_refusal(kind: String, source: Node) -> bool:
 		"lesson_layer": (source as CanvasLayer).layer if kind == "cutscene" and is_instance_valid(source) else -1,
 		"actual_safety": {"combat": safety.get("combat"), "dialogue": safety.get("dialogue"), "cutscene": safety.get("cutscene")} if kind == "cutscene" else {},
 		"traversal_before": traversal_before, "traversal_after": _traversal_snapshot(kind, source, actor),
-		"post_tap_readable": post_tap_readable, "during_tap_rendered_refusal": rendered_refusal,
 		"visibility_evidence": "structural visibility/layer observation; no rendered acceptance claim",
 		"passed": readable and unchanged})
 	return (readable and unchanged) or _fail("actual bound " + kind + " key press did not visibly refuse without side effects")

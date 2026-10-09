@@ -90,10 +90,6 @@ func _assert_released_unpaid(fixture: Dictionary, released: String, label: Strin
 	assert_eq(int(party.call("size")), 5, label + ": still exactly five")
 	assert_false(owned.has(released), label + ": the chosen creature went free")
 	assert_true(game.pending_catch == null, label + ": the newcomer joined")
-	var newcomer_uid := str(party.call("at", 4).get("uid"))
-	assert_eq(game.local.redesign_character.get("creatures", {}).get(newcomer_uid, {}).get("cap_level"), 10,
-		label + ": actual newcomer owns its local cap mirror")
-	assert_true(game.local.redesign_character.release_receipts.is_empty(), label + ": unadmitted release gains no payout receipt")
 	assert_eq((fixture.results as Array).size(), 1, label + ": one completion")
 	var result: Dictionary = (fixture.results as Array)[0] if not (fixture.results as Array).is_empty() else {}
 	assert_true(result.get("ok") == true and result.get("resolved") == true and not str(result.get("unpaid_reason", "")).is_empty(),

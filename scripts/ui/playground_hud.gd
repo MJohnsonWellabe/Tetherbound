@@ -4633,11 +4633,6 @@ func _use_hotbar_slot(slot_index: int) -> void:
 	# D40 (OF32): `heal` (potions) and `revive` (Revives) are mutually
 	# exclusive fields on an item's definition -- a potion tops up the
 	# living, a Revive raises the fallen, and never the same item both ways.
-	var owner_session: Node = _game.get("session") as Node
-	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
-		and owner_session.call("_owner_training_mutation_blocked", _game.get("local")) == true:
-		_show_hotbar_message("Saving your last action. Try again in a moment.")
-		return
 	var definition := db.call("definition", id) as Dictionary
 	var heal := float(definition.get("heal", 0.0))
 	var revive_fraction := float(definition.get("revive", 0.0))

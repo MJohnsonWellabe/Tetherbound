@@ -160,11 +160,7 @@ func journal_foundation_event(source: String, duties: Array) -> Dictionary:
 	var world: RefCounted = game.get("world")
 	var saver: RefCounted = game.get("save_system")
 	if saver == null or saver.call("fallback_busy") == true: return {"ok": false, "durable": false}
-	var epoch: String = game.get("session").call("_altar_current_epoch")
-	if source.begins_with("rest_night:") or source.begins_with("rest_discovery:"):
-		epoch = game.get("session").call("_qualified_rest_source_epoch", source, duties)
-		if not preload("res://scripts/creatures/essence.gd")._opaque_id(epoch): return {"ok": false, "durable": false}
-	var row := preload("res://scripts/net/foundation_event.gd").make(world, epoch, source, duties)
+	var row := preload("res://scripts/net/foundation_event.gd").make(world, game.get("session").call("_altar_current_epoch"), source, duties)
 	if row.is_empty(): return {"ok": false, "durable": false}
 	var before: Dictionary = world.call("save_data")
 	var revision := int(world.revision)
@@ -395,16 +391,6 @@ func submit(intent: Dictionary) -> Dictionary:
 ## local player and a remote one are arbitrated by literally the same lines.
 func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	var kind := str(intent.get("kind", ""))
-	var inventory_move := kind in ["transfer_item", "drop_item"] or (kind == "claim_pickup" and str(intent.get("flag", "")).begins_with("dropped:"))
-	var inventory_source := ""
-	if inventory_move:
-		var setup := _ledger_inventory_source(intent, peer_id)
-		if setup.get("ok") != true: return setup
-		intent = setup.intent
-		inventory_source = setup.source
-		var saver: RefCounted = _game().get("save_system")
-		if saver == null: return _pending(intent, false, "The world cannot save this move yet.")
-		saver.call("finish_fallback") # Before either the ledger or owner proposal freezes.
 	var altar: Dictionary = _altar_building_request(intent, peer_id)
 	if altar.get("intercept") == true:
 		var session: Node = _game().get("session")
@@ -421,7 +407,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		and WORLD_LEDGER.guest_pickup_routed(str(intent.get("flag", ""))) and not _registered_character(peer_id).is_empty() \
 		and not PICKUP_SPECS.lookup(str(intent.get("flag", ""))).is_empty() \
 		and not (str(intent.get("flag", "")).begins_with(WORLD_LEDGER.FELLED_FLAG_PREFIX) and GATHER_BATCHES.enabled())
-	var durable_world_transaction := inventory_move or satchel_transaction or guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim", "gather_flush"]
+	var durable_world_transaction := satchel_transaction or guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim", "gather_flush"]
 	var before_satchel: Dictionary = {}
 	if durable_world_transaction:
 		before_satchel = {"world": ledger.world.save_data(), "seq": ledger.seq,
@@ -480,27 +466,15 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	if not bool(verdict.get("ok", false)):
 		return verdict
 	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
-	if inventory_move:
-		var retained := _retain_ledger_inventory(intent, delta, inventory_source)
-		if retained.get("ok") != true:
-			ledger.world.load_data(before_satchel.world)
-			ledger.world.set("revision", int(before_satchel.world_revision))
-			ledger.seq = before_satchel.seq
-			ledger.set("_storage_revisions", before_satchel.revisions)
-			ledger.set("_seen_txns", before_satchel.seen)
-			return _pending(intent, false, str(retained.get("reason", "The owner inventory cannot accept this move yet.")))
-		delta = retained.delta
-		verdict.delta = delta
 	if durable_world_transaction:
 		var satchel_game := _game()
 		var world_id := str(satchel_game.get("world").world_id)
 		# Reward and dock publication always require a durable world file. Death-
 		# satchel fixtures historically allow an unnamed session, so preserve only
 		# that legacy path.
-		if inventory_move or guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim", "gather_flush"] or not world_id.is_empty():
+		if guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim", "gather_flush"] or not world_id.is_empty():
 			var saver: RefCounted = satchel_game.get("save_system")
-			var method := "save_world_prepared" if inventory_move else "save_world"
-			if saver == null or not bool(saver.call(method, satchel_game, world_id)):
+			if saver == null or not bool(saver.call("save_world", satchel_game, world_id)):
 				# No personal settlement or publication happened yet. Roll back
 				# the synchronous in-memory commit as one unit, including receipt
 				# bookkeeping, so a later retry cannot mistake it for durable work.
@@ -538,114 +512,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		if _can_rpc() and _is_multi_peer():
 			rpc("_rpc_delta", delta)
 	_gather_after_commit(delta)
-	if inventory_move and peer_id == _local_peer_id():
-		var solo_session: Node = _game().get("session")
-		if solo_session != null and solo_session.has_method("is_active") and solo_session.call("is_active") == false \
-				and solo_session.has_method("_retry_foundation_events"):
-			# The world already retained this original. Solo can try its normal
-			# save/ACK path now; a held decision keeps the existing retry alive.
-			solo_session.call("_retry_foundation_events")
 	return verdict
-
-
-## The original ledger transaction is the source, never a later client grant.
-## Retained rows also fence duplicates after the transient ledger set resets.
-func _ledger_inventory_source(intent: Dictionary, peer: int) -> Dictionary:
-	var event := preload("res://scripts/net/foundation_event.gd")
-	var world: RefCounted = ledger.world
-	var kind := str(intent.get("kind", ""))
-	var transaction := str(intent.get("txn_id", ""))
-	if kind == "claim_pickup": transaction = "pickup:" + str(intent.get("flag", ""))
-	if not ESSENCE._opaque_id(transaction) or world.world_id.is_empty() or world.reward_delivery_namespace.is_empty() \
-		or _registered_character(peer).is_empty(): return _pending(intent, false, "This move needs a saved world and admitted owner.")
-	var source := "ledger_inventory:" + transaction
-	for raw: Variant in world.reward_deliveries.values():
-		if event.valid(raw, world.reward_delivery_namespace, world.world_id) and raw.source_id == source:
-			var refusal := _pending(intent, false, "That inventory move is already recorded.")
-			refusal.code = "duplicate"
-			return refusal
-	var original := intent.duplicate(true)
-	if kind == "transfer_item":
-		var from_peer := int(intent.get("from", peer))
-		var to_peer := int(intent.get("to", 0))
-		if (peer != _local_peer_id() and from_peer != peer) or _registered_character(from_peer).is_empty() \
-			or _registered_character(to_peer).is_empty(): return _pending(intent, false, "Both trade owners must be admitted.")
-	elif kind == "claim_pickup":
-		# A dropped pickup's contents come from its original retained drop.
-		var drop_source := "ledger_inventory:" + str(intent.flag).trim_prefix("dropped:")
-		var drop: Dictionary = {}
-		for raw: Variant in world.reward_deliveries.values():
-			if event.valid(raw, world.reward_delivery_namespace, world.world_id) and raw.source_id == drop_source \
-				and raw.duties.size() == 1 and raw.duties[0].context.ledger_kind == "drop_item": drop = raw
-		if drop.is_empty() or str(drop.duties[0].context.get("realm", "")) != str(intent.get("realm", "")):
-			return _pending(intent, false, "That dropped stack has no original in this world.")
-		original.item = drop.duties[0].intent.ops[0].item
-		original.count = drop.duties[0].intent.ops[0].count
-	return {"ok": true, "source": source, "intent": original}
-
-
-## Append the exact original owner halves without applying them. The caller
-## saves this event and the original world effect together, or rolls both back.
-func _retain_ledger_inventory(intent: Dictionary, delta: Dictionary, source: String) -> Dictionary:
-	var session: Node = _game().get("session")
-	var world: RefCounted = ledger.world
-	if session == null: return {"ok": false}
-	var actions := preload("res://scripts/net/foundation_actions.gd")
-	var grouped := {}
-	var owners := {}
-	var published: Array = []
-	for op: Dictionary in delta.ops:
-		if op.get("scope") != "player" or op.get("op") not in ["item_take", "item_grant"]:
-			published.append(op.duplicate(true))
-			continue
-		if not op.get("peers") is Array or op.peers.size() != 1: return {"ok": false}
-		var peer := int(op.peers[0])
-		var character := _registered_character(peer)
-		if character.is_empty(): return {"ok": false}
-		if not grouped.has(character):
-			grouped[character] = []
-			owners[character] = peer
-		grouped[character].append({"op": op.op, "item": op.item, "count": int(op.count)})
-	if grouped.is_empty(): return {"ok": false}
-	var participants: Array = grouped.keys()
-	var epoch: String = session.call("_altar_current_epoch")
-	# Transport sequence resets when the host loads. These immutable retained
-	# originals are the durable order, including already-settled transactions.
-	var sequence := 1
-	for work: Dictionary in preload("res://scripts/net/foundation_retry_order.gd").ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
-		if work.duty.action == "ledger_inventory": sequence = maxi(sequence, int(work.duty.intent.source_sequence) + 1)
-	if sequence > 2147483647: return {"ok": false}
-	var duties: Array = []
-	for character: String in participants:
-		if (session.call("admitted_character_state", int(owners[character])) as Dictionary).is_empty(): return {"ok": false}
-		var current: Dictionary = session.get("_character_authority").call("state", character)
-		if current.is_empty(): return {"ok": false}
-		# Project only unpaid original inventory duties for debit/capacity checks;
-		# this detached copy never advances a canonical revision or owner ACK.
-		for work: Dictionary in preload("res://scripts/net/foundation_retry_order.gd").ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
-			var duty: Dictionary = work.duty
-			if duty.action != "ledger_inventory" or duty.character_id != character: continue
-			if current.redesign_character.transaction_receipts.has(actions.ledger_inventory_receipt(duty.intent, duty.context, character)): continue
-			if preload("res://scripts/net/retained_settlement.gd").duty_settled(world.redesign_world, work.event.delivery_id, duty): continue
-			var prior: Dictionary = actions._ledger_inventory(current, duty.intent, duty.context)
-			if prior.get("ok") != true: return {"ok": false}
-			current = prior.state
-		var context := {"source_key": source, "world_namespace": world.reward_delivery_namespace,
-			"session_id": epoch, "participants": participants.duplicate(), "ledger_confirmed": true,
-			"ledger_kind": str(intent.kind), "realm": str(intent.get("realm", "")), "original_ops": grouped[character].duplicate(true)}
-		var original := {"transaction_id": source.trim_prefix("ledger_inventory:"), "source_sequence": sequence, "ops": grouped[character].duplicate(true)}
-		var plan: Dictionary = actions._ledger_inventory(current, original, context)
-		if plan.get("ok") != true: return {"ok": false, "reason": "The original inventory move was refused: " + str(plan.get("code", ""))}
-		duties.append({"character_id": character, "action": "ledger_inventory", "intent": original, "context": context})
-	var row := preload("res://scripts/net/foundation_event.gd").make(world, epoch, source, duties)
-	if row.is_empty(): return {"ok": false}
-	var retained: Dictionary = ledger.call("commit_foundation_event", row)
-	if retained.get("ok") != true or retained.get("duplicate") == true: return {"ok": false}
-	published.append_array(retained.delta.ops)
-	var combined := delta.duplicate(true)
-	combined.ops = published
-	combined.seq = retained.delta.seq
-	return {"ok": true, "delta": combined}
 
 
 # --- coordinator ruling (b): a guest's batched gathers --------------------------
@@ -1173,28 +1040,14 @@ func _apply_player_ops(delta: Dictionary) -> void:
 			"item_grant":
 				var inv: Variant = (local as RefCounted).get("inventory")
 				if inv != null:
-					var remaining: int = (inv as RefCounted).call("add", str(op.get("item", "")),
+					(inv as RefCounted).call("add", str(op.get("item", "")),
 						int(op.get("count", 1)))
-					if remaining > 0 and not OS.get_environment("TB_NET_RUN_ID").is_empty():
-						var session: Node = game.get("session") as Node
-						print("[ledger] original item_grant unapplied: ", JSON.stringify({"op": op,
-							"remaining": remaining, "blocked": session.call("_owner_training_mutation_blocked", local)
-								if session != null and session.has_method("_owner_training_mutation_blocked") else null,
-							"guard": session.call("_owner_snapshot_block_reason", local)
-								if session != null and session.has_method("_owner_snapshot_block_reason") else "unavailable"}))
 				PROGRESSION_FEED.announce_catalyst_pickup(str(op.get("item", "")))
 			"item_take":
 				var satchel: Variant = (local as RefCounted).get("inventory")
 				if satchel != null:
-					var removed: bool = (satchel as RefCounted).call("remove", str(op.get("item", "")),
+					(satchel as RefCounted).call("remove", str(op.get("item", "")),
 						int(op.get("count", 1)))
-					if not removed and not OS.get_environment("TB_NET_RUN_ID").is_empty():
-						var session: Node = game.get("session") as Node
-						print("[ledger] original item_take unapplied: ", JSON.stringify({"op": op,
-							"removed": removed, "blocked": session.call("_owner_training_mutation_blocked", local)
-								if session != null and session.has_method("_owner_training_mutation_blocked") else null,
-							"guard": session.call("_owner_snapshot_block_reason", local)
-								if session != null and session.has_method("_owner_snapshot_block_reason") else "unavailable"}))
 
 
 func _character_writes_ready() -> bool:
@@ -1558,9 +1411,7 @@ func _process_creature_training(row: Dictionary) -> void:
 		_note_training_stall("owner apply %s%s" % [str(outcome.get("code", outcome.get("reason", "unsaved"))), stall_detail])
 		return
 	_observe_training_boundary(row, "after_owner_write_before_ack")
-	if not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row):
-		_note_training_stall("owner row changed after its BOOL-save, before ACK")
-		return
+	if not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row): return
 	if bool(game.call("is_host")):
 		if not _accept_creature_training(row.delivery_id, int(row.journal_revision), row.receipt, _local_peer_id()):
 			_note_training_stall("host accept after its own owner write refused")
@@ -1574,9 +1425,7 @@ func _rpc_creature_training_ack(epoch: String, id: String, revision: int, receip
 	var game := _game()
 	if game == null or not bool(game.call("is_host")): return
 	var session: Node = game.get("session")
-	if session == null or epoch != session.call("_altar_current_epoch"):
-		_note_training_stall("owner ACK arrived outside the current session epoch")
-		return
+	if session == null or epoch != session.call("_altar_current_epoch"): return
 	_accept_creature_training(id, revision, receipt, multiplayer.get_remote_sender_id())
 
 
@@ -1586,15 +1435,8 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 	var character := _registered_character(peer)
 	var world: RefCounted = game.get("world")
 	var row: Variant = world.reward_deliveries.get(id)
-	if character.is_empty():
-		_note_training_stall("owner ACK arrived without a registered character")
-		return false
-	if not WORLD_STATE.training_row_valid(row, world.reward_delivery_namespace, world.world_id):
-		_note_training_stall("owner ACK arrived without a valid current training row")
-		return false
-	if row.character_id != character or row.receipt != receipt or int(row.journal_revision) != revision:
-		_note_training_stall("owner ACK arrived with a different character, receipt or journal revision")
-		return false
+	if character.is_empty() or not WORLD_STATE.training_row_valid(row, world.reward_delivery_namespace, world.world_id) \
+			or row.character_id != character or row.receipt != receipt or int(row.journal_revision) != revision: return false
 	var session: Node = game.get("session")
 	if row.status == "accepted":
 		if session == null or session.call("host_ack_creature_training", peer, row) != true:
@@ -1609,9 +1451,7 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 		session.call("_deliver_training_decision", peer, row)
 		return true
 	var saver: RefCounted = game.get("save_system")
-	if saver == null or saver.call("fallback_busy") == true:
-		_note_training_stall("owner ACK cannot settle while the world saver is absent or fallback busy")
-		return false
+	if saver == null or saver.call("fallback_busy") == true: return false
 	if session == null or session.call("training_actor_baseline_ready",peer,row)!=true:
 		_note_training_stall("actor baseline not ready")
 		return false
@@ -1619,14 +1459,11 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 	var before_revision := int(world.get("revision"))
 	var before_seq := int(ledger.get("seq"))
 	var verdict: Dictionary = ledger.call("accept_creature_training_delivery", id, character, revision, receipt, peer)
-	if verdict.get("ok") != true:
-		_note_training_stall("owner ACK ledger acceptance refused: " + str(verdict.get("code", verdict.get("reason", ""))))
-		return false
+	if verdict.get("ok") != true: return false
 	if saver.call("save_world_prepared", game, world.world_id) != true:
 		world.call("load_data", before)
 		world.set("revision", before_revision)
 		ledger.set("seq", before_seq)
-		_note_training_stall("owner ACK world BOOL-save refused; original pending row restored")
 		return false
 	var accepted: Dictionary = world.reward_deliveries[id].duplicate(true)
 	# Keep publication identity in the existing transient delivery queue if
@@ -1634,9 +1471,7 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 	_training_publications[id] = {"peer": peer, "row": accepted.duplicate(true), "delta": verdict.delta.duplicate(true)}
 	# Only the saved accepted row unlocks authority. A lost result is recoverable
 	# from this same row, never from a boolean the client claimed in an intent.
-	if session == null or session.call("host_ack_creature_training", peer, accepted) != true:
-		_note_training_stall("owner ACK accepted world row, but authority handoff refused")
-		return false
+	if session == null or session.call("host_ack_creature_training", peer, accepted) != true: return false
 	_publish_training_acceptance(peer, accepted)
 	session.call("_deliver_training_decision", peer, accepted)
 	return true

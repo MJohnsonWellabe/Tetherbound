@@ -32,12 +32,6 @@ var _player: Node3D
 var _command_tier_proof := false
 var _command_config_before: Dictionary = {}
 var _actor_vitals_before: Dictionary = {}
-var _gear_label_capture := ""
-## Optional F33#0 functional scope: same paid-station fixture, one owned
-## starter and two disclosed carried base pieces before admission. Four
-## physical gear presses; no combat, capture, campaign boundary or flag flip.
-var _creature_gear_proof := false
-var _gear_stations: Dictionary = {}
 
 
 func _init() -> void:
@@ -46,44 +40,6 @@ func _init() -> void:
 
 func _run() -> void:
 	_command_tier_proof = OS.get_cmdline_user_args().has("--prove-command-tier")
-	_creature_gear_proof = OS.get_cmdline_user_args().has("--prove-creature-gear")
-	if _creature_gear_proof and _command_tier_proof:
-		_fail("creature gear and command-tier proof scopes must be separate")
-		_report()
-		return
-	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--gear-label-capture="):
-			var output := arg.trim_prefix("--gear-label-capture=")
-			if not _gear_label_capture.is_empty() or output.is_empty() or not output.is_absolute_path() \
-					or DirAccess.dir_exists_absolute(output) or FileAccess.file_exists(output) \
-					or DisplayServer.get_name() == "headless" or _command_tier_proof or _creature_gear_proof:
-				_fail("gear label capture needs one fresh absolute native output and no command-tier mode")
-				_report()
-				return
-			_gear_label_capture = output
-	if not _gear_label_capture.is_empty() or _creature_gear_proof:
-		await process_frame
-		var game := root.get_node("Game")
-		var session: Node = game.get("session")
-		var party: RefCounted = game.get("party")
-		if session == null or session.call("is_active") == true or party.call("size") != 0:
-			_fail("gear label stock requires a fresh character before admission")
-			_report()
-			return
-		# Visual/mechanics setup only, never caught or earned campaign credit.
-		var stock: Array = ["terrapup"] if _creature_gear_proof else ["terrapup", "bramblebun", "bramblebun", "mudsnout", "mosshell"]
-		for species: String in stock:
-			var creature := preload("res://scripts/creatures/creature_species.gd").spawn(species)
-			if species == "mosshell": creature.set("nickname", "Pip")
-			if party.call("add", creature) != true:
-				_fail("five-card gear-label fixture was refused")
-				_report()
-				return
-		for item: String in ["rootiron_harness", "rootiron_charm"]:
-			if game.get("inventory").call("add", item, 1) != 0:
-				_fail("carried gear-label stock did not fit")
-				_report()
-				return
 	if _command_tier_proof:
 		await process_frame
 		var game := root.get_node("Game")
@@ -136,15 +92,12 @@ func _run() -> void:
 		return
 	await _check_forged_legacy_station_intent_is_refused()
 	var forge := await _check_paid_station_place("forge")
-	var attachment: Node3D = null
 	if forge != null:
-		attachment = await _check_paid_attachment_place(forge)
+		var attachment := await _check_paid_attachment_place(forge)
 		if attachment != null:
 			await _check_dismantle_order_and_refund(forge, attachment)
 	await _check_host_station_craft_settles_the_panel()
 	await _check_remaining_stations_place()
-	if _creature_gear_proof and _failures.is_empty():
-		await _check_paid_creature_gear()
 	_check_saved_world_binding()
 	_report()
 
@@ -201,9 +154,7 @@ func _await_accepted(uid: String, action: String) -> Dictionary:
 
 
 func _check_paid_station_place(id: String) -> Node3D:
-	# Altar placement has its original version-1 journal and settled price;
-	# HomesteadBuildingDelivery intentionally prices only its other stations.
-	var cost: Array = _placer.call("_altar_cost", _game) if id == "altar" else DELIVERY.cost(id)
+	var cost := DELIVERY.cost(id)
 	_fund(cost)
 	var before := _counts(cost)
 	var uid := "b%d" % int(_game.get("world").next_building_uid)
@@ -231,11 +182,11 @@ func _check_paid_station_place(id: String) -> Node3D:
 	if not str(node.name).begins_with("Piece_" + id):
 		_fail("the planted %s is named %s" % [id, node.name])
 	print("%s planted through the paid journal; exact price spent; row accepted" % id)
-	if _creature_gear_proof: _gear_stations[id] = node
 	return node
 
 
-func _check_paid_attachment_place(parent: Node3D, id: String = "forge_meadows") -> Node3D:
+func _check_paid_attachment_place(parent: Node3D) -> Node3D:
+	var id := "forge_meadows"
 	var parent_uid := str(parent.get_meta("building_uid", ""))
 	var cost := DELIVERY.cost(id)
 	_fund(cost)
@@ -258,9 +209,9 @@ func _check_paid_attachment_place(parent: Node3D, id: String = "forge_meadows") 
 			_fail("%s spent the wrong %s" % [id, need.id])
 	var tier := STATION_RULES.effective_tier(STATION_RULES.config(), _game.get("placed_buildings"), parent_uid)
 	if tier.get("ok") != true or int(tier.effective_tier) != 1:
-		_fail("the paid Meadows attachment did not raise its station to tier 1: %s" % str(tier))
+		_fail("the paid Meadows attachment did not raise the Forge to tier 1: %s" % str(tier))
 	else:
-		print("%s snapped to slot 1 of %s; effective tier 1" % [id, parent_uid])
+		print("%s snapped to slot 1 of %s; Forge effective tier 1" % [id, parent_uid])
 	await _press("build_cancel")
 	for i in 6: await physics_frame
 	return node
@@ -362,67 +313,14 @@ func _check_remaining_stations_place() -> void:
 			continue
 		_player.global_position = cell + GHOST_TO_STANCE
 		for i in 10: await physics_frame
-		var placed := await _check_paid_station_place(id)
-		if placed != null:
+		if await _check_paid_station_place(id) != null:
 			await _press("build_cancel")
 			for i in 6: await physics_frame
-			if id == "den" and not _gear_label_capture.is_empty():
-				placed.call("_open")
-				var panel: Node = placed.get("_panel")
-				if panel == null:
-					_fail("actual paid Den has no mounted gear panel")
-					return
-				var view := {}
-				for frame in 240:
-					view = panel.call("_station_view")
-					if (view.get("party", []) as Array).size() == 5 and not panel.call("_gear_context", view).is_empty(): break
-					await physics_frame
-				var cards: Array = view.get("party", [])
-				if cards.size() != 5 or panel.call("is_open") != true \
-						or panel.get("_station") != placed or panel.get("_producer") != _game.get("session") \
-						or panel.call("_gear_context", view).is_empty() \
-						or preload("res://scripts/ui/input_owner.gd").current(self) != panel:
-					_fail("gear labels require the actual five-card paid Den/current Session/input owner")
-					return
-				if DirAccess.make_dir_recursive_absolute(_gear_label_capture) != OK:
-					_fail("fresh gear-label output could not be created")
-					return
-				var saved_size := root.size
-				for size: Vector2i in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
-					root.size = size
-					root.content_scale_size = Vector2i.ZERO
-					for frame in 20: await process_frame
-					for index: int in cards.size():
-						var card: Dictionary = cards[index]
-						for slot: String in ["harness", "charm"]:
-							var key := JSON.stringify(["gear", "equip", str(card.uid), slot, "rootiron_" + slot])
-							var matches: Array[Button] = []
-							for button: Button in panel.get("_station_buttons"):
-								if button.get_meta("station_focus_key", "") == key and not button.disabled: matches.append(button)
-							if matches.size() != 1:
-								_fail("exact actual owned gear control unavailable: " + key)
-								panel.call("close")
-								return
-							matches[0].grab_focus()
-							for frame in 8: await process_frame
-							if root.gui_get_focus_owner() != matches[0] or panel.get("_station") != placed \
-									or preload("res://scripts/ui/input_owner.gd").current(self) != panel:
-								_fail("actual gear focus/context changed before native capture")
-								panel.call("close")
-								return
-							await RenderingServer.frame_post_draw
-							var path := _gear_label_capture.path_join("panel_%dx%d_%d_%s.png" % [size.x, size.y, index + 1, slot])
-							if root.get_texture().get_image().save_png(path) != OK: _fail("native gear frame write failed")
-							print("GEAR_LABEL_NATIVE ", JSON.stringify({"path": path, "character_id": view.get("character_id"),
-								"creature_uid": card.uid, "station_uid": placed.get_meta("building_uid", ""),
-								"focus_key": key, "text": matches[0].text, "fixture": "pre-admission cards/carried gear; paid Den"}))
-				root.size = saved_size
-				panel.call("close")
 
 
 ## The first open, level homestead cell (by the placer's own legality) along
 ## the yard; the ghost then lands there from the trainer's ordinary stance.
-func _legal_cell(id: String, live_preview: bool = false) -> Vector3:
+func _legal_cell(id: String) -> Vector3:
 	var cfg := STATION_RULES.config()
 	for dz in [0, -4, 4, -8, 8]:
 		for dx in range(0, 40, 4):
@@ -430,140 +328,12 @@ func _legal_cell(id: String, live_preview: bool = false) -> Vector3:
 				var x: float = STANCE.x + sign * dx
 				var z: float = STANCE.z - GHOST_TO_STANCE.z + dz
 				var at := Vector3(x, float(_world.call("ground_height_at", x, z)), z)
-				if live_preview:
-					# Resolve the same grid/neighbor snap, live yaw, affordability,
-					# collision and homestead bounds as the mounted build ghost.
-					if _placer.call("preview_placement", _game, id, at).get("ok") == true: return at
-					continue
 				var legal: bool = _placer.call("_altar_pose_valid", _game, "meadows", at, 0.0).ok if id == "altar" else \
 					(STATION_RULES.placement(cfg, _game.get("placed_buildings"), id, "meadows", at, 0.0, {}, "").get("ok") == true \
 						and _placer.call("_station_pose_valid", _game, id, "meadows", at, 0.0).get("ok") == true)
 				if legal:
 					return at
 	return Vector3.INF
-
-
-## The 24-link detached upgrade matrix is retained separately. This bounded
-## actual path proves each station/slot family through mounted controls,
-## authenticated Session, exact payment and physical owner-save receipts.
-func _check_paid_creature_gear() -> void:
-	var party: RefCounted = _game.get("party")
-	if party.call("size") != 1 or not _gear_stations.has("den") or not _gear_stations.has("altar"):
-		_fail("gear path requires its one original owned creature and three paid stations")
-		return
-	var uid := str(party.call("at", 0).get("uid"))
-	var character := str(_game.get("local").get("character_id"))
-	# The first Forge retained its original dismantle/refund proof, freeing
-	# the Kitchen's original cell. Build this paid Forge on a legal free cell.
-	_fund(DELIVERY.cost("forge"))
-	var cell := _legal_cell("forge", true)
-	if not cell.is_finite():
-		_fail("no legal homestead cell for the paid gear Forge")
-		return
-	var forward := -_player.global_transform.basis.z
-	var camera: Node = _placer.get("_camera_rig")
-	if camera != null and camera.has_method("planar_basis"):
-		forward = -(camera.call("planar_basis") as Basis).z
-	_player.global_position = cell - forward * preload("res://scripts/build/build_placer.gd").PLACE_AHEAD + Vector3(0, 0.5, 0)
-	for frame in 10: await physics_frame
-	var forge := await _check_paid_station_place("forge")
-	if forge == null or await _check_paid_attachment_place(forge) == null: return
-	var altar: Node3D = _gear_stations.altar
-	_player.global_position = altar.global_position + GHOST_TO_STANCE
-	for frame in 10: await physics_frame
-	if await _check_paid_attachment_place(altar, "altar_meadows") == null: return
-	var cfg := preload("res://scripts/creatures/creature_gear.gd").config()
-	for route: Array in [["den", "equip", "harness"], ["den", "equip", "charm"], ["forge", "upgrade", "harness"], ["altar", "upgrade", "charm"]]:
-		var station: Node3D = _gear_stations[route[0]]
-		var item := "rootiron_" + str(route[2])
-		var output := item if route[1] == "equip" else str(cfg.upgrades[item].output)
-		var cost: Array = []
-		if route[1] == "upgrade":
-			for id: String in cfg.upgrades[item].inputs:
-				cost.append({"id": id, "n": int(cfg.upgrades[item].inputs[id])})
-			_fund(cost) # Original disclosed supplies; the upgraded piece is never granted.
-		else:
-			cost.append({"id": item, "n": 1})
-		var before := _counts(cost)
-		_player.global_position = station.global_position + GHOST_TO_STANCE
-		for frame in 10: await physics_frame
-		station.call("_open")
-		var panel: Node = station.get("_panel")
-		if panel == null:
-			_fail("paid gear station has no mounted panel: " + str(route))
-			return
-		var key := JSON.stringify(["gear", route[1], uid, route[2], item])
-		var matches: Array[Button] = []
-		var view := {}
-		for frame in SETTLE_FRAMES:
-			view = panel.call("_station_view")
-			matches.clear()
-			for button: Button in panel.get("_station_buttons"):
-				if button.get_meta("station_focus_key", "") == key and not button.disabled: matches.append(button)
-			if matches.size() == 1 and not panel.call("_gear_context", view).is_empty(): break
-			await physics_frame
-		if matches.size() != 1 or panel.call("is_open") != true or panel.get("_station") != station \
-				or panel.get("_producer") != _game.get("session") or panel.call("_gear_context", view).is_empty() \
-				or preload("res://scripts/ui/input_owner.gd").current(self) != panel:
-			_fail("exact authenticated mounted gear control unavailable: " + key)
-			panel.call("close")
-			return
-		var expected := {"action": route[1], "creature_uid": uid, "slot": route[2], "item_id": item}
-		var observed := {"original": {}, "result": {}}
-		var observer := func(op: String, original: Dictionary, result: Dictionary) -> void:
-			if op != "gear" or original.size() != 5: return
-			for field: String in expected:
-				if original.get(field) != expected[field]: return
-			if observed.original.is_empty(): observed.original = original.duplicate(true)
-			if original == observed.original: observed.result = result.duplicate(true)
-		var session: Node = _game.get("session")
-		session.connect("homestead_action_completed", observer)
-		matches[0].grab_focus()
-		await process_frame
-		var pressed: Dictionary = await preload("res://tools/net/press_inject.gd").tap(self,
-			preload("res://tools/gate_f/operator_harness.gd")._physical_binding, "ui_accept", 1)
-		for frame in 600:
-			if observed.result.get("settled") == true or observed.result.get("terminal_refusal") == true: break
-			await physics_frame
-		session.disconnect("homestead_action_completed", observer)
-		panel.call("close")
-		var result: Dictionary = observed.result
-		var original: Dictionary = observed.original
-		var receipt := "craft:%s:gear_%s" % [character, str(original.get("action_id", ""))]
-		if pressed.get("ok") != true or original.size() != 5 or str(original.get("action_id", "")).length() != 32 \
-				or result.get("ok") != true or result.get("settled") != true or result.get("durable") != true \
-				or result.get("owner_saved") != true or result.get("owner_acknowledged") != true or result.get("receipt") != receipt:
-			_fail("actual gear press/save/ACK failed: " + JSON.stringify({"route": route, "original": original, "result": result, "press": pressed}))
-			return
-		var after := _counts(cost)
-		for need: Dictionary in cost:
-			if int(after.get(need.id, 0)) != int(before.get(need.id, 0)) - int(need.n):
-				_fail("gear action did not debit its exact original input: " + str(need))
-		var saver: RefCounted = _game.get("save_system")
-		var path := str(saver.get("_characters").call("path_for", character))
-		var readable := preload("res://scripts/save/atomic_save_file.gd").readable_path(path)
-		var decoded: Variant = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(readable))
-		if not decoded is Dictionary or decoded.get("character_id") != character \
-				or decoded.get("party", []).size() != 1 or decoded.party[0].get("uid") != uid \
-				or decoded.get("redesign_character", {}).get("creatures", {}).get(uid, {}).get("gear", {}).get(route[2]) != output \
-				or (decoded.get("redesign_character", {}).get("transaction_receipts", []) as Array).count(receipt) != 1:
-			_fail("physical owner file does not retain exact creature gear and one original receipt: " + str(route))
-			return
-		var disk_inventory: RefCounted = preload("res://scripts/creatures/creature_gear.gd")._inventory(decoded.inventory, _game.get("items"))
-		if disk_inventory == null:
-			_fail("physical gear owner inventory failed its original validation")
-			return
-		for need: Dictionary in cost:
-			if int(disk_inventory.call("count", need.id)) != int(after.get(need.id, 0)):
-				_fail("physical owner file did not retain exact paid gear inputs: " + str(need))
-		var personal: Dictionary = _game.get("local").get("redesign_character")
-		if party.call("size") != 1 or str(party.call("at", 0).get("uid")) != uid \
-				or personal.creatures.get(uid, {}).get("gear", {}).get(route[2]) != output:
-			_fail("gear press changed ownership or failed to update the exact live slot")
-		print("F33_PAID_GEAR " + JSON.stringify({"station": route[0], "station_uid": station.get_meta("building_uid", ""),
-			"original": original, "result": result, "before": before, "after": after, "output": output,
-			"character_path": readable, "same_owned_uid": uid, "receipt": receipt}))
-		for frame in 10: await physics_frame
 
 
 func _check_saved_world_binding() -> void:

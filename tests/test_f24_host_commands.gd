@@ -501,7 +501,6 @@ func test_pouch_assignment_uses_original_character_journal_and_owner_save_withou
 	bag.call("add", "stormglass_command_pouch", 1)
 	equip_before.inventory = rules.slots(bag)
 	equip_before.equipment.backpack = "rootiron_command_pouch"
-	equip_before.redesign_character.pouch_tier = 1
 	var equip_context := context.duplicate(true)
 	equip_context.source_key = "personal_equipment:owner_a"
 	equip_context.station_kind = "personal_equipment"
@@ -513,7 +512,6 @@ func test_pouch_assignment_uses_original_character_journal_and_owner_save_withou
 	assert_true(equip_token.ok, str(equip_token))
 	if not equip_token.ok: return
 	assert_eq(equip_token.state.equipment.backpack, "stormglass_command_pouch")
-	assert_eq(equip_token.state.redesign_character.pouch_tier, 4, "the saved pouch tier follows the actual worn swap")
 	assert_eq(rules.inventory_from(equip_token.state.inventory).count("stormglass_command_pouch"), 0)
 	assert_eq(rules.inventory_from(equip_token.state.inventory).count("rootiron_command_pouch"), 1)
 	assert_eq(equip_token.state.party, equip_before.party)
@@ -532,12 +530,10 @@ func test_pouch_assignment_uses_original_character_journal_and_owner_save_withou
 	assert_false(equip_rejoined.acknowledge_creature_training("owner_a", equip_row), "pending equip cannot ACK before original owner save")
 	var equip_owner := delivery.owner_plan(equip_before, equip_row, record.errors)
 	assert_true(equip_owner.ok and equip_owner.get("requires_owner_save") == true)
-	assert_eq(equip_owner.state.redesign_character.pouch_tier, 4, "the original owner-save candidate carries the same tier")
 	assert_true(delivery.owner_plan(equip_owner.state, equip_row, record.errors).duplicate)
 	equip_row.status = "accepted"
 	assert_true(equip_rejoined.acknowledge_creature_training("owner_a", equip_row))
 	assert_eq(equip_rejoined.state("owner_a").equipment.backpack, "stormglass_command_pouch")
-	assert_eq(equip_rejoined.state("owner_a").redesign_character.pouch_tier, 4, "durable replay restores the worn tier together")
 	assert_false(equip_rejoined.stage_character_action("owner_a", 0, "trainer_equip", equip_intent, equip_context).ok)
 	# A later untyped local snapshot still cannot change admitted gear.
 	var untyped: Dictionary = equip_owner.state.duplicate(true)
@@ -569,7 +565,6 @@ func test_pouch_assignment_uses_original_character_journal_and_owner_save_withou
 	assert_true(removed.ok, str(removed))
 	if removed.ok:
 		assert_eq(removed.state.equipment.backpack, "")
-		assert_eq(removed.state.redesign_character.pouch_tier, 0, "removing the actual pouch clears its saved tier")
 		assert_eq(rules.inventory_from(removed.state.inventory).count("rootiron_command_pouch"), 1)
 
 

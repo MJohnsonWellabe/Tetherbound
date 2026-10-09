@@ -206,7 +206,20 @@ func _run() -> void:
 			"peer %d returned to normal exploration after the shared trainer victory (context=%s, locomotion=%s)"
 				% [i, str(context), str((story as Dictionary).get("locomotion", false))])
 
+	var after: Array = []
+	for i in 2:
+		after.append(await _reward_state(i))
+
+	# --- ONCE for the world ----------------------------------------------------
+	for i in 2:
+		check(bool((after[i] as Dictionary).get("beaten", false)),
+			"peer %d's world says Bryn has been beaten ('%s')" % [i, DEFEAT_FLAG])
+		check(not bool((after[i] as Dictionary).get("can_challenge", true)),
+			"and peer %d is offered a greeting rather than a second battle" % i)
+
 	# --- ONCE PER PARTICIPANT --------------------------------------------------
+	var peers: Array = (after[0] as Dictionary).get("session_peers", []) as Array
+	check(peers.size() == 2, "the host knows about 2 peers to pay (got %d)" % peers.size())
 	var host_world: Dictionary = {}
 	var guest_world: Dictionary = {}
 	# Character settlement saves before ACK, and the host saves the accepted
@@ -218,19 +231,6 @@ func _run() -> void:
 		if _reward_journal_settled(host_world, guest_world):
 			break
 		await process_frame
-	# Sample the paid inventories after this existing owner-save/accepted-ACK
-	# barrier. A snapshot taken before it remains stale after the ACK arrives.
-	var after: Array = []
-	for i in 2:
-		after.append(await _reward_state(i))
-	# --- ONCE for the world ----------------------------------------------------
-	for i in 2:
-		check(bool((after[i] as Dictionary).get("beaten", false)),
-			"peer %d's world says Bryn has been beaten ('%s')" % [i, DEFEAT_FLAG])
-		check(not bool((after[i] as Dictionary).get("can_challenge", true)),
-			"and peer %d is offered a greeting rather than a second battle" % i)
-	var peers: Array = (after[0] as Dictionary).get("session_peers", []) as Array
-	check(peers.size() == 2, "the host knows about 2 peers to pay (got %d)" % peers.size())
 	var host_namespace := str(host_world.get("reward_delivery_namespace", ""))
 	var guest_namespace := str(guest_world.get("reward_delivery_namespace", ""))
 	check(not host_namespace.is_empty(), "the host minted a durable reward world namespace")

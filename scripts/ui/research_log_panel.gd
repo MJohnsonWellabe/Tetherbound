@@ -10,21 +10,11 @@ var _species := ""
 var claim_task := Callable()
 var _refresh_left := 0.0
 var _last_view := ""
-var _pending_claim: Dictionary = {}
 
 func open(personal_view: Callable) -> bool:
 	if config().get("enabled") != true or not personal_view.is_valid(): return false
 	_view = personal_view
 	if not begin("Research log", "A Inspect · LB/RB Biome · B Back"): return false
-	_pending_claim.clear()
-	var game := get_node_or_null(^"/root/Game")
-	var session: Node = game.get("session") if game != null else null
-	if session != null and not session.is_connected("foundation_reply_received", _claim_reply):
-		session.connect("foundation_reply_received", _claim_reply)
-	if session != null:
-		var completed := _claim_completed.bind(session)
-		if not session.is_connected("homestead_action_completed", completed):
-			session.connect("homestead_action_completed", completed)
 	_rebuild()
 	return true
 
@@ -104,43 +94,8 @@ func _reveal_species(scroll: ScrollContainer, selected: Button) -> void:
 
 func _claim(species: String, task: String) -> void:
 	if not claim_task.is_valid(): return
-	if not _pending_claim.is_empty():
-		status.text = "Claim submitted · waiting for confirmation"
-		return
 	var result: Variant = claim_task.call(species, task)
-	var awaiting: bool = result is Dictionary and result.get("resolved") == false \
-		and result.get("code") == "awaiting_saved_decision"
-	_pending_claim = {"species_id": species, "task_id": task} if awaiting else {}
-	status.text = "Claim submitted · waiting for confirmation" if result is Dictionary and (result.get("ok") == true or awaiting) else str(result.get("code", "Research reward unavailable")) if result is Dictionary else "Research reward unavailable"
-
-func _claim_reply(envelope: Dictionary, result: Dictionary) -> void:
-	if not _shown or _pending_claim.is_empty() or envelope.get("op") != "research_claim" \
-		or envelope.get("station_key") != "research_journal" or envelope.get("intent") != _pending_claim \
-		or envelope.get("character_id") != _opened_context.get("character_id") \
-		or envelope.get("world_namespace") != _opened_context.get("world_namespace"): return
-	if result.get("resolved") != true: return
-	if result.get("ok") == true:
-		_pending_claim.clear()
-		_rebuild()
-	elif result.get("ok") == false and result.get("terminal_refusal") == true and result.get("durable") == false:
-		_pending_claim.clear()
-		status.text = str(result.get("reason", result.get("code", "Research reward unavailable")))
-
-func _claim_completed(action: String, intent: Dictionary, result: Dictionary, source: Node) -> void:
-	# Session emits this only after its original accepted owner BOOL/save ACK.
-	# The immediate foundation reply may still be unresolved; never resend it.
-	if not _shown or _pending_claim.is_empty() or action != "research_claim" or intent != _pending_claim \
-		or result.get("ok") != true or result.get("resolved") != true or result.get("durable") != true \
-		or result.get("saved") != true or result.get("owner_saved") != true \
-		or result.get("owner_acknowledged") != true: return
-	var game := get_node_or_null(^"/root/Game")
-	if game == null or not is_instance_valid(source) or game.get("session") != source \
-		or _opened_context.is_empty() or character_context(game) != _opened_context: return
-	var receipt: String = preload("res://scripts/creatures/research_actions.gd")._receipt(
-		str(_opened_context.get("character_id", "")), action, intent, {})
-	if result.get("receipt") != receipt: return
-	_pending_claim.clear()
-	_rebuild()
+	status.text = "Claim submitted · waiting for confirmation" if result is Dictionary and result.get("ok") == true else str(result.get("code", "Research reward unavailable")) if result is Dictionary else "Research reward unavailable"
 
 func _process(delta: float) -> void:
 	super._process(delta)

@@ -227,7 +227,6 @@ func is_alive() -> bool:
 
 
 func _physics_process(delta: float) -> void:
-	if has_meta(&"ambient_host_mirror"): return
 	var before := global_position
 	if engaged:
 		_tick_combat(delta)

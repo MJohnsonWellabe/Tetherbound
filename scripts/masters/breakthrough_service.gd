@@ -35,14 +35,6 @@ func bind_actions(submit_action: Callable, personal_view: Callable) -> bool:
 ## Session already fenced this reply to the exact sent envelope. Admission
 ## failure has no saved reward; it releases the chooser for another attempt.
 func _foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
-	if envelope.get("op") == "master_chest":
-		if result.get("ok") == true and result.get("resolved") == true and result.get("durable") == true \
-				and result.get("owner_saved") == true and result.get("owner_acknowledged") == true:
-			_message("Ascension Feast recipe learned and saved.")
-		elif result.get("ok") == false and result.get("resolved") == true \
-				and result.get("terminal_refusal") == true and result.get("durable") == false:
-			_message(str(result.get("reason", result.get("code", "Recipe chest could not open."))))
-		return
 	if envelope.get("op") != "master_duel" or not envelope.get("intent") is Dictionary \
 			or result.get("ok") != false or result.get("code") == "awaiting_saved_decision": return
 	var refused := result.duplicate(true)
@@ -50,9 +42,6 @@ func _foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 	_action_completed("master_duel", envelope.intent, refused)
 
 func _action_completed(action: String, original: Dictionary, result: Dictionary) -> void:
-	if action == "master_chest":
-		_foundation_reply({"op": action}, result)
-		return
 	if is_instance_valid(_panel):
 		_panel.call("accept_completion", action, original, result)
 
@@ -182,12 +171,7 @@ func _challenge(site: Node3D) -> void:
 
 func _chest(site: Node3D) -> void:
 	var verdict := submit("master_chest", {"master_id": str(site.get("master_id"))}, site)
-	if verdict.get("resolved") == false and verdict.get("code") == "awaiting_saved_decision":
-		_message("Opening recipe chest · waiting for confirmation.")
-	elif verdict.get("ok") == true:
-		_foundation_reply({"op": "master_chest"}, verdict)
-	else:
-		_message(str(verdict.get("reason", verdict.get("code", ""))))
+	_message(str(verdict.get("reason", verdict.get("code", ""))))
 
 func open_kitchen(station: Node3D) -> void:
 	_open("cook", station, "")
@@ -217,10 +201,6 @@ func _open(mode: String, source: Node, master_id: String) -> void:
 	_panel.call("open", self, mode, source, master_id)
 
 func _message(message: String) -> void:
-	message = {
-		"win_your_own_duel_first": "Win your own 1v1 here before opening this recipe chest.",
-		"chest_pending_make_satchel_room": "Make room in your Satchel, then open this recipe chest again."
-	}.get(message, message)
 	var game := get_node_or_null(^"/root/Game")
 	if game != null and not message.is_empty(): game.call("push_world_message", message)
 

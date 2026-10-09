@@ -1,10 +1,10 @@
 extends "res://tools/net/peer_runner.gd"
 
 ## Test-side orchestration for smoke_net_water_deep_watch_chart. Poses are
-## teleport fixtures. The accepted_alpha_cycle argument drives a genuinely
-## admitted fight with ordinary creature inputs; the legacy terminal-handler
-## fixture remains available to callers omitting that argument. The claim uses
-## the production pickup body and LedgerRPC transport, never a direct host rule.
+## teleport fixtures. Tidecoil resolution invokes the production Water director's
+## won-fight terminal handler on the real named body (no fight is played); the
+## claim uses the production pickup body and LedgerRPC transport; the host rule
+## is never called directly.
 const GATED := "water:deep_watch:pickup:002"
 const RESOLVED := "water_named_deep_watch_tidecoil_resolved"
 const TIDECOIL_ID := "water_deep_watch_tidecoil"
@@ -95,53 +95,6 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 					break
 			if body == null:
 				return {"verdict": "FAIL", "detail": "Named Tidecoil body never became resident"}
-			if msg.get("args", {}).get("accepted_alpha_cycle") == true:
-				var active: RefCounted = game.party.call("active")
-				if active == null or int(active.get("level")) != 55:
-					return {"verdict": "FAIL", "detail": "Declared owned level-55 input is not the active companion"}
-				var deployed := await _step_deploy_creature({})
-				if deployed.get("verdict") != "PASS": return deployed
-				# A client's resident body is not a host encounter. Join the exact
-				# already-announced record through the unchanged admission helper.
-				var host_encounter_id := str(msg.get("args", {}).get("host_encounter_id", ""))
-				var engaged: Dictionary
-				if host_encounter_id.is_empty():
-					engaged = await _step_engage_wild({"foundation_alpha_site": TIDECOIL_ID})
-				else:
-					engaged = await _step_join_encounter({"encounter_id": host_encounter_id})
-				if engaged.get("verdict") != "PASS": return engaged
-				var manager := _combat_manager()
-				var encounter_id := str(manager.call("encounter_id"))
-				if not host_encounter_id.is_empty() and encounter_id != host_encounter_id:
-					return {"verdict": "FAIL", "detail": "Client did not bind the exact announced Alpha encounter"}
-				var owner = game.local
-				var host_world = game.world
-				var session = game.session
-				var epoch := str(session.call("_altar_current_epoch"))
-				for frame in 600:
-					if game.local != owner or game.world != host_world or game.session != session \
-							or not is_instance_valid(manager) or not is_instance_valid(session) \
-							or str(session.call("_altar_current_epoch")) != epoch:
-						return {"verdict": "FAIL", "detail": "Alpha fight owner/world/session/epoch changed"}
-					if game.world.flags.has(RESOLVED):
-						return {"verdict": "PASS", "detail": "Genuine Alpha fight resolved through ordinary creature inputs",
-							"data": {"encounter_id": encounter_id}}
-					var current_encounter := str(manager.call("encounter_id"))
-					if not current_encounter.is_empty() and current_encounter != encounter_id:
-						return {"verdict": "FAIL", "detail": "Alpha fight changed before original resolution"}
-					if current_encounter == encounter_id and bool(manager.call("quick_ready")) and manager.get("_move_awaiting_host") != true:
-						var ally: Node3D = manager.get("_ally_body")
-						var enemy: Node3D = manager.get("_wild")
-						if is_instance_valid(ally) and is_instance_valid(enemy):
-							var target: Vector3 = enemy.call("centre")
-							ally.call("place_on_ground", target + Vector3(1.1, 0, 0))
-							ally.call("face_towards", target)
-							var pressed := await _inject("combat_quick", 1)
-							if pressed.get("ok") != true:
-								return {"verdict": "FAIL", "detail": "Ordinary creature input failed: " + str(pressed.get("why", "unknown"))}
-					await physics_frame
-				return {"verdict": "FAIL", "detail": "No genuine Alpha resolution within original bounded fight input",
-					"data": {"encounter_id": encounter_id}}
 			director.set("_engaged_with", body)
 			director.call("_on_combat_exited", "won")
 			for frame in 10:
@@ -170,16 +123,6 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 					return {"verdict": "PASS", "detail": "Production claim paid one Candy III through the host"}
 			return {"verdict": "FAIL", "detail": "Claim did not complete", "data": {"refusals": _refusals.duplicate(true),
 				"candy": int(game.inventory.count("skill_candy_iii"))}}
-		"deep_watch_depart_alpha":
-			var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
-			var at: Array = cfg.entry_anchors.from_stormwood.position
-			_pose(Vector3(float(at[0]), float(at[1]), float(at[2])))
-			for frame in 120: await physics_frame
-			return {"verdict": "PASS", "detail": "Disclosed pose at authored First Shore arrival; production census must confirm departure"}
-		"deep_watch_visit_alpha":
-			_pose(TIDECOIL_SITE + (ISLAND_CENTRE - TIDECOIL_SITE).normalized() * 60.0)
-			for frame in 120: await physics_frame
-			return {"verdict": "PASS", "detail": "Disclosed pose within original Tidecoil residency radius"}
 	return {"verdict": "ERROR", "detail": "Unknown Deep Watch action"}
 
 
@@ -191,38 +134,5 @@ func _execute_probe(msg: Dictionary) -> Variant:
 	for flag: Variant in game.world.flags.all_set():
 		if str(flag).begins_with("water_claim:") and str(flag).ends_with(":" + GATED):
 			receipts += 1
-	var rules := preload("res://scripts/repeatables/alpha_respawns.gd")
-	var cycle: Dictionary = game.world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(TIDECOIL_ID, {}).duplicate(true)
-	var bodies: Array = []
-	var world := _world()
-	if world != null:
-		for wild: Node3D in world.get_node("EncounterDirector").get("_wild_creatures"):
-			if not is_instance_valid(wild) or wild.is_queued_for_deletion() or not wild.visible \
-					or not bool(wild.call("is_alive")) or wild.get_meta("foundation_alpha_site", "") != TIDECOIL_ID: continue
-			var instance: RefCounted = wild.get("instance")
-			bodies.append({"uid": str(instance.get("uid")), "generation": wild.get_meta("foundation_alpha_generation", 0),
-				"packet": wild.get_meta("foundation_alpha_packet", {}).duplicate(true),
-				"rolled_traits": instance.get("rolled_traits").duplicate(), "initialized": instance.get("traits_initialized")})
-	# Read the already-cached store and physical document. No worlds() getter,
-	# autosave or fallback completion can manufacture this observation.
-	var disk: Dictionary = {}
-	var store: RefCounted = game.save_system.get("_worlds")
-	if store != null:
-		var path := str(store.call("path_for", str(game.world.world_id)))
-		var readable := preload("res://scripts/save/atomic_save_file.gd").readable_path(path)
-		if FileAccess.file_exists(readable):
-			var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(readable))
-			if parsed is Dictionary: disk = parsed
-	var source: Dictionary = world.get_node("EncounterDirector").call("host_wild_victory_source",
-		str(msg.get("args", {}).get("encounter_id", ""))) if world != null and game.is_host() else {}
 	return {"resolved": game.world.flags.has(RESOLVED), "receipts": receipts,
-		"character_id": str(game.local.character_id), "host": bool(game.is_host()), "day": int(game.world.day),
-		"world_namespace": str(game.world.reward_delivery_namespace), "cycle": cycle, "bodies": bodies,
-		"retained": rules.retained_spawn(game.world.redesign_world, TIDECOIL_ID),
-		"saved_cycle": disk.get("redesign_world", {}).get("alpha_cycles", {}).get("sites", {}).get(TIDECOIL_ID, {}),
-		"saved_retained": rules.retained_spawn(disk.get("redesign_world", {}), TIDECOIL_ID),
-		"victory_source": source.duplicate(true),
-		"canonical_actor_ready": world != null and game.is_host() and world.get_node("EncounterDirector").call("_owns_canonical_wild",
-			str(msg.get("args", {}).get("encounter_id", ""))) == true,
-		"accepted_kill": source.get("accepted", {}).get("delta", {}).get("killed") == true,
-		"enemy_fainted": source.get("enemy_record", {}).get("fainted") == true}
+		"character_id": str(game.local.character_id), "host": bool(game.is_host())}

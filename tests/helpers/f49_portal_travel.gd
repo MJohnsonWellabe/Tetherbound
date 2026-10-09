@@ -11,7 +11,6 @@ var _player: CharacterBody3D
 var _rig: Node3D
 var _activated: Object
 var _home_result: Dictionary = {}
-var last_approach: Dictionary = {}
 
 func _init(owner: SceneTree, actual_game: Node) -> void:
 	tree = owner
@@ -158,29 +157,16 @@ func walk_to_pedestal(biome: String) -> bool:
 	distance = _player.global_position.distance_to(pedestal.global_position)
 	return distance <= radius or _fail("F49 walk stopped %.2f m from the %s pedestal (radius %.1f m)" % [distance, biome, radius])
 
-func activate(prompt: Node3D, approach_headings: Array[Vector3] = []) -> bool:
-	last_approach = {}
+func activate(prompt: Node3D) -> bool:
 	if prompt == null or not _bind(): return _fail("F49 lacks the actual interaction provider")
 	var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")
 	if arbiter == null: return _fail("F49 lacks the actual interaction arbiter")
 	var nav := NAV.new(tree, _player, _rig, _stick)
 	var distance := _player.global_position.distance_to(prompt.global_position)
 	var recoveries_before := int(_player.get("_unstick_count"))
-	var start := _player.global_position
-	var budget := maxi(1200, int(distance * 65.0))
 	# Original navigator retains capsule probes, confined watchdog and support
 	# tests. No floor snap, shape waiver, target relocation or budget relaxation.
-	var arrived := false
-	if approach_headings.is_empty():
-		arrived = await nav.walk_to(prompt.global_position, budget, 2.5)
-	else:
-		arrived = await nav.walk_to_guided(prompt.global_position, budget, 2.5, approach_headings)
-	last_approach = {"phase": "portal_approach", "provider": str(prompt.get_path()), "start": str(start),
-		"target": str(prompt.global_position), "end": str(_player.global_position), "arrived": arrived,
-		"grounded": _player.is_on_floor(), "can_walk": nav.can_walk(), "original_frame_budget": budget,
-		"unstick_count_before": recoveries_before, "unstick_count_after": int(_player.get("_unstick_count")),
-		"confined_resets": nav.confined_resets(), "headings": approach_headings.map(func(point: Vector3) -> String: return str(point))}
-	if not arrived:
+	if not await nav.walk_to(prompt.global_position, maxi(1200, int(distance * 65.0)), 2.5):
 		_stick(0, 0)
 		return _fail("F49 ordinary capsule walk failed to " + str(prompt.get_path()))
 	_stick(0, 0)

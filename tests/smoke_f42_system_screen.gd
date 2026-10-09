@@ -112,76 +112,13 @@ func _research_rows() -> void:
 		await process_frame
 		_check(_research_text(panel).contains("Meet this species in an encounter · 1 / 1"),
 			"focusing post-release history shows its retained task progress")
-	# Disclosed unresolved service replies exercise only the actual panel's
-	# consumer; Session still owns authentication, journal/BOOL-save and ACK.
-	var submissions: Array[Dictionary] = []
-	panel.claim_task = func(species: String, task: String) -> Dictionary:
-		submissions.append({"species_id": species, "task_id": task})
-		return {"ok": false, "resolved": false, "code": "awaiting_saved_decision"}
-	var original_claim := {"species_id": "bramblebun", "task_id": "sight"}
-	panel.call("_claim", "bramblebun", "sight")
-	_check(submissions == [original_claim] and panel.get("_pending_claim") == original_claim,
-		"unresolved claim retains its exact original intent")
-	panel.call("_claim", "terrapup", "signature")
-	_check(submissions == [original_claim] and panel.get("_pending_claim") == original_claim,
-		"a second task cannot submit or replace the original pending claim")
-	var context: Dictionary = panel.get("_opened_context")
-	var original_envelope := {"op": "research_claim", "station_key": "research_journal",
-		"intent": original_claim, "character_id": context.get("character_id"),
-		"world_namespace": context.get("world_namespace")}
-	var foreign_envelope := original_envelope.duplicate(true)
-	foreign_envelope.intent = {"species_id": "terrapup", "task_id": "signature"}
-	var refused := {"ok": false, "resolved": true, "terminal_refusal": true, "durable": false,
-		"code": "disclosed_component_refusal"}
-	panel.call("_claim_reply", foreign_envelope, refused)
-	_check(panel.get("_pending_claim") == original_claim,
-		"another task's terminal reply cannot release the original claim")
-	panel.call("_claim_reply", original_envelope, refused)
-	_check((panel.get("_pending_claim") as Dictionary).is_empty(),
-		"matching terminal refusal releases the original claim for retry")
-	panel.call("_claim", "bramblebun", "sight")
-	_check(submissions == [original_claim, original_claim] and panel.get("_pending_claim") == original_claim,
-		"ordinary retry submits the same task after its original refusal")
 	var claimed: Dictionary = actions.stage(model.record, 2, "research_claim",
 		{"species_id": "bramblebun", "task_id": "sight"},
 		{"character_id": model.record.character_id, "expected_revision": 2,
 			"in_range": true, "source_key": "research_journal"}, records.errors)
 	_check(claimed.get("ok") == true, "canonical component claim produces paid projection")
 	if claimed.get("ok") == true:
-		var source: Node = root.get_node("Game").get("session")
-		_check(source.is_connected("homestead_action_completed", Callable(panel, "_claim_completed").bind(source)),
-			"real research panel binds the original Session's saved-completion signal")
-		var completion := {"ok": true, "resolved": true, "durable": true, "saved": true,
-			"owner_saved": true, "owner_acknowledged": true,
-			"receipt": preload("res://scripts/creatures/research_actions.gd")._receipt(
-				str(context.get("character_id", "")), "research_claim", original_claim, {})}
-		var incomplete := completion.duplicate(true)
-		incomplete.owner_acknowledged = false
-		panel.call("_claim_completed", "research_claim", original_claim, incomplete, source)
-		_check(panel.get("_pending_claim") == original_claim,
-			"completion without owner ACK cannot release the original claim")
-		panel.call("_claim_completed", "research_claim", foreign_envelope.intent, completion, source)
-		_check(panel.get("_pending_claim") == original_claim,
-			"another task's saved completion cannot release the original claim")
-		var wrong_receipt := completion.duplicate(true)
-		wrong_receipt.receipt = "foreign-receipt"
-		panel.call("_claim_completed", "research_claim", original_claim, wrong_receipt, source)
-		_check(panel.get("_pending_claim") == original_claim,
-			"a foreign receipt cannot release the original claim")
-		panel.call("_claim_completed", "research_claim", original_claim, completion, null)
-		_check(panel.get("_pending_claim") == original_claim,
-			"completion without the original source Session cannot release the claim")
-		var changed_context := context.duplicate(true)
-		changed_context.world_namespace = "disclosed-foreign-world"
-		panel.set("_opened_context", changed_context)
-		panel.call("_claim_completed", "research_claim", original_claim, completion, source)
-		_check(panel.get("_pending_claim") == original_claim,
-			"a changed opened world cannot release the original claim")
-		panel.set("_opened_context", context)
 		model.record = JSON.parse_string(JSON.stringify(claimed.state))
-		source.emit_signal("homestead_action_completed", "research_claim", original_claim, completion)
-		_check((panel.get("_pending_claim") as Dictionary).is_empty(),
-			"matching saved component completion releases the original pending claim")
 		panel.call("_process", 0.6)
 		await process_frame
 		_check(_research_text(panel).contains("Paid ✓"), "restored paid task renders its paid tick")

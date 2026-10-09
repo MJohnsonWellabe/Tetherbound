@@ -8,9 +8,6 @@ var _source: Node
 var _waiting := false
 var _durable := false
 var _claim_context: Dictionary = {}
-var _view_observer: Callable
-var _opened_session: Node
-var _opened_epoch := ""
 
 static func attach(adapter: Node) -> CanvasLayer:
 	if config().get("enabled") != true or not is_instance_valid(adapter): return null
@@ -26,49 +23,26 @@ static func attach(adapter: Node) -> CanvasLayer:
 func open_requested_callback() -> Callable:
 	return _on_open_requested
 
-func _on_open_requested(snapshot: Dictionary, adapter: Node) -> void:
-	open(adapter, snapshot)
+func _on_open_requested(_view: Dictionary, adapter: Node) -> void:
+	open(adapter)
 
-func open(board: Node, snapshot: Variant = null) -> bool:
+func open(board: Node) -> bool:
 	if config().get("enabled") != true or not is_instance_valid(board) or (_waiting and board != _source): return false
 	if _waiting and _claim_context != character_context(get_node_or_null(^"/root/Game")): return false
 	for method: String in ["view", "claim", "reconcile"]:
 		if not board.has_method(method): return false
 	if not board.has_signal("action_completed"): return false
-	if not begin("Bounty board", "A Claim / Deliver · B Leave · New bounties at dawn"): return false
 	if is_instance_valid(_source) and _source != board and _source.is_connected("action_completed", present_result):
 		_source.disconnect("action_completed", present_result)
-	if is_instance_valid(_source) and _source != board and _view_observer.is_valid() \
-		and _source.has_signal("view_changed") and _source.is_connected("view_changed", _view_observer):
-		_source.disconnect("view_changed", _view_observer)
 	_source = board
 	if not board.is_connected("action_completed", present_result): board.connect("action_completed", present_result)
-	_view_observer = _on_view_changed.bind(board)
-	if board.has_signal("view_changed") and not board.is_connected("view_changed", _view_observer):
-		board.connect("view_changed", _view_observer)
-	var game := get_node_or_null(^"/root/Game")
-	_opened_session = game.get("session") if game != null else null
-	_opened_epoch = str(_opened_session.call("_altar_current_epoch")) if _opened_session != null else ""
-	_rebuild(snapshot)
+	if not begin("Bounty board", "A Claim / Deliver · B Leave · New bounties at dawn"): return false
+	_rebuild()
 	return true
 
-func _current_opened_scope() -> bool:
-	var game := get_node_or_null(^"/root/Game")
-	return game != null and is_instance_valid(_source) and character_context(game) == _opened_context \
-		and is_instance_valid(_opened_session) and game.get("session") == _opened_session \
-		and str(_opened_session.call("_altar_current_epoch")) == _opened_epoch
-
-func _on_view_changed(snapshot: Dictionary, adapter: Node) -> void:
-	if not _shown or adapter != _source or not _current_opened_scope() \
-		or snapshot.get("character_id") != _opened_context.get("character_id") \
-		or snapshot.get("world_namespace") != _opened_context.get("world_namespace"): return
-	# Consume this authenticated reply directly. Calling view() here would
-	# send another request for every reply and steal focus in a refresh loop.
-	_rebuild(snapshot)
-
-func _rebuild(snapshot: Variant = null) -> void:
+func _rebuild() -> void:
 	var focus := clear_body()
-	var raw: Variant = _source.call("view") if snapshot == null else snapshot
+	var raw: Variant = _source.call("view")
 	if not raw is Dictionary or raw.get("ready") != true or not raw.get("rows") is Array \
 			or raw.rows.size() != 3:
 		status.text = "The board is waiting for the host's morning update."
@@ -106,9 +80,6 @@ func _rebuild(snapshot: Variant = null) -> void:
 	finish(focus)
 
 func _claim(instance: String) -> void:
-	if not _current_opened_scope():
-		if _shown: close()
-		return
 	if _waiting or instance.is_empty() or not is_instance_valid(_source): return
 	# F43 validates the instance against the admitted board; no client rewards,
 	# day, progress, character id or costs enter the business intent.
@@ -121,9 +92,6 @@ func _claim(instance: String) -> void:
 	if result is Dictionary: present_result(result)
 
 func _reconcile() -> void:
-	if not _current_opened_scope():
-		if _shown: close()
-		return
 	if _waiting and is_instance_valid(_source): _source.call("reconcile")
 
 ## The bound producer delivers ONLY its original claim's terminal verdict.
@@ -146,12 +114,9 @@ func present_result(result: Dictionary) -> void:
 
 func _process(delta: float) -> void:
 	super._process(delta)
-	if _shown and not _current_opened_scope(): close()
+	if _shown and not is_instance_valid(_source): close()
 
 func _exit_tree() -> void:
 	if is_instance_valid(_source) and _source.is_connected("action_completed", present_result):
 		_source.disconnect("action_completed", present_result)
-	if is_instance_valid(_source) and _view_observer.is_valid() and _source.has_signal("view_changed") \
-		and _source.is_connected("view_changed", _view_observer):
-		_source.disconnect("view_changed", _view_observer)
 	super._exit_tree()

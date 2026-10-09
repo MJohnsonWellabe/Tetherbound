@@ -72,7 +72,6 @@ class CliffWild:
 				_pause_left = 0.3
 
 	func _physics_process(delta: float) -> void:
-		if has_meta(&"ambient_host_mirror"): return
 		super._physics_process(delta)
 		# Endpoint/path validation constrains requested wandering, but physics can
 		# still slide a peaceful body off its high-roost shelf. Once it lands on
@@ -450,7 +449,6 @@ func _spawn_available_sites() -> void:
 				var angle := index * TAU / maxi(1, int(site.get("count", 1)))
 				var at := centre + Vector3(cos(angle), 0, sin(angle)) * float(site.get("radius_m", 4.0)) * 0.5
 				wild = spawn_wild(str(selected["species"]), at, {"name": "%s_%d" % [id, index],
-					"ambient_source_id": "site:%s:%d" % [id, index],
 					"site_anchor": centre,
 					"level": selected["level"], "aggressive": false, "wander_radius": float(site.get("radius_m", 4.0)),
 					"combat": encounter_config.get("behavior_profiles", {}).get("scout", {})})
@@ -486,7 +484,6 @@ func _spawn_air_patrol(species: String, site: Dictionary, index: int, level: int
 		return null
 	var wild: Node3D = CREATURE_SCENE.instantiate()
 	wild.set_script(AirPatrolWild)
-	wild.set_meta(&"ambient_source_id", "site:%s:%d" % [str(site.id), index])
 	wild.name = str(plan.id)
 	# Peer 1 is the listen host in a live session and the ordinary offline
 	# authority in solo. Every peer builds the same fixed presentation node, but
@@ -539,8 +536,6 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	# grounding differ. Trainer bodies still use the untouched main pipeline.
 	var wild: Node3D = CREATURE_SCENE.instantiate()
 	wild.set_script(CliffWild)
-	if opts.get("ambient_source_id") is String:
-		wild.set_meta(&"ambient_source_id", opts.ambient_source_id)
 	wild.name = str(opts.get("name", "Wild_%s_%d" % [species, _wild_creatures.size() + 1]))
 	var parent: Node = opts.get("parent", null) as Node
 	if not is_instance_valid(parent):

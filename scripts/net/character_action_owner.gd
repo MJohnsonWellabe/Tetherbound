@@ -46,14 +46,6 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 		if starter_live == null: return _deny("owner_starter_instance_missing")
 	var plan := _live_plan(roster.members, current, applied, starter_live)
 	if plan.get("ok") != true: return plan
-	if row.action == "rest_complete" and proposal.get("duplicate") != true:
-		# These existing save metadata/vitals are outside portable authority.
-		# Keep them in this same owner install/BOOL-save, not an after-ACK write.
-		var vitals: RefCounted = game.call("player_vitals") if game.has_method("player_vitals") else null
-		if vitals != null and vitals.has_method("rest"):
-			plan["rest_trainer_before"] = {"body": weakref(vitals), "values": {"health": vitals.get("health"),
-				"stamina": vitals.get("stamina"), "satiety": vitals.get("satiety"),
-				"_exhausted": vitals.get("_exhausted"), "damage_revision": vitals.get("damage_revision")}}
 	if session.call("_retain_owner_training_retry", player, world, row) != true \
 		or session.call("_begin_owner_training_install", player, world, row) != true: return _deny("owner_install_refused")
 	if proposal.get("duplicate") != true:
@@ -75,11 +67,6 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 			return _rollback(game, player, world, session, row, snapshot, roster, plan, "owner_capture_roster_refused")
 		if row.action == "starter_choice":
 			player.flags.call("set_flag", STARTER_FLAG, true)
-		if row.action == "rest_complete":
-			player.flags.call("set_flag", "player_slept_at_home", true)
-			player.set("satiety", preload("res://scripts/save/save_game.gd").new().call("_default_satiety"))
-			var vitals: RefCounted = game.call("player_vitals") if game.has_method("player_vitals") else null
-			if vitals != null and vitals.has_method("rest"): vitals.call("rest")
 		if not ESSENCE._equivalent(current.equipment, row.after.equipment):
 			player.get("equipment").call("load_data", row.after.equipment)
 		# F31#2: a relic power choice changes only the active heart.
@@ -205,14 +192,6 @@ static func _rollback(game: Node, player: RefCounted, world: RefCounted, session
 		# the live instance stays the follower's, owned by the pending adoption.
 		if player.get("party").call("install_owner_capture_roster", [], true) != true:
 			return _end_refused(session, "owner_roster_rollback_failed")
-	if row.action == "rest_complete":
-		player.flags.call("load_data", snapshot.flags)
-		player.set("satiety", snapshot.satiety)
-		var recovery: Dictionary = plan.get("rest_trainer_before", {})
-		var vitals: RefCounted = recovery.body.get_ref() if recovery.get("body") is WeakRef else null
-		if vitals != null:
-			for field: String in ["health", "stamina", "satiety", "_exhausted", "damage_revision"]:
-				vitals.set(field, recovery.values[field])
 	if not ESSENCE._equivalent(snapshot.equipment, row.after.equipment):
 		player.get("equipment").call("load_data", snapshot.equipment)
 	if not ESSENCE._equivalent(snapshot.realm_hearts, row.after.realm_hearts) and player.get("hearts") != null:

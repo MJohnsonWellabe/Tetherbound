@@ -29,13 +29,7 @@ func _offer(id: String = "", include_decided: bool = false) -> Dictionary:
 			var latest: Variant = game.world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(game.world.reward_delivery_namespace, duty.character_id))
 			if not include_decided and game.local.redesign_character.transaction_receipts.has(receipt) \
 				and latest is Dictionary and load("res://autoload/world_state.gd").call("training_row_valid", latest, game.world.reward_delivery_namespace, game.world.world_id) == true \
-				and latest.character_id == game.local.character_id and latest.after.redesign_character.transaction_receipts.has(receipt):
-				# The one-row journal advances only from an accepted predecessor.
-				# A later pending action must not present an already saved catch
-				# again. Its before AND after retain the original receipt; the
-				# original pending capture lacks it in before and still awaits ACK.
-				if latest.status == "accepted" or (latest.status == "pending" \
-					and int(latest.journal_revision) > 1 and latest.before.redesign_character.transaction_receipts.has(receipt)): continue
+				and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
 			return duty.context.duplicate(true)
 	return {}
 

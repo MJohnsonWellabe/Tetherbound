@@ -435,11 +435,6 @@ func confirm_swap() -> String:
 	var party: RefCounted = game.get("party") if game != null else null
 	if party == null or _offer_creature == null:
 		return CREATURE_TRADE.REFUSED_NO_OFFER
-	var owner_session: Node = game.get("session") as Node
-	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
-		and owner_session.call("_owner_training_mutation_blocked", game.get("local")) == true:
-		if _message != null: _message.text = "Saving your last action. Try again in a moment."
-		return "owner_save_pending"
 	var giving: RefCounted = party.call("at", _pending_index)
 	var given_label := str(giving.call("label")) if giving != null else ""
 	var reason := str(CREATURE_TRADE.swap(party, _pending_index, _offer_creature))

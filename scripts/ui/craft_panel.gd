@@ -58,7 +58,6 @@ const LIST_VISIBLE_HEIGHT := 6 * ROW_HEIGHT + 5 * 8
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
 const CAMP_RULES := preload("res://scripts/build/forward_camp_rules.gd")
 const STATION_NEXT := preload("res://scripts/build/station_next_upgrade.gd")
-const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 var _station: Node3D
 var _station_mode := false
 var _station_intent: Dictionary = {}
@@ -282,16 +281,12 @@ func _build_gear_controls(controls: VBoxContainer, station_id: String) -> void:
 	elif station_id in ["den","forge","altar"]:
 		var party: Variant = view.get("party")
 		if not party is Array or party.size() > 5: return
-		for index: int in party.size():
-			var row: Variant = party[index]
+		for row: Variant in party:
 			if not row is Dictionary or not row.get("uid") is String: continue
 			var uid: String = row.uid
 			var gear: Variant = _gear_rules.call("gear_for",view,uid)
 			if not gear is Dictionary: continue
-			var species := str(SPECIES.definition(str(row.get("species_id", ""))).get("display_name", row.get("species_id", uid)))
-			var nickname := str(row.get("nickname", ""))
-			var name := species if nickname.strip_edges().is_empty() else "%s (%s)" % [nickname, species]
-			var companion := "%d · %s" % [index + 1, name]
+			var companion: String = str(row.get("nickname",row.get("species_id",uid)))
 			for slot: String in ["harness","charm"]:
 				var equipped: Variant = gear.get(slot)
 				if not equipped is String: continue

@@ -745,12 +745,6 @@ func _equipment_has_focus() -> bool:
 func _unequip(slot: String) -> void:
 	if _held >= 0 or _targeting >= 0 or _confirming >= 0:
 		return
-	var owner_game := state()
-	var owner_session: Node = owner_game.get("session") as Node if owner_game != null else null
-	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
-		and owner_session.call("_owner_training_mutation_blocked", owner_game.get("local")) == true:
-		say("Saving your last action. Try again in a moment.")
-		return
 	var equipment := _equipment()
 	if equipment == null:
 		return
@@ -759,21 +753,6 @@ func _unequip(slot: String) -> void:
 		say("This equipment slot is empty.")
 	else:
 		_begin_equipment_transaction(slot, "", id)
-
-func _equip(id: String) -> void:
-	var owner_game := state()
-	var owner_session: Node = owner_game.get("session") as Node if owner_game != null else null
-	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
-		and owner_session.call("_owner_training_mutation_blocked", owner_game.get("local")) == true:
-		say("Saving your last action. Try again in a moment.")
-		return
-	var equipment := _equipment()
-	if equipment != null:
-		var definition: Dictionary = _items().call("definition", id)
-		var slot := str(definition.get("armor_slot", ""))
-		_begin_equipment_transaction(slot, id, str(equipment.call("equipped_in", slot)))
-	else:
-		say("Cannot equip that now. Make room for the worn piece in your Satchel.")
 
 
 func _refresh_equipment() -> void:
@@ -1292,12 +1271,6 @@ func _on_slot(index: int) -> void:
 		say("Put it back in slot %d." % (index + 1))
 		return
 
-	var owner_game := state()
-	var owner_session: Node = owner_game.get("session") as Node if owner_game != null else null
-	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
-		and owner_session.call("_owner_training_mutation_blocked", owner_game.get("local")) == true:
-		say("Saving your last action. Try again in a moment.")
-		return
 	var moving := _stack_label(_held)
 	var displaced := _stack_label(index)
 	var merging := _same_item(_held, index)
@@ -1480,15 +1453,12 @@ func _read_use() -> void:
 		if game != null: game.call("use_home_key")
 		return
 	if str(db.call("kind", id)) == "armor":
-		_equip(id)
+		var equipment := _equipment()
+		if equipment != null:
+			var slot := str(def.get("armor_slot", ""))
+			_begin_equipment_transaction(slot, id, str(equipment.call("equipped_in", slot)))
 		return
 
-	var owner_game := state()
-	var owner_session: Node = owner_game.get("session") as Node if owner_game != null else null
-	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
-		and owner_session.call("_owner_training_mutation_blocked", owner_game.get("local")) == true:
-		say("Saving your last action. Try again in a moment.")
-		return
 	if str(db.call("kind", id)) == "tool":
 		var maximum := int(inventory.call("max_durability_at", _focused))
 		if maximum > 0:
@@ -1808,12 +1778,6 @@ func _drop(id: String, n: int, db: RefCounted) -> void:
 		var reason := str(verdict.get("reason", ""))
 		say(reason if not reason.is_empty() else "That could not be dropped.")
 		return
-	var owner_session: Node = game.get("session") as Node
-	if verdict.get("pending") == true or (owner_session != null \
-		and owner_session.has_method("_owner_training_mutation_blocked") \
-		and owner_session.call("_owner_training_mutation_blocked", game.get("local")) == true):
-		say("Drop submitted. Waiting for your Satchel to save.")
-		return
 	var what := str(db.call("item_name", id)) if db != null else id
 	if n > 1:
 		say("Dropped %d %s." % [n, what])
@@ -1965,15 +1929,7 @@ func _read_split() -> void:
 		return
 	if not Input.is_action_just_pressed(SPLIT_ACTION):
 		return
-	_split()
 
-func _split() -> void:
-	var owner_game := state()
-	var owner_session: Node = owner_game.get("session") as Node if owner_game != null else null
-	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
-		and owner_session.call("_owner_training_mutation_blocked", owner_game.get("local")) == true:
-		say("Saving your last action. Try again in a moment.")
-		return
 	var inventory: RefCounted = _inventory()
 	var db: RefCounted = _items()
 	var stack: Dictionary = inventory.call("stack_at", _focused)

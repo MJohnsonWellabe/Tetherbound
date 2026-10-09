@@ -1765,7 +1765,7 @@
     }
   },
   "attuned_sources": {
-    "enabled": true,
+    "enabled": false,
     "owner": "F32",
     "nodes": [],
     "canonical_nodes": "data/config/essence_nodes.json",

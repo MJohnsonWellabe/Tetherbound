@@ -31,9 +31,7 @@ const STORMWOOD_SCENE := preload("res://scenes/world/stormwood.tscn")
 const STORMWOOD_DIALOGUE_PATH := "res://data/dialogue/stormwood.json"
 
 const TEST_SAVE_DIR := "user://stormwood_water_gate_path_smoke"
-# The isolated saver writes slot-0. Bind the fixture before host transactions
-# so the real gate save never needs to reassign their immutable world id.
-const WORLD_ID := "slot-0"
+const WORLD_ID := "stormwood-water-gate-path-world"
 const CHARACTER_ID := "stormwood-water-gate-path-character"
 const BUILD_DEADLINE_MS := 180000
 const TRANSITION_DEADLINE_MS := 180000
@@ -188,14 +186,6 @@ func _run() -> void:
 		return
 
 	var transport := game.get("ledger") as Node
-	# The real morning producer also writes this isolated character. Authenticate
-	# its initial saved acceptance before observing the gate; otherwise its two
-	# unrelated bounty deltas contaminate the unchanged zero-operation guard.
-	_expect(await _wait_for_initial_bounty(game, session),
-		"initial canonical bounty rotation did not settle before gate observation")
-	if not _failures.is_empty():
-		_finish()
-		return
 	var published: Array[Dictionary] = []
 	transport.delta_applied.connect(func(delta: Dictionary) -> void:
 		published.append(delta.duplicate(true)))
@@ -235,10 +225,7 @@ func _run() -> void:
 			and not bool(game.call("world_flags").call("has", "realm_gate_water_unlocked")),
 		"shipped config: the retired Waterward gate consumed the key or opened the gate")
 	_expect(int(transport.get("ledger").get("seq")) == sequence_before and published.is_empty(),
-		"shipped config: the retired Waterward gate committed or published a ledger operation: "
-		+ JSON.stringify({"sequence_before": sequence_before,
-			"sequence_after": int(transport.get("ledger").get("seq")),
-			"published_count": published.size(), "published": published}))
+		"shipped config: the retired Waterward gate committed or published a ledger operation")
 	# Restore the fallback fixture for the legacy path below. The retired branch
 	# of RealmGate._refresh switched the gate's revision watcher off; switch it
 	# back exactly as _ready() leaves it in a legacy-crossing world.
@@ -350,26 +337,6 @@ func _wait_for_shell(world: Node, budget_ms: int) -> bool:
 func _wait_for_provider(arbiter: Node, provider: Node) -> bool:
 	for _frame in PROVIDER_WAIT_FRAMES:
 		if is_instance_valid(arbiter) and arbiter.call("winning_provider") == provider:
-			return true
-		await physics_frame
-	return false
-
-
-func _wait_for_initial_bounty(game: Node, session: Node) -> bool:
-	for _frame in PROVIDER_WAIT_FRAMES:
-		var row: Dictionary = session.call("_owner_training_row")
-		var personal: Dictionary = game.get("local").get("redesign_character")
-		var context: Dictionary = row.get("host_context", {})
-		var bounties: Dictionary = personal.get("bounties", {})
-		if row.get("status") == "accepted" and row.get("action") == "bounty_rotate" \
-				and row.get("character_id") == CHARACTER_ID and row.get("world_id") == WORLD_ID \
-				and row.get("world_namespace") == game.get("world").get("reward_delivery_namespace") \
-				and row.get("source_key") == "halda_bounty_clock" \
-				and not str(row.get("receipt", "")).is_empty() \
-				and (personal.get("transaction_receipts", []) as Array).has(row.receipt) \
-				and bounties.get("anchor_world") == row.world_namespace \
-				and bounties.get("anchor_day") == context.get("host_day") \
-				and session.call("_owner_training_mutation_blocked", game.get("local")) == false:
 			return true
 		await physics_frame
 	return false

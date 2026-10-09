@@ -692,8 +692,6 @@ var _discovery_elapsed: float = 0.0
 ## far the player spawned from Vector3.ZERO.
 var _travel_pos: Vector3 = Vector3.ZERO
 var _travel_pos_valid: bool = false
-var _travel_fenced: bool = false
-var _travel_fence_realm: String = ""
 ## A single tick's honest walking distance at sprint speed is a few metres
 ## (see player_controller.gd's `_sprint_speed`) times `_DISCOVERY_INTERVAL_S`.
 ## Anything past this in one tick is a teleport/respawn/scene change, not
@@ -834,8 +832,6 @@ func reset_for_new_game() -> void:
 	_discovery_elapsed = 0.0
 	_autosave_elapsed = 0.0
 	_travel_pos_valid = false
-	_travel_fenced = false
-	_travel_fence_realm = ""
 
 
 ## D95/lane 2.A. The session node, mounted before the menu so anything the menu
@@ -1089,12 +1085,7 @@ func _exit_tree() -> void:
 func _process(delta: float) -> void:
 	_tick_orphaned_regional_acks(delta)
 	if session != null and session.has_method("_owner_training_mutation_blocked") 			and session.call("_owner_training_mutation_blocked", local) == true:
-		if not _travel_fenced: _travel_fence_realm = current_realm
-		_travel_fenced = true
-		var fenced_player := _find_player()
-		if fenced_player == null or fenced_player.global_position != _travel_pos \
-			or current_realm != _travel_fence_realm:
-			_travel_pos_valid = false
+		_travel_pos_valid = false # No delayed travel/bond grant on resume.
 		return # Session/Ledger child recovery still ticks; no care/bed/buff mutation.
 	var canonical_passive := _canonical_guest_passive()
 	var record_passive: bool = session != null and session.has_method("owner_passive_recording_active") \
@@ -1172,7 +1163,7 @@ func _process(delta: float) -> void:
 	var landmarks_before := int(map.discovered_landmark_count())
 	var watch_discovery := not canonical_passive and party != null \
 		and not get_signal_connection_list("party_passive_tick").is_empty()
-	var discovered_before: Dictionary = (map.get("_discovered") as Dictionary).duplicate() if record_passive or watch_discovery or is_host() else {}
+	var discovered_before: Dictionary = (map.get("_discovered") as Dictionary).duplicate() if record_passive or watch_discovery else {}
 	var discovery_cards: Array[Dictionary] = []
 	if watch_discovery:
 		for member: Variant in (party.call("members") as Array):
@@ -1181,13 +1172,6 @@ func _process(delta: float) -> void:
 			discovery_cards.append({"source": source, "before": SAVE_GAME.new().call("_party_to_array", source)[0],
 				"buffs_before": (member.get("active_buffs") as Array).duplicate(true)})
 	var here := player.global_position
-	if _travel_fenced:
-		# A stationary fence creates no new baseline. Movement during the
-		# pause still needs the existing host reset proof and earns no distance.
-		if here != _travel_pos or current_realm != _travel_fence_realm:
-			_travel_pos_valid = false
-		_travel_fenced = false
-		_travel_fence_realm = ""
 	var travel_from := _travel_pos
 	var travel_was_valid := _travel_pos_valid
 	if not canonical_passive and _travel_pos_valid:
@@ -1201,11 +1185,6 @@ func _process(delta: float) -> void:
 	map.mark_visited(here)
 	map.update_region(here)
 	var landmarks_gained := int(map.discovered_landmark_count()) - landmarks_before
-	if not canonical_passive and is_host() and session != null and session.has_method("foundation_host_discovery"):
-		var fresh_ids: Array = []
-		for id: String in (map.get("_discovered") as Dictionary):
-			if not discovered_before.has(id): fresh_ids.append(id)
-		if not fresh_ids.is_empty(): session.call("foundation_host_discovery", self, discovered_before, fresh_ids, here, current_realm)
 	if record_passive and not canonical_passive and landmarks_gained > 0:
 		# Owner-passive: a landmark the host already holds (its replay identity)
 		# is not replayed again, so it earns no visit credit here either.

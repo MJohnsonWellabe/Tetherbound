@@ -4,7 +4,6 @@ extends Control
 const INPUT := preload("res://scripts/ui/input_owner.gd")
 const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
-const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 var _service: Node
 var _source: Node
 var _mode := ""
@@ -71,15 +70,10 @@ func _rebuild() -> void:
 	if state.is_empty():
 		_message.text = "Character transaction reconciliation is not ready."
 	elif _mode == "duel":
-		var slot := 0
 		for card: Dictionary in state.get("party", []):
-			slot += 1
 			var uid := str(card.uid)
-			var species := str(SPECIES.definition(str(card.species_id)).get("display_name", card.species_id))
-			var nickname := str(card.get("nickname", ""))
-			var companion := species if nickname.strip_edges().is_empty() else "%s (%s)" % [nickname, species]
-			_button("%d · %s · Lv %d" % [slot, companion, int(card.level)],
-				_duel.bind(uid), bool(card.get("fainted", false)) or bool(card.get("resting", false)) or float(card.get("hp", 0)) <= 0)
+			_button("%s · Lv %d" % [str(card.get("nickname", card.species_id)), int(card.level)],
+				func() -> void: _duel(uid), bool(card.get("fainted", false)) or bool(card.get("resting", false)))
 	elif _mode == "cook":
 		for id: String in BREAKTHROUGH.feasts().get("recipes", {}):
 			var row: Dictionary = BREAKTHROUGH.feasts().recipes[id]
@@ -128,10 +122,6 @@ func _button(label: String, action: Callable, disabled: bool = false) -> void:
 	button.disabled = disabled
 	button.add_theme_font_size_override("font_size", 22)
 	button.pressed.connect(action)
-	var bound := action.get_bound_arguments()
-	if _mode == "duel" and action.get_object() == self and action.get_method() == "_duel" \
-			and bound.size() == 1 and bound[0] is String:
-		button.set_meta("master_challenger_uid", bound[0])
 	_list.add_child(button)
 
 func _cook(recipe: String) -> void:

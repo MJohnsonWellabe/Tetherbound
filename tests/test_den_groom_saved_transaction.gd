@@ -164,34 +164,6 @@ func test_foreign_uid_forged_context_and_care_cap_refuse_without_mutation() -> v
 	var capped_original := before.duplicate(true)
 	assert_eq(ACTIONS.stage(before, 0, "groom", _intent(before), _context(), RECORD.errors).get("code"), "daily_care_cap")
 	assert_eq(before, capped_original)
-	# Supplied live-source/day fixtures exercise the actual canonical producer,
-	# not elapsed time or a physical journey between these two worlds.
-	var scoped_before := _before()
-	var scoped_context := _context()
-	scoped_context.care_clock_scope = "world"
-	var paid := ACTIONS.stage(scoped_before, 0, "groom", _intent(scoped_before), scoped_context, RECORD.errors)
-	assert_true(paid.get("ok") == true, str(paid))
-	if paid.get("ok") != true: return
-	var scoped_care := "care:%s:1:%s:1:%s" % [DATA.CHARACTER, scoped_before.party[0].uid,
-		str(scoped_context.world_namespace).sha256_text()]
-	assert_true(paid.state.redesign_character.transaction_receipts.has(scoped_care))
-	var frozen_paid: Dictionary = JSON.parse_string(JSON.stringify(paid.state))
-	var frozen_copy := frozen_paid.duplicate(true)
-	for foreign_day: int in [2, 900000]:
-		var foreign := _context(foreign_day, 1)
-		foreign.care_clock_scope = "world"
-		foreign.world_id = "foreign-resource-slot"
-		foreign.world_namespace = "foreign-resource-namespace"
-		var refusal := ACTIONS.stage(frozen_paid, 1, "groom", _intent(frozen_paid, SECOND), foreign, RECORD.errors)
-		assert_eq(refusal.get("code"), "foreign_care_day_unverified")
-		assert_eq(frozen_paid, frozen_copy, "a foreign clock changes no stock, care/shed receipt or owned card")
-	var returned_context := _context(2, 1)
-	returned_context.care_clock_scope = "world"
-	var returned := ACTIONS.stage(frozen_paid, 1, "groom", _intent(frozen_paid, SECOND), returned_context, RECORD.errors)
-	assert_true(returned.get("ok") == true, "only the actual owning calendar permits its next day %s" % str(returned))
-	var malformed := _context()
-	malformed.care_clock_scope = "client_choice"
-	assert_eq(ACTIONS.stage(scoped_before, 0, "groom", _intent(scoped_before), malformed, RECORD.errors).get("code"), "invalid_care_clock_scope")
 
 func test_groom_journal_rejects_a_different_world_even_with_same_slot_name() -> void:
 	var before := _before()
@@ -224,8 +196,6 @@ func test_disk_failures_original_replay_and_real_saved_ack_never_pay_twice() -> 
 	rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(game.world)
 	var before := RECORD.portable_projection(game.local.save_data())
 	var original := _intent(before)
-	var scoped_context := _context()
-	scoped_context.care_clock_scope = "world"
 	var live_creature: RefCounted = game.local.party.at(0)
 	assert_true(authority.bind_world("resource-namespace"))
 	assert_true(authority.seed_admitted_character(before, DATA.CHARACTER).get("ok") == true)
@@ -235,7 +205,7 @@ func test_disk_failures_original_replay_and_real_saved_ack_never_pay_twice() -> 
 	var owner_path: String = writer.character_store.call("path_for", DATA.CHARACTER)
 	var old_world := FileAccess.get_file_as_bytes(world_path)
 	var old_owner := FileAccess.get_file_as_bytes(owner_path)
-	var token := authority.stage_character_action(DATA.CHARACTER, 0, "groom", original, scoped_context)
+	var token := authority.stage_character_action(DATA.CHARACTER, 0, "groom", original, _context())
 	assert_true(token.get("ok") == true, str(token))
 	if token.get("ok") != true:
 		SAVE.new()._close(game, rpc, directory)
@@ -250,7 +220,7 @@ func test_disk_failures_original_replay_and_real_saved_ack_never_pay_twice() -> 
 	assert_eq(FileAccess.get_file_as_bytes(world_path), old_world)
 	assert_eq(FileAccess.get_file_as_bytes(owner_path), old_owner)
 	writer.refuse_world = false
-	token = authority.stage_character_action(DATA.CHARACTER, 0, "groom", original, scoped_context)
+	token = authority.stage_character_action(DATA.CHARACTER, 0, "groom", original, _context())
 	var journal := rpc.journal_creature_training_prepared(1, DATA.CHARACTER, authority.staged_creature_training(token))
 	assert_true(journal.get("durable") == true, str(journal))
 	assert_true(authority.finish_creature_training(token, journal.get("durable") == true))
@@ -258,10 +228,6 @@ func test_disk_failures_original_replay_and_real_saved_ack_never_pay_twice() -> 
 		SAVE.new()._close(game, rpc, directory)
 		return
 	var row: Dictionary = game.world.reward_deliveries[journal.delivery_id]
-	var scoped_care := "care:%s:1:%s:1:%s" % [DATA.CHARACTER, before.party[0].uid,
-		str(scoped_context.world_namespace).sha256_text()]
-	assert_true(row.after.redesign_character.transaction_receipts.has(scoped_care), "new live scope is in the original durable decision")
-	assert_eq(row.host_context.get("care_clock_scope"), "world")
 	var source := Node3D.new()
 	var panel := _panel_for(game, session, source, original, 0)
 	panel.set("_groom_original_sent", true)

@@ -8,7 +8,7 @@ const ACTIONS := preload("res://scripts/build/forward_camp_actions.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
 
 static func placement_context(placer: Node, game: Node, actor: Node3D, character: String,
-		revision: int, realm: String, combat: bool, original: Dictionary, observation: Dictionary = {}) -> Dictionary:
+		revision: int, realm: String, combat: bool, original: Dictionary) -> Dictionary:
 	var cfg := RULES.config()
 	if cfg.get("runtime_enabled") != true or game == null or game.call("is_host") != true \
 			or not is_instance_valid(placer) or not is_instance_valid(actor) or not actor.is_inside_tree() \
@@ -20,7 +20,6 @@ static func placement_context(placer: Node, game: Node, actor: Node3D, character
 	var at := Vector3(p[0],p[1],p[2])
 	if actor.global_position.distance_to(at) > float(cfg.maximum_place_distance_m): return {}
 	var checked: Variant = placer.call("validate_forward_camp_ground",game,realm,at,original.get("yaw_deg",NAN),actor)
-	observation["ground_validation_code"] = str(checked.get("code", "")) if checked is Dictionary else ""
 	if not checked is Dictionary or checked.get("ok") != true: return {}
 	return {"character_id":character,"expected_revision":revision,"realm":realm,
 		"in_range":true,"in_combat":false,"host_ground_valid":true}

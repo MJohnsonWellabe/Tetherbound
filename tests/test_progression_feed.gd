@@ -390,7 +390,7 @@ func test_candy_and_rest_share_the_one_log_without_fabricated_candy_xp() -> void
 	assert_eq(_of_kind("level_up").size(), 1)
 	assert_eq(_of_kind("xp_gained").size(), 0)
 	REST.rest(c, preload("res://scripts/creatures/progression.gd").config())
-	assert_eq(_of_kind("xp_gained").size(), 0, "healing cannot duplicate the canonical qualified-night XP award")
+	assert_eq(_of_kind("xp_gained").size(), 1, "the real rest bonus reaches the XP producer")
 
 
 func test_an_authored_fly_route_credit_ticks_once_below_the_distance_poll_step() -> void:

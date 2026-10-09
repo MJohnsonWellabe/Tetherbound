@@ -10,9 +10,9 @@ extends "res://tests/helpers/net_harness.gd"
 ## retired world-scoped `realm_key_cloudreach` is no longer asserted. The
 ## world-scoped earned Heart and its personal one-active power remain the
 ## shipped relic-power rule (RD-20 "the existing one-active rule"; moving the
-## selection into the Shrine Room is F31#2), so the shrine/power
-## assertions below are unchanged. Hanging the relic in the Shrine Room is
-## covered by the optional --f31-shrine continuation after all original checks.
+## selection into the Shrine Room is F31#2, not built), so the shrine/power
+## assertions below are unchanged. Hanging the relic in the Shrine Room is not
+## covered here.
 ##
 ## F05 (ACCEPTANCE §6.1; card M4 "relic/key are durable"), two real peers.
 ##
@@ -71,8 +71,6 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	if OS.get_cmdline_user_args().has("--f31-shrine"):
-		OS.set_environment("TB_PROOF_OUT", ProjectSettings.globalize_path("res://ralph/reports/F31/c-shrine"))
 	# The guest's returning-route rejoin rebuilds the Meadows (one blocking
 	# scene build after hello); the allowance the other scene-changing smokes use.
 	heartbeat_silence_tolerance_s = 240.0
@@ -222,11 +220,6 @@ func _run() -> void:
 		for peer in 2:
 			await step(peer, "wait", {"frames": 10})
 	await _assert_durable("after the host's reload and the guest's rejoin")
-	if OS.get_cmdline_user_args().has("--f31-shrine"):
-		for peer in 2:
-			var hung: Dictionary = await step(peer, "f31_shrine_hang", {}, 4000)
-			check(hung.get("verdict") == "PASS", "F31 peer %d earned relic unlocks personal next-tier blueprints and one carried power: %s" % [peer, hung.get("detail", "")])
-			if hung.get("verdict") != "PASS": break
 	quit(await finish())
 
 

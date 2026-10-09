@@ -14,10 +14,6 @@ const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 
 class GuestSession extends GROOM.GroomSession:
 	var hosting := false
-	# Only the detached leave/rejoin method opts into this transport fixture.
-	# The native two-peer method continues through the actual Session RPC.
-	var capture_outbound := false
-	var captured_outbound: Array[Dictionary] = []
 	func _ready() -> void: pass
 	func _process(_delta: float) -> void: pass
 	func is_host() -> bool: return hosting
@@ -25,10 +21,6 @@ class GuestSession extends GROOM.GroomSession:
 	func snapshot_ready() -> bool: return true
 	func local_peer_id() -> int:
 		return multiplayer.get_unique_id() if is_inside_tree() and multiplayer.has_multiplayer_peer() else (1 if hosting else 2)
-	func _foundation_send(op: String, key: String, intent: Dictionary, revision: int) -> Dictionary:
-		if not capture_outbound: return super._foundation_send(op, key, intent, revision)
-		captured_outbound.append({"op": op, "source_key": key, "intent": intent.duplicate(true), "revision": revision})
-		return {"ok": false, "resolved": false, "code": "awaiting_saved_decision"} # Never an ACK or host commit.
 	func _foundation_groom_context(peer: int, key: String) -> Dictionary:
 		if _authority_character(peer) != DATA.CHARACTER or key != "den:meadows:b3": return {}
 		return GROOM.new()._context(1, int(get("_character_authority").call("revision", DATA.CHARACTER)))
@@ -269,9 +261,6 @@ func test_leave_mid_groom_resume_still_saves_and_rejoin_replays_nothing() -> voi
 	var directory := "user://test_guest_groom_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
 	var game := _game(directory)
 	var session: Node = game.session
-	# This detached method explicitly supplies the later host response. Capture
-	# its outgoing request without pretending a detached Node has a transport.
-	session.capture_outbound = true
 	var sync: RefCounted = session.call("_groom_service")
 	var member: RefCounted = game.local.party.at(0)
 	CONDITION.tick(member, CONDITION.config(), 1.0) # Genuine progress the leave must keep.
@@ -307,12 +296,6 @@ func test_leave_mid_groom_resume_still_saves_and_rejoin_replays_nothing() -> voi
 	var saved: Dictionary = game.save_system.character_store.read(DATA.CHARACTER)
 	assert_true(E._equivalent(RECORD.portable_projection(saved), retained.after), "the one install is the saved baseline")
 	assert_false(game.save_system.save_character_prepared(game, DATA.CHARACTER), "after install only the baseline may be on disk until the ACK")
-	var expected_commit: Dictionary = retained.intent.duplicate(true)
-	expected_commit.hash = retained.hash
-	expected_commit.preparation_id = retained.preparation_id
-	assert_eq(session.captured_outbound.size(), 1, "the saved baseline submits exactly one commit; no ACK is manufactured")
-	assert_eq(session.captured_outbound[0], {"op": "groom_commit", "source_key": retained.source_key,
-		"intent": expected_commit, "revision": int(retained.revision) + 1}, "the captured commit retains the original UID, hash and revision")
 	# Rejoin to a host with no preparation: resume clears with nothing to replay.
 	sync.pending = {}
 	sync.call("begin_resume")

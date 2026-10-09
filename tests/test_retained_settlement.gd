@@ -106,20 +106,6 @@ func test_only_high_frequency_kinds_settle_or_retire() -> void:
 		{"character_id": "c", "action": "research_event", "intent": {}, "context": {}}]}
 	var result: Array = SETTLE.after_accept({}, mixed, {"character_id": "c", "action": "combat_mastery"})
 	assert_false(bool(result[1]), "an event carrying a non-windowed duty never retires")
-	var inventory := {"delivery_id": "foundation_event:inventory", "duties": [
-		{"character_id": "c", "action": "ledger_inventory", "intent": {}, "context": {}}]}
-	var saved := SETTLE.after_accept({}, inventory, {"character_id": "c", "action": "ledger_inventory"})
-	assert_eq(saved, [["c|ledger_inventory"], false], "saved owner duty settles but original ledger txn never retires")
-	assert_true(SETTLE.duty_settled({SETTLE.FIELD: {inventory.delivery_id: saved[0]}}, inventory.delivery_id, inventory.duties[0]))
-	for action: String in ["rest_complete", "rest_discovery"]:
-		var original := {"delivery_id": "foundation_event:" + action, "duties": [
-			{"character_id": "c", "action": action, "intent": {}, "context": {}}]}
-		assert_false(SETTLE.duty_settled({}, original.delivery_id, original.duties[0]), "journal durability alone does not settle " + action)
-		# after_accept is the existing world accept reducer's contract; this
-		# detached row classification does not claim a delivered owner ACK.
-		var accepted := SETTLE.after_accept({}, original, {"character_id": "c", "action": action})
-		assert_eq(accepted, [["c|" + action], false], "the accepted owner duty settles while its original remains")
-		assert_true(SETTLE.duty_settled({SETTLE.FIELD: {original.delivery_id: accepted[0]}}, original.delivery_id, original.duties[0]))
 
 
 func test_a_v28_world_without_the_marker_validates() -> void:

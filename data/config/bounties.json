@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "_comment_runtime_enabled": "F43 uses personal host-journal decisions and exact owner save/ACK receipts. First rejoin defers while a training row is pending, then retries the bound declaration after accepted ACK; smoke_net_foundations production_join is the release gate.",
-  "runtime_enabled": true,
+  "_comment_runtime_enabled": "F43 (Wave 3) is unfinished. Off on main until F43 lands: a rotated bounty row left pending for a guest who leaves holds that character's rejoin bootstrap shut (smoke_net_foundations production_join).",
+  "runtime_enabled": false,
   "board_key": "halda_bounty_board",
   "board_count": 3,
   "speaker": "Halda",

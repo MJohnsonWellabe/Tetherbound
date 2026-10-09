@@ -58,11 +58,11 @@ func _portal_result(result: Dictionary) -> void:
 		and result.get("world_instance_id") == game.world.reward_delivery_namespace:
 		_home_result = result.duplicate(true)
 
-func activate(prompt: Node3D, approach_headings: Array[Vector3] = []) -> bool:
+func activate(prompt: Node3D) -> bool:
 	# A lesson may be due on this character's first walk past its teacher.
 	# Read/continue its real card; retain the original navigation budget and
 	# exact grounded/provider checks after ordinary world input returns.
-	return await _with_navigation_lessons(_activate_world.bind(prompt, approach_headings))
+	return await _with_navigation_lessons(_activate_world.bind(prompt))
 
 func _with_navigation_lessons(navigate: Callable) -> bool:
 	if _lesson_active or _lesson_busy: return _fail("F20 navigation re-entered its active lesson reader")
@@ -469,7 +469,7 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 			_lesson_replay_identity = {"character_id": character_id, "party_uids": witness.party_uids.duplicate()}
 	_lesson_busy = false
 
-func _activate_world(prompt: Node3D, approach_headings: Array[Vector3] = []) -> bool:
+func _activate_world(prompt: Node3D) -> bool:
 	var bounty: Node = game.session.get_node_or_null("FoundationComposition/BountyInteraction")
 	if bounty != null and bounty.get("_prompt") == prompt:
 		return await _activate_bounty_via_road(prompt)
@@ -486,7 +486,7 @@ func _activate_world(prompt: Node3D, approach_headings: Array[Vector3] = []) -> 
 			_stick(0, 0)
 			if not arrived or int(_player.get("_unstick_count")) != recoveries_before:
 				return _fail("F20 ordinary capsule walk failed to the authored Hall arch approach")
-	var passed := await super.activate(prompt, approach_headings)
+	var passed := await super.activate(prompt)
 	if not passed and tree.current_scene != null:
 		var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")
 		var owner := INPUT_OWNER.current(tree)

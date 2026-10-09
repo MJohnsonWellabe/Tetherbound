@@ -18,11 +18,6 @@ class FixtureGame extends Node:
 	var world: RefCounted
 	var session: Node
 	var save_system: RefCounted
-	var advance_calls := 0
-	func advance_day() -> int:
-		advance_calls += 1
-		world.day += 1
-		return int(world.day)
 
 class DeliveryRecorder extends Node:
 	var rows: Array[Dictionary] = []
@@ -51,12 +46,6 @@ class CountedSession extends "res://scripts/net/session.gd":
 class ResearchSaver extends RefCounted:
 	func finish_fallback() -> void: pass
 	func fallback_busy() -> bool: return false
-	# Disclosed BOOL sequence over the existing no-write fixture, not disk proof.
-	var world_save_results: Array[bool] = []
-	var world_save_calls := 0
-	func save_world_prepared(_game: Node, _world: String) -> bool:
-		world_save_calls += 1
-		return world_save_results.pop_front() if not world_save_results.is_empty() else false
 
 class ResearchRecorder extends DeliveryRecorder:
 	var proposals: Array[Dictionary] = []
@@ -197,39 +186,6 @@ func test_retry_revision_change_rechecks_previously_saturated_semantics() -> voi
 		assert_eq(fixture.writer.proposals[0].state.redesign_character.research.species.terrapup.tasks.casts, 3)
 	assert_eq(fixture.authority.revision(DATA.CHARACTER), 1, "failed world writer does not retain its hidden promotion")
 	_free_research_fixture(fixture)
-	# The retained night on reload has no transient original. After one failed
-	# BOOL, in-memory day equality must still retry the world write before pay.
-	var night_fixture := _research_fixture(DATA.new()._before())
-	night_fixture.world.day = 1
-	var uids: Array = []
-	for card: Dictionary in night_fixture.authority.state(DATA.CHARACTER).party: uids.append(card.uid)
-	var night := {"character_id": DATA.CHARACTER, "action": "rest_complete",
-		"intent": {"action_id": "11111111111111111111111111111111"},
-		"context": {"rest_source_version": 1, "actual_completed_night": true, "source_key": "rest_night:resource-slot:2",
-			"world_id": "resource-slot", "world_namespace": "resource-namespace", "session_id": "resource-epoch",
-			"participants": [DATA.CHARACTER], "night_day": 2, "eligible_generation": 0, "party_uids": uids, "bed_roster": {}}}
-	var event := EVENT.make(night_fixture.world, "resource-epoch", "rest_night:resource-slot:2", [night])
-	assert_false(event.is_empty())
-	if not event.is_empty():
-		night_fixture.world.reward_deliveries[event.delivery_id] = event
-		night_fixture.game.save_system.world_save_results.assign([false, false])
-		for attempt: int in 2:
-			night_fixture.session._retry_foundation_events()
-			assert_eq(night_fixture.game.save_system.world_save_calls, attempt + 1, "day equality cannot stand in for a successful BOOL")
-			assert_eq(night_fixture.game.advance_calls, 1, "retry retains the same night instead of advancing again")
-			assert_true(night_fixture.writer.proposals.is_empty(), "a false world BOOL cannot prepare a personal award")
-		# Supplied settled-world fixture only: this is not a disk write or ACK.
-		# The original identity persists, but repeated scans must do no work.
-		var settlement: Dictionary = night_fixture.world.redesign_world.get("retained_settlement", {})
-		settlement[event.delivery_id] = [preload("res://scripts/net/retained_settlement.gd").key(DATA.CHARACTER, "rest_complete")]
-		night_fixture.world.redesign_world["retained_settlement"] = settlement
-		for settled_scan: int in 2:
-			night_fixture.session._retry_foundation_events()
-			assert_eq(night_fixture.game.save_system.world_save_calls, 2, "a settled original never rewrites the world")
-			assert_eq(night_fixture.game.advance_calls, 1, "a settled original never advances the clock")
-			assert_true(night_fixture.writer.proposals.is_empty(), "a settled original never prepares another award")
-		assert_eq(night_fixture.world.reward_deliveries[event.delivery_id], event, "settlement keeps the original identity")
-	_free_research_fixture(night_fixture)
 
 func test_retry_invalid_original_cannot_enter_no_progress_bucket() -> void:
 	var fixture := _research_fixture(_saturated_research_record())

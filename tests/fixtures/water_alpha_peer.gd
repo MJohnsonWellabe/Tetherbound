@@ -14,11 +14,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"water_alpha_attune_world_fixture":
 			if not game.is_host():
 				return {"verdict": "FAIL", "detail": "Only the host may name the test world"}
-			# Each peer already has an isolated home. Keep its booted slot identity:
-			# host() may have saved a morning journal that cannot be renamed.
-			if str(game.world.world_id) != "slot-0":
-				return {"verdict": "FAIL", "detail": "Isolated fixture did not boot the canonical slot-0 world"}
-			return {"verdict": "PASS", "detail": "Explicit isolated named-world fixture confirmed"}
+			game.world.world_id = "net-water-swim-stone-late-join"
+			return {"verdict": "PASS", "detail": "Explicit isolated named-world fixture installed"}
 		"water_alpha_attune_request":
 			alpha.last_verdict = {}
 			alpha.request_attunement()

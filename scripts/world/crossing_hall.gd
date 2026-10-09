@@ -559,15 +559,11 @@ func hang_relic(biome: String, game: Node = null) -> void:
 			_relic_pending = ""
 			game.call("push_world_message", "The shrine is waiting for the host. Try again.")
 			return
-	# The host's own saved ACK is asynchronous too. Listen before submitting,
-	# including a completion delivered synchronously inside the request.
-	if not session.is_connected("homestead_action_completed", _relic_reply):
-		session.connect("homestead_action_completed", _relic_reply)
+		if not session.is_connected("homestead_action_completed", _relic_reply):
+			session.connect("homestead_action_completed", _relic_reply)
 	var verdict: Dictionary = session.call("request_relic_hang", biome)
-	if _relic_pending != biome:
-		return # The final callback already presented this original decision.
 	if verdict.get("code") == "awaiting_saved_decision":
-		# The saved decision arrives on homestead_action_completed for either peer.
+		# Guest: the host's saved decision arrives on homestead_action_completed.
 		# A reply that never comes must not lock the shrine for later presses.
 		var tree := Engine.get_main_loop() as SceneTree
 		if tree == null:
@@ -579,8 +575,6 @@ func hang_relic(biome: String, game: Node = null) -> void:
 				session.disconnect("homestead_action_completed", _relic_reply)
 		return
 	_relic_pending = ""
-	if session.is_connected("homestead_action_completed", _relic_reply):
-		session.disconnect("homestead_action_completed", _relic_reply)
 	if verdict.get("ok") != true:
 		game.call("push_world_message", _relic_refusal_text(verdict))
 	else:

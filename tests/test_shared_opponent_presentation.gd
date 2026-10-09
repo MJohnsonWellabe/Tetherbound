@@ -239,26 +239,6 @@ func test_late_record_for_cancelled_join_never_creates_presentation() -> void:
 	assert_eq(str(state.get("pending_encounter_id", "")), "")
 	assert_eq(director.submitted, [{"kind": "disengage", "encounter_id": "fight-late"}],
 		"late admitted record is answered only with cleanup")
-	var manager := ManagerShell.new()
-	director._manager = manager
-	manager._encounter_id = "legacy-current"
-	manager.state = COMBAT_MANAGER.State.ACTIVE
-	director._pending_legacy_join_id = "legacy-current"
-	assert_false(director._receive_legacy_join_verdict({"kind": "engage",
-		"encounter_id": "legacy-old", "ok": false}), "late refusal cannot cancel another join")
-	assert_eq(manager.state, COMBAT_MANAGER.State.ACTIVE)
-	assert_eq(director._pending_legacy_join_id, "legacy-current")
-	assert_true(director._receive_legacy_join_verdict({"kind": "engage",
-		"encounter_id": "legacy-current", "ok": true}))
-	assert_eq(manager.state, COMBAT_MANAGER.State.ACTIVE, "admission keeps the existing fight")
-	assert_eq(director._pending_legacy_join_id, "")
-	director._pending_legacy_join_id = "legacy-current"
-	assert_true(director._receive_legacy_join_verdict({"kind": "engage",
-		"encounter_id": "legacy-current", "ok": false, "code": "unknown_encounter"}))
-	assert_eq(manager.state, COMBAT_MANAGER.State.RESOLVING)
-	assert_eq(manager.resolved, "fled", "refused admission uses normal exit without a win")
-	assert_eq(director._pending_legacy_join_id, "")
-	manager.free()
 	director.free()
 
 

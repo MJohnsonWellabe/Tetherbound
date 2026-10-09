@@ -8,7 +8,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "relic_power", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery", "waystone_touch", "combat_round_reward", "home_key_owe", "home_key_deliver", "wild_defeat_share", "tether_pouch", "tether_item", "starter_choice", "ledger_inventory", "trainer_equip", "rest_complete", "rest_discovery"]
+const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "relic_power", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery", "waystone_touch", "combat_round_reward", "home_key_owe", "home_key_deliver", "wild_defeat_share", "tether_pouch", "tether_item", "starter_choice", "trainer_equip"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -34,11 +34,8 @@ static func stage(current: Dictionary, revision: int, action: String,
 	if context.get("foundation_runtime_authorized") != true: return deny("missing_frozen_authorization")
 	var proposal: Dictionary
 	match action:
-		"ledger_inventory": proposal = _ledger_inventory(current, intent, context)
 		"combat_round_reward": proposal = preload("res://scripts/net/combat_round_reward.gd").stage(current, intent, context)
 		"wild_defeat_share": proposal = preload("res://scripts/net/wild_actor_scope.gd").stage(current, intent, context)
-		"rest_discovery": proposal = preload("res://scripts/creatures/rest_reward.gd").stage_discovery(current, intent, context)
-		"rest_complete": proposal = preload("res://scripts/creatures/rest_reward.gd").stage(current, intent, context)
 		"home_key_owe", "home_key_deliver": proposal = preload("res://scripts/net/home_key_action.gd").stage(current, action, intent, context)
 		"waystone_touch": proposal = preload("res://scripts/net/waystone_action.gd").stage(current, intent, context)
 		"starter_choice": proposal = preload("res://scripts/net/starter_choice_action.gd").stage(current, intent, context)
@@ -72,43 +69,6 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"receipt": proposal.receipt, "intent": intent.duplicate(true), "host_context": context.duplicate(true),
 		"expected_character_revision": revision, "source_key": context.source_key, "durable": false, "resolved": false}
 
-## Original committed ledger halves are obligations, never new client grants.
-## Their world event survives a frozen owner, crash and stable-character rejoin.
-static func ledger_inventory_source_valid(intent: Dictionary, context: Dictionary) -> bool:
-	if intent.size() != 3 or not ESSENCE._opaque_id(intent.get("transaction_id")) \
-		or not ESSENCE._integer(intent.get("source_sequence"), 1, 2147483647) \
-		or not intent.get("ops") is Array or intent.ops.is_empty() or intent.ops.size() > 2 \
-		or context.get("ledger_confirmed") != true \
-		or context.get("ledger_kind") not in ["transfer_item", "drop_item", "claim_pickup"] \
-		or context.get("source_key") != "ledger_inventory:" + str(intent.transaction_id) \
-		or not ESSENCE._opaque_id(context.get("world_namespace")) \
-		or not ESSENCE._opaque_id(context.get("session_id")) \
-		or not ESSENCE._equivalent(context.get("original_ops"), intent.ops): return false
-	for raw: Variant in intent.ops:
-		if not raw is Dictionary or raw.size() != 3 or raw.get("op") not in ["item_take", "item_grant"] \
-			or not raw.get("item") is String or not ESSENCE._integer(raw.get("count"), 1, 2147483647) \
-			or not preload("res://scripts/world/death_satchel_rules.gd").db().call("has", raw.item) \
-			or preload("res://scripts/world/death_satchel_rules.gd").protected_key(raw.item): return false
-	return true
-
-static func ledger_inventory_receipt(intent: Dictionary, context: Dictionary, character: String) -> String:
-	return "craft:ledger_inventory_%s:%s" % [JSON.stringify([context.get("world_namespace"), intent.get("transaction_id")]).sha256_text(), character]
-
-static func _ledger_inventory(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
-	if not ledger_inventory_source_valid(intent, context): return deny("original_ledger_move_required")
-	var receipt := ledger_inventory_receipt(intent, context, current.character_id)
-	if current.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_ledger_move")
-	if current.redesign_character.transaction_receipts.size() >= int(ESSENCE.config().maximum_transaction_receipts): return deny("receipt_budget")
-	var bag := preload("res://scripts/world/death_satchel_rules.gd").inventory_from(current.inventory)
-	for op: Dictionary in intent.ops:
-		if op.op == "item_take":
-			if not bag.call("remove", op.item, int(op.count)): return deny("original_ledger_debit_missing")
-		elif int(bag.call("add", op.item, int(op.count))) != 0: return deny("satchel_full")
-	var next := current.duplicate(true)
-	next.inventory = preload("res://scripts/world/death_satchel_rules.gd").slots(bag)
-	next.redesign_character.transaction_receipts.append(receipt)
-	return {"ok": true, "state": next, "receipt": receipt}
-
 
 ## Backpack swaps use the same original full-character journal. Items and
 ## displaced-piece capacity come from the admitted bag; no candidate packet.
@@ -138,7 +98,6 @@ static func _trainer_equip(current: Dictionary, intent: Dictionary, context: Dic
 	if current.redesign_character.transaction_receipts.has(receipt): return deny("duplicate")
 	var next := current.duplicate(true)
 	next.equipment = equipment.save_data()
-	next.redesign_character.pouch_tier = equipment.command_pouch_tier()
 	next.inventory = rules.slots(bag)
 	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "station_craft", str(current.character_id))
 	next.redesign_character.transaction_receipts.append(receipt)
@@ -261,12 +220,8 @@ static func groom_plan(current: Dictionary, revision: int, intent: Dictionary, c
 		or not ESSENCE._component(context.get("source_id")) \
 		or context.get("source_key") != "den:meadows:" + str(context.get("source_id", "")):
 		return deny("actual_den_care_producer_required")
-	# Scope is frozen by the host producer, never accepted in the owner intent.
-	# Missing scope replays old pending/accepted five-field care rows unchanged.
-	if context.has("care_clock_scope") and context.care_clock_scope != "world": return deny("invalid_care_clock_scope")
-	var care_world := str(context.world_namespace) if context.get("care_clock_scope") == "world" else ""
 	return preload("res://scripts/world/f32_source_actions.gd").stage(current, revision,
-		"groom", intent, context, ESSENCE.stage_care.bind(ESSENCE.config(), care_world))
+		"groom", intent, context, ESSENCE.stage_care.bind(ESSENCE.config()))
 
 static func _tm_teach(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
 	if intent.size() != 3 or not ESSENCE._component(intent.get("creature_uid")) \

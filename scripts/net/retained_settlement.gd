@@ -17,9 +17,6 @@ const FIELD := "retained_settlement"
 ## Master wins, research, bounties, rematches and capture offers keep their
 ## receipt-based behaviour (their volume is bounded by content).
 const SAFE_ACTIONS := ["combat_mastery", "combat_round_reward"]
-## Original inventory, night and discovery decisions settle only on real
-## accepted owner ACKs; their source identities are never retired/windowed.
-const PERSISTENT_ACTIONS := ["ledger_inventory", "rest_complete", "rest_discovery"]
 const MAX_KEYS_PER_EVENT := 16
 
 
@@ -43,7 +40,7 @@ static func duty_settled(redesign_world: Dictionary, event_id: String, duty: Dic
 static func after_accept(redesign_world: Dictionary, event: Dictionary, row: Dictionary) -> Array:
 	var character := str(row.get("character_id", ""))
 	var action := str(row.get("action", ""))
-	if action not in SAFE_ACTIONS and action not in PERSISTENT_ACTIONS: return []
+	if not action in SAFE_ACTIONS: return []
 	var matches := 0
 	for duty: Variant in event.get("duties", []):
 		if duty is Dictionary and str(duty.get("character_id", "")) == character and str(duty.get("action", "")) == action:
@@ -56,9 +53,6 @@ static func after_accept(redesign_world: Dictionary, event: Dictionary, row: Dic
 		keys.append(settled)
 	var retire := true
 	for duty: Variant in event.duties:
-		# Original trade/drop identities must survive host restart, where the
-		# ledger's transient seen-txn set no longer fences a repeated intent.
-		if duty.get("action") == "ledger_inventory": retire = false
 		if not str(duty.get("action", "")) in SAFE_ACTIONS \
 				or not keys.has(key(str(duty.get("character_id", "")), str(duty.get("action", "")))):
 			retire = false

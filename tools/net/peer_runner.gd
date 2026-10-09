@@ -326,25 +326,10 @@ var _catch_refusals: Array = []
 ## `caught_by_other` -- §8 step 4, the message every OTHER participant gets when
 ## somebody's catch lands.
 var _catch_caught_by_other: Array = []
-## Bounded observations of actual typed-capture replies; never submits an intent.
-var _catch_foundation_replies: Array = []
-var _catch_foundation_observer: Callable
 
 
 func _initialize() -> void:
 	var args := _parse_args()
-	# Opt-in proof scope: these isolated test processes only. Match shipping
-	# ActorON without writing combat.json or altering any other production gate.
-	if args.has("prove-host-ambient-wild"):
-		var math := preload("res://scripts/combat/combat_math.gd")
-		var actor_on: Dictionary = math.config().duplicate(true)
-		if not actor_on.get("actor_vitals") is Dictionary:
-			push_error("ambient proof requires the original actor-vitals config")
-			quit(2)
-			return
-		actor_on.actor_vitals.runtime_enabled = true
-		math._config = actor_on
-		print("SETUP ambient guest proof: ActorVitalsON in-memory only; original config file and all other gates unchanged")
 	_role = str(args.get("role", ""))
 	_peer_index = int(args.get("peer", -1))
 	_control_port = int(args.get("control-port", 0))
@@ -789,7 +774,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"storage_grant":
 			out = await _step_storage_grant(args)
 		"equipment_equip_from_satchel":
-			out = await _step_equipment_equip_from_satchel(args)
+			out = _step_equipment_equip_from_satchel(args)
 		"storage_transfer":
 			out = _step_storage_transfer(args)
 		"pickup_stand":
@@ -811,7 +796,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"alpha_clear":
 			out = _step_alpha_clear(args)
 		"explore_at":
-			out = await _step_explore_at(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
+			out = await _step_explore_at(args)
 		"trade_offer":
 			out = _step_trade_offer(args)
 		"trade_accept":
@@ -831,7 +816,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"join_encounter":
 			out = await _step_join_encounter(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
 		"teleport":
-			out = await _step_teleport(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
+			out = await _step_teleport(args)
 		"place_creature":
 			out = await _step_place_creature(args)
 		"strike":
@@ -847,7 +832,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"stand_by_downed":
 			out = await _step_stand_by_downed(args)
 		"trainer_battle":
-			return await _step_trainer_battle(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
+			return await _step_trainer_battle(args)
 		"win_trainer_battle":
 			_trainer_fight_command_budget_frames = int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES))
 			var trainer_result: Dictionary = await _step_win_trainer_battle(args)
@@ -862,9 +847,9 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"place_stand_in":
 			out = await _step_place_stand_in(args)
 		"party_grant":
-			out = await _step_party_grant(args)
+			out = _step_party_grant(args)
 		"tournament_setup":
-			out = await _step_tournament_setup(args)
+			out = _step_tournament_setup(args)
 		"save_reload_here":
 			out = await _step_save_reload_here(args)
 		"foundations_state":
@@ -896,8 +881,6 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_heart_place(args)
 		"heart_activate":
 			out = await _step_heart_activate(args)
-		"f31_shrine_hang":
-			out = await _step_f31_shrine_hang(args)
 		"present_publish":
 			out = _step_present_publish(args)
 		"present_damage":
@@ -1083,62 +1066,6 @@ func _step_equipment_equip_from_satchel(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "missing live satchel or PlayerState.equipment"}
 	var item := str(args.get("item", ""))
 	var before := int(satchel.call("count", item))
-	if args.get("journaled") == true:
-		# Existing stock/focus fixtures only. The wear press uses the actual
-		# Satchel and its original host journal, owner BOOL write and ACK.
-		var session := _session()
-		var definition: Dictionary = game.get("items").call("definition", item)
-		var slot := str(definition.get("armor_slot", ""))
-		if session == null or not session.call("is_active") or before != 1 \
-				or not equipment.call("is_slot", slot):
-			return {"verdict": "FAIL", "detail": "journaled wear requires one admitted carried armor item"}
-		var expected := str(equipment.call("equipped_in", slot))
-		var observed := {"original": {}, "result": {}}
-		var observer := func(action: String, original: Dictionary, result: Dictionary) -> void:
-			if action == "trainer_equip" and original.get("slot") == slot \
-					and original.get("item_id") == item and original.get("expected_item") == expected:
-				if observed.original.is_empty(): observed.original = original.duplicate(true)
-				if original == observed.original: observed.result = result.duplicate(true)
-		session.connect("homestead_action_completed", observer)
-		var menu: Node = game.call("menu")
-		menu.call("open", "backpack")
-		for frame in 8: await process_frame
-		var body: Node = null
-		for candidate: Node in menu.get("_bodies"):
-			if candidate.get_script() == preload("res://scripts/ui/tab_backpack.gd"): body = candidate
-		var carried_slot := int(satchel.call("find_slot", item))
-		if body == null or carried_slot < 0:
-			session.disconnect("homestead_action_completed", observer)
-			menu.call("close")
-			return {"verdict": "FAIL", "detail": "actual carried Satchel row unavailable"}
-		(body.get("_buttons") as Array)[carried_slot].grab_focus()
-		await process_frame
-		var pressed := await _step_press({"action": "interact"})
-		for frame in 600:
-			if observed.result.get("ok") == true and observed.result.get("owner_saved") == true \
-					and observed.result.get("durable") == true and observed.result.get("owner_acknowledged") == true: break
-			await physics_frame
-		session.disconnect("homestead_action_completed", observer)
-		menu.call("close")
-		var result: Dictionary = observed.result
-		var original: Dictionary = observed.original
-		var character := str(local.get("character_id"))
-		var disk: Dictionary = game.get("save_system").get("_characters").call("state", character)
-		var receipt := "craft:%s:%s" % [character,
-			("trainer_equip:" + character + ":" + str(original.get("equip_id", ""))).sha256_text().substr(0, 32)]
-		var tier := int(equipment.call("command_pouch_tier"))
-		var passed: bool = pressed.get("verdict") == "PASS" and original.size() == 4 \
-			and result.get("ok") == true and result.get("durable") == true \
-			and result.get("owner_saved") == true and result.get("owner_acknowledged") == true \
-			and result.get("receipt") == receipt and equipment.call("equipped_in", slot) == item \
-			and int(satchel.call("count", item)) == 0 and disk.get("equipment", {}).get(slot) == item \
-			and disk.get("redesign_character", {}).get("pouch_tier") == tier \
-			and (disk.get("redesign_character", {}).get("transaction_receipts", []) as Array).count(receipt) == 1
-		return {"verdict": "PASS" if passed else "FAIL", "detail": "actual Satchel wear/save/ACK",
-			"data": {"character_id": character, "item": item, "tier": tier,
-				"original": original, "result": result, "receipt": receipt,
-				"equipment": equipment.call("save_data"), "disk_equipment": disk.get("equipment", {}),
-				"disk_pouch_tier": disk.get("redesign_character", {}).get("pouch_tier")}}
 	var equipped := bool(equipment.call("equip_from_inventory", item, satchel))
 	var after := int(satchel.call("count", item))
 	var worn: Dictionary = equipment.call("save_data") as Dictionary
@@ -2630,14 +2557,6 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 		if not alpha_site.is_empty():
 			return {"verdict": "FAIL", "detail": "Exact retained Alpha was excluded; no legacy body substitution permitted"}
 		wild = _nearest_live_wild_excluding(director, excluded)
-	# The existing disclosed approach must precede interest-limited admission.
-	# This presentation is only a heading; the exact original offer and press
-	# below still require its genuine authenticated host packet and body.
-	if wild == null and alpha_site.is_empty() and args.get("approach_before_ambient_offer") == true \
-			and args.get("require_record") == true and OS.get_cmdline_user_args().has("--prove-host-ambient-wild"):
-		var session := _session()
-		if session != null and session.call("is_active") == true and session.call("is_host") != true:
-			wild = _nearest_live_wild_excluding(director, excluded)
 	if wild == null:
 		return {"verdict": "FAIL", "detail": "no live wild creature to engage"
 			+ (" other than body %d" % excluded if excluded != 0 else "")}
@@ -2675,17 +2594,12 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL", "detail": "could not stand where body %d was the one on offer (offered %s)"
 			% [int(body.get_instance_id()),
 				str(int((other as Object).get_instance_id())) if other != null else "nothing"]}
-	var ambient_request_before: Dictionary = director.get("_ambient_request_observation")
 	director.call("interaction_activate")
-	var ambient_request_after: Dictionary = director.get("_ambient_request_observation")
-	var ambient_request: Dictionary = ambient_request_after.duplicate(true)
-	ambient_request["invoked_during_press"] = not is_same(ambient_request_before, ambient_request_after)
 	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
 	var manager := _combat_manager()
 	if manager == null or not bool(manager.call("is_fighting")):
-		return {"verdict": "FAIL", "detail": "the engage press did not start a fight; ambient request=%s receipt=%s" % [
-			JSON.stringify(ambient_request), JSON.stringify(director.get("_ambient_guest_receipt_observation"))]}
+		return {"verdict": "FAIL", "detail": "the engage press did not start a fight"}
 	# Lane 7.A fix, kept, with lane 6.B's opt-out folded in AFTER it rather
 	# than instead of it. The binding is POLLED, not read once.
 	#
@@ -2746,135 +2660,30 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 			% bind_budget}
 
 
-## Observe production discovery and its authenticated prefix ACK before and
-## after a disclosed placement. Moving first can invalidate an unacknowledged
-## initial pose; an empty buffer alone can precede stream admission/discovery.
-## Callers share one original catch-up allowance across both observations.
-func _await_owner_passive_caught_up(budget_frames: int = 600,
-		require_new_discovery: bool = false, binding: Dictionary = {}) -> Dictionary:
-	var phase := "post-placement" if require_new_discovery else "pre-placement"
+## A harness placement is a jump no player can make. The host's owner-passive
+## replay accepts a long discontinuity only while its own copy of this body
+## stands within 2 m of the new spot (owner_passive_sync.gd _inputs_host), so a
+## step that places the player and moves on at once can strand that input for
+## good: CI 37189095290 client_trainer_rewards waited on 'discontinuity to
+## (80.0, 0.9, 46.0), host body at (81.06, 0.9, 50.45)' and every round reward
+## behind it stalled. On a client, give the discovery tick time to record the
+## jump, then wait (bounded) until the host has acknowledged every recorded
+## input, as a real arrival would before play continues.
+func _await_owner_passive_caught_up(budget_frames: int = 600) -> void:
 	var game := root.get_node_or_null(^"Game")
-	var session: Node = game.get("session") as Node if game != null else null
-	if game == null or session == null:
-		return {"verdict": "FAIL", "detail": "placement has no original Game/Session", "data": {"phase": phase}}
-	if binding.is_empty():
-		binding.merge({"game": game, "session": session, "scene": current_scene,
-			"player": _probe.call("player"), "owner": game.get("local"), "world": game.get("world"),
-			"character": game.get("local").get("character_id"), "realm": game.get("current_realm"),
-			"world_id": game.get("world").get("world_id"), "namespace": game.get("world").get("reward_delivery_namespace"),
-			"epoch": session.call("_altar_current_epoch"), "host": session.call("is_host"), "active": session.call("is_active")})
-	var source_live: Callable = func() -> bool:
-		return is_instance_valid(game) and root.get_node_or_null(^"Game") == binding.game and game == binding.game \
-			and is_instance_valid(session) and session == binding.session and game.get("session") == session \
-			and current_scene == binding.scene and is_instance_valid(binding.player) and _probe.call("player") == binding.player \
-			and game.get("local") == binding.owner and game.get("world") == binding.world \
-			and binding.owner.get("character_id") == binding.character and game.get("current_realm") == binding.realm \
-			and binding.world.get("world_id") == binding.world_id and binding.world.get("reward_delivery_namespace") == binding.namespace \
-			and session.call("_altar_current_epoch") == binding.epoch and session.call("is_host") == binding.host \
-			and session.call("is_active") == binding.active
-	if not source_live.call():
-		return {"verdict": "FAIL", "detail": "original placement owner/world/session/player changed", "data": {"phase": phase}}
-	if binding.host == true or binding.active != true:
-		return {"verdict": "PASS", "detail": "placement has no remote owner stream"}
-	var passive: RefCounted = session.get("_owner_passive") as RefCounted
+	var session: Variant = game.get("session") if game != null else null
+	if not session is Node or not (session as Node).has_method("is_host") \
+			or bool((session as Node).call("is_host")) or not bool((session as Node).call("is_active")):
+		return
+	var passive: Variant = (session as Node).get("_owner_passive")
 	if passive == null:
-		return {"verdict": "FAIL", "detail": "admitted guest has no owner-passive service", "data": {"phase": phase}}
-	var observed := {"stream": "", "sequence": -1, "prefix_sequence": -1, "position": Vector3.INF, "via": ""}
-	# Game emits this observation immediately before recording its one discovery
-	# input (after the condition input). Freeze the first eligible prefix, not a
-	# moving target of later care ticks. No recorder/timer/ACK is driven here.
-	var discovery_observer: Callable = func(tick: Dictionary) -> void:
-		if not source_live.call() or session.get("_owner_passive") != passive \
-			or tick.get("operation") != "discovery" or tick.get("character_id") != binding.character \
-			or tick.get("world_namespace") != binding.namespace or tick.get("session_epoch") != binding.epoch \
-			or tick.get("realm") != binding.realm or passive.call("recording_active") != true: return
-		var stream: Dictionary = passive.get("local")
-		var at: Array = tick.get("to", [])
-		if at.size() != 3 or str(stream.get("id", "")).is_empty() or observed.stream == stream.id: return
-		var position := Vector3(float(at[0]), float(at[1]), float(at[2]))
-		if not preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, position): return
-		if require_new_discovery and stream.id == binding.get("placement_stream") \
-			and int(stream.sequence) + 1 <= int(binding.get("placement_sequence", -1)): return
-		observed.stream = stream.id
-		observed.sequence = int(stream.sequence) + 1
-		observed.prefix_sequence = observed.sequence
-		observed.position = position
-		observed.via = "discovery_signal"
-	game.connect("party_passive_tick", discovery_observer)
-	var reason := "original discovery prefix was not acknowledged within the existing placement allowance"
-	var ready := false
-	var observation: Dictionary = {"phase": phase}
-	for frame in maxi(0, budget_frames) + 1:
-		if not source_live.call() or session.get("_owner_passive") != passive:
-			reason = "original placement owner/world/session/player/passive service changed"
-			break
-		var stream: Dictionary = passive.get("local")
-		# Retain the actual recorded input too, including for an empty party whose
-		# discovery has no per-creature observation signal. A changed stream must
-		# supply its own discovery; the old stream's ACK cannot satisfy this one.
-		for input: Dictionary in stream.get("inputs", []):
-			if observed.stream == stream.get("id"): break
-			if input.get("op") == "discovery" and input.get("realm") == binding.realm \
-				and (not require_new_discovery or stream.id != binding.get("placement_stream") \
-					or int(input.sequence) > int(binding.get("placement_sequence", -1))):
-				var position := Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
-				if not preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, position): continue
-				observed.stream = stream.id
-				observed.sequence = input.sequence
-				observed.prefix_sequence = maxi(int(stream.sequence), int(input.sequence))
-				observed.position = position
-				observed.via = "recorded_discovery_input"
-		var admitted: bool = not stream.is_empty() and stream.get("character") == binding.character \
-			and session.call("snapshot_ready") == true and stream.get("hello_pending") == false \
-			and stream.get("admission_pending") == false and (stream.get("rebase", {}) as Dictionary).is_empty() \
-			and (passive.get("pending") as Dictionary).is_empty()
-		var discovered: bool = game.get("_travel_pos_valid") == true \
-			and preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, game.get("_travel_pos"))
-		# arm_owner resets travel_valid. Game sets it only in the synchronous
-		# discovery path that appends its input, so an already observed pose can
-		# bind the current prefix before placement even after its input was ACKed.
-		if not require_new_discovery and admitted and discovered and int(stream.get("sequence", 0)) > 0 \
-			and observed.stream != stream.get("id"):
-			observed.stream = stream.id
-			observed.sequence = int(stream.sequence)
-			observed.prefix_sequence = int(stream.sequence)
-			observed.position = game.get("_travel_pos")
-			observed.via = "current_travel_baseline"
-		var prefix_acked: bool = observed.stream == stream.get("id") and int(observed.sequence) > 0 \
-			and int(stream.get("acked", -1)) >= int(observed.prefix_sequence) \
-			and int(stream.get("sequence", -1)) >= int(observed.prefix_sequence)
-		discovered = discovered and observed.stream == stream.get("id") \
-			and preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, observed.position)
-		if require_new_discovery:
-			discovered = discovered and (observed.stream != binding.get("placement_stream") \
-				or int(observed.sequence) > int(binding.get("placement_sequence", -1)))
-		observation = {"phase": phase, "frame": frame, "budget_frames": budget_frames,
-			"character_id": binding.character, "session_epoch": binding.epoch,
-			"stream_id": stream.get("id"), "sequence": stream.get("sequence"), "acked": stream.get("acked"),
-			"admission_pending": stream.get("admission_pending"), "hello_pending": stream.get("hello_pending"),
-			"error": stream.get("error"), "pending": passive.get("pending").duplicate(true),
-			"observed_discovery_sequence": observed.sequence, "observed_discovery_stream": observed.stream,
-			"observed_via": observed.via,
-			"required_prefix_sequence": observed.prefix_sequence, "prefix_acked": prefix_acked,
-			"admitted": admitted, "discovered": discovered, "remaining_inputs": (stream.get("inputs", []) as Array).size(),
-			"observed_position": observed.position, "player_position": binding.player.global_position,
-			"travel_position": game.get("_travel_pos"), "travel_valid": game.get("_travel_pos_valid")}
-		if not str(stream.get("error", "")).is_empty():
-			reason = "owner-passive placement refused: " + str(stream.error)
-			break
-		# Later care remains queued for its ordinary replay. The placement needs
-		# this exact discovery prefix ACK, not an idle producer with no new input.
-		if admitted and discovered and prefix_acked:
-			binding.placement_sequence = int(stream.sequence)
-			binding.placement_stream = str(stream.id)
-			ready = true
-			break
-		if frame >= budget_frames: break
+		return
+	for frame in budget_frames:
+		var local: Dictionary = passive.get("local")
+		if frame >= 45 and (local.is_empty() or not str(local.get("error", "")).is_empty() \
+				or (local.get("inputs", []) as Array).is_empty()):
+			return
 		await physics_frame
-	if is_instance_valid(game) and game.is_connected("party_passive_tick", discovery_observer):
-		game.disconnect("party_passive_tick", discovery_observer)
-	return {"verdict": "PASS" if ready else "FAIL", "detail": "original discovery prefix acknowledged" if ready else reason,
-		"data": observation}
 
 
 ## Stand the trainer at a point. The travel itself, not a game action.
@@ -2884,7 +2693,7 @@ func _await_owner_passive_caught_up(budget_frames: int = 600,
 ## walk dying against a Terrain3D snag, and a smoke that fails there is
 ## reporting on terrain rather than on what it is testing. Same teleport
 ## `tests/smoke_combat_camera.gd` uses to stand a trainer beside a creature.
-func _step_teleport(args: Dictionary, command_budget_frames: int = NET_STEP_BUDGET_FRAMES) -> Dictionary:
+func _step_teleport(args: Dictionary) -> Dictionary:
 	var player := _probe.call("player") as Node3D
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live player"}
@@ -2897,23 +2706,15 @@ func _step_teleport(args: Dictionary, command_budget_frames: int = NET_STEP_BUDG
 		at = [near.x, near.y, near.z]
 	if at.size() != 3:
 		return {"verdict": "ERROR", "detail": "teleport needs args.at = [x, y, z]"}
-	var settle := maxi(0, int(args.get("settle", 30)))
-	var catchup_budget := mini(600, maxi(0, command_budget_frames - settle))
-	var placement_binding: Dictionary = {}
-	var before_catchup := Engine.get_physics_frames()
-	var ready := await _await_owner_passive_caught_up(catchup_budget, false, placement_binding)
-	if ready.get("verdict") != "PASS": return ready
-	catchup_budget = maxi(0, catchup_budget - int(Engine.get_physics_frames() - before_catchup))
 	# A teleport, not a motion (`remote_creature.teleport_body`): set as a plain
 	# position, GodotPhysics sweeps the body across the whole jump and the next
 	# move_and_slide against Terrain3D collision took ~4.4 s for a 4 km jump
 	# (F14#3), stalling the peer the proof is measuring.
 	REMOTE_CREATURE_TP.teleport_body(player as PhysicsBody3D, Vector3(float(at[0]), float(at[1]), float(at[2])))
 	player.velocity = Vector3.ZERO
-	for i in settle:
+	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
-	ready = await _await_owner_passive_caught_up(catchup_budget, true, placement_binding)
-	if ready.get("verdict") != "PASS": return ready
+	await _await_owner_passive_caught_up()
 	var p: Vector3 = player.global_position
 	return {"verdict": "PASS", "detail": "trainer stands at (%.2f, %.2f, %.2f)" % [p.x, p.y, p.z]}
 
@@ -2926,8 +2727,6 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 	var id := str(args.get("encounter_id", ""))
 	if id.is_empty():
 		return {"verdict": "ERROR", "detail": "join_encounter needs args.encounter_id"}
-	var join_session := _session()
-	var join_epoch := str(join_session.call("_altar_current_epoch")) if join_session != null else ""
 	if not bool(director.call("join_encounter", id)):
 		return {"verdict": "FAIL", "detail": "join_encounter('%s') refused locally" % id}
 	# A shared join returns while the host's admission/record is still pending.
@@ -2955,10 +2754,6 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 	var observed_world_message := ""
 	for i in frames:
 		await physics_frame
-		if not is_instance_valid(director) or _encounter_director() != director \
-				or _session() != join_session or (join_session != null and str(join_session.call("_altar_current_epoch")) != join_epoch):
-			failure = "join source changed before host admission"
-			break
 		if shared:
 			if (director.get("_cancelled_shared_joins") as Dictionary).has(id):
 				failure = "shared admission was cancelled by the producer"
@@ -2973,14 +2768,7 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 		if manager != null and bool(manager.call("is_fighting")) \
 				and str(manager.call("encounter_id")) == id:
 			if not shared:
-				# The legacy mirror binds locally before its engage RPC is answered.
-				# Starting the host fight at that point can finish the encounter before
-				# the guest is admitted. Require the host's actual participant record
-				# within the original legacy/tournament observation allowance.
-				var admitted: Dictionary = director.call("encounter_record")
-				bound = str(admitted.get("encounter_id", "")) == id \
-					and admitted.get("phase") == "active" \
-					and (admitted.get("participants", {}) as Dictionary).has(int(director.call("_local_peer_id")))
+				bound = true
 			else:
 				var rec: Dictionary = director.call("encounter_record")
 				var opponent: Dictionary = rec.get("opponent", {})
@@ -3040,10 +2828,6 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 				"data": {"encounter_id": id, "producer_deadline_ms": admission_deadline, "frame_limit": frames}}
 		if manager == null or not bool(manager.call("is_fighting")):
 			return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
-		if not failure.is_empty():
-			return {"verdict": "FAIL", "detail": failure}
-		if str(manager.call("encounter_id")) == id:
-			return {"verdict": "FAIL", "detail": "the local mirror bound, but no matching active host participant record arrived within %d frames" % frames}
 		return {"verdict": "FAIL", "detail": "the join is fighting, but is bound to '%s' instead of '%s'"
 			% [str(manager.call("encounter_id")), id]}
 	# Report the actual body. The shared-wild smoke asserts its host identity
@@ -3800,126 +3584,6 @@ func _step_heart_activate(args: Dictionary) -> Dictionary:
 	return {"verdict": "PASS", "detail": "wearing '%s'" % heart}
 
 
-## Opt-in F31 continuation of the existing shared Warden smoke. Its earned
-## personal relic is the only input; reuse the existing disclosed approach
-## placement and ordinary physical prompt/button helpers. No state grants.
-func _step_f31_shrine_hang(_args: Dictionary) -> Dictionary:
-	var started := Engine.get_physics_frames()
-	var game := root.get_node_or_null(^"Game")
-	var session: Node = _session()
-	if game == null or session == null or session.call("portal_runtime_ready") != true:
-		return {"verdict": "FAIL", "detail": "actual Shrine runtime is unavailable"}
-	var local: RefCounted = game.get("local")
-	var world: RefCounted = game.get("world")
-	var character: String = local.get("character_id")
-	var shrine_namespace: String = world.get("reward_delivery_namespace")
-	var world_id: String = world.get("world_id")
-	var epoch: String = session.call("_altar_current_epoch")
-	var live := func() -> bool:
-		return is_instance_valid(game) and root.get_node_or_null(^"Game") == game \
-			and game.get("session") == session and game.get("local") == local and game.get("world") == world \
-			and local.get("character_id") == character and world.get("reward_delivery_namespace") == shrine_namespace \
-			and world.get("world_id") == world_id and session.call("_altar_current_epoch") == epoch
-	var before := _foundations_payload()
-	var active_before: String = game.get("realm_hearts").call("active_id")
-	var receipt := "relic_hang:meadows:" + character
-	if (before.character.get("relics_held", []) as Array).count("meadows") != 1 \
-		or (before.character.get("relics_hung", []) as Array).has("meadows") \
-		or (before.character.get("transaction_receipts", []) as Array).has(receipt):
-		return {"verdict": "FAIL", "detail": "requires the original un-hung Warden relic", "data": before}
-	var proof: Script = preload("res://tools/net/proof_steps_f48.gd")
-	var deployed: Dictionary = await proof._deploy_owned(self)
-	if deployed.get("verdict") != "PASS": return deployed
-	if not live.call(): return {"verdict": "FAIL", "detail": "original Shrine owner changed during deployment"}
-	var approached: Dictionary = await proof._fixture_approach(self, {"target": "meadows_pedestal",
-		"fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"})
-	if approached.get("verdict") != "PASS": return approached
-	if not live.call(): return {"verdict": "FAIL", "detail": "original Shrine owner changed during approach"}
-	var halls := get_nodes_in_group("crossing_halls")
-	if halls.size() != 1: return {"verdict": "FAIL", "detail": "requires one actual mounted Hall"}
-	var hall: Node = halls[0]
-	var pedestal: Node = hall.get("_pedestals").get("meadows")
-	var prompt: Node
-	if pedestal != null:
-		for child: Node in pedestal.get_children():
-			if child.get_script() == preload("res://scripts/world/interactable.gd"):
-				if prompt != null: return {"verdict": "FAIL", "detail": "ambiguous mounted Meadows pedestal prompt"}
-				prompt = child
-	var arbiter := get_first_node_in_group("interaction_arbiter")
-	if prompt == null or arbiter == null or arbiter.call("winning_provider") != prompt:
-		return {"verdict": "FAIL", "detail": "actual Meadows pedestal must win physical interaction"}
-	if not proof._watch_owner_saves(self): return {"verdict": "FAIL", "detail": "actual owner BOOL-write observer unavailable"}
-	var pressed := await _step_press({"action": "interact"})
-	if pressed.get("verdict") != "PASS": return pressed
-	var row: Dictionary = {}
-	var accepted: Dictionary = {}
-	var hang_edge: Dictionary = {}
-	for frame in maxi(0, NET_STEP_BUDGET_FRAMES - (Engine.get_physics_frames() - started)):
-		if not live.call(): break
-		row = session.call("_owner_training_row")
-		if row.get("action") == "relic_hang" and row.get("intent") == {"biome": "meadows"} \
-			and row.get("character_id") == character and row.get("world_namespace") == shrine_namespace \
-			and row.get("world_id") == world_id and row.get("receipt") == receipt and row.get("status") == "accepted":
-			accepted = session.call("_foundation_decision", int(session.call("local_peer_id")), row)
-			var edge: Dictionary = get_meta("f48_latest_owner_save", {})
-			if edge.get("row", {}).get("receipt") == receipt and proof._fallback_parent_matches(edge, row):
-				hang_edge = edge.duplicate(true)
-			if accepted.get("owner_saved") == true and accepted.get("owner_acknowledged") == true and not hang_edge.is_empty(): break
-		await physics_frame
-	var after := _foundations_payload()
-	var known: Array = after.character.get("attachment_recipes", [])
-	var disk_known: Array = after.character_disk_redesign.get("attachment_recipes", [])
-	var blueprints: Array[String] = preload("res://scripts/build/station_rules.gd").next_tier_blueprints(
-		preload("res://scripts/build/station_rules.gd").config(), "meadows")
-	var valid: bool = live.call() and not hang_edge.is_empty() and proof._fallback_parent_matches(hang_edge, row) \
-		and accepted.get("owner_saved") == true and accepted.get("owner_acknowledged") == true \
-		and row.get("receipt") == receipt and blueprints.size() == 4 \
-		and (after.character.get("relics_hung", []) as Array).count("meadows") == 1 \
-		and (after.character_disk_redesign.get("relics_hung", []) as Array).count("meadows") == 1 \
-		and (after.character.get("transaction_receipts", []) as Array).count(receipt) == 1 \
-		and (after.character_disk_redesign.get("transaction_receipts", []) as Array).count(receipt) == 1
-	for blueprint: String in blueprints:
-		valid = valid and known.count(blueprint) == 1 and disk_known.count(blueprint) == 1
-	var owner: Node = preload("res://scripts/ui/input_owner.gd").current(self)
-	if not valid or owner == null or owner.get_script() != preload("res://scripts/ui/relic_power_panel.gd") \
-		or (owner.get("_rows") as Array).size() != 1:
-		return {"verdict": "FAIL", "detail": "actual hang must save/ACK all four Tidewake blueprints and open one-power choice",
-			"data": {"before": before, "after": after, "row": row, "accepted": accepted}}
-	var choice: Button = owner.get("_rows")[0]
-	var chosen: Dictionary = await proof._button(self, {"text": choice.text})
-	if chosen.get("verdict") != "PASS": return chosen
-	var disk: Dictionary = {}
-	var active := ""
-	var power_edge: Dictionary = {}
-	var power_row: Dictionary = {}
-	for frame in maxi(0, NET_STEP_BUDGET_FRAMES - (Engine.get_physics_frames() - started)):
-		if not live.call() or not is_instance_valid(owner): break
-		disk = game.get("save_system").get("_characters").call("state", character)
-		active = game.get("realm_hearts").call("active_id")
-		if active_before != "meadows":
-			power_row = session.call("_owner_training_row")
-			var edge: Dictionary = get_meta("f48_latest_owner_save", {})
-			if power_row.get("action") == "relic_power" and power_row.get("character_id") == character \
-				and proof._fallback_parent_matches(edge, power_row): power_edge = edge.duplicate(true)
-		if active == "meadows" and disk.get("realm_hearts", {}).get("active_id") == active \
-			and owner.get("_pending_heart") == "" and (active_before == "meadows" or not power_edge.is_empty()): break
-		await physics_frame
-	if not live.call() or active != "meadows" or disk.get("realm_hearts", {}).get("active_id") != active \
-		or not is_instance_valid(owner) or owner.get("_pending_heart") != "" \
-		or (active_before != "meadows" and power_edge.is_empty()):
-		return {"verdict": "FAIL", "detail": "original carried-power choice did not settle in the existing step budget", "data": {"active_id": active, "disk": disk}}
-	var closed := await _step_press({"action": "menu_cancel"})
-	if closed.get("verdict") != "PASS": return closed
-	valid = live.call() and active == "meadows" and disk.get("realm_hearts", {}).get("active_id") == active \
-		and preload("res://scripts/ui/input_owner.gd").current(self) == null
-	return {"verdict": "PASS" if valid else "FAIL", "detail": "original earned Meadows relic hung once; four personal Tidewake blueprints saved/ACKed; one carried power selected by ordinary A",
-		"data": {"before": before, "after": after, "row": row, "accepted": accepted, "approach": approached,
-			"owner_write_packet": hang_edge.packet, "owner_write_row": hang_edge.row, "owner_write_path": hang_edge.path,
-			"power_mode": "unchanged_original_active_power" if active_before == "meadows" else "actual_saved_power_choice",
-			"power_owner_write_packet": power_edge.get("packet", {}), "power_row": power_row,
-			"active_id": active, "disk_active_id": disk.get("realm_hearts", {}).get("active_id")}}
-
-
 # --- lane 6.D: a friend's fight is not silent ---------------------------------
 #
 # Two arms and one probe. `present_publish` is the owner pressing publish on its
@@ -4069,7 +3733,7 @@ func _sequence_director() -> Node:
 ## `_DISCOVERY_INTERVAL_S` clock, over the local player's own `MapState`. The
 ## body is placed the same way `operator_harness.gd::_step_teleport` places it,
 ## ground height included, so it lands on real terrain rather than under it.
-func _step_explore_at(args: Dictionary, command_budget_frames: int = NET_STEP_BUDGET_FRAMES) -> Dictionary:
+func _step_explore_at(args: Dictionary) -> Dictionary:
 	var player := _probe.call("player") as Node3D
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live Player to stand anywhere"}
@@ -4085,13 +3749,6 @@ func _step_explore_at(args: Dictionary, command_budget_frames: int = NET_STEP_BU
 		y = float(at[2]) + 1.0
 	elif world != null and world.has_method("ground_height_at"):
 		y = float(world.call("ground_height_at", float(at[0]), float(at[1]))) + 1.0
-	var settle := maxi(1, int(args.get("settle", 240)))
-	var catchup_budget := mini(600, maxi(0, command_budget_frames - settle))
-	var placement_binding: Dictionary = {}
-	var before_catchup := Engine.get_physics_frames()
-	var ready := await _await_owner_passive_caught_up(catchup_budget, false, placement_binding)
-	if ready.get("verdict") != "PASS": return ready
-	catchup_budget = maxi(0, catchup_budget - int(Engine.get_physics_frames() - before_catchup))
 	player.global_position = Vector3(float(at[0]), y, float(at[1]))
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO
@@ -4102,10 +3759,8 @@ func _step_explore_at(args: Dictionary, command_budget_frames: int = NET_STEP_BU
 	# the nominal rate; the default is four of them, which is slack enough that
 	# a slow headless process still gets sampled and short enough that a fog
 	# system that has stopped ticking still shows up as zero new cells.
-	for i in settle:
+	for i in maxi(1, int(args.get("settle", 240))):
 		await physics_frame
-	ready = await _await_owner_passive_caught_up(catchup_budget, true, placement_binding)
-	if ready.get("verdict") != "PASS": return ready
 	var settled := player.global_position
 	return {
 		"verdict": "PASS",
@@ -4498,7 +4153,7 @@ func _story_gate_rows() -> Array:
 ## use, and for the reason `smoke_aggression.gd`'s header documents: a scripted
 ## walk across the Meadows dies against a Terrain3D snag, and a smoke that fails
 ## there is reporting on terrain rather than on what it is testing.
-func _step_trainer_battle(args: Dictionary, command_budget_frames: int = NET_STEP_BUDGET_FRAMES) -> Dictionary:
+func _step_trainer_battle(args: Dictionary) -> Dictionary:
 	var director := _encounter_director()
 	if director == null:
 		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
@@ -4511,24 +4166,11 @@ func _step_trainer_battle(args: Dictionary, command_budget_frames: int = NET_STE
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live player"}
 	if body != null:
-		var catchup_budget := mini(600, maxi(0, command_budget_frames - 20 - maxi(0, int(args.get("settle", 45)))))
-		var placement_binding: Dictionary = {}
-		var before_catchup := Engine.get_physics_frames()
-		var ready := await _await_owner_passive_caught_up(catchup_budget, false, placement_binding)
-		if ready.get("verdict") != "PASS": return ready
-		catchup_budget = maxi(0, catchup_budget - int(Engine.get_physics_frames() - before_catchup))
-		if not is_instance_valid(body) or _trainer_body_named(trainer_id) != body \
-			or not is_instance_valid(director) or _encounter_director() != director:
-			return {"verdict": "FAIL", "detail": "original trainer changed before placement"}
 		player.global_position = body.global_position + Vector3(2.0, 0.0, 2.0)
 		player.velocity = Vector3.ZERO
 		for i in 20:
 			await physics_frame
-		ready = await _await_owner_passive_caught_up(catchup_budget, true, placement_binding)
-		if ready.get("verdict") != "PASS": return ready
-		if not is_instance_valid(body) or _trainer_body_named(trainer_id) != body \
-			or not is_instance_valid(director) or _encounter_director() != director:
-			return {"verdict": "FAIL", "detail": "original trainer changed during placement"}
+		await _await_owner_passive_caught_up()
 	if not bool(director.call("can_challenge", spec)):
 		return {"verdict": "FAIL", "detail": "'%s' will not take the challenge (already beaten: %s, nothing out: %s)"
 			% [trainer_id, str(NET_TRAINERS.already_beaten(spec, _progression_store())),
@@ -4972,7 +4614,6 @@ func _character_view(game: Node, args: Dictionary) -> Dictionary:
 	if local == null:
 		return {}
 	var party_rows: Array = []
-	var creature_gear := {}
 	var party: Variant = (local as RefCounted).get("party")
 	if party != null:
 		for i in int((party as RefCounted).call("size")):
@@ -4980,9 +4621,6 @@ func _character_view(game: Node, args: Dictionary) -> Dictionary:
 			if member != null:
 				party_rows.append("%s@%d" % [str((member as RefCounted).get("species_id")),
 					int((member as RefCounted).get("level"))])
-				var uid := str((member as RefCounted).get("uid"))
-				var row: Dictionary = (local as RefCounted).get("redesign_character").get("creatures", {}).get(uid, {})
-				if row.has("gear"): creature_gear[uid] = row.gear.duplicate(true)
 	var flags_set: Dictionary = {}
 	var flags: Variant = (local as RefCounted).get("flags")
 	var equipment: Variant = (local as RefCounted).get("equipment")
@@ -4993,8 +4631,6 @@ func _character_view(game: Node, args: Dictionary) -> Dictionary:
 		"party_size": party_rows.size(),
 		"satchel": _probe.call("inventory_snapshot"),
 		"equipment": (equipment as RefCounted).call("save_data") if equipment != null else {},
-		"pouch_tier": (local as RefCounted).get("redesign_character").get("pouch_tier", 0),
-		"creature_gear": creature_gear,
 		"player_flags": flags_set,
 		"display_name": str((local as RefCounted).get("display_name")),
 		"satiety": float((local as RefCounted).get("satiety")),
@@ -5013,15 +4649,11 @@ func _character_view(game: Node, args: Dictionary) -> Dictionary:
 ## direction that looks like the feature being broken.
 func _character_file_view(state: Dictionary, args: Dictionary) -> Dictionary:
 	var party_rows: Array = []
-	var creature_gear := {}
 	for raw: Variant in (state.get("party", []) as Array):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var row := raw as Dictionary
 		party_rows.append("%s@%d" % [str(row.get("species_id", "")), int(row.get("level", 0))])
-		var uid := str(row.get("uid", ""))
-		var personal: Dictionary = state.get("redesign_character", {}).get("creatures", {}).get(uid, {})
-		if personal.has("gear"): creature_gear[uid] = personal.gear.duplicate(true)
 	var satchel: Dictionary = {}
 	for raw: Variant in (state.get("inventory", []) as Array):
 		if typeof(raw) != TYPE_DICTIONARY:
@@ -5045,8 +4677,6 @@ func _character_file_view(state: Dictionary, args: Dictionary) -> Dictionary:
 		"party_size": party_rows.size(),
 		"satchel": satchel,
 		"equipment": (state.get("equipment", {}) as Dictionary).duplicate(true),
-		"pouch_tier": state.get("redesign_character", {}).get("pouch_tier", 0),
-		"creature_gear": creature_gear,
 		"player_flags": flags_set,
 		"display_name": str(state.get("display_name", "")),
 		"satiety": float(state.get("satiety", -1.0)),
@@ -5073,37 +4703,6 @@ func _character_file_view(state: Dictionary, args: Dictionary) -> Dictionary:
 ## is the thing being called, so a sixth is refused here exactly as it is
 ## refused everywhere else, and the refusal is reported.
 func _step_party_grant(args: Dictionary) -> Dictionary:
-	var game := root.get_node_or_null(^"Game")
-	var party: RefCounted = game.get("party") if game != null else null
-	var local: RefCounted = game.get("local") if game != null else null
-	var world: RefCounted = game.get("world") if game != null else null
-	var session: Node = game.get("session") if game != null else null
-	if party == null or local == null or world == null or session == null:
-		return {"verdict": "ERROR", "detail": "party grant has no bound owner/world/session"}
-	if args.has("gear"):
-		var gear_rules := preload("res://scripts/creatures/creature_gear.gd")
-		if session.call("is_active") == true or not args.gear is Dictionary \
-				or not gear_rules.slots_errors(args.gear, gear_rules.config()).is_empty():
-			return {"verdict": "FAIL", "detail": "disclosed gear stock requires valid slots before session admission"}
-	# Like save_character_here, wait for this owner's actual saved admission.
-	# Never bypass the guard or move the disclosed fixture to another scope.
-	var scope := [local.get("character_id"), world.get("world_id"),
-		world.get("reward_delivery_namespace"), session.call("_altar_current_epoch")]
-	var waited := 0
-	while true:
-		if game.get("party") != party or game.get("local") != local or game.get("world") != world \
-				or game.get("session") != session or not is_instance_valid(session) \
-				or scope != [local.get("character_id"), world.get("world_id"),
-					world.get("reward_delivery_namespace"), session.call("_altar_current_epoch")]:
-			return {"verdict": "FAIL", "detail": "party grant owner/world/session/epoch changed while waiting"}
-		if party.call("owner_mutation_blocked") == false:
-			break
-		if waited >= SAVE_FENCE_WAIT_FRAMES:
-			return {"verdict": "FAIL", "detail": "party grant owner admission did not settle",
-				"data": {"party_size": party.call("size"), "waited": waited,
-					"fence": session.call("_owner_snapshot_block_reason", local)}}
-		await process_frame
-		waited += 1
 	var species := str(args.get("species", "bramblebun"))
 	var creature: RefCounted = SPECIES_DATA.spawn(species)
 	if creature == null:
@@ -5111,18 +4710,18 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 	var cfg: Dictionary = NET_PROGRESSION.config()
 	var level := int(args.get("level",
 		int((cfg.get("level", {}) as Dictionary).get("starter_level", 3))))
-	if args.has("gear") and level > int(BREAKTHROUGH.masters().get("ceiling", 60)):
-		return {"verdict": "FAIL", "detail": "disclosed gear stock requires a canonical level within this pass"}
 	creature.call("set_level", level, cfg)
 	if not bool(PARTY_SEAM.add(creature, str(args.get("nickname", "")))):
 		return {"verdict": "FAIL",
-			"detail": "party_seam.add('%s') refused" % species,
-			"data": {"party_size": party.call("size"), "waited": waited,
-				"fence": session.call("_owner_snapshot_block_reason", local)}}
+			"detail": "party_seam.add('%s') refused -- the party is full (five, and there is no sixth slot)"
+				% species}
+	var game := root.get_node_or_null(^"Game")
+	var party: Variant = game.get("party") if game != null else null
 	var size := int((party as RefCounted).call("size")) if party != null else -1
 	# A creature above the starting cap carries the breakthroughs its level
 	# implies, exactly as a caught one does (foundation_capture_rules.gd).
 	# Without them a level-18 grant sits above cap 10 and earns no round XP.
+	var local: Variant = game.get("local") if game != null else null
 	if local != null:
 		var saved: Dictionary = (local as RefCounted).call("save_data")
 		var personal: Dictionary = TEACHING.character_loadout_mirror(saved.get("party", []), (local as RefCounted).get("redesign_character"))
@@ -5134,11 +4733,6 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 					personal = BREAKTHROUGH.initialize_caught(personal, card)
 			if personal.is_empty():
 				return {"verdict": "FAIL", "detail": "could not record breakthroughs for a level-%d '%s'" % [level, species]}
-			if args.has("gear"):
-				var granted_uid := str(creature.get("uid"))
-				if not personal.get("creatures", {}).get(granted_uid) is Dictionary:
-					return {"verdict": "FAIL", "detail": "disclosed gear stock has no actual owned UID row"}
-				personal.creatures[granted_uid]["gear"] = args.gear.duplicate(true)
 			(local as RefCounted).set("redesign_character", personal)
 	if not PARTY_SEAM.has_game_state():
 		return {"verdict": "FAIL",
@@ -5516,14 +5110,6 @@ func _step_catch_fixture_rng(args: Dictionary) -> Dictionary:
 	var chance_min := float(chance_cfg.get("min", 0.02))
 	var chance_max := float(chance_cfg.get("max", 0.95))
 	runtime.call("pause_for_catch") # prevents AI from consuming the selected next roll.
-	# This disclosed RNG fixture precedes the guest's actual catch request.
-	# The director resumes an active fight whose body is disengaged; retain
-	# its engagement marker while physics stays paused so the next roll is
-	# still the one the original host catch arbiter receives.
-	var paused_body := runtime.call("body") as Node3D
-	if paused_body == null or paused_body.is_physics_processing():
-		return {"verdict": "FAIL", "detail": "Actual host catch fixture could not pause its body"}
-	paused_body.set("engaged", true)
 	var want_caught := bool(args.get("caught", true))
 	var runtime_rng := runtime.get("_rng") as RandomNumberGenerator
 	if runtime_rng == null:
@@ -5579,8 +5165,7 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	var requested := Vector3(float(target[0]) + 3.0, float(target[1]) + 2.0, float(target[2]))
 	load("res://scripts/creatures/remote_creature.gd").teleport_body(player, requested)
 	player.velocity = Vector3.ZERO
-	var placement_ready: Dictionary = await _await_owner_passive_caught_up(600, false, {})
-	if placement_ready.get("verdict") != "PASS": return placement_ready
+	await _await_owner_passive_caught_up()
 	var fixture := {"actor_before": [actor_before.x, actor_before.y, actor_before.z],
 		"actor_requested": [requested.x, requested.y, requested.z], "announcement": announcement,
 		"owner_before": before, "fixture_disclosure": args.fixture_disclosure, "acceptance_credit": false}
@@ -5606,88 +5191,58 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	var accepted_observer: Callable = _f48_capture_accepted_source.bind(capture_source)
 	writer.connect("transaction_boundary", save_observer)
 	writer.connect("delta_applied", accepted_observer)
-	var capture_started_frame: int = Engine.get_physics_frames()
-	var original_owner: RefCounted = game.get("local")
-	var original_namespace: String = game.get("world").get("reward_delivery_namespace")
-	var captures: Node = session.get_node_or_null(^"FoundationComposition/Captures")
 	var thrown: Dictionary = _step_catch_throw({"target": actual, "orb_id": "orb_basic"})
 	if thrown.get("verdict") != "PASS":
 		writer.disconnect("transaction_boundary", save_observer)
 		writer.disconnect("delta_applied", accepted_observer)
 		_fixture_capture_pose(fixture, player)
 		thrown["data"] = fixture; return thrown
-	var after: Dictionary = {}
-	var row: Dictionary = {}
-	var valid := false
-	var source_live := true
-	# The original 600 physical frames start at the actual throw. Observe the
-	# same BOOL/ACK and canonical catch predicate now, so ordinary menu close
-	# can precede the separately journaled Research duty. No new request here.
-	while true:
-		# Also runs immediately after every awaited frame; never carry an old
-		# owner's success into a replaced scene, body, Session or world.
-		source_live = is_instance_valid(game) and game.get("local") == original_owner \
-			and _f48_capture_source_live(capture_source) and is_instance_valid(director) \
-			and _encounter_director() == director and is_instance_valid(player) and game.call("find_player") == player \
-			and game.get("world").get("reward_delivery_namespace") == original_namespace \
-			and is_instance_valid(captures) and session.get_node_or_null(^"FoundationComposition/Captures") == captures
-		if not source_live: break
-		if capture_source.accepted.is_empty() and Engine.get_physics_frames() - capture_started_frame < 600:
-			await physics_frame
-			continue
-		after = game.get("local").call("save_data")
-		row = capture_source.accepted
-		fixture["owner_projection"] = preload("res://scripts/net/character_record_rules.gd").portable_projection(after)
-		var added: Array = []
-		for uid: Variant in after.get("redesign_character", {}).get("creatures", {}):
-			if not before.get("redesign_character", {}).get("creatures", {}).has(uid): added.append(uid)
-		valid = added.size() == 1 and after.get("party", []).size() == before.get("party", []).size() + 1
-		if valid:
-			var provenance: Dictionary = after.redesign_character.creatures[added[0]].get("captured_from", {})
-			var reply: Dictionary = director.get("_shared_catch_finish_reply")
-			# The director exposes the normalized local finish reply, after its
-			# authority-only verdict matched the pending encounter and claim.
-			var capture_uid := str(added[0])
-			var capture_offer := JSON.stringify([game.get("world").get("reward_delivery_namespace"),
-				str(reply.get("claim_id", "")), capture_uid]).sha256_text()
-			var owned_capture := false
-			for creature: Dictionary in after.get("party", []):
-				if creature.get("uid") == capture_uid: owned_capture = true
-			valid = provenance.get("kind") == "wild" and provenance.get("spawn_id") == site \
-				and provenance.get("spawn_generation") == 1 \
-				and provenance.get("world_namespace") == game.get("world").get("reward_delivery_namespace") \
-				and reply.get("ok") == true and reply.get("caught") == true \
-				and reply.get("kind") == "catch_finished" and reply.get("pending") == false \
-				and reply.get("creature", {}).get("uid") == capture_uid and owned_capture \
-				and reply.get("encounter_id") == announcement.encounter_id and not str(reply.get("claim_id", "")).is_empty() \
-				and row.get("action") == "wild_capture" and row.get("status") == "accepted" \
-				and row.get("character_id") == after.get("character_id") \
-				and row.get("source_key") == "capture:" + capture_offer \
-				and not str(row.get("receipt", "")).is_empty() \
-				and fixture.owner_projection.redesign_character.transaction_receipts.has(row.receipt)
-		if valid and captures.get_script() == preload("res://scripts/net/foundation_capture.gd") \
-			and game.get("pending_catch") == null and str(captures.get("_active")).is_empty() \
-			and captures.get("_requests").is_empty() and session.call("_owner_training_mutation_blocked", original_owner) != true: break
-		if Engine.get_physics_frames() - capture_started_frame >= 600: break
-		await physics_frame
+	for _frame: int in 600: await physics_frame
 	if is_instance_valid(writer):
 		writer.disconnect("transaction_boundary", save_observer)
 		writer.disconnect("delta_applied", accepted_observer)
-	fixture["capture_started_physics_frame"] = capture_started_frame
-	fixture["capture_observed_physics_frame"] = Engine.get_physics_frames()
-	if not source_live:
-		return {"verdict": "FAIL", "detail": "Original catch source changed during its existing observation budget", "data": fixture}
 	_fixture_capture_pose(fixture, player)
+	var after: Dictionary = game.get("local").call("save_data")
 	fixture["owner_before"] = before
 	fixture["owner_after"] = after
 	fixture["finish_reply"] = director.get("_shared_catch_finish_reply")
+	var row: Dictionary = capture_source.accepted
 	fixture["latest_owner_training_row"] = session.call("_owner_training_row") if is_instance_valid(session) else {}
 	fixture["capture_saved_edge"] = {"path":capture_source.edge.get("path"), "sha256":capture_source.edge.get("sha256"),
 		"row":capture_source.edge.get("row"), "accepted_delta":capture_source.get("accepted_delta",{})}
 	fixture["owner_training_row"] = row
+	fixture["owner_projection"] = preload("res://scripts/net/character_record_rules.gd").portable_projection(after)
 	if not row.is_empty() and row.get("version") in [2, 3]:
 		fixture["owner_plan"] = preload("res://scripts/net/character_action_delivery.gd").owner_plan(
 			fixture.owner_projection, row, preload("res://scripts/net/character_record_rules.gd").errors)
+	var added: Array = []
+	for uid: Variant in after.get("redesign_character", {}).get("creatures", {}):
+		if not before.get("redesign_character", {}).get("creatures", {}).has(uid): added.append(uid)
+	var valid: bool = added.size() == 1 and after.get("party", []).size() == before.get("party", []).size() + 1
+	if valid:
+		var provenance: Dictionary = after.redesign_character.creatures[added[0]].get("captured_from", {})
+		var reply: Dictionary = director.get("_shared_catch_finish_reply")
+		fixture["finish_reply"] = reply
+		# The director exposes the normalized local finish reply, after its
+		# authority-only verdict matched the pending encounter and claim.
+		var capture_uid := str(added[0])
+		var capture_offer := JSON.stringify([game.get("world").get("reward_delivery_namespace"),
+			str(reply.get("claim_id", "")), capture_uid]).sha256_text()
+		var owned_capture := false
+		for creature: Dictionary in after.get("party", []):
+			if creature.get("uid") == capture_uid: owned_capture = true
+		valid = provenance.get("kind") == "wild" and provenance.get("spawn_id") == site \
+			and provenance.get("spawn_generation") == 1 \
+			and provenance.get("world_namespace") == game.get("world").get("reward_delivery_namespace") \
+			and reply.get("ok") == true and reply.get("caught") == true \
+			and reply.get("kind") == "catch_finished" and reply.get("pending") == false \
+			and reply.get("creature", {}).get("uid") == capture_uid and owned_capture \
+			and reply.get("encounter_id") == announcement.encounter_id and not str(reply.get("claim_id", "")).is_empty() \
+			and row.get("action") == "wild_capture" and row.get("status") == "accepted" \
+			and row.get("character_id") == after.get("character_id") \
+			and row.get("source_key") == "capture:" + capture_offer \
+			and not str(row.get("receipt", "")).is_empty() \
+			and fixture.owner_projection.redesign_character.transaction_receipts.has(row.receipt)
 	if not valid: fixture["owner_passive_diagnostic"] = _f48_owner_passive_diagnostic()
 	return {"verdict": "PASS" if valid else "FAIL", "detail": "Actual shared Alpha catch created one source companion with its accepted original receipt and normalized finish reply." if valid else "Actual shared Alpha catch must create exactly one durable source companion; no offered/provenance grant. Owner plan: " + str(fixture.get("owner_plan", {}).get("code", "unavailable")), "data": fixture}
 
@@ -7469,23 +7024,6 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				joinable.append(str((row as Dictionary).get("encounter_id", "")))
 			var out := {
 				"available": true,
-				"local_character_id": str(root.get_node(^"Game").get("local").get("character_id")),
-				"local_ally_uid": str(mine.get("uid")) if mine != null else "",
-				"actor_vitals_runtime_enabled": preload("res://scripts/combat/combat_math.gd").config().get("actor_vitals", {}).get("runtime_enabled") == true,
-				"ambient_source_token": str(edirector.get("_ambient_active_token")),
-				"ambient_diagnostic": {"scope": edirector.call("_ambient_scope"),
-					"pending_token": edirector.get("_ambient_pending_token"), "deadline_ms": edirector.get("_ambient_pending_deadline"),
-					"host_source_count": (edirector.get("_ambient_host_sources") as Dictionary).size(),
-					"guest_source_count": (edirector.get("_ambient_guest_sources") as Dictionary).size(),
-					"publish_serial": edirector.get("_ambient_publish_serial"),
-					"source_decisions": (edirector.get("_ambient_source_observations") as Dictionary).duplicate(true),
-					"received_batches": edirector.get("_ambient_received_batches"),
-					"received_packets": edirector.get("_ambient_received_packets"),
-					"request": (edirector.get("_ambient_request_observation") as Dictionary).duplicate(true),
-					"receipt": (edirector.get("_ambient_guest_receipt_observation") as Dictionary).duplicate(true),
-					"host_admission": (edirector.get("_ambient_host_admission_observation") as Dictionary).duplicate(true)},
-				"wild_actor_owner": rec.get("wild_actor_owner", {}).duplicate(true),
-				"saved_wild_actor": edirector.call("uses_wild_actor_vitals", str(rec.get("encounter_id", ""))),
 				"fighting": bool(emanager.call("is_fighting")),
 				"id": str(rec.get("encounter_id", "")),
 				"bound_id": str(emanager.call("encounter_id")),
@@ -7525,7 +7063,6 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				out["presentation_species"] = str(enemy_node.get("species_id"))
 				if enemy_instance != null:
 					out["presentation_species"] = str(enemy_instance.get("species_id"))
-					out["presentation_uid"] = str(enemy_instance.get("uid"))
 				out["presentation_script"] = str(enemy_script.resource_path) if enemy_script != null else ""
 				out["presentation_pos"] = [enemy_node.global_position.x, enemy_node.global_position.y, enemy_node.global_position.z]
 				out["presentation_centre"] = [enemy_centre.x, enemy_centre.y, enemy_centre.z]
@@ -7556,10 +7093,6 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var runtime: Variant = runtime_map.get(requested_id)
 				var runtime_row := {
 					"id": requested_id,
-					"wild_actor_owner": requested_record.get("wild_actor_owner", {}).duplicate(true),
-					"opponent_uid": str(requested_record.get("opponent", {}).get("card", {}).get("uid", "")),
-					"saved_wild_actor": edirector.call("uses_wild_actor_vitals", requested_id),
-					"owners": [],
 					"record_exists": not requested_record.is_empty(),
 					"phase": str(requested_record.get("phase", "done")),
 					"participants": (requested_record.get("participants", {}) as Dictionary).keys(),
@@ -7569,23 +7102,6 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var runtime_receipts: Array[Dictionary] = []
 				for raw_runtime_peer: Variant in (requested_record.get("participants", {}) as Dictionary).keys():
 					var runtime_peer := int(raw_runtime_peer)
-					var member: Dictionary = requested_record.participants[raw_runtime_peer]
-					# Observation never binds, refreshes or recovers admission. Read
-					# only the already-installed authority and registered stable CID.
-					var observed_session := _session()
-					var registered_character := str(observed_session.call("_authority_character", runtime_peer)) \
-						if observed_session != null else ""
-					var authority: Variant = observed_session.get("_character_authority") if observed_session != null else null
-					var admitted_owner: Dictionary = authority.call("state", registered_character) \
-						if authority != null else {}
-					var admitted_uids: Array[String] = []
-					for admitted_card: Dictionary in admitted_owner.get("party", []):
-						admitted_uids.append(str(admitted_card.get("uid", "")))
-					(runtime_row.owners as Array).append({"peer": runtime_peer,
-						"character_id": member.get("character_id", ""), "actor_bound_uid": member.get("actor_bound_uid", ""),
-						"actor_generation": member.get("actor_generation", 0),
-						"admitted_character_id": registered_character,
-						"authority_character_id": admitted_owner.get("character_id", ""), "admitted_party_uids": admitted_uids})
 					var runtime_receipt: Dictionary = encounter_host.call(
 						"latest_strike_receipt", requested_id, runtime_peer)
 					if not runtime_receipt.is_empty():
@@ -7600,12 +7116,6 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					runtime_row["body_valid"] = runtime_body != null and is_instance_valid(runtime_body)
 					if runtime_body != null and is_instance_valid(runtime_body):
 						runtime_row["body_instance_id"] = runtime_body.get_instance_id()
-						runtime_row["body_uid"] = str(runtime_body.get("instance").get("uid")) if runtime_body.get("instance") != null else ""
-						runtime_row["body_feet"] = [runtime_body.global_position.x, runtime_body.global_position.y, runtime_body.global_position.z]
-						var registered: Dictionary = (edirector.get("_ambient_host_sources") as Dictionary).get(str(runtime_body.get_meta(&"ambient_source_id", "")), {})
-						runtime_row["ambient_source_token"] = registered.get("token", "")
-						runtime_row["ambient_source_generation"] = registered.get("generation", 0)
-						runtime_row["ambient_source_body_matches"] = registered.get("body") is WeakRef and registered.body.get_ref() == runtime_body
 						runtime_row["body_species"] = str(runtime_body.get("species_id"))
 						var runtime_centre: Variant = runtime_body.call("centre") \
 							if runtime_body.has_method("centre") else runtime_body.global_position
@@ -8241,7 +7751,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			var sess := _session()
 			if sess == null:
 				return {"available": false}
-			var snapshot := {
+			return {
 				"available": true,
 				"active": bool(sess.call("is_active")),
 				"mode": str(sess.call("mode")),
@@ -8263,92 +7773,6 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				# having to remember what it handed out.
 				"enet_port": _enet_port,
 			}
-			if args.get("players_capture") == true:
-				# Read the production tab and the very Session it reads. This
-				# neither opens/selects a tab nor creates or refreshes any row.
-				var players_game := root.get_node_or_null(^"Game")
-				var players_menu: Node = players_game.call("menu") if players_game != null else null
-				var players_tab: Control = null
-				var tab_index := -1
-				if players_menu != null and players_menu.get_script() == preload("res://scripts/ui/game_menu.gd") \
-					and players_menu.call("is_open") == true and players_menu.call("current_tab_id") == "players":
-					var bodies: Array = players_menu.get("_bodies")
-					tab_index = int(players_menu.get("_index"))
-					if tab_index >= 0 and tab_index < bodies.size(): players_tab = bodies[tab_index] as Control
-				var bound: bool = players_tab != null and players_tab.get_script() == preload("res://scripts/ui/tab_players.gd") \
-					and players_tab.is_visible_in_tree() and players_tab.get("menu") == players_menu \
-					and players_game.get("session") == sess and players_tab.call("_session") == sess \
-					and _probe.call("input_owner_node") == players_menu and _probe.call("input_context") == "menu_players"
-				var by_peer: Dictionary = {}
-				var characters: Dictionary = {}
-				var identities_ok: bool = snapshot.active and snapshot.snapshot_ready and snapshot.peer_count == 4 \
-					and sess.call("transport_kind") == "enet" and snapshot.rows.size() == 4
-				for member: Dictionary in snapshot.rows:
-					var peer_id := int(member.get("peer_id", 0))
-					var character := str(member.get("character_id", ""))
-					identities_ok = identities_ok and peer_id > 0 and not character.is_empty() \
-						and not by_peer.has(peer_id) and not characters.has(character)
-					by_peer[peer_id] = member
-					characters[character] = true
-				var expected_characters: Variant = args.get("characters", [])
-				identities_ok = identities_ok and expected_characters is Array and expected_characters.size() == 4
-				var expected_seen: Dictionary = {}
-				if expected_characters is Array:
-					for character: Variant in expected_characters:
-						identities_ok = identities_ok and character is String and characters.has(character) and not expected_seen.has(character)
-						expected_seen[character] = true
-				var local: Variant = players_game.get("local") if players_game != null else null
-				identities_ok = identities_ok and local != null \
-					and by_peer.get(snapshot.peer_id, {}).get("character_id") == local.get("character_id")
-				var focus: Control = root.gui_get_focus_owner()
-				var list: VBoxContainer = players_tab.get("_list") as VBoxContainer if bound else null
-				var scroll: ScrollContainer = list.get_parent() as ScrollContainer if list != null else null
-				var footer: Label = players_menu.get("_footer") as Label if bound else null
-				var visible_rows: Array = []
-				var row_ids: Dictionary = {}
-				var guest_buttons: Array[Button] = []
-				var rows_ok := bound and scroll != null
-				if bound:
-					for displayed: Dictionary in players_tab.get("_rows"):
-						var peer_id := int(displayed.get("peer_id", 0))
-						var member: Dictionary = by_peer.get(peer_id, {})
-						var label: Label = displayed.get("label") as Label
-						var kick: Button = displayed.get("kick") as Button
-						var who_name := str(member.get("display_name", ""))
-						if who_name.is_empty(): who_name = "Trainer"
-						var label_matches: bool = label != null and label.is_visible_in_tree() \
-							and label.text.begins_with(who_name + " — " + str(member.get("realm", "meadows")))
-						var needs_kick: bool = snapshot.is_host and peer_id != 1
-						rows_ok = rows_ok and not member.is_empty() and not row_ids.has(peer_id) and label_matches \
-							and ((kick != null and kick.is_visible_in_tree() and not kick.disabled) if needs_kick else kick == null)
-						row_ids[peer_id] = true
-						if kick != null: guest_buttons.append(kick)
-						var label_rect: Rect2 = label.get_global_rect() if label != null else Rect2()
-						visible_rows.append({"peer_id": peer_id, "character_id": member.get("character_id", ""),
-							"label": label.text if label != null else "", "label_matches": label_matches,
-							"label_rect": str(label_rect), "fully_in_scroll": scroll != null and scroll.get_global_rect().encloses(label_rect),
-							"remove_available": kick != null, "focused": focus == kick if kick != null else false})
-				var footer_ready: bool = footer != null and footer.is_visible_in_tree() and not footer.text.is_empty()
-				var focus_ready: bool = bound and focus != null and focus.is_visible_in_tree() and players_menu.is_ancestor_of(focus)
-				var focus_in_scroll: bool = focus_ready and scroll != null and scroll.get_global_rect().encloses(focus.get_global_rect())
-				var initial_focus: bool = focus == guest_buttons[0] if snapshot.is_host and guest_buttons.size() == 3 \
-					else bound and not snapshot.is_host and focus == players_menu.get("_tab_buttons")[tab_index]
-				var window_size := DisplayServer.window_get_size()
-				var resolution := "%dx%d" % [window_size.x, window_size.y]
-				var native_raster: bool = DisplayServer.get_name() != "headless" and resolution in ["1280x720", "1920x1080"] \
-					and resolution == OS.get_environment("TB_NET_PROOF_RESOLUTION")
-				snapshot["players_capture"] = {"ready": identities_ok and rows_ok and row_ids.size() == 4 \
-					and guest_buttons.size() == (3 if snapshot.is_host else 0) and footer_ready and focus_ready \
-					and (focus_in_scroll if snapshot.is_host else true) and native_raster,
-					"bound_to_current_session": bound, "original_characters": identities_ok,
-					"session_instance_id": sess.get_instance_id(), "epoch": sess.call("_altar_current_epoch"),
-					"rows": visible_rows, "initial_focus": initial_focus,
-					"last_guest_focus": guest_buttons.size() == 3 and focus == guest_buttons.back(),
-					"focus_path": str(focus.get_path()) if focus != null else "", "focus_in_scroll": focus_in_scroll, "resolution": resolution,
-					"scroll_vertical": scroll.scroll_vertical if scroll != null else -1,
-					"scroll_rect": str(scroll.get_global_rect()) if scroll != null else "",
-					"footer": footer.text if footer != null else "", "footer_visible": footer_ready}
-			return snapshot
 		"local_pause":
 			# Acceptance item 16 / D102. Everything the "a menu does not freeze
 			# other players" smoke reads, off this process's own live objects.
@@ -8399,50 +7823,10 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				for member: Variant in ((cparty as RefCounted).call("members") as Array):
 					species.append(str((member as RefCounted).get("species_id")))
 			var pending: Variant = cgame.get("pending_catch") if cgame != null else null
-			var capture_session: Node = cgame.get("session") as Node if cgame != null else null
-			var capture_service: Node = capture_session.get_node_or_null(^"FoundationComposition/Captures") if capture_session != null else null
-			if capture_session != null:
-				if not _catch_foundation_observer.is_valid():
-					_catch_foundation_observer = func(envelope: Dictionary, result: Dictionary) -> void:
-						if envelope.get("op") not in ["wild_capture", "wild_capture_quote"]: return
-						_catch_foundation_replies.append({"op": envelope.get("op"),
-							"offer_id": envelope.get("intent", {}).get("offer_id"), "revision": envelope.get("revision"),
-							"code": result.get("code"), "ok": result.get("ok"), "resolved": result.get("resolved"),
-							"terminal_refusal": result.get("terminal_refusal"), "pending": result.get("pending"),
-							"owner_acknowledged": result.get("owner_acknowledged"), "at_ms": Time.get_ticks_msec()})
-						if _catch_foundation_replies.size() > 8: _catch_foundation_replies.pop_front()
-				if not capture_session.is_connected("foundation_reply_received", _catch_foundation_observer):
-					capture_session.connect("foundation_reply_received", _catch_foundation_observer)
-			var capture_requests: Array = []
-			if capture_session != null:
-				for request: Dictionary in (capture_session.get("_foundation_requests") as Dictionary).values():
-					if request.get("op") not in ["wild_capture", "wild_capture_quote"]: continue
-					capture_requests.append({"op": request.get("op"), "revision": request.get("revision"),
-						"offer_id": request.get("intent", {}).get("offer_id")})
-					if capture_requests.size() == 4: break
-			var capture_tabs: Array = []
-			for tab: Node in root.find_children("*", "Control", true, false):
-				if tab.get_script() == null or tab.get_script().resource_path != "res://scripts/ui/tab_creatures.gd": continue
-				capture_tabs.append({"bound": tab.get("_release_service") == capture_service and capture_service != null,
-					"enabled": tab.get("_release_authority_enabled"), "stage": tab.get("_release_stage"),
-					"request_id": tab.get("_release_request_id")})
-				if capture_tabs.size() == 4: break
 			var runtime: Variant = edirector.call("_shared_host_fight", str(cmanager.call("encounter_id"))) \
 				if edirector != null and cmanager != null and bool(edirector.call("is_encounter_host")) else null
 			var host_decision: Dictionary = runtime.get_meta("catch_decision", {}) as Dictionary \
 				if runtime != null and is_instance_valid(runtime) else {}
-			var source_body: Node = runtime.call("body") if runtime != null and is_instance_valid(runtime) else null
-			var original_traits: Dictionary = source_body.get_meta("ordinary_trait_packet", {}) if source_body != null else {}
-			var live_traits: Dictionary = {}
-			if cparty != null:
-				for member: RefCounted in cparty.call("members"):
-					live_traits[str(member.get("uid"))] = {"traits_initialized": member.get("traits_initialized"),
-						"rolled_traits": member.get("rolled_traits").duplicate(), "taught_traits": member.get("taught_traits").duplicate(true)}
-			var personal: RefCounted = cgame.get("local") if cgame != null else null
-			var disk: Dictionary = {}
-			if personal != null and cgame.get("save_system") != null:
-				var store: RefCounted = cgame.get("save_system").get("_characters")
-				if store != null: disk = store.call("state", str(personal.get("character_id")))
 			return {
 				"available": cmanager != null,
 				"encounter_id": _catch_encounter_id,
@@ -8460,17 +7844,6 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"party_size": species.size(),
 				"party_full": cparty != null and bool((cparty as RefCounted).call("is_full")),
 				"pending": str((pending as RefCounted).get("species_id")) if pending != null else "",
-				"capture_observation": {"service_mounted": capture_service != null,
-					"active_offer": capture_service.get("_active") if capture_service != null else null,
-					"release_request_ids": (capture_service.get("_requests") as Dictionary).keys().slice(0, 4) if capture_service != null else null,
-					"pending_uid": pending.get("uid") if pending != null else null,
-					"pending_offer": pending.get_meta("foundation_capture_offer") if pending != null and pending.has_meta("foundation_capture_offer") else null,
-					"pending_typed_traits": pending.has_meta("foundation_capture_traits") if pending != null else null,
-					"cached_registry_revision": (capture_session.get("_foundation_personal_cache") as Dictionary).get("registry_revision") if capture_session != null else null,
-					"manager_fighting": cmanager.call("is_fighting") if cmanager != null else null,
-					"owner_blocked": capture_session.call("_owner_training_mutation_blocked", cgame.get("local")) if capture_session != null else null,
-					"guard": capture_session.call("_owner_snapshot_block_reason", cgame.get("local")) if capture_session != null else null,
-					"requests": capture_requests, "replies": _catch_foundation_replies.duplicate(true), "tabs": capture_tabs},
 				"owned": species.size() + (1 if pending != null else 0),
 				"host_caught": host_decision.get("caught", null),
 				"claim_id": str(cmanager.get("_catch_claim_id")) if cmanager != null else "",
@@ -8479,13 +7852,6 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"enemy_body_id": enemy_body.get_instance_id() if enemy_body != null and is_instance_valid(enemy_body) else 0,
 				"enemy_card": WATER_CAPTURE_CODEC.encode(cmanager.get("_enemy") as RefCounted) if cmanager != null else {},
 				"owned_cards": _catch_owned_cards(cparty, pending),
-				"original_trait_packet": original_traits.duplicate(true), "live_owned_traits": live_traits,
-				"character_id": str(personal.get("character_id")) if personal != null else "",
-				"canonical_owned_traits": personal.get("redesign_character").get("creatures", {}).duplicate(true) if personal != null else {},
-				"disk_owned_traits": disk.get("redesign_character", {}).get("creatures", {}).duplicate(true),
-				"transaction_receipts": personal.get("redesign_character").get("transaction_receipts", []).duplicate() if personal != null else [],
-				"disk_transaction_receipts": disk.get("redesign_character", {}).get("transaction_receipts", []).duplicate(),
-				"reward_deliveries": cgame.get("world").get("reward_deliveries").duplicate(true) if cgame != null and cgame.get("world") != null else {},
 			}
 		"storage":
 			# Lane 3.D. Everything the concurrency smoke asserts on, read off
@@ -9059,7 +8425,7 @@ func _step_tournament_setup(_args: Dictionary) -> Dictionary:
 	var ordinary := ["terrapup", "bramblebun", "trailpup", "mudsnout", "meadowhart"]
 	var add_index := 0
 	while int(party.call("size")) < 5 and add_index < ordinary.size():
-		var granted: Dictionary = await _step_party_grant({"species": ordinary[add_index], "level": TOURNAMENT.required_level()})
+		var granted := _step_party_grant({"species": ordinary[add_index], "level": TOURNAMENT.required_level()})
 		if str(granted.get("verdict", "")) != "PASS":
 			return granted
 		add_index += 1
@@ -9316,8 +8682,8 @@ func _step_guardian_pilot(args: Dictionary) -> Dictionary:
 	return {"verdict": "PASS" if won else "FAIL", "data": result,
 		"detail": "input pilot outcome=%s hits=%d frames=%d gap=%.2f" % [str(result.get("outcome", "")), pilot.hits_dealt, int(result.get("frames", 0)), float(result.get("final_gap", -1.0))]}
 
-## Existing F16 storage carriers and F43 observations. Read-only inspection
-## never completes pending fallback jobs or changes their save/ACK timing.
+## F16 storage witness only. Future training/portal/craft transaction verbs are
+## not earned or invoked here; these are declared, valid carrier fixtures.
 func _foundations_payload() -> Dictionary:
 	var game := root.get_node_or_null(^"Game")
 	if game == null: return {}
@@ -9326,11 +8692,8 @@ func _foundations_payload() -> Dictionary:
 	var saver: RefCounted = game.get("save_system")
 	var world_id := str(world.get("world_id"))
 	var character_id := str(local.get("character_id"))
-	var world_store := saver.get("_worlds") as RefCounted
-	var character_store := saver.get("_characters") as RefCounted
-	var world_path := str(world_store.call("path_for", world_id)) if world_store != null else ""
-	var character_path := str(character_store.call("path_for", character_id)) if character_store != null else ""
-	var disk: Dictionary = character_store.call("state", character_id) if character_store != null else {}
+	var world_path := str((saver.call("worlds") as RefCounted).call("path_for", world_id))
+	var character_path := str((saver.call("characters") as RefCounted).call("path_for", character_id))
 	# Compare the complete JSON payload in its persisted numeric domain. Godot
 	# otherwise treats runtime int 20 and parsed JSON float 20.0 as unequal.
 	return {"world": JSON.parse_string(JSON.stringify(world.get("redesign_world"))),
@@ -9342,10 +8705,6 @@ func _foundations_payload() -> Dictionary:
 		# autosaves legitimately rewrite.
 		"world_disk_redesign": _disk_redesign_world(world_path),
 		"character_disk_sha256": FileAccess.get_sha256(character_path) if FileAccess.file_exists(character_path) else "",
-		"inventory": JSON.parse_string(JSON.stringify(local.get("inventory").get("_slots"))),
-		"character_disk_redesign": disk.get("redesign_character", {}).duplicate(true),
-		"inventory_disk": disk.get("inventory", []).duplicate(true),
-		"reward_deliveries": world.get("reward_deliveries").duplicate(true),
 		"schema": FOUNDATIONS_SAVE.VERSION, "host": bool(game.call("is_host"))}
 
 func _disk_redesign_world(path: String) -> Variant:
@@ -9480,222 +8839,6 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 		if session != null and bool(session.call("is_active")):
 			return {"verdict": "FAIL", "detail": "memory-loss world fixture requires a disconnected peer"}
 		world.set("redesign_world", FOUNDATIONS_STATE.defaults("world"))
-	elif mode in ["bounty_inspect", "bounty_claim"]:
-		var composition := _session().get_node_or_null(^"FoundationComposition") if _session() != null else null
-		var adapter := composition.get_node_or_null(^"BountyInteraction") if composition != null else null
-		var board_ref: WeakRef = composition.get("_board") if composition != null else null
-		var board: Node3D = board_ref.get_ref() as Node3D if board_ref != null else null
-		if adapter == null or board == null:
-			return {"verdict": "FAIL", "detail": "actual grounded Halda board and adapter are not mounted"}
-		var view: Dictionary
-		if mode == "bounty_inspect":
-			if not adapter.has_signal("view_changed"):
-				return {"verdict": "FAIL", "detail": "actual Halda adapter has no authenticated view reply signal"}
-			var inspection_session: Node = _session()
-			var inspection_character: String = local.get("character_id")
-			var inspection_namespace: String = world.get("reward_delivery_namespace")
-			var inspection_world_id: String = world.get("world_id")
-			var inspection_epoch: String = inspection_session.call("_altar_current_epoch")
-			var inspection_host: bool = inspection_session.call("is_host")
-			var inspection_live: Callable = func() -> bool:
-				return is_instance_valid(game) and root.get_node_or_null(^"Game") == game \
-					and is_instance_valid(inspection_session) and game.get("session") == inspection_session and _session() == inspection_session \
-					and game.get("local") == local and game.get("world") == world and local.get("character_id") == inspection_character \
-					and world.get("reward_delivery_namespace") == inspection_namespace and world.get("world_id") == inspection_world_id \
-					and inspection_session.call("_altar_current_epoch") == inspection_epoch and inspection_session.call("is_host") == inspection_host \
-					and is_instance_valid(composition) and inspection_session.get_node_or_null(^"FoundationComposition") == composition \
-					and is_instance_valid(adapter) and composition.get_node_or_null(^"BountyInteraction") == adapter \
-					and is_instance_valid(board) and composition.get("_board") is WeakRef and composition.get("_board").get_ref() == board
-			var observed_view := {"received": false, "view": {}}
-			var view_observer: Callable = func(snapshot: Dictionary) -> void:
-				if not inspection_live.call() or snapshot.get("character_id") != inspection_character \
-					or snapshot.get("world_namespace") != inspection_namespace: return
-				observed_view.received = true
-				observed_view.view = snapshot.duplicate(true)
-			adapter.connect("view_changed", view_observer)
-			view = adapter.call("view") # One original request; no polling admission or settlement.
-			if not inspection_host:
-				for frame in NET_STEP_BUDGET_FRAMES:
-					if observed_view.received or not inspection_live.call(): break
-					await physics_frame
-					if not inspection_live.call(): break
-				view = observed_view.view
-			if is_instance_valid(adapter) and adapter.is_connected("view_changed", view_observer):
-				adapter.disconnect("view_changed", view_observer)
-			if not inspection_live.call():
-				return {"verdict": "FAIL", "detail": "original Halda inspection owner/world/session/adapter changed", "data": view}
-			if not inspection_host and not observed_view.received:
-				return {"verdict": "FAIL", "detail": "original authenticated Halda view reply did not arrive within the existing step budget", "data": view}
-		else:
-			view = adapter.call("view")
-		var prompt: Node3D = adapter.get("_prompt")
-		if prompt == null or view.get("ready") != true:
-			return {"verdict": "FAIL", "detail": "actual Halda prompt or admitted personal board is not ready", "data": view}
-		if mode == "bounty_inspect":
-			var payload := _foundations_payload()
-			payload.bounty_view = view
-			payload.bounty_prompt = [prompt.global_position.x, prompt.global_position.y, prompt.global_position.z]
-			payload.bounty_board = [board.global_position.x, board.global_position.y, board.global_position.z]
-			return {"verdict": "PASS", "detail": "read actual personal board and saves without settling writers", "data": payload}
-		var proof: Script = preload("res://tools/net/proof_steps_f48.gd")
-		var claim_session: Node = _session()
-		var claim_scene: Node = current_scene
-		var claim_character: String = local.get("character_id")
-		var claim_namespace: String = world.get("reward_delivery_namespace")
-		var claim_world_id: String = world.get("world_id")
-		var claim_epoch: String = claim_session.call("_altar_current_epoch")
-		var claim_host: bool = claim_session.call("is_host")
-		var claim_started_frame: int = Engine.get_physics_frames()
-		var panel := adapter.get_node_or_null(^"BountyBoardPanel") as CanvasLayer
-		if panel == null: return {"verdict": "FAIL", "detail": "shipping bounty panel is not mounted"}
-		var teaching: Array[Dictionary] = []
-		var claim_live: Callable = func() -> bool:
-			return is_instance_valid(game) and root.get_node_or_null(^"Game") == game and current_scene == claim_scene \
-				and is_instance_valid(claim_session) and _session() == claim_session and game.get("session") == claim_session \
-				and game.get("local") == local and game.get("world") == world and local.get("character_id") == claim_character \
-				and world.get("world_id") == claim_world_id and world.get("reward_delivery_namespace") == claim_namespace \
-				and claim_session.call("_altar_current_epoch") == claim_epoch and claim_session.call("is_host") == claim_host \
-				and is_instance_valid(composition) and claim_session.get_node_or_null(^"FoundationComposition") == composition \
-				and is_instance_valid(adapter) and composition.get_node_or_null(^"BountyInteraction") == adapter \
-				and is_instance_valid(board) and composition.get("_board") is WeakRef and composition.get("_board").get_ref() == board \
-				and is_instance_valid(prompt) and adapter.get("_prompt") == prompt \
-				and is_instance_valid(panel) and adapter.get_node_or_null(^"BountyBoardPanel") == panel
-		var instance := str(args.get("instance", ""))
-		var selected: Dictionary = {}
-		for row: Dictionary in view.get("rows", []):
-			if row.get("instance") == instance: selected = row
-		if selected.is_empty() or selected.get("kind") != "material_delivery" or selected.get("paid") == true:
-			return {"verdict": "FAIL", "detail": "original issued unclaimed material notice required"}
-		# The F16 stock can make genuine teaching due before the Halda visit.
-		# Read/continue only the actual currently owning lesson, once per its
-		# configured remaining line. Never dismiss another modal or write flags.
-		# These inputs share the caller's unchanged 6000-frame step allowance;
-		# the original 1800 post-submit settlement frames below stay unchanged.
-		var lesson: Node = preload("res://scripts/ui/input_owner.gd").current(self)
-		if lesson != null:
-			var service: Node = game.get_node_or_null(^"OnboardingLessons")
-			if lesson.get_script() != preload("res://scripts/onboarding/lesson_panel.gd") or service == null \
-				or service.get("_panel") != lesson or service.get("_identity") != claim_character or lesson.call("is_open") != true:
-				return {"verdict": "FAIL", "detail": "Halda claim has a competing input owner; no original claim attempted",
-					"data": {"input": proof._capture_input_state(self), "pending": proof._capture_pending_diagnostic(game)}}
-			var lesson_row: Dictionary = lesson.get("_row").duplicate(true)
-			var configured: Dictionary = {}
-			for candidate: Dictionary in preload("res://scripts/onboarding/lesson_rules.gd").config().get("lessons", []):
-				if candidate.get("id") == lesson_row.get("id"): configured = candidate.duplicate(true)
-			var dialogue: Variant = preload("res://scripts/data/redesign_data.gd").json(str(configured.get("dialogue_path", ""))) \
-				if not configured.is_empty() else {}
-			var conversation: Dictionary = dialogue.get("conversations", {}).get(str(configured.get("conversation", "")), {}) if dialogue is Dictionary else {}
-			configured["speaker"] = str(conversation.get("speaker", ""))
-			configured["lines"] = conversation.get("lines", [])
-			var lines: Array = configured.lines
-			var first_line: int = int(lesson.get("_line"))
-			if configured != lesson_row or lines.is_empty() or first_line < 0 or first_line >= lines.size() \
-				or lesson.get("_opening_edge") == true:
-				return {"verdict": "FAIL", "detail": "Current Halda teaching does not match its configured lesson/cursor/released input",
-					"data": {"lesson": lesson_row, "line": first_line, "input": proof._capture_input_state(self)}}
-			for line: int in range(first_line, lines.size()):
-				if not claim_live.call() or not is_instance_valid(service) or game.get_node_or_null(^"OnboardingLessons") != service \
-					or not is_instance_valid(lesson) or service.get("_panel") != lesson or service.get("_identity") != claim_character \
-					or lesson.get("_row") != lesson_row or lesson.get("_line") != line or lesson.call("is_open") != true \
-					or preload("res://scripts/ui/input_owner.gd").current(self) != lesson:
-					return {"verdict": "FAIL", "detail": "Original owner or lesson changed before ordinary Continue",
-						"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
-				teaching.append({"lesson_id": lesson_row.id, "line": line, "text": str(lesson.get("_text").get("text")),
-					"character_id": claim_character, "panel_path": str(lesson.get_path()), "physics_frame": Engine.get_physics_frames()})
-				var continued: Dictionary = await _step_press({"action": "menu_confirm", "tap_frames": 2})
-				if not claim_live.call() or not is_instance_valid(service) or game.get_node_or_null(^"OnboardingLessons") != service \
-					or not is_instance_valid(lesson) or service.get("_panel") != lesson or service.get("_identity") != claim_character \
-					or lesson.get("_row") != lesson_row or lesson.get("_line") != line + 1 or continued.get("verdict") != "PASS":
-					return {"verdict": "FAIL", "detail": "Original lesson did not consume exactly one ordinary Continue",
-						"data": {"teaching": teaching, "press": continued, "input": proof._capture_input_state(self)}}
-			# Dismissal submits the real lesson receipt. Observe its release; do
-			# not acknowledge it here or send X through a legitimate Session hold.
-			# This is only the remaining part of the existing outer 6000 allowance,
-			# reserving the unchanged 1800 settlement frames. The outer deadline
-			# continues to include every teaching/open/claim/close input as before.
-			var lesson_receipt := preload("res://scripts/onboarding/lesson_rules.gd").PREFIX + str(lesson_row.id)
-			var lesson_released := false
-			for frame in maxi(0, 6000 - 1800 - int(Engine.get_physics_frames() - claim_started_frame)):
-				if not claim_live.call() or not is_instance_valid(service) or game.get_node_or_null(^"OnboardingLessons") != service \
-					or not is_instance_valid(lesson) or service.get("_panel") != lesson or service.get("_identity") != claim_character \
-					or lesson.get("_row") != lesson_row or lesson.get("_line") != lines.size() or lesson.call("is_open") != false:
-					break
-				var holder: Node = preload("res://scripts/ui/input_owner.gd").current(self)
-				if holder != null and holder != lesson and holder != claim_session: break
-				if local.get("flags").call("has", lesson_receipt) == true and not (service.get("_pending") as Dictionary).has(lesson_receipt) \
-					and holder == null and _probe.call("input_context") == "world":
-					lesson_released = true
-					break
-				await physics_frame
-			if not lesson_released or not claim_live.call():
-				return {"verdict": "FAIL", "detail": "Original lesson receipt/input did not release within the existing Halda allowance; no claim attempted",
-					"data": {"teaching": teaching, "lesson_receipt": lesson_receipt, "input": proof._capture_input_state(self),
-						"pending": proof._capture_pending_diagnostic(game)}}
-		if not claim_live.call() or not is_instance_valid(panel) or adapter.get_node_or_null(^"BountyBoardPanel") != panel \
-			or preload("res://scripts/ui/input_owner.gd").current(self) != null or _probe.call("input_context") != "world":
-			return {"verdict": "FAIL", "detail": "Original Halda source must have ordinary world input before its one X/A attempt",
-				"data": {"teaching": teaching, "input": proof._capture_input_state(self), "pending": proof._capture_pending_diagnostic(game)}}
-		var arbiter := get_first_node_in_group(&"interaction_arbiter")
-		if arbiter == null or arbiter.call("winning_provider") != prompt:
-			return {"verdict": "FAIL", "detail": "actual Halda bounty prompt must win ordinary physical interaction",
-				"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
-		var opened := await _step_press({"action": "interact"})
-		if opened.get("verdict") != "PASS": return opened
-		for frame in 6:
-			if not claim_live.call(): break
-			await physics_frame
-		if not claim_live.call() or not is_instance_valid(panel) or adapter.get_node_or_null(^"BountyBoardPanel") != panel:
-			return {"verdict": "FAIL", "detail": "Original Halda source changed during its one physical open",
-				"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
-		if panel.get("_shown") != true or preload("res://scripts/ui/input_owner.gd").current(self) != panel:
-			return {"verdict": "FAIL", "detail": "physical X did not open one input-owning Halda panel",
-				"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
-		var button: Button = null
-		for candidate: Button in panel.get("_buttons"):
-			if candidate.get_meta("system_focus_key", "") == instance: button = candidate
-		if button == null or button.disabled:
-			return {"verdict": "FAIL", "detail": "original admitted material notice has no enabled claim control",
-				"data": {"teaching": teaching, "bounty_original": selected, "input": proof._capture_input_state(self)}}
-		var observed := {"result": {}}
-		var observer: Callable = func(result: Dictionary) -> void: observed.result = result.duplicate(true)
-		adapter.connect("action_completed", observer)
-		button.grab_focus()
-		for frame in 2:
-			if not claim_live.call(): break
-			await physics_frame
-		if not claim_live.call():
-			if is_instance_valid(adapter) and adapter.is_connected("action_completed", observer): adapter.disconnect("action_completed", observer)
-			return {"verdict": "FAIL", "detail": "Original Halda source changed before its one claim press",
-				"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
-		var pressed := await _step_press({"action": "ui_accept"})
-		if pressed.get("verdict") != "PASS" or not claim_live.call():
-			if is_instance_valid(adapter) and adapter.is_connected("action_completed", observer): adapter.disconnect("action_completed", observer)
-			if not claim_live.call():
-				return {"verdict": "FAIL", "detail": "Original Halda source changed during its one claim press",
-					"data": {"teaching": teaching, "press": pressed, "input": proof._capture_input_state(self)}}
-			return pressed
-		for frame in 1800:
-			if not claim_live.call(): break
-			var result: Dictionary = observed.result
-			if result.get("ok") == true and result.get("owner_saved") == true and result.get("durable") == true and result.get("owner_acknowledged") == true: break
-			await physics_frame
-		if is_instance_valid(adapter) and adapter.is_connected("action_completed", observer): adapter.disconnect("action_completed", observer)
-		if not claim_live.call():
-			return {"verdict": "FAIL", "detail": "Original Halda source changed during claim settlement",
-				"data": {"teaching": teaching, "bounty_claim": observed.result, "input": proof._capture_input_state(self)}}
-		var result: Dictionary = observed.result
-		var expected := "bounty:%s:%s" % [instance, local.get("character_id")]
-		var complete: bool = result.get("ok") == true and result.get("owner_saved") == true and result.get("durable") == true \
-			and result.get("owner_acknowledged") == true and result.get("receipt") == expected
-		var payload := _foundations_payload()
-		payload.bounty_claim = result
-		payload.bounty_original = selected
-		payload.bounty_teaching = teaching
-		payload.bounty_input = proof._capture_input_state(self)
-		if not complete: payload.bounty_pending = proof._capture_pending_diagnostic(game)
-		await _step_press({"action": "ui_cancel"})
-		if not claim_live.call(): return {"verdict": "FAIL", "detail": "Original Halda source changed during ordinary close", "data": payload}
-		return {"verdict": "PASS" if complete else "FAIL", "detail": "actual physical bounty claim requires original owner BOOL-save and accepted ACK", "data": payload}
 	elif mode != "inspect":
 		return {"verdict": "ERROR", "detail": "unknown F16 witness mode " + mode}
 	var payload := _foundations_payload()

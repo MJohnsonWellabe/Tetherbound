@@ -48,7 +48,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 				data["owner_before_difference"] = _json_difference(data.owner_training_row.get("before"), data.owner_projection)
 				data["owner_after_difference"] = _json_difference(data.owner_training_row.get("after"), data.owner_projection)
 			if captured.get("verdict") == "PASS" and args.get("role") == "guest":
-				var presentation: Dictionary = await _finish_capture_presentation(tree, int(data.get("capture_started_physics_frame", -1)))
+				var presentation: Dictionary = await _finish_capture_presentation(tree)
 				data["presentation_exit"] = presentation.get("data", {})
 				captured["data"] = data
 				if presentation.get("verdict") != "PASS":
@@ -503,9 +503,7 @@ static func _saved_edge_errors(edge: Dictionary) -> Array[String]:
 				errors.append(scope + ": exact portal owner codec/key debit/unlock/receipt not persisted")
 		else:
 			var full: Dictionary = RECORD_RULES.portable_projection(carrier) if RECORD_RULES.training_version(row) in [2, 3] \
-				else preload("res://scripts/creatures/essence.gd").training_projection(carrier)
-			if row.get("kind") == "altar_building" and full.get("party") is Array:
-				full.party = full.party.map(RECORD_RULES.portable_card)
+				else {"inventory": carrier.get("inventory"), "party": carrier.get("party"), "redesign_character": carrier.get("redesign_character")}
 			if not _json_equal(full, row.get("after")):
 				errors.append(scope + ": complete canonical carrier differs from actual immutable row.after at owner BOOL-save edge")
 	if row.get("kind") == "portal_unlock":
@@ -848,16 +846,13 @@ static func _capture_pending_diagnostic(game: Node) -> Dictionary:
 		data[field.trim_prefix("_")] = observation
 	return data
 
-static func _finish_capture_presentation(tree: SceneTree, capture_started_frame: int) -> Dictionary:
+static func _finish_capture_presentation(tree: SceneTree) -> Dictionary:
 	# An accepted free-slot catch leaves the real Creatures menu open. Finish
 	# that presentation with ordinary input only after all catch work settled.
 	var game := tree.root.get_node_or_null(^"Game")
 	var captures := game.get_node_or_null(^"Session/FoundationComposition/Captures") if game != null else null
 	var before := _capture_input_state(tree)
-	var data := {"before": before, "ordinary_cancel": false,
-		"capture_started_physics_frame": capture_started_frame, "capture_budget_frames": 600, "modal_release_frames": 15}
-	if capture_started_frame < 0:
-		return _result(false, "Original catch observation timeline is unavailable", data)
+	var data := {"before": before, "ordinary_cancel": false}
 	if game == null or game.session == null or captures == null \
 		or captures.get_script() != preload("res://scripts/net/foundation_capture.gd") \
 		or game.pending_catch != null or not before.capture_active.is_empty() or before.capture_requests != 0 \
@@ -875,37 +870,20 @@ static func _finish_capture_presentation(tree: SceneTree, capture_started_frame:
 	var epoch := str(session.call("_altar_current_epoch"))
 	var local: RefCounted = game.local
 	var world: RefCounted = game.world
-	var character: String = local.character_id
-	var namespace_id: String = world.reward_delivery_namespace
-	data["close_started_physics_frame"] = Engine.get_physics_frames()
 	var pressed: Dictionary = await tree.call("_step_press", {"action": "menu_cancel"})
 	data["ordinary_cancel"] = true
 	data["press"] = pressed.duplicate(true)
-	if pressed.get("verdict") != "PASS":
-		data["pending_diagnostic"] = _capture_pending_diagnostic(game)
-		return _result(false, "Ordinary settled-catch menu close input failed", data)
-	var released := false
-	while true:
-		# This binding check follows the press await and every frame await.
-		# A fresh owner/session/world cannot satisfy the original catch's close.
-		var source_live: bool = is_instance_valid(game) and is_instance_valid(session) and is_instance_valid(captures) and is_instance_valid(owner) \
-			and tree.root.get_node_or_null(^"Game") == game and game.session == session and game.local == local and game.world == world \
-			and session.call("_altar_current_epoch") == epoch and local.character_id == character and world.reward_delivery_namespace == namespace_id \
-			and game.get_node_or_null(^"Session/FoundationComposition/Captures") == captures
-		if not source_live: break
-		# Fifteen frames are a release allowance, not a mandatory delay before
-		# observing a real release. The physical tap already awaited its edge.
-		# Sample only inside the SAME original throw + 600 + 15 timeline.
-		if Engine.get_physics_frames() - capture_started_frame - 15 > 600: break
-		var after := _capture_input_state(tree)
-		data["after"] = after
-		released = INPUT_OWNER.current(tree) == null and after.context == "world" and owner.call("is_open") == false \
-			and game.pending_catch == null and after.capture_active.is_empty() and after.capture_requests == 0 \
-			and session.call("_owner_training_mutation_blocked", game.local) != true
-		if released or Engine.get_physics_frames() - capture_started_frame - 15 >= 600: break
-		await tree.physics_frame
-	data["observed_physics_frame"] = Engine.get_physics_frames()
-	if not released: data["pending_diagnostic"] = _capture_pending_diagnostic(game)
+	if pressed.get("verdict") != "PASS": return _result(false, "Ordinary settled-catch menu close input failed", data)
+	for _frame: int in 15: await tree.physics_frame # Existing modal release wait; no deadline extension.
+	var after := _capture_input_state(tree)
+	data["after"] = after
+	var released: bool = is_instance_valid(game) and is_instance_valid(session) and is_instance_valid(captures) and is_instance_valid(owner) \
+		and tree.root.get_node_or_null(^"Game") == game and game.session == session and game.local == local and game.world == world \
+		and session.call("_altar_current_epoch") == epoch \
+		and game.get_node_or_null(^"Session/FoundationComposition/Captures") == captures \
+		and INPUT_OWNER.current(tree) == null and after.context == "world" and owner.call("is_open") == false \
+		and game.pending_catch == null and after.capture_active.is_empty() and after.capture_requests == 0 \
+		and session.call("_owner_training_mutation_blocked", game.local) != true
 	return _result(released, "Ordinary settled-catch menu close must restore actual world input before onward interaction", data)
 
 
@@ -1201,38 +1179,6 @@ static func _witness(tree: SceneTree, args: Dictionary) -> Dictionary:
 	_phase(label, "observed", started)
 	if data.is_empty() or data.disk.is_empty():
 		return await _sealed_reply(tree, "f48_witness", args, _result(false, "Actual durable character file unavailable", data))
-	# The explicit producer's initial guest input predates the finite Home Key
-	# runtime. Admission settles that authentic grant before the operation's
-	# bystander baseline; never grant, save, ACK or alter the later equalities.
-	var admission_game: Node = tree.root.get_node_or_null(^"Game")
-	var disk_flags: Array = data.disk.get("flags", {}).get("flags", [])
-	if producer and label == "initial-bootstrap" and admission_game != null \
-			and admission_game.session.call("is_host") == false \
-			and disk_flags.has("opening:beat:walk_out") and not disk_flags.has("home_key_given"):
-		var opening: Script = preload("res://scripts/net/opening_home_key.gd")
-		var gift_id: String = preload("res://scripts/net/reward_delivery.gd").delivery_id(
-			str(data.world_namespace), "home_key:grant:" + str(data.character_id), str(data.character_id))
-		var settled: bool = false
-		# Same 3000-frame default step allowance; coordinator budgets unchanged.
-		for frame: int in 3000:
-			var gift: Variant = admission_game.world.reward_deliveries.get(gift_id)
-			var edge: Dictionary = tree.get_meta("f48_latest_owner_save", {})
-			var row: Dictionary = edge.get("row", {})
-			if gift is Dictionary and gift.get("status") == "accepted" \
-					and opening.valid_row(gift, admission_game.world, str(data.character_id)) \
-					and opening.owner_physically_settled(admission_game.local, gift_id) \
-					and row.get("action") == "home_key_deliver" \
-					and row.get("intent", {}).get("delivery_id") == gift_id:
-				var admitted: Dictionary = _observe(tree)
-				if _snapshot_errors(tree, admitted).is_empty():
-					data = admitted
-					settled = true
-					break
-			await tree.physics_frame
-		if not settled:
-			return await _sealed_reply(tree, "f48_witness", args, _result(false,
-				"Authentic legacy Home Key admission did not reach owner BOOL-save and accepted journal within original step budget", _observe(tree)))
-		_phase(label, "authentic_admission_settled_before_baseline", started)
 	if not label.is_empty() and not _remember(tree, label, data, producer):
 		return await _sealed_reply(tree, "f48_witness", args, _result(false, "Actual full-card witness anchor refused", data))
 	_phase(label, "remembered", started)
@@ -1855,17 +1801,13 @@ static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary
 			if edge.row.get("status") != "pending" or not _json_equal(pending, accepted) \
 				or _digest(str(edge.path)) != edge.sha256:
 				errors.append("Exact immutable original saved row/edge artifact changed")
-		var host_party: Variant = host_edge.files.memory.get("party")
-		if host_party is Array: host_party = host_party.map(RECORD_RULES.portable_card)
-		var host_before := {"inventory": host_edge.files.memory.get("inventory"), "party": host_party,
+		var host_before := {"inventory": host_edge.files.memory.get("inventory"), "party": host_edge.files.memory.get("party"),
 			"redesign_character": host_edge.files.memory.get("redesign_character")}
 		if not _json_equal(row.get("before"), host_before):
 			errors.append("Full original before carrier differs from actual host writer edge")
 		for scope: String in ["memory", "disk"]:
 			var saved: Dictionary = owner_edge.files[scope]
-			var owner_party: Variant = saved.get("party")
-			if owner_party is Array: owner_party = owner_party.map(RECORD_RULES.portable_card)
-			var projection := {"inventory": saved.get("inventory"), "party": owner_party, "redesign_character": saved.get("redesign_character")}
+			var projection := {"inventory": saved.get("inventory"), "party": saved.get("party"), "redesign_character": saved.get("redesign_character")}
 			if not _json_equal(row.get("after"), projection):
 				errors.append(scope + ": full original after carrier differs at actual owner BOOL-save edge")
 	if not row.get("before") is Dictionary or not row.get("after") is Dictionary \
@@ -1887,9 +1829,7 @@ static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary
 		# Disk must still hold the original complete saved row. Live care resumes
 		# later; its full values remain in now and the sealed owner-edge evidence.
 		if scope == "disk":
-			var disk_party: Variant = state.get("party")
-			if disk_party is Array: disk_party = disk_party.map(RECORD_RULES.portable_card)
-			var projection := {"inventory": state.get("inventory"), "party": disk_party, "redesign_character": state.get("redesign_character")}
+			var projection := {"inventory": state.get("inventory"), "party": state.get("party"), "redesign_character": state.get("redesign_character")}
 			if not _json_equal(row.get("after"), projection): errors.append("Latest disk differs from complete authenticated after carrier")
 	if not _json_equal(row.before.get("inventory"), prior.memory.get("inventory")) \
 		or not _json_equal(row.before.get("redesign_character"), prior.memory.get("redesign_character")):
@@ -1906,9 +1846,7 @@ static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary
 		var edge_disk: Dictionary = owner_edge.get("files", {}).get("disk", {})
 		for label: String in ["owner_edge_disk", "latest_disk"]:
 			var saved: Dictionary = edge_disk if label == "owner_edge_disk" else now.disk
-			var diagnostic_party: Variant = saved.get("party")
-			if diagnostic_party is Array: diagnostic_party = diagnostic_party.map(RECORD_RULES.portable_card)
-			var projection := {"inventory": saved.get("inventory"), "party": diagnostic_party, "redesign_character": saved.get("redesign_character")}
+			var projection := {"inventory": saved.get("inventory"), "party": saved.get("party"), "redesign_character": saved.get("redesign_character")}
 			differences[label] = _json_difference(row.get("after"), projection)
 		differences["disk_journal"] = _json_difference(row, now.disk_world.get("reward_deliveries", {}).get(id))
 		for building: Variant in now.disk_world.get("placed_buildings", []):
@@ -1923,33 +1861,7 @@ static func _button(tree: SceneTree, args: Dictionary) -> Dictionary:
 	# no Button.pressed.emit(), no private _cook/_feed/submit adapters.
 	var matches: Array[Button] = []
 	var text := str(args.get("text", ""))
-	var master_uid := str(args.get("master_creature_uid", ""))
-	var census_root: Node = tree.root
-	if args.has("master_creature_uid"):
-		var chooser: Node = INPUT_OWNER.current(tree)
-		var game := tree.root.get_node_or_null(^"Game")
-		var local: RefCounted = game.get("local") if game != null else null
-		if args.has("text") or args.has("feast_recipe") \
-				or not preload("res://scripts/creatures/creature_instance.gd").valid_uid(master_uid) \
-				or chooser == null or chooser.get_script() != preload("res://scripts/masters/breakthrough_panel.gd") \
-				or chooser.get("_mode") != "duel" or local == null:
-			return _result(false, "Master UID input requires the actual owned duel chooser")
-		var source: Node = chooser.get("_source")
-		var service: Node = chooser.get("_service")
-		if not is_instance_valid(source) or source.get_script() != preload("res://scripts/masters/master_site.gd") \
-				or source.get("_mounted") != true or source.get("master_id") != chooser.get("_master") \
-				or not is_instance_valid(service) or service.get_script() != preload("res://scripts/masters/breakthrough_service.gd") \
-				or service.get("_panel") != chooser or source.get_meta("breakthrough_service", null) != service:
-			return _result(false, "Master UID input requires its actual mounted site and service")
-		var view: Dictionary = service.call("view")
-		var owned := 0
-		for card: Dictionary in view.get("party", []):
-			if card.get("uid") == master_uid and card.get("fainted") == false \
-					and card.get("resting") == false and float(card.get("hp", 0)) > 0: owned += 1
-		if view.get("character_id") != local.get("character_id") or owned != 1:
-			return _result(false, "Master UID input requires one conscious companion of the actual character")
-		census_root = chooser
-	elif args.has("feast_recipe"):
+	if args.has("feast_recipe"):
 		if args.get("feast_recipe") != "feast_t1_ground" or args.has("text"):
 			return _result(false, "Only exact original ground feast recipe label may be resolved")
 		var recipes: Dictionary = preload("res://scripts/creatures/breakthrough.gd").feasts().get("recipes", {})
@@ -1958,7 +1870,7 @@ static func _button(tree: SceneTree, args: Dictionary) -> Dictionary:
 		# Same visible shipping label construction, without assuming a cross-
 		# platform Dictionary number rendering; input still presses real button.
 		text = str(recipe.name) + " · " + str(recipe.cost)
-	_collect_buttons(census_root, text, matches, master_uid)
+	_collect_buttons(tree.root, text, matches)
 	if matches.size() != 1:
 		var failure: Dictionary = _result(false, "Need exactly one visible enabled button: " + str(args.get("text", "")))
 		var snapshot: Dictionary = _button_failure_snapshot(tree, text, matches)
@@ -2120,8 +2032,7 @@ static func _collect_choices(node: Node, uid: String, choices: Array[OptionButto
 				break
 	for child: Node in node.get_children(): _collect_choices(child, uid, choices)
 
-static func _collect_buttons(node: Node, text: String, matches: Array[Button], master_uid: String = "") -> void:
-	if node is Button and node.is_visible_in_tree() and not node.disabled:
-		if (node.get_meta("master_challenger_uid", "") == master_uid if not master_uid.is_empty() else node.text == text):
-			matches.append(node)
-	for child: Node in node.get_children(): _collect_buttons(child, text, matches, master_uid)
+static func _collect_buttons(node: Node, text: String, matches: Array[Button]) -> void:
+	if node is Button and node.is_visible_in_tree() and not node.disabled and node.text == text:
+		matches.append(node)
+	for child: Node in node.get_children(): _collect_buttons(child, text, matches)

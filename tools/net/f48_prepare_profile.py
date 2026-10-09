@@ -39,7 +39,7 @@ def produce(source: Path, output: Path):
         routes[f"hub_{peer}"]=copy.deepcopy(routes["essence_spend_prepare"])+[button("Ground Essence · Cost 20 · Have 100"),wait(120)]+close()
         routes[f"craft_{peer}"]=contact("forge")+[button("Refine Rootiron Ingot"),wait(150)]+close()
         routes[f"portal_{peer}"]=contact("home_arch")+[wait(180)]
-        routes[f"master_{peer}"]=contact("master_t1")+[step("f48_button", master_creature_uid=uid),wait(60),fight("master_t1"),wait(120)]+contact("master_t1_chest")
+        routes[f"master_{peer}"]=contact("master_t1")+[button(f"{nickname} · Lv 10"),wait(60),fight("master_t1"),wait(120)]+contact("master_t1_chest")
         cook=contact("kitchen")+[button("Cook learned Ascension Feasts"),wait()]
         routes[f"feast_cook_{peer}"]=cook+[step("f48_button", feast_recipe="feast_t1_ground"),wait(120)]+close()
         feed=cook+[button("Feed creatures"),wait()]

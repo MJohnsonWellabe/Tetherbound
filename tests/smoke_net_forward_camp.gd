@@ -95,22 +95,8 @@ func _run() -> void:
 	# player); 12 m clears the old camp's footprint, which still stands while
 	# the new ghost is validated.
 	var moved: Dictionary = await _cstep(1, "camp_place", {"away": 12.0, "presses": 2}, STEP_BUDGET)
-	var placement_observation := {}
-	if moved.get("verdict") != "PASS":
-		for key: String in ["phase", "admitted", "discovered", "prefix_acked", "acked", "required_prefix_sequence", "stream_id"]:
-			if moved.has(key): placement_observation[key] = moved[key]
-		# Preserve the original refused input/cursor, after the unchanged failed
-		# placement allowance. Existing read-only diagnostics do not replay/save.
-		var host_prefix: Variant = await probe(0, "f48_owner_passive_diagnostic")
-		var guest_prefix: Variant = await probe(1, "f48_owner_passive_diagnostic")
-		var refusal_file := FileAccess.open(_run_dir.path_join("camp-prefix-refusal.json"), FileAccess.WRITE)
-		if refusal_file != null:
-			refusal_file.store_string(JSON.stringify({"placement": placement_observation, "host": host_prefix, "guest": guest_prefix}))
-			refusal_file.close()
 	check(moved.get("verdict") == "PASS" and str((moved.get("messages", [""]) as Array)[0]).contains("Press Place again to pack it up"),
-		"the guest is offered a pack-up and, pressing again, pitches a new camp (%s)" %
-			(str(moved.get("detail", "")).left(160) if moved.get("verdict") == "PASS" else
-				str(moved.get("detail", "")) + "; original placement observation=" + JSON.stringify(placement_observation)))
+		"the guest is offered a pack-up and, pressing again, pitches a new camp (%s)" % str(moved.get("detail", "")).left(160))
 	host_view = await _await_records(0, 2)
 	var guest_uids := (host_view.get("records", []) as Array).filter(func(r: Dictionary) -> bool: return r.character_id == guest_id)
 	check(guest_uids.size() == 1 and str(guest_uids[0].uid) != old_guest_uid,

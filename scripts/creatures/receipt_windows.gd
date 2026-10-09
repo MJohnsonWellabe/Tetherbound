@@ -9,8 +9,8 @@ extends RefCounted
 ## and trainer rounds are retained world duties: they are windowed only because
 ## an accepted duty is now settled durably in the world (retained_settlement.gd,
 ## ruling R2), so the retry loop never re-stages one whose receipt was evicted
-## (review R1). NOT windowed: care retains its paying calendar anchor. Legacy
-## five-field receipts also remain exact (review R4).
+## (review R1). NOT windowed: care (its receipt carries no world namespace;
+## review R4).
 ## Why an evicted receipt cannot pay twice:
 ## - essence_spend, station_craft: a client request; character authority stages
 ##   only at the current character revision with `before` equal to the live
@@ -31,28 +31,6 @@ const CONFIG := "res://data/config/receipt_windows.json"
 
 
 static var _config_cache: Dictionary = {}
-
-
-## Rest anchors are not recency windows: the generation survives every other
-## kind's compaction. Absent anchors are the legacy state (generation zero).
-static func rest_decimal(raw: String) -> int:
-	if raw.is_empty() or raw.length() > 10 or not raw.is_valid_int(): return -1
-	var value := raw.to_int()
-	return value if value >= 0 and value <= 2147483646 and str(value) == raw else -1
-
-
-static func rest_marker_valid(raw: String) -> bool:
-	var fields := raw.split(":")
-	if fields.size() == 3 and fields[0] in ["rest_complete", "rest_discovery"]:
-		return not fields[1].is_empty() and fields[2].length() == 64 and fields[2].to_lower() == fields[2] and fields[2].is_valid_hex_number(false)
-	if fields.size() < 4 or fields[1].is_empty() or fields[1].length() > 128 \
-		or fields[1] != fields[1].strip_edges() or fields[1].contains("\n") or fields[1].contains("\r") \
-		or rest_decimal(fields[2]) < 0 or fields[3].length() != 64: return false
-	for letter: String in fields[3]:
-		if not "0123456789abcdef".contains(letter): return false
-	if fields[0] == "rest_activity": return fields.size() == 4 and rest_decimal(fields[2]) > 0
-	if fields[0] == "rest_award": return fields.size() == 5 and rest_decimal(fields[4]) > 0
-	return false
 
 
 static func window(kind: String) -> int:
