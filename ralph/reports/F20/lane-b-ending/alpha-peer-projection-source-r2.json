@@ -1,0 +1,30 @@
+{
+  "kind": "water_retained_alpha_peer_projection_source",
+  "source": "9566aca1392e1859bda863fed8804e1922ca068d",
+  "source_paths": [
+    "scripts/combat/water_encounter_director.gd",
+    "data/config/alpha_respawns.json"
+  ],
+  "notice": 6075529180,
+  "source_supported_break": "Active retained cycle -> _spawn_available_sites calls foundation_publish_alpha then continues for each peer. That publisher rejected non-hosts, so the active-cycle path could not project its validated body on the client. Host generation1/active persisted in actual failed37891499576.",
+  "change": "Allow local projection of the already retained host generation on each occupied peer; preserve exact world retained-packet equality, canonical registration, once rewards and original generation/resolution/payout/save authority.",
+  "candidate_runtime_enabled": true,
+  "unlanded_candidate": true,
+  "shipping_flag_restoration_approved": false,
+  "shipping_hold_checkpoint_source": "96950debaf33604164c2b5a75dabd8acd5354a07",
+  "first_spawn_generation_authority_changed": false,
+  "resolution_or_paid_clock_or_payout_or_save_guards_changed": false,
+  "proof_fixture_or_pose_or_wait_or_failure_guard_changed": false,
+  "existing_named_command": "tests/smoke_net_water_deep_watch_chart.gd --resident-shell",
+  "original_source_review_pending": true,
+  "new_runtime_dispatched": false,
+  "existing_logic_reuse": "37886132051@936f: 12tests115assertions0fail; no change to pure alpha rules, service or selected unit file.",
+  "runtime_sole_cause_confirmed": false,
+  "client_body_available_proven": false,
+  "postcredits_alpha_availability_proven": false,
+  "blind_pass": false,
+  "whole_criterion_closed": false,
+  "failed_save_input_used": false,
+  "new_accepted_boundary": false,
+  "native_dispatched_by_B": false
+}

@@ -41,6 +41,13 @@
   "named_scope": "Existing two-process named Deep Watch client residency/once-cache/claim proof; original poses and manual won-handler disclosed. Not played victory, accepted alpha resolution, generation2 or paid cooldown elapsed/postcredits availability.",
   "named_site_run": 37891499576,
   "named_site_source": "14cf31d6c57194986b3927bcf0b3f9f85fc87c82",
-  "named_site_runtime_result_collected": false,
-  "named_site_actual_args": "--resident-shell"
+  "named_site_runtime_result_collected": true,
+  "named_site_actual_args": "--resident-shell",
+  "named_site_runtime_status": "FAIL",
+  "named_site_artifact_id": 11597988736,
+  "shipping_hold_checkpoint_source": "96950debaf33604164c2b5a75dabd8acd5354a07",
+  "runtime_enabled_at_hold_checkpoint": false,
+  "next_projection_source": "9566aca1392e1859bda863fed8804e1922ca068d",
+  "next_projection_review_pending": true,
+  "next_projection_dispatched": false
 }

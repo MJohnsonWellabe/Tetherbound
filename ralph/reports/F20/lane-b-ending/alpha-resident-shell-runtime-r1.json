@@ -1,0 +1,71 @@
+{
+  "kind": "alpha-resident-shell-runtime-r1",
+  "source": "14cf31d6c57194986b3927bcf0b3f9f85fc87c82",
+  "run_id": 37891499576,
+  "artifact_id": 11597988736,
+  "artifact_zip_sha256": "d0ef219770c2e3d1f26b52955165ccaf45de18ecf8286e24c7a9fe56088a8a54",
+  "original_archive": "alpha-resident-shell-runtime-r1-failed-producer.zip",
+  "crc_verified": true,
+  "log": "ci-alpha-resident-shell-runtime-r1-37891499576.log.gz",
+  "log_sha256": "4ad13b310d1eab391d2080ed957587f9343aed269509a68c3112e72fb930959f",
+  "gzip_sha256": "733b0bfe305f5255018d21d736fabedd7e8ef886476a643e78c5337968ae1a6d",
+  "status": "FAIL",
+  "numeric_exit_independently_attested": false,
+  "engine_script_errors": 0,
+  "unique_failure_count": 8,
+  "original_failures": [
+    "Resolver records Tidecoil locally: Named Tidecoil body never became resident",
+    "Original client resolver observed the actual named Tidecoil body",
+    "Named residency wait observed the canonical generation before the original terminal fixture",
+    "Resolution reaches the other peer's world store: flag water_named_deep_watch_tidecoil_resolved (world) never set within 600 frames",
+    "Host world truth holds the Tidecoil resolution",
+    "Client claims the unlocked cache through host authority: Resolved cache never streamed in on this peer {  }",
+    "Host records exactly one durable character receipt",
+    "Client mirror holds the resolution"
+  ],
+  "first_failed_guard": "Original300-frame client residency wait did not find named Tidecoil body",
+  "host_completed_water_simulation_shell_without_worldlook_guard_passed": true,
+  "host_world_file": "net-runs/net-run-local-6127384/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json",
+  "host_world_file_sha256": "615e9056a5409f3e003c3be64eec07ff8c70c80806dcf754ce68adfbede30ae3",
+  "host_saved_named_cycle": {
+    "generation": 1,
+    "spawn_traits": {
+      "captured_from": {
+        "kind": "wild",
+        "spawn_generation": 1,
+        "spawn_id": "water_deep_watch_tidecoil",
+        "world_namespace": "6171cb75c8fa011dc2bd97d0c373919e"
+      },
+      "rolled_traits": [
+        "composed"
+      ],
+      "taught_traits": {},
+      "traits_initialized": true
+    },
+    "status": "active"
+  },
+  "host_saved_world_namespace": "6171cb75c8fa011dc2bd97d0c373919e",
+  "cycle_birth_persisted": true,
+  "client_named_body_available_proven": false,
+  "client_missing_body_cause_identified": false,
+  "manual_won_handler_reached": false,
+  "unchanged_deadlines_and_pose_fixtures": true,
+  "source_runtime_enabled_was_true": true,
+  "shipping_flag_restoration_approved": false,
+  "original_independent_review_pending": true,
+  "same_originals": [
+    "b_f49_review/Bacon",
+    "b_f20_review/Hubble"
+  ],
+  "whole_criterion_closed": false,
+  "postcredits_alpha_availability_proven": false,
+  "blind_pass": false,
+  "failed_save_input_used": false,
+  "new_accepted_boundary": false,
+  "native_dispatched_by_B": false,
+  "shipping_hold_checkpoint_source": "96950debaf33604164c2b5a75dabd8acd5354a07",
+  "runtime_enabled_at_hold_checkpoint": false,
+  "distinct_supported_candidate_source": "9566aca1392e1859bda863fed8804e1922ca068d",
+  "candidate_change": "Water active retained-cycle path calls foundation_publish_alpha on every occupied peer, but publisher rejected non-hosts before local projection. Remove only that rejection; exact retained packet equality and existing registration/resolution/save guards unchanged.",
+  "missing_client_body_sole_cause_runtime_confirmed": false
+}
