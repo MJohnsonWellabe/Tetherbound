@@ -195,6 +195,9 @@ var _ambient_active_token := ""
 var _ambient_request_observation: Dictionary = {}
 var _ambient_host_admission_observation: Dictionary = {}
 var _ambient_guest_receipt_observation: Dictionary = {}
+var _ambient_source_observations: Dictionary = {}
+var _ambient_received_batches := 0
+var _ambient_received_packets := 0
 var _ambient_guest_body: WeakRef
 var _engaged_with: Node3D = null
 var _ally_body: Node3D = null
@@ -1862,6 +1865,10 @@ func _ambient_guest_offerable(body: Node3D, scope: Dictionary) -> bool:
 
 
 func _tick_ambient_wild_sources(delta: float) -> void:
+	if not _ambient_source_observations.has("first_tick"):
+		_ambient_observe_source("first_tick", {"multi_peer":_is_multi_peer(), "session_present":_session != null,
+			"actor_vitals_enabled":MATH.config().get("actor_vitals", {}).get("runtime_enabled"),
+			"wild_victory_enabled":preload("res://scripts/creatures/essence.gd").config().get("wild_victory_runtime_enabled")})
 	if not _ambient_pending_token.is_empty() and Time.get_ticks_msec() >= _ambient_pending_deadline:
 		_ambient_guest_receipt_observation = {"outcome": "expired_without_receipt", "token": _ambient_pending_token,
 			"deadline_ms": _ambient_pending_deadline, "sampled_ms": Time.get_ticks_msec()}
@@ -1870,7 +1877,14 @@ func _tick_ambient_wild_sources(delta: float) -> void:
 		_ambient_guest_body = null
 	if not _is_multi_peer(): return
 	var scope := _ambient_scope()
-	if scope.is_empty(): return
+	if scope.is_empty():
+		var game: Node = _session.call("_game") if _session != null else null
+		_ambient_observe_source("tick_scope_empty", {"session_present":_session != null, "game_present":game != null,
+			"game_session_matches":game != null and game.get("session") == _session,
+			"world_present":game != null and game.get("world") != null,
+			"session_id":_session.call("_altar_current_epoch") if _session != null else "",
+			"world_namespace":game.get("world").reward_delivery_namespace if game != null and game.get("world") != null else ""})
+		return
 	_ambient_publish_left -= delta
 	if _ambient_publish_left > 0.0: return
 	_ambient_publish_left = 1.0 / maxf(1.0, float(ENCOUNTER_HOST_SCRIPT.config().get("shared_opponent_presentation_hz", 10.0)))
@@ -1884,9 +1898,14 @@ func _tick_ambient_wild_sources(delta: float) -> void:
 		return
 	var context: Dictionary = _session.call("_host_wild_training_context")
 	if context.get("ready") != true or context.get("world_namespace") != scope.world_namespace \
-		or context.get("session_id") != scope.session_id: return
+		or context.get("session_id") != scope.session_id:
+		_ambient_observe_source("host_context_refused", {"scope":scope, "ready":context.get("ready"),
+			"context_namespace":context.get("world_namespace"), "context_session_id":context.get("session_id")})
+		return
 	_ambient_publish_serial += 1
 	var packets: Array[Dictionary] = []
+	var source_counts := {"registered":_wild_creatures.size(), "invalid_instance":0, "queued_body":0, "outside_tree":0, "missing_source_id":0,
+		"duplicate_source":0, "missing_card":0, "invalid_uid":0}
 	for source_id: String in _ambient_host_sources.keys():
 		var source: Dictionary = _ambient_host_sources[source_id]
 		var retained: Node3D = source.body.get_ref()
@@ -1897,19 +1916,31 @@ func _tick_ambient_wild_sources(delta: float) -> void:
 	# published and the ordinary full population is never searched per member.
 	var by_source: Dictionary = {}
 	for body: Node3D in _wild_creatures:
-		if not is_instance_valid(body) or body.is_queued_for_deletion() or not body.is_inside_tree(): continue
+		if not is_instance_valid(body) or body.is_queued_for_deletion() or not body.is_inside_tree():
+			if not is_instance_valid(body): source_counts.invalid_instance += 1
+			elif body.is_queued_for_deletion(): source_counts.queued_body += 1
+			else: source_counts.outside_tree += 1
+			continue
 		var source_id := str(body.get_meta(&"ambient_source_id", ""))
-		if source_id.is_empty(): continue
+		if source_id.is_empty():
+			source_counts.missing_source_id += 1
+			continue
 		if by_source.has(source_id): by_source[source_id] = null
 		else: by_source[source_id] = body
 	for source_id: String in by_source:
 		var body: Node3D = by_source[source_id]
-		if body == null: continue
+		if body == null:
+			source_counts.duplicate_source += 1
+			continue
 		var card: RefCounted = body.get("instance")
-		if card == null: continue
+		if card == null:
+			source_counts.missing_card += 1
+			continue
 		var uid := str(card.get("uid"))
 		var generation := _ambient_generation(body)
-		if not CREATURE_INSTANCE.valid_uid(uid): continue
+		if not CREATURE_INSTANCE.valid_uid(uid):
+			source_counts.invalid_uid += 1
+			continue
 		var source: Dictionary = _ambient_host_sources.get(source_id, {})
 		if source.get("uid") != uid or source.get("generation") != generation or source.get("scope") != scope \
 			or not source.get("body") is WeakRef or source.body.get_ref() != body:
@@ -1927,39 +1958,80 @@ func _tick_ambient_wild_sources(delta: float) -> void:
 	for peer: int in multiplayer.get_peers():
 		var actor: Dictionary = _session.get_node(^"LedgerRpc").call("_water_actor_context", peer, {})
 		if actor.get("realm") != scope.realm or not actor.get("position") is Vector3 \
-			or actor.get("character_id") != _session.call("_authority_character", peer): continue
+			or actor.get("character_id") != _session.call("_authority_character", peer):
+			_ambient_observe_source("host_peer_refused", {"peer":peer, "scope":scope, "source_counts":source_counts,
+				"packet_count":packets.size(), "actor":actor, "authority_character":_session.call("_authority_character", peer)})
+			continue
 		var nearby: Array[Dictionary] = []
 		for packet: Dictionary in packets:
 			var feet: Variant = _wire_vec3(packet.foot_position)
 			if feet != null and actor.position.distance_to(feet) <= _activation_radius_margin() * 2.0: nearby.append(packet)
-		_send_realm_rpc(peer, "_rpc_ambient_wild_sources", [nearby])
+		var sent := _send_realm_rpc(peer, "_rpc_ambient_wild_sources", [nearby])
+		var stage := ("host_send_empty" if nearby.is_empty() else "host_send_packets") + ("" if sent else "_refused")
+		if not _ambient_source_observations.has(stage):
+			var sample: Array[Dictionary] = []
+			for packet: Dictionary in (packets if nearby.is_empty() else nearby).slice(0, 8):
+				sample.append(_ambient_packet_observation(packet))
+			_ambient_observe_source(stage, {"peer":peer, "scope":scope, "source_counts":source_counts, "actor":actor,
+				"authority_character":_session.call("_authority_character", peer), "packet_count":packets.size(),
+				"nearby_count":nearby.size(), "range_m":_activation_radius_margin() * 2.0,
+				"sample_scope":"all_sources" if nearby.is_empty() else "sent_sources", "sample_cap":8,
+				"packets":sample, "send_returned":sent})
+	_ambient_observe_source("first_host_publication", {"scope":scope, "peers":multiplayer.get_peers(),
+		"source_counts":source_counts, "packet_count":packets.size()})
 
 
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_ambient_wild_sources(packets: Array) -> void:
-	if _is_host() or not _realm_rpc_allowed(1): return
+	_ambient_received_batches += 1
+	_ambient_received_packets += packets.size()
+	if not _ambient_source_observations.has("first_guest_rpc"):
+		_ambient_observe_source("first_guest_rpc", {"packet_count":packets.size(), "realm_rpc_allowed":_realm_rpc_allowed(1)})
+	if _is_host() or not _realm_rpc_allowed(1):
+		_ambient_observe_source("guest_role_or_route_refused", {"packet_count":packets.size(), "realm_rpc_allowed":_realm_rpc_allowed(1)})
+		return
 	var scope := _ambient_scope()
-	if scope.is_empty(): return
+	if scope.is_empty():
+		var game: Node = _session.call("_game") if _session != null else null
+		_ambient_observe_source("guest_scope_empty", {"packet_count":packets.size(), "session_present":_session != null,
+			"game_session_matches":game != null and game.get("session") == _session,
+			"world_present":game != null and game.get("world") != null,
+			"session_id":_session.call("_altar_current_epoch") if _session != null else "",
+			"world_namespace":game.get("world").reward_delivery_namespace if game != null and game.get("world") != null else ""})
+		return
 	for raw: Variant in packets:
 		if not raw is Dictionary or raw.get("scope") != scope or not raw.get("source_id") is String \
 			or not raw.get("token") is String or raw.token.length() != 32 \
-			or not raw.get("retired") is bool: continue
+			or not raw.get("retired") is bool:
+			_ambient_observe_source("guest_schema_or_scope_refused", {"scope":scope, "packet":_ambient_packet_observation(raw)})
+			continue
 		var packet: Dictionary = raw
 		var previous: Dictionary = _ambient_guest_sources.get(packet.source_id, {})
-		if previous.get("scope") == scope and int(packet.get("sequence", 0)) <= int(previous.get("sequence", 0)): continue
+		if previous.get("scope") == scope and int(packet.get("sequence", 0)) <= int(previous.get("sequence", 0)):
+			_ambient_observe_source("guest_sequence_refused", {"packet":_ambient_packet_observation(packet), "previous_sequence":previous.get("sequence")})
+			continue
 		var body := _ambient_body(str(packet.source_id))
 		if packet.retired:
+			_ambient_observe_source("guest_retired", {"packet":_ambient_packet_observation(packet),
+				"previous_token":previous.get("token"), "body_present":body != null})
 			if previous.get("token") == packet.token and body != null:
 				body.visible = false
 				_ambient_guest_sources.erase(packet.source_id)
 			continue
 		if not packet.get("visible") is bool or not packet.get("aggressive") is bool \
-			or not packet.get("generation") is int or packet.generation < 1: continue
+			or not packet.get("generation") is int or packet.generation < 1:
+			_ambient_observe_source("guest_body_fields_refused", {"packet":_ambient_packet_observation(packet)})
+			continue
 		var card := WATER_CAPTURE_CODEC.decode(packet.get("card", {})) as RefCounted
 		var feet: Variant = _wire_vec3(packet.get("foot_position", []))
 		var facing: Variant = _wire_vec3(packet.get("facing", []))
 		if body == null or card == null or feet == null or facing == null \
-			or str(body.get("species_id")) != str(card.get("species_id")): continue
+			or str(body.get("species_id")) != str(card.get("species_id")):
+			_ambient_observe_source("guest_body_or_decode_refused", {"packet":_ambient_packet_observation(packet),
+				"body_present":body != null, "card_decoded":card != null, "feet_valid":feet != null, "facing_valid":facing != null,
+				"body_species":str(body.get("species_id")) if body != null else "",
+				"card_species":str(card.get("species_id")) if card != null else ""})
+			continue
 		body.set_meta(&"ambient_host_mirror", true)
 		body.set("instance", card)
 		body.set("aggressive", packet.aggressive)
@@ -1970,6 +2042,33 @@ func _rpc_ambient_wild_sources(packets: Array) -> void:
 		if _ambient_guest_body == null or _ambient_guest_body.get_ref() != body:
 			body.visible = packet.visible and not bool(card.get("fainted"))
 		_ambient_guest_sources[packet.source_id] = packet.duplicate(true)
+		if not _ambient_source_observations.has("guest_packet_accepted"):
+			_ambient_observe_source("guest_packet_accepted", {"packet":_ambient_packet_observation(packet),
+				"guest_source_count":_ambient_guest_sources.size(), "body_id":body.get_instance_id(),
+				"body_visible":body.visible, "fainted":card.get("fainted"), "mirror":body.get_meta(&"ambient_host_mirror", false)})
+
+
+## First occurrence per decision, capped and detached; never read by gameplay.
+func _ambient_observe_source(stage: String, operands: Dictionary) -> void:
+	if _ambient_source_observations.has(stage) or _ambient_source_observations.size() >= 20: return
+	var observed := operands.duplicate(true)
+	observed.merge({"sampled_ms":Time.get_ticks_msec(), "publish_serial":_ambient_publish_serial,
+		"host_role":_is_host(), "realm":_encounter_realm(),
+		"received_batches":_ambient_received_batches, "received_packets":_ambient_received_packets}, true)
+	_ambient_source_observations[stage] = observed
+
+
+func _ambient_packet_observation(raw: Variant) -> Dictionary:
+	if not raw is Dictionary: return {"wire_type":typeof(raw)}
+	var observed := {}
+	for key: String in ["source_id", "token", "scope", "sequence", "retired", "generation", "visible", "aggressive", "foot_position"]:
+		observed[key] = raw.get(key)
+		observed[key + "_type"] = typeof(raw.get(key))
+	var card: Variant = raw.get("card")
+	if card is Dictionary:
+		observed["uid"] = card.get("uid")
+		observed["species_id"] = card.get("species_id")
+	return observed
 
 
 func _request_ambient_wild(body: Node3D) -> bool:
