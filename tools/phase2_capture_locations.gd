@@ -33,6 +33,11 @@ const LANDMARK_PATHS := {
 	"stormwood": "res://data/config/stormwood_world.json",
 }
 const DEFAULT_OUTPUT_ROOT := "res://ralph/reports/VISUAL/phase2"
+## Terrain3D documents precision trouble with perfectly vertical physics rays:
+## https://terrain3d.readthedocs.io/en/stable/docs/collision.html
+## Offset only the sole ray's origin by 1 mm; keep the authored target and
+## physical floor/capsule predicates. This is not a second support sample.
+const FLOOR_RAY_ORIGIN_XZ_OFFSET_M := 0.001
 const SCENES := {
 	"meadows": "res://scenes/world/meadows_playground.tscn",
 	"cloudreach": "res://scenes/world/cloudreach_cliffs.tscn",
@@ -603,10 +608,12 @@ func _capture_support_preflight(spec: Dictionary) -> String:
 	var space := _world.get_world_3d().direct_space_state
 	if not bool(spec.swimming):
 		var ground := Vector3(at.x, float(spec.ground_y), at.z)
-		var ray := PhysicsRayQueryParameters3D.create(ground + Vector3.UP * 1.5,
+		var ray_origin := ground + Vector3(FLOOR_RAY_ORIGIN_XZ_OFFSET_M, 1.5, FLOOR_RAY_ORIGIN_XZ_OFFSET_M)
+		var ray := PhysicsRayQueryParameters3D.create(ray_origin,
 			ground - Vector3.UP, _player.collision_mask, [_player.get_rid()])
 		var hit := space.intersect_ray(ray)
 		spec["physical_support"] = {"ray_from": _vec3(ray.from), "ray_to": _vec3(ray.to),
+			"query_origin_xz_offset_m": FLOOR_RAY_ORIGIN_XZ_OFFSET_M,
 			"collision_mask": ray.collision_mask, "excluded_player_rid": str(_player.get_rid()),
 			"hit_from_inside": ray.hit_from_inside, "hit_back_faces": ray.hit_back_faces,
 			"hit_empty": hit.is_empty(), "slide_contacts": []}
