@@ -195,3 +195,123 @@ func test_actual_prepared_writer_preserves_full_v2_and_v3_pending_owner_projecti
 		assert_eq(FileAccess.get_file_as_bytes(store.call("path_for", CHARACTER)), bytes_before)
 		assert_true(game.session.call("owns_input") == true, "sleep cannot discard the original ACK hold")
 		_close(game, directory)
+
+func test_actual_rematch_owner_bool_retry_and_two_world_files_preserve_the_owning_paid_clock() -> void:
+	const ACTIONS = preload("res://scripts/net/character_action_rules.gd")
+	const DELIVERY = preload("res://scripts/net/character_action_delivery.gd")
+	const OWNER = preload("res://scripts/net/character_action_owner.gd")
+	const AUTHORITY = preload("res://scripts/net/character_authority.gd")
+	var directory := "user://test_prepared_rematch_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var game := _game(directory)
+	var characters: RefCounted = game.save_system.get("_characters")
+	var worlds: RefCounted = game.save_system.get("_worlds")
+	assert_true(game.save_system.call("save_character_prepared", game, CHARACTER), "real initial character file")
+	var original_uid := str(game.local.party.at(0).get("uid"))
+	var paid_inventory: Array = []
+	var paid_clocks: Dictionary = {}
+	# These are disclosed canonical-win/host-clock fixtures. The real disk
+	# writers, original row recovery and explicit authority ACK below do not
+	# substitute for an earned encounter, elapsed time or a network transport.
+	var steps := [
+		{"world": "owning", "seconds": 100, "paid": true},
+		{"world": "foreign", "seconds": 0, "paid": false},
+		{"world": "foreign", "seconds": 900000, "paid": false},
+		{"world": "owning", "seconds": 1299, "paid": false},
+		{"world": "owning", "seconds": 1300, "paid": true},
+	]
+	for index: int in steps.size():
+		var step: Dictionary = steps[index]
+		var namespace := NAMESPACE + "-" + str(step.world)
+		var world_id := "slot-prepared-rematch-" + str(step.world)
+		game.world.world_id = world_id
+		game.world.reward_delivery_namespace = namespace
+		var prior_world: Dictionary = worlds.call("read", world_id) if worlds.call("has", world_id) else {}
+		game.world.reward_deliveries = prior_world.get("reward_deliveries", {}).duplicate(true)
+		var disk_before: Dictionary = characters.call("read", CHARACTER)
+		assert_false(disk_before.is_empty(), "same stable character is read from its real file on every world step")
+		var before := RECORD.portable_projection(disk_before)
+		assert_true(ESSENCE._equivalent(before, RECORD.portable_projection(game.local.save_data())))
+		var encounter := "fixture-rematch-%d" % index
+		var intent := {"trainer_id": "relay_captain", "tier": "r1", "encounter_id": encounter}
+		var context := {"character_id": CHARACTER, "expected_revision": index, "source_key": "rematch:relay_captain",
+			"in_range": true, "validated_host_outcome": "win", "encounter_id": encounter,
+			"trainer_id": "relay_captain", "tier": "r1", "participants": [CHARACTER],
+			"world_flags": ["defeated_warden"], "personal_flags": [], "world_namespace": namespace,
+			"session_id": EPOCH, "world_seconds": step.seconds}
+		var proposal := ACTIONS.stage(before, index, "rematch_win", intent, context, RECORD.errors)
+		assert_true(proposal.get("ok") == true, "canonical rematch step %d %s" % [index, str(proposal)])
+		if proposal.get("ok") != true:
+			_close(game, directory)
+			return
+		assert_eq(proposal.get("reward_paid"), step.paid, "foreign clocks and the owning early clock cannot pay")
+		if index > 0 and not step.paid:
+			assert_true(ESSENCE._equivalent(proposal.state.inventory, paid_inventory), "no stock minted on the unpaid cycle")
+			assert_true(ESSENCE._equivalent(proposal.state.redesign_character.rematch_cooldowns, paid_clocks),
+				"actual saved owning clock is retained through foreign/early wins")
+		proposal.character_revision = index + 1
+		var delivery_id := ESSENCE.training_delivery_id(namespace, CHARACTER)
+		var row := DELIVERY.make_record(world_id, namespace, EPOCH, proposal,
+			game.world.reward_deliveries.get(delivery_id), RECORD.errors)
+		assert_false(row.is_empty(), "same original full projection codec")
+		if row.is_empty():
+			_close(game, directory)
+			return
+		game.world.reward_deliveries[delivery_id] = row
+		assert_true(worlds.call("write", world_id, game.world.save_data()), "actual pending world file")
+		var pending_world: Dictionary = worlds.call("read", world_id)
+		var pending: Dictionary = pending_world.get("reward_deliveries", {}).get(delivery_id, {})
+		assert_true(ESSENCE._equivalent(pending, row), "exact pending row survived world disk reload")
+		game.world.reward_deliveries = pending_world.reward_deliveries.duplicate(true)
+		var authority := AUTHORITY.new()
+		assert_true(authority.bind_world(namespace))
+		assert_true(authority.seed_admitted_character(before, CHARACTER).get("ok") == true)
+		assert_true(authority.recover_durable_training(CHARACTER, pending_world.reward_deliveries).get("ok") == true)
+		assert_true(authority.creature_training_pending_matches(CHARACTER, pending))
+		var owner_bytes := FileAccess.get_file_as_bytes(characters.call("path_for", CHARACTER))
+		characters.set("refuse", true)
+		var failed := OWNER.apply_owner(game, pending)
+		assert_true(failed.get("ok") == false and failed.get("saved") == false and failed.get("pending") == true,
+			"original BOOL-false write is not a saved owner or ACK")
+		assert_eq(FileAccess.get_file_as_bytes(characters.call("path_for", CHARACTER)), owner_bytes)
+		assert_true(game.session.call("owns_input") == true)
+		assert_true(authority.creature_training_is_pending(CHARACTER))
+		assert_true(ESSENCE._equivalent(RECORD.portable_projection(game.local.save_data()), pending.after),
+			"installed exact original decision remains fenced for retry")
+		characters.set("refuse", false)
+		var retried := OWNER.apply_owner(game, pending)
+		assert_true(retried.get("ok") == true and retried.get("saved") == true and retried.get("duplicate") == true,
+			"same original decision retries its actual BOOL write without another payout")
+		var disk_after: Dictionary = characters.call("read", CHARACTER)
+		assert_true(ESSENCE._equivalent(RECORD.portable_projection(disk_after), pending.after))
+		assert_eq(str(game.local.party.at(0).get("uid")), original_uid)
+		assert_true(game.session.call("owns_input") == true, "saved owner alone is still not host ACK")
+		assert_true(authority.creature_training_is_pending(CHARACTER))
+		# Explicitly exercise the original accepted-row predicates after both
+		# actual files exist; no packet/transport delivery is claimed.
+		var accepted := pending.duplicate(true)
+		accepted.status = "accepted"
+		game.world.reward_deliveries[delivery_id] = accepted
+		assert_true(worlds.call("write", world_id, game.world.save_data()), "actual accepted world file")
+		var accepted_world: Dictionary = worlds.call("read", world_id)
+		var saved_accepted: Dictionary = accepted_world.reward_deliveries[delivery_id]
+		assert_true(ESSENCE._equivalent(saved_accepted, accepted))
+		game.world.reward_deliveries = accepted_world.reward_deliveries.duplicate(true)
+		assert_true(authority.acknowledge_creature_training(CHARACTER, saved_accepted))
+		assert_false(authority.creature_training_is_pending(CHARACTER))
+		assert_true(game.session.call("_settle_owner_training_accepted", game.local, game.world, saved_accepted))
+		assert_false(game.session.call("owns_input"), "only the matching accepted original releases the owner")
+		assert_true(ESSENCE._equivalent(authority.state(CHARACTER), pending.after))
+		var replay := ACTIONS.stage(RECORD.portable_projection(disk_after), index, "rematch_win", intent, context, RECORD.errors)
+		assert_true(replay.get("ok") == false and replay.get("code") == "reconcile_original_delivery",
+			"actual owner disk reload cannot replay the same win")
+		if index == 0:
+			paid_inventory = disk_after.inventory.duplicate(true)
+			paid_clocks = disk_after.redesign_character.rematch_cooldowns.duplicate(true)
+			assert_eq(paid_clocks.size(), 1)
+			assert_eq(paid_clocks[NAMESPACE + "-owning:relay_captain:r1"].next_eligible_seconds, 1300.0)
+		if index == steps.size() - 1:
+			assert_eq(disk_after.redesign_character.rematch_cooldowns[NAMESPACE + "-owning:relay_captain:r1"].next_eligible_seconds, 2500.0)
+			assert_false(proposal.get("unique_reward"), "returning due cycle is not a second unique reward")
+	assert_true(worlds.call("has", "slot-prepared-rematch-owning") and worlds.call("has", "slot-prepared-rematch-foreign"),
+		"both independent world documents persisted alongside the same stable character")
+	_close(game, directory)
