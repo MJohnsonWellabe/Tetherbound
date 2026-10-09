@@ -335,5 +335,35 @@
     "correction_scope": "Existing granted party fixture only: canonical initialize_caught certificate producer before isolated save/admission, disclosed granted history/caps; no earned catch/feast history claimed",
     "reused_control_evidence": "cdf065f952d50666507d70ac5fc58f572775e5ed: run37914043555 6 tests/38 outer assertions/0 failures with original APPROVE; unchanged water-data passing piece retained",
     "criterion": "F33#2 OPEN; no gear tuning, failed-save promotion, accepted-boundary invention or native GPU claim"
+  },
+  "owned_main_merge_review": {
+    "source": "9ab940c531aad07c986ebe7336e67ed089dc49da",
+    "reviewer": "/root/f25_medium_review",
+    "turn": "01a12034-031e-7530-94e1-4ecaa5a1c230",
+    "verdict": "SOURCE INTEGRATION APPROVE, limited to owned resolutions; no whole-head/activation/runtime approval"
+  },
+  "granted_training_correction_proof": {
+    "source": "9f0ab3a77c70fca49e325553c984835d5bcbc906",
+    "scope": "existing actual-world fixture only; granted canonical per-UID training history/caps; no production guards changed",
+    "reviewer": "/root/f25_medium_review",
+    "review_turn": "01a12040-439f-7ba2-bbc4-137a912be236",
+    "source_command_verdict": "APPROVE one pinned existing seed0 Nerissa/Ripplet/READER/Tidesteel headless batch only",
+    "run": 37919184674,
+    "status": "RUNNING at dispatch; no gameplay PASS, whole criterion or accepted boundary claim",
+    "script": "tests/batch_tidewake_named_inworld_c2.gd",
+    "args": "--trainer=water_trainer_nerissa --starter=ripplet --policy=READER --seeds=0 --gear-tier=tidesteel --out=ralph/reports/F33/nerissa_authored_l32_reader_seed0.jsonl",
+    "grants": {
+      "party_level": 32,
+      "breakthroughs": [
+        1,
+        2,
+        3
+      ],
+      "cap_level": 40,
+      "all_five": true,
+      "earned": false
+    },
+    "preserved": "original five, authored L32, moves/HP, gear, isolated canonical saver, registry/admission and actual input/reward/owner-save paths",
+    "criterion": "F33#2 OPEN"
   }
 }
