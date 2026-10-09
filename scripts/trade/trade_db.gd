@@ -19,6 +19,7 @@ extends RefCounted
 ## satchel every other item lives in. There is no balance field anywhere.
 
 const CONFIG_PATH := "res://data/config/trade.json"
+const INVENTORY := preload("res://autoload/inventory.gd")
 
 ## What a transaction can refuse for. Returned as a string rather than a bool so
 ## the panel can say WHICH thing went wrong -- "no room" and "no coins" are
@@ -148,7 +149,7 @@ func buy(inventory: RefCounted, vendor_id: String, item_id: String, count: int =
 	var coin := currency_id()
 	if int(inventory.call("count", coin)) < price:
 		return REFUSED_NO_COINS
-	if not bool(inventory.call("has_room_for", item_id, count)):
+	if not _has_room_after_payment(inventory, coin, price, item_id, count):
 		return REFUSED_NO_ROOM
 	if not bool(inventory.call("remove", coin, price)):
 		return REFUSED_NO_COINS
@@ -178,7 +179,7 @@ func sell(inventory: RefCounted, vendor_id: String, item_id: String, count: int 
 	var payment := sell_price(vendor_id, item_id) * count
 	if int(inventory.call("count", item_id)) < count:
 		return REFUSED_NO_ITEM
-	if not bool(inventory.call("has_room_for", currency_id(), payment)):
+	if not _has_room_after_payment(inventory, item_id, count, currency_id(), payment):
 		return REFUSED_NO_ROOM
 	if not bool(inventory.call("remove", item_id, count)):
 		return REFUSED_NO_ITEM
@@ -189,6 +190,19 @@ func sell(inventory: RefCounted, vendor_id: String, item_id: String, count: int 
 			inventory.call("remove", currency_id(), payment - leftover)
 		return REFUSED_NO_ROOM
 	return OK
+
+
+## Price the capacity of the completed exchange, using the real Satchel rules
+## on a detached copy. A spent stack can free the receiving slot. Refusals
+## never touch the owner's slots or revision; real remove/add still enforce
+## the owner's mutation guard and remain the only commit path.
+func _has_room_after_payment(inventory: RefCounted, paid_id: String, paid_count: int,
+		received_id: String, received_count: int) -> bool:
+	var preview := INVENTORY.new(inventory.get("_db"))
+	for index: int in inventory.call("slot_count"):
+		var stack: Dictionary = inventory.call("stack_at", index)
+		if not stack.is_empty(): preview.set_slot(index, stack.duplicate(true))
+	return preview.remove(paid_id, paid_count) and preview.has_room_for(received_id, received_count)
 
 
 ## What a refusal should SAY, in the panel, to the player. Kept beside the

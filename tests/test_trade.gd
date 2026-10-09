@@ -104,6 +104,22 @@ func test_buying_moves_coins_out_and_goods_in() -> void:
 	assert_eq(_trade.buy(_inventory, VENDOR, "potion_small", 1), TRADE_DB.OK)
 	assert_eq(int(_inventory.count("potion_small")), 1, "the potion never arrived")
 	assert_eq(int(_inventory.count(coin)), price, "the coins were not taken")
+	# A real full Satchel can exchange its entire payment stack for the goods.
+	var full := INVENTORY.new(_items)
+	for index: int in full.slot_count():
+		full.set_slot(index, {"id": "stone", "n": _items.stack_size("stone")})
+	full.set_slot(0, {"id": coin, "n": price + 1})
+	var refused_slots: Array = full.get("_slots").duplicate(true)
+	var refused_revision: int = full.revision
+	assert_eq(_trade.buy(full, VENDOR, "potion_small", 1), TRADE_DB.REFUSED_NO_ROOM)
+	assert_eq(full.get("_slots"), refused_slots, "a refused exchange preserves every slot")
+	assert_eq(full.revision, refused_revision, "a refused exchange does not mutate the owner")
+	full.set_slot(0, {"id": coin, "n": price})
+	assert_true(full.is_full())
+	assert_eq(_trade.buy(full, VENDOR, "potion_small", 1), TRADE_DB.OK)
+	assert_eq(full.count(coin), 0)
+	assert_eq(full.count("potion_small"), 1)
+	assert_true(full.is_full(), "the bought item occupies the spent coin slot")
 
 
 func test_selling_moves_goods_out_and_coins_in() -> void:
@@ -115,6 +131,21 @@ func test_selling_moves_goods_out_and_coins_in() -> void:
 	assert_eq(_trade.sell(_inventory, VENDOR, "wood", 4), TRADE_DB.OK)
 	assert_eq(int(_inventory.count("wood")), 6, "four wood should have left the satchel")
 	assert_eq(int(_inventory.count(coin)), paid * 4, "the payment did not arrive")
+	var full := INVENTORY.new(_items)
+	for index: int in full.slot_count():
+		full.set_slot(index, {"id": "stone", "n": _items.stack_size("stone")})
+	full.set_slot(0, {"id": "wood", "n": 5})
+	var refused_slots: Array = full.get("_slots").duplicate(true)
+	var refused_revision: int = full.revision
+	assert_eq(_trade.sell(full, VENDOR, "wood", 4), TRADE_DB.REFUSED_NO_ROOM)
+	assert_eq(full.get("_slots"), refused_slots, "a refused sale preserves every slot")
+	assert_eq(full.revision, refused_revision, "a refused sale does not mutate the owner")
+	full.set_slot(0, {"id": "wood", "n": 4})
+	assert_true(full.is_full())
+	assert_eq(_trade.sell(full, VENDOR, "wood", 4), TRADE_DB.OK)
+	assert_eq(full.count("wood"), 0)
+	assert_eq(full.count(coin), paid * 4)
+	assert_true(full.is_full(), "the sale coins occupy the sold material slot")
 
 
 func test_a_purchase_you_cannot_afford_is_refused_and_costs_nothing() -> void:
