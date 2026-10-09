@@ -1,0 +1,29 @@
+{
+  "original_source_command_approve": "01a11f30-ede4-7231-9e35-100a010c6407 SAME f42",
+  "source": "3c9fa94b73fa3ddcc53287d44c140064e9e08aa3",
+  "scope": "Read-only host shrine_display.meadows drives existing reward heart geometry on measured BookStand; other7 unchanged; collider/prompt/authority/save/transaction unchanged",
+  "visual_gate": "Native changed-source mount/doorway readability with existing hang-path fixture and SAME original blind verdict required. EmptyHallstills cannotwitnesshungrelic; no acceptedboundary fabricated.",
+  "criterion": "F17#6 OPEN; Meadows-only shrine display candidate",
+  "affected_proof": {
+    "failed": 0,
+    "warning": "14 ObjectDB instances leaked at exit",
+    "seconds": 5,
+    "run": 37890271421,
+    "engine_error": "1 resource still in use at exit",
+    "job": 113689402922,
+    "artifact": 11597753547,
+    "args": "res://tests/test_crossing_hall_relic_hang.gd",
+    "exit": 0,
+    "acceptance": "No clean-runtime credit; original factual verdict pending; raw preserved",
+    "script": "tools/run_one_test.gd",
+    "zip_sha256": "c5621c3b2ae76dc31d660ce177bf037702d82693dd10d072568b4b468676b489",
+    "tests": 4
+  },
+  "shipping": "OFF; processbaseline wins",
+  "supported_test_teardown": {
+    "change": "9 exact frees after all assertions in existing3 methods that leave allocated detachedHall/Game/Session nodes alive; no guard/assertion suppression; production3c9 unchanged",
+    "source": "7e3791edaa9a7471f3af8b3ac7fb6a92acb9c1e3",
+    "runtime": "pending affected rerun approval",
+    "source_review": "pending SAME original"
+  }
+}
