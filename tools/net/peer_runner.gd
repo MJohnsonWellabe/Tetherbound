@@ -2689,21 +2689,22 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 ## behind it stalled. On a client, give the discovery tick time to record the
 ## jump, then wait (bounded) until the host has acknowledged every recorded
 ## input, as a real arrival would before play continues.
-func _await_owner_passive_caught_up(budget_frames: int = 600) -> void:
+func _await_owner_passive_caught_up(budget_frames: int = 600) -> bool:
 	var game := root.get_node_or_null(^"Game")
 	var session: Variant = game.get("session") if game != null else null
 	if not session is Node or not (session as Node).has_method("is_host") \
 			or bool((session as Node).call("is_host")) or not bool((session as Node).call("is_active")):
-		return
+		return true
 	var passive: Variant = (session as Node).get("_owner_passive")
 	if passive == null:
-		return
+		return true
 	for frame in budget_frames:
 		var local: Dictionary = passive.get("local")
-		if frame >= 45 and (local.is_empty() or not str(local.get("error", "")).is_empty() \
-				or (local.get("inputs", []) as Array).is_empty()):
-			return
+		if not str(local.get("error", "")).is_empty(): return false
+		if frame >= 45 and (local.is_empty() or (local.get("inputs", []) as Array).is_empty()):
+			return true
 		await physics_frame
+	return false
 
 
 ## Stand the trainer at a point. The travel itself, not a game action.
@@ -2726,6 +2727,11 @@ func _step_teleport(args: Dictionary) -> Dictionary:
 		at = [near.x, near.y, near.z]
 	if at.size() != 3:
 		return {"verdict": "ERROR", "detail": "teleport needs args.at = [x, y, z]"}
+	# Drain the original pose while the host can still observe it. Moving
+	# first can leave an unacknowledged initial discovery kilometres behind
+	# the host proxy; the real pose guard then correctly rejects that prefix.
+	if not await _await_owner_passive_caught_up():
+		return {"verdict": "FAIL", "detail": "owner passive prefix did not settle before fixture teleport"}
 	# A teleport, not a motion (`remote_creature.teleport_body`): set as a plain
 	# position, GodotPhysics sweeps the body across the whole jump and the next
 	# move_and_slide against Terrain3D collision took ~4.4 s for a 4 km jump
@@ -2734,7 +2740,8 @@ func _step_teleport(args: Dictionary) -> Dictionary:
 	player.velocity = Vector3.ZERO
 	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
-	await _await_owner_passive_caught_up()
+	if not await _await_owner_passive_caught_up():
+		return {"verdict": "FAIL", "detail": "owner passive prefix did not settle after fixture teleport"}
 	var p: Vector3 = player.global_position
 	return {"verdict": "PASS", "detail": "trainer stands at (%.2f, %.2f, %.2f)" % [p.x, p.y, p.z]}
 
