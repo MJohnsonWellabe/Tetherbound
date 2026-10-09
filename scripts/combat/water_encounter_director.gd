@@ -352,8 +352,19 @@ func _spawn_available_sites() -> void:
 			_site_failures[id] = true
 			push_warning("Water site lacks a valid authored encounter or supported creature footing: " + id)
 
+func foundation_alpha_cycle(site_id: String) -> Dictionary:
+	if _is_host(): return super.foundation_alpha_cycle(site_id)
+	# The accepted world snapshot/deltas own the cycle on a client too. Reading
+	# its generation permits residency without asking the client to roll/save it.
+	if not is_inside_tree() or _session == null or _session.call("snapshot_ready") != true: return {}
+	var rules := preload("res://scripts/repeatables/alpha_respawns.gd")
+	var game := get_node_or_null("/root/Game")
+	if rules.config().get("runtime_enabled") != true or game == null or rules.site(site_id).is_empty(): return {}
+	return game.world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(site_id, {}).duplicate(true)
+
 func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
-	if not _is_host() or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
+	if packet.is_empty() or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true \
+			or (not _is_host() and (_session == null or _session.call("snapshot_ready") != true)): return
 	var game := get_node_or_null("/root/Game")
 	if game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return
 	for wild: Node3D in _wild_creatures:
