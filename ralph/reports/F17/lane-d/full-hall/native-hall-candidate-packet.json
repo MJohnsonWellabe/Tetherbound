@@ -1,0 +1,72 @@
+{
+  "guards": "2ef5 actualfloor/camera/raster diagnostic and37886379900 genuine6-test APPROVE retained for unchanged affected paths; no duplicateguard job",
+  "changes": "Alreadyreviewedinstalledendwallcloth/archframedepth/aperturedepth candidates, plus supported5.2m lintel/collider andinstalledreservedstoneinfills. No held/hung relicfixture; empty pedestals only. Newfocus andallphysicalrelicmounts explicitlybaseline. Sameoriginal3Halllabels/24images/controllerphysical8+8/nativepose/raster/healthycompanion guards.",
+  "scheduler": "Preparedonly, NOTqueued. ROOT-only serializednative afterexactoriginalART/COMMAND andcurrent4ab baselinecontext. No Dengine/import/render/export/hostedGPU; frozen4ab/aff/9a/6a unchanged.",
+  "flags": "All shippingOFF",
+  "expected": {
+    "times": [
+      "day",
+      "night"
+    ],
+    "hall_stills_finished": true,
+    "complete": false,
+    "presets": [
+      "Medium",
+      "High"
+    ],
+    "frames": 24,
+    "weather": [
+      "clear",
+      "rain"
+    ],
+    "labels": [
+      "inside Hall nave",
+      "pedestal meadows",
+      "companion in Shrine Room"
+    ]
+  },
+  "args": [
+    "--preset=Medium",
+    "--paired-high",
+    "--hall-stills-only",
+    "--source-commit=fb6a9f1f5e5c290683677c4493c3eac8436d1eb9",
+    "--output=res://ralph/reports/F17/lane-d/full-hall/native-fb6-hall-candidates",
+    "--hall-doorway-candidate",
+    "--hall-sealed-infill-candidate",
+    "--hall-endwall-candidate",
+    "--hall-arch-depth-candidate",
+    "--hall-surface-depth-candidate",
+    "--hall-relic-display-baseline",
+    "--hall-cloudreach-relic-baseline",
+    "--hall-stormwood-relic-baseline",
+    "--hall-relic-focus-baseline"
+  ],
+  "preserved": "Original controller farmdoor→road→nave and8arch/8pedestal circuit, unchanged stands/poses, samebody/healthydeployedcompanion/recall guards, sourcepin, nativeencodedraster and material/state bindings",
+  "before": "Retain originalSAME01a11f46 BEFORE-REUSE conditional75a24 same3labels/presets/raster; matchactualnewposesbeforecomparison, no soleitemattribution. EarlierMeado/Cloud16eacholdnave/HallbarBLOCK remainsliteral. This isnewsource/architecture, notunchangedfullbarrepeat.",
+  "engine_args": [
+    "--rendering-method",
+    "forward_plus",
+    "--rendering-driver",
+    "vulkan",
+    "--fullscreen",
+    "--resolution",
+    "1920x1080"
+  ],
+  "command_review": "Exactfb6 prospectivecommand notyetreviewed, NOTROOTqueued. SOURCE/changedexistingpresetCOMMANDAPP parent01a12037; actual1/0/exit0/6s/zeroerrorswarnings37918527501 nowavailable, originalARTIFACTrequested. Reservedinfilld38 actual2/0 originalARTAPP; combineddepthcurtainstate notcredited. Fixed4ab ROOTqueue MUSTremainunchangedfirst.",
+  "source": "fb6a9f1f5e5c290683677c4493c3eac8436d1eb9",
+  "related_unit": "Reuse original4abheader1/0/f596selector1/0/d38reservedbase-state2/0 and2ef5actualfloor/raster diagnostic plusoriginal37886379900 genuine6testAPP forunchangedguards. No unchangedguard/preset/hostbatch repeat; newfb6selected1methodcoversnewfullHallnoheldscope only.",
+  "script": "tools/capture_f17_visual.gd",
+  "excluded": [
+    "furniture lift parked4/4",
+    "parkedF19",
+    "Low bank37763616872 alreadyPASS, norepeat",
+    "hungrelic candidate witness",
+    "whole F17/F38/F26",
+    "performance",
+    "earned route",
+    "device"
+  ],
+  "criterion": "F17#6 OPEN; bounded Hall visual candidate packet, notwhole acceptance",
+  "proof_limit": "Inheritedvillage aperture-binding assertion overriddenbycircuit hook, no credit. Worldinitialreservedsealed only: combineddepth-curtain/stirredrestoration actualunit/native notestablished, no newassertioncount. No village/motion/co-op/earned/device/performance orwholeF17#6 credit; nativeHallBarA/Bscorepending.",
+  "source_preflight": "Use establishedexactHEADR2-F38 restoredefinition/shots-ignore/pin/import, freshHOME/output, actualsource/index checksbeforeafter. Allfailed/successfulrawpackets/untrackedproofs preserved. Fullscreen1080fromalreadyapprovedrasterrefusalfix."
+}
