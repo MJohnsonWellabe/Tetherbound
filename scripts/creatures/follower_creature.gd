@@ -70,11 +70,9 @@ const INTERIOR_BEACON := preload("res://scripts/world/objective_beacon.gd")
 ## collision (`cloudreach_encounter_director.gd::verified_follow_spot`) supplies
 ## `station_validator`; without one the station is the unchanged flank and the
 ## snap keeps `place_on_ground`, refusing only a seat far below the trainer.
-## Revalidate a changed station at most every this many physics frames (the
-## validator is tens of physics queries; never every frame).
+## Revalidate stations at this interval: nearby physical actors can move even
+## when the trainer and requested flank stand still. Never query every frame.
 const STATION_VALIDATE_FRAMES := 15
-## A station that moved less than this since its last check is not re-checked.
-const STATION_VALIDATE_MOVE_M := 0.05
 ## Default snap guard: a seat more than this below the trainer's feet is a floor
 ## under a drop, not the trainer's ground (a Meadows hillside flank never is).
 const DEFAULT_SNAP_MAX_DROP_M := 6.0
@@ -352,23 +350,18 @@ func _release_footprint_exception(leader_position: Vector3) -> void:
 		_footprint_exception = null
 
 
-## The walking station, verified by the realm validator on change and at most
-## every STATION_VALIDATE_FRAMES; between checks the verified offset rides with
+## The walking station, verified by the realm validator every
+## STATION_VALIDATE_FRAMES; between checks the verified offset rides with
 ## the trainer. INF when the validator found no station on the trainer's floor.
 func _validated_station(requested: Vector3, leader_position: Vector3, validator: Callable = Callable()) -> Vector3:
 	if not validator.is_valid():
 		validator = station_validator
 	var frame := Engine.get_physics_frames()
 	var offset := requested - leader_position
-	var due := not _station_requested.is_finite()
-	if not due and frame - _station_checked_frame >= STATION_VALIDATE_FRAMES:
-		# Also re-ask while the last answer was "no station": after a teleport
-		# the first check can run before the floor's colliders exist, and a
-		# trainer who then stands still would otherwise keep the companion on
-		# the close-on-trainer fallback indefinitely.
-		due = not _station_offset.is_finite() \
-			or _station_requested.distance_to(offset) > STATION_VALIDATE_MOVE_M \
-			or _station_leader.distance_to(leader_position) > STATION_VALIDATE_MOVE_M
+	# A valid answer can become occupied by a roaming body while both anchors
+	# stand still. Refresh positive and INF answers at the same bounded cadence.
+	var due := not _station_requested.is_finite() \
+		or frame - _station_checked_frame >= STATION_VALIDATE_FRAMES
 	if due:
 		_station_checked_frame = frame
 		_station_requested = offset

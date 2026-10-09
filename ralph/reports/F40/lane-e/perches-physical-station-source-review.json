@@ -1,0 +1,102 @@
+{
+  "reviewer": "Original Ohm /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "review_type": "Bounded exact TEMP patch independent source review before integration; no live application/execution",
+  "source_verdict": "APPROVE TEMP exact patch; integrated pin/runtime remains PENDING",
+  "patch": {
+    "path": "D:/CodexTemp/e-perches-physical-station-6a5f.patch",
+    "sha256": "38b6d8fee52037136c9c4e3f6de8e689d9c4ee1195455a461b51fa38faa97b0a",
+    "base_commit": "1e2cc89ae9e74fbd64f195616fba3fe37695774b",
+    "observed_current_HEAD": "4df352afc9cfa4c7991b36668e14fda715a198a7",
+    "base_binding": "All four original objects equal exact1e2 and current HEAD objects. Every removal/context in each supplied hunk matched base content; resultant source computed in memory only. No patch applied/file implementation written.",
+    "insertions": 54,
+    "deletions": 17,
+    "objects": [
+      {
+        "path": "scripts/creatures/follower_creature.gd",
+        "base_blob": "bb95ae59051ab8f470b9b47950759743d3c8c1f6",
+        "base_sha256": "fd2b6f7ec4d731052acccff49455c97616b94f1edcbf73374f733db3dfbad1c8",
+        "temporary_after_blob": "f2356de63e40d22cde7167bc38c6fb0ec1c5d9ab",
+        "temporary_after_sha256": "a2ddfd724aa8633cbb3d7ee3ef578e885baf5046aa2d69c209b958bc4d50c3a3",
+        "base_exact_1e2_and_current_HEAD_equal": true,
+        "insertions": 8,
+        "deletions": 15
+      },
+      {
+        "path": "scripts/combat/cloudreach_encounter_director.gd",
+        "base_blob": "5124f892db348f5860e5bfa75372da8b86f993cd",
+        "base_sha256": "4934a3f9275baa3e7e63df7e5dcb7531293394befbfbc4c7648404dfd0f21d4f",
+        "temporary_after_blob": "69ab8b9de0c3ee06a1945dc996e93bb23f66c671",
+        "temporary_after_sha256": "2c1caf7ab609e14404bcb9c5cbdce6b3327d5b127d9bf9a6bf0e2045d0467c63",
+        "base_exact_1e2_and_current_HEAD_equal": true,
+        "insertions": 3,
+        "deletions": 2
+      },
+      {
+        "path": "tests/test_follower_floor_station.gd",
+        "base_blob": "491e5330ab0dc7018d9ab54e60854ccada82ec80",
+        "base_sha256": "9019d9a4d68ced8fa12e6b29dc2fea50474bb49073065de657cea36e21b956c9",
+        "temporary_after_blob": "df6ca76bb7958132852917c38cb399cb90076429",
+        "temporary_after_sha256": "c7760b7d378c90d6cf6493255e4eb4c598e611935ed1b93a1335e2c411bb3056",
+        "base_exact_1e2_and_current_HEAD_equal": true,
+        "insertions": 17,
+        "deletions": 0
+      },
+      {
+        "path": "tests/smoke_cloudreach_follower_edge.gd",
+        "base_blob": "941cba079dbebc10ca44b311408033fed490aad6",
+        "base_sha256": "24766b99c6158f1cd51052e39e852212a19e037afdfe45c17b9be9cd8d64e24b",
+        "temporary_after_blob": "94a919958bcc900580531857007cbca70fc66022",
+        "temporary_after_sha256": "f3e8c71bf54e6c4fabf79c2b233393f4c1f27cc39dd8737266a51904286d55b7",
+        "base_exact_1e2_and_current_HEAD_equal": true,
+        "insertions": 26,
+        "deletions": 0
+      }
+    ]
+  },
+  "ownership": {
+    "notice": "Parent supplied A-owner permissionNOTICE6079757167; no external issue fetch.",
+    "director_stop_condition": "Verified director hunk contains only comment change and StaticBody3D to PhysicsBody3D hit predicate in _recall_body_fits. Query shape/global basis/offset0.05/mask/exclusions/trainer-body RIDs/hitcap8 remain byte-identical. No manager, authority, combat, actor roster/scale or other director behavior edit."
+  },
+  "findings": [
+    "PhysicsBody3D includes existing StaticBody3D terrain plus CharacterBody3D/RigidBody3D actors. Body-fit now rejects returned physical-actor overlap while preserving both self/trainer exclusions, query mask/hitcap8/default body query and missing-shape fallback. Floor selection remains StaticBody-only and existing normal/level/path checks unchanged; this does not accept actors as floor.",
+    "Shared follower _validated_station removes movement-conditioned cache reuse beyond the interval. Initial invalid request still validates immediately; every positive or INF answer now refreshes when at least15physics frames elapsed. Between checks same verified offset rides with trainer, cadence and validation callable signature remain unchanged. _tick_follow calls it only for valid realm/indoor validator; ordinary no-validator flank, grounded/snap and no-station trainer-clearance fallback are unchanged.",
+    "Stationary validation work increases from indefinitely reused positive cache to one bounded refresh per15frames. Existing indoor validators also use this shared function: this is a follow behavior/performance change, not presentation-only. Existing candidate/ray/shape counts stay bounded; no per-frame querying added. Actual cost and mounted behavior remain to be demonstrated.",
+    "Existing floor-station method retains initial five-call one-validation/steering guards and extends the same validator fixture: boundary-minus-one causes no call; exact interval changes a positive answer; next exact interval stores INF and restores existing fallback. No new method/class/fixture, assertion skip or clock change in production.",
+    "Existing mounted Cloudreach smoke adds a read-only probe against its already-mounted wild roster, using the actual follower collision and exact transform/mask/exclusions/hitcap8. It requires a returned wild hit with no StaticBody hit, then body-fit refusal. Missing actor-only operand hard-fails rather than skipping; original snap/road/yaw/airborne checks remain. No actor moved/created or result/shape mutated by this probe.",
+    "The original6a actor snapshots have positive-cache age139/140 and a matched ally beside other unknown-role bodies. Those measurements support a stale-cache/query inconsistency hypothesis, but do not prove collision interpenetration, ownership, the merged silhouette cause or future visual improvement."
+  ],
+  "necessary_affected_existing_proofs": [
+    {
+      "recipe": [
+        "Godot",
+        "--headless",
+        "--path",
+        "<exact approved integrated pin>",
+        "--script",
+        "res://tests/run_tests.gd",
+        "--",
+        "--only=test_follower_floor_station.gd"
+      ],
+      "scope": "Existing detached follower/validator tests including new cadence boundaries and INF fallback. Cannot establish live physics/body clearance/performance."
+    },
+    {
+      "recipe": [
+        "Godot",
+        "--headless",
+        "--path",
+        "<same exact approved integrated pin>",
+        "--script",
+        "res://tests/smoke_cloudreach_follower_edge.gd"
+      ],
+      "scope": "Existing mounted world and real recall/follower physics proof, including actor-only actual query and all original snap/walk/airborne guards. Existing seed/teleport/camera-yaw/airborne-stand-in disclosures remain; no new fixture or fullsuite."
+    }
+  ],
+  "pending_gates": [
+    "Executor integration must preserve exact approved result objects and ownership hunk; resolve/pin actual integrated source before command/runtime identity approval.",
+    "Original affected unit and mounted smoke artifacts must be genuinely bound to that integrated pin; no unrun PASS claimed.",
+    "ROOT actual native mounted Perches original rows/actor-cache/fixture receipts and independent blind pixel comparison remain required for appearance. No native argv or live SHA approval in this TEMP review.",
+    "Actual query cost/occupancy/fallback behavior and any body-silhouette improvement remain unproved; no snapshot role/UID ownership or geometry-contact PASS."
+  ],
+  "reuse_limits": "Accepted unchanged 8b/f9/6a scenery/material/producer/test witnesses are preserved; no SHA-only reset, old accepted batch rerun or unrelated map/environment/fullsuite requested. Prior whole High/Medium barFAILs and parked seating attempts stay unchanged. No engine/import/GPU/tests/dispatch, live patch, source edit, helper/newagent or judge contact performed.",
+  "literal_remaining_limits": "No actual runtime/artifact/native/physical-interpenetration/appearance/campaign/earned/co-op/device/performance/fullmatrix/wholeF40/F08/READY approval."
+}

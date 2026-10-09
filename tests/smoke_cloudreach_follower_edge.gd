@@ -100,6 +100,32 @@ func _run() -> void:
 		_report()
 		return
 
+	# Read-only occupancy probe against an existing mounted wild, with no actor
+	# movement or new fixture. Require an actor-only physics hit so static
+	# geometry cannot make the old StaticBody-only predicate pass this check.
+	var dynamic_checked := false
+	var follower := _body() as PhysicsBody3D
+	var follower_shape := follower.get_node(^"Collision") as CollisionShape3D
+	for wild: Node3D in _director.get("_wild_creatures"):
+		if not is_instance_valid(wild) or not wild is PhysicsBody3D or not wild.is_inside_tree(): continue
+		var query := PhysicsShapeQueryParameters3D.new()
+		query.shape = follower_shape.shape
+		query.collision_mask = _player.collision_mask
+		query.transform = Transform3D(follower_shape.global_basis,
+			wild.global_position + Vector3.UP * 0.05 + (follower_shape.global_position - follower.global_position))
+		query.exclude = [_player.get_rid(), follower.get_rid()]
+		var has_wild := false
+		var has_static := false
+		for hit: Dictionary in _player.get_world_3d().direct_space_state.intersect_shape(query, 8):
+			has_wild = has_wild or hit.collider == wild
+			has_static = has_static or hit.collider is StaticBody3D
+		if not has_wild or has_static: continue
+		_check(_director.call("_recall_body_fits", _player, wild.global_position, follower) == false,
+			"station refuses actual mounted wild %s without a static obstruction" % wild.name)
+		dynamic_checked = true
+		break
+	_check(dynamic_checked, "existing mounted wild supplies the dynamic occupancy operand")
+
 	# (a) leash snaps.
 	for label: String in SPOTS:
 		for q in 4:
