@@ -73,7 +73,7 @@ static func source_valid(action: String, intent: Dictionary, context: Dictionary
 	if action != "rest_complete" or context.get("actual_completed_night") != true \
 		or not E._integer(context.get("night_day"), 1, MAX_GENERATION) \
 		or not E._integer(context.get("eligible_generation"), 0, MAX_GENERATION) \
-		or not context.get("party_uids") is Array or context.party_uids.is_empty() or context.party_uids.size() > 5 \
+		or not context.get("party_uids") is Array or context.party_uids.size() > 5 \
 		or not context.get("bed_roster") is Dictionary: return false
 	var seen := {}
 	for uid: Variant in context.party_uids:

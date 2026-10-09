@@ -283,6 +283,32 @@ func test_authored_completion_bonus_is_separate_without_an_extra_victory() -> vo
 		"participants": [DATA.CHARACTER], "night_day": 6, "eligible_generation": REST.generation(night_before.redesign_character, DATA.CHARACTER, "rest_activity"), "party_uids": night_uids,
 		"bed_roster": {night_uids[0]: {"bed_index": 0, "comfort_bonus": 0.0}}}
 	var night_intent := {"action_id": "11111111111111111111111111111111"}
+	# Disclosed fresh empty-player codec control: no owned companion grant,
+	# earned activity, physical night, disk write or ACK is supplied here.
+	var empty_player := preload("res://autoload/player_state.gd").new()
+	empty_player.configure(preload("res://autoload/item_db.gd").new())
+	empty_player.character_id = DATA.CHARACTER
+	var empty_before := RECORD.portable_projection(empty_player.save_data())
+	assert_true(empty_before.party.is_empty())
+	assert_true(RECORD.errors(empty_before, DATA.CHARACTER).is_empty())
+	var empty_night: Dictionary = night.duplicate(true)
+	empty_night.party_uids = []
+	empty_night.bed_roster = {}
+	empty_night.eligible_generation = 0
+	var empty_rest := REST.stage(empty_before, night_intent, empty_night)
+	assert_true(empty_rest.get("ok") == true, str(empty_rest))
+	if empty_rest.get("ok") == true:
+		assert_true(empty_rest.state.party.is_empty(), "sleep cannot grant a companion")
+		assert_true(empty_rest.awards.is_empty(), "an empty roster receives no creature XP")
+		assert_false(empty_rest.qualified, "a new character has no earned activity")
+		assert_true(RECORD.errors(empty_rest.state, DATA.CHARACTER).is_empty())
+		var empty_duty := {"character_id": DATA.CHARACTER, "action": "rest_complete", "intent": night_intent, "context": empty_night}
+		assert_true(EVENT.valid(_event(empty_duty), "resource-namespace", "resource-slot"))
+		var empty_row := _row(empty_before, empty_duty)
+		assert_true(DELIVERY.valid(empty_row, RECORD.errors, DATA.CHARACTER, "resource-namespace", "resource-slot"), "authenticated empty roster uses the original v3 carrier")
+	var false_empty: Dictionary = empty_night.duplicate(true)
+	false_empty.party_uids = [night_uids[0]]
+	assert_false(REST.stage(empty_before, night_intent, false_empty).ok, "empty player still requires exact authenticated roster equality")
 	var rested := REST.stage(night_before, night_intent, night)
 	assert_true(rested.get("ok") == true, str(rested))
 	if rested.get("ok") != true: return
