@@ -1451,11 +1451,9 @@ func _read_use() -> void:
 		var game := get_node_or_null(^"/root/Game")
 		if menu != null: menu.call("close")
 		if game != null:
-			var owner: Node = preload("res://scripts/ui/input_owner.gd").current(get_tree())
-			var owner_path := str(owner.get_path()) if owner != null else ""
 			var used: bool = game.call("use_home_key") == true
 			print("HOME KEY SATCHEL USE " + JSON.stringify({"returned": used,
-				"input_owner_at_call": owner_path, "refusal_after_call": game.call("home_key_refusal")}))
+				"focused_slot": _focused, "selected_item": id, "selected_count": stack.get("n", 0)}))
 		return
 	if str(db.call("kind", id)) == "armor":
 		var equipment := _equipment()

@@ -212,24 +212,19 @@ func hang_relic(biome: String) -> bool:
 			return _uids() == before or _fail("F49 relic hanging changed the actual party")
 	return _fail("F49 relic hanging produced no actual portable relics_hung state")
 
-## Read-only operands: no request dispatch, admission change or success inference.
+## Stored operands only: no policy getters, admission recovery or UI factories.
 func _observe_home_key(phase: String) -> void:
-	var owner := INPUT_OWNER.current(tree)
 	var scene := tree.current_scene
-	var menu: Node = game.call("menu")
+	var menu: Node = game.get("_menu")
 	var session: Node = game.get("session")
 	var key := game.get_node_or_null(^"HomeKey")
 	var row := {"phase": phase, "paused": tree.paused,
-		"input_owner": str(owner.get_path()) if owner != null else "",
-		"menu_open": menu != null and menu.call("is_open") == true,
+		"menu_open": menu != null and menu.get("_open") == true,
+		"menu_closing_action": str(menu.get("_closing_action")) if menu != null else "",
 		"realm": str(game.current_realm), "pending_entry": str(game.pending_realm_entry),
 		"scene": str(scene.get_path()) if scene != null else "",
-		"meadows_scene_ready": scene != null and game.call("_realm_scene_ready", scene, "meadows") == true,
-		"meadows_input_ready": _ready_world("meadows"), "home_key_present": key != null,
-		"story_modals": [], "session": {}}
-	for modal: Node in tree.get_nodes_in_group("story_modal"):
-		if modal.has_method("is_open") and modal.call("is_open") == true:
-			row.story_modals.append(str(modal.get_path()))
+		"home_key_present": key != null, "session": {}}
+	if is_instance_valid(_player): row["player_position"] = str(_player.global_position)
 	if key != null:
 		row["key"] = {}
 		var label: Label = key.get("_refusal_label")
@@ -237,25 +232,11 @@ func _observe_home_key(phase: String) -> void:
 		for field: String in ["_phase", "_pending", "_use_id", "_elapsed", "_wait", "_fade_locked", "_closing_edge"]:
 			row.key[field] = key.get(field)
 	if session != null:
-		var peer: int = session.call("local_peer_id")
-		var blocked: bool = session.call("_owner_training_mutation_blocked", game.local) == true
-		row.session = {"host": session.call("is_host"), "active": session.call("is_active"),
-			"snapshot_ready": session.call("snapshot_ready"), "peer": peer,
-			"epoch": session.call("_altar_current_epoch"),
-			"admitted": not (session.call("admitted_character_state", peer) as Dictionary).is_empty(),
-			"runtime_ready": session.call("portal_runtime_ready"), "owner_mutation_blocked": blocked,
-			"owner_block_reason": session.call("_owner_snapshot_block_reason", game.local) if blocked else "",
-			"refusal": game.call("home_key_refusal"), "context": {}, "queued_requests": []}
-		var context: Dictionary = {}
-		if row.session.host == true:
-			context = session.call("_host_portal_context", peer)
-		else:
-			var lifecycle := session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
-			if lifecycle != null: context = lifecycle.call("local_sample")
-		for field: String in ["combat", "dialogue", "cutscene", "swimming", "flying", "downed", "home_key_owned", "realm", "damage_revision", "position"]:
-			if context.has(field): row.session.context[field] = context[field]
-		if context.get("arch_positions") is Dictionary:
-			row.session.context["home_arch"] = context.arch_positions.get("home")
+		row.session = {"mode": session.get("_mode"),
+			"preparing_client": session.get("_preparing_client"),
+			"snapshot": (session.get("_box") as Dictionary).get("snapshot"),
+			"host_epoch": session.get("_altar_epoch"),
+			"received_host_epoch": session.get("_altar_host_epoch"), "queued_requests": []}
 		for request: Variant in (session.get("_portal_requests") as Dictionary).values():
 			if request is Dictionary and request.get("payload", {}).get("kind", "") in ["home_key_begin", "home_key_finish", "home_key_cancel"]:
 				var queued := {}
