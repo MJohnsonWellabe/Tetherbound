@@ -314,6 +314,8 @@ func test_authored_completion_bonus_is_separate_without_an_extra_victory() -> vo
 	if rested.get("ok") != true: return
 	for card: Dictionary in night_before.party:
 		assert_eq(rested.awards[card.uid], 5, "all owned cards receive flat five, including the fainted unbedded card")
+	for card: Dictionary in rested.state.party:
+		assert_eq(RECORD.portable_card(card), card, "the rest target must equal the owner portable card, with combat energy outside authority")
 	assert_true(rested.state.party[4].fainted)
 	assert_eq(rested.state.party[4].hp, 0.0, "unbedded fainted creature receives XP without revival")
 	assert_eq(rested.state.party[0].hp, rested.state.party[0].max_hp)

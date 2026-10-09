@@ -154,6 +154,9 @@ static func stage(current: Dictionary, intent: Dictionary, context: Dictionary) 
 		completed[uid] = true
 	if completed.size() != context.bed_roster.size(): return {"ok": false, "code": "night_bed_roster_changed"}
 	next.party = codec.call("_party_to_array", party)
+	# The live save codec includes the combat meter; owner authority never does.
+	for index: int in next.party.size():
+		next.party[index] = load("res://scripts/net/character_record_rules.gd").portable_card(next.party[index])
 	var awards := {}
 	for index: int in next.party.size():
 		var card: Dictionary = next.party[index]
