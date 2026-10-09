@@ -182,6 +182,7 @@ func _build_pedestal(entry: Dictionary) -> void:
 	add_child(slot)
 	_add_model(slot, STAND_MODEL)
 	_build_meadows_relic_visual(slot, str(entry.biome))
+	_build_cloudreach_relic_visual(slot, str(entry.biome))
 	# Measured installed BookStand bounds, authored in config so physics and
 	# presentation share one native-scale footprint rather than a solid room.
 	var collider: Dictionary = _config.get("pedestal_collider", {})
@@ -227,6 +228,29 @@ func _build_meadows_relic_visual(slot: Node3D, biome: String) -> void:
 	mount.visible = false
 	slot.add_child(mount)
 	preload("res://scripts/world/trainer_aftermath.gd")._build_heart(mount, Vector3.ZERO, float(cfg.get("scale", .85)))
+
+
+func _build_cloudreach_relic_visual(slot: Node3D, biome: String) -> void:
+	var cfg: Dictionary = _config.get("cloudreach_relic_visual", {})
+	var args := OS.get_cmdline_user_args()
+	if biome != "cloudreach" or args.has("--hall-cloudreach-relic-baseline") or \
+			not (bool(cfg.get("enabled", false)) or args.has("--hall-cloudreach-relic-candidate")):
+		return
+	var shrine := preload("res://scripts/world/realm_heart_shrine.gd")
+	var material := StandardMaterial3D.new()
+	material.albedo_color = shrine.HEART_READY
+	material.roughness = .82
+	material.emission_enabled = true
+	material.emission = shrine.HEART_READY
+	material.emission_energy_multiplier = 1.15
+	var mount := Node3D.new()
+	mount.name = "CloudreachRelicDisplay"
+	mount.position = _position(cfg.get("at", [-.0131231, 1.34151, .02178]))
+	mount.rotation.x = deg_to_rad(float(cfg.get("pitch_deg", -41.035)))
+	mount.scale = Vector3.ONE * float(cfg.get("scale", .48))
+	mount.visible = false
+	slot.add_child(mount)
+	shrine.build_cloudreach_relic(mount, material)
 
 
 func _add_model(parent: Node3D, path: String) -> Node3D:
@@ -521,6 +545,9 @@ func apply_display(display: Dictionary) -> void:
 		var relic := pedestal.get_node_or_null(^"MeadowsRelicDisplay") as Node3D
 		if relic != null:
 			relic.visible = displayed
+		var cloudreach_relic := pedestal.get_node_or_null(^"CloudreachRelicDisplay") as Node3D
+		if cloudreach_relic != null:
+			cloudreach_relic.visible = displayed
 
 
 func home_arrival() -> Vector3:

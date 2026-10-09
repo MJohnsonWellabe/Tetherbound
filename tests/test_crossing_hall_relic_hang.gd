@@ -90,24 +90,60 @@ func test_host_sends_directly_and_surfaces_refusal() -> void:
 	var baseline: Node3D = hall.get("_pedestals").meadows
 	assert_true(baseline.get_node_or_null(^"MeadowsRelicDisplay") == null, "shipping candidate remains off")
 	baseline.free()
+	hall.call("_build_pedestal", config.pedestals[2])
+	var cloud_baseline: Node3D = hall.get("_pedestals").cloudreach
+	assert_true(cloud_baseline.get_node_or_null(^"CloudreachRelicDisplay") == null, "Cloudreach shipping candidate remains off")
+	cloud_baseline.free()
 	hall.get("_pedestals").clear()
 	config.meadows_relic_visual.enabled = true
+	config.cloudreach_relic_visual.enabled = true
 	hall.set("_config", config)
 	hall.call("_build_pedestal", config.pedestals[0])
 	var pedestal: Node3D = hall.get("_pedestals").meadows
 	var relic := pedestal.get_node(^"MeadowsRelicDisplay") as Node3D
 	var children: int = pedestal.get_child_count()
+	hall.call("_build_pedestal", config.pedestals[2])
+	var cloud_pedestal: Node3D = hall.get("_pedestals").cloudreach
+	var wings := cloud_pedestal.get_node(^"CloudreachRelicDisplay") as Node3D
+	var cloud_children: int = cloud_pedestal.get_child_count()
+	assert_eq(wings.get_child_count(), 6, "reuse all six existing Cloudreach feathers")
+	var feather_index := 0
+	for side: float in [-1.0, 1.0]:
+		for feather in 3:
+			var piece := wings.get_child(feather_index) as MeshInstance3D
+			assert_eq(piece.position, Vector3(side * (0.12 + feather * 0.12), 0.15 - feather * 0.07, 0), "existing feather position")
+			assert_eq(piece.scale, Vector3(0.13, 0.45 - feather * 0.05, 0.12), "existing feather scale")
+			assert_true(is_equal_approx(piece.rotation.z, side * 0.65), "existing feather roll")
+			var sphere := piece.mesh as SphereMesh
+			assert_eq(sphere.radius, 0.5)
+			assert_eq(sphere.height, 1.0)
+			assert_eq(sphere.radial_segments, 12)
+			assert_eq(sphere.rings, 6)
+			feather_index += 1
 	assert_false(relic.visible, "empty pedestal has no phantom reward")
+	assert_false(wings.visible, "empty Cloudreach pedestal has no phantom reward")
 	var saved := {"shrine_display":{"meadows":true}}
 	var before: Dictionary = saved.duplicate(true)
 	hall.call("apply_display", saved)
 	assert_true(relic.visible, "saved host hang produces a physical display")
+	assert_false(wings.visible, "a Meadows hang does not display Cloudreach")
 	assert_eq(saved, before, "presentation never mutates the host display")
 	hall.call("apply_display", saved)
 	assert_eq(pedestal.get_child_count(), children, "replayed view does not duplicate the relic")
 	assert_eq(session.calls, ["hang:meadows"] as Array[String], "repainting never sends a hang")
+	var cloud_saved := {"shrine_display":{"cloudreach":true}}
+	var cloud_before: Dictionary = cloud_saved.duplicate(true)
+	hall.call("apply_display", cloud_saved)
+	assert_true(wings.visible, "saved Cloudreach host hang displays the Wings")
+	assert_false(relic.visible, "Cloudreach host state does not retain a stale Meadows display")
+	assert_eq(cloud_saved, cloud_before, "Cloudreach presentation never mutates the host view")
+	hall.call("apply_display", cloud_saved)
+	assert_eq(cloud_pedestal.get_child_count(), cloud_children, "replayed Cloudreach view does not duplicate the Wings")
+	assert_eq(session.calls, ["hang:meadows"] as Array[String], "Cloudreach repaint never sends a hang")
 	hall.call("apply_display", {})
 	assert_false(relic.visible, "an empty restored view removes the stale display")
+	assert_false(wings.visible, "empty restored host state clears Cloudreach display")
+	assert_false(bool(cloud_pedestal.get_meta("relic_displayed")))
 	assert_false(bool(pedestal.get_meta("relic_displayed")))
 	hall.free()
 	game.free()
