@@ -1,0 +1,70 @@
+{
+  "source": "b9a6c704bbe2d0192b3ad86c58ddea86cfe0440a",
+  "criterion": "F17#6 OPEN; actual mounted Meadows relic witness only",
+  "script": "tools/capture_f17_visual.gd",
+  "engine_args": [
+    "--rendering-method",
+    "forward_plus",
+    "--rendering-driver",
+    "vulkan",
+    "--resolution",
+    "1920x1080"
+  ],
+  "args": [
+    "--preset=Medium",
+    "--paired-high",
+    "--hall-stills-only",
+    "--hall-relic-hang-witness",
+    "--hall-relic-display-candidate",
+    "--hall-endwall-baseline",
+    "--hall-arch-depth-baseline",
+    "--hall-surface-depth-baseline",
+    "--source-commit=b9a6c704bbe2d0192b3ad86c58ddea86cfe0440a",
+    "--output=res://ralph/reports/F17/lane-d/meadows-relic-display/native-b9a6-hung"
+  ],
+  "fixture": "Fresh solo host, unchanged portal runtime true. Existing post-opening/starter and initial placement retained; one authored Meadows relic appended to personal held list before world load, fresh production saver under output. No earned boss, key, hung flag, receipt or world display seeded.",
+  "path": "Existing f49_portal_travel::hang_relic uses ordinary grounded controller navigation and exact actionable provider. Production Session request/authority/source/revision/transaction/save path unchanged; power modal cancelled through parsed pad.",
+  "guards": "Fresh output/save dir, original8arch/8pedestal physical circuit and samebody/healthy-owned companion; initial hidden actual candidate, actual saved held removal/hung+receipt once/worlddisplay, stable identity/namespace/party, actual mount visible before every native image; original actual camera/pairedpose/raster/weather guards retained",
+  "expected": {
+    "weather": [
+      "clear",
+      "rain"
+    ],
+    "presets": [
+      "Medium",
+      "High"
+    ],
+    "hall_stills_finished": true,
+    "frames": 16,
+    "complete": false,
+    "times": [
+      "day",
+      "night"
+    ],
+    "labels": [
+      "pedestal meadows",
+      "hung relic from nave"
+    ]
+  },
+  "unit_command": {
+    "script": "tools/run_one_test.gd",
+    "headless": true,
+    "args": "res://tests/test_f17_capture_presets.gd",
+    "dummy_audio": true,
+    "scope": "Existing capture preload and preset branches; no actual hang or native credit",
+    "renderer": "gl_compatibility",
+    "timeout_minutes": 10
+  },
+  "shipping": "Meadows relic display remains OFF outside explicit candidate argv; native/judge failure stays OFF",
+  "review": "PENDING SAME original SOURCE/exact unit/native argv approval before any ROOT queue",
+  "excluded": [
+    "earned boundary promotion",
+    "boss completion",
+    "co-op",
+    "whole F17#6",
+    "device",
+    "performance",
+    "motion"
+  ],
+  "reuse": "Original Meadows4/0 clean unit and2ef5 genuine6guard/runtimeAPP retained for unchanged production; no repeated jobs"
+}
