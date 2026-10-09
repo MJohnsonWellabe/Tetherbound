@@ -28,3 +28,14 @@ func test_native_capture_preset_branches_return_typed_strings() -> void:
 	assert_eq(CAPTURE.relic_witness_spec("stormwood").mount, "StormwoodRelicDisplay")
 	assert_true(CAPTURE.relic_witness_spec("tidewake").is_empty(), "do not invent a Tideglass mount")
 	assert_true(CAPTURE.relic_witness_spec("biome5").is_empty(), "sealed biomes cannot seed a witness")
+	# The outer first-column relics lie behind the partition from room centre.
+	# The optional actual nave-side doorway viewpoint must clear that partition
+	# for all four live mounts, without moving any pedestal or camera manually.
+	var doorway := Vector3(7, 0, 0)
+	var view: Vector3 = CAPTURE.relic_doorway_stand(doorway)
+	assert_true(view.x < doorway.x, "viewpoint remains in the nave")
+	var hall_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
+	for row: Dictionary in hall_config.pedestals.slice(0, 4):
+		var fraction := (doorway.x - view.x) / (float(row.at[0]) - view.x)
+		var crossing_z := view.z + (float(row.at[2]) - view.z) * fraction
+		assert_true(absf(crossing_z) < 2.0, "actual live-pedestal sightline passes the unchanged four-metre doorway")

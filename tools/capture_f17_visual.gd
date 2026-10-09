@@ -18,6 +18,10 @@ var _hall_stills_only := false
 var _hall_stills_finished := false
 var _relic_hang_witness := false
 var _relic_biome := "meadows"
+## Process-only evidence position option; no gameplay/save/authority writes.
+var _relic_doorway_view := false
+var _relic_doorway_boundary := Vector3.ZERO
+var _relic_view_hall: Node3D
 var _relic_hung := false
 var _relic_witness: Dictionary = {}
 const HALL_STILL_LABELS: Array[String] = ["inside Hall nave", "pedestal meadows", "companion in Shrine Room"]
@@ -42,6 +46,8 @@ func _run() -> void:
 			_relic_hang_witness = true
 		elif argument.begins_with("--hall-relic-biome="):
 			_relic_biome = argument.trim_prefix("--hall-relic-biome=")
+		elif argument == "--hall-relic-doorway-view":
+			_relic_doorway_view = true
 		elif argument.begins_with("--expected-resolution="):
 			var dimensions := argument.trim_prefix("--expected-resolution=").split("x")
 			_expected_resolution = Vector2i(int(dimensions[0]), int(dimensions[1])) if dimensions.size() == 2 else Vector2i.ZERO
@@ -53,6 +59,7 @@ func _run() -> void:
 	await process_frame
 	if DisplayServer.get_name() == "headless" or not GRAPHICS.PRESETS.has(_preset) \
 			or relic_witness_spec(_relic_biome).is_empty() or (_relic_biome != "meadows" and not _relic_hang_witness) \
+			or (_relic_doorway_view and (not _relic_hang_witness or not _hall_stills_only)) \
 			or (_farm_diagnostic_only and _hall_stills_only) \
 			or (_paired_high and _preset != "Medium") \
 			or (_expected_resolution != Vector2i(1920, 1080) and not (_preset == "Low" and _expected_resolution == Vector2i(1280, 720))) \
@@ -92,7 +99,10 @@ func _capture(label: String) -> void:
 			if not await _hang_fixture_relic():
 				_finish_failure(_failed)
 				return
-		if label == "hung relic from nave":
+		if label == _relic_view_label():
+			if _relic_doorway_view and not _doorway_nave_position_valid():
+				_finish_failure("doorway witness must remain at its ordinary target on the actual nave side of the partition")
+				return
 			var target := root.get_node_or_null(str(_relic_witness.get("pedestal", ""))) as Node3D
 			if target == null:
 				_finish_failure("hung relic's actual pedestal disappeared before doorway view")
@@ -132,8 +142,27 @@ static func relic_witness_spec(biome: String) -> Dictionary:
 func _hung_relic_labels() -> Array[String]:
 	var labels: Array[String] = []
 	labels.append("pedestal " + _relic_biome)
-	labels.append("hung relic from nave")
+	labels.append(_relic_view_label())
 	return labels
+
+
+func _relic_view_label() -> String:
+	return "hung relic from shrine doorway" if _relic_doorway_view else "hung relic from nave"
+
+
+static func relic_doorway_stand(door: Vector3) -> Vector3:
+	# The existing controller arrival tolerance is .6m. Approach from the
+	# gallery toward a target .9m into the nave, preserving that tolerance.
+	return door - Vector3(.9, 0, 0)
+
+
+func _doorway_nave_position_valid() -> bool:
+	if not is_instance_valid(_relic_view_hall):
+		return false
+	var actual := _relic_view_hall.to_local(_player.global_position)
+	var target := relic_doorway_stand(_relic_doorway_boundary)
+	return is_finite(actual.x) and actual.x < _relic_doorway_boundary.x \
+		and Vector2(actual.x, actual.z).distance_to(Vector2(target.x, target.z)) <= .75
 
 
 func _prepare_relic_fixture() -> bool:
@@ -328,6 +357,9 @@ func _capture_matrix(label: String) -> void:
 func _save_view(label: String, time_name: String, weather_name: String = "clear", motion: bool = false, diagnostic: String = "") -> bool:
 	await RenderingServer.frame_post_draw
 	var captured_ms := Time.get_ticks_msec()
+	if _relic_doorway_view and label == _relic_view_label() and not _doorway_nave_position_valid():
+		_failed = "actual doorway/nave position changed before native capture"
+		return false
 	if _relic_hang_witness:
 		var mount := root.get_node_or_null(str(_relic_witness.get("mount", ""))) as Node3D
 		if not _relic_hung or mount == null or not mount.is_visible_in_tree() \
@@ -473,9 +505,13 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 		for pedestal: Node3D in get_nodes_in_group("crossing_hall_pedestals"):
 			stands[str(pedestal.get_meta("biome", ""))] = pedestal
 		var route := _gallery_route(hall, stands)
+		_relic_view_hall = hall
+		_relic_doorway_boundary = route.get("door", Vector3.ZERO)
+		var view_at := relic_doorway_stand(_relic_doorway_boundary) if _relic_doorway_view else Vector3.ZERO
+		var view_via: Vector3 = route.get("door", Vector3.ZERO) if _relic_doorway_view else Vector3.ZERO
 		if not _relic_hung or route.is_empty() \
 				or not await _walk_to_target(hall, hall.to_global(route.door), route.aisle, "hung relic return through shrine doorway") \
-				or not await _walk_to_target(hall, hall.global_position, Vector3.ZERO, "hung relic from nave"):
+				or not await _walk_to_target(hall, hall.to_global(view_at), view_via, _relic_view_label()):
 			_write_manifest(false)
 			return false
 	if _hall_stills_only:
@@ -539,6 +575,7 @@ func _write_manifest(complete: bool) -> void:
 		"diagnostic_only": _farm_diagnostic_only,
 		"hall_stills_only": _hall_stills_only, "hall_stills_finished": _hall_stills_finished,
 		"relic_hang_witness": _relic_hang_witness, "relic_hang": _relic_witness,
+		"relic_doorway_view": _relic_doorway_view,
 		"scope": "disclosed held-relic fixture, ordinary host hang and saved receipt, mounted candidate ON at pedestal and nave with same healthy companion/production camera; no earned boundary, boss, co-op, device, full matrix or whole criterion claim" if _relic_hang_witness else "partial farm-door light diagnostic only; no Hall circuit, motion or acceptance claim" if _farm_diagnostic_only else "bounded3existing Hall still labels with physical8+8/recall; no full visual matrix/motion/wholecriterion claim" if _hall_stills_only else "physical village/Hall circuit and native views; independent visual verdict required; no earned opening, device, fight or multiplayer proof"}, "\t") + "\n")
 	file.flush()
 	var write_error := file.get_error()
