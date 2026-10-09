@@ -30,7 +30,20 @@ the first real release observation. It samples immediately after the same
 ordinary physical tap, then each eligible frame, preserving the exact original
 600+15 deadline, source identities and every input-owner/menu/pending/mutation
 predicate. NOTICE `6071728922` preceded this existing-observer correction.
-Original SOURCE + COMMAND review is pending; no rerun or runtime PASS follows.
+Original `kitchen_review` SOURCE + COMMAND APPROVE exact `555311af41`.
+
+[Second run 37865719148](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37865719148),
+job `113611848230`, exact `555311af41`, artifact `11588192350`, exits 1.
+ROOT retains the original ZIP and extraction at
+`D:/CodexTemp/tetherbound-proof/11588192350`; ZIP SHA256
+`e4dbe23a0432b1b1f3c940845e589bbd4dc792f42a4271279f850060e102402d`.
+The first failure is again step 25 guest catch, now the earlier source-companion
+guard: "Actual shared Alpha catch must create exactly one durable source
+companion; no offered/provenance grant. Owner plan: unavailable".
+Cooking and feeding were not reached. This is not a close-release result or
+proof of an ownership-plan cause. Original terminal artifact review is pending.
+Both full attempts remain failed and retained; the Kitchen producer is parked
+after two attempts. No unchanged third rerun or failed-save boundary promotion.
 
 The existing five-tier feast-button test is extended at
 `b12252c7942d346d3af1c930042cfb4e01da2921` with actual detached Kitchen
@@ -48,7 +61,9 @@ job `113609041531`, artifact `11587886822`, exact `b12252c794`:
 checkout and selector verified. ZIP
 `D:/tetherbound/.tmp/c-f28-cost-type-37864853941.zip`, SHA256
 `e725858760434ce165f6b49b0956032b8fe46b1974e22fc83013ac3e041abdfa`.
-Original artifact review remains pending; no whole F28#2/#3/#4 approval or
+Original `kitchen_review` ARTIFACT APPROVE verifies the ZIP digest, selected
+method, 135 assertions and exit 0; source binding uses the actual job checkout.
+No whole F28#2/#3/#4 approval or
 READY follows. F28#0/#5 already landed in PR558 and are not recounted.
 
 Production source: `0f07a3f0c6fb55465027b68a981070ed82cedf8d` on `tb/codex-c`.
