@@ -1029,7 +1029,9 @@ func _spawn_creatures() -> void:
 	await _spawn_authored_creatures(entries)
 
 func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
-	if not _is_host() or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
+	# A connected guest publishes only its mirror's retained packet (checked
+	# below), so a client never invents or advances a generation.
+	if not (_is_host() or _is_guest()) or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
 	var game := get_node_or_null("/root/Game")
 	if game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return
 	var site := preload("res://scripts/repeatables/alpha_respawns.gd").site(site_id)
@@ -1053,6 +1055,18 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 	set_meta("foundation_alpha_spawning_" + site_id, true)
 	await _spawn_authored_creatures([entry], packet)
 	remove_meta("foundation_alpha_spawning_" + site_id)
+
+## F44, guest only: drop this site's alpha bodies that are not the host's
+## live generation (0 while the host's cycle waits), outside a fight. A beaten
+## or superseded alpha must not stand, or respawn, on a client.
+func foundation_retire_stale_alpha(site_id: String, live_generation: int) -> void:
+	if not _is_guest() or (_manager != null and _manager.call("is_fighting") == true): return
+	for wild: Node3D in _wild_creatures.duplicate():
+		if not is_instance_valid(wild) or wild.get_meta("foundation_alpha_site", "") != site_id \
+			or int(wild.get_meta("foundation_alpha_generation", 0)) == live_generation: continue
+		_wild_creatures.erase(wild)
+		_wild_respawn.erase(wild)
+		wild.queue_free()
 
 func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -> void:
 	if entries.is_empty():
@@ -1158,6 +1172,18 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			cycle = foundation_alpha_cycle(alpha_site)
 		if spawn_packet.is_empty() and cycle.get("status") == "active":
 			spawn_packet = preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(get_node("/root/Game").world.redesign_world, alpha_site)
+		# F44: alpha cycles are host truth and foundation_alpha_cycle is {} off
+		# the host. A client follows its mirror of the host's retained cycle:
+		# the live generation's packet, nothing while it waits, and nothing yet
+		# with no mirrored cycle -- never a body with traits of its own roll.
+		# FoundationAlphas publishes the host's packet once the mirror arrives.
+		var client_alpha: bool = _is_guest() \
+			and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
+			and not preload("res://scripts/repeatables/alpha_respawns.gd").site(alpha_site).is_empty()
+		if client_alpha:
+			cycle = get_node("/root/Game").world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(alpha_site, {}).duplicate(true)
+			if cycle.get("status") == "active":
+				spawn_packet = preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(get_node("/root/Game").world.redesign_world, alpha_site)
 		if not spawn_packet.is_empty(): set_meta("foundation_alpha_spawning_" + alpha_site, true)
 
 		for n in count:

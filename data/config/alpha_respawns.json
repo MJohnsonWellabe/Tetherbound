@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "_comment_runtime_enabled": "F44 alpha respawns are unfinished: with them on, the named Deep Watch Tidecoil (an alpha site) never became resident for a co-op client. Off, named sites spawn through the path main ships. F44 turns this on when it lands.",
-  "runtime_enabled": false,
+  "_comment_runtime_enabled": "F44#2: alphas respawn every configured number of in-game days with freshly rolled traits; the host owns each cycle (world_ledger alpha_cycle deltas) and co-op clients mirror it and keep its site resident (smoke_net_f44_alpha_respawn, smoke_net_water_alpha).",
+  "runtime_enabled": true,
   "day_seconds": 600,
   "respawn_days": 3,
   "requires_all_region_departures": true,

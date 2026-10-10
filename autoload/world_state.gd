@@ -552,9 +552,17 @@ func _apply_op(op: Dictionary) -> bool:
 			revision += 1
 			return true
 		"alpha_cycle":
-			if op.get("world_namespace") != reward_delivery_namespace \
-				or not preload("res://scripts/repeatables/alpha_respawns.gd").valid_plan(op.get("plan"), redesign_world, reward_delivery_namespace): return false
-			redesign_world = op.plan.state.duplicate(true)
+			# The host commit path validated this plan against its whole world
+			# (world_ledger.commit_alpha_plan). A replica's other redesign_world
+			# fields (bounty_day, unlocks...) arrive through their own deltas and
+			# may differ in between, so it checks the plan against its own
+			# before and requires only the alpha_cycles it replaces to match.
+			var plan: Variant = op.get("plan")
+			if op.get("world_namespace") != reward_delivery_namespace or not plan is Dictionary \
+				or not plan.get("before") is Dictionary or not plan.get("state") is Dictionary \
+				or not preload("res://scripts/repeatables/alpha_respawns.gd").valid_plan(plan, plan.before, reward_delivery_namespace) \
+				or plan.before.get("alpha_cycles") != redesign_world.get("alpha_cycles"): return false
+			redesign_world.alpha_cycles = (plan.state.alpha_cycles as Dictionary).duplicate(true)
 			revision += 1
 			return true
 		"portal_delivery_journal", "portal_delivery_accept":
