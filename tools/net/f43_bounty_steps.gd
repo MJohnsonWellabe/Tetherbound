@@ -20,6 +20,9 @@ static func run(runner: SceneTree, action: String, args: Dictionary) -> Dictiona
 		"f43_claim": return await _claim(runner, args)
 		"f43_replay": return await _replay(runner, args)
 		"f43_morning": return await _morning(runner, args)
+		"f43_arm_owner_cut": return _arm_owner_cut(runner)
+		"f43_hold_clock": return _hold_clock(runner)
+		"f43_disk_view": return _disk_view(runner, str(args.get("character_id", "")))
 	return {"verdict": "ERROR", "detail": "unknown F43 action '%s'" % action}
 
 
@@ -137,6 +140,7 @@ static func _replay(runner: SceneTree, args: Dictionary) -> Dictionary:
 		await runner.physics_frame
 		if not answers.is_empty() or session.call("is_host") == true: break
 	session.disconnect("foundation_reply_received", record)
+	if answers.is_empty(): return _fail("the host never answered the replayed claim (first %s)" % str(first), {"first": first})
 	return _ok("replayed original claim", {"first": first, "answers": answers})
 
 
@@ -145,6 +149,9 @@ static func _replay(runner: SceneTree, args: Dictionary) -> Dictionary:
 static func _morning(runner: SceneTree, args: Dictionary) -> Dictionary:
 	var game := _game(runner)
 	if game == null or game.call("is_host") != true: return _fail("morning is host truth")
+	if args.get("wait") == false:
+		game.call("advance_day")
+		return _ok("morning %d started" % int(game.get("world").redesign_world.bounty_day))
 	var authority: Object = game.get("session").get("_character_authority")
 	var world: RefCounted = game.get("world")
 	var anchors := {}
@@ -163,3 +170,38 @@ static func _morning(runner: SceneTree, args: Dictionary) -> Dictionary:
 				done = false
 		if done: return _ok("morning %d rotated and settled after %d frames" % [day, f], {"day": day})
 	return _fail("morning %d did not rotate/settle every board" % day)
+
+
+## Guest only. One-shot: hard-kill this process at the real owner-save edge of
+## its next morning rotation, so the host keeps that row pending (no ACK).
+static func _arm_owner_cut(runner: SceneTree) -> Dictionary:
+	var writer: Node = runner.root.get_node_or_null(^"Game/Session/LedgerRpc")
+	if writer == null: return _fail("no LedgerRpc")
+	writer.connect("transaction_boundary", func(observation: Dictionary) -> void:
+		if observation.get("phase") == "after_owner_write_before_ack" and observation.get("action") == "bounty_rotate":
+			print("F43 OWNER CUT: hard kill after owner write, before ACK: %s" % str(observation.get("receipt")))
+			OS.kill(OS.get_process_id()))
+	return _ok("armed the bounty_rotate owner cut")
+
+
+## The character as saved on this peer's disk (read before any rejoin).
+static func _disk_view(runner: SceneTree, character_id: String) -> Dictionary:
+	var game := _game(runner)
+	var saver: Variant = game.get("save_system") if game != null else null
+	var characters: Variant = saver.call("characters") if saver != null else null
+	if characters == null or not bool(characters.call("has", character_id)): return _fail("no saved character %s" % character_id)
+	var record: Dictionary = characters.call("read", character_id)
+	return _ok("disk record of %s" % character_id, _summary(record))
+
+
+## Host only, disclosed fixture: restart world_look's real-time day roll
+## (every day_length_seconds), so the only mornings in a section are the
+## smoke's own Game.advance_day calls.
+static func _hold_clock(runner: SceneTree) -> Dictionary:
+	var held := 0
+	for node: Node in runner.root.find_children("*", "Node", true, false):
+		var script: Script = node.get_script()
+		if script != null and script.resource_path == "res://scripts/world/world_look.gd":
+			node.set("_auto_day_accum", 0.0)
+			held += 1
+	return _ok("restarted %d day-roll clock(s)" % held, {"held": held})

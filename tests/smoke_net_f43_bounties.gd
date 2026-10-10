@@ -10,11 +10,15 @@ extends "res://tests/helpers/net_harness.gd"
 ##    three bounties, drawn only from that character's unlocked biomes.
 ## #2 a guest's material delivery pays once; a reconnect, a hard process
 ##    restart and replays of the original request never pay it again.
+##    A guest killed at the owner-save edge of a morning rotation (the host
+##    row left pending, no ACK) relaunches and rejoins; the row settles.
 ## #3 boards are personal (distinct instances per character, a guest's claim
 ##    never touches the host's board) and survive the guest's save/reload.
 ## Disclosed fixtures: party_grant/storage_grant seed both homes before
 ## networking; the guest is teleported beside Halda's board; onboarding modals
-## are continued with confirm. Rewards, receipts and boards come only from the
+## are continued with confirm; f43_hold_clock restarts the host's real-time
+## day roll before each section, so the only mornings are the smoke's own
+## Game.advance_day calls. Rewards, receipts and boards come only from the
 ## shipping BountyHost/character_action path.
 const TEMPLATE := "meadows_material_delivery"
 const WOOD_STOCK := 12
@@ -23,6 +27,7 @@ const SETTLE_FRAMES := 240
 var _host_id := ""
 var _guest_id := ""
 var _host_port := 0
+var _expect_disk: Dictionary = {}
 
 
 func _initialize() -> void:
@@ -64,6 +69,7 @@ func _start_session() -> bool:
 
 
 func _proof() -> void:
+	if not await _hold(): return
 	# Admission issues each character's first board without a client request.
 	var host_board := await _settled_host_view(_host_id)
 	var guest_held := await _settled_host_view(_guest_id)
@@ -90,6 +96,7 @@ func _proof() -> void:
 	var guest := await _guest()
 	check(guest.board == guest_held.board, "guest owner record holds the same board as the host's admitted view")
 	# Claim at the real board.
+	if not await _hold(): return
 	var stand: Dictionary = await step(1, "f43_board_stand", {})
 	if not _ok(stand, "guest resolves Halda's board"): return
 	if not await _pass(1, "teleport", {"at": stand.data.at}): return
@@ -104,6 +111,7 @@ func _proof() -> void:
 		"#3 a guest claim leaves the host's own board and items untouched")
 	await _want_host_matches(paid, "#2 after claim")
 	# Reconnect, then replay the original request.
+	if not await _hold(): return
 	if not await _pass(1, "leave", {"reason": "f43_reconnect"}): return
 	if not await _pass(0, "expect_peers", {"count": 1}): return
 	if not await _pass(1, "production_join", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 14000,
@@ -112,6 +120,7 @@ func _proof() -> void:
 	_want_same(paid, await _guest(), "#2 after reconnect")
 	await _replay_unchanged(instance, paid, "#2 replay after reconnect")
 	# Reload from disk in a fresh process, then replay again.
+	_expect_disk = paid
 	if not await _restart_and_rejoin(): return
 	var reloaded := await _guest()
 	_want_same(paid, reloaded, "#3 after reload")
@@ -127,7 +136,47 @@ func _proof() -> void:
 	check(final.board == next_guest.board, "#0 the guest owner saved the new morning's board")
 	check(final.bounty_receipts == paid.bounty_receipts and final.items == paid.items,
 		"#2 a new morning keeps the single paid receipt and pays nothing (%s)" % str(final.items))
+	await _leave_while_pending(final)
 	print("F43_NET_BOUNTIES: personal boards, morning rotation, pay-once across reconnect and reload")
+
+
+## The guest dies at the owner-save edge of a morning rotation; the host row
+## stays pending. A fresh process rejoins from disk and the row settles once.
+func _leave_while_pending(before: Dictionary) -> void:
+	if not await _hold(): return
+	_expect_disk = {}
+	if not await _pass(1, "f43_arm_owner_cut", {}): return
+	(_peers[1] as Dictionary)["quit_sent"] = true # The guest kills itself at the edge.
+	var pid := int((_peers[1] as Dictionary).get("pid", -1))
+	if not await _pass(0, "f43_morning", {"wait": false}): return
+	for _f in 1800:
+		await process_frame
+		_pump_once()
+		if not OS.is_process_running(pid): break
+	check(not OS.is_process_running(pid), "pending case: the guest died at its owner-save edge")
+	var held: Dictionary = (await step(0, "f43_host_view", {"character_id": _guest_id})).get("data", {})
+	check((held.get("row", {}) as Dictionary).get("status") == "pending" and held.row.get("action") == "bounty_rotate",
+		"pending case: the host holds the guest's morning row pending (%s)" % str(held.get("row", {})))
+	# A killed process sends no disconnect: f27_title_rejoin retries Join
+	# while the host still holds the dead link, as a player would.
+	var restarted := await _restart_peer(1, "title")
+	if not _ok(restarted, "pending case: guest relaunched"): return
+	if not await _pass(1, "f27_title_rejoin", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 40000,
+			"character_id": _guest_id}, 42000): return
+	for peer in 2:
+		if not await _pass(peer, "expect_peers", {"count": 2}): return
+	var settled := await _settled_host_view(_guest_id)
+	await step(1, "wait", {"frames": SETTLE_FRAMES})
+	var after := await _guest()
+	check((settled.get("row", {}) as Dictionary).get("status") == "accepted", "pending case: the row settled after rejoin (%s)" % str(settled.get("row", {})))
+	_want_rotated(before, settled, "pending case")
+	check(after.board == settled.board, "pending case: the rejoined guest holds the settled board")
+	check(after.bounty_receipts == before.bounty_receipts and after.items == before.items,
+		"pending case: no payment or receipt changed (%s)" % str(after.items))
+
+
+func _hold() -> bool:
+	return await _pass(0, "f43_hold_clock", {})
 
 
 func _want_unlocked(view: Dictionary, label: String) -> void:
@@ -170,7 +219,10 @@ func _want_same(expected: Dictionary, actual: Dictionary, label: String) -> void
 
 func _replay_unchanged(instance: String, expected: Dictionary, label: String) -> void:
 	var replay: Dictionary = await step(1, "f43_replay", {"instance": instance}, 600)
-	_ok(replay, "%s ran (%s)" % [label, str(replay.get("data", {}))])
+	if _ok(replay, "%s reached the host (%s)" % [label, str(replay.get("data", {}))]):
+		var answer: Dictionary = (replay.data.answers as Array)[0]
+		check(answer.get("receipt") == "bounty:%s:%s" % [instance, _guest_id] or answer.get("ok") != true,
+			"%s: the host answered with the original decision or a refusal, never a new payment (%s)" % [label, str(answer)])
 	await step(1, "wait", {"frames": SETTLE_FRAMES})
 	_want_same(expected, await _guest(), label)
 	await _want_host_matches(expected, label)
@@ -207,6 +259,9 @@ func _restart_and_rejoin() -> bool:
 	if not await _pass(0, "expect_peers", {"count": 1}): return false
 	var restarted := await _restart_peer(1, "title")
 	if not _ok(restarted, "guest process restarted (hard)"): return false
+	var disk: Dictionary = await step(1, "f43_disk_view", {"character_id": _guest_id})
+	if _ok(disk, "guest reads its saved character before rejoining") and not _expect_disk.is_empty():
+		_want_same(_expect_disk, disk.data, "#3 guest disk save before rejoin")
 	if not await _pass(1, "f27_title_rejoin", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 40000,
 			"character_id": _guest_id}, 42000): return false
 	for peer in 2:
