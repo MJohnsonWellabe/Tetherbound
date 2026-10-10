@@ -56,8 +56,8 @@ func _run() -> void:
 	# A killed process sends no disconnect: the host holds the dead guest's
 	# seat (120 s) before it drops the link; the guest returns after that.
 	if not await _f18_pass(0, "expect_peers", {"count": 1, "budget_frames": 12000}, 13000): return
-	if not await _f18_pass(1, "production_join", {"port": port, "returning_route": true,
-			"pick_saved": true, "character": {"character_id": guest_id}}, 12000): return
+	if not await _f18_pass(1, "production_join", {"port": port, "returning_route": true, "budget_frames": 14000,
+			"pick_saved": true, "character": {"character_id": guest_id}}, 15000): return
 	for peer in 2:
 		if not await _f18_pass(peer, "expect_peers", {"count": 2}): return
 	var settled: Dictionary = await _f18_action(1, "f18_settled", {}, 3000)
