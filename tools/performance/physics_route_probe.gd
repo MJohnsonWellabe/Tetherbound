@@ -12,7 +12,7 @@ extends "res://tools/capture_lookdev_route.gd"
 ## much of the step that script's nodes were costing (largest first).
 var _ablate := ""
 var _attribute := ""
-const ATTRIBUTE_FRAMES := 40
+const ATTRIBUTE_FRAMES := 60
 
 
 func _run() -> void:
@@ -80,14 +80,18 @@ func _attribute_scripts(physics: bool) -> void:
 			if not groups.has(key):
 				groups[key] = []
 			groups[key].append(node)
+	# Each script's off window is bracketed by on windows on both sides, so a
+	# slow drift in the scene's own cost does not read as a saving.
 	var baseline := await _mean_step(physics)
+	var before := baseline
 	var rows: Array = []
 	for key: String in groups:
 		_switch(groups[key], physics, false)
 		var without := await _mean_step(physics)
 		_switch(groups[key], physics, true)
-		await _mean_step(physics)
-		rows.append([baseline - without, key, groups[key].size()])
+		var after := await _mean_step(physics)
+		rows.append([(before + after) * 0.5 - without, key, groups[key].size()])
+		before = after
 	rows.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0])
 	print("PHYSICS PROBE ATTRIBUTE %s baseline=%.3f scripts=%d" % ["physics" if physics else "process", baseline, rows.size()])
 	for row: Array in rows.slice(0, 25):
