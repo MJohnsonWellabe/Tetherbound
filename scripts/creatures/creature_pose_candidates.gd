@@ -121,6 +121,7 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		clips[role] = "%s/%s" % [LIBRARY, role]
 		if role == "hit":
 			clips["hit_start_phase"] = float(spec.get("start_phase", 0.0))
+			clips["hit_release_phase"] = float(spec.get("release_phase", spec.get("start_phase", 0.0)))
 	if player.has_animation_library(LIBRARY):
 		player.remove_animation_library(LIBRARY)
 	player.add_animation_library(LIBRARY, library)

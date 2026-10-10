@@ -2243,7 +2243,8 @@
             "pivot_roll_deg": 0
           }
         ],
-        "start_phase": 0.125
+        "start_phase": 0.125,
+        "release_phase": 0.25
       },
       "faint": {
         "duration_s": 1.2,
@@ -5876,7 +5877,8 @@
             "pivot_roll_deg": 0
           }
         ],
-        "start_phase": 0.125
+        "start_phase": 0.125,
+        "release_phase": 0.25
       },
       "faint": {
         "duration_s": 1.2,
@@ -9374,7 +9376,8 @@
             "pivot_roll_deg": 0
           }
         ],
-        "start_phase": 0.125
+        "start_phase": 0.125,
+        "release_phase": 0.25
       },
       "faint": {
         "duration_s": 1.2,
@@ -13097,7 +13100,8 @@
             "pivot_roll_deg": 0
           }
         ],
-        "start_phase": 0.125
+        "start_phase": 0.125,
+        "release_phase": 0.25
       },
       "faint": {
         "duration_s": 1.2,
@@ -17135,7 +17139,8 @@
             "pivot_roll_deg": 0
           }
         ],
-        "start_phase": 0.125
+        "start_phase": 0.125,
+        "release_phase": 0.25
       },
       "faint": {
         "duration_s": 1.2,
@@ -21713,7 +21718,8 @@
             "pivot_roll_deg": 0
           }
         ],
-        "start_phase": 0.125
+        "start_phase": 0.125,
+        "release_phase": 0.25
       },
       "faint": {
         "duration_s": 1.2,
@@ -26291,7 +26297,8 @@
             "pivot_roll_deg": 0
           }
         ],
-        "start_phase": 0.125
+        "start_phase": 0.125,
+        "release_phase": 0.25
       },
       "faint": {
         "duration_s": 1.2,
@@ -30869,7 +30876,8 @@
             "pivot_roll_deg": 0
           }
         ],
-        "start_phase": 0.125
+        "start_phase": 0.125,
+        "release_phase": 0.25
       },
       "faint": {
         "duration_s": 1.2,
@@ -35267,7 +35275,8 @@
             "pivot_roll_deg": 0
           }
         ],
-        "start_phase": 0.125
+        "start_phase": 0.125,
+        "release_phase": 0.25
       },
       "faint": {
         "duration_s": 1.2,
@@ -38990,7 +38999,8 @@
             "pivot_roll_deg": 0
           }
         ],
-        "start_phase": 0.125
+        "start_phase": 0.125,
+        "release_phase": 0.25
       },
       "faint": {
         "duration_s": 1.2,
