@@ -1,0 +1,122 @@
+{
+  "subject": "veridian",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Reference-backed reconstruction for disabled native review; installed species unchanged",
+  "reference_provenance": {
+    "subject": "veridian",
+    "reference": "assets/creatures/tetherbound/veridian/reference/native-standing-v1.png",
+    "method": "built_in_imagegen",
+    "identity_reference": [
+      "assets/creatures/tetherbound/veridian/reference/front.png",
+      "assets/creatures/tetherbound/veridian/reference/side.png"
+    ],
+    "prompt": "Draft an original Tetherbound Veridian modeling reference based on the supplied existing owner-approved Veridian Stag front and side identity reference crops. ONE full-body three-quarter studio view of the SAME majestic living forest stag: four slender but substantial bark-textured deer legs and complete cloven hooves, tall natural supported stag neck, expressive dark amber-brown eyes with pupils, short dignified deer muzzle with pale cream cheek/muzzle markings, pointed deer ears, a dark forest-green leaf mantle and layered leaf chest plates, warm natural bark/gold branching markings across the torso and legs, and a modest leafy tuft tail with a pale cream tip. Preserve its spectacular broad BRANCHING ANTLER CROWN: two substantial branched bark/green antlers rooted into the head, several thick upward AND forward-reaching branches and pale ivory branch tips, broad forward-facing crown rather than swept-back crest. Exact same established forest stag identity; no new wings, horns besides existing antlers, armour gear, saddle, harness, weapons or new species. Make the anatomy riggable: head naturally connected to the high neck, four whole legs clearly separated in a neutral stable standing pose, visible hoof soles all resting on studio floor, no cropped feet, hidden rear legs, raised limbs or crouching. Antler branches have thick solid joins and readable open gaps, no thin floating needles or disconnected fragments. Simplify busy vines and leaf edges into large coherent connected surface masses and shallow texture while keeping the recognizable green/bark/ivory colour organization and beautiful leafy silhouette. Antlers, entire head, torso, four legs, tail and all hoof tips fit fully inside the image with generous margin. The creature reads as a large legendary stag, not an ordinary deer or humanoid. Soft rough organic leaves/bark, no chrome, plastic metal finish or neon emission. Plain light-grey studio floor and background, soft neutral lighting, detailed stylized game creature. No text, rulers, labels, reference boards, humans, scenery, action pose or particles.",
+    "default_enabled": false,
+    "selected_origin": "exec-5a31ff96-dc37-4627-97f6-cdf8386daeb8",
+    "inspection": {
+      "identity": "Owner-approved leafy forest stag, broad branching ivory-tipped antler crown, bark/gold limbs, cream cheek and leafy tail retained",
+      "riggability": "Four separated full cloven hooves, supported high neck and head, solid antler roots; entire rack/body fit frame",
+      "limits": "Antler/leaf topology, face rig and actual leg connectivity require model inspection. No full art approval inferred."
+    }
+  },
+  "generation": {
+    "task_id": "01a126c7-4b1b-77ab-8438-ff68b3ed8a30",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "reference": "assets/creatures/tetherbound/veridian/reference/native-standing-v1.png",
+    "night": "2026-10-09",
+    "status": "SUCCEEDED",
+    "observed_credits": 30,
+    "new_submissions": 1
+  },
+  "rights": {
+    "basis": "Owner-held installed identity and original drafted reference; owner-authorized paid Meshy account. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "approach": "Measured four cloven hooves, tall supported neck, complete antler crown protected on the head control and fitted leafy tail; local surface diffusion and normalized four influences.",
+    "material": "Organic dielectric: metallic and emission disabled, UVs and texture maps retained",
+    "colourway": "Disabled veridian_native_review texture lookup avoids incompatible installed repaints; no roster species added",
+    "export_triangles": 29400,
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "topology_warnings": [
+      "Mesh_0: 14806 non-manifold edges",
+      "Mesh_0: 8051 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 681 microscopic disconnected components",
+      "Mesh_0: ~4268 inward-facing faces",
+      "Mesh_0: 88 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ],
+    "height_m": 5.8,
+    "bones": 20,
+    "unweighted_vertices": 0,
+    "vertices": 14724,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "before_height_m": 5.80000019073486,
+    "candidate_height_m": 5.79999971389771,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 whole-body Low role samples and front/reverse native scale. Raw receipts/captures outside Git.",
+    "world": "Matched production meadows CameraRig stage/seed/five poses per preset; fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "full_rig_and_motion": "OPEN",
+    "terminal_contact": "FAIL",
+    "topology": "OPEN",
+    "colour_variants": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Eleven clip names and still fixtures do not certify motion, ordinary gameplay paths, earned fights, swim/fly-grip or rider contact.",
+    "Retained topology/UV warnings require independent approval.",
+    "Candidate remains OFF until the complete art bar passes.",
+    "Faint diagnostic visibly hangs above the surface rather than settling the body; terminal repose/contact FAIL. No contact approval inferred from standing scale or diagnostic lowest-point grounding."
+  ]
+}
