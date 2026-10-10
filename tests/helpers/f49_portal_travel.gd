@@ -4,6 +4,9 @@ const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const CARE := preload("res://tests/helpers/meadows_earned_team_segment.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const HOME := preload("res://scripts/story/regional_homecoming.gd")
+const RELIC_PANEL := preload("res://scripts/ui/relic_power_panel.gd")
+const STATIONS := preload("res://scripts/build/station_rules.gd")
+const DOCUMENT := preload("res://scripts/save/save_document.gd")
 var tree: SceneTree
 var game: Node
 var failures: Array[String] = []
@@ -116,13 +119,82 @@ func hang_relic(biome: String) -> bool:
 		if child.has_method("interaction_offer"): prompt = child as Node3D
 	if prompt == null: return _fail("F49 missing producer: Shrine Room pedestal has display geometry but no ordinary relic-hanging interaction")
 	var before := _uids()
+	var session: Node = game.get("session")
+	var local: RefCounted = game.get("local")
+	if session == null or local == null or not session.has_signal("homestead_action_completed"):
+		return _fail("F49 relic hanging has no original owner or saved completion signal")
+	var reply := {"result": {}}
+	var completed := func(op: String, intent: Dictionary, result: Dictionary) -> void:
+		if op == "relic_hang" and intent.get("biome") == biome and RELIC_PANEL.reply_final(result):
+			reply.result = result.duplicate(true)
+	# The host's saved reply may arrive inside the ordinary Interact press.
+	session.connect("homestead_action_completed", completed)
+	var passed := await _settle_relic_hang(prompt, biome, before, session, local, reply)
+	if is_instance_valid(session) and session.is_connected("homestead_action_completed", completed):
+		session.disconnect("homestead_action_completed", completed)
+	return passed
+
+func _settle_relic_hang(prompt: Node3D, biome: String, before: Array[String], session: Node,
+		local: RefCounted, reply: Dictionary) -> bool:
+	var scene := tree.current_scene
+	var character_id := str(local.get("character_id"))
+	var epoch := str(session.call("_altar_current_epoch"))
+	var receipt := "relic_hang:%s:%s" % [biome, character_id]
+	var active_before := str(game.realm_hearts.call("active_id"))
+	var checked_saved := false
+	var saved_observation: Dictionary = {}
+	var cancelled := false
 	if not await activate(prompt): return false
 	for frame in 720:
 		await tree.process_frame
-		var character: Dictionary = game.local.get("redesign_character")
-		if (character.get("relics_hung", []) as Array).has(biome):
-			return _uids() == before or _fail("F49 relic hanging changed the actual party")
-	return _fail("F49 relic hanging produced no actual portable relics_hung state")
+		if tree.current_scene != scene or game.get("session") != session or game.get("local") != local \
+			or str(local.get("character_id")) != character_id or str(session.call("_altar_current_epoch")) != epoch:
+			return _fail("F49 relic hanging changed its original scene, character or session")
+		var result: Dictionary = reply.result
+		if result.is_empty(): continue
+		if result.get("ok") != true or result.get("owner_saved") != true \
+			or result.get("owner_acknowledged") != true or result.get("receipt") != receipt:
+			return _fail("F49 relic hanging did not receive its original saved owner decision: " + str(result))
+		if not checked_saved:
+			var saver: RefCounted = game.get("save_system")
+			var path := str((saver.call("characters") as RefCounted).call("path_for", character_id))
+			var parsed: Variant = DOCUMENT.parse(FileAccess.get_file_as_string(path))
+			if not parsed is Dictionary or parsed.get("character_id") != character_id \
+				or not parsed.get("redesign_character") is Dictionary:
+				return _fail("F49 saved relic character document is missing or belongs to another owner")
+			var disk: Dictionary = parsed.redesign_character
+			var character: Dictionary = local.get("redesign_character")
+			var blueprints: Array[String] = STATIONS.next_tier_blueprints(STATIONS.config(), biome)
+			if blueprints.size() != 4: return _fail("F49 relic has no complete next-tier recipe column")
+			for state: Dictionary in [character, disk]:
+				if (state.get("relics_hung", []) as Array).count(biome) != 1 \
+					or (state.get("relics_held", []) as Array).has(biome) \
+					or (state.get("transaction_receipts", []) as Array).count(receipt) != 1:
+					return _fail("F49 relic hang and once-only receipt differ in runtime or saved character")
+				for blueprint: String in blueprints:
+					if (state.get("attachment_recipes", []) as Array).count(blueprint) != 1:
+						return _fail("F49 relic did not save its next-tier attachment recipe: " + blueprint)
+			saved_observation = {"biome": biome, "character_id": character_id, "receipt": receipt,
+				"character_path": ProjectSettings.globalize_path(path), "character_sha256": FileAccess.get_sha256(path),
+				"attachment_recipes": blueprints}
+			checked_saved = true
+		var owner := INPUT_OWNER.current(tree)
+		if not cancelled:
+			if owner == null: continue # The shipping saved callback presents its queued panel.
+			if owner.get_script() != RELIC_PANEL or not bool(owner.call("is_open")):
+				return _fail("F49 saved relic hang presented an unexpected input owner")
+			await tap("menu_cancel")
+			cancelled = true
+		elif owner == null:
+			if _uids() != before or str(game.realm_hearts.call("active_id")) != active_before:
+				return _fail("F49 relic Cancel changed the actual party or selected another power")
+			saved_observation["ordinary_cancel_released_input"] = true
+			saved_observation["party_uids"] = before
+			print("F49 RELIC HANG " + JSON.stringify(saved_observation))
+			return true
+		elif owner.get_script() != RELIC_PANEL:
+			return _fail("F49 relic Cancel opened another input owner before portal continuation")
+	return _fail("F49 relic hanging did not save its recipes and close the actual power panel within the original budget")
 
 ## Diagnostic only: which readiness condition a long Home Key wait is on.
 func _print_home_key_wait(frame: int) -> void:
