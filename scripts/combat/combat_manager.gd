@@ -3881,6 +3881,24 @@ func _award_victory() -> void:
 	# concrete starting line as every creature caught before or after it.
 
 
+## P2-113: the abandoned companion walks out of the aim frame, to the trainer's
+## left (the side away from the shoulder camera), rather than standing beside
+## the lens and filling a third of the shot. It still takes hits there.
+func _step_companion_aside() -> void:
+	var aside: Dictionary = CATCH.config().get("aim", {}).get("companion_aside", {})
+	if aside.is_empty() or _player == null or _camera_rig == null: return
+	var yaw := float(_camera_rig.get("yaw"))
+	var forward := Vector3(-sin(yaw), 0.0, -cos(yaw))
+	var left := Vector3(forward.z, 0.0, -forward.x)
+	var spot: Vector3 = _player.global_position + left * float(aside.get("lateral_m", 0.0)) \
+		- forward * float(aside.get("back_m", 0.0))
+	var to_spot := spot - _ally_body.global_position
+	to_spot.y = 0.0
+	# The dodge hop clears the frame inside the aim camera's own glide.
+	if to_spot.length() > float(aside.get("arrive_m", 0.35)) and _ally_body.has_method("begin_combat_burst"):
+		_ally_body.call("begin_combat_burst", to_spot, to_spot.length(), float(aside.get("hop_seconds", 0.3)))
+
+
 ## Movement is the dodge. The creature is driven straight from the stick, in camera
 ## space, exactly like the trainer — and is rooted while attacking.
 func _drive_player_creature() -> void:
@@ -3893,6 +3911,7 @@ func _drive_player_creature() -> void:
 	# of catching, and without it throwing is free and the correct play is to
 	# throw constantly between attacks.
 	if bool(_throw.call("is_aiming")):
+		_step_companion_aside()
 		return
 
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
