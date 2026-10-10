@@ -86,6 +86,11 @@ func _run() -> void:
 	var physics_start := Engine.get_physics_frames()
 	await _capture_route_case()
 	_print_summary()
+	print("PHYSICS PROBE server active=%d pairs=%d islands=%d" % [Performance.get_monitor(Performance.PHYSICS_3D_ACTIVE_OBJECTS),
+		Performance.get_monitor(Performance.PHYSICS_3D_COLLISION_PAIRS), Performance.get_monitor(Performance.PHYSICS_3D_ISLAND_COUNT)])
+	for node: Node in _all_nodes(_world):
+		if node is CharacterBody3D and node.has_method("defer_engage") and node.is_physics_processing():
+			print("PHYSICS PROBE wild %s mask=%d layer=%d pos=%s" % [node.name, node.collision_mask, node.collision_layer, node.global_position])
 	if sections is Dictionary:
 		var ticks := maxi(1, Engine.get_physics_frames() - physics_start)
 		for key: String in (sections as Dictionary):

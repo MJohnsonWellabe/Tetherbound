@@ -1948,6 +1948,10 @@ func _physics_process(delta: float) -> void:
 	perf_add("pre_slide", t1 - t0)
 	perf_add("slide_" + ("on_floor" if is_on_floor() else "air") + ("_moving" if Vector2(velocity.x, velocity.z).length() > 0.01 else "_still"), t2 - t1)
 	perf_add("slide_collisions_" + str(get_slide_collision_count()), t2 - t1)
+	for ci in get_slide_collision_count():
+		var hit_node: Object = get_slide_collision(ci).get_collider()
+		var shape_owner: Object = get_slide_collision(ci).get_collider_shape()
+		perf_add("hit_%s_%s" % [hit_node.get("name") if hit_node != null else "null", shape_owner.get_class() if shape_owner != null else "?"], t2 - t1)
 	_environment_velocity.after_slide(self)
 	_hold_contact_spacing(delta)
 	var t3 := Time.get_ticks_usec()
