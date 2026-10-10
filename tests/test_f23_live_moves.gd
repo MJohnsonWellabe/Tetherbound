@@ -191,8 +191,8 @@ func _landing_body() -> Node:
 	var body := WILD.new()
 	body.instance = SPECIES.spawn("bramblebun")
 	body.engaged = true
-	# Pushes use the real collision-aware burst, which needs a body in a tree.
-	(Engine.get_main_loop() as SceneTree).root.add_child(body)
+	# The unit runner has no live SceneTree, so the body stays out of a tree
+	# at the origin; the burst and statuses are plain state on the body.
 	_landing_bodies.append(body)
 	return body
 
@@ -207,7 +207,7 @@ func test_every_target_utility_kind_lands_on_the_wild_body() -> void:
 	# Each live target utility reaches its consumer: movement, burst, damage taken, trap.
 	var slow_body := _landing_body()
 	var slow := _utility_frozen("slow_field", 1)
-	assert_true(slow_body.apply_landed_utility(slow, _landing_context(slow, slow_body, slow_body.global_position)))
+	assert_true(slow_body.apply_landed_utility(slow, _landing_context(slow, slow_body, Vector3.ZERO)))
 	assert_almost_eq(slow_body.utility_movement_multiplier(), 0.5, 0.001, "Slow Field halves movement inside its radius")
 	var sap_body := _landing_body()
 	var sap := _utility_frozen("sap", 2)
@@ -221,7 +221,7 @@ func test_every_target_utility_kind_lands_on_the_wild_body() -> void:
 		assert_true(push_body.combat_burst_active(), "%s pushes the body along its collision-aware burst" % push_id)
 	var trap_body := _landing_body()
 	var trap := _utility_frozen("bramble_trap", 4)
-	assert_true(trap_body.apply_landed_utility(trap, _landing_context(trap, trap_body, trap_body.global_position)))
+	assert_true(trap_body.apply_landed_utility(trap, _landing_context(trap, trap_body, Vector3.ZERO)))
 	assert_eq(trap_body.utility_movement_multiplier(), 1.0, "an armed trap does nothing before it triggers")
 	trap_body.set("_utility_clock_ms", 1000.0)
 	trap_body.call("_tick_landed_traps")
