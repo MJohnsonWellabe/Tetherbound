@@ -65,6 +65,14 @@ func _run() -> void:
 		for frame in 30:
 			await physics_frame
 		print("PHYSICS PROBE terrain collision_mode=%s" % [terrain.get("collision_mode")])
+	if _ablate == "inactive-anim":
+		var paused := 0
+		for node: Node in _all_nodes(_world):
+			if node is CharacterBody3D and node.has_method("defer_engage") and not node.is_physics_processing():
+				for player: Node in node.find_children("*", "AnimationPlayer", true, false):
+					(player as AnimationPlayer).active = false
+					paused += 1
+		print("PHYSICS PROBE paused %d inactive wild AnimationPlayers" % paused)
 	if _ablate == "wilds":
 		node_added.connect(_stop_wild)
 		_stop_wilds(_world)
