@@ -701,6 +701,8 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 	_animator = null
 	if has_meta("f36_pose_candidate_installed"):
 		remove_meta("f36_pose_candidate_installed")
+	if has_meta("f36_pose_rest_installed"):
+		remove_meta("f36_pose_rest_installed")
 	var players: Array[Node] = art.find_children("*", "AnimationPlayer", true, false)
 	if players.is_empty():
 		push_warning("model for '%s' has no AnimationPlayer; it will not animate" % species_id)
@@ -2207,6 +2209,13 @@ const REST_SINK_METERS := 0.12
 ## already-correct pose for a standing one.
 func play_rest() -> void:
 	if _rest_pose_active or _rest_pose_pending:
+		return
+	# Species with a generated, posed-vertex-grounded rest own their endpoint.
+	# Keep the existing stop_rest/revive lifecycle for camp, beds and recall.
+	if bool(get_meta("f36_pose_rest_installed", false)) and _animator != null:
+		_rest_pose_pivot_before = _model.transform
+		_rest_pose_active = true
+		_animator.call("play_terminal", "rest")
 		return
 	var look := REST_VISUAL.resolve(species_id, SPECIES.placeholder(species_id))
 	var authored: Variant = look.get("rest_pose", {})
