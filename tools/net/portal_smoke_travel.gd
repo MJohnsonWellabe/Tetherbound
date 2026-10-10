@@ -6,7 +6,10 @@ const DISCLOSURE := "initial_hall_position_and_open_route_no_earned_credit"
 const ROUTES := {"session_host_first_realm": "cloudreach", "water_alpha": "tidewake",
 	"stormwood_livewire": "stormwood", "stormwood_finalized_death": "stormwood", "stormwood_hosted_trainers": "stormwood",
 	"cloudreach_riding": "cloudreach", "stormwood_realms": "stormwood", "water_return": "stormwood",
-	"stormwood_glass_for_bryn": "stormwood", "veridian_same_five": "tidewake", "f15_dock": "tidewake"}
+	"stormwood_glass_for_bryn": "stormwood", "veridian_same_five": "tidewake", "f15_dock": "tidewake",
+	# Two-peer Stormwood proof scenarios (tools/net/proof_scenarios/), migrated
+	# from a raw Game.enter_realm to the Crossing Hall Stormwood portal.
+	"stormwood_proof": "stormwood"}
 const RETURNS := ["cloudreach_riding", "stormwood_realms", "water_return"]
 const HALL := preload("res://scripts/world/crossing_hall.gd")
 const HOME_KEY := preload("res://scripts/world/home_key.gd")
@@ -14,6 +17,8 @@ const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const TELEPORT := preload("res://scripts/creatures/remote_creature.gd")
 const STATE := preload("res://scripts/data/redesign_state.gd")
 const META := "portal_smoke_initial_fixture"
+const NOT_READY := "Your authoritative travel state is not ready."
+const RETRY_FRAMES := 60
 var reply: Dictionary = {}
 var request_id := ""
 var _home_scope: Dictionary = {}
@@ -153,12 +158,24 @@ func travel(tree: SceneTree, args: Dictionary, started: int, budget: int) -> Dic
 	# No post-admission position, pose, map or progression writes. This public
 	# request owns real policy/permit, origin BOOL, arrival BOOL and host ACK.
 	game.connect("portal_action_result", _completed)
-	var accepted: Dictionary = game.call("request_portal_action", {"kind": "portal_enter", "arch_id": arch_id})
-	request_id = str(accepted.get("request_id", ""))
-	if accepted.get("ok") == true and not request_id.is_empty():
-		while reply.is_empty() and Engine.get_physics_frames() - started < budget:
+	var accepted: Dictionary
+	while true:
+		reply = {}
+		accepted = game.call("request_portal_action", {"kind": "portal_enter", "arch_id": arch_id})
+		request_id = str(accepted.get("request_id", ""))
+		if accepted.get("ok") == true and not request_id.is_empty():
+			while reply.is_empty() and Engine.get_physics_frames() - started < budget:
+				await tree.physics_frame
+				if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game: break
+		# A guest who presses the moment the host has left its realm is refused
+		# until the host's shell holds that guest's body; a player presses again.
+		# Only that exact transient refusal is retried, inside the same budget.
+		if reply.get("ok") != false or str(reply.get("reason", "")) != NOT_READY \
+				or Engine.get_physics_frames() - started + RETRY_FRAMES >= budget:
+			break
+		for frame in RETRY_FRAMES:
 			await tree.physics_frame
-			if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game: break
+		if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game: break
 	if is_instance_valid(game) and game.is_connected("portal_action_result", _completed):
 		game.disconnect("portal_action_result", _completed)
 	if not reply.is_empty():

@@ -2742,7 +2742,7 @@ func _release_payout_text(raw: Variant) -> String:
 func _submit_typed_release() -> void:
 	if not _release_request_id.is_empty(): return
 	var current := _quote_release_choice()
-	if current.is_empty() or current != _release_quote:
+	if current.is_empty() or not _same_release_choice(current, _release_quote):
 		say("Your team or the catch changed. Choose who goes free again.")
 		_back_to_choosing()
 		return
@@ -2767,6 +2767,16 @@ func _submit_typed_release() -> void:
 	_farewell_done.grab_focus()
 	# Identity and intent only. No client payout/cost/cap or creature snapshot.
 	_release_service.call("submit_release", request)
+
+
+## What the player confirmed: who leaves, who joins and the payout they read.
+## The character revision is not part of it. A hosted session's revision moves
+## on its own (saves, travel, care) between the question and the press, and
+## the request carries the fresh quote's revision, which the host re-checks.
+static func _same_release_choice(current: Dictionary, confirmed: Dictionary) -> bool:
+	for key: String in ["pending_uid", "released_uid", "ceremony_id", "payout", "unpaid_reason"]:
+		if current.get(key) != confirmed.get(key): return false
+	return not confirmed.is_empty()
 
 
 func _on_release_completed(release_id: String, result: Dictionary) -> void:
