@@ -74,6 +74,12 @@ func _run() -> void:
 	if int(owned_party.call("size")) == 0 and _director.call("ally_instance") != null:
 		owned_party.call("add", _director.call("ally_instance"))
 	var base := int(owned_party.call("size"))
+	# Bind the scratch world to its save slot before any capture creates
+	# retained transactions. Their world namespace is immutable thereafter.
+	if not bool(_game.call("save_game", TEST_SLOT)):
+		_fail("could not bind the scratch save slot before catches")
+		_report()
+		return
 	var targets := (_director.call("wild_creatures") as Array).duplicate()
 	if targets.size() < 3:
 		_fail("fewer than 3 live wild creatures exist to catch (%d)" % targets.size())
