@@ -140,6 +140,12 @@ uniform float head = 0.3;
 uniform float tail = 0.25;
 uniform float near_fade_start = 0.0;
 uniform float near_fade_end = 0.0;
+// The Stormheart Tree's hollow trunk (tree-local inner clearance): x, y =
+// inner radius below/above the crown taper, z, w = taper start/end height.
+uniform bool hollow_enabled = false;
+uniform mat4 world_to_hollow;
+uniform vec4 hollow_radius_taper = vec4(46.0, 13.0, 185.0, 250.0);
+uniform vec3 hollow_lean_top = vec3(9.0, 6.0, 250.0);
 void fragment() {
 	float t = UV.y;
 	float taper = smoothstep(0.0, head, t) * (1.0 - smoothstep(1.0 - tail, 1.0, t));
@@ -147,6 +153,17 @@ void fragment() {
 	// thick white pole): a streak nearer the camera than near_fade_end fades
 	// out, gone by near_fade_start, so no single drop can fill the frame.
 	float near = near_fade_end > near_fade_start ? smoothstep(near_fade_start, near_fade_end, -VERTEX.z) : 1.0;
+	// No streak falls inside the hollow tree; rain outside its split
+	// openings and above its crown stays.
+	if (hollow_enabled) {
+		vec3 local = (world_to_hollow * INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+		if (local.y < hollow_lean_top.z) {
+			float crown = smoothstep(hollow_radius_taper.z, hollow_radius_taper.w, local.y);
+			vec2 centre = hollow_lean_top.xy * crown;
+			float inner = mix(hollow_radius_taper.x, hollow_radius_taper.y, crown);
+			if (distance(local.xz, centre) < inner) { discard; }
+		}
+	}
 	ALBEDO = COLOR.rgb;
 	ALPHA = COLOR.a * taper * near;
 }
@@ -763,6 +780,23 @@ func _style_rain() -> void:
 		_rain_curtain.position = Vector3(0.0, float(curtain.get("centre_offset_m", 0.0)), 0.0)
 		_rain_curtain.visible = true
 		_rain.add_child(_rain_curtain)
+	_bind_hollow_rain_mask()
+
+## Rain is a client presentation layer; the tree's static inner clearance is
+## complete before Surge mounts. No collider, flag or shelter rule changes.
+func _bind_hollow_rain_mask() -> void:
+	var tree := world.get_node_or_null("StormheartTree") as Node3D if world != null else null
+	if tree == null or not tree.has_method("hollow_rain_volume"):
+		return
+	var volume: Dictionary = tree.call("hollow_rain_volume")
+	for emitter: GPUParticles3D in [_rain, _rain_far, _rain_curtain]:
+		if emitter == null:
+			continue
+		var material := (emitter.draw_pass_1 as CylinderMesh).material as ShaderMaterial
+		material.set_shader_parameter("hollow_enabled", true)
+		material.set_shader_parameter("world_to_hollow", tree.global_transform.affine_inverse())
+		material.set_shader_parameter("hollow_radius_taper", volume.radius_taper)
+		material.set_shader_parameter("hollow_lean_top", volume.lean_top)
 
 func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 	var colour := Color(str(cfg.get("colour", "#c0ccd6")))

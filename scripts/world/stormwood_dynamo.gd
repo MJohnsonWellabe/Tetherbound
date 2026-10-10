@@ -46,6 +46,7 @@ const DECK_GAP_CLEARANCE_M := 0.3
 ## once threw the piloted ally over the edge and it fell 150 m (focused smoke).
 const CORE_RAIL_SEGMENTS := 32
 const CORE_RAIL_SIZE := Vector3(0.22, 1.4, 0.0)
+const RAIL_POST_WIDTH_M := 0.14
 ## Where the ascent's own rails rise above deck level in the gap (their tops
 ## are ramp + 1.4 m, the ramp climbing 0.1 m per degree to the landing at 270).
 const GAP_GUARD_TO_DEG := 257.0
@@ -108,6 +109,7 @@ func mount(owner_world: Node3D) -> void:
 	arena.name = "DynamoArena"
 	add_child(arena)
 	arena.build(rules, bool(world.get("simulation_only")))
+	arena.seat_discharge_lanes(deck_height())
 	_build_deck_infill(bool(world.get("simulation_only")))
 	if not bool(world.get("simulation_only")):
 		var control := FIELD_CONTROL.new()
@@ -263,6 +265,39 @@ func _rail(id: String, points: Array[Vector3], material: StandardMaterial3D) -> 
 			visual.material_override = material
 			visual.transform = Transform3D(pose.basis, pose.origin + Vector3.UP * (CORE_RAIL_SIZE.y * 0.5 - 0.09))
 			rail.add_child(visual)
+	if material != null:
+		_rail_posts(rail, points)
+
+
+## Render-only posts under a deck rail's bar, in the Stormheart ascent's
+## picket finish. Without them the bar alone read as a thin dark plane
+## floating at head height across the captive cobra. No collider changes.
+func _rail_posts(rail: Node3D, points: Array[Vector3]) -> void:
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	var post := BoxMesh.new()
+	post.size = Vector3(RAIL_POST_WIDTH_M, CORE_RAIL_SIZE.y, RAIL_POST_WIDTH_M)
+	mm.mesh = post
+	mm.instance_count = points.size()
+	for i in points.size():
+		mm.set_instance_transform(i, Transform3D(Basis.IDENTITY, points[i] + Vector3.UP * CORE_RAIL_SIZE.y * 0.5))
+	var visual := MultiMeshInstance3D.new()
+	visual.name = "RailPosts"
+	visual.multimesh = mm
+	visual.material_override = _rail_post_material()
+	rail.add_child(visual)
+
+
+static var _post_material: StandardMaterial3D
+
+static func _rail_post_material() -> StandardMaterial3D:
+	if _post_material == null:
+		_post_material = StandardMaterial3D.new()
+		_post_material.albedo_color = Color("927448")
+		_post_material.albedo_texture = load("res://assets/environment/stylized_nature/Bark_TwistedTree.png")
+		_post_material.uv1_scale = Vector3(0.35, 0.35, 1)
+		_post_material.roughness = 0.88
+	return _post_material
 
 
 ## The Stormheart Tree's deck height, or this node's own height where no tree
