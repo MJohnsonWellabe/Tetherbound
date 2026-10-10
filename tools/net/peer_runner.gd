@@ -873,6 +873,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_story_flag(args)
 		"sleep_press":
 			out = _step_sleep_press(args)
+		"apply_time":
+			out = _step_apply_time(args)
 		"heart_bind":
 			out = _step_heart_bind(args)
 		"heart_earn":
@@ -1429,6 +1431,16 @@ func _step_sleep_stand(_args: Dictionary) -> Dictionary:
 	_bedroll = bed
 	await physics_frame
 	return {"verdict": "PASS", "detail": "bedroll + tent at (%.1f, %.1f, %.1f)" % [at.x, at.y, at.z]}
+
+
+## Disclosed fixture: snap this process's live clock to a named art.json time
+## (world_look.apply_time), e.g. "night" so a rest reaches a morning (F47#4).
+func _step_apply_time(args: Dictionary) -> Dictionary:
+	var look: Node = get_first_node_in_group(&"day_cycle")
+	if look == null or not look.has_method("apply_time"):
+		return {"verdict": "ERROR", "detail": "no day_cycle clock"}
+	look.call("apply_time", str(args.get("time", "night")))
+	return {"verdict": "PASS", "detail": "clock at %s (hour %.1f)" % [str(look.call("time_of_day")), float(look.call("hour"))]}
 
 
 ## Press it. The signal, not the private method, so a change that broke the

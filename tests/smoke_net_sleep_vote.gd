@@ -95,12 +95,32 @@ func _run() -> void:
 		quit(await finish())
 		return
 
-	# --- one player lies down ---------------------------------------------------
-
 	for i in 2:
 		var stood: Dictionary = await step(i, "sleep_stand", {})
 		check(str(stood.get("verdict", "")) == "PASS",
 			"peer %d stood a bedroll under a tent (%s)" % [i, str(stood.get("detail", ""))])
+
+	# --- F47#4: both lie down by day: they rest a while, no morning ------------
+	# Only a vote inside rest.json's night window reaches a morning, and the
+	# host's hour decides it; the world opens in the morning.
+	for i in 2:
+		var by_day: Dictionary = await step(i, "sleep_press", {})
+		check(str(by_day.get("verdict", "")) == "PASS", "peer %d lay down by day (%s)" % [i, str(by_day.get("detail", ""))])
+		await step(0, "wait", {"frames": VOTE_SETTLE_FRAMES})
+		await step(1, "wait", {"frames": VOTE_SETTLE_FRAMES})
+	check(await _day(0) == day_before and await _day(1) == day_before,
+		"F47#4: a vote by day passes no night on either peer (host %d, client %d, was %d)" % [await _day(0), await _day(1), day_before])
+	for i in 2:
+		var awake: Variant = await probe(i, "sleep_vote")
+		check(awake is Dictionary and not bool((awake as Dictionary).get("sleeping_here", true)),
+			"F47#4: peer %d is up again after resting by day (%s)" % [i, str(awake)])
+
+	# Disclosed fixture: the host's clock is snapped to night
+	# (world_look.apply_time); the client follows the host's clock.
+	var night: Dictionary = await step(0, "apply_time", {"time": "night"})
+	check(str(night.get("verdict", "")) == "PASS", "the host's clock is at night (%s)" % str(night.get("detail", "")))
+
+	# --- one player lies down ---------------------------------------------------
 
 	var pressed: Dictionary = await step(0, "sleep_press", {})
 	check(str(pressed.get("verdict", "")) == "PASS",

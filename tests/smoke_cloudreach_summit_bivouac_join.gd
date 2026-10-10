@@ -43,6 +43,9 @@ func _run() -> void:
 	var camp: Node3D=physical.get_node("summit_bivouac")
 	if await _navigate(camp.global_position):
 		var previous_clock:=await _normal_input_clock("summit bivouac interaction")
+		# F47#4: a rest reaches a morning only after nightfall (rest.json); disclosed: snap the clock to night.
+		for _look: Node in (Engine.get_main_loop() as SceneTree).get_nodes_in_group("day_cycle"):
+			if _look.has_method("apply_time"): _look.call("apply_time", "night")
 		var day_before:=int(game.day)
 		if await _interact(camp.get_node("Interactable"),"",false):
 			await _frames(120)

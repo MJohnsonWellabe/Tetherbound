@@ -47,6 +47,9 @@ func _run() -> void:
 	player.velocity = Vector3.ZERO
 	await _frames(30)
 	if not _require(player.is_on_floor(),"Camp fixture settles on its actual floor"): return _end_regression()
+	# F47#4: a rest reaches a morning only after nightfall (rest.json); disclosed: snap the clock to night.
+	for _look: Node in (Engine.get_main_loop() as SceneTree).get_nodes_in_group("day_cycle"):
+		if _look.has_method("apply_time"): _look.call("apply_time", "night")
 	var day_before: int = game.day
 	if not await _interact(camp.get_node("Interactable"),"",false): return _end_regression()
 	# The real service passes the night halfway through its 1.6-second fade.
