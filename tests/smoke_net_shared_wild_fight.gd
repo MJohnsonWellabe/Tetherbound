@@ -856,10 +856,15 @@ func _run() -> void:
 			if str(refusal.get("code", "")) == "friendly_target":
 				break
 		var striker_struck := _struck_count(await _encounter(0), guest_peer_id)
-		if str(refusal.get("code", "")) != "move_start_required" or striker_struck <= striker_struck_before:
+		# With actor vitals on, an opponent blow that just landed holds every
+		# action until its health change is saved. That refusal is about the
+		# save, not this action; once it clears, the next action is the probe.
+		var saving := str(refusal.get("code", "")) == "pending_vitals"
+		if not saving and (str(refusal.get("code", "")) != "move_start_required" or striker_struck <= striker_struck_before):
 			break
-		print("friendly action %d was interrupted: an opponent blow landed on the striker during its wind-up (host struck_count %d -> %d); retrying with the next action id"
-			% [friendly_action, striker_struck_before, striker_struck])
+		print("friendly action %d was not judged (%s; host struck_count %d -> %d); retrying with the next action id"
+			% [friendly_action, "a health change was still being saved" if saving
+				else "an opponent blow landed on the striker during its wind-up", striker_struck_before, striker_struck])
 		friendly_action += 1
 		await _await_host_action_ready(guest_peer_id)
 		await step(1, "place_creature",
