@@ -44,5 +44,6 @@
       "severed_spokes": {"visibility_range_end": 500.0, "visibility_range_end_margin": 60.0}
     },
     "skip_name_contains": ["square_oak", "Bush_", "Grass_", "Plant_", "CommonTree", "Fern", "Flower", "Leaves"]
-  }
+  },
+  "water_trainer_prompt_follow": {"_comment": "F26: Water trainer challenge prompts are re-positioned only when their trainer has moved, instead of every frame. enabled false restores the per-frame write.", "enabled": true}
 }

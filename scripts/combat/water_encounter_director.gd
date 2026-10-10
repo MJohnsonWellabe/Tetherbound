@@ -3,6 +3,7 @@ extends "res://scripts/combat/cloudreach_encounter_director.gd"
 ## Water content over the shared production combat pipeline. Residency is the
 ## union of occupied Water peer neighborhoods, including a remote island when
 ## this world's local rig is only a host simulation. Story bosses stay external.
+const WATER_PERF := preload("res://scripts/world/performance_config.gd")
 const REMOTE_CREATURE_BODY := preload("res://scripts/creatures/remote_creature.gd")
 const WATER_DATA := preload("res://scripts/world/water_encounter_runtime_data.gd")
 const RANKS := preload("res://scripts/characters/npc_ranks.gd")
@@ -505,10 +506,17 @@ func _process(delta: float) -> void:
 	for wild: Node3D in _wild_creatures:
 		if is_instance_valid(wild) and wild.visible and wild != _engaged_with and not bool(wild.get("engaged")):
 			_set_wild_active(wild, _wanted_sites.has(str(wild.get_meta("water_site_id", ""))))
+	# F26 (`performance.json` water_trainer_prompt_follow): a top-level prompt
+	# write pushes a transform update every frame for every trainer, though
+	# trainers stand still; move it only when its trainer has moved.
+	var follow_only_moved := bool(WATER_PERF.config().get("water_trainer_prompt_follow", {}).get("enabled", false))
+	var simulation_only := bool(realm_world.get("simulation_only"))
 	for id: String in trainer_prompts:
 		var prompt: Node3D = trainer_prompts[id]
-		prompt.global_position = trainer_nodes[id].global_position + Vector3(1.5, 1.05, 0)
-		if bool(realm_world.get("simulation_only")):
+		var at: Vector3 = trainer_nodes[id].global_position + Vector3(1.5, 1.05, 0)
+		if not follow_only_moved or not prompt.global_position.is_equal_approx(at):
+			prompt.global_position = at
+		if simulation_only:
 			prompt.enabled = false
 	_mute_greeting_during_own_fight()
 
