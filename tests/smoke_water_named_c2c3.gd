@@ -5,7 +5,7 @@ extends SceneTree
 ## measurable half of C3 (single-hit ceiling, tell floors)?
 ##
 ##   godot --headless --path . --fixed-fps 60 --script tests/smoke_water_named_c2c3.gd \
-##       -- --seeds=24 [--case=<substring>[,<substring>...]] [--starter=<id>] [--party-level=43] --json=<path>
+##       -- --seeds=24 [--case=<substring>[,<substring>...]] [--starter=<id>] [--party-level=<n>] --json=<path>
 ##
 ## Water-lane file. It reuses the shared paired pilot
 ## (tests/helpers/combat_depth_pilot.gd, unmodified): real CombatManager, real
@@ -16,6 +16,7 @@ extends SceneTree
 ## - the five data-named wilds (water_encounters.json::named_encounters) spawn
 ##   through WaterEncounterDirector.named_spawn_plan, trainer_owned=false, at the
 ##   authored level with the entry's own `combat` block (none authored today);
+##   the shipping F22 named pattern is configured for its identity;
 ## - Water trainers (water_characters.json::trainers) are translated by
 ##   water_encounter_runtime_data.gd::team_member (the production translator):
 ##   species + level + `combat` block incl. the trainer's
@@ -27,8 +28,9 @@ extends SceneTree
 ##
 ## PARTY (the "ordinary route" fixture): the retained five from the F12
 ## original-five precedent -- starter + bramblebun, mudsnout, pipwing,
-## trailpup -- all at the Tidewake region-entry level (PROGRESSION §3 "L43
-## overlap"; COMBAT §7 measures "at region-entry levels"). C2 demands all three
+## trailpup -- at chapter_curve.json's current Tidewake regional team entry
+## (COMBAT §7). The authored site's table resolves its island's region; no
+## historical L43 fallback is used. C2 demands all three
 ## starters, so the lead slot cycles terrapup / ripplet / galewisp.
 ##
 ## Never tunes anything. Prints one WATER_C2C3 row per case/starter/policy and
@@ -68,7 +70,7 @@ const TRAINER_CASES := {
 	"water_trainer_evi": "veilfall_trainer",
 	"water_trainer_nerissa": "veilfall_top",
 }
-## The Abyssal Guardian (water_veilfall.json guardian_species_id, L55) has no
+## The Abyssal Guardian (water_veilfall.json guardian_species_id) has no
 ## case: BOSSES §4.12 "This is not a combat boss", water_encounters.json
 ## scripted reference role "legendary_ceremony_not_wild_or_named_combat_census",
 ## and water_veilfall.gd::_build_guardian builds a captive body with physics
@@ -111,7 +113,7 @@ class AlphaPilot:
 var _seeds := 24
 var _selection := ""
 var _starter_only := ""
-var _party_level := 43
+var _party_level_override := 0
 var _json := ""
 ## Tuning sweeps only: replaces every selected trainer's authored
 ## `foe_power_multiplier`. Recorded in the JSON; evidence runs omit it.
@@ -125,7 +127,7 @@ func _init() -> void:
 		if arg.begins_with("--seeds="): _seeds = maxi(1, int(arg.trim_prefix("--seeds=")))
 		elif arg.begins_with("--case="): _selection = arg.trim_prefix("--case=")
 		elif arg.begins_with("--starter="): _starter_only = arg.trim_prefix("--starter=")
-		elif arg.begins_with("--party-level="): _party_level = int(arg.trim_prefix("--party-level="))
+		elif arg.begins_with("--party-level="): _party_level_override = int(arg.trim_prefix("--party-level="))
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
 		elif arg.begins_with("--multiplier-override="): _multiplier_override = float(arg.trim_prefix("--multiplier-override="))
 	_run.call_deferred()
@@ -136,18 +138,49 @@ func _read(path: String) -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
+func _entry_regions(encounters: Dictionary, errors: Array[String]) -> Dictionary:
+	var tables := {}
+	var islands := {}
+	var biome: Dictionary = _read("res://data/config/chapter_curve.json").get("biomes", {}).get("tidewake", {})
+	for region: Dictionary in biome.get("regional_targets", []):
+		var team: Array = region.get("team", [])
+		if team.size() != 2 or int(team[0]) <= 0: continue
+		for table: String in region.get("tables", []):
+			tables[table] = {"region": str(region.region_id), "level": int(team[0])}
+	for site: Dictionary in encounters.get("wild_sites", []):
+		var table := str(site.get("table_id", ""))
+		var island := str(site.get("island_id", ""))
+		if island.is_empty() or not tables.has(table): continue
+		if islands.has(island) and str(islands[island].region) != str(tables[table].region):
+			errors.append("conflicting current regions for island " + island)
+		else:
+			islands[island] = tables[table]
+	return islands
+
+
+func _append_case(cases: Array[Dictionary], entry: Dictionary, island: String,
+		regions: Dictionary, errors: Array[String]) -> void:
+	if not regions.has(island):
+		errors.append("%s: no current team-entry pin for island %s" % [entry.id, island])
+		return
+	entry["region"] = str(regions[island].region)
+	entry["party_level"] = _party_level_override if _party_level_override > 0 else int(regions[island].level)
+	cases.append(entry)
+
+
 func _cases(errors: Array[String]) -> Array[Dictionary]:
 	var cases: Array[Dictionary] = []
 	var encounters := _read("res://data/config/water_encounters.json")
+	var regions := _entry_regions(encounters, errors)
 	for named: Dictionary in encounters.get("named_encounters", []):
-		cases.append({"id": str(named.id), "kind": "named_wild", "owned": false,
+		_append_case(cases, {"id": str(named.id), "kind": "named_wild", "owned": false,
 			"foes": [{"species": WATER_DATA._species(str(named.species_id), errors),
-				"level": int(named.level), "combat": named.get("combat", {})}]})
+				"level": int(named.level), "combat": named.get("combat", {})}]}, str(named.island_id), regions, errors)
 	var alpha := _read("res://data/config/water_alpha.json")
-	cases.append({"id": "water_aquaryn_alpha", "kind": "alpha", "owned": false,
+	_append_case(cases, {"id": "water_aquaryn_alpha", "kind": "alpha", "owned": false,
 		"phases": alpha.get("phases", []),
 		"preferred_fraction": float(alpha.get("movement", {}).get("preferred_reach_fraction", 0.7)),
-		"foes": [{"species": str(alpha.species_id), "level": int(alpha.level)}]})
+		"foes": [{"species": str(alpha.species_id), "level": int(alpha.level)}]}, str(alpha.island_id), regions, errors)
 	var characters := _read("res://data/config/water_characters.json")
 	for trainer: Dictionary in characters.get("trainers", []):
 		var id := str(trainer.id)
@@ -158,7 +191,11 @@ func _cases(errors: Array[String]) -> Array[Dictionary]:
 			trainer["foe_power_multiplier"] = _multiplier_override
 		for member: Dictionary in trainer.get("team", []):
 			foes.append(WATER_DATA.team_member(trainer, member, errors))
-		cases.append({"id": id, "kind": TRAINER_CASES[id], "owned": true, "foes": foes})
+		var named_id := "named_" + id
+		var floor_trainer := not NAMED_PATTERNS.has(named_id) \
+			and not str(trainer.get("rank", "local")) in ["captain", "officer", "lieutenant", "elite", "mentor", "ace"]
+		_append_case(cases, {"id": id, "kind": TRAINER_CASES[id], "owned": true,
+			"floor_trainer": floor_trainer, "foes": foes}, str(trainer.island_id), regions, errors)
 	return cases
 
 
@@ -180,7 +217,7 @@ func _run() -> void:
 		for starter: String in STARTERS:
 			if not _starter_only.is_empty() and starter != _starter_only: continue
 			var row := {"case": entry.id, "kind": entry.kind, "starter": starter,
-				"party_level": _party_level, "pilots": {}}
+				"party_level": entry.party_level, "region": entry.region, "pilots": {}}
 			for policy in ["MASHER", "READER"]:
 				var s := {"wins": 0, "lead_cost": [], "party_cost": [], "seconds": [],
 					"lead_faints": 0, "party_wipes": 0, "max_hit": 0.0, "min_tell": INF,
@@ -192,7 +229,7 @@ func _run() -> void:
 						if creature == null:
 							errors.append("party species missing: %s" % id)
 							continue
-						creature.set_level(_party_level, PROGRESSION.config())
+						creature.set_level(int(entry.party_level), PROGRESSION.config())
 						party.append(creature)
 					var foes: Array = []
 					for member: Dictionary in entry.foes:
@@ -212,7 +249,8 @@ func _run() -> void:
 						# F22#4: named fights run their authored pattern rows.
 						pilot = PATTERN_PILOT.new()
 						var named_id := "named_" + str(entry.id)
-						pilot.context = {"chapter": "water", "band": "water_named", "after_south_bridge": true,
+						pilot.context = {"chapter": "water", "band": entry.region, "after_south_bridge": true,
+							"floor_trainer": bool(entry.get("floor_trainer", false)),
 							"pattern_id": named_id if NAMED_PATTERNS.has(named_id) else ""}
 					var result: Dictionary = await pilot.fight(self, party, foes, bool(entry.owned),
 						hash("%s/%s/%d" % [entry.id, starter, seed_index]),
@@ -220,12 +258,20 @@ func _run() -> void:
 						# alpha's own pilot keeps its policy name.
 						"SWITCH_READER" if policy == "READER" and entry.kind != "alpha" else policy)
 					var tells: Array = []
+					var tell_profiles: Array[Dictionary] = []
 					for event: Dictionary in result.get("events", []):
-						if str(event.get("event", "")) == "telegraph": tells.append(float(event.seconds))
+						if str(event.get("event", "")) == "telegraph":
+							tells.append(float(event.seconds))
+							var profile: Dictionary = event.get("enemy_config", {})
+							tell_profiles.append({"seconds": float(event.seconds), "heavy": bool(profile.get("heavy", false)),
+								"attack": str(profile.get("pattern_attack_id", ""))})
 					result.erase("events")
 					result["tells"] = tells
+					result["tell_profiles"] = tell_profiles
 					result["case"] = entry.id
 					result["starter"] = starter
+					result["party_level"] = entry.party_level
+					result["region"] = entry.region
 					if entry.kind == "alpha": result["phases"] = pilot.phase_log
 					runs.append(result)
 					s.wins += int(result.won)
@@ -273,7 +319,8 @@ func _run() -> void:
 		else:
 			file.store_string(JSON.stringify({"seeds": _seeds, "selection": _selection, "multiplier_override": _multiplier_override,
 				"gear": GEAR.label(str(_gear.tier), int(_gear.upgrade)),
-				"party": {"lead": STARTERS, "retained": RETAINED, "level": _party_level},
+				"party": {"lead": STARTERS, "retained": RETAINED,
+					"level_rule": "chapter_curve Tidewake regional team entry", "override": _party_level_override},
 				"fixture": "production CombatManager + WildCreature bodies on a flat collider (combat_depth_pilot.gd)",
 				"rows": rows, "runs": runs, "errors": errors, "accepted": false}, "  "))
 	for e in errors: print("WATER_C2C3 ERROR: %s" % e)
