@@ -236,6 +236,7 @@ var _far_lod_elapsed := 0.0
 
 
 func _physics_process(delta: float) -> void:
+	var w0 := Time.get_ticks_usec()
 	_far_lod_elapsed += delta
 	if _far_lod_hold():
 		return
