@@ -86,6 +86,16 @@ static func validate(scope: String, value: Variant, owned_uids: Array = [], worl
 			if not receipts is Array: continue
 			for receipt: Variant in receipts:
 				var pieces := str(receipt).split(":")
+				if pieces[0] == "stormheart_answer":
+					# This is a character's historical original-offer receipt, so its
+					# creature need not remain in the currently owned roster.
+					# Load lazily: Creature -> Essence already depends on this checker.
+					var creature_identity: Script = load("res://scripts/creatures/creature_instance.gd")
+					if not receipt is String or field != "transaction_receipts" or pieces.size() != 3 \
+						or creature_identity.call("valid_uid", pieces[1]) != true \
+						or not preload("res://scripts/save/character_identity.gd").is_valid(pieces[2]):
+						errors.append("invalid Stormheart answer receipt %s" % receipt)
+					continue
 				if pieces.size() < 2 or pieces[1].is_empty() or not pieces[0] in ["portal_unlock", "starter_choice", "relic_hang", "craft", "release", "essence_spend", "defeat", "care", "master_recipe", "feast_feed", "candy_feed", "trait_teach", "loadout", "bounty", "research", "rematch", "groom"]:
 					errors.append("unknown transaction receipt %s" % receipt)
 	return errors
