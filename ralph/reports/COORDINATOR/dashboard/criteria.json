@@ -1,7 +1,7 @@
 {
- "generated_at": "2026-10-10T14:05:00+00:00",
+ "generated_at": "2026-10-10T21:20:00+00:00",
  "main_sha": "77ae9579 (PR #623)",
- "batch4_sha": "#630 consolidated (7 art/perf PRs) in CI",
+ "batch4_sha": "#630 consolidated: 25 lane PRs + f48 seat-wait fix (30edaa494), full CI running; batch 3 staged (vitals+Nysa fix, F23, F28, F02 batch, P2-013, P2-102)",
  "rows": [
   {
    "id": "F01",
@@ -115,18 +115,18 @@
     },
     {
      "text": "Continues through three Sigils and the Hall in order",
-     "status": "failing",
+     "status": "in_progress",
      "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-3.md",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-hall --reload-at-transitions --world-seed=15. Folds into F49.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #610 Hall route reader pilot; plus batch-3 F02 run: Sigils 3 captains 5-0, Hall PASS (2nd attempt). | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 3
     },
     {
      "text": "Each transition, reward and recovery survives reload on that route",
-     "status": "failing",
+     "status": "in_progress",
      "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-4.md",
      "gap": "Re-run the --reload-at-transitions chain (through-tournament and through-hall) on the v28 save. Folds into F49.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "note": "PENDING batch 3 (after #630): tb/lane-b-f02-batch --reload-at-sigils: 5 production save/Loads exact (flags, UIDs, HP/L/XP, items). | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 4
     },
     {
@@ -139,10 +139,10 @@
     },
     {
      "text": "No repeated wilds required",
-     "status": "failing",
+     "status": "in_progress",
      "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-6.md",
      "gap": "Re-run earned team segment on 3 seeds; confirm repeated_wilds [] at the new level gates. Folds into F47.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "note": "PENDING batch 3 (after #630): route ledger: 25 fights, all trainer, 0 wild fights, L15→18-19 on trainer XP. | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 6
     },
     {
@@ -150,7 +150,7 @@
      "status": "failing",
      "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-7.md",
      "gap": "Re-run the --through-hall --route-ledger run; recompute A7/spacing with strict-recompute.py. Folds into F49.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "note": "Batch-3 measurement (lane B, strict): A7 longest 68.2 s / 54.2 s, 0 violations; three §3.1 gaps over 250 m (252 near Captain Field, 334 after Vess, 252 at Hall start) — FAILING until placement fix. | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 7
     }
    ]
@@ -439,18 +439,18 @@
     },
     {
      "text": "Fly training, landing and invalid-landing recovery",
-     "status": "partial",
+     "status": "in_progress",
      "evidence": ".../f06-2-fly-training/earned/ (smoke_cloudreach_fly_training_witness.gd) @≤94c63b1f2",
      "gap": "Re-run smoke_cloudreach_fly_training_witness.gd --leg=flight. Folds into F49.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Not in CI. The Cloudreach world, save and camera_rig changed since.",
+     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #657 glide landing / cloud-sea recovery. | prior: Audit 2026-10-04 on b4e4897d5: STALE. Not in CI. The Cloudreach world, save and camera_rig changed since.",
      "audit_index": 2
     },
     {
      "text": "Loaner path does not bypass gates or lose creatures",
-     "status": "partial",
+     "status": "in_progress",
      "evidence": ".../f06-3-loaner/earned-full-v2/ (smoke_cloudreach_loaner_witness.gd) @≤94c63b1f2",
      "gap": "Re-run smoke_cloudreach_loaner_witness.gd. Folds into F49.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Not in CI. The Cloudreach route/world and save paths changed since.",
+     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #655 Maela Fly loaner can never join the party. | prior: Audit 2026-10-04 on b4e4897d5: STALE. Not in CI. The Cloudreach route/world and save paths changed since.",
      "audit_index": 3
     },
     {
@@ -643,10 +643,10 @@
     },
     {
      "text": "Four loops, three shortcuts, five pockets, alternate routes physically traversable",
-     "status": "partial",
+     "status": "in_progress",
      "evidence": "ralph/reports/STORMWOOD/f09_3_r8/@b2653f34 (smoke_stormwood_route_walks, smoke_stormwood_pocket_walks, not CI)",
      "gap": "Re-run smoke_stormwood_route_walks and smoke_stormwood_pocket_walks from earned checkpoints Folds into F49#0, F19#5.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Walks are not in CI. CI units check pockets and road walkability statically only. stormwood_world/terrain/encounters changed (3 files) since b2653f34.",
+     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #664 loops/shortcuts/pockets walk by ordinary input (5 pockets 118 checks, 5 loops, alt road, shortcuts both ways). | prior: Audit 2026-10-04 on b4e4897d5: STALE. Walks are not in CI. CI units check pockets and road walkability statically only. stormwood_world/terrain/encounters changed (3 files) since b2653f34.",
      "audit_index": 3
     },
     {
@@ -1280,10 +1280,10 @@
     },
     {
      "text": "Per-participant legendary offers (Veridian, Abyssal Guardian, Solmane, Stormwood's legendary) still work in the new order, accept and refuse, at capacity and with space.",
-     "status": "partial",
+     "status": "in_progress",
      "evidence": "REORDER/f19/completion/functional-offload-actual-results.json @1351af5394",
      "gap": "Re-run smoke_cloudreach_solmane_offer_choice and the f19 functional smokes clean; keep the Veridian/Stormheart CI smokes.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Not clean witnesses (engine errors). Solmane smoke is not in CI. Since then: session.gd +1190, encounter_director, save paths.",
+     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #654 Stormheart offer proofs. | prior: Audit 2026-10-04 on b4e4897d5: STALE. Not clean witnesses (engine errors). Solmane smoke is not in CI. Since then: session.gd +1190, encounter_director, save paths.",
      "audit_index": 4
     },
     {
@@ -1495,7 +1495,7 @@
      "status": "in_progress",
      "evidence": "test_moves_data.gd; test_f23_live_moves.gd (tap sequence)",
      "gap": "Widen live_moves, enable ultimates.json, get the owner's confirmation of the map, then a controller fight smoke.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. Only snare and ultimate_ground_current are live (combat.json move_commit.live_moves); ultimates.json enabled=false. Owner decision #10 (map) is open.",
+     "note": "PENDING batch 3 (after #630): lane A ultall: every species fills all 4 slots (unit5 58/0). | prior: Audit 2026-10-04 on b4e4897d5: OFF. Only snare and ultimate_ground_current are live (combat.json move_commit.live_moves); ultimates.json enabled=false. Owner decision #10 (map) is open.",
      "audit_index": 0
     },
     {
@@ -1511,7 +1511,7 @@
      "status": "in_progress",
      "evidence": "data/moves/moves.json (10 utility); test_actor_vitals_authority.gd",
      "gap": "Enable the utilities; add a per-role equip unit test.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The data has 10 utilities, but only snare is live (move_commit.live_moves). No test covers per-role equip.",
+     "note": "PENDING batch 3 (after #630): lane A utils: 10 utilities live (unit10 46/0). | prior: Audit 2026-10-04 on b4e4897d5: OFF. The data has 10 utilities, but only snare is live (move_commit.live_moves). No test covers per-role equip.",
      "audit_index": 2
     },
     {
@@ -1535,7 +1535,7 @@
      "status": "in_progress",
      "evidence": "test_f23_live_moves.gd::test_ultimate_requires_real_landed_meter… (forces visuals on)",
      "gap": "Enable ultimates.json after F25 proof; add a HUD meter engine smoke.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. data/moves/ultimates.json enabled=false makes live_move_supported refuse every ultimate (\"move_not_mounted\").",
+     "note": "PENDING batch 3 (after #630): lane A ultall smoke2: meter→HUD→full-only fire; part-filled meter refused at host ingress. | prior: Audit 2026-10-04 on b4e4897d5: OFF. data/moves/ultimates.json enabled=false makes live_move_supported refuse every ultimate (\"move_not_mounted\").",
      "audit_index": 5
     }
    ]
@@ -2275,7 +2275,7 @@
      "status": "in_progress",
      "evidence": "ultimates.json enabled=false (configured 2.4 s); test_f23_live_moves recovery≥presentation (flag forced on in fixture)",
      "gap": "Turn on. Add a control-restore timing test and a four-player capture with a code-blind judge and frame-time capture.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The flag is off. No four-player readability capture or frame-time evidence exists.",
+     "note": "Code-blind judge 10-10 FAIL (lanea-f35-four2): only two effect families visible, target occluded late; parked. Timing half: unit 2.4 s windup+recovery (batch 3). Frame time needs real GPU. | prior: Audit 2026-10-04 on b4e4897d5: OFF. The flag is off. No four-player readability capture or frame-time evidence exists.",
      "audit_index": 3
     },
     {
@@ -2723,7 +2723,7 @@
      "status": "in_progress",
      "evidence": "Evidenced on tb/codex-c ee5f7ebc7c (READY #572 6047852423, 5:10 PM CT 10-07): 70 rows run 37693142773, 81 tests run 37692770470; review APPROVE",
      "gap": "Fix the pending-row rejoin block (smoke_net_foundations production_join), add an engine witness, then set runtime_enabled true.",
-     "note": "READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
+     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #607 bounty board on, two-peer proof. | prior: READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
      "audit_index": 0
     },
     {
@@ -2731,7 +2731,7 @@
      "status": "in_progress",
      "evidence": "Evidenced on tb/codex-c ee5f7ebc7c (READY #572 6047852423, 5:10 PM CT 10-07): 70 rows run 37693142773, 81 tests run 37692770470; review APPROVE",
      "gap": "Enable after F43#0. Witness each kind in an engine run.",
-     "note": "READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
+     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #607. | prior: READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
      "audit_index": 1
     },
     {
@@ -2739,7 +2739,7 @@
      "status": "in_progress",
      "evidence": "Evidenced on tb/codex-c ee5f7ebc7c (READY #572 6047852423, 5:10 PM CT 10-07): 70 rows run 37693142773, 81 tests run 37692770470; review APPROVE",
      "gap": "Build a two-peer reconnect-at-claim net smoke (peers:2), then enable.",
-     "note": "READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
+     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #607. | prior: READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
      "audit_index": 2
     },
     {
@@ -2747,7 +2747,7 @@
      "status": "in_progress",
      "evidence": "Evidenced on tb/codex-c ee5f7ebc7c (READY #572 6047852423, 5:10 PM CT 10-07): 70 rows run 37693142773, 81 tests run 37692770470; review APPROVE",
      "gap": "Two-peer save/reload smoke with separate boards, then enable.",
-     "note": "READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
+     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #607 two-peer + reload proof. | prior: READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
      "audit_index": 3
     }
    ]
@@ -2940,10 +2940,10 @@
     },
     {
      "text": "No exploit loop (buy/resell, rest, release farming beyond the intended rate, bounty rerolls) mints unbounded value.",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "R3-F47 contracts; bounties off; rematch cross-world guard untested",
      "gap": "Build an exploit unit/engine test matrix: resell, rest, release rate, bounty reroll, world hop.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No exploit audit or test. The daily-cap world-hop check is undone.",
+     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #634 day rest heals but mints no morning; exploit audit. | prior: Audit 2026-10-04 on b4e4897d5: MISSING. No exploit audit or test. The daily-cap world-hop check is undone.",
      "audit_index": 4
     }
    ]
@@ -2973,10 +2973,10 @@
     },
     {
      "text": "Disconnect and rejoin at each transaction (craft, release payout, feast, key use, relic hang) neither duplicates nor loses anything.",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "R3-F48/process-boundary/*@b4e4897d5 (source); STATE: \"all24 interruption cuts\" unvalidated",
      "gap": "Pass the 24-cut transaction reconnect matrix and land it with F48.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The 24-cut matrix has never passed. The suite is not on b4e4897d5.",
+     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #649 craft/key/release cuts (seat-wait fix 443d8e0a). | prior: Audit 2026-10-04 on b4e4897d5: MISSING. The 24-cut matrix has never passed. The suite is not on b4e4897d5.",
      "audit_index": 1
     },
     {
