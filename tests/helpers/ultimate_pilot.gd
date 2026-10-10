@@ -7,7 +7,7 @@ extends RefCounted
 ##
 ##   const ULTIMATE_PILOT := preload("res://tests/helpers/ultimate_pilot.gd")
 ##   if await ULTIMATE_PILOT.fire(get_tree(), manager):
-##       ...  # the host accepted the ultimate start
+##       ...  # the face tap consumed the armed ultimate; check the host for acceptance
 ##
 ## Returns false without pressing anything when the meter is not full, and
 ## false when RB release did not arm (gate off, recovering, input owned).
