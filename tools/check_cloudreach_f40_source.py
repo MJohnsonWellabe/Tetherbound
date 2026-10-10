@@ -10,13 +10,14 @@ ROOT = Path(__file__).resolve().parents[1]
 base = json.loads((ROOT / 'data/config/cloudreach_aviary.json').read_text())
 candidate = json.loads((ROOT / 'data/config/cloudreach_f40_visual.json').read_text())
 visual = json.loads((ROOT / 'data/config/cloudreach_visual.json').read_text())
-assert candidate['enabled'] is False
-assert base['crown_arcade']['enabled'] is False
-assert base['towers']['enabled'] is False
-assert visual['skyline_profile']['enabled'] is False
-assert visual['settlement']['occupied_terrace']['enabled'] is False
-assert candidate['aviary']['towers']['enabled'] is False
-assert candidate['visual']['settlement']['occupied_terrace']['enabled'] is False
+# Owner flip list (F40): every presentation candidate below is live.
+assert candidate['enabled'] is True
+assert base['crown_arcade']['enabled'] is True
+assert base['towers']['enabled'] is True
+assert visual['skyline_profile']['enabled'] is True
+assert visual['settlement']['occupied_terrace']['enabled'] is True
+assert candidate['aviary']['towers']['enabled'] is True
+assert candidate['visual']['settlement']['occupied_terrace']['enabled'] is True
 
 arcade = candidate['aviary']['crown_arcade']
 radius = min(base['drum']['radius_x_m'], base['drum']['radius_z_m']) - arcade['radial_inset_m']
@@ -55,7 +56,7 @@ for relative in scripts:
         for forbidden in ['StaticBody3D.new', 'CollisionShape3D.new', 'Area3D.new', 'rpc(', 'set_flag(', 'SaveGame']:
             assert forbidden not in text, (relative, forbidden)
 
-print(f'PASS: production candidates off; {destinations} destinations/{planned} planned frames per preset; '
+print(f'PASS: production candidates live (owner flip list); {destinations} destinations/{planned} planned frames per preset; '
       'crown clearance/spacing/light budget, middle-ground offset/support budget, resource paths, no new state/collision API.')
 if importlib.util.find_spec('gdtoolkit'):
     from gdtoolkit.parser import parser
