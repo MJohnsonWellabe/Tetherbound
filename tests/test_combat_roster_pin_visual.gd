@@ -38,7 +38,7 @@ func _case_live_repeated_pin() -> void:
 	var tree := Engine.get_main_loop() as SceneTree
 	var reduced_before := MOTION.reduced_motion()
 	MOTION.set_reduced_motion(false)
-	assert_false(STRIP.compact_pin_candidate_enabled(), "unjudged candidate defaults off")
+	assert_true(STRIP.compact_pin_candidate_enabled(), "P2-088 passed its judge and ships on")
 	var strip := _strip(tree, true)
 	strip.call("set_pinned", true)
 	await _repeat_pins(tree, strip)
