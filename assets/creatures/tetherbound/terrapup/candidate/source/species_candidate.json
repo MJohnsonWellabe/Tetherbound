@@ -1,0 +1,56 @@
+{
+  "activation": "Requires independent full art bar approval; installed asset remains default",
+  "subject": "terrapup",
+  "placeholder": {
+    "colour": "#8a6138",
+    "height": 3.85,
+    "radius": 1.464004,
+    "rest_roll_deg": 0.0,
+    "rest_use_body_pose": true,
+    "rest_pose": {
+      "clip_role": "rest",
+      "max_height_ratio": 0.85,
+      "min_ground_offset_m": -0.22,
+      "max_ground_offset_m": 0.08,
+      "max_torso_contact_offset_m": 0.2,
+      "model_rotation_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "model_position_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bones": {
+        "root": {
+          "rotation_deg": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "model": "res://assets/creatures/tetherbound/terrapup/candidate/models/creature_terrapup_native.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "field_emission": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    }
+  },
+  "scope": "presentation_only",
+  "enabled": false
+}
