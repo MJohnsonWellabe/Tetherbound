@@ -192,6 +192,14 @@
     "flame_energy": 2.4
   },
   "refresh_seconds": 0.2,
+  "membrane": {
+    "scope": "client_presentation",
+    "half_width_m": 0.725,
+    "height_m": 2.4,
+    "recess_m": 0.22,
+    "centre_opacity": 0.12,
+    "rim_opacity": 0.62
+  },
   "pedestal_collider": {
     "_provenance": "Installed BookStand.gltf POSITION accessor bounds: X[-0.25348,0.25363],Y[-0.00250,1.44429],Z[-0.25552,0.25567]; native metres, no model scale change.",
     "size": [

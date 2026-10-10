@@ -105,16 +105,43 @@ func _build_arch(entry: Dictionary) -> void:
 	slot.add_child(arrival)
 	var membrane := MeshInstance3D.new()
 	membrane.name = "PortalSurface"
-	var mesh := QuadMesh.new()
-	mesh.size = Vector2(1.45, 2.4)
-	membrane.mesh = mesh
-	membrane.position = Vector3(0, 1.28, -.08)
+	membrane.mesh = _arch_membrane_mesh()
+	membrane.position = Vector3(0, .08, -.08)
 	var material := StandardMaterial3D.new()
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.roughness = .75
+	material.vertex_color_use_as_albedo = true
 	membrane.material_override = material
+	membrane.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	slot.add_child(membrane)
 	_arches[str(entry.id)] = slot
+
+
+## The installed arch has a rounded opening, not a rectangular door panel.
+## A shallow recessed fan leaves the stone reveal visible and carries the
+## open portal's light at its rim instead of filling the nave with a card.
+func _arch_membrane_mesh() -> ArrayMesh:
+	var settings: Dictionary = _config.get("membrane", {})
+	var radius := float(settings.get("half_width_m", .725))
+	var height := float(settings.get("height_m", 2.4))
+	var spring := height - radius
+	var outline := PackedVector3Array([Vector3(-radius, 0, 0), Vector3(radius, 0, 0)])
+	for step in range(25):
+		var angle := float(step) * PI / 24.0
+		outline.append(Vector3(cos(angle) * radius, spring + sin(angle) * radius, 0))
+	var centre := Vector3(0, height * .5, -float(settings.get("recess_m", .22)))
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for index in outline.size():
+		for vertex in [centre, outline[index], outline[(index + 1) % outline.size()]]:
+			var middle: bool = vertex == centre
+			var value := .38 if middle else .9
+			surface.set_color(Color(value, value, value,
+				float(settings.get("centre_opacity", .12)) if middle else float(settings.get("rim_opacity", .62))))
+			surface.set_uv(Vector2((vertex.x / radius + 1.0) * .5, vertex.y / height))
+			surface.add_vertex(vertex)
+	surface.generate_normals()
+	return surface.commit()
 
 
 func _build_pedestal(entry: Dictionary) -> void:
@@ -438,6 +465,7 @@ func apply_display(display: Dictionary) -> void:
 		arch.set_meta("arch_state", state)
 		var material := (arch.get_node("PortalSurface") as MeshInstance3D).material_override as StandardMaterial3D
 		material.albedo_color = Color(str(colors.get(state, "#303947")))
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA if state == "open" or state == "stirred" else BaseMaterial3D.TRANSPARENCY_DISABLED
 		material.emission_enabled = state == "open" or state == "stirred"
 		material.emission = material.albedo_color
 		material.emission_energy_multiplier = OPEN_MEMBRANE_EMISSION if state == "open" else .1
@@ -671,4 +699,3 @@ func _declare_interior_volumes() -> void:
 		return
 	set_meta(OBJECTIVE_BEACON.INTERIOR_BOXES_META, boxes)
 	add_to_group(OBJECTIVE_BEACON.INTERIOR_GROUP)
-
