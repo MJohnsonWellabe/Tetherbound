@@ -1,6 +1,6 @@
 {
   "name": "F11: a guest's link dies at the Stormheart claim acknowledgement; no duplicated grant",
-  "claim": "ACCEPTANCE F11 'through disconnect ... without duplicated grants', the claim-acknowledgement window. Both players fought the Dynamo. The host says Yes. The guest walks up, opens its own offer and says Yes through the real dialogue. The guest's transport is closed from the dialogue's own `completed` signal, in the physics step that accepted the Yes. The ending then records the receipt and saves the character locally (stormwood_ending.gd _finish_local_claim), and its `ending_settled` acknowledgement fails with 'Trying to call an RPC via a multiplayer peer which is not connected' (peer-1 log). The host holds no world receipt of the guest's answer and its one claim for the guest is unsettled. The guest rejoins from the title as the same character. The host settles that one claim from the resent claim and the guest's saved receipt (settled, kept), and the guest holds exactly one Stormheart. A repeat of the claim the prompt sends is refused by the host, before and after both peers reload. Setup: the host's captured save with the Stormwood route open, and the Dynamo fixture, which also commits stormwood:act_ii_complete and stormwood:marrow_defeated through the ledger. Disclosed: the local close() sends an ENet disconnect, so the host sees the leave at once (a silent partition is not this proof); the guest's leave-time character write runs before the deferred commit, as a real link death would not order it; after the rejoin the guest arrives downed (it lands from height near the Stormheart), which touches no grant. Not covered here: the host dropping; a refusal at the acknowledgement; a drop before the receipt is saved; a silent partition timed out by the host; a rejoin after the 120 s seat hold.",
+  "claim": "ACCEPTANCE F11 'accept/refuse independently ... through disconnect/reload, without duplicated grants', the saved-character acknowledgement window. Both players fought the Dynamo. The host says Yes. The guest opens its own offer and says Yes through the real dialogue. The existing adapter closes its actual connected ENet transport synchronously in SaveGame's prepared_character_completed TRUE_BOOL callback, after authenticating the original live save call, immutable request, scoped frozen owner state, single answer transaction receipt and written character bytes, before the save returns to the ending_settled sender. The host holds no world receipt of the guest's answer and its one guest claim remains unsettled. The guest rejoins as the same character with the saved answer; the host settles the original claim as ACCEPTED. The guest holds exactly one Stormheart. A repeated claim is refused before and after reload, with no duplicate grant. Setup: a declared-start host save with an open Stormwood route and empty team, isolated initial Hall positioning/open route/Home Key, and the Dynamo ledger fixture that establishes act_ii_complete and marrow_defeated; no earned route or boss-play credit. Travel uses real host-authorized portal permits. A local close() sends an ENet disconnect; this proves a saved-character ACK drop, not a silent partition. Not covered: host disconnect, pre-save disconnect, silent timeout, or rejoin beyond the 120 s seat hold.",
   "peers": 2,
   "scene": "world",
   "budget_s": 2100,
@@ -26,6 +26,18 @@
       },
       "budget_frames": 10000,
       "label": "guest: a fresh trainer in the Meadows"
+    },
+    {
+      "peer": "all",
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood",
+        "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+        "portal_regression": "stormwood_proof",
+        "portal_prepare_only": true
+      },
+      "budget_frames": 10000,
+      "label": "SETUP: initial Hall ground, open Stormwood route and Home Key before admission; no earned route credit"
     },
     {
       "peer": 0,
@@ -54,7 +66,9 @@
       "peer": 0,
       "action": "enter_realm",
       "args": {
-        "realm": "stormwood"
+        "realm": "stormwood",
+        "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+        "portal_regression": "stormwood_proof"
       },
       "budget_frames": 10000
     },
@@ -62,7 +76,9 @@
       "peer": 1,
       "action": "enter_realm",
       "args": {
-        "realm": "stormwood"
+        "realm": "stormwood",
+        "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+        "portal_regression": "stormwood_proof"
       },
       "budget_frames": 10000
     },
@@ -128,9 +144,13 @@
         "cut_at_ack": true,
         "receipt_on_disk": true,
         "has_stormheart": true,
-        "accepted_anywhere": true
+        "accepted_anywhere": true,
+        "saved_before_ack": true,
+        "claim_pending_at_cut": true,
+        "answer_receipt_count": 1,
+        "stormhearts_in_party": 1
       },
-      "label": "the guest says Yes through the real dialogue, and its link is closed from the dialogue's completed signal in the physics step that accepted the Yes: the Yes receipt is saved on its character, the ending_settled acknowledgement fails (not connected)"
+      "label": "Guest answers Yes through the real dialogue; close the authenticated connected ENet link after the scoped prepared character TRUE_BOOL and before ending_settled; saved original answer receipt survives"
     },
     {
       "peer": 1,
@@ -241,7 +261,8 @@
         ],
         "has_stormheart": true,
         "world_accepted": true,
-        "accepted_anywhere": true
+        "accepted_anywhere": true,
+        "stormhearts_in_party": 1
       },
       "label": "exactly one Stormheart: the resent claim granted nothing twice"
     },
@@ -300,7 +321,8 @@
         "party": [
           "fulgocobra"
         ],
-        "has_stormheart": true
+        "has_stormheart": true,
+        "stormhearts_in_party": 1
       },
       "label": "still exactly one Stormheart"
     },
@@ -320,7 +342,8 @@
         "other_refused": false,
         "other_claims": 1,
         "other_claim_settled": true,
-        "other_claim_kept": true
+        "other_claim_kept": true,
+        "stormhearts_in_party": 1
       },
       "label": "host: its own one; its single claim entry for the guest is now settled and kept, and the world holds the guest's accepted receipt (not refused)"
     },
