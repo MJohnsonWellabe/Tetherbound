@@ -151,7 +151,9 @@ static func _view(runner: SceneTree, character_id: String, master_id: String) ->
 		"feast_recipes": (personal.get("feast_recipes", []) as Array).duplicate(),
 		"has_feast": (personal.get("feast_recipes", []) as Array).count(feast),
 		"recipe_receipts": (personal.get("transaction_receipts", []) as Array).filter(func(r: Variant) -> bool: return str(r).begins_with("master_recipe:")),
-		"candy": candy})
+		"candy": candy,
+		"party": (record.get("party", []) as Array).map(func(m: Variant) -> Dictionary: return {"uid": str(m.get("uid", "")),
+			"battles_fought": int(m.get("battles_fought", 0)), "xp": int(m.get("xp", 0)), "level": int(m.get("level", 0))} if m is Dictionary else {})})
 
 
 ## Stand the trainer on the ground at [x, z] (a disclosed fixture position).

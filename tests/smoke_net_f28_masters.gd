@@ -98,7 +98,11 @@ func _proof() -> void:
 	await step(0, "wait", {"frames": SETTLE_FRAMES})
 	# Guest retry with its strong creature, and win.
 	if not await _stand(1, _npc): return
-	if not await _pass(1, "f28_challenge", {"master_id": MASTER, "species": WINNER}, 2400): return
+	var guest_pre_win := await _view(1, "")
+	var challenged: Dictionary = await step(1, "f28_challenge", {"master_id": MASTER, "species": WINNER}, 2400)
+	if not _ok(challenged, "peer 1 f28_challenge"): return
+	_duelist = str(challenged.get("data", {}).get("uid", ""))
+	_duelist_battles = _battles(guest_pre_win, _duelist)
 	# No self-HP top-up for the guest: its creature's health is host-owned in
 	# the duel (saved actor vitals), so the fixture may not write it locally.
 	if not await _pass(1, "win_trainer_battle", {"budget_frames": 6000, "fixture_guest_master": true, "self_hp_topups": false}, 6400): return
@@ -113,6 +117,13 @@ func _proof() -> void:
 	for peer in 2:
 		var won := await _view(peer, "")
 		check((won.master_wins as Array).count(MASTER) == 1, "#2 peer %d holds exactly one %s win (%s)" % [peer, MASTER, str(won.master_wins)])
+	# The host-paid award of the guest's hosted win: one battle credit for the
+	# duelist, once (its own combat manager pays nothing locally).
+	var guest_won := await _view(1, "")
+	check(_battles(guest_won, _duelist) == _duelist_battles + 1,
+		"#2 the guest's duelist was credited the win exactly once (%d -> %d)" % [_duelist_battles, _battles(guest_won, _duelist)])
+	check(_battles(await _view(0, _guest_id), _duelist) == _battles(guest_won, _duelist),
+		"#2 the host's admitted record holds the same credit for the guest's duelist")
 	# Each opens the chest: their own recipe, once.
 	await _chest(0, "host chest")
 	await _chest(1, "guest chest")
@@ -196,6 +207,18 @@ func _chest(peer: int, label: String) -> void:
 func _want_same(expected: Dictionary, actual: Dictionary, label: String) -> void:
 	for key: String in ["master_wins", "feast_recipes", "recipe_receipts", "candy"]:
 		check(str(actual.get(key)) == str(expected.get(key)), "%s: %s unchanged (%s vs %s)" % [label, key, str(actual.get(key)), str(expected.get(key))])
+	if not _duelist.is_empty() and expected.has("party") and actual.has("party"):
+		check(_battles(actual, _duelist) == _battles(expected, _duelist),
+			"%s: the duelist's battle credit unchanged (%d vs %d)" % [label, _battles(actual, _duelist), _battles(expected, _duelist)])
+
+
+var _duelist := ""
+var _duelist_battles := -1
+
+func _battles(view: Dictionary, uid: String) -> int:
+	for member: Variant in view.get("party", []):
+		if member is Dictionary and member.get("uid") == uid: return int(member.get("battles_fought", -1))
+	return -1
 
 
 func _want_host_matches(guest: Dictionary, label: String) -> void:
