@@ -247,6 +247,50 @@ func authored_named_wild_arena_context(wild: Node3D) -> Dictionary:
 	return context
 
 
+## Existing floating-seat policy, read only by the local admission consumer.
+## A registered surface wild is supported by the actual Water column; it does
+## not stand on a fabricated collider or on the seabed. The manager still tests
+## its full measured rendered box against real solids, including submerged art.
+func surface_wild_admission_context(wild: Node3D) -> Dictionary:
+	if not wild is SurfaceWild or not is_instance_valid(wild) or not wild.is_inside_tree() \
+			or not wild.visible or wild.is_queued_for_deletion() or bool(wild.get("trainer_owned")) \
+			or realm_world != get_parent() or wild.get_parent() != realm_world \
+			or not _wild_creatures.has(wild): return {}
+	var site_id := str(wild.get_meta(&"water_site_id", ""))
+	var site := find_id(encounter_config.get("wild_sites", []), site_id)
+	if site.is_empty() or str(site.get("placement_mode", "ground")) != "water_surface" \
+			or str(wild.get_meta(&"water_placement_mode", "")) != "water_surface" \
+			or not (_site_members.get(site_id, []) as Array).has(wild): return {}
+	var index := int(wild.get_meta(&"water_member_index", -1))
+	var table := find_id(chapter.get("encounter_tables", []), str(site.get("table_id", "")))
+	var expected_species := ""
+	for plan: Dictionary in site_spawn_plans(site, table, encounter_config.get("named_encounters", []), world_seed()):
+		if int(plan.member_index) == index: expected_species = str(plan.species)
+	var instance: RefCounted = wild.get("instance")
+	if instance == null or expected_species.is_empty() or str(instance.get("species_id")) != expected_species: return {}
+	var field: RefCounted = realm_world.get("field")
+	if field == null or not field.has_method("water_level"): return {}
+	var sea := float(field.call("water_level"))
+	var surface := float(site.get("surface_y_m", NAN))
+	var submerge := float(site.get("surface_submerge_fraction", NAN))
+	if not is_finite(sea) or not is_finite(surface) or absf(surface - sea) > 0.01 \
+			or not is_finite(submerge) or submerge < 0.0 or submerge > 0.5 \
+			or not is_equal_approx(float((wild as SurfaceWild).water_surface_y), surface) \
+			or not is_equal_approx(float((wild as SurfaceWild).surface_submerge_fraction), submerge): return {}
+	var origin := (wild as SurfaceWild).surface_origin_y()
+	if not is_finite(origin): return {}
+	return {"source": self, "wild": wild, "site_id": site_id, "species_id": expected_species,
+		"water_level_y": sea, "surface_origin_y": origin,
+		"surface_y": surface, "surface_submerge_fraction": submerge}
+
+
+func surface_wild_supports_at(wild: Node3D, point: Vector3) -> bool:
+	var context := surface_wild_admission_context(wild)
+	if context.is_empty() or not point.is_finite() or not realm_world.has_method("ground_height_at"): return false
+	var ground := float(realm_world.call("ground_height_at", point.x, point.z))
+	return is_finite(ground) and ground < float(context.water_level_y)
+
+
 func occupied_positions() -> Array[Vector3]:
 	var result: Array[Vector3] = []
 	var game := get_node_or_null("/root/Game")
