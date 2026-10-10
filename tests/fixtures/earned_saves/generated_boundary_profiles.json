@@ -21,6 +21,94 @@
       "personal_flags": [],
       "inventory_add": {},
       "disclosure": "Generated healthy post-Warrens five at L15 with generated breakthrough caps, matching the Relay officers band. Ordered UIDs/species, original inventory and prior route flags retained. Levels, caps and full HP are setup; no earned feast, XP or recovery witness is claimed."
+    },
+    "cloudreach": {
+      "boundary": "tidewake_settled",
+      "realm": "water",
+      "day": 12,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "water_dock": true
+      },
+      "party_levels": [
+        31,
+        31,
+        31,
+        31,
+        31
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "water_aquaryn_resolved",
+        "water_dock_salt_crown_landing_charted",
+        "water_sluice_west_disabled",
+        "water_sluice_east_disabled",
+        "defeated_water_trainer_bex",
+        "defeated_water_trainer_calder",
+        "defeated_water_trainer_venn",
+        "water_dock_sluice_isle_both_controls_disabled",
+        "water_captain_nerissa_defeated",
+        "water_veilfall_intake_stopped",
+        "water_veilfall_return_opened",
+        "water_guardian_freed",
+        "water_tether_disabled",
+        "water_guardian_settled",
+        "water_currents_restored",
+        "realm_relic_water_earned",
+        "water_civilian_departure_complete",
+        "water_dock_reedhaven_repaired",
+        "water_swim_lesson_complete",
+        "defeated_water_trainer_tovin",
+        "water_dock_brine_steps_trial_won",
+        "defeated_water_trainer_solm",
+        "defeated_water_trainer_irva",
+        "water_shellwatch_residents_freed",
+        "water_shellwatch_pump_disabled",
+        "water_dock_shellwatch_residents_freed_and_pump_disabled"
+      ],
+      "personal_flags": [
+        "legendary_refused",
+        "water_chapter_started",
+        "water_cordage_recipe_gated",
+        "water_swim_lesson_briefed",
+        "water_swim_stone_earned",
+        "water:legendary_refused"
+      ],
+      "inventory_add": {
+        "cloudreach_portal_key": 1
+      },
+      "character_fields": {
+        "portal_unlocks": [
+          "tidewake"
+        ],
+        "relics_held": [
+          "tidewake"
+        ],
+        "relics_hung": [
+          "meadows"
+        ]
+      },
+      "world_portal_unlocks": [
+        "tidewake"
+      ],
+      "disclosure": "Generated restored Tidewake after dock conclusion at the actual civilian dock provider, before Home Key/Tideglass hanging/Cloudreach unlock. Prior dock completion is a disclosed generated world flag, not a durable earned dock receipt. Five ordered template UIDs/species and stack positions are retained; all five levels/caps/full HP, listed prior facts, held/hung relics and next key are generated setup. No boss/dock/portal/hang transaction receipts or accepted delivery records are fabricated. This input claims no prior earned segment PASS or continuous lineage."
     }
   }
 }
