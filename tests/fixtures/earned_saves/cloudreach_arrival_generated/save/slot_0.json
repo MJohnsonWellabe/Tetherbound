@@ -5,7 +5,7 @@
 		"alpha_pins": [],
 		"chosen_character": "trainer",
 		"clock_elapsed_seconds": {
-			"$tb_float64": "65cdc82077058040"
+			"$tb_float64": "4401a260a6058040"
 		},
 		"current_realm": "cloudreach",
 		"day": 12,
@@ -171,7 +171,7 @@
 				"fainted": false,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "58ad78ae10fc5840"
+					"$tb_float64": "a39d307a11fc5840"
 				},
 				"hp": {
 					"$tb_float64": "0000000000007540"
@@ -207,7 +207,7 @@
 				"move_utility": "",
 				"nickname": "Bud",
 				"nourishment": {
-					"$tb_float64": "fb14b6cfd8065140"
+					"$tb_float64": "c1a1a5a5de065140"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 2,
@@ -260,7 +260,7 @@
 				"fainted": false,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "58ad78ae10fc5840"
+					"$tb_float64": "a39d307a11fc5840"
 				},
 				"hp": {
 					"$tb_float64": "0ad7e325f17d7140"
@@ -296,13 +296,13 @@
 				"move_utility": "",
 				"nickname": "",
 				"nourishment": {
-					"$tb_float64": "c27bc9dffe245140"
+					"$tb_float64": "8808b9b504255140"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 2,
 				"rested": true,
 				"rested_seconds_left": {
-					"$tb_float64": "59d2c4d988859740"
+					"$tb_float64": "b649bbbe9c859740"
 				},
 				"resting": false,
 				"secondary_type": "",
@@ -349,7 +349,7 @@
 				"fainted": false,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "58ad78ae10fc5840"
+					"$tb_float64": "a39d307a11fc5840"
 				},
 				"hp": {
 					"$tb_float64": "703d8a5ae7c47040"
@@ -385,13 +385,13 @@
 				"move_utility": "",
 				"nickname": "",
 				"nourishment": {
-					"$tb_float64": "776981f5c5af5140"
+					"$tb_float64": "3df670cbcbaf5140"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 2,
 				"rested": true,
 				"rested_seconds_left": {
-					"$tb_float64": "59d2c4d988859740"
+					"$tb_float64": "b649bbbe9c859740"
 				},
 				"resting": false,
 				"secondary_type": "",
@@ -438,7 +438,7 @@
 				"fainted": false,
 				"feeds_together": 0,
 				"happiness": {
-					"$tb_float64": "58ad78ae10fc5840"
+					"$tb_float64": "a39d307a11fc5840"
 				},
 				"hp": {
 					"$tb_float64": "6766667876387240"
@@ -474,7 +474,7 @@
 				"move_utility": "",
 				"nickname": "",
 				"nourishment": {
-					"$tb_float64": "d4c94982082f4240"
+					"$tb_float64": "81e3282e142f4240"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 0,
@@ -527,7 +527,7 @@
 				"fainted": false,
 				"feeds_together": 0,
 				"happiness": {
-					"$tb_float64": "58ad78ae10fc5840"
+					"$tb_float64": "a39d307a11fc5840"
 				},
 				"hp": {
 					"$tb_float64": "48e1bab5ce867140"
@@ -563,7 +563,7 @@
 				"move_utility": "",
 				"nickname": "",
 				"nourishment": {
-					"$tb_float64": "c27dbe64fe934240"
+					"$tb_float64": "6f979d100a944240"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 0,
@@ -1583,7 +1583,7 @@
 							"fainted": false,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "8e0b33f81cfc5840"
+								"$tb_float64": "f839ae721efc5840"
 							},
 							"hp": {
 								"$tb_float64": "0000000000007540"
@@ -1619,7 +1619,7 @@
 							"move_utility": "",
 							"nickname": "Bud",
 							"nourishment": {
-								"$tb_float64": "2c1d62ec32075140"
+								"$tb_float64": "8471e9c33d075140"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 2,
@@ -1669,7 +1669,7 @@
 							"fainted": false,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "8e0b33f81cfc5840"
+								"$tb_float64": "f839ae721efc5840"
 							},
 							"hp": {
 								"$tb_float64": "0ad7e325f17d7140"
@@ -1705,13 +1705,13 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "f38375fc58255140"
+								"$tb_float64": "4bd8fcd363255140"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 2,
 							"rested": true,
 							"rested_seconds_left": {
-								"$tb_float64": "8c05f80cbc869740"
+								"$tb_float64": "fa8dff02e1869740"
 							},
 							"resting": false,
 							"secondary_type": "",
@@ -1755,7 +1755,7 @@
 							"fainted": false,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "8e0b33f81cfc5840"
+								"$tb_float64": "f839ae721efc5840"
 							},
 							"hp": {
 								"$tb_float64": "703d8a5ae7c47040"
@@ -1791,13 +1791,13 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "a8712d1220b05140"
+								"$tb_float64": "00c6b4e92ab05140"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 2,
 							"rested": true,
 							"rested_seconds_left": {
-								"$tb_float64": "8c05f80cbc869740"
+								"$tb_float64": "fa8dff02e1869740"
 							},
 							"resting": false,
 							"secondary_type": "",
@@ -1841,7 +1841,7 @@
 							"fainted": false,
 							"feeds_together": 0,
 							"happiness": {
-								"$tb_float64": "8e0b33f81cfc5840"
+								"$tb_float64": "f839ae721efc5840"
 							},
 							"hp": {
 								"$tb_float64": "6766667876387240"
@@ -1877,7 +1877,7 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "36daa1bbbc2f4240"
+								"$tb_float64": "0583b06ad22f4240"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
@@ -1927,7 +1927,7 @@
 							"fainted": false,
 							"feeds_together": 0,
 							"happiness": {
-								"$tb_float64": "8e0b33f81cfc5840"
+								"$tb_float64": "f839ae721efc5840"
 							},
 							"hp": {
 								"$tb_float64": "48e1bab5ce867140"
@@ -1963,7 +1963,7 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "248e169eb2944240"
+								"$tb_float64": "f336254dc8944240"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
@@ -2349,7 +2349,7 @@
 							"fainted": false,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "8e0b33f81cfc5840"
+								"$tb_float64": "f839ae721efc5840"
 							},
 							"hp": {
 								"$tb_float64": "0000000000007540"
@@ -2385,7 +2385,7 @@
 							"move_utility": "",
 							"nickname": "Bud",
 							"nourishment": {
-								"$tb_float64": "2c1d62ec32075140"
+								"$tb_float64": "8471e9c33d075140"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 2,
@@ -2435,7 +2435,7 @@
 							"fainted": false,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "8e0b33f81cfc5840"
+								"$tb_float64": "f839ae721efc5840"
 							},
 							"hp": {
 								"$tb_float64": "0ad7e325f17d7140"
@@ -2471,13 +2471,13 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "f38375fc58255140"
+								"$tb_float64": "4bd8fcd363255140"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 2,
 							"rested": true,
 							"rested_seconds_left": {
-								"$tb_float64": "8c05f80cbc869740"
+								"$tb_float64": "fa8dff02e1869740"
 							},
 							"resting": false,
 							"secondary_type": "",
@@ -2521,7 +2521,7 @@
 							"fainted": false,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "8e0b33f81cfc5840"
+								"$tb_float64": "f839ae721efc5840"
 							},
 							"hp": {
 								"$tb_float64": "703d8a5ae7c47040"
@@ -2557,13 +2557,13 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "a8712d1220b05140"
+								"$tb_float64": "00c6b4e92ab05140"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 2,
 							"rested": true,
 							"rested_seconds_left": {
-								"$tb_float64": "8c05f80cbc869740"
+								"$tb_float64": "fa8dff02e1869740"
 							},
 							"resting": false,
 							"secondary_type": "",
@@ -2607,7 +2607,7 @@
 							"fainted": false,
 							"feeds_together": 0,
 							"happiness": {
-								"$tb_float64": "8e0b33f81cfc5840"
+								"$tb_float64": "f839ae721efc5840"
 							},
 							"hp": {
 								"$tb_float64": "6766667876387240"
@@ -2643,7 +2643,7 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "36daa1bbbc2f4240"
+								"$tb_float64": "0583b06ad22f4240"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
@@ -2693,7 +2693,7 @@
 							"fainted": false,
 							"feeds_together": 0,
 							"happiness": {
-								"$tb_float64": "8e0b33f81cfc5840"
+								"$tb_float64": "f839ae721efc5840"
 							},
 							"hp": {
 								"$tb_float64": "48e1bab5ce867140"
@@ -2729,7 +2729,7 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "248e169eb2944240"
+								"$tb_float64": "f336254dc8944240"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
@@ -3015,7 +3015,7 @@
 				"journal_revision": 24,
 				"kind": "creature_training",
 				"receipt": "craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:3:character-cb1b88c682cd3219e5c3d8d63558473d",
-				"session_id": "26d20edd7ef43f7002a2d8c9d3a58eae",
+				"session_id": "e99cf260df949b604867b85ade0da03e",
 				"source_key": "arrival:travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:3",
 				"status": "accepted",
 				"version": 3,
@@ -3127,7 +3127,7 @@
 			}
 		},
 		"satiety": {
-			"$tb_float64": "786891ed7cff5840"
+			"$tb_float64": "261d804979ff5840"
 		},
 		"skills": {
 			"levels": {

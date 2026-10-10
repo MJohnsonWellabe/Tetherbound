@@ -5,7 +5,7 @@
   "portal_leg": "cloudreach:cloudreach",
   "prior_earned_play": false,
   "profile": "cloudreach",
-  "profile_sha256": "c0ee0d20793b6537f1771d561bd52d6ce3f251ec0a861835a052727c46a647a9",
+  "profile_sha256": "afa4b1d4910444cdee16141ad196b2372a6b64b258b6f60245d89d84207fa801",
   "slot": 0,
   "slot_info": {
     "day": 12,
@@ -18,5 +18,5 @@
     "party_size": 5,
     "realm": "cloudreach"
   },
-  "source": "c249a6904f197c52c9b9a07cde28cb13ceae0938"
+  "source": "01dc47491ecd88ae712795f8f4bbce278e89cd8a"
 }

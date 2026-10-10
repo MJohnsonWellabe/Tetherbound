@@ -3,10 +3,10 @@
 	"format": "tetherbound-save",
 	"payload": {
 		"clock_elapsed_seconds": {
-			"$tb_float64": "4401a260a6058040"
+			"$tb_float64": "5f5b069c85a48040"
 		},
-		"created_at": "2026-10-10T12:06:55",
-		"day": 12,
+		"created_at": "2026-10-10T11:58:42",
+		"day": 8,
 		"death_satchels": [],
 		"display_name": "",
 		"farm_plots": [],
@@ -44,32 +44,6 @@
 				"legendary_settled",
 				"realm_key_cloudreach",
 				"realm_heart_meadows_earned",
-				"water_aquaryn_resolved",
-				"water_dock_salt_crown_landing_charted",
-				"water_sluice_west_disabled",
-				"water_sluice_east_disabled",
-				"defeated_water_trainer_bex",
-				"defeated_water_trainer_calder",
-				"defeated_water_trainer_venn",
-				"water_dock_sluice_isle_both_controls_disabled",
-				"water_captain_nerissa_defeated",
-				"water_veilfall_intake_stopped",
-				"water_veilfall_return_opened",
-				"water_guardian_freed",
-				"water_tether_disabled",
-				"water_guardian_settled",
-				"water_currents_restored",
-				"realm_relic_water_earned",
-				"water_civilian_departure_complete",
-				"water_dock_reedhaven_repaired",
-				"water_swim_lesson_complete",
-				"defeated_water_trainer_tovin",
-				"water_dock_brine_steps_trial_won",
-				"defeated_water_trainer_solm",
-				"defeated_water_trainer_irva",
-				"water_shellwatch_residents_freed",
-				"water_shellwatch_pump_disabled",
-				"water_dock_shellwatch_residents_freed_and_pump_disabled",
 				"legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d"
 			]
 		},
@@ -78,7 +52,7 @@
 			"rocks": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
 			"trees": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
 		},
-		"last_played": "2026-10-10T12:06:55",
+		"last_played": "2026-10-10T11:58:42",
 		"migrated_from": "",
 		"placed_buildings": [
 			{
@@ -312,12 +286,11 @@
 				}
 			},
 			"portal_unlocks": [
-				"tidewake",
-				"cloudreach"
+				"tidewake"
 			],
 			"rematch_cycles": {},
 			"shrine_display": {
-				"tidewake": true
+				"meadows": true
 			},
 			"station_tiers": {}
 		},
@@ -500,7 +473,7 @@
 					"party": [
 						{
 							"attack": {
-								"$tb_float64": "0000000000804b40"
+								"$tb_float64": "3433333333734540"
 							},
 							"base_attack": {
 								"$tb_float64": "0000000000003640"
@@ -519,19 +492,19 @@
 							"caught_on_day": 0,
 							"creature_type": "ground",
 							"defence": {
-								"$tb_float64": "0000000000004940"
+								"$tb_float64": "0000000000804340"
 							},
 							"display_name": "Terrapup",
 							"distance_m_together": {
-								"$tb_float64": "48819abec793ba40"
+								"$tb_float64": "4801d19023cbba40"
 							},
 							"fainted": false,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "f839ae721efc5840"
+								"$tb_float64": "22cfe884f7f85840"
 							},
 							"hp": {
-								"$tb_float64": "0000000000007540"
+								"$tb_float64": "cccccccccc0c7040"
 							},
 							"iv_attack": {
 								"$tb_float64": "000000000000e03f"
@@ -549,12 +522,12 @@
 								"shove"
 							],
 							"landmarks_visited_together": 5,
-							"level": 31,
+							"level": 20,
 							"levels_gained_with_you": 6,
 							"loadout_last_edit": {},
 							"loadout_revision": 0,
 							"max_hp": {
-								"$tb_float64": "0000000000007540"
+								"$tb_float64": "cccccccccc0c7040"
 							},
 							"move_charged": "stone_rush",
 							"move_mastery_receipts": {},
@@ -564,7 +537,7 @@
 							"move_utility": "",
 							"nickname": "Bud",
 							"nourishment": {
-								"$tb_float64": "8471e9c33d075140"
+								"$tb_float64": "a00c974920f05040"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 2,
@@ -586,7 +559,7 @@
 						},
 						{
 							"attack": {
-								"$tb_float64": "000000cbb9174540"
+								"$tb_float64": "295c0f3dc9734040"
 							},
 							"base_attack": {
 								"$tb_float64": "0000000000003240"
@@ -605,19 +578,19 @@
 							"caught_on_day": 1,
 							"creature_type": "ground",
 							"defence": {
-								"$tb_float64": "000000f489e44140"
+								"$tb_float64": "5d8fc201a4e93b40"
 							},
 							"display_name": "Bramblebun",
 							"distance_m_together": {
-								"$tb_float64": "4861e98e9948ba40"
+								"$tb_float64": "48e11f61f57fba40"
 							},
 							"fainted": false,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "f839ae721efc5840"
+								"$tb_float64": "22cfe884f7f85840"
 							},
 							"hp": {
-								"$tb_float64": "0ad7e325f17d7140"
+								"$tb_float64": "e7fb49abdabc6a40"
 							},
 							"iv_attack": {
 								"$tb_float64": "000000802aa4ce3f"
@@ -635,12 +608,12 @@
 								"snare"
 							],
 							"landmarks_visited_together": 4,
-							"level": 31,
+							"level": 20,
 							"levels_gained_with_you": 7,
 							"loadout_last_edit": {},
 							"loadout_revision": 0,
 							"max_hp": {
-								"$tb_float64": "0ad7e325f17d7140"
+								"$tb_float64": "e7fb49abdabc6a40"
 							},
 							"move_charged": "warren_charge",
 							"move_mastery_receipts": {},
@@ -650,13 +623,13 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "4bd8fcd363255140"
+								"$tb_float64": "6773aa59460e5140"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 2,
 							"rested": true,
 							"rested_seconds_left": {
-								"$tb_float64": "fa8dff02e1869740"
+								"$tb_float64": "c81eb8ca13389740"
 							},
 							"resting": false,
 							"secondary_type": "",
@@ -672,7 +645,7 @@
 						},
 						{
 							"attack": {
-								"$tb_float64": "343333eed3ca4640"
+								"$tb_float64": "dcf9fe6c2ac74140"
 							},
 							"base_attack": {
 								"$tb_float64": "0000000000003240"
@@ -691,19 +664,19 @@
 							"caught_on_day": 1,
 							"creature_type": "ground",
 							"defence": {
-								"$tb_float64": "66666604b98b4240"
+								"$tb_float64": "6de7fb8b72ee3c40"
 							},
 							"display_name": "Bramblebun",
 							"distance_m_together": {
-								"$tb_float64": "c8c410a43971b840"
+								"$tb_float64": "c844477695a8b840"
 							},
 							"fainted": false,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "f839ae721efc5840"
+								"$tb_float64": "22cfe884f7f85840"
 							},
 							"hp": {
-								"$tb_float64": "703d8a5ae7c47040"
+								"$tb_float64": "f1d20d8e02a26940"
 							},
 							"iv_attack": {
 								"$tb_float64": "000000a06cbbe13f"
@@ -721,12 +694,12 @@
 								"snare"
 							],
 							"landmarks_visited_together": 3,
-							"level": 31,
+							"level": 20,
 							"levels_gained_with_you": 7,
 							"loadout_last_edit": {},
 							"loadout_revision": 0,
 							"max_hp": {
-								"$tb_float64": "703d8a5ae7c47040"
+								"$tb_float64": "f1d20d8e02a26940"
 							},
 							"move_charged": "warren_charge",
 							"move_mastery_receipts": {},
@@ -736,13 +709,13 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "00c6b4e92ab05140"
+								"$tb_float64": "1c61626f0d995140"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 2,
 							"rested": true,
 							"rested_seconds_left": {
-								"$tb_float64": "fa8dff02e1869740"
+								"$tb_float64": "c81eb8ca13389740"
 							},
 							"resting": false,
 							"secondary_type": "",
@@ -758,7 +731,7 @@
 						},
 						{
 							"attack": {
-								"$tb_float64": "3333d3b45f314340"
+								"$tb_float64": "b8f35dfbdcf03d40"
 							},
 							"base_attack": {
 								"$tb_float64": "0000000000003140"
@@ -777,19 +750,19 @@
 							"caught_on_day": 1,
 							"creature_type": "ground",
 							"defence": {
-								"$tb_float64": "9a99993c3a3e4840"
+								"$tb_float64": "c5203081dbe84240"
 							},
 							"display_name": "Mudsnout",
 							"distance_m_together": {
-								"$tb_float64": "c8c478bb9d6cb840"
+								"$tb_float64": "c844af8df9a3b840"
 							},
 							"fainted": false,
 							"feeds_together": 0,
 							"happiness": {
-								"$tb_float64": "f839ae721efc5840"
+								"$tb_float64": "22cfe884f7f85840"
 							},
 							"hp": {
-								"$tb_float64": "6766667876387240"
+								"$tb_float64": "a3703debf6d96b40"
 							},
 							"iv_attack": {
 								"$tb_float64": "000000c06ebdb83f"
@@ -807,12 +780,12 @@
 								"slow_field"
 							],
 							"landmarks_visited_together": 3,
-							"level": 31,
+							"level": 20,
 							"levels_gained_with_you": 4,
 							"loadout_last_edit": {},
 							"loadout_revision": 0,
 							"max_hp": {
-								"$tb_float64": "6766667876387240"
+								"$tb_float64": "a3703debf6d96b40"
 							},
 							"move_charged": "rootquake",
 							"move_mastery_receipts": {},
@@ -822,7 +795,7 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "0583b06ad22f4240"
+								"$tb_float64": "49b90b7697014240"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
@@ -844,7 +817,7 @@
 						},
 						{
 							"attack": {
-								"$tb_float64": "cccccc4d29834640"
+								"$tb_float64": "be9f9a0e448f4140"
 							},
 							"base_attack": {
 								"$tb_float64": "0000000000003240"
@@ -863,19 +836,19 @@
 							"caught_on_day": 1,
 							"creature_type": "ground",
 							"defence": {
-								"$tb_float64": "000000e003ac4440"
+								"$tb_float64": "52b81e95c51f4040"
 							},
 							"display_name": "Bramblebun",
 							"distance_m_together": {
-								"$tb_float64": "c8c408c23a54b840"
+								"$tb_float64": "c8443f94968bb840"
 							},
 							"fainted": false,
 							"feeds_together": 0,
 							"happiness": {
-								"$tb_float64": "f839ae721efc5840"
+								"$tb_float64": "22cfe884f7f85840"
 							},
 							"hp": {
-								"$tb_float64": "48e1bab5ce867140"
+								"$tb_float64": "54e345db67ca6a40"
 							},
 							"iv_attack": {
 								"$tb_float64": "000000e0bb12e03f"
@@ -893,12 +866,12 @@
 								"snare"
 							],
 							"landmarks_visited_together": 3,
-							"level": 31,
+							"level": 20,
 							"levels_gained_with_you": 4,
 							"loadout_last_edit": {},
 							"loadout_revision": 0,
 							"max_hp": {
-								"$tb_float64": "48e1bab5ce867140"
+								"$tb_float64": "54e345db67ca6a40"
 							},
 							"move_charged": "warren_charge",
 							"move_mastery_receipts": {},
@@ -908,7 +881,7 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "f336254dc8944240"
+								"$tb_float64": "376d80588d664240"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
@@ -940,13 +913,13 @@
 							"world_id": "slot-0",
 							"world_namespace": "d3374d50ed084f0da03f42a78232f36b"
 						},
-						"portal_unlock:ef876efd31bd2751ac0baa228b0f8938bcc6320793e3526dcff43408939d04cf": {
-							"biome": "cloudreach",
+						"portal_unlock:f8804dfeaae43e23b75e50a7675392c8bcfa9da647a38fbbf51d4c9b5e68477d": {
+							"biome": "tidewake",
 							"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
-							"item": "cloudreach_portal_key",
+							"item": "tidewake_portal_key",
 							"key_slot": 18,
 							"kind": "portal_unlock",
-							"receipt": "portal_unlock:ef876efd31bd2751ac0baa228b0f8938bcc6320793e3526dcff43408939d04cf",
+							"receipt": "portal_unlock:f8804dfeaae43e23b75e50a7675392c8bcfa9da647a38fbbf51d4c9b5e68477d",
 							"status": "settled",
 							"version": 2,
 							"world_id": "slot-0",
@@ -958,10 +931,10 @@
 					},
 					"redesign_character": {
 						"attachment_recipes": [
-							"forge_cloudreach",
-							"kitchen_cloudreach",
-							"altar_cloudreach",
-							"den_cloudreach"
+							"forge_tidewake",
+							"kitchen_tidewake",
+							"altar_tidewake",
+							"den_tidewake"
 						],
 						"bounties": {
 							"anchor_day": {
@@ -978,11 +951,9 @@
 							"creature-83d263c517d32cc6cb7beab6925d80c7": {
 								"best": false,
 								"breakthroughs": [
-									1,
-									2,
-									3
+									1
 								],
-								"cap_level": 40,
+								"cap_level": 20,
 								"evolution_choices": {},
 								"known_moves": [
 									"bramble_whip",
@@ -1006,11 +977,9 @@
 							"creature-afbd0d982b14221393f70c29863586a1": {
 								"best": false,
 								"breakthroughs": [
-									1,
-									2,
-									3
+									1
 								],
-								"cap_level": 40,
+								"cap_level": 20,
 								"evolution_choices": {},
 								"known_moves": [
 									"root_nibble",
@@ -1034,11 +1003,9 @@
 							"creature-c576f15db4b7f3ecf487a80de0169177": {
 								"best": false,
 								"breakthroughs": [
-									1,
-									2,
-									3
+									1
 								],
-								"cap_level": 40,
+								"cap_level": 20,
 								"evolution_choices": {},
 								"known_moves": [
 									"bramble_whip",
@@ -1062,11 +1029,9 @@
 							"creature-cf906fd5504c229a431c3b3202c3c2e2": {
 								"best": false,
 								"breakthroughs": [
-									1,
-									2,
-									3
+									1
 								],
-								"cap_level": 40,
+								"cap_level": 20,
 								"evolution_choices": {},
 								"known_moves": [
 									"pebble_toss",
@@ -1090,11 +1055,9 @@
 							"creature-db1124dc0450464a2bf16ac0f7b6ef17": {
 								"best": false,
 								"breakthroughs": [
-									1,
-									2,
-									3
+									1
 								],
-								"cap_level": 40,
+								"cap_level": 20,
 								"evolution_choices": {},
 								"known_moves": [
 									"bramble_whip",
@@ -1120,8 +1083,7 @@
 						"last_waystones": {},
 						"master_wins": [],
 						"portal_unlocks": [
-							"tidewake",
-							"cloudreach"
+							"tidewake"
 						],
 						"pouch_tier": {
 							"$tb_float64": "0000000000000000"
@@ -1129,8 +1091,7 @@
 						"release_receipts": [],
 						"relics_held": [],
 						"relics_hung": [
-							"meadows",
-							"tidewake"
+							"meadows"
 						],
 						"research": {
 							"event_receipts": [],
@@ -1163,8 +1124,8 @@
 							"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:a614297c608cc3b1db6b6d9f582872a73a5bb9813a48ef57c46cb3617d3b2802",
 							"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:1:character-cb1b88c682cd3219e5c3d8d63558473d",
 							"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:1:character-cb1b88c682cd3219e5c3d8d63558473d",
-							"relic_hang:tidewake:character-cb1b88c682cd3219e5c3d8d63558473d",
-							"portal_unlock:ef876efd31bd2751ac0baa228b0f8938bcc6320793e3526dcff43408939d04cf",
+							"relic_hang:meadows:character-cb1b88c682cd3219e5c3d8d63558473d",
+							"portal_unlock:f8804dfeaae43e23b75e50a7675392c8bcfa9da647a38fbbf51d4c9b5e68477d",
 							"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:3:character-cb1b88c682cd3219e5c3d8d63558473d"
 						],
 						"waystones_activated": {}
@@ -1266,7 +1227,7 @@
 					"party": [
 						{
 							"attack": {
-								"$tb_float64": "0000000000804b40"
+								"$tb_float64": "3433333333734540"
 							},
 							"base_attack": {
 								"$tb_float64": "0000000000003640"
@@ -1285,19 +1246,19 @@
 							"caught_on_day": 0,
 							"creature_type": "ground",
 							"defence": {
-								"$tb_float64": "0000000000004940"
+								"$tb_float64": "0000000000804340"
 							},
 							"display_name": "Terrapup",
 							"distance_m_together": {
-								"$tb_float64": "48819abec793ba40"
+								"$tb_float64": "4801d19023cbba40"
 							},
 							"fainted": false,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "f839ae721efc5840"
+								"$tb_float64": "22cfe884f7f85840"
 							},
 							"hp": {
-								"$tb_float64": "0000000000007540"
+								"$tb_float64": "cccccccccc0c7040"
 							},
 							"iv_attack": {
 								"$tb_float64": "000000000000e03f"
@@ -1315,12 +1276,12 @@
 								"shove"
 							],
 							"landmarks_visited_together": 5,
-							"level": 31,
+							"level": 20,
 							"levels_gained_with_you": 6,
 							"loadout_last_edit": {},
 							"loadout_revision": 0,
 							"max_hp": {
-								"$tb_float64": "0000000000007540"
+								"$tb_float64": "cccccccccc0c7040"
 							},
 							"move_charged": "stone_rush",
 							"move_mastery_receipts": {},
@@ -1330,7 +1291,7 @@
 							"move_utility": "",
 							"nickname": "Bud",
 							"nourishment": {
-								"$tb_float64": "8471e9c33d075140"
+								"$tb_float64": "a00c974920f05040"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 2,
@@ -1352,7 +1313,7 @@
 						},
 						{
 							"attack": {
-								"$tb_float64": "000000cbb9174540"
+								"$tb_float64": "295c0f3dc9734040"
 							},
 							"base_attack": {
 								"$tb_float64": "0000000000003240"
@@ -1371,19 +1332,19 @@
 							"caught_on_day": 1,
 							"creature_type": "ground",
 							"defence": {
-								"$tb_float64": "000000f489e44140"
+								"$tb_float64": "5d8fc201a4e93b40"
 							},
 							"display_name": "Bramblebun",
 							"distance_m_together": {
-								"$tb_float64": "4861e98e9948ba40"
+								"$tb_float64": "48e11f61f57fba40"
 							},
 							"fainted": false,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "f839ae721efc5840"
+								"$tb_float64": "22cfe884f7f85840"
 							},
 							"hp": {
-								"$tb_float64": "0ad7e325f17d7140"
+								"$tb_float64": "e7fb49abdabc6a40"
 							},
 							"iv_attack": {
 								"$tb_float64": "000000802aa4ce3f"
@@ -1401,12 +1362,12 @@
 								"snare"
 							],
 							"landmarks_visited_together": 4,
-							"level": 31,
+							"level": 20,
 							"levels_gained_with_you": 7,
 							"loadout_last_edit": {},
 							"loadout_revision": 0,
 							"max_hp": {
-								"$tb_float64": "0ad7e325f17d7140"
+								"$tb_float64": "e7fb49abdabc6a40"
 							},
 							"move_charged": "warren_charge",
 							"move_mastery_receipts": {},
@@ -1416,13 +1377,13 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "4bd8fcd363255140"
+								"$tb_float64": "6773aa59460e5140"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 2,
 							"rested": true,
 							"rested_seconds_left": {
-								"$tb_float64": "fa8dff02e1869740"
+								"$tb_float64": "c81eb8ca13389740"
 							},
 							"resting": false,
 							"secondary_type": "",
@@ -1438,7 +1399,7 @@
 						},
 						{
 							"attack": {
-								"$tb_float64": "343333eed3ca4640"
+								"$tb_float64": "dcf9fe6c2ac74140"
 							},
 							"base_attack": {
 								"$tb_float64": "0000000000003240"
@@ -1457,19 +1418,19 @@
 							"caught_on_day": 1,
 							"creature_type": "ground",
 							"defence": {
-								"$tb_float64": "66666604b98b4240"
+								"$tb_float64": "6de7fb8b72ee3c40"
 							},
 							"display_name": "Bramblebun",
 							"distance_m_together": {
-								"$tb_float64": "c8c410a43971b840"
+								"$tb_float64": "c844477695a8b840"
 							},
 							"fainted": false,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "f839ae721efc5840"
+								"$tb_float64": "22cfe884f7f85840"
 							},
 							"hp": {
-								"$tb_float64": "703d8a5ae7c47040"
+								"$tb_float64": "f1d20d8e02a26940"
 							},
 							"iv_attack": {
 								"$tb_float64": "000000a06cbbe13f"
@@ -1487,12 +1448,12 @@
 								"snare"
 							],
 							"landmarks_visited_together": 3,
-							"level": 31,
+							"level": 20,
 							"levels_gained_with_you": 7,
 							"loadout_last_edit": {},
 							"loadout_revision": 0,
 							"max_hp": {
-								"$tb_float64": "703d8a5ae7c47040"
+								"$tb_float64": "f1d20d8e02a26940"
 							},
 							"move_charged": "warren_charge",
 							"move_mastery_receipts": {},
@@ -1502,13 +1463,13 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "00c6b4e92ab05140"
+								"$tb_float64": "1c61626f0d995140"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 2,
 							"rested": true,
 							"rested_seconds_left": {
-								"$tb_float64": "fa8dff02e1869740"
+								"$tb_float64": "c81eb8ca13389740"
 							},
 							"resting": false,
 							"secondary_type": "",
@@ -1524,7 +1485,7 @@
 						},
 						{
 							"attack": {
-								"$tb_float64": "3333d3b45f314340"
+								"$tb_float64": "b8f35dfbdcf03d40"
 							},
 							"base_attack": {
 								"$tb_float64": "0000000000003140"
@@ -1543,19 +1504,19 @@
 							"caught_on_day": 1,
 							"creature_type": "ground",
 							"defence": {
-								"$tb_float64": "9a99993c3a3e4840"
+								"$tb_float64": "c5203081dbe84240"
 							},
 							"display_name": "Mudsnout",
 							"distance_m_together": {
-								"$tb_float64": "c8c478bb9d6cb840"
+								"$tb_float64": "c844af8df9a3b840"
 							},
 							"fainted": false,
 							"feeds_together": 0,
 							"happiness": {
-								"$tb_float64": "f839ae721efc5840"
+								"$tb_float64": "22cfe884f7f85840"
 							},
 							"hp": {
-								"$tb_float64": "6766667876387240"
+								"$tb_float64": "a3703debf6d96b40"
 							},
 							"iv_attack": {
 								"$tb_float64": "000000c06ebdb83f"
@@ -1573,12 +1534,12 @@
 								"slow_field"
 							],
 							"landmarks_visited_together": 3,
-							"level": 31,
+							"level": 20,
 							"levels_gained_with_you": 4,
 							"loadout_last_edit": {},
 							"loadout_revision": 0,
 							"max_hp": {
-								"$tb_float64": "6766667876387240"
+								"$tb_float64": "a3703debf6d96b40"
 							},
 							"move_charged": "rootquake",
 							"move_mastery_receipts": {},
@@ -1588,7 +1549,7 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "0583b06ad22f4240"
+								"$tb_float64": "49b90b7697014240"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
@@ -1610,7 +1571,7 @@
 						},
 						{
 							"attack": {
-								"$tb_float64": "cccccc4d29834640"
+								"$tb_float64": "be9f9a0e448f4140"
 							},
 							"base_attack": {
 								"$tb_float64": "0000000000003240"
@@ -1629,19 +1590,19 @@
 							"caught_on_day": 1,
 							"creature_type": "ground",
 							"defence": {
-								"$tb_float64": "000000e003ac4440"
+								"$tb_float64": "52b81e95c51f4040"
 							},
 							"display_name": "Bramblebun",
 							"distance_m_together": {
-								"$tb_float64": "c8c408c23a54b840"
+								"$tb_float64": "c8443f94968bb840"
 							},
 							"fainted": false,
 							"feeds_together": 0,
 							"happiness": {
-								"$tb_float64": "f839ae721efc5840"
+								"$tb_float64": "22cfe884f7f85840"
 							},
 							"hp": {
-								"$tb_float64": "48e1bab5ce867140"
+								"$tb_float64": "54e345db67ca6a40"
 							},
 							"iv_attack": {
 								"$tb_float64": "000000e0bb12e03f"
@@ -1659,12 +1620,12 @@
 								"snare"
 							],
 							"landmarks_visited_together": 3,
-							"level": 31,
+							"level": 20,
 							"levels_gained_with_you": 4,
 							"loadout_last_edit": {},
 							"loadout_revision": 0,
 							"max_hp": {
-								"$tb_float64": "48e1bab5ce867140"
+								"$tb_float64": "54e345db67ca6a40"
 							},
 							"move_charged": "warren_charge",
 							"move_mastery_receipts": {},
@@ -1674,7 +1635,7 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "f336254dc8944240"
+								"$tb_float64": "376d80588d664240"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
@@ -1706,13 +1667,13 @@
 							"world_id": "slot-0",
 							"world_namespace": "d3374d50ed084f0da03f42a78232f36b"
 						},
-						"portal_unlock:ef876efd31bd2751ac0baa228b0f8938bcc6320793e3526dcff43408939d04cf": {
-							"biome": "cloudreach",
+						"portal_unlock:f8804dfeaae43e23b75e50a7675392c8bcfa9da647a38fbbf51d4c9b5e68477d": {
+							"biome": "tidewake",
 							"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
-							"item": "cloudreach_portal_key",
+							"item": "tidewake_portal_key",
 							"key_slot": 18,
 							"kind": "portal_unlock",
-							"receipt": "portal_unlock:ef876efd31bd2751ac0baa228b0f8938bcc6320793e3526dcff43408939d04cf",
+							"receipt": "portal_unlock:f8804dfeaae43e23b75e50a7675392c8bcfa9da647a38fbbf51d4c9b5e68477d",
 							"status": "settled",
 							"version": 2,
 							"world_id": "slot-0",
@@ -1724,10 +1685,10 @@
 					},
 					"redesign_character": {
 						"attachment_recipes": [
-							"forge_cloudreach",
-							"kitchen_cloudreach",
-							"altar_cloudreach",
-							"den_cloudreach"
+							"forge_tidewake",
+							"kitchen_tidewake",
+							"altar_tidewake",
+							"den_tidewake"
 						],
 						"bounties": {
 							"anchor_day": {
@@ -1744,11 +1705,9 @@
 							"creature-83d263c517d32cc6cb7beab6925d80c7": {
 								"best": false,
 								"breakthroughs": [
-									1,
-									2,
-									3
+									1
 								],
-								"cap_level": 40,
+								"cap_level": 20,
 								"evolution_choices": {},
 								"known_moves": [
 									"bramble_whip",
@@ -1772,11 +1731,9 @@
 							"creature-afbd0d982b14221393f70c29863586a1": {
 								"best": false,
 								"breakthroughs": [
-									1,
-									2,
-									3
+									1
 								],
-								"cap_level": 40,
+								"cap_level": 20,
 								"evolution_choices": {},
 								"known_moves": [
 									"root_nibble",
@@ -1800,11 +1757,9 @@
 							"creature-c576f15db4b7f3ecf487a80de0169177": {
 								"best": false,
 								"breakthroughs": [
-									1,
-									2,
-									3
+									1
 								],
-								"cap_level": 40,
+								"cap_level": 20,
 								"evolution_choices": {},
 								"known_moves": [
 									"bramble_whip",
@@ -1828,11 +1783,9 @@
 							"creature-cf906fd5504c229a431c3b3202c3c2e2": {
 								"best": false,
 								"breakthroughs": [
-									1,
-									2,
-									3
+									1
 								],
-								"cap_level": 40,
+								"cap_level": 20,
 								"evolution_choices": {},
 								"known_moves": [
 									"pebble_toss",
@@ -1856,11 +1809,9 @@
 							"creature-db1124dc0450464a2bf16ac0f7b6ef17": {
 								"best": false,
 								"breakthroughs": [
-									1,
-									2,
-									3
+									1
 								],
-								"cap_level": 40,
+								"cap_level": 20,
 								"evolution_choices": {},
 								"known_moves": [
 									"bramble_whip",
@@ -1886,8 +1837,7 @@
 						"last_waystones": {},
 						"master_wins": [],
 						"portal_unlocks": [
-							"tidewake",
-							"cloudreach"
+							"tidewake"
 						],
 						"pouch_tier": {
 							"$tb_float64": "0000000000000000"
@@ -1895,8 +1845,7 @@
 						"release_receipts": [],
 						"relics_held": [],
 						"relics_hung": [
-							"meadows",
-							"tidewake"
+							"meadows"
 						],
 						"research": {
 							"event_receipts": [],
@@ -1929,8 +1878,8 @@
 							"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:a614297c608cc3b1db6b6d9f582872a73a5bb9813a48ef57c46cb3617d3b2802",
 							"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:1:character-cb1b88c682cd3219e5c3d8d63558473d",
 							"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:1:character-cb1b88c682cd3219e5c3d8d63558473d",
-							"relic_hang:tidewake:character-cb1b88c682cd3219e5c3d8d63558473d",
-							"portal_unlock:ef876efd31bd2751ac0baa228b0f8938bcc6320793e3526dcff43408939d04cf"
+							"relic_hang:meadows:character-cb1b88c682cd3219e5c3d8d63558473d",
+							"portal_unlock:f8804dfeaae43e23b75e50a7675392c8bcfa9da647a38fbbf51d4c9b5e68477d"
 						],
 						"waystones_activated": {}
 					},
@@ -1941,26 +1890,26 @@
 				"delivery_id": "creature_training:25bb4cc1133cd18d80e77f4064de2ff1a5bc3545777a05521eba6ed2e8782c9b",
 				"host_context": {
 					"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
-					"entry_id": "cloudreach_arrival_from_meadows",
+					"entry_id": "water_arrival_from_stormwood",
 					"expected_revision": 574,
 					"foundation_runtime_authorized": true,
 					"grounded_arrival": true,
 					"in_combat": false,
 					"in_range": true,
 					"permit_id": "travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:3",
-					"realm": "cloudreach",
+					"realm": "water",
 					"source_key": "arrival:travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:3",
 					"world_namespace": "d3374d50ed084f0da03f42a78232f36b"
 				},
 				"intent": {
-					"entry_id": "cloudreach_arrival_from_meadows",
+					"entry_id": "water_arrival_from_stormwood",
 					"permit_id": "travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:3",
-					"realm": "cloudreach"
+					"realm": "water"
 				},
 				"journal_revision": 24,
 				"kind": "creature_training",
 				"receipt": "craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:3:character-cb1b88c682cd3219e5c3d8d63558473d",
-				"session_id": "e99cf260df949b604867b85ade0da03e",
+				"session_id": "50696885879d1a6ab7c489d8c8e47469",
 				"source_key": "arrival:travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:3",
 				"status": "accepted",
 				"version": 3,
@@ -1983,13 +1932,13 @@
 				"world_id": "slot-0",
 				"world_namespace": "d3374d50ed084f0da03f42a78232f36b"
 			},
-			"portal_unlock:ef876efd31bd2751ac0baa228b0f8938bcc6320793e3526dcff43408939d04cf": {
-				"biome": "cloudreach",
+			"portal_unlock:f8804dfeaae43e23b75e50a7675392c8bcfa9da647a38fbbf51d4c9b5e68477d": {
+				"biome": "tidewake",
 				"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
-				"item": "cloudreach_portal_key",
+				"item": "tidewake_portal_key",
 				"key_slot": 18,
 				"kind": "portal_unlock",
-				"receipt": "portal_unlock:ef876efd31bd2751ac0baa228b0f8938bcc6320793e3526dcff43408939d04cf",
+				"receipt": "portal_unlock:f8804dfeaae43e23b75e50a7675392c8bcfa9da647a38fbbf51d4c9b5e68477d",
 				"status": "accepted",
 				"version": 2,
 				"world_id": "slot-0",

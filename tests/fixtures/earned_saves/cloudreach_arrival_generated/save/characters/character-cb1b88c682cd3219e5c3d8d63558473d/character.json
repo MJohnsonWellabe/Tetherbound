@@ -4,7 +4,7 @@
 	"payload": {
 		"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
 		"chosen_character": "trainer",
-		"created_at": "2026-10-10T11:45:31",
+		"created_at": "2026-10-10T12:06:55",
 		"display_name": "",
 		"equipment": {
 			"backpack": "",
@@ -148,7 +148,7 @@
 			null,
 			null
 		],
-		"last_played": "2026-10-10T11:45:31",
+		"last_played": "2026-10-10T12:06:55",
 		"last_world_id": "slot-0",
 		"last_world_instance_id": "d3374d50ed084f0da03f42a78232f36b",
 		"migrated_from": "",
@@ -186,7 +186,7 @@
 				"fainted": false,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "58ad78ae10fc5840"
+					"$tb_float64": "a39d307a11fc5840"
 				},
 				"hp": {
 					"$tb_float64": "0000000000007540"
@@ -222,7 +222,7 @@
 				"move_utility": "",
 				"nickname": "Bud",
 				"nourishment": {
-					"$tb_float64": "fb14b6cfd8065140"
+					"$tb_float64": "c1a1a5a5de065140"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 2,
@@ -275,7 +275,7 @@
 				"fainted": false,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "58ad78ae10fc5840"
+					"$tb_float64": "a39d307a11fc5840"
 				},
 				"hp": {
 					"$tb_float64": "0ad7e325f17d7140"
@@ -311,13 +311,13 @@
 				"move_utility": "",
 				"nickname": "",
 				"nourishment": {
-					"$tb_float64": "c27bc9dffe245140"
+					"$tb_float64": "8808b9b504255140"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 2,
 				"rested": true,
 				"rested_seconds_left": {
-					"$tb_float64": "59d2c4d988859740"
+					"$tb_float64": "b649bbbe9c859740"
 				},
 				"resting": false,
 				"secondary_type": "",
@@ -364,7 +364,7 @@
 				"fainted": false,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "58ad78ae10fc5840"
+					"$tb_float64": "a39d307a11fc5840"
 				},
 				"hp": {
 					"$tb_float64": "703d8a5ae7c47040"
@@ -400,13 +400,13 @@
 				"move_utility": "",
 				"nickname": "",
 				"nourishment": {
-					"$tb_float64": "776981f5c5af5140"
+					"$tb_float64": "3df670cbcbaf5140"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 2,
 				"rested": true,
 				"rested_seconds_left": {
-					"$tb_float64": "59d2c4d988859740"
+					"$tb_float64": "b649bbbe9c859740"
 				},
 				"resting": false,
 				"secondary_type": "",
@@ -453,7 +453,7 @@
 				"fainted": false,
 				"feeds_together": 0,
 				"happiness": {
-					"$tb_float64": "58ad78ae10fc5840"
+					"$tb_float64": "a39d307a11fc5840"
 				},
 				"hp": {
 					"$tb_float64": "6766667876387240"
@@ -489,7 +489,7 @@
 				"move_utility": "",
 				"nickname": "",
 				"nourishment": {
-					"$tb_float64": "d4c94982082f4240"
+					"$tb_float64": "81e3282e142f4240"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 0,
@@ -542,7 +542,7 @@
 				"fainted": false,
 				"feeds_together": 0,
 				"happiness": {
-					"$tb_float64": "58ad78ae10fc5840"
+					"$tb_float64": "a39d307a11fc5840"
 				},
 				"hp": {
 					"$tb_float64": "48e1bab5ce867140"
@@ -578,7 +578,7 @@
 				"move_utility": "",
 				"nickname": "",
 				"nourishment": {
-					"$tb_float64": "c27dbe64fe934240"
+					"$tb_float64": "6f979d100a944240"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 0,
@@ -1123,7 +1123,7 @@
 			}
 		},
 		"satiety": {
-			"$tb_float64": "786891ed7cff5840"
+			"$tb_float64": "261d804979ff5840"
 		},
 		"skills": {
 			"levels": {
