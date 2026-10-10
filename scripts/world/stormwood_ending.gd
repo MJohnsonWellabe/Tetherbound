@@ -63,6 +63,10 @@ const LEGENDARY_NAME := "the Stormheart"
 const LEGENDARY_LEVEL := 55
 const DYNAMO_CONFIG_PATH := "res://data/config/stormwood_dynamo.json"
 const CORE_POSITION := Vector3(-100.0, 262.21, 5470.0)
+## Matches the dynamo deck's inner radius (DECK_INNER_RADIUS_M): fills the core hole.
+const CAPTIVE_PLINTH_RADIUS_M := 9.0
+## stormheart_tree.gd CORE_HEIGHT: the core deck's height above the tree base.
+const STORMHEART_CORE_HEIGHT_M := 150.0
 const OFFER_RADIUS_M := 14.0
 const VIEW_RADIUS_M := 18.0
 const WATER_GATE_RADIUS_M := 6.0
@@ -789,6 +793,28 @@ func _build_captive() -> void:
 	_legendary.set("collision_layer", 0)
 	_legendary.set("collision_mask", 0)
 	_legendary.set_physics_process(false)
+	# The captive sits over the 9 m core hole and its coils overhang it, so
+	# from the arena it read as floating past the deck with sky beneath. A
+	# visual-only plinth fills the hole under it (no collider; the hole's
+	# rail and the deck colliders are unchanged).
+	var plinth := MeshInstance3D.new()
+	plinth.name = "CaptivePlinth"
+	var slab := CylinderMesh.new()
+	slab.top_radius = CAPTIVE_PLINTH_RADIUS_M
+	slab.bottom_radius = CAPTIVE_PLINTH_RADIUS_M * 0.92
+	slab.height = 0.8
+	slab.radial_segments = 48
+	plinth.mesh = slab
+	var stone := StandardMaterial3D.new()
+	stone.albedo_color = Color("4a4540")
+	stone.roughness = 0.9
+	plinth.material_override = stone
+	plinth.position = Vector3(0.0, -0.4, 0.0)
+	add_child(plinth)
+	# Seat its top on the actual core deck when the tree is mounted.
+	var tree := world.get_node_or_null("StormheartTree") as Node3D if is_instance_valid(world) else null
+	if tree != null and plinth.is_inside_tree():
+		plinth.global_position.y = tree.global_position.y + STORMHEART_CORE_HEIGHT_M - 0.4
 	_cage = Node3D.new()
 	_cage.name = "StormheartContainment"
 	add_child(_cage)
