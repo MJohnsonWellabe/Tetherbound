@@ -240,10 +240,18 @@ func replay_cutscene(open_tab: Callable) -> bool:
 			and session.call("_altar_current_epoch") == epoch
 	# Owner duties from the earlier catch (research, mastery) settle in the
 	# background and add receipts. Replay must change nothing of its own, so
-	# take the before-state once those holds have cleared (bounded).
-	for _frame in 900:
-		if (session.get("_duty_holds") as Dictionary).is_empty(): break
+	# take the before-state once the receipts have been still for 3 s (bounded).
+	var settling: Array = (local.get("redesign_character").get("transaction_receipts") as Array).duplicate()
+	var still := 0
+	for _frame in 2400:
 		await tree.process_frame
+		var now_receipts: Array = local.get("redesign_character").get("transaction_receipts")
+		if now_receipts == settling:
+			still += 1
+			if still >= 180: break
+		else:
+			settling = now_receipts.duplicate()
+			still = 0
 	var before_flags: Array = local.get("flags").call("all_set")
 	before_flags.sort()
 	var before_receipts: Array = (local.get("redesign_character").get("transaction_receipts") as Array).duplicate(true)
