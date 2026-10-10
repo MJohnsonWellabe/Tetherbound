@@ -866,6 +866,12 @@ func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary, rank: int 
 	var from := _attacker_origin(case, move_id, 0.0)
 	if not from.is_finite(): _failures.append("Attacker model missing " + encounter); return
 	var to := _target.global_position + Vector3.UP * float(_target.call("body_height")) * 0.5
+	var pivot := _target.call("model_pivot") as Node3D
+	if pivot == null:
+		_failures.append("Production model pivot missing " + encounter); return
+	var target_bounds := pivot.global_transform * RENDER_BOUNDS.measure(pivot)
+	if not target_bounds.position.is_finite() or not target_bounds.size.is_finite() or target_bounds.size.x <= 0.0 or target_bounds.size.y <= 0.0 or target_bounds.size.z <= 0.0:
+		_failures.append("Production model bounds invalid " + encounter); return
 	if bool(cfg.get("auto_frame", false)) and not _no_autoframe: _frame_fight(cfg)
 	var binding := {"character_id": "f35-proof", "creature_uid": "f35-proof-attacker",
 		"encounter_id": encounter, "generation": 1, "action": 1}
@@ -874,7 +880,8 @@ func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary, rank: int 
 		"ultimate": signature.duplicate(true), "vfx": move.get("vfx", {}).duplicate(true)}
 	var context := {"current_actor": binding, "travel_seconds": travel,
 		"recipient_character_id": "f35-proof", "source_ground": _ground_point(_arena.to_local(from).x, 0.0),
-		"target_ground": _ground_point(_target_x, 0.0)}
+		"target_ground": _ground_point(_target_x, 0.0),
+		"target_visual_bounds": {"position": target_bounds.position, "size": target_bounds.size}}
 	var effect: Node3D = ULTIMATES.launch(_arena, from, to, spec, context)
 	if effect == null: _failures.append("Ultimate launch refused " + encounter); return
 	if not LIBRARY.ultimate_override(move_id).is_empty():
@@ -919,6 +926,8 @@ func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary, rank: int 
 ## overlap a four-player fight produces. Frame intervals cover the whole
 ## presentation; captures at an early, middle and late beat go to the judge.
 func _exercise_simultaneous(cfg: Dictionary) -> void:
+	if _simultaneous.size() != 4:
+		_failures.append("Four-ultimate presentation requires exactly four moves"); return
 	var lanes := [-4.5, -1.5, 1.5, 4.5]
 	var origins: Array[Vector3] = []
 	var bodies: Array[Node3D] = []
@@ -942,6 +951,15 @@ func _exercise_simultaneous(cfg: Dictionary) -> void:
 		camera.global_position = centre + _arena.global_basis * Vector3(-13.0, 8.0, 5.0)
 		camera.look_at(centre, Vector3.UP)
 	var to := _target.global_position + Vector3.UP * float(_target.call("body_height")) * 0.5
+	var pivot := _target.call("model_pivot") as Node3D
+	if pivot == null:
+		_failures.append("Production model pivot missing f35-four"); return
+	var target_bounds := pivot.global_transform * RENDER_BOUNDS.measure(pivot)
+	if not target_bounds.position.is_finite() or not target_bounds.size.is_finite() or target_bounds.size.x <= 0.0 or target_bounds.size.y <= 0.0 or target_bounds.size.z <= 0.0:
+		_failures.append("Production model bounds invalid f35-four"); return
+	# One viewport has one local character. The other three effects must take
+	# the same peer presentation path used by shipping combat on that client.
+	var recipient := "f35-four-0"
 	var duration := 0.0
 	var arrivals := [0]
 	for i in _simultaneous.size():
@@ -955,8 +973,9 @@ func _exercise_simultaneous(cfg: Dictionary) -> void:
 			"actor_binding": binding, "mastery_rank": 1, "breakthrough_count": 0,
 			"ultimate": signature.duplicate(true), "vfx": move.get("vfx", {}).duplicate(true)}
 		var context := {"current_actor": binding, "travel_seconds": minf(float(cfg.travel_seconds), 1.2),
-			"recipient_character_id": "f35-four-%d" % i, "source_ground": _ground_point(_arena.to_local(origins[i]).x, float(lanes[i % lanes.size()])),
-			"target_ground": _ground_point(_target_x, 0.0)}
+			"recipient_character_id": recipient, "source_ground": _ground_point(_arena.to_local(origins[i]).x, float(lanes[i % lanes.size()])),
+			"target_ground": _ground_point(_target_x, 0.0),
+			"target_visual_bounds": {"position": target_bounds.position, "size": target_bounds.size}}
 		var effect: Node3D = ULTIMATES.launch(_arena, origins[i], to, spec, context)
 		if effect == null: _failures.append("Simultaneous launch refused " + move_id); continue
 		effect.connect("arrived", func() -> void: arrivals[0] += 1)
@@ -987,6 +1006,7 @@ func _exercise_simultaneous(cfg: Dictionary) -> void:
 	if captured.size() != beats.size(): _failures.append("Incomplete four-ultimate frames")
 	if int(arrivals[0]) != _simultaneous.size(): _failures.append("Four-ultimate arrivals %d" % arrivals[0])
 	_records.append({"id": "four_simultaneous", "moves": _simultaneous, "presentation_seconds": duration,
+		"recipient_character_id": recipient,
 		"captures": captured, "arrivals": arrivals[0], "frames": intervals.size(), "first_frame_ms": first_frame_ms,
 		"frame_ms_p95": p95, "frame_ms_max": intervals.back() if not intervals.is_empty() else 0.0})
 	print("F35 four simultaneous frames=%d first=%.0fms p95=%.2fms max=%.2fms arrivals=%d" % [intervals.size(), first_frame_ms, p95,
