@@ -501,8 +501,21 @@ func _build_trainers() -> void:
 		prompt.activated.connect(_challenge.bind(id))
 		trainer_prompts[id] = prompt
 
+## F26 performance (`performance.json` water_wild_activity): the full
+## activity pass -- including `_set_wild_active`'s below-ground reground query
+## for every active wild -- runs every `recheck_s`; between passes a wild is
+## only touched when its wanted state and its physics state disagree, so a
+## site entering or leaving range still switches it on the same frame.
+var _wild_activity_left := 0.0
+
+
 func _process(delta: float) -> void:
 	super._process(delta)
+	var activity: Dictionary = WATER_PERF.config().get("water_wild_activity", {})
+	_wild_activity_left -= delta
+	var full_pass := not bool(activity.get("enabled", false)) or _wild_activity_left <= 0.0
+	if full_pass:
+		_wild_activity_left = float(activity.get("recheck_s", 1.0))
 	for wild: Node3D in _wild_creatures:
 		if is_instance_valid(wild) and wild.visible and wild != _engaged_with and not bool(wild.get("engaged")):
 			_set_wild_active(wild, _wanted_sites.has(str(wild.get_meta("water_site_id", ""))))
