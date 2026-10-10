@@ -396,7 +396,7 @@ func _charged(action: int, move_id: String, state: Dictionary, settle: int) -> D
 		"trainer": TRAINER,
 		"encounter_id": str((state.get("record", {}) as Dictionary).get("id", "")),
 		"slot": "charged", "move_id": move_id, "action": action,
-		"realm": STORMWOOD, "damage": 999999.0, "settle": settle,
+		"realm": STORMWOOD, "damage": 999999.0, "settle": settle, "with_start": true,
 	})
 
 

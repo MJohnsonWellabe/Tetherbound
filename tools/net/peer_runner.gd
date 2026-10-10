@@ -3345,6 +3345,14 @@ func _step_stormwood_hosted_raw_strike(args: Dictionary) -> Dictionary:
 	# Raw fixture requests share the sender's monotonic action stream, so a
 	# later real button press is not accidentally an old fixture action id.
 	hub.set("_action", maxi(int(hub.get("_action")), int(payload.action)))
+	if args.get("with_start", false) == true:
+		# With actor vitals on, the host judges a strike only against its own
+		# accepted move start for that action (stormwood_hosted_trainer.gd
+		# move_start), so send that start first and wait out its wind-up.
+		session.call("request_stormwood_encounter", {"kind": "move_start", "trainer_id": trainer_id,
+			"encounter_id": id, "slot": payload.slot, "action": payload.action})
+		for i in maxi(0, int(args.get("start_settle", 66))):
+			await physics_frame
 	session.call("request_stormwood_encounter", payload)
 	for i in maxi(0, int(args.get("settle", 90))):
 		await physics_frame
