@@ -11,7 +11,9 @@ extends Node3D
 ## so a sixth slot never exists. The freeing, the quieted storm and the
 ## Waterward reveal stay single world facts committed through the chapter
 ## ledger; the first settled decision records the world's offer fact. The Spark
-## is placed later at the Meadows shrine circle, like the other relic powers.
+## is hung later in the Crossing Hall Shrine Room, like the other relic powers.
+signal release_completed(release_id: String, result: Dictionary)
+
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
@@ -84,6 +86,8 @@ var _water_gate: Node3D
 var _waterward_sea: MeshInstance3D
 var _local_claim: Dictionary = {}
 var _local_creature: RefCounted
+var _local_answer := -1
+var _release_request_id := ""
 var _waiting_for_offer_dialogue := false
 var _homecoming_handoff_pending := false
 var _homecoming_handoff_presented := false
@@ -114,6 +118,7 @@ var _foundation_world_binding: WeakRef
 
 func mount(owner_world: Node3D) -> void:
 	world = owner_world
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_foundation_world_binding = weakref(get_node("/root/Game").world)
 	hub = world.get_node("StormwoodEncounterHub")
 	session = get_node("/root/Game/Session")
@@ -174,6 +179,17 @@ func receive(event: Dictionary) -> void:
 			var claim: Variant = event.get("claim", {})
 			if claim is Dictionary and not (claim as Dictionary).is_empty():
 				_receive_claim(claim as Dictionary)
+		"ending_answer_saved":
+			if _local_claim.is_empty() or event.get("claim_uid") != claim_id(_local_claim): return
+			var passive: RefCounted = session.get("_owner_passive")
+			if passive != null and passive.call("stormwood_finish_owner", event.get("stream_cut", {})) == true:
+				_local_claim.clear()
+				_local_creature = null
+				_local_answer = -1
+				if not _release_request_id.is_empty():
+					var released := _release_request_id
+					_release_request_id = ""
+					release_completed.emit(released, {"ok": true, "resolved": true})
 		"ending_aftermath":
 			_aftermath_announced = true
 			_refresh_presentation()
@@ -277,7 +293,12 @@ func _claim_for(peer: int, client_hint_accepted := false) -> void:
 		if payload.is_empty():
 			_refuse(peer, "The Stormheart could not begin the ceremony.")
 			return
-		existing = {"creature": payload, "settled": false, "kept": false}
+		var admitted: Dictionary = session.call("admitted_character_state", peer)
+		if admitted.is_empty():
+			_refuse(peer, "Your character record is not ready for this ceremony.")
+			return
+		existing = {"creature": payload, "settled": false, "kept": false,
+			"party_uids": preload("res://scripts/data/redesign_state.gd").uids(admitted.party)}
 		claims[character] = existing
 		state["claims"] = claims
 		# A freeing with no recorded fighters (a save from before the list
@@ -299,6 +320,10 @@ func _claim_for(peer: int, client_hint_accepted := false) -> void:
 
 
 func _settle_for(peer: int, intent: Dictionary) -> void:
+	if intent.get("kind") != "ending_settled" or not intent.get("kept") is bool \
+		or not intent.get("released_uid", "") is String or not intent.get("stream_cut", {}) is Dictionary: return
+	for key: Variant in intent:
+		if key not in ["kind", "kept", "released_uid", "stream_cut"]: return
 	# Drain the actual fallback before reading the answer we will freeze. It
 	# may run callbacks, so reacquire claim/character only after the owner fence.
 	var owner_game := get_node("/root/Game")
@@ -322,19 +347,31 @@ func _settle_for(peer: int, intent: Dictionary) -> void:
 	if bool(claim.get("settled", false)):
 		# Repeat only the saved original handoff. An ignored failed world write
 		# must not leave an in-memory settled claim that silences all retries.
-		if _save_world_claim(): session.call("foundation_stormwood_answer", self, peer, claim)
+		if _save_world_claim() and session.call("foundation_stormwood_answer", self, peer, claim, intent.get("stream_cut", {})) == true:
+			_send_answer_saved(peer, claim, intent.get("stream_cut", {}))
 		return
-	if not _commit_world_decision(peer, bool(intent.get("kept", false)), true):
+	var selected := claim.duplicate(true)
+	selected.kept = intent.kept
+	selected.settled = true
+	selected.released_uid = intent.get("released_uid", "")
+	if session.call("foundation_stormwood_answer", self, peer, selected, intent.get("stream_cut", {}), "check") != true:
+		return # The exact queued replay prefix may still be arriving. Retry it.
+	if not _commit_world_decision(peer, intent.kept, true, selected.released_uid, intent.get("stream_cut", {})):
 		_refuse(peer, "The world could not save the ceremony. Try again.")
 		return
 	claim = _saved_state().get("claims", {}).get(character, {})
-	session.call("foundation_stormwood_answer", self, peer, claim)
+	if session.call("foundation_stormwood_answer", self, peer, claim, intent.get("stream_cut", {})) == true:
+		_send_answer_saved(peer, claim, intent.get("stream_cut", {}))
 	_broadcast(_state_event())
+
+
+func _send_answer_saved(peer: int, claim: Dictionary, cut: Dictionary) -> void:
+	hub.call("send_to", peer, {"kind": "ending_answer_saved", "claim_uid": claim_id(claim), "stream_cut": cut.duplicate(true)})
 
 ## The existing host ledger stages the claim, authored offer flags and exact
 ## character resolution as one unpublished world cut. Only the bool writer
 ## permits publication; a failed write restores flags, environment and sequence.
-func _commit_world_decision(peer: int, kept: bool, settle: bool) -> bool:
+func _commit_world_decision(peer: int, kept: bool, settle: bool, released_uid: String = "", cut: Dictionary = {}) -> bool:
 	if session == null or session.call("is_host") != true: return false
 	var game := _decision_game()
 	if game == null: return false
@@ -362,6 +399,7 @@ func _commit_world_decision(peer: int, kept: bool, settle: bool) -> bool:
 		claim = claim.duplicate(true)
 		claim.kept = kept
 		claim.settled = true
+		claim.released_uid = released_uid
 		claims = claims.duplicate(true)
 		claims[character] = claim
 		state.claims = claims
@@ -388,9 +426,13 @@ func _commit_world_decision(peer: int, kept: bool, settle: bool) -> bool:
 			authored, "legendary:offer_shown", writer)
 		if offer.get("accepted") != true or not _has(OFFER_FLAG): failed[0] = true
 	if settle: writer.call(resolution_flag(kept, character))
+	if settle and not failed[0]:
+		var selected: Dictionary = state.claims[character]
+		if session.call("foundation_stormwood_answer", self, peer, selected, cut, "stage") != true: failed[0] = true
 	if failed[0] or not _save_world_claim() or game.world != original or ledger.get("world") != original \
 		or game.get("save_system") != saver or original.reward_delivery_namespace != namespace_id \
 		or original.world_id != instance_id or session.call("_altar_current_epoch") != epoch:
+		if settle: session.call("foundation_stormwood_answer", self, peer, {}, cut, "rollback")
 		if game.world == original and ledger.get("world") == original and original.reward_delivery_namespace == namespace_id \
 			and original.world_id == instance_id and session.call("_altar_current_epoch") == epoch:
 			original.call("load_data", before)
@@ -399,6 +441,8 @@ func _commit_world_decision(peer: int, kept: bool, settle: bool) -> bool:
 			ledger.set("seq", sequence)
 			ledger.set("_storage_revisions", storage)
 			ledger.set("_seen_txns", seen)
+		return false
+	if settle and session.call("foundation_stormwood_answer", self, peer, state.claims[character], cut) != true:
 		return false
 	for delta: Dictionary in deltas: transport.call("publish_journaled_delta", delta)
 	return true
@@ -459,11 +503,13 @@ func _receive_claim(claim: Dictionary) -> void:
 	var player_flags: RefCounted = game.call("player_flags")
 	var answer := recorded_answer(player_flags, claim_id(claim))
 	if answer == "accepted" or _party_holds_claim(game.get("party"), claim):
+		if not _freeze_owner_claim(claim): return
 		_local_claim = claim.duplicate(true)
 		_save_retry_left = 0.0
 		_finish_local_claim(true)
 		return
 	if answer == "refused":
+		if not _freeze_owner_claim(claim): return
 		_local_claim = claim.duplicate(true)
 		_finish_local_claim(false)
 		return
@@ -497,14 +543,21 @@ func _process_local_claim(delta: float) -> void:
 	if _ceremony_waiting and not catch_open:
 		_ceremony_waiting = false
 		_begin_local_ceremony()
-	if _local_claim.is_empty() or _local_creature == null:
+	if _local_claim.is_empty() or (_local_creature == null and _local_answer < 0):
 		return
 	if catch_open:
+		# Let the existing menu open first; the Session fence is itself a story
+		# modal and must not prevent the five-slot ceremony from opening.
+		var menu: Node = game.get("_menu")
+		if menu != null and menu.call("is_open") == true: _freeze_owner_claim(_local_claim)
+		elif menu != null:
+			var passive: RefCounted = session.get("_owner_passive")
+			if passive != null: passive.call("stormwood_restore_menu", menu)
 		return
 	_save_retry_left -= delta
 	if _save_retry_left > 0.0:
 		return
-	_finish_local_claim((game.get("party").call("members") as Array).has(_local_creature))
+	_finish_local_claim(_local_answer == 1 if _local_answer >= 0 else (game.get("party").call("members") as Array).has(_local_creature))
 
 
 func _line_presented(id: String, is_last: bool) -> void:
@@ -584,31 +637,136 @@ func _begin_local_ceremony() -> void:
 		game.push_world_message("The Stormheart's offer could not be restored yet.")
 		_local_claim.clear()
 		return
-	_local_creature.set("caught_on_day", maxi(1, int(game.get("day"))))
 	var party: RefCounted = game.get("party")
 	if not bool(party.call("is_full")):
-		if bool(party.call("add", _local_creature)):
+		if not _freeze_owner_claim(_local_claim):
+			_ceremony_waiting = true
+			return
+		var passive: RefCounted = session.get("_owner_passive")
+		if passive != null and passive.call("stormwood_apply_ceremony", _local_claim, "", _local_creature) == true:
 			_finish_local_claim(true)
+		else:
+			_cancel_local_claim()
+		return
+	# The original legendary offer owns this ceremony; an ordinary catch's
+	# release service must not start a competing roster/payout transaction.
+	_local_creature.set_meta(&"foundation_capture_offer", true)
+	var menu: Node = game.get("_menu")
+	var configured := false
+	if menu != null:
+		for body: Node in menu.get("_bodies"):
+			if body.has_method("configure_release_service"):
+				configured = body.call("configure_release_service", self) == true
+				break
+	if not configured:
+		_cancel_local_claim()
 		return
 	game.set("pending_catch", _local_creature)
+
+
+## The existing five-slot Team ceremony calls this controller through its
+## typed service interface. It supplies identity and choice, never a card.
+func owns_pending_capture(pending: RefCounted) -> bool:
+	return pending != null and pending == _local_creature and not _local_claim.is_empty() \
+		and get_node("/root/Game").get("pending_catch") == pending
+
+func quote_release(pending_uid: String, released_uid: String) -> Dictionary:
+	if not owns_pending_capture(_local_creature) or claim_id(_local_claim) != pending_uid \
+		or not _freeze_owner_claim(_local_claim): return {}
+	var passive: RefCounted = session.get("_owner_passive")
+	var frozen: Dictionary = passive.get("stormwood_owner")
+	if frozen.is_empty() or frozen.saved: return {}
+	var payout: Array = []
+	if not released_uid.is_empty():
+		var selected := _local_claim.duplicate(true)
+		selected.kept = true
+		var proposal: Dictionary = load("res://scripts/net/character_authority.gd").call("stormwood_answer_proposal", frozen.before, selected, released_uid)
+		if proposal.get("ok") != true: return {}
+		for card: Dictionary in frozen.before.party:
+			if card.uid == released_uid: payout = preload("res://scripts/creatures/essence.gd").release_payout(card, preload("res://scripts/creatures/essence.gd").config())
+	return {"ok": true, "pending_uid": pending_uid, "released_uid": released_uid,
+		"ceremony_id": "stormheart:" + pending_uid, "expected_character_revision": int(frozen.sequence), "payout": payout}
+
+func submit_release(request: Dictionary) -> void:
+	var id := str(request.get("release_id", ""))
+	var released_uid := str(request.get("released_uid", ""))
+	var quote := quote_release(str(request.get("pending_uid", "")), released_uid)
+	if not _release_request_id.is_empty() or not preload("res://scripts/creatures/essence.gd")._component(id) \
+		or quote.is_empty() or quote.ceremony_id != request.get("ceremony_id") \
+		or quote.expected_character_revision != request.get("expected_character_revision"):
+		release_completed.emit(id, {"ok": false, "resolved": true})
+		return
+	_release_request_id = id
+	if not released_uid.is_empty():
+		var passive: RefCounted = session.get("_owner_passive")
+		if passive.call("stormwood_apply_ceremony", _local_claim, released_uid, _local_creature) != true:
+			_cancel_local_claim()
+			return
+	get_node("/root/Game").set("pending_catch", null)
+	_finish_local_claim(not released_uid.is_empty())
+
+func reconcile_release(id: String) -> void:
+	if id == _release_request_id and not id.is_empty() and _local_answer >= 0:
+		_finish_local_claim(_local_answer == 1)
+
+func _freeze_owner_claim(claim: Dictionary) -> bool:
+	var passive: RefCounted = session.get("_owner_passive")
+	return passive != null and passive.call("stormwood_begin_owner", claim) == true
+
+
+func _cancel_local_claim() -> void:
+	var passive: RefCounted = session.get("_owner_passive")
+	if passive != null: passive.call("stormwood_cancel_owner")
+	get_node("/root/Game").set("pending_catch", null)
+	if not _release_request_id.is_empty():
+		var released := _release_request_id
+		_release_request_id = ""
+		release_completed.emit(released, {"ok": false, "resolved": true})
+	_local_claim.clear()
+	_local_creature = null
+	_local_answer = -1
+	_waiting_for_offer_dialogue = false
+	_ceremony_waiting = false
+	get_node("/root/Game").push_world_message("The roster choice changed before it could be saved. Answer the Stormheart again.")
 
 
 func _finish_local_claim(kept: bool) -> void:
 	if _local_claim.is_empty():
 		return
+	if not _freeze_owner_claim(_local_claim):
+		_local_answer = 1 if kept else 0
+		_save_retry_left = RESEND_SECONDS
+		return
 	var game := get_node("/root/Game")
-	var saver: RefCounted = game.get("save_system")
-	var character := _local_character_id(game)
+	_local_answer = 1 if kept else 0
+	var released_uid := ""
+	if kept:
+		var owned: Array = (game.get("party").call("members") as Array).map(func(c: RefCounted) -> String: return str(c.get("uid")))
+		for uid: String in _local_claim.get("party_uids", []):
+			if not owned.has(uid):
+				if not released_uid.is_empty():
+					_cancel_local_claim()
+					return
+				released_uid = uid
+	if not released_uid.is_empty(): game.local.redesign_character.creatures.erase(released_uid)
 	# The world keeps the unresolved claim; this player-owned receipt makes a
 	# reconnect resume at the acknowledgement instead of replaying a farewell.
 	record_answer(game.call("player_flags"), claim_id(_local_claim), kept, game.get("party"))
-	if saver != null and not character.is_empty() and not bool(saver.call("save_character", game, character)):
+	var selected := _local_claim.duplicate(true)
+	selected.kept = kept
+	var passive: RefCounted = session.get("_owner_passive")
+	var result: Dictionary = passive.call("stormwood_save_owner", selected, released_uid) if passive != null else {}
+	if result.get("terminal") == true:
+		_cancel_local_claim()
+		return
+	var cut: Dictionary = {} if session.is_host() else result
+	var saved := result.get("host_saved") == true if session.is_host() else not cut.is_empty()
+	if not saved:
 		_save_retry_left = 1.0
 		game.push_world_message("Could not save the roster choice. The Stormheart is still waiting.")
 		return
-	session.request_stormwood_encounter({"kind": "ending_settled", "kept": kept})
-	_local_claim.clear()
-	_local_creature = null
+	_save_retry_left = RESEND_SECONDS
+	session.request_stormwood_encounter({"kind": "ending_settled", "kept": kept, "released_uid": released_uid, "stream_cut": cut})
 
 
 func _on_offer() -> void:
@@ -894,6 +1052,7 @@ func _make_legendary() -> RefCounted:
 	})
 	if creature != null:
 		creature.set("nickname", LEGENDARY_NAME)
+		creature.set("caught_on_day", maxi(1, int(get_node("/root/Game").get("day"))))
 	return creature
 
 
@@ -1062,6 +1221,20 @@ func _save_world_claim() -> bool:
 func _send_claim(peer: int, character: String, claim: Dictionary) -> void:
 	if bool(claim.get("settled", false)):
 		return
+	# Additive upgrade of an unresolved original claim: only the host's existing
+	# admitted roster supplies its capacity contract, and save it before offering.
+	if not claim.has("party_uids"):
+		var admitted: Dictionary = session.call("admitted_character_state", peer)
+		if admitted.is_empty(): return
+		var before: Dictionary = get_node("/root/Game").realm_environment.duplicate(true)
+		claim = claim.duplicate(true)
+		claim.party_uids = preload("res://scripts/data/redesign_state.gd").uids(admitted.party)
+		var state := _saved_state()
+		state.claims[character] = claim
+		_store_state(state)
+		if not _save_world_claim():
+			get_node("/root/Game").set("realm_environment", before)
+			return
 	var payload := claim.duplicate(true)
 	payload["recipient_character_id"] = character
 	hub.call("send_to", peer, {"kind": "ending_offer", "claim": payload})

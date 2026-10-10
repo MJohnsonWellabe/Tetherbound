@@ -106,7 +106,7 @@ func arm_owner(before: Dictionary, discoveries: Dictionary) -> Dictionary:
 	return {"id": local.id, "baseline_hash": local.base_hash}
 
 func record_input(input: Dictionary) -> void:
-	if local.is_empty() or not pending.is_empty() or not str(local.error).is_empty(): return
+	if local.is_empty() or not pending.is_empty() or not stormwood_owner.is_empty() or not str(local.error).is_empty(): return
 	if local.inputs.size() >= MAX_BUFFER:
 		local.error = "owner_passive_buffer_full"
 		return # Never discard an unacknowledged transition.
@@ -169,7 +169,7 @@ func reward_replay_pending() -> bool:
 	return false
 
 func recording_active() -> bool:
-	return not local.is_empty() and pending.is_empty() and str(local.error).is_empty()
+	return not local.is_empty() and pending.is_empty() and stormwood_owner.is_empty() and str(local.error).is_empty()
 
 ## A reward delivery waits until the host has first admitted this join's
 ## stream (and any readmit settled the payouts its held record already holds,
@@ -1392,9 +1392,13 @@ func receive_owner(packet: Dictionary) -> void:
 				owner().call("_owner_passive_request_terminal", terminal_source, terminal_request, result)
 
 func blocked(player: RefCounted) -> bool:
-	return not pending.is_empty() and _game() != null and player == _game().get("local") and pending.scope == _scope()
+	return _game() != null and player == _game().get("local") and ((not pending.is_empty() and pending.scope == _scope()) \
+		or (not stormwood_owner.is_empty() and stormwood_owner.scope == _scope() and not stormwood_applying))
 
 func snapshot_allowed(player: RefCounted, payload: Dictionary) -> bool:
+	if not stormwood_owner.is_empty() and blocked(player) and (stormwood_saving \
+		or (stormwood_owner.get("host") == true and stormwood_owner.get("saved") == true)):
+		return PREP.exact(RECORD.portable_projection(payload), stormwood_owner.get("after"))
 	return saving and blocked(player) and pending.has("prepared") \
 		and PREP.exact(RECORD.portable_projection(payload), pending.prepared.after)
 
@@ -1846,7 +1850,149 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 	if _add_host(peer, character, packet.stream_id, before, discoveries):
 		_send_owner(peer, hosts[character], {"op": "rebase_ack"})
 
+## The legacy legendary ceremony changes its roster before sending a saved
+## answer. Freeze only that ceremony, retaining the stream and every queued
+## input. Its original prefix drains normally while the owner choice is saved.
+var stormwood_owner: Dictionary = {}
+var stormwood_saving := false
+var stormwood_applying := false
+
+func stormwood_begin_owner(claim: Dictionary) -> bool:
+	var host: bool = owner().call("is_host") == true
+	var uid: String = str(claim.get("creature", {}).get("uid", ""))
+	if not stormwood_owner.is_empty(): return stormwood_owner.uid == uid and stormwood_owner.scope == _scope()
+	if uid.is_empty() or claim.get("recipient_character_id") != _scope().get("character_id") \
+		or (not host and (not delivery_ready() or not local.rebase.is_empty())): return false
+	if owner().call("_owner_training_mutation_blocked", _game().get("local")) == true: return false
+	var undo := _owner_undo_point()
+	if undo.is_empty(): return false
+	stormwood_owner = {"uid": uid, "scope": _scope(), "before": _projection(), "undo": undo,
+		"host": host, "stream_id": local.get("id", ""), "sequence": local.get("sequence", 0),
+		"prefix_hash": local.get("prefix_hash", ""), "saved": false}
+	return true
+
+## Only the original offer's controller calls this synchronous roster press.
+## Every other owner mutation remains fenced; the existing five-slot cap runs.
+func stormwood_apply_ceremony(claim: Dictionary, released_uid: String, newcomer: RefCounted) -> bool:
+	if stormwood_owner.is_empty() or stormwood_owner.saved or stormwood_owner.scope != _scope() \
+		or not PREP.exact(_projection(), stormwood_owner.before) or newcomer == null \
+		or newcomer.get("uid") != stormwood_owner.uid: return false
+	var selected := claim.duplicate(true)
+	selected.kept = true
+	var proposal: Dictionary = load("res://scripts/net/character_authority.gd").call("stormwood_answer_proposal", stormwood_owner.before, selected, released_uid)
+	if proposal.get("ok") != true: return false
+	var party: RefCounted = _game().get("party")
+	stormwood_applying = true
+	var removed := released_uid.is_empty()
+	if not released_uid.is_empty():
+		for index: int in int(party.call("size")):
+			if party.call("at", index).get("uid") == released_uid:
+				removed = party.call("remove_at", index) != null
+				break
+	var added: bool = removed and party.call("add", newcomer) == true
+	stormwood_applying = false
+	return added
+
+## Game's normal pending-catch watcher is fenced during this choice. Restore
+## its same Team screen if the panic/settings path closed it mid-ceremony.
+func stormwood_restore_menu(menu: Node) -> void:
+	var pending_creature: RefCounted = _game().get("pending_catch")
+	if stormwood_owner.is_empty() or stormwood_owner.saved or stormwood_owner.scope != _scope() \
+		or pending_creature == null or pending_creature.get("uid") != stormwood_owner.uid \
+		or menu == null or menu.call("is_open") == true: return
+	stormwood_applying = true
+	menu.call("open", "creatures")
+	stormwood_applying = false
+
+func stormwood_save_owner(claim: Dictionary, released_uid: String) -> Dictionary:
+	if stormwood_owner.is_empty() or stormwood_owner.uid != claim.get("creature", {}).get("uid") \
+		or stormwood_owner.scope != _scope() or (not stormwood_owner.host and local.get("id") != stormwood_owner.stream_id): return {}
+	if stormwood_owner.saved:
+		if not PREP.exact(_projection(), stormwood_owner.after): return {}
+		return {"host_saved": true} if stormwood_owner.host else stormwood_owner.cut.duplicate(true)
+	var producer: Script = load("res://scripts/net/character_authority.gd")
+	var proposal: Dictionary = producer.call("stormwood_answer_proposal", stormwood_owner.before, claim, released_uid)
+	if proposal.get("ok") != true: return {"terminal": true, "code": proposal.get("code", "invalid_stormwood_claim")}
+	var personal: Dictionary = _game().local.redesign_character
+	if not stormwood_owner.has("after"):
+		# Verify the live ceremony first, then install only its derived payout
+		# and receipt arrays. No owner-supplied replacement card is accepted.
+		var expected := proposal.state.duplicate(true)
+		expected.inventory = stormwood_owner.before.inventory.duplicate(true)
+		expected.redesign_character.release_receipts = stormwood_owner.before.redesign_character.release_receipts.duplicate()
+		expected.redesign_character.transaction_receipts = stormwood_owner.before.redesign_character.transaction_receipts.duplicate()
+		if not PREP.exact(_projection(), expected): return {"terminal": true, "code": "stormwood_owner_changed"}
+		var inventory: RefCounted = _game().local.inventory
+		inventory.set("_slots", proposal.state.inventory.duplicate(true))
+		inventory.set("revision", int(inventory.get("revision")) + 1)
+		personal.release_receipts = proposal.state.redesign_character.release_receipts.duplicate()
+		personal.transaction_receipts = proposal.state.redesign_character.transaction_receipts.duplicate()
+	if not PREP.exact(_projection(), proposal.state): return {"terminal": true, "code": "stormwood_owner_changed"}
+	stormwood_owner.after = proposal.state.duplicate(true)
+	var saver: RefCounted = _game().get("save_system")
+	if saver == null: return {}
+	saver.call("finish_fallback")
+	if saver.call("fallback_busy") == true or stormwood_owner.scope != _scope(): return {}
+	stormwood_saving = true
+	var saved: bool = saver.call("save_character_prepared", _game(), str(_scope().character_id)) == true
+	stormwood_saving = false
+	if not saved or stormwood_owner.is_empty() or stormwood_owner.scope != _scope() \
+		or not PREP.exact(_projection(), proposal.state): return {}
+	stormwood_owner.saved = true
+	if stormwood_owner.host:
+		stormwood_owner.cut = {}
+		return {"host_saved": true}
+	stormwood_owner.cut = {"stream_id": local.id, "sequence": stormwood_owner.sequence,
+		"prefix_hash": stormwood_owner.prefix_hash, "after_hash": HASH.fingerprint(proposal.state)}
+	_flush() # No input is discarded, even if the answer reaches the host first.
+	return stormwood_owner.cut.duplicate(true)
+
+func stormwood_host_before(peer: int, cut: Dictionary) -> Dictionary:
+	var character: String = owner().call("_authority_character", peer)
+	var stream: Dictionary = hosts.get(character, {})
+	if cut.size() != 4 or stream.is_empty() or stream.get("peer") != peer or stream.get("departed") == true \
+		or stream.has("readmit") or not stream.checkpoint.is_empty() or not str(stream.error).is_empty() \
+		or stream.id != cut.get("stream_id") or stream.cursor.sequence != cut.get("sequence") \
+		or stream.cursor.prefix_hash != cut.get("prefix_hash") or not HASH._hex(cut.get("after_hash"), 64): return {}
+	var authority: RefCounted = owner().get("_character_authority")
+	if authority.call("revision", character) != stream.revision \
+		or not PREP.exact(authority.call("state", character), stream.cursor.base): return {}
+	return stream.cursor.state.duplicate(true)
+
+func stormwood_promote_host(peer: int, cut: Dictionary, after: Dictionary, revision: int) -> bool:
+	var character: String = owner().call("_authority_character", peer)
+	var stream: Dictionary = hosts.get(character, {})
+	if stream.is_empty() or stream.id != cut.get("stream_id") or stream.cursor.sequence != cut.get("sequence") \
+		or stream.cursor.prefix_hash != cut.get("prefix_hash") or HASH.fingerprint(after) != cut.get("after_hash"): return false
+	# Keep stream identity, sequence, prefix, discoveries and travel cursor. Only
+	# this saved original roster decision advances its exact canonical baseline.
+	stream.cursor.base = after.duplicate(true)
+	stream.cursor.state = after.duplicate(true)
+	stream.revision = revision
+	return true
+
+func stormwood_finish_owner(cut: Dictionary) -> bool:
+	if stormwood_owner.is_empty() or stormwood_owner.get("saved") != true \
+		or stormwood_owner.scope != _scope() or not PREP.exact(cut, stormwood_owner.cut) \
+		or not PREP.exact(_projection(), stormwood_owner.after): return false
+	if not stormwood_owner.host: local.base_hash = cut.after_hash
+	stormwood_owner.clear()
+	_flush()
+	return true
+
+func stormwood_cancel_owner() -> void:
+	# Before a saved ACK, a rejected choice can safely restore the original
+	# live instances. A saved choice stays on disk and reconciles on reconnect.
+	if not stormwood_owner.is_empty() and stormwood_owner.get("saved") != true:
+		_owner_undo(stormwood_owner.undo)
+	stormwood_owner.clear()
+	stormwood_saving = false
+	stormwood_applying = false
+
 func reset() -> void:
+	stormwood_owner.clear()
+	stormwood_saving = false
+	stormwood_applying = false
 	_pose_ring.clear()
 	if owner() != null:
 		var authority: RefCounted = owner().get("_character_authority")
