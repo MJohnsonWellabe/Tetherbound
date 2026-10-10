@@ -152,11 +152,42 @@ func _active_main(progression: RefCounted) -> Array:
 		game, _regional_ending, _realm_id)
 	if not ending.is_empty(): return ending
 	var lesson := _lesson_guidance()
-	if lesson.is_empty(): return _main
+	if lesson.is_empty():
+		var departure := _chapter_departure(game, progression)
+		if departure.is_empty(): return _main
+		var chapter_rows := _main.duplicate()
+		chapter_rows.append(departure)
+		return chapter_rows
 	# This row is a state-derived presentation, with no invented completion flag.
 	var rows: Array = [{"id": "lesson:" + str(lesson.id), "label": str(lesson.goal), "how": str(lesson.goal), "scope": "player"}]
 	rows.append_array(_main)
 	return rows
+
+
+## A completed chapter still has a next destination. Derive it from this
+## traveler's real key/unlock, without awarding progress or inventing a flag.
+## Changing realms selects the next chapter's authored objectives normally.
+func _chapter_departure(game: Object, progression: RefCounted) -> Dictionary:
+	if game == null or progression == null or _main.is_empty(): return {}
+	for entry: Dictionary in _main:
+		if not _done(entry, progression): return {}
+	var player: RefCounted = game.get("local")
+	if player == null: return {}
+	var inventory: RefCounted = player.get("inventory")
+	var personal: Dictionary = player.get("redesign_character")
+	var config: Dictionary = preload("res://scripts/data/redesign_data.gd").json_view("res://data/config/portals.json")
+	for arch: Dictionary in config.get("arches", []):
+		if arch.get("departure_from", "") != _realm_id: continue
+		var owns_key := inventory != null and inventory.call("count", str(arch.key_item)) > 0
+		if not owns_key and not personal.get("portal_unlocks", []).has(str(arch.biome)): return {}
+		var destination := preload("res://scripts/data/biome_order.gd").display_name(str(arch.biome))
+		var row := {"id": "chapter_departure:" + str(arch.id), "scope": "player",
+			"label": "Continue to %s through the Crossing Hall." % destination,
+			"how": "Use your Home Key to return home, enter the Crossing Hall, then use the signed %s arch." % destination}
+		if _realm_id == "meadows":
+			row["beacon"] = {"position": [107, 14], "display_name": "Crossing Hall"}
+		return row
+	return {}
 
 func _lesson_guidance() -> Dictionary:
 	var tree := Engine.get_main_loop() as SceneTree
