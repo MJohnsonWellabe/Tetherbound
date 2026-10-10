@@ -152,6 +152,15 @@ func _run() -> void:
 		})
 		_expect(bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)),
 			"chapter-entry fixture accepted completed Cloudreach fact %s" % flag)
+	# Portal order (RD-17): a completed Cloudreach has opened this world's
+	# Stormwood portal; the router refuses Stormwood without that unlock.
+	var route: Dictionary = (game.get("world").get("redesign_world") as Dictionary).duplicate(true)
+	var opened: Array = (route.get("portal_unlocks", []) as Array).duplicate()
+	if not opened.has("stormwood"): opened.append("stormwood")
+	route["portal_unlocks"] = opened
+	_expect(preload("res://scripts/data/redesign_state.gd").validate("world", route).is_empty(),
+		"chapter-entry fixture's opened Stormwood portal is a valid world route")
+	game.get("world").set("redesign_world", route)
 	for species_id: String in ENTRY_PARTY:
 		var creature: RefCounted = SPECIES.spawn(species_id)
 		if creature != null:
