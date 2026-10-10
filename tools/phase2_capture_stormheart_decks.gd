@@ -13,12 +13,23 @@ var _hero_original := PackedByteArray()
 var _hero_candidate := false
 var _hero_source := ""
 var _hero_config_sha256 := ""
+## --probe=<stand>:x,y+x,y — diagnostic only. After the frame is saved, lists
+## the visible geometry whose screen-space bounds cover each pixel (1280x720
+## frame coordinates), nearest first, in <frame>_probe.json. Changes nothing.
+var _probes := {}
 
 
 func _run() -> void:
 	# Reuse the exterior matrix's hero-only overlay. This explicit preview
 	# changes no shipping flag or regional material and restores exact bytes.
 	_hero_candidate = OS.get_cmdline_user_args().has("--f41-candidate")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--probe="):
+			var spec := arg.trim_prefix("--probe=")
+			var points: Array = []
+			for pair: String in spec.get_slice(":", 1).split("+", false):
+				points.append(Vector2(float(pair.get_slice(",", 0)), float(pair.get_slice(",", 1))))
+			_probes[spec.get_slice(":", 0)] = points
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--source-commit="):
 			_hero_source = arg.trim_prefix("--source-commit=")
@@ -137,6 +148,7 @@ func _matrix_pass(aftermath: bool) -> void:
 				"actual_player_local":_vec3(tree.to_local(_player.global_position)),"floor_hit":_deck_floor_hit,
 				"fixture_limit":"Debug placement on verified floor; not earned ascent/traversal proof."})
 			_log("captured "+id)
+			_write_probes(id, str(stand.id))
 	if _frames.size() == captured_before:
 		_failures.append("raised-deck selection captured no frames")
 
@@ -155,3 +167,65 @@ func _floor_at(x: float,z: float,_probe_above: float = 4.0) -> float:
 	_deck_floor_hit = {"position":_vec3(hit.position),"normal":_vec3(hit.normal),
 		"collider_path":str(_world.get_path_to(collider)) if collider != null else ""}
 	return float((hit.position as Vector3).y)
+
+
+func _write_probes(frame_id: String, stand_id: String) -> void:
+	if not _probes.has(stand_id):
+		return
+	var size := Vector2(root.get_visible_rect().size)
+	var rows: Array = []
+	for pixel: Vector2 in _probes[stand_id]:
+		var at := pixel * size / Vector2(1280, 720)
+		var hits: Array = []
+		for node: Node in _world.find_children("*", "GeometryInstance3D", true, false):
+			var geo := node as GeometryInstance3D
+			if not geo.is_visible_in_tree():
+				continue
+			var boxes: Array[AABB] = []
+			if geo is MultiMeshInstance3D and (geo as MultiMeshInstance3D).multimesh != null:
+				var mm := (geo as MultiMeshInstance3D).multimesh
+				if mm.mesh == null:
+					continue
+				for i in mm.visible_instance_count if mm.visible_instance_count >= 0 else mm.instance_count:
+					boxes.append(geo.global_transform * mm.get_instance_transform(i) * mm.mesh.get_aabb())
+			else:
+				boxes.append(geo.global_transform * geo.get_aabb())
+			for index in boxes.size():
+				var hit := _box_covers(boxes[index], at)
+				if hit >= 0.0:
+					var material := geo.material_override if geo.material_override != null else null
+					hits.append({"path": str(_world.get_path_to(geo)), "instance": index, "distance": hit,
+						"class": geo.get_class(), "aabb_size": _vec3(boxes[index].size),
+						"material": material.resource_name if material != null else ""})
+		hits.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.distance) < float(b.distance))
+		# Large meshes that enclose the camera (ramp, trunk) fail the box test;
+		# a physics ray names the solid surface actually under the pixel.
+		var from := _camera.project_ray_origin(at)
+		var query := PhysicsRayQueryParameters3D.create(from, from + _camera.project_ray_normal(at) * 2000.0)
+		var ray := _camera.get_world_3d().direct_space_state.intersect_ray(query)
+		var surface := {}
+		if not ray.is_empty() and ray.collider is Node:
+			surface = {"collider": str(_world.get_path_to(ray.collider as Node)), "position": _vec3(ray.position),
+				"normal": _vec3(ray.normal), "distance": from.distance_to(ray.position)}
+		rows.append({"pixel": [pixel.x, pixel.y], "ray": surface, "nearest": hits.slice(0, 14)})
+	var file := FileAccess.open(ProjectSettings.globalize_path("%s/%s_probe.json" % [_output_dir, frame_id]), FileAccess.WRITE)
+	if file != null:
+		file.store_string(JSON.stringify(rows, "\t"))
+		file.close()
+
+
+## Camera distance to the box centre when its projected corners cover `pixel`
+## and it is in front of the camera; -1 otherwise.
+func _box_covers(box: AABB, pixel: Vector2) -> float:
+	var low := Vector2(INF, INF)
+	var high := Vector2(-INF, -INF)
+	for corner in 8:
+		var point := box.get_endpoint(corner)
+		if _camera.is_position_behind(point):
+			return -1.0
+		var screen := _camera.unproject_position(point)
+		low = low.min(screen)
+		high = high.max(screen)
+	if pixel.x < low.x or pixel.x > high.x or pixel.y < low.y or pixel.y > high.y:
+		return -1.0
+	return _camera.global_position.distance_to(box.get_center())

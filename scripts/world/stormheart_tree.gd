@@ -9,6 +9,13 @@ const RAMP_RADIUS := 26.0
 const RAMP_WIDTH := 8.0
 const RAMP_TURNS := 4.0
 const RAMP_SEGMENTS := 384
+## Half-widths (radians) of the trunk's open splits at +Z and -Z.
+const SPLIT_NORTH_HALF_WIDTH := 0.14
+const SPLIT_SOUTH_HALF_WIDTH := 0.27
+const SPLIT_BRACE_MARGIN := 0.05
+## Spiral lamps sit 2.25 m above the ramp; their post runs from it to the bracket.
+const LAMP_POST_TOP_M := 1.0
+const LAMP_POST_HEIGHT_M := 3.25
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 const PRESENTATION_PATH := "res://data/config/stormheart_presentation.json"
 const CANOPY_SHADER := preload("res://scripts/world/stormheart_canopy.gdshader")
@@ -23,6 +30,7 @@ var _core_material: StandardMaterial3D
 var _core_lights: Array[OmniLight3D] = []
 var _core_revision := -1
 var _core_flags_id := 0
+var _core_released := false
 
 func build() -> void:
 	_wood = StandardMaterial3D.new()
@@ -140,11 +148,18 @@ func _ascent() -> void:
 			collider.shape = shape
 			collider.transform = pose
 			body.add_child(collider)
-			pose.basis = pose.basis.scaled(Vector3(0.18,0.15,length+0.1))
-			pose.origin.y += 0.55
-			rails.append(pose)
+			rails.append(_rail_visual_pose(pose, length))
 		if not simulation_only:
 			_instances(body,rails,_metal)
+
+## Pure visual transform shared by the real rail batch and headless contract
+## checks. The collider pose is a value; its physical seat/shape never changes.
+func _rail_visual_pose(collider_pose: Transform3D, segment_length: float) -> Transform3D:
+	var pose := collider_pose
+	pose.basis = pose.basis.scaled_local(Vector3(0.18, 0.15, segment_length + 0.1))
+	pose.origin.y += 0.55
+	return pose
+
 
 func _ramp(id: String,start: Vector3,end: Vector3,width: float) -> void:
 	var side := Vector3(end.z-start.z,0,start.x-end.x).normalized()*width*0.5
@@ -184,10 +199,10 @@ func _surface(id: String,vertices: PackedVector3Array,uv: PackedVector2Array) ->
 		visual.material_override = _cut_wood if _cut_wood != null else _wood
 		body.add_child(visual)
 
-func _instances(parent: Node3D,poses: Array[Transform3D],material: Material) -> void:
+func _instances(parent: Node3D,poses: Array[Transform3D],material: Material,mesh: Mesh = null) -> void:
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.mesh = BoxMesh.new()
+	mm.mesh = mesh if mesh != null else BoxMesh.new()
 	mm.instance_count = poses.size()
 	for i in poses.size():
 		mm.set_instance_transform(i,poses[i])
@@ -544,10 +559,17 @@ func _ascent_dressing() -> void:
 		var at := ascent_point(float(step)/48)
 		var radial := Vector3(at.x,0,at.z).normalized()
 		var edge := at+radial*(RAMP_WIDTH*0.5)
-		posts.append(Transform3D(Basis.IDENTITY.scaled(Vector3(0.65,3.2,0.65)),edge+Vector3.UP*1.2))
+		var in_split := in_trunk_split(atan2(at.z,at.x),SPLIT_BRACE_MARGIN)
+		# Across the open split an edge post has no bark behind it and reads
+		# as a stub hanging into the sky slot; the picket rail stays.
+		if not in_split:
+			posts.append(Transform3D(Basis.IDENTITY.scaled(Vector3(0.65,3.2,0.65)),edge+Vector3.UP*1.2))
 		var anchor := radial*48+Vector3(0,at.y-6,0)
 		var vector := edge-anchor
-		braces.append(Transform3D(Basis.looking_at(vector.normalized()).scaled(Vector3(0.8,0.8,vector.length())),(anchor+edge)*0.5))
+		# A brace seated in the bark has nothing to seat in across the open
+		# split: there it ended in mid-air against the sky slot.
+		if not in_split:
+			braces.append(Transform3D(Basis.looking_at(vector.normalized()).scaled_local(Vector3(0.8,0.8,vector.length())),(anchor+edge)*0.5))
 	_instances(self,posts,_wood)
 	_instances(self,braces,_wood)
 
@@ -670,11 +692,7 @@ func _built_detail() -> void:
 			var p := Vector3(cos(a)*tier.y,tier.x-0.25,sin(a)*tier.y)
 			var q := Vector3(cos(b)*tier.y,tier.x-0.25,sin(b)*tier.y)
 			fascia.append(_beam_pose(p,q,0.35,0.45))
-			if index%4 == 0:
-				var ray := Vector3(cos(a),0,sin(a))
-				var low := maxf(0.0,tier.x-8.0)
-				brackets.append(_beam_pose(ray*(tier.y+2.0)+Vector3.UP*low,
-					ray*(tier.y-1.0)+Vector3.UP*(tier.x-1.4),0.7,0.7))
+		brackets.append_array(_deck_brace_poses(tier))
 	_instances(detail,fascia,wood)
 	_instances(detail,brackets,wood)
 	var pickets: Array[Transform3D] = []
@@ -683,7 +701,7 @@ func _built_detail() -> void:
 		var radial := Vector3(at.x,0,at.z).normalized()
 		for side in [-1.0,1.0]:
 			pickets.append(Transform3D(Basis.IDENTITY.scaled(Vector3(0.14,1.18,0.14)),
-				at+radial*(RAMP_WIDTH*0.5*side)+Vector3.UP*0.65))
+				at+radial*(RAMP_WIDTH*0.5*side)+Vector3.UP*0.59))
 	_instances(detail,pickets,wood)
 	var cloth := StandardMaterial3D.new()
 	cloth.albedo_color = Color(str(settings.get("banner_colour","#183e65")))
@@ -696,6 +714,35 @@ func _built_detail() -> void:
 		var at := ascent_point((float(index)/2.0+0.16)/RAMP_TURNS)
 		var radial := Vector3(at.x,0,at.z).normalized()
 		_hanging_banner(detail,at+radial*6.2-Vector3.UP*0.35,cloth,trim,index)
+
+
+## Use the same open north/south trunk split for both upper deck tiers.
+## Crown supports descend to the core floor: their two axial braces used to
+## bisect the existing encounter/approach view despite having valid seats.
+func _deck_brace_poses(tier: Vector2) -> Array[Transform3D]:
+	var poses: Array[Transform3D] = []
+	for index in range(0,64,4):
+		# Preserve the physical core ascent opening and its existing trim rule.
+		if tier.x == CORE_HEIGHT and index >= 43 and index < 48:
+			continue
+		var a := float(index)*TAU/64.0
+		if tier.x >= CORE_HEIGHT and absf(cos(a)) < 0.27:
+			continue
+		if in_trunk_split(a,SPLIT_BRACE_MARGIN):
+			continue
+		var ray := Vector3(cos(a),0,sin(a))
+		var low := CORE_HEIGHT if tier.x > CORE_HEIGHT else maxf(0.0,tier.x-8.0)
+		poses.append(_beam_pose(ray*(tier.y+2.0)+Vector3.UP*low,
+			ray*(tier.y-1.0)+Vector3.UP*(tier.x-1.4),0.7,0.7))
+	return poses
+
+
+## True where `angle` (tree-local, atan2(z, x)) faces one of the trunk's two
+## open lightning splits (see _split_bark_shell), widened by `margin` radians.
+static func in_trunk_split(angle: float,margin: float) -> bool:
+	var north := absf(angle_difference(angle,PI*0.5))
+	var south := absf(angle_difference(angle,-PI*0.5))
+	return north < SPLIT_NORTH_HALF_WIDTH+margin or south < SPLIT_SOUTH_HALF_WIDTH+margin
 
 
 func _beam_pose(start: Vector3,finish: Vector3,width: float,height: float) -> Transform3D:
@@ -775,6 +822,20 @@ func _add_wayfinding_lamp(parent: Node3D, at: Vector3, glow: Material, id: Strin
 	bulb.material_override = glow
 	bulb.position = Vector3(0.0, 0.72, 0.62)
 	holder.add_child(bulb)
+	# Route lamps on the open ramp hang from a short timber post seated on the
+	# ramp; without it the flame floated against the sky slot. Visual only.
+	if id.begins_with("SpiralLamp"):
+		var post := MeshInstance3D.new()
+		post.name = "LampPost"
+		var box := BoxMesh.new()
+		box.size = Vector3(0.24, LAMP_POST_HEIGHT_M, 0.24)
+		post.mesh = box
+		post.material_override = _wood
+		# The holder faces the axis (+Z inward). An outer-edge lamp's post
+		# steps inward and an inner-edge lamp's outward, so both seat on the ramp.
+		var inward := 1.0 if Vector2(at.x, at.z).length() > RAMP_RADIUS else -1.0
+		post.position = Vector3(0.0, LAMP_POST_TOP_M - LAMP_POST_HEIGHT_M*0.5, 0.2*inward)
+		holder.add_child(post)
 	var light := OmniLight3D.new()
 	light.name = "WarmRouteLight"
 	light.position = Vector3(0.0, 0.72, 0.9)
@@ -832,7 +893,7 @@ func _energy_seam() -> void:
 	for i in 32:
 		var p := Vector3(sin(i*1.9)*3,8+i*7,5)
 		var q := Vector3(sin((i+1)*1.9)*3,15+i*7,5)
-		poses.append(Transform3D(Basis.looking_at((q-p).normalized()).scaled(Vector3(2.4,2.4,p.distance_to(q))), (p+q)*0.5))
+		poses.append(Transform3D(Basis.looking_at((q-p).normalized()).scaled_local(Vector3(2.4,2.4,p.distance_to(q))), (p+q)*0.5))
 	_instances(self,poses,material)
 	for y in [12,75,150,200]:
 		var light := OmniLight3D.new()
@@ -861,14 +922,15 @@ func _finished_energy_seam() -> void:
 		var p := Vector3(sin(index * 1.9) * 3.0, 8.0 + index * 7.0, 5.0)
 		var q := Vector3(sin((index + 1) * 1.9) * 3.0, 15.0 + index * 7.0, 5.0)
 		var width := float(settings.width_m)
-		poses.append(Transform3D(Basis.looking_at((q-p).normalized()).scaled(
-			Vector3(width, width, p.distance_to(q))), (p+q)*0.5))
+		poses.append(_charge_pose(p,q,width))
 		if index % 5 == 2:
 			var tip := q + Vector3(-6.0 if index % 2 else 6.0, 5.0, 2.0)
 			var branch_width := float(settings.branch_width_m)
-			poses.append(Transform3D(Basis.looking_at((tip-q).normalized()).scaled(
-				Vector3(branch_width, branch_width, q.distance_to(tip))), (q+tip)*0.5))
-	_instances(root, poses, _core_material)
+			# A branch that would meet a real floor is left out: trimmed, its
+			# end showed through the floor's well edge as a bright chip.
+			if _charge_branch_tip(q,tip,branch_width).is_equal_approx(tip):
+				poses.append(_charge_pose(q,tip,branch_width))
+	_instances(root, poses, _core_material,_charge_mesh())
 	for y in [12.0, 75.0, 150.0, 200.0]:
 		var light := OmniLight3D.new()
 		light.position = Vector3(0.0, y, 5.0)
@@ -881,9 +943,83 @@ func _finished_energy_seam() -> void:
 	_refresh_core_state()
 
 
+## Unit-height round charge sections end at their anchors. The configured
+## width is the diameter, instead of being doubled by a default BoxMesh.
+func _charge_mesh() -> CylinderMesh:
+	var mesh := CylinderMesh.new()
+	mesh.top_radius = 0.5
+	mesh.bottom_radius = 0.5
+	mesh.height = 1.0
+	mesh.radial_segments = 12
+	mesh.rings = 1
+	return mesh
+
+
+func _charge_pose(start: Vector3,finish: Vector3,width: float) -> Transform3D:
+	var axis := (finish-start).normalized()
+	var side := axis.cross(Vector3.FORWARD).normalized()
+	if side.length_squared() < 0.000001:
+		side = Vector3.RIGHT
+	var basis := Basis(side,axis,side.cross(axis).normalized())
+	return Transform3D(basis.scaled_local(Vector3(width,start.distance_to(finish),width)),(start+finish)*0.5)
+
+
+## The six visual branches query existing CPU floor faces once at build.
+## This trims floor contact without changing any physical face or hazard.
+func _charge_branch_tip(start: Vector3,finish: Vector3,width: float) -> Vector3:
+	var crown := get_node_or_null("CrownChamber") as StaticBody3D
+	if crown == null:
+		return finish
+	var axis := (finish-start).normalized()
+	var reach := start.distance_to(finish)
+	for child: Node in crown.get_children():
+		if not child is CollisionShape3D:
+			continue
+		var collider := child as CollisionShape3D
+		if not collider.shape is ConcavePolygonShape3D:
+			continue
+		var pose: Transform3D = crown.transform*collider.transform
+		var faces := (collider.shape as ConcavePolygonShape3D).get_faces()
+		for index in range(0,faces.size(),3):
+			var a: Vector3 = pose*faces[index]
+			var b: Vector3 = pose*faces[index+1]
+			var c: Vector3 = pose*faces[index+2]
+			var hit: Variant = Geometry3D.segment_intersects_triangle(start,finish,a,b,c)
+			if not hit is Vector3:
+				continue
+			var point: Vector3 = hit
+			var normal := (b-a).cross(c-a).normalized()
+			var clearance := width*0.5/maxf(0.000001,absf(normal.dot(axis)))+0.001
+			reach = minf(reach,maxf(0.0,start.distance_to(point)-clearance))
+	return start+axis*reach
+
+
 func _process(_delta: float) -> void:
 	if _core_material != null:
 		_refresh_core_state()
+		_refresh_charge_visibility()
+
+
+## The live charge is storm weather: it shows only while this client's local
+## Surge is Building or Breaking. The cooled scar after release stays.
+func _refresh_charge_visibility() -> void:
+	var root := get_node_or_null("ForkedHeartCharge") as Node3D
+	if root == null:
+		return
+	var surge := get_parent().get_node_or_null("StormwoodSurge") if get_parent() != null else null
+	var phase := str(surge.get("phase")) if surge != null else "break"
+	root.visible = charge_visible_for(phase, _core_released)
+
+
+static func charge_visible_for(phase: String, released: bool) -> bool:
+	return released or phase in ["building", "break"]
+
+
+## Tree-local inner clearance of the hollow trunk (see _trunk_point), for the
+## Surge rain mask: radius below/above the crown taper, taper heights, the
+## crown's lean and the trunk top.
+static func hollow_rain_volume() -> Dictionary:
+	return {"radius_taper": Vector4(46.0, 13.0, 185.0, 250.0), "lean_top": Vector3(9.0, 6.0, 250.0)}
 
 
 func _refresh_core_state() -> void:
@@ -903,6 +1039,7 @@ func _refresh_core_state() -> void:
 
 
 func set_core_released(released: bool) -> void:
+	_core_released = released
 	if _core_material == null:
 		return
 	var settings: Dictionary = _presentation.core_finish
