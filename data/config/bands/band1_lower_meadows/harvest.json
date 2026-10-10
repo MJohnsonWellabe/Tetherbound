@@ -137,9 +137,10 @@
     -24.5
    ],
    "_why_f01_berry_field": "F01 (village road settlement): the cottage_b re-pose at (19,-18) left this bush INSIDE the cottage, 2.2m from its centre, and the day-walk judge found Berry Field reading as one bush. Moved into paths.village_topology's berry_field subarea (centre (-8.5,-23), r 6) beside order 1036, 2.9m from the centre and 6.3m from 1036, off the berry lane. Same item, yield, model and order.",
-   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
    "model_scale": 0.52,
-   "_why_village_visual_2026_09_11": "Grandpa's Village ordinary gameplay frame proved the six village berry bushes were each roughly 2.3m wide at the route-wide 1.2 scale and read as saturated purple creature-sized foreground masses. Keep position, interaction, yield and model; 0.52 preserves a readable ~1m berry bush without letting a gatherable outrank the village frontage. Applied consistently to village berries only; corridor and Pond berries retain their established 1.2 route scale."
+   "_why_village_visual_2026_09_11": "Grandpa's Village ordinary gameplay frame proved the six village berry bushes were each roughly 2.3m wide at the route-wide 1.2 scale and read as saturated purple creature-sized foreground masses. Keep position, interaction, yield and model; 0.52 preserves a readable ~1m berry bush without letting a gatherable outrank the village frontage. Applied consistently to village berries only; corridor and Pond berries retain their established 1.2 route scale.",
+   "visual": {"berry_radius_m": 0.055}
   },
   {
    "order": 11,
@@ -150,9 +151,10 @@
     38.0,
     -36.0
    ],
-   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
    "model_scale": 0.52,
-   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change.",
+   "visual": {"berry_radius_m": 0.055}
   },
   {
    "order": 1000,
@@ -215,9 +217,10 @@
     335.0,
     1070.0
    ],
-   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
    "model_scale": 1.2,
-   "_why_d1": "BAND1-D1. Third corridor stop, past the mudsnout cluster (spawns.json order 1004) and short of the south_bridge_grunt checkpoint -- the last thing to notice before the gate fight, not another silent kilometre leading into it. tools/_probe_band1_cadence.py: ~30m lateral from the spine."
+   "_why_d1": "BAND1-D1. Third corridor stop, past the mudsnout cluster (spawns.json order 1004) and short of the south_bridge_grunt checkpoint -- the last thing to notice before the gate fight, not another silent kilometre leading into it. tools/_probe_band1_cadence.py: ~30m lateral from the spine.",
+   "visual": {"berry_radius_m": 0.055}
   },
   {
    "order": 1005,
@@ -392,8 +395,9 @@
     935.0
    ],
    "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
-   "model_scale": 0.85,
-   "_why_t3_pickups": "Owner directive 2026-08-29. Beside the bramblebun off-route pocket (spawns.json order 1047, centre (-260,950)) which 'rewards cutting the corner instead of following the road's own longer arc' -- the same corner-cut now pays twice, catch temptation and orb supply together."
+   "model_scale": 0.5,
+   "_why_t3_pickups": "Owner directive 2026-08-29. Beside the bramblebun off-route pocket (spawns.json order 1047, centre (-260,950)) which 'rewards cutting the corner instead of following the road's own longer arc' -- the same corner-cut now pays twice, catch temptation and orb supply together.",
+   "visual": {"reward_height_m": 0.38}
   },
   {
    "order": 1030,
@@ -405,8 +409,9 @@
     1035.0
    ],
    "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
-   "model_scale": 0.85,
-   "_why_t3_pickups": "T3-REWARD found `travel_pack` (items.json) fully modelled with zero acquisition path anywhere in the game. Placed beside the galecrest off-route pocket (spawns.json order 1048, centre (500,1050)), the 'upper ridge' aggressor sighting -- a pack left by whoever was here before, on the same detour. stack:1 gear, so a respawning crate is harmless: nothing is farmable that changes the equip once worn."
+   "model_scale": 0.5,
+   "_why_t3_pickups": "T3-REWARD found `travel_pack` (items.json) fully modelled with zero acquisition path anywhere in the game. Placed beside the galecrest off-route pocket (spawns.json order 1048, centre (500,1050)), the 'upper ridge' aggressor sighting -- a pack left by whoever was here before, on the same detour. stack:1 gear, so a respawning crate is harmless: nothing is farmable that changes the equip once worn.",
+   "visual": {"reward_height_m": 0.65}
   },
   {
    "order": 1031,
@@ -417,10 +422,11 @@
      30,
      8
    ],
-   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
    "model_scale": 0.52,
    "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15, verbatim: 'There needs to be more berries in the village.' The village authored exactly two berry nodes (orders 10, 11; 3 each = 6), the thinnest of the four village resources against wood's 7 nodes, stone's 3 (raised to 4 each by GAME-F5), and fiber's 8 -- and berries are the one baseline resource with ongoing draws the other three do not carry: player/creature food (items.json), the 3-berries-for-4-seeds recipe and the farm crop itself (data/config/farm.json), and a 5-berry cost in the Band-4 stronghold potion (recipes_ironwood.json). Three new nodes (this one plus 1032, 1033) bring the village to five for +9, proportionate to the raise stone already got and short of flooding the square. Sited in the village's north quarter, inside the fence (data/config/village_boundary.json), >=4m clear of the boundary line and of every existing village node, and outside the practice cluster's 15m disc at (30,-40) -- unused ground: no harvest node previously stood north of z=-8. tests/test_village_boundary.gd's VILLAGE_HARVEST_NODES raised 20 -> 23 in the same commit, per that test's own instruction to confirm and update rather than silently drift.",
-   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change.",
+   "visual": {"berry_radius_m": 0.055}
   },
   {
    "order": 1032,
@@ -431,10 +437,11 @@
     0.0,
     18.0
    ],
-   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
    "model_scale": 0.52,
    "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Second of the three new village berry stops, on the north side near the pond-road gate approach, >=4m clear of the boundary and of every existing node.",
-   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change.",
+   "visual": {"berry_radius_m": 0.055}
   },
   {
    "order": 1033,
@@ -445,10 +452,11 @@
     -32.0,
     -1.0
    ],
-   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
    "model_scale": 0.52,
    "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Third of the three new village berry stops, west of the farmhouse, >=4m clear of the boundary and of every existing node.",
-   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change.",
+   "visual": {"berry_radius_m": 0.055}
   },
   {
    "order": 1034,
@@ -485,11 +493,12 @@
     -9.0,
     -19.0
    ],
-   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
    "model_scale": 0.48,
    "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note). Berries carry no `gathered_with` tool at all (items.json), so this is the one resource a fresh player gathers at full yield from the very first minute -- CLAUDE.md's light-satiety rule makes that the honest safety net, not a workaround of the knife gate this lane is told to leave alone. Sited on the walk from Grandpa's house toward the square (terrain_playground.json paths.routes 'Grandpa's House': [10,-10]->[-4,-13]->[-18,-15]).",
    "_why_resited_2026_09_01": "LAND-MEGA-0901 fix: the original [-9,-9] was verified clear (>=4m) of the work_area prop cluster and every existing wood/fiber node, but nobody checked it against the village's PEOPLE -- it landed 3.11m from Bram [-5.89,-9] (village_npcs.json), inside Bram's own 3.8m Interactable radius, and 0.42m inside the inn building's own 7.08m circumscribed footprint (tools/_probe_civilian_placement.gd's BUILDINGS.inn). interaction_arbiter.gd has exactly one prompt slot and picks whichever offer is closer at equal priority (prompt_arbiter.gd::choose_index), so standing at Bram's own authored customer spot made the two prompts contest that slot -- reproduced 100% by tests/smoke_post_modal_control.gd's first Bram visit (bisected to this commit, df793bd5). Moved 10m further south along the same north-south line, still off every path (path_factor 0.00) and on flat ground (slope <5deg, tools/_probe_berries_1036_resite.gd): 10.47m from Bram (>=7.2m combined-radius-plus-margin), 5.42m clear of the inn footprint, and 5.10m clear of the nearest other harvest node (order 1026, fiber at [-10,-14]).",
-   "_why_grandpa_yard_visual_2026_09_11": "Production Grandpa-yard r1/r2 proved this exact persistent harvest node -- not vegetation scatter or the camera-relative decorative flower tier -- was the oversized saturated purple/black mass owning the lower-left foreground. Keep its established [-9,-19] interaction position, full early-game yield and prompt contract; reduce only its visual scale 1.2 -> 0.48. Bush_Common_Flowers' raw footprint is ~1.9m, so 0.48 keeps a readable ~0.9m berry bush while removing the 2.3m-wide focal competitor. This is one village node only; every other berry stop keeps the route-wide 1.2 convention."
+   "_why_grandpa_yard_visual_2026_09_11": "Production Grandpa-yard r1/r2 proved this exact persistent harvest node -- not vegetation scatter or the camera-relative decorative flower tier -- was the oversized saturated purple/black mass owning the lower-left foreground. Keep its established [-9,-19] interaction position, full early-game yield and prompt contract; reduce only its visual scale 1.2 -> 0.48. Bush_Common_Flowers' raw footprint is ~1.9m, so 0.48 keeps a readable ~0.9m berry bush while removing the 2.3m-wide focal competitor. This is one village node only; every other berry stop keeps the route-wide 1.2 convention.",
+   "visual": {"berry_radius_m": 0.055}
   },
   {
    "order": 1037,
@@ -565,9 +574,10 @@
     -375.0,
     579.6
    ],
-   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
    "model_scale": 1.2,
-   "_why_world_content": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3 (the Pond pocket) names 'a fiber node and berries' explicitly; a fiber node already stands at the pocket's own edge (order 1005, arc 960) but berries did not exist anywhere in the pond stretch. Sited by a real ground scan of the pond's own shore (tools/_probe_world_content_0903b.gd -- the water is at level -17.0, and the first straight-line candidate off the road here came back underwater at -18.87): this point is dry (h=-14.65, 2.35m above the waterline), 20m off the road at arc 821, on the same shore as the fisher NPC and the camp prop below, clear (>=19m) of the mosshell/paddlenewt/brooktail wild clusters and the bridge_repair_site prop cluster already authored here -- the approved-lush reference is unthinned, this only adds a resource among content already there. With orders 1041/1042 above, the 566m gap between arc 393 and arc 960 is now four legs of 167m, 120m, 141m and 139m -- all under the 250m target."
+   "_why_world_content": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3 (the Pond pocket) names 'a fiber node and berries' explicitly; a fiber node already stands at the pocket's own edge (order 1005, arc 960) but berries did not exist anywhere in the pond stretch. Sited by a real ground scan of the pond's own shore (tools/_probe_world_content_0903b.gd -- the water is at level -17.0, and the first straight-line candidate off the road here came back underwater at -18.87): this point is dry (h=-14.65, 2.35m above the waterline), 20m off the road at arc 821, on the same shore as the fisher NPC and the camp prop below, clear (>=19m) of the mosshell/paddlenewt/brooktail wild clusters and the bridge_repair_site prop cluster already authored here -- the approved-lush reference is unthinned, this only adds a resource among content already there. With orders 1041/1042 above, the 566m gap between arc 393 and arc 960 is now four legs of 167m, 120m, 141m and 139m -- all under the 250m target.",
+   "visual": {"berry_radius_m": 0.055}
   },
   {
    "order": 1044,

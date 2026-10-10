@@ -325,10 +325,11 @@
         -250.0,
         4900.0
       ],
-      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
       "model_scale": 1.2,
-      "_why_w18_density": "W18-DENSITY. Band 4 had no food at all; a berry bush on the old-growth's sunny side gives the light-satiety loop something to find up here (CLAUDE.md: food restores, no starvation)."
-    },
+      "_why_w18_density": "W18-DENSITY. Band 4 had no food at all; a berry bush on the old-growth's sunny side gives the light-satiety loop something to find up here (CLAUDE.md: food restores, no starvation).",
+   "visual": {"berry_radius_m": 0.055}
+  },
     {
       "order": 4037,
       "item": "fiber",
@@ -377,10 +378,11 @@
         200.0,
         5520.0
       ],
-      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
       "model_scale": 1.2,
-      "_why_w18_density": "W18-DENSITY. The pasture hedge below the pipwing roost (order 4036): food before the first captain."
-    },
+      "_why_w18_density": "W18-DENSITY. The pasture hedge below the pipwing roost (order 4036): food before the first captain.",
+   "visual": {"berry_radius_m": 0.055}
+  },
     {
       "order": 4041,
       "item": "ironwood",
@@ -442,10 +444,11 @@
         -58.0,
         6270.0
       ],
-      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
       "model_scale": 1.2,
-      "_why_w18_density": "W18-DENSITY. A hedge on the high pasture before the picket and the rest-free climb: food where a player decides whether to camp first."
-    },
+      "_why_w18_density": "W18-DENSITY. A hedge on the high pasture before the picket and the rest-free climb: food where a player decides whether to camp first.",
+   "visual": {"berry_radius_m": 0.055}
+  },
     {
       "order": 4046,
       "item": "stone",
