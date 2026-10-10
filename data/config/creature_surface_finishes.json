@@ -1,6 +1,12 @@
 {
   "enabled": true,
   "species": {
+    "cloudfang": {
+      "shiny": {"body_hue": 0.095, "body_saturation": 0.43, "body_value_floor": 0.43, "body_value_scale": 1.0, "repaint_strength": 1.0, "accent_hue": 0.73, "accent_saturation": 0.40, "accent_value": 0.38, "accent_source_hue": [0.68, 0.80], "accent_source_value": 0.15, "accent_source_saturation": 0.22, "accent_energy": 0.0}
+    },
+    "galecrest": {
+      "shiny": {"body_source_hue": [0.56, 0.72], "body_source_saturation": 0.14, "body_hue": 0.065, "body_saturation": 0.55, "body_value_floor": 0.32, "body_value_scale": 1.6, "repaint_strength": 1.0, "accent_hue": 0.50, "accent_saturation": 0.56, "accent_value": 0.70, "accent_source_hue": [0.46, 0.55], "accent_source_value": 0.19, "accent_source_saturation": 0.40, "accent_energy": 0.12}
+    },
     "sparkit": {
       "shiny": {"body_hue": 0.51, "body_saturation": 0.48, "body_value_floor": 0.48, "body_value_scale": 1.1, "repaint_strength": 1.0, "accent_hue": 0.76, "accent_saturation": 0.48, "accent_value": 0.72, "accent_source_hue": [0.08, 0.20], "accent_source_value": 0.66, "accent_source_saturation": 0.32, "accent_energy": 0.12}
     },

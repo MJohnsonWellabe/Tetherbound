@@ -46,7 +46,7 @@ static func apply(model: Node, species: String, shiny: bool) -> void:
 				overlay.set_shader_parameter("rim_amount", source.rim if source.rim_enabled else 0.0)
 				for parameter: String in finish:
 					var value: Variant = finish[parameter]
-					if parameter == "accent_source_hue": value = Vector2(float(value[0]), float(value[1]))
+					if parameter in ["accent_source_hue", "body_source_hue"]: value = Vector2(float(value[0]), float(value[1]))
 					overlay.set_shader_parameter(parameter, value)
 				overlay.next_pass = source.next_pass
 				copy.next_pass = overlay
