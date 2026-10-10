@@ -1,6 +1,6 @@
 {
-  "_comment": "P2-008 presentation candidate. Disabled until paired native captures pass independent review. Uses the installed terrain family and the inspected Veilfall board's wet rock, moss and warm strand palette. No height, collision, depth, control-map or vegetation-placement changes.",
-  "enabled": false,
+  "_comment": "P2-008 prepared candidate, awaiting paired native review. Shore weathering follows the dune surface layer; numeric defaults retain the previous weathering strengths. No geometry, collision, shadow, control-map or vegetation changes. Grass underlay remains unresolved.",
+  "enabled": true,
   "weathering_scale": 0.11,
   "moss_colour": "#526a3d",
   "moss_amount": 0.65,
@@ -8,5 +8,8 @@
   "sediment_height_m": 4.8,
   "wet_colour": "#394b46",
   "wet_height_m": 1.6,
-  "rock_detail": 0.45
+  "rock_detail": 0.45,
+  "sediment_amount": 0.8,
+  "wet_amount": 0.65,
+  "wet_roughness": 0.55
 }

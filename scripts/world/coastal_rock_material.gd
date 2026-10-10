@@ -27,8 +27,11 @@ uniform vec3 coast_moss_colour : source_color = vec3(0.32, 0.42, 0.24);
 uniform float coast_moss_amount = 0.65;
 uniform vec3 coast_sediment_colour : source_color = vec3(0.71, 0.61, 0.45);
 uniform float coast_sediment_height_m = 4.8;
+uniform float coast_sediment_amount = 0.8;
 uniform vec3 coast_wet_colour : source_color = vec3(0.22, 0.29, 0.27);
 uniform float coast_wet_height_m = 1.6;
+uniform float coast_wet_amount = 0.65;
+uniform float coast_wet_roughness = 0.55;
 uniform float coast_rock_detail = 0.45;
 uniform bool coast_dunes_enabled = false;
 uniform sampler2D coast_dune_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
@@ -98,17 +101,6 @@ const MATERIAL := """
 		float bed = fract((v_vertex.y + warp) / 12.0);
 		float ledge = smoothstep(0.02, 0.15, bed) * (1.0 - smoothstep(0.55, 0.98, bed));
 		rock *= coast_tint * mix(0.90, 1.10, ledge);
-		if (coast_weathering_enabled) {
-			// Broad mineral planes, with irregular vegetation tongues at the
-			// slope transition; the real surface and its silhouette stay intact.
-			float patch = coast_noise(v_vertex.xz * coast_weathering_scale);
-			float grain = coast_noise(v_vertex.xz * coast_weathering_scale * 3.7);
-			rock = mix(coast_tint * 0.42, rock, coast_rock_detail);
-			rock *= mix(0.78, 1.15, patch);
-			float moss = smoothstep(0.48, 0.91, abs(coast_face.y) + (patch - 0.5) * 0.32);
-			moss *= smoothstep(1.8, 5.0, v_vertex.y) * coast_moss_amount;
-			rock = mix(rock, coast_moss_colour * mix(0.65, 1.05, grain), moss);
-		}
 		vec3 detail = vec3(0.0, nx.y, -side.x * nx.x) * coast_weights.x
 			+ vec3(ny.x, 0.0, -ny.y) * coast_weights.y
 			+ vec3(side.y * nz.x, nz.y, 0.0) * coast_weights.z;
@@ -120,20 +112,6 @@ const MATERIAL := """
 		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, rock, coast_weight);
 		mat.normal_rough = mix(mat.normal_rough, vec4(mapped, 0.88), coast_weight);
 		mat.normal_map_depth = mix(mat.normal_map_depth, coast_normal_depth, coast_weight);
-	}
-	if (coast_weathering_enabled) {
-		// Sand and wet mineral stains soften the waterline without painting
-		// new walkable terrain or touching Veilfall's separate treatment.
-		float patch = coast_noise(v_vertex.xz * coast_weathering_scale);
-		float grain = coast_noise(v_vertex.xz * coast_weathering_scale * 3.7);
-		float outside = smoothstep(coast_exclude_radius, coast_exclude_radius + 30.0, length(v_vertex.xz - coast_exclude_centre));
-		float strand = 1.0 - smoothstep(coast_sediment_height_m * 0.35, coast_sediment_height_m, v_vertex.y + (patch - 0.5) * 2.8);
-		strand *= smoothstep(0.25, 0.85, abs(coast_face.y)) * outside;
-		vec3 sediment = coast_sediment_colour * mix(0.70, 0.96, grain);
-		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, sediment, strand * 0.8);
-		float wet = (1.0 - smoothstep(0.05, coast_wet_height_m, v_vertex.y + (patch - 0.5) * 0.6)) * outside;
-		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, coast_wet_colour * mix(0.65, 1.0, grain), wet * 0.65);
-		mat.normal_rough.a = mix(mat.normal_rough.a, 0.55, wet);
 	}
 	if (coast_dunes_enabled) {
 		// Owner-directed Great Lakes dune palette. This is surface colour and
@@ -189,6 +167,31 @@ const MATERIAL := """
 		mat.normal_rough.rgb = mix(mat.normal_rough.rgb, vec3(0.0, 1.0, 0.0), dune_weight);
 		mat.normal_rough.a = mix(mat.normal_rough.a, mix(0.94, 0.73, wet), dune_weight);
 		mat.normal_map_depth *= 1.0 - dune_weight;
+	}
+	if (coast_weathering_enabled) {
+		// Weather the completed dune/mineral surface so the dune layer cannot
+		// overwrite the strand and wet band. No additional texture samples.
+		float patch = coast_noise(v_vertex.xz * coast_weathering_scale);
+		float grain = coast_noise(v_vertex.xz * coast_weathering_scale * 3.7);
+		if (coast_weight > 0.001) {
+			vec3 rock = mat.albedo_height.rgb;
+			// Broad mineral planes, with irregular vegetation tongues at the
+			// slope transition; the real surface and its silhouette stay intact.
+			rock = mix(coast_tint * 0.42, rock, coast_rock_detail);
+			rock *= mix(0.78, 1.15, patch);
+			float moss = smoothstep(0.48, 0.91, abs(coast_face.y) + (patch - 0.5) * 0.32);
+			moss *= smoothstep(1.8, 5.0, v_vertex.y) * coast_moss_amount;
+			rock = mix(rock, coast_moss_colour * mix(0.65, 1.05, grain), moss);
+			mat.albedo_height.rgb = mix(mat.albedo_height.rgb, rock, coast_weight);
+		}
+		float outside = smoothstep(coast_exclude_radius, coast_exclude_radius + 30.0, length(v_vertex.xz - coast_exclude_centre));
+		float strand = 1.0 - smoothstep(coast_sediment_height_m * 0.35, coast_sediment_height_m, v_vertex.y + (patch - 0.5) * 2.8);
+		strand *= smoothstep(0.25, 0.85, abs(coast_face.y)) * outside;
+		vec3 sediment = coast_sediment_colour * mix(0.70, 0.96, grain);
+		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, sediment, strand * coast_sediment_amount);
+		float wet = (1.0 - smoothstep(0.05, coast_wet_height_m, v_vertex.y + (patch - 0.5) * 0.6)) * outside;
+		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, coast_wet_colour * mix(0.65, 1.0, grain), wet * coast_wet_amount);
+		mat.normal_rough.a = mix(mat.normal_rough.a, coast_wet_roughness, wet);
 	}
 """
 
