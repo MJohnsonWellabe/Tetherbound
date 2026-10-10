@@ -774,7 +774,9 @@ func _animate_release() -> void:
 
 
 func _build_captive() -> void:
-	if bool(world.get("simulation_only")):
+	var shell := bool(world.get("simulation_only"))
+	_build_captive_plinth(shell)
+	if shell:
 		_legendary = Node3D.new()
 		_legendary.name = "CaptiveStormheart"
 		add_child(_legendary)
@@ -793,43 +795,50 @@ func _build_captive() -> void:
 	_legendary.set("collision_layer", 0)
 	_legendary.set("collision_mask", 0)
 	_legendary.set_physics_process(false)
-	# The captive sits over the 9 m core hole and its coils overhang it, so
-	# from the arena it read as floating past the deck with sky beneath. A
-	# stone plinth fills the hole under it. It is solid, so stone that reads
-	# as floor is floor: nothing drops through the core hole (CoreRail exists
-	# to stop exactly that 150 m fall).
-	var plinth := StaticBody3D.new()
-	plinth.name = "CaptivePlinth"
-	var plinth_visual := MeshInstance3D.new()
-	var slab := CylinderMesh.new()
-	slab.top_radius = CAPTIVE_PLINTH_RADIUS_M
-	slab.bottom_radius = CAPTIVE_PLINTH_RADIUS_M * 0.92
-	slab.height = 0.8
-	slab.radial_segments = 48
-	plinth_visual.mesh = slab
-	var stone := StandardMaterial3D.new()
-	stone.albedo_color = Color("4a4540")
-	stone.roughness = 0.9
-	plinth_visual.material_override = stone
-	plinth.add_child(plinth_visual)
-	var footing := CylinderShape3D.new()
-	footing.radius = CAPTIVE_PLINTH_RADIUS_M
-	footing.height = slab.height
-	var footing_shape := CollisionShape3D.new()
-	footing_shape.shape = footing
-	plinth.add_child(footing_shape)
-	plinth.position = Vector3(0.0, -0.4, 0.0)
-	add_child(plinth)
-	# Seat its top on the actual core deck when the tree is mounted.
-	var tree := world.get_node_or_null("StormheartTree") as Node3D if is_instance_valid(world) else null
-	if tree != null and plinth.is_inside_tree():
-		plinth.global_position.y = tree.global_position.y + STORMHEART_CORE_HEIGHT_M - 0.4
 	_cage = Node3D.new()
 	_cage.name = "StormheartContainment"
 	add_child(_cage)
 	# The cage keeps its node (visibility and the finale read it) but no
 	# longer draws bars: eight thin, evenly spaced glowing rods read as unlit
 	# emissive streaks in the doorway behind the captive (F41#5 judge).
+
+
+## The captive sits over the 9 m core hole and its coils overhang it, so from
+## the arena it read as floating past the deck with sky beneath. A stone plinth
+## fills the hole under it. It is solid, so stone that reads as floor is floor:
+## nothing drops through the core hole (CoreRail exists to stop exactly that
+## 150 m fall). The collider is built in a simulation-only shell too, so the
+## authoritative host and its guests share the same static floor; only the
+## stone mesh is skipped there (as DeckInfill and CoreRail do).
+func _build_captive_plinth(shell: bool) -> void:
+	var plinth := StaticBody3D.new()
+	plinth.name = "CaptivePlinth"
+	var height := 0.8
+	if not shell:
+		var slab := CylinderMesh.new()
+		slab.top_radius = CAPTIVE_PLINTH_RADIUS_M
+		slab.bottom_radius = CAPTIVE_PLINTH_RADIUS_M * 0.92
+		slab.height = height
+		slab.radial_segments = 48
+		var stone := StandardMaterial3D.new()
+		stone.albedo_color = Color("4a4540")
+		stone.roughness = 0.9
+		var plinth_visual := MeshInstance3D.new()
+		plinth_visual.mesh = slab
+		plinth_visual.material_override = stone
+		plinth.add_child(plinth_visual)
+	var footing := CylinderShape3D.new()
+	footing.radius = CAPTIVE_PLINTH_RADIUS_M
+	footing.height = height
+	var footing_shape := CollisionShape3D.new()
+	footing_shape.shape = footing
+	plinth.add_child(footing_shape)
+	plinth.position = Vector3(0.0, -height * 0.5, 0.0)
+	add_child(plinth)
+	# Seat its top on the actual core deck when the tree is mounted.
+	var tree := world.get_node_or_null("StormheartTree") as Node3D if is_instance_valid(world) else null
+	if tree != null and plinth.is_inside_tree():
+		plinth.global_position.y = tree.global_position.y + STORMHEART_CORE_HEIGHT_M - height * 0.5
 
 
 func _build_offer_prompt() -> void:
