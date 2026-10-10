@@ -550,6 +550,30 @@ func _build_ground_pad() -> void:
 	pad.mesh = surface.commit()
 	pad.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(pad)
+	# P2-013: the pad is trodden yard, but the runtime grass field only thins
+	# where a node in its `grass_clear` group says so (`grass_field.gd`
+	# CLEAR_GROUP/CLEAR_RADIUS_META, the same route village.gd and
+	# burrow_warrens.gd take). Lay overlapping clearing discs on the pad grid.
+	var clear: Dictionary = config.get("grass_clear", {})
+	if not bool(clear.get("enabled", false)):
+		return
+	var spacing := maxf(float(clear.get("spacing_m", 12.0)), 2.0)
+	var radius := maxf(float(clear.get("radius_m", 8.5)), 0.5)
+	var cs := s_min + spacing * 0.5
+	while cs < s_max:
+		var ct := t_min + spacing * 0.5
+		while ct < t_max:
+			var xz := world_of(Vector2(cs, ct))
+			var ground := _ground(xz)
+			if not is_nan(ground):
+				var marker := Node3D.new()
+				marker.name = "YardGrassClear"
+				marker.position = Vector3(xz.x, ground, xz.y)
+				marker.set_meta("grass_clear_radius", radius)
+				marker.add_to_group("grass_clear")
+				add_child(marker)
+			ct += spacing
+		cs += spacing
 
 
 ## Wall runs, through `severed_spokes.gd::_ground_wall` — a run that follows
