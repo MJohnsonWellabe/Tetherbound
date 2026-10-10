@@ -1,0 +1,28 @@
+{
+  "enabled": false,
+  "species": "galecrest",
+  "placeholder": {
+    "colour": "#a9bfd8",
+    "height": 3.5,
+    "radius": 1.083333,
+    "footprint_allowance": 4.2,
+    "rest_roll_deg": 0.0,
+    "model": "res://assets/creatures/tetherbound/galecrest/candidate/models/creature_galecrest_native.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    },
+    "colourway_source_species": "galecrest"
+  }
+}

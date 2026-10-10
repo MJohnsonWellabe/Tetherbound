@@ -1,0 +1,84 @@
+{
+  "criterion": "F36#0",
+  "asset": "Galecrest confirm-only role extension",
+  "enabled": false,
+  "reference": {
+    "image": "../reference/rebuild/galecrest.png",
+    "exact_prompt": "../reference/rebuild/imagegen-prompt.txt",
+    "origin": "OpenAI imagegen exec-78a8a658-222b-435e-b166-d7d787a604a4",
+    "inspection": "Existing project-authored full-body slate/cream raptor reference inspected; no new reference or identity redesign."
+  },
+  "mesh": {
+    "existing_task": "01a0e4a9-3cfa-7210-b6d6-70f332337328",
+    "original_submission_and_provenance": "../source/rebuild/",
+    "source_model": "../models/creature_galecrest_lod0.glb",
+    "new_meshy_submissions": 0,
+    "new_credits": 0,
+    "licence": "Existing owner-held paid Meshy account; project-authored identity reference. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preparation": {
+    "approach": "Author five role tracks in Blender, then graft only animation channels/accessors into the installed GLB. Original binary payload, neutral geometry, skin, UVs, materials, scene nodes and six animation records remain unchanged.",
+    "validation": {
+      "triangles_before": 29048,
+      "triangles_after": 29048,
+      "neutral_position_set_preserved": true,
+      "mesh_skin_uv_materials_preserved": true,
+      "bones": 19,
+      "original_six_clip_data_and_durations_preserved": true,
+      "clips": [
+        "idle",
+        "walk",
+        "run",
+        "attack",
+        "hit",
+        "faint",
+        "charged",
+        "rest",
+        "swim",
+        "fly_grip",
+        "ride"
+      ],
+      "new_meshy_submissions": 0,
+      "candidate_enabled": false
+    },
+    "added_roles": [
+      "charged",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "rest_limit": "Dedicated hold of existing terminal faint pose, still awaiting flank/contact approval.",
+    "charged_limit": "Existing attack poses retimed; anticipation polish remains open.",
+    "colourways": "Accepted unchanged UV layout and existing Galecrest anatomical repaint namespace retained."
+  },
+  "native": {
+    "platform": "Windows GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "low_renderer": "gl_compatibility/opengl3",
+    "medium_renderer": "forward_plus/vulkan",
+    "scale": "Standing 3.50 m before/after against measured 1.80 m trainer; original radius, footprint and model scale retained.",
+    "baseline_confirmation": "Existing swim/fly_grip/ride clips missing; ten hit/faint frames captured. This fails the full role contract despite earlier standing appearance approval.",
+    "candidate_diagnostics": "25 whole-body frames over five requested roles; native scale front/reverse before/after; five matched Cloudreach production CameraRig poses per preset.",
+    "world_result": "All four world receipts complete with five loaded frames each and no capture errors. Existing Cloudreach surface-placement and two fail-closed wild-site warnings remain in baseline and candidate.",
+    "scope": "Pose and world fixtures only; no earned fight, ordinary movement, actual swimming/grip/mounted rider or continuous-contact certification."
+  },
+  "gates": {
+    "scale": true,
+    "mesh_skin_uv_material_and_original_clip_preservation": true,
+    "full_rig_and_motion": false,
+    "terminal_floor_contact": false,
+    "ordinary_runtime_paths": false,
+    "flight_and_grip_contact": false,
+    "independent_visual_judge": false,
+    "full_art": false
+  },
+  "review_sheets": [
+    "review/low-before-after.jpg",
+    "review/medium-before-after.jpg"
+  ]
+}
