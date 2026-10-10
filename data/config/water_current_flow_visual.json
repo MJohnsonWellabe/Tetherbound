@@ -1,7 +1,7 @@
 {
   "_comment": "Local/static Tidewake grouped-current presentation. Promoted after F14#2 matched live/restored captures and real settlement/save-reload proof37671873221, literal scoped blind PASS under owner572#6045342186. Ridges remain off. Existing flow vector, live/restored parameters, physics, route and saved flags are unchanged; release Visual bar/motion/co-op gates remain separate.",
   "enabled": true,
-  "ridges_enabled": true,
+  "ridges_enabled": false,
   "shader": {
     "visual_cell_width_m": 3.6,
     "visual_cell_length_m": 11.0,
@@ -10,6 +10,6 @@
     "visual_band_gain": 0.55,
     "visual_ridge_spacing_m": 23.0,
     "visual_ridge_width_m": 4.5,
-    "visual_ridge_gain": 1.4
+    "visual_ridge_gain": 0.7
   }
 }
