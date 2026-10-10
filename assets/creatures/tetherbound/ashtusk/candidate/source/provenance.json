@@ -1,0 +1,130 @@
+{
+  "subject": "ashtusk",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Disabled material-only Ashtusk aspect variant; no independent body mesh",
+  "reference_provenance": {
+    "subject": "ashtusk",
+    "reference": "assets/creatures/tetherbound/ashtusk/reference/native-material-v1.png",
+    "method": "built_in_imagegen_material_only_edit",
+    "edit_target": "assets/creatures/tetherbound/tuskroot/reference/native-standing-v1.png",
+    "supporting_palette_reference": "docs/art/reference/creature-expansion-2026-08-30/08_Ashtusk_tuskroot_variant.png",
+    "prompt": "Create a material-only Ashtusk reference from the supplied full Tuskroot studio image, using the supplied existing Ashtusk board solely for its established ash/basalt/ember palette and variant identity. Preserve EXACTLY the Tuskroot image's body geometry, boar proportions, rounded expressive face, brows, snout, ears, two curved tusks, layered stone back, all four legs and complete feet, small tail, pose, camera, framing, studio floor and lighting. Ashtusk is the SAME Tuskroot body as an aspect variant, never a new mesh or armour redesign. Recolour warm brown fur to deep natural ash brown and soot-dark highlights while retaining visible fur direction; recolour the existing grey stone plates to rough charcoal basalt with a few large thin warm orange/amber ember cracks mainly in plate seams. Recolour the existing moss/leaf surface groups to scorched dark brown/ash without changing or removing their geometry. The two existing tusks retain their exact ivory tusk shape but have darkened basalt surfaces with sparse restrained warm orange ember veins; preserve readable curved silhouettes. Eyes remain expressive with warm amber/orange irises and visible dark pupils, not featureless glowing spheres. Keep nose and nostrils dark and clear. No overall body emission, no body engulfed in flames, no smoke cloud hiding form, no lava wash or red faction colour. Soft roughness on fur and stone; no metallic or plastic sheen. No changes to anatomy, silhouette, facial proportions, foot count, body size, new horns, claws, spikes, scars, equipment, saddle, harness, background or props. One complete existing Ashtusk aspect-variant boar in the same plain light-grey studio scene, no text, labels, board or alternate views. The board is a palette guide, not permission to copy its angular armour geometry.",
+    "geometry_contract": "SAME Tuskroot mesh; no new body generation. Retexture only; preserve geometry/UV/rig/clips or stay OFF.",
+    "default_enabled": false,
+    "selected_origin": "exec-e2731ec6-30c0-48f3-9e9c-0551e3fc3055",
+    "inspection": {
+      "identity": "Same exact Tuskroot body, studio pose and facial/hoof/tusk/stone arrangement; ash-brown coat, basalt plates, sparse amber-orange seam/tusk veins and expressive amber eyes",
+      "riggability": "Material-only reference; no new body geometry is authorized or requested",
+      "limits": "Generated texture/UV preservation, emission restraint and native variant readability must pass; no full art approval from reference."
+    }
+  },
+  "generation": {
+    "task_id": "01a12696-88ce-7625-85ae-7fa9487ed6bd",
+    "endpoint": "/openapi/v1/retexture",
+    "settings": {
+      "input_task_id": "01a12687-647e-7283-a146-f26d481c0d94",
+      "ai_model": "meshy-6",
+      "enable_original_uv": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "text_style_prompt": "Material-only Ashtusk aspect variant on the SAME Tuskroot body. Deep ash-brown fur, rough charcoal basalt stone plates, scorched brown leaf surfaces, sparse restrained warm amber-orange ember seams and tusk veins, amber eyes with dark pupils. Preserve the original UVs and exact boar geometry. No flames engulfing the body, new geometry, metallic fur, equipment or red faction colours."
+    },
+    "reference": "assets/creatures/tetherbound/ashtusk/reference/native-material-v1.png",
+    "night": "2026-10-09",
+    "status": "SUCCEEDED",
+    "observed_credits": 10,
+    "new_submissions": 1
+  },
+  "rights": {
+    "basis": "Owner-held installed identity and original drafted reference; owner-authorized paid Meshy account. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "approach": "Material-only graft onto the fitted Tuskroot candidate from PR #658. Geometry, UVs, weights, nodes, skins and eleven animations retained unchanged; no new shape generation.",
+    "material": "Retexture with original UV enabled; new materials and embedded texture maps grafted onto fitted Tuskroot; metallic factor forced to zero, restrained ember finish needs native approval",
+    "colourway": "Disabled ashtusk_native_review ordinary and aspect texture lookup namespaces avoid applying incompatible installed Tuskroot variant repaints; no roster species added",
+    "export_triangles": 23956,
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "topology_warnings": [
+      "Mesh_0: 7856 non-manifold edges",
+      "Mesh_0: 4141 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 250 microscopic disconnected components",
+      "Mesh_0: ~1312 inward-facing faces",
+      "Mesh_0: 40 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ],
+    "height_m": 3.6,
+    "bones": 20,
+    "unweighted_vertices": 0,
+    "vertices": 11981,
+    "method": "Existing Tuskroot fitted rig and clips, preserved without re-authoring; material-only GLB graft",
+    "candidate_enabled": false,
+    "shared_body_subject": "tuskroot",
+    "preservation_checks": {
+      "subject": "ashtusk",
+      "candidate_enabled": false,
+      "raw_retexture_triangle_uv_mapping_unchanged": true,
+      "fitted_tuskroot_geometry_uv_weights_nodes_skins_animations_unchanged": true,
+      "original_binary_prefix_preserved": true,
+      "only_material_binding_and_new_material_textures_added": true,
+      "clips": 11,
+      "full_art_gate": false
+    },
+    "parent_candidate_pr": "https://github.com/MJohnsonWellabe/Tetherbound/pull/658",
+    "inherited_animation_source": "source/author_native_clips.py is the unchanged Tuskroot authoring source; its existing eleven animations are retained, not regenerated for Ashtusk."
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "before_height_m": 3.60000038146973,
+    "candidate_height_m": 3.59999990463257,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 whole-body Low role samples and front/reverse native scale. Raw receipts/captures outside Git.",
+    "world": "Matched production meadows CameraRig stage/seed/five poses per preset; fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "full_rig_and_motion": "OPEN",
+    "terminal_contact": "OPEN",
+    "topology": "OPEN",
+    "colour_variants": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Eleven clip names and still fixtures do not certify motion, ordinary gameplay paths, earned fights, swim/fly-grip or rider contact.",
+    "Retained topology/UV warnings require independent approval.",
+    "Candidate remains OFF until the complete art bar passes.",
+    "The original Ashtusk palette board and new Tuskroot reference in PR #658 guided a material-only image edit. Parent Tuskroot full motion/contact/topology gates remain OPEN."
+  ]
+}
