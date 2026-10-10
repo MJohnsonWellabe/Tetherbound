@@ -168,16 +168,21 @@ func _stand(peer: int, at: Vector3) -> bool:
 
 func _chest(peer: int, label: String) -> void:
 	if not await _stand(peer, _chest_at): return
-	var opened: Dictionary = await step(peer, "f28_chest", {"master_id": MASTER}, 1200)
+	# A guest's press waits for its own queued owner checkpoints (the duel's
+	# win and mastery duties) to settle, as a player's press stays open.
+	var opened: Dictionary = await step(peer, "f28_chest", {"master_id": MASTER, "budget_frames": 3600}, 4000)
 	_ok(opened, "%s ran (%s)" % [label, str(opened.get("data", {}))])
-	# A press refused for a revision that moved under it is pressed again.
-	var answers: Array = opened.get("data", {}).get("completed", []) + opened.get("data", {}).get("answers", [])
-	for answer: Variant in answers:
-		if answer is Dictionary and answer.get("code") == "source_or_revision_changed":
-			await step(peer, "wait", {"frames": 120})
-			var again: Dictionary = await step(peer, "f28_chest", {"master_id": MASTER}, 1200)
-			print("%s pressed again after a revision change: %s" % [label, str(again.get("data", {}))])
-			break
+	# A press refused for a revision that moved under it is pressed again,
+	# as a player would, a few times at most.
+	for attempt in 3:
+		var answers: Array = opened.get("data", {}).get("completed", []) + opened.get("data", {}).get("answers", [])
+		var moved := false
+		for answer: Variant in answers:
+			if answer is Dictionary and answer.get("code") == "source_or_revision_changed": moved = true
+		if not moved: break
+		await step(peer, "wait", {"frames": 120})
+		opened = await step(peer, "f28_chest", {"master_id": MASTER, "budget_frames": 3600}, 4000)
+		print("%s pressed again after a revision change: %s" % [label, str(opened.get("data", {}))])
 	await step(peer, "wait", {"frames": SETTLE_FRAMES})
 
 
