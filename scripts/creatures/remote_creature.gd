@@ -82,12 +82,12 @@ var owner_character_id: String = ""
 var deploy_species: String = ""
 var deploy_shiny: bool = false
 
-## The replicated set. Position and yaw are what this body is interpolated
-## toward; nothing else needs to cross the wire, because the animator derives
-## its gait from the velocity that interpolation produces.
+## Position and yaw drive interpolation; fainted mirrors accepted health only
+## for presentation, including healing and peers joining after the knockout.
 var net_position: Vector3 = Vector3.ZERO
 var net_yaw: float = 0.0
 var net_aquatic: Dictionary = {}
+var net_fainted := false
 var aquatic := AQUATIC_STATE.new()
 
 ## The trainer body this creature belongs to, so the companion layer has
@@ -116,6 +116,7 @@ var last_effect: String = ""
 
 var _render_position: Vector3 = Vector3.ZERO
 var _has_render: bool = false
+var _remote_fainted := false
 ## `null` until the first evaluation, so the first pass always applies. See
 ## this file's header for why it is re-read rather than cached at `_ready()`.
 var _owned_here: Variant = null
@@ -185,6 +186,8 @@ func setup(id: String, is_shiny: bool = false) -> void:
 	# Comparing two owned creatures' HP would invent damage or level feedback.
 	_sampled.clear()
 	super.setup(id, is_shiny)
+	# setup rebuilt the animator: apply the current presentation state again.
+	_remote_fainted = false
 
 
 ## Never the local player's own piloted creature: that is always the
@@ -317,8 +320,10 @@ func _publish_presentation() -> void:
 	var announced := str(get_meta(&"creature_uid", ""))
 	if not announced.is_empty() and (creature == null or str(creature.get("uid")) != announced):
 		_sampled.clear()
+		net_fainted = false
 		return
 	var after: Dictionary = PRESENTATION.sample(creature)
+	net_fainted = bool(after.get("fainted", false))
 	var before := _sampled
 	_sampled = after
 	for raw: Variant in PRESENTATION.diff(before, after):
@@ -473,6 +478,7 @@ func _hold_replicated_ground_plane() -> void:
 
 
 func _follow(delta: float) -> void:
+	_apply_remote_faint_pose()
 	if not net_aquatic.is_empty():
 		aquatic.owner_peer_id = get_multiplayer_authority()
 		aquatic.apply_remote_snapshot(net_aquatic, get_multiplayer_authority())
@@ -505,11 +511,15 @@ func _follow(delta: float) -> void:
 	# assigned never gets floor contact, and the animation layer reads real
 	# planar velocity.
 	var to := _render_position - global_position
+	var before_move := global_position
 	velocity = to / maxf(delta, 0.0001)
 	move_and_slide()
 	_hold_replicated_ground_plane()
 	if _animator != null:
-		_animator.call("tick", delta, Vector2(velocity.x, velocity.z).length(), _speed)
+		# Ground correction clears collision velocity after placing the proxy.
+		# Animate the displacement actually drawn, including that correction.
+		var moved := global_position - before_move
+		_animator.call("tick", delta, Vector2(moved.x, moved.z).length() / maxf(delta, 0.0001), _speed)
 	if _presence != null and is_instance_valid(_presence):
 		# After the follow step and before the next frame's, which is the order
 		# `follower_creature.gd` ticks its own: the presence layer's only
@@ -520,6 +530,19 @@ func _follow(delta: float) -> void:
 
 
 # --- lane 6.D: the presentation channel -------------------------------------------
+
+
+## The mirrored state owns terminal poses, not transient effect delivery.
+## A late KO event after healing cannot collapse a living companion again.
+func _apply_remote_faint_pose() -> void:
+	if net_fainted == _remote_fainted or _animator == null:
+		return
+	_remote_fainted = net_fainted
+	if _remote_fainted:
+		play_faint()
+	else:
+		revive_animation()
+
 
 ## Publish one presentation event about THIS body to every other peer.
 ##
@@ -548,6 +571,14 @@ func _rpc_presentation(kind: String, payload: Dictionary) -> void:
 func play_presentation(kind: String, payload: Dictionary = {}) -> Node:
 	if not PRESENTATION.is_kind(kind):
 		return null
+	if kind == PRESENTATION.KIND_HIT:
+		# The existing event is the owner's report of host-resolved damage.
+		# Presence must release its additive pose before the full hurt clip.
+		if _presence != null and is_instance_valid(_presence):
+			_presence.call("_suspend", "hit_pose")
+		play_hit()
+	elif kind == PRESENTATION.KIND_KNOCKOUT:
+		_apply_remote_faint_pose()
 	presentation_plays += 1
 	last_presentation = kind
 	var spawned := PRESENTATION.play(self, kind, payload)

@@ -163,7 +163,8 @@ func set_traversal_role(role: String) -> void:
 
 
 func owns_pose() -> bool:
-	return _finished or not _traversal_role.is_empty()
+	return _finished or not _traversal_role.is_empty() \
+		or (_candidate_pose_active and _hold > 0.0)
 
 
 func bind_candidate_pivot(pivot: Node3D) -> void:
