@@ -1938,14 +1938,14 @@ func _physics_process(delta: float) -> void:
 		# travel, and the floor contact absorbs the downward pinning bias.
 		velocity = Vector3.ZERO
 		_rest_slide_skipped += 1
-	elif slide_time_scale != 1.0:
-		var scale := slide_time_scale
-		velocity *= scale
-		move_and_slide()
-		velocity /= scale
-		_note_rest_slide()
 	else:
+		# One sweep per step; a far-LOD step covers its whole elapsed time.
+		var scale := slide_time_scale
+		if scale != 1.0:
+			velocity *= scale
 		move_and_slide()
+		if scale != 1.0:
+			velocity /= scale
 		_note_rest_slide()
 	_environment_velocity.after_slide(self)
 	_hold_contact_spacing(delta)
