@@ -34,7 +34,10 @@ const COMBAT_PILOT := preload("res://tools/combat_pilot.gd")
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const DEFAULT_SCENE := "res://scenes/world/meadows_playground.tscn"
 const SLOT_DIR := "user://f03_lure_walk_slots/"
-const SLOT := 1
+## `--slot=`: the slot the save is loaded from (default 1). Generated boundary
+## saves (tools/earned_saves/generate_boundary_save.gd) publish in slot 0, the
+## slot their retained world journal is bound to.
+var SLOT := 1
 
 const SETTLE_FRAMES := 300
 ## `--budget-s=` overrides (Juno's patrol is 1.6 km and five road fights
@@ -129,7 +132,8 @@ func _run() -> void:
 			_save_path = a.trim_prefix("--save=")
 		elif a.begins_with("--save-dir="):
 			_save_dir = a.trim_prefix("--save-dir=").trim_suffix("/")
-			_save_path = _save_dir + "/slot_%d.json" % SLOT
+		elif a.begins_with("--slot="):
+			SLOT = int(a.trim_prefix("--slot="))
 		elif a.begins_with("--budget-s="):
 			WALK_BUDGET_S = float(a.trim_prefix("--budget-s="))
 		elif a.begins_with("--via="):
@@ -145,6 +149,8 @@ func _run() -> void:
 			_probe_stands = true
 		elif a.begins_with("--capture-dir="):
 			_capture_dir = a.trim_prefix("--capture-dir=")
+	if not _save_dir.is_empty():
+		_save_path = _save_dir + "/slot_%d.json" % SLOT
 	if not _activity in ["bram", "herd", "vault", "doss", "juno", "hall", "cart"] \
 			or not _save_path.is_absolute_path() or not FileAccess.file_exists(_save_path) \
 			or not _capture_dir.is_absolute_path():
