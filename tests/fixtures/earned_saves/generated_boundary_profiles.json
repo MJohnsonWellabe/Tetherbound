@@ -21,6 +21,35 @@
       "personal_flags": [],
       "inventory_add": {},
       "disclosure": "Generated healthy post-Warrens five at L15 with generated breakthrough caps, matching the Relay officers band. Ordered UIDs/species, original inventory and prior route flags retained. Levels, caps and full HP are setup; no earned feast, XP or recovery witness is claimed."
+    },
+    "hall": {
+      "boundary": "relay",
+      "realm": "meadows",
+      "day": 6,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "ground_xz": [
+          -152.0,
+          4235.0
+        ]
+      },
+      "party_levels": [
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored"
+      ],
+      "personal_flags": [],
+      "inventory_add": {},
+      "disclosure": "Generated completed Relay/Mill far-bank five at L15, the chapter_curve band3 exit (team.exit 15) an earned run reaches here, with the generated first breakthrough (cap 20) so captain XP is earned on the route. Ordered UIDs/species and original inventory retained. Zero Mill gear and no next captain, Sigil or Hall outcome. Exact live ground pose saved during setup. No earned feast, XP or recovery witness is claimed."
     }
   }
 }
