@@ -241,8 +241,10 @@ def rotation(bone, role, phase, winged, biped, wing_folds=None):
 
 def main():
     species = json.loads((ROOT / 'data/creatures/species.json').read_text())['species']
+    installed = json.loads(OUT.read_text()) if OUT.exists() else {}
     rows = {}
     profiles = {}
+    dedicated_profiles = {}
     rig_profiles = {}
     for name, definition in species.items():
         path = ROOT / definition['placeholder']['model'].replace('res://', '')
@@ -258,6 +260,27 @@ def main():
         uid_match = re.search(r'^uid="([^"]+)"$', Path(str(path) + '.import').read_text(), re.MULTILINE)
         if uid_match is None:
             raise ValueError(f'{name}: missing stable Godot import UID')
+        if name == 'stormursa':
+            # Adult Stormursa deliberately replaces all eleven roles, rather
+            # than borrowing the five-role quadruped repair shared by cubs.
+            # Preserve its authored recipe; a changed mesh needs re-authoring,
+            # not a silent generic fallback which removes evolution readiness.
+            saved = installed.get('species', {}).get(name, {})
+            profile_id = saved.get('profile', '')
+            roles = installed.get('profiles', {}).get(profile_id, {})
+            required = {'idle', 'walk', 'run', 'attack', 'charged', 'hit',
+                        'faint', 'rest', 'swim', 'fly_grip', 'ride'}
+            expected = {'model': definition['placeholder']['model'],
+                        'source_sha256': hashlib.sha256(raw).hexdigest(),
+                        'resource_uid': uid_match.group(1), 'bones': bones,
+                        'rig_contract': rig, 'bind_contract': binds}
+            if (any(saved.get(key) != value for key, value in expected.items())
+                    or not required.issubset(roles)
+                    or not {'faint', 'rest'}.issubset(saved.get('grounded_roles', []))):
+                raise ValueError('Stormursa dedicated pose recipe is missing or stale; re-author it for the installed rig')
+            rows[name] = saved
+            dedicated_profiles[profile_id] = roles
+            continue
         winged = 'wing_upper_l' in bones
         biped = 'arm_l' in bones
         family = 'winged' if winged else 'biped' if biped else 'quadruped'
@@ -288,6 +311,8 @@ def main():
         rig_profiles[signature] = profile
         row['profile'] = profile
         rows[name] = row
+    # Append after generic authoring so its stable profile numbering is intact.
+    profiles.update(dedicated_profiles)
     OUT.write_text(json.dumps({'enabled_species': list(rows), 'rig_tolerance': .0001,
                                'scope': 'presentation_only_no_save_or_network_payload',
                                'status': 'owner_enabled_phase1_visual_acceptance_pending',
