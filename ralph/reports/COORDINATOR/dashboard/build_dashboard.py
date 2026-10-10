@@ -272,8 +272,21 @@ if _plan_path.exists():
         return t.astimezone(_CT).strftime("%a %d %b %-I:%M %p")
 
     TRACK = {"done": "Done", "on_track": "On track", "behind": "Behind", "late": "Late",
-             "planned": "Planned", "early": "Started early"}
-    track_rows, lane_html, counts_t = [], [], {}
+             "planned": "Not started", "early": "Started early"}
+    # Owner 10-10 ("make the delivery plan more legible"): the chart shows only the
+    # current baseline's window, labelled by day; each bar carries its full name and
+    # done/total; a plain summary and a slim table replace the expected-% columns.
+    v0 = min(float(b["start"]) for l in plan["lanes"] for b in l["bars"])
+    v1 = max(float(b["end"]) for l in plan["lanes"] for b in l["bars"])
+    span = max(0.01, v1 - v0)
+
+    def x(pos):
+        return 100.0 * (pos - v0) / span
+
+    def short(t):
+        return t.astimezone(_CT).strftime("%a %-d %b")
+
+    track_rows, lane_html, counts_t, now_items = [], [], {}, []
     for lane in plan["lanes"]:
         bars = []
         for b in lane["bars"]:
@@ -293,47 +306,61 @@ if _plan_path.exists():
             else:
                 st = "behind"
             counts_t[st] = counts_t.get(st, 0) + 1
-            left, width = 100 * s0 / n_sprints, 100 * (e0 - s0) / n_sprints
-            tip = (f'{b["label"]}: {fmt(at(s0))} to {fmt(at(e0))} {at(s0).tzname()}. '
-                   f'{done}/{n} criteria done or owner-blocked, {actual:.0f}% met (expected now {expected:.0f}%). {TRACK[st]}.')
+            name = b["label"].split(" — ")[0]
+            tip = (f'{name}: {fmt(at(s0))} to {fmt(at(e0))} {at(s0).tzname()}. '
+                   f'{done} of {n} criteria done. {actual:.0f}% met, {expected:.0f}% expected by now. {TRACK[st]}.')
             bars.append(
-                f'<div class="gbar t-{st}" style="left:{left:.3f}%;width:{width:.3f}%" title="{E(tip)}">'
+                f'<div class="gbar t-{st}" style="left:{x(s0):.3f}%;width:{x(e0) - x(s0):.3f}%" title="{E(tip)}">'
                 f'<span class="gfill" style="width:{actual:.0f}%"></span>'
-                f'<span class="glabel">{E(b["label"].split(" ")[0])}</span></div>')
+                f'<span class="glabel">{E(name)} <span class="gcount">{done}/{n}</span></span></div>')
+            note = " · ".join(filter(None, [", ".join(b.get("depends", [])), b.get("note", "")]))
             track_rows.append(
-                f'<tr class="t-{st}"><td>{E(lane["id"])}</td><td>{E(b["label"])}</td>'
-                f'<td>S{int(s0) + 1}{"½" if s0 % 1 else ""} → S{int(e0 - 0.001) + 1}{"½" if e0 % 1 else ""}'
-                f'<br><span class="meta">{fmt(at(s0))} → {fmt(at(e0))}</span></td>'
-                f'<td class="num">{done}/{n}</td><td class="num">{base:.0f}%</td><td class="num">{expected:.0f}%</td>'
-                f'<td class="num">{actual:.0f}%</td><td><span class="tpill t-{st}">{TRACK[st]}</span></td>'
-                f'<td>{E(", ".join(b.get("depends", [])))}{(" · " + E(b["note"])) if b.get("note") else ""}</td></tr>')
+                f'<tr class="t-{st}"><td>{E(lane["id"])}</td><td>{E(name)}'
+                f'{("<br><span class=meta>" + E(note) + "</span>") if note else ""}</td>'
+                f'<td>{short(at(s0))} → {short(at(e0))}</td>'
+                f'<td class="num">{done} / {n}</td><td><span class="tpill t-{st}">{TRACK[st]}</span></td></tr>')
+            if lane.get("id") != "owner" and s0 <= now_pos < e0:
+                now_items.append(f'<li><b>{E(lane["name"].split(" · ")[0])}</b>: {E(name)} '
+                                 f'<span class="meta">({done} of {n} done, ends {short(at(e0))})</span> '
+                                 f'<span class="tpill t-{st}">{TRACK[st]}</span></li>')
         lane_html.append(
-            f'<div class="glane"><div class="gname">{E(lane["name"])}<span class="meta">{E(lane.get("session", ""))}</span></div>'
+            f'<div class="glane"><div class="gname">{E(lane["name"].split(" · ")[0])}'
+            f'<span class="meta">{E(lane["name"].split(" · ", 1)[1] if " · " in lane["name"] else "")}</span></div>'
             f'<div class="gtrack">{"".join(bars)}</div></div>')
-    heads = "".join(
-        f'<div class="gs" style="left:{100 * i / n_sprints:.3f}%;width:{100 / n_sprints:.3f}%">'
-        f'<b>S{i + 1}</b><span>{at(i).strftime("%a %-I %p")}</span></div>' for i in range(n_sprints))
-    now_html = (f'<div class="gnow" style="left:{100 * now_pos / n_sprints:.3f}%"><span>now</span></div>'
-                if 0 <= now_pos <= n_sprints else "")
-    cur = int(now_pos) + 1 if now_pos >= 0 else 0
+    # Day ticks (Chicago midnight) across the window.
+    days, d = [], at(v0).replace(hour=0, minute=0, second=0, microsecond=0) + _dt.timedelta(days=1)
+    while d <= at(v1):
+        pos = v0 + (d - at(v0)).total_seconds() / 3600.0 / p_hours
+        days.append((pos, d))
+        d += _dt.timedelta(days=1)
+    heads = "".join(f'<div class="gs" style="left:{x(pos):.3f}%"><b>{dd.strftime("%a")}</b><span>{dd.strftime("%-d %b")}</span></div>'
+                    for pos, dd in days)
+    grid = "".join(f'<i class="gday" style="left:{x(pos):.3f}%"></i>' for pos, _ in days)
+    now_html = (f'<div class="gnow" style="left:{x(now_pos):.3f}%"><span>now</span></div>'
+                if v0 <= now_pos <= v1 else "")
     # Finish = end of the last lane bar (owner-only items follow it; owner 2026-10-07).
     finish = at(max(float(b["end"]) for l in plan["lanes"] if l.get("id") != "owner" for b in l["bars"]))
-    tsum = " · ".join(f'{TRACK[k]} {v}' for k, v in counts_t.items())
+    tsum = " · ".join(f'{v} {TRACK[k].lower()}' for k, v in counts_t.items())
+    open_c = sum(1 for x_ in all_c if norm(x_.get("status")) != "met")
     plan_html = f"""
   <section class="panel gantt-panel" aria-labelledby="plan-h"><h2 id="plan-h">Delivery plan</h2>
-    <p class="meta">Baseline set {E(plan.get("baseline_set", ""))} · sprint = {p_hours:.0f} h, back to back from {fmt(p_start)} {at(0).tzname()} ·
-      now in <b>sprint {cur} of {n_sprints}</b> · planned finish {fmt(finish)} {finish.tzname()} · {E(tsum)}</p>
-    <p class="note">Each bar is a feature a lane takes to done (every criterion met or blocked on the owner). The darker fill is the share of that bar's
-      criteria met now (partial, in-progress and blocked add nothing). Status compares it with a straight-line expectation from the bar's frozen starting progress: within 15 points is on track.
-      Past its end and not done is late.</p>
+    <div class="gsum">
+      <div><span class="meta">Lane work projected to finish</span><b>{fmt(finish)} {finish.tzname()}</b></div>
+      <div><span class="meta">Criteria met</span><b>{len(all_c) - open_c} of {len(all_c)}</b></div>
+      <div><span class="meta">Bars</span><b>{E(tsum)}</b></div>
+    </div>
+    <h3>Now</h3>
+    <ul class="gnowlist">{"".join(now_items)}</ul>
+    <p class="note">Each bar is one piece of work a lane takes to done. The darker fill is the share of its criteria met; the count is done / total.
+      Hover a bar for dates and expected progress. Owner items (ROG Ally test, play pass, release) follow the lanes.</p>
     <div class="gscroll"><div class="gantt">
       <div class="glane ghead"><div class="gname"></div><div class="gtrack">{heads}{now_html}</div></div>
-      {"".join(lane_html)}
+      {"".join(l.replace('<div class="gtrack">', '<div class="gtrack">' + grid, 1) for l in lane_html)}
     </div></div>
     <div class="glegend">{"".join(f'<span class="tpill t-{k}">{v}</span>' for k, v in TRACK.items())}</div>
-    <div class="tbl"><table><thead><tr><th>Lane</th><th>Feature</th><th>Planned window</th><th>Criteria</th><th>At baseline</th><th>Expected now</th><th>Actual</th><th>Status</th><th>Depends on / notes</th></tr></thead>
+    <div class="tbl"><table><thead><tr><th>Lane</th><th>Work</th><th>Dates (CT)</th><th>Done</th><th>Status</th></tr></thead>
     <tbody>{"".join(track_rows)}</tbody></table></div>
-    <p class="note">Rebaselines: {E("; ".join(plan.get("rebaselines", [])) or "none")}.</p>
+    <details class="note"><summary>Rebaseline history</summary><ul>{"".join(f"<li>{E(r)}</li>" for r in plan.get("rebaselines", []))}</ul></details>
   </section>"""
 
 # A complete document (owner report, 2026-09-30): the board is also served raw by
@@ -419,18 +446,22 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 #tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
 #tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan]{{outline:2px solid var(--accent)}}
 .pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan{{display:grid}}
-.gscroll{{overflow-x:auto}} .gantt{{min-width:880px;display:grid;gap:6px}}
+.gscroll{{overflow-x:auto}} .gantt{{min-width:980px;display:grid;gap:6px}}
 .glane{{display:grid;grid-template-columns:190px minmax(0,1fr);gap:10px;align-items:center}}
 .gname{{font-weight:600;font-size:13px;display:grid}} .gname .meta{{font-weight:400;font-size:11.5px}}
-.gtrack{{position:relative;height:30px;background:repeating-linear-gradient(90deg,var(--tint-none) 0 1px,transparent 1px calc(100%/13));border-radius:6px}}
+.gtrack{{position:relative;height:30px;background:var(--tint-none);border-radius:6px}}
+.gday{{position:absolute;top:0;bottom:0;border-left:1px solid var(--line)}}
+.gcount{{font-weight:400;opacity:.8}}
+.gsum{{display:flex;flex-wrap:wrap;gap:24px}} .gsum div{{display:grid;gap:2px}} .gsum b{{font-size:18px}}
+.gnowlist{{margin:0;padding-left:18px;display:grid;gap:6px}}
 .ghead .gtrack{{background:none;height:34px;margin-top:12px}}
-.gs{{position:absolute;top:0;display:grid;font-size:11px;color:var(--muted);padding-left:4px;border-left:1px solid var(--line)}}
+.gs{{position:absolute;top:0;display:grid;font-size:11px;color:var(--muted);padding-left:4px;border-left:1px solid var(--line);white-space:nowrap}}
 .gs b{{font:600 12px "JetBrains Mono",monospace;color:var(--ink)}}
 .gnow{{position:absolute;top:0;bottom:-600px;border-left:2px solid var(--fail);z-index:3;pointer-events:none}}
 .gnow span{{position:absolute;top:-14px;left:-12px;font:600 10px "JetBrains Mono",monospace;color:var(--fail);text-transform:uppercase}}
 .gbar{{position:absolute;top:3px;height:24px;border-radius:5px;overflow:hidden;background:var(--tc-tint);border:1px solid var(--tc)}}
 .gfill{{position:absolute;inset:0 auto 0 0;background:var(--tc);opacity:.45}}
-.glabel{{position:relative;font:600 11px "JetBrains Mono",monospace;padding:0 5px;line-height:22px;white-space:nowrap;color:var(--ink)}}
+.glabel{{position:relative;display:block;font:600 11.5px system-ui,sans-serif;padding:0 6px;line-height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}}
 .t-done{{--tc:var(--met);--tc-tint:var(--tint-met)}} .t-on_track{{--tc:var(--prog);--tc-tint:var(--tint-prog)}}
 .t-behind{{--tc:var(--partial);--tc-tint:var(--tint-partial)}} .t-late{{--tc:var(--fail);--tc-tint:var(--tint-fail)}}
 .t-planned{{--tc:var(--none);--tc-tint:var(--tint-none)}} .t-early{{--tc:var(--block);--tc-tint:var(--tint-block)}}
@@ -450,7 +481,7 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   <div class="top">
     <span class="eyebrow">Project update · F01–{E(last_id)} acceptance</span>
     <h1>Tetherbound Acceptance Board</h1>
-    <p class="meta">Updated {E(status.get("updated", crit.get("generated_at", "")))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
+    <p class="meta">Updated {E(crit.get("generated_at") or status.get("updated", ""))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
   </div>
   <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-plan">Delivery plan</label></nav>
   <div class="pane pane-plan">{plan_html}</div>
