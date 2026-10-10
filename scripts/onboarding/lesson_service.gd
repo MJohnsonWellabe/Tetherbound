@@ -72,6 +72,7 @@ func _process(_delta: float) -> void:
 				row = due_candidate.duplicate(true)
 				break
 	if row.is_empty() or not _teacher_near(row): return
+	row = RULES.lesson(row, player)
 	# Content lives with its installed speaker's dialogue, with no reward effects.
 	var dialogue: Variant = preload("res://scripts/data/redesign_data.gd").json(str(row.dialogue_path))
 	var conversation: Dictionary = dialogue.get("conversations", {}).get(str(row.conversation), {}) if dialogue is Dictionary else {}

@@ -29,11 +29,7 @@ static func available(id: String, player: RefCounted) -> bool:
 			for essence: Dictionary in DATA.json_view("res://data/schema/essences.json"):
 				if inventory.call("count", str(essence.id)) > 0: return true
 		"masters":
-			var party: RefCounted = player.get("party")
-			for index: int in party.call("size"):
-				var creature: RefCounted = party.call("at", index)
-				var mirror: Dictionary = state.get("creatures", {}).get(str(creature.get("uid")), {})
-				if int(creature.get("level")) == 10 and BREAKTHROUGH.level_cap(mirror.get("breakthroughs", [])) == 10: return true
+			return not capped_master(player).is_empty()
 		"feasts": return not state.get("feast_recipes", []).is_empty()
 		"traits": return not state.get("release_receipts", []).is_empty()
 		"portals":
@@ -46,14 +42,14 @@ static func available(id: String, player: RefCounted) -> bool:
 static func due(player: RefCounted) -> Dictionary:
 	for row: Dictionary in _config_view().get("lessons", []):
 		if available(str(row.id), player) and player.get("flags").call("has", PREFIX + str(row.id)) != true:
-			return row.duplicate(true)
+			return lesson(row, player)
 	return {}
 
-static func guidance(player: RefCounted) -> Dictionary:
-	if _config_view().get("enabled") != true or player == null: return {}
-	# Preserve the required opening's one next action. Tutorials don't replace
-	# naming, real catch, Mira's kit or the tournament readiness chain.
-	if player.get("flags").call("has", "tournament_entered") != true: return {}
+## A returning character can first meet Tam at any of the five caps. The
+## installed Master data and this character's own breakthrough mirror decide
+## which lesson goal to show; the host's progress never supplies it.
+static func capped_master(player: RefCounted) -> Dictionary:
+	if player == null: return {}
 	var state: Dictionary = player.get("redesign_character")
 	var party: RefCounted = player.get("party")
 	for index: int in party.call("size"):
@@ -62,17 +58,32 @@ static func guidance(player: RefCounted) -> Dictionary:
 		var cap := BREAKTHROUGH.level_cap(mirror.get("breakthroughs", []))
 		if int(creature.get("level")) != cap: continue
 		for master: Dictionary in BREAKTHROUGH.masters().get("masters", []):
-			if int(master.cap_level) != cap: continue
-			var row := _row("masters")
-			row["goal_realm"] = preload("res://scripts/data/biome_order.gd").runtime_id(str(master.biome))
-			row["goal_at"] = [master.position[0], master.position[2]]
-			row["goal"] = "Challenge %s for the L%d feast recipe." % [str(master.name), cap]
-			if state.get("master_wins", []).has(master.id): row["goal"] = "Open %s's recipe chest." % str(master.name)
-			if state.get("feast_recipes", []).has(master.feast_id):
-				row["goal"] = "Cook the L%d feast at home, then feed your capped creature." % cap
-				row["goal_realm"] = "meadows"
-				row["goal_at"] = [2, 14]
-			return row
+			if int(master.cap_level) == cap: return master.duplicate(true)
+	return {}
+
+static func lesson(authored: Dictionary, player: RefCounted) -> Dictionary:
+	var row := authored.duplicate(true)
+	if row.get("id") != "masters": return row
+	var master := capped_master(player)
+	if master.is_empty(): return row
+	var state: Dictionary = player.get("redesign_character")
+	row["goal_realm"] = preload("res://scripts/data/biome_order.gd").runtime_id(str(master.biome))
+	row["goal_at"] = [master.position[0], master.position[2]]
+	row["goal"] = "Challenge %s for the L%d feast recipe." % [str(master.name), int(master.cap_level)]
+	if state.get("master_wins", []).has(master.id): row["goal"] = "Open %s's recipe chest." % str(master.name)
+	if state.get("feast_recipes", []).has(master.feast_id):
+		row["goal"] = "Cook the L%d feast at home, then feed your capped creature." % int(master.cap_level)
+		row["goal_realm"] = "meadows"
+		row["goal_at"] = [2, 14]
+	return row
+
+static func guidance(player: RefCounted) -> Dictionary:
+	if _config_view().get("enabled") != true or player == null: return {}
+	# Preserve the required opening's one next action. Tutorials don't replace
+	# naming, real catch, Mira's kit or the tournament readiness chain.
+	if player.get("flags").call("has", "tournament_entered") != true: return {}
+	var state: Dictionary = player.get("redesign_character")
+	if not capped_master(player).is_empty(): return lesson(_row("masters"), player)
 	var inventory: RefCounted = player.get("inventory")
 	for biome: String in ["tidewake", "cloudreach", "stormwood"]:
 		if inventory.call("count", biome + "_portal_key") > 0 and not state.get("portal_unlocks", []).has(biome):
