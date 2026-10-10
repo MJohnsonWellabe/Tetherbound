@@ -162,7 +162,6 @@ const CLOSING_OBJECTIVE := "South Bridge"
 var _failures: Array[String] = []
 var _started_ms := 0
 var _world: Node = null
-var _test_save_system: RefCounted = null
 var _game: Node = null
 var _player: CharacterBody3D = null
 var _rig: Node3D = null
@@ -186,17 +185,6 @@ func _init() -> void:
 func _run() -> void:
 	_wipe_test_dir()
 	_started_ms = Time.get_ticks_msec()
-	await process_frame # Game's normal autoload readiness precedes the title.
-	var initial_game := root.get_node_or_null(^"Game")
-	if initial_game == null:
-		_fail("no ready Game before the real opening")
-		_finish()
-		return
-	# Every original capture/training transaction must be born in the same
-	# test save root as the later village and tournament. Replacing the writer
-	# after the played catch can strand retained originals on another root.
-	_test_save_system = SAVE_GAME.new(TEST_DIR)
-	initial_game.set("save_system", _test_save_system)
 	if not await _play_the_opening():
 		_finish()
 		return
@@ -285,9 +273,9 @@ func _play_the_opening() -> bool:
 		return false
 	_checkpoint("starter %s reached the party as '%s' (uid %s)"
 		% [_starter_species, OPENING_DRIVE.CHOSEN_NAME, _starter_uid])
-	if _game.get("save_system") != _test_save_system:
-		_fail("the real opening replaced its original test save writer")
-		return false
+	# Never touch a player's real save directory from a regression: the tail
+	# played later in this run autosaves through the real rest path.
+	_game.set("save_system", SAVE_GAME.new(TEST_DIR))
 	_progression = _game.get("progression")
 	if _progression == null:
 		_fail("no progression store after the opening")

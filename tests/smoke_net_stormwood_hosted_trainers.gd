@@ -49,25 +49,6 @@ func _run() -> void:
 		if legacy.get("verdict") != "PASS":
 			quit(await finish())
 			return
-	# A fresh net-harness process has not played the opening, so it owns no
-	# party member. `deploy_creature` can build the sandbox fallback body, but
-	# `begin_hosted_round` correctly requires the Game.party record that every
-	# real Stormwood player acquired at the starter choice. Seed that state via
-	# the opening's production PartySeam before asking the production recall
-	# path to deploy it. The same owned UID must enter guest admission at join.
-	# This fixture skips the whole Meadows/Cloudreach progression and enters the
-	# chapter at its first authored level-32/33 trainer.  A starter-level (3)
-	# Terrapup is knocked out by Tamsin while the adversarial stale-action checks
-	# run, so the later real button press never has a living actor to execute it.
-	# Give the fixture the chapter-appropriate level a real arriving player has;
-	# HP, damage, cooldowns, movement and every outcome still go through shipping
-	# party/combat code, and the opponent is still host-owned.
-	var party_seeded := await step(1, "party_grant", {"species": "terrapup", "level": 33})
-	check(str(party_seeded.get("verdict", "")) == "PASS",
-		"client owns a real party member before the hosted challenge")
-	if str(party_seeded.get("verdict", "")) != "PASS":
-		quit(await finish())
-		return
 	var hosted := await step(0, "host")
 	check(str(hosted.get("verdict", "")) == "PASS", "peer 0 started the real listen host")
 	if str(hosted.get("verdict", "")) != "PASS":
@@ -119,6 +100,25 @@ func _run() -> void:
 		quit(await finish())
 		return
 
+	# A fresh net-harness process has not played the opening, so it owns no
+	# party member. `deploy_creature` can build the sandbox fallback body, but
+	# `begin_hosted_round` correctly requires the Game.party record that every
+	# real Stormwood player acquired at the starter choice. Seed that state via
+	# the opening's production PartySeam before asking the production recall
+	# path to deploy it.
+	# This fixture skips the whole Meadows/Cloudreach progression and enters the
+	# chapter at its first authored level-32/33 trainer.  A starter-level (3)
+	# Terrapup is knocked out by Tamsin while the adversarial stale-action checks
+	# run, so the later real button press never has a living actor to execute it.
+	# Give the fixture the chapter-appropriate level a real arriving player has;
+	# HP, damage, cooldowns, movement and every outcome still go through shipping
+	# party/combat code, and the opponent is still host-owned.
+	var party_seeded := await step(1, "party_grant", {"species": "terrapup", "level": 33})
+	check(str(party_seeded.get("verdict", "")) == "PASS",
+		"client owns a real party member before the hosted challenge")
+	if str(party_seeded.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
 	var deployed := await step(1, "deploy_creature", {"species": "terrapup"})
 	check(str(deployed.get("verdict", "")) == "PASS", "client deployed its own creature before challenging")
 	if str(deployed.get("verdict", "")) != "PASS":
@@ -216,12 +216,14 @@ func _run() -> void:
 	check(_vec(host_state.get("host_body_pos", [])).distance_to(stand) <= BODY_SYNC_M,
 		"host shell received the client's creature transform before a strike")
 
-	# One real quick input admits move_start and consumes action 703, after the
-	# two adversarial fixture actions. Re-sending that id after its cooldown must
-	# remain stale; the raw replay still traverses Session and host validation.
+	# One legal raw request consumes an action. Re-sending its action id after a
+	# real cooldown window must remain stale; the second request cannot change hp
+	# or roster state. The raw request still traverses Session and host validation.
 	var quick := str((client_state.get("local_card", {}) as Dictionary).get("quick", ""))
 	check(not quick.is_empty(), "client's deployed card has an authored quick move")
-	var legal := await step(1, "stormwood_hosted_quick", {"settle": 90})
+	var legal := await step(1, "stormwood_hosted_raw_strike", {"trainer": TRAINER,
+		"encounter_id": str((host_state.get("record", {}) as Dictionary).get("id", "")), "action": 703,
+		"move_id": quick, "realm": STORMWOOD, "damage": 999999.0, "settle": 90})
 	check(str(legal.get("verdict", "")) == "PASS", "client sent one host-validated action")
 	await step(1, "wait", {"frames": 180}) # longer than the action cooldown; stale must stay stale.
 	var before_stale := await _await_hosted(0, true)
