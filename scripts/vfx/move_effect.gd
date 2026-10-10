@@ -60,7 +60,12 @@ func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 	_to = to
 	_row = row.duplicate(true)
 	_context = context
-	_config = config.duplicate(true)
+	# The resolved row already owns this effect's authored content. Snapshot
+	# only the scalar limits used here instead of cloning all 24 archetypes
+	# (and their variants/mastery rows) on every landed attack.
+	_config = {}
+	for key: String in ["ordinary_particle_limit", "ultimate_particle_limit", "encounter_particle_cap", "scene_light_cap"]:
+		if config.has(key): _config[key] = config[key]
 	_params = _row.parameters
 	_travel = travel
 	_colour = Color(str(_params.get("colour", "#e4c67d")))
