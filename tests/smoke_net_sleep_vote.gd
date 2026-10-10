@@ -95,6 +95,12 @@ func _run() -> void:
 		quit(await finish())
 		return
 
+	# F47#4: only a vote inside the night window reaches a morning, and the
+	# host's hour decides it. Disclosed fixture: the host's clock is snapped to
+	# night (world_look.apply_time); the client follows the host's clock.
+	var night: Dictionary = await step(0, "apply_time", {"time": "night"})
+	check(str(night.get("verdict", "")) == "PASS", "the host's clock is at night (%s)" % str(night.get("detail", "")))
+
 	# --- one player lies down ---------------------------------------------------
 
 	for i in 2:
