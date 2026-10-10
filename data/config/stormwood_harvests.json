@@ -4647,12 +4647,12 @@
     },
     "stormglass_crown": {
       "kind": "shards",
-      "count": 7,
+      "count": 5,
       "radius_m": 0.7,
-      "height_m": 1.45,
+      "height_m": 2.1,
       "lift_m": 0.0,
-      "colour": "#b49cff",
-      "emission": 0.6,
+      "colour": "#e2c681",
+      "emission": 0.45,
       "albedo_shade": 0.55,
       "ring_m": 1.85,
       "width_m": 0.36

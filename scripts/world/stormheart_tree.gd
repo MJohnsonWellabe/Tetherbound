@@ -862,6 +862,8 @@ func _green_canopy(node: Node) -> void:
 					corrected.set_shader_parameter("leaf_colour", Color(str(canopy.get("leaf_colour", "#75924d"))))
 					corrected.set_shader_parameter("alpha_cutoff", source.alpha_scissor_threshold)
 					corrected.set_shader_parameter("leaf_roughness", float(canopy.get("roughness", 0.91)))
+					corrected.set_shader_parameter("wind_amplitude_m", float(canopy.get("wind_amplitude_m", 0.16)))
+					corrected.set_shader_parameter("wind_speed", float(canopy.get("wind_speed", 0.85)))
 					visual.set_surface_override_material(i, corrected)
 					continue
 				var green := source.duplicate() as StandardMaterial3D
