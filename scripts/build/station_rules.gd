@@ -17,6 +17,13 @@ static func config() -> Dictionary:
 		_cached = _load_config()
 	return _cached.duplicate(true)
 
+## `config().runtime_enabled` without the deep copy, for per-frame checks
+## (build_placer reads it every physics tick; the copy cost ~0.6 ms a call).
+static func runtime_enabled() -> bool:
+	if not _loaded:
+		config()
+	return _cached.get("runtime_enabled") == true
+
 static func _load_config() -> Dictionary:
 	var raw: Variant = DATA.json(CONFIG)
 	if not raw is Dictionary: return {}
