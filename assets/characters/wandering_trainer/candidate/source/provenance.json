@@ -1,0 +1,142 @@
+{
+  "subject": "wandering_trainer",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "full_art_bar_pass": false,
+  "disposition": "Disabled identity-preserving material refinement of the existing installed NPC; no new character or body.",
+  "reference_provenance": {
+    "subject": "wandering_trainer",
+    "reference": "assets/characters/wandering_trainer/reference/native-face-material-v1.png",
+    "method": "built_in_imagegen",
+    "identity_reference": [
+      "Installed wandering_trainer_lod0.glb, rendered close front and three-quarter views"
+    ],
+    "prompt": "Draft one identity-preserving Tetherbound production FACE MATERIAL reference using the supplied front and three-quarter close renders of the SAME installed wandering trainer. A centered three-quarter head and very short neck only, including his complete existing dark brown broad-brimmed travel hat with its thin grey cord and two small tan leaf ornaments. Preserve the same middle-aged man's age, warm light-tan complexion, long rounded nose, narrow oval head, slightly pointed chin, thick dark eyebrows, warm dark brown eyes, short dark brown hair, and the same short dark moustache and connected goatee/stubble outline. Keep his serious but approachable slightly concerned expression and closed mouth; not a heroic new identity, not younger, not a different ethnicity. Refine readability and finish of the EXISTING face: coherent warm skin colour groups with soft restrained cheek shading, clean eyelids and readable dark pupils, softened age lines, crisp brows and facial-hair edges, no mottled brown speckles or photoreal pores, no heavy makeup or plastic shine. Preserve the exact hat shape, colour, cord and ornaments as identity direction, with no new accessory. No shoulders, backpack, scarf, coat, torso, hands or full body in this reference. Plain pale-grey studio background, neutral even illumination, stylized premium game character material study, complete hat brim and face fully inside the image with generous margins. One original directional image, no text, labels, ruler, panel grid or watermark. The installed geometry, body/clothes/hat, skeleton and clips will be preserved; this reference is for a scoped face-material refinement, not a new humanoid or silhouette.",
+    "default_enabled": false,
+    "scope": "Face material only; preserve installed geometry, body/clothes/hat, rig and all clips",
+    "selected_origin": "exec-557cbc92-6635-4ee3-84bb-0b530daaa742",
+    "inspection": {
+      "identity": "Same middle-aged serious traveler, long nose, dark eyes/brows, dark moustache/goatee, original brown hat/cord/tan leaf ornaments",
+      "framing": "One complete hat/head/short neck, no shoulders/body; adequate outline margin",
+      "limits": "Directional face finish only; installed geometry/hat/body/rig remain authoritative. Retexture fidelity, UV mapping and face-mask boundaries require inspection."
+    }
+  },
+  "generation": {
+    "task_id": "01a1274e-93a1-7194-acdb-0e0f330a2c17",
+    "endpoint": "/openapi/v1/retexture",
+    "settings": {
+      "ai_model": "meshy-6",
+      "enable_original_uv": true,
+      "enable_pbr": false,
+      "texture_resolution": "2k",
+      "remove_lighting": true,
+      "text_style_prompt": "Preserve this SAME installed character identity and original UV layout. Only improve exposed facial skin finish with coherent warm skin colour groups matching the inspected image. Preserve eye colour, brows, facial hair, hair, headwear, mask and collar appearance. No freckles, speckles, dramatic baked lighting, new accessories or new identity. The source mesh will be retained; only safely isolated facial-skin albedo pixels will be used."
+    },
+    "reference": "assets/characters/wandering_trainer/reference/native-face-material-v1.png",
+    "model_input": "installed isolated head with original UVs",
+    "night": "2026-10-09",
+    "provider": "Meshy",
+    "status": "SUCCEEDED",
+    "new_submissions": 1,
+    "observed_credit_cost": 10
+  },
+  "generation_scope": "One guarded original-UV Meshy retexture of a static isolated installed-head input. Service geometry, rig, materials and other maps are never installed. Only conservative facial-skin albedo pixels are transferred to the complete original body.",
+  "rights": {
+    "basis": "Owner-held installed character and inspected original project draft; owner-authorized existing paid Meshy account. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preservation": {
+    "scope": "Original installed NPC; only safe facial-skin albedo pixels changed",
+    "candidate_enabled": false,
+    "service_head_triangle_uv_mapping_unchanged": true,
+    "installed_geometry_uv_weights_nodes_skin_clips_unchanged": true,
+    "original_binary_prefix_preserved": true,
+    "original_material_parameters_normal_roughness_metallic_unchanged": true,
+    "decoded_rgba_outside_face_mask_identical": true,
+    "protected_uv_overlap_excluded": true,
+    "changed_pixels": 10081,
+    "safe_pixels": 10311,
+    "image_size": [
+      2048,
+      2048
+    ],
+    "clips": 6,
+    "blend": "Inward 24-pixel Gaussian attenuation, half strength, service RGBA delta bounded to 18/255 before blending",
+    "requires_native_face_finish_identity_and_seam_review": true,
+    "full_art_gate": false
+  },
+  "face_skin_mask": {
+    "source": "wandering_trainer_lod0.glb",
+    "scope": "Conservative facial skin only; no geometry or source image modification",
+    "bounds_m": {
+      "min_y": 1.46,
+      "max_y": 1.615,
+      "max_abs_x": 0.14,
+      "min_z": 0.03
+    },
+    "selected_face_triangles": 583,
+    "protected_triangles": 27413,
+    "safe_pixels": 10311,
+    "original_image_size": [
+      2048,
+      2048
+    ],
+    "protected_uv_overlap_excluded": true,
+    "non_skin_pixels_and_boundary_inset_excluded": true,
+    "candidate_enabled": false,
+    "requires_native_identity_and_seam_review": true
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "presets": {
+      "Low": {
+        "renderer": "gl_compatibility",
+        "before_height_m": 1.77999997138977,
+        "after_height_m": 1.77999997138977,
+        "nine_matched_stage_views": true,
+        "paired_authored_world_post": true,
+        "sheet": "review/low-before-after.jpg"
+      },
+      "Medium": {
+        "renderer": "forward_plus",
+        "before_height_m": 1.77999997138977,
+        "after_height_m": 1.77999997138977,
+        "nine_matched_stage_views": true,
+        "paired_authored_world_post": true,
+        "sheet": "review/medium-before-after.jpg"
+      }
+    },
+    "scope": "Matched fixed native material/rig stage, existing original clip samples and authored NPC post when available. Raw logs and receipts remain outside Git."
+  },
+  "gates": {
+    "installed_scale": "PASS",
+    "original_body_uv_rig_clips": "PASS",
+    "protected_albedo_pixels": "PASS",
+    "face_finish_identity_seams": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false,
+    "face_finish": "FAIL",
+    "production_post_readability": "OPEN"
+  },
+  "limitations": [
+    "Conservative head-weight/position/skin-colour UV mask excludes all other triangle coverage; classification still requires native identity, shading and seam judgment.",
+    "Original decoded RGBA outside the selected mask is exactly retained; this does not alone certify visual appeal.",
+    "Still samples do not certify full motion, ordinary dialogue, trainer reactions, earned journeys or fights.",
+    "Runtime character config remains unchanged; OFF recipe changes only the candidate model path.",
+    "The existing wandering-trainer NPC is visibly present at its authored Meadows post. Matched camera/stage samples are visual fixtures, not dialogue, trainer reactions, earned journeys or full motion proof."
+  ],
+  "native_inspection": {
+    "selected_candidate": "v1 conservative face material",
+    "face_finish": "FAIL",
+    "face_finish_identity_seams": "OPEN",
+    "production_post_readability": "OPEN",
+    "production_post_note": "The existing wandering-trainer NPC is visibly present at its authored Meadows post. Matched camera/stage samples are visual fixtures, not dialogue, trainer reactions, earned journeys or full motion proof.",
+    "inspection": "Native Low before/after three-quarter face views retain heavy mottled skin and coarse baked detail; the restrained albedo transfer is insufficient to meet the clean reference finish. Installed body/hat silhouette and scale are retained. Face finish fails; independent identity/boundary and full art judgment remain open.",
+    "candidate_enabled": false
+  }
+}
