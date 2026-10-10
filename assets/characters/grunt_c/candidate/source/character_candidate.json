@@ -1,0 +1,23 @@
+{
+  "enabled": false,
+  "character": "grunt_c",
+  "config": {
+    "model": "res://assets/characters/grunt_c/candidate/models/grunt_c_native_face.glb",
+    "body_emission_enabled": false,
+    "height": 1.7,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "scope": "Same installed NPC, masked facial-skin albedo only; not a new body or character"
+}
