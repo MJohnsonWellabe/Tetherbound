@@ -42,10 +42,15 @@ func _run() -> void:
 	# The cut: the guest kills itself at its key use's owner-save edge.
 	_peers[1].quit_sent = true
 	var pid := int(_peers[1].pid)
-	await step(1, "f18_arch", {"arch": "tidewake", "mode": "unlock", "cut": "owner_before_ack"}, 3000)
-	for _f in 1800:
-		await process_frame
-		_pump_once()
+	# The host judges the arch distance from its replicated copy of the guest,
+	# which can trail the guest's own walk under load; a refused press ("Stand
+	# at the Crossing Hall arch first") is pressed again, as a player would.
+	for _press in 3:
+		await step(1, "f18_arch", {"arch": "tidewake", "mode": "unlock", "cut": "owner_before_ack"}, 3000)
+		for _f in 1800:
+			await process_frame
+			_pump_once()
+			if not OS.is_process_running(pid): break
 		if not OS.is_process_running(pid): break
 	check(not OS.is_process_running(pid), "the guest process ended")
 	check(FileAccess.get_file_as_string(str(_peers[1].log_path)).contains("F48 KEY CUT"),
