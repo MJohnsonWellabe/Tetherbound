@@ -62,7 +62,8 @@
       "hud_dynamic_controls": [
         "_party_strip",
         "_orb_cluster",
-        "_effect_banner"
+        "_effect_banner",
+        "_tether_meter"
       ],
       "occluder_radius_m": 80.0,
       "occluder_limit": 32,
