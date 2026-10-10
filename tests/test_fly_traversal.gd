@@ -319,3 +319,30 @@ func test_galewisp_carrier_art_builds_with_grip_bones_and_flapping_wings() -> vo
 		FLY.pose_carrier_wings(rig, capability, 0.1)
 		assert_false(rig.get_bone_pose_rotation(upper).is_equal_approx(before), "the upper wing moves")
 	art.free()
+
+
+## F06#3: the loaner path never adds or loses an owned creature, and a sealed
+## wind route stops a loaner flight exactly as it stops an owned carrier.
+func test_the_loaner_can_never_join_the_party_even_with_room() -> void:
+	for species: String in ["bramblebun", "mudsnout", "terrapup", "brooktail"]:
+		assert_true(game.party.add(SPECIES.spawn(species)))
+	game.progression.set_flag("fly_traversal_unlocked")
+	var loaner: RefCounted = fly.eligible_creature()
+	assert_ne(loaner, null, "a five without a carrier gets Maela's loaner after the unlock")
+	var before: Array = (game.party.members() as Array).duplicate()
+	assert_false(game.party.add(loaner), "the party refuses Maela's loaner even with a free slot")
+	assert_eq(game.party.members(), before, "the four owned creatures are unchanged")
+	assert_true(game.party.add(SPECIES.spawn("sparkit")), "an ordinary creature still fills the free slot")
+	assert_eq(game.party.size(), 5)
+
+
+func test_a_sealed_route_stops_a_loaner_flight_like_an_owned_one() -> void:
+	game.progression.set_flag("fly_traversal_unlocked")
+	var loaner: RefCounted = fly.eligible_creature()
+	assert_ne(loaner, null)
+	fly._creature = loaner
+	fly.register_restriction("upper", AABB(Vector3(10, 0, -5), Vector3(2, 50, 10)), "upper_open")
+	assert_false(fly._restricted_reason(Vector3(0, 20, 0), Vector3(30, 20, 0)).is_empty(),
+		"the loaner does not carry the trainer through a closed gate")
+	game.progression.set_flag("upper_open")
+	assert_true(fly._restricted_reason(Vector3(0, 20, 0), Vector3(30, 20, 0)).is_empty(), "the opened route lets it pass")
