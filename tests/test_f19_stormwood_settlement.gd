@@ -11,6 +11,11 @@ const REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 
 class HostSession extends Node:
 	func is_host() -> bool: return true
+	# This fixture covers the world writer/publication cut. The production
+	# Session's canonical owner validation remains outside this fixture.
+	func foundation_stormwood_answer(_source: Node, _peer: int, claim: Dictionary,
+			_cut: Dictionary = {}, phase: String = "commit") -> bool:
+		return phase == "rollback" or (phase in ["stage", "commit"] and claim.get("settled") == true)
 	func _altar_current_epoch() -> String: return "host-epoch"
 
 class Transport extends Node:
