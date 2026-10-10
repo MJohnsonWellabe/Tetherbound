@@ -1,13 +1,17 @@
 extends SceneTree
 
-## Synthetic low-RAM admission diagnostic, NOT campaign evidence. No world,
-## Terrain3D, saved party, progression or save service is loaded or mutated.
+## Synthetic low-RAM admission diagnostic, NOT campaign evidence. No biome,
+## Terrain3D or campaign is loaded. The isolated owned party, authority and
+## prepared save services satisfy tracked admission; no campaign save is used.
 ## Only startup/population is replaced; admission and manager.begin are real.
 const MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const ARBITER := preload("res://scripts/world/interaction_arbiter.gd")
 const BODY := preload("res://scenes/creatures/creature.tscn")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const CROWN := preload("res://tests/helpers/stormwood_crown_build_segment.gd")
+const PREPARED := preload("res://tests/test_prepared_training_owner_identity.gd")
+const OWNER_FIXTURE := preload("res://tests/test_local_trait_catch_settlement.gd")
+const RECORD := preload("res://scripts/net/character_record_rules.gd")
 
 class LocalDirector extends "res://scripts/combat/stormwood_encounter_director.gd":
 	func _ready() -> void:
@@ -16,8 +20,6 @@ class LocalDirector extends "res://scripts/combat/stormwood_encounter_director.g
 		pass
 	func _physics_process(_delta: float) -> void:
 		pass
-	func _party() -> RefCounted:
-		return null
 
 class Ground extends Node3D:
 	func ground_height_at(_x: float, _z: float) -> float:
@@ -38,6 +40,40 @@ func _run() -> void:
 	quit(0 if failures.is_empty() else 1)
 
 func _case(resting: bool) -> void:
+	if root.get_node_or_null("Game") != null:
+		failures.append("isolated admission fixture requires an unmounted Game")
+		return
+	var game := OWNER_FIXTURE.CaptureGame.new()
+	var seed := PREPARED.new()._game("user://synthetic_alpha_admission_%s/" % Crypto.new().generate_random_bytes(12).hex_encode())
+	game.local = seed.local
+	game.world = seed.world
+	game.forwarded = seed.forwarded
+	game.save_system = seed.save_system
+	seed.session.free()
+	seed.free()
+	game.current_realm = "stormwood"
+	var session := OWNER_FIXTURE.CaptureSession.new()
+	session.fixture = game
+	session.set("_altar_epoch", PREPARED.EPOCH)
+	game.session = session
+	var rpc := OWNER_FIXTURE.CaptureRpc.new()
+	rpc.name = "LedgerRpc"
+	rpc.fixture = game
+	rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(game.world)
+	session.add_child(rpc)
+	var creature: RefCounted = game.local.party.at(0)
+	creature.set("resting", resting)
+	var authority: RefCounted = session.get("_character_authority")
+	var owned := RECORD.portable_projection(game.local.save_data())
+	if not authority.call("bind_world", PREPARED.NAMESPACE) \
+		or authority.call("seed_admitted_character", owned, PREPARED.CHARACTER).get("ok") != true:
+		failures.append("isolated owned party admission failed")
+		session.free()
+		game.free()
+		return
+	session.get("_registry").call("add", 1, PREPARED.CHARACTER, "Synthetic", "stormwood")
+	game.name = "Game"
+	root.add_child(game)
 	var world := Ground.new()
 	world.name = "SyntheticAdmission"
 	root.add_child(world)
@@ -54,8 +90,7 @@ func _case(resting: bool) -> void:
 	world.add_child(ally)
 	ally.call("populate", "terrapup", player)
 	ally.set_physics_process(false)
-	var creature := ally.get("instance") as RefCounted
-	creature.set("resting", resting)
+	ally.set("instance", creature)
 	var alpha := BODY.instantiate() as Node3D
 	alpha.set_script(WILD)
 	alpha.name = "Named_capacitor_alpha"
@@ -67,6 +102,7 @@ func _case(resting: bool) -> void:
 	director.name = "EncounterDirector"
 	world.add_child(director)
 	director._player = player
+	director._session = session
 	director._manager = manager
 	director._ally = creature
 	director._ally_body = ally
@@ -102,3 +138,5 @@ func _case(resting: bool) -> void:
 	world.queue_free()
 	await process_frame
 	await process_frame
+	session.free()
+	game.free()

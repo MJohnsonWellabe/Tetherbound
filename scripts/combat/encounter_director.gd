@@ -479,7 +479,7 @@ func _freeze_bounty_instances(encounter_id: String, peer: int) -> void:
 	participant.foundation_bounty_instances = instances
 
 func _retain_research(encounter_id: String, peer: int, kind: String, species: String, serial: String, move_id: String = "", night: Variant = null, capture_card: Dictionary = {}, capture_offer: Dictionary = {}) -> bool:
-	if _session == null or not _is_host(): return true
+	if _session == null or (not _is_host() and not _owns_canonical_wild(encounter_id)): return true
 	var source := {"encounter_id": encounter_id, "peer": peer, "kind": kind, "species": species,
 		"source_id": JSON.stringify([_encounter_realm(), encounter_id, peer, kind, serial]).sha256_text(), "move_id": move_id, "night": night}
 	source.record = _encounter_host.call("record", encounter_id).duplicate(true)
@@ -498,8 +498,9 @@ func _retain_research(encounter_id: String, peer: int, kind: String, species: St
 	return result.get("durable") == true
 
 func _retry_research_sources() -> void:
-	if _session == null or not _is_host(): return
+	if _session == null: return
 	for source: Dictionary in _foundation_pending_sources.duplicate(true):
+		if not _is_host() and not _owns_canonical_wild(str(source.encounter_id)): continue
 		var result: Dictionary = _session.call("foundation_research_source", self, source.encounter_id, source.peer, source.kind, source.source_id, source.species, source.move_id, source.night)
 		if result.get("durable") == true: _foundation_pending_sources.erase(source)
 
@@ -3177,6 +3178,10 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 		return deny
 	var runtime := _shared_host_fight(id)
 	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+	var hosted := get_parent().get_node_or_null("StormwoodEncounterHub")
+	if hosted != null:
+		var round_body: Node3D = hosted.call("opponent_for_record", id)
+		if round_body != null: wild = round_body
 	if not is_instance_valid(wild): return deny
 	# A tracked trainer/boss actor binds lazily on first publication, which
 	# advances its actor generation. Bind it here, before the start freezes its
@@ -6787,10 +6792,10 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	_retain_research(str(rec["encounter_id"]), _local_peer_id(), "sight", str(opponent.species_id), "engage")
 	if preload("res://scripts/combat/tether_commands.gd").enabled() \
 		and MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true:
-		# Complete existing command admission before the first saved-vitals
-		# original freezes this record. Late admission changes its exact seq.
-		# Without saved vitals there is no original to freeze; commands bind
-		# on the next encounter change as before.
+		# Canonical saved actor vitals need command admission before their
+		# original encounter record freezes; this eager application is ON-only.
+		# OFF still retains ordinary trainer reward originals and owner-save
+		# barriers. Guest pose admission fences both paths independently.
 		_host_after_encounter_change(str(rec["encounter_id"]))
 	if _can_encounter_rpc():
 		for peer_id: int in multiplayer.get_peers():
@@ -7620,6 +7625,20 @@ func _cleanup_shared_guest_proxy() -> void:
 ## on `Game.pending_catch` — exactly one, never saved, not storage — and the
 ## Game autoload's `_watch_pending_catch()` opens the Team screen's release
 ## ceremony on it. Play never resumes with six creatures owned.
+## Before the manager publishes completion, settle this local canonical catch
+## through the existing owner BOOL/ACK. Remote guest and legacy paths retain
+## their existing producer; only this exact host runtime can authorize this.
+func complete_local_catch_before_exploration(id: String, kept: RefCounted) -> bool:
+	if not _owns_canonical_wild(id): return true
+	if kept == null or not kept.has_meta("foundation_capture_traits") or _session == null \
+		or _session.call("is_host") != true: return false
+	var record: Dictionary = _encounter_host.call("record", id)
+	if record.get("phase") != "done" or record.get("opponent", {}).get("card", {}).get("uid") != kept.get("uid"):
+		return false
+	var captures := _session.get_node_or_null(^"FoundationComposition/Captures")
+	return captures != null and captures.call("complete_local_catch", kept) == true
+
+
 func _resolve_catch(kept: RefCounted) -> void:
 	if kept == null:
 		push_error("combat ended as a catch with nothing caught")
@@ -9224,6 +9243,11 @@ func _f22_visible_observation(wild: Node3D) -> Dictionary:
 func _canonical_wild_start_state(wild: Node3D) -> Dictionary:
 	var disabled := {"enabled": false, "ready": false}
 	if (MATH.config().get("actor_vitals", {}) as Dictionary).get("runtime_enabled") != true:
+		return disabled
+	# A guest's unreplicated local wild has no host-owned runtime to convert.
+	# Keep that existing fight path; host/shared wilds still require canonical
+	# ownership and the prepared writers below, with no refused-host fallback.
+	if _session != null and _session.call("is_active") == true and _session.call("is_host") != true:
 		return disabled
 	var essence: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/essence.json")) \
 		if FileAccess.file_exists("res://data/config/essence.json") else null
