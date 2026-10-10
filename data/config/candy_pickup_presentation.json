@@ -1,4 +1,4 @@
 {
-  "_comment": "P2-045 candidate. Reuse the installed, reviewed Meadows candy tier dressing at the Stormwood and Tidewake cache adapters. Disabled until matched regional sightings pass independent visual review. Item IDs, claims, quantities, spawn coordinates and progression are unchanged.",
-  "enabled": false
+  "_comment": "P2-045. Reuse the installed, reviewed Meadows candy tier dressing at the Stormwood and Tidewake cache adapters. Disabled until matched regional sightings pass independent visual review. Item IDs, claims, quantities, spawn coordinates and progression are unchanged.",
+  "enabled": true
 }
