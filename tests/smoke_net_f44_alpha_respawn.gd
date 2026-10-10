@@ -135,7 +135,8 @@ func _proof() -> void:
 	var host_back := await _wait_live(0, 2)
 	if _one_live(host_back, 2, "host generation 2"):
 		check(host_back.live[0].traits == next_traits, "the host's live generation-2 body carries the new roll")
-	_one_live(await _wait_live(1, 2), 2, "guest generation 2")
+	var guest_back := await _wait_live(1, 2)
+	if not _one_live(guest_back, 2, "guest generation 2"): print("F44 guest gen2 diagnostics: cycle %s %s" % [str(guest_back.get("cycle")), str(guest_back.get("diagnostics"))])
 	print("F44_NET_ALPHA_RESPAWN: defeat, %d-day wait, departures, fresh generation 2 on both peers" % days)
 
 

@@ -66,6 +66,11 @@ static func _view(runner: SceneTree, site_id: String, encounter_id: String = "")
 			if is_instance_valid(wild) and (wild as Node3D).global_position.distance_to(Vector3(-318, (wild as Node3D).global_position.y, 505)) < 25.0:
 				near.append({"name": str((wild as Node).name), "display": str((wild as Node).get("display_name")), "metas": (wild as Node).get_meta_list()})
 	diagnostics.near_site = near
+	var guards: Array = []
+	for director: Node in runner.root.find_children("*", "Node", true, false):
+		if director.has_method("foundation_register_alpha"):
+			guards.append({"director": str(director.get_path()), "metas": director.get_meta_list(), "realm": str(director.call("_encounter_realm"))})
+	diagnostics.directors = guards
 	var live := bodies.filter(func(b: Dictionary) -> bool: return b.alive and b.visible)
 	return _ok("cycle %s, %d live body(ies)" % [str(record.get("status", "none")), live.size()],
 		{"cycle": record.duplicate(true), "bodies": bodies, "live": live, "day": int(game.get("day")), "diagnostics": diagnostics,

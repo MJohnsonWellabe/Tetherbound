@@ -232,7 +232,10 @@ func _process(delta: float) -> void:
 	if _left > 0.0: return
 	_left = 1.0
 	var owner := session()
-	if RULES.config().get("runtime_enabled") != true or owner.call("is_host") != true: return
+	if RULES.config().get("runtime_enabled") != true: return
+	if owner.call("is_host") != true:
+		_publish_mirrored(owner)
+		return
 	for key: String in _first_pending.keys():
 		var frozen: Dictionary = _first_pending[key]
 		var director: Node = frozen.director.get_ref()
@@ -264,3 +267,27 @@ func _process(delta: float) -> void:
 					"character_id": peer.character_id, "actual_region": region})
 				record = world.redesign_world.alpha_cycles.sites[id]
 		_service.call("advance", id)
+
+
+## A connected guest shows the host's live generation from its world mirror
+## (each host plan is a journaled world delta), including a guest that built
+## its world before joining and a respawned generation. Never a client roll.
+func _publish_mirrored(owner: Node) -> void:
+	if owner.call("is_active") != true: return
+	var game: Node = owner.call("_game")
+	if game == null or game.get("world") == null: return
+	for id: String in game.world.redesign_world.get("alpha_cycles", {}).get("sites", {}).keys():
+		if RULES.site(id).is_empty(): continue
+		var packet := RULES.retained_spawn(game.world.redesign_world, id)
+		var live := int(packet.captured_from.spawn_generation) if not packet.is_empty() else 0
+		for director: Node in _site_directors(owner, id): director.call("foundation_retire_stale_alpha", id, live)
+		if not packet.is_empty(): _publish(id, packet)
+
+func _site_directors(owner: Node, id: String) -> Array[Node]:
+	var site := RULES.site(id)
+	var realm: Node3D = owner.call("_portal_world_node", "water" if site.get("biome") == "tidewake" else str(site.get("biome", "")))
+	var result: Array[Node] = []
+	if realm == null: return result
+	for node: Node in owner.call("_foundation_group_under", owner.FOUNDATION_DIRECTOR_GROUP, [realm], owner.FOUNDATION_DIRECTORS):
+		if node.has_method("foundation_retire_stale_alpha"): result.append(node)
+	return result
