@@ -1037,7 +1037,7 @@ func _prepare_host(peer: int, stream: Dictionary) -> void:
 	var projected: Dictionary = stream.cursor.state
 	if checkpoint.get("duty", {}).get("action") == "combat_round_reward":
 		projected = preload("res://scripts/net/combat_round_reward.gd").settled_before(projected, checkpoint.duty.intent, checkpoint.duty.context)
-	elif checkpoint.get("duty", {}).get("action") == "wild_defeat_share":
+	elif checkpoint.get("duty", {}).get("action") == "wild_defeat_share" or PREP._master_settled(checkpoint.get("duty", {})):
 		projected = preload("res://scripts/net/wild_actor_scope.gd").settled_before(projected, checkpoint.duty.context)
 	if stream.cursor.sequence != frozen.sequence or stream.cursor.prefix_hash != frozen.prefix_hash \
 		or projected.is_empty() or HASH.fingerprint(projected) != frozen.hash:

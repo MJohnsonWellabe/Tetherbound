@@ -118,7 +118,9 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 			or not ESSENCE._opaque_id(intent.get("encounter_id")) or context.get("master_id") != intent.master_id \
 			or context.get("creature_uid") != intent.creature_uid or context.get("encounter_id") != intent.encounter_id \
 			or context.get("validated_host_outcome") != "win" or context.get("participant_count") != 1 \
-			or context.source_key != "master_encounter:" + str(intent.encounter_id): return false
+			or context.source_key != "master_encounter:" + str(intent.encounter_id) \
+			or (context.has("settled_vitals") and (not context.settled_vitals is Array or context.settled_vitals.is_empty() \
+				or context.settled_vitals.size() > 5)): return false
 	elif duty.action == "boss_relic":
 		if intent.size() != 3 or not ESSENCE._opaque_id(intent.get("trainer_id")) or not ESSENCE._opaque_id(intent.get("encounter_id")) \
 			or context.get("encounter_id") != intent.encounter_id or context.get("validated_host_outcome") != "win" \

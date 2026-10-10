@@ -2106,6 +2106,9 @@ func foundation_guest_master_outcome(director: Node, frozen: Dictionary) -> Dict
 	var intent := {"master_id": frozen.master_id, "creature_uid": frozen.creature_uid, "encounter_id": frozen.encounter_id}
 	var context := {"source_key": "master_encounter:" + frozen.encounter_id, "validated_host_outcome": "win", "participant_count": 1,
 		"encounter_id": frozen.encounter_id, "creature_uid": frozen.creature_uid, "master_id": frozen.master_id}
+	# F28: the duel's host-saved vitals (every hit owner-ACKed first); the win
+	# stages its award on them and owner-passive projects them (wild_actor_scope).
+	if frozen.get("settled_vitals") is Array: context["settled_vitals"] = (frozen.settled_vitals as Array).duplicate(true)
 	return get_node(^"LedgerRpc").call("journal_foundation_event", "master:%s:%s" % [frozen.master_id, frozen.encounter_id],
 		[{"character_id": frozen.character_id, "action": "master_win", "intent": intent, "context": context}])
 

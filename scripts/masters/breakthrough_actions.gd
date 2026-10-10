@@ -26,7 +26,11 @@ static func stage(current: Dictionary, revision: int, op: String, intent: Dictio
 					or context.get("encounter_id") != intent.encounter_id or context.get("creature_uid") != intent.creature_uid \
 					or context.get("master_id") != intent.master_id:
 				return _deny("canonical_duel_win_required")
-			result = RULES.prepare_win(current, intent.master_id, str(current.character_id))
+			var won := current
+			if context.get("settled_vitals") is Array:
+				won = _hosted_duel_award(current, intent.master_id, intent.creature_uid)
+				if won.is_empty(): return _deny("hosted_duel_award_unavailable")
+			result = RULES.prepare_win(won, intent.master_id, str(current.character_id))
 		"master_chest":
 			if context.get("master_id") != intent.master_id: return _deny("wrong_chest")
 			result = RULES.prepare_chest(current, intent.master_id, str(current.character_id))
@@ -44,6 +48,37 @@ static func stage(current: Dictionary, revision: int, op: String, intent: Dictio
 		result.original_revision = revision
 		result.character_id = str(current.character_id)
 	return result
+
+## F28: a guest's host-arbitrated Master win pays its victory as a co-op
+## trainer round does (combat_round_reward): XP to the duelist and a share to
+## the living bench, each with its battle credit and victory mood. The record
+## already holds the duel's owner-saved vitals; the guest's own combat manager
+## pays nothing (host_owns_xp), so this is the only award.
+static func _hosted_duel_award(current: Dictionary, master_id: String, duelist: String) -> Dictionary:
+	const E := preload("res://scripts/creatures/essence.gd")
+	const P := preload("res://scripts/creatures/progression.gd")
+	const TEACHING := preload("res://scripts/creatures/teaching.gd")
+	var definition: Dictionary = RULES.master(master_id)
+	if definition.is_empty() or not current.get("party") is Array: return {}
+	var eligible: Array[String] = []
+	var caps := {}
+	var found := false
+	for card: Variant in current.party:
+		if not card is Dictionary: return {}
+		if card.get("uid") == duelist:
+			found = true
+			if card.get("fainted") != false: return {}
+		if card.get("fainted") != false: continue
+		eligible.append(str(card.uid))
+		caps[card.uid] = E.creature_cap(current.redesign_character, str(card.uid))
+	if not found: return {}
+	var xp := P.staged_combat_party_xp(current.party, duelist, eligible, caps, int(definition.get("cap_level", 0)),
+		P.config(), E.config(), "hybrid", E._canonical_trait_maximum.bind(current.redesign_character.creatures))
+	if xp.is_empty(): return {}
+	var next := current.duplicate(true)
+	next.party = xp.party.duplicate(true)
+	return E.refresh_training_moves(next, TEACHING.available_moves, TEACHING.character_loadout_mirror)
+
 
 static func _deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code}
