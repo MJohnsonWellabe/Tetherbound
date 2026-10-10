@@ -5335,19 +5335,26 @@ func deployed_bodies() -> Array:
 ## The deployed body belonging to `peer_id`, or null. The local player's own
 ## body answers for the local peer id; everyone else's is their proxy.
 func deployed_body_for(peer_id: int) -> Node3D:
-	if peer_id == _local_peer_id() and _ally_body != null and is_instance_valid(_ally_body) \
-			and not _ally_body.is_queued_for_deletion():
-		return _ally_body
-	# A peer can own more than one group member for a moment (a hidden
-	# mirror, or a replacement body still finding ground). The visible one is
-	# the creature that fights, as in `_encounter_body_rows()`; an invisible
-	# first match made the host aim wild AI at it and judge strikes from it.
+	return pick_peer_body(deployed_bodies(), peer_id, _local_peer_id(), _ally_body)
+
+
+## Pure choice behind `deployed_body_for`. A peer can own more than one
+## deployed member for a moment (a hidden mirror, or a replacement body still
+## finding ground). The local peer's own ally body answers for it; otherwise
+## the visible member is the creature that fights, as `_encounter_body_rows()`
+## already assumes. An invisible first match made the host aim wild AI at it
+## and judge that peer's strikes from where it stood.
+static func pick_peer_body(candidates: Array, peer_id: int, local_peer_id: int, local_body: Node3D) -> Node3D:
+	if peer_id == local_peer_id and local_body != null and is_instance_valid(local_body) \
+			and not local_body.is_queued_for_deletion():
+		return local_body
 	var hidden: Node3D = null
-	for node in deployed_bodies():
-		if node is Node3D and int((node as Node3D).get("owner_peer_id")) == peer_id \
-				and not (node as Node3D).is_queued_for_deletion():
-			if (node as Node3D).visible: return node as Node3D
-			if hidden == null: hidden = node as Node3D
+	for node: Variant in candidates:
+		if not node is Node3D or not is_instance_valid(node): continue
+		var body := node as Node3D
+		if int(body.get("owner_peer_id")) != peer_id or body.is_queued_for_deletion(): continue
+		if body.visible: return body
+		if hidden == null: hidden = body
 	return hidden
 
 
