@@ -22,6 +22,8 @@ extends SceneTree
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const EARNED_SLOT := 1
+## `--from-slot=<n>` loads another slot of --from-save (0 is the title's Autosave).
+var from_slot := EARNED_SLOT
 const SAVE := preload("res://scripts/save/save_game.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -96,6 +98,7 @@ func _run() -> void:
 	live_combat = "--live-combat" in OS.get_cmdline_user_args()
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--from-save="): from_save = arg.trim_prefix("--from-save=").trim_suffix("/")
+		elif arg.begins_with("--from-slot="): from_slot = int(arg.trim_prefix("--from-slot="))
 		elif arg.begins_with("--leg="): leg = arg.trim_prefix("--leg=")
 	output_dir = OUTPUT_ROOT + ("/live" if live_combat else "/mechanics-only") + ("" if from_save.is_empty() else "-from-earned-save")
 	if accelerated:
@@ -1226,7 +1229,7 @@ func _finish() -> void:
 	quit(1 if failed else 0)
 
 
-## Copy `<from_save>/save/` to a scratch user:// dir and load slot EARNED_SLOT
+## Copy `<from_save>/save/` to a scratch user:// dir and load slot `from_slot` (default EARNED_SLOT)
 ## through the production title's Load list (the fixture test's path). No flag,
 ## party, inventory or position is written here.
 func _load_earned_handoff() -> bool:
@@ -1237,7 +1240,7 @@ func _load_earned_handoff() -> bool:
 	earned_scratch = "user://cloudreach_continuous_from_earned_%d/" % OS.get_process_id()
 	_copy_tree(source, ProjectSettings.globalize_path(earned_scratch))
 	game.save_system = SAVE.new(earned_scratch)
-	var info: Dictionary = game.save_slot_info(EARNED_SLOT)
+	var info: Dictionary = game.save_slot_info(from_slot)
 	if str(info.get("realm", "")) != "cloudreach":
 		print("CLOUDREACH CONTINUOUS earned slot is not a Cloudreach save: " + str(info))
 		return false
@@ -1249,11 +1252,12 @@ func _load_earned_handoff() -> bool:
 	(title.get("_load_button") as Button).pressed.emit()
 	await process_frame
 	var chosen: Button = null
+	var label := "Autosave" if from_slot == 0 else "Save %d" % from_slot
 	for node: Node in (title.get("_load_box") as Node).get_children():
-		if node is Button and (node as Button).text.begins_with("Save %d" % EARNED_SLOT) and not (node as Button).disabled:
+		if node is Button and (node as Button).text.begins_with(label) and not (node as Button).disabled:
 			chosen = node
 	if chosen == null:
-		print("CLOUDREACH CONTINUOUS the title's Load list does not offer Save %d" % EARNED_SLOT)
+		print("CLOUDREACH CONTINUOUS the title's Load list does not offer " + label)
 		return false
 	chosen.pressed.emit()
 	for _frame in 3600:
