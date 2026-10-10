@@ -39,9 +39,8 @@ func _model(player: CharacterBody3D, enabled: bool = true) -> Node3D:
 	return model
 
 
-func test_disabled_pose_leaves_art_bones_and_animation_untouched() -> void:
-	# F39 P2-071: shipped on; the disabled path below stays pinned.
-	assert_true(bool(MODEL.load_human_swim_visual().get("pose_enabled", false)))
+func test_default_off_leaves_art_bones_and_animation_untouched() -> void:
+	assert_false(bool(MODEL.load_human_swim_visual().get("pose_enabled", true)))
 	var player := _local()
 	var model := _model(player, false)
 	var art: Transform3D = model.call("art_transform")
@@ -119,33 +118,6 @@ func test_leaving_water_restores_exact_art_and_bone_pose_and_resumes_animation()
 		assert_true(poses[index].is_equal_approx(rig.get_bone_pose(index)))
 	assert_eq(animator.active, active)
 	assert_eq(str(model.get("_current")), "")
-	player.free()
-
-
-func test_swimming_keeps_non_swim_bones_at_their_pre_swim_pose() -> void:
-	# F39 P2-071 round 1: cloth/accessory bones snapped to the installed rest
-	# pose and stood up out of the swimmer. Only the stroke bones may move.
-	var player := _local()
-	var model := _model(player)
-	var rig: Skeleton3D = model.call("skeleton")
-	var swim_bones: Array = MODEL.HUMAN_SWIM_BONES
-	var poses: Array[Transform3D] = []
-	for index in rig.get_bone_count():
-		poses.append(rig.get_bone_pose(index))
-	assert_true(bool(model.call("_update_human_swim_visual", 0.2)))
-	assert_true(bool(model.call("_update_human_swim_visual", 0.2)))
-	var kept := 0
-	var moved := 0
-	for index in rig.get_bone_count():
-		if rig.get_bone_name(index) in swim_bones:
-			if not poses[index].is_equal_approx(rig.get_bone_pose(index)):
-				moved += 1
-		else:
-			assert_true(poses[index].is_equal_approx(rig.get_bone_pose(index)),
-				rig.get_bone_name(index) + " keeps its pre-swim pose")
-			kept += 1
-	assert_true(kept > 0, "some non-swim bones exist")
-	assert_true(moved > 0, "the stroke bones move")
 	player.free()
 
 

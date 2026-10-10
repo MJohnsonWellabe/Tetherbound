@@ -1,7 +1,10 @@
 extends Node3D
 
 ## P2-072: local presentation only. Never writes aquatic state, body/art
-## transforms, velocity, resources, network fields, camera or shadow settings.
+## transforms, velocity, resources, network fields or camera settings. While
+## the human is in the water its own meshes stop casting a shadow (a hard dark
+## wedge on the water plane, judge round 2); leaving the water restores each
+## mesh's own setting.
 const CONFIG := "res://data/config/human_water_contact_visual.json"
 const SWIM := preload("res://scripts/player/swim_state.gd")
 const FOAM := preload("res://shaders/human_water_contact.gdshader")
@@ -15,6 +18,7 @@ var _fade := 0.0
 var _last_position := Vector3.INF
 var _last_emission := Vector3.INF
 var _emission_clock := 0.0
+var _shadow_before: Dictionary = {}
 
 
 static func load_settings() -> Dictionary:
@@ -71,8 +75,10 @@ func step_visual(delta: float, packet: Dictionary, body_position: Vector3) -> vo
 	if not bool(settings.get("enabled", false)) or not (human or paused) \
 			or not is_finite(sea) or not body_position.is_finite():
 		_clear()
+		_set_body_shadow(true)
 		return
 	delta = maxf(0.0, delta)
+	_set_body_shadow(false)
 	# Paused entry cannot generate effects, including on a late remote spawn.
 	if paused and _contact == null:
 		return
@@ -115,6 +121,30 @@ func step_visual(delta: float, packet: Dictionary, body_position: Vector3) -> vo
 			continue
 		var remaining := 1.0 - float(entry.age) / lifetime
 		_set_ring(ring, float(entry.phase), remaining * _fade * 0.6)
+
+
+## The swimmer's meshes (the model this view hangs under, never the foam
+## rings themselves) cast no shadow while in the water.
+func _set_body_shadow(casting: bool) -> void:
+	if casting:
+		for node: Variant in _shadow_before.keys():
+			if is_instance_valid(node):
+				(node as GeometryInstance3D).cast_shadow = _shadow_before[node]
+		_shadow_before.clear()
+		return
+	var model := get_parent()
+	if model == null:
+		return
+	for node: Node in model.find_children("*", "GeometryInstance3D", true, false):
+		if is_ancestor_of(node) or _shadow_before.has(node):
+			continue
+		var mesh := node as GeometryInstance3D
+		_shadow_before[mesh] = mesh.cast_shadow
+		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
+
+func _exit_tree() -> void:
+	_set_body_shadow(true)
 
 
 func _ring() -> MeshInstance3D:

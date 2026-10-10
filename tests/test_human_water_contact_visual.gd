@@ -173,3 +173,25 @@ func test_owner_teardown_frees_contact_and_trail_children() -> void:
 	assert_false(is_instance_valid(view))
 	assert_false(is_instance_valid(contact))
 	assert_false(is_instance_valid(trail_ring))
+
+
+func test_swimmer_meshes_stop_casting_shadow_in_water_and_restore_on_land() -> void:
+	# F39 P2-072 judge round 2: the body's own shadow drew a hard dark wedge on
+	# the water plane. In the water the model's meshes cast none; on land each
+	# mesh gets its own setting back. The foam rings are never touched.
+	var model := Node3D.new()
+	var lit := MeshInstance3D.new()
+	lit.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	model.add_child(lit)
+	var double := MeshInstance3D.new()
+	double.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED
+	model.add_child(double)
+	var view := _view()
+	model.add_child(view)
+	view.step_visual(0.2, _human(), Vector3(0, 0, 0))
+	assert_eq(lit.cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
+	assert_eq(double.cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
+	view.step_visual(0.2, {}, Vector3(0, 0, 0))
+	assert_eq(lit.cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_ON)
+	assert_eq(double.cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED)
+	model.free()
