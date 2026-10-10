@@ -89,6 +89,63 @@ func _run() -> void:
 			await physics_frame
 		_expect(player.is_on_floor(), "player did not settle back onto real floor after recovery", failures)
 
+	# --- F06#2: a fall with NO fresh standing reading (a glide that sank past
+	# the cloud sea; a long drop) returns to the last verified landing, not to
+	# a distant camp. Hold the trainer airborne past LAST_SAFE_MAX_AGE_S above
+	# where it last stood, then drop it through the kill plane.
+	# Stand somewhere well away from the realm entry first (the ladder's own
+	# answer here), so the last landing and a camp/entry recovery differ.
+	for offset: Vector2 in [Vector2(0, 120), Vector2(-60, 160), Vector2(60, 200), Vector2(-90, 90), Vector2(0, 240)]:
+		var gy := float(world.call("ground_height_at", route_stand.x + offset.x, route_stand.z + offset.y))
+		if is_nan(gy):
+			continue
+		player.global_position = Vector3(route_stand.x + offset.x, gy + 1.0, route_stand.z + offset.y)
+		player.velocity = Vector3.ZERO
+		for _frame in 30:
+			await physics_frame
+		if player.is_on_floor() and player.global_position.distance_to(route_stand) > 40.0:
+			break
+	_expect(player.is_on_floor() and player.global_position.distance_to(route_stand) > 40.0,
+		"no standing ground 40 m from the realm entry for the stale-fall check", failures)
+	var landing := player.global_position
+	var fly: Node = player.get_node_or_null(^"FlyController")
+	_expect(fly != null and (fly.get("safe_anchor") as Vector3).distance_to(landing) < 2.0,
+		"Fly did not hold the trainer's last landing as its anchor", failures)
+	# A real glide (Maela's loaner after the unlock: the party here has no
+	# carrier), held aloft past the freshness window, then sinking through the
+	# cloud sea with stamina left -- Fly's own exhausted recovery never fires.
+	game.progression.set_flag("fly_traversal_unlocked")
+	player.global_position = landing + Vector3.UP * 300.0
+	player.velocity = Vector3.ZERO
+	await physics_frame
+	if fly != null:
+		fly.call("_launch")
+	_expect(fly != null and bool(fly.call("is_flying")), "the trainer could not launch a glide for the stale-fall check", failures)
+	var held_frames := int(ceil((fall_recovery.LAST_SAFE_MAX_AGE_S + 1.0) * Engine.physics_ticks_per_second))
+	for _frame in held_frames:
+		player.global_position = landing + Vector3.UP * 300.0
+		player.velocity = Vector3.ZERO
+		await physics_frame
+	_expect(fly != null and str(fly.get("state")) == "glide", "the glide did not hold (state %s)" % str(fly.get("state") if fly != null else ""), failures)
+	# Just above the kill volume: the glide sinks into it on its own.
+	var plane_y := float(fall_recovery.get("_kill_plane_y"))
+	player.global_position = Vector3(landing.x, plane_y + fall_recovery.KILL_PLANE_THICKNESS * 0.5 + 4.0, landing.z)
+	var returned := false
+	for _frame in 600:
+		await physics_frame
+		if player.global_position.y > plane_y + 200.0:
+			returned = true
+			break
+	_expect(returned, "a stale fall was never recovered", failures)
+	if returned:
+		_expect(player.global_position.distance_to(landing) < 3.0,
+			"a stale fall went to %s, not the last verified landing %s" % [str(player.global_position), str(landing)], failures)
+		_expect(fly == null or not bool(fly.call("is_flying")), "recovery left the trainer flying", failures)
+		_expect(player.velocity.length() < 0.5, "recovery kept the fall's velocity", failures)
+		for _settle in 10:
+			await physics_frame
+		_expect(player.is_on_floor(), "player did not settle on its last landing", failures)
+
 	if failures.is_empty():
 		print("CLOUDREACH FALL RECOVERY OK route_stand=%s recovered=%s" % [str(route_stand), str(player.global_position)])
 		quit(0)

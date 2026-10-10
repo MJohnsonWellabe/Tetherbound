@@ -870,9 +870,11 @@ func recover_to_anchor(reason: String) -> bool:
 	var hit := _player.get_world_3d().direct_space_state.intersect_ray(query)
 	if hit.is_empty() or (hit["normal"] as Vector3).y < cos(_player.floor_max_angle):
 		return false
-	_finish("recovery")
+	# Moved first: _finish re-summons a recalled companion beside the trainer,
+	# which must be the landing, not the open air the flight ended over.
 	_player.global_position = (hit["position"] as Vector3) + Vector3.UP * 0.08
 	_player.velocity = Vector3.ZERO
+	_finish("recovery")
 	if _rig != null:
 		_rig.global_position = _player.global_position
 	recovered.emit(reason)
