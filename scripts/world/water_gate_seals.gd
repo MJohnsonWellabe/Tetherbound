@@ -14,6 +14,7 @@ extends RefCounted
 ## flight restrictions and tests all compile the same seal list from config.
 
 const SWIMMING_PATH := "res://data/config/water_swimming.json"
+const HEIGHTFIELD := preload("res://scripts/world/water_heightfield.gd")
 
 
 static func load_rules(path: String = SWIMMING_PATH) -> Dictionary:
@@ -82,7 +83,7 @@ static func compile(config: Dictionary) -> Array[Dictionary]:
 			var docks := _extend(dock_path[from], str(dock.get("id", "")) if not str(dock.get("unlock_flag", "")).is_empty() else "")
 			seals.append(_seal(str(shoal.get("id", "")), "rest_shoal", str(shoal.get("parent_island_id", "")),
 					str(names.get(to, to)), "the tide race on the %s crossing" % str(names.get(to, to)),
-					shoal.get("center_xz_m", []), float(shoal.get("shore_radius_m", 0.0)), flags, docks))
+					shoal.get("center_xz_m", []), HEIGHTFIELD.rest_shoal_max_radius(shoal), flags, docks))
 			break
 	# A landform opens with its own final fact or any later fact on a chain
 	# through it: a world holding a later fact has already come past it.

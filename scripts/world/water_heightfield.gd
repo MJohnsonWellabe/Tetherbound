@@ -23,6 +23,7 @@ var _peak := PackedFloat64Array()
 var _power := PackedFloat64Array()
 var _beach_width := PackedFloat64Array()
 var _inner_height := PackedFloat64Array()
+var _rest_shapes: Array[PackedFloat64Array] = []
 var _dune_passages: Array = []
 ## Per island: local profile zones [dx, dz, radius, fade, beach_width, inner_height]
 ## that blend back to an authored coast profile (e.g. a gated cliff wall).
@@ -86,12 +87,12 @@ func _init(config: Dictionary = {}) -> void:
 	for spec: Dictionary in _config.get("rest_shoals", []):
 		var parent := str(spec.get("parent_island_id", ""))
 		if not parent.is_empty():
-			_compile_landform(spec, parent)
+			_compile_landform(spec, parent, true)
 	_compile_trails()
 	_compile_sites()
 
 
-func _compile_landform(spec: Dictionary, membership_id: String) -> void:
+func _compile_landform(spec: Dictionary, membership_id: String, rest_shoal: bool = false) -> void:
 	var centre: Array = spec.get("center_xz_m", [])
 	var radius := float(spec.get("shore_radius_m", 0.0))
 	var id := str(spec.get("id", ""))
@@ -106,6 +107,7 @@ func _compile_landform(spec: Dictionary, membership_id: String) -> void:
 	_power.append(maxf(0.001, float(spec.get("peak_power", 1.65))))
 	_beach_width.append(clampf(float(spec.get("coast_beach_width_m", 4.0)), 0.001, radius * 0.999))
 	_inner_height.append(float(spec.get("coast_inner_height_m", 12.0)))
+	_rest_shapes.append(_compile_rest_shape(spec) if rest_shoal else PackedFloat64Array())
 	_dune_passages.append(spec.get("dune_passages", []))
 	var zones: Array = []
 	for zone: Dictionary in spec.get("profile_zones", []):
@@ -128,6 +130,47 @@ func _compile_landform(spec: Dictionary, membership_id: String) -> void:
 			float(sector.get("inner_height_m", 3.0)),
 		])
 	_sectors.append(sectors)
+
+
+## Compile once for the baker's terrain samples. Only rest shoals opt into
+## this footprint; inhabited-island coast profiles retain their own shape.
+static func _compile_rest_shape(spec: Dictionary) -> PackedFloat64Array:
+	var raw: Variant = spec.get("shape", {})
+	if not raw is Dictionary or raw.is_empty():
+		return PackedFloat64Array()
+	var major := clampf(float(raw.get("major_extension_m", 0.0)), 0.0, 8.0)
+	var minor := clampf(float(raw.get("minor_extension_m", 0.0)), 0.0, major)
+	var lobe := clampf(float(raw.get("lobe_extension_m", 0.0)), 0.0, 2.0)
+	return PackedFloat64Array([8.0, major, minor,
+		deg_to_rad(float(raw.get("bearing_deg", 0.0))), lobe,
+		float(clampi(int(raw.get("lobes", 3)), 2, 4)),
+		deg_to_rad(float(raw.get("phase_deg", 0.0))), minf(8.0, major + lobe)])
+
+
+static func _rest_shore_radius(radius: float, shape: PackedFloat64Array, angle: float) -> float:
+	if shape.is_empty() or radius <= 0.0:
+		return radius
+	var bearing := angle - shape[3]
+	var along := cos(bearing) / (radius + shape[1])
+	var across := sin(bearing) / (radius + shape[2])
+	var ellipse_radius := 1.0 / sqrt(along * along + across * across)
+	var extension := ellipse_radius - radius + shape[4] * sin(bearing * shape[5] + shape[6])
+	return radius + clampf(extension, 0.0, shape[7])
+
+
+## Shared exact boundary and conservative extent for shore membership and
+## closed-route seals. The bound includes every directional lobe.
+static func rest_shoal_shore_radius(spec: Dictionary, angle: float) -> float:
+	return _rest_shore_radius(float(spec.get("shore_radius_m", 0.0)), _compile_rest_shape(spec), angle)
+
+
+static func rest_shoal_max_radius(spec: Dictionary) -> float:
+	var shape := _compile_rest_shape(spec)
+	return float(spec.get("shore_radius_m", 0.0)) + (shape[7] if not shape.is_empty() else 0.0)
+
+
+func _shore_radius_for(index: int, dx: float, dz: float) -> float:
+	return _rest_shore_radius(_radius[index], _rest_shapes[index], atan2(dz, dx))
 
 
 ## Authored pickup/harvest rows (incl. approach lines) and reward pockets sit
@@ -294,7 +337,8 @@ func height_at(x: float, z: float) -> float:
 	for index in _ids.size():
 		var dx := x - _cx[index]
 		var dz := z - _cz[index]
-		var extent := _radius[index] + reach
+		var shape := _rest_shapes[index]
+		var extent := _radius[index] + reach + (shape[7] if not shape.is_empty() else 0.0)
 		if absf(dx) > extent or absf(dz) > extent:
 			continue
 		best = maxf(best, _height_for(index, dx, dz))
@@ -366,7 +410,7 @@ func island_id_at(x: float, z: float, shore_margin_m: float = 0.0) -> String:
 	for index in _ids.size():
 		var dx := x - _cx[index]
 		var dz := z - _cz[index]
-		var radius := _radius[index] + maxf(0.0, shore_margin_m)
+		var radius := _shore_radius_for(index, dx, dz) + maxf(0.0, shore_margin_m)
 		if dx * dx + dz * dz > radius * radius:
 			continue
 		var height := _height_for(index, dx, dz)
@@ -387,7 +431,9 @@ func nearest_island_id(x: float, z: float) -> String:
 	var nearest := ""
 	var distance := INF
 	for index in _ids.size():
-		var gap := sqrt(pow(x - _cx[index], 2.0) + pow(z - _cz[index], 2.0)) - _radius[index]
+		var dx := x - _cx[index]
+		var dz := z - _cz[index]
+		var gap := sqrt(dx * dx + dz * dz) - _shore_radius_for(index, dx, dz)
 		if gap < distance:
 			distance = gap
 			nearest = _membership_ids[index]
@@ -419,6 +465,18 @@ func _height_for(index: int, dx: float, dz: float) -> float:
 func _profile_height(index: int, dx: float, dz: float, default_width: float, default_inner: float) -> float:
 	var r := sqrt(dx * dx + dz * dz)
 	var radius := _radius[index]
+	var shape := _rest_shapes[index]
+	if not shape.is_empty() and r > shape[0]:
+		var shore_radius := _shore_radius_for(index, dx, dz)
+		if r > shore_radius:
+			# Keep the seabed slope in world metres beyond the new shore,
+			# rather than stretching its influence with the inland warp.
+			return _sea_level - minf(_seabed_depth, (r - shore_radius) * _outer_slope)
+		# Keep the eight-metre landing/marker core exact. Beyond it the
+		# radial coordinate only moves inward, lifting the existing beach
+		# into an irregular shoulder without lowering any legacy floor.
+		var extension := shore_radius - radius
+		r *= radius / (radius + extension * smoothstep(shape[0], radius, r))
 	if r > radius:
 		return _sea_level - minf(_seabed_depth, (r - radius) * _outer_slope)
 	var width := default_width
