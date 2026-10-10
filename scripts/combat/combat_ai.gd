@@ -241,7 +241,9 @@ static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dict
 		out["telegraph"] = float(out.telegraph) + float(tradeoff.get("telegraph_add_s", 0.0))
 		out["power"] = float(out.get("power", 8.0)) * float(tradeoff.get("power_multiplier", 1.0))
 		out["reposition_time"] = maxf(0.0, float(out.get("reposition_time", 1.0)) + float(tradeoff.get("reposition_add_s", 0.0)))
-		if posmod(cursor + 1, 3) == 0:
+		# A recovery punish selects a quick by sequence index, but still belongs
+		# to this body's live attack count for its every-third recovery tradeoff.
+		if posmod(int(context.get("pattern_cursor", cursor)) + 1, 3) == 0:
 			out["recovery"] = float(out.recovery) + float(tradeoff.get("third_recovery_add_s", 0.0))
 	return out
 
