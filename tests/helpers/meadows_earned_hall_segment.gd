@@ -97,77 +97,6 @@ class HallReader extends "res://tests/helpers/f22_pattern_pilot.gd":
 		return null
 
 
-## The established COMBAT §7 reader (tests/helpers/f22_pattern_pilot.gd,
-## the F22#1/F04#7 C2 policy) driving the earned route's actual fight. Its
-## `_read` decisions are reused unchanged; only the input layer differs:
-## presses and stick deflection go through the physical controller bindings,
-## the stick camera-relative, and the production foe is never reconfigured.
-class HallReader extends "res://tests/helpers/f22_pattern_pilot.gd":
-	var rig: Node3D
-	var presses := {}
-
-	func _init(camera_rig: Node3D) -> void:
-		rig = camera_rig
-		_tally = {"burst_uses": 0, "events": []}
-
-	func step(manager: Node, ally: Node3D, foe: Node3D) -> void:
-		_release_attack()
-		_release_move()
-		_manager = manager
-		_ally = ally
-		_wild = foe
-		_read("READER")
-		_frames += 1
-
-	func _walk(direction: Vector3) -> void:
-		direction.y = 0.0
-		var local := (rig.call("planar_basis") as Basis).inverse() * direction.normalized()
-		for action: String in ["move_right", "move_back"]:
-			var event := _joypad(action)
-			if event is InputEventJoypadMotion:
-				var axis := event as InputEventJoypadMotion
-				axis.axis_value = (local.x if action == "move_right" else local.z) * signf(axis.axis_value)
-				Input.parse_input_event(axis)
-
-	func _release_move() -> void:
-		for action: String in ["move_right", "move_back"]:
-			var event := _joypad(action)
-			if event is InputEventJoypadMotion:
-				(event as InputEventJoypadMotion).axis_value = 0.0
-				Input.parse_input_event(event)
-
-	func _press(action: String) -> void:
-		var event := _joypad(action)
-		if not event is InputEventJoypadButton:
-			push_error("Hall reader has no physical controller button: " + action)
-			return
-		(event as InputEventJoypadButton).pressed = true
-		Input.parse_input_event(event)
-		_pressed = action
-		presses[action] = int(presses.get(action, 0)) + 1
-
-	func _release_attack() -> void:
-		if _pressed.is_empty():
-			return
-		var event := _joypad(_pressed)
-		if event is InputEventJoypadButton:
-			(event as InputEventJoypadButton).pressed = false
-			Input.parse_input_event(event)
-		_pressed = ""
-
-	func release_all() -> void:
-		_release_attack()
-		_release_move()
-
-	static func _joypad(action: String) -> InputEvent:
-		for configured: InputEvent in InputMap.action_get_events(action):
-			if configured is InputEventJoypadButton or configured is InputEventJoypadMotion:
-				var event: InputEvent = configured.duplicate()
-				event.device = 0
-				return event
-		return null
-
-
 func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	_tree = tree
 	_world = world
@@ -284,21 +213,6 @@ func _hook() -> void:
 	_nav = NAV.new(_tree, _player, _rig, _stick)
 	_combat.connect("entered", _on_entered)
 	_combat.connect("hit_landed", _on_hit)
-	_combat.connect("attack_missed", func(by_player: bool) -> void: print("DIAG MISS f=%d by_player=%s" % [Engine.get_physics_frames(), by_player]))
-	_combat.connect("hit_landed", func(e: bool, a: float) -> void:
-		var en: RefCounted = _combat.call("enemy")
-		var al: RefCounted = _combat.call("active_creature")
-		var ab := _director.call("ally_body") as Node3D
-		var fb := _combat.call("enemy_body") as Node3D
-		if ab and fb and not e:
-			var off := ab.global_position - fb.global_position
-			off.y = 0
-			var fc: Vector3 = fb.call("facing")
-			fc.y = 0
-			print("DIAG GAP %.2f angle=%.0f committed=%s cfgrange=%.2f" % [off.length(), rad_to_deg(fc.angle_to(off)), _combat.call("player_is_committed"), float((fb.call("combat_config") as Dictionary).get("range", 0))])
-		print("DIAG HIT f=%d enemy_side=%s amt=%.1f ally=%s %s/%s enemy=%s L%s %s/%s" % [Engine.get_physics_frames(), e, a,
-			al.get("species_id") if al else "-", al.get("hp") if al else "-", al.get("max_hp") if al else "-",
-			en.get("species_id") if en else "-", en.get("level") if en else "-", en.get("hp") if en else "-", en.get("max_hp") if en else "-"]))
 	_combat.connect("exited", _on_exit)
 	_panel.connect("finished", _on_dialogue_finished)
 	_arbiter.connect("activated", _on_activated)

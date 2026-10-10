@@ -112,7 +112,9 @@ func test_crown_supports_keep_the_existing_encounter_sightline_and_floor_seats()
 	var counts: Array[int] = []
 	for batch: MultiMeshInstance3D in batches:
 		counts.append(batch.multimesh.instance_count)
-	assert_true(counts.has(43),"production uploads the14 crown +13 core +16 outer supports")
+	# 43 before #617: its judged Stormheart-deck fix drops the two core/outer braces
+	# that ended in mid-air across the open trunk split (in_trunk_split).
+	assert_true(counts.has(41),"production uploads the 14 crown supports plus the core and outer supports outside the trunk split")
 	assert_true(counts.has(187),"all original deck fascia remains")
 	assert_true(counts.has(384),"all original ascent pickets remain")
 	tree.free()
