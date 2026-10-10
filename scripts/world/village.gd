@@ -78,10 +78,13 @@ func build(slicer: RefCounted = null) -> void:
 		await _breathe(slicer)
 	print("[village] placed %d structures; static batch folded %d module meshes in %d ms" % [
 		_placed, _batched_meshes, _batch_usec / 1000])
-	var catalog := CATALOG_PRESENTATION.new()
-	catalog.name = "MeadowsCatalogPresentation"
-	add_child(catalog)
-	catalog.build("village", Callable(self, "_ground_height"))
+	# Stormwood's RodfolkSettlements reuse this builder with their own config;
+	# the Meadows catalog dressing belongs to the Meadows village only.
+	if config_path == CONFIG_PATH:
+		var catalog := CATALOG_PRESENTATION.new()
+		catalog.name = "MeadowsCatalogPresentation"
+		add_child(catalog)
+		catalog.build("village", Callable(self, "_ground_height"))
 
 
 ## `vegetation.gd::_breathe()`'s own pattern, verbatim: `slicer == null` (every
