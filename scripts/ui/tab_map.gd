@@ -974,17 +974,17 @@ func _spread_callouts(entries: Array[Dictionary], top: float, bottom: float) -> 
 	# Region callouts occupy their complete wrapped glyph/outline bounds.
 	# Keep the existing destination layout and geographical ordering.
 	if entries[0].has("height"):
-		var cursor := top
-		for entry in entries:
-			var half_height := float(entry.height) * 0.5
-			entry["label_y"] = maxf(float(entry.desired_y), cursor + half_height)
-			cursor = float(entry.label_y) + half_height + HEADING_CLEARANCE
-		cursor = bottom
+		var region_cursor := top
+		for region_entry in entries:
+			var half_height := float(region_entry.height) * 0.5
+			region_entry["label_y"] = maxf(float(region_entry.desired_y), region_cursor + half_height)
+			region_cursor = float(region_entry.label_y) + half_height + HEADING_CLEARANCE
+		region_cursor = bottom
 		for offset in entries.size():
-			var entry := entries[entries.size() - 1 - offset]
-			var half_height := float(entry.height) * 0.5
-			entry["label_y"] = minf(float(entry.label_y), cursor - half_height)
-			cursor = float(entry.label_y) - half_height - HEADING_CLEARANCE
+			var region_entry := entries[entries.size() - 1 - offset]
+			var half_height := float(region_entry.height) * 0.5
+			region_entry["label_y"] = minf(float(region_entry.label_y), region_cursor - half_height)
+			region_cursor = float(region_entry.label_y) - half_height - HEADING_CLEARANCE
 		return
 	const GAP := 38.0 # >= CANVAS_LABEL_FONT_SIZE's own line height, so bumped labels never touch
 	var cursor := top
