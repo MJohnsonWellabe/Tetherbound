@@ -1,0 +1,29 @@
+{
+  "enabled": false,
+  "species": "abyssal_guardian",
+  "placeholder": {
+    "colour": "#8899aa",
+    "height": 7.2,
+    "radius": 2.52,
+    "footprint_allowance": 4.25,
+    "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate/models/creature_abyssal_guardian_native.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    },
+    "field_emission": 0.0,
+    "rest_model_position_offset": 0.0,
+    "colourway_source_species": "abyssal_guardian_native_review"
+  }
+}
