@@ -13,6 +13,51 @@
   "_comment_aggressive": "`aggressive` decides whether a wild creature will start a fight on its own. GAME_DESIGN.md 14 forbids simple proximity starting a fight with a PEACEFUL creature, and the same list allows 'Aggressive creature initiates' \u2014 so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
   "_comment_best_creature": "R4.7, GAME_DESIGN.md 12: 'Best Creature abilities should be species-specific where possible.' `kind` is `survivability` (a percentage bonus to the effective defence a Best Creature fights with) or `energy` (the same percentage bonus applied to energy gained from a landed quick attack) \u2014 the two D30-era combat hooks that already exist. Read only through `creature_species.best_creature_ability()`, and only applied when a creature is the party's flagged Best Creature (`autoload/party.gd::best()`); it never affects a creature nobody has designated. Traversal and other perk kinds named by GAME_DESIGN.md 12 are not built \u2014 no out-of-exploration companion-speed system exists yet for one to hook into.",
   "species": {
+    "stormursa": {
+      "display_name": "Stormursa",
+      "type": "electric",
+      "evolves_from": "staticub",
+      "evolution_authorized": true,
+      "evolution_enabled": true,
+      "evolution_trigger": "breakthrough_feast",
+      "evolution_breaks_level": 50,
+      "wild_evolution_form": false,
+      "base_hp": 150.0,
+      "base_attack": 30.0,
+      "base_defence": 24.0,
+      "catch_rate": 0.0,
+      "aggressive": false,
+      "moves": {
+        "quick": "spark_bite",
+        "charged": "arc_lash",
+        "utility": "shove",
+        "ultimate": "ultimate_stormursa"
+      },
+      "learnset_id": "stormursa",
+      "_comment": "RD-28: Staticub evolves at its L50 feast. Production species uses the consolidated native Stormursa mesh and its unique grounding ultimate.",
+      "learnset": "stormursa",
+      "placeholder": {
+        "colour": "#76513a",
+        "height": 4.1,
+        "radius": 1.435,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/stormursa/models/creature_stormursa_lod0.glb",
+        "model_scale": 1.0,
+        "yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "charged": "charged",
+          "hit": "hit",
+          "faint": "faint",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        }
+      }
+    },
     "terrapup": {
       "display_name": "Terrapup",
       "type": "ground",
