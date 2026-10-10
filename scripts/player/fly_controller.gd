@@ -4,6 +4,7 @@ extends Node
 ## the ordinary locomotion tick while deployed; it never carries/hides it.
 ## World-authored AABBs are true 3D volumes, including progression restrictions.
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const PARTY := preload("res://autoload/party.gd")
 const ANCHOR_ARBITER := preload("res://scripts/net/fly_anchor_arbiter.gd")
 const CONFIG_PATH := "res://data/config/fly_traversal.json"
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
@@ -241,6 +242,9 @@ func eligible_creature() -> RefCounted:
 		return null
 	if _mentor_loaner == null or str(_mentor_loaner.get("species_id")) != species_id:
 		_mentor_loaner = SPECIES.spawn(species_id)
+		# Party refuses this tag (party.gd add): the loaner is Maela's, never
+		# a sixth or a replacement owned creature, whatever later code holds it.
+		_mentor_loaner.set_meta(PARTY.LOANER_META, true)
 	return _mentor_loaner
 
 
