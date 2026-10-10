@@ -64,7 +64,7 @@ static func step_xz(row: Dictionary) -> Vector2:
 static func _island_point(island_id: String, offset: Variant) -> Vector2:
 	if not offset is Array or (offset as Array).size() < 3:
 		return Vector2.INF
-	for island: Dictionary in FIELD.load_config().get("islands", []):
+	for island: Dictionary in (FIELD.shared().call("config") as Dictionary).get("islands", []):
 		if str(island.id) == island_id:
 			return Vector2(float(island.center_xz_m[0]) + float(offset[0]),
 				float(island.center_xz_m[1]) + float(offset[2]))
