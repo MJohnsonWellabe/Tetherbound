@@ -8,7 +8,7 @@ extends SceneTree
 ##       -- --seeds=24 [--case=<substring>[,...]] [--starter=<id>] [--party-level=<n>] --json=<path>
 ##
 ## Same method as tests/smoke_water_named_c2c3.gd (F14#0): the shared paired
-## pilot tests/helpers/combat_depth_pilot.gd, unmodified -- real CombatManager,
+## pilot tests/helpers/f22_pattern_pilot.gd -- real CombatManager,
 ## real WildCreature AI and CharacterBody3D bodies on a flat collider, READER
 ## and MASHER input policies. It adds no combat arithmetic of its own.
 ##
@@ -22,19 +22,19 @@ extends SceneTree
 ## PARTY: the retained five (starter + bramblebun, mudsnout, pipwing, trailpup,
 ## the F12 original-five precedent). C2 demands all three starters, so the
 ## lead cycles terrapup / ripplet / galewisp. COMBAT §7 measures "at
-## region-entry levels"; each fight's party level is its region's Calm wild
-## band midpoint + 1 (the chapter's declared entry, L33, sits one above Cinder
-## Verge's 30-34 band midpoint). --party-level overrides it for every case.
+## region-entry levels"; each fight uses chapter_curve.json's current
+## Stormwood regional_targets[].team[0]. --party-level is a disclosed override.
 ##
 ## Verdict rules applied per case/starter (printed; nothing is tuned):
 ##   C2 named wild: READER median lead HP cost <= 0.55 x MASHER's, READER win >= 90%.
 ##   C3: no single incoming hit >= 50% of an entry creature's HP (worst seen,
 ##       not neutral-only: a harsher bound), every tell >= 0.8 s, and any tell
 ##       authored as heavy (>= 1.1 s by BOSSES) observed at >= 1.1 s.
-## Not covered: terrain/arena geometry, storm strikes, manual switch/burst/Y,
+## Not covered: terrain/arena geometry, storm strikes,
 ## co-op scaling, framing (a rendered capture), an earned-save party.
 
-const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
+const PILOT := preload("res://tests/helpers/f22_pattern_pilot.gd")
+const MATH := preload("res://scripts/combat/combat_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
@@ -70,28 +70,33 @@ func _read(path: String) -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
-## Region-entry party level: Calm band midpoint + 1 (see header).
-func _entry_levels(encounters: Dictionary) -> Dictionary:
+## Same authored regional entry pins as the existing F22 band proof.
+func _entry_levels() -> Dictionary:
 	var out := {}
-	for table: Dictionary in encounters.get("tables", []):
-		if str(table.get("surge_phase", "")) != "calm": continue
-		var band: Array = table.get("level_range", [])
-		if band.size() == 2:
-			out[str(table.region_id)] = floori((int(band[0]) + int(band[1])) / 2.0) + 1
+	var biome: Dictionary = _read("res://data/config/chapter_curve.json").get("biomes", {}).get("stormwood", {})
+	for region: Dictionary in biome.get("regional_targets", []):
+		var team: Array = region.get("team", [])
+		if team.size() == 2 and int(team[0]) > 0:
+			out[str(region.region_id)] = int(team[0])
 	return out
 
 
 func _cases(errors: Array[String]) -> Array[Dictionary]:
 	var cases: Array[Dictionary] = []
 	var encounters := _read("res://data/config/stormwood_encounters.json")
-	var levels := _entry_levels(encounters)
+	var levels := _entry_levels()
+	var patterns: Dictionary = MATH.config().get("patterns", {}).get("named", {})
 	for named: Dictionary in encounters.get("named_encounters", []):
 		var region := str(named.get("region_id", ""))
 		if not levels.has(region):
-			errors.append("%s: no Calm band for region %s" % [named.id, region])
+			errors.append("%s: no current team-entry pin for region %s" % [named.id, region])
+			continue
+		var pattern_id := "named_" + str(named.id)
+		if not patterns.has(pattern_id):
+			errors.append("%s: missing shipping named pattern" % named.id)
 			continue
 		var combat := CATALOGUE.named_combat(named)
-		cases.append({"id": str(named.id), "region": region, "profile": str(named.behavior_profile),
+		cases.append({"id": str(named.id), "region": region, "profile": str(named.behavior_profile), "pattern_id": pattern_id,
 			"party_level": _party_level_override if _party_level_override > 0 else int(levels[region]),
 			"authored_tell": float(combat.get("telegraph", TELL_FLOOR)),
 			"foes": [{"species": str(named.placeholder_species), "level": int(named.level), "combat": combat}]})
@@ -139,15 +144,27 @@ func _run() -> void:
 						foes.append(foe)
 					if party.size() != 5 or foes.size() != entry.foes.size(): break
 					var pilot: RefCounted = PILOT.new()
+					pilot.context = {"chapter": "stormwood", "band": entry.region,
+						"after_south_bridge": true, "role": entry.profile,
+						"floor_trainer": false, "pattern_id": entry.pattern_id}
 					var result: Dictionary = await pilot.fight(self, party, foes, false,
-						hash("stormwood/%s/%s/%d" % [entry.id, starter, seed_index]), policy)
+						hash("stormwood/%s/%s/%d" % [entry.id, starter, seed_index]),
+						"SWITCH_READER" if policy == "READER" else policy)
 					var tells: Array = []
+					var tell_profiles: Array[Dictionary] = []
 					for event: Dictionary in result.get("events", []):
-						if str(event.get("event", "")) == "telegraph": tells.append(float(event.seconds))
+						if str(event.get("event", "")) == "telegraph":
+							tells.append(float(event.seconds))
+							var profile: Dictionary = event.get("enemy_config", {})
+							tell_profiles.append({"seconds": float(event.seconds), "heavy": bool(profile.get("heavy", false)),
+								"attack": str(profile.get("pattern_attack_id", ""))})
 					result.erase("events")
 					result["tells"] = tells
+					result["tell_profiles"] = tell_profiles
 					result["case"] = entry.id
 					result["starter"] = starter
+					result["party_level"] = entry.party_level
+					result["pattern_id"] = entry.pattern_id
 					runs.append(result)
 					s.wins += int(result.won)
 					s.lead_cost.append(float(result.lead_lost_frac))
@@ -197,9 +214,9 @@ func _run() -> void:
 			errors.append("cannot write %s" % _json)
 		else:
 			file.store_string(JSON.stringify({"seeds": _seeds, "selection": _selection,
-				"party": {"lead": STARTERS, "retained": RETAINED, "level_rule": "region Calm band midpoint + 1",
+				"party": {"lead": STARTERS, "retained": RETAINED, "level_rule": "chapter_curve Stormwood regional team entry",
 					"override": _party_level_override},
-				"fixture": "production CombatManager + WildCreature bodies on a flat collider (combat_depth_pilot.gd)",
+				"fixture": "production CombatManager + F22 WildCreature patterns on a flat collider (f22_pattern_pilot.gd)",
 				"rules": {"ratio_max": RATIO_MAX, "reader_win_min": READER_WIN_MIN, "hit_ceiling": HIT_CEILING,
 					"tell_floor": TELL_FLOOR, "heavy_tell": HEAVY_TELL},
 				"rows": rows, "runs": runs, "errors": errors}, "  "))
