@@ -90,11 +90,21 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 			animation.track_set_path(bone_position, bone_path)
 			animation.position_track_insert_key(bone_position, 0.0, rest_transform.origin)
 			animation.position_track_insert_key(bone_position, animation.length, rest_transform.origin)
+			var has_position_offsets := false
+			for frame: Dictionary in spec.frames:
+				if frame.get("bone_positions", {}).has(bone):
+					has_position_offsets = true
+					break
 			var bone_scale := animation.add_track(Animation.TYPE_SCALE_3D)
 			animation.track_set_path(bone_scale, bone_path)
 			animation.scale_track_insert_key(bone_scale, 0.0, rest_transform.basis.get_scale())
 			animation.scale_track_insert_key(bone_scale, animation.length, rest_transform.basis.get_scale())
 			for frame: Dictionary in spec.frames:
+				var offsets: Dictionary = frame.get("bone_positions", {})
+				if has_position_offsets:
+					var offset: Array = offsets.get(bone, [0, 0, 0])
+					animation.position_track_insert_key(bone_position, float(frame.phase) * animation.length,
+						rest_transform.origin + Vector3(float(offset[0]), float(offset[1]), float(offset[2])))
 				var degrees: Array = frame.bones[bone]
 				var delta := Quaternion.from_euler(Vector3(float(degrees[0]), float(degrees[1]), float(degrees[2])) * PI / 180.0)
 				animation.rotation_track_insert_key(track, float(frame.phase) * animation.length, (rest * delta).normalized())
@@ -104,13 +114,18 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		animation.track_set_path(position_track, pivot_path)
 		for frame: Dictionary in spec.frames:
 			var rolled := pivot_before.basis * Basis(Vector3.BACK, deg_to_rad(float(frame.pivot_roll_deg)))
+			if frame.has("pivot_rotation_deg"):
+				var degrees: Array = frame.pivot_rotation_deg
+				rolled = pivot_before.basis * Basis(Quaternion.from_euler(
+					Vector3(float(degrees[0]), float(degrees[1]), float(degrees[2])) * PI / 180.0))
 			var position := pivot_before.origin
-			if role in ["faint", "hit", "ride"]:
+			if role in recipe.get("grounded_roles", ["faint", "hit", "ride"]):
 				# The standing AABB includes unfolded legs/wings. Ground the
 				# actual skinned pose instead, without changing mesh or collision.
 				var sample := "%s:%s" % [role, frame.phase]
 				if not contacts.has(sample):
-					var minimum := _posed_minimum_y(skeleton, model, surfaces, frame.bones, rolled)
+					var minimum := _posed_minimum_y(skeleton, model, surfaces, frame.bones, rolled,
+						frame.get("bone_positions", {}))
 					contacts[sample] = minimum if is_finite(minimum) else \
 						(Transform3D(rolled, Vector3.ZERO) * box).position.y
 				position.y = -float(contacts[sample])
@@ -183,11 +198,13 @@ static func _transform_matches(transform: Transform3D, column_major: Array) -> b
 ## follows the renderer's skin transform, including named and eight-weight
 ## binds, while leaving the live skeleton's current animation untouched.
 static func _posed_minimum_y(skeleton: Skeleton3D, model: Node3D,
-		surfaces: Array[Dictionary], rotations: Dictionary, rolled: Basis) -> float:
+		surfaces: Array[Dictionary], rotations: Dictionary, rolled: Basis, positions: Dictionary = {}) -> float:
 	var poses: Array[Transform3D] = []
 	poses.resize(skeleton.get_bone_count())
 	for bone in skeleton.get_bone_count():
 		var pose := skeleton.get_bone_rest(bone)
+		var offset: Array = positions.get(str(skeleton.get_bone_name(bone)), [0, 0, 0])
+		pose.origin += Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
 		var degrees: Array = rotations.get(str(skeleton.get_bone_name(bone)), [0, 0, 0])
 		var delta := Quaternion.from_euler(Vector3(float(degrees[0]), float(degrees[1]),
 			float(degrees[2])) * PI / 180.0)

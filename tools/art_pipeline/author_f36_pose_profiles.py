@@ -5,6 +5,7 @@ Runtime verifies the source hash or packaged UID/rest/bind contract before insta
 Re-run after any mesh replacement: source hashes bind each recipe to its rig.
 """
 import hashlib
+import copy
 import json
 import math
 from pathlib import Path
@@ -239,6 +240,111 @@ def rotation(bone, role, phase, winged, biped, wing_folds=None):
     return [0, 0, 0]
 
 
+ANATOMICAL_SPECIES = {'terrapup', 'brooktail', 'ripplet'}
+
+
+def rigid_inverse(matrix):
+    inverse = [0.0] * 16
+    inverse[15] = 1.0
+    for column in range(3):
+        for row in range(3):
+            inverse[column * 4 + row] = matrix[row * 4 + column]
+    for row in range(3):
+        inverse[12 + row] = -sum(inverse[column * 4 + row] * matrix[12 + column] for column in range(3))
+    return inverse
+
+
+def follow_head_details(rig, pose):
+    # These two installed rigs put small facial details on a separate root.
+    # Keep those existing weighted details attached to the posed head. This
+    # changes pose only, not skin weights, bone parents, rests or expression.
+    if 'neutral_bone' not in rig or rig['neutral_bone']['parent']:
+        return {}
+
+    def global_pose(bone, rotations):
+        local = multiply(rig[bone]['rest'], node_matrix({'rotation': quaternion(rotations.get(bone, [0, 0, 0]))}))
+        parent = rig[bone]['parent']
+        return multiply(global_pose(parent, rotations), local) if parent else local
+
+    head_delta = multiply(global_pose('head', pose), rigid_inverse(global_pose('head', {})))
+    rest = rig['neutral_bone']['rest']
+    desired = multiply(head_delta, rest)
+    local_delta = multiply(rigid_inverse(rest), desired)
+    pose['neutral_bone'] = [math.degrees(math.asin(max(-1, min(1, -local_delta[9])))),
+                            math.degrees(math.atan2(local_delta[8], local_delta[10])),
+                            math.degrees(math.atan2(local_delta[1], local_delta[5]))]
+    return {'neutral_bone': [desired[12 + axis] - rest[12 + axis] for axis in range(3)]}
+
+
+def anatomical_poses(name, bones, rig, roles):
+    """Bounded installed-skin repairs; keep successful roles unchanged.
+
+    Brooktail's tail joints have zero skin influence: its tail is weighted to
+    rear-leg joints. Do not curl those joints as if they were independent feet.
+    Rigid pivot attitude carries/swims the body without stretching its skin.
+    """
+    if name not in ANATOMICAL_SPECIES:
+        return roles
+    result = copy.deepcopy(roles)
+    for role in (('faint', 'swim') if name == 'ripplet' else ('fly_grip', 'faint')):
+        for frame in result[role]['frames']:
+            phase = frame['phase']
+            amount = min(1, phase / .7) if role == 'faint' else 1
+            wave = math.sin(phase * math.tau)
+            pose = {bone: [0, 0, 0] for bone in bones}
+            if role == 'fly_grip':
+                # Small clasp arcs around rest, with a rigid carrying attitude.
+                # Large limb curls stretch blended underside/torso weights.
+                pitch = -30 if name == 'terrapup' else -25
+                for bone in bones:
+                    if bone.startswith('front_upper'):
+                        pose[bone] = [-15 if name == 'terrapup' else -10, 0, 0]
+                    elif bone.startswith('front_lower'):
+                        pose[bone] = [20 if name == 'terrapup' else 15, 0, 0]
+                    elif name == 'terrapup' and bone.startswith('rear_upper'):
+                        pose[bone] = [10, 0, 0]
+                    elif name == 'terrapup' and bone.startswith('rear_lower'):
+                        pose[bone] = [20, 0, 0]
+                frame['pivot_rotation_deg'] = [pitch, 0, 0]
+            elif role == 'swim':
+                # Ripplet floats along its body's long axis, with alternating
+                # flipper strokes and a tail scull, rather than an upright gait.
+                pose.update(arm_l=[-8 + 10 * wave, 0, 8], arm_r=[-8 - 10 * wave, 0, -8],
+                            leg_upper_l=[8 + 6 * wave, 0, 0], leg_upper_r=[8 - 6 * wave, 0, 0],
+                            leg_lower_l=[15, 0, 0], leg_lower_r=[15, 0, 0],
+                            tail_1=[0, 5 * wave, 0], tail_2=[0, 8 * wave, 0])
+                frame['pivot_rotation_deg'] = [65, 0, 3 * wave]
+            elif name == 'terrapup':
+                # Keep the demonstrated grounded flank, but relax the upper
+                # paws and expose the face instead of retaining a hard curl.
+                pose.update(frame['bones'])
+                for bone in bones:
+                    if 'upper' in bone and bone.endswith('_r'):
+                        pose[bone] = [5 * amount, 0, 0]
+                    elif 'lower' in bone and bone.endswith('_r'):
+                        pose[bone] = [30 * amount, 0, 0]
+                pose.update(neck=[8 * amount, 0, 0], head=[-5 * amount, 0, 0],
+                            tail_1=[15 * amount, 0, 0], tail_2=[-8 * amount, 0, 0])
+            elif name == 'brooktail':
+                pose.update(front_upper_l=[-15 * amount, 0, -10 * amount],
+                            front_upper_r=[5 * amount, 0, 0],
+                            front_lower_l=[20 * amount, 0, 0], front_lower_r=[20 * amount, 0, 0],
+                            neck=[5 * amount, 0, 0], head=[-5 * amount, 0, 0])
+                # Rear-leg curls would bend the wrongly assigned tail weights.
+            else:
+                pose.update(neck=[5 * amount, 0, 0], head=[-5 * amount, 0, 0],
+                            tail_2=[10 * amount, 0, 0], leg_upper_r=[-10 * amount, 0, 10 * amount],
+                            leg_lower_r=[20 * amount, 0, 0], leg_upper_l=[5 * amount, 0, 0],
+                            leg_lower_l=[10 * amount, 0, 0])
+                frame['pivot_rotation_deg'] = [40 * amount, 0, -75 * amount]
+            frame['bones'] = pose
+            if role == 'faint':
+                offsets = follow_head_details(rig, pose)
+                if offsets:
+                    frame['bone_positions'] = offsets
+    return result
+
+
 def main():
     species = json.loads((ROOT / 'data/creatures/species.json').read_text())['species']
     rows = {}
@@ -262,8 +368,9 @@ def main():
         biped = 'arm_l' in bones
         family = 'winged' if winged else 'biped' if biped else 'quadruped'
         wing_folds = folded_wings(rig) if winged else {}
-        signature = (tuple(bones), tuple((bone, tuple(round(value, 5) for value in angles))
-                                       for bone, angles in wing_folds.items()))
+        signature = (name if name in ANATOMICAL_SPECIES else '', tuple(bones),
+                     tuple((bone, tuple(round(value, 5) for value in angles))
+                           for bone, angles in wing_folds.items()))
         row = {'model': definition['placeholder']['model'], 'source_sha256': hashlib.sha256(raw).hexdigest(),
                'resource_uid': uid_match.group(1), 'rig_contract': rig, 'bind_contract': binds,
                'rig_family': family, 'bones': bones}
@@ -284,7 +391,11 @@ def main():
                 roles[role]['start_phase'] = .125
                 roles[role]['release_phase'] = .25
         profile = f'{family}_{len(profiles) + 1}'
-        profiles[profile] = roles
+        profiles[profile] = anatomical_poses(name, bones, rig, roles)
+        if name in {'terrapup', 'brooktail'}:
+            # Ground the stage's carrying attitude on its actual skin, not an
+            # invented lift. Real carriers still align their foot to the hand.
+            row['grounded_roles'] = ['hit', 'faint', 'ride', 'fly_grip']
         rig_profiles[signature] = profile
         row['profile'] = profile
         rows[name] = row
