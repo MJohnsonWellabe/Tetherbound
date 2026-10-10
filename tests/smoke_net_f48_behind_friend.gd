@@ -37,8 +37,12 @@ func _run() -> void:
 	for peer in 2:
 		if not await _f18_pass(peer, "expect_peers", {"count": 2}): return
 	var before := await _f18_observe(1)
+	for peer in 2:
+		check((await _f18_observe(peer)).get("runtime_enabled") == true,
+			"peer %d uses the shipping portal runtime without a test override" % peer)
 	check(before.get("tidewake_key_count") == 0 and not before.get("character", {}).get("portal_unlocks", []).has("tidewake"),
 		"the guest starts without a Tidewake key or unlock")
+	var honest_progress := _personal_progress(before.get("character", {}))
 	# The host opens Tidewake for its world with its own key.
 	if not await _f18_pass(0, "f18_home_key", {}, 12000): return
 	var unlocked := await _f18_action(0, "f18_arch", {"arch": "tidewake", "mode": "unlock"})
@@ -76,6 +80,19 @@ func _run() -> void:
 	var saved := await _f18_observe(1)
 	check(not saved.get("character_disk", {}).get("redesign_character", {}).get("portal_unlocks", []).has("tidewake"),
 		"the guest's saved character holds no Tidewake unlock")
+	check(saved.get("realm") == "water", "the keyless guest reaches the actual Tidewake realm")
+	check(_personal_progress(saved.get("character", {})) == honest_progress \
+		and _personal_progress(saved.get("character_disk", {}).get("redesign_character", {})) == honest_progress \
+		and _personal_progress(travelled.get("admitted", {}).get("redesign_character", {})) == honest_progress,
+		"following grants no personal unlock, relic, Master or recipe live, admitted or on disk")
+	for character: Dictionary in [saved.get("character", {}), saved.get("character_disk", {}).get("redesign_character", {}),
+			travelled.get("admitted", {}).get("redesign_character", {})]:
+		check(_honest_travel_receipts(before.get("character", {}).get("transaction_receipts", []), character.get("transaction_receipts", []), travelled, guest_id),
+			"every added guest receipt is its exact accepted arrival journal; no permanent progress receipt is granted")
+	check(saved.get("character_disk", {}).get("character_id") == guest_id \
+		and saved.get("character_disk", {}).get("inventory") is Array \
+		and _saved_key_count(saved.get("character_disk", {})) == 0,
+		"the guest's durable inventory gains no permanent Tidewake key")
 	# Away from the host's world the guest's own arch stays shut.
 	if not await _f18_pass(1, "leave", {}): return
 	if not await _f18_pass(0, "expect_peers", {"count": 1}): return
@@ -85,3 +102,36 @@ func _run() -> void:
 		"after leaving, the guest's personal Tidewake arch is still locked (%s)" % str(alone.get("tidewake_view")))
 	print("F48_BEHIND_FRIEND: host-opened Tidewake arch crossed by a key-less guest; no personal unlock or key gained")
 	quit(await finish())
+
+
+func _personal_progress(character: Dictionary) -> Dictionary:
+	var result := {}
+	for field: String in ["portal_unlocks", "relics_held", "relics_hung", "master_wins", "feast_recipes", "attachment_recipes"]:
+		result[field] = character.get(field, []).duplicate(true)
+	return result
+
+
+func _honest_travel_receipts(before: Array, after: Array, host: Dictionary, character: String) -> bool:
+	var allowed := before.duplicate()
+	for row: Variant in host.get("deliveries", {}).values():
+		if not row is Dictionary or row.get("character_id") != character or row.get("status") != "accepted" \
+			or row.get("action") != "portal_arrival": continue
+		var intent: Dictionary = row.get("intent", {})
+		var permit := str(intent.get("permit_id", ""))
+		var receipt := "craft:portal_arrival_%s:%s" % [permit, character]
+		if permit.is_empty() or row.get("receipt") != receipt: return false
+		allowed.append(receipt)
+		if intent.get("realm") == "meadows" and intent.get("entry_id") == "hall_home":
+			allowed.append("craft:home_return_%s_%s:%s" % [host.get("world_instance", ""), permit, character])
+	for receipt: Variant in before:
+		if not after.has(receipt): return false
+	for receipt: Variant in after:
+		if not allowed.has(receipt): return false
+	return true
+
+
+func _saved_key_count(character: Dictionary) -> int:
+	var count := 0
+	for stack: Variant in character.get("inventory", []):
+		if stack is Dictionary and stack.get("id") == "tidewake_portal_key": count += int(stack.get("n", 0))
+	return count

@@ -352,6 +352,33 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 	var game: Node = root.get_node(^"Game")
 	var session: Node = game.get_node(^"Session")
 	match action:
+		"op_tonic_hostile":
+			var manager: Node = _combat_manager()
+			var director: Node = _encounter_director()
+			var session: Node = _session()
+			var intent: Dictionary = args.get("intent", {})
+			if session.is_host() or not session.is_active() or not manager.is_fighting() \
+				or intent.get("kind") != "tether_command" or intent.get("encounter_id") != manager.encounter_id():
+				return {"verdict":"FAIL", "detail":"hostile control requires actual joined guest and its live encounter"}
+			var refusals: Array[String] = []
+			var observe_refusal := func(reason: String) -> void: refusals.append(reason)
+			manager.connect("tether_command_refused", observe_refusal)
+			# Sender identity is supplied by ENet; no direct host function call.
+			var sent: int = director.rpc_id(1, "_rpc_encounter_intent", intent)
+			if args.get("barrier") == true and sent == OK:
+				# Stale-generation replies are intentionally ignored by the local
+				# manager. A malformed sentinel on the same reliable channel proves
+				# the host has processed the preceding stale packet before snapshot.
+				var sentinel := intent.duplicate(true)
+				sentinel.request["hostile_barrier"] = true
+				sent = director.rpc_id(1, "_rpc_encounter_intent", sentinel)
+			for frame in 90:
+				if sent != OK or not refusals.is_empty(): break
+				await physics_frame
+			manager.disconnect("tether_command_refused", observe_refusal)
+			return {"verdict":"PASS" if sent == OK and not refusals.is_empty() else "FAIL",
+				"detail":"raw guest ENet hostile request refused" if not refusals.is_empty() else "raw guest ENet request had no refusal",
+				"data":{"rpc_error":sent, "refusals":refusals, "intent":intent}}
 		"op_tonic_candidate":
 			if OS.get_cmdline_user_args().has("--capture-combat-hud"):
 				if _peer_index != 1 or DisplayServer.get_name() == "headless":

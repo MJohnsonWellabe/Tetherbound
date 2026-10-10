@@ -218,6 +218,12 @@ func _rejoin(label: String) -> bool:
 
 
 func _run() -> void:
+	if OS.get_cmdline_user_args().has("--prove-network-tether") and not OS.get_cmdline_user_args().has("--prove-shipping-tether"):
+		push_error("F24#5 requires shipping gates; use --prove-network-tether --prove-shipping-tether")
+		quit(1)
+		return
+	if OS.get_cmdline_user_args().has("--prove-network-tether"):
+		require_peer_logs_without(["SCRIPT ERROR", "Parse Error", "Invalid call", "ERROR:"], "F24 shipping network peers have no runtime errors")
 	if not await launch(2, "title"):
 		quit(await finish())
 		return
@@ -232,7 +238,7 @@ func _run() -> void:
 		await step(i, "dismiss_dialogue", {})
 		_ok(await step(i, "party_grant", {"species": "terrapup", "level": 8}), "SETUP: peer %d owns a terrapup" % i)
 		if (host_commands and i == 0) or (not host_commands and i == 1 \
-			and OS.get_cmdline_user_args().has("--prove-tag-combo")):
+			and (OS.get_cmdline_user_args().has("--prove-tag-combo") or OS.get_cmdline_user_args().has("--prove-network-tether"))):
 			_ok(await step(i, "party_grant", {"species":"ripplet", "level":8}), "Tag SETUP: peer %d owns one additional healthy companion before admission" % i)
 	_ok(await step(command_setup_peer, "op_tonic_supply"), "tonic: peer %d saves its initial two-item stock before admission" % command_setup_peer)
 	if not _ok(await step(0, "host"), "peer 0 hosts"):
@@ -252,6 +258,22 @@ func _run() -> void:
 	# 1. First join.
 	var first := await _await_admitted("first-join")
 	check(_admitted(first), "first join: the guest's owner-passive stream is admitted by the host")
+	if OS.get_cmdline_user_args().has("--prove-network-tether"):
+		# F24#5: all four ordinary guest commands and hostile ENet controls,
+		# using tracked shipping flags and the existing command consumers.
+		if _admitted(first):
+			var failed_before: int = failures.size()
+			if await _tonic_item_original(1) and failures.size() == failed_before:
+				var host_tonics: Dictionary = (await _state(0)).get("tonic", {}).get("projected", {})
+				var host_character := str((await _state(0)).get("character_id", ""))
+				check(host_tonics.get(host_character, {}).is_empty(), "Item: guest's saved tonic gives the host's creatures no effect")
+				for i in [1, 0]: _ok(await step(i, "press", {"action":"combat_run"}), "network Item: peer %d leaves normally" % i)
+				if failures.size() == failed_before: await _prove_rally(1)
+				if failures.size() == failed_before: await _prove_tag_combo(1)
+				if failures.size() == failed_before: await _prove_snare(1)
+		print("F24_NETWORK_TETHER: shipping guest Item/Rally/Tag/Snare; own-only host readers and hostile ENet payload controls")
+		quit(await finish())
+		return
 	if OS.get_cmdline_user_args().has("--prove-host-tether-snare"):
 		# Independent F24#3 fresh-join segment; the default Item/Mastery/rejoin
 		# path and its assertions remain below. No failed save is reused.
@@ -494,6 +516,7 @@ func _prove_tag_combo(commander: int = 1) -> void:
 	if commander_character.is_empty(): return
 	var peer := int(owner.peer)
 	var host_before: Dictionary = await probe(0, "op_tag_state", {"peer":peer})
+	var observer_before: Dictionary = await probe(1 - commander, "op_tag_state")
 	var combo: Dictionary = await step(commander, "op_tag_combo")
 	if combo.get("verdict") != "PASS":
 		var failed_data: Dictionary = combo.get("data", {})
@@ -533,6 +556,8 @@ func _prove_tag_combo(commander: int = 1) -> void:
 		and after.deployment.generation == int(request.generation) + 1,
 		"Tag: owner and trusted host recast the same bodies once to the next owned UID")
 	check(after.party == data.before.party and after.party.size() <= 5, "Tag: body switch preserves the admitted party without another creature")
+	check(observer.party == observer_before.party and observer.deployment == observer_before.deployment \
+		and observer.body_instance == observer_before.body_instance, "Tag: command never switches the other participant's owned creature")
 	check(after.commands.meter == verdict.delta.tether_commands.meter \
 		and host.record.participants.get(str(peer), {}).get("tether_commands", {}) == verdict.delta.tether_commands,
 		"Tag: owner and host consume exactly the parent's command meter state")
@@ -764,6 +789,8 @@ func _prove_rally(commander: int) -> void:
 			and before.record.get("kind") == "wild" and float(before.record.get("opponent", {}).get("hp", 0.0)) > 0.0
 		check(ready, "Rally: trusted host has earned meter and the same living admitted wild before the request")
 		if not ready: break
+		if OS.get_cmdline_user_args().has("--prove-network-tether"):
+			if not await _prove_hostile_tether(owner, before, {}): break
 		var cast: Dictionary = await step(commander, "op_tonic_rally")
 		print("RALLY actual request observation: ", JSON.stringify(cast))
 		if not _ok(cast, "Rally: production TetherCommandInput request receives its accepted host receipt"): break
@@ -811,4 +838,45 @@ func _prove_rally(commander: int) -> void:
 			var other: Dictionary = observed.modifiers[character]
 			check(other.get("damage") == 1.0 and other.get("wind_regen") == 1.0, "Rally: other participant receives neither bonus")
 		print("RALLY actual host observation: ", JSON.stringify({"request":request, "before":before, "host":host}))
+		if OS.get_cmdline_user_args().has("--prove-network-tether"):
+			if not await _prove_hostile_tether(owner, host, request): break
 		for i in [1, 0]: _ok(await step(i, "press", {"action":"combat_run"}), "Rally: peer %d normally leaves the proof fight" % i)
+
+
+## Raw ENet requests intentionally bypass the local input validator. The
+## production RPC must refuse them, and the detached host command state for
+## BOTH participants must remain identical. No synthetic host view is supplied.
+func _prove_hostile_tether(owner: Dictionary, baseline: Dictionary, replay: Dictionary) -> bool:
+	var request := preload("res://scripts/combat/tether_commands.gd").intent(str(owner.encounter_id),
+		int(owner.deployment.generation), int(baseline.record.participants.get(str(owner.peer), {}).get("tether_commands", {}).get("last_sequence", 0)) + 1, "rally")
+	var other: Dictionary = baseline.record.participants.get("1", {})
+	var cases: Array[Dictionary] = []
+	if replay.is_empty():
+		for field: String in ["character_id", "creature_uid", "tier", "meter", "item_id"]:
+			var forged := request.duplicate(true)
+			forged[field] = {"character_id":other.get("character_id", ""), "creature_uid":baseline.deployment.get("creature_uid", ""),
+				"tier":4, "meter":100, "item_id":"potion_small"}[field]
+			cases.append({"name":"forged " + field, "intent":{"kind":"tether_command", "encounter_id":request.encounter_id, "request":forged}})
+		cases.append({"name":"forged transport peer", "intent":{"kind":"tether_command", "encounter_id":request.encounter_id, "request":request, "peer_id":1}})
+		var stale := request.duplicate(true)
+		stale.generation = int(request.generation) + 1
+		cases.append({"name":"stale deployment generation", "intent":{"kind":"tether_command", "encounter_id":request.encounter_id, "request":stale}, "barrier":true})
+	else:
+		cases.append({"name":"replayed accepted Rally", "intent":{"kind":"tether_command", "encounter_id":replay.encounter_id, "request":replay}})
+	var before := _participant_command_states(baseline.record)
+	for hostile: Dictionary in cases:
+		var result: Dictionary = await step(1, "op_tonic_hostile", hostile)
+		if not _ok(result, "Host validation: " + str(hostile.name) + " reaches ENet and receives refusal"): return false
+		var actual: Dictionary = await probe(0, "op_tag_state", {"peer":int(owner.peer), "rally":true})
+		var unchanged: bool = _participant_command_states(actual.record) == before
+		check(unchanged, "Host validation: " + str(hostile.name) + " cannot spend either meter, buff either owner or replace either receipt")
+		print("F24_HOSTILE_ENET: ", JSON.stringify({"case":hostile, "result":result, "host_commands":_participant_command_states(actual.record)}))
+		if not unchanged: return false
+	return true
+
+
+func _participant_command_states(record: Dictionary) -> Dictionary:
+	var result := {}
+	for peer: String in record.get("participants", {}):
+		result[peer] = record.participants[peer].get("tether_commands", {}).duplicate(true)
+	return result
