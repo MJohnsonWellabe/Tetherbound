@@ -241,7 +241,8 @@ func _physics_process(delta: float) -> void:
 		return
 	delta = _far_lod_elapsed
 	_far_lod_elapsed = 0.0
-	slide_time_scale = delta / maxf(get_physics_process_delta_time(), 0.0001) if _far_lod_far else 1.0
+	# Covers the whole elapsed time, including a step that just left far mode.
+	slide_time_scale = delta / maxf(get_physics_process_delta_time(), 0.0001)
 	var before := global_position
 	# Resting outside a fight may skip the floor sweep (creature_body.gd).
 	rest_slide_skip_allowed = not engaged
