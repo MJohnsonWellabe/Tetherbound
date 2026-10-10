@@ -1,0 +1,106 @@
+{
+  "subject": "burrowback",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Disabled asset-local review candidate; ordinary species selection remains unchanged",
+  "reference": "assets/creatures/tetherbound/burrowback/reference/native-standing-v1.png",
+  "reference_author": "Built-in imagegen, owner-authorized original character reference",
+  "identity_reference": "assets/creatures/tetherbound/burrowback/reference/three_quarter.png",
+  "reference_prompt": "Draft an original Tetherbound Burrowback creature reference from the supplied established character image. ONE full-body three-quarter studio view of the same stout brown digging badger: distinctive broad cream central forehead stripe and cream muzzle/cheeks with charcoal eye masks, small rounded dark badger ears, warm golden-brown eyes, dark broad nose, thick brown fur, strong stocky limbs, large dark paws with three broad curved ivory digging claws, short thick tufted brown tail. Preserve the irregular grey stone slabs and small moss-green/ochre leaves across its back and shoulders, integrated into the heavy fur silhouette. Keep its friendly determined badger face and squat powerful proportions, not a puppy or boar. Neutral standing quadruped with four separated grounded paws, readable shoulders/elbows and hips/knees, belly visibly above the floor, head level with its spine and no exaggerated crouch. Tail separate and fully inside frame. Solid connected fur masses, broad integrated stone/leaf plates and solid short claws; no floating debris or thin hanging pieces. Replace any cheek whiskers with small flush painted marks: no projecting hair strands or wire/tube whiskers. Entire ears, body, claws and tail in frame with margin. Light-grey studio background, neutral soft lighting, clean detailed stylized game sculpt. No people, rulers, text, clothing, equipment, armor harness, particles, red accents, extra limbs or environment.",
+  "reference_inspection": {
+    "identity": "Brown badger with cream central forehead/muzzle markings, charcoal eye masks, rounded ears, amber eyes, grey stone slabs and moss/ochre dorsal foliage retained",
+    "riggability": "Four separated grounded paws with broad solid digging claws; visible limb joints and separate tufted tail; no hanging hairs or floating fragments",
+    "limits": "Single view does not establish reverse anatomy, topology, rig or native approval"
+  },
+  "generation": {
+    "task_id": "01a125f0-dc01-7429-b59b-7b61af1f9587",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "night": "2026-10-09",
+    "night_submission_index": 6,
+    "observed_credit_cost": 30,
+    "new_submissions_for_this_revision": 1
+  },
+  "rights": {
+    "basis": "Original drafted reference based on owner-held Burrowback identity; existing owner-authorized paid Meshy account under RD-26; no third-party character input, purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models",
+    "terms_checked": "2026-10-10"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "geometry": "25748 input triangles; UV-loop-preserving weld retains albedo, normal and roughness maps and the generated silhouette.",
+    "skin": "15 fitted anatomical joints: torso/head, upper/lower legs/feet and two tail joints. Local surface diffusion, four normalized influences and zero unweighted vertices.",
+    "material": "Organic body is dielectric: Metallic=0, emission inputs removed and emission strength=0. Albedo/normal/roughness maps and UVs retained.",
+    "colourway": "Old installed Burrowback repaints use a different UV layout. The disabled recipe uses the existing colourway_source_species seam with burrowback_native_review, a texture lookup namespace only, to retain candidate textures. No roster species or gameplay code added; new UV-specific variants remain OPEN.",
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "height_m": 2.95,
+    "bones": 15,
+    "unweighted_vertices": 0,
+    "vertices": 12887,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 stable Windows",
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "raster": [
+      1920,
+      1080
+    ],
+    "before_height_m": 2.95000004768372,
+    "candidate_height_m": 2.95000004768372,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 native Low samples across hit/faint/swim/fly_grip/ride included in the single Low sheet; native front/reverse ruler samples retained outside Git",
+    "world": "Production Meadows scene and CameraRig with matched stage, seed and pose sampling; presentation fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "skin_weights": "Zero unweighted vertices; not independent deformation approval",
+    "full_rig_animation": "OPEN: terminal flank contact, foot locking and ordinary gameplay paths require review",
+    "colour_variants": "OPEN: generated UV layout requires its own approved repaints",
+    "independent_art_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Terminal faint/rest floor contact and appealing deformation require review",
+    "Neutral procedural clips do not certify ordinary swim, flight/grip, rider contact or carrying",
+    "Fixtures do not prove earned fights or traversal",
+    "Preserve grey-olive stone armour and dark badger markings; named 1.30:1 habitat-contrast treatment requires day/night review, not bleaching",
+    "Candidate remains OFF until the full F36 art bar passes"
+  ]
+}
