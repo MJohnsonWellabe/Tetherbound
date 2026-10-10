@@ -383,11 +383,6 @@ func _build_landmark_masses() -> void:
 	sentinel.position = Vector3(sentinel_x, ground_height_at(sentinel_x, sentinel_z), sentinel_z)
 	add_child(sentinel)
 	sentinel.call("build")
-	if not simulation_only:
-		var sink := GLASS_SINK.new()
-		sink.name = "GlassSinkSurface"
-		add_child(sink)
-		sink.build(self, _field)
 
 func _model(parent: Node3D,path: String,at: Vector3,scale_factor: float,yaw: float) -> void:
 	if simulation_only:
@@ -426,3 +421,5 @@ func _apply_ground_materials(budget: RefCounted) -> void:
 	var material: Object = _terrain.get("material")
 	material.set("show_checkered",false)
 	material.set("auto_shader",true)
+	if not simulation_only:
+		GLASS_SINK.install(_terrain, _field.config.glass_sink)

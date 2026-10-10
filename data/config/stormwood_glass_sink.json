@@ -1,10 +1,6 @@
 {
   "scope": "client_presentation",
-  "angular_segments": 768,
-  "sectors": 24,
-  "wall_step_m": 2.0,
-  "floor_step_m": 18.0,
-  "surface_lift_m": 0.09,
+  "edge_feather_m": 12.0,
   "glass_colour": "#243c40",
   "facet_colour": "#466266",
   "seam_colour": "#739080",
