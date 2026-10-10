@@ -4,6 +4,7 @@ extends "res://tests/helpers/meadows_earned_relay_segment.gd"
 ## is not called: only its physical prompt, care, walking and combat observers
 ## are reused. Warden combat, riding and the legendary choice are later work.
 const HALL_CONFIG := "res://data/config/stronghold.json"
+const ESSENCE_CAPS := preload("res://scripts/creatures/essence.gd")
 const CAPTAIN_IDS := ["captain_riverwatch", "captain_field", "captain_ridge"]
 const SIGILS := ["field_sigil", "ridge_sigil", "river_sigil"]
 const HALL_FLAGS := ["defeated_stronghold_patrol", "defeated_stronghold_courtyard", "defeated_stronghold_elite"]
@@ -15,6 +16,15 @@ var _sigil_gate: Node3D
 var _hall_config: Dictionary
 var _named_trainer := ""
 var _observed_trainers: Array[String] = []
+
+
+class HallPilot extends LIVE.CampaignPilot:
+	func _faces_target(_ally_body: Node3D, _foe_body: Node3D) -> bool:
+		# Production faces the target at accepted quick/charged start and
+		# tracks it during windup. Do not spend the recovery window turning
+		# with the stick first. Range, retreat, readiness and host refusal
+		# still use the inherited physical input path.
+		return true
 
 
 func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
@@ -259,6 +269,9 @@ func _fight_named(body: Node3D, id: String) -> bool:
 		return false
 	var before_items := _captain_stock()
 	var before_xp := _xp_snapshot()
+	var xp_caps := _xp_cap_totals()
+	if xp_caps.size() != before_xp.size():
+		return _fail("The retained five lack exact admitted XP caps: " + id)
 	_captain_start = 0
 	_captain_rounds = 0
 	_captain_wins = 0
@@ -273,9 +286,10 @@ func _fight_named(body: Node3D, id: String) -> bool:
 		return false
 	if not bool(_director.call("trainer_battle_active")) or str(_director.call("trainer_battle_id")) != id:
 		return _fail("Physical challenge input did not admit the exact required trainer: " + id)
-	var pilot := LIVE.CampaignPilot.new(_tree, _combat, _director, _rig)
+	var pilot := HallPilot.new(_tree, _combat, _director, _rig)
 	pilot.use_switching = false
 	pilot.switch_input = true
+	pilot.burst_input = true
 	while bool(_director.call("trainer_battle_active")) and captain_within_deadline(Engine.get_physics_frames() - _captain_start):
 		if not _failures.is_empty():
 			break
@@ -292,17 +306,31 @@ func _fight_named(body: Node3D, id: String) -> bool:
 	pilot._move_toward(Vector3.ZERO)
 	_captain_active = false
 	var team_size := TRAINERS.team_of(_captain_spec).size()
+	# Retain the actual failed oracle as well as successful outcomes. A
+	# generic failure must not lose the round/hit/physical-input witness.
+	var actual_enemy: RefCounted = _combat.call("enemy")
+	_receipt("trainer_attempt", {"id": id, "rounds": _captain_rounds, "wins": _captain_wins,
+		"hits": _captain_hits, "kills": _captain_kills.size(), "team_size": team_size,
+		"frames": Engine.get_physics_frames() - _captain_start,
+		"within_original_deadline": captain_within_deadline(Engine.get_physics_frames() - _captain_start),
+		"fighting": _fighting(), "flag": _has(flag), "quick_inputs": pilot.quick_thrown,
+		"charged_inputs": pilot.charged_thrown, "switches": pilot.voluntary_switches,
+		"burst_attempts": pilot.burst_attempts, "accepted_bursts": pilot.accepted_bursts,
+		"enemy_species": str(actual_enemy.get("species_id")) if actual_enemy != null else "",
+		"enemy_hp": float(actual_enemy.get("hp")) if actual_enemy != null else -1.0,
+		"items_before": before_items, "items_after": _captain_stock(),
+		"xp_before": before_xp, "xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate(), "xp_cap_totals": xp_caps})
 	if not captain_within_deadline(Engine.get_physics_frames() - _captain_start) or _fighting() \
 			or not _failures.is_empty() or _captain_rounds != team_size or _captain_wins != team_size \
 			or _captain_kills.size() != team_size or _captain_hits <= 0 or not _has(flag) \
 			or not retained_five(_initial_ids, _party_ids()) \
 			or not exact_item_reward(before_items, _captain_stock(), _captain_spec.get("reward", {})) \
-			or not exact_captain_xp(before_xp, _xp_snapshot(), _expected_xp):
+			or not exact_capped_captain_xp(before_xp, _xp_snapshot(), _expected_xp, xp_caps):
 		return _fail("Required trainer lacks exact admitted opponents, killing hits, configured rewards/XP and retained-five receipts: " + id)
 	_observed_trainers.append(id)
 	_receipt("trainer_defeated", {"id": id, "rounds": _captain_rounds, "wins": _captain_wins, "hits": _captain_hits,
 		"items_before": before_items, "items_after": _captain_stock(), "xp_before": before_xp,
-		"xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate(), "frames": Engine.get_physics_frames() - _captain_start})
+		"xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate(), "xp_cap_totals": xp_caps, "frames": Engine.get_physics_frames() - _captain_start})
 	# A row's `victory_conversation` (the captains' Sigil handover, F04#6) opens
 	# a deferred frame after the win; it is read through with Interact at a
 	# reader's pace (one line per VICTORY_READ_FRAMES) before world input is
@@ -433,6 +461,37 @@ func _sigil_stock() -> Dictionary:
 	for id: String in SIGILS:
 		stock[id] = _count(id)
 	return stock
+
+
+func _xp_cap_totals() -> Dictionary:
+	var caps := {}
+	var cfg := PROGRESSION.config()
+	var personal: Variant = _game.get("local").get("redesign_character")
+	if not personal is Dictionary:
+		return caps
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		var cap := ESSENCE_CAPS.creature_cap(personal, str(member.get("uid")))
+		if cap < 1:
+			return {}
+		cap = mini(cap, int(cfg.get("level", {}).get("cap", member.get("level"))))
+		caps[member.get_instance_id()] = total_xp(cap, 0, cfg)
+	return caps
+
+
+static func exact_capped_captain_xp(before: Dictionary, after: Dictionary, awarded: Dictionary, caps: Dictionary) -> bool:
+	# Keep the killing-hit observer's configured award intact. Production
+	# gain_xp discards overflow at the creature's admitted cap; a generated
+	# L20/cap20 input therefore earns zero banked XP, never an invented gain.
+	if before.size() != 5 or after.size() != 5 or awarded.size() != 5 or caps.size() != 5:
+		return false
+	for id: int in before:
+		if not after.has(id) or not awarded.has(id) or not caps.has(id):
+			return false
+		if int(before[id]) < 0 or int(caps[id]) < int(before[id]) or int(awarded[id]) < 0:
+			return false
+		if int(after[id]) != mini(int(before[id]) + int(awarded[id]), int(caps[id])):
+			return false
+	return true
 
 
 func _receipt(beat: String, detail: Dictionary) -> void:
