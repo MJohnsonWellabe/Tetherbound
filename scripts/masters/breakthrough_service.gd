@@ -42,6 +42,12 @@ func _foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 	_action_completed("master_duel", envelope.intent, refused)
 
 func _action_completed(action: String, original: Dictionary, result: Dictionary) -> void:
+	if action == "master_chest":
+		if result.get("settled") == true or result.get("owner_saved") == true:
+			_message("Ascension Feast recipe learned. Your Master reward is saved.")
+			view()
+		elif result.get("terminal_refusal") == true:
+			_message(str(result.get("reason", result.get("code", "Chest reward is still pending."))))
 	if is_instance_valid(_panel):
 		_panel.call("accept_completion", action, original, result)
 
