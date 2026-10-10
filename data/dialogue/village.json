@@ -17,7 +17,7 @@
     "lesson_masters": {
       "speaker": "Tam",
       "portrait": "res://assets/ui/portraits/tam.png",
-      "lines": ["One of your creatures has reached level ten. That's its first cap, not the end of its training. Orin Stonewake teaches at the Old Quarry.", "Win your own one-creature duel, open Orin's recipe chest, cook the feast at your Kitchen, and feed it to a creature at that cap. Friends may watch; each trainer earns their own recipe."]
+      "lines": ["One of your creatures has reached its level cap. That's not the end of its training. A Master can teach you the next Ascension Feast recipe.", "Win your own one-creature duel, open the Master's recipe chest, cook the feast at your Kitchen, and feed it to a creature at that cap. Friends may watch; each trainer earns their own recipe."]
     },
     "lesson_feasts": {
       "speaker": "Tam",
