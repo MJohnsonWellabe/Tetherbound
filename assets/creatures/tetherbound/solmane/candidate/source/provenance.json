@@ -1,0 +1,122 @@
+{
+  "subject": "solmane",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Reference-backed reconstruction for disabled native review; installed species unchanged",
+  "reference_provenance": {
+    "subject": "solmane",
+    "reference": "assets/creatures/tetherbound/solmane/reference/native-standing-v1.png",
+    "method": "built_in_imagegen",
+    "identity_reference": [
+      "assets/creatures/tetherbound/solmane/models/creature_solmane_lod0.glb rendered full three-quarter and side views"
+    ],
+    "prompt": "Draft an original Tetherbound Solmane modeling reference using the supplied complete installed winged-lion model renders as the established identity. ONE full-body three-quarter studio view of the SAME majestic golden/cream winged lion: natural confident feline face with clear expressive amber-brown eyes and dark pupils, small rounded lion ears, short supported lion muzzle with a dark nose and gently closed mouth, dense warm cream/gold sculpted lion mane, strong tawny-golden feline torso with cream chest and belly, FOUR substantial complete lion legs and broad grounded lion paws with small pale claws, and its complete long slender curved lion tail ending in the same pale golden leafy/flame-shaped tuft. Preserve the established pale golden/cream palette and TWO enormous broad feathered wings rooted in the upper back, cream/golden feather layers with the characteristic restrained charcoal/slate-blue band across the middle as shown in the installed renders. Keep the exact existing winged-lion identity; no new horns, crown, armour, jewellery, straps, saddle, harness, weapons or invented species. Improve readable riggable anatomy: all four legs and whole paw soles clearly separate and grounded in a stable neutral standing pose, supported head and neck with readable eyes, both whole wings visible and spread diagonally upward/outward, thick continuous wing roots and clear elbow/wrist bends. The entire wing tips and feather fans must fit in frame with generous margins; no cropped or hidden far wing. Wings are broad coherent connected surfaces with chunky feather layers and thick tapered feather ends rather than isolated needles, thin floating strands or perforated ribbons. Simplify mane and tail tuft into large connected sculpted masses and shallow fur texture; retain a regal lion mane, not a bear or dog head. Distinct warm tawny fur, pale cream/gold mane and feathers, restrained blue-grey feather band, natural feline roughness, no metallic chrome, plastic sheen, body glow or floating particles. Entire head, mane, body, four complete paws, both full wings and complete tail visible against plain light-grey studio floor/background, soft neutral studio light. Detailed stylized game creature. No humans, scenery, text, labels, rulers, reference board, action pose or effects. One established roster legendary only.",
+    "default_enabled": false,
+    "selected_origin": "exec-edc76c1c-9f67-4255-9dbd-b68aac85e30c",
+    "inspection": {
+      "identity": "Existing golden/cream winged lion, lion mane/paws, amber eyes, slate-blue feather band and long tufted tail retained",
+      "riggability": "Four complete paws and both full wings visible; broad supported wing roots and layered connected feather surfaces; no added gear",
+      "limits": "Far paw root partially occluded by torso; wing-tip framing close but complete. Actual wing/limb connectivity and feather deformation require model inspection. No full art approval inferred."
+    }
+  },
+  "generation": {
+    "task_id": "01a126e0-04e3-7739-8721-3aaf92442349",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "reference": "assets/creatures/tetherbound/solmane/reference/native-standing-v1.png",
+    "night": "2026-10-09",
+    "status": "SUCCEEDED",
+    "observed_credits": 30,
+    "new_submissions": 1
+  },
+  "rights": {
+    "basis": "Owner-held installed identity and original drafted reference; owner-authorized paid Meshy account. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "approach": "Four measured paw chains, two three-control wing chains, fitted lion head/mane and long tufted tail; local surface diffusion with normalized four influences. Dedicated belly-down settling with folded wings rather than root rolling.",
+    "material": "Organic dielectric: metallic and emission disabled, UVs and texture maps retained",
+    "colourway": "Disabled solmane_native_review texture lookup avoids incompatible installed repaints; no roster species added",
+    "export_triangles": 29398,
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "topology_warnings": [
+      "Mesh_0: 15220 non-manifold edges",
+      "Mesh_0: 7541 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 1214 microscopic disconnected components",
+      "Mesh_0: ~4383 inward-facing faces",
+      "Mesh_0: 117 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ],
+    "height_m": 6.7,
+    "bones": 26,
+    "unweighted_vertices": 0,
+    "vertices": 15942,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "before_height_m": 6.69999980926514,
+    "candidate_height_m": 6.69999980926514,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 whole-body Low role samples and front/reverse native scale. Raw receipts/captures outside Git.",
+    "world": "Matched production cloudreach CameraRig stage/seed/five poses per preset; fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "full_rig_and_motion": "OPEN",
+    "terminal_contact": "FAIL",
+    "topology": "FAIL",
+    "colour_variants": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Eleven clip names and still fixtures do not certify motion, ordinary gameplay paths, earned fights, swim/fly-grip or rider contact.",
+    "Retained topology/UV warnings require independent approval.",
+    "Candidate remains OFF until the complete art bar passes.",
+    "Faint diagnostic retains a raised body supported on folded paws rather than a settled terminal repose; terminal repose/contact FAIL. No contact approval inferred from standing scale or diagnostic lowest-point grounding.",
+    "Visible holes/fragmentation near a forward wing root in raw and native diagnostics; topology FAIL. No art or motion approval inferred from eleven clip names."
+  ]
+}

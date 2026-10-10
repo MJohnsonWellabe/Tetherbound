@@ -1,0 +1,29 @@
+{
+  "enabled": false,
+  "species": "solmane",
+  "placeholder": {
+    "colour": "#8899aa",
+    "height": 6.7,
+    "radius": 2.345,
+    "footprint_allowance": 3.0,
+    "model": "res://assets/creatures/tetherbound/solmane/candidate/models/creature_solmane_native.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    },
+    "field_emission": 0.0,
+    "rest_model_position_offset": 0.0,
+    "colourway_source_species": "solmane_native_review"
+  }
+}
