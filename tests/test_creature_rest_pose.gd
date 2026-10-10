@@ -368,7 +368,8 @@ func test_galecrest_zero_roll_keeps_its_existing_faint_only_path() -> void:
 
 func test_water_rest_candidate_gate_preserves_legacy_roll_for_all_four_ids() -> void:
 	var shipped: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(REST_VISUAL.CONFIG_PATH))
-	assert_false(bool(shipped.get("enabled", true)), "the installed candidate gate is off")
+	# F39 P2-029: shipped on; the disabled gate below still restores the legacy roll.
+	assert_true(bool(shipped.get("enabled", false)), "the installed candidate gate ships on")
 	REST_VISUAL._config = {"enabled": false}
 	for id: String in WATER_REST_IDS:
 		var source := SPECIES.placeholder(id).duplicate(true)
