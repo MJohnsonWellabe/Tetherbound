@@ -39,7 +39,7 @@ static func resolve(base: Dictionary, base_profile: String, variant_id: String,
 		return result
 	var portrait := str(record.get("portrait", ""))
 	# A dedicated flat filename keeps portrait output inside the established
-	# directory. Existence is not required: the portrait tool produces this file.
+	# directory. Both derivatives must be usable before a runtime identity changes.
 	if not portrait.begins_with(PORTRAIT_ROOT) or portrait.get_extension() != "png" \
 			or portrait.get_base_dir() + "/" != PORTRAIT_ROOT \
 			or portrait.get_file().get_basename().is_empty():
@@ -50,11 +50,15 @@ static func resolve(base: Dictionary, base_profile: String, variant_id: String,
 		if str(other_id) != variant_id and other is Dictionary \
 				and str(other.get("portrait", "")) == portrait:
 			return result
+	if not ResourceLoader.exists(portrait) or not load(portrait) is Texture2D:
+		return result
 	var overrides := {}
 	for key: String in ["body_albedo_override", "body_emission_override"]:
 		if record.has(key):
 			var path: Variant = record[key]
 			if not path is String or not path.begins_with("res://") or path.is_empty():
+				return result
+			if not ResourceLoader.exists(path) or not load(path) is Texture2D:
 				return result
 			overrides[key] = path
 	if overrides.is_empty():
