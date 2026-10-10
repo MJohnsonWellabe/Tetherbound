@@ -1,0 +1,25 @@
+{
+  "classification": "CLAUDE_PASS_QUALIFIED_FOUR_NPC_SUBSET_ONLY",
+  "feature": "P2-057 / partial F39#2",
+  "current_main_base": "c87af7423d66bd2e7f5531513e9641ad8a978483",
+  "historical_native_before": "b24e307029c757d00ab2e04beea0e8d56ff4cc6c",
+  "historical_native_after": "2e92108ef86539e0bde2b67f4a8bafc7e343bd3b",
+  "contact_source": "49eb12bf7e2963e9d6d32345e25abcc4a26aaf92",
+  "contact_sheet": "paired-low.png",
+  "judge_comment_id": 6091785430,
+  "judge_url": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6091785430",
+  "subset": [
+    "water_adair",
+    "water_bren",
+    "water_edda",
+    "water_corin"
+  ],
+  "graphics": "Low / GL Compatibility / native1280x720",
+  "judge_result": "Adair/Bren controls unchanged; Edda/Corin enabled clearance preferred; natural gaps accepted with nonblocking foreground blade note.",
+  "component_source_qualification": "Eleven named native component inputs byte-identical b24->c87; actual exact composed current-tree proof remains pending.",
+  "production_change": "water_named_grass_clearance.enabled false->true; radius2.5 unchanged; truthful metadata comment updated",
+  "tests_change": "Existing disabled no-op and production-enabled expectation correction retained from2e; no new tests",
+  "exact_current_tree_units_and_smoke": "PENDING",
+  "whole_F39_or_all_named_sightings": "OPEN; remaining sightings/catalogue items not accepted",
+  "performance_acceptance": null
+}
