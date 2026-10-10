@@ -8,6 +8,7 @@ signal guarded_event_requested(event_id: String, npc_id: String, peer_id: int)
 signal authored_conversation_finished(conversation_id: String, npc_id: String, peer_id: int)
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const CHARACTER := preload("res://scripts/characters/character_model.gd")
+const APPEARANCE := preload("res://scripts/characters/appearance_variants.gd")
 const RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const GREETINGS := preload("res://scripts/world/village_npcs.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
@@ -83,6 +84,11 @@ func build(world: Node3D) -> Dictionary:
 		if model.is_empty() or str(model.get("model", "")) != str(spec.model):
 			push_error("Water NPC installed profile/model mismatch: " + id)
 			continue
+		model = APPEARANCE.resolve(model, profile, str(spec.get("appearance_variant_id", "")))
+		# The resolver admits appearance and portrait together. A disabled or
+		# mismatched candidate keeps this named NPC's installed portrait too.
+		var presentation_spec := spec.duplicate(true)
+		presentation_spec["portrait"] = model.get("portrait", spec.get("portrait", ""))
 		var body: Node3D = NPC.new()
 		body.name = id
 		body.set_meta("water_npc_id", id)
@@ -96,7 +102,7 @@ func build(world: Node3D) -> Dictionary:
 		preload("res://scripts/world/water_named_grass_clearance.gd").apply(body, _world)
 		var prompt: Node3D = body.call("add_prompt", "Greet " + str(spec.display_name))
 		prompt.activated.connect(_on_greeted.bind(id))
-		_specs[id] = spec
+		_specs[id] = presentation_spec
 		_bodies[id] = body
 	return _bodies.duplicate()
 
