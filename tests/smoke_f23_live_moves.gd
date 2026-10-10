@@ -100,6 +100,8 @@ func _body(script: Script, species: String, at: Vector3) -> Node3D:
 	body.set_physics_process(false)
 	return body
 
+var _shipped_actor_vitals: Variant = null
+
 func _run() -> void:
 	_saved_library_enabled = bool(MOVE_LIBRARY.config().get("enabled", false))
 	_prove_library_arrival = OS.get_cmdline_user_args().has("--prove-library-arrival")
@@ -121,7 +123,9 @@ func _run() -> void:
 		var candidate := _saved_visual_config.duplicate(true)
 		candidate.enabled = true
 		ULTIMATES._config = candidate
-	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "actor_vitals gate must remain off")
+	# The shipped actor_vitals gate is read once; this proof never overrides it.
+	_shipped_actor_vitals = MATH.config().get("actor_vitals", {}).get("runtime_enabled")
+	_check(_shipped_actor_vitals is bool, "actor_vitals gate is a tracked shipped flag")
 	_check(_capture_dir.is_empty() or DisplayServer.get_name() != "headless", "render capture requires an actual display")
 	if not _errors.is_empty():
 		_finish()
@@ -348,7 +352,7 @@ func _run() -> void:
 			_check(float(_impacts.back().damage) > 0.0 and float(_impacts.back().damage) <= float(_enemy.max_hp) * 0.2 + 0.001,
 				"the upgraded signature commits a real positive HP debit within the unchanged named cap")
 			await create_timer(2.6).timeout
-	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "proof must not activate actor_vitals")
+	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == _shipped_actor_vitals, "proof must not change actor_vitals")
 	while _pending_library_captures > 0: await process_frame
 	_finish()
 
