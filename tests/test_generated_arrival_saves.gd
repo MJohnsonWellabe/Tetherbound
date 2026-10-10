@@ -6,15 +6,17 @@ extends "res://tests/test_case.gd"
 ## their profile declares, and carry their generated-setup disclosure.
 const SAVE := preload("res://scripts/save/save_game.gd")
 const PROFILES := "res://tests/fixtures/earned_saves/generated_boundary_profiles.json"
+const CURVE := "res://data/config/redesign_level_curve.json"
 const FIXTURES := {
-	"tidewake": {"dir": "res://tests/fixtures/earned_saves/tidewake_arrival_generated", "realm": "water"},
-	"cloudreach": {"dir": "res://tests/fixtures/earned_saves/cloudreach_arrival_generated", "realm": "cloudreach"},
-	"stormwood": {"dir": "res://tests/fixtures/earned_saves/stormwood_arrival_generated", "realm": "stormwood"},
+	"tidewake": {"dir": "res://tests/fixtures/earned_saves/tidewake_arrival_generated", "realm": "water", "chapter": "tidewake"},
+	"cloudreach": {"dir": "res://tests/fixtures/earned_saves/cloudreach_arrival_generated", "realm": "cloudreach", "chapter": "cloudreach"},
+	"stormwood": {"dir": "res://tests/fixtures/earned_saves/stormwood_arrival_generated", "realm": "stormwood", "chapter": "stormwood"},
 }
 
 
 func test_each_arrival_save_loads_in_its_realm_with_the_declared_five() -> void:
 	var profiles: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILES)).profiles
+	var biomes: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CURVE)).biomes
 	for profile: String in FIXTURES:
 		var row: Dictionary = FIXTURES[profile]
 		var scratch := "user://test_generated_arrival_%s_%d" % [profile, OS.get_process_id()]
@@ -29,6 +31,8 @@ func test_each_arrival_save_loads_in_its_realm_with_the_declared_five() -> void:
 		for member: Dictionary in data.get("party", []):
 			uids[str(member.get("uid", ""))] = true
 			assert_eq(int(member.get("level", 0)), int(profiles[profile].party_levels[0]), profile + " companion level")
+			assert_true(int(member.get("level", 0)) <= int(biomes[str(row.chapter)].team[0]),
+				profile + " never exceeds the earned team level entering " + str(row.chapter))
 		assert_eq(uids.size(), 5, profile + " companions are distinct")
 		assert_false(uids.has(""), profile + " companions have identities")
 		var provenance: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(str(row.dir) + "/PROVENANCE.json"))

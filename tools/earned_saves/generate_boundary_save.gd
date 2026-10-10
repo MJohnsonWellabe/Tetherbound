@@ -44,6 +44,8 @@ func _run() -> void:
 		failures.append("usage: --profile=<id> --slot=<n> --out=<absent dir>")
 	elif DirAccess.dir_exists_absolute(_out) or FileAccess.file_exists(_out):
 		failures.append("Generator output must be absent; refusing overwrite")
+	elif DirAccess.dir_exists_absolute(_out + "_scratch") or DirAccess.dir_exists_absolute(_out + "_scratch_working"):
+		failures.append("Generator scratch from an earlier run exists; refusing stale inputs")
 	if OS.has_environment("TB_WORLD_SEED"):
 		failures.append("Generated boundaries keep the template's saved population; no seed override")
 	game = root.get_node("Game")
