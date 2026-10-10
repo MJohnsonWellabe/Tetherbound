@@ -10,6 +10,11 @@ static func config() -> Dictionary:
 	var raw: Variant = DATA.json("res://data/config/onboarding.json")
 	return raw if raw is Dictionary else {}
 
+## No-copy read for this file's own per-frame checks; rows leave as copies.
+static func _config_view() -> Dictionary:
+	var raw: Variant = DATA.json_view("res://data/config/onboarding.json")
+	return raw if raw is Dictionary else {}
+
 static func available(id: String, player: RefCounted) -> bool:
 	if player == null: return false
 	var state: Dictionary = player.get("redesign_character")
@@ -21,7 +26,7 @@ static func available(id: String, player: RefCounted) -> bool:
 		"homestead":
 			return flags.call("has", PREFIX + "trigger:home_return") == true
 		"altar":
-			for essence: Dictionary in DATA.json("res://data/schema/essences.json"):
+			for essence: Dictionary in DATA.json_view("res://data/schema/essences.json"):
 				if inventory.call("count", str(essence.id)) > 0: return true
 		"masters":
 			var party: RefCounted = player.get("party")
@@ -39,13 +44,13 @@ static func available(id: String, player: RefCounted) -> bool:
 	return false
 
 static func due(player: RefCounted) -> Dictionary:
-	for row: Dictionary in config().get("lessons", []):
+	for row: Dictionary in _config_view().get("lessons", []):
 		if available(str(row.id), player) and player.get("flags").call("has", PREFIX + str(row.id)) != true:
 			return row.duplicate(true)
 	return {}
 
 static func guidance(player: RefCounted) -> Dictionary:
-	if config().get("enabled") != true or player == null: return {}
+	if _config_view().get("enabled") != true or player == null: return {}
 	# Preserve the required opening's one next action. Tutorials don't replace
 	# naming, real catch, Mira's kit or the tournament readiness chain.
 	if player.get("flags").call("has", "tournament_entered") != true: return {}
@@ -79,6 +84,6 @@ static func guidance(player: RefCounted) -> Dictionary:
 	return {}
 
 static func _row(id: String) -> Dictionary:
-	for row: Dictionary in config().get("lessons", []):
+	for row: Dictionary in _config_view().get("lessons", []):
 		if row.id == id: return row.duplicate(true)
 	return {}

@@ -269,7 +269,7 @@ static func resource_plot_index(realm: String, plot_id: String) -> int:
 	var suffix := plot_id.trim_prefix("authored:")
 	if not suffix.is_valid_int(): return -1
 	var index := int(suffix)
-	var farm: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/farm.json")
+	var farm: Dictionary = preload("res://scripts/data/redesign_data.gd").json_view("res://data/config/farm.json")
 	return index if suffix == str(index) and index >= 0 and index < farm.get("plots", []).size() else -1
 
 ## Old one-shot records have no harvest day. Give those records a single
@@ -888,7 +888,7 @@ static func altar_build_id(world_namespace: String, character: String, txn: Stri
 
 
 static func altar_recipe() -> Array:
-	var data: Variant = preload("res://scripts/data/redesign_data.gd").json("res://data/items/buildables.json")
+	var data: Variant = preload("res://scripts/data/redesign_data.gd").json_view("res://data/items/buildables.json")
 	return altar_recipe_from_catalogue(data)
 
 ## A saved paid placement still validates with runtime gates OFF. The Session

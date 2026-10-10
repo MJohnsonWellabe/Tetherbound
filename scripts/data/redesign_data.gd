@@ -16,15 +16,26 @@ static var _json_cache: Dictionary = {}
 
 
 static func json(path: String) -> Variant:
+	var parsed: Variant = json_view(path)
+	return parsed.duplicate(true) if parsed is Dictionary or parsed is Array else parsed
+
+
+## The cached parse itself, without the deep copy `json()` makes, for callers
+## that only read (per-frame lesson and plot checks paid ~0.1 ms a copy). The
+## top level is locked read-only; never mutate any part of it. Use `json()` for
+## a value you will change.
+static func json_view(path: String) -> Variant:
 	if not FileAccess.file_exists(path):
 		return JSON.parse_string(FileAccess.get_file_as_string(path)) # unchanged missing-file behaviour
 	var stamp := "%d:%d" % [FileAccess.get_modified_time(path), FileAccess.get_size(path)]
 	var entry: Variant = _json_cache.get(path)
 	if not entry is Array or (entry as Array)[0] != stamp:
-		entry = [stamp, JSON.parse_string(FileAccess.get_file_as_string(path))]
+		var fresh: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+		if fresh is Dictionary or fresh is Array:
+			fresh.make_read_only()
+		entry = [stamp, fresh]
 		_json_cache[path] = entry
-	var parsed: Variant = (entry as Array)[1]
-	return parsed.duplicate(true) if parsed is Dictionary or parsed is Array else parsed
+	return (entry as Array)[1]
 
 static func validate(value: Variant, schema: Dictionary, path: String = "$") -> Array[String]:
 	var errors: Array[String] = []
