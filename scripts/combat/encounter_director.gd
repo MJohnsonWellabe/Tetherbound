@@ -3228,7 +3228,9 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 		_body_radius(body), _body_radius(wild), host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(body, wild), frozen.move)
 	move["mastery_context"] = {"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
 		"session_id": _session.call("_altar_current_epoch")}
-	if uses_durable_trainer_rewards(id) and slot == "utility" \
+	# Heal Pulse is a health change, so it commits through the same saved
+	# vitals producer whether the fight is a trainer round or a wild fight.
+	if uses_saved_actor_vitals(id) and slot == "utility" \
 		and move.get("utility", {}).get("kind") == "heal" and move.get("utility", {}).get("scope") == "self":
 		return _stage_ordinary_self_heal(id, peer, intent, body, move, card)
 	var verdict: Dictionary = _encounter_host.call("authorize_move_start", intent, peer, owned,

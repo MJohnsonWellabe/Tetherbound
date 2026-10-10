@@ -6,6 +6,7 @@ const MOVES := preload("res://scripts/creatures/move_db.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
+const MATH := preload("res://scripts/combat/combat_math.gd")
 
 class TapManager extends "res://scripts/combat/combat_manager.gd":
 	var arm_edge := false
@@ -99,8 +100,12 @@ func test_unsupported_utility_and_low_wind_refuse_without_spending() -> void:
 	var move := _frozen("utility", 1)
 	move.move_id = "heal_pulse"
 	var before: Dictionary = host.record(id).duplicate(true)
+	# Every authored utility is live now, so unmount one for this refusal.
+	var live: Array = MATH.config().move_commit.live_moves
+	live.erase("heal_pulse")
 	assert_eq(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "utility"},
 		1, owned, _binding(), move, WIND, 1000).code, "move_not_mounted")
+	live.insert(live.find("dash_strike"), "heal_pulse")
 	assert_eq(host.record(id), before)
 	var short_wind := {"max": 20.0, "regen_per_second": 0.0}
 	assert_eq(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "utility"},
@@ -236,6 +241,8 @@ func test_every_role_can_equip_at_least_two_live_utilities() -> void:
 	for move_id: String in moves.move_ids():
 		if moves.slot(move_id) == "utility": utilities.append(move_id)
 	assert_true(utilities.size() >= 10, "at least ten utility moves exist")
+	for move_id: String in utilities:
+		assert_true(MANAGER.live_move_supported("utility", move_id), "%s is mounted on the host" % move_id)
 	var learnsets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/learnsets.json"))
 	var species: Dictionary = learnsets.get("species", learnsets)
 	var roles := {}
