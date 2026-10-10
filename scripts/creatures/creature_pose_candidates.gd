@@ -27,10 +27,16 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 	var model_path := str(look.get("model", ""))
 	if recipe.is_empty() or model_path != str(recipe.get("model", "")):
 		return original
-	if not _hashes.has(model_path):
-		_hashes[model_path] = FileAccess.get_sha256(model_path)
-	if str(_hashes[model_path]) != str(recipe.get("source_sha256", "")):
-		push_warning("F36 pose recipe stale for %s; preserving installed clips" % id)
+	# Exported GLBs are imported PackedScenes, and their raw source bytes need
+	# not exist in the PCK. Keep the source hash check where bytes are present;
+	# packaged scenes retain the same model-path and skeleton validation below.
+	if FileAccess.file_exists(model_path):
+		if not _hashes.has(model_path):
+			_hashes[model_path] = FileAccess.get_sha256(model_path)
+		if str(_hashes[model_path]) != str(recipe.get("source_sha256", "")):
+			push_warning("F36 pose recipe stale for %s; preserving installed clips" % id)
+			return original
+	elif not ResourceLoader.exists(model_path):
 		return original
 	var skeletons := model.find_children("*", "Skeleton3D", true, false)
 	if skeletons.size() != 1:
