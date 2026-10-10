@@ -3,13 +3,12 @@ extends Node
 ## One host-owned authored trainer roster. Rendering and local party control
 ## live in the realm hub; neither a client's victory claim nor its damage
 ## number can advance this roster.
-const AUTHORITY := preload("res://scripts/combat/accepted_action_host.gd")
+const AUTHORITY := preload("res://scripts/net/encounter_host.gd")
 const FIGHT := preload("res://scripts/combat/stormwood_authoritative_fight.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const BODY := preload("res://scenes/creatures/creature.tscn")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
-const CARD := preload("res://scripts/save/water_capture_codec.gd")
 var hub: Node
 var spec: Dictionary
 var authority := AUTHORITY.new()
@@ -68,13 +67,6 @@ func _next_round() -> bool:
 	if creature == null:
 		finish(false)
 		return false
-	var owners: Dictionary = {}
-	for peer: int in participants:
-		var identity := _owned_identity(peer)
-		if identity.is_empty():
-			finish(false)
-			return false
-		owners[peer] = identity
 	opponent = BODY.instantiate()
 	opponent.set_script(WILD)
 	opponent.name = "HostedOpponent_%s_%d" % [str(spec.id), round_index]
@@ -94,15 +86,9 @@ func _next_round() -> bool:
 	_base_combat = (creature.get("combat_override") as Dictionary).duplicate(true)
 	record = authority.open(participants[0], "stormwood", "trainer", {
 		"species_id": creature.get("species_id"), "level": creature.get("level"),
-		"hp": creature.get("hp"), "hp_max": creature.get("max_hp"), "owner_npc": spec.id,
-		"card": CARD.encode(creature), "body_generation": round_index + 1},
-		owners[participants[0]].uid, owners[participants[0]].character)
+		"hp": creature.get("hp"), "hp_max": creature.get("max_hp"), "owner_npc": spec.id})
 	for peer: int in participants.slice(1):
-		authority.join(str(record.encounter_id), peer, owners[peer].uid, owners[peer].character)
-	for peer: int in participants:
-		if hub.director.call("_ordinary_actor_binding", str(record.encounter_id), peer, hub.body_for(peer)).is_empty():
-			finish(false)
-			return false
+		authority.join(str(record.encounter_id), peer)
 	_actions.clear()
 	_cooldowns.clear()
 	_apply_scaling()
@@ -113,49 +99,13 @@ func _next_round() -> bool:
 func join(peer: int) -> void:
 	if finished or participants.has(peer):
 		return
-	var identity := _owned_identity(peer)
-	if identity.is_empty(): return
-	if _between <= 0.0:
-		var joined: Dictionary = authority.join(str(record.encounter_id), peer, identity.uid, identity.character)
-		if joined.get("ok") != true: return
-		if hub.director.call("_ordinary_actor_binding", str(record.encounter_id), peer, hub.body_for(peer)).is_empty():
-			authority.leave(str(record.encounter_id), peer)
-			return
 	participants.append(peer)
 	if not contributors.has(peer):
 		contributors.append(peer)
 	if _between <= 0.0:
+		authority.join(str(record.encounter_id), peer)
 		_apply_scaling()
 	_snapshot()
-
-## Resolve only the authenticated owner's admitted row and live deployment.
-func _owned_identity(peer: int) -> Dictionary:
-	if hub.session.is_host() != true or hub.session.realm_of(peer) != "stormwood" \
-		or not is_instance_valid(hub.body_for(peer)): return {}
-	var character := str(hub.session.call("_authority_character", peer))
-	var admitted: Dictionary = hub.session.call("admitted_character_state", peer)
-	var uid := str(hub.card_for(peer).get("creature_uid", ""))
-	if character.is_empty() or admitted.get("character_id") != character \
-		or not admitted.get("party") is Array or admitted.party.is_empty() or admitted.party.size() > 5: return {}
-	var matches := 0
-	for owned: Dictionary in admitted.party:
-		if owned.get("uid") == uid and owned.get("fainted") == false and float(owned.get("hp", 0.0)) > 0.0:
-			matches += 1
-	return {"character": character, "uid": uid} if matches == 1 else {}
-
-func move_start(peer: int, intent: Dictionary) -> Dictionary:
-	var id := str(record.get("encounter_id", ""))
-	if finished or _between > 0.0 or not participants.has(peer) or intent.get("encounter_id") != id \
-		or intent.get("slot") not in ["quick", "charged"] or _owned_identity(peer).is_empty() \
-		or hub.director.call("_host_actor_settlement_pending", id) == true:
-		return {"ok": false, "kind": "move_start", "code": "unavailable", "delta": {}}
-	# Reuse the admitted loadout/mastery/gear freeze and owner-save fences.
-	return hub.director.call("_host_commit_encounter", intent, peer)
-
-func acknowledge_strike(peer: int, verdict: Dictionary) -> void:
-	var action_id := str(verdict.get("publication_action_id", ""))
-	if not action_id.is_empty():
-		authority.acknowledge_move_action_publication(str(record.encounter_id), peer, action_id, verdict)
 
 func leave(peer: int) -> void:
 	participants.erase(peer)
@@ -224,21 +174,17 @@ func _strike(peer: int, intent: Dictionary) -> Dictionary:
 	var now := Time.get_ticks_msec()
 	if action <= int(_actions.get(peer, 0)) or now < int(_cooldowns.get(peer, 0)):
 		return refused
-	var id := str(record.encounter_id)
-	if hub.director.call("_host_actor_settlement_pending", id) == true: return refused
-	var publication_binding: Dictionary = hub.director.call("_ordinary_actor_binding", id, peer, body)
-	var binding: Dictionary = hub.director.call("_strike_actor_binding", id, peer, body)
-	var started: Dictionary = authority.move_commit(id, peer, action)
-	if publication_binding.is_empty() or binding.is_empty() or started.is_empty() \
-		or started.get("resolved") == true or started.get("cancelled") == true \
-		or started.get("binding") != binding:
-		return refused
-	var profile: Dictionary = started.move.duplicate(true)
+	var profile: Dictionary = FIGHT.host_move_profile(engine.get("_moves"),
+		"player_" + slot, move_id, hub.body_radius(body), hub.body_radius(opponent),
+		float(hub.director.call("host_card_cooldown_multiplier", card)),
+		FIGHT.CONTACT_SPACING.pair_reach_need(body, opponent))
 	var wind_cfg: Dictionary = MATH.config().get("wind", {})
 	var wind_cost := float(wind_cfg.get("quick_cost" if slot == "quick" else "charged_cost", 0.0))
 	var wind_profile: Dictionary = FIGHT.host_wind_profile(card)
 	var wind_preview: Dictionary = authority.preview_wind(str(record.encounter_id),
 		peer, wind_profile, wind_cost, now)
+	profile = FIGHT.with_wind_exhaustion(profile,
+		bool(wind_preview.get("wind_exhausted", false)))
 	var checked := intent.duplicate(true)
 	checked["move"] = profile
 	# The host's current facing, as well as its body position, owns the hit.
@@ -254,37 +200,22 @@ func _strike(peer: int, intent: Dictionary) -> Dictionary:
 		"windup": float(profile.get("windup", 0.0)),
 		"connects": MATH.move_connects(profile, origin, facing, target)}
 	authority.note_opponent_position(str(record.encounter_id), opponent.call("centre"), now)
-	var verdict: Dictionary = authority.validate_strike(checked, peer, {
-		"now_ms": now, "origin": body.call("centre"), "bodies": hub.body_rows(),
-		"f22_actor_binding": publication_binding, "move_actor_binding": binding})
+	var verdict: Dictionary = authority.validate_strike(checked, peer, {"now_ms": now, "origin": body.call("centre"), "bodies": hub.body_rows()})
 	if not bool(verdict.get("ok", false)):
 		(verdict.get("delta", {}) as Dictionary).merge(wind_preview, true)
 		return verdict
-	# The accepted start already paid wind/resources. Arrival must not pay twice.
-	(verdict.get("delta", {}) as Dictionary).merge(authority.move_resource_snapshot(id, peer, str(binding.creature_uid)), true)
+	var wind_delta: Dictionary = authority.commit_wind(str(record.encounter_id), peer,
+		action, wind_profile, wind_cost, now, float(profile.get("recovery", 0.2)),
+		float(wind_cfg.get("regen_delay", 0.6)))
+	(verdict.get("delta", {}) as Dictionary).merge(wind_delta, true)
 	_actions[peer] = action
-	_cooldowns[peer] = int(verdict.delta.get("cooldown_deadline_ms", now))
+	_cooldowns[peer] = now + ceili(1000.0 * maxf(float(profile.get("cooldown", 0.0)), float(profile.get("windup", 0.1)) + float(profile.get("recovery", 0.1))))
 	if bool(verdict.delta.get("hit", false)):
-		var target_instance: RefCounted = opponent.get("instance")
-		var publication: Dictionary = authority.begin_move_action_resolution(id, peer, action,
-			publication_binding, str(target_instance.get("uid")), round_index + 1)
-		if publication.get("ok") != true: return refused
-		var hp_before := float(target_instance.get("hp"))
-		profile["started_at_ms"] = int(started.get("started_at_ms", -1))
-		var damage: Dictionary = engine.host_roll_damage(card, move_id, float(profile.get("power", 9.0)), slot == "charged",
-			{"move": profile, "action_id": str(started.action_id), "striker_body": body,
-			"body_generation": round_index + 1, "direction": target - origin})
-		if damage.is_empty(): return refused
+		var damage: Dictionary = engine.host_roll_damage(card, move_id, float(profile.get("power", 9.0)))
 		verdict.delta.merge(damage, true)
-		verdict.delta.merge(authority.credit_move_hit(id, peer, action,
-			maxf(0.0, hp_before - float(damage.get("hp", hp_before))), str(target_instance.get("uid")),
-			hp_before, round_index + 1, float(card.get("hp", 0.0))), true)
 		authority.set_opponent_hp(str(record.encounter_id), float(damage.hp), float(damage.hp_max))
-		verdict["publication_action_id"] = str(publication.action_id)
-		if not authority.record_move_action_outcome(id, peer, str(publication.action_id), damage, verdict): return refused
-		hub.session.call("foundation_combat_mastery", hub.director, id, peer, action)
 		if bool(damage.get("killed", false)):
-			if not authority.publish_move_action_terminal(id, peer, str(publication.action_id), "done"): return refused
+			authority.set_phase(str(record.encounter_id), "done")
 			engine.stop_opponent()
 			_between = 2.4
 	_snapshot()
@@ -293,7 +224,6 @@ func _strike(peer: int, intent: Dictionary) -> Dictionary:
 func _process(delta: float) -> void:
 	if finished or hub == null:
 		return
-	if authority.move_action_publication_pending(str(record.get("encounter_id", ""))): return
 	for peer: int in participants.duplicate():
 		if hub.session.realm_of(peer) != "stormwood":
 			leave(peer)
