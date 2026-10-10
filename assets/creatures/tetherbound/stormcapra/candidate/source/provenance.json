@@ -1,0 +1,122 @@
+{
+  "subject": "stormcapra",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Disabled reuse of preserved earlier image-backed Meshy retexture; original species unchanged",
+  "reference_provenance": {
+    "subject": "stormcapra",
+    "reference": "assets/creatures/tetherbound/stormcapra/reference/f36-material-v1.png",
+    "identity_reference": [
+      "assets/creatures/tetherbound/stormcapra/reference/front.png",
+      "assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_lod0.glb"
+    ],
+    "reference_origin": "Existing project-authored F36 draft on current main; inspected brown/cream mountain ram, massive segmented curling horns, amber eyes, blue crystalline shoulder accents and four grounded cloven feet. Exact original draft prompt not found; honest provenance gap retained.",
+    "reference_prompt_retained": false,
+    "existing_task": "01a11940-9171-7258-8fd9-f0638f5ba380",
+    "endpoint": "retexture",
+    "new_meshy_submissions": 0,
+    "inspection": {
+      "identity": "Same installed mountain ram identity, brown/cream wool, massive curved stone horns, blue shoulder crystals and amber eyes",
+      "riggability": "Earlier bounded decimation retained; actual foot positions, rigid horns/crystals and wool skin transitions require inspection before fitted rig",
+      "limits": "Original prompt completeness, topology, horn/hoof contact and full art gate remain OPEN."
+    },
+    "default_enabled": false,
+    "service_input_reference_bytes_match": true,
+    "recovered_credit_cost": 10,
+    "recovered_task_status": "SUCCEEDED",
+    "service_text_style_prompt": ""
+  },
+  "generation": {
+    "task_id": "01a11940-9171-7258-8fd9-f0638f5ba380",
+    "endpoint": "/openapi/v1/retexture",
+    "status": "SUCCEEDED",
+    "observed_historical_credits": 10,
+    "new_submissions": 0,
+    "new_credits": 0,
+    "service_image_input_verified_against_project_reference": true,
+    "original_draft_prompt_retained": false
+  },
+  "rights": {
+    "basis": "Existing owner-held Stormcapra identity/project draft and owner-authorized paid Meshy account; no new acquisition, purchase or community publication",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models",
+    "provenance_gap": "Exact original image-generation prompt is not retained. Service receipt confirms the image input, not the missing draft prompt; full provenance/art approval remains OPEN."
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "approach": "Reuse preserved bounded-decimation source from the earlier retexture, UV-preserving weld and fitted anatomical skin regions rather than the old generic donor rig. Four cloven foot chains and three short tail segments; protected curling horns/head and shoulder crystal ownership, local surface diffusion and four normalized influences.",
+    "material": "Organic dielectric, metallic/emission disabled; retained maps/UVs",
+    "colourway": "Disabled stormcapra_native_review texture lookup namespace avoids applying incompatible original repaints; no roster species added",
+    "export_triangles": 29400,
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "topology_warnings": [
+      "Mesh_0: 11948 non-manifold edges",
+      "Mesh_0: 4234 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 279 microscopic disconnected components",
+      "Mesh_0: ~1997 inward-facing faces",
+      "Mesh_0: 701 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ],
+    "export_warning": "Corrected 3.85 m rig export and animated reimport complete without mesh-validation warning; animated exporter notes repeated image-sampler use. No topology acceptance inferred.",
+    "height_m": 3.85,
+    "bones": 20,
+    "unweighted_vertices": 0,
+    "vertices": 16792,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "before_height_m": 3.84999990463257,
+    "candidate_height_m": 3.84999990463257,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 whole-body Low role samples and front/reverse native scale; raw receipts/captures outside Git",
+    "world": "Matched production Cloudreach CameraRig stage/seed/five poses per preset, fixture only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ],
+    "observed_warnings": "Completed native batch logs are checked for Godot ERROR; unchanged-world notices do not imply an asset or performance PASS."
+  },
+  "gates": {
+    "scale": "PASS",
+    "full_rig_and_motion": "OPEN",
+    "terminal_contact": "FAIL",
+    "topology": "OPEN",
+    "colour_variants": "OPEN",
+    "reference_prompt_completeness": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Standing appeal of prior retexture is not full pose/contact approval",
+    "Still fixtures do not certify foot locking, earned fights, ordinary swim/fly-grip or rider contact",
+    "Retained topology and UV warnings, finish and full reference provenance require independent approval",
+    "Candidate remains OFF until full art bar passes",
+    "Faint diagnostic visibly hangs above the surface rather than settling the body; terminal contact FAIL. Hoof/horn contact and full motion require further work; standing scale and diagnostic lowest-point grounding do not approve contact."
+  ]
+}
