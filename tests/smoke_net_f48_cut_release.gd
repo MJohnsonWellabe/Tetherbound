@@ -56,6 +56,11 @@ func _release_cut() -> void:
 	var view := await _host(_guest_id)
 	want((view.get("row", {}) as Dictionary).get("action") == "essence_release" and (view.get("row", {}) as Dictionary).get("status") == "pending",
 		"the host's essence_release row is still pending without the ACK (%s)" % str(view.get("row")))
+	# A killed process sends no disconnect: the host holds the dead guest's
+	# seat until its ENet timeout (135-180 s) drops the link. Rejoin after that, so the fresh
+	# process is not refused as "already connected" and rebuilding its world
+	# on every retry.
+	if not await _pass(0, "expect_peers", {"count": 1, "budget_s": 300.0}, 20000): return
 	if not await _restart_and_rejoin(): return
 	var after := await _guest()
 	view = await _host(_guest_id)
