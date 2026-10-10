@@ -1,0 +1,118 @@
+{
+  "subject": "riverdrake",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Disabled asset-local candidate; production species selection unchanged",
+  "reference": "assets/creatures/tetherbound/riverdrake/reference/native-standing-v1.png",
+  "reference_author": "Built-in imagegen using owner-held existing species identity",
+  "reference_prompt": "Draft an original Tetherbound Riverdrake creature reference using the supplied established side-view reference crop and the full view of its installed model. ONE full-body three-quarter studio view of the same friendly aquatic drake: rich azure/turquoise blue scale skin, cream throat/chest/belly, expressive golden-amber eyes, a broad modest dragon/reptile snout with a small friendly closed-mouth smile, a short upright neck, four sturdy quadruped limbs with visible shoulders/elbows and hips/knees, broad grounded feet with separate pale ivory claws, and a long thick tapering tail ending in a large blue fin fan. Preserve the blue/cream identity, cream flank spots, swept-back head fin crest, broad dorsal sail fins and warm golden-orange fin margins. Fins should be broad connected sculpted membranes with a few sturdy integrated ribs, not hair wires or floating shards. Neutral standing quadruped with four clearly separated grounded feet and space between limbs; straight body and relaxed complete tail extending to one side. Keep all fins, claws and the entire tail inside frame with generous margin. No wings, new horns, extra limbs, saddle, harness, equipment, clothing, human, text, ruler, red faction marks, particles or environment. Warm fin accents are orange/ochre, never oxblood/red. Clean detailed stylized game-creature reference, coherent broad scale groups and readable facial forms, not photorealistic reptile noise. Neutral light-grey studio background and soft lighting. This preserves the same current-roster Riverdrake, not a new species.",
+  "identity_reference": [
+    "assets/creatures/tetherbound/riverdrake/reference/side.png",
+    "assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb rendered as full identity view"
+  ],
+  "reference_inspection": {
+    "identity": "Azure/turquoise drake, cream underside/flank spots, amber eyes, swept head crest, dorsal sail and orange/ochre fin margins retained",
+    "riggability": "Four distinct grounded feet and limb joints, straight quadruped torso, entire curved tail/fan inside frame, broad connected fin membranes without free-floating whisker wires",
+    "limits": "Single reference does not prove fin/tail topology, skinning, swim/grip or ordinary gameplay contact; candidate remains OFF pending full review"
+  },
+  "generation": {
+    "task_id": "01a12638-ecdc-719f-ab53-c706b864a76e",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "night": "2026-10-09",
+    "night_submission_index": 9,
+    "new_submissions_for_this_revision": 1,
+    "observed_credit_cost": 30
+  },
+  "rights": {
+    "basis": "Owner-authorized original drafted reference and existing paid Meshy account under RD-26. No purchase, third-party character or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models",
+    "terms_checked": "2026-10-10"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "geometry": "UV-loop-preserving weld; Mirejaw bounded collapse under 30k; generated identity and material maps retained.",
+    "skin": "Measured anatomical regions with local surface diffusion, four normalized influences and zero unweighted vertices. Separate tail segments; Riverdrake four separate foot joints.",
+    "material": "Organic dielectric: metallic and emission disabled; albedo/normal/roughness retained.",
+    "colourway": "Candidate texture namespace riverdrake_native_review avoids old repaints on new UVs; no roster addition. New colour variants remain open.",
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "height_m": 4.0,
+    "bones": 20,
+    "unweighted_vertices": 0,
+    "vertices": 13471,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false,
+    "export_triangles": 26873,
+    "topology_warnings": [
+      "Mesh_0: 11779 non-manifold edges",
+      "Mesh_0: 6365 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 525 microscopic disconnected components",
+      "Mesh_0: ~2606 inward-facing faces",
+      "Mesh_0: 25 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ]
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 stable Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "before_height_m": 4.00000047683716,
+    "candidate_height_m": 4.0,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "world": "Matched production Tidewake scene / CameraRig / stage / seed / five poses per preset; fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "diagnostics": "25 whole-body Low role samples; scale front/reverse before/after retained outside Git",
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "full_rig_animation": "OPEN",
+    "topology": "OPEN: retained warnings require independent inspection",
+    "colour_variants": "OPEN",
+    "ordinary_swimming_and_mount_contact": "OPEN",
+    "independent_art_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Still fixtures do not prove continuous contact, earned fights, ordinary swimming, flight/grip or mounted-rider fit.",
+    "Terminal faint and dedicated folded rest require contact/appeal review.",
+    "Gill/fin deformation and surface finish require independent approval.",
+    "Candidate remains OFF until the full art bar passes."
+  ]
+}
