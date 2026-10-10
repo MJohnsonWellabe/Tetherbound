@@ -138,20 +138,25 @@ func _add_fissures(parent: Node3D, centre: Vector2, radius: float, seed_value: i
 		var angle := float(seed_value % 31) * 0.09 + TAU * float(index) / 3.0
 		var start := centre + Vector2(cos(angle), sin(angle)) * radius * 0.18
 		var finish := centre + Vector2(cos(angle + 0.18), sin(angle + 0.18)) * radius * 1.15
-		var a := _local_grounded(start, 0.06)
-		var b := _local_grounded(finish, 0.06)
-		var segment := MeshInstance3D.new()
-		segment.name = "GlassFissure%d" % index
-		var mesh := CylinderMesh.new()
-		mesh.top_radius = 0.025
-		mesh.bottom_radius = 0.06
-		mesh.height = a.distance_to(b)
-		mesh.radial_segments = 5
-		segment.mesh = mesh
-		segment.position = (a + b) * 0.5
-		segment.quaternion = Quaternion(Vector3.UP, (b - a).normalized())
-		segment.material_override = _glow_material()
-		parent.add_child(segment)
+		# Short segments track the strike scar instead of bridging a slope
+		# with one floating white rod.
+		var steps := maxi(2, ceili(start.distance_to(finish) / 0.75))
+		var material := _glow_material()
+		for step in steps:
+			var a := _local_grounded(start.lerp(finish, float(step) / steps), 0.06)
+			var b := _local_grounded(start.lerp(finish, float(step + 1) / steps), 0.06)
+			var segment := MeshInstance3D.new()
+			segment.name = "GlassFissure%d_%d" % [index, step]
+			var mesh := CylinderMesh.new()
+			mesh.top_radius = 0.025
+			mesh.bottom_radius = 0.04
+			mesh.height = a.distance_to(b)
+			mesh.radial_segments = 5
+			segment.mesh = mesh
+			segment.position = (a + b) * 0.5
+			segment.quaternion = Quaternion(Vector3.UP, (b - a).normalized())
+			segment.material_override = material
+			parent.add_child(segment)
 
 
 func _build_blasted_tree(spec: Dictionary) -> void:
