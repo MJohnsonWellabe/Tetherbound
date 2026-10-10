@@ -1,0 +1,162 @@
+{
+  "subject": "grandpa",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "full_art_bar_pass": false,
+  "disposition": "Disabled identity-preserving material refinement of the existing installed NPC; no new character or body.",
+  "reference_provenance": {
+    "subject": "grandpa",
+    "reference": "assets/characters/grandpa/reference/f36-face-v1.png",
+    "method": "reuse_existing_inspected_project_draft",
+    "prompt": "Create one identity-preserving production sculpture reference for the SAME installed Grandpa character in these two Tetherbound reference images. Image 1 defines his head identity; image 2 defines clothing and proportions. Crop: a single centered three-quarter head and short neck, facing nearly forward, with the complete hair silhouette and ears visible, no shoulders or scarf, isolated on plain pale grey. Refine only anatomical definition and clean sculpted surface quality for image-to-3D head generation: readable deep-set warm dark eyes with modeled lids, grey eyebrows, kind slightly concerned elderly expression, same long rounded nose, same softly squared jaw and short full grey beard and moustache; swept wavy silver hair with the same uneven side curls and part. Preserve perceived ethnicity, elderly age, head width/height, forehead, face likeness, ear placement, hair length and all recognizable features from the references. Art style: stylized premium creature-expedition game character sculpt, warm natural skin, coherent softened forms, crisp actual facial geometry rather than painted lines, restrained roughness, clean rounded clumps of hair and beard. Neutral even studio illumination showing eye sockets, cheeks and lips, no dramatic shadows. No new character redesign, no ornaments, no red accents, no text, no labels, no extra views, no pedestal, no photoreal pores, no heroic younger face. Intended as a faithful face refinement of the existing Grandpa, not a replacement identity.",
+    "selected_origin": "exec-ba032b1f-637d-4bef-8636-6c86d03acb2a",
+    "inspection": "PASS reference: same elderly warm face, swept grey curls, thick brows, long rounded nose, short full beard and kind concerned expression. Single head crop preserves original identity; no wardrobe/body change.",
+    "default_enabled": false,
+    "original_reference_prompt_retained": true,
+    "new_submissions": 0,
+    "historical_tasks": [
+      {
+        "task_id": "01a118ab-c9e1-7121-b488-52473510552c",
+        "endpoint": "/openapi/v1/multi-image-to-3d",
+        "status": "SUCCEEDED",
+        "observed_historical_credits": 20,
+        "service_reference_bytes_match": null
+      },
+      {
+        "task_id": "01a118b6-747c-74f1-9546-87893540dfbc",
+        "endpoint": "/openapi/v1/retexture",
+        "status": "SUCCEEDED",
+        "observed_historical_credits": 10,
+        "service_reference_bytes_match": true
+      }
+    ]
+  },
+  "generation": {
+    "task_id": "01a1273b-a08a-75f8-8e41-f3c86f1f5a9a",
+    "endpoint": "/openapi/v1/retexture",
+    "settings": {
+      "ai_model": "meshy-6",
+      "enable_original_uv": true,
+      "enable_pbr": false,
+      "texture_resolution": "2k",
+      "remove_lighting": true,
+      "text_style_prompt": "Preserve this SAME installed character identity and original UV layout. Only improve exposed facial skin finish with coherent warm skin colour groups matching the inspected image. Preserve eye colour, brows, facial hair, hair, headwear, mask and collar appearance. No freckles, speckles, dramatic baked lighting, new accessories or new identity. The source mesh will be retained; only safely isolated facial-skin albedo pixels will be used."
+    },
+    "reference": "assets/characters/grandpa/reference/f36-face-v1.png",
+    "model_input": "installed isolated head with original UVs",
+    "night": "2026-10-09",
+    "provider": "Meshy",
+    "status": "SUCCEEDED",
+    "new_submissions": 1,
+    "observed_credit_cost": 10
+  },
+  "generation_scope": "One guarded original-UV Meshy retexture of a static isolated installed-head input. Service geometry, rig, materials and other maps are never installed. Only conservative facial-skin albedo pixels are transferred to the complete original body.",
+  "rights": {
+    "basis": "Owner-held installed character and inspected original project draft; owner-authorized existing paid Meshy account. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preservation": {
+    "scope": "Original installed NPC; only safe facial-skin albedo pixels changed",
+    "candidate_enabled": false,
+    "service_head_triangle_uv_mapping_unchanged": true,
+    "installed_geometry_uv_weights_nodes_skin_clips_unchanged": true,
+    "original_binary_prefix_preserved": true,
+    "original_material_parameters_normal_roughness_metallic_unchanged": true,
+    "decoded_rgba_outside_face_mask_identical": true,
+    "protected_uv_overlap_excluded": true,
+    "changed_pixels": 39729,
+    "safe_pixels": 40586,
+    "image_size": [
+      2048,
+      2048
+    ],
+    "clips": 5,
+    "blend": "Inward 24-pixel Gaussian attenuation, half strength, service RGBA delta bounded to 18/255 before blending",
+    "requires_native_face_finish_identity_and_seam_review": true,
+    "full_art_gate": false
+  },
+  "face_skin_mask": {
+    "source": "grandpa_lod0.glb",
+    "scope": "Conservative facial skin only; no geometry or source image modification",
+    "bounds_m": {
+      "min_y": 1.43,
+      "max_y": 1.645,
+      "max_abs_x": 0.14,
+      "min_z": 0.025
+    },
+    "selected_face_triangles": 1636,
+    "protected_triangles": 26342,
+    "safe_pixels": 40586,
+    "original_image_size": [
+      2048,
+      2048
+    ],
+    "protected_uv_overlap_excluded": true,
+    "non_skin_pixels_and_boundary_inset_excluded": true,
+    "candidate_enabled": false,
+    "requires_native_identity_and_seam_review": true
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "presets": {
+      "Low": {
+        "renderer": "gl_compatibility",
+        "before_height_m": 1.72000002861023,
+        "after_height_m": 1.72000002861023,
+        "nine_matched_stage_views": true,
+        "paired_authored_world_post": true,
+        "sheet": "review/low-before-after.jpg"
+      },
+      "Medium": {
+        "renderer": "forward_plus",
+        "before_height_m": 1.72000002861023,
+        "after_height_m": 1.72000002861023,
+        "nine_matched_stage_views": true,
+        "paired_authored_world_post": true,
+        "sheet": "review/medium-before-after.jpg"
+      }
+    },
+    "scope": "Matched fixed native material/rig stage, existing original clip samples and authored NPC post when available. Raw logs and receipts remain outside Git."
+  },
+  "gates": {
+    "installed_scale": "PASS",
+    "original_body_uv_rig_clips": "PASS",
+    "protected_albedo_pixels": "PASS",
+    "face_finish_identity_seams": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false,
+    "production_post_readability": "FAIL"
+  },
+  "limitations": [
+    "Conservative head-weight/position/skin-colour UV mask excludes all other triangle coverage; classification still requires native identity, shading and seam judgment.",
+    "Original decoded RGBA outside the selected mask is exactly retained; this does not alone certify visual appeal.",
+    "Still samples do not certify full motion, ordinary dialogue, trainer reactions, earned journeys or fights.",
+    "Runtime character config remains unchanged; OFF recipe changes only the candidate model path.",
+    "Initial full-colour graft failed native face-finish review with visible mask edges and uneven skin tone. It is preserved outside Git and not selected; final conservative blend reuses the same service task with no additional submission. Before captures are reused because installed body and render setup are unchanged.",
+    "The existing authored NPC transform is behind the building from the matched production CameraRig stand. Loaded-model and matched-transform checks pass, but Grandpa is occluded; these frames do not demonstrate production face readability. No actor, building or production feature was moved to conceal the failure."
+  ],
+  "local_material_selection": {
+    "version": 2,
+    "before_evidence_version": "v1",
+    "after_evidence_version": "v2",
+    "model": "native-face-material-v2.glb",
+    "proof": "face-material-preservation-v2.json",
+    "rejected_v1": "Native Low face finish FAIL: stark orange patches and visible ownership-mask seams. Original body/pixel preservation passed.",
+    "correction": "Same service retexture, inward 24-pixel feather, half strength and bounded skin delta to preserve installed palette. No additional generation.",
+    "new_submissions_for_correction": 0,
+    "candidate_enabled": false
+  },
+  "native_inspection": {
+    "selected_candidate": "v2 conservative face material",
+    "face_finish_identity_seams": "OPEN",
+    "production_post_readability": "FAIL",
+    "production_post_note": "The existing authored NPC transform is behind the building from the matched production CameraRig stand. Loaded-model and matched-transform checks pass, but Grandpa is occluded; these frames do not demonstrate production face readability. No actor, building or production feature was moved to conceal the failure.",
+    "inspection": "Viewed original and selected native Low face front/three-quarter plus Medium whole body and both complete contact sheets. Stark orange seams in the rejected full-colour v1 are absent from conservative v2; original face faceting, clothing and material details remain. Final appeal and full art judgment remain independent/open.",
+    "candidate_enabled": false
+  }
+}
