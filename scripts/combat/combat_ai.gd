@@ -273,9 +273,23 @@ static func reaction(state: Intent, observation: Dictionary, patterns: Dictionar
 ## player's commitment provides opportunity; it does not buy an instant hit.
 static func punish_profile(patterns: Dictionary, base: Dictionary, context: Dictionary) -> Dictionary:
 	var local := context.duplicate(true)
-	local.erase("pattern_id")
-	var role := str(local.get("role", ""))
+	var role := context_role(patterns, context)
+	local["role"] = role
 	var ids := pattern_ids(patterns, role, local)
+	var named := not str(local.get("pattern_id", "")).is_empty()
+	# A named reaction uses this send-out's quick, with the same authored tell,
+	# pressure and role as its normal sequence. Never substitute a species quick
+	# merely because the director's baseline role differs from the named one.
+	for index: int in ids.size():
+		var row: Dictionary = (patterns.get("attacks", {}) as Dictionary).get(str(ids[index]), {})
+		if named and row.is_empty(): return {}
+		if str(row.get("slot", "")) == "quick":
+			return select_pattern(patterns, base, local, index)
+	# Heavy-only named sequences retain a role quick as their recovery punish.
+	# Missing send-out data is unavailable, not permission for a generic attack.
+	if not named or ids.is_empty(): return {}
+	local.erase("pattern_id")
+	ids = pattern_ids(patterns, role, local)
 	for index: int in ids.size():
 		var row: Dictionary = (patterns.get("attacks", {}) as Dictionary).get(str(ids[index]), {})
 		if str(row.get("slot", "")) == "quick":
