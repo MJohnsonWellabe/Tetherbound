@@ -65,11 +65,11 @@ func _run() -> void:
 	var after := await _f18_observe(1)
 	var held := await _f18_observe(0, guest_id)
 	var receipts: Array = after.get("character", {}).get("transaction_receipts", [])
-	var unlock_receipts := receipts.filter(func(r: Variant) -> bool: return str(r).contains("portal") or str(r).contains("tidewake"))
+	var unlock_receipts := receipts.filter(func(r: Variant) -> bool: return str(r).begins_with("portal_unlock:"))
 	check(after.get("tidewake_key_count") == 0, "#1 key cut: the key is spent exactly once, none left (%d)" % int(after.get("tidewake_key_count", -1)))
 	check(after.get("character", {}).get("portal_unlocks", []).count("tidewake") == 1, "#1 key cut: the personal unlock exists exactly once")
-	check(unlock_receipts.size() >= 1 and unlock_receipts.size() == after.get("character_disk", {}).get("redesign_character", {}).get("transaction_receipts", []).filter(
-			func(r: Variant) -> bool: return str(r).contains("portal") or str(r).contains("tidewake")).size(),
+	check(unlock_receipts.size() == 1 and after.get("character_disk", {}).get("redesign_character", {}).get("transaction_receipts", []).filter(
+			func(r: Variant) -> bool: return str(r).begins_with("portal_unlock:")).size() == 1,
 		"#1 key cut: the unlock receipt is saved once (%s)" % str(unlock_receipts))
 	check(held.get("admitted", {}).get("redesign_character", {}).get("portal_unlocks", []).count("tidewake") == 1
 		and held.get("admitted", {}).get("redesign_character", {}).get("transaction_receipts", []) == receipts,

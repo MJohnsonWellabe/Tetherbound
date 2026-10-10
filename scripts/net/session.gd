@@ -2548,6 +2548,7 @@ var _owner_training_retry: Dictionary = {} # Only weak refs + exact row identity
 var _owner_training_install := false
 var _owner_training_install_rollback := false
 var _training_bootstrap_waiting := false
+var _bootstrap_deltas_applied := 0
 var _character_authority: RefCounted = CHARACTER_AUTHORITY.new()
 
 
@@ -3573,12 +3574,18 @@ func _finalize_snapshot_receive() -> bool:
 			and (ledger_rpc == null or not ledger_rpc.has_method("apply_remote_delta")):
 		_fail_snapshot_receive("Queued world changes could not be applied after the snapshot.", true)
 		return false
-	game.call("apply_world_snapshot", data)
-	_sync_tether_tonic_scope()
+	# A bootstrap resumed after a training wait already holds this snapshot and
+	# the deltas queued before it: only later deltas apply, once. Re-applying
+	# would replay their player ops (item grants/takes are not idempotent).
+	if not _training_bootstrap_waiting:
+		game.call("apply_world_snapshot", data)
+		_sync_tether_tonic_scope()
+		_bootstrap_deltas_applied = 0
 	if not _latest_bootstrap_registry.is_empty():
 		_apply_registry(_latest_bootstrap_registry)
-	for delta: Dictionary in _bootstrap_deltas:
-		ledger_rpc.call("apply_remote_delta", delta)
+	for index: int in range(_bootstrap_deltas_applied, _bootstrap_deltas.size()):
+		ledger_rpc.call("apply_remote_delta", _bootstrap_deltas[index])
+	_bootstrap_deltas_applied = _bootstrap_deltas.size()
 	if preload("res://scripts/net/actor_vitals_delivery.gd").has_pending_owner(game.get("world").reward_deliveries, _local_character_id()) \
 			and (ledger_rpc == null or not ledger_rpc.has_method("reconcile_actor_vitals_before_ready") \
 			or not bool(ledger_rpc.call("reconcile_actor_vitals_before_ready"))):
@@ -3628,6 +3635,8 @@ func _clear_snapshot_bootstrap() -> void:
 	_early_snapshot_chunk = {}
 	_bootstrap_boundary = false
 	_bootstrap_deltas.clear()
+	_bootstrap_deltas_applied = 0
+	_training_bootstrap_waiting = false
 	_bootstrap_delta_bytes = 0
 	_latest_bootstrap_registry = {}
 	_bootstrap_registry_received = false
