@@ -377,6 +377,12 @@ func blocked_reason() -> String:
 		return "no_body"
 	if not _body.visible:
 		return "hidden"
+	# Terminal/traversal animation owns the pivot and the complete rig even on
+	# a remote body. A camp rest started by this layer remains its own state.
+	var animator: Variant = _body.get("_animator")
+	if not _body_rest_held and animator != null and animator.has_method("owns_pose") \
+			and bool(animator.call("owns_pose")):
+		return "authored_pose"
 	if _leader() == null:
 		return "no_leader"
 	if remote:

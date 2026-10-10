@@ -978,6 +978,30 @@ static func make_carrier_art(capability: Dictionary) -> Node3D:
 	visual.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
 	for animation: Node in art.find_children("*", "AnimationPlayer", true, false):
 		var player := animation as AnimationPlayer
+		# This shared builder draws both the local and remote carrier. Install
+		# the same measured grip clip used by ordinary creature presentation.
+		var clips: Dictionary = {}
+		for species_id: String in SPECIES.table():
+			var look := SPECIES.placeholder(species_id)
+			if str(look.get("model", "")) == path:
+				clips = preload("res://scripts/creatures/creature_pose_candidates.gd").install(
+					visual, visual, player, look, look.get("animations", {}), species_id)
+				break
+		var grip := str(clips.get("fly_grip", ""))
+		if not grip.is_empty() and player.has_animation(grip):
+			var grip_animation := player.get_animation(grip)
+			# Wrist/foot alignment owns the carrier's position. Bone animation
+			# must not reset that alignment to the configured launch offset.
+			var animation_root := player.get_node_or_null(player.root_node)
+			if animation_root != null:
+				var pivot_path := animation_root.get_path_to(visual)
+				for track in range(grip_animation.get_track_count() - 1, -1, -1):
+					if grip_animation.track_get_path(track) == pivot_path:
+						grip_animation.remove_track(track)
+			grip_animation.loop_mode = Animation.LOOP_LINEAR
+			player.play(grip)
+			player.advance(0.0)
+			continue
 		if bool(capability.get("procedural_wing_pose", false)):
 			player.stop()
 			continue
@@ -1067,6 +1091,13 @@ func _pose_bird() -> void:
 static func pose_carrier_wings(rig: Skeleton3D, capability: Dictionary, seconds: float) -> void:
 	if rig == null or not is_instance_valid(rig) or not bool(capability.get("procedural_wing_pose", false)):
 		return
+	# The authored loop owns these same wing bones. Do not overwrite it with
+	# the legacy wing-only fallback after the animation has evaluated.
+	var ancestor: Node = rig
+	while ancestor != null:
+		if bool(ancestor.get_meta("f36_pose_candidate_installed", false)):
+			return
+		ancestor = ancestor.get_parent()
 	var flap := sin(seconds * float(capability.get("wing_flap_frequency", 2.2)) * TAU) * float(capability.get("wing_flap_amplitude", 0.16))
 	for side: String in ["l", "r"]:
 		for section: String in ["upper", "fore"]:

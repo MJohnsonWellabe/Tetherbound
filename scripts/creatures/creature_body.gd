@@ -347,6 +347,7 @@ var _has_model: bool = false
 ## Drives the model's clips. Null when a creature fell back to the capsule,
 ## which has nothing to animate.
 var _animator: RefCounted = null
+var _traversal_pose_role := ""
 ## OWNER-0912-TERRAPUP-LAY. A species may finish its shipped rest clip with a
 ## small additive skeletal pose. The complete pre-rest state is retained so a
 ## deployed companion can reuse the bed pose and stand back up without touching
@@ -692,15 +693,22 @@ func _release_art(node: Node) -> void:
 ## `Armature|Frog_Attack` and `Armature|Triceratops_Run`. Nothing in code knows
 ## those strings, so a new creature is a data edit.
 func _build_animator(art: Node3D, look: Dictionary) -> void:
+	_animator = null
+	if has_meta("f36_pose_candidate_installed"):
+		remove_meta("f36_pose_candidate_installed")
 	var players: Array[Node] = art.find_children("*", "AnimationPlayer", true, false)
 	if players.is_empty():
 		push_warning("model for '%s' has no AnimationPlayer; it will not animate" % species_id)
 		return
 	var player := players[0] as AnimationPlayer
-	var clips := POSE_CANDIDATES.install(self, _model, player, look, look.get("animations", {}))
+	var clips := POSE_CANDIDATES.install(self, _model, player, look, look.get("animations", {})).duplicate(true)
+	# Authored bed recipes finish the installed faint clip. Combat's new
+	# collapse must not replace their endpoint or completion signal.
+	clips["rest_faint"] = str((look.get("animations", {}) as Dictionary).get("faint", ""))
 	_animator = ANIMATOR.new(player, clips)
 	if bool(get_meta("f36_pose_candidate_installed", false)):
 		_animator.call("bind_candidate_pivot", _model)
+	_animator.call("set_traversal_role", _traversal_pose_role)
 
 
 ## Scale and centre an imported model so it stands on the node's origin at the
@@ -2141,6 +2149,14 @@ func set_combat_hitstop(active: bool) -> void:
 
 
 func play_faint() -> void:
+	var presence := get_node_or_null("Presence")
+	if presence != null:
+		presence.call("_suspend", "faint_pose")
+	# A hit-recoil tween must not overwrite the collapse's grounded pivot.
+	if _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
+		_combat_flinch_tween.kill()
+		_model.position = _combat_flinch_rest_position
+		_model.rotation = _combat_flinch_rest_rotation
 	if _animator != null:
 		_animator.call("play_faint")
 
@@ -2187,7 +2203,10 @@ func play_rest() -> void:
 		return
 	var roll := float(look.get("rest_roll_deg", DEFAULT_REST_ROLL_DEG))
 	if roll == 0.0:
-		play_faint()
+		if _animator != null:
+			_animator.call("play_terminal", "rest_faint")
+		else:
+			play_faint()
 		return
 	if _animator != null:
 		_animator.call("tick", 0.0, 0.0, 1.0)
@@ -2322,7 +2341,7 @@ func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 		player.animation_finished.connect(callback)
 	var rest_role := str(config.get("clip_role", "faint"))
 	if _animator != null and _animator.has_method("play_terminal"):
-		_animator.call("play_terminal", rest_role)
+		_animator.call("play_terminal", "rest_faint" if rest_role == "faint" else rest_role)
 	else:
 		play_faint()
 	var expected := str((look.get("animations", {}) as Dictionary).get(
@@ -2708,8 +2727,16 @@ func revive_animation() -> void:
 ## already-authorized mounted/swimming/flying state, and clear on dismount.
 ## This never grants traversal, moves collision, or mutates saved state.
 func set_traversal_pose(role: String) -> void:
+	var next := role if role in ["ride", "swim", "fly_grip"] else ""
+	if next == _traversal_pose_role:
+		return
+	_traversal_pose_role = next
 	if _animator != null:
-		_animator.call("set_traversal_role", role)
+		if not next.is_empty():
+			var presence := get_node_or_null("Presence")
+			if presence != null:
+				presence.call("_suspend", "traversal_pose")
+		_animator.call("set_traversal_role", next)
 
 
 ## --- catching, the creature's half ------------------------------------------

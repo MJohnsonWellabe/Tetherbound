@@ -59,6 +59,7 @@ const GROUP := &"remote_creature"
 
 const PRESENTATION := preload("res://scripts/net/remote_presentation.gd")
 const PRESENCE := preload("res://scripts/creatures/companion_presence.gd")
+const AQUATIC_STATE := preload("res://scripts/player/swim_state.gd")
 
 ## Smoothing half-life for the rendered position, and the gap past which the
 ## difference is a teleport rather than late packets. Same numbers and same
@@ -87,7 +88,7 @@ var deploy_shiny: bool = false
 var net_position: Vector3 = Vector3.ZERO
 var net_yaw: float = 0.0
 var net_aquatic: Dictionary = {}
-var aquatic := preload("res://scripts/player/swim_state.gd").new()
+var aquatic := AQUATIC_STATE.new()
 
 ## The trainer body this creature belongs to, so the companion layer has
 ## somebody to look at and stand still beside. Resolved lazily from the
@@ -475,6 +476,16 @@ func _follow(delta: float) -> void:
 	if not net_aquatic.is_empty():
 		aquatic.owner_peer_id = get_multiplayer_authority()
 		aquatic.apply_remote_snapshot(net_aquatic, get_multiplayer_authority())
+	_resolve_leader()
+	# Draw only the already replicated traversal state; this cannot grant a
+	# ride, consume stamina or change the owning peer's authority.
+	var pose := ""
+	if not net_aquatic.is_empty() and aquatic.mode in [AQUATIC_STATE.Mode.HUMAN, AQUATIC_STATE.Mode.MOUNTED]:
+		pose = "swim"
+	elif (net_aquatic.is_empty() or aquatic.mode != AQUATIC_STATE.Mode.COMBAT_PAUSED) \
+			and is_instance_valid(leader) and bool(leader.get("net_riding")):
+		pose = "ride"
+	set_traversal_pose(pose)
 	if not _has_render:
 		_render_position = net_position
 		_has_render = true
