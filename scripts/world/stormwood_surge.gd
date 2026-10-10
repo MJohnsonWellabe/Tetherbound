@@ -1269,20 +1269,54 @@ func _build_steam() -> void:
 	var quad := QuadMesh.new()
 	var size := float(cfg.get("puff_size_m", 2.4))
 	quad.size = Vector2(size, size * float(cfg.get("puff_aspect", 0.6)))
-	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
-	material.billboard_keep_scale = true
-	material.vertex_color_use_as_albedo = true
-	material.albedo_texture = soft_puff_texture()
-	material.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var material := ShaderMaterial.new()
+	var shader := Shader.new()
+	shader.code = STEAM_SHADER
+	material.shader = shader
+	material.set_shader_parameter("puff_texture", soft_puff_texture())
+	# Use the existing puff height for the blend distance; the authored
+	# particle budget, tint, alpha, size and life curves stay unchanged.
+	material.set_shader_parameter("intersection_fade_m", quad.size.y)
 	quad.material = material
 	_steam.draw_pass_1 = quad
 	var reach := process.emission_ring_radius + size + 1.0
 	_steam.visibility_aabb = AABB(Vector3(-reach, -2.0, -reach), Vector3(reach * 2.0, 14.0, reach * 2.0))
 	add_child(_steam)
+
+const STEAM_SHADER := """
+shader_type spatial;
+render_mode unshaded, blend_mix, depth_draw_never, cull_disabled, shadows_disabled;
+uniform sampler2D puff_texture : repeat_disable, filter_linear;
+uniform sampler2D scene_depth : hint_depth_texture, repeat_disable, filter_nearest;
+uniform float intersection_fade_m = 1.0;
+void vertex() {
+	mat4 facing = mat4(INV_VIEW_MATRIX[0], INV_VIEW_MATRIX[1], INV_VIEW_MATRIX[2], MODEL_MATRIX[3]);
+	float angle = INSTANCE_CUSTOM.x;
+	mat4 spin = mat4(vec4(cos(angle), sin(angle), 0.0, 0.0),
+		vec4(-sin(angle), cos(angle), 0.0, 0.0), vec4(0.0, 0.0, 1.0, 0.0), vec4(0.0, 0.0, 0.0, 1.0));
+	mat4 size = mat4(vec4(length(MODEL_MATRIX[0].xyz), 0.0, 0.0, 0.0),
+		vec4(0.0, length(MODEL_MATRIX[1].xyz), 0.0, 0.0),
+		vec4(0.0, 0.0, length(MODEL_MATRIX[2].xyz), 0.0), vec4(0.0, 0.0, 0.0, 1.0));
+	MODELVIEW_MATRIX = VIEW_MATRIX * facing * spin * size;
+}
+void fragment() {
+	float raw_depth = texture(scene_depth, SCREEN_UV).r;
+	#if CURRENT_RENDERER == RENDERER_COMPATIBILITY
+	vec3 ndc = vec3(SCREEN_UV * 2.0 - 1.0, raw_depth * 2.0 - 1.0);
+	#else
+	vec3 ndc = vec3(SCREEN_UV * 2.0 - 1.0, raw_depth);
+	#endif
+	vec4 scene_view = INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+	float soft_edge = 1.0;
+	if (abs(scene_view.w) > 0.00001) {
+		float scene_z = -scene_view.z / scene_view.w;
+		float separation = scene_z + VERTEX.z;
+		soft_edge = smoothstep(0.0, intersection_fade_m, max(separation, 0.0));
+	}
+	ALBEDO = COLOR.rgb;
+	ALPHA = COLOR.a * texture(puff_texture, UV).a * soft_edge;
+}
+"""
 
 static var _puff_texture: GradientTexture2D
 
