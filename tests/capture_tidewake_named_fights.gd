@@ -8,7 +8,7 @@ extends SceneTree
 ##   xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
 ##     --resolution 1280x720 --script res://tests/capture_tidewake_named_fights.gd \
 ##     -- --trainer=water_trainer_venn[,water_trainer_nerissa] --out=res://shots/tidewake/f14_c3 \
-##     [--interval=1.0] [--max-frames=40] [--level=53] [--pilot=QUICK|READER|MASHER] [--cap-s=240]
+##     [--interval=1.0] [--max-frames=40] [--level=<disclosed override>] [--pilot=QUICK|READER|MASHER] [--cap-s=240]
 ##
 ## Path: the actual Water world (water_archipelago.tscn); a legal five-member
 ## party of the original five at the given level (Ripplet lead); the player
@@ -46,7 +46,7 @@ var _reader: RefCounted
 ## physics tick at 1080p ran ~200x slower than the fight clock; the fight
 ## itself (physics, AI, pilot, camera _process) is unchanged.
 var _sparse := false
-## --wild=aquaryn,tidecoil: F14#0's named wilds. Aquaryn is engaged through
+## --wild=aquaryn,tidecoil,water_<named id>: F14#0's named wilds. Aquaryn is engaged through
 ## WaterAlpha.request_engage() (smoke_water_alpha_runtime.gd); Tidecoil by the
 ## ordinary interact prompt from the Deep Watch arrival bay's beach, the stand
 ## tidewake_b_tidecoil_fight.gd walks to. Fixture (disclosed): placement.
@@ -80,7 +80,13 @@ const SPARSE_WARM_FRAMES := 3
 var _out := ""
 var _interval := 1.0
 var _max_frames := 40
-var _level := 53
+## With no override, resolve the requested encounter's current regional entry
+## from chapter_curve and wild-site island pins. Different entries need separate
+## runs, so a later fight never silently borrows an earlier fight's level.
+var _level := 0
+var _level_override := 0
+var _entry_levels: Dictionary = {}
+var _captures: Array = []
 ## Tell pairs (start + late) saved per opponent, so the frame budget spans the
 ## whole roster instead of the first opponent's opening seconds.
 var _tells_per_opponent := 2
@@ -104,7 +110,12 @@ func _run() -> void:
 		elif arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
 		elif arg.begins_with("--interval="): _interval = maxf(0.2, float(arg.trim_prefix("--interval=")))
 		elif arg.begins_with("--max-frames="): _max_frames = maxi(4, int(arg.trim_prefix("--max-frames=")))
-		elif arg.begins_with("--level="): _level = int(arg.trim_prefix("--level="))
+		elif arg.begins_with("--level="):
+			_level_override = int(arg.trim_prefix("--level="))
+			if _level_override <= 0:
+				push_error("--level must be positive; omit it for current regional entry")
+				quit(1)
+				return
 		elif arg.begins_with("--tells-per-opponent="): _tells_per_opponent = maxi(0, int(arg.trim_prefix("--tells-per-opponent=")))
 		elif arg.begins_with("--pilot="): _policy = arg.trim_prefix("--pilot=").to_upper()
 		elif arg.begins_with("--cap-s="): _fight_cap_s = maxf(30.0, float(arg.trim_prefix("--cap-s=")))
@@ -116,6 +127,9 @@ func _run() -> void:
 		elif arg == "--stand=south": _stand_south = true
 	if (ids.is_empty() and _wilds.is_empty()) or _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --trainer=, --out= and a rendering display")
+		quit(1)
+		return
+	if not _resolve_entry_level(ids):
 		quit(1)
 		return
 	await process_frame
@@ -145,14 +159,25 @@ func _run() -> void:
 		return
 	var failures := 0
 	for id: String in ids:
-		if not await _capture(world, game, id):
+		_approach_log = {}
+		_record_result = {}
+		var ok := await _capture(world, game, id)
+		_captures.append({"id": id, "ok": ok, "approach": _approach_log.duplicate(true),
+			"recording": _record_result.duplicate(true)})
+		if not ok:
 			failures += 1
 			break # A capped fight may still be active; never stage the next trainer.
 	for wild: String in _wilds:
 		if failures > 0:
 			break
-		if not await _capture_wild(world, game, wild):
+		_approach_log = {}
+		_record_result = {}
+		var ok := await _capture_wild(world, game, wild)
+		_captures.append({"id": wild, "ok": ok, "approach": _approach_log.duplicate(true),
+			"recording": _record_result.duplicate(true)})
+		if not ok:
 			failures += 1
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out))
 	var file := FileAccess.open(_out.path_join("frames.json"), FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify(_log, "  "))
@@ -162,10 +187,73 @@ func _run() -> void:
 		file.close()
 	else:
 		failures += 1
+	var manifest := FileAccess.open(_out.path_join("capture.json"), FileAccess.WRITE)
+	if manifest != null:
+		manifest.store_string(JSON.stringify({"party": PARTY, "party_level": _level,
+			"level_override": _level_override, "regional_entries": _entry_levels,
+			"fixture": "staged five; authored landing placement then stick walk when --approach is set; no earned-save lineage",
+			"fixture_flags": INTERIOR_FLAGS + Array(_extra_flags), "policy": _policy,
+			"continuous_rendering": not _sparse, "ordinary_approach_requested": not _approach.is_empty(),
+			"captures": _captures}, "  "))
+		manifest.flush()
+		if manifest.get_error() != OK: failures += 1
+		manifest.close()
+	else:
+		failures += 1
 	if not _finalize_capture(failures):
 		failures += 1
 	print("TIDEWAKE C3 CAPTURE done: %d trainer(s), %d failure(s), %d frames" % [ids.size(), failures, _log.size()])
 	quit(1 if failures else 0)
+
+
+func _read_config(path: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	return parsed if parsed is Dictionary else {}
+
+
+func _named_spec(wild: String) -> Dictionary:
+	var id := "water_deep_watch_tidecoil" if wild == "tidecoil" else wild
+	for row: Dictionary in _read_config("res://data/config/water_encounters.json").get("named_encounters", []):
+		if str(row.get("id", "")) == id: return row
+	return {}
+
+
+func _resolve_entry_level(ids: PackedStringArray) -> bool:
+	var tables := {}
+	var islands := {}
+	for region: Dictionary in _read_config("res://data/config/chapter_curve.json").get("biomes", {}).get("tidewake", {}).get("regional_targets", []):
+		var team: Array = region.get("team", [])
+		if team.size() != 2 or int(team[0]) <= 0: continue
+		for table: String in region.get("tables", []):
+			tables[table] = {"region": str(region.region_id), "level": int(team[0])}
+	for site: Dictionary in _read_config("res://data/config/water_encounters.json").get("wild_sites", []):
+		var island := str(site.get("island_id", ""))
+		var table := str(site.get("table_id", ""))
+		if island.is_empty() or not tables.has(table): continue
+		if islands.has(island) and str(islands[island].region) != str(tables[table].region):
+			push_error("conflicting current regions for island " + island)
+			return false
+		islands[island] = tables[table]
+	var requested := {}
+	for id: String in ids:
+		for trainer: Dictionary in _read_config("res://data/config/water_characters.json").get("trainers", []):
+			if str(trainer.get("id", "")) == id:
+				requested[id] = str(trainer.get("island_id", ""))
+	for wild: String in _wilds:
+		requested[wild] = "tidal_cradle" if wild == "aquaryn" else str(_named_spec(wild).get("island_id", ""))
+	for id: String in Array(ids) + Array(_wilds):
+		var island := str(requested.get(id, ""))
+		if not islands.has(island):
+			push_error("missing current regional entry for " + id)
+			return false
+		_entry_levels[id] = islands[island].duplicate(true)
+		var entry := int(islands[island].level)
+		if _level_override <= 0 and _level > 0 and _level != entry:
+			push_error("different regional entries require separate capture runs")
+			return false
+		_level = _level_override if _level_override > 0 else entry
+	print("TIDEWAKE C3 fixture party level=%d override=%d entries=%s" % [_level, _level_override, JSON.stringify(_entry_levels)])
+	return _level > 0
 
 
 ## Derived evidence tools can finalize their manifest after raw export errors
@@ -642,6 +730,13 @@ func _capture_wild(world: Node3D, game: Node, wild: String) -> bool:
 		body = (world.get_node("WaterAlpha") as Node).get("body")
 		if not await _walk_to_aquaryn(world, body):
 			return false
+		if manager.enemy_body() != body:
+			push_error("the ordinary Aquaryn approach engaged a different opponent")
+			return false
+	elif not _named_spec(wild).is_empty() and not _approach.is_empty():
+		if not await _walk_to_named_wild(world, _named_spec(wild)):
+			return false
+		body = manager.enemy_body()
 	elif wild == "aquaryn":
 		var alpha: Node = world.get_node("WaterAlpha")
 		body = alpha.get("body")
@@ -737,3 +832,117 @@ func _capture_wild(world: Node3D, game: Node, wild: String) -> bool:
 	var dir := _out.path_join(wild)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir))
 	return await _record(world, game, dir, wild, manager.is_fighting)
+
+
+## The same landing fixture as the trainer/Aquaryn recorder, extended to the
+## five authored data-named wilds. Only the initial authored anchor is placed;
+## thereafter movement, deployment and engagement are ordinary player inputs.
+## Read the resident target and arbiter candidate; never move/hide wilds or
+## start combat directly. An ambient fight cannot stand in for the named one.
+func _walk_to_named_wild(world: Node3D, spec: Dictionary) -> bool:
+	var director: Node = world.get_node("EncounterDirector")
+	var manager: Node = world.get_node("CombatManager")
+	var player: CharacterBody3D = world.local_rig()
+	var rig: Node3D = world.get_node("CameraRig")
+	var arbiter: Node = get_first_node_in_group("interaction_arbiter")
+	var id := str(spec.get("id", ""))
+	var anchor: Dictionary = {}
+	for row: Dictionary in (world.get("config") as Dictionary).get("anchors", []):
+		if str(row.get("id", "")) == _approach: anchor = row
+	if anchor.is_empty() or not spec.has("position"):
+		push_error("unknown --approach anchor %s or missing named position %s" % [_approach, id])
+		return false
+	if str(anchor.get("kind", "")) != "arrival" or str(anchor.get("island_id", "")) != str(spec.get("island_id", "")):
+		push_error("named capture needs its island's authored arrival anchor: " + id)
+		return false
+	var start_at: Array = anchor.safe_position
+	var start := Vector3(float(start_at[0]), 0.0, float(start_at[2]))
+	start.y = float(world.ground_height_at(start.x, start.z)) + 0.2
+	player.global_position = start
+	player.velocity = Vector3.ZERO
+	await _frames(30)
+	var at: Array = spec.position
+	var target := Vector2(float(at[0]), float(at[2]))
+	var inland := (Vector2(start.x, start.z) - target).normalized()
+	var goal := target
+	var dry_goal := false
+	# A shallow-surface named body is reached from dry land. Read the baked
+	# ground on its landing side rather than planting the trainer in the sea.
+	for step in 80:
+		goal = target + inland * (6.0 + step)
+		if float(world.ground_height_at(goal.x, goal.y)) >= WALK.DRY_M:
+			dry_goal = true
+			break
+	if not dry_goal:
+		push_error("no dry landing-side approach to " + id)
+		return false
+	var route: Array = WALK.plan_route(world, Vector2(start.x, start.z), goal).get("points", [])
+	if route.is_empty():
+		push_error("no baked-ground walking route to " + id)
+		return false
+	var drive := func(x: float, y: float) -> void:
+		for axis in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
+			var event := InputEventJoypadMotion.new()
+			event.axis = axis
+			event.axis_value = x if axis == JOY_AXIS_LEFT_X else y
+			Input.parse_input_event(event)
+	var tap := func(action: StringName) -> void:
+		for pressed in [true, false]:
+			var event := InputEventAction.new()
+			event.action = action
+			event.pressed = pressed
+			event.strength = 1.0 if pressed else 0.0
+			Input.parse_input_event(event)
+			await _frames(6)
+	var nav: RefCounted = NAV.new(self, player, rig, drive)
+	var walked := 0.0
+	if _sparse: RenderingServer.render_loop_enabled = false
+	for index in route.size():
+		if manager.is_fighting(): break
+		var point: Vector2 = route[index]
+		var before := player.global_position
+		var budget := maxi(900, int(Vector2(before.x, before.z).distance_to(point) * 90.0))
+		var ok: bool = await nav.walk_to(Vector3(point.x, 0.0, point.y), budget, 1.8)
+		walked += Vector2(before.x, before.z).distance_to(Vector2(player.global_position.x, player.global_position.z))
+		if manager.is_fighting(): break
+		if not ok:
+			drive.call(0.0, 0.0)
+			RenderingServer.render_loop_enabled = true
+			push_error("named approach stalled at leg %d/%d for %s" % [index + 1, route.size(), id])
+			return false
+	drive.call(0.0, 0.0)
+	if not manager.is_fighting() and director.call("ally_body") == null:
+		await tap.call(&"creature_recall")
+		await _frames(30)
+	var body: Node3D = null
+	for _frame in 600:
+		if manager.is_fighting(): break
+		for candidate: Variant in director.get("_wild_creatures"):
+			if is_instance_valid(candidate) and str((candidate as Node).get_meta(&"water_named_encounter", "")) == id:
+				body = candidate
+		if is_instance_valid(body): break
+		await physics_frame
+	for _frame in 1800:
+		if manager.is_fighting() or not is_instance_valid(body): break
+		if arbiter != null and arbiter.call("winning_provider") == director \
+				and bool((arbiter.call("winner") as Dictionary).get("actionable", false)) \
+				and director.call("_engageable") == body:
+			drive.call(0.0, 0.0)
+			await tap.call(&"interact")
+			continue
+		var flat := body.global_position - player.global_position
+		flat.y = 0.0
+		if flat.length() > 1.5: nav.push_once(flat.normalized() * 0.8)
+		await physics_frame
+	drive.call(0.0, 0.0)
+	RenderingServer.render_loop_enabled = true
+	var enemy: Node3D = manager.enemy_body()
+	var engaged_id := str(enemy.get_meta(&"water_named_encounter", "")) if is_instance_valid(enemy) else ""
+	_approach_log = {"approach": _approach, "start": start, "walked_m": snappedf(walked, 1.0),
+		"legs": route.size(), "engaged_at": player.global_position, "expected_named_id": id,
+		"observed_named_id": engaged_id, "dry_goal": goal}
+	print("TIDEWAKE C3 APPROACH %s -> %s %s" % [_approach, id, JSON.stringify(_approach_log)])
+	if not manager.is_fighting() or engaged_id != id:
+		push_error("ordinary named approach did not engage %s; observed=%s" % [id, engaged_id])
+		return false
+	return true
