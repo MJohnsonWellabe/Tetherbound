@@ -146,7 +146,7 @@ func _run_livewire() -> void:
 	var started := await step(1, "stormwood_hosted_start", {
 		"trainer": TRAINER, "request_only": true,
 	})
-	check(str(started.get("verdict", "")) == "PASS", "remote client started host-owned Tamsin")
+	check(str(started.get("verdict", "")) == "PASS", "remote client started host-owned Tamsin (%s)" % str(started.get("detail", "")))
 	var host_state := await _await_hosted(0, true)
 	var client_state := await _await_hosted(1, true)
 	var charged := str((client_state.get("local_card", {}) as Dictionary).get("charged", ""))
