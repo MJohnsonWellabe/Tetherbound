@@ -653,7 +653,7 @@ func _prune_pending_arena_spawns(retire_all: bool = false) -> void:
 			game.world.redesign_world, str(packet.get("captured_from", {}).get("spawn_id", ""))) != packet): abandoned = true
 		if not site_id.is_empty():
 			abandoned = abandoned or find_id(encounter_config.get("wild_sites", []), site_id).is_empty() \
-				or _site_failures.has(site_id) or bool(_site_spawned.get(site_id, false))
+				or _site_failures.has(site_id) or (packet.is_empty() and bool(_site_spawned.get(site_id, false)))
 		if not abandoned: continue
 		_pending_arena_spawns.erase(name_key)
 		if is_instance_valid(wild) and not _wild_creatures.has(wild) and not wild.visible:
