@@ -1872,7 +1872,13 @@ func request_jump(height: float) -> void:
 	_jump_speed = sqrt(2.0 * _gravity * height)
 
 
+static var perf_sections := {}
+static func perf_add(key: String, usec: int) -> void:
+	perf_sections[key] = int(perf_sections.get(key, 0)) + usec
+
+
 func _physics_process(delta: float) -> void:
+	var t0 := Time.get_ticks_usec()
 	_environment_velocity.begin_step(self)
 	if not is_on_floor():
 		velocity.y -= _gravity * delta
@@ -1916,9 +1922,15 @@ func _physics_process(delta: float) -> void:
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 	_environment_velocity.apply(self, delta, _impulse)
+	var t1 := Time.get_ticks_usec()
 	move_and_slide()
+	var t2 := Time.get_ticks_usec()
+	perf_add("pre_slide", t1 - t0)
+	perf_add("slide_" + ("on_floor" if is_on_floor() else "air") + ("_moving" if Vector2(velocity.x, velocity.z).length() > 0.01 else "_still"), t2 - t1)
+	perf_add("slide_collisions_" + str(get_slide_collision_count()), t2 - t1)
 	_environment_velocity.after_slide(self)
 	_hold_contact_spacing(delta)
+	var t3 := Time.get_ticks_usec()
 
 	if arena != null:
 		var constraint: Variant = arena.call("hold_inside", self)
@@ -1928,6 +1940,8 @@ func _physics_process(delta: float) -> void:
 	if _animator != null:
 		var moving := Vector3(velocity.x, 0.0, velocity.z).length()
 		_animator.call("tick", delta, moving, _speed)
+	perf_add("post_slide", Time.get_ticks_usec() - t3)
+	perf_add("bodies", 1)
 
 	_requested = Vector3.ZERO
 	_requested_handling = 1.0

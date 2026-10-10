@@ -227,6 +227,7 @@ func is_alive() -> bool:
 
 
 func _physics_process(delta: float) -> void:
+	var w0 := Time.get_ticks_usec()
 	var before := global_position
 	if engaged:
 		_tick_combat(delta)
@@ -240,7 +241,10 @@ func _physics_process(delta: float) -> void:
 	# The body integrates whatever was requested above. Calling super LAST is
 	# required: request_move is cleared every frame by design, so a request made
 	# after integration would be thrown away.
+	perf_add("wild_pre", Time.get_ticks_usec() - w0)
+	var w1 := Time.get_ticks_usec()
 	super(delta)
+	perf_add("wild_total_super", Time.get_ticks_usec() - w1)
 	# F04: the charge is judged on where the body actually got to this step,
 	# after collision, not where it was asked to go.
 	if _lunge_active:
