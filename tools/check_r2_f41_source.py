@@ -22,7 +22,7 @@ def config(name):
 tree = config("stormheart_presentation")
 check("tree and core candidate stay disabled", not tree["enabled"] and not tree["core_finish"]["enabled"])
 check("road finish stays disabled", not config("stormwood_road_current")["finish_candidate"]["enabled"])
-check("ground profile stays disabled", not config("stormwood_ground_finish")["enabled"])
+check("ground profile is live (owner flip list)", config("stormwood_ground_finish")["enabled"])
 check("legacy scar candidate stays disabled", not config("stormwood_glass_field")["scorched_scars"])
 check("Stormwood time grade remains pinned", config("stormwood_surge")["presentation"]["storm_base"]["pin_time_of_day"])
 
