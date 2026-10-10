@@ -176,7 +176,10 @@ func _leave_while_pending(before: Dictionary) -> void:
 
 
 func _hold() -> bool:
-	return await _pass(0, "f43_hold_clock", {})
+	var held: Dictionary = await step(0, "f43_hold_clock", {})
+	var ok := _ok(held, "peer 0 f43_hold_clock") and int(held.get("data", {}).get("held", 0)) >= 1
+	check(ok, "the host's day-roll clock was found and restarted")
+	return ok
 
 
 func _want_unlocked(view: Dictionary, label: String) -> void:
@@ -221,8 +224,8 @@ func _replay_unchanged(instance: String, expected: Dictionary, label: String) ->
 	var replay: Dictionary = await step(1, "f43_replay", {"instance": instance}, 600)
 	if _ok(replay, "%s reached the host (%s)" % [label, str(replay.get("data", {}))]):
 		var answer: Dictionary = (replay.data.answers as Array)[0]
-		check(answer.get("receipt") == "bounty:%s:%s" % [instance, _guest_id] or answer.get("ok") != true,
-			"%s: the host answered with the original decision or a refusal, never a new payment (%s)" % [label, str(answer)])
+		check(answer.get("receipt") == "bounty:%s:%s" % [instance, _guest_id] or answer.get("code") == "reconcile_original_decision",
+			"%s: the host answered with the original decision, never a new payment (%s)" % [label, str(answer)])
 	await step(1, "wait", {"frames": SETTLE_FRAMES})
 	_want_same(expected, await _guest(), label)
 	await _want_host_matches(expected, label)
@@ -255,6 +258,7 @@ func _guest() -> Dictionary:
 ## Save/reload: the guest leaves (its production save), the process is
 ## killed and relaunched on the title from that disk, then rejoins.
 func _restart_and_rejoin() -> bool:
+	if not await _hold(): return false
 	if not await _pass(1, "leave", {"reason": "f43_reload"}): return false
 	if not await _pass(0, "expect_peers", {"count": 1}): return false
 	var restarted := await _restart_peer(1, "title")
