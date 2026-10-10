@@ -228,6 +228,8 @@ func is_alive() -> bool:
 
 func _physics_process(delta: float) -> void:
 	var before := global_position
+	# Resting outside a fight may skip the floor sweep (creature_body.gd).
+	rest_slide_skip_allowed = not engaged
 	if engaged:
 		_tick_combat(delta)
 	elif is_alive():
