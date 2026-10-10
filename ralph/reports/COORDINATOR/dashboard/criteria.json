@@ -1,7 +1,7 @@
 {
- "generated_at": "2026-10-09T06:13:16.063586+00:00",
- "main_sha": "7c7d25873 (PR #591)",
- "batch4_sha": "next batch assembling",
+ "generated_at": "2026-10-10T14:05:00+00:00",
+ "main_sha": "77ae9579 (PR #623)",
+ "batch4_sha": "#630 consolidated (7 art/perf PRs) in CI",
  "rows": [
   {
    "id": "F01",
@@ -2981,10 +2981,10 @@
     },
     {
      "text": "A four-peer session completes one biome boss with every participant receiving their own key and relic.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c 9c20f818d2 (READY #572 6050391956, 8:38 PM CT 10-07): boss_four 79 rows run 37687259638, 40 tests run 37686961386; review APPROVE",
-     "gap": "Build a four-peer boss/key/relic smoke and run it in multiplayer-wide with a recorded pass.",
-     "note": "READY 6050391956 held at consolidation 7 (10-07 9:25 PM CT): scope is the CI-FLAKE peer_runner fence (90a283b1fb + 7e05fdc3c3), which changes shared teleport/explore_at/trainer_battle/join_encounter steps used by 23 smokes; catch_race and forward_camp still fail under it. Land together with the CI-FLAKE repair set.",
+     "status": "met",
+     "evidence": "PR #623 (merged 10-10 13:16 UTC, 77ae9579): four-peer boss smoke in multiplayer-wide, each participant gets their own key and relic; full-ci green; independent review Result: pass",
+     "gap": "",
+     "note": "Met on main 77ae9579 (lane C, PR #623).",
      "audit_index": 2
     },
     {
