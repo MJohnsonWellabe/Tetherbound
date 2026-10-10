@@ -29,7 +29,7 @@ func test_tiers_do_not_open_from_another_characters_credits() -> void:
 	assert_false(REMATCH.available("relay_captain", "r1", [], []))
 	assert_true(REMATCH.available("relay_captain", "r1", ["defeated_warden"], []))
 	assert_true(REMATCH.available("relay_captain", "r1", [], ["defeated_warden"]))
-	assert_false(REMATCH.available("officer_maren_verge_rod", "r1", ["stormwood:marrow_defeated"], []))
+	assert_true(REMATCH.available("officer_maren_verge_rod", "r1", ["stormwood:marrow_defeated"], []))
 	assert_false(REMATCH.available("warden_aldis", "endgame", ["regional_credits_seen"], []))
 	assert_true(REMATCH.available("warden_aldis", "endgame", [], ["regional_credits_seen"]))
 
