@@ -134,6 +134,9 @@ var _site_spawned: Dictionary = {}
 var _surface_nodes: Dictionary = {}
 var _site_members: Dictionary = {}
 var _site_failures: Dictionary = {}
+var _site_arena_retry_ms: Dictionary = {}
+var _pending_arena_spawns: Dictionary = {}
+var _wild_spawn_arena_blocked: bool = false
 var _wild_homes: Dictionary = {}
 ## Wilds whose site keeps the trainer corridor clear; their exemption follows
 ## the trainer onto a mount (`keep_mount_corridor_clear`).
@@ -434,6 +437,7 @@ func _spawn_available_sites() -> void:
 		var id := str(site["id"])
 		if not site_needs_spawn(_site_spawned, _site_failures, id):
 			continue
+		if Time.get_ticks_msec() < int(_site_arena_retry_ms.get(id, 0)): continue
 		var table := find_id(chapter.get("encounter_tables", []), str(site["table_id"]))
 		var gate := str(table.get("requires_unlock", ""))
 		if table.is_empty() or (not gate.is_empty() and not _flags_hold([gate])):
@@ -441,13 +445,22 @@ func _spawn_available_sites() -> void:
 		var centre := _vector3_of(site["position"])
 		if _player == null or centre.distance_to(_player.global_position) > float(encounter_config.get("activation_distance_m", 130.0)):
 			continue
-		var members: Array = []
+		var members: Array = _site_members.get(id, []).duplicate()
 		var complete := true
+		var permanent_failure := false
 		for index in int(site.get("count", 1)):
+			var retained := false
+			for member: Variant in members:
+				if is_instance_valid(member) and int((member as Node).get_meta(&"site_member_index", -1)) == index:
+					retained = true
+					break
+			if retained: continue
 			var selected := roll_wild(table, world_seed(), hash(id) + index)
 			if selected.is_empty():
 				complete = false
+				permanent_failure = true
 				continue
+			_wild_spawn_arena_blocked = false
 			var wild: Node3D
 			if str(site.get("placement_mode", "ground")) == "air_patrol":
 				wild = _spawn_air_patrol(str(selected["species"]), site, index, int(selected["level"]))
@@ -459,6 +472,7 @@ func _spawn_available_sites() -> void:
 					"level": selected["level"], "aggressive": false, "wander_radius": float(site.get("radius_m", 4.0)),
 					"combat": encounter_config.get("behavior_profiles", {}).get("scout", {})})
 			if wild != null:
+				wild.set_meta(&"site_member_index", index)
 				if site_keeps_trainer_corridor_clear(site) \
 						and wild is CollisionObject3D and _player is CollisionObject3D:
 					keep_trainer_corridor_clear(wild as CollisionObject3D,
@@ -471,14 +485,20 @@ func _spawn_available_sites() -> void:
 					_wild_gates[wild] = {"cloudreach_requires_flags": [gate]}
 			else:
 				complete = false
+				permanent_failure = permanent_failure or not _wild_spawn_arena_blocked
 		_site_members[id] = members
 		if complete:
 			_site_spawned[id] = true
-		else:
+			_site_arena_retry_ms.erase(id)
+		elif permanent_failure:
 			# Fail closed once, visibly. Never mark an unsupported population as
 			# valid or roll replacements every idle frame for a partial site.
 			_site_failures[id] = true
 			push_warning("Cloudreach wild site has unsupported placements: " + id)
+		else:
+			# Arena occupancy is temporary. Keep admitted member identities and
+			# retry only the same unpublished missing members after a short delay.
+			_site_arena_retry_ms[id] = Time.get_ticks_msec() + 500
 
 
 func _spawn_air_patrol(species: String, site: Dictionary, index: int, level: int) -> Node3D:
@@ -530,6 +550,7 @@ func _surface_for(body: Node3D, spot: Vector3) -> void:
 
 
 func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D:
+	_wild_spawn_arena_blocked = false
 	if not SPECIES.has(species):
 		push_error("spawn_wild('%s') names a species that is not in species.json" % species)
 		return null
@@ -540,19 +561,37 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	# populate/instance roll, combat override, fixed level, config, signal and
 	# once-only registration. Only the script's peaceful fallback and admission
 	# grounding differ. Trainer bodies still use the untouched main pipeline.
-	var wild: Node3D = CREATURE_SCENE.instantiate()
-	wild.set_script(CliffWild)
-	wild.name = str(opts.get("name", "Wild_%s_%d" % [species, _wild_creatures.size() + 1]))
+	var spawn_name := str(opts.get("name", "Wild_%s_%d" % [species, _wild_creatures.size() + 1]))
+	var pending: Dictionary = _pending_arena_spawns.get(spawn_name, {})
+	var epoch := str(_session.call("_altar_current_epoch")) if _session != null else ""
+	var wild: Node3D = pending.get("body") as Node3D
+	if not pending.is_empty() and (not is_instance_valid(wild) or pending.get("world") != realm_world \
+		or pending.get("generation") != _population_generation or pending.get("epoch") != epoch \
+		or pending.get("species") != species or pending.get("spot") != spot or pending.get("opts") != opts):
+		if is_instance_valid(wild):
+			_surface_nodes.erase(wild.get_instance_id())
+			wild.free()
+		_pending_arena_spawns.erase(spawn_name)
+		# A stale unpublished generation retires; the next poll uses new context.
+		_wild_spawn_arena_blocked = true
+		return null
+	var creating := wild == null
+	if creating:
+		wild = CREATURE_SCENE.instantiate()
+		wild.set_script(CliffWild)
+		wild.name = spawn_name
+		wild.visible = false
 	var parent: Node = opts.get("parent", null) as Node
 	if not is_instance_valid(parent):
 		parent = get_parent()
-	parent.add_child(wild)
-	wild.call("populate", species, _player)
+	if creating:
+		parent.add_child(wild)
+		wild.call("populate", species, _player)
 	var opt_combat: Variant = opts.get("combat", {})
 	if opt_combat is Dictionary and not opt_combat.is_empty():
 		wild.set("combat_override", opt_combat.duplicate(true))
 	var level := int(opts.get("level", 0))
-	if level > 0:
+	if creating and level > 0:
 		_set_fixed_level(wild, species, level)
 	if opts.has("aggressive"):
 		wild.set("aggressive", bool(opts.aggressive))
@@ -564,9 +603,18 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	var anchor: Vector3 = opts.get("site_anchor", spot)
 	var safe := _find_wild_spawn(wild, spot, anchor)
 	if not safe.is_finite() or not bool(wild.call("place_on_ground", safe)):
+		if _wild_spawn_arena_blocked:
+			wild.process_mode = Node.PROCESS_MODE_DISABLED
+			_pending_arena_spawns[spawn_name] = {"body": wild, "world": realm_world, "generation": _population_generation,
+				"epoch": epoch, "species": species, "spot": spot, "opts": opts.duplicate(true)}
+			return null
 		_surface_nodes.erase(wild.get_instance_id())
+		_pending_arena_spawns.erase(spawn_name)
 		wild.free()
 		return null
+	_pending_arena_spawns.erase(spawn_name)
+	wild.process_mode = Node.PROCESS_MODE_INHERIT
+	wild.visible = true
 	wild.set("home", wild.global_position)
 	wild.set("_target", wild.global_position)
 	_wild_homes[wild] = wild.global_position
@@ -658,6 +706,10 @@ func _find_wild_spawn(wild: Node3D, requested: Vector3, centre: Vector3) -> Vect
 						< radius + float(other.call("body_radius")) + WILD_FOOT_MARGIN:
 					occupied = true
 			if not occupied:
+				if not _active_arena_clear(safe, _ambient_render_radius(wild), wild):
+					_wild_spawn_arena_blocked = true
+					continue
+				_wild_spawn_arena_blocked = false
 				return safe
 	return Vector3.INF
 
