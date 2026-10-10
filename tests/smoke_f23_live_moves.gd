@@ -198,6 +198,17 @@ func _run() -> void:
 		var quick := await _tap_move(JOY_BUTTON_X, "quick")
 		_check(not quick.is_empty(), "physical quick %d did not land" % hit)
 		if quick.is_empty(): break
+		if hit == 2 and bool(ULTIMATES.config().get("enabled", false)):
+			# F23#5: a part-filled meter cannot fire. The same host ingress the
+			# gated check below uses refuses it without touching the resources.
+			var partial: Dictionary = _host.move_resource_snapshot(_id, 1, _creature.uid).duplicate(true)
+			var row_before: Dictionary = _host.record(_id).participants[1].move_resources[_creature.uid].duplicate(true)
+			var early: Dictionary = _director.call("_host_move_start", {"encounter_id": _id, "slot": "ultimate", "action": 98}, 1)
+			_check(float(partial.ultimate_meter) > 0.0 and float(partial.ultimate_meter) < 100.0,
+				"landed hits part-fill the Ultimate meter")
+			_check(early.get("code") == "ultimate_not_ready", "a part-filled meter refuses the ultimate at host ingress")
+			_check(_host.record(_id).participants[1].move_resources[_creature.uid] == row_before and _host.move_commit(_id, 1, 98).is_empty(),
+				"the refused early ultimate spends nothing and commits no action")
 		if slot_inputs and hit == 4:
 			var charged := await _tap_move(JOY_BUTTON_Y, "charged")
 			_check(not charged.is_empty(), "ordinary physical Y tap completes its charged move after release")

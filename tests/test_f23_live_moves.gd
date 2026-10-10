@@ -189,3 +189,23 @@ func test_every_ultimate_presents_for_two_to_three_seconds_of_committed_control(
 		var row: Dictionary = moves.move(move_id)
 		var committed := float(row.get("windup", 0.0)) + float(row.get("recovery", 0.0))
 		assert_between(committed, 2.0, 3.0, "%s commits the creature for %.2fs" % [move_id, committed])
+
+func test_every_species_fills_quick_charged_utility_and_ultimate_by_default() -> void:
+	# F23#0: every creature carries the three slots plus an ultimate. Quick,
+	# charged and ultimate come with the species; the utility is the learnset's
+	# first utility, equipped automatically once it unlocks.
+	var moves := MOVES.load_default()
+	var progression := preload("res://scripts/creatures/progression.gd")
+	var learnsets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/learnsets.json"))
+	var rows: Dictionary = learnsets.get("species", learnsets)
+	var checked := 0
+	for species_id: String in rows:
+		if not rows[species_id] is Dictionary or SPECIES.spawn(species_id) == null: continue
+		var creature: RefCounted = SPECIES.spawn(species_id)
+		creature.set_level(10, progression.config())
+		checked += 1
+		for slot: String in ["quick", "charged", "utility", "ultimate"]:
+			var move_id := str(creature.get("move_" + slot))
+			assert_true(not move_id.is_empty() and moves.slot(move_id) == slot,
+				"%s equips a %s move by default (got '%s')" % [species_id, slot, move_id])
+	assert_true(checked >= 50, "every species with a learnset was checked (%d)" % checked)
