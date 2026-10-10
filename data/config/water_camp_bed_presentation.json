@@ -1,5 +1,5 @@
 {
-  "_comment": "P2-115 unjudged Water-authored-camp candidate. Default off pending paired native empty/occupied bed and alternate-approach views. Decorative padded back/sides reuse the installed camp tent canvas and existing capsule-rim idiom; the shared bed, collision and rest anchor are unchanged.",
+  "_comment": "P2-115 Water-authored-camp padding. Enabled after a code-blind Low before/after PASS (F39, 2026-10-10). Decorative padded back/sides reuse the installed camp tent canvas and existing capsule-rim idiom; the shared bed, collision and rest anchor are unchanged.",
   "enabled": true,
   "padding_radius_m": 0.22,
   "segment_length_m": 1.0,
