@@ -26,11 +26,15 @@ static func receipt(action_id: String, move_id: String, move: Dictionary,
 	var giant := target_height >= float(cfg.get("giant_height_m", INF))
 	var scale := float(cfg.get("giant_knockback_scale", 1.0)) if giant else 1.0
 	var flat := Vector3(direction.x, 0.0, direction.z)
+	# A critical adds emphasis; it must not shorten a heavier move's contact.
+	var hitstop := float(spec.get("hitstop_seconds", 0.0))
+	if critical:
+		hitstop = maxf(hitstop, float(cfg.get("critical_hitstop_seconds", 0.0)))
 	var result := {"action_id": action_id, "move_id": move_id, "target_uid": target_uid, "slot": fallback_slot,
 		"weight": weight, "damage": maxf(0.0, damage), "type_mult": type_mult,
 		"critical": critical, "direction": flat.normalized(),
 		"impact_audio_owner": "receipt", "mastery_rank": 1,
-		"hitstop_seconds": float(cfg.get("critical_hitstop_seconds", 0.0)) if critical else float(spec.get("hitstop_seconds", 0.0)),
+		"hitstop_seconds": hitstop,
 		"knockback_m": maxf(0.0, float(spec.get("knockback_m", 0.0)) * scale * clampf(profile_scale, 0.0, 1.0)),
 		"recoil_m": float(spec.get("recoil_m", 0.0)),
 		"recoil_up_m": float(spec.get("recoil_up_m", 0.0)),
