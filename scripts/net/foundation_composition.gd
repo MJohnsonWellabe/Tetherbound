@@ -137,13 +137,10 @@ func bounty_context(peer: int) -> Dictionary:
 		and board != null and actor.position.distance_to(board.global_position) <= float(preload("res://scripts/world/bounty_board.gd").config().interaction_radius_m)
 	var registry: RefCounted = session.get("_character_authority")
 	var character: String = session.call("_authority_character", peer)
-	# bounty_day counts the mornings since the world began (0 on a fresh world);
-	# board day 1 is the world's first day, so a new game has a board at once
-	# and every later host morning still rotates it.
 	return {"character_id": character, "expected_revision": registry.call("revision", character),
 		"source_key": preload("res://scripts/world/bounty_board.gd").config().board_key,
 		"in_range": nearby, "in_combat": session.call("_altar_peer_in_combat", peer),
-		"world_namespace": world.reward_delivery_namespace, "host_day": int(world.redesign_world.bounty_day) + 1,
+		"world_namespace": world.reward_delivery_namespace, "host_day": world.redesign_world.bounty_day,
 		"host_unlocks": world.redesign_world.portal_unlocks.duplicate(), "clock_confirmed": world.day >= 1}
 
 func accepted_bounty_event(peer: int, token: String) -> Dictionary:

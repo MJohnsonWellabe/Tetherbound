@@ -6,8 +6,9 @@ extends "res://tests/helpers/net_harness.gd"
 ##
 ##   tools/net/run_net_smoke.sh f43_bounties
 ##
-## #0 each host morning (Game.advance_day) rotates every admitted character's
-##    three bounties, drawn only from that character's unlocked biomes.
+## #0 each host morning (Game.advance_day) issues or rotates every admitted
+##    character's three bounties, drawn only from that character's unlocked
+##    biomes.
 ## #2 a guest's material delivery pays once; a reconnect, a hard process
 ##    restart and replays of the original request never pay it again.
 ##    A guest killed at the owner-save edge of a morning rotation (the host
@@ -70,7 +71,9 @@ func _start_session() -> bool:
 
 func _proof() -> void:
 	if not await _hold(): return
-	# Admission issues each character's first board without a client request.
+	# A fresh world has no board until its first host morning (UX: the board
+	# opens with a morning); that morning issues every admitted character's.
+	if not await _pass(0, "f43_morning", {"characters": [_host_id, _guest_id]}, 2400): return
 	var host_board := await _settled_host_view(_host_id)
 	var guest_held := await _settled_host_view(_guest_id)
 	check(int(host_board.board.get("cycle", 0)) >= 1 and int(guest_held.board.get("cycle", 0)) >= 1,
