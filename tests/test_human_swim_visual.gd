@@ -122,6 +122,33 @@ func test_leaving_water_restores_exact_art_and_bone_pose_and_resumes_animation()
 	player.free()
 
 
+func test_swimming_keeps_non_swim_bones_at_their_pre_swim_pose() -> void:
+	# F39 P2-071 round 1: cloth/accessory bones snapped to the installed rest
+	# pose and stood up out of the swimmer. Only the stroke bones may move.
+	var player := _local()
+	var model := _model(player)
+	var rig: Skeleton3D = model.call("skeleton")
+	var swim_bones: Array = MODEL.HUMAN_SWIM_BONES
+	var poses: Array[Transform3D] = []
+	for index in rig.get_bone_count():
+		poses.append(rig.get_bone_pose(index))
+	assert_true(bool(model.call("_update_human_swim_visual", 0.2)))
+	assert_true(bool(model.call("_update_human_swim_visual", 0.2)))
+	var kept := 0
+	var moved := 0
+	for index in rig.get_bone_count():
+		if rig.get_bone_name(index) in swim_bones:
+			if not poses[index].is_equal_approx(rig.get_bone_pose(index)):
+				moved += 1
+		else:
+			assert_true(poses[index].is_equal_approx(rig.get_bone_pose(index)),
+				rig.get_bone_name(index) + " keeps its pre-swim pose")
+			kept += 1
+	assert_true(kept > 0, "some non-swim bones exist")
+	assert_true(moved > 0, "the stroke bones move")
+	player.free()
+
+
 func test_swimming_neutralises_entry_tilt_and_restores_it_without_rewinding_facing() -> void:
 	var player := _local()
 	player.transform = Transform3D(Basis(Vector3.UP, 0.4), Vector3(3.0, 1.0, 5.0))

@@ -775,8 +775,24 @@ func _update_human_swim_visual(delta: float) -> bool:
 	return true
 
 
+## Bones the swim pose drives. Every other bone (cloth, cloaks, sleeves,
+## accessories) keeps the pose it had when swimming began: resetting them to
+## the installed rest pose stood Kael's shoulder pieces and Sera's sleeve
+## straight up (F39 P2-071 judge round 1).
+const HUMAN_SWIM_BONES := ["neck", "Head", "LeftArm", "LeftForeArm", "RightArm", "RightForeArm",
+	"LeftUpLeg", "LeftLeg", "RightUpLeg", "RightLeg"]
+
+
 func _apply_human_swim_pose(rig: Skeleton3D, surface_y: float) -> void:
-	rig.reset_bone_poses()
+	for index in mini(rig.get_bone_count(), _human_swim_bones_before.size()):
+		var before := _human_swim_bones_before[index]
+		rig.set_bone_pose_position(index, before.origin)
+		rig.set_bone_pose_rotation(index, before.basis.get_rotation_quaternion())
+		rig.set_bone_pose_scale(index, before.basis.get_scale())
+	for bone: String in HUMAN_SWIM_BONES:
+		var index := rig.find_bone(bone)
+		if index >= 0:
+			rig.reset_bone_pose(index)
 	# Model yaw faces +Z in PlayerController._face. Pitch the fitted art
 	# toward that heading, leaving Model and the CharacterBody untouched.
 	_art.transform = _human_swim_art_before
