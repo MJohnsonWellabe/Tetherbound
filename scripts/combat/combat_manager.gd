@@ -3466,6 +3466,12 @@ func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_e
 		if move.get("slot") == "ultimate":
 			var session := get_node_or_null(^"/root/Session")
 			context["recipient_character_id"] = str(session.call("_local_character_id")) if session != null and session.has_method("_local_character_id") else str(move.get("actor_binding", {}).get("character_id", ""))
+	# Surface presentation uses the local rendered target, independently of
+	# the host's accepted strike endpoint and authoritative arrival clock.
+	var visual_bounds := _body_world_bounds(target_body)
+	if visual_bounds.position.is_finite() and visual_bounds.size.is_finite() \
+			and visual_bounds.size.x > 0.0 and visual_bounds.size.y > 0.0 and visual_bounds.size.z > 0.0:
+		context["target_visual_bounds"] = {"position": visual_bounds.position, "size": visual_bounds.size}
 	var presentation: Node3D = PROJECTILE.launch(parent,
 		launch.get("from", striker.global_position), launch.get("to", target_body.global_position),
 		move, context)
