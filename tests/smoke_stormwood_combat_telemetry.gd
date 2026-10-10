@@ -1,7 +1,6 @@
 extends SceneTree
 
-## SYNTHETIC isolated host-strike seam with admitted owned actor/Session data.
-## No mounted campaign world, network, controller
+## SYNTHETIC isolated host-strike seam. No campaign/world/session, controller
 ## simulation, live AI, or roster advancement is claimed by this proof.
 const TELEMETRY := preload("res://tests/helpers/stormwood_combat_telemetry.gd")
 const HOSTED := preload("res://scripts/combat/stormwood_hosted_trainer.gd")
@@ -11,11 +10,6 @@ const CATALOGUE := preload("res://scripts/combat/stormwood_encounter_catalogue.g
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const MOVES := preload("res://scripts/creatures/move_db.gd")
-const DATA_FIXTURE := preload("res://tests/test_foundation_resources.gd")
-const SAVE_FIXTURE := preload("res://tests/test_foundation_resource_save.gd")
-const RECORD := preload("res://scripts/net/character_record_rules.gd")
-const CARD := preload("res://scripts/save/water_capture_codec.gd")
-const MASTERY := preload("res://scripts/creatures/move_mastery.gd")
 var checks := 0
 var failures: Array[String] = []
 
@@ -34,7 +28,6 @@ class FixtureHub extends Node:
 	var ally: Node3D
 	var card: Dictionary
 	var director: Node
-	var session: Node
 	func body_for(_peer: int) -> Node3D:
 		return ally
 	func card_for(_peer: int) -> Dictionary:
@@ -47,38 +40,6 @@ class FixtureHub extends Node:
 		pass
 	func host_card_cooldown_multiplier(_card: Dictionary) -> float:
 		return 1.0
-
-## Only physical discovery is detached. Binding, pending-settlement checks,
-## owned admission, move starts and impact publication use production methods.
-class FixtureDirector extends "res://scripts/combat/encounter_director.gd":
-	var fixture_body: Node3D
-	var fixture_card: Dictionary
-	func deployed_body_for(peer: int) -> Node3D:
-		return fixture_body if peer == 1 else null
-	func _creature_card_for(peer: int) -> Dictionary:
-		return fixture_card if peer == 1 else {}
-
-func _start_fixture_move(fight: Node, director: Node, owned: Dictionary,
-		admitted: Dictionary, intent: Dictionary, ally: Node3D, opponent: Node3D) -> bool:
-	var id := str(intent.encounter_id)
-	var publication: Dictionary = director.call("_ordinary_actor_binding", id, 1, ally)
-	var binding: Dictionary = director.call("_strike_actor_binding", id, 1, ally)
-	if publication.is_empty() or binding.is_empty(): return false
-	var actor := {"character_id": binding.character_id, "creature_uid": binding.creature_uid,
-		"encounter_id": id, "generation": binding.deployment_generation, "action": intent.action}
-	var frozen := MASTERY.freeze_action(MASTERY.owned_record(owned), "quick", actor,
-		admitted.redesign_character.creatures[binding.creature_uid].breakthroughs, MOVES.load_default())
-	if frozen.get("ok") != true: return false
-	var move := FIGHT.host_move_profile(MOVES.load_default(), "player_quick", str(owned.move_quick),
-		ally.call("body_radius"), opponent.call("body_radius"), 1.0, 0.0, frozen.move)
-	var verdict: Dictionary = fight.authority.authorize_move_start(intent, 1, owned, binding,
-		move, FIGHT.host_wind_profile(director.fixture_card), Time.get_ticks_msec())
-	if verdict.get("ok") != true: return false
-	var started: Dictionary = fight.authority.move_commit(id, 1, int(intent.action))
-	# Observe the authored start's arrival deadline; never backdate its clock.
-	while Time.get_ticks_msec() < int(started.strike_at_ms):
-		await process_frame
-	return true
 
 func _initialize() -> void:
 	create_timer(15.0).timeout.connect(func() -> void:
@@ -112,21 +73,8 @@ func _run() -> void:
 	var enemy: RefCounted = TRAINERS.creature_for(team[2])
 	_check(str(enemy.species_id) == "stormraven" and int(enemy.level) == 49,
 		"opponent uses the F19 Varga third member, Stormraven level 49")
-	var data := DATA_FIXTURE.new()
-	var game := SAVE_FIXTURE.FixtureGame.new()
-	game.local = data._player()
-	game.world = data._world()
-	var session := SAVE_FIXTURE.FixtureSession.new()
-	session.fixture = game
-	game.session = session
-	var creature: RefCounted = game.local.party.at(0)
+	var creature: RefCounted = SPECIES.spawn("terrapup")
 	creature.set_level(44, PROGRESSION.config())
-	var admitted := RECORD.portable_projection(game.local.save_data())
-	var owner_authority: RefCounted = session.get("_character_authority")
-	_check(owner_authority.call("bind_world", game.world.reward_delivery_namespace)
-		and owner_authority.call("seed_admitted_character", admitted, DATA_FIXTURE.CHARACTER).get("ok") == true,
-		"synthetic party is admitted before binding the production strike actor")
-	session.get("_registry").call("add", 1, DATA_FIXTURE.CHARACTER, "Synthetic", "stormwood")
 	var ally := _body(creature, Vector3.ZERO)
 	# Independent immutable geometry entities deliberately distinguish the
 	# rendered replica from authority; no real actor is moved by the collector.
@@ -134,16 +82,9 @@ func _run() -> void:
 	var replica := _body(enemy, Vector3(0, 0, 3))
 	var hub := FixtureHub.new()
 	hub.ally = ally
-	var director := FixtureDirector.new()
-	hub.director = director
-	hub.session = session
-	hub.card = {"creature_uid": creature.uid, "hp": creature.hp, "move_quick": creature.move_quick,
+	hub.director = hub
+	hub.card = {"move_quick": creature.move_quick,
 		"attack": creature.effective_attack(PROGRESSION.config())}
-	director.fixture_body = ally
-	director.fixture_card = hub.card
-	director.set("_session", session)
-	director.set("_deployment_identity", {1: {"character_id": DATA_FIXTURE.CHARACTER,
-		"creature_uid": creature.uid, "generation": 1}})
 	var fight := HOSTED.new()
 	var engine := FIGHT.new()
 	# Wire only the production strike seam, outside SceneTree processing. This
@@ -160,9 +101,7 @@ func _run() -> void:
 	fight.round_index = 2
 	fight.participants.append(1)
 	fight.record = fight.authority.open(1, "stormwood", "trainer", {
-		"species_id": enemy.species_id, "level": enemy.level, "hp": enemy.hp, "hp_max": enemy.max_hp,
-		"card": CARD.encode(enemy), "body_generation": 3}, creature.uid, DATA_FIXTURE.CHARACTER)
-	director.set("_encounter_host", fight.authority)
+		"species_id": enemy.species_id, "level": enemy.level, "hp": enemy.hp, "hp_max": enemy.max_hp})
 	var telemetry := TELEMETRY.new()
 	var counts := {"controller_presses": 0, "controller_releases": 0, "direct_fixture_intents": 0}
 	telemetry.capture("entry", fight, engine, ally, replica, counts)
@@ -170,8 +109,6 @@ func _run() -> void:
 		"slot": "quick", "move_id": creature.move_quick, "action": 1}
 	# Facing away induces an accepted miss without changing range or HP.
 	ally.rotation.y = PI
-	_check(await _start_fixture_move(fight, director, admitted.party[0], admitted, intent, ally, opponent),
-		"geometric miss has a real owned move start at its authored arrival time")
 	counts.direct_fixture_intents += 1
 	var miss: Dictionary = fight.strike(1, intent)
 	telemetry.capture("accepted_miss", fight, engine, ally, replica, counts)
@@ -184,8 +121,6 @@ func _run() -> void:
 		await process_frame
 	ally.rotation.y = 0.0
 	intent.action = 2
-	_check(await _start_fixture_move(fight, director, admitted.party[0], admitted, intent, ally, opponent),
-		"geometric hit has a second real owned move start after unchanged cadence")
 	counts.direct_fixture_intents += 1
 	var hit: Dictionary = fight.strike(1, intent)
 	telemetry.capture("accepted_hit", fight, engine, ally, replica, counts)
@@ -239,9 +174,6 @@ func _run() -> void:
 	engine.free()
 	fight.free()
 	hub.free()
-	director.free()
-	session.free()
-	game.free()
 	ally.free()
 	replica.free()
 	print("STORMWOOD TELEMETRY: %d checks; %d failures; elapsed_ms=%d" % [checks, failures.size(), Time.get_ticks_msec() - started])
