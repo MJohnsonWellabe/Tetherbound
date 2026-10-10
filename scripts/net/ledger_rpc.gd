@@ -1095,7 +1095,8 @@ func _owner_training_blocks_character_write(game: Node, owner_settled_portal_ok:
 	if game == null or not game.get("local") is RefCounted: return true
 	var session: Variant = game.get("session")
 	if not session is Node or not session.has_method("_owner_training_mutation_blocked"): return true
-	var blocked: Variant = session.call("_owner_training_mutation_blocked", game.get("local"), false, owner_settled_portal_ok)
+	var blocked: Variant = session.call("_owner_training_mutation_blocked", game.get("local"), false, true) if owner_settled_portal_ok \
+		else session.call("_owner_training_mutation_blocked", game.get("local"))
 	return not blocked is bool or blocked
 
 
