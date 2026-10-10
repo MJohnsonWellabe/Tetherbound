@@ -1,0 +1,100 @@
+{
+  "subject": "ripplet",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Flag-off native review candidate; installed Ripplet remains selected",
+  "reference": "assets/creatures/tetherbound/ripplet/reference/native-standing-v2.png",
+  "reference_author": "built_in_imagegen",
+  "reference_prompt": "Draft an original Tetherbound Ripplet creature reference for a new image-to-3D attempt using the supplied established character image as identity reference. ONE full-body three-quarter studio view, same cyan aquatic otter/cat character, cream muzzle, eye surrounds, chest and belly, huge deep-blue eyes, broad dark nose, pink and cyan ear-fin fans, small cyan head-fin crest, forehead and chest droplet markings, chunky webbed feet with small dark claws and the broad cyan fin tail with pale curved striations. Preserve the same proportions, expressive face, appealing chunky body and designed cyan/cream color blocks. Neutral balanced upright standing pose, both feet grounded and separate, arms relaxed 25 degrees away from chest with separately readable shoulder, elbow, wrist and open small clawed hands. Tail curves gently behind and to the side, visibly separate from legs, entire fin inside frame. Replace projecting whisker hairs with three short fine PAINTED whisker marks on each cream cheek, flush with the muzzle surface: no physical tubes, wires, strands or narrow floating geometry anywhere. This deliberate reference adjustment prevents the previous generator's long whisker rods from crossing chest and legs. Keep all canonical face, ear, droplet and tail features. Sculpted fur masses with moderate clean detail, smooth integrated fins, coherent riggable anatomy. Light-gray background and neutral soft studio lighting, entire body in frame. No human, ruler, text, clothes, props, armor, particles, environment, red accents, extra limbs, dramatic lighting, cropped parts or thin hanging pieces.",
+  "identity_reference": "assets/creatures/tetherbound/ripplet/reference/f36-standing-v1.png",
+  "reference_inspection": {
+    "identity": "Cyan upright otter/cat, cream face/chest, blue eyes, pink/cyan ear fins, droplet marks and broad cyan fin tail retained",
+    "riggability": "Two separated grounded feet, arms distinct from torso; projecting whiskers replaced by short flush cheek marks to prevent long rods",
+    "limits": "One view does not establish reverse anatomy, topology, rig or native art acceptance"
+  },
+  "generation": {
+    "task_id": "01a125c2-40f9-7392-8aad-39ec250c1cd1",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "night": "2026-10-09",
+    "night_submission_index": 3,
+    "observed_credit_cost": 30,
+    "new_submissions_for_this_revision": 1
+  },
+  "rights": "Original built-in imagegen reference based on the existing owner-held Ripplet reference; existing owner-held paid Meshy license and paid generated-output ownership/redistribution terms under RD-26. No third-party character or purchase.",
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "approach": "Two cleanup attempts on the preserved smart-topology model left crossing whisker rods. Changed approach to a newly drafted flush-cheek reference and one Meshy-6 regeneration. No third identical mask attempt.",
+    "geometry": "UV-loop-preserving weld; original generated PBR textures; inspected front/side/back geometry without hanging rods; 26044 input triangles",
+    "skin": "New biped anatomy: separate upper/lower legs, arms/forearms, neck/head and two tail joints; three local surface diffusion iterations, four influences per vertex. No donor skin or automatic heat retry.",
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "material": "Field emission zero in the review recipe; baseline unchanged.",
+    "height_m": 3.6,
+    "bones": 15,
+    "vertices": 13024,
+    "unweighted_vertices": 0,
+    "filament_cleanup": "Not applied: regenerated cheek markings are flush; no hanging rods in inspected front/side/reverse",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 stable Windows",
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "raster": [
+      1920,
+      1080
+    ],
+    "before_height_m": 3.59999990463257,
+    "candidate_height_m": 3.59999990463257,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 native Low samples across hit/faint/swim/fly_grip/ride plus standing/reverse scale samples; diagnostic files retained outside the repository",
+    "world": "Production Tidewake scene, CameraRig, matched stage/seed/pose sampling; presentation fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "skin_weights": "No unweighted vertices; not deformation approval",
+    "full_rig_animation": "OPEN: terminal flank contact doubtful in native diagnostic",
+    "independent_art_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Terminal faint/rest contact and appeal need independent correction/approval before enabling",
+    "Procedural clips do not establish foot locking or mount contact",
+    "Pose fixtures do not prove ordinary earned fights, Dive, swimming or carrying paths",
+    "Candidate remains OFF until the complete F36 art bar passes"
+  ]
+}
