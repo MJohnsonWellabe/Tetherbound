@@ -373,6 +373,16 @@ static func _ceremony_release(runner: SceneTree, args: Dictionary) -> Dictionary
 	for f in 6: await runner.process_frame
 	if tab.get("_release_stage") != "confirm": return _fail("the holder row did not open the farewell (stage %s)" % str(tab.get("_release_stage")))
 	var quote: Dictionary = tab.get("_release_quote") if tab.get("_release_quote") is Dictionary else {}
+	# F48#1 cut (opt-in): hard-kill this process at the real owner-save edge of
+	# the release payout, after its owner file is written and before its ACK.
+	if str(args.get("cut", "")) == "owner_before_ack":
+		var writer: Node = runner.root.get_node_or_null(^"Game/Session/LedgerRpc")
+		if writer == null: return _fail("no LedgerRpc for the cut")
+		print("F48 RELEASE QUOTE: %s" % JSON.stringify(quote.get("payout", [])))
+		writer.connect("transaction_boundary", func(observation: Dictionary) -> void:
+			if observation.get("phase") == "after_owner_write_before_ack" and observation.get("action") == "essence_release":
+				print("F48 RELEASE CUT: hard kill after owner write, before ACK: %s" % str(observation.get("receipt")))
+				OS.kill(OS.get_process_id()))
 	(tab.get("_farewell_release") as BaseButton).pressed.emit()
 	for f in int(args.get("budget_frames", 1800)):
 		if tab.get("_release_stage") not in ["waiting", "confirm"]: break
