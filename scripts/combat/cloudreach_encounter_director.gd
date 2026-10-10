@@ -376,6 +376,7 @@ func can_challenge(spec: Dictionary) -> bool:
 
 
 func _process(delta: float) -> void:
+	_prune_pending_arena_spawns()
 	super._process(delta)
 	_release_shared_footprint()
 	_spawn_available_sites()
@@ -467,7 +468,7 @@ func _spawn_available_sites() -> void:
 			else:
 				var angle := index * TAU / maxi(1, int(site.get("count", 1)))
 				var at := centre + Vector3(cos(angle), 0, sin(angle)) * float(site.get("radius_m", 4.0)) * 0.5
-				wild = spawn_wild(str(selected["species"]), at, {"name": "%s_%d" % [id, index],
+				wild = spawn_wild(str(selected["species"]), at, {"name": "%s_%d" % [id, index], "arena_pending_site": id,
 					"site_anchor": centre,
 					"level": selected["level"], "aggressive": false, "wander_radius": float(site.get("radius_m", 4.0)),
 					"combat": encounter_config.get("behavior_profiles", {}).get("scout", {})})
@@ -605,7 +606,9 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	if not safe.is_finite() or not bool(wild.call("place_on_ground", safe)):
 		if _wild_spawn_arena_blocked:
 			wild.process_mode = Node.PROCESS_MODE_DISABLED
+			var game := get_node_or_null("/root/Game")
 			_pending_arena_spawns[spawn_name] = {"body": wild, "world": realm_world, "generation": _population_generation,
+				"owner_world": weakref(game.world) if game != null else null,
 				"epoch": epoch, "species": species, "spot": spot, "opts": opts.duplicate(true)}
 			return null
 		_surface_nodes.erase(wild.get_instance_id())
@@ -627,6 +630,41 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	if not once_id.is_empty():
 		_once_only[wild] = once_id
 	return wild
+
+
+## Pending bodies are unpublished realm siblings, so deleting the director
+## alone does not own their lifetime. Retire only this unpublished generation;
+## published residents are absent from the cache and are never touched here.
+func _prune_pending_arena_spawns(retire_all: bool = false) -> void:
+	var epoch := str(_session.call("_altar_current_epoch")) if is_instance_valid(_session) else ""
+	var game := get_node_or_null("/root/Game")
+	for name_key: String in _pending_arena_spawns.keys():
+		var pending: Dictionary = _pending_arena_spawns[name_key]
+		var wild := pending.get("body") as Node3D
+		var opts: Dictionary = pending.get("opts", {})
+		var site_id := str(opts.get("arena_pending_site", opts.get("water_pending_site", "")))
+		var abandoned := retire_all or not is_instance_valid(wild) or pending.get("world") != realm_world \
+			or pending.get("generation") != _population_generation or pending.get("epoch") != epoch \
+			or _once_cleared(str(opts.get("once_id", "")))
+		var owner: WeakRef = pending.get("owner_world")
+		if owner != null and (game == null or owner.get_ref() != game.world): abandoned = true
+		var packet: Dictionary = opts.get("water_retained_packet", {})
+		if not packet.is_empty() and (game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(
+			game.world.redesign_world, str(packet.get("captured_from", {}).get("spawn_id", ""))) != packet): abandoned = true
+		if not site_id.is_empty():
+			abandoned = abandoned or find_id(encounter_config.get("wild_sites", []), site_id).is_empty() \
+				or _site_failures.has(site_id) or bool(_site_spawned.get(site_id, false))
+		if not abandoned: continue
+		_pending_arena_spawns.erase(name_key)
+		if is_instance_valid(wild) and not _wild_creatures.has(wild) and not wild.visible:
+			_surface_nodes.erase(wild.get_instance_id())
+			_ambient_render_bounds_cache.erase(wild.get_instance_id())
+			wild.queue_free()
+
+
+func _exit_tree() -> void:
+	_prune_pending_arena_spawns(true)
+	super._exit_tree()
 
 
 ## Real collision AND the intended analytic stratum must agree. An enclosing

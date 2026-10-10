@@ -5780,10 +5780,22 @@ func _ambient_active_arenas(wild: Node3D = null) -> Array[Node3D]:
 	var arenas: Array[Node3D] = []
 	for manager: Node in get_tree().get_nodes_in_group(&"foundation_combat_managers"):
 		if not manager.has_method("is_fighting") or not bool(manager.call("is_fighting")) \
-			or wild == manager.get("_wild") or wild == manager.get("_ally_body"): continue
+			or (wild != null and (wild == manager.get("_wild") or wild == manager.get("_ally_body"))): continue
 		var arena: Node3D = manager.call("arena") as Node3D
-		if is_instance_valid(arena) and arena.get_parent() == get_parent() and not arenas.has(arena):
-			arenas.append(arena)
+		if not is_instance_valid(arena) or arena.is_queued_for_deletion(): continue
+		var world_owned := arena.get_parent() == get_parent()
+		# Authoritative runtimes parent their arenas to this director. Only an
+		# actual registered live runtime extends the same-world ownership rule.
+		var runtime_owned := arena.get_parent() == self and manager.get_parent() == self \
+			and manager.get_script() == SHARED_WILD_HOST_FIGHT and _shared_host_fights.values().has(manager)
+		if not world_owned and not runtime_owned: continue
+		var duplicate := false
+		for existing: Node3D in arenas:
+			if existing == arena or (existing.global_position.is_equal_approx(arena.global_position) \
+				and is_equal_approx(float(existing.get("radius")), float(arena.get("radius")))):
+				duplicate = true
+				break
+		if not duplicate: arenas.append(arena)
 	return arenas
 
 
