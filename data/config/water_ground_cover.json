@@ -27,8 +27,8 @@
   "wind_scale": 0.055,
   "cull_tile_m": 16.0,
   "forbidden_ground": ["shore", "rock"],
-  "stones": {"enabled": false},
-  "far_cover": {"enabled": false},
+  "stones": {"enabled": true},
+  "far_cover": {"enabled": true},
   "cover_tiers": [
     {
       "name": "strand_bushes",
