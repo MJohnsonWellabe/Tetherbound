@@ -44,5 +44,6 @@
       "severed_spokes": {"visibility_range_end": 500.0, "visibility_range_end_margin": 60.0}
     },
     "skip_name_contains": ["square_oak", "Bush_", "Grass_", "Plant_", "CommonTree", "Fern", "Flower", "Leaves"]
-  }
+  },
+  "water_wild_activity": {"_comment": "F26: Tidewake wild activity/reground full pass every recheck_s instead of every frame; a wild whose wanted active state disagrees with its physics state is still switched the same frame. enabled false restores the per-frame pass.", "enabled": true, "recheck_s": 1.0}
 }

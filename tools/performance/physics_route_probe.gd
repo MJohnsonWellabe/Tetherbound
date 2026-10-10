@@ -68,11 +68,19 @@ func _run() -> void:
 
 
 func _run_ab() -> void:
-	var lod: Dictionary = load("res://scripts/creatures/creature_body.gd").call("physics_lod_config")
-	if not lod.get(_ab_lod) is Dictionary:
-		_failures.append("unknown creature_physics_lod block " + _ab_lod)
+	# "perf:<key>" flips a performance.json block; any other name is a
+	# creature_physics_lod.json block.
+	var source: Dictionary
+	var key := _ab_lod
+	if _ab_lod.begins_with("perf:"):
+		key = _ab_lod.trim_prefix("perf:")
+		source = load("res://scripts/world/performance_config.gd").call("config")
+	else:
+		source = load("res://scripts/creatures/creature_body.gd").call("physics_lod_config")
+	if not source.get(key) is Dictionary:
+		_failures.append("unknown A/B block " + _ab_lod)
 		return
-	var block: Dictionary = lod[_ab_lod]
+	var block: Dictionary = source[key]
 	var original: bool = bool(block.get("enabled", false))
 	var totals := {false: [0.0, 0.0, 0], true: [0.0, 0.0, 0]}
 	for r in _rounds:
