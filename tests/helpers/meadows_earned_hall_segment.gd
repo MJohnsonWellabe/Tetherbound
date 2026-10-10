@@ -105,6 +105,12 @@ func _hook() -> void:
 	_nav = NAV.new(_tree, _player, _rig, _stick)
 	_combat.connect("entered", _on_entered)
 	_combat.connect("hit_landed", _on_hit)
+	_combat.connect("hit_landed", func(e: bool, a: float) -> void:
+		var en: RefCounted = _combat.call("enemy")
+		var al: RefCounted = _combat.call("active_creature")
+		print("DIAG HIT f=%d enemy_side=%s amt=%.1f ally=%s %s/%s enemy=%s L%s %s/%s" % [Engine.get_physics_frames(), e, a,
+			al.get("species_id") if al else "-", al.get("hp") if al else "-", al.get("max_hp") if al else "-",
+			en.get("species_id") if en else "-", en.get("level") if en else "-", en.get("hp") if en else "-", en.get("max_hp") if en else "-"]))
 	_combat.connect("exited", _on_exit)
 	_panel.connect("finished", _on_dialogue_finished)
 	_arbiter.connect("activated", _on_activated)
