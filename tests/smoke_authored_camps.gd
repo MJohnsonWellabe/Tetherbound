@@ -258,6 +258,10 @@ func _resting_at_an_authored_camp_passes_the_night(
 	var progression: RefCounted = game.get("progression")
 	if progression != null:
 		progression.call("set_flag", "player_slept_at_home", false)
+	# F47#4: a rest reaches a morning only after nightfall (rest.json's night
+	# window); a day rest heals without one. Snap the clock to night first.
+	var look: Node = get_first_node_in_group("day_cycle")
+	if look != null and look.has_method("apply_time"): look.call("apply_time", "night")
 	var day_before := int(game.get("day"))
 	var vitals: RefCounted = player.get("vitals")
 	if vitals != null:
