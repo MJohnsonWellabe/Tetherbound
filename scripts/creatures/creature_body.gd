@@ -282,6 +282,18 @@ var _combat_burst_just_finished := false
 ## yet spent. Zero means nothing is pending; the frame that applies it clears it.
 var _jump_speed: float = 0.0
 
+## F26 performance (`creature_physics_lod.json`). A body standing still on its
+## floor gets the same answer from every `move_and_slide`, and in Tidewake each
+## sweep against Terrain3D's full-island collision costs most of a
+## millisecond. The owning controller opts in (`wild_creature.gd`, outside a
+## fight); the body then skips the sweep only while nothing could move it, and
+## re-sweeps at least every `refresh_ticks` so floor contact never goes stale.
+const PHYSICS_LOD_PATH := "res://data/config/creature_physics_lod.json"
+static var _physics_lod_cache: Dictionary = {}
+var rest_slide_skip_allowed := false
+var _rest_slide_at := Vector3.INF
+var _rest_slide_skipped := 0
+
 var _speed: float = 5.0
 var _acceleration: float = 34.0
 var _friction: float = 30.0
@@ -1916,7 +1928,14 @@ func _physics_process(delta: float) -> void:
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 	_environment_velocity.apply(self, delta, _impulse)
-	move_and_slide()
+	if _rest_slide_skippable():
+		# What the sweep itself leaves for a body resting on its floor: no
+		# travel, and the floor contact absorbs the downward pinning bias.
+		velocity = Vector3.ZERO
+		_rest_slide_skipped += 1
+	else:
+		move_and_slide()
+		_note_rest_slide()
 	_environment_velocity.after_slide(self)
 	_hold_contact_spacing(delta)
 
@@ -1931,6 +1950,35 @@ func _physics_process(delta: float) -> void:
 
 	_requested = Vector3.ZERO
 	_requested_handling = 1.0
+
+
+static func physics_lod_config() -> Dictionary:
+	if _physics_lod_cache.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PHYSICS_LOD_PATH))
+		_physics_lod_cache = parsed if parsed is Dictionary else {"rest_slide_skip": {"enabled": false}}
+	return _physics_lod_cache
+
+
+func _rest_slide_skippable() -> bool:
+	if not rest_slide_skip_allowed or not _rest_slide_at.is_finite() \
+			or global_position != _rest_slide_at or not is_on_floor():
+		return false
+	var cfg: Dictionary = physics_lod_config().get("rest_slide_skip", {})
+	if not bool(cfg.get("enabled", false)) or _rest_slide_skipped >= int(cfg.get("refresh_ticks", 12)):
+		return false
+	return _jump_speed <= 0.0 and _combat_burst_time_left <= 0.0 and not _combat_burst_just_finished \
+		and _requested.is_zero_approx() and _impulse.is_zero_approx() \
+		and is_zero_approx(velocity.x) and is_zero_approx(velocity.z)
+
+
+## Arms the skip only after a real sweep that found the body resting: on the
+## floor, not displaced, and with no horizontal velocity left.
+func _note_rest_slide() -> void:
+	_rest_slide_skipped = 0
+	var resting := rest_slide_skip_allowed and is_on_floor() \
+		and get_position_delta().length_squared() < 0.000001 \
+		and is_zero_approx(velocity.x) and is_zero_approx(velocity.z)
+	_rest_slide_at = global_position if resting else Vector3.INF
 
 
 func register_environment_velocity_modifier(id: StringName, owner: Node, modifier: Callable, order: int = 0,
