@@ -74,26 +74,136 @@ def rig_contracts(gltf, binary):
     return names, rig, binds
 
 
-def rotation(bone, role, phase, winged, biped):
+def quaternion(degrees):
+    x, y, z = (math.radians(value) / 2 for value in degrees)
+    sx, cx, sy, cy, sz, cz = math.sin(x), math.cos(x), math.sin(y), math.cos(y), math.sin(z), math.cos(z)
+    qx = cy * sx * cz + sy * cx * sz
+    qy = sy * cx * cz - cy * sx * sz
+    qz = cy * cx * sz - sy * sx * cz
+    qw = cy * cx * cz + sy * sx * sz
+    return [qx, qy, qz, qw]
+
+
+def euler_degrees(q):
+    qx, qy, qz, qw = q
+    return [math.degrees(math.asin(max(-1, min(1, 2 * (qw * qx - qy * qz))))),
+            math.degrees(math.atan2(2 * (qx * qz + qw * qy), 1 - 2 * (qx*qx + qy*qy))),
+            math.degrees(math.atan2(2 * (qx * qy + qw * qz), 1 - 2 * (qx*qx + qz*qz)))]
+
+
+def blend_rotation(degrees, amount):
+    """Fold along the shortest quaternion arc, not three large Euler sweeps."""
+    qx, qy, qz, qw = quaternion(degrees)
+    if qw < 0:
+        qx, qy, qz, qw = -qx, -qy, -qz, -qw
+    angle = math.acos(max(-1, min(1, qw)))
+    scale = math.sin(angle * amount) / math.sin(angle) if angle > .000001 else amount
+    qx, qy, qz, qw = qx * scale, qy * scale, qz * scale, math.cos(angle * amount)
+    return euler_degrees([qx, qy, qz, qw])
+
+
+def folded_wings(rig):
+    # Equal bone names do not imply equal wing axes. Resolve each installed
+    # rig's rest hierarchy, then fold upper wings toward the tail and return
+    # the distal segments alongside the body. No mesh or bind is changed.
+    folds = {}
+
+    def global_pose(bone):
+        local = multiply(rig[bone]['rest'], node_matrix({'rotation': quaternion(folds.get(bone, [0, 0, 0]))}))
+        parent = rig[bone]['parent']
+        return multiply(global_pose(parent), local) if parent else local
+
+    def depth(bone):
+        parent = rig[bone]['parent']
+        return 1 + depth(parent) if parent else 0
+
+    for bone in sorted((name for name in rig if name.startswith('wing_')), key=depth):
+        side = -1 if bone.endswith('_l') else 1
+        target = [side * .12, -.08, -1] if bone.startswith('wing_upper') else [side * .1, 0, 1]
+        length = math.sqrt(sum(value * value for value in target))
+        target = [value / length for value in target]
+        basis = global_pose(bone)
+        # Inverse rotation takes the anatomical direction into this bone's
+        # local frame. A joint's longitudinal direction is local +Y.
+        local = []
+        for column in range(3):
+            axis = basis[column * 4:column * 4 + 3]
+            axis_length = math.sqrt(sum(value * value for value in axis))
+            local.append(sum(axis[row] * target[row] for row in range(3)) / axis_length)
+        q = [local[2], 0, -local[0], 1 + local[1]]
+        length = math.sqrt(sum(value * value for value in q))
+        if length < .000001:
+            q = [1, 0, 0, 0]
+        else:
+            q = [value / length for value in q]
+        folds[bone] = euler_degrees(q)
+    return folds
+
+
+def rotation(bone, role, phase, winged, biped, wing_folds=None):
     wave = math.sin(phase * math.tau)
     opposite = -1 if bone.endswith('_r') else 1
+    quadruped = not winged and not biped
+    if quadruped and role == 'hit':
+        # The measured quad spine points local X opposite to neck/head X.
+        # Bow all three in the same anatomical direction, with a quick impact
+        # and a held wince rather than the old mutually cancelling bob.
+        envelope = phase / .125 if phase <= .125 else ((1 - phase) / .875) ** .55
+        angle = {'pelvis': -6, 'spine': -28, 'neck': 32, 'head': 28}.get(bone, 0)
+        if 'upper' in bone:
+            angle = -90 if bone.startswith('front') else -55
+        elif 'lower' in bone:
+            angle = 90 if bone.startswith('front') else 60
+        return [angle * envelope, 0, 0]
+    if quadruped and role == 'faint':
+        envelope = min(1, phase / .7)
+        # Adduct the outboard paw width inside the flank's contact envelope.
+        # Stagger the upper/lower-side folds so paws do not occupy one volume.
+        if 'upper' in bone:
+            return [(-36 if bone.endswith('_l') else 20) * envelope, 0,
+                    -20 * envelope if bone.endswith('_l') else 0]
+        if 'lower' in bone:
+            return [(48 if bone.endswith('_l') else 90) * envelope, 0, 0]
+        return [({'neck': 26, 'head': 22}.get(bone, 0)) * envelope, 0, 0]
+    if quadruped and role == 'fly_grip':
+        # Elevated forearms and returning lower legs form an unmistakable
+        # hook/clasp; the rear feet tuck up rather than support a standing dog.
+        if bone.startswith('front_upper'):
+            return [-100, 0, -opposite * 8]
+        if bone.startswith('front_lower'):
+            return [152, 0, 0]
+        if bone.startswith('rear_upper'):
+            return [58, 0, -opposite * 5]
+        if bone.startswith('rear_lower'):
+            return [78, 0, 0]
+        return [10 if bone in ('neck', 'head') else 0, 0, 0]
     if role == 'hit':
-        envelope = math.sin(phase * math.pi)
-        return [(-16 if bone in ('spine', 'neck') else 12 if bone == 'head' else 0) * envelope, 0, 0]
+        envelope = phase / .125 if phase <= .125 else ((1 - phase) / .875) ** .55
+        # These upright rigs have matching torso/head X axes. A full-body bow
+        # and bent knees carry the impact, including at the mid/late samples.
+        angle = {'pelvis': 12, 'spine': 26, 'neck': 35, 'head': 25}.get(bone, 0)
+        if bone.startswith('leg_upper'):
+            angle = -45
+        elif bone.startswith('leg_lower'):
+            angle = 80
+        elif bone.startswith('arm'):
+            angle = -40
+        if bone.startswith('wing'):
+            return [0, 0, opposite * -18 * envelope]
+        return [angle * envelope, 0, 0]
     if role == 'faint':
         envelope = min(1, phase / .7)
-        angle = 0
-        if 'upper' in bone and 'wing' not in bone:
-            angle = -42
-        elif 'lower' in bone:
-            angle = 68
-        elif bone == 'neck':
-            angle = 20
-        elif bone == 'head':
-            angle = 12
-        if 'wing' in bone:
-            return [0, 0, opposite * (52 if 'upper' in bone else -34) * envelope]
-        return [angle * envelope, 0, 0]
+        if bone.startswith('wing'):
+            return blend_rotation((wing_folds or {}).get(bone, [0, 0, 0]), envelope)
+        if bone.startswith('arm'):
+            return blend_rotation([-24.577, -45.848, 125.497] if bone.endswith('_l')
+                                  else [-23.67, 44.326, -125.556], envelope)
+        if bone.startswith('leg_upper'):
+            return [(-35 if bone.endswith('_l') else 20) * envelope, 0,
+                    -12 * envelope if bone.endswith('_l') else 0]
+        if bone.startswith('leg_lower'):
+            return [(55 if bone.endswith('_l') else 85) * envelope, 0, 0]
+        return [({'neck': 35, 'head': 25}.get(bone, -20 if bone.startswith('foot') else 0)) * envelope, 0, 0]
     if role == 'swim':
         if 'tail' in bone:
             return [0, 18 * wave, 0]
@@ -107,10 +217,14 @@ def rotation(bone, role, phase, winged, biped):
     if role == 'fly_grip':
         if 'wing' in bone:
             return [0, 0, opposite * (12 + 24 * wave if 'upper' in bone else -12 + 10 * wave)]
+        if bone.startswith('arm'):
+            return [-42.59, -32.895, 74.28] if bone.endswith('_l') else [-42.208, 33.001, -75.013]
         if 'upper' in bone:
-            return [-30 if winged else -15, 0, 0]
+            return [50, 0, 0]
         if 'lower' in bone:
-            return [52, 0, 0]
+            return [90, 0, 0]
+        if bone.startswith('foot'):
+            return [-45, 0, 0]
         return [(-8 if bone == 'neck' else 0), 0, 0]
     if role == 'ride':
         if 'upper' in bone and 'wing' not in bone:
@@ -147,7 +261,9 @@ def main():
         winged = 'wing_upper_l' in bones
         biped = 'arm_l' in bones
         family = 'winged' if winged else 'biped' if biped else 'quadruped'
-        signature = tuple(bones)
+        wing_folds = folded_wings(rig) if winged else {}
+        signature = (tuple(bones), tuple((bone, tuple(round(value, 5) for value in angles))
+                                       for bone, angles in wing_folds.items()))
         row = {'model': definition['placeholder']['model'], 'source_sha256': hashlib.sha256(raw).hexdigest(),
                'resource_uid': uid_match.group(1), 'rig_contract': rig, 'bind_contract': binds,
                'rig_family': family, 'bones': bones}
@@ -160,8 +276,8 @@ def main():
             frames = []
             for sample in range(9):
                 phase = sample / 8
-                frames.append({'phase': phase, 'bones': {bone: rotation(bone, role, phase, winged, biped) for bone in bones},
-                               'pivot_roll_deg': 82 * min(1, phase / .7) if role == 'faint' else 0})
+                frames.append({'phase': phase, 'bones': {bone: rotation(bone, role, phase, winged, biped, wing_folds) for bone in bones},
+                               'pivot_roll_deg': 90 * min(1, phase / .7) if role == 'faint' else 0})
             roles[role] = {'duration_s': {'hit': .24, 'faint': 1.2, 'swim': 1.15, 'fly_grip': .9, 'ride': .8}[role],
                            'loop': role in ('swim', 'fly_grip', 'ride'), 'frames': frames}
         profile = f'{family}_{len(profiles) + 1}'
