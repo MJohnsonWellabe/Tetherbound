@@ -5,13 +5,25 @@ extends Node3D
 const RULES := preload("res://scripts/world/stormwood_dynamo_rules.gd")
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
+const PLATE_ALBEDO := preload("res://assets/props/quaternius_fantasy/T_Trim_Metal_BaseColor.png")
+const PLATE_NORMAL := preload("res://assets/props/quaternius_fantasy/T_Trim_Metal_Normal.png")
+const PLATE_ORM := preload("res://assets/props/quaternius_fantasy/T_Trim_Metal_ORM.png")
+# Bucket_Metal's authored twelve-sided metal cap, fitted from its actual UVs.
+# The radius stays two atlas pixels inside every edge of that UV island.
+const PLATE_CAP_UV_CENTER := Vector2(0.8671874454, 0.8603515526)
+const PLATE_CAP_UV_RADIUS := 0.1186379366
+# Its outer metal lip uses this full-width trim band (two-pixel edge inset).
+const PLATE_LIP_UV_MIN := 0.0070266724
+const PLATE_LIP_UV_MAX := 0.0476037264
 var rules: RefCounted
 var _banks: Array[Dictionary] = []
 var _plates: Array[MeshInstance3D] = []
 var _readout: Label3D
+var _presentation: Dictionary = {}
 
 func build(policy: RefCounted, simulation_only: bool = false) -> void:
 	rules = policy
+	_presentation = rules.config.get("presentation", {})
 	for i in int(rules.config.bank_count):
 		var point: Vector2 = rules.bank_position(i)
 		var bank := Node3D.new()
@@ -53,6 +65,10 @@ func build(policy: RefCounted, simulation_only: bool = false) -> void:
 		lane.position.y = 0.09
 		lane.rotation.y = -TAU * float(i) / float(rules.config.bank_count)
 		var material := _glow(Color("8876d8"), 0.1)
+		# Keep the entire authoritative lane visible, with the existing hazard
+		# colour and firing emission, while allowing the real wood floor to read.
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		material.albedo_color.a = float(_presentation.lane_idle_alpha)
 		lane.material_override = material
 		add_child(lane)
 		_banks.append({"node":bank, "lane":lane, "material":material, "light":light})
@@ -64,9 +80,31 @@ func build(policy: RefCounted, simulation_only: bool = false) -> void:
 			mesh.top_radius = float(rules.config.plate_radius_m)
 			mesh.bottom_radius = mesh.top_radius
 			mesh.height = 0.12
-			plate.mesh = mesh
+			plate.mesh = _finished_plate_mesh(mesh)
 			plate.position = Vector3(float(raw[0]), 0.14, float(raw[1]))
-			plate.material_override = _glow(Color("63d4b0"), 0.45)
+			var metal := _plate_material()
+			metal.albedo_color = Color(str(_presentation.plate_surface_colour))
+			metal.metallic = float(_presentation.plate_metallic)
+			metal.roughness = float(_presentation.plate_roughness)
+			plate.material_override = metal
+			# The same mint safe-ground cue outlines the same 3.5 m plate.
+			# This is render-only: the existing cylinder, seat and rule stay intact.
+			var rim := MeshInstance3D.new()
+			rim.name = "GroundedPlateRim"
+			var ring := TorusMesh.new()
+			ring.inner_radius = mesh.top_radius - float(_presentation.plate_rim_width_m)
+			ring.outer_radius = mesh.top_radius
+			ring.rings = 48
+			ring.ring_segments = 8
+			rim.mesh = _finished_rim_mesh(ring)
+			rim.position.y = 0.09
+			var cue := _plate_material()
+			cue.albedo_color = Color("63d4b0")
+			cue.emission_enabled = true
+			cue.emission = Color("63d4b0")
+			cue.emission_energy_multiplier = 0.45
+			rim.material_override = cue
+			plate.add_child(rim)
 			add_child(plate)
 			_plates.append(plate)
 		# BOSSES §4.7's visible countdown and 0/4 progress, shown in the arena
@@ -89,6 +127,67 @@ static func readout_text(state: Dictionary, phase: String, bank_count: int) -> S
 	return "Conduits %d/%d · %d s" % [int(state.get("struck", 0)), bank_count,
 		ceili(float(state.get("window_left", 0.0)))]
 
+## The arena controller has a fixed authored anchor, while the actual tree
+## deck seats on the terrain heightfield. The warning is a floor overlay:
+## anchoring it to the controller sliced through the captive cobra's coils.
+## Keep the existing 9 cm clearance, lane footprint/material and hazard rules;
+## only derive this visual's world height from the physical deck.
+func seat_discharge_lanes(deck_world_height: float) -> void:
+	for row: Dictionary in _banks:
+		var lane: MeshInstance3D = row.lane
+		var at: Vector3 = lane.global_position
+		at.y = deck_world_height + 0.09
+		lane.global_position = at
+
+## Keep the exact cylinder vertices, normals and indices. Only finish UVs
+## and the matching cap tangent basis change; there is no new walk collider.
+static func _finished_plate_mesh(source: CylinderMesh) -> ArrayMesh:
+	var arrays: Array = source.surface_get_arrays(0)
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
+	var uv: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
+	var tangents: PackedFloat32Array = arrays[Mesh.ARRAY_TANGENT]
+	for i in vertices.size():
+		if absf(normals[i].y) > 0.5:
+			uv[i] = PLATE_CAP_UV_CENTER + Vector2(vertices[i].x, vertices[i].z) * (PLATE_CAP_UV_RADIUS / source.top_radius)
+			tangents[i * 4] = 1.0
+			tangents[i * 4 + 1] = 0.0
+			tangents[i * 4 + 2] = 0.0
+			tangents[i * 4 + 3] = -signf(normals[i].y)
+		else:
+			uv[i].y = lerpf(PLATE_LIP_UV_MIN, PLATE_LIP_UV_MAX, 0.5 - vertices[i].y / source.height)
+	arrays[Mesh.ARRAY_TEX_UV] = uv
+	arrays[Mesh.ARRAY_TANGENT] = tangents
+	var finish := ArrayMesh.new()
+	finish.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return finish
+
+static func _finished_rim_mesh(source: TorusMesh) -> ArrayMesh:
+	var arrays: Array = source.surface_get_arrays(0)
+	var uv: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
+	for i in uv.size():
+		uv[i].y = lerpf(PLATE_LIP_UV_MIN, PLATE_LIP_UV_MAX, uv[i].y)
+	arrays[Mesh.ARRAY_TEX_UV] = uv
+	var finish := ArrayMesh.new()
+	finish.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return finish
+
+static func _plate_material() -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = PLATE_ALBEDO
+	material.normal_enabled = true
+	material.normal_texture = PLATE_NORMAL
+	material.roughness_texture = PLATE_ORM
+	material.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_GREEN
+	material.metallic_texture = PLATE_ORM
+	material.metallic_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_BLUE
+	material.ao_enabled = true
+	material.ao_texture = PLATE_ORM
+	material.ao_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
+	material.metallic = 1.0
+	material.roughness = 1.0
+	return material
+
 func _glow(colour: Color, energy: float) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
@@ -110,3 +209,5 @@ func show_state(state: Dictionary) -> void:
 		row.light.light_energy = 3.0 if firing else charge * 1.6
 		row.lane.visible = active and str(state.get("state", "")) != "recovery"
 		row.material.emission_energy_multiplier = 4.0 if firing else charge * 0.7
+		row.material.albedo_color.a = float(_presentation.lane_fire_alpha) if firing else \
+			lerpf(float(_presentation.lane_idle_alpha), float(_presentation.lane_charge_alpha), charge)

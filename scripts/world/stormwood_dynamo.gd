@@ -108,6 +108,7 @@ func mount(owner_world: Node3D) -> void:
 	arena.name = "DynamoArena"
 	add_child(arena)
 	arena.build(rules, bool(world.get("simulation_only")))
+	arena.seat_discharge_lanes(deck_height())
 	_build_deck_infill(bool(world.get("simulation_only")))
 	if not bool(world.get("simulation_only")):
 		var control := FIELD_CONTROL.new()

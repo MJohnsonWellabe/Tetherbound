@@ -140,6 +140,13 @@ uniform float head = 0.3;
 uniform float tail = 0.25;
 uniform float near_fade_start = 0.0;
 uniform float near_fade_end = 0.0;
+uniform int roof_count = 0;
+uniform vec4 roof_bounds[6]; // physical inner radius, outer radius, height
+uniform vec4 roof_arcs[6]; // physical start angle, end angle, polygon step
+uniform vec2 roof_extent; // measured outer radius squared, highest physical roof
+uniform mat4 world_to_roofs;
+varying vec3 rain_world_at;
+void vertex() { rain_world_at = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz; }
 void fragment() {
 	float t = UV.y;
 	float taper = smoothstep(0.0, head, t) * (1.0 - smoothstep(1.0 - tail, 1.0, t));
@@ -147,6 +154,26 @@ void fragment() {
 	// thick white pole): a streak nearer the camera than near_fade_end fades
 	// out, gone by near_fade_start, so no single drop can fill the frame.
 	float near = near_fade_end > near_fade_start ? smoothstep(near_fade_start, near_fade_end, -VERTEX.z) : 1.0;
+	// All layers retain outdoor/window rain. Only a fragment below an actual
+	// mounted horizontal deck face is removed; no whole far emitter is hidden.
+	if (roof_count > 0) {
+		vec3 local = (world_to_roofs * vec4(rain_world_at, 1.0)).xyz;
+		float radius_squared = dot(local.xz, local.xz);
+		// Most outdoor fragments stop here: no atan, sqrt or roof arc loop.
+		if (radius_squared <= roof_extent.x && local.y < roof_extent.y) {
+			float angle = mod(atan(local.z, local.x) + 6.28318530718, 6.28318530718);
+			float radius = length(local.xz);
+			for (int k = 0; k < 6; k++) {
+				if (k >= roof_count) { break; }
+				vec4 bounds = roof_bounds[k];
+				vec4 arc = roof_arcs[k];
+				if (angle < arc.x || angle >= arc.y || local.y >= bounds.z) { continue; }
+				float middle = arc.x + (floor((angle - arc.x) / arc.z) + 0.5) * arc.z;
+				float edge_scale = cos(arc.z * 0.5) / cos(angle - middle);
+				if (radius > bounds.x * edge_scale && radius < bounds.y * edge_scale) { discard; }
+			}
+		}
+	}
 	ALBEDO = COLOR.rgb;
 	ALPHA = COLOR.a * taper * near;
 }
@@ -763,6 +790,110 @@ func _style_rain() -> void:
 		_rain_curtain.position = Vector3(0.0, float(curtain.get("centre_offset_m", 0.0)), 0.0)
 		_rain_curtain.visible = true
 		_rain.add_child(_rain_curtain)
+	_bind_mounted_deck_rain_cover()
+
+## Static physical topology is complete before Surge mounts. Include the
+## Dynamo's real DeckInfill, which fills both radial sides of the tree's
+## ascent wedge. Six contiguous polygon arcs cover the three tree decks plus
+## this infill. Read their collision faces once; no per-frame ray grid,
+## approximated circle, added roof, weather flag or gameplay change.
+static func mounted_deck_rain_cover(owner_world: Node3D) -> Dictionary:
+	var tree := owner_world.get_node_or_null("StormheartTree") as Node3D
+	var bounds := PackedVector4Array()
+	var arcs := PackedVector4Array()
+	var sources: Array[String] = []
+	var extent := Vector2(0.0, -INF)
+	if tree == null or not tree.is_inside_tree():
+		return {"bounds": bounds, "arcs": arcs, "sources": sources, "extent": extent}
+	var inverse := tree.global_transform.affine_inverse()
+	for path: String in ["StormheartTree/OuterWorks", "StormheartTree/DynamoCore",
+			"StormheartTree/CrownChamber", "StormwoodDynamo/DeckInfill"]:
+		var body := owner_world.get_node_or_null(path)
+		if body == null:
+			continue
+		for child: Node in body.get_children():
+			if not (child is CollisionShape3D) or not (child.shape is ConcavePolygonShape3D):
+				continue
+			var faces := (child.shape as ConcavePolygonShape3D).get_faces()
+			var to_tree := inverse * (child as CollisionShape3D).global_transform
+			for i in faces.size():
+				faces[i] = to_tree * faces[i]
+				extent.x = maxf(extent.x, Vector2(faces[i].x, faces[i].z).length_squared())
+				extent.y = maxf(extent.y, faces[i].y)
+			for section: Dictionary in _deck_roof_sections(faces):
+				bounds.append(section.bounds)
+				arcs.append(section.arc)
+				sources.append(path)
+	return {"bounds": bounds, "arcs": arcs, "sources": sources, "inverse": inverse, "extent": extent}
+
+## Merge actual flat triangle spans with the same radial band. Keep physical
+## polygon edge spacing and all discontinuities, including the open ascent
+## band between the two infill strips. Vertical fascia never becomes a roof.
+static func _deck_roof_sections(faces: PackedVector3Array) -> Array[Dictionary]:
+	var bands: Dictionary = {}
+	for i in range(0, faces.size(), 3):
+		var a := faces[i]
+		var b := faces[i + 1]
+		var c := faces[i + 2]
+		if absf(a.y - b.y) > 0.001 or absf(a.y - c.y) > 0.001:
+			continue
+		var inner := INF
+		var outer := 0.0
+		var angles: Array[float] = []
+		for point: Vector3 in [a, b, c]:
+			var radius := Vector2(point.x, point.z).length()
+			inner = minf(inner, radius)
+			outer = maxf(outer, radius)
+			var angle := fposmod(atan2(point.z, point.x), TAU)
+			if angle < 0.00001 or angle > TAU - 0.00001:
+				angle = 0.0
+			angles.append(angle)
+		angles.sort()
+		if angles.back() - angles.front() > PI:
+			for k in angles.size():
+				if angles[k] < PI:
+					angles[k] += TAU
+			angles.sort()
+		var span := Vector2(angles.front(), angles.back())
+		if span.y - span.x < 0.00001:
+			continue
+		var key := "%.3f:%.3f:%.3f" % [inner, outer, a.y]
+		if not bands.has(key):
+			bands[key] = {"bounds": Vector4(inner, outer, a.y, 0.0), "step": span.y - span.x, "spans": []}
+		bands[key].spans.append(span)
+		bands[key].step = minf(float(bands[key].step), span.y - span.x)
+	var sections: Array[Dictionary] = []
+	for band: Dictionary in bands.values():
+		var spans: Array = band.spans
+		spans.sort_custom(func(a: Vector2, b: Vector2) -> bool: return a.x < b.x)
+		var joined: Array[Vector2] = []
+		for span: Vector2 in spans:
+			if not joined.is_empty() and span.x <= joined.back().y + 0.0001:
+				joined[joined.size() - 1].y = maxf(joined.back().y, span.y)
+			else:
+				joined.append(span)
+		for span: Vector2 in joined:
+			sections.append({"bounds": band.bounds, "arc": Vector4(span.x, span.y, band.step, 0.0)})
+	return sections
+
+func _bind_mounted_deck_rain_cover() -> void:
+	if world == null:
+		return
+	var cover := mounted_deck_rain_cover(world)
+	if cover.bounds.is_empty():
+		return
+	if cover.bounds.size() > 6:
+		push_error("Stormwood rain roof topology exceeds six physical polygon arcs")
+		return # Do not silently replace new topology with a truncated mask.
+	for emitter: GPUParticles3D in [_rain, _rain_far, _rain_curtain]:
+		if emitter == null:
+			continue
+		var material := (emitter.draw_pass_1 as CylinderMesh).material as ShaderMaterial
+		material.set_shader_parameter("roof_count", cover.bounds.size())
+		material.set_shader_parameter("roof_bounds", cover.bounds)
+		material.set_shader_parameter("roof_arcs", cover.arcs)
+		material.set_shader_parameter("roof_extent", cover.extent)
+		material.set_shader_parameter("world_to_roofs", cover.inverse)
 
 func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 	var colour := Color(str(cfg.get("colour", "#c0ccd6")))
@@ -1232,20 +1363,54 @@ func _build_steam() -> void:
 	var quad := QuadMesh.new()
 	var size := float(cfg.get("puff_size_m", 2.4))
 	quad.size = Vector2(size, size * float(cfg.get("puff_aspect", 0.6)))
-	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
-	material.billboard_keep_scale = true
-	material.vertex_color_use_as_albedo = true
-	material.albedo_texture = soft_puff_texture()
-	material.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var material := ShaderMaterial.new()
+	var shader := Shader.new()
+	shader.code = STEAM_SHADER
+	material.shader = shader
+	material.set_shader_parameter("puff_texture", soft_puff_texture())
+	# Use the existing puff height for the blend distance; the authored
+	# particle budget, tint, alpha, size and life curves stay unchanged.
+	material.set_shader_parameter("intersection_fade_m", quad.size.y)
 	quad.material = material
 	_steam.draw_pass_1 = quad
 	var reach := process.emission_ring_radius + size + 1.0
 	_steam.visibility_aabb = AABB(Vector3(-reach, -2.0, -reach), Vector3(reach * 2.0, 14.0, reach * 2.0))
 	add_child(_steam)
+
+const STEAM_SHADER := """
+shader_type spatial;
+render_mode unshaded, blend_mix, depth_draw_never, cull_disabled, shadows_disabled;
+uniform sampler2D puff_texture : repeat_disable, filter_linear;
+uniform sampler2D scene_depth : hint_depth_texture, repeat_disable, filter_nearest;
+uniform float intersection_fade_m = 1.0;
+void vertex() {
+	mat4 facing = mat4(INV_VIEW_MATRIX[0], INV_VIEW_MATRIX[1], INV_VIEW_MATRIX[2], MODEL_MATRIX[3]);
+	float angle = INSTANCE_CUSTOM.x;
+	mat4 spin = mat4(vec4(cos(angle), sin(angle), 0.0, 0.0),
+		vec4(-sin(angle), cos(angle), 0.0, 0.0), vec4(0.0, 0.0, 1.0, 0.0), vec4(0.0, 0.0, 0.0, 1.0));
+	mat4 size = mat4(vec4(length(MODEL_MATRIX[0].xyz), 0.0, 0.0, 0.0),
+		vec4(0.0, length(MODEL_MATRIX[1].xyz), 0.0, 0.0),
+		vec4(0.0, 0.0, length(MODEL_MATRIX[2].xyz), 0.0), vec4(0.0, 0.0, 0.0, 1.0));
+	MODELVIEW_MATRIX = VIEW_MATRIX * facing * spin * size;
+}
+void fragment() {
+	float raw_depth = texture(scene_depth, SCREEN_UV).r;
+	#if CURRENT_RENDERER == RENDERER_COMPATIBILITY
+	vec3 ndc = vec3(SCREEN_UV * 2.0 - 1.0, raw_depth * 2.0 - 1.0);
+	#else
+	vec3 ndc = vec3(SCREEN_UV * 2.0 - 1.0, raw_depth);
+	#endif
+	vec4 scene_view = INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+	float soft_edge = 1.0;
+	if (abs(scene_view.w) > 0.00001) {
+		float scene_z = -scene_view.z / scene_view.w;
+		float separation = scene_z + VERTEX.z;
+		soft_edge = smoothstep(0.0, intersection_fade_m, max(separation, 0.0));
+	}
+	ALBEDO = COLOR.rgb;
+	ALPHA = COLOR.a * texture(puff_texture, UV).a * soft_edge;
+}
+"""
 
 static var _puff_texture: GradientTexture2D
 
