@@ -33,6 +33,7 @@ class HallPilot extends LIVE.CampaignPilot:
 	const WALK_SPEED := 5.6  # combat.json creature speed; only used to time a Dodge.
 	var ultimate_inputs := 0
 	var tell_charges := 0
+	var _dbg_w := false
 
 	func _faces_target(_ally_body: Node3D, _foe_body: Node3D) -> bool:
 		# Production faces the target at accepted quick/charged start and
@@ -62,6 +63,11 @@ class HallPilot extends LIVE.CampaignPilot:
 		var charged: Dictionary = manager.call("_move_profile", "player_charged", str(creature.get("move_charged")))
 		var quick: Dictionary = manager.call("_move_profile", "player_quick", str(creature.get("move_quick")))
 		var beat := float(foe_body.get("_beat_left"))
+		if bool(manager.call("enemy_is_winding_up")) != _dbg_w:
+			_dbg_w = not _dbg_w
+			if _dbg_w:
+				var sel: Variant = foe_body.get("_selected_attack")
+				print("DIAG TELL d=%.2f reach=%.2f cfgrange=%.2f cone=%s beat=%.2f wind=%.0f sel=%s" % [distance, _strike_reach(foe_body), float((foe_body.call("combat_config") as Dictionary).get("range", 0)), (foe_body.call("combat_config") as Dictionary).get("cone_degrees"), beat, wind, JSON.stringify(sel).left(300)])
 		if bool(manager.call("enemy_is_winding_up")):
 			if bool(manager.call("charged_ready")) and distance < charged_reach - 0.2 \
 					and beat > float(charged.get("windup", 0.55)) + 0.1 \
@@ -263,7 +269,12 @@ func _hook() -> void:
 		var al: RefCounted = _combat.call("active_creature")
 		var ab := _director.call("ally_body") as Node3D
 		var fb := _combat.call("enemy_body") as Node3D
-		if ab and fb: print("DIAG GAP %.2f committed=%s" % [Vector2(ab.global_position.x - fb.global_position.x, ab.global_position.z - fb.global_position.z).length(), _combat.call("player_is_committed")])
+		if ab and fb and not e:
+			var off := ab.global_position - fb.global_position
+			off.y = 0
+			var fc: Vector3 = fb.call("facing")
+			fc.y = 0
+			print("DIAG GAP %.2f angle=%.0f committed=%s cfgrange=%.2f" % [off.length(), rad_to_deg(fc.angle_to(off)), _combat.call("player_is_committed"), float((fb.call("combat_config") as Dictionary).get("range", 0))])
 		print("DIAG HIT f=%d enemy_side=%s amt=%.1f ally=%s %s/%s enemy=%s L%s %s/%s" % [Engine.get_physics_frames(), e, a,
 			al.get("species_id") if al else "-", al.get("hp") if al else "-", al.get("max_hp") if al else "-",
 			en.get("species_id") if en else "-", en.get("level") if en else "-", en.get("hp") if en else "-", en.get("max_hp") if en else "-"]))
