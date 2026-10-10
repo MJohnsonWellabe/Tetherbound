@@ -652,7 +652,9 @@ func _generate_boundary_fixture() -> bool:
 	expected_flags.sort()
 	actual_flags.sort()
 	if actual_flags != expected_flags:
-		failures.append("Generated scene changed declared progression flags during setup")
+		var added: Array = actual_flags.filter(func(flag: Variant) -> bool: return not expected_flags.has(flag))
+		var removed: Array = expected_flags.filter(func(flag: Variant) -> bool: return not actual_flags.has(flag))
+		failures.append("Generated scene changed declared progression flags during setup (added %s, removed %s)" % [str(added), str(removed)])
 		return false
 	for field: String in profile.get("character_fields", {}):
 		if saved.redesign_character.get(field) != profile.character_fields[field]:
