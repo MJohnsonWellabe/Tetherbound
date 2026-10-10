@@ -15,9 +15,10 @@ assert candidate['enabled'] is True
 assert base['crown_arcade']['enabled'] is True
 assert base['towers']['enabled'] is True
 assert visual['skyline_profile']['enabled'] is True
-assert visual['settlement']['occupied_terrace']['enabled'] is True
+# The occupied terrace builds colliders: it lands separately with a walk proof.
+assert visual['settlement']['occupied_terrace']['enabled'] is False
 assert candidate['aviary']['towers']['enabled'] is True
-assert candidate['visual']['settlement']['occupied_terrace']['enabled'] is True
+assert candidate['visual']['settlement']['occupied_terrace']['enabled'] is False
 
 arcade = candidate['aviary']['crown_arcade']
 radius = min(base['drum']['radius_x_m'], base['drum']['radius_z_m']) - arcade['radial_inset_m']

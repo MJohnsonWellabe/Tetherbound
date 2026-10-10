@@ -4,7 +4,7 @@
   "_disposition": "Unjudged F40 candidate. Enable only after independent matched High/Medium full-bar PASS. Previous skyline/crown FAILs remain evidence; towers and occupied terrace remain off. Local presentation only, no save or gameplay flag.",
   "visual": {
     "skyline_profile": {"enabled": true},
-    "settlement": {"occupied_terrace": {"enabled": true}}
+    "settlement": {"occupied_terrace": {"enabled": false}}
   },
   "look": {
     "route_verges": {
