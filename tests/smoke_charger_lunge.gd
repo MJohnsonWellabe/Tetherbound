@@ -29,6 +29,7 @@ extends SceneTree
 ##
 ## Run as a child of `tests/test_charger_lunge.gd`, so CI's unit job runs it.
 
+const LUNGE_LANE := preload("res://scripts/combat/lunge_lane.gd")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const COMBAT := preload("res://scripts/combat/combat_manager.gd")
@@ -455,6 +456,15 @@ func _case_charger_tell_lane_and_charge_state() -> void:
 	_check(recovery_steady and absf(recovery_seen - float((wild.call("combat_config") as Dictionary).get("recovery", 0.9))) < 0.02,
 		"the recovery window waits for the charge to stop (held at %.2f)" % recovery_seen)
 	_check(bool(wild.call("is_rooted")), "after the charge the recovery is the punish window")
+	# P2-093: the danger lane must not outlast the opening the HUD announces.
+	var open_frames := 0
+	var budget := int(ceil(LUNGE_LANE.OPEN_FADE * physics_hz)) + 2
+	while _lane(wild) != null and open_frames <= budget and bool(wild.call("is_rooted")):
+		await physics_frame
+		_release_hitstop(manager)
+		open_frames += 1
+	print("charger/tell: lane cleared %d frames into the opening (budget %d)" % [open_frames, budget])
+	_check(_lane(wild) == null, "the danger lane clears within %d frames of the opening" % budget)
 	await _teardown(stage)
 
 

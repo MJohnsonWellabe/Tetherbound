@@ -26,6 +26,10 @@ const CHEVRON_PERIOD := 0.6
 ## A body standing on a built deck far above the terrain query is not a
 ## rendering offset to copy along the lane; cap what is carried.
 const MAX_SURFACE_BIAS := 0.6
+## Once the body is open (its `is_rooted()`, the HUD's opening predicate), the
+## released lane clears within this many seconds: a lingering danger slab under
+## an "it's open" prompt gave both signals at once (P2-093).
+const OPEN_FADE := 0.08
 
 var _body: Node3D = null
 var _origin := Vector3.ZERO
@@ -182,11 +186,17 @@ func lane_half_width() -> float:
 func _physics_process(delta: float) -> void:
 	_life += delta
 	if _released:
+		if _body_is_open():
+			_fade_left = minf(_fade_left, OPEN_FADE)
 		_fade_left -= delta
 		if _fade_left <= 0.0:
 			queue_free()
 			return
 	_draw()
+
+
+func _body_is_open() -> bool:
+	return is_instance_valid(_body) and _body.has_method("is_rooted") and bool(_body.call("is_rooted"))
 
 
 func _refresh_aabb() -> void:
