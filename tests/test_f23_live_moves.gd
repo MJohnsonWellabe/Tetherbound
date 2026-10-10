@@ -239,3 +239,13 @@ func test_every_role_can_equip_at_least_two_live_utilities() -> void:
 		assert_gte(live, 2, "%s can equip at least two live utilities" % species_id)
 		roles[str(row.get("role_family", ""))] = true
 	assert_gte(roles.size(), 4, "every role family is represented")
+
+func test_hearten_raises_the_next_landed_hit_once() -> void:
+	var move := _utility_frozen("hearten", 20)
+	assert_eq(host.self_utility_power(id, "creature_a", 1000), 1.0)
+	assert_true(host.apply_self_status_utility(id, "creature_a", "hearten", move, Vector3.ZERO, 100.0, 100.0, "hearten-1", 1000))
+	assert_gt(host.self_utility_power(id, "creature_a", 1100), 1.0, "Hearten raises the caster's next hit")
+	host.consume_next_hit(id, "creature_a", 1200)
+	assert_eq(host.self_utility_power(id, "creature_a", 1300), 1.0, "one landed hit spends Hearten")
+	assert_false(host.apply_self_status_utility(id, "creature_a", "snare", _utility_frozen("snare", 21),
+		Vector3.ZERO, 100.0, 100.0, "snare-1", 1400), "only self status utilities stage here")

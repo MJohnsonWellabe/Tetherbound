@@ -12,7 +12,7 @@
   "move_commit": {
     "_scope": "Host-owned named equipped move starts and per-creature encounter resources. Actual strike arrival must match the retained action and body lifetime.",
     "runtime_enabled": true,
-    "live_moves": ["snare", "slow_field", "shove", "quake_ring", "sap", "bramble_trap", "ultimate_ground_current"]
+    "live_moves": ["snare", "slow_field", "shove", "quake_ring", "sap", "bramble_trap", "hearten", "ultimate_ground_current"]
   },
   "ultimate": {
     "_scope": "Per-creature encounter meter; only host-resolved positive HP debits credit it.",

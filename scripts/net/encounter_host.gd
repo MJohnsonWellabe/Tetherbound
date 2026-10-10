@@ -737,6 +737,32 @@ func self_utility_power(id: String, uid: String, now_ms: int) -> float:
 	return UTILITY_EFFECTS.power_multiplier(encounters.get(id, {}).get("utility_state", {}), uid, now_ms)
 
 
+## A self status utility (Hearten) the host accepted at move start: stage its
+## status on this encounter's utility state. No HP, meter or mastery here.
+func apply_self_status_utility(id: String, uid: String, move_id: String, move: Dictionary,
+		source_position: Vector3, source_hp: float, source_max_hp: float, action_id: String, now_ms: int) -> bool:
+	var rec: Dictionary = encounters.get(id, {})
+	if rec.is_empty() or str(move.get("utility", {}).get("scope", "")) != "self" \
+		or str(move.get("utility", {}).get("kind", "")) not in ["next_hit_buff"]: return false
+	var state: Dictionary = rec.get("utility_state", UTILITY_EFFECTS.empty_state(id, 0))
+	var staged := UTILITY_EFFECTS.stage_application(state, move_id, move, {"encounter_id": id, "generation": 0,
+		"action_id": action_id, "source_uid": uid, "target_uid": uid, "source_position": source_position,
+		"target_position": source_position, "source_hp": source_hp, "source_max_hp": source_max_hp,
+		"hostile": false, "geometry_connected": true}, now_ms,
+		int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)))
+	if staged.get("ok") != true: return false
+	rec["utility_state"] = staged.state
+	return true
+
+
+## Hearten is spent by the first hit that actually debits HP.
+func consume_next_hit(id: String, uid: String, now_ms: int) -> void:
+	var rec: Dictionary = encounters.get(id, {})
+	if rec.is_empty() or not rec.get("utility_state") is Dictionary: return
+	var staged := UTILITY_EFFECTS.stage_consume_next_hit(rec.utility_state, uid, now_ms)
+	if staged.get("ok") == true: rec["utility_state"] = staged.state
+
+
 ## Tier is frozen once on the existing admitted participant, from host gear.
 func bind_tether_commands(id: String, peer: int, admitted: Dictionary) -> void:
 	if not TETHER_COMMANDS.enabled(): return

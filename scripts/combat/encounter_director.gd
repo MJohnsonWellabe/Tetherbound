@@ -3233,7 +3233,14 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 		return _stage_ordinary_self_heal(id, peer, intent, body, move, card)
 	var verdict: Dictionary = _encounter_host.call("authorize_move_start", intent, peer, owned,
 		binding, move, COMBAT_MANAGER.host_wind_profile(card), Time.get_ticks_msec())
-	if verdict.get("ok") == true: _host_after_encounter_change(id, peer)
+	if verdict.get("ok") == true:
+		# A self status utility (Hearten) takes effect when its start is accepted;
+		# the next landed hit reads it through self_utility_power and spends it.
+		if str(move.get("utility", {}).get("scope", "")) == "self":
+			_encounter_host.call("apply_self_status_utility", id, str(binding.creature_uid), move_id, move,
+				body.global_position, float(card.get("hp", 0.0)), float(card.get("hp_max", card.get("max_hp", 0.0))),
+				"%s:%d:%d:self" % [id, peer, int(intent.get("action", 0))], Time.get_ticks_msec())
+		_host_after_encounter_change(id, peer)
 	return verdict
 
 
@@ -3390,6 +3397,8 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		 "travel_seconds": float(launch.travel_seconds), "body_generation": int(launch.body_generation),
 		 "direction": (launch.to as Vector3) - (launch.from as Vector3)})
 	if rolled.is_empty(): return {}
+	if hp_before > float(rolled.get("hp", hp_before)):
+		_encounter_host.call("consume_next_hit", encounter_id, str(current_card.get("creature_uid", "")), Time.get_ticks_msec())
 	var resources: Dictionary = _encounter_host.call("credit_move_hit", encounter_id, peer_id,
 		int(intent.get("action", 0)), maxf(0.0, hp_before - float(rolled.get("hp", hp_before))), str(opponent.get("uid")), hp_before,
 		int(record.get("opponent", {}).get("body_generation", 0)), float(current_card.get("hp", 0.0)))
