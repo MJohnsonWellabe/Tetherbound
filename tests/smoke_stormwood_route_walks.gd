@@ -246,6 +246,13 @@ func _enter_fixture() -> bool:
 		await physics_frame
 	game.get("progression").call("set_flag", ROOTGATE_FLAG, true)
 	_seam("SEAM 1 fixture entry: in-memory completed-Cloudreach party, opened Stormwood portal, %s set (no earned checkpoint)" % ROOTGATE_FLAG)
+	if _wants("road"):
+		# The road needs what an earned run gathers before it: the arch recipe
+		# and one pair's materials (stormwood_items_recipes stormglass_arch x2).
+		game.get("progression").call("set_flag", "stormwood:arch_recipe_known", true)
+		for stack: Array in [["stormglass", 12], ["thunderwood", 12], ["conductor_vine", 8]]:
+			game.get("inventory").call("add", str(stack[0]), int(stack[1]))
+		_seam("SEAM 1b fixture road: stormwood:arch_recipe_known set; 12 stormglass, 12 thunderwood, 8 conductor_vine granted (one arch pair)")
 	for _frame in 60:
 		await physics_frame
 	return true
