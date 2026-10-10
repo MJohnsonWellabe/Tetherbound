@@ -35,6 +35,8 @@ const ACTIONS := ["title_load", "aftermath_state", "spark_socket", "spark_start"
 const ENDING_PATH := "res://scripts/world/stormwood_ending.gd"
 const SURGE_PATH := "res://scripts/world/stormwood_surge.gd"
 const SPARK_ID := "stormwood"
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const SPARK_RECIPES := ["forge_biome5", "kitchen_biome5", "altar_biome5", "den_biome5"]
 const LEGENDARY_SPECIES := "fulgocobra"
 const WORLD_FACTS := ["stormwood:long_storm_ended", "stormwood:legendary_freed",
 	"stormwood:legendary_offer_made", "realm_heart_stormwood_earned", "realm_heart_stormwood_placed",
@@ -76,6 +78,9 @@ static func _spark_start(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var personal: Dictionary = game.local.redesign_character.duplicate(true)
 	if personal.get("relics_hung", []).has(SPARK_ID):
 		return {"verdict": "FAIL", "detail": "The Spark must start unhung"}
+	for id: String in SPARK_RECIPES:
+		if personal.get("attachment_recipes", []).has(id):
+			return {"verdict": "FAIL", "detail": "The initial fixture must not grant reserved Stormwood hang recipes"}
 	if not personal.relics_held.has(SPARK_ID): personal.relics_held.append(SPARK_ID)
 	if not preload("res://scripts/data/redesign_state.gd").validate("character", personal).is_empty():
 		return {"verdict": "FAIL", "detail": "Invalid initial Spark entitlement"}
@@ -90,25 +95,87 @@ static func _spark_hall(tree: SceneTree) -> Node3D:
 	return null
 
 
-## Choose the actual panel's focused Spark row with an ordinary accept edge.
+## Read the original owner's actual portable file; never synthesize a saved ACK.
+static func _spark_disk(game: Node, character: String) -> Dictionary:
+	var path: String = game.get("save_system").call("characters").call("path_for", character)
+	var raw: Variant = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
+	if not raw is Dictionary or raw.get("character_id") != character: return {}
+	var personal: Dictionary = raw.get("redesign_character", {})
+	var recipes := {}
+	for id: String in SPARK_RECIPES: recipes[id] = personal.get("attachment_recipes", []).count(id)
+	return {"character_id": character, "held": personal.get("relics_held", []).count(SPARK_ID),
+		"hung": personal.get("relics_hung", []).count(SPARK_ID),
+		"hang_receipts": personal.get("transaction_receipts", []).count("relic_hang:%s:%s" % [SPARK_ID, character]),
+		"active_relic": raw.get("realm_hearts", {}).get("active_id", ""), "recipes": recipes}
+
+
+static func _spark_binding(tree: SceneTree) -> Dictionary:
+	var game := _game(tree)
+	var session: Node = game.get("session") if game != null else null
+	if session == null or session.call("is_active") != true: return {}
+	return {"scene": tree.current_scene, "hall": _spark_hall(tree), "local": game.get("local"),
+		"world": game.get("world"), "session": session, "character": _character_id(game),
+		"epoch": session.call("_altar_current_epoch"), "namespace": game.world.reward_delivery_namespace}
+
+
+static func _spark_panel_ready(tree: SceneTree, original: Dictionary, disk: Dictionary) -> bool:
+	if original.is_empty() or original.epoch == "" or _spark_binding(tree) != original: return false
+	var hall: Node = original.hall
+	var panel: Node = hall.get("_power_panel") if is_instance_valid(hall) else null
+	var personal: Dictionary = _game(tree).local.redesign_character
+	return panel != null and panel.call("is_open") == true and INPUT_OWNER.current(tree) == panel \
+		and hall.get("_relic_pending") == "" and (hall.get("_queued_power") as Dictionary).is_empty() \
+		and personal.relics_held.count(SPARK_ID) == 0 and personal.relics_hung.count(SPARK_ID) == 1 \
+		and personal.transaction_receipts.count("relic_hang:%s:%s" % [SPARK_ID, original.character]) == 1 \
+		and disk.get("held") == 0 and disk.get("hung") == 1 and disk.get("hang_receipts") == 1
+
+
+## Wait for this saved hang's actual panel, then use ordinary accept/Cancel edges.
 static func _spark_power(tree: SceneTree, args: Dictionary) -> Dictionary:
-	var hall := _spark_hall(tree)
-	var panel: Node = hall.get("_power_panel") if hall != null else null
-	if panel == null or panel.call("is_open") != true:
-		return {"verdict": "FAIL", "detail": "Actual Shrine Room power panel is not open"}
-	var rows: Array = panel.get("_rows")
-	var choices: Array = panel.call("choices", _game(tree).realm_hearts, _game(tree).local.redesign_character.relics_hung)
-	var index := choices.find(SPARK_ID)
-	if index < 0 or index >= rows.size():
-		return {"verdict": "FAIL", "detail": "The character has no hung Spark row"}
-	(rows[index] as Button).grab_focus()
-	await tree.call("_step_press", {"action": "ui_accept"})
-	for _i in int(args.get("budget_frames", 600)):
+	var original := _spark_binding(tree)
+	if original.is_empty(): return {"verdict": "FAIL", "detail": "Spark power needs the original admitted owner"}
+	var deadline := Engine.get_physics_frames() + int(args.get("budget_frames", 600))
+	var disk := _spark_disk(_game(tree), original.character)
+	while not _spark_panel_ready(tree, original, disk) and Engine.get_physics_frames() < deadline:
+		if _spark_binding(tree) != original: return {"verdict": "FAIL", "detail": "Spark power owner/session changed while waiting"}
 		await tree.physics_frame
-		if _game(tree).realm_hearts.active_id() == SPARK_ID:
-			await tree.call("_step_press", {"action": "menu_cancel"})
-			return {"verdict": "PASS", "detail": "Selected Spark through the Shrine Room power panel", "data": {"active_relic": SPARK_ID}}
-	return {"verdict": "FAIL", "detail": "Spark power selection never saved/applied"}
+		disk = _spark_disk(_game(tree), original.character)
+	if not _spark_panel_ready(tree, original, disk): return {"verdict": "FAIL", "detail": "Saved hang never settled with the exact Shrine Room panel owning input"}
+	var panel: Node = original.hall.get("_power_panel")
+	var active_before: String = _game(tree).realm_hearts.active_id()
+	var cancel_only := bool(args.get("cancel_only", false))
+	if not cancel_only:
+		var rows: Array = panel.get("_rows")
+		var choices: Array = panel.call("choices", _game(tree).realm_hearts, _game(tree).local.redesign_character.relics_hung)
+		var index := choices.find(SPARK_ID)
+		if index < 0 or index >= rows.size(): return {"verdict": "FAIL", "detail": "The character has no hung Spark row"}
+		(rows[index] as Button).grab_focus()
+		var accept: Dictionary = await tree.call("_step_press", {"action": "ui_accept"})
+		if accept.get("verdict") != "PASS": return accept
+		while Engine.get_physics_frames() < deadline:
+			if _spark_binding(tree) != original: return {"verdict": "FAIL", "detail": "Spark selection owner/session changed"}
+			disk = _spark_disk(_game(tree), original.character)
+			if _spark_panel_ready(tree, original, disk) and disk.get("active_relic") == SPARK_ID \
+				and _game(tree).realm_hearts.active_id() == SPARK_ID and panel.get("_pending_heart") == "": break
+			await tree.physics_frame
+		if disk.get("active_relic") != SPARK_ID or _game(tree).realm_hearts.active_id() != SPARK_ID \
+			or panel.get("_pending_heart") != "" or not _spark_panel_ready(tree, original, disk):
+			return {"verdict": "FAIL", "detail": "Spark power selection never saved/applied on the original owner"}
+	var cancel: Dictionary = await tree.call("_step_press", {"action": "menu_cancel"})
+	if cancel.get("verdict") != "PASS": return cancel
+	while Engine.get_physics_frames() < deadline:
+		if _spark_binding(tree) != original: return {"verdict": "FAIL", "detail": "Spark Cancel owner/session changed"}
+		if panel.call("is_open") == false and panel.get("_pending_heart") == "" \
+			and panel.get("_pending_character") == "" and panel.get("_pending_session") == null \
+			and INPUT_OWNER.current(tree) == null and not tree.paused:
+			disk = _spark_disk(_game(tree), original.character)
+			var expected := active_before if cancel_only else SPARK_ID
+			if disk.get("active_relic") != expected or _game(tree).realm_hearts.active_id() != expected:
+				return {"verdict": "FAIL", "detail": "Spark Cancel changed the original saved power"}
+			return {"verdict": "PASS", "detail": "Actual power panel closed, pending choice cleared and world input released",
+				"data": {"active_relic": expected, "cancel_only": cancel_only, "disk": disk}}
+		await tree.physics_frame
+	return {"verdict": "FAIL", "detail": "Spark Cancel failed to close the exact panel and release world input"}
 
 
 # --- the restarted process's Load ----------------------------------------------------
@@ -203,6 +270,7 @@ static func _aftermath_state(tree: SceneTree, args: Dictionary) -> Dictionary:
 	data["spark_hung"] = personal.get("relics_hung", []).has(SPARK_ID)
 	data["spark_held"] = personal.get("relics_held", []).has(SPARK_ID)
 	data["spark_hang_receipts"] = personal.get("transaction_receipts", []).count("relic_hang:%s:%s" % [SPARK_ID, _character_id(game)])
+	data["spark_disk"] = _spark_disk(game, _character_id(game))
 	data["active_relic"] = str(hearts.call("active_id")) if hearts != null else ""
 	data["spark_socket"] = "active" if data.spark_hung and data.active_relic == SPARK_ID else ("placed_inactive" if data.spark_hung else "earned_unplaced")
 	var scene := tree.current_scene
@@ -282,6 +350,7 @@ static func _character_id(game: Node) -> String:
 
 static func _spark_socket(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var scene := tree.current_scene
+	var original := _spark_binding(tree)
 	var hall := _spark_hall(tree)
 	var slot := hall.get_node_or_null("Pedestal_stormwood") as Node3D if hall != null else null
 	var player := (tree.get("_probe") as Object).call("player") as Node3D
@@ -317,14 +386,36 @@ static func _spark_socket(tree: SceneTree, args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL", "detail": "the Spark socket's prompt never won the interaction arbiter (state %s, label '%s'; won instead: %s)"
 			% [before, label, str(winners)]}
 	var pressed := ""
+	var disk := {}
+	var disk_before := {}
 	if bool(args.get("press", false)):
+		if original.is_empty() or original.epoch == "" or _spark_binding(tree) != original:
+			return {"verdict": "FAIL", "detail": "Spark interaction needs the original admitted owner/session"}
+		disk = _spark_disk(_game(tree), original.character)
+		disk_before = disk.duplicate(true)
+		if before == "held":
+			if disk.get("held") != 1 or disk.get("hung") != 0 or disk.get("hang_receipts") != 0:
+				return {"verdict": "FAIL", "detail": "Original character disk does not prove the initial unspent held Spark", "data": {"disk": disk}}
+			for id: String in SPARK_RECIPES:
+				if disk.get("recipes", {}).get(id) != 0:
+					return {"verdict": "FAIL", "detail": "Reserved Stormwood recipe was already present before the actual hang", "data": {"disk": disk}}
 		var press: Dictionary = await tree.call("_step_press", {"action": "interact"})
 		pressed = "; press: %s" % str(press.get("detail", ""))
 		if str(press.get("verdict", "")) != "PASS":
 			return {"verdict": "FAIL", "detail": "standing %s, '%s' (%s)%s" % [standing, label, before, pressed]}
 		for _i in int(args.get("after_frames", 120)):
+			if _spark_binding(tree) != original:
+				return {"verdict": "FAIL", "detail": "Spark hang owner/session changed"}
+			disk = _spark_disk(_game(tree), original.character)
+			if _spark_panel_ready(tree, original, disk): break
 			await tree.physics_frame
+		disk = _spark_disk(_game(tree), original.character)
+		if not _spark_panel_ready(tree, original, disk):
+			return {"verdict": "FAIL", "detail": "Spark hang did not save and settle with the exact power panel owning input", "data": {"disk": disk}}
+		for id: String in SPARK_RECIPES:
+			if disk.get("recipes", {}).get(id) != 1 or _game(tree).local.redesign_character.attachment_recipes.count(id) != 1:
+				return {"verdict": "FAIL", "detail": "Actual hang did not install/save exactly one reserved recipe: " + id, "data": {"disk": disk}}
 	var after := "hung" if _game(tree).local.redesign_character.relics_hung.has(SPARK_ID) else "held"
 	return {"verdict": "PASS",
 		"detail": "standing %s at the Spark socket, prompt '%s'; state %s -> %s%s" % [standing, label, before, after, pressed],
-		"data": {"before": before, "after": after, "label": label}}
+		"data": {"before": before, "after": after, "label": label, "disk_before": disk_before, "disk": disk}}
