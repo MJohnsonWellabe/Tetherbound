@@ -235,10 +235,11 @@ static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dict
 	out["move_id"] = str(out.get("move_override", context.get("move_" + slot, "")))
 	if out.move_id.is_empty():
 		return {}
-	# Low-health tradeoffs are visible timing changes, confined to the role.
+	# Low-health pressure keeps its visible timing tradeoff, confined to the role.
 	if float(context.get("hp_fraction", 1.0)) <= float(patterns.get("low_hp_fraction", 0.3)):
 		var tradeoff: Dictionary = (patterns.get("low_hp_tradeoffs", {}) as Dictionary).get(role, {})
 		out["telegraph"] = float(out.telegraph) + float(tradeoff.get("telegraph_add_s", 0.0))
+		out["power"] = float(out.get("power", 8.0)) * float(tradeoff.get("power_multiplier", 1.0))
 		out["reposition_time"] = maxf(0.0, float(out.get("reposition_time", 1.0)) + float(tradeoff.get("reposition_add_s", 0.0)))
 		if posmod(cursor + 1, 3) == 0:
 			out["recovery"] = float(out.recovery) + float(tradeoff.get("third_recovery_add_s", 0.0))
