@@ -66,6 +66,12 @@ func tick(delta: float, speed: float, top_speed: float) -> void:
 	if _player == null or _finished:
 		return
 	_hold = maxf(0.0, _hold - delta)
+	if _candidate_impact_pending():
+		return
+	if speed >= STILL_SPEED and _candidate_pose_active and _current == _resolve(HIT):
+		# Remote bodies follow a transform rather than calling request_move.
+		# They need the same release into gait after the visible impact sample.
+		_hold = 0.0
 	if _hold > 0.0:
 		return
 	if _traversal_role != "" and _resolve(_traversal_role) != "":
@@ -227,8 +233,21 @@ func play_if_exists(role: String) -> bool:
 ## direction, so a creature already back under way is never shown standing
 ## still for a pose that finished being true.
 func cancel_hold() -> void:
+	if _candidate_impact_pending():
+		return
 	_hold = 0.0
 	_clear_telegraph_attack()
+
+
+## Keep only the authored impact window, including a movement request issued
+## in the very same physics step as damage. After it, movement resumes gait.
+## Animation position also respects hitstop without adding a gameplay timer.
+func _candidate_impact_pending() -> bool:
+	if _player == null or not _candidate_pose_active or _current != _resolve(HIT):
+		return false
+	var start_phase := clampf(float(_clips.get("hit_start_phase", 0.0)), 0.0, 1.0)
+	var release_phase := clampf(float(_clips.get("hit_release_phase", start_phase)), start_phase, 1.0)
+	return _player.current_animation_position < _player.get_animation(_current).length * release_phase
 
 
 ## Freeze only this model's current frame. CombatManager owns the short clock

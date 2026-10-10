@@ -282,6 +282,7 @@ def main():
                            'loop': role in ('swim', 'fly_grip', 'ride'), 'frames': frames}
             if role == 'hit':
                 roles[role]['start_phase'] = .125
+                roles[role]['release_phase'] = .25
         profile = f'{family}_{len(profiles) + 1}'
         profiles[profile] = roles
         rig_profiles[signature] = profile
