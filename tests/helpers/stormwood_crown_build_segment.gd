@@ -804,6 +804,12 @@ func _fight_current(label: String) -> bool:
 		label, _last_combat_outcome, Time.get_ticks_msec() - started,
 		_fighter_snapshot(ally_instance), _fighter_snapshot(enemy_instance), counts])
 	if bool(_manager.call("is_fighting")) or _last_combat_outcome.is_empty():
+		# Read-only: the host's own view of the last strike, for a stuck fight.
+		var hub := _director.get_parent().get_node_or_null(^"StormwoodEncounterHub")
+		if hub != null:
+			for fight: Variant in (hub.get("fights") as Dictionary).values():
+				if is_instance_valid(fight):
+					_note("STUCK host last_strike=%s" % JSON.stringify(fight.get("last_strike")))
 		return _fail("combat during %s did not resolve and publish an outcome" % label)
 	_note("RESOLVED live route encounter during %s (outcome=%s)" % [label, _last_combat_outcome])
 	return true
