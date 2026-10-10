@@ -167,8 +167,9 @@ func _charge_case(tell_first: bool) -> Dictionary:
 		out.poise_before = float(pin.get("poise", 0.0))
 		hp_before = float(pin.get("hp", -1.0))
 		_action += 1
-		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "charged",
+		var read_strike: Dictionary = await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "charged",
 			"action": _action, "settle": 15})
+		out["strike"] = "%s %s" % [str(read_strike.get("detail", "")), str(read_strike.get("data", {}))]
 	else:
 		_action += 1
 		var action := _action
