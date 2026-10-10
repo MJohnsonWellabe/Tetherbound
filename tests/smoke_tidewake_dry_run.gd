@@ -13,7 +13,11 @@ extends SceneTree
 ## resumes from the save just before a failing step while debugging.
 ##
 ##   godot --headless --path . --script tests/smoke_tidewake_dry_run.gd -- \
-##     [--from=<checkpoint>] [--through=<checkpoint>] [--out=<dir>]
+##     [--from=<checkpoint> --slot=0] [--through=<checkpoint>] [--out=<dir>]
+##     [--from-save=<production split-save dir> --slot=0]
+## --from-save loads an untouched copy through the production title and uses
+## the real Home Key/Tidewake portal if the save is still in Meadows. This is
+## a segmented diagnostic; it never claims continuous campaign provenance.
 ##
 ## Checkpoints, in order: start, pell, reedhaven, brine, shellwatch, tidal,
 ## late (Salt Crown -> Sluice -> Veilfall -> Nerissa -> tether, by human
@@ -22,6 +26,7 @@ extends SceneTree
 ## with "TIDEWAKE DRY RUN {summary}". The summary is also written to <out>/summary.json.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const WATER_OPENING := preload("res://tests/helpers/water_earned_opening_segment.gd")
@@ -48,6 +53,9 @@ var summary := {"label": LABEL, "segments": [], "blocker": "", "reached": "", "p
 	"fixture": "declared start only: gate flags %s, key consumed, belt %s at L%d, knife/axe" % [
 		str(HANDOFF_WORLD_FLAGS), str(PARTY), PARTY_LEVEL]}
 var _started_ms := 0
+var from_save := ""
+var save_slot := SLOT
+var travel: RefCounted
 
 
 func _init() -> void:
@@ -58,19 +66,43 @@ func _run() -> void:
 	_started_ms = Time.get_ticks_msec()
 	var from := "start"
 	var through := CHECKPOINTS[-1]
+	var slot_given := false
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--from="): from = arg.trim_prefix("--from=")
 		elif arg.begins_with("--through="): through = arg.trim_prefix("--through=")
 		elif arg.begins_with("--out="): out_dir = arg.trim_prefix("--out=")
+		elif arg.begins_with("--from-save="): from_save = arg.trim_prefix("--from-save=")
+		elif arg.begins_with("--slot="):
+			var raw_slot := arg.trim_prefix("--slot=")
+			if not raw_slot.is_valid_int() or int(raw_slot) < 0 or int(raw_slot) >= SAVE.SLOT_COUNT:
+				_finish("--slot must name a production save slot")
+				return
+			save_slot = int(raw_slot)
+			slot_given = true
+		else:
+			_finish("unknown diagnostic option: " + arg)
+			return
+	if (slot_given and from_save.is_empty() and from == "start") or (not from_save.is_empty() and from != "start"):
+		_finish("--slot requires --from-save or a resumed --from checkpoint; --from-save cannot also resume --from")
+		return
 	if not CHECKPOINTS.has(from) or not CHECKPOINTS.has(through):
 		_finish("unknown checkpoint (valid: %s)" % str(CHECKPOINTS))
 		return
-	print("TIDEWAKE DRY RUN: " + LABEL)
+	if CHECKPOINTS.find(through) < CHECKPOINTS.find(from):
+		_finish("--through cannot precede the starting checkpoint")
+		return
 	await process_frame
 	game = root.get_node("Game")
+	travel = TRAVEL.new(self, game)
 	run_dir = out_dir.path_join("run_%d" % Time.get_ticks_usec())
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(run_dir))
-	if from == "start":
+	if not from_save.is_empty():
+		summary.label = "DRY RUN — copied production save, segmented title reloads"
+		summary.fixture = "none injected; source provenance must be reviewed separately: " + from_save
+		print("TIDEWAKE DRY RUN: " + str(summary.label))
+		if not await _copied_save_start(): return
+	elif from == "start":
+		print("TIDEWAKE DRY RUN: " + LABEL)
 		if not await _fixture_start():
 			return
 	elif not await _resume(from):
@@ -132,19 +164,72 @@ func _resume(name: String) -> bool:
 	var live := run_dir.path_join("live/")
 	_copy_dir(source, live)
 	game.save_system = SAVE.new(live)
-	game.reset_for_new_game()
-	if not bool(game.load_game(SLOT)):
-		_finish("resume: Game.load_game failed for " + source)
-		return false
-	world = WORLD.instantiate()
-	root.add_child(world)
-	current_scene = world
-	if not await _wait_built():
-		_finish("resume: Water world did not build")
-		return false
-	await _frames(30)
+	if not await _title_load(): return false
 	print("TIDEWAKE DRY RUN RESUMED from %s (%s)" % [name, source])
 	return true
+
+
+func _copied_save_start() -> bool:
+	var source := ProjectSettings.globalize_path(from_save).simplify_path()
+	if not DirAccess.dir_exists_absolute(source):
+		_finish("production save directory is missing: " + source)
+		return false
+	var live := run_dir.path_join("live/")
+	_copy_dir(source, live)
+	game.save_system = SAVE.new(live)
+	var info: Dictionary = game.save_slot_info(save_slot)
+	if str(info.get("realm", "")) not in ["meadows", "water"]:
+		_finish("production start must be an earned Meadows handoff or Tidewake route save")
+		return false
+	if not await _title_load(): return false
+	if str(game.current_realm) == "meadows":
+		if not game.progression.has("legendary_settled") or not game.progression.has("defeated_warden"):
+			_finish("Meadows start did not complete its real Warden handoff")
+			return false
+		if not await travel.home_key() or not await travel.enter("tidewake", "water"):
+			_finish("ordinary Tidewake portal entry failed: " + str(travel.failures))
+			return false
+		world = current_scene as Node3D
+	if game.party.size() != 5 or game.pending_catch != null:
+		_finish("production Tidewake route must retain five with no pending creature")
+		return false
+	return await _checkpoint("start", false)
+
+
+## Use the established travel adapter's controller edges at the production
+## title Load list. SAVE resolves the copied slot's world/character partitions.
+func _title_load() -> bool:
+	if change_scene_to_file("res://scenes/ui/title_screen.tscn") != OK:
+		_finish("cannot open production title Load screen")
+		return false
+	for frame in 10: await process_frame
+	var title := current_scene
+	var button := title.get("_load_button") as Button
+	for step in 8:
+		if root.gui_get_focus_owner() == button: break
+		await travel.tap("ui_down")
+	if root.gui_get_focus_owner() != button:
+		_finish("controller focus did not reach title Load Game")
+		return false
+	await travel.tap("ui_accept")
+	var label := "Autosave —" if save_slot == 0 else "Save %d —" % save_slot
+	var chosen := root.gui_get_focus_owner() as Button
+	for step in SAVE.SLOT_COUNT + 2:
+		if chosen != null and chosen.text.begins_with(label) and not chosen.disabled: break
+		await travel.tap("ui_down")
+		chosen = root.gui_get_focus_owner() as Button
+	if chosen == null or not chosen.text.begins_with(label) or chosen.disabled:
+		_finish("production title refused copied " + label)
+		return false
+	await travel.tap("ui_accept")
+	for frame in 7200:
+		await process_frame
+		if current_scene != title and travel._ready_world(str(game.current_realm)):
+			world = current_scene as Node3D
+			await _frames(30)
+			return true
+	_finish("production title Load did not settle the copied world")
+	return false
 
 
 func _segment(name: String) -> Dictionary:
@@ -187,32 +272,17 @@ func _segment(name: String) -> Dictionary:
 ## Production save, destroy, reset, load, rebuild: the Continue order. Copies
 ## the saved slot to <run>/cp_<name>/ for --from.
 func _checkpoint(name: String, reload := true) -> bool:
-	if not bool(game.save_game(SLOT)):
+	if not bool(game.save_game(save_slot)):
 		_finish("checkpoint %s: Game.save_game failed" % name)
 		return false
-	var live := str(game.save_system.slot_path(SLOT)).get_base_dir()
+	var live := str(game.save_system.slot_path(save_slot)).get_base_dir()
 	_copy_dir(live, run_dir.path_join("cp_" + name))
 	print("TIDEWAKE DRY RUN CHECKPOINT %s saved at %s" % [name, _pose()])
 	if not reload:
 		return true
 	var before := _pose()
 	var party_ids := _party_ids()
-	current_scene = null
-	world.queue_free()
-	await process_frame
-	await process_frame
-	game.reset_for_new_game()
-	game.save_system = SAVE.new(live + "/")
-	if not bool(game.load_game(SLOT)):
-		_finish("checkpoint %s: Game.load_game failed" % name)
-		return false
-	world = WORLD.instantiate()
-	root.add_child(world)
-	current_scene = world
-	if not await _wait_built():
-		_finish("checkpoint %s: Water world did not rebuild" % name)
-		return false
-	await _frames(30)
+	if not await _title_load(): return false
 	var after := _pose()
 	var moved := Vector3(before[0], before[1], before[2]).distance_to(Vector3(after[0], after[1], after[2]))
 	print("TIDEWAKE DRY RUN RELOADED %s: pose drift %.2f m, party same=%s" % [name, moved, party_ids == _party_ids()])

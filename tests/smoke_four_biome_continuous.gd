@@ -440,25 +440,39 @@ func _stage_water_to_ending(game: Node, chapter_only: bool = false) -> void:
 			return
 		if reached == "water_swim_stone_and_recipe_earned" and not await _visit_local_chains(game, ["cradle"]):
 			return
-	var preparation := SWIMMER.new()
-	if not _accepted(await preparation.run(self, live["world"], game), "passed"):
-		return
-	reached = "water_earned_swimmer_and_paid_saddle_mounted"
-	var late_water := LATE_WATER.new()
-	late_water.setup(self, live["world"], live["player"], live["rig"])
-	var late_passed: bool = await late_water.run_from_mount(preparation.swimmer, _abort_late)
-	if not _accepted(late_water.result(), "passed"):
-		return
-	if not late_passed:
-		_abort_late("Late Water returned false despite its accepted result")
-		return
+	var chapter_swimmer: RefCounted = null
+	if chapter_only:
+		# New-order campaign keeps the original five; its existing human route
+		# resolves every late fight and physical crossing without a replacement.
+		var human_late := preload("res://tests/helpers/water_human_late_segment.gd").new()
+		human_late.setup(self, live["world"], live["player"], live["rig"])
+		var human_passed: bool = await human_late.run_human()
+		if not _accepted(human_late.result(), "passed"):
+			return
+		if not human_passed:
+			_abort_late("Human late Water returned false despite its accepted result")
+			return
+	else:
+		var preparation := SWIMMER.new()
+		if not _accepted(await preparation.run(self, live["world"], game), "passed"):
+			return
+		chapter_swimmer = preparation.swimmer
+		reached = "water_earned_swimmer_and_paid_saddle_mounted"
+		var late_water := LATE_WATER.new()
+		late_water.setup(self, live["world"], live["player"], live["rig"])
+		var late_passed: bool = await late_water.run_from_mount(chapter_swimmer, _abort_late)
+		if not _accepted(late_water.result(), "passed"):
+			return
+		if not late_passed:
+			_abort_late("Late Water returned false despite its accepted result")
+			return
 	reached = "water_nerissa_defeated_and_guardian_freed"
 	# F13#3: Deep Watch (Orsen, Sluice; Tidecoil), Garden (Edda, Salt Crown)
 	# and Lastlight (Halen, Veilfall) after Nerissa and the tether, before the
 	# Guardian invitation (Edda/Orsen/Halen stop offering leads once the
 	# ending restores the currents): leave the Veilfall interior by its own
 	# prompt, ride the earned saddled swimmer between islands, walk back in.
-	if local_chains != null and not await _veilfall_out_and_back(game, preparation.swimmer):
+	if local_chains != null and not await _veilfall_out_and_back(game, chapter_swimmer):
 		return
 	if not _accepted(await WATER_ENDING.new().run_earned(self, live["world"], game), "ok"):
 		return

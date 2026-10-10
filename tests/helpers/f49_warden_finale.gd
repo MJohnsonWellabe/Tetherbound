@@ -57,5 +57,48 @@ func _bind_ending(tree: SceneTree, world: Node3D, game: Node, after: bool) -> bo
 
 func _ending_ready() -> bool:
 	return _has("defeated_warden") and _has("legendary_freed") and _has("legendary_settled") \
-		and _has("realm_heart_meadows_earned") and not _has("legendary_joined") \
+		and _has("realm_heart_meadows_earned") and _has("legendary_refused") and not _has("legendary_joined") \
 		and _game.get("pending_catch") == null
+
+
+## The production volunteer now asks at two physical prompts before any
+## pending catch exists. Read all four conversations, then walk to Refuse.
+func _drive_machine_to_ceremony(expected: Array[String], first: int) -> bool:
+	var sequence: Array[String] = expected.duplicate()
+	sequence.append(str((_ending_config.get("choice", {}) as Dictionary).get("conversation", "")))
+	var start := Engine.get_physics_frames()
+	while Engine.get_physics_frames() - start < SEQUENCE_FRAMES:
+		var observed: Array = _finished_dialogues.slice(first)
+		if not _failures.is_empty() or not dialogue_prefix(observed, sequence):
+			return _fail("The machine's chamber/free/join/choice conversations diverged")
+		if _game.get("pending_catch") != null:
+			return _fail("The legendary became pending before the retained-five refusal")
+		if bool(_climax.call("choice_open")) and not bool(_panel.call("is_open")) and observed == sequence:
+			return _has("legendary_freed") or _fail("The choice opened before the actual freeing")
+		if bool(_panel.call("is_open")):
+			if observed.size() >= sequence.size() or _current_conversation() != sequence[observed.size()]:
+				return _fail("An unexpected dialogue interrupted the actual legendary choice")
+			await _input._tap("interact")
+		else:
+			await _tree.physics_frame
+	return _fail("The machine never reached its actual Refuse choice within the story budget")
+
+
+func _keep_the_earned_five() -> bool:
+	var refuse := _climax.get("_refuse_prompt") as Node3D
+	if not bool(_climax.call("choice_open")) or refuse == null or _game.get("pending_catch") != null:
+		return _fail("The retained-five ending has no actual voluntary Refuse prompt")
+	if not await _press_prompt(refuse):
+		return false
+	return (not bool(_climax.call("choice_open")) and _has("legendary_refused") \
+		and not _has("legendary_joined") and _game.get("pending_catch") == null \
+		and retained_five(_initial_ids, _party_ids())) \
+		or _fail("Physical Refuse did not settle this character with the same five")
+
+
+func _receipt(beat: String, detail: Dictionary) -> void:
+	if beat == "meadows_ending_settled":
+		detail["choice"] = "physical_refuse_keep_earned_five"
+		detail.erase("released_pending_id")
+		detail["legendary_refused"] = _has("legendary_refused")
+	super._receipt(beat, detail)

@@ -5,7 +5,8 @@ extends RefCounted
 ## their elapsed time never supplies owner play or hardware performance proof.
 const ORDER := preload("res://scripts/data/biome_order.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
-const TRAVEL := preload("res://tests/helpers/f49_portal_travel.gd")
+# Reuse the earned-piece adapter's physics/idle input edges and real lesson reader.
+const TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 const HANDOFF := preload("res://tests/helpers/f49_disk_handoff.gd")
 const HOME := preload("res://scripts/story/regional_homecoming.gd")
 const WARDEN := preload("res://tests/helpers/f49_warden_finale.gd")
@@ -138,9 +139,9 @@ func _dock_conclusion_available() -> bool:
 	var chains: RefCounted = driver.local_chains
 	var world := driver.current_scene as Node3D
 	var cave := world.get_node_or_null("WaterVeilfall")
-	if chains == null or chains.mount == null or cave == null or not chains.continuous \
+	if chains == null or cave == null or not chains.continuous \
 		or not chains.earned or not cave.call("contains_interior", chains.player.global_position):
-		_fail("F49 dock continuation requires the same earned swimmer and actual Veilfall chamber")
+		_fail("F49 dock continuation requires the retained earned five and actual Veilfall chamber")
 		return false
 	var party_before := _dock_party_uids()
 	var origin: Vector3 = cave.get("interior").global_position
@@ -160,7 +161,7 @@ func _dock_conclusion_available() -> bool:
 		_fail("F49 ordinary exit input did not leave Veilfall")
 		return false
 	chains.last_island = "veilfall"
-	# _talk uses the existing continuous island path, paid swimmer, ground
+	# _talk uses the existing continuous human or mounted island path, ground
 	# navigator, exact NPC provider and Interact-driven natural completion.
 	var heard: Array = await chains._talk("water_mara")
 	if heard.is_empty() or heard[0] != "water_mara_post" or not chains.failures.is_empty():

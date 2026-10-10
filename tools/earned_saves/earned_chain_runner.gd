@@ -15,6 +15,11 @@ extends SceneTree
 ##   Explicit --generated-fixture constructs a disclosed unearned input first;
 ##   its own segment then uses the same Load path and unchanged helpers.
 ##
+## --segment=campaign delegates one uninterrupted fresh new-order run to the
+## existing four-biome driver, retaining its immutable production handoffs and
+## strict promote_f19.mjs provenance. --campaign-log must be an absent file.
+## --functional-offload uses its existing real Compatibility display driver.
+##
 ## SEGMENTS (in order)
 ##   opening_team     fresh title -> first catch -> road gate -> village -> team
 ##   camp_tournament  materials -> paid camp -> rest -> tournament (camp beds are
@@ -71,6 +76,7 @@ const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
+var campaign_log := ""
 var save_dir := ""
 var receipt_path := ""
 var failures: Array[String] = []
@@ -107,6 +113,8 @@ func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--segment="):
 			segment = arg.get_slice("=", 1)
+		elif arg.begins_with("--campaign-log="):
+			campaign_log = arg.trim_prefix("--campaign-log=")
 		elif arg.begins_with("--save-dir="):
 			save_dir = arg.get_slice("=", 1)
 		elif arg.begins_with("--receipt="):
@@ -138,6 +146,9 @@ func _run() -> void:
 				compatibility_paths.append(path)
 		else:
 			failures.append("Unknown earned-piece option: " + arg)
+	if segment == "campaign":
+		await _campaign()
+		return
 	var lesson_options := TRAVEL.lesson_witness_options()
 	failures.append_array(lesson_options.failures)
 	if not SEGMENTS.has(segment) or save_dir.is_empty() or receipt_path.is_empty():
@@ -247,6 +258,67 @@ func _run() -> void:
 		if not bool(game.call("save_game", CHAIN_SLOT)):
 			failures.append("Game.save_game(%d) refused the segment save" % CHAIN_SLOT)
 	_finish()
+
+
+## Reuse the established continuous driver; never turn Meadows piece receipts
+## into continuous proof or synthesize the later chapter saves.
+func _campaign() -> void:
+	if campaign_log.is_empty() or not campaign_log.is_absolute_path() \
+			or FileAccess.file_exists(campaign_log) or DirAccess.dir_exists_absolute(campaign_log):
+		failures.append("Campaign requires --campaign-log=<absent absolute file>; refusing overwrite")
+	else:
+		campaign_log = campaign_log.simplify_path()
+	if not save_dir.is_empty() or not receipt_path.is_empty() or legacy_order_diagnostic \
+			or generated_fixture or not handoff_from.is_empty() or not compatibility_paths.is_empty() \
+			or reload_at_sigils or route_ledger_enabled or observe_next_goal:
+		failures.append("Continuous campaign cannot import piece/setup/legacy options")
+	if OS.has_environment("TB_WORLD_SEED"):
+		failures.append("Continuous campaign retains the real fresh saved population; no seed override")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--capture-lessons"] or arg.begins_with("--lesson-skip-line"):
+			failures.append("Campaign cannot silently discard piece-only lesson options: " + arg)
+	var source := CHECKPOINTS.commit_sha()
+	var pattern := RegEx.new()
+	pattern.compile("^[0-9a-f]{40}$")
+	if pattern.search(source) == null:
+		failures.append("Campaign requires an exact clean source commit")
+	if not failures.is_empty():
+		print("EARNED CAMPAIGN RESULT " + JSON.stringify({"passed": false, "failures": failures}))
+		quit(2)
+		return
+	DirAccess.make_dir_recursive_absolute(campaign_log.get_base_dir())
+	var driver_path := "res://tests/smoke_f19_campaign_functional.gd" if functional_offload \
+		else "res://tests/smoke_four_biome_continuous.gd"
+	var args := PackedStringArray(["--path", ProjectSettings.globalize_path("res://"),
+		"--audio-driver", "Dummy", "--log-file", campaign_log, "--script", driver_path])
+	if functional_offload or DisplayServer.get_name() != "headless":
+		args.append_array(PackedStringArray(["--rendering-method", "gl_compatibility", "--rendering-driver", "opengl3"]))
+	else:
+		args.append("--headless")
+	print("EARNED CAMPAIGN START " + JSON.stringify({"source": source, "args": args,
+		"log": campaign_log, "continuous_fresh_save": true, "promotion": "tools/earned_saves/promote_f19.mjs"}))
+	var pid := OS.create_process(OS.get_executable_path(), args)
+	if pid <= 0:
+		failures.append("Cannot launch the existing continuous campaign driver")
+	else:
+		while OS.is_process_running(pid):
+			await create_timer(1.0).timeout
+		var exit_code := OS.get_process_exit_code(pid)
+		if exit_code != 0: failures.append("Actual continuous driver exit=%d" % exit_code)
+		var actual_log := FileAccess.get_file_as_string(campaign_log)
+		var results: Array = []
+		for line: String in actual_log.split("\n"):
+			if line.begins_with("FRESH CAMPAIGN RESULT "):
+				results.append(JSON.parse_string(line.trim_prefix("FRESH CAMPAIGN RESULT ")))
+		if results.size() != 1 or not results[0] is Dictionary \
+				or results[0].get("counts_as_proof") != true or results[0].get("campaign_complete") != true \
+				or not results[0].get("failures", ["missing"]).is_empty():
+			failures.append("Actual driver did not complete one continuous fresh campaign proof")
+		for marker: String in ["SCRIPT ERROR:", "ERROR:", "Parse Error:"]:
+			if actual_log.contains(marker): failures.append("Actual driver log contains " + marker)
+	print("EARNED CAMPAIGN RESULT " + JSON.stringify({"passed": failures.is_empty(), "source": source,
+		"log": campaign_log, "failures": failures, "promotion_pending": failures.is_empty()}))
+	quit(0 if failures.is_empty() else 1)
 
 
 func _opening_team() -> void:

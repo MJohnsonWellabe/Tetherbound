@@ -81,6 +81,7 @@ var battle_wins: Array[String] = []
 var battle_losses: Array[String] = []
 var recovery_choices: Array[Dictionary] = []
 var from_save := ""
+var new_order_handoff := false
 var leg := ""
 var earned_scratch := ""
 var expected_party_size := 5
@@ -184,7 +185,7 @@ func _run() -> void:
 			last_reported_denial = reason
 			_log("flight_denied", {"reason":reason,"state":fly.state,"velocity":str(player.velocity)}))
 	await _frames(20)
-	_log("precondition", {"description": ("EARNED Meadows handoff save loaded through the title Load list: " + from_save) if not from_save.is_empty() else "Fresh completed-Meadows fixture; five level-25 installed creatures; active Meadows Heart; separate proven handoff reused","from_save":from_save,"leg":leg,"flags":_flag_snapshot().size(), "accelerated": accelerated,"combat_mode":"live_input" if live_combat else "mechanics_only_test_lethal", "team":_team_snapshot(),"inventory":_inventory_snapshot()})
+	_log("precondition", {"description": ("EARNED handoff save loaded through the title Load list: " + from_save) if not from_save.is_empty() else "Fresh completed-Meadows fixture; five level-25 installed creatures; active Meadows Heart; separate proven handoff reused","from_save":from_save,"leg":leg,"flags":_flag_snapshot().size(), "accelerated": accelerated,"combat_mode":"live_input" if live_combat else "mechanics_only_test_lethal", "team":_team_snapshot(),"inventory":_inventory_snapshot()})
 	_purpose("Orient in Cloudreach and learn why the routes are broken", "Take the authored arrival road, inspect its landmark, and gather useful preparation instead of beelining")
 	await _capture("arrival")
 	stage = "arrival_to_aila"
@@ -343,7 +344,14 @@ func _run() -> void:
 		_require(_has(flag), "Reload preserved " + flag)
 	_require(game.inventory.count("coin") == coins, "Reload did not duplicate payouts")
 	_require(_inventory_snapshot() == saved_inventory,"Reload preserved every occupied inventory slot")
-	_require(not game.can_enter_realm("water"), "Water realm remains non-enterable")
+	if new_order_handoff:
+		_require(game.can_enter_realm("water"), "Earned Tidewake portal remains reachable")
+		_require(_has("water_currents_restored"), "Reload preserves the earned Tidewake conclusion")
+		_require(game.local.redesign_character.relics_held.has("cloudreach") \
+			or game.local.redesign_character.relics_hung.has("cloudreach"), "Veyra grants the personal Cloudreach relic")
+		_require(game.inventory.count("stormwood_portal_key") == 1, "Veyra grants the real personal Stormwood key once")
+	else:
+		_require(not game.can_enter_realm("water"), "Legacy diagnostic keeps Water non-enterable")
 	_log("persistence_snapshot", {"inventory":_inventory_snapshot(),"team":_team_snapshot(),"party_exact":_party_persistence_snapshot(),"flags":_flag_snapshot(),"day":game.day,"water_enterable":game.can_enter_realm("water")})
 	_log("complete", {"optional_trainers": "not attempted", "optional_detours": "opening candy; required fiber and camp preparation", "recovery_choices":recovery_choices, "combat_mode":"live_input" if live_combat else "mechanics_only_test_lethal"})
 	completed_route = true
@@ -1256,8 +1264,8 @@ func _load_earned_handoff() -> bool:
 	_copy_tree(source, ProjectSettings.globalize_path(earned_scratch))
 	game.save_system = SAVE.new(earned_scratch)
 	var info: Dictionary = game.save_slot_info(from_slot)
-	if str(info.get("realm", "")) != "cloudreach":
-		print("CLOUDREACH CONTINUOUS earned slot is not a Cloudreach save: " + str(info))
+	if str(info.get("realm", "")) not in ["water", "cloudreach"]:
+		print("CLOUDREACH CONTINUOUS earned slot is not a Tidewake settlement or Cloudreach save: " + str(info))
 		return false
 	var title := (load(TITLE_SCENE) as PackedScene).instantiate()
 	root.add_child(title)
@@ -1279,9 +1287,19 @@ func _load_earned_handoff() -> bool:
 		await process_frame
 		var scene := current_scene
 		if scene != null and scene != title and is_instance_valid(scene) and scene.get_node_or_null("Player") != null \
-				and str(game.pending_realm_entry).is_empty() and bool(game.call("_realm_scene_ready", scene, "cloudreach")):
+				and str(game.pending_realm_entry).is_empty() and bool(game.call("_realm_scene_ready", scene, str(info.get("realm", "")))):
 			world = scene as Node3D
 			break
+	if world != null and game.current_realm == "water":
+		if not _has("water_currents_restored"):
+			print("CLOUDREACH CONTINUOUS predecessor did not earn Tidewake restoration")
+			return false
+		var travel := preload("res://tests/helpers/f20_portal_travel.gd").new(self, game)
+		if not await travel.home_key() or not await travel.enter("cloudreach", "cloudreach"):
+			print("CLOUDREACH CONTINUOUS ordinary predecessor portal travel failed: " + str(travel.failures))
+			return false
+		world = current_scene as Node3D
+	new_order_handoff = _has("water_currents_restored") and game.call("portal_view", "cloudreach").get("character_open") == true
 	if world == null or game.current_realm != "cloudreach" or world.get_node_or_null("CloudreachChapter") == null:
 		print("CLOUDREACH CONTINUOUS the earned save never booted a ready Cloudreach scene")
 		return false
