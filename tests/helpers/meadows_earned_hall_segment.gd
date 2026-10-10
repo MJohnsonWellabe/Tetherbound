@@ -330,6 +330,36 @@ func _travel() -> bool:
 	return true
 
 
+## Standing still, the exact prompt must keep winning before Interact: at the
+## Sigil Gate a roadside plant's harvest offer took the Interact frame just
+## after the walker stopped. A player steps closer until the gate's own
+## prompt holds.
+const PROMPT_SETTLE_FRAMES := 12
+const PROMPT_SETTLE_STEPS := 20
+
+
+func _approach_prompt(prompt: Node3D) -> bool:
+	for _attempt in PROMPT_SETTLE_STEPS:
+		if not await super._approach_prompt(prompt):
+			return false
+		var held := true
+		for _frame in PROMPT_SETTLE_FRAMES:
+			await _tree.physics_frame
+			if not is_instance_valid(prompt) or _arbiter.call("winning_provider") != prompt \
+					or not bool(_arbiter.call("winner").get("actionable", false)):
+				held = false
+				break
+		if held:
+			return true
+		_receipt("prompt_settle_step", {"wanted": str(prompt.get_path()) if is_instance_valid(prompt) else "",
+			"winner": str((_arbiter.call("winning_provider") as Node).get_path()) if _arbiter.call("winning_provider") is Node else ""})
+		for _frame in 10:
+			_nav.step(prompt.global_position)
+			await _tree.physics_frame
+		_stick(0.0, 0.0)
+	return _fail("The exact live prompt never held the Interact offer while standing still")
+
+
 func _walk_marker(id: String, budget: int) -> bool:
 	if not bool(_hold.call("has_marker", id)):
 		return _fail("The actual Hall route marker is missing: " + id)

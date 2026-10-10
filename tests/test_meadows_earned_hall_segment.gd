@@ -244,6 +244,27 @@ func test_room_axis_and_door_waypoints_share_one_existing_budget() -> void:
 	assert_false(SEGMENT.captain_within_deadline(9000))
 
 
+func test_named_trainer_deadline_is_the_round_deadline_per_admitted_opponent() -> void:
+	assert_true(SEGMENT.trainer_within_deadline(44999, 5), "five rounds share five round budgets")
+	assert_false(SEGMENT.trainer_within_deadline(45000, 5))
+	assert_true(SEGMENT.trainer_within_deadline(17999, 2))
+	assert_false(SEGMENT.trainer_within_deadline(18000, 2))
+	assert_false(SEGMENT.trainer_within_deadline(0, 0), "no admitted team never qualifies")
+	assert_false(SEGMENT.trainer_within_deadline(-1, 5))
+
+
+func test_hall_reader_presses_and_steers_only_through_physical_controller_bindings() -> void:
+	for action: String in ["combat_quick", "combat_charged", "jump", "move_right", "move_back"]:
+		var event := SEGMENT.HallReader._joypad(action)
+		assert_true(event is InputEventJoypadButton or event is InputEventJoypadMotion, "controller binding: " + action)
+		assert_eq(event.device, 0)
+	assert_true(SEGMENT.HallReader._joypad("combat_quick") is InputEventJoypadButton)
+	assert_true(SEGMENT.HallReader._joypad("move_right") is InputEventJoypadMotion)
+	var reader = SEGMENT.HallReader.new(null)
+	assert_true(reader.presses.is_empty(), "a new reader has pressed nothing")
+	assert_eq(int(reader._tally.get("burst_uses", -1)), 0)
+
+
 func test_named_admission_rejects_another_trainer_and_out_of_order_opponents() -> void:
 	var segment := SEGMENT.new()
 	var director := Director.new()
