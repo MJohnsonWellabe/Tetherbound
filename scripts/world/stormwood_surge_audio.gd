@@ -132,9 +132,11 @@ func _start_bed(cue: Dictionary, phase: String) -> void:
 
 
 func _stop_bed() -> void:
-	# The pool reuses players; stop only one still carrying this bed's stream.
-	if is_instance_valid(_bed) and _bed.get("stream") == _bed_stream:
+	# Beds belong to this realm rather than the round-robin one-shot pool.
+	# Combat/UI sounds cannot steal the phase, and leaving the realm frees it.
+	if is_instance_valid(_bed):
 		_bed.call("stop")
+		_bed.queue_free()
 	_bed = null
 	_bed_stream = null
 
@@ -148,7 +150,24 @@ func _fire(cue: Dictionary, at: Variant, strike_id: int, phase: String = "") -> 
 	var positional := bool(cue.get("positional", false)) and at is Vector3
 	var player: Node = null
 	if present:
-		if positional:
+		if not positional and bool(cue.get("loop", false)):
+			var source := AUDIO.stream(path)
+			if source != null:
+				var loop_stream := source.duplicate() as AudioStream
+				if loop_stream is AudioStreamWAV:
+					loop_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+					loop_stream.loop_begin = 0
+					loop_stream.loop_end = roundi(loop_stream.get_length() * loop_stream.mix_rate)
+				elif loop_stream is AudioStreamOggVorbis:
+					loop_stream.loop = true
+				var bed := AudioStreamPlayer.new()
+				bed.name = "SurgePhaseBed"
+				bed.stream = loop_stream
+				bed.bus = str(cue.get("bus", "Ambience"))
+				add_child(bed)
+				bed.play()
+				player = bed
+		elif positional:
 			player = AUDIO.play_file_at(path, str(cue.id), at, str(cue.get("bus", "SFX")))
 		else:
 			player = AUDIO.play_file(path, str(cue.id), str(cue.get("bus", "SFX")))
