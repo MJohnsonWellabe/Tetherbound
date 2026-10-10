@@ -721,26 +721,6 @@ func _clear_blocking_wild(label: String) -> bool:
 	return await _fight_current(label + " (blocking wild)")
 
 
-## Read-only host view of the bound encounter: the latest strike receipt
-## (its candidates carry host positions), the body this pilot chases and the
-## host runtime body, when they differ.
-func _note_host_strike_view(why: String) -> void:
-	var id := str(_manager.get("_encounter_id"))
-	if id.is_empty() or not _director.has_method("_shared_host_fight") or not _director.has_method("_local_peer_id"): return
-	var host: Variant = _director.get("_encounter_host")
-	var receipt: Variant = host.call("latest_strike_receipt", id, int(_director.call("_local_peer_id"))) \
-		if host != null and host.has_method("latest_strike_receipt") else {}
-	var runtime: Variant = _director.call("_shared_host_fight", id)
-	var runtime_body: Variant = runtime.call("body") if runtime != null else null
-	var chased := _manager.call("enemy_body") as Node3D
-	var ally := _director.call("ally_body") as Node3D
-	_note("%s host view id=%s chased=%s runtime=%s same=%s ally=%s receipt=%s" % [why, id,
-		str(chased.global_position) if is_instance_valid(chased) else "none",
-		str((runtime_body as Node3D).global_position) if is_instance_valid(runtime_body) else "none",
-		str(is_instance_valid(runtime_body) and runtime_body == chased),
-		str(ally.global_position) if is_instance_valid(ally) else "none", JSON.stringify(receipt)])
-
-
 func _fight_current(label: String) -> bool:
 	_fights_seen += 1
 	if _safety != null:
@@ -789,12 +769,6 @@ func _fight_current(label: String) -> bool:
 			misses_before = int(counts.player_misses)
 			reposition_ticks = 45
 			side = -side
-			_note_host_strike_view("REPOSITION after misses;")
-			var hub := _director.get_parent().get_node_or_null(^"StormwoodEncounterHub")
-			if hub != null:
-				for fight: Variant in (hub.get("fights") as Dictionary).values():
-					if is_instance_valid(fight):
-						_note("REPOSITION after misses; host last_strike=%s" % JSON.stringify(fight.get("last_strike")))
 		if enemy != null and ally != null:
 			var offset := enemy.global_position - ally.global_position
 			offset.y = 0.0
@@ -830,13 +804,6 @@ func _fight_current(label: String) -> bool:
 		label, _last_combat_outcome, Time.get_ticks_msec() - started,
 		_fighter_snapshot(ally_instance), _fighter_snapshot(enemy_instance), counts])
 	if bool(_manager.call("is_fighting")) or _last_combat_outcome.is_empty():
-		# Read-only: the host's own view of the last strike, for a stuck fight.
-		_note_host_strike_view("STUCK")
-		var hub := _director.get_parent().get_node_or_null(^"StormwoodEncounterHub")
-		if hub != null:
-			for fight: Variant in (hub.get("fights") as Dictionary).values():
-				if is_instance_valid(fight):
-					_note("STUCK host last_strike=%s" % JSON.stringify(fight.get("last_strike")))
 		return _fail("combat during %s did not resolve and publish an outcome" % label)
 	_note("RESOLVED live route encounter during %s (outcome=%s)" % [label, _last_combat_outcome])
 	return true
