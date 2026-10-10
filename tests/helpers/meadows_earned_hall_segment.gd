@@ -16,6 +16,7 @@ var _sigil_gate: Node3D
 var _hall_config: Dictionary
 var _named_trainer := ""
 var _observed_trainers: Array[String] = []
+var _round_start := 0
 
 
 ## The established COMBAT §7 reader (tests/helpers/f22_pattern_pilot.gd,
@@ -341,6 +342,8 @@ func _approach_prompt(prompt: Node3D) -> bool:
 				break
 		if held:
 			return true
+		if not is_instance_valid(prompt):
+			return false
 		_receipt("prompt_settle_step", {"wanted": str(prompt.get_path()) if is_instance_valid(prompt) else "",
 			"winner": str((_arbiter.call("winning_provider") as Node).get_path()) if _arbiter.call("winning_provider") is Node else ""})
 		for _frame in 10:
@@ -490,6 +493,7 @@ func _fight_named(body: Node3D, id: String) -> bool:
 	if xp_caps.size() != before_xp.size():
 		return _fail("The retained five lack exact admitted XP caps: " + id)
 	_captain_start = 0
+	_round_start = Engine.get_physics_frames()
 	_captain_rounds = 0
 	_captain_wins = 0
 	_captain_hits = 0
@@ -505,7 +509,7 @@ func _fight_named(body: Node3D, id: String) -> bool:
 		return _fail("Physical challenge input did not admit the exact required trainer: " + id)
 	var pilot := HallReader.new(_rig)
 	var team_size := TRAINERS.team_of(_captain_spec).size()
-	while bool(_director.call("trainer_battle_active")) and trainer_within_deadline(Engine.get_physics_frames() - _captain_start, team_size):
+	while bool(_director.call("trainer_battle_active")) and round_within_deadline(Engine.get_physics_frames() - _round_start):
 		if not _failures.is_empty():
 			break
 		var ally := _director.call("ally_body") as Node3D
@@ -523,14 +527,14 @@ func _fight_named(body: Node3D, id: String) -> bool:
 	_receipt("trainer_attempt", {"id": id, "rounds": _captain_rounds, "wins": _captain_wins,
 		"hits": _captain_hits, "kills": _captain_kills.size(), "team_size": team_size,
 		"frames": Engine.get_physics_frames() - _captain_start,
-		"within_original_deadline": trainer_within_deadline(Engine.get_physics_frames() - _captain_start, team_size),
+		"within_round_deadline": round_within_deadline(Engine.get_physics_frames() - _round_start),
 		"fighting": _fighting(), "flag": _has(flag), "presses": pilot.presses.duplicate(),
 		"read_escapes": int(pilot._tally.get("read_escapes", 0)), "read_interrupts": int(pilot._tally.get("read_interrupts", 0)),
 		"enemy_species": str(actual_enemy.get("species_id")) if actual_enemy != null else "",
 		"enemy_hp": float(actual_enemy.get("hp")) if actual_enemy != null else -1.0,
 		"items_before": before_items, "items_after": _captain_stock(),
 		"xp_before": before_xp, "xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate(), "xp_cap_totals": xp_caps})
-	if not trainer_within_deadline(Engine.get_physics_frames() - _captain_start, team_size) or _fighting() \
+	if not round_within_deadline(Engine.get_physics_frames() - _round_start) or _fighting() \
 			or not _failures.is_empty() or _captain_rounds != team_size or _captain_wins != team_size \
 			or _captain_kills.size() != team_size or _captain_hits <= 0 or not _has(flag) \
 			or not retained_five(_initial_ids, _party_ids()) \
@@ -574,6 +578,7 @@ func _on_entered() -> void:
 	if _captain_rounds == 0:
 		_captain_start = Engine.get_physics_frames()
 	_captain_rounds += 1
+	_round_start = Engine.get_physics_frames()
 
 
 static func departure_spine(terrain: Dictionary) -> Array[Vector2]:
@@ -640,8 +645,8 @@ static func keys_match(keys: Array) -> bool:
 
 ## TRAINER_FRAMES is the earned bridge/tournament ROUND deadline; a named
 ## trainer fields several rounds, so each admitted opponent gets that budget.
-static func trainer_within_deadline(elapsed: int, team_size: int) -> bool:
-	return elapsed >= 0 and team_size > 0 and elapsed < TRAINER_FRAMES * team_size
+static func round_within_deadline(elapsed: int) -> bool:
+	return elapsed >= 0 and elapsed < TRAINER_FRAMES
 
 
 static func room_frames_remaining(elapsed: int) -> int:

@@ -245,12 +245,10 @@ func test_room_axis_and_door_waypoints_share_one_existing_budget() -> void:
 
 
 func test_named_trainer_deadline_is_the_round_deadline_per_admitted_opponent() -> void:
-	assert_true(SEGMENT.trainer_within_deadline(44999, 5), "five rounds share five round budgets")
-	assert_false(SEGMENT.trainer_within_deadline(45000, 5))
-	assert_true(SEGMENT.trainer_within_deadline(17999, 2))
-	assert_false(SEGMENT.trainer_within_deadline(18000, 2))
-	assert_false(SEGMENT.trainer_within_deadline(0, 0), "no admitted team never qualifies")
-	assert_false(SEGMENT.trainer_within_deadline(-1, 5))
+	assert_true(SEGMENT.round_within_deadline(0))
+	assert_true(SEGMENT.round_within_deadline(8999), "each admitted round has the bridge/tournament round budget")
+	assert_false(SEGMENT.round_within_deadline(9000))
+	assert_false(SEGMENT.round_within_deadline(-1))
 
 
 func test_hall_reader_presses_and_steers_only_through_physical_controller_bindings() -> void:
