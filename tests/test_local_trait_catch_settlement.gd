@@ -230,3 +230,56 @@ func test_original_five_owned_catch_hands_off_to_existing_ceremony_without_sixth
 	assert_eq(f.game.pending_catch.uid, f.offer.creature.uid)
 	assert_true(f.presenter.owns_pending_capture(f.game.pending_catch))
 	_close(f)
+
+
+func test_later_pending_research_does_not_reopen_an_acknowledged_capture_ceremony() -> void:
+	var f := _fixture()
+	assert_true(_ready(f))
+	_assert_settled(f, 2)
+	var original := _row(f).duplicate(true)
+	var before: Dictionary = f.authority.state(CHARACTER)
+	var revision: int = f.authority.revision(CHARACTER)
+	var research: RefCounted = preload("res://tests/test_research_log.gd").new()
+	var context: Dictionary = research.call("_context", before, revision, "sight", "later-research")
+	context.world_namespace = NAMESPACE
+	context.session_id = EPOCH
+	var token: Dictionary = f.authority.stage_character_action(CHARACTER, revision, "research_event", {}, context)
+	assert_true(token.get("ok") == true, str(token))
+	if token.get("ok") != true:
+		_close(f)
+		return
+	var accepted: Dictionary = f.authority.staged_creature_training(token)
+	var written: Dictionary = f.rpc.journal_creature_training_prepared(1, CHARACTER, accepted)
+	assert_true(written.get("ok") == true and written.get("durable") == true, str(written))
+	assert_true(f.authority.finish_creature_training(token, written.get("ok") == true and written.get("durable") == true))
+	var row := _row(f)
+	assert_eq(row.action, "research_event")
+	assert_eq(row.status, "pending", "new research still awaits its own owner BOOL/ACK")
+	assert_eq(row.journal_revision, int(original.journal_revision) + 1)
+	assert_true(row.before.redesign_character.transaction_receipts.has(original.receipt))
+	var writes_before: int = f.owner_writer.attempts
+	assert_true(f.presenter.call("_offer").is_empty(), "a later pending action cannot re-offer the original acknowledged catch")
+	assert_false(f.presenter.call("_offer", f.offer.offer_id, true).is_empty(), "the original source remains available for explicit reconciliation")
+	f.presenter.call("_process", 0.6)
+	assert_true(f.game.pending_catch == null, "Game's ceremony watcher must have no stale capture to open")
+	assert_eq(f.owner_writer.attempts, writes_before, "presentation neither acknowledges research nor repeats the catch write")
+	assert_eq(_row(f).status, "pending")
+	assert_eq(f.game.local.party.size(), 2)
+	assert_eq(f.game.local.redesign_character.transaction_receipts.count(original.receipt), 1)
+	_close(f)
+
+
+func test_pending_first_capture_after_state_cannot_hide_its_missing_owner_ack() -> void:
+	var f := _fixture()
+	f.owner_writer.refuse = true
+	assert_false(_ready(f))
+	var row := _row(f)
+	assert_eq(row.status, "pending")
+	assert_false(row.before.redesign_character.transaction_receipts.has(row.receipt))
+	assert_true(row.after.redesign_character.transaction_receipts.has(row.receipt))
+	assert_false(f.presenter.call("_offer").is_empty(), "pending AFTER cannot count as an accepted capture prefix")
+	assert_true(f.game.pending_catch != null)
+	f.owner_writer.refuse = false
+	assert_true(_ready(f))
+	_assert_settled(f, 2)
+	_close(f)

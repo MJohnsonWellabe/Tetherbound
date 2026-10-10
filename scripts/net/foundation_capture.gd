@@ -28,8 +28,14 @@ func _offer(id: String = "", include_decided: bool = false) -> Dictionary:
 			var receipt := RULES.receipt(duty.context.offer_id, duty.character_id)
 			var latest: Variant = game.world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(game.world.reward_delivery_namespace, duty.character_id))
 			if not include_decided and game.local.redesign_character.transaction_receipts.has(receipt) \
-				and latest is Dictionary and load("res://autoload/world_state.gd").call("training_row_valid", latest, game.world.reward_delivery_namespace, game.world.world_id) == true \
-				and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
+				and latest is Dictionary and load("res://autoload/world_state.gd").call("training_row_valid", latest, game.world.reward_delivery_namespace, game.world.world_id) == true:
+				# A later v2/v3 mutation can replace the accepted capture row with
+				# its own pending row. Its frozen BEFORE carries only the already
+				# accepted prefix (make_record requires an accepted predecessor).
+				# Pending AFTER alone still proves no owner save/ACK for a catch.
+				var prior_capture: bool = latest.version in [2, 3] and int(latest.journal_revision) > 1 \
+					and latest.before.redesign_character.transaction_receipts.has(receipt)
+				if prior_capture or (latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt)): continue
 			return duty.context.duplicate(true)
 	return {}
 
