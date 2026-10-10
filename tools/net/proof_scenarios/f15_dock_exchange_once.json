@@ -4,6 +4,8 @@
  "peers": 2,
  "scene": "title",
  "budget_s": 1500,
+ "build_allowance_s": 300,
+ "_comment_build_allowance": "The first native Windows rendered attempt exhausted the existing 150-second Meadows build allowance before load_save returned. Use the runner's existing finite named-build allowance; load_save and boot get matching 18000-frame command bounds. The ordinary heartbeat guard, dock assertions and overall 1500-second scenario bound remain unchanged.",
  "steps": [
   {
    "peer": 0,
@@ -14,6 +16,7 @@
    "expect_data": {
     "realm": "meadows"
    },
+   "budget_frames": 18000,
    "label": "named save: the host's world"
   },
   {
@@ -22,7 +25,7 @@
    "args": {
     "scene": "world"
    },
-   "budget_frames": 10000,
+   "budget_frames": 18000,
    "label": "guest: its own trainer"
   },
   {
