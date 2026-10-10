@@ -174,11 +174,21 @@ func _utility_frozen(move_id: String, action: int) -> Dictionary:
 	assert_true(frozen.get("ok") == true, str(frozen))
 	return MANAGER.host_move_profile(MOVES.load_default(), "player_utility", move_id, 0.5, 0.5, 1.0, 0.0, frozen.move)
 
+var _landing_bodies: Array[Node] = []
+
+func after_each() -> void:
+	for body: Node in _landing_bodies:
+		if is_instance_valid(body): body.free()
+	_landing_bodies.clear()
+	super()
+
 func _landing_body() -> Node:
 	var body := WILD.new()
 	body.instance = SPECIES.spawn("bramblebun")
 	body.engaged = true
-	add_child_autofree(body)
+	# Pushes use the real collision-aware burst, which needs a body in a tree.
+	(Engine.get_main_loop() as SceneTree).root.add_child(body)
+	_landing_bodies.append(body)
 	return body
 
 func _landing_context(move: Dictionary, body: Node, point: Vector3 = Vector3.RIGHT) -> Dictionary:
@@ -198,7 +208,7 @@ func test_every_target_utility_kind_lands_on_the_wild_body() -> void:
 	var sap := _utility_frozen("sap", 2)
 	assert_eq(sap_body.utility_damage_multiplier("creature_a"), 1.0)
 	assert_true(sap_body.apply_landed_utility(sap, _landing_context(sap, sap_body)))
-	assert_gt(sap_body.utility_damage_multiplier("creature_a"), 1.0, "Sap raises the damage this body takes")
+	assert_true(sap_body.utility_damage_multiplier("creature_a") > 1.0, "Sap raises the damage this body takes")
 	for push_id: String in ["shove", "quake_ring"]:
 		var push_body := _landing_body()
 		var push := _utility_frozen(push_id, 3)
@@ -225,7 +235,7 @@ func test_every_role_can_equip_at_least_two_live_utilities() -> void:
 	var utilities: Array[String] = []
 	for move_id: String in moves.move_ids():
 		if moves.slot(move_id) == "utility": utilities.append(move_id)
-	assert_gte(utilities.size(), 10, "at least ten utility moves exist")
+	assert_true(utilities.size() >= 10, "at least ten utility moves exist")
 	var learnsets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/learnsets.json"))
 	var species: Dictionary = learnsets.get("species", learnsets)
 	var roles := {}
@@ -236,15 +246,15 @@ func test_every_role_can_equip_at_least_two_live_utilities() -> void:
 		for unlock: Variant in row.get("unlocks", []):
 			var move_id := str(unlock.get("move_id", "")) if unlock is Dictionary else str(unlock)
 			if utilities.has(move_id) and MANAGER.live_move_supported("utility", move_id): live += 1
-		assert_gte(live, 2, "%s can equip at least two live utilities" % species_id)
+		assert_true(live >= 2, "%s can equip at least two live utilities" % species_id)
 		roles[str(row.get("role_family", ""))] = true
-	assert_gte(roles.size(), 4, "every role family is represented")
+	assert_true(roles.size() >= 4, "every role family is represented")
 
 func test_hearten_raises_the_next_landed_hit_once() -> void:
 	var move := _utility_frozen("hearten", 20)
 	assert_eq(host.self_utility_power(id, "creature_a", 1000), 1.0)
 	assert_true(host.apply_self_status_utility(id, "creature_a", "hearten", move, Vector3.ZERO, 100.0, 100.0, "hearten-1", 1000))
-	assert_gt(host.self_utility_power(id, "creature_a", 1100), 1.0, "Hearten raises the caster's next hit")
+	assert_true(host.self_utility_power(id > "creature_a", 1100), 1.0, "Hearten raises the caster's next hit")
 	host.consume_next_hit(id, "creature_a", 1200)
 	assert_eq(host.self_utility_power(id, "creature_a", 1300), 1.0, "one landed hit spends Hearten")
 	assert_false(host.apply_self_status_utility(id, "creature_a", "snare", _utility_frozen("snare", 21),
