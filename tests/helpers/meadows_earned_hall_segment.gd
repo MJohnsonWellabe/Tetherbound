@@ -276,6 +276,10 @@ func _travel() -> bool:
 	if depth < crossing[1].distance_to(gate_at) - 0.6:
 		return _fail("The player has not physically crossed the actual Sigil Gate plane")
 	_receipt("hall_approach_open", {"sigils_before": before, "sigils_after": _sigil_stock(), "depth": depth})
+	# The last creature bed before the Warden (the_waystop) stands just past
+	# the gate: a player sleeps the five back before the Hall's three guards.
+	if party_hp_fraction(_game.get("party")) < 0.95 and not await _camp_care():
+		return false
 	# Stop the terrain spine before it enters the raised Hall footprint.
 	var entrance := _hold.call("marker", "entrance") as Vector3
 	if not bool(_hold.call("has_marker", "entrance")):
@@ -291,6 +295,7 @@ func _travel() -> bool:
 	if hall_trainers == null or not await _walk_marker(str(stages[0].from), ENTRANCE_FRAMES):
 		return _fail("The ordinary Hall ramp did not reach the outer works")
 	_supported_y = (_hold.call("marker", str(stages[0].from)) as Vector3).y
+	_in_hall = true
 	for stage: Dictionary in stages:
 		var flag := str(stage.flag)
 		if _has(flag) or not shutter_receipt(_hold, flag, false):
@@ -358,6 +363,126 @@ func _approach_prompt(prompt: Node3D) -> bool:
 			await _tree.physics_frame
 		_stick(0.0, 0.0)
 	return _fail("The exact live prompt never held the Interact offer while standing still")
+
+
+## Carried care runs out over three captains and their roads (L15 local run:
+## no revive or potion left after Captain Hald, Grandpa's bed the only
+## fallback). A player instead beds the hurt five at the nearest authored camp
+## on the route (rest_point.gd, `full_heal_seconds` while bedded): the real bed
+## panel, production recovery ticks, an early wake, then back to the road.
+const CAMP_BED := preload("res://scripts/build/creature_bed.gd")
+const BED_INPUT := preload("res://tests/helpers/gate_b_tail_segment.gd")
+const CAMP_REACH_M := 700.0
+const CAMP_BELOW := 0.6  # Party HP fraction under which a captain is not taken on carried care.
+var camp_rests := 0
+var _in_hall := false
+
+
+func _prepare() -> bool:
+	if not _in_hall and not _carried_care_covers() and not await _camp_care():
+		return false
+	return await super._prepare()
+
+
+func _prepare_for_trainer() -> bool:
+	if not _in_hall and party_hp_fraction(_game.get("party")) < CAMP_BELOW and not await _camp_care():
+		return false
+	return await super._prepare_for_trainer()
+
+
+func _carried_care_covers() -> bool:
+	var inventory := _game.get("inventory") as RefCounted
+	var fainted := 0
+	var low := false
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		if bool(member.get("fainted")):
+			fainted += 1
+		elif float(member.get("hp")) < float(member.get("max_hp")) * CARE_BELOW:
+			low = true
+	return fainted <= int(inventory.call("count", "revive")) \
+		and (not low or int(inventory.call("count", "potion_small")) > 0)
+
+
+static func party_hp_fraction(party: RefCounted) -> float:
+	var hp := 0.0
+	var most := 0.0
+	for member: RefCounted in party.call("members"):
+		hp += 0.0 if bool(member.get("fainted")) else float(member.get("hp"))
+		most += float(member.get("max_hp"))
+	return hp / most if most > 0.0 else 0.0
+
+
+## Authored camp beds only (rest_point.gd's reserved range): never Grandpa's
+## installed bed, the Hall's own recovery bed or a player-built one.
+static func is_camp_bed(bed: Node) -> bool:
+	return bed != null and bed.get_script() == CAMP_BED and bed.name != "HomeCreatureBed" \
+		and bed.has_method("build_index") and int(bed.call("build_index")) <= -11
+
+
+func _nearest_camp_bed() -> Node3D:
+	var best: Node3D = null
+	for node: Node in _world.find_children("*", "Node3D", true, false):
+		if not is_camp_bed(node):
+			continue
+		var bed := node as Node3D
+		if best == null or bed.global_position.distance_to(_player.global_position) \
+				< best.global_position.distance_to(_player.global_position):
+			best = bed
+	return best
+
+
+func _camp_care() -> bool:
+	var party := _game.get("party") as RefCounted
+	var bed := _nearest_camp_bed()
+	if bed == null or bed.global_position.distance_to(_player.global_position) > CAMP_REACH_M:
+		return _fail("Spent carried care has no authored camp bed within reach of the route")
+	var resume := Vector2(_player.global_position.x, _player.global_position.z)
+	var before := _party_hp()
+	if not await _walk_ground(Vector2(bed.global_position.x, bed.global_position.z), 6.0):
+		return false
+	var driver := BED_INPUT.new()
+	driver._tree = _tree
+	driver._world = _world
+	driver._game = _game
+	driver._player = _player
+	driver._rig = _rig
+	driver._party = party
+	driver._bed = bed
+	if not driver._collect_nodes():
+		return _fail("Camp bed input dependencies are missing: " + str(driver.failures))
+	driver._resolve_move_bindings()
+	var prompt := bed.get_node_or_null("Interactable") as Node3D
+	var heal_seconds := PROGRESSION.creature_bed_full_heal_seconds(PROGRESSION.config())
+	for index in int(party.call("size")):
+		var member: RefCounted = party.call("at", index)
+		if not bool(member.get("fainted")) and float(member.get("hp")) >= float(member.get("max_hp")) * 0.95:
+			continue
+		if prompt == null or not await driver._assign_to_bed(index):
+			return _fail("Camp bed assignment failed: " + str(driver.failures))
+		var deadline := Time.get_ticks_msec() + int((heal_seconds * 2.0 + 30.0) * 1000.0)
+		while float(member.get("hp")) < float(member.get("max_hp")) - 0.01:
+			if _fighting():
+				_stick(0.0, 0.0)
+				if not await _fight():
+					return false
+			if Time.get_ticks_msec() >= deadline or not bool(member.get("resting")) or _tree.paused:
+				return _fail("Production camp-bed recovery stopped before full HP")
+			await _tree.physics_frame
+		if not await driver._walk_to_prompt(prompt, "camp creature bed"):
+			return _fail("Could not return to the camp bed to wake: " + str(driver.failures))
+		await driver._tap(&"interact")
+		var panel: Node = await driver._wait_for_panel("creature_bed_panel.gd")
+		if panel == null or not await driver._focus_the_row_for(panel, index):
+			return _fail("Camp bed panel could not select the sleeping creature to wake")
+		await driver._tap(&"ui_accept")
+		await driver._tap(&"menu_cancel")
+		await driver._settle(8)
+		if bool(member.get("resting")) or bool(member.get("fainted")) or _tree.paused:
+			return _fail("Camp bed early wake left the creature asleep, fainted or the world paused")
+	camp_rests += 1
+	_receipt("camp_bed_recovery", {"bed": str(bed.get_path()), "bed_index": bed.call("build_index"),
+		"before": before, "after": _party_hp(), "full_heal_seconds": heal_seconds})
+	return await _walk_ground(resume, 3.0)
 
 
 func _walk_marker(id: String, budget: int) -> bool:
