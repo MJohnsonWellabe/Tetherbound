@@ -267,7 +267,9 @@ func _build_horizon_ranges() -> void:
 			var angle := float(cluster) * 2.399 + float(range_spec.get("seed", 0))
 			var portion := 0.34 + 0.09 * float(cluster % 3)
 			var height_fraction := 0.34 + 0.11 * float(cluster % 4)
-			if use_profile:
+			# A range near a viewpoint keeps its authored heights: at full
+			# profile height it rose as flat slabs behind Stormward Overlook.
+			if use_profile and not bool(range_spec.get("profile_exempt", false)):
 				# The ranges share a base half their configured height below `at`.
 				# Short peaks disappear beneath the upper crowns. Use the full
 				# authored height envelope for varied, visible distant summits.

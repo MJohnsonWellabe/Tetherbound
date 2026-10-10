@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "revision": "f40-sanctuary-and-route-masses-r1",
   "_disposition": "Unjudged F40 candidate. Enable only after independent matched High/Medium full-bar PASS. Previous skyline/crown FAILs remain evidence; towers and occupied terrace remain off. Local presentation only, no save or gameplay flag.",
   "visual": {
@@ -38,7 +38,7 @@
       "lantern_energy": 1.5,
       "lantern_range_m": 10.0
     },
-    "towers": {"enabled": true},
+    "towers": {"enabled": false},
     "sanctuary": {
       "enabled": true,
       "entry_light_height_m": 5.8,

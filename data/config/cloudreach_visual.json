@@ -147,7 +147,7 @@
     {"id": "EastRoostRange", "position": [2090, 570, 3100], "size": [700, 1700, 1050], "seed": 377},
     {"id": "WestUpperRange", "position": [-1730, 580, 4400], "size": [800, 1720, 1300], "seed": 389},
     {"id": "EastUpperPeaks", "position": [1660, 680, 4620], "size": [600, 1920, 950], "seed": 391},
-    {"id": "NorthSummitRange", "position": [220, 720, 6260], "size": [1550, 2040, 650], "seed": 407}
+    {"id": "NorthSummitRange", "position": [220, 720, 6260], "size": [1550, 2040, 650], "seed": 407, "profile_exempt": true}
   ],
   "surface": {
     "cliff": {
