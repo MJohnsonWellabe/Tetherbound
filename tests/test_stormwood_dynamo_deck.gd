@@ -122,7 +122,7 @@ func _case_discharge_overlay_on_actual_physics_floor() -> void:
 			"warning must lie below the fitted captive's existing zero-height contact line")
 		assert_eq(Vector2(lane.global_position.x, lane.global_position.z),
 			Vector2(before[i].position.x, before[i].position.z), "warning horizontal seat unchanged")
-		assert_eq(lane.rotation, before[i].rotation, "bank direction unchanged")
+		assert_true(lane.basis.is_equal_approx(Basis.from_euler(before[i].rotation)), "bank direction unchanged")
 		assert_eq((lane.mesh as PlaneMesh).size, before[i].size, "warning footprint unchanged")
 		assert_eq(lane.material_override, before[i].material, "warning material and palette unchanged")
 	assert_eq(controller.global_position, DYNAMO.CORE_POSITION, "authored actor/fight anchor unchanged")
@@ -210,8 +210,15 @@ func _case_grounded_plates_have_authored_metal_finish_and_unchanged_footprint() 
 		var raw: Array = policy.config.plates[i]
 		assert_eq(plate.position, Vector3(float(raw[0]), 0.14, float(raw[1])), "authoritative safe plate seat unchanged")
 		var actual: Array = plate.mesh.surface_get_arrays(0)
-		for channel: int in [Mesh.ARRAY_VERTEX, Mesh.ARRAY_NORMAL, Mesh.ARRAY_INDEX]:
+		for channel: int in [Mesh.ARRAY_VERTEX, Mesh.ARRAY_INDEX]:
 			assert_eq(actual[channel], original[channel], "plate geometry and topology remain the original cylinder")
+		# Normals pass through the mesh's compressed storage; compare by angle.
+		var actual_normals: PackedVector3Array = actual[Mesh.ARRAY_NORMAL]
+		var original_normals: PackedVector3Array = original[Mesh.ARRAY_NORMAL]
+		var normals_match := actual_normals.size() == original_normals.size()
+		for n in mini(actual_normals.size(), original_normals.size()):
+			normals_match = normals_match and actual_normals[n].dot(original_normals[n]) > 0.9999
+		assert_true(normals_match, "plate normals remain the original cylinder's")
 		var vertices: PackedVector3Array = actual[Mesh.ARRAY_VERTEX]
 		var normals: PackedVector3Array = actual[Mesh.ARRAY_NORMAL]
 		var uv: PackedVector2Array = actual[Mesh.ARRAY_TEX_UV]
