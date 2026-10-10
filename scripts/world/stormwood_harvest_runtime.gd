@@ -180,9 +180,12 @@ static func add_material_cue(node: Node3D, item: String, cues: Dictionary) -> No
 	root.name = "MaterialCue"
 	node.add_child(root)
 	var glow := StandardMaterial3D.new()
-	glow.albedo_color = Color(str(spec.get("colour", "#ffffff")))
+	var colour := Color(str(spec.get("colour", "#ffffff")))
+	# A darker body under a softer glow keeps the hue: albedo and emission both
+	# at full colour tonemapped the Stormglass shards to flat white on Low.
+	glow.albedo_color = colour.darkened(clampf(float(spec.get("albedo_shade", 0.0)), 0.0, 1.0))
 	glow.emission_enabled = true
-	glow.emission = glow.albedo_color
+	glow.emission = colour
 	glow.emission_energy_multiplier = float(spec.get("emission", 1.0))
 	glow.roughness = 0.2
 	var lift := float(spec.get("lift_m", 0.0))

@@ -4624,7 +4624,8 @@
       "height_m": 1.15,
       "lift_m": 0.0,
       "colour": "#8fd4ff",
-      "emission": 1.6,
+      "emission": 0.55,
+      "albedo_shade": 0.55,
       "ring_m": 1.55,
       "width_m": 0.3
     },
@@ -4642,7 +4643,8 @@
       "height_m": 1.45,
       "lift_m": 0.0,
       "colour": "#b49cff",
-      "emission": 1.8,
+      "emission": 0.6,
+      "albedo_shade": 0.55,
       "ring_m": 1.85,
       "width_m": 0.36
     }
