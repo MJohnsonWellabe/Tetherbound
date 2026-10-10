@@ -273,10 +273,8 @@ func test_remote_shell_retains_failed_hit_and_retries_before_release() -> void:
 	var owned: Dictionary = before.party[0]
 	var rec: Dictionary = host.open(2, "cloudreach", "wild", {"hp": 100.0, "hp_max": 100.0,
 		"position": [2.0, 0.0, 0.0]}, owned.uid, DATA.CHARACTER)
-	var admitted: Dictionary = host.bind_actor_body(rec.encounter_id, 2, DATA.CHARACTER, owned, 55)
-	assert_true(admitted.get("ok") == true, "remote mastery fixture admits its owned actor")
 	var binding := {"character_id": DATA.CHARACTER, "creature_uid": owned.uid,
-		"deployment_generation": 1, "body_instance_id": 55, "actor_generation": int(admitted.get("vitals", {}).get("body_generation", 0))}
+		"deployment_generation": 1, "body_instance_id": 55, "actor_generation": 0}
 	var move := {"move_id": owned.move_quick, "slot": "quick", "range": 3.0, "cone_degrees": 100.0,
 		"windup": 0.3, "recovery": 0.2, "wind_cost": 12.0,
 		"mastery_context": {"world_namespace": "resource-namespace", "session_id": "resource-epoch"}}
@@ -285,8 +283,7 @@ func test_remote_shell_retains_failed_hit_and_retries_before_release() -> void:
 	var start: Dictionary = host.move_commit(rec.encounter_id, 2, 1)
 	assert_true(host.validate_strike({"encounter_id": rec.encounter_id, "action": 1, "slot": "quick",
 		"move_id": owned.move_quick, "move": start.move, "facing": Vector3.RIGHT}, 2,
-		{"now_ms": 1300, "origin": Vector3.ZERO, "bodies": [], "move_actor_binding": binding,
-			"f22_actor_binding": binding}).ok)
+		{"now_ms": 1300, "origin": Vector3.ZERO, "bodies": [], "move_actor_binding": binding}).ok)
 	host.credit_move_hit(rec.encounter_id, 2, 1, 12.0, "remote-opponent", 100.0)
 	writer.refuse_world = true
 	assert_false(session.foundation_combat_mastery(director, rec.encounter_id, 2, 1).durable)

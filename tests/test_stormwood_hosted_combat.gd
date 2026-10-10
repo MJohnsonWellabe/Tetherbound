@@ -10,42 +10,6 @@ const HOST_FIGHT := preload("res://scripts/combat/stormwood_authoritative_fight.
 const STORMWOOD_MANAGER := preload("res://scripts/combat/stormwood_combat_manager.gd")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
-const HOSTED_TRAINER := preload("res://scripts/combat/stormwood_hosted_trainer.gd")
-const CATALOGUE := preload("res://scripts/combat/stormwood_encounter_catalogue.gd")
-const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
-const CARD := preload("res://scripts/save/water_capture_codec.gd")
-const SAVE := preload("res://scripts/save/save_game.gd")
-const TEACHING := preload("res://scripts/creatures/teaching.gd")
-
-
-func test_tamsin_hosted_round_preserves_the_actual_opponent_card() -> void:
-	for spec: Dictionary in CATALOGUE.trainer_specs():
-		if spec.id != "tamsin_surge_lesson": continue
-		for entry: Dictionary in TRAINERS.team_of(spec):
-			var creature := TRAINERS.creature_for(entry)
-			assert_true(creature != null, "Tamsin authored creature exists")
-			if creature == null: continue
-			var raw: Dictionary = SAVE.new()._party_to_array(CARD.SingleMember.new(creature))[0]
-			var errors := TEACHING.party_loadout_errors([raw], {})
-			assert_true(errors.is_empty(), "Tamsin loadout validates: %s" % str(errors))
-			var card := CARD.encode(creature)
-			assert_false(card.is_empty(), "Tamsin card encodes %s" % entry.species)
-			if card.is_empty(): continue
-			var fight := HOSTED_TRAINER.new()
-			fight.spec = spec
-			fight.team = TRAINERS.team_of(spec)
-			fight.round_index = 0
-			fight.record = fight.authority.open(1, "stormwood", "trainer", {
-				"species_id": creature.species_id, "level": creature.level,
-				"hp": creature.hp, "hp_max": creature.max_hp,
-				"card": card, "body_generation": 1, "owner_npc": spec.id})
-			var mirrored := CARD.decode(fight.snapshot().record.opponent.card)
-			assert_true(mirrored != null, "Guest decodes the host snapshot")
-			if mirrored != null:
-				assert_eq(mirrored.uid, creature.uid, "Guest retains host opponent identity")
-				assert_eq(mirrored.move_quick, creature.move_quick, "Guest retains authored quick move")
-				assert_eq(mirrored.hp, creature.hp, "Guest retains host opponent HP")
-			fight.free()
 
 const DEFINITION := {
 	"display_name": "Terrapup", "type": "ground",

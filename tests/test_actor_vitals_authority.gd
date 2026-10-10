@@ -411,12 +411,6 @@ class ReseatSession extends Node:
 	func _authority_character(peer: int) -> String: return str(owners.get(peer, ""))
 
 
-class ReseatDirector extends "res://scripts/combat/encounter_director.gd":
-	# This detached authority fixture has no /root/Game. Supply its admitted
-	# host identity without attempting an absolute SceneTree lookup.
-	func _local_character_id() -> String: return "owner_host"
-
-
 ## F27 flip review B1: a GUEST that disengaged at a trainer round boundary is
 ## re-seated by encounter_director._resume_trainer_encounter under its own
 ## host-admitted character, so its retained row (bound creature, actor
@@ -425,7 +419,7 @@ class ReseatDirector extends "res://scripts/combat/encounter_director.gd":
 func test_trainer_round_reseat_restores_a_departed_guests_retained_row() -> void:
 	var owned: Dictionary = _portable(_player()).party[0]
 	var session := ReseatSession.new()
-	var director: Node = ReseatDirector.new()
+	var director: Node = preload("res://scripts/combat/encounter_director.gd").new()
 	director.set("_session", session)
 	director.call("_ensure_encounter_arbiters")
 	var host: RefCounted = director.get("_encounter_host")
