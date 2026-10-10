@@ -104,6 +104,13 @@ func play_once(role: String) -> void:
 	if clip.begins_with("f36_candidate/"):
 		_current = ""
 	_play(role, false)
+	if role == HIT and clip.begins_with("f36_candidate/"):
+		# Damage can freeze animation immediately, then locomotion cancels the
+		# hold on the first resumed tick. Apply the authored impact sample now
+		# so hitstop shows the wince rather than the clip's neutral lead-in.
+		var start_phase := clampf(float(_clips.get("hit_start_phase", 0.0)), 0.0, 1.0)
+		_player.seek(_hold * start_phase, true)
+		_hold *= 1.0 - start_phase
 
 
 ## Start an attack while its gameplay telegraph begins, but only for an
@@ -258,7 +265,8 @@ func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:
 	_player.speed_scale = playback_speed
 	# Blending the old candidate would reapply its unkeyed bones and pivot
 	# after restoration. The installed clip starts from the restored rig.
-	_player.play(clip, 0.0 if leaving_candidate else 0.15)
+	var impact_pose := role == HIT and clip.begins_with("f36_candidate/")
+	_player.play(clip, 0.0 if leaving_candidate or impact_pose else 0.15)
 
 
 func _clear_telegraph_attack() -> void:
