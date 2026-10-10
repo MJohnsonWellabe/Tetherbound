@@ -54,27 +54,28 @@ func _run() -> void:
 	if placed.is_empty():
 		await _feast_finish()
 		return
-	await _craft_data(1, "craft_home_key_trip", {}, 12000)
 	var kitchen := str(placed.kitchen_uid)
 	var before := await _feast(1)
 	if before.is_empty():
 		await _feast_finish()
 		return
-	check(before.items == {"berries": 4, "rootstone": 2, "attuned_ground": 1, FEAST: 0}
+	check(_ints(before.items) == {"berries": 4, "rootstone": 2, "attuned_ground": 1, FEAST: 0}
 		and int(before.party.terrapup.cap_level) == 10 and int(before.party.terrapup.level) == 10
 		and int(before.party.ripplet.cap_level) == 10 and int(before.party.ripplet.level) == 10,
 		"the guest starts with one cook's ingredients and two Lv 10 creatures at cap 10 (%s)" % JSON.stringify(before))
 
 	# Cook: the exact cost, one feast.
+	await step(1, "f27_dismiss_modals", {})
 	var cooked := await _craft_data(1, "f28_cook", {"kitchen_uid": kitchen, "button": RECIPE}, 2400)
 	var after_cook := await _feast(1)
 	check(cooked.get("pressed") == true, "the Kitchen panel offers %s (%s)" % [RECIPE, str(cooked.get("labels", []))])
-	check(after_cook.get("items", {}) == {"berries": 0, "rootstone": 0, "attuned_ground": 0, FEAST: 1},
+	check(_ints(after_cook.get("items", {})) == {"berries": 0, "rootstone": 0, "attuned_ground": 0, FEAST: 1},
 		"#3 cooking spent exactly berries 4, rootstone 2, attuned_ground 1 and made one %s (%s; %s)" % [FEAST, str(after_cook.get("items")), str(cooked.get("message"))])
 	check((after_cook.get("receipts", []) as Array).filter(func(r: Variant) -> bool: return str(r).begins_with("craft:")).size() == 1,
 		"#3 the cook saved one craft receipt")
 
 	# Without its ingredients, the same recipe is refused and nothing moves.
+	await step(1, "f27_dismiss_modals", {})
 	var short := await _craft_data(1, "f28_cook", {"kitchen_uid": kitchen, "button": RECIPE}, 2400)
 	var after_short := await _feast(1)
 	check(short.get("pressed") == true and after_short.get("items") == after_cook.get("items")
@@ -82,6 +83,7 @@ func _run() -> void:
 		"#3 a cook without the ingredients is refused and moves nothing (%s; %s)" % [str(short.get("message")), str(after_short.get("items"))])
 
 	# Type mismatch: the ground feast on the water creature.
+	await step(1, "f27_dismiss_modals", {})
 	var mismatch := await _craft_data(1, "f28_feed", {"kitchen_uid": kitchen, "button": "Rip · "}, 2400)
 	var after_mismatch := await _feast(1)
 	check(mismatch.get("pressed") == true and str(mismatch.get("message", "")).to_lower().contains("match"),
@@ -91,6 +93,7 @@ func _run() -> void:
 		"#3 the refused feed keeps the feast and leaves the Ripplet at cap 10 (%s)" % JSON.stringify(after_mismatch.party.ripplet))
 
 	# The matching ground creature: cap 10 -> 20, no level or XP.
+	await step(1, "f27_dismiss_modals", {})
 	var fed := await _craft_data(1, "f28_feed", {"kitchen_uid": kitchen, "button": "Pup · "}, 2400)
 	var after_feed := await _feast(1)
 	var pup_before: Dictionary = before.party.terrapup
@@ -103,6 +106,7 @@ func _run() -> void:
 		"#3 the feed saved one feast receipt")
 
 	# The lifted creature is not offered the tier again.
+	await step(1, "f27_dismiss_modals", {})
 	var again := await _craft_data(1, "f28_feed", {"kitchen_uid": kitchen, "button": "Pup · "}, 600)
 	check(again.get("pressed") == false, "the lifted Terrapup is not offered a tier-1 feast again (%s)" % str(again.get("labels")))
 
@@ -121,6 +125,12 @@ func _run() -> void:
 		and reloaded.get("receipts") == after_feed.get("receipts"),
 		"a save and reload keeps the cooked-and-fed state (%s)" % JSON.stringify(reloaded))
 	await _feast_finish()
+
+
+func _ints(items: Dictionary) -> Dictionary:
+	var out := {}
+	for id: String in items: out[id] = int(items[id])
+	return out
 
 
 func _feast(peer: int, character_id: String = "") -> Dictionary:

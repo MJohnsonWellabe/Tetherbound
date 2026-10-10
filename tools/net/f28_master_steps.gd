@@ -233,7 +233,9 @@ static func _feast_press(runner: SceneTree, args: Dictionary, mode: String) -> D
 	service.call("open_kitchen", kitchen)
 	await runner.process_frame
 	var panel: Node = service.get("_panel")
-	if panel == null or panel.call("is_open") != true: return _fail("the Kitchen feast panel did not open")
+	if panel == null or panel.call("is_open") != true:
+		var owner: Variant = preload("res://scripts/ui/input_owner.gd").current(runner)
+		return _fail("the Kitchen feast panel did not open (input owned by %s)" % (str(owner.name) if owner is Node else "nobody"))
 	if mode == "feed":
 		panel.call("_open_feed_from_kitchen")
 		await runner.process_frame
