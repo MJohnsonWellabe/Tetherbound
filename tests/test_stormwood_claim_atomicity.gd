@@ -134,7 +134,30 @@ func test_unsaved_ceremony_rollback_restores_original_live_team_and_inventory_un
 	game.local.inventory.set_slot(0, null)
 	assert_eq(game.local.save_data().inventory, before.inventory, "ordinary inventory writes stay fenced")
 	var released_uid: String = originals[1].uid
-	assert_true(passive.stormwood_apply_ceremony(claim, released_uid, newcomer))
+	var projected: Dictionary = preload("res://scripts/net/character_record_rules.gd").portable_projection(before)
+	var baseline_errors: Array = preload("res://scripts/net/character_authority.gd").errors(projected, game.local.character_id)
+	assert_true(baseline_errors.is_empty(), "actual full-team portable baseline: %s" % str(baseline_errors))
+	var original_answer := "stormheart_answer:%s:%s" % [newcomer.uid, game.local.character_id]
+	var history: Dictionary = preload("res://scripts/data/redesign_state.gd").defaults("character")
+	history.transaction_receipts.append(original_answer)
+	assert_true(preload("res://scripts/data/redesign_state.gd").validate("character", history).is_empty(),
+		"a valid original answer remains historical after its creature is released")
+	for malformed: Variant in ["stormheart_answer", "stormheart_answer:",
+		"stormheart_answer:invalid_uid:" + game.local.character_id,
+		"stormheart_answer:%s:" % newcomer.uid, "stormheart_answer:%s:../other" % newcomer.uid,
+		original_answer + ":extra", 42, {"receipt": original_answer}]:
+		var invalid: Dictionary = history.duplicate(true)
+		invalid.transaction_receipts = [malformed]
+		assert_false(preload("res://scripts/data/redesign_state.gd").validate("character", invalid).is_empty(),
+			"malformed/wrong-type Stormheart receipt is rejected: %s" % str(malformed))
+	var wrong_field: Dictionary = history.duplicate(true)
+	wrong_field.transaction_receipts.clear()
+	wrong_field.release_receipts.append(original_answer)
+	assert_false(preload("res://scripts/data/redesign_state.gd").validate("character", wrong_field).is_empty(),
+		"Stormheart answers belong only to transaction_receipts")
+	var proposal: Dictionary = preload("res://scripts/net/character_authority.gd").stormwood_answer_proposal(projected, claim, released_uid)
+	assert_true(proposal.get("ok") == true, "original claim proposal: %s" % str(proposal))
+	assert_true(passive.stormwood_apply_ceremony(claim, released_uid, newcomer), "scoped production release/add must succeed")
 	assert_true(game.party.members().has(newcomer))
 	assert_false(game.party.members().has(originals[1]))
 	assert_eq(game.party.size(), 5)
@@ -143,7 +166,8 @@ func test_unsaved_ceremony_rollback_restores_original_live_team_and_inventory_un
 	# BOOL leaves the derived payout/receipts installed, but nothing durable.
 	game.local.redesign_character.creatures.erase(released_uid)
 	game.save_system = RefusedCharacterWriter.new()
-	assert_true(passive.stormwood_save_owner(claim, released_uid).is_empty())
+	var saved: Dictionary = passive.stormwood_save_owner(claim, released_uid)
+	assert_true(saved.is_empty(), "failed prepared BOOL retains the unsaved choice, not a terminal proposal: %s" % str(saved))
 	assert_eq(game.save_system.writes, 1)
 	assert_ne(game.local.save_data().inventory, before.inventory, "release payout was installed before the failed save")
 	assert_true(game.local.redesign_character.release_receipts.has("release:" + released_uid))
