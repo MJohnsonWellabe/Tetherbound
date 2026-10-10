@@ -86,8 +86,8 @@
     }
   },
   "ack_timeout_seconds": 8,
-  "guest_ack_timeout_seconds": 24,
-  "_comment_guest_ack_timeout_seconds": "A guest's acknowledgement is a host round trip (fresh personal view, send, host durable save, row delivery). On a slow frame rate (CI at ~1 fps) 8 s ran out before the first view reply (F18 #4, CI 37298008163 shard 5). The host's own ack commits in-frame and keeps ack_timeout_seconds.",
+  "guest_ack_timeout_seconds": 60,
+  "_comment_guest_ack_timeout_seconds": "A guest's acknowledgement is a host round trip (fresh personal view, send, host durable save, row delivery). On a slow frame rate (CI at ~1 fps) 8 s ran out before the first view reply (F18 #4, CI 37298008163 shard 5). 24 -> 60: at ~1.7 s per frame (peer 1, #612 multiplayer shard 1, net-f20_ending-20261010T102628Z) the host's 'awaiting_saved_decision' answer arrived just after the 24 s deadline, so the guest gave up unjournalled and credits never opened. A connected wait ends sooner on reply, disconnect or context change, and stays below guest_ack_settle_ceiling_seconds. The host's own ack commits in-frame and keeps ack_timeout_seconds.",
   "guest_ack_settle_ceiling_seconds": 120,
   "_comment_guest_ack_settle_ceiling_seconds": "Once the host has journalled a guest's acknowledgement the presentation waits for it to settle past guest_ack_timeout_seconds; this ceiling still ends that wait with the failure notice if the settlement never completes while connected (review of d773e034). Disconnect and context changes end it at once.",
   "handoff_retry_seconds": 0.5,
