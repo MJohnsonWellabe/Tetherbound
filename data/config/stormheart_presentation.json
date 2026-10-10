@@ -52,7 +52,9 @@
     "enabled": true,
     "_comment": "P2-037 candidate: preserve the installed TwistedTree leaf UV/alpha atlas and recolour it in a shader. Native crown review is required; no geometry, scale, placement or collision changes.",
     "leaf_colour": "#75924d",
-    "roughness": 0.91
+    "roughness": 0.91,
+    "wind_amplitude_m": 0.16,
+    "wind_speed": 0.85
   },
   "visible_roots": {"enabled": true, "scope": "client_presentation", "reach_m": 132.0, "_comment": "Reference-backed visual roots anchor in actual outer bark, keeping south/east openings and every physical floor/collider unchanged. Full native landmark judgment required."}
 }

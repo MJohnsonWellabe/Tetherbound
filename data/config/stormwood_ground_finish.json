@@ -7,25 +7,25 @@
     "height_far": 0.18,
     "tint_base": "#25392c",
     "tint_tip": "#496344",
-    "density_gain": 0.42,
+    "density_gain": 0.3,
     "clump_contrast": 0.95,
-    "clump_scale": 0.028,
+    "clump_scale": 0.016,
     "ground_blend": 0.8,
     "translucency": 0.04
   },
   "tiers": {
     "flowers": {
-      "enabled": true
+      "enabled": false
     },
     "flowers_gold": {
-      "enabled": true
+      "enabled": false
     },
     "bushes": {
       "enabled": true,
       "item_size": 0.52,
       "size_jitter": 0.45,
-      "density_gain": 0.36,
-      "drift_scale": 0.035,
+      "density_gain": 0.24,
+      "drift_scale": 0.018,
       "drift_contrast": 1.0,
       "drift_gate": 2.0,
       "tint_base": "#273d32",

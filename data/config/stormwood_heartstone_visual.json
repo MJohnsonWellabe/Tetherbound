@@ -1,0 +1,14 @@
+{
+  "scope": "client_presentation",
+  "charge_colour": "#9adecd",
+  "charge_energy": 1.1,
+  "released_colour": "#76a485",
+  "released_energy": 0.22,
+  "vein_scale": 4.6,
+  "vein_width": 0.035,
+  "pulse_depth": 0.12,
+  "pulse_speed": 0.7,
+  "light_energy": 1.5,
+  "released_light_energy": 0.45,
+  "light_range_m": 14.0
+}
