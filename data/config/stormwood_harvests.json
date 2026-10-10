@@ -4630,11 +4630,20 @@
       "width_m": 0.3
     },
     "glowmoss": {
-      "kind": "glow_cap",
-      "radius_m": 0.42,
-      "lift_m": 0.32,
+      "kind": "moss",
+      "replace_model": true,
+      "radius_m": 0.55,
+      "lift_m": 0.10,
       "colour": "#7dffb8",
-      "emission": 1.2
+      "emission": 0.3
+    },
+    "conductor_vine": {
+      "kind": "veins", "radius_m": 0.65, "height_m": 1.8,
+      "width_m": 0.045, "colour": "#cfa16b", "emission": 0.22
+    },
+    "thunderwood": {
+      "kind": "veins", "radius_m": 0.52, "height_m": 3.2,
+      "width_m": 0.035, "colour": "#87cfe1", "emission": 0.18
     },
     "stormglass_crown": {
       "kind": "shards",

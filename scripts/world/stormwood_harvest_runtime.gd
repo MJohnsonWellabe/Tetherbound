@@ -226,4 +226,50 @@ static func add_material_cue(node: Node3D, item: String, cues: Dictionary) -> No
 			cap.position = Vector3(0.0, lift, 0.0)
 			cap.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			root.add_child(cap)
+		"moss":
+			# Low overlapping cushions read as ground growth, not mushrooms.
+			for index in 9:
+				var pad := MeshInstance3D.new()
+				var dome := SphereMesh.new()
+				dome.radius = radius * (0.6 + 0.08 * (index % 4))
+				dome.height = dome.radius * 0.42
+				pad.mesh = dome
+				pad.material_override = glow
+				var angle := TAU * float(index) / 9.0
+				pad.position = Vector3(cos(angle) * radius, lift, sin(angle) * radius)
+				root.add_child(pad)
+		"veins":
+			# Broken copper/blue seams follow the node's trunk or vine body.
+			var height := float(spec.get("height_m", 2.0))
+			for strand in 3:
+				for step in 12:
+					var t := float(step) / 12.0
+					var next_t := float(step + 1) / 12.0
+					var angle := TAU * (float(strand) / 3.0 + t * 0.55)
+					var next_angle := TAU * (float(strand) / 3.0 + next_t * 0.55)
+					var a := Vector3(cos(angle) * radius, lift + t * height, sin(angle) * radius)
+					var b := Vector3(cos(next_angle) * radius, lift + next_t * height, sin(next_angle) * radius)
+					var seam := MeshInstance3D.new()
+					var tube := CylinderMesh.new()
+					tube.top_radius = float(spec.get("width_m", 0.035))
+					tube.bottom_radius = tube.top_radius
+					tube.height = a.distance_to(b)
+					tube.radial_segments = 5
+					seam.mesh = tube
+					seam.material_override = glow
+					seam.position = (a + b) * 0.5
+					seam.quaternion = Quaternion(Vector3.UP, (b - a).normalized())
+					root.add_child(seam)
+	# Keep new cues on the same visibility lifecycle as the harvest model.
+	# In particular, hiding a bush in a fight must also hide its copper seams.
+	if item in ["glowmoss", "conductor_vine", "thunderwood"]:
+		var visual := node.get("_visual") as Node3D
+		if visual != null:
+			if bool(spec.get("replace_model", false)):
+				visual.queue_free()
+				node.set("_visual", root)
+			else:
+				node.remove_child(root)
+				visual.add_child(root)
+				root.transform = visual.transform.affine_inverse()
 	return root
