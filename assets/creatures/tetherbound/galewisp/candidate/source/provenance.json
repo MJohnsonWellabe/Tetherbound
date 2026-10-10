@@ -1,0 +1,103 @@
+{
+  "subject": "galewisp",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Disabled asset-local review candidate; ordinary Galewisp selection remains unchanged",
+  "reference": "assets/creatures/tetherbound/galewisp/reference/native-standing-v1.png",
+  "reference_author": "Codex original draft via built-in imagegen",
+  "identity_reference": "assets/creatures/tetherbound/galewisp/reference/three_quarter.png",
+  "reference_brief": "Original full-body studio Galewisp refinement preserving cream fox face, teal eyes, golden brows, tall twin blue/cream/gold crests, layered blue/cream/gold feather wings and charcoal taloned feet; neutral separate grounded feet and wings partly extended for rig fitting; no equipment or environment.",
+  "prompt_record": "Brief and generated input PNG retained; exact bitmap-generation prompt was not retained in the local provenance record. Meshy task settings are retained exactly.",
+  "reference_inspection": "Cream fox face, teal eyes, golden brows, tall blue cream ear crests, blue/cream/gold feather wings, charcoal taloned feet preserved; standing separate feet and visibly extended wings; one view does not prove reverse anatomy or riggability",
+  "generation": {
+    "task_id": "01a125a6-fcec-72c7-a7f4-0cd3bd7e05d7",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "night": "2026-10-09",
+    "night_submission_index": 2,
+    "observed_credit_cost": 30,
+    "new_submissions_for_this_revision": 1
+  },
+  "rights": {
+    "basis": "Original agent-drafted reference based on owner-held Galewisp identity; generated using existing owner-authorized paid Meshy account under RD-26; no third-party character input, purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models",
+    "terms_checked": "2026-10-10"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "geometry": "Original generated PBR textures retained; UV-loop-preserving weld; 30516 input triangles. Tail tips lifted above the foot soles before grounding and final scale.",
+    "skin": "19 fitted anatomical joints: torso/head, three joints per wing, upper/lower legs/feet and two tail joints. Local surface diffusion and four normalized influences; no donor/heat retries.",
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "pose_revision": "Initial flank pose stayed propped up on a spread wing. Changed to backward-folded wings; revised native samples retained. Flank contact and appeal still require independent correction/approval.",
+    "height_m": 3.25,
+    "bones": 19,
+    "vertices": 15305,
+    "unweighted_vertices": 0,
+    "tail_tip_lift_raw_m": 0.11770680053157016,
+    "foot_sole_raw_m": 0.10504007203501864,
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 stable Windows",
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "raster": [
+      1920,
+      1080
+    ],
+    "before_height_m": 3.24999976158142,
+    "candidate_height_m": 3.25000023841858,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 native Low samples across hit/faint/swim/fly_grip/ride included in the single Low sheet; separate native standing/reverse ruler samples retained outside Git",
+    "world": "Production Cloudreach scene, CameraRig and matched stage/seed/pose sampling; presentation fixtures only",
+    "scene_warnings": "Existing Cloudreach surface-placement and fail-closed wild-site warnings occur in baseline and candidate. No engine errors in these captures; successful manifests certify fixture output only.",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "skin_weights": "Zero unweighted vertices; not independent deformation approval",
+    "full_rig_animation": "OPEN: flank contact/appeal and ordinary flight/grip paths not approved",
+    "independent_art_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Flank contact and appeal require independent correction/approval before enabling",
+    "Procedural clips do not establish foot locking, ordinary flight/grip or rider contact",
+    "Fixtures do not prove earned fights or traversal",
+    "Exact bitmap draft prompt was not retained; reference brief, inspected input PNG and exact Meshy settings are preserved",
+    "Candidate remains OFF until the full F36 art bar passes"
+  ]
+}
