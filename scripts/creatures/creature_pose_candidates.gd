@@ -119,6 +119,8 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 			animation.position_track_insert_key(position_track, time, position)
 		library.add_animation(StringName(role), animation)
 		clips[role] = "%s/%s" % [LIBRARY, role]
+		if role == "hit":
+			clips["hit_start_phase"] = float(spec.get("start_phase", 0.0))
 	if player.has_animation_library(LIBRARY):
 		player.remove_animation_library(LIBRARY)
 	player.add_animation_library(LIBRARY, library)

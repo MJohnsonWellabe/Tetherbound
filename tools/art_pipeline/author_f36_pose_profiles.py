@@ -280,6 +280,8 @@ def main():
                                'pivot_roll_deg': 90 * min(1, phase / .7) if role == 'faint' else 0})
             roles[role] = {'duration_s': {'hit': .24, 'faint': 1.2, 'swim': 1.15, 'fly_grip': .9, 'ride': .8}[role],
                            'loop': role in ('swim', 'fly_grip', 'ride'), 'frames': frames}
+            if role == 'hit':
+                roles[role]['start_phase'] = .125
         profile = f'{family}_{len(profiles) + 1}'
         profiles[profile] = roles
         rig_profiles[signature] = profile
