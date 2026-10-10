@@ -429,7 +429,7 @@ func _check_actual_lesson_service_fixtures(game: Node) -> void:
 			while not (service.get("_pending") as Dictionary).is_empty() and Time.get_ticks_msec() < deadline: await process_frame
 			if not _lesson_service_check((service.get("_pending") as Dictionary).is_empty() and game.call("save_game", slot) == true,
 				"actual callback settles and production autosave accepts: " + id): return
-			if not _lesson_service_disk(game, seen): return
+			if not _lesson_service_disk(game, seen, before): return
 			print("F46 SERVICE ACK " + JSON.stringify({"lesson": id, "teacher": teacher, "character_id": character,
 				"owned_uid": uid, "fixture": declarations[id], "source": "actual proximity/eligibility service",
 				"physical_skip": true, "callback_once": true, "personal_ack_on_disk": true, "progression_unchanged": true}))
@@ -440,7 +440,7 @@ func _check_actual_lesson_service_fixtures(game: Node) -> void:
 	if not _lesson_service_check(game.call("save_game", slot) == true, "all-eight production autosave before memory clear"): return
 	if not await _lesson_service_title_load(game, slot): return
 	if not _lesson_service_check(_lesson_service_stable(game) == before, "actual title Load retains owner/team and declared progression"): return
-	if not _lesson_service_disk(game, seen): return
+	if not _lesson_service_disk(game, seen, before): return
 	for teacher: String in ["Grandpa", "Tam"]:
 		if not await _lesson_service_place(game, teacher): return
 		for frame in 60:
@@ -453,7 +453,7 @@ func _check_actual_lesson_service_fixtures(game: Node) -> void:
 		travel.set("_lesson_replay_identity", {"character_id": character, "party_uids": [uid]})
 		if not _lesson_service_check(await travel.call("replay_observed_lesson"), "actual Settings Help replay after disk Load: " + str(row.id)): return
 		if not _lesson_service_check(_lesson_service_stable(game) == before, "Help replay grants no progression: " + str(row.id)): return
-	if not _lesson_service_disk(game, seen): return
+	if not _lesson_service_disk(game, seen, before): return
 	print("F46 SERVICE RESULT " + JSON.stringify({"passed": true, "lessons": seen, "character_id": character,
 		"party_uids": [uid], "locked_teacher_control": true, "unlocked_outside_radius_control": true,
 		"actual_service_trigger": true, "all_skipped_by_controller": true, "callback_ack_saved": true,
@@ -532,8 +532,8 @@ func _lesson_service_title_load(game: Node, slot: int) -> bool:
 	return await _lesson_service_world_ready(game)
 
 
-## Exclude lesson acknowledgements and changing HP/food/clock from the stable
-## comparison. A lesson may teach; it may never pay inventory/XP or alter team.
+## Exclude only the eight expected lesson acknowledgements and changing
+## HP/food/clock. A lesson may never grant other flags, inventory/XP or team edits.
 func _lesson_service_stable(game: Node) -> Dictionary:
 	var local: RefCounted = game.get("local")
 	var party: Array[Dictionary] = []
@@ -547,15 +547,32 @@ func _lesson_service_stable(game: Node) -> Dictionary:
 	var inventory: Array = []
 	for slot: int in int(local.get("inventory").call("slot_count")): inventory.append(local.get("inventory").call("stack_at", slot))
 	return {"character_id": str(local.get("character_id")), "party_uids": uids, "party": party,
-		"inventory": inventory, "redesign_character": local.get("redesign_character")}.duplicate(true)
+		"inventory": inventory, "redesign_character": local.get("redesign_character"),
+		"personal_flags": _lesson_service_progress_flags(local.get("flags").call("all_set"), true),
+		"world_flags": _lesson_service_progress_flags(game.get("world").get("flags").call("all_set"), false)}.duplicate(true)
 
 
-func _lesson_service_disk(game: Node, expected: Array[String]) -> bool:
+func _lesson_service_progress_flags(flags: Array, personal: bool) -> Array[String]:
+	var acknowledgements: Array[String] = []
+	if personal:
+		for row: Dictionary in preload("res://scripts/onboarding/lesson_rules.gd").config().get("lessons", []):
+			acknowledgements.append("opening:lesson:" + str(row.id))
+	var retained: Array[String] = []
+	for raw: Variant in flags:
+		var id := str(raw)
+		if not acknowledgements.has(id): retained.append(id)
+	retained.sort()
+	return retained
+
+
+func _lesson_service_disk(game: Node, expected: Array[String], before: Dictionary) -> bool:
 	var character := str(game.get("local").get("character_id"))
 	var path: String = game.get("save_system").call("characters").call("path_for", character)
 	var disk: Variant = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
 	if not _lesson_service_check(disk is Dictionary and disk.get("character_id") == character, "actual character disk belongs to original owner"): return false
 	var flags: Array = disk.get("flags", {}).get("flags", [])
+	if not _lesson_service_check(_lesson_service_progress_flags(flags, true) == before.personal_flags,
+		"actual character disk retains every non-lesson progression flag"): return false
 	for row: Dictionary in preload("res://scripts/onboarding/lesson_rules.gd").config().get("lessons", []):
 		var id := str(row.id)
 		if not _lesson_service_check(flags.count("opening:lesson:" + id) == (1 if expected.has(id) else 0) \
