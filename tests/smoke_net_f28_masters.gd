@@ -185,7 +185,14 @@ func _stand(peer: int, at: Vector3) -> bool:
 
 
 func _chest(peer: int, label: String) -> void:
-	if not await _stand(peer, _chest_at): return
+	if peer == 0:
+		if not await _stand(peer, _chest_at): return
+	else:
+		# The guest walks the few metres from the Master to its chest. A
+		# fixture teleport is a discontinuity its owner-passive stream holds
+		# until the host's body catches up, which can stall its checkpoints.
+		if not await _pass(peer, "f27_dismiss_modals", {}): return
+		if not await _pass(peer, "move_to", {"x": _chest_at.x + 2.0, "z": _chest_at.z + 1.0, "close_enough": 1.5, "budget_frames": 1800}, 2200): return
 	# A guest's press waits for its own queued owner checkpoints (the duel's
 	# win and mastery duties) to settle, as a player's press stays open.
 	var opened: Dictionary = await step(peer, "f28_chest", {"master_id": MASTER, "budget_frames": 3600}, 4000)
