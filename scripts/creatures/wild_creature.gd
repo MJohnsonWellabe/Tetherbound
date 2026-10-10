@@ -229,6 +229,7 @@ func is_alive() -> bool:
 func _physics_process(delta: float) -> void:
 	var w0 := Time.get_ticks_usec()
 	var before := global_position
+	rest_slide_skip_allowed = not engaged
 	if engaged:
 		_tick_combat(delta)
 	elif is_alive():
