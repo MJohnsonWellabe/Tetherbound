@@ -962,6 +962,11 @@ func _exercise_simultaneous(cfg: Dictionary) -> void:
 	var beats := {"early": 0.35, "middle": duration * 0.5, "late": duration - 0.3}
 	var captured := {}
 	var intervals: Array[float] = []
+	# The first frame after launch carries shader compilation for all four
+	# effects; it is reported apart and the presentation is timed from it.
+	var launched := Time.get_ticks_usec()
+	await RenderingServer.frame_post_draw
+	var first_frame_ms := float(Time.get_ticks_usec() - launched) / 1000.0
 	var started := Time.get_ticks_usec()
 	var last := started
 	while float(Time.get_ticks_usec() - started) / 1000000.0 < duration + 0.4:
@@ -980,9 +985,9 @@ func _exercise_simultaneous(cfg: Dictionary) -> void:
 	if captured.size() != beats.size(): _failures.append("Incomplete four-ultimate frames")
 	if int(arrivals[0]) != _simultaneous.size(): _failures.append("Four-ultimate arrivals %d" % arrivals[0])
 	_records.append({"id": "four_simultaneous", "moves": _simultaneous, "presentation_seconds": duration,
-		"captures": captured, "arrivals": arrivals[0], "frames": intervals.size(),
+		"captures": captured, "arrivals": arrivals[0], "frames": intervals.size(), "first_frame_ms": first_frame_ms,
 		"frame_ms_p95": p95, "frame_ms_max": intervals.back() if not intervals.is_empty() else 0.0})
-	print("F35 four simultaneous frames=%d p95=%.2fms max=%.2fms arrivals=%d" % [intervals.size(), p95,
+	print("F35 four simultaneous frames=%d first=%.0fms p95=%.2fms max=%.2fms arrivals=%d" % [intervals.size(), first_frame_ms, p95,
 		intervals.back() if not intervals.is_empty() else 0.0, arrivals[0]])
 
 

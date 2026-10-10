@@ -201,6 +201,7 @@ func _run() -> void:
 		if hit == 2 and bool(ULTIMATES.config().get("enabled", false)):
 			# F23#5: a part-filled meter cannot fire. The same host ingress the
 			# gated check below uses refuses it without touching the resources.
+			await _wait_ready()
 			var partial: Dictionary = _host.move_resource_snapshot(_id, 1, _creature.uid).duplicate(true)
 			var row_before: Dictionary = _host.record(_id).participants[1].move_resources[_creature.uid].duplicate(true)
 			var early: Dictionary = _director.call("_host_move_start", {"encounter_id": _id, "slot": "ultimate", "action": 98}, 1)
