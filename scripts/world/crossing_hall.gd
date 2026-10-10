@@ -12,6 +12,8 @@ const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 const PORTAL_ACTION := preload("res://scripts/world/portal_arch.gd")
+const DATA := preload("res://scripts/data/redesign_data.gd")
+const PORTALS_PATH := "res://data/config/portals.json"
 
 var _config: Dictionary = {}
 var _arches: Dictionary = {}
@@ -93,7 +95,7 @@ func _build_arch(entry: Dictionary) -> void:
 	slot.add_to_group("crossing_hall_arches")
 	add_child(slot)
 	_add_model(slot, ARCH_MODEL)
-	var board := _label(slot, ORDER.display_name(str(entry.biome)), Vector3(0, 3.55, 0))
+	var board := _label(slot, sign_text(entry, DATA.json(PORTALS_PATH)), Vector3(0, 3.55, 0))
 	board.name = "BiomeSign"
 	var state := _label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked", Vector3(0, 2.95, .12))
 	state.name = "StateSign"
@@ -159,6 +161,18 @@ func _add_model(parent: Node3D, path: String) -> void:
 		push_error("Crossing Hall installed model missing: " + path)
 		return
 	parent.add_child(packed.instantiate())
+
+
+## F19#5: a live arch's own board names its biome and the same recommended
+## level its portal prompt reads (portals.json). The level advises; travel is
+## never gated by it (portal_action_policy.gd reads no party level).
+static func sign_text(entry: Dictionary, portals: Dictionary) -> String:
+	var name := ORDER.display_name(str(entry.get("biome", "")))
+	for row: Dictionary in portals.get("arches", []):
+		if str(row.get("id", "")) == str(entry.get("id", "")) and str(row.get("kind", "")) == "live" \
+				and int(row.get("recommended_level", 0)) > 0:
+			return "%s · Recommended Lv %d" % [name, int(row.recommended_level)]
+	return name
 
 
 func _label(parent: Node3D, text: String, at: Vector3) -> Label3D:
