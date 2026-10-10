@@ -107,6 +107,7 @@ func _proof() -> void:
 		if poll % 10 == 9: print("F28 guest win still settling after %d polls; input owner %s; host duels %s" % [poll + 1, str((await probe(1, "input_context"))), str((await step(0, "f28_host_duels", {})).get("data", {}))])
 		await step(1, "wait", {"frames": 60})
 	print("F28 guest win settled after %d polls of 60 frames" % settle_polls)
+	if settle_polls > 0: await _projection_diff()
 	for peer in 2:
 		var won := await _view(peer, "")
 		check((won.master_wins as Array).count(MASTER) == 1, "#2 peer %d holds exactly one %s win (%s)" % [peer, MASTER, str(won.master_wins)])
@@ -136,6 +137,26 @@ func _proof() -> void:
 	_want_same(guest_paid, await _view(1, ""), "#4 guest after a chest replay post-reload")
 	await _want_host_matches(guest_paid, "#4 host admitted guest at the end")
 	print("F28_NET_MASTERS: chosen-creature loss then retry win, one recipe per character, no regrant")
+
+
+## Diagnostic only: where the guest's owner projection and the host's
+## owner-passive view of it differ (as smoke_net_f27_guest_wild_win prints).
+func _projection_diff() -> void:
+	var owner_state: Dictionary = ((await step(1, "f27_passive_projection", {})).get("data", {}) as Dictionary).get("state", {})
+	var host_data: Dictionary = (await step(0, "f27_passive_projection", {"character_id": _guest_id})).get("data", {})
+	print("F28 projection diff (host stream error %s):" % str(host_data.get("error")))
+	_diff("", owner_state, host_data.get("state", {}))
+
+
+func _diff(path: String, a: Variant, b: Variant) -> void:
+	if a is Dictionary and b is Dictionary:
+		var keys: Dictionary = {}
+		for k: Variant in (a as Dictionary).keys() + (b as Dictionary).keys(): keys[k] = true
+		for k: Variant in keys: _diff("%s.%s" % [path, str(k)], (a as Dictionary).get(k), (b as Dictionary).get(k))
+	elif a is Array and b is Array and (a as Array).size() == (b as Array).size():
+		for i in (a as Array).size(): _diff("%s[%d]" % [path, i], a[i], b[i])
+	elif str(a) != str(b):
+		print("  F28 DIFF %s owner=%s host=%s" % [path, str(a).left(160), str(b).left(160)])
 
 
 func _stand(peer: int, at: Vector3) -> bool:
