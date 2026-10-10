@@ -220,7 +220,9 @@
       {"id":"lower_left_shelf", "at_xz":[-34.0,-58.0], "base_radius_xz":[16.0,12.0], "top_radius_xz":[11.0,8.0], "top_lean_xz":[-1.5,-1.0], "height_m":17.0, "sink_m":1.8, "route_edge_clearance_m":50.22, "seed":4103},
       {"id":"lower_right_shelf", "at_xz":[80.0,-50.0], "base_radius_xz":[17.0,12.0], "top_radius_xz":[11.5,8.0], "top_lean_xz":[1.5,-0.5], "height_m":21.0, "sink_m":1.8, "route_edge_clearance_m":24.21, "seed":4104},
       {"id":"rear_left_spire", "at_xz":[-42.0,-78.0], "base_radius_xz":[18.0,14.0], "top_radius_xz":[9.0,7.0], "top_lean_xz":[-4.0,-2.0], "height_m":68.0, "sink_m":3.0, "route_edge_clearance_m":64.86, "seed":4105},
-      {"id":"rear_right_spire", "at_xz":[90.0,-35.0], "base_radius_xz":[19.0,14.0], "top_radius_xz":[9.5,7.0], "top_lean_xz":[4.0,-2.5], "height_m":76.0, "sink_m":3.0, "route_edge_clearance_m":33.06, "seed":4106}
+      {"id":"rear_right_spire", "at_xz":[90.0,-35.0], "base_radius_xz":[19.0,14.0], "top_radius_xz":[9.5,7.0], "top_lean_xz":[4.0,-2.5], "height_m":76.0, "sink_m":3.0, "route_edge_clearance_m":33.06, "seed":4106},
+      {"id":"west_summit_shoulder", "at_xz":[-250.208,324.289], "base_radius_xz":[38.0,30.0], "top_radius_xz":[18.0,12.0], "top_lean_xz":[-9.0,3.0], "height_m":142.0, "sink_m":4.0, "seed":4107},
+      {"id":"east_summit_shoulder", "at_xz":[-70.208,274.289], "base_radius_xz":[30.0,34.0], "top_radius_xz":[12.0,16.0], "top_lean_xz":[6.0,-4.0], "height_m":112.0, "sink_m":4.0, "seed":4108}
     ],
     "groves": [
       {"support":"gate_left_shoulder", "seed":5101, "radius_m":5.2, "trees":3, "shrubs":8, "groundcover":13},
