@@ -3543,17 +3543,21 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 	var named := is_instance_valid(_wild) and _wild.has_method("named_combat_target") and bool(_wild.call("named_combat_target"))
 	if slot == "ultimate" and named:
 		damage = minf(damage, float(_enemy.max_hp) * float(MATH.config().get("ultimate", {}).get("max_fraction_of_named_hp", 0.2)))
+	# A zero-power utility (Slow Field, Sap, Bramble Trap) lands its effect and
+	# deals nothing; the rolled-damage floor applies only to damaging moves.
+	var effect_only := slot == "utility" and frozen.has("base_power") and float(frozen.get("base_power", 0.0)) <= 0.0
+	if effect_only: damage = 0.0
 	var hp_before := float(_enemy.hp)
 	_confirm_host_contact(str(impact_context.get("action_id", "")))
-	var killed: bool = _enemy.take_damage(damage)
+	var killed: bool = _enemy.take_damage(damage) if damage > 0.0 else false
 	var stagger_triggered := false
 	var protected := is_instance_valid(_wild) and _wild.has_method("protected_heavy_committed") and bool(_wild.call("protected_heavy_committed"))
-	if not killed and _wild != null and _wild.has_method("apply_poise_damage") and not protected:
+	if not killed and not effect_only and _wild != null and _wild.has_method("apply_poise_damage") and not protected:
 		var force_interrupt := charged and enemy_is_winding_up() \
 			and bool(_poise_config().get("interrupt_on_charged_into_telegraph", true)) \
 			and charge_read_the_tell(_host_charged_windup(impact_context, move_id), int(frozen.get("started_at_ms", -1)))
 		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
-	if hp_before > float(_enemy.hp) and not killed and is_instance_valid(_wild):
+	if (hp_before > float(_enemy.hp) or effect_only) and not killed and is_instance_valid(_wild):
 		if slot == "utility" and _wild.has_method("apply_landed_utility"):
 			var source := impact_context.get("striker_body") as Node3D
 			var actor: Dictionary = frozen.get("actor_binding", {})
@@ -3563,7 +3567,8 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 					"source_uid": str(card.get("creature_uid", "")), "target_uid": str(_enemy.get("uid")),
 					"source_position": source.global_position, "target_position": _wild.global_position,
 					"source_hp": float(card.get("hp", 0.0)), "source_max_hp": float(card.get("hp_max", card.get("max_hp", 0.0))),
-					"target_hp": hp_before, "hostile": true, "geometry_connected": true, "target_is_boss": named})
+					"target_hp": hp_before, "hostile": true, "geometry_connected": true, "target_is_boss": named,
+					"target_is_heavy_boss": named, "target_point": _wild.global_position})
 		elif slot == "ultimate" and _wild.has_method("hold_ultimate_reaction"):
 			_wild.call("hold_ultimate_reaction", maxf(0.0, float(frozen.get("ultimate", {}).get("presentation_seconds", 2.4)) - float(impact_context.get("travel_seconds", 0.0))))
 	var direction: Vector3 = impact_context.get("direction", Vector3.ZERO)
