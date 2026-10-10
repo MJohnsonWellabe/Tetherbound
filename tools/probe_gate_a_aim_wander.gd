@@ -10,9 +10,12 @@ class CombatState extends Node:
 class WanderDriver extends DRIVE:
 	var movement_calls := 0
 	var aim_calls := 0
+	var walled := false
 
-	func _drive_body_toward(_body: Node3D, _point: Vector3, _frames: int) -> void:
+	func _drive_body_toward(body: Node3D, point: Vector3, _frames: int) -> void:
 		movement_calls += 1
+		if not walled:
+			body.global_position = point
 
 	func _aim_camera_at(_target: Node3D, _seconds: float = AIM_CONVERGE_SECONDS) -> bool:
 		aim_calls += 1
@@ -23,8 +26,10 @@ func _init() -> void:
 
 func _run() -> void:
 	var failed := false
-	for aiming in [false, true]:
+	for scenario in [[false, false], [true, false], [true, true]]:
+		var aiming: bool = scenario[0]
 		var driver := WanderDriver.new()
+		driver.walled = scenario[1]
 		var player := CharacterBody3D.new()
 		var wild := Node3D.new()
 		var combat := CombatState.new()
@@ -40,8 +45,11 @@ func _run() -> void:
 		driver._combat = combat
 		await driver._wander_for_a_new_angle()
 		var expected_aims := 1 if aiming else 0
-		var passed := driver.movement_calls == 1 and driver.aim_calls == expected_aims
-		print("AIM WANDER PROBE aiming=", aiming, " movement_calls=", driver.movement_calls,
+		# A walk that goes nowhere tries the other side once, then gives up.
+		var expected_moves := 2 if driver.walled else 1
+		var passed := driver.movement_calls == expected_moves and driver.aim_calls == expected_aims
+		print("AIM WANDER PROBE aiming=", aiming, " walled=", driver.walled,
+			" movement_calls=", driver.movement_calls,
 			" aim_calls=", driver.aim_calls, " expected_aim_calls=", expected_aims,
 			" passed=", passed)
 		failed = failed or not passed
