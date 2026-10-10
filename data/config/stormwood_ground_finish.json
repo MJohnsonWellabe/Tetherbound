@@ -1,5 +1,5 @@
 {
-  "enabled": false,
+  "enabled": true,
   "scope": "client_presentation",
   "_comment": "F41/P2-039 realm-local profile through existing grass_field.configure_profile. Short dark ground cover, low clustered shrubs and wet litter on grass/soil/damp/forest_floor add understory layers without admitting path or rock. Uses the existing generated grass/shrub/litter families and retains the grass ring count; disables flower tiers and tunes cover size/density. No scatter bake, terrain, collision, authority or save edits. Candidate requires native before/after visual proof before landing; revert enabled on failure.",
   "grass": {
@@ -15,10 +15,10 @@
   },
   "tiers": {
     "flowers": {
-      "enabled": false
+      "enabled": true
     },
     "flowers_gold": {
-      "enabled": false
+      "enabled": true
     },
     "bushes": {
       "enabled": true,
