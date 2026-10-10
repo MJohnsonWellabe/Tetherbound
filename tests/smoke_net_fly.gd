@@ -210,7 +210,7 @@ func _run() -> void:
 	# SETUP: peer 0 needs a creature of its own before it can pick a fight, and
 	# something in the satchel before it can drop anything. Neither is what is
 	# under test; both are what a player brings.
-	var host_creature: Dictionary = await step(0, "deploy_creature", {"species": "terrapup"})
+	var host_creature: Dictionary = await step(0, "deploy_creature", {"species": "terrapup", "owned": true})
 	_check(str(host_creature.get("verdict", "")) == "PASS",
 		"SETUP: peer 0 has its own creature out to fight beside (%s)"
 			% str(host_creature.get("detail", "")))
