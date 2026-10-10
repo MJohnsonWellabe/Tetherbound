@@ -44,7 +44,7 @@ func _foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 func _action_completed(action: String, original: Dictionary, result: Dictionary) -> void:
 	if action == "master_chest":
 		if result.get("settled") == true or result.get("owner_saved") == true:
-			_message("Ascension Feast recipe learned. Your Master reward is saved.")
+			_message("Ascension Feast recipe learned. Master rewards are saved; check your satchel for preparation supplies, then craft at home.")
 			view()
 		elif result.get("terminal_refusal") == true:
 			_message(str(result.get("reason", result.get("code", "Chest reward is still pending."))))
