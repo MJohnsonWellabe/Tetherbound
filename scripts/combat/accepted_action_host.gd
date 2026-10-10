@@ -350,6 +350,14 @@ func publish_move_action_terminal(id: String, peer: int, action_id: String, next
 	return true
 
 
+## A host that refuses after begin_move_action_resolution releases the
+## publication, so one refused arrival cannot fence every later action.
+func abandon_move_action_resolution(id: String, peer: int, action_id: String) -> void:
+	var entry: Dictionary = _actions(id, peer).get(action_id, {})
+	if entry.get("phase") in ["resolving", "body_publication_pending"]:
+		entry["phase"] = "cancelled"
+
+
 func move_action_publication_pending(id: String) -> bool:
 	for state: Dictionary in (_strike_authority.get(id, {}) as Dictionary).values():
 		for entry: Dictionary in (state.get("accepted_actions", {}) as Dictionary).values():

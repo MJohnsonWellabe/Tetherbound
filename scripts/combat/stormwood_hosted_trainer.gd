@@ -274,17 +274,23 @@ func _strike(peer: int, intent: Dictionary) -> Dictionary:
 		var damage: Dictionary = engine.host_roll_damage(card, move_id, float(profile.get("power", 9.0)), slot == "charged",
 			{"move": profile, "action_id": str(started.action_id), "striker_body": body,
 			"body_generation": round_index + 1, "direction": target - origin})
-		if damage.is_empty(): return refused
+		if damage.is_empty():
+			authority.abandon_move_action_resolution(id, peer, str(publication.action_id))
+			return refused
 		verdict.delta.merge(damage, true)
 		verdict.delta.merge(authority.credit_move_hit(id, peer, action,
 			maxf(0.0, hp_before - float(damage.get("hp", hp_before))), str(target_instance.get("uid")),
 			hp_before, round_index + 1, float(card.get("hp", 0.0))), true)
 		authority.set_opponent_hp(str(record.encounter_id), float(damage.hp), float(damage.hp_max))
 		verdict["publication_action_id"] = str(publication.action_id)
-		if not authority.record_move_action_outcome(id, peer, str(publication.action_id), damage, verdict): return refused
+		if not authority.record_move_action_outcome(id, peer, str(publication.action_id), damage, verdict):
+			authority.abandon_move_action_resolution(id, peer, str(publication.action_id))
+			return refused
 		hub.session.call("foundation_combat_mastery", hub.director, id, peer, action)
 		if bool(damage.get("killed", false)):
-			if not authority.publish_move_action_terminal(id, peer, str(publication.action_id), "done"): return refused
+			if not authority.publish_move_action_terminal(id, peer, str(publication.action_id), "done"):
+				authority.abandon_move_action_resolution(id, peer, str(publication.action_id))
+				return refused
 			engine.stop_opponent()
 			_between = 2.4
 	_snapshot()
