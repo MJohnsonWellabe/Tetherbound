@@ -26,7 +26,7 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 12
+SHARD_COUNT = 13
 # Lanes per shard job. Two lanes at once (tools/ci/run_net_lanes.sh) ran at
 # 1.0-1.6x solo time and broke timing-sensitive smokes under the CPU load
 # (PR #573 runs 37636924943, 37642447200: f20_ending's hello budget,
@@ -60,6 +60,8 @@ MEASURED_SECONDS = {
     "f20_home_diagnostic": 136,
     "f22_forced_break": 169,
     "f28_masters": 600,
+    "f28_feast": 600,
+    "f48_behind_friend": 600,
     "f32_node_contention": 136,
     "f43_bounties": 733,
     "farm_race": 112,
