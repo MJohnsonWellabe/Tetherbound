@@ -8,7 +8,7 @@ func _init() -> void:
 	var options: Dictionary = {}
 	for argument: String in OS.get_cmdline_user_args():
 		var pair: PackedStringArray = argument.split("=", true, 1)
-		if pair.size() != 2 or pair[1].is_empty() or options.has(pair[0]) or pair[0] not in ["--producer", "--loop-output", "--loop-profile", "--loop-profile-sha256", "--behind-guest-peer", "--shipping-config"]:
+		if pair.size() != 2 or pair[1].is_empty() or options.has(pair[0]) or pair[0] not in ["--producer", "--loop-output", "--loop-profile", "--loop-profile-sha256", "--behind-guest-peer"]:
 			push_error("Unknown actual-input producer argument: " + argument)
 			quit(1)
 			return
@@ -16,10 +16,6 @@ func _init() -> void:
 	producer = str(options.get("--producer", "loop"))
 	if producer not in ["loop", "boss_four", "behind"]:
 		push_error("Unknown actual-input producer: " + producer)
-		quit(1)
-		return
-	if options.has("--shipping-config") and options["--shipping-config"] != "true":
-		push_error("--shipping-config must be true when supplied")
 		quit(1)
 		return
 	var python := OS.get_environment("TB_F48_PROCESS_PYTHON")
@@ -31,8 +27,6 @@ func _init() -> void:
 		# render.yml's uploader excludes hidden directories, including .tmp.
 		"--output", ProjectSettings.globalize_path("res://ralph/reports/INTEGRATION/main-green/native-f48-" + producer),
 		"--producer", producer])
-	if options.has("--shipping-config"):
-		arguments.append("--shipping-config")
 	for option: String in ["--loop-output", "--loop-profile", "--loop-profile-sha256", "--behind-guest-peer"]:
 		if options.has(option):
 			arguments.append(option)

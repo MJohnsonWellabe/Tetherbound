@@ -20,7 +20,6 @@ import sys
 import tempfile
 
 import f48_ci_ready
-import f48_configuration as configuration
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = {"tests/smoke_net_f48_loop.gd", "tests/smoke_net_f48_behind.gd",
@@ -154,11 +153,8 @@ def main() -> int:
         require(Path(coordinator).resolve().is_relative_to(output), "Coordinator home escaped named native output")
         environment.update(XDG_DATA_HOME=coordinator, APPDATA=coordinator, LOCALAPPDATA=coordinator)
         environment.setdefault("TB_NET_OUT_DIR", str(output / "net-run"))
-        shipping = configuration.shipping_pins(profile) is not None
-        context = configuration.shipping_configuration(ROOT, profile) if shipping else configuration_overlay(ROOT, profile)
-        with context as pins:
-            print(json.dumps({"effective_configuration": pins, "shipping_configuration": shipping,
-                              "profile_sha256": digest(profile_path.read_bytes()),
+        with configuration_overlay(ROOT, profile) as pins:
+            print(json.dumps({"disclosed_mechanics_overlay": pins, "profile_sha256": digest(profile_path.read_bytes()),
                               "script": args.script, "readiness": readiness, "acceptance_credit": False}), flush=True)
             result = subprocess.run([args.godot, "--headless", "--path", str(ROOT), "--script", "res://" + args.script],
                                     cwd=ROOT, env=environment, check=False)

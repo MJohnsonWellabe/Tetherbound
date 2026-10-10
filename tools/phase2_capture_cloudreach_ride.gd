@@ -36,8 +36,6 @@ const PARTY := preload("res://autoload/party.gd")
 const RIDING := preload("res://scripts/world/riding_controller.gd")
 const LANE := preload("res://tools/capture_cloudreach_lane_common.gd")
 const OUT := "res://ralph/reports/VISUAL/phase2/cloudreach/ride_live"
-const BOOTSTRAP := preload("res://tools/lookdev_capture_bootstrap.gd")
-const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 const TEAM := ["meadowhart", "bramblebun", "mudsnout", "terrapup", "brooktail"]
 const LEDGE_ROAD := Vector3(-104.0, 401.6, 1664.0)
 const LEDGE_TOWARD := Vector3(-94.0, 390.0, 1647.0)
@@ -56,10 +54,6 @@ var _frames: Array = []
 var _shot := 0
 var _motion_s := 0.0
 var _errors := 0
-var _output := ""
-var _graphics_capture: Dictionary = {}
-var _records: Array[Dictionary] = []
-var _failures: Array[String] = []
 
 
 func _init() -> void:
@@ -72,35 +66,8 @@ func _run() -> void:
 			_tag = arg.trim_prefix("--tag=")
 		elif arg.begins_with("--seed="):
 			_seed = int(arg.trim_prefix("--seed="))
-		elif arg.begins_with("--output="):
-			_output = arg.trim_prefix("--output=").trim_suffix("/")
-	var named_preset := false
-	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--preset="):
-			named_preset = true
-			if arg.trim_prefix("--preset=") not in ["High", "Medium"]:
-				push_error("Cloudreach ride review requires High or Medium")
-				quit(1)
-				return
-	if named_preset:
-		_graphics_capture = BOOTSTRAP.prepare(self)
-		if _graphics_capture.is_empty():
-			quit(1)
-			return
-	elif _output.is_empty():
-		_output = "%s/%s" % [OUT, _tag]
-	if DisplayServer.get_name() == "headless":
-		push_error("Cloudreach ride capture requires a rendering display")
-		quit(1)
-		return
-	if DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output)) != OK:
-		push_error("Cloudreach ride output could not be created")
-		quit(1)
-		return
 	seed(_seed)
-	# Forward+ shell construction awaits drawn frames. Suppress drawing only
-	# after the real world and mount have finished booting.
-	RenderingServer.render_loop_enabled = true
+	RenderingServer.render_loop_enabled = false
 	var game := root.get_node(^"Game")
 	game.call("reset_for_new_game")
 	game.set("current_realm", "cloudreach")
@@ -121,19 +88,11 @@ func _run() -> void:
 	_player = _world.get_node(^"Player") as CharacterBody3D
 	_rig = _world.get_node(^"CameraRig")
 	_arbiter = _world.get_node(^"InteractionArbiter")
-	var boot_deadline := Time.get_ticks_msec() + 900000
-	while not bool(_world.call("shell_build_complete")):
-		if Time.get_ticks_msec() > boot_deadline:
-			_capture_error("production Cloudreach shell build timed out")
-			_finish()
-			return
-		await process_frame
 	if not await _wait_for_mount():
-		_capture_error("the mount never appeared after the production shell built")
-		_finish()
+		push_error("capture: the mount never appeared")
+		quit(1)
 		return
 	_riding = _world.get_node(^"RidingController")
-	RenderingServer.render_loop_enabled = false
 
 	if not await _edge_sequence("ledge", LEDGE_ROAD, LEDGE_TOWARD, Vector3(2.0, 0.0, 1.0), 8.0, 1.0):
 		_errors += 1
@@ -169,7 +128,8 @@ func _run() -> void:
 		print("CAPTURE ERROR %s: only %.1f s of stick-held motion (need 30)" % [_tag, _motion_s])
 		_errors += 1
 	print("RIDE_OFF %s motion_s=%.1f frames=%d errors=%d" % [_tag, _motion_s, _frames.size(), _errors])
-	_finish()
+	LANE.contact_sheet(_frames, "%s/_sheet_ride_off_%s.png" % [OUT, _tag], 4, 480)
+	quit(0 if _errors == 0 else 1)
 
 
 ## Stand on `road`, put the mount on the road, mount by interact, and ride
@@ -319,32 +279,7 @@ func _shoot(name: String) -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	_shot += 1
-	var image := root.get_texture().get_image()
-	var observed_preset := GRAPHICS.selected()
-	var observed_renderer := RenderingServer.get_current_rendering_method()
-	var valid := image != null and not image.is_empty()
-	if not _graphics_capture.is_empty():
-		valid = valid and image.get_size() == Vector2i(1920, 1080) \
-			and observed_preset == str(_graphics_capture.preset) \
-			and observed_renderer == str(_graphics_capture.renderer)
-	var path := ""
-	if valid:
-		path = LANE.save_frame(self, _output, "%s_%02d_%s" % [_tag, _shot, name], _frames)
-	if not valid or path.is_empty():
-		_capture_error("%s: image, observed preset/renderer/raster or PNG save failed" % name)
-	else:
-		var camera := _world.get_node(^"CameraRig/Camera3D") as Camera3D
-		var mount: Node3D = _riding.call("mount_body")
-		_records.append({"id": name, "file": path, "bytes": FileAccess.get_file_as_bytes(path).size(),
-			"sha256": FileAccess.get_sha256(path), "resolution": [image.get_width(), image.get_height()],
-			"graphics_capture": _graphics_capture.duplicate(true),
-			"observed_preset": observed_preset, "observed_graphics": GRAPHICS.values(),
-			"observed_renderer": observed_renderer, "physics_frame": Engine.get_physics_frames(),
-			"motion_s_before_current_leg": _motion_s, "mounted": bool(_riding.call("is_mounted")),
-			"player_position": _vec3(_player.global_position), "camera_position": _vec3(camera.global_position),
-			"mount_position": _vec3(mount.global_position) if mount != null else [],
-			"mount_on_floor": mount is CharacterBody3D and (mount as CharacterBody3D).is_on_floor(),
-			"recoveries": _recoveries(), "camera": "production CameraRig/Camera3D"})
+	LANE.save_frame(self, "%s/%s" % [OUT, _tag], "%s_%02d_%s" % [_tag, _shot, name], _frames)
 	RenderingServer.render_loop_enabled = false
 	for layer: CanvasLayer in shown:
 		layer.visible = true
@@ -357,56 +292,3 @@ func _advance(seconds: float) -> void:
 	for i in int(round(seconds * 60.0)):
 		await physics_frame
 
-
-
-func _vec3(value: Vector3) -> Array[float]:
-	return [value.x, value.y, value.z]
-
-
-func _capture_error(message: String) -> void:
-	_errors += 1
-	_failures.append(message)
-	push_error("Cloudreach ride capture: " + message)
-
-
-func _finish() -> void:
-	_release_move()
-	RenderingServer.render_loop_enabled = true
-	var ids: Array[String] = []
-	for record: Dictionary in _records:
-		ids.append(str(record.id))
-	for required: String in ["ledge_mounted_at_edge", "ledge_dismounted", "ledge_remounted",
-		"terrace_mounted_at_edge", "terrace_after"]:
-		if required not in ids:
-			_capture_error("required view missing: " + required)
-	if _motion_s < 30.0 or _records.size() != _shot:
-		_capture_error("30 seconds of stick-held motion and every requested PNG are required")
-	var sheet_path := "%s/_sheet_ride_off_%s.png" % [OUT, _tag] if _graphics_capture.is_empty() \
-		else _output + "/_sheet.png"
-	if not _frames.is_empty():
-		LANE.contact_sheet(_frames, sheet_path, 4, 480)
-		var sheet := Image.load_from_file(sheet_path)
-		if sheet == null or sheet.is_empty():
-			_capture_error("contact sheet save/readback failed")
-	var manifest := {"tool": "tools/phase2_capture_cloudreach_ride.gd", "biome": "cloudreach",
-		"scene": "res://scenes/world/cloudreach_cliffs.tscn", "seed": _seed, "tag": _tag,
-		"graphics_capture": _graphics_capture, "display_server": DisplayServer.get_name(),
-		"observed_preset": GRAPHICS.selected(), "observed_graphics": GRAPHICS.values(),
-		"rendering_method": RenderingServer.get_current_rendering_method(),
-		"adapter": RenderingServer.get_video_adapter_name(), "resolution": [root.size.x, root.size.y],
-		"motion_s": _motion_s, "requested_frames": _shot, "frames": _records, "errors": _errors,
-		"failures": _failures, "complete": _errors == 0 and not _records.is_empty(),
-		"fixture": "Five directly created companions, supplied saddle/flag, two declared edge teleports; real interact and stick ride/dismount/remount. Rendering suppressed between saved frames after boot; HUD hidden only for shots. Visual/movement fixture, no earned campaign, timing or visual PASS claim.",
-		"finished_utc": Time.get_datetime_string_from_system(true)}
-	var text := JSON.stringify(manifest, "\t") + "\n"
-	var file := FileAccess.open(_output + "/manifest.json", FileAccess.WRITE)
-	if file == null:
-		_capture_error("manifest could not be opened")
-	else:
-		file.store_string(text)
-		file.flush()
-		var error := file.get_error()
-		file.close()
-		if error != OK or FileAccess.get_file_as_string(_output + "/manifest.json") != text:
-			_capture_error("manifest flush/readback failed")
-	quit(0 if _errors == 0 and not _records.is_empty() else 1)
