@@ -153,10 +153,6 @@ func _rigged_veg(layer_name: String, count: int) -> Node3D:
 		veg.add_child(n)
 	veg.set("_harvest_lookup", lookup)
 	veg.set("_harvest_nodes", nodes)
-	var tree := Engine.get_main_loop() as SceneTree
-	if tree != null and tree.root.is_inside_tree():
-		tree.root.add_child(veg)
-		assert_true(veg.is_inside_tree(), "the felled-pile fixture has entered the initialized tree")
 	return veg
 
 
@@ -290,50 +286,6 @@ func test_harvested_count_reports_only_what_is_actually_chopped() -> void:
 # in this file that does not need it.
 
 
-## The unit runner executes in _init(), before it has an active SceneTree.
-## Pile setup legitimately reads /root/Game; a detached parent is not a valid
-## fixture for that production path. Reuse the initialized-child mechanism
-## from test_vegetation_camera_canopy, keeping each test name filterable.
-## There is no Game autoload here: its absence is a valid lookup result once
-## the node is in the tree, and no Terrain3D/build() is needed.
-func _run_felled_case_in_initialized_tree(method: String) -> bool:
-	var tree := Engine.get_main_loop() as SceneTree
-	if tree != null and tree.root.is_inside_tree():
-		return false
-	var case_id := method.sha256_text().left(12)
-	var runner_path := "user://harvest-permanence-%s-child.gd" % case_id
-	var log_path := ProjectSettings.globalize_path("user://harvest-permanence-%s-child.log" % case_id)
-	var runner := FileAccess.open(runner_path, FileAccess.WRITE)
-	assert_true(runner != null, "the initialized harvest child can be written")
-	if runner == null:
-		return true
-	var child := 'extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tawait process_frame\n\tawait physics_frame\n\tvar test = load("res://tests/test_harvest_permanence.gd").new()\n\ttest.before_each()\n\ttest.call(%s)\n\ttest.after_each()\n\tprint("HARVEST_PERMANENCE_RESULT=" + JSON.stringify({"method":%s,"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() else 1)\n' % [JSON.stringify(method), JSON.stringify(method)]
-	runner.store_string(child)
-	runner.close()
-	var output: Array = []
-	var code := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"),
-		"--script", ProjectSettings.globalize_path(runner_path), "--log-file", log_path], output, true)
-	var text := "\n".join(output)
-	assert_true(FileAccess.file_exists(log_path), "the child retained its engine log")
-	var log_text := FileAccess.get_file_as_string(log_path) if FileAccess.file_exists(log_path) else ""
-	assert_false(text.contains("SCRIPT ERROR:") or text.contains("ERROR:") or
-		log_text.contains("SCRIPT ERROR:") or log_text.contains("ERROR:"),
-		"the initialized harvest case has no engine errors: %s" % text.right(600))
-	var marker := text.find("HARVEST_PERMANENCE_RESULT=")
-	assert_true(marker >= 0, "the initialized harvest child reported a result: %s" % text.right(600))
-	if marker < 0:
-		assert_eq(code, 0, "the child exited cleanly")
-		return true
-	var parsed: Variant = JSON.parse_string(text.substr(marker + "HARVEST_PERMANENCE_RESULT=".length()).get_slice("\n", 0))
-	var result: Dictionary = parsed as Dictionary if parsed is Dictionary else {}
-	assert_eq(result.get("method", ""), method, "the child ran the requested case")
-	assert_eq(result.get("failures", ["unparsed"]), [], "all original case assertions pass")
-	assert_true(int(result.get("assertions", 0)) > 0, "the child actually asserted")
-	assertion_count += int(result.get("assertions", 0))
-	assert_eq(code, 0, "the child exited cleanly")
-	return true
-
-
 func _rig_lookup_for_fell(veg: Node3D, key: String, item: String, at: Vector3) -> void:
 	var lookup: Dictionary = veg.get("_harvest_lookup")
 	var entry: Dictionary = lookup.get(key, {}).duplicate()
@@ -347,7 +299,7 @@ func _rig_lookup_for_fell(veg: Node3D, key: String, item: String, at: Vector3) -
 ## `_rigged_veg` also parents one plain `Node.new()` per placement as its own
 ## `_harvest_nodes` stand-in, and `harvest_permanently()`'s `queue_free()` on
 ## a chopped one does not remove it from `get_children()` SYNCHRONOUSLY (no
-## frame is stepped between fell() and these assertions) -- so a raw child count right
+## scene tree is stepping frames in this file) -- so a raw child count right
 ## after `fell()` is not the standing-vs-felled placeholders. Filtering by
 ## script is what actually finds "the felled pickup fell() stood", the same
 ## script-identity check `tests/smoke_playground.gd` uses live.
@@ -355,14 +307,11 @@ func _felled_children(veg: Node3D) -> Array[Node]:
 	var out: Array[Node] = []
 	for child in veg.get_children():
 		if (child.get_script() as Script) == FELLED_RESOURCE:
-			assert_true(child.is_inside_tree(), "production pile setup runs on an entered child")
 			out.append(child)
 	return out
 
 
 func test_fell_removes_the_standing_placement_and_stands_a_felled_pickup() -> void:
-	if _run_felled_case_in_initialized_tree("test_fell_removes_the_standing_placement_and_stands_a_felled_pickup"):
-		return
 	var veg := _rigged_veg("trees", 3)
 	_rig_lookup_for_fell(veg, "trees#1", "wood", Vector3(5.0, 0.0, 5.0))
 	veg.call("fell", "trees", 1, 3)
@@ -378,8 +327,6 @@ func test_fell_removes_the_standing_placement_and_stands_a_felled_pickup() -> vo
 
 
 func test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default() -> void:
-	if _run_felled_case_in_initialized_tree("test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default"):
-		return
 	# The whole point of taking `actual_amount` as a parameter: a bare-handed
 	# chop (a reduced yield) must stand a SMALLER pile, not the layer's own
 	# full configured amount re-derived from scratch.
@@ -394,8 +341,6 @@ func test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default() -> vo
 
 
 func test_fell_tracks_the_placement_in_felled_for_persistence() -> void:
-	if _run_felled_case_in_initialized_tree("test_fell_tracks_the_placement_in_felled_for_persistence"):
-		return
 	var veg := _rigged_veg("rocks", 2)
 	_rig_lookup_for_fell(veg, "rocks#0", "stone", Vector3(1.0, 2.0, 3.0))
 	veg.call("fell", "rocks", 0, 2)
@@ -409,8 +354,6 @@ func test_fell_tracks_the_placement_in_felled_for_persistence() -> void:
 
 
 func test_fell_on_an_unknown_key_still_chops_but_stands_nothing() -> void:
-	if _run_felled_case_in_initialized_tree("test_fell_on_an_unknown_key_still_chops_but_stands_nothing"):
-		return
 	# `_harvest_lookup` for this key predates RG9 (no item/amount wired) or is
 	# simply missing -- `harvest_permanently()`'s own half must still run
 	# (the standing placement disappearing is never optional), but there is
@@ -424,8 +367,6 @@ func test_fell_on_an_unknown_key_still_chops_but_stands_nothing() -> void:
 
 
 func test_clear_felled_forgets_the_tracking_entry() -> void:
-	if _run_felled_case_in_initialized_tree("test_clear_felled_forgets_the_tracking_entry"):
-		return
 	var veg := _rigged_veg("trees", 1)
 	_rig_lookup_for_fell(veg, "trees#0", "wood", Vector3.ZERO)
 	veg.call("fell", "trees", 0, 3)
@@ -437,8 +378,6 @@ func test_clear_felled_forgets_the_tracking_entry() -> void:
 
 
 func test_sync_state_to_game_writes_felled_vegetation_alongside_harvested() -> void:
-	if _run_felled_case_in_initialized_tree("test_sync_state_to_game_writes_felled_vegetation_alongside_harvested"):
-		return
 	var veg := _rigged_veg("trees", 1)
 	_rig_lookup_for_fell(veg, "trees#0", "wood", Vector3(4.0, 0.0, 0.0))
 	veg.call("fell", "trees", 0, 3)
@@ -455,8 +394,6 @@ func test_sync_state_to_game_writes_felled_vegetation_alongside_harvested() -> v
 ## above) but the wood it owed would simply vanish -- nothing stands the pile
 ## back up. This is the test that proves it does.
 func test_restore_from_game_restands_a_felled_pickup_the_save_still_owes() -> void:
-	if _run_felled_case_in_initialized_tree("test_restore_from_game_restands_a_felled_pickup_the_save_still_owes"):
-		return
 	var chopper := _rigged_veg("trees", 1)
 	_rig_lookup_for_fell(chopper, "trees#0", "wood", Vector3(7.0, 0.0, 2.0))
 	chopper.call("fell", "trees", 0, 3)
@@ -479,8 +416,15 @@ func test_restore_from_game_restands_a_felled_pickup_the_save_still_owes() -> vo
 	if felled.size() == 1:
 		assert_eq(str(felled[0].get("_item_id")), "wood")
 		assert_eq(int(felled[0].get("_amount")), 3)
-		# The initialized fixture stays at the origin. _spawn_felled() sets
-		# this local position directly; preserve the exact placement oracle.
+		# `.position` (local), not `global_position`: `fresh` here is never
+		# added to a live SceneTree (the same "no live Terrain3D node" shape
+		# every other test in this file uses), and `fresh` itself never moves
+		# from the origin, so local and global coincide for a correctly
+		# behaving engine -- but `global_position`'s transform cache is only
+		# reliably fresh for a node chain that has actually entered the tree,
+		# and asserting against it here was measured flaky for exactly that
+		# reason. `_spawn_felled()` sets `.position` directly; that is the
+		# value actually under test.
 		assert_almost_eq((felled[0] as Node3D).position.x, 7.0, 0.001)
 	fresh.free()
 
@@ -491,8 +435,6 @@ func test_restore_from_game_restands_a_felled_pickup_the_save_still_owes() -> vo
 ## has nothing telling it to restand anything, only `harvest_permanently()`'s
 ## ordinary "stays chopped" bit.
 func test_restore_from_game_does_not_restand_an_already_gathered_chop() -> void:
-	if _run_felled_case_in_initialized_tree("test_restore_from_game_does_not_restand_an_already_gathered_chop"):
-		return
 	var chopper := _rigged_veg("trees", 1)
 	_rig_lookup_for_fell(chopper, "trees#0", "wood", Vector3.ZERO)
 	chopper.call("fell", "trees", 0, 3)

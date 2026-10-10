@@ -26,8 +26,6 @@ var _pad := false
 var _custom: Array[String] = []
 var _ground_readability := false
 var _road_readability := false
-var _named_preset := false
-const MATRIX_GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 
 
 func _run() -> void:
@@ -59,8 +57,6 @@ func _run() -> void:
 			_ground_readability = true
 		elif arg == "--road-readability":
 			_road_readability = true
-		elif arg.begins_with("--preset="):
-			_named_preset = true
 		elif arg == "--pad":
 			# F10#6 device profile: the ROG Ally is a controller device, so
 			# glyphs follow a pad as the last input device (Game's own
@@ -82,7 +78,7 @@ func _run() -> void:
 			push_error("Road readability needs rod_line, Calm/Break and no aftermath (two affected views)")
 			quit(2)
 			return
-	if _ground_readability or _road_readability or _named_preset:
+	if _ground_readability or _road_readability:
 		_phase_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self, "--out=")
 		if _phase_graphics_capture.is_empty():
 			quit(1)
@@ -184,17 +180,9 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 	if image == null or image.is_empty():
 		_failures.append("%s: empty viewport image" % frame_id)
 		return
-	if not _phase_graphics_capture.is_empty() and str(_surge.get("phase")) != frame_id.get_slice("_", frame_id.get_slice_count("_") - 1):
+	if (_ground_readability or _road_readability) and str(_surge.get("phase")) != frame_id.get_slice("_", frame_id.get_slice_count("_") - 1):
 		_failures.append(frame_id + ": actual Surge phase differs from requested capture phase")
 		return
-	var graphics: Dictionary = {}
-	if not _phase_graphics_capture.is_empty():
-		if MATRIX_GRAPHICS.selected() != str(_phase_graphics_capture.preset) \
-				or RenderingServer.get_current_rendering_method() != str(_phase_graphics_capture.renderer):
-			_failures.append(frame_id + ": actual renderer or device preset changed")
-			return
-		graphics = _phase_graphics_capture.merged({"observed_preset": MATRIX_GRAPHICS.selected(),
-			"observed_values": MATRIX_GRAPHICS.values()}, true)
 	var path := ProjectSettings.globalize_path("%s/%s.jpg" % [_output_dir, frame_id])
 	if image.save_jpg(path, 0.85) != OK:
 		_failures.append("%s: save_jpg failed" % frame_id)
@@ -206,15 +194,13 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		"renderer": RenderingServer.get_current_rendering_driver_name(),
 		"adapter": RenderingServer.get_video_adapter_name(),
 		"player": _vec3(_player.global_position), "camera_pos": _vec3(_camera.global_position),
-		"camera_basis": [_vec3(_camera.global_basis.x), _vec3(_camera.global_basis.y), _vec3(_camera.global_basis.z)],
-		"graphics_capture": graphics, "source_commit": str(_phase_graphics_capture.get("source_commit", "")),
 		"region": _region(), "surge_phase": str(_surge.get("phase")), "surge_elapsed": _surge_elapsed(),
 		"long_storm_ended": bool(_game.get("progression").call("has", "stormwood:long_storm_ended")),
 		"presentation": _presentation_state(), "staged": _staged.duplicate(),
 		"ground_materials": ground,
 		"road_current": road,
 	}.merged(extra, true))
-	if not _phase_graphics_capture.is_empty() and [image.get_width(), image.get_height()] != _phase_graphics_capture.resolution:
+	if (_ground_readability or _road_readability) and [image.get_width(), image.get_height()] != _phase_graphics_capture.resolution:
 		_failures.append(frame_id + ": raster differs from declared native preset")
 
 
@@ -266,8 +252,6 @@ func _done() -> void:
 		var expected := 8 if _ground_readability else 2
 		if _frames.size() != expected or ids.size() != expected:
 			_failures.append("Readability captured %d/%d unique views; %d required" % [_frames.size(), ids.size(), expected])
-	elif not _phase_graphics_capture.is_empty() and _frames.is_empty():
-		_failures.append("named preset matrix captured no frames")
 	super._done()
 
 

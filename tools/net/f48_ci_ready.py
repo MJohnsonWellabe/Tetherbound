@@ -13,7 +13,6 @@ from pathlib import Path
 
 import f48_profile_fixture as fixture
 import f48_profile_ready as ready
-import f48_configuration as configuration
 from f48_relocate_profile import tail
 
 SUITES = {"loop", "behind", "boss_four"}
@@ -47,11 +46,8 @@ def terminal_producer(root: Path, profile_path: Path, expected_sha: str) -> dict
     require(lines and lines[-1] == "ALL CHECKS PASSED" and
             not any(line.startswith(("FAIL:", "SCRIPT ERROR:")) for line in lines),
             "Actual clean terminal coordinator verdict unavailable")
-    shipping = configuration.shipping_pins(profile)
-    require((invocation.get("shipping_configuration") is True) == (shipping is not None),
-            "Producer shipping configuration declaration differs from original profile")
-    expected = shipping if shipping is not None else [
-        {"file": row["file"], "sha256": row["sha256"]} for row in profile["test_configuration"]]
+    expected = [{"file": row["file"], "sha256": row["sha256"]}
+                for row in profile["test_configuration"]]
     require(invocation.get("effective_configuration") == expected,
             "Producer effective configuration differs from original profile pins")
     return {str(path.relative_to(root)): fixture.digest(path) for path in
@@ -153,8 +149,6 @@ def validate(profile_path: Path, bundle: Path | None = None) -> dict:
     require(len(defaults) == 1, "Default roots must match one original named start")
     expected["saves"] = [str(checked_path(bundle, raw, "starts")) for raw in original["saves"]]
     configurations = expected.get("test_configuration", [])
-    if configuration.shipping_pins(expected) is not None:
-        configuration.shipping_files(fixture.ROOT, expected)
     require(expected.get("configuration_scope") == "full" and isinstance(configurations, list) and
             len(configurations) == len(ready.CONFIGURATION_FILES) and
             {row["file"] for row in configurations} ==

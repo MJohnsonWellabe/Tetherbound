@@ -15,13 +15,10 @@ def wait(frames=45): return step("wait", frames=frames)
 def contact(target): return approach(target)+[press("interact"),wait()]
 def close(): return [press("ui_cancel"),wait(15),press("ui_cancel"),wait(15)]
 def fight(trainer):
-    result = step("f48_fixture_trainer_fight", trainer_id=trainer,
+    return step("f48_fixture_trainer_fight", trainer_id=trainer,
                 budget_frames=9000 if trainer == "warden_aldis" else 3000,
                 fixture_disclosure={"scope":"named_mechanics_only","self_hp_topups":True,
                     "ally_placement":True,"enemy_hp_ceiling":0,"earned_campaign_credit":False})
-    if trainer == "warden_aldis":
-        result["args"]["input_cadence"] = {"stride_frames": 4, "stage_when_ready": True}
-    return result
 
 def produce(source: Path, output: Path):
     assert not output.exists(), "Fresh output required"

@@ -16,7 +16,6 @@ from pathlib import Path
 import re
 
 import f48_ci_ready as gate
-import f48_configuration as configuration
 import f48_prepare_profile as actions
 import f48_profile_fixture as fixture
 import f48_profile_ready as ready
@@ -42,7 +41,7 @@ def inside(root: Path, relative: str | Path) -> Path:
 
 
 def generate(loop_root: Path, profile_path: Path, profile_sha256: str, output: Path,
-             guest_peer: int = 2, *, shipping_config: bool = False) -> Path:
+             guest_peer: int = 2) -> Path:
     """Generate the standard producer layout; the native launcher is separate."""
     loop_root, output = loop_root.resolve(), output.resolve()
     require(not output.exists(), "Fresh behind output required")
@@ -67,11 +66,6 @@ def generate(loop_root: Path, profile_path: Path, profile_sha256: str, output: P
 
     pin(profile_path, profile_sha256)
     profile = fixture.read(profile_path)
-    shipping = configuration.shipping_pins(profile)
-    require(type(shipping_config) is bool and shipping_config == (shipping is not None),
-            "Behind shipping mode must match the original loop configuration")
-    if shipping is not None:
-        for path, digest in configuration.shipping_files(ROOT, profile): pin(path, digest)
     terminal = gate.terminal_producer(loop_root, profile_path, profile_sha256)
     for relative, digest in terminal.items(): pin(inside(loop_root, relative), digest)
     require("tools/net/f48_prepare.gd" in fixture.read(loop_root / "invocation.json").get("command", []),
@@ -143,14 +137,13 @@ def generate(loop_root: Path, profile_path: Path, profile_sha256: str, output: P
             and {row["file"] for row in configurations} ==
                 {"res://data/config/" + name for name in ready.CONFIGURATION_FILES},
             "All six reviewed configuration pins required")
-    if shipping is None:
-        for row in configurations:
-            suffix = Path("mechanics-start") / tail(row["overlay_file"], "test-configuration")
-            require(suffix == Path("mechanics-start/test-configuration/data/config") / Path(row["file"]).name,
-                    "Configuration path differs from original resource")
-            copies[suffix] = pin(inside(loop_root, suffix), row["sha256"])
-            pin(ROOT / row["file"].removeprefix("res://"), row["source_sha256"])
-            row["overlay_file"] = str(output / suffix)
+    for row in configurations:
+        suffix = Path("mechanics-start") / tail(row["overlay_file"], "test-configuration")
+        require(suffix == Path("mechanics-start/test-configuration/data/config") / Path(row["file"]).name,
+                "Configuration path differs from original resource")
+        copies[suffix] = pin(inside(loop_root, suffix), row["sha256"])
+        pin(ROOT / row["file"].removeprefix("res://"), row["source_sha256"])
+        row["overlay_file"] = str(output / suffix)
     routes = {
         "host_unlock_tidewake": actions.contact("tidewake_arch") + [actions.wait(180)],
         "host_enter_tidewake": [actions.press("interact"), actions.wait(240)],
@@ -163,9 +156,6 @@ def generate(loop_root: Path, profile_path: Path, profile_sha256: str, output: P
     gate.validate_routes("behind", pack)
     generated = {**pack, "configuration_scope": "full", "test_configuration": configurations,
                  "saves": [str(output / "mechanics-start" / f"peer-{peer}") for peer in range(2)]}
-    if shipping is not None:
-        generated["production_configuration_pins"] = copy.deepcopy(shipping)
-        generated["provenance"] += " Original shipping configuration pins preserved; no overlays or flag overrides."
     for path, digest in pins.items(): require(fixture.digest(path) == digest, f"Original source changed before copy: {path}")
     output.mkdir(parents=True)
     for relative, data in copies.items():
@@ -191,8 +181,7 @@ if __name__ == "__main__":
     parser.add_argument("--loop-profile-sha256", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--behind-guest-peer", type=int, choices=(2, 3), default=2)
-    parser.add_argument("--shipping-config", action="store_true")
     args = parser.parse_args()
     path = generate(args.loop_output, args.loop_profile, args.loop_profile_sha256,
-                    args.output, args.behind_guest_peer, shipping_config=args.shipping_config)
+                    args.output, args.behind_guest_peer)
     print(json.dumps({"profile": str(path), "sha256": fixture.digest(path), "acceptance_credit": False}))

@@ -32,12 +32,8 @@ func _build() -> Dictionary:
 		_admit(steps, saves, 2)
 	if bool(_profile.get("prepare_alpha_capture", false)):
 		for peer: int in 2:
-			var capture_args := {"role": "host" if peer == 0 else "guest",
-				"fixture_disclosure": "actual_shared_alpha_rng_and_actor_placement_no_earned_credit"}
-			if _profile.has("production_configuration_pins"):
-				capture_args["shipping_capture_mode"] = true
-				capture_args["shipping_configuration_pins"] = _profile.production_configuration_pins.duplicate(true)
-			steps.append(_entry(peer, "f48_fixture_capture", capture_args))
+			steps.append(_entry(peer, "f48_fixture_capture", {"role": "host" if peer == 0 else "guest",
+				"fixture_disclosure": "actual_shared_alpha_rng_and_actor_placement_no_earned_credit"}))
 		_capture_prepared_start(steps, "actual-shared-alpha-catch")
 		steps.append(_entry("all", "f48_witness", {"remember": "admitted-after-catch"}))
 	# These remain prerequisite snapshots, never readiness claims: the complete

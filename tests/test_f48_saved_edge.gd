@@ -11,26 +11,6 @@ const DOCUMENT := preload("res://scripts/save/save_document.gd")
 var memory: Dictionary
 var edge: Dictionary
 
-func test_named_warden_input_cadence_preserves_legacy_and_refuses_foreign_or_weakened_schedule() -> void:
-	var baseline := {"stride_frames": 20, "stage_when_ready": false}
-	var ready := {"stride_frames": 4, "stage_when_ready": true}
-	assert_eq(PROOF._fixture_fight_cadence("warden_aldis", {}), baseline)
-	assert_eq(PROOF._fixture_fight_cadence("master_t1", {}), baseline)
-	assert_eq(PROOF._fixture_fight_cadence("warden_aldis", {"input_cadence": ready}), ready)
-	assert_true(PROOF._fixture_fight_cadence("master_t1", {"input_cadence": ready}).is_empty())
-	for invalid: Variant in [null, [], {}, {"stride_frames": 0, "stage_when_ready": true},
-		{"stride_frames": 4, "stage_when_ready": false}, {"stride_frames": 4, "stage_when_ready": 1},
-		{"stride_frames": "4", "stage_when_ready": true}, {"stride_frames": 4, "stage_when_ready": true, "budget_frames": 12000}]:
-		assert_true(PROOF._fixture_fight_cadence("warden_aldis", {"input_cadence": invalid}).is_empty())
-	var original := {"input_cadence": ready.duplicate(true)}
-	var selected: Dictionary = PROOF._fixture_fight_cadence("warden_aldis", original)
-	selected.stride_frames = 100
-	assert_eq(original.input_cadence, ready, "Schedule selection never rewrites caller disclosure")
-
-class RefusingPreparedSaver extends SAVE:
-	func _write_snapshot_locked(_request: Dictionary) -> bool:
-		return false
-
 func test_float_diagnostic_retains_exact_bits_when_json_hides_difference() -> void:
 	var original := 100.0 - (1.0 / 60.0) * 0.2
 	var saved: float = JSON.parse_string(JSON.stringify(original))
@@ -203,112 +183,6 @@ func test_actual_character_only_receipt_retains_full_snapshot_without_world_part
 	changed_party.files.character.bytes_base64 = Marshalls.raw_to_base64(bytes)
 	changed_party.files.character.sha256 = hasher.finish().hex_encode()
 	assert_true(PROOF._fallback_receipt_files(request,changed_party,paths,saver.get_instance_id()).is_empty(),"Internally matching raw bytes cannot add an owned card absent from the actual frozen request")
-	FIXTURE.wipe(directory)
-
-func test_actual_prepared_character_observer_binds_original_request_bool_and_locked_bytes() -> void:
-	var directory: String = "user://test_f48_prepared_receipt_" + Crypto.new().generate_random_bytes(12).hex_encode() + "/"
-	var game: RefCounted = FIXTURE.game(ITEM_DB.new(),false)
-	var saver: RefCounted = SAVE.new(directory)
-	var initial: Dictionary = saver.call("_prepare_snapshot",game,0)
-	assert_false(initial.is_empty())
-	if initial.is_empty():
-		FIXTURE.wipe(directory)
-		return
-	game.set("host",false)
-	game.set("satiety",62.75)
-	var observed := {"submitted":{},"completed":{},"saved":false,"receipt":{},"calls":0,"id":"","original":{}}
-	var submitted := func(id: String, request: Dictionary) -> void:
-		observed.id=id
-		observed.submitted=request
-		var actual: Dictionary = PROOF._prepared_character_call_matches(saver,id,request,"submitted")
-		assert_false(actual.is_empty())
-		observed.original=actual.get("call",{})
-		assert_true(PROOF._prepared_character_call_matches(saver,id,request.duplicate(true),"submitted").is_empty(),"Equivalent request bytes are not the active original object")
-	var completed := func(id: String, request: Dictionary, saved: bool, receipt: Dictionary) -> void:
-		observed.completed=request
-		observed.saved=saved
-		observed.receipt=receipt
-		observed.calls+=1
-		assert_eq(id,observed.id)
-		assert_false(PROOF._prepared_character_call_matches(saver,id,request,"completed",observed.original,receipt).is_empty())
-		assert_true(PROOF._prepared_character_call_matches(saver,id,request,"completed",observed.original,receipt.duplicate(true)).is_empty(),"Equivalent receipt bytes cannot impersonate the actual locked receipt object")
-		assert_true(PROOF._prepared_character_call_matches(saver,id,request,"completed",observed.original.duplicate(true),receipt).is_empty())
-	saver.connect("prepared_character_submitted",submitted)
-	saver.connect("prepared_character_completed",completed)
-	assert_true(saver.call("save_character_prepared",game,str(initial.character_id)) == true)
-	assert_true(observed.saved)
-	assert_eq(observed.calls,1)
-	assert_true(PROOF._prepared_character_call_matches(saver,observed.id,observed.submitted,"submitted").is_empty(),"Manual or replayed submission after the real invocation has no source")
-	assert_true(PROOF._prepared_character_call_matches(saver,observed.id,observed.completed,"completed",observed.original,observed.receipt).is_empty(),"A replayed TRUE callback cannot revive the expired call")
-	assert_true(is_same(observed.submitted,observed.completed),"Both signals carry the same actual request, not reconstructed state")
-	assert_true(observed.submitted.is_read_only())
-	assert_true(observed.submitted.character_data.is_read_only())
-	assert_eq(observed.submitted.character_data.satiety,62.75)
-	var paths := {"character":saver.get("_characters").call("path_for",str(initial.character_id))}
-	var files := PROOF._fallback_receipt_files(observed.submitted,observed.receipt,paths,saver.get_instance_id(),"SaveGame_locked_prepared_character_write_TRUE_BOOL")
-	assert_eq(files.size(),1)
-	assert_eq(files.get("character",{}).get("satiety"),62.75)
-	assert_eq(FileAccess.get_sha256(str(paths.character)),observed.receipt.files.character.sha256,"Receipt proves complete actual primary bytes")
-	assert_true(PROOF._fallback_receipt_files(observed.submitted,observed.receipt,paths,saver.get_instance_id()).is_empty(),"A synchronous receipt cannot masquerade as a worker receipt")
-	var changed: Dictionary = observed.submitted.duplicate(true)
-	changed.character_data.satiety-=1.0
-	assert_true(PROOF._fallback_receipt_files(changed,observed.receipt,paths,saver.get_instance_id(),"SaveGame_locked_prepared_character_write_TRUE_BOOL").is_empty())
-	assert_false(FileAccess.file_exists(str(saver.call("slot_path",0))))
-	assert_false(saver.call("save_character_prepared",null,str(initial.character_id)) == true)
-	assert_eq(observed.calls,1,"An invalid/no-write attempt cannot invent a completed BOOL")
-	saver.disconnect("prepared_character_submitted",submitted)
-	saver.disconnect("prepared_character_completed",completed)
-	FIXTURE.wipe(directory)
-
-func test_prepared_invocations_keep_nested_calls_separate_and_reject_false_actual_bool() -> void:
-	var directory: String = "user://test_f48_prepared_nested_" + Crypto.new().generate_random_bytes(12).hex_encode() + "/"
-	var game: RefCounted = FIXTURE.game(ITEM_DB.new(),false)
-	var saver: RefCounted = SAVE.new(directory)
-	var initial: Dictionary = saver.call("_prepare_snapshot",game,0)
-	assert_false(initial.is_empty())
-	if initial.is_empty():
-		FIXTURE.wipe(directory)
-		return
-	var calls := {"nested":false,"originals":{},"completed":[]}
-	var submitted := func(id: String, request: Dictionary) -> void:
-		var actual: Dictionary = PROOF._prepared_character_call_matches(saver,id,request,"submitted")
-		assert_false(actual.is_empty())
-		calls.originals[id]=actual.get("call",{})
-		if not calls.nested:
-			calls.nested=true
-			assert_true(saver.call("save_character_prepared",game,str(initial.character_id)) == true)
-			assert_true(is_same(PROOF._prepared_character_call_matches(saver,id,request,"submitted").get("call"),calls.originals[id]),"The child cannot replace its still-active parent")
-	var completed := func(id: String, request: Dictionary, saved: bool, receipt: Dictionary) -> void:
-		assert_true(saved)
-		assert_false(PROOF._prepared_character_call_matches(saver,id,request,"completed",calls.originals[id],receipt).is_empty())
-		for other: String in calls.originals:
-			if other != id:
-				assert_true(PROOF._prepared_character_call_matches(saver,id,request,"completed",calls.originals[other],receipt).is_empty())
-		calls.completed.append(id)
-	saver.connect("prepared_character_submitted",submitted)
-	saver.connect("prepared_character_completed",completed)
-	assert_true(saver.call("save_character_prepared",game,str(initial.character_id)) == true)
-	assert_eq(calls.originals.size(),2)
-	assert_eq(calls.completed.size(),2)
-	assert_ne(calls.completed[0],calls.completed[1])
-	for id: String in calls.originals: assert_true(saver.call("prepared_character_call",id).is_empty())
-	saver.disconnect("prepared_character_submitted",submitted)
-	saver.disconnect("prepared_character_completed",completed)
-	var refusing: RefCounted = RefusingPreparedSaver.new(directory)
-	var failed := {"original":{},"called":false}
-	var failing_submit := func(id: String, request: Dictionary) -> void:
-		failed.original=PROOF._prepared_character_call_matches(refusing,id,request,"submitted").get("call",{})
-	var failing_complete := func(id: String, request: Dictionary, saved: bool, receipt: Dictionary) -> void:
-		failed.called=true
-		assert_false(saved)
-		assert_false(refusing.call("prepared_character_call",id).success)
-		assert_true(PROOF._prepared_character_call_matches(refusing,id,request,"completed",failed.original,receipt).is_empty(),"A true callback argument cannot certify an actual FALSE writer result")
-	refusing.connect("prepared_character_submitted",failing_submit)
-	refusing.connect("prepared_character_completed",failing_complete)
-	assert_false(refusing.call("save_character_prepared",game,str(initial.character_id)) == true)
-	assert_true(failed.called)
-	refusing.disconnect("prepared_character_submitted",failing_submit)
-	refusing.disconnect("prepared_character_completed",failing_complete)
 	FIXTURE.wipe(directory)
 
 func test_descendant_keeps_original_full_canonical_parent_and_exact_replayed_party() -> void:
