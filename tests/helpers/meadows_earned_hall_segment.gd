@@ -372,7 +372,7 @@ func _approach_prompt(prompt: Node3D) -> bool:
 ## panel, production recovery ticks, an early wake, then back to the road.
 const CAMP_BED := preload("res://scripts/build/creature_bed.gd")
 const BED_INPUT := preload("res://tests/helpers/gate_b_tail_segment.gd")
-const CAMP_REACH_M := 700.0
+const CAMP_REACH_M := 1400.0
 const CAMP_BELOW := 0.6  # Party HP fraction under which a captain is not taken on carried care.
 var camp_rests := 0
 var _in_hall := false
