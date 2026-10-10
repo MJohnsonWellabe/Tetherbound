@@ -43,7 +43,7 @@ static func available(id: String, tier: String, world_flags: Array, personal_fla
 	var row := profile(id)
 	if row.is_empty(): return false
 	if tier == "endgame": return personal_flags.has(str(_raw().get("credits_flag", "")))
-	if tier != "r1" or row.biome == "stormwood" or row.kind == "boss": return false
+	if tier != "r1" or row.kind == "boss": return false
 	var gate: String = _raw().biomes[row.biome].climax_flag
 	return world_flags.has(gate) or personal_flags.has(gate)
 
@@ -53,7 +53,7 @@ static func available(id: String, tier: String, world_flags: Array, personal_fla
 static func encounter_spec(original: Dictionary, tier: String) -> Dictionary:
 	var row := profile(str(original.get("id", "")))
 	if row.is_empty() or tier not in ["r1", "endgame"]: return {}
-	if tier == "r1" and (row.biome == "stormwood" or row.kind == "boss"): return {}
+	if tier == "r1" and row.kind == "boss": return {}
 	var team: Variant = original.get("team")
 	if not team is Array or team.is_empty() or (row.kind == "master" and team.size() != 1): return {}
 	var level: int = int(config().endgame_levels[row.kind]) if tier == "endgame" else int(config().biomes[row.biome].r1_levels[row.kind])
