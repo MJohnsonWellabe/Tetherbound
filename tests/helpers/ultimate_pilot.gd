@@ -40,3 +40,4 @@ static func press(tree: SceneTree, button: JoyButton, pressed: bool, device: int
 	await tree.physics_frame
 	await tree.process_frame
 	await tree.physics_frame
+	await tree.process_frame
