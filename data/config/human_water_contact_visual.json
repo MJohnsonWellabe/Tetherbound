@@ -1,6 +1,6 @@
 {
   "_comment": "P2-072 unjudged presentation candidate. Independent of the human swim pose; reads existing local/remote aquatic snapshots only.",
-  "enabled": false,
+  "enabled": true,
   "surface_lift_m": 0.045,
   "ring_diameter_m": 1.35,
   "opacity": 0.26,
