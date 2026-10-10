@@ -1958,6 +1958,11 @@ const BUILDING_ID_META := "building_id"
 ## cannot: geometry built at load, and geometry the player builds.
 const CLEAR_GROUP := "grass_clear"
 const CLEAR_RADIUS_META := "grass_clear_radius"
+## P2-020: set by anything that joins or leaves CLEAR_GROUP after the ring has
+## settled (an idle creature, `creature_body.gd`). `_process` re-applies the
+## footprint list once when it is set, so a clearing appears without waiting
+## for the camera to step a cell; it is never a per-frame group scan.
+static var clearings_dirty := false
 
 ## The authored footprints, resolved once. `scatter_rules.gd` merges them per
 ## band and caches; this only keeps the flattened (x, z, radius) form.
@@ -2270,7 +2275,11 @@ func _process(delta: float) -> void:
 	var cell := profile_lattice_cell(_active_config())
 	var anchor := Vector3(snappedf(at.x, cell), 0.0, snappedf(at.z, cell))
 	if anchor.is_equal_approx(_centre):
+		if clearings_dirty:
+			clearings_dirty = false
+			_apply_built(_centre)
 		return
+	clearings_dirty = false  # the ring move below re-reads every footprint
 	_centre = anchor
 	global_position = anchor
 	_apply_drain(anchor)

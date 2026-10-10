@@ -294,6 +294,7 @@ static var _physics_lod_cache: Dictionary = {}
 ## (CLEAR_GROUP / CLEAR_RADIUS_META) so the runtime grass thins and shortens
 ## around its feet; it leaves the group as soon as it moves.
 const GRASS_CLEAR_PATH := "res://data/config/creature_grass_clear.json"
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const GRASS_CLEAR_GROUP := "grass_clear"
 const GRASS_CLEAR_RADIUS_META := "grass_clear_radius"
 static var _grass_clear_cache: Dictionary = {}
@@ -1986,6 +1987,8 @@ func _update_grass_clear(delta: float) -> void:
 		add_to_group(GRASS_CLEAR_GROUP)
 	else:
 		remove_from_group(GRASS_CLEAR_GROUP)
+	# Tell a settled grass ring to re-read its clearings once (P2-020).
+	GRASS_FIELD.clearings_dirty = true
 
 
 static func physics_lod_config() -> Dictionary:
