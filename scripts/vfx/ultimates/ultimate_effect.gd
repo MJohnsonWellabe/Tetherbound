@@ -30,6 +30,7 @@ var _lease := 0
 var _mesh_count := 0
 var _motes: MultiMeshInstance3D
 var _mote_count := 0
+var _mote_directions: Array[Vector3] = []
 
 func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary, data: Dictionary) -> void:
 	_from = from
@@ -143,21 +144,33 @@ func _build_motes(colour: Color, opacity: float) -> void:
 	_motes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_motes.visible = false
 	add_child(_motes)
+	# Each mote keeps the same accepted seed and direction for its lifetime.
+	# Generate this once rather than allocating/reseeding an RNG every frame.
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(_context.seed)
+	for i in _mote_count:
+		_mote_directions.append(Vector3(rng.randf_range(-1.0, 1.0), rng.randf_range(0.2, 1.0), rng.randf_range(-1.0, 1.0)).normalized())
 
 func _process(delta: float) -> void:
 	if _cancelled: return
 	if not _did_arrive and _clock != null:
 		_elapsed = maxf(0.0, _arrival - _clock.time_left)
 	else: _elapsed += delta
+	# A peer's shortened aftermath ends its rendering lifetime too. Hidden
+	# nodes must not keep mesh/particle reservations until the local duration.
+	if _elapsed >= _presentation_end():
+		cancel_presentation()
+		return
 	_update_parts()
 	_update_motes()
-	if _elapsed >= _duration: cancel_presentation()
+
+func _presentation_end() -> float:
+	if bool(_context.peer_view):
+		return minf(_duration, _arrival + maxf(0.0, float((_config.get("peer", {}) as Dictionary).get("aftermath_seconds", 0.65))))
+	return _duration
 
 func _update_parts() -> void:
-	var peer: Dictionary = _config.get("peer", {})
-	var end := _duration
-	if bool(_context.peer_view): end = minf(end, _arrival + float(peer.get("aftermath_seconds", 0.65)))
-	var visible_now := _elapsed <= end
+	var visible_now := _elapsed <= _presentation_end()
 	var visual_arrival := maxf(_arrival, 0.001)
 	var visual_elapsed := maxf(_elapsed, visual_arrival) if _did_arrive else _elapsed
 	for i in _nodes.size():
@@ -206,11 +219,8 @@ func _update_motes() -> void:
 	var lifetime := float(profile.get("lifetime_seconds", 0.5))
 	_motes.visible = _did_arrive and age >= 0.0 and age < lifetime
 	if not _motes.visible: return
-	var rng := RandomNumberGenerator.new()
-	rng.seed = int(_context.seed)
 	for i in visible_count:
-		var direction := Vector3(rng.randf_range(-1.0, 1.0), rng.randf_range(0.2, 1.0), rng.randf_range(-1.0, 1.0)).normalized()
-		var position := _to + direction * age * float(profile.get("speed_mps", 3.2))
+		var position := _to + _mote_directions[i] * age * float(profile.get("speed_mps", 3.2))
 		position.y -= age * age * float(profile.get("fall_mps2", 2.0))
 		var scale := maxf(0.01, 1.0 - age / lifetime)
 		_motes.multimesh.set_instance_transform(i, Transform3D(Basis.IDENTITY.scaled(Vector3.ONE * scale), position))

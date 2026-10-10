@@ -9,18 +9,23 @@ const MOVE_LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
 static var _config: Dictionary = {}
 
 static func config() -> Dictionary:
+	return _cached_config().duplicate(true)
+
+## Internal readers borrow the catalogue; only resolved rows and presentation
+## settings are copied at launch. Public callers still receive a detached copy.
+static func _cached_config() -> Dictionary:
 	if _config.is_empty():
 		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 		if raw is Dictionary: _config = raw
-	return _config.duplicate(true)
+	return _config
 
 ## The host checks this same presentation gate before it spends a meter.
 static func available(move_id: String) -> bool:
-	var data := config()
+	var data := _cached_config()
 	return bool(data.get("enabled", false)) and (data.get("visuals", {}) as Dictionary).has(move_id)
 
 static func resolve(move_id: String, breakthroughs: int) -> Dictionary:
-	var data := config()
+	var data := _cached_config()
 	var rows: Dictionary = data.get("visuals", {})
 	var growth: Array = data.get("breakthrough_visuals", [])
 	if not rows.has(move_id) or breakthroughs < 0 or breakthroughs >= growth.size(): return {}
@@ -44,7 +49,7 @@ static func _whole(value: Variant, low: int, high: int) -> bool:
 
 static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 		context: Dictionary = {}) -> Node3D:
-	var data := config()
+	var data := _cached_config()
 	if parent == null or not parent.is_inside_tree() or not bool(data.get("enabled", false)): return null
 	if not from.is_finite() or not to.is_finite() or str(spec.get("slot", "")) != "ultimate": return null
 	var binding: Variant = spec.get("actor_binding")

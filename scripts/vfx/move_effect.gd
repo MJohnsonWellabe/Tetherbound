@@ -53,6 +53,8 @@ var _stages: Array[Dictionary] = []
 var _mote_linger := 0.0
 var _peer_opacity := 1.0
 var _peer_aftermath := -1.0
+var _signature_end := -1.0
+var _contact_retired := false
 
 func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 		travel: float, config: Dictionary) -> void:
@@ -82,8 +84,10 @@ func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 		# around the target; ordinary move timing and arrival remain unchanged.
 		var signature_seconds := float(context.get("duration_seconds", 0.0))
 		var stages: Dictionary = (_row.impact as Dictionary).get("stages", {})
-		if signature_seconds >= 2.0 and signature_seconds <= 3.0 and stages.get("mark") is Dictionary:
-			stages.mark["duration"] = maxf(0.05, signature_seconds - _travel)
+		if signature_seconds >= 2.0 and signature_seconds <= 3.0:
+			_signature_end = signature_seconds
+			if stages.get("mark") is Dictionary:
+				stages.mark["duration"] = maxf(0.05, signature_seconds - _travel)
 		if bool(context.get("peer_view", false)):
 			var peer: Dictionary = context.get("peer_presentation", {})
 			_peer_opacity = clampf(float(peer.get("opacity", 1.0)), 0.0, 1.0)
@@ -200,6 +204,9 @@ func _process(delta: float) -> void:
 		_elapsed = maxf(0.0, _travel - _presentation_clock.time_left)
 	else:
 		_elapsed += delta
+	if _signature_end >= 0.0 and _elapsed >= _signature_end:
+		cancel_presentation()
+		return
 	if _arrived and _peer_aftermath >= 0.0 and _elapsed >= _travel + _peer_aftermath:
 		cancel_presentation()
 		return
@@ -210,24 +217,27 @@ func _process(delta: float) -> void:
 		if _presentation_clock == null and _elapsed >= _travel:
 			_finish_presentation()
 	else:
-		_update_trail()
-		var duration := float((_row.impact as Dictionary).get("duration", 0.45))
-		var u := clampf((_elapsed - _travel) / maxf(duration, 0.001), 0.0, 1.0)
-		_update_impact(u, delta)
 		var contact_age := _elapsed - _travel
-		var body_profile: Dictionary = _row.body
-		var contact_fade := 1.0
-		if str(body_profile.get("motion", "")) == "sky" and body_profile.has("contact_fade_power"):
-			var hold := maxf(0.001, float(body_profile.get("contact_hold_seconds", 0.0)))
-			contact_fade = pow(maxf(0.0, 1.0 - contact_age / hold), maxf(0.1, float(body_profile.contact_fade_power)))
-		for body: MeshInstance3D in _bodies:
-			# Retain the completed vertical strike through contact and early
-			# impact, so the visual actually joins sky, target and ground.
-			body.visible = str(_row.body.get("motion", "")) == "sky" and contact_age < float(_row.body.get("contact_hold_seconds", 0.0))
-			if body_profile.has("contact_fade_power"):
-				_set_opacity(body.material_override, contact_fade * float(body_profile.get("opacity", 1.0)))
-		for trail: MeshInstance3D in _trails:
-			_set_opacity(trail.material_override, contact_fade * (1.0 - u) * float((_row.trail as Dictionary).get("opacity", 0.78)))
+		if contact_age >= _lifetime_after_contact():
+			_retire_contact_drawing()
+		else:
+			_update_trail()
+			var duration := float((_row.impact as Dictionary).get("duration", 0.45))
+			var u := clampf(contact_age / maxf(duration, 0.001), 0.0, 1.0)
+			_update_impact(u, delta)
+			var body_profile: Dictionary = _row.body
+			var contact_fade := 1.0
+			if str(body_profile.get("motion", "")) == "sky" and body_profile.has("contact_fade_power"):
+				var hold := maxf(0.001, float(body_profile.get("contact_hold_seconds", 0.0)))
+				contact_fade = pow(maxf(0.0, 1.0 - contact_age / hold), maxf(0.1, float(body_profile.contact_fade_power)))
+			for body: MeshInstance3D in _bodies:
+				# Retain the completed vertical strike through contact and early
+				# impact, so the visual actually joins sky, target and ground.
+				body.visible = str(_row.body.get("motion", "")) == "sky" and contact_age < float(_row.body.get("contact_hold_seconds", 0.0))
+				if body_profile.has("contact_fade_power"):
+					_set_opacity(body.material_override, contact_fade * float(body_profile.get("opacity", 1.0)))
+			for trail: MeshInstance3D in _trails:
+				_set_opacity(trail.material_override, contact_fade * (1.0 - u) * float((_row.trail as Dictionary).get("opacity", 0.78)))
 	_update_stages()
 	if _arrived and _elapsed - _travel >= _lifetime_after_contact() and _stages_finished(): queue_free()
 
@@ -642,7 +652,7 @@ func _update_puffs(u: float) -> void:
 func _update_impact(u: float, delta: float) -> void:
 	if _impact == null: return
 	if _light != null:
-		_light.light_energy = maxf(0.0, float(_light_profile.get("impact_energy", 1.6))) * pow(1.0 - u, 2.0)
+		_light.light_energy = maxf(0.0, float(_light_profile.get("impact_energy", 1.6))) * _peer_opacity * pow(1.0 - u, 2.0)
 	var profile: Dictionary = _row.impact
 	_update_puffs(u)
 	for child: Node in _impact.get_children():
@@ -714,7 +724,21 @@ func _presentation_material(material: Material) -> Material:
 	return material
 
 func _lifetime_after_contact() -> float:
-	return float((_row.impact as Dictionary).get("duration", 0.45)) + _mote_linger
+	return maxf(float((_row.impact as Dictionary).get("duration", 0.45)) + _mote_linger,
+		float((_row.body as Dictionary).get("contact_hold_seconds", 0.0)))
+
+func _retire_contact_drawing() -> void:
+	if _contact_retired: return
+	_contact_retired = true
+	# Ground aftermath is a separate bounded mesh stage. Once the particles,
+	# strike and trail finish, stop their drawing and return their reservations
+	# instead of rebuilding invisible ribbons for the rest of the ground mark.
+	if _impact != null: _impact.visible = false
+	for body: MeshInstance3D in _bodies: body.visible = false
+	for trail: MeshInstance3D in _trails: trail.visible = false
+	if _light != null: _light.visible = false
+	BUDGET.release(_lease)
+	_lease = 0
 
 func _stages_finished() -> bool:
 	for stage: Dictionary in _stages:
