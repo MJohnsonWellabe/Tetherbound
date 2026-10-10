@@ -10,6 +10,8 @@
 timeout 300s godot --headless --path . --script tests/smoke_water_closed_gate_seal.gd
 ### step: Verify resting wild creatures skip the floor sweep safely
 timeout 120s godot --headless --path . --script tests/smoke_wild_rest_slide_skip.gd
+### step: Verify far wild creatures step at a lower rate over the same ground
+timeout 120s godot --headless --path . --script tests/smoke_wild_far_lod.gd
 ### step: Verify Tidewake dismount leaves no mounted state
 timeout 240s godot --headless --path . --script tests/smoke_water_dismount_state.gd
 ### step: Verify Tidewake drowning and safe shore

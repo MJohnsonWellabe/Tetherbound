@@ -291,6 +291,11 @@ var _jump_speed: float = 0.0
 const PHYSICS_LOD_PATH := "res://data/config/creature_physics_lod.json"
 static var _physics_lod_cache: Dictionary = {}
 var rest_slide_skip_allowed := false
+## Seconds of motion one `move_and_slide` covers, as a multiple of the physics
+## step. A controller that steps this body less often than every tick
+## (`wild_creature.gd`'s far-wild LOD) sets it so the sweep travels the whole
+## elapsed time; 1.0 everywhere else.
+var slide_time_scale := 1.0
 var _rest_slide_at := Vector3.INF
 var _rest_slide_skipped := 0
 
@@ -1933,6 +1938,12 @@ func _physics_process(delta: float) -> void:
 		# travel, and the floor contact absorbs the downward pinning bias.
 		velocity = Vector3.ZERO
 		_rest_slide_skipped += 1
+	elif slide_time_scale != 1.0:
+		var scale := slide_time_scale
+		velocity *= scale
+		move_and_slide()
+		velocity /= scale
+		_note_rest_slide()
 	else:
 		move_and_slide()
 		_note_rest_slide()

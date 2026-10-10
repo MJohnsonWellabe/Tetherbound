@@ -226,7 +226,22 @@ func is_alive() -> bool:
 	return instance != null and not instance.fainted
 
 
+## F26 performance (`creature_physics_lod.json` far_wild_tick): a peaceful
+## wild far from every trainer steps every `interval_ticks` with the elapsed
+## time. Phase is spread by instance so far bodies do not all step together.
+var _far_lod_far := false
+var _far_lod_recheck := 0
+var _far_lod_counter := -1
+var _far_lod_elapsed := 0.0
+
+
 func _physics_process(delta: float) -> void:
+	_far_lod_elapsed += delta
+	if _far_lod_hold():
+		return
+	delta = _far_lod_elapsed
+	_far_lod_elapsed = 0.0
+	slide_time_scale = delta / maxf(get_physics_process_delta_time(), 0.0001) if _far_lod_far else 1.0
 	var before := global_position
 	# Resting outside a fight may skip the floor sweep (creature_body.gd).
 	rest_slide_skip_allowed = not engaged
@@ -249,6 +264,45 @@ func _physics_process(delta: float) -> void:
 		_after_lunge_step(before, delta)
 	if _pattern_leap_active:
 		_after_pattern_leap_step(delta)
+
+
+## True when this tick is skipped: the body is in far-LOD and it is not its
+## turn. Any reason to step every tick ends far mode at once.
+func _far_lod_hold() -> bool:
+	var cfg: Dictionary = physics_lod_config().get("far_wild_tick", {})
+	if not bool(cfg.get("enabled", false)) or engaged or aggressive or not is_alive() \
+			or not _far_lod_allowed():
+		_far_lod_far = false
+		return false
+	_far_lod_recheck -= 1
+	if _far_lod_recheck <= 0:
+		_far_lod_recheck = maxi(1, int(cfg.get("recheck_ticks", 15)))
+		# No known trainer at all (a detached test body) is never "far".
+		var nearest := _nearest_trainer_distance()
+		_far_lod_far = is_finite(nearest) and nearest > float(cfg.get("distance_m", 40.0))
+	if not _far_lod_far:
+		return false
+	var interval := maxi(1, int(cfg.get("interval_ticks", 3)))
+	if _far_lod_counter < 0:
+		_far_lod_counter = get_instance_id() % interval
+	_far_lod_counter = (_far_lod_counter + 1) % interval
+	return _far_lod_counter != 0
+
+
+## Subclasses whose motion is not ordinary wandering opt out.
+func _far_lod_allowed() -> bool:
+	return true
+
+
+func _nearest_trainer_distance() -> float:
+	var nearest := INF
+	if _player != null and is_instance_valid(_player):
+		nearest = global_position.distance_to(_player.global_position)
+	if is_inside_tree():
+		for body: Node in get_tree().get_nodes_in_group(&"remote_trainer"):
+			if body is Node3D and is_instance_valid(body):
+				nearest = minf(nearest, global_position.distance_to((body as Node3D).global_position))
+	return nearest
 
 
 ## --- peaceful -------------------------------------------------------------

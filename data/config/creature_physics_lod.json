@@ -4,5 +4,12 @@
     "_comment": "A wild creature standing still on its floor keeps its last collision result instead of re-sweeping its capsule every tick. Any requested move, velocity, impulse, burst, jump, external reposition or loss of floor runs a real slide the same tick; refresh_ticks forces a real slide at least that often while resting.",
     "enabled": true,
     "refresh_ticks": 12
+  },
+  "far_wild_tick": {
+    "_comment": "A peaceful, non-aggressive wild creature farther than distance_m from every trainer in its realm (local player and remote_trainer bodies) runs its physics step once every interval_ticks with the elapsed time, so its wander covers the same ground at a lower update rate. Distance is rechecked every recheck_ticks. Engaged, aggressive or fainted bodies, and anything inside distance_m, step every tick. distance_m stays well outside notice (9 m) and aggression notice/give-up (14/26 m).",
+    "enabled": true,
+    "distance_m": 40.0,
+    "interval_ticks": 3,
+    "recheck_ticks": 15
   }
 }

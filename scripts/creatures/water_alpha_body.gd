@@ -21,6 +21,10 @@ func _physics_process(delta: float) -> void:
 		set_engaged(false)
 	super._physics_process(delta)
 
+## Aquaryn's surface and authority sync step every tick.
+func _far_lod_allowed() -> bool:
+	return false
+
 func _tick_peaceful(_delta: float) -> void:
 	request_move(Vector3.ZERO, 0.0)
 
