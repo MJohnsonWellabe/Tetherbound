@@ -23,6 +23,8 @@ var _rows: Array[Button] = []
 var _open := false
 var _closing_cancel := false
 var _pending_heart := ""
+var _pending_character := ""
+var _pending_session: Node
 
 
 func _ready() -> void:
@@ -65,6 +67,7 @@ func open(message: String = "") -> void:
 func close() -> void:
 	if not _open:
 		return
+	_clear_pending_choice()
 	_open = false
 	visible = false
 	var release_world := INPUT_OWNER.current(get_tree()) == null
@@ -121,16 +124,23 @@ func _refresh() -> void:
 
 
 func _choose(id: String) -> void:
+	if not _open or not _pending_heart.is_empty(): return
 	var hearts: RefCounted = game.get("realm_hearts")
 	var session: Node = game.get("session")
 	if session != null and session.has_method("request_relic_power") and bool(session.call("is_active")):
+		# Bind and listen before submitting: the solo/host saved decision can
+		# arrive inside request_relic_power, and it is announced only once.
+		_pending_heart = id
+		_pending_character = _character_id()
+		_pending_session = session
+		if not session.is_connected("homestead_action_completed", _on_reply):
+			session.connect("homestead_action_completed", _on_reply)
 		var verdict: Dictionary = session.call("request_relic_power", id)
-		if verdict.get("code") == "awaiting_saved_decision":
-			_pending_heart = id
-			if not session.is_connected("homestead_action_completed", _on_reply):
-				session.connect("homestead_action_completed", _on_reply)
+		if _pending_heart != id: return # Inline completion already presented it.
+		if not reply_final(verdict):
 			_message.text = "Asking the host…"
 			return
+		_clear_pending_choice()
 		if verdict.get("ok") != true and not chosen_already(verdict):
 			_message.text = _refusal(verdict)
 			return
@@ -140,22 +150,45 @@ func _choose(id: String) -> void:
 func _on_reply(op: String, intent: Dictionary, result: Dictionary) -> void:
 	if op != "relic_power" or str(intent.get("heart_id", "")) != _pending_heart:
 		return
+	if not _open or _character_id() != _pending_character or game.get("session") != _pending_session:
+		_clear_pending_choice()
+		return
 	if not reply_final(result):
 		_message.text = "Asking the host to save your choice..."
 		return # A guest's first reply is the host's checkpoint; the saved decision follows.
-	var session: Node = game.get("session")
-	if session != null and session.is_connected("homestead_action_completed", _on_reply):
-		session.disconnect("homestead_action_completed", _on_reply)
 	var id := _pending_heart
-	_pending_heart = ""
+	_clear_pending_choice()
 	if result.get("ok") == true or chosen_already(result):
 		_apply(game.get("realm_hearts"), id)
 	else:
 		_message.text = _refusal(result)
 
 
+func _character_id() -> String:
+	var local: RefCounted = game.get("local") if is_instance_valid(game) else null
+	return str(local.get("character_id")) if local != null else ""
+
+
+func _clear_pending_choice() -> void:
+	if is_instance_valid(_pending_session) and _pending_session.is_connected("homestead_action_completed", _on_reply):
+		_pending_session.disconnect("homestead_action_completed", _on_reply)
+	_pending_heart = ""
+	_pending_character = ""
+	_pending_session = null
+
+
+func _exit_tree() -> void:
+	_clear_pending_choice()
+
+
 func _apply(hearts: RefCounted, id: String) -> void:
-	if bool(hearts.call("activate_hung", id, _hung())):
+	var session: Node = game.get("session")
+	# Session installs the accepted owner record before announcing success.
+	# A screen callback may display it, but may never select a power itself
+	# while the authority owns this character (including solo/host sessions).
+	var accepted := str(hearts.call("active_id")) == id if session != null and bool(session.call("is_active")) \
+		else bool(hearts.call("activate_hung", id, _hung()))
+	if accepted:
 		var heart: Dictionary = hearts.call("heart", id)
 		_message.text = "%s is your active power." % str((heart.get("power", {}) as Dictionary).get("display_name", id))
 	else:
