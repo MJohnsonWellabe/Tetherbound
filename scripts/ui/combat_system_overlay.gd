@@ -15,6 +15,7 @@ var _ring: Control
 var _cells: Dictionary = {}
 var _uid := ""
 var _meter_caption: Label
+var _command_box: VBoxContainer
 
 class UltimateRing extends Control:
 	var fraction := 0.0
@@ -40,6 +41,7 @@ func _ready() -> void:
 	visible = false
 	var cfg: Dictionary = SCREEN.config().get("combat", {})
 	var left := VBoxContainer.new()
+	_command_box = left
 	left.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	left.position = Vector2(float(cfg.get("inset", 56)), -float(cfg.get("command_bottom", 500)))
 	add_child(left)
@@ -63,23 +65,35 @@ func _ready() -> void:
 	rb.add_theme_font_size_override("font_size", TOKENS.FONT_HEADING)
 	_ring.add_child(rb)
 	_meter_caption = _label(ultimate, "Ultimate")
-	var grid := GridContainer.new()
-	grid.columns = 2
-	grid.add_theme_constant_override("h_separation", 12)
-	grid.add_theme_constant_override("v_separation", 8)
+	var grid := Control.new()
+	var width := float(cfg.get("move_width", 420))
+	var row_height := float(cfg.get("move_row_height", 68))
+	grid.custom_minimum_size = Vector2(width, row_height * 3.0)
 	_moves.add_child(grid)
-	# Y above X/B; A is explicit dodge rather than a hidden fourth attack.
+	var positions := {"charged": Vector2(width * 0.25, 0),
+		"quick": Vector2(0, row_height), "utility": Vector2(width * 0.5, row_height),
+		"dodge": Vector2(width * 0.25, row_height * 2.0)}
 	for slot: String in ["charged", "quick", "utility", "dodge"]:
 		var cell := VBoxContainer.new()
-		cell.custom_minimum_size.x = float(cfg.get("move_width", 420)) * 0.5 - 6
+		cell.custom_minimum_size.x = width * 0.5 - 6
+		cell.position = positions[slot]
 		grid.add_child(cell)
 		var title := _label(cell, "")
+		title.autowrap_mode = TextServer.AUTOWRAP_OFF
+		title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		cell.size.x = cell.custom_minimum_size.x
 		var cooldown := ProgressBar.new()
 		cooldown.show_percentage = false
 		cooldown.custom_minimum_size.y = 8
 		cell.add_child(cooldown)
 		_cells[slot] = {"title": title, "cooldown": cooldown}
 	TOKENS.make_text_legible(self)
+
+func occupied_controls() -> Array[Control]:
+	return [_command_box, _moves]
+
+func command_rect() -> Rect2:
+	return _command_box.get_global_rect() if is_instance_valid(_command_box) else Rect2()
 
 func _label(parent: Node, text: String) -> Label:
 	var label := Label.new()
@@ -112,12 +126,12 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 	_ring.queue_redraw()
 	_meter_caption.text = "Ultimate · %d%%\n%s" % [int(clampf(meter / maximum, 0, 1) * 100),
 		"Ultimate unavailable" if raw.get("ultimate_available", true) != true else \
-		"Choose X / Y / B" if raw.get("ultimate_armed") == true else "Ready · Tap RB" if meter >= maximum else "Build with landed hits"]
+		"Choose X / Y / B" if raw.get("ultimate_armed") == true else "Ready · Tap RB" if meter >= maximum else ""]
 	_commands.call("present", raw.commands, using_pad)
 	for slot: String in _cells:
 		var row: Dictionary = raw.slots[slot]
 		var label: Label = _cells[slot].title
-		label.text = "%s %s%s" % [row.glyph, row.name, "" if row.ready else " · Unavailable"]
+		label.text = "%s %s%s" % [row.glyph, row.name, "" if row.ready else " ×"]
 		label.add_theme_color_override("font_color", TOKENS.TEAL_SOFT if row.ready else TOKENS.TEXT_SECONDARY)
 		var cooldown: ProgressBar = _cells[slot].cooldown
 		var total := float(row.get("cooldown_total_s", 0))

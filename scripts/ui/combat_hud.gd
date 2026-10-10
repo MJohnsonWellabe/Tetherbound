@@ -630,9 +630,13 @@ func _update_subject_fade(delta: float) -> void:
 	# The target plate is not faded: it carries the tell line, and both the
 	# C3 footage judge and device judge r5 read a faded "incoming" as a miss.
 	# It sits top-right, off the framed target.
-	for entry: Array in [[_grid_panel, true, _grid_panel],
+	var panels: Array = [[_grid_panel, true, _grid_panel],
 			[_ally_panel, false, _ally_panel], [_orbs_panel, false, _orbs_panel],
-			[_strip_fader, false, _party_strip]]:
+			[_strip_fader, false, _party_strip]]
+	if is_instance_valid(_system_overlay) and _system_overlay.visible:
+		for control: Control in _system_overlay.call("occupied_controls"):
+			panels.append([control, false, control])
+	for entry: Array in panels:
 		var panel := entry[0] as Control
 		var measured := entry[2] as Control
 		if panel == null or measured == null:
@@ -1324,6 +1328,10 @@ func _party_strip_position() -> Vector2:
 	var ally_rect := _ally_panel.get_global_rect()
 	var ally_top: float = ally_rect.position.y if ally_rect.size.y > 0.0 \
 			else _root.size.y + _ally_panel.offset_top
+	if is_instance_valid(_system_overlay) and _system_overlay.visible:
+		var commands: Rect2 = _system_overlay.call("command_rect")
+		if commands.size.y > 0.0:
+			ally_top = minf(ally_top, commands.position.y)
 	var strip_h: float = _party_strip.size.y if _party_strip != null else 0.0
 	return Vector2(SWITCH_PANEL_X, ally_top - strip_h - SWITCH_PANEL_GAP)
 

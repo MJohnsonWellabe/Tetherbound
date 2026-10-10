@@ -25,7 +25,7 @@ func _ready() -> void:
 	if SYSTEM_SCREEN.config().get("enabled") == true:
 		ui = ui.duplicate(true)
 		ui["font_size"] = maxi(int(ui.get("font_size", 22)), TOKENS.FONT_READ)
-	custom_minimum_size.x = float(ui.get("width", 580))
+	custom_minimum_size.x = float(SYSTEM_SCREEN.config().get("combat", {}).get("command_width", ui.get("width", 580)))
 	_title = Label.new()
 	_title.add_theme_font_size_override("font_size", int(ui.get("font_size", 22)))
 	add_child(_title)
@@ -43,6 +43,9 @@ func _ready() -> void:
 	for id: String in COMMANDS.COMMAND_IDS:
 		var label := Label.new()
 		label.add_theme_font_size_override("font_size", int(ui.get("font_size", 22)))
+		label.custom_minimum_size.x = (custom_minimum_size.x - 20.0) * 0.5
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		buttons.add_child(label)
 		_labels[id] = label
 	_reason = Label.new()
@@ -65,7 +68,7 @@ func present(snapshot: Dictionary, using_pad: bool) -> void:
 	var maximum := float(COMMANDS.config().meter.maximum)
 	_bar.max_value = maximum
 	_bar.value = clampf(meter, 0, maximum)
-	_title.text = "Tether Commands  %d / %d" % [int(meter), int(maximum)]
+	_title.text = "Commands  %d / %d" % [int(meter), int(maximum)]
 	for id: String in COMMANDS.COMMAND_IDS:
 		var row: Dictionary = COMMANDS.config().commands[id]
 		var label: Label = _labels[id]
