@@ -3,6 +3,7 @@ extends "res://tests/test_case.gd"
 ## The Dynamo deck the Marrow fight and the Break stand on
 ## (tests/smoke_stormwood_marrow_press.gd found each of these live).
 const DYNAMO := preload("res://scripts/world/stormwood_dynamo.gd")
+const ARENA := preload("res://scripts/world/stormwood_dynamo_arena.gd")
 const TRAINERS := preload("res://scripts/world/stormwood_trainers.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 
@@ -265,3 +266,27 @@ func _case_grounded_plates_have_authored_metal_finish_and_unchanged_footprint() 
 		assert_almost_eq(cue.emission_energy_multiplier, float(policy.config.presentation.plate_rim_emission), 0.0001, "safe-ground emission energy from config")
 		assert_true(cue.emission_energy_multiplier > 0.0, "safe-ground cue keeps its glow")
 		assert_almost_eq(cue.metallic, metal.metallic, 0.0001, "rim is the same lit metal as its plate")
+
+
+class FakeDynamo extends Node3D:
+	var participants: Array = []
+
+
+func test_idle_safe_plates_draw_near_only_and_engaged_plates_draw_everywhere() -> void:
+	var parent := FakeDynamo.new()
+	var arena := ARENA.new()
+	arena.set("_presentation", {"plate_visible_range_m": 34.0})
+	var plate := MeshInstance3D.new()
+	var rim := MeshInstance3D.new()
+	plate.add_child(rim)
+	(arena.get("_plates") as Array).append(plate)
+	parent.add_child(arena)
+	arena._process(0.0)
+	assert_eq(plate.visibility_range_end, 34.0, "idle plate has a draw range")
+	assert_eq(rim.visibility_range_end, 34.0, "idle rim follows its plate")
+	parent.participants = [1]
+	arena._process(0.0)
+	assert_eq(plate.visibility_range_end, 0.0, "engaged plate draws at any distance")
+	assert_eq(rim.visibility_range_end, 0.0, "engaged rim draws at any distance")
+	plate.free()
+	parent.free()

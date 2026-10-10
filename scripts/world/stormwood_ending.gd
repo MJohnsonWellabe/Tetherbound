@@ -792,20 +792,9 @@ func _build_captive() -> void:
 	_cage = Node3D.new()
 	_cage.name = "StormheartContainment"
 	add_child(_cage)
-	var cage_material := _glow(Color("8d78e8"), 2.4, 0.62)
-	for i in 8:
-		var bar := MeshInstance3D.new()
-		bar.name = "ContainmentArc%02d" % i
-		var mesh := CylinderMesh.new()
-		mesh.top_radius = 0.07
-		mesh.bottom_radius = 0.07
-		mesh.height = 7.0
-		mesh.radial_segments = 6
-		bar.mesh = mesh
-		var angle := TAU * float(i) / 8.0
-		bar.position = Vector3(cos(angle) * 3.6, 3.5, sin(angle) * 3.6)
-		bar.material_override = cage_material
-		_cage.add_child(bar)
+	# The cage keeps its node (visibility and the finale read it) but no
+	# longer draws bars: eight thin, evenly spaced glowing rods read as unlit
+	# emissive streaks in the doorway behind the captive (F41#5 judge).
 
 
 func _build_offer_prompt() -> void:

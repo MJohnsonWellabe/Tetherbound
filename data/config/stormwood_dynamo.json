@@ -19,6 +19,6 @@
   "captain_trainer_id": "captain_marrow_dynamo_core",
   "replacement_point": "stormwood_dynamo.captive.placeholder_species",
   "_comment_presentation": "Render-only safe plate finish and discharge lane visibility. F41#5: plates are warm low-metal trim (full metal read as a flat navy disc without interior reflections) with a lit mint lip. Authoritative radius, footprints, timing and damage remain above.",
-  "presentation": {"plate_surface_colour": "#d9c39c", "plate_metallic": 0.3, "plate_roughness": 0.7, "plate_rim_width_m": 0.16, "plate_rim_emission": 0.3, "lane_idle_alpha": 0.16, "lane_charge_alpha": 0.38, "lane_fire_alpha": 0.72},
+  "presentation": {"plate_surface_colour": "#d9c39c", "plate_metallic": 0.3, "plate_roughness": 0.7, "plate_rim_width_m": 0.16, "plate_rim_emission": 0.3, "plate_visible_range_m": 34.0, "lane_idle_alpha": 0.16, "lane_charge_alpha": 0.38, "lane_fire_alpha": 0.72},
   "captive": {"placeholder_species": "fulgocobra", "level": 55, "scale": 1.8, "nickname": "the Stormheart"}
 }

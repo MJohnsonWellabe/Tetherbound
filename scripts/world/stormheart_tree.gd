@@ -559,12 +559,16 @@ func _ascent_dressing() -> void:
 		var at := ascent_point(float(step)/48)
 		var radial := Vector3(at.x,0,at.z).normalized()
 		var edge := at+radial*(RAMP_WIDTH*0.5)
-		posts.append(Transform3D(Basis.IDENTITY.scaled(Vector3(0.65,3.2,0.65)),edge+Vector3.UP*1.2))
+		var in_split := in_trunk_split(atan2(at.z,at.x),SPLIT_BRACE_MARGIN)
+		# Across the open split an edge post has no bark behind it and reads
+		# as a stub hanging into the sky slot; the picket rail stays.
+		if not in_split:
+			posts.append(Transform3D(Basis.IDENTITY.scaled(Vector3(0.65,3.2,0.65)),edge+Vector3.UP*1.2))
 		var anchor := radial*48+Vector3(0,at.y-6,0)
 		var vector := edge-anchor
 		# A brace seated in the bark has nothing to seat in across the open
 		# split: there it ended in mid-air against the sky slot.
-		if not in_trunk_split(atan2(at.z,at.x),SPLIT_BRACE_MARGIN):
+		if not in_split:
 			braces.append(Transform3D(Basis.looking_at(vector.normalized()).scaled_local(Vector3(0.8,0.8,vector.length())),(anchor+edge)*0.5))
 	_instances(self,posts,_wood)
 	_instances(self,braces,_wood)
