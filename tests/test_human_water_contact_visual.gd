@@ -30,12 +30,17 @@ func _human() -> Dictionary:
 	return state.snapshot()
 
 
-func test_gate_off_attaches_nothing_and_generates_nothing() -> void:
-	assert_false(bool(VIEW.load_settings().get("enabled", true)))
+func test_shipped_on_attaches_and_gate_off_generates_nothing() -> void:
+	# F39 P2-072: shipped on. A null body still attaches nothing; a view whose
+	# settings are switched off generates nothing.
+	assert_true(bool(VIEW.load_settings().get("enabled", false)))
 	var model := Node3D.new()
 	var body := CharacterBody3D.new()
-	assert_eq(VIEW.attach(model, body), null)
+	assert_eq(VIEW.attach(model, null), null)
 	assert_eq(model.get_child_count(), 0)
+	var attached := VIEW.attach(model, body)
+	assert_true(attached != null)
+	assert_eq(model.get_child_count(), 1)
 	var view := _view()
 	view.settings.enabled = false
 	view.step_visual(0.2, _human(), Vector3.ZERO)
@@ -168,3 +173,25 @@ func test_owner_teardown_frees_contact_and_trail_children() -> void:
 	assert_false(is_instance_valid(view))
 	assert_false(is_instance_valid(contact))
 	assert_false(is_instance_valid(trail_ring))
+
+
+func test_swimmer_meshes_stop_casting_shadow_in_water_and_restore_on_land() -> void:
+	# F39 P2-072 judge round 2: the body's own shadow drew a hard dark wedge on
+	# the water plane. In the water the model's meshes cast none; on land each
+	# mesh gets its own setting back. The foam rings are never touched.
+	var model := Node3D.new()
+	var lit := MeshInstance3D.new()
+	lit.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	model.add_child(lit)
+	var double := MeshInstance3D.new()
+	double.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED
+	model.add_child(double)
+	var view := _view()
+	model.add_child(view)
+	view.step_visual(0.2, _human(), Vector3(0, 0, 0))
+	assert_eq(lit.cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
+	assert_eq(double.cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
+	view.step_visual(0.2, {}, Vector3(0, 0, 0))
+	assert_eq(lit.cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_ON)
+	assert_eq(double.cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED)
+	model.free()
