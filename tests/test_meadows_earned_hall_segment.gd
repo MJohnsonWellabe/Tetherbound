@@ -296,3 +296,18 @@ func test_named_admission_rejects_another_trainer_and_out_of_order_opponents() -
 	assert_eq(segment.result().failures, [])
 	director.free()
 	combat.free()
+
+
+func test_route_is_split_into_sigils_then_hall_pieces() -> void:
+	var handoff := preload("res://tests/helpers/f49_disk_handoff.gd")
+	var pieces: Array = handoff.MEADOWS_PIECES
+	assert_true(pieces.find("relay") + 1 == pieces.find("sigils") and pieces.find("sigils") + 1 == pieces.find("hall"),
+		"the Sigil captains piece sits between Relay and the Hall gauntlet")
+	assert_eq(handoff.MEADOWS_REALMS.size(), pieces.size())
+	var segment = SEGMENT.new()
+	assert_eq(segment.run_stage, SEGMENT.STAGE_FULL, "the continuous driver keeps the single full run")
+
+
+func test_care_uses_only_the_authored_camp_beds_ahead_on_the_route() -> void:
+	assert_eq(SEGMENT.CAMP_BEDS_AHEAD, [-14, -15, -16])
+	assert_false(SEGMENT.is_camp_bed(null))

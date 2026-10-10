@@ -11,6 +11,13 @@ const HALL_FLAGS := ["defeated_stronghold_patrol", "defeated_stronghold_courtyar
 const ROOM_FRAMES := 600  # smoke_stronghold's existing chamber-hop budget.
 ## VICTORY_READ_FRAMES (a player reading a victory line, F04#6) is inherited from the relay segment.
 const ENTRANCE_FRAMES := 950  # Its separate authored 40m ramp budget.
+## Owner 10-04 segment ruling: the route is proven as the Sigil captains and
+## gate (sigils) and the Hall gauntlet (hall, from the sigils piece's own
+## saved end state). STAGE_FULL keeps the continuous driver's single run.
+const STAGE_FULL := "full"
+const STAGE_SIGILS := "sigils"
+const STAGE_HALL := "hall"
+var run_stage := STAGE_FULL
 var _hold: Node3D
 var _sigil_gate: Node3D
 var _hall_config: Dictionary
@@ -106,25 +113,9 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 		_fail("The actual Mill, Sigil Gate, Hall or input dependencies are missing")
 		return result()
 	_initial_ids = _party_ids()
-	var terrain := _read(TERRAIN)
-	var channel: Dictionary = mill_config(terrain).get("channel", {})
-	var bank := float(channel.get("half_width", 0.0)) + float(channel.get("rim", 0.0)) + 3.0
-	if not retained_five(_initial_ids, _initial_ids) or _fighting() or channel.is_empty() \
-			or not _has("relay_disabled") or not _has("captive_rescued") or not _has("mill_crossing_restored") \
-			or not bool(_mill.call("is_open")) or _count(GEAR) != 0 \
-			or float(_mill.call("depth_past_crossing", Vector2(_player.global_position.x, _player.global_position.z))) < bank - 0.6:
-		_fail("Hall must follow the actual paid Mill far-bank crossing with the same earned five")
+	if run_stage != STAGE_HALL and not _sigil_start_ready():
 		return result()
-	for id: String in CAPTAIN_IDS:
-		if _has(str(TRAINERS.trainer(id).get("defeat_flag", ""))):
-			_fail("The next captain is already defeated: " + id)
-			return result()
-	for id: String in SIGILS:
-		if _count(id) != 0:
-			_fail("The next earned sigil is already carried: " + id)
-			return result()
-	if _has("hall_approach_open") or bool(_sigil_gate.call("is_open")) or _has("defeated_warden"):
-		_fail("The Sigil/Hall route is already completed or bypassed")
+	if run_stage == STAGE_HALL and not _hall_start_ready():
 		return result()
 	_hall_config = _read(HALL_CONFIG)
 	if gauntlet_path(_hall_config).size() != 3:
@@ -137,10 +128,57 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	_input = INPUTS.new()
 	_input._tree = tree
 	_hook()
-	_completed = await _travel()
+	if run_stage == STAGE_HALL:
+		_completed = await _travel_hall()
+	else:
+		_completed = await _travel()
 	_stick(0.0, 0.0)
 	_unhook()
 	return result()
+
+
+## The sigils/full start: the actual paid Mill far-bank crossing, every captain
+## unbeaten, no Sigil carried and the gate still shut.
+func _sigil_start_ready() -> bool:
+	var terrain := _read(TERRAIN)
+	var channel: Dictionary = mill_config(terrain).get("channel", {})
+	var bank := float(channel.get("half_width", 0.0)) + float(channel.get("rim", 0.0)) + 3.0
+	if not retained_five(_initial_ids, _initial_ids) or _fighting() or channel.is_empty() \
+			or not _has("relay_disabled") or not _has("captive_rescued") or not _has("mill_crossing_restored") \
+			or not bool(_mill.call("is_open")) or _count(GEAR) != 0 \
+			or float(_mill.call("depth_past_crossing", Vector2(_player.global_position.x, _player.global_position.z))) < bank - 0.6:
+		return _fail("Hall must follow the actual paid Mill far-bank crossing with the same earned five")
+	for id: String in CAPTAIN_IDS:
+		if _has(str(TRAINERS.trainer(id).get("defeat_flag", ""))):
+			return _fail("The next captain is already defeated: " + id)
+	for id: String in SIGILS:
+		if _count(id) != 0:
+			return _fail("The next earned sigil is already carried: " + id)
+	if _has("hall_approach_open") or bool(_sigil_gate.call("is_open")) or _has("defeated_warden"):
+		return _fail("The Sigil/Hall route is already completed or bypassed")
+	return true
+
+
+## The hall start: the sigils piece's own end state. Every captain beaten,
+## all three Sigils spent on the open gate, the player past its plane.
+func _hall_start_ready() -> bool:
+	if not retained_five(_initial_ids, _initial_ids) or _fighting():
+		return _fail("Hall gauntlet must start from the retained five in ordinary world input")
+	for id: String in CAPTAIN_IDS:
+		if not _has(str(TRAINERS.trainer(id).get("defeat_flag", ""))):
+			return _fail("The Hall gauntlet needs every Sigil captain beaten first: " + id)
+	var road := departure_spine(_read(TERRAIN))
+	var gate_at := Vector2(_sigil_gate.global_position.x, _sigil_gate.global_position.z)
+	var gate_join := nearest_index(road, gate_at)
+	var crossing := gate_crossing_points(_sigil_gate.global_transform, road[gate_join], road[gate_join + 1]) \
+		if gate_join + 1 < road.size() else []
+	var here := Vector2(_player.global_position.x, _player.global_position.z)
+	if not _has("hall_approach_open") or not bool(_sigil_gate.call("is_open")) or not all_sigils(_sigil_stock(), 0) \
+			or crossing.size() != 2 or (here - gate_at).dot((crossing[1] - crossing[0]).normalized()) <= 0.0:
+		return _fail("The Hall gauntlet must start past the actual opened Sigil Gate with the Sigils spent")
+	if _has("defeated_warden"):
+		return _fail("The Warden is already beaten")
+	return true
 
 
 ## M2 "save/reload at ... Sigils": an optional reload with all three earned
@@ -262,6 +300,14 @@ func _travel() -> bool:
 	if depth < crossing[1].distance_to(gate_at) - 0.6:
 		return _fail("The player has not physically crossed the actual Sigil Gate plane")
 	_receipt("hall_approach_open", {"sigils_before": before, "sigils_after": _sigil_stock(), "depth": depth})
+	if run_stage == STAGE_SIGILS:
+		return true
+	return await _travel_hall()
+
+
+func _travel_hall() -> bool:
+	var road := departure_spine(_read(TERRAIN))
+	var gate_join := nearest_index(road, Vector2(_sigil_gate.global_position.x, _sigil_gate.global_position.z))
 	# The last creature bed before the Warden (the_waystop) stands just past
 	# the gate: a player sleeps the five back before the Hall's three guards.
 	if party_hp_fraction(_game.get("party")) < 0.95 and not await _camp_care():
@@ -400,11 +446,18 @@ static func party_hp_fraction(party: RefCounted) -> float:
 	return hp / most if most > 0.0 else 0.0
 
 
-## Authored camp beds only (rest_point.gd's reserved range): never Grandpa's
-## installed bed, the Hall's own recovery bed or a player-built one.
+## Authored camp beds ahead on this route only (rest_point.gd's reserved
+## indices for highfield_stockcamp -14, the_waystop -15, ridge_patrol_camp
+## -16): never Grandpa's installed bed, the Hall's own recovery bed, a
+## player-built one, or a camp behind the route (ranger_camp's bed prompt
+## measured 15.9 m from a walker standing 1.4 m from it in plan, Hall proof
+## render 38044156997).
+const CAMP_BEDS_AHEAD := [-14, -15, -16]
+
+
 static func is_camp_bed(bed: Node) -> bool:
 	return bed != null and bed.get_script() == CAMP_BED and bed.name != "HomeCreatureBed" \
-		and bed.has_method("build_index") and int(bed.call("build_index")) <= -11
+		and bed.has_method("build_index") and CAMP_BEDS_AHEAD.has(int(bed.call("build_index")))
 
 
 func _nearest_camp_bed() -> Node3D:

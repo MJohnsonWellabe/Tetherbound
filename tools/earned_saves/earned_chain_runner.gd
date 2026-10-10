@@ -22,7 +22,8 @@ extends SceneTree
 ##   bridge           South Bridge grunt + crossing
 ##   warrens          Quarry / Burrow Warrens cleared and exited
 ##   relay            Tether relay disabled, Mill crossed
-##   hall             three Sigils, Hall gauntlet, Warden arena boundary
+##   sigils           three Sigil captains, Sigil Gate crossed
+##   hall             Hall gauntlet from the sigils save, Warden arena boundary
 ##   warden           Warden, Veridian offer ACCEPTED (see warden_accept.gd),
 ##                    acknowledgement, physical Rift crossing -> Cloudreach
 ##   kell_rift        (resume only) from the warden segment's village_pre_kell
@@ -64,7 +65,7 @@ const GENERATED_PROFILES := "res://tests/fixtures/earned_saves/generated_boundar
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CHAIN_SLOT := 1  # Historical copied-save slot; legacy-order diagnostics only.
-const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall", "warden", "kell_rift"]
+const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall", "warden", "kell_rift"]
 const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
 const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
 const LOAD_SETTLE_FRAMES := 300
@@ -134,8 +135,8 @@ func _run() -> void:
 	if not failures.is_empty():
 		_finish()
 		return
-	if generated_fixture and (legacy_order_diagnostic or not compatibility_paths.is_empty() or segment not in ["relay", "hall"]):
-		failures.append("Generated fixtures are explicit Relay/Hall inputs, never legacy or reviewed earned imports")
+	if generated_fixture and (legacy_order_diagnostic or not compatibility_paths.is_empty() or segment not in ["relay", "sigils"]):
+		failures.append("Generated fixtures are explicit Relay/Sigils inputs, never legacy or reviewed earned imports")
 		_finish()
 		return
 	if legacy_order_diagnostic and not handoff_from.is_empty():
@@ -358,9 +359,17 @@ func _resumed_segment() -> void:
 		"relay":
 			var helper: GDScript = load("res://tools/earned_saves/relay_route.gd") if legacy_order_diagnostic else RELAY
 			_take(await helper.new().run(self, world, game), "passed", "relay")
+		"sigils":
+			var sigils := HALL.new()
+			sigils.run_stage = HALL.STAGE_SIGILS
+			_take(await sigils.run(self, world, game), "passed", "sigils")
 		"hall":
-			var helper: GDScript = load("res://tools/earned_saves/hall_route.gd") if legacy_order_diagnostic else HALL
-			_take(await helper.new().run(self, world, game), "passed", "hall")
+			if legacy_order_diagnostic:
+				_take(await (load("res://tools/earned_saves/hall_route.gd") as GDScript).new().run(self, world, game), "passed", "hall")
+			else:
+				var hall := HALL.new()
+				hall.run_stage = HALL.STAGE_HALL
+				_take(await hall.run(self, world, game), "passed", "hall")
 		"kell_rift":
 			# Resume from the warden segment's village_pre_kell checkpoint.
 			_take(await (load(WARDEN_ACCEPT_PATH) as GDScript).new().run_from_village(self, world, game), "passed", "kell_rift")
