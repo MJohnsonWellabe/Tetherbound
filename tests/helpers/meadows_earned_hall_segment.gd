@@ -18,181 +18,75 @@ var _named_trainer := ""
 var _observed_trainers: Array[String] = []
 
 
-## The F22#1 READER policy (tests/helpers/combat_depth_pilot.gd) on the
-## earned route's physical controller path, for the harder named fights
-## (F04#7: ~200 HP bodies whose landed blow costs 10-15% of a creature). It
-## reads only what the fight shows: the wind-up ring and its drawn lane or
-## cone, the foe's recovery and stagger, and the Wind and ultimate meters.
-## It punishes recovery, beats a long tell with a charged, steps off a lane
-## or cone, keeps a quarter of its Wind in reserve, and spends a full
-## ultimate (RB tap, then a face press) into a recovery window.
-class HallPilot extends LIVE.CampaignPilot:
-	const AI := preload("res://scripts/combat/combat_ai.gd")
-	const MATH := preload("res://scripts/combat/combat_math.gd")
-	const RESERVE := 0.25
-	const WALK_SPEED := 5.6  # combat.json creature speed; only used to time a Dodge.
-	var ultimate_inputs := 0
-	var tell_charges := 0
-	var _dbg_w := false
+## The established COMBAT §7 reader (tests/helpers/f22_pattern_pilot.gd,
+## the F22#1/F04#7 C2 policy) driving the earned route's actual fight. Its
+## `_read` decisions are reused unchanged; only the input layer differs:
+## presses and stick deflection go through the physical controller bindings,
+## the stick camera-relative, and the production foe is never reconfigured.
+class HallReader extends "res://tests/helpers/f22_pattern_pilot.gd":
+	var rig: Node3D
+	var presses := {}
 
-	func _faces_target(_ally_body: Node3D, _foe_body: Node3D) -> bool:
-		# Production faces the target at accepted quick/charged start and
-		# tracks it during windup. Do not spend the recovery window turning
-		# with the stick first.
-		return true
+	func _init(camera_rig: Node3D) -> void:
+		rig = camera_rig
+		_tally = {"burst_uses": 0, "events": []}
 
-	func _act(ally_body: Node3D, foe_body: Node3D) -> void:
-		if bool(manager.call("player_is_committed")):
-			await tree.physics_frame
-			return
-		if switch_input and _should_switch():
-			var before: RefCounted = manager.call("active_creature")
-			await press("party_cycle", true)
-			if _observe_switch(before, manager.call("active_creature")):
-				voluntary_switches += 1
-			return
-		var delta := foe_body.global_position - ally_body.global_position
-		delta.y = 0.0
-		var distance := delta.length()
-		var toward := delta.normalized()
-		var reach := float(manager.call("combat_move_reach", "quick"))
-		var charged_reach := float(manager.call("combat_move_reach", "charged"))
-		var wind := float(manager.call("wind_value"))
-		var reserve := float(manager.call("wind_max")) * RESERVE
-		var creature: RefCounted = manager.call("active_creature")
-		var charged: Dictionary = manager.call("_move_profile", "player_charged", str(creature.get("move_charged")))
-		var quick: Dictionary = manager.call("_move_profile", "player_quick", str(creature.get("move_quick")))
-		var beat := float(foe_body.get("_beat_left"))
-		if bool(manager.call("enemy_is_winding_up")) != _dbg_w:
-			_dbg_w = not _dbg_w
-			if _dbg_w:
-				var sel: Variant = foe_body.get("_selected_attack")
-				print("DIAG TELL d=%.2f reach=%.2f cfgrange=%.2f cone=%s beat=%.2f wind=%.0f sel=%s" % [distance, _strike_reach(foe_body, ally_body), float((foe_body.call("combat_config") as Dictionary).get("range", 0)), (foe_body.call("combat_config") as Dictionary).get("cone_degrees"), beat, wind, JSON.stringify({"shape": (sel as Dictionary).get("telegraph_shape"), "pat": (sel as Dictionary).get("pattern_attack_id"), "move": (sel as Dictionary).get("move_id"), "lunge": (sel as Dictionary).get("lunge"), "range": (sel as Dictionary).get("range"), "travels": foe_body.call("lunge_travels"), "cfgshape": (foe_body.call("combat_config") as Dictionary).get("telegraph_shape")})])
-		if bool(manager.call("enemy_is_winding_up")):
-			if bool(manager.call("charged_ready")) and distance < charged_reach - 0.2 \
-					and beat > float(charged.get("windup", 0.55)) + 0.1 \
-					and wind >= float(manager.call("wind_cost", "charged")) + reserve:
-				tell_charges += 1
-				charged_thrown += 1
-				await press("combat_charged")
-				return
-			if foe_body.has_method("lunge_travels") and bool(foe_body.call("lunge_travels")):
-				await _clear_lunge_lane(ally_body, foe_body, toward)
-				return
-			var enemy_reach := _strike_reach(foe_body, ally_body)
-			if distance < enemy_reach + 0.35:
-				await _leave_strike(ally_body, foe_body, toward, distance, enemy_reach, beat)
-				return
-			await tree.physics_frame
-			return
-		if wind < float(manager.call("wind_cost", "quick")) + reserve:
-			await _hold(_retreat_direction(ally_body, toward))
-			return
-		var punish := bool(manager.call("enemy_is_staggered")) or int(foe_body.call("intent")) == AI.Intent.RECOVER
-		if not punish:
-			# A quick commits for less than the shortest tell; throw one
-			# whenever a Dodge's worth of Wind is still banked after it.
-			if distance <= reach - 0.25 and bool(manager.call("quick_ready")) \
-					and wind >= float(manager.call("wind_cost", "quick")) + float(manager.call("wind_cost", "burst")):
-				quick_thrown += 1
-				await press("combat_quick")
-				return
-			await _hold(toward if distance > reach - 0.4 else Vector3.ZERO)
-			return
-		if beat < float(quick.get("windup", 0.18)) + 0.05:
-			await _hold(toward if distance > reach - 0.25 else Vector3.ZERO)
-			return
-		if float(manager.call("ultimate_fraction")) >= 1.0 and distance < charged_reach - 0.2:
-			ultimate_inputs += 1
-			await press("combat_ultimate_arm")
-			await press("combat_charged")
-			return
-		if distance > reach - 0.25:
-			await _hold(toward)
-			return
-		if beat > float(charged.get("windup", 0.55)) + 0.1 and bool(manager.call("charged_ready")) \
-				and distance < charged_reach - 0.15 and wind >= float(manager.call("wind_cost", "charged")) + reserve:
-			charged_thrown += 1
-			await press("combat_charged")
-		elif bool(manager.call("quick_ready")):
-			quick_thrown += 1
-			await press("combat_quick")
-		else:
-			await tree.physics_frame
+	func step(manager: Node, ally: Node3D, foe: Node3D) -> void:
+		_release_attack()
+		_release_move()
+		_manager = manager
+		_ally = ally
+		_wild = foe
+		_read("READER")
+		_frames += 1
 
-	func _hold(direction: Vector3) -> void:
-		_move_toward(direction)
-		await tree.physics_frame
+	func _walk(direction: Vector3) -> void:
+		direction.y = 0.0
+		var local := (rig.call("planar_basis") as Basis).inverse() * direction.normalized()
+		for action: String in ["move_right", "move_back"]:
+			var event := _joypad(action)
+			if event is InputEventJoypadMotion:
+				var axis := event as InputEventJoypadMotion
+				axis.axis_value = (local.x if action == "move_right" else local.z) * signf(axis.axis_value)
+				Input.parse_input_event(axis)
 
-	## The drawn attack's own reach: a named pattern attack freezes its
-	## profile at tell start; otherwise the body's spaced strike.
-	## A drawn pattern (combat_ai.gd pattern_contains) also reaches the
-	## target's own body radius past its range.
-	func _strike_reach(foe_body: Node3D, ally_body: Node3D) -> float:
-		var selected: Variant = foe_body.get("_selected_attack")
-		if selected is Dictionary and (selected as Dictionary).has("range"):
-			var pattern := (selected as Dictionary).has("pattern_attack_id")
-			return float(selected.range) + (float(ally_body.call("body_radius")) if pattern else 0.0)
-		return float((foe_body.call("combat_config") as Dictionary).get("range", 2.6))
+	func _release_move() -> void:
+		for action: String in ["move_right", "move_back"]:
+			var event := _joypad(action)
+			if event is InputEventJoypadMotion:
+				(event as InputEventJoypadMotion).axis_value = 0.0
+				Input.parse_input_event(event)
 
-	func _retreat_direction(ally_body: Node3D, toward: Vector3) -> Vector3:
-		var arena: Node3D = manager.call("arena")
-		if arena == null:
-			return -toward
-		var outward := ally_body.global_position - arena.global_position
-		outward.y = 0.0
-		# At the boundary walking straight back is no longer a dodge; circle.
-		if outward.length() > float(arena.get("radius")) - 2.5:
-			var tangent := outward.normalized().cross(Vector3.UP)
-			return tangent if tangent.dot(-toward) >= 0.0 else -tangent
-		return -toward
-
-	## Out of the drawn cone sideways when that is shorter than out of its
-	## reach, else back off; Dodge when walking cannot make it in the tell.
-	func _leave_strike(ally_body: Node3D, foe_body: Node3D, toward: Vector3, distance: float, enemy_reach: float, beat: float) -> void:
-		var heading: Vector3 = foe_body.call("facing")
-		heading.y = 0.0
-		var direction := _retreat_direction(ally_body, toward)
-		var needed := enemy_reach + 0.35 - distance
-		if heading.length() > 0.01:
-			heading = heading.normalized()
-			var offset := ally_body.global_position - foe_body.global_position
-			offset.y = 0.0
-			var along := offset.dot(heading)
-			var lateral := offset - heading * along
-			var half := deg_to_rad(float((foe_body.call("combat_config") as Dictionary).get("cone_degrees", 90.0)) * 0.5)
-			var edge_gap := along * tan(half) - lateral.length() if along > 0.0 else 0.0
-			var sideways := maxf(0.0, edge_gap) * cos(half) + float(ally_body.call("body_radius")) + 0.3
-			if sideways < needed:
-				direction = lateral.normalized() if lateral.length() > 0.05 else heading.cross(Vector3.UP)
-				needed = sideways
-		_move_toward(direction)
-		if needed / WALK_SPEED > beat - 0.05 and burst_input \
-				and float(manager.call("wind_value")) >= float(manager.call("wind_cost", "burst")):
-			burst_attempts += 1
-			var before := float(manager.call("wind_value"))
-			await press("jump")
-			if float(manager.call("wind_value")) < before:
-				accepted_bursts += 1
+	func _press(action: String) -> void:
+		var event := _joypad(action)
+		if not event is InputEventJoypadButton:
+			push_error("Hall reader has no physical controller button: " + action)
 			return
-		await tree.physics_frame
+		(event as InputEventJoypadButton).pressed = true
+		Input.parse_input_event(event)
+		_pressed = action
+		presses[action] = int(presses.get(action, 0)) + 1
 
-	## Sidestep until the ally's footprint is off the lane the charger shows.
-	func _clear_lunge_lane(ally_body: Node3D, foe_body: Node3D, toward: Vector3) -> void:
-		var heading: Vector3 = foe_body.call("facing")
-		heading.y = 0.0
-		heading = heading.normalized() if heading.length() > 0.01 else toward
-		var offset := ally_body.global_position - foe_body.global_position
-		offset.y = 0.0
-		var along := offset.dot(heading)
-		var lateral := offset - heading * along
-		var scale := float(MATH.config().get("charger_lunge", {}).get("contact_scale", 1.2))
-		var clearance := (float(ally_body.call("body_radius")) + float(foe_body.call("body_radius"))) * scale + 0.4
-		var length := float((foe_body.call("combat_config") as Dictionary).get("lunge", 0.0)) + clearance
-		if along < -clearance or along > length or lateral.length() > clearance:
-			await _hold(Vector3.ZERO)
+	func _release_attack() -> void:
+		if _pressed.is_empty():
 			return
-		await _hold(lateral.normalized() if lateral.length() > 0.05 else heading.cross(Vector3.UP))
+		var event := _joypad(_pressed)
+		if event is InputEventJoypadButton:
+			(event as InputEventJoypadButton).pressed = false
+			Input.parse_input_event(event)
+		_pressed = ""
+
+	func release_all() -> void:
+		_release_attack()
+		_release_move()
+
+	static func _joypad(action: String) -> InputEvent:
+		for configured: InputEvent in InputMap.action_get_events(action):
+			if configured is InputEventJoypadButton or configured is InputEventJoypadMotion:
+				var event: InputEvent = configured.duplicate()
+				event.device = 0
+				return event
+		return null
 
 
 func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
@@ -469,25 +363,19 @@ func _fight_named(body: Node3D, id: String) -> bool:
 		return false
 	if not bool(_director.call("trainer_battle_active")) or str(_director.call("trainer_battle_id")) != id:
 		return _fail("Physical challenge input did not admit the exact required trainer: " + id)
-	var pilot := HallPilot.new(_tree, _combat, _director, _rig)
-	pilot.use_switching = false
-	pilot.switch_input = true
-	pilot.burst_input = true
+	var pilot := HallReader.new(_rig)
 	var team_size := TRAINERS.team_of(_captain_spec).size()
 	while bool(_director.call("trainer_battle_active")) and trainer_within_deadline(Engine.get_physics_frames() - _captain_start, team_size):
 		if not _failures.is_empty():
 			break
-		if bool(_combat.call("is_fighting")):
-			var ally := _director.call("ally_body") as Node3D
-			var foe := _combat.call("enemy_body") as Node3D
-			if is_instance_valid(ally) and is_instance_valid(foe):
-				await pilot._act(ally, foe)
-				pilot._move_toward(Vector3.ZERO)
-			else:
-				await _tree.physics_frame
+		var ally := _director.call("ally_body") as Node3D
+		var foe := _combat.call("enemy_body") as Node3D
+		if bool(_combat.call("is_fighting")) and is_instance_valid(ally) and is_instance_valid(foe):
+			pilot.step(_combat, ally, foe)
 		else:
-			await _tree.physics_frame
-	pilot._move_toward(Vector3.ZERO)
+			pilot.release_all()
+		await _tree.physics_frame
+	pilot.release_all()
 	_captain_active = false
 	# Retain the actual failed oracle as well as successful outcomes. A
 	# generic failure must not lose the round/hit/physical-input witness.
@@ -496,10 +384,8 @@ func _fight_named(body: Node3D, id: String) -> bool:
 		"hits": _captain_hits, "kills": _captain_kills.size(), "team_size": team_size,
 		"frames": Engine.get_physics_frames() - _captain_start,
 		"within_original_deadline": trainer_within_deadline(Engine.get_physics_frames() - _captain_start, team_size),
-		"fighting": _fighting(), "flag": _has(flag), "quick_inputs": pilot.quick_thrown,
-		"charged_inputs": pilot.charged_thrown, "switches": pilot.voluntary_switches,
-		"burst_attempts": pilot.burst_attempts, "accepted_bursts": pilot.accepted_bursts,
-		"tell_charges": pilot.tell_charges, "ultimate_inputs": pilot.ultimate_inputs,
+		"fighting": _fighting(), "flag": _has(flag), "presses": pilot.presses.duplicate(),
+		"read_escapes": int(pilot._tally.get("read_escapes", 0)), "read_interrupts": int(pilot._tally.get("read_interrupts", 0)),
 		"enemy_species": str(actual_enemy.get("species_id")) if actual_enemy != null else "",
 		"enemy_hp": float(actual_enemy.get("hp")) if actual_enemy != null else -1.0,
 		"items_before": before_items, "items_after": _captain_stock(),
