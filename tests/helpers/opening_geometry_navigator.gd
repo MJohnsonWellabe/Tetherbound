@@ -30,83 +30,6 @@ const LOW_PROP_RISE := 0.05
 ## contact-saturation guards stay hard refusals.
 const MAX_DEFERRAL_FRAMES := 30
 
-## A physics_frame signal resumes BEFORE NativeTick and the controller. A
-## submitted attempt is finished only by its corresponding actual callback epoch.
-## This keeps nested coroutine resumes from spending walking frames without
-## crossing the real pre/controller/post movement callbacks.
-## Completion spends one attempt, including a deferred/refused pre check; only
-## the unchanged successful production post check can set _checked_start.
-class StepEpoch extends RefCounted:
-	var issued := 0
-	var completed := 0
-	var in_flight := 0
-	var pre_frame := -1
-	func request() -> int:
-		issued += 1
-		return issued
-	func begin(token: int, frame: int) -> bool:
-		if frame < 0 or token < 0 or token > issued or (token > 0 and token <= completed) or in_flight > 0:
-			return false
-		in_flight = token
-		pre_frame = frame
-		return true
-	func finish(frame: int) -> void:
-		if in_flight > 0 and frame == pre_frame:
-			completed = in_flight
-		in_flight = 0
-	func retry_token(token: int) -> int:
-		# An abandoned pre/post pair has not earned completion. A later actual
-		# pair may retry its same pending input within the original walk clock.
-		return token if token > completed and token <= issued and in_flight == 0 else 0
-
-var _step_epoch := StepEpoch.new()
-var _requested_step := 0
-var _waiting_step := 0
-var _waiting_point := Vector3.INF
-signal step_wake
-
-## One unchanged allowance for the whole walk, including callback waits.
-## UI ownership does not exempt a locomotion-enabled physics frame.
-class WalkBudget extends RefCounted:
-	var limit: int
-	var walked := 0
-	var held := 0
-	var last_frame := -1
-	var walking_this_frame := false
-	var exhausted := false
-	func _init(original_limit: int) -> void:
-		limit = original_limit
-	func advance(frame: int, walking_allowed: bool) -> bool:
-		if exhausted or frame < last_frame:
-			exhausted = true
-			return false
-		if frame == last_frame:
-			if not walking_allowed or walking_this_frame:
-				return true
-			# A late hand-back in this same actual frame counts as walking,
-			# not both a hold and a walking tick.
-			held -= 1
-		else:
-			if walked >= limit:
-				exhausted = true
-				return false
-			last_frame = frame
-			walking_this_frame = false
-		if walking_allowed:
-			if walked >= limit:
-				exhausted = true
-				return false
-			walked += 1
-			walking_this_frame = true
-		else:
-			held += 1
-			if held > 36000:
-				exhausted = true
-				return false
-		return true
-
-var _active_walk_budget: WalkBudget
-
 ## Frame-counted deferral ledger for the cooperative deadline (see
 ## MAX_DEFERRAL_FRAMES). One deferral per physics frame at most.
 class DeadlineDeferral extends RefCounted:
@@ -134,12 +57,6 @@ class NativeTick extends Node:
 	var navigator: WeakRef
 	var records: Array[Dictionary] = []
 	var flush_pending := false
-	func wake_step() -> void:
-		var nav: RefCounted = navigator.get_ref()
-		if nav == null:
-			queue_free()
-		else:
-			nav.call("_physics_frame_wake")
 	func flush_records() -> void:
 		# Snapshots contain values only. Never read a later body pose here.
 		flush_pending = false
@@ -160,8 +77,6 @@ class NativeTick extends Node:
 			queue_free()
 		else:
 			nav.call("_native_tick", delta)
-			if not bool(nav.get("_production_steering")):
-				nav.call("_finish_step_epoch")
 
 var _body: CharacterBody3D
 var _cap: CollisionShape3D
@@ -262,7 +177,6 @@ func _init(tree: SceneTree, player: Node3D, rig: Node3D, drive: Callable, produc
 	_tick.process_thread_group = Node.PROCESS_THREAD_GROUP_INHERIT # Same group as the actual trainer.
 	_tick.process_physics_priority = _body.process_physics_priority - 1
 	_world.add_child(_tick)
-	_tree.connect("physics_frame", Callable(_tick, "wake_step"))
 	_progress_at = _player.global_position
 	if _production_steering:
 		_observer = ProductionObserve.new()
@@ -332,9 +246,6 @@ func _stop_geometry(reason: String) -> void:
 
 
 func reset() -> void:
-	if _waiting_step > 0:
-		_stop_geometry("reset overlaps a pending private walking request")
-		return
 	# Sticky refusal, departure and all lifetime allowances survive reset.
 	_requested = false
 	_owns_input = false
@@ -389,90 +300,17 @@ func set_approach_radius(value: float) -> void:
 
 
 func step(point: Vector3) -> void:
-	if _waiting_step > 0:
-		_stop_geometry("public step overlaps a pending private walking request")
-		return
 	_request = point
 	_raw = false
 	_requested = not refused()
-	_requested_step = 0
-	await _tree.physics_frame # Original single-step callers retain their allowances.
-
-
-func _walk_step(point: Vector3) -> void:
-	if _active_walk_budget == null:
-		_stop_geometry("native walking request has no original whole-walk allowance")
-		return
-	_request = point
-	_raw = false
-	_requested = not refused()
-	var token := _step_epoch.request()
-	_requested_step = token
-	_waiting_step = token
-	_waiting_point = point
-	while _step_epoch.completed < token and not refused() \
-			and not _active_walk_budget.exhausted:
-		await step_wake
-	_waiting_step = 0
-	_waiting_point = Vector3.INF
-
-
-func _physics_frame_wake() -> void:
-	if _active_walk_budget != null:
-		_active_walk_budget.advance(Engine.get_physics_frames(), can_walk())
-		if _active_walk_budget.exhausted:
-			_requested = false
-			_drive.call(0.0, 0.0)
-			if _production_steering:
-				Input.flush_buffered_events()
-		elif can_walk() and not refused() and not _requested and not _production_pending and not _raw:
-			var retry := _step_epoch.retry_token(_waiting_step)
-			if retry > 0:
-				if retry != _step_epoch.issued or _request != _waiting_point:
-					_stop_geometry("pending private walking request was replaced")
-				else:
-					_checked_start = false
-					_requested_step = retry
-					_requested = true
-	step_wake.emit()
-
-
-func _finish_step_epoch() -> void:
-	_step_epoch.finish(Engine.get_physics_frames())
-	step_wake.emit()
-
-
-func _end_walk(arrived: bool) -> bool:
-	if not arrived and _active_walk_budget != null:
-		var owner: Node = preload("res://scripts/ui/input_owner.gd").current(_tree)
-		print("OPENING_WALK_TERMINAL ", JSON.stringify({"acceptance": false,
-			"limit": _active_walk_budget.limit, "walked": _active_walk_budget.walked,
-			"held": _active_walk_budget.held, "last_frame": _active_walk_budget.last_frame,
-			"exhausted": _active_walk_budget.exhausted, "physics_frame": Engine.get_physics_frames(),
-			"paused": _tree.paused, "can_walk": can_walk(),
-			"input_owner": str(owner.get_path()) if owner != null else "",
-			"tick_can_process": _tick.can_process(), "observer_can_process": _observer.can_process(),
-			"body_can_process": _body.can_process(), "requested": _requested,
-			"issued": _step_epoch.issued, "completed": _step_epoch.completed,
-			"in_flight": _step_epoch.in_flight, "pre_frame": _step_epoch.pre_frame,
-			"requested_step": _requested_step, "observed_frames": _observed_frames,
-			"requests": _requests, "pending_post": _production_pending, "refusal": _reason,
-			"position": [_body.global_position.x, _body.global_position.y, _body.global_position.z]}))
-	_active_walk_budget = null
-	_requested = false
-	_drive.call(0.0, 0.0)
-	return arrived
+	await _tree.physics_frame # Queries execute only in NativeTick, after this signal.
 
 
 func push_once(direction: Vector3) -> void:
-	if _waiting_step > 0:
-		_stop_geometry("raw input overlaps a pending private walking request")
-		return
 	# Preserve deliberate prompt shuffles through the same real stick seam.
 	_request = direction
 	_raw = true
 	_requested = not refused()
-	_requested_step = 0
 
 
 func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false, provisional_path: Array[Vector2] = []) -> bool:
@@ -508,26 +346,27 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_ro
 				_stop_geometry("missing/malformed bounded authored road prefix")
 				return false
 		_guided_label = authored_road
-	if _active_walk_budget != null:
-		_stop_geometry("overlapping bounded native walks")
-		return false
-	_active_walk_budget = WalkBudget.new(budget)
-	while not _active_walk_budget.exhausted and not refused():
+	var walked := 0
+	var held := 0
+	while walked < budget and not refused():
 		if not can_walk():
-			_active_walk_budget.advance(Engine.get_physics_frames(), false)
+			held += 1
 			_drive.call(0.0, 0.0)
 			_requested = false
-			if _active_walk_budget.exhausted:
-				break
-			await step_wake
+			if held > 36000:
+				return false
+			await _tree.physics_frame
 			continue
 		if _checked_start and not departure_pending(point) and not refused() \
 				and _xz(_player.global_position).distance_to(_xz(point)) <= close_enough:
-			return _end_walk(true)
-		if not _active_walk_budget.advance(Engine.get_physics_frames(), true):
-			break
-		await _walk_step(point)
-	return _end_walk(false)
+			_requested = false
+			_drive.call(0.0, 0.0)
+			return true
+		walked += 1
+		await step(point)
+	_requested = false
+	_drive.call(0.0, 0.0)
+	return false
 
 
 func authored_road_points(label: String) -> Array[Vector2]:
@@ -1025,11 +864,6 @@ func _native_tick_impl(_delta: float) -> void:
 			_owns_input = false
 		return
 	_requested = false
-	if not _step_epoch.begin(_requested_step, Engine.get_physics_frames()):
-		_stop_geometry("native walking request/callback epoch diverged")
-		return
-	_requested_step = 0
-	_checked_start = false
 	_requests += 1
 	_queries = 0
 	_deadline = Time.get_ticks_usec() + FRAME_QUERY_US
@@ -1541,9 +1375,6 @@ class ProductionObserve extends Node:
 			queue_free()
 		else:
 			nav.call("_production_observe")
-			# A deferred/refused pre check still spends its original one-frame
-			# attempt. It never earns _checked_start or an arrival witness.
-			nav.call("_finish_step_epoch")
 
 var _production_steering := false
 var _observer: ProductionObserve
