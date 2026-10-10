@@ -132,7 +132,10 @@ func _ribbon(surface: SurfaceTool, path: Array[Vector3], width: float, standoff:
 			var side := u * 2.0 - 1.0
 			var at := centre + lateral * side * half + outward * standoff
 			var ground := float(_world.call("ground_height_at", at.x, at.z))
-			var y := maxf(centre.y, ground if is_finite(ground) else centre.y) + standoff
+			# Each strand follows its own terrain sample. Raising the whole row
+			# to its centre height suspended the outer strands over the cliff;
+			# from the plateau those bridges were visible against open sky.
+			var y := (ground if is_finite(ground) else centre.y) + standoff
 			row.append({"at": Vector3(at.x, y, at.z),
 				"uv": Vector2(u, travelled)})
 		rows.append(row)
