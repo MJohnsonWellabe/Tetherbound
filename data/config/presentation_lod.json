@@ -1,0 +1,14 @@
+{
+  "_scope": "F26 performance, CPU only, local presentation. How often far-away presentation refreshes; no save, network, combat or gameplay state. enabled false restores every-frame refresh everywhere.",
+  "enabled": true,
+  "crop_plot": {
+    "_comment": "A homestead crop bed farther than far_m from the camera re-reads its plot, seeds and prompt label every refresh_s instead of every frame. Its prompt radius is 2 m; growth still shows within refresh_s. Open, queued or claimed beds always refresh.",
+    "far_m": 20.0,
+    "refresh_s": 0.5
+  },
+  "mote_vfx": {
+    "_comment": "Alpha auras and aspect VFX rebuild their camera-facing ImmediateMesh every tick only within far_m of the camera; beyond it every rebuild_ticks ticks; hidden, never.",
+    "far_m": 50.0,
+    "rebuild_ticks": 4
+  }
+}

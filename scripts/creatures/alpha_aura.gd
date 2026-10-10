@@ -98,11 +98,26 @@ func _material() -> StandardMaterial3D:
 	return material
 
 
+## F26 performance (presentation_lod.json mote_vfx): the motes are rebuilt
+## every tick only where they can be seen in detail. Hidden, nothing is
+## rebuilt; far from the camera the billboard is rebuilt every few ticks.
+const PRESENTATION_LOD := preload("res://scripts/world/presentation_lod.gd")
+var _rebuild_skip := 0
+
+
 func _physics_process(delta: float) -> void:
 	_life += delta
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
 		return
+	var lod := PRESENTATION_LOD.block("mote_vfx")
+	if not lod.is_empty():
+		if not is_visible_in_tree():
+			return
+		if camera.global_position.distance_to(global_position) > float(lod.get("far_m", 50.0)):
+			_rebuild_skip = (_rebuild_skip + 1) % maxi(1, int(lod.get("rebuild_ticks", 4)))
+			if _rebuild_skip != 0:
+				return
 	var basis := camera.global_transform.basis
 	var right: Vector3 = basis.x
 	var up: Vector3 = basis.y
