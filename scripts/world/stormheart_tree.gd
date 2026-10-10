@@ -827,7 +827,10 @@ func _add_wayfinding_lamp(parent: Node3D, at: Vector3, glow: Material, id: Strin
 		box.size = Vector3(0.24, LAMP_POST_HEIGHT_M, 0.24)
 		post.mesh = box
 		post.material_override = _wood
-		post.position = Vector3(0.0, LAMP_POST_TOP_M - LAMP_POST_HEIGHT_M*0.5, -0.12)
+		# The holder faces the axis (+Z inward). An outer-edge lamp's post
+		# steps inward and an inner-edge lamp's outward, so both seat on the ramp.
+		var inward := 1.0 if Vector2(at.x, at.z).length() > RAMP_RADIUS else -1.0
+		post.position = Vector3(0.0, LAMP_POST_TOP_M - LAMP_POST_HEIGHT_M*0.5, 0.2*inward)
 		holder.add_child(post)
 	var light := OmniLight3D.new()
 	light.name = "WarmRouteLight"
