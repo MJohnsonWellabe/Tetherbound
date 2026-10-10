@@ -78,6 +78,17 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 		"travel_seconds": float(travel), "duration_seconds": float(duration),
 		"source_ground": source_ground, "target_ground": target_ground,
 		"recipient_character_id": recipient, "peer_view": recipient != str(binding.character_id)}
+	# Keep measured surface contact for staged signatures too. Copy only the
+	# finite vectors; never retain a target body or other caller-owned values.
+	var bounds: Variant = context.get("target_visual_bounds", {})
+	if bounds is Dictionary:
+		var position: Variant = bounds.get("position")
+		var size: Variant = bounds.get("size")
+		if position is Vector3 and size is Vector3 and position.is_finite() and size.is_finite() \
+				and size.x > 0.0 and size.y > 0.0 and size.z > 0.0:
+			var surface := {"position": position, "size": size}
+			surface.make_read_only()
+			frozen["target_visual_bounds"] = surface
 	for value: Variant in frozen.actor_binding.values():
 		if value is Object or value is Dictionary or value is Array: return null
 	frozen.actor_binding.make_read_only()
@@ -95,6 +106,8 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 		staged["breakthrough_growth"] = row.growth.duplicate(true)
 		staged["ultimate"] = true
 		staged["impact_audio_owner"] = "receipt"
+		staged["peer_presentation"] = data.get("peer", {}).duplicate(true)
+		staged["ultimate_launch"] = row.get("launch", {}).duplicate(true)
 		return MOVE_LIBRARY.launch_presentation(parent, from, to, override, staged)
 	var effect := EFFECT.new()
 	effect.configure(from, to, row, frozen, data)

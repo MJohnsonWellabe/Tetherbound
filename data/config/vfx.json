@@ -140,8 +140,8 @@
     "no_depth_test": true
   },
   "move_library": {
-    "enabled": false,
-    "_comment": "F25 draft remains flag-off until real player paths, visual judgment and Medium frame-time proof pass. Presentation never owns damage; host receipt travel_seconds wins. Guard flash is visual only.",
+    "enabled": true,
+    "_comment": "Owner Phase 1 rollout: real move effects are ON; visual and Medium frame-time acceptance remains a Phase 2 gate. Presentation never owns damage; host receipt travel_seconds wins. Guard flash is visual only.",
     "ordinary_particle_limit": 48,
     "ultimate_particle_limit": 160,
     "encounter_particle_cap": 384,
