@@ -1,0 +1,8 @@
+{
+  "_scope": "F26 performance, CPU only. Local simulation of wild creature bodies outside a fight; no save, network, combat or presentation state. Disabling restores a full move_and_slide every physics tick.",
+  "rest_slide_skip": {
+    "_comment": "A wild creature standing still on its floor keeps its last collision result instead of re-sweeping its capsule every tick. Any requested move, velocity, impulse, burst, jump, external reposition or loss of floor runs a real slide the same tick; refresh_ticks forces a real slide at least that often while resting.",
+    "enabled": true,
+    "refresh_ticks": 12
+  }
+}

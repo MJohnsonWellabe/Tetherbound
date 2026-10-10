@@ -8,6 +8,8 @@
 
 ### step: Verify Tidewake closed-gate tide-race seal
 timeout 300s godot --headless --path . --script tests/smoke_water_closed_gate_seal.gd
+### step: Verify resting wild creatures skip the floor sweep safely
+timeout 120s godot --headless --path . --script tests/smoke_wild_rest_slide_skip.gd
 ### step: Verify Tidewake dismount leaves no mounted state
 timeout 240s godot --headless --path . --script tests/smoke_water_dismount_state.gd
 ### step: Verify Tidewake drowning and safe shore
