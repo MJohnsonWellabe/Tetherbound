@@ -1909,7 +1909,13 @@ func request_jump(height: float) -> void:
 	_jump_speed = sqrt(2.0 * _gravity * height)
 
 
+static var perf_sections := {}
+static func perf_add(key: String, usec: int) -> void:
+	perf_sections[key] = int(perf_sections.get(key, 0)) + usec
+
+
 func _physics_process(delta: float) -> void:
+	var t0 := Time.get_ticks_usec()
 	_environment_velocity.begin_step(self)
 	if not is_on_floor():
 		velocity.y -= _gravity * delta
@@ -1969,6 +1975,7 @@ func _physics_process(delta: float) -> void:
 		_note_rest_slide()
 	_environment_velocity.after_slide(self)
 	_hold_contact_spacing(delta)
+	var t3 := Time.get_ticks_usec()
 
 	if arena != null:
 		var constraint: Variant = arena.call("hold_inside", self)
