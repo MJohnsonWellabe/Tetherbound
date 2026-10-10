@@ -12,6 +12,7 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const FIT := preload("res://scripts/combat/fight_camera.gd")
 const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
+const PARTY := preload("res://autoload/party.gd")
 
 const SETTLE_FRAMES := 300
 const RIGHT_X := JOY_AXIS_RIGHT_X
@@ -55,6 +56,16 @@ func _run() -> void:
 	current_scene = _world
 	for i in SETTLE_FRAMES:
 		await physics_frame
+	# Sliced construction can outlast a fixed frame count on a real GPU.
+	# Use the world's production readiness seam; never capture a held player
+	# or a world whose scatter/collision is still being installed.
+	var build_deadline := Time.get_ticks_msec() + 600000
+	while _world.has_method("shell_build_complete") and not bool(_world.call("shell_build_complete")):
+		if Time.get_ticks_msec() >= build_deadline:
+			_fail("production world did not finish construction within 600s")
+			_report()
+			return
+		await process_frame
 	if not await _collect_and_stage():
 		_report()
 		return
@@ -245,6 +256,9 @@ func _capture_size_matrix() -> void:
 ## HUD and rig run normally. No framing function is driven by this harness.
 func _capture_live_size_matrix(directory: String, source: String, preset: String) -> void:
 	var saved_party: Array = (_manager.get("_party") as Array).duplicate()
+	var saved_owned_party: RefCounted = _game.get("party")
+	var saved_character: Dictionary = _game.get("local").get("redesign_character").duplicate(true)
+	var saved_best: RefCounted = _manager.get("_best_creature")
 	var active_index := int(_manager.get("_active_index"))
 	var saved_enemy: RefCounted = _manager.get("_enemy")
 	var saved_director_ally: RefCounted = _director.get("_ally")
@@ -252,12 +266,22 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 	var saved_foe_species := str(_wild.get("species_id"))
 	var saved_ally_at := _ally.global_transform
 	var saved_foe_at := _wild.global_transform
+	var owned_members: Array = saved_owned_party.call("members")
+	var owned_index := owned_members.find(saved_director_ally)
+	if owned_index < 0 or owned_members.size() > PARTY.MAX_CREATURES:
+		_fail("live matrix active creature is not in the production owned party")
+		return
+	var saved_patterns: Dictionary = (_wild.get("_patterns") as Dictionary).duplicate(true)
+	var saved_pattern_context: Dictionary = (_wild.get("_pattern_context") as Dictionary).duplicate(true)
+	var saved_pattern_observer: Callable = _wild.get("_pattern_observer")
 	var kinds := {"small":"mudsnout", "normal":"terrapup", "giant":"veridian"}
 	var cfg := FIT.config()
 	var cases: Array[Dictionary] = []
 	var case_index := 0
-	print("LIVE MATRIX SCOPE: physically entered solo encounter; staged authored roster/start poses and fresh action/Wind/poise per pair; all simulation, AI, collision, HUD and camera live throughout 120 settling + 180 observed physics boundaries; every actual post-draw view scored after settling; no rescale, invulnerability, HP grants during observation or earned-campaign claim")
+	var roster_staging_failed := false
+	print("LIVE MATRIX SCOPE: production world construction complete; physically entered solo encounter; staged authored owned roster/start poses and fresh action/Wind/poise per pair, with production loadout mirroring and deployment announcement; all simulation, AI, collision, HUD and camera live throughout 120 settling + 180 observed physics boundaries; every actual post-draw view scored after settling; no rescale, invulnerability, HP grants during observation or earned-campaign claim")
 	for ally_class: String in kinds:
+		if roster_staging_failed: break
 		for foe_class: String in kinds:
 			if int(_manager.get("state")) != 1: # State.ACTIVE
 				break
@@ -265,10 +289,32 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 			var foe_instance := SPECIES.spawn(str(kinds[foe_class]))
 			var staged_party := saved_party.duplicate()
 			staged_party[active_index] = ally_instance
+			# Stage the same instance in the owned party the host admits, keeping
+			# its five-member cap. A manager-only swap names an unowned fresh UID
+			# and is correctly refused by the production move-start validator.
+			var staged_members := owned_members.duplicate()
+			staged_members[owned_index] = ally_instance
+			var staged_owned := PARTY.new()
+			for member: RefCounted in staged_members:
+				if not staged_owned.add(member):
+					_fail("live matrix could not stage its capped owned party")
+					roster_staging_failed = true
+					break
+			if roster_staging_failed: break
+			staged_owned.set_active(owned_index)
+			if int(saved_owned_party.call("best_index")) >= 0:
+				staged_owned.set_best(int(saved_owned_party.call("best_index")))
+			_game.set("party", staged_owned)
+			_game.get("local").set("redesign_character", saved_character.duplicate(true))
+			var staged_character: Dictionary = _game.get("local").call("save_data")
+			_game.get("local").set("redesign_character", staged_character.redesign_character)
 			_manager.set("_party", staged_party)
+			_manager.set("_best_creature", staged_owned.best())
 			_manager.set("_enemy", foe_instance)
 			_director.set("_ally", ally_instance)
 			_wild.set("instance", foe_instance)
+			_director.call("_announce_deployment", ally_instance)
+			_director.call("_configure_f22_patterns", _wild, false)
 			_ally.call("setup", str(kinds[ally_class]))
 			_wild.call("setup", str(kinds[foe_class]))
 			_ally.global_transform = saved_ally_at
@@ -450,6 +496,8 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 			case_index += 1
 	# Do not turn an ended/failed encounter back into ACTIVE to restore a fixture.
 	# Such a run aborts truthfully before the retained original control sequence.
+	_game.set("party", saved_owned_party)
+	_game.get("local").set("redesign_character", saved_character)
 	if int(_manager.get("state")) == 1: # State.ACTIVE
 		_manager.call("_end_hitstop")
 		_manager.set("_action", 0)
@@ -458,9 +506,12 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 		_manager.set("_buffered_attack", "")
 		_manager.set("_buffer_left", 0.0)
 		_manager.set("_party", saved_party)
+		_manager.set("_best_creature", saved_best)
 		_manager.set("_enemy", saved_enemy)
 		_director.set("_ally", saved_director_ally)
+		_director.call("_announce_deployment", saved_director_ally)
 		_wild.set("instance", saved_enemy)
+		_wild.call("configure_patterns", saved_patterns, saved_pattern_context, saved_pattern_observer)
 		_ally.call("setup", saved_ally_species)
 		_wild.call("setup", saved_foe_species)
 		_ally.global_transform = saved_ally_at
@@ -480,7 +531,7 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 			"engine":Engine.get_version_info(),"renderer":RenderingServer.get_current_rendering_method(),"preset":GRAPHICS.selected(),"requested_preset":preset,
 			"resolution":[1920,1080],"mode":"live","settling_physics_ticks":120,"observed_physics_ticks":180,"geometry_scoring":"Every actual post-draw frame after setup settling; model-transformed corners, strict0 overlap/full frame plus actual HUD exclusion and approximate foreground head/torso sight; inflated world-AABB diagnostics also retained","case_wall_budget_ms":30000,
 			"physics_ticks_per_second":Engine.physics_ticks_per_second,"input_timing":"Pre-physics boundaries: left Y -0.85 at observed30, release90; physical quick trigger at120, release122, buffered-event flush at both trigger edges before manager physics. Six PNG milestones0/30/60/90/120/179 use distinct actual draws with actual boundary recorded; every post-draw view including terminal/aborted view retained.",
-			"scope":"Physically entered solo encounter; staged actual authored roster/positions and fresh action/Wind/poise baselines per pair. Manager, actors, enemy AI, collision, HUD and rig remain live during all recorded physics ticks and rendered observations. No species rescale, invulnerability, mid-observation HP grants, earned campaign, device, blind verdict or performance claim.",
+			"scope":"Production world construction complete; physically entered solo encounter; staged actual authored owned roster/positions with production loadout mirroring and deployment announcement, plus fresh action/Wind/poise baselines per pair. Manager, actors, enemy AI, collision, HUD and rig remain live during all recorded physics ticks and rendered observations. No species rescale, invulnerability, mid-observation HP grants, earned campaign, device, blind verdict or performance claim.",
 			"cases":cases,"all_nine_complete":cases.size()==9,"failures":_failures.duplicate()},"  "))
 		output.close()
 	for frame: int in 30: await physics_frame
@@ -718,12 +769,11 @@ func _measure_requested_framing(gap: float) -> float:
 		_ally.global_position = centre
 		_wild.global_position = centre + Vector3(gap, 0.0, 0.0)
 		_manager.call("_update_combat_camera_framing", 1.0 / 60.0)
+		# Framing physics now reserves the matrix mode; the actual final idle
+		# composer owns the constrained pose. Drive that same production seam
+		# while this static fixture holds the two positions between calls.
+		_manager.call("_draw_fight_camera", 1.0 / 60.0)
 	var requested := float(_rig.get("_distance"))
-	var basis := _rig.global_basis.orthonormalized()
-	var pivot := _ally.global_position + Vector3.UP * float(_rig.get("_height"))
-	if _rig.has_method("framing_pivot_offset"):
-		pivot += _rig.call("framing_pivot_offset") as Vector3
-	pivot += Basis(Vector3.UP, float(_rig.get("yaw"))).x * float(_rig.get("_shoulder"))
 	var probe := Camera3D.new()
 	probe.current = false
 	probe.projection = _camera.projection
@@ -732,7 +782,7 @@ func _measure_requested_framing(gap: float) -> float:
 	probe.near = _camera.near
 	probe.far = _camera.far
 	_world.add_child(probe)
-	probe.global_transform = Transform3D(basis, pivot + basis.z * requested)
+	probe.global_transform = _camera.get_camera_transform()
 	var viewport_size := probe.get_viewport().get_visible_rect().size
 	# horizontal_fill=.82 reserves about 9% per edge. Five percent permits
 	# ordinary projection rounding while still requiring useful breathing room.
