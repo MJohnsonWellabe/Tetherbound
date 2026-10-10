@@ -134,7 +134,7 @@
   },
   "skyline_profile": {
     "enabled": true,
-    "_disposition": "P2-021 paired visual FAIL: distant skyline improves but broad grass routes remain unresolved. Retain disabled. Evidence: ralph/reports/VISUAL/phase2/cloudreach/p2-021/paired-visual-judge.md.",
+    "_disposition": "Owner flip (F40, Lane E 10-10): live. NorthSummitRange is profile_exempt (it read as flat slabs behind Stormward Overlook). Evidence: ralph/reports/VISUAL/cloudreach/lane-e-flips/.",
     "height_fractions": [0.70, 0.88, 1.0, 0.80, 0.94, 0.76, 0.86]
   },
   "horizon_ranges": [

@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 base = json.loads((ROOT / 'data/config/cloudreach_aviary.json').read_text())
 candidate = json.loads((ROOT / 'data/config/cloudreach_f40_visual.json').read_text())
 visual = json.loads((ROOT / 'data/config/cloudreach_visual.json').read_text())
-# Owner flip list (F40): every presentation candidate below is live.
+# Owner flip list (F40): only the skyline profile is live; the rest stay off.
 # Crown arcade and F40 dressing: judge saw no change at the catalogue views; off until an aviary view proves them.
 assert candidate['enabled'] is False
 assert base['crown_arcade']['enabled'] is False
