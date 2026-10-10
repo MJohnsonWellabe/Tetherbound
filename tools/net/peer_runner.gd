@@ -2548,6 +2548,13 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 	# Explicit disclosed input production may require the actual retained Alpha
 	# packet. Never substitute a nearest legacy body or fabricate its source.
 	var alpha_site := str(args.get("foundation_alpha_site", ""))
+	var shipping_source := preload("res://tools/net/f48_shipping_capture_source.gd")
+	var shipping_binding: Variant = args.get("f48_shipping_capture_binding")
+	if args.has("f48_shipping_capture_binding"):
+		if not alpha_site.is_empty() or not shipping_binding is Dictionary \
+				or not shipping_source.live(self, director, shipping_binding):
+			return {"verdict": "FAIL", "detail": "Original private shipping capture source required; no alternate body"}
+		wild = shipping_source.selected_body(shipping_binding)
 	if not alpha_site.is_empty():
 		wild = null
 		var matches: Array[Node3D] = []
@@ -2572,7 +2579,7 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 	# Walk past it, the way a player looking for a different creature does.
 	var excluded := int(args.get("exclude_body_id", 0))
 	if excluded != 0 and wild != null and int((wild as Object).get_instance_id()) == excluded:
-		if not alpha_site.is_empty():
+		if not alpha_site.is_empty() or args.has("f48_shipping_capture_binding"):
 			return {"verdict": "FAIL", "detail": "Exact retained Alpha was excluded; no legacy body substitution permitted"}
 		wild = _nearest_live_wild_excluding(director, excluded)
 	if wild == null:
@@ -2600,10 +2607,18 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 			away = flat.normalized()
 	var offered := false
 	for gap: float in [2.5, 1.6, 1.0]:
+		if args.has("f48_shipping_capture_binding") and (not shipping_source.live(self, director, shipping_binding) \
+				or shipping_source.selected_body(shipping_binding) != body or not is_instance_valid(player) \
+				or not player.is_inside_tree() or player.is_queued_for_deletion() or _probe.call("player") != player):
+			return {"verdict": "FAIL", "detail": "Original shipping source/player expired before engage placement"}
 		player.global_position = body.global_position + away * gap
 		player.velocity = Vector3.ZERO
 		for i in 20:
 			await physics_frame
+		if args.has("f48_shipping_capture_binding") and (not shipping_source.live(self, director, shipping_binding) \
+				or shipping_source.selected_body(shipping_binding) != body or not is_instance_valid(player) \
+				or not player.is_inside_tree() or player.is_queued_for_deletion() or _probe.call("player") != player):
+			return {"verdict": "FAIL", "detail": "Original shipping source/player expired during engage geometry wait"}
 		if director.call("_engageable") == body:
 			offered = true
 			break
@@ -2612,9 +2627,15 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL", "detail": "could not stand where body %d was the one on offer (offered %s)"
 			% [int(body.get_instance_id()),
 				str(int((other as Object).get_instance_id())) if other != null else "nothing"]}
+	if args.has("f48_shipping_capture_binding") and (not shipping_source.live(self, director, shipping_binding) \
+			or shipping_source.selected_body(shipping_binding) != body):
+		return {"verdict": "FAIL", "detail": "Original shipping capture body changed before the real engage press"}
 	director.call("interaction_activate")
 	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
+	if args.has("f48_shipping_capture_binding") and (not shipping_source.live(self, director, shipping_binding) \
+			or shipping_source.selected_body(shipping_binding) != body):
+		return {"verdict": "FAIL", "detail": "Original shipping source expired during engage settlement wait"}
 	var manager := _combat_manager()
 	if manager == null or not bool(manager.call("is_fighting")):
 		return {"verdict": "FAIL", "detail": "the engage press did not start a fight"}
@@ -2661,6 +2682,10 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 	var bind_budget := maxi(1, int(args.get("bind_budget_frames", 600)))
 	var id := ""
 	for i in bind_budget:
+		if args.has("f48_shipping_capture_binding") and (not shipping_source.live(self, director, shipping_binding) \
+				or shipping_source.selected_body(shipping_binding) != body or not is_instance_valid(manager) \
+				or manager != _combat_manager()):
+			return {"verdict": "FAIL", "detail": "Original shipping source/manager expired before encounter binding"}
 		id = str(manager.call("encounter_id"))
 		if not id.is_empty():
 			return {"verdict": "PASS", "detail": "engaged %s as encounter %s (bound after %d frame(s))"
@@ -5171,6 +5196,18 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL", "detail": "Explicit same-world catch input fixture required"}
 	var director := _encounter_director()
 	var site := "wild_once_1900"
+	var source_helper := preload("res://tools/net/f48_shipping_capture_source.gd")
+	var shipping := args.has("shipping_capture_mode")
+	var shipping_certificate: Dictionary = {}
+	if shipping:
+		if typeof(args.shipping_capture_mode) != TYPE_BOOL or args.shipping_capture_mode != true \
+				or not args.get("shipping_configuration_pins") is Array \
+				or not source_helper.pins_valid(args.shipping_configuration_pins):
+			return {"verdict": "FAIL", "detail": "Explicit shipping mode and all seven original configuration pins required"}
+		if args.get("role") == "guest":
+			shipping_certificate = source_helper.verified_report(args.get("shipping_capture_source"))
+			if shipping_certificate.is_empty() or not shipping_certificate.has("encounter_id"):
+				return {"verdict": "FAIL", "detail": "Original successful host shipping capture certificate required"}
 	if director == null: return {"verdict": "FAIL", "detail": "No actual director"}
 	if director.call("ally_body") == null:
 		var recalled: Dictionary = await _step_press({"action": "creature_recall"})
@@ -5179,9 +5216,38 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 		if director.call("ally_body") == null:
 			return {"verdict": "FAIL", "detail": "Ordinary recall did not deploy original owned companion"}
 	if args.get("role") == "host":
-		var engaged: Dictionary = await _step_engage_wild({"foundation_alpha_site": site})
+		var binding: Dictionary = {}
+		var engage_args := {"foundation_alpha_site": site}
+		if shipping:
+			binding = source_helper.freeze(self, director, site, args.shipping_configuration_pins)
+			if binding.is_empty():
+				return {"verdict": "FAIL", "detail": "Exact authored OFF once1900 original body and ordinary packet unavailable"}
+			engage_args = {"f48_shipping_capture_binding": binding}
+		var engaged: Dictionary = await _step_engage_wild(engage_args)
 		if engaged.get("verdict") != "PASS": return engaged
-		return _step_catch_fixture_rng({"caught": true})
+		if shipping:
+			if not source_helper.live(self, director, binding):
+				return {"verdict": "FAIL", "detail": "Original host shipping lifetime expired during engage"}
+			var encounter_id: String = director.call("encounter_id")
+			var runtime: Variant = director.call("_shared_host_fight", encounter_id)
+			var record: Dictionary = director.call("encounter_record")
+			if not source_helper.live(self, director, binding) or not runtime is Node \
+					or runtime.call("body") != source_helper.selected_body(binding):
+				return {"verdict": "FAIL", "detail": "Real host encounter must bind the original selected shipping body"}
+			shipping_certificate = source_helper.report(binding)
+			if shipping_certificate.is_empty() or encounter_id.is_empty() \
+					or record.get("encounter_id") != encounter_id \
+					or record.get("kind") != "wild" or record.get("phase") != "active" \
+					or record.get("realm") != shipping_certificate.realm \
+					or record.get("opponent", {}).get("card", {}).get("uid") != shipping_certificate.body_uid:
+				return {"verdict": "FAIL", "detail": "Real host encounter opponent must retain the original shipping UID"}
+			shipping_certificate["encounter_id"] = encounter_id
+		var seeded := _step_catch_fixture_rng({"caught": true})
+		if shipping and seeded.get("verdict") == "PASS":
+			var seeded_data: Dictionary = seeded.get("data", {})
+			seeded_data["shipping_capture_source"] = shipping_certificate
+			seeded["data"] = seeded_data
+		return seeded
 	if args.get("role") != "guest" or bool(director.call("is_encounter_host")):
 		return {"verdict": "FAIL", "detail": "Actual guest role required"}
 	var offered: Array = []
@@ -5194,21 +5260,47 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	var game := root.get_node_or_null(^"Game")
 	if target.size() != 3 or player == null or game == null:
 		return {"verdict": "FAIL", "detail": "Actual target/player/owner unavailable"}
+	if shipping and (announcement.get("encounter_id") != shipping_certificate.encounter_id \
+			or announcement.get("opponent", {}).get("card", {}).get("uid") != shipping_certificate.body_uid \
+			or shipping_certificate.namespace != game.get("world").get("reward_delivery_namespace") \
+			or shipping_certificate.world_id != game.get("world").get("world_id") \
+			or shipping_certificate.realm != game.get("current_realm") \
+			or shipping_certificate.epoch != game.get("session").call("_altar_current_epoch")):
+		return {"verdict": "FAIL", "detail": "Guest announcement must name the original shipping encounter/UID/world/lifetime"}
+	var shipping_guest: Dictionary = {}
+	if shipping:
+		shipping_guest = {"game": weakref(game), "session": weakref(game.get("session")),
+			"world": weakref(game.get("world")), "owner": weakref(game.get("local")),
+			"player": weakref(player), "director": weakref(director),
+			"player_script": player.get_script(), "character": str(game.get("local").get("character_id"))}
+		if not _f48_shipping_guest_live(shipping_guest, shipping_certificate):
+			return {"verdict": "FAIL", "detail": "Original mounted guest shipping lifetime unavailable"}
 	var before: Dictionary = game.get("local").call("save_data")
 	var actor_before := player.global_position
 	var requested := Vector3(float(target[0]) + 3.0, float(target[1]) + 2.0, float(target[2]))
 	load("res://scripts/creatures/remote_creature.gd").teleport_body(player, requested)
 	player.velocity = Vector3.ZERO
 	await _await_owner_passive_caught_up()
+	if shipping and not _f48_shipping_guest_live(shipping_guest, shipping_certificate):
+		return {"verdict": "FAIL", "detail": "Original guest shipping lifetime expired during pose confirmation"}
 	var fixture := {"actor_before": [actor_before.x, actor_before.y, actor_before.z],
 		"actor_requested": [requested.x, requested.y, requested.z], "announcement": announcement,
 		"owner_before": before, "fixture_disclosure": args.fixture_disclosure, "acceptance_credit": false}
 	_fixture_capture_pose(fixture, player)
 	var joined: Dictionary = await _step_join_encounter({"encounter_id": announcement.encounter_id})
+	if shipping and not _f48_shipping_guest_live(shipping_guest, shipping_certificate):
+		return {"verdict": "FAIL", "detail": "Original guest shipping lifetime expired during join", "data": fixture}
 	if joined.get("verdict") != "PASS":
 		_fixture_capture_pose(fixture, player)
 		joined["data"] = fixture; return joined
 	var record: Dictionary = director.call("encounter_record")
+	if shipping and (not _f48_shipping_guest_live(shipping_guest, shipping_certificate) \
+			or record.get("encounter_id") != shipping_certificate.encounter_id \
+			or record.get("kind") != "wild" or record.get("phase") != "active" \
+			or record.get("realm") != shipping_certificate.realm \
+			or record.get("opponent", {}).get("card", {}).get("uid") != shipping_certificate.body_uid):
+		return {"verdict": "FAIL", "detail": "Actual joined record changed the original shipping capture identity", "data": fixture}
+	if shipping: fixture["shipping_capture_source"] = shipping_certificate
 	var actual: Array = record.get("opponent", {}).get("position", [])
 	# The training journal has one current row per owner. Real catch research
 	# may replace it during the existing presentation wait. Observe the actual
@@ -5235,6 +5327,8 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	if is_instance_valid(writer):
 		writer.disconnect("transaction_boundary", save_observer)
 		writer.disconnect("delta_applied", accepted_observer)
+	if shipping and not _f48_shipping_guest_live(shipping_guest, shipping_certificate):
+		return {"verdict": "FAIL", "detail": "Original guest shipping lifetime changed during the real capture", "data": fixture}
 	_fixture_capture_pose(fixture, player)
 	var after: Dictionary = game.get("local").call("save_data")
 	fixture["owner_before"] = before
@@ -5265,7 +5359,16 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 		var owned_capture := false
 		for creature: Dictionary in after.get("party", []):
 			if creature.get("uid") == capture_uid: owned_capture = true
-		valid = provenance.get("kind") == "wild" and provenance.get("spawn_id") == site \
+		var source_provenance_ok: bool = provenance.get("spawn_id") == site
+		if shipping:
+			source_provenance_ok = capture_uid == shipping_certificate.body_uid \
+				and provenance == shipping_certificate.packet.captured_from
+			for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
+				source_provenance_ok = source_provenance_ok \
+					and after.redesign_character.creatures[capture_uid].get(field) == shipping_certificate.packet.get(field) \
+					and reply.get("capture_traits", {}).get(field) == shipping_certificate.packet.get(field)
+			source_provenance_ok = source_provenance_ok and reply.get("capture_traits") == shipping_certificate.packet
+		valid = provenance.get("kind") == "wild" and source_provenance_ok \
 			and provenance.get("spawn_generation") == 1 \
 			and provenance.get("world_namespace") == game.get("world").get("reward_delivery_namespace") \
 			and reply.get("ok") == true and reply.get("caught") == true \
@@ -5279,6 +5382,35 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 			and fixture.owner_projection.redesign_character.transaction_receipts.has(row.receipt)
 	if not valid: fixture["owner_passive_diagnostic"] = _f48_owner_passive_diagnostic()
 	return {"verdict": "PASS" if valid else "FAIL", "detail": "Actual shared Alpha catch created one source companion with its accepted original receipt and normalized finish reply." if valid else "Actual shared Alpha catch must create exactly one durable source companion; no offered/provenance grant. Owner plan: " + str(fixture.get("owner_plan", {}).get("code", "unavailable")), "data": fixture}
+
+func _f48_shipping_guest_live(source: Dictionary, certificate: Dictionary) -> bool:
+	var game: Node = source.game.get_ref() as Node
+	if game == null or root.get_node_or_null(^"Game") != game or not game.is_inside_tree() \
+		or game.is_queued_for_deletion() or game.get_script() != preload("res://autoload/game_state.gd"): return false
+	var session: Node = source.session.get_ref() as Node
+	var world: RefCounted = source.world.get_ref() as RefCounted
+	var owner: RefCounted = source.owner.get_ref() as RefCounted
+	var player: Node = source.player.get_ref() as Node
+	var director: Node = source.director.get_ref() as Node
+	return session != null and world != null and owner != null and player != null \
+		and session.is_inside_tree() and not session.is_queued_for_deletion() \
+		and session.get_script() == preload("res://scripts/net/session.gd") \
+		and world.get_script() == preload("res://autoload/world_state.gd") \
+		and owner.get_script() == preload("res://autoload/player_state.gd") \
+		and player.is_inside_tree() and not player.is_queued_for_deletion() \
+		and source.player_script is Script and player.get_script() == source.player_script \
+		and director != null and director.is_inside_tree() and not director.is_queued_for_deletion() \
+		and _encounter_director() == director and director.get_script() == preload("res://scripts/combat/encounter_director.gd") \
+		and director.get("_session") == session \
+		and game.get("session") == session and game.get("world") == world and game.get("local") == owner \
+		and game.get_node_or_null(^"Session") == session and session.call("_game") == game \
+		and session.call("is_active") == true and session.call("is_host") == false \
+		and session.call("_altar_current_epoch") == certificate.get("epoch") \
+		and world.get("world_id") == certificate.get("world_id") \
+		and world.get("reward_delivery_namespace") == certificate.get("namespace") \
+		and owner.get("character_id") == source.character and not source.character.is_empty() \
+		and game.get("current_realm") == certificate.get("realm") and _probe.call("player") == player \
+		and preload("res://tools/net/f48_shipping_capture_source.gd").pins_valid(certificate.shipping_configuration_pins)
 
 func _f48_capture_source_live(source: Dictionary) -> bool:
 	var game: Node = source.game.get_ref() as Node

@@ -21,6 +21,8 @@ from pathlib import Path
 import f48_ci_ready as gate
 import f48_profile_fixture as fixture
 import f48_profile_ready as ready
+import f48_configuration as configuration
+import f48_evidence_closure as evidence
 from f48_relocate_profile import tail
 
 CAPTURES = {"loop": ("loop", "f48-loop-input"),
@@ -102,11 +104,22 @@ def package(input_path: Path, output: Path) -> dict:
                 "Require all original configuration pins")
         relocated = copy.deepcopy(profile)
         signature = []
+        shipping = configuration.shipping_pins(relocated)
+        if shipping is not None:
+            for source, digest in configuration.shipping_files(fixture.ROOT, relocated):
+                pin(source, digest)
+            signature.append(("res://data/config/combat.json",
+                              next(row["sha256"] for row in shipping if row["file"].endswith("/combat.json")),
+                              "shipping"))
         for config in relocated["test_configuration"]:
             # Production producer paths are preserved in the reviewed profile;
             # artifact extraction changes only their parent directory here.
-            suffix = tail(config["overlay_file"], "test-configuration")
-            source = checked(root, Path("mechanics-start") / suffix)
+            if shipping is not None:
+                source = fixture.ROOT / config["file"].removeprefix("res://")
+                config["source_sha256"] = config["sha256"]
+            else:
+                suffix = tail(config["overlay_file"], "test-configuration")
+                source = checked(root, Path("mechanics-start") / suffix)
             require(source.name == Path(config["file"]).name, "Configuration filename changed")
             pin(source, config["sha256"])
             pin(fixture.ROOT / "data/config" / source.name, config["source_sha256"])
@@ -124,11 +137,11 @@ def package(input_path: Path, output: Path) -> dict:
             data = result.get("data", {})
             if value.get("action") == "f48_assert_snapshot" and result.get("verdict") == "PASS":
                 snapshots.append((observation, data.get("character_id"), data.get("character_sha256"),
-                                  data.get("world_sha256"), data.get("snapshot_source")))
+                                  data.get("world_sha256"), data))
         require(snapshots, "Actual sealed passing snapshot evidence missing")
         producers[name] = {"root": root, "profile": relocated, "profile_path": profile_path,
                            "terminal": terminal, "report": report_text, "snapshots": snapshots,
-                           "used_snapshots": set()}
+                           "used_snapshots": set(), "evidence_closure": set()}
 
     starts = {}
     for name, row in spec["starts"].items():
@@ -145,13 +158,12 @@ def package(input_path: Path, output: Path) -> dict:
             if peer == 0: originals += [source["world_path"], source["slot_path"]]
             matches = [item for item in producer["snapshots"] if item[1] == source["id"] and
                        item[2] == fixture.digest(source["character_path"]) and
-                       (peer != 0 or item[3] == fixture.digest(source["world_path"])) and
-                       item[4] in {"unchanged_original_admitted_disk_no_initial_memory_disk_convergence_or_saved_live_care_bond_claim",
-                                   "actual_owner_BOOL_edge_full_canonical_after_and_accepted_ACK"}]
+                       (peer != 0 or item[3] == fixture.digest(source["world_path"]))]
             require(matches, "Captured document bytes lack matching sealed native snapshot hashes")
-            for observation, *_ in matches:
+            for observation, _, _, _, data in matches:
                 pin(observation)
                 producer["used_snapshots"].add(observation.relative_to(producer["root"]).as_posix())
+                producer["evidence_closure"].update(evidence.closure(data, source, producer["root"], checked, pin))
             for path in originals:
                 pin(path)
                 artifact = path.relative_to(producer["root"] / "proof").as_posix()
@@ -187,12 +199,19 @@ def package(input_path: Path, output: Path) -> dict:
         shutil.copyfile(pack_path, output / "actual-input-pack.json")
     for name, producer in producers.items():
         for relative in (*producer["terminal"], "proof/PROOF.md", str(Path(spec["producers"][name]["profile"])),
-                         *sorted(producer["used_snapshots"])):
+                         *sorted(producer["used_snapshots"] | producer["evidence_closure"])):
             source = checked(producer["root"], relative)
             target = output / "producer-evidence" / name / relative
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
             require(fixture.digest(target) == pins[source], "Copied terminal evidence changed")
+        condition = fixture.ROOT / "data/config/creature_condition.json"
+        if condition in pins:
+            target = output / "producer-evidence" / name / "configuration/creature_condition.json"
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(condition, target)
+            require(fixture.digest(target) == pins[condition], "Copied passive configuration changed")
+    for path, digest in pins.items(): require(fixture.digest(path) == digest, f"Original evidence changed during copy: {path}")
     result.update({"earned_checkpoint": False, "native_oracles_required": True,
                    "source_pins": [{"path": str(path), "sha256": digest} for path, digest in pins.items()]})
     fixture.write(output / "actual-producer-evidence.json", result)

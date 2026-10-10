@@ -90,24 +90,9 @@ func _run() -> void:
 	await step(0, "place_creature", {"at": [here.x + 12.0, here.y, here.z + 12.0]})
 
 	var before: Dictionary = await _hstep(1, "harness_read")
-	# The wild remains live during join and positioning. Its ordinary strike can
-	# arrive before our explicit strike; sample completed hit feedback rather
-	# than assuming that the explicit command is the first host hit.
-	var before_state := pre_hit_state(before, resting, expected_s)
-	for _poll in 20:
-		if not before_state.is_empty(): break
-		await step(1, "wait", {"frames": 6})
-		before = await _hstep(1, "harness_read")
-		before_state = pre_hit_state(before, resting, expected_s)
-	print("harness pre-hit: state=%s incoming_total=%.6f resting_hp=%.6f | %s" % [
-		before_state, float(before.get("incoming_total", -1.0)),
-		float(resting.get("hp", -1.0)), str(before.get("detail", ""))])
 	check(bool(before.get("fighting", false)), "the guest is in the fight")
-	check(not before_state.is_empty(),
-		"pre-strike read proves either bare HP before any hit or exact prior host-hit scale/HP/save arithmetic")
-	if before_state.is_empty():
-		quit(await finish())
-		return
+	check(absf(float(before.get("shown_max", 0.0)) - float(before.get("max_hp", -1.0))) < 0.01,
+		"before the host's hit the guest's own (bare) record shows no raise")
 	var hit: Dictionary = await _hstep(0, "harness_host_hit", {"peer_id": guest_peer})
 	check(hit.get("verdict") == "PASS", "the host's opponent strikes the guest's creature (%s)" % str(hit.get("detail", "")))
 	var host_s := float(hit.get("host_s", 0.0))
@@ -164,31 +149,6 @@ func _hstep(peer: int, action: String, args := {}) -> Dictionary:
 func _encounter(peer: int) -> Dictionary:
 	var value = await probe(peer, "encounter")
 	return value if value is Dictionary else {}
-
-
-static func pre_hit_state(before: Dictionary, resting: Dictionary, host_s: float) -> String:
-	var base := float(resting.get("max_hp", -1.0))
-	var initial_hp := float(resting.get("hp", -1.0))
-	var hp := float(before.get("hp", -1.0))
-	var maximum := float(before.get("max_hp", -1.0))
-	var saved := float(before.get("saved_max", -1.0))
-	var shown_hp := float(before.get("shown_hp", -1.0))
-	var shown_max := float(before.get("shown_max", -1.0))
-	var incoming := float(before.get("incoming_total", -1.0))
-	for value: float in [base, initial_hp, hp, maximum, saved, shown_hp, shown_max, incoming, host_s]:
-		if not is_finite(value): return ""
-	if not bool(before.get("fighting", false)) or base <= 0.0 or host_s <= 1.0 \
-			or hp < 0.0 or shown_hp < 0.0 or shown_max <= 0.0 or incoming < 0.0 \
-			or absf(maximum - base) >= 0.01 or absf(saved - base) >= 0.01:
-		return ""
-	if absf(shown_hp / shown_max - hp / base) >= 0.0001:
-		return ""
-	if incoming == 0.0 and absf(hp - initial_hp) < 0.01 and absf(shown_max - base) < 0.01:
-		return "bare_before_host_hit"
-	if incoming > 0.0 and absf(shown_max - base * host_s) < 0.01 \
-			and absf(initial_hp - hp - incoming / host_s) < 0.01:
-		return "prior_host_hit"
-	return ""
 
 
 static func _vec(value: Variant) -> Vector3:

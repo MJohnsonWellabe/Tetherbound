@@ -98,7 +98,7 @@ kill_orphans # in the unlikely case a stale run shares this shell pid
 		sleep 1
 		waited=$((waited + 1))
 	done
-	[ -f "$run_dir/SUMMARY.md" ] && exec tail -f "$run_dir/SUMMARY.md" 2>/dev/null
+	[ -f "$run_dir/SUMMARY.md" ] && tail -f "$run_dir/SUMMARY.md" 2>/dev/null
 ) &
 tail_pid=$!
 
