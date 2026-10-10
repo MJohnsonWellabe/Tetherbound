@@ -43,6 +43,7 @@ extends Node3D
 ## parenting a creature under this node is the whole of the wiring.
 
 const CONFIG_PATH := "res://data/config/burrow_warrens.json"
+const GUARDIAN_ENCOUNTER_ID := "warrens_guardian"
 const CAMERA_RIG := preload("res://scripts/player/camera_rig.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 ## OP-0905-18: the vault prize is a heartstone, the one evolution catalyst
@@ -203,6 +204,7 @@ const INTERIOR_PROFILE := {
 }
 
 var _config: Dictionary = {}
+var _arena_definition_ready: bool = false
 var _world: Node = null
 var _camera_rig: Node = null
 var _player: Node3D = null
@@ -262,6 +264,7 @@ var _population: Array[Node3D] = []
 func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 		director: Node = null, build_budget: RefCounted = null) -> bool:
 	_world = world
+	_arena_definition_ready = false
 	_camera_rig = camera_rig
 	_player = player
 	_config = _load_config()
@@ -375,6 +378,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	_markers["entrance"] = to_global(Vector3(0.0, _floor_y, _mouth_outer_z() - 3.0))
 	if director != null:
 		_spawn_population(director)
+	_arena_definition_ready = true
 	set_process(true)
 	return true
 
@@ -8253,6 +8257,93 @@ func chamber_ids() -> Array:
 
 func guardian() -> Node3D:
 	return _guardian
+
+
+## The shared guest can rederive the built guardian room without a resident
+## guardian mirror. This supplies geometry only; it does not admit a wild.
+func authored_named_wild_arena_definition(named_id: String) -> Dictionary:
+	if named_id != GUARDIAN_ENCOUNTER_ID or not _arena_definition_ready \
+			or not is_inside_tree() or is_queued_for_deletion() \
+			or _config.is_empty() or _footprint.is_empty():
+		return {}
+	var canonical := _load_config()
+	var spec: Dictionary = canonical.get("guardian", {})
+	var clear: Dictionary = canonical.get("clear", {})
+	var species_id := str(spec.get("species", ""))
+	var chamber_id := str(spec.get("chamber", ""))
+	if spec.is_empty() or spec != _config.get("guardian", {}) or species_id.is_empty() \
+			or str(clear.get("flag", "")).is_empty() or str(clear.get("flag", "")) != _clear_flag() \
+			or not _chambers.has(chamber_id) or not _markers.has(chamber_id):
+		return {}
+	var chamber: Dictionary = _chambers[chamber_id]
+	var canonical_chamber: Dictionary = {}
+	for entry: Dictionary in canonical.get("chambers", []):
+		if str(entry.get("id", "")) == chamber_id:
+			canonical_chamber = entry
+			break
+	if canonical_chamber.is_empty() or chamber != canonical_chamber:
+		return {}
+	var at: Variant = chamber.get("at")
+	var size: Variant = chamber.get("size")
+	var offset: Variant = spec.get("offset")
+	if not at is Array or at.size() != 2 or not size is Array or size.size() != 2 \
+			or not offset is Array or offset.size() != 2:
+		return {}
+	var local_centre := _local_of(at)
+	var room_size := _size_of(size)
+	var spawn_offset := _local_of(offset)
+	if not local_centre.is_finite() or not room_size.is_finite() or not spawn_offset.is_finite() \
+			or room_size.x <= 0.0 or room_size.y <= 0.0 \
+			or absf(spawn_offset.x) >= room_size.x * 0.5 or absf(spawn_offset.z) >= room_size.y * 0.5:
+		return {}
+	var rect := [local_centre.x - room_size.x * 0.5, local_centre.z - room_size.y * 0.5,
+		local_centre.x + room_size.x * 0.5, local_centre.z + room_size.y * 0.5]
+	if not _footprint.has(rect):
+		return {}
+	var centre: Variant = _markers[chamber_id]
+	var expected := to_global(Vector3(local_centre.x, _floor_y, local_centre.z))
+	if not centre is Vector3 or not (centre as Vector3).is_finite() \
+			or not (centre as Vector3).is_equal_approx(expected):
+		return {}
+	var floor_height := built_floor_height_at(expected.x, expected.z)
+	var radius := combat_arena_bounds_at(expected.x, expected.z)
+	if not is_finite(floor_height) or not is_equal_approx(floor_height, expected.y) \
+			or not is_finite(radius) or radius <= 0.0:
+		return {}
+	return {"source": self, "named_encounter_id": GUARDIAN_ENCOUNTER_ID,
+		"species_id": species_id, "centre": expected, "radius": radius}
+
+
+## Only this build's original, living guardian may use that authored room.
+## A nickname, once flag, or nearby ordinary wild cannot grant admission.
+func authored_named_wild_arena_context(wild: Node3D) -> Dictionary:
+	if not is_instance_valid(wild) or wild != _guardian or not _guardian_seen_alive \
+			or wild.get_parent() != self or not wild.is_inside_tree() or wild.is_queued_for_deletion() \
+			or not wild.is_visible_in_tree() or bool(wild.get("trainer_owned")) \
+			or not wild.has_method("is_alive") or not bool(wild.call("is_alive")) or is_cleared():
+		return {}
+	var definition := authored_named_wild_arena_definition(GUARDIAN_ENCOUNTER_ID)
+	var instance: RefCounted = wild.get("instance")
+	if definition.is_empty() or instance == null or str(instance.get("species_id")) != definition.species_id \
+			or not _markers.has("guardian"):
+		return {}
+	var spec: Dictionary = _config["guardian"]
+	var chamber: Dictionary = _chambers[str(spec.chamber)]
+	var local_centre := _local_of(chamber.at)
+	var room_size := _size_of(chamber.size)
+	var spawn_offset := _local_of(spec.offset)
+	var spawn_marker: Variant = _markers["guardian"]
+	var expected_spawn := to_global(Vector3(local_centre.x + spawn_offset.x, _floor_y, local_centre.z + spawn_offset.z))
+	if not spawn_marker is Vector3 or not (spawn_marker as Vector3).is_finite() \
+			or not is_equal_approx(spawn_marker.x, expected_spawn.x) or not is_equal_approx(spawn_marker.z, expected_spawn.z):
+		return {}
+	var local_wild := to_local(wild.global_position)
+	if not local_wild.is_finite() or absf(local_wild.x - local_centre.x) >= room_size.x * 0.5 \
+			or absf(local_wild.z - local_centre.z) >= room_size.y * 0.5 \
+			or not is_finite(built_floor_height_at(wild.global_position.x, wild.global_position.z)):
+		return {}
+	definition["wild"] = wild
+	return definition
 
 
 func population() -> Array[Node3D]:
