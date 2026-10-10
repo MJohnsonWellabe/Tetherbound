@@ -4616,7 +4616,7 @@
     ]
   },
   "material_cues": {
-    "_comment": "P2-046 presentation only: a visual-only cue on each harvest node so its named material reads. Child of the node, so it hides with the node when harvested. No collider, stock, reward or placement change.",
+    "_comment": "P2-046 presentation only: a visual-only cue on each harvest node so its named material reads. Child of the node, so it hides with the node when harvested. No collider, stock, reward or placement change. Only items whose model is not a fight-ring occluder get a cue: the cue is a sibling of the model and would float while a fight hides it.",
     "stormglass": {
       "kind": "shards",
       "count": 5,
@@ -4641,13 +4641,6 @@
       "lift_m": 0.45,
       "colour": "#b49cff",
       "emission": 1.8
-    },
-    "conductor_vine": {
-      "kind": "glow_cap",
-      "radius_m": 0.5,
-      "lift_m": 0.45,
-      "colour": "#ffb36b",
-      "emission": 0.9
     }
   }
 }
