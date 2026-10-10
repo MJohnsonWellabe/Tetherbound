@@ -1,0 +1,23 @@
+{
+  "enabled": false,
+  "character": "young_trainer",
+  "config": {
+    "model": "res://assets/characters/young_trainer/candidate/models/young_trainer_native_face.glb",
+    "body_emission_enabled": false,
+    "height": 1.5,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "scope": "Same installed NPC, masked facial-skin albedo only; not a new body or character"
+}
