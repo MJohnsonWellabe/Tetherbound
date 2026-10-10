@@ -376,6 +376,10 @@
       "stack": 20,
       "colour": "#b4703a",
       "icon": "res://assets/ui/icons/items/orb_prime.png",
+      "world_model": "res://assets/props/tm_orb/tm_orb.glb",
+      "world_model_scale": 0.22,
+      "world_identity": {"height_m": 0.44, "accent_colour": "#705638"},
+      "world_model_reward_scale": 1.0,
       "blurb": "Ironwood-sprung bands. The best odds the Meadows can build.",
       "description": "A greater orb rebuilt around a sprung ironwood core, so the bands close harder and hold longer instead of flexing open on the first surge. The last rung of the tier ladder the Meadows has materials for."
     },
@@ -386,8 +390,10 @@
       "colour": "#3f8f6a",
       "heal": 80,
       "icon": "res://assets/ui/icons/items/potion_large.png",
-      "world_model": "res://assets/props/potion_plant/potion_plant.glb",
-      "world_model_scale": 0.55,
+      "world_model": "res://assets/props/stat_draughts/bottle_base.glb",
+      "world_model_scale": 0.6,
+      "world_identity": {"height_m": 0.48, "accent_colour": "#d7bd77"},
+      "world_model_reward_scale": 1.0,
       "blurb": "A proper dose, brewed from ironwood bark. For the long fights.",
       "description": "Bitter resin boiled out of ironwood bark and cut with berry pulp. More than twice a small potion's worth in one go — the thing you carry into a gauntlet where there is no time to stop and pour three."
     },
@@ -442,6 +448,10 @@
       "stack": 20,
       "colour": "#4a7fa3",
       "icon": "res://assets/ui/icons/items/orb_basic.png",
+      "world_model": "res://assets/props/tm_orb/tm_orb.glb",
+      "world_model_scale": 0.2,
+      "world_identity": {"height_m": 0.4, "accent_colour": "#aeb7ba"},
+      "world_model_reward_scale": 1.0,
       "blurb": "Plain make, from Grandpa's pack. A good throw matters more than a good orb.",
       "description": "A plain, unmarked sphere from Grandpa's old pack — no dial, no fittings, nothing fancy. It works because your throw does the work, not the orb."
     },
@@ -451,6 +461,10 @@
       "stack": 20,
       "colour": "#c9932e",
       "icon": "res://assets/ui/icons/items/orb_greater.png",
+      "world_model": "res://assets/props/tm_orb/tm_orb.glb",
+      "world_model_scale": 0.21,
+      "world_identity": {"height_m": 0.42, "accent_colour": "#d7bd77"},
+      "world_model_reward_scale": 1.0,
       "blurb": "Reinforced tether bands. Meaningfully better odds than a plain orb.",
       "description": "A reinforced take on the plain orb, its tether bands doubled and set tighter. A creature caught in this one has a real fight on its hands before it breaks free."
     },
@@ -462,8 +476,10 @@
       "heal": 50,
       "_comment_0912_tuning": "OWNER_PLAYTEST_2026-09-12: 35 HP was too little to justify a combat turn or one of the three opening doses. Fifty restores a meaningful portion of an early creature without replacing the 80 HP Ridge Tonic or full rest. Data-only and tunable.",
       "icon": "res://assets/ui/icons/items/potion_small.png",
-      "world_model": "res://assets/props/potion_plant/potion_plant.glb",
-      "world_model_scale": 0.35,
+      "world_model": "res://assets/props/stat_draughts/bottle_base.glb",
+      "world_model_scale": 0.45,
+      "world_identity": {"height_m": 0.36, "accent_colour": "#d7bd77"},
+      "world_model_reward_scale": 1.0,
       "blurb": "Restores 50 HP to a creature. For you, it's still soup.",
       "description": "A small dose that restores 50 HP to one creature. It only works on a creature — for you, it's soup and rest, same as always."
     },
@@ -474,8 +490,10 @@
       "colour": "#c9538a",
       "revive": 0.5,
       "icon": "res://assets/ui/icons/items/revive.png",
-      "world_model": "res://assets/props/revive_flower/revive_flower.glb",
-      "world_model_scale": 0.4,
+      "world_model": "res://assets/props/stat_draughts/bottle_base.glb",
+      "world_model_scale": 0.525,
+      "world_identity": {"height_m": 0.42, "accent_colour": "#f0cd78"},
+      "world_model_reward_scale": 1.0,
       "blurb": "Brings a fainted creature back up, half strength. Nothing else does.",
       "description": "A denser, costlier draught than a potion, and the only thing that raises a creature back up once it's fainted. It comes back at half its full strength — a proper rest is still what finishes the job."
     },
@@ -824,6 +842,10 @@
       "colour": "#4f9fd0",
       "icon": "res://assets/ui/icons/items/tm_quick.png",
       "blurb": "A fast bolt of pressurised water. Reaches where a jab cannot.",
+      "world_model": "res://assets/props/tm_orb/tm_orb.glb",
+      "world_model_scale": 0.16,
+      "world_identity": {"height_m": 0.32, "accent_colour": "#a9dce8"},
+      "world_model_reward_scale": 1.0,
       "description": "A fast bolt of pressurised water. Reaches where a jab cannot. Teaching it spends the disc, and it replaces whatever sits in that creature's quick slot.",
       "move": "aqua_shot"
     },
@@ -878,6 +900,8 @@
       "world_model": "res://assets/props/tm_orb/tm_orb.glb",
       "world_model_scale": 0.42,
       "blurb": "A dash so fast the strike lands before the movement reads.",
+      "world_identity": {"height_m": 0.32, "accent_colour": "#e4dbc4"},
+      "world_model_reward_scale": 1.0,
       "description": "A dash so fast the strike lands before the movement reads. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
       "move": "aerial_flash"
     },
@@ -900,6 +924,8 @@
       "world_model": "res://assets/props/tm_orb/tm_orb.glb",
       "world_model_scale": 0.42,
       "blurb": "Everything the sky has, at once. Very rare.",
+      "world_identity": {"height_m": 0.36, "accent_colour": "#e4dbc4"},
+      "world_model_reward_scale": 1.0,
       "description": "Everything the sky has, at once. Very rare. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
       "move": "heavenfall"
     },
@@ -1058,6 +1084,10 @@
       "defense": 0.06,
       "icon": "res://assets/ui/icons/items/armor_backpack.png",
       "blurb": "A padded frame pack. Takes a little sting out of landing on your back.",
+      "world_model": "res://assets/props/quaternius_fantasy/Bag.gltf",
+      "world_model_scale": 0.7,
+      "world_identity": {"height_m": 0.62, "accent_colour": "#796a48"},
+      "world_model_reward_scale": 1.0,
       "description": "A padded frame worn high on the back. It carries nothing the satchel does not already hold -- CLAUDE.md's own rule against a carry-weight system stands -- but the padding softens a landing taken square on the spine."
     },
     "stormglass": {
@@ -1322,6 +1352,8 @@
       "world_model": "res://assets/props/tm_orb/tm_orb.glb",
       "world_model_scale": 0.42,
       "blurb": "One electric creature, one lesson.",
+      "world_identity": {"height_m": 0.36, "accent_colour": "#e6c867"},
+      "world_model_reward_scale": 1.0,
       "description": "A gold-lit teaching orb carrying Thunder Break. An electric creature can learn this charged move; the orb is spent after the lesson."
     },
     "tm_stormfall": {
@@ -1334,6 +1366,8 @@
       "world_model": "res://assets/props/tm_orb/tm_orb.glb",
       "world_model_scale": 0.42,
       "blurb": "One electric creature, one lesson.",
+      "world_identity": {"height_m": 0.38, "accent_colour": "#9eb2c8"},
+      "world_model_reward_scale": 1.0,
       "description": "A gold-lit teaching orb carrying Stormfall. An electric creature can learn this charged move; the orb is spent after the lesson."
     },
     "rootiron_ingot": {

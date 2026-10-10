@@ -37,6 +37,20 @@ const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const FLAG_PREFIX := "cache:"
 const PICKUP_SPECS := preload("res://scripts/net/pickup_spec_registry.gd")
 
+## Only these records have an authored identity assembly. Other presentations
+## (notably the accepted candy, mushroom and stat draughts) keep their own art.
+const IDENTITY_STYLES := {
+	"orb_basic": "orb_plain", "orb_greater": "orb_banded", "orb_prime": "orb_sprung",
+	"tm_aqua_shot": "tm_nozzle", "tm_aerial_flash": "tm_wings",
+	"tm_heavenfall": "tm_crown", "tm_thunder_break": "tm_fork", "tm_stormfall": "tm_storm",
+	"travel_pack": "pack", "potion_small": "bottle_small",
+	"potion_large": "bottle_large", "revive": "bottle_revive",
+}
+const IDENTITY_ORB := "res://assets/props/tm_orb/tm_orb.glb"
+const IDENTITY_BOTTLE := "res://assets/props/stat_draughts/bottle_base.glb"
+const IDENTITY_PACK := "res://assets/props/quaternius_fantasy/Bag.gltf"
+const IDENTITY_BEDROLL := "res://assets/props/kenney_survival/bedroll-packed.glb"
+
 ## The ledger said no, with one sentence a player can act on and the machine tag
 ## behind it. The same surface `storage_container.gd::storage_refused` gives its
 ## own panel (lane 3.D): `ledger_claim.gd` already SHOWS the sentence, so nothing
@@ -165,7 +179,15 @@ func _item_colour() -> Color:
 ## `load()` result assigned straight to `MeshInstance3D.mesh` type-fails
 ## silently on a multi-part scene.
 func _build_visual() -> void:
-	if _model_path != "" and ResourceLoader.exists(_model_path):
+	var game: Node = get_node_or_null(^"/root/Game") if is_inside_tree() else null
+	var items: RefCounted = game.get("items") if game != null else null
+	var definition: Dictionary = items.call("definition", _item_id) if items != null else {}
+	if items == null and IDENTITY_STYLES.has(_item_id):
+		var catalogue: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/items/items.json"))
+		if catalogue is Dictionary:
+			definition = (catalogue.get("items", {}) as Dictionary).get(_item_id, {}) as Dictionary
+	_visual = create_identity_visual(_item_id, definition)
+	if _visual == null and _model_path != "" and ResourceLoader.exists(_model_path):
 		var resource: Resource = load(_model_path)
 		if resource is PackedScene:
 			var wrapper := Node3D.new()
@@ -201,6 +223,177 @@ func _build_visual() -> void:
 	# out-shine it. The item's own colour still drives the tint, so a cache
 	# still reads as its own find rather than as a generic marker.
 	PICKUP_GLOW.attach(self, _item_colour())
+
+
+## Pure presentation seam shared with TM and loose-item callers. Each call
+## owns a fresh, unparented subtree, centred in X/Z and resting at Y=0, in
+## metres. No Game lookup, claim, restore, highlight or harvest dependency.
+## Missing installed art and unsupported records return null to the caller.
+static func create_identity_visual(item_id: String, definition: Dictionary) -> Node3D:
+	if not IDENTITY_STYLES.has(item_id):
+		return null
+	var style: String = IDENTITY_STYLES[item_id]
+	var metadata: Dictionary = definition.get("world_identity", {}) as Dictionary
+	var height := float(metadata.get("height_m", 0.40))
+	var colour := Color(str(definition.get("colour", "#678ca0")))
+	var accent := Color(str(metadata.get("accent_colour", "#d7bd77")))
+	var root := Node3D.new()
+	root.name = "ItemIdentity"
+	var path := IDENTITY_ORB
+	if style.begins_with("bottle"):
+		path = IDENTITY_BOTTLE
+	elif style == "pack":
+		path = IDENTITY_PACK
+	var body := _identity_scene(path, 0.30 if style != "pack" else 0.48)
+	if body == null:
+		root.free()
+		return null
+	root.add_child(body)
+	var trim := _identity_material(accent)
+	if style.begins_with("orb_"):
+		_identity_tint(body, _identity_material(colour))
+		if style != "orb_plain":
+			_identity_ring(root, trim, Vector3(0.0, 0.15, 0.0), Vector3(PI * 0.5, 0.0, 0.0))
+			_identity_ring(root, trim, Vector3(0.0, 0.15, 0.0), Vector3(0.0, 0.0, PI * 0.5))
+		if style == "orb_sprung":
+			_identity_ring(root, trim, Vector3(0.0, 0.15, 0.0), Vector3.ZERO)
+			for side: float in [-1.0, 1.0]:
+				_identity_box(root, trim, Vector3(0.055, 0.11, 0.075), Vector3(side * 0.16, 0.15, 0.0))
+	elif style.begins_with("tm_"):
+		_identity_tint(body, _identity_material(colour))
+		# Move families have physical attachments, not just another core tint.
+		match style:
+			"tm_nozzle":
+				var nozzle := CylinderMesh.new()
+				nozzle.top_radius = 0.045
+				nozzle.bottom_radius = 0.075
+				nozzle.height = 0.20
+				_identity_mesh(root, nozzle, trim, Vector3(0.0, 0.15, 0.17), Vector3(PI * 0.5, 0.0, 0.0))
+			"tm_wings":
+				for side: float in [-1.0, 1.0]:
+					var wing := PrismMesh.new()
+					wing.size = Vector3(0.20, 0.065, 0.14)
+					_identity_mesh(root, wing, trim, Vector3(side * 0.19, 0.19, 0.0), Vector3(0.0, 0.0, side * 0.35))
+			"tm_crown":
+				_identity_ring(root, trim, Vector3(0.0, 0.26, 0.0), Vector3.ZERO)
+				for x: float in [-0.11, 0.0, 0.11]:
+					var point := CylinderMesh.new()
+					point.top_radius = 0.0
+					point.bottom_radius = 0.035
+					point.height = 0.16 if x == 0.0 else 0.11
+					_identity_mesh(root, point, trim, Vector3(x, 0.32, 0.0))
+			"tm_fork":
+				_identity_box(root, trim, Vector3(0.34, 0.045, 0.065), Vector3(0.0, 0.27, 0.0))
+				for side: float in [-1.0, 1.0]:
+					_identity_box(root, trim, Vector3(0.045, 0.15, 0.065), Vector3(side * 0.15, 0.33, 0.0))
+			"tm_storm":
+				for index: int in range(4):
+					var angle := float(index) * PI * 0.5
+					var fin := PrismMesh.new()
+					fin.size = Vector3(0.09, 0.22, 0.16)
+					_identity_mesh(root, fin, trim, Vector3(sin(angle) * 0.17, 0.21, cos(angle) * 0.17), Vector3(0.0, angle, 0.30))
+	elif style == "pack":
+		var roll := _identity_scene(IDENTITY_BEDROLL, 0.16)
+		if roll == null:
+			root.free()
+			return null
+		root.add_child(roll)
+		roll.position = Vector3(0.0, 0.49, 0.0)
+		var frame := _identity_material(Color("#796a48"))
+		for side: float in [-1.0, 1.0]:
+			_identity_box(root, frame, Vector3(0.035, 0.53, 0.035), Vector3(side * 0.15, 0.265, 0.14))
+	else:
+		# Keep the installed bottle's glass/cork materials. Solid collars and
+		# embodied badges distinguish dose/restore without hiding the bottle.
+		var dose := _identity_material(colour)
+		_identity_ring(root, dose, Vector3(0.0, 0.12, 0.0), Vector3.ZERO, 0.11)
+		if style == "bottle_large":
+			_identity_ring(root, dose, Vector3(0.0, 0.19, 0.0), Vector3.ZERO, 0.12)
+			_identity_box(root, trim, Vector3(0.16, 0.10, 0.025), Vector3(0.0, 0.155, 0.115))
+		elif style == "bottle_revive":
+			_identity_ring(root, trim, Vector3(0.0, 0.25, 0.0), Vector3.ZERO, 0.09)
+			_identity_box(root, dose, Vector3(0.065, 0.19, 0.04), Vector3(0.0, 0.15, 0.12))
+			_identity_box(root, dose, Vector3(0.19, 0.065, 0.04), Vector3(0.0, 0.15, 0.12))
+	_identity_fit(root, height)
+	return root
+
+
+static func _identity_scene(path: String, height: float) -> Node3D:
+	if not ResourceLoader.exists(path):
+		return null
+	var packed := load(path) as PackedScene
+	if packed == null:
+		return null
+	var scene := packed.instantiate()
+	if not scene is Node3D:
+		scene.free()
+		return null
+	var wrapper := Node3D.new()
+	wrapper.add_child(scene)
+	_identity_fit(wrapper, height)
+	return wrapper
+
+
+static func _identity_fit(root: Node3D, height: float) -> void:
+	var bounds := AABB()
+	var first := true
+	for node: Node in root.find_children("*", "MeshInstance3D", true, false):
+		var mesh := node as MeshInstance3D
+		if mesh.mesh == null:
+			continue
+		var transform := mesh.transform
+		var parent := mesh.get_parent()
+		while parent != root and parent is Node3D:
+			transform = (parent as Node3D).transform * transform
+			parent = parent.get_parent()
+		var local_bounds: AABB = transform * mesh.get_aabb()
+		bounds = local_bounds if first else bounds.merge(local_bounds)
+		first = false
+	if first or bounds.size.y <= 0.0001:
+		return
+	var factor := clampf(height, 0.10, 1.0) / bounds.size.y
+	var offset := Vector3(-bounds.get_center().x, -bounds.position.y, -bounds.get_center().z)
+	for child: Node in root.get_children():
+		if child is Node3D:
+			var spatial := child as Node3D
+			spatial.position = (spatial.position + offset) * factor
+			spatial.scale *= factor
+
+
+static func _identity_material(colour: Color) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = colour
+	material.roughness = 0.72
+	return material
+
+
+static func _identity_tint(root: Node3D, material: StandardMaterial3D) -> void:
+	for node: Node in root.find_children("*", "MeshInstance3D", true, false):
+		(node as MeshInstance3D).material_override = material
+
+
+static func _identity_mesh(root: Node3D, mesh: Mesh, material: Material, at: Vector3, rotation: Vector3 = Vector3.ZERO) -> void:
+	var part := MeshInstance3D.new()
+	part.mesh = mesh
+	part.material_override = material
+	part.position = at
+	part.rotation = rotation
+	root.add_child(part)
+
+
+static func _identity_box(root: Node3D, material: Material, size: Vector3, at: Vector3) -> void:
+	var box := BoxMesh.new()
+	box.size = size
+	_identity_mesh(root, box, material, at)
+
+
+static func _identity_ring(root: Node3D, material: Material, at: Vector3, rotation: Vector3, radius: float = 0.165) -> void:
+	var ring := TorusMesh.new()
+	ring.inner_radius = radius - 0.018
+	ring.outer_radius = radius + 0.018
+	ring.rings = 16
+	ring.ring_segments = 8
+	_identity_mesh(root, ring, material, at, rotation)
 
 
 ## D103, Stage B lane 3.B. This used to grant the item and write the
