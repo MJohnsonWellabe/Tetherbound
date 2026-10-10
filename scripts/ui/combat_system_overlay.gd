@@ -42,8 +42,6 @@ func _ready() -> void:
 	var cfg: Dictionary = SCREEN.config().get("combat", {})
 	var left := VBoxContainer.new()
 	_command_box = left
-	left.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	left.position = Vector2(float(cfg.get("inset", 56)), -float(cfg.get("command_bottom", 500)))
 	add_child(left)
 	_commands = COMMAND_METER.new()
 	left.add_child(_commands)
@@ -95,6 +93,13 @@ func occupied_controls() -> Array[Control]:
 func command_rect() -> Rect2:
 	return _command_box.get_global_rect() if is_instance_valid(_command_box) else Rect2()
 
+func _layout_commands() -> void:
+	var cfg: Dictionary = SCREEN.config().get("combat", {})
+	var extent := _command_box.get_combined_minimum_size()
+	_command_box.size = extent
+	_command_box.position = Vector2((size.x - extent.x) * 0.5,
+		size.y - float(cfg.get("command_inset_bottom", 56)) - extent.y)
+
 func _label(parent: Node, text: String) -> Label:
 	var label := Label.new()
 	label.text = text
@@ -128,6 +133,7 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 		"Ultimate unavailable" if raw.get("ultimate_available", true) != true else \
 		"Choose X / Y / B" if raw.get("ultimate_armed") == true else "Ready · Tap RB" if meter >= maximum else ""]
 	_commands.call("present", raw.commands, using_pad)
+	_layout_commands()
 	for slot: String in _cells:
 		var row: Dictionary = raw.slots[slot]
 		var label: Label = _cells[slot].title
