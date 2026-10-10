@@ -363,6 +363,8 @@ var _rest_pose_meshes_before: Dictionary = {}
 var _rest_pose_vertex_deform_receipt: Dictionary = {}
 var _rest_pose_applied_bones: Array[String] = []
 var _combat_flinch_tween: Tween = null
+var _combat_flinch_art: Node3D = null
+var _combat_flinch_target: Node3D = null
 var _combat_flinch_rest_position := Vector3.ZERO
 var _combat_flinch_rest_rotation := Vector3.ZERO
 var _combat_hitstop_active := false
@@ -549,6 +551,8 @@ var body_scale: float = 1.0
 
 
 func _build_placeholder() -> void:
+	_clear_combat_flinch()
+	_combat_flinch_art = null
 	if _rest_pose_active or _rest_pose_pending:
 		stop_rest()
 	var look: Dictionary = SPECIES.placeholder(species_id)
@@ -627,6 +631,7 @@ func _build_model(look: Dictionary) -> bool:
 		return false
 	_model.add_child(art)
 	_fit(art, float(look.get("model_scale", 1.0)))
+	_combat_flinch_art = art
 
 	# Sourced models point in whatever direction their author chose, and there
 	# is no convention to rely on. Combat faces creatures along +Z (`facing()`),
@@ -2099,26 +2104,36 @@ func play_hit() -> void:
 		_animator.call("play_once", "hit")
 
 
-## Combat's hit reaction is deliberately on the visual pivot, never the
-## CharacterBody: the recoil cannot move collision or change whether the next
-## attack connects. An authored hit clip still plays underneath it.
+## Recoil stays visual, never moving collision or attack geometry. Enabled
+## hurt clips own Model's grounded transform, so their additive recoil uses
+## the fitted art child instead of competing for the same animation tracks.
 func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
+	_clear_combat_flinch()
 	play_hit()
 	if _model == null or not is_inside_tree():
 		return
-	if _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
-		_combat_flinch_tween.kill()
-		_model.position = _combat_flinch_rest_position
-		_model.rotation = _combat_flinch_rest_rotation
-	_combat_flinch_rest_position = _model.position
-	_combat_flinch_rest_rotation = _model.rotation
-	var local_away := global_basis.inverse() * away.normalized()
+	_combat_flinch_target = _combat_flinch_art \
+		if bool(get_meta("f36_pose_candidate_installed", false)) and is_instance_valid(_combat_flinch_art) else _model
+	_combat_flinch_rest_position = _combat_flinch_target.position
+	_combat_flinch_rest_rotation = _combat_flinch_target.rotation
+	var recoil_parent := _combat_flinch_target.get_parent() as Node3D
+	var local_away := recoil_parent.global_basis.inverse() * away.normalized()
 	var recoil := Vector3(local_away.x, 0.08, local_away.z) * 0.14
 	_combat_flinch_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
-	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position + recoil, 0.045).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), 0.045)
-	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x, 0.11)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position + recoil, 0.045).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), 0.045)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x, 0.11)
+
+
+func _clear_combat_flinch() -> void:
+	if _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
+		_combat_flinch_tween.kill()
+	_combat_flinch_tween = null
+	if is_instance_valid(_combat_flinch_target):
+		_combat_flinch_target.position = _combat_flinch_rest_position
+		_combat_flinch_target.rotation = _combat_flinch_rest_rotation
+	_combat_flinch_target = null
 
 
 ## Hitstop freezes locomotion and animation on this creature only. The manager
@@ -2153,10 +2168,7 @@ func play_faint() -> void:
 	if presence != null:
 		presence.call("_suspend", "faint_pose")
 	# A hit-recoil tween must not overwrite the collapse's grounded pivot.
-	if _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
-		_combat_flinch_tween.kill()
-		_model.position = _combat_flinch_rest_position
-		_model.rotation = _combat_flinch_rest_rotation
+	_clear_combat_flinch()
 	if _animator != null:
 		_animator.call("play_faint")
 
