@@ -6,6 +6,7 @@ extends RefCounted
 ## Authored trail grading shares the bake/depth surface and preserves shores.
 
 const CONFIG_PATH := "res://data/config/water_world.json"
+const CONFIG_SCRIPT := "res://scripts/world/water_heightfield.gd"
 
 var _config: Dictionary = {}
 var _sea_level := 0.0
@@ -40,6 +41,24 @@ var _trail_flat := 3.0
 var _trail_feather := 15.0
 var _shore_preserve := 22.0
 var _shore_blend := 10.0
+
+
+static var _shared: RefCounted = null
+
+
+## One read-only surface over the shipped config for host rule checks. Building
+## a field parses water_world.json and compiles every island (~35 ms), which a
+## per-intent `new()` paid on every dock or pickup press. Safe to share: the
+## surface is pure and never mutated after `_init`.
+static func shared() -> RefCounted:
+	if _shared == null:
+		_shared = load(CONFIG_SCRIPT).new()
+	return _shared
+
+
+## The config the shared surface was built from. Read-only for callers.
+func config() -> Dictionary:
+	return _config
 
 
 static func load_config(path: String = CONFIG_PATH) -> Dictionary:
