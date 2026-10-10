@@ -22,8 +22,29 @@
         "ultimate": "ultimate_stormursa"
       },
       "learnset_id": "stormursa",
-      "_comment": "RD-28 sole authorized new species. Tuning authored by F29; target art 4.10m versus current Staticub3.25m. No placeholder/model path: acquisition and visual activation OFF until reference/Meshy/rig/animation/scale/full in-engine code-blind art bar PASS. F23 supplies unique ultimate from its authored stormursa learnset.",
-      "learnset": "stormursa"
+      "_comment": "RD-28 sole authorized new species. Asset-local preview recipe only; runtime and evolution remain OFF pending native scale/pose checks and code-blind full art review. Existing Staticub is unchanged.",
+      "learnset": "stormursa",
+      "placeholder": {
+        "colour": "#76513a",
+        "height": 4.1,
+        "radius": 1.435,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/stormursa/models/creature_stormursa_lod0.glb",
+        "model_scale": 1.0,
+        "yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "charged": "charged",
+          "hit": "hit",
+          "faint": "faint",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        }
+      }
     }
   },
   "source_species_overrides": {

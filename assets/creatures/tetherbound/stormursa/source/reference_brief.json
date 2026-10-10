@@ -3,18 +3,31 @@
   "evolution_source": "staticub",
   "working_name": "Stormursa",
   "owner_name_decision": "Keep working name until owner supplies final name; no extra roster slot.",
-  "reference_status": "PROMPT_ONLY; ROOT must generate and inspect the actual original image before Meshy",
-  "reference_prompt": "Original full-body creature reference for Tetherbound: Stormursa, a powerful adult storm bear evolved from Staticub. Study the installed Staticub reference/body first and preserve its face, rounded ears, muzzle and recognizable electric markings. A massive believable quadruped bear with broad shoulders, thick neck, broad planted paws, short tail, clear leg separations, and a friendly but formidable intelligent expression. Stormwood identity: muted slate-violet fur, warm copper horn-like shoulder ridges, restrained translucent glass accents and small white-violet lightning seams. Natural fur masses and readable anatomy, tactile stylized materials with the appeal of a high-quality creature adventure game, original design, no copied comparison-game characters, no Team Tether red, no clothes, no mechanical armor. Neutral balanced standing pose, mouth closed, claws visible, all four feet visible and separable, no VFX obscuring anatomy. Plain neutral light-gray background, even studio illumination, clean 3/4 view suitable for image-to-3D, no lettering, no logo, no trainer, no contact shadows painted into texture. Include separate front and side orthographic references if needed for rig assessment. Target withers height 4.10 meters, measurably larger than installed Staticub at 3.25 meters; do not shrink Staticub or existing larger creatures.",
+  "reference_status": "Original standing PNG drafted, visually inspected, and used for Meshy task; native candidate remains OFF.",
+  "reference_prompt": "Use case: stylized-concept. Asset type: original Stormursa image-to-3D reference for Tetherbound. The supplied image is an identity reference for Staticub, not an edit target. Create ONE isolated full-body adult storm bear, Staticub's optional evolution, as a clean three-quarter game-creature concept render. Preserve Staticub's established warm dark-brown and chestnut layered fur, rounded ears, pale warm muzzle, blue-violet intelligent eyes and restrained blue-violet lightning channels embedded in its fur. Mature the SAME creature into a massive believable quadruped bear with broad muscular shoulders, thick neck, powerful compact legs and broad planted paws. Short bear tail; friendly but formidable face, mouth closed. Natural bear anatomy, four clearly separate legs and paws, clear belly gap and useful articulated joints; no fused limbs, detached fur shells or floating lightning geometry. Refined stylized-realism creature-game appeal, tactile soft fur represented with large clean fur masses and subtle surface texture, no photographic hair strands. Adult proportions and greater shoulder mass than Staticub, target in-engine withers height 4.10m versus source Staticub target 3.25m and trainer 1.80m; the image itself is not a measured scale check. Neutral balanced standing pose, all four feet visible and separable, entire silhouette in frame with generous margin. Plain neutral light-gray background, even studio illumination, subtle grounding only. No copper horns, glass armor, mechanical parts, clothes, red accents, new species traits, electricity cloud, habitat, pedestal, trainer, multiple views, text, logo or watermark. Keep reference suitable for image-to-3D reconstruction.\n",
   "scale": {
-    "trainer_m": 1.80,
+    "trainer_m": 1.8,
     "current_staticub_m": 3.25,
-    "target_withers_m": 4.10,
-    "rule": "Final mesh bounds and in-engine posture must clear BOTH source and trainer, grow smaller side on repair. These values are targets, not measured evidence."
+    "target_withers_m": 4.1,
+    "rule": "Grow the candidate rather than shrink source or trainer. Existing source scale unchanged.",
+    "measured_standing_bounds_m": 4.10000038146973,
+    "measurement_scope": "Native rendered standing bounds, withers not independently measured. Existing Staticub renders 3.25m and the trainer 1.80m."
   },
-  "meshy_prompt": "Use only the inspected original Stormursa reference. Preserve bear anatomy, broad shoulder silhouette, four separate articulated legs and toes, short tail, broad paws, rounded ears, visible face, slate-violet/copper/glass palette. Game-ready closed connected surface with clean deforming joints, separate muzzle/neck/paw articulation and UV textures. No baked lightning haze, no floating decorative shells, no fused front legs or occluded underbelly. Record actual settings and every task ID.",
+  "meshy_prompt": null,
   "rig_and_animation": {
     "rig": "Existing quadruped workflow or installed-model animation retarget only after actual topology and full art review; preserve source-license record.",
-    "required": ["idle", "walk", "run", "attack", "charged", "hurt", "faint", "swim", "fly_grip", "ride"],
+    "required": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hurt",
+      "faint",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
     "review": "F36 pose set; gait ground contact and slope placement; shoulders/paws/head must remain readable during charged and ultimate. Mark anatomically inapplicable traversal poses explicitly against F36 contract, do not silently omit.",
     "budget": "Reuse F36 creature mesh/texture/LOD/performance budgets. ROOT records actual imported statistics and verifies Medium fight frames."
   },
@@ -30,5 +43,7 @@
     "after": "Candidate Stormursa at gameplay distance, day/Stormwood purple light, idle and motion, High and Medium, with trainer and Staticub size comparison",
     "judge": "Different author code-blind full Bars A/B review, not merely anatomy preference or attractive studio render",
     "activate": "Set all provenance gates only after actual PASS, record reference/model/captures/judge hashes and task IDs, add ART_DIRECTION provenance ledger row through its owner, then enable staticub_stormursa config row and approved species visual metadata together."
-  }
+  },
+  "reference": "res://assets/creatures/tetherbound/stormursa/reference/native-standing-v1.png",
+  "meshy_input_note": "Single inspected image submitted to image-to-3D. No additional text or texture prompt was sent; exact task/settings are in provenance.json."
 }
