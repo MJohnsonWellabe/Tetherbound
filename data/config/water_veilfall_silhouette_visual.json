@@ -1,6 +1,6 @@
 {
   "_comment": "P2-010 default-off presentation candidate. Local/static rendering only; no terrain, collision, routes, actors, camera or progression changes. Reuses the existing VeilfallExteriorComposition crag/cap meshes at their exact transforms beyond their near presentation range, using the existing far mountain material/fog. Installed procedural geometry and material provenance remain unchanged. Does not reshape the radial summit or change waterfall streams. Pending matched production captures and code-blind judgment.",
-  "enabled": false,
+  "enabled": true,
   "source_root": "WaterVeilfall/WaterfallPassage/VeilfallExteriorComposition",
   "mesh_names": ["FacetedCragBody", "VegetatedShelfCap"]
 }
