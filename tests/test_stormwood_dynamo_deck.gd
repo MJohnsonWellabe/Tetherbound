@@ -272,21 +272,29 @@ class FakeDynamo extends Node3D:
 	var participants: Array = []
 
 
-func test_idle_safe_plates_draw_near_only_and_engaged_plates_draw_everywhere() -> void:
+## Runs in an initialized tree only (needs a viewport camera); a detached
+## arena keeps every plate visible, which this also checks.
+func test_idle_plates_hide_far_from_the_camera_and_show_when_engaged() -> void:
 	var parent := FakeDynamo.new()
 	var arena := ARENA.new()
 	arena.set("_presentation", {"plate_visible_range_m": 34.0})
 	var plate := MeshInstance3D.new()
-	var rim := MeshInstance3D.new()
-	plate.add_child(rim)
+	plate.position = Vector3(0, 0, 60)
 	(arena.get("_plates") as Array).append(plate)
+	arena.add_child(plate)
 	parent.add_child(arena)
 	arena._process(0.0)
-	assert_eq(plate.visibility_range_end, 34.0, "idle plate has a draw range")
-	assert_eq(rim.visibility_range_end, 34.0, "idle rim follows its plate")
-	parent.participants = [1]
-	arena._process(0.0)
-	assert_eq(plate.visibility_range_end, 0.0, "engaged plate draws at any distance")
-	assert_eq(rim.visibility_range_end, 0.0, "engaged rim draws at any distance")
-	plate.free()
+	assert_true(plate.visible, "with no camera every plate stays visible")
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree != null and tree.root.is_inside_tree():
+		var camera := Camera3D.new()
+		tree.root.add_child(camera)
+		tree.root.add_child(parent)
+		camera.make_current()
+		arena._process(0.0)
+		assert_false(plate.visible, "an idle plate 60 m away is hidden")
+		parent.participants = [1]
+		arena._process(0.0)
+		assert_true(plate.visible, "an engaged plate shows at any distance")
+		camera.free()
 	parent.free()
