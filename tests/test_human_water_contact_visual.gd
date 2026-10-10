@@ -30,12 +30,17 @@ func _human() -> Dictionary:
 	return state.snapshot()
 
 
-func test_gate_off_attaches_nothing_and_generates_nothing() -> void:
-	assert_false(bool(VIEW.load_settings().get("enabled", true)))
+func test_shipped_on_attaches_and_gate_off_generates_nothing() -> void:
+	# F39 P2-072: shipped on. A null body still attaches nothing; a view whose
+	# settings are switched off generates nothing.
+	assert_true(bool(VIEW.load_settings().get("enabled", false)))
 	var model := Node3D.new()
 	var body := CharacterBody3D.new()
-	assert_eq(VIEW.attach(model, body), null)
+	assert_eq(VIEW.attach(model, null), null)
 	assert_eq(model.get_child_count(), 0)
+	var attached := VIEW.attach(model, body)
+	assert_true(attached != null)
+	assert_eq(model.get_child_count(), 1)
 	var view := _view()
 	view.settings.enabled = false
 	view.step_visual(0.2, _human(), Vector3.ZERO)
