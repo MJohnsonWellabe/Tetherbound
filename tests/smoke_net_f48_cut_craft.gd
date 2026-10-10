@@ -19,6 +19,8 @@ extends "res://tests/smoke_net_homestead_station_craft.gd"
 func _run() -> void:
 	await process_frame
 	require_peer_logs_without(["SCRIPT ERROR", "Parse Error", "Invalid call"], "craft cut peer logs have no script errors")
+	# As the key and release cuts: a relaunched guest builds its world cold.
+	heartbeat_silence_tolerance_s = 150.0
 	world_build_allowance_floor_s["production_host"] = 150.0
 	world_build_allowance_floor_s["production_join"] = 150.0
 	if not await launch(2, "title", [], {1: ["--scene=world"]}):
@@ -66,6 +68,11 @@ func _run() -> void:
 	check(not OS.is_process_running(pid), "the guest process ended")
 	var cut_log := FileAccess.get_file_as_string(str((_peers[1] as Dictionary).get("log_path", "")))
 	check(cut_log.contains("F48 CRAFT CUT"), "the guest died at the craft's real owner-save edge (after owner write, before ACK)")
+	# A killed process sends no disconnect: the host holds the dead guest's
+	# seat until its ENet timeout (135-180 s) drops the link. Rejoin after that, so the fresh
+	# process is not refused as "already connected" and rebuilding its world
+	# on every retry.
+	if not await _craft_step(0, "expect_peers", {"count": 1, "budget_s": 300.0}, 20000): return
 	var restarted := await _restart_peer(1, "title", "after_cut")
 	if not _cut_ok(restarted, "guest relaunched from its own disk"):
 		await _craft_finish()
