@@ -838,6 +838,12 @@ func _build_capsule(look: Dictionary) -> void:
 ## creature once rolled, so there is no "restore the original material" path
 ## to maintain.
 func _refresh_shiny_tint() -> void:
+	_refresh_base_colourway()
+	_apply_night_floor()
+	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny)
+
+
+func _refresh_base_colourway() -> void:
 	## T1-CREATURE-ART. An Aspect variant REPLACES the vivid/shiny/alpha
 	## ladder outright rather than adding a fourth rung to it -- see
 	## `aspect_variant`'s own comment for why. `alpha` can still be true at
@@ -898,7 +904,7 @@ func _refresh_shiny_tint() -> void:
 	if _has_model and suffix == "alpha" and _swap_colourway_textures("vivid", _ordinary_colourway_species):
 		_apply_alpha_presence()
 		return
-	if shiny:
+	if shiny and not preload("res://scripts/creatures/creature_surface_finish.gd").has_finish(species_id, true):
 		_apply_variant_tint(_shiny_palette())
 	_apply_alpha_presence()
 
@@ -1087,6 +1093,7 @@ static func set_emission_floor_scale(scale: float) -> void:
 	_night_floor_scale = wanted
 	for material: BaseMaterial3D in _night_floor_materials.values():
 		material.emission_energy_multiplier = wanted
+		preload("res://scripts/creatures/creature_surface_finish.gd").sync_lighting(material)
 
 
 func _apply_night_floor() -> void:
@@ -1129,6 +1136,7 @@ func _night_floor_material(source: BaseMaterial3D) -> BaseMaterial3D:
 	floored.emission_texture = floored.albedo_texture
 	floored.emission = Color(1.0, 1.0, 1.0, 1.0)
 	floored.emission_energy_multiplier = _night_floor_scale
+	preload("res://scripts/creatures/creature_surface_finish.gd").sync_lighting(floored)
 	_night_floor_materials[key] = floored
 	return floored
 
@@ -1254,6 +1262,7 @@ static func _apply_field_bright_values(info: Dictionary) -> void:
 	material.albedo_color = new_albedo
 	if material.emission_enabled:
 		material.emission_energy_multiplier = float(info["orig_emission_mult"]) * bright
+	preload("res://scripts/creatures/creature_surface_finish.gd").sync_lighting(material)
 	# `_night_floor_material()` above duplicates whichever material is active
 	# at BUILD time and only ever revisits its OWN `emission_energy_multiplier`
 	# afterwards (`set_emission_floor_scale()`'s loop) -- if this exact material
@@ -1267,6 +1276,7 @@ static func _apply_field_bright_values(info: Dictionary) -> void:
 	var floored_key := "%s|%s" % [String(info.get("species_id", "")), material.resource_name]
 	if _night_floor_materials.has(floored_key):
 		(_night_floor_materials[floored_key] as BaseMaterial3D).albedo_color = new_albedo
+		preload("res://scripts/creatures/creature_surface_finish.gd").sync_lighting(_night_floor_materials[floored_key] as BaseMaterial3D)
 
 
 func _field_bright_material(source: BaseMaterial3D, strength: float, degreen: float) -> BaseMaterial3D:
