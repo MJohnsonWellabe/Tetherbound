@@ -217,3 +217,25 @@ func test_self_and_caster_utilities_are_not_consumed_by_the_target() -> void:
 	for move_id: String in ["heal_pulse", "veil", "hearten", "dash_strike"]:
 		var move := _utility_frozen(move_id, 10)
 		assert_false(body.apply_landed_utility(move, _landing_context(move, body)), move_id)
+
+func test_every_role_can_equip_at_least_two_live_utilities() -> void:
+	# F23#2: at least ten utility moves exist and each species (so each role
+	# family) can learn at least two utilities the host actually mounts.
+	var moves := MOVES.load_default()
+	var utilities: Array[String] = []
+	for move_id: String in moves.move_ids():
+		if moves.slot(move_id) == "utility": utilities.append(move_id)
+	assert_gte(utilities.size(), 10, "at least ten utility moves exist")
+	var learnsets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/learnsets.json"))
+	var species: Dictionary = learnsets.get("species", learnsets)
+	var roles := {}
+	for species_id: String in species:
+		var row: Variant = species[species_id]
+		if not row is Dictionary: continue
+		var live := 0
+		for unlock: Variant in row.get("unlocks", []):
+			var move_id := str(unlock.get("move_id", "")) if unlock is Dictionary else str(unlock)
+			if utilities.has(move_id) and MANAGER.live_move_supported("utility", move_id): live += 1
+		assert_gte(live, 2, "%s can equip at least two live utilities" % species_id)
+		roles[str(row.get("role_family", ""))] = true
+	assert_gte(roles.size(), 4, "every role family is represented")
