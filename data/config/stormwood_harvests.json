@@ -4632,6 +4632,22 @@
       "lift_m": 0.32,
       "colour": "#7dffb8",
       "emission": 1.2
+    },
+    "stormglass_crown": {
+      "kind": "shards",
+      "count": 6,
+      "radius_m": 0.7,
+      "height_m": 1.25,
+      "lift_m": 0.45,
+      "colour": "#b49cff",
+      "emission": 1.8
+    },
+    "conductor_vine": {
+      "kind": "glow_cap",
+      "radius_m": 0.5,
+      "lift_m": 0.45,
+      "colour": "#ffb36b",
+      "emission": 0.9
     }
   }
 }

@@ -6,7 +6,7 @@ const RUNTIME := preload("res://scripts/world/stormwood_harvest_runtime.gd")
 
 func test_stormglass_and_glowmoss_get_visual_only_cues() -> void:
 	var cues: Dictionary = RUNTIME.read().get("material_cues", {})
-	for item: String in ["stormglass", "glowmoss"]:
+	for item: String in ["stormglass", "stormglass_crown", "glowmoss", "conductor_vine"]:
 		var node := Node3D.new()
 		var cue := RUNTIME.add_material_cue(node, item, cues)
 		assert_true(cue != null and cue.get_child_count() > 0, item + " gets a cue")
