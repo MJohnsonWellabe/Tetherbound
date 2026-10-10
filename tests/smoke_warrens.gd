@@ -1163,22 +1163,36 @@ func _doorway_then_room(warrens: Node3D, config: Dictionary, chambers: Dictionar
 	return out
 
 
-## Hold `move_forward` with the camera yawed at `target` until the player is
-## within `ARRIVED_M` of it or the budget runs out. Returns metres walked.
+## The precise ingress mouth leg projects ordinary stick input at Player's
+## native consumption boundary. Other established legs retain their driver.
+## Arrival, requested frame budget and actual travelled distance stay unchanged.
+## UNVALIDATED shutdown checkpoint: the referenced driver and native controls
+## are unwritten. This prepared integration must not be dispatched or accepted.
 func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3,
 		arrived_m: float = ARRIVED_M, stop_when_fighting: Node = null) -> float:
 	var rig: Node3D = _camera_rig(player)
+	var mouth_projection: RefCounted = null
+	if arrived_m == 0.75 \
+		and target.is_equal_approx(warrens.call("marker", "mouth") as Vector3):
+		mouth_projection = load("res://tests/helpers/warrens_stick_projection_driver.gd").new()
+		if not bool(mouth_projection.call("begin", player, warrens, target, rig, arrived_m)):
+			_fail("Warrens native stick projection refused: " + str(mouth_projection.call("refusal_reason")))
+			mouth_projection.call("close")
+			return 0.0
 	var walked := 0.0
 	var frames := 0
-	Input.action_press("move_forward")
+	if mouth_projection == null:
+		Input.action_press("move_forward")
 	while frames < WALK_FRAMES:
+		if mouth_projection != null and bool(mouth_projection.call("refused")):
+			break
 		if stop_when_fighting != null and bool(stop_when_fighting.call("is_fighting")):
 			break
 		var to_target := target - player.global_position
 		to_target.y = 0.0
 		if to_target.length() <= arrived_m:
 			break
-		if rig != null:
+		if mouth_projection == null and rig != null:
 			# camera_rig.gd:239's own convention: the camera sits behind the
 			# direction of travel.
 			var yaw := atan2(-to_target.x, -to_target.z)
@@ -1189,7 +1203,18 @@ func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3,
 		walked += Vector2(player.global_position.x - before.x,
 			player.global_position.z - before.z).length()
 		frames += 1
-	Input.action_release("move_forward")
+	if mouth_projection == null:
+		Input.action_release("move_forward")
+	else:
+		mouth_projection.call("close")
+		var projection_report: Dictionary = mouth_projection.call("report")
+		projection_report["original_requested_wait_frames"] = frames
+		projection_report["original_walk_frame_limit"] = WALK_FRAMES
+		projection_report["original_arrived_m"] = arrived_m
+		projection_report["original_walked_m"] = walked
+		if bool(mouth_projection.call("refused")):
+			_fail("Warrens native stick projection refused: " + str(mouth_projection.call("refusal_reason")))
+		_write_warrens_projection_report.call_deferred(projection_report)
 	if Vector2(player.global_position.x - target.x, player.global_position.z - target.z).length() > arrived_m:
 		print("warrens walk stopped: local=%s target=%s velocity=%s floor=%s floor_normal=%s walked=%.2f frames=%d" % [
 			warrens.to_local(player.global_position), warrens.to_local(target), player.velocity,
@@ -1201,6 +1226,12 @@ func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3,
 				str((collider as Node).get_path()) if collider is Node else str(collider),
 				warrens.to_local(hit.get_position()), hit.get_normal()])
 	return walked
+
+
+func _write_warrens_projection_report(report: Dictionary) -> void:
+	# Values observed around actual Player callbacks, serialized after the leg.
+	# The original ingress/egress geometry checks remain the route's oracle.
+	print("WARRENS_NATIVE_STICK_PROJECTION " + JSON.stringify(report))
 
 
 ## OWNER-0912 Tier 2 #5, runtime half. The static identity test proves the new

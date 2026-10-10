@@ -17,6 +17,7 @@ import shutil
 from pathlib import Path
 
 import f48_profile_fixture as fixture
+import f48_configuration as configuration
 
 SUITES = {"loop", "behind", "boss_four"}
 OPERATIONS = set(fixture.OPERATIONS)
@@ -113,6 +114,11 @@ def generate(input_path: Path, output: Path, complete: bool) -> dict:
     overlay = fixture.read(Path(pack["configuration_profile"]))
     fixture.require(overlay.get("configuration_scope") == "full", "Require separately reviewed full mechanics overlay")
     configurations = overlay.get("test_configuration", [])
+    shipping = configuration.shipping_pins(overlay)
+    if shipping is not None:
+        configuration.shipping_files(fixture.ROOT, overlay)
+        configurations = [dict(row, overlay_file=str(fixture.ROOT / row["file"].removeprefix("res://")),
+                               source_sha256=row["sha256"]) for row in configurations]
     fixture.require(isinstance(configurations, list) and len(configurations) == len(CONFIGURATION_FILES) and
                     {Path(row["file"]).name for row in configurations} == CONFIGURATION_FILES,
                     "Require exact full configuration file set")
@@ -148,6 +154,8 @@ def generate(input_path: Path, output: Path, complete: bool) -> dict:
     profile = {"provenance": "Immutable actual producer mechanics inputs; no earned campaign claim. " + pack["provenance"],
                "configuration_scope": "full", "test_configuration": configuration_rows,
                "suite_profiles": {}, "transaction_profiles": {}}
+    if shipping is not None:
+        profile["production_configuration_pins"] = shipping
     manifest = {"acceptance_credit": False, "earned_checkpoint": False, "status": "OPEN_NATIVE_ORACLES_REQUIRED",
                 "input_pack_sha256": fixture.digest(input_path), "mutations": [], "starts": {}}
     for name, (row, inputs, routes) in prepared.items():

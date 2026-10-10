@@ -17,12 +17,37 @@ import sys
 
 import f48_profile_fixture as fixture
 import f48_prepare_profile as prepare
-from f48_ci_runner import configuration_overlay
+from f48_ci_runner import FIELDS, configuration_overlay
+from f48_configuration import shipping_configuration
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def boss_profile(source: Path, output: Path) -> Path:
+def pin_shipping_profile(profile: dict, project: Path) -> None:
+    """Bind the native guard to seven original config files, without overlays."""
+    pins = [{"file": "res://data/config/" + name,
+             "sha256": fixture.digest(project / "data/config" / name)}
+            for name in sorted(set(FIELDS) | {"combat.json"})]
+    profile["test_configuration"] = [row.copy() for row in pins
+                                     if not row["file"].endswith("/combat.json")]
+    profile["configuration_scope"] = "full"
+    profile["production_configuration_pins"] = pins
+    profile["provenance"] += " Shipping configuration bytes preserved; no mechanics overlay or flag overrides."
+
+
+def loop_profile(source: Path, output: Path, shipping_config: bool = False) -> Path:
+    path = prepare.produce(source, output)
+    if shipping_config:
+        profile = fixture.read(path)
+        pin_shipping_profile(profile, ROOT)
+        fixture.write(path, profile)
+        source_record = fixture.read(output / "source.json")
+        source_record["profile_sha256"] = fixture.digest(path)
+        fixture.write(output / "source.json", source_record)
+    return path
+
+
+def boss_profile(source: Path, output: Path, shipping_config: bool = False) -> Path:
     """Declare the same real boss input actions for four original participants."""
     profile = fixture.read(source)
     fixture.require(len(profile["saves"]) == 4, "Four original boss participants required")
@@ -40,6 +65,8 @@ def boss_profile(source: Path, output: Path) -> Path:
     profile["outcomes"] = {}
     profile["provenance"] += (" Four original distinct participants. Disclosed named actor/ally placement,"
         " actual announced boss joins and self-HP aid. No enemy HP ceiling, authored outcome or earned campaign credit.")
+    if shipping_config:
+        pin_shipping_profile(profile, ROOT)
     output.mkdir(parents=True)
     path = output / "profile.json"
     fixture.write(path, profile)
@@ -96,6 +123,8 @@ def main() -> int:
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--producer", choices=("loop", "boss_four", "behind"), default="loop")
+    parser.add_argument("--shipping-config", action="store_true",
+                        help="Pin shipping configuration without overlays; behind requires a matching shipping loop")
     parser.add_argument("--loop-output", type=Path)
     parser.add_argument("--loop-profile", type=Path)
     parser.add_argument("--loop-profile-sha256")
@@ -109,7 +138,7 @@ def main() -> int:
                         "Behind requires the completed original loop artifact, reviewed profile and SHA256")
         import f48_behind_profile
         profile_path = f48_behind_profile.generate(args.loop_output, args.loop_profile,
-            args.loop_profile_sha256, output, args.behind_guest_peer)
+            args.loop_profile_sha256, output, args.behind_guest_peer, shipping_config=args.shipping_config)
     else:
         fixture.require(args.loop_output is None and args.loop_profile is None and args.loop_profile_sha256 is None,
                         "Loop source arguments apply only to behind producer")
@@ -117,8 +146,9 @@ def main() -> int:
         manifest = fixture.read(bundle / "manifest.json")
         fixture.generate(sources if args.producer == "boss_four" else sources[:2], bundle / "layout.json", output / "mechanics-start", None,
                          manifest["provenance"], "full", True, True, True)
-        build_profile = boss_profile if args.producer == "boss_four" else prepare.produce
-        profile_path = build_profile(output / "mechanics-start/profile.json", output / "producer-profile")
+        source_profile = output / "mechanics-start/profile.json"
+        profile_path = boss_profile(source_profile, output / "producer-profile", args.shipping_config) \
+            if args.producer == "boss_four" else loop_profile(source_profile, output / "producer-profile", args.shipping_config)
     if args.prepare_only:
         print(json.dumps({"profile": str(profile_path), "acceptance_credit": False, "native_run": False}))
         return 0
@@ -137,9 +167,11 @@ def main() -> int:
     script = {"loop": "tools/net/f48_prepare.gd", "boss_four": "tools/net/f48_prepare_boss_four.gd",
               "behind": "tools/net/f48_prepare_behind.gd"}[args.producer]
     command = [args.godot, "--headless", "--path", str(ROOT), "--script", script]
-    with configuration_overlay(ROOT, profile) as pins:
+    configuration = shipping_configuration(ROOT, profile) if args.shipping_config else configuration_overlay(ROOT, profile)
+    with configuration as pins:
         fixture.write(output / "invocation.json", {"command": command, "profile_sha256": fixture.digest(profile_path),
                       "source_manifest_sha256": fixture.digest(bundle / "manifest.json"), "effective_configuration": pins,
+                      "shipping_configuration": args.shipping_config,
                       "peer_phase_trace": env.get("TB_PEER_PHASE_TRACE") == "1",
                       "background_work_trace": env.get("TB_BACKGROUND_WORK_TRACE") == "1",
                       "acceptance_credit": False, "ready_ci_bundle": False})
