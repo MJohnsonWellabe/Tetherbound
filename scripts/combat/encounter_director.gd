@@ -497,6 +497,19 @@ func _retain_research(encounter_id: String, peer: int, kind: String, species: St
 	if result.get("durable") == true: _foundation_pending_sources.erase(source)
 	return result.get("durable") == true
 
+## Leaves refused only by a pending actor-vitals save, replayed once it lands.
+var _deferred_disengages: Dictionary = {}
+
+func _retry_deferred_disengages() -> void:
+	if _encounter_host == null: return
+	for encounter_id: String in _deferred_disengages.keys().duplicate():
+		if ordinary_actor_vitals_pending(encounter_id): continue
+		var waiting: Array = _deferred_disengages[encounter_id]
+		_deferred_disengages.erase(encounter_id)
+		for peer_id: int in waiting:
+			if (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id):
+				_host_commit_encounter({"kind": "disengage", "encounter_id": encounter_id}, peer_id)
+
 func _retry_research_sources() -> void:
 	if _session == null: return
 	for source: Dictionary in _foundation_pending_sources.duplicate(true):
@@ -2896,6 +2909,12 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 			and _tether_item_request_retained(encounter_id, peer_id, intent.request)):
 		var refusal := {"ok": false, "pending": false, "kind": kind, "peer": peer_id,
 			"code": "pending_vitals", "reason": "The original health change is still being saved.", "delta": {}, "encounter_id": encounter_id}
+		if kind == "disengage":
+			# A leaver's manager has already ended its fight and dropped the
+			# link, so nobody resends this. Keep the leave until the save lands.
+			var waiting: Array = _deferred_disengages.get(encounter_id, [])
+			if not waiting.has(peer_id): waiting.append(peer_id)
+			_deferred_disengages[encounter_id] = waiting
 		if kind == "tether_command" and intent.get("request") is Dictionary \
 			and preload("res://scripts/combat/tether_commands.gd").valid_intent(intent.request):
 			refusal["command_request"] = intent.request.duplicate(true)
@@ -6062,6 +6081,7 @@ func _process(delta: float) -> void:
 		_catch_waiting_for_owner = null
 		_resolve_catch(waiting)
 	_retry_ordinary_actor_vitals()
+	_retry_deferred_disengages()
 	_tether_item_retry_left -= delta
 	if _tether_item_retry_left <= 0.0:
 		_tether_item_retry_left = 0.5
