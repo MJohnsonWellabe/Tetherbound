@@ -22,7 +22,9 @@ extends SceneTree
 ##
 ## No world scene. The shell is an autoload and both modals are ordinary
 ## CanvasLayers; booting the meadow would add four minutes of terrain to a check
-## about one guard.
+## about one guard. The opt-in --lesson-service-fixtures continuation below
+## mounts the actual Meadows world with disclosed unlock/approach fixtures;
+## it does not change the default isolated modal proof or claim an earned run.
 
 const PICKER_SCENE := "res://scenes/ui/starter_picker.tscn"
 const DIALOGUE_SCENE := "res://scenes/ui/dialogue_panel.tscn"
@@ -34,6 +36,7 @@ const CONVERSATION := "grandpa_house"
 var _failures: Array[String] = []
 var _menu: CanvasLayer = null
 var _capture_output := ""
+var _lesson_service_fixtures := false
 
 
 func _init() -> void:
@@ -44,6 +47,16 @@ func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--capture-output="):
 			_capture_output = argument.trim_prefix("--capture-output=")
+		if argument.begins_with("--lesson-service-fixtures"):
+			if argument != "--lesson-service-fixtures":
+				_fail("Use --lesson-service-fixtures without a value")
+			_lesson_service_fixtures = true
+	if _lesson_service_fixtures:
+		for required: String in ["--lesson-controller-witness", "--lesson-replay-witness", "--lesson-skip-line=0"]:
+			if not OS.get_cmdline_user_args().has(required): _fail("lesson service fixtures require " + required)
+		if not _failures.is_empty():
+			quit(1)
+			return
 	if not _capture_output.is_empty():
 		if not _capture_output.begins_with("res://shots/") or _capture_output.contains(".."):
 			push_error("Modal captures must stay under res://shots/")
@@ -83,6 +96,8 @@ func _run() -> void:
 	await _check_the_shell_refuses_over_a_conversation()
 	await _check_lessons_own_skip_and_menu_input()
 	await _check_lesson_service_departures(game)
+	if _failures.is_empty() and _lesson_service_fixtures:
+		await _check_actual_lesson_service_fixtures(game)
 
 	print("")
 	if _failures.is_empty():
@@ -297,6 +312,256 @@ func _check_lesson_service_departures(game: Node) -> void:
 	service.queue_free()
 	for release_frame: int in 4: await process_frame
 	print("lesson service: actual character/realm departures release input without dismissal or lesson receipt")
+
+
+## F46 focused service proof, never an earned campaign claim. All progress
+## setup occurs offline before the actual saved character enters Meadows.
+## Teacher approaches are disclosed actor placement; cards themselves must
+## come from the normally processing service, not panel.open/_process calls.
+func _check_actual_lesson_service_fixtures(game: Node) -> void:
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	if not _lesson_service_check(rules.config().get("enabled") == true and rules.config().get("lessons", []).size() == 8,
+		"shipping service is enabled with exactly eight authored lessons"): return
+	var saver := preload("res://scripts/save/save_game.gd").new("user://f46_service_%d" % OS.get_process_id())
+	var slot := int(game.call("autosave_slot"))
+	game.call("reset_for_new_game")
+	game.set("save_system", saver)
+	var local: RefCounted = game.get("local")
+	var member: RefCounted = local.call("make_creature", "terrapup", "Lesson Fixture")
+	if not _lesson_service_check(member != null and game.get("party").call("add", member) == true,
+		"one owned starter fixture must be admitted without a sixth creature"): return
+	for flag: String in ["opening:starter_granted", "opening:beat:free_play"]:
+		local.get("flags").call("set_flag", flag)
+	if not _lesson_service_check(game.call("save_game", slot) == true, "locked fixture production save"): return
+	var character := str(local.get("character_id"))
+	var uid := str(member.get("uid"))
+	if not _lesson_service_check(not character.is_empty() and not uid.is_empty(), "stable fixture identities"): return
+	for row: Dictionary in rules.config().get("lessons", []):
+		if not _lesson_service_check(not rules.available(str(row.id), local), "locked system unavailable: " + str(row.id)): return
+	if not _lesson_service_check(change_scene_to_file("res://scenes/world/meadows_playground.tscn") == OK, "actual locked Meadows load"): return
+	if not await _lesson_service_world_ready(game): return
+	for teacher: String in ["Grandpa", "Tam"]:
+		if not await _lesson_service_place(game, teacher): return
+		for frame in 60:
+			await process_frame
+			if not _lesson_service_check(preload("res://scripts/ui/input_owner.gd").current(self) == null,
+				"actual service stays silent beside locked teacher " + teacher): return
+	print("F46 SERVICE LOCKED " + JSON.stringify({"character_id": character, "owned_uid": uid,
+		"teachers": ["Grandpa", "Tam"], "all_eight_unavailable": true, "teacher_near_service_silent": true}))
+	if not await _lesson_service_place(game, ""): return
+	if not _lesson_service_check(game.call("save_game", slot) == true, "locked fixture saves its away pose"): return
+	if not await _lesson_service_title(): return
+	game.call("reset_for_new_game")
+	if not _lesson_service_check(saver.call("load_slot", game, slot) == true, "offline fixture restores original saved character"): return
+	local = game.get("local")
+	if not _lesson_service_check(str(local.get("character_id")) == character and game.get("session").call("is_active") != true,
+		"declared unlock setup is offline and belongs to the original character"): return
+	# Per-lesson declarations. No boss, release, feast, portal or Home Key
+	# producer is claimed by these records; no lesson acknowledgement is seeded.
+	local.get("flags").call("set_flag", "home_key_given")
+	local.get("flags").call("set_flag", rules.PREFIX + "trigger:home_return")
+	for item: String in ["home_key", "essence_ground", "tidewake_portal_key"]:
+		local.get("inventory").call("add", item, 1)
+	member = game.get("party").call("at", 0)
+	member.set("level", 40)
+	var personal: Dictionary = local.get("redesign_character").duplicate(true)
+	personal.creatures[uid]["breakthroughs"] = [1, 2, 3]
+	personal.creatures[uid]["cap_level"] = 40
+	personal.feast_recipes = ["feast_t1"]
+	personal.release_receipts = ["release:f46_declared_fixture:" + character]
+	personal.relics_held = ["meadows"]
+	local.set("redesign_character", personal)
+	var declarations := {"home_key": "home_key_given + one Home Key", "homestead": "declared saved home_return trigger",
+		"altar": "one Ground Essence", "masters": "original owned UID at L40 with breakthroughs [1,2,3]",
+		"feasts": "declared feast_t1 recipe", "traits": "declared release receipt; no actual release",
+		"portals": "one Tidewake key; no earned boss or portal entry", "shrines": "held Meadows relic; no earned boss or hang"}
+	for row: Dictionary in rules.config().get("lessons", []):
+		if not _lesson_service_check(rules.available(str(row.id), local) and local.get("flags").call("has", rules.PREFIX + str(row.id)) != true,
+			"declared unlock is available without seeded acknowledgement: " + str(row.id)): return
+	if not _lesson_service_check(game.call("save_game", slot) == true, "declared unlocks save through production schema"): return
+	print("F46 SERVICE FIXTURES " + JSON.stringify({"character_id": character, "owned_uid": uid, "per_lesson": declarations,
+		"unlock_fixtures_loaded_together": true, "earned_progression": false, "approach": "actual actor placement at authored teacher/away yard"}))
+	if not await _lesson_service_title_load(game, slot): return
+	var before := _lesson_service_stable(game)
+	if not _lesson_service_check(str(before.character_id) == character and before.party_uids == [uid], "unlock fixture keeps original owner and one companion"): return
+	if not await _lesson_service_place(game, ""): return
+	for frame in 60:
+		await process_frame
+		if not _lesson_service_check(preload("res://scripts/ui/input_owner.gd").current(self) == null,
+			"unlocked service stays silent outside both actual teacher radii"): return
+	var service: Node = game.get_node_or_null("OnboardingLessons")
+	var panel: Node = service.get("_panel")
+	var dismissed: Array[String] = []
+	var observe := func(id: String) -> void: dismissed.append(id)
+	panel.connect("dismissed", observe)
+	var seen: Array[String] = []
+	var observed_rows: Array[Dictionary] = []
+	var travel_script := load("res://tests/helpers/f20_portal_travel.gd") as GDScript
+	if not _lesson_service_check(travel_script != null, "existing controller/reader adapter loads"): return
+	var travel: RefCounted = travel_script.new(self, game)
+	for teacher: String in ["Grandpa", "Tam"]:
+		if not await _lesson_service_place(game, teacher): return
+		var expected: Array[String] = ["home_key", "homestead", "altar", "traits"] if teacher == "Grandpa" else ["masters", "feasts", "portals", "shrines"]
+		for id: String in expected:
+			var appeared := false
+			for frame in 180:
+				await process_frame
+				if panel.call("is_open") == true: appeared = true; break
+			var row: Dictionary = (panel.get("_row") as Dictionary).duplicate(true)
+			if not _lesson_service_check(appeared and row.get("id") == id and row.get("teacher_node") == teacher \
+				and service.get("_replaying") == false and preload("res://scripts/ui/input_owner.gd").current(self) == panel,
+				"actual teacher service owns its next expected card: " + id): return
+			if id == "masters":
+				var master := preload("res://scripts/creatures/breakthrough.gd").master("master_t4")
+				if not _lesson_service_check(row.get("goal") == "Challenge %s for the L40 feast recipe." % str(master.name),
+					"returning L40 character gets its actual Master goal instead of Orin/L10"): return
+			observed_rows.append(row)
+			travel.set("_lesson_active", true)
+			var generation := int(travel.get("_lesson_generation")) + 1
+			travel.set("_lesson_generation", generation)
+			await travel.call("_continue_navigation_lesson", generation)
+			travel.set("_lesson_active", false)
+			if not _lesson_service_check((travel.get("failures") as Array).is_empty(), "actual controller Skip reader: " + id): return
+			seen.append(id)
+			if not _lesson_service_check(dismissed == seen and _lesson_service_stable(game) == before,
+				"one callback per lesson; Skip preserves original owner, team and progression: " + id): return
+			var deadline := Time.get_ticks_msec() + 30000
+			while not (service.get("_pending") as Dictionary).is_empty() and Time.get_ticks_msec() < deadline: await process_frame
+			if not _lesson_service_check((service.get("_pending") as Dictionary).is_empty() and game.call("save_game", slot) == true,
+				"actual callback settles and production autosave accepts: " + id): return
+			if not _lesson_service_disk(game, seen): return
+			print("F46 SERVICE ACK " + JSON.stringify({"lesson": id, "teacher": teacher, "character_id": character,
+				"owned_uid": uid, "fixture": declarations[id], "source": "actual proximity/eligibility service",
+				"physical_skip": true, "callback_once": true, "personal_ack_on_disk": true, "progression_unchanged": true}))
+	panel.disconnect("dismissed", observe)
+	if not _lesson_service_check(seen.size() == 8 and preload("res://scripts/ui/input_owner.gd").current(self) == null,
+		"all eight service cards skipped with free world input"): return
+	if not await _lesson_service_place(game, ""): return
+	if not _lesson_service_check(game.call("save_game", slot) == true, "all-eight production autosave before memory clear"): return
+	if not await _lesson_service_title_load(game, slot): return
+	if not _lesson_service_check(_lesson_service_stable(game) == before, "actual title Load retains owner/team and declared progression"): return
+	if not _lesson_service_disk(game, seen): return
+	for teacher: String in ["Grandpa", "Tam"]:
+		if not await _lesson_service_place(game, teacher): return
+		for frame in 60:
+			await process_frame
+			if not _lesson_service_check(preload("res://scripts/ui/input_owner.gd").current(self) == null,
+				"actual teacher return after disk Load does not repeat acknowledged cards: " + teacher): return
+	for row: Dictionary in observed_rows:
+		travel = travel_script.new(self, game)
+		travel.set("_lesson_replay_row", row.duplicate(true))
+		travel.set("_lesson_replay_identity", {"character_id": character, "party_uids": [uid]})
+		if not _lesson_service_check(await travel.call("replay_observed_lesson"), "actual Settings Help replay after disk Load: " + str(row.id)): return
+		if not _lesson_service_check(_lesson_service_stable(game) == before, "Help replay grants no progression: " + str(row.id)): return
+	if not _lesson_service_disk(game, seen): return
+	print("F46 SERVICE RESULT " + JSON.stringify({"passed": true, "lessons": seen, "character_id": character,
+		"party_uids": [uid], "locked_teacher_control": true, "unlocked_outside_radius_control": true,
+		"actual_service_trigger": true, "all_skipped_by_controller": true, "callback_ack_saved": true,
+		"memory_cleared_before_physical_title_load": true, "no_repeat_at_teachers": true, "all_help_replays": true,
+		"save_root": saver.get("_dir"), "per_lesson_fixtures": declarations,
+		"scope": "Focused F46#0 service/skip/save/replay proof from declared unlock and approach fixtures; no earned producers, full campaign or F46#1 comprehension claim"}))
+
+
+func _lesson_service_check(ok: bool, message: String) -> bool:
+	if not ok: _fail("F46 service: " + message)
+	return ok
+
+
+func _lesson_service_world_ready(game: Node) -> bool:
+	for frame in 7200:
+		await process_frame
+		var scene := current_scene
+		var actor := game.call("find_player") as CharacterBody3D
+		if scene != null and scene.scene_file_path == "res://scenes/world/meadows_playground.tscn" \
+			and scene.has_method("shell_build_complete") and scene.call("shell_build_complete") == true \
+			and actor != null and actor.is_on_floor() and game.get("session").call("snapshot_ready") == true \
+			and game.get_node_or_null("OnboardingLessons") != null and preload("res://scripts/ui/input_owner.gd").current(self) == null:
+			return true
+	return _lesson_service_check(false, "actual Meadows shell, grounded actor, session and mounted service become ready")
+
+
+## This fixture changes only the real actor's approach, never the teacher,
+## interaction radii, eligibility, service schedule or presentation ownership.
+func _lesson_service_place(game: Node, teacher_name: String) -> bool:
+	var actor := game.call("find_player") as CharacterBody3D
+	var teacher := current_scene.find_child(teacher_name, true, false) as Node3D if not teacher_name.is_empty() else null
+	if not _lesson_service_check(actor != null and (teacher_name.is_empty() or teacher != null), "actual teacher/actor for approach " + teacher_name): return false
+	var target := Vector3(-6, 1.4, 22) if teacher == null else teacher.global_position + Vector3(0, 0.2, 2)
+	preload("res://scripts/creatures/remote_creature.gd").teleport_body(actor, target)
+	actor.velocity = Vector3.ZERO
+	for frame in 90: await physics_frame
+	for frame in 2: await process_frame
+	if not _lesson_service_check(actor.is_on_floor(), "fixture approach is grounded: " + teacher_name): return false
+	for row: Dictionary in preload("res://scripts/onboarding/lesson_rules.gd").config().get("lessons", []):
+		var npc := current_scene.find_child(str(row.teacher_node), true, false) as Node3D
+		if not _lesson_service_check(npc != null, "authored teacher is mounted: " + str(row.teacher_node)): return false
+		if teacher_name.is_empty() and not _lesson_service_check(actor.global_position.distance_to(npc.global_position) > float(row.radius_m),
+			"away fixture is outside actual teacher radius"): return false
+		if str(row.teacher_node) == teacher_name and not _lesson_service_check(actor.global_position.distance_to(npc.global_position) <= float(row.radius_m),
+			"near fixture is within actual teacher radius"): return false
+	return true
+
+
+func _lesson_service_title() -> bool:
+	if not _lesson_service_check(change_scene_to_file("res://scenes/ui/title_screen.tscn") == OK, "production title transition"): return false
+	for frame in 10: await process_frame
+	return _lesson_service_check(current_scene != null and current_scene.scene_file_path == "res://scenes/ui/title_screen.tscn", "actual title loaded")
+
+
+func _lesson_service_title_load(game: Node, slot: int) -> bool:
+	if not _lesson_service_check(slot == int(game.call("autosave_slot")), "physical title Load uses the original production autosave slot"): return false
+	if current_scene == null or current_scene.scene_file_path != "res://scenes/ui/title_screen.tscn":
+		if not await _lesson_service_title(): return false
+	game.call("reset_for_new_game")
+	if not _lesson_service_check(game.get("party").call("size") == 0, "memory cleared before physical title Load"): return false
+	for row: Dictionary in preload("res://scripts/onboarding/lesson_rules.gd").config().get("lessons", []):
+		if not _lesson_service_check(game.get("local").get("flags").call("has", "opening:lesson:" + str(row.id)) != true, "old lesson memory cleared"): return false
+	var travel: RefCounted = (load("res://tests/helpers/f20_portal_travel.gd") as GDScript).new(self, game)
+	travel.set("_lesson_controller_input", true)
+	var button := current_scene.get("_load_button") as Button
+	if not _lesson_service_check(button != null and not button.disabled, "enabled actual title Load Game"): return false
+	for step in 8:
+		if root.gui_get_focus_owner() == button: break
+		await travel.call("tap", "ui_down")
+	if not _lesson_service_check(root.gui_get_focus_owner() == button, "controller focuses actual Load Game"): return false
+	await travel.call("tap", "ui_accept")
+	var autosave := root.gui_get_focus_owner() as Button
+	if not _lesson_service_check(autosave != null and not autosave.disabled and autosave.text.begins_with("Autosave —"), "controller offers actual saved autosave"): return false
+	await travel.call("tap", "ui_accept")
+	if not _lesson_service_check((travel.get("failures") as Array).is_empty(), "title controller adapter succeeds"): return false
+	return await _lesson_service_world_ready(game)
+
+
+## Exclude lesson acknowledgements and changing HP/food/clock from the stable
+## comparison. A lesson may teach; it may never pay inventory/XP or alter team.
+func _lesson_service_stable(game: Node) -> Dictionary:
+	var local: RefCounted = game.get("local")
+	var party: Array[Dictionary] = []
+	var uids: Array[String] = []
+	for member: RefCounted in game.get("party").call("members"):
+		var card := {}
+		for field: String in ["uid", "species_id", "level", "xp", "known_moves", "move_quick", "move_charged", "move_utility", "move_ultimate", "move_mastery_uses", "move_mastery_receipts", "loadout_revision"]:
+			card[field] = member.get(field)
+		party.append(card)
+		uids.append(str(member.get("uid")))
+	var inventory: Array = []
+	for slot: int in int(local.get("inventory").call("slot_count")): inventory.append(local.get("inventory").call("stack_at", slot))
+	return {"character_id": str(local.get("character_id")), "party_uids": uids, "party": party,
+		"inventory": inventory, "redesign_character": local.get("redesign_character")}.duplicate(true)
+
+
+func _lesson_service_disk(game: Node, expected: Array[String]) -> bool:
+	var character := str(game.get("local").get("character_id"))
+	var path: String = game.get("save_system").call("characters").call("path_for", character)
+	var disk: Variant = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
+	if not _lesson_service_check(disk is Dictionary and disk.get("character_id") == character, "actual character disk belongs to original owner"): return false
+	var flags: Array = disk.get("flags", {}).get("flags", [])
+	for row: Dictionary in preload("res://scripts/onboarding/lesson_rules.gd").config().get("lessons", []):
+		var id := str(row.id)
+		if not _lesson_service_check(flags.count("opening:lesson:" + id) == (1 if expected.has(id) else 0) \
+			and game.get("local").get("flags").call("has", "opening:lesson:" + id) == expected.has(id),
+			"only actual skipped lesson acknowledges once in memory/disk: " + id): return false
+	return true
 
 
 ## Optional native frames from this existing smoke's actual configured cards.
