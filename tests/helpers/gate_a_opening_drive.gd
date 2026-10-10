@@ -1701,6 +1701,11 @@ func _hold_the_fight_where_it_was() -> void:
 ## creature moves between every attempt.
 const BLOCKED_LINES_ALLOWED := 8
 
+## A wander that covers less ground than this did not reach a new angle: a
+## blocker one body-width off the line needs at least that much sideways step.
+const WANDER_MIN_PROGRESS_METRES := 1.0
+var _wander_side := 1.0
+
 
 ## Walk somewhere genuinely different and look again. Not a strafe -- the
 ## strafing inside `_step_until_the_shot_is_clear()` has already been tried and
@@ -1708,16 +1713,34 @@ const BLOCKED_LINES_ALLOWED := 8
 func _wander_for_a_new_angle() -> void:
 	if not is_instance_valid(_wild):
 		return
-	var to := _wild.global_position - _player.global_position
-	to.y = 0.0
-	if to.length() < 0.05:
-		to = Vector3.FORWARD
-	# A quarter turn around the creature, at a comfortable throwing radius.
-	var around := to.normalized().rotated(Vector3.UP, PI * 0.5) * THROW_RANGE_WANTED
-	await _drive_body_toward(_player, _wild.global_position + around, 90)
-	_stop_left_stick()
-	for _i in 10:
-		await _tree.physics_frame
+	# A quarter turn around the creature, at a comfortable throwing radius --
+	# alternating sides, and switching side when the walk goes nowhere.
+	#
+	# This used to turn the same way every time. The CI flakes ("right-stick aim
+	# could not line up the real throw reticle", F18 "live catch right-stick aim
+	# did not converge") ended with the reticle on the body, the line blocked by
+	# a peaceful bystander (`first_hit=Wild_mudsnout_*`), and the trainer moving
+	# 0.03m across a whole "circling for another angle": the one side it knew
+	# was walled off, so every retry walked into the same obstacle and the shot
+	# never changed.
+	for _side_try in 2:
+		var start := _player.global_position
+		var to := _wild.global_position - start
+		to.y = 0.0
+		if to.length() < 0.05:
+			to = Vector3.FORWARD
+		var around := to.normalized().rotated(Vector3.UP, PI * 0.5 * _wander_side) \
+			* THROW_RANGE_WANTED
+		await _drive_body_toward(_player, _wild.global_position + around, 90)
+		_stop_left_stick()
+		for _i in 10:
+			await _tree.physics_frame
+		_wander_side = -_wander_side
+		var moved := Vector2(_player.global_position.x - start.x,
+			_player.global_position.z - start.z).length()
+		if moved >= WANDER_MIN_PROGRESS_METRES or not is_instance_valid(_wild):
+			break
+		print("wander: moved only %.2fm toward a new angle; trying the other side" % moved)
 	# A resolved throw leaves ThrowAim IDLE. Its production `aim_report()` is
 	# deliberately empty outside AIMING, so waiting on the strict preview-ready
 	# aim loop here can only burn the whole eight-second bound while the fight
