@@ -9248,6 +9248,9 @@ func _configure_f22_patterns(wild: Node3D, opponent_owned: bool) -> void:
 	var water_named: Variant = wild.get_meta(&"water_named_encounter", "")
 	if water_named is String and not water_named.is_empty():
 		encounter_id = water_named
+	var stormwood_named: Variant = wild.get_meta(&"stormwood_named_encounter", "")
+	if stormwood_named is String and not stormwood_named.is_empty():
+		encounter_id = stormwood_named
 	var pattern_id := ""
 	for id: String in patterns.get("named", {}):
 		if str(patterns.named[id].get("encounter_id", "")) == encounter_id:
@@ -9264,6 +9267,13 @@ func _configure_f22_patterns(wild: Node3D, opponent_owned: bool) -> void:
 				after_bridge = not band in ["band1_lower_meadows", "band2_stone_and_root"]
 				break
 	var role := COMBAT_AI.species_role(str(creature.get("species_id")), patterns)
+	# Named Stormwood residents already author their role on the spawned body.
+	# Keep that encounter identity when its species normally fills another role;
+	# explicit named send-out roles still take precedence in combat_ai.
+	if stormwood_named is String and not stormwood_named.is_empty():
+		var named_role := COMBAT_AI.normalize_role(str(wild.get_meta(&"stormwood_behavior_profile", "")), patterns)
+		if not named_role.is_empty():
+			role = named_role
 	# Masters (host duel through the trainer battle, or a guest duel tagged on
 	# its body) fight in their authored masters.json profile role.
 	var is_master := opponent_owned and (bool(_trainer_spec.get("master", false)) or wild.has_meta(&"f22_master_role"))
