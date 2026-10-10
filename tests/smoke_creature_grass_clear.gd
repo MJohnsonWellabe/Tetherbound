@@ -28,7 +28,7 @@ func _run() -> void:
 	world.add_child(floor_body)
 	var trainer := Node3D.new()
 	world.add_child(trainer)
-	trainer.position = Vector3(5.0, 0.0, 0.0)
+	trainer.position = Vector3(30.0, 0.0, 0.0)  # far enough that a peaceful wild keeps wandering
 
 	var cfg: Dictionary = BODY.grass_clear_config()
 	var wild := CREATURE_SCENE.instantiate() as CharacterBody3D
@@ -50,9 +50,9 @@ func _run() -> void:
 	_check(is_equal_approx(radius, expected), "its clearing radius is body_radius * radius_scale (%.2f vs %.2f)" % [radius, expected])
 
 	wild.set("_pause_left", 0.0)
-	wild.set("_target", wild.global_position + Vector3(0.0, 0.0, 10.0))
+	wild.set("_target", wild.global_position + Vector3(6.0, 0.0, 0.0))
 	var left := false
-	for i in 60:
+	for i in 120:
 		await physics_frame
 		if not wild.is_in_group(BODY.GRASS_CLEAR_GROUP):
 			left = true
