@@ -6855,9 +6855,10 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	var shared_host_wild := not opponent_owned and ((_is_multi_peer() and _is_host()) \
 		or bool(canonical.get("ready", false)))
 	wild.set_meta(&"canonical_wild_runtime", bool(canonical.get("ready", false)))
+	var authored_arena := _local_authored_arena_context() if opponent_owned else {}
 	if not bool(_manager.call(
 		"begin", _player, wild, _ally_body, _fight_party(), _camera_rig, best,
-		opponent_owned, shared_host_wild, shared_host_wild
+		opponent_owned, shared_host_wild, shared_host_wild, authored_arena
 	)):
 		var reason := str(_manager.get("last_admission_failure"))
 		var game := get_node_or_null(^"/root/Game")
@@ -6874,6 +6875,23 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	# which is the scope lane 4.D shipped -- see `_scale_opponent_for_the_session`.
 	if opponent_owned:
 		_scale_opponent_for_the_session(wild.get("instance") as RefCounted)
+
+
+func _local_authored_arena_context() -> Dictionary:
+	if _trainer_spec.has("master") and is_instance_valid(_trainer_node):
+		var site := _trainer_node.get_parent() as Node3D
+		if site != null and site.get_script() == preload("res://scripts/masters/master_site.gd"):
+			var definition := preload("res://scripts/creatures/breakthrough.gd").master(str(site.get("master_id")))
+			if not definition.is_empty() and definition.id == _trainer_spec.get("id"):
+				return {"source": site, "owner_npc": definition.id,
+					"centre": site.global_position, "radius": float(definition.arena_radius_m)}
+	for child: Node in get_parent().get_children():
+		if child.get_script() != preload("res://scripts/world/cloudreach_finale_controller.gd"): continue
+		var definition: Dictionary = child.get("config")
+		if not definition.is_empty() and definition.get("encounter_id") == _trainer_spec.get("id"):
+			return {"source": child, "owner_npc": _trainer_spec.id,
+				"centre": (child as Node3D).global_position, "radius": float(definition.arena_radius_m)}
+	return {}
 
 
 ## Stage B lane 4.C. Stand a host-arbitrated encounter record up behind the

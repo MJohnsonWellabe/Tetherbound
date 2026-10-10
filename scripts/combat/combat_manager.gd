@@ -997,12 +997,25 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 	_admitted_spots = _staging_spots(cfg)
 	var centre := (_admitted_spots[0] + _admitted_spots[1]) * 0.5
 	var bound := _arena_bounds(centre)
-	if bound >= 0.0:
-		cfg["radius"] = minf(float(cfg.get("radius", 11.0)), bound)
+	if host_arena.is_empty() and bound >= 0.0 and bound < float(cfg["radius"]):
+		if not _enemy_owned: return false
+		# Named rooms retain their authored provider's existing radius. An
+		# ordinary encounter cannot silently shrink below its derived ring.
+		cfg["radius"] = bound
 	if not host_arena.is_empty():
-		if not joining_realm or not _valid_host_arena(host_arena): return false
+		if joining_realm:
+			if not _valid_host_arena(host_arena): return false
+		elif not _valid_authored_arena(host_arena): return false
 		centre = host_arena.centre
 		cfg["radius"] = host_arena.radius
+		if not joining_realm:
+			# Seat the formation on this actual authored pad before fighting,
+			# retaining its measured gap and any lateral trainer treatment.
+			var shift := centre - (_admitted_spots[0] + _admitted_spots[1]) * 0.5
+			_admitted_spots[0] += shift
+			_admitted_spots[1] += shift
+			var authored_bound := _arena_bounds(centre)
+			if authored_bound >= 0.0 and authored_bound < float(cfg["radius"]): return false
 	if joining_realm:
 		var ally_spot := _realm_owned_ally_spot()
 		var footprint := _admission_render_radius(_ally_body)
@@ -1061,6 +1074,29 @@ func _valid_host_arena(context: Dictionary) -> bool:
 	if generation == null: generation = _wild.get_meta(&"tether_body_generation", null)
 	if generation != null and int(generation) != int(context.body_generation): return false
 	return str(context.get("kind", "")) != "wild" or float(radius) <= 26.0
+
+
+## Before an encounter ID exists, only the actual mounted named site supplies
+## canonical geometry. This context never crosses a client input channel.
+func _valid_authored_arena(context: Dictionary) -> bool:
+	var source: Variant = context.get("source")
+	if not _enemy_owned or not source is Node3D or not is_instance_valid(source) \
+		or not _player.get_parent().is_ancestor_of(source as Node): return false
+	var centre: Variant = context.get("centre")
+	var radius: Variant = context.get("radius")
+	if not centre is Vector3 or not (centre as Vector3).is_finite() or not (radius is int or radius is float) \
+		or not is_finite(float(radius)) or float(radius) <= 0.0: return false
+	if source.get_script() == preload("res://scripts/masters/master_site.gd"):
+		var definition := preload("res://scripts/creatures/breakthrough.gd").master(str(source.get("master_id")))
+		return source.get("_mounted") == true and not definition.is_empty() \
+			and context.get("owner_npc") == definition.id and centre == source.global_position \
+			and is_equal_approx(float(radius), float(definition.arena_radius_m))
+	if source.get_script() == preload("res://scripts/world/cloudreach_finale_controller.gd"):
+		var definition: Dictionary = source.get("config")
+		return not definition.is_empty() and definition == preload("res://scripts/world/cloudreach_finale_controller.gd").read_config() \
+			and context.get("owner_npc") == definition.encounter_id and centre == source.global_position \
+			and is_equal_approx(float(radius), float(definition.arena_radius_m))
+	return false
 
 
 ## Measured art in body-local space, including off-centre model placement.
@@ -1125,7 +1161,11 @@ func _staged_render_fit(spots: Array[Vector3], centre: Vector3, radius: float) -
 ## physics providers must support its footprint; a terrain claim alone cannot
 ## seat a giant beyond a built deck or inside a wall.
 func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector3) -> bool:
-	var level := _ground_height(spot.x, spot.z)
+	# Predict exactly the seat place_on_ground will use, including the highest
+	# support under the gameplay footprint; a hillside is not a wall.
+	var level: float = body.call("_ground_height", spot.x, spot.z)
+	if is_nan(level): level = float(body.call("_ray_ground", spot))
+	if is_finite(level): level = float(body.call("_seat_over_footprint", spot, level))
 	if not is_finite(level): return false
 	var direction := facing_at - spot
 	direction.y = 0.0
