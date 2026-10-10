@@ -14,7 +14,7 @@ static var _contact_heights: Dictionary = {}
 
 ## Build readiness for an evolution which needs authored runtime poses. This
 ## checks installed source/configuration, never a historical acceptance flag.
-## The instantiated consumer still verifies the actual packaged skeleton.
+## Check the imported scene as well as source data before a durable evolution.
 static func configured_for_species(id: String, model_path: String, required_roles: Array[String]) -> bool:
 	if _data.is_empty():
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
@@ -57,7 +57,29 @@ static func configured_for_species(id: String, model_path: String, required_role
 				if degrees.size() != 3: return false
 				for value: Variant in degrees:
 					if not (value is float or value is int) or not is_finite(float(value)): return false
-	return true
+	return _installed_scene_matches(model_path, recipe)
+
+
+static func _installed_scene_matches(model_path: String, recipe: Dictionary) -> bool:
+	var scene := ResourceLoader.load(model_path) as PackedScene
+	if scene == null: return false
+	# No SceneTree admission: no gameplay nodes, animation clocks or visuals run.
+	# UID alone is insufficient because an asset replacement can retain it.
+	var instance := scene.instantiate()
+	if instance == null: return false
+	var valid := false
+	if instance is Node3D:
+		var skeletons := instance.find_children("*", "Skeleton3D", true, false)
+		var players := instance.find_children("*", "AnimationPlayer", true, false)
+		if skeletons.size() == 1 and players.size() == 1:
+			var skeleton := skeletons[0] as Skeleton3D
+			var player := players[0] as AnimationPlayer
+			var animation_root := player.get_node_or_null(player.root_node)
+			valid = animation_root != null and not player.get_animation_list().is_empty() \
+				and (animation_root == skeleton or animation_root.is_ancestor_of(skeleton)) \
+				and _packaged_rig_matches(instance as Node3D, skeleton, recipe)
+	instance.free()
+	return valid
 
 
 static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
