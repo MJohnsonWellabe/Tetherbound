@@ -268,8 +268,13 @@ func _spawn_available_sites() -> void:
 		if plans.size() == 1 and not str(plans[0].id).is_empty():
 			var cycle := foundation_alpha_cycle(str(plans[0].id))
 			# Alpha cycles are host truth (foundation_alpha_cycle is {} on a
-			# client): a client keeps the ordinary authored spawn below, as
-			# encounter_director does, instead of retrying a host-only plan.
+			# client). A client follows its mirror of the host's cycle, as
+			# encounter_director does: the live generation's packet, nothing
+			# while it waits, and no body before the mirror arrives (retried).
+			if _is_guest() and _session != null and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
+				and not preload("res://scripts/repeatables/alpha_respawns.gd").site(str(plans[0].id)).is_empty():
+				cycle = get_node("/root/Game").world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(str(plans[0].id), {}).duplicate(true)
+				if cycle.is_empty(): continue
 			if cycle.is_empty() and _is_host() and not _once_cleared(str(plans[0].opts.get("once_id", ""))) \
 				and _session != null and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
 				and not preload("res://scripts/repeatables/alpha_respawns.gd").site(str(plans[0].id)).is_empty():
@@ -356,7 +361,9 @@ func _spawn_available_sites() -> void:
 			push_warning("Water site lacks a valid authored encounter or supported creature footing: " + id)
 
 func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
-	if not _is_host() or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
+	# A connected guest publishes only its mirror's retained packet (checked
+	# below), so a client never invents or advances a generation.
+	if not (_is_host() or _is_guest()) or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
 	var game := get_node_or_null("/root/Game")
 	if game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return
 	for wild: Node3D in _wild_creatures:

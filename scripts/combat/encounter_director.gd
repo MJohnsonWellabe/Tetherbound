@@ -1143,8 +1143,9 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			spawn_packet = preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(get_node("/root/Game").world.redesign_world, alpha_site)
 		# F44: alpha cycles are host truth and foundation_alpha_cycle is {} off
 		# the host. A client follows its mirror of the host's retained cycle:
-		# the live generation's packet, nothing while it waits, and with no
-		# mirrored cycle yet the ordinary authored member (as with the flag off).
+		# the live generation's packet, nothing while it waits, and nothing yet
+		# with no mirrored cycle -- never a body with traits of its own roll.
+		# FoundationAlphas publishes the host's packet once the mirror arrives.
 		var client_alpha: bool = _is_guest() \
 			and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
 			and not preload("res://scripts/repeatables/alpha_respawns.gd").site(alpha_site).is_empty()
@@ -1170,7 +1171,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			# caught or freed, this spot simply spawns one fewer body -- the
 			# rest of an ordinary-population cluster (`n > 0`) is untouched.
 			if n == 0 and (cycle.get("status") == "waiting" or (once_already_cleared and spawn_packet.is_empty()) \
-				or (_session != null and not (client_alpha and cycle.is_empty()) and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
+				or (_session != null and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
 					and not preload("res://scripts/repeatables/alpha_respawns.gd").site(alpha_site).is_empty() and spawn_packet.is_empty())):
 				continue
 			var member_packet: Dictionary = spawn_packet if n == 0 else {}

@@ -8,8 +8,8 @@ extends "res://tests/helpers/net_harness.gd"
 ##   tools/net/run_net_smoke.sh f44_alpha_respawn
 ##
 ## The host engages the Pond's Alpha Mosshell (wild_once_1900); the guest
-## joins and defeats it with real host-accepted strikes. Its retained cycle then waits: neither the configured
-## days alone nor a departure alone respawns it; once the days have passed and
+## joins and defeats it with real host-accepted strikes. Its retained cycle then waits: the configured days
+## alone do not respawn it (a departure alone is test_f44_repeatables'); once the days have passed and
 ## every trainer who was in the region has left it, generation 2 spawns with a
 ## new roll, and both peers see that one body when they return.
 ## Disclosed fixtures: party_grant seeds a strong guest creature before
@@ -75,6 +75,11 @@ func _proof() -> void:
 		"the live alpha carries the retained roll (%s)" % str(first_traits))
 	var guest_first := await _wait_live(1, 1)
 	if not _one_live(guest_first, 1, "guest generation 1"): print("F44 guest near site: %s" % str(guest_first.get("diagnostics", {}).get("near_site")))
+	else:
+		# The guest built its world before the host's cycle was mirrored: its
+		# body must carry the host's retained roll, never one of its own.
+		check(guest_first.live[0].traits == first_traits,
+			"the guest's generation-1 alpha carries the host's roll (%s vs host %s)" % [str(guest_first.live[0].traits), str(first_traits)])
 	# Defeat it: the host engages; the guest joins and lands real
 	# host-accepted strikes, as smoke_net_f27_guest_wild_win does.
 	for peer in 2:
@@ -129,6 +134,14 @@ func _proof() -> void:
 	check((next.get("departed", []) as Array).size() == 2, "both departures were recorded (%s)" % str(next.get("departed")))
 	check(not next_traits.is_empty() and next.get("spawn_traits", {}).get("captured_from", {}).get("spawn_generation") == 2,
 		"generation 2 carries its own fresh alpha roll (%s, was %s)" % [str(next_traits), str(first_traits)])
+	# Fresh: a new retained roll, not generation 1's packet carried forward.
+	check(next.get("spawn_traits", {}) != first.cycle.get("spawn_traits", {}),
+		"generation 2's retained roll is a new packet, not generation 1's (%s)" % str(next.get("spawn_traits", {}).get("captured_from")))
+	# Better: the alpha trait profile never rolls zero traits and allows up to
+	# three (alpha_respawns.json trait_profiles); an ordinary wild may have none.
+	var weights: Array = preload("res://scripts/repeatables/alpha_respawns.gd").config().get("trait_profiles", {}).get("alpha", {}).get("count_weights", [])
+	check(weights.size() == 4 and int(weights[0]) == 0 and next_traits.size() >= 1 and next_traits.size() <= weights.size() - 1,
+		"generation 2's roll follows the alpha profile: %d trait(s), profile %s" % [next_traits.size(), str(weights)])
 	# Both peers see the one new body when they return.
 	for peer in 2:
 		if not await _pass(peer, "f44_stand", {"at": BESIDE_XZ}): return
@@ -137,6 +150,9 @@ func _proof() -> void:
 		check(host_back.live[0].traits == next_traits, "the host's live generation-2 body carries the new roll")
 	var guest_back := await _wait_live(1, 2)
 	if not _one_live(guest_back, 2, "guest generation 2"): print("F44 guest gen2 diagnostics: cycle %s %s" % [str(guest_back.get("cycle")), str(guest_back.get("diagnostics"))])
+	else:
+		check(guest_back.live[0].traits == next_traits,
+			"the guest's generation-2 alpha carries the host's new roll (%s vs host %s)" % [str(guest_back.live[0].traits), str(next_traits)])
 	print("F44_NET_ALPHA_RESPAWN: defeat, %d-day wait, departures, fresh generation 2 on both peers" % days)
 
 
