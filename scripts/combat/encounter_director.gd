@@ -1688,6 +1688,13 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	if not bool(wild.call("place_on_ground", spot)):
 		wild.global_position = spot
 	wild.set("home", wild.global_position)
+	if not _active_arena_clear(wild.global_position, _ambient_render_radius(wild), wild):
+		# Synchronous placed-spawn callers receive a genuine admission refusal,
+		# before the new body joins ecology or owns any once-only receipt.
+		wild.free()
+		return null
+	wild.call("set_clearance_check", Callable(self, "_placed_wild_target_clear").bind(wild))
+	wild.call("set_arena_clearance_check", Callable(self, "_arena_wander_guard").bind(wild))
 	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
 	if not bool(opts.get("retained_alpha_pending", false)):
 		_initialize_wild_traits(wild, bool(opts.get("ordinary_trait_alpha", false)))
@@ -5788,6 +5795,12 @@ func _active_arena_clear(pos: Vector3, footprint: float, wild: Node3D = null) ->
 		if Vector2(delta.x, delta.z).length() <= float(arena.get("radius")) + footprint + clearance:
 			return false
 	return true
+
+
+func _placed_wild_target_clear(pos: Vector3, wild: Node3D) -> bool:
+	if _ambient_active_arenas(wild).is_empty(): return pos.is_finite()
+	return _active_arena_clear(pos, _ambient_render_radius(wild), wild) \
+		and _arena_wander_guard(wild.global_position, pos - wild.global_position, wild) == null
 
 
 ## Null keeps ordinary movement. A vector overrides only ambient motion:
