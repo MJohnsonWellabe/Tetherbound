@@ -4614,5 +4614,24 @@
       "glowmoss",
       "voltcap"
     ]
+  },
+  "material_cues": {
+    "_comment": "P2-046 presentation only: a visual-only cue on each harvest node so its named material reads. Child of the node, so it hides with the node when harvested. No collider, stock, reward or placement change.",
+    "stormglass": {
+      "kind": "shards",
+      "count": 5,
+      "radius_m": 0.55,
+      "height_m": 0.95,
+      "lift_m": 0.35,
+      "colour": "#8fd4ff",
+      "emission": 1.6
+    },
+    "glowmoss": {
+      "kind": "glow_cap",
+      "radius_m": 0.42,
+      "lift_m": 0.32,
+      "colour": "#7dffb8",
+      "emission": 1.2
+    }
   }
 }
