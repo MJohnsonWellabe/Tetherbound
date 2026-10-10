@@ -28,6 +28,7 @@ class HallPilot extends LIVE.CampaignPilot:
 	var lateral_bursts := 0
 	var _dodged_this_windup := false
 	var _side := 1.0
+	var _dbg_w := false
 
 	func _faces_target(_ally_body: Node3D, _foe_body: Node3D) -> bool:
 		# Production faces the target at accepted quick/charged start and
@@ -45,6 +46,11 @@ class HallPilot extends LIVE.CampaignPilot:
 		var winding := bool(manager.call("enemy_is_winding_up"))
 		if not winding:
 			_dodged_this_windup = false
+		if winding != _dbg_w:
+			_dbg_w = winding
+			if winding:
+				var cfgd: Dictionary = foe_body.call("combat_config")
+				print("DIAG TELL f=%d gap=%.2f range=%.2f tell=%.2f committed=%s wind=%.0f shape=%s chase=%s" % [Engine.get_physics_frames(), toward.length(), float(cfgd.get("range", 0)), float(cfgd.get("telegraph", 0)), manager.call("player_is_committed"), float(manager.call("wind_value")), manager.call("enemy_windup_shape"), cfgd.get("chase_speed")])
 		var committed := bool(manager.call("player_is_committed"))
 		var burst_cost := float(manager.call("wind_cost", "burst"))
 		var wind := float(manager.call("wind_value"))
@@ -159,9 +165,13 @@ func _hook() -> void:
 	_nav = NAV.new(_tree, _player, _rig, _stick)
 	_combat.connect("entered", _on_entered)
 	_combat.connect("hit_landed", _on_hit)
+	_combat.connect("attack_missed", func(by_player: bool) -> void: print("DIAG MISS f=%d by_player=%s" % [Engine.get_physics_frames(), by_player]))
 	_combat.connect("hit_landed", func(e: bool, a: float) -> void:
 		var en: RefCounted = _combat.call("enemy")
 		var al: RefCounted = _combat.call("active_creature")
+		var ab := _director.call("ally_body") as Node3D
+		var fb := _combat.call("enemy_body") as Node3D
+		if ab and fb: print("DIAG GAP %.2f committed=%s" % [Vector2(ab.global_position.x - fb.global_position.x, ab.global_position.z - fb.global_position.z).length(), _combat.call("player_is_committed")])
 		print("DIAG HIT f=%d enemy_side=%s amt=%.1f ally=%s %s/%s enemy=%s L%s %s/%s" % [Engine.get_physics_frames(), e, a,
 			al.get("species_id") if al else "-", al.get("hp") if al else "-", al.get("max_hp") if al else "-",
 			en.get("species_id") if en else "-", en.get("level") if en else "-", en.get("hp") if en else "-", en.get("max_hp") if en else "-"]))
