@@ -1003,12 +1003,15 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 		if not joining_realm or not _valid_host_arena(host_arena): return false
 		centre = host_arena.centre
 		cfg["radius"] = host_arena.radius
+	if joining_realm:
 		var ally_spot := _realm_owned_ally_spot()
 		var footprint := _admission_render_radius(_ally_body)
 		var offset := Vector2(ally_spot.x - centre.x, ally_spot.z - centre.z).length()
 		if not ally_spot.is_finite() or not is_finite(footprint) \
 			or offset + footprint + float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)) > float(cfg["radius"]):
 			return false
+		if not _staged_render_terrain_clear(_ally_body, ally_spot, _wild.global_position) \
+			or not _realm_ally_clears_host_render(ally_spot): return false
 		_admitted_spots = [ally_spot, _wild.global_position]
 	# A joining peer never relocates or re-admits the host's live opponent.
 	# Local admission fails before configure's scatter/bystander side effects.
@@ -1022,6 +1025,25 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 	_arena_centre = centre
 	_arena.call("configure", centre, cfg)
 	return true
+
+
+## The host enemy keeps its current orientation, even if it is targeting a
+## different participant. Measure that pose toward the proposed local seat;
+## only the joining ally turns to face the enemy.
+func _realm_ally_clears_host_render(ally_spot: Vector3) -> bool:
+	var line := _wild.global_position - ally_spot
+	line.y = 0.0
+	var distance := line.length()
+	if distance <= 0.000001: return false
+	line /= distance
+	var points := _body_world_corners(_wild)
+	if points.is_empty(): return false
+	var foe_extent := 0.0
+	for point: Vector3 in points:
+		if not point.is_finite(): return false
+		foe_extent = maxf(foe_extent, (point - _wild.global_position).dot(-line))
+	var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
+	return distance + 0.001 >= _admission_front_extent(_ally_body) + foe_extent + clearance
 
 
 ## Only the director's admitted reliable record supplies this context. Packet
