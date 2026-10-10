@@ -200,7 +200,14 @@ func _f25_visible(node: Node, camera: Camera3D) -> bool:
 	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
 		var mesh := node as MeshInstance3D
 		var centre := mesh.global_transform * mesh.get_aabb().get_center()
-		if not camera.is_position_behind(centre) and root.get_visible_rect().has_point(camera.unproject_position(centre)) \
+		var drawable := absf(mesh.global_basis.determinant()) > 0.0000001 and mesh.transparency < 1.0
+		var material := mesh.material_override
+		if material is StandardMaterial3D and (material as StandardMaterial3D).transparency != BaseMaterial3D.TRANSPARENCY_DISABLED:
+			drawable = drawable and (material as StandardMaterial3D).albedo_color.a > 0.0
+		elif material is ShaderMaterial:
+			var opacity: Variant = (material as ShaderMaterial).get_shader_parameter("opacity")
+			if opacity is float or opacity is int: drawable = drawable and float(opacity) > 0.0
+		if drawable and not camera.is_position_behind(centre) and root.get_visible_rect().has_point(camera.unproject_position(centre)) \
 				and camera.global_position.distance_to(centre) < camera.far: return true
 	for child: Node in node.get_children():
 		if _f25_visible(child, camera): return true
