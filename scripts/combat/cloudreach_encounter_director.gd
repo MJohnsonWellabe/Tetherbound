@@ -643,7 +643,8 @@ func _prune_pending_arena_spawns(retire_all: bool = false) -> void:
 		var wild := pending.get("body") as Node3D
 		var opts: Dictionary = pending.get("opts", {})
 		var site_id := str(opts.get("arena_pending_site", opts.get("water_pending_site", "")))
-		var abandoned := retire_all or not is_instance_valid(wild) or pending.get("world") != realm_world \
+		var abandoned := retire_all or not is_instance_valid(wild) or not is_instance_valid(realm_world) \
+			or realm_world != get_parent() or pending.get("world") != realm_world \
 			or pending.get("generation") != _population_generation or pending.get("epoch") != epoch \
 			or _once_cleared(str(opts.get("once_id", "")))
 		var owner: WeakRef = pending.get("owner_world")
