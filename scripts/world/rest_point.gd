@@ -149,7 +149,13 @@ func _build_creature_bed(raw: Variant) -> void:
 		return
 	_bed = CREATURE_BED.new()
 	_bed.name = "CampCreatureBed"
-	_bed.position = Vector3(x, ground, z)
+	# `at` is WORLD metres like every props.json key, and this node already
+	# stands at the rest point's own world position: place the bed relative
+	# to it, exactly as the craft prompt above is. Using the world vector as a
+	# local offset put every authored camp bed at about twice its coordinates,
+	# off the camp and off the ground (ranger_camp's prompt read 15.9 m from a
+	# player standing on it in plan).
+	_bed.position = Vector3(x, ground, z) - position
 	_bed.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 	add_child(_bed)
 	_bed.call("build_real", false)
