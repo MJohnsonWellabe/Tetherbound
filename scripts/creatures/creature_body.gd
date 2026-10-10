@@ -17,6 +17,8 @@ extends CharacterBody3D
 ## M11 replaces `_build_placeholder` with a rigged model. Nothing else here
 ## changes.
 
+const OWNER_SLIDE_PROBE := preload("res://tools/performance/owner_slide_attribution.gd")
+
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/creatures/creature_animator.gd")
