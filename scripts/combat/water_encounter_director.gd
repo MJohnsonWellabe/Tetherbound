@@ -267,7 +267,10 @@ func _spawn_available_sites() -> void:
 		var authored_members: Array = site.get("member_anchors", [])
 		if plans.size() == 1 and not str(plans[0].id).is_empty():
 			var cycle := foundation_alpha_cycle(str(plans[0].id))
-			if cycle.is_empty() and not _once_cleared(str(plans[0].opts.get("once_id", ""))) \
+			# Alpha cycles are host truth (foundation_alpha_cycle is {} on a
+			# client): a client keeps the ordinary authored spawn below, as
+			# encounter_director does, instead of retrying a host-only plan.
+			if cycle.is_empty() and _is_host() and not _once_cleared(str(plans[0].opts.get("once_id", ""))) \
 				and _session != null and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
 				and not preload("res://scripts/repeatables/alpha_respawns.gd").site(str(plans[0].id)).is_empty():
 				var first_packet: Dictionary = _session.call("foundation_alpha_first_spawn", self, str(plans[0].id))
