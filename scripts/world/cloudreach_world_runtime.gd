@@ -498,10 +498,12 @@ func _on_world_fall(body: CharacterBody3D, last_safe: Vector3) -> void:
 		body.global_position = last_safe
 		body.velocity = Vector3.ZERO
 		_settle_companion_beside(body)
-	elif recover_to_last_landing(body):
+	elif not _piloting and not bool(manager.call("is_fighting")) and not bool(director.call("trainer_battle_active")) \
+			and recover_to_last_landing(body):
 		# F06#2: a glide that sank past the cloud sea (or a long drop) has no
 		# fresh standing reading, but Fly holds the trainer's last verified
-		# landing in this realm: back there, flight ended, no damage.
+		# landing in this realm: back there, flight ended, no damage. A live
+		# round keeps the ladder, whose _recover unwinds it first.
 		print("[cloudreach_fall_recovery] %s fell below the cloud sea -- returning to the last verified landing" % body.name)
 		_settle_companion_beside(body)
 	else:
