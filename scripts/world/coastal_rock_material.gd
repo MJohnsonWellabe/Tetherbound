@@ -69,10 +69,35 @@ const MATERIAL := """
 	vec4 coast_blend = vec4(control >> uvec4(14u) & uvec4(255u)) / 255.0;
 	vec4 coast_paint = coast_base * (1.0 - coast_blend) + coast_over * coast_blend;
 	float coast_painted = bilerp ? dot(coast_paint, weights) : coast_paint[3];
+	// Full dune coverage replaces only the coastal layer's output channels.
+	// Compute its unchanged mask once before either overwritten layer.
+	float dune_weight = 0.0;
+	vec3 dune_normal = vec3(0.0);
+	if (coast_dunes_enabled) {
+		float outside = smoothstep(coast_exclude_radius, coast_exclude_radius + 30.0, length(v_vertex.xz - coast_exclude_centre));
+		// Use Terrain3D's interpolated height normal, not raster triangle
+		// derivatives: slope tint must not outline every terrain triangle.
+		dune_normal = normalize(w_normal);
+		// Sand caps the gentle ground; required steep banks expose the
+		// installed mineral material beneath it. This keeps those fixed
+		// landforms from reading as vertical piles of uniformly pale sand.
+		float bluff_patch = coast_noise(v_vertex.xz * 0.16 + vec2(v_vertex.y * 0.025));
+		float bluff = 1.0 - smoothstep(coast_dune_bluff_full_y, coast_dune_bluff_start_y,
+			abs(dune_normal.y) + (bluff_patch - 0.5) * 0.12);
+		// The baked painted banks include 33-degree slopes: the purely
+		// steep-face mask misses much of them. Retain the installed mineral
+		// material through a broader, smoothly blended painted-rock mask.
+		float painted_bluff = coast_painted * (1.0 - smoothstep(
+			coast_dune_painted_bluff_full_y, coast_dune_painted_bluff_start_y,
+			abs(dune_normal.y) + (bluff_patch - 0.5) * 0.08));
+		bluff = max(bluff, painted_bluff) * smoothstep(1.3, 3.5, v_vertex.y);
+		dune_weight = outside * (1.0 - bluff);
+	}
+	bool full_dune = coast_dunes_enabled && dune_weight == 1.0;
 	float coast_weight = coast_strength * max(coast_painted, 1.0 - smoothstep(coast_full_y, coast_start_y, abs(coast_face.y)));
 	coast_weight *= smoothstep(0.2, 1.6, v_vertex.y);
 	coast_weight *= smoothstep(coast_exclude_radius, coast_exclude_radius + 30.0, length(v_vertex.xz - coast_exclude_centre));
-	if (coast_weight > 0.001) {
+	if (!full_dune && coast_weight > 0.001) {
 		vec2 side = vec2(coast_face.x < 0.0 ? -1.0 : 1.0, coast_face.z < 0.0 ? -1.0 : 1.0);
 		vec3 coast_weights = abs(coast_face);
 		coast_weights /= max(coast_weights.x + coast_weights.y + coast_weights.z, 0.001);
@@ -121,7 +146,7 @@ const MATERIAL := """
 		mat.normal_rough = mix(mat.normal_rough, vec4(mapped, 0.88), coast_weight);
 		mat.normal_map_depth = mix(mat.normal_map_depth, coast_normal_depth, coast_weight);
 	}
-	if (coast_weathering_enabled) {
+	if (!full_dune && coast_weathering_enabled) {
 		// Sand and wet mineral stains soften the waterline without painting
 		// new walkable terrain or touching Veilfall's separate treatment.
 		float patch = coast_noise(v_vertex.xz * coast_weathering_scale);
@@ -138,11 +163,7 @@ const MATERIAL := """
 	if (coast_dunes_enabled) {
 		// Owner-directed Great Lakes dune palette. This is surface colour and
 		// roughness only: the baked heights, controls and collision stay intact.
-		float outside = smoothstep(coast_exclude_radius, coast_exclude_radius + 30.0, length(v_vertex.xz - coast_exclude_centre));
 		float patch = coast_noise(v_vertex.xz * coast_dune_patch_scale);
-		// Use Terrain3D's interpolated height normal, not raster triangle
-		// derivatives: slope tint must not outline every terrain triangle.
-		vec3 dune_normal = normalize(w_normal);
 		vec3 dune_weights = abs(dune_normal);
 		dune_weights /= max(dot(dune_weights, vec3(1.0)), 0.001);
 		float grain = coast_noise(v_vertex.zy * 3.4) * dune_weights.x
@@ -167,20 +188,6 @@ const MATERIAL := """
 		float face_shade = 1.0 - smoothstep(coast_dune_face_shade_full_y,
 			coast_dune_face_shade_start_y, abs(dune_normal.y) + (patch - 0.5) * 0.06);
 		sand *= 1.0 - face_shade * coast_dune_face_shade_strength;
-		// Sand caps the gentle ground; required steep banks expose the
-		// installed mineral material beneath it. This keeps those fixed
-		// landforms from reading as vertical piles of uniformly pale sand.
-		float bluff_patch = coast_noise(v_vertex.xz * 0.16 + vec2(v_vertex.y * 0.025));
-		float bluff = 1.0 - smoothstep(coast_dune_bluff_full_y, coast_dune_bluff_start_y,
-			abs(dune_normal.y) + (bluff_patch - 0.5) * 0.12);
-		// The baked painted banks include 33-degree slopes: the purely
-		// steep-face mask misses much of them. Retain the installed mineral
-		// material through a broader, smoothly blended painted-rock mask.
-		float painted_bluff = coast_painted * (1.0 - smoothstep(
-			coast_dune_painted_bluff_full_y, coast_dune_painted_bluff_start_y,
-			abs(dune_normal.y) + (bluff_patch - 0.5) * 0.08));
-		bluff = max(bluff, painted_bluff) * smoothstep(1.3, 3.5, v_vertex.y);
-		float dune_weight = outside * (1.0 - bluff);
 		float wet = 1.0 - smoothstep(0.15, 1.25, v_vertex.y + (patch - 0.5) * 0.4);
 		sand = mix(sand, coast_dune_wet_colour * mix(0.92, 1.02, grain), wet * 0.8);
 		// At full mineral coverage every installed albedo/normal/roughness
