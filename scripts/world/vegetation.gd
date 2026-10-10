@@ -1900,7 +1900,8 @@ func _stream_batch(batch: Dictionary, center: Vector3) -> void:
 ## F04: the camera canopy box for `model_path`, in model units: the render
 ## bounds above the trunk collider's top (4 model units, see
 ## `_make_collision_shape`), inset on x/z. A model shorter than that gets its
-## upper half. Empty when the layer is not listed, or the mesh is missing.
+## upper half. Stormwood shared models instead get exact lower-bark triangles.
+## Empty when neither camera rule applies, or the mesh is missing.
 func _canopy_for(model_path: String, layer: Dictionary) -> Dictionary:
 	var cfg := _camera_canopy_config()
 	var layer_name := ""
@@ -1909,8 +1910,12 @@ func _canopy_for(model_path: String, layer: Dictionary) -> Dictionary:
 		if layers[name] == layer:
 			layer_name = name
 			break
+	var lower_bark := _camera_lower_bark_for(model_path, layer_name, cfg)
+	var result := {}
+	if lower_bark != null:
+		result["lower_bark"] = lower_bark
 	if not (cfg.get("layers", []) as Array).has(layer_name):
-		return {}
+		return result
 	var mesh := _mesh_for(model_path)
 	if mesh == null:
 		return {}
@@ -1923,7 +1928,80 @@ func _canopy_for(model_path: String, layer: Dictionary) -> Dictionary:
 	if size.x <= 0.01 or size.y <= 0.01 or size.z <= 0.01:
 		return {}
 	var centre := box.get_center()
-	return {"size": size, "centre": Vector3(centre.x, bottom + size.y * 0.5, centre.z)}
+	result["size"] = size
+	result["centre"] = Vector3(centre.x, bottom + size.y * 0.5, centre.z)
+	return result
+
+
+## Exact lower bark, kept separate from the broad upper-canopy approximation.
+## Shared models resolve to storm_canopy first. Both layer and model must opt in;
+## no render/scatter/walking data is changed or fingerprinted by this camera rule.
+var _camera_lower_bark_shapes: Dictionary = {}
+
+func _camera_lower_bark_for(model_path: String, layer_name: String, cfg: Dictionary) -> ConcavePolygonShape3D:
+	var rule: Dictionary = cfg.get("lower_bark", {})
+	if not (rule.get("layers", []) as Array).has(layer_name) \
+			or not (rule.get("models", []) as Array).has(model_path):
+		return null
+	var material_name := str(rule.get("material", ""))
+	var top := float(rule.get("top", 4.0))
+	var key := "%s|%s|%s" % [model_path, material_name, str(top)]
+	if _camera_lower_bark_shapes.has(key):
+		return _camera_lower_bark_shapes[key] as ConcavePolygonShape3D
+	# Extract once per model/profile; each resident gets this same shape resource.
+	_camera_lower_bark_shapes[key] = null
+	var mesh := _mesh_for(model_path)
+	if mesh == null:
+		return null
+	var faces := _camera_lower_bark_faces(mesh, material_name, top)
+	if faces.is_empty():
+		push_error("Camera lower bark has no triangles: %s / %s" % [model_path, material_name])
+		return null
+	var shape := ConcavePolygonShape3D.new()
+	shape.set_faces(faces)
+	# A camera sweep can approach from either side; no solid volume or cap is added.
+	shape.backface_collision = true
+	_camera_lower_bark_shapes[key] = shape
+	return shape
+
+
+func _camera_lower_bark_faces(mesh: Mesh, material_name: String, top: float) -> PackedVector3Array:
+	var faces := PackedVector3Array()
+	for surface in mesh.get_surface_count():
+		var material := mesh.surface_get_material(surface)
+		if material == null or material.resource_name != material_name:
+			continue
+		var arrays := mesh.surface_get_arrays(surface)
+		var vertices := arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array
+		var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX] if arrays[Mesh.ARRAY_INDEX] != null else PackedInt32Array()
+		var count := indices.size() if not indices.is_empty() else vertices.size()
+		for offset in range(0, count - 2, 3):
+			var a: Vector3 = vertices[indices[offset] if not indices.is_empty() else offset]
+			var b: Vector3 = vertices[indices[offset + 1] if not indices.is_empty() else offset + 1]
+			var c: Vector3 = vertices[indices[offset + 2] if not indices.is_empty() else offset + 2]
+			faces.append_array(_clip_camera_bark_triangle(a, b, c, top))
+	return faces
+
+
+## Clip a triangle against y <= top, preserving its plane/winding. Fan only
+## this clipped triangle; never bridge separate faces or close the cut with a cap.
+func _clip_camera_bark_triangle(a: Vector3, b: Vector3, c: Vector3, top: float) -> PackedVector3Array:
+	var polygon: Array[Vector3] = []
+	var previous := c
+	for point: Vector3 in [a, b, c]:
+		if (previous.y <= top) != (point.y <= top):
+			polygon.append(previous.lerp(point, (top - previous.y) / (point.y - previous.y)))
+		if point.y <= top:
+			polygon.append(point)
+		previous = point
+	var faces := PackedVector3Array()
+	for index in range(1, polygon.size() - 1):
+		if (polygon[index] - polygon[0]).cross(polygon[index + 1] - polygon[0]).length_squared() <= 1e-12:
+			continue
+		faces.append(polygon[0])
+		faces.append(polygon[index])
+		faces.append(polygon[index + 1])
+	return faces
 
 
 var _camera_canopy_cfg: Dictionary = {}
@@ -1957,7 +2035,7 @@ func _make_collision_shape(placement: Dictionary, radius: float, canopy: Diction
 		up = placement["normal"]
 		node.basis = Basis(Quaternion(Vector3.UP, up))
 	node.position = (placement["position"] as Vector3) + up * (shape.height * 0.5)
-	if not canopy.is_empty():
+	if canopy.has("size"):
 		# A child body, so the box streams in, is evicted and is freed with the
 		# trunk shape that owns it -- harvest, clear_area and the residency
 		# sweep all handle it without knowing it exists.
@@ -1973,6 +2051,20 @@ func _make_collision_shape(placement: Dictionary, radius: float, canopy: Diction
 		# The trunk node sits at base + up * half its height; the canopy centre
 		# is measured from the base in model units.
 		occluder.position = (canopy["centre"] as Vector3) * scale - Vector3.UP * (shape.height * 0.5)
+		node.add_child(occluder)
+	if canopy.get("lower_bark") is ConcavePolygonShape3D:
+		var occluder := StaticBody3D.new()
+		occluder.name = "CameraLowerBark"
+		occluder.collision_layer = CAMERA_OCCLUSION_ONLY_LAYER
+		occluder.collision_mask = 0
+		# Same yaw, uniform scale and world-space SINK as _build_batch's mesh.
+		# The trunk parent already contributes the optional slope basis.
+		occluder.basis = Basis(Vector3.UP, float(placement.get("yaw", 0.0)))
+		occluder.position = -Vector3.UP * (shape.height * 0.5) - node.basis.inverse() * Vector3.UP * SINK
+		var bark_node := CollisionShape3D.new()
+		bark_node.shape = canopy["lower_bark"]
+		bark_node.scale = Vector3.ONE * scale
+		occluder.add_child(bark_node)
 		node.add_child(occluder)
 	return node
 

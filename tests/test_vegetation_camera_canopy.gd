@@ -105,3 +105,19 @@ func test_camera_canopy_in_an_initialized_tree() -> void:
 	assert_eq(result.get("failures", ["unparsed"]), [], "every canopy case passes")
 	assert_true(int(result.get("assertions", 0)) >= 9, "the cases asserted (%s)" % str(result.get("assertions")))
 	assert_eq(code, 0, "the child exited cleanly")
+
+
+## Stormwood lower bark: a camera-only trimesh clipped at the canopy boundary.
+func test_lower_bark_triangle_clip_keeps_only_bark_below_the_boundary() -> void:
+	var veg := VEGETATION.new()
+	var below: PackedVector3Array = veg._clip_camera_bark_triangle(Vector3(0,0,0), Vector3(1,0,0), Vector3(0,1,0), 4.0)
+	assert_eq(below.size(), 3, "a triangle wholly below the boundary is kept as is")
+	var above: PackedVector3Array = veg._clip_camera_bark_triangle(Vector3(0,5,0), Vector3(1,5,0), Vector3(0,6,0), 4.0)
+	assert_eq(above.size(), 0, "canopy above the boundary adds no camera face")
+	var split: PackedVector3Array = veg._clip_camera_bark_triangle(Vector3(0,0,0), Vector3(2,0,0), Vector3(0,8,0), 4.0)
+	assert_true(split.size() > 0 and split.size() % 3 == 0, "a crossing triangle is fanned, not capped")
+	for point: Vector3 in split:
+		assert_true(point.y <= 4.0 + 0.00001, "no clipped point rises above the boundary")
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/vegetation_camera_canopy.json"))
+	assert_true(cfg.lower_bark.layers.has("storm_canopy") and cfg.lower_bark.layers.has("giant_canopy"))
+	veg.free()
