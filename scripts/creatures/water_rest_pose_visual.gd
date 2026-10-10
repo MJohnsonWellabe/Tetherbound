@@ -23,6 +23,12 @@ static func resolve(species_id: String, source: Dictionary) -> Dictionary:
 	if not bool(config().get("enabled", false)) or not EXPECTED_MODELS.has(species_id) \
 			or str(source.get("model", "")) != str(EXPECTED_MODELS[species_id]):
 		return source
+	# Optional per-id allow list: an id whose installed faint endpoint does not
+	# read as rest (Riptusk stands head-down on straight front legs) keeps the
+	# legacy roll until it has a dedicated recipe.
+	var allowed: Variant = config().get("species", null)
+	if allowed is Array and not (allowed as Array).has(species_id):
+		return source
 	# Future dedicated recipes take priority over this reuse candidate.
 	var authored: Variant = source.get("rest_pose", {})
 	if authored is Dictionary and not (authored as Dictionary).is_empty():
