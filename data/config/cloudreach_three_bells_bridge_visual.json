@@ -6,7 +6,9 @@
   "bell_x_m": [-5.4, 0.0, 5.4],
   "bell_scale": [1.02, 1.18, 0.96],
   "stone_pier_x_m": [-10.0, 10.0],
-  "signal_colour": "#76e4dc",
+  "_signal_note": "P2-053: the pier signals were saturated cyan orbs at emission 2.4 that out-shone the bells and stone; they now use the realm's warm lamp colour (as the Flight Aerie signals) at a lamp-level glow.",
+  "signal_colour": "#f0a057",
+  "signal_emission": 0.9,
   "banner_blue": "#315f9a",
   "banner_gold": "#d6ad52"
 }

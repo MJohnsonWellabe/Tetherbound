@@ -454,7 +454,8 @@ func _anchor(id: String, target: Node3D) -> void:
 	var teal := _material(Color("#409ca4"))
 	teal.emission_enabled = true
 	teal.emission = Color("#367d87")
-	teal.emission_energy_multiplier = 0.35
+	# P2-053: a quieter glow; the teal hue still tells locked from restored.
+	teal.emission_energy_multiplier = 0.15
 	world.call("_cylinder",bottled,"CompressedWind",Vector3(0,1.8,0),0.12,2.4,teal)
 	for height: float in [0.75,2.85]:
 		var ring := MeshInstance3D.new()
