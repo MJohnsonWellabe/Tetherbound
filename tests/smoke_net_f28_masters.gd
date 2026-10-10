@@ -233,14 +233,14 @@ func _battles(view: Dictionary, uid: String) -> int:
 	return -1
 
 
-func _want_host_matches(guest: Dictionary, label: String) -> void:
-	_want_same(guest, await _view(0, _guest_id), label)
-
-
 ## The guest's chest grant, never more than once: at most one feast recipe and
 ## at most one chest's candy above its pre-chest count.
 func _guest_at_most_once(before: Dictionary, chest_candy: int, label: String) -> void:
 	var now := await _view(1, "")
+	# The hosted win and its duelist award stand exactly once, whatever the
+	# chest's delivery state (the per-duel hosted-win receipt never regrants).
+	check((now.master_wins as Array).count(MASTER) == 1 and _battles(now, _duelist) == _duelist_battles + 1,
+		"%s: one %s win and one duelist credit (%s, %d -> %d)" % [label, MASTER, str(now.master_wins), _duelist_battles, _battles(now, _duelist)])
 	check(int(now.has_feast) <= 1 and int(now.candy) <= int(before.candy) + chest_candy
 		and int(now.candy) - int(before.candy) == (chest_candy if int(now.has_feast) == 1 else 0),
 		"%s: the chest granted at most once (feast %s, candy %d -> %d)" % [label, str(now.feast_recipes), int(before.candy), int(now.candy)])
