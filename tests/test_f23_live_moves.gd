@@ -163,3 +163,57 @@ func test_root_status_uses_body_clock_and_never_cancels_protected_tell() -> void
 	body.hold_ultimate_reaction(2.0)
 	assert_true(body.protected_heavy_committed(), "reaction must preserve the committed heavy")
 	body.free()
+
+func _utility_frozen(move_id: String, action: int) -> Dictionary:
+	var owned := _new_owned()
+	owned.move_utility = move_id
+	owned.known_moves.append(move_id)
+	var frozen := MASTERY.freeze_action(MASTERY.owned_record(owned), "utility",
+		{"character_id": "owner_a", "creature_uid": owned.uid, "encounter_id": id,
+		"generation": 1, "action": action}, [], MOVES.load_default())
+	assert_true(frozen.get("ok") == true, str(frozen))
+	return MANAGER.host_move_profile(MOVES.load_default(), "player_utility", move_id, 0.5, 0.5, 1.0, 0.0, frozen.move)
+
+func _landing_body() -> Node:
+	var body := WILD.new()
+	body.instance = SPECIES.spawn("bramblebun")
+	body.engaged = true
+	add_child_autofree(body)
+	return body
+
+func _landing_context(move: Dictionary, body: Node, point: Vector3 = Vector3.RIGHT) -> Dictionary:
+	return {"action_id": move.action_id, "encounter_id": id, "generation": 1,
+		"source_uid": "creature_a", "target_uid": body.instance.uid,
+		"source_position": Vector3.ZERO, "target_position": point, "target_point": point,
+		"source_hp": 100.0, "source_max_hp": 100.0, "target_hp": body.instance.hp,
+		"hostile": true, "geometry_connected": true, "target_is_boss": false, "target_is_heavy_boss": false}
+
+func test_every_target_utility_kind_lands_on_the_wild_body() -> void:
+	# Each live target utility reaches its consumer: movement, burst, damage taken, trap.
+	var slow_body := _landing_body()
+	var slow := _utility_frozen("slow_field", 1)
+	assert_true(slow_body.apply_landed_utility(slow, _landing_context(slow, slow_body, slow_body.global_position)))
+	assert_almost_eq(slow_body.utility_movement_multiplier(), 0.5, 0.001, "Slow Field halves movement inside its radius")
+	var sap_body := _landing_body()
+	var sap := _utility_frozen("sap", 2)
+	assert_eq(sap_body.utility_damage_multiplier("creature_a"), 1.0)
+	assert_true(sap_body.apply_landed_utility(sap, _landing_context(sap, sap_body)))
+	assert_gt(sap_body.utility_damage_multiplier("creature_a"), 1.0, "Sap raises the damage this body takes")
+	for push_id: String in ["shove", "quake_ring"]:
+		var push_body := _landing_body()
+		var push := _utility_frozen(push_id, 3)
+		assert_true(push_body.apply_landed_utility(push, _landing_context(push, push_body)), push_id)
+		assert_true(push_body.combat_burst_active(), "%s pushes the body along its collision-aware burst" % push_id)
+	var trap_body := _landing_body()
+	var trap := _utility_frozen("bramble_trap", 4)
+	assert_true(trap_body.apply_landed_utility(trap, _landing_context(trap, trap_body, trap_body.global_position)))
+	assert_eq(trap_body.utility_movement_multiplier(), 1.0, "an armed trap does nothing before it triggers")
+	trap_body.set("_utility_clock_ms", 1000.0)
+	trap_body.call("_tick_landed_traps")
+	assert_eq(trap_body.utility_movement_multiplier(), 0.0, "entering the armed trap roots the body once")
+
+func test_self_and_caster_utilities_are_not_consumed_by_the_target() -> void:
+	var body := _landing_body()
+	for move_id: String in ["heal_pulse", "veil", "hearten", "dash_strike"]:
+		var move := _utility_frozen(move_id, 10)
+		assert_false(body.apply_landed_utility(move, _landing_context(move, body)), move_id)
