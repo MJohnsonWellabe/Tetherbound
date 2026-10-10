@@ -130,7 +130,7 @@ func begin_hosted_round(link: Node, state: Dictionary) -> bool:
 	if not is_instance_valid(_ally_body):
 		hosted_round_blocker = "companion_not_deployed"
 		return false
-	var creature := TRAINERS.creature_for(state.get("team_entry", {}))
+	var creature := WATER_CAPTURE_CODEC.decode(state.get("record", {}).get("opponent", {}).get("card", {}))
 	if creature == null:
 		hosted_round_blocker = "opponent_unavailable"
 		return false
@@ -196,7 +196,7 @@ func observe_hosted_state(state: Dictionary) -> void:
 	var row: Dictionary = _observed_hosted.get(id, {})
 	if str(row.get("round", "")) != round_id:
 		remove_hosted_observer(id)
-		var creature := TRAINERS.creature_for(state.get("team_entry", {}))
+		var creature := WATER_CAPTURE_CODEC.decode(record.get("opponent", {}).get("card", {}))
 		if creature == null:
 			return
 		var body: Node3D = CREATURE_SCENE.instantiate()
