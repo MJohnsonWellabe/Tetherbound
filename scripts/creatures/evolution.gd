@@ -141,7 +141,9 @@ static func storm_bear_ready() -> bool:
 	var height := float(visual.get("height", 0.0))
 	var source_height := float(SPECIES.placeholder("staticub").get("height", INF))
 	return is_finite(height) and height > maxf(source_height, 1.80) \
-		and ResourceLoader.exists(str(visual.get("model", "")))
+		and preload("res://scripts/creatures/creature_pose_candidates.gd").configured_for_species(
+			"stormursa", str(visual.get("model", "")),
+			["idle", "walk", "run", "attack", "charged", "hit", "faint", "rest", "swim", "fly_grip", "ride"])
 
 
 static func _has_ingredient(branches: Array, ingredient: String) -> bool:
