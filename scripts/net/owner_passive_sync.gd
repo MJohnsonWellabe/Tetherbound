@@ -1983,8 +1983,13 @@ func stormwood_finish_owner(cut: Dictionary) -> bool:
 func stormwood_cancel_owner() -> void:
 	# Before a saved ACK, a rejected choice can safely restore the original
 	# live instances. A saved choice stays on disk and reconciles on reconnect.
-	if not stormwood_owner.is_empty() and stormwood_owner.get("saved") != true:
+	if not stormwood_owner.is_empty() and stormwood_owner.get("saved") != true \
+		and stormwood_owner.scope == _scope():
+		# The original scoped undo uses the same guarded party/inventory loaders
+		# as admission. Permit only this synchronous restore while frozen.
+		stormwood_applying = true
 		_owner_undo(stormwood_owner.undo)
+		stormwood_applying = false
 	stormwood_owner.clear()
 	stormwood_saving = false
 	stormwood_applying = false
