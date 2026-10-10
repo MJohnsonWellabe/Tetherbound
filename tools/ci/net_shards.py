@@ -55,6 +55,7 @@ MEASURED_SECONDS = {
     "f20_ending": 620,
     "f20_home_diagnostic": 136,
     "f22_forced_break": 169,
+    "f28_masters": 600,
     "f32_node_contention": 136,
     "farm_race": 112,
     "fly": 127,
