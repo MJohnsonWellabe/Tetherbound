@@ -290,6 +290,15 @@ var _jump_speed: float = 0.0
 ## re-sweeps at least every `refresh_ticks` so floor contact never goes stale.
 const PHYSICS_LOD_PATH := "res://data/config/creature_physics_lod.json"
 static var _physics_lod_cache: Dictionary = {}
+## P2-020: a creature standing still joins grass_field.gd's clearing group
+## (CLEAR_GROUP / CLEAR_RADIUS_META) so the runtime grass thins and shortens
+## around its feet; it leaves the group as soon as it moves.
+const GRASS_CLEAR_PATH := "res://data/config/creature_grass_clear.json"
+const GRASS_CLEAR_GROUP := "grass_clear"
+const GRASS_CLEAR_RADIUS_META := "grass_clear_radius"
+static var _grass_clear_cache: Dictionary = {}
+var _grass_still_s := 0.0
+var _grass_clearing := false
 var rest_slide_skip_allowed := false
 var _rest_slide_at := Vector3.INF
 var _rest_slide_skipped := 0
@@ -1947,9 +1956,36 @@ func _physics_process(delta: float) -> void:
 	if _animator != null:
 		var moving := Vector3(velocity.x, 0.0, velocity.z).length()
 		_animator.call("tick", delta, moving, _speed)
+	_update_grass_clear(delta)
 
 	_requested = Vector3.ZERO
 	_requested_handling = 1.0
+
+
+static func grass_clear_config() -> Dictionary:
+	if _grass_clear_cache.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(GRASS_CLEAR_PATH))
+		_grass_clear_cache = parsed if parsed is Dictionary else {"enabled": false}
+	return _grass_clear_cache
+
+
+## Join the grass clearing once settled on the floor for `settle_s`; leave on
+## the first moving frame. The grass field re-reads the group when its ring
+## steps, so a creature that walks off releases its patch on the next step.
+func _update_grass_clear(delta: float) -> void:
+	var cfg := grass_clear_config()
+	var still := bool(cfg.get("enabled", false)) and is_on_floor() \
+			and Vector2(velocity.x, velocity.z).length() < float(cfg.get("still_speed", 0.15))
+	_grass_still_s = _grass_still_s + delta if still else 0.0
+	var want := still and _grass_still_s >= float(cfg.get("settle_s", 0.6))
+	if want == _grass_clearing:
+		return
+	_grass_clearing = want
+	if want:
+		set_meta(GRASS_CLEAR_RADIUS_META, _radius * float(cfg.get("radius_scale", 1.6)))
+		add_to_group(GRASS_CLEAR_GROUP)
+	else:
+		remove_from_group(GRASS_CLEAR_GROUP)
 
 
 static func physics_lod_config() -> Dictionary:
