@@ -239,7 +239,9 @@ func _run() -> void:
 		_check(ready_image != null and ready_image.save_png(ready_path) == OK, "rendered actual full-meter CombatHUD capture " + ready_path)
 		_captures.append(ready_path)
 	var ultimate_event: Dictionary = {}
-	if visual_override:
+	# The shipped gate or the disclosed override; the refusal branch below
+	# still proves a gated ultimate is refused whenever the gate is off.
+	if visual_override or bool(ULTIMATES.config().get("enabled", false)):
 		await _wait_ready()
 		await _button(JOY_BUTTON_RIGHT_SHOULDER, true)
 		_check(not bool(_manager.call("ultimate_armed")), "RB hold cannot arm an ultimate")
