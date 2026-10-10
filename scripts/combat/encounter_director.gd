@@ -479,7 +479,7 @@ func _freeze_bounty_instances(encounter_id: String, peer: int) -> void:
 	participant.foundation_bounty_instances = instances
 
 func _retain_research(encounter_id: String, peer: int, kind: String, species: String, serial: String, move_id: String = "", night: Variant = null, capture_card: Dictionary = {}, capture_offer: Dictionary = {}) -> bool:
-	if _session == null or not _is_host(): return true
+	if _session == null or (not _is_host() and not _owns_canonical_wild(encounter_id)): return true
 	var source := {"encounter_id": encounter_id, "peer": peer, "kind": kind, "species": species,
 		"source_id": JSON.stringify([_encounter_realm(), encounter_id, peer, kind, serial]).sha256_text(), "move_id": move_id, "night": night}
 	source.record = _encounter_host.call("record", encounter_id).duplicate(true)
@@ -497,9 +497,23 @@ func _retain_research(encounter_id: String, peer: int, kind: String, species: St
 	if result.get("durable") == true: _foundation_pending_sources.erase(source)
 	return result.get("durable") == true
 
+## Leaves refused only by a pending actor-vitals save, replayed once it lands.
+var _deferred_disengages: Dictionary = {}
+
+func _retry_deferred_disengages() -> void:
+	if _encounter_host == null: return
+	for encounter_id: String in _deferred_disengages.keys().duplicate():
+		if ordinary_actor_vitals_pending(encounter_id): continue
+		var waiting: Array = _deferred_disengages[encounter_id]
+		_deferred_disengages.erase(encounter_id)
+		for peer_id: int in waiting:
+			if (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id):
+				_host_commit_encounter({"kind": "disengage", "encounter_id": encounter_id}, peer_id)
+
 func _retry_research_sources() -> void:
-	if _session == null or not _is_host(): return
+	if _session == null: return
 	for source: Dictionary in _foundation_pending_sources.duplicate(true):
+		if not _is_host() and not _owns_canonical_wild(str(source.encounter_id)): continue
 		var result: Dictionary = _session.call("foundation_research_source", self, source.encounter_id, source.peer, source.kind, source.source_id, source.species, source.move_id, source.night)
 		if result.get("durable") == true: _foundation_pending_sources.erase(source)
 
@@ -2895,6 +2909,12 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 			and _tether_item_request_retained(encounter_id, peer_id, intent.request)):
 		var refusal := {"ok": false, "pending": false, "kind": kind, "peer": peer_id,
 			"code": "pending_vitals", "reason": "The original health change is still being saved.", "delta": {}, "encounter_id": encounter_id}
+		if kind == "disengage":
+			# A leaver's manager has already ended its fight and dropped the
+			# link, so nobody resends this. Keep the leave until the save lands.
+			var waiting: Array = _deferred_disengages.get(encounter_id, [])
+			if not waiting.has(peer_id): waiting.append(peer_id)
+			_deferred_disengages[encounter_id] = waiting
 		if kind == "tether_command" and intent.get("request") is Dictionary \
 			and preload("res://scripts/combat/tether_commands.gd").valid_intent(intent.request):
 			refusal["command_request"] = intent.request.duplicate(true)
@@ -3177,6 +3197,10 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 		return deny
 	var runtime := _shared_host_fight(id)
 	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+	var hosted := get_parent().get_node_or_null("StormwoodEncounterHub")
+	if hosted != null:
+		var round_body: Node3D = hosted.call("opponent_for_record", id)
+		if round_body != null: wild = round_body
 	if not is_instance_valid(wild): return deny
 	# A tracked trainer/boss actor binds lazily on first publication, which
 	# advances its actor generation. Bind it here, before the start freezes its
@@ -3204,12 +3228,27 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 		_body_radius(body), _body_radius(wild), host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(body, wild), frozen.move)
 	move["mastery_context"] = {"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
 		"session_id": _session.call("_altar_current_epoch")}
-	if uses_durable_trainer_rewards(id) and slot == "utility" \
+	# Heal Pulse is a health change, so it commits through the same saved
+	# vitals producer whether the fight is a trainer round or a wild fight.
+	if uses_saved_actor_vitals(id) and slot == "utility" \
 		and move.get("utility", {}).get("kind") == "heal" and move.get("utility", {}).get("scope") == "self":
 		return _stage_ordinary_self_heal(id, peer, intent, body, move, card)
 	var verdict: Dictionary = _encounter_host.call("authorize_move_start", intent, peer, owned,
 		binding, move, COMBAT_MANAGER.host_wind_profile(card), Time.get_ticks_msec())
-	if verdict.get("ok") == true: _host_after_encounter_change(id, peer)
+	if verdict.get("ok") == true:
+		# A self status utility (Hearten) takes effect when its start is accepted;
+		# the next landed hit reads it through self_utility_power and spends it.
+		if str(move.get("utility", {}).get("scope", "")) == "self":
+			var applied: bool = _encounter_host.call("apply_self_status_utility", id, str(binding.creature_uid), move_id, move,
+				body.global_position, float(card.get("hp", 0.0)), float(card.get("hp_max", card.get("max_hp", 0.0))),
+				"%s:%d:%d:self" % [id, peer, int(intent.get("action", 0))], Time.get_ticks_msec())
+			var effect: Dictionary = move.get("utility", {})
+			if applied and str(effect.get("kind", "")) == "movement_buff" and verdict.get("delta") is Dictionary:
+				# Each player drives their own creature, so the owner's manager
+				# applies the host-accepted Veil to that body's speed.
+				(verdict.delta as Dictionary)["utility_self_movement"] = {
+					"multiplier": float(effect.get("movement_multiplier", 1.0)), "duration_s": float(effect.get("duration", 0.0))}
+		_host_after_encounter_change(id, peer)
 	return verdict
 
 
@@ -3366,6 +3405,8 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		 "travel_seconds": float(launch.travel_seconds), "body_generation": int(launch.body_generation),
 		 "direction": (launch.to as Vector3) - (launch.from as Vector3)})
 	if rolled.is_empty(): return {}
+	if hp_before > float(rolled.get("hp", hp_before)):
+		_encounter_host.call("consume_next_hit", encounter_id, str(current_card.get("creature_uid", "")), Time.get_ticks_msec())
 	var resources: Dictionary = _encounter_host.call("credit_move_hit", encounter_id, peer_id,
 		int(intent.get("action", 0)), maxf(0.0, hp_before - float(rolled.get("hp", hp_before))), str(opponent.get("uid")), hp_before,
 		int(record.get("opponent", {}).get("body_generation", 0)), float(current_card.get("hp", 0.0)))
@@ -6057,6 +6098,7 @@ func _process(delta: float) -> void:
 		_catch_waiting_for_owner = null
 		_resolve_catch(waiting)
 	_retry_ordinary_actor_vitals()
+	_retry_deferred_disengages()
 	_tether_item_retry_left -= delta
 	if _tether_item_retry_left <= 0.0:
 		_tether_item_retry_left = 0.5
@@ -6787,10 +6829,10 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	_retain_research(str(rec["encounter_id"]), _local_peer_id(), "sight", str(opponent.species_id), "engage")
 	if preload("res://scripts/combat/tether_commands.gd").enabled() \
 		and MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true:
-		# Complete existing command admission before the first saved-vitals
-		# original freezes this record. Late admission changes its exact seq.
-		# Without saved vitals there is no original to freeze; commands bind
-		# on the next encounter change as before.
+		# Canonical saved actor vitals need command admission before their
+		# original encounter record freezes; this eager application is ON-only.
+		# OFF still retains ordinary trainer reward originals and owner-save
+		# barriers. Guest pose admission fences both paths independently.
 		_host_after_encounter_change(str(rec["encounter_id"]))
 	if _can_encounter_rpc():
 		for peer_id: int in multiplayer.get_peers():
@@ -7620,6 +7662,20 @@ func _cleanup_shared_guest_proxy() -> void:
 ## on `Game.pending_catch` — exactly one, never saved, not storage — and the
 ## Game autoload's `_watch_pending_catch()` opens the Team screen's release
 ## ceremony on it. Play never resumes with six creatures owned.
+## Before the manager publishes completion, settle this local canonical catch
+## through the existing owner BOOL/ACK. Remote guest and legacy paths retain
+## their existing producer; only this exact host runtime can authorize this.
+func complete_local_catch_before_exploration(id: String, kept: RefCounted) -> bool:
+	if not _owns_canonical_wild(id): return true
+	if kept == null or not kept.has_meta("foundation_capture_traits") or _session == null \
+		or _session.call("is_host") != true: return false
+	var record: Dictionary = _encounter_host.call("record", id)
+	if record.get("phase") != "done" or record.get("opponent", {}).get("card", {}).get("uid") != kept.get("uid"):
+		return false
+	var captures := _session.get_node_or_null(^"FoundationComposition/Captures")
+	return captures != null and captures.call("complete_local_catch", kept) == true
+
+
 func _resolve_catch(kept: RefCounted) -> void:
 	if kept == null:
 		push_error("combat ended as a catch with nothing caught")
@@ -9224,6 +9280,11 @@ func _f22_visible_observation(wild: Node3D) -> Dictionary:
 func _canonical_wild_start_state(wild: Node3D) -> Dictionary:
 	var disabled := {"enabled": false, "ready": false}
 	if (MATH.config().get("actor_vitals", {}) as Dictionary).get("runtime_enabled") != true:
+		return disabled
+	# A guest's unreplicated local wild has no host-owned runtime to convert.
+	# Keep that existing fight path; host/shared wilds still require canonical
+	# ownership and the prepared writers below, with no refused-host fallback.
+	if _session != null and _session.call("is_active") == true and _session.call("is_host") != true:
 		return disabled
 	var essence: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/essence.json")) \
 		if FileAccess.file_exists("res://data/config/essence.json") else null

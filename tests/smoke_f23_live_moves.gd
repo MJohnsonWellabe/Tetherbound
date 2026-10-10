@@ -100,6 +100,8 @@ func _body(script: Script, species: String, at: Vector3) -> Node3D:
 	body.set_physics_process(false)
 	return body
 
+var _shipped_actor_vitals: Variant = null
+
 func _run() -> void:
 	_saved_library_enabled = bool(MOVE_LIBRARY.config().get("enabled", false))
 	_prove_library_arrival = OS.get_cmdline_user_args().has("--prove-library-arrival")
@@ -121,7 +123,9 @@ func _run() -> void:
 		var candidate := _saved_visual_config.duplicate(true)
 		candidate.enabled = true
 		ULTIMATES._config = candidate
-	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "actor_vitals gate must remain off")
+	# The shipped actor_vitals gate is read once; this proof never overrides it.
+	_shipped_actor_vitals = MATH.config().get("actor_vitals", {}).get("runtime_enabled")
+	_check(_shipped_actor_vitals is bool, "actor_vitals gate is a tracked shipped flag")
 	_check(_capture_dir.is_empty() or DisplayServer.get_name() != "headless", "render capture requires an actual display")
 	if not _errors.is_empty():
 		_finish()
@@ -194,6 +198,18 @@ func _run() -> void:
 		var quick := await _tap_move(JOY_BUTTON_X, "quick")
 		_check(not quick.is_empty(), "physical quick %d did not land" % hit)
 		if quick.is_empty(): break
+		if hit == 2 and bool(ULTIMATES.config().get("enabled", false)):
+			# F23#5: a part-filled meter cannot fire. The same host ingress the
+			# gated check below uses refuses it without touching the resources.
+			await _wait_ready()
+			var partial: Dictionary = _host.move_resource_snapshot(_id, 1, _creature.uid).duplicate(true)
+			var row_before: Dictionary = _host.record(_id).participants[1].move_resources[_creature.uid].duplicate(true)
+			var early: Dictionary = _director.call("_host_move_start", {"encounter_id": _id, "slot": "ultimate", "action": 98}, 1)
+			_check(float(partial.ultimate_meter) > 0.0 and float(partial.ultimate_meter) < 100.0,
+				"landed hits part-fill the Ultimate meter")
+			_check(early.get("code") == "ultimate_not_ready", "a part-filled meter refuses the ultimate at host ingress")
+			_check(_host.record(_id).participants[1].move_resources[_creature.uid] == row_before and _host.move_commit(_id, 1, 98).is_empty(),
+				"the refused early ultimate spends nothing and commits no action")
 		if slot_inputs and hit == 4:
 			var charged := await _tap_move(JOY_BUTTON_Y, "charged")
 			_check(not charged.is_empty(), "ordinary physical Y tap completes its charged move after release")
@@ -235,7 +251,9 @@ func _run() -> void:
 		_check(ready_image != null and ready_image.save_png(ready_path) == OK, "rendered actual full-meter CombatHUD capture " + ready_path)
 		_captures.append(ready_path)
 	var ultimate_event: Dictionary = {}
-	if visual_override:
+	# The shipped gate or the disclosed override; the refusal branch below
+	# still proves a gated ultimate is refused whenever the gate is off.
+	if visual_override or bool(ULTIMATES.config().get("enabled", false)):
 		await _wait_ready()
 		await _button(JOY_BUTTON_RIGHT_SHOULDER, true)
 		_check(not bool(_manager.call("ultimate_armed")), "RB hold cannot arm an ultimate")
@@ -348,7 +366,7 @@ func _run() -> void:
 			_check(float(_impacts.back().damage) > 0.0 and float(_impacts.back().damage) <= float(_enemy.max_hp) * 0.2 + 0.001,
 				"the upgraded signature commits a real positive HP debit within the unchanged named cap")
 			await create_timer(2.6).timeout
-	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "proof must not activate actor_vitals")
+	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == _shipped_actor_vitals, "proof must not change actor_vitals")
 	while _pending_library_captures > 0: await process_frame
 	_finish()
 
@@ -440,7 +458,11 @@ func _setup() -> void:
 	var target: Vector3 = _wild.call("centre")
 	var rec: Dictionary = _host.open(1, "meadows", "trainer", {"species_id": "staticub",
 		"creature_uid": _enemy.uid, "hp": _enemy.hp, "hp_max": _enemy.max_hp,
-		"position": [target.x, target.y, target.z]}, str(_creature.uid), DATA.CHARACTER)
+		"position": [target.x, target.y, target.z],
+		# A trainer-owned opponent record carries its card and body generation,
+		# as `encounter_director.gd` opens one; tracked arrivals check both.
+		"card": preload("res://scripts/save/water_capture_codec.gd").encode(_enemy),
+		"body_generation": 1}, str(_creature.uid), DATA.CHARACTER)
 	_id = rec.encounter_id
 	_director.set("_encounter", rec)
 	_manager.call("bind_encounter", _director, _id, "trainer")

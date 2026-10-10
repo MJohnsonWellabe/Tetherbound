@@ -2,8 +2,8 @@
   "_comment": "Combat tuning. ALL of it is TUNABLE and none of it is a mechanic. M2 exists to answer one question: is the fight worth repeating? The expected feedback is 'too slow', 'too spongy', 'the charged attack isn't worth waiting for', 'I keep missing' \u2014 every one of those has to be answerable by editing this file.",
   "_comment_model": "Combat is PILOTED, not commanded: see docs/decisions/D07-combat-is-piloted-not-commanded.md. The player takes over their creature, both fighters move inside a bounded arena, and attacks are aimed and can miss.",
   "actor_vitals": {
-    "_scope": "Canonical admitted actor/prepared world/owner-save pipeline. Remains disabled until actual solo/local/guest callers and failure/rejoin paths are integrated and verified.",
-    "runtime_enabled": false
+    "_scope": "Canonical admitted actor/prepared world/owner-save pipeline for solo, local and guest callers, including failure/rejoin paths and Stormwood hosted trainers.",
+    "runtime_enabled": true
   },
   "utility_limits": {
     "_scope": "Host encounter action receipts; fail closed at the bound without evicting replay history.",
@@ -12,7 +12,7 @@
   "move_commit": {
     "_scope": "Host-owned named equipped move starts and per-creature encounter resources. Actual strike arrival must match the retained action and body lifetime.",
     "runtime_enabled": true,
-    "live_moves": ["snare", "ultimate_ground_current"]
+    "live_moves": ["snare", "slow_field", "shove", "quake_ring", "sap", "bramble_trap", "hearten", "veil", "heal_pulse", "dash_strike", "ultimate_abyssal_guardian", "ultimate_air_charger", "ultimate_air_current", "ultimate_air_diver", "ultimate_air_wall", "ultimate_ashtusk", "ultimate_cannonback", "ultimate_dark_diver", "ultimate_electric_charger", "ultimate_electric_current", "ultimate_electric_diver", "ultimate_electric_wall", "ultimate_fire_wall", "ultimate_fulgocobra", "ultimate_galewisp", "ultimate_ground_charger", "ultimate_ground_current", "ultimate_ground_diver", "ultimate_ground_wall", "ultimate_ice_current", "ultimate_ripplet", "ultimate_solmane", "ultimate_stormcapra", "ultimate_stormursa", "ultimate_terrapup", "ultimate_tuskroot", "ultimate_veridian", "ultimate_water_charger", "ultimate_water_current", "ultimate_water_diver", "ultimate_water_wall"]
   },
   "ultimate": {
     "_scope": "Per-creature encounter meter; only host-resolved positive HP debits credit it.",

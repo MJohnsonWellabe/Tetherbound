@@ -809,6 +809,7 @@ func _tick_combat(delta: float) -> void:
 	if not is_alive() or _opponent == null:
 		return
 	_utility_clock_ms += delta * 1000.0
+	_tick_landed_traps()
 	_ultimate_reaction_left = maxf(0.0, _ultimate_reaction_left - delta)
 	# An already committed protected heavy still runs. Only this opponent's
 	# issuance/movement pauses; other hosted opponents keep their own clocks.
@@ -913,15 +914,46 @@ func named_combat_target() -> bool:
 
 ## The one host HP writer calls this after a positive landed debit. Utility
 ## receipts and expiry use this opponent's clock, which pauses with hitstop.
+## Target utilities this body consumes from a host-landed hit. Self effects
+## (heal, movement_buff, next_hit_buff) and the caster's own dash_strike
+## advance are applied to the caster, never here.
+const LANDED_TARGET_KINDS := ["root", "slow_field", "push", "quake_ring", "damage_taken_debuff", "trap"]
+
 func apply_landed_utility(move: Dictionary, context: Dictionary) -> bool:
-	if move.get("move_id") != "snare" or not engaged or not is_alive(): return false
+	var kind := str(move.get("utility", {}).get("kind", ""))
+	if kind not in LANDED_TARGET_KINDS or not engaged or not is_alive(): return false
 	if _landed_utility_state.is_empty():
 		_landed_utility_state = UTILITY_EFFECTS.empty_state(str(context.get("encounter_id", "")), int(context.get("generation", 0)))
-	var staged := UTILITY_EFFECTS.stage_application(_landed_utility_state, "snare", move,
+	var staged := UTILITY_EFFECTS.stage_application(_landed_utility_state, str(move.get("move_id", "")), move,
 		context, int(_utility_clock_ms), int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)))
 	if staged.get("ok") != true: return false
 	_landed_utility_state = staged.state
+	# Push and quake ring move this body along the existing collision-aware
+	# burst, away from the caster: the receipt carries the host-sized distance.
+	var push := float((staged.receipt as Dictionary).get("requested_push_metres", 0.0))
+	if push > 0.0:
+		var away: Vector3 = global_position - (context.get("source_position", global_position) as Vector3)
+		begin_combat_burst(away, push, clampf(push * 0.12, 0.12, 0.4))
 	return true
+
+
+## A landed Bramble Trap roots this body once, when it walks into the armed
+## field. Only this body's own staged state is read, so the host decides.
+func _tick_landed_traps() -> void:
+	if _landed_utility_state.is_empty() or instance == null: return
+	var uid := str(instance.get("uid"))
+	for source_uid: String in (_landed_utility_state.get("fields", {}) as Dictionary).keys():
+		var staged := UTILITY_EFFECTS.stage_trap_trigger(_landed_utility_state, source_uid, uid,
+			global_position, true, float(instance.get("hp")), named_combat_target() if has_method("named_combat_target") else false,
+			int(_utility_clock_ms))
+		if staged.get("ok") == true: _landed_utility_state = staged.state
+
+
+## Damage multiplier this body takes from a landed Sap (damage_taken_debuff).
+## combat_manager.gd::host_roll_damage reads it per striker; 1.0 when none.
+func utility_damage_multiplier(_source_uid: String = "") -> float:
+	if _landed_utility_state.is_empty() or instance == null: return 1.0
+	return UTILITY_EFFECTS.damage_taken_multiplier(_landed_utility_state, str(instance.get("uid")), int(_utility_clock_ms))
 
 
 func utility_movement_multiplier() -> float:

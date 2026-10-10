@@ -3359,6 +3359,14 @@ func _step_stormwood_hosted_raw_strike(args: Dictionary) -> Dictionary:
 	# Raw fixture requests share the sender's monotonic action stream, so a
 	# later real button press is not accidentally an old fixture action id.
 	hub.set("_action", maxi(int(hub.get("_action")), int(payload.action)))
+	if args.get("with_start", false) == true:
+		# With actor vitals on, the host judges a strike only against its own
+		# accepted move start for that action (stormwood_hosted_trainer.gd
+		# move_start), so send that start first and wait out its wind-up.
+		session.call("request_stormwood_encounter", {"kind": "move_start", "trainer_id": trainer_id,
+			"encounter_id": id, "slot": payload.slot, "action": payload.action})
+		for i in maxi(0, int(args.get("start_settle", 66))):
+			await physics_frame
 	session.call("request_stormwood_encounter", payload)
 	for i in maxi(0, int(args.get("settle", 90))):
 		await physics_frame
@@ -3437,9 +3445,17 @@ func _step_stormwood_hosted_quick(args: Dictionary) -> Dictionary:
 				await physics_frame
 				if hub != null:
 					action_observed = maxi(action_observed, int(hub.get("_action")))
+			var client_state := ""
+			if action_observed <= action_before:
+				# Read-only client view for a failed press: what held the input.
+				client_state = "; client=%s" % str({"awaiting_host": manager.get("_move_awaiting_host"),
+					"burst_awaiting_host": manager.get("_burst_awaiting_host"), "action": manager.get("_action"),
+					"encounter_id": manager.get("_encounter_id"), "fighting": manager.call("is_fighting"),
+					"input_available": manager.call("combat_input_available"),
+					"local_record": hub.get("_local_record") if hub != null else null})
 			return {"verdict": "PASS" if action_observed > action_before else "FAIL",
-				"detail": "real hosted combat_quick input; observed action %d -> %d; retained refusal (may predate input)=%s"
-					% [action_before, action_observed, str(manager.get("last_encounter_refusal"))]}
+				"detail": "real hosted combat_quick input; observed action %d -> %d; retained refusal (may predate input)=%s%s"
+					% [action_before, action_observed, str(manager.get("last_encounter_refusal")), client_state]}
 		await physics_frame
 	return {"verdict": "FAIL", "detail": "combat_quick never became ready; did not bypass cooldown"}
 

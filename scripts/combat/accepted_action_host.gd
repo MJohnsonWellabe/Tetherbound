@@ -313,7 +313,7 @@ func begin_move_action_resolution(id: String, peer: int, action: int,
 
 
 ## Record only the debit produced by the existing damage/body writer and
-## committed by set_opponent_hp. A mismatch stays pending for reconciliation.
+## committed by set_opponent_hp. A mismatch returns false; the caller abandons it.
 func record_move_action_outcome(id: String, peer: int, action_id: String,
 		rolled: Dictionary, verdict: Dictionary) -> bool:
 	var entry: Dictionary = _actions(id, peer).get(action_id, {})
@@ -348,6 +348,14 @@ func publish_move_action_terminal(id: String, peer: int, action_id: String, next
 	_cancel_admitted(before)
 	_retain_originals(id, before)
 	return true
+
+
+## A host that refuses after begin_move_action_resolution releases the
+## publication, so one refused arrival cannot fence every later action.
+func abandon_move_action_resolution(id: String, peer: int, action_id: String) -> void:
+	var entry: Dictionary = _actions(id, peer).get(action_id, {})
+	if entry.get("phase") in ["resolving", "body_publication_pending"]:
+		entry["phase"] = "cancelled"
 
 
 func move_action_publication_pending(id: String) -> bool:
