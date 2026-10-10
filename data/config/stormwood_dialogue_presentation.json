@@ -1,6 +1,6 @@
 {
   "_comment": "P2-081 trainer conversations use enabled and remain off pending native acceptance. P2-082 NPC portraits and P2-084 NPC openings use independent gates accepted by the 96-frame people comparison and fresh blind review. No encounter, reward, input, camera or progression changes.",
-  "enabled": false,
+  "enabled": true,
   "npc_portraits": {
     "enabled": true,
     "_comment": "P2-082: installed plates match all eleven unchanged world speaker profiles, including side conversations and generated Wen/Bryn panels. Native paired identity review passed; see fixes/P2-082/people-blind-verdict.md.",
