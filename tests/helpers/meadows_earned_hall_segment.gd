@@ -473,6 +473,49 @@ func _camp_care() -> bool:
 	return await _walk_ground(resume, 3.0)
 
 
+## Ordinary wilds on this route take the same reader as the named fights. The
+## inherited campaign pilot stalled on a road wild (Hall proof 38032275731:
+## 0 hits in its 7200-frame budget, charged refused for Energy). Loss
+## recovery and the win verdict are the inherited ones, unchanged.
+func _fight() -> bool:
+	if bool(_director.call("trainer_battle_active")) or _fight_enemy == null:
+		return _fail("An unexpected trainer or unobserved encounter interrupted the Hall route")
+	var pilot := HallReader.new(_rig)
+	while _fighting() and within_battle_deadline(Engine.get_physics_frames() - _fight_started):
+		if _combat.call("enemy") != _fight_enemy or bool(_director.call("trainer_battle_active")):
+			pilot.release_all()
+			return _fail("The admitted wild identity changed during the input fight")
+		var ally := _director.call("ally_body") as Node3D
+		var foe := _combat.call("enemy_body") as Node3D
+		if is_instance_valid(ally) and is_instance_valid(foe):
+			pilot.step(_combat, ally, foe)
+		else:
+			pilot.release_all()
+		await _tree.physics_frame
+	pilot.release_all()
+	if not _fighting() and str(_combat.call("outcome")) == "lost" and _wild_losses < MAX_WILD_LOSSES:
+		_wild_losses += 1
+		_receipt("wild_loss_recovered", {"number": _wild_losses, "hits": _fight_hits,
+			"frames": Engine.get_physics_frames() - _fight_started, "party": _party_hp()})
+		for _frame in 180:
+			if INPUT_OWNER.current(_tree) == null:
+				break
+			await _tree.physics_frame
+		return await _prepare()
+	if not within_battle_deadline(Engine.get_physics_frames() - _fight_started) \
+			or _fighting() or str(_combat.call("outcome")) != "won" or _fight_hits <= 0:
+		return _fail("Real wild combat did not win with landed strikes inside its unchanged physics budget (outcome '%s', fighting %s, hits %d, frames %d, presses %s, party %s)" % [
+			str(_combat.call("outcome")), _fighting(), _fight_hits, Engine.get_physics_frames() - _fight_started,
+			JSON.stringify(pilot.presses), _party_hp()])
+	_receipt("wild_victory", {"hits": _fight_hits, "presses": pilot.presses.duplicate(),
+		"enemy_id": _fight_enemy.get_instance_id(), "frames": Engine.get_physics_frames() - _fight_started})
+	for _frame in 120:
+		if INPUT_OWNER.current(_tree) == null:
+			return true
+		await _tree.physics_frame
+	return _fail("The actual wild victory did not release world input")
+
+
 func _walk_marker(id: String, budget: int) -> bool:
 	if not bool(_hold.call("has_marker", id)):
 		return _fail("The actual Hall route marker is missing: " + id)
