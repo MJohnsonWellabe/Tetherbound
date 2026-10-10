@@ -1968,7 +1968,7 @@ func _rest_slide_skippable() -> bool:
 		return false
 	return _jump_speed <= 0.0 and _combat_burst_time_left <= 0.0 and not _combat_burst_just_finished \
 		and _requested.is_zero_approx() and _impulse.is_zero_approx() \
-		and is_zero_approx(velocity.x) and is_zero_approx(velocity.z)
+		and is_zero_approx(velocity.x) and is_zero_approx(velocity.z) and velocity.y <= 0.0
 
 
 ## Arms the skip only after a real sweep that found the body resting: on the
