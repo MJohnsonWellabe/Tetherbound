@@ -258,6 +258,19 @@ func _run() -> void:
 		"unlocking Fly leaves the counterweight gate barrier closed")
 	_check(not bool(_flags.call("has", UPPER_FLAG)), "unlocking Fly does not unlock the upper route")
 
+	# F06#4 (`--reload`): a production save and Load here, with Fly unlocked
+	# and the upper route sealed; the same five and every closed gate must come
+	# back, and the Fly legs below then run on the rebuilt world.
+	if OS.get_cmdline_user_args().has("--reload"):
+		await _reload_world()
+		if _finished:
+			return
+		barrier = _gate_barrier(GATE_ID)
+		_check(barrier != null and not _barrier_disabled(barrier),
+			"(reload) the counterweight gate barrier is closed after the reload")
+		_check(not bool(_flags.call("has", UPPER_FLAG)) and bool(_flags.call("has", FLY_FLAG)),
+			"(reload) Fly stays unlocked and the upper route stays sealed")
+
 	var stand: Vector3 = await _find_aerie_stand()
 	if _finished:
 		return
@@ -301,6 +314,55 @@ func _run() -> void:
 	_check(not bool(_flags.call("has", UPPER_FLAG)), "end of run: the upper route is still locked")
 	_check(barrier != null and not _barrier_disabled(barrier), "end of run: the counterweight gate is still closed")
 	_report()
+
+
+## Production save_game(0) to a scratch save dir, the live world freed, flags
+## and party emptied, load_game(0) and a fresh Cloudreach scene; the trainer,
+## rig and FlyController are rebound and the no-fly volumes re-registered.
+func _reload_world() -> void:
+	_game.set("save_system", preload("res://scripts/save/save_game.gd").new(
+		"user://closed_gate_reload_%d_%d" % [OS.get_process_id(), Time.get_ticks_usec()]))
+	var uids := _party_uids()
+	var flags_before: Array = (_flags.call("all_set") as Array).duplicate()
+	flags_before.sort()
+	if not _expect(bool(_game.call("save_game", 0)), "(reload) production save_game(0)"):
+		return
+	_world.queue_free()
+	for _frame in 4:
+		await process_frame
+	_flags.call("load_data", {})
+	(_game.get("party") as RefCounted).call("clear")
+	if not _expect(bool(_game.call("load_game", 0)), "(reload) production load_game(0)"):
+		return
+	_flags = _game.get("progression")
+	var flags_after: Array = (_flags.call("all_set") as Array).duplicate()
+	flags_after.sort()
+	_check(flags_after == flags_before, "(reload) the exact flag set came back (%d flags)" % flags_after.size())
+	_check(_party_uids() == uids, "(reload) the same five creatures came back, in order")
+	_world = SCENE.instantiate()
+	root.add_child(_world)
+	current_scene = _world
+	for _frame in 3600:
+		await physics_frame
+		if bool(_world.call("shell_build_complete")):
+			break
+	if not _expect(bool(_world.call("shell_build_complete")), "(reload) the rebuilt Cloudreach shell finished building"):
+		return
+	_player = _world.get_node(^"Player") as CharacterBody3D
+	_rig = _world.get_node(^"CameraRig")
+	_fly = _player.get("fly_controller")
+	if not _expect(_fly != null, "(reload) the rebuilt trainer has a FlyController"):
+		return
+	for _frame in 900:
+		if not _registered(UPPER_ID).is_empty() and not _registered(SUMMIT_ID).is_empty():
+			break
+		await physics_frame
+	await _frames(30)
+	_fly.connect("denied", _on_denied)
+	_fly.connect("recovered", _on_recovered)
+	_fly.connect("landed", _on_landed)
+	_check(not _registered(UPPER_ID).is_empty() and not _registered(SUMMIT_ID).is_empty(),
+		"(reload) the upper and summit no-fly seals are registered again")
 
 
 # --- (d) + (c): locked launch, then the on-foot gate ----------------------------
