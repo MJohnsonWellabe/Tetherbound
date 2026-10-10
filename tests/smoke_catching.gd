@@ -43,9 +43,6 @@ func _init() -> void:
 func _run() -> void:
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
-	# Mount the same active realm root that Game and Session inspect for
-	# capture admission; adding a child alone leaves current_scene unset.
-	current_scene = _world
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
