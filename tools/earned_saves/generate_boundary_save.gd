@@ -2,7 +2,10 @@ extends "res://tools/earned_saves/earned_chain_runner.gd"
 
 ## Writes one committed generated boundary profile as an ordinary production
 ## save directory, for witnesses that load a `<dir>/save/` slot through the
-## title (e.g. tests/smoke_cloudreach_continuous.gd --from-save=, slot 1).
+## title (e.g. tests/smoke_cloudreach_continuous.gd --from-save=). The slot is
+## the one the generated world's retained journal is bound to (0): saving a
+## live world under another slot would rebind journal ownership, which
+## save_game.gd refuses by design.
 ##
 ## The profile is applied by the runner's own disclosed generated-fixture
 ## path (`_generate_boundary_fixture`): the same template bytes, provenance
@@ -14,12 +17,12 @@ extends "res://tools/earned_saves/earned_chain_runner.gd"
 ##
 ## USAGE
 ##   godot --headless --path . --script tools/earned_saves/generate_boundary_save.gd -- \
-##     --profile=cloudreach --enter=cloudreach:cloudreach --slot=1 --out=<absent dir>
+##     --profile=cloudreach --enter=cloudreach:cloudreach --slot=0 --out=<absent dir>
 ## Writes <out>/save/ and <out>/PROVENANCE.json; exit 0 on success.
 
 const PORTAL := preload("res://tests/helpers/f49_portal_travel.gd")
 var _out := ""
-var _slot := 1
+var _slot := 0
 var _enter := ""
 
 
