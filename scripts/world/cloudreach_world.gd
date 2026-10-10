@@ -3286,9 +3286,12 @@ func _build_bridge_section(bridge: Node3D, spec: Dictionary, a: Vector3, b: Vect
 	# BRIDGE_KIT's thin floor modules) sits only ~0.045 m proud, already
 	# inside tolerance, so it is left on the authored line.
 	var deck_lift := _segment_basis(a, b).y * (0.2 if stone_bridge else 0.0)
-	_segment_box(bridge, "WalkableDeck", a + deck_lift, b + deck_lift, width, 0.42,
+	var deck := _segment_box(bridge, "WalkableDeck", a + deck_lift, b + deck_lift, width, 0.42,
 		_materials["stone"] if stone_bridge else _materials["wood"], true)
 	if not stone_bridge:
+		# The installed floor modules own the timber surface and its UVs. Keep
+		# the continuous walking collider without drawing its box as a slab.
+		(deck.get_child(0) as MeshInstance3D).visible = false
 		BRIDGE_KIT.build_deck(bridge,a,b,width)
 	var plank_mesh := BoxMesh.new()
 	plank_mesh.size = Vector3(width, 0.16, length / float(count) * 0.86)

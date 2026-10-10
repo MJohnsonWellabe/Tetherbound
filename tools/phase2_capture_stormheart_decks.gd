@@ -8,6 +8,8 @@ extends "res://tools/capture_stormwood_f10_matrix.gd"
 var _deck_height := NAN
 var _deck_floor_hit := {}
 var _expected_floor := ""
+const DECK_BOOTSTRAP := preload("res://tools/lookdev_capture_bootstrap.gd")
+const DECK_GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 const HERO_CONFIG := "res://data/config/stormheart_presentation.json"
 var _hero_original := PackedByteArray()
 var _hero_candidate := false
@@ -20,6 +22,15 @@ var _probes := {}
 
 
 func _run() -> void:
+	# Named visual captures verify the actual renderer and production device
+	# preference before the world mounts; legacy invocations stay unchanged.
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_phase_graphics_capture = DECK_BOOTSTRAP.prepare(self, "--out=")
+			if _phase_graphics_capture.is_empty():
+				quit(1)
+				return
+			break
 	# Reuse the exterior matrix's hero-only overlay. This explicit preview
 	# changes no shipping flag or regional material and restores exact bytes.
 	_hero_candidate = OS.get_cmdline_user_args().has("--f41-candidate")
@@ -85,9 +96,21 @@ func _restore_hero_config() -> void:
 
 
 func _capture(frame_id: String, description: String, full_size: bool, extra: Dictionary = {}) -> void:
-	await super._capture(frame_id, description, full_size, extra.merged({
-		"candidate_preview": _hero_candidate, "source_commit": _hero_source,
-		"stormheart_config_sha256": _hero_config_sha256}, true))
+	var provenance := {"candidate_preview": _hero_candidate,
+		"source_commit": _hero_source, "stormheart_config_sha256": _hero_config_sha256}
+	if not _phase_graphics_capture.is_empty():
+		if DECK_GRAPHICS.selected() != str(_phase_graphics_capture.preset) \
+				or RenderingServer.get_current_rendering_method() != str(_phase_graphics_capture.renderer):
+			_failures.append(frame_id + ": actual renderer or device preset changed")
+			return
+		provenance["graphics_capture"] = _phase_graphics_capture.merged({
+			"observed_preset": DECK_GRAPHICS.selected(),
+			"observed_values": DECK_GRAPHICS.values()}, true)
+	var captured_before := _frames.size()
+	await super._capture(frame_id, description, full_size, extra.merged(provenance, true))
+	if not _phase_graphics_capture.is_empty() and _frames.size() > captured_before \
+			and _frames.back().get("size", []) != _phase_graphics_capture.resolution:
+		_failures.append(frame_id + ": raster differs from declared native preset")
 
 
 func _done() -> void:
