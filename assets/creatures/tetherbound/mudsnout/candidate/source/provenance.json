@@ -1,0 +1,105 @@
+{
+  "subject": "mudsnout",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Disabled asset-local review candidate; ordinary species selection remains unchanged",
+  "reference": "assets/creatures/tetherbound/mudsnout/reference/native-standing-v1.png",
+  "reference_author": "Built-in imagegen, owner-authorized original character reference",
+  "identity_reference": "assets/creatures/tetherbound/mudsnout/reference/three_quarter.png",
+  "reference_prompt": "Draft an original Tetherbound Mudsnout creature reference using the supplied established character image as identity reference. ONE full-body three-quarter studio view of the same appealing stout brown woodland boar: broad friendly dark eyes, tan/brown round muzzle with two visible nostrils, two short ivory tusks curving outward, upright rounded boar ears with brown interiors, chunky short legs with divided dark hooves, a short tufted tail, sculpted brown fur and grey-brown earth clods with small ochre leaf-like plates along the shoulders and back. Preserve the recognizable face, stout proportions, mottled natural brown palette and designed dorsal clod ridge. Neutral standing quadruped with four separate grounded feet, visible shoulder/elbow and hip/knee placement, space between legs, head facing three-quarter camera without twist, tail clearly separate and inside frame. Clean riggable anatomy and broad integrated fur masses, not thin strands or floating pieces. No human, text, ruler, clothing, props, equipment, harness, red markings, extra limbs, particles, dramatic pose or background environment. Entire body and tail inside a light-grey studio frame with neutral soft lighting. Render a clean detailed stylized game creature, not a photorealistic pig; keep the warm original personality.",
+  "reference_inspection": {
+    "identity": "Stout brown boar, broad tan muzzle, two ivory tusks, dark expressive eyes, earth-clod/ochre dorsal ridge and tufted tail retained",
+    "riggability": "Four separated grounded hooves; distinct shoulders/hips and tail; no hanging whisker rods",
+    "limits": "One reference view does not establish reverse anatomy, topology, rig or native art acceptance"
+  },
+  "generation": {
+    "task_id": "01a125e0-ce9f-75bd-a1fa-44e04971b211",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "night": "2026-10-09",
+    "night_submission_index": 4,
+    "observed_credit_cost": 30,
+    "new_submissions_for_this_revision": 1
+  },
+  "rights": {
+    "basis": "Original drafted reference based on owner-held Mudsnout identity; existing owner-authorized paid Meshy account under RD-26; no third-party character input, purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models",
+    "terms_checked": "2026-10-10"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "geometry": "23868 input triangles; UV-loop-preserving weld retains albedo, normal and roughness maps and the generated silhouette.",
+    "skin": "15 fitted anatomical joints: torso/head, upper/lower legs/feet and two tail joints. Local surface diffusion, four normalized influences and zero unweighted vertices.",
+    "material": "Organic body is dielectric: Metallic=0, emission inputs removed and emission strength=0. Albedo/normal/roughness maps and UVs retained.",
+    "colourway": "Initial native preview resolved the installed Mudsnout vivid repaint against incompatible new UVs. Disabled recipe uses the existing colourway_source_species seam with mudsnout_native_review, a texture lookup namespace only, to retain candidate textures. No roster species or gameplay code added; new UV-specific variants remain OPEN.",
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "height_m": 2.0,
+    "bones": 15,
+    "unweighted_vertices": 0,
+    "vertices": 11939,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 stable Windows",
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "raster": [
+      1920,
+      1080
+    ],
+    "before_height_m": 1.99999988079071,
+    "candidate_height_m": 2.0,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 native Low samples across hit/faint/swim/fly_grip/ride included in the single Low sheet; native front/reverse ruler samples retained outside Git",
+    "world": "Production Meadows scene and CameraRig with matched stage, seed and pose sampling; presentation fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "skin_weights": "Zero unweighted vertices; not independent deformation approval",
+    "full_rig_animation": "OPEN: terminal flank contact, foot locking and ordinary gameplay paths require review",
+    "colour_variants": "OPEN: generated UV layout requires its own approved repaints",
+    "independent_art_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Terminal faint/rest floor contact and appealing deformation require review",
+    "Neutral procedural clips do not certify ordinary swim, flight/grip, rider contact or carrying",
+    "Fixtures do not prove earned fights or traversal",
+    "Candidate remains OFF until the full F36 art bar passes"
+  ]
+}
