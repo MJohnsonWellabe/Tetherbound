@@ -123,35 +123,6 @@
       "radius_m": 3.3
     }
   ],
-  "horizon_layers": {
-    "FarRanges": {
-      "frequency": 1.45,
-      "octaves": 3,
-      "ridged": false,
-      "massif_frequency": 0.32,
-      "hero_width_deg": 11,
-      "hero_lift": 0.28,
-      "sharpness": 1.1,
-      "segments": 512,
-      "rows": 24,
-      "forest": "#526c64",
-      "rock": "#687b90",
-      "snow": "#cad8e5",
-      "smooth_normals": true,
-      "colour_variation": 0.018
-    },
-    "Foothills": {
-      "frequency": 1.8,
-      "octaves": 2,
-      "massif_frequency": 0.32,
-      "segments": 512,
-      "rows": 12,
-      "forest": "#425f50",
-      "rock": "#596e60",
-      "smooth_normals": true,
-      "colour_variation": 0.018
-    }
-  },
   "placements": [
     {
       "id": "shop_bench",
