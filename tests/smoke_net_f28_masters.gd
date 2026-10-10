@@ -99,7 +99,9 @@ func _proof() -> void:
 	# Guest retry with its strong creature, and win.
 	if not await _stand(1, _npc): return
 	if not await _pass(1, "f28_challenge", {"master_id": MASTER, "species": WINNER}, 2400): return
-	if not await _pass(1, "win_trainer_battle", {"budget_frames": 6000, "fixture_guest_master": true}, 6400): return
+	# No self-HP top-up for the guest: its creature's health is host-owned in
+	# the duel (saved actor vitals), so the fixture may not write it locally.
+	if not await _pass(1, "win_trainer_battle", {"budget_frames": 6000, "fixture_guest_master": true, "self_hp_topups": false}, 6400): return
 	var settle_polls := 0
 	for poll in 60:
 		if ((await _view(1, "")).master_wins as Array).has(MASTER): break
