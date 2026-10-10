@@ -18,6 +18,8 @@ extends SceneTree
 ## the encounter director installs as `combat_override`
 ## (stormwood_encounter_catalogue.gd::named_combat: profile, then the row's
 ## own numbers, clamped to the .8/.6 s Stormwood floor), trainer_owned=false.
+## The enabled F22 consumer then selects that encounter's named sequence,
+## as the shipping director does; quick and heavy tells are distinct rows.
 ##
 ## PARTY: the retained five (starter + bramblebun, mudsnout, pipwing, trailpup,
 ## the F12 original-five precedent). C2 demands all three starters, so the
@@ -85,7 +87,8 @@ func _cases(errors: Array[String]) -> Array[Dictionary]:
 	var cases: Array[Dictionary] = []
 	var encounters := _read("res://data/config/stormwood_encounters.json")
 	var levels := _entry_levels()
-	var patterns: Dictionary = MATH.config().get("patterns", {}).get("named", {})
+	var pattern_config: Dictionary = MATH.config().get("patterns", {})
+	var patterns: Dictionary = pattern_config.get("named", {})
 	for named: Dictionary in encounters.get("named_encounters", []):
 		var region := str(named.get("region_id", ""))
 		if not levels.has(region):
@@ -96,9 +99,14 @@ func _cases(errors: Array[String]) -> Array[Dictionary]:
 			errors.append("%s: missing shipping named pattern" % named.id)
 			continue
 		var combat := CATALOGUE.named_combat(named)
+		var has_heavy := false
+		for sendout: Dictionary in patterns[pattern_id].get("sendouts", []):
+			for attack: String in sendout.get("sequence", []):
+				if bool((pattern_config.get("attacks", {}).get(attack, {}) as Dictionary).get("heavy", false)):
+					has_heavy = true
 		cases.append({"id": str(named.id), "region": region, "profile": str(named.behavior_profile), "pattern_id": pattern_id,
 			"party_level": _party_level_override if _party_level_override > 0 else int(levels[region]),
-			"authored_tell": float(combat.get("telegraph", TELL_FLOOR)),
+			"authored_tell": float(combat.get("telegraph", TELL_FLOOR)), "has_heavy": has_heavy,
 			"foes": [{"species": str(named.placeholder_species), "level": int(named.level), "combat": combat}]})
 	return cases
 
@@ -125,7 +133,8 @@ func _run() -> void:
 			for policy in ["MASHER", "READER"]:
 				var s := {"wins": 0, "lead_cost": [], "party_cost": [], "seconds": [],
 					"lead_faints": 0, "party_wipes": 0, "max_hit": 0.0, "min_tell": INF,
-					"max_tell": 0.0, "stalled": 0, "incoming_hits": 0, "hits": 0}
+					"max_tell": 0.0, "min_heavy_tell": INF, "heavy_tells": 0,
+					"stalled": 0, "incoming_hits": 0, "hits": 0}
 				for seed_index in _seeds:
 					var party: Array[RefCounted] = []
 					for id in [starter] + RETAINED:
@@ -179,6 +188,10 @@ func _run() -> void:
 					for t in tells:
 						s.min_tell = minf(float(s.min_tell), float(t))
 						s.max_tell = maxf(float(s.max_tell), float(t))
+					for profile: Dictionary in tell_profiles:
+						if bool(profile.heavy):
+							s.heavy_tells += 1
+							s.min_heavy_tell = minf(float(s.min_heavy_tell), float(profile.seconds))
 				var summary := {"runs": s.seconds.size(), "wins": s.wins,
 					"win_rate": float(s.wins) / maxf(1.0, s.seconds.size()),
 					"median_lead_cost": _median(s.lead_cost), "mean_lead_cost": _mean(s.lead_cost),
@@ -188,6 +201,8 @@ func _run() -> void:
 					"party_wipe_rate": float(s.party_wipes) / maxf(1.0, s.seconds.size()),
 					"max_single_hit_frac": s.max_hit,
 					"min_tell_s": s.min_tell if is_finite(float(s.min_tell)) else -1.0,
+					"min_heavy_tell_s": s.min_heavy_tell if is_finite(float(s.min_heavy_tell)) else -1.0,
+					"heavy_tells": s.heavy_tells,
 					"max_tell_s": s.max_tell, "stalled": s.stalled,
 					"incoming_hits": s.incoming_hits, "hits": s.hits}
 				row.pilots[policy] = summary
@@ -241,10 +256,17 @@ func _verdict(entry: Dictionary, masher: Dictionary, reader: Dictionary) -> Dict
 	var min_tell := -1.0 if tells.is_empty() else float(tells.min())
 	if min_tell < 0.0: reasons.append("no tell observed")
 	elif min_tell < TELL_FLOOR - 0.001: reasons.append("tell %.2f < %.2f" % [min_tell, TELL_FLOOR])
-	if float(entry.authored_tell) >= HEAVY_TELL and min_tell >= 0.0 and min_tell < HEAVY_TELL - 0.001:
-		reasons.append("heavy-authored tell seen at %.2f < %.2f" % [min_tell, HEAVY_TELL])
+	# ACCEPTANCE C3: every meaningful tell >= .8, every heavy >= 1.1.
+	# A named quick+heavy sequence must not relabel its quick as a heavy.
+	var heavy_tells: Array = [float(masher.min_heavy_tell_s), float(reader.min_heavy_tell_s)].filter(func(t: float) -> bool: return t >= 0.0)
+	var min_heavy := -1.0 if heavy_tells.is_empty() else float(heavy_tells.min())
+	if bool(entry.has_heavy) or float(entry.authored_tell) >= HEAVY_TELL:
+		if min_heavy < 0.0: reasons.append("no authored heavy tell observed")
+	if min_heavy >= 0.0 and min_heavy < HEAVY_TELL - 0.001:
+		reasons.append("heavy tell %.2f < %.2f" % [min_heavy, HEAVY_TELL])
 	if int(masher.stalled) + int(reader.stalled) > 0: reasons.append("stalled runs")
-	return {"pass": reasons.is_empty(), "ratio": ratio, "max_hit": max_hit, "min_tell": min_tell, "reasons": reasons}
+	return {"pass": reasons.is_empty(), "ratio": ratio, "max_hit": max_hit, "min_tell": min_tell,
+		"min_heavy_tell": min_heavy, "reasons": reasons}
 
 
 static func _median(values: Array) -> float:
