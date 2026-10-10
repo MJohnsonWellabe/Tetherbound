@@ -1,0 +1,106 @@
+{
+  "subject": "meadowhart",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Disabled asset-local review candidate; ordinary species selection remains unchanged",
+  "reference": "assets/creatures/tetherbound/meadowhart/reference/native-standing-v1.png",
+  "reference_author": "Built-in imagegen, owner-authorized original character reference",
+  "identity_reference": "assets/creatures/tetherbound/meadowhart/reference/three_quarter.png",
+  "reference_prompt": "Draft an original Tetherbound Meadowhart creature reference from the supplied established character image. ONE full-body three-quarter studio view of the same appealing tan woodland deer mount: friendly large dark eyes, cream muzzle/chest/belly, black nose, broad alert ears, warm brown branched antlers with a few sturdy rounded tines, moss-green and ochre broad layered leaves forming a shoulder/neck mantle, white spots on the tan rump, strong deer legs with separate dark cloven hooves, short leafy tufted tail. Preserve its recognizable face, gentle mature personality, spotted coat and antler/leaf silhouette. Neutral standing quadruped, four separate grounded feet, readable shoulder/elbow and hip/knee joints, limbs slightly separated and body straight with no twisting. Robust riggable anatomy, broad connected leaf masses, no thin hair rods or dangling vines. Remove the reference saddle, harness, straps, bags and all riding equipment so the creature anatomy is clear; this is the same current-roster character's bare body, no new character or roster addition. No human, rider, clothing, text, ruler, red markings, particles, props, extra legs, environment or action pose. Entire body including antler tips and tail inside a light-grey studio frame, neutral soft lighting. Clean detailed stylized game creature with coherent PBR-friendly material shapes, not photorealistic wildlife.",
+  "reference_inspection": {
+    "identity": "Tan deer with cream chest/muzzle, black nose, expressive dark eyes, sturdy branched antlers, moss/ochre leaf mantle, white rump spots and leafy tufted tail retained",
+    "riggability": "Four grounded cloven hooves, separated limbs and readable shoulder/hip joints; whole antler tips and tail inside frame; saddle/straps removed for bare-body rig inspection; no thin hanging hairs",
+    "limits": "Single view does not establish reverse anatomy, mesh topology, mount contact, rig or native approval"
+  },
+  "generation": {
+    "task_id": "01a1260f-fcd7-7747-a6a4-184b096ffce8",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "night": "2026-10-09",
+    "night_submission_index": 7,
+    "observed_credit_cost": 30,
+    "new_submissions_for_this_revision": 1
+  },
+  "rights": {
+    "basis": "Original drafted reference based on owner-held Meadowhart identity; existing owner-authorized paid Meshy account under RD-26; no third-party character input, purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models",
+    "terms_checked": "2026-10-10"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "geometry": "26201 input triangles; UV-loop-preserving weld retains albedo, normal and roughness maps and the generated silhouette.",
+    "skin": "19 fitted anatomical joints: torso/neck/head, upper/lower legs plus four separate hoof joints and two tail joints. Antlers share protected head ownership; new neck region and counter-rotating hoof keys retain the deer anatomy. Local surface diffusion, four normalized influences and zero unweighted vertices.",
+    "material": "Organic body is dielectric: Metallic=0, emission inputs removed and emission strength=0. Albedo/normal/roughness maps and UVs retained.",
+    "colourway": "Old installed Meadowhart repaints use a different UV layout. The disabled recipe uses the existing colourway_source_species seam with meadowhart_native_review, a texture lookup namespace only, to retain candidate textures. No roster species or gameplay code added; new UV-specific variants remain OPEN.",
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "height_m": 3.45,
+    "bones": 19,
+    "unweighted_vertices": 0,
+    "vertices": 13106,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 stable Windows",
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "raster": [
+      1920,
+      1080
+    ],
+    "before_height_m": 3.44999980926514,
+    "candidate_height_m": 3.45000004768372,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 native Low samples across hit/faint/swim/fly_grip/ride included in the single Low sheet; native front/reverse ruler samples retained outside Git",
+    "world": "Production Meadows scene and CameraRig with matched stage, seed and pose sampling; presentation fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "skin_weights": "Zero unweighted vertices; not independent deformation approval",
+    "full_rig_animation": "OPEN: terminal flank contact, foot locking and ordinary gameplay paths require review",
+    "colour_variants": "OPEN: generated UV layout requires its own approved repaints",
+    "independent_art_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Terminal faint/rest floor contact and appealing deformation require review",
+    "Neutral procedural clips do not certify ordinary swim, flight/grip, rider contact or carrying",
+    "Fixtures do not prove earned fights or traversal",
+    "Bare creature body only; no saddle baked into geometry. Ordinary mounting, tack alignment, gait and rider contact require separate native proof",
+    "Candidate remains OFF until the full F36 art bar passes"
+  ]
+}
