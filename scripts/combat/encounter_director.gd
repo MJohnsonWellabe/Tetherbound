@@ -2381,13 +2381,12 @@ func _spawn_deployed_creature(data: Variant) -> Node:
 	return node
 
 
-## Position and yaw, every tick. Nothing else needs to cross the wire: the
-## animator derives its gait from the velocity the interpolation produces, and
-## every number a FIGHT turns on is host truth rather than a replicated
-## property (`docs/specs/MP_ENCOUNTER_PROTOCOL.md` §3).
+## Movement/aquatic presentation and the accepted faint state, every tick.
+## The faint flag controls only poses: every number a FIGHT turns on stays
+## host truth (`docs/specs/MP_ENCOUNTER_PROTOCOL.md` §3).
 func _creature_replication_config() -> SceneReplicationConfig:
 	var cfg := SceneReplicationConfig.new()
-	for path in [^".:net_position", ^".:net_yaw", ^".:net_aquatic"]:
+	for path in [^".:net_position", ^".:net_yaw", ^".:net_aquatic", ^".:net_fainted"]:
 		cfg.add_property(path)
 		cfg.property_set_spawn(path, true)
 		cfg.property_set_replication_mode(path, SceneReplicationConfig.REPLICATION_MODE_ALWAYS)
