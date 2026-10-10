@@ -769,6 +769,11 @@ func _fight_current(label: String) -> bool:
 			misses_before = int(counts.player_misses)
 			reposition_ticks = 45
 			side = -side
+			var hub := _director.get_parent().get_node_or_null(^"StormwoodEncounterHub")
+			if hub != null:
+				for fight: Variant in (hub.get("fights") as Dictionary).values():
+					if is_instance_valid(fight):
+						_note("REPOSITION after misses; host last_strike=%s" % JSON.stringify(fight.get("last_strike")))
 		if enemy != null and ally != null:
 			var offset := enemy.global_position - ally.global_position
 			offset.y = 0.0
