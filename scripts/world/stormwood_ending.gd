@@ -11,7 +11,7 @@ extends Node3D
 ## so a sixth slot never exists. The freeing, the quieted storm and the
 ## Waterward reveal stay single world facts committed through the chapter
 ## ledger; the first settled decision records the world's offer fact. The Spark
-## is placed later at the Meadows shrine circle, like the other relic powers.
+## is hung later in the Crossing Hall Shrine Room, like the other relic powers.
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
