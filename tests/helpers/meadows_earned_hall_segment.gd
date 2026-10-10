@@ -67,7 +67,7 @@ class HallPilot extends LIVE.CampaignPilot:
 			_dbg_w = not _dbg_w
 			if _dbg_w:
 				var sel: Variant = foe_body.get("_selected_attack")
-				print("DIAG TELL d=%.2f reach=%.2f cfgrange=%.2f cone=%s beat=%.2f wind=%.0f sel=%s" % [distance, _strike_reach(foe_body), float((foe_body.call("combat_config") as Dictionary).get("range", 0)), (foe_body.call("combat_config") as Dictionary).get("cone_degrees"), beat, wind, JSON.stringify({"shape": (sel as Dictionary).get("telegraph_shape"), "pat": (sel as Dictionary).get("pattern_attack_id"), "move": (sel as Dictionary).get("move_id"), "lunge": (sel as Dictionary).get("lunge"), "range": (sel as Dictionary).get("range"), "travels": foe_body.call("lunge_travels"), "cfgshape": (foe_body.call("combat_config") as Dictionary).get("telegraph_shape")})])
+				print("DIAG TELL d=%.2f reach=%.2f cfgrange=%.2f cone=%s beat=%.2f wind=%.0f sel=%s" % [distance, _strike_reach(foe_body, ally_body), float((foe_body.call("combat_config") as Dictionary).get("range", 0)), (foe_body.call("combat_config") as Dictionary).get("cone_degrees"), beat, wind, JSON.stringify({"shape": (sel as Dictionary).get("telegraph_shape"), "pat": (sel as Dictionary).get("pattern_attack_id"), "move": (sel as Dictionary).get("move_id"), "lunge": (sel as Dictionary).get("lunge"), "range": (sel as Dictionary).get("range"), "travels": foe_body.call("lunge_travels"), "cfgshape": (foe_body.call("combat_config") as Dictionary).get("telegraph_shape")})])
 		if bool(manager.call("enemy_is_winding_up")):
 			if bool(manager.call("charged_ready")) and distance < charged_reach - 0.2 \
 					and beat > float(charged.get("windup", 0.55)) + 0.1 \
@@ -79,7 +79,7 @@ class HallPilot extends LIVE.CampaignPilot:
 			if foe_body.has_method("lunge_travels") and bool(foe_body.call("lunge_travels")):
 				await _clear_lunge_lane(ally_body, foe_body, toward)
 				return
-			var enemy_reach := _strike_reach(foe_body)
+			var enemy_reach := _strike_reach(foe_body, ally_body)
 			if distance < enemy_reach + 0.35:
 				await _leave_strike(ally_body, foe_body, toward, distance, enemy_reach, beat)
 				return
@@ -119,10 +119,13 @@ class HallPilot extends LIVE.CampaignPilot:
 
 	## The drawn attack's own reach: a named pattern attack freezes its
 	## profile at tell start; otherwise the body's spaced strike.
-	func _strike_reach(foe_body: Node3D) -> float:
+	## A drawn pattern (combat_ai.gd pattern_contains) also reaches the
+	## target's own body radius past its range.
+	func _strike_reach(foe_body: Node3D, ally_body: Node3D) -> float:
 		var selected: Variant = foe_body.get("_selected_attack")
 		if selected is Dictionary and (selected as Dictionary).has("range"):
-			return float(selected.range)
+			var pattern := (selected as Dictionary).has("pattern_attack_id")
+			return float(selected.range) + (float(ally_body.call("body_radius")) if pattern else 0.0)
 		return float((foe_body.call("combat_config") as Dictionary).get("range", 2.6))
 
 	func _retreat_direction(ally_body: Node3D, toward: Vector3) -> Vector3:
