@@ -135,7 +135,10 @@ func _run() -> void:
 	if not failures.is_empty():
 		_finish()
 		return
-	if generated_fixture and (legacy_order_diagnostic or not compatibility_paths.is_empty() or segment not in ["relay", "sigils"]):
+	# A generated lineage starts only at Relay or Sigils; a later piece may
+	# continue it from its predecessor's own saved handoff, never start one.
+	if generated_fixture and (legacy_order_diagnostic or not compatibility_paths.is_empty() \
+			or (segment not in ["relay", "sigils"] and handoff_from.is_empty())):
 		failures.append("Generated fixtures are explicit Relay/Sigils inputs, never legacy or reviewed earned imports")
 		_finish()
 		return
