@@ -15,6 +15,8 @@ uniform float surface_roughness = 0.8;
 uniform float surface_metallic = 0.0;
 uniform float rim_amount = 0.0;
 uniform float repaint_strength = 0.0;
+uniform vec2 body_source_hue = vec2(0.0, 1.0);
+uniform float body_source_saturation = 0.0;
 uniform float base_value_scale = 1.0;
 uniform float body_hue = 0.5;
 uniform float body_saturation = 0.3;
@@ -53,7 +55,10 @@ void fragment() {
         * smoothstep(accent_source_value - 0.12, accent_source_value + 0.08, hsv.z);
     float body_value = clamp(max(body_value_floor, hsv.z * body_value_scale), 0.0, 0.86);
     vec3 body = from_hsv(vec3(body_hue, body_saturation, body_value));
-    vec3 base = mix(source.rgb * base_value_scale, body, repaint_strength) * source_tint.rgb;
+    float body_mask = smoothstep(body_source_hue.x - 0.025, body_source_hue.x, hsv.x)
+        * (1.0 - smoothstep(body_source_hue.y, body_source_hue.y + 0.025, hsv.x))
+        * smoothstep(body_source_saturation - 0.04, body_source_saturation, hsv.y);
+    vec3 base = mix(source.rgb * base_value_scale, body, repaint_strength * body_mask) * source_tint.rgb;
     // The authored UV regions select charged seams/tips, never a moving world mask.
     vec3 charged = from_hsv(vec3(accent_hue, accent_saturation, mix(hsv.z, accent_value, 0.8)));
     ALBEDO = mix(base, charged, accent);
