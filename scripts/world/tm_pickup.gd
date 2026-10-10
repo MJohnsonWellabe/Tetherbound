@@ -23,6 +23,7 @@ extends Node3D
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const TM_DB := preload("res://scripts/creatures/tm_db.gd")
+const ITEM_CACHE := preload("res://scripts/world/item_cache_pickup.gd")
 ## D103 / Stage B lane 3.B. See `_on_picked_up()`: this TM is claimed through
 ## the world ledger now, not written here.
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
@@ -205,6 +206,23 @@ func _build_visual() -> void:
 	_spinner.name = "Orb"
 	_spinner.position = Vector3.UP * ORB_CENTRE_Y
 	add_child(_spinner)
+
+	var game: Node = get_node_or_null(^"/root/Game") if is_inside_tree() else null
+	var items: RefCounted = game.get("items") if game != null else null
+	var definition: Dictionary = items.call("definition", _tm_id) if items != null else {}
+	if items == null and ITEM_CACHE.IDENTITY_STYLES.has(_tm_id):
+		var catalogue: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/items/items.json"))
+		if catalogue is Dictionary:
+			definition = (catalogue.get("items", {}) as Dictionary).get(_tm_id, {}) as Dictionary
+	var identity: Node3D = ITEM_CACHE.create_identity_visual(_tm_id, definition)
+	if identity != null:
+		# The shared factory rests at Y=0. The spinner's established centre,
+		# interaction anchor and halo stay fixed; sit the assembly on the plinth.
+		identity.position.y = PLINTH_HEIGHT - 0.02 - ORB_CENTRE_Y
+		_spinner.add_child(identity)
+		PICKUP_GLOW.attach(self, colour, ORB_CENTRE_Y)
+		set_process(true)
+		return
 
 	# A .glb imports as a PackedScene, NOT a Mesh. Assigning the loaded
 	# resource straight to MeshInstance3D.mesh type-fails and renders nothing

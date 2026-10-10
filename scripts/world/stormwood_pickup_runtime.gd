@@ -15,14 +15,14 @@ const REALM_ID := "stormwood"
 const DATA_PATH := "res://data/config/stormwood_pickups.json"
 const ITEM_DATA_PATH := "res://data/items/items.json"
 
-## These six ordinary Stormwood rewards already have item definitions but no
-## `world_model` metadata. Reuse the installed pickup art instead of asking
-## ItemCachePickup to stand its warning-box fallback. This maps presentation
-## only; grants remain the catalogue's exact item ids.
+## Legacy presentation hints for ordinary Stormwood rewards. Item metadata
+## takes priority, including the stronger authored tonic scenes. Orb sizes
+## match their ordinary identity assemblies rather than a shared tiny sphere.
+## This maps presentation only; grants remain the catalogue's exact item ids.
 const PRESENTATION_FALLBACKS := {
-	"orb_basic": {"model": "res://assets/props/tm_orb/tm_orb.glb", "scale": 0.13},
-	"orb_greater": {"model": "res://assets/props/tm_orb/tm_orb.glb", "scale": 0.13},
-	"orb_prime": {"model": "res://assets/props/tm_orb/tm_orb.glb", "scale": 0.13},
+	"orb_basic": {"model": "res://assets/props/tm_orb/tm_orb.glb", "scale": 0.20},
+	"orb_greater": {"model": "res://assets/props/tm_orb/tm_orb.glb", "scale": 0.21},
+	"orb_prime": {"model": "res://assets/props/tm_orb/tm_orb.glb", "scale": 0.22},
 	"swift_tonic": {"model": "res://assets/props/potion_plant/potion_plant.glb", "scale": 0.35},
 	"attack_tonic": {"model": "res://assets/props/potion_plant/potion_plant.glb", "scale": 0.35},
 	"stoneguard_brew": {"model": "res://assets/props/potion_plant/potion_plant.glb", "scale": 0.35},
