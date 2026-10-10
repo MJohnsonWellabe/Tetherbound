@@ -1,0 +1,122 @@
+{
+  "subject": "tuskroot",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Reference-backed reconstruction for disabled native review; installed species unchanged",
+  "reference_provenance": {
+    "subject": "tuskroot",
+    "reference": "assets/creatures/tetherbound/tuskroot/reference/native-standing-v1.png",
+    "method": "built_in_imagegen",
+    "identity_reference": [
+      "assets/creatures/tetherbound/tuskroot/reference/front.png",
+      "assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb rendered full identity three-quarter view"
+    ],
+    "prompt": "Draft an original Tetherbound Tuskroot 3D modeling reference using the supplied established front crop and full installed-model render as species identity references. ONE complete three-quarter studio view of the same massive mature earth boar: broad warm brown face, blunt dark rounded snout with two readable nostrils, large expressive brown eyes, thick angular brows, small upright ears, two stout forward and upward curving ivory tusks, heavy barrel body, short strong four-legged stance, large dark hooves with warm tan claws, layered rough grey stone plates embedded along the back with restrained moss and broad natural green leaves. It is Mudsnout grown up, not a new species: keep the established brown, grey, moss-green and ivory colour organization, rounded friendly face underneath its powerful brow, complete boar anatomy and large adult mass. Neutral riggable pose: all FOUR full legs and complete hooves visibly separate beneath the body, front and rear limb roots clear, no crouching or tucked limbs, each sole on the floor, broad solid torso with a natural supported neck and readable shoulders, both tusks entirely visible. A small complete boar tail may follow the installed anatomy, no invented giant tail or extra appendage. Consolidate moss/leaves into a few broad connected masses on the coherent stone mantle; no thin dangling roots, wire leaves, scattered stones or floating fragments. Sculpt the face and brow cleanly with soft roughness and large readable surfaces; preserve the identity rather than adding scars, horns or armour. Whole head, tusks, four feet and back inside frame with generous margin. Plain light-grey studio floor, soft neutral light, stylized detailed game-creature surface. No glowing eyes, lava, neon, metallic sheen, red faction colours, equipment, saddle, harness, weapons, humans, text, ruler, board, environment or action pose. One existing roster creature only.",
+    "default_enabled": false,
+    "selected_origin": "exec-df181b6e-48b0-44d7-b4ea-2df19b62634d",
+    "inspection": {
+      "identity": "Established heavy brown boar, dark blunt nose, expressive brown eyes, ivory tusks, rough grey stone back and natural moss/leaf masses retained",
+      "riggability": "Four visibly separate complete feet, clear adult boar torso and neck, both tusks fully visible, broad connected foliage rather than thin roots",
+      "limits": "Leaf/stone attachment topology, foot segmentation, tusk protection, saddle contact and new colour variants require generated/native inspection; no full art pass from the reference."
+    }
+  },
+  "generation": {
+    "task_id": "01a12687-647e-7283-a146-f26d481c0d94",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "reference": "assets/creatures/tetherbound/tuskroot/reference/native-standing-v1.png",
+    "night": "2026-10-09",
+    "status": "SUCCEEDED",
+    "observed_credits": 30,
+    "new_submissions": 1
+  },
+  "rights": {
+    "basis": "Owner-held installed identity and original drafted reference; owner-authorized paid Meshy account. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "approach": "Measured boar torso, four feet and three short tail segments; protected back mantle, local surface diffusion and normalized four influences.",
+    "material": "Organic dielectric: metallic and emission disabled, UVs and texture maps retained",
+    "colourway": "Disabled tuskroot_native_review texture lookup avoids incompatible installed repaints; no roster species added",
+    "export_triangles": 23956,
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "topology_warnings": [
+      "Mesh_0: 7856 non-manifold edges",
+      "Mesh_0: 4141 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 250 microscopic disconnected components",
+      "Mesh_0: ~1312 inward-facing faces",
+      "Mesh_0: 40 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ],
+    "height_m": 3.6,
+    "bones": 20,
+    "unweighted_vertices": 0,
+    "vertices": 11981,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "before_height_m": 3.60000038146973,
+    "candidate_height_m": 3.59999990463257,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 whole-body Low role samples and front/reverse native scale. Raw receipts/captures outside Git.",
+    "world": "Matched production meadows CameraRig stage/seed/five poses per preset; fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "full_rig_and_motion": "OPEN",
+    "terminal_contact": "OPEN",
+    "topology": "OPEN",
+    "colour_variants": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Eleven clip names and still fixtures do not certify motion, ordinary gameplay paths, earned fights, swim/fly-grip or rider contact.",
+    "Retained topology/UV warnings require independent approval.",
+    "Candidate remains OFF until the complete art bar passes.",
+    "Initial world fixture did not list Tuskroot and returned zero frames. Preserved outside Git; corrected external fixture only adds Tuskroot/Ashtusk to the Meadows selection, leaving production scene/pose logic unchanged. Completed paired sheets use v2; standing scale and 25 diagnostics remain v1."
+  ]
+}
