@@ -945,6 +945,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await preload("res://tools/net/f27_essence_steps.gd").run(self, action, args)
 		_ when action.begins_with("f43_"):
 			out = await preload("res://tools/net/f43_bounty_steps.gd").run(self, action, args)
+		_ when action.begins_with("f28_"):
+			out = await preload("res://tools/net/f28_master_steps.gd").run(self, action, args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before

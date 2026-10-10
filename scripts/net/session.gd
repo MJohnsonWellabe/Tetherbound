@@ -7,6 +7,7 @@ const FOUNDATION_ACTIONS := preload("res://scripts/net/foundation_actions.gd")
 const CHARACTER_ACTIONS := preload("res://scripts/net/character_action_rules.gd")
 const FOUNDATION_RETRY_ORDER := preload("res://scripts/net/foundation_retry_order.gd")
 const WILD_ACTOR_SCOPE := preload("res://scripts/net/wild_actor_scope.gd")
+const HOSTED_MASTER_WIN := preload("res://scripts/masters/breakthrough_actions.gd")
 const COMBAT_ROUND_REWARD := preload("res://scripts/net/combat_round_reward.gd")
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
 const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
@@ -1212,7 +1213,11 @@ func _foundation_duty_receipt(duty: Dictionary, world_namespace: String = "") ->
 	if duty.action == "combat_round_reward": return COMBAT_ROUND_REWARD.receipt(duty.character_id, duty.intent, duty.context)
 	if duty.action == "combat_mastery": return "craft:combat_mastery_%s:%s" % [str(duty.intent.action_id).sha256_text(), duty.character_id]
 	if duty.action == "rematch_win": return "rematch:%s:%s:%s:win:%s:%s:%s" % [duty.intent.trainer_id, duty.intent.tier, duty.character_id, duty.context.world_namespace, duty.context.session_id, str(duty.intent.encounter_id).sha256_text()]
-	if duty.action == "master_win": return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
+	if duty.action == "master_win":
+		# F28: a hosted guest duel's win is receipted per duel, so a later win
+		# over the same Master still pays its award once (breakthrough_actions).
+		if duty.context.has("settled_vitals"): return HOSTED_MASTER_WIN.hosted_win_receipt(duty.intent.master_id, duty.character_id, duty.intent.encounter_id)
+		return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
 	if duty.action == "wild_defeat_share": return ESSENCE.defeat_receipt(duty.character_id, duty.intent)
 	if duty.action == "boss_relic": return FOUNDATION_ACTIONS.boss_receipt(world_namespace, duty.intent.trainer_id, duty.character_id)
 	if duty.action == "research_event":
@@ -2106,6 +2111,9 @@ func foundation_guest_master_outcome(director: Node, frozen: Dictionary) -> Dict
 	var intent := {"master_id": frozen.master_id, "creature_uid": frozen.creature_uid, "encounter_id": frozen.encounter_id}
 	var context := {"source_key": "master_encounter:" + frozen.encounter_id, "validated_host_outcome": "win", "participant_count": 1,
 		"encounter_id": frozen.encounter_id, "creature_uid": frozen.creature_uid, "master_id": frozen.master_id}
+	# F28: the duel's host-saved vitals (every hit owner-ACKed first); the win
+	# stages its award on them and owner-passive projects them (wild_actor_scope).
+	if frozen.get("settled_vitals") is Array: context["settled_vitals"] = (frozen.settled_vitals as Array).duplicate(true)
 	return get_node(^"LedgerRpc").call("journal_foundation_event", "master:%s:%s" % [frozen.master_id, frozen.encounter_id],
 		[{"character_id": frozen.character_id, "action": "master_win", "intent": intent, "context": context}])
 

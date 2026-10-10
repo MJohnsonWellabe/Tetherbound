@@ -624,10 +624,16 @@ func start_guest_master_duel(site: Node3D, peer: int, character: String, uid: St
 		_encounter_host.call("forget", id)
 		body.queue_free()
 		return {"ok": false, "code": "actual_master_actor_required"}
+	var world: RefCounted = _session.call("_game").get("world")
+	# F28: the guest's creature vitals in this duel are host-owned (saved
+	# actor vitals, wild_actor_scope kind "master"); its win settles them.
+	var live: Dictionary = _encounter_host.call("record", id)
+	live["wild_actor_owner"] = WILD_ACTOR_SCOPE.make(str(world.reward_delivery_namespace),
+		str(_session.call("_altar_current_epoch")), _encounter_realm(), id, "master")
+	rec = live.duplicate(true)
 	var runtime: Node = SHARED_WILD_HOST_FIGHT.new()
 	add_child(runtime)
 	_shared_host_fights[id] = runtime
-	var world: RefCounted = _session.call("_game").get("world")
 	_guest_master_duels[id] = {"peer": peer, "character_id": character, "creature_uid": uid, "master_id": definition.id,
 		"encounter_id": id, "world_namespace": world.reward_delivery_namespace, "session_id": world.world_id,
 		"world": weakref(world), "epoch": _session.call("_altar_current_epoch"), "site": weakref(site),
@@ -684,13 +690,24 @@ func retained_guest_master_win(id: String) -> Dictionary:
 		or float(witness.get("verdict", {}).get("delta", {}).get("hp", 1)) > 0 \
 		or creature == null or float(creature.get("hp")) > 0 \
 		or duel.world.get_ref() != _session.call("_game").get("world") or duel.epoch != _session.call("_altar_current_epoch"): return {}
+	# F28: every hit was owner-saved before the win settles (see
+	# _retry_guest_master_win); these are the host's settled vitals.
+	var member: Dictionary = (_encounter_host.call("record", id) as Dictionary).get("participants", {}).get(duel.peer, {})
+	var settled: Array = WILD_ACTOR_SCOPE.settled_vitals(_session.call("admitted_character_state", duel.peer), member)
+	if settled.is_empty(): return {}
 	return {"character_id": duel.character_id, "creature_uid": duel.creature_uid, "master_id": duel.master_id,
 		"encounter_id": id, "world_namespace": duel.world_namespace, "session_id": duel.session_id,
-		"participants": duel.participants.duplicate(true)}
+		"participants": duel.participants.duplicate(true), "settled_vitals": settled}
 
 func _retry_guest_master_win(id: String) -> void:
 	var duel: Dictionary = _guest_master_duels.get(id, {})
 	if duel.get("won") != true or duel.get("durable") == true: return
+	# As a wild victory settles: the fight is done and every HP receipt of
+	# this guest is owner-ACKed before its win (and award) is journaled.
+	if _encounter_host == null or str(_encounter_host.call("phase", id)) != "done" \
+		or not (_encounter_host.call("pending_actor_vitals", id) as Array).is_empty(): return
+	var waiting: Variant = _session.call("admitted_pending_vitals", int(duel.peer)) if _session.has_method("admitted_pending_vitals") else null
+	if not waiting is Dictionary or not (waiting as Dictionary).is_empty(): return
 	var result: Dictionary = _session.call("foundation_guest_master_outcome", self, retained_guest_master_win(id))
 	if result.get("durable") == true and result.get("ok") == true:
 		duel.durable = true
@@ -4768,7 +4785,7 @@ func uses_wild_actor_vitals(id: String) -> bool:
 	if id.is_empty() or _session == null or not _session.has_method("_game") \
 		or not _session.has_method("_altar_current_epoch"): return false
 	var host := _is_host() or _owns_canonical_wild(id)
-	if host and (_encounter_host == null or not _owns_canonical_wild(id)): return false
+	if host and (_encounter_host == null or not (_owns_canonical_wild(id) or _guest_master_duels.has(id))): return false
 	# A guest reads the same authenticated record that carries the saved hold.
 	# Its scope must still name this actual world and transport lifetime.
 	var record: Dictionary = _encounter_host.call("record", id) if host else _encounter
@@ -9384,7 +9401,8 @@ func _is_guest() -> bool:
 
 
 func _with_host_xp_owner(encounter_id: String, payload: Dictionary) -> Dictionary:
-	if not canonical_wild_encounter(encounter_id): return payload
+	# F28: a guest Master duel's award is the host's master_win, too.
+	if not (canonical_wild_encounter(encounter_id) or (_is_host() and _guest_master_duels.has(encounter_id))): return payload
 	var stamped := payload.duplicate()
 	stamped["host_owns_xp"] = encounter_id
 	return stamped
