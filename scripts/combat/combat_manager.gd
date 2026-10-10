@@ -5157,7 +5157,9 @@ func _on_orb_missed(message: String) -> void:
 func _on_aim_exited() -> void:
 	if state != State.ACTIVE:
 		return
-	if bool(_throw.call("is_busy")):
+	# A cancelled aim is already IDLE even while its closing B press is being
+	# swallowed. That input guard must not keep the camera on the trainer.
+	if int(_throw.get("state")) != THROW_AIM.State.IDLE:
 		return
 	_take_camera()
 
