@@ -279,6 +279,35 @@
   },
   {
    "peer": 1,
+   "action": "water_dock_resend",
+   "args": {
+    "action_id": "reedhaven_repair"
+   },
+   "expect_data": {
+    "found": true,
+    "status_before": "settled",
+    "status_after": "settled",
+    "refusals": [
+     "already_done"
+    ],
+    "committed": false,
+    "taken": {
+     "reed_fiber": 0,
+     "driftwood": 0
+    },
+    "bag_after": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    },
+    "disk_after": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    }
+   },
+   "label": "guest resends the same paid transaction over the real connection: host answers already_done, settled escrow and saved materials stay unchanged"
+  },
+  {
+   "peer": 1,
    "action": "water_dock_act",
    "args": {
     "action_id": "reedhaven_repair",
@@ -291,7 +320,7 @@
      "driftwood": 0
     }
    },
-   "label": "guest retries the finished repair (stale resend): no second charge"
+   "label": "guest presses the finished repair prompt again: no second charge"
   },
   {
    "peer": 0,
