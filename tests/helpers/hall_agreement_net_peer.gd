@@ -619,6 +619,15 @@ func _craft_at_host_kitchen(args: Dictionary) -> Dictionary:
 	var reply := {"result": {}}
 	session.connect("homestead_action_completed", func(op: String, _intent: Dictionary, result: Dictionary) -> void:
 		if op == "station_craft": reply.result = result)
+	# F48#1 cut (opt-in): hard-kill this process at the real owner-save edge
+	# of this craft, after its owner file is written and before its ACK.
+	if str(args.get("cut", "")) == "owner_before_ack":
+		var writer: Node = root.get_node_or_null(^"Game/Session/LedgerRpc")
+		if writer == null: return {"verdict": "FAIL", "detail": "no LedgerRpc for the cut"}
+		writer.connect("transaction_boundary", func(observation: Dictionary) -> void:
+			if observation.get("phase") == "after_owner_write_before_ack" and observation.get("action") == "station_craft":
+				print("F48 CRAFT CUT: hard kill after owner write, before ACK: %s" % str(observation.get("receipt")))
+				OS.kill(OS.get_process_id()))
 	var craft_id := Crypto.new().generate_random_bytes(16).hex_encode()
 	var sent: Dictionary = session.call("homestead_submit_action", "station_craft",
 		{"recipe_id": "potion_small", "craft_id": craft_id}, kitchen, int(view.get("registry_revision", -1)))
