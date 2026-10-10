@@ -29,6 +29,30 @@
   },
   {
    "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood",
+    "portal_prepare_only": true,
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof"
+   },
+   "budget_frames": 3000,
+   "label": "DISCLOSED SETUP: initial Hall arch position and the Stormwood portal open for this world (stands in for the earned Cloudreach-finale unlock), no earned credit"
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood",
+    "portal_prepare_only": true,
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof"
+   },
+   "budget_frames": 3000,
+   "label": "DISCLOSED SETUP: initial Hall arch position and the Stormwood portal open for this world (stands in for the earned Cloudreach-finale unlock), no earned credit"
+  },
+  {
+   "peer": 0,
    "action": "host"
   },
   {
@@ -54,17 +78,23 @@
    "peer": 0,
    "action": "enter_realm",
    "args": {
-    "realm": "stormwood"
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof"
    },
-   "budget_frames": 10000
+   "budget_frames": 10000,
+   "label": "through the Crossing Hall Stormwood portal (RD-17)"
   },
   {
    "peer": 1,
    "action": "enter_realm",
    "args": {
-    "realm": "stormwood"
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof"
    },
-   "budget_frames": 10000
+   "budget_frames": 10000,
+   "label": "through the Crossing Hall Stormwood portal (RD-17)"
   },
   {
    "peer": 0,
