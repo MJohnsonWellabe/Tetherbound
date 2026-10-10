@@ -673,7 +673,7 @@ func _begin_pattern_cue() -> void:
 	_pattern_geometry = {"profile": _selected_attack.duplicate(true), "origin": global_position,
 		"heading": facing(), "marker": _tracked_pattern_marker(), "body": self}
 	# Travelling charges already own the same swept-width LungeLane cue.
-	if is_inside_tree() and str(_selected_attack.get("telegraph_shape", "")) != "lane":
+	if is_inside_tree() and not (str(_selected_attack.get("telegraph_shape", "")) == "lane" and lunge_travels()):
 		_pattern_cue = PATTERN_CUE.begin(self, _selected_attack, global_position, facing(),
 			_pattern_geometry.marker, _patterns.get("presentation", {}),
 			Color(str(MATH.config().get("telegraph", {}).get("colour", "#ff5a3c"))))

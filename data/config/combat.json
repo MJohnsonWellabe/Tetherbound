@@ -1288,20 +1288,20 @@
           },
           {
             "sequence": [
-              "oreth_pressure",
-              "current_zone"
+              "charger_check",
+              "charger_rush"
+            ]
+          },
+          {
+            "sequence": [
+              "wall_check",
+              "wall_slam"
             ]
           },
           {
             "sequence": [
               "diver_retreat",
               "diver_leap"
-            ]
-          },
-          {
-            "sequence": [
-              "wall_check",
-              "wall_quake"
             ]
           },
           {
@@ -1339,14 +1339,14 @@
           },
           {
             "sequence": [
-              "diver_retreat",
-              "diver_leap"
+              "wall_check",
+              "wall_slam"
             ]
           },
           {
             "sequence": [
-              "charger_check",
-              "halder_range"
+              "current_volley",
+              "current_zone"
             ]
           }
         ],

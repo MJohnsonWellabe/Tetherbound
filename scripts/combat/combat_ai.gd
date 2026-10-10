@@ -209,6 +209,9 @@ static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dict
 		return {}
 	var out := base.duplicate(true)
 	out.merge(row.duplicate(true), true)
+	# Travel belongs to the selected strike, not the creature's previous
+	# CHARGER override. A cone/check must not become a zero-length charge.
+	out["lunge_travels"] = bool(row.get("lunge_travels", false))
 	out["pattern_attack_id"] = id
 	out["combat_role"] = role
 	out["pattern_id"] = str(context.get("pattern_id", ""))
