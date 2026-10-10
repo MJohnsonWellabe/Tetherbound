@@ -10,8 +10,13 @@ extends "res://tools/capture_lookdev_route.gd"
 ## Optional --attribute=process|physics: before the route, stand at its start
 ## and switch each script's nodes off in turn for a few frames, printing how
 ## much of the step that script's nodes were costing (largest first).
+## Optional --ab-lod=<creature_physics_lod.json block> --rounds=N: walk the
+## route 2N times in one process, alternating that block's `enabled` off/on,
+## so both sides are measured on the same runner in the same scene.
 var _ablate := ""
 var _attribute := ""
+var _ab_lod := ""
+var _rounds := 2
 const ATTRIBUTE_FRAMES := 60
 
 
@@ -27,6 +32,10 @@ func _run() -> void:
 			_ablate = arg.trim_prefix("--ablate=")
 		elif arg.begins_with("--attribute="):
 			_attribute = arg.trim_prefix("--attribute=")
+		elif arg.begins_with("--ab-lod="):
+			_ab_lod = arg.trim_prefix("--ab-lod=")
+		elif arg.begins_with("--rounds="):
+			_rounds = maxi(1, int(arg.trim_prefix("--rounds=")))
 	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string(ROUTES_PATH))
 	if not config is Dictionary or not config.get("routes", {}).has(_biome_id) or _output_dir == "":
 		print("PHYSICS PROBE needs a known --biome and --output")
@@ -47,28 +56,49 @@ func _run() -> void:
 	if _ablate == "wilds":
 		node_added.connect(_stop_wild)
 		_stop_wilds(_world)
-	if _attribute in ["process", "physics"]:
-		await _attribute_scripts(_attribute == "physics")
-	var body_script: Script = load("res://scripts/creatures/creature_body.gd")
-	var sections: Variant = body_script.get("perf_sections")
-	if sections is Dictionary:
-		(sections as Dictionary).clear()
-	var physics_start := Engine.get_physics_frames()
+	if _ab_lod != "":
+		await _run_ab()
+		quit(0 if _failures.is_empty() else 1)
+		return
 	await _capture_route_case()
 	_print_summary()
-	if sections is Dictionary:
-		var ticks := maxi(1, Engine.get_physics_frames() - physics_start)
-		for key: String in (sections as Dictionary):
-			print("PHYSICS PROBE SECTION %s per_tick_ms=%.3f" % [key, float(sections[key]) / 1000.0 / ticks]
-				if key != "bodies" else "PHYSICS PROBE SECTION bodies per_tick=%.2f" % [float(sections[key]) / ticks])
+	# Attributed where the route ends, after it has streamed in and settled.
+	if _attribute in ["process", "physics"]:
+		await _attribute_scripts(_attribute == "physics")
 	quit(0 if _failures.is_empty() else 1)
 
 
+func _run_ab() -> void:
+	var lod: Dictionary = load("res://scripts/creatures/creature_body.gd").call("physics_lod_config")
+	if not lod.get(_ab_lod) is Dictionary:
+		_failures.append("unknown creature_physics_lod block " + _ab_lod)
+		return
+	var block: Dictionary = lod[_ab_lod]
+	var original: bool = bool(block.get("enabled", false))
+	var totals := {false: [0.0, 0.0, 0], true: [0.0, 0.0, 0]}
+	for r in _rounds:
+		for enabled: bool in [false, true]:
+			block["enabled"] = enabled
+			await _capture_route_case()
+			_print_summary("%s=%s round=%d " % [_ab_lod, enabled, r])
+			totals[enabled][0] += _mean(_column("physics_ms"))
+			totals[enabled][1] += _mean(_column("process_ms"))
+			totals[enabled][2] += 1
+	block["enabled"] = original
+	for enabled: bool in [false, true]:
+		var n := maxi(1, int(totals[enabled][2]))
+		print("PHYSICS PROBE AB biome=%s %s=%s rounds=%d physics_mean=%.3f process_mean=%.3f"
+			% [_biome_id, _ab_lod, enabled, n, totals[enabled][0] / n, totals[enabled][1] / n])
+
+
+func _column(key: String) -> Array[float]:
+	var out: Array[float] = []
+	for sample: Dictionary in _samples:
+		out.append(float(sample[key]))
+	return out
+
+
 func _attribute_scripts(physics: bool) -> void:
-	var start := _route_point(_route.start)
-	_player.global_position = start + Vector3.UP * float(_capture.floor_clearance_m)
-	_player.velocity = Vector3.ZERO
-	_rig.global_position = _player.global_position
 	for frame in int(_capture.warmup_frames):
 		await process_frame
 	var groups := {}
@@ -136,24 +166,20 @@ func _stop_wild(node: Node) -> void:
 		node.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
 
 
-func _print_summary() -> void:
-	var physics: Array[float] = []
-	var process: Array[float] = []
-	var wall: Array[float] = []
-	for sample: Dictionary in _samples:
-		physics.append(float(sample.physics_ms))
-		process.append(float(sample.process_ms))
-		wall.append(float(sample.wall_ms))
+func _print_summary(label: String = "") -> void:
+	var physics := _column("physics_ms")
+	var process := _column("process_ms")
+	var wall := _column("wall_ms")
 	var wilds := 0
 	var active := 0
 	for node: Node in _all_nodes(_world):
 		if node is CharacterBody3D and node.has_method("defer_engage"):
 			wilds += 1
 			active += 1 if node.is_physics_processing() else 0
-	print("PHYSICS PROBE biome=%s ablate=%s samples=%d waypoints=%d/%d wilds=%d active=%d "
+	print(("PHYSICS PROBE " + label + "biome=%s ablate=%s samples=%d waypoints=%d/%d wilds=%d active=%d "
 		% [_biome_id, _ablate, _samples.size(), _waypoints_reached, _route.waypoints.size(), wilds, active]
 		+ "physics_mean=%.3f physics_p95=%.3f process_mean=%.3f process_p95=%.3f wall_mean=%.3f failures=%s"
-		% [_mean(physics), _p95(physics), _mean(process), _p95(process), _mean(wall), _failures])
+		% [_mean(physics), _p95(physics), _mean(process), _p95(process), _mean(wall), _failures]))
 
 
 func _all_nodes(node: Node) -> Array[Node]:
