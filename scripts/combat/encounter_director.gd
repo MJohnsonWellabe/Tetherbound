@@ -6867,6 +6867,8 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 		or bool(canonical.get("ready", false)))
 	wild.set_meta(&"canonical_wild_runtime", bool(canonical.get("ready", false)))
 	var authored_arena := _local_authored_arena_context() if opponent_owned else {}
+	if not opponent_owned and has_method("authored_named_wild_arena_context"):
+		authored_arena = call("authored_named_wild_arena_context", wild)
 	if not bool(_manager.call(
 		"begin", _player, wild, _ally_body, _fight_party(), _camera_rig, best,
 		opponent_owned, shared_host_wild, shared_host_wild, authored_arena
@@ -6949,6 +6951,13 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	var arena_at := arena.global_position
 	opponent["arena_centre"] = [arena_at.x, arena_at.y, arena_at.z]
 	opponent["arena_radius_m"] = float(arena.get("radius"))
+	if not opponent_owned and has_method("authored_named_wild_arena_context"):
+		var named: Dictionary = call("authored_named_wild_arena_context", wild)
+		if not named.is_empty() and named.get("wild") == wild and named.get("source") == self \
+			and named.get("species_id") == opponent.species_id and named.get("centre") == arena_at \
+			and is_equal_approx(float(named.get("radius", -1.0)), float(opponent.arena_radius_m)) \
+			and bool(_manager.call("canonical_named_host_arena", named)):
+			opponent["named_encounter_id"] = str(named.named_encounter_id)
 	if opponent_owned:
 		# F14#1: a guest who joins a trainer/boss fight mirrors THIS creature
 		# (`_legacy_mirror_body`), so the record carries its card and pose too.
@@ -7421,10 +7430,17 @@ func _shared_arena_context(rec: Dictionary) -> Dictionary:
 	if centre == null or not (radius is int or radius is float) or not is_finite(float(radius)) \
 		or float(radius) <= 0.0 or int(opponent.get("body_generation", 0)) <= 0 \
 		or str(opponent.get("species_id", "")).is_empty(): return {}
-	if str(rec.kind) == "wild" and float(radius) > 26.0: return {}
-	return {"encounter_id": str(rec.encounter_id), "realm": str(rec.realm), "kind": str(rec.kind),
+	var context := {"encounter_id": str(rec.encounter_id), "realm": str(rec.realm), "kind": str(rec.kind),
 		"body_generation": int(opponent.body_generation), "species_id": str(opponent.species_id),
 		"centre": centre as Vector3, "radius": float(radius)}
+	if str(rec.kind) == "wild":
+		if float(radius) > 26.0: return {}
+		var named_id := str(opponent.get("named_encounter_id", ""))
+		if not named_id.is_empty():
+			context["named_encounter_id"] = named_id
+			if _manager == null or not bool(_manager.call("canonical_named_host_arena", context, get_parent())): return {}
+		elif float(radius) < 11.0: return {}
+	return context
 
 
 func _begin_shared_guest_from_record(rec: Dictionary) -> bool:
