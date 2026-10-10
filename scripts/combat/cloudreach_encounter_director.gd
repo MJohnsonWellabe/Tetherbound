@@ -83,6 +83,12 @@ class CliffWild:
 		if engaged or aggressive or not is_alive() or not home.is_finite() \
 				or global_position.distance_to(home) <= _wander_radius + PEACEFUL_LEASH_MARGIN_M:
 			return
+		# A legitimate swept arena exit must not be undone by the residency
+		# teleport. Restore the ordinary leash once home and its route are clear.
+		if _arena_clearance_check.is_valid():
+			if _arena_clearance_check.call(home, Vector3.ZERO) != null \
+				or _arena_clearance_check.call(global_position, home - global_position) != null:
+				return
 		if place_on_ground(home):
 			_target = home
 			_returning_home = false
@@ -565,6 +571,7 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	wild.set("_target", wild.global_position)
 	_wild_homes[wild] = wild.global_position
 	wild.call("set_clearance_check", Callable(self, "_wild_destination_supported").bind(wild))
+	wild.call("set_arena_clearance_check", Callable(self, "_cliff_arena_wander_guard").bind(wild))
 	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
 	if not bool(opts.get("retained_alpha_pending", false)):
 		_initialize_wild_traits(wild, bool(opts.get("ordinary_trait_alpha", false)))
@@ -658,8 +665,19 @@ func _find_wild_spawn(wild: Node3D, requested: Vector3, centre: Vector3) -> Vect
 func _wild_destination_supported(candidate: Vector3, wild: Node3D) -> bool:
 	if not is_instance_valid(wild):
 		return false
+	if not _active_arena_clear(candidate, _ambient_render_radius(wild), wild): return false
+	if _arena_wander_guard(wild.global_position, candidate - wild.global_position, wild) != null: return false
 	return _wild_path_supported(wild.global_position, candidate,
 		float(wild.call("body_radius")) + WILD_FOOT_MARGIN, wild)
+
+
+func _cliff_arena_wander_guard(from: Vector3, step: Vector3, wild: Node3D) -> Variant:
+	var guard: Variant = _arena_wander_guard(from, step, wild)
+	if not guard is Vector3 or (guard as Vector3).is_zero_approx(): return guard
+	var ahead := from + (guard as Vector3) * maxf(WILD_PATH_STEP, float(wild.get("_wander_speed")) * get_physics_process_delta_time() * 2.0)
+	if not _wild_path_supported(from, ahead, float(wild.call("body_radius")) + WILD_FOOT_MARGIN, wild):
+		return Vector3.ZERO
+	return guard
 
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
