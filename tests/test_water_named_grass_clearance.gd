@@ -22,15 +22,14 @@ func after_each() -> void:
 	_world.free()
 
 
-func test_default_off_is_an_exact_spawn_noop() -> void:
-	assert_false(bool(CLEARANCE.settings().get("enabled", true)))
+func test_explicitly_disabled_is_an_exact_spawn_noop() -> void:
 	var body := CharacterBody3D.new()
 	body.name = "water_adair"
 	body.position = Vector3(17.0, 3.0, 8.0)
 	body.set_meta("water_npc_id", "water_adair")
 	var before := body.transform
 	var metadata := body.get_meta_list()
-	assert_false(CLEARANCE.apply(body, _world))
+	assert_false(CLEARANCE.apply(body, _world, {"enabled": false}))
 	assert_eq(body.get_meta_list(), metadata)
 	assert_false(body.is_in_group(CLEARANCE.GROUP))
 	assert_true(body.transform.is_equal_approx(before))
@@ -38,7 +37,8 @@ func test_default_off_is_an_exact_spawn_noop() -> void:
 	body.free()
 
 
-func test_enabled_footprint_preserves_actor_prompt_and_collision() -> void:
+func test_production_default_footprint_preserves_actor_prompt_and_collision() -> void:
+	assert_true(bool(CLEARANCE.settings().get("enabled", false)))
 	var body := CharacterBody3D.new()
 	body.name = "water_trainer_bex"
 	body.transform = Transform3D(Basis(Vector3.UP, 0.75), Vector3(4, 8, 12))
@@ -52,7 +52,7 @@ func test_enabled_footprint_preserves_actor_prompt_and_collision() -> void:
 	var before := body.transform
 	var velocity_before := body.velocity
 	var prompt_before := prompt.transform
-	assert_true(CLEARANCE.apply(body, _world, {"enabled": true, "radius_m": 2.5}))
+	assert_true(CLEARANCE.apply(body, _world))
 	assert_true(body.is_in_group(CLEARANCE.GROUP))
 	assert_almost_eq(float(body.get_meta(CLEARANCE.RADIUS_META)), 2.5)
 	assert_eq(body.get_child_count(), 1)
