@@ -172,6 +172,15 @@ func _enter_stormwood() -> bool:
 			creature.call("set_level", 44, PROGRESSION.config())
 		_check(creature != null and bool(game.get("party").call("add", creature)),
 			"chapter-entry fixture carries %s" % species_id)
+	# Portal order (RD-17): a completed Cloudreach has opened this world's
+	# Stormwood portal; the router refuses Stormwood without that unlock.
+	var route: Dictionary = (game.get("world").get("redesign_world") as Dictionary).duplicate(true)
+	var opened: Array = (route.get("portal_unlocks", []) as Array).duplicate()
+	if not opened.has("stormwood"): opened.append("stormwood")
+	route["portal_unlocks"] = opened
+	_check(preload("res://scripts/data/redesign_state.gd").validate("world", route).is_empty(),
+		"chapter-entry fixture's opened Stormwood portal is a valid world route")
+	game.get("world").set("redesign_world", route)
 	var source := Node3D.new()
 	source.name = "StormwoodPocketWalksEntrySource"
 	root.add_child(source)
