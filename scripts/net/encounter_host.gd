@@ -743,7 +743,7 @@ func apply_self_status_utility(id: String, uid: String, move_id: String, move: D
 		source_position: Vector3, source_hp: float, source_max_hp: float, action_id: String, now_ms: int) -> bool:
 	var rec: Dictionary = encounters.get(id, {})
 	if rec.is_empty() or str(move.get("utility", {}).get("scope", "")) != "self" \
-		or str(move.get("utility", {}).get("kind", "")) not in ["next_hit_buff"]: return false
+		or str(move.get("utility", {}).get("kind", "")) not in ["next_hit_buff", "movement_buff"]: return false
 	var state: Dictionary = rec.get("utility_state", UTILITY_EFFECTS.empty_state(id, 0))
 	var staged := UTILITY_EFFECTS.stage_application(state, move_id, move, {"encounter_id": id, "generation": 0,
 		"action_id": action_id, "source_uid": uid, "target_uid": uid, "source_position": source_position,

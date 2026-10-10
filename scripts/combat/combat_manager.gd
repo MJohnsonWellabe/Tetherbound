@@ -239,6 +239,9 @@ var _stagger_glows: Dictionary = {}
 ## the host could later have to rewind through collision.
 var _burst_awaiting_host := false
 var _move_awaiting_host := false
+## Host-accepted Veil (utility movement_buff) on the piloted creature.
+var _veil_multiplier := 1.0
+var _veil_until_ms := 0
 var _party_ultimate: Dictionary = {}
 ## F33 Harness max HP per creature uid this fight (creature_gear.hp_scale):
 ## the host's value when a hit carried one, else the owner's own record.
@@ -3916,6 +3919,7 @@ func _drive_player_creature() -> void:
 	var creature_for_speed := active_creature()
 	var speed_scale: float = float(creature_for_speed.call("buff_scale", "speed")) \
 			if creature_for_speed != null else 1.0
+	if Time.get_ticks_msec() < _veil_until_ms: speed_scale *= _veil_multiplier
 	if speed_scale != 1.0 and _ally_body.has_method("base_speed"):
 		_ally_body.call("request_move", direction, float(_ally_body.call("base_speed")) * speed_scale)
 	else:
@@ -4465,6 +4469,10 @@ func apply_host_move_start(payload: Dictionary) -> void:
 		or payload.get("encounter_id") != _encounter_id or not payload.get("move") is Dictionary: return
 	_sync_authoritative_wind(payload)
 	_apply_move_resources(payload)
+	var veil: Variant = payload.get("utility_self_movement")
+	if veil is Dictionary and float(veil.get("duration_s", 0.0)) > 0.0:
+		_veil_multiplier = clampf(float(veil.get("multiplier", 1.0)), 1.0, 4.0)
+		_veil_until_ms = Time.get_ticks_msec() + int(float(veil.duration_s) * 1000.0)
 	var move: Dictionary = payload.move.duplicate(true)
 	move["accepted_action"] = int(payload.get("accepted_action", 0))
 	_begin_move_presentation(move)

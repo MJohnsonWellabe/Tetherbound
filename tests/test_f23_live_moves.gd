@@ -259,3 +259,9 @@ func test_hearten_raises_the_next_landed_hit_once() -> void:
 	assert_eq(host.self_utility_power(id, "creature_a", 1300), 1.0, "one landed hit spends Hearten")
 	assert_false(host.apply_self_status_utility(id, "creature_a", "snare", _utility_frozen("snare", 21),
 		Vector3.ZERO, 100.0, 100.0, "snare-1", 1400), "only self status utilities stage here")
+
+func test_veil_is_a_host_staged_self_movement_buff() -> void:
+	var move := _utility_frozen("veil", 30)
+	assert_eq(str(move.utility.kind), "movement_buff")
+	assert_true(host.apply_self_status_utility(id, "creature_a", "veil", move, Vector3.ZERO, 100.0, 100.0, "veil-1", 1000))
+	assert_true(MANAGER.live_move_supported("utility", "veil"), "Veil is mounted")

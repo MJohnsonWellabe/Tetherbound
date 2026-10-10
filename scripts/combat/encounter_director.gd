@@ -3237,9 +3237,15 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 		# A self status utility (Hearten) takes effect when its start is accepted;
 		# the next landed hit reads it through self_utility_power and spends it.
 		if str(move.get("utility", {}).get("scope", "")) == "self":
-			_encounter_host.call("apply_self_status_utility", id, str(binding.creature_uid), move_id, move,
+			var applied: bool = _encounter_host.call("apply_self_status_utility", id, str(binding.creature_uid), move_id, move,
 				body.global_position, float(card.get("hp", 0.0)), float(card.get("hp_max", card.get("max_hp", 0.0))),
 				"%s:%d:%d:self" % [id, peer, int(intent.get("action", 0))], Time.get_ticks_msec())
+			var effect: Dictionary = move.get("utility", {})
+			if applied and str(effect.get("kind", "")) == "movement_buff" and verdict.get("delta") is Dictionary:
+				# Each player drives their own creature, so the owner's manager
+				# applies the host-accepted Veil to that body's speed.
+				(verdict.delta as Dictionary)["utility_self_movement"] = {
+					"multiplier": float(effect.get("movement_multiplier", 1.0)), "duration_s": float(effect.get("duration", 0.0))}
 		_host_after_encounter_change(id, peer)
 	return verdict
 
