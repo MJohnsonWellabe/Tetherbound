@@ -211,6 +211,9 @@ func _run() -> void:
 		player.global_position = bed_at + Vector3(0.0, 0.5, 1.0)
 		for _frame in 10:
 			await physics_frame
+		# F47#4: a rest reaches a morning only after nightfall (rest.json); disclosed: snap the clock to night.
+		for _look: Node in (Engine.get_main_loop() as SceneTree).get_nodes_in_group("day_cycle"):
+			if _look.has_method("apply_time"): _look.call("apply_time", "night")
 		var day_before := int(game.get("world").get("day")) if game.get("world") != null else -1
 
 		# The rest waits for the owner's saved decision; the camp keeps the same
