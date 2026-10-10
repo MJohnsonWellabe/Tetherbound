@@ -52,6 +52,7 @@ static func choices(hearts: RefCounted, relics_hung: Array) -> Array[String]:
 
 
 func open(message: String = "") -> void:
+	if not _open and INPUT_OWNER.current(get_tree()) != null: return
 	_closing_cancel = false
 	if not _open:
 		_open = true
