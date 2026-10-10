@@ -313,7 +313,7 @@ func begin_move_action_resolution(id: String, peer: int, action: int,
 
 
 ## Record only the debit produced by the existing damage/body writer and
-## committed by set_opponent_hp. A mismatch stays pending for reconciliation.
+## committed by set_opponent_hp. A mismatch returns false; the caller abandons it.
 func record_move_action_outcome(id: String, peer: int, action_id: String,
 		rolled: Dictionary, verdict: Dictionary) -> bool:
 	var entry: Dictionary = _actions(id, peer).get(action_id, {})
