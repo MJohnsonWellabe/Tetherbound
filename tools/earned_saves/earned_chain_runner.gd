@@ -88,6 +88,14 @@ var compatibility_paths: Array[String] = []
 var disk: RefCounted
 var retained_uids: Array[String] = []
 var generated_fixture := false
+## F02#4: `--reload-at-sigils` saves and reloads through the production Load
+## after each Sigil captain, with the three Sigils before the gate, and at the
+## Warden arena. F02#6/#7: `--route-ledger` runs the route-ledger observer
+## (tests/helpers/meadows_earned_route_ledger_segment.gd) over the sigils and
+## hall pieces, staged at each captain and the Hall.
+var reload_at_sigils := false
+var route_ledger_enabled := false
+var _ledger_stage := ""
 
 
 func _init() -> void:
@@ -109,6 +117,10 @@ func _run() -> void:
 			functional_offload = true
 		elif arg == "--generated-fixture":
 			generated_fixture = true
+		elif arg == "--reload-at-sigils":
+			reload_at_sigils = true
+		elif arg == "--route-ledger":
+			route_ledger_enabled = true
 		elif arg == "--observe-next-goal":
 			observe_next_goal = true
 		elif arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--capture-lessons"] or arg.begins_with("--lesson-skip-line"):
@@ -365,14 +377,20 @@ func _resumed_segment() -> void:
 		"sigils":
 			var sigils := HALL.new()
 			sigils.run_stage = HALL.STAGE_SIGILS
+			_stage_hooks(sigils)
+			var ledger := _start_ledger()
 			_take(await sigils.run(self, world, game), "passed", "sigils")
+			_stop_ledger(ledger)
 		"hall":
 			if legacy_order_diagnostic:
 				_take(await (load("res://tools/earned_saves/hall_route.gd") as GDScript).new().run(self, world, game), "passed", "hall")
 			else:
 				var hall := HALL.new()
 				hall.run_stage = HALL.STAGE_HALL
+				_stage_hooks(hall)
+				var ledger := _start_ledger()
 				_take(await hall.run(self, world, game), "passed", "hall")
+				_stop_ledger(ledger)
 		"kell_rift":
 			# Resume from the warden segment's village_pre_kell checkpoint.
 			_take(await (load(WARDEN_ACCEPT_PATH) as GDScript).new().run_from_village(self, world, game), "passed", "kell_rift")
@@ -383,6 +401,118 @@ func _resumed_segment() -> void:
 			# The helper follows the production Rift callback into Cloudreach.
 			for _i in 120:
 				await physics_frame
+
+
+func _stage_hooks(helper: RefCounted) -> void:
+	if not reload_at_sigils and not route_ledger_enabled:
+		return
+	_ledger_stage = segment + "_start"
+	helper.set("after_captain", _stage)
+	helper.set("after_hall", _stage)
+	helper.set("before_gate", func() -> bool: return await _stage("sigils_carried"))
+
+
+func _stage(label: String) -> bool:
+	_ledger_stage = label
+	if not reload_at_sigils:
+		return true
+	return await _reload_transition(label)
+
+
+func _start_ledger() -> RefCounted:
+	if not route_ledger_enabled:
+		return null
+	var ledger: RefCounted = preload("res://tests/helpers/meadows_earned_route_ledger_segment.gd").new()
+	var path := "user://route_ledger_%s_%d_%d.jsonl" % [segment, OS.get_process_id(), Time.get_ticks_msec()]
+	if not ledger.call("start", self, func() -> String: return _ledger_stage, path):
+		failures.append("Route ledger could not start at " + path)
+		return null
+	disclosures.append("Route ledger observer (read-only) over the %s piece: %s" % [segment, ProjectSettings.globalize_path(path)])
+	return ledger
+
+
+func _stop_ledger(ledger: RefCounted) -> void:
+	if ledger != null:
+		_ledger_stage = segment + "_end"
+		print("ROUTE LEDGER SUMMARY %s" % JSON.stringify(ledger.call("stop")))
+
+
+## F02#4, as smoke_four_biome_continuous.gd `_reload_transition`: a production
+## save, the live Meadows freed, flags, party and satchel emptied, a production
+## load and a fresh Meadows scene. Every flag, the party UIDs and condition and
+## the carried items must come back exactly.
+func _reload_transition(label: String) -> bool:
+	var progression: RefCounted = game.get("progression")
+	var party: RefCounted = game.get("party")
+	var inventory: RefCounted = game.get("inventory")
+	var flags_before: Array = (progression.call("all_set") as Array).duplicate()
+	flags_before.sort()
+	var uids_before := _party_uids()
+	var items_before := _inventory_totals()
+	var condition_before := _party_condition()
+	var scene_path := str(current_scene.scene_file_path)
+	if not bool(game.call("save_game", 0)):
+		failures.append("RELOAD %s: save_game(0) refused" % label)
+		return false
+	current_scene.queue_free()
+	for i in 4:
+		await process_frame
+	progression.call("load_data", {})
+	party.call("clear")
+	for i in int(inventory.call("slot_count")):
+		inventory.call("set_slot", i, null)
+	if not bool(game.call("load_game", 0)):
+		failures.append("RELOAD %s: load_game(0) failed" % label)
+		return false
+	var condition_after := _party_condition()
+	var world: Node = (load(scene_path) as PackedScene).instantiate()
+	root.add_child(world)
+	current_scene = world
+	for i in 240:
+		await physics_frame
+	var flags_after: Array = (progression.call("all_set") as Array).duplicate()
+	flags_after.sort()
+	var lost: Array = flags_before.filter(func(f: Variant) -> bool: return not flags_after.has(f))
+	print("RELOAD %s: flags %d -> %d (lost %s); party %s -> %s; items %s -> %s" % [label, flags_before.size(),
+		flags_after.size(), str(lost), str(uids_before), str(_party_uids()), JSON.stringify(items_before),
+		JSON.stringify(_inventory_totals())])
+	if not lost.is_empty():
+		failures.append("RELOAD %s: flags lost across the reload: %s" % [label, str(lost)])
+	if _party_uids() != uids_before:
+		failures.append("RELOAD %s: the party changed across the reload" % label)
+	if _inventory_totals() != items_before:
+		failures.append("RELOAD %s: the carried inventory changed across the reload" % label)
+	if condition_after != condition_before:
+		failures.append("RELOAD %s: party HP/fainted/level/XP changed across the reload (%s -> %s)" % [label,
+			JSON.stringify(condition_before), JSON.stringify(condition_after)])
+	if world.get_node_or_null(^"Player") == null:
+		failures.append("RELOAD %s: the rebuilt world has no Player" % label)
+	return failures.is_empty()
+
+
+func _party_uids() -> Array:
+	var out: Array = []
+	for member: RefCounted in game.get("party").call("members"):
+		out.append(str(member.get("uid")))
+	return out
+
+
+func _party_condition() -> Dictionary:
+	var out := {}
+	for member: RefCounted in game.get("party").call("members"):
+		out[str(member.get("uid"))] = [snappedf(float(member.get("hp")), 0.1), int(member.get("max_hp")),
+			bool(member.get("fainted")), int(member.get("level")), int(member.get("xp"))]
+	return out
+
+
+func _inventory_totals() -> Dictionary:
+	var out := {}
+	var inventory: RefCounted = game.get("inventory")
+	for i in int(inventory.call("slot_count")):
+		var stack: Dictionary = inventory.call("stack_at", i)
+		if not stack.is_empty():
+			out[str(stack.get("id", ""))] = int(out.get(str(stack.get("id", "")), 0)) + int(stack.get("n", 0))
+	return out
 
 
 func _take(result: Dictionary, key: String, label: String) -> bool:

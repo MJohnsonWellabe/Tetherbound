@@ -186,6 +186,13 @@ func _hall_start_ready() -> bool:
 ## hook saves, frees the world and loads it back; the segment then binds to
 ## the rebuilt world. Unset (the default) changes nothing.
 var before_gate: Callable
+## F02#4/#6: optional stage hooks, each `func(label: String) -> bool`. The
+## caller may save and reload there (the segment rebinds to the rebuilt world,
+## as for `before_gate`) or only mark a ledger stage. `after_captain` runs after
+## each captain's win (label: trainer id), `after_hall` once the Warden arena
+## is reached (label "hall"). Unset (the default) changes nothing.
+var after_captain: Callable
+var after_hall: Callable
 
 
 func _collect(world: Node) -> void:
@@ -218,6 +225,22 @@ func _unhook() -> void:
 		var node: Object = pair[0]
 		if is_instance_valid(node) and node.is_connected(str(pair[1]), pair[2]):
 			node.disconnect(str(pair[1]), pair[2])
+
+
+func _stage_hook(hook: Callable, label: String) -> bool:
+	if not hook.is_valid():
+		return true
+	_stick(0.0, 0.0)
+	_unhook()
+	var ok: bool = await hook.call(label)
+	if not ok:
+		return _fail("The stage hook (save/reload) after %s failed" % label)
+	_collect(_tree.current_scene)
+	_initial_ids = _party_ids()
+	if _player == null or _sigil_gate == null or _combat == null or _panel == null or _arbiter == null or _hold == null:
+		return _fail("The world after %s lacks the route dependencies" % label)
+	_hook()
+	return true
 
 
 func _reload_with_sigils() -> bool:
@@ -269,6 +292,8 @@ func _travel() -> bool:
 			return false
 		# Return through the actual road junction before following its next leg.
 		if not await _walk_ground(road[join]):
+			return false
+		if not await _stage_hook(after_captain, id):
 			return false
 		previous = join + 1
 	if not await _reload_with_sigils():
@@ -358,6 +383,8 @@ func _travel_hall() -> bool:
 			return _fail("Late arrival cannot complete the Hall passage")
 		_receipt("hall_passage_crossed", {"trainer": stage.trainer, "flag": flag, "from": stage.from, "to": stage.to,
 			"player": _player.global_position})
+	if not await _stage_hook(after_hall, "hall"):
+		return false
 	if not retained_five(_initial_ids, _party_ids()) or _tree.current_scene != _world \
 			or str(_game.get("current_realm")) != "meadows" or _fighting() or _has("defeated_warden") \
 			or not shutter_receipt(_hold, "defeated_warden", false):
@@ -373,6 +400,12 @@ func _travel_hall() -> bool:
 ## prompt holds.
 const PROMPT_SETTLE_FRAMES := 12
 const PROMPT_SETTLE_STEPS := 20
+
+
+## A press that lands on a harvestable plant beside the target (the Sigil Gate
+## stands among them) just gathers it; a player presses again.
+func _retryable_activation() -> bool:
+	return _activated_name.contains("/Vegetation/")
 
 
 func _approach_prompt(prompt: Node3D) -> bool:
