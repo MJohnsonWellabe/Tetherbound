@@ -109,6 +109,175 @@
         "tidewake"
       ],
       "disclosure": "Generated restored Tidewake after dock conclusion at the actual civilian dock provider, before Home Key/Tideglass hanging/Cloudreach unlock. Prior dock completion is a disclosed generated world flag, not a durable earned dock receipt. Five ordered template UIDs/species and stack positions are retained; all five levels/caps/full HP, listed prior facts, held/hung relics and next key are generated setup. No boss/dock/portal/hang transaction receipts or accepted delivery records are fabricated. This input claims no prior earned segment PASS or continuous lineage."
+    },
+    "tidewake": {
+      "boundary": "meadows_settled",
+      "realm": "meadows",
+      "day": 8,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "stronghold_marker": "machine_foot"
+      },
+      "party_levels": [
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned"
+      ],
+      "personal_flags": [
+        "legendary_refused"
+      ],
+      "inventory_add": {
+        "tidewake_portal_key": 1
+      },
+      "character_fields": {
+        "portal_unlocks": [],
+        "relics_held": [
+          "meadows"
+        ],
+        "relics_hung": []
+      },
+      "world_portal_unlocks": [],
+      "disclosure": "Generated post-machine Meadows finale at the actual outside-plinth control, before Home Key/relic hanging/Tidewake unlock. The existing Warden finale endpoint precedes village acknowledgement; no acknowledgement is claimed. Five ordered template UIDs/species and stack positions are retained; all five levels/caps/full HP, listed prior facts, held/hung relics and next key are generated setup. No boss/dock/portal/hang transaction receipts or accepted delivery records are fabricated. This input claims no prior earned segment PASS or continuous lineage."
+    },
+    "stormwood": {
+      "boundary": "cloudreach_settled",
+      "realm": "cloudreach",
+      "day": 16,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "cloudreach_reward": true
+      },
+      "party_levels": [
+        42,
+        42,
+        42,
+        42,
+        42
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "water_aquaryn_resolved",
+        "water_dock_salt_crown_landing_charted",
+        "water_sluice_west_disabled",
+        "water_sluice_east_disabled",
+        "defeated_water_trainer_bex",
+        "defeated_water_trainer_calder",
+        "defeated_water_trainer_venn",
+        "water_dock_sluice_isle_both_controls_disabled",
+        "water_captain_nerissa_defeated",
+        "water_veilfall_intake_stopped",
+        "water_veilfall_return_opened",
+        "water_guardian_freed",
+        "water_tether_disabled",
+        "water_guardian_settled",
+        "water_currents_restored",
+        "realm_relic_water_earned",
+        "water_civilian_departure_complete",
+        "cloudreach_chapter_started",
+        "cloudreach_crisis_learned",
+        "cloudreach_lower_anchors_investigated",
+        "causeway_survivors_reconnected",
+        "windscar_aerie_prepared",
+        "cloudreach_act_i_complete",
+        "fly_traversal_unlocked",
+        "sky_shrine_reached",
+        "storm_anchor_engine_truth_learned",
+        "cloudreach_upper_route_unlocked",
+        "cloudreach_act_ii_complete",
+        "cloudreach_upper_anchors_disabled",
+        "summit_extraction_engine_reached",
+        "captain_veyra_defeated",
+        "storm_anchor_network_disabled",
+        "cloudreach_winds_restored",
+        "cloudreach_chapter_complete",
+        "storm_anchor_lower_west_mapped",
+        "storm_anchor_lower_east_mapped",
+        "storm_anchor_upper_west_disabled",
+        "storm_anchor_upper_east_disabled",
+        "cloudreach_summit_relay_west_disabled",
+        "cloudreach_summit_relay_crown_disabled",
+        "cloudreach_summit_relay_east_disabled",
+        "realm_heart_cloudreach_earned",
+        "realm_key_stormwood",
+        "stormward_route_revealed",
+        "water_dock_reedhaven_repaired",
+        "water_swim_lesson_complete",
+        "defeated_water_trainer_tovin",
+        "water_dock_brine_steps_trial_won",
+        "defeated_water_trainer_solm",
+        "defeated_water_trainer_irva",
+        "water_shellwatch_residents_freed",
+        "water_shellwatch_pump_disabled",
+        "water_dock_shellwatch_residents_freed_and_pump_disabled"
+      ],
+      "personal_flags": [
+        "legendary_refused",
+        "water_chapter_started",
+        "water_cordage_recipe_gated",
+        "water_swim_lesson_briefed",
+        "water_swim_stone_earned",
+        "water:legendary_refused"
+      ],
+      "inventory_add": {
+        "stormwood_portal_key": 1
+      },
+      "character_fields": {
+        "portal_unlocks": [
+          "tidewake",
+          "cloudreach"
+        ],
+        "relics_held": [
+          "cloudreach"
+        ],
+        "relics_hung": [
+          "meadows",
+          "tidewake"
+        ]
+      },
+      "world_portal_unlocks": [
+        "tidewake",
+        "cloudreach"
+      ],
+      "disclosure": "Generated restored Cloudreach at current Warden Aila reward body, before Home Key/Wings hanging/Stormwood unlock. Completed main-route flags are drawn from authored act objectives; no optional chain completion is claimed. Five ordered template UIDs/species and stack positions are retained; all five levels/caps/full HP, listed prior facts, held/hung relics and next key are generated setup. No boss/dock/portal/hang transaction receipts or accepted delivery records are fabricated. This input claims no prior earned segment PASS or continuous lineage."
     }
   }
 }
