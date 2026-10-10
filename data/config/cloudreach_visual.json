@@ -120,7 +120,15 @@
     "mist_radius_max_fraction": 0.46,
     "mist_visible_distance_m": 3600.0,
     "mist_colour": "#e6eef4",
-    "mist_emission": 0.16
+    "mist_emission": 0.16,
+    "_mist_style_note": "P2-106: 'soft_bank' draws the collar with shaders/cloudreach_cloud_bank.gdshader (lit, darker underside, silhouette fades to mist_edge_alpha) on a rounder sphere; 'flat' restores the opaque emissive puffs that read as white decagons beside the arrival terrace.",
+    "mist_style": "soft_bank",
+    "mist_base_colour": "#8095a8",
+    "mist_edge_alpha": 0.0,
+    "mist_core_alpha": 0.62,
+    "mist_fade_end": 0.9,
+    "mist_radial_segments": 20,
+    "mist_rings": 10
   },
   "resource_positions": {
     "cr_node_cloudberry_waycamp": [-175.0, 136.5, 109.0],
