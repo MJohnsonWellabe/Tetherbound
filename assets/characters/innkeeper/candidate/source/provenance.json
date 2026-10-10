@@ -1,0 +1,139 @@
+{
+  "subject": "innkeeper",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "full_art_bar_pass": false,
+  "disposition": "Disabled identity-preserving material refinement of the existing installed NPC; no new character or body.",
+  "reference_provenance": {
+    "subject": "innkeeper",
+    "reference": "assets/characters/innkeeper/reference/native-face-material-v1.png",
+    "method": "built_in_imagegen",
+    "identity_reference": [
+      "Installed innkeeper_lod0.glb close front and three-quarter renders"
+    ],
+    "prompt": "Draft one identity-preserving FACE MATERIAL reference for the SAME installed Tetherbound innkeeper in the supplied front and three-quarter head renders. A single centered three-quarter head and very short neck, all existing hair/hat/hood fully inside frame with generous margins. Preserve the same adult man, warm light-tan complexion, broad softly square head, thick chestnut brows, dark eyes, short swept chestnut hair with the same small tied rear bun, long rounded nose, full short chestnut beard and moustache, calm serious closed mouth. Preserve every identity cue, age, forehead shape, bun and beard silhouette; no new hair, hat, accessory or younger identity. Refine only the existing exposed facial skin finish: coherent warm skin colour groups, restrained softened cheek and nose shading, readable eyelids, no mottled orange/brown speckles, no photoreal pores, no heavy makeup or glossy plastic. Maintain perceived ethnicity, expression, face width, eye spacing and recognizable likeness. Original premium stylized game character material study with neutral even illumination and pale grey studio background. No shoulders, coat, scarf, torso, hands, full body, new character, labels, text, panels, ruler or watermark. The installed geometry, rig, clips, clothing, hair, beard, eyes and headwear will be retained; this is direction for a safely masked facial-skin material refinement only.",
+    "default_enabled": false,
+    "scope": "Facial skin material only; preserve installed identity/body/clothes/headwear/rig/clips",
+    "selected_origin": "exec-483f2886-bac1-46e8-9f5e-b1043405e35b",
+    "inspection": "PASS likeness direction: same broad face, chestnut brows/full beard and tied rear bun. Faceted skin shading is a direction limitation requiring native finish review; original hair/beard/eyes/geometry protected.",
+    "limits": "Reference preserves identity direction. Native face finish/seams/full art approval remain OPEN; only masked facial skin will be used."
+  },
+  "generation": {
+    "task_id": "01a12763-328e-741d-a07c-d1b72b124d87",
+    "endpoint": "/openapi/v1/retexture",
+    "settings": {
+      "ai_model": "meshy-6",
+      "enable_original_uv": true,
+      "enable_pbr": false,
+      "texture_resolution": "2k",
+      "remove_lighting": true,
+      "text_style_prompt": "Preserve this SAME installed character identity and original UV layout. Only improve exposed facial skin finish with coherent warm skin colour groups matching the inspected image. Preserve eye colour, brows, facial hair, hair, headwear, mask and collar appearance. No freckles, speckles, dramatic baked lighting, new accessories or new identity. The source mesh will be retained; only safely isolated facial-skin albedo pixels will be used."
+    },
+    "reference": "assets/characters/innkeeper/reference/native-face-material-v1.png",
+    "model_input": "installed isolated head with original UVs",
+    "night": "2026-10-09",
+    "provider": "Meshy",
+    "status": "SUCCEEDED",
+    "new_submissions": 1,
+    "observed_credit_cost": 10
+  },
+  "generation_scope": "One guarded original-UV Meshy retexture of a static isolated installed-head input. Service geometry, rig, materials and other maps are never installed. Only conservative facial-skin albedo pixels are transferred to the complete original body.",
+  "rights": {
+    "basis": "Owner-held installed character and inspected original project draft; owner-authorized existing paid Meshy account. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preservation": {
+    "scope": "Original installed NPC; only safe facial-skin albedo pixels changed",
+    "candidate_enabled": false,
+    "service_head_triangle_uv_mapping_unchanged": true,
+    "installed_geometry_uv_weights_nodes_skin_clips_unchanged": true,
+    "original_binary_prefix_preserved": true,
+    "original_material_parameters_normal_roughness_metallic_unchanged": true,
+    "decoded_rgba_outside_face_mask_identical": true,
+    "protected_uv_overlap_excluded": true,
+    "changed_pixels": 13704,
+    "safe_pixels": 14047,
+    "image_size": [
+      2048,
+      2048
+    ],
+    "clips": 6,
+    "blend": "Inward 24-pixel Gaussian attenuation, half strength, service RGBA delta bounded to 18/255 before blending",
+    "requires_native_face_finish_identity_and_seam_review": true,
+    "full_art_gate": false
+  },
+  "face_skin_mask": {
+    "source": "innkeeper_lod0.glb",
+    "scope": "Conservative facial skin only; no geometry or source image modification",
+    "bounds_m": {
+      "min_y": 1.49,
+      "max_y": 1.68,
+      "max_abs_x": 0.13,
+      "min_z": 0.035
+    },
+    "selected_face_triangles": 512,
+    "protected_triangles": 53442,
+    "safe_pixels": 14047,
+    "original_image_size": [
+      2048,
+      2048
+    ],
+    "protected_uv_overlap_excluded": true,
+    "non_skin_pixels_and_boundary_inset_excluded": true,
+    "candidate_enabled": false,
+    "requires_native_identity_and_seam_review": true
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "presets": {
+      "Low": {
+        "renderer": "gl_compatibility",
+        "before_height_m": 1.77999997138977,
+        "after_height_m": 1.77999997138977,
+        "nine_matched_stage_views": true,
+        "paired_authored_world_post": true,
+        "sheet": "review/low-before-after.jpg"
+      },
+      "Medium": {
+        "renderer": "forward_plus",
+        "before_height_m": 1.77999997138977,
+        "after_height_m": 1.77999997138977,
+        "nine_matched_stage_views": true,
+        "paired_authored_world_post": true,
+        "sheet": "review/medium-before-after.jpg"
+      }
+    },
+    "scope": "Matched fixed native material/rig stage, existing original clip samples and authored NPC post when available. Raw logs and receipts remain outside Git."
+  },
+  "gates": {
+    "installed_scale": "PASS",
+    "original_body_uv_rig_clips": "PASS",
+    "protected_albedo_pixels": "PASS",
+    "face_finish_identity_seams": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false,
+    "face_finish": "FAIL",
+    "production_post_readability": "OPEN"
+  },
+  "limitations": [
+    "Conservative head-weight/position/skin-colour UV mask excludes all other triangle coverage; classification still requires native identity, shading and seam judgment.",
+    "Original decoded RGBA outside the selected mask is exactly retained; this does not alone certify visual appeal.",
+    "Still samples do not certify full motion, ordinary dialogue, trainer reactions, earned journeys or fights.",
+    "Runtime character config remains unchanged; OFF recipe changes only the candidate model path.",
+    "Existing innkeeper is visible, with a foreground trunk partly obstructing the body. Placement and vegetation retained; ordinary-path readability and dialogue remain OPEN."
+  ],
+  "native_inspection": {
+    "face_finish": "FAIL",
+    "face_finish_note": "Blurred eyes/mouth and uneven cheek/nose shading remain below the drafted face-finish reference.",
+    "identity_seams": "OPEN",
+    "independent_judge": "OPEN",
+    "default_enabled": false,
+    "production_post_readability": "OPEN",
+    "production_post_note": "Existing innkeeper is visible, with a foreground trunk partly obstructing the body. Placement and vegetation retained; ordinary-path readability and dialogue remain OPEN."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "scope": "Original installed NPC; only safe facial-skin albedo pixels changed",
+  "candidate_enabled": false,
+  "service_head_triangle_uv_mapping_unchanged": true,
+  "installed_geometry_uv_weights_nodes_skin_clips_unchanged": true,
+  "original_binary_prefix_preserved": true,
+  "original_material_parameters_normal_roughness_metallic_unchanged": true,
+  "decoded_rgba_outside_face_mask_identical": true,
+  "protected_uv_overlap_excluded": true,
+  "changed_pixels": 13704,
+  "safe_pixels": 14047,
+  "image_size": [
+    2048,
+    2048
+  ],
+  "clips": 6,
+  "blend": "Inward 24-pixel Gaussian attenuation, half strength, service RGBA delta bounded to 18/255 before blending",
+  "requires_native_face_finish_identity_and_seam_review": true,
+  "full_art_gate": false
+}
