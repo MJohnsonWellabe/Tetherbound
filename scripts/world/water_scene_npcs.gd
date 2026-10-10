@@ -88,7 +88,9 @@ func build(world: Node3D) -> Dictionary:
 		# The resolver admits appearance and portrait together. A disabled or
 		# mismatched candidate keeps this named NPC's installed portrait too.
 		var presentation_spec := spec.duplicate(true)
-		presentation_spec["portrait"] = model.get("portrait", spec.get("portrait", ""))
+		var variant_id := str(spec.get("appearance_variant_id", ""))
+		if not variant_id.is_empty() and str(model.get("appearance_variant_id", "")) == variant_id:
+			presentation_spec["portrait"] = model.get("portrait", spec.get("portrait", ""))
 		var body: Node3D = NPC.new()
 		body.name = id
 		body.set_meta("water_npc_id", id)
