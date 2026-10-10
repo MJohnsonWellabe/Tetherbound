@@ -66,12 +66,12 @@ func _case_preview_library_preserves_installed_clips_and_revive_pivot() -> void:
 	stage.free()
 
 
-func _case_ordinary_body_keeps_candidates_off() -> void:
+func _case_ordinary_body_uses_enabled_poses() -> void:
 	var body := SCENE.instantiate() as Node3D
 	body.set_script(BODY)
 	var loop := Engine.get_main_loop() as SceneTree
 	loop.root.add_child(body)
 	body.call("setup", "terrapup", false)
 	body.set_physics_process(false)
-	assert_false(bool(body.get_meta("f36_pose_candidate_installed", false)), "ordinary body stays on installed art")
+	assert_true(bool(body.get_meta("f36_pose_candidate_installed", false)), "ordinary body uses owner-enabled poses on installed art")
 	body.free()

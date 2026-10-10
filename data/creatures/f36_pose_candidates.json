@@ -1,7 +1,7 @@
 {
-  "enabled_species": [],
+  "enabled_species": ["terrapup", "ripplet", "galewisp", "bramblebun", "mudsnout", "trailpup", "burrowback", "meadowhart", "tuskroot", "paddlenewt", "mosshell", "brooktail", "galecrest", "duskhush", "pipwing", "reedwing", "veridian", "nightburrow", "stormtrail", "riftfrill", "ashtusk", "sparkit", "cindercub", "shadelet", "frostclaw", "cannonback", "riptusk", "mirejaw", "aquaryn", "torrentoad", "cragclaw", "riverdrake", "sirenseal", "mangrove_monitor", "tidecoil", "abyssal_guardian", "voltwig", "mosshock", "staticub", "voltarach", "fulgocobra", "stormraven", "pebbik", "craghorn", "stormbrush", "tanglevolt", "thundertunnel", "glimmermoth", "stormcapra", "skyrill", "aeriex", "ribbonray", "breezetail", "cloudfang", "cliffspike", "tempestwing", "solmane"],
   "scope": "presentation_only_no_save_or_network_payload",
-  "status": "unjudged_candidate_off",
+  "status": "owner_enabled_phase1_visual_acceptance_pending",
   "species": {
     "terrapup": {
       "model": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
