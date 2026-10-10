@@ -6792,11 +6792,10 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	_retain_research(str(rec["encounter_id"]), _local_peer_id(), "sight", str(opponent.species_id), "engage")
 	if preload("res://scripts/combat/tether_commands.gd").enabled() \
 		and MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true:
-		# Complete existing command admission before the first saved-vitals
-		# original freezes this record. Late admission changes its exact seq.
-		# The OFF path retains ordinary trainer reward originals, but skips
-		# this eager record application; commands bind on the next change.
-		# Owner-pose/save admission still fences either path independently.
+		# Canonical saved actor vitals need command admission before their
+		# original encounter record freezes; this eager application is ON-only.
+		# OFF still retains ordinary trainer reward originals and owner-save
+		# barriers. Guest pose admission fences both paths independently.
 		_host_after_encounter_change(str(rec["encounter_id"]))
 	if _can_encounter_rpc():
 		for peer_id: int in multiplayer.get_peers():

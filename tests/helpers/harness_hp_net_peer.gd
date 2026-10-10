@@ -98,8 +98,9 @@ func _harness_dispatch(action: String, args: Dictionary) -> Dictionary:
 			var creature: RefCounted = manager.call("active_creature") if manager != null and manager.call("is_fighting") else members[0]
 			var shown: Vector2 = manager.call("display_hp", creature) if manager != null else Vector2.ZERO
 			var row: Dictionary = SAVE.new("user://harness_hp_probe")._party_to_array(local.get("party"))[0]
-			return {"verdict": "PASS", "detail": "hp %.2f/%.2f shown %.2f/%.2f saved max %.2f" % [
-				float(creature.get("hp")), float(creature.get("max_hp")), shown.x, shown.y, float(row.max_hp)],
+			return {"verdict": "PASS", "detail": "hp %.2f/%.2f shown %.2f/%.2f saved max %.2f incoming %.6f last %.6f" % [
+				float(creature.get("hp")), float(creature.get("max_hp")), shown.x, shown.y, float(row.max_hp),
+				_incoming_total, _last_incoming],
 				"hp": float(creature.get("hp")), "max_hp": float(creature.get("max_hp")),
 				"shown_hp": shown.x, "shown_max": shown.y, "saved_max": float(row.max_hp),
 				"fighting": manager != null and bool(manager.call("is_fighting")), "last_incoming": _last_incoming,
