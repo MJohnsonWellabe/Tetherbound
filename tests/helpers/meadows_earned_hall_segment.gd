@@ -90,6 +90,13 @@ class HallPilot extends LIVE.CampaignPilot:
 			return
 		var punish := bool(manager.call("enemy_is_staggered")) or int(foe_body.call("intent")) == AI.Intent.RECOVER
 		if not punish:
+			# A quick commits for less than the shortest tell; throw one
+			# whenever a Dodge's worth of Wind is still banked after it.
+			if distance <= reach - 0.25 and bool(manager.call("quick_ready")) \
+					and wind >= float(manager.call("wind_cost", "quick")) + float(manager.call("wind_cost", "burst")):
+				quick_thrown += 1
+				await press("combat_quick")
+				return
 			await _hold(toward if distance > reach - 0.4 else Vector3.ZERO)
 			return
 		if beat < float(quick.get("windup", 0.18)) + 0.05:
