@@ -46,6 +46,9 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		if skeleton.find_bone(bone) < 0:
 			push_warning("F36 pose recipe missing bone %s for %s" % [bone, id])
 			return original
+	if not FileAccess.file_exists(model_path) and not _packaged_rig_matches(model, skeleton, recipe):
+		push_warning("F36 packaged rig contract stale for %s; preserving installed clips" % id)
+		return original
 	var animation_root := player.get_node_or_null(player.root_node)
 	if animation_root == null:
 		return original
@@ -121,6 +124,56 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 	player.add_animation_library(LIBRARY, library)
 	body.set_meta("f36_pose_candidate_installed", true)
 	return clips
+
+
+## Imported resources have a stable UID and preserve the measured skeleton
+## rest hierarchy and skin binds even when the exporter omits raw GLB bytes.
+static func _packaged_rig_matches(model: Node3D, skeleton: Skeleton3D, recipe: Dictionary) -> bool:
+	var uid := str(recipe.get("resource_uid", ""))
+	if uid.is_empty() or ResourceLoader.get_resource_uid(str(recipe.model)) != ResourceUID.text_to_id(uid):
+		return false
+	var bones: Dictionary = recipe.get("rig_contract", {})
+	var binds: Dictionary = recipe.get("bind_contract", {})
+	if bones.size() != skeleton.get_bone_count() or binds.is_empty():
+		return false
+	for name: String in bones:
+		var bone := skeleton.find_bone(name)
+		if bone < 0:
+			return false
+		var parent := skeleton.get_bone_parent(bone)
+		var parent_name := str(skeleton.get_bone_name(parent)) if parent >= 0 else ""
+		var contract: Dictionary = bones[name]
+		if parent_name != str(contract.parent) or not _transform_matches(skeleton.get_bone_rest(bone), contract.rest):
+			return false
+	var seen := {}
+	for mesh: MeshInstance3D in BOUNDS._mesh_instances(model):
+		if mesh.skin == null or BOUNDS._skeleton_for(mesh) != skeleton:
+			continue
+		var skin := mesh.skin
+		if skin.get_bind_count() != binds.size():
+			return false
+		for bind in skin.get_bind_count():
+			var bone := skin.get_bind_bone(bind)
+			if bone >= skeleton.get_bone_count():
+				return false
+			var name := str(skin.get_bind_name(bind)) if bone < 0 else str(skeleton.get_bone_name(bone))
+			if not binds.has(name) or not _transform_matches(skin.get_bind_pose(bind), binds[name]):
+				return false
+			seen[name] = true
+	return seen.size() == binds.size()
+
+
+static func _transform_matches(transform: Transform3D, column_major: Array) -> bool:
+	if column_major.size() != 16:
+		return false
+	var columns := [transform.basis.x, transform.basis.y, transform.basis.z, transform.origin]
+	var tolerance := float(_data.get("rig_tolerance", 0.0001))
+	for column in 4:
+		var actual: Vector3 = columns[column]
+		for row in 3:
+			if absf(actual[row] - float(column_major[column * 4 + row])) > tolerance:
+				return false
+	return true
 
 
 ## Bake the collapse's contact once per source/profile/fitted basis. This
