@@ -616,7 +616,9 @@ func _pending_surface_current(pending: Dictionary) -> bool:
 		or body.get_parent() != realm_world: return false
 	if pending.get("generation") != _population_generation: return false
 	var site_id := str(pending.get("site", ""))
-	if _site_failures.has(site_id) or _site_spawned.has(site_id) or not _wanted_sites.has(site_id): return false
+	var packet: Dictionary = pending.packet
+	if _site_failures.has(site_id) or (packet.is_empty() and _site_spawned.has(site_id)) \
+		or not _wanted_sites.has(site_id): return false
 	var site := find_id(encounter_config.get("wild_sites", []), site_id)
 	if site.is_empty() or site != pending.get("site_definition") \
 		or str(site.get("placement_mode", "ground")) != "water_surface": return false
@@ -627,7 +629,6 @@ func _pending_surface_current(pending: Dictionary) -> bool:
 	if owner != null and (game == null or owner.get_ref() != game.world): return false
 	if str(pending.epoch) != (str(_session.call("_altar_current_epoch")) if _session != null else ""): return false
 	if _once_cleared(str(pending.once_id)): return false
-	var packet: Dictionary = pending.packet
 	if not packet.is_empty() and (game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(
 			game.world.redesign_world, str(packet.get("captured_from", {}).get("spawn_id", ""))) != packet): return false
 	return true
