@@ -18,73 +18,165 @@ var _named_trainer := ""
 var _observed_trainers: Array[String] = []
 
 
-## A reader for the harder named fights (F04#7: ~200 HP bodies whose landed
-## blow costs 10-15% of a creature). It keeps one Dodge of Wind in reserve
-## outside the foe's rooted recovery, spends charged and the ultimate into
-## that recovery, and steps off a CHARGER's or DIVER's lane sideways instead
-## of backing down it. Every action is a physical controller press.
+## The F22#1 READER policy (tests/helpers/combat_depth_pilot.gd) on the
+## earned route's physical controller path, for the harder named fights
+## (F04#7: ~200 HP bodies whose landed blow costs 10-15% of a creature). It
+## reads only what the fight shows: the wind-up ring and its drawn lane or
+## cone, the foe's recovery and stagger, and the Wind and ultimate meters.
+## It punishes recovery, beats a long tell with a charged, steps off a lane
+## or cone, keeps a quarter of its Wind in reserve, and spends a full
+## ultimate (RB tap, then a face press) into a recovery window.
 class HallPilot extends LIVE.CampaignPilot:
+	const AI := preload("res://scripts/combat/combat_ai.gd")
+	const MATH := preload("res://scripts/combat/combat_math.gd")
+	const RESERVE := 0.25
+	const WALK_SPEED := 5.6  # combat.json creature speed; only used to time a Dodge.
 	var ultimate_inputs := 0
-	var lateral_bursts := 0
-	var _dodged_this_windup := false
-	var _side := 1.0
-	var _dbg_w := false
+	var tell_charges := 0
 
 	func _faces_target(_ally_body: Node3D, _foe_body: Node3D) -> bool:
 		# Production faces the target at accepted quick/charged start and
 		# tracks it during windup. Do not spend the recovery window turning
-		# with the stick first. Range, retreat, readiness and host refusal
-		# still use the inherited physical input path.
+		# with the stick first.
 		return true
 
-	func _charged_is_worth_it() -> bool:
-		return bool(manager.call("enemy_is_rooted"))
-
 	func _act(ally_body: Node3D, foe_body: Node3D) -> void:
-		var toward := foe_body.global_position - ally_body.global_position
-		toward.y = 0.0
-		var winding := bool(manager.call("enemy_is_winding_up"))
-		if not winding:
-			_dodged_this_windup = false
-		if winding != _dbg_w:
-			_dbg_w = winding
-			if winding:
-				var cfgd: Dictionary = foe_body.call("combat_config")
-				print("DIAG TELL f=%d gap=%.2f range=%.2f tell=%.2f committed=%s wind=%.0f shape=%s chase=%s" % [Engine.get_physics_frames(), toward.length(), float(cfgd.get("range", 0)), float(cfgd.get("telegraph", 0)), manager.call("player_is_committed"), float(manager.call("wind_value")), manager.call("enemy_windup_shape"), cfgd.get("chase_speed")])
-		var committed := bool(manager.call("player_is_committed"))
-		var burst_cost := float(manager.call("wind_cost", "burst"))
-		var wind := float(manager.call("wind_value"))
-		# A travelling lunge follows its lane: leave it sideways, once per tell.
-		if winding and burst_input and not committed and not _dodged_this_windup and wind >= burst_cost \
-				and not str(manager.call("enemy_windup_shape")).is_empty():
-			_dodged_this_windup = true
-			_side = -_side
-			_move_toward(toward.cross(Vector3.UP).normalized() * _side)
-			burst_attempts += 1
-			lateral_bursts += 1
-			var before := wind
-			await press("jump")
-			if float(manager.call("wind_value")) < before:
-				accepted_bursts += 1
-			_move_toward(Vector3.ZERO)
+		if bool(manager.call("player_is_committed")):
+			await tree.physics_frame
 			return
-		var rooted := bool(manager.call("enemy_is_rooted"))
-		var contact := preload("res://scripts/combat/contact_spacing.gd").pair_need(ally_body, foe_body)
-		var in_reach := toward.length() <= contact + (float(manager.call("combat_move_reach", "charged")) - contact) * 0.8
-		# RB tap arms the ultimate on release; the next face press spends it.
-		if rooted and in_reach and not committed and float(manager.call("ultimate_fraction")) >= 1.0:
+		if switch_input and _should_switch():
+			var before: RefCounted = manager.call("active_creature")
+			await press("party_cycle", true)
+			if _observe_switch(before, manager.call("active_creature")):
+				voluntary_switches += 1
+			return
+		var delta := foe_body.global_position - ally_body.global_position
+		delta.y = 0.0
+		var distance := delta.length()
+		var toward := delta.normalized()
+		var reach := float(manager.call("combat_move_reach", "quick"))
+		var charged_reach := float(manager.call("combat_move_reach", "charged"))
+		var wind := float(manager.call("wind_value"))
+		var reserve := float(manager.call("wind_max")) * RESERVE
+		var creature: RefCounted = manager.call("active_creature")
+		var charged: Dictionary = manager.call("_move_profile", "player_charged", str(creature.get("move_charged")))
+		var quick: Dictionary = manager.call("_move_profile", "player_quick", str(creature.get("move_quick")))
+		var beat := float(foe_body.get("_beat_left"))
+		if bool(manager.call("enemy_is_winding_up")):
+			if bool(manager.call("charged_ready")) and distance < charged_reach - 0.2 \
+					and beat > float(charged.get("windup", 0.55)) + 0.1 \
+					and wind >= float(manager.call("wind_cost", "charged")) + reserve:
+				tell_charges += 1
+				charged_thrown += 1
+				await press("combat_charged")
+				return
+			if foe_body.has_method("lunge_travels") and bool(foe_body.call("lunge_travels")):
+				await _clear_lunge_lane(ally_body, foe_body, toward)
+				return
+			var enemy_reach := _strike_reach(foe_body)
+			if distance < enemy_reach + 0.35:
+				await _leave_strike(ally_body, foe_body, toward, distance, enemy_reach, beat)
+				return
+			await tree.physics_frame
+			return
+		if wind < float(manager.call("wind_cost", "quick")) + reserve:
+			await _hold(_retreat_direction(ally_body, toward))
+			return
+		var punish := bool(manager.call("enemy_is_staggered")) or int(foe_body.call("intent")) == AI.Intent.RECOVER
+		if not punish:
+			await _hold(toward if distance > reach - 0.4 else Vector3.ZERO)
+			return
+		if beat < float(quick.get("windup", 0.18)) + 0.05:
+			await _hold(toward if distance > reach - 0.25 else Vector3.ZERO)
+			return
+		if float(manager.call("ultimate_fraction")) >= 1.0 and distance < charged_reach - 0.2:
 			ultimate_inputs += 1
 			await press("combat_ultimate_arm")
 			await press("combat_charged")
 			return
-		# Outside a punish window, never spend the Wind the next Dodge needs.
-		if not rooted and not winding and wind - float(manager.call("wind_cost", "quick")) < burst_cost \
-				and toward.length() < _enemy_reach(ally_body, foe_body) + 2.0:
-			_move_toward(-toward)
-			await tree.physics_frame
-			_move_toward(Vector3.ZERO)
+		if distance > reach - 0.25:
+			await _hold(toward)
 			return
-		await super._act(ally_body, foe_body)
+		if beat > float(charged.get("windup", 0.55)) + 0.1 and bool(manager.call("charged_ready")) \
+				and distance < charged_reach - 0.15 and wind >= float(manager.call("wind_cost", "charged")) + reserve:
+			charged_thrown += 1
+			await press("combat_charged")
+		elif bool(manager.call("quick_ready")):
+			quick_thrown += 1
+			await press("combat_quick")
+		else:
+			await tree.physics_frame
+
+	func _hold(direction: Vector3) -> void:
+		_move_toward(direction)
+		await tree.physics_frame
+
+	## The drawn attack's own reach: a named pattern attack freezes its
+	## profile at tell start; otherwise the body's spaced strike.
+	func _strike_reach(foe_body: Node3D) -> float:
+		var selected: Variant = foe_body.get("_selected_attack")
+		if selected is Dictionary and (selected as Dictionary).has("range"):
+			return float(selected.range)
+		return float((foe_body.call("combat_config") as Dictionary).get("range", 2.6))
+
+	func _retreat_direction(ally_body: Node3D, toward: Vector3) -> Vector3:
+		var arena: Node3D = manager.call("arena")
+		if arena == null:
+			return -toward
+		var outward := ally_body.global_position - arena.global_position
+		outward.y = 0.0
+		# At the boundary walking straight back is no longer a dodge; circle.
+		if outward.length() > float(arena.get("radius")) - 2.5:
+			var tangent := outward.normalized().cross(Vector3.UP)
+			return tangent if tangent.dot(-toward) >= 0.0 else -tangent
+		return -toward
+
+	## Out of the drawn cone sideways when that is shorter than out of its
+	## reach, else back off; Dodge when walking cannot make it in the tell.
+	func _leave_strike(ally_body: Node3D, foe_body: Node3D, toward: Vector3, distance: float, enemy_reach: float, beat: float) -> void:
+		var heading: Vector3 = foe_body.call("facing")
+		heading.y = 0.0
+		var direction := _retreat_direction(ally_body, toward)
+		var needed := enemy_reach + 0.35 - distance
+		if heading.length() > 0.01:
+			heading = heading.normalized()
+			var offset := ally_body.global_position - foe_body.global_position
+			offset.y = 0.0
+			var along := offset.dot(heading)
+			var lateral := offset - heading * along
+			var half := deg_to_rad(float((foe_body.call("combat_config") as Dictionary).get("cone_degrees", 90.0)) * 0.5)
+			var edge_gap := along * tan(half) - lateral.length() if along > 0.0 else 0.0
+			var sideways := maxf(0.0, edge_gap) * cos(half) + float(ally_body.call("body_radius")) + 0.3
+			if sideways < needed:
+				direction = lateral.normalized() if lateral.length() > 0.05 else heading.cross(Vector3.UP)
+				needed = sideways
+		_move_toward(direction)
+		if needed / WALK_SPEED > beat - 0.05 and burst_input \
+				and float(manager.call("wind_value")) >= float(manager.call("wind_cost", "burst")):
+			burst_attempts += 1
+			var before := float(manager.call("wind_value"))
+			await press("jump")
+			if float(manager.call("wind_value")) < before:
+				accepted_bursts += 1
+			return
+		await tree.physics_frame
+
+	## Sidestep until the ally's footprint is off the lane the charger shows.
+	func _clear_lunge_lane(ally_body: Node3D, foe_body: Node3D, toward: Vector3) -> void:
+		var heading: Vector3 = foe_body.call("facing")
+		heading.y = 0.0
+		heading = heading.normalized() if heading.length() > 0.01 else toward
+		var offset := ally_body.global_position - foe_body.global_position
+		offset.y = 0.0
+		var along := offset.dot(heading)
+		var lateral := offset - heading * along
+		var scale := float(MATH.config().get("charger_lunge", {}).get("contact_scale", 1.2))
+		var clearance := (float(ally_body.call("body_radius")) + float(foe_body.call("body_radius"))) * scale + 0.4
+		var length := float((foe_body.call("combat_config") as Dictionary).get("lunge", 0.0)) + clearance
+		if along < -clearance or along > length or lateral.length() > clearance:
+			await _hold(Vector3.ZERO)
+			return
+		await _hold(lateral.normalized() if lateral.length() > 0.05 else heading.cross(Vector3.UP))
 
 
 func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
@@ -386,7 +478,7 @@ func _fight_named(body: Node3D, id: String) -> bool:
 		"fighting": _fighting(), "flag": _has(flag), "quick_inputs": pilot.quick_thrown,
 		"charged_inputs": pilot.charged_thrown, "switches": pilot.voluntary_switches,
 		"burst_attempts": pilot.burst_attempts, "accepted_bursts": pilot.accepted_bursts,
-		"lateral_bursts": pilot.lateral_bursts, "ultimate_inputs": pilot.ultimate_inputs,
+		"tell_charges": pilot.tell_charges, "ultimate_inputs": pilot.ultimate_inputs,
 		"enemy_species": str(actual_enemy.get("species_id")) if actual_enemy != null else "",
 		"enemy_hp": float(actual_enemy.get("hp")) if actual_enemy != null else -1.0,
 		"items_before": before_items, "items_after": _captain_stock(),
