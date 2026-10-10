@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "enabled": false,
+  "enabled": true,
   "scope": "peer-local presentation; no durable state, RPC, transaction or save schema",
   "provenance": "Unmodified installed Quaternius Medieval Village/Fantasy Props/Stylized Nature. Duplicated banner tint only. No acquisition/generation.",
   "cover_layers": [
