@@ -1,5 +1,5 @@
 {
-  "_comment": "P2-057 unjudged local ground-cover clearance on actual Water named NPC/trainer bodies. Default off until paired native approach evidence. Reload the Water scene after changing this gate. Does not affect static vegetation, actor placement, prompts or collisions.",
-  "enabled": false,
+  "_comment": "P2-057 paired Low named-NPC subset accepted by Claude. Reload the Water scene after changing this gate. Clears only local procedural grass; static vegetation, actor placement, prompts and collisions are unaffected.",
+  "enabled": true,
   "radius_m": 2.5
 }
