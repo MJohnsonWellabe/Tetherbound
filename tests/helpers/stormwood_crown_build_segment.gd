@@ -767,6 +767,16 @@ func _fight_current(label: String) -> bool:
 			misses_before = int(counts.player_misses)
 		elif int(counts.player_misses) - misses_before >= 4 and reposition_ticks <= 0:
 			misses_before = int(counts.player_misses)
+			var e_dbg := _manager.call("enemy_body") as Node3D
+			var a_dbg := _director.call("ally_body") as Node3D
+			if e_dbg != null and a_dbg != null:
+				_note("DIAG miss streak ally=%s enemy=%s enemy_centre=%s floor=%s ai=%s reach=%s" % [a_dbg.global_position,
+					e_dbg.global_position, e_dbg.call("centre") if e_dbg.has_method("centre") else "-",
+					e_dbg.call("is_on_floor") if e_dbg.has_method("is_on_floor") else "-",
+					e_dbg.get("_intent"), _manager.call("combat_move_reach", "quick")])
+				var opp_dbg: Variant = e_dbg.get("_opponent")
+				_note("DIAG enemy_opponent=%s same_as_ally=%s visible=%s" % [(opp_dbg as Node3D).global_position if opp_dbg is Node3D else "none",
+					opp_dbg == a_dbg, (opp_dbg as Node3D).visible if opp_dbg is Node3D else false])
 			reposition_ticks = 45
 			side = -side
 		if enemy != null and ally != null:
