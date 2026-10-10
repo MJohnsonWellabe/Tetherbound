@@ -18,7 +18,7 @@ func _run() -> void:
 	_player.global_position=Vector3(-320,300.2,1040)
 	_player.velocity=Vector3.ZERO
 	var passed:=true
-	for at in [Vector3(-540,330,1280),Vector3(-511.2,338.25,1305.6),Vector3(-468,338.25,1344),Vector3(-450,342,1360),Vector3(-260,390,1560),Vector3(-230,390,1575),Vector3(110,420,1815),Vector3(120,420,1830)]:
+	for at in [Vector3(-540,330,1280),Vector3(-511.2,338.25,1305.625),Vector3(-468,338.25,1344),Vector3(-450,342,1360),Vector3(-260,390,1560),Vector3(-230,390,1575),Vector3(110,420,1815),Vector3(120,420,1830)]:
 		if not await _walk_to(at):
 			passed=false
 			break
