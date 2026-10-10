@@ -676,6 +676,12 @@ class Segment extends RefCounted:
 			if not str(surge.get("phase")) in ["break", "fading"]:
 				await tree.physics_frame
 				continue
+			# A wild that wanders up offers its own Engage prompt; let it pass.
+			var arbiter: Node = tree.get_first_node_in_group("interaction_arbiter")
+			var winner: Variant = arbiter.call("winning_provider") if arbiter != null else null
+			if winner is Node and (winner as Node).name == "EncounterDirector":
+				await tree.physics_frame
+				continue
 			if not await _activate_node(harvest, harvest.get_node_or_null(^"Interactable") as Node3D,
 					FIRST_GLASS_XZ, "first charged Stormglass node"):
 				return _result()
