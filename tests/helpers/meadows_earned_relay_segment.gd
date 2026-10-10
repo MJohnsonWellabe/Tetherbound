@@ -342,7 +342,7 @@ func _press_prompt(prompt: Node3D) -> bool:
 			return true
 		var wild_took_it := _fighting() and not _captain_active \
 				and not bool(_director.call("trainer_battle_active"))
-		if _activated_id != 0 and not wild_took_it:
+		if _activated_id != 0 and not wild_took_it and not _retryable_activation():
 			break
 		_receipt("press_retry", {"attempt": attempt + 1, "wanted": str(prompt.name),
 			"activated": _activated_name, "wild_fight": wild_took_it})
@@ -354,6 +354,12 @@ func _press_prompt(prompt: Node3D) -> bool:
 		str(is_instance_valid(prompt) and prompt.is_inside_tree()),
 		str(prompt.get_path()) if is_instance_valid(prompt) and prompt.is_inside_tree() else "",
 		_activated_name, _activated_id])
+
+
+## Whether a press that activated another provider may simply be pressed
+## again (a subclass may allow a harmless one). False here: unchanged.
+func _retryable_activation() -> bool:
+	return false
 
 
 func _talk(prompt: Node3D, expected: String) -> bool:

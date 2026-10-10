@@ -402,6 +402,12 @@ const PROMPT_SETTLE_FRAMES := 12
 const PROMPT_SETTLE_STEPS := 20
 
 
+## A press that lands on a harvestable plant beside the target (the Sigil Gate
+## stands among them) just gathers it; a player presses again.
+func _retryable_activation() -> bool:
+	return _activated_name.contains("/Vegetation/")
+
+
 func _approach_prompt(prompt: Node3D) -> bool:
 	for _attempt in PROMPT_SETTLE_STEPS:
 		if not await super._approach_prompt(prompt):
