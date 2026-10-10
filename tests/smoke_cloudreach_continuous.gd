@@ -756,6 +756,11 @@ func _arrival_gather(id: String, item: String) -> bool:
 	var prompt: Node3D = resource.find_child("Interactable",true,false)
 	if prompt == null: return _fail("Missing arrival resource " + id)
 	if not await _walk(prompt.global_position + Vector3(0,-0.8,-1.5),0.35): return false
+	# The daily harvest rebuilds its prompt while the player walks up (a
+	# streamed or refreshed node); interact with the live one, not the freed one.
+	var live: Node = world.get_node_or_null("CloudreachResources/" + id)
+	prompt = live.find_child("Interactable",true,false) if live != null else null
+	if prompt == null: return _fail("Arrival resource %s offered no live prompt on arrival" % id)
 	var before: int = game.inventory.count(item)
 	if str(game.items.gathered_with(item)) == "knife" and str(game.equipped_tool) != "knife":
 		await _tap("hotbar_1")
