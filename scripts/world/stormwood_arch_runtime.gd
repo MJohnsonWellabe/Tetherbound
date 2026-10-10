@@ -115,10 +115,13 @@ func _build(spec: Dictionary) -> void:
 	var slab_mesh := BoxMesh.new()
 	slab_mesh.size = footing_box.size
 	slab.mesh = slab_mesh
-	var stone := StandardMaterial3D.new()
-	stone.albedo_color = Color("343a42")
-	slab.material_override = stone
+	slab.material_override = PIECE.masonry_material(true)
 	footing.add_child(slab)
+	var clearance := Node3D.new()
+	clearance.name = "ArchPavingClearance"
+	clearance.set_meta("grass_clear_radius", float(RULES.config().get("presentation", {}).get("paving_clear_radius_m", 6.4)))
+	footing.add_child(clearance)
+	clearance.add_to_group("grass_clear")
 	var piece := PIECE.new()
 	piece.name = "ArchPresentation"
 	arch.add_child(piece)

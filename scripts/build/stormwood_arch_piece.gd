@@ -12,6 +12,7 @@ extends Node3D
 ## arch mounted on terrain.
 
 const MESH_PATH := "res://assets/buildings/quaternius_castle/WallEntranceBricks.obj"
+const ARCH_RULES := preload("res://scripts/world/stormwood_arch_rules.gd")
 
 const HEIGHT := 4.0
 const OUTER_WIDTH := 4.0
@@ -102,10 +103,25 @@ func _spawn(solid: bool) -> void:
 
 
 func _dark_frame_material() -> StandardMaterial3D:
+	return masonry_material()
+
+
+## Installed masonry texture and normal are shared by the arch and its
+## supported paving. Triplanar mapping avoids stretching the old kit UVs.
+static func masonry_material(paving: bool = false) -> StandardMaterial3D:
+	var settings: Dictionary = ARCH_RULES.config().get("presentation", {})
 	var material := StandardMaterial3D.new()
-	material.albedo_color = FRAME_DARK
-	material.metallic = 0.28
-	material.roughness = 0.56
+	material.albedo_color = Color(str(settings.get("paving_tint" if paving else "masonry_tint", "#a5a49a")))
+	material.albedo_texture = load("res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png")
+	material.normal_enabled = true
+	material.normal_texture = load("res://assets/buildings/quaternius_medieval/T_RockTrim_Normal.png")
+	material.normal_scale = float(settings.get("normal_depth", .35))
+	material.uv1_triplanar = true
+	material.uv1_world_triplanar = true
+	material.uv1_scale = Vector3.ONE * float(settings.get("paving_uv_scale" if paving else "masonry_uv_scale", .4))
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	material.metallic = .05
+	material.roughness = float(settings.get("roughness", .86))
 	return material
 
 
