@@ -21,7 +21,8 @@ extends RefCounted
 ##                                         defeat through the ledger (F11 setup only)
 ##   stormheart_answer  {answer, drop_at_ack?}  answer THIS peer's Stormheart offer through
 ##                                         the real dialogue: interact = Yes, menu_cancel = No
-##                                         (drop_at_ack: Yes or No; the link closes in that answer's own step)
+##                                         (drop_at_ack: after the scoped prepared character write succeeds,
+##                                         before the ending sends its settlement acknowledgement)
 ##   stormheart_claim_again {}            send the prompt's ending_claim WITHOUT the acceptance
 ##                                         hint; the HOST must refuse from its own record
 ##   stormheart_state {character?}        this peer's view of the F11 outcome (character:
@@ -612,55 +613,143 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 		shot = await _screenshot(tree, {"name": str(args.screenshot)})
 	var cut_at_ack := false
 	if bool(args.get("drop_at_ack", false)):
-		# F11 "disconnect at claim acknowledgement". The panel answers Yes in its
-		# `_physics_process` and emits `completed`. This one-shot handler closes
-		# the transport in that same physics step, before the frame's network
-		# poll: whatever the ending then commits (receipt, character save) is
-		# local, and the `ending_settled` acknowledgement it sends finds no
-		# connected peer. The host-side step that follows proves it never arrived.
-		# A No is the panel's `declined` (emitted before `finished`); the ending
-		# then refuses, writes its receipt and sends the same acknowledgement.
+		# F11 saved-character -> missing host ACK. Observe the existing writer's
+		# live invocation, not the earlier dialogue signal: the ceremony needs
+		# its admitted owner stream until this exact synchronous save completes.
 		var accepting := answer == "accept"
 		var claim_uid := str(load(ENDING_PATH).call("claim_id", ending.get("_local_claim")))
-		var cut := {"done": false, "claim_left": true}
-		var on_yes := func(_conversation: String) -> void:
-			if is_instance_valid(ending):
-				cut.claim_left = not (ending.get("_local_claim") as Dictionary).is_empty()
-			(tree.root.multiplayer.multiplayer_peer as MultiplayerPeer).close()
+		var game: Node = tree.root.get_node_or_null(^"Game")
+		var session: Node = game.get("session") if game != null else null
+		var saver: RefCounted = game.get("save_system") if game != null else null
+		var passive: RefCounted = session.get("_owner_passive") if session != null else null
+		var link: MultiplayerPeer = tree.root.multiplayer.multiplayer_peer
+		if saver == null or passive == null or claim_uid.is_empty() or session.call("is_host") == true \
+			or not link is ENetMultiplayerPeer or link.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+			return {"verdict": "ERROR", "detail": "ACK-drop requires the actual guest saver, owner stream, claim and connected ENet transport"}
+		var character: String = game.get("local").get("character_id")
+		var scope: Dictionary = passive.call("_scope")
+		var receipt_flag := str(load(ENDING_PATH).call("answer_flag", claim_uid, accepting))
+		var transaction_receipt := "stormheart_answer:%s:%s" % [claim_uid, character]
+		var jobs: Dictionary = {}
+		var cut := {"done": false, "claim_left": false, "call_id": "", "sha256": "", "evidence_path": ""}
+		var on_submitted := func(id: String, request: Dictionary) -> void:
+			var actual: Dictionary = saver.call("prepared_character_call", id)
+			var frozen: Dictionary = passive.get("stormwood_owner")
+			if actual.is_empty() or actual.get("phase") != "submitted" or not request.is_read_only() \
+				or not actual.get("call") is Dictionary or not actual.call.is_read_only() \
+				or actual.call.get("id") != id or actual.call.get("writer_instance_id") != saver.get_instance_id() \
+				or not is_same(actual.call.get("request"), request) or frozen.get("uid") != claim_uid \
+				or frozen.get("host") != false or frozen.get("saved") != false or not frozen.get("after") is Dictionary \
+				or not preload("res://scripts/net/owner_passive_preparation.gd").exact(frozen.get("scope"), scope) \
+				or not preload("res://scripts/net/owner_passive_preparation.gd").exact(passive.call("_scope"), scope) \
+				or request.get("character_only") != true or request.get("write_split") != false or request.get("host") != false \
+				or request.get("character_id") != character or request.get("world_id") != scope.world_id \
+				or request.get("world_instance_id") != scope.world_namespace or not request.get("character_data") is Dictionary:
+				return
+			var personal: Dictionary = request.character_data.duplicate(true)
+			personal.character_id = character
+			if not personal.get("flags", {}).get("flags", []).has(receipt_flag) \
+				or personal.get("redesign_character", {}).get("transaction_receipts", []).count(transaction_receipt) != 1 \
+				or not preload("res://scripts/net/owner_passive_preparation.gd").exact(
+					preload("res://scripts/net/character_record_rules.gd").portable_projection(personal), frozen.after): return
+			jobs[id] = {"call": actual.call, "request": request, "after": frozen.after.duplicate(true)}
+		var on_completed := func(id: String, request: Dictionary, success: bool, receipt: Dictionary) -> void:
+			var job: Dictionary = jobs.get(id, {})
+			jobs.erase(id)
+			var actual: Dictionary = saver.call("prepared_character_call", id)
+			var frozen: Dictionary = passive.get("stormwood_owner")
+			if cut.done or not success or job.is_empty() or actual.is_empty() or actual.get("phase") != "completed" \
+				or actual.get("success") != true or not is_same(actual.get("call"), job.call) \
+				or not is_same(actual.call.get("request"), request) or not is_same(job.request, request) \
+				or not is_same(actual.get("receipt"), receipt) or game.get("save_system") != saver \
+				or game.get("session") != session or session.get("_owner_passive") != passive \
+				or not preload("res://scripts/net/owner_passive_preparation.gd").exact(passive.call("_scope"), scope) \
+				or frozen.get("uid") != claim_uid or frozen.get("saved") != false \
+				or not preload("res://scripts/net/owner_passive_preparation.gd").exact(frozen.get("after"), job.after) \
+				or str(load(ENDING_PATH).call("claim_id", ending.get("_local_claim"))) != claim_uid \
+				or tree.root.multiplayer.multiplayer_peer != link or link.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED \
+				or receipt.size() != 6 or receipt.get("version") != 1 \
+				or receipt.get("source") != "SaveGame_locked_prepared_character_write_TRUE_BOOL" \
+				or receipt.get("writer_instance_id") != saver.get_instance_id() \
+				or receipt.get("writer_script") != "res://scripts/save/save_game.gd" \
+				or receipt.get("request_sha256") != preload("res://scripts/save/save_document.gd").stringify(request).sha256_text() \
+				or not receipt.get("files") is Dictionary or receipt.files.size() != 1: return
+			var file: Dictionary = receipt.files.get("character", {})
+			var path: String = saver.get("_characters").call("path_for", character)
+			if file.size() != 4 or file.get("path") != path or not file.get("payload") is Dictionary: return
+			var raw: FileAccess = FileAccess.open(path, FileAccess.READ)
+			if raw == null: return
+			var bytes: PackedByteArray = raw.get_buffer(raw.get_length())
+			raw.close()
+			var hasher: HashingContext = HashingContext.new()
+			hasher.start(HashingContext.HASH_SHA256)
+			hasher.update(bytes)
+			var digest: String = hasher.finish().hex_encode()
+			var decoded: Variant = preload("res://scripts/save/save_document.gd").parse(bytes.get_string_from_utf8())
+			if bytes.is_empty() or digest != file.get("sha256") or Marshalls.raw_to_base64(bytes) != file.get("bytes_base64") \
+				or not decoded is Dictionary or not preload("res://scripts/net/owner_passive_preparation.gd").exact(decoded, file.payload) \
+				or decoded.get("character_id") != character or decoded.get("last_world_id") != scope.world_id \
+				or decoded.get("last_world_instance_id") != scope.world_namespace: return
+			for field: String in request.character_data:
+				if not preload("res://scripts/net/owner_passive_preparation.gd").exact(decoded.get(field), request.character_data[field]): return
+			var evidence_path: String = out_dir(tree).path_join("f11_ack_drop_prepared.json")
+			DirAccess.make_dir_recursive_absolute(out_dir(tree))
+			var evidence: FileAccess = FileAccess.open(evidence_path, FileAccess.WRITE)
+			if evidence == null: return
+			evidence.store_string(preload("res://scripts/save/save_document.gd").stringify({
+				"source": "actual_scoped_prepared_character_TRUE_BOOL_before_ending_settled",
+				"call_id": id, "actual_writer_success": success, "claim_uid": claim_uid,
+				"answer": answer, "scope": scope, "after": job.after, "request": request, "receipt": receipt,
+				"request_document": preload("res://scripts/save/save_document.gd").stringify(request),
+				"receipt_document": preload("res://scripts/save/save_document.gd").stringify(receipt)}))
+			var evidence_ok: bool = evidence.get_error() == OK
+			evidence.close()
+			if not evidence_ok: return
+			# No await: SaveGame has not returned to _finish_local_claim, which is
+			# the only sender of ending_settled. Host assertions below prove no ACK.
+			cut.claim_left = not (ending.get("_local_claim") as Dictionary).is_empty()
+			cut.call_id = id
+			cut.sha256 = digest
+			cut.evidence_path = evidence_path
+			link.close()
 			cut.done = true
-		var answer_signal := "completed" if accepting else "declined"
 		var answer_action := "interact" if accepting else "menu_cancel"
-		panel.connect(answer_signal, on_yes, CONNECT_ONE_SHOT)
-		if not _edge_ok(await tree.call("_press_edge", answer_action, true)):
-			return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}
+		saver.connect("prepared_character_submitted", on_submitted)
+		saver.connect("prepared_character_completed", on_completed)
+		var pressed: bool = _edge_ok(await tree.call("_press_edge", answer_action, true))
 		for f in 240:
 			await tree.physics_frame
-			if bool(cut.done):
+			if bool(cut.done) or not pressed:
 				break
-		if is_instance_valid(panel) and panel.is_connected(answer_signal, on_yes):
-			panel.disconnect(answer_signal, on_yes)
+		saver.disconnect("prepared_character_submitted", on_submitted)
+		saver.disconnect("prepared_character_completed", on_completed)
 		await tree.call("_press_edge", answer_action, false)
+		if not pressed:
+			return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}
 		for f in 60:
 			await tree.physics_frame
 		# The dropped guest returns to the title; its answer must already be on
 		# its saved character (the receipt the rejoin will present).
-		var game := tree.root.get_node_or_null(^"Game")
-		var character := str((game.get("local") as RefCounted).get("character_id")) if game != null else ""
 		var saved: Dictionary = (game.get("save_system") as Object).get("_characters").call("read", character) \
 			if game != null and not character.is_empty() else {}
 		var saved_flags: Array = ((saved.get("flags", {}) as Dictionary).get("flags", []) as Array) if saved.get("flags") is Dictionary else []
-		var receipt_flag := str(load(ENDING_PATH).call("answer_flag", claim_uid, accepting))
 		var receipt_on_disk := not claim_uid.is_empty() and saved_flags.has(receipt_flag)
-		cut_at_ack = bool(cut.done) and receipt_on_disk
+		cut_at_ack = bool(cut.done) and bool(cut.claim_left) and receipt_on_disk \
+			and saved.get("redesign_character", {}).get("transaction_receipts", []).count(transaction_receipt) == 1
 		var cut_state := _stormheart_state(tree)
 		(cut_state.data as Dictionary)["cut_at_ack"] = cut_at_ack
-		(cut_state.data as Dictionary)["committed_before_cut"] = not bool(cut.claim_left)
+		(cut_state.data as Dictionary)["saved_before_ack"] = bool(cut.done)
+		(cut_state.data as Dictionary)["claim_pending_at_cut"] = bool(cut.claim_left)
+		(cut_state.data as Dictionary)["save_call_id"] = cut.call_id
+		(cut_state.data as Dictionary)["prepared_save_sha256"] = cut.sha256
+		(cut_state.data as Dictionary)["prepared_save_evidence"] = cut.evidence_path
+		(cut_state.data as Dictionary)["answer_receipt_count"] = saved.get("redesign_character", {}).get("transaction_receipts", []).count(transaction_receipt)
 		(cut_state.data as Dictionary)["receipt_on_disk"] = receipt_on_disk
 		(cut_state.data as Dictionary)["receipt_flag"] = receipt_flag
 		(cut_state.data as Dictionary)["claim_uid"] = claim_uid
 		return {"verdict": "PASS" if cut_at_ack else "FAIL",
-			"detail": "answered %s to claim %s; link closed in the answer's own physics step=%s (claim already committed then=%s); '%s' is on the saved character=%s; %s"
-				% ["Yes" if accepting else "No", claim_uid, str(cut.done), str(not bool(cut.claim_left)), receipt_flag, str(receipt_on_disk), str(cut_state.data)],
+			"detail": "answered %s to claim %s; actual prepared character TRUE_BOOL before ACK=%s (claim pending=%s, call=%s, SHA256=%s); '%s' is on the saved character=%s; %s"
+				% ["Yes" if accepting else "No", claim_uid, str(cut.done), str(cut.claim_left), str(cut.call_id), str(cut.sha256), receipt_flag, str(receipt_on_disk), str(cut_state.data)],
 			"data": cut_state.data}
 	if not await _tap(tree, "interact" if answer == "accept" else "menu_cancel"):
 		return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}
@@ -728,6 +817,7 @@ static func _stormheart_state(tree: SceneTree, args: Dictionary = {}) -> Diction
 		"character_id": character,
 		"party": species,
 		"has_stormheart": species.has(LEGENDARY_SPECIES),
+		"stormhearts_in_party": species.count(LEGENDARY_SPECIES),
 		"freed": has_flag.call(ending.FREED_FLAG),
 		"world_accepted": has_flag.call(ending.resolution_flag(true, character)),
 		"world_refused": has_flag.call(ending.resolution_flag(false, character)),

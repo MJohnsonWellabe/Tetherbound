@@ -1,6 +1,6 @@
 {
   "name": "F11#2: a guest's link dies at its Stormheart REFUSAL acknowledgement; the refusal is settled once and nothing is granted",
-  "claim": "ACCEPTANCE F11 'accept/refuse independently ... through disconnect/reload, without duplicated grants', the refusal-acknowledgement window (the mirror of f11_stormheart_drop_at_ack). Both players fought the Dynamo. The host says Yes. The guest opens its own offer and says No through the real dialogue's No; its transport is closed from the panel's own `declined` signal, before the ending's deferred refusal runs, so the refusal receipt and character save are local and the `ending_settled` acknowledgement finds no connected peer. The host holds no world receipt of the guest's answer and its one claim for the guest is unsettled. The guest rejoins from the title as the same character; the host settles that one claim as REFUSED from the resent claim and the guest's saved receipt. The guest never holds a Stormheart, a repeat claim is refused by the host before and after both peers reload, and the host world records the guest's refusal once and no acceptance. Setup and disclosures as in f11_stormheart_drop_at_ack (captured host save; Dynamo fixture; a local close() sends an ENet disconnect, so this is not a silent partition). Not covered: the host dropping; a drop before the receipt is saved; a silent partition; a rejoin after the 120 s seat hold; the legacy old-build receipt (awaits an owner ruling).",
+  "claim": "ACCEPTANCE F11 'accept/refuse independently ... through disconnect/reload, without duplicated grants', the saved-character acknowledgement window. Both players fought the Dynamo. The host says Yes. The guest opens its own offer and says No through the real dialogue. The existing adapter closes its actual connected ENet transport synchronously in SaveGame's prepared_character_completed TRUE_BOOL callback, after authenticating the original live save call, immutable request, scoped frozen owner state, single answer transaction receipt and written character bytes, before the save returns to the ending_settled sender. The host holds no world receipt of the guest's answer and its one guest claim remains unsettled. The guest rejoins as the same character with the saved answer; the host settles the original claim as REFUSED. The guest holds zero Stormheart. A repeated claim is refused before and after reload, with no duplicate grant. Setup: a declared-start host save with an open Stormwood route and empty team, isolated initial Hall positioning/open route/Home Key, and the Dynamo ledger fixture that establishes act_ii_complete and marrow_defeated; no earned route or boss-play credit. Travel uses real host-authorized portal permits. A local close() sends an ENet disconnect; this proves a saved-character ACK drop, not a silent partition. Not covered: host disconnect, pre-save disconnect, silent timeout, or rejoin beyond the 120 s seat hold.",
   "peers": 2,
   "scene": "world",
   "budget_s": 2100,
@@ -26,6 +26,18 @@
       },
       "budget_frames": 10000,
       "label": "guest: a fresh trainer in the Meadows"
+    },
+    {
+      "peer": "all",
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood",
+        "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+        "portal_regression": "stormwood_proof",
+        "portal_prepare_only": true
+      },
+      "budget_frames": 10000,
+      "label": "SETUP: initial Hall ground, open Stormwood route and Home Key before admission; no earned route credit"
     },
     {
       "peer": 0,
@@ -54,7 +66,9 @@
       "peer": 0,
       "action": "enter_realm",
       "args": {
-        "realm": "stormwood"
+        "realm": "stormwood",
+        "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+        "portal_regression": "stormwood_proof"
       },
       "budget_frames": 10000
     },
@@ -62,7 +76,9 @@
       "peer": 1,
       "action": "enter_realm",
       "args": {
-        "realm": "stormwood"
+        "realm": "stormwood",
+        "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+        "portal_regression": "stormwood_proof"
       },
       "budget_frames": 10000
     },
@@ -128,9 +144,13 @@
         "cut_at_ack": true,
         "receipt_on_disk": true,
         "has_stormheart": false,
-        "accepted_anywhere": false
+        "accepted_anywhere": false,
+        "saved_before_ack": true,
+        "claim_pending_at_cut": true,
+        "answer_receipt_count": 1,
+        "stormhearts_in_party": 0
       },
-      "label": "the guest says No through the real dialogue's No, and its link is closed from the panel's declined signal before the ending's refusal runs: the No receipt is on its saved character, the ending_settled acknowledgement never leaves"
+      "label": "Guest answers No through the real dialogue; close the authenticated connected ENet link after the scoped prepared character TRUE_BOOL and before ending_settled; saved original answer receipt survives"
     },
     {
       "peer": 1,
@@ -239,7 +259,8 @@
         "has_stormheart": false,
         "world_refused": true,
         "world_accepted": false,
-        "accepted_anywhere": false
+        "accepted_anywhere": false,
+        "stormhearts_in_party": 0
       },
       "label": "no Stormheart: the resent claim turned the refusal into nothing else"
     },
@@ -296,7 +317,8 @@
       "action": "stormheart_state",
       "expect_data": {
         "has_stormheart": false,
-        "accepted_anywhere": false
+        "accepted_anywhere": false,
+        "stormhearts_in_party": 0
       },
       "label": "still no Stormheart"
     },
@@ -313,7 +335,8 @@
         "other_refused": true,
         "other_claims": 1,
         "other_claim_settled": true,
-        "other_claim_kept": false
+        "other_claim_kept": false,
+        "stormhearts_in_party": 1
       },
       "label": "host: its own one; its claim entry for the guest is settled and not kept, and the world holds the guest's refused receipt (not accepted)"
     },
