@@ -163,3 +163,19 @@ func test_root_status_uses_body_clock_and_never_cancels_protected_tell() -> void
 	body.hold_ultimate_reaction(2.0)
 	assert_true(body.protected_heavy_committed(), "reaction must preserve the committed heavy")
 	body.free()
+
+func test_every_authored_ultimate_is_mounted_when_visuals_are_on() -> void:
+	# F23#0/#5: every creature's ultimate fires once the visual index is on,
+	# not only the one ultimate the first proof drove.
+	var saved_visual_config := ULTIMATES.config()
+	var enabled_visuals := saved_visual_config.duplicate(true)
+	enabled_visuals.enabled = true
+	ULTIMATES._config = enabled_visuals
+	var moves := MOVES.load_default()
+	var count := 0
+	for move_id: String in moves.move_ids():
+		if moves.slot(move_id) != "ultimate": continue
+		count += 1
+		assert_true(MANAGER.live_move_supported("ultimate", move_id), "%s is mounted on the host" % move_id)
+	assert_true(count >= 31, "every authored ultimate was checked")
+	ULTIMATES._config = saved_visual_config
