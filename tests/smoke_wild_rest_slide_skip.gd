@@ -71,6 +71,23 @@ func _run() -> void:
 	await _ticks(20)
 	_check(wild.global_position.distance_to(shoved_from) > 0.2, "an impulse moves a resting wild")
 
+	# Engaged in a fight (the shared-wild host fight, a charge, a pinned tell),
+	# the body sweeps every tick: the skip is a peaceful-only optimisation.
+	await _ticks(60)
+	var opponent := Node3D.new()
+	world.add_child(opponent)
+	opponent.global_position = wild.global_position + Vector3(0.0, 0.0, 3.0)
+	wild.call("set_engaged", true, opponent)
+	skipped = 0
+	for i in 40:
+		await physics_frame
+		if bool(wild.get("rest_slide_skip_allowed")) or int(wild.get("_rest_slide_skipped")) > 0:
+			skipped += 1
+	_check(skipped == 0, "an engaged wild never skips a sweep (%d ticks did)" % skipped)
+	wild.call("set_engaged", false)
+	wild.set("_pause_left", 1000.0)
+	await _ticks(30)
+
 	# Disabled in config, every tick sweeps.
 	var cfg: Dictionary = wild.call("physics_lod_config")
 	cfg.rest_slide_skip.enabled = false
