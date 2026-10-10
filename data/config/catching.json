@@ -73,8 +73,8 @@
   "aim": {
     "_comment": "The over-the-shoulder aim camera, expressed as a camera_rig profile. Reuses scripts/player/camera_rig.gd's set_target(target, profile) rather than adding a third camera — the same reasoning that deleted combat_camera.gd in M2.",
     "_comment_distance": "Far enough back that the trainer does not fill the frame. At 2.4m their body covered the whole view and the reticle sat on their shoulder — you were aiming at your own trainer.",
-    "distance": 3.4,
-    "height": 1.78,
+    "distance": 4.4,
+    "height": 2.0,
     "fov": 52.0,
     "_comment_shoulder": "Wide, because in aim mode the trainer is close to the lens and would otherwise sit on top of the reticle. The orb is thrown at whatever the reticle is over rather than parallel to the camera, so this offset does not put the throw somewhere other than where you aimed.",
     "shoulder_offset": 1.45,
@@ -115,9 +115,9 @@
     "_comment": "camera_rig profile for the wobble: a close-up on the resting orb, entered with a slow glide (retarget_lag) the moment the orb strikes. The whole resolution plays through this shot — the orb is the only actor on stage and the camera says so. Handed back to the creature on a breakout and to the trainer when a catch ends the fight.",
     "_comment_framing": "First capture at distance 3.2 / height 1.1 / pitch -16 was not a close-up at all: the orb huddled small at the bottom of the frame with dead grass in the centre. Height near the orb itself and a steeper look-down centre it.",
   "_why_framing_n14": "N14-ROUTED-FOLLOWUPS, 2026-09-05, on N07-VFX-POLISH's routed finding, quoting W09's judge: the resolve camera 'still parks inside the ally', and the result is 'indistinguishable from a bug'.\n\nWHAT `height` ACTUALLY IS, because the first attempt at this got it wrong and rendered the mistake. It is not the camera's elevation: `camera_rig.gd:380` computes the pivot as `target.global_position + Vector3.UP * height`, so it is how far ABOVE the orb the frame is centred. Raising it 0.55 -> 1.35 to clear a creature put the frame's centre 1.35 m above an orb in a shot whose half-height is 1.10 m -- and the rendered seal came back with the orb sliced by the bottom edge of frame. Reverted to 0.55; the orb is the subject and the subject is what the frame centres on.\n\nThe lens is lifted with the PITCH instead, which moves the camera without moving the frame. Elevation above the pivot is `distance * sin(pitch)`: 2.4 * sin(22) = 0.90 m before, so the lens sat about 1.45 m over the ground -- chest height on a deployed creature standing at the seal, which is exactly how it ends up inside one. 3.4 * sin(40) = 2.19 m now, about 2.74 m over the ground and clear of a creature's back, with 3.4 * cos(40) = 2.60 m of horizontal standoff so it is outside the body as well as above it.\n\nAnd the close-up survives, because the distance is bought back with the lens rather than paid for in subject size. The `_comment_framing` above records distance 3.2 / height 1.1 / fov 50 as tried and rejected for leaving 'the orb huddled small at the bottom of the frame'; half the frame width at the subject is `distance * tan(fov/2)`, which is 1.49 m for that rejected attempt against the 1.12 m that was accepted. Here it is 3.4 * tan(18) = 1.10 m -- within 2% of the accepted framing, so the orb is the same size on screen as the pass that settled it. `retarget_lag` is untouched: the glide is what W09 and N07 both liked.",
-    "distance": 3.4,
+    "distance": 4.2,
     "height": 0.55,
-    "fov": 36.0,
+    "fov": 44.0,
     "retarget_lag": 5.0,
     "pitch_start_deg": -40.0
   },
