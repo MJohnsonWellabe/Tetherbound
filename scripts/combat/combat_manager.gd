@@ -1073,14 +1073,51 @@ func _valid_host_arena(context: Dictionary) -> bool:
 	var generation: Variant = _wild.get("body_generation")
 	if generation == null: generation = _wild.get_meta(&"tether_body_generation", null)
 	if generation != null and int(generation) != int(context.body_generation): return false
-	return str(context.get("kind", "")) != "wild" or float(radius) <= 26.0
+	if str(context.get("kind", "")) != "wild": return true
+	if float(radius) > 26.0: return false
+	if not str(context.get("named_encounter_id", "")).is_empty(): return canonical_named_host_arena(context)
+	return float(radius) >= 11.0
+
+
+## A reliable named identity is checked against the mounted world's translated
+## canonical row and its reserved replacement site, never against a pose packet
+## or an arbitrary positive radius. A guest mirror need not be a resident actor.
+func canonical_named_host_arena(context: Dictionary, world: Node = null) -> bool:
+	if world == null and is_instance_valid(_player): world = _player.get_parent()
+	if not is_instance_valid(world) or not world.is_inside_tree(): return false
+	var id := str(context.get("named_encounter_id", ""))
+	var centre: Variant = context.get("centre")
+	var radius: Variant = context.get("radius")
+	if id.is_empty() or not centre is Vector3 or not (centre as Vector3).is_finite() \
+		or not (radius is float or radius is int) or not is_finite(float(radius)): return false
+	for source: Node in world.get_children():
+		var script := source.get_script() as Script
+		if script == null or script.resource_path != "res://scripts/combat/water_encounter_director.gd" \
+			or source.get("realm_world") != world: continue
+		var config: Dictionary = source.get("encounter_config")
+		for named: Dictionary in config.get("named_encounters", []):
+			if str(named.get("id", "")) != id: continue
+			if bool(named.get("trainer_owned", true)) or not bool(named.get("catchable", false)) \
+				or not named.has("arena_radius_m") or str(named.get("species", "")) != str(context.get("species_id", "")):
+				return false
+			var position: Variant = named.get("position")
+			if not position is Array or position.size() != 3: return false
+			var authored := Vector3(float(position[0]), float(position[1]), float(position[2]))
+			if not authored.is_finite() or not authored.is_equal_approx(centre as Vector3) \
+				or not is_equal_approx(float(named.arena_radius_m), float(radius)): return false
+			for site: Dictionary in config.get("wild_sites", []):
+				if str(site.get("id", "")) == str(named.get("replaces_wild_site_id", "")):
+					return str(site.get("named_replacement_id", "")) == id and int(site.get("count", 1)) == 1
+			return false
+	return false
 
 
 ## Before an encounter ID exists, only the actual mounted named site supplies
 ## canonical geometry. This context never crosses a client input channel.
 func _valid_authored_arena(context: Dictionary) -> bool:
 	var source: Variant = context.get("source")
-	if not _enemy_owned or not source is Node3D or not is_instance_valid(source) \
+	if not _enemy_owned: return _valid_named_wild_arena(context)
+	if not source is Node3D or not is_instance_valid(source) \
 		or not _player.get_parent().is_ancestor_of(source as Node): return false
 	var centre: Variant = context.get("centre")
 	var radius: Variant = context.get("radius")
@@ -1097,6 +1134,26 @@ func _valid_authored_arena(context: Dictionary) -> bool:
 			and context.get("owner_npc") == definition.encounter_id and centre == source.global_position \
 			and is_equal_approx(float(radius), float(definition.arena_radius_m))
 	return false
+
+
+## A named wild remains wild. Only its actual mounted Water producer can
+## authorize the existing small authored bay; nearby ordinary actors cannot.
+func _valid_named_wild_arena(context: Dictionary) -> bool:
+	var source: Variant = context.get("source")
+	if not source is Node or not is_instance_valid(source) or not (source as Node).is_inside_tree() \
+		or not _player.get_parent().is_ancestor_of(source as Node) or context.get("wild") != _wild:
+		return false
+	var script: Script = (source as Node).get_script() as Script
+	if script == null or script.resource_path != "res://scripts/combat/water_encounter_director.gd" \
+		or not source.has_method("authored_named_wild_arena_context"): return false
+	var canonical: Dictionary = source.call("authored_named_wild_arena_context", _wild)
+	if canonical.is_empty() or context != canonical: return false
+	var centre: Variant = canonical.get("centre")
+	var radius: Variant = canonical.get("radius")
+	return centre is Vector3 and (centre as Vector3).is_finite() and (radius is float or radius is int) \
+		and is_finite(float(radius)) and float(radius) > 0.0 \
+		and canonical.get("species_id") == _enemy.get("species_id") \
+		and not str(canonical.get("named_encounter_id", "")).is_empty()
 
 
 ## Measured art in body-local space, including off-centre model placement.
@@ -1163,9 +1220,16 @@ func _staged_render_fit(spots: Array[Vector3], centre: Vector3, radius: float) -
 func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector3) -> bool:
 	# Predict exactly the seat place_on_ground will use, including the highest
 	# support under the gameplay footprint; a hillside is not a wall.
-	var level: float = body.call("_ground_height", spot.x, spot.z)
-	if is_nan(level): level = float(body.call("_ray_ground", spot))
-	if is_finite(level): level = float(body.call("_seat_over_footprint", spot, level))
+	var surface := _registered_surface_admission_context(body)
+	var level := NAN
+	if not surface.is_empty():
+		level = float(surface.surface_origin_y)
+	else:
+		# A surface subtype cannot borrow an unregistered dry-ground fallback.
+		if body.has_method("surface_origin_y"): return false
+		level = float(body.call("_ground_height", spot.x, spot.z))
+		if is_nan(level): level = float(body.call("_ray_ground", spot))
+		if is_finite(level): level = float(body.call("_seat_over_footprint", spot, level))
 	if not is_finite(level): return false
 	var direction := facing_at - spot
 	direction.y = 0.0
@@ -1184,7 +1248,16 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 	for actor: Node3D in [_player, _ally_body, _wild]:
 		if actor is CollisionObject3D: exclude.append((actor as CollisionObject3D).get_rid())
 	var space := body.get_world_3d().direct_space_state
+	if not surface.is_empty():
+		var source: Node = surface.source as Node
+		# Validate the centre and every actual transformed render-footprint
+		# corner through the registered Water domain, including submerged art.
+		if not bool(source.call("surface_wild_supports_at", body, Vector3(spot.x, level, spot.z))): return false
+		for point: Vector3 in points:
+			if not bool(source.call("surface_wild_supports_at", body, basis * point + Vector3(spot.x, level, spot.z))):
+				return false
 	for at: Vector2 in [Vector2(spot.x, spot.z), Vector2(lo.x, lo.z), Vector2(lo.x, hi.z), Vector2(hi.x, lo.z), Vector2(hi.x, hi.z)]:
+		if not surface.is_empty(): continue
 		var ray := PhysicsRayQueryParameters3D.create(Vector3(at.x, level + REALM_SEAT_MAX_STEP_M, at.y),
 			Vector3(at.x, level - REALM_SEAT_MAX_STEP_M, at.y), 0x7FFFFFFF, exclude)
 		var hit := space.intersect_ray(ray)
@@ -1202,7 +1275,8 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 			support_query.exclude = exclude
 			if space.intersect_shape(support_query, 1).is_empty(): return false
 	# Leave the floor/contact skin out of the solid-obstacle query.
-	lo.y = maxf(lo.y, level + 0.25)
+	# A floating body's submerged bounds remain in the actual solid query.
+	if surface.is_empty(): lo.y = maxf(lo.y, level + 0.25)
 	if hi.y <= lo.y: return false
 	var shape := BoxShape3D.new()
 	shape.size = hi - lo
@@ -1212,6 +1286,24 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 	query.collision_mask = 0x7FFFFFFF
 	query.exclude = exclude
 	return space.intersect_shape(query, 1).is_empty()
+
+
+func _registered_surface_admission_context(body: Node3D) -> Dictionary:
+	if not body.has_method("surface_origin_y"): return {}
+	for source: Node in _player.get_parent().get_children():
+		var script := source.get_script() as Script
+		if script == null or script.resource_path != "res://scripts/combat/water_encounter_director.gd" \
+			or not source.has_method("surface_wild_admission_context") or not source.has_method("surface_wild_supports_at"):
+			continue
+		var context: Dictionary = source.call("surface_wild_admission_context", body)
+		if context.is_empty() or context.get("source") != source or context.get("wild") != body: continue
+		var origin: Variant = context.get("surface_origin_y")
+		var level: Variant = context.get("water_level_y")
+		if not (origin is float or origin is int) or not (level is float or level is int) \
+			or not is_finite(float(origin)) or not is_finite(float(level)): return {}
+		if not is_equal_approx(float(origin), float(body.call("surface_origin_y"))): return {}
+		return context
+	return {}
 
 
 ## The most radius the room around `centre` can afford, or -1.0 if no room
