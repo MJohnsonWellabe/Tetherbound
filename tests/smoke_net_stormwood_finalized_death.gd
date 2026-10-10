@@ -20,12 +20,6 @@ func _run() -> void:
 		if legacy.get("verdict") != "PASS":
 			quit(await finish())
 			return
-	# Seed the existing lifecycle fixture before guest admission. The hosted
-	# controller requires the deployed UID in the host's admitted party;
-	# adding a local-only party member after join cannot establish ownership.
-	if not await _require_step(1, "party_grant", {"species": "terrapup", "level": 99}):
-		quit(await finish())
-		return
 	if not await _require_step(0, "host"):
 		quit(await finish())
 		return
@@ -50,6 +44,7 @@ func _run() -> void:
 	if not bool(runtime.get("available", false)):
 		quit(await finish())
 		return
+	await _require_step(1, "party_grant", {"species": "terrapup", "level": 99})
 	await _require_step(1, "deploy_creature", {"species": "terrapup"})
 	var prepared := await step(1, "stormwood_hosted_start", {"trainer": TRAINER, "prepare_only": true})
 	check(str(prepared.get("verdict", "")) == "PASS", "remote fighter staged beside authored trainer")

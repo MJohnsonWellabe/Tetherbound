@@ -124,9 +124,6 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 	if not is_instance_valid(fight):
 		return
 	match kind:
-		"move_start":
-			var verdict: Dictionary = fight.move_start(peer, intent)
-			send_to(peer, {"kind": "verdict", "trainer_id": id, "encounter_id": intent.get("encounter_id", ""), "verdict": verdict})
 		"finalized_death_withdrawal":
 			# The authenticated sender is the only removable participant. The
 			# current roster membership, not an old round id/phase, owns this
@@ -138,7 +135,6 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 		"strike_intent":
 			var verdict: Dictionary = fight.strike(peer, intent)
 			send_to(peer, {"kind": "verdict", "trainer_id": id, "encounter_id": intent.get("encounter_id", ""), "verdict": verdict})
-			fight.acknowledge_strike(peer, verdict)
 		"burst_intent":
 			var verdict: Dictionary = fight.burst(peer, intent)
 			send_to(peer, {"kind": "verdict", "trainer_id": id,
@@ -330,9 +326,7 @@ func _receive(event: Dictionary) -> void:
 		"verdict":
 			var verdict: Dictionary = event.verdict
 			if bool(verdict.get("ok", false)):
-				if str(verdict.get("kind", "")) == "move_start":
-					manager.apply_host_move_start(verdict.get("delta", {}))
-				elif str(verdict.get("kind", "")) == "burst_intent":
+				if str(verdict.get("kind", "")) == "burst_intent":
 					manager.apply_host_burst_verdict(verdict.get("delta", {}))
 				else:
 					manager.apply_host_strike_verdict(verdict.get("delta", {}))
@@ -392,11 +386,8 @@ func _apply_state(delta: float = 0.0) -> void:
 func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 	var request := intent.duplicate(true)
 	request["trainer_id"] = _local_trainer
-	if intent.has("action"):
-		_action = maxi(_action, int(intent.action))
-	else:
-		_action += 1
-		request["action"] = _action
+	_action += 1
+	request["action"] = _action
 	session.request_stormwood_encounter(request)
 	return {"ok": false, "pending": true, "kind": str(intent.get("kind", "")), "delta": {}}
 
@@ -405,28 +396,6 @@ func is_encounter_host() -> bool:
 
 func hosted_transport() -> bool:
 	return true
-
-func supports_host_move_start() -> bool:
-	return true
-
-func combat_motion_original_current(original: Dictionary, body: Node3D) -> bool:
-	if not is_instance_valid(director) or not director.has_method("combat_motion_original_current"):
-		return false
-	return director.call("combat_motion_original_current", original, body) == true
-
-func _wire_vec3(value: Variant) -> Variant:
-	if not is_instance_valid(director) or not director.has_method("_wire_vec3"):
-		return null
-	return director.call("_wire_vec3", value)
-
-## Only a currently owned round may supply the director's move-freeze target.
-func opponent_for_record(id: String) -> Node3D:
-	if not session.is_host(): return null
-	for fight: Node in fights.values():
-		if is_instance_valid(fight) and not fight.finished and fight._between <= 0.0 \
-			and str(fight.record.get("encounter_id", "")) == id and is_instance_valid(fight.opponent):
-			return fight.opponent
-	return null
 
 func local_encounter_peer_id() -> int:
 	return session.local_peer_id()
