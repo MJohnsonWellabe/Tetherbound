@@ -98,6 +98,10 @@ func _run() -> void:
 	_expect(not CACHE.was_taken(_game, "good_candy", "cr_pickup_bridge_good_candy", "cloudreach"), "second Good Candy remains independent")
 	var rest := physical.get_node(^"galefoot_waycamp")
 	await _approach(rest.get_node(^"Interactable") as Node3D)
+	# F47#4: a rest reaches a morning only after nightfall (rest.json's night
+	# window); a day rest heals without one. Disclosed: snap the clock to night.
+	var look := get_first_node_in_group("day_cycle")
+	if look != null and look.has_method("apply_time"): look.call("apply_time", "night")
 	var day_before := int(_game.get("day"))
 	await _press(rest.get_node(^"Interactable"))
 	await create_timer(1.9).timeout

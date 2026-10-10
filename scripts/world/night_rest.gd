@@ -297,7 +297,8 @@ static func in_night_window(hour: float, cfg: Dictionary = {}) -> bool:
 static func night_now(host: Node) -> bool:
 	if host == null or not host.is_inside_tree(): return true
 	for look: Node in host.get_tree().get_nodes_in_group("day_cycle"):
-		if look.has_method("hour"): return in_night_window(float(look.call("hour")))
+		# A look whose day cycle failed to load reads hour 0: no clock either.
+		if look.has_method("hour") and look.get("_cycle") != null: return in_night_window(float(look.call("hour")))
 	return true
 
 
