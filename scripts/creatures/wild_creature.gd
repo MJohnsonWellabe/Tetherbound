@@ -69,6 +69,7 @@ var _pause_left: float = 0.0
 ## well inside a 20m wander disc. This node has no idea what a "road" is and
 ## is not going to learn; it only ever asks the callback yes/no.
 var _clearance_check: Callable = Callable()
+var _arena_clearance_check: Callable = Callable()
 
 ## Aggression. A creature that will start a fight on its own, per GAME_DESIGN.md
 ## pillar 3 and §14. Peaceful creatures are untouched by all of this: §14's "not
@@ -250,6 +251,19 @@ func _physics_process(delta: float) -> void:
 		_tick_combat(delta)
 	elif is_alive():
 		_tick_peaceful(delta)
+	if not engaged and _arena_clearance_check.is_valid():
+		var step := _requested * _requested_speed * delta
+		var moving := Vector3(velocity.x, 0.0, velocity.z) * delta + _impulse * delta
+		var guarded: Variant = _arena_clearance_check.call(global_position, step)
+		if guarded == null: guarded = _arena_clearance_check.call(global_position, moving)
+		if guarded is Vector3:
+			request_move(guarded as Vector3, _wander_speed)
+			# Momentum cannot carry a stopped ambient body through the ring.
+			if (guarded as Vector3).is_zero_approx():
+				velocity.x = 0.0
+				velocity.z = 0.0
+				_impulse.x = 0.0
+				_impulse.z = 0.0
 	if engaged and not protected_heavy_committed() and (utility_movement_multiplier() <= 0.0 or _ultimate_reaction_left > 0.0):
 		request_move(Vector3.ZERO)
 		velocity.x = 0.0
@@ -313,6 +327,13 @@ func _nearest_trainer_distance() -> float:
 
 func _tick_peaceful(delta: float) -> void:
 	_grace_left = maxf(0.0, _grace_left - delta)
+	# Ambient bodies already inside a newly admitted ring walk out normally,
+	# before notice/aggression can root them beside its combatants. No teleport.
+	if _arena_clearance_check.is_valid():
+		var escape: Variant = _arena_clearance_check.call(global_position, Vector3.ZERO)
+		if escape is Vector3:
+			request_move(escape as Vector3, _wander_speed)
+			return
 
 	if aggressive and _tick_aggression(delta):
 		return
@@ -401,9 +422,13 @@ func _unstick(requested_dir: Vector3) -> Vector3:
 		dir = dir.rotated(Vector3.UP, side * UNSTICK_STEER_RAD)
 
 		if _stuck_frames > HARD_UNSTICK_AFTER_FRAMES:
-			global_position += dir * HARD_UNSTICK_NUDGE
-			_stuck_frames = 0
-			_stuck_check_pos = global_position
+			var nudge := dir * HARD_UNSTICK_NUDGE
+			var guard: Variant = _arena_clearance_check.call(global_position, nudge) \
+				if not engaged and _arena_clearance_check.is_valid() else null
+			if guard == null:
+				global_position += nudge
+				_stuck_frames = 0
+				_stuck_check_pos = global_position
 	return dir
 
 
@@ -477,6 +502,10 @@ func defer_engage(seconds: float) -> void:
 
 
 func _wander(delta: float) -> void:
+	# A ring may open after this destination was selected. Revalidate the whole
+	# path rather than letting an old route cross a fight's rendered footprint.
+	if _clearance_check.is_valid() and not bool(_clearance_check.call(_target)):
+		_target = _pick_destination()
 	if _pause_left > 0.0:
 		_pause_left -= delta
 		if _pause_left <= 0.0:
@@ -494,8 +523,8 @@ func _wander(delta: float) -> void:
 ## Retries against `_clearance_check` the same shape `encounter_director.gd`'s
 ## own `_pick_clear_spot()` already uses for the initial scatter -- a handful
 ## of attempts from the SAME per-instance `_rng` (never seeded, so this was
-## never part of the world's determinism promise), falling back to the last
-## candidate rather than freezing in place if every attempt lands on the road.
+## never part of the world's determinism promise). Exhaustion stays put;
+## a rejected destination cannot become an unchecked movement fallback.
 const WANDER_CLEAR_ATTEMPTS := 8
 
 func _pick_destination() -> Vector3:
@@ -506,13 +535,18 @@ func _pick_destination() -> Vector3:
 		candidate = home + Vector3(sin(angle), 0.0, cos(angle)) * distance
 		if not _clearance_check.is_valid() or bool(_clearance_check.call(candidate)):
 			return candidate
-	return candidate
+	# Exhausted retries must not turn a rejected arena/road target into motion.
+	return global_position
 
 
 ## See `_clearance_check`'s own comment. A no-op call for every wild creature
 ## the director does not opt in.
 func set_clearance_check(check: Callable) -> void:
 	_clearance_check = check
+
+
+func set_arena_clearance_check(check: Callable) -> void:
+	_arena_clearance_check = check
 
 
 ## `combat.json`'s `enemy` block with this body's own G-2 override laid over it.

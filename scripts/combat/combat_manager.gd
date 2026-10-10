@@ -217,6 +217,7 @@ var _ally_clear_for := 0.0
 ## where the room is tightest.
 var _arena_centre: Vector3 = Vector3.ZERO
 var _admitted_spots: Array[Vector3] = []
+var last_admission_failure: String = ""
 
 var _action: Action = Action.READY
 var _action_timer: float = 0.0
@@ -805,6 +806,7 @@ func begin(
 	opponent_owned: bool = false, realm_owned_opponent: bool = false,
 	host_started: bool = false, host_arena: Dictionary = {}
 ) -> bool:
+	last_admission_failure = ""
 	if is_fighting():
 		return false
 	if _completing_catch: return false
@@ -885,6 +887,7 @@ func begin(
 	# else's realm fight keeps the hands-off realm seat below.
 	var joining_realm := realm_owned_opponent and not host_started
 	if not _open_arena(joining_realm, host_arena):
+		last_admission_failure = "There isn't enough clear ground here for both creatures."
 		return false
 	if joining_realm:
 		# Joining a shared realm encounter must not reposition its enemy or
