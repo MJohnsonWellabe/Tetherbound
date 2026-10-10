@@ -16,6 +16,11 @@ static func run(runner: SceneTree, action: String, args: Dictionary) -> Dictiona
 		"f28_await_fight_end": return await _await_fight_end(runner, int(args.get("budget_frames", 3600)))
 		"f28_stand": return await _stand(runner, args)
 		"f28_host_duels": return _host_duels(runner)
+		"f28_feast_seed": return _feast_seed(runner, args)
+		"f28_cook": return await _feast_press(runner, args, "cook")
+		"f28_feed": return await _feast_press(runner, args, "feed")
+		"f28_feast_view": return _feast_view(runner, str(args.get("character_id", "")))
+		"f28_station_at": return await _station_at(runner, str(args.get("kitchen_uid", "")))
 	return {"verdict": "ERROR", "detail": "unknown F28 action '%s'" % action}
 
 
@@ -186,3 +191,123 @@ static func _host_duels(runner: SceneTree) -> Dictionary:
 			"retained": not (director.call("retained_guest_master_win", id) as Dictionary).is_empty(),
 			"outcome": director.get("_session").call("foundation_guest_master_outcome", director, director.call("retained_guest_master_win", id)) if false else {}})
 	return _ok("%d guest duel(s)" % out.size(), {"duels": out})
+
+
+## F28#3 disclosed fixture, on the owner's own home BEFORE networking (as
+## party_grant): the tier-1 recipe as a Master chest would teach it, and the
+## named ingredients as gathered stock. Nothing here cooks, feeds or saves.
+static func _feast_seed(runner: SceneTree, args: Dictionary) -> Dictionary:
+	var game := runner.root.get_node(^"Game")
+	if game.get("session").call("is_active") == true:
+		return _fail("seed the owner's own home before any session")
+	var local: RefCounted = game.get("local")
+	var personal: Dictionary = (local.get("redesign_character") as Dictionary).duplicate(true)
+	var recipes: Array = personal.get("feast_recipes", [])
+	for feast: Variant in args.get("recipes", []):
+		if not recipes.has(str(feast)): recipes.append(str(feast))
+	personal.feast_recipes = recipes
+	local.set("redesign_character", personal)
+	var items: Dictionary = args.get("items", {})
+	for id: String in items:
+		if int(game.get("inventory").call("add", id, int(items[id]))) != 0: return _fail("no satchel room for %s" % id)
+	return _ok("recipes %s and items %s seeded" % [str(recipes), str(items)])
+
+
+## F28#3: one press of the actual Ascension Feast panel. "cook" opens the
+## Kitchen's feast list (the craft panel's Feasts button calls this same
+## open_kitchen) and presses the recipe button; "feed" opens its Feed list and
+## presses the button for the creature of args.species. The panel submits the
+## ordinary typed foundation action; this waits for its saved or refused end.
+static func _feast_press(runner: SceneTree, args: Dictionary, mode: String) -> Dictionary:
+	var service := _service(runner)
+	if service == null: return _fail("no BreakthroughService")
+	var kitchen: Node3D = null
+	for f in 600:
+		kitchen = runner.call("_station_node", str(args.get("kitchen_uid", "")))
+		if kitchen != null: break
+		await runner.physics_frame
+	if kitchen == null: return _fail("the host's Kitchen never replicated here")
+	# The smoke walks the trainer here (f28_station_at + move_to): a fixture
+	# teleport is a discontinuity the owner-passive stream holds on.
+	var player := runner.current_scene.get_node(^"Player") as Node3D
+	if player.global_position.distance_to(kitchen.global_position) > 3.5:
+		return _fail("walk to the Kitchen first (%.1f m away)" % player.global_position.distance_to(kitchen.global_position))
+	# The panel opens only once no saved decision holds this owner's input
+	# (Session.owns_input); a player waits for that too.
+	var session_node: Node = runner.root.get_node(^"Game/Session")
+	for f in int(args.get("settle_frames", 1200)):
+		if session_node.call("owns_input") != true: break
+		await runner.physics_frame
+	service.call("open_kitchen", kitchen)
+	await runner.process_frame
+	var panel: Node = service.get("_panel")
+	if panel == null or panel.call("is_open") != true:
+		var owner: Variant = preload("res://scripts/ui/input_owner.gd").current(runner)
+		var why := str(session_node.call("_owner_snapshot_block_reason", runner.root.get_node(^"Game").get("local"))) if owner == session_node else ""
+		return _fail("the Kitchen feast panel did not open (input owned by %s %s)" % [str(owner.name) if owner is Node else "nobody", why])
+	if mode == "feed":
+		panel.call("_open_feed_from_kitchen")
+		await runner.process_frame
+	var want := str(args.get("button", ""))
+	var target: Button = null
+	var labels: Array = []
+	for node: Node in panel.get("_list").get_children():
+		if not node is Button: continue
+		labels.append((node as Button).text)
+		if target == null and not (node as Button).disabled and (node as Button).text.begins_with(want): target = node
+	if target == null:
+		panel.call("close")
+		return _ok("no enabled button starts with '%s'" % want, {"pressed": false, "labels": labels})
+	var session: Node = runner.root.get_node(^"Game/Session")
+	var op := "feast_cook" if mode == "cook" else "feast_feed"
+	var completed: Array = []
+	var done := func(action: String, _intent: Dictionary, result: Dictionary) -> void:
+		if action == op: completed.append(result)
+	session.connect("homestead_action_completed", done)
+	target.emit_signal("pressed")
+	for f in int(args.get("budget_frames", 1800)):
+		await runner.physics_frame
+		if str(panel.get("_pending_action")).is_empty(): break
+	session.disconnect("homestead_action_completed", done)
+	var message := str(panel.get("_message").text) if is_instance_valid(panel.get("_message")) else ""
+	var pending := str(panel.get("_pending_action"))
+	if panel.call("is_open") == true: panel.call("close")
+	return _ok("pressed '%s'" % target.text, {"pressed": true, "labels": labels, "message": message,
+		"still_pending": pending, "completed": completed})
+
+
+## Feast-relevant state: the owner's own record, or (host, character_id) the
+## host's admitted record of that character.
+static func _feast_view(runner: SceneTree, character_id: String) -> Dictionary:
+	var game := runner.root.get_node(^"Game")
+	var record: Dictionary
+	if character_id.is_empty():
+		record = preload("res://scripts/net/character_record_rules.gd").portable_projection(game.get("local").call("save_data"))
+		character_id = str(game.get("local").get("character_id"))
+	else:
+		if game.call("is_host") != true: return _fail("host view requires the host")
+		record = game.get("session").get("_character_authority").call("state", character_id)
+	var personal: Dictionary = record.get("redesign_character", {})
+	var stock := preload("res://scripts/world/death_satchel_rules.gd").inventory_from(record.get("inventory", []))
+	var items := {}
+	for id: String in ["berries", "rootstone", "attuned_ground", "feast_t1_ground"]: items[id] = stock.count(id)
+	var party := {}
+	for member: Variant in record.get("party", []):
+		if not member is Dictionary: continue
+		var mirror: Dictionary = personal.get("creatures", {}).get(str(member.get("uid", "")), {})
+		party[str(member.get("species_id", ""))] = {"uid": str(member.get("uid", "")), "level": int(member.get("level", 0)),
+			"xp": int(member.get("xp", 0)), "cap_level": int(mirror.get("cap_level", -1)),
+			"breakthroughs": (mirror.get("breakthroughs", []) as Array).duplicate()}
+	return _ok("%s feast state" % character_id, {"character_id": character_id, "items": items, "party": party,
+		"feast_recipes": (personal.get("feast_recipes", []) as Array).duplicate(),
+		"receipts": (personal.get("transaction_receipts", []) as Array).filter(func(r: Variant) -> bool:
+			return str(r).begins_with("craft:") or str(r).begins_with("feast_feed:"))})
+
+
+## Where a placed station stands in this process (once replicated).
+static func _station_at(runner: SceneTree, uid: String) -> Dictionary:
+	for f in 600:
+		var node: Node3D = runner.call("_station_node", uid)
+		if node != null: return _ok("station %s" % uid, {"at": [node.global_position.x, node.global_position.y, node.global_position.z]})
+		await runner.physics_frame
+	return _fail("station %s never replicated here" % uid)
