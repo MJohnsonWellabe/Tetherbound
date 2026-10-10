@@ -808,9 +808,21 @@ func _build_materials() -> void:
 	cloud_bank.set_shader_parameter("extinction", float(cloud_cfg.get("bank_extinction", 10.0)))
 	_materials["cloud_billow"] = cloud_bank
 	var island_cfg: Dictionary = _visual_config.get("island_roots", {})
-	_materials["island_mist"] = _emissive_material(Color(str(island_cfg.get("mist_colour", "#e6eef4"))),
-		float(island_cfg.get("mist_emission", 0.16)))
-	_materials["island_mist"].roughness = 1.0
+	if str(island_cfg.get("mist_style", "flat")) == "soft_bank":
+		# P2-106: an opaque emissive collar read as flat white decagons cut
+		# out of the sky. The soft bank is lit, darker underneath and fades
+		# to nothing at its silhouette, so the puffs read as cloud.
+		var mist := ShaderMaterial.new()
+		mist.shader = preload("res://shaders/cloudreach_cloud_bank.gdshader")
+		mist.set_shader_parameter("cloud_lit", Color(str(island_cfg.get("mist_colour", "#e6eef4"))))
+		mist.set_shader_parameter("cloud_base", Color(str(island_cfg.get("mist_base_colour", "#8095a8"))))
+		mist.set_shader_parameter("edge_alpha", float(island_cfg.get("mist_edge_alpha", 0.0)))
+		mist.set_shader_parameter("core_alpha", float(island_cfg.get("mist_core_alpha", 0.85)))
+		_materials["island_mist"] = mist
+	else:
+		_materials["island_mist"] = _emissive_material(Color(str(island_cfg.get("mist_colour", "#e6eef4"))),
+			float(island_cfg.get("mist_emission", 0.16)))
+		_materials["island_mist"].roughness = 1.0
 	# Far stone uses the geology material below, with two cooler palettes.
 	var relief_cfg: Dictionary = _visual_config.get("distant_relief", {})
 	for material_key: String in ["masonry", "masonry_trim"]:
@@ -5677,8 +5689,8 @@ func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value
 	var sphere := SphereMesh.new()
 	sphere.radius = 1.0
 	sphere.height = 2.0
-	sphere.radial_segments = 10
-	sphere.rings = 5
+	sphere.radial_segments = maxi(6, int(cfg.get("mist_radial_segments", 10)))
+	sphere.rings = maxi(3, int(cfg.get("mist_rings", 5)))
 	sphere.material = _materials["island_mist"]
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D

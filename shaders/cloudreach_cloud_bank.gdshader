@@ -3,6 +3,10 @@ render_mode blend_mix, depth_prepass_alpha, cull_back, diffuse_burley, specular_
 
 uniform vec4 cloud_lit : source_color = vec4(0.89, 0.93, 0.95, 1.0);
 uniform vec4 cloud_base : source_color = vec4(0.50, 0.58, 0.66, 1.0);
+// Opacity at the silhouette and where the surface faces the camera. A
+// silhouette near zero hides the low-poly outline of a puff (P2-106).
+uniform float edge_alpha : hint_range(0.0, 1.0) = 0.18;
+uniform float core_alpha : hint_range(0.0, 1.0) = 0.92;
 varying float local_height;
 
 void vertex() {
@@ -17,5 +21,5 @@ void fragment() {
 	ALBEDO = mix(cloud_lit.rgb, cloud_base.rgb,
 		clamp(underside * 0.78 + (1.0 - upward) * 0.22, 0.0, 1.0));
 	ROUGHNESS = 1.0;
-	ALPHA = mix(0.18, 0.92, soft_edge);
+	ALPHA = mix(edge_alpha, core_alpha, soft_edge);
 }
