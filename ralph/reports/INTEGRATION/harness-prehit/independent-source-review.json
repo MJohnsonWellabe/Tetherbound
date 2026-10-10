@@ -1,0 +1,18 @@
+{
+  "reviewer": "/root",
+  "utc": "2026-10-09T23:01:41Z",
+  "source": "97a4d7bad060b6fb2e1e54eb7795e65ad78663b2",
+  "main": "6add9d5f9b9f490bf8a77783d3afa21474cdb50d",
+  "verdict": "SOURCE_APPROVE_BOUNDED_PRE_HIT_CLASSIFICATION",
+  "scope": "Exactly3 test/helper files; no production/config/default/feature changes; diffcheck clean",
+  "assessment": [
+    "Uses actual hit_landed incoming counter attached during the original resting read. Bare classification requires zero incoming and unchanged HP/base maximum; prior-hit classification requires positive actual incoming and authored host scale with exact original damage/fraction tolerances.",
+    "Partial feedback, wrong scale/HP/fraction/base serialized maximum, missing counters, NaN or ended fights remain unclassified and fail. At most20 polls of6 frames; no live enemy attack suppression, HP grant, timer or actor-vitals changes.",
+    "Original explicit-host-hit acceptance, actual admitted scale, incoming delta/HP arithmetic, HP fraction, base serialized party maximum and post-flee guards remain unchanged.",
+    "Source emits actual incoming counters in retained logs so the prior-hit classification can be independently certified rather than inferred from rounded HP alone."
+  ],
+  "qualification": "saved_max comes from the canonical serialized party row; that field alone is not independently read disk durability evidence",
+  "next": "Fresh exact-source affected causal/harness units and actual two-peer smoke required before landing; keep this infrastructure scope separate from route READY",
+  "ready_approved": false,
+  "runtime_approved": false
+}
