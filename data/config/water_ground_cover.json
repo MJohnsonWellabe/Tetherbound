@@ -27,7 +27,7 @@
   "wind_scale": 0.055,
   "cull_tile_m": 16.0,
   "forbidden_ground": ["shore", "rock"],
-  "stones": {"enabled": false},
+  "stones": {"enabled": true, "ground": ["shore", "rock"], "count": 26000, "stone_size": 0.16, "size_jitter": 0.8, "sink": 0.35, "density_gain": 0.9, "tint_stone": "#8a8073", "tint_jitter": 0.35, "contact_darken": 0.5, "reach_m": 30.0},
   "far_cover": {"enabled": false},
   "cover_tiers": [
     {
