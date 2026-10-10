@@ -1,0 +1,130 @@
+{
+  "subject": "aeriex",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Disabled Meshy-6 legless sky-serpent candidate; current species remains default",
+  "reference_provenance": {
+    "subject": "aeriex",
+    "reference": "assets/creatures/tetherbound/aeriex/reference/native-wing-layout-v2.png",
+    "method": "built_in_imagegen",
+    "identity_reference": [
+      "assets/creatures/tetherbound/aeriex/reference/side.png",
+      "assets/creatures/tetherbound/aeriex/models/creature_aeriex_lod0.glb rendered as full identity view"
+    ],
+    "prompt": "Draft an original Tetherbound Aeriex modeling reference using the supplied established side reference crop and full installed-model render only as species identity. ONE full-body three-quarter studio view of the SAME elegant feathered sky-serpent bird: long gently curved serpentine body and upright flexible neck, cream-white underside continuing up the neck to a rounded expressive bird face, short warm ochre beak, large dark expressive eyes, turquoise/azure feather groups with restrained orange-ochre edges, swept turquoise head crest, two broad feathered side wings and a long tapering feathered tail. Preserve the existing legless anatomy: NO feet, talons, arms, humanoid body, dragon horns, new equipment or extra appendages. The body is a single substantial continuous volume with a natural supported neck, not a thin stalk. Neutral riggable presentation: body in a shallow readable S curve, both wings slightly extended sideways to separate their shoulder/wing roots, layered feather groups broad and connected rather than long wire strands, full tail separate and entirely visible. Rest the low curved belly and tail on the studio floor without crumpling the neck; this does not add legs to the airborne species. Entire head crest, wings and tail inside the image with generous margin. Clean detailed stylized game-creature surface, large coherent blue and cream colour blocks, soft roughness, plain light-grey background and soft studio light. No neon or metallic sheen, wispy floating disconnected feather shards, dramatic action, environment, text, ruler, reference board, humans, saddle or harness. One existing roster creature only, not a new species.",
+    "default_enabled": false,
+    "draft_origin": "exec-b1c68ac6-9e8d-4f9d-a0ef-07afee1585f5",
+    "selected_origin": "exec-4d5b1cb0-a5c1-4bf3-9a2d-58a67b011d0f",
+    "edit_prompt": "Refine this original Tetherbound Aeriex modeling reference while keeping its exact legless sky-serpent anatomy, expressive face, beak, long cream neck/belly, turquoise and ochre palette, pose, studio background and full-body framing. Improve only the feather construction for a deformable low-poly game mesh: make both side wings clearly originate from the body and consist of a few broad thick connected overlapping feather groups, with solid blue surfaces between the major feather tips, rather than a bundle of long thin hanging strands. Make the long tail feathers a broad continuous sculpted plume attached to the tapered body, with a small number of substantial broad feather tips instead of thin wires or separated ribbons. Keep feather layering through shallow sculpted relief and painted texture. Give the head crest fewer broader connected feather tufts too. No new feet or legs, equipment, horns, appendages, characters, text or environment. Preserve the established creature identity; do not turn it into a dragon or ordinary bird. The complete tail and both wings must remain inside the frame.\n",
+    "inspection": {
+      "identity": "Same legless cream-necked azure/ochre feathered sky-serpent with expressive bird face and curved tail",
+      "riggability": "Both complete wings clearly separated horizontally, broad overlapping feather volumes and visible shoulder attachment; generous upper/body/tail framing, tight lateral wing-tip margin",
+      "limits": "Actual bilateral wing volume, shoulder topology and deformation must be inspected in the generated GLB; no rig or full art approval from reference"
+    },
+    "wing_layout_prompt": "Create a corrected 3D modeling reference of this SAME Tetherbound Aeriex character. Change the camera and neutral rigging pose so the complete anatomy is unambiguous. Use a near-frontal three-quarter view, only about 15 degrees yaw from straight front. The upright cream-white neck, rounded bird face, ochre beak, big dark expressive eyes and turquoise/ochre crest remain the same. Keep its substantial continuous legless serpentine body and curved feathered tail, without adding feet or legs. Crucially show TWO clearly separate matching broad feathered side wings, one on EACH side, both visibly joined to the upper body below the neck by thick shoulder roots. Hold the wings extended horizontally out to left and right in a shallow comfortable upsweep; show each entire wing from root to tip. Their broad layered blue feather surfaces and restrained ochre tips must read as two solid volumetric wing masses, not thin hanging feathers, breast fins, or a flat side-profile silhouette. The viewer must see the thickness of the neck, torso, both wing roots and feather overlaps. Keep the central belly/body and low curved tail resting on the studio floor, with the full long tail curving to the side below the wings and completely inside frame. Preserve the established azure/turquoise and cream colour organization, expressive face and exact legless sky-serpent bird identity. No invented appendages, horns, equipment, saddle, humans, text, rulers, backgrounds or alternate views. One full-body creature on a plain light-grey studio floor, soft roughness and soft studio light. Generous margin around both extended wings, crest and tail. This is a volume and bilateral wing layout correction of the existing species, not a redesign into a dragon or an ordinary eagle.\n",
+    "superseded_attempt": {
+      "task_id": "01a12665-4a6e-7415-879c-6bda9b837b86",
+      "reference": "native-resting-v1.png",
+      "disposition": "OFF: side wings collapsed against a narrow body; fails usable bilateral wing layout. Raw and views preserved outside Git."
+    }
+  },
+  "generation": {
+    "selected_task": "01a1266d-46de-70b4-8c20-33926e3db02b",
+    "failed_task": "01a12665-4a6e-7415-879c-6bda9b837b86",
+    "status": "SUCCEEDED",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "model": "meshy-6",
+    "topology": "quad",
+    "target_polycount": 14000,
+    "texture_resolution": 2048,
+    "enable_pbr": true,
+    "image_enhancement": false,
+    "remesh": true,
+    "pose_mode": "",
+    "new_submissions_including_failed": 2,
+    "observed_credits_including_failed": 60,
+    "nightly_cap": 30,
+    "nightly_count_includes_failed": true
+  },
+  "rights": {
+    "basis": "Owner-held current-roster identity, original built-in imagegen drafts, existing owner-authorized paid Meshy account; no purchase, community publication or roster expansion",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "approach": "After first mesh collapsed both wings into a narrow body plane, changed the camera and reference to visibly separated near-frontal wing masses. Selected second mesh has a fitted legless body/neck/head and three joints per wing plus three tail segments, UV-preserving weld, bounded decimation, local surface diffusion and four normalized influences. No invented feet, quadruped donor or heat weights.",
+    "material": "Organic dielectric; metallic/emission disabled; original maps/UVs retained",
+    "colourway": "Disabled aeriex_native_review lookup namespace avoids old UV repaints; no species added",
+    "export_triangles": 29399,
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "topology_warnings": [
+      "Mesh_0: 16313 non-manifold edges",
+      "Mesh_0: 9101 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 1164 microscopic disconnected components",
+      "Mesh_0: ~4705 inward-facing faces",
+      "Mesh_0: 188 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ],
+    "height_m": 4.0,
+    "bones": 14,
+    "unweighted_vertices": 0,
+    "vertices": 14879,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "before_height_m": 4.0,
+    "candidate_height_m": 4.0,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 whole-body Low role samples plus front/reverse scale; raw receipts/captures outside Git",
+    "world": "Matched production Cloudreach CameraRig stage, seed and five pose samples per preset; fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "first_attempt_bilateral_wings": "FAIL",
+    "selected_reference_and_layout": "Inspected; deformation approval OPEN",
+    "terminal_faint_contact": "FAIL: feathered silhouette supports the body rather than clear flank contact in sampled pose",
+    "topology": "OPEN",
+    "colour_variants": "OPEN",
+    "ordinary_flight_carrying_and_mount": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "First failed raw mesh and all retry evidence preserved outside Git; both task IDs count toward 30/night",
+    "Second mesh separates wings, but topology and UV warnings remain; standing layout is not a deformation PASS",
+    "Faint/body contact visibly fails; wing fold, feather silhouettes and ordinary flight need independent review",
+    "Still fixtures do not certify earned fights, motion cycles, swimming, flight carrying or rider contact",
+    "Candidate remains OFF until full art bar passes"
+  ]
+}
