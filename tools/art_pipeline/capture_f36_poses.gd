@@ -1,12 +1,14 @@
 extends "res://tools/_capture_creature_roster.gd"
 
-## Existing pose/scale stage. Explicit --candidate previews flag-off recipes on one
-## stage body. Capture the same command without it for the matched baseline.
+## Existing pose/scale stage. Ordinary captures use production's enabled map
+## and body pose hooks. --candidate remains an explicit recipe preview.
 ## This stage is deformation evidence, not an ordinary-input traversal proof.
+const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 const ROLES := ["hit", "faint", "swim", "fly_grip", "ride"]
 const PHASES := [0.0, 0.25, 0.5, 0.75, 1.0]
 var _pose_failures: Array[String] = []
 var _scale_only := false
+var _preset := "Low"
 
 
 func _run() -> void:
@@ -32,6 +34,8 @@ func _run() -> void:
 			out = arg.trim_prefix("--out=")
 		elif arg.begins_with("--source-commit="):
 			source = arg.trim_prefix("--source-commit=")
+		elif arg.begins_with("--preset="):
+			_preset = arg.trim_prefix("--preset=")
 	if all_roster:
 		ids.assign(SPECIES.table().keys())
 		ids.sort()
@@ -49,8 +53,19 @@ func _run() -> void:
 	var sha_pattern := RegEx.new()
 	sha_pattern.compile("^[0-9a-f]{40}$")
 	if DisplayServer.get_name() == "headless" or ids.is_empty() \
+			or not GRAPHICS.PRESETS.has(_preset) \
 			or (not source.is_empty() and sha_pattern.search(source) == null):
 		push_error("F36 needs a native renderer and a current species id")
+		quit(1)
+		return
+	# Match the existing visual fixtures' process-local production preferences.
+	# Keep the owner's saved device preference intact.
+	GRAPHICS.load_preferences()
+	GRAPHICS._base = _preset
+	GRAPHICS._choice = _preset
+	GRAPHICS._custom = {}
+	if GRAPHICS.restart_required():
+		push_error("F36 launch renderer does not match requested preset")
 		quit(1)
 		return
 	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(out)):
@@ -71,6 +86,17 @@ func _run() -> void:
 	for failure: String in _pose_failures:
 		push_error(failure)
 	quit(0 if _pose_failures.is_empty() else 1)
+
+
+func _build_environment() -> void:
+	super._build_environment()
+	GRAPHICS.apply_viewport(root)
+	GRAPHICS.apply_camera(_camera)
+	for child: Node in _world.get_children():
+		if child is WorldEnvironment:
+			GRAPHICS.apply_environment((child as WorldEnvironment).environment)
+		elif child is DirectionalLight3D:
+			GRAPHICS.apply_sun(child as DirectionalLight3D)
 
 
 func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: String, source: String) -> void:
@@ -98,8 +124,8 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	if candidate:
 		body.set_meta("f36_pose_preview", true)
 		body.call("_build_placeholder")
-	if candidate and not bool(body.get_meta("f36_pose_candidate_installed", false)):
-		_pose_failures.append("%s: F36 candidate did not install" % id)
+	if not _scale_only and not bool(body.get_meta("f36_pose_candidate_installed", false)):
+		_pose_failures.append("%s: F36 poses did not install" % id)
 		body.queue_free()
 		await process_frame
 		return
@@ -112,29 +138,51 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	var player := players[0] as AnimationPlayer if players.size() == 1 else null
 	if player != null:
 		player.process_mode = Node.PROCESS_MODE_DISABLED
-	var look: Dictionary = SPECIES.placeholder(id)
-	var map: Dictionary = look.get("animations", {})
+	var animator: RefCounted = body.get("_animator")
+	if not _scale_only and animator == null:
+		_pose_failures.append("%s: production animator missing" % id)
+		body.queue_free()
+		await process_frame
+		return
+	var map: Dictionary = animator.get("_clips") if animator != null else {}
 	var receipt: Array = []
 	var roles: Array = ["standing"] if _scale_only else ROLES
 	var phases: Array = [0.0, 1.0] if _scale_only else PHASES
 	for role: String in roles:
-		var clip := "f36_candidate/%s" % role if candidate else str(map.get(role, ""))
+		var clip := str(map.get(role, ""))
 		if not _scale_only and (clip.is_empty() or not player.has_animation(clip)):
-			receipt.append({"role": role, "status": "missing_baseline_clip"})
+			receipt.append({"role": role, "status": "missing_production_clip"})
 			_pose_failures.append("%s: missing %s clip" % [id, role])
 			continue
+		if not _scale_only:
+			# Leave the previous role through the same restoration used by game
+			# bodies; then require the production hook to select the mapped clip.
+			body.call("set_traversal_pose", "")
+			body.call("revive_animation")
+			if role == "hit":
+				body.call("play_hit")
+			elif role == "faint":
+				body.call("play_faint")
+			else:
+				body.call("set_traversal_pose", role)
+				animator.call("tick", 0.0, 2.0, 4.0)
+			if str(player.assigned_animation) != clip:
+				_pose_failures.append("%s: production hook did not select %s" % [id, role])
+				receipt.append({"role": role, "status": "production_selection_failed"})
+				continue
 		for phase: float in phases:
 			if _scale_only:
 				body.rotation.y = deg_to_rad(phase * 180.0)
 			else:
-				player.play(clip)
+				# Freeze an exact phase without outgoing crossfade contamination.
+				player.play(clip, 0.0)
 				player.seek(player.get_animation(clip).length * phase, true)
 				player.pause()
 			for frame in 3:
 				await process_frame
 			var path := "%s/%s-%s-%03d.png" % [out, id, role, int(phase * 100)]
 			var captured := await _capture(path)
-			receipt.append({"role": role, "phase": phase, "path": path, "captured": captured})
+			receipt.append({"role": role, "clip": clip, "phase": phase, "path": path, "captured": captured})
 			if not captured:
 				_pose_failures.append("%s: PNG capture failed" % path)
 	var file := FileAccess.open("%s/%s-receipt.json" % [out, id], FileAccess.WRITE)
@@ -142,8 +190,10 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		_pose_failures.append("%s: receipt could not be opened" % id)
 	else:
 		file.store_string(JSON.stringify({"species": id, "candidate": candidate, "stage_only": true,
+			"production_poses_installed": bool(body.get_meta("f36_pose_candidate_installed", false)),
 			"scale_only": _scale_only, "installed_model": bool(body.call("has_model")),
 			"source_commit": source, "renderer": RenderingServer.get_current_rendering_method(),
+			"preset": GRAPHICS.selected(), "adapter": RenderingServer.get_video_adapter_name(),
 			"standing_height_m": measured_height, "trainer_reference_height_m": TRAINER_HEIGHT,
 			"trainer_measured_height_m": measured_trainer, "scale_scope": "Installed standing stage; no fight-scale claim",
 			"whole_body_camera": whole_body, "camera_position": [_camera.global_position.x, _camera.global_position.y, _camera.global_position.z],
