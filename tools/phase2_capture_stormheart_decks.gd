@@ -198,7 +198,16 @@ func _write_probes(frame_id: String, stand_id: String) -> void:
 						"class": geo.get_class(), "aabb_size": _vec3(boxes[index].size),
 						"material": material.resource_name if material != null else ""})
 		hits.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.distance) < float(b.distance))
-		rows.append({"pixel": [pixel.x, pixel.y], "nearest": hits.slice(0, 14)})
+		# Large meshes that enclose the camera (ramp, trunk) fail the box test;
+		# a physics ray names the solid surface actually under the pixel.
+		var from := _camera.project_ray_origin(at)
+		var query := PhysicsRayQueryParameters3D.create(from, from + _camera.project_ray_normal(at) * 2000.0)
+		var ray := _camera.get_world_3d().direct_space_state.intersect_ray(query)
+		var surface := {}
+		if not ray.is_empty() and ray.collider is Node:
+			surface = {"collider": str(_world.get_path_to(ray.collider as Node)), "position": _vec3(ray.position),
+				"normal": _vec3(ray.normal), "distance": from.distance_to(ray.position)}
+		rows.append({"pixel": [pixel.x, pixel.y], "ray": surface, "nearest": hits.slice(0, 14)})
 	var file := FileAccess.open(ProjectSettings.globalize_path("%s/%s_probe.json" % [_output_dir, frame_id]), FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify(rows, "\t"))
