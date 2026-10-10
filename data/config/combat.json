@@ -1914,7 +1914,8 @@
     "low_hp_fraction": 0.3,
     "low_hp_tradeoffs": {
       "WALL": {
-        "telegraph_add_s": 0.2
+        "telegraph_add_s": 0.2,
+        "power_multiplier": 1.15
       },
       "DIVER": {
         "reposition_add_s": 0.4
