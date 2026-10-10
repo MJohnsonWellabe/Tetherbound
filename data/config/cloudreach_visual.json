@@ -125,7 +125,8 @@
     "mist_style": "soft_bank",
     "mist_base_colour": "#8095a8",
     "mist_edge_alpha": 0.0,
-    "mist_core_alpha": 0.85,
+    "mist_core_alpha": 0.62,
+    "mist_fade_end": 0.9,
     "mist_radial_segments": 20,
     "mist_rings": 10
   },

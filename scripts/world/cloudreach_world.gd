@@ -818,6 +818,7 @@ func _build_materials() -> void:
 		mist.set_shader_parameter("cloud_base", Color(str(island_cfg.get("mist_base_colour", "#8095a8"))))
 		mist.set_shader_parameter("edge_alpha", float(island_cfg.get("mist_edge_alpha", 0.0)))
 		mist.set_shader_parameter("core_alpha", float(island_cfg.get("mist_core_alpha", 0.85)))
+		mist.set_shader_parameter("fade_end", float(island_cfg.get("mist_fade_end", 0.34)))
 		_materials["island_mist"] = mist
 	else:
 		_materials["island_mist"] = _emissive_material(Color(str(island_cfg.get("mist_colour", "#e6eef4"))),

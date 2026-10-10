@@ -7,6 +7,9 @@ uniform vec4 cloud_base : source_color = vec4(0.50, 0.58, 0.66, 1.0);
 // silhouette near zero hides the low-poly outline of a puff (P2-106).
 uniform float edge_alpha : hint_range(0.0, 1.0) = 0.18;
 uniform float core_alpha : hint_range(0.0, 1.0) = 0.92;
+// Facing value at which the edge fade reaches the core. A flattened puff turns
+// its normals over a thin rim, so it needs a wider band than a round bank.
+uniform float fade_end : hint_range(0.05, 1.0) = 0.34;
 varying float local_height;
 
 void vertex() {
@@ -16,7 +19,7 @@ void vertex() {
 void fragment() {
 	float upward = clamp(NORMAL.y * 0.5 + 0.5, 0.0, 1.0);
 	float facing = abs(dot(normalize(NORMAL), normalize(VIEW)));
-	float soft_edge = smoothstep(0.03, 0.34, facing);
+	float soft_edge = smoothstep(0.03, fade_end, facing);
 	float underside = 1.0 - smoothstep(-0.55, 0.18, local_height);
 	ALBEDO = mix(cloud_lit.rgb, cloud_base.rgb,
 		clamp(underside * 0.78 + (1.0 - upward) * 0.22, 0.0, 1.0));
