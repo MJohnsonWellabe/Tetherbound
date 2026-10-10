@@ -427,6 +427,14 @@ func _ready() -> void:
 ## playground at 500 m/s, accelerating, on the first frame of every run.
 func _on_visibility_changed() -> void:
 	set_physics_process(visible)
+	if not visible:
+		# Hidden means no physics, so `_update_grass_clear` cannot release the
+		# patch later: drop it now (a stowed companion, a caught or fainted wild).
+		_grass_still_s = 0.0
+		if _grass_clearing:
+			_grass_clearing = false
+			remove_from_group(GRASS_CLEAR_GROUP)
+			GRASS_FIELD.clearings_dirty = true
 	if _collision != null:
 		# Deferred because visibility is usually flipped from inside a physics
 		# callback, and changing a collider's state mid-step is not allowed.

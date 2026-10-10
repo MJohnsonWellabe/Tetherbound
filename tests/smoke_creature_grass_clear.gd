@@ -79,6 +79,17 @@ func _run() -> void:
 			break
 	_check(left, "a creature that starts walking leaves the grass clearing")
 
+	# A creature hidden while still (stowed companion, caught/fainted wild)
+	# loses its physics, so it must release its patch on hiding.
+	wild.set("_target", wild.global_position)
+	wild.set("_pause_left", 1000.0)
+	for i in settle_ticks:
+		await physics_frame
+	_check(wild.is_in_group(BODY.GRASS_CLEAR_GROUP), "the creature settles and clears grass again")
+	wild.visible = false
+	await physics_frame
+	_check(not wild.is_in_group(BODY.GRASS_CLEAR_GROUP), "hiding a still creature releases its grass patch")
+
 	if _failures.is_empty():
 		print("creature grass clear smoke passed")
 		quit(0)
