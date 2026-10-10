@@ -1,25 +1,122 @@
 {
   "subject": "stormursa",
   "working_name": "Stormursa",
-  "authorization": "CODEX_START_HERE RD-28; ART_DIRECTION 7.2; ACCEPTANCE F29#3",
-  "status": "reference_inspected_meshy_preview_submitted_gates_open",
-  "generation_provider": "Meshy",
-  "meshy_task_id": "01a1165e-e5b9-754f-8aaf-ff5f40c68d64",
+  "authorization": "Issue 572 MESH REQUEST F29#3 and priority row 24 of F36#0; RD-26/RD-28",
+  "status": "native_candidate_off_pose_and_full_art_gates_open",
+  "generation_provider": "Meshy API",
+  "meshy_task_id": "01a1256e-ac9f-77cf-bc43-5628bc37b068",
+  "generation_date": "2026-10-10",
+  "night_start_date_america_chicago": "2026-10-09",
+  "night_generation_number": 1,
+  "night_generation_cap": 30,
+  "consumed_credits": 30,
+  "generation_endpoint": "/openapi/v1/image-to-3d",
+  "generation_settings": {
+    "ai_model": "meshy-6",
+    "model_type": "standard",
+    "should_remesh": true,
+    "topology_requested": "quad",
+    "target_polycount": 14000,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "image_enhancement": false,
+    "pose_mode": ""
+  },
+  "reference": "res://assets/creatures/tetherbound/stormursa/reference/native-standing-v1.png",
+  "reference_source": "Original imagegen draft based on the inspected owner Staticub board docs/art/reference/43_Staticub_Board.png. Brown/chestnut fur, cream muzzle, blue-violet eyes, rounded ears and violet lightning retained; adult mass and four separate standing paws requested. No external animal or character reference used.",
   "reference_inspected": true,
+  "model": "res://assets/creatures/tetherbound/stormursa/models/creature_stormursa_lod0.glb",
+  "mesh_triangles": 27998,
+  "materials": 1,
+  "rig_bones": 15,
+  "unweighted_vertices": 0,
+  "preparation": "Existing Blender quadruped and skin-transfer workflow. Stormursa-specific measured-paw rest joints and continuous anatomical weights replace the failed automatic/donor weights; original textured surface and UVs retained. Bear gait arcs and strike/faint/swim/carry clips authored only in this asset.",
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "swim",
+    "fly_grip",
+    "ride"
+  ],
+  "traversal_scope": "fly_grip and ride clips are visual previews only; this OFF species recipe grants no flight, riding, encounter, evolution or acquisition capability.",
+  "preparation_scripts": [
+    "assets/creatures/tetherbound/stormursa/source/prepare_native_candidate.py",
+    "tools/art_pipeline/blender/skin_transfer.py",
+    "assets/creatures/tetherbound/stormursa/source/refit_native_rig.py",
+    "assets/creatures/tetherbound/stormursa/source/author_native_clips.py"
+  ],
   "rig_pass": false,
   "animation_pass": false,
-  "scale_pass": false,
+  "scale_pass": true,
   "full_art_bar_pass": false,
-  "height_m": null,
-  "reference": "res://assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
-  "model": null,
+  "height_m": 4.10000038146973,
+  "native_scale": {
+    "renderer": "gl_compatibility",
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "standing_bounds_height_m": 4.10000038146973,
+    "unchanged_staticub_standing_height_m": 3.25,
+    "trainer_measured_height_m": 1.79999995231628,
+    "scope": "Actual production CreatureBody fitting on the existing native scale stage; total standing bounds, not an anatomical withers measurement or fight proof."
+  },
+  "before_after": "assets/creatures/tetherbound/stormursa/review/low-before-after.jpg",
+  "native_capture_scope": "Production Stormwood scene, trainer and CameraRig; identical stand positions and camera for current Staticub and audit-only Stormursa. Direct pose fixture, not an earned fight, traversal or progression claim. Low Compatibility at 1920x1080.",
+  "open_findings": [
+    "Extreme stride skin deformation and the faint endpoint remain below the F36 pose bar; rig and animation gates remain false.",
+    "Matched Low/Medium F36 confirmation exists; full Bars A/B, High and an independent code-blind art judgment have not passed."
+  ],
   "judge_medium": null,
   "judge_high": null,
-  "before_after": null,
-  "preparation_scripts": [
-    "tools/art_pipeline/f36_meshy_guard.py",
-    "tools/art_pipeline/meshy.py"
-  ],
-  "license": "Use existing Meshy license only; output rights and redistribution must be recorded after actual generation. No new purchase.",
-  "default_enabled": false
+  "default_enabled": false,
+  "license": {
+    "source": "Meshy API existing owner credits; no new purchase",
+    "terms": "https://www.meshy.ai/terms-of-use",
+    "api": "https://www.meshy.ai/api",
+    "rights_basis": "Existing paid API output terms; original drafted reference and owner project inputs. Output may be redistributed as this project asset under those account terms; no new third-party source or license introduced.",
+    "rights_scope": "This records the generation/account basis and source attribution; it does not grant rights beyond Meshy terms."
+  },
+  "f36_confirmation": {
+    "criterion": "F36#0",
+    "new_meshy_submissions": 0,
+    "preparation": "Reuse the existing disabled F29 Stormursa asset and original reference; no mesh, rig, skin, texture, animation or runtime recipe changes.",
+    "native_presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "resolution": [
+      1920,
+      1080
+    ],
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "staticub_height_m": 3.25,
+    "stormursa_height_m": 4.10000038146973,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "before_after": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ],
+    "scope": "Current-main production Stormwood scene and CameraRig, identical adult stand framing and seed, five paired pose samples per preset; 25 Low whole-body diagnostics. External audit fixture injects only the OFF authorized evolution candidate.",
+    "gates": {
+      "rig": "FAIL",
+      "animation": "FAIL",
+      "terminal_contact": "FAIL",
+      "independent_judge": "OPEN",
+      "full_art_bar_pass": false
+    },
+    "limitations": [
+      "Earlier extreme stride skin deformation and faint endpoint failures remain; these stills do not cure them.",
+      "Ten retained clips omit rest; no full-motion, earned fight, progression, traversal, contact, colour-variant or High approval.",
+      "Raw captures and manifests remain outside Git. No further generation or third repetition of the failed rig workflow."
+    ]
+  }
 }
