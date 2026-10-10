@@ -760,7 +760,7 @@ func _finish_local_claim(kept: bool) -> void:
 		_cancel_local_claim()
 		return
 	var cut: Dictionary = {} if session.is_host() else result
-	var saved := result.get("host_saved") == true if session.is_host() else not cut.is_empty()
+	var saved: bool = result.get("host_saved") == true if session.is_host() else not cut.is_empty()
 	if not saved:
 		_save_retry_left = 1.0
 		game.push_world_message("Could not save the roster choice. The Stormheart is still waiting.")

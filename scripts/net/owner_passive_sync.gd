@@ -1917,7 +1917,7 @@ func stormwood_save_owner(claim: Dictionary, released_uid: String) -> Dictionary
 	if not stormwood_owner.has("after"):
 		# Verify the live ceremony first, then install only its derived payout
 		# and receipt arrays. No owner-supplied replacement card is accepted.
-		var expected := proposal.state.duplicate(true)
+		var expected: Dictionary = proposal.state.duplicate(true)
 		expected.inventory = stormwood_owner.before.inventory.duplicate(true)
 		expected.redesign_character.release_receipts = stormwood_owner.before.redesign_character.release_receipts.duplicate()
 		expected.redesign_character.transaction_receipts = stormwood_owner.before.redesign_character.transaction_receipts.duplicate()
