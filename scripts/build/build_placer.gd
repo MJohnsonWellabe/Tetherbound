@@ -551,7 +551,7 @@ func _ready() -> void:
 	restore_from_game(_game())
 
 func _connect_station_view(game: Node) -> void:
-	if game == null or STATION_RULES.config().get("runtime_enabled") != true: return
+	if game == null or not STATION_RULES.runtime_enabled(): return
 	var producer := game.get("session") as Node
 	if producer == _station_view_producer: return
 	if is_instance_valid(_station_view_producer) and _station_view_producer.has_signal("homestead_personal_view_completed") \
