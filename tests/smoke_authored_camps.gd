@@ -165,6 +165,16 @@ func _every_authored_camp_stood_one_up(props: Node3D, authored: Array) -> void:
 				_fail("'%s''s creature bed came up at index %d, not the authored %d"
 					% [name, int(bed.call("build_index")),
 						int((wants_bed as Dictionary).get("bed_index", 0))])
+			else:
+				# The bed a player walks up to stands where it is authored and on
+				# the ground there (it once stood at about twice its coordinates).
+				var bed_at: Array = (wants_bed as Dictionary).get("at", [])
+				var at := (bed as Node3D).global_position
+				var ground := float(props.get_parent().call("ground_height_at", at.x, at.z))
+				if bed_at.size() < 2 or Vector2(at.x, at.z).distance_to(Vector2(float(bed_at[0]), float(bed_at[1]))) > 0.05:
+					_fail("'%s''s creature bed stands at %s, not its authored %s" % [name, str(at), str(bed_at)])
+				elif is_nan(ground) or absf(at.y - ground) > 1.0:
+					_fail("'%s''s creature bed stands %.2f m off the terrain (y %.2f, ground %.2f)" % [name, at.y - ground, at.y, ground])
 		print("  %-22s rest%s%s at %.0f, %.0f" % [
 			name,
 			" + craft" if point.get_node_or_null(^"CraftInteractable") != null else "",
