@@ -238,6 +238,12 @@ func replay_cutscene(open_tab: Callable) -> bool:
 		return tree.current_scene == scene and game.call("find_player") == actor and game.get("world") == world \
 			and game.get("local") == local and local.get("character_id") == character and game.get("session") == session \
 			and session.call("_altar_current_epoch") == epoch
+	# Owner duties from the earlier catch (research, mastery) settle in the
+	# background and add receipts. Replay must change nothing of its own, so
+	# take the before-state once those holds have cleared (bounded).
+	for _frame in 900:
+		if (session.get("_duty_holds") as Dictionary).is_empty(): break
+		await tree.process_frame
 	var before_flags: Array = local.get("flags").call("all_set")
 	before_flags.sort()
 	var before_receipts: Array = (local.get("redesign_character").get("transaction_receipts") as Array).duplicate(true)
