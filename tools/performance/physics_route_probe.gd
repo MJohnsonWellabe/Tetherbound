@@ -45,7 +45,7 @@ func _run() -> void:
 		quit(1)
 		return
 	if _ablate == "wilds":
-		get_tree().node_added.connect(_stop_wild)
+		node_added.connect(_stop_wild)
 		_stop_wilds(_world)
 	if _attribute in ["process", "physics"]:
 		await _attribute_scripts(_attribute == "physics")
