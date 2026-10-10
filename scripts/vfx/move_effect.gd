@@ -77,6 +77,13 @@ func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 		for key: String in context.get("ultimate_launch", {}):
 			launch[key] = context.ultimate_launch[key].duplicate(true)
 		_row["launch"] = launch
+		# Keep the signature's visible set piece for its accepted duration.
+		# Stretch only the existing ground aftermath, not the contact burst
+		# around the target; ordinary move timing and arrival remain unchanged.
+		var signature_seconds := float(context.get("duration_seconds", 0.0))
+		var stages: Dictionary = (_row.impact as Dictionary).get("stages", {})
+		if signature_seconds >= 2.0 and signature_seconds <= 3.0 and stages.get("mark") is Dictionary:
+			stages.mark["duration"] = maxf(0.05, signature_seconds - _travel)
 		if bool(context.get("peer_view", false)):
 			var peer: Dictionary = context.get("peer_presentation", {})
 			_peer_opacity = clampf(float(peer.get("opacity", 1.0)), 0.0, 1.0)
