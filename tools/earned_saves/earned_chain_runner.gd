@@ -11,7 +11,9 @@ extends SceneTree
 ##   production title's Autosave entry (slot 0), runs one or more earned helpers
 ##   read-only, and on success writes that same slot through `Game.save_game()`.
 ##   This retains the actual fresh world's transaction ownership. No teleport,
-##   flag/inventory/party write, HP pin or debug skip is made by this file.
+##   flag/inventory/party write, HP pin or debug skip occurs during earned play.
+##   Explicit --generated-fixture constructs a disclosed unearned input first;
+##   its own segment then uses the same Load path and unchanged helpers.
 ##
 ## SEGMENTS (in order)
 ##   opening_team     fresh title -> first catch -> road gate -> village -> team
@@ -58,6 +60,7 @@ const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const OFFLOAD := preload("res://tests/helpers/f19_functional_offload.gd")
 const TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 const ORDER := preload("res://scripts/data/biome_order.gd")
+const GENERATED_PROFILES := "res://tests/fixtures/earned_saves/generated_boundary_profiles.json"
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CHAIN_SLOT := 1  # Historical copied-save slot; legacy-order diagnostics only.
@@ -83,6 +86,7 @@ var handoff_from := ""
 var compatibility_paths: Array[String] = []
 var disk: RefCounted
 var retained_uids: Array[String] = []
+var generated_fixture := false
 
 
 func _init() -> void:
@@ -102,6 +106,8 @@ func _run() -> void:
 			legacy_order_diagnostic = true
 		elif arg == "--functional-offload":
 			functional_offload = true
+		elif arg == "--generated-fixture":
+			generated_fixture = true
 		elif arg == "--observe-next-goal":
 			observe_next_goal = true
 		elif arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--capture-lessons"] or arg.begins_with("--lesson-skip-line"):
@@ -126,6 +132,10 @@ func _run() -> void:
 		_finish()
 		return
 	if not failures.is_empty():
+		_finish()
+		return
+	if generated_fixture and (legacy_order_diagnostic or not compatibility_paths.is_empty() or segment != "relay"):
+		failures.append("Generated fixtures are explicit Relay inputs, never legacy or reviewed earned imports")
 		_finish()
 		return
 	if legacy_order_diagnostic and not handoff_from.is_empty():
@@ -171,7 +181,7 @@ func _run() -> void:
 			or receipt_path != output_root.path_join(segment + "/receipt.json") \
 			or DirAccess.dir_exists_absolute(output_root) or FileAccess.file_exists(output_root):
 			failures.append("Piece output must be an absent root with <segment>/save and <segment>/receipt.json; refusing overwrite")
-		if (segment == "opening_team") != handoff_from.is_empty():
+		if not generated_fixture and (segment == "opening_team") != handoff_from.is_empty():
 			failures.append("Only opening_team starts fresh; every later piece requires --handoff-from=<previous piece>")
 		var working := output_root + "_working_" + segment
 		if DirAccess.dir_exists_absolute(working) or FileAccess.file_exists(working):
@@ -192,6 +202,10 @@ func _run() -> void:
 		failures.append("Existing Compatibility functional offload refused this piece")
 		_finish()
 		return
+	if generated_fixture and handoff_from.is_empty():
+		if not await _generate_boundary_fixture():
+			_finish()
+			return
 	print("EARNED CHAIN segment=%s save_dir=%s seed=%s" % [segment, save_dir, OS.get_environment("TB_WORLD_SEED")])
 	match segment:
 		"opening_team":
@@ -248,7 +262,7 @@ func _load_previous() -> bool:
 		if ProjectSettings.globalize_path(handoff_from).simplify_path().trim_suffix("/").get_file() != previous:
 			failures.append("Piece must load its immediate predecessor: " + previous)
 			return false
-		if disk.import_prefix(handoff_from) != previous:
+		if disk.import_prefix(handoff_from, "generated_fixture" if generated_fixture else "earned") != previous:
 			failures.append_array(disk.failures)
 			return false
 		var travel := TRAVEL.new(self, game)
@@ -442,6 +456,9 @@ func _finish() -> void:
 		"segment": segment,
 		"mode": "legacy_order_diagnostic" if legacy_order_diagnostic else "new_order_meadows_piece",
 		"functional_offload": functional_offload,
+		"input_mode": "generated_fixture" if generated_fixture else "earned",
+		"prior_earned_play": false if generated_fixture else null,
+		"continuous_fresh_save": false,
 		"handoff_from": handoff_from,
 		"passed": failures.is_empty(),
 		"failures": failures,
@@ -487,3 +504,203 @@ func _finish() -> void:
 
 func copy_tree(from: String, to: String) -> bool:
 	return CHECKPOINTS.copy_tree(from, to)
+
+
+## Owner #5726060136810: setup only. After export, the original helpers receive
+## the immutable production save through their unchanged title Load path.
+func _generate_boundary_fixture() -> bool:
+	var generated_root := save_dir.get_base_dir().get_base_dir() + "_generated_input"
+	if DirAccess.dir_exists_absolute(generated_root) or FileAccess.file_exists(generated_root):
+		failures.append("Generated fixture output root already exists; refusing overwrite")
+		return false
+	var table: Variant = JSON.parse_string(FileAccess.get_file_as_string(GENERATED_PROFILES))
+	if not table is Dictionary or table.get("owner_policy") != "#5726060136810" \
+			or not table.get("profiles", {}).has(segment):
+		failures.append("Generated segment requires its committed complete boundary profile")
+		return false
+	var profile: Dictionary = table.profiles[segment]
+	var source := ProjectSettings.globalize_path(str(table.base_save))
+	var working := ProjectSettings.globalize_path(str(game.save_system.get("_dir")))
+	var manifest: Variant = JSON.parse_string(FileAccess.get_file_as_string(source.get_base_dir().path_join("PROVENANCE.json")))
+	if not manifest is Dictionary or manifest.get("kind") != "generated_fixture_template":
+		failures.append("Generated fixture template requires its portable byte provenance")
+		return false
+	for file: String in manifest.files_sha256:
+		if FileAccess.get_sha256(source.path_join(file)) != manifest.files_sha256[file]:
+			failures.append("Generated fixture template bytes changed: " + file)
+			return false
+	if not copy_tree(source, working) or not game.load_game(0):
+		failures.append("Generated fixture template failed production Load validation")
+		return false
+	var original_party := _party()
+	var original_ids: Array[String] = []
+	for member: Dictionary in original_party: original_ids.append(str(member.uid))
+	var distinct := {}
+	for uid: String in original_ids: distinct[uid] = true
+	if original_ids.size() != 5 or original_ids.has("") or distinct.size() != 5:
+		failures.append("Generated fixture must start with five actual distinct template identities")
+		return false
+	var levels: Array = profile.party_levels
+	if not levels.is_empty() and levels.size() != 5:
+		failures.append("Generated level profile must declare all five companions")
+		return false
+	for index in 5:
+		var creature: RefCounted = game.party.at(index)
+		if not levels.is_empty():
+			var level := int(levels[index])
+			if level < 1 or level > 55:
+				failures.append("Generated four-chapter level is outside its authored range")
+				return false
+			creature.level = level
+			creature.xp = 0
+			creature.recompute_stats_from_base(preload("res://scripts/creatures/progression.gd").config())
+			var tiers := preload("res://scripts/creatures/breakthrough.gd").caught_tiers(level)
+			var record: Dictionary = game.local.redesign_character.creatures[creature.uid]
+			record.breakthroughs = tiers
+			record.cap_level = preload("res://scripts/creatures/breakthrough.gd").level_cap(tiers)
+		if profile.heal_party: creature.heal_fully()
+	for flag: String in profile.world_flags: game.world.flags.set_flag(flag)
+	for flag: String in profile.personal_flags: game.local.flags.set_flag(flag)
+	# Only declared progress carriers; never fabricate transaction/delivery
+	# receipts or previous PASS evidence for a generated chapter input.
+	for field: String in profile.get("character_fields", {}):
+		if field not in ["portal_unlocks", "relics_held", "relics_hung"] or not profile.character_fields[field] is Array:
+			failures.append("Generated profile tried to replace an undeclared protected carrier")
+			return false
+		game.local.redesign_character[field] = profile.character_fields[field].duplicate()
+	if profile.has("world_portal_unlocks"):
+		game.world.redesign_world.portal_unlocks = profile.world_portal_unlocks.duplicate()
+	for item: String in profile.inventory_add:
+		if game.inventory.add(item, int(profile.inventory_add[item])) != 0:
+			failures.append("Generated inventory could not fit declared item: " + item)
+			return false
+	game.day = int(profile.day)
+	game.clock_elapsed_seconds = float(profile.clock_elapsed_seconds)
+	game.current_realm = str(profile.realm)
+	game.local.realm = str(profile.realm)
+	game.pending_realm_entry = ""
+	var pose: Dictionary = game.saved_player_pose.duplicate(true)
+	pose.realm = str(profile.realm)
+	if pose.get("traversal") is Dictionary:
+		pose.traversal.realm = str(profile.realm)
+		pose.traversal.mode = "grounded"
+		pose.traversal.velocity = [0.0, 0.0, 0.0]
+	game.saved_player_pose = pose
+	var expected_inventory: Array = game.save_system.snapshot(game).inventory.duplicate(true)
+	var expected_flags: Array = game.progression.all_set().duplicate()
+	var scenes := {"meadows":"res://scenes/world/meadows_playground.tscn", "water":"res://scenes/world/water_archipelago.tscn",
+		"cloudreach":"res://scenes/world/cloudreach_cliffs.tscn", "stormwood":"res://scenes/world/stormwood.tscn"}
+	if not scenes.has(profile.realm) or change_scene_to_file(scenes[profile.realm]) != OK:
+		failures.append("Generated fixture could not mount its authored realm")
+		return false
+	var ready := false
+	for frame in 7200:
+		await process_frame
+		if current_scene != null and game._realm_scene_ready(current_scene, str(profile.realm)):
+			ready = true
+			break
+	var player: CharacterBody3D = game.find_player()
+	if not ready or player == null:
+		failures.append("Generated fixture realm did not become ready")
+		return false
+	var requested := player.global_position
+	if profile.position is Dictionary:
+		if profile.position.has("ground_xz"):
+			var xz: Array = profile.position.ground_xz
+			requested = Vector3(float(xz[0]), float(current_scene.ground_height_at(float(xz[0]), float(xz[1]))) + 0.15, float(xz[1]))
+		elif profile.position.has("stronghold_marker"):
+			requested = current_scene.get_node("Stronghold").marker(str(profile.position.stronghold_marker)) + Vector3.UP * 0.15
+		elif profile.position.get("water_dock") == true:
+			var prompt: Node3D = current_scene.get_node("WaterChapter").get("_dock_prompt")
+			requested = prompt.global_position + Vector3(0.0, 0.15, 2.5)
+		elif profile.position.get("cloudreach_reward") == true:
+			var npc: Node3D = current_scene.get_node("CloudreachChapter").npc_bodies().get("warden_aila")
+			requested = npc.global_position + Vector3(0.0, 0.15, 2.5)
+		elif profile.position.get("stormheart_south_ring") == true:
+			requested = current_scene.get_node("StormheartTree").to_global(Vector3(0.0, 150.0, 26.0)) + Vector3.UP * 0.15
+		else:
+			failures.append("Generated pose requires an authored ground or Hall marker")
+			return false
+		player.global_position = requested
+		player.velocity = Vector3.ZERO
+	for frame in 60: await physics_frame
+	if not player.is_on_floor() or Vector2(player.global_position.x, player.global_position.z).distance_to(Vector2(requested.x, requested.z)) > 0.6 \
+			or game.day != int(profile.day) or bool(game.free_build):
+		failures.append("Generated fixture failed its declared ordinary ground pose/day/free-build guard")
+		return false
+	var actual_ids: Array[String] = []
+	for member: Dictionary in _party(): actual_ids.append(str(member.uid))
+	if actual_ids != original_ids:
+		failures.append("Generated setup replaced or reordered its declared five")
+		return false
+	# Validate the actual production save before publishing any importable
+	# boundary. A refused setup may leave scratch bytes, never a handoff.
+	if not game.save_game(0) or not game.save_system.finish_fallback():
+		failures.append("Generated profile failed its production save before publication")
+		return false
+	var saved: Dictionary = game.save_system._read(0)
+	if saved.get("day") != int(profile.day) or saved.get("current_realm") != profile.realm \
+			or saved.get("inventory") != expected_inventory or saved.get("party", []).size() != 5 \
+			or saved.get("player_pose", {}).get("realm") != profile.realm:
+		failures.append("Generated production bytes differ from declared day/realm/inventory/five/pose")
+		return false
+	var saved_position: Array = saved.player_pose.get("position", [])
+	if saved_position.size() != 3 or Vector3(float(saved_position[0]),float(saved_position[1]),float(saved_position[2])).distance_to(player.global_position) > 0.01:
+		failures.append("Generated saved pose differs from the actual settled body")
+		return false
+	var actual_flags: Array = game.progression.all_set()
+	expected_flags.sort()
+	actual_flags.sort()
+	if actual_flags != expected_flags:
+		failures.append("Generated scene changed declared progression flags during setup")
+		return false
+	for field: String in profile.get("character_fields", {}):
+		if saved.redesign_character.get(field) != profile.character_fields[field]:
+			failures.append("Generated saved progress differs from its declared carrier: " + field)
+			return false
+	if profile.has("world_portal_unlocks") and saved.redesign_world.portal_unlocks != profile.world_portal_unlocks:
+		failures.append("Generated saved world portal progress differs from declaration")
+		return false
+	for index in 5:
+		var member: Dictionary = saved.party[index]
+		var expected_level := int(original_party[index].level) if levels.is_empty() else int(levels[index])
+		var record: Dictionary = saved.redesign_character.creatures[original_ids[index]]
+		if member.get("uid") != original_ids[index] or member.get("species_id") != original_party[index].species \
+				or int(member.get("level", 0)) != expected_level or int(record.cap_level) < expected_level:
+			failures.append("Generated production companion identity/species/level/cap differs from declaration")
+			return false
+	var observation := {"kind":"generated_fixture","owner_policy":"#5726060136810","profile":profile,
+		"profile_sha256":FileAccess.get_sha256(GENERATED_PROFILES),"template_files_sha256":manifest.files_sha256,
+		"prior_earned_play":false,"continuous_fresh_save":false,"input":generated_root.path_join(str(profile.boundary)),
+		"saved_day":saved.day,"saved_pose":saved.player_pose,"party":saved.party,
+		"creature_records":saved.redesign_character.creatures,"inventory":saved.inventory,
+		"declared_character_fields":profile.get("character_fields", {}),
+		"saved_character_progress":{"portal_unlocks":saved.redesign_character.portal_unlocks,
+			"relics_held":saved.redesign_character.relics_held,"relics_hung":saved.redesign_character.relics_hung},
+		"flags":game.progression.all_set(),"source":CHECKPOINTS.commit_sha()}
+	var encoded := preload("res://scripts/save/save_document.gd").stringify(observation)
+	if encoded.is_empty() or DirAccess.make_dir_recursive_absolute(generated_root) != OK:
+		failures.append("Generated setup observation could not be encoded before publication")
+		return false
+	var file := FileAccess.open(generated_root.path_join("GENERATED_SETUP.json"), FileAccess.WRITE)
+	if file == null:
+		failures.append("Generated setup could not retain its actual declared carriers")
+		return false
+	file.store_string(encoded)
+	file.flush()
+	var write_error := file.get_error()
+	file.close()
+	if write_error != OK or FileAccess.get_file_as_string(generated_root.path_join("GENERATED_SETUP.json")) != encoded:
+		failures.append("Generated setup observation was not retained before publication")
+		return false
+	var generator := HANDOFF.new(self, game, generated_root, MEADOWS_PIECES + HANDOFF.BOUNDARIES,
+		MEADOWS_REALMS + HANDOFF.REALMS, HANDOFF.MEADOWS_SLOT)
+	var provenance := {"generator":"tools/earned_saves/earned_chain_runner.gd:%s:%s" % [FileAccess.get_sha256(GENERATED_PROFILES),segment],
+		"owner_policy":"#5726060136810","prior_earned_play":false,"continuous_fresh_save":false}
+	if not generator.export_boundary(str(profile.boundary), {}, "generated_fixture", provenance):
+		failures.append_array(generator.failures)
+		return false
+	handoff_from = generated_root.path_join(str(profile.boundary))
+	disclosures.append(str(profile.disclosure))
+	print("GENERATED FIXTURE INPUT " + JSON.stringify(observation))
+	return true

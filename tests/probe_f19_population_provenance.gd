@@ -35,6 +35,32 @@ func _run() -> void:
 	var disk: Dictionary = store.read("observed-world")
 	_check(int(disk.get("world_seed")) == 1434901555, "saved ordinary world seed")
 	var handoff := HANDOFF.new(self, game, "user://unused_population_handoff")
+	var fixture := {"generator": "existing boundary generator", "owner_policy": "#5726060136810",
+		"prior_earned_play": false, "continuous_fresh_save": false}
+	_check(HANDOFF._generated_fixture_valid(fixture), "explicit generated input provenance is unearned")
+	for field: String in ["prior_earned_play", "continuous_fresh_save"]:
+		var invalid_flag := fixture.duplicate(true)
+		invalid_flag[field] = true
+		_check(not HANDOFF._generated_fixture_valid(invalid_flag), "generated input refuses a true " + field + " claim")
+		invalid_flag[field] = 0
+		_check(not HANDOFF._generated_fixture_valid(invalid_flag), "generated input requires a typed false " + field)
+	var invalid := fixture.duplicate(true)
+	invalid["passed"] = true
+	_check(not HANDOFF._generated_fixture_valid(invalid), "generated provenance refuses a PASS field")
+	invalid = fixture.duplicate(true)
+	invalid.owner_policy = "unbound policy"
+	_check(not HANDOFF._generated_fixture_valid(invalid), "generated input requires its exact owner policy")
+	invalid = fixture.duplicate(true)
+	invalid.generator = " "
+	_check(not HANDOFF._generated_fixture_valid(invalid), "generated input requires its named generator")
+	var pieces := HANDOFF.new(self, game, "user://unused_generated_handoff", HANDOFF.MEADOWS_PIECES, HANDOFF.MEADOWS_REALMS)
+	_check(pieces._generated_origin_valid({"boundary": "warrens", "provenance": fixture}), "Warrens may seed the next parallel segment")
+	_check(pieces._generated_origin_valid({"boundary": "hall", "provenance": fixture}), "Hall fixture retains an explicit unearned origin")
+	for boundary: String in ["opening_team", "bridge", "unknown", "completed_world"]:
+		_check(not pieces._generated_origin_valid({"boundary": boundary, "provenance": fixture}), "generated input refuses boundary " + boundary)
+	_check(not handoff._generated_origin_valid({"boundary": "meadows_settled", "provenance": fixture}), "generated input retains the required five-creature piece lineage")
+	_check(not pieces.export_boundary("warrens", {"passed": true}, "generated_fixture", fixture), "generated export refuses an earned proof before any save")
+	_check(pieces.history.is_empty() and pieces.snapshots.is_empty(), "rejected generated export creates no earned history")
 	OS.unset_environment(SPAWNS.SEED_ENV_VAR)
 	var observed: Dictionary = handoff.population_provenance()
 	_check(observed.saved_world_seed == disk.world_seed, "normal observed saved seed matches disk")
