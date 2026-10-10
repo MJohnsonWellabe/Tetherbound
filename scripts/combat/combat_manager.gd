@@ -1092,6 +1092,17 @@ func canonical_named_host_arena(context: Dictionary, world: Node = null) -> bool
 		or not (radius is float or radius is int) or not is_finite(float(radius)): return false
 	for source: Node in world.get_children():
 		var script := source.get_script() as Script
+		if script != null and script.resource_path == "res://scripts/world/burrow_warrens.gd" \
+			and source.has_method("authored_named_wild_arena_definition"):
+			var definition: Dictionary = source.call("authored_named_wild_arena_definition", id)
+			if definition.is_empty(): continue
+			var at: Variant = definition.get("centre")
+			var size: Variant = definition.get("radius")
+			return definition.get("source") == source and str(definition.get("named_encounter_id", "")) == id \
+				and definition.get("species_id") == context.get("species_id") \
+				and at is Vector3 and (at as Vector3).is_finite() and (at as Vector3).is_equal_approx(centre as Vector3) \
+				and (size is float or size is int) and is_finite(float(size)) and float(size) > 0.0 \
+				and is_equal_approx(float(size), float(radius))
 		if script == null or script.resource_path != "res://scripts/combat/water_encounter_director.gd" \
 			or source.get("realm_world") != world: continue
 		var config: Dictionary = source.get("encounter_config")
@@ -1136,15 +1147,15 @@ func _valid_authored_arena(context: Dictionary) -> bool:
 	return false
 
 
-## A named wild remains wild. Only its actual mounted Water producer can
-## authorize the existing small authored bay; nearby ordinary actors cannot.
+## A named wild remains wild. Only its actual mounted canonical producer can
+## authorize an authored bay or guardian room; nearby ordinary actors cannot.
 func _valid_named_wild_arena(context: Dictionary) -> bool:
 	var source: Variant = context.get("source")
 	if not source is Node or not is_instance_valid(source) or not (source as Node).is_inside_tree() \
 		or not _player.get_parent().is_ancestor_of(source as Node) or context.get("wild") != _wild:
 		return false
 	var script: Script = (source as Node).get_script() as Script
-	if script == null or script.resource_path != "res://scripts/combat/water_encounter_director.gd" \
+	if script == null or script.resource_path not in ["res://scripts/combat/water_encounter_director.gd", "res://scripts/world/burrow_warrens.gd"] \
 		or not source.has_method("authored_named_wild_arena_context"): return false
 	var canonical: Dictionary = source.call("authored_named_wild_arena_context", _wild)
 	if canonical.is_empty() or context != canonical: return false

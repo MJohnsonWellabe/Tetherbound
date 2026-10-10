@@ -6879,8 +6879,7 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 		or bool(canonical.get("ready", false)))
 	wild.set_meta(&"canonical_wild_runtime", bool(canonical.get("ready", false)))
 	var authored_arena := _local_authored_arena_context() if opponent_owned else {}
-	if not opponent_owned and has_method("authored_named_wild_arena_context"):
-		authored_arena = call("authored_named_wild_arena_context", wild)
+	if not opponent_owned: authored_arena = _local_named_wild_arena_context(wild)
 	if not bool(_manager.call(
 		"begin", _player, wild, _ally_body, _fight_party(), _camera_rig, best,
 		opponent_owned, shared_host_wild, shared_host_wild, authored_arena
@@ -6936,6 +6935,18 @@ func _local_authored_arena_context() -> Dictionary:
 ##
 ## Solo is not merely unaffected: `_is_multi_peer()` is false, so not one line
 ## below runs.
+func _local_named_wild_arena_context(wild: Node3D) -> Dictionary:
+	var sources: Array[Node] = [self]
+	sources.append_array(get_parent().get_children())
+	for source: Node in sources:
+		var script := source.get_script() as Script
+		if script == null or script.resource_path not in ["res://scripts/combat/water_encounter_director.gd", "res://scripts/world/burrow_warrens.gd"] \
+			or not source.has_method("authored_named_wild_arena_context"): continue
+		var context: Dictionary = source.call("authored_named_wild_arena_context", wild)
+		if not context.is_empty() and context.get("source") == source and context.get("wild") == wild: return context
+	return {}
+
+
 func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
 	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
@@ -6963,12 +6974,12 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	var arena_at := arena.global_position
 	opponent["arena_centre"] = [arena_at.x, arena_at.y, arena_at.z]
 	opponent["arena_radius_m"] = float(arena.get("radius"))
-	if not opponent_owned and has_method("authored_named_wild_arena_context"):
-		var named: Dictionary = call("authored_named_wild_arena_context", wild)
-		if not named.is_empty() and named.get("wild") == wild and named.get("source") == self \
+	if not opponent_owned:
+		var named := _local_named_wild_arena_context(wild)
+		if not named.is_empty() and named.get("wild") == wild \
 			and named.get("species_id") == opponent.species_id and named.get("centre") == arena_at \
 			and is_equal_approx(float(named.get("radius", -1.0)), float(opponent.arena_radius_m)) \
-			and bool(_manager.call("canonical_named_host_arena", named)):
+			and bool(_manager.call("_valid_named_wild_arena", named)) and bool(_manager.call("canonical_named_host_arena", named)):
 			opponent["named_encounter_id"] = str(named.named_encounter_id)
 	if opponent_owned:
 		# F14#1: a guest who joins a trainer/boss fight mirrors THIS creature
