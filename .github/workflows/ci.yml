@@ -812,7 +812,7 @@ jobs:
   # rule docs/WORKFLOW.md §5 already holds every other smoke to.
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # CI-SPEED (owner, 2026-10-07): eight shard jobs (was 23), planned
+    # CI-SPEED (owner, 2026-10-07): nine shard jobs (was 23; eight until the F43 bounty smoke, 2026-10-10), planned
     # longest-processing-time first from MEASURED durations
     # (tools/ci/net_shards.py: the slowest of three green full runs per
     # smoke), each ~18 min of smokes. Eleven duplicate/regional net smokes
@@ -827,7 +827,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9]
     timeout-minutes: 30
     needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-multiplayer-shard|'))

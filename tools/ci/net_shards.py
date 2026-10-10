@@ -26,7 +26,7 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 8
+SHARD_COUNT = 9
 # Lanes per shard job. Two lanes at once (tools/ci/run_net_lanes.sh) ran at
 # 1.0-1.6x solo time and broke timing-sensitive smokes under the CPU load
 # (PR #573 runs 37636924943, 37642447200: f20_ending's hello budget,
@@ -55,6 +55,7 @@ MEASURED_SECONDS = {
     "f20_ending": 620,
     "f20_home_diagnostic": 136,
     "f22_forced_break": 169,
+    "f43_bounties": 431,
     "f32_node_contention": 136,
     "farm_race": 112,
     "fly": 127,
@@ -150,7 +151,7 @@ UNMEASURED_SECONDS = max(v for k, v in MEASURED_SECONDS.items() if k not in ISOL
 #   for f in tests/smoke_net_*.gd; do
 #     head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*2$' && echo "$f"
 #   done | wc -l
-DISCOVERY_FLOOR = 62
+DISCOVERY_FLOOR = 66
 # Named registration on top of the count: a smoke that loses its `# peers: 2`
 # header in a rebase must fail discovery, not silently drop out of CI. Each
 # lane that ships a net smoke adds its file here.
@@ -164,7 +165,7 @@ ROSTER = (
     "storage_concurrency", "stormwood_hosted_trainers", "stormwood_livewire", "stormwood_realms",
     "trade", "two_peers_boot", "water_alpha", "water_mounted_swimming",
     "water_swim_stone_late_join", "water_swimming",
-    "stormwood_charged_ground", "harness_max_hp", "forward_camp",
+    "stormwood_charged_ground", "harness_max_hp", "forward_camp", "f43_bounties",
 )
 
 PEERS_RE = re.compile(r"^#\s*peers:\s*2\s*$")
