@@ -67,7 +67,7 @@ class HallPilot extends LIVE.CampaignPilot:
 			_dbg_w = not _dbg_w
 			if _dbg_w:
 				var sel: Variant = foe_body.get("_selected_attack")
-				print("DIAG TELL d=%.2f reach=%.2f cfgrange=%.2f cone=%s beat=%.2f wind=%.0f sel=%s" % [distance, _strike_reach(foe_body), float((foe_body.call("combat_config") as Dictionary).get("range", 0)), (foe_body.call("combat_config") as Dictionary).get("cone_degrees"), beat, wind, JSON.stringify(sel).left(300)])
+				print("DIAG TELL d=%.2f reach=%.2f cfgrange=%.2f cone=%s beat=%.2f wind=%.0f sel=%s" % [distance, _strike_reach(foe_body), float((foe_body.call("combat_config") as Dictionary).get("range", 0)), (foe_body.call("combat_config") as Dictionary).get("cone_degrees"), beat, wind, JSON.stringify({"shape": (sel as Dictionary).get("telegraph_shape"), "pat": (sel as Dictionary).get("pattern_attack_id"), "move": (sel as Dictionary).get("move_id"), "lunge": (sel as Dictionary).get("lunge"), "range": (sel as Dictionary).get("range"), "travels": foe_body.call("lunge_travels"), "cfgshape": (foe_body.call("combat_config") as Dictionary).get("telegraph_shape")})])
 		if bool(manager.call("enemy_is_winding_up")):
 			if bool(manager.call("charged_ready")) and distance < charged_reach - 0.2 \
 					and beat > float(charged.get("windup", 0.55)) + 0.1 \
