@@ -726,9 +726,11 @@ func _clear_blocking_wild(label: String) -> bool:
 ## host runtime body, when they differ.
 func _note_host_strike_view(why: String) -> void:
 	var id := str(_manager.get("_encounter_id"))
+	if id.is_empty() or not _director.has_method("_shared_host_fight") or not _director.has_method("_local_peer_id"): return
 	var host: Variant = _director.get("_encounter_host")
-	var receipt: Variant = host.call("latest_strike_receipt", id, int(_director.call("_local_peer_id"))) if host != null and not id.is_empty() else {}
-	var runtime: Variant = _director.call("_shared_host_fight", id) if not id.is_empty() else null
+	var receipt: Variant = host.call("latest_strike_receipt", id, int(_director.call("_local_peer_id"))) \
+		if host != null and host.has_method("latest_strike_receipt") else {}
+	var runtime: Variant = _director.call("_shared_host_fight", id)
 	var runtime_body: Variant = runtime.call("body") if runtime != null else null
 	var chased := _manager.call("enemy_body") as Node3D
 	var ally := _director.call("ally_body") as Node3D
