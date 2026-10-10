@@ -138,6 +138,7 @@ var _fight_feed_seq: int = 0
 var _fight_feed_epoch: int = -1
 var _go_left: float = 0.0
 var _miss_left: float = 0.0
+var _catch_verdict_message := false
 var _miss_text: String = ""
 
 ## Grid cell ready-state on the PREVIOUS frame, so a cell pulses once on the
@@ -1011,6 +1012,12 @@ func _draw_grid() -> void:
 
 	var resolving: bool = bool(_manager.call("is_resolving_catch"))
 	var aiming: bool = bool(_manager.call("is_aiming"))
+	# A fresh aim supersedes advice about the previous failed throw. Other
+	# action/refusal messages retain their existing lifetime and precedence.
+	if aiming and not resolving and _catch_verdict_message:
+		_miss_left = 0.0
+		_miss_text = ""
+		_catch_verdict_message = false
 	var has_message: bool = _miss_left > 0.0
 
 	# The orb cluster and the enemy plate/grid dim (spec §10.1/§10.4) only ever
@@ -1290,6 +1297,7 @@ func _handle_switch_input() -> void:
 
 
 func _refuse_switch() -> void:
+	_catch_verdict_message = false
 	_miss_text = "locked in — a moment"
 	_miss_left = 1.2
 
@@ -1657,12 +1665,14 @@ func _forget_the_last_verdict() -> void:
 
 ## A miss has to be legible or it reads as the game dropping the input.
 func _on_missed(by_player: bool) -> void:
+	_catch_verdict_message = false
 	_miss_text = "missed — too far, or facing the wrong way" if by_player else "it missed you"
 	_miss_left = 0.9
 
 
 ## A throw the game declined to make, and why.
 func _on_catch_refused(reason: String) -> void:
+	_catch_verdict_message = false
 	_miss_text = reason
 	_miss_left = 1.6
 
@@ -1675,6 +1685,7 @@ func _on_orb_shook(_index: int) -> void:
 
 
 func _on_catch_resolved(success: bool, shakes: int) -> void:
+	_catch_verdict_message = not success
 	if _capture_reticle != null:
 		_capture_reticle.call("play_success" if success else "play_break")
 	if success:
@@ -1699,6 +1710,7 @@ func _on_catch_resolved(success: bool, shakes: int) -> void:
 
 
 func _on_exited(outcome: String) -> void:
+	_catch_verdict_message = false
 	# Ownership survives _finish(), unlike the director's cleared trainer spec.
 	# Trainer round wins are represented by the next opponent and shared feed;
 	# no wild verdict or centre-screen result may leak into a relay objective.
@@ -1741,6 +1753,7 @@ func set_world_presentation_mode(mode: String) -> void:
 
 
 func relinquish_result_presentation() -> void:
+	_catch_verdict_message = false
 	_outcome_left = 0.0
 	_xp_left = 0.0
 	_go_left = 0.0
