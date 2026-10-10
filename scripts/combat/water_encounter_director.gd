@@ -632,6 +632,13 @@ func _clear_stale_surface_spawns() -> void:
 	for key: String in _water_surface_pending.keys():
 		if not _pending_surface_current(_water_surface_pending[key]): _discard_pending_surface(key)
 
+
+func _exit_tree() -> void:
+	# Pending bodies are parented to the realm for valid render measurements,
+	# but this producer owns their lifetime if it leaves before the realm does.
+	for key: String in _water_surface_pending.keys(): _discard_pending_surface(key)
+	super._exit_tree()
+
 func _build_trainers() -> void:
 	for placement: Dictionary in encounter_config.get("trainers", []):
 		var id := str(placement.id)
