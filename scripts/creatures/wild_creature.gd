@@ -633,6 +633,7 @@ func pattern_geometry() -> Dictionary:
 
 func _current_pattern_context() -> Dictionary:
 	var context := _pattern_context.duplicate(true)
+	context["pattern_cursor"] = _pattern_cursor
 	if instance != null:
 		context["hp_fraction"] = float(instance.get("hp")) / maxf(1.0, float(instance.get("max_hp")))
 		context["move_quick"] = str(instance.get("move_quick"))
