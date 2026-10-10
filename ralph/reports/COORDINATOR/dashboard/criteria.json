@@ -79,14 +79,14 @@
    "id": "F02",
    "title": "Earned Meadows spine and ledgers",
    "chapter": "Meadows",
-   "pct": 62,
+   "pct": 50,
    "counts": {
-    "met": 8,
+    "met": 4,
     "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 0
+    "failing": 4
    },
    "criteria": [
     {
@@ -107,10 +107,10 @@
     },
     {
      "text": "Continues through Sela/relay crossing",
-     "status": "failing",
-     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-2.md",
+     "status": "met",
+     "evidence": "PR #594 merged 2026-10-09",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-relay --reload-at-transitions. Folds into F49.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "note": "Landed: PR #594",
      "audit_index": 2
     },
     {
