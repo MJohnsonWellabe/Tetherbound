@@ -1,0 +1,106 @@
+{
+  "subject": "bramblebun",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Disabled asset-local review candidate; ordinary species selection remains unchanged",
+  "reference": "assets/creatures/tetherbound/bramblebun/reference/native-standing-v1.png",
+  "reference_author": "Built-in imagegen, owner-authorized original character reference",
+  "identity_reference": "assets/creatures/tetherbound/bramblebun/reference/three_quarter.png",
+  "reference_prompt": "Draft an original Tetherbound Bramblebun creature reference from the supplied established identity image. ONE full-body three-quarter studio view of the same warm brown woodland rabbit: exceptionally tall upright rabbit ears with soft muted pink/brown inner ears, huge deep green eyes, small dark nose, cream muzzle and layered cream chest fur, stout haunches and large rabbit hind paws, small tufted brown/cream tail. Preserve its tan/brown fur and moss-green/ochre leafy bramble mantle with a few small purple buds over the shoulders and back. Make the foliage broad integrated sculpted leaves and short connected buds; do not create floating wisps or thin brittle stem wires. Neutral ready-standing quadruped, not seated: four separate grounded feet, front legs gently extended with readable shoulders and elbows, rear hips raised enough for readable thighs/knees/hocks and distinct large rear paws. Keep friendly rabbit proportions and face; no anatomy borrowed from a dog, no duck, no new horns or armor. Ears fully inside frame with space above tips; tail separate and complete. Clean riggable stylized game anatomy with coherent fur masses and modest fine detail. Entire body on a light-grey studio background, neutral soft lighting. No people, rulers, text, equipment, clothing, particles, red accents, dramatic action or environment.",
+  "reference_edit_prompt": "Edit this Bramblebun studio reference with ONLY these mesh-preparation adjustments: remove every projecting whisker hair/wire from both cheeks and replace each with three tiny short dark PAINTED cheek marks flush with the cream muzzle. No physical whisker strands anywhere. Replace the tall thin woody stems above its back with short broad connected sculpted leaf clusters anchored directly into the existing foliage mantle, keeping the same ochre/moss-green leaves and small purple buds. Do not remove the mantle or change character identity. Preserve its huge deep green eyes, brown/tan fur, tall rabbit ears, cream muzzle/chest, tufted tail, exact ready-standing four-legged pose, four grounded paws, proportions, framing, neutral studio lighting and light-gray background. Keep the full ears and tail inside frame. The result is an original clean riggable reference with no floating pieces or brittle narrow tubes.",
+  "reference_inspection": {
+    "identity": "Brown rabbit, tall pink/brown ears, huge green eyes, cream muzzle/chest, leafy ochre mantle with purple buds and tufted tail preserved",
+    "riggability": "Four separate grounded paws and readable hip/hock anatomy; cheek hairs replaced by flush painted marks and fragile stems by connected broad leaf clusters",
+    "limits": "Single-view draft does not prove reverse anatomy, topology, rig or native art approval"
+  },
+  "generation": {
+    "task_id": "01a125e5-347f-770b-afe3-7092b3333fb3",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "night": "2026-10-09",
+    "night_submission_index": 5,
+    "observed_credit_cost": 30,
+    "new_submissions_for_this_revision": 1
+  },
+  "rights": {
+    "basis": "Original drafted reference based on owner-held Bramblebun identity; existing owner-authorized paid Meshy account under RD-26; no third-party character input, purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models",
+    "terms_checked": "2026-10-10"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "geometry": "28026 input triangles; UV-loop-preserving weld retains albedo, normal and roughness maps and the generated silhouette.",
+    "skin": "17 fitted anatomical joints: torso/head, two ear joints, upper/lower legs/feet and two tail joints. Local surface diffusion, four normalized influences and zero unweighted vertices.",
+    "material": "Organic body is dielectric: Metallic=0, emission inputs removed and emission strength=0. Albedo/normal/roughness maps and UVs retained.",
+    "colourway": "The old installed Bramblebun repaints use an incompatible UV layout. The disabled recipe uses the existing colourway_source_species seam with bramblebun_native_review, a texture lookup namespace only, to retain candidate textures. No roster species or gameplay code added; new UV-specific variants remain OPEN.",
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "height_m": 2.05,
+    "bones": 17,
+    "unweighted_vertices": 0,
+    "vertices": 14012,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 stable Windows",
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "raster": [
+      1920,
+      1080
+    ],
+    "before_height_m": 2.04999995231628,
+    "candidate_height_m": 2.04999995231628,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 native Low samples across hit/faint/swim/fly_grip/ride included in the single Low sheet; native front/reverse ruler samples retained outside Git",
+    "world": "Production Meadows scene and CameraRig with matched stage, seed and pose sampling; presentation fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "skin_weights": "Zero unweighted vertices; not independent deformation approval",
+    "full_rig_animation": "OPEN: terminal flank contact, foot locking and ordinary gameplay paths require review",
+    "colour_variants": "OPEN: generated UV layout requires its own approved repaints",
+    "independent_art_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Terminal faint/rest floor contact and appealing deformation require review",
+    "Neutral procedural clips do not certify ordinary swim, flight/grip, rider contact or carrying",
+    "Fixtures do not prove earned fights or traversal",
+    "Candidate remains OFF until the full F36 art bar passes"
+  ]
+}
