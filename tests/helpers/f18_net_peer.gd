@@ -125,7 +125,9 @@ func _f18_fixture(game: Node, args: Dictionary) -> Dictionary:
 	local.get("flags").call("set_flag", "opening:starter_granted", true)
 	var inventory: RefCounted = game.get("inventory")
 	var fixture_items: Array[String] = ["home_key"]
-	if bool(args.get("guest", false)): fixture_items.append("tidewake_portal_key")
+	# `key` defaults to `guest`: a keyless joiner (F48 behind friend) still
+	# takes the joiner's portable save path below.
+	if bool(args.get("key", args.get("guest", false))): fixture_items.append("tidewake_portal_key")
 	for item: String in fixture_items:
 		if inventory.call("count", item) != 0 or inventory.call("add", item, 1) != 0:
 			return _f18_verdict(false, "cannot install exactly one disclosed fixture " + item)
