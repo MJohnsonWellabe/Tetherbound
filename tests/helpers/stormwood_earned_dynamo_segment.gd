@@ -277,6 +277,20 @@ func _trainer(id: String) -> bool:
 	Engine.physics_ticks_per_second = hz_before
 	if Time.get_ticks_msec() - started >= 300000 or _director.trainer_battle_active() \
 			or not bool(_outcomes.get(id, false)):
+		# Read-only host view of a stuck hosted fight: round, gap, last strike
+		# and every accepted action's phase in the authority.
+		var hub := _director.get_parent().get_node_or_null(^"StormwoodEncounterHub")
+		if hub != null:
+			for fight: Variant in (hub.get("fights") as Dictionary).values():
+				if not is_instance_valid(fight): continue
+				var rec_id := str((fight.get("record") as Dictionary).get("encounter_id", ""))
+				var authority: Object = fight.get("authority")
+				_note("STUCK hosted round=%s between=%s finished=%s pending=%s record=%s" % [
+					str(fight.get("round_index")), str(fight.get("_between")), str(fight.get("finished")),
+					str(authority.call("move_action_publication_pending", rec_id)),
+					JSON.stringify(authority.call("record", rec_id).get("opponent", {}))])
+				_note("STUCK hosted last_strike=%s" % JSON.stringify(fight.get("last_strike")))
+				_note("STUCK hosted strike_authority=%s" % JSON.stringify(authority.get("_strike_authority").get(rec_id, {})))
 		return _fail(id + " did not publish its actual hosted victory within five minutes")
 	return await _receipt(str(spec.get("defeat_flag", "")))
 
