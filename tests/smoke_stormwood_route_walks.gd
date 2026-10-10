@@ -113,6 +113,7 @@ const FAST_SCALE := 8.0
 const FAST_HZ := 480
 
 var _from_save := ""
+var _fixture_entry := false
 var _only := ""
 var game: Node
 var world: Node3D
@@ -147,10 +148,18 @@ func _run() -> void:
 			_only = argument.trim_prefix("--only=")
 		elif argument.begins_with("--from-save="):
 			_from_save = argument.trim_prefix("--from-save=")
-	if not _check(not _from_save.is_empty(), "--from-save=user://<dir> names the earned checkpoint"):
+		elif argument == "--fixture-entry":
+			_fixture_entry = true
+	if not _check(not _from_save.is_empty() or _fixture_entry,
+			"--from-save=user://<dir> names the earned checkpoint (or --fixture-entry)"):
 		_finish()
 		return
-	if not await _enter_from_save():
+	var entered := false
+	if _fixture_entry:
+		entered = await _enter_fixture()
+	else:
+		entered = await _enter_from_save()
+	if not entered:
 		_finish()
 		return
 	seg = CONTINUOUS.Segment.new()
@@ -185,6 +194,62 @@ func _wants(id: String) -> bool:
 
 
 # ------------------------------------------------------------------ seam 1
+
+## `--fixture-entry`: no v28 mid-chapter checkpoint exists yet. Enter as
+## smoke_stormwood_pocket_walks.gd does (disclosed): the in-memory
+## completed-Cloudreach fixture, its opened Stormwood portal, the production
+## router, then `stormwood:rootgate_released` set for the routes behind the
+## Rootgate. Loops and the alternate road only; arch pairs and the road keep
+## their earned-save prerequisites (recipe, paid Crown pair).
+func _enter_fixture() -> bool:
+	game = root.get_node_or_null(^"Game")
+	if game == null:
+		game = GAME.new()
+		game.name = "Game"
+		root.add_child(game)
+	game.set("save_system", SAVE_GAME.new("user://route_walks_fixture_%d_%d" % [OS.get_process_id(), Time.get_ticks_usec()]))
+	await process_frame
+	game.call("reset_for_new_game")
+	game.get("local").set("character_id", "stormwood-route-walks")
+	game.get("world").set("world_id", "stormwood-route-walks-world")
+	for flag: String in CONTINUOUS.COMPLETED_CLOUDREACH_FLAGS:
+		game.get("ledger").call("submit", {"kind": "set_world_flag", "realm": "cloudreach", "id": flag, "value": true})
+	for species_id: String in CONTINUOUS.ENTRY_PARTY:
+		var creature: RefCounted = preload("res://scripts/creatures/creature_species.gd").spawn(species_id)
+		if creature != null:
+			creature.call("set_level", 44, preload("res://scripts/creatures/progression.gd").config())
+			game.get("party").call("add", creature)
+	var route: Dictionary = (game.get("world").get("redesign_world") as Dictionary).duplicate(true)
+	var opened: Array = (route.get("portal_unlocks", []) as Array).duplicate()
+	if not opened.has("stormwood"): opened.append("stormwood")
+	route["portal_unlocks"] = opened
+	game.get("world").set("redesign_world", route)
+	var source := Node3D.new()
+	source.name = "StormwoodRouteWalksEntrySource"
+	root.add_child(source)
+	current_scene = source
+	await process_frame
+	if not _check(await game.call("enter_realm", "stormwood", "stormwood_arrival_from_cloudreach"),
+			"production router accepted the fixture Stormwood entry"):
+		return false
+	for _frame in SCENE_WAIT_FRAMES:
+		var candidate := current_scene as Node3D
+		if candidate != null and candidate.name == "Stormwood" and bool(candidate.call("shell_build_complete")):
+			world = candidate
+			break
+		await physics_frame
+	if not _check(world != null, "production Stormwood scene became current"):
+		return false
+	for _frame in SCENE_WAIT_FRAMES:
+		if str(game.get("pending_realm_entry")) == "":
+			break
+		await physics_frame
+	game.get("progression").call("set_flag", ROOTGATE_FLAG, true)
+	_seam("SEAM 1 fixture entry: in-memory completed-Cloudreach party, opened Stormwood portal, %s set (no earned checkpoint)" % ROOTGATE_FLAG)
+	for _frame in 60:
+		await physics_frame
+	return true
+
 
 func _enter_from_save() -> bool:
 	game = root.get_node_or_null(^"Game")
