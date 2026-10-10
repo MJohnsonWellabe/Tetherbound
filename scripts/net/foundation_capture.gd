@@ -28,8 +28,14 @@ func _offer(id: String = "", include_decided: bool = false) -> Dictionary:
 			var receipt := RULES.receipt(duty.context.offer_id, duty.character_id)
 			var latest: Variant = game.world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(game.world.reward_delivery_namespace, duty.character_id))
 			if not include_decided and game.local.redesign_character.transaction_receipts.has(receipt) \
-				and latest is Dictionary and load("res://autoload/world_state.gd").call("training_row_valid", latest, game.world.reward_delivery_namespace, game.world.world_id) == true \
-				and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
+				and latest is Dictionary and load("res://autoload/world_state.gd").call("training_row_valid", latest, game.world.reward_delivery_namespace, game.world.world_id) == true:
+				# A later v2/v3 mutation can replace the accepted capture row with
+				# its own pending row. Its frozen BEFORE carries only the already
+				# accepted prefix (make_record requires an accepted predecessor).
+				# Pending AFTER alone still proves no owner save/ACK for a catch.
+				var prior_capture: bool = latest.version in [2, 3] and int(latest.journal_revision) > 1 \
+					and latest.before.redesign_character.transaction_receipts.has(receipt)
+				if prior_capture or (latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt)): continue
 			return duty.context.duplicate(true)
 	return {}
 
@@ -37,6 +43,53 @@ func present_from_catch(creature: RefCounted) -> bool:
 	var offer := _offer()
 	if offer.is_empty() or creature == null or creature.get("uid") != offer.creature.uid: return false
 	return _present(offer, creature)
+
+## Synchronous local terminal-catch completion. Use the same journal, owner
+## writer, accepted world writer and registry ACK as deferred reconciliation.
+## A full belt still opens the existing ceremony; it never auto-adds a sixth.
+func complete_local_catch(creature: RefCounted) -> bool:
+	if creature == null or session().call("is_host") != true: return false
+	var game: Node = session().call("_game")
+	if game == null or game.local == null or game.world == null: return false
+	var offer: Dictionary = {}
+	for row: Variant in game.world.reward_deliveries.values():
+		if not EVENT.valid(row, game.world.reward_delivery_namespace, game.world.world_id): continue
+		for duty: Dictionary in row.duties:
+			if duty.action == "capture_offer" and duty.character_id == game.local.character_id \
+				and duty.context.realm == game.current_realm and duty.context.creature.uid == creature.get("uid"):
+				offer = duty.context.duplicate(true)
+	if offer.is_empty() or not RULES.offer_valid(offer): return false
+	var receipt := RULES.receipt(offer.offer_id, game.local.character_id)
+	var world_script := load("res://autoload/world_state.gd") as GDScript
+	var owner_row: Dictionary = world_script.training_owner_row(game.world.reward_deliveries,
+		game.world.reward_delivery_namespace, game.world.world_id, game.local.character_id)
+	var same_row: bool = owner_row.get("action") == "wild_capture" \
+		and owner_row.get("intent", {}).get("offer_id") == offer.offer_id \
+		and owner_row.get("source_key") == offer.source_key and owner_row.get("receipt") == receipt
+	if not same_row:
+		if not _present(offer, creature): return false
+		if game.local.party.is_full(): return true
+		var view: Dictionary = session().call("homestead_personal_view")
+		if view.is_empty() or not view.get("registry_revision") is int: return false
+		_send({"offer_id": offer.offer_id, "keep": true, "released_uid": ""}, int(view.registry_revision), "")
+		owner_row = world_script.training_owner_row(game.world.reward_deliveries,
+			game.world.reward_delivery_namespace, game.world.world_id, game.local.character_id)
+	if owner_row.get("action") != "wild_capture" or owner_row.get("character_id") != game.local.character_id \
+		or owner_row.get("intent", {}).get("offer_id") != offer.offer_id \
+		or owner_row.get("source_key") != offer.source_key or owner_row.get("receipt") != receipt: return false
+	var ledger := session().get_node_or_null(^"LedgerRpc")
+	if ledger == null or ledger.call("reconcile_creature_training_before_ready") != true: return false
+	owner_row = game.world.reward_deliveries.get(owner_row.delivery_id, {})
+	var decision: Dictionary = session().call("_foundation_decision", session().call("local_peer_id"), owner_row)
+	if decision.get("resolved") != true or decision.get("saved") != true or decision.get("owner_acknowledged") != true: return false
+	var matches := 0
+	for member: RefCounted in game.local.party.members():
+		if member.get("uid") == creature.get("uid"): matches += 1
+	if matches != 1 or not game.local.redesign_character.transaction_receipts.has(receipt): return false
+	# Reconciliation can finish after _send returned an unresolved decision.
+	# Retire only this saved, acknowledged offer before exploration resumes.
+	_complete(owner_row.intent, decision, "")
+	return true
 
 func owns_pending_capture(creature: RefCounted) -> bool:
 	if creature == null or _active.is_empty() \
