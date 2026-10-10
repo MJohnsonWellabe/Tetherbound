@@ -36,7 +36,11 @@ func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 	_to = to
 	_row = row.duplicate(true)
 	_context = context
-	_config = data.duplicate(true)
+	# The frozen row supplies the composition. Preserve the tunable snapshot
+	# without deep-copying every other signature for each ultimate launch.
+	_config = {}
+	for key: String in ["budget", "peer", "motes", "mote_geometry"]:
+		if data.has(key): _config[key] = (data[key] as Dictionary).duplicate(true)
 	_arrival = float(context.travel_seconds)
 	_duration = float(context.duration_seconds)
 
