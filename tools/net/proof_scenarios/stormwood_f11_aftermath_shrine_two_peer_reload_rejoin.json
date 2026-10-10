@@ -1,6 +1,6 @@
 {
   "name": "F11#3: Long Storm aftermath and personal Spark Shrine Room hang/power persist through process restart and guest reconnect",
-  "claim": "Two real peers use actual host-authorized Crossing Hall portals and Home Key returns. The host's ending sees fixture Marrow defeat, records participants and emits dynamo:release; both peers present Long Storm aftermath with no flashes. Host accepts and guest refuses the Stormheart through ordinary dialogue. Each hangs its own Spark at the actual Crossing Hall Shrine Room Stormwood pedestal through an interact input; host chooses Livewire on the actual relic power panel while guest keeps no active power. Host process restarts from its saved slot; guest rejoins twice, including a mid-session link death. World hashes, shared aftermath/display, each personal hung Spark/power, scoped original answers and exactly one host Stormheart persist. Replay prompts refuse new offers. Negative controls preserve the pre-release aftermath, pre-restart world hash and pre-run saved-aftermath failures. Disclosed setup: declared-start host route save with empty team; initial Hall positions/open route/Home Key; each isolated character starts holding a personal Spark (no credit for boss relic delivery: F19#2 proves that); Dynamo contributor/prerequisite fixture; teleport beside real pedestal for the ordinary press. Legacy Waterward gate is retired by RD-17 and excluded. Loopback ENet closure is not a silent partition or internet invitation proof. Break-strike warnings are watched over the original bounded intervals; calm season still retains the designed 45s Break per 2550s cycle.",
+  "claim": "Two real peers use actual host-authorized Crossing Hall portals and Home Key returns. The host's ending sees fixture Marrow defeat, records participants and emits dynamo:release; both peers present Long Storm aftermath with no flashes. Host accepts and guest refuses the Stormheart through ordinary dialogue. Each hangs its own Spark at the actual Crossing Hall Shrine Room Stormwood pedestal through an interact input; host chooses Livewire on the actual relic power panel while guest keeps no active power. Host process restarts from its saved slot; guest rejoins twice, including a mid-session link death. World hashes, shared aftermath/display, each personal hung Spark/power, scoped original answers and exactly one host Stormheart persist. Replay prompts refuse new offers. Negative controls preserve the pre-release aftermath, pre-restart world hash and pre-run saved-aftermath failures. Disclosed setup: declared-start host route save with empty team; initial Hall positions/open route/Home Key; each isolated character starts holding a personal Spark (no credit for boss relic delivery: F19#2 proves that); Dynamo contributor/prerequisite fixture; teleport beside real pedestal for the ordinary press. The original character disk is decoded before hanging and after restart/rejoin, checking exactly one hang receipt, held count zero, hung count one, selected power and the four reserved tier-5 blueprint IDs; these supporting observations do not claim F31 completion. Legacy Waterward gate is retired by RD-17 and excluded. Loopback ENet closure is not a silent partition or internet invitation proof. Break-strike warnings are watched over the original bounded intervals; calm season still retains the designed 45s Break per 2550s cycle.",
   "peers": 2,
   "scene": "title",
   "budget_s": 3600,
@@ -266,11 +266,15 @@
     },
     {
       "peer": 1,
-      "action": "press",
+      "action": "spark_power",
       "args": {
-        "action": "menu_cancel"
+        "cancel_only": true
       },
-      "label": "Guest closes the power screen and keeps no active relic"
+      "label": "Guest Cancels the exact power panel, clears pending choice and frees world input; keeps no active relic",
+      "expect_data": {
+        "active_relic": "",
+        "cancel_only": true
+      }
     },
     {
       "peer": 0,
@@ -291,7 +295,20 @@
           "stormhearts_in_party": 1,
           "spark_hung": true,
           "spark_held": false,
-          "spark_hang_receipts": 1
+          "spark_hang_receipts": 1,
+          "spark_disk": {
+            "character_id": "$character0",
+            "held": 0,
+            "hung": 1,
+            "hang_receipts": 1,
+            "active_relic": "stormwood",
+            "recipes": {
+              "forge_biome5": 1,
+              "kitchen_biome5": 1,
+              "altar_biome5": 1,
+              "den_biome5": 1
+            }
+          }
         }
       },
       "label": "Personal hung Spark and chosen power; shared aftermath/display; original answer and roster survive"
@@ -314,7 +331,20 @@
           "stormhearts_in_party": 0,
           "spark_hung": true,
           "spark_held": false,
-          "spark_hang_receipts": 1
+          "spark_hang_receipts": 1,
+          "spark_disk": {
+            "character_id": "$character1",
+            "held": 0,
+            "hung": 1,
+            "hang_receipts": 1,
+            "active_relic": "",
+            "recipes": {
+              "forge_biome5": 1,
+              "kitchen_biome5": 1,
+              "altar_biome5": 1,
+              "den_biome5": 1
+            }
+          }
         }
       },
       "label": "Personal hung Spark and chosen power; shared aftermath/display; original answer and roster survive"
@@ -466,7 +496,20 @@
           "stormhearts_in_party": 1,
           "spark_hung": true,
           "spark_held": false,
-          "spark_hang_receipts": 1
+          "spark_hang_receipts": 1,
+          "spark_disk": {
+            "character_id": "$character0",
+            "held": 0,
+            "hung": 1,
+            "hang_receipts": 1,
+            "active_relic": "stormwood",
+            "recipes": {
+              "forge_biome5": 1,
+              "kitchen_biome5": 1,
+              "altar_biome5": 1,
+              "den_biome5": 1
+            }
+          }
         }
       },
       "label": "Personal hung Spark and chosen power; shared aftermath/display; original answer and roster survive"
@@ -499,7 +542,20 @@
           "stormhearts_in_party": 0,
           "spark_hung": true,
           "spark_held": false,
-          "spark_hang_receipts": 1
+          "spark_hang_receipts": 1,
+          "spark_disk": {
+            "character_id": "$character1",
+            "held": 0,
+            "hung": 1,
+            "hang_receipts": 1,
+            "active_relic": "",
+            "recipes": {
+              "forge_biome5": 1,
+              "kitchen_biome5": 1,
+              "altar_biome5": 1,
+              "den_biome5": 1
+            }
+          }
         }
       },
       "label": "Personal hung Spark and chosen power; shared aftermath/display; original answer and roster survive"
@@ -617,7 +673,20 @@
           "stormhearts_in_party": 0,
           "spark_hung": true,
           "spark_held": false,
-          "spark_hang_receipts": 1
+          "spark_hang_receipts": 1,
+          "spark_disk": {
+            "character_id": "$character1",
+            "held": 0,
+            "hung": 1,
+            "hang_receipts": 1,
+            "active_relic": "",
+            "recipes": {
+              "forge_biome5": 1,
+              "kitchen_biome5": 1,
+              "altar_biome5": 1,
+              "den_biome5": 1
+            }
+          }
         }
       },
       "label": "Personal hung Spark and chosen power; shared aftermath/display; original answer and roster survive"
@@ -645,7 +714,20 @@
           "stormhearts_in_party": 1,
           "spark_hung": true,
           "spark_held": false,
-          "spark_hang_receipts": 1
+          "spark_hang_receipts": 1,
+          "spark_disk": {
+            "character_id": "$character0",
+            "held": 0,
+            "hung": 1,
+            "hang_receipts": 1,
+            "active_relic": "stormwood",
+            "recipes": {
+              "forge_biome5": 1,
+              "kitchen_biome5": 1,
+              "altar_biome5": 1,
+              "den_biome5": 1
+            }
+          }
         }
       },
       "label": "Personal hung Spark and chosen power; shared aftermath/display; original answer and roster survive"
