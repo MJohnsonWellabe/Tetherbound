@@ -444,7 +444,11 @@ func _setup() -> void:
 	var target: Vector3 = _wild.call("centre")
 	var rec: Dictionary = _host.open(1, "meadows", "trainer", {"species_id": "staticub",
 		"creature_uid": _enemy.uid, "hp": _enemy.hp, "hp_max": _enemy.max_hp,
-		"position": [target.x, target.y, target.z]}, str(_creature.uid), DATA.CHARACTER)
+		"position": [target.x, target.y, target.z],
+		# A trainer-owned opponent record carries its card and body generation,
+		# as `encounter_director.gd` opens one; tracked arrivals check both.
+		"card": preload("res://scripts/save/water_capture_codec.gd").encode(_enemy),
+		"body_generation": 1}, str(_creature.uid), DATA.CHARACTER)
 	_id = rec.encounter_id
 	_director.set("_encounter", rec)
 	_manager.call("bind_encounter", _director, _id, "trainer")
