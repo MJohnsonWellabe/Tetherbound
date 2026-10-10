@@ -28,6 +28,10 @@ static func resolve(base: Dictionary, base_profile: String, variant_id: String,
 	if not raw is Dictionary:
 		return result
 	var record: Dictionary = raw
+	# Regional candidates can be staged independently of the overall pipeline.
+	# Existing records without this field retain the global gate's behavior.
+	if record.has("enabled") and not bool(record.enabled):
+		return result
 	if base_profile.is_empty() or str(record.get("expected_base_profile", "")) != base_profile:
 		return result
 	var model := str(base.get("model", ""))

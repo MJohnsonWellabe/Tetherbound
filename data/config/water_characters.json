@@ -300,6 +300,7 @@
     },
     {
       "id": "water_adair",
+      "appearance_variant_id": "p2055_water_adair",
       "display_name": "Surveyor Adair",
       "island_id": "brine_steps",
       "role": "current_mapping",
@@ -385,6 +386,7 @@
     },
     {
       "id": "water_iona",
+      "appearance_variant_id": "p2055_water_iona",
       "display_name": "Researcher Iona",
       "island_id": "tidal_cradle",
       "role": "alpha_and_saddle",
@@ -408,6 +410,7 @@
     },
     {
       "id": "water_otto",
+      "appearance_variant_id": "p2055_water_otto",
       "display_name": "Tracker Otto",
       "island_id": "tidal_cradle",
       "role": "alternate_mount_route",
@@ -514,6 +517,7 @@
     },
     {
       "id": "water_orsen",
+      "appearance_variant_id": "p2055_water_orsen",
       "display_name": "Channel Keeper Orsen",
       "island_id": "sluice_isle",
       "role": "sluice_controls",
@@ -704,6 +708,7 @@
     },
     {
       "id": "water_trainer_fen",
+      "appearance_variant_id": "p2055_water_trainer_fen",
       "display_name": "Fen",
       "npc_entity_id": "water_trainer_fen",
       "island_id": "lantern_cove",
@@ -1460,6 +1465,7 @@
     },
     {
       "id": "water_trainer_evi",
+      "appearance_variant_id": "p2055_water_trainer_evi",
       "display_name": "Evi",
       "npc_entity_id": "water_trainer_evi",
       "island_id": "veilfall",
