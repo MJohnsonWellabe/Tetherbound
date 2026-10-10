@@ -158,6 +158,7 @@ func _mount_site(spec: Dictionary) -> void:
 		"order": str(spec.get("id", "")),
 		"realm": REALM_ID,
 	})
+	add_material_cue(node, str(spec.get("item", "")), _catalogue.get("material_cues", {}))
 	_placements[str(spec.get("id", ""))] = node
 
 
@@ -165,3 +166,64 @@ func _ground_height(x: float, z: float) -> float:
 	if world != null and world.has_method("ground_height_at"):
 		return float(world.call("ground_height_at", x, z))
 	return 0.0
+
+
+## P2-046: a visual-only cue so a node reads as its named material (a plain
+## rock read as stone, not Stormglass). A child of the node, so it hides with
+## it once harvested. No collider, stock, reward or placement change.
+static func add_material_cue(node: Node3D, item: String, cues: Dictionary) -> Node3D:
+	var cue: Variant = cues.get(item, null)
+	if not cue is Dictionary or node.get_node_or_null(^"MaterialCue") != null:
+		return null
+	var spec := cue as Dictionary
+	var root := Node3D.new()
+	root.name = "MaterialCue"
+	node.add_child(root)
+	var glow := StandardMaterial3D.new()
+	var colour := Color(str(spec.get("colour", "#ffffff")))
+	# A darker body under a softer glow keeps the hue: albedo and emission both
+	# at full colour tonemapped the Stormglass shards to flat white on Low.
+	glow.albedo_color = colour.darkened(clampf(float(spec.get("albedo_shade", 0.0)), 0.0, 1.0))
+	glow.emission_enabled = true
+	glow.emission = colour
+	glow.emission_energy_multiplier = float(spec.get("emission", 1.0))
+	glow.roughness = 0.2
+	var lift := float(spec.get("lift_m", 0.0))
+	var radius := float(spec.get("radius_m", 0.4))
+	match str(spec.get("kind", "")):
+		"shards":
+			var count := maxi(1, int(spec.get("count", 4)))
+			var height := float(spec.get("height_m", 0.8))
+			for index in count:
+				var shard := MeshInstance3D.new()
+				shard.name = "Shard%d" % index
+				var prism := PrismMesh.new()
+				# Deterministic per-index variation; every peer builds the same cue.
+				var factor := 0.65 + 0.35 * float((index * 7) % 5) / 4.0
+				var width := float(spec.get("width_m", radius * 0.32))
+				prism.size = Vector3(width, height * factor, width)
+				shard.mesh = prism
+				shard.material_override = glow
+				var angle := TAU * float(index) / float(count)
+				# A ring around the model's base: placed near the centre, shards
+				# sat inside the Stormglass rock and never showed.
+				var ring := float(spec.get("ring_m", radius * 0.45))
+				shard.position = Vector3(cos(angle) * ring, lift + prism.size.y * 0.5, sin(angle) * ring)
+				shard.rotation = Vector3(sin(angle) * 0.35, angle, cos(angle) * 0.35)
+				shard.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+				root.add_child(shard)
+		"glow_cap":
+			var cap := MeshInstance3D.new()
+			cap.name = "GlowCap"
+			var dome := SphereMesh.new()
+			dome.radius = radius
+			dome.height = radius
+			dome.is_hemisphere = true
+			cap.mesh = dome
+			glow.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			glow.albedo_color.a = 0.55
+			cap.material_override = glow
+			cap.position = Vector3(0.0, lift, 0.0)
+			cap.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			root.add_child(cap)
+	return root
