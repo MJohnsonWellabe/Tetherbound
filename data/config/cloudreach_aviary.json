@@ -14,7 +14,7 @@
     "pane_opacity": 0.28
   },
   "crown_arcade": {
-    "enabled": false,
+    "enabled": true,
     "_disposition": "P2-022 paired visual FAIL: local arches do not resolve the skeletal whole-site silhouette or cold dark entry. Retain disabled. Evidence: ralph/reports/VISUAL/phase2/cloudreach/p2-022/paired-visual-judge.md.",
     "width_m": 8.2,
     "post_width_m": 0.9,

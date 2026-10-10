@@ -133,7 +133,7 @@
     "description": "The weathered marker overlooks the sheltered road toward Galefoot Waycamp. Cloudberries and wind-bent fiber grow along its planted margins."
   },
   "skyline_profile": {
-    "enabled": false,
+    "enabled": true,
     "_disposition": "P2-021 paired visual FAIL: distant skyline improves but broad grass routes remain unresolved. Retain disabled. Evidence: ralph/reports/VISUAL/phase2/cloudreach/p2-021/paired-visual-judge.md.",
     "height_fractions": [0.70, 0.88, 1.0, 0.80, 0.94, 0.76, 0.86]
   },
@@ -321,7 +321,7 @@
   },
   "settlement": {
     "occupied_terrace": {
-      "enabled": false,
+      "enabled": true,
       "_disposition": "Mixed native comparison; full Bars A/B NO. Candidate retained disabled for consolidation. Evidence: VISUAL/cloudreach-c2-candidate/occupied-street.",
       "height_m": 4.2,
       "front_z": 16.0,
