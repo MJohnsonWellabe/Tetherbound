@@ -23,8 +23,9 @@
       "forest": "#34503a",
       "rock": "#5b6474",
       "snow": "#dfe6ee",
-      "segments": 360,
-      "rows": 14,
+      "segments": 720,
+      "rows": 28,
+      "smooth_normals": true,
       "sharpness": 1.6
     },
     {
@@ -42,8 +43,9 @@
       "tree_line": 2.0,
       "forest": "#2f4d2c",
       "rock": "#4a5a42",
-      "segments": 360,
-      "rows": 8
+      "segments": 720,
+      "rows": 16,
+      "smooth_normals": true
     }
   ]
 }
