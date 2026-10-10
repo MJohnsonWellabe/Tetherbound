@@ -13,7 +13,7 @@ var _hero_original := PackedByteArray()
 var _hero_candidate := false
 var _hero_source := ""
 var _hero_config_sha256 := ""
-## --probe=<stand>:x,y;x,y — diagnostic only. After the frame is saved, lists
+## --probe=<stand>:x,y+x,y — diagnostic only. After the frame is saved, lists
 ## the visible geometry whose screen-space bounds cover each pixel (1280x720
 ## frame coordinates), nearest first, in <frame>_probe.json. Changes nothing.
 var _probes := {}
@@ -27,7 +27,7 @@ func _run() -> void:
 		if arg.begins_with("--probe="):
 			var spec := arg.trim_prefix("--probe=")
 			var points: Array = []
-			for pair: String in spec.get_slice(":", 1).split(";", false):
+			for pair: String in spec.get_slice(":", 1).split("+", false):
 				points.append(Vector2(float(pair.get_slice(",", 0)), float(pair.get_slice(",", 1))))
 			_probes[spec.get_slice(":", 0)] = points
 	for arg: String in OS.get_cmdline_user_args():
