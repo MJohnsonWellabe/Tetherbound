@@ -120,3 +120,17 @@ func test_hollow_rain_volume_matches_inner_trunk_clearance() -> void:
 		assert_almost_eq(Vector2(inner.x, inner.z).distance_to(centre), radius, 0.01,
 			"rain mask follows the protected inner trunk at %.0f m" % height)
 	tree.free()
+
+
+func test_no_ascent_brace_seats_across_an_open_trunk_split() -> void:
+	assert_true(TREE.in_trunk_split(PI*0.5, 0.0), "north split")
+	assert_true(TREE.in_trunk_split(-PI*0.5, 0.0), "south split")
+	assert_true(TREE.in_trunk_split(PI*1.5, 0.0), "south split across the angle wrap")
+	assert_false(TREE.in_trunk_split(0.0, TREE.SPLIT_BRACE_MARGIN), "east bark keeps its braces")
+	assert_false(TREE.in_trunk_split(PI, TREE.SPLIT_BRACE_MARGIN), "west bark keeps its braces")
+	var tree := TREE.new()
+	for tier: Vector2 in [Vector2(6.0,44.0),Vector2(TREE.CORE_HEIGHT,44.0),Vector2(TREE.CORE_HEIGHT+24.0,18.0)]:
+		for pose: Transform3D in tree._deck_brace_poses(tier):
+			assert_false(TREE.in_trunk_split(atan2(pose.origin.z, pose.origin.x), 0.0),
+				"no deck brace stands in a split at tier %.0f" % tier.x)
+	tree.free()

@@ -278,8 +278,12 @@ func _rail_posts(rail: Node3D, points: Array[Vector3]) -> void:
 	var post := BoxMesh.new()
 	post.size = Vector3(RAIL_POST_WIDTH_M, CORE_RAIL_SIZE.y, RAIL_POST_WIDTH_M)
 	mm.mesh = post
-	mm.instance_count = points.size()
-	for i in points.size():
+	# A closed loop repeats its first point; one post stands there, not two.
+	var count := points.size()
+	if count > 2 and points[count - 1].is_equal_approx(points[0]):
+		count -= 1
+	mm.instance_count = count
+	for i in count:
 		mm.set_instance_transform(i, Transform3D(Basis.IDENTITY, points[i] + Vector3.UP * CORE_RAIL_SIZE.y * 0.5))
 	var visual := MultiMeshInstance3D.new()
 	visual.name = "RailPosts"

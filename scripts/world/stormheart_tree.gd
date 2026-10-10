@@ -9,6 +9,13 @@ const RAMP_RADIUS := 26.0
 const RAMP_WIDTH := 8.0
 const RAMP_TURNS := 4.0
 const RAMP_SEGMENTS := 384
+## Half-widths (radians) of the trunk's open splits at +Z and -Z.
+const SPLIT_NORTH_HALF_WIDTH := 0.14
+const SPLIT_SOUTH_HALF_WIDTH := 0.27
+const SPLIT_BRACE_MARGIN := 0.05
+## Spiral lamps sit 2.25 m above the ramp; their post runs from it to the bracket.
+const LAMP_POST_TOP_M := 1.0
+const LAMP_POST_HEIGHT_M := 3.25
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 const PRESENTATION_PATH := "res://data/config/stormheart_presentation.json"
 const CANOPY_SHADER := preload("res://scripts/world/stormheart_canopy.gdshader")
@@ -555,7 +562,10 @@ func _ascent_dressing() -> void:
 		posts.append(Transform3D(Basis.IDENTITY.scaled(Vector3(0.65,3.2,0.65)),edge+Vector3.UP*1.2))
 		var anchor := radial*48+Vector3(0,at.y-6,0)
 		var vector := edge-anchor
-		braces.append(Transform3D(Basis.looking_at(vector.normalized()).scaled_local(Vector3(0.8,0.8,vector.length())),(anchor+edge)*0.5))
+		# A brace seated in the bark has nothing to seat in across the open
+		# split: there it ended in mid-air against the sky slot.
+		if not in_trunk_split(atan2(at.z,at.x),SPLIT_BRACE_MARGIN):
+			braces.append(Transform3D(Basis.looking_at(vector.normalized()).scaled_local(Vector3(0.8,0.8,vector.length())),(anchor+edge)*0.5))
 	_instances(self,posts,_wood)
 	_instances(self,braces,_wood)
 
@@ -714,11 +724,21 @@ func _deck_brace_poses(tier: Vector2) -> Array[Transform3D]:
 		var a := float(index)*TAU/64.0
 		if tier.x >= CORE_HEIGHT and absf(cos(a)) < 0.27:
 			continue
+		if in_trunk_split(a,SPLIT_BRACE_MARGIN):
+			continue
 		var ray := Vector3(cos(a),0,sin(a))
 		var low := CORE_HEIGHT if tier.x > CORE_HEIGHT else maxf(0.0,tier.x-8.0)
 		poses.append(_beam_pose(ray*(tier.y+2.0)+Vector3.UP*low,
 			ray*(tier.y-1.0)+Vector3.UP*(tier.x-1.4),0.7,0.7))
 	return poses
+
+
+## True where `angle` (tree-local, atan2(z, x)) faces one of the trunk's two
+## open lightning splits (see _split_bark_shell), widened by `margin` radians.
+static func in_trunk_split(angle: float,margin: float) -> bool:
+	var north := absf(angle_difference(angle,PI*0.5))
+	var south := absf(angle_difference(angle,-PI*0.5))
+	return north < SPLIT_NORTH_HALF_WIDTH+margin or south < SPLIT_SOUTH_HALF_WIDTH+margin
 
 
 func _beam_pose(start: Vector3,finish: Vector3,width: float,height: float) -> Transform3D:
@@ -798,6 +818,17 @@ func _add_wayfinding_lamp(parent: Node3D, at: Vector3, glow: Material, id: Strin
 	bulb.material_override = glow
 	bulb.position = Vector3(0.0, 0.72, 0.62)
 	holder.add_child(bulb)
+	# Route lamps on the open ramp hang from a short timber post seated on the
+	# ramp; without it the flame floated against the sky slot. Visual only.
+	if id.begins_with("SpiralLamp"):
+		var post := MeshInstance3D.new()
+		post.name = "LampPost"
+		var box := BoxMesh.new()
+		box.size = Vector3(0.24, LAMP_POST_HEIGHT_M, 0.24)
+		post.mesh = box
+		post.material_override = _wood
+		post.position = Vector3(0.0, LAMP_POST_TOP_M - LAMP_POST_HEIGHT_M*0.5, -0.12)
+		holder.add_child(post)
 	var light := OmniLight3D.new()
 	light.name = "WarmRouteLight"
 	light.position = Vector3(0.0, 0.72, 0.9)

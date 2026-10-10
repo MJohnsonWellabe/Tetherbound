@@ -146,6 +146,13 @@ uniform bool hollow_enabled = false;
 uniform mat4 world_to_hollow;
 uniform vec4 hollow_radius_taper = vec4(46.0, 13.0, 185.0, 250.0);
 uniform vec3 hollow_lean_top = vec3(9.0, 6.0, 250.0);
+bool inside_hollow(vec3 world_at) {
+	vec3 local = (world_to_hollow * vec4(world_at, 1.0)).xyz;
+	if (local.y >= hollow_lean_top.z) { return false; }
+	float crown = smoothstep(hollow_radius_taper.z, hollow_radius_taper.w, local.y);
+	float inner = mix(hollow_radius_taper.x, hollow_radius_taper.y, crown);
+	return distance(local.xz, hollow_lean_top.xy * crown) < inner;
+}
 void fragment() {
 	float t = UV.y;
 	float taper = smoothstep(0.0, head, t) * (1.0 - smoothstep(1.0 - tail, 1.0, t));
@@ -153,16 +160,12 @@ void fragment() {
 	// thick white pole): a streak nearer the camera than near_fade_end fades
 	// out, gone by near_fade_start, so no single drop can fill the frame.
 	float near = near_fade_end > near_fade_start ? smoothstep(near_fade_start, near_fade_end, -VERTEX.z) : 1.0;
-	// No streak falls inside the hollow tree; rain outside its split
-	// openings and above its crown stays.
-	if (hollow_enabled) {
-		vec3 local = (world_to_hollow * INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
-		if (local.y < hollow_lean_top.z) {
-			float crown = smoothstep(hollow_radius_taper.z, hollow_radius_taper.w, local.y);
-			vec2 centre = hollow_lean_top.xy * crown;
-			float inner = mix(hollow_radius_taper.x, hollow_radius_taper.y, crown);
-			if (distance(local.xz, centre) < inner) { discard; }
-		}
+	// No streak falls inside the hollow tree.
+	// From inside the hollow, the rain beyond its open splits read as bright
+	// even streaks in the gap; the camera inside hides every streak.
+	if (hollow_enabled && (inside_hollow(INV_VIEW_MATRIX[3].xyz)
+			|| inside_hollow((INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz))) {
+		discard;
 	}
 	ALBEDO = COLOR.rgb;
 	ALPHA = COLOR.a * taper * near;

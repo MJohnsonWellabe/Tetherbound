@@ -99,7 +99,9 @@ func build(policy: RefCounted, simulation_only: bool = false) -> void:
 			rim.mesh = _finished_rim_mesh(ring)
 			rim.position.y = 0.09
 			var cue := _plate_material()
-			cue.albedo_color = Color("63d4b0")
+			# The lip is the plate's own metal trim; the mint safe-ground cue
+			# is its glow. Albedo mint read as a flat painted strip at range.
+			cue.albedo_color = Color(str(_presentation.plate_surface_colour))
 			cue.emission_enabled = true
 			cue.emission = Color("63d4b0")
 			cue.emission_energy_multiplier = float(_presentation.get("plate_rim_emission", 0.45))

@@ -259,7 +259,7 @@ func _case_grounded_plates_have_authored_metal_finish_and_unchanged_footprint() 
 		var cue := rim.material_override as StandardMaterial3D
 		assert_eq(cue.shading_mode, BaseMaterial3D.SHADING_MODE_PER_PIXEL, "rim reads as finished metal under the existing cue")
 		assert_eq(cue.albedo_texture, metal.albedo_texture)
-		assert_eq(cue.albedo_color, Color("63d4b0"), "safe-ground mint palette preserved")
+		assert_eq(cue.albedo_color, metal.albedo_color, "rim is the plate's own metal trim")
 		assert_true(cue.emission_enabled, "safe-ground cue remains visible under every existing theme")
 		assert_eq(cue.emission, Color("63d4b0"), "safe-ground emission hue preserved")
 		assert_almost_eq(cue.emission_energy_multiplier, float(policy.config.presentation.plate_rim_emission), 0.0001, "safe-ground emission energy from config")
