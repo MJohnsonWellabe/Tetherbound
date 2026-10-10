@@ -53,8 +53,12 @@ static func _peer(value: Variant) -> bool:
 
 
 static func _authored() -> Dictionary:
+	# The authored row binds independently of the shipping alpha flag; only
+	# freeze/live require the OFF configuration (_shipping_off).
 	var alpha := _json("res://data/config/alpha_respawns.json")
-	if not flags_valid(alpha, _json("res://data/config/traits.json")): return {}
+	var traits := _json("res://data/config/traits.json")
+	if not traits.get("runtime_enabled") is bool or traits.runtime_enabled != true \
+		or not TRAITS.runtime_enabled(traits): return {}
 	var sites: Variant = alpha.get("sites")
 	var site: Variant = sites.get(SITE) if sites is Dictionary else null
 	if not site is Dictionary or site.get("id") != SITE or site.get("biome") != "meadows" \
@@ -73,6 +77,10 @@ static func _authored() -> Dictionary:
 		or not spawn.get("alpha") is Dictionary or spawn.alpha.is_empty(): return {}
 	return {"site": site.duplicate(true), "spawn": spawn.duplicate(true), "file": SPAWNS,
 		"sha256": FileAccess.get_sha256(SPAWNS)}
+
+
+static func _shipping_off() -> bool:
+	return flags_valid(_json("res://data/config/alpha_respawns.json"), _json("res://data/config/traits.json"))
 
 
 static func _mounted(tree: SceneTree, director: Node) -> Dictionary:
@@ -113,8 +121,9 @@ static func _packet_valid(body: Node3D, world: RefCounted) -> bool:
 		or body.get_meta("foundation_alpha_site", "") != SITE \
 		or body.get_meta("ordinary_trait_alpha", null) != true \
 		or not body.get_meta("ordinary_trait_alpha", null) is bool \
-		or not _one(body.get_meta("foundation_alpha_generation", null)) \
-		or not _one(body.get_meta("ordinary_trait_generation", null)): return false
+		or not body.has_meta("foundation_alpha_generation") or not body.has_meta("ordinary_trait_generation") \
+		or not _one(body.get_meta("foundation_alpha_generation")) \
+		or not _one(body.get_meta("ordinary_trait_generation")): return false
 	var creature: Variant = body.get("instance")
 	var packet: Variant = body.get_meta("ordinary_trait_packet", null)
 	var world_ref: Variant = body.get_meta("ordinary_trait_world", null)
@@ -146,7 +155,7 @@ static func _select(wilds: Array, once: Dictionary, world: RefCounted) -> Node3D
 
 
 static func freeze(tree: SceneTree, director: Node, site: String = SITE, pins: Array = []) -> Dictionary:
-	if site != SITE or not pins_valid(pins): return {}
+	if site != SITE or not pins_valid(pins) or not _shipping_off(): return {}
 	var mounted := _mounted(tree, director)
 	var authored := _authored()
 	if mounted.is_empty() or authored.is_empty() or director.call("_once_cleared", SITE) != false: return {}
@@ -209,7 +218,7 @@ static func _same_objects(source: Dictionary, mounted: Dictionary, body: Node3D)
 
 static func live(tree: SceneTree, director: Node, binding: Dictionary) -> bool:
 	var source := _source(binding)
-	if source.is_empty() or not pins_valid(source.pins): return false
+	if source.is_empty() or not pins_valid(source.pins) or not _shipping_off(): return false
 	var mounted := _mounted(tree, director)
 	if mounted.is_empty() or _authored() != source.authored or director.call("_once_cleared", SITE) != false: return false
 	var wilds: Variant = director.get("_wild_creatures")
@@ -305,7 +314,8 @@ static func verified_report(value: Variant) -> Dictionary:
 	for field: String in SCOPE_FIELDS:
 		if not scope.has(field): return {}
 		if field in IDS:
-			if not scope[field] is int or scope[field] <= 0 or original[field] != str(scope[field]): return {}
+			# Object IDs are nonzero; RefCounted IDs set the high bit and are negative.
+			if not scope[field] is int or scope[field] == 0 or original[field] != str(scope[field]): return {}
 		elif original[field] != scope[field]: return {}
 	for field: String in ["body_uid", "namespace", "world_id", "epoch", "body_path", "director_path", "host_character_id"]:
 		if not scope[field] is String or scope[field].is_empty(): return {}

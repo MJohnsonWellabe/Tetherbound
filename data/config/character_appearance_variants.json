@@ -1,5 +1,54 @@
 {
   "enabled": false,
-  "variants": {},
+  "variants": {
+    "p2055_water_adair": {
+      "enabled": false,
+      "expected_base_profile": "field_researcher",
+      "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+      "body_albedo_override": "res://assets/characters/field_researcher/p2055_water_adair_albedo.png",
+      "portrait": "res://assets/ui/portraits/p2055_water_adair.png",
+      "review_status": "blocked_missing_authoritative_cloth_mask_and_matching_derivative_portrait"
+    },
+    "p2055_water_iona": {
+      "enabled": false,
+      "expected_base_profile": "field_researcher",
+      "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+      "body_albedo_override": "res://assets/characters/field_researcher/p2055_water_iona_albedo.png",
+      "portrait": "res://assets/ui/portraits/p2055_water_iona.png",
+      "review_status": "blocked_missing_authoritative_cloth_mask_and_matching_derivative_portrait"
+    },
+    "p2055_water_orsen": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_albedo_override": "res://assets/characters/wandering_trainer/p2055_water_orsen_albedo.png",
+      "portrait": "res://assets/ui/portraits/p2055_water_orsen.png",
+      "review_status": "blocked_missing_authoritative_cloth_mask_and_matching_derivative_portrait"
+    },
+    "p2055_water_otto": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_albedo_override": "res://assets/characters/wandering_trainer/p2055_water_otto_albedo.png",
+      "portrait": "res://assets/ui/portraits/p2055_water_otto.png",
+      "review_status": "blocked_missing_authoritative_cloth_mask_and_matching_derivative_portrait"
+    },
+    "p2055_water_trainer_fen": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_albedo_override": "res://assets/characters/wandering_trainer/p2055_water_trainer_fen_albedo.png",
+      "portrait": "res://assets/ui/portraits/p2055_water_trainer_fen.png",
+      "review_status": "blocked_missing_authoritative_cloth_mask_and_matching_derivative_portrait"
+    },
+    "p2055_water_trainer_evi": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_albedo_override": "res://assets/characters/wandering_trainer/p2055_water_trainer_evi_albedo.png",
+      "portrait": "res://assets/ui/portraits/p2055_water_trainer_evi.png",
+      "review_status": "blocked_missing_authoritative_cloth_mask_and_matching_derivative_portrait"
+    }
+  },
   "_comment": "P2-055 shared presentation pipeline only. Local/static scope; no save, network or gameplay effect. No regional identity mappings or new art are supplied. A named record requires expected_base_profile, expected_model, a dedicated portrait under res://assets/ui/portraits/, and body_albedo_override and/or body_emission_override. Existing model, rank palette, badges, names and gender remain unchanged. Keep disabled until authored derivatives, matching portraits and production visual review pass."
 }
