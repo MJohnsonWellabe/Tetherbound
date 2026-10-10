@@ -197,11 +197,15 @@ static func add_material_cue(node: Node3D, item: String, cues: Dictionary) -> No
 				var prism := PrismMesh.new()
 				# Deterministic per-index variation; every peer builds the same cue.
 				var factor := 0.65 + 0.35 * float((index * 7) % 5) / 4.0
-				prism.size = Vector3(radius * 0.32, height * factor, radius * 0.32)
+				var width := float(spec.get("width_m", radius * 0.32))
+				prism.size = Vector3(width, height * factor, width)
 				shard.mesh = prism
 				shard.material_override = glow
 				var angle := TAU * float(index) / float(count)
-				shard.position = Vector3(cos(angle) * radius * 0.45, lift + prism.size.y * 0.5, sin(angle) * radius * 0.45)
+				# A ring around the model's base: placed near the centre, shards
+				# sat inside the Stormglass rock and never showed.
+				var ring := float(spec.get("ring_m", radius * 0.45))
+				shard.position = Vector3(cos(angle) * ring, lift + prism.size.y * 0.5, sin(angle) * ring)
 				shard.rotation = Vector3(sin(angle) * 0.35, angle, cos(angle) * 0.35)
 				shard.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 				root.add_child(shard)
