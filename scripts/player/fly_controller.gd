@@ -1001,6 +1001,9 @@ static func make_carrier_art(capability: Dictionary) -> Node3D:
 			grip_animation.loop_mode = Animation.LOOP_LINEAR
 			player.play(grip)
 			player.advance(0.0)
+			# Physics samples the clip before wrist alignment. An independently
+			# advancing render animation would move the feet after that alignment.
+			player.pause()
 			continue
 		if bool(capability.get("procedural_wing_pose", false)):
 			player.stop()
@@ -1091,11 +1094,18 @@ func _pose_bird() -> void:
 static func pose_carrier_wings(rig: Skeleton3D, capability: Dictionary, seconds: float) -> void:
 	if rig == null or not is_instance_valid(rig) or not bool(capability.get("procedural_wing_pose", false)):
 		return
-	# The authored loop owns these same wing bones. Do not overwrite it with
-	# the legacy wing-only fallback after the animation has evaluated.
+	# Sample the authored grip on the existing flight clock before its caller
+	# aligns feet with wrists. The same path runs for local and remote carriers.
 	var ancestor: Node = rig
 	while ancestor != null:
 		if bool(ancestor.get_meta("f36_pose_candidate_installed", false)):
+			for animation: Node in ancestor.find_children("*", "AnimationPlayer", true, false):
+				var player := animation as AnimationPlayer
+				var clip := str(player.assigned_animation)
+				if clip == "f36_candidate/fly_grip" and player.has_animation(clip):
+					var length := player.get_animation(clip).length
+					if length > 0.0:
+						player.seek(fposmod(seconds, length), true)
 			return
 		ancestor = ancestor.get_parent()
 	var flap := sin(seconds * float(capability.get("wing_flap_frequency", 2.2)) * TAU) * float(capability.get("wing_flap_amplitude", 0.16))
