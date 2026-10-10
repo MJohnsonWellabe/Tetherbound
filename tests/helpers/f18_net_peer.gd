@@ -447,6 +447,15 @@ func _f18_arch(game: Node, args: Dictionary) -> Dictionary:
 		return _f18_verdict(false, "unlock requires matching fixture key and locked personal arch", before)
 	if mode == "enter" and (view.get("open") != true or view.get("has_key") == true):
 		return _f18_verdict(false, "Enter requires an already open arch without a consumable key", before)
+	# F48#1 cut (opt-in): hard-kill this process at the real owner-save edge of
+	# its key use, after its owner file is written and before its ACK.
+	if str(args.get("cut", "")) == "owner_before_ack":
+		var writer: Node = root.get_node_or_null(^"Game/Session/LedgerRpc")
+		if writer == null: return _f18_verdict(false, "no LedgerRpc for the cut")
+		writer.connect("transaction_boundary", func(observation: Dictionary) -> void:
+			if observation.get("phase") == "after_owner_write_before_ack" and observation.get("action") == "portal_key":
+				print("F48 KEY CUT: hard kill after owner write, before ACK: %s" % str(observation.get("receipt")))
+				OS.kill(OS.get_process_id()))
 	var start := _f18_results.size()
 	var travel := F18_TRAVEL.new(self, game)
 	if not await travel.activate(arch.get_node_or_null(^"Interactable") as Node3D):
