@@ -217,7 +217,10 @@ func test_every_target_utility_kind_lands_on_the_wild_body() -> void:
 	for push_id: String in ["shove", "quake_ring"]:
 		var push_body := _landing_body()
 		var push := _utility_frozen(push_id, 3)
-		assert_true(push_body.apply_landed_utility(push, _landing_context(push, push_body)), push_id)
+		var push_context := _landing_context(push, push_body)
+		# The caster stands off the target, so the push has a direction.
+		push_context.source_position = Vector3(-2.0, 0.0, 0.0)
+		assert_true(push_body.apply_landed_utility(push, push_context), push_id)
 		assert_true(push_body.combat_burst_active(), "%s pushes the body along its collision-aware burst" % push_id)
 	var trap_body := _landing_body()
 	var trap := _utility_frozen("bramble_trap", 4)
