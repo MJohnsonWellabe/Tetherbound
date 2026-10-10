@@ -258,6 +258,11 @@ func _trainer(id: String) -> bool:
 		var ally_raw: Variant = _director.call("ally_body")
 		var enemy := enemy_raw as Node3D if is_instance_valid(enemy_raw) else null
 		var ally := ally_raw as Node3D if is_instance_valid(ally_raw) else null
+		if tick % 300 == 0 and enemy != null and ally != null:
+			var aim_dbg: Variant = enemy.get("_opponent")
+			print("DIAG trainer t=%d ally=%s enemy=%s enemy_opponent=%s ai=%s fighting=%s" % [Time.get_ticks_msec() - started,
+				ally.global_position, enemy.global_position, (aim_dbg as Node3D).global_position if aim_dbg is Node3D else "none",
+				enemy.get("_intent"), _manager.is_fighting()])
 		if _manager.is_fighting() and enemy != null and ally != null:
 			var offset := enemy.global_position - ally.global_position
 			offset.y = 0

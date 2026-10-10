@@ -774,6 +774,9 @@ func _fight_current(label: String) -> bool:
 					e_dbg.global_position, e_dbg.call("centre") if e_dbg.has_method("centre") else "-",
 					e_dbg.call("is_on_floor") if e_dbg.has_method("is_on_floor") else "-",
 					e_dbg.get("_intent"), _manager.call("combat_move_reach", "quick")])
+				var opp_dbg: Variant = e_dbg.get("_opponent")
+				_note("DIAG enemy_opponent=%s same_as_ally=%s visible=%s" % [(opp_dbg as Node3D).global_position if opp_dbg is Node3D else "none",
+					opp_dbg == a_dbg, (opp_dbg as Node3D).visible if opp_dbg is Node3D else false])
 			reposition_ticks = 45
 			side = -side
 		if enemy != null and ally != null:
