@@ -650,12 +650,13 @@ func admit_endgame_rematch(tree: SceneTree, game: Node, rematches: Node) -> bool
 		if candidate == null or not candidate.is_inside_tree() or candidate.get("label") != "Endgame rematch" \
 			or candidate.get("enabled") != true: continue
 		var spec: Dictionary = candidate.get_parent().get_meta("foundation_trainer_spec", {})
-		if rules.profile(str(spec.get("id", ""))).get("kind") != "trainer": continue
+		# F44#1: a leader, which must return at the endgame leader tier.
+		if rules.profile(str(spec.get("id", ""))).get("kind") != "leader": continue
 		var distance := player.global_position.distance_to(candidate.global_position)
 		if distance < nearest:
 			nearest = distance
 			prompt = candidate
-	if not check(prompt != null, "reloaded world has a mounted nonmaster endgame rematch"): return false
+	if not check(prompt != null, "reloaded world has a mounted endgame leader rematch"): return false
 	var source := prompt.get_parent() as Node3D
 	var original: Dictionary = source.get_meta("foundation_trainer_spec", {}).duplicate(true)
 	var expected: Dictionary = rules.encounter_spec(original, "endgame")
@@ -703,5 +704,8 @@ func admit_endgame_rematch(tree: SceneTree, game: Node, rematches: Node) -> bool
 			" enemy_owned=", manager.get("_enemy_owned"), " ally_blocker=", director.call("usable_ally_blocker"),
 			" can_challenge=", director.call("can_challenge", expected), " source_busy=", director.call("rematch_source_busy", source),
 			" pending_world_message=", game.get("_pending_world_message"))
+	var leader_level := int(rules.config().endgame_levels.leader)
+	check(enemy != null and int(enemy.get("level")) == leader_level and leader_level >= 55 and leader_level <= 60,
+		"F44#1: the post-credits leader returns at the endgame leader tier L%d (enemy L%d)" % [leader_level, int(enemy.get("level")) if enemy != null else -1])
 	return check(admitted,
 		"ordinary input admits the actual canonical endgame rematch at its configured tier; isolated proof quits during fight")
