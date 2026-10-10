@@ -239,6 +239,9 @@ var _stagger_glows: Dictionary = {}
 ## the host could later have to rewind through collision.
 var _burst_awaiting_host := false
 var _move_awaiting_host := false
+## Host-accepted Veil (utility movement_buff) on the piloted creature.
+var _veil_multiplier := 1.0
+var _veil_until_ms := 0
 var _party_ultimate: Dictionary = {}
 ## F33 Harness max HP per creature uid this fight (creature_gear.hp_scale):
 ## the host's value when a hit carried one, else the owner's own record.
@@ -3543,17 +3546,21 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 	var named := is_instance_valid(_wild) and _wild.has_method("named_combat_target") and bool(_wild.call("named_combat_target"))
 	if slot == "ultimate" and named:
 		damage = minf(damage, float(_enemy.max_hp) * float(MATH.config().get("ultimate", {}).get("max_fraction_of_named_hp", 0.2)))
+	# A zero-power utility (Slow Field, Sap, Bramble Trap) lands its effect and
+	# deals nothing; the rolled-damage floor applies only to damaging moves.
+	var effect_only := slot == "utility" and frozen.has("base_power") and float(frozen.get("base_power", 0.0)) <= 0.0
+	if effect_only: damage = 0.0
 	var hp_before := float(_enemy.hp)
 	_confirm_host_contact(str(impact_context.get("action_id", "")))
-	var killed: bool = _enemy.take_damage(damage)
+	var killed: bool = _enemy.take_damage(damage) if damage > 0.0 else false
 	var stagger_triggered := false
 	var protected := is_instance_valid(_wild) and _wild.has_method("protected_heavy_committed") and bool(_wild.call("protected_heavy_committed"))
-	if not killed and _wild != null and _wild.has_method("apply_poise_damage") and not protected:
+	if not killed and not effect_only and _wild != null and _wild.has_method("apply_poise_damage") and not protected:
 		var force_interrupt := charged and enemy_is_winding_up() \
 			and bool(_poise_config().get("interrupt_on_charged_into_telegraph", true)) \
 			and charge_read_the_tell(_host_charged_windup(impact_context, move_id), int(frozen.get("started_at_ms", -1)))
 		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
-	if hp_before > float(_enemy.hp) and not killed and is_instance_valid(_wild):
+	if (hp_before > float(_enemy.hp) or effect_only) and not killed and is_instance_valid(_wild):
 		if slot == "utility" and _wild.has_method("apply_landed_utility"):
 			var source := impact_context.get("striker_body") as Node3D
 			var actor: Dictionary = frozen.get("actor_binding", {})
@@ -3563,7 +3570,8 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 					"source_uid": str(card.get("creature_uid", "")), "target_uid": str(_enemy.get("uid")),
 					"source_position": source.global_position, "target_position": _wild.global_position,
 					"source_hp": float(card.get("hp", 0.0)), "source_max_hp": float(card.get("hp_max", card.get("max_hp", 0.0))),
-					"target_hp": hp_before, "hostile": true, "geometry_connected": true, "target_is_boss": named})
+					"target_hp": hp_before, "hostile": true, "geometry_connected": true, "target_is_boss": named,
+					"target_is_heavy_boss": named, "target_point": _wild.global_position})
 		elif slot == "ultimate" and _wild.has_method("hold_ultimate_reaction"):
 			_wild.call("hold_ultimate_reaction", maxf(0.0, float(frozen.get("ultimate", {}).get("presentation_seconds", 2.4)) - float(impact_context.get("travel_seconds", 0.0))))
 	var direction: Vector3 = impact_context.get("direction", Vector3.ZERO)
@@ -3794,7 +3802,7 @@ func _saved_actor_vitals_matches(creature: RefCounted, payload: Dictionary) -> b
 func apply_host_actor_heal(payload: Dictionary) -> void:
 	var creature: RefCounted = active_creature()
 	if state != State.ACTIVE or creature == null or not is_instance_valid(_ally_body) \
-		or not _durable_trainer_reward_owned() or payload.get("canonical_self_heal") != true \
+		or payload.get("canonical_self_heal") != true \
 		or not _saved_actor_vitals_matches(creature, payload) or not payload.get("move") is Dictionary: return
 	var action_id: String = str(payload.actor_vitals_receipt.get("receipt_id", ""))
 	if action_id.is_empty() or _seen_impact_actions.has(action_id): return
@@ -3911,6 +3919,7 @@ func _drive_player_creature() -> void:
 	var creature_for_speed := active_creature()
 	var speed_scale: float = float(creature_for_speed.call("buff_scale", "speed")) \
 			if creature_for_speed != null else 1.0
+	if Time.get_ticks_msec() < _veil_until_ms: speed_scale *= _veil_multiplier
 	if speed_scale != 1.0 and _ally_body.has_method("base_speed"):
 		_ally_body.call("request_move", direction, float(_ally_body.call("base_speed")) * speed_scale)
 	else:
@@ -4460,6 +4469,10 @@ func apply_host_move_start(payload: Dictionary) -> void:
 		or payload.get("encounter_id") != _encounter_id or not payload.get("move") is Dictionary: return
 	_sync_authoritative_wind(payload)
 	_apply_move_resources(payload)
+	var veil: Variant = payload.get("utility_self_movement")
+	if veil is Dictionary and float(veil.get("duration_s", 0.0)) > 0.0:
+		_veil_multiplier = clampf(float(veil.get("multiplier", 1.0)), 1.0, 4.0)
+		_veil_until_ms = Time.get_ticks_msec() + int(float(veil.duration_s) * 1000.0)
 	var move: Dictionary = payload.move.duplicate(true)
 	move["accepted_action"] = int(payload.get("accepted_action", 0))
 	_begin_move_presentation(move)
@@ -4488,8 +4501,24 @@ func _begin_move_presentation(move: Dictionary) -> void:
 	if _ally_body != null and _wild != null:
 		_ally_body.call("face_towards", _wild.call("centre"))
 		_ally_body.call("add_impulse", _ally_body.call("facing"), float(_pending_move.get("lunge", 0.0)))
+		_dash_strike_advance()
 		_ally_body.call("play_attack")
 	state_changed.emit()
+
+
+## F23 Dash Strike closes up to its authored distance across the wind-up, so
+## the host's ordinary strike geometry then judges the hit from where it ends.
+func _dash_strike_advance() -> void:
+	if _moves == null or str(_pending_move.get("slot", "")) != "utility": return
+	var effect: Dictionary = _moves.call("move", str(_pending_move.get("move_id", ""))).get("utility", {})
+	if str(effect.get("kind", "")) != "dash_strike" or not _ally_body.has_method("begin_combat_burst"): return
+	var gap: Vector3 = _wild.global_position - _ally_body.global_position
+	gap.y = 0.0
+	var reach: float = (float(_ally_body.call("body_radius")) if _ally_body.has_method("body_radius") else 0.6) \
+		+ (float(_wild.call("body_radius")) if _wild.has_method("body_radius") else 0.6)
+	var distance: float = clampf(gap.length() - reach, 0.0, float(effect.get("advance_metres", 0.0)))
+	if distance > 0.0:
+		_ally_body.call("begin_combat_burst", gap, distance, maxf(0.08, float(_pending_move.get("windup", 0.25))))
 
 
 static func with_wind_exhaustion(move: Dictionary, exhausted: bool) -> Dictionary:
