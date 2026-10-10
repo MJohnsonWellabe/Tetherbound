@@ -17,6 +17,8 @@ var _ablate := ""
 var _attribute := ""
 var _ab_lod := ""
 var _rounds := 2
+## Diagnostic only: re-run with Terrain3D in this collision_mode (1 dynamic).
+var _terrain_collision := -1
 const ATTRIBUTE_FRAMES := 60
 
 
@@ -34,6 +36,8 @@ func _run() -> void:
 			_attribute = arg.trim_prefix("--attribute=")
 		elif arg.begins_with("--ab-lod="):
 			_ab_lod = arg.trim_prefix("--ab-lod=")
+		elif arg.begins_with("--terrain-collision="):
+			_terrain_collision = int(arg.trim_prefix("--terrain-collision="))
 		elif arg.begins_with("--rounds="):
 			_rounds = maxi(1, int(arg.trim_prefix("--rounds=")))
 	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string(ROUTES_PATH))
@@ -53,6 +57,14 @@ func _run() -> void:
 		print("PHYSICS PROBE mount failed: %s" % [_failures])
 		quit(1)
 		return
+	if _terrain_collision >= 0:
+		var terrain := _world.get_node_or_null(^"Terrain")
+		terrain.set("collision_shape_size", 64)
+		terrain.set("collision_radius", 256)
+		terrain.set("collision_mode", _terrain_collision)
+		for frame in 30:
+			await physics_frame
+		print("PHYSICS PROBE terrain collision_mode=%s" % [terrain.get("collision_mode")])
 	if _ablate == "wilds":
 		node_added.connect(_stop_wild)
 		_stop_wilds(_world)
@@ -60,8 +72,16 @@ func _run() -> void:
 		await _run_ab()
 		quit(0 if _failures.is_empty() else 1)
 		return
+	var sections: Variant = load("res://scripts/creatures/creature_body.gd").get("perf_sections")
+	if sections is Dictionary:
+		(sections as Dictionary).clear()
+	var physics_start := Engine.get_physics_frames()
 	await _capture_route_case()
 	_print_summary()
+	if sections is Dictionary:
+		var ticks := maxi(1, Engine.get_physics_frames() - physics_start)
+		for key: String in (sections as Dictionary):
+			print("PHYSICS PROBE SECTION %s per_tick=%.3f" % [key, float(sections[key]) / 1000.0 / ticks])
 	# Attributed where the route ends, after it has streamed in and settled.
 	if _attribute in ["process", "physics"]:
 		await _attribute_scripts(_attribute == "physics")
