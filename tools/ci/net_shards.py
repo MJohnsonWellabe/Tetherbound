@@ -26,7 +26,7 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 8
+SHARD_COUNT = 10
 # Lanes per shard job. Two lanes at once (tools/ci/run_net_lanes.sh) ran at
 # 1.0-1.6x solo time and broke timing-sensitive smokes under the CPU load
 # (PR #573 runs 37636924943, 37642447200: f20_ending's hello budget,
