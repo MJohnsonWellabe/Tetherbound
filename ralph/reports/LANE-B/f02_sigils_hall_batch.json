@@ -1,0 +1,39 @@
+{
+  "criteria": ["F02#3", "F02#4", "F02#6", "F02#7"],
+  "source": "tb/lane-b-f02-batch f3323a304 (#610 + main 2d267441c + #629 camp beds)",
+  "setup": "earned_chain_runner --generated-fixture (disclosed relay boundary: L15 five at the band3 exit) -> sigils -> hall via --handoff-from; local Godot 4.7 headless",
+  "commands": [
+    "--segment=sigils --generated-fixture --reload-at-sigils --route-ledger",
+    "--segment=hall --generated-fixture --handoff-from=<sigils piece> --reload-at-sigils --route-ledger"
+  ],
+  "f02_3_route": {
+    "sigils": "PASS 3416 s wall: captain_riverwatch 5-0, captain_field 5-0, captain_ridge 5-0; Sigil Gate paid with all three Sigils",
+    "hall": "PASS on attempt 2: patrol 2-0, courtyard 3-0, elite 5-0, Warden arena reached; attempt 1 lost the elite's fifth round (4-1)"
+  },
+  "f02_4_reloads": {
+    "points": ["captain_riverwatch", "captain_field", "captain_ridge", "sigils_carried", "hall"],
+    "check": "production save_game(0), world freed, flags/party/satchel cleared, load_game(0), fresh scene",
+    "result": "every reload: 0 flags lost, same five UIDs, identical HP/fainted/level/XP, identical carried items"
+  },
+  "f02_6_wilds": {
+    "sigils": {"fights": 15, "wild_fights": 0, "trainer_fights": 15, "repeated_wilds": []},
+    "hall": {"fights": 10, "wild_fights": 0, "trainer_fights": 10, "repeated_wilds": []},
+    "levels_at_stage": {
+      "sigils_start": [15, 15, 15, 15, 15],
+      "after_riverwatch": [15, 15, 16, 15, 15],
+      "after_field": [15, 16, 17, 16, 16],
+      "after_ridge": [15, 17, 18, 17, 17],
+      "after_hall": [18, 19, 19, 19, 19]
+    },
+    "finding": "every Sigil gate and the Hall were won on captain/guard XP alone; no wild fight, so no forced re-grind"
+  },
+  "f02_7_spacing_a7": {
+    "contract": "beat radius 40 m, window 250 m, A7 limit 120 s (strict beats)",
+    "sigils": {"path_m": 5045.7, "strict_a7_longest_s": 68.2, "a7_violations": 0, "strict_spacing_median_m": 35.9,
+      "strict_gaps_over_window_m": [252.3, 334.5]},
+    "hall": {"path_m": 523.7, "strict_a7_longest_s": 54.2, "a7_violations": 0, "strict_spacing_median_m": 4.8,
+      "strict_gaps_over_window_m": [251.6]},
+    "finding": "A7 met throughout; three strict spacing gaps exceed 250 m (near Captain Field 252 m, after Captain Vess 334 m, at the Hall start 252 m); non-strict beats have none"
+  },
+  "disclosures": ["generated relay-boundary input, not earned play", "harness waits/retries per hall segment (prompt settle, vegetation re-press)", "wall time is this box's, not CI"]
+}
