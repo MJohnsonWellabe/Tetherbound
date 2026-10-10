@@ -55,6 +55,13 @@ func _run() -> void:
 		await _feast_finish()
 		return
 	var kitchen := str(placed.kitchen_uid)
+	# The guest walks the few metres to the host's Kitchen (no teleport).
+	var station := await _craft_data(1, "f28_station_at", {"kitchen_uid": kitchen}, 1200)
+	if station.is_empty():
+		await _feast_finish()
+		return
+	if not await _craft_step(1, "move_to", {"x": float(station.at[0]) + 1.6, "z": float(station.at[2]) + 1.6,
+			"close_enough": 1.5, "budget_frames": 2400}, 2800): return
 	var before := await _feast(1)
 	if before.is_empty():
 		await _feast_finish()

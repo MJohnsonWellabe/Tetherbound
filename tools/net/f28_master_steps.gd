@@ -20,6 +20,7 @@ static func run(runner: SceneTree, action: String, args: Dictionary) -> Dictiona
 		"f28_cook": return await _feast_press(runner, args, "cook")
 		"f28_feed": return await _feast_press(runner, args, "feed")
 		"f28_feast_view": return _feast_view(runner, str(args.get("character_id", "")))
+		"f28_station_at": return await _station_at(runner, str(args.get("kitchen_uid", "")))
 	return {"verdict": "ERROR", "detail": "unknown F28 action '%s'" % action}
 
 
@@ -226,10 +227,11 @@ static func _feast_press(runner: SceneTree, args: Dictionary, mode: String) -> D
 		if kitchen != null: break
 		await runner.physics_frame
 	if kitchen == null: return _fail("the host's Kitchen never replicated here")
+	# The smoke walks the trainer here (f28_station_at + move_to): a fixture
+	# teleport is a discontinuity the owner-passive stream holds on.
 	var player := runner.current_scene.get_node(^"Player") as Node3D
-	if player.global_position.distance_to(kitchen.global_position) > 3.0:
-		player.global_position = kitchen.global_position + Vector3(1.6, 0.6, 1.6)
-		for f in 60: await runner.physics_frame
+	if player.global_position.distance_to(kitchen.global_position) > 3.5:
+		return _fail("walk to the Kitchen first (%.1f m away)" % player.global_position.distance_to(kitchen.global_position))
 	# The panel opens only once no saved decision holds this owner's input
 	# (Session.owns_input); a player waits for that too.
 	var session_node: Node = runner.root.get_node(^"Game/Session")
@@ -300,3 +302,12 @@ static func _feast_view(runner: SceneTree, character_id: String) -> Dictionary:
 		"feast_recipes": (personal.get("feast_recipes", []) as Array).duplicate(),
 		"receipts": (personal.get("transaction_receipts", []) as Array).filter(func(r: Variant) -> bool:
 			return str(r).begins_with("craft:") or str(r).begins_with("feast_feed:"))})
+
+
+## Where a placed station stands in this process (once replicated).
+static func _station_at(runner: SceneTree, uid: String) -> Dictionary:
+	for f in 600:
+		var node: Node3D = runner.call("_station_node", uid)
+		if node != null: return _ok("station %s" % uid, {"at": [node.global_position.x, node.global_position.y, node.global_position.z]})
+		await runner.physics_frame
+	return _fail("station %s never replicated here" % uid)
