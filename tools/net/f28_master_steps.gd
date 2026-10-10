@@ -230,12 +230,19 @@ static func _feast_press(runner: SceneTree, args: Dictionary, mode: String) -> D
 	if player.global_position.distance_to(kitchen.global_position) > 3.0:
 		player.global_position = kitchen.global_position + Vector3(1.6, 0.6, 1.6)
 		for f in 60: await runner.physics_frame
+	# The panel opens only once no saved decision holds this owner's input
+	# (Session.owns_input); a player waits for that too.
+	var session_node: Node = runner.root.get_node(^"Game/Session")
+	for f in int(args.get("settle_frames", 1200)):
+		if session_node.call("owns_input") != true: break
+		await runner.physics_frame
 	service.call("open_kitchen", kitchen)
 	await runner.process_frame
 	var panel: Node = service.get("_panel")
 	if panel == null or panel.call("is_open") != true:
 		var owner: Variant = preload("res://scripts/ui/input_owner.gd").current(runner)
-		return _fail("the Kitchen feast panel did not open (input owned by %s)" % (str(owner.name) if owner is Node else "nobody"))
+		var why := str(session_node.call("_owner_snapshot_block_reason", runner.root.get_node(^"Game").get("local"))) if owner == session_node else ""
+		return _fail("the Kitchen feast panel did not open (input owned by %s %s)" % [str(owner.name) if owner is Node else "nobody", why])
 	if mode == "feed":
 		panel.call("_open_feed_from_kitchen")
 		await runner.process_frame
