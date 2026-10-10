@@ -1,0 +1,156 @@
+{
+  "subject": "grunt_c",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "full_art_bar_pass": false,
+  "disposition": "Disabled identity-preserving material refinement of the existing installed NPC; no new character or body.",
+  "reference_provenance": {
+    "subject": "grunt_c",
+    "reference": "assets/characters/grunt_c/reference/native-face-material-v1.png",
+    "method": "built_in_imagegen",
+    "identity_reference": [
+      "Installed grunt_c_lod0.glb close front and three-quarter renders"
+    ],
+    "prompt": "Draft one identity-preserving FACE MATERIAL reference for the SAME installed Tetherbound grunt_c in the supplied front and three-quarter head renders. A single centered three-quarter head and very short neck, all existing hair/hat/hood fully inside frame with generous margins. Preserve the same young adult man, warm light-tan narrow oval face, thick dark brows and large dark eyes, short tousled muted blue-grey hair with the same pointed fringe, small straight nose and neutral closed mouth, clean-shaven chin. Preserve the exact hair silhouette and blue-grey colour, age and likeness; no new scar or accessory. Refine only the existing exposed facial skin finish: coherent warm skin colour groups, restrained softened cheek and nose shading, readable eyelids, no mottled orange/brown speckles, no photoreal pores, no heavy makeup or glossy plastic. Maintain perceived ethnicity, expression, face width, eye spacing and recognizable likeness. Original premium stylized game character material study with neutral even illumination and pale grey studio background. No shoulders, coat, scarf, torso, hands, full body, new character, labels, text, panels, ruler or watermark. The installed geometry, rig, clips, clothing, hair, beard, eyes and headwear will be retained; this is direction for a safely masked facial-skin material refinement only.",
+    "default_enabled": false,
+    "scope": "Facial skin material only; preserve installed identity/body/clothes/headwear/rig/clips",
+    "selected_origin": "exec-36e53655-a66b-44ab-bde5-3297659dc348",
+    "inspection": "PASS skin-material direction: same blue-grey pointed fringe, youthful narrow face, dark brows/eyes and neutral mouth. Original hair/eyes/geometry protected.",
+    "limits": "Reference preserves identity direction. Native face finish/seams/full art approval remain OPEN; only masked facial skin will be used."
+  },
+  "generation": {
+    "task_id": "01a12753-157d-754a-b22f-af62fb2a0930",
+    "endpoint": "/openapi/v1/retexture",
+    "settings": {
+      "ai_model": "meshy-6",
+      "enable_original_uv": true,
+      "enable_pbr": false,
+      "texture_resolution": "2k",
+      "remove_lighting": true,
+      "text_style_prompt": "Preserve this SAME installed character identity and original UV layout. Only improve exposed facial skin finish with coherent warm skin colour groups matching the inspected image. Preserve eye colour, brows, facial hair, hair, headwear, mask and collar appearance. No freckles, speckles, dramatic baked lighting, new accessories or new identity. The source mesh will be retained; only safely isolated facial-skin albedo pixels will be used."
+    },
+    "reference": "assets/characters/grunt_c/reference/native-face-material-v1.png",
+    "model_input": "installed isolated head with original UVs",
+    "night": "2026-10-09",
+    "provider": "Meshy",
+    "status": "SUCCEEDED",
+    "new_submissions": 1,
+    "observed_credit_cost": 10
+  },
+  "generation_scope": "One guarded original-UV Meshy retexture of a static isolated installed-head input. Service geometry, rig, materials and other maps are never installed. Only conservative facial-skin albedo pixels are transferred to the complete original body.",
+  "rights": {
+    "basis": "Owner-held installed character and inspected original project draft; owner-authorized existing paid Meshy account. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preservation": {
+    "scope": "Same installed NPC geometry and material parameters; source albedo is the authored runtime extracted PNG, not its older embedded GLB image",
+    "candidate_enabled": false,
+    "service_head_triangle_uv_mapping_unchanged": true,
+    "installed_geometry_uv_weights_nodes_skin_clips_unchanged": true,
+    "original_binary_prefix_preserved": true,
+    "original_material_parameters_normal_roughness_metallic_unchanged": true,
+    "decoded_rgba_outside_face_mask_identical": true,
+    "protected_uv_overlap_excluded": true,
+    "changed_pixels": 23150,
+    "safe_pixels": 23356,
+    "image_size": [
+      2048,
+      2048
+    ],
+    "clips": 6,
+    "blend": "Inward 24-pixel Gaussian attenuation, half strength, service RGBA delta bounded to 18/255 before blending",
+    "requires_native_face_finish_identity_and_seam_review": true,
+    "full_art_gate": false,
+    "protected_pixels_basis": "Current-main authored assets/characters/grunt_c/grunt_c_lod0_texture_0.png",
+    "runtime_atlas_outside_face_mask_identical": true,
+    "original_embedded_albedo_matches_runtime": false,
+    "original_embedded_albedo_max_difference": 91,
+    "local_correction": "Reapply the same guarded service task conservative face-only delta to the current authored runtime atlas. No additional generation."
+  },
+  "face_skin_mask": {
+    "source": "grunt_c_lod0.glb",
+    "scope": "Conservative facial skin only; no geometry or source image modification",
+    "bounds_m": {
+      "min_y": 1.415,
+      "max_y": 1.565,
+      "max_abs_x": 0.12,
+      "min_z": 0.025
+    },
+    "selected_face_triangles": 2293,
+    "protected_triangles": 51647,
+    "safe_pixels": 23356,
+    "original_image_size": [
+      2048,
+      2048
+    ],
+    "protected_uv_overlap_excluded": true,
+    "non_skin_pixels_and_boundary_inset_excluded": true,
+    "candidate_enabled": false,
+    "requires_native_identity_and_seam_review": true
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "presets": {
+      "Low": {
+        "renderer": "gl_compatibility",
+        "before_height_m": 1.69999992847443,
+        "after_height_m": 1.69999992847443,
+        "nine_matched_stage_views": true,
+        "paired_authored_world_post": true,
+        "sheet": "review/low-before-after.jpg"
+      },
+      "Medium": {
+        "renderer": "forward_plus",
+        "before_height_m": 1.69999992847443,
+        "after_height_m": 1.69999992847443,
+        "nine_matched_stage_views": true,
+        "paired_authored_world_post": true,
+        "sheet": "review/medium-before-after.jpg"
+      }
+    },
+    "scope": "Matched fixed native material/rig stage, existing original clip samples and authored NPC post when available. Raw logs and receipts remain outside Git."
+  },
+  "gates": {
+    "installed_scale": "PASS",
+    "original_body_uv_rig_clips": "PASS",
+    "protected_albedo_pixels": "PASS",
+    "face_finish_identity_seams": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false,
+    "face_finish": "FAIL",
+    "production_post_readability": "OPEN"
+  },
+  "limitations": [
+    "Conservative head-weight/position/skin-colour UV mask excludes all other triangle coverage; classification still requires native identity, shading and seam judgment.",
+    "Original decoded RGBA outside the selected mask is exactly retained; this does not alone certify visual appeal.",
+    "Still samples do not certify full motion, ordinary dialogue, trainer reactions, earned journeys or fights.",
+    "Runtime character config remains unchanged; OFF recipe changes only the candidate model path.",
+    "Embedded GLB atlas differed from current-main extracted runtime PNG; v1 reset authored clothing palette outside face mask. Preserve v1 evidence outside Git; select corrected authored atlas. The rejected candidate and evidence are preserved outside Git; final correction reuses the same service task with no additional submission. Before captures are reused because installed body and render setup are unchanged.",
+    "Existing authored NPC was found; matched cameras preserve production placement. These fixtures do not certify ordinary dialogue, trainer reactions or an earned journey."
+  ],
+  "local_material_selection": {
+    "selected": "native-face-material-v2.glb",
+    "proof": "face-material-preservation-v2.json",
+    "before_evidence_version": "v1",
+    "after_evidence_version": "v2",
+    "rejected_v1_reason": "Embedded GLB atlas differed from current-main extracted runtime PNG; v1 reset authored clothing palette outside face mask. Preserve v1 evidence outside Git; select corrected authored atlas.",
+    "additional_submissions": 0
+  },
+  "native_inspection": {
+    "face_finish": "FAIL",
+    "face_finish_note": "Blurred eyes and mouth and angular cheek shading remain below the drafted face-finish reference.",
+    "identity_seams": "OPEN",
+    "independent_judge": "OPEN",
+    "default_enabled": false,
+    "production_post_readability": "OPEN",
+    "production_post_note": "Existing authored NPC was found; matched cameras preserve production placement. These fixtures do not certify ordinary dialogue, trainer reactions or an earned journey.",
+    "runtime_palette_correction": "Original authored runtime atlas restored; v1 embedded atlas reset is rejected and preserved outside Git. Candidate keeps current runtime palette outside the face mask; face finish still FAIL.",
+    "reference_runtime_palette_alignment": "FAIL",
+    "reference_palette_note": "Drafts were inspected from the original embedded-GLB head renders before retexture. Those embedded atlases differ from current-main authored runtime PNGs; grunt C draft shows blue-grey hair while the native runtime hair is brown. Runtime hair/clothing pixels are protected and retained; reference identity alignment is not approved."
+  }
+}
