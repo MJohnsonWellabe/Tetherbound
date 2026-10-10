@@ -15,26 +15,29 @@ extends RefCounted
 ##                                        and restarting the game
 ##   aftermath_state {require?, watch_frames?}   read-only: this peer's view of the
 ##                                        Long Storm aftermath, the Spark of the
-##                                        Stormwood (personal held/hung and active,
-##                                        shared Shrine Room display), and Stormheart
+##                                        Stormwood (earned/placed world facts, this
+##                                        character's own active relic, the Meadows
+##                                        socket when it stands in the Meadows), the
+##                                        Waterward gate/key and the Stormheart
 ##                                        receipts. `require` is a subset of `data`
 ##                                        that must hold or the step FAILS (so a
 ##                                        negative control can expect FAIL).
 ##                                        `watch_frames` watches strike warnings
 ##                                        reaching this peer for that long.
-##   spark_socket    {press?, settle?}    stand where the Shrine Room Stormwood
-##                                        pedestal offers its
+##   spark_socket    {press?, settle?}    stand where the Meadows home circle's Spark
+##                                        socket (RelicSlot_stormwood) offers its
 ##                                        prompt; with `press` true press interact
 ##                                        once through the peer runner's own input
 ##                                        edge. Reports the socket state before/after.
 ##
-## Only spark_start supplies a disclosed initial entitlement; subsequent state writes go
+## Nothing here writes game state: the load, the press and every grant go
 ## through the game's own code.
 
-const ACTIONS := ["title_load", "aftermath_state", "spark_socket", "spark_start", "spark_power"]
+const ACTIONS := ["title_load", "aftermath_state", "spark_socket"]
 const ENDING_PATH := "res://scripts/world/stormwood_ending.gd"
 const SURGE_PATH := "res://scripts/world/stormwood_surge.gd"
 const SPARK_ID := "stormwood"
+const SPARK_SLOT_PATH := ^"MeadowsRealmHeartShrine/RelicSlot_stormwood"
 const LEGENDARY_SPECIES := "fulgocobra"
 const WORLD_FACTS := ["stormwood:long_storm_ended", "stormwood:legendary_freed",
 	"stormwood:legendary_offer_made", "realm_heart_stormwood_earned", "realm_heart_stormwood_placed",
@@ -47,10 +50,6 @@ static func handles(action: String) -> bool:
 
 static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
 	match action:
-		"spark_start":
-			return _spark_start(tree, args)
-		"spark_power":
-			return await _spark_power(tree, args)
 		"title_load":
 			return await _title_load(tree, args)
 		"aftermath_state":
@@ -62,53 +61,6 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 
 static func _game(tree: SceneTree) -> Node:
 	return tree.root.get_node_or_null(^"Game")
-
-
-## Declared start entitlement only, before admission. The release, hang,
-## selection, restart and rejoin remain production writes. Boss reward delivery
-## is F19#2's separate witness; this fixture cannot certify that grant.
-static func _spark_start(tree: SceneTree, args: Dictionary) -> Dictionary:
-	var game := _game(tree)
-	var session: Node = game.get("session") if game != null else null
-	if args.get("disclosure") != "initial_personal_spark_entitlement_no_boss_grant_credit" \
-		or session == null or session.call("is_active") == true:
-		return {"verdict": "FAIL", "detail": "Spark start fixture requires declared isolated pre-admission character"}
-	var personal: Dictionary = game.local.redesign_character.duplicate(true)
-	if personal.get("relics_hung", []).has(SPARK_ID):
-		return {"verdict": "FAIL", "detail": "The Spark must start unhung"}
-	if not personal.relics_held.has(SPARK_ID): personal.relics_held.append(SPARK_ID)
-	if not preload("res://scripts/data/redesign_state.gd").validate("character", personal).is_empty():
-		return {"verdict": "FAIL", "detail": "Invalid initial Spark entitlement"}
-	game.local.redesign_character = personal
-	return {"verdict": "PASS", "detail": "Disclosed initial personal Spark held, not hung; no boss grant credit"}
-
-
-static func _spark_hall(tree: SceneTree) -> Node3D:
-	for node: Node in tree.get_nodes_in_group("crossing_halls"):
-		if tree.current_scene != null and tree.current_scene.is_ancestor_of(node):
-			return node as Node3D
-	return null
-
-
-## Choose the actual panel's focused Spark row with an ordinary accept edge.
-static func _spark_power(tree: SceneTree, args: Dictionary) -> Dictionary:
-	var hall := _spark_hall(tree)
-	var panel: Node = hall.get("_power_panel") if hall != null else null
-	if panel == null or panel.call("is_open") != true:
-		return {"verdict": "FAIL", "detail": "Actual Shrine Room power panel is not open"}
-	var rows: Array = panel.get("_rows")
-	var choices: Array = panel.call("choices", _game(tree).realm_hearts, _game(tree).local.redesign_character.relics_hung)
-	var index := choices.find(SPARK_ID)
-	if index < 0 or index >= rows.size():
-		return {"verdict": "FAIL", "detail": "The character has no hung Spark row"}
-	(rows[index] as Button).grab_focus()
-	await tree.call("_step_press", {"action": "ui_accept"})
-	for _i in int(args.get("budget_frames", 600)):
-		await tree.physics_frame
-		if _game(tree).realm_hearts.active_id() == SPARK_ID:
-			await tree.call("_step_press", {"action": "menu_cancel"})
-			return {"verdict": "PASS", "detail": "Selected Spark through the Shrine Room power panel", "data": {"active_relic": SPARK_ID}}
-	return {"verdict": "FAIL", "detail": "Spark power selection never saved/applied"}
 
 
 # --- the restarted process's Load ----------------------------------------------------
@@ -193,22 +145,16 @@ static func _aftermath_state(tree: SceneTree, args: Dictionary) -> Dictionary:
 			if str((member as RefCounted).get("species_id")) == LEGENDARY_SPECIES:
 				stormhearts += 1
 	data["stormhearts_in_party"] = stormhearts
-	# Spark ownership and selection belong to this character. The Hall display
-	# is a world presentation fact, independent of another character's hung set.
+	# The Spark of the Stormwood: earned/placed are the world's, active is this
+	# character's own (realm_heart_shrine.gd's split).
 	var hearts: RefCounted = game.get("realm_hearts")
-	var personal: Dictionary = game.local.redesign_character
-	var displayed: Dictionary = game.world.redesign_world.get("shrine_display", {})
-	data["spark_earned"] = personal.get("relics_held", []).has(SPARK_ID) or personal.get("relics_hung", []).has(SPARK_ID)
-	data["spark_placed"] = displayed.get(SPARK_ID) == true
-	data["spark_hung"] = personal.get("relics_hung", []).has(SPARK_ID)
-	data["spark_held"] = personal.get("relics_held", []).has(SPARK_ID)
-	data["spark_hang_receipts"] = personal.get("transaction_receipts", []).count("relic_hang:%s:%s" % [SPARK_ID, _character_id(game)])
+	var progression: RefCounted = game.get("progression")
+	data["spark_earned"] = hearts != null and bool(hearts.call("is_earned", SPARK_ID, progression))
+	data["spark_placed"] = hearts != null and bool(hearts.call("is_placed", SPARK_ID, progression))
 	data["active_relic"] = str(hearts.call("active_id")) if hearts != null else ""
-	data["spark_socket"] = "active" if data.spark_hung and data.active_relic == SPARK_ID else ("placed_inactive" if data.spark_hung else "earned_unplaced")
 	var scene := tree.current_scene
-	var hall := _spark_hall(tree)
-	var pedestal: Node = hall.get_node_or_null("Pedestal_stormwood") if hall != null else null
-	data["spark_pedestal_displayed"] = pedestal.get_meta("relic_displayed", false) if pedestal != null else null
+	var slot := scene.get_node_or_null(SPARK_SLOT_PATH) if scene != null else null
+	data["spark_socket"] = str(slot.call("current_state")) if slot != null else "(not in the Meadows)"
 	# The Stormwood presentation, when this peer stands in Stormwood.
 	var surge := scene.find_child("StormwoodSurge", true, false) if scene != null else null
 	var player := (tree.get("_probe") as Object).call("player") as Node3D
@@ -278,20 +224,15 @@ static func _character_id(game: Node) -> String:
 	return str((local as RefCounted).get("character_id")) if local != null else ""
 
 
-# --- the Spark's pedestal in the Crossing Hall Shrine Room -----------------------------------
+# --- the Spark's socket in the Meadows home circle -----------------------------------
 
 static func _spark_socket(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var scene := tree.current_scene
-	var hall := _spark_hall(tree)
-	var slot := hall.get_node_or_null("Pedestal_stormwood") as Node3D if hall != null else null
+	var slot := scene.get_node_or_null(SPARK_SLOT_PATH) as Node3D if scene != null else null
 	var player := (tree.get("_probe") as Object).call("player") as Node3D
 	if slot == null or player == null:
-		return {"verdict": "FAIL", "detail": "no Shrine Room Spark pedestal or player in this scene"}
-	var prompt: Node
-	for child: Node in slot.get_children():
-		if child.get_script() == preload("res://scripts/world/interactable.gd"):
-			prompt = child
-			break
+		return {"verdict": "FAIL", "detail": "no Spark socket (%s) or player in this scene" % str(SPARK_SLOT_PATH)}
+	var prompt: Node = slot.get("_prompt") as Node
 	if prompt == null:
 		return {"verdict": "FAIL", "detail": "the Spark socket has no Interactable"}
 	# Stand where the socket's prompt is the one the interaction arbiter would
@@ -311,7 +252,7 @@ static func _spark_socket(tree: SceneTree, args: Dictionary) -> Dictionary:
 			standing = str(offset)
 			break
 		winners.append(str((winner as Node).name) if winner is Node and is_instance_valid(winner) else str(winner))
-	var before := "hung" if _game(tree).local.redesign_character.relics_hung.has(SPARK_ID) else "held"
+	var before := str(slot.call("current_state"))
 	var label := str(prompt.get("label"))
 	if standing.is_empty():
 		return {"verdict": "FAIL", "detail": "the Spark socket's prompt never won the interaction arbiter (state %s, label '%s'; won instead: %s)"
@@ -324,7 +265,7 @@ static func _spark_socket(tree: SceneTree, args: Dictionary) -> Dictionary:
 			return {"verdict": "FAIL", "detail": "standing %s, '%s' (%s)%s" % [standing, label, before, pressed]}
 		for _i in int(args.get("after_frames", 120)):
 			await tree.physics_frame
-	var after := "hung" if _game(tree).local.redesign_character.relics_hung.has(SPARK_ID) else "held"
+	var after := str(slot.call("current_state"))
 	return {"verdict": "PASS",
 		"detail": "standing %s at the Spark socket, prompt '%s'; state %s -> %s%s" % [standing, label, before, after, pressed],
 		"data": {"before": before, "after": after, "label": label}}

@@ -1,6 +1,6 @@
 {
   "name": "F11#2: a guest's link dies at its Stormheart REFUSAL acknowledgement; the refusal is settled once and nothing is granted",
-  "claim": "ACCEPTANCE F11 'accept/refuse independently ... through disconnect/reload, without duplicated grants', the refusal-acknowledgement window (the mirror of f11_stormheart_drop_at_ack). Both players fought the Dynamo. The host says Yes. The guest opens its own offer and says No through the real dialogue's No; its transport is closed from the panel's own `declined` signal, before the ending's deferred refusal runs, so the refusal receipt and character save are local and the `ending_settled` acknowledgement finds no connected peer. The host holds no world receipt of the guest's answer and its one claim for the guest is unsettled. The guest rejoins from the title as the same character; the host settles that one claim as REFUSED from the resent claim and the guest's saved receipt. The guest never holds a Stormheart, a repeat claim is refused by the host before and after both peers reload, and the host world records the guest's refusal once and no acceptance. Setup and disclosures as in f11_stormheart_drop_at_ack (captured host save; Dynamo fixture; a local close() sends an ENet disconnect, so this is not a silent partition). Not covered: the host dropping; a drop before the receipt is saved; a silent partition; a rejoin after the 120 s seat hold; the legacy old-build receipt (awaits an owner ruling). Current route setup: isolated peers start at the actual Crossing Hall Stormwood arch with a disclosed open-route fixture and Home Key. First travel consumes a real host-authorized portal permit, rather than a retired physical crossing.",
+  "claim": "ACCEPTANCE F11 'accept/refuse independently ... through disconnect/reload, without duplicated grants', the refusal-acknowledgement window (the mirror of f11_stormheart_drop_at_ack). Both players fought the Dynamo. The host says Yes. The guest opens its own offer and says No through the real dialogue's No; its transport is closed from the panel's own `declined` signal, before the ending's deferred refusal runs, so the refusal receipt and character save are local and the `ending_settled` acknowledgement finds no connected peer. The host holds no world receipt of the guest's answer and its one claim for the guest is unsettled. The guest rejoins from the title as the same character; the host settles that one claim as REFUSED from the resent claim and the guest's saved receipt. The guest never holds a Stormheart, a repeat claim is refused by the host before and after both peers reload, and the host world records the guest's refusal once and no acceptance. Setup and disclosures as in f11_stormheart_drop_at_ack (captured host save; Dynamo fixture; a local close() sends an ENet disconnect, so this is not a silent partition). Not covered: the host dropping; a drop before the receipt is saved; a silent partition; a rejoin after the 120 s seat hold; the legacy old-build receipt (awaits an owner ruling).",
   "peers": 2,
   "scene": "world",
   "budget_s": 2100,
@@ -26,18 +26,6 @@
       },
       "budget_frames": 10000,
       "label": "guest: a fresh trainer in the Meadows"
-    },
-    {
-      "peer": "all",
-      "action": "enter_realm",
-      "args": {
-        "realm": "stormwood",
-        "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
-        "portal_regression": "stormwood_proof",
-        "portal_prepare_only": true
-      },
-      "budget_frames": 10000,
-      "label": "SETUP: initial Hall ground, open Stormwood route and Home Key before admission; no earned route credit"
     },
     {
       "peer": 0,
@@ -66,9 +54,7 @@
       "peer": 0,
       "action": "enter_realm",
       "args": {
-        "realm": "stormwood",
-        "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
-        "portal_regression": "stormwood_proof"
+        "realm": "stormwood"
       },
       "budget_frames": 10000
     },
@@ -76,9 +62,7 @@
       "peer": 1,
       "action": "enter_realm",
       "args": {
-        "realm": "stormwood",
-        "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
-        "portal_regression": "stormwood_proof"
+        "realm": "stormwood"
       },
       "budget_frames": 10000
     },
