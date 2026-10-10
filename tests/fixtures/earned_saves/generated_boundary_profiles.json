@@ -143,7 +143,8 @@
         "legendary_freed",
         "legendary_settled",
         "realm_key_cloudreach",
-        "realm_heart_meadows_earned"
+        "realm_heart_meadows_earned",
+        "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d"
       ],
       "personal_flags": [
         "legendary_refused"
@@ -255,7 +256,8 @@
         "water_cordage_recipe_gated",
         "water_swim_lesson_briefed",
         "water_swim_stone_earned",
-        "water:legendary_refused"
+        "water:legendary_refused",
+        "fly_tutorial_completed"
       ],
       "inventory_add": {
         "stormwood_portal_key": 1
