@@ -179,3 +179,13 @@ func test_every_authored_ultimate_is_mounted_when_visuals_are_on() -> void:
 		assert_true(MANAGER.live_move_supported("ultimate", move_id), "%s is mounted on the host" % move_id)
 	assert_true(count >= 31, "every authored ultimate was checked")
 	ULTIMATES._config = saved_visual_config
+
+func test_every_ultimate_presents_for_two_to_three_seconds_of_committed_control() -> void:
+	# F35#3: the presentation lasts 2-3 s and costs no longer loss of control:
+	# the creature is committed only for the move's own wind-up plus recovery.
+	var moves := MOVES.load_default()
+	for move_id: String in moves.move_ids():
+		if moves.slot(move_id) != "ultimate": continue
+		var row: Dictionary = moves.move(move_id)
+		var committed := float(row.get("windup", 0.0)) + float(row.get("recovery", 0.0))
+		assert_between(committed, 2.0, 3.0, "%s commits the creature for %.2fs" % [move_id, committed])
