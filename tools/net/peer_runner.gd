@@ -3423,9 +3423,17 @@ func _step_stormwood_hosted_quick(args: Dictionary) -> Dictionary:
 				await physics_frame
 				if hub != null:
 					action_observed = maxi(action_observed, int(hub.get("_action")))
+			var client_state := ""
+			if action_observed <= action_before:
+				# Read-only client view for a failed press: what held the input.
+				client_state = "; client=%s" % str({"awaiting_host": manager.get("_move_awaiting_host"),
+					"burst_awaiting_host": manager.get("_burst_awaiting_host"), "action": manager.get("_action"),
+					"encounter_id": manager.get("_encounter_id"), "fighting": manager.call("is_fighting"),
+					"input_available": manager.call("combat_input_available"),
+					"local_record": hub.get("_local_record") if hub != null else null})
 			return {"verdict": "PASS" if action_observed > action_before else "FAIL",
-				"detail": "real hosted combat_quick input; observed action %d -> %d; retained refusal (may predate input)=%s"
-					% [action_before, action_observed, str(manager.get("last_encounter_refusal"))]}
+				"detail": "real hosted combat_quick input; observed action %d -> %d; retained refusal (may predate input)=%s%s"
+					% [action_before, action_observed, str(manager.get("last_encounter_refusal")), client_state]}
 		await physics_frame
 	return {"verdict": "FAIL", "detail": "combat_quick never became ready; did not bypass cooldown"}
 
