@@ -31,7 +31,8 @@ func build(materials: Dictionary) -> void:
 		_add_box("BellPierCap%02d" % (index + 1), Vector3(x, 6.7, 0.0), Vector3(4.0, 0.55, 5.0), stone_light, "bell_pier_cap")
 		_add_box("BellUpright%02d" % (index + 1), Vector3(x, 8.3, 0.0), Vector3(0.65, 3.0, 0.8), wood, "bell_frame")
 		_add_cylinder_between("BellKneeBrace%02d" % (index + 1), Vector3(x, 8.8, 0.0), Vector3(x - side * 3.2, 10.1, 0.0), 0.22, wood, "bell_frame")
-		_add_beacon("BridgeSignal%02d" % (index + 1), Vector3(x, 10.45, 0.0), Color(str(cfg.get("signal_colour", "#76e4dc"))))
+		_add_beacon("BridgeSignal%02d" % (index + 1), Vector3(x, 10.45, 0.0), Color(str(cfg.get("signal_colour", "#76e4dc"))),
+			float(cfg.get("signal_emission", 2.4)))
 		_add_banner("BridgePennant%02d" % (index + 1), Vector3(x + side * 2.15, 7.8, 0.16), side, cfg)
 	_add_box("ThreeBellCrownBeam", Vector3(0.0, 10.0, 0.0), Vector3(22.0, 1.15, 1.35), wood, "bell_frame")
 	for strap_x: float in [-9.6, -5.4, 0.0, 5.4, 9.6]:
@@ -115,12 +116,12 @@ func _add_banner(label: String, at: Vector3, side: float, cfg: Dictionary) -> vo
 	add_child(flag)
 
 
-func _add_beacon(label: String, at: Vector3, colour: Color) -> void:
+func _add_beacon(label: String, at: Vector3, colour: Color, energy: float = 2.4) -> void:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
 	material.emission_enabled = true
 	material.emission = colour
-	material.emission_energy_multiplier = 2.4
+	material.emission_energy_multiplier = energy
 	var orb := MeshInstance3D.new()
 	orb.name = label
 	var mesh := SphereMesh.new()
