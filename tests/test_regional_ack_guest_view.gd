@@ -147,7 +147,9 @@ func test_guest_resends_on_a_fresh_view_while_the_caller_still_waits() -> void:
 	session.reply({"registry_revision": 6})
 	assert_eq(session.sent.size(), 2)
 	assert_eq(session.sent[1].revision, 6, "the resend uses the fresh view")
-	game._regional_ack_queued_at[tid] = Time.get_ticks_msec() - 60000
+	# Past the guest window the game reads (ack_timeout_ms), not a fixed age.
+	game._regional_ack_queued_at[tid] = Time.get_ticks_msec() \
+		- preload("res://scripts/story/regional_homecoming.gd").ack_timeout_ms(game) - 1000
 	game._regional_ack_sent_at[tid] = Time.get_ticks_msec() - game.REGIONAL_ACK_RESEND_MS - 1
 	game._regional_ack_viewed_at.clear()
 	game.regional_ending_ack_result(tid)
