@@ -266,6 +266,7 @@ var _buffer_left: float = 0.0
 
 var _resolve_timer: float = 0.0
 var _outcome: String = ""
+var _completing_catch := false
 
 ## Seconds after the fight opens during which player input is ignored.
 ##
@@ -802,6 +803,7 @@ func begin(
 ) -> bool:
 	if is_fighting():
 		return false
+	if _completing_catch: return false
 	if player == null or wild == null or ally_body == null or party.is_empty():
 		push_error("cannot begin combat without a player, a wild creature, a deployed body and a party")
 		return false
@@ -3403,7 +3405,8 @@ func _shared_hit_feedback() -> Script:
 
 
 func _confirm_host_contact(action_id: String) -> void:
-	if not action_id.is_empty() and _shared_hit_feedback() != null:
+	# Presentation only: a host settling outside the scene tree has no effects.
+	if not action_id.is_empty() and is_inside_tree() and _shared_hit_feedback() != null:
 		PROJECTILE.confirm_impact(get_tree(), action_id)
 
 
@@ -5361,9 +5364,25 @@ func _begin_resolve(outcome: String) -> void:
 
 
 func _finish() -> void:
+	if _completing_catch: return
 	if _outcome == "won" and _durable_trainer_reward_owned():
 		if not is_instance_valid(_encounter_link) or not _encounter_link.has_method("ordinary_combat_round_release_ready") \
 			or _encounter_link.call("ordinary_combat_round_release_ready", _encounter_id) != true: return
+	if _outcome == OUTCOME_CAUGHT and is_instance_valid(_encounter_link) \
+		and _encounter_link.has_method("complete_local_catch_before_exploration"):
+		# The fight is terminal. Let the existing capture context read its normal
+		# inactive state synchronously, without releasing input or emitting exit.
+		# A refused owner/world BOOL restores resolving for the same next retry.
+		var prior_state := state
+		var original_id := _encounter_id
+		var original_creature := _enemy
+		_completing_catch = true
+		state = State.INACTIVE
+		var complete: bool = _encounter_link.call("complete_local_catch_before_exploration", original_id, original_creature) == true
+		_completing_catch = false
+		if not complete or _encounter_id != original_id or _enemy != original_creature:
+			state = prior_state
+			return
 	_clear_move_input()
 	if is_inside_tree(): PROJECTILE.cancel_encounter(get_tree(), _encounter_id)
 	_end_hitstop()
