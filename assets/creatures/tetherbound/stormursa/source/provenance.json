@@ -1,7 +1,7 @@
 {
   "subject": "stormursa",
   "working_name": "Stormursa",
-  "authorization": "Issue 572 MESH REQUEST F29#3; CODEX_START_HERE RD-26/RD-28",
+  "authorization": "Issue 572 MESH REQUEST F29#3 and priority row 24 of F36#0; RD-26/RD-28",
   "status": "native_candidate_off_pose_and_full_art_gates_open",
   "generation_provider": "Meshy API",
   "meshy_task_id": "01a1256e-ac9f-77cf-bc43-5628bc37b068",
@@ -72,7 +72,7 @@
   "native_capture_scope": "Production Stormwood scene, trainer and CameraRig; identical stand positions and camera for current Staticub and audit-only Stormursa. Direct pose fixture, not an earned fight, traversal or progression claim. Low Compatibility at 1920x1080.",
   "open_findings": [
     "Extreme stride skin deformation and the faint endpoint remain below the F36 pose bar; rig and animation gates remain false.",
-    "Medium/High full Bars A/B and an independent code-blind art judgment have not passed."
+    "Matched Low/Medium F36 confirmation exists; full Bars A/B, High and an independent code-blind art judgment have not passed."
   ],
   "judge_medium": null,
   "judge_high": null,
@@ -83,5 +83,40 @@
     "api": "https://www.meshy.ai/api",
     "rights_basis": "Existing paid API output terms; original drafted reference and owner project inputs. Output may be redistributed as this project asset under those account terms; no new third-party source or license introduced.",
     "rights_scope": "This records the generation/account basis and source attribution; it does not grant rights beyond Meshy terms."
+  },
+  "f36_confirmation": {
+    "criterion": "F36#0",
+    "new_meshy_submissions": 0,
+    "preparation": "Reuse the existing disabled F29 Stormursa asset and original reference; no mesh, rig, skin, texture, animation or runtime recipe changes.",
+    "native_presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "resolution": [
+      1920,
+      1080
+    ],
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "staticub_height_m": 3.25,
+    "stormursa_height_m": 4.10000038146973,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "before_after": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ],
+    "scope": "Current-main production Stormwood scene and CameraRig, identical adult stand framing and seed, five paired pose samples per preset; 25 Low whole-body diagnostics. External audit fixture injects only the OFF authorized evolution candidate.",
+    "gates": {
+      "rig": "FAIL",
+      "animation": "FAIL",
+      "terminal_contact": "FAIL",
+      "independent_judge": "OPEN",
+      "full_art_bar_pass": false
+    },
+    "limitations": [
+      "Earlier extreme stride skin deformation and faint endpoint failures remain; these stills do not cure them.",
+      "Ten retained clips omit rest; no full-motion, earned fight, progression, traversal, contact, colour-variant or High approval.",
+      "Raw captures and manifests remain outside Git. No further generation or third repetition of the failed rig workflow."
+    ]
   }
 }
