@@ -117,7 +117,14 @@ func _proof() -> void:
 	await _chest(0, "host chest")
 	await _chest(1, "guest chest")
 	var host_paid := await _view(0, "")
+	# The guest's chest settles behind its queued owner checkpoints (one per
+	# accepted duel strike's mastery duty); wait for it as for the win.
 	var guest_paid := await _view(1, "")
+	for poll in 240:
+		if int(guest_paid.get("has_feast", 0)) >= 1: break
+		if poll % 30 == 29: print("F28 guest chest still settling after %d polls" % (poll + 1))
+		await step(1, "wait", {"frames": 60})
+		guest_paid = await _view(1, "")
 	for pair: Array in [[host_before, host_paid, "host"], [guest_before, guest_paid, "guest"]]:
 		check(int(pair[1].has_feast) == 1, "#4 the %s learned %s's feast exactly once (%s)" % [pair[2], MASTER, str(pair[1].feast_recipes)])
 		check(int(pair[1].candy) > int(pair[0].candy), "#2 the %s's chest paid its Tether Candy (%d -> %d)" % [pair[2], int(pair[0].candy), int(pair[1].candy)])
