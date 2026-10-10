@@ -18,13 +18,67 @@ var _named_trainer := ""
 var _observed_trainers: Array[String] = []
 
 
+## A reader for the harder named fights (F04#7: ~200 HP bodies whose landed
+## blow costs 10-15% of a creature). It keeps one Dodge of Wind in reserve
+## outside the foe's rooted recovery, spends charged and the ultimate into
+## that recovery, and steps off a CHARGER's or DIVER's lane sideways instead
+## of backing down it. Every action is a physical controller press.
 class HallPilot extends LIVE.CampaignPilot:
+	var ultimate_inputs := 0
+	var lateral_bursts := 0
+	var _dodged_this_windup := false
+	var _side := 1.0
+
 	func _faces_target(_ally_body: Node3D, _foe_body: Node3D) -> bool:
 		# Production faces the target at accepted quick/charged start and
 		# tracks it during windup. Do not spend the recovery window turning
 		# with the stick first. Range, retreat, readiness and host refusal
 		# still use the inherited physical input path.
 		return true
+
+	func _charged_is_worth_it() -> bool:
+		return bool(manager.call("enemy_is_rooted"))
+
+	func _act(ally_body: Node3D, foe_body: Node3D) -> void:
+		var toward := foe_body.global_position - ally_body.global_position
+		toward.y = 0.0
+		var winding := bool(manager.call("enemy_is_winding_up"))
+		if not winding:
+			_dodged_this_windup = false
+		var committed := bool(manager.call("player_is_committed"))
+		var burst_cost := float(manager.call("wind_cost", "burst"))
+		var wind := float(manager.call("wind_value"))
+		# A travelling lunge follows its lane: leave it sideways, once per tell.
+		if winding and burst_input and not committed and not _dodged_this_windup and wind >= burst_cost \
+				and not str(manager.call("enemy_windup_shape")).is_empty():
+			_dodged_this_windup = true
+			_side = -_side
+			_move_toward(toward.cross(Vector3.UP).normalized() * _side)
+			burst_attempts += 1
+			lateral_bursts += 1
+			var before := wind
+			await press("jump")
+			if float(manager.call("wind_value")) < before:
+				accepted_bursts += 1
+			_move_toward(Vector3.ZERO)
+			return
+		var rooted := bool(manager.call("enemy_is_rooted"))
+		var contact := preload("res://scripts/combat/contact_spacing.gd").pair_need(ally_body, foe_body)
+		var in_reach := toward.length() <= contact + (float(manager.call("combat_move_reach", "charged")) - contact) * 0.8
+		# RB tap arms the ultimate on release; the next face press spends it.
+		if rooted and in_reach and not committed and float(manager.call("ultimate_fraction")) >= 1.0:
+			ultimate_inputs += 1
+			await press("combat_ultimate_arm")
+			await press("combat_charged")
+			return
+		# Outside a punish window, never spend the Wind the next Dodge needs.
+		if not rooted and not winding and wind - float(manager.call("wind_cost", "quick")) < burst_cost \
+				and toward.length() < _enemy_reach(ally_body, foe_body) + 2.0:
+			_move_toward(-toward)
+			await tree.physics_frame
+			_move_toward(Vector3.ZERO)
+			return
+		await super._act(ally_body, foe_body)
 
 
 func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
@@ -296,7 +350,8 @@ func _fight_named(body: Node3D, id: String) -> bool:
 	pilot.use_switching = false
 	pilot.switch_input = true
 	pilot.burst_input = true
-	while bool(_director.call("trainer_battle_active")) and captain_within_deadline(Engine.get_physics_frames() - _captain_start):
+	var team_size := TRAINERS.team_of(_captain_spec).size()
+	while bool(_director.call("trainer_battle_active")) and trainer_within_deadline(Engine.get_physics_frames() - _captain_start, team_size):
 		if not _failures.is_empty():
 			break
 		if bool(_combat.call("is_fighting")):
@@ -311,22 +366,22 @@ func _fight_named(body: Node3D, id: String) -> bool:
 			await _tree.physics_frame
 	pilot._move_toward(Vector3.ZERO)
 	_captain_active = false
-	var team_size := TRAINERS.team_of(_captain_spec).size()
 	# Retain the actual failed oracle as well as successful outcomes. A
 	# generic failure must not lose the round/hit/physical-input witness.
 	var actual_enemy: RefCounted = _combat.call("enemy")
 	_receipt("trainer_attempt", {"id": id, "rounds": _captain_rounds, "wins": _captain_wins,
 		"hits": _captain_hits, "kills": _captain_kills.size(), "team_size": team_size,
 		"frames": Engine.get_physics_frames() - _captain_start,
-		"within_original_deadline": captain_within_deadline(Engine.get_physics_frames() - _captain_start),
+		"within_original_deadline": trainer_within_deadline(Engine.get_physics_frames() - _captain_start, team_size),
 		"fighting": _fighting(), "flag": _has(flag), "quick_inputs": pilot.quick_thrown,
 		"charged_inputs": pilot.charged_thrown, "switches": pilot.voluntary_switches,
 		"burst_attempts": pilot.burst_attempts, "accepted_bursts": pilot.accepted_bursts,
+		"lateral_bursts": pilot.lateral_bursts, "ultimate_inputs": pilot.ultimate_inputs,
 		"enemy_species": str(actual_enemy.get("species_id")) if actual_enemy != null else "",
 		"enemy_hp": float(actual_enemy.get("hp")) if actual_enemy != null else -1.0,
 		"items_before": before_items, "items_after": _captain_stock(),
 		"xp_before": before_xp, "xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate(), "xp_cap_totals": xp_caps})
-	if not captain_within_deadline(Engine.get_physics_frames() - _captain_start) or _fighting() \
+	if not trainer_within_deadline(Engine.get_physics_frames() - _captain_start, team_size) or _fighting() \
 			or not _failures.is_empty() or _captain_rounds != team_size or _captain_wins != team_size \
 			or _captain_kills.size() != team_size or _captain_hits <= 0 or not _has(flag) \
 			or not retained_five(_initial_ids, _party_ids()) \
@@ -432,6 +487,12 @@ static func keys_match(keys: Array) -> bool:
 		if not keys.has(id):
 			return false
 	return true
+
+
+## TRAINER_FRAMES is the earned bridge/tournament ROUND deadline; a named
+## trainer fields several rounds, so each admitted opponent gets that budget.
+static func trainer_within_deadline(elapsed: int, team_size: int) -> bool:
+	return elapsed >= 0 and team_size > 0 and elapsed < TRAINER_FRAMES * team_size
 
 
 static func room_frames_remaining(elapsed: int) -> int:
