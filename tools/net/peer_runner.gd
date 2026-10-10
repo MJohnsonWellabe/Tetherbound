@@ -6305,6 +6305,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
 	var args: Dictionary = msg.get("args", {}) as Dictionary
 	match what:
+		"owner_pose_prefix":
+			return preload("res://tests/helpers/net_owner_pose_prefix.gd").observe(self, str(args.get("character", "")))
 		"f48_owner_passive_diagnostic":
 			return _f48_owner_passive_diagnostic()
 		"water_mounted":
