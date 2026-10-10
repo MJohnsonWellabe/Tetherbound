@@ -1,9 +1,9 @@
 {
  "_comment": "Baseline delivery plan (owner request 2026-10-04). A sprint is one 8-hour session; sprints run back to back from `start`. Each bar's `start`/`end` are positions on a sprint axis: 0 is the start of sprint 1, 1 the end of sprint 1, 2.5 the middle of sprint 3. `features` lists the F rows whose criteria measure the bar (the redesign row plus F01-F15 rows folded into it). The baseline is frozen; progress is read live from criteria.json. Re-baseline only on an owner decision and record it in `rebaselines`.",
- "baseline_set": "2026-10-04T23:30:00Z",
+ "baseline_set": "2026-10-10T10:45:00Z",
  "start": "2026-10-04T23:00:00Z",
  "sprint_hours": 8,
- "sprints": 13,
+ "sprints": 53,
  "rebaselines": [
   "2026-10-04 6:50 PM CDT, before any tracking: baseline measurement corrected. F29#3, F36#0, F36#3 and F47#0 (agent half) were labelled blocked but are agent work. The F49 bars now also measure the 13 chapter cards and the 4 release-wide requirements. Bar dates unchanged.",
   "2026-10-04 7:50 PM CDT (owner): added lane P, a temporary performance lane for sprints 1–4. Codex's desktop timings showed Meadows 11, Tidewake 7 and Stormwood 17 fps average at Medium 1080p. No other bar moved.",
@@ -12,274 +12,247 @@
   "2026-10-06 7:20 AM CDT (owner: 'redo the delivery board based on actual progress'). Measured pace 10-04 6:30 PM → 10-06 7 AM CT: 26 criteria met in ~37 h across 6–9 lanes, about one criterion per lane per 8-hour sprint, Claude and Codex alike. Lanes now match reality: Claude Lane A and F18 finish their bars and archive (owner 10-05: no new Claude lanes); six Codex lanes (root, R1–R5) take their current work, then pull the rest in ROADMAP order. Features over 6 open criteria are split across lanes. Each bar is sized at 1 sprint per open criterion. F49 follows the last feature. Planned finish moves from Sat 10 Oct 10 AM CT (S17) to Thu 15 Oct 12 PM CT (S33). Old bars stay as dashed ghosts.",
   "2026-10-06 7:15 AM CDT (owner): F03#0/#1 move from Claude Lane A to Codex R3; Lane A keeps F01#6b and F17#6 then archives.",
   "2026-10-06 12:35 PM CDT: Claude Lane A archived (owner: no more Claude lanes); its F17#6 scene items and hero art move to Codex root (M1). No other dates change.",
-  "2026-10-07 9:15 AM CDT (owner): Codex restarted as five sprint lanes A–E from consolidated main b3ad69a; target about 24 hours (lane work ends Thu 08 Oct about 7 AM CDT, owner items after). A criterion counts once evidenced on its lane branch (READY on #572); Claude consolidates to main every 2 hours. Previous plan (finish Thu 15 Oct) kept as history."
+  "2026-10-07 9:15 AM CDT (owner): Codex restarted as five sprint lanes A–E from consolidated main b3ad69a; target about 24 hours (lane work ends Thu 08 Oct about 7 AM CDT, owner items after). A criterion counts once evidenced on its lane branch (READY on #572); Claude consolidates to main every 2 hours. Previous plan (finish Thu 15 Oct) kept as history.",
+  "2026-10-10 5:45 AM CDT (owner: 'update the delivery plan'): rebaselined to five Claude lanes A–E plus the Codex service from sprint 16.5. Codex lanes retired 10-09. Bars sized from open criteria at ~0.6 criteria per lane per 8-hour sprint (~9/day, mid of the 6–10/day target; overnight 10-09→10-10 actual was 1 criterion, lost ~5 h to the #604 actor_vitals regression and its #613 revert). Load-balanced (B's F37/F46 → D; C's F27/F28 → A, F31/F33 → E). Projected lane finish Wed 21 Oct 10 PM CDT, owner items after."
  ],
  "lanes": [
   {
    "id": "A",
-   "name": "Lane A · Codex (combat, moves, commands, ultimates)",
-   "session": "tb/codex-a",
+   "name": "Lane A · Claude (combat, commands, ultimates)",
+   "session": "tb/lane-a",
    "bars": [
     {
-     "label": "F25 move effects library (flag on)",
-     "features": [
-      "F25"
-     ],
-     "start": 7.652,
-     "end": 8.107,
-     "baseline_pct": 16.7
-    },
-    {
-     "label": "F23 loadout + ultimate meter",
-     "features": [
-      "F23"
-     ],
-     "start": 8.107,
-     "end": 8.379,
-     "baseline_pct": 50.0
-    },
-    {
-     "label": "F35 ultimates",
-     "features": [
-      "F35"
-     ],
-     "start": 8.379,
-     "end": 8.834,
-     "baseline_pct": 0.0
-    },
-    {
-     "label": "F24 Tether Commands (flags on)",
+     "label": "actor_vitals re-land + F24 Tether Commands — 1 open",
      "features": [
       "F24"
      ],
-     "start": 8.834,
-     "end": 9.198,
-     "baseline_pct": 33.3
+     "start": 16.469,
+     "end": 18.139,
+     "baseline_pct": 83.3
     },
     {
-     "label": "F42#2 combat HUD + F21 camera/impact",
+     "label": "F23 loadout + F35 ultimates — 5 open",
      "features": [
-      "F21"
+      "F23",
+      "F35"
      ],
-     "start": 9.198,
-     "end": 9.561,
-     "baseline_pct": 66.7
+     "start": 18.139,
+     "end": 26.489,
+     "baseline_pct": 54.5
     },
     {
-     "label": "F22 + named fights (folds F04, F14#0/#1, F10#2) + F33#2",
+     "label": "F21 camera/impact + F22 named fights + F04 — 9 open",
      "features": [
+      "F21",
       "F22",
       "F04"
      ],
-     "start": 9.561,
-     "end": 10.652,
-     "baseline_pct": 42.9
+     "start": 26.489,
+     "end": 41.519,
+     "baseline_pct": 55.0
+    },
+    {
+     "label": "F25 move effects — 2 open",
+     "features": [
+      "F25"
+     ],
+     "start": 41.519,
+     "end": 44.859,
+     "baseline_pct": 66.7
+    },
+    {
+     "label": "F27/F28 Masters, feasts (from C) — 4 open",
+     "features": [
+      "F27",
+      "F28"
+     ],
+     "start": 44.859,
+     "end": 51.539,
+     "baseline_pct": 66.7
     }
    ]
   },
   {
    "id": "B",
-   "name": "Lane B · Codex (earned route, story, ending, swim)",
-   "session": "tb/codex-b",
+   "name": "Lane B · Claude (earned route, story, ending)",
+   "session": "tb/lane-b",
    "bars": [
     {
-     "label": "F19 order, offers, earned saves",
+     "label": "F02 Meadows route (Hall, reload, spacing) — 4 open",
      "features": [
-      "F19"
+      "F02"
      ],
-     "start": 7.652,
-     "end": 7.909,
+     "start": 16.469,
+     "end": 23.149,
      "baseline_pct": 50.0
     },
     {
-     "label": "F20 ending",
+     "label": "F19 earned saves + F06/F09/F13 route rows — 10 open",
      "features": [
-      "F20"
-     ],
-     "start": 7.909,
-     "end": 8.252,
-     "baseline_pct": 20.0
-    },
-    {
-     "label": "F49#0 continuous run (folds F02, F03, F06, F09, F11, F13#0, F15)",
-     "features": [
-      "F02",
-      "F03",
+      "F19",
       "F06",
       "F09",
+      "F13"
+     ],
+     "start": 23.149,
+     "end": 39.849,
+     "baseline_pct": 56.5
+    },
+    {
+     "label": "F03/F11/F15/F20 chapter closes — 7 open",
+     "features": [
+      "F03",
       "F11",
-      "F15"
+      "F15",
+      "F20"
      ],
-     "start": 8.252,
-     "end": 10.052,
-     "baseline_pct": 42.4
-    },
-    {
-     "label": "F37 Ripplet swim + dive",
-     "features": [
-      "F37"
-     ],
-     "start": 10.052,
-     "end": 10.395,
-     "baseline_pct": 20.0
-    },
-    {
-     "label": "F46 onboarding + F01#3 night walk",
-     "features": [
-      "F46",
-      "F01"
-     ],
-     "start": 10.395,
-     "end": 10.652,
-     "baseline_pct": 60.0
+     "start": 39.849,
+     "end": 51.539,
+     "baseline_pct": 63.2
     }
    ]
   },
   {
    "id": "C",
-   "name": "Lane C · Codex (power, homestead, economy, co-op)",
-   "session": "tb/codex-c",
+   "name": "Lane C · Claude (economy, Masters, co-op)",
+   "session": "tb/lane-c",
    "bars": [
     {
-     "label": "F27 + F28 Masters, feasts",
+     "label": "F43 bounties + F44 alphas/rematches — 7 open",
      "features": [
-      "F27",
-      "F28"
-     ],
-     "start": 7.652,
-     "end": 8.229,
-     "baseline_pct": 58.3
-    },
-    {
-     "label": "F30, F31, F32, F33 gear",
-     "features": [
-      "F30",
-      "F31",
-      "F32",
-      "F33"
-     ],
-     "start": 8.229,
-     "end": 8.921,
-     "baseline_pct": 69.6
-    },
-    {
-     "label": "F43 bounties",
-     "features": [
-      "F43"
-     ],
-     "start": 8.921,
-     "end": 9.383,
-     "baseline_pct": 0.0
-    },
-    {
-     "label": "F44 rematches + alphas",
-     "features": [
+      "F43",
       "F44"
      ],
-     "start": 9.383,
-     "end": 9.729,
-     "baseline_pct": 25.0
+     "start": 16.469,
+     "end": 28.159,
+     "baseline_pct": 12.5
     },
     {
-     "label": "F47 economy + exploits",
-     "features": [
-      "F47"
-     ],
-     "start": 9.729,
-     "end": 10.191,
-     "baseline_pct": 0.0
-    },
-    {
-     "label": "F48 co-op loop",
+     "label": "F48 co-op loop — 4 open",
      "features": [
       "F48"
      ],
-     "start": 10.191,
-     "end": 10.652,
+     "start": 28.159,
+     "end": 34.839,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F47 economy + exploits — 5 open",
+     "features": [
+      "F47"
+     ],
+     "start": 34.839,
+     "end": 43.189,
      "baseline_pct": 0.0
     }
    ]
   },
   {
    "id": "D",
-   "name": "Lane D · Codex (visual bar: Meadows, village, Tidewake, renderer)",
-   "session": "tb/codex-d",
+   "name": "Lane D · Claude (Meadows/Tidewake visuals, performance)",
+   "session": "tb/lane-d",
    "bars": [
     {
-     "label": "F26 renderer presets + census",
+     "label": "F39 Tidewake catalog (+F14) — 7 open",
      "features": [
-      "F26"
+      "F39",
+      "F14"
      ],
-     "start": 7.652,
-     "end": 8.252,
-     "baseline_pct": 33.3
+     "start": 16.469,
+     "end": 28.159,
+     "baseline_pct": 41.7
     },
     {
-     "label": "F38 Meadows + F17#6 village/Hall",
+     "label": "F38 Meadows catalog + F17#6 — 6 open",
      "features": [
       "F38",
       "F17"
      ],
-     "start": 8.252,
-     "end": 9.302,
-     "baseline_pct": 46.2
+     "start": 28.159,
+     "end": 38.179,
+     "baseline_pct": 53.8
     },
     {
-     "label": "F39 Tidewake (+ F13#5, F14#2)",
+     "label": "F26 performance + presets — 1 open",
      "features": [
-      "F39",
-      "F13",
-      "F14"
+      "F26"
      ],
-     "start": 9.302,
-     "end": 10.502,
-     "baseline_pct": 38.9
+     "start": 38.179,
+     "end": 39.849,
+     "baseline_pct": 66.7
     },
     {
-     "label": "F42#0 catalog UI",
+     "label": "F42 HUD/UI — 1 open",
      "features": [
       "F42"
      ],
-     "start": 10.502,
-     "end": 10.652,
-     "baseline_pct": 50.0
+     "start": 39.849,
+     "end": 41.519,
+     "baseline_pct": 75.0
+    },
+    {
+     "label": "F37 swim/dive + F46 onboarding (from B) — 3 open",
+     "features": [
+      "F37",
+      "F46"
+     ],
+     "start": 41.519,
+     "end": 46.529,
+     "baseline_pct": 62.5
     }
    ]
   },
   {
    "id": "E",
-   "name": "Lane E · Codex (visual bar: Cloudreach, Stormwood, art, audio)",
-   "session": "tb/codex-e",
+   "name": "Lane E · Claude (Cloudreach/Stormwood visuals)",
+   "session": "tb/lane-e",
    "bars": [
     {
-     "label": "F40 Cloudreach + F08 camera/settlements",
-     "features": [
-      "F40",
-      "F08"
-     ],
-     "start": 7.652,
-     "end": 8.743,
-     "baseline_pct": 18.2
-    },
-    {
-     "label": "F41 Stormwood + F10 lightning/forest/audio",
+     "label": "F41 Stormwood (+F10) — 8 open",
      "features": [
       "F41",
       "F10"
      ],
-     "start": 8.743,
-     "end": 9.97,
-     "baseline_pct": 7.7
+     "start": 16.469,
+     "end": 29.829,
+     "baseline_pct": 38.5
     },
     {
-     "label": "F36 creature art + F29 storm bear",
+     "label": "F40 Cloudreach (+F08) — 7 open",
+     "features": [
+      "F40",
+      "F08"
+     ],
+     "start": 29.829,
+     "end": 41.519,
+     "baseline_pct": 36.4
+    },
+    {
+     "label": "F31/F33 homestead gear (from C) — 4 open",
+     "features": [
+      "F31",
+      "F33"
+     ],
+     "start": 41.519,
+     "end": 48.199,
+     "baseline_pct": 66.7
+    }
+   ]
+  },
+  {
+   "id": "X",
+   "name": "Codex service (native captures, Meshy, GPU perf)",
+   "session": "codex-service",
+   "bars": [
+    {
+     "label": "F36 priority assets + F29 Stormursa (disk-blocked until owner clears) — 3 open",
      "features": [
       "F36",
       "F29"
      ],
-     "start": 9.97,
-     "end": 10.652,
-     "baseline_pct": 55.6
+     "start": 16.469,
+     "end": 21.479,
+     "baseline_pct": 66.7
     }
    ]
   },
@@ -289,12 +262,13 @@
    "session": "owner",
    "bars": [
     {
-     "label": "Owner: ROG Ally test (F26#5, F49#2), play pass (F49#1), F47#0 owner half, F10#5 listen",
+     "label": "Owner: ROG Ally test (F26#5, F49#2), play pass (F49#1, F47#0), F49#0/#3 release",
      "features": [
+      "F49",
       "XPERF"
      ],
-     "start": 10.652,
-     "end": 11.402,
+     "start": 51.539,
+     "end": 52.289,
      "baseline_pct": 0.0
     }
    ]
