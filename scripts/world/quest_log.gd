@@ -176,10 +176,13 @@ func _chapter_departure(game: Object, progression: RefCounted) -> Dictionary:
 	var inventory: RefCounted = player.get("inventory")
 	var personal: Dictionary = player.get("redesign_character")
 	var config: Dictionary = preload("res://scripts/data/redesign_data.gd").json_view("res://data/config/portals.json")
-	for arch: Dictionary in config.get("arches", []):
-		if arch.get("departure_from", "") != _realm_id: continue
+	var arches: Array = config.get("arches", []).duplicate()
+	arches.reverse()
+	for arch: Dictionary in arches:
+		var origin := str(arch.get("departure_from", ""))
+		if origin.is_empty() or (_realm_id != "meadows" and origin != _realm_id): continue
 		var owns_key := inventory != null and inventory.call("count", str(arch.key_item)) > 0
-		if not owns_key and not personal.get("portal_unlocks", []).has(str(arch.biome)): return {}
+		if not owns_key and not personal.get("portal_unlocks", []).has(str(arch.biome)): continue
 		var destination := preload("res://scripts/data/biome_order.gd").display_name(str(arch.biome))
 		var row := {"id": "chapter_departure:" + str(arch.id), "scope": "player",
 			"label": "Continue to %s through the Crossing Hall." % destination,
