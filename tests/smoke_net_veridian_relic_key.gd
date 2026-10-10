@@ -10,9 +10,10 @@ extends "res://tests/helpers/net_harness.gd"
 ## retired world-scoped `realm_key_cloudreach` is no longer asserted. The
 ## world-scoped earned Heart and its personal one-active power remain the
 ## shipped relic-power rule (RD-20 "the existing one-active rule"; moving the
-## selection into the Shrine Room is F31#2, not built), so the shrine/power
-## assertions below are unchanged. Hanging the relic in the Shrine Room is not
-## covered here.
+## selection into the Shrine Room is F31#2). With the shipping portal runtime
+## ON, both participants hang their own earned relic at its actual Hall
+## pedestal, then choose a personal power through physical input. The legacy
+## world socket assertions remain only for the explicitly disabled runtime.
 ##
 ## F05 (ACCEPTANCE §6.1; card M4 "relic/key are durable"), two real peers.
 ##
@@ -23,28 +24,29 @@ extends "res://tests/helpers/net_harness.gd"
 ## `realm_heart_meadows_earned` (the Heart of the Meadows, a WORLD fact
 ## committed once by the host's encounter rewards,
 ## scripts/net/encounter_rewards.gd). This smoke plays the real shared Warden
-## fight -- no flag is set by hand -- then:
+## reward path from an instrumented shared fight; no reward flag is set by hand.
+## With the shipping Shrine runtime ON it then checks:
 ##
 ##   * each peer's OWN satchel holds exactly one Tidewake portal key and its
 ##     OWN character holds the Meadows relic; both WORLD stores hold the
 ##     earned Heart;
-##   * the GUEST sets the Heart into a real shrine (`submit_place()`, the call
-##     the interact prompt makes, which a client submits through the ledger), and
-##     both worlds hold it placed;
-##   * the HOST activates its personal Heart power; the guest does not -- the
-##     power is personal, the relic is the world's;
+##   * each participant hangs its earned relic at the actual Hall pedestal,
+##     receives four next-tier blueprints and chooses its own power with A;
+##   * the host's choice leaves the guest inactive until its own choice;
 ##   * a production save/reload on the host, and the guest leaves and rejoins by
 ##     its character id (the returning route);
-##   * afterwards, on both peers: one key and one held relic each, and the
-##     Heart earned and placed are still the world's;
-##     the host's power is still active and the guest's still is not.
+##   * afterwards, each retains its original key, one hung relic/receipt,
+##     four personal blueprints and chosen power in memory and disk; the
+##     world retains its earned Heart and shared Shrine display.
 ##
 ## Disclosed staging: parties are granted with `party_grant`, both peers are
 ## placed at the Warden arena with `explore_at`, and the win is driven by
-## `win_trainer_battle` without self-HP top-ups (smoke_net_shared_boss.gd's path).
-## The shrine is a real `realm_heart_shrine.gd` stood in each process by
-## `heart_bind`, the way the
-## world stands the authored one.
+## `win_trainer_battle` with enemy HP capped at six and no self-HP top-ups.
+## This proves participant payout and Shrine durability, not earned journey or
+## unmodified Warden combat. Shrine approach reuses the existing disclosed
+## mechanics placement; its interaction and choice use ordinary physical input.
+## Only when the portal runtime is explicitly OFF does the legacy path bind
+## realm_heart_shrine.gd, place through the guest and activate only the host.
 
 const PARTY := ["terrapup", "bramblebun", "trailpup", "mudsnout"]
 const WARDEN_TRAINER := "warden_aldis"
@@ -58,6 +60,7 @@ const POLLS := 60
 var _port := 0
 var _host_id := ""
 var _guest_id := ""
+var _shrine_mode := false
 
 
 func _init_budgets() -> void:
@@ -71,6 +74,13 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	require_peer_logs_without(["SCRIPT ERROR:", "Parse Error:", "Failed to load script"], "both peer logs contain no script errors")
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/multiplayer.json"))
+	_shrine_mode = config.get("session", {}).get("redesign_portal_runtime_enabled") == true
+	if OS.get_cmdline_user_args().has("--f31-shrine") and not _shrine_mode:
+		check(false, "F31 Shrine proof requires the shipping portal runtime ON")
+		quit(await finish())
+		return
 	# The guest's returning-route rejoin rebuilds the Meadows (one blocking
 	# scene build after hello); the allowance the other scene-changing smokes use.
 	heartbeat_silence_tolerance_s = 240.0
@@ -166,28 +176,41 @@ func _run() -> void:
 		check(ok, "peer %d holds its own Tidewake portal key (x%d) and Meadows relic (%s), and its WORLD the earned Heart (%s)"
 			% [peer, keys, str(relics), str(heart)])
 
-	# 5. The GUEST places the Heart (a client press, through the ledger).
-	var bound_all := true
-	for peer in 2:
-		var bound: Dictionary = await step(peer, "heart_bind", {"heart": "meadows"})
-		bound_all = bound_all and str(bound.get("verdict", "")) == "PASS"
-	check(bound_all, "each peer stood a real Meadows shrine")
-	var placed: Dictionary = await step(1, "heart_place", {})
-	check(str(placed.get("verdict", "")) == "PASS", "the guest set the Heart into the shrine (%s)"
-		% str(placed.get("detail", "")))
-	for peer in 2:
-		var seen := false
-		for _poll in POLLS:
-			if bool((await _heart(peer)).get("placed_in_world", false)):
-				seen = true
-				break
-			await step(peer, "wait", {"frames": 10})
-		check(seen, "peer %d's WORLD holds the Heart placed" % peer)
+	# RD-20 replaces the old world socket with a personal Shrine Room hang.
+	# Keep every Warden participant/reward and subsequent save/rejoin check.
+	if _shrine_mode:
+		for peer in 2:
+			var hung: Dictionary = await step(peer, "f31_shrine_hang", {}, 4000)
+			check(hung.get("verdict") == "PASS", "F31 peer %d earned relic hangs once, saves four next-tier recipes and one power: %s" % [peer, hung.get("detail", "")])
+			if hung.get("verdict") != "PASS":
+				quit(await finish())
+				return
+			if peer == 0:
+				var unchosen: Dictionary = await _heart(1)
+				check(str(unchosen.get("active", "?")) == "", "the host choosing a power never chooses one for the guest")
+	else:
+		# 5. The GUEST places the Heart (a client press, through the ledger).
+		var bound_all := true
+		for peer in 2:
+			var bound: Dictionary = await step(peer, "heart_bind", {"heart": "meadows"})
+			bound_all = bound_all and str(bound.get("verdict", "")) == "PASS"
+		check(bound_all, "each peer stood a real Meadows shrine")
+		var placed: Dictionary = await step(1, "heart_place", {})
+		check(str(placed.get("verdict", "")) == "PASS", "the guest set the Heart into the shrine (%s)"
+			% str(placed.get("detail", "")))
+		for peer in 2:
+			var seen := false
+			for _poll in POLLS:
+				if bool((await _heart(peer)).get("placed_in_world", false)):
+					seen = true
+					break
+				await step(peer, "wait", {"frames": 10})
+			check(seen, "peer %d's WORLD holds the Heart placed" % peer)
 
-	# 6. The power is personal: the host wears it, the guest does not.
-	var activated: Dictionary = await step(0, "heart_activate", {"heart": "meadows"})
-	check(str(activated.get("verdict", "")) == "PASS", "the host activated its Heart power (%s)"
-		% str(activated.get("detail", "")))
+		# 6. The power is personal: the host wears it, the guest does not.
+		var activated: Dictionary = await step(0, "heart_activate", {"heart": "meadows"})
+		check(str(activated.get("verdict", "")) == "PASS", "the host activated its Heart power (%s)"
+			% str(activated.get("detail", "")))
 	await _assert_durable("before reload and rejoin")
 
 	# 7. Host: production save/reload. Guest: leave and rejoin by its id.
@@ -215,7 +238,7 @@ func _run() -> void:
 	for _poll in POLLS:
 		var a: Dictionary = await _heart(0)
 		var b: Dictionary = await _heart(1)
-		if bool(a.get("placed_in_world", false)) and bool(b.get("placed_in_world", false)):
+		if _shrine_mode or (bool(a.get("placed_in_world", false)) and bool(b.get("placed_in_world", false))):
 			break
 		for peer in 2:
 			await step(peer, "wait", {"frames": 10})
@@ -229,13 +252,40 @@ func _assert_durable(when: String) -> void:
 		var keys := await _keys(peer)
 		var relics := await _relics_held(peer)
 		check(keys == 1, "%s: peer %d's own satchel holds exactly one Tidewake portal key (%d)" % [when, peer, keys])
-		check(relics.count(RELIC) == 1, "%s: peer %d's own character holds the Meadows relic once (%s)" % [when, peer, str(relics)])
-		check(bool(heart.get("earned_in_world", false)) and bool(heart.get("placed_in_world", false)),
-			"%s: peer %d's WORLD holds the Heart earned and placed (%s)" % [when, peer, str(heart)])
-		var want_active := "meadows" if peer == 0 else ""
-		check(str(heart.get("active", "?")) == want_active,
-			"%s: peer %d's personal Heart power is '%s' (got '%s')"
-				% [when, peer, want_active, str(heart.get("active", "?"))])
+		if _shrine_mode:
+			var state: Dictionary = await step(peer, "foundations_state", {"mode": "inspect"})
+			check(state.get("verdict") == "PASS", "%s: peer %d durable Shrine state is readable" % [when, peer])
+			var payload: Dictionary = state.get("data", {})
+			var personal: Dictionary = payload.get("character", {})
+			var disk_value: Variant = payload.get("character_disk_redesign")
+			check(disk_value is Dictionary, "%s: peer %d original character disk is readable" % [when, peer])
+			if not disk_value is Dictionary:
+				continue
+			var disk: Dictionary = disk_value
+			var character := _host_id if peer == 0 else _guest_id
+			var receipt := "relic_hang:%s:%s" % [RELIC, character]
+			check(payload.get("character_id") == character, "%s: peer %d retains the original stable character" % [when, peer])
+			check(relics.count(RELIC) == 0 and (personal.get("relics_hung", []) as Array).count(RELIC) == 1 \
+				and (disk.get("relics_held", []) as Array).count(RELIC) == 0 and (disk.get("relics_hung", []) as Array).count(RELIC) == 1,
+				"%s: peer %d original relic moved from held to hung exactly once in memory and disk" % [when, peer])
+			check((personal.get("transaction_receipts", []) as Array).count(receipt) == 1 \
+				and (disk.get("transaction_receipts", []) as Array).count(receipt) == 1,
+				"%s: peer %d original hang receipt remains exactly once" % [when, peer])
+			for blueprint: String in ["forge_tidewake", "kitchen_tidewake", "altar_tidewake", "den_tidewake"]:
+				check((personal.get("attachment_recipes", []) as Array).count(blueprint) == 1 \
+					and (disk.get("attachment_recipes", []) as Array).count(blueprint) == 1,
+					"%s: peer %d keeps its own %s blueprint once through reload/rejoin" % [when, peer, blueprint])
+			check(bool(heart.get("earned_in_world", false)) and payload.get("world", {}).get("shrine_display", {}).get(RELIC) == true,
+				"%s: peer %d world retains earned Heart and shared Shrine display" % [when, peer])
+			check(str(heart.get("active", "?")) == "meadows", "%s: peer %d keeps its own actually chosen power" % [when, peer])
+		else:
+			check(relics.count(RELIC) == 1, "%s: peer %d's own character holds the Meadows relic once (%s)" % [when, peer, str(relics)])
+			check(bool(heart.get("earned_in_world", false)) and bool(heart.get("placed_in_world", false)),
+				"%s: peer %d's WORLD holds the Heart earned and placed (%s)" % [when, peer, str(heart)])
+			var want_active := "meadows" if peer == 0 else ""
+			check(str(heart.get("active", "?")) == want_active,
+				"%s: peer %d's personal Heart power is '%s' (got '%s')"
+					% [when, peer, want_active, str(heart.get("active", "?"))])
 
 
 func _heart(peer: int) -> Dictionary:
