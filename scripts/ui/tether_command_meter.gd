@@ -83,11 +83,11 @@ func present(snapshot: Dictionary, using_pad: bool) -> void:
 		if id == "snare" and snapshot.get("wild_target") != true: suffix = " —"
 		var action := COMMANDS.input_action(id)
 		var button_name := GLYPH.pad_button_name_for_action(action) if using_pad else GLYPH.key_name_for_action(action)
-		label.text = "%s\n%s\n%d%s" % [button_name, str(row.label), int(row.cost), suffix]
 		var available := meter >= float(row.cost) and (snapshot.get("unlocked_commands", []) as Array).has(id)
 		if id == "tag_combo": available = available and float(snapshot.get("combo_remaining_s", 0)) > 0
 		if id == "snare": available = available and snapshot.get("wild_target") == true
 		if id == "item_throw": available = available and int(snapshot.get("pouch_count", 0)) > 0
+		label.text = "%s\n%s\n%d%s%s" % [button_name, str(row.label), int(row.cost), suffix, "" if available else " ×"]
 		label.add_theme_color_override("font_color", TOKENS.TEAL_SOFT if available else TOKENS.TEXT_MUTED)
 
 func refused(reason: String) -> void:
