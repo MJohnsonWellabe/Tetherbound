@@ -690,8 +690,8 @@ func retained_guest_master_win(id: String) -> Dictionary:
 		or float(witness.get("verdict", {}).get("delta", {}).get("hp", 1)) > 0 \
 		or creature == null or float(creature.get("hp")) > 0 \
 		or duel.world.get_ref() != _session.call("_game").get("world") or duel.epoch != _session.call("_altar_current_epoch"): return {}
-	# F28: every hit was owner-saved before the win settles (see
-	# _retry_guest_master_win); these are the host's settled vitals.
+	# Freeze host-resolved vitals with the win even if the owner's save ACK
+	# is still in flight. Foundation settles those deliveries before rewards.
 	var member: Dictionary = (_encounter_host.call("record", id) as Dictionary).get("participants", {}).get(duel.peer, {})
 	var settled: Array = WILD_ACTOR_SCOPE.settled_vitals(_session.call("admitted_character_state", duel.peer), member)
 	if settled.is_empty(): return {}
@@ -702,12 +702,11 @@ func retained_guest_master_win(id: String) -> Dictionary:
 func _retry_guest_master_win(id: String) -> void:
 	var duel: Dictionary = _guest_master_duels.get(id, {})
 	if duel.get("won") != true or duel.get("durable") == true: return
-	# As a wild victory settles: the fight is done and every HP receipt of
-	# this guest is owner-ACKed before its win (and award) is journaled.
-	if _encounter_host == null or str(_encounter_host.call("phase", id)) != "done" \
-		or not (_encounter_host.call("pending_actor_vitals", id) as Array).is_empty(): return
-	var waiting: Variant = _session.call("admitted_pending_vitals", int(duel.peer)) if _session.has_method("admitted_pending_vitals") else null
-	if not waiting is Dictionary or not (waiting as Dictionary).is_empty(): return
+	# Journal the earned result before waiting for any owner ACK: a departed
+	# peer must not take the only copy of this win out of the live arena.
+	# The durable Foundation duty still waits on actor-vitals reconciliation
+	# and the owner-passive gate before it can award XP or a chest receipt.
+	if _encounter_host == null or str(_encounter_host.call("phase", id)) != "done": return
 	var result: Dictionary = _session.call("foundation_guest_master_outcome", self, retained_guest_master_win(id))
 	if result.get("durable") == true and result.get("ok") == true:
 		duel.durable = true
