@@ -43,6 +43,14 @@ extends SceneTree
 ##      Crown pair; this smoke asserts that and writes no flag. The tree is
 ##      copied to a fresh user://route_walks_<pid>_<usec> first and the copy is
 ##      loaded, because play autosaves and must not rewrite the checkpoint.
+##   1F. Or `--fixture-entry` (no v28 mid-chapter checkpoint exists yet): the
+##      pocket walks' in-memory completed-Cloudreach party, plus the world's
+##      opened Stormwood portal (RD-17), then the production router enters at
+##      the authored arrival. `stormwood:rootgate_released` is set for every
+##      run (the 4_core save carries it), and `stormwood:arch_recipe_known`
+##      when the road is walked. Unlike 4_core no paid Crown pair stands, so
+##      the road cap counts crown=0 and seam 6 cannot trigger. --from-save wins
+##      when both are passed.
 ##   2. One `Game.debug_teleport_to` per route start (onto the route's first
 ##      authored vertex, facing its second), per arch endpoint before its
 ##      relight (8 m in front of the arch) and per road footing before its
@@ -72,6 +80,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_stormwood_route_walks.gd \
 ##     -- --from-save=user://swcp_a/4_core [--only=<route_id>|loops|c|d|road]
+##   (or `-- --fixture-entry [--only=...]` in place of --from-save)
 
 const GAME := preload("res://autoload/game_state.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
@@ -155,7 +164,7 @@ func _run() -> void:
 		_finish()
 		return
 	var entered := false
-	if _fixture_entry:
+	if _fixture_entry and _from_save.is_empty():
 		entered = await _enter_fixture()
 	else:
 		entered = await _enter_from_save()
@@ -195,12 +204,11 @@ func _wants(id: String) -> bool:
 
 # ------------------------------------------------------------------ seam 1
 
-## `--fixture-entry`: no v28 mid-chapter checkpoint exists yet. Enter as
-## smoke_stormwood_pocket_walks.gd does (disclosed): the in-memory
+## `--fixture-entry` (seam 1F in the header): no v28 mid-chapter checkpoint
+## exists yet. Enter as smoke_stormwood_pocket_walks.gd does: the in-memory
 ## completed-Cloudreach fixture, its opened Stormwood portal, the production
-## router, then `stormwood:rootgate_released` set for the routes behind the
-## Rootgate. Loops and the alternate road only; arch pairs and the road keep
-## their earned-save prerequisites (recipe, paid Crown pair).
+## router, then `stormwood:rootgate_released` for every run, and the arch
+## recipe when the road is walked.
 func _enter_fixture() -> bool:
 	game = root.get_node_or_null(^"Game")
 	if game == null:
@@ -247,12 +255,10 @@ func _enter_fixture() -> bool:
 	game.get("progression").call("set_flag", ROOTGATE_FLAG, true)
 	_seam("SEAM 1 fixture entry: in-memory completed-Cloudreach party, opened Stormwood portal, %s set (no earned checkpoint)" % ROOTGATE_FLAG)
 	if _wants("road"):
-		# The road needs what an earned run gathers before it: the arch recipe
-		# and one pair's materials (stormwood_items_recipes stormglass_arch x2).
+		# The road's Build needs the arch recipe an earned run learns first; its
+		# materials stay seam 3's printed shortfall grant.
 		game.get("progression").call("set_flag", "stormwood:arch_recipe_known", true)
-		for stack: Array in [["stormglass", 12], ["thunderwood", 12], ["conductor_vine", 8]]:
-			game.get("inventory").call("add", str(stack[0]), int(stack[1]))
-		_seam("SEAM 1b fixture road: stormwood:arch_recipe_known set; 12 stormglass, 12 thunderwood, 8 conductor_vine granted (one arch pair)")
+		_seam("SEAM 1b fixture road: stormwood:arch_recipe_known set; no paid Crown pair stands (road cap counts crown=0)")
 	for _frame in 60:
 		await physics_frame
 	return true
