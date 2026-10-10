@@ -34,8 +34,15 @@ func _run() -> void:
 	Engine.time_scale = 8.0
 	Engine.physics_ticks_per_second = 480
 	Engine.max_physics_steps_per_frame = 32
+	# `--script` mounts the real Game autoload. Detach it for the isolated
+	# fixture Game (production code finds it at /root/Game), then restore it.
+	var real_game := root.get_node_or_null("Game")
+	if real_game != null:
+		root.remove_child(real_game)
 	for resting in [true, false]:
 		await _case(resting)
+	if real_game != null:
+		root.add_child(real_game)
 	print("SYNTHETIC ALPHA ADMISSION: 2 cases, failures=", failures)
 	quit(0 if failures.is_empty() else 1)
 

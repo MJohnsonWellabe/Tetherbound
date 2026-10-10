@@ -3405,7 +3405,8 @@ func _shared_hit_feedback() -> Script:
 
 
 func _confirm_host_contact(action_id: String) -> void:
-	if not action_id.is_empty() and _shared_hit_feedback() != null:
+	# Presentation only: a host settling outside the scene tree has no effects.
+	if not action_id.is_empty() and is_inside_tree() and _shared_hit_feedback() != null:
 		PROJECTILE.confirm_impact(get_tree(), action_id)
 
 
