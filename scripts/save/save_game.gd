@@ -295,6 +295,8 @@ const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
 signal fallback_completed(success: bool)
 signal fallback_submitted(job_id: String, request: Dictionary)
 signal fallback_request_completed(job_id: String, request: Dictionary, success: bool, receipt: Dictionary)
+signal prepared_character_submitted(call_id: String, request: Dictionary)
+signal prepared_character_completed(call_id: String, request: Dictionary, success: bool, receipt: Dictionary)
 
 var _dir: String
 var _legacy_dir: String = ""
@@ -303,6 +305,8 @@ var _characters: RefCounted = null
 var _fallback: RefCounted = null
 var _fallback_writer: RefCounted = null
 var _fallback_write_receipt: Dictionary = {}
+var _prepared_character_calls: Array[Dictionary] = []
+var _prepared_character_sequence := 0
 var _last_refusal := ""
 ## Typed outcome for UI and tools; refused loads never apply live state.
 var last_load_result: Dictionary = {}
@@ -620,19 +624,24 @@ func write_snapshot_observed(request: Dictionary) -> bool:
 func fallback_write_receipt() -> Dictionary:
 	return _fallback_write_receipt
 
-func _write_snapshot_transaction(request: Dictionary, observe: bool) -> bool:
-	if observe: _fallback_write_receipt={}
+func _write_snapshot_transaction(request: Dictionary, observe: bool,
+		receipt_source: String = "SaveGame_locked_fallback_write_TRUE_BOOL", prepared_call: Dictionary = {}) -> bool:
+	if observe and prepared_call.is_empty(): _fallback_write_receipt={}
 	if request.is_empty():
 		return false
 	ATOMIC_SAVE_FILE.begin_transaction()
 	var success := _write_snapshot_locked(request)
-	if observe and success: _fallback_write_receipt=_snapshot_receipt_locked(request)
+	if observe and success:
+		var receipt := _snapshot_receipt_locked(request,receipt_source)
+		if prepared_call.is_empty(): _fallback_write_receipt=receipt
+		else: prepared_call.receipt=receipt
 	ATOMIC_SAVE_FILE.end_transaction()
 	return success
 
 ## Still inside the existing writer mutex, before a pending successor can
 ## overwrite these primaries. Raw reads do not join, repair or use store caches.
-func _snapshot_receipt_locked(request: Dictionary) -> Dictionary:
+func _snapshot_receipt_locked(request: Dictionary,
+		receipt_source: String = "SaveGame_locked_fallback_write_TRUE_BOOL") -> Dictionary:
 	var paths: Dictionary = {}
 	if request.character_only:
 		paths.character=_characters.call("path_for",str(request.character_id))
@@ -654,7 +663,7 @@ func _snapshot_receipt_locked(request: Dictionary) -> Dictionary:
 		hasher.update(bytes)
 		files[kind]={"path":str(paths[kind]),"bytes_base64":Marshalls.raw_to_base64(bytes),
 			"sha256":hasher.finish().hex_encode(),"payload":payload}
-	return _immutable_copy({"version":1,"source":"SaveGame_locked_fallback_write_TRUE_BOOL",
+	return _immutable_copy({"version":1,"source":receipt_source,
 		"writer_instance_id":get_instance_id(),"writer_script":get_script().resource_path,
 		"request_sha256":SAVE_DOCUMENT.stringify(request).sha256_text(),"files":files})
 
@@ -1064,7 +1073,38 @@ func save_character(game: Object, character_id: String) -> bool:
 func save_character_prepared(game: Object, character_id: String) -> bool:
 	if fallback_busy():
 		return false
-	return _write_character_snapshot(game, character_id)
+	if prepared_character_submitted.get_connections().is_empty() and prepared_character_completed.get_connections().is_empty():
+		return _write_character_snapshot(game, character_id)
+	# Opt-in observers receive the actual immutable request and bytes captured
+	# under the existing writer mutex. The original write and BOOL are unchanged.
+	if game == null or character_id.is_empty(): return false
+	var request := _prepare_snapshot(game, AUTOSAVE_SLOT, false, character_id)
+	if request.is_empty(): return false
+	_prepared_character_sequence+=1
+	var call_id := "%d-%d" % [get_instance_id(),_prepared_character_sequence]
+	var original := {"id":call_id,"request":request,"writer_instance_id":get_instance_id()}
+	original.make_read_only()
+	var active := {"call":original,"phase":"submitted","success":false,"receipt":{}}
+	_prepared_character_calls.append(active)
+	prepared_character_submitted.emit(call_id,request)
+	var saved := _write_snapshot_transaction(request,true,"SaveGame_locked_prepared_character_write_TRUE_BOOL",active)
+	var receipt: Dictionary = active.receipt
+	active.phase="completed"
+	active.success=saved
+	active.receipt=receipt
+	prepared_character_completed.emit(call_id,request,saved,receipt)
+	_prepared_character_calls.erase(active)
+	return saved
+
+## A read-only view of a live invocation, retaining the exact original request
+## and receipt objects. Signal replay after the actual call returns has no source.
+func prepared_character_call(call_id: String) -> Dictionary:
+	for active: Dictionary in _prepared_character_calls:
+		if active.call.id != call_id: continue
+		var view := {"call":active.call,"phase":active.phase,"success":active.success,"receipt":active.receipt}
+		view.make_read_only()
+		return view
+	return {}
 
 
 func _write_character_snapshot(game: Object, character_id: String) -> bool:
