@@ -113,13 +113,13 @@ function raiseApiError(response, operation) {
 
 function validatedEnvironment(env) {
   const repository = env.GITHUB_REPOSITORY ?? "";
-  const targetSha = env.GITHUB_SHA ?? "";
+  const targetSha = env.RELEASE_SHA ?? env.GITHUB_SHA ?? "";
   const token = env.GITHUB_TOKEN ?? "";
   if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository)) {
     throw new ReleaseRefError("GITHUB_REPOSITORY must be an owner/repository pair");
   }
   if (!/^[0-9a-fA-F]{40}$/.test(targetSha)) {
-    throw new ReleaseRefError("GITHUB_SHA must be a full 40-character commit SHA");
+    throw new ReleaseRefError("RELEASE_SHA (or GITHUB_SHA) must be a full 40-character commit SHA");
   }
   if (!token) {
     throw new ReleaseRefError("GITHUB_TOKEN is required");
