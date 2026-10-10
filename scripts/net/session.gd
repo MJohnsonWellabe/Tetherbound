@@ -435,7 +435,7 @@ func _foundation_send(op: String, key: String, intent: Dictionary, revision: int
 	_foundation_requests[correlation] = envelope.duplicate(true)
 	if is_host(): return _foundation_handle(local_peer_id(), envelope)
 	if not is_active(): return FOUNDATION_ACTIONS.deny("authority_missing")
-	if op in ["regional_ack", "refine_start", "master_duel", "resource", "groom", "rematch_start"]:
+	if op in ["regional_ack", "refine_start", "master_duel", "master_chest", "resource", "groom", "rematch_start"]:
 		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
 		if lifecycle == null or lifecycle.call("publish_now") != true: return FOUNDATION_ACTIONS.deny("ending_context_changed")
 	rpc_id(HOST_PEER_ID, "_rpc_foundation_action", envelope)
