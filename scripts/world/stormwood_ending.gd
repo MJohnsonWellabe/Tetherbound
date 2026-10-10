@@ -795,20 +795,29 @@ func _build_captive() -> void:
 	_legendary.set_physics_process(false)
 	# The captive sits over the 9 m core hole and its coils overhang it, so
 	# from the arena it read as floating past the deck with sky beneath. A
-	# visual-only plinth fills the hole under it (no collider; the hole's
-	# rail and the deck colliders are unchanged).
-	var plinth := MeshInstance3D.new()
+	# stone plinth fills the hole under it. It is solid, so stone that reads
+	# as floor is floor: nothing drops through the core hole (CoreRail exists
+	# to stop exactly that 150 m fall).
+	var plinth := StaticBody3D.new()
 	plinth.name = "CaptivePlinth"
+	var plinth_visual := MeshInstance3D.new()
 	var slab := CylinderMesh.new()
 	slab.top_radius = CAPTIVE_PLINTH_RADIUS_M
 	slab.bottom_radius = CAPTIVE_PLINTH_RADIUS_M * 0.92
 	slab.height = 0.8
 	slab.radial_segments = 48
-	plinth.mesh = slab
+	plinth_visual.mesh = slab
 	var stone := StandardMaterial3D.new()
 	stone.albedo_color = Color("4a4540")
 	stone.roughness = 0.9
-	plinth.material_override = stone
+	plinth_visual.material_override = stone
+	plinth.add_child(plinth_visual)
+	var footing := CylinderShape3D.new()
+	footing.radius = CAPTIVE_PLINTH_RADIUS_M
+	footing.height = slab.height
+	var footing_shape := CollisionShape3D.new()
+	footing_shape.shape = footing
+	plinth.add_child(footing_shape)
 	plinth.position = Vector3(0.0, -0.4, 0.0)
 	add_child(plinth)
 	# Seat its top on the actual core deck when the tree is mounted.
