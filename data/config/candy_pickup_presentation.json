@@ -1,6 +1,16 @@
 {
-  "_comment": "P2-045. Reuse the installed, reviewed Meadows candy tier dressing at the Stormwood and Tidewake cache adapters. Skill candies keep their own look. Item IDs, claims, quantities, spawn coordinates and progression are unchanged.",
+  "_comment": "P2-045. Regional creature candies reuse Meadows tier dressing; skill candies consume the black-wrapper, Roman marking and silhouette ladder from water_crafting.json. Presentation only: no durable flag, claim, quantity or placement changes.",
   "enabled": true,
+  "skill_tiers": {
+    "roughness": 0.58,
+    "mark_width_fraction": 0.10,
+    "mark_spacing_fraction": 0.18,
+    "mark_length_fraction": 0.52,
+    "mark_depth_fraction": 0.02,
+    "fold_width_fraction": 0.30,
+    "fold_reach_fraction": 0.18,
+    "glow_scale": 0.45
+  },
   "regional_tiers": {
     "_comment": "P2-045 round 2: Good and Great get an opaque body with their own albedo, low emission and a smaller shared glow; Great is darker so it holds on Tidewake sand and is lifted off the ground plane. Rare keeps the Meadows dressing that passed.",
     "good_candy": {

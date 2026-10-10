@@ -810,7 +810,17 @@ func _build_materials() -> void:
 	cloud_bank.set_shader_parameter("extinction", float(cloud_cfg.get("bank_extinction", 10.0)))
 	_materials["cloud_billow"] = cloud_bank
 	var island_cfg: Dictionary = _visual_config.get("island_roots", {})
-	if str(island_cfg.get("mist_style", "flat")) == "soft_bank":
+	if str(island_cfg.get("mist_style", "flat")) == "volume_bank":
+		# The realm's existing bounded density shader has no visible proxy
+		# surface and clips against opaque depth. This removes the overlapping
+		# translucent disks rather than changing their silhouette opacity.
+		var mist := ShaderMaterial.new()
+		mist.shader = preload("res://shaders/cloudreach_cloud_volume.gdshader")
+		mist.set_shader_parameter("cloud_lit", Color(str(island_cfg.get("mist_colour", "#e6eef4"))))
+		mist.set_shader_parameter("cloud_base", Color(str(island_cfg.get("mist_base_colour", "#8095a8"))))
+		mist.set_shader_parameter("extinction", float(island_cfg.get("mist_extinction", 6.0)))
+		_materials["island_mist"] = mist
+	elif str(island_cfg.get("mist_style", "flat")) == "soft_bank":
 		# P2-106: an opaque emissive collar read as flat white decagons cut
 		# out of the sky. The soft bank is lit, darker underneath and fades
 		# to nothing at its silhouette, so the puffs read as cloud.
@@ -5685,22 +5695,31 @@ func _emit_mesa_root(tool: SurfaceTool, sides: int, bottom_ring: Array[Vector3],
 
 
 ## The mist that tells a player the island is high, not broken. A collar of
-## soft billows around and just under the base ring, one MultiMesh per island,
-## unshaded so it stays bright against the cliff underside it sits on.
+## soft billows around and just under the base ring, one MultiMesh per island.
+## Volume banks use invisible unit boxes, as the existing density shader
+## integrates the ray through [-1, 1] and supplies its own cloud silhouette.
 func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value: int) -> void:
 	var cfg: Dictionary = _visual_config.get("island_roots", {})
 	var count := maxi(0, int(cfg.get("mist_puffs", 26)))
 	if count == 0:
 		return
-	var sphere := SphereMesh.new()
-	sphere.radius = 1.0
-	sphere.height = 2.0
-	sphere.radial_segments = maxi(6, int(cfg.get("mist_radial_segments", 10)))
-	sphere.rings = maxi(3, int(cfg.get("mist_rings", 5)))
-	sphere.material = _materials["island_mist"]
+	var volume_bank := str(cfg.get("mist_style", "flat")) == "volume_bank"
+	var puff_mesh: PrimitiveMesh
+	if volume_bank:
+		var box := BoxMesh.new()
+		box.size = Vector3.ONE * 2.0
+		puff_mesh = box
+	else:
+		var sphere := SphereMesh.new()
+		sphere.radius = 1.0
+		sphere.height = 2.0
+		sphere.radial_segments = maxi(6, int(cfg.get("mist_radial_segments", 10)))
+		sphere.rings = maxi(3, int(cfg.get("mist_rings", 5)))
+		puff_mesh = sphere
+	puff_mesh.material = _materials["island_mist"]
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
-	multi.mesh = sphere
+	multi.mesh = puff_mesh
 	multi.instance_count = count
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value * 97 + 13
@@ -5709,6 +5728,7 @@ func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value
 	var below := float(cfg.get("mist_below_m", 26.0))
 	var puff_min := float(cfg.get("mist_radius_min_fraction", 0.30))
 	var puff_max := float(cfg.get("mist_radius_max_fraction", 0.62))
+	var height_fraction := float(cfg.get("mist_height_fraction", 0.60)) if volume_bank else 0.36
 	for i in count:
 		var angle := rng.randf() * TAU
 		# A COLLAR, strictly outside the mass footprint and strictly below its
@@ -5722,7 +5742,7 @@ func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value
 		var y := base_y - rng.randf_range(below * 0.12, below)
 		var puff := radius * rng.randf_range(puff_min, puff_max)
 		var basis := Basis.IDENTITY.rotated(Vector3.UP, rng.randf() * TAU)
-		basis = basis.scaled(Vector3(puff, puff * 0.36, puff * rng.randf_range(0.7, 1.05)))
+		basis = basis.scaled(Vector3(puff, puff * height_fraction, puff * rng.randf_range(0.7, 1.05)))
 		multi.set_instance_transform(i, Transform3D(basis,
 			Vector3(cos(angle) * r, y, sin(angle) * r)))
 	var node := MultiMeshInstance3D.new()

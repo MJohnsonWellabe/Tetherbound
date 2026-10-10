@@ -203,21 +203,17 @@ func _full_party_moment_layout() -> void:
 	hud.set_world_presentation_mode("exploration")
 
 
-## Exercise the candidate without changing the on-disk gate used by concurrent
-## captures. These are layout/ownership checks, not a rendered acceptance claim.
+## Exercise the shipping presentation without changing its on-disk gate.
+## These are layout/ownership checks, not a rendered acceptance claim.
 func _enable_victory_candidate() -> void:
-	_check(not hud._victory_hierarchy_candidate, "Committed victory gate starts disabled")
-	_check(hud._quick_items_heading == null and hud._moment_separator == null,
-		"Disabled candidate adds no visual nodes")
+	_check(hud._victory_hierarchy_candidate, "Committed victory presentation starts enabled")
+	_check(hud._quick_items_heading != null and hud._moment_separator != null,
+		"Production HUD builds its quick-item heading and receipt separator")
 	var panel: Control = hud._hotbar_panel
 	var baseline := panel.get_global_rect()
 	var slot_sizes: Array[Vector2] = []
 	for chip: Control in hud._hotbar_chips:
 		slot_sizes.append(chip.custom_minimum_size)
-	hud._victory_hierarchy_candidate = true
-	hud._style_hotbar()
-	hud._moment_banner.free()
-	hud._build_moment_banner()
 	await _frames(8)
 	var heading: Label = hud._quick_items_heading
 	_check(heading.text == "QUICK ITEMS" and heading.mouse_filter == Control.MOUSE_FILTER_IGNORE,

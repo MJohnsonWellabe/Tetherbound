@@ -1,6 +1,6 @@
 {
-  "pose_enabled": false,
-  "_comment": "P2-071 unjudged presentation candidate. Only the installed human art and skeleton are posed; existing local/remote aquatic state is read-only. No wake or P2-072 change. Keep disabled until production stills and motion pass independent review for all four playable bodies.",
+  "pose_enabled": true,
+  "_comment": "P2-071 production human swim pose, default on under the owner's Phase 1 instruction. Poses installed art from existing local/remote aquatic snapshots, restoring art and bones on exit. No physics, wake, save or P2-072 change. Phase 2 stills and motion review remains required for all four playable bodies.",
   "body_pitch_deg": 68.0,
   "chest_above_surface_m": 0.10,
   "neck_lift_deg": -18.0,

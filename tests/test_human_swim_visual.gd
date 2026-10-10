@@ -39,8 +39,8 @@ func _model(player: CharacterBody3D, enabled: bool = true) -> Node3D:
 	return model
 
 
-func test_default_off_leaves_art_bones_and_animation_untouched() -> void:
-	assert_false(bool(MODEL.load_human_swim_visual().get("pose_enabled", true)))
+func test_explicit_off_leaves_art_bones_and_animation_untouched() -> void:
+	assert_true(bool(MODEL.load_human_swim_visual().get("pose_enabled", false)))
 	var player := _local()
 	var model := _model(player, false)
 	var art: Transform3D = model.call("art_transform")
