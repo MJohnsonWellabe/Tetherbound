@@ -1,0 +1,8 @@
+{
+  "scope": "client_presentation",
+  "tools": [
+    {"id": "BenchAnvil", "path": "res://assets/props/quaternius_fantasy/Anvil.gltf", "width_fraction": 0.29, "depth_fraction": 0.72, "at_fraction": [-0.26, 0.0], "rotation_deg": [0, 90, 0]},
+    {"id": "BronzeWoodworkingAxe", "path": "res://assets/props/quaternius_fantasy/Axe_Bronze.gltf", "width_fraction": 0.33, "depth_fraction": 0.58, "at_fraction": [0.13, 0.06], "rotation_deg": [90, -15, 0]},
+    {"id": "RepairMaterials", "path": "res://assets/props/quaternius_fantasy/Bag.gltf", "width_fraction": 0.13, "depth_fraction": 0.42, "at_fraction": [0.35, -0.2], "rotation_deg": [0, 12, 0]}
+  ]
+}
