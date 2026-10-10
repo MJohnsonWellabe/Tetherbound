@@ -1,0 +1,15 @@
+{
+  "scope": "client_presentation",
+  "angular_segments": 768,
+  "sectors": 24,
+  "wall_step_m": 2.0,
+  "floor_step_m": 18.0,
+  "surface_lift_m": 0.09,
+  "glass_colour": "#243c40",
+  "facet_colour": "#466266",
+  "seam_colour": "#739080",
+  "fracture_scale": 0.085,
+  "seam_width": 0.022,
+  "roughness": 0.31,
+  "metallic": 0.18
+}

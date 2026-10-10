@@ -12,6 +12,7 @@ const DROPS := preload("res://scripts/world/dropped_item_spawner.gd")
 const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
 const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
 const STRUCK_SENTINEL := preload("res://scripts/world/stormwood_struck_sentinel.gd")
+const GLASS_SINK := preload("res://scripts/world/stormwood_glass_sink.gd")
 const POCKETS := preload("res://scripts/world/stormwood_pockets.gd")
 const ROAD_CURRENT := preload("res://scripts/world/stormwood_road_current.gd")
 const ROD_LINE := preload("res://scripts/world/stormwood_rod_line.gd")
@@ -382,6 +383,11 @@ func _build_landmark_masses() -> void:
 	sentinel.position = Vector3(sentinel_x, ground_height_at(sentinel_x, sentinel_z), sentinel_z)
 	add_child(sentinel)
 	sentinel.call("build")
+	if not simulation_only:
+		var sink := GLASS_SINK.new()
+		sink.name = "GlassSinkSurface"
+		add_child(sink)
+		sink.build(self, _field)
 
 func _model(parent: Node3D,path: String,at: Vector3,scale_factor: float,yaw: float) -> void:
 	if simulation_only:
