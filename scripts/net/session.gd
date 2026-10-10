@@ -3964,8 +3964,12 @@ func _process(delta: float) -> void:
 		if not portal_context.is_empty(): _portal_policy.call("cancel_invalid", portal_context)
 	if _training_bootstrap_waiting:
 		var training_transport := get_node_or_null(^"LedgerRpc")
-		if training_transport != null and training_transport.has_method("reconcile_creature_training_before_ready"):
-			training_transport.call("reconcile_creature_training_before_ready")
+		if training_transport != null and training_transport.has_method("reconcile_creature_training_before_ready") \
+			and training_transport.call("reconcile_creature_training_before_ready") == true:
+			# Already accepted rows send no further decision: the hold that
+			# kept it shut (an owner-settled portal row) is released, so
+			# finish the existing path as _rpc_training_decision does.
+			_finalize_snapshot_receive()
 	_poll_lingering_peer()
 	if _closing_frames > 0:
 		if _closing_frames > 1:
@@ -4290,6 +4294,9 @@ func _teardown(linger_transport: bool = false) -> void:
 			_peer.close()
 	_peer = null
 	_mode = ""
+	# A closed bootstrap ends with its session: a transport-solo process never
+	# reconciles the former host's rows as their host.
+	_training_bootstrap_waiting = false
 	_sync_tether_tonic_scope()
 	_transport_kind = ""
 	_preparing_client = false
@@ -5343,14 +5350,15 @@ func _owner_training_row() -> Dictionary:
 	return _owner_training_row_value.duplicate(true)
 
 
-func _owner_training_mutation_blocked(player: RefCounted, ignore_untouched_groom: bool = false) -> bool:
+func _owner_training_mutation_blocked(player: RefCounted, ignore_untouched_groom: bool = false,
+		owner_settled_portal_ok: bool = false) -> bool:
 	var game := _game()
 	if game == null or player == null or player != game.get("local"): return false
 	if _groom_passive != null and _groom_passive.call("blocked", player) == true \
 		and not (ignore_untouched_groom and _groom_passive.call("local_untouched", player) == true): return true
 	if _owner_passive != null and _owner_passive.call("blocked", player) == true: return true
 	var row := _owner_training_row()
-	if _pending_portal_for(str(player.character_id)): return true
+	if _pending_portal_for(str(player.character_id), owner_settled_portal_ok): return true
 	if is_host() and _character_authority.call("creature_training_is_pending", str(player.character_id)) == true:
 		return true
 	if row.is_empty(): return not _owner_training_retry.is_empty() # Missing recovery truth cannot unlock.
@@ -6629,14 +6637,31 @@ func _rpc_travel_lifecycle(sample: Dictionary) -> void:
 
 ## Read-only pending predicate over the one durable world carrier. Unknown
 ## matching rows fail closed; this is not a new pending store or inventory.
-func _pending_portal_for(character: String) -> bool:
+## `owner_settled_ok` (the joining bootstrap only): a pending row this local
+## owner has already durably settled -- its key spent, unlock and receipt
+## saved -- does not hold the bootstrap shut. Its ACK needs the very readiness
+## it would block (a guest killed after its owner write, before its ACK, could
+## never rejoin). The row still holds mutations until the host accepts it.
+func _pending_portal_for(character: String, owner_settled_ok: bool = false) -> bool:
 	var game := _game()
 	if game == null or game.get("world") == null: return true
 	var world: RefCounted = game.get("world")
 	for row: Variant in world.reward_deliveries.values():
 		if row is Dictionary and row.get("kind") == "portal_unlock" and row.get("character_id") == character:
-			if not PORTAL_RECEIPT.valid(row, character, world.reward_delivery_namespace) or row.status not in ["accepted"]: return true
+			if not PORTAL_RECEIPT.valid(row, character, world.reward_delivery_namespace): return true
+			if row.status == "accepted": continue
+			if owner_settled_ok and row.status == "pending" and _portal_owner_settled(row): continue
+			return true
 	return false
+
+
+func _portal_owner_settled(row: Dictionary) -> bool:
+	var player: RefCounted = _game().get("local") if _game() != null else null
+	if player == null or player.get("character_id") != row.get("character_id"): return false
+	var expected: Dictionary = row.duplicate(true)
+	expected.status = "settled"
+	return PORTAL_RECEIPT.equivalent(player.satchel_escrow.get(row.receipt), expected) \
+		and player.redesign_character.transaction_receipts.has(row.receipt)
 
 
 var _owner_portal_install: Dictionary = {}

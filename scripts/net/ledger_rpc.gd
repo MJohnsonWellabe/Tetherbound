@@ -1091,11 +1091,11 @@ func reconcile_reward_deliveries() -> void:
 			_process_reward_delivery(raw as Dictionary)
 
 
-func _owner_training_blocks_character_write(game: Node) -> bool:
+func _owner_training_blocks_character_write(game: Node, owner_settled_portal_ok: bool = false) -> bool:
 	if game == null or not game.get("local") is RefCounted: return true
 	var session: Variant = game.get("session")
 	if not session is Node or not session.has_method("_owner_training_mutation_blocked"): return true
-	var blocked: Variant = session.call("_owner_training_mutation_blocked", game.get("local"))
+	var blocked: Variant = session.call("_owner_training_mutation_blocked", game.get("local"), false, owner_settled_portal_ok)
 	return not blocked is bool or blocked
 
 
@@ -1492,9 +1492,32 @@ func reconcile_creature_training_before_ready() -> bool:
 	# A pending world row keeps admission/readiness shut until both bool writes
 	# are accepted. Session resumes its existing bootstrap on accepted response.
 	row = game.get("world").reward_deliveries.get(id)
+	_settle_portal_before_ready(game)
 	return row is Dictionary and row.status == "accepted" \
 		and game.get("local").redesign_character.transaction_receipts.has(row.receipt) \
-		and not _owner_training_blocks_character_write(game)
+		and not _owner_training_blocks_character_write(game, true)
+
+
+## The joining bootstrap's own pending portal rows: the owner settles each
+## (a durable duplicate when its save already holds it) and resends the exact
+## ACK, as reconcile_actor_vitals_before_ready does. The host's acceptance
+## then arrives through the ordinary path once the snapshot is ready.
+func _settle_portal_before_ready(game: Node) -> void:
+	if bool(game.call("is_host")) or not _can_rpc(): return
+	var session: Node = game.get("session")
+	var generation := str(session.call("_altar_current_epoch")) if session != null else ""
+	if generation.is_empty(): return
+	var world: RefCounted = game.get("world")
+	var player: RefCounted = game.get("local")
+	for raw: Variant in world.reward_deliveries.values():
+		if not raw is Dictionary or raw.get("kind") != PORTAL_DELIVERY.KIND or raw.get("status") != "pending" \
+			or not PORTAL_DELIVERY.valid(raw, player.character_id, world.reward_delivery_namespace): continue
+		var row: Dictionary = (raw as Dictionary).duplicate(true)
+		if PORTAL_DELIVERY.settle_owner(game, row.duplicate(true)).get("ok") != true: continue
+		var now := Time.get_ticks_msec()
+		if now < int(_portal_retry_at.get(row.receipt, 0)): continue
+		_portal_retry_at[row.receipt] = now + 1000
+		rpc_id(HOST_PEER_ID, "_rpc_portal_delivery_ack", generation, row)
 
 
 ## Only called after private actor handoff and registry ACK. A process restart

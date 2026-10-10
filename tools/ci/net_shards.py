@@ -52,6 +52,7 @@ MEASURED_SECONDS = {
     "crossing_hall_agreement": 270,
     "deploy_two_creatures": 107,
     "f18_fixture_teaching": 182,
+    "f48_cut_key": 540,
     "f20_ending": 620,
     "f20_home_diagnostic": 136,
     "f22_forced_break": 169,
@@ -150,7 +151,7 @@ UNMEASURED_SECONDS = max(v for k, v in MEASURED_SECONDS.items() if k not in ISOL
 #   for f in tests/smoke_net_*.gd; do
 #     head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*2$' && echo "$f"
 #   done | wc -l
-DISCOVERY_FLOOR = 62
+DISCOVERY_FLOOR = 63
 # Named registration on top of the count: a smoke that loses its `# peers: 2`
 # header in a rebase must fail discovery, not silently drop out of CI. Each
 # lane that ships a net smoke adds its file here.
@@ -165,6 +166,7 @@ ROSTER = (
     "trade", "two_peers_boot", "water_alpha", "water_mounted_swimming",
     "water_swim_stone_late_join", "water_swimming",
     "stormwood_charged_ground", "harness_max_hp", "forward_camp",
+    "f48_cut_key",
 )
 
 PEERS_RE = re.compile(r"^#\s*peers:\s*2\s*$")
