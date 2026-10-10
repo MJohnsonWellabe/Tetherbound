@@ -575,12 +575,17 @@ func _spawn_surface_wild(species: String, spot: Vector3, opts: Dictionary,
 		wild.set("home", wild.global_position)
 		wild.set("_target", wild.global_position)
 		var game := get_node_or_null("/root/Game")
+		var site := find_id(encounter_config.get("wild_sites", []), str(opts.get("water_pending_site", "")))
 		pending = {"body": wild, "once_id": once_id,
 			"world": weakref(game.world) if game != null else null,
+			"realm": weakref(realm_world),
 			"epoch": str(_session.call("_altar_current_epoch")) if _session != null else "",
 			"generation": _population_generation, "species": species, "spot": spot,
 			"opts": opts.duplicate(true), "surface_y": surface_y, "submerge": submerge_fraction,
 			"site": str(opts.get("water_pending_site", "")),
+			"site_definition": site.duplicate(true),
+			"named_definition": find_id(encounter_config.get("named_encounters", []),
+				str(site.get("named_replacement_id", ""))).duplicate(true),
 			"packet": opts.get("water_retained_packet", {}).duplicate(true)}
 		_water_surface_pending[key] = pending
 	# The same unpublished body/card waits at the same authored placement.
@@ -606,8 +611,17 @@ func _spawn_surface_wild(species: String, spot: Vector3, opts: Dictionary,
 func _pending_surface_current(pending: Dictionary) -> bool:
 	var body: Node3D = pending.get("body")
 	if not is_instance_valid(body) or body.is_queued_for_deletion(): return false
+	var realm: WeakRef = pending.get("realm")
+	if realm == null or realm.get_ref() != realm_world or realm_world != get_parent() \
+		or body.get_parent() != realm_world: return false
 	if pending.get("generation") != _population_generation: return false
-	if _site_failures.has(str(pending.get("site", ""))): return false
+	var site_id := str(pending.get("site", ""))
+	if _site_failures.has(site_id) or _site_spawned.has(site_id) or not _wanted_sites.has(site_id): return false
+	var site := find_id(encounter_config.get("wild_sites", []), site_id)
+	if site.is_empty() or site != pending.get("site_definition") \
+		or str(site.get("placement_mode", "ground")) != "water_surface": return false
+	if find_id(encounter_config.get("named_encounters", []), str(site.get("named_replacement_id", ""))) \
+		!= pending.get("named_definition"): return false
 	var game := get_node_or_null("/root/Game")
 	var owner: WeakRef = pending.get("world")
 	if owner != null and (game == null or owner.get_ref() != game.world): return false
@@ -622,7 +636,7 @@ func _pending_surface_current(pending: Dictionary) -> bool:
 func _discard_pending_surface(key: String) -> void:
 	var pending: Dictionary = _water_surface_pending.get(key, {})
 	var body: Node3D = pending.get("body")
-	if is_instance_valid(body):
+	if is_instance_valid(body) and not body in _wild_creatures:
 		_ambient_render_bounds_cache.erase(body.get_instance_id())
 		body.queue_free()
 	_water_surface_pending.erase(key)
@@ -678,6 +692,7 @@ var _wild_activity_left := 0.0
 
 
 func _process(delta: float) -> void:
+	_clear_stale_surface_spawns()
 	super._process(delta)
 	var activity: Dictionary = WATER_PERF.config().get("water_wild_activity", {})
 	_wild_activity_left -= delta
