@@ -17,6 +17,8 @@ extends CharacterBody3D
 ## M11 replaces `_build_placeholder` with a rigged model. Nothing else here
 ## changes.
 
+const OWNER_SLIDE_PROBE := preload("res://tools/performance/owner_slide_attribution.gd")
+
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/creatures/creature_animator.gd")
@@ -1916,7 +1918,12 @@ func _physics_process(delta: float) -> void:
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 	_environment_velocity.apply(self, delta, _impulse)
+	var owner_probe_index := OWNER_SLIDE_PROBE.before_slide(self, _requested)
+	var owner_probe_start := Time.get_ticks_usec() if owner_probe_index >= 0 else 0
 	move_and_slide()
+	var owner_probe_end := Time.get_ticks_usec() if owner_probe_index >= 0 else 0
+	if owner_probe_index >= 0:
+		OWNER_SLIDE_PROBE.after_slide(self, owner_probe_index, owner_probe_start, owner_probe_end)
 	_environment_velocity.after_slide(self)
 	_hold_contact_spacing(delta)
 
