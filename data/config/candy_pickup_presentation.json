@@ -1,4 +1,18 @@
 {
   "_comment": "P2-045. Reuse the installed, reviewed Meadows candy tier dressing at the Stormwood and Tidewake cache adapters. Skill candies keep their own look. Item IDs, claims, quantities, spawn coordinates and progression are unchanged.",
-  "enabled": true
+  "enabled": true,
+  "regional_tiers": {
+    "_comment": "P2-045 round 2: Good and Great get an opaque body with their own albedo, low emission and a smaller shared glow; Great is darker so it holds on Tidewake sand and is lifted off the ground plane. Rare keeps the Meadows dressing that passed.",
+    "good_candy": {
+      "albedo": "#4fae55",
+      "emission": 0.25,
+      "glow_scale": 0.45
+    },
+    "great_candy": {
+      "albedo": "#2a4fae",
+      "emission": 0.3,
+      "glow_scale": 0.5,
+      "lift_m": 0.12
+    }
+  }
 }
