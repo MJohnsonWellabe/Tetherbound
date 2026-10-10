@@ -333,6 +333,12 @@ func _release_unpaid(id: String, reason: String) -> void:
 	if party.call("remove_at", index) == null: return
 	party.call("add", pending)
 	_game.set("pending_catch", null)
+	# The released creature's character record leaves with it, as the paid
+	# release (essence.stage_release) does; a record for a creature no longer
+	# owned makes every later character save refuse.
+	var local: Object = _game.get("local")
+	var record: Variant = local.get("redesign_character") if local != null else null
+	if record is Dictionary and record.get("creatures") is Dictionary: (record.creatures as Dictionary).erase(request.released_uid)
 	_requests.erase(id)
 	if _game.has_method("push_world_message"): _game.call("push_world_message", "Released with no essence: " + reason + ".")
 	release_completed.emit(id, {"ok": true, "resolved": true, "unpaid_reason": reason})
