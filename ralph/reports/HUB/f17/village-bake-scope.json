@@ -1,7 +1,8 @@
 {
   "kind": "F17_reviewed_village_only",
   "baseline": "b2ea1455abdda7f2a7078ed1f148d5c40952c9fc",
-  "approved_source": "8ee152a47ee90f430a3e8aafb13d2b0d9c9ad1ea",
+  "approved_source": "d5ab7d73b31cdd5a24cd45501c980bd4aa553687",
+  "original_approved_source": "8ee152a47ee90f430a3e8aafb13d2b0d9c9ad1ea",
   "regions": [
     [
       -1,
@@ -23,14 +24,19 @@
   "inputs": {
     "res://data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
     "res://data/config/vegetation.json": "4e3331edea4ceb764bf57bb422dc7db676a3e0acad412dd23d42939cd55593df",
-    "res://data/config/bands/band1_lower_meadows/vegetation.json": "497894d689b20a4539b9be0497b4b1f8851b95386c4608c9543b95a17fc44788",
+    "res://data/config/bands/band1_lower_meadows/vegetation.json": "ca69f88bff234b00e92529e01c4e0125166d11e0ab9b077e894d262d3b06db05",
     "res://data/config/bands/band2_stone_and_root/vegetation.json": "2695ecadd6458d3aa1e6fe520c8637adfe2e652f1a73dbee5cce00cab9a28a58",
     "res://data/config/bands/band3_the_river_lock/vegetation.json": "0493ecf1641a1c901b9eb6d4544709c558bbf172b72b5c6579333384f4b8ef6b",
     "res://data/config/bands/band4_upper_meadows_ironwood/vegetation.json": "f451051c1520ce5fac9f0e92ecb5415f2459d8a0c62b3eb16d04e3009a325906",
     "res://data/config/bands/band5_stronghold_approach/vegetation.json": "e705c91104d1b0b1892d0da89dbfc432277a4008160c38825b6e1d64cbfc0877"
   },
-  "harvest_order1031": "position only [28,6] -> [30,8]",
-  "objective_position_only_indices": [
+  "berry_field_change": "Only the anchor at [-8.5,-25]: Bush_Common -> Fern_1, matching 0.4 scale key and authored rationale; all other vegetation fields unchanged.",
+  "non_generator_sources": {
+    "res://data/config/bands/band1_lower_meadows/harvest.json": "8b74afdb690eb888cdc5d76efb2107f446dcb36122fc71ffec3746bc7d80c6a7",
+    "res://data/progression/objectives.json": "b7acfcd4ebf3c58255216ae59dcb3b7d79dec59d6234045db5dcf587f9188bc9"
+  },
+  "original_harvest_order1031": "Original approval: position only [28,6] -> [30,8]; current shipping harvest is separately pinned in full.",
+  "original_objective_position_only_indices": [
     0,
     1,
     2,
