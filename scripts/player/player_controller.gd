@@ -685,15 +685,19 @@ func _recover_if_entombed(delta: float) -> void:
 
 ## Is there no way out of `from` in any direction?
 ##
-## Swept through the physics server with this body's own shape, from
-## `STEP_HEIGHT` up, so the answer is about the capsule that actually has to fit
-## rather than a ray from its centre.
+## Swept through the physics server with this body's own shape. Probe from
+## `STEP_HEIGHT` up only when the complete upward sweep is clear; translating
+## directly into an inward-leaning wall makes all eight escape queries report
+## the same initial penetration. If raising is blocked, use the actual pose.
 func _entombed_at(from: Transform3D) -> bool:
-	var raised := from.translated(Vector3.UP * STEP_HEIGHT)
+	var probe_from := from
+	var up := Vector3.UP * STEP_HEIGHT
+	if not test_move(from, up):
+		probe_from = from.translated(up)
 	for i in 8:
 		var angle := TAU * float(i) / 8.0
 		var dir := Vector3(sin(angle), 0.0, cos(angle))
-		if not test_move(raised, dir * _unstick_probe_m):
+		if not test_move(probe_from, dir * _unstick_probe_m):
 			return false
 	return true
 
