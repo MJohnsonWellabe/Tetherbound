@@ -712,7 +712,11 @@ class NativeTrainerBody extends Node3D:
 
 class NativeTrainerManager extends "res://scripts/combat/combat_manager.gd":
 	func _open_arena(_joining_realm: bool = false, _host_arena: Dictionary = {}) -> bool:
-		_arena = Node3D.new()
+		# Keep presentation mocked, but publish the same immutable radius the
+		# shipping opener derives from these actual fixture body radii.
+		_arena = ARENA.new()
+		_arena.set("radius", clampf(ceilf(2.0 * (float(_ally_body.call("body_radius"))
+			+ float(_wild.call("body_radius"))) + 7.0), 11.0, 26.0))
 		_player.get_parent().add_child(_arena)
 		return true
 	func _place_fighters() -> void:
