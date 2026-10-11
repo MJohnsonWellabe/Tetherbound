@@ -1,5 +1,5 @@
 {
- "generated_at": "12:52 PM CT Sun 11 Oct 2026",
+ "generated_at": "1:06 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -2953,11 +2953,11 @@
    "title": "Co-op across the new loop",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/coop",
-   "pct": 50,
+   "pct": 75,
    "counts": {
-    "met": 2,
+    "met": 3,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 1,
     "blocked": 0,
     "failing": 0
@@ -2989,10 +2989,10 @@
     },
     {
      "text": "A behind friend follows a host through an unlocked portal, and their own progress stays honest (no permanent key without the fight).",
-     "status": "in_progress",
-     "evidence": "multiplayer.json `session.redesign_portal_runtime_enabled=false`",
-     "gap": "Land F18 portals, then a two-peer behind-friend portal net smoke in CI.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. Portals ship off. The behind-portal smoke is on tb/coop.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F48#3/ (systems-b 91b4fba3): 2-peer f48_behind_friend ALL CHECKS PASSED 34/0 (0/2 before the fix): the guest follows the host through the unlocked arch honestly; owner_passive_sync + replay units 62 tests/1116 assertions, 0 failed (coordinator re-ran)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (1:06 PM CT Sun 11 Oct). Game fix in owner_passive_sync._inputs_host_batch: a guest's travel-reset input that arrives before the host's proof is held, bounded by multiplayer.json owner_passive_travel_reset_wait_s = 60, and matches only its own travel's proof; past the bound the original travel_baseline_mismatch refusal applies. All original refusal asserts are kept, plus a new no-proof case. Previously this stream error blocked every owner-gated guest action, including the Home Key. Disclosed: slow-host wall-clock budgets raised locally, uncommitted. Lands with the consolidated PR.",
      "audit_index": 3
     }
    ]
