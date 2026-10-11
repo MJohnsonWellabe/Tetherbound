@@ -1,0 +1,44 @@
+{
+	"camera_fov": 42.0,
+	"camera_position": [
+		-1.14999997615814,
+		2.84280395507812,
+		25.9981555938721
+	],
+	"candidate": false,
+	"frames": [
+		{
+			"captured": true,
+			"path": "/tmp/claude-0/-home-user-Tetherbound/ea41ac29-f78a-5ec1-8729-4a93aaa83713/scratchpad/f36/installed/mirejaw-standing-000.png",
+			"phase": 0.0,
+			"role": "standing"
+		},
+		{
+			"captured": true,
+			"path": "/tmp/claude-0/-home-user-Tetherbound/ea41ac29-f78a-5ec1-8729-4a93aaa83713/scratchpad/f36/installed/mirejaw-standing-100.png",
+			"phase": 1.0,
+			"role": "standing"
+		}
+	],
+	"installed_model": true,
+	"planned_frames": 2,
+	"renderer": "gl_compatibility",
+	"resolution": [
+		1280,
+		720
+	],
+	"resting_size_m": [
+		4.66598176956177,
+		2.79999995231628,
+		8.6624002456665
+	],
+	"scale_only": true,
+	"scale_scope": "Installed standing stage; no fight-scale claim",
+	"source_commit": "0d598b9b25a21d937f6d006403f79714acce571b",
+	"species": "mirejaw",
+	"stage_only": true,
+	"standing_height_m": 2.79999995231628,
+	"trainer_measured_height_m": 1.79999995231628,
+	"trainer_reference_height_m": 1.8,
+	"whole_body_camera": true
+}
