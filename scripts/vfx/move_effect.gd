@@ -3,15 +3,17 @@ extends Node3D
 ## Local rendering of a host-scheduled action. No collision objects, timers
 ## driving damage, durable fields or RPCs are owned by this node.
 const GEOMETRY := preload("res://scripts/vfx/move_effect_geometry.gd")
+const SIGNATURE_GEOMETRY := preload("res://scripts/vfx/ultimates/ultimate_geometry.gd")
 const BUDGET := preload("res://scripts/vfx/move_effect_budget.gd")
 const AUDIO := preload("res://scripts/audio/audio_manager.gd")
 const CONTRACT := preload("res://scripts/vfx/move_presentation_contract.gd")
 const FLASH_SHADER := preload("res://assets/vfx/shaders/impact_flash.gdshader")
 const GROUND_MARK_SHADER := preload("res://assets/vfx/shaders/impact_ground_mark.gdshader")
-## Launch/contact/aftermath stage meshes are a fixed small set per effect
-## (flash, ground kick, contact flash, shockwave, ground mark). They are not
-## particles and never draw from the particle lease.
+## Launch/contact/aftermath and species-identity meshes share this fixed total
+## per effect. Each extra identity mesh also consumes one actual slot from
+## the existing decorative budget; generic stage meshes retain their contract.
 const MAX_STAGE_MESHES := 6
+const MAX_SIGNATURE_MESHES := 4
 const SPARK_SHADER := preload("res://assets/vfx/shaders/spark_streak.gdshader")
 const SPARK_GLOW_SHADER := preload("res://assets/vfx/shaders/spark_streak_glow.gdshader")
 
@@ -55,6 +57,13 @@ var _peer_opacity := 1.0
 var _peer_aftermath := -1.0
 var _signature_end := -1.0
 var _contact_retired := false
+var _signature_nodes: Array[MeshInstance3D] = []
+var _signature_profile: Dictionary = {}
+var _signature_lease := 0
+var _signature_basis := Basis.IDENTITY
+var _signature_source_offsets: Array[float] = []
+var _signature_target_offsets: Array[float] = []
+var _signature_ground_lifts: Array[float] = []
 
 func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 		travel: float, config: Dictionary) -> void:
@@ -99,6 +108,9 @@ func _ready() -> void:
 	global_transform = Transform3D.IDENTITY
 	var budget: Dictionary = _row.get("budget", {})
 	var limit := int(_config.get("ultimate_particle_limit", 160)) if bool(_context.get("ultimate", false)) else int(_config.get("ordinary_particle_limit", 48))
+	# Reserve the species body before decorative trails, using the same actual
+	# encounter pool. Its admitted slots are part of this effect's existing cap.
+	limit = maxi(0, limit - _build_signature_shapes(limit))
 	var requested_impact := mini(int(budget.get("impact", 24)), limit)
 	var requested_trail := mini(int(budget.get("trail", 12)), maxi(0, limit - requested_impact))
 	_lease = BUDGET.reserve(str(_context.get("encounter_id", "global")), requested_impact,
@@ -165,6 +177,7 @@ func _ready() -> void:
 	_build_light()
 	_build_launch_stages()
 	_update_bodies(0.0)
+	_update_signature_shapes()
 	_play_launch()
 	if _travel <= 0.0:
 		# Contact geometry exists when launch returns. Emit only after callers
@@ -239,7 +252,8 @@ func _process(delta: float) -> void:
 			for trail: MeshInstance3D in _trails:
 				_set_opacity(trail.material_override, contact_fade * (1.0 - u) * float((_row.trail as Dictionary).get("opacity", 0.78)))
 	_update_stages()
-	if _arrived and _elapsed - _travel >= _lifetime_after_contact() and _stages_finished(): queue_free()
+	_update_signature_shapes()
+	if _arrived and _elapsed - _travel >= _lifetime_after_contact() and _stages_finished() and _signature_nodes.is_empty(): queue_free()
 
 func _finish_presentation() -> void:
 	if _arrived or is_queued_for_deletion(): return
@@ -247,11 +261,115 @@ func _finish_presentation() -> void:
 	_update_bodies(1.0)
 	_arrived = true
 	if _impact == null: _build_impact()
+	_update_signature_shapes()
 	_play_impact()
 	# Contact geometry exists before the later host timer can resolve HP.
 	# No observer of this informational signal can authorize a gameplay hit.
 	arrived.emit()
 	presentation_arrived.emit(_context)
+
+func _build_signature_shapes(limit: int) -> int:
+	if not bool(_context.get("ultimate", false)) or _signature_end < 2.0: return 0
+	_signature_profile = (_row.body as Dictionary).get("signature", {}).duplicate(true)
+	var kind := str(_signature_profile.get("shape", ""))
+	if kind not in ["capra_horn", "thunder_paw"]: return 0
+	var requested := mini(MAX_STAGE_MESHES, mini(MAX_SIGNATURE_MESHES, mini(limit, maxi(0, int(_signature_profile.get("count", 0))))))
+	if requested <= 0: return 0
+	var geometry: Dictionary = _signature_profile.get("geometry", {}).duplicate(true)
+	geometry["vertex_cap"] = clampi(int(geometry.get("vertex_cap", 12000)), 96, 12000)
+	var size := float(_params.size) * clampf(float(_signature_profile.get("size_scale", 0.75)), 0.1, 1.5)
+	var mesh := SIGNATURE_GEOMETRY.shape(kind, size, geometry)
+	if mesh == null or bool(mesh.get_meta("ultimate_budget_clipped", false)): return 0
+	_signature_lease = BUDGET.reserve(str(_context.get("encounter_id", "global")), requested, 0,
+		int(_config.get("encounter_particle_cap", 384)))
+	var admitted := mini(requested, int(BUDGET.allocation(_signature_lease).get("impact", 0)))
+	if admitted <= 0:
+		_retire_signature_shapes()
+		return 0
+	var forward := Vector3(_to.x - _from.x, 0.0, _to.z - _from.z).normalized()
+	if forward.is_zero_approx(): forward = Vector3.FORWARD
+	_signature_basis = Basis(Quaternion(Vector3.FORWARD, forward))
+	var right := forward.cross(Vector3.UP).normalized()
+	var bounds := mesh.get_aabb()
+	var mesh_min := INF
+	var mesh_max := -INF
+	var mesh_low := INF
+	for x in 2:
+		for y in 2:
+			for z in 2:
+				var point := _signature_basis * (bounds.position + Vector3(bounds.size.x * x, bounds.size.y * y, bounds.size.z * z))
+				mesh_min = minf(mesh_min, point.dot(right))
+				mesh_max = maxf(mesh_max, point.dot(right))
+				mesh_low = minf(mesh_low, point.y)
+	var target: Vector3 = _context.get("target_ground", _to)
+	var target_min := -maxf(0.0, float(_signature_profile.get("fallback_target_radius_m", 1.5)))
+	var target_max := -target_min
+	var target_bounds: Dictionary = _context.get("target_visual_bounds", {})
+	if target_bounds.get("position") is Vector3 and target_bounds.get("size") is Vector3:
+		target_min = INF
+		target_max = -INF
+		var position: Vector3 = target_bounds.position
+		var extent: Vector3 = target_bounds.size
+		for x in 2:
+			for y in 2:
+				for z in 2:
+					var point := position + Vector3(extent.x * x, extent.y * y, extent.z * z)
+					var lateral := (point - target).dot(right)
+					target_min = minf(target_min, lateral)
+					target_max = maxf(target_max, lateral)
+	var gap := maxf(0.25, float(_signature_profile.get("clearance_m", 0.4)))
+	var opacity := clampf(float(_signature_profile.get("opacity", 0.85)), 0.0, 1.0)
+	var colour := Color(str(_signature_profile.get("colour", _params.colour)))
+	for i in admitted:
+		var node := _mesh_node(mesh, colour, opacity, true)
+		node.material_override = _presentation_material(SIGNATURE_GEOMETRY.material(colour, opacity, true))
+		_signature_nodes.append(node)
+		# Both actual rotated mesh and full measured target bounds determine the
+		# open lateral lane. No center-only/radius guess can shrink that clearance.
+		var left := i % 2 == 0
+		_signature_source_offsets.append(-gap - mesh_max if left else gap - mesh_min)
+		_signature_target_offsets.append(target_min - gap - mesh_max if left else target_max + gap - mesh_min)
+		_signature_ground_lifts.append(maxf(0.0, -mesh_low))
+	return admitted
+
+func _update_signature_shapes() -> void:
+	if _signature_nodes.is_empty(): return
+	var admitted := int(BUDGET.allocation(_signature_lease).get("impact", 0))
+	var from: Vector3 = _context.get("source_ground", _from)
+	var to: Vector3 = _context.get("target_ground", _to)
+	var forward := Vector3(_to.x - _from.x, 0.0, _to.z - _from.z).normalized()
+	if forward.is_zero_approx(): forward = Vector3.FORWARD
+	var right := forward.cross(Vector3.UP).normalized()
+	from -= forward * maxf(0.0, float(_signature_profile.get("behind_m", 0.5)))
+	var t := 1.0 if _arrived else clampf(_elapsed / maxf(_travel, 0.00001), 0.0, 1.0)
+	var fade_seconds := clampf(float(_signature_profile.get("fade_seconds", 0.25)), 0.05, 0.5)
+	var opacity := float(_signature_profile.get("opacity", 0.85)) * (1.0 - smoothstep(_signature_end - fade_seconds, _signature_end, _elapsed))
+	for i in _signature_nodes.size():
+		var node := _signature_nodes[i]
+		var pair := floorf(float(i) / 2.0) - float(maxi(1, int(ceil(_signature_nodes.size() / 2.0))) - 1) * 0.5
+		var lateral := lerpf(_signature_source_offsets[i], _signature_target_offsets[i], smoothstep(0.0, 1.0, t))
+		var rise := sin(t * PI) * float(_params.size) * maxf(0.0, float(_signature_profile.get("rise_scale", 1.0)))
+		node.transform = Transform3D(_signature_basis, from.lerp(to, t) + right * lateral
+			+ forward * pair * float(_signature_profile.get("pair_spacing_m", 1.0))
+			+ Vector3.UP * (_signature_ground_lifts[i] + rise))
+		node.visible = i < admitted and _elapsed < _signature_end and opacity > 0.0
+		_set_opacity(node.material_override, opacity)
+
+func _retire_signature_shapes() -> void:
+	for node: MeshInstance3D in _signature_nodes:
+		if is_instance_valid(node):
+			node.visible = false
+			if not node.is_queued_for_deletion(): node.queue_free()
+	_signature_nodes.clear()
+	_signature_source_offsets.clear()
+	_signature_target_offsets.clear()
+	_signature_ground_lifts.clear()
+	if _signature_lease != 0:
+		BUDGET.release(_signature_lease)
+		_signature_lease = 0
+
+func _stage_mesh_slots_used() -> int:
+	return _stages.size() + _signature_nodes.size()
 
 func _update_bodies(t: float) -> void:
 	var mode := str((_row.body as Dictionary).get("motion", "projectile"))
@@ -768,7 +886,7 @@ func _build_launch_stages() -> void:
 		_add_ground_mark(launch.ground, source, scale, 0.0)
 
 func _add_source_body(profile: Dictionary, scale: float) -> void:
-	if _stages.size() >= MAX_STAGE_MESHES: return
+	if _stage_mesh_slots_used() >= MAX_STAGE_MESHES: return
 	var body_profile: Dictionary = _row.body.duplicate(true)
 	var size := scale * maxf(0.01, float(profile.get("size_scale", 0.6)))
 	var node := _mesh_node(GEOMETRY.shape(str(body_profile.shape), size, body_profile),
@@ -811,7 +929,7 @@ func _build_impact_stages(profile: Dictionary, scale_factor: float, origin: Vect
 ## Lightning-style launch: a short jagged bolt rising from the attacker into
 ## the sky, so the later strike from above reads as called by this creature.
 func _add_sky_call(profile: Dictionary, scale: float) -> void:
-	if _stages.size() >= MAX_STAGE_MESHES: return
+	if _stage_mesh_slots_used() >= MAX_STAGE_MESHES: return
 	var height := float(profile.get("height_m", 3.5))
 	var points: Array[Vector3] = []
 	var across := (_to - _from).normalized().cross(Vector3.UP).normalized()
@@ -832,7 +950,7 @@ func _add_sky_call(profile: Dictionary, scale: float) -> void:
 	_update_stage(_stages.back())
 
 func _add_flash(profile: Dictionary, position: Vector3, scale: float, born: float) -> void:
-	if _stages.size() >= MAX_STAGE_MESHES: return
+	if _stage_mesh_slots_used() >= MAX_STAGE_MESHES: return
 	var quad := QuadMesh.new()
 	# One archetype spans pebbles to rank-5 boulders; authored metre caps keep
 	# the flash readable without swallowing the target.
@@ -857,7 +975,7 @@ func _add_flash(profile: Dictionary, position: Vector3, scale: float, born: floa
 	_update_stage(_stages.back())
 
 func _add_ground_mark(profile: Dictionary, centre: Vector3, scale: float, born: float) -> void:
-	if _stages.size() >= MAX_STAGE_MESHES: return
+	if _stage_mesh_slots_used() >= MAX_STAGE_MESHES: return
 	var plane := PlaneMesh.new()
 	var radius := clampf(scale * float(profile.get("radius_scale", 2.0)), float(profile.get("min_m", 0.3)), float(profile.get("max_m", 3.0)))
 	plane.size = Vector2.ONE * radius * 2.0
@@ -948,6 +1066,7 @@ func _play_impact() -> void:
 	AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _contact_position(), "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)))
 
 func _exit_tree() -> void:
+	_retire_signature_shapes()
 	BUDGET.release(_lease)
 	# AudioManager owns its pooled players; do not stop a recycled voice here.
 
@@ -978,6 +1097,7 @@ func cancel_presentation() -> void:
 	# This cannot cancel an earned action or an authoritative pending hit.
 	# Stop local processing now; deferred deletion still releases the lease.
 	set_process(false)
+	_retire_signature_shapes()
 	if _light != null: _light.visible = false
 	_arrived = true
 	queue_free()
