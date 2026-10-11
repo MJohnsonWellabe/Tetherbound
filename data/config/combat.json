@@ -656,6 +656,7 @@
       "voltwig": "DIVER",
       "mosshock": "DIVER",
       "staticub": "WALL",
+      "stormursa": "WALL",
       "voltarach": "WALL",
       "fulgocobra": "CURRENT",
       "stormraven": "DIVER",
@@ -1869,20 +1870,20 @@
           },
           {
             "sequence": [
-              "oreth_pressure",
-              "current_zone"
+              "charger_check",
+              "charger_rush"
+            ]
+          },
+          {
+            "sequence": [
+              "wall_check",
+              "wall_slam"
             ]
           },
           {
             "sequence": [
               "diver_retreat",
               "diver_leap"
-            ]
-          },
-          {
-            "sequence": [
-              "wall_check",
-              "wall_quake"
             ]
           },
           {
@@ -1920,14 +1921,14 @@
           },
           {
             "sequence": [
-              "diver_retreat",
-              "diver_leap"
+              "wall_check",
+              "wall_slam"
             ]
           },
           {
             "sequence": [
-              "charger_check",
-              "halder_range"
+              "current_volley",
+              "current_zone"
             ]
           }
         ],
@@ -2495,7 +2496,8 @@
     "low_hp_fraction": 0.3,
     "low_hp_tradeoffs": {
       "WALL": {
-        "telegraph_add_s": 0.2
+        "telegraph_add_s": 0.2,
+        "power_multiplier": 1.15
       },
       "DIVER": {
         "reposition_add_s": 0.4

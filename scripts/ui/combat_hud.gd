@@ -138,6 +138,7 @@ var _fight_feed_seq: int = 0
 var _fight_feed_epoch: int = -1
 var _go_left: float = 0.0
 var _miss_left: float = 0.0
+var _catch_verdict_message := false
 var _miss_text: String = ""
 
 ## Grid cell ready-state on the PREVIOUS frame, so a cell pulses once on the
@@ -289,6 +290,7 @@ const COMBAT_INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 
 func _ready() -> void:
+	add_to_group("combat_hud")
 	layer = UITokens.LAYER_COMBAT
 
 	_manager = get_node_or_null(manager_path)
@@ -591,16 +593,32 @@ func _process(delta: float) -> void:
 	_draw_enemy()
 	_draw_ally()
 	_draw_grid()
+	_ultimate_readout.show()
+	_ultimate_meter.show()
 	if is_instance_valid(_system_overlay):
 		_system_overlay.hide()
 		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
-		if active != null and _system_overlay.call("refresh", str(active.get("uid")), not Input.get_connected_joypads().is_empty()) == true:
+		if active != null and _system_overlay.call("refresh", str(active.get("uid")), INPUT_GLYPH.using_gamepad()) == true:
 			_grid_panel.hide()
+			_ultimate_readout.hide()
+			_ultimate_meter.hide()
 			if _tether_meter != null: _tether_meter.hide()
+			_layout_system_hints()
 	_update_capture_reticle()
 	_handle_switch_input()
 	_update_party_strip()
 	_update_subject_fade(delta)
+
+
+func _layout_system_hints() -> void:
+	# Aim/switch/flee stay above the command lane, clear of the ultimate and
+	# move diamond. The legacy anchored hint occupied that diamond's centre.
+	var commands: Rect2 = _system_overlay.call("command_rect")
+	_orbs.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_orbs_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_orbs_panel.size = Vector2(commands.size.x, 0)
+	var at := _root.get_global_transform().affine_inverse() * commands.position
+	_orbs_panel.position = at - Vector2(0, _orbs_panel.size.y + 12)
 
 
 ## F10#6 device profile (UX §1.4: the HUD supports direction, team state and
@@ -611,6 +629,36 @@ func _process(delta: float) -> void:
 ## them clear. Each frame the trainer, the active creature and the target are
 ## projected; a fight panel over one of them eases down to `alpha`, and back
 ## once it is clear. Presentation only. combat.json `hud_subject_fade`.
+func fight_occupied_controls() -> Array[Control]:
+	var controls: Array[Control] = []
+	for control: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel,
+			_party_strip, _tether_meter, _aim_row, _catch_row, _orb_cluster]:
+		if is_instance_valid(control) and control.is_visible_in_tree():
+			controls.append(control)
+	if is_instance_valid(_system_overlay) and _system_overlay.is_visible_in_tree():
+		for control: Control in _system_overlay.call("occupied_controls"):
+			if is_instance_valid(control) and control.is_visible_in_tree(): controls.append(control)
+	return controls
+
+
+## Actual viewport-space rectangles, including canvas scaling and roster
+## animation. Camera framing reserves the visible foreground even when its
+## backing fades; alpha is never treated as permission to cover a creature.
+func occupied_viewport_rects() -> Array[Rect2]:
+	var rectangles: Array[Rect2] = []
+	for control: Control in fight_occupied_controls():
+		if not control.size.is_finite() or not control.size.x > 0 or not control.size.y > 0: continue
+		var pose := control.get_global_transform_with_canvas()
+		var lo := Vector2(INF, INF)
+		var hi := Vector2(-INF, -INF)
+		for corner: Vector2 in [Vector2.ZERO, Vector2(control.size.x, 0), control.size, Vector2(0, control.size.y)]:
+			var point := pose * corner
+			lo = lo.min(point)
+			hi = hi.max(point)
+		if lo.is_finite() and hi.is_finite(): rectangles.append(Rect2(lo, hi - lo))
+	return rectangles
+
+
 func _update_subject_fade(delta: float) -> void:
 	var cfg: Dictionary = COMBAT_MATH.config().get("hud_subject_fade", {}) as Dictionary
 	var enabled := bool(cfg.get("enabled", true))
@@ -630,9 +678,13 @@ func _update_subject_fade(delta: float) -> void:
 	# The target plate is not faded: it carries the tell line, and both the
 	# C3 footage judge and device judge r5 read a faded "incoming" as a miss.
 	# It sits top-right, off the framed target.
-	for entry: Array in [[_grid_panel, true, _grid_panel],
+	var panels: Array = [[_grid_panel, true, _grid_panel],
 			[_ally_panel, false, _ally_panel], [_orbs_panel, false, _orbs_panel],
-			[_strip_fader, false, _party_strip]]:
+			[_strip_fader, false, _party_strip]]
+	if is_instance_valid(_system_overlay) and _system_overlay.visible:
+		for control: Control in _system_overlay.call("occupied_controls"):
+			panels.append([control, false, control])
+	for entry: Array in panels:
 		var panel := entry[0] as Control
 		var measured := entry[2] as Control
 		if panel == null or measured == null:
@@ -1011,6 +1063,12 @@ func _draw_grid() -> void:
 
 	var resolving: bool = bool(_manager.call("is_resolving_catch"))
 	var aiming: bool = bool(_manager.call("is_aiming"))
+	# A fresh aim supersedes advice about the previous failed throw. Other
+	# action/refusal messages retain their existing lifetime and precedence.
+	if aiming and not resolving and _catch_verdict_message:
+		_miss_left = 0.0
+		_miss_text = ""
+		_catch_verdict_message = false
 	var has_message: bool = _miss_left > 0.0
 
 	# The orb cluster and the enemy plate/grid dim (spec §10.1/§10.4) only ever
@@ -1290,6 +1348,7 @@ func _handle_switch_input() -> void:
 
 
 func _refuse_switch() -> void:
+	_catch_verdict_message = false
 	_miss_text = "locked in — a moment"
 	_miss_left = 1.2
 
@@ -1324,6 +1383,11 @@ func _party_strip_position() -> Vector2:
 	var ally_rect := _ally_panel.get_global_rect()
 	var ally_top: float = ally_rect.position.y if ally_rect.size.y > 0.0 \
 			else _root.size.y + _ally_panel.offset_top
+	if is_instance_valid(_system_overlay) and _system_overlay.visible:
+		var commands: Rect2 = _system_overlay.call("command_rect")
+		if commands.size.y > 0.0 and commands.position.x < SWITCH_PANEL_X + _party_strip.size.x \
+				and commands.end.x > SWITCH_PANEL_X:
+			ally_top = minf(ally_top, commands.position.y)
 	var strip_h: float = _party_strip.size.y if _party_strip != null else 0.0
 	return Vector2(SWITCH_PANEL_X, ally_top - strip_h - SWITCH_PANEL_GAP)
 
@@ -1657,12 +1721,14 @@ func _forget_the_last_verdict() -> void:
 
 ## A miss has to be legible or it reads as the game dropping the input.
 func _on_missed(by_player: bool) -> void:
+	_catch_verdict_message = false
 	_miss_text = "missed — too far, or facing the wrong way" if by_player else "it missed you"
 	_miss_left = 0.9
 
 
 ## A throw the game declined to make, and why.
 func _on_catch_refused(reason: String) -> void:
+	_catch_verdict_message = false
 	_miss_text = reason
 	_miss_left = 1.6
 
@@ -1675,6 +1741,7 @@ func _on_orb_shook(_index: int) -> void:
 
 
 func _on_catch_resolved(success: bool, shakes: int) -> void:
+	_catch_verdict_message = not success
 	if _capture_reticle != null:
 		_capture_reticle.call("play_success" if success else "play_break")
 	if success:
@@ -1699,6 +1766,7 @@ func _on_catch_resolved(success: bool, shakes: int) -> void:
 
 
 func _on_exited(outcome: String) -> void:
+	_catch_verdict_message = false
 	# Ownership survives _finish(), unlike the director's cleared trainer spec.
 	# Trainer round wins are represented by the next opponent and shared feed;
 	# no wild verdict or centre-screen result may leak into a relay objective.
@@ -1741,6 +1809,7 @@ func set_world_presentation_mode(mode: String) -> void:
 
 
 func relinquish_result_presentation() -> void:
+	_catch_verdict_message = false
 	_outcome_left = 0.0
 	_xp_left = 0.0
 	_go_left = 0.0

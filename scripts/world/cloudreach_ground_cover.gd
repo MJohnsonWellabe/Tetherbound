@@ -206,7 +206,7 @@ func _breathe(build_budget: RefCounted) -> void:
 
 func _nearby_exclusions(patch: Dictionary) -> Array[Dictionary]:
 	var centre := _patch_origin(patch)
-	var follows_surface := patch.has("surface_rows")
+	var follows_surface := patch.has("surface_rows") or patch.has("crown_surface")
 	var radius := 0.0
 	if str(patch.get("kind", "")) == "segment":
 		radius = (patch["a"] as Vector3).distance_to(patch["b"]) * 0.5 + float(patch["half_width"])
@@ -297,8 +297,14 @@ func _sample_patch(patch: Dictionary, rng: RandomNumberGenerator, path_clearance
 	var radius := sqrt(rng.randf()) * 0.88
 	if radius < float(patch.get("inner_clear_fraction", 0.0)):
 		return Vector3(NAN, NAN, NAN)
-	return centre + Vector3(cos(angle) * half.x * radius, 0.08,
+	var at := centre + Vector3(cos(angle) * half.x * radius, 0.08,
 		sin(angle) * half.y * radius)
+	if patch.has("crown_surface"):
+		var sample: Vector2 = patch["crown_surface"].sample(at.x, at.z)
+		if not is_finite(sample.x) or sample.y < 0.64:
+			return Vector3(NAN, NAN, NAN)
+		at.y = sample.x + 0.04
+	return at
 
 
 ## Sample the same triangle split that builds the visible/collidable shoulder.

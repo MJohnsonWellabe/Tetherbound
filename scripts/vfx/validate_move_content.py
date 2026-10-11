@@ -33,7 +33,7 @@ def audit(moves_path: Path):
     cues = read(ROOT/'data/config/audio.json')['move_effect_cues']
     moves = read(moves_path)['moves']
     check(set(archetypes) == REQUIRED, 'Archetype catalogue must contain exactly the24 specified IDs')
-    check(config['enabled'] is False, 'Unproved source candidate must stay flag-off')
+    check(config['enabled'] is True, 'Owner rollout requires the production move library enabled')
     consumed = set()
     for name, row in archetypes.items():
         for component in ('body', 'trail', 'impact', 'sound', 'budget', 'parameters', 'damage_timing'):

@@ -209,6 +209,9 @@ static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dict
 		return {}
 	var out := base.duplicate(true)
 	out.merge(row.duplicate(true), true)
+	# Travel belongs to the selected strike, not the creature's previous
+	# CHARGER override. A cone/check must not become a zero-length charge.
+	out["lunge_travels"] = bool(row.get("lunge_travels", false))
 	out["pattern_attack_id"] = id
 	out["combat_role"] = role
 	out["pattern_id"] = str(context.get("pattern_id", ""))
@@ -235,12 +238,15 @@ static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dict
 	out["move_id"] = str(out.get("move_override", context.get("move_" + slot, "")))
 	if out.move_id.is_empty():
 		return {}
-	# Low-health tradeoffs are visible timing changes, confined to the role.
+	# Low-health pressure keeps its visible timing tradeoff, confined to the role.
 	if float(context.get("hp_fraction", 1.0)) <= float(patterns.get("low_hp_fraction", 0.3)):
 		var tradeoff: Dictionary = (patterns.get("low_hp_tradeoffs", {}) as Dictionary).get(role, {})
 		out["telegraph"] = float(out.telegraph) + float(tradeoff.get("telegraph_add_s", 0.0))
+		out["power"] = float(out.get("power", 8.0)) * float(tradeoff.get("power_multiplier", 1.0))
 		out["reposition_time"] = maxf(0.0, float(out.get("reposition_time", 1.0)) + float(tradeoff.get("reposition_add_s", 0.0)))
-		if posmod(cursor + 1, 3) == 0:
+		# A recovery punish selects a quick by sequence index, but still belongs
+		# to this body's live attack count for its every-third recovery tradeoff.
+		if posmod(int(context.get("pattern_cursor", cursor)) + 1, 3) == 0:
 			out["recovery"] = float(out.recovery) + float(tradeoff.get("third_recovery_add_s", 0.0))
 	return out
 
@@ -273,9 +279,23 @@ static func reaction(state: Intent, observation: Dictionary, patterns: Dictionar
 ## player's commitment provides opportunity; it does not buy an instant hit.
 static func punish_profile(patterns: Dictionary, base: Dictionary, context: Dictionary) -> Dictionary:
 	var local := context.duplicate(true)
-	local.erase("pattern_id")
-	var role := str(local.get("role", ""))
+	var role := context_role(patterns, context)
+	local["role"] = role
 	var ids := pattern_ids(patterns, role, local)
+	var named := not str(local.get("pattern_id", "")).is_empty()
+	# A named reaction uses this send-out's quick, with the same authored tell,
+	# pressure and role as its normal sequence. Never substitute a species quick
+	# merely because the director's baseline role differs from the named one.
+	for index: int in ids.size():
+		var row: Dictionary = (patterns.get("attacks", {}) as Dictionary).get(str(ids[index]), {})
+		if named and row.is_empty(): return {}
+		if str(row.get("slot", "")) == "quick":
+			return select_pattern(patterns, base, local, index)
+	# Heavy-only named sequences retain a role quick as their recovery punish.
+	# Missing send-out data is unavailable, not permission for a generic attack.
+	if not named or ids.is_empty(): return {}
+	local.erase("pattern_id")
+	ids = pattern_ids(patterns, role, local)
 	for index: int in ids.size():
 		var row: Dictionary = (patterns.get("attacks", {}) as Dictionary).get(str(ids[index]), {})
 		if str(row.get("slot", "")) == "quick":

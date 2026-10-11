@@ -216,6 +216,8 @@ var _ally_clear_for := 0.0
 ## rect) and left the flat, uncollided shoulder offset in place exactly
 ## where the room is tightest.
 var _arena_centre: Vector3 = Vector3.ZERO
+var _admitted_spots: Array[Vector3] = []
+var last_admission_failure: String = ""
 
 var _action: Action = Action.READY
 var _action_timer: float = 0.0
@@ -802,8 +804,9 @@ func begin(
 	player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCounted],
 	camera_rig: Node = null, best_creature: RefCounted = null,
 	opponent_owned: bool = false, realm_owned_opponent: bool = false,
-	host_started: bool = false
+	host_started: bool = false, host_arena: Dictionary = {}
 ) -> bool:
+	last_admission_failure = ""
 	if is_fighting():
 		return false
 	if _completing_catch: return false
@@ -877,13 +880,15 @@ func begin(
 	last_xp_award.clear()
 	_victory_awarded = false
 
-	_open_arena()
 	# A realm fight THIS process is starting as its host (a canonical solo wild
 	# with actor_vitals on, or a multi-peer host's own wild) has nobody to defer
 	# to yet: stage it like any local fight so the trainer stands aside and the
 	# camera's ally is seated in formation. Only a participant JOINING someone
 	# else's realm fight keeps the hands-off realm seat below.
 	var joining_realm := realm_owned_opponent and not host_started
+	if not _open_arena(joining_realm, host_arena):
+		last_admission_failure = "There isn't enough clear ground here for both creatures."
+		return false
 	if joining_realm:
 		# Joining a shared realm encounter must not reposition its enemy or
 		# constrain it to this participant's disposable presentation arena.
@@ -977,30 +982,339 @@ func _disconnect_opponent_callbacks(body: Node3D) -> void:
 ## it on the trainer would put them at the middle of a circle they are supposed
 ## to be standing at the edge of, watching.
 ##
-## OP21-25: `combat.json`'s radius is one flat number for every fight
-## anywhere, and the Stronghold/Burrow Warrens rooms are mostly smaller than
-## it in at least one dimension. `combat_arena.hold_inside()` corrects a
-## fighter with a raw position write, not a physics move -- it has no
-## collision to stop it -- so a boundary that reaches past a room's real walls
-## does not clip a knocked-back fighter against them, it teleports the fighter
-## straight through to the far side, and the fight becomes unwinnable exactly
-## as OP21-25 describes. `_arena_bounds()` asks whatever built this room
-## (`stronghold.gd`, `burrow_warrens.gd`) how much radius it can actually
-## afford, the same way `_ground_height()` below already asks it for a Y --
-## and only ever SHRINKS the configured radius, never grows it, so the open
-## meadow (nothing answers the query, `_arena_bounds()` returns -1.0) fights
-## exactly as before.
-func _open_arena() -> void:
+## COMBAT §5: gameplay radii size an ordinary ring; measured rendered bodies
+## independently have to fit. Existing room providers may cap the ring, but
+## a cap cannot authorize clipping. No alternate ordinary pad producer exists:
+## an unsuitable location refuses admission before any fight side effects.
+func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bool:
 	var cfg: Dictionary = (MATH.config().get("arena", {}) as Dictionary).duplicate()
+	# Gameplay radii size the ring; rendered art independently decides fit.
+	var ally_radius := float(_ally_body.call("body_radius"))
+	var foe_radius := float(_wild.call("body_radius"))
+	if not is_finite(ally_radius) or not is_finite(foe_radius) or ally_radius <= 0.0 or foe_radius <= 0.0:
+		return false
+	cfg["radius"] = clampf(ceilf(2.0 * (ally_radius + foe_radius) + 7.0), 11.0, 26.0)
+	_admitted_spots = _staging_spots(cfg)
+	var centre := (_admitted_spots[0] + _admitted_spots[1]) * 0.5
+	var bound := _arena_bounds(centre)
+	if host_arena.is_empty() and bound >= 0.0 and bound < float(cfg["radius"]):
+		if not _enemy_owned: return false
+		# Named rooms retain their authored provider's existing radius. An
+		# ordinary encounter cannot silently shrink below its derived ring.
+		cfg["radius"] = bound
+	if not host_arena.is_empty():
+		if joining_realm:
+			if not _valid_host_arena(host_arena): return false
+		elif not _valid_authored_arena(host_arena): return false
+		centre = host_arena.centre
+		cfg["radius"] = host_arena.radius
+		if not joining_realm:
+			# Seat the formation on this actual authored pad before fighting,
+			# retaining its measured gap and any lateral trainer treatment.
+			var shift := centre - (_admitted_spots[0] + _admitted_spots[1]) * 0.5
+			_admitted_spots[0] += shift
+			_admitted_spots[1] += shift
+			var authored_bound := _arena_bounds(centre)
+			if authored_bound >= 0.0 and authored_bound < float(cfg["radius"]): return false
+	if joining_realm:
+		var ally_spot := _realm_owned_ally_spot()
+		var footprint := _admission_render_radius(_ally_body)
+		var offset := Vector2(ally_spot.x - centre.x, ally_spot.z - centre.z).length()
+		if not ally_spot.is_finite() or not is_finite(footprint) \
+			or offset + footprint + float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)) > float(cfg["radius"]):
+			return false
+		if not _staged_render_terrain_clear(_ally_body, ally_spot, _wild.global_position) \
+			or not _realm_ally_clears_host_render(ally_spot): return false
+		_admitted_spots = [ally_spot, _wild.global_position]
+	# A joining peer never relocates or re-admits the host's live opponent.
+	# Local admission fails before configure's scatter/bystander side effects.
+	if not joining_realm and not _staged_render_fit(_admitted_spots, centre, float(cfg["radius"])):
+		_admitted_spots.clear()
+		push_warning("This encounter location cannot fit both rendered combatants.")
+		return false
 	_arena = ARENA.new()
 	_arena.name = "CombatArena"
 	_player.get_parent().add_child(_arena)
-	var centre := _midpoint(cfg)
 	_arena_centre = centre
-	var bound := _arena_bounds(centre)
-	if bound >= 0.0:
-		cfg["radius"] = minf(float(cfg.get("radius", 11.0)), bound)
 	_arena.call("configure", centre, cfg)
+	return true
+
+
+## The host enemy keeps its current orientation, even if it is targeting a
+## different participant. Measure that pose toward the proposed local seat;
+## only the joining ally turns to face the enemy.
+func _realm_ally_clears_host_render(ally_spot: Vector3) -> bool:
+	var line := _wild.global_position - ally_spot
+	line.y = 0.0
+	var distance := line.length()
+	if distance <= 0.000001: return false
+	line /= distance
+	var points := _body_world_corners(_wild)
+	if points.is_empty(): return false
+	var foe_extent := 0.0
+	for point: Vector3 in points:
+		if not point.is_finite(): return false
+		foe_extent = maxf(foe_extent, (point - _wild.global_position).dot(-line))
+	var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
+	return distance + 0.001 >= _admission_front_extent(_ally_body) + foe_extent + clearance
+
+
+## Only the director's admitted reliable record supplies this context. Packet
+## pose updates and the joining player's own radius never replace host geometry.
+func _valid_host_arena(context: Dictionary) -> bool:
+	if str(context.get("encounter_id", "")).is_empty() or str(context.get("realm", "")).is_empty() \
+		or int(context.get("body_generation", 0)) <= 0 or context.get("species_id") != _enemy.get("species_id"):
+		return false
+	var centre: Variant = context.get("centre")
+	var radius: Variant = context.get("radius")
+	if not centre is Vector3 or not (centre as Vector3).is_finite() or not (radius is float or radius is int) \
+		or not is_finite(float(radius)) or float(radius) <= 0.0:
+		return false
+	var generation: Variant = _wild.get("body_generation")
+	if generation == null: generation = _wild.get_meta(&"tether_body_generation", null)
+	if generation != null and int(generation) != int(context.body_generation): return false
+	if str(context.get("kind", "")) != "wild": return true
+	if float(radius) > 26.0: return false
+	if not str(context.get("named_encounter_id", "")).is_empty(): return canonical_named_host_arena(context)
+	return float(radius) >= 11.0
+
+
+## A reliable named identity is checked against the mounted world's translated
+## canonical row and its reserved replacement site, never against a pose packet
+## or an arbitrary positive radius. A guest mirror need not be a resident actor.
+func canonical_named_host_arena(context: Dictionary, world: Node = null) -> bool:
+	if world == null and is_instance_valid(_player): world = _player.get_parent()
+	if not is_instance_valid(world) or not world.is_inside_tree(): return false
+	var id := str(context.get("named_encounter_id", ""))
+	var centre: Variant = context.get("centre")
+	var radius: Variant = context.get("radius")
+	if id.is_empty() or not centre is Vector3 or not (centre as Vector3).is_finite() \
+		or not (radius is float or radius is int) or not is_finite(float(radius)): return false
+	for source: Node in world.get_children():
+		var script := source.get_script() as Script
+		if script != null and script.resource_path == "res://scripts/world/burrow_warrens.gd" \
+			and source.has_method("authored_named_wild_arena_definition"):
+			var definition: Dictionary = source.call("authored_named_wild_arena_definition", id)
+			if definition.is_empty(): continue
+			var at: Variant = definition.get("centre")
+			var size: Variant = definition.get("radius")
+			return definition.get("source") == source and str(definition.get("named_encounter_id", "")) == id \
+				and definition.get("species_id") == context.get("species_id") \
+				and at is Vector3 and (at as Vector3).is_finite() and (at as Vector3).is_equal_approx(centre as Vector3) \
+				and (size is float or size is int) and is_finite(float(size)) and float(size) > 0.0 \
+				and is_equal_approx(float(size), float(radius))
+		if script == null or script.resource_path != "res://scripts/combat/water_encounter_director.gd" \
+			or source.get("realm_world") != world: continue
+		var config: Dictionary = source.get("encounter_config")
+		for named: Dictionary in config.get("named_encounters", []):
+			if str(named.get("id", "")) != id: continue
+			if bool(named.get("trainer_owned", true)) or not bool(named.get("catchable", false)) \
+				or not named.has("arena_radius_m") or str(named.get("species", "")) != str(context.get("species_id", "")):
+				return false
+			var position: Variant = named.get("position")
+			if not position is Array or position.size() != 3: return false
+			var authored := Vector3(float(position[0]), float(position[1]), float(position[2]))
+			if not authored.is_finite() or not authored.is_equal_approx(centre as Vector3) \
+				or not is_equal_approx(float(named.arena_radius_m), float(radius)): return false
+			for site: Dictionary in config.get("wild_sites", []):
+				if str(site.get("id", "")) == str(named.get("replaces_wild_site_id", "")):
+					return str(site.get("named_replacement_id", "")) == id and int(site.get("count", 1)) == 1
+			return false
+	return false
+
+
+## Before an encounter ID exists, only the actual mounted named site supplies
+## canonical geometry. This context never crosses a client input channel.
+func _valid_authored_arena(context: Dictionary) -> bool:
+	var source: Variant = context.get("source")
+	if not _enemy_owned: return _valid_named_wild_arena(context)
+	if not source is Node3D or not is_instance_valid(source) \
+		or not _player.get_parent().is_ancestor_of(source as Node): return false
+	var centre: Variant = context.get("centre")
+	var radius: Variant = context.get("radius")
+	if not centre is Vector3 or not (centre as Vector3).is_finite() or not (radius is int or radius is float) \
+		or not is_finite(float(radius)) or float(radius) <= 0.0: return false
+	if source.get_script() == preload("res://scripts/masters/master_site.gd"):
+		var definition := preload("res://scripts/creatures/breakthrough.gd").master(str(source.get("master_id")))
+		return source.get("_mounted") == true and not definition.is_empty() \
+			and context.get("owner_npc") == definition.id and centre == source.global_position \
+			and is_equal_approx(float(radius), float(definition.arena_radius_m))
+	if source.get_script() == preload("res://scripts/world/cloudreach_finale_controller.gd"):
+		var definition: Dictionary = source.get("config")
+		return not definition.is_empty() and definition == preload("res://scripts/world/cloudreach_finale_controller.gd").read_config() \
+			and context.get("owner_npc") == definition.encounter_id and centre == source.global_position \
+			and is_equal_approx(float(radius), float(definition.arena_radius_m))
+	return false
+
+
+## A named wild remains wild. Only its actual mounted canonical producer can
+## authorize an authored bay or guardian room; nearby ordinary actors cannot.
+func _valid_named_wild_arena(context: Dictionary) -> bool:
+	var source: Variant = context.get("source")
+	if not source is Node or not is_instance_valid(source) or not (source as Node).is_inside_tree() \
+		or not _player.get_parent().is_ancestor_of(source as Node) or context.get("wild") != _wild:
+		return false
+	var script: Script = (source as Node).get_script() as Script
+	if script == null or script.resource_path not in ["res://scripts/combat/water_encounter_director.gd", "res://scripts/world/burrow_warrens.gd"] \
+		or not source.has_method("authored_named_wild_arena_context"): return false
+	var canonical: Dictionary = source.call("authored_named_wild_arena_context", _wild)
+	if canonical.is_empty() or context != canonical: return false
+	var centre: Variant = canonical.get("centre")
+	var radius: Variant = canonical.get("radius")
+	return centre is Vector3 and (centre as Vector3).is_finite() and (radius is float or radius is int) \
+		and is_finite(float(radius)) and float(radius) > 0.0 \
+		and canonical.get("species_id") == _enemy.get("species_id") \
+		and not str(canonical.get("named_encounter_id", "")).is_empty()
+
+
+## Measured art in body-local space, including off-centre model placement.
+## This is deliberately separate from the gameplay capsule radius.
+func _admission_render_points(body: Node3D) -> PackedVector3Array:
+	if body == null or not is_instance_valid(body) or not body.is_inside_tree():
+		return PackedVector3Array()
+	var model := body.call("model_pivot") as Node3D if body.has_method("model_pivot") else null
+	if model == null or not model.is_inside_tree():
+		return PackedVector3Array()
+	var pose := body.global_transform
+	if not pose.origin.is_finite() or not pose.basis.x.is_finite() or not pose.basis.y.is_finite() \
+		or not pose.basis.z.is_finite() or absf(pose.basis.determinant()) <= 0.000001:
+		return PackedVector3Array()
+	var bounds := _body_render_bounds(body)
+	if not bounds.position.is_finite() or not bounds.size.is_finite() or bounds.size.is_zero_approx():
+		return PackedVector3Array()
+	return FIGHT_CAMERA.box_points(bounds, body.global_transform.affine_inverse() * model.global_transform)
+
+
+func _admission_render_radius(body: Node3D) -> float:
+	var points := _admission_render_points(body)
+	if points.is_empty():
+		return INF
+	var radius := 0.0
+	var scale := body.global_basis.get_scale()
+	for point: Vector3 in points:
+		var reach := Vector2(point.x * scale.x, point.z * scale.z).length()
+		if not is_finite(reach): return INF
+		radius = maxf(radius, reach)
+	return radius
+
+
+func _admission_front_extent(body: Node3D) -> float:
+	var points := _admission_render_points(body)
+	if points.is_empty(): return INF
+	var extent := 0.0
+	for point: Vector3 in points:
+		extent = maxf(extent, point.z * body.global_basis.get_scale().z)
+	return extent
+
+
+func _staged_render_fit(spots: Array[Vector3], centre: Vector3, radius: float) -> bool:
+	var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
+	if spots.size() != 2 or not centre.is_finite() or not is_finite(radius) or radius <= 0.0:
+		return false
+	var gap := Vector2(spots[1].x - spots[0].x, spots[1].z - spots[0].z).length()
+	if gap + 0.001 < _admission_front_extent(_ally_body) + _admission_front_extent(_wild) + clearance:
+		return false
+	for index in 2:
+		var body: Node3D = _ally_body if index == 0 else _wild
+		var footprint := _admission_render_radius(body)
+		var offset := Vector2(spots[index].x - centre.x, spots[index].z - centre.z).length()
+		if not spots[index].is_finite() or not is_finite(footprint) or offset + footprint + clearance > radius:
+			return false
+		if not _staged_render_terrain_clear(body, spots[index], spots[1 - index]):
+			return false
+	return true
+
+
+## Check the proposed rendered box before moving a body. Existing ground and
+## physics providers must support its footprint; a terrain claim alone cannot
+## seat a giant beyond a built deck or inside a wall.
+func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector3) -> bool:
+	# Predict exactly the seat place_on_ground will use, including the highest
+	# support under the gameplay footprint; a hillside is not a wall.
+	var surface := _registered_surface_admission_context(body)
+	var level := NAN
+	if not surface.is_empty():
+		level = float(surface.surface_origin_y)
+	else:
+		# A surface subtype cannot borrow an unregistered dry-ground fallback.
+		if body.has_method("surface_origin_y"): return false
+		level = float(body.call("_ground_height", spot.x, spot.z))
+		if is_nan(level): level = float(body.call("_ray_ground", spot))
+		if is_finite(level): level = float(body.call("_seat_over_footprint", spot, level))
+	if not is_finite(level): return false
+	var direction := facing_at - spot
+	direction.y = 0.0
+	if direction.length_squared() <= 0.000001: return false
+	# CreatureBody faces along local +Z (yaw_in_parent), unlike Camera3D.
+	var basis := Basis.looking_at(-direction.normalized(), Vector3.UP) * Basis.from_scale(body.global_basis.get_scale())
+	var points := _admission_render_points(body)
+	if points.is_empty(): return false
+	var lo := Vector3(INF, INF, INF)
+	var hi := Vector3(-INF, -INF, -INF)
+	for point: Vector3 in points:
+		var at := basis * point + Vector3(spot.x, level, spot.z)
+		lo = lo.min(at)
+		hi = hi.max(at)
+	var exclude: Array[RID] = []
+	for actor: Node3D in [_player, _ally_body, _wild]:
+		if actor is CollisionObject3D: exclude.append((actor as CollisionObject3D).get_rid())
+	var space := body.get_world_3d().direct_space_state
+	if not surface.is_empty():
+		var source: Node = surface.source as Node
+		# Validate the centre and every actual transformed render-footprint
+		# corner through the registered Water domain, including submerged art.
+		if not bool(source.call("surface_wild_supports_at", body, Vector3(spot.x, level, spot.z))): return false
+		for point: Vector3 in points:
+			if not bool(source.call("surface_wild_supports_at", body, basis * point + Vector3(spot.x, level, spot.z))):
+				return false
+	for at: Vector2 in [Vector2(spot.x, spot.z), Vector2(lo.x, lo.z), Vector2(lo.x, hi.z), Vector2(hi.x, lo.z), Vector2(hi.x, hi.z)]:
+		if not surface.is_empty(): continue
+		var ray := PhysicsRayQueryParameters3D.create(Vector3(at.x, level + REALM_SEAT_MAX_STEP_M, at.y),
+			Vector3(at.x, level - REALM_SEAT_MAX_STEP_M, at.y), 0x7FFFFFFF, exclude)
+		var hit := space.intersect_ray(ray)
+		if not hit.is_empty():
+			if (hit.normal as Vector3).dot(Vector3.UP) <= 0.5: return false
+		else:
+			# Terrain3D rays can miss supported floor; use its actual collision,
+			# as CharacterBody's sweep does, instead of trusting the height claim.
+			var support := SphereShape3D.new()
+			support.radius = 0.25
+			var support_query := PhysicsShapeQueryParameters3D.new()
+			support_query.shape = support
+			support_query.transform = Transform3D(Basis.IDENTITY, Vector3(at.x, level, at.y))
+			support_query.collision_mask = 0x7FFFFFFF
+			support_query.exclude = exclude
+			if space.intersect_shape(support_query, 1).is_empty(): return false
+	# Leave the floor/contact skin out of the solid-obstacle query.
+	# A floating body's submerged bounds remain in the actual solid query.
+	if surface.is_empty(): lo.y = maxf(lo.y, level + 0.25)
+	if hi.y <= lo.y: return false
+	var shape := BoxShape3D.new()
+	shape.size = hi - lo
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = shape
+	query.transform = Transform3D(Basis.IDENTITY, (lo + hi) * 0.5)
+	query.collision_mask = 0x7FFFFFFF
+	query.exclude = exclude
+	return space.intersect_shape(query, 1).is_empty()
+
+
+func _registered_surface_admission_context(body: Node3D) -> Dictionary:
+	if not body.has_method("surface_origin_y"): return {}
+	for source: Node in _player.get_parent().get_children():
+		var script := source.get_script() as Script
+		if script == null or script.resource_path != "res://scripts/combat/water_encounter_director.gd" \
+			or not source.has_method("surface_wild_admission_context") or not source.has_method("surface_wild_supports_at"):
+			continue
+		var context: Dictionary = source.call("surface_wild_admission_context", body)
+		if context.is_empty() or context.get("source") != source or context.get("wild") != body: continue
+		var origin: Variant = context.get("surface_origin_y")
+		var level: Variant = context.get("water_level_y")
+		if not (origin is float or origin is int) or not (level is float or level is int) \
+			or not is_finite(float(origin)) or not is_finite(float(level)): return {}
+		if not is_equal_approx(float(origin), float(body.call("surface_origin_y"))): return {}
+		return context
+	return {}
 
 
 ## The most radius the room around `centre` can afford, or -1.0 if no room
@@ -1031,8 +1345,8 @@ func _arena_bounds(centre: Vector3) -> float:
 		return -1.0
 	var footprint := 0.0
 	for fighter: Variant in [_ally_body, _wild]:
-		if fighter != null and is_instance_valid(fighter) and fighter.has_method("body_radius"):
-			footprint = maxf(footprint, float(fighter.call("body_radius")))
+		if fighter != null and is_instance_valid(fighter):
+			footprint = maxf(footprint, _admission_render_radius(fighter))
 	for child in host.get_children():
 		if child == _arena or not (child is Node):
 			continue
@@ -1069,10 +1383,18 @@ func _staging_spots(cfg: Dictionary) -> Array[Vector3]:
 	var scale := 1.0
 	if full > 0.01:
 		scale = _staging_reach(_player.global_position, forward, full) / full
-	return [
+	var spots: Array[Vector3] = [
 		_player.global_position + forward * (deploy * scale),
 		_player.global_position + forward * (full * scale),
 	]
+	var lateral := float(cfg.get("trainer_ally_lateral_m", 0.0))
+	var rank: Variant = _wild.get_meta(&"trainer_rank") if _wild != null and _wild.has_meta(&"trainer_rank") else null
+	if _enemy_owned and lateral > 0.0 and trainer_seats_aside(cfg, rank):
+		var side := Vector3(-forward.z, 0.0, forward.x).normalized()
+		var right := _staging_reach(spots[0], side, lateral)
+		var left := _staging_reach(spots[0], -side, lateral)
+		spots[0] += side * right if right >= left else -side * left
+	return spots
 
 
 ## F04#2 (round-1 judge B1: Halder's CHARGER opened point-blank, its lane a
@@ -1086,6 +1408,9 @@ const OPEN_SEPARATION_CLEARANCE_M := 1.6
 
 func _open_separation(cfg: Dictionary) -> float:
 	var separation := float(cfg.get("separation", 5.0))
+	var measured_gap := _admission_front_extent(_ally_body) + _admission_front_extent(_wild) \
+		+ maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
+	if is_finite(measured_gap): separation = maxf(separation, measured_gap)
 	if _wild == null or not is_instance_valid(_wild):
 		return separation
 	var override: Variant = _wild.get("combat_override")
@@ -1201,22 +1526,10 @@ func _place_fighters() -> void:
 	# current position, and `_place()` below moves it.
 	var full := float(cfg.get("deploy_offset", 2.6)) + _open_separation(cfg)
 	var forward := _staging_axis(full)
-	var spots := _staging_spots(cfg)
+	var spots := _admitted_spots if _admitted_spots.size() == 2 else _staging_spots(cfg)
 	var ally_spot: Vector3 = spots[0]
 	var wild_spot: Vector3 = spots[1]
-	# F04#2 (round-1 judge B1/D: the player's own creature hid the captain's).
-	# A trainer fight seats the ally beside the player->opponent line, on the
-	# side with room, the same treatment `_place_realm_owned_ally` gives realm
-	# fights (F14#0 C3). 0 keeps the in-line formation.
-	var lateral := float(cfg.get("trainer_ally_lateral_m", 0.0))
-	var trainer_rank: Variant = _wild.get_meta(&"trainer_rank") if _wild.has_meta(&"trainer_rank") else null
-	if _enemy_owned and lateral > 0.0 \
-			and trainer_seats_aside(cfg, trainer_rank):
-		var side := Vector3(-forward.z, 0.0, forward.x).normalized()
-		var right := _staging_reach(ally_spot, side, lateral)
-		var left := _staging_reach(ally_spot, -side, lateral)
-		ally_spot += side * right if right >= left else -side * left
-
+	# The admitted formation already includes any named trainer lateral seat.
 	_ally_body.visible = true
 	_place(_ally_body, ally_spot)
 	_ally_body.call("face_towards", wild_spot)
@@ -1262,6 +1575,13 @@ const REALM_SEAT_MAX_STEP_M := 1.0
 
 
 func _place_realm_owned_ally() -> void:
+	var ally_spot := _admitted_spots[0] if _admitted_spots.size() == 2 else _realm_owned_ally_spot()
+	_ally_body.visible = true
+	_place(_ally_body, ally_spot)
+	_ally_body.call("face_towards", _combat_position(_wild))
+
+
+func _realm_owned_ally_spot() -> Vector3:
 	var cfg: Dictionary = MATH.config().get("arena", {})
 	var ally_spot: Vector3 = _staging_spots(cfg)[0]
 	var enemy_at := _combat_position(_wild)
@@ -1300,9 +1620,7 @@ func _place_realm_owned_ally() -> void:
 			if _realm_seat_stands(ally_spot + shift, base_level):
 				ally_spot += shift
 				break
-	_ally_body.visible = true
-	_place(_ally_body, ally_spot)
-	_ally_body.call("face_towards", _combat_position(_wild))
+	return ally_spot
 
 
 ## A lateral realm seat must stand on a real surface at the unshifted seat's
@@ -3466,6 +3784,12 @@ func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_e
 		if move.get("slot") == "ultimate":
 			var session := get_node_or_null(^"/root/Session")
 			context["recipient_character_id"] = str(session.call("_local_character_id")) if session != null and session.has_method("_local_character_id") else str(move.get("actor_binding", {}).get("character_id", ""))
+	# Surface presentation uses the local rendered target, independently of
+	# the host's accepted strike endpoint and authoritative arrival clock.
+	var visual_bounds := _body_world_bounds(target_body)
+	if visual_bounds.position.is_finite() and visual_bounds.size.is_finite() \
+			and visual_bounds.size.x > 0.0 and visual_bounds.size.y > 0.0 and visual_bounds.size.z > 0.0:
+		context["target_visual_bounds"] = {"position": visual_bounds.position, "size": visual_bounds.size}
 	var presentation: Node3D = PROJECTILE.launch(parent,
 		launch.get("from", striker.global_position), launch.get("to", target_body.global_position),
 		move, context)
@@ -5151,7 +5475,9 @@ func _on_orb_missed(message: String) -> void:
 func _on_aim_exited() -> void:
 	if state != State.ACTIVE:
 		return
-	if bool(_throw.call("is_busy")):
+	# A cancelled aim is already IDLE even while its closing B press is being
+	# swallowed. That input guard must not keep the camera on the trainer.
+	if int(_throw.get("state")) != THROW_AIM.State.IDLE:
 		return
 	_take_camera()
 
@@ -5944,17 +6270,25 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 	var invalid_hud: Array[String] = []
 	var hud := (_camera_rig as Node).get_parent().get_node_or_null(^"CombatHUD")
 	var controls: Array[Control] = []
+	# The production HUD owns dynamic panels and overlays. Measure its actual
+	# controls as well as configured paths, retaining missing-path failures.
+	for candidate: Node in get_tree().get_nodes_in_group(&"combat_hud"):
+		if candidate.get_viewport() != camera.get_viewport() or not candidate.has_method("fight_occupied_controls"):
+			continue
+		if hud == null: hud = candidate
+		for control: Control in candidate.call("fight_occupied_controls"):
+			if is_instance_valid(control) and not controls.has(control): controls.append(control)
 	if hud != null:
 		for path: String in cfg.get("hud_paths", []):
 			var control := hud.get_node_or_null(NodePath(path)) as Control
 			if control != null:
-				controls.append(control)
+				if not controls.has(control): controls.append(control)
 			else:
 				hud_valid = false
 				invalid_hud.append(path)
 		for property: String in cfg.get("hud_dynamic_controls", []):
 			var value: Variant = hud.get(property)
-			if value is Control: controls.append(value)
+			if value is Control and not controls.has(value): controls.append(value)
 	var margin := clampf(float(cfg.get("hud_margin_px", 12.0)), 0.0, 64.0)
 	if not is_finite(margin): hud_valid = false
 	for control: Control in controls:

@@ -347,6 +347,7 @@ var _has_model: bool = false
 ## Drives the model's clips. Null when a creature fell back to the capsule,
 ## which has nothing to animate.
 var _animator: RefCounted = null
+var _traversal_pose_role := ""
 ## OWNER-0912-TERRAPUP-LAY. A species may finish its shipped rest clip with a
 ## small additive skeletal pose. The complete pre-rest state is retained so a
 ## deployed companion can reuse the bed pose and stand back up without touching
@@ -362,6 +363,8 @@ var _rest_pose_meshes_before: Dictionary = {}
 var _rest_pose_vertex_deform_receipt: Dictionary = {}
 var _rest_pose_applied_bones: Array[String] = []
 var _combat_flinch_tween: Tween = null
+var _combat_flinch_art: Node3D = null
+var _combat_flinch_target: Node3D = null
 var _combat_flinch_rest_position := Vector3.ZERO
 var _combat_flinch_rest_rotation := Vector3.ZERO
 var _combat_hitstop_active := false
@@ -548,6 +551,8 @@ var body_scale: float = 1.0
 
 
 func _build_placeholder() -> void:
+	_clear_combat_flinch()
+	_combat_flinch_art = null
 	if _rest_pose_active or _rest_pose_pending:
 		stop_rest()
 	var look: Dictionary = SPECIES.placeholder(species_id)
@@ -626,6 +631,7 @@ func _build_model(look: Dictionary) -> bool:
 		return false
 	_model.add_child(art)
 	_fit(art, float(look.get("model_scale", 1.0)))
+	_combat_flinch_art = art
 
 	# Sourced models point in whatever direction their author chose, and there
 	# is no convention to rely on. Combat faces creatures along +Z (`facing()`),
@@ -692,15 +698,24 @@ func _release_art(node: Node) -> void:
 ## `Armature|Frog_Attack` and `Armature|Triceratops_Run`. Nothing in code knows
 ## those strings, so a new creature is a data edit.
 func _build_animator(art: Node3D, look: Dictionary) -> void:
+	_animator = null
+	if has_meta("f36_pose_candidate_installed"):
+		remove_meta("f36_pose_candidate_installed")
+	if has_meta("f36_pose_rest_installed"):
+		remove_meta("f36_pose_rest_installed")
 	var players: Array[Node] = art.find_children("*", "AnimationPlayer", true, false)
 	if players.is_empty():
 		push_warning("model for '%s' has no AnimationPlayer; it will not animate" % species_id)
 		return
 	var player := players[0] as AnimationPlayer
-	var clips := POSE_CANDIDATES.install(self, _model, player, look, look.get("animations", {}))
+	var clips := POSE_CANDIDATES.install(self, _model, player, look, look.get("animations", {})).duplicate(true)
+	# Authored bed recipes finish the installed faint clip. Combat's new
+	# collapse must not replace their endpoint or completion signal.
+	clips["rest_faint"] = str((look.get("animations", {}) as Dictionary).get("faint", ""))
 	_animator = ANIMATOR.new(player, clips)
 	if bool(get_meta("f36_pose_candidate_installed", false)):
 		_animator.call("bind_candidate_pivot", _model)
+	_animator.call("set_traversal_role", _traversal_pose_role)
 
 
 ## Scale and centre an imported model so it stands on the node's origin at the
@@ -2091,26 +2106,36 @@ func play_hit() -> void:
 		_animator.call("play_once", "hit")
 
 
-## Combat's hit reaction is deliberately on the visual pivot, never the
-## CharacterBody: the recoil cannot move collision or change whether the next
-## attack connects. An authored hit clip still plays underneath it.
+## Recoil stays visual, never moving collision or attack geometry. Enabled
+## hurt clips own Model's grounded transform, so their additive recoil uses
+## the fitted art child instead of competing for the same animation tracks.
 func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
+	_clear_combat_flinch()
 	play_hit()
 	if _model == null or not is_inside_tree():
 		return
-	if _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
-		_combat_flinch_tween.kill()
-		_model.position = _combat_flinch_rest_position
-		_model.rotation = _combat_flinch_rest_rotation
-	_combat_flinch_rest_position = _model.position
-	_combat_flinch_rest_rotation = _model.rotation
-	var local_away := global_basis.inverse() * away.normalized()
+	_combat_flinch_target = _combat_flinch_art \
+		if bool(get_meta("f36_pose_candidate_installed", false)) and is_instance_valid(_combat_flinch_art) else _model
+	_combat_flinch_rest_position = _combat_flinch_target.position
+	_combat_flinch_rest_rotation = _combat_flinch_target.rotation
+	var recoil_parent := _combat_flinch_target.get_parent() as Node3D
+	var local_away := recoil_parent.global_basis.inverse() * away.normalized()
 	var recoil := Vector3(local_away.x, 0.08, local_away.z) * 0.14
 	_combat_flinch_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
-	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position + recoil, 0.045).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), 0.045)
-	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x, 0.11)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position + recoil, 0.045).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), 0.045)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x, 0.11)
+
+
+func _clear_combat_flinch() -> void:
+	if _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
+		_combat_flinch_tween.kill()
+	_combat_flinch_tween = null
+	if is_instance_valid(_combat_flinch_target):
+		_combat_flinch_target.position = _combat_flinch_rest_position
+		_combat_flinch_target.rotation = _combat_flinch_rest_rotation
+	_combat_flinch_target = null
 
 
 ## Hitstop freezes locomotion and animation on this creature only. The manager
@@ -2141,6 +2166,11 @@ func set_combat_hitstop(active: bool) -> void:
 
 
 func play_faint() -> void:
+	var presence := get_node_or_null("Presence")
+	if presence != null:
+		presence.call("_suspend", "faint_pose")
+	# A hit-recoil tween must not overwrite the collapse's grounded pivot.
+	_clear_combat_flinch()
 	if _animator != null:
 		_animator.call("play_faint")
 
@@ -2180,6 +2210,13 @@ const REST_SINK_METERS := 0.12
 func play_rest() -> void:
 	if _rest_pose_active or _rest_pose_pending:
 		return
+	# Species with a generated, posed-vertex-grounded rest own their endpoint.
+	# Keep the existing stop_rest/revive lifecycle for camp, beds and recall.
+	if bool(get_meta("f36_pose_rest_installed", false)) and _animator != null:
+		_rest_pose_pivot_before = _model.transform
+		_rest_pose_active = true
+		_animator.call("play_terminal", "rest")
+		return
 	var look := REST_VISUAL.resolve(species_id, SPECIES.placeholder(species_id))
 	var authored: Variant = look.get("rest_pose", {})
 	if authored is Dictionary and not (authored as Dictionary).is_empty():
@@ -2187,7 +2224,10 @@ func play_rest() -> void:
 		return
 	var roll := float(look.get("rest_roll_deg", DEFAULT_REST_ROLL_DEG))
 	if roll == 0.0:
-		play_faint()
+		if _animator != null:
+			_animator.call("play_terminal", "rest_faint")
+		else:
+			play_faint()
 		return
 	if _animator != null:
 		_animator.call("tick", 0.0, 0.0, 1.0)
@@ -2322,7 +2362,7 @@ func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 		player.animation_finished.connect(callback)
 	var rest_role := str(config.get("clip_role", "faint"))
 	if _animator != null and _animator.has_method("play_terminal"):
-		_animator.call("play_terminal", rest_role)
+		_animator.call("play_terminal", "rest_faint" if rest_role == "faint" else rest_role)
 	else:
 		play_faint()
 	var expected := str((look.get("animations", {}) as Dictionary).get(
@@ -2708,8 +2748,16 @@ func revive_animation() -> void:
 ## already-authorized mounted/swimming/flying state, and clear on dismount.
 ## This never grants traversal, moves collision, or mutates saved state.
 func set_traversal_pose(role: String) -> void:
+	var next := role if role in ["ride", "swim", "fly_grip"] else ""
+	if next == _traversal_pose_role:
+		return
+	_traversal_pose_role = next
 	if _animator != null:
-		_animator.call("set_traversal_role", role)
+		if not next.is_empty():
+			var presence := get_node_or_null("Presence")
+			if presence != null:
+				presence.call("_suspend", "traversal_pose")
+		_animator.call("set_traversal_role", next)
 
 
 ## --- catching, the creature's half ------------------------------------------

@@ -100,6 +100,7 @@ extends RefCounted
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
+const MUSHROOM_PRESENTATION := preload("res://scripts/world/mushroom_pickup_presentation.gd")
 
 const FILE_NAME := "pickups.json"
 const ARRAY_KEY := "pickups"
@@ -233,11 +234,7 @@ const CANDY_LOOK := {
 ## noun it did not have to guess at. They are the size the candy is being
 ## brought toward, so touching them would be undoing the one thing that was
 ## already right.
-const MUSHROOM_LOOK := {
-	"speed_mushroom": {"tint": Color(0.60, 0.72, 1.0), "scale": Vector3.ONE},
-	"stamina_mushroom": {"tint": Color(1.0, 1.0, 1.0), "scale": Vector3.ONE},
-	"wild_mushroom": {"tint": Color(1.0, 0.62, 0.52), "scale": Vector3(1.30, 0.90, 1.30)},
-}
+const MUSHROOM_LOOK := MUSHROOM_PRESENTATION.LOOK
 
 ## Medallion and wing proportions, as fractions of the candy mesh's own AABB
 ## so they follow whatever `world_model_scale` the item carries. Both were
@@ -788,12 +785,7 @@ static func _star_mesh(outer: float, inner: float, height: float) -> Mesh:
 
 
 static func _dress_mushroom(mesh: MeshInstance3D, look: Dictionary) -> void:
-	var tint: Color = look["tint"]
-	if not tint.is_equal_approx(Color.WHITE):
-		mesh.material_override = _tinted(mesh, tint, tint, 0.0)
-	var scale: Vector3 = look["scale"]
-	if not scale.is_equal_approx(Vector3.ONE):
-		mesh.scale = mesh.scale * scale
+	MUSHROOM_PRESENTATION.dress_mesh(mesh, look)
 
 
 ## A copy of the mesh's own textured material with the tint multiplied in,

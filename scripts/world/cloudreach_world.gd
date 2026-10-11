@@ -579,7 +579,11 @@ func ground_height_at(x: float, z: float, preferred_y: float = NAN) -> float:
 		if surface.has("built_by_flag") and not bool(_open_bridge_flags.get(surface["built_by_flag"], false)):
 			continue
 		var kind := str(surface.get("kind", "rect"))
-		if kind == "rect":
+		if kind == "crown_mesh":
+			var sample: Vector2 = surface["sampler"].sample(x, z)
+			if is_finite(sample.x):
+				best = _preferred_surface(best, sample.x, preferred_y)
+		elif kind == "rect":
 			var centre: Vector2 = surface.get("centre", Vector2.ZERO)
 			var half: Vector2 = surface.get("half", Vector2.ZERO)
 			if absf(x - centre.x) <= half.x and absf(z - centre.y) <= half.y:
@@ -810,7 +814,17 @@ func _build_materials() -> void:
 	cloud_bank.set_shader_parameter("extinction", float(cloud_cfg.get("bank_extinction", 10.0)))
 	_materials["cloud_billow"] = cloud_bank
 	var island_cfg: Dictionary = _visual_config.get("island_roots", {})
-	if str(island_cfg.get("mist_style", "flat")) == "soft_bank":
+	if str(island_cfg.get("mist_style", "flat")) == "volume_bank":
+		# The realm's existing bounded density shader has no visible proxy
+		# surface and clips against opaque depth. This removes the overlapping
+		# translucent disks rather than changing their silhouette opacity.
+		var mist := ShaderMaterial.new()
+		mist.shader = preload("res://shaders/cloudreach_cloud_volume.gdshader")
+		mist.set_shader_parameter("cloud_lit", Color(str(island_cfg.get("mist_colour", "#e6eef4"))))
+		mist.set_shader_parameter("cloud_base", Color(str(island_cfg.get("mist_base_colour", "#8095a8"))))
+		mist.set_shader_parameter("extinction", float(island_cfg.get("mist_extinction", 6.0)))
+		_materials["island_mist"] = mist
+	elif str(island_cfg.get("mist_style", "flat")) == "soft_bank":
 		# P2-106: an opaque emissive collar read as flat white decagons cut
 		# out of the sky. The soft bank is lit, darker underneath and fades
 		# to nothing at its silhouette, so the puffs read as cloud.
@@ -1214,6 +1228,8 @@ func _build_regions() -> void:
 		# straight through. `crown_cut` carves the crown down to every road
 		# under it, and `_mesa` draws AND collides that one carved surface.
 		var crown_cut := _region_crown_cut(spec, centre, size, top)
+		if not summit_region and not _crown_relief_config().is_empty():
+			crown_cut = _region_relief_cut(crown_cut, centre, size, top)
 		_shell_build.call("mark", "regions:%s:mesa:begin" % str(spec.get("id", "Region")))
 		# The summit only collides once its crown is carved clear of those
 		# roads; uncarved (no cut configured) it keeps the old silhouette-only
@@ -1224,6 +1240,20 @@ func _build_regions() -> void:
 			false, 0.0, -1.0, crown_cut)
 		if not crown_cut.is_empty():
 			_exclude_crown_cut_cover(crown_cut)
+		# Register the real crown before planting. An old flat ellipse above a
+		# lowered terrace would otherwise win preferred-height queries.
+		var crown_surface := {"kind": "ellipse", "centre": Vector2(centre.x, centre.z),
+			"half": Vector2(size.x, size.z) * 0.30,
+			"rotation": region_mass.rotation.y, "height": top}
+		if region_mass.has_meta(&"crown_surface"):
+			var sampler: RefCounted = region_mass.get_meta(&"crown_surface")
+			var surface_bounds: AABB = sampler.get("bounds")
+			crown_surface = {"kind": "crown_mesh", "sampler": sampler,
+				"centre": Vector2(surface_bounds.get_center().x, surface_bounds.get_center().z),
+				"half": Vector2(surface_bounds.size.x, surface_bounds.size.z) * 0.5}
+		elif not crown_cut.is_empty():
+			crown_surface["crown_cut"] = crown_cut
+		_surfaces.append(crown_surface)
 		if summit_region:
 			_summit_crown_cut = crown_cut
 			# The road's y=1160 landing -> arena approach join. The carved crown
@@ -1246,25 +1276,73 @@ func _build_regions() -> void:
 		_add_wind_vegetation(node,
 			Rect2(centre.x - size.x * 0.5, centre.z - size.z * 0.5, size.x, size.z),
 			top, int(spec.get("order", 0)), crown_cut)
-		_cover_patches.append({
+		var region_cover := {
 			"kind": "ellipse", "centre": Vector3(centre.x, top, centre.z),
 			# Conservative inside the rotated irregular crown; no grass can hang
 			# in the air at the ellipse corners.
 			"half": Vector2(size.x, size.z) * 0.34,
 			"seed": int(spec.get("order", 0)) * 101,
 			"dry": int(spec.get("order", 0)) >= 5,
-		})
-		# Match the real rotated irregular crown conservatively. The old enclosing
-		# rectangle reported invisible corner air as ground, which could place a
-		# loaded player or an evidence camera beside a floating island.
-		var crown_surface := {"kind": "ellipse", "centre": Vector2(centre.x, centre.z),
-			"half": Vector2(size.x, size.z) * 0.30,
-			"rotation": region_mass.rotation.y, "height": top}
-		if not crown_cut.is_empty():
-			# The index reports the carved floor/bank, not y=1160 over a road.
-			crown_surface["crown_cut"] = crown_cut
-		_surfaces.append(crown_surface)
+		}
+		if region_mass.has_meta(&"crown_surface"):
+			region_cover["crown_surface"] = region_mass.get_meta(&"crown_surface")
+		_cover_patches.append(region_cover)
 		_region_count += 1
+
+
+## Broad pre-summit crowns use the same sampled triangles as the existing
+## road carve. Landing discs and the summit's specialized foundation stay as
+## authored. Relief dies inside the core ring, before any cliff wall vertex.
+func _region_relief_cut(existing: Dictionary, centre: Vector3, size: Vector3, top: float) -> Dictionary:
+	if _all_route_lines.is_empty():
+		_collect_all_route_lines()
+	var cfg := _crown_relief_config()
+	var cut := existing.duplicate(true)
+	if cut.is_empty():
+		cut = {"crown_y": top + 0.03, "cell_m": float(cfg.get("mesh_step_m", 7.0)),
+			"bank_normal_y": 0.64, "floor_half_width_m": 10.0, "floor_drop_m": 0.25,
+			"bank_slope": 2.5, "min_lowering_m": 0.3, "min_raise_m": 0.05,
+			"fill_clearance_m": 8.9, "lines": [], "ends": PackedVector3Array(),
+			"bounds": PackedFloat32Array()}
+	var radius := minf(size.x, size.z) * 0.30
+	# A whole crown cell must stay flat beside a protected ribbon. Otherwise
+	# a triangle with a raised corner can interpolate across the ribbon even
+	# when every vertex directly over the road was pinned to zero relief.
+	var road_margin := float(cut["cell_m"]) * 1.5
+	var pad := {"position": Vector3(centre.x, top, centre.z), "flat_radius": radius,
+		"road_margin_m": road_margin}
+	var reach := maxf(size.x, size.z) * 0.5 + road_margin \
+		+ maxf(LINE_EASE_M, float(cfg.get("terrace_line_ease_m", 55.0)))
+	pad["lines"] = _lines_near(centre.x - reach, centre.x + reach, centre.z - reach, centre.z + reach)
+	var protected: Array[Dictionary] = []
+	for landing: Dictionary in _pads_near(centre.x - reach, centre.x + reach, centre.z - reach, centre.z + reach):
+		protected.append({"position": landing.position, "radius": float(landing.flat_radius) + PAD_EASE_M})
+	for landmark: Dictionary in _config.get("landmarks", []):
+		if str(landmark.get("category", "")) == "settlement":
+			protected.append({"position": _vec3(landmark.position), "radius": 42.0})
+	if _yard_visual_config.is_empty():
+		_yard_visual_config = _read_json("res://data/config/cloudreach_scene_runtime.json")
+	for yard: Dictionary in _yard_visual_config.get("battle_yards", []):
+		protected.append({"position": _vec3(yard.road_position) + _vec3(yard.outward).normalized() * 25.0,
+			"radius": 26.0})
+	pad["protected"] = protected
+	cut["relief"] = pad
+	return cut
+
+
+func _region_relief_at(point: Vector3, pad: Dictionary) -> float:
+	var weight := 1.0
+	for protected: Dictionary in pad["protected"]:
+		var centre: Vector3 = protected.position
+		if absf(point.y - centre.y) > 45.0:
+			continue
+		var distance := Vector2(point.x - centre.x, point.z - centre.z).length()
+		var radius := float(protected.radius)
+		weight = minf(weight, smoothstep(radius, radius + 24.0, distance))
+		if weight <= 0.0:
+			return 0.0
+	var lines: Array[Dictionary] = pad["lines"]
+	return _crown_relief_at(pad, point, lines) * weight
 
 
 ## How far under the crown's flat top a region's eroded rim can reach; bounds
@@ -1506,7 +1584,12 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int,
 			centre.y + sin(angle) * half.y * radius)
 		if _inside_settlement_clearance(at) or _inside_nature_tree_exclusion(at):
 			continue
-		if not crown_cut.is_empty() and absf(_carved_crown_y(top, at.x, at.z, crown_cut) - top) > 0.01:
+		if crown_cut.has("surface"):
+			var sample: Vector2 = crown_cut["surface"].sample(at.x, at.z)
+			if not is_finite(sample.x) or sample.y < 0.72:
+				continue
+			at.y = sample.x
+		elif not crown_cut.is_empty() and absf(_carved_crown_y(top, at.x, at.z, crown_cut) - top) > 0.01:
 			continue # F06: planted at crown height, it would hang over the carve or sink in the fill.
 		var tree_scene := WIND_TREES[order % WIND_TREES.size()] if i == 0 \
 			else NATURE_TREES[(i + order) % NATURE_TREES.size()]
@@ -1534,7 +1617,12 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int,
 		var radius := 0.24 + 0.38 * sqrt(fmod(float(i) * 0.4142 + 0.13 * order, 1.0))
 		var at := Vector3(centre.x + cos(angle) * half.x * radius, top - 0.18,
 			centre.y + sin(angle) * half.y * radius)
-		if not crown_cut.is_empty() and absf(_carved_crown_y(top, at.x, at.z, crown_cut) - top) > 0.01:
+		if crown_cut.has("surface"):
+			var sample: Vector2 = crown_cut["surface"].sample(at.x, at.z)
+			if not is_finite(sample.x) or sample.y < 0.64:
+				continue
+			at.y = sample.x - 0.18
+		elif not crown_cut.is_empty() and absf(_carved_crown_y(top, at.x, at.z, crown_cut) - top) > 0.01:
 			continue
 		var rock := NATURE_ROCKS[(i * 2 + order) % NATURE_ROCKS.size()].instantiate() as Node3D
 		apply_stone_palette(rock)
@@ -1715,7 +1803,7 @@ const PAD_EASE_M := 6.0
 ## line's walking-surface height there. `lines` is normally
 ## `_all_route_lines`; callers with a spatially culled subset pass it instead.
 func _nearest_route_line(world_point: Vector3, lines: Array[Dictionary],
-		floor_y: float = -INF) -> Dictionary:
+		floor_y: float = -INF, ease_m: float = LINE_EASE_M) -> Dictionary:
 	var best_d := INF
 	var best_h := 0.0
 	var best_half_width := 0.0
@@ -1728,7 +1816,7 @@ func _nearest_route_line(world_point: Vector3, lines: Array[Dictionary],
 	var pinned_d := 0.0
 	var pinned_half_width := 0.0
 	for line: Dictionary in lines:
-		var reach: float = float(line["half_width"]) + LINE_PIN_MARGIN_M + LINE_EASE_M
+		var reach: float = float(line["half_width"]) + LINE_PIN_MARGIN_M + ease_m
 		if world_point.x < float(line["min_x"]) - reach or world_point.x > float(line["max_x"]) + reach \
 				or world_point.z < float(line["min_z"]) - reach or world_point.z > float(line["max_z"]) + reach:
 			continue
@@ -1848,27 +1936,25 @@ func _crown_relief_at(pad: Dictionary, world_point: Vector3,
 		return 0.0
 	if bool(cfg.get("respect_settlements", true)) and _inside_settlement_clearance(world_point):
 		return 0.0
-	# Roads and bridge decks own their own height. `_crown_height_at`'s caller
-	# flattens the relief back out near them for free through
-	# `_line_eased_height`, but `_emit_mesa_top` has no such easing, so the
-	# suppression lives here where both paths get it. Without it a region
-	# crown would roll straight through an authored road ribbon, which is the
-	# hole/sink class OP-0905-24/25 closed.
+	# Roads and bridge decks own their height. The region carve samples this
+	# relief before applying its road constraints; suppress displacement in a
+	# wide band so crown triangles cannot roll through a fixed road ribbon.
 	# C3's terraces are a much larger displacement than the waves, so they need
 	# a much wider berth from a road than LINE_EASE_M gives: 15 m of drop
 	# recovered over 6 m is a wall across the ribbon's shoulder. Same
 	# suppression, second ease distance.
 	var terrace_line := 1.0
 	if not lines.is_empty():
-		var nearest := _nearest_route_line(world_point, lines)
+		var wide := maxf(LINE_EASE_M, float(cfg.get("terrace_line_ease_m", 55.0)))
+		var road_margin := float(pad.get("road_margin_m", 0.0))
+		var nearest := _nearest_route_line(world_point, lines, -INF, wide + road_margin)
 		var d: float = nearest["distance"]
 		if not is_inf(d):
-			var reach: float = float(nearest["half_width"]) + LINE_PIN_MARGIN_M
+			var reach: float = float(nearest["half_width"]) + LINE_PIN_MARGIN_M + road_margin
 			if d < reach:
 				return 0.0
 			if d < reach + LINE_EASE_M:
 				edge *= smoothstep(0.0, 1.0, (d - reach) / LINE_EASE_M)
-			var wide := maxf(LINE_EASE_M, float(cfg.get("terrace_line_ease_m", 55.0)))
 			terrace_line = smoothstep(0.0, 1.0, clampf((d - reach) / wide, 0.0, 1.0))
 	var reference := maxf(float(cfg.get("reference_radius_m", 150.0)), 1.0)
 	var amplitude := float(cfg.get("amplitude_m", 4.5)) * minf(1.0, flat_radius / reference)
@@ -1893,20 +1979,10 @@ func _crown_relief_at(pad: Dictionary, world_point: Vector3,
 ## where its cliff face starts, so a player standing on it has no edge in front
 ## of them and no stepped profile behind them.
 ##
-## This steps the crown DOWN from its centre to its rim in `bench_count` broad
-## benches with walkable risers between them. Down, and never up: `_surfaces`
-## registers a region as one ellipse at its authored `top`, and
-## `ground_height_at` answers with that flat number for the whole disc -- so a
-## crown that rose ABOVE it would spawn a loaded player or an evidence camera
-## inside a hill, while one that falls below it only drops them a little. That
-## is the same direction `_mesa`'s eroded crown already takes; its rim is
-## authored up to 48 m below the registered top.
-##
-## Lives here, in the shared height model, for the reason the whole file is
-## organised around: `_mesa` emits its visible crown AND its collision copy from
-## `_crown_height_at`/`_emit_mesa_top`, and every shoulder conforms through
-## `_walkable_height`. Putting relief into one emitter alone is exactly the
-## hole/sink class OP-0905-24/25 closed at real cost.
+## This steps the crown down from its centre in `bench_count` broad benches
+## with sloped risers. `_carve_mesa_top` samples it before the road constraints
+## and emits one triangle set for drawing, collision and the crown's CPU
+## height queries. The final rim returns to the original cliff wall contour.
 func _crown_terrace_at(cfg: Dictionary, r: float, flat_radius: float, line_ease: float) -> float:
 	var total := float(cfg.get("terrace_drop_m", 0.0))
 	var benches := int(cfg.get("bench_count", 0))
@@ -4425,8 +4501,20 @@ func _build_sky_shrine(root: Node3D) -> void:
 	_cover_exclusions.append({"centre": root.global_position + Vector3(0, 0, -10), "half": Vector2(4.5, 9), "rotation": 0.0})
 	for step in 3:
 		var height := 0.34 * (step + 1)
-		_box(root, "ShrineApproachStep", Vector3(0, height * 0.5, -12.4 + step * 0.8), Vector3(7.0, height, 1.0), _materials["masonry_trim"], true)
-	_box(root, "Dais", Vector3(0.0, 0.65, 0.0), Vector3(26.0, 1.3, 20.0), _materials["masonry_trim"], true)
+		var step_size := Vector3(7.0, height, 1.0)
+		var stair := _box(root, "ShrineApproachStep", Vector3(0, height * 0.5, -12.4 + step * 0.8), step_size, _materials["masonry_trim"], true)
+		var step_top := stair.to_global(Vector3.UP * step_size.y * 0.5)
+		register_runtime_surface({"kind": "rect", "centre": Vector2(step_top.x, step_top.z),
+			"half": Vector2(step_size.x, step_size.z) * 0.5, "height": step_top.y})
+	var dais_size := Vector3(26.0, 1.3, 20.0)
+	var dais := _box(root, "Dais", Vector3(0.0, 0.65, 0.0), dais_size, _materials["masonry_trim"], true)
+	var dais_top := dais.to_global(Vector3.UP * dais_size.y * 0.5)
+	# The shrine root is the existing unrotated landmark. Register its actual
+	# paved collider tops, rather than the lower generic landmark datum.
+	register_runtime_surface({"kind": "rect", "centre": Vector2(dais_top.x, dais_top.z),
+		"half": Vector2(dais_size.x, dais_size.z) * 0.5, "height": dais_top.y})
+	_cover_exclusions.append({"centre": dais_top, "half": Vector2(dais_size.x, dais_size.z) * 0.5,
+		"rotation": root.global_rotation.y})
 	for x in [-9.5, 9.5]:
 		# Route stall (#340, Cloudreach-B): a 2.2 m BOX collider here trapped a
 		# trainer on the dais at (1099.003, 1051.301, 2941.399) -- every move
@@ -5522,6 +5610,12 @@ func _mesa(
 	var upper_tool := SurfaceTool.new()
 	upper_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	upper_tool.set_material(_materials["cliff_high"] if side_material != _materials["cliff_shadow"] else side_material)
+	# Crown emitters lift their perimeter by 3 cm; the wall starts on the
+	# original ring. Close that daylight seam without moving either surface.
+	if carved.is_empty():
+		_emit_mesa_visual_seam(upper_tool, sides, top_ring)
+	else:
+		_emit_carved_mesa_seam(upper_tool, carved["rim"], carved["natural_rim"])
 	for i in sides:
 		var next := (i + 1) % sides
 		_add_geological_face(upper_tool, top_ring[i], top_ring[next], upper_ring[i], upper_ring[next],
@@ -5574,6 +5668,13 @@ func _mesa(
 	if not carved.is_empty():
 		var build_started := Time.get_ticks_usec()
 		_build_carved_crown(root, carved, top_material, collision)
+		if crown_cut.has("relief"):
+			var sampler := preload("res://scripts/world/cloudreach_crown_surface.gd").new()
+			var triangles: PackedVector3Array = (carved["turf"] as PackedVector3Array).duplicate()
+			triangles.append_array(carved["bank"])
+			sampler.build(triangles, Transform3D(yaw_basis, root.global_position))
+			root.set_meta(&"crown_surface", sampler)
+			crown_cut["surface"] = sampler
 		crown_cut_build_usec = crown_cut_carve_usec + Time.get_ticks_usec() - build_started
 
 	if collision and carved.is_empty():
@@ -5685,22 +5786,31 @@ func _emit_mesa_root(tool: SurfaceTool, sides: int, bottom_ring: Array[Vector3],
 
 
 ## The mist that tells a player the island is high, not broken. A collar of
-## soft billows around and just under the base ring, one MultiMesh per island,
-## unshaded so it stays bright against the cliff underside it sits on.
+## soft billows around and just under the base ring, one MultiMesh per island.
+## Volume banks use invisible unit boxes, as the existing density shader
+## integrates the ray through [-1, 1] and supplies its own cloud silhouette.
 func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value: int) -> void:
 	var cfg: Dictionary = _visual_config.get("island_roots", {})
 	var count := maxi(0, int(cfg.get("mist_puffs", 26)))
 	if count == 0:
 		return
-	var sphere := SphereMesh.new()
-	sphere.radius = 1.0
-	sphere.height = 2.0
-	sphere.radial_segments = maxi(6, int(cfg.get("mist_radial_segments", 10)))
-	sphere.rings = maxi(3, int(cfg.get("mist_rings", 5)))
-	sphere.material = _materials["island_mist"]
+	var volume_bank := str(cfg.get("mist_style", "flat")) == "volume_bank"
+	var puff_mesh: PrimitiveMesh
+	if volume_bank:
+		var box := BoxMesh.new()
+		box.size = Vector3.ONE * 2.0
+		puff_mesh = box
+	else:
+		var sphere := SphereMesh.new()
+		sphere.radius = 1.0
+		sphere.height = 2.0
+		sphere.radial_segments = maxi(6, int(cfg.get("mist_radial_segments", 10)))
+		sphere.rings = maxi(3, int(cfg.get("mist_rings", 5)))
+		puff_mesh = sphere
+	puff_mesh.material = _materials["island_mist"]
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
-	multi.mesh = sphere
+	multi.mesh = puff_mesh
 	multi.instance_count = count
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value * 97 + 13
@@ -5709,6 +5819,7 @@ func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value
 	var below := float(cfg.get("mist_below_m", 26.0))
 	var puff_min := float(cfg.get("mist_radius_min_fraction", 0.30))
 	var puff_max := float(cfg.get("mist_radius_max_fraction", 0.62))
+	var height_fraction := float(cfg.get("mist_height_fraction", 0.60)) if volume_bank else 0.36
 	for i in count:
 		var angle := rng.randf() * TAU
 		# A COLLAR, strictly outside the mass footprint and strictly below its
@@ -5722,7 +5833,7 @@ func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value
 		var y := base_y - rng.randf_range(below * 0.12, below)
 		var puff := radius * rng.randf_range(puff_min, puff_max)
 		var basis := Basis.IDENTITY.rotated(Vector3.UP, rng.randf() * TAU)
-		basis = basis.scaled(Vector3(puff, puff * 0.36, puff * rng.randf_range(0.7, 1.05)))
+		basis = basis.scaled(Vector3(puff, puff * height_fraction, puff * rng.randf_range(0.7, 1.05)))
 		multi.set_instance_transform(i, Transform3D(basis,
 			Vector3(cos(angle) * r, y, sin(angle) * r)))
 	var node := MultiMeshInstance3D.new()
@@ -5746,6 +5857,60 @@ func _emit_mesa_skirt(tool: SurfaceTool, sides: int, top_ring: Array[Vector3], d
 		var bottom_b := top_b - Vector3.UP * depth
 		_add_surface_triangle(tool, top_a, bottom_a, top_b)
 		_add_surface_triangle(tool, top_b, bottom_a, bottom_b)
+
+
+## The carved crown's raised bank already ends at the lifted natural rim.
+## Close only the remaining gap to the wall below it. Where a carve drops
+## below the wall top, the wall already overlaps the rim: add nothing there.
+## A raised-B bank triangle can reach below the natural rim when A is
+## lowered. Its lower diagonal owns that area; cap the gasket there before
+## splitting at both clamp thresholds to avoid coplanar overlapping faces.
+func _emit_carved_mesa_seam(tool: SurfaceTool, rim: PackedVector3Array,
+		natural_rim: PackedVector3Array) -> void:
+	for i in range(0, rim.size() - 1, 2):
+		var base_a := natural_rim[i] - Vector3.UP * 0.03
+		var base_b := natural_rim[i + 1] - Vector3.UP * 0.03
+		var height_a := rim[i].y - base_a.y
+		var height_b := rim[i + 1].y - base_b.y
+		# Match _carve_mesa_top's first bank-triangle condition exactly. That
+		# triangle spans from the carved rim down to (rim A -> natural B).
+		# Its upper edge is the gasket's original height limit, so subtracting
+		# it leaves only the area below this diagonal. The second bank triangle
+		# (raised A -> natural B -> natural A) stays at/above the natural rim.
+		if rim[i + 1].y > natural_rim[i + 1].y + 0.01:
+			height_b = 0.03
+		var cuts: Array[float] = [0.0, 1.0]
+		if absf(height_b - height_a) > 0.000001:
+			for threshold: float in [0.0, 0.03]:
+				var crossing := (threshold - height_a) / (height_b - height_a)
+				if crossing > 0.000001 and crossing < 0.999999:
+					cuts.append(crossing)
+		cuts.sort()
+		for span in cuts.size() - 1:
+			var t0 := cuts[span]
+			var t1 := cuts[span + 1]
+			if t1 - t0 < 0.000001:
+				continue
+			var bottom_a := base_a.lerp(base_b, t0)
+			var bottom_b := base_a.lerp(base_b, t1)
+			var top_a := bottom_a + Vector3.UP * clampf(lerpf(height_a, height_b, t0), 0.0, 0.03)
+			var top_b := bottom_b + Vector3.UP * clampf(lerpf(height_a, height_b, t1), 0.0, 0.03)
+			# Outward cross products, unlike the legacy collision-only skirt.
+			if top_a.y - bottom_a.y > 0.000001:
+				_add_surface_triangle(tool, top_a, top_b, bottom_a)
+			if top_b.y - bottom_b.y > 0.000001:
+				_add_surface_triangle(tool, top_b, bottom_b, bottom_a)
+
+
+func _emit_mesa_visual_seam(tool: SurfaceTool, sides: int, top_ring: Array[Vector3]) -> void:
+	for i in sides:
+		var next := (i + 1) % sides
+		var a: Vector3 = top_ring[i] + Vector3.UP * 0.03
+		var b: Vector3 = top_ring[next] + Vector3.UP * 0.03
+		# _add_surface_triangle reverses these outward-cross-product recipes
+		# for Godot's clockwise front face. Keep the collision skirt untouched.
+		_add_surface_triangle(tool, a, b, top_ring[i])
+		_add_surface_triangle(tool, b, top_ring[next], top_ring[i])
 
 
 ## The mesa's crown surface: a flat/eroded/rugged fan from `crown` across
@@ -5889,6 +6054,7 @@ func _carve_mesa_top(sides: int, crown: Vector3, core_ring: Array[Vector3],
 	var turf := PackedVector3Array()
 	var bank := PackedVector3Array()
 	var rim := PackedVector3Array()
+	var natural_boundary := PackedVector3Array()
 	var any_carved := false
 	for i in sides:
 		var next := (i + 1) % sides
@@ -5928,7 +6094,10 @@ func _carve_mesa_top(sides: int, crown: Vector3, core_ring: Array[Vector3],
 				else:
 					local = edge_core.lerp(edge_top, float(row - core_steps) / float(band_steps))
 				var world := anchor + yaw_basis * local
-				var carved_y := _carved_crown_y(world.y, world.x, world.z, cut)
+				var natural_y := world.y
+				if cut.has("relief"):
+					natural_y += _region_relief_at(world, cut["relief"])
+				var carved_y := _carved_crown_y(natural_y, world.x, world.z, cut)
 				var changed := carved_y != world.y
 				flags.append(1 if changed else 0)
 				if changed:
@@ -5943,10 +6112,12 @@ func _carve_mesa_top(sides: int, crown: Vector3, core_ring: Array[Vector3],
 			turf.append_array(PackedVector3Array([crown, core_b, core_a,
 				core_a, core_b, top_a, top_a, core_b, top_b]))
 			rim.append_array(PackedVector3Array([top_a, top_b]))
+			natural_boundary.append_array(PackedVector3Array([top_a, top_b]))
 			continue
 		any_carved = true
 		for col in cols:
 			rim.append_array(PackedVector3Array([grid[col][rows], grid[col + 1][rows]]))
+			natural_boundary.append_array(PackedVector3Array([natural_rims[col], natural_rims[col + 1]]))
 			# A filled rim stands over the mesa's side wall, which still starts
 			# at the natural rim: close that slot with a strip of cliff so no
 			# daylight shows between them.
@@ -6007,7 +6178,7 @@ func _carve_mesa_top(sides: int, crown: Vector3, core_ring: Array[Vector3],
 						turf.append_array(PackedVector3Array([a, b, c]))
 	if not any_carved:
 		return {}
-	return {"turf": turf, "bank": bank, "rim": rim}
+	return {"turf": turf, "bank": bank, "rim": rim, "natural_rim": natural_boundary}
 
 
 ## A carved triangle steeper than `bank_normal_y` draws as rock, the rest as
@@ -6107,7 +6278,11 @@ func _build_crown_outcrops(parent: Node3D, size: Vector3, seed_value: int) -> vo
 		var bounds: AABB=BUILDING_PREFABS.new().combined_aabb(rock)
 		rock.scale=Vector3(width,height,width*0.82)/bounds.size
 		rock.rotation.y=angle
-		rock.position=Vector3(cos(angle)*size.x*0.19,size.y*0.5-height*0.7-6.0,sin(angle)*size.z*0.19)-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*rock.scale
+		# Keep the intended floor centre after yaw as well as scale. Imported
+		# rocks have asymmetric bounds, so an unrotated offset moves the seat.
+		var floor_centre := Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z)
+		rock.position = Vector3(cos(angle) * size.x * 0.19,
+			size.y * 0.5 - height * 0.7 - 6.0, sin(angle) * size.z * 0.19) - rock.basis * floor_centre
 		parent.add_child(rock)
 		for mesh: MeshInstance3D in rock.find_children("*","MeshInstance3D",true,false):
 			mesh.material_override=_materials["cliff"]
@@ -6179,7 +6354,12 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 		var bounds: AABB = bounds_tool.combined_aabb(rock)
 		rock.scale = Vector3(width, height, width * 0.70) / bounds.size
 		rock.rotation.y = angle + 0.35
-		rock.position = Vector3(cos(angle) * size.x * 0.40, size.y * 0.5 - depth - height * 0.5, sin(angle) * size.z * 0.40)
+		# This is the buried volume's centre, not the imported mesh origin.
+		# All three installed rocks carry nonzero AABB centres; compensate the
+		# full basis so yaw cannot push an outcrop outside its supporting mass.
+		var seat := Vector3(cos(angle) * size.x * 0.40,
+			size.y * 0.5 - depth - height * 0.5, sin(angle) * size.z * 0.40)
+		rock.position = seat - rock.basis * bounds.get_center()
 		rock.name = "EmbeddedCliffOutcrop%d" % i
 		parent.add_child(rock)
 		for mesh: MeshInstance3D in rock.find_children("*", "MeshInstance3D", true, false):

@@ -8,6 +8,7 @@
     90,
     100
   ],
+  "_preparation_supplies": "F47 finite personal preparation bundles, paid with the existing once-per-character Master chest receipt. Raw materials cover five-creature Harness/Charm sets upgraded to +1, five feasts, station attachments and a forward camp with preparation reserve; Meadows is split across its two Masters. Players still refine and craft at their real home stations. Further upgrades, extra equipment, traits and repeatable training retain their gathering costs. Shared nodes and respawn clocks are unchanged. This is source tuning, not a measured route or C2 result.",
   "duel_policy": "sequential_one_challenger",
   "sign_presentation": {
     "font_size": 96,
@@ -27,6 +28,8 @@
       "feast_id": "feast_t1",
       "participants": 1,
       "candy": 2,
+      "attuned_per_creature": 2,
+      "preparation_supplies": {"potion_large": 2, "rootstone": 120, "ironwood": 80, "berries": 35, "fiber": 60, "sunleaf": 15, "wood": 75, "stone": 55},
       "name": "Orin Stonewake",
       "humanoid_key": "villager_quarryman",
       "species_id": "burrowback",
@@ -80,7 +83,7 @@
       ],
       "lead_name": "Neri",
       "lead_cast": "field_researcher",
-      "lead_text": "Orin Stonewake teaches at the side arena. Win your own one-creature duel, open the recipe chest, then cook a matching feast at home. Wait for the opening."
+      "lead_text": "Orin Stonewake teaches at the side arena. Win your own one-creature duel, open the recipe and supply chest, then cook a matching feast at home. Wait for the opening."
     },
     {
       "id": "master_t2",
@@ -90,6 +93,8 @@
       "feast_id": "feast_t2",
       "participants": 1,
       "candy": 2,
+      "attuned_per_creature": 1,
+      "preparation_supplies": {"potion_large": 2, "rootstone": 120, "ironwood": 67, "berries": 40, "fiber": 38, "wood": 27, "stone": 14},
       "name": "Mira Emberlane",
       "humanoid_key": "wandering_trainer",
       "species_id": "ashtusk",
@@ -144,7 +149,7 @@
       ],
       "lead_name": "Toma",
       "lead_cast": "field_researcher",
-      "lead_text": "Mira Emberlane teaches at the side arena. Win your own one-creature duel, open the recipe chest, then cook a matching feast at home. Own the lane."
+      "lead_text": "Mira Emberlane teaches at the side arena. Win your own one-creature duel, open the recipe and supply chest, then cook a matching feast at home. Own the lane."
     },
     {
       "id": "master_t3",
@@ -154,6 +159,8 @@
       "feast_id": "feast_t3",
       "participants": 1,
       "candy": 2,
+      "attuned_per_creature": 2,
+      "preparation_supplies": {"potion_large": 2, "sluice_metal": 180, "reef_stone": 100, "reed_fiber": 30, "tide_pearl": 15, "tide_bloom": 23, "wood": 12, "fiber": 9, "stone": 6, "rootstone": 3, "ironwood": 2},
       "name": "Ione Tideglass",
       "humanoid_key": "field_researcher",
       "species_id": "cannonback",
@@ -207,7 +214,7 @@
       ],
       "lead_name": "Elin",
       "lead_cast": "field_researcher",
-      "lead_text": "Ione Tideglass teaches at the side arena. Win your own one-creature duel, open the recipe chest, then cook a matching feast at home. Close the distance."
+      "lead_text": "Ione Tideglass teaches at the side arena. Win your own one-creature duel, open the recipe and supply chest, then cook a matching feast at home. Close the distance."
     },
     {
       "id": "master_t4",
@@ -218,6 +225,8 @@
       "feast_id": "feast_t4",
       "participants": 1,
       "candy": 2,
+      "attuned_per_creature": 2,
+      "preparation_supplies": {"potion_large": 2, "cliffglass_ore": 200, "windworn_heartwood": 128, "skyplume": 45, "gale_fiber": 15, "cloudberry": 23, "wood": 12, "fiber": 9, "stone": 6, "rootstone": 3, "ironwood": 2},
       "name": "Aster Windward",
       "humanoid_key": "alpha_tracker",
       "species_id": "stormcapra",
@@ -291,7 +300,7 @@
       ],
       "lead_name": "Sable",
       "lead_cast": "field_researcher",
-      "lead_text": "Aster Windward teaches at the side arena. Win your own one-creature duel, open the recipe chest, then cook a matching feast at home. Hold your footing."
+      "lead_text": "Aster Windward teaches at the side arena. Win your own one-creature duel, open the recipe and supply chest, then cook a matching feast at home. Hold your footing."
     },
     {
       "id": "master_t5",
@@ -301,6 +310,8 @@
       "feast_id": "feast_t5",
       "participants": 1,
       "candy": 2,
+      "attuned_per_creature": 2,
+      "preparation_supplies": {"potion_large": 2, "stormglass": 200, "thunderwood": 128, "sparkfur": 45, "glowmoss": 15, "voltcap": 20, "wood": 12, "fiber": 9, "stone": 6, "rootstone": 3, "ironwood": 2},
       "name": "Rowan Stormwise",
       "humanoid_key": "former_tether_member",
       "species_id": "voltarach",
@@ -355,7 +366,7 @@
       ],
       "lead_name": "Bryn",
       "lead_cast": "field_researcher",
-      "lead_text": "Rowan Stormwise teaches at the side arena. Win your own one-creature duel, open the recipe chest, then cook a matching feast at home. Read the mix-up and punish recovery.",
+      "lead_text": "Rowan Stormwise teaches at the side arena. Win your own one-creature duel, open the recipe and supply chest, then cook a matching feast at home. Read the mix-up and punish recovery.",
       "ready_species_id": "stormursa",
       "species_gate": "storm_bear_ready"
     }

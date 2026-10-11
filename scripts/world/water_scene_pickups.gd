@@ -12,7 +12,7 @@ const RESOURCE_MODELS := {
 	"driftwood": ["res://assets/environment/nature/log_large.glb", 0.5],
 	"reed_fiber": ["res://assets/environment/stylized_nature/Grass_Wheat.gltf", 0.7],
 	"tide_bloom": ["res://assets/environment/stylized_nature/Flower_3_Group.gltf", 0.7],
-	"sluice_metal": ["res://assets/props/quaternius_fantasy/Crate_Wooden.gltf", 0.35],
+	"sluice_metal": ["res://assets/environment/tidewake/sluice_metal_scrap/sluice_metal_scrap.tscn", 1.0],
 }
 @export var residency_radius_m := 140.0
 @export var active_cap_per_peer := 96
@@ -241,13 +241,8 @@ func _spawn(row: Dictionary) -> void:
 		node.call("setup", str(row.item_id), "Take " + str(definition.name), str(definition.get("world_model", CRATE)),
 			float(definition.get("world_model_scale", 0.35)), id.trim_prefix("water:"), "water", int(row.get("quantity", 1)))
 		CANDY_PRESENTATION.apply(node, str(row.item_id), definition, id)
-		if personal:
-			var label := Label3D.new()
-			label.text = str(row.get("tier_marking", ""))
-			label.position.y = 0.9
-			label.font_size = 48
-			label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-			node.add_child(label)
+		# Personal skill-candy grades are marked on the actual black wrapper
+		# by CANDY_PRESENTATION, rather than a floating billboard above it.
 	node.name = id.replace(":", "_")
 	node.set_meta("water_placement_id", id)
 	node.set_meta("water_placement_kind", str(row.placement_kind))

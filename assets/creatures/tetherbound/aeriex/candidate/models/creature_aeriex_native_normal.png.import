@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c2e0sg2xv4ujl"
-path="res://.godot/imported/creature_aeriex_native_normal.png-2b95d7f85d4a11a26cdfe9d12f3e3b4e.ctex"
+path.s3tc="res://.godot/imported/creature_aeriex_native_normal.png-2b95d7f85d4a11a26cdfe9d12f3e3b4e.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "4574b3a83ff667a1e8f3f1e5a71795e5"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/aeriex/candidate/models/creature_aeriex_native_normal.png"
-dest_files=["res://.godot/imported/creature_aeriex_native_normal.png-2b95d7f85d4a11a26cdfe9d12f3e3b4e.ctex"]
+dest_files=["res://.godot/imported/creature_aeriex_native_normal.png-2b95d7f85d4a11a26cdfe9d12f3e3b4e.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

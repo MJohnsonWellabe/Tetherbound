@@ -157,7 +157,7 @@ func setup(spec: Dictionary) -> void:
 		PICKUP_SPECS.register(flag_id(_node_id), _item_id, _amount, tool_yield, tool)
 	add_to_group("progression_restore")
 
-	_build_visual()
+	_build_visual(spec)
 	if _model_is_a_soft_occluder():
 		add_to_group(FIGHT_RING_OCCLUDER_GROUP)
 	_prompt = INTERACTABLE.new()
@@ -300,7 +300,7 @@ func resource_amount() -> int:
 ## exact pack. A PackedScene gets instantiated and wrapped in a plain Node3D
 ## so `_visual` stays a single node whose `.visible` and `.scale` mean "the
 ## whole prop" regardless of how many parts the scene's own root has.
-func _build_visual() -> void:
+func _build_visual(spec: Dictionary = {}) -> void:
 	if _model_path != "" and ResourceLoader.exists(_model_path):
 		var resource: Resource = load(_model_path)
 		if resource is PackedScene:
@@ -328,6 +328,11 @@ func _build_visual() -> void:
 			_visual = _box_visual()
 	else:
 		_visual = _box_visual()
+	var presentation: Dictionary = spec.get("visual", {})
+	if _item_id == "berries":
+		_visual = _berry_plant_visual(_visual, presentation)
+	elif _item_id in ["orb_basic", "travel_pack", "hide_boots", "hide_leggings", "hide_helm"]:
+		_visual = _mounted_reward_visual(_visual, presentation)
 	add_child(_visual)
 	# OP-0830-3. Attached to `_visual` rather than to `self` on purpose:
 	# `_deactivate()` detaches this by the same reference, so pickup_glow.gd
@@ -336,6 +341,112 @@ func _build_visual() -> void:
 	# type glow for a buried potion and stay dark for a wood/stone/fiber
 	# deposit -- see `pickup_glow.gd::is_glow_kind()`.
 	PICKUP_GLOW.attach(_visual, _item_colour(), -1.0, 1.0, _item_kind())
+
+
+## Keep the authored harvest anchor and its support; only the displayed item
+## comes from the cache's shared identity builder. Load it lazily so mounting
+## a harvest prop cannot introduce a preload cycle through world composition.
+func _mounted_reward_visual(support: Node3D, presentation: Dictionary) -> Node3D:
+	var factory: GDScript = load("res://scripts/world/item_cache_pickup.gd") as GDScript
+	if factory == null: return support
+	var definition := _presentation_item_definition()
+	var identity: Node3D = factory.create_identity_visual(_item_id, definition) as Node3D
+	if identity == null: return support
+	var display := Node3D.new()
+	display.name = "HarvestRewardDisplay"
+	display.add_child(identity)
+	var bounds := _presentation_bounds(display)
+	if bounds.size.y <= 0.0:
+		display.free()
+		return support
+	var height := float(presentation.get("reward_height_m", bounds.size.y))
+	if is_finite(height) and height > 0.0:
+		identity.scale *= height / bounds.size.y
+		bounds = _presentation_bounds(display)
+	var centre := bounds.position + bounds.size * 0.5
+	identity.position -= Vector3(centre.x, bounds.position.y, centre.z)
+	display.add_child(support)
+	var support_bounds := _presentation_bounds(support, true)
+	var support_centre := support_bounds.position + support_bounds.size * 0.5
+	identity.position += Vector3(support_centre.x, support_bounds.end.y, support_centre.z)
+	return display
+
+
+static var _presentation_item_db: RefCounted
+
+
+func _presentation_item_definition() -> Dictionary:
+	var game := get_node_or_null(^"/root/Game") if is_inside_tree() else null
+	var items: RefCounted = game.get("items") if game != null else null
+	# Some authored mounts build before entering the tree. Use the same item
+	# database there, so a detached prop keeps its real colour and gear identity.
+	if items == null:
+		if _presentation_item_db == null: _presentation_item_db = load("res://autoload/item_db.gd").new()
+		items = _presentation_item_db
+	return items.call("definition", _item_id)
+
+
+## Berries remain a harvestable plant, with fruit on its own foliage rather
+## than a floating food pickup. One instanced mesh draws all of its clusters.
+func _berry_plant_visual(plant: Node3D, presentation: Dictionary) -> Node3D:
+	var display := Node3D.new()
+	display.name = "BerryPlant"
+	display.add_child(plant)
+	var bounds := _presentation_bounds(display)
+	if bounds.size.x <= 0.0 or bounds.size.y <= 0.0: return display
+	var radius := float(presentation.get("berry_radius_m", 0.055))
+	if not is_finite(radius) or radius <= 0.0: return display
+	var berry := SphereMesh.new()
+	berry.radius = radius
+	berry.height = radius * 2.0
+	berry.radial_segments = 10
+	berry.rings = 6
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color(str(_presentation_item_definition().get("colour", "#a33a55")))
+	material.roughness = 0.55
+	berry.material = material
+	var clusters := MultiMesh.new()
+	clusters.transform_format = MultiMesh.TRANSFORM_3D
+	clusters.mesh = berry
+	clusters.instance_count = 18
+	var centre := bounds.position + bounds.size * 0.5
+	for cluster in 6:
+		var angle := TAU * float(cluster) / 6.0
+		var anchor := Vector3(centre.x + cos(angle) * bounds.size.x * 0.35,
+			bounds.position.y + bounds.size.y * (0.55 if cluster % 2 == 0 else 0.72),
+			centre.z + sin(angle) * bounds.size.z * 0.35)
+		for fruit_index in 3:
+			var offset := Vector3((-0.8 if fruit_index == 0 else 0.8 if fruit_index == 1 else 0.0) * radius,
+				-radius if fruit_index == 2 else 0.0, radius * 0.25 if fruit_index == 2 else 0.0)
+			clusters.set_instance_transform(cluster * 3 + fruit_index, Transform3D(Basis.IDENTITY, anchor + offset))
+	var clusters_visual := MultiMeshInstance3D.new()
+	clusters_visual.name = "BerryClusters"
+	clusters_visual.multimesh = clusters
+	clusters_visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	display.add_child(clusters_visual)
+	return display
+
+
+## Compose local transforms while detached: world construction calls setup
+## before adding some harvest nodes to the tree. Never query global_transform.
+func _presentation_bounds(root: Node3D, include_root_transform: bool = false) -> AABB:
+	var bounds := AABB()
+	var found := false
+	var meshes: Array[Node] = root.find_children("*", "MeshInstance3D", true, false)
+	if root is MeshInstance3D: meshes.append(root)
+	for node: Node in meshes:
+		var mesh := node as MeshInstance3D
+		if mesh.mesh == null: continue
+		var local := Transform3D.IDENTITY
+		var walk: Node3D = mesh
+		while walk != null and walk != root:
+			local = walk.transform * local
+			walk = walk.get_parent() as Node3D
+		if include_root_transform: local = root.transform * local
+		var box: AABB = local * mesh.get_aabb()
+		bounds = bounds.merge(box) if found else box
+		found = true
+	return bounds
 
 
 ## MAT-BLOCKOUT. The Old Quarry's rootstone deposits (`Rock_Medium_1/3.gltf`,

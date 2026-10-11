@@ -10,9 +10,9 @@ func test_candidate_keeps_collision_contract_and_baseline_immutable() -> void:
 	var base: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_aviary.json"))
 	var candidate: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(MERGE.PATH))
 	var combined := MERGE._merge(base, candidate.aviary)
-	assert_false(candidate.enabled)
+	assert_true(candidate.enabled)
 	assert_true(base.crown_arcade.enabled)
-	assert_false(combined.towers.enabled)
+	assert_true(combined.towers.enabled)
 	for field: String in ["throat", "drum", "arches", "footprint", "dome", "pylon_anchor"]:
 		assert_eq(combined[field], base[field], "candidate preserves " + field)
 	assert_true(AVIARY.throat_clear(combined))

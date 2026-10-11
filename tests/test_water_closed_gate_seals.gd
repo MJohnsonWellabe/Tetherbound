@@ -286,7 +286,7 @@ func _landforms() -> Array[Dictionary]:
 			"radius": float(island.shore_radius_m), "flags": sealed.get(str(island.id), [])})
 	for shoal: Dictionary in _config.rest_shoals:
 		landforms.append({"id": str(shoal.id), "centre": Vector2(float(shoal.center_xz_m[0]), float(shoal.center_xz_m[1])),
-			"radius": float(shoal.shore_radius_m), "flags": sealed.get(str(shoal.id), [])})
+			"radius": HEIGHT.rest_shoal_max_radius(shoal), "flags": sealed.get(str(shoal.id), [])})
 	return landforms
 
 

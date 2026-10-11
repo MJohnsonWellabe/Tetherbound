@@ -38,8 +38,10 @@
     "row_height": 66,
     "combat": {
       "inset": 56,
-      "command_bottom": 500,
+      "command_inset_bottom": 56,
+      "command_width": 840,
       "move_width": 420,
+      "move_row_height": 68,
       "move_bottom": 380
     },
     "scope": "device_local_presentation"

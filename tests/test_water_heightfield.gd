@@ -217,8 +217,9 @@ func test_real_rest_shoals_are_dry_gentle_bounded_and_inside_baked_regions() -> 
 				"safe disk must stay dry: " + str(shoal.get("id", "")))
 			assert_between(_field.slope_degrees_at(x, z, 0.25), 0.0, 35.0,
 				"safe disk must remain walkable: " + str(shoal.get("id", "")))
-		assert_almost_eq(_field.height_at(cx + radius, cz), _field.water_level(), 0.003)
-		assert_true(_field.height_at(cx + radius + 1.0, cz) < _field.water_level(),
+		var shore_radius := FIELD.rest_shoal_shore_radius(shoal, 0.0)
+		assert_almost_eq(_field.height_at(cx + shore_radius, cz), _field.water_level(), 0.003)
+		assert_true(_field.height_at(cx + shore_radius + 1.0, cz) < _field.water_level(),
 			"shoal cannot create phantom floor beyond its edge")
 		var found_anchor := false
 		for anchor: Dictionary in _config.get("anchors", []):

@@ -31,8 +31,8 @@ func build(materials: Dictionary) -> void:
 		_add_box("BellPierCap%02d" % (index + 1), Vector3(x, 6.7, 0.0), Vector3(4.0, 0.55, 5.0), stone_light, "bell_pier_cap")
 		_add_box("BellUpright%02d" % (index + 1), Vector3(x, 8.3, 0.0), Vector3(0.65, 3.0, 0.8), wood, "bell_frame")
 		_add_cylinder_between("BellKneeBrace%02d" % (index + 1), Vector3(x, 8.8, 0.0), Vector3(x - side * 3.2, 10.1, 0.0), 0.22, wood, "bell_frame")
-		_add_beacon("BridgeSignal%02d" % (index + 1), Vector3(x, 10.45, 0.0), Color(str(cfg.get("signal_colour", "#76e4dc"))),
-			float(cfg.get("signal_emission", 2.4)))
+		_add_beacon("BridgeSignal%02d" % (index + 1),
+			Vector3(x, 10.45 + float(cfg.get("signal_mount_offset_m", 0.445)), 0.0), bronze, cfg)
 		_add_banner("BridgePennant%02d" % (index + 1), Vector3(x + side * 2.15, 7.8, 0.16), side, cfg)
 	_add_box("ThreeBellCrownBeam", Vector3(0.0, 10.0, 0.0), Vector3(22.0, 1.15, 1.35), wood, "bell_frame")
 	for strap_x: float in [-9.6, -5.4, 0.0, 5.4, 9.6]:
@@ -116,22 +116,43 @@ func _add_banner(label: String, at: Vector3, side: float, cfg: Dictionary) -> vo
 	add_child(flag)
 
 
-func _add_beacon(label: String, at: Vector3, colour: Color, energy: float = 2.4) -> void:
+func _add_beacon(label: String, at: Vector3, bronze: Material, cfg: Dictionary) -> void:
+	# A luminous lens belongs to a crafted lantern, rather than an unsupported
+	# sphere intersecting the beam. All parts are visual and reuse bell bronze.
+	var lantern := Node3D.new()
+	lantern.name = label + "Housing"
+	lantern.position = at
+	add_child(lantern)
+	var radius := float(cfg.get("signal_lens_radius_m", 0.22))
+	var height := float(cfg.get("signal_lens_height_m", 0.44))
+	var housing_radius := float(cfg.get("signal_housing_radius_m", 0.34))
+	var cap_height := float(cfg.get("signal_housing_height_m", 0.10))
+	var strut_radius := float(cfg.get("signal_strut_radius_m", 0.035))
+	for side: float in [-1.0, 1.0]:
+		_add_cylinder_to(lantern, "LanternBase" if side < 0.0 else "LanternCap",
+			Vector3(0.0, side * (height + cap_height) * 0.5, 0.0), housing_radius,
+			cap_height, bronze, "signal_housing")
+	for i in 4:
+		var angle := TAU * float(i) / 4.0
+		_add_cylinder_to(lantern, "LanternStrut%d" % i,
+			Vector3(cos(angle) * radius, 0.0, sin(angle) * radius), strut_radius,
+			height, bronze, "signal_housing")
 	var material := StandardMaterial3D.new()
+	var colour := Color(str(cfg.get("signal_colour", "#f0a057")))
 	material.albedo_color = colour
+	material.roughness = 0.45
 	material.emission_enabled = true
 	material.emission = colour
-	material.emission_energy_multiplier = energy
+	material.emission_energy_multiplier = float(cfg.get("signal_emission", 0.45))
 	var orb := MeshInstance3D.new()
 	orb.name = label
 	var mesh := SphereMesh.new()
-	mesh.radius = 0.34
-	mesh.height = 0.68
+	mesh.radius = radius
+	mesh.height = height
 	orb.mesh = mesh
 	orb.material_override = material
-	orb.position = at
 	orb.set_meta("three_bells_role", "bridge_signal")
-	add_child(orb)
+	lantern.add_child(orb)
 
 
 func _add_box(label: String, at: Vector3, size: Vector3, material: Material, role: String) -> MeshInstance3D:

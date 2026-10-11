@@ -46,6 +46,9 @@ var _hitstop_active := false
 var _traversal_role := ""
 var _candidate_pivot: Node3D = null
 var _candidate_pivot_before := Transform3D.IDENTITY
+var _candidate_skeleton: Skeleton3D = null
+var _candidate_bones_before: Array[Transform3D] = []
+var _candidate_pose_active := false
 
 
 func _init(animation_player: AnimationPlayer, clips: Dictionary) -> void:
@@ -63,6 +66,12 @@ func tick(delta: float, speed: float, top_speed: float) -> void:
 	if _player == null or _finished:
 		return
 	_hold = maxf(0.0, _hold - delta)
+	if _candidate_impact_pending():
+		return
+	if speed >= STILL_SPEED and _candidate_pose_active and _current == _resolve(HIT):
+		# Remote bodies follow a transform rather than calling request_move.
+		# They need the same release into gait after the visible impact sample.
+		_hold = 0.0
 	if _hold > 0.0:
 		return
 	if _traversal_role != "" and _resolve(_traversal_role) != "":
@@ -101,6 +110,13 @@ func play_once(role: String) -> void:
 	if clip.begins_with("f36_candidate/"):
 		_current = ""
 	_play(role, false)
+	if role == HIT and clip.begins_with("f36_candidate/"):
+		# Damage can freeze animation immediately, then locomotion cancels the
+		# hold on the first resumed tick. Apply the authored impact sample now
+		# so hitstop shows the wince rather than the clip's neutral lead-in.
+		var start_phase := clampf(float(_clips.get("hit_start_phase", 0.0)), 0.0, 1.0)
+		_player.seek(_hold * start_phase, true)
+		_hold *= 1.0 - start_phase
 
 
 ## Start an attack while its gameplay telegraph begins, but only for an
@@ -146,6 +162,8 @@ func play_terminal(role: String) -> void:
 
 
 func revive() -> void:
+	if _player != null and _candidate_pose_active:
+		_player.stop()
 	_finished = false
 	_hold = 0.0
 	_current = ""
@@ -157,14 +175,35 @@ func set_traversal_role(role: String) -> void:
 	_traversal_role = role if role in ["ride", "swim", "fly_grip"] else ""
 
 
+func owns_pose() -> bool:
+	return _finished or not _traversal_role.is_empty() \
+		or (_candidate_pose_active and _hold > 0.0)
+
+
 func bind_candidate_pivot(pivot: Node3D) -> void:
 	_candidate_pivot = pivot
 	_candidate_pivot_before = pivot.transform
+	var skeletons := pivot.find_children("*", "Skeleton3D", true, false)
+	if skeletons.size() == 1:
+		_candidate_skeleton = skeletons[0] as Skeleton3D
+		for bone in _candidate_skeleton.get_bone_count():
+			_candidate_bones_before.append(_candidate_skeleton.get_bone_pose(bone))
 
 
 func _restore_candidate_pivot() -> void:
+	if not _candidate_pose_active:
+		return
 	if is_instance_valid(_candidate_pivot):
 		_candidate_pivot.transform = _candidate_pivot_before
+	# Installed clips often key only moving limbs. Restore the candidate's
+	# neck, tail and folded wings too, or they persist into ordinary locomotion.
+	if is_instance_valid(_candidate_skeleton):
+		for bone in _candidate_bones_before.size():
+			var pose := _candidate_bones_before[bone]
+			_candidate_skeleton.set_bone_pose_position(bone, pose.origin)
+			_candidate_skeleton.set_bone_pose_rotation(bone, pose.basis.get_rotation_quaternion())
+			_candidate_skeleton.set_bone_pose_scale(bone, pose.basis.get_scale())
+	_candidate_pose_active = false
 
 
 ## W12-COMPANION-0904. Play `role` once IF this rig has a clip for it (its own
@@ -194,8 +233,21 @@ func play_if_exists(role: String) -> bool:
 ## direction, so a creature already back under way is never shown standing
 ## still for a pose that finished being true.
 func cancel_hold() -> void:
+	if _candidate_impact_pending():
+		return
 	_hold = 0.0
 	_clear_telegraph_attack()
+
+
+## Keep only the authored impact window, including a movement request issued
+## in the very same physics step as damage. After it, movement resumes gait.
+## Animation position also respects hitstop without adding a gameplay timer.
+func _candidate_impact_pending() -> bool:
+	if _player == null or not _candidate_pose_active or _current != _resolve(HIT):
+		return false
+	var start_phase := clampf(float(_clips.get("hit_start_phase", 0.0)), 0.0, 1.0)
+	var release_phase := clampf(float(_clips.get("hit_release_phase", start_phase)), start_phase, 1.0)
+	return _player.current_animation_position < _player.get_animation(_current).length * release_phase
 
 
 ## Freeze only this model's current frame. CombatManager owns the short clock
@@ -216,8 +268,11 @@ func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:
 	if clip == "" or clip == _current:
 		return
 	_current = clip
+	var leaving_candidate := _candidate_pose_active and not clip.begins_with("f36_candidate/")
 	if not clip.begins_with("f36_candidate/"):
 		_restore_candidate_pivot()
+	else:
+		_candidate_pose_active = true
 	var animation := _player.get_animation(clip)
 	if animation != null:
 		animation.loop_mode = Animation.LOOP_LINEAR if looping else Animation.LOOP_NONE
@@ -227,7 +282,10 @@ func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:
 	# `speed_scale` multiply; mixing them would leave the telegraph rate active
 	# after setting only `speed_scale` back to one at impact.
 	_player.speed_scale = playback_speed
-	_player.play(clip, 0.15)
+	# Blending the old candidate would reapply its unkeyed bones and pivot
+	# after restoration. The installed clip starts from the restored rig.
+	var impact_pose := role == HIT and clip.begins_with("f36_candidate/")
+	_player.play(clip, 0.0 if leaving_candidate or impact_pose else 0.15)
 
 
 func _clear_telegraph_attack() -> void:

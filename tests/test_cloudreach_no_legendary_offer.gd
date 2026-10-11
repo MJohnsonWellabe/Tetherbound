@@ -755,17 +755,62 @@ static func _cross_scan_violations(sources: Dictionary, legendaries: Dictionary,
 ## character claim; its remaining imports call static claim/flag codecs. It
 ## neither constructs nor attaches an offer controller. Any body change or any
 ## additional import must enter the ordinary closure scan again.
-const SAVED_STORMWOOD_CALLBACK := """func foundation_stormwood_answer(source: Node, peer: int, claim: Dictionary) -> bool:
+const SAVED_STORMWOOD_CALLBACK := """func foundation_stormwood_answer(source: Node, peer: int, claim: Dictionary, cut: Dictionary = {}, phase: String = "commit") -> bool:
 	if not is_host() or not is_instance_valid(source) or source.get_script() != preload("res://scripts/world/stormwood_ending.gd") \\
 		or _game() == null or _game().session != self or source.get("session") != self \\
 		or source.get("world") != _portal_world_node("stormwood") or source.get("_foundation_world_binding") == null \\
 		or source.get("_foundation_world_binding").get_ref() != _game().world: return false
+	var stages: Dictionary = source.get_meta("stormwood_authority_stages", {})
+	var passive: RefCounted = _owner_passive_service()
+	if phase == "rollback":
+		var stage: Dictionary = stages.get(peer, {})
+		if not stage.is_empty() and stage.world == _game().world and stage.epoch == _altar_current_epoch():
+			_character_authority.call("restore_record", stage.character, stage.record)
+			if not stage.stream.is_empty(): (passive.get("hosts") as Dictionary)[stage.character] = stage.stream
+		stages.erase(peer)
+		source.set_meta("stormwood_authority_stages", stages)
+		return true
+	if phase not in ["check", "stage", "commit"]: return false
 	var character := _authority_character(peer)
 	if character.is_empty() or admitted_character_state(peer).is_empty() or claim.get("settled") != true \\
-		or not claim.get("kept") is bool or source.call("_saved_state").get("claims", {}).get(character, {}) != claim: return false
+		or not claim.get("kept") is bool or not claim.get("released_uid", "") is String: return false
+	var original: Dictionary = source.call("_saved_state").get("claims", {}).get(character, {})
+	if phase == "check":
+		if original.is_empty() or original.get("settled") == true: return false
+		var expected := original.duplicate(true)
+		expected.kept = claim.kept
+		expected.settled = true
+		expected.released_uid = claim.get("released_uid", "")
+		if expected != claim: return false
+	elif original != claim: return false
 	var id := preload("res://scripts/world/stormwood_ending.gd").claim_id(claim)
 	var kept: bool = claim.kept
-	if id.is_empty() or not _game().world.flags.call("has", preload("res://scripts/world/stormwood_ending.gd").resolution_flag(kept, character)): return false
+	if id.is_empty() or (phase != "check" and not _game().world.flags.call("has", preload("res://scripts/world/stormwood_ending.gd").resolution_flag(kept, character))): return false
+	if peer == local_peer_id():
+
+
+		var current: Dictionary = _character_authority.call("state", character)
+		if not current.redesign_character.transaction_receipts.has("stormheart_answer:%s:%s" % [id, character]): return false
+	else:
+		var before: Dictionary = passive.call("stormwood_host_before", peer, cut)
+		if before.is_empty(): return false
+		var proposal := CHARACTER_AUTHORITY.stormwood_answer_proposal(before, claim, claim.get("released_uid", ""))
+		if proposal.get("ok") != true or preload("res://scripts/net/research_passive_preparation.gd").fingerprint(proposal.state) != cut.get("after_hash"): return false
+		if phase != "check":
+			var snapshot: Dictionary = _character_authority.call("snapshot_record", character)
+			var prior_stream: Dictionary = (passive.get("hosts") as Dictionary).get(character, {}).duplicate(true)
+			var result: Dictionary = _character_authority.call("commit_stormwood_answer", character, before, claim, claim.get("released_uid", ""))
+			if result.get("ok") != true: return false
+			if passive.call("stormwood_promote_host", peer, cut, result.state, result.revision) != true:
+				_character_authority.call("restore_record", character, snapshot)
+				return false
+			if phase == "stage":
+				stages[peer] = {"character": character, "record": snapshot, "stream": prior_stream,
+					"world": _game().world, "epoch": _altar_current_epoch()}
+				source.set_meta("stormwood_authority_stages", stages)
+	if phase != "commit": return true
+	stages.erase(peer)
+	source.set_meta("stormwood_authority_stages", stages)
 	var flags: Dictionary = _character_authority.call("personal_flags", character)
 	var marker := "stormwood:regional_outcome:%s:%s" % [id, "accepted" if kept else "refused"]
 	var has_original := false

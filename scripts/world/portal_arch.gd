@@ -107,7 +107,8 @@ static func prompt_text(row: Dictionary, view: Dictionary) -> String:
 		return "Enter %s · to %s" % [sign, str(view.get("destination_label", "biome entry"))]
 	if bool(view.get("has_key", false)):
 		return "Use %s · %s" % [key_name, sign]
-	return sign + " · Needs the " + key_name
+	var source_hint := str(row.get("key_source_hint", ""))
+	return sign + " · Needs the " + key_name + (" · " + source_hint if not source_hint.is_empty() else "")
 
 
 func _view() -> Dictionary:

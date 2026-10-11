@@ -160,7 +160,8 @@ static func prepare_win(current: Dictionary, master_id: String, character_id: St
 	result.intent = {"master_id": master_id, "character_id": character_id}
 	return result
 
-static func prepare_chest(current: Dictionary, master_id: String, character_id: String) -> Dictionary:
+static func prepare_chest(current: Dictionary, master_id: String, character_id: String,
+		include_supplies: bool = true) -> Dictionary:
 	var row := master(master_id)
 	if row.is_empty() or current.get("character_id") != character_id: return _deny("invalid_character")
 	var receipt := "master_recipe:%s:%s" % [master_id, character_id]
@@ -168,11 +169,41 @@ static func prepare_chest(current: Dictionary, master_id: String, character_id: 
 	if not replay.is_empty(): return replay
 	if not current.redesign_character.master_wins.has(master_id): return _deny("win_your_own_duel_first")
 	var next := current.duplicate(true)
-	if not _inventory(next, {}, {"tether_candy": int(row.candy)}): return _deny("chest_pending_make_satchel_room")
+	var supplies := _master_supplies(current, row) if include_supplies else {"tether_candy": int(row.candy)}
+	if supplies.is_empty(): return _deny("invalid_master_supplies")
+	if not _inventory(next, {}, supplies): return _deny("chest_pending_make_satchel_room")
 	if not next.redesign_character.feast_recipes.has(row.feast_id): next.redesign_character.feast_recipes.append(row.feast_id)
 	var result := _result(next, receipt, "master_chest")
 	result.intent = {"master_id": master_id, "character_id": character_id}
 	return result
+
+## A won Master supplies this character's preparation, including the current
+## team's feast ingredients. Shared nodes remain contested; joining four peers
+## never divides a single character's required kit by four. These items use the
+## same chest receipt and owner save as the recipe, with no separate claim.
+static func _master_supplies(current: Dictionary, row: Dictionary) -> Dictionary:
+	var supplies: Dictionary = {"tether_candy": int(row.candy)}
+	var configured: Variant = row.get("preparation_supplies", {})
+	var attuned: Variant = row.get("attuned_per_creature", 0)
+	if not configured is Dictionary or not (attuned is int or attuned is float) \
+			or not is_finite(float(attuned)) or float(attuned) != floorf(float(attuned)) \
+			or int(attuned) < 0 or int(attuned) > 10: return {}
+	for item: Variant in configured:
+		var amount: Variant = configured[item]
+		if not item is String or not BAG.db().has(item) or not (amount is int or amount is float) \
+				or not is_finite(float(amount)) or float(amount) != floorf(float(amount)) \
+				or int(amount) <= 0 or int(amount) > 999: return {}
+		supplies[item] = int(supplies.get(item, 0)) + int(amount)
+	if int(attuned) > 0:
+		var essence: Script = load("res://scripts/creatures/essence.gd")
+		for card: Dictionary in current.get("party", []):
+			var types: Array = essence.call("_species_types", card)
+			if types.is_empty(): return {}
+			# Dual types accept either ingredient; use the canonical primary,
+			# so the client cannot choose a payout or change its quantity.
+			var item := "attuned_" + str(types[0])
+			supplies[item] = int(supplies.get(item, 0)) + int(attuned)
+	return supplies
 
 ## Compatibility refusal only. F32 owns renewable node/crop staging, stock,
 ## host-day generations and outputs through the existing world_harvest carrier.

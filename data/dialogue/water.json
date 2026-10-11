@@ -335,7 +335,8 @@
       "portrait": "res://assets/ui/portraits/captain_b.png",
       "lines": [
         "The crystal is quiet. Every channel I called mine is moving without my permission.",
-        "The Deep Watcher is no longer contained here. I cannot pretend the islands needed its captivity after what you have shown them."
+        "The Deep Watcher is no longer contained here. I cannot pretend the islands needed its captivity after what you have shown them.",
+        "Your way onward is Cloudreach. Use your Home Key, take the Cloudreach key to its arch in the Crossing Hall, and hang your Tidewake relic before preparing for the heights."
       ]
     },
     "water_trainer_pell_trial_intro": {

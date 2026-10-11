@@ -348,6 +348,8 @@ func mount() -> bool:
 		return false
 
 	_mount = body
+	if body.has_method("set_traversal_pose"):
+		body.call("set_traversal_pose", "ride")
 	_riding_now = true
 	_last_mount_position = body.global_position
 
@@ -392,6 +394,8 @@ func dismount() -> bool:
 	var alive := is_instance_valid(body)
 	if alive:
 		_last_mount_position = body.global_position
+		if body.has_method("set_traversal_pose"):
+			body.call("set_traversal_pose", "")
 	_restore_climb_limit(body if alive else null)
 
 	if _player != null and is_instance_valid(_player):

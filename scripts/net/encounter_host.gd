@@ -1642,7 +1642,7 @@ static func _opponent_row(opponent: Dictionary) -> Dictionary:
 	# still reads the established fields above.
 	for key: String in ["card", "foot_position", "facing", "body_generation",
 			"presentation_seq", "cue_serial", "telegraph_count", "strike_count", "cue",
-			"body_scale", "alpha", "round", "round_continues"]:
+			"body_scale", "alpha", "round", "round_continues", "arena_centre", "arena_radius_m", "named_encounter_id"]:
 		if opponent.has(key):
 			out[key] = opponent[key].duplicate(true) if opponent[key] is Dictionary \
 				or opponent[key] is Array else opponent[key]
