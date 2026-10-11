@@ -31,6 +31,7 @@ var _mesh_count := 0
 var _motes: MultiMeshInstance3D
 var _mote_count := 0
 var _mote_directions: Array[Vector3] = []
+var _motes_retired := false
 
 func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary, data: Dictionary) -> void:
 	_from = from
@@ -93,6 +94,8 @@ func _ready() -> void:
 		_lease = int(_budget.call("reserve", scope, int(limits.get("impact_motes", 32)),
 			int(limits.get("trail_motes", 16)), int(limits.get("encounter_particle_cap", 384))))
 		_build_motes(colour, opacity)
+	else:
+		_retire_motes()
 	_update_parts()
 	_play_launch_cue()
 	if _arrival == 0.0:
@@ -126,7 +129,9 @@ func _play_launch_cue() -> void:
 func _build_motes(colour: Color, opacity: float) -> void:
 	var allocation: Dictionary = _budget.call("allocation", _lease)
 	_mote_count = int(allocation.get("impact", 0)) + int(allocation.get("trail", 0))
-	if _mote_count <= 0: return
+	if _mote_count <= 0:
+		_retire_motes()
+		return
 	_motes = MultiMeshInstance3D.new()
 	# Moved every frame: detail_cull.gd must not range it by its spawn spread.
 	_motes.set_meta(&"detail_cull_skip", true)
@@ -135,8 +140,7 @@ func _build_motes(colour: Color, opacity: float) -> void:
 	mesh.mesh = GEOMETRY.shape(str(_row.get("mote_shape", "gale_feather")),
 		float((_config.get("budget", {}) as Dictionary).get("mote_size_m", 0.08)), _config.get("mote_geometry", {}))
 	if mesh.mesh == null or bool(mesh.mesh.get_meta("ultimate_budget_clipped", false)):
-		_motes.free()
-		_motes = null
+		_retire_motes()
 		return
 	mesh.instance_count = _mote_count
 	_motes.multimesh = mesh
@@ -210,13 +214,17 @@ func _clear_side_lane(pose: Transform3D, bounds: AABB, part: Dictionary,
 	return pose
 
 func _update_motes() -> void:
+	if _motes_retired: return
+	var age := _elapsed - _arrival
+	var profile: Dictionary = _config.get("motes", {})
+	var lifetime := float(profile.get("lifetime_seconds", 0.5))
+	if _did_arrive and age >= lifetime:
+		_retire_motes()
+		return
 	if _motes == null: return
 	var allocation: Dictionary = _budget.call("allocation", _lease)
 	var visible_count := mini(_mote_count, int(allocation.get("impact", 0)) + int(allocation.get("trail", 0)))
 	_motes.multimesh.visible_instance_count = visible_count
-	var age := _elapsed - _arrival
-	var profile: Dictionary = _config.get("motes", {})
-	var lifetime := float(profile.get("lifetime_seconds", 0.5))
 	_motes.visible = _did_arrive and age >= 0.0 and age < lifetime
 	if not _motes.visible: return
 	for i in visible_count:
@@ -224,6 +232,28 @@ func _update_motes() -> void:
 		position.y -= age * age * float(profile.get("fall_mps2", 2.0))
 		var scale := maxf(0.01, 1.0 - age / lifetime)
 		_motes.multimesh.set_instance_transform(i, Transform3D(Basis.IDENTITY.scaled(Vector3.ONE * scale), position))
+
+func _retire_motes() -> void:
+	if _motes_retired: return
+	_motes_retired = true
+	if is_instance_valid(_motes):
+		_motes.visible = false
+		if _motes.is_inside_tree(): _motes.queue_free()
+		else: _motes.free()
+	_motes = null
+	_mote_count = 0
+	_mote_directions.clear()
+	if _budget != null and _lease != 0:
+		_budget.call("release", _lease)
+		_lease = 0
+	# The contact MultiMesh owned exactly one reserved instance slot. Release
+	# it with its expired particles; every signature body part keeps its own
+	# reservation and its unchanged 2–3 s choreography/control lifetime.
+	if _mesh_count > 0:
+		_mesh_count -= 1
+		var scope := encounter_id()
+		_active[scope] = maxi(0, int(_active.get(scope, 0)) - 1)
+		if int(_active[scope]) == 0: _active.erase(scope)
 
 func _finish_presentation() -> void:
 	if _did_arrive or _cancelled or is_queued_for_deletion(): return
@@ -260,6 +290,7 @@ func reconcile_actor(current: Dictionary) -> void:
 func cancel_presentation() -> void:
 	if _cancelled: return
 	_cancelled = true
+	_retire_motes()
 	set_process(false)
 	visible = false
 	queue_free()
@@ -276,7 +307,7 @@ func actor_binding() -> Dictionary:
 	return (_context.get("actor_binding", {}) as Dictionary).duplicate(true)
 
 func _exit_tree() -> void:
+	_retire_motes()
 	var scope := encounter_id()
 	_active[scope] = maxi(0, int(_active.get(scope, 0)) - _mesh_count)
 	if int(_active[scope]) == 0: _active.erase(scope)
-	if _budget != null and _lease != 0: _budget.call("release", _lease)
