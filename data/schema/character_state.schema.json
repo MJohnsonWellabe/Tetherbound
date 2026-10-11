@@ -61,6 +61,38 @@
             "type": "string"
           },
           "uniqueItems": true
+        },
+        "schema_version": {
+          "type": "integer",
+          "enum": [
+            2
+          ]
+        },
+        "title_revisions": {
+          "type": "object",
+          "properties": {
+            "tidewake": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2
+            },
+            "meadows": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2
+            },
+            "stormwood": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2
+            },
+            "cloudreach": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false,
@@ -69,6 +101,22 @@
         "species",
         "event_receipts",
         "titles"
+      ],
+      "oneOf": [
+        {
+          "properties": {
+            "species": {},
+            "event_receipts": {},
+            "titles": {}
+          },
+          "additionalProperties": false
+        },
+        {
+          "required": [
+            "schema_version",
+            "title_revisions"
+          ]
+        }
       ]
     },
     "bounties": {

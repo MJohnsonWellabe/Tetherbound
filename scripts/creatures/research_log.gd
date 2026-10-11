@@ -8,8 +8,12 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const WATER := preload("res://scripts/creatures/water_species_catalog.gd")
 const ACTIONS := ["research_event", "research_claim"]
+const LOG_SCHEMA_VERSION := 2
+const LEGACY_CATALOGUE_REVISION := 1
+const TITLE_HISTORY_PATH := "res://data/config/research_title_requirements_v1.json"
 static var _catalogue: Dictionary = {}
 static var _configuration: Dictionary = {}
+static var _title_history: Dictionary = {}
 
 static func catalogue() -> Dictionary:
 	if not _catalogue.is_empty(): return _catalogue
@@ -29,7 +33,7 @@ static func config() -> Dictionary:
 	return _configuration
 
 static func configuration_errors(raw: Dictionary) -> Array[String]:
-	if raw.get("schema_version") != 1 or not raw.get("runtime_enabled") is bool \
+	if raw.get("schema_version") != 1 or raw.get("catalogue_revision") != 2 or not raw.get("runtime_enabled") is bool \
 		or not ESSENCE._integer(raw.get("maximum_event_receipts"), 1, 4096) \
 		or not ESSENCE._integer(raw.get("maximum_transaction_receipts"), 1, 4096) \
 		or not raw.get("biomes") is Dictionary or not raw.get("species") is Dictionary:
@@ -58,6 +62,31 @@ static func configuration_errors(raw: Dictionary) -> Array[String]:
 				return ["unknown signature move"]
 			if task.has("night") and (task.kind != "catch" or not task.night is bool): return ["invalid night task"]
 			ids.append(task.id)
+	return _title_history_errors(raw)
+
+
+static func _legacy_title_requirements() -> Dictionary:
+	if not _title_history.is_empty(): return _title_history
+	var raw: Variant = DATA.json(TITLE_HISTORY_PATH)
+	if raw is Dictionary: _title_history = raw
+	return _title_history
+
+
+static func _title_history_errors(cfg: Dictionary) -> Array[String]:
+	var history := _legacy_title_requirements()
+	if history.get("schema_version") != 1 or history.get("catalogue_revision") != LEGACY_CATALOGUE_REVISION \
+		or not history.get("biomes") is Dictionary or history.biomes.size() != cfg.biomes.size():
+		return ["invalid historical research title catalogue"]
+	for biome: Variant in history.biomes:
+		var species: Variant = history.biomes[biome]
+		if not cfg.biomes.has(biome) or not species is Dictionary or species.is_empty(): return ["invalid historical biome title"]
+		for id: Variant in species:
+			var tasks: Variant = species[id]
+			if not cfg.species.has(id) or cfg.species[id].biome != biome or not tasks is Dictionary or tasks.is_empty():
+				return ["invalid historical title species"]
+			for task: Variant in tasks:
+				if task_definition(str(id), str(task), cfg).is_empty() or not ESSENCE._integer(tasks[task], 1, 999):
+					return ["invalid historical title task"]
 	return []
 
 static func personal_errors(personal: Dictionary, cfg: Dictionary) -> Array[String]:
@@ -73,7 +102,7 @@ static func personal_errors(personal: Dictionary, cfg: Dictionary) -> Array[Stri
 	return []
 
 static func empty_log() -> Dictionary:
-	return {"species": {}, "event_receipts": [], "titles": []}
+	return {"schema_version": LOG_SCHEMA_VERSION, "species": {}, "event_receipts": [], "titles": [], "title_revisions": {}}
 
 static func task_definition(species: String, task_id: String, cfg: Dictionary) -> Dictionary:
 	for task: Dictionary in cfg.get("species", {}).get(species, {}).get("tasks", []):
@@ -81,8 +110,12 @@ static func task_definition(species: String, task_id: String, cfg: Dictionary) -
 	return {}
 
 static func log_errors(raw: Variant, cfg: Dictionary) -> Array[String]:
-	if not raw is Dictionary or raw.size() != 3 or not raw.get("species") is Dictionary \
+	if not raw is Dictionary or not raw.get("species") is Dictionary \
 		or not raw.get("event_receipts") is Array or not raw.get("titles") is Array: return ["invalid research carrier"]
+	var legacy: bool = raw.size() == 3
+	if not legacy and (raw.size() != 5 or raw.get("schema_version") != LOG_SCHEMA_VERSION \
+		or not raw.get("title_revisions") is Dictionary): return ["unsupported research carrier revision"]
+	if not legacy and raw.title_revisions.size() != raw.titles.size(): return ["invalid research title revisions"]
 	if raw.event_receipts.size() > int(cfg.get("maximum_event_receipts", 0)): return ["research receipt budget"]
 	var seen: Array = []
 	for receipt: Variant in raw.event_receipts:
@@ -98,10 +131,56 @@ static func log_errors(raw: Variant, cfg: Dictionary) -> Array[String]:
 			if definition.is_empty() or not ESSENCE._integer(row.tasks[task_id], 0, int(definition.required)): return ["invalid research progress"]
 	seen = []
 	for biome: Variant in raw.titles:
+		var revision: Variant = LEGACY_CATALOGUE_REVISION if legacy else raw.title_revisions.get(biome)
 		if not biome is String or not cfg.get("biomes", {}).has(biome) or seen.has(biome) \
-			or completion(raw, biome, cfg) != 100: return ["unearned research title"]
+			or not ESSENCE._integer(revision, LEGACY_CATALOGUE_REVISION, int(cfg.get("catalogue_revision", 0))) \
+			or not _earned_title(raw, biome, int(revision), cfg): return ["unearned research title"]
 		seen.append(biome)
 	return []
+
+
+static func _earned_title(log: Dictionary, biome: String, revision: int, cfg: Dictionary) -> bool:
+	if revision == int(cfg.get("catalogue_revision", 0)): return completion(log, biome, cfg) == 100
+	if revision != LEGACY_CATALOGUE_REVISION or not _title_history_errors(cfg).is_empty(): return false
+	var requirements: Dictionary = _legacy_title_requirements().biomes.get(biome, {})
+	if requirements.is_empty(): return false
+	for id: String in requirements:
+		for task: String in requirements[id]:
+			if int(log.species.get(id, {}).get("tasks", {}).get(task, 0)) < int(requirements[id][task]): return false
+	return true
+
+
+## Only a successful detached research proposal upgrades the carrier. Readers
+## and validators leave durable before/after journal snapshots byte-for-byte
+## intact. Existing titles retain their old qualification; no progress, event
+## receipt, payout, or missing title is manufactured by this migration.
+static func _upgraded_log(log: Dictionary) -> Dictionary:
+	var upgraded := log.duplicate(true)
+	if log.size() != 3: return upgraded
+	upgraded["schema_version"] = LOG_SCHEMA_VERSION
+	upgraded["title_revisions"] = {}
+	for biome: String in log.titles: upgraded.title_revisions[biome] = LEGACY_CATALOGUE_REVISION
+	return upgraded
+
+
+## Frozen journal replays alone use the pre-Stormursa catalogue. Task metadata
+## is unchanged by that additive release; membership and required counts are
+## taken from the immutable revision1 recipe, never current-minus-one-species.
+static func _legacy_configuration(current: Dictionary) -> Dictionary:
+	if not _title_history_errors(current).is_empty(): return {}
+	var legacy := current.duplicate(true)
+	legacy.catalogue_revision = LEGACY_CATALOGUE_REVISION
+	legacy.species = {}
+	for biome: String in _legacy_title_requirements().biomes:
+		var species: Dictionary = _legacy_title_requirements().biomes[biome]
+		for id: String in species:
+			var row := {"biome": biome, "tasks": []}
+			for task_id: String in species[id]:
+				var task := task_definition(id, task_id, current).duplicate(true)
+				task.required = int(species[id][task_id])
+				row.tasks.append(task)
+			legacy.species[id] = row
+	return legacy
 
 static func completion(log: Dictionary, biome: String, cfg: Dictionary) -> int:
 	var done := 0
@@ -144,16 +223,25 @@ static func view(personal: Dictionary, character: String, biome: String) -> Dict
 		"title": cfg.biomes[biome].title if log.titles.has(biome) else "", "species": rows,
 		"claims_enabled": cfg.runtime_enabled}
 
-static func stage(current: Dictionary, revision: int, action: String, intent: Dictionary, context: Dictionary) -> Dictionary:
+static func stage(current: Dictionary, revision: int, action: String, intent: Dictionary, context: Dictionary,
+		legacy_delivery_replay: bool = false) -> Dictionary:
 	if action not in ACTIONS or context.get("character_id") != current.get("character_id") \
 		or context.get("expected_revision") != revision or context.get("in_range") != true: return _deny("invalid_research_authority")
 	var cfg := config()
 	if cfg.is_empty(): return _deny("research_configuration_unavailable")
+	if legacy_delivery_replay:
+		cfg = _legacy_configuration(cfg)
+		if cfg.is_empty(): return _deny("historical_research_configuration_unavailable")
 	var personal: Dictionary = current.redesign_character
 	for paid: String in personal.get("research_receipts", []):
 		if not paid.ends_with(":" + str(current.character_id)): return _deny("foreign_research_receipt")
-	var log: Dictionary = personal.get("research", empty_log()).duplicate(true)
 	if not personal_errors(personal, cfg).is_empty(): return _deny("invalid_research_history")
+	var log: Dictionary
+	if legacy_delivery_replay:
+		log = personal.get("research", {"species": {}, "event_receipts": [], "titles": []}).duplicate(true)
+		if log.size() != 3: return _deny("historical_research_carrier_required")
+	else:
+		log = _upgraded_log(personal.get("research", empty_log()))
 	var next := current.duplicate(true)
 	var receipt := ""
 	if action == "research_event":
@@ -184,7 +272,9 @@ static func stage(current: Dictionary, revision: int, action: String, intent: Di
 		log.event_receipts.append(event)
 		receipt = "research:event_%s:%s" % [event, current.character_id]
 		for biome: String in cfg.biomes:
-			if not log.titles.has(biome) and completion(log, biome, cfg) == 100: log.titles.append(biome)
+			if not log.titles.has(biome) and completion(log, biome, cfg) == 100:
+				log.titles.append(biome)
+				if not legacy_delivery_replay: log.title_revisions[biome] = int(cfg.catalogue_revision)
 	else:
 		if intent.size() != 2 or not intent.get("species_id") is String or not intent.get("task_id") is String \
 			or context.get("source_key") != "research_journal": return _deny("invalid_research_claim")

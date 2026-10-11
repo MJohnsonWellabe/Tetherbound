@@ -10,7 +10,13 @@
   "release_receipts": [],
   "transaction_receipts": [],
   "research_receipts": [],
-  "research": {"species": {}, "event_receipts": [], "titles": []},
+  "research": {
+    "species": {},
+    "event_receipts": [],
+    "titles": [],
+    "schema_version": 2,
+    "title_revisions": {}
+  },
   "bounty_receipts": [],
   "bounties": {"anchor_world": "", "anchor_day": 0, "cycle": 0, "slots": []},
   "pouch_tier": 0,
