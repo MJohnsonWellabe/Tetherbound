@@ -137,7 +137,8 @@ func _finish_ending() -> bool:
 		return _fail("The actual machine control or untouched voluntary join seam is unavailable")
 	var config: Dictionary = _ending_config.get("machine", {})
 	var expected: Array[String] = [str(config.get("chamber_conversation", "")),
-		str(config.get("free_conversation", "")), str(config.get("join_conversation", ""))]
+		str(config.get("free_conversation", "")), str(config.get("join_conversation", "")),
+		str((_ending_config.get("choice", {}) as Dictionary).get("conversation", ""))]
 	var first := _finished_dialogues.size()
 	if not await _press_prompt(machine) or not await _drive_machine_to_ceremony(expected, first):
 		return false
@@ -182,9 +183,23 @@ func _drive_machine_to_ceremony(expected: Array[String], first: int) -> bool:
 			return observed == expected and _has("legendary_freed") \
 				and str(_climax.get("_stage")) == "ceremony" \
 				or _fail("The voluntary pending creature arrived before the complete authored join sequence")
-		if bool(_panel.call("is_open")):
+		var panel_open := bool(_panel.call("is_open"))
+		if not panel_open and observed == expected and bool(_climax.call("choice_open")):
+			# F05: both final answers are read out, then the player walks to
+			# the ordinary accept prompt; at five that opens the ceremony.
+			var accept := _climax.find_child("VeridianAcceptPrompt", true, false) as Node3D
+			if accept == null or accept.is_queued_for_deletion():
+				return _fail("The open Veridian choice lacks its accept prompt")
+			_receipt("veridian_accept_prompt", {"prompt": str(accept.get_path()),
+				"distance_m": _player.global_position.distance_to(accept.global_position)})
+			if not await _press_prompt(accept):
+				return false
+		elif panel_open and _current_conversation().is_empty():
+			await _tree.physics_frame
+		elif panel_open:
 			if observed.size() >= expected.size() or _current_conversation() != expected[observed.size()]:
-				return _fail("An unexpected live dialogue interrupted the machine sequence")
+				return _fail("An unexpected live dialogue interrupted the machine sequence: %s (read %s, expected %s)" % [
+					_current_conversation(), str(observed), str(expected)])
 			await _input._tap("interact")
 		else:
 			await _tree.physics_frame
