@@ -1189,6 +1189,21 @@ func _find_clear_shared_seat(spot: Vector3, centre: Vector3, radius: float) -> V
 		if _shared_seat_fit(candidate, centre, radius):
 			last_admission_context.clear()
 			return candidate
+	# Preserve every existing translation-only success before trying another
+	# side of the live opponent. Only the ally's proposed seat turns.
+	for degrees: float in ADMISSION_TURNS_DEG:
+		if is_zero_approx(degrees): continue
+		var turn := Basis(Vector3.UP, deg_to_rad(degrees))
+		var turned := foe_at + turn * (spot - foe_at)
+		turned.y = spot.y
+		for offset: Vector3 in _admission_offsets():
+			var candidate := turned + offset
+			var roundoff := 0.001 if offset.is_zero_approx() else 0.0
+			if Vector2(candidate.x - foe_at.x, candidate.z - foe_at.z).length() + roundoff < original_gap: continue
+			attempts += 1
+			if _shared_seat_fit(candidate, centre, radius):
+				last_admission_context.clear()
+				return candidate
 	var last_failure := last_admission_context.duplicate()
 	last_admission_context = first_failure
 	last_admission_context["clear_seat_search_exhausted"] = true
