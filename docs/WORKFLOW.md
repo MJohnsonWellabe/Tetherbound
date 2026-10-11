@@ -578,7 +578,8 @@ These replace stricter lane rules wherever they differ. They never permit deleti
 4. **Pre-approved test-helper alignments,** disclosed and reviewed at merge: stale literals vs current config, RD-17 portal migrations, authored-path walks, stable uids, closing panels a newer feature opens, and the old chapter order.
 5. **Visuals.** A Low/Compatibility capture is enough. PASS means the criterion's point is clearly visible with no blocking defect; polish notes don't hold a criterion open.
 6. **Less paper.** One evidence file of 30 lines or fewer per criterion, and one EV line to the coordinator.
-7. **Decisions (owner, 4:12 PM CT).** The coordinator decides everything except the human playtest and the ROG Ally device runs, and logs each decision in `status.json` `decisions`. A hard-rule or pillar conflict still goes to the owner (CLAUDE.md).
+7. **No permission requests (owner, 5:20 PM CT).** Lanes decide and act within their criteria and report afterwards; the coordinator reviews at merge.
+8. **Decisions (owner, 4:12 PM CT).** The coordinator decides everything except the human playtest and the ROG Ally device runs, and logs each decision in `status.json` `decisions`. A hard-rule or pillar conflict still goes to the owner (CLAUDE.md).
 
 # 9. Evidence hygiene
 
