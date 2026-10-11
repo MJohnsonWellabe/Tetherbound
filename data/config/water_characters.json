@@ -300,7 +300,7 @@
     },
     {
       "id": "water_adair",
-      "appearance_variant_id": "p2055_water_adair",
+      "appearance_variant_id": "npc_identity_water_adair_v1",
       "display_name": "Surveyor Adair",
       "island_id": "brine_steps",
       "role": "current_mapping",
@@ -386,7 +386,7 @@
     },
     {
       "id": "water_iona",
-      "appearance_variant_id": "p2055_water_iona",
+      "appearance_variant_id": "npc_identity_water_iona_v1",
       "display_name": "Researcher Iona",
       "island_id": "tidal_cradle",
       "role": "alpha_and_saddle",
@@ -410,7 +410,7 @@
     },
     {
       "id": "water_otto",
-      "appearance_variant_id": "p2055_water_otto",
+      "appearance_variant_id": "npc_identity_water_otto_v1",
       "display_name": "Tracker Otto",
       "island_id": "tidal_cradle",
       "role": "alternate_mount_route",
@@ -517,7 +517,7 @@
     },
     {
       "id": "water_orsen",
-      "appearance_variant_id": "p2055_water_orsen",
+      "appearance_variant_id": "npc_identity_water_orsen_v1",
       "display_name": "Channel Keeper Orsen",
       "island_id": "sluice_isle",
       "role": "sluice_controls",

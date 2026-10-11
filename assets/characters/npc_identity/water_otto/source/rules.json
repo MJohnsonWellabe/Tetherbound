@@ -1,0 +1,28 @@
+{
+  "actor_id": "water_otto",
+  "default_enabled": false,
+  "scope": "Otto-only complete disabled body/portrait candidate pair; sampled body and portrait reviewed, world/Claude pending; installed fallback retained",
+  "installed_profile": "wandering_trainer",
+  "target_height_m": 1.78,
+  "required_joints": 24,
+  "required_clips": [
+    "idle",
+    "walk",
+    "sprint",
+    "jump",
+    "throw",
+    "chop",
+    "defeated"
+  ],
+  "identity": "Preserve installed face/hat/beard/scarf/coat/pouches/backpack/bedroll; Otto olive coat direction from existing reserved hue96 palette; no new biography, body swap, role or location change",
+  "native_review": "PASS_SCOPED sampled56body frames and exact native paired portrait, Low/Compatibility only; continuous motion/world/Claude PENDING",
+  "forbidden_without_further_root_grant": [
+    "Further arm correction",
+    "Skin/weight/material edits",
+    "Further bake/export",
+    "Shipping gate changes",
+    "Additional actor or shared base changes"
+  ],
+  "source_ownership": "Prior actors, shared base assets, shared animator and all runtime records remain unchanged",
+  "portrait_authoring": "Root sole writer, unique dedicated destination and existing source/hash/coverage/clipping/border/protected-destination guards; no shipped pair until required acceptance"
+}
