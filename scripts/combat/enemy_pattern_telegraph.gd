@@ -78,7 +78,8 @@ func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
 		"ring":
 			_disc(_origin, float(_profile.get("inner_radius_m", 0.0)), float(_profile.get("range", 0.0)), TAU)
 		"marker", "field":
-			_disc(_marker, 0.0, float(_profile.get("marker_radius_m", 0.0)), TAU)
+			# The hit area: marker radius plus the target's own radius (F04#1).
+			_disc(_marker, 0.0, float(_profile.get("marker_radius_m", 0.0)) + float(_profile.get("target_radius_m", 0.0)), TAU)
 		"cone", "fan":
 			_disc(_origin, 0.0, float(_profile.get("range", 0.0)), deg_to_rad(float(_profile.get("cone_degrees", 0.0))))
 		"lane":
