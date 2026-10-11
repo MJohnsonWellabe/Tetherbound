@@ -31,6 +31,7 @@ const PROGRESSION_FEEDBACK := preload("res://scripts/creatures/progression_feed.
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const REST := preload("res://scripts/world/rest_point.gd")
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
+const CANDY_PRESENTATION := preload("res://scripts/world/candy_pickup_presentation.gd")
 const PERSONAL_REWARD := preload("res://scripts/world/cloudreach_personal_reward.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const NPCS := preload("res://scripts/world/village_npcs.gd")
@@ -658,6 +659,7 @@ func _sync_pickups_and_camps() -> void:
 		pickup.global_position = at
 		var definition: Dictionary = _game.get("items").call("definition", spec["item_id"])
 		pickup.setup(spec["item_id"], "Take " + str(definition.get("name", spec["item_id"])), str(definition.get("world_model", "")), float(definition.get("world_model_scale", 1)), id, "cloudreach", int(spec.get("count", 1)))
+		CANDY_PRESENTATION.apply(pickup, str(spec["item_id"]), definition, id)
 		_placements[id] = pickup
 	for spec: Dictionary in chapter.get("camping_contract", {}).get("camps", []):
 		var id := str(spec["id"])
