@@ -1,0 +1,14 @@
+{
+  "kind": "earned_meadows_piece",
+  "criterion": "F19#5",
+  "segment": "01_opening_team",
+  "command": "godot --headless --path . --audio-driver Dummy --script tools/earned_saves/earned_chain_runner.gd -- --segment=opening_team --save-dir=<root>/opening_team/opening_team/save --receipt=<root>/opening_team/opening_team/receipt.json",
+  "commit": "275e1063ecd1e1ca9fc7e5483285b57ef8fd7808",
+  "seed": "none set (TB_WORLD_SEED refused); saved world seed 1423931563",
+  "start_save": "fresh production title (New Game)",
+  "injections": 0,
+  "party_uids": ["creature-a56799abd143cb71d39a1ce94fbf4633", "creature-a4c48e62fbf6032853ad624f1cd70798", "creature-ae663c3ed343c510690fd4a6dc76e2b3", "creature-7114417776d973169785e77a78d722a8", "creature-14f12b4e276f332a6bcd8a18162ea7b4"],
+  "shortcuts": ["Helper navigator alignments disclosed in ralph/reports/EVIDENCE/F19-5/README.md"],
+  "run": "r8, 11:59-13:07 CT Sun 11 Oct 2026; also passed independently in r7 at 49ad747b",
+  "passed": true
+}
