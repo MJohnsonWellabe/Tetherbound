@@ -2770,7 +2770,7 @@
     {
      "text": "After a biome's boss, its named trainers, captains and Master can be rematched at the next biome's level for better rewards.",
      "status": "met",
-     "evidence": "ralph/reports/EV-REMATCH-WIRING/README.md (Tidewake/Cloudreach); systems lane F44 receipts (Meadows captain_riverwatch r1 21/21, Stormwood officer_maren 24/24) at fda1c9b5",
+     "evidence": "ralph/reports/EVIDENCE/F44#0/EVIDENCE.md; ralph/reports/EV-REMATCH-WIRING/README.md (Tidewake/Cloudreach); systems lane F44 receipts (Meadows captain_riverwatch r1 21/21, Stormwood officer_maren 24/24) at fda1c9b5",
      "gap": "",
      "note": "Landed: Evidenced on tb/ev-coordinator (4:04 PM CT). All four biomes: rematch admitted through ordinary input, tier levels, reward paid once, no repay after reload, cooldown kept. Game fixes: 11af2aff (Tidewake/Cloudreach rematch sources), 57ac1753 (Stormwood director sent rematch specs to the chapter hub, dropping them). 7 withdrawn Meadows patrol profiles left for the owner.",
      "audit_index": 0
