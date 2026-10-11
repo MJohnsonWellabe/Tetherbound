@@ -179,12 +179,25 @@ func _handoff_check() -> void:
 		handoff = {"checked": false, "reason": "previous checkpoint has no receipt.json after-state (generated input)"}
 		return
 	var expected: Dictionary = receipt.after
+	var keys: Array = ["uids", "species", "world_flags", "player_flags", "items", "portal_unlocks", "realm"]
+	var cross_runner := false
+	# A Cloudreach piece receipt (cloudreach_chain_runner.gd, earned_chain_runner
+	# shape: party/uids/flags/inventory/realm) hands into Stormwood after piece 07.
+	# Compare what both shapes carry: the ordered five (uids, species) and realm.
+	if not expected.has("species") and expected.get("party") is Array:
+		cross_runner = true
+		var species: Array = []
+		for member: Variant in expected.party:
+			species.append(str((member as Dictionary).get("species", "")))
+		expected = expected.duplicate()
+		expected["species"] = species
+		keys = ["uids", "species", "realm"]
 	var mismatched: Array = []
-	for key: String in ["uids", "species", "world_flags", "player_flags", "items", "portal_unlocks", "realm"]:
+	for key: String in keys:
 		if JSON.stringify(expected.get(key)) != JSON.stringify(before.get(key)):
 			mismatched.append(key)
 	handoff = {"checked": true, "previous": from_dir.get_file(), "mismatched": mismatched,
-		"passed": mismatched.is_empty()}
+		"passed": mismatched.is_empty(), "cross_runner": cross_runner, "keys": keys}
 	if not mismatched.is_empty():
 		for key: String in mismatched:
 			failures.append("Handoff mismatch %s: saved %s, loaded %s" % [key,
