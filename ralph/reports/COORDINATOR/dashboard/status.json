@@ -585,28 +585,10 @@
   }
  ],
  "decisions": [
-  "Owner redesign 2026-09-29: RD-01..RD-35 in CODEX_START_HERE \u00a71 (grind loop, creature-power spine, hybrid leveling and breakthroughs via Masters and feasts, per-type essence, homestead with six stations, Crossing Hall with Home Key, portals and waystones, the new order Meadows\u2192Tidewake\u2192Cloudreach\u2192Stormwood, three move slots plus ultimate, Tether Commands, effect archetypes, the Palworld+Valheim bar, Forward+ pending the Ally test, the Meshy overnight batch, evolution per biome with a new storm bear, traits, repeatables, the fifth-key ending, saves reset).",
-  "Coordinator 2026-09-28 (delegated): new Combat Spacing lane owns contact-range body separation; new Cards lane owns M1/M2 integrated runs and T2/S2 non-fight clauses; biome lanes keep only their F rows (Meadows also M3).",
-  "Owner 2026-09-28: the coordinator makes lane decisions. First: Tidewake lands #407's player-visible fixes now instead of holding them for a criterion close.",
-  "Owner 2026-09-28 (F04#7): option (c). The Meadows top-fight C2 bar becomes a masher lead-faint rate plus a reader/masher party-cost ratio, with harder five-member captains at the level ceiling; the same bar applies to Tidewake F14#0.",
-  "Owner 2026-09-28: fix the auto-merge CI gap. A merge pushed by GITHUB_TOKEN auto-merge starts no CI run, so batch 67 reached main untested and the next docs-only run skipped every job. Fixed by chaining main CI to the last run and a 30-minute CI reconciler.",
-  "Owner 21:20: the homeward return route after Tidewake is exempt from A7 (T3/F15).",
-  "Healed Meadows: runtime regreen, herd returns, pylons fall; no re-bake.",
-  "Bramblebun: sheet 06 approved for one Meshy redo with rust/ochre thorns.",
-  "Steam: DLL redistribution approved; release builds need a Steam launch; packaging stays off until an AppID exists.",
-  "Meadows pacing: more practice wilds so level 5 is reachable with margin.",
-  "Legacy Tidewake worlds: every journal-named fighter gets an offer.",
-  "Client-run trainer wins pay every participant through the host.",
-  "Shared UI is owned by the X03 lane; region lanes send UI requests through the coordinator.",
-  "Stormwood strikes spare a trainer during a creature fight (interim; owner to confirm).",
-  "Terrapup kept at field_emission 0.6 (owner: pick what looks better).",
-  "F03 lure cue option (a); Juno escort kept; X03 beacon kept under the presentation hold; Xbox B glyph neutral.",
-  "2026-09-26 owner Q&A: tournament grant is a non-starter; a legacy Stormheart receipt is undecided (re-offered once); cliff palette by blind judge; Tether palette as is; Guardian C2/C3 = Nerissa; Meshy and all art go to Codex; one PR per lane.",
-  "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
+  "Owner 11 Oct: (1A) required Cloudreach route raised to carry the level curve to ~L39\u201340 before Voss; (2A) Meshy batch for P2-055 NPC identities under RD-26 rules; (3A) native creature models switched on as each passes its code-blind judge; (4B) Meadows build freeze left for the ROG Ally test; solo play is a one-player co-op session for boss hand-offs."
  ],
  "owner_needs": [
-  "Decisions deferred to the end (owner, 11 Oct): (1) Cloudreach stronghold level gap \u2014 Voss L41\u201342 vs a route that gives almost no XP; (2) F41#1 NPC identity assets via Meshy or park; (3) switch on the native creature models that pass their judge; (4) the 63 s Meadows build freeze. Conservative defaults hold until then.",
-  "At the very end, after the final consolidated merge: ROG Ally device tests (F26#5, F49#2), the play pass (F49#1) and the 15\u201325 h clear confirmation (F47#0)."
+  "ROG Ally device tests (F26#5, F49#2), play pass (F49#1) and the 15\u201325 h clear confirmation (F47#0). Recommended early (they answer the combat frame-rate and build-freeze questions); owner schedules."
  ],
  "four_chapter_run": null,
  "wip": [],
