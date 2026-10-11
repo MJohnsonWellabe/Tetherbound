@@ -1111,6 +1111,120 @@
         "cloudreach"
       ],
       "disclosure": "Generated F19#5 Cloudreach boundary after piece 04 (High Roost, landed back at the Windscar aerie), for piece 05 (stronghold, Officer Voss L41-42), F47 owner ruling (A) 2026-10-11. NOT earned. Five ordered template UIDs/species at a generated L40: the arrival level the F27 route ledger's ordinary path (Altar essence, found candy, half the wilds; tools/f27_route_ledger.mjs) gives before the summit (L41-42 types-match, L41 plausible team), taken at its conservative L40, with generated caps and full HP. Prior Meadows/Tidewake facts as the cloudreach profile; Cloudreach story flags through cloudreach_upper_route_unlocked mirror the earned 01-04 checkpoints (tests/fixtures/earned_saves/cloudreach_04_high_roost). Template inventory, not the earned carried items; no pickup, harvest, battle-reward or transaction receipts are fabricated. Day 18 at 219 s, pose at the earned 04 landing (400.9, 3249.96). Claims no prior earned segment PASS."
+    },
+    "cloudreach_summit_bivouac": {
+      "boundary": "cloudreach_settled",
+      "realm": "cloudreach",
+      "day": 20,
+      "clock_elapsed_seconds": 120.0,
+      "position": {
+        "ground_xz": [
+          132.0,
+          5345.0
+        ]
+      },
+      "party_levels": [
+        40,
+        40,
+        40,
+        40,
+        40
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "water_aquaryn_resolved",
+        "water_dock_salt_crown_landing_charted",
+        "water_sluice_west_disabled",
+        "water_sluice_east_disabled",
+        "defeated_water_trainer_bex",
+        "defeated_water_trainer_calder",
+        "defeated_water_trainer_venn",
+        "water_dock_sluice_isle_both_controls_disabled",
+        "water_captain_nerissa_defeated",
+        "water_veilfall_intake_stopped",
+        "water_veilfall_return_opened",
+        "water_guardian_freed",
+        "water_tether_disabled",
+        "water_guardian_settled",
+        "water_currents_restored",
+        "realm_relic_water_earned",
+        "water_civilian_departure_complete",
+        "water_dock_reedhaven_repaired",
+        "water_swim_lesson_complete",
+        "defeated_water_trainer_tovin",
+        "water_dock_brine_steps_trial_won",
+        "defeated_water_trainer_solm",
+        "defeated_water_trainer_irva",
+        "water_shellwatch_residents_freed",
+        "water_shellwatch_pump_disabled",
+        "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "cloudreach_chapter_started",
+        "cloudreach_crisis_learned",
+        "storm_anchor_lower_west_mapped",
+        "storm_anchor_lower_east_mapped",
+        "cloudreach_lower_anchors_investigated",
+        "defeated_cloudreach_senn",
+        "causeway_survivors_reconnected",
+        "completed_cloudreach_maela_trial_battle",
+        "windscar_aerie_prepared",
+        "cloudreach_act_i_complete",
+        "fly_traversal_unlocked",
+        "fly_tutorial_completed",
+        "sky_shrine_reached",
+        "cloudreach_shrine_vane_west_aligned",
+        "cloudreach_shrine_vane_east_aligned",
+        "cloudreach_shrine_vane_crown_aligned",
+        "storm_anchor_engine_truth_learned",
+        "cloudreach_upper_route_unlocked",
+        "cloudreach_act_ii_complete",
+        "storm_anchor_upper_west_disabled",
+        "storm_anchor_upper_east_disabled",
+        "storm_anchor_summit_feed_disabled",
+        "defeated_cloudreach_voss",
+        "cloudreach_upper_anchors_disabled"
+      ],
+      "personal_flags": [
+        "legendary_refused",
+        "water_chapter_started",
+        "water_cordage_recipe_gated",
+        "water_swim_lesson_briefed",
+        "water_swim_stone_earned",
+        "water:legendary_refused"
+      ],
+      "inventory_add": {},
+      "character_fields": {
+        "portal_unlocks": [
+          "tidewake",
+          "cloudreach"
+        ],
+        "relics_held": [],
+        "relics_hung": [
+          "meadows",
+          "tidewake"
+        ]
+      },
+      "world_portal_unlocks": [
+        "tidewake",
+        "cloudreach"
+      ],
+      "disclosure": "Generated F19#5 Cloudreach summit boundary for the 05b_summit_tail re-proof (bivouac rest -> summit threshold), coordinator ruling 2026-10-11 after piece 05 stalled leaving the bivouac. NOT earned. Same five template UIDs/species at a generated L40 with generated caps and full HP as cloudreach_stronghold (whose piece 05 beat Officer Voss by live piloting); Cloudreach story flags through cloudreach_upper_anchors_disabled (including defeated_cloudreach_voss) mirror that run; summit_extraction_engine_reached is withheld so the tail must earn it. Template inventory; no pickup, harvest, battle-reward or transaction receipts are fabricated. Day 20 at 120 s, pose at the Summit Bivouac arrival (132, 5345). Claims no prior earned segment PASS."
     }
   }
 }
