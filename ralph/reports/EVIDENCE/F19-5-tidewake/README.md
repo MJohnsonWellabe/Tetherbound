@@ -134,3 +134,15 @@ test_follower_floor_station, test_lost_companion_escort, test_remote_creature_fo
   offer (CODEC.decode), so pending_catch is always a new object. Helper identity checks
   (earned_roster_replacement_segment.gd:104/125/151/160, swimmer preparation 176+) are stale
   against that path. Coordinator decision requested.
+- Catch identity (coordinator-approved): earned_roster_replacement_segment resolves the
+  newcomer as the pending catch carrying the capture offer meta, same species/level as the
+  engaged wild, uid not in the belt (exactly one, else fail; exact identity still accepted);
+  the host-settled farewell reinstalls the belt as new objects, so the receipt compares
+  stable uids (other four kept in order, caught uid appended) and the swimmer is rebound to
+  the live member with that uid. Verified: catch + farewell receipt PASS (Riverdrake L26
+  appended, bramblebun released).
+- 06 then stops at "Earned Swim Saddle recipe absent from workbench": stations.json routes
+  water_swim_saddle (not in field_allowed, no route) to the homestead Workbench, matching
+  HOMESTEAD §2 (Workbench: saddles) and RD-15 (big stations only at home). The helper's
+  field-camp craft is stale against RD-15; swim mounts are optional (WORLD §6 owner
+  retained-team override). Coordinator decision requested.
