@@ -4,7 +4,7 @@
     {
       "id": "DrownedGardenTerraceCourses",
       "landmark_id": "drowned_garden_terraces",
-      "terrace_beds_repair_enabled": true,
+      "terrace_beds_repair_enabled": false,
       "terrace_bed_reference": "Static farm_plot.gd soil, edging and furrows with installed stylized_nature plants. Level closed soil fill beyond route feather; presentation-only. Missing/false preserves previous pieces; native acceptance pending.",
       "terrace_bed_style": {
         "soil_size_xz": [

@@ -1,7 +1,7 @@
 {
   "shell_final_repair": {
     "_comment": "P2-010 final bounded candidate. Presentation-local, no durable state. Missing/false preserves original definitions. Shared near/far masses; no terrain bake. Native visual acceptance pending.",
-    "enabled": true,
+    "enabled": false,
     "formations_by_id": {
       "west_lower_buttress": {
         "at_xz": [
