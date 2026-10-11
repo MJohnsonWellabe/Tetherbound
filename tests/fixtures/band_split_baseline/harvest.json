@@ -129,7 +129,9 @@
       "_why_f01_berry_field": "F01 (village road settlement): the cottage_b re-pose at (19,-18) left this bush INSIDE the cottage, 2.2m from its centre, and the day-walk judge found Berry Field reading as one bush. Moved into paths.village_topology's berry_field subarea (centre (-8.5,-23), r 6) beside order 1036, 2.9m from the centre and 6.3m from 1036, off the berry lane. Same item, yield, model and order.",
       "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
       "model_scale": 0.52,
-      "_why_village_visual_2026_09_11": "Grandpa's Village ordinary gameplay frame proved the six village berry bushes were each roughly 2.3m wide at the route-wide 1.2 scale and read as saturated purple creature-sized foreground masses. Keep position, interaction, yield and model; 0.52 preserves a readable ~1m berry bush without letting a gatherable outrank the village frontage. Applied consistently to village berries only; corridor and Pond berries retain their established 1.2 route scale."
+      "_why_village_visual_2026_09_11": "Grandpa's Village ordinary gameplay frame proved the six village berry bushes were each roughly 2.3m wide at the route-wide 1.2 scale and read as saturated purple creature-sized foreground masses. Keep position, interaction, yield and model; 0.52 preserves a readable ~1m berry bush without letting a gatherable outrank the village frontage. Applied consistently to village berries only; corridor and Pond berries retain their established 1.2 route scale.",
+      "_why_village_berry_dressing": "Village harvest berries use a 0.055m fruit radius so the fruit stays proportional to the existing low flowering bushes. This visual dressing changes no node identity, interaction, yield or placement; the strict band-split mirror retains the same setting.",
+      "visual": {"berry_radius_m": 0.055}
     },
     {
       "item": "berries",
@@ -141,7 +143,9 @@
       ],
       "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
       "model_scale": 0.52,
-      "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
+      "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change.",
+      "_why_village_berry_dressing": "Village harvest berries use a 0.055m fruit radius so the fruit stays proportional to the existing low flowering bushes. This visual dressing changes no node identity, interaction, yield or placement; the strict band-split mirror retains the same setting.",
+      "visual": {"berry_radius_m": 0.055}
     },
     {
       "_comment_sd16": "SD16, spec §3 Band 2 and §10: the Rootstone deposits on the Old Quarry's floor, reachable only past the South Bridge. Pickaxe-gated the same way stone is -- `gathered_with` on the ITEM (data/items/items.json), never on the node, so the rule lives in one place and a bare-handed player is told what they need rather than silently refused (OF20). Five deposits at 2 each: enough that a first visit is worth the walk, few enough that the quarry is a place you go back to rather than a vending machine. Amounts and positions TUNABLE; every one of them stands on the quarry pad (terrain_playground.json `flats`, centre [23,158] r8) and is clear of both foundations, the prop cluster and the conduit head by at least 4m so no two interact prompts contest.",

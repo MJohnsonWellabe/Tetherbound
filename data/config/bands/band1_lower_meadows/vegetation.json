@@ -765,7 +765,7 @@
         "count": 8
       },
       {
-        "_why": "F01-b/F01-c Berry Field (paths.village_topology.subareas berry_field, centre [-8.5,-23] r6): the planted rows inside the field's L of village.json rails. F01-c: deliberately NOT the harvest model -- Bush_Common_Flowers is what every berry harvest node uses, and seven harvest-sized copies beside node 1036 read as eight pickable bushes of which one works. Bush_Common is the same installed family's flowerless shrub (green leaves only, retextured by the layer like every other bush), at model_scale 0.4 (0.16-0.36 of the raw 1.9m mesh, knee height) against the harvest node's ~1m flowering bush, so the rows read as tended low plants and the one pickable bush stands out. `cleared_by_clearings` false because the field sits 14m from Grandpa's 16m farmhouse clearing (order 2), which exists to keep trees out of fights; bushes do not collide and cannot block one.",
+        "_why": "F01-b/F01-c Berry Field (centre [-8.5,-23] r6): ten planted decorative rows inside the existing village rails use the installed Meadows Fern_1 at model_scale 0.4. Berry harvest nodes elsewhere use both Bush_Common and Bush_Common_Flowers, so either shrub would imply a pickable plant here. Distinct green fern fronds keep these small ornamental plants separate from fruit-bearing harvest bushes. The existing anchor position, radius, count and clearing behavior remain unchanged. cleared_by_clearings stays false because the nearby farmhouse clearing keeps trees out of fights; this non-colliding decoration adds no interaction or harvest yield.",
         "at": [
           -8.5,
           -25.0
@@ -773,10 +773,10 @@
         "radius": 3.2,
         "count": 10,
         "models": [
-          "res://assets/environment/stylized_nature/Bush_Common.gltf"
+          "res://assets/environment/stylized_nature/Fern_1.gltf"
         ],
         "model_scale": {
-          "res://assets/environment/stylized_nature/Bush_Common.gltf": 0.4
+          "res://assets/environment/stylized_nature/Fern_1.gltf": 0.4
         },
         "cleared_by_clearings": false
       },
