@@ -140,6 +140,7 @@
    "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 0.52,
    "_why_village_visual_2026_09_11": "Grandpa's Village ordinary gameplay frame proved the six village berry bushes were each roughly 2.3m wide at the route-wide 1.2 scale and read as saturated purple creature-sized foreground masses. Keep position, interaction, yield and model; 0.52 preserves a readable ~1m berry bush without letting a gatherable outrank the village frontage. Applied consistently to village berries only; corridor and Pond berries retain their established 1.2 route scale.",
+   "_why_village_berry_dressing": "Village harvest berries use a 0.055m fruit radius so the fruit stays proportional to the existing low flowering bushes. This visual dressing changes no node identity, interaction, yield or placement; the strict band-split mirror retains the same setting.",
    "visual": {"berry_radius_m": 0.055}
   },
   {
@@ -154,6 +155,7 @@
    "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 0.52,
    "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change.",
+   "_why_village_berry_dressing": "Village harvest berries use a 0.055m fruit radius so the fruit stays proportional to the existing low flowering bushes. This visual dressing changes no node identity, interaction, yield or placement; the strict band-split mirror retains the same setting.",
    "visual": {"berry_radius_m": 0.055}
   },
   {
