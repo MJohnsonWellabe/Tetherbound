@@ -5610,6 +5610,12 @@ func _mesa(
 	var upper_tool := SurfaceTool.new()
 	upper_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	upper_tool.set_material(_materials["cliff_high"] if side_material != _materials["cliff_shadow"] else side_material)
+	# Crown emitters lift their perimeter by 3 cm; the wall starts on the
+	# original ring. Close that daylight seam without moving either surface.
+	if carved.is_empty():
+		_emit_mesa_visual_seam(upper_tool, sides, top_ring)
+	else:
+		_emit_carved_mesa_seam(upper_tool, carved["rim"], carved["natural_rim"])
 	for i in sides:
 		var next := (i + 1) % sides
 		_add_geological_face(upper_tool, top_ring[i], top_ring[next], upper_ring[i], upper_ring[next],
@@ -5853,6 +5859,60 @@ func _emit_mesa_skirt(tool: SurfaceTool, sides: int, top_ring: Array[Vector3], d
 		_add_surface_triangle(tool, top_b, bottom_a, bottom_b)
 
 
+## The carved crown's raised bank already ends at the lifted natural rim.
+## Close only the remaining gap to the wall below it. Where a carve drops
+## below the wall top, the wall already overlaps the rim: add nothing there.
+## A raised-B bank triangle can reach below the natural rim when A is
+## lowered. Its lower diagonal owns that area; cap the gasket there before
+## splitting at both clamp thresholds to avoid coplanar overlapping faces.
+func _emit_carved_mesa_seam(tool: SurfaceTool, rim: PackedVector3Array,
+		natural_rim: PackedVector3Array) -> void:
+	for i in range(0, rim.size() - 1, 2):
+		var base_a := natural_rim[i] - Vector3.UP * 0.03
+		var base_b := natural_rim[i + 1] - Vector3.UP * 0.03
+		var height_a := rim[i].y - base_a.y
+		var height_b := rim[i + 1].y - base_b.y
+		# Match _carve_mesa_top's first bank-triangle condition exactly. That
+		# triangle spans from the carved rim down to (rim A -> natural B).
+		# Its upper edge is the gasket's original height limit, so subtracting
+		# it leaves only the area below this diagonal. The second bank triangle
+		# (raised A -> natural B -> natural A) stays at/above the natural rim.
+		if rim[i + 1].y > natural_rim[i + 1].y + 0.01:
+			height_b = 0.03
+		var cuts: Array[float] = [0.0, 1.0]
+		if absf(height_b - height_a) > 0.000001:
+			for threshold: float in [0.0, 0.03]:
+				var crossing := (threshold - height_a) / (height_b - height_a)
+				if crossing > 0.000001 and crossing < 0.999999:
+					cuts.append(crossing)
+		cuts.sort()
+		for span in cuts.size() - 1:
+			var t0 := cuts[span]
+			var t1 := cuts[span + 1]
+			if t1 - t0 < 0.000001:
+				continue
+			var bottom_a := base_a.lerp(base_b, t0)
+			var bottom_b := base_a.lerp(base_b, t1)
+			var top_a := bottom_a + Vector3.UP * clampf(lerpf(height_a, height_b, t0), 0.0, 0.03)
+			var top_b := bottom_b + Vector3.UP * clampf(lerpf(height_a, height_b, t1), 0.0, 0.03)
+			# Outward cross products, unlike the legacy collision-only skirt.
+			if top_a.y - bottom_a.y > 0.000001:
+				_add_surface_triangle(tool, top_a, top_b, bottom_a)
+			if top_b.y - bottom_b.y > 0.000001:
+				_add_surface_triangle(tool, top_b, bottom_b, bottom_a)
+
+
+func _emit_mesa_visual_seam(tool: SurfaceTool, sides: int, top_ring: Array[Vector3]) -> void:
+	for i in sides:
+		var next := (i + 1) % sides
+		var a: Vector3 = top_ring[i] + Vector3.UP * 0.03
+		var b: Vector3 = top_ring[next] + Vector3.UP * 0.03
+		# _add_surface_triangle reverses these outward-cross-product recipes
+		# for Godot's clockwise front face. Keep the collision skirt untouched.
+		_add_surface_triangle(tool, a, b, top_ring[i])
+		_add_surface_triangle(tool, b, top_ring[next], top_ring[i])
+
+
 ## The mesa's crown surface: a flat/eroded/rugged fan from `crown` across
 ## `top_ring` (and, for the eroded-crown profile, through `core_ring` as an
 ## intermediate contour). Shared by the visible top mesh and its collision
@@ -5994,6 +6054,7 @@ func _carve_mesa_top(sides: int, crown: Vector3, core_ring: Array[Vector3],
 	var turf := PackedVector3Array()
 	var bank := PackedVector3Array()
 	var rim := PackedVector3Array()
+	var natural_boundary := PackedVector3Array()
 	var any_carved := false
 	for i in sides:
 		var next := (i + 1) % sides
@@ -6051,10 +6112,12 @@ func _carve_mesa_top(sides: int, crown: Vector3, core_ring: Array[Vector3],
 			turf.append_array(PackedVector3Array([crown, core_b, core_a,
 				core_a, core_b, top_a, top_a, core_b, top_b]))
 			rim.append_array(PackedVector3Array([top_a, top_b]))
+			natural_boundary.append_array(PackedVector3Array([top_a, top_b]))
 			continue
 		any_carved = true
 		for col in cols:
 			rim.append_array(PackedVector3Array([grid[col][rows], grid[col + 1][rows]]))
+			natural_boundary.append_array(PackedVector3Array([natural_rims[col], natural_rims[col + 1]]))
 			# A filled rim stands over the mesa's side wall, which still starts
 			# at the natural rim: close that slot with a strip of cliff so no
 			# daylight shows between them.
@@ -6115,7 +6178,7 @@ func _carve_mesa_top(sides: int, crown: Vector3, core_ring: Array[Vector3],
 						turf.append_array(PackedVector3Array([a, b, c]))
 	if not any_carved:
 		return {}
-	return {"turf": turf, "bank": bank, "rim": rim}
+	return {"turf": turf, "bank": bank, "rim": rim, "natural_rim": natural_boundary}
 
 
 ## A carved triangle steeper than `bank_normal_y` draws as rock, the rest as
