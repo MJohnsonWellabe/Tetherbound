@@ -46,7 +46,7 @@ The smoke failed on unmodified main before any attack ran ("aggressive engage ro
 
 The re-proof's "camera too close/occluded" finding needs a rendered capture. No camera change was made; the coordinator's capture decides it.
 
-## Round 2: code-blind judge FAIL fix (2026-10-11, about 12:30 PM CT)
+## Round 2: code-blind judge FAIL fix (2026-10-11, about 11:50 AM CT)
 
 **Judge finding.** The capture was `tb/ev-captures` 53d9616f (`ralph/reports/VISUAL-PROOF/F04-0/`). Earth Fist showed only a small amber ring at the guardian's feet, and the quick showed the same ring in purple.
 
