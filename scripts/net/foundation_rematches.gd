@@ -114,8 +114,8 @@ func _mount_realm(realm_id: String) -> void:
 ## The source's challenge prompt: a declared `foundation_rematch_prompt` (the
 ## boss board, Cloudreach/Water trainers) or the trainer body's own prompt.
 func _source_prompt(source: Node) -> Node:
-	var declared: Variant = source.get_meta("foundation_rematch_prompt", null)
-	if declared is Node and is_instance_valid(declared): return declared
+	var declared: Variant = source.get_meta("foundation_rematch_prompt") if source.has_meta("foundation_rematch_prompt") else null
+	if is_instance_valid(declared) and declared is Node: return declared
 	return source.call("prompt_node") if source.has_method("prompt_node") else null
 
 ## Descendants of `realm` in `group`, in tree order.

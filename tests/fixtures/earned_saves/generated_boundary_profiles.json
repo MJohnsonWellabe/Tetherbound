@@ -970,7 +970,8 @@
         "water_dock_shellwatch_residents_freed_and_pump_disabled",
         "defeated_cloudreach_voss",
         "stormwood:trainer:officer_maren_verge_rod:defeated",
-        "stormwood:marrow_defeated"
+        "stormwood:marrow_defeated",
+        "stormwood:chapter_started"
       ],
       "personal_flags": [
         "legendary_refused",

@@ -1173,7 +1173,9 @@ func _retry_foundation_events() -> void:
 		var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
 		var receipt := _foundation_duty_receipt(duty, world.reward_delivery_namespace)
 		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
-			and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
+			and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt):
+			_note_duty_released(duty) # Its committed row was accepted: the hold logged at commit has ended.
+			continue
 		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
 			and latest.status == "pending" and latest.after.redesign_character.transaction_receipts.has(receipt):
 			get_node(^"LedgerRpc").call("_process_creature_training", latest)
@@ -5065,6 +5067,9 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 	if row.get("status")!="accepted" or not ESSENCE._equivalent(world.reward_deliveries.get(row.get("delivery_id")),row): return false
 	var character := _authority_character(peer)
 	if character.is_empty() or character != row.get("character_id"): return false
+	# After a title Load the host's own record is seeded lazily; seed it before
+	# acknowledging the save's accepted row instead of refusing that ack.
+	if peer == local_peer_id() and int(_character_authority.call("revision", character)) < 0: admitted_character_state(peer)
 	if not _tether_item_live_consumer_ready(row): return false
 	var pending: bool = _character_authority.call("creature_training_is_pending", character) == true
 	if not pending and (row.get("action") != "tether_item" or not _tether_item_original_pending(row)):
