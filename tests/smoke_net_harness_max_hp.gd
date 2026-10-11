@@ -19,6 +19,9 @@ extends "res://tests/helpers/net_harness.gd"
 ##   * the guest's stored HP fell by the rolled hits (its own hit_landed,
 ##     summed since the "before" read) / s;
 ##   * the guest's saved party row holds the base maximum, mid-fight and after.
+## Then (F33#4) a production leave, wipe and returning production_join: the
+## Harness comes back from the guest's own file, the host applies it to the
+## guest's creature only, the host's own creature never has it, no duplicate.
 ## DISCLOSED FIXTURES (peer side: tests/helpers/harness_hp_net_peer.gd): gear
 ## written into the guest's own record before join; the host's swing placed
 ## 1.5 m from the guest's creature with a narrow cone so it picks the guest.
@@ -150,7 +153,66 @@ func _run() -> void:
 		check(is_equal_approx(float(out.get("shown_max", 0.0)), float(out.get("max_hp", -1.0))),
 			"after the fight the guest's bar is the stored maximum again")
 		check(absf(float(out.get("saved_max", 0.0)) - float(out.get("max_hp", -1.0))) < 0.0001, "and the saved row holds it")
+	await _rejoin_round_trip(port, expected_s)
 	quit(await finish())
+
+
+## F33#4 (coordinator ruling 2026-10-11): creature gear survives a production
+## leave, an in-memory wipe and a returning-character production_join, comes
+## back from the guest's OWN character file, is applied again by the host to
+## the guest's creature only, and is never duplicated. DISCLOSED FIXTURE: the
+## smoke's own isolation step above (`harness_unwear`) erased the guest's
+## in-memory row, so `harness_wear` restores that same pre-join gear first;
+## from there every write and read is the production leave/save/restore path.
+func _rejoin_round_trip(port: int, expected_s: float) -> void:
+	var rewear: Dictionary = await _hstep(1, "harness_wear", {"item": ITEM})
+	check(rewear.get("verdict") == "PASS", "rejoin: the guest's own record wears %s again before leaving (fixture, see header)" % ITEM)
+	var held: Dictionary = await _hstep(1, "harness_record", {"item": ITEM})
+	var character_id := str(held.get("character_id", ""))
+	var uid := str(held.get("uid", ""))
+	var bag_before := int(held.get("live_count", -1))
+	var left: Dictionary = await step(1, "leave", {"reason": "f33_rejoin"})
+	check(left.get("verdict") == "PASS", "rejoin: the guest leaves through the production session leave (%s)" % str(left.get("detail", "")))
+	var alone: Dictionary = await step(0, "expect_peers", {"count": 1}, 900)
+	check(alone.get("verdict") == "PASS", "rejoin: the host is back to one peer")
+	var written: Dictionary = await _hstep(1, "harness_record", {"item": ITEM})
+	check(bool(written.get("file_exists", false)) and str(written.get("file_harness", "")) == ITEM
+		and str(written.get("file_uid", "")) == uid,
+		"rejoin: the leave wrote %s on creature %s into the guest's own character file (%s)" % [ITEM, uid, str(written.get("detail", ""))])
+	var wiped: Dictionary = await step(1, "wipe_character", {})
+	check(wiped.get("verdict") == "PASS", "rejoin: the guest's in-memory character is blanked (%s)" % str(wiped.get("detail", "")))
+	var blank: Dictionary = await _hstep(1, "harness_record", {"item": ITEM})
+	check(int(blank.get("party_size", -1)) == 0 and str(blank.get("live_harness", "")).is_empty()
+		and str(blank.get("file_harness", "")) == ITEM,
+		"rejoin: memory holds no creature or gear while the file still holds the Harness (%s)" % str(blank.get("detail", "")))
+	var rejoined: Dictionary = await step(1, "production_join", {"host": "127.0.0.1", "port": port, "budget_frames": 6000,
+		"returning_route": true, "character": {"character_id": character_id}}, 6500)
+	check(rejoined.get("verdict") == "PASS", "rejoin: the same saved guest rejoins through production_join (%s)" % str(rejoined.get("detail", "")))
+	if rejoined.get("verdict") != "PASS": return
+	var back: Dictionary = await _hstep(1, "harness_record", {"item": ITEM})
+	check(str(back.get("character_id", "")) == character_id and str(back.get("uid", "")) == uid
+		and str(back.get("live_harness", "")) == ITEM,
+		"rejoin: the guest's creature wears %s again, restored from its own file (%s)" % [ITEM, str(back.get("detail", ""))])
+	check(int(back.get("live_count", -1)) == bag_before and int(back.get("file_count", -1)) == bag_before,
+		"rejoin: the Harness is not duplicated into the bag (bag %d, file %d, before %d)" % [int(back.get("live_count", -1)), int(back.get("file_count", -1)), bag_before])
+	var guest_session: Variant = await probe(1, "session")
+	var guest_peer := int((guest_session as Dictionary).get("peer_id", 0)) if guest_session is Dictionary else 0
+	for i in 2:
+		var seen: Dictionary = await step(i, "expect_peers", {"count": 2})
+		check(seen.get("verdict") == "PASS", "rejoin: peer %d sees both players again" % i)
+	var deployed: Dictionary = await step(1, "deploy_creature", {})
+	check(deployed.get("verdict") == "PASS", "rejoin: the guest deploys its creature (%s)" % str(deployed.get("detail", "")))
+	var host_view: Dictionary = {}
+	for _poll in 20:
+		host_view = await _hstep(0, "harness_admitted", {"peer_id": guest_peer, "uid": uid})
+		if str(host_view.get("admitted_harness", "")) == ITEM and absf(float(host_view.get("guest_s", 0.0)) - expected_s) < 0.0001: break
+		await step(0, "wait", {"frames": 30})
+	check(str(host_view.get("admitted_harness", "")) == ITEM and absf(float(host_view.get("guest_s", 0.0)) - expected_s) < 0.0001,
+		"rejoin: the host's admitted record gives the guest's creature %s and the host rolls its hits with s %.4f (%s)" % [ITEM, expected_s, str(host_view.get("detail", ""))])
+	var own: Array = host_view.get("own_harnesses", ["?"])
+	check(not own.is_empty() and own.all(func(h: Variant) -> bool: return str(h).is_empty())
+		and is_equal_approx(float(host_view.get("own_s", 0.0)), 1.0),
+		"rejoin: the host's own creature never has the guest's Harness (%s)" % str(host_view.get("detail", "")))
 
 
 func _hstep(peer: int, action: String, args := {}) -> Dictionary:
