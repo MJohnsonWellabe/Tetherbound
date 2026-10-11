@@ -114,17 +114,24 @@ func _open_research_log() -> bool:
 	await _driver.call("_tap_action", &"game_menu")
 	var menu: Node = _game.call("menu")
 	if not _check(menu != null and menu.call("is_open") == true, "game_menu opens the Journal"): return false
-	for i in 12:
-		if menu.call("current_tab_id") == "quest_log": break
-		await _driver.call("_tap_action", &"menu_tab_right")
+	# Step tab by tab, judging each only after it settles; step back on an overshoot.
+	for i in 16:
+		await _frames(10)
+		var tab := str(menu.call("current_tab_id"))
+		print("RESEARCH DIAG tab step %d: %s" % [i, tab])
+		if tab == "quest_log": break
+		await _driver.call("_tap_action", &"menu_tab_left" if tab == "build" else &"menu_tab_right")
+	await _frames(10)
 	if not _check(menu.call("current_tab_id") == "quest_log", "menu_tab_right reaches the Quests tab"): return false
 	await _frames(10)
 	var focus := root.gui_get_focus_owner()
+	print("RESEARCH DIAG tab=%s focus=%s" % [str(menu.call("current_tab_id")), str(focus.get_path()) if focus != null else "none"])
 	for i in 24:
 		if focus is Button and str((focus as Button).text).begins_with("Research log"): break
 		await _driver.call("_tap_action", &"ui_up" if i < 12 else &"ui_down")
 		await _frames(4)
 		focus = root.gui_get_focus_owner()
+		print("RESEARCH DIAG step %d tab=%s focus=%s" % [i, str(menu.call("current_tab_id")), str(focus.get_path()) if focus != null else "none"])
 	if not _check(focus is Button and str((focus as Button).text).begins_with("Research log"),
 		"ui_up/ui_down reach the Research log button (focus '%s')" % (str((focus as Button).text) if focus is Button else str(focus))):
 		return false

@@ -22,4 +22,33 @@ The host had already accepted (and paid) the harvest, but the plot reported a re
 ## Disclosed fixtures
 Each smoke's own: isolated save dirs, one owned Terrapup, opening free-play flag, short starts beside the source, hoe + 2 seed_ground for the crop, `Game.advance_day()` for crop growth, pending-catch seam for release. No generated save. Not claimed: two-peer for these sources (guest wild win/release have separate net smokes), research tasks and care trickle beyond the unit tests.
 
-Verdict: PASS
+
+## Research tasks and the capped daily care trickle (coordinator ruling 11:22 AM CT: two new smokes authorized as F27#1 work)
+
+| Source | Proof | Result |
+|---|---|---|
+| Capped daily care trickle | `tests/smoke_f27_den_groom_essence.gd` on `c0f02fca` (12:07–12:10 CT) | PASS 5/5 steps (`smoke_f27_den_groom_essence.txt`) |
+| Research task | `tests/smoke_f27_research_claim_essence.gd` on `55190f3c` (12:05–12:06 CT) | PASS (`smoke_f27_research_claim_essence.txt`) |
+
+**Den groom.** A paid Den is placed through `build_place`. The physical stick walks to it, `interact` opens its panel, and each groom is the Groom button confirmed with a real `ui_accept` tap (the focus is set on the button, disclosed).
+1. Groom terrapup: disk `essence_ground` +1 (`care_per_grooming`), accepted `groom` row, receipt `care:<cid>:1:<uid>:1`.
+2. The same creature again that day: refused `already_groomed`, disk +0.
+3. Groom ripplet: `essence_water` +1; today's care reaches `care_daily_character_cap`.
+4. Groom sparkit: refused `daily_care_cap`, `essence_electric` +0.
+5. `Game.advance_day()` + settle: groom sparkit, `essence_electric` +1, receipt `care:<cid>:2:<uid>:1`.
+
+Config values are read from `essence.json` (`care_per_grooming` 1, `care_daily_character_cap` 5). The five-creature rule leaves no sixth creature to reach the cap by grooming. Today's earlier care is therefore SEEDED as 3 `care:` receipts (cap − 2) for creatures released earlier that day, before the world loads (disclosed). The receipts are well formed: `essence.stage_care` validates components only.
+
+**Game fix found by this smoke** (`b6c266ad`, `scripts/net/session.gd::_deliver_training_decision`). After a saved groom, a solo/host player's Den panel reopened with every Groom button disabled and "Retry original transaction" (`den_before_session_fix.txt`). The cause: the host's own settled rows announced every action except `groom`, assuming groom_passive_sync would. That service only runs for guests (`homestead_submit_action` sends the host straight to `_foundation_send`). The host's own groom is now announced once, like every other action. Affected units: 32 tests / 486 assertions, 0 failed (`units_after_session_fix.txt`).
+
+**Research claim.** `game_menu` opens the Journal. `menu_tab_right` reaches Quests: each step is judged after it settles, and the smoke would step back with `menu_tab_left` on an overshoot (an earlier run overshot to Build once; this run reached Quests directly). `ui_up`/`ui_down` reach "Research log", and `ui_accept` opens it. `ui_down` reaches `claim:terrapup:sight`, confirmed with `ui_accept`.
+1. Disk gains exactly `research_log.reward()` = `essence_ground` ×5, with an accepted `research_claim` row and receipt `research:terrapup:sight:<cid>` in both `research_receipts` and `transaction_receipts`.
+2. The paid task no longer offers Claim. A replayed claim request returns the original decision and pays nothing more.
+
+The task's completion is SEEDED (terrapup seen, sight 1/1) before the world loads, disclosed. Its production trigger is engaging a wild (`encounter_director._retain_research("sight")`), which would leave this solo smoke inside a live fight before the claim.
+
+**UX note (not fixed):** the Den panel shows raw refusal codes (`already_groomed`, `daily_care_cap`) as its status line.
+
+Both smokes are solo host-path; co-op is not claimed.
+
+Verdict: PASS (all six named sources: wild defeat, release, attuned node, crop, research task, capped care trickle)
