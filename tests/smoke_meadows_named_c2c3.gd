@@ -131,7 +131,7 @@ func _cases(errors: Array[String]) -> Array[Dictionary]:
 		for member: Dictionary in spec.get("team", []):
 			var c: Dictionary = member.get("combat", {})
 			heavy = heavy or float(c.get("charged_telegraph", c.get("telegraph", 0.0))) >= HEAVY_TELL
-		# COMBAT §7 "top trainer" is a band's top fight (its captains). Dell is
+		# COMBAT §7 "top trainer" (COMBAT.md:142, ACCEPTANCE.md:38) is a band's top fight (its captains). Dell is
 		# band 3's mid-band officer (rank "officer", three creatures): judged on
 		# the floor-trainer bar, still counted in the chapter masher product.
 		var kind := "officer" if str(spec.get("rank", "")) == "officer" else "top"
