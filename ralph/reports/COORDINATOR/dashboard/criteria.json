@@ -1427,8 +1427,8 @@
    "counts": {
     "met": 3,
     "partial": 1,
-    "in_progress": 0,
-    "not_started": 1,
+    "in_progress": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -1443,9 +1443,9 @@
     },
     {
      "text": "Across 12+ seeds per biome band, a reader pilot beats a masher pilot (reader win ≥0.9; masher loses the lead creature materially more often).",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "smoke_f22_pattern_bands.gd + helpers/f22_pattern_pilot.gd (no recorded run)",
-     "gap": "Run smoke_f22_pattern_bands.gd with 12+ seeds per band and record win and lead-loss rates.",
+     "gap": "Band sweep running (fights lane, started 3:38 PM CT on caadfd7c): 12 seeds per band, masher vs reader, all 23 bands, one JSON per band. Disclosed: 12 seeds (criterion floor).",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No seed distribution recorded for any band.",
      "audit_index": 1
     },
@@ -2126,8 +2126,8 @@
    "counts": {
     "met": 4,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 1,
+    "in_progress": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -2150,9 +2150,9 @@
     },
     {
      "text": "Gear matters: a simulation of each biome's boss shows the matching tier passes C2 and the previous tier is clearly harder.",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "gear.json boss_proof.status=\"UNRUN\"@b4e4897d5",
-     "gap": "Run F22 encounter/director C2 sims for four bosses × matching/prior tier, same seeds and loadouts. Record the distributions and a C2 verdict.",
+     "gap": "Sims: Nerissa pair done (prior tier harder: PASS; matching tier too easy for masher on ripplet/galewisp); Veyra skyglass done, Veyra tidesteel and Marrow pairs running (routes-east). Verdict from the fights lane after all four.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No C2 runs pair tiers against the four bosses. The F22 runner pairs are only declared in config.",
      "audit_index": 2
     },
@@ -2900,8 +2900,8 @@
    "counts": {
     "met": 3,
     "partial": 0,
-    "in_progress": 1,
-    "not_started": 1,
+    "in_progress": 2,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -2932,9 +2932,9 @@
     },
     {
      "text": "C2 difficulty holds for every biome band in the new order.",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "test_economy_difficulty.mjs (not CI); F22 diagnostic reports acceptance=false",
-     "gap": "Run the C2 24-seed sweep per band × three starters at the new levels.",
+     "gap": "Judged from the same 12-seed band sweep as F22#1 (running, fights lane); disclosed 12 seeds, not 24.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No paired 24-seed C2 per band in the new order.",
      "audit_index": 3
     },
