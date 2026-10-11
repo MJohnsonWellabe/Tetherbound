@@ -687,11 +687,13 @@
       "disclosure": "F44#0 rematch witness input (Cloudreach): the 'stormwood' post-Veyra Cloudreach profile plus Voss's original defeat flag, five raised to L55 (the generator's maximum) for the L55 officer_voss_summit_approach r1 band. Generated setup only: no rematch receipt, cooldown or payout is fabricated."
     },
     "f44_stormwood": {
-      "boundary": "stormwood_settled",
-      "realm": "stormwood",
-      "day": 20,
+      "boundary": "cloudreach_settled",
+      "realm": "cloudreach",
+      "day": 16,
       "clock_elapsed_seconds": 500.0,
-      "position": "template",
+      "position": {
+        "cloudreach_reward": true
+      },
       "party_levels": [
         55,
         55,
@@ -771,6 +773,7 @@
         "water_shellwatch_residents_freed",
         "water_shellwatch_pump_disabled",
         "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "defeated_cloudreach_voss",
         "stormwood:trainer:officer_maren_verge_rod:defeated",
         "stormwood:marrow_defeated"
       ],
@@ -784,12 +787,13 @@
         "fly_tutorial_completed",
         "regional_credits_seen"
       ],
-      "inventory_add": {},
+      "inventory_add": {
+        "stormwood_portal_key": 1
+      },
       "character_fields": {
         "portal_unlocks": [
           "tidewake",
-          "cloudreach",
-          "stormwood"
+          "cloudreach"
         ],
         "relics_held": [
           "cloudreach"
@@ -801,10 +805,9 @@
       },
       "world_portal_unlocks": [
         "tidewake",
-        "cloudreach",
-        "stormwood"
+        "cloudreach"
       ],
-      "disclosure": "F44#0 rematch witness input (Stormwood, post-credits): the post-Veyra flags plus Maren's original defeat, the Marrow climax and this character's regional_credits_seen, realm Stormwood, Stormwood portal unlocked, five raised to L55 (the generator's maximum) for the L58 endgame leader band. Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
+      "disclosure": "F44#0 rematch witness input (Stormwood, post-credits): the 'stormwood' post-Veyra Cloudreach profile, generated with --enter=stormwood:stormwood (the ordinary F49 portal leg into Stormwood), plus Voss's and Maren's original defeats, the Marrow climax flag and this character's regional_credits_seen; five raised to L55 (the generator's maximum) for the L58 endgame leader band. Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
     }
   }
 }
