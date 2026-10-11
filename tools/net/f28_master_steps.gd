@@ -241,6 +241,10 @@ static func _feast_press(runner: SceneTree, args: Dictionary, mode: String) -> D
 	service.call("open_kitchen", kitchen)
 	await runner.process_frame
 	var panel: Node = service.get("_panel")
+	# A guest's personal view is an async request: the panel fills on arrival.
+	for f in int(args.get("view_frames", 600)):
+		if panel == null or panel.call("is_open") != true or panel.get("_awaiting_view") != true: break
+		await runner.physics_frame
 	if panel == null or panel.call("is_open") != true:
 		var owner: Variant = preload("res://scripts/ui/input_owner.gd").current(runner)
 		var why := str(session_node.call("_owner_snapshot_block_reason", runner.root.get_node(^"Game").get("local"))) if owner == session_node else ""

@@ -16,6 +16,8 @@ var _pending_action := ""
 var _pending_intent: Dictionary = {}
 var _duel_generation := 0
 var _preparing_duel := false
+## A guest's first view is an async request: the list built empty waits for it.
+var _awaiting_view := false
 
 func _ready() -> void:
 	add_to_group(INPUT.GROUP)
@@ -67,6 +69,7 @@ func _rebuild() -> void:
 		if not retained.is_empty():
 			_button("Retry original transaction", func() -> void: _retry_retained_feast(retained.intent))
 	var state: Dictionary = _service.call("view")
+	_awaiting_view = state.is_empty()
 	if state.is_empty():
 		_message.text = "Character transaction reconciliation is not ready."
 	elif _mode == "duel":
@@ -207,6 +210,12 @@ func accept_completion(action: String, original: Dictionary, result: Dictionary)
 		if _mode == "duel": close()
 		else: _rebuild()
 	return true
+
+## The producer's personal view arrived. Rebuild only a list that was built
+## without one; a shown list keeps its buttons (and re-reading cannot loop).
+func view_arrived() -> void:
+	if visible and _awaiting_view and _pending_action.is_empty() and not _preparing_duel:
+		_rebuild()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):
