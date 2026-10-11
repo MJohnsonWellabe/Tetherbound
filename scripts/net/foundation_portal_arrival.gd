@@ -259,6 +259,9 @@ func _process(delta: float) -> void:
 ## every later owner-gated guest action is refused.
 static func _confirm_travel_reset(session: Node, peer: int, realm: String) -> void:
 	var lifecycle: Node = session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
+	# The host's own record of this crossing: the one proof that lets the
+	# peer's rebuilt trainer restart its damage_revision in the new realm.
+	if lifecycle != null and lifecycle.has_method("host_crossing_confirmed"): lifecycle.call("host_crossing_confirmed", peer, realm)
 	var actor: Node3D = lifecycle.call("remote_body", peer) as Node3D if lifecycle != null else null
 	if actor == null or not actor.global_position.is_finite() or not session.has_method("owner_passive_travel_reset_confirmed"): return
 	session.call("owner_passive_travel_reset_confirmed", peer, realm, actor.global_position, true)
