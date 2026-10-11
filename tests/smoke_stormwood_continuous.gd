@@ -574,6 +574,7 @@ class Segment extends RefCounted:
 	## same Break as a fast one. A physics-frame cap derived from that budget at
 	## the current clock still bounds every wait.
 	const SURGE_FRAME_MARGIN := 1.5
+	const ENGAGE_PASS_SECONDS := 10.0
 	# Measured on the failed 2026-09-08 run: from Lantern Pools camp to both
 	# charged nodes plus their impact settles consumed about 45.7 simulation
 	# seconds. Require 55 contiguous seconds of the runtime's own open window;
@@ -676,16 +677,33 @@ class Segment extends RefCounted:
 		# seam for the next one, as a player would, then press.
 		var gathered := false
 		var seam_wait := _surge_wait(FIRST_GLASS_XZ)
+		var engage_held := 0
 		while not gathered and _surge_wait_open(seam_wait):
 			if not str(surge.get("phase")) in ["break", "fading"]:
 				await tree.physics_frame
 				continue
 			# A wild that wanders up offers its own Engage prompt; let it pass.
+			# One that keeps the prompt for ENGAGE_PASS_SECONDS of simulation
+			# time is not passing: answer it as a player would, then go on.
 			var arbiter: Node = tree.get_first_node_in_group("interaction_arbiter")
 			var winner: Variant = arbiter.call("winning_provider") if arbiter != null else null
 			if winner is Node and (winner as Node).name == "EncounterDirector":
-				await tree.physics_frame
+				engage_held += 1
+				if float(engage_held) * Engine.time_scale / float(Engine.physics_ticks_per_second) < ENGAGE_PASS_SECONDS:
+					await tree.physics_frame
+					continue
+				engage_held = 0
+				_note("ANSWERED a wild that held the Engage prompt at the first seam (offer=%s)" % str(arbiter.call("winner")))
+				await _tap(&"interact")
+				if not bool(manager.call("is_fighting")):
+					_fail("pressing the held Engage prompt at the first seam started no fight (offer=%s)" % str(arbiter.call("winner")))
+					return _result()
+				if not await _fight_current_encounter("first seam held wild"):
+					return _result()
+				if not await _ensure_usable_ally("first charged Stormglass node"):
+					return _result()
 				continue
+			engage_held = 0
 			if not await _activate_node(harvest, harvest.get_node_or_null(^"Interactable") as Node3D,
 					FIRST_GLASS_XZ, "first charged Stormglass node"):
 				return _result()
