@@ -2979,8 +2979,23 @@ func _step_place_stand_in(args: Dictionary) -> Dictionary:
 	# repositions around it.
 	if node.get("home") != null:
 		node.set("home", node.global_position)
+	var encounter_id: String = str(manager.call("encounter_id"))
+	var instance: Variant = node.get("instance")
+	var generation: Variant = node.get("body_generation")
+	if generation == null: generation = node.get_meta(&"tether_body_generation", null)
 	for i in maxi(0, int(args.get("settle", 20))):
 		await physics_frame
+	# A round retry can retire this opponent during the ordinary settle frame.
+	# Refuse the changed witness instead of reading a freed or replacement body.
+	if not is_instance_valid(manager) or _combat_manager() != manager:
+		return {"verdict": "FAIL", "detail": "the combat manager changed while the stand-in was settling"}
+	if not is_instance_valid(node) or node.is_queued_for_deletion():
+		return {"verdict": "FAIL", "detail": "the opponent was retired while the stand-in was settling"}
+	var current_generation: Variant = node.get("body_generation")
+	if current_generation == null: current_generation = node.get_meta(&"tether_body_generation", null)
+	if manager.call("enemy_body") != node or str(manager.call("encounter_id")) != encounter_id \
+			or node.get("instance") != instance or current_generation != generation:
+		return {"verdict": "FAIL", "detail": "the encounter, opponent or body generation changed while the stand-in was settling"}
 	var p: Vector3 = node.global_position
 	return {"verdict": "PASS", "detail": "local stand-in '%s' stands at (%.2f, %.2f, %.2f)"
 		% [str(node.name), p.x, p.y, p.z]}
