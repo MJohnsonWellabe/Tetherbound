@@ -1,0 +1,3 @@
+  ok    test_onboarding_lesson_triggers.gd :: test_every_authored_lesson_waits_for_its_own_unlock_then_is_due_once
+  ok    test_onboarding_lesson_triggers.gd :: test_lessons_unlocking_together_are_offered_in_authored_order
+2 tests, 150 assertions, 0 failed
