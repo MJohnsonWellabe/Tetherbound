@@ -4,6 +4,7 @@ extends "res://tests/helpers/water_shellwatch_segment.gd"
 ## camp recovery -> Aquaryn defeat -> Iona's earned recipe. No fixture writes.
 ## Deliberately stops BEFORE the saddle/mount path: material harvesting and a
 ## five-slot capture/release ceremony still need ordinary continuous evidence.
+const ALPHA_FIGHT_SIM_S := 600.0
 const TIDAL_ROUTE := "shellwatch_to_tidal_cradle_sheltered"
 const ALPHA_FLAG := "water_aquaryn_resolved"
 const STONE_FLAG := "water_swim_stone_earned"
@@ -131,24 +132,28 @@ func _fight_alpha() -> bool:
 		await _tree.physics_frame
 	if not _manager.is_fighting() or _manager.encounter_id() != alpha.authority.encounter_id:
 		return _fail("Real Aquaryn interaction did not enter its authoritative fight")
-	var deadline := Time.get_ticks_msec() + 180000
+	var fight_started_ms := Time.get_ticks_msec()
+	var fight_sim_s := 0.0
 	var fight_frames := 0
-	while _manager.is_fighting() and Time.get_ticks_msec() < deadline:
+	# Duration budget in SIM seconds, not wall clock (coordinator-approved).
+	while _manager.is_fighting() and fight_sim_s < ALPHA_FIGHT_SIM_S:
 		var enemy: Node3D = _manager.enemy_body()
 		var ally: Node3D = _director.ally_body()
 		fight_frames += 1
 		if fight_frames % 600 == 0 and is_instance_valid(enemy) and is_instance_valid(ally):
 			_note("Aquaryn fight t=%.0fs wall=%.0fs enemy_hp=%.2f ally=%s hp=%.2f gap=%.1fm enemy_y=%.1f ally_y=%.1f" % [
-				fight_frames / 60.0, (180000 - (deadline - Time.get_ticks_msec())) / 1000.0,
+				fight_sim_s, (Time.get_ticks_msec() - fight_started_ms) / 1000.0,
 				enemy.instance.hp_fraction(), str(_manager.active_creature().species_id), _manager.active_creature().hp_fraction(),
 				ally.global_position.distance_to(enemy.global_position), enemy.global_position.y, ally.global_position.y])
 		_stop_combat_input()
 		if is_instance_valid(enemy) and is_instance_valid(ally):
 			_pilot.drive(_manager, ally, enemy)
 		await _tree.physics_frame
+		fight_sim_s += Engine.time_scale / float(Engine.physics_ticks_per_second)
 	_stop_combat_input()
+	_note("Aquaryn fight length %.1f s sim" % fight_sim_s)
 	if _manager.is_fighting():
-		return _fail("Aquaryn fight exceeded 180 seconds")
+		return _fail("Aquaryn fight exceeded %d sim seconds" % int(ALPHA_FIGHT_SIM_S))
 	if str(alpha.authority.resolution.get("outcome", "")) != "defeated" \
 			or not await _wait_world_flag(ALPHA_FLAG, 240) or not _game.local.flags.has(STONE_FLAG):
 		return _fail("Aquaryn fight ended without real defeat and personal Swim Stone")

@@ -32,7 +32,8 @@ json.dump({"kind":"tidewake_checkpoint","criterion":"F19#5","segment":seg,"comma
   "07_late remounts the 06 swimmer by the late helper's own input step: a mount is not saved",
   "Water helpers accept the F32 renewable stock receipt in place of the legacy harvest flag (coordinator-approved)",
   "Start lineage is the generated tidewake arrival, not an earned Meadows end save",
-  "03_brine: Tovin fight bound raised 180 s wall to 600 s SIM (coordinator-approved duration budget; victory still required): generated L20 ground belt, terrapup lead 0.8x vs water; actual fight length is the 'Tovin fight length' note in receipt.json helper_receipts"]},open(out+"/PROVENANCE.json","w"),indent=2)
+  "03_brine: Tovin fight bound raised 180 s wall to 600 s SIM (coordinator-approved duration budget; victory still required): generated L20 ground belt, terrapup lead 0.8x vs water; actual fight length is the 'Tovin fight length' note in receipt.json helper_receipts",
+  "Every Tidewake helper trainer/alpha fight bound (Shellwatch _fight_trainer, Tidal Aquaryn, late fight_bound_ms) is a 600 s SIM duration budget (coordinator-approved); victory still required; each fight's length is a '<id> fight length N s sim' note in receipt.json helper_receipts"]},open(out+"/PROVENANCE.json","w"),indent=2)
 P
   echo "CHAIN DONE $seg $(TZ=America/Chicago date '+%F %T CT')"; prev="$out"
 done
