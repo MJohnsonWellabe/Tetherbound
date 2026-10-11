@@ -6234,9 +6234,14 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 		var mouth_back := (a.x + a_size.x * 0.5) if along_x \
 			else (a.z + a_size.y * 0.5)
 		start = mouth_front + float(_bank_cfg().get("throat_overlap_m", 0.4))
+		# The seam joins the throat, but the COMPLETE gallery profile stays
+		# inset behind the bank face. The same mesh blends between them instead
+		# of presenting its full cross-section as a separate entrance ring.
+		var complete_profile_start := maxf(start + _wall_t,
+			mouth_front + float(cfg.get("mouth_passage_start_inset_m", 2.5)))
 		shell_cfg["mouth_vestibule"] = {
 			"front": start,
-			"full_start": start + _wall_t,
+			"full_start": complete_profile_start,
 			"full_finish": mouth_back - _wall_t,
 			"back": mouth_back,
 			"half_width": (a_size.y if along_x else a_size.x) * 0.5 - inset,
@@ -6321,6 +6326,10 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 				# Keep erosion at the existing gallery ends; the full room span has
 				# exact longitudinal boundaries shared with its continuous floor.
 				along = lerpf(along, lerpf(start, finish, t), vestibule_weight)
+				# Negative erosion must not carry the gallery back outside the
+				# mouth plane as a freestanding cross-section. Its floor already
+				# begins at this same interior seam; deeper gallery ends are intact.
+				along = maxf(start, along)
 			var across := section_across[section_index] * half_width * width_wave \
 				+ lateral_drift
 			if not vestibule.is_empty():
