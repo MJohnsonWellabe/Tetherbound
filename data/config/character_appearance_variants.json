@@ -511,7 +511,7 @@
       "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
       "body_model_override": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
       "portrait": "res://assets/ui/portraits/npc_identity_water_otto_v1.png",
-      "review_status": "off_candidate_sampled_low_body_passed_pending_portrait_world_and_claude_judgement",
+      "review_status": "paired_candidate_sampled_low_body_and_portrait_passed_pending_world_and_claude_judgement",
       "authoring_provenance": {
         "source_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
         "source_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",

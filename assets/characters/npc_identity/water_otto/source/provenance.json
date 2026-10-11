@@ -1,7 +1,7 @@
 {
   "actor_id": "water_otto",
   "default_enabled": false,
-  "status": "REGISTERED_OFF_SAMPLED_LOW_BODY_PASS_PORTRAIT_WORLD_CLAUDE_PENDING",
+  "status": "REGISTERED_OFF_SAMPLED_LOW_BODY_AND_PORTRAIT_PASS_WORLD_CLAUDE_PENDING",
   "source_commit": "10d72eb48aad458c337060bbbbbf15babd670b7e",
   "installed_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
   "installed_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
@@ -232,10 +232,9 @@
     "scope": "Low/Compatibility, seven clips, four phases, front/side; all56 original scale/raster/clip guards retained",
     "risks": [
       "CPU ten-idle-edge and chop stretching remains disclosed; no blocking artifact visible in root sampled corrected native views. Continuous motion and contacts are not certified.",
-      "Olive differentiation from Orsen still requires world/portrait review.",
-      "No paired portrait or independent Claude acceptance yet."
+      "Olive outfit differentiation and body/portrait composition still require matched world and independent Claude review."
     ],
-    "portrait": "NOT_AUTHORED",
+    "portrait": "PASS_SCOPED_NATIVE_PAIRED_PORTRAIT",
     "world": "PENDING",
     "claude_judgement": "PENDING",
     "previous_uncorrected_review": {
@@ -308,5 +307,53 @@
   },
   "appearance_variant_id": "npc_identity_water_otto_v1",
   "paired_portrait": "res://assets/ui/portraits/npc_identity_water_otto_v1.png",
-  "runtime_binding": "Only water_otto binds the disabled candidate; global and record gates OFF retain installed wandering_trainer body and portrait. Dedicated portrait is not yet authored."
+  "runtime_binding": "Only water_otto binds the disabled complete candidate pair; global and record gates OFF retain installed wandering_trainer body and portrait.",
+  "portrait_authoring": {
+    "status": "PASS_SCOPED_NATIVE_PAIRED_PORTRAIT",
+    "source_commit": "e39f94f0c53eaf3eac1f090df559f068924587ee",
+    "portrait": "res://assets/ui/portraits/npc_identity_water_otto_v1.png",
+    "portrait_sha256": "df544e51a8afa754b8987a738e02a55367a30401f2b00c1680a3c369881b2c9a",
+    "import_sidecar_sha256": "8eca042af508017e293df15adc51747b4aa3dd9051b27f5a0571f01125afaa46",
+    "import_uid": "uid://b7dpgb6emwss2",
+    "candidate_model": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
+    "candidate_model_sha256": "545881bda98f542d6fdf1afbc874a6f028c04e2c32e05e20de288d5b2ca134cc",
+    "appearance_variant_id": "npc_identity_water_otto_v1",
+    "renderer": "Low/Compatibility",
+    "authoring_script": "res://tools/_capture_portraits.gd",
+    "source_script_sha256": "f8e6b280e9fc1e542819c340761f0dcf9ee094dde6e86e72de615b562bc192de",
+    "private_fixture": "otto_portrait_off_private_v1.gd",
+    "private_fixture_sha256": "1583e4e3fc29051660b7e7cba0b8f648a88e1c6b7567a453257cb33937b23a04",
+    "fixture_change": "Only HEADROOM0.045to0.10 and fresh private SHEET_PATH; all source/hash/destination/coverage/clipping/border guards unchanged",
+    "parameters": {
+      "headroom_m": 0.1,
+      "fov_degrees": 28.0,
+      "window_height_m": 0.66,
+      "max_fit_attempts": 5,
+      "exposure": 1.0,
+      "render_size_px": 512,
+      "plate_size_px": 256
+    },
+    "actual_process_id": 60100,
+    "exit_code": 0,
+    "completed_utc": "2026-10-11T20:43:22.275779+00:00",
+    "completed_import": {
+      "exit_code": 0,
+      "actual_engine_pid": 39896,
+      "completed_utc": "2026-10-11T20:45:10.768648+00:00"
+    },
+    "render_checks": {
+      "coverage_percent_reported": 50,
+      "clipped_white_percent_reported": 0.3,
+      "border": "clear",
+      "failures": 0,
+      "coverage_allowed_percent": [
+        38,
+        68
+      ],
+      "clipped_white_limit_percent": 1.5
+    },
+    "coordinator_visual_review": "PASS scoped native portrait: root inspected face, hat and exact corrected-body pair; world and independent Claude acceptance PENDING",
+    "world": "PENDING",
+    "claude_judgement": "PENDING"
+  }
 }

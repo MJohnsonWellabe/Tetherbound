@@ -1,7 +1,7 @@
 {
   "actor_id": "water_otto",
   "default_enabled": false,
-  "scope": "Otto-only disabled body/portrait candidate registered for root portrait authoring; paired portrait not yet authored, installed fallback retained",
+  "scope": "Otto-only complete disabled body/portrait candidate pair; sampled body and portrait reviewed, world/Claude pending; installed fallback retained",
   "installed_profile": "wandering_trainer",
   "target_height_m": 1.78,
   "required_joints": 24,
@@ -15,7 +15,7 @@
     "defeated"
   ],
   "identity": "Preserve installed face/hat/beard/scarf/coat/pouches/backpack/bedroll; Otto olive coat direction from existing reserved hue96 palette; no new biography, body swap, role or location change",
-  "native_review": "PASS_SCOPED_SAMPLED_BODY_ONLY: corrected56frames, seven clips/four phases/front-side Low/Compatibility; continuous motion/portrait/world/Claude PENDING",
+  "native_review": "PASS_SCOPED sampled56body frames and exact native paired portrait, Low/Compatibility only; continuous motion/world/Claude PENDING",
   "forbidden_without_further_root_grant": [
     "Further arm correction",
     "Skin/weight/material edits",
