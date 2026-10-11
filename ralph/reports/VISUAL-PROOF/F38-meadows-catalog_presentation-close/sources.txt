@@ -1,0 +1,6 @@
+Item: F38 meadows_catalog_presentation (P2-006), 2nd attempt, close stands per judge request.
+Tool: tools/capture_grandpas_village_identity.gd via render.yml, gl_compatibility (Low), 1280x720; 9 fixed village views at ~5-10 m, day shown (night frames exist in the artifacts).
+Before: main 078772372c458ea20c286041dbc9edb1699851e5, render run 38101525706 (18/18 frames).
+After:  tb/coordinator-all 36a2c48a24fdf0ffecd4e2b6315da42032cccf64, render run 38102653417 (18/18 frames).
+Coverage gap: no existing tool places a close camera on the Crossing Hall front or the pond; these views cover streets, Grandpa's square and Mira's shop threshold only. Medium not captured (tool has no preset switch).
+Sheet: before-after-close-day.jpg, left = before (main), right = after. Composited with tools/sheet.py.
