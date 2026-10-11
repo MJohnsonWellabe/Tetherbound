@@ -71,3 +71,25 @@ All times are US Central. Run date: 2026-10-11, 06:50–08:42 CT. Base: main 9e3
   - Minting the ordinary record in solo is refused further in (likely the ordinary reward-owner install).
   - The next option would invent a solo encounter identity for a durable journal. That is a transaction-semantics decision; coordinator ruling needed.
 - **Result:** 06 FAIL (Veyra never resolves solo); 07 NOT RUN.
+
+## 05 Officer Voss: WAITING ON OWNER (level-gap decision deferred to the end; no XP or level numbers changed)
+
+- **Team at Voss:** the five ordered template creatures, all L31, full HP after the summit-bivouac rest. Order: terrapup, bramblebun, bramblebun, mudsnout, bramblebun.
+- **Opponents:** stormcapra L41, cloudfang L42, skyrill L42 (`cloudreach_chapter.json` officer_voss_summit_approach, level_band 41–42).
+- **Fight (live SPACER pilot):** lost; all five fainted.
+  - Hits: 69 dealt, 31 taken.
+  - Damage: 732 dealt, 1568 taken.
+  - Inputs: 129 quick, 17 charged; 0 switches.
+- **Route XP earned, arrival through piece 04:**
+
+  | Creature | Arrival | After 04 | XP gained |
+  |---|---|---|---|
+  | terrapup | L31 / 0 xp | L31 / 898 | 898 |
+  | bramblebun | L31 / 0 xp | L31 / 1185 | 1185 |
+  | bramblebun | L31 / 0 xp | L31 / 1512 | 1512 |
+  | mudsnout | L31 / 0 xp | L31 / 1196 | 1196 |
+  | bramblebun | L31 / 0 xp | L31 / 579 | 579 |
+
+  No level-ups. Senn and Maela were the only fights; wild fights and optional trainers are not on the required route.
+- **After 05**, which includes the Voss loss and the stronghold walk: terrapup L31/1584, bramblebun L32/155, bramblebun L32/131, mudsnout L31/1196, bramblebun L31/1273.
+- **The gap:** `redesign_level_curve.json` expects team L39–42 by upper Cloudreach. The required route ends 05 at L31–32.
