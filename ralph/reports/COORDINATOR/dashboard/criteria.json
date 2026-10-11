@@ -1,5 +1,5 @@
 {
- "generated_at": "12:12 PM CT Sun 11 Oct 2026",
+ "generated_at": "12:17 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -2122,12 +2122,12 @@
    "title": "Creature gear and trainer gear",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 60,
+   "pct": 80,
    "counts": {
-    "met": 3,
+    "met": 4,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 2,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -2166,10 +2166,10 @@
     },
     {
      "text": "Trainer tool pouch tiers extend Tether Commands; all gear persists and is personal in co-op.",
-     "status": "not_started",
-     "evidence": "none in tests (no pouch_tier/command_pouch_tier assertion)",
-     "gap": "Add a unit test for pouch tier → command extension. Add a net smoke covering a two-peer gear craft/equip, reload and rejoin, with ownership kept personal.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test covers pouch-tier growth of commands, gear save/reload, or personal gear across two peers.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F33#4/: pouch tiers bind Tether Commands per tier (test_f24_host_commands pouch tests, 0 failed); 2-peer harness_max_hp extended with a production leave, wipe and returning join: ALL CHECKS PASSED 42/0 (guest's creature gear written to its own file, restored from file on rejoin, no duplicate, host applies it to the guest's creature only, host's own creature never has it); reconnect_keeps_character ALL PASSED (84) for trainer gear",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-b 2f4a69d4, 12:17 PM CT Sun 11 Oct). Disclosed: slow-host wall-clock budgets raised locally, uncommitted (coordinator-approved); harness_unwear isolation step re-wears the guest's gear before the leave. Lands with the consolidated PR.",
      "audit_index": 4
     }
    ]
