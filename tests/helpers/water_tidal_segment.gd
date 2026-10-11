@@ -120,8 +120,10 @@ func _activate_alpha_challenge(alpha: Node) -> bool:
 func _fight_alpha() -> bool:
 	var alpha := _world.get_node_or_null("WaterAlpha")
 	if alpha == null or not alpha.ready_for_intents or not is_instance_valid(alpha.body) \
-			or str(alpha.body.instance.species_id) != "water_aquaryn" or int(alpha.body.instance.level) != 49:
-		return _fail("Production level-49 Aquaryn is missing")
+			or str(alpha.body.instance.species_id) != "water_aquaryn" \
+			or int(alpha.body.instance.level) != int(alpha.rules.get("level", -1)):
+		# The authored level is data/config/water_alpha.json `level` (BOSSES §4.8: L49 -> L26).
+		return _fail("Production Aquaryn at its authored water_alpha.json level is missing")
 	if not await _ensure_ally_deployed("Aquaryn"):
 		return false
 	if not await _activate_alpha_challenge(alpha):
