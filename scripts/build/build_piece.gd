@@ -14,6 +14,7 @@ extends Node3D
 ## onto a `MeshInstance3D.mesh`.
 
 const BUILD_MATERIAL_FINISH := preload("res://scripts/build/build_material_finish.gd")
+const WALL_INTERIOR := preload("res://scripts/build/build_wall_interior.gd")
 
 var _model: Node3D = null
 
@@ -89,6 +90,7 @@ func _spawn(mesh_path: String, solid: bool, light: Dictionary, model_scale: Vect
 	_model.scale = model_scale
 	add_child(_model)
 	BUILD_MATERIAL_FINISH.apply(_model)
+	WALL_INTERIOR.apply(_model, mesh_path)
 	if not light.is_empty():
 		_build_light(light)
 	if not solid or collision_layer == 0:
