@@ -104,3 +104,45 @@ belt, not admission. Open; coordinator decision requested.
 - Stale-data finding (left unchanged, per coordinator): data/config/water_encounters.json
   scripted_encounter_references[0] (water_aquaryn_alpha) still lists level 49 vs the
   authored spawn level 26.
+
+## 05 Tidal: wedged follower (game defect, FIXED)
+Aquaryn's challenge was refused ("Bring your creature closer to Aquaryn.", engage radius
+32 m) in 3 of 4 clean runs. Trace: the deployed ally wedged on the Tidal spine leg from
+point 2 toward Aquaryn at (576.5, 35.4, 1427.9), `closing=true`, velocity 0, 42.7 m from
+the player for 30+ s. Inside follower_creature.gd's 45 m LEASH it never snapped back, so
+the encounter could never be engaged. Fix (scripts/creatures/follower_creature.gd): a
+follower still closing that moves < 0.5 m for 3 s while > 12 m from the trainer takes the
+existing leash snap. Verification: 05 Tidal 2/2 PASS (Aquaryn 45.5 s / 31.8 s sim); unit
+tests test_companion_presence, test_companion_terrapup_capture_0912,
+test_follower_floor_station, test_lost_companion_escort, test_remote_creature_follow:
+63 tests, 404 assertions, 0 failed.
+
+## 05 PASS; 06 harvest binding (game defect, FIXED) and catch identity (OPEN)
+- 05 Tidal PASS (checkpoint tidewake_05_tidal).
+- 06 first failed "water:tidal_cradle:harvest:014 did not pay ... gained=0". Trace: the
+  WaterPickups node for 014 was renewable-bound but `_source_service == null`, so the press
+  only answered "not ready". The F32 mount ran its own placement verdict BEFORE adopting a
+  resident node, so a site whose mount placement was refused (or not yet re-polled) left the
+  chapter's authored node unbound. Fix (f32_world_mount.gd + water_scene_pickups.gd): the
+  mount adopts a resident node already bound to its site at the authored XZ before its own
+  placement checks, keeps its service, and WaterPickups hands a freshly spawned renewable
+  node to the mount immediately (adopt_resident). Verified: 06 harvests 013/014/007/004/
+  002/010 all pay; 02 Reedhaven regression PASS.
+- 06 now stops at the swimmer catch: outcome caught, choice ceremony open, belt unchanged,
+  but the helper requires `pending_catch == wild.instance` (object identity). The
+  host-authoritative capture (foundation_capture.gd `_present`) decodes the creature from the
+  offer (CODEC.decode), so pending_catch is always a new object. Helper identity checks
+  (earned_roster_replacement_segment.gd:104/125/151/160, swimmer preparation 176+) are stale
+  against that path. Coordinator decision requested.
+- Catch identity (coordinator-approved): earned_roster_replacement_segment resolves the
+  newcomer as the pending catch carrying the capture offer meta, same species/level as the
+  engaged wild, uid not in the belt (exactly one, else fail; exact identity still accepted);
+  the host-settled farewell reinstalls the belt as new objects, so the receipt compares
+  stable uids (other four kept in order, caught uid appended) and the swimmer is rebound to
+  the live member with that uid. Verified: catch + farewell receipt PASS (Riverdrake L26
+  appended, bramblebun released).
+- 06 then stops at "Earned Swim Saddle recipe absent from workbench": stations.json routes
+  water_swim_saddle (not in field_allowed, no route) to the homestead Workbench, matching
+  HOMESTEAD §2 (Workbench: saddles) and RD-15 (big stations only at home). The helper's
+  field-camp craft is stale against RD-15; swim mounts are optional (WORLD §6 owner
+  retained-team override). Coordinator decision requested.

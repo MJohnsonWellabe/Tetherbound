@@ -239,7 +239,12 @@ func _spawn(row: Dictionary) -> void:
 		add_child(node)
 		node.global_position = spot
 		var model: Array = RESOURCE_MODELS.get(str(row.item_id), [CRATE, 0.35])
-		if personal_patch or not _setup_ordinary_harvest(node, row, spot, definition, model):
+		var renewable := not personal_patch and _setup_ordinary_harvest(node, row, spot, definition, model)
+		if renewable:
+			var mount := _world.get_node_or_null(^"RenewableResources")
+			if mount != null and mount.has_method("adopt_resident"):
+				mount.call("adopt_resident", id, node)
+		if not renewable:
 			node.call("setup", {"order": id, "realm": "water", "item": row.item_id, "amount": int(row.get("yield", 1)),
 				"at": [spot.x, spot.y, spot.z], "label": "Gather " + str(definition.name), "model": model[0], "model_scale": model[1]})
 	else:

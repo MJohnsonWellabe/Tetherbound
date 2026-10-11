@@ -234,6 +234,35 @@ func _watch_weather() -> void:
 			str(player.global_position) if player != null else "-"])
 		last_sim = sim
 		last_ms = Time.get_ticks_msec()
+		_monitor_growth()
+
+
+var _last_histogram := {}
+
+
+## Diagnostic only: engine node/object counts and frame cost, and the node
+## kinds (class + script, scene-root child) that grew since the last sample.
+func _monitor_growth() -> void:
+	var histogram := {}
+	var walk := func(node: Node, recurse: Callable) -> void:
+		var script: Script = node.get_script()
+		var key := "%s:%s" % [node.get_class(), script.resource_path.get_file() if script != null else ""]
+		histogram[key] = int(histogram.get(key, 0)) + 1
+		for child: Node in node.get_children():
+			recurse.call(child, recurse)
+	walk.call(root, walk)
+	var growth: Array = []
+	for key: String in histogram:
+		var delta := int(histogram[key]) - int(_last_histogram.get(key, 0))
+		if delta != 0 and not _last_histogram.is_empty():
+			growth.append([delta, key, int(histogram[key])])
+	growth.sort_custom(func(a: Array, b: Array) -> bool: return absi(int(a[0])) > absi(int(b[0])))
+	_last_histogram = histogram
+	print("STORMWOOD CHAIN perf nodes=%d objects=%d orphans=%d process_ms=%.1f physics_ms=%.1f fps=%.1f growth=%s" % [
+		int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)), int(Performance.get_monitor(Performance.OBJECT_COUNT)),
+		int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)),
+		Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0, Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0,
+		Performance.get_monitor(Performance.TIME_FPS), str(growth.slice(0, 8))])
 
 
 ## Diagnostic only: the first charged seam's prompt and what moves the player
