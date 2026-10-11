@@ -73,6 +73,38 @@ func mount(world: Node3D, player: Node3D) -> bool:
 	_mounted = true
 	return true
 
+## Built-floor consumers use the live pad collision, including its transform,
+## rather than seating creatures in the terrain beneath this raised floor.
+func built_floor_height_at(x: float, z: float) -> float:
+	if not _mounted or not is_inside_tree() or not is_node_ready() or is_queued_for_deletion() \
+		or not is_finite(x) or not is_finite(z): return NAN
+	var body := get_node_or_null(^"ArenaCollision") as StaticBody3D
+	if body == null or body.get_parent() != self or not body.is_inside_tree() or not body.is_node_ready() \
+		or body.is_queued_for_deletion() or (body.collision_layer & 0x7FFFFFFF) == 0: return NAN
+	var collision: CollisionShape3D = null
+	for child: Node in body.get_children():
+		if child is CollisionShape3D:
+			if collision != null: return NAN
+			collision = child as CollisionShape3D
+		elif child is CollisionPolygon3D: return NAN
+	if collision == null or not collision.is_inside_tree() or not collision.is_node_ready() \
+		or collision.is_queued_for_deletion() or collision.disabled: return NAN
+	var cylinder := collision.shape as CylinderShape3D
+	if cylinder == null or not is_finite(cylinder.radius) or cylinder.radius <= 0.0 \
+		or not is_finite(cylinder.height) or cylinder.height <= 0.0: return NAN
+	var pose := collision.global_transform
+	if not pose.origin.is_finite() or not pose.basis.x.is_finite() or not pose.basis.y.is_finite() \
+		or not pose.basis.z.is_finite() or absf(pose.basis.determinant()) <= 0.000001: return NAN
+	# A horizontal cylinder cap is a floor. Tilted or sheared geometry cannot
+	# supply this scalar height contract; retain the normal terrain fallback.
+	if pose.basis.y.y <= 0.0 or not pose.basis.y.normalized().is_equal_approx(Vector3.UP) \
+		or not is_zero_approx(pose.basis.x.y) or not is_zero_approx(pose.basis.z.y) \
+		or not is_zero_approx(pose.basis.x.normalized().dot(pose.basis.z.normalized())): return NAN
+	var local := pose.affine_inverse() * Vector3(x, pose.origin.y, z)
+	if not local.is_finite() or Vector2(local.x, local.z).length() > cylinder.radius: return NAN
+	var top := pose * Vector3(0.0, cylinder.height * 0.5, 0.0)
+	return top.y if top.is_finite() else NAN
+
 func _build_arena() -> void:
 	var radius := float(_definition.arena_radius_m)
 	var mesh := CylinderMesh.new()
