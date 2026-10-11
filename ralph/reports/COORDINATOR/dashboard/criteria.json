@@ -2757,22 +2757,22 @@
    "title": "Rematches and alpha respawns",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 50,
+   "pct": 75,
    "counts": {
-    "met": 2,
+    "met": 3,
     "partial": 0,
     "in_progress": 1,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "After a biome's boss, its named trainers, captains and Master can be rematched at the next biome's level for better rewards.",
-     "status": "not_started",
-     "evidence": "tests/test_f44_repeatables.gd@b4e4897d5 (unit: availability, L33 spec); rematches.json witnesses",
-     "gap": "Run one engine rematch witness per biome (relay_captain, yara, voss, maren) with reload.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The unit test covers detached plans only (\"not earned encounters\"). The required per-biome rematch witness is absent.",
+     "status": "met",
+     "evidence": "ralph/reports/EV-REMATCH-WIRING/README.md (Tidewake/Cloudreach); systems lane F44 receipts (Meadows captain_riverwatch r1 21/21, Stormwood officer_maren 24/24) at fda1c9b5",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (4:04 PM CT). All four biomes: rematch admitted through ordinary input, tier levels, reward paid once, no repay after reload, cooldown kept. Game fixes: 11af2aff (Tidewake/Cloudreach rematch sources), 57ac1753 (Stormwood director sent rematch specs to the chapter hub, dropping them). 7 withdrawn Meadows patrol profiles left for the owner.",
      "audit_index": 0
     },
     {
