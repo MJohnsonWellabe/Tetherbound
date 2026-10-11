@@ -245,6 +245,8 @@ essence nodes and type crops.
 
 ## 4. Waves and lanes
 
+> **Current lanes (owner, 11 Oct 2026):** 6 Claude + 5 Codex lanes, listed in STATE §0. The wave branches below still define file ownership; landing goes through the coordinator's single consolidated PR (WORKFLOW §8), not per-lane PRs.
+
 Lanes in the same wave run in parallel **only on disjoint files** (the owned paths in §6).
 A shared file (combat_manager, HUD, species.json, items.json, project.godot) has one
 owning lane per wave. Others request an edit through STATE's WIP list, or wait for it to land.
@@ -908,6 +910,7 @@ same criteria, numbered from zero (`F27#3`).
   exclusive Godot writer token.
 
 ### 7.2 Landing a criterion or coherent batch (self-landing, no human gate)
+> **Superseded in part (owner, 10 and 11 Oct 2026):** lanes don't open PRs, run CI or dispatch renders. They push their branch and report the head SHA; the coordinator merges and lands one consolidated PR with full CI (WORKFLOW §8). Proof rules v2 (WORKFLOW §8.1) apply. Steps 1–3 below still hold; step 4's per-lane PR does not.
 1. Implement content and code first. Under RD-36, use existing focused checks where sufficient;
    add tests only for required acceptance or substantial rework risk. Exercise the required actual
    player path. Related criteria may share a bounded batch and its necessary checks.
@@ -969,6 +972,7 @@ same criteria, numbered from zero (`F27#3`).
 ---
 
 ## 8. Owner-dependent items (never block other work on these)
+> **Owner, 11 Oct 2026:** only the human playtest (items 2 and the two-account Steam co-op check) and the ROG Ally run (item 1) remain with the owner. The coordinator decides everything else (WORKFLOW §8.1 item 7).
 1. **ROG Ally test** for F26. When the Forward+ build is ready, STATE gets a one-page
    checklist: install, preset Medium, handheld 15 W, the scripted route, read the fps overlay.
 2. **Owner play pass** for F47/F49.

@@ -75,7 +75,9 @@ func _wander_target_clear_of_road(at: Vector3) -> bool:
 func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 	# Foundation Masters use the inherited one-creature duel and personal win
 	# journal. They are not entries in the chapter hub's trainer catalogue.
-	if spec.get("master") == true:
+	# F44 rematches carry their own combat-only spec (rematch tier levels, no
+	# story rewards); the hub only restarts the chapter's canonical trainer.
+	if spec.get("master") == true or spec.has("rematch"):
 		return super.begin_trainer_battle(spec, trainer)
 	if not can_challenge(spec):
 		return false

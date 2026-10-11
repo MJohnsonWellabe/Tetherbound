@@ -1,0 +1,22 @@
+{
+  "continuous_fresh_save": false,
+  "disclosure": "F44#0 rematch witness input (Stormwood): the 'stormwood' post-Veyra profile's flags plus Voss's and Maren's original defeats, generated directly in Stormwood at Ashfoot Waycamp ground (-325, 466) with the Stormwood portal unlocked; five raised to L55 (the generator's maximum) for the L58 endgame leader band. The smoke adds stormwood:marrow_defeated and regional_credits_seen as a disclosed post-load fixture. (The ordinary portal leg was tried twice and failed: the relic hang opens the relic power panel.) Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated.",
+  "kind": "generated_boundary_save",
+  "portal_leg": "",
+  "prior_earned_play": false,
+  "profile": "f44_stormwood",
+  "profile_sha256": "372ae61f319af0f5eb443063a3333ccd466945e407f52468447747b88ef74a8a",
+  "slot": 0,
+  "slot_info": {
+    "day": 20,
+    "legacy": false,
+    "load_result": {
+      "code": "ok",
+      "message": "",
+      "ok": true
+    },
+    "party_size": 5,
+    "realm": "stormwood"
+  },
+  "source": "9c1098496b08e4886cbf609ca061db5877f9351e"
+}

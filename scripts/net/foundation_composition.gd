@@ -69,6 +69,9 @@ func _process(delta: float) -> void:
 	var trace := BACKGROUND_TRACE.begin("composition.poll")
 	_poll_background_work()
 	BACKGROUND_TRACE.end("composition.poll", trace)
+	# A committed duty is still settling: look again soon (multiplayer.json).
+	if get_parent().get("foundation_backlog") == true:
+		_left = float(get_parent().call("_cfg", "foundation_backlog_scan_interval_s", 1.0))
 
 func _poll_background_work() -> void:
 	var camp_trace := BACKGROUND_TRACE.begin("composition.retry_camp")

@@ -933,7 +933,14 @@ func _exercise_simultaneous(cfg: Dictionary) -> void:
 		if not from.is_finite(): _failures.append("Attacker model missing " + move_id); return
 		origins.append(from)
 		bodies.append(_current_attacker)
-	for body: Node3D in bodies: body.visible = true
+	# Showing a posed attacker re-enables its physics (creature_body
+	# _on_visibility_changed); keep it stationary or it falls through the
+	# collider-less stage floor before contact.
+	var rest_y: Array[float] = []
+	for body: Node3D in bodies:
+		body.visible = true
+		body.set_physics_process(false)
+		rest_y.append(body.global_position.y)
 	var camera := get_root().get_viewport().get_camera_3d()
 	if camera != null:
 		var centre := _arena.to_global(Vector3((float(_scenarios.get("stage", {}).get("attacker_x", -3.4)) + _target_x) * 0.5, 1.6, 0.0))
@@ -982,6 +989,9 @@ func _exercise_simultaneous(cfg: Dictionary) -> void:
 			var path := _out.path_join("four-ultimates-%s.png" % beat)
 			if root.get_texture().get_image().save_png(path) != OK: _failures.append("Capture failed " + path)
 			captured[beat] = {"wall_seconds": elapsed, "arrivals": arrivals[0]}
+			for k in bodies.size():
+				if not bodies[k].is_visible_in_tree() or absf(bodies[k].global_position.y - rest_y[k]) > 0.05:
+					_failures.append("Four-ultimate attacker %d left its pose at %s" % [k, beat])
 	intervals.sort()
 	var p95 := intervals[int(floor(float(intervals.size() - 1) * 0.95))] if not intervals.is_empty() else 0.0
 	if captured.size() != beats.size(): _failures.append("Incomplete four-ultimate frames")
