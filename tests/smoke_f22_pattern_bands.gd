@@ -29,6 +29,9 @@ var _trainers := false
 ## --named=<trainer id,...> (F22#4): those named trainers only, each with its
 ## authored F22 pattern row, judged on COMBAT §7's top-trainer bar.
 var _named: PackedStringArray = []
+## --policies=MASHER,READER (coordinator ruling 2026-10-11, F22#1/F47#3 sweep):
+## run only these pilots; the default runs all three. Skipped pilots score 0 runs.
+var _policies: PackedStringArray = []
 ## F33#2: --gear-tier / --gear-upgrade (tests/helpers/f33_gear_fixture.gd).
 var _gear: Dictionary = GEAR.from_args()
 
@@ -38,6 +41,7 @@ func _init() -> void:
 		if arg.begins_with("--seeds="): _seeds = int(arg.trim_prefix("--seeds="))
 		elif arg.begins_with("--band="): _selection = arg.trim_prefix("--band=")
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
+		elif arg.begins_with("--policies="): _policies = arg.trim_prefix("--policies=").split(",", false)
 		elif arg == "--trainers": _trainers = true
 		elif arg.begins_with("--named="):
 			_named = arg.trim_prefix("--named=").split(",", false)
@@ -173,6 +177,7 @@ func _run() -> void:
 				for seed_index: int in _seeds:
 					var sid := str(entry.species[seed_index % entry.species.size()])
 					for policy: String in scores:
+						if not _policies.is_empty() and not _policies.has(policy): continue
 						var party := _party(int(entry.level), starter)
 						var foes: Array = []
 						if _trainers:
@@ -212,6 +217,7 @@ func _run() -> void:
 				var switch_reader := _score(scores.SWITCH_READER)
 				var reasons: Array[String] = []
 				for policy: String in scores:
+					if not _policies.is_empty() and not _policies.has(policy): continue
 					var scored := _score(scores[policy])
 					if int(scored.runs) != _seeds or int(scored.errors) > 0:
 						reasons.append(policy + " incomplete or invalid actual fixture")
