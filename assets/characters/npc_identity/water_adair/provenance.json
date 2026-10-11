@@ -1,6 +1,6 @@
 {
   "actor_id": "water_adair",
-  "status": "candidate_off_pending_portrait_and_native_judge",
+  "status": "paired_candidate_off_pending_native_world_and_claude_judgement",
   "installed_identity": "Surveyor Adair; existing field_researcher body/face family; Brine Steps current surveyor",
   "authorization": "Owner issue 572 comment 6110631002; RD-26 identity-preserving reference-backed refinement on existing Meshy licence, no purchase",
   "reference_origin": "Original built-in imagegen full-body reference drafted and visually inspected by coordinator01a123c0; no board pixels traced or shipped",
@@ -64,10 +64,19 @@
     "invalid_joint_indices": 0,
     "unweighted_vertices": 0
   },
+  "portrait": {
+    "path": "res://assets/ui/portraits/npc_identity_water_adair_v1.png",
+    "authoring_source_commit": "78c8fb4001bbb9733a4afd7bac7cffbfe648e4eb",
+    "method": "Coordinator-owned native production portrait authoring from this exact candidate body",
+    "result": "One plate rendered successfully; coordinator visually confirmed bob, glasses, teal coat and cream shirt",
+    "coverage_percent": 52,
+    "white_clip_percent": 0,
+    "border_clear": true
+  },
   "open_proofs": [
-    "production portrait from exact candidate",
     "native import/scale and deformation",
-    "matched in-world before/after code-blind judgement"
+    "matched High/Medium in-world before/after captures",
+    "Claude code-blind judgement"
   ],
   "candidate_enabled": false,
   "reference_prompt": "docs/art/reference/npc-identity/adair-front-agent-v1.prompt.txt"
