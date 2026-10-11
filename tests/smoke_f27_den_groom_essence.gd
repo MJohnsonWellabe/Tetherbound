@@ -156,6 +156,12 @@ func _groom(prompt: Node3D, uid: String, species: String, expect_paid: int, expe
 		if button != null: break
 		await physics_frame
 	if not _check(button != null and not button.disabled, label + ": the Den panel offers Groom for " + species):
+		for panel: Node in root.find_children("*", "", true, false):
+			if panel.get_script() == preload("res://scripts/ui/craft_panel.gd"):
+				print("DEN PANEL DIAG open=%s intent=%s op=%s waiting=%s buttons=%s results=%s" % [str(panel.get("_open")),
+					JSON.stringify(panel.get("_station_intent")), str(panel.get("_station_operation")), str(panel.get("_groom_waiting_release")),
+					str((panel.get("_station_buttons") as Array).map(func(b: Button) -> String: return "%s%s" % [str(b.get_meta("station_focus_key", "")), "(off)" if b.disabled else ""]) if panel.get("_station_buttons") is Array else []),
+					JSON.stringify(_results).left(600)])
 		return
 	button.grab_focus()
 	await _frames(4)
