@@ -241,6 +241,10 @@ func _flow() -> void:
 			before["keys"] = keys0
 			before["relics"] = relics0.duplicate()
 			before["heart"] = await _heart(peer)
+			if keys0 < 0 or (before.heart as Dictionary).is_empty() or str(before.get("character_id", "")) != _ids[peer] \
+					or str(before.get("world_namespace", "")).is_empty() or str(before.get("session_epoch", "")).is_empty():
+				check(false, "F25 original story/reward/owner scope baseline is unreadable")
+				return
 			if (before.get("transaction_receipts", []) as Array).has("rematch:warden_aldis:endgame:" + _ids[peer]):
 				check(false, "F25 requires first earned endgame Warden rematch; retained progress cannot be stripped")
 				return
