@@ -5620,6 +5620,14 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 func _altar_peer_in_combat(peer: int) -> bool:
 	var roots := _foundation_realm_roots()
 	if roots.is_empty(): return true
+	# Stormwood's host-owned roster survives its done round and send-out gap.
+	# Keep passive checkpoints outside that whole battle, as ordinary trainers do.
+	if is_host():
+		for hub: Node in _foundation_group_under(&"stormwood_encounter_hub", roots,
+			["res://scripts/world/stormwood_encounter_hub.gd"]):
+			if hub.is_queued_for_deletion() or hub.get("session") != self: continue
+			if hub.has_method("peer_in_owned_trainer_roster") \
+				and hub.call("peer_in_owned_trainer_roster", peer) == true: return true
 	var found_host := false
 	for node: Node in _foundation_directors_under(roots):
 		if node.has_method("pending_remote_rematch_settlement") and node.call("pending_remote_rematch_settlement") == true: return true
