@@ -1,6 +1,6 @@
 # F47#1 — essence/material ledgers: no mandatory grinding; optional grinding measurably speeds progress — FAIL (regression)
 
-systems-a, Sun 11 Oct 2026 ~12:45 PM CT. Commands (Node 22, no Godot):
+systems-a, Sun 11 Oct 2026 12:34 PM CT. Commands (Node 22, no Godot):
 `node --test tests/test_f27_route_ledger.mjs tests/test_economy_ledger.mjs tests/test_economy_difficulty.mjs` and `node tools/f27_route_ledger.mjs`.
 
 | Commit | Tests | mandatory_repeat_grinding | optional_grind_faster_every_biome | Cloudreach reached | Stormwood grind lvl/h |
