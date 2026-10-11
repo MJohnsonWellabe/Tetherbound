@@ -26,7 +26,12 @@ out,frm,seg,cmd,commit=sys.argv[1:]
 r=json.load(open(out+"/receipt.json"))
 json.dump({"kind":"tidewake_checkpoint","criterion":"F19#5","segment":seg,"command":cmd,"commit":commit,
  "start_save":frm,"lineage_root":"tests/fixtures/earned_saves/tidewake_arrival_generated (generated arrival, prior_earned_play=false)",
- "injections":[],"shortcuts":r.get("disclosures",[]),"passed":r["passed"]},open(out+"/PROVENANCE.json","w"),indent=2)
+ "injections":[],"shortcuts":r.get("disclosures",[]),"passed":r["passed"],
+ "chain_disclosures":["Order 03_brine then 04_shellwatch: the Shellwatch helper continues from Tovin's Brine victory",
+  "06_swimmer catches a swimmer and releases one of the five (helper design), so UIDs change at 06; the handoff check compares each save with the next segment's Load",
+  "07_late remounts the 06 swimmer by the late helper's own input step: a mount is not saved",
+  "Water helpers accept the F32 renewable stock receipt in place of the legacy harvest flag (coordinator-approved)",
+  "Start lineage is the generated tidewake arrival, not an earned Meadows end save"]},open(out+"/PROVENANCE.json","w"),indent=2)
 P
   echo "CHAIN DONE $seg $(TZ=America/Chicago date '+%F %T CT')"; prev="$out"
 done
