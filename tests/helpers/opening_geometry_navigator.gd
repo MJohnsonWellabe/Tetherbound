@@ -1611,7 +1611,11 @@ func _observed_live_clear() -> bool:
 	_observed_live = result.hit as PhysicsTestMotionResult3D
 	if _observed_live == null:
 		return false
-	if _observed_live.get_travel().length() > _body.safe_margin + CONTACT_EPS:
+	# `_motion` queries with margin = safe_margin, so the engine's recovery is
+	# that query inflation plus the actual penetration. Penetration up to the
+	# body's own safe_margin is ordinary contact (the per-contact depth rule
+	# below), so only recovery beyond margin + safe_margin is a deep overlap.
+	if _observed_live.get_travel().length() > 2.0 * _body.safe_margin + CONTACT_EPS:
 		_capture_failed_pre_sample()
 		_stop_geometry("deep actual overlap: zero-motion recovery exceeds unchanged skin")
 		return false
@@ -1991,7 +1995,8 @@ func _production_observe() -> void:
 	if not contract_ok or (not live_ok and not live_deferred):
 		_stop_geometry("invalid actual production landing/registration")
 	elif not _body.is_on_floor():
-		_stop_geometry("actual production walk lost grounded floor")
+		_stop_geometry("actual production walk lost grounded floor at %s; slides: %s" % [
+			_body.global_position, JSON.stringify(_lost_floor_colliders())])
 	else:
 		var count: int = _body.get_slide_collision_count()
 		var contacts := 0
@@ -2004,10 +2009,9 @@ func _production_observe() -> void:
 				if collision == null or not is_finite(collision.get_depth()) or collision.get_depth() < -CONTACT_EPS:
 					_stop_geometry("invalid actual production slide result")
 					break
+				# Observation count only. Multi-point terrain contact can exceed
+				# CONTACTS; every point of every slide is still validated below.
 				contacts += collision.get_collision_count()
-				if contacts > CONTACTS:
-					_stop_geometry("actual production contact observation cap")
-					break
 				# Swept depths describe UNSAFE motion; only the live ZERO-motion
 				# result above is used to reject deep current-body overlap.
 				_observed_slide_depth = maxf(_observed_slide_depth, collision.get_depth())
@@ -2168,3 +2172,19 @@ func _production_record() -> Dictionary:
 
 func _production_collider_path(collider: Object) -> String:
 	return str((collider as Node).get_path()) if is_instance_valid(collider) and collider is Node else "<raw>"
+
+
+## Failure evidence only: what the body touched on the frame it lost floor.
+func _lost_floor_colliders() -> Array:
+	var out: Array = []
+	for slide in _body.get_slide_collision_count():
+		var collision: KinematicCollision3D = _body.get_slide_collision(slide)
+		var collider: Object = collision.get_collider() if collision != null else null
+		var node := collider as Node
+		out.append({"collider": str(node.get_path()) if node != null else "<none>",
+			"class": collider.get_class() if collider != null else "<none>",
+			"layer": int(collider.get("collision_layer")) if collider != null and collider.get("collision_layer") != null else -1,
+			"owner": str(node.owner.get_path()) if node != null and node.owner != null else "<none>",
+			"normal": _contact_vector(collision.get_normal()) if collision != null else [],
+			"point": _contact_vector(collision.get_position()) if collision != null else []})
+	return out
