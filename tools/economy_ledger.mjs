@@ -358,14 +358,22 @@ export function analyzeTrace(rows) {
     status:'Observations only; route coverage, shortcuts, losses and gross producers require review'}));
 }
 
-if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
+// Async IIFE, not top-level await: the census imports this module back.
+if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) (async()=>{
   const args=process.argv.slice(2);
   const value=name=>{const i=args.indexOf(name);if(i<0)return null;if(!args[i+1]||args[i+1].startsWith('--'))throw Error(`Missing ${name}`);return args[i+1];};
   const report=sourceReport(value('--root')??ROOT);
+  // F47#2: fill in-band reachable supply from the data-only census (carry-forward and verdict live there).
+  const {supplyCensus}=await import('./economy_supply_census.mjs');
+  const census=supplyCensus(value('--root')??ROOT,report);
+  for(const row of report.materials){const band=census.bands.find(b=>b.band===row.biome);
+    row.reachable_supply=Object.fromEntries(Object.keys(row.four_character_raw).map(id=>[id,band.supply[id]??0]));
+    row.status='CENSUS: upper-bound in-band world-site supply (tools/economy_supply_census.mjs); loss/recovery consumption not measured';}
+  report.supply_census={solvent:census.solvent,bands:census.bands.map(b=>({band:b.band,solvent:b.solvent,solvent_by_upgrade:b.solvent_by_upgrade})),shortfalls:census.shortfalls};
   const trace=value('--trace');
   if(trace) {const bytes=fs.readFileSync(trace);report.trace_sha256=digest(bytes);report.observations=analyzeTrace(bytes.toString().split(/\r?\n/).filter(Boolean).map(JSON.parse));}
   const out=value('--out');
   const json=JSON.stringify(report,null,2)+'\n';
   if(out) fs.writeFileSync(out,json);else process.stdout.write(json);
   if(report.errors.length) process.exitCode=1;
-}
+})();
