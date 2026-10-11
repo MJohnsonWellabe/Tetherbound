@@ -36,7 +36,14 @@
       "lantern_every": 4,
       "lantern_height_m": 1.1,
       "lantern_energy": 1.5,
-      "lantern_range_m": 10.0
+      "lantern_range_m": 10.0,
+      "cornice": {
+        "enabled": true,
+        "lower_height_m": 0.35,
+        "upper_height_m": 0.3,
+        "projection_m": 0.3,
+        "segments": 64
+      }
     },
     "towers": {"enabled": true},
     "sanctuary": {

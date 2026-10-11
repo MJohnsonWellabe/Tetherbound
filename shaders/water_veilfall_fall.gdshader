@@ -21,6 +21,10 @@ uniform float depth_pull_max_m = 30.0;
 uniform float detail_fade_start_m = 500.0;
 uniform float detail_fade_end_m = 1600.0;
 uniform float night_lift = 0.06;
+uniform float continuous_core_floor = 0.72;
+uniform float presentation_pull_start_m = 900.0;
+uniform float presentation_pull_end_m = 1100.0;
+uniform float lip_feather_m = 2.0;
 uniform bool visual_far_core_enabled = false;
 uniform float visual_far_core_floor = 0.64;
 uniform float visual_far_edge_floor = 0.82;
@@ -51,13 +55,18 @@ void vertex() {
 	vec3 camera = INV_VIEW_MATRIX[3].xyz;
 	float distance_m = length(world - camera);
 	float width_m = COLOR.a * 100.0;
-	float wanted = max(width_m, distance_m * min_angular_width);
+	// Preserve the sampled face at near/plateau stands. Projection tricks are
+	// needed only where the distant terrain proxy begins; they must not lift
+	// the sheet into open sky next to a player on the mountain.
+	float far_geometry = smoothstep(presentation_pull_start_m,
+		max(presentation_pull_end_m, presentation_pull_start_m + 1.0), distance_m);
+	float wanted = mix(width_m, max(width_m, distance_m * min_angular_width), far_geometry);
 	// Green stores opacity, not a direction: widening must stay horizontal.
 	vec3 lateral = vec3(COLOR.r * 2.0 - 1.0, 0.0, COLOR.b * 2.0 - 1.0);
 	world += lateral * (UV.x - 0.5) * (wanted - width_m);
 	v_distance = distance_m;
 	vec3 view = (VIEW_MATRIX * vec4(world, 1.0)).xyz;
-	float pull = min(distance_m * depth_pull_fraction, depth_pull_max_m);
+	float pull = min(distance_m * depth_pull_fraction, depth_pull_max_m) * far_geometry;
 	VERTEX = view * max(0.0, 1.0 - pull / max(distance_m, 0.001));
 	NORMAL = normalize((MODELVIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
@@ -82,6 +91,13 @@ void fragment() {
 	float across = abs(UV.x - 0.5) * 2.0;
 	float core = 1.0 - smoothstep(0.2, 1.0, across);
 	float ragged = mix(0.3, 1.0, body) * mix(0.7, 1.0, core);
+	// Flow detail colours a continuous water body instead of punching holes
+	// through it. Keep the side wisps irregular, with a connected central fall
+	// at every distance, not only after the distant-core fade.
+	if (visual_far_core_enabled) {
+		float connected = 1.0 - smoothstep(0.55, 0.95, across);
+		ragged = max(ragged, connected * continuous_core_floor);
+	}
 	// The column's outline wanders down its length instead of a ruled edge.
 	float wander = 0.55 + 0.45 * noise(vec2(UV.x > 0.5 ? 3.0 : 7.0, UV.y / 22.0 - TIME * 0.08));
 	float edge = 1.0 - smoothstep(wander - edge_feather, wander, across);
@@ -96,14 +112,14 @@ void fragment() {
 			visual_far_edge_floor, across);
 		edge = mix(edge, max(edge, steady_edge), far_mix);
 	}
-	float lip = smoothstep(0.0, 10.0, UV.y);
+	float lip = smoothstep(0.0, max(lip_feather_m, 0.001), UV.y);
 	// Fade into the plunge mist instead of exposing the last triangle row.
 	float foot = smoothstep(0.0, max(foot_feather_m, 0.001), UV2.y);
 	vec3 colour = mix(shade_colour.rgb, foam_colour.rgb, body);
 	ALBEDO = colour;
 	EMISSION = colour * night_lift;
-	ROUGHNESS = 0.55;
-	SPECULAR = 0.3;
+	ROUGHNESS = mix(0.28, 0.58, body);
+	SPECULAR = 0.4;
 	ALPHA = opacity * strength * edge * lip * foot * ragged;
 	FOG = vec4(fog_colour, fog_enabled ? (1.0 - exp(-fog_density * v_distance)) * fog_keep : 0.0);
 }

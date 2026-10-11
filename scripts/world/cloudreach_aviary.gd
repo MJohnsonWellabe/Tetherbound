@@ -626,11 +626,9 @@ static func _build_veils(root: Node3D, spec: Dictionary, drum_height: float,
 ## lattice ... an unbuilt planetarium frame or a giant birdcage on a ruined
 ## fort." An open lattice has no surface, so at reading distance the dome is
 ## only its own wireframe against the sky and the eye finishes it as scaffold.
-## This skins a band of the meridian gaps with a translucent membrane that
-## follows the same sphere the ribs do, so the ribs read as the STRUCTURE OF
-## something rather than as the whole object. It is deliberately a band, not a
-## full skin: the crown stays open lattice and the oculus stays a real hole, so
-## the dome is still an aviary and not a solid roof.
+## The lower band is a glazed clerestory on the same sphere as the ribs.
+## The dedicated aviary roof helper owns the opaque slate courses; this band
+## leaves its upper openings and the real oculus clear.
 ##
 ## Geometry: one ArrayMesh per gap, a quad grid in (alpha, phi) on the dome
 ## sphere, normals pointing outward. Built with the same `_dome_point` the ribs
@@ -654,6 +652,13 @@ static func _build_membrane(root: Node3D, spec: Dictionary, dome: Dictionary,
 	var columns := maxi(int(membrane_spec.get("columns", 3)), 1)
 	var inset := float(membrane_spec.get("rib_inset_m", 0.12))
 	var material := _mat(materials, "membrane", Color(0.74, 0.79, 0.72, 0.30), true)
+	# The supplied pale, low-alpha panes disappeared against cloud and left
+	# only the ribs. Give the lower clerestory its own readable glazing without
+	# duplicating the dedicated roof helper's opaque courses and open ranges.
+	var glazing := material.duplicate() as StandardMaterial3D
+	if glazing != null:
+		glazing.albedo_color.a = float(membrane_spec.get("glazing_opacity", 0.6))
+		material = glazing
 
 	var alpha_rim := PI * 0.5
 	var membrane_root := Node3D.new()
