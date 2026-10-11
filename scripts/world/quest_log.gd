@@ -159,7 +159,7 @@ func _active_main(progression: RefCounted) -> Array:
 		chapter_rows.append(departure)
 		return chapter_rows
 	# This row is a state-derived presentation, with no invented completion flag.
-	var rows: Array = [{"id": "lesson:" + str(lesson.id), "label": str(lesson.goal), "how": str(lesson.goal), "scope": "player"}]
+	var rows: Array = [{"id": "lesson:" + str(lesson.id), "label": str(lesson.goal), "how": str(lesson.get("hint", lesson.goal)), "scope": "player"}]
 	rows.append_array(_main)
 	return rows
 
@@ -477,7 +477,7 @@ func hint_text(entry: Dictionary) -> String:
 ## caller must draw that as nothing, never as a blank line.
 func tracked_hint(progression: RefCounted) -> String:
 	var lesson := _lesson_guidance()
-	if not lesson.is_empty(): return str(lesson.goal)
+	if not lesson.is_empty(): return str(lesson.get("hint", lesson.goal))
 	for raw: Variant in _active_main(progression):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
