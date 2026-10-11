@@ -168,8 +168,12 @@ func accept(peer: int, sample: Dictionary) -> void:
 		_paired_at.erase(peer)
 		return
 	var prior: Dictionary = _observations.get(peer, {})
+	# A realm crossing rebuilds the trainer and its vitals, so damage_revision
+	# restarts at 0 there; only the same realm's samples must never go back.
+	# (A frozen portal action already lapses on any realm change.)
 	if not prior.is_empty() and prior.sample.session_epoch == sample.session_epoch \
-		and (sample.sequence <= prior.sample.sequence or sample.damage_revision < prior.sample.damage_revision):
+		and (sample.sequence <= prior.sample.sequence \
+			or (sample.damage_revision < prior.sample.damage_revision and sample.realm == prior.sample.realm)):
 		_accept_refusals[peer] = "sequence %s<=%s or damage %s<%s" % [str(sample.sequence), str(prior.sample.sequence), str(sample.damage_revision), str(prior.sample.damage_revision)]
 		_paired_at.erase(peer)
 		return
