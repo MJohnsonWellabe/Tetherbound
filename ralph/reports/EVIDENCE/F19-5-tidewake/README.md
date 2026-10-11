@@ -58,3 +58,21 @@ treats a site as already harvested on the legacy flag or on that site's next_rea
   PROBE RESULT FAIL, same exhausted 395-attempt seat search (overlap with
   WaterNPCs/water_tovin/Body). So Tovin's battle does not admit on main: a main defect,
   not a save/handoff issue. 04-08 not run (Shellwatch requires Brine's victory).
+
+## Tovin admission fix (51f85d43, coordinator-directed; attempt 1 of 2)
+Root cause in combat_manager's staged seat test, not Tovin's position: the oriented render
+box (wider than the gameplay footprint) hit uphill terrain above the 0.25 m floor-contact
+cut, and the challenging trainer's own body was not excluded. Fix: the director names the
+round's trainer (`admission_trainer`, set only around that begin()) and the seat test
+excludes its colliders; realm Terrain3D rising within REALM_SEAT_MAX_STEP_M (1.0 m) inside
+the box counts as hillside. Non-terrain colliders are reported ahead of terrain and keep
+the 0.25 m cut. The support check is unchanged.
+Verification (commit 51f85d43):
+- probe_water_brine_tovin_fight seeds 1/2/3: PASS/PASS/PASS (was FAIL on main, seed 1);
+  fights won in 73.9/71.1/68.1 s.
+- run_tests --only=<all test_combat_* + test_*admission*/arena*/seat*>: 292 tests,
+  1982 assertions, 0 failed.
+- tools/net/run_net_smoke.sh shared_wild_fight: ALL CHECKS PASSED.
+- smoke_warrens --guardian-attacks: FAIL "the production aggressive engage route did not
+  open combat" both with the fix AND on main's combat files (baseline run) - pre-existing,
+  not caused by this change; no admission refusal is logged for the guardian.
