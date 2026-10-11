@@ -1189,17 +1189,47 @@ func _find_clear_shared_seat(spot: Vector3, centre: Vector3, radius: float) -> V
 		if _shared_seat_fit(candidate, centre, radius):
 			last_admission_context.clear()
 			return candidate
+	var orbit := spot - foe_at
+	var search_gap := original_gap
+	var impossible_orbit: bool = centre.is_finite() and foe_at.is_finite() and is_finite(radius) and radius > 0.0 \
+		and original_gap - 0.001 > radius + Vector2(foe_at.x - centre.x, foe_at.z - centre.z).length()
+	if impossible_orbit:
+		# This bound uses the body origin only when it is inside the actual
+		# rendered footprint: a containing circle must then contain it too.
+		var projected := PackedVector2Array()
+		for point: Vector3 in _admission_render_points(_ally_body):
+			projected.append(Vector2(point.x, point.z))
+		var hull := Geometry2D.convex_hull(projected)
+		var twice_area := 0.0
+		for index in hull.size():
+			twice_area += hull[index].cross(hull[(index + 1) % hull.size()])
+		var origin_contained: bool = hull.size() >= 3 and absf(twice_area) > 0.000001 \
+			and Geometry2D.is_point_in_polygon(Vector2.ZERO, hull)
+		var cfg: Dictionary = MATH.config().get("arena", {})
+		var intended_gap := _open_separation(cfg)
+		var valid_gap: bool = is_finite(intended_gap) and intended_gap > 0.0 and intended_gap < original_gap
+		if origin_contained and valid_gap:
+			# An approach after another fight is not the opening separation.
+			# Reconstitute the full measured/configured formation in this ring.
+			var inward := centre - foe_at
+			inward.y = 0.0
+			if inward.length_squared() <= 0.000001:
+				inward = Vector3(orbit.x, 0.0, orbit.z)
+			if inward.length_squared() > 0.000001:
+				orbit = inward.normalized() * intended_gap
+				orbit.y = spot.y - foe_at.y
+				search_gap = intended_gap
 	# Preserve every existing translation-only success before trying another
 	# side of the live opponent. Only the ally's proposed seat turns.
 	for degrees: float in ADMISSION_TURNS_DEG:
 		if is_zero_approx(degrees): continue
 		var turn := Basis(Vector3.UP, deg_to_rad(degrees))
-		var turned := foe_at + turn * (spot - foe_at)
+		var turned := foe_at + turn * orbit
 		turned.y = spot.y
 		for offset: Vector3 in _admission_offsets():
 			var candidate := turned + offset
 			var roundoff := 0.001 if offset.is_zero_approx() else 0.0
-			if Vector2(candidate.x - foe_at.x, candidate.z - foe_at.z).length() + roundoff < original_gap: continue
+			if Vector2(candidate.x - foe_at.x, candidate.z - foe_at.z).length() + roundoff < search_gap: continue
 			attempts += 1
 			if _shared_seat_fit(candidate, centre, radius):
 				last_admission_context.clear()
