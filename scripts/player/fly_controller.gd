@@ -996,7 +996,8 @@ static func make_carrier_art(capability: Dictionary) -> Node3D:
 			if animation_root != null:
 				var pivot_path := animation_root.get_path_to(visual)
 				for track in range(grip_animation.get_track_count() - 1, -1, -1):
-					if grip_animation.track_get_path(track) == pivot_path:
+					if grip_animation.track_get_path(track) == pivot_path \
+							and grip_animation.track_get_type(track) == Animation.TYPE_POSITION_3D:
 						grip_animation.remove_track(track)
 			grip_animation.loop_mode = Animation.LOOP_LINEAR
 			player.play(grip)
