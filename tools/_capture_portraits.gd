@@ -220,8 +220,11 @@ func _run() -> void:
 				_failures.append("unknown appearance authoring candidate: " + variant_id)
 				continue
 			var profile := str(record.get("expected_base_profile", ""))
+			var exposure := 0.88 if profile == "field_researcher" else 1.0
+			if variant_id == "npc_identity_water_iona_v1":
+				exposure = 0.70
 			author_specs.append({"file": variant_id, "config_key": profile, "appearance_variant": variant_id,
-				"author_appearance": true, "exposure": 0.88 if profile == "field_researcher" else 1.0})
+				"author_appearance": true, "exposure": exposure})
 		else:
 			wanted.append(text)
 	if not author_specs.is_empty() and not wanted.is_empty():

@@ -228,17 +228,22 @@ func test_off_model_portrait_authoring_uses_runtime_body_and_checks_provenance()
 	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, settings), {})
 
 
-func test_only_adair_is_bound_to_new_model_candidate() -> void:
+func test_only_named_actors_are_bound_to_their_model_candidates() -> void:
 	var cast: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_characters.json"))
 	var bound: Array[String] = []
+	var iona_bound: Array[String] = []
 	for actor: Dictionary in cast.npcs + cast.trainers:
 		if str(actor.get("appearance_variant_id", "")) == "npc_identity_water_adair_v1":
 			bound.append(str(actor.id))
+		if str(actor.get("appearance_variant_id", "")) == "npc_identity_water_iona_v1":
+			iona_bound.append(str(actor.id))
 		if str(actor.id) == "water_iona":
-			assert_eq(actor.appearance_variant_id, "p2055_water_iona")
+			assert_eq(actor.appearance_variant_id, "npc_identity_water_iona_v1")
 			assert_eq(actor.body_profile, "field_researcher")
 			assert_eq(actor.model, "res://assets/characters/field_researcher/field_researcher_lod0.glb")
+			assert_eq(actor.portrait, "res://assets/ui/portraits/maren.png")
 	assert_eq(bound, ["water_adair"])
+	assert_eq(iona_bound, ["water_iona"])
 
 
 func test_iona_authoring_is_exact_hash_bound_and_shipping_fallback_remains_installed() -> void:

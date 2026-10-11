@@ -1,6 +1,6 @@
 {
   "actor_id": "water_iona",
-  "status": "candidate_off_pending_native_pose_portrait_world_and_claude_judgement",
+  "status": "paired_candidate_off_sampled_low_pose_passed_pending_low_world_and_claude_judgement",
   "candidate_enabled": false,
   "installed_identity": "Researcher Iona; existing field_researcher body/face family; Aquaryn and swimming-saddle researcher on Tidal Cradle",
   "authorization": "Owner issue 572 comment 6110631002; RD-26 identity-preserving reference-backed refinement on existing Meshy licence, no purchase",
@@ -58,7 +58,7 @@
       "changed_rotation_tracks": 14,
       "interpolation": "LINEAR; original key times preserved",
       "preserved": "Original BIN prefix, rest transforms, mesh, skin, inverse binds, materials, textures and all non-target channels; target outputs and samplers cloned",
-      "native_review": "PENDING"
+      "native_review": "Low/Compatibility sampled scale and pose PASS for proceeding; independent Claude judgment PENDING"
     }
   },
   "generation": {
@@ -135,19 +135,52 @@
         "moving_channels": 12
       }
     ],
-    "arm_retargeting": "Applied once privately with exact reviewed recipe; rest/skin/mesh unchanged; native review PENDING"
+    "arm_retargeting": "Applied once with exact reviewed recipe; original rest/skin/mesh unchanged; subsequent sampled Low native pose reviewed by coordinator"
   },
   "portrait": {
     "path": "res://assets/ui/portraits/npc_identity_water_iona_v1.png",
-    "status": "NOT_YET_AUTHORED",
-    "candidate_model_sha256": "1fa712b8c0c061c1c7968b962a529587ceac857fb90a6a5d9e89dcbbbc32bab0"
+    "status": "matching_corrected_candidate_portrait_authored",
+    "candidate_model_sha256": "1fa712b8c0c061c1c7968b962a529587ceac857fb90a6a5d9e89dcbbbc32bab0",
+    "sha256": "604e9101d35bb4e020e033697784a47e55e58d5792c892f955bba008a9b292ef",
+    "authoring_source_commit": "e27c9803d2272c281f01bc7c16695ba5b0a276dd",
+    "method": "Strict production authoring flow with Iona-only spec exposure 0.70; guards unchanged",
+    "rendering_method": "gl_compatibility",
+    "exposure": 0.7,
+    "coverage_percent": 43,
+    "white_clip_percent": 0,
+    "border_clear": true,
+    "result": "One actual plate; coordinator-approved package, independent Claude judgment pending"
   },
-  "runtime_binding": "Original p2055_water_iona binding, installed field_researcher model/profile and maren portrait retained; new candidate is explicit authoring only at this stage",
+  "runtime_binding": "water_iona binds npc_identity_water_iona_v1 with global and record gates OFF; installed field_researcher model/profile and maren portrait remain fallback; original disabled p2055_water_iona record preserved",
   "open_proofs": [
-    "native import, scale, Iona-specific arm stance and coat/pouch clearance",
-    "all-clip native deformation and continuous-motion review",
-    "production portrait from exact candidate",
-    "matched High/Medium world captures",
+    "Low/Compatibility world capture with identity clearly visible and no blocking defect",
     "independent Claude judgement"
-  ]
+  ],
+  "native_sampled_review": {
+    "source_commit": "e27c9803d2272c281f01bc7c16695ba5b0a276dd",
+    "candidate_model_sha256": "1fa712b8c0c061c1c7968b962a529587ceac857fb90a6a5d9e89dcbbbc32bab0",
+    "status": "PASS_FOR_PROCEEDING_TO_LOW_WORLD_CAPTURE",
+    "preset": "Low",
+    "rendering_method": "gl_compatibility",
+    "actual_frames": 56,
+    "clips": [
+      "idle",
+      "walk",
+      "sprint",
+      "jump",
+      "throw",
+      "chop",
+      "defeated"
+    ],
+    "phases_per_clip": 4,
+    "views": [
+      "front",
+      "side"
+    ],
+    "candidate_height_m": 1.6999999,
+    "trainer_height_m": 1.8,
+    "coordinator_findings": "Relaxed arms and no obvious sampled coat breakage",
+    "limitations": "Sampled pose evidence only; continuous motion and independent Claude acceptance not established"
+  },
+  "proof_rules": "Owner proof rules v2, issue 572 comment 6111674339; Low/Compatibility only; earlier High/Medium requirement withdrawn"
 }
