@@ -50,3 +50,24 @@ All times are US Central. Run date: 2026-10-11, 06:50–08:42 CT. Base: main 9e3
 - **Not deterministic:** the 05 re-run walked past the same spot without stalling.
 - **Same family:** the witness route already records this collider type (Windscar Ridge003, lower causeway Ridge000, summit road Ridge001).
 - **Current handling:** recovered by the disclosed stick sidestep. The defect itself is open (coordinator ruling 2026-10-11).
+
+## Pieces 06–07 from a disclosed generated post-05 boundary (coordinator ruling 2026-10-11)
+
+- **Input:** `tools/earned_saves/generate_boundary_save.gd -- --profile=cloudreach_veyra --slot=0 --out=<dir>`. The profile is in `generated_boundary_profiles.json`.
+  - Same five template UIDs, L40, full HP, on the summit deck at (100, 1160.13, 5350).
+  - Act-III flags through `summit_extraction_engine_reached` are generated. The input is NOT earned.
+  - See `generated_after_05.PROVENANCE.json`.
+- **06 run a** (08:52 CT, log `06_veyra_relay.run4a.log.gz`):
+  - The live pilot won all three of Veyra's rounds: aeriex, cloudfang, galecrest.
+  - The battle never ended. It timed out at the helper's 36000-frame limit with no victory or loss callback.
+- **06 run b** (09:17 CT, log `run4b`), with a read-only director dump:
+  - `boss_pending_win: true`, `encounter_id: ""`, `retained_boss_participants: []`, manager outcome `won`, `is_host: true`, `redesign_boss_handoff_runtime_enabled: true`.
+- **Root cause (game defect, F19#2 live path):**
+  - `encounter_director.gd::_open_encounter_if_networked` mints the host encounter record only for multi-peer, master or rematch battles.
+  - A solo boss with a chapter hand-off (Veyra; by the same code, the other `chapter_rewards.json` boss_handoffs on base-director paths) never gets a record.
+  - `session.gd::foundation_boss_outcome` then returns non-durable on every retry, and `_finish_trainer_battle` keeps `_boss_pending_win` forever.
+  - The unit tests `test_f19_boss_handoffs` and `test_f19_participant_delivery` pass (30 tests, 0 failed, with and without the attempt). They do not cover this live solo path.
+- **Fix attempt 1** (commit aab341e1, reverted in a86b733b): extend that exception to bosses with a hand-off. Run 09:41 CT (log `run4`): round 1 resolved `fled` after 2 frames, so the battle reported a loss.
+  - Minting the ordinary record in solo is refused further in (likely the ordinary reward-owner install).
+  - The next option would invent a solo encounter identity for a durable journal. That is a transaction-semantics decision; coordinator ruling needed.
+- **Result:** 06 FAIL (Veyra never resolves solo); 07 NOT RUN.
