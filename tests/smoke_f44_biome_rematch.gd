@@ -230,7 +230,9 @@ func _run() -> void:
 	for item: String in payout: gained[item] = int(bag_after.get(item, 0)) - int(bag_before.get(item, 0))
 	receipt.payout = gained
 	receipt.first_reward = first_reward
-	check(gained == payout, "the first rematch win pays the configured unique reward %s (gained %s)" % [str(payout), str(gained)])
+	var expected_payout := {}
+	for item: String in payout: expected_payout[item] = int(payout[item]) # JSON numbers parse as floats.
+	check(gained == expected_payout, "the first rematch win pays the configured unique reward %s (gained %s)" % [str(payout), str(gained)])
 	var first_items: Array = []
 	for row: Variant in first_reward.get("items", []): first_items.append(str(row.get("id", row)) if row is Dictionary else str(row))
 	check(payout.keys().all(func(item: Variant) -> bool: return not first_items.has(str(item))),
@@ -241,9 +243,12 @@ func _run() -> void:
 		await _finish()
 		return
 	var reloaded := RECORD.portable_projection(game.local.call("save_data")).duplicate(true)
-	check((reloaded.redesign_character.transaction_receipts as Array).count(base_receipt) == 1
-		and reloaded.redesign_character.transaction_receipts == receipts,
-		"after a title reload the receipts are unchanged (rematch paid once)")
+	# The fight's other duties (research, mastery) keep draining after the win,
+	# so compare this rematch's receipts, not the whole growing receipt list.
+	var rematch_rows := func(rows: Array) -> Array: return rows.filter(func(r: Variant) -> bool: return str(r).begins_with(base_receipt))
+	var reloaded_rematch: Array = rematch_rows.call(reloaded.redesign_character.transaction_receipts)
+	check(reloaded_rematch.count(base_receipt) == 1 and reloaded_rematch == rematch_rows.call(receipts) and reloaded_rematch.size() == 2,
+		"after a title reload the rematch receipts are unchanged (paid once: %s)" % str(reloaded_rematch))
 	var bag_reloaded := _bag()
 	var same := true
 	for item: String in payout: same = same and int(bag_reloaded.get(item, 0)) == int(bag_after.get(item, 0))
