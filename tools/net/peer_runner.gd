@@ -603,6 +603,10 @@ func _panel_input_observation() -> Dictionary:
 		"owner_script": script.resource_path if script != null else "",
 		"focus_path": str(focus.get_path()).substr(0, 512) if is_instance_valid(focus) else "",
 		"tree_paused": paused}
+	if is_instance_valid(owner) and owner.has_method("_owner_snapshot_block_reason"):
+		var game := get_root().get_node_or_null(^"Game")
+		if game != null and game.get("local") is RefCounted:
+			result["owner_block_reason"] = str(owner.call("_owner_snapshot_block_reason", game.get("local"))).substr(0, 512)
 	if script != null and script.resource_path == "res://scripts/ui/craft_panel.gd":
 		var pending: Variant = owner.get("_station_intent")
 		var status: Label = owner.get("_status") as Label
@@ -2982,7 +2986,8 @@ func _step_place_stand_in(args: Dictionary) -> Dictionary:
 	var encounter_id: String = str(manager.call("encounter_id"))
 	var instance: Variant = node.get("instance")
 	var generation: Variant = node.get("body_generation")
-	if generation == null: generation = node.get_meta(&"tether_body_generation", null)
+	if generation == null and node.has_meta(&"tether_body_generation"):
+		generation = node.get_meta(&"tether_body_generation")
 	for i in maxi(0, int(args.get("settle", 20))):
 		await physics_frame
 	# A round retry can retire this opponent during the ordinary settle frame.
@@ -2992,7 +2997,8 @@ func _step_place_stand_in(args: Dictionary) -> Dictionary:
 	if not is_instance_valid(node) or node.is_queued_for_deletion():
 		return {"verdict": "FAIL", "detail": "the opponent was retired while the stand-in was settling"}
 	var current_generation: Variant = node.get("body_generation")
-	if current_generation == null: current_generation = node.get_meta(&"tether_body_generation", null)
+	if current_generation == null and node.has_meta(&"tether_body_generation"):
+		current_generation = node.get_meta(&"tether_body_generation")
 	if manager.call("enemy_body") != node or str(manager.call("encounter_id")) != encounter_id \
 			or node.get("instance") != instance or current_generation != generation:
 		return {"verdict": "FAIL", "detail": "the encounter, opponent or body generation changed while the stand-in was settling"}
@@ -3496,6 +3502,7 @@ func _step_stormwood_hosted_quick(args: Dictionary) -> Dictionary:
 					"burst_awaiting_host": manager.get("_burst_awaiting_host"), "action": manager.get("_action"),
 					"encounter_id": manager.get("_encounter_id"), "fighting": manager.call("is_fighting"),
 					"input_available": manager.call("combat_input_available"),
+					"input_owner": _panel_input_observation(),
 					"local_record": hub.get("_local_record") if hub != null else null})
 			return {"verdict": "PASS" if action_observed > action_before else "FAIL",
 				"detail": "real hosted combat_quick input; observed action %d -> %d; retained refusal (may predate input)=%s%s"
