@@ -63,3 +63,31 @@ No game defect was observed: the weather cycle, the shelter detection and the di
 - `stormwood_earned_waterward_handoff.gd` is old-order (Water gate). In the new order, the handoff is `f49_stormheart_settlement` followed by `home_key`.
 - `stormwood_earned_aftermath_segment.gd` still expects `realm_key_water`, which may be a stale old-order assertion. Not run, because it is blocked behind 01.
 - Pieces 02–08 were not run: each needs its predecessor's earned save.
+
+## Round 2 (coordinator-approved Surge-time waits)
+Commits: `ea5d3ae4`-era runner, plus helper fixes on this branch (see git log).
+
+**Surge-time waits: fixed.** The Ashfoot Break, first-seam and charged-window waits in the prefix, and the Crown Rodline Refuge wait, now budget one full Surge cycle of the waited region, with a physics-frame cap derived from that budget. Assertions are unchanged.
+
+Piece 01 now earns:
+- arrival (`chapter_started`)
+- Hesk (`crisis_learned`)
+- Tamsin
+- the sheltered Break at Ashfoot (`first_break_witnessed`), at ~420 s of Surge time, because Cinder Verge's gentle calm runs 324 s
+- the walk to the Verge rod clearing
+
+**New blocker: the first charged Stormglass seam (`stormwood_harvest_cinder_verge_018`).**
+
+- Fix attempt 1 (`attempt_fix_c.log`): the seam loop let every EncounterDirector prompt pass. The player stood at the road point through two whole Break/Fading windows.
+- Fix attempt 2a (`attempt_fix_d.log`): the helper answered a held prompt with Engage. That showed the director's winning offer is the **non-actionable "Call out Bramblebun" hint** (RB, priority −1), not a wild, and pressing it starts no fight.
+- Fix attempt 2b (`attempt_fix_e.log`): only an actionable Engage offer now holds the wait.
+  - The player walks to the seam in Fading (open) and reaches all eight stance targets, each about 1 m from the prompt (radius 2.4 m).
+  - The seam's Interactable still never offers. The arbiter falls back to the priority −1 hint, which it only picks when the harvest offers nothing.
+  - Failure: `first charged Stormglass node never won the live InteractionArbiter ... winner=EncounterDirector offer=Call out Bramblebun ... body_distance=4.69`.
+  - The player is pushed 2–5 m between consecutive stance walks.
+
+Ruled out:
+- The save has no `harvest_node:order:` taken flag for this node.
+- `node_cycles` has no Stormwood site, so stock defaults to ready (day 16 ≥ 1).
+
+Not yet known: why `interaction_offer` returns `{}` here. The candidates are a disabled prompt (Stormwood charged gating), blocked line of sight, or the 2–5 m displacement (lightning knockback or a body push). Finding out needs a live read-only probe at the seam. That would be a third attempt at this step, so it needs the coordinator's go-ahead.
