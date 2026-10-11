@@ -1,5 +1,5 @@
 {
- "generated_at": "2:06 PM CT Sun 11 Oct 2026",
+ "generated_at": "2:10 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -545,10 +545,10 @@
    "id": "F08",
    "title": "Veyra finale, persistence and Cloudreach look",
    "chapter": "Cloudreach",
-   "pct": 60,
+   "pct": 80,
    "counts": {
-    "met": 3,
-    "partial": 1,
+    "met": 4,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -557,10 +557,10 @@
    "criteria": [
     {
      "text": "Veyra's team and flight-relay exam completed by ordinary input",
-     "status": "partial",
-     "evidence": "ralph/reports/CLOUDREACH/b/f08-0-veyra-exam/earned-tightened/ (smoke_cloudreach_veyra_exam_witness.gd) @d01c0e7b",
-     "gap": "Re-run smoke_cloudreach_veyra_exam_witness.gd from the regenerated Cloudreach checkpoint. Folds into F49.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Not in CI. Since d01c0e7b, combat (11k lines), encounter_director and cloudreach_encounters changed, and Veyra moved to L43–44.",
+     "status": "met",
+     "evidence": "tests/smoke_cloudreach_veyra_exam_witness.gd --live-combat (home-key lane e6f05dc6): live input, 0 FAIL, exit 0. One Veyra victory; three relays struck by the piloted creature; stages crosswind_command, anchor_overload, break_the_eye; wind lanes and the relay arc pushed the body; the lee pocket held",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (2:09 PM CT Sun 11 Oct). Started from the disclosed generated cloudreach_veyra save (proof rules v2). No game or test change needed. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
