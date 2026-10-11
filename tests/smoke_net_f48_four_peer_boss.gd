@@ -26,6 +26,8 @@ var _completed := false
 var _f25: Dictionary = {}
 var _f25_output := ""
 var _f25_source := ""
+var _f25_rewards: Array[Dictionary] = []
+var _f25_battle_id := ""
 
 
 ## Opt-in only: --f25-medium=<fresh absolute directory> --f25-profile=<JSON>
@@ -35,6 +37,10 @@ var _f25_source := ""
 ## {save_directory, character_id, character_sha256, creature_uid, move_id,
 ## slot, mastery_rank, breakthrough_count}. warmup_rounds and measured_rounds
 ## each contain four existing input steps per round: {action,args,budget_frames}.
+## approach_rounds walks all four to the built homestead's real Warden board.
+## The opt-in witnesses their FIRST earned endgame Warden rematch: original
+## rematch base receipt must be absent, so the authored unique candy delta is
+## exact and independent of repeat cooldown clocks. Earlier story rewards stay.
 ## Only press/wait/stick/move_to are admitted; no save/HP/meter mutation steps.
 ## min_frames, max_frames, max_seconds, frame_budget_ms and min_overlap_frames
 ## are explicit reviewed bounds. Missing inputs fail before any peer launches.
@@ -90,6 +96,8 @@ func _f25_preflight() -> bool:
 			var original := F25_PEER.f25_identity(document) if document is Dictionary else {}
 			valid = valid and not original.is_empty() and str(original.get("character_id", "")) == id
 			input["original_identity"] = original
+			var receipts: Array = document.get("redesign_character", {}).get("transaction_receipts", []) if document is Dictionary else []
+			valid = valid and not receipts.has("rematch:warden_aldis:endgame:" + id)
 			var equipped := false
 			for member: Dictionary in original.get("party", []):
 				if str(member.uid) == uid and str(member.get("move_" + str(input.get("slot", "")), "")) == str(input.get("move_id", "")): equipped = true
@@ -98,7 +106,7 @@ func _f25_preflight() -> bool:
 		uids[uid] = true
 		valid = valid and not str(input.get("move_id", "")).is_empty() and str(input.get("slot", "")) in ["quick", "charged", "utility", "ultimate"] \
 			and int(input.get("mastery_rank", 0)) in range(1, 6) and int(input.get("breakthrough_count", -1)) in range(0, 6)
-	for key: String in ["warmup_rounds", "measured_rounds"]:
+	for key: String in ["approach_rounds", "warmup_rounds", "measured_rounds"]:
 		if not _f25.get(key, []) is Array:
 			check(false, "F25 input rounds must be arrays")
 			return false
@@ -225,25 +233,54 @@ func _flow() -> void:
 	for peer in PEERS:
 		var keys0 := await _keys(peer)
 		var relics0 := await _relics_held(peer)
-		check(keys0 == 0 and not relics0.has(RELIC), "peer %d holds no key or Meadows relic before the Warden" % peer)
+		if _f25.is_empty(): check(keys0 == 0 and not relics0.has(RELIC), "peer %d holds no key or Meadows relic before the Warden" % peer)
+		else:
+			var snapshot := await step(peer, "f25_rematch_snapshot", {})
+			if not _pass(snapshot, "F25 original rematch reward baseline"): return
+			var before: Dictionary = snapshot.get("data", {})
+			before["keys"] = keys0
+			before["relics"] = relics0.duplicate()
+			before["heart"] = await _heart(peer)
+			if (before.get("transaction_receipts", []) as Array).has("rematch:warden_aldis:endgame:" + _ids[peer]):
+				check(false, "F25 requires first earned endgame Warden rematch; retained progress cannot be stripped")
+				return
+			_f25_rewards.append(before)
 	# The Warden, shared by all four.
 	for peer in PEERS:
 		if _f25.is_empty(): await step(peer, "deploy_creature", {})
 		else:
 			# Ordinary recall only: no deploy_creature fallback adoption or grant.
 			if not _pass(await step(peer, "press", {"action": "creature_recall", "gap_frames": 60}), "F25 peer %d recalled its owned companion" % peer): return
-	var hold: Variant = await probe(0, "stronghold")
-	var markers: Dictionary = (hold as Dictionary).get("markers", {}) as Dictionary if hold is Dictionary else {}
-	var arena: Array = markers.get("warden_arena", []) as Array
-	check(arena.size() == 3, "the Hall names its Warden arena (%s)" % str(arena))
-	if arena.size() != 3: return
-	for peer in PEERS:
-		var offset: float = [-2.0, 2.0, -2.0, 2.0][peer]
-		var depth: float = [0.0, 0.0, 2.5, 2.5][peer]
-		await step(peer, "explore_at", {"at": [float(arena[0]) + offset, float(arena[2]), float(arena[1]) + depth], "settle": 60})
-	if not _pass(await step(0, "trainer_battle", {"trainer": WARDEN_TRAINER, "settle": 45}), "host challenged the Warden"): return
+	if _f25.is_empty():
+		var hold: Variant = await probe(0, "stronghold")
+		var markers: Dictionary = (hold as Dictionary).get("markers", {}) as Dictionary if hold is Dictionary else {}
+		var arena: Array = markers.get("warden_arena", []) as Array
+		check(arena.size() == 3, "the Hall names its Warden arena (%s)" % str(arena))
+		if arena.size() != 3: return
+		for peer in PEERS:
+			var offset: float = [-2.0, 2.0, -2.0, 2.0][peer]
+			var depth: float = [0.0, 0.0, 2.5, 2.5][peer]
+			await step(peer, "explore_at", {"at": [float(arena[0]) + offset, float(arena[2]), float(arena[1]) + depth], "settle": 60})
+		if not _pass(await step(0, "trainer_battle", {"trainer": WARDEN_TRAINER, "settle": 45}), "host challenged the Warden"): return
+	else:
+		if not await _f25_rounds(_f25.get("approach_rounds", [])): return
+		var source := await step(0, "f25_rematch_source", {})
+		if not _pass(source, "F25 actual installed endgame Warden source"): return
+		var offer: Dictionary = source.get("data", {})
+		check(bool(offer.get("selected", false)) and bool(offer.get("offer_available", false)), "F25 ordinary arbiter selects the earned Warden endgame prompt")
+		if not bool(offer.get("selected", false)) or not bool(offer.get("offer_available", false)): return
+		if not _pass(await step(0, "press", {"action": "interact"}), "F25 ordinary endgame rematch interaction"): return
+		await step(0, "wait", {"frames": 45})
 	var record: Variant = await probe(0, "encounter")
 	var encounter_id := str((record as Dictionary).get("id", "")) if record is Dictionary else ""
+	if not _f25.is_empty():
+		_f25_battle_id = encounter_id
+		var active := await step(0, "f25_rematch_snapshot", {})
+		var actual: Dictionary = active.get("data", {})
+		if not _pass(active, "F25 actual started rematch") or actual.get("trainer_id") != WARDEN_TRAINER \
+				or actual.get("rematch", {}).get("original_id") != WARDEN_TRAINER or actual.get("rematch", {}).get("tier") != "endgame":
+			check(false, "F25 ordinary interaction did not start the authored endgame Warden rematch")
+			return
 	for peer in range(1, PEERS):
 		if not _pass(await step(peer, "join_encounter", {"encounter_id": encounter_id}), "guest %d joined the Warden's fight" % peer): return
 	var count := 0
@@ -266,16 +303,54 @@ func _flow() -> void:
 		await step(peer, "wait", {"frames": 120})
 		await step(peer, "dismiss_dialogue", {"presses": 40, "settle": 30})
 	for peer in PEERS:
-		await _want_paid(peer, "after the Warden")
+		if _f25.is_empty(): await _want_paid(peer, "after the Warden")
+		elif not await _f25_want_paid(peer, "after the rematch"): return
 	# A guest leaves and returns by its character: still exactly one each.
 	if not _pass(await step(3, "leave", {}), "guest 3 left"): return
 	if not _pass(await step(0, "expect_peers", {"count": PEERS - 1}), "host sees three peers"): return
 	if not _pass(await step(3, "production_join", {"host": "127.0.0.1", "port": _port, "budget_frames": 14000,
 			"returning_route": true, "character": {"character_id": _ids[3]}}, 15000), "guest 3 rejoined"): return
 	await step(3, "wait", {"frames": 240})
-	await _want_paid(3, "after guest 3's rejoin")
+	if _f25.is_empty(): await _want_paid(3, "after guest 3's rejoin")
+	elif not await _f25_want_paid(3, "after guest 3's rejoin"): return
 	_completed = true
-	print("F48_FOUR_PEER_BOSS: four participants, one Warden, one key and one relic each")
+	print("F48_FOUR_PEER_BOSS: four participants, one Warden, one key and one relic each" if _f25.is_empty() else "F25_FOUR_PEER_REMATCH: four original owners, authored rematch, one unique candy and win receipt each; story rewards unchanged after rejoin")
+
+
+func _f25_want_paid(peer: int, label: String) -> bool:
+	var before: Dictionary = _f25_rewards[peer]
+	var base := "rematch:warden_aldis:endgame:" + _ids[peer]
+	var receipt := base + ":win:" + str(before.world_namespace) + ":" + str(before.session_epoch) + ":" + _f25_battle_id.sha256_text()
+	var paid := false
+	var snapshot: Dictionary = {}
+	for _poll in POLLS:
+		var result := await step(peer, "f25_rematch_snapshot", {})
+		if not _pass(result, "F25 actual rematch owner reward snapshot"): return false
+		snapshot = result.get("data", {})
+		var receipts: Array = snapshot.get("transaction_receipts", [])
+		paid = str(snapshot.get("character_id", "")) == _ids[peer] and receipts.count(base) == 1 and receipts.count(receipt) == 1 \
+			and int(snapshot.get("candy", -1)) == int(before.candy) + 1
+		if paid: break
+		await step(peer, "wait", {"frames": 10})
+	var keys_after := await _keys(peer)
+	var relics_after := await _relics_held(peer)
+	var heart_after := await _heart(peer)
+	var unchanged := keys_after == int(before.keys) and relics_after == before.relics and heart_after == before.heart
+	var old_receipts: Array = before.transaction_receipts
+	var receipts: Array = snapshot.get("transaction_receipts", [])
+	var retained := true
+	for old: String in old_receipts:
+		if receipts.count(old) != old_receipts.count(old): retained = false
+	# All rematch receipts for this trainer/tier must be exactly baseline + two.
+	var old_rematch := 0
+	var new_rematch := 0
+	for old: String in old_receipts:
+		if old.begins_with(base): old_rematch += 1
+	for current: String in receipts:
+		if current.begins_with(base): new_rematch += 1
+	var ok := paid and unchanged and retained and new_rematch == old_rematch + 2
+	check(ok, "%s: peer %d exact one authored unique candy/base/win receipt, original receipts/key/relic/Heart unchanged" % [label, peer])
+	return ok
 
 
 func _f25_rounds(rounds: Array) -> bool:
