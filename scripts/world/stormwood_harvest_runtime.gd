@@ -60,7 +60,7 @@ func _process(delta: float) -> void:
 		if not bool(world.get("simulation_only")) and not _flags.has("stormwood:first_stormglass_gathered"):
 			for spec: Dictionary in _catalogue.get("sites", []):
 				if str(spec.region_id) == "cinder_verge" and str(spec.item) == "stormglass" \
-						and site_gathered(str(spec.id), _flags, _game.get("world")):
+						and site_gathered(str(spec.id), _flags, _game.get("world") if _game != null else null):
 					world.get_node("StormwoodChapter").emit_event("harvest:verge_stormglass")
 					break
 		# Crown Stormglass can be claimed before its chapter recipe prerequisite.
@@ -71,7 +71,7 @@ func _process(delta: float) -> void:
 				and not _flags.has("stormwood:crown_glass_gathered"):
 			if _crown_glass_required < 0:
 				_crown_glass_required = crown_glass_cost()
-			if _crown_glass_required > 0 and claimed_crown_glass(_catalogue, _flags, _game.get("world")) >= _crown_glass_required:
+			if _crown_glass_required > 0 and claimed_crown_glass(_catalogue, _flags, _game.get("world") if _game != null else null) >= _crown_glass_required:
 				world.get_node("StormwoodChapter").emit_event("harvest:crown_grade")
 
 
