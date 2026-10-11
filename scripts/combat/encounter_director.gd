@@ -9472,6 +9472,11 @@ func _close_trainer_encounter() -> void:
 func _clear_fallen_bodies() -> void:
 	for body: Node3D in _trainer_fallen:
 		if is_instance_valid(body):
+			# The next round starts before deferred deletion completes. Retire
+			# this ended round's collider at the existing cleanup instant.
+			if body is CollisionObject3D:
+				(body as CollisionObject3D).collision_layer = 0
+				(body as CollisionObject3D).collision_mask = 0
 			body.queue_free()
 	_trainer_fallen.clear()
 
