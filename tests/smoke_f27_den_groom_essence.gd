@@ -167,10 +167,16 @@ func _groom(prompt: Node3D, uid: String, species: String, expect_paid: int, expe
 	await _frames(4)
 	await _driver.call("_tap_action", &"ui_accept")
 	var result: Dictionary = {}
+	var statuses: Array[String] = []
 	for frame in 1200:
+		for panel: Node in root.find_children("*", "", true, false):
+			if panel.get_script() == preload("res://scripts/ui/craft_panel.gd"):
+				var text := str(panel.get("_status").text)
+				if not text.is_empty() and (statuses.is_empty() or statuses.back() != text): statuses.append(text)
 		if _results.size() > results_before:
 			result = _results.back().result
 			if result.get("settled") == true or result.get("owner_saved") == true or result.get("ok") != true: break
+		if expect_paid == 0 and not statuses.is_empty() and frame > 120: break
 		await physics_frame
 	await _frames(30)
 	var after := _disk("after_" + label.left(1))
@@ -185,10 +191,9 @@ func _groom(prompt: Node3D, uid: String, species: String, expect_paid: int, expe
 		_check(row.get("status") == "accepted" and after.character.get("redesign_character", {}).get("transaction_receipts", []).has(receipt),
 			"%s: accepted groom row and care receipt %s on disk" % [label, receipt])
 	else:
-		# A refusal answers synchronously into the panel's status line.
-		var status := ""
-		for panel: Node in root.find_children("*", "", true, false):
-			if panel.get_script() == preload("res://scripts/ui/craft_panel.gd"): status = str(panel.get("_status").text)
+		# A refusal answers synchronously into the panel's status line, which
+		# clears itself after a few seconds; every distinct line was sampled.
+		var status := " | ".join(statuses)
 		var code := str(result.get("code", result.get("reason", "")))
 		_check(code == expect_code or status.contains(expect_code),
 			"%s: refused %s (signal '%s', panel '%s')" % [label, expect_code, code, status])
