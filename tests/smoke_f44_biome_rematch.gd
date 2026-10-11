@@ -189,14 +189,30 @@ func _run() -> void:
 	# character's own durable win receipt instead.
 	var win_prefix := base_receipt + ":win:"
 	var after: Dictionary = {}
-	for _i in 7200:
+	# Diagnostic (coordinator, 2026-10-11): how much of the post-fight duty
+	# drain keeps the owner's inventory/party mutations blocked.
+	var session_node: Node = game.get("session")
+	var blocked_frames := 0
+	var longest_block := 0
+	var run_block := 0
+	var drain_frames := 0
+	for _i in 36000:
 		after = RECORD.portable_projection(game.local.call("save_data")).duplicate(true)
 		if (after.redesign_character.transaction_receipts as Array).any(func(r: Variant) -> bool: return str(r).begins_with(win_prefix)): break
+		drain_frames += 1
+		if session_node != null and session_node.call("_owner_training_mutation_blocked", game.local) == true:
+			blocked_frames += 1
+			run_block += 1
+			longest_block = maxi(longest_block, run_block)
+		else: run_block = 0
 		await physics_frame
+	receipt.drain = {"frames_until_win_receipt": drain_frames, "owner_mutation_blocked_frames": blocked_frames, "longest_blocked_run": longest_block}
 	var win_receipts: Array = (after.redesign_character.transaction_receipts as Array).filter(func(r: Variant) -> bool: return str(r).begins_with(win_prefix))
 	var deliveries: Array = []
 	for key: Variant in game.world.reward_deliveries:
-		if str(key).contains("rematch"): deliveries.append({str(key): str(game.world.reward_deliveries[key].get("status", ""))})
+		var row: Variant = game.world.reward_deliveries[key]
+		if row is Dictionary and (row.get("duties", []) as Array).any(func(d: Variant) -> bool: return d is Dictionary and d.get("action") == "rematch_win"):
+			deliveries.append({str(key).left(40): str(row.get("status", "event"))})
 	receipt.diagnostic = {"pending_outcome": str(director.get("_rematch_pending_outcome")),
 		"pending_event": director.get_meta("foundation_rematch_pending", {}).get("source_id", ""), "deliveries": deliveries}
 	check(win_receipts.size() == 1, "the rematch win is delivered to this character once (%s; %s)" % [str(win_receipts), str(receipt.diagnostic)])
