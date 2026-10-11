@@ -1445,7 +1445,7 @@
      "text": "Across 12+ seeds per biome band, a reader pilot beats a masher pilot (reader win ≥0.9; masher loses the lead creature materially more often).",
      "status": "in_progress",
      "evidence": "smoke_f22_pattern_bands.gd + helpers/f22_pattern_pilot.gd (no recorded run)",
-     "gap": "Sweep done (12 seeds, 23 bands x 3 starters, 9c7379e08). Under the 5:04 PM ruling (lead-HP cost <= 0.55x masher, reader win >= 0.9): 40/69 pass (Meadows 14/15, Tidewake 15/18, Cloudreach 6/18, Stormwood 5/18). The Cloudreach and Stormwood failures look like reader-pilot or fixture issues (same class as the Venn helper bug); fights lane is root-causing, then re-runs those bands.",
+     "gap": "Sweep done (12 seeds, 23 bands x 3 starters, 9c7379e08). Under the 5:02 PM ruling (lead-HP cost <= 0.55x masher, reader win >= 0.9): 40/69 pass (Meadows 14/15, Tidewake 15/18, Cloudreach 6/18, Stormwood 5/18). The Cloudreach and Stormwood failures look like reader-pilot or fixture issues (same class as the Venn helper bug); fights lane is root-causing, then re-runs those bands.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No seed distribution recorded for any band.",
      "audit_index": 1
     },
@@ -2910,7 +2910,7 @@
      "text": "An agent-piloted normal route estimates a 15–25 hour clear; the owner's play pass confirms the range.",
      "status": "failing",
      "evidence": "ralph/reports/R3-F47/implementation-evidence.json (route command queued, never run)",
-     "gap": "Agent estimate v2 (a5d3ce59e): 8.8-12.5 h raw agent sim (required path 2.5-3.9 h; 5 Master cycles 0.35 h; gear 0.04 h; optional activities 1.9-4.2 h; grind budget 4 h), below 15-25 h. Agent speed is a lower bound. Coordinator decision 5:07 PM: no content change on the agent number alone; the owner's playtest (F49#1) decides, and PROGRESSION §4's 'deepen preparation choices' options are ready if it also runs short. Feast cook/feed time is unmeasured (feast smoke went heartbeat-silent twice).",
+     "gap": "Agent estimate v2 (a5d3ce59e): 8.8-12.5 h raw agent sim (required path 2.5-3.9 h; 5 Master cycles 0.35 h; gear 0.04 h; optional activities 1.9-4.2 h; grind budget 4 h), below 15-25 h. Agent speed is a lower bound. Coordinator decision 5:03 PM: no content change on the agent number alone; the owner's playtest (F49#1) decides, and PROGRESSION §4's 'deepen preparation choices' options are ready if it also runs short. Feast cook/feed time is unmeasured (feast smoke went heartbeat-silent twice).",
      "note": "Agent half, partial (home-key lane 4e2a873a, ralph/reports/EV-HOME-KEY/F47-0-estimate.md): tools/f47_capture_route.gd only records a human playing the real title, so it was estimated from route receipts instead. Cloudreach, fully measured, takes 3,042 s of simulated required-route play; 4 chapters at 46-51 min each is about 3.1-3.4 h of agent critical path. Hitting 15-25 h would need human play to take 4.4-8x the agent's time (exploration, optional activities, fights at human skill). Plausible but unmeasured: the owner's play pass decides.",
      "audit_index": 0
     },
