@@ -116,3 +116,21 @@ existing leash snap. Verification: 05 Tidal 2/2 PASS (Aquaryn 45.5 s / 31.8 s si
 tests test_companion_presence, test_companion_terrapup_capture_0912,
 test_follower_floor_station, test_lost_companion_escort, test_remote_creature_follow:
 63 tests, 404 assertions, 0 failed.
+
+## 05 PASS; 06 harvest binding (game defect, FIXED) and catch identity (OPEN)
+- 05 Tidal PASS (checkpoint tidewake_05_tidal).
+- 06 first failed "water:tidal_cradle:harvest:014 did not pay ... gained=0". Trace: the
+  WaterPickups node for 014 was renewable-bound but `_source_service == null`, so the press
+  only answered "not ready". The F32 mount ran its own placement verdict BEFORE adopting a
+  resident node, so a site whose mount placement was refused (or not yet re-polled) left the
+  chapter's authored node unbound. Fix (f32_world_mount.gd + water_scene_pickups.gd): the
+  mount adopts a resident node already bound to its site at the authored XZ before its own
+  placement checks, keeps its service, and WaterPickups hands a freshly spawned renewable
+  node to the mount immediately (adopt_resident). Verified: 06 harvests 013/014/007/004/
+  002/010 all pay; 02 Reedhaven regression PASS.
+- 06 now stops at the swimmer catch: outcome caught, choice ceremony open, belt unchanged,
+  but the helper requires `pending_catch == wild.instance` (object identity). The
+  host-authoritative capture (foundation_capture.gd `_present`) decodes the creature from the
+  offer (CODEC.decode), so pending_catch is always a new object. Helper identity checks
+  (earned_roster_replacement_segment.gd:104/125/151/160, swimmer preparation 176+) are stale
+  against that path. Coordinator decision requested.
