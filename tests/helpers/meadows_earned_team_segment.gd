@@ -1361,7 +1361,14 @@ func _use_remedy(item: String, index: int) -> bool:
 			break
 		await _tree.process_frame
 	if not bool(_menu.call("is_open")) or str(_menu.call("current_tab_id")) != "backpack":
-		return _fail("Inventory input did not open the Satchel for earned care")
+		# Name what held input (F19#5 sigils: one refusal with no other log).
+		var owner: Node = INPUT_OWNER.current(_tree)
+		var manager := _tree.root.find_child("CombatManager", true, false)
+		return _fail("Inventory input did not open the Satchel for earned care (menu_open %s, tab %s, input_owner %s, fighting %s, paused %s)" % [
+			str(_menu.call("is_open")), str(_menu.call("current_tab_id")),
+			str(owner.get_path()) if owner != null else "none",
+			str(manager.call("is_fighting")) if manager != null and manager.has_method("is_fighting") else "n/a",
+			str(_tree.paused)])
 	var bodies: Array = _menu.get("_bodies")
 	var backpack: Node = bodies[0]
 	var buttons: Array = backpack.get("_buttons")
