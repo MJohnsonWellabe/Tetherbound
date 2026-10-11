@@ -84,6 +84,11 @@ static func presentation_for(item_id: String, definition: Dictionary) -> Diction
 	var model := str(definition.get("world_model", ""))
 	if not model.is_empty():
 		return {"model": model, "scale": float(definition.get("world_model_scale", 1.0))}
+	if item_id in ["insulated_leggings", "insulated_boots"]:
+		# ItemCache's factory renders the real clothing first. Retain the same
+		# installed gear parcel as the insulated helm/vest for its fallback.
+		return {"model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+			"scale": 0.65 if item_id == "insulated_leggings" else 0.55}
 	return (PRESENTATION_FALLBACKS.get(item_id, {}) as Dictionary).duplicate(true)
 
 
