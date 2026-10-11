@@ -1,0 +1,31 @@
+{
+  "actor_id": "water_orsen",
+  "mode": "Unchanged full humanoid bake; no --only",
+  "blender_version": "4.2.9",
+  "actual_producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+  "archived_identical_producer": "res://assets/characters/npc_identity/water_orsen/source/author_native_clips.py",
+  "producer_sha256_lf": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+  "input_rig_sha256": "72d7eab110763b70c9869dba732b1ff0a61f3173d5a31db61b305d958db5f6d4",
+  "output_model": "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb",
+  "output_sha256": "a3fd8bd4fa66936e2cace642e2ca0370a12353ce8f8eb288a204f6153d61bd91",
+  "argv_after_blender": [
+    "--background",
+    "--python",
+    "tools/art_pipeline/blender/animate_humanoid.py",
+    "--",
+    "assets_raw/water_orsen/01a12c39-2461-7719-9915-6be22b5a4518/rigged_character_glb.glb",
+    "--out",
+    "assets_raw/water_orsen/local-bake-v1/orsen_animated.glb"
+  ],
+  "clip_frames": {
+    "idle": 96,
+    "walk": 15,
+    "sprint": 11,
+    "jump": 28,
+    "throw": 24,
+    "chop": 15,
+    "defeated": 36
+  },
+  "fps": 24,
+  "postprocessing": "NONE; no arm correction applied"
+}

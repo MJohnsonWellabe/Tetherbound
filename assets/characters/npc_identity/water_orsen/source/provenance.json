@@ -1,0 +1,104 @@
+{
+  "actor_id": "water_orsen",
+  "default_enabled": false,
+  "status": "PROVISIONAL_OFF_BODY_ONLY_NATIVE_REVIEW_PENDING",
+  "source_commit": "5d7038d99b8dbb5f8182617e970a09df5da2e86c",
+  "installed_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+  "installed_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+  "installed_profile": "wandering_trainer",
+  "target_height_m": 1.78,
+  "reference": "res://docs/art/reference/npc-identity/orsen-front-agent-v1.png",
+  "reference_sha256": "850916609870ec7636998ae5165ead0b3f4e9ea679f8bffa1e5326135e89d462",
+  "reference_prompt": "res://docs/art/reference/npc-identity/orsen-front-agent-v1.prompt.txt",
+  "reference_prompt_sha256_lf": "4305e0f6f2a500597687f6d6ec40ed08292597629f72aba55bd6d66d80cb510d",
+  "reference_origin": "Original built-in imagegen reference, coordinator inspected against installed portrait and before-body evidence",
+  "generation": {
+    "task_id": "01a12c31-4e68-7244-8345-7f97ce9f63ab",
+    "model": "meshy-7.1",
+    "raw_model_sha256": "9372779daa51339c3844f45bc5f0be4726227e22f1d1d7510e90dc2a604cba84",
+    "consumed_credits": 30
+  },
+  "rigging": {
+    "task_id": "01a12c39-2461-7719-9915-6be22b5a4518",
+    "parent_task_id": "01a12c31-4e68-7244-8345-7f97ce9f63ab",
+    "height_meters": 1.78,
+    "rigged_model_sha256": "72d7eab110763b70c9869dba732b1ff0a61f3173d5a31db61b305d958db5f6d4",
+    "consumed_credits": 5
+  },
+  "bake": {
+    "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+    "archived_identical_producer": "res://assets/characters/npc_identity/water_orsen/source/author_native_clips.py",
+    "producer_sha256_lf": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+    "blender_version": "4.2.9",
+    "actual_process_id": 29336,
+    "exit_code": 0,
+    "model": "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb",
+    "model_sha256": "a3fd8bd4fa66936e2cace642e2ca0370a12353ce8f8eb288a204f6153d61bd91",
+    "postprocessing": "NONE"
+  },
+  "cpu_initial_skin_clip_check": {
+    "status": "PASS_BOUNDED_PRESERVATION_AND_FINITE_CLIPS_ONLY",
+    "joints": 24,
+    "vertices": 26295,
+    "skinned_height_m": 1.7799999567288818,
+    "root_scale": "unit",
+    "max_rest_position_error_m": 1.2385680693317858e-06,
+    "max_named_weight_error": 1.7881393432617188e-07,
+    "uvs_exact": true,
+    "triangle_indices_exact": true,
+    "texture_bytes_exact": true,
+    "material_factors_unchanged": true,
+    "finite_skinned_pose_samples": 28,
+    "clips": [
+      {
+        "name": "idle",
+        "duration_s": 3.999999839812517,
+        "moving_channels": 8
+      },
+      {
+        "name": "walk",
+        "duration_s": 0.6250000186264515,
+        "moving_channels": 14
+      },
+      {
+        "name": "sprint",
+        "duration_s": 0.4583333320915699,
+        "moving_channels": 14
+      },
+      {
+        "name": "jump",
+        "duration_s": 1.166666705161333,
+        "moving_channels": 14
+      },
+      {
+        "name": "throw",
+        "duration_s": 0.9999999590218067,
+        "moving_channels": 8
+      },
+      {
+        "name": "chop",
+        "duration_s": 0.6250000186264515,
+        "moving_channels": 15
+      },
+      {
+        "name": "defeated",
+        "duration_s": 1.4999999590218067,
+        "moving_channels": 12
+      }
+    ]
+  },
+  "native_review": {
+    "status": "PENDING",
+    "scope": "Seven clips, four phases, front/side Low/Compatibility views requested; no acceptance yet",
+    "risks": [
+      "Idle arms remain about 29.5-32.4 degrees from down; Orsen-specific stance correction is proposed privately but unapplied",
+      "Rear-torso/backpack-region edges stretch from about 1 cm to 5-10 cm in some action samples, worst in chop; native review must determine visible severity",
+      "Coat split, pouch/hand clearance, backpack/bedroll rigidity and hat/neck behavior remain unproven"
+    ],
+    "portrait": "NOT_AUTHORED",
+    "world": "PENDING",
+    "claude_judgement": "PENDING"
+  },
+  "rules": "res://assets/characters/npc_identity/water_orsen/source/rules.json",
+  "recipe": "res://assets/characters/npc_identity/water_orsen/source/animation_recipe.json"
+}

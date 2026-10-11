@@ -1,0 +1,27 @@
+{
+  "actor_id": "water_orsen",
+  "default_enabled": false,
+  "scope": "Provisional uncorrected body-only native review input; no appearance record, runtime binding or paired portrait",
+  "installed_profile": "wandering_trainer",
+  "target_height_m": 1.78,
+  "required_joints": 24,
+  "required_clips": [
+    "idle",
+    "walk",
+    "sprint",
+    "jump",
+    "throw",
+    "chop",
+    "defeated"
+  ],
+  "identity": "Preserve installed hat, moustache/chin beard, dark cloth with ochre trim, scarf, backpack and bedroll; no blue recolor or role change",
+  "native_review": "PENDING; Low/Compatibility only",
+  "forbidden_without_further_root_grant": [
+    "Arm correction",
+    "Skin/weight/material edits",
+    "Further bake/export",
+    "Runtime candidate/portrait wiring",
+    "Shipping gate changes"
+  ],
+  "source_ownership": "Adair/Iona and shared animator remain unchanged"
+}
