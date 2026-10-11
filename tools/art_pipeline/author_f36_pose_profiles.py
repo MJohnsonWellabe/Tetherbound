@@ -243,6 +243,7 @@ def rotation(bone, role, phase, winged, biped, wing_folds=None):
 ANATOMICAL_SPECIES = {'terrapup', 'brooktail', 'ripplet'}
 WING_ANATOMICAL_SPECIES = {'pipwing', 'galecrest', 'galewisp', 'duskhush', 'reedwing'}
 SPECIAL_ANATOMICAL_SPECIES = {'glimmermoth', 'abyssal_guardian'}
+BRACED_HIT_SPECIES = {'mudsnout', 'veridian', 'frostclaw'}
 
 
 def rigid_inverse(matrix):
@@ -618,6 +619,72 @@ def quadruped_anatomical_poses(name, bones, roles, fall_attitude):
     return result
 
 
+def braced_hit_poses(name, bones, roles):
+    if name not in BRACED_HIT_SPECIES:
+        return roles
+    result = copy.deepcopy(roles)
+    for frame in result['hit']['frames']:
+        phase = frame['phase']
+        amount = phase / .125 if phase <= .125 else ((1 - phase) / .875) ** .55
+        pose = {bone: [0, 0, 0] for bone in bones}
+        for bone in bones:
+            if bone.startswith('front_upper'):
+                pose[bone] = [(-12 if name == 'veridian' else -22) * amount, 0, 0]
+            elif bone.startswith('front_lower'):
+                pose[bone] = [(20 if name == 'veridian' else 35) * amount, 0, 0]
+            elif bone.startswith('rear_upper'):
+                pose[bone] = [-8 * amount, 0, 0]
+            elif bone.startswith('rear_lower'):
+                pose[bone] = [15 * amount, 0, 0]
+        # Head/neck weights include large parts of these bodies. Keep those
+        # controls at rest instead of swinging the bulk skin through the head.
+        # The existing real impact flinch, hit-stop and flash supply the strike.
+        frame['bones'] = pose
+        frame['pivot_rotation_deg'] = [-4 * amount, 0, -6 * amount]
+    return result
+
+
+def serpent_poses(name, bones, roles):
+    if name != 'fulgocobra':
+        return roles
+    result = copy.deepcopy(roles)
+    for role, spec in result.items():
+        for frame in spec['frames']:
+            phase = frame['phase']
+            wave = math.sin(phase * math.tau)
+            rear_wave = math.sin(phase * math.tau - .6 * math.pi)
+            pose = {bone: [0, 0, 0] for bone in bones}
+            frame['pivot_roll_deg'] = 0
+            frame['pivot_rotation_deg'] = [0, 0, 0]
+            if role == 'hit':
+                amount = phase / .125 if phase <= .125 else ((1 - phase) / .875) ** .55
+                pose['neck'] = [8 * amount, 0, 0]
+                frame['pivot_rotation_deg'] = [0, 0, -4 * amount]
+            elif role == 'faint':
+                amount = min(1, phase / .7)
+                pose['neck'] = [12 * amount, 0, 0]
+                pose['tail_2'] = [0, 5 * amount, 0]
+                # Its natural coil lies in XZ. A 90-degree flank rotation
+                # stands the loops on their edges instead of collapsing them.
+                frame['pivot_rotation_deg'] = [0, 0, 8 * amount]
+            else:
+                for side in ('l', 'r'):
+                    # These names belong to weighted coil regions, not legs.
+                    # Give both halves of a region the same lateral motion.
+                    front = 4 * wave if role == 'swim' else 12 if role == 'fly_grip' else 2 * wave
+                    rear = 4 * rear_wave if role == 'swim' else -12 if role == 'fly_grip' else 2 * rear_wave
+                    pose['front_upper_' + side] = [0, front, 0]
+                    pose['front_lower_' + side] = [0, front * .5, 0]
+                    pose['rear_upper_' + side] = [0, rear, 0]
+                    pose['rear_lower_' + side] = [0, rear * .5, 0]
+                pose['tail_1'] = [0, (6 * wave if role == 'swim' else 5 if role == 'fly_grip' else 2 * wave), 0]
+                pose['tail_2'] = [0, (10 * rear_wave if role == 'swim' else 10 if role == 'fly_grip' else 3 * rear_wave), 0]
+    # The installed skin still assigns most coil mass to the head. This recipe
+    # removes impossible quadruped motions; it cannot create independent head,
+    # eyelid or coil articulation missing from that skin.
+    return result
+
+
 def main():
     species = json.loads((ROOT / 'data/creatures/species.json').read_text())['species']
     rows = {}
@@ -671,10 +738,16 @@ def main():
             roles = quadruped_anatomical_poses(name, bones, roles, fall_attitude)
         profiles[profile] = special_anatomical_poses(name, bones,
                                                    anatomical_wing_poses(name, bones, anatomical_poses(name, bones, rig, roles)))
+        profiles[profile] = serpent_poses(name, bones, braced_hit_poses(name, bones, profiles[profile]))
         if name in {'terrapup', 'brooktail'}:
             # Ground the stage's carrying attitude on its actual skin, not an
             # invented lift. Real carriers still align their foot to the hand.
             row['grounded_roles'] = ['hit', 'faint', 'ride', 'fly_grip']
+        elif name == 'ripplet':
+            # The authored horizontal swimmer must ground its actual skin just
+            # like every other swimmer; rotating the face through the origin
+            # without this contact calculation clips it into the floor.
+            row['grounded_roles'] = ['hit', 'faint', 'ride', 'swim']
         elif anatomical_quad or name in WING_ANATOMICAL_SPECIES | SPECIAL_ANATOMICAL_SPECIES:
             row['grounded_roles'] = ['hit', 'faint', 'ride', 'fly_grip', 'swim']
         rig_profiles[signature] = profile
