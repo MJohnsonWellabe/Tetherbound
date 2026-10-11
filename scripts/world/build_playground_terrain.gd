@@ -161,6 +161,11 @@ func _run() -> void:
 	terrain.set("region_size", region_size)
 	terrain.set("vertex_spacing", spacing)
 	terrain.set("data_directory", output_dir)
+	# Terrain3D still needs a camera when this offline producer runs headlessly.
+	var bake_camera := Camera3D.new()
+	root.add_child(bake_camera)
+	bake_camera.current = true
+	terrain.call("set_camera", bake_camera)
 	root.add_child(terrain)
 	await process_frame
 
