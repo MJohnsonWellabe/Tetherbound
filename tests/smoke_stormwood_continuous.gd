@@ -1292,6 +1292,13 @@ class Segment extends RefCounted:
 		return await _equip_fixture_tool(item_id)
 
 
+	## The exact site's receipt: its legacy one-shot flag, or the F32 renewable
+	## stock record its gather advanced (the predicate the chapter itself uses).
+	func _site_gathered(id: String) -> bool:
+		return preload("res://scripts/world/stormwood_harvest_runtime.gd").site_gathered(
+			id, game.get("progression"), game.get("world"))
+
+
 	func _harvest_site(id: String, item: String, stance: Vector2) -> bool:
 		var node := world.get_node_or_null(NodePath("StormwoodHarvests/" + id)) as Node3D
 		if node == null:
@@ -1301,13 +1308,12 @@ class Segment extends RefCounted:
 		var before := int(inventory.call("count", item))
 		if not await _activate_node(node, node.get_node_or_null(^"Interactable") as Node3D, stance, id):
 			return false
-		var receipt := "harvest_node:order:" + id
 		for _frame in 600:
-			if bool(game.get("progression").call("has", receipt)) and int(inventory.call("count", item)) > before:
+			if _site_gathered(id) and int(inventory.call("count", item)) > before:
 				break
 			await tree.physics_frame
 		var gained := int(inventory.call("count", item)) - before
-		if gained <= 0 or not bool(game.get("progression").call("has", receipt)):
+		if gained <= 0 or not _site_gathered(id):
 			_fail("%s did not settle its receipt and %s yield (gained=%d)" % [id, item, gained])
 			return false
 		_note("GATHERED %s +%d %s through its live prompt" % [id, gained, item])
@@ -1324,19 +1330,18 @@ class Segment extends RefCounted:
 		if not await _activate_node(node, node.get_node_or_null(^"Interactable") as Node3D,
 				at, id):
 			return false
-		var receipt := "harvest_node:order:" + id
 		for _frame in 600:
-			if bool(game.get("progression").call("has", receipt)) \
+			if _site_gathered(id) \
 					and int(inventory.call("count", "stormglass")) > count_before:
 				break
 			await tree.physics_frame
 		var gained := int(inventory.call("count", "stormglass")) - count_before
 		var wear_after := int(inventory.call("durability_at", pickaxe_slot)) \
 			if pickaxe_slot >= 0 else -1
-		if gained != 3 or not bool(game.get("progression").call("has", receipt)) \
+		if gained != 3 or not _site_gathered(id) \
 				or wear_after != wear_before - 1:
 			_fail("%s did not settle its exact receipt/yield/wear (gained=%d receipt=%s wear=%d->%d weather=%s)" % [
-				id, gained, str(bool(game.get("progression").call("has", receipt))),
+				id, gained, str(_site_gathered(id)),
 				wear_before, wear_after, str(_charged_window_snapshot(at))])
 			return false
 		_note("GATHERED %s exact +3 Stormglass receipt with one pickaxe wear" % id)
