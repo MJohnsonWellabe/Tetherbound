@@ -1,6 +1,6 @@
 # F47#2 — four-character contention ledgers are solvent — FAIL (balance finding)
 
-systems-a, Sun 11 Oct 2026 12:45 PM CT. Data-only census (coordinator ruling 12:36 PM CT): `tools/economy_supply_census.mjs` (117 lines) + `tests/test_economy_supply_census.mjs`; `node tools/economy_ledger.mjs --out f` now fills `reachable_supply`.
+systems-a, Sun 11 Oct 2026 12:40 PM CT. Data-only census (coordinator ruling 12:36 PM CT): `tools/economy_supply_census.mjs` (117 lines) + `tests/test_economy_supply_census.mjs`; `node tools/economy_ledger.mjs --out f` now fills `reachable_supply`.
 `node --test tests/test_economy_supply_census.mjs tests/test_economy_ledger.mjs tests/test_economy_difficulty.mjs` → 16 pass, 4 fail (one solvency test per band). Earlier units: Meadows/Tidewake old-loop four-character tests PASS (9/80).
 
 Model: world-stock sites shared by all 4 characters, harvests = 1 + floor(route_days / respawn_days) (an upper bound; first-pass lower bound also reported); one-time pickups once; route hours 5/3.5/3.5/3.5 (f27 lower bounds), day = 600 s (art.json). Demand = economy_ledger `four_character_raw` (personal ×4 + shared once), worst single-type team, at gear max upgrade 3 (per-upgrade verdicts included); surplus carries forward, deficits floor at 0.
