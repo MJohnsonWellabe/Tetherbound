@@ -362,8 +362,21 @@ func _run() -> void:
 		# The handoff is the F49 portal leg tests/helpers/f49_campaign_journey.gd
 		# plays: Home Key -> hang the held Cloudreach relic -> Stormwood arch.
 		var travel := PORTAL.new(self, game)
-		var ok: bool = await travel.home_key() and await travel.hang_relic("cloudreach") \
-			and await travel.enter("stormwood", "stormwood")
+		var ok: bool = await travel.home_key()
+		if ok: ok = await travel.hang_relic("cloudreach")
+		if ok:
+			# A successful hang opens the relic-power choice (crossing_hall.gd
+			# "Relic hung. Choose the power you carry."). Dismiss it as a player
+			# would, with the ordinary menu_cancel press; no power is chosen.
+			for _i in 120:
+				if INPUT_OWNER.current(self) != null: break
+				await process_frame
+			var owner: Node = INPUT_OWNER.current(self)
+			if owner != null and str(owner.name) == "RelicPowerPanel":
+				await travel.tap("menu_cancel")
+				for _i in 30: await process_frame
+				disclosures.append("Piece 07: the relic-power choice panel that opens after the Cloudreach relic is hung was dismissed with the ordinary menu_cancel press; no power was chosen")
+		if ok: ok = await travel.enter("stormwood", "stormwood")
 		helper_summary["portal_leg"] = {"ok": ok, "failures": travel.failures.duplicate()}
 		for line: Variant in travel.failures:
 			failures.append("portal: " + str(line))
