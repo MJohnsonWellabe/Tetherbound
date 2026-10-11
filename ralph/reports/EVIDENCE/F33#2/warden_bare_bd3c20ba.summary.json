@@ -1,0 +1,93 @@
+{
+ "gear": "bare",
+ "seeds_per_band": 12,
+ "rows": [
+  {
+   "starter": "terrapup",
+   "pass": true,
+   "reasons": [],
+   "switch_reader": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.271066045741348,
+    "median_lead_cost": 0.748603027784743,
+    "runs": 12,
+    "errors": 0
+   },
+   "reader": {
+    "win_rate": 0.833333333333333,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.564503774629017,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "errors": 0
+   },
+   "masher": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.789156626506024,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "errors": 0
+   }
+  },
+  {
+   "starter": "ripplet",
+   "pass": true,
+   "reasons": [],
+   "switch_reader": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.202336705805061,
+    "median_lead_cost": 0.734080699591884,
+    "runs": 12,
+    "errors": 0
+   },
+   "reader": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.312039181940159,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "errors": 0
+   },
+   "masher": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.784836065573771,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "errors": 0
+   }
+  },
+  {
+   "starter": "galewisp",
+   "pass": true,
+   "reasons": [],
+   "switch_reader": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.146485420626633,
+    "median_lead_cost": 0.661052756672258,
+    "runs": 12,
+    "errors": 0
+   },
+   "reader": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.28882586156907,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "errors": 0
+   },
+   "masher": {
+    "win_rate": 0.833333333333333,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.854283358305286,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "errors": 0
+   }
+  }
+ ]
+}
