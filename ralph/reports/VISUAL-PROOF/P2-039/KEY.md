@@ -49,3 +49,18 @@ Sheet 2: mean A 21.0, mean B 16.8
 | 12 | stormwood__hollow_crown__08__the_crown_heartstone__night__close | 32.9 | 41.6 |
 
 Manifest clock: day frames 08:00, night frames 23:00 (requested times reached); all frames weather phase `calm`.
+
+## Follow-up (coordinator review, 12:16 PM CT)
+
+| Sheet | A (left) = BEFORE | B (right) = AFTER |
+|---|---|---|
+| sheet-3-candidate-heartstone-lamp-low-compat.jpg | none (candidate only) | de7e24d93df54c6fb3ae3915a10699c875170bbb, run 38153815266 |
+| sheet-4-heartstone-landmark-low-compat.jpg | 9e39d0086ee88998b8295747fc19f6603fe714f7 (main), run 38155917837 | de7e24d93df54c6fb3ae3915a10699c875170bbb, run 38153815266 |
+
+No new render: sheets 3 and 4 use the `stormwood__landmark__crown_heartstone__*` frames that every run already captured (left off sheets 1–2). Same command and seed, so a re-run would reproduce the same views.
+
+Sheet 4 ground band (bottom 30%) mean luma: A 28.1, B 18.6. Pairs: day approach 26.7/17.6, night approach 26.7/17.6, day close 29.6/19.6, night close 29.6/19.6.
+
+1. Night: `--times=night` takes effect in the capture tool. Manifest clock is 23:00 for every night frame, and the same tool in Meadows (P2-006 candidate run 38156433591, also Low/Compatibility) darkens frame mean luma from about 101–114 (day) to about 22–26 (night). In Stormwood the day and night frames differ by ≤0.1 mean luma at every stand on all three SHAs, so Stormwood's scene lighting does not respond to the clock in this capture path. It is not a tool failure. (The cause was not traced. Stormwood mounts WorldLook from `stormwood_world.gd` without a realm look, and the surge/lightning environment runs alongside it.)
+2. Heartstone lamp: no option of `phase2_capture_locations.gd` (subset/times/views/character/seed) frames the heartstone itself. Neither the catalogue stand (place 08, 50 m west, heading 76.5°) nor the landmark stand shows a heartstone body. The landmark close stand does frame two lamps with the ground around them (sheet 3 crops). Their ground-patch luma is identical day and night: about 32 under the lectern lamp and 31 under the left lamp post.
+3. Place 08 `close` (sheet 1/2 pairs 10 and 12) puts the camera inside a wild bear body on every SHA. The landmark stand (sheets 3–4) has no bear occlusion.
