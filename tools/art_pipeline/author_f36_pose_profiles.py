@@ -480,6 +480,144 @@ def special_anatomical_poses(name, bones, roles):
     return result
 
 
+def installed_skin_points(gltf, binary, rig, binds, pose):
+    """Read the actual installed skin for authoring a body's fall attitude."""
+    formats = {5121: 'B', 5123: 'H', 5125: 'I', 5126: 'f'}
+    widths = {'SCALAR': 1, 'VEC3': 3, 'VEC4': 4}
+
+    def accessor(index):
+        item = gltf['accessors'][index]
+        if 'sparse' in item:
+            raise ValueError('pose authoring needs a dense installed skin')
+        view = gltf['bufferViews'][item['bufferView']]
+        if view.get('buffer', 0) != 0:
+            raise ValueError('pose authoring needs an embedded skin buffer')
+        fmt = '<' + formats[item['componentType']] * widths[item['type']]
+        size = struct.calcsize(fmt)
+        start = view.get('byteOffset', 0) + item.get('byteOffset', 0)
+        values = [struct.unpack_from(fmt, binary, start + i * view.get('byteStride', size))
+                  for i in range(item['count'])]
+        if item.get('normalized') and item['componentType'] != 5126:
+            divisor = {5121: 255, 5123: 65535}[item['componentType']]
+            values = [tuple(v / divisor for v in row) for row in values]
+        return values
+
+    globals_ = {}
+
+    def global_pose(bone):
+        if bone not in globals_:
+            local = multiply(rig[bone]['rest'], node_matrix({'rotation': quaternion(pose.get(bone, [0, 0, 0]))}))
+            parent = rig[bone]['parent']
+            globals_[bone] = multiply(global_pose(parent), local) if parent else local
+        return globals_[bone]
+
+    matrices = {bone: multiply(global_pose(bone), bind) for bone, bind in binds.items()}
+    points = []
+    for node in gltf['nodes']:
+        if 'mesh' not in node or 'skin' not in node:
+            continue
+        if any(key in node for key in ('matrix', 'translation', 'rotation', 'scale')):
+            raise ValueError('body authoring needs the installed mesh in skeleton coordinates')
+        names = [gltf['nodes'][i]['name'] for i in gltf['skins'][node['skin']]['joints']]
+        for primitive in gltf['meshes'][node['mesh']]['primitives']:
+            attributes = primitive['attributes']
+            positions = accessor(attributes['POSITION'])
+            joints, weights = accessor(attributes['JOINTS_0']), accessor(attributes['WEIGHTS_0'])
+            if len(positions) != len(joints) or len(positions) != len(weights):
+                raise ValueError('installed skin attribute counts differ')
+            for position, indices, influences in zip(positions, joints, weights):
+                total = sum(influences)
+                if total <= 0:
+                    raise ValueError('installed skin has an unweighted vertex')
+                posed = [0.0, 0.0, 0.0]
+                core = 0.0
+                for index, weight in zip(indices, influences):
+                    if weight <= 0:
+                        continue
+                    bone = names[index]
+                    matrix = matrices[bone]
+                    for axis in range(3):
+                        posed[axis] += weight * (sum(matrix[column * 4 + axis] * position[column]
+                                                    for column in range(3)) + matrix[12 + axis]) / total
+                    if bone in ('root', 'pelvis', 'spine'):
+                        core += weight / total
+                points.append((tuple(posed), position, core >= .35))
+    if not points:
+        raise ValueError('installed model has no skinned vertices')
+    return points
+
+
+def quadruped_fall_attitude(points):
+    """Choose a rigid flank attitude from the posed skin, never a sink offset.
+
+    Some installed bodies put their torso on head/limb weights. For those rigs
+    use the central source silhouette instead of assuming pelvis is body mass.
+    Runtime grounding still uses every weighted vertex, independently of this
+    authoring choice, so no selected point can conceal an intersecting foot.
+    """
+    core = [posed for posed, _, selected in points if selected]
+    if len(core) < len(points) * .02:
+        centre = [sum(rest[axis] for _, rest, _ in points) / len(points) for axis in range(3)]
+        central = sorted(points, key=lambda item: sum((item[1][axis] - centre[axis]) ** 2 for axis in range(3)))
+        core = [posed for posed, _, _ in central[:max(1, len(points) // 3)]]
+    skin = [posed for posed, _, _ in points]
+    height = max(p[1] for p in skin) - min(p[1] for p in skin)
+    candidates = []
+    for pitch in (-30, -15, 0, 15, 30, 45):
+        for roll in (75, 90, 105):
+            matrix = node_matrix({'rotation': quaternion([pitch, 0, roll])})
+            axis = [matrix[column * 4 + 1] for column in range(3)]
+            ys = [sum(axis[i] * p[i] for i in range(3)) for p in skin]
+            floor, ceiling = min(ys), max(ys)
+            gap = min(sum(axis[i] * p[i] for i in range(3)) for p in core) - floor
+            # Prefer mass contact and a low collapsed silhouette. This only
+            # selects rigid orientation; existing skin grounding owns height.
+            score = gap + .03 * (ceiling - floor) + height * abs(pitch) * .0002
+            candidates.append((score, abs(roll - 90), abs(pitch), pitch, roll))
+    _, _, _, pitch, roll = min(candidates)
+    return [pitch, 0, roll]
+
+
+def quadruped_anatomical_poses(name, bones, roles, fall_attitude):
+    if name in ANATOMICAL_SPECIES | {'stormursa'} or 'wing_upper_l' in bones or 'arm_l' in bones:
+        return roles
+    result = copy.deepcopy(roles)
+    for role in ('faint', 'swim', 'fly_grip'):
+        for frame in result[role]['frames']:
+            phase = frame['phase']
+            wave = math.sin(phase * math.tau)
+            amount = min(1, phase / .7) if role == 'faint' else 1
+            pose = {bone: [0, 0, 0] for bone in bones}
+            if role == 'faint':
+                frame['pivot_rotation_deg'] = [angle * amount for angle in fall_attitude]
+                for bone in bones:
+                    if bone.startswith('front_upper'):
+                        pose[bone] = [(-15 if bone.endswith('_l') else 5) * amount, 0,
+                                      -15 * amount if bone.endswith('_l') else 0]
+                    elif bone.startswith('rear_upper'):
+                        pose[bone] = [5 * amount, 0, -15 * amount if bone.endswith('_l') else 0]
+                    elif 'lower' in bone:
+                        pose[bone] = [20 * amount, 0, 0]
+                # Keep the head and neutral details at rest: a few source rigs
+                # assign body mass to the head rather than to torso bones.
+            else:
+                frame['pivot_rotation_deg'] = [-30, 0, 0] if role == 'fly_grip' else [10, 0, 3 * wave]
+                for bone in bones:
+                    opposite = -1 if bone.endswith('_r') else 1
+                    if bone.startswith('front_upper'):
+                        pose[bone] = [-15 if role == 'fly_grip' else -22 + 8 * wave * opposite, 0, 0]
+                    elif bone.startswith('front_lower'):
+                        pose[bone] = [20 if role == 'fly_grip' else 30, 0, 0]
+                    elif bone.startswith('rear_upper'):
+                        pose[bone] = [10 if role == 'fly_grip' else 15 - 6 * wave * opposite, 0, 0]
+                    elif bone.startswith('rear_lower'):
+                        pose[bone] = [20, 0, 0]
+                    elif role == 'swim' and bone.startswith('tail'):
+                        pose[bone] = [0, (5 if bone == 'tail_1' else 8) * wave, 0]
+            frame['bones'] = pose
+    return result
+
+
 def main():
     species = json.loads((ROOT / 'data/creatures/species.json').read_text())['species']
     rows = {}
@@ -503,7 +641,8 @@ def main():
         biped = 'arm_l' in bones
         family = 'winged' if winged else 'biped' if biped else 'quadruped'
         wing_folds = folded_wings(rig) if winged else {}
-        signature = (name if name in ANATOMICAL_SPECIES | WING_ANATOMICAL_SPECIES | SPECIAL_ANATOMICAL_SPECIES else '', tuple(bones),
+        anatomical_quad = family == 'quadruped' and name not in ANATOMICAL_SPECIES | {'stormursa'}
+        signature = (name if anatomical_quad or name in ANATOMICAL_SPECIES | WING_ANATOMICAL_SPECIES | SPECIAL_ANATOMICAL_SPECIES else '', tuple(bones),
                      tuple((bone, tuple(round(value, 5) for value in angles))
                            for bone, angles in wing_folds.items()))
         row = {'model': definition['placeholder']['model'], 'source_sha256': hashlib.sha256(raw).hexdigest(),
@@ -526,13 +665,17 @@ def main():
                 roles[role]['start_phase'] = .125
                 roles[role]['release_phase'] = .25
         profile = f'{family}_{len(profiles) + 1}'
+        if anatomical_quad:
+            resting_fall = quadruped_anatomical_poses(name, bones, roles, [0, 0, 90])['faint']['frames'][-1]['bones']
+            fall_attitude = quadruped_fall_attitude(installed_skin_points(gltf, binary, rig, binds, resting_fall))
+            roles = quadruped_anatomical_poses(name, bones, roles, fall_attitude)
         profiles[profile] = special_anatomical_poses(name, bones,
                                                    anatomical_wing_poses(name, bones, anatomical_poses(name, bones, rig, roles)))
         if name in {'terrapup', 'brooktail'}:
             # Ground the stage's carrying attitude on its actual skin, not an
             # invented lift. Real carriers still align their foot to the hand.
             row['grounded_roles'] = ['hit', 'faint', 'ride', 'fly_grip']
-        elif name in WING_ANATOMICAL_SPECIES | SPECIAL_ANATOMICAL_SPECIES:
+        elif anatomical_quad or name in WING_ANATOMICAL_SPECIES | SPECIAL_ANATOMICAL_SPECIES:
             row['grounded_roles'] = ['hit', 'faint', 'ride', 'fly_grip', 'swim']
         rig_profiles[signature] = profile
         row['profile'] = profile
