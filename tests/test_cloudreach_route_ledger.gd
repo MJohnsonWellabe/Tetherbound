@@ -1041,8 +1041,17 @@ func test_negative_controls_fail_the_same_assertion() -> void:
 	# Each control removes one real income source; the same shortfall check
 	# that passes the shipped ledger must now report a failure. If a control
 	# stops failing, the ledger has slack it does not admit, or went quiet.
+	# Owner decision 1A (2026-10-11): the REQUIRED route carries the curve, so
+	# the load-bearing sources are the required trainers' payouts (Senn's
+	# grunt and Maela's mentor xp_bonus), not the optional, non-aggressive
+	# wilds. The two wild-phase controls ({drop_wild_phase: 2} and
+	# {drop_trainer_xp: voss, drop_wild_phase: 3}) encoded "wild fights are
+	# required income", the opposite of 1A, and were replaced (coordinator
+	# ruling, same date) by dropping each required trainer's XP. Same rule,
+	# same strictness: remove a load-bearing source and the bands must fail.
+	# Evidence: ralph/reports/EVIDENCE/F47-cloudreach-xp/README.md.
 	assert_eq(shortfalls(ledger()).size(), 0, "baseline must pass for the controls to mean anything")
-	var controls := [{"drop_wild_phase": 2}, {"drop_trainer_xp": "officer_voss_summit_approach", "drop_wild_phase": 3},
+	var controls := [{"drop_trainer_xp": "tether_lieutenant_senn"}, {"drop_trainer_xp": "keeper_maela_trial"},
 		{"drop_candy": true}, {"wild_fraction": 0.25}]
 	for options: Dictionary in controls:
 		var failures := shortfalls(ledger(options))
