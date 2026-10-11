@@ -3350,8 +3350,8 @@ func _build_bank() -> void:
 	# necessarily contains very steep triangles; viewed from inside they were the
 	# long grey fins in the threshold receipt.  A second, non-colliding surface
 	# omits the complete feather band and hands that overlap to the continuous
-	# excavated threshold cut. The collider also yields the enclosed room volume
-	# to its structural shell so the notch release cannot block ingress.
+	# excavated threshold cut. The collider also yields quads wholly inside the
+	# mouth's physical box so the notch release cannot block ingress.
 	var collision_st := SurfaceTool.new()
 	collision_st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var visible_st := SurfaceTool.new()
@@ -3410,8 +3410,9 @@ func _build_bank() -> void:
 				continue
 			# The throat notch releases inside the mouth. Its rising bank triangles
 			# must not become a second floor or wall across the room's walk route.
-			# The chamber/passage shell owns enclosure throughout this volume.
-			if not _bank_quad_intersects_room(a, b, c, d):
+			# Only wholly enclosed quads yield to the mouth's physical box.
+			# Boundary quads and the organic rooms' exterior bank remain intact.
+			if not _bank_quad_inside_mouth(a, b, c, d):
 				_bank_add_vertex(collision_st, a, crest_for_norm, moist_sources, moist_radius, na)
 				_bank_add_vertex(collision_st, c, crest_for_norm, moist_sources, moist_radius, nc)
 				_bank_add_vertex(collision_st, b, crest_for_norm, moist_sources, moist_radius, nb)
@@ -3470,21 +3471,22 @@ func _build_bank() -> void:
 		", ".join(report), worst_margin])
 
 
-func _bank_quad_intersects_room(a: Vector3, b: Vector3, c: Vector3, d: Vector3) -> bool:
+func _bank_quad_inside_mouth(a: Vector3, b: Vector3, c: Vector3, d: Vector3) -> bool:
+	var mouth: Dictionary = _chambers.get("mouth", {})
+	if mouth.is_empty() or _solid_organic_chamber("mouth"):
+		return false
 	var low := a.min(b).min(c).min(d)
 	var high := a.max(b).max(c).max(d)
-	if high.y < _floor_y - 0.01:
+	# _build_chambers retains this mouth's solid floor plinth, walls and
+	# ceiling. Require the complete quad inside that exact box volume rather
+	# than cutting an overlapping cell or assuming organic square corners.
+	if high.y < _floor_y - 0.01 or low.y < _floor_y - _skirt \
+			or high.y > _floor_y + float(mouth.height):
 		return false
-	for id: String in _chambers:
-		var chamber: Dictionary = _chambers[id]
-		var centre := _local_of(chamber.at)
-		var half := _size_of(chamber.size) * 0.5
-		if low.y > _floor_y + float(chamber.height):
-			continue
-		if low.x < centre.x + half.x and high.x > centre.x - half.x \
-				and low.z < centre.z + half.y and high.z > centre.z - half.y:
-			return true
-	return false
+	var centre := _local_of(mouth.at)
+	var half := _size_of(mouth.size) * 0.5
+	return low.x >= centre.x - half.x and high.x <= centre.x + half.x \
+		and low.z >= centre.z - half.y and high.z <= centre.z + half.y
 
 
 ## POST-ROUND-6-0906, JUDGE-round6.md 00/03: the dome was OPEN above the
