@@ -1,8 +1,29 @@
 {
   "schema_version": 1,
   "landmark_id": "broken_skyroad_arch",
-  "design_intent": "A weathered installed-stone gateway whose fallen crown, asymmetric buttresses, and wind-lit fracture turn the isolated ledge into a recognizable skyroad ruin.",
+  "design_intent": "Jointed wind-weathered stone piers and individual arch voussoirs carry broken upper courses; fallen hewn stones settle beside the old skyroad. One metre-scaled rock family ties the whole ruin together.",
   "gateway_size_m": [26.0, 19.0, 5.5],
   "gateway_yaw_deg": -24.0,
-  "fracture_colour": "#70e0d6"
+  "outer_half_width_m": 13.0,
+  "opening_half_width_m": 7.7,
+  "spring_height_m": 6.0,
+  "opening_rise_m": 6.8,
+  "arch_ring_m": 2.2,
+  "depth_m": 5.5,
+  "course_height_m": 1.2,
+  "stone_length_m": 2.0,
+  "joint_m": 0.08,
+  "edge_bevel_m": 0.10,
+  "west_height_m": 17.4,
+  "east_height_m": 15.2,
+  "voussoir_count": 21,
+  "stone": {"stone_tint": "#a6ada0", "moss_tint": "#4a592d", "texture_scale": 0.65, "moss_amount": 0.16, "streak_strength": 0.10},
+  "rubble": [
+    {"at": [10.7, 0.0, 5.5], "size_m": [3.7, 1.7, 2.6], "rotation_deg": [8.0, 18.0, 24.0]},
+    {"at": [12.2, 0.0, 2.0], "size_m": [2.2, 1.35, 2.4], "rotation_deg": [-12.0, -28.0, -9.0]},
+    {"at": [9.8, 0.0, -5.0], "size_m": [2.8, 1.1, 2.0], "rotation_deg": [16.0, 31.0, 18.0]},
+    {"at": [-11.8, 0.0, 4.6], "size_m": [2.6, 1.5, 2.1], "rotation_deg": [-8.0, -17.0, -21.0]}
+  ],
+  "fracture_colour": "#70c6ba",
+  "fracture_emission": 0.65
 }
