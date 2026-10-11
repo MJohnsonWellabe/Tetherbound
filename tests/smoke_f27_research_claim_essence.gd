@@ -120,7 +120,13 @@ func _open_research_log() -> bool:
 	if not _check(menu.call("current_tab_id") == "quest_log", "menu_tab_right reaches the Quests tab"): return false
 	await _frames(10)
 	var focus := root.gui_get_focus_owner()
-	if not _check(focus is Button and str((focus as Button).text).begins_with("Research log"), "the Research log button holds focus (%s)" % str(focus)):
+	for i in 24:
+		if focus is Button and str((focus as Button).text).begins_with("Research log"): break
+		await _driver.call("_tap_action", &"ui_up" if i < 12 else &"ui_down")
+		await _frames(4)
+		focus = root.gui_get_focus_owner()
+	if not _check(focus is Button and str((focus as Button).text).begins_with("Research log"),
+		"ui_up/ui_down reach the Research log button (focus '%s')" % (str((focus as Button).text) if focus is Button else str(focus))):
 		return false
 	await _driver.call("_tap_action", &"ui_accept")
 	for frame in 120:

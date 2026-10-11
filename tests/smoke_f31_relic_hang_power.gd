@@ -12,7 +12,7 @@ extends "res://tools/earned_saves/earned_chain_runner.gd"
 ##    choose its power in the chooser (ui_down/ui_accept): the relic_hang
 ##    receipt grants exactly the four Tidewake attachment recipes, once.
 ## 2. Re-open the chooser at the pedestal and choose the same power: still one.
-## 3. Hang the Tidewake relic and defer (menu_cancel): Meadows stays the only
+## 3. Hang the Tidewake relic (approached from the room's centre) and defer (menu_cancel): Meadows stays the only
 ##    power, the Cloudreach column is added without duplicates. Then choose
 ##    the Tidewake (water) power: it REPLACES Meadows; one active power.
 ## 4. Production save_game/load_game and world rebuild (_reload_transition):
@@ -54,7 +54,17 @@ func _run() -> void:
 		return
 	_expect(["meadows"], TIDEWAKE, "meadows", "2 re-opened chooser, same power")
 	# 3. Hang the next relic and defer; then choose it.
-	if not await travel.hang_relic("tidewake"):
+	# Approach the Tidewake pedestal from the room's centre: from the Meadows
+	# pedestal beside it, a 2.5 m stop leaves Meadows the nearer provider.
+	if not await travel.activate(_pedestal_prompt("tidewake"), [_room_side("tidewake")]):
+		failures.append_array(travel.failures)
+		_finish()
+		return
+	for frame in 720:
+		if (_personal().relics_hung as Array).has("tidewake"): break
+		await process_frame
+	if not (_personal().relics_hung as Array).has("tidewake") or not await travel.settle_power_chooser():
+		failures.append("tidewake hang did not land or its chooser did not close")
 		failures.append_array(travel.failures)
 		_finish()
 		return
@@ -85,6 +95,20 @@ func _pedestal_prompt(biome: String) -> Node3D:
 		for child: Node in candidate.find_children("*", "", true, false):
 			if child.has_method("interaction_offer"): return child as Node3D
 	return null
+
+
+func _room_side(biome: String) -> Vector3:
+	var centre := Vector3.ZERO
+	var count := 0
+	var at := Vector3.ZERO
+	for candidate: Node in get_nodes_in_group("crossing_hall_pedestals"):
+		centre += (candidate as Node3D).global_position
+		count += 1
+		if candidate.get_meta("biome", "") == biome: at = (candidate as Node3D).global_position
+	centre /= maxi(count, 1)
+	var side := centre - at
+	side.y = 0.0
+	return at + side.normalized() * 2.0
 
 
 func _expect(hung: Array, recipes: Array, power: String, label: String) -> void:
