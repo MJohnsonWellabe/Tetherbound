@@ -29,6 +29,9 @@ var _f25_actions: Dictionary = {}
 var _f25_verdicts: Array[Dictionary] = []
 var _f25_bodies: Dictionary = {}
 var _f25_expected: Dictionary = {}
+var _f25_peers: Dictionary = {}
+var _f25_overlap_actions: Array[Array] = []
+var _f25_scope: Dictionary = {}
 var _f25_manager: WeakRef
 var _f25_director: WeakRef
 var _f25_encounter := ""
@@ -59,6 +62,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 	var action := str(msg.get("action", ""))
 	if action == "f25_frame_start": return _f25_start(msg.get("args", {}))
 	if action == "f25_frame_stop": return _f25_stop()
+	if action == "f25_owned_identity": return {"verdict": "PASS", "data": _f25_local_identity()}
 	if action.begins_with("f48_"):
 		if action == "f48_fixture_trainer_fight":
 			# This dispatch bypasses the base win_trainer_battle branch. Carry its
@@ -85,6 +89,79 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		out = await PROOF_STEPS.run(self, action, args)
 	out["frames_used"] = _physics_count - before
 	return out
+
+
+## Original portable identity/loadout stays exact. Legitimate combat may add
+## mastery uses/receipts; HP, XP, meter, pose and timestamps are not frozen.
+static func f25_identity(record: Dictionary) -> Dictionary:
+	if not record.get("party") is Array or not record.get("redesign_character") is Dictionary: return {}
+	var members: Array = record.party
+	if members.is_empty() or members.size() > 5: return {}
+	var rows: Array[Dictionary] = []
+	var seen := {}
+	for raw: Variant in members:
+		if not raw is Dictionary: return {}
+		if not raw.get("known_moves", []) is Array or not raw.get("move_mastery_uses", {}) is Dictionary \
+				or not raw.get("move_mastery_receipts", {}) is Dictionary: return {}
+		var uid := str(raw.get("uid", ""))
+		if uid.is_empty() or seen.has(uid): return {}
+		seen[uid] = true
+		var personal: Dictionary = record.redesign_character.get("creatures", {}).get(uid, {})
+		if not personal.get("breakthroughs", []) is Array or not personal.get("gear", {}) is Dictionary: return {}
+		var row := {"uid": uid, "species_id": str(raw.get("species_id", "")), "known_moves": raw.get("known_moves", []).duplicate(),
+			"move_mastery_uses": raw.get("move_mastery_uses", {}).duplicate(true), "move_mastery_receipts": raw.get("move_mastery_receipts", {}).duplicate(true),
+			"breakthroughs": personal.get("breakthroughs", []).duplicate(), "gear": personal.get("gear", {}).duplicate(true)}
+		for slot: String in ["quick", "charged", "utility", "ultimate"]: row["move_" + slot] = str(raw.get("move_" + slot, ""))
+		rows.append(row)
+	return {"character_id": str(record.get("character_id", "")), "party": rows}
+
+
+static func f25_identity_preserved(original: Dictionary, current: Dictionary) -> bool:
+	if original.is_empty() or current.is_empty() or original.character_id != current.character_id or original.party.size() != current.party.size(): return false
+	for index: int in original.party.size():
+		var before: Dictionary = original.party[index]
+		var after: Dictionary = current.party[index]
+		for key: String in ["uid", "species_id", "known_moves", "move_quick", "move_charged", "move_utility", "move_ultimate", "breakthroughs", "gear"]:
+			if before[key] != after[key]: return false
+		for move: String in before.move_mastery_uses:
+			if int(after.move_mastery_uses.get(move, -1)) < int(before.move_mastery_uses[move]): return false
+		for move: String in before.move_mastery_receipts:
+			var receipts: Array = after.move_mastery_receipts.get(move, [])
+			var old: Array = before.move_mastery_receipts[move]
+			if receipts.size() < old.size() or receipts.slice(0, old.size()) != old: return false
+	return true
+
+
+func _f25_local_identity() -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	var local: Variant = game.get("local") if game != null else null
+	if not local is RefCounted: return {}
+	var state: Dictionary = local.call("save_data")
+	state["character_id"] = str(local.get("character_id"))
+	return f25_identity(state)
+
+
+func _f25_current_scope() -> Dictionary:
+	var session := _session()
+	var game := root.get_node_or_null(^"Game")
+	var world: Variant = game.get("world") if game != null else null
+	if session == null or world == null or session.call("is_active") != true: return {}
+	var identities := {}
+	for character: String in _f25_peers:
+		identities[int(_f25_peers[character])] = str(session.call("_authority_character", int(_f25_peers[character])))
+	return {"session_epoch": str(session.call("_altar_current_epoch")), "world_id": str(world.get("world_id")),
+		"world_namespace": str(world.get("reward_delivery_namespace")), "realm": str(game.get("current_realm")), "peer_characters": identities}
+
+
+func _f25_owned_still_original() -> bool:
+	var authority := _session().get("_character_authority") as RefCounted
+	if authority == null: return false
+	for character: String in _f25_expected:
+		var original: Dictionary = _f25_expected[character].get("original_identity", {})
+		var admitted: Dictionary = authority.call("state", character)
+		if not f25_identity_preserved(original, f25_identity(admitted)): return false
+		if int(_f25_peers[character]) == _local_peer_id_or_host() and not f25_identity_preserved(original, _f25_local_identity()): return false
+	return true
 
 
 ## Passive collector attached only to the opt-in native host. Reads production
@@ -116,6 +193,16 @@ func _f25_start(args: Dictionary) -> Dictionary:
 			return {"verdict": "FAIL", "detail": "F25 participant/deployed owned UID differs from reviewed input"}
 		_f25_bodies[character] = weakref(body)
 		_f25_expected[character] = expected
+		_f25_peers[character] = int(peer)
+		# Read the existing admitted registry without admission refresh/recovery.
+		var authority := _session().get("_character_authority") as RefCounted
+		var admitted: Dictionary = authority.call("state", character) if authority != null else {}
+		if not f25_identity_preserved(expected.get("original_identity", {}), f25_identity(admitted)):
+			return {"verdict": "FAIL", "detail": "F25 host admission changed original ordered UID/catalog/loadout/mastery/BT/gear"}
+	_f25_scope = _f25_current_scope()
+	if str(_f25_scope.get("session_epoch", "")).is_empty() or str(_f25_scope.get("world_namespace", "")).is_empty():
+		return {"verdict": "FAIL", "detail": "F25 host session/world namespace missing"}
+	if not _f25_owned_still_original(): return {"verdict": "FAIL", "detail": "F25 actual host snapshot differs from original admitted owned records"}
 	var camera := root.get_camera_3d()
 	var environment := current_scene.get_node_or_null(^"WorldEnvironment") as WorldEnvironment
 	if camera == null or environment == null or environment.environment == null:
@@ -129,6 +216,14 @@ func _f25_start(args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL", "detail": "F25 output must be fresh and writable"}
 	_f25_meta["graphics_values"] = values
 	_f25_meta["window_size"] = [DisplayServer.window_get_size().x, DisplayServer.window_get_size().y]
+	_f25_meta["vsync_mode"] = DisplayServer.window_get_vsync_mode()
+	_f25_meta["engine_max_fps"] = Engine.max_fps
+	_f25_meta["internal_3d_size"] = [int(root.size.x * root.scaling_3d_scale), int(root.size.y * root.scaling_3d_scale)]
+	_f25_meta["scaling_3d_scale"] = root.scaling_3d_scale
+	_f25_meta["scaling_3d_mode"] = root.scaling_3d_mode
+	_f25_meta["msaa_3d"] = root.msaa_3d
+	_f25_meta["screen_space_aa"] = root.screen_space_aa
+	_f25_meta["temporal_aa"] = root.use_taa
 	_f25_meta["camera_path"] = str(camera.get_path())
 	_f25_meta["camera_position"] = [camera.global_position.x, camera.global_position.y, camera.global_position.z]
 	_f25_meta["camera_far"] = camera.far
@@ -137,6 +232,7 @@ func _f25_start(args: Dictionary) -> Dictionary:
 	_f25_meta["run_id"] = OS.get_environment("TB_NET_RUN_ID")
 	_f25_meta["save_home"] = OS.get_user_data_dir()
 	_f25_meta["encounter_id"] = _f25_encounter
+	_f25_meta["original_admitted_scope"] = _f25_scope
 	_f25_manager = weakref(manager)
 	_f25_director = weakref(director)
 	manager.connect("attack_launched", _f25_launch)
@@ -160,6 +256,7 @@ func _f25_launch(on_enemy: bool, launch: Dictionary, presentation: Node3D) -> vo
 	var character := str(binding.get("character_id", ""))
 	if not _f25_expected.has(character): return
 	var expected: Dictionary = _f25_expected[character]
+	var attacker: Dictionary = launch.get("attacker_binding", {})
 	var matches := str(binding.get("creature_uid", "")) == str(expected.creature_uid) \
 		and str(launch.get("move_id", "")) == str(expected.move_id) and str(move.get("slot", "")) == str(expected.slot) \
 		and int(move.get("mastery_rank", -1)) == int(expected.mastery_rank) and int(move.get("breakthrough_count", -1)) == int(expected.breakthrough_count)
@@ -168,10 +265,37 @@ func _f25_launch(on_enemy: bool, launch: Dictionary, presentation: Node3D) -> vo
 		_f25_error = "missing or duplicate actual launch identity"
 		return
 	_f25_actions[id] = {"action_id": id, "character_id": character, "creature_uid": str(binding.get("creature_uid", "")),
+		"frozen_action_id": str(move.get("action_id", "")), "actor_binding": binding.duplicate(true), "attacker_binding": attacker.duplicate(true),
+		"target_uid": str(launch.get("target_uid", "")), "peer": int(_f25_peers[character]), "host_finished_usec": -1,
+		"impact_matches": false, "host_finished_matches": false,
 		"move_id": str(launch.get("move_id", "")), "slot": str(move.get("slot", "")), "mastery_rank": int(move.get("mastery_rank", -1)),
 		"breakthrough_count": int(move.get("breakthrough_count", -1)), "reviewed_move_matches": matches,
 		"launch_usec": Time.get_ticks_usec() - _f25_start_usec, "contact_usec": -1, "applied_damage": -1.0,
 		"presentation": weakref(presentation) if is_instance_valid(presentation) else null}
+	var row: Dictionary = _f25_actions[id]
+	if str(binding.get("encounter_id", "")) != _f25_encounter or int(binding.get("action", 0)) < 1 \
+			or int(binding.get("generation", 0)) < 1 or int(binding.get("generation", 0)) != int(attacker.get("deployment_generation", -1)) \
+			or str(binding.get("character_id", "")) != str(attacker.get("character_id", "")) \
+			or str(binding.get("creature_uid", "")) != str(attacker.get("creature_uid", "")) \
+			or str(row.frozen_action_id).is_empty() or not _f25_binding_current(row):
+		_f25_error = "actual launch frozen actor/deployment binding mismatch"
+		row.reviewed_move_matches = false
+
+
+func _f25_binding_current(row: Dictionary) -> bool:
+	if _f25_current_scope() != _f25_scope: return false
+	var director := _f25_director.get_ref() as Node
+	if not is_instance_valid(director): return false
+	var body := director.call("deployed_body_for", int(row.peer)) as Node3D
+	if not is_instance_valid(body) or body != (_f25_bodies[row.character_id] as WeakRef).get_ref(): return false
+	var current: Dictionary = director.call("_strike_actor_binding", _f25_encounter, int(row.peer), body)
+	return not current.is_empty() and current == row.attacker_binding
+
+
+func _f25_receipt_matches(row: Dictionary, receipt: Dictionary) -> bool:
+	return str(receipt.get("action_id", "")) == str(row.action_id) and str(receipt.get("target_uid", "")) == str(row.target_uid) \
+		and str(receipt.get("move_id", "")) == str(row.move_id) and str(receipt.get("slot", "")) == str(row.slot) \
+		and int(receipt.get("mastery_rank", -1)) == int(row.mastery_rank)
 
 
 func _f25_impact(on_enemy: bool, receipt: Dictionary, _position: Vector3) -> void:
@@ -181,7 +305,8 @@ func _f25_impact(on_enemy: bool, receipt: Dictionary, _position: Vector3) -> voi
 	var row: Dictionary = _f25_actions[id]
 	if int(row.contact_usec) >= 0: _f25_error = "duplicate actual impact"
 	row.contact_usec = Time.get_ticks_usec() - _f25_start_usec
-	row.applied_damage = float(receipt.get("applied_damage", receipt.get("damage", -1.0)))
+	row.impact_matches = _f25_receipt_matches(row, receipt) and _f25_binding_current(row)
+	if not bool(row.impact_matches): _f25_error = "actual impact launch/deployment mismatch"
 
 
 func _f25_host_verdict(intent: Dictionary, peer: int, verdict: Dictionary) -> void:
@@ -189,8 +314,40 @@ func _f25_host_verdict(intent: Dictionary, peer: int, verdict: Dictionary) -> vo
 	if _f25_verdicts.size() >= 512:
 		_f25_error = "host verdict witness overflow"
 		return
-	_f25_verdicts.append({"peer": peer, "move_id": str(intent.get("move_id", "")), "ok": bool(verdict.get("ok", false)),
+	var delta: Dictionary = verdict.get("delta", {})
+	var impact: Dictionary = delta.get("impact", {})
+	var id := str(impact.get("action_id", ""))
+	_f25_verdicts.append({"peer": peer, "action": int(intent.get("action", -1)), "accepted_action": int(delta.get("accepted_action", -1)),
+		"action_id": id, "encounter_id": str(intent.get("encounter_id", "")), "move_id": str(intent.get("move_id", "")),
+		"ok": bool(verdict.get("ok", false)), "hit": bool(delta.get("hit", false)),
 		"code": str(verdict.get("code", "")), "usec": Time.get_ticks_usec() - _f25_start_usec})
+	if not _f25_actions.has(id): return
+	var row: Dictionary = _f25_actions[id]
+	var director := _f25_director.get_ref() as Node
+	var authority := director.get("_encounter_host") as RefCounted if is_instance_valid(director) else null
+	var committed: Dictionary = authority.call("move_commit", _f25_encounter, peer, int(intent.get("action", -1))) if authority != null else {}
+	var frozen: Dictionary = committed.get("move", {})
+	var outcome: Dictionary = committed.get("mastery_outcome", {})
+	row.host_finished_usec = Time.get_ticks_usec() - _f25_start_usec
+	row.applied_damage = float(outcome.get("applied_damage", -1.0))
+	# R5 capped moves have no new mastery outcome. The existing host ledger's
+	# credited bit is set only by credit_move_hit after a positive actual debit.
+	row.actual_hp_debit_positive = committed.get("credited") == true
+	row.host_damage = float(delta.get("damage", -1.0))
+	row.host_finished_matches = bool(verdict.get("ok", false)) and bool(delta.get("hit", false)) \
+		and peer == int(row.peer) and str(intent.get("encounter_id", "")) == _f25_encounter \
+		and int(intent.get("action", -1)) == int(row.actor_binding.get("action", 0)) \
+		and int(delta.get("accepted_action", -1)) == int(intent.get("action", -1)) and _f25_receipt_matches(row, impact) \
+		and committed.get("binding", {}) == row.attacker_binding and frozen.get("actor_binding", {}) == row.actor_binding \
+		and str(committed.get("action_id", "")) == str(row.frozen_action_id) and str(frozen.get("action_id", "")) == str(row.frozen_action_id) \
+		and str(frozen.get("move_id", "")) == str(row.move_id) and str(frozen.get("slot", "")) == str(row.slot) \
+		and int(frozen.get("mastery_rank", -1)) == int(row.mastery_rank) and int(frozen.get("breakthrough_count", -1)) == int(row.breakthrough_count) \
+		and _f25_binding_current(row)
+	if not outcome.is_empty():
+		row.host_finished_matches = bool(row.host_finished_matches) and str(outcome.get("action_id", "")) == str(row.frozen_action_id) \
+			and str(outcome.get("attacker_uid", "")) == str(row.creature_uid) and str(outcome.get("target_uid", "")) == str(row.target_uid) \
+			and str(outcome.get("move_id", "")) == str(row.move_id)
+	if not bool(row.host_finished_matches): _f25_error = "actual host-finished frozen action/receipt/deployment mismatch"
 
 
 ## Frustum/node witness only, explicitly not an occlusion/pixel visual verdict.
@@ -224,7 +381,7 @@ func _f25_frame() -> void:
 		_f25_detach()
 		return
 	var record: Dictionary = director.call("encounter_record")
-	if str(record.get("encounter_id", "")) != _f25_encounter or str(record.get("phase", "")) != "active" \
+	if _f25_current_scope() != _f25_scope or str(record.get("encounter_id", "")) != _f25_encounter or str(record.get("phase", "")) != "active" \
 			or (record.get("participants", {}) as Dictionary).size() != 4:
 		_f25_error = "measured admitted four-participant encounter ended or changed"
 		_f25_detach()
@@ -233,10 +390,17 @@ func _f25_frame() -> void:
 	for ref: WeakRef in _f25_bodies.values():
 		if _f25_visible(ref.get_ref() as Node, camera): visible_bodies += 1
 	var visible_authors := {}
+	var visible_actions: Array[String] = []
 	for row: Dictionary in _f25_actions.values():
 		if not bool(row.reviewed_move_matches) or not row.presentation is WeakRef: continue
-		if _f25_visible((row.presentation as WeakRef).get_ref() as Node, camera): visible_authors[row.character_id] = true
-	if visible_authors.size() == 4 and visible_bodies == 4: _f25_overlap += 1
+		if not _f25_binding_current(row):
+			_f25_error = "frozen launch deployment changed during measured window"
+			continue
+		if _f25_visible((row.presentation as WeakRef).get_ref() as Node, camera):
+			visible_authors[row.character_id] = true
+			visible_actions.append(str(row.action_id))
+	if visible_authors.size() == 4 and visible_bodies == 4:
+		_f25_overlap_actions.append(visible_actions)
 	var particles := F25_BUDGET.used(_f25_encounter)
 	var lights := F25_BUDGET.lights_used()
 	_f25_peak_particles = maxi(_f25_peak_particles, particles)
@@ -279,14 +443,26 @@ func _f25_percentiles(column: int) -> Dictionary:
 func _f25_stop() -> Dictionary:
 	if not _f25_started: return {"verdict": "FAIL", "detail": "F25 native collector was never started"}
 	_f25_detach()
+	if _f25_current_scope() != _f25_scope: _f25_error = "session/world/peer identity scope changed before stop"
+	if not _f25_owned_still_original(): _f25_error = "original ordered party/catalog/loadout/mastery/BT/gear changed before stop"
 	var accepted := {}
+	var accepted_actions := {}
 	var actions: Array[Dictionary] = []
 	for row: Dictionary in _f25_actions.values():
+		if not _f25_binding_current(row): _f25_error = "original frozen actor/deployment changed before stop"
 		var value := row.duplicate()
 		value.erase("presentation")
 		actions.append(value)
-		if bool(row.reviewed_move_matches) and int(row.contact_usec) >= 0 and is_finite(float(row.applied_damage)) and float(row.applied_damage) > 0.0:
+		if bool(row.reviewed_move_matches) and bool(row.impact_matches) and bool(row.host_finished_matches) \
+				and int(row.contact_usec) >= 0 and int(row.host_finished_usec) >= int(row.contact_usec) \
+				and bool(row.get("actual_hp_debit_positive", false)):
 			accepted[row.character_id] = true
+			accepted_actions[row.action_id] = true
+	for ids: Array in _f25_overlap_actions:
+		var same_authors := {}
+		for id: String in ids:
+			if accepted_actions.has(id): same_authors[_f25_actions[id].character_id] = true
+		if same_authors.size() == 4: _f25_overlap += 1
 	var limits := F25_LIBRARY.config()
 	var stats := {"wall_ms": _f25_percentiles(1), "process_ms": _f25_percentiles(2), "physics_ms": _f25_percentiles(3),
 		"render_cpu_ms": _f25_percentiles(4), "render_gpu_ms": _f25_percentiles(5), "setup_cpu_ms": _f25_percentiles(6)}
@@ -298,6 +474,7 @@ func _f25_stop() -> Dictionary:
 	var manifest := {"verdict": "PASS" if passed else "FAIL", "error": _f25_error, "metadata": _f25_meta,
 		"reviewed_profile": _f25_profile, "profile_sha256": JSON.stringify(_f25_profile).sha256_text(), "frames": _f25_rows.size(),
 		"overlap_frames": _f25_overlap, "accepted_characters": accepted.keys(), "actions": actions, "host_verdicts": _f25_verdicts,
+		"same_action_overlap_witnesses": _f25_overlap_actions,
 		"stats": stats, "peak_particles": _f25_peak_particles, "peak_lights": _f25_peak_lights,
 		"particle_cap": int(limits.get("encounter_particle_cap", 0)), "light_cap": int(limits.get("scene_light_cap", 0)),
 		"scope": "One physical adapter, four same-machine processes; native host viewport with three headless guests. Node/frustum overlap is not a blind visual verdict or Ally hardware proof.",

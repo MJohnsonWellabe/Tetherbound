@@ -18,6 +18,9 @@ extends "res://tests/smoke_net_veridian_relic_key.gd"
 ## continues story lines; win_trainer_battle's enemy_hp_ceiling as in
 ## smoke_net_veridian_relic_key.
 const PEERS := 4
+const F25_PEER := preload("res://tools/net/proof_peer_runner.gd")
+const F25_SAVE := preload("res://scripts/save/save_document.gd")
+const F25_STEPS := preload("res://tools/net/proof_steps.gd")
 var _ids: Array[String] = []
 var _completed := false
 var _f25: Dictionary = {}
@@ -81,7 +84,16 @@ func _f25_preflight() -> bool:
 			and not ids.has(id) and not uids.has(uid) and FileAccess.file_exists(carrier) \
 			and hash.search(str(input.get("character_sha256", ""))) != null
 		if dir != null: valid = valid and dir.get_directories().size() == 1
-		if FileAccess.file_exists(carrier): valid = valid and FileAccess.get_sha256(carrier) == str(input.get("character_sha256", ""))
+		if FileAccess.file_exists(carrier):
+			valid = valid and FileAccess.get_sha256(carrier) == str(input.get("character_sha256", ""))
+			var document: Variant = F25_SAVE.parse(F25_STEPS._read_text(carrier))
+			var original := F25_PEER.f25_identity(document) if document is Dictionary else {}
+			valid = valid and not original.is_empty() and str(original.get("character_id", "")) == id
+			input["original_identity"] = original
+			var equipped := false
+			for member: Dictionary in original.get("party", []):
+				if str(member.uid) == uid and str(member.get("move_" + str(input.get("slot", "")), "")) == str(input.get("move_id", "")): equipped = true
+			valid = valid and equipped
 		ids[id] = true
 		uids[uid] = true
 		valid = valid and not str(input.get("move_id", "")).is_empty() and str(input.get("slot", "")) in ["quick", "charged", "utility", "ultimate"] \
@@ -180,6 +192,11 @@ func _flow() -> void:
 			check(id == str(input.character_id), "F25 peer %d retained its original stable identity" % peer)
 			if id != str(input.character_id): return
 			_ids.append(id)
+			var identity := await step(peer, "f25_owned_identity", {})
+			if not _pass(identity, "F25 restored identity snapshot"): return
+			var unchanged := F25_PEER.f25_identity_preserved(input.original_identity, identity.get("data", {}))
+			check(unchanged, "F25 production load preserved ordered owned UID/catalog/loadout/mastery/BT/gear")
+			if not unchanged: return
 			continue
 		await step(peer, "dismiss_dialogue", {"presses": 40, "settle": 0})
 		for species: String in PARTY:
@@ -199,6 +216,12 @@ func _flow() -> void:
 		await step(peer, "dismiss_dialogue", {"presses": 40, "settle": 0})
 	for peer in PEERS:
 		if not _pass(await step(peer, "expect_peers", {"count": PEERS}), "peer %d sees four peers" % peer): return
+		if not _f25.is_empty():
+			var snapshot := await step(peer, "f25_owned_identity", {})
+			if not _pass(snapshot, "F25 peer %d actual joined snapshot" % peer): return
+			var preserved := F25_PEER.f25_identity_preserved(_f25.owned[peer].original_identity, snapshot.get("data", {}))
+			check(preserved, "F25 peer %d retained original owned records through production admission/snapshot" % peer)
+			if not preserved: return
 	for peer in PEERS:
 		var keys0 := await _keys(peer)
 		var relics0 := await _relics_held(peer)
