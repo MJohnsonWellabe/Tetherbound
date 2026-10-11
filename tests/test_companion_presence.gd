@@ -464,9 +464,15 @@ func test_low_hp_slows_the_gait_lowers_the_head_and_flinches() -> void:
 	assert_eq(aimed, droop[0], "a hurt creature hangs its head instead of holding the trainer's eye")
 	assert_true(bool(_presence.call("is_looking")), "and the modifier is actually active")
 	assert_true(float(_presence.call("anim_speed_scale")) < 1.0, "the idle plays slower")
-	# A flinch arrives inside the configured window: the rig's own `hit` clip.
+	# A flinch arrives inside the configured window using the body's installed
+	# role mapping, which can replace the imported rig's literal `hit` clip.
 	# The trainer paces meanwhile so no acknowledgment can start and hide the
 	# hurt idle behind a reaction (a reaction is what a flinch yields to).
+	var animator := _body.get("_animator") as RefCounted
+	var flinch_role := str(_cfg()["hurt"]["flinch_clip"])
+	var flinch_clip := str(animator.call("_resolve", flinch_role))
+	assert_true(not flinch_clip.is_empty() and _anim().has_animation(flinch_clip),
+		"the configured flinch resolves to an installed animation")
 	var window := float(_cfg()["hurt"]["flinch_every_s"]) + float(_cfg()["hurt"]["flinch_jitter_s"]) + 1.0
 	var flinched := false
 	var t := 0.0
@@ -476,13 +482,22 @@ func test_low_hp_slows_the_gait_lowers_the_head_and_flinches() -> void:
 		side = -side
 		_presence.call("tick", TICK)
 		t += TICK
-		flinched = _anim().current_animation == "hit"
+		flinched = _anim().current_animation == flinch_clip
 	assert_true(flinched, "a flinch (the hit clip) played within %.0fs" % window)
-	# Healed: everything is handed back.
+	# Health/gait update even while the animator still owns the flinch.
 	_creature.set("hp", float(_creature.get("max_hp")))
 	_presence.call("tick", TICK)
 	assert_false(bool(_presence.call("is_hurt")))
 	assert_almost_eq(float(_presence.call("gait_scale")), 1.0, 0.0001)
+	# This detached fixture has no physics or AnimationPlayer processing.
+	# Supply one actual clip duration to both clocks, allowing the authored
+	# pose to finish and the real animator to return to idle before Presence
+	# resumes its presentation. No extra flinch-arrival window is added.
+	if flinched:
+		var clip_seconds := _anim().get_animation(flinch_clip).length
+		_anim().advance(clip_seconds)
+		animator.call("tick", clip_seconds, 0.0, float(_body.call("base_speed")))
+	_presence.call("tick", TICK)
 	assert_true(_pivot().transform.is_equal_approx(rest), "the pivot is back at rest once healed")
 	assert_almost_eq(float(_presence.call("anim_speed_scale")), 1.0, 0.0001)
 	var look_again := _pivot().find_children("CompanionLook", "LookAtModifier3D", true, false)
