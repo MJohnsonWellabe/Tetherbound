@@ -8485,8 +8485,9 @@ func guardian() -> Node3D:
 	return _guardian
 
 
-## Ordinary room pads are separate from named encounter identity. A room
-## capacity never overrides the ordinary pair-derived ring or art fit.
+## Ordinary authored rooms are separate from named encounter identity. Their
+## measured capacity, including the registered mouth encounter, still requires
+## the consumer's actual body fit, gap, ground support and obstruction checks.
 func authored_room_arena_definition(room_id: String) -> Dictionary:
 	if not _arena_definition_ready or not is_inside_tree() or is_queued_for_deletion(): return {}
 	var parts := room_id.split(":")
@@ -8502,14 +8503,16 @@ func authored_room_arena_definition(room_id: String) -> Dictionary:
 	var room: Dictionary = {}
 	for entry: Dictionary in canonical.get("chambers", []):
 		if str(entry.get("id", "")) == chamber_id: room = entry
-	if room.is_empty() or not bool(room.get("combat_pad", false)) or _chambers.get(chamber_id, {}) != room: return {}
+	if room.is_empty() or not (bool(room.get("combat_pad", false)) or chamber_id == "mouth") \
+			or _chambers.get(chamber_id, {}) != room: return {}
 	var at := _local_of(room.at)
 	var size := _size_of(room.size)
 	var rect := [at.x - size.x * 0.5, at.z - size.y * 0.5, at.x + size.x * 0.5, at.z + size.y * 0.5]
 	var centre := to_global(Vector3(at.x, _floor_y, at.z))
 	if not _footprint.has(rect) or not centre.is_finite() or _markers.get(chamber_id) != centre: return {}
 	var radius := combat_arena_bounds_at(centre.x, centre.z)
-	if radius < 11.0 or not is_equal_approx(built_floor_height_at(centre.x, centre.z), centre.y): return {}
+	if not is_finite(radius) or radius <= 0.0 \
+			or not is_equal_approx(built_floor_height_at(centre.x, centre.z), centre.y): return {}
 	return {"source": self, "room_arena_id": room_id, "species_id": species_id, "centre": centre, "radius": radius}
 
 
