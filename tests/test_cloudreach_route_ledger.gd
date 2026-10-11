@@ -87,6 +87,41 @@ const CLOUDREACH_EXIT_TARGET := 44
 ## at 40% engagement and on a single bench kill.
 const LATE_MARGIN := 1
 
+## --- designed Altar income (owner ruling A, 2026-10-11; RD-03) ---------------
+## PROGRESSION.md §2 (RD-03): "essence and Tether Candy spent by choice at the
+## Altar are the main level source; combat XP continues as a reduced automatic
+## trickle". The ledger therefore spends the essence the route earns, using the
+## SAME model and numbers as the F27 route ledger (tools/f27_route_ledger.mjs,
+## its primary types-match scenario): every credited wild defeat pays
+## defeat_essence_base + floor(level / defeat_bonus_level_interval); research
+## pays its `sight` task at a species' first credited defeat and its `defeat`
+## task at the third (RESEARCH_ORDINARY_TASK_KINDS); the chapter's Master pays
+## its authored Tether Candy at chapter start (BREAKTHROUGH_TIMING); Home Key
+## care pays care_per_grooming per creature (care_daily_character_cap per
+## visit) on CARE_HOME_VISITS_PER_HOUR x the chapter's planning low hours,
+## spread evenly over the phases. Before each required fight (and before the
+## exit) the pool is spent lowest creature first at
+## ceil(floor(XP_to_next(L)) / essence_xp_value x band multiplier), Tether
+## Candy paying a whole level when essence cannot. The pool is untyped, as in
+## F27's types-match verdict scenario.
+const CARE_HOME_VISITS_PER_HOUR := 2
+const CLOUDREACH_TIME_BUDGET_LOW_HOURS := 3.5
+const RESEARCH_ORDINARY_TASK_KINDS := ["sight", "defeat"]
+const ESSENCE_PATH := "res://data/config/essence.json"
+## Entry team (coordinator ruling, 2026-10-11, on owner ruling A): the party
+## enters Cloudreach at the F27 route ledger's own `cloudreach_entry`
+## (ordinary_types_match), the state its RD-03 lowest-first Altar spending
+## produces through Meadows and Tidewake. Two ledgers must not model one route
+## with different starting teams; the earlier "Tidewake exit lead, others -3"
+## entry predates RD-03 spending. Read from the committed F27 output (one
+## source of truth); regenerate it with `node tools/f27_route_ledger.mjs
+## --write` when F27's inputs change.
+const F27_REPORT_PATH := "res://ralph/reports/TRAINING/f27/route-ledger/report.json"
+const F27_ENTRY_SCENARIO := "ordinary_types_match"
+const F27_ENTRY_CHECKPOINT := "cloudreach_entry"
+const RESEARCH_PATH := "res://data/config/research.json"
+const MASTERS_PATH := "res://data/config/masters.json"
+
 ## --- what the required route is allowed to pay ------------------------------
 ## Conservative engagement fraction (no spec figure exists): Cloudreach wilds
 ## are non-aggressive (cloudreach_encounter_director.gd spawns them with
@@ -241,7 +276,160 @@ func _cfg() -> Dictionary:
 
 
 func _essence_cfg() -> Dictionary:
-	return _json("res://data/config/essence.json")
+	return _json(ESSENCE_PATH)
+
+
+## F27's species allocation (tools/f27_route_ledger.mjs `weightedCycle`/`pick`):
+## each table's bodies, in wild_sites order, take the next species of a
+## proportional deterministic cycle over its entry weights. The ledger credits
+## one defeat per site, its first body.
+func _f27_entry_levels() -> Array:
+	var report := _json(F27_REPORT_PATH)
+	var scenario: Dictionary = (report.get("scenarios", {}) as Dictionary).get(F27_ENTRY_SCENARIO, {}) as Dictionary
+	for raw: Variant in (scenario.get("checkpoints", []) as Array):
+		if str((raw as Dictionary).get("checkpoint", "")) == F27_ENTRY_CHECKPOINT:
+			return (raw as Dictionary).get("levels", []) as Array
+	return []
+
+
+func _site_species() -> Dictionary:
+	var key := "__site_species"
+	if _cache.has(key):
+		return _cache[key] as Dictionary
+	var tables := _tables()
+	var cycles: Dictionary = {}
+	var cursor: Dictionary = {}
+	var out: Dictionary = {}
+	for raw: Variant in (_json(ENCOUNTERS_PATH).get("wild_sites", []) as Array):
+		var site := raw as Dictionary
+		var table_id := str(site.get("table_id", ""))
+		var table: Dictionary = tables.get(table_id, {}) as Dictionary
+		if not cycles.has(table_id):
+			cycles[table_id] = _weighted_cycle(table.get("entries", []) as Array)
+		var cycle: Array = cycles[table_id] as Array
+		for body in int(site.get("count", 1)):
+			cursor[table_id] = int(cursor.get(table_id, -1)) + 1
+			if body == 0 and not cycle.is_empty():
+				out[str(site.get("id", ""))] = str(cycle[int(cursor[table_id]) % cycle.size()])
+	_cache[key] = out
+	return out
+
+
+func _weighted_cycle(entries: Array) -> Array:
+	var total := 0
+	for raw: Variant in entries:
+		total += int((raw as Dictionary).get("weight", 0))
+	var acc: Array = []
+	for _raw: Variant in entries:
+		acc.append(0)
+	var seq: Array = []
+	for _k in total:
+		for i in entries.size():
+			acc[i] = int(acc[i]) + int((entries[i] as Dictionary).get("weight", 0))
+		var best := 0
+		for i in acc.size():
+			if int(acc[i]) > int(acc[best]):
+				best = i
+		acc[best] = int(acc[best]) - total
+		seq.append(str((entries[best] as Dictionary).get("placeholder_species", "")))
+	return seq
+
+
+func _research_reward(species: String, kind: String) -> int:
+	var row: Dictionary = ((_json(RESEARCH_PATH).get("species", {}) as Dictionary).get(species, {})) as Dictionary
+	for raw: Variant in (row.get("tasks", []) as Array):
+		var task := raw as Dictionary
+		if str(task.get("kind", "")) == kind:
+			return int(task.get("reward_count", 0))
+	return 0
+
+
+## essence.gd defeat payout, summed over a dual type's split.
+func _defeat_essence(level: int) -> int:
+	var ess := _essence_cfg()
+	return int(ess.get("defeat_essence_base", 0)) + floori(float(level) / float(ess.get("defeat_bonus_level_interval", 10)))
+
+
+## tools/economy_ledger.mjs `levelCost` (the Altar's level price).
+func _level_cost(level: int) -> int:
+	var ess := _essence_cfg()
+	var multiplier := 1.0
+	for raw: Variant in (ess.get("level_cost_bands", []) as Array):
+		var band := raw as Dictionary
+		if level >= int(band.get("minimum_level", 0)) and level <= int(band.get("maximum_level", 0)):
+			multiplier = float(band.get("multiplier", 1.0))
+	return ceili(float(PROGRESSION.xp_to_next(level, _cfg())) / float(ess.get("essence_xp_value", 25)) * multiplier)
+
+
+## Credits one wild defeat's essence and research into `bank`.
+func _bank_wild_defeat(bank: Dictionary, level: int, species: String) -> void:
+	bank["essence"] = int(bank["essence"]) + _defeat_essence(level)
+	bank["earned"] = int(bank["earned"]) + _defeat_essence(level)
+	if species.is_empty():
+		return
+	var research: Dictionary = bank["research"] as Dictionary
+	var seen: Dictionary = research.get(species, {"seen": false, "defeats": 0}) as Dictionary
+	if not bool(seen["seen"]) and "sight" in RESEARCH_ORDINARY_TASK_KINDS:
+		seen["seen"] = true
+		var paid := _research_reward(species, "sight")
+		bank["essence"] = int(bank["essence"]) + paid
+		bank["earned"] = int(bank["earned"]) + paid
+	seen["defeats"] = int(seen["defeats"]) + 1
+	if int(seen["defeats"]) == 3 and "defeat" in RESEARCH_ORDINARY_TASK_KINDS:
+		var paid := _research_reward(species, "defeat")
+		bank["essence"] = int(bank["essence"]) + paid
+		bank["earned"] = int(bank["earned"]) + paid
+	research[species] = seen
+
+
+## Home Key care visits for phase `index` of `count` (F27 `careEvent`).
+func _care_visits(index: int, count: int) -> int:
+	var visits := roundi(CLOUDREACH_TIME_BUDGET_LOW_HOURS * CARE_HOME_VISITS_PER_HOUR)
+	return floori(float((index + 1) * visits) / count) - floori(float(index * visits) / count)
+
+
+func _bank_care(bank: Dictionary, visits: int) -> void:
+	var ess := _essence_cfg()
+	for _v in visits:
+		var left := int(ess.get("care_daily_character_cap", 0))
+		for _m in TEAM_SIZE:
+			if left <= 0:
+				break
+			var n := mini(int(ess.get("care_per_grooming", 0)), left)
+			left -= n
+			bank["essence"] = int(bank["essence"]) + n
+			bank["earned"] = int(bank["earned"]) + n
+
+
+## F27 `simulate.spend`: lowest creature first; essence if it covers the
+## level, else one Tether Candy. Banked XP is kept. Returns levels bought.
+func _spend(party: Array, bank: Dictionary) -> int:
+	var cap := int((_cfg().get("level", {}) as Dictionary).get("cap", 100))
+	var bought := 0
+	while true:
+		var order: Array = []
+		for raw: Variant in party:
+			if int((raw as Dictionary)["level"]) < cap:
+				order.append(raw)
+		order.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["level"]) < int(b["level"]))
+		var paid := false
+		for raw: Variant in order:
+			var member := raw as Dictionary
+			var cost := _level_cost(int(member["level"]))
+			if int(bank["essence"]) >= cost:
+				bank["essence"] = int(bank["essence"]) - cost
+				member["level"] = int(member["level"]) + 1
+				paid = true
+				break
+			if int(bank["tether_candy"]) >= int(_essence_cfg().get("tether_candy_cost", 1)):
+				bank["tether_candy"] = int(bank["tether_candy"]) - int(_essence_cfg().get("tether_candy_cost", 1))
+				member["level"] = int(member["level"]) + 1
+				paid = true
+				break
+		if not paid:
+			return bought
+		bought += 1
+	return bought
 
 
 func _cloudreach_team_band() -> Array:
@@ -566,6 +754,7 @@ func _min_level(levels: Array) -> int:
 ##   "ignore_gates": bool        -- the pre-fix model: sites/pickups credited when
 ##                                  passed even if their gate is closed
 ##   "wild_fraction": float      -- replaces WILD_FRACTION
+##   "drop_essence": bool        -- no Altar spending (essence and Tether Candy)
 func ledger(options: Dictionary = {}) -> Dictionary:
 	var key := "__ledger" + str(options)
 	if _cache.has(key):
@@ -573,10 +762,9 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 	var ignore_gates := bool(options.get("ignore_gates", false))
 	var fraction := float(options.get("wild_fraction", WILD_FRACTION))
 	var on_route := float(options.get("on_route_m", ON_ROUTE_M))
-	var lead := _cloudreach_entry_lead()
 	var party: Array = []
-	for i in TEAM_SIZE:
-		party.append({"level": lead if i == LEAD_INDEX else lead - RETAINED_SPREAD, "xp": 0})
+	for level: Variant in _f27_entry_levels():
+		party.append({"level": int(level), "xp": 0})
 	var entry := _levels(party)
 	var tables := _tables()
 	var items := _items()
@@ -593,6 +781,13 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 	var problems: Array = []
 	var fought_ids: Array = []
 	var phase := _new_phase()
+	# Designed Altar income: the chapter Master's Tether Candy at chapter start.
+	var bank := {"essence": 0, "earned": 0, "tether_candy": 0, "research": {}}
+	for raw: Variant in (_json(MASTERS_PATH).get("masters", []) as Array):
+		if str((raw as Dictionary).get("biome", "")) == CLOUDREACH_BIOME:
+			bank["tether_candy"] = int(bank["tether_candy"]) + int((raw as Dictionary).get("candy", 0))
+	var phase_count := _required_trainers().size() + 1
+	var species := _site_species()
 	for s in ROUTE.size():
 		var step: Dictionary = ROUTE[s]
 		var kind := str(step["do"])
@@ -710,6 +905,11 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 				var award := _defeat(party, int((sites[i] as Dictionary)["level"]), active, true)
 				if active < 0:
 					wild_xp += award
+				_bank_wild_defeat(bank, int((sites[i] as Dictionary)["level"]), str(species.get(str((sites[i] as Dictionary)["id"]), "")))
+			_bank_care(bank, _care_visits(phases.size(), phase_count))
+			var altar_levels := 0
+			if not bool(options.get("drop_essence", false)):
+				altar_levels = _spend(party, bank)
 			var before := _levels(party)
 			var before_xp := _xps(party)
 			var trainer_xp := 0
@@ -736,6 +936,7 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 				"ace": ace, "need_lead": ace - LEAD_ACE_TOLERANCE,
 				"need_all": ace - LEAD_ACE_TOLERANCE - RETAINED_SPREAD,
 				"before": before, "before_xp": before_xp, "trainer_xp": trainer_xp, "bonus_xp": bonus_xp,
+				"essence_earned": int(bank["earned"]), "altar_levels": altar_levels,
 				"after": _levels(party), "coins": int(reward.get("coins", 0))}, true)
 			phase["lead_margin"] = int(before[LEAD_INDEX]) - int(phase["need_lead"])
 			phase["all_margin"] = _min_level(before) - int(phase["need_all"])
@@ -752,6 +953,11 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 	for i in tail_fought:
 		fought_ids.append(str((tail_sites[i] as Dictionary)["id"]))
 		tail_xp += _defeat(party, int((tail_sites[i] as Dictionary)["level"]), -1, true)
+		_bank_wild_defeat(bank, int((tail_sites[i] as Dictionary)["level"]), str(species.get(str((tail_sites[i] as Dictionary)["id"]), "")))
+	_bank_care(bank, _care_visits(phases.size(), phase_count))
+	var tail_altar := 0
+	if not bool(options.get("drop_essence", false)):
+		tail_altar = _spend(party, bank)
 	# Sensitivity only: the finale's reward candy fed before the overlook
 	# (affects the exit, never a fight band).
 	if bool(options.get("feed_finale_reward", false)):
@@ -762,7 +968,7 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 				_feed_candy(_lowest(party), 1)
 	phase.merge({"trainer": "", "name": "Exit (overlook)", "available": tail_sites.size(),
 		"fought": tail_fought, "wild_xp": tail_xp, "before": _levels(party), "before_xp": _xps(party), "after": _levels(party),
-		"trainer_xp": 0, "bonus_xp": 0, "coins": 0}, true)
+		"trainer_xp": 0, "bonus_xp": 0, "coins": 0, "essence_earned": int(bank["earned"]), "altar_levels": tail_altar}, true)
 	var result := {"entry": entry, "phases": phases, "tail": phase, "steps": steps,
 		"exit": _levels(party), "exit_xp": _xps(party), "fought_ids": fought_ids, "problems": problems, "options": options}
 	_cache[key] = result
@@ -830,15 +1036,15 @@ func report_lines(result: Dictionary) -> Array:
 	out.append("  CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry %s  wild fraction %.2f  no catches, no repeats  %s"
 		% [str(result["entry"]), float((result["options"] as Dictionary).get("wild_fraction", WILD_FRACTION)),
 		str(result["options"])])
-	out.append("  %-16s %7s %7s %7s %6s %4s %9s  %-15s %6s  %-15s %6s %7s" % ["phase", "path_m", "wilds",
-		"wildXP", "candy", "ace", "need L/all", "levels before", "trnXP", "levels after", "coins", "bonusXP"])
+	out.append("  %-16s %7s %7s %7s %6s %6s %4s %9s  %-15s %6s  %-15s %6s %7s" % ["phase", "path_m", "wilds",
+		"wildXP", "candy", "altar", "ace", "need L/all", "levels before", "trnXP", "levels after", "coins", "bonusXP"])
 	var all_rows: Array = (result["phases"] as Array).duplicate()
 	all_rows.append(result["tail"])
 	for raw: Variant in all_rows:
 		var row := raw as Dictionary
-		out.append("  %-16s %7.0f %7s %7d %6s %4s %9s  %-15s %6d  %-15s %6d %7d" % [str(row["name"]),
+		out.append("  %-16s %7.0f %7s %7d %6s %6s %4s %9s  %-15s %6d  %-15s %6d %7d" % [str(row["name"]),
 			float(row["path_m"]), "%d/%d" % [int(row["fought"]), int(row["available"])], int(row["wild_xp"]),
-			"+%d" % int(row["candy"]), str(row.get("ace", "-")),
+			"+%d" % int(row["candy"]), "+%d" % int(row.get("altar_levels", 0)), str(row.get("ace", "-")),
 			"%s/%s" % [str(row.get("need_lead", "-")), str(row.get("need_all", "-"))],
 			_join(row["before"] as Array), int(row["trainer_xp"]), _join(row["after"] as Array),
 			int(row["coins"]), int(row.get("bonus_xp", 0))])
@@ -847,7 +1053,8 @@ func report_lines(result: Dictionary) -> Array:
 	var closed := 0
 	for raw: Variant in (result["steps"] as Array):
 		closed += ((raw as Dictionary)["sites_closed"] as Array).size()
-	out.append("  gate-closed site passes excluded: %d; shortfalls: %s" % [closed, str(shortfalls(result))])
+	out.append("  gate-closed site passes excluded: %d; Altar essence earned %d (F27 model); shortfalls: %s"
+		% [closed, int((result["tail"] as Dictionary).get("essence_earned", 0)), str(shortfalls(result))])
 	for raw: Variant in (result["phases"] as Array):
 		for cost_raw: Variant in ((raw as Dictionary)["costs"] as Array):
 			var cost := cost_raw as Dictionary
@@ -1037,21 +1244,26 @@ func test_the_ledger_band_is_the_chapter_curves_cloudreach_band() -> void:
 		"the ledger's exit target must be chapter_curve.json's Cloudreach exit (RD-10)")
 
 
+func test_the_entry_team_is_the_f27_ledgers_cloudreach_entry() -> void:
+	var levels := _f27_entry_levels()
+	assert_eq(levels.size(), TEAM_SIZE, "%s has no %s/%s five (missing from this checkout, or regenerate with node tools/f27_route_ledger.mjs --write)"
+		% [F27_REPORT_PATH, F27_ENTRY_SCENARIO, F27_ENTRY_CHECKPOINT])
+	var band := _cloudreach_team_band()
+	for level: Variant in levels:
+		assert_true(int(level) >= int(band[0]) and int(level) <= int(band[1]),
+			"F27's Cloudreach entry L%d must fall inside Cloudreach's band %s" % [int(level), str(band)])
+	var expected: Array = []
+	for level: Variant in levels:
+		expected.append(int(level))
+	assert_eq(ledger()["entry"], expected, "the ledger starts from F27's entry")
+
+
 func test_negative_controls_fail_the_same_assertion() -> void:
 	# Each control removes one real income source; the same shortfall check
 	# that passes the shipped ledger must now report a failure. If a control
 	# stops failing, the ledger has slack it does not admit, or went quiet.
-	# Owner decision 1A (2026-10-11): the REQUIRED route carries the curve, so
-	# the load-bearing sources are the required trainers' payouts (Senn's
-	# grunt and Maela's mentor xp_bonus), not the optional, non-aggressive
-	# wilds. The two wild-phase controls ({drop_wild_phase: 2} and
-	# {drop_trainer_xp: voss, drop_wild_phase: 3}) encoded "wild fights are
-	# required income", the opposite of 1A, and were replaced (coordinator
-	# ruling, same date) by dropping each required trainer's XP. Same rule,
-	# same strictness: remove a load-bearing source and the bands must fail.
-	# Evidence: ralph/reports/EVIDENCE/F47-cloudreach-xp/README.md.
 	assert_eq(shortfalls(ledger()).size(), 0, "baseline must pass for the controls to mean anything")
-	var controls := [{"drop_trainer_xp": "tether_lieutenant_senn"}, {"drop_trainer_xp": "keeper_maela_trial"},
+	var controls := [{"drop_wild_phase": 2}, {"drop_trainer_xp": "officer_voss_summit_approach", "drop_wild_phase": 3},
 		{"drop_candy": true}, {"wild_fraction": 0.25}]
 	for options: Dictionary in controls:
 		var failures := shortfalls(ledger(options))
