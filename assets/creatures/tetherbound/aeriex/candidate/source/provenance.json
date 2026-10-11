@@ -107,7 +107,9 @@
     "sheets": [
       "review/low-before-after.jpg",
       "review/medium-before-after.jpg"
-    ]
+    ],
+    "scope": "Historical pre-repair captures of the input candidate; not validation of this new bake.",
+    "input_model_sha256": "464e28291d657f9922af742c751d2c0cb45573c6c7c82e582c013bc1ebcab8b3"
   },
   "gates": {
     "scale": "PASS",
@@ -128,7 +130,7 @@
     "Candidate remains OFF until full art bar passes"
   ],
   "source_repair": {
-    "status": "SOURCE_PREPARED_NATIVE_BAKE_PENDING",
+    "status": "NATIVE_BAKED_CONTACT_REVIEW_PENDING",
     "baseline_model_sha256": "464e28291d657f9922af742c751d2c0cb45573c6c7c82e582c013bc1ebcab8b3",
     "recipe": "source/terminal_repose.json",
     "scope": "Only faint/rest authoring; all other clips, standing scale, mesh, UV, skin, materials and default-off registration unchanged by this pose repair.",
@@ -139,7 +141,7 @@
       "Low standing scale and hurt context in the existing capture path; no broad recapture suite",
       "independent code-blind judgment and Claude disposition; retain original assertions and shipping gates"
     ],
-    "acceptance": "Existing FAIL and OPEN gates are retained; no native proof was run.",
+    "acceptance": "Root Blender bake and CPU preservation checks passed. Original contact FAIL/open gates retained until Low engine capture and independent Claude judgment.",
     "cpu_preparation": {
       "method": "Read-only glTF skin evaluation of source rotations, all vertices; 61 transition samples. Nine unaffected clips match baseline source controls at five phases each. No native engine or bake.",
       "support_regions": {
@@ -162,6 +164,103 @@
       "preset": "Low / Compatibility only",
       "shot": "Three-quarter side, low enough to see trunk/pelvis floor support; both folded wings and entire tail visible.",
       "judge": "Minimum decisive terminal body-contact frame; original assertions and Claude judgment still required."
+    },
+    "native_contact_status": "NATIVE PENDING",
+    "bake": {
+      "source_commit": "81c6e804215d89814fe98e80779f5536b21b7843",
+      "engine": "Blender 4.2.9 LTS",
+      "producer_build": "a10f621e649a",
+      "producer_script": "source/author_native_clips.py",
+      "producer_sha256": "945cf831bbb0bb24290a667fb82073f19d59b32e70b86a8e02bf920f16ffd5a8",
+      "recipe": "source/terminal_repose.json",
+      "recipe_sha256": "6eb9b8106b3df02e724a164aad08e13b530a034b456c053071b5bd84bc1ab872",
+      "input_sha256": "464e28291d657f9922af742c751d2c0cb45573c6c7c82e582c013bc1ebcab8b3",
+      "input_preserved_at_commit": "81c6e804215d89814fe98e80779f5536b21b7843",
+      "input_repository_path": "assets/creatures/tetherbound/aeriex/candidate/models/creature_aeriex_native.glb",
+      "output_sha256": "7c5a72f8888589e8779bbaa24ae5964a4fc57dfc6c603d5e9282acfc34738fff",
+      "actual_exit_code": 0,
+      "actual_blender_pid": 35448,
+      "completed_utc": "2026-10-11T17:52:55.202412+00:00",
+      "private_launch_receipt": "C:\\CodexTemp\\native-service-artifacts\\f36-contact-fixes-81c6\\aeriex-bake-v1\\launch-receipt.json",
+      "private_result_receipt": "C:\\CodexTemp\\native-service-artifacts\\f36-contact-fixes-81c6\\aeriex-bake-v1\\result.json",
+      "private_output": "C:\\CodexTemp\\native-service-artifacts\\f36-contact-fixes-81c6\\aeriex-bake-v1\\aeriex-supported-repose.glb",
+      "support_guard_readings": [
+        {
+          "spine": 0.00027179718017578125,
+          "pelvis": 0.0
+        },
+        {
+          "spine": 0.00027179718017578125,
+          "pelvis": 0.0
+        }
+      ],
+      "warning": "Multiple shader image nodes: exporter chose first sampler. CPU comparison verifies materials, sampler settings, texture bindings and embedded image bytes exactly unchanged.",
+      "preservation": {
+        "status": "PASS_CPU_PRESERVATION",
+        "method": "Ordered triangle-corner correspondence; full unaffected track keys/times/interpolation plus five posed samples per clip; read-only glTF skin evaluation. No engine run by repair lane.",
+        "triangles": 29399,
+        "vertex_count_before": 23979,
+        "vertex_count_after": 23980,
+        "extra_vertices": "Exporter seam splits; corner topology/UV/joint identity preserved.",
+        "corner_attribute_max_absolute_delta": {
+          "POSITION": 9.5367431640625e-07,
+          "NORMAL": 0.0013314485549926758,
+          "TEXCOORD_0": 0.0,
+          "JOINTS_0": 0.0,
+          "WEIGHTS_0": 1.1920928955078125e-07
+        },
+        "normal_max_angle_degrees": 0.106702160222193,
+        "rest_surface_max_distance_m": 9.772528673200556e-07,
+        "standing_height_m_before": 4.0000004980684345,
+        "standing_height_m_after": 4.000000411965164,
+        "rig_local_matrix_max_delta": 4.76837158203125e-07,
+        "inverse_bind_matrix_max_delta": 9.5367431640625e-07,
+        "rig_names_hierarchy_joint_order": "unchanged",
+        "materials_textures_samplers_embedded_images": "exactly unchanged",
+        "configured_height_m": 4.0,
+        "configured_model_scale": 1.0,
+        "unaffected_clip_max_posed_distance_m": {
+          "idle": 1.5266690433327738e-06,
+          "walk": 1.4185231771592498e-06,
+          "run": 1.3618975405788162e-06,
+          "attack": 1.5437288893101828e-06,
+          "charged": 1.551660587606382e-06,
+          "hit": 1.3995695193196349e-06,
+          "swim": 1.3769621125255864e-06,
+          "fly_grip": 1.85262851597593e-06,
+          "ride": 1.5266690433327738e-06
+        },
+        "terminal_skin_evaluation": {
+          "faint": {
+            "duration_seconds": 1.5416666269302368,
+            "minimum_y_m": -2.1877782716960698e-08,
+            "support": {
+              "spine": {
+                "minimum_y_m": 0.00027178330734892956,
+                "vertices_within_8cm": 9
+              },
+              "pelvis": {
+                "minimum_y_m": -2.1877782716960698e-08,
+                "vertices_within_8cm": 11
+              }
+            }
+          },
+          "rest": {
+            "duration_seconds": 1.5416666269302368,
+            "minimum_y_m": -2.1877782716960698e-08,
+            "support": {
+              "spine": {
+                "minimum_y_m": 0.00027178330734892956,
+                "vertices_within_8cm": 9
+              },
+              "pelvis": {
+                "minimum_y_m": -2.1877782716960698e-08,
+                "vertices_within_8cm": 11
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
