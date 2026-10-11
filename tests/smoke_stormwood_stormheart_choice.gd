@@ -46,10 +46,25 @@ class HubStub extends Node:
 	var ending: Node
 	var actor: Node3D
 	var drop_settles := false
+	var queue_offers := false
+	var offers: Array[Dictionary] = []
 
 	func send_to(_peer: int, event: Dictionary) -> void:
 		sent.append(event.duplicate(true))
+		if queue_offers and event.get("kind") == "ending_offer":
+			offers.append(event.duplicate(true))
+			return
 		if ending != null: ending.receive(event)
+
+	## Deliver one original producer packet for this reconnect/resend input.
+	## Snapshot and periodic retransmissions stay queued at transport.
+	func deliver_offer(claim: Dictionary) -> bool:
+		for i: int in offers.size():
+			if ENDING.claim_id(offers[i].get("claim", {})) == ENDING.claim_id(claim):
+				var event: Dictionary = offers.pop_at(i)
+				ending.receive(event)
+				return true
+		return false
 
 	## The drop happens at transport, after the original personal BOOL save.
 	func dispatch(peer: int, intent: Dictionary) -> void:
@@ -213,7 +228,18 @@ func _run() -> void:
 	# Yes while another catch ceremony still holds the belt: the Stormheart
 	# waits for it instead of stalling, then joins once it is resolved.
 	_reset_character(game)
+	var keepers: Array[RefCounted] = []
+	for i: int in 5:
+		var keeper: RefCounted = game.make_creature("terrapup", "Keeper %d" % i)
+		_check(keeper != null and game.party.add(keeper), "the ordinary ceremony starts with five real keepers")
+		keepers.append(keeper)
+	_check(_saver.save_character_prepared(game, CHARACTER) == true,
+		"the full-five original character baseline is BOOL-saved before the host reserves its claim")
 	await _offer(ending, panel, game)
+	var keeper_uids: Array[String] = []
+	for keeper: RefCounted in keepers: keeper_uids.append(str(keeper.get("uid")))
+	_check((ending.get("_local_claim") as Dictionary).get("party_uids", []) == keeper_uids,
+		"the original Stormheart claim reserves these five keepers before the other catch")
 	await _to_question(panel)
 	# A disclosed ordinary catch fixture, with its own authored loadout and UID.
 	var other_catch: RefCounted = game.make_creature("terrapup", "Other catch fixture")
@@ -234,17 +260,44 @@ func _run() -> void:
 	await _frames(3)
 	_check(not _holds_stormheart(game) and bool(ending.get("_ceremony_waiting")),
 		"a Yes during another catch ceremony waits for that ceremony")
-	# The other ceremony ends (its own release/keep choice) and its menu closes.
-	game.pending_catch = null
 	var menu: Node = game.get("_menu")
-	if menu != null and bool(menu.call("is_open")):
-		menu.call("close")
-	paused = false
+	var tab: Node
+	for i: int in (menu.get("_tabs") as Array).size():
+		if str((menu.get("_tabs")[i] as Dictionary).get("id", "")) == "creatures":
+			tab = menu.get("_bodies")[i]
+			break
+	_check(tab != null and tab.get("_release_stage") == "choose" and game.pending_catch == other_catch,
+		"the actual ordinary release menu owns its original pending catch")
+	# Decline the ordinary newcomer through the real service; all five original
+	# keepers still match the Stormheart producer's reserved party_uids.
+	(tab.get("_pending_button") as Button).grab_focus()
+	await _press_menu("ui_accept")
+	await _press_menu("ui_down")
+	await _press_menu("ui_accept")
+	_check(game.pending_catch == null and game.party.members() == keepers
+		and tab.get("_release_stage") == "done",
+		"the ordinary newcomer refusal preserves the original five keepers")
+	_check(bool(ending.get("_ceremony_waiting")) and not (ending.get("_local_claim") as Dictionary).is_empty(),
+		"the Stormheart's original consent survives the prior catch's goodbye screen")
+	await _press_menu("ui_accept") # End the ordinary goodbye, allowing handoff.
+	_check(tab.get("_release_stage") == "choose" and game.pending_catch != null
+		and str(game.pending_catch.get("uid")) == ENDING.claim_id(ending.get("_local_claim") as Dictionary),
+		"the original Stormheart enters its own full-five ceremony after the ordinary goodbye")
+	# The player gives up an original keeper using Stormheart's typed service.
+	(tab.get("_rows")[0] as Button).grab_focus()
+	await _press_menu("ui_accept")
+	await _press_menu("ui_down")
+	await _press_menu("ui_accept")
 	await _frames(3)
 	_check_saved_ack(ending, hub, game)
 	_check(_holds_stormheart(game) and _receipt(game),
 		"the Stormheart joins as soon as the other ceremony ends")
 	_check(_accepted(game), "the Stormheart kept after a waited ceremony is an acceptance")
+	_check(game.party.size() == 5 and not game.party.members().has(keepers[0])
+		and tab.get("_release_stage") == "done",
+		"the original keeper release seats only the reserved Stormheart in the full-five roster")
+	await _press_menu("ui_accept")
+	await _press_menu("menu_cancel")
 	# Accepted here, then this character asks in another world: the hint
 	# withholds a second creature there.
 	hub.intents.clear()
@@ -281,13 +334,13 @@ func _two_worlds(game: Node) -> void:
 		"each world's claim carries its own Stormheart uid")
 	# World B: the offer opens, and this character disconnects unanswered.
 	var b := await _mount(game, "stormwood-world-b")
-	b.ending.receive({"kind": "ending_offer", "claim": claim_b})
+	_check((b.hub as HubStub).deliver_offer(claim_b), "world B receives its original producer's reserved offer")
 	await _frames(2)
 	_check(b.panel.is_open(), "world B's offer opens")
 	await _unmount(b)
 	# World A: this character refuses. Its host never hears it.
 	var a := await _mount(game, "stormwood-world-a")
-	a.ending.receive({"kind": "ending_offer", "claim": claim_a})
+	_check((a.hub as HubStub).deliver_offer(claim_a), "world A receives its original producer's reserved offer")
 	await _frames(2)
 	await _to_question(a.panel)
 	await _press_decline()
@@ -300,7 +353,7 @@ func _two_worlds(game: Node) -> void:
 	# Back in world B: its host resends B's unsettled claim.
 	b = await _mount(game, "stormwood-world-b")
 	(b.hub as HubStub).intents.clear()
-	b.ending.receive({"kind": "ending_offer", "claim": claim_b})
+	_check((b.hub as HubStub).deliver_offer(claim_b), "world B receives its original producer's reserved resend")
 	await _frames(2)
 	_check(b.panel.is_open() and b.panel.runner().conversation_id() == ENDING.OFFER_CONVERSATION,
 		"a refusal in world A does not auto-refuse world B's unanswered offer: it is asked")
@@ -315,7 +368,7 @@ func _two_worlds(game: Node) -> void:
 	# This character's saved answer to THAT claim resumes it without asking.
 	a = await _mount(game, "stormwood-world-a")
 	(a.hub as HubStub).intents.clear()
-	a.ending.receive({"kind": "ending_offer", "claim": claim_a})
+	_check((a.hub as HubStub).deliver_offer(claim_a), "world A receives its original producer's reserved resend")
 	await _frames(2)
 	var settled: Array = (a.hub as HubStub).intents.filter(func(intent: Dictionary) -> bool:
 		return str(intent.kind) == "ending_settled")
@@ -329,12 +382,12 @@ func _two_worlds(game: Node) -> void:
 	var claim_c := await _claim(game, "stormwood-world-c")
 	var claim_d := await _claim(game, "stormwood-world-d")
 	var d := await _mount(game, "stormwood-world-d")
-	d.ending.receive({"kind": "ending_offer", "claim": claim_d})
+	_check((d.hub as HubStub).deliver_offer(claim_d), "world D receives its original producer's reserved offer")
 	await _frames(2)
 	_check(d.panel.is_open(), "world D's offer opens")
 	await _unmount(d)
 	var c := await _mount(game, "stormwood-world-c")
-	c.ending.receive({"kind": "ending_offer", "claim": claim_c})
+	_check((c.hub as HubStub).deliver_offer(claim_c), "world C receives its original producer's reserved offer")
 	await _frames(2)
 	await _to_question(c.panel)
 	c.panel.runner().advance()
@@ -343,7 +396,7 @@ func _two_worlds(game: Node) -> void:
 	await _unmount(c)
 	d = await _mount(game, "stormwood-world-d")
 	(d.hub as HubStub).intents.clear()
-	d.ending.receive({"kind": "ending_offer", "claim": claim_d})
+	_check((d.hub as HubStub).deliver_offer(claim_d), "world D receives its original producer's reserved resend")
 	await _frames(3)
 	settled = (d.hub as HubStub).intents.filter(func(intent: Dictionary) -> bool:
 		return str(intent.kind) == "ending_settled")
@@ -384,6 +437,7 @@ func _mount(game: Node, world_id: String) -> Dictionary:
 	world.add_child(panel)
 	var hub := HubStub.new()
 	hub.drop_settles = true
+	hub.queue_offers = true
 	hub.name = "StormwoodEncounterHub"
 	world.add_child(hub)
 	hub.add_to_group("stormwood_encounter_hub")
@@ -440,6 +494,26 @@ func _check_saved_ack(ending: Node, hub: HubStub, game: Node) -> void:
 		and personal.get("redesign_character", {}).get("transaction_receipts", []).has(
 			"stormheart_answer:%s:%s" % [ENDING.claim_id(offered), CHARACTER]),
 		"the original BOOL-saved owner/world answer and matching durable ACK clean up before assertions")
+
+
+## The same real menu input path as the existing release smoke: the GUI
+## Buttons receive parsed events, and the menu polls the action state.
+func _press_menu(action: String) -> void:
+	Input.action_press(action)
+	var press := InputEventAction.new()
+	press.action = action
+	press.pressed = true
+	Input.parse_input_event(press)
+	Input.flush_buffered_events()
+	await process_frame
+	await process_frame
+	Input.action_release(action)
+	var release := InputEventAction.new()
+	release.action = action
+	release.pressed = false
+	Input.parse_input_event(release)
+	Input.flush_buffered_events()
+	await _frames(4)
 
 
 ## The panel's real decline: a menu_cancel press through Input, read by the
