@@ -112,7 +112,9 @@ static func _course_mesh(radius: float, height: float, start: float, finish: flo
 
 static func _quad(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, d: Vector3,
 		reverse: bool, centre: Vector3, normal_sign: float, fascia: bool = false) -> void:
-	var points: Array[Vector3] = [a, c, b, a, d, c] if reverse else [a, b, c, a, c, d]
+	var points: Array[Vector3] = [a, b, c, a, c, d]
+	if reverse:
+		points.assign([a, c, b, a, d, c])
 	for point: Vector3 in points:
 		var normal := (point - centre).normalized()
 		if fascia:

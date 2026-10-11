@@ -119,10 +119,15 @@ func add_decorative_far_meshes(world: Node3D, composition: Node3D, settings: Dic
 		copy.name = "Far_%s_%s" % [source.get_parent().name, source.name]
 		copy.mesh = source.mesh
 		copy.transform = receiver_inverse * _transform_under(source, world)
-		var distant := (material_override as ShaderMaterial).duplicate() as ShaderMaterial
-		distant.set_shader_parameter("shelf_cap", str(source.name) == "VegetatedShelfCap")
-		copy.material_override = distant
-		fogged_materials.append(distant)
+		# Crags share the far silhouette's material and fog state. Only the cap
+		# needs a distinct shader variant; changing the shared material for it
+		# would also recolour every distant crag and the mountain itself.
+		copy.material_override = material_override
+		if str(source.name) == "VegetatedShelfCap":
+			var distant := (material_override as ShaderMaterial).duplicate() as ShaderMaterial
+			distant.set_shader_parameter("shelf_cap", true)
+			copy.material_override = distant
+			fogged_materials.append(distant)
 		copy.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		# Shelf caps end sooner than the main mountain copy begins. Match the
 		# source's own handoff or they disappear for the 900–1100m interval.

@@ -3345,13 +3345,13 @@ func _build_bank() -> void:
 			ncol[iz] = n.normalized() if n.length() > 0.0001 else Vector3.UP
 		normals[ix] = ncol
 
-	# R17 keeps the exact R16 collider mesh below, but no longer asks that mesh
+	# R17 separates the bank collider mesh below from the visible facade.
 	# to be the visible facade too.  The smoothstep edge of the walk-clear notch
 	# necessarily contains very steep triangles; viewed from inside they were the
 	# long grey fins in the threshold receipt.  A second, non-colliding surface
 	# omits the complete feather band and hands that overlap to the continuous
-	# excavated threshold cut.  Collision, enclosure and the walk route are byte-
-	# for-shape unchanged.
+	# excavated threshold cut. The collider also yields quads wholly inside the
+	# mouth's physical box so the notch release cannot block ingress.
 	var collision_st := SurfaceTool.new()
 	collision_st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var visible_st := SurfaceTool.new()
@@ -3408,12 +3408,17 @@ func _build_bank() -> void:
 			var hs1: PackedFloat32Array = heights[ix + 1]
 			if hs[iz] < 0.02 and hs1[iz] < 0.02 and hs1[iz + 1] < 0.02 and hs[iz + 1] < 0.02:
 				continue
-			_bank_add_vertex(collision_st, a, crest_for_norm, moist_sources, moist_radius, na)
-			_bank_add_vertex(collision_st, c, crest_for_norm, moist_sources, moist_radius, nc)
-			_bank_add_vertex(collision_st, b, crest_for_norm, moist_sources, moist_radius, nb)
-			_bank_add_vertex(collision_st, a, crest_for_norm, moist_sources, moist_radius, na)
-			_bank_add_vertex(collision_st, d, crest_for_norm, moist_sources, moist_radius, nd)
-			_bank_add_vertex(collision_st, c, crest_for_norm, moist_sources, moist_radius, nc)
+			# The throat notch releases inside the mouth. Its rising bank triangles
+			# must not become a second floor or wall across the room's walk route.
+			# Only wholly enclosed quads yield to the mouth's physical box.
+			# Boundary quads and the organic rooms' exterior bank remain intact.
+			if not _bank_quad_inside_mouth(a, b, c, d):
+				_bank_add_vertex(collision_st, a, crest_for_norm, moist_sources, moist_radius, na)
+				_bank_add_vertex(collision_st, c, crest_for_norm, moist_sources, moist_radius, nc)
+				_bank_add_vertex(collision_st, b, crest_for_norm, moist_sources, moist_radius, nb)
+				_bank_add_vertex(collision_st, a, crest_for_norm, moist_sources, moist_radius, na)
+				_bank_add_vertex(collision_st, d, crest_for_norm, moist_sources, moist_radius, nd)
+				_bank_add_vertex(collision_st, c, crest_for_norm, moist_sources, moist_radius, nc)
 			var visible_route_factor := 0.0
 			for corner: Vector3 in [a, b, c, d]:
 				visible_route_factor = maxf(visible_route_factor,
@@ -3464,6 +3469,24 @@ func _build_bank() -> void:
 	print("[warrens] earth bank %.0fx%.0fm, crest %.1fm above the mouth (%.1fx the 1.8m trainer); chamber clearance past the required 1.5m: %s (worst %.1fm)" % [
 		max_x - min_x, max_z - min_z, crest_local, crest_local / 1.8,
 		", ".join(report), worst_margin])
+
+
+func _bank_quad_inside_mouth(a: Vector3, b: Vector3, c: Vector3, d: Vector3) -> bool:
+	var mouth: Dictionary = _chambers.get("mouth", {})
+	if mouth.is_empty() or _solid_organic_chamber("mouth"):
+		return false
+	var low := a.min(b).min(c).min(d)
+	var high := a.max(b).max(c).max(d)
+	# _build_chambers retains this mouth's solid floor plinth, walls and
+	# ceiling. Require the complete quad inside that exact box volume rather
+	# than cutting an overlapping cell or assuming organic square corners.
+	if high.y < _floor_y - 0.01 or low.y < _floor_y - _skirt \
+			or high.y > _floor_y + float(mouth.height):
+		return false
+	var centre := _local_of(mouth.at)
+	var half := _size_of(mouth.size) * 0.5
+	return low.x >= centre.x - half.x and high.x <= centre.x + half.x \
+		and low.z >= centre.z - half.y and high.z <= centre.z + half.y
 
 
 ## POST-ROUND-6-0906, JUDGE-round6.md 00/03: the dome was OPEN above the
@@ -6140,16 +6163,26 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 		height, cfg, shell_material)
 	shell.name = "ExcavatedCavernTerrain_%s" % id
 	holder.add_child(shell)
-	if bool(chamber.get("combat_pad", false)):
-		# One shell supplies the visible and physical floor, wall and roof.
-		# Cameras already query world collision, including casts from inside.
+	var surface := shell.mesh.create_trimesh_shape()
+	surface.backface_collision = true
+	if _solid_organic_chamber(id):
+		# Structural gameplay collision follows the actual shell, but belongs to
+		# the building rather than to its decorative/camera finish hierarchy.
+		var structure := StaticBody3D.new()
+		structure.name = "Structural%sBoundary" % id.capitalize()
+		structure.collision_layer = 1
+		structure.collision_mask = 0
+		var structural_shape := CollisionShape3D.new()
+		structural_shape.shape = surface
+		structure.add_child(structural_shape)
+		holder.add_child(structure)
+	if id == "den" or id == "vault":
+		# Keep the established camera-only finish separate from gameplay walls.
 		var boundary := StaticBody3D.new()
 		boundary.name = "Visible%sBoundary" % id.capitalize()
-		boundary.collision_layer = 1
+		boundary.collision_layer = CAMERA_RIG.OCCLUSION_ONLY_LAYER
 		boundary.collision_mask = 0
 		var shape_node := CollisionShape3D.new()
-		var surface := shell.mesh.create_trimesh_shape()
-		surface.backface_collision = true
 		shape_node.shape = surface
 		boundary.add_child(shape_node)
 		shell.add_child(boundary)
@@ -6478,15 +6511,15 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 	# One radial floor disc belongs to the same mesh and overlaps the gallery
 	# floors, removing the detached black bands visible in R14.
 	var floor_centre := ceiling_centre + 1
-	var floor_lift := 0.0 if solid_shell else 0.055
-	st.add_vertex(Vector3(centre.x, _floor_y + floor_lift, centre.z))
+	var floor_height := _floor_y if solid_shell else _floor_y + 0.055
+	st.add_vertex(Vector3(centre.x, floor_height, centre.z))
 	var floor_ring := floor_centre + 1
 	for perimeter_index in perimeter_segments:
 		var angle := angles[perimeter_index]
 		var radial_noise := 1.0 + 0.075 * sin(angle * 3.0 + seed) \
 			+ 0.045 * sin(angle * 7.0 - seed * 0.31)
 		var floor_point := Vector3(centre.x + cos(angle) * size.x * 0.53 * radial_noise,
-			_floor_y + floor_lift + (0.0 if solid_shell else 0.018 * sin(angle * 3.0 + seed)),
+			floor_height + (0.0 if solid_shell else 0.018 * sin(angle * 3.0 + seed)),
 			centre.z + sin(angle) * size.y * 0.53 * radial_noise)
 		if solid_shell:
 			# Close on the exact bottom wall ring, at the canonical flat floor.
