@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bxm3pmktlws8k"
-path="res://.godot/imported/creature_ashtusk_native_0.jpg-9b200db7f807d185716c572e80e39958.ctex"
+path.s3tc="res://.godot/imported/creature_ashtusk_native_0.jpg-9b200db7f807d185716c572e80e39958.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "f627c973dba893facf1718b1f424724f"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/ashtusk/candidate/models/creature_ashtusk_native_0.jpg"
-dest_files=["res://.godot/imported/creature_ashtusk_native_0.jpg-9b200db7f807d185716c572e80e39958.ctex"]
+dest_files=["res://.godot/imported/creature_ashtusk_native_0.jpg-9b200db7f807d185716c572e80e39958.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
