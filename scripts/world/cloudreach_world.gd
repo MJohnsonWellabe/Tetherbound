@@ -579,7 +579,11 @@ func ground_height_at(x: float, z: float, preferred_y: float = NAN) -> float:
 		if surface.has("built_by_flag") and not bool(_open_bridge_flags.get(surface["built_by_flag"], false)):
 			continue
 		var kind := str(surface.get("kind", "rect"))
-		if kind == "rect":
+		if kind == "crown_mesh":
+			var sample: Vector2 = surface["sampler"].sample(x, z)
+			if is_finite(sample.x):
+				best = _preferred_surface(best, sample.x, preferred_y)
+		elif kind == "rect":
 			var centre: Vector2 = surface.get("centre", Vector2.ZERO)
 			var half: Vector2 = surface.get("half", Vector2.ZERO)
 			if absf(x - centre.x) <= half.x and absf(z - centre.y) <= half.y:
@@ -1214,6 +1218,8 @@ func _build_regions() -> void:
 		# straight through. `crown_cut` carves the crown down to every road
 		# under it, and `_mesa` draws AND collides that one carved surface.
 		var crown_cut := _region_crown_cut(spec, centre, size, top)
+		if not summit_region and not _crown_relief_config().is_empty():
+			crown_cut = _region_relief_cut(crown_cut, centre, size, top)
 		_shell_build.call("mark", "regions:%s:mesa:begin" % str(spec.get("id", "Region")))
 		# The summit only collides once its crown is carved clear of those
 		# roads; uncarved (no cut configured) it keeps the old silhouette-only
@@ -1224,6 +1230,20 @@ func _build_regions() -> void:
 			false, 0.0, -1.0, crown_cut)
 		if not crown_cut.is_empty():
 			_exclude_crown_cut_cover(crown_cut)
+		# Register the real crown before planting. An old flat ellipse above a
+		# lowered terrace would otherwise win preferred-height queries.
+		var crown_surface := {"kind": "ellipse", "centre": Vector2(centre.x, centre.z),
+			"half": Vector2(size.x, size.z) * 0.30,
+			"rotation": region_mass.rotation.y, "height": top}
+		if region_mass.has_meta(&"crown_surface"):
+			var sampler: RefCounted = region_mass.get_meta(&"crown_surface")
+			var surface_bounds: AABB = sampler.get("bounds")
+			crown_surface = {"kind": "crown_mesh", "sampler": sampler,
+				"centre": Vector2(surface_bounds.get_center().x, surface_bounds.get_center().z),
+				"half": Vector2(surface_bounds.size.x, surface_bounds.size.z) * 0.5}
+		elif not crown_cut.is_empty():
+			crown_surface["crown_cut"] = crown_cut
+		_surfaces.append(crown_surface)
 		if summit_region:
 			_summit_crown_cut = crown_cut
 			# The road's y=1160 landing -> arena approach join. The carved crown
@@ -1246,25 +1266,73 @@ func _build_regions() -> void:
 		_add_wind_vegetation(node,
 			Rect2(centre.x - size.x * 0.5, centre.z - size.z * 0.5, size.x, size.z),
 			top, int(spec.get("order", 0)), crown_cut)
-		_cover_patches.append({
+		var region_cover := {
 			"kind": "ellipse", "centre": Vector3(centre.x, top, centre.z),
 			# Conservative inside the rotated irregular crown; no grass can hang
 			# in the air at the ellipse corners.
 			"half": Vector2(size.x, size.z) * 0.34,
 			"seed": int(spec.get("order", 0)) * 101,
 			"dry": int(spec.get("order", 0)) >= 5,
-		})
-		# Match the real rotated irregular crown conservatively. The old enclosing
-		# rectangle reported invisible corner air as ground, which could place a
-		# loaded player or an evidence camera beside a floating island.
-		var crown_surface := {"kind": "ellipse", "centre": Vector2(centre.x, centre.z),
-			"half": Vector2(size.x, size.z) * 0.30,
-			"rotation": region_mass.rotation.y, "height": top}
-		if not crown_cut.is_empty():
-			# The index reports the carved floor/bank, not y=1160 over a road.
-			crown_surface["crown_cut"] = crown_cut
-		_surfaces.append(crown_surface)
+		}
+		if region_mass.has_meta(&"crown_surface"):
+			region_cover["crown_surface"] = region_mass.get_meta(&"crown_surface")
+		_cover_patches.append(region_cover)
 		_region_count += 1
+
+
+## Broad pre-summit crowns use the same sampled triangles as the existing
+## road carve. Landing discs and the summit's specialized foundation stay as
+## authored. Relief dies inside the core ring, before any cliff wall vertex.
+func _region_relief_cut(existing: Dictionary, centre: Vector3, size: Vector3, top: float) -> Dictionary:
+	if _all_route_lines.is_empty():
+		_collect_all_route_lines()
+	var cfg := _crown_relief_config()
+	var cut := existing.duplicate(true)
+	if cut.is_empty():
+		cut = {"crown_y": top + 0.03, "cell_m": float(cfg.get("mesh_step_m", 7.0)),
+			"bank_normal_y": 0.64, "floor_half_width_m": 10.0, "floor_drop_m": 0.25,
+			"bank_slope": 2.5, "min_lowering_m": 0.3, "min_raise_m": 0.05,
+			"fill_clearance_m": 8.9, "lines": [], "ends": PackedVector3Array(),
+			"bounds": PackedFloat32Array()}
+	var radius := minf(size.x, size.z) * 0.30
+	# A whole crown cell must stay flat beside a protected ribbon. Otherwise
+	# a triangle with a raised corner can interpolate across the ribbon even
+	# when every vertex directly over the road was pinned to zero relief.
+	var road_margin := float(cut["cell_m"]) * 1.5
+	var pad := {"position": Vector3(centre.x, top, centre.z), "flat_radius": radius,
+		"road_margin_m": road_margin}
+	var reach := maxf(size.x, size.z) * 0.5 + road_margin \
+		+ maxf(LINE_EASE_M, float(cfg.get("terrace_line_ease_m", 55.0)))
+	pad["lines"] = _lines_near(centre.x - reach, centre.x + reach, centre.z - reach, centre.z + reach)
+	var protected: Array[Dictionary] = []
+	for landing: Dictionary in _pads_near(centre.x - reach, centre.x + reach, centre.z - reach, centre.z + reach):
+		protected.append({"position": landing.position, "radius": float(landing.flat_radius) + PAD_EASE_M})
+	for landmark: Dictionary in _config.get("landmarks", []):
+		if str(landmark.get("category", "")) == "settlement":
+			protected.append({"position": _vec3(landmark.position), "radius": 42.0})
+	if _yard_visual_config.is_empty():
+		_yard_visual_config = _read_json("res://data/config/cloudreach_scene_runtime.json")
+	for yard: Dictionary in _yard_visual_config.get("battle_yards", []):
+		protected.append({"position": _vec3(yard.road_position) + _vec3(yard.outward).normalized() * 25.0,
+			"radius": 26.0})
+	pad["protected"] = protected
+	cut["relief"] = pad
+	return cut
+
+
+func _region_relief_at(point: Vector3, pad: Dictionary) -> float:
+	var weight := 1.0
+	for protected: Dictionary in pad["protected"]:
+		var centre: Vector3 = protected.position
+		if absf(point.y - centre.y) > 45.0:
+			continue
+		var distance := Vector2(point.x - centre.x, point.z - centre.z).length()
+		var radius := float(protected.radius)
+		weight = minf(weight, smoothstep(radius, radius + 24.0, distance))
+		if weight <= 0.0:
+			return 0.0
+	var lines: Array[Dictionary] = pad["lines"]
+	return _crown_relief_at(pad, point, lines) * weight
 
 
 ## How far under the crown's flat top a region's eroded rim can reach; bounds
@@ -1506,7 +1574,12 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int,
 			centre.y + sin(angle) * half.y * radius)
 		if _inside_settlement_clearance(at) or _inside_nature_tree_exclusion(at):
 			continue
-		if not crown_cut.is_empty() and absf(_carved_crown_y(top, at.x, at.z, crown_cut) - top) > 0.01:
+		if crown_cut.has("surface"):
+			var sample: Vector2 = crown_cut["surface"].sample(at.x, at.z)
+			if not is_finite(sample.x) or sample.y < 0.72:
+				continue
+			at.y = sample.x
+		elif not crown_cut.is_empty() and absf(_carved_crown_y(top, at.x, at.z, crown_cut) - top) > 0.01:
 			continue # F06: planted at crown height, it would hang over the carve or sink in the fill.
 		var tree_scene := WIND_TREES[order % WIND_TREES.size()] if i == 0 \
 			else NATURE_TREES[(i + order) % NATURE_TREES.size()]
@@ -1534,7 +1607,12 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int,
 		var radius := 0.24 + 0.38 * sqrt(fmod(float(i) * 0.4142 + 0.13 * order, 1.0))
 		var at := Vector3(centre.x + cos(angle) * half.x * radius, top - 0.18,
 			centre.y + sin(angle) * half.y * radius)
-		if not crown_cut.is_empty() and absf(_carved_crown_y(top, at.x, at.z, crown_cut) - top) > 0.01:
+		if crown_cut.has("surface"):
+			var sample: Vector2 = crown_cut["surface"].sample(at.x, at.z)
+			if not is_finite(sample.x) or sample.y < 0.64:
+				continue
+			at.y = sample.x - 0.18
+		elif not crown_cut.is_empty() and absf(_carved_crown_y(top, at.x, at.z, crown_cut) - top) > 0.01:
 			continue
 		var rock := NATURE_ROCKS[(i * 2 + order) % NATURE_ROCKS.size()].instantiate() as Node3D
 		apply_stone_palette(rock)
@@ -1715,7 +1793,7 @@ const PAD_EASE_M := 6.0
 ## line's walking-surface height there. `lines` is normally
 ## `_all_route_lines`; callers with a spatially culled subset pass it instead.
 func _nearest_route_line(world_point: Vector3, lines: Array[Dictionary],
-		floor_y: float = -INF) -> Dictionary:
+		floor_y: float = -INF, ease_m: float = LINE_EASE_M) -> Dictionary:
 	var best_d := INF
 	var best_h := 0.0
 	var best_half_width := 0.0
@@ -1728,7 +1806,7 @@ func _nearest_route_line(world_point: Vector3, lines: Array[Dictionary],
 	var pinned_d := 0.0
 	var pinned_half_width := 0.0
 	for line: Dictionary in lines:
-		var reach: float = float(line["half_width"]) + LINE_PIN_MARGIN_M + LINE_EASE_M
+		var reach: float = float(line["half_width"]) + LINE_PIN_MARGIN_M + ease_m
 		if world_point.x < float(line["min_x"]) - reach or world_point.x > float(line["max_x"]) + reach \
 				or world_point.z < float(line["min_z"]) - reach or world_point.z > float(line["max_z"]) + reach:
 			continue
@@ -1848,27 +1926,25 @@ func _crown_relief_at(pad: Dictionary, world_point: Vector3,
 		return 0.0
 	if bool(cfg.get("respect_settlements", true)) and _inside_settlement_clearance(world_point):
 		return 0.0
-	# Roads and bridge decks own their own height. `_crown_height_at`'s caller
-	# flattens the relief back out near them for free through
-	# `_line_eased_height`, but `_emit_mesa_top` has no such easing, so the
-	# suppression lives here where both paths get it. Without it a region
-	# crown would roll straight through an authored road ribbon, which is the
-	# hole/sink class OP-0905-24/25 closed.
+	# Roads and bridge decks own their height. The region carve samples this
+	# relief before applying its road constraints; suppress displacement in a
+	# wide band so crown triangles cannot roll through a fixed road ribbon.
 	# C3's terraces are a much larger displacement than the waves, so they need
 	# a much wider berth from a road than LINE_EASE_M gives: 15 m of drop
 	# recovered over 6 m is a wall across the ribbon's shoulder. Same
 	# suppression, second ease distance.
 	var terrace_line := 1.0
 	if not lines.is_empty():
-		var nearest := _nearest_route_line(world_point, lines)
+		var wide := maxf(LINE_EASE_M, float(cfg.get("terrace_line_ease_m", 55.0)))
+		var road_margin := float(pad.get("road_margin_m", 0.0))
+		var nearest := _nearest_route_line(world_point, lines, -INF, wide + road_margin)
 		var d: float = nearest["distance"]
 		if not is_inf(d):
-			var reach: float = float(nearest["half_width"]) + LINE_PIN_MARGIN_M
+			var reach: float = float(nearest["half_width"]) + LINE_PIN_MARGIN_M + road_margin
 			if d < reach:
 				return 0.0
 			if d < reach + LINE_EASE_M:
 				edge *= smoothstep(0.0, 1.0, (d - reach) / LINE_EASE_M)
-			var wide := maxf(LINE_EASE_M, float(cfg.get("terrace_line_ease_m", 55.0)))
 			terrace_line = smoothstep(0.0, 1.0, clampf((d - reach) / wide, 0.0, 1.0))
 	var reference := maxf(float(cfg.get("reference_radius_m", 150.0)), 1.0)
 	var amplitude := float(cfg.get("amplitude_m", 4.5)) * minf(1.0, flat_radius / reference)
@@ -1893,20 +1969,10 @@ func _crown_relief_at(pad: Dictionary, world_point: Vector3,
 ## where its cliff face starts, so a player standing on it has no edge in front
 ## of them and no stepped profile behind them.
 ##
-## This steps the crown DOWN from its centre to its rim in `bench_count` broad
-## benches with walkable risers between them. Down, and never up: `_surfaces`
-## registers a region as one ellipse at its authored `top`, and
-## `ground_height_at` answers with that flat number for the whole disc -- so a
-## crown that rose ABOVE it would spawn a loaded player or an evidence camera
-## inside a hill, while one that falls below it only drops them a little. That
-## is the same direction `_mesa`'s eroded crown already takes; its rim is
-## authored up to 48 m below the registered top.
-##
-## Lives here, in the shared height model, for the reason the whole file is
-## organised around: `_mesa` emits its visible crown AND its collision copy from
-## `_crown_height_at`/`_emit_mesa_top`, and every shoulder conforms through
-## `_walkable_height`. Putting relief into one emitter alone is exactly the
-## hole/sink class OP-0905-24/25 closed at real cost.
+## This steps the crown down from its centre in `bench_count` broad benches
+## with sloped risers. `_carve_mesa_top` samples it before the road constraints
+## and emits one triangle set for drawing, collision and the crown's CPU
+## height queries. The final rim returns to the original cliff wall contour.
 func _crown_terrace_at(cfg: Dictionary, r: float, flat_radius: float, line_ease: float) -> float:
 	var total := float(cfg.get("terrace_drop_m", 0.0))
 	var benches := int(cfg.get("bench_count", 0))
@@ -5574,6 +5640,13 @@ func _mesa(
 	if not carved.is_empty():
 		var build_started := Time.get_ticks_usec()
 		_build_carved_crown(root, carved, top_material, collision)
+		if crown_cut.has("relief"):
+			var sampler := preload("res://scripts/world/cloudreach_crown_surface.gd").new()
+			var triangles: PackedVector3Array = (carved["turf"] as PackedVector3Array).duplicate()
+			triangles.append_array(carved["bank"])
+			sampler.build(triangles, Transform3D(yaw_basis, root.global_position))
+			root.set_meta(&"crown_surface", sampler)
+			crown_cut["surface"] = sampler
 		crown_cut_build_usec = crown_cut_carve_usec + Time.get_ticks_usec() - build_started
 
 	if collision and carved.is_empty():
@@ -5928,7 +6001,10 @@ func _carve_mesa_top(sides: int, crown: Vector3, core_ring: Array[Vector3],
 				else:
 					local = edge_core.lerp(edge_top, float(row - core_steps) / float(band_steps))
 				var world := anchor + yaw_basis * local
-				var carved_y := _carved_crown_y(world.y, world.x, world.z, cut)
+				var natural_y := world.y
+				if cut.has("relief"):
+					natural_y += _region_relief_at(world, cut["relief"])
+				var carved_y := _carved_crown_y(natural_y, world.x, world.z, cut)
 				var changed := carved_y != world.y
 				flags.append(1 if changed else 0)
 				if changed:
