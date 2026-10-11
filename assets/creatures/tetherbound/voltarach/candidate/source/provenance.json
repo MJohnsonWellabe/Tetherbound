@@ -74,11 +74,11 @@
     ],
     "topology_warnings": [
       "Mesh_0: 14334 non-manifold edges",
-      "Mesh_0: 7819 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 7819 duplicate vertices — will split under deformation",
       "Mesh_0: 671 microscopic disconnected components",
       "Mesh_0: ~3637 inward-facing faces",
       "Mesh_0: 74 faces with texel density 4.0x off the median",
-      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+      "Mesh_0: 0% quads — generator triangle soup, poor for deformation"
     ],
     "height_m": 4.25,
     "bones": 28,
@@ -260,5 +260,21 @@
         }
       }
     }
+  },
+  "supported_repose_low_capture": {
+    "before_source": "81c6e804215d89814fe98e80779f5536b21b7843",
+    "after_source": "16f273ed6546ba0d42897b1b34df5bf56f941e9e",
+    "renderer": "gl_compatibility",
+    "capture_tool": "tools/art_pipeline/capture_f36_poses.gd; original 25-pose assertions unchanged",
+    "selection": "Process-local OFF candidate placeholder selection only; shipping configuration unchanged",
+    "proof_scope": "Native bare-floor stage, faint terminal body contact; no fight or full animation acceptance claim",
+    "frames_captured_per_source": 25,
+    "sheet": "ralph/reports/VISUAL-PROOF/F36-voltarach/faint-before-after-Low.png",
+    "standing_height_m": 4.25,
+    "standing_height_delta_m": 0.0,
+    "camera_delta_m": 3.814697301152137e-06,
+    "contact_review": "Improved body-supported repose visible; independent verdict pending",
+    "remaining_gap": "Claude code-blind acceptance pending",
+    "shipping_enabled": false
   }
 }
