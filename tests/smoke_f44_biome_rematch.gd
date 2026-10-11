@@ -7,6 +7,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_f44_biome_rematch.gd -- \
 ##     --biome=<meadows|tidewake|cloudreach|stormwood> --from-save=<dir holding save/> [--json=<path>]
+##     [--tier=<r1|endgame>] [--witness=<rematches.json profile id>]
 ##
 ## Modelled on tests/helpers/f20_ending_probe.gd::admit_endgame_rematch. The
 ## save loads through the production title's Load list (Autosave). The fight is
@@ -15,6 +16,7 @@ extends SceneTree
 ## is admitted by the ordinary Interact press on the mounted rematch prompt.
 ## Stormwood's witness is post-credits, so its tier is `endgame` (L58), as in
 ## tools/f44_rematch_witness.gd; the other three are `r1` at the next band.
+## F44#1 witnesses pass --tier=endgame with a post-credits save (f44_<biome>_endgame).
 ##
 ## Asserted: ordinary input admits the canonical rematch; every member is at the
 ## configured level; the pilot wins; the settled verdict is saved and resolved;
@@ -38,6 +40,8 @@ const FIGHT_FRAMES := 36000
 var biome := ""
 var from_save := ""
 var json_out := ""
+var tier_arg := ""
+var witness_arg := ""
 var game: Node
 var world: Node3D
 var failures: Array[String] = []
@@ -62,7 +66,9 @@ func _run() -> void:
 		if arg.begins_with("--biome="): biome = arg.trim_prefix("--biome=")
 		elif arg.begins_with("--from-save="): from_save = arg.trim_prefix("--from-save=").trim_suffix("/")
 		elif arg.begins_with("--json="): json_out = arg.trim_prefix("--json=")
-	if not REALMS.has(biome) or from_save.is_empty():
+		elif arg.begins_with("--tier="): tier_arg = arg.trim_prefix("--tier=")
+		elif arg.begins_with("--witness="): witness_arg = arg.trim_prefix("--witness=")
+	if not REALMS.has(biome) or from_save.is_empty() or tier_arg not in ["", "r1", "endgame"]:
 		push_error("usage: --biome=<meadows|tidewake|cloudreach|stormwood> --from-save=<dir>")
 		quit(2)
 		return
@@ -77,8 +83,8 @@ func _run() -> void:
 	if not await _title_load():
 		await _finish()
 		return
-	var witness := str(RULES.config().witnesses[biome])
-	var tier := "endgame" if biome == "stormwood" else "r1"
+	var witness := witness_arg if not witness_arg.is_empty() else str(RULES.config().witnesses[biome])
+	var tier := tier_arg if not tier_arg.is_empty() else ("endgame" if biome == "stormwood" else "r1")
 	var profile: Dictionary = RULES.profile(witness)
 	var expected_level := int(RULES.config().endgame_levels[profile.kind]) if tier == "endgame" \
 		else int(RULES.config().biomes[biome].r1_levels[profile.kind])
