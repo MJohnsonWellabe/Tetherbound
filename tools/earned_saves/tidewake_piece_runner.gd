@@ -263,6 +263,14 @@ func _distinct(values: Array) -> int:
 
 
 func _finish() -> void:
+	if not failures.is_empty() and current_scene != null and current_scene.get_node_or_null("Player") != null:
+		var at := (current_scene.get_node("Player") as Node3D).global_position
+		var arbiter := current_scene.get_node_or_null("InteractionArbiter")
+		var winner: Variant = arbiter.call("winning_provider") if arbiter != null else null
+		print("TIDEWAKE FAIL DIAG player=%s winner=%s" % [at, (winner as Node).get_path() if winner is Node else "none"])
+		for n: Node in current_scene.find_children("*", "Node3D", true, false):
+			if n.name.begins_with("Interactable") and (n as Node3D).global_position.distance_to(at) < 8.0:
+				print("TIDEWAKE FAIL DIAG near %s d=%.2f parent_pos=%s" % [n.get_path(), (n as Node3D).global_position.distance_to(at), (n.get_parent() as Node3D).global_position if n.get_parent() is Node3D else "-"])
 	var after := _snapshot() if game != null and current_scene != null else {}
 	var gained: Array = []
 	if not before.is_empty() and not after.is_empty():
