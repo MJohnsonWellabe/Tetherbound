@@ -258,7 +258,7 @@ func _charge_commit(peer: int, action: int, owned: Dictionary, deadline: int,
 		var committed: Dictionary = observed.get("move_commit", {})
 		if not committed.is_empty():
 			var binding: Dictionary = committed.get("binding", {})
-			var matched := int(committed.get("action", 0)) == action \
+			var matched: bool = int(committed.get("action", 0)) == action \
 				and int(committed.get("peer", 0)) == peer and committed.get("slot") == "charged" \
 				and committed.get("creature_uid") == owned.get("body_uid") \
 				and binding.get("creature_uid") == owned.get("body_uid") \
