@@ -64,7 +64,16 @@
     "unweighted_vertices": 0,
     "vertices": 13106,
     "method": "measured_joint_anatomical_regions_local_surface_diffusion",
-    "candidate_enabled": false
+    "candidate_enabled": false,
+    "riding_body_identity_repair": {
+      "source_baseline": "9e39d0086ee88998b8295747fc19f6603fe714f7",
+      "input_glb_sha256": "11cdf7f9caf9c8abb808cd42c95c66039b2daec79e1a14e68933b1c5cbb4fa59",
+      "output_glb_sha256": "5994f3f4fc896e90b0a0a6160f836c2711bcc3b3b453c174ebea5b3f0f807e4b",
+      "method": "CPU GLB JSON-node rename of the sole existing complete skinned body from Mesh_0 to MeadowhartBareBody; prepare_native_candidate.py now authors that same object name.",
+      "preservation": "Every other parsed glTF field and all following GLB chunks are unchanged. No vertex, topology, UV, material, texture, joint, inverse-bind matrix, weight, clip, transform or configured-scale changes; no extra mesh or tack.",
+      "native_validation": "PENDING: coordinator must reimport the repaired GLB with proposed candidate selection and run the unchanged riding visual repair tests, riding/alpha smokes and production riding captures before Claude judgment. Existing native validation above predates this node-name repair.",
+      "candidate_enabled": false
+    }
   },
   "native_validation": {
     "engine": "Godot 4.7 stable Windows",
