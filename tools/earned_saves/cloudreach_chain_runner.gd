@@ -81,6 +81,58 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		if piece == "04_high_roost" and not _require(not fly.is_flying() and player.is_on_floor(), "Landed at the aerie"): return
 		completed_route = true
 
+	## The established witness recovery (tests/helpers/cloudreach_witness_route.gd
+	## `_walk_with_static_sidestep`): a stick walk that stops dead (velocity 0)
+	## against STATIC geometry only - the cliff-shoulder ridge colliders, e.g.
+	## WindscarCounterweightPassCliffShoulders/Ridge003 - withdraws that stall,
+	## pulls the stick back and to the side, and retries the same walk, at most
+	## twice per walk. Every use is logged and disclosed; mobile/no-contact
+	## stalls keep the base failure. The underlying collider stall stays an open gap.
+	const STATIC_SIDESTEP_ATTEMPTS := 2
+	var static_sidesteps: Array[Dictionary] = []
+
+	func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) -> bool:
+		for attempt in STATIC_SIDESTEP_ATTEMPTS + 1:
+			var rows_before := rows.size()
+			var ok: bool = await super._walk(target, radius, body)
+			if ok or attempt == STATIC_SIDESTEP_ATTEMPTS or rows.size() <= rows_before:
+				return ok
+			var fail_row: Dictionary = rows[rows.size() - 1]
+			if str(fail_row.get("kind", "")) != "FAIL" or not str(fail_row.get("message", "")).begins_with("Walking stalled"):
+				return false
+			var block: Dictionary = {}
+			for index in range(rows.size() - 1, rows_before - 1, -1):
+				if str(rows[index].get("kind", "")) == "collision_block":
+					block = rows[index]
+					break
+			var collisions: Array = block.get("collisions", [])
+			if collisions.is_empty() or collisions.any(func(c: Dictionary) -> bool:
+					var node := _tree.root.get_node_or_null(NodePath(str(c.get("body", ""))))
+					return node == null or node is CharacterBody3D):
+				return false
+			# Withdraw the stall just reported.
+			failed = false
+			failures.remove_at(failures.size() - 1)
+			rows.remove_at(rows.size() - 1)
+			var mover: Node3D = body if body != null else player
+			var ahead := target - mover.global_position
+			ahead.y = 0.0
+			ahead = ahead.normalized() if ahead.length() > 0.01 else Vector3.FORWARD
+			var side := ahead.cross(Vector3.UP) * (1.0 if attempt == 0 else -1.0)
+			var record := {"at": str(mover.global_position), "target": str(target), "attempt": attempt + 1,
+				"blocker": str(collisions[0].get("body", "")), "normal": str(collisions[0].get("normal", ""))}
+			static_sidesteps.append(record)
+			_log("witness_static_stall_sidestep", record)
+			var previous_clock := await _normal_input_clock("static stall sidestep")
+			for vector: Vector3 in [-ahead * 3.0, side * 3.0]:
+				for frame in 45:
+					_steer(vector, 1.0)
+					await _frames(1)
+			_release()
+			await _frames(10)
+			await _restore_route_clock(previous_clock)
+		return false
+
 	## The helper's _arrival_gather, except the prompt is re-read from the same
 	## resource after the walk: cloudreach_resource_patch.gd rebuilds its
 	## DailyHarvest child on every Game.day roll, and the helper's pre-walk
@@ -296,7 +348,9 @@ func _run() -> void:
 		"simulated_seconds": snappedf(helper.simulated_seconds, 0.01),
 		"battle_starts": helper.battle_starts, "battle_wins": helper.battle_wins,
 		"battle_losses": helper.battle_losses, "recovery_choices": helper.recovery_choices,
-		"events": (result.get("events", []) as Array).size()}
+		"events": (result.get("events", []) as Array).size(), "static_sidesteps": helper.static_sidesteps}
+	for record: Dictionary in helper.static_sidesteps:
+		disclosures.append("Static-collider stall withdrawn and retried after a disclosed stick sidestep (witness-route recovery): " + JSON.stringify(record))
 	for line: Variant in result.get("failures", []):
 		failures.append("%s: %s" % [segment, str(line)])
 	if failures.is_empty() and not bool(result.get("ok", false)):
