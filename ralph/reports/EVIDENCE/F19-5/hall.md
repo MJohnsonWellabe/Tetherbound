@@ -1,6 +1,6 @@
 # F19#5 Meadows piece `hall`: PASS (meadows-route-b)
 
-- **Run:** 2026-10-11, about 2:05–2:26 PM CT, Godot 4.7 headless. Source `60d34e5c` (exact clean commit; the runner checks this).
+- **Run:** 2026-10-11, about 2:05–2:26 PM CT, Godot 4.7 headless. Source `088adb0f` (exact clean commit; the runner checks this).
 - **Command:** `godot --headless --path . --script tools/earned_saves/earned_chain_runner.gd -- --segment=hall --generated-fixture --save-dir=<root>/hall/save --receipt=<root>/hall/receipt.json`
 - **Result:** `passed: true`, no failures, wall time 1263 s.
 - **Beats:**
