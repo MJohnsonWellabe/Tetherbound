@@ -4,6 +4,7 @@ extends RefCounted
 ## liberated Shellwatch departure. The caller owns the live production Water
 ## world and unchanged carried party. No actor pose/orientation, HP, inventory
 ## or progression value is written by this helper.
+const TRAINER_FIGHT_SIM_S := 600.0
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const PILOT := preload("res://tests/helpers/water_combat_pilot.gd")
@@ -283,8 +284,10 @@ func _fight_trainer(id: String, flag: String, expected_opponents: int) -> bool:
 	if not _director.trainer_battle_active() or _director.trainer_battle_id() != id:
 		return _fail(id + " challenge never entered production trainer combat")
 	var opponents: Dictionary = {}
-	deadline = Time.get_ticks_msec() + 180000
-	while _director.trainer_battle_active() and Time.get_ticks_msec() < deadline:
+	# Duration budget in SIM seconds, not wall clock (coordinator-approved);
+	# victory by ordinary piloting is still required.
+	var fight_sim_s := 0.0
+	while _director.trainer_battle_active() and fight_sim_s < TRAINER_FIGHT_SIM_S:
 		var enemy: Node3D = _manager.enemy_body()
 		var ally: Node3D = _director.ally_body()
 		if is_instance_valid(enemy) and is_instance_valid(ally) and _manager.is_fighting():
@@ -294,9 +297,11 @@ func _fight_trainer(id: String, flag: String, expected_opponents: int) -> bool:
 		else:
 			_stop_combat_input()
 		await _tree.physics_frame
+		fight_sim_s += Engine.time_scale / float(Engine.physics_ticks_per_second)
 	_stop_combat_input()
+	_note("%s fight length %.1f s sim" % [id, fight_sim_s])
 	if _director.trainer_battle_active():
-		return _fail("%s combat exceeded 180 seconds; opponents=%s" % [id, str(opponents.values())])
+		return _fail("%s combat exceeded %d sim seconds; opponents=%s" % [id, int(TRAINER_FIGHT_SIM_S), str(opponents.values())])
 	if opponents.size() != expected_opponents:
 		return _fail("%s did not field every authored opponent: %s" % [id, str(opponents.values())])
 	if not await _wait_world_flag(flag, 240):

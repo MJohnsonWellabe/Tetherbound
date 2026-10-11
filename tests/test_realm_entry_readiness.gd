@@ -122,6 +122,24 @@ func test_readiness_wait_is_bounded_but_a_ready_frame_wins_the_deadline() -> voi
 	sliced.free()
 
 
+func test_a_build_releasing_its_hold_after_the_deadline_gets_bounded_frames() -> void:
+	var sliced := SlicedWorld.new()
+	var deadline := int(GAME.REALM_SCENE_READY_TIMEOUT_MSEC)
+	var grace := int(GAME.REALM_READY_DEADLINE_GRACE_FRAMES)
+	assert_true(grace > 1, "Meadows reports ready one physics tick and one frame after its build")
+	assert_eq(GAME._realm_scene_wait_state(sliced, "cloudreach", deadline + 60_000, deadline, grace),
+		GAME.REALM_READY_WAITING,
+		"one long build call past the deadline does not time out its post-build hold")
+	assert_eq(GAME._realm_scene_wait_state(sliced, "cloudreach", deadline + 60_000, deadline, 0),
+		GAME.REALM_READY_TIMED_OUT,
+		"a build that still is not ready after its grace frames times out")
+	sliced.build_ready = true
+	assert_eq(GAME._realm_scene_wait_state(sliced, "cloudreach", deadline + 60_000, deadline, 1),
+		GAME.REALM_READY,
+		"readiness reported during the grace frames is accepted")
+	sliced.free()
+
+
 func test_failed_transition_restores_realm_map_pending_pose_announcement_and_save() -> void:
 	var game := GameWithoutDisk.new()
 	game.reset_for_new_game()

@@ -147,6 +147,8 @@ var _lunge_speed := 0.0
 var _lunge_heading_locked := false
 var _lunge_outcome: Dictionary = {}
 var _lunge_lane: Node3D = null
+## A guest proxy's copy of the host tell's authored colour (cue `tell_colour`).
+var _shape_tell_colour := ""
 ## F10#2: seconds left in a `route_cue_seconds` phase before the tell proper.
 var _route_cue_left := 0.0
 ## F10#2: the `guard_stance` frontal cone drawn for the current tell.
@@ -808,8 +810,7 @@ func _begin_pattern_cue() -> void:
 	# Travelling charges already own the same swept-width LungeLane cue.
 	if is_inside_tree() and not (str(_selected_attack.get("telegraph_shape", "")) == "lane" and lunge_travels()):
 		_pattern_cue = PATTERN_CUE.begin(self, _selected_attack, global_position, facing(),
-			_pattern_geometry.marker, _patterns.get("presentation", {}),
-			Color(str(MATH.config().get("telegraph", {}).get("colour", "#ff5a3c"))))
+			_pattern_geometry.marker, _patterns.get("presentation", {}), tell_colour())
 
 
 func _tracked_pattern_marker() -> Vector3:
@@ -846,7 +847,12 @@ func _finish_pattern_leap() -> void:
 	_pattern_leap_active = false
 	if is_instance_valid(_model): _model.position.y = _pattern_leap_model_y
 	var landing: Vector3 = _pattern_geometry.get("marker", global_position)
-	_pattern_geometry["blocked"] = Vector2(landing.x - global_position.x, landing.z - global_position.z).length() > maxf(0.15, body_radius())
+	# Blocked means stopped short of the marked circle (a wall, a rock). The
+	# marker sits on the target, so a target that stays put stops the
+	# collision-aware leap at body contact; a body still overlapping the circle
+	# has arrived (F04#1: Vance's Galecrest never landed on a player who stood).
+	var arrived_within := maxf(0.15, body_radius()) + maxf(0.0, float(_pattern_geometry.get("profile", {}).get("marker_radius_m", 0.0)))
+	_pattern_geometry["blocked"] = Vector2(landing.x - global_position.x, landing.z - global_position.z).length() > arrived_within
 	_clear_pattern_cue()
 	strike_ready.emit()
 
@@ -1149,6 +1155,15 @@ func _select_attack() -> Dictionary:
 	if not pattern.is_empty():
 		_pattern_cursor += 1
 		_pattern_repeat_left = maxi(0, int(pattern.get("repeat_count", 1)) - 1)
+		# F04#0: a named row may take its geometry from its own move in MoveDB
+		# (the guardian's Earth Fist, BOSSES §4.1), not a transcription.
+		if bool(pattern.get("move_geometry", false)):
+			if _move_db == null:
+				_move_db = MOVE_DB.new()
+			var named_move: Dictionary = _move_db.move(str(pattern.get("move_id", "")))
+			for key: String in ["range", "cone_degrees", "lunge"]:
+				if named_move.has(key):
+					pattern[key] = float(named_move[key])
 		var selected := spaced_config_for(pattern, mine, theirs, _contact_need(), _contact_reach_need())
 		if str(selected.get("telegraph_shape", "")) == "lane":
 			selected["lane_half_width_m"] = _lunge_lane_half_width()
@@ -1402,6 +1417,17 @@ func guard_stance() -> bool:
 	return bool(_attack_row().get("guard_stance", false))
 
 
+## This tell's colour: the attack's own authored `telegraph_colour` (F04#0: a
+## named pattern row gives each of its attacks its own colour),
+## else the one a guest's proxy received in the host's cue shape, else the
+## shared combat.json `telegraph.colour`.
+func tell_colour() -> Color:
+	var authored := str(_attack_row().get("telegraph_colour", _shape_tell_colour))
+	if authored.is_empty():
+		authored = str(MATH.config().get("telegraph", {}).get("colour", "#ff40e6"))
+	return Color(authored)
+
+
 ## What a guest's proxy needs to draw this tell's ground marks exactly as this
 ## body draws them: the lane (`lane_*`, with seconds until its heading locks)
 ## and/or the guard cone (`guard_*`), plus `route_s` while a route cue runs.
@@ -1442,6 +1468,8 @@ func presentation_shape() -> Dictionary:
 			elif fraction > 0.0:
 				lock_in = maxf(0.0, _beat_left - maxf(0.001, _lunge_tell_total) * (1.0 - fraction))
 		shape["lane_lock_in_s"] = lock_in
+	if _attack_row().has("telegraph_colour"):
+		shape["tell_colour"] = str(_attack_row().telegraph_colour)
 	if guard_stance():
 		var cfg := combat_config()
 		shape["guard_reach"] = maxf(0.5, float(cfg.get("range", 2.6)))
@@ -1485,7 +1513,7 @@ func _show_guard_cone(reach_override: float = 0.0, cone_override: float = 0.0) -
 	var reach := maxf(0.5, reach_override if reach_override > 0.0 else float(cfg.get("range", 2.6)))
 	var cone := clampf(cone_override if cone_override > 0.0 else float(cfg.get("cone_degrees", 90.0)),
 		5.0, 360.0)
-	var colour := Color(str(MATH.config().get("telegraph", {}).get("colour", "#ff40e6")))
+	var colour := tell_colour()
 	colour.a = 0.35
 	var steps := maxi(6, int(cone / 6.0))
 	var points := PackedVector3Array()

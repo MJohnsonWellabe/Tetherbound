@@ -4,7 +4,7 @@ extends "res://tests/helpers/stormwood_earned_dynamo_segment.gd"
 ## No legendary offer or ceremony is started by this helper.
 const DYNAMO := preload("res://scripts/world/stormwood_dynamo.gd")
 const CAPTAIN := "captain_marrow_dynamo_core"
-## One attempt's wall-clock cap at the 1x clock. Five was too short: the
+## One attempt's cap, in game milliseconds (counted in physics steps). Five was too short: the
 ## focused smoke (tests/smoke_stormwood_marrow_press.gd) was still in round 5's
 ## overload phase at 300 s (round 1 alone ~65 s), before any conduit window.
 const ATTEMPT_MS := 900000
@@ -233,7 +233,10 @@ func _attempt_marrow(dynamo: Node) -> void:
 	if control == null:
 		_fail("actual Dynamo FieldControl absent")
 		return
-	while Time.get_ticks_msec() - started < ATTEMPT_MS:
+	# Game-time budget: one physics step is 1/60 s of game time at the wrapper's
+	# 8x/480 Hz and the fights' 1x/60 Hz clocks alike.
+	var started_frame := Engine.get_physics_frames()
+	while Engine.get_physics_frames() - started_frame < ATTEMPT_MS / 1000 * 60:
 		_drive_stick(0, 0)
 		if release_tick >= 0 and tick >= release_tick:
 			_set_action(&"combat_quick", false)

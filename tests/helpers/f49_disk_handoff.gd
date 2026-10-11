@@ -13,8 +13,10 @@ const STATE_DIFF := preload("res://scripts/net/owner_passive_sync.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const BOUNDARIES := ["meadows_settled", "tidewake_settled", "cloudreach_settled", "stormwood_settled", "completed_world"]
 const REALMS := ["meadows", "water", "cloudreach", "stormwood", "meadows"]
-const MEADOWS_PIECES := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall"]
-const MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows"]
+## New order: the Warden finale (no Rift) and the Home Key/portal handoff to
+## Tidewake close the Meadows pieces; the last one is saved in Tidewake.
+const MEADOWS_PIECES := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff"]
+const MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "water"]
 const MEADOWS_SLOT := 0
 var tree: SceneTree
 var game: Node

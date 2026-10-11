@@ -59,7 +59,8 @@ func _process(delta: float) -> void:
 		_event_check_left = 0.5
 		if not bool(world.get("simulation_only")) and not _flags.has("stormwood:first_stormglass_gathered"):
 			for spec: Dictionary in _catalogue.get("sites", []):
-				if str(spec.region_id) == "cinder_verge" and str(spec.item) == "stormglass" and _flags.has("harvest_node:order:" + str(spec.id)):
+				if str(spec.region_id) == "cinder_verge" and str(spec.item) == "stormglass" \
+						and site_gathered(str(spec.id), _flags, _game.get("world") if _game != null else null):
 					world.get_node("StormwoodChapter").emit_event("harvest:verge_stormglass")
 					break
 		# Crown Stormglass can be claimed before its chapter recipe prerequisite.
@@ -70,8 +71,22 @@ func _process(delta: float) -> void:
 				and not _flags.has("stormwood:crown_glass_gathered"):
 			if _crown_glass_required < 0:
 				_crown_glass_required = crown_glass_cost()
-			if _crown_glass_required > 0 and claimed_crown_glass(_catalogue, _flags) >= _crown_glass_required:
+			if _crown_glass_required > 0 and claimed_crown_glass(_catalogue, _flags, _game.get("world") if _game != null else null) >= _crown_glass_required:
 				world.get_node("StormwoodChapter").emit_event("harvest:crown_grade")
+
+
+## One exact site has been gathered: its legacy one-shot receipt, or, for a
+## site the F32 renewable mount adopted, a world stock record that a gather
+## advanced (revision >= 1). The renewable claim carries no world flag.
+static func site_gathered(id: String, flags: RefCounted, world_state: Object = null) -> bool:
+	if id.is_empty():
+		return false
+	if flags != null and bool(flags.call("has", "harvest_node:order:" + id)):
+		return true
+	if world_state == null or not world_state.has_method("renewable_stock_state"):
+		return false
+	var stock: Variant = world_state.call("renewable_stock_state", REALM_ID, id)
+	return stock is Dictionary and int((stock as Dictionary).get("revision", 0)) >= 1
 
 
 static func crown_glass_cost() -> int:
@@ -90,14 +105,14 @@ static func crown_glass_cost() -> int:
 ## This world objective records shared gathering, not one player's current
 ## inventory. The ledger still grants each yield only to its claiming peer;
 ## the builder must hold and pay the complete production cost separately.
-static func claimed_crown_glass(catalogue: Dictionary, flags: RefCounted) -> int:
+static func claimed_crown_glass(catalogue: Dictionary, flags: RefCounted, world_state: Object = null) -> int:
 	var total := 0
 	var seen := {}
 	for spec: Dictionary in catalogue.get("sites", []):
 		var id := str(spec.get("id", ""))
 		if id.is_empty() or seen.has(id) or str(spec.get("grade", "")) != "crown" \
 				or str(spec.get("item", "")) != "stormglass_crown" \
-				or not flags.has("harvest_node:order:" + id):
+				or not site_gathered(id, flags, world_state):
 			continue
 		seen[id] = true
 		total += maxi(0, int(spec.get("amount", 0)))

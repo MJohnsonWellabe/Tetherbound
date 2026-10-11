@@ -75,6 +75,11 @@ const DEMO_FLAG := "--menu-demo"
 ## interrupt one indivisible engine call; it bounds the frame-by-frame wait
 ## once the main loop is pumping again.
 const REALM_SCENE_READY_TIMEOUT_MSEC := 120_000
+## A build busy in one long call when the deadline passes still owes its
+## post-build hold (Meadows waits one physics tick and one process frame after
+## its last mutation before reporting ready). These ordinary frames after the
+## deadline let it report; a stuck build still times out a few frames later.
+const REALM_READY_DEADLINE_GRACE_FRAMES := 4
 const REALM_READY_WAITING := 0
 const REALM_READY := 1
 const REALM_READY_TIMED_OUT := 2
@@ -1919,12 +1924,16 @@ func _recover_realm_begin_failure(tree: SceneTree, source_scene: Node,
 
 func _await_realm_scene_ready(tree: SceneTree, realm_id: String, context: Dictionary = {}) -> bool:
 	var began_msec := Time.get_ticks_msec()
+	var grace_frames_left := REALM_READY_DEADLINE_GRACE_FRAMES
 	while true:
 		await tree.process_frame
 		if not _realm_crossing_valid(context):
 			return false
+		var elapsed := Time.get_ticks_msec() - began_msec
 		var state := _realm_scene_wait_state(tree.current_scene, realm_id,
-			Time.get_ticks_msec() - began_msec, REALM_SCENE_READY_TIMEOUT_MSEC)
+			elapsed, REALM_SCENE_READY_TIMEOUT_MSEC, grace_frames_left)
+		if elapsed >= REALM_SCENE_READY_TIMEOUT_MSEC:
+			grace_frames_left -= 1
 		if state == REALM_READY:
 			return true
 		if state == REALM_READY_TIMED_OUT:
@@ -1934,12 +1943,14 @@ func _await_realm_scene_ready(tree: SceneTree, realm_id: String, context: Dictio
 
 ## Pure three-state decision behind the awaited loop. Readiness wins on the
 ## frame that crosses the deadline: a build which completed during one long
-## indivisible engine call is ready, not a false timeout.
+## indivisible engine call is ready, not a false timeout. Past the deadline,
+## the wait keeps going only while `grace_frames_left` ordinary frames remain.
 static func _realm_scene_wait_state(scene: Node, realm_id: String,
-		elapsed_msec: int, timeout_msec: int = REALM_SCENE_READY_TIMEOUT_MSEC) -> int:
+		elapsed_msec: int, timeout_msec: int = REALM_SCENE_READY_TIMEOUT_MSEC,
+		grace_frames_left: int = 0) -> int:
 	if _realm_scene_ready(scene, realm_id):
 		return REALM_READY
-	if elapsed_msec >= timeout_msec:
+	if elapsed_msec >= timeout_msec and grace_frames_left <= 0:
 		return REALM_READY_TIMED_OUT
 	return REALM_READY_WAITING
 

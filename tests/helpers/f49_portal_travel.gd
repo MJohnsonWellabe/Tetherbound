@@ -157,11 +157,18 @@ func walk_to_pedestal(biome: String) -> bool:
 	distance = _player.global_position.distance_to(pedestal.global_position)
 	return distance <= radius or _fail("F49 walk stopped %.2f m from the %s pedestal (radius %.1f m)" % [distance, biome, radius])
 
-func activate(prompt: Node3D) -> bool:
+## `via` are ordinary walk waypoints taken first, e.g. the doorway of a
+## building whose provider is indoors: a straight line from outside pins the
+## capsule against a wall, short of the provider, beside another one.
+func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 	if prompt == null or not _bind(): return _fail("F49 lacks the actual interaction provider")
 	var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")
 	if arbiter == null: return _fail("F49 lacks the actual interaction arbiter")
 	var nav := NAV.new(tree, _player, _rig, _stick)
+	for point: Vector3 in via:
+		if not await nav.walk_to(point, maxi(1200, int(_player.global_position.distance_to(point) * 65.0)), 0.8):
+			_stick(0, 0)
+			return _fail("F49 ordinary capsule walk failed to waypoint " + str(point))
 	var distance := _player.global_position.distance_to(prompt.global_position)
 	var recoveries_before := int(_player.get("_unstick_count"))
 	# Original navigator retains capsule probes, confined watchdog and support
@@ -198,7 +205,12 @@ func grandpa_and_credits() -> bool:
 	if prompt == null: return _fail("F49 missing producer: Grandpa has no actual farm prompt")
 	var panel: Node = tree.current_scene.get_node_or_null("DialoguePanel")
 	if panel == null: return _fail("F49 homecoming has no actual dialogue panel")
-	if not await activate(prompt): return false
+	# Grandpa is indoors: enter by the east door, as a player does.
+	var house: Node = tree.current_scene.find_child("GrandpaHouse", true, false)
+	var via: Array[Vector3] = []
+	if house != null and house.has_method("marker"):
+		via.append(house.call("marker", "door") as Vector3)
+	if not await activate(prompt, via): return false
 	var context := HOME.context(game)
 	if (context.get("chapter_choices", []) as Array).size() != 4:
 		return _fail("F49 homecoming lacks the four actual personal chapter choices")

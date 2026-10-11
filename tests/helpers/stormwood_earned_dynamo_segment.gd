@@ -247,7 +247,9 @@ func _trainer(id: String) -> bool:
 	var next_quick := 0
 	var tick := 0
 	var release_tick := -1
-	while _director.trainer_battle_active() and Time.get_ticks_msec() - started < 300000:
+	# Game-time budget: one physics step is 1/60 s of game time at this 1x/60 Hz clock.
+	var started_frame := Engine.get_physics_frames()
+	while _director.trainer_battle_active() and Engine.get_physics_frames() - started_frame < 300 * 60:
 		_drive_stick(0, 0)
 		if release_tick >= 0 and tick >= release_tick:
 			_set_action(&"combat_quick", false)
@@ -280,7 +282,7 @@ func _trainer(id: String) -> bool:
 	await _tree.process_frame
 	Engine.time_scale = scale_before
 	Engine.physics_ticks_per_second = hz_before
-	if Time.get_ticks_msec() - started >= 300000 or _director.trainer_battle_active() \
+	if Engine.get_physics_frames() - started_frame >= 300 * 60 or _director.trainer_battle_active() \
 			or not bool(_outcomes.get(id, false)):
 		# Read-only host view of a stuck hosted fight: round, gap, last strike
 		# and every accepted action's phase in the authority.

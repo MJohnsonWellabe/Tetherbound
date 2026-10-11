@@ -303,6 +303,12 @@ func _stick_away_from_opponent() -> Vector2:
 	if (_body as Node3D).has_method("lunge_travels") and bool((_body as Node3D).call("lunge_travels")) \
 			and (_body as Node3D).has_method("facing"):
 		lane = (_body as Node3D).call("facing")
+	# A CURRENT's field (`current_zone`) locks its marker on the line to the
+	# target, clamped to its range, so backing straight away stays inside it.
+	# Its authored answer is to step out of the circle sideways (coordinator
+	# approved, F04#2): treat the line to the opponent as the lane.
+	if not _strikes.is_empty() and str((_strikes.back() as Dictionary).get("shape", "")) == "field":
+		lane = -away
 	if lane is Vector3 and (lane as Vector3).length() > 0.01:
 		var heading := Vector3((lane as Vector3).x, 0.0, (lane as Vector3).z).normalized()
 		var side := Vector3(-heading.z, 0.0, heading.x)
