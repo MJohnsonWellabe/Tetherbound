@@ -75,6 +75,8 @@ const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "rela
 const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
 const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
 const LOAD_SETTLE_FRAMES := 300
+const SETTLE_ROUNDS := 6
+const SETTLE_FRAMES := 60
 
 var segment := ""
 var save_dir := ""
@@ -254,7 +256,30 @@ func _run() -> void:
 	if failures.is_empty() and legacy_order_diagnostic:
 		if not bool(game.call("save_game", CHAIN_SLOT)):
 			failures.append("Game.save_game(%d) refused the segment save" % CHAIN_SLOT)
+	if failures.is_empty() and not legacy_order_diagnostic and disk != null:
+		await _settle_owner_deliveries()
 	_finish()
+
+
+## F19#5 r8: a combat_mastery duty journaled as pending_owner_save applies on
+## the frames after a production save, so a receipt read on the save frame
+## missed one mastery use that production Load then replayed. Save, let those
+## deliveries apply, and repeat until the observed state is stable (bounded).
+## Nothing is written but ordinary production saves; export then saves again.
+func _settle_owner_deliveries() -> void:
+	var before: Dictionary = disk.call("_state")
+	for round in SETTLE_ROUNDS:
+		if not bool(game.call("save_game", HANDOFF.MEADOWS_SLOT)):
+			failures.append("Settling save refused before export")
+			return
+		for _i in SETTLE_FRAMES:
+			await physics_frame
+		var after: Dictionary = disk.call("_state")
+		if after == before:
+			disclosures.append("Pending owner deliveries settled after %d save(s) before export" % (round + 1))
+			return
+		before = after
+	disclosures.append("Owner deliveries still changing after %d settling saves; exported the last state" % SETTLE_ROUNDS)
 
 
 func _opening_team() -> void:
@@ -785,6 +810,28 @@ func _generate_boundary_fixture() -> bool:
 			return false
 		player.global_position = requested
 		player.velocity = Vector3.ZERO
+	# Disclosed opt-in (coordinator, 2026-10-11): one paid Crown-arch record on
+	# the authored Still Grove footing, written exactly as the real build does
+	# (world_ledger.gd place_building: register_building + building_arch_link
+	# twin e_crown / footing still_grove), for pieces that start past Rootgate.
+	if profile.get("stormwood_paid_crown_arch") == true:
+		if str(profile.realm) != "stormwood" or not (game.progression.call("has", "stormwood:crown_arch_built") as bool):
+			failures.append("Generated Crown arch requires a Stormwood profile that declares stormwood:crown_arch_built")
+			return false
+		var footing: Dictionary = {}
+		var arches: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_arches.json"))
+		for socket: Dictionary in (arches as Dictionary).get("footings", []):
+			if str(socket.get("id", "")) == "still_grove": footing = socket
+		if footing.is_empty():
+			failures.append("Generated Crown arch found no authored still_grove footing")
+			return false
+		var at := Vector3(float(footing.at[0]), 0.0, float(footing.at[1]))
+		at.y = float(current_scene.ground_height_at(at.x, at.z))
+		var uid: String = game.world.call("register_building", "stormglass_arch", at, float(footing.get("yaw_deg", 90.0)), true, "stormwood", "")
+		var index: int = game.world.call("building_index_of", uid)
+		game.world.placed_buildings[index]["arch_twin"] = "e_crown"
+		game.world.placed_buildings[index]["arch_footing"] = "still_grove"
+		disclosures.append("Generated paid Crown-arch placed_buildings record %s at %s on footing still_grove (twin e_crown); no materials were spent" % [uid, str(at)])
 	for frame in 60: await physics_frame
 	if not player.is_on_floor() or Vector2(player.global_position.x, player.global_position.z).distance_to(Vector2(requested.x, requested.z)) > 0.6 \
 			or game.day != int(profile.day) or bool(game.free_build):

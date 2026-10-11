@@ -695,9 +695,14 @@ static func _on_confirmation(panel: Node) -> bool:
 ## (the physical event plus the polled state). False if either edge failed.
 static func _tap(tree: SceneTree, action: String) -> bool:
 	var down: Variant = await tree.call("_press_edge", action, true)
+	# Flush the queued physical press before the next physics frame, as
+	# press_inject.gd tap() does: on a slow frame it otherwise lands after the
+	# release and reads as a second press (peer_runner.gd, F11#3 note).
+	await tree.process_frame
 	for f in 2:
 		await tree.physics_frame
 	var up: Variant = await tree.call("_press_edge", action, false)
+	await tree.process_frame
 	for f in 8:
 		await tree.physics_frame
 	return _edge_ok(down) and _edge_ok(up)

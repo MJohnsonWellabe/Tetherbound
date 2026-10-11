@@ -1,0 +1,15 @@
+{
+  "kind": "earned_meadows_piece",
+  "criterion": "F19#5",
+  "segment": "01_opening_team",
+  "command": "godot --headless --path . --audio-driver Dummy --script tools/earned_saves/earned_chain_runner.gd -- --segment=opening_team --save-dir=<root>/opening_team/opening_team/save --receipt=<root>/opening_team/opening_team/receipt.json",
+  "commit": "ebe1b2c722f9c1089cecfbf4e83b5b36a6bd599b",
+  "seed": "none set (TB_WORLD_SEED refused); saved world seed 1259229353",
+  "start_save": "fresh production title (New Game)",
+  "injections": 0,
+  "party_uids": ["creature-6c8a83e63c77f1b7850a03d18331ba0b", "creature-5fb03436b6e237d9bfa62c9246ab60f2", "creature-12badaa91497b85c505220b41d5c4df5", "creature-551f88b5dc93bed0bfe72e236b805636", "creature-fbeb68a095279977e76a00674f12141b"],
+  "handoff_check": "camp_tournament (r10, same commit) loaded this save through the production title; F49 state comparison (party/UIDs/flags/inventory/mastery) equal",
+  "shortcuts": ["Helper navigator alignments and pre-export owner-delivery settle (disclosed: 'still changing after 6 settling saves') in ralph/reports/EVIDENCE/F19-5/README.md"],
+  "run": "r10, 14:23-15:21 CT Sun 11 Oct 2026",
+  "passed": true
+}

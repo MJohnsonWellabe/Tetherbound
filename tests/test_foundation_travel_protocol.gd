@@ -238,8 +238,8 @@ class PairingSession extends Node:
 	func _game() -> Node: return game
 	func admitted_character_state(_peer: int) -> Dictionary: return {"character_id": "guest_a"}
 
-func _pairing_sample(sequence: int, damage_revision: int = 0) -> Dictionary:
-	return {"character_id": "guest_a", "world_instance_id": "world_a", "session_epoch": "epoch_a", "realm": "meadows",
+func _pairing_sample(sequence: int, damage_revision: int = 0, realm: String = "meadows") -> Dictionary:
+	return {"character_id": "guest_a", "world_instance_id": "world_a", "session_epoch": "epoch_a", "realm": realm,
 		"damage_revision": damage_revision, "dialogue": false, "cutscene": false, "swimming": false, "flying": false,
 		"downed": false, "station_ack_only": false, "ending_owner": true, "party_revision": 1,
 		"party_signature": "a".repeat(64), "sequence": sequence}
@@ -270,6 +270,28 @@ func test_a_request_is_judged_at_its_paired_sample_a_slow_frame_later() -> void:
 	lifecycle.accept(2, _pairing_sample(2))
 	lifecycle.accept(2, _pairing_sample(2))
 	assert_eq(lifecycle.take_paired_arrival(2, slow_frame), slow_frame, "a refused last sample pairs nothing")
+	owner.free()
+
+
+## F11#3 (EVIDENCE/F11-3): a guest hurt in the Meadows (damage_revision 1)
+## crossed to Stormwood, where its rebuilt trainer's vitals start at 0. The
+## host refused every later sample as a damage rollback, so the guest's travel
+## state went stale and its Home Key was refused as "not ready" for good.
+func test_a_realm_crossing_restarts_the_damage_revision_without_staling_the_guest() -> void:
+	var owner := PairingSession.new()
+	var composition := Node.new()
+	var lifecycle: Node = LIFECYCLE.new()
+	owner.add_child(composition)
+	composition.add_child(lifecycle)
+	lifecycle.accept(2, _pairing_sample(1, 1))
+	lifecycle.accept(2, _pairing_sample(2, 0))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 1, "the same realm never accepts a damage rollback")
+	lifecycle.accept(2, _pairing_sample(3, 0, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 3, "a crossing's rebuilt trainer restarts its damage revision")
+	lifecycle.accept(2, _pairing_sample(4, 0, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 4, "and keeps being observed there")
+	lifecycle.accept(2, _pairing_sample(4, 1, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.damage_revision), 0, "a replayed sequence is still refused")
 	owner.free()
 
 

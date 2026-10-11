@@ -17,15 +17,15 @@
     },
     {
       "path": "data/config/essence.json",
-      "sha256": "0b03b15b433f2297767b18a10f49126902d80d9bbc4e6560133e97526ca8d80e"
+      "sha256": "024fd4614037d9b11c03a69908f05c454e15e503933e91acece1aadf38153c13"
     },
     {
       "path": "data/config/progression.json",
-      "sha256": "ee83ea8a3c65012d57133e1803abab87647452d5c7963552bdf8b175e96b6246"
+      "sha256": "1d2a3bbb7c5fbadd365ef2e32282d90749c2ad6195d2ac5f5360be850e75199b"
     },
     {
       "path": "data/creatures/species.json",
-      "sha256": "b5721fc2ca8191a3da8f80199b50b9ae39231f8a7cf4ac18a43e584349c6d147"
+      "sha256": "1fabb5be7e9a8bf4ece9a777ec0a40bbcd2d758196e0503853373ef8a04ecb98"
     },
     {
       "path": "data/config/bands/band1_lower_meadows/spawns.json",
@@ -33,7 +33,7 @@
     },
     {
       "path": "data/config/bands/band1_lower_meadows/trainers.json",
-      "sha256": "9ed16005d9e22c3f37e654cabbd45837b320c7888cfaebfc0b4c9c8f1b718500"
+      "sha256": "6de1fd95b2e9cffed5131e9fb0db25e3ceacd1ee3634962ab220775c647bd1fd"
     },
     {
       "path": "data/config/bands/band1_lower_meadows/pickups.json",
@@ -41,7 +41,7 @@
     },
     {
       "path": "data/config/bands/band2_stone_and_root/spawns.json",
-      "sha256": "513c4d6f42383cbe2b936c9019adb677c3f0d5bbf9d85b15847267e52ada4ff4"
+      "sha256": "ad5ad89dac93fc3eb8ff06df6c4ed75c42a2876102318168fdb11630a3de4107"
     },
     {
       "path": "data/config/bands/band2_stone_and_root/trainers.json",
@@ -77,7 +77,7 @@
     },
     {
       "path": "data/config/bands/band5_stronghold_approach/spawns.json",
-      "sha256": "c57df872832116a8cb204e300d703eae53c9ce6fbb871e020f3115e4436752f1"
+      "sha256": "d0c88c87ceb8529f3408828c9088cf750525a4534397ff54b7311e89eecc6c17"
     },
     {
       "path": "data/config/bands/band5_stronghold_approach/trainers.json",
@@ -89,15 +89,15 @@
     },
     {
       "path": "data/config/burrow_warrens.json",
-      "sha256": "3d7854878357b6baa8b70d83a9664ae05771e0830f0d54f214f7166a9bdb6ca5"
+      "sha256": "9e600fb19f0361775a71d26211ac02630c2a7da1fa38afa19b370c288e828e2d"
     },
     {
       "path": "data/config/water_encounters.json",
-      "sha256": "9a1b08a071dc3bceeaf9bff333056615d75103d6c16bdcb963695d8c8ba5a057"
+      "sha256": "8dc5acb81aec90c9a1c8e12708528f0401f9330844a812f516910ed5bad5b936"
     },
     {
       "path": "data/config/water_characters.json",
-      "sha256": "e9765ab8739f9696f0321bb4e5fd567a98b3ce7dab6bbc043044def361a4a622"
+      "sha256": "8ddb83e2081b07e58ef42fcdd506f92c5381feb724c51a064d07a27e6216ff4f"
     },
     {
       "path": "data/config/water_alpha.json",
@@ -105,11 +105,11 @@
     },
     {
       "path": "data/config/water_pickups.json",
-      "sha256": "429da58e2805fd37d7d5981e699f6e892af3388548b592fd4f71e5cbec13ead7"
+      "sha256": "0933ea9ec58aade9cbe50c585fc8e47c5e181052ae5f55242705dc72adc1a479"
     },
     {
       "path": "data/config/cloudreach_chapter.json",
-      "sha256": "3e754ce104396e7b0f00145c4da1b3179ffec4ba288c9b898962602e8c03ad09"
+      "sha256": "aed7063b961aff6e3667ef637aa6043fd028847f8038a2f340cb1d40d73c1b62"
     },
     {
       "path": "data/config/cloudreach_encounters.json",
@@ -129,23 +129,23 @@
     },
     {
       "path": "data/config/masters.json",
-      "sha256": "d93a2a2064c87f5f27066691c128e7a17a62bf212e878da385c6c7c110aafece"
+      "sha256": "1e396b8d82fd9e1466d9d18b3b480ef785b82ae15de65d52ceb6789c592bd6e7"
     },
     {
       "path": "data/config/essence_nodes.json",
-      "sha256": "2bc7080ec14ade4880eb7d38ef3b256ab532a6dc828f08aeb06957e0a1ecbb9f"
+      "sha256": "fd368eddd1e4356f42127801cd8e3bba12508cf2ebf92f1e0b267067c2894c74"
     },
     {
       "path": "data/config/research.json",
-      "sha256": "e1a0d584540069907b92534526a028bb5500f306776f1696d25492e0080692be"
+      "sha256": "ff7c653f38db9b40c1e37128ffb9f3e3351906288576ddfcd45c0ff45b8b3efa"
     },
     {
       "path": "data/config/bounties.json",
-      "sha256": "876cb89d142948c88b707ae9b6529f33aea7d9f091c92ba3e00560ba496152ed"
+      "sha256": "abd4951e93e818a59871e695c5b45567f37ac82ec06de7affc71b073cce5a31c"
     },
     {
       "path": "data/config/alpha_respawns.json",
-      "sha256": "b5a92b9a73ba66bb39aed476354b012e9e0ac80beb1e9cad82df6213ba5e2b59"
+      "sha256": "e3130c7f6d8e097cf73972909893a365e8d55b3c09162ea05de90c2ea146e9b9"
     },
     {
       "path": "data/config/farm.json",
@@ -157,11 +157,11 @@
     },
     {
       "path": "data/items/items.json",
-      "sha256": "bcf67b7bdf175885eb2891c5facf43f8bcbd110fec75f7a2cfa534b0d5354fc0"
+      "sha256": "9e19cd10186766642b5a6fd3d1deee9c6a4f2ff23e55b4c5cd1e3d02c0c0d369"
     },
     {
       "path": "scripts/combat/stormwood_encounter_catalogue.gd",
-      "sha256": "2c708ba8924ac50fe2a9d36fb97c9448657bc21d7b037dca02db1bba6efb75a0"
+      "sha256": "06aa6748713faf8fd8e4b4767f0b1ca17b1829180c2037c5f18cbe8e8376d434"
     },
     {
       "path": "scripts/creatures/progression.gd",
@@ -169,19 +169,19 @@
     },
     {
       "path": "scripts/creatures/essence.gd",
-      "sha256": "a4a5c81c551547cd04c0266be7359e0f330053d834a4f091a1ab0c8c6ca32bef"
+      "sha256": "09bd8ace57f8a79296d823fea9a0b38e58bdde4a569d716e36a82beffac12b56"
     },
     {
       "path": "scripts/net/combat_round_reward.gd",
-      "sha256": "5e895103e25378e0cb64d5b04a927217b3dcf971d692a80a1efd68df98998819"
+      "sha256": "332cf4a46c570513094ecd1a3a95dd16549ecc387ba9783ff16ba852194fd3ac"
     },
     {
       "path": "scripts/combat/encounter_director.gd",
-      "sha256": "5029d58df858c8542e94dfbcd3341ff9f1b927743ffd33eb9c6af0088e53b07a"
+      "sha256": "40c357bf1741c0dea2f6450a392f822723dfda43d36da9572629dadf36523be5"
     },
     {
       "path": "scripts/creatures/research_log.gd",
-      "sha256": "ae81ebc6916fcd59377a53f6a1f8865abd1e2d35a63419a8d798ae3d105ff048"
+      "sha256": "8e980620d4027804d914d0390081a527a6ae39bd85128ccf5914b790d2e43f83"
     }
   ],
   "formulas": {
@@ -5176,7 +5176,7 @@
         "alpha_respawns": {
           "per_hour": 12,
           "sites": 16,
-          "runtime_enabled": false,
+          "runtime_enabled": true,
           "rule": "min(60/5 min, 16 sites × 60/(3 days × 10 min))",
           "levels_per_grind_hour": 3.95,
           "progress_gain_at_next_checkpoint": 0.45,
@@ -5220,7 +5220,7 @@
         },
         "bounties": {
           "per_hour": 6,
-          "runtime_enabled": false,
+          "runtime_enabled": true,
           "rule": "min(60/10 min, 3 per 10-min morning); templates cycled",
           "levels_per_grind_hour": 1.8,
           "progress_gain_at_next_checkpoint": 0.18,
@@ -5284,7 +5284,7 @@
         "alpha_respawns": {
           "per_hour": 12,
           "sites": 6,
-          "runtime_enabled": false,
+          "runtime_enabled": true,
           "rule": "min(60/5 min, 6 sites × 60/(3 days × 10 min))",
           "levels_per_grind_hour": 0.91,
           "progress_gain_at_next_checkpoint": 0.68,
@@ -5328,7 +5328,7 @@
         },
         "bounties": {
           "per_hour": 6,
-          "runtime_enabled": false,
+          "runtime_enabled": true,
           "rule": "min(60/10 min, 3 per 10-min morning); templates cycled",
           "levels_per_grind_hour": 0.39,
           "progress_gain_at_next_checkpoint": 0.3,
@@ -5392,7 +5392,7 @@
         "alpha_respawns": {
           "per_hour": 0,
           "sites": 0,
-          "runtime_enabled": false,
+          "runtime_enabled": true,
           "rule": "min(60/5 min, 0 sites × 60/(3 days × 10 min))",
           "levels_per_grind_hour": 0,
           "progress_gain_at_next_checkpoint": 0,
@@ -5436,7 +5436,7 @@
         },
         "bounties": {
           "per_hour": 6,
-          "runtime_enabled": false,
+          "runtime_enabled": true,
           "rule": "min(60/10 min, 3 per 10-min morning); templates cycled",
           "levels_per_grind_hour": 0.4,
           "progress_gain_at_next_checkpoint": 0.36,
@@ -5500,7 +5500,7 @@
         "alpha_respawns": {
           "per_hour": 12,
           "sites": 6,
-          "runtime_enabled": false,
+          "runtime_enabled": true,
           "rule": "min(60/5 min, 6 sites × 60/(3 days × 10 min))",
           "levels_per_grind_hour": 0.87,
           "progress_gain_at_next_checkpoint": 0,
@@ -5544,7 +5544,7 @@
         },
         "bounties": {
           "per_hour": 6,
-          "runtime_enabled": false,
+          "runtime_enabled": true,
           "rule": "min(60/10 min, 3 per 10-min morning); templates cycled",
           "levels_per_grind_hour": 0.4,
           "progress_gain_at_next_checkpoint": 0,

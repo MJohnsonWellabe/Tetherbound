@@ -69,7 +69,10 @@ static func lesson(authored: Dictionary, player: RefCounted) -> Dictionary:
 	var state: Dictionary = player.get("redesign_character")
 	row["goal_realm"] = preload("res://scripts/data/biome_order.gd").runtime_id(str(master.biome))
 	row["goal_at"] = [master.position[0], master.position[2]]
-	row["goal"] = "Challenge %s for the L%d feast recipe." % [str(master.name), int(master.cap_level)]
+	# Name the Master's site so the line says where, not only who.
+	var place := str(master.get("author_reference", "")).replace("_", " ").capitalize()
+	row["goal"] = ("Challenge %s at %s for the L%d feast recipe." % [str(master.name), place, int(master.cap_level)]) \
+		if not place.is_empty() else "Challenge %s for the L%d feast recipe." % [str(master.name), int(master.cap_level)]
 	if state.get("master_wins", []).has(master.id): row["goal"] = "Open %s's recipe chest." % str(master.name)
 	if state.get("feast_recipes", []).has(master.feast_id):
 		row["goal"] = "Cook the L%d feast at home, then feed your capped creature." % int(master.cap_level)
@@ -83,13 +86,21 @@ static func guidance(player: RefCounted) -> Dictionary:
 	# naming, real catch, Mira's kit or the tournament readiness chain.
 	if player.get("flags").call("has", "tournament_entered") != true: return {}
 	var state: Dictionary = player.get("redesign_character")
-	if not capped_master(player).is_empty(): return lesson(_row("masters"), player)
 	var inventory: RefCounted = player.get("inventory")
+	var key_goal := ""
 	for biome: String in ["tidewake", "cloudreach", "stormwood"]:
 		if inventory.call("count", biome + "_portal_key") > 0 and not state.get("portal_unlocks", []).has(biome):
-			var row := _row("portals")
-			row["goal"] = "Use your %s key at its signed arch in the Crossing Hall." % biome.capitalize()
-			return row
+			key_goal = "Use your %s key at its signed arch in the Crossing Hall." % biome.capitalize()
+			break
+	if not capped_master(player).is_empty():
+		var master_row := lesson(_row("masters"), player)
+		# A held next-realm key stays visible as the secondary line.
+		if not key_goal.is_empty(): master_row["hint"] = "Then: " + key_goal
+		return master_row
+	if not key_goal.is_empty():
+		var row := _row("portals")
+		row["goal"] = key_goal
+		return row
 	for relic: String in state.get("relics_held", []):
 		if not state.get("relics_hung", []).has(relic): return _row("shrines")
 	return {}

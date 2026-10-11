@@ -26,7 +26,7 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 13
+SHARD_COUNT = 14
 # Lanes per shard job. Two lanes at once (tools/ci/run_net_lanes.sh) ran at
 # 1.0-1.6x solo time and broke timing-sensitive smokes under the CPU load
 # (PR #573 runs 37636924943, 37642447200: f20_ending's hello budget,
@@ -62,6 +62,10 @@ MEASURED_SECONDS = {
     "f28_masters": 600,
     "f28_feast": 600,
     "f48_behind_friend": 600,
+    # ESTIMATE, not yet measured on CI: its seven legs replay parts of
+    # f28_masters, f28_feast, homestead_station_craft and veridian_relic_key.
+    # Refresh from the first full run.
+    "f48_coop_loop": 1100,
     "f32_node_contention": 136,
     "f43_bounties": 733,
     "farm_race": 112,
@@ -158,7 +162,7 @@ UNMEASURED_SECONDS = max(v for k, v in MEASURED_SECONDS.items() if k not in ISOL
 #   for f in tests/smoke_net_*.gd; do
 #     head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*2$' && echo "$f"
 #   done | wc -l
-DISCOVERY_FLOOR = 71
+DISCOVERY_FLOOR = 74
 # Named registration on top of the count: a smoke that loses its `# peers: 2`
 # header in a rebase must fail discovery, not silently drop out of CI. Each
 # lane that ships a net smoke adds its file here.
@@ -176,6 +180,7 @@ ROSTER = (
     "f48_cut_key", "f48_cut_craft", "f48_cut_release",
     "stormwood_charged_ground", "harness_max_hp", "forward_camp",
     "f44_alpha_respawn",
+    "f48_coop_loop",
 )
 
 PEERS_RE = re.compile(r"^#\s*peers:\s*2\s*$")
