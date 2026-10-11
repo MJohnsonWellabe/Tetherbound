@@ -303,15 +303,6 @@
    "label": "one resolution per character"
   },
   {
-   "peer": 0,
-   "action": "enter_realm",
-   "args": {
-    "realm": "meadows"
-   },
-   "budget_frames": 10000,
-   "label": "host home to the Meadows"
-  },
-  {
    "peer": 1,
    "action": "enter_realm",
    "args": {
@@ -319,6 +310,15 @@
    },
    "budget_frames": 10000,
    "label": "guest home to the Meadows"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "meadows"
+   },
+   "budget_frames": 10000,
+   "label": "host home to the Meadows"
   },
   {
    "peer": "all",
@@ -405,15 +405,6 @@
    "label": "SHRINE LIVE (guest): placed, not active for the guest"
   },
   {
-   "peer": 0,
-   "action": "enter_realm",
-   "args": {
-    "realm": "stormwood"
-   },
-   "budget_frames": 10000,
-   "label": "host back to Stormwood, so the saved world reloads there (the host makes no realm crossing after the guest reconnects: see the finding in the claim)"
-  },
-  {
    "peer": 1,
    "action": "enter_realm",
    "args": {
@@ -421,6 +412,15 @@
    },
    "budget_frames": 10000,
    "label": "guest back to Stormwood"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000,
+   "label": "host back to Stormwood, so the saved world reloads there (the host makes no realm crossing after the guest reconnects: see the finding in the claim)"
   },
   {
    "peer": 0,
