@@ -118,5 +118,44 @@
     "Candidate remains OFF until the complete art bar passes.",
     "Faint diagnostic retains a raised body supported on folded paws rather than a settled terminal repose; terminal repose/contact FAIL. No contact approval inferred from standing scale or diagnostic lowest-point grounding.",
     "Visible holes/fragmentation near a forward wing root in raw and native diagnostics; topology FAIL. No art or motion approval inferred from eleven clip names."
-  ]
+  ],
+  "source_repair": {
+    "status": "SOURCE_PREPARED_NATIVE_BAKE_PENDING",
+    "baseline_model_sha256": "1b9c746929d6cb6e438ebda636ce607c0c65c02d7ee946b98eae5a77ffa2d3b3",
+    "recipe": "source/terminal_repose.json",
+    "scope": "Only faint/rest authoring; all other clips, standing scale, mesh, UV, skin, materials and default-off registration unchanged by this pose repair.",
+    "support": "Sternal repose with folded paws and swept wings; chest and pelvis share support.",
+    "required_jobs": [
+      "root-owned native clip bake and import",
+      "Low/Compatibility terminal-faint three-quarter side shot with unobscured torso/floor contact",
+      "Low standing scale and hurt context in the existing capture path; no broad recapture suite",
+      "independent code-blind judgment and Claude disposition; retain original assertions and shipping gates",
+      "Low forward wing-root detail after actual topology repair; topology FAIL remains"
+    ],
+    "acceptance": "Existing FAIL and OPEN gates are retained; no native proof was run.",
+    "topology": "UNRESOLVED: current candidate has 2702 geometric boundary edges and 107 edges with more than two incident faces. The bounded forward-root census found 26 branching/large contours, 12 UV-seam contours and 22 contours with UV fold or surface-orientation ambiguity. No geometry or UV change applied. Needs localized retopology and texture/skin transfer under root native ownership, followed by Low front/reverse wing-root detail.",
+    "cpu_preparation": {
+      "method": "Read-only glTF skin evaluation of source rotations, all vertices; 61 transition samples. Nine unaffected clips match baseline source controls at five phases each. No native engine or bake.",
+      "support_regions": {
+        "spine": {
+          "minimum_m": 0.0,
+          "vertices_within_8cm": 10
+        },
+        "pelvis": {
+          "minimum_m": 0.01805,
+          "vertices_within_8cm": 9
+        }
+      },
+      "limits": "Not a native posed-contact or topology/UV/self-intersection judgment. The source gap/vertex guard prevents gross suspension; original native assertions remain unchanged."
+    },
+    "low_capture_request": {
+      "stand": "Existing F36 flat bare-floor stage, candidate fixture only; preserve full standing scale.",
+      "clip": "faint",
+      "time_seconds": 1.5,
+      "frame_at_24fps": 36,
+      "preset": "Low / Compatibility only",
+      "shot": "Three-quarter left side of the 12-degree relaxed lean; chest/pelvis floor line and swept wings visible.",
+      "judge": "Minimum decisive terminal body-contact frame; original assertions and Claude judgment still required."
+    }
+  }
 }
