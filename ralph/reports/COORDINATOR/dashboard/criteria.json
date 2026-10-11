@@ -2297,18 +2297,18 @@
    "counts": {
     "met": 2,
     "partial": 0,
-    "in_progress": 1,
-    "not_started": 1,
+    "in_progress": 2,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "About 25–30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.",
-     "status": "not_started",
-     "evidence": "ralph/reports/R2-F36/priority-source-audit.json, meshy-night-ledger.json (0 submissions)@b4e4897d5",
-     "gap": "Codex Meshy lane: run the attended batch; owner ruling 2026-10-04 allows the six most-repeated NPC faces as identity-preserving refinements of the installed cast.",
-     "note": "Relabelled 2026-10-04: agent work (Codex/lane), not waiting on the owner.",
+     "status": "in_progress",
+     "evidence": "ralph/reports/EVIDENCE/F36-0/JUDGE.md: 23 native candidates judged code-blind (shuffled A/B, two judges) on tb/ev-captures 8b6452d4",
+     "gap": "Switch-on commit for the 3 PASS species (captures lane); Codex fixes terminal contact on veridian/voltarach/solmane/aeriex and re-posts; the six most-repeated NPC faces (npc-identity Meshy batch) still to be judged.",
+     "note": "12:12 PM CT Sun 11 Oct: PASS meadowhart, mirejaw, tuskroot (switch on). Held for Codex contact fix: veridian (installed judged defective), voltarach, solmane, aeriex. All others stay flagged off (installed better, or candidate defect). Criterion closes when every priority asset is judged and each either passes or stays off, NPC faces included.",
      "audit_index": 0
     },
     {
