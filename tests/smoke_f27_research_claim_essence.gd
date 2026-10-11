@@ -120,11 +120,14 @@ func _open_research_log() -> bool:
 	if not _check(menu.call("current_tab_id") == "quest_log", "menu_tab_right reaches the Quests tab"): return false
 	await _frames(10)
 	var focus := root.gui_get_focus_owner()
+	print("RESEARCH DIAG tab=%s focus=%s research_enabled=%s" % [str(menu.call("current_tab_id")), str(focus.get_path()) if focus != null else "none",
+		str(preload("res://scripts/ui/research_log_panel.gd").config().get("enabled") if preload("res://scripts/ui/research_log_panel.gd").has_method("config") else "?")])
 	for i in 24:
 		if focus is Button and str((focus as Button).text).begins_with("Research log"): break
 		await _driver.call("_tap_action", &"ui_up" if i < 12 else &"ui_down")
 		await _frames(4)
 		focus = root.gui_get_focus_owner()
+		print("RESEARCH DIAG step %d tab=%s focus=%s" % [i, str(menu.call("current_tab_id")), str(focus.get_path()) if focus != null else "none"])
 	if not _check(focus is Button and str((focus as Button).text).begins_with("Research log"),
 		"ui_up/ui_down reach the Research log button (focus '%s')" % (str((focus as Button).text) if focus is Button else str(focus))):
 		return false

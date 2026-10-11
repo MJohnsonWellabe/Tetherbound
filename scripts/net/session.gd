@@ -5359,9 +5359,11 @@ func _deliver_training_decision(peer: int, row: Dictionary) -> void:
 		# A host's own homestead action (solo too) is answered "awaiting" by
 		# _foundation_send and settles here; nothing else announced it, so a
 		# station panel stayed on "awaiting_saved_decision" with its buttons off.
-		# Guests hear theirs through _rpc_foundation_reply; groom has its own.
+		# Guests hear theirs through _rpc_foundation_reply; a guest's groom has
+		# its own (groom_passive_sync), but the host's own groom never enters
+		# that service (homestead_submit_action), so it is announced here too.
 		var action := str(row.get("action", ""))
-		if settled and (action in FOUNDATION_ACTIONS.ACTIONS or action in CHARACTER_ACTIONS.ACTIONS) and action != "groom" and _homestead_completion_once(row):
+		if settled and (action in FOUNDATION_ACTIONS.ACTIONS or action in CHARACTER_ACTIONS.ACTIONS) and _homestead_completion_once(row):
 			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true), _foundation_decision(peer, row))
 	elif bool(_registry.call("has", peer)):
 		rpc_id(peer, "_rpc_training_decision", _altar_epoch, row.delivery_id, int(row.journal_revision), row.receipt)
