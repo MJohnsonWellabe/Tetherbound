@@ -1,9 +1,9 @@
 {
- "updated": "7:46 AM CT Sun 11 Oct",
+ "updated": "9:25 AM CT Sun 11 Oct",
  "headline": [
-  "6:23 AM CT Sun 11 Oct: 189 of 271 criteria met on main. All code is on main: #676 (8:54 PM CT Sat), Codex's final batch #677 (3:04 AM CT, full CI green), final sweep #680 (4:32 AM CT). Every branch except main deleted.",
-  "Evidence phase started 6:20 AM CT. Window 1: F02#7 route spacing, F03#1 six activities, F04#0-#2 named Meadows fights. F19#5 checkpoints are being built for all four biomes in parallel (33 segments) so the play-through criteria can be proven piece by piece.",
-  "Visual items: Codex captures on its GPU when asked; Claude judges code-blind. Batches land only when they close criteria."
+  "9:25 AM CT Sun 11 Oct: 189 of 271 met on main. Evidence phase (since 6:20 AM CT) has found and fixed 9 real game bugs, all collected on tb/ev-coordinator for the one consolidated merge at the end.",
+  "Closest to closing: F04#0\u2013#2 (named Meadows fights) \u2014 every fight test passes; waiting on Codex GPU captures + code-blind judge. Route checkpoints (F19#5): Tidewake 4/8, Cloudreach 4/7, Meadows chain running, Stormwood on piece 1.",
+  "Owner decision coming: Cloudreach stronghold (Officer Voss L41\u201342) beat a level-31 team; the required route gives almost no XP while the curve expects L39\u201342. Will confirm on the earned route first."
  ],
  "batches": [
   {
@@ -688,54 +688,54 @@
    "sandbox_mode": "danger-full-access"
   }
  ],
- "active_lanes_note": "As of 7:46 AM CT Sun 11 Oct. Owner plan: prove every criterion first, collect it all on tb/ev-coordinator, then one consolidated PR with full CI at the end. Times are estimates.",
+ "active_lanes_note": "As of 9:25 AM CT Sun 11 Oct. Owner plan: prove every criterion first, collect it all on tb/ev-coordinator, then one consolidated PR with full CI. Times are estimates.",
  "active_lanes": [
   {
    "lane": "meadows-route",
-   "doing": "Replaying the Meadows story route as separate earned pieces and saving a checkpoint after each one; currently on the three Sigil captains.",
-   "criteria": "F19#5 (Meadows), then F02#7 route spacing and F03#1 six activities",
-   "next": "About 2\u20133 h to finish the 8 Meadows checkpoints"
+   "doing": "Running the full earned Meadows chain after fixing a woodpile that blocked a doorstep and adding the new Warden \u2192 Tidewake handoff pieces.",
+   "criteria": "F19#5 (Meadows), F02#7, F03#1",
+   "next": "About 2\u20133 h for the chain; F02#7 spacing data in parallel"
   },
   {
    "lane": "meadows-fights",
-   "doing": "Fixed the Warrens guardian's two attack warnings (they now pass); now fixing a failing check in Captain Vance's fight.",
-   "criteria": "F04#0 guardian, F04#1 relay officers, F04#2 captains",
-   "next": "About 1\u20132 h to passing smokes, then GPU captures and judge"
+   "doing": "Done for now: guardian, relay officers and all three captains pass their fight tests; idle in case a judge fails one.",
+   "criteria": "F04#0, F04#1, F04#2",
+   "next": "Waiting on Codex captures, then judge"
   },
   {
    "lane": "tidewake-route",
-   "doing": "Two Tidewake checkpoints done; fixing a game bug where Tovin's fight on the Brine Steps slope never starts.",
+   "doing": "4 of 8 Tidewake checkpoints done; continuing from Aquaryn's tidal fight after correcting a stale level check.",
    "criteria": "F19#5 (Tidewake), then F13#0",
-   "next": "About 1\u20132 h for the fix, then 3\u20134 h for segments 03\u201308"
+   "next": "About 2\u20133 h for segments 05\u201308"
   },
   {
    "lane": "cloudreach-route",
-   "doing": "Cloudreach segments 01\u201302 pass; running segments 03 (flight training) and 04 (aviary).",
+   "doing": "4 of 7 checkpoints done; finishing Veyra and the Stormward handoff from a disclosed level-40 save while the stronghold level gap waits on the earned run.",
    "criteria": "F19#5 (Cloudreach), then F06#0",
-   "next": "About 2\u20133 h for the remaining 5 segments"
+   "next": "About 1\u20132 h for segments 06\u201307"
   },
   {
    "lane": "stormwood-route",
-   "doing": "First Stormwood segment now gets past the storm break; diagnosing why the first charged seam never offers its harvest prompt (likely the same duplicate-node bug Tidewake fixed).",
+   "doing": "Fixed the chapter-blocking Stormglass objective bug; re-running the first Stormwood piece.",
    "criteria": "F19#5 (Stormwood), then F09#0 and F11#0",
-   "next": "About 1 h for the seam fix, then 3\u20135 h for segments 02\u201308"
+   "next": "About 1 h for piece 1, then 3\u20135 h for 02\u201308"
   },
   {
    "lane": "home-key",
-   "doing": "Tracking down why the Home Key trip home fails with 'destination could not load' since Codex's final batch; testing whether it's a real hang or this slow test machine.",
-   "criteria": "F44#1 endgame rematch (and the Home Key itself)",
-   "next": "About 1\u20132 h for root cause and fix"
+   "doing": "Pushed a fix for the Home Key failing to load the homestead; re-running the ending test through the rematch leg.",
+   "criteria": "F44#1 (and the Home Key itself)",
+   "next": "About 1 h to a pass/fail"
   },
   {
    "lane": "Codex (visual)",
-   "doing": "Fixing failed biome visuals on its GPU; resubmitted the Stormwood forest floor (P2-039), which Claude is judging now.",
-   "criteria": "F38\u2013F41 biome visuals (catalog fixes, frame matrices, defect sweeps)",
+   "doing": "Final attempt at the Stormwood forest floor (P2-039) is being judged; F04 fight captures requested at priority.",
+   "criteria": "F38\u2013F41 biome visuals; F04 captures",
    "next": "READY posts every 2\u20133 h"
   },
   {
    "lane": "Claude coordinator",
-   "doing": "Merging shared fixes onto tb/ev-coordinator (Tidewake harvest fix landed, 105 tests pass), judging visuals, keeping this board current.",
-   "criteria": "All; F44#1 door walk",
+   "doing": "Merged all six lanes onto tb/ev-coordinator and running the combat/harvest/navigator tests; judging P2-039.",
+   "criteria": "All",
    "next": "Check-ins every 90 min"
   }
  ]

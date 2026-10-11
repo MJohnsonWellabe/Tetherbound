@@ -1,5 +1,5 @@
 {
- "generated_at": "7:46 AM CT Sun 11 Oct 2026",
+ "generated_at": "9:25 AM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -254,10 +254,10 @@
    "criteria": [
     {
      "text": "Warrens guardian: named tactical question visible at normal distance",
-     "status": "failing",
+     "status": "in_progress",
      "evidence": "tb/reproof-captures: | F04#0 Warrens guardian | FAIL | F04-0/ | Smoke FAIL (tell/recovery 1.00/0.90 vs expected 0.85/1.10; Earth Fist cone/lunge not from MoveDB); both attacks share one magenta-ring tell, question only in HUD text, camera too close/occluded in ",
      "gap": "Re-capture the guardian fight at normal camera; redo the code-blind judge. Folds into F22#4.",
-     "note": "Evidence window 1 (6:20 AM CT Sun 11 Oct): lane working. | Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "note": "Evidence 11 Oct: fight tests PASS on tb/ev-meadows-fights (merged to tb/ev-coordinator); awaiting Codex GPU capture + code-blind judge. | Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 0
     },
     {
@@ -265,7 +265,7 @@
      "status": "in_progress",
      "evidence": "named-fights REPORT @fe07d0d2 (blind verdict partly/partly)",
      "gap": "Build a visible lunge/telegraph; capture at normal camera; code-blind judge. Folds into F22#4.",
-     "note": "Evidence window 1 (6:20 AM CT Sun 11 Oct): lane working. | Audit 2026-10-04 on b4e4897d5: MISSING. The board shows partial: there is no visible lunge travel or path telegraph, and no passing verdict ever existed. CODEX §7.5 folds this into F22#4.",
+     "note": "Evidence 11 Oct: fight tests PASS on tb/ev-meadows-fights (merged to tb/ev-coordinator); awaiting Codex GPU capture + code-blind judge. | Audit 2026-10-04 on b4e4897d5: MISSING. The board shows partial: there is no visible lunge travel or path telegraph, and no passing verdict ever existed. CODEX §7.5 folds this into F22#4.",
      "audit_index": 1
     },
     {
@@ -273,7 +273,7 @@
      "status": "in_progress",
      "evidence": "test_named_fight_profiles.gd (data only); no normal-camera witness",
      "gap": "Capture each captain at normal camera; code-blind judge per captain. Folds into F22#4.",
-     "note": "Evidence window 1 (6:20 AM CT Sun 11 Oct): lane working. | Audit 2026-10-04 on b4e4897d5: MISSING. There is no capture or blind verdict per captain. CODEX §7.5 folds this into F22#4.",
+     "note": "Evidence 11 Oct: fight tests PASS on tb/ev-meadows-fights (merged to tb/ev-coordinator); awaiting Codex GPU capture + code-blind judge. | Audit 2026-10-04 on b4e4897d5: MISSING. There is no capture or blind verdict per captain. CODEX §7.5 folds this into F22#4.",
      "audit_index": 2
     },
     {
