@@ -711,9 +711,10 @@ class NativeTrainerBody extends Node3D:
 		faint_notifications += 1
 
 class NativeTrainerManager extends "res://scripts/combat/combat_manager.gd":
-	func _open_arena() -> void:
+	func _open_arena(_joining_realm: bool = false, _host_arena: Dictionary = {}) -> bool:
 		_arena = Node3D.new()
 		_player.get_parent().add_child(_arena)
+		return true
 	func _place_fighters() -> void:
 		# Both sides use the same fixed host-held geometry; no terrain in this fixture.
 		pass

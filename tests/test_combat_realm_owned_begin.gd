@@ -36,9 +36,10 @@ class Manager extends "res://scripts/combat/combat_manager.gd":
 		set_physics_process(false)
 		_throw = ThrowAdapter.new()
 		add_child(_throw)
-	func _open_arena() -> void:
+	func _open_arena(_joining_realm: bool = false, _host_arena: Dictionary = {}) -> bool:
 		_arena = Node3D.new()
 		add_child(_arena)
+		return true
 	func _arena_bounds(_at: Vector3) -> float:
 		return -1.0
 	func _take_camera() -> void:
