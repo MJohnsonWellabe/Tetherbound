@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+STORMWOOD_C2C3 hollows_alpha terrapup MASHER L45 runs=24 win=0.96 med_lead=0.818 med_party=0.197 med_s=72.2 max_s=83.1 lead_faint=0.04 wipe=0.00 max_hit=0.042 tell=[0.80,0.80] incoming=512 stalled=0
+STORMWOOD_C2C3 hollows_alpha terrapup READER L45 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=81.4 max_s=83.3 lead_faint=0.00 wipe=0.00 max_hit=0.041 tell=[0.80,0.80] incoming=5 stalled=0
+STORMWOOD_C2C3_VERDICT hollows_alpha terrapup PASS ratio=0.00 reader_win=1.00 max_hit=0.042 min_tell=0.80 
+STORMWOOD_C2C3 hollows_alpha ripplet MASHER L45 runs=24 win=0.00 med_lead=1.000 med_party=0.225 med_s=49.1 max_s=55.4 lead_faint=1.00 wipe=0.00 max_hit=0.074 tell=[0.80,0.80] incoming=365 stalled=0
+STORMWOOD_C2C3 hollows_alpha ripplet READER L45 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=69.8 max_s=72.0 lead_faint=0.00 wipe=0.00 max_hit=0.070 tell=[0.80,0.80] incoming=1 stalled=0
+STORMWOOD_C2C3_VERDICT hollows_alpha ripplet PASS ratio=0.00 reader_win=1.00 max_hit=0.074 min_tell=0.80 
+STORMWOOD_C2C3 hollows_alpha galewisp MASHER L45 runs=24 win=0.00 med_lead=1.000 med_party=0.217 med_s=43.7 max_s=48.7 lead_faint=1.00 wipe=0.00 max_hit=0.079 tell=[0.80,0.80] incoming=344 stalled=0
+STORMWOOD_C2C3 hollows_alpha galewisp READER L45 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=64.8 max_s=67.0 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.80] incoming=0 stalled=0
+STORMWOOD_C2C3_VERDICT hollows_alpha galewisp PASS ratio=0.00 reader_win=1.00 max_hit=0.079 min_tell=0.80 
+STORMWOOD_C2C3 done: 3 rows, 144 runs, 0 failing rows, 0 errors

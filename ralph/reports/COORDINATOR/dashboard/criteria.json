@@ -1,5 +1,5 @@
 {
- "generated_at": "9:25 AM CT Sun 11 Oct 2026",
+ "generated_at": "12:52 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -242,22 +242,22 @@
    "id": "F04",
    "title": "Named Meadows fights",
    "chapter": "Meadows",
-   "pct": 44,
+   "pct": 56,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
     "in_progress": 2,
     "not_started": 2,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
      "text": "Warrens guardian: named tactical question visible at normal distance",
-     "status": "in_progress",
-     "evidence": "tb/reproof-captures: | F04#0 Warrens guardian | FAIL | F04-0/ | Smoke FAIL (tell/recovery 1.00/0.90 vs expected 0.85/1.10; Earth Fist cone/lunge not from MoveDB); both attacks share one magenta-ring tell, question only in HUD text, camera too close/occluded in ",
-     "gap": "Re-capture the guardian fight at normal camera; redo the code-blind judge. Folds into F22#4.",
-     "note": "Evidence 11 Oct: fight tests PASS on tb/ev-meadows-fights (merged to tb/ev-coordinator); awaiting Codex GPU capture + code-blind judge. | Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "status": "met",
+     "evidence": "ralph/reports/VISUAL-PROOF/F04-0/ (tb/ev-captures 7ef5e574, render on tb/ev-coordinator a8899257): smoke_warrens --guardian-attacks --guardian-settled-approach PASS (Q,C,Q,C; 1 hit, 2 misses) + code-blind judge PASS: the Earth Fist reads as a filled orange 72-degree wedge you can step out of sideways; the quick strike is a distinct violet outline; a hit and a dodge are visible",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (code-blind PASS 12:46 PM CT Sun 11 Oct). Real game fix behind it: F22 pattern cues were drawn about 2.6 km from fights whose parent is translated (enemy_pattern_telegraph top_level order), plus the Earth Fist fill, Commands meter at bottom-centre and den cairn moved off the arena. Disclosed: the dodge is the smoke's 4 m fixture step. Polish notes (not blocking): faint quick-strike outline on brown floor; wedge runs under the HUD bar. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
@@ -990,10 +990,10 @@
    "id": "F15",
    "title": "Dock exchange, homecoming and credits",
    "chapter": "Tidewake",
-   "pct": 50,
+   "pct": 100,
    "counts": {
-    "met": 1,
-    "partial": 1,
+    "met": 2,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -1002,10 +1002,10 @@
    "criteria": [
     {
      "text": "Host and guest settle the dock exchange once",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/f15_dock_exchange_once/@14674ed5",
-     "gap": "Re-run f15_dock_exchange_once proof scenario on b4e4897d5 Folds into F20#0, F48#1.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The two-process proof is not in CI. world_ledger.gd (+396) and water_dock_actions.gd changed. CI unit only replicates the guest in one process.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F15-0/: two-process ENet proof f15_dock_exchange_once, exit 0, 43 PASS/0 FAIL: guest pays the Reedhaven repair once (memory and disk), host never charged, stale resends charge nothing, host's saved world holds both actions",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (coop-chapters 810cd705, 11:16 AM CT Sun 11 Oct). Disclosed: declared-start host save and portal fixture from the scenario itself; slow-host wall-clock deadlines scaled in a scratch copy only (pre-approved; no step, expectation or peer-side sim budget changed). Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
@@ -1301,11 +1301,11 @@
    "title": "Ending after Stormwood and the fifth key",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/reorder",
-   "pct": 80,
+   "pct": 100,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1337,10 +1337,10 @@
     },
     {
      "text": "After credits, reload resumes a safe completed world with bounties, rematches and remaining activities available.",
-     "status": "in_progress",
-     "evidence": "smoke_regional_credits_reload.gd (CI, synthetic); F20 solo PASS @b61078613068",
-     "gap": "Enable portals; re-run smoke_f20_ending.gd continuation, including rematch admission.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. Credits are unreachable in play without Home Key travel (portal flag false). The CI smoke uses a synthetic return and doesn't assert rematches.",
+     "status": "met",
+     "evidence": "tests/smoke_f20_ending.gd (home-key lane c4359f23): 68/0, counts_as_f20_3_proof=true: after credits, reload resumes the completed world with bounties, rematch admission and remaining activities available",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (home-key c4359f23, 12:37 PM CT Sun 11 Oct), the same ending smoke run as F44#1, with the same disclosed fixtures. Lands with the consolidated PR.",
      "audit_index": 3
     },
     {
@@ -1545,11 +1545,11 @@
    "title": "Tether Commands (trainer support, no damage)",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 83,
+   "pct": 100,
    "counts": {
-    "met": 5,
+    "met": 6,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1597,10 +1597,10 @@
     },
     {
      "text": "Co-op: each player's commands affect only their own creature and are host-validated.",
-     "status": "in_progress",
-     "evidence": "tether_commands.gd (host staging)",
-     "gap": "Enable it; build a peers:2 net smoke covering own-only effects and hostile payload refusal.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. network_enabled=false. No net smoke exists.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F24-5/: test_f24_host_commands (forged other-character command refused by host.commit_tether_command; Rally affects only the commander's creature) + 2-peer ENet smoke owner_passive_rejoin ALL CHECKS PASSED (guest Item goes through the host; never buffs the other player's creature)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a 408438850, 10:43 AM CT Sun 11 Oct). Own-creature-only and host validation are both shown on real peers and at unit level. Lands with the consolidated PR.",
      "audit_index": 5
     }
    ]
@@ -1740,12 +1740,12 @@
    "title": "Type essence and chosen leveling",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 83,
+   "pct": 100,
    "counts": {
-    "met": 5,
+    "met": 6,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -1760,10 +1760,10 @@
     },
     {
      "text": "Sources work: defeating wilds, releasing a caught creature (its type), attuned nodes, essence crops, research tasks and a capped daily care trickle; no creature expeditions or automation.",
-     "status": "not_started",
-     "evidence": "partial units: test_foundation_resources (node), test_research_log, test_den_groom_saved_transaction (care cap), test_bounty_board",
-     "gap": "Unit tests for defeat, release and crop payouts, then one engine smoke per source on the production path.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test of wild-defeat or release essence payouts (stage_defeat and release_payout are unused in tests). Crop essence unknown. No actual-path witness.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F27-1/: engine smokes for all six sources on the production path: wild defeat, attuned node, release, essence crop (53/53), Den groom (5/5: pays once, same creature refused, daily cap refused, next day pays) and research claim through the Journal (+5 essence, receipt, no second payout); units 95/0",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a bfeb15c6, 12:11 PM CT Sun 11 Oct). Two new smokes authorized for the groom and research sources. Disclosed: groom cap reached via a seeded count; research task completion seeded. Game fix b6c266ad: the host's own saved groom was never announced, so a solo/host Den panel stuck on 'Retry original transaction'. Coordinator re-ran groom/essence/master units (54 tests, 0 failed). Open UX nit: the Den panel shows raw refusal codes. Lands with the consolidated PR.",
      "audit_index": 1
     },
     {
@@ -1805,12 +1805,12 @@
    "title": "Breakthroughs, Masters and Ascension Feasts",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 83,
+   "pct": 100,
    "counts": {
-    "met": 5,
+    "met": 6,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -1849,10 +1849,10 @@
     },
     {
      "text": "Each co-op participant earns their own recipe; nobody receives it twice.",
-     "status": "not_started",
-     "evidence": "none",
-     "gap": "Peers:2 net smoke: both win, each gets the recipe once, and rejoin does not regrant.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No two-peer recipe receipt test.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F28-4/: 2-peer ENet smoke f28_masters ALL CHECKS PASSED (88 PASS): host and guest each win master_t1 and hold feast_t1 exactly once, unchanged across a second chest, reconnect, save/reload and chest replay",
+     "gap": "Follow-up (not this criterion): the guest's first chest press right after the duel is refused while its checkpoints settle, with no auto-retry; the recipe lands on the second press.",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a d40a5aba, 10:54 AM CT Sun 11 Oct). Coordinator read the check list: per-participant grant and no regrant are each asserted on real peers. Lands with the consolidated PR.",
      "audit_index": 4
     },
     {
@@ -1984,11 +1984,11 @@
    "title": "Homestead stations and upgrades",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 86,
+   "pct": 100,
    "counts": {
-    "met": 6,
+    "met": 7,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -2012,10 +2012,10 @@
     },
     {
      "text": "Meadows (tier 1) attachments are available from the start; hanging a biome's relic in the Shrine Room unlocks the next tier's attachment recipes (Meadows relic → Tidewake tier, and so on; Stormwood's relic → reserved tier 5); the player then carries one chosen relic power.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c 971615a6c1 (READY #572 6048907058, 6:26 PM CT 10-07): earned Shrine hang/power run 37699612835, 6 tests run 37699273278; review APPROVE",
-     "gap": "Unit and engine smoke: hang each relic → next-biome attachment recipes once; one relic power; save/rejoin.",
-     "note": "READY 6048907058 bounced at consolidation 6 (10-07 7:30 PM CT): its peer_runner placement fence is the code that broke smoke_net_catch_race on #578, and lane C's follow-up fixes (3205439a8, 7d22e88bc, 20f21f896) are outside the scope.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F31-2/: smoke_f31_relic_hang_power 17/17 (real Shrine Room hang grants exactly the 4 Tidewake attachment recipes once with a receipt; one power chosen in the real chooser; re-open and a second hang never stack; save/load keeps relics, 8 recipes and the one power) + Meadows attachment paid-path smoke on a fresh world; units test_relic_hang_attachment_blueprints (each relic unlocks the next tier, Stormwood the reserved fifth, once) and test_relic_power_selection (one at a time, save/reload, guest owner install): 15 tests/0 failed (coordinator re-run)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a ba4c8568, 12:00 PM CT Sun 11 Oct). Two-peer rejoin of a relic hang is already proven under F48#1 (met); the chosen power's own two-peer rejoin isn't separately shown. Lands with the consolidated PR.",
      "audit_index": 2
     },
     {
@@ -2122,22 +2122,22 @@
    "title": "Creature gear and trainer gear",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 40,
+   "pct": 80,
    "counts": {
-    "met": 2,
+    "met": 4,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 3,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Creatures have Harness and Charm slots in Rootiron, Tidesteel, Skyglass and Stormglass tiers, each upgradable +1 to +3.",
-     "status": "not_started",
-     "evidence": "gear.json@b4e4897d5; tests/test_recipes.gd::test_legacy_and_homestead_recipes_keep_their_approved_material_limits (partial)",
-     "gap": "Add a unit test for slots, the four tiers and upgrade chains +1..+3 through CreatureGear.stage_core/preflight.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. test_recipes only checks four tiers of recipes and their costs. No CI test loads creature_gear.gd, its slots, or the 24 upgrade links.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F33#0/EVIDENCE.md: tests/test_creature_gear.gd 8 tests/303 assertions/0 failed (four tiers x harness/charm x +0..+3, all 24 upgrade links, den equip + forge upgrade path)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-b deddb6a6d, 10:45 AM CT Sun 11 Oct). Coordinator re-read the test list against the criterion: slots, four tiers and +1..+3 upgrades are each asserted. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
@@ -2166,10 +2166,10 @@
     },
     {
      "text": "Trainer tool pouch tiers extend Tether Commands; all gear persists and is personal in co-op.",
-     "status": "not_started",
-     "evidence": "none in tests (no pouch_tier/command_pouch_tier assertion)",
-     "gap": "Add a unit test for pouch tier → command extension. Add a net smoke covering a two-peer gear craft/equip, reload and rejoin, with ownership kept personal.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test covers pouch-tier growth of commands, gear save/reload, or personal gear across two peers.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F33#4/: pouch tiers bind Tether Commands per tier (test_f24_host_commands pouch tests, 0 failed); 2-peer harness_max_hp extended with a production leave, wipe and returning join: ALL CHECKS PASSED 42/0 (guest's creature gear written to its own file, restored from file on rejoin, no duplicate, host applies it to the guest's creature only, host's own creature never has it); reconnect_keeps_character ALL PASSED (84) for trainer gear",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-b 2f4a69d4, 12:17 PM CT Sun 11 Oct). Disclosed: slow-host wall-clock budgets raised locally, uncommitted (coordinator-approved); harness_unwear isolation step re-wears the guest's gear before the leave. Lands with the consolidated PR.",
      "audit_index": 4
     }
    ]
@@ -2297,18 +2297,18 @@
    "counts": {
     "met": 2,
     "partial": 0,
-    "in_progress": 1,
-    "not_started": 1,
+    "in_progress": 2,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "About 25–30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.",
-     "status": "not_started",
-     "evidence": "ralph/reports/R2-F36/priority-source-audit.json, meshy-night-ledger.json (0 submissions)@b4e4897d5",
-     "gap": "Codex Meshy lane: run the attended batch; owner ruling 2026-10-04 allows the six most-repeated NPC faces as identity-preserving refinements of the installed cast.",
-     "note": "Relabelled 2026-10-04: agent work (Codex/lane), not waiting on the owner.",
+     "status": "in_progress",
+     "evidence": "ralph/reports/EVIDENCE/F36-0/JUDGE.md: 23 native candidates judged code-blind (shuffled A/B, two judges) on tb/ev-captures 8b6452d4",
+     "gap": "Switch-on commit for the 3 PASS species (captures lane); Codex fixes terminal contact on veridian/voltarach/solmane/aeriex and re-posts; the six most-repeated NPC faces (npc-identity Meshy batch) still to be judged.",
+     "note": "12:02 PM CT Sun 11 Oct: PASS meadowhart, mirejaw, tuskroot (switch on; Meadowhart later held for its riding body). Held for Codex contact fix: veridian (installed judged defective), voltarach, solmane, aeriex. All others stay flagged off (installed better, or candidate defect). Criterion closes when every priority asset is judged and each either passes or stays off, NPC faces included.",
      "audit_index": 0
     },
     {
@@ -2342,12 +2342,12 @@
    "title": "Ripplet swim and dive",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 80,
+   "pct": 100,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -2386,10 +2386,10 @@
     },
     {
      "text": "Riding and diving survive save/reload and two-peer rejoin.",
-     "status": "not_started",
-     "evidence": "test_f37_ripplet_traversal.gd JSON round-trip; tools/net/proof_scenarios/f37_ripplet_rejoin.json (unrun)",
-     "gap": "Run f37_ripplet_rejoin as a `# peers: 2` net smoke. Add a disk save/reload smoke while mounted and mid-dive.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Only an in-memory JSON round trip has been tested. The two-peer rejoin scenario is prepared but has never run. There is no disk reload test.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F37-4/: two-peer proof f37_ripplet_rejoin (first run) PASS: mounted mid-dive disk save, link drop, character wiped, returning join restores the same Ripplet ride (swim mode 2, host agrees, nothing stale) and a fresh Jump resumes the saved dive; f12_remote_rider_identity_reconnect (saddled Aquaryn) control also PASS",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a d2044ea2, 12:00 PM CT Sun 11 Oct). Two game fixes: restore_swim_mount no longer re-selects an already-active mount during rejoin admission; the Ripplet motion validator re-anchors on a connection's first host-approved mount (open finding: one 1 s validation window passes unjudged once per connection). Approved test change: the saddle check skips the saddle-less Ripplet ride only. Coordinator re-ran test_f37_ripplet_traversal + water encounter units (22 tests, 0 failed). Lands with the consolidated PR.",
      "audit_index": 4
     }
    ]
@@ -2778,9 +2778,9 @@
     {
      "text": "After credits, leaders and bosses return at the endgame tier (L55–60).",
      "status": "in_progress",
-     "evidence": "test_f44_repeatables::test_tiers… (gating only); rematches.json endgame_levels 55/58/58/60",
-     "gap": "Unit-assert endgame levels, then an engine witness of a post-credits leader rematch.",
-     "note": "Evidence phase: test walk now enters Grandpa's house by the east door (tb/ev-coordinator); smoke_f20_ending re-running. | Code on main; test_f44_endgame_tier 3 tests/295 assertions PASS. smoke_f20_ending fails before credits because its straight-line walk to Grandpa hits the house's south wall (needs to path through the east door). Deferred to the evidence phase (10-11). | prior: Audit 2026-10-04 on b4e4897d5: MISSING. Levels are config-only. No test asserts endgame levels or a post-credits encounter.",
+     "evidence": "tests/smoke_f20_ending.gd (home-key lane c4359f23): 68 checks, 0 failures, exit 0. 'The post-credits leader returns at the endgame leader tier L58 (enemy L58)'; ordinary input admits the canonical endgame rematch",
+     "gap": "Wire Tidewake and Cloudreach trainers into foundation_rematches (R1 and endgame), then one endgame witness per biome.",
+     "note": "Reopened 1:01 PM CT Sun 11 Oct by the coordinator. smoke_f20_ending (home-key c4359f23, 68/0) proves a Meadows post-credits leader returns at the endgame tier L58. But systems-b found that foundation_rematches mounts rematch sources only on trainer_npc-spawned bodies (Meadows, Stormwood); Tidewake (water_scene_npcs) and Cloudreach trainers get no rematch source, so their leaders can't return. Re-closes when the rematch-wiring lane lands Tidewake/Cloudreach sources and a witness passes.",
      "audit_index": 1
     },
     {
@@ -2855,11 +2855,11 @@
    "title": "Onboarding for the new systems",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 33,
+   "pct": 67,
    "counts": {
-    "met": 1,
+    "met": 2,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 1,
     "blocked": 0,
     "failing": 0
@@ -2867,10 +2867,10 @@
    "criteria": [
     {
      "text": "Grandpa or a village NPC introduces the Home Key, homestead, Altar and essence, breakthroughs and Masters, portals and shrines as each unlocks; each lesson can be skipped.",
-     "status": "in_progress",
-     "evidence": "multiplayer.json@b4e4897d5 `session.redesign_portal_runtime_enabled=false`; onboarding.json `enabled=true`",
-     "gap": "Land F18 portals (flag true), then a controller witness of all eight lessons with per-line skip.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. Home Key/portal/shrine lessons need F18's portal runtime. smoke_opening returns early while it is off.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F46-0/ (systems-a c9707f79): new test_onboarding_lesson_triggers (each of the 8 lessons becomes due only on its own unlock, in authored order, once; 2 tests/150 assertions, coordinator re-ran 0 failed) + smoke_modal_stacking (all 8 lessons skip at every line) + smoke_opening (Grandpa's real Home Key lesson read with the pad)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (12:45 PM CT Sun 11 Oct) under proof rules v2: unlock triggers and per-line skip are proven for all eight, and in-world delivery shown for the Home Key lesson; the other seven's in-world delivery rides the route chunks. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
@@ -2896,12 +2896,12 @@
    "title": "Economy, balance and the 15–25 hour clear",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/balance",
-   "pct": 20,
+   "pct": 40,
    "counts": {
-    "met": 1,
+    "met": 2,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 4,
+    "not_started": 3,
     "blocked": 0,
     "failing": 0
    },
@@ -2924,10 +2924,10 @@
     },
     {
      "text": "Four-character contention ledgers are solvent.",
-     "status": "not_started",
-     "evidence": "test_economy_ledger.mjs (not CI); test_tidewake_b_four_character_ledger.gd (old Tidewake only)",
-     "gap": "Measure the four-character ledger per band on the new loop (stations/feasts/gear).",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No new-loop four-character ledger is measured.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F47-2/ (systems-a 4f0c3ce6): tools/economy_supply_census.mjs + tests/test_economy_supply_census.mjs (data-only, coordinator re-ran 0 failed). All four bands are solvent for four characters against required demand (matching gear tier at +0; +1 also solvent), counting site stock and every configured non-site source (Master chests, trainer rewards, Warrens, chains, bounties, vendors, shed)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (12:52 PM CT Sun 11 Oct). Caveats for the owner: solvency depends on each character winning its own Master chest (without them berries, cliffglass_ore, windworn_heartwood, skyplume and sparkfur fall short); the optional +3-everything column is short only Cloudreach skyplume (185 of 200). Lands with the consolidated PR.",
      "audit_index": 2
     },
     {

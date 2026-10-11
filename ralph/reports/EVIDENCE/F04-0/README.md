@@ -45,3 +45,44 @@ The smoke failed on unmodified main before any attack ran ("aggressive engage ro
 ## Not addressed here
 
 The re-proof's "camera too close/occluded" finding needs a rendered capture. No camera change was made; the coordinator's capture decides it.
+
+## Round 2: code-blind judge FAIL fix (2026-10-11, about 11:50 AM CT)
+
+**Judge finding.** The capture was `tb/ev-captures` 53d9616f (`ralph/reports/VISUAL-PROOF/F04-0/`). Earth Fist showed only a small amber ring at the guardian's feet, and the quick showed the same ring in purple.
+
+**Cause (game bug).** `enemy_pattern_telegraph.gd::begin` set `top_level = true` *after* `add_child`. Godot keeps the node's current global transform at that moment, and the cue builds its vertices in world coordinates. Under the translated `BurrowWarrens` parent at (−357, 3.8, 2610), every F22 pattern cone was therefore drawn about 2.6 km from the fight. A headless trace confirmed it: `cue_global` equalled `parent_global`. Only the warning ring (`telegraph_glow.gd`) reached the screen. Any F22 pattern cue whose creature's parent is not at the world origin had the same fault. `lunge_lane.gd` already sets `top_level` before `add_child`, so it was not affected.
+
+**Fix.**
+- `top_level` is set before `add_child`.
+- Each row may now set its own fill:
+  - the guardian quick (`guardian_wall_quick`) is an outline-only violet wedge (`cue_fill_alpha` 0);
+  - Earth Fist is an orange wedge (`cue_fill_alpha` 0.5) that fills in over its 1.1 s tell (`cue_fills`, material alpha 25% → 100%). The wedge uses the move's own `range` and `cone_degrees` and follows the locked heading.
+
+Both wedges really reach about 8.5 m, because contact spacing between the two large bodies floors the reach. The quick's wedge is therefore not drawn smaller than its real hit area.
+
+**Local self-check (not judge evidence).** `local_render/`: xvfb + llvmpipe `opengl3`, 1280×720, `smoke_warrens.gd -- --guardian-attacks --capture-dir` with the den fixture teleport, at Earth Fist fill 0.32 (the final value is 0.5). Frame 01 shows the violet outline wedge with its tip past the Terrapup; frame 02 shows the filled orange 72° wedge.
+
+**Proofs at this commit.**
+- `smoke_warrens --guardian-attacks` PASS: Q, C, Q, C; 1 hit, 2 misses.
+- Units PASS: `test_enemy_pattern_telegraph`, `test_named_fight_tell_timing`, `test_telegraph_glow`, `test_named_fight_profiles`, `test_f22_action_publication` (28 tests, 1513 assertions, 0 failed).
+- `smoke_f22_pattern_contract` and `smoke_f22_live_pattern_mount` PASS.
+
+## Round 3: coordinator-approved items (b) and (c) (2026-10-11, about 12:10 PM CT)
+
+**(b) Tether Commands meter.**
+- `combat_hud.gd` now anchors the meter bottom-centre (`PRESET_CENTER_BOTTOM`, growing upward, 24 px margin). It used to sit 160 px above the party strip, over the play space.
+- `tether_command_meter.gd` drops the trailing " ×" unavailable mark; the existing muted colour carries that state. The pouch count now reads "(N held)", so Item throw shows "25  (0 held)" instead of "25 ×0 ×".
+
+**(c) Den cairn.**
+- The amber spikes on a dark root-rock base are `DenRootstoneCairn`. It is built in code (`burrow_warrens.gd::_build_warrens_landmark_motif`), not from JSON, so its placement now reads `burrow_warrens.json` → `landmark.den_cairn_offset`. The fallback is the old (5.2, 4.4).
+- It moves to (−12.5, 12.5) from the den centre: 17.7 m out, which is outside the guardian's 16 m arena (centred on the den) and inside the 19.5 m den shell. That corner (−x/+z) is clear of both the hall>den passage (−z edge) and the den>vault passage (+x edge). The cairn is non-colliding.
+- `GuardianRootNest` was not moved. It is the guardian's own low root bed, at most 0.42 m tall, at its spawn point (den centre + (0, 4)), deliberately inside the arena, and below the guardian's forelegs.
+
+**(d)** The coordinator recorded it as an owner decision for the end.
+
+**Proofs at this commit.**
+- `smoke_warrens` (full) PASS.
+- `smoke_warrens -- --guardian-attacks --guardian-settled-approach` PASS: natural admission after a 46.2 m input walk from hall to den; Q, C, Q, C; 1 hit, 2 misses.
+- Units PASS: `test_combat_hud_handheld_floors`, `test_burrow_warrens_visual_identity`, `test_f24_host_commands`, `test_enemy_pattern_telegraph`, `test_named_fight_tell_timing` (57 tests, 3071 assertions, 0 failed).
+- `smoke_combat_hud_left_column` PASS.
+- Local llvmpipe frames `local_render/r3_*` (self-check, not judge evidence): the Commands lane at bottom-centre, the cairn beyond the arena edge, and the Earth Fist wedge solid by mid-tell.

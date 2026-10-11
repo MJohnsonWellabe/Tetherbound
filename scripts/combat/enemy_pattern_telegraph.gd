@@ -29,10 +29,16 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	cue._profile = profile.duplicate(true)
 	cue._lift = float(cfg.get("ground_lift_m", 0.09))
 	cue._segments = maxi(12, int(cfg.get("segments", 48)))
-	cue._fill_alpha = float(cfg.get("fill_alpha", 0.18))
+	# A row may set its own fill (F04#0: the guardian's quick is an outline,
+	# its Earth Fist a solid wedge) and fill in over its tell (`cue_fills`).
+	cue._fill_alpha = float(profile.get("cue_fill_alpha", cfg.get("fill_alpha", 0.18)))
 	cue._edge_width = float(cfg.get("edge_width_m", 0.12))
-	body.get_parent().add_child(cue)
+	# Top-level BEFORE entering the tree: its vertices are world coordinates,
+	# and turning top_level on afterwards keeps the parent's global transform,
+	# which drew every cue under a translated parent (the Warrens guardian's
+	# cone under BurrowWarrens) ~2.6 km from the fight (F04#0 judge).
 	cue.top_level = true
+	body.get_parent().add_child(cue)
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -47,6 +53,12 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	cue.add_child(visual)
 	cue.aim(origin, heading, marker)
+	var fill_s := float(profile.get("telegraph", 0.0)) if profile.get("cue_fills") == true else 0.0
+	if fill_s > 0.0:
+		var faint := colour
+		faint.a = colour.a * 0.25
+		material.albedo_color = faint
+		cue.create_tween().tween_property(material, "albedo_color:a", colour.a, fill_s)
 	return cue
 
 

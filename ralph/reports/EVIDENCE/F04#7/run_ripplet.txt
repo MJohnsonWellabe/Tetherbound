@@ -1,0 +1,44 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+MEADOWS_C2C3 warrens_guardian ripplet MASHER L9 runs=24 win=1.00 med_lead=0.350 lead_faint=0.00 wipe=0.00 max_hit=0.141 tell=[0.85,1.30] diver_tell=-1.00 med_s=13.4 stalled=0
+MEADOWS_C2C3_HITS warrens_guardian ripplet MASHER neutral_worst=0.180 by={ "foe": "burrowback", "target": "ripplet", "move": "earth_fist" } | any_matchup_worst=0.141 by={ "foe": "burrowback", "target": "ripplet", "move": "earth_fist", "type_mult": 0.8 }
+MEADOWS_C2C3 warrens_guardian ripplet READER L9 runs=24 win=1.00 med_lead=0.440 lead_faint=0.00 wipe=0.00 max_hit=0.163 tell=[0.85,1.30] diver_tell=-1.00 med_s=31.7 stalled=0
+MEADOWS_C2C3_HITS warrens_guardian ripplet READER neutral_worst=0.207 by={ "foe": "burrowback", "target": "ripplet", "move": "earth_fist" } | any_matchup_worst=0.163 by={ "foe": "burrowback", "target": "ripplet", "move": "earth_fist", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT warrens_guardian ripplet FAIL -- reader/masher lead cost 0.440/0.350 > 0.55
+MEADOWS_C2C3 relay_officer_dell ripplet MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.167 tell=[0.90,1.40] diver_tell=-1.00 med_s=58.3 stalled=0
+MEADOWS_C2C3_HITS relay_officer_dell ripplet MASHER neutral_worst=0.166 by={ "foe": "galecrest", "target": "bramblebun", "move": "storm_strike" } | any_matchup_worst=0.167 by={ "foe": "galecrest", "target": "ripplet", "move": "storm_strike", "type_mult": 1.25 }
+MEADOWS_C2C3 relay_officer_dell ripplet READER L12 runs=24 win=1.00 med_lead=0.075 lead_faint=0.00 wipe=0.00 max_hit=0.132 tell=[0.90,1.40] diver_tell=-1.00 med_s=93.2 stalled=0
+MEADOWS_C2C3_HITS relay_officer_dell ripplet READER neutral_worst=0.166 by={ "foe": "galecrest", "target": "bramblebun", "move": "storm_strike" } | any_matchup_worst=0.132 by={ "foe": "galecrest", "target": "bramblebun", "move": "storm_strike", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT relay_officer_dell ripplet PASS
+MEADOWS_C2C3 relay_captain ripplet MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.459 tell=[0.90,1.40] diver_tell=-1.00 med_s=97.2 stalled=0
+MEADOWS_C2C3_HITS relay_captain ripplet MASHER neutral_worst=0.406 by={ "foe": "mosshell", "target": "pipwing", "move": "shell_bash" } | any_matchup_worst=0.459 by={ "foe": "mosshell", "target": "pipwing", "move": "tremor_roll", "type_mult": 1.25 }
+MEADOWS_C2C3 relay_captain ripplet READER L12 runs=24 win=1.00 med_lead=0.753 lead_faint=0.00 wipe=0.00 max_hit=0.307 tell=[0.90,1.40] diver_tell=-1.00 med_s=165.1 stalled=0
+MEADOWS_C2C3_HITS relay_captain ripplet READER neutral_worst=0.333 by={ "foe": "duskhush", "target": "bramblebun", "move": "night_swoop" } | any_matchup_worst=0.307 by={ "foe": "duskhush", "target": "bramblebun", "move": "quick_flit", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT relay_captain ripplet PASS
+MEADOWS_C2C3 captain_riverwatch ripplet MASHER L12 runs=24 win=0.79 med_lead=1.000 lead_faint=1.00 wipe=0.21 max_hit=0.510 tell=[0.90,1.30] diver_tell=-1.00 med_s=90.5 stalled=0
+MEADOWS_C2C3_HITS captain_riverwatch ripplet MASHER neutral_worst=0.467 by={ "foe": "duskhush", "target": "pipwing", "move": "night_swoop" } | any_matchup_worst=0.510 by={ "foe": "burrowback", "target": "pipwing", "move": "burrow_strike", "type_mult": 1.25 }
+MEADOWS_C2C3 captain_riverwatch ripplet READER L12 runs=24 win=1.00 med_lead=0.443 lead_faint=0.00 wipe=0.00 max_hit=0.251 tell=[0.90,1.30] diver_tell=-1.00 med_s=176.2 stalled=0
+MEADOWS_C2C3_HITS captain_riverwatch ripplet READER neutral_worst=0.313 by={ "foe": "duskhush", "target": "bramblebun", "move": "night_swoop" } | any_matchup_worst=0.251 by={ "foe": "duskhush", "target": "bramblebun", "move": "night_swoop", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT captain_riverwatch ripplet PASS
+MEADOWS_C2C3 captain_field ripplet MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.450 tell=[0.90,1.40] diver_tell=-1.00 med_s=102.9 stalled=0
+MEADOWS_C2C3_HITS captain_field ripplet MASHER neutral_worst=0.382 by={ "foe": "mosshell", "target": "pipwing", "move": "shell_bash" } | any_matchup_worst=0.450 by={ "foe": "meadowhart", "target": "pipwing", "move": "hoofbeat", "type_mult": 1.25 }
+MEADOWS_C2C3 captain_field ripplet READER L15 runs=24 win=1.00 med_lead=0.758 lead_faint=0.00 wipe=0.00 max_hit=0.265 tell=[0.90,1.40] diver_tell=-1.00 med_s=177.7 stalled=0
+MEADOWS_C2C3_HITS captain_field ripplet READER neutral_worst=0.322 by={ "foe": "duskhush", "target": "bramblebun", "move": "night_swoop" } | any_matchup_worst=0.265 by={ "foe": "duskhush", "target": "bramblebun", "move": "quick_flit", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT captain_field ripplet PASS
+MEADOWS_C2C3 captain_ridge ripplet MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.411 tell=[0.90,1.20] diver_tell=-1.00 med_s=86.5 stalled=0
+MEADOWS_C2C3_HITS captain_ridge ripplet MASHER neutral_worst=0.342 by={ "foe": "tuskroot", "target": "pipwing", "move": "root_nibble" } | any_matchup_worst=0.411 by={ "foe": "tuskroot", "target": "pipwing", "move": "root_nibble", "type_mult": 1.25 }
+MEADOWS_C2C3 captain_ridge ripplet READER L15 runs=24 win=1.00 med_lead=0.577 lead_faint=0.00 wipe=0.00 max_hit=0.254 tell=[0.90,1.20] diver_tell=-1.00 med_s=185.9 stalled=0
+MEADOWS_C2C3_HITS captain_ridge ripplet READER neutral_worst=0.312 by={ "foe": "duskhush", "target": "bramblebun", "move": "night_swoop" } | any_matchup_worst=0.254 by={ "foe": "duskhush", "target": "bramblebun", "move": "quick_flit", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT captain_ridge ripplet PASS
+MEADOWS_C2C3 stronghold_elite ripplet MASHER L18 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.413 tell=[0.90,1.40] diver_tell=-1.00 med_s=114.9 stalled=0
+MEADOWS_C2C3_HITS stronghold_elite ripplet MASHER neutral_worst=0.367 by={ "foe": "mosshell", "target": "pipwing", "move": "shell_bash" } | any_matchup_worst=0.413 by={ "foe": "mosshell", "target": "pipwing", "move": "tremor_roll", "type_mult": 1.25 }
+MEADOWS_C2C3 stronghold_elite ripplet READER L18 runs=24 win=1.00 med_lead=0.649 lead_faint=0.00 wipe=0.00 max_hit=0.299 tell=[0.90,1.40] diver_tell=-1.00 med_s=188.3 stalled=0
+MEADOWS_C2C3_HITS stronghold_elite ripplet READER neutral_worst=0.310 by={ "foe": "duskhush", "target": "bramblebun", "move": "night_swoop" } | any_matchup_worst=0.299 by={ "foe": "duskhush", "target": "bramblebun", "move": "quick_flit", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT stronghold_elite ripplet PASS
+MEADOWS_C2C3 warden_aldis ripplet MASHER L18 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.496 tell=[0.90,1.40] diver_tell=-1.00 med_s=116.8 stalled=0
+MEADOWS_C2C3_HITS warden_aldis ripplet MASHER neutral_worst=0.409 by={ "foe": "tuskroot", "target": "pipwing", "move": "earth_fist" } | any_matchup_worst=0.496 by={ "foe": "tuskroot", "target": "pipwing", "move": "earth_fist", "type_mult": 1.25 }
+MEADOWS_C2C3 warden_aldis ripplet READER L18 runs=24 win=1.00 med_lead=0.737 lead_faint=0.00 wipe=0.00 max_hit=0.319 tell=[0.90,1.40] diver_tell=-1.00 med_s=185.4 stalled=0
+MEADOWS_C2C3_HITS warden_aldis ripplet READER neutral_worst=0.416 by={ "foe": "brooktail", "target": "pipwing", "move": "aqua_shot" } | any_matchup_worst=0.319 by={ "foe": "brooktail", "target": "pipwing", "move": "aqua_shot", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT warden_aldis ripplet PASS
+MEADOWS_C2C3_CHAPTER ripplet masher_loses_a_named_fight=0.21 FAIL -- < 0.25
+MEADOWS_C2C3 done: 8 rows, 2 failing rows, 384 runs, 0 errors

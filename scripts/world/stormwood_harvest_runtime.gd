@@ -245,16 +245,22 @@ static func add_material_cue(node: Node3D, item: String, cues: Dictionary,
 			cap.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			root.add_child(cap)
 		"moss":
-			# Low overlapping cushions read as ground growth, not mushrooms.
+			# Each lobe samples its own terrain footprint. A flat ring of
+			# centred spheres floated above level ground and cut through slopes.
+			var patch_seed := absi(str(node.name).hash()) % 997
+			var embed := float(spec.get("ground_embed_m", 0.025))
+			var height_ratio := float(spec.get("height_ratio", 0.42))
+			glow.vertex_color_use_as_albedo = true
+			glow.roughness = float(spec.get("roughness", 0.85))
 			for index in 9:
 				var pad := MeshInstance3D.new()
-				var dome := SphereMesh.new()
-				dome.radius = radius * (0.6 + 0.08 * (index % 4))
-				dome.height = dome.radius * 0.42
-				pad.mesh = dome
+				pad.name = "MossCushion%d" % index
+				var pad_radius := radius * (0.6 + 0.08 * (index % 4))
+				var angle := float(index) * 2.39996 + float(patch_seed) * 0.13
+				var centre := Vector2(cos(angle), sin(angle)) * radius * sqrt(float(index) / 8.0)
+				pad.mesh = _moss_cushion_mesh(node, centre, pad_radius,
+					pad_radius * height_ratio, patch_seed + index, embed, ground_height)
 				pad.material_override = glow
-				var angle := TAU * float(index) / 9.0
-				pad.position = Vector3(cos(angle) * radius, lift, sin(angle) * radius)
 				root.add_child(pad)
 		"veins":
 			# Broken copper/blue seams follow the node's trunk or vine body.
@@ -291,6 +297,57 @@ static func add_material_cue(node: Node3D, item: String, cues: Dictionary,
 				visual.add_child(root)
 				root.transform = visual.transform.affine_inverse()
 	return root
+
+
+## A closed-looking moss cap with its irregular rim embedded in the actual
+## ground. Every shoulder/rim vertex samples the same production height
+## callable as the harvest site; there is no flat support sheet or collider.
+static func _moss_cushion_mesh(node: Node3D, centre: Vector2, radius: float,
+		height: float, seed_value: int, embed: float, ground_height: Callable) -> ArrayMesh:
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	# Shared smoothing group joins the curved rings into a soft continuous cap.
+	surface.set_smooth_group(0)
+	var rings: Array[PackedVector3Array] = []
+	for band in 6:
+		var ring := PackedVector3Array()
+		var polar := float(band) * PI / 10.0
+		for index in 16:
+			var angle := TAU * float(index) / 16.0
+			var outline := 1.0 + 0.055 * sin(angle * 3.0 + float(seed_value))
+			var offset := Vector2(cos(angle), sin(angle) * 0.87) * radius * cos(polar) * outline
+			ring.append(_moss_ground_point(node, centre + offset,
+				height * sin(polar) - embed, ground_height))
+		rings.append(ring)
+	for band in 5:
+		for index in 16:
+			var next := (index + 1) % 16
+			_moss_face(surface, rings[band][index], rings[band + 1][index],
+				rings[band][next] if band == 4 else rings[band + 1][next], 0.85)
+			if band < 4:
+				_moss_face(surface, rings[band][index], rings[band + 1][next], rings[band][next], 0.85)
+	surface.generate_normals()
+	return surface.commit()
+
+
+static func _moss_ground_point(node: Node3D, point: Vector2, lift: float,
+		ground_height: Callable) -> Vector3:
+	var local := Vector3(point.x, lift, point.y)
+	if ground_height.is_valid():
+		var world_at := node.to_global(Vector3(point.x, 0.0, point.y))
+		var ground := float(ground_height.call(world_at.x, world_at.z))
+		if is_finite(ground):
+			local = node.to_local(Vector3(world_at.x, ground, world_at.z)) + Vector3.UP * lift
+	return local
+
+
+static func _moss_face(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, shade: float) -> void:
+	surface.set_color(Color(shade, shade, shade))
+	# Godot front faces are clockwise; retain upward-facing normals on slopes.
+	var points: Array[Vector3] = []
+	points.assign([a, c, b] if (c - a).cross(b - a).y < 0.0 else [a, b, c])
+	for point: Vector3 in points:
+		surface.add_vertex(point)
 
 
 ## An offset broken tip and six flat side faces distinguish fused crystals

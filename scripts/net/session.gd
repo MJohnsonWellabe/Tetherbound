@@ -1406,6 +1406,13 @@ func ordinary_combat_reward_owner(director: Node, encounter_id: String) -> Dicti
 	if not _ordinary_combat_director_live(director) or not _bind_character_authority() \
 		or get_node_or_null(^"LedgerRpc") == null \
 		or not director.has_method("ordinary_combat_vitals_ready"): return unavailable
+	# Per-round ordinary rewards cover only the trainers.json table. Any other
+	# trainer (a chapter boss such as Captain Veyra) is not applicable here: it
+	# keeps its own reward path, rather than "unavailable" aborting the round.
+	var trainer_spec: Dictionary = director.get("_trainer_spec")
+	if not trainer_spec.is_empty() and not trainer_spec.has("master") and not trainer_spec.has("rematch") \
+		and preload("res://scripts/world/trainer_npc.gd").trainer(str(trainer_spec.get("id", ""))).is_empty():
+		return {"enabled": false, "ready": true, "scope": {}}
 	var vitals_ready: Variant = director.call("ordinary_combat_vitals_ready", encounter_id)
 	if not vitals_ready is bool or vitals_ready != true: return unavailable
 	var game: Node = _game()
@@ -5371,9 +5378,11 @@ func _deliver_training_decision(peer: int, row: Dictionary) -> void:
 		# A host's own homestead action (solo too) is answered "awaiting" by
 		# _foundation_send and settles here; nothing else announced it, so a
 		# station panel stayed on "awaiting_saved_decision" with its buttons off.
-		# Guests hear theirs through _rpc_foundation_reply; groom has its own.
+		# Guests hear theirs through _rpc_foundation_reply; a guest's groom has
+		# its own (groom_passive_sync), but the host's own groom never enters
+		# that service (homestead_submit_action), so it is announced here too.
 		var action := str(row.get("action", ""))
-		if settled and (action in FOUNDATION_ACTIONS.ACTIONS or action in CHARACTER_ACTIONS.ACTIONS) and action != "groom" and _homestead_completion_once(row):
+		if settled and (action in FOUNDATION_ACTIONS.ACTIONS or action in CHARACTER_ACTIONS.ACTIONS) and _homestead_completion_once(row):
 			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true), _foundation_decision(peer, row))
 	elif bool(_registry.call("has", peer)):
 		rpc_id(peer, "_rpc_training_decision", _altar_epoch, row.delivery_id, int(row.journal_revision), row.receipt)

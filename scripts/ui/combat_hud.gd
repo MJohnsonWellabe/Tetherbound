@@ -351,7 +351,12 @@ func _ready() -> void:
 	if preload("res://scripts/combat/tether_commands.gd").enabled("ui_enabled"):
 		_tether_meter = preload("res://scripts/ui/tether_command_meter.gd").new()
 		$Root.add_child(_tether_meter)
-		_tether_meter.position = Vector2(_party_strip_position().x, maxf(24.0, _party_strip_position().y - 160.0))
+		# Bottom-centre, as tether_command_meter.gd's header says: the old spot
+		# above the party strip put the lane over the play space (F04#0
+		# code-blind judge). Grows upward from the bottom edge.
+		_tether_meter.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM, Control.PRESET_MODE_MINSIZE, 24)
+		_tether_meter.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		_tether_meter.grow_vertical = Control.GROW_DIRECTION_BEGIN
 		if _manager != null:
 			_manager.connect("tether_command_refused", _tether_meter.refused)
 			if _manager.has_method("new_system_combat_snapshot"):

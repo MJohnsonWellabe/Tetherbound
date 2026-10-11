@@ -1,0 +1,75 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"archetype_filter": [],
+	"batch": "ultimates",
+	"cases": [
+		{
+			"arrivals": 0,
+			"captures": {
+				"early": {
+					"arrivals": 0,
+					"wall_seconds": 0.568219
+				},
+				"late": {
+					"arrivals": 0,
+					"wall_seconds": 2.46221
+				},
+				"middle": {
+					"arrivals": 0,
+					"wall_seconds": 1.527717
+				}
+			},
+			"first_frame_ms": 1155.298,
+			"frame_ms_max": 959.498,
+			"frame_ms_p95": 934.493,
+			"frames": 3,
+			"id": "four_simultaneous",
+			"moves": [
+				"ultimate_terrapup",
+				"ultimate_ripplet",
+				"ultimate_galewisp",
+				"ultimate_veridian"
+			],
+			"presentation_seconds": 2.4
+		}
+	],
+	"display": "X11",
+	"engine": {
+		"build": "official",
+		"hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+		"hex": 263936,
+		"major": 4,
+		"minor": 7,
+		"patch": 0,
+		"status": "stable",
+		"string": "4.7-stable (official)",
+		"timestamp": 0
+	},
+	"failures": [
+		"Four-ultimate arrivals 0"
+	],
+	"light_lifecycle": {},
+	"limits": [
+		"No combat/damage authority exercised",
+		"Wall-frame intervals include CPU/GPU/present/OS scheduling",
+		"No Ally or four-creature-fight acceptance claim",
+		"Identity duration slowed for readable frames; host timing requires separate player witness"
+	],
+	"medium_features": false,
+	"rank_filter": [],
+	"relocated_world_characters": [],
+	"renderer": "gl_compatibility",
+	"resolution": [
+		1280,
+		720
+	],
+	"scope": "production_effect_nodes_synthetic_arena",
+	"selected_identity": "",
+	"stage": "meadows",
+	"target": {
+		"production_model": true,
+		"scope": "posed production body; no encounter or HP authority",
+		"species": "mudsnout"
+	},
+	"ultimate_override_assertions": 361
+}

@@ -195,6 +195,37 @@ func test_every_ultimate_presents_for_two_to_three_seconds_of_committed_control(
 		var committed := float(row.get("windup", 0.0)) + float(row.get("recovery", 0.0))
 		assert_between(committed, 2.0, 3.0, "%s commits the creature for %.2fs" % [move_id, committed])
 
+func test_ultimate_control_returns_when_its_presentation_ends() -> void:
+	# F35#3 control-restore timing on the actual host profile and action clock:
+	# the wind-up launches the presentation, recovery lasts exactly as long as
+	# it, and the creature is READY again on the tick it ends, never later.
+	var moves := MOVES.load_default()
+	var step := 1.0 / 60.0
+	var checked := 0
+	for move_id: String in moves.move_ids():
+		if moves.slot(move_id) != "ultimate": continue
+		checked += 1
+		var profile := MANAGER.host_move_profile(moves, "player_ultimate", move_id, 0.5, 0.5)
+		var presentation := float(profile.get("ultimate", {}).get("presentation_seconds", 0.0))
+		assert_between(presentation, 2.0, 3.0, "%s presents for %.2fs" % [move_id, presentation])
+		assert_almost_eq(float(profile.recovery), presentation, 0.0001, "%s recovery ends with its presentation" % move_id)
+		assert_true(float(profile.windup) + float(profile.recovery) <= 3.0001,
+			"%s total loss of control %.2fs stays within 3 s" % [move_id, float(profile.windup) + float(profile.recovery)])
+		var manager := MANAGER.new()
+		manager.set("_action", MANAGER.Action.RECOVERY)
+		manager.set("_action_timer", float(profile.recovery))
+		manager.set("_pending_move", profile)
+		var elapsed := 0.0
+		while int(manager.get("_action")) != MANAGER.Action.READY and elapsed < 5.0:
+			manager.call("_tick_action", step)
+			elapsed += step
+		assert_eq(int(manager.get("_action")), MANAGER.Action.READY, move_id + " hands control back")
+		assert_true(absf(elapsed - presentation) <= step + 0.0001,
+			"%s control returns at %.3fs for a %.2fs presentation" % [move_id, elapsed, presentation])
+		assert_true((manager.get("_pending_move") as Dictionary).is_empty(), move_id + " leaves no committed move behind")
+		manager.free()
+	assert_true(checked >= 31, "every authored ultimate was timed")
+
 func test_every_species_fills_quick_charged_utility_and_ultimate_by_default() -> void:
 	# F23#0: every creature carries the three slots plus an ultimate. Quick,
 	# charged and ultimate come with the species; the utility is the learnset's

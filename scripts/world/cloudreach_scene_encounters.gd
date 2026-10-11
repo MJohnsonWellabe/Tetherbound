@@ -60,6 +60,7 @@ func _mount_challenge(id: String, body: Node3D) -> void:
 	sync_challenge_anchor(prompt, body)
 	prompt.connect("activated",_challenge.bind(id))
 	trainer_prompts[id] = prompt
+	_mark_rematch_source(id, body, prompt)
 
 
 func _process(delta: float) -> void:
@@ -79,6 +80,7 @@ func _process(delta: float) -> void:
 				old_prompt.queue_free()
 			trainer_prompts.erase(id)
 			trainer_nodes.erase(id)
+			_unmark_rematch_source(previous)
 			if not is_instance_valid(body) or not trainer_specs.has(id):
 				continue
 			_mount_challenge(id,body)

@@ -1,0 +1,3 @@
+lessons: every configured exchange skips at every line; menu refused; departure and opening edge preserved
+lesson service: actual character/realm departures release input without dismissal or lesson receipt
+modal stacking smoke test passed

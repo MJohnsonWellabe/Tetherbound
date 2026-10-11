@@ -1,0 +1,70 @@
+{
+  "biome": "cloudreach",
+  "checks": [
+    "PASS: the title's Load list offers the Autosave",
+    "PASS: the save loads cloudreach through the title",
+    "PASS: officer_voss_summit_approach stands in the loaded cloudreach world",
+    "PASS: the endgame rematch prompt is mounted and enabled after the biome's boss",
+    "PASS: no rematch receipt before the fight",
+    "PASS: the realm has its director, combat manager and camera",
+    "PASS: an owned companion is called out ()",
+    "PASS: the ordinary Interact offer is the rematch prompt",
+    "PASS: ordinary input admits the canonical officer_voss_summit_approach endgame rematch",
+    "PASS: every rematch member is at the configured endgame level L58 ([58, 58, 58])",
+    "PASS: the rematch is fought above the first win's levels ([41, 42, 42])",
+    "PASS: the pilot wins the rematch (won after 4648 frames)",
+    "PASS: the rematch win is delivered to this character once ([\"rematch:officer_voss_summit_approach:endgame:character-cb1b88c682cd3219e5c3d8d63558473d:win:d3374d50ed084f0da03f42a78232f36b:ae9dca7b09f92f6746d6c6b804ea82c5:d6b5915c46057bcb005f46f6433df65609dd3a7a57af75ac1a5a4a7c299ebffb\"]; { \"pending_outcome\": \"<null>\", \"pending_event\": \"\", \"deliveries\": [{ \"foundation_event:f8e6b1673a5b8a62819a3b4\": \"retained\" }] })",
+    "PASS: the unique rematch receipt is paid exactly once",
+    "PASS: the first rematch win pays the configured unique reward { \"skyglass_ingot\": 2.0 } (gained { \"skyglass_ingot\": 2 })",
+    "PASS: better than the first win: its reward { \"_why_xp_bonus\": \"F07#4 ledger margin (ralph/reports/CLOUDREACH-LANE/f07-route-ledger/summary.md). Flat SC15 top-up paid to every living party member on the required Voss win (trainer_npc.gd::reward_xp_bonus). Was 0: at 50% wild engagement the lead met Captain Veyra\\'s band and the L33 exit with zero slack and 77% of its XP came from optional wilds. PROGRESSION §7: tune existing awards so the ordinary route supports its intended encounters. Scale: about 0.8 of a level per member at L29-30 (XP to next 1922-1998), no multi-level spike; larger than the Warden precedent (400 XP, about 0.3 of a level at L20, band5_stronghold_approach/trainers.json), because Voss is the long Voss-to-Veyra leg\\'s only required payout. TUNABLE.\", \"coins\": 120.0, \"xp_bonus\": 1600.0, \"items\": [{ \"id\": \"revive\", \"count\": 2.0 }] } never paid [\"skyglass_ingot\"]",
+    "PASS: the title's Load list offers the Autosave",
+    "PASS: the save loads cloudreach through the title",
+    "PASS: after a title reload the rematch receipts are unchanged (paid once: [\"rematch:officer_voss_summit_approach:endgame:character-cb1b88c682cd3219e5c3d8d63558473d\", \"rematch:officer_voss_summit_approach:endgame:character-cb1b88c682cd3219e5c3d8d63558473d:win:d3374d50ed084f0da03f42a78232f36b:ae9dca7b09f92f6746d6c6b804ea82c5:d6b5915c46057bcb005f46f6433df65609dd3a7a57af75ac1a5a4a7c299ebffb\"])",
+    "PASS: after the reload there is no second payout",
+    "PASS: after the reload the repeat cooldown is retained"
+  ],
+  "diagnostic": {
+    "deliveries": [
+      {
+        "foundation_event:f8e6b1673a5b8a62819a3b4": "retained"
+      }
+    ],
+    "pending_event": "",
+    "pending_outcome": "<null>"
+  },
+  "drain": {
+    "frames_until_win_receipt": 5300,
+    "longest_blocked_run": 0,
+    "owner_mutation_blocked_frames": 0
+  },
+  "expected_level": 58,
+  "fight_frames": 4648,
+  "first_levels": [
+    41,
+    42,
+    42
+  ],
+  "first_reward": {
+    "_why_xp_bonus": "F07#4 ledger margin (ralph/reports/CLOUDREACH-LANE/f07-route-ledger/summary.md). Flat SC15 top-up paid to every living party member on the required Voss win (trainer_npc.gd::reward_xp_bonus). Was 0: at 50% wild engagement the lead met Captain Veyra's band and the L33 exit with zero slack and 77% of its XP came from optional wilds. PROGRESSION §7: tune existing awards so the ordinary route supports its intended encounters. Scale: about 0.8 of a level per member at L29-30 (XP to next 1922-1998), no multi-level spike; larger than the Warden precedent (400 XP, about 0.3 of a level at L20, band5_stronghold_approach/trainers.json), because Voss is the long Voss-to-Veyra leg's only required payout. TUNABLE.",
+    "coins": 120.0,
+    "items": [
+      {
+        "count": 2.0,
+        "id": "revive"
+      }
+    ],
+    "xp_bonus": 1600.0
+  },
+  "levels": [
+    58,
+    58,
+    58
+  ],
+  "outcome": "won",
+  "passed": true,
+  "payout": {
+    "skyglass_ingot": 2
+  },
+  "tier": "endgame",
+  "witness": "officer_voss_summit_approach"
+}

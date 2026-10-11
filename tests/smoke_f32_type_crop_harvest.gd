@@ -244,6 +244,13 @@ func _crop_cycle(config: Dictionary, crop: Dictionary) -> void:
 		"disk: ripe crop stays on the plot")
 	for item: String in crop.outputs:
 		_check(_count(disk_ripe.character, item) == _count(disk_sown.character, item), "disk: day advance paid no " + item)
+	# Sim-time settle (coordinator-approved 2026-10-11): the host's bounty
+	# morning poll (bounty_host_adapter, host_poll_seconds) writes through the
+	# same per-character delivery slot; let it and its owner save settle first.
+	await _frames(120)
+	for frame in 1800:
+		if _game.get("session").call("owns_input") != true: break
+		await physics_frame
 	# Pick by hand.
 	if not await _interact(prompt, "harvest"): return
 	var disk_after := _disk("harvested")
