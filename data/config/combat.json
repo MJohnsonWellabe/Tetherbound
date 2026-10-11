@@ -1219,6 +1219,50 @@
         "repeat_telegraph_s": 1.1,
         "repeat_recovery_s": 0.6
       },
+      "venn_charger_rush": {
+        "role": "CHARGER",
+        "slot": "quick",
+        "telegraph_shape": "lane",
+        "telegraph": 0.9,
+        "recovery": 0.9,
+        "heavy": false,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7,
+        "face_lock_fraction": 0.25,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.65,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "_why": "F14#1/F22#4 (coordinator tuning batch, 11 Oct 2026): Venn's riptusk sendout used the generic charger rows, whose face_lock_fraction 0.5 overwrote riptusk's tuned 0.25 lane lock (6d984384c) in combat_ai.select_pattern's merge. An exact copy with the 0.25 lock keeps every other CHARGER on the generic rows."
+      },
+      "venn_charger_double_rush": {
+        "role": "CHARGER",
+        "slot": "charged",
+        "telegraph_shape": "lane",
+        "telegraph": 1.1,
+        "recovery": 1.2,
+        "heavy": true,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7,
+        "face_lock_fraction": 0.25,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "repeat_count": 2,
+        "repeat_reaim_s": 0.3,
+        "repeat_telegraph_s": 1.1,
+        "repeat_recovery_s": 0.6,
+        "_why": "F14#1/F22#4 (coordinator tuning batch, 11 Oct 2026): Venn's riptusk sendout used the generic charger rows, whose face_lock_fraction 0.5 overwrote riptusk's tuned 0.25 lane lock (6d984384c) in combat_ai.select_pattern's merge. An exact copy with the 0.25 lock keeps every other CHARGER on the generic rows."
+      },
       "charger_check": {
         "role": "CHARGER",
         "slot": "quick",
@@ -1782,8 +1826,8 @@
           },
           {
             "sequence": [
-              "charger_rush",
-              "charger_double_rush"
+              "venn_charger_rush",
+              "venn_charger_double_rush"
             ]
           }
         ],
