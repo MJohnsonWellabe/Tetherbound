@@ -343,7 +343,13 @@ func _run() -> void:
 		_require(_has(flag), "Reload preserved " + flag)
 	_require(game.inventory.count("coin") == coins, "Reload did not duplicate payouts")
 	_require(_inventory_snapshot() == saved_inventory,"Reload preserved every occupied inventory slot")
-	_require(not game.can_enter_realm("water"), "Water realm remains non-enterable")
+	# Chapter order decides: in the new order Tidewake is earned before
+	# Cloudreach and stays enterable; in the legacy order it is still locked.
+	var order := preload("res://scripts/data/biome_order.gd").runtime_ids()
+	if order.find("water") < order.find("cloudreach"):
+		_require(game.can_enter_realm("water"), "Water realm, earned before Cloudreach, remains enterable")
+	else:
+		_require(not game.can_enter_realm("water"), "Water realm remains non-enterable")
 	_log("persistence_snapshot", {"inventory":_inventory_snapshot(),"team":_team_snapshot(),"party_exact":_party_persistence_snapshot(),"flags":_flag_snapshot(),"day":game.day,"water_enterable":game.can_enter_realm("water")})
 	_log("complete", {"optional_trainers": "not attempted", "optional_detours": "opening candy; required fiber and camp preparation", "recovery_choices":recovery_choices, "combat_mode":"live_input" if live_combat else "mechanics_only_test_lethal"})
 	completed_route = true
