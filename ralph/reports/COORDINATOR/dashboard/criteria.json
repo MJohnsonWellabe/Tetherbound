@@ -256,8 +256,8 @@
      "text": "Warrens guardian: named tactical question visible at normal distance",
      "status": "in_progress",
      "evidence": "tb/reproof-captures: | F04#0 Warrens guardian | FAIL | F04-0/ | Smoke FAIL (tell/recovery 1.00/0.90 vs expected 0.85/1.10; Earth Fist cone/lunge not from MoveDB); both attacks share one magenta-ring tell, question only in HUD text, camera too close/occluded in ",
-     "gap": "Re-capture the guardian fight at normal camera; redo the code-blind judge. Folds into F22#4.",
-     "note": "Evidence 11 Oct: fight tests PASS on tb/ev-meadows-fights (merged to tb/ev-coordinator); awaiting Codex GPU capture + code-blind judge. | Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "gap": "Wedge telegraph for Earth Fist from its config; distinct quick-strike shape; re-capture at the normal camera; code-blind judge.",
+     "note": "Code-blind judge 11:26 AM CT Sun 11 Oct on tb/ev-captures 53d9616f (render.yml Compatibility): FAIL. The Earth Fist tell is a small round ring at the guardian's feet, not the 6.5 m / 72° cone, so the sidestep answer isn't visible; the quick strike is the same ring in another colour. Also noted: a camera flip at the dodge, command labels over the creatures, props hiding the forelegs, guardian barely larger than the Terrapup. Fix sent to meadows-fights (wedge telegraph from config); then re-capture and re-judge.",
      "audit_index": 0
     },
     {
