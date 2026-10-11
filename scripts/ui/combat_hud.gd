@@ -1714,8 +1714,8 @@ func _on_exited(outcome: String) -> void:
 			_outcome.add_theme_color_override("font_color", UITokens.TEAL)
 			_set_xp_line()
 		"lost":
-			_outcome.text = "Your creature is out of the fight."
-			_outcome.add_theme_color_override("font_color", UITokens.DANGER)
+			_outcome.text = "Battle lost\nYour creature needs recovery."
+			_outcome.add_theme_color_override("font_color", UITokens.WARNING)
 		"fled":
 			_outcome.text = "You backed off."
 			_outcome.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
