@@ -3,6 +3,7 @@
 #   tools/earned_saves/run_cloudreach_chain.sh <start checkpoint dir> <out root> [first segment] [--accelerated]
 # One fresh Godot process per segment; each loads the previous segment's save and
 # stops the chain on the first failure (the previous dir stays the last good save).
+# The start dir feeds the first segment run, whichever segment that is.
 set -u
 START="${1:?start checkpoint dir}"; ROOT="${2:?out root}"; FIRST="${3:-01_arrival_gate}"; EXTRA="${4:-}"
 GODOT="${GODOT:-godot}"
@@ -14,7 +15,7 @@ started=0; prev="$START"
 for i in "${!SEGMENTS[@]}"; do
   seg="${SEGMENTS[$i]}"; dir="$ROOT/cloudreach_${seg}"
   if [[ "$seg" == "$FIRST" ]]; then started=1; fi
-  if [[ $started == 0 ]]; then prev="$dir"; continue; fi
+  if [[ $started == 0 ]]; then continue; fi
   echo "CHAIN START $seg $(TZ=America/Chicago date +%FT%T%Z)"
   (cd "$REPO" && timeout "${CHAIN_TIMEOUT:-7200}" "$GODOT" --headless --path . \
      --script tools/earned_saves/cloudreach_chain_runner.gd -- \
