@@ -938,7 +938,7 @@
       "original_win_field": "master_wins"
     }
   },
-  "_why_withdrawn_patrols": "Coordinator ruling 2026-10-11 (owner-delegated): the seven Team Tether patrol rows (relay_picket_hess, relay_picket_orrin, relay_officer_dell, relay_captain, stronghold_patrol, stronghold_courtyard, stronghold_elite) are not rematch profiles. They are patrols, not named trainers; F44 covers named trainers, leaders, captains, Masters and bosses. The F05 Meadows healing withdraws them at the Warden's legendary_freed, the same moment their r1 tier would open, so their rematch could never be offered.",
+  "_why_withdrawn_patrols": "Coordinator ruling 2026-10-11 (owner-delegated): rows relay_picket_hess, relay_picket_orrin, relay_officer_dell, relay_captain, stronghold_patrol, stronghold_courtyard and stronghold_elite are withdrawn. Team Tether's Meadows units (two pickets, Officer Dell, Captain Vance, the stronghold patrol, courtyard and Hald) leave Meadows when the Warden falls (F05 healing), so their r1 tier can never be offered; the Meadows captains, Master and Warden keep their rematches.",
   "witnesses": {
     "meadows": "captain_riverwatch",
     "tidewake": "water_trainer_yara",
