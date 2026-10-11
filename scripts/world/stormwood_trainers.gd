@@ -29,6 +29,12 @@ func build_authored(player: Node3D) -> void:
 					if not portrait.is_empty() and ResourceLoader.exists(portrait):
 						entry["portrait"] = portrait
 					DIALOGUE.table()[spec[kind]] = entry
+		var variant_id := str(spec.get("appearance_variant_id", ""))
+		if not variant_id.is_empty():
+			var model := model_config(spec)
+			if str(model.get("appearance_variant_id", "")) == variant_id:
+				for kind: String in ["challenge", "defeated"]:
+					DIALOGUE.table()[spec[kind]]["portrait"] = model["portrait"]
 		authored_specs[str(spec.id)] = spec
 		_spawn(spec)
 		if str(spec.get("surface_id", "")) == "dynamo_core":
