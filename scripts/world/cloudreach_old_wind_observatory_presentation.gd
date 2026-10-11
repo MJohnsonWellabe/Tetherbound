@@ -103,7 +103,7 @@ func _build_tower_ribs(cfg: Dictionary, trim: Material, bronze: Material) -> voi
 
 
 func _build_armillary(cfg: Dictionary, bronze: Material, glow: Material) -> void:
-	var centre := _v3(cfg.get("armillary_position", [0.0, 10.5, -6.9]))
+	var centre := _v3(cfg.get("armillary_position", [0.0, 10.5, -10.4]))
 	var radii := cfg.armillary_radii_m as Array
 	var horizontal := _add_ring("ArmillaryHorizon", float(radii[0]), float(radii[1]), centre,
 		bronze, "armillary")
@@ -126,11 +126,26 @@ func _build_armillary(cfg: Dictionary, bronze: Material, glow: Material) -> void
 	core.material_override = glow
 	core.set_meta("observatory_role", "armillary")
 	add_child(core)
+	# The tilted rings previously passed through the tower, while the short
+	# hub spokes stopped before reaching the outer ring. Seat four braces in
+	# the masonry and terminate them on that ring's actual tube centreline.
+	var ring_radius := (float(radii[0]) + float(radii[1])) * 0.5
+	var diagonal := ring_radius / sqrt(2.0)
+	var mount_heights: Array = cfg.get("armillary_wall_mount_heights_m", [7.0, 12.6])
 	for index in 4:
-		var angle := TAU * float(index) / 4.0 + PI * 0.25
-		var finish := centre + Vector3(sin(angle) * 4.8, cos(angle) * 4.8, 0.75)
-		_add_cylinder_between("ArmillaryBrace%02d" % index, centre, finish,
-			0.12, bronze, "armillary")
+		var side := -1.0 if index % 2 == 0 else 1.0
+		var upper := index >= 2
+		var mount := Vector3(side * float(cfg.get("armillary_wall_mount_x_m", 3.8)),
+			float(mount_heights[1 if upper else 0]),
+			float(cfg.get("armillary_wall_mount_z_m", -5.35)))
+		var finish := centre + Vector3(side * diagonal, diagonal if upper else -diagonal, 0.0)
+		_add_cylinder_between("ArmillaryBrace%02d" % index, mount, finish,
+			float(cfg.get("armillary_brace_radius_m", 0.12)), bronze, "armillary")
+	# All three ring planes share this vertical axis. It carries the smaller
+	# wind ring and the reading core instead of leaving either suspended.
+	_add_cylinder_between("ArmillaryAxle", centre - Vector3.UP * ring_radius,
+		centre + Vector3.UP * ring_radius,
+		float(cfg.get("armillary_axle_radius_m", 0.09)), bronze, "armillary")
 	var armillary_fill := OmniLight3D.new()
 	armillary_fill.name = "ArmillaryNightFill"
 	armillary_fill.position = centre + Vector3(0.0, 0.0, -1.2)
