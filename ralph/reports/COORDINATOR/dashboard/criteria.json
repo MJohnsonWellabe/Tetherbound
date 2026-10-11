@@ -929,26 +929,26 @@
    "pct": 67,
    "counts": {
     "met": 4,
-    "partial": 1,
+    "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
-    "failing": 0
+    "failing": 2
    },
    "criteria": [
     {
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
-     "status": "partial",
+     "status": "failing",
      "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md@1e0ddd39; CLOSER/f14_0_tess/r1",
-     "gap": "Re-run Tidewake named C2 seeds at new bands; redo C3 capture plus two code-blind judges Folds into F22#4, F47#3.",
+     "gap": "C2 FAIL b15ed6a7a (24 seeds x 3 starters, ralph/reports/EVIDENCE/F14#0/): every named wild, alpha and trainer passes except three Galewisp named-wild rows on reader-lead ratio (0.29-0.42), and Galewisp chapter masher-loss is 0.12 vs the 0.25 bar. C3 measured half passes. Balance: one tuning proposal after the F22#1 band sweep.",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/encounters diff since 1e0ddd39: 33 files, +8435. Tidewake levels re-banded (RD-10); smoke_water_named_c2c3 is not in CI.",
      "audit_index": 0
     },
     {
      "text": "Veilfall and Guardian pass C2/C3",
-     "status": "not_started",
+     "status": "failing",
      "evidence": "ralph/reports/TIDEWAKE/phase1/f14_1/VERDICTS.md (partial; C3 framing 98%/83% failed)",
-     "gap": "After F21#4 spacing lands, C2 at new band plus C3 capture with code-blind judges Folds into F22#4.",
+     "gap": "C2 FAIL b15ed6a7a (Veilfall L32, 24 x 3): Venn fails the top bar on all starters (reader/masher party 0.51-0.55 / 0.67-0.79); Nerissa, Fennel, Morra and Evi PASS; the Guardian is not a combat fight. Route also lost to Venn at L20/L32/L33 with an all-ground team. Balance: tuning proposal after the sweep.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No passing C3 exists. CSH §7.5 and F22#4 fold it in, to be re-judged at Nerissa's new level.",
      "audit_index": 1
     },
