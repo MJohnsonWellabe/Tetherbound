@@ -5,6 +5,7 @@ extends RefCounted
 ## Water world and an earned, healthy campaign party. This helper never resets
 ## the game, moves an actor directly, grants a creature, repairs HP/stamina, or
 ## writes inventory/progression state.
+const TOVIN_FIGHT_SIM_S := 600.0
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const PILOT := preload("res://tests/helpers/water_combat_pilot.gd")
 ## Owns the shared move-keyed matchup rule and party_cycle press count.
@@ -230,8 +231,11 @@ func _fight_tovin() -> bool:
 	if not _director.trainer_battle_active() or _director.trainer_battle_id() != TOVIN_ID:
 		return _fail("Tovin challenge never entered its production trainer battle")
 	var opponents: Dictionary = {}
-	deadline = Time.get_ticks_msec() + 180000
-	while _director.trainer_battle_active() and Time.get_ticks_msec() < deadline:
+	# A duration budget in SIM seconds (physics ticks x time scale), not wall
+	# clock: victory is still required by ordinary piloting. Matches the
+	# late-Water human subclass bound (fight difficulty is judged by F14#0).
+	var fight_sim_s := 0.0
+	while _director.trainer_battle_active() and fight_sim_s < TOVIN_FIGHT_SIM_S:
 		var enemy: Node3D = _manager.enemy_body()
 		var ally: Node3D = _director.ally_body()
 		if is_instance_valid(enemy) and is_instance_valid(ally) and _manager.is_fighting():
@@ -241,7 +245,9 @@ func _fight_tovin() -> bool:
 		else:
 			_stop_combat_input()
 		await _tree.physics_frame
+		fight_sim_s += Engine.time_scale / float(Engine.physics_ticks_per_second)
 	_stop_combat_input()
+	_note("Tovin fight length %.1f s sim" % fight_sim_s)
 	if _director.trainer_battle_active():
 		# Diagnostic only. DRY RUNs 9/11 timed out here with nobody lost:
 		# a resisted (0.8x) ground lead simply needed ~175 s (see
@@ -253,8 +259,8 @@ func _fight_tovin() -> bool:
 			stalled_enemy.global_position if is_instance_valid(stalled_enemy) else "none",
 			str(_director.ally_instance().hp) if _director.ally_instance() != null else "?",
 			str(stalled_enemy.instance.hp) if is_instance_valid(stalled_enemy) else "?"])
-		return _fail("Tovin combat exceeded 180 seconds after opponents=%s" %
-			str(opponents.values()))
+		return _fail("Tovin combat exceeded %d sim seconds after opponents=%s" %
+			[int(TOVIN_FIGHT_SIM_S), str(opponents.values())])
 	if opponents.size() != 2:
 		return _fail("Tovin combat did not reach both authored opponents: " + str(opponents.values()))
 	var survivor: RefCounted = _director.ally_instance()
