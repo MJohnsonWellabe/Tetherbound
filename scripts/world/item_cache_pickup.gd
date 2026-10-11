@@ -45,11 +45,15 @@ const IDENTITY_STYLES := {
 	"tm_heavenfall": "tm_crown", "tm_thunder_break": "tm_fork", "tm_stormfall": "tm_storm",
 	"travel_pack": "pack", "potion_small": "bottle_small",
 	"potion_large": "bottle_large", "revive": "bottle_revive",
+	"hide_leggings": "leggings_padded", "insulated_leggings": "leggings_insulated",
+	"hide_boots": "boots_padded", "insulated_boots": "boots_insulated",
 }
 const IDENTITY_ORB := "res://assets/props/tm_orb/tm_orb.glb"
 const IDENTITY_BOTTLE := "res://assets/props/stat_draughts/bottle_base.glb"
 const IDENTITY_PACK := "res://assets/props/quaternius_fantasy/Bag.gltf"
 const IDENTITY_BEDROLL := "res://assets/props/kenney_survival/bedroll-packed.glb"
+const IDENTITY_TROUSERS := "res://assets/characters/villager_male/villager_male_lod0.glb"
+const IDENTITY_BOOTS := "res://assets/characters/Ranger.glb"
 
 ## The ledger said no, with one sentence a player can act on and the machine tag
 ## behind it. The same surface `storage_container.gd::storage_refused` gives its
@@ -244,7 +248,13 @@ static func create_identity_visual(item_id: String, definition: Dictionary) -> N
 		path = IDENTITY_BOTTLE
 	elif style == "pack":
 		path = IDENTITY_PACK
-	var body := _identity_scene(path, 0.30 if style != "pack" else 0.48)
+	var body: Node3D = null
+	if style.begins_with("leggings_"):
+		body = _identity_named_meshes(IDENTITY_TROUSERS, ["trousers"], 0.50)
+	elif style.begins_with("boots_"):
+		body = _identity_named_meshes(IDENTITY_BOOTS, ["Ranger_LegLeft", "Ranger_LegRight"], 0.40)
+	else:
+		body = _identity_scene(path, 0.30 if style != "pack" else 0.48)
 	if body == null:
 		root.free()
 		return null
@@ -302,6 +312,21 @@ static func create_identity_visual(item_id: String, definition: Dictionary) -> N
 		var frame := _identity_material(Color("#796a48"))
 		for side: float in [-1.0, 1.0]:
 			_identity_box(root, frame, Vector3(0.035, 0.53, 0.035), Vector3(side * 0.15, 0.265, 0.14))
+	elif style.begins_with("leggings_"):
+		var padding := _identity_material(colour if style == "leggings_insulated" else accent)
+		for side: float in [-1.0, 1.0]:
+			_identity_box(root, padding, Vector3(0.10, 0.13, 0.045), Vector3(side * 0.095, 0.23, 0.11))
+			if style == "leggings_insulated":
+				_identity_box(root, trim, Vector3(0.12, 0.045, 0.20), Vector3(side * 0.095, 0.065, 0.0))
+		if style == "leggings_insulated":
+			_identity_box(root, padding, Vector3(0.33, 0.045, 0.22), Vector3(0.0, 0.47, 0.0))
+	elif style.begins_with("boots_"):
+		var padding := _identity_material(colour if style == "boots_insulated" else accent)
+		for side: float in [-1.0, 1.0]:
+			_identity_ring(root, padding, Vector3(side * 0.126, 0.365, -0.025), Vector3.ZERO, 0.09)
+			if style == "boots_insulated":
+				_identity_box(root, padding, Vector3(0.10, 0.22, 0.045), Vector3(side * 0.126, 0.225, 0.055))
+				_identity_ring(root, trim, Vector3(side * 0.126, 0.125, -0.025), Vector3.ZERO, 0.09)
 	else:
 		# Keep the installed bottle's glass/cork materials. Solid collars and
 		# embodied badges distinguish dose/restore without hiding the bottle.
@@ -332,6 +357,74 @@ static func _identity_scene(path: String, height: float) -> Node3D:
 	wrapper.add_child(scene)
 	_identity_fit(wrapper, height)
 	return wrapper
+
+
+## Reuse genuine separately authored clothing meshes, never a full humanoid
+## or a skin/animation node. Shared mesh/atlas resources remain read-only;
+## the static instance carries the source's collapsed rest/bind transform.
+static func _identity_named_meshes(path: String, part_names: Array[String], height: float) -> Node3D:
+	if not ResourceLoader.exists(path):
+		return null
+	var packed := load(path) as PackedScene
+	if packed == null:
+		return null
+	var scene := packed.instantiate()
+	if not scene is Node3D:
+		scene.free()
+		return null
+	var source_root := scene as Node3D
+	var wrapper := Node3D.new()
+	for part_name: String in part_names:
+		var source := source_root.find_child(part_name, true, false) as MeshInstance3D
+		if source == null or source.mesh == null:
+			wrapper.free()
+			source_root.free()
+			return null
+		var part := MeshInstance3D.new()
+		part.name = part_name
+		part.mesh = source.mesh
+		part.skeleton = NodePath()
+		part.transform = _identity_bind_transform(source, source_root)
+		part.material_override = source.material_override
+		for surface: int in source.mesh.get_surface_count():
+			var material := source.get_surface_override_material(surface)
+			if material != null:
+				part.set_surface_override_material(surface, material)
+		wrapper.add_child(part)
+	source_root.free()
+	_identity_fit(wrapper, height)
+	return wrapper
+
+
+static func _identity_bind_transform(mesh: MeshInstance3D, root: Node3D) -> Transform3D:
+	var skeleton: Skeleton3D = null
+	if not mesh.skeleton.is_empty():
+		skeleton = mesh.get_node_or_null(mesh.skeleton) as Skeleton3D
+	var parent := mesh.get_parent()
+	while skeleton == null and parent != null:
+		if parent is Skeleton3D:
+			skeleton = parent as Skeleton3D
+		parent = parent.get_parent()
+	if mesh.skin != null and skeleton != null:
+		# Rest == bind for these installed rigs. As in render_bounds.gd,
+		# skeleton-chain x rest x inverse-bind includes centimetre compensation
+		# that a skinned MeshInstance's own local chain does not represent.
+		for index: int in mesh.skin.get_bind_count():
+			var bone := mesh.skin.get_bind_bone(index)
+			if bone < 0:
+				bone = skeleton.find_bone(mesh.skin.get_bind_name(index))
+			if bone >= 0 and bone < skeleton.get_bone_count():
+				return _identity_chain(skeleton, root) * skeleton.get_bone_global_rest(bone) * mesh.skin.get_bind_pose(index)
+	return _identity_chain(mesh, root)
+
+
+static func _identity_chain(node: Node3D, root: Node3D) -> Transform3D:
+	var transform := Transform3D.IDENTITY
+	var cursor := node
+	while cursor != null and cursor != root:
+		transform = cursor.transform * transform
+		cursor = cursor.get_parent() as Node3D
+	return transform
 
 
 static func _identity_fit(root: Node3D, height: float) -> void:
