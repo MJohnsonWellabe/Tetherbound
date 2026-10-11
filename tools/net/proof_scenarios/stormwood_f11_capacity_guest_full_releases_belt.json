@@ -75,7 +75,7 @@
    "label": "the route comes from the host's save"
   },
   {
-   "peer": 0,
+   "peer": 1,
    "action": "enter_realm",
    "args": {
     "realm": "stormwood",
@@ -86,7 +86,7 @@
    "label": "through the Crossing Hall Stormwood portal (RD-17)"
   },
   {
-   "peer": 1,
+   "peer": 0,
    "action": "enter_realm",
    "args": {
     "realm": "stormwood",

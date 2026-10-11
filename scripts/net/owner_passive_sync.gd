@@ -27,6 +27,12 @@ const MAX_SPEED := 40.0
 ## This bounded initial allowance does not replace or extend those deadlines.
 const ADMISSION_ALLOWANCE_S := 80.0
 const INITIAL_POSE_LAG_S := 2.0
+## F48#3: how long an unproven travel-reset input may wait for its host proof
+## (multiplayer.json session.owner_passive_travel_reset_wait_s).
+static func travel_reset_wait_ms() -> int:
+	var session: Variant = DATA.json_view("res://data/config/multiplayer.json").get("session", {})
+	var seconds: Variant = session.get("owner_passive_travel_reset_wait_s", 0.0) if session is Dictionary else 0.0
+	return int(float(seconds) * 1000.0) if (seconds is float or seconds is int) and float(seconds) > 0.0 else 0
 ## Hard bound on one peer's pose ring (INITIAL_POSE_LAG_S at 60 physics ticks
 ## per second is 120); a slower or faster tick only changes how many fit.
 const MAX_POSE_SAMPLES := 256
@@ -602,8 +608,10 @@ func travel_reset_confirmed(peer: int, realm: String, anchor: Vector3, arrival_e
 		or stream.world_namespace != _game().get("world").reward_delivery_namespace: return
 	var context := _context(peer, stream)
 	if context.realm != realm or not context.get("initial_position") is Vector3: return
+	stream.travel_reset_generation = int(stream.get("travel_reset_generation", 0)) + 1
 	stream.travel_reset = {"peer": peer, "stream_id": stream.id, "epoch": stream.epoch, "realm": realm,
-		"anchor": [anchor.x, anchor.y, anchor.z], "sequence": stream.cursor.sequence, "arrival": arrival_endpoint}
+		"anchor": [anchor.x, anchor.y, anchor.z], "sequence": stream.cursor.sequence, "arrival": arrival_endpoint,
+		"generation": stream.travel_reset_generation}
 
 func _reset_matches(peer: int, stream: Dictionary, input: Dictionary, context: Dictionary) -> bool:
 	var proof: Dictionary = stream.get("travel_reset", {})
@@ -613,6 +621,10 @@ func _reset_matches(peer: int, stream: Dictionary, input: Dictionary, context: D
 		or int(input.sequence) <= int(proof.sequence) or not E._equivalent(input.get("from"), stream.cursor.position) \
 		or not REPLAY._position(input.get("to")) or not REPLAY._position(proof.anchor) \
 		or not context.get("initial_position") is Vector3: return false
+	# F48#3: a held input matches only the proof minted for its own travel (the
+	# first one after it was held), never a later reset at the same position.
+	var hold: Dictionary = stream.get("travel_reset_hold", {})
+	if hold.get("sequence") == input.sequence and int(proof.get("generation", 0)) > int(hold.generation) + 1: return false
 	var at := Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
 	# An arrival proof's anchor is the host's replica at mint time; the guest
 	# reports where it stands at its next poll. The live-body check below is
@@ -700,6 +712,20 @@ func _inputs_host_batch(peer: int, stream: Dictionary, packet: Dictionary, batch
 						str(context.get("initial_position", "none"))])
 					return false
 				input_context.discontinuity_authorized = true
+			# A dropped travel baseline whose host proof (fly landing or arrival
+			# placement) has not been confirmed yet waits for it, as the cases
+			# above do; replaying it now would fail the whole stream for good.
+			# Bounded (owner_passive_travel_reset_wait_s); past it the old refusal applies.
+			if input.get("travel_valid") == false and not reset and stream.cursor.travel_valid == true \
+				and input.get("realm") == context.realm:
+				var hold: Dictionary = stream.get("travel_reset_hold", {})
+				if hold.get("sequence") != sequence:
+					hold = {"sequence": sequence, "since_ms": Time.get_ticks_msec(),
+						"generation": int(stream.get("travel_reset_generation", 0))}
+					stream.travel_reset_hold = hold
+				if Time.get_ticks_msec() - int(hold.since_ms) <= travel_reset_wait_ms():
+					_note_host(stream, "input %d waits: travel reset at %s not yet confirmed by the host" % [sequence, str(to)])
+					return false
 		var applied: Dictionary
 		if input.get("op") in ["actor_vitals_applied", "actor_vitals_saved"]:
 			if not owner().has_method("_owner_passive_actor_vitals_context"): return false
@@ -738,6 +764,7 @@ func _inputs_host_batch(peer: int, stream: Dictionary, packet: Dictionary, batch
 		if input.get("op") == "actor_vitals_applied": stream.revision = applied.revision
 		stream.seen[sequence] = digest
 		if reset: stream.erase("travel_reset") # Only successful exact replay consumes it.
+		if stream.get("travel_reset_hold", {}).get("sequence") == sequence: stream.erase("travel_reset_hold")
 	return true
 
 func gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> Dictionary:

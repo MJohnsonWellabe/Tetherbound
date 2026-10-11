@@ -1,9 +1,9 @@
 {
- "updated": "10:50 AM CT Sun 11 Oct",
+ "updated": "1:53 PM CT Sun 11 Oct",
  "headline": [
-  "10:50 AM CT Sun 11 Oct: 189 of 271 met on main, plus 2 more proven on tb/ev-coordinator today (F24#5 co-op commands, F33#0 creature gear). Evidence phase has now found and fixed 11 real game bugs, including a solo boss hand-off that never paid out and a follower creature stuck on Tidewake terrain.",
-  "Closest to closing: F04#0\u2013#2 (named Meadows fights), with captures rendering now. Route checkpoints (F19#5): Tidewake 4/8 with 05 now passing, Cloudreach 4/7 (06\u201307 running), Meadows chain r7 running, Stormwood on piece 1.",
-  "Owner decisions applied: the required Cloudreach route now carries the level curve (Senn and Maela fights give the XP); native creature models switch on only after their code-blind judge."
+  "1:53 PM CT Sun 11 Oct: 189 of 271 met on main, plus 17 proven on tb/ev-coordinator today (206 in total). All of it lands in one consolidated PR at the end.",
+  "Since proof rules v2 (12:25 PM CT): F04#0, F46#0, F46#1, F20#3, F47#1, F47#2, F48#0, F48#3, F10#1 closed. F44#1 reopened: Tidewake/Cloudreach trainers have no rematch source, and a new lane is wiring them.",
+  "Real game fixes since noon: boss attack warnings drawn 2.6 km away, co-op guests unable to follow through portals (owner_passive stream error), Ripplet ride not restored on rejoin, Den panel stuck after a groom, Cloudreach XP reverted per owner ruling A."
  ],
  "batches": [
   {
@@ -585,7 +585,9 @@
   }
  ],
  "decisions": [
-  "Owner 11 Oct: (1A) required Cloudreach route raised to carry the level curve to ~L39\u201340 before Voss; (2A) Meshy batch for P2-055 NPC identities under RD-26 rules; (3A) native creature models switched on as each passes its code-blind judge; (4B) Meadows build freeze left for the ROG Ally test; solo play is a one-player co-op session for boss hand-offs."
+  "Owner 11 Oct: (1A) required Cloudreach route raised to carry the level curve to ~L39\u201340 before Voss; (2A) Meshy batch for P2-055 NPC identities under RD-26 rules; (3A) native creature models switched on as each passes its code-blind judge; (4B) Meadows build freeze left for the ROG Ally test; solo play is a one-player co-op session for boss hand-offs.",
+  "Owner 11 Oct ~12:25 PM CT: eliminate waste and loosen proof where it costs little. Proof rules v2: routes proven in chunks (any piece from a disclosed generated boundary or any earlier checkpoint, any commit; no full-chain restarts; one passing run per piece); disclosed teleports/fixtures for non-traversal criteria; slow-host budget scaling and routine test-helper alignments pre-approved; Low/Compatibility captures suffice for visual criteria (PASS = point clearly visible, no blocking defect); short evidence.",
+  "Owner 11 Oct ~12:42 PM CT: Cloudreach XP option (A). Revert the Senn/Maela XP bonus (it pushed Stormwood entry to L50, breaking the F27/F47#1 grind test). The test route plays as designed (RD-03: Altar essence, candy, some wilds), which reaches Voss at about L40 without a bonus. This supersedes the 1A means; the 1A goal (arrive at Voss ~L39-40) is kept."
  ],
  "owner_needs": [
   "ROG Ally device tests (F26#5, F49#2), play pass (F49#1) and the 15\u201325 h clear confirmation (F47#0). Recommended early (they answer the combat frame-rate and build-freeze questions); owner schedules."
@@ -670,89 +672,113 @@
    "sandbox_mode": "danger-full-access"
   }
  ],
- "active_lanes_note": "As of 10:50 AM CT Sun 11 Oct. Owner plan: prove every criterion first, collect it all on tb/ev-coordinator, then one consolidated PR with full CI. Times are estimates; this host runs fights at 1\u20132 fps, so long walks and fights are slow.",
+ "active_lanes_note": "As of 1:53 PM CT Sun 11 Oct. Proof rules v2 in force (routes in chunks, Low-only visuals, pre-approved alignments). These hosts run fights at 1\u20132 fps.",
  "active_lanes": [
   {
    "lane": "meadows-route",
-   "doing": "Running the full earned Meadows chain (r7) after the navigator fix; piece-by-piece monitor.",
+   "doing": "Re-running Meadows opening \u2192 camp \u2192 bridge \u2192 Warrens (r9) after fixing the save-receipt timing.",
    "criteria": "F19#5 (Meadows), F02#7, F03#1",
-   "next": "About 2\u20133 h for the chain"
+   "next": "About 2 h"
   },
   {
-   "lane": "tidewake-route",
-   "doing": "Fixed a real bug (a creature wedged on Tidal Cradle terrain never caught up); segment 05 now passes, running 05\u201308.",
-   "criteria": "F19#5 (Tidewake), then F13#0",
-   "next": "About 2\u20133 h for 05\u201308"
-  },
-  {
-   "lane": "cloudreach-route",
-   "doing": "Fixed solo boss hand-offs (a solo win never paid out); running live checkpoints 06 (Veyra) and 07 (Home Key portal) plus the co-op boss smoke.",
-   "criteria": "F19#5 (Cloudreach), F19#2, then F06#0",
+   "lane": "meadows-fights (route-b)",
+   "doing": "Meadows Sigils piece retry (relay piece passed); then Hall \u2192 Warden \u2192 Tidewake handoff.",
+   "criteria": "F19#5 (Meadows)",
    "next": "About 1\u20132 h"
   },
   {
+   "lane": "tidewake-route",
+   "doing": "Segment 07 lost to Venn at L32; re-running at the band top (L33), then 08.",
+   "criteria": "F19#5 (Tidewake), F13#0",
+   "next": "About 1\u20132 h"
+  },
+  {
+   "lane": "cloudreach-route",
+   "doing": "Proving Stormwood pieces named_detour \u2192 home_key from generated saves.",
+   "criteria": "F19#5 (Stormwood, Cloudreach)",
+   "next": "About 2\u20133 h"
+  },
+  {
    "lane": "cloudreach-xp",
-   "doing": "Raising XP on the required Cloudreach route (Senn and Maela fights) so the team reaches Voss at about L39\u201340, then re-running Voss by ordinary piloting.",
-   "criteria": "F47 level curve; unblocks Cloudreach checkpoint 05",
+   "doing": "Voss done; fixing a summit-bivouac collision stall, then the F33#2 Cloudreach/Stormwood gear sims.",
+   "criteria": "F19#5 Cloudreach 05, F33#2",
    "next": "About 1\u20132 h"
   },
   {
    "lane": "stormwood-route",
-   "doing": "Running Stormwood piece 1 with game-time fight caps; fights run at 1\u20132 fps on this host (recorded for the device test).",
-   "criteria": "F19#5 (Stormwood), then F09#0 and F11#0",
-   "next": "About 1 h for piece 1, then 3\u20135 h for 02\u201308"
-  },
-  {
-   "lane": "home-key",
-   "doing": "Second and final attempt at the endgame rematch walk: it now follows the village road through the gate instead of pinning on the fence.",
-   "criteria": "F44#1",
-   "next": "About 1\u20132 h to pass/fail"
-  },
-  {
-   "lane": "captures",
-   "doing": "Rendering the Warrens guardian fight (F04#0); then the trainer strike beats (F04#1/#2), fight aftermaths (F04#6), size matrix (F21#4), ultimates (F35) and all 23 native creature candidates (F36#0).",
-   "criteria": "F04#0\u2013#2, F04#6, F21#4, F35#1/#3, F36#0",
-   "next": "First sheets in about 1 h, then one every 1\u20132 h"
-  },
-  {
-   "lane": "fights-c2c3",
-   "doing": "Measuring whether careful play beats button-mashing in each Meadows fight for each starter; early signal: the Warrens guardian fails this for Ripplet.",
-   "criteria": "F04#7, F10#2, F14#0/#1, F22#1/#4",
-   "next": "Full numbers in about 1\u20132 h"
-  },
-  {
-   "lane": "coop-chapters",
-   "doing": "Running the co-op chapter checks on two real networked players.",
-   "criteria": "F10#1, F11#1\u2013#3, F15#0",
+   "doing": "Stormwood arrival, crown build and rootgate pieces.",
+   "criteria": "F19#5 (Stormwood), F09#0, F11#0",
    "next": "About 2 h"
   },
   {
+   "lane": "rematch-wiring",
+   "doing": "Wiring Tidewake and Cloudreach trainers into the rematch system.",
+   "criteria": "F44#0, F44#1",
+   "next": "About 2\u20133 h"
+  },
+  {
    "lane": "systems-a",
-   "doing": "F24#5 proven; now on the next systems criteria.",
-   "criteria": "F27#1, F28#4, F31#2, F37#4",
-   "next": "Next result in about 1 h"
+   "doing": "F33#2 gear sims (Warden, Nerissa) and the all-band difficulty sweep.",
+   "criteria": "F33#2, F47#3, F22#1",
+   "next": "About 2 h"
   },
   {
    "lane": "systems-b",
-   "doing": "F33#0 proven; running gear and homestead net smokes.",
-   "criteria": "F33#2/#4, F44#0, F48#0, F48#3",
-   "next": "Next result in about 1 h"
+   "doing": "F44#0 Meadows and Stormwood rematch runs.",
+   "criteria": "F44#0",
+   "next": "About 1 h"
+  },
+  {
+   "lane": "coop-chapters",
+   "doing": "F11#1 Stormwood legendary offers at capacity, retried with the owner_passive fix.",
+   "criteria": "F11#1",
+   "next": "About 1 h"
+  },
+  {
+   "lane": "coop-loop",
+   "doing": "F11#2 reconnect and F11#3 aftermath two-peer proofs.",
+   "criteria": "F11#2, F11#3",
+   "next": "About 1\u20132 h"
+  },
+  {
+   "lane": "fights-c2c3",
+   "doing": "Meadows C2 re-run with the fixed reader pilot, then Tidewake named fights.",
+   "criteria": "F04#7, F14#0/#1, F22#4",
+   "next": "About 2 h"
+  },
+  {
+   "lane": "captures",
+   "doing": "Re-rendering relay officers/captains (F04#1/#2), ultimates (F35) and the clear-ground size matrix (F21#4).",
+   "criteria": "F04#1/#2, F35#1/#3, F21#4",
+   "next": "Sheets every ~1 h"
   },
   {
    "lane": "captures-art",
-   "doing": "New lane: rendering matched before/after sheets of Codex's four ready art fixes (Stormwood forest floor, Meadows village dressing, Tidewake Veilfall and terraces, Cloudreach summit and bell bridge) for the code-blind judge.",
-   "criteria": "F38\u2013F41 (P2-039, P2-006, P2-010/011, P2-022/053/024)",
-   "next": "First sheet in about 1 h"
+   "doing": "F04#7 and F10#2 fight footage, F36#1 poses, then Codex art.",
+   "criteria": "F04#7, F10#2, F36#1, F38\u2013F41",
+   "next": "About 1\u20132 h"
+  },
+  {
+   "lane": "ultimates (visual)",
+   "doing": "HUD, hit-feel and effect-archetype captures.",
+   "criteria": "F42#2, F21#5, F25#0",
+   "next": "About 1\u20132 h"
+  },
+  {
+   "lane": "home-key (walkers)",
+   "doing": "Cloudreach six-region walk and Veyra exam witnesses; then the 15\u201325 h estimate.",
+   "criteria": "F06#0, F08#0, F47#0",
+   "next": "About 1\u20132 h"
   },
   {
    "lane": "Codex (visual)",
-   "doing": "Biome visual fixes (F38\u2013F41) and the NPC identity Meshy batch; posts READY sheets to #572.",
-   "criteria": "F38\u2013F41, P2-055",
+   "doing": "NPC face batch, native creature fixes, open art notes.",
+   "criteria": "F36#0, F38\u2013F41",
    "next": "READY posts every 2\u20133 h"
   },
   {
    "lane": "Claude coordinator",
-   "doing": "Merged nine lane branches onto tb/ev-coordinator (boss and follower tests pass), marking proven criteria, judging captures as they land.",
+   "doing": "Merging, judging code-blind, marking criteria.",
    "criteria": "All",
    "next": "Check-ins every 90 min"
   }

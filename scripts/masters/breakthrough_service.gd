@@ -13,14 +13,6 @@ var _producer: Object
 var _duel_preparing := false
 var _duel_preparing_director: WeakRef
 var _duel_preparation_generation := 0
-## A guest's chest press that met another original still saving
-## ("owner_passive_original_pending") is not retained by the host; the same
-## press is sent again once that settles instead of being dropped silently.
-const CHEST_RETRY_SECONDS := 0.5
-const CHEST_RETRY_LIMIT := 40
-var _chest_source: WeakRef
-var _chest_intent: Dictionary = {}
-var _chest_retries := 0
 
 func bind_actions(submit_action: Callable, personal_view: Callable) -> bool:
 	if not submit_action.is_valid() or not personal_view.is_valid(): return false
@@ -61,11 +53,7 @@ func _foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 	_action_completed("master_duel", envelope.intent, refused)
 
 func _action_completed(action: String, original: Dictionary, result: Dictionary) -> void:
-	if action == "master_chest" and result.get("code") == "owner_passive_original_pending" and original == _chest_intent:
-		_message("Your last action is still saving. Opening the chest in a moment...")
-		_retry_chest()
-	elif action == "master_chest":
-		if result.get("resolved") == true: _chest_retries = 0
+	if action == "master_chest":
 		if result.get("settled") == true or result.get("owner_saved") == true:
 			_message("Ascension Feast recipe learned. Your Master rewards are saved. Cook your feast at home.")
 			view()
@@ -77,10 +65,6 @@ func _action_completed(action: String, original: Dictionary, result: Dictionary)
 func submit(op: String, intent: Dictionary, source: Node) -> Dictionary:
 	if not _submit.is_valid():
 		return {"ok": false, "code": "breakthrough_producer_not_mounted", "reason": "Master and Kitchen integration is not ready."}
-	if op == "master_chest" and intent != _chest_intent:
-		_chest_intent = intent.duplicate(true)
-		_chest_retries = 0
-	if op == "master_chest": _chest_source = weakref(source)
 	# Source node stays local. It is not serialized as proof of reachability.
 	var verdict: Variant = _submit.call(op, intent.duplicate(true), source)
 	return verdict if verdict is Dictionary else {"ok": false, "code": "invalid_producer_verdict"}
@@ -206,17 +190,7 @@ func _chest(site: Node3D) -> void:
 	var verdict := submit("master_chest", {"master_id": str(site.get("master_id"))}, site)
 	_message(_chest_message(verdict))
 
-func _retry_chest() -> void:
-	if _chest_retries >= CHEST_RETRY_LIMIT or _chest_intent.is_empty() or not is_inside_tree(): return
-	_chest_retries += 1
-	await get_tree().create_timer(CHEST_RETRY_SECONDS).timeout
-	var source: Node = _chest_source.get_ref() as Node if _chest_source != null else null
-	if is_instance_valid(source) and not _chest_intent.is_empty():
-		submit("master_chest", _chest_intent.duplicate(true), source)
-
 func _chest_message(result: Dictionary) -> String:
-	if result.get("code") in ["awaiting_saved_decision", "owner_passive_checkpoint_pending", "owner_passive_original_pending"]:
-		return "Saving your Master reward..."
 	if result.get("code") == "chest_pending_make_satchel_room":
 		return "Your Master reward is waiting. Use your Home Key, store items at home, then return to this chest with room in your satchel."
 	return str(result.get("reason", result.get("code", "")))

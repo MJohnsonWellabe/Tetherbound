@@ -20,6 +20,8 @@ extends SceneTree
 ##                   paid saddle, mounted)
 ##   07_late         water_earned_late_segment.run_from_mount (Salt Crown ->
 ##                   Sluice -> Veilfall -> Nerissa -> tether)
+##   07_human_late   water_human_late_segment.run_human: the same late route by the
+##                   player's own swimming with the same five (no swimmer/saddle)
 ##   08_ending       water_earned_ending_segment.run_earned (Guardian invite)
 ##
 ## USAGE
@@ -32,7 +34,7 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "05_tidal",
-	"06_swimmer", "07_late", "08_ending"]
+	"06_swimmer", "07_late", "07_human_late", "08_ending"]
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
@@ -45,6 +47,9 @@ var helper_receipts: Array = []
 var started_ms := 0
 var before := {}
 var swimmer_uid := ""
+## Rules v2 #1: disclosed generated input. Raise the same five to this level
+## (generator's own level/cap/breakthrough code, full heal) after Load.
+var raise_levels := 0
 
 
 func _init() -> void:
@@ -57,6 +62,7 @@ func _run() -> void:
 		if arg.begins_with("--segment="): segment = arg.trim_prefix("--segment=")
 		elif arg.begins_with("--from="): from_dir = arg.trim_prefix("--from=").trim_suffix("/")
 		elif arg.begins_with("--out="): out_dir = arg.trim_prefix("--out=").trim_suffix("/")
+		elif arg.begins_with("--raise-levels="): raise_levels = int(arg.trim_prefix("--raise-levels="))
 		else: failures.append("Unknown option: " + arg)
 	if not SEGMENTS.has(segment) or from_dir.is_empty() or out_dir.is_empty():
 		failures.append("usage: --segment=<%s> --from=<dir> --out=<dir>" % "|".join(SEGMENTS))
@@ -84,6 +90,9 @@ func _run() -> void:
 		return
 	before = _snapshot()
 	_handoff_check()
+	if failures.is_empty() and raise_levels > 0:
+		_raise_levels()
+		before = _snapshot()
 	if failures.is_empty():
 		await _play()
 	if failures.is_empty():
@@ -167,6 +176,24 @@ func _handoff_check() -> void:
 				key, JSON.stringify(expected[key]), JSON.stringify(before[key])])
 
 
+func _raise_levels() -> void:
+	if raise_levels < 1 or raise_levels > 55:
+		failures.append("--raise-levels outside the authored 1..55 range")
+		return
+	var levels_before: Array = []
+	for creature: RefCounted in game.party.members():
+		levels_before.append(int(creature.level))
+		creature.level = raise_levels
+		creature.xp = 0
+		creature.recompute_stats_from_base(preload("res://scripts/creatures/progression.gd").config())
+		var tiers: Variant = preload("res://scripts/creatures/breakthrough.gd").caught_tiers(raise_levels)
+		var record: Dictionary = game.local.redesign_character.creatures[creature.uid]
+		record.breakthroughs = tiers
+		record.cap_level = preload("res://scripts/creatures/breakthrough.gd").level_cap(tiers)
+		creature.heal_fully()
+	disclosures.append("GENERATED INPUT (Rules v2 #1): after production Load, the same five (uids unchanged) were raised from %s to L%d with the generator's level/cap/breakthrough code and fully healed; no other state changed" % [str(levels_before), raise_levels])
+
+
 func _play() -> void:
 	var world := current_scene as Node3D
 	var player := world.get_node("Player") as CharacterBody3D
@@ -212,6 +239,14 @@ func _play() -> void:
 			var ok: bool = await late.run_from_mount(swimmer, func(reason: String) -> void: failures.append("late abort: " + reason))
 			_take(late.result(), "passed", "late")
 			if not ok and failures.is_empty(): failures.append("late returned false")
+		"07_human_late":
+			# Critical path with the same five (WORLD §6 retained-team override):
+			# the player's own swimming over the sheltered late crossings.
+			var human: RefCounted = load("res://tests/helpers/water_human_late_segment.gd").new()
+			human.setup(self, world, player, rig)
+			var ok: bool = await human.run_human()
+			_take(human.result(), "passed", "human_late")
+			if not ok and failures.is_empty(): failures.append("human late returned false")
 		"08_ending":
 			_take(await load("res://tests/helpers/water_earned_ending_segment.gd").new().run_earned(self, world, game), "ok", "ending")
 
@@ -288,7 +323,7 @@ func _finish() -> void:
 	if not before.is_empty() and not after.is_empty():
 		gained = after.flags.filter(func(f: Variant) -> bool: return not before.flags.has(f))
 	var receipt := {"segment": segment, "passed": failures.is_empty(), "failures": failures,
-		"from": from_dir, "out": out_dir, "commit": CHECKPOINTS.commit_sha(),
+		"from": from_dir, "out": out_dir, "input_mode": "generated_levels" if raise_levels > 0 else "earned", "commit": CHECKPOINTS.commit_sha(),
 		"wall_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"before": before, "after": after, "flags_gained": gained,
 		"swimmer_uid": swimmer_uid, "disclosures": disclosures, "helper_receipts": helper_receipts}

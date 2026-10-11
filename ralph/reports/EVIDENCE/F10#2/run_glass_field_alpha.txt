@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+STORMWOOD_C2C3 glass_field_alpha terrapup MASHER L52 runs=24 win=0.88 med_lead=0.908 med_party=0.219 med_s=85.9 max_s=91.7 lead_faint=0.12 wipe=0.00 max_hit=0.037 tell=[0.80,0.80] incoming=624 stalled=0
+STORMWOOD_C2C3 glass_field_alpha terrapup READER L52 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=86.9 max_s=96.6 lead_faint=0.00 wipe=0.00 max_hit=0.037 tell=[0.80,0.80] incoming=16 stalled=0
+STORMWOOD_C2C3_VERDICT glass_field_alpha terrapup PASS ratio=0.00 reader_win=1.00 max_hit=0.037 min_tell=0.80 
+STORMWOOD_C2C3 glass_field_alpha ripplet MASHER L52 runs=24 win=0.00 med_lead=1.000 med_party=0.225 med_s=55.8 max_s=57.0 lead_faint=1.00 wipe=0.00 max_hit=0.066 tell=[0.80,0.80] incoming=408 stalled=0
+STORMWOOD_C2C3 glass_field_alpha ripplet READER L52 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=75.2 max_s=78.3 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.80] incoming=0 stalled=0
+STORMWOOD_C2C3_VERDICT glass_field_alpha ripplet PASS ratio=0.00 reader_win=1.00 max_hit=0.066 min_tell=0.80 
+STORMWOOD_C2C3 glass_field_alpha galewisp MASHER L52 runs=24 win=0.00 med_lead=1.000 med_party=0.217 med_s=50.2 max_s=53.1 lead_faint=1.00 wipe=0.00 max_hit=0.071 tell=[0.80,0.80] incoming=384 stalled=0
+STORMWOOD_C2C3 glass_field_alpha galewisp READER L52 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=71.0 max_s=73.9 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.80] incoming=0 stalled=0
+STORMWOOD_C2C3_VERDICT glass_field_alpha galewisp PASS ratio=0.00 reader_win=1.00 max_hit=0.071 min_tell=0.80 
+STORMWOOD_C2C3 done: 3 rows, 144 runs, 0 failing rows, 0 errors
