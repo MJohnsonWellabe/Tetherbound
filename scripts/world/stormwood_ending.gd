@@ -543,6 +543,7 @@ func _process_local_claim(delta: float) -> void:
 	if _ceremony_waiting and not catch_open:
 		_ceremony_waiting = false
 		_begin_local_ceremony()
+		catch_open = game.get("pending_catch") != null
 	if _local_claim.is_empty() or (_local_creature == null and _local_answer < 0):
 		return
 	if catch_open:
