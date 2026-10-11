@@ -205,7 +205,8 @@ func _gather_costs() -> bool:
 		for index in remaining.size():
 			var row: Dictionary = remaining[index]
 			if not harvest_needed(row, costs, counts) \
-					or game.progression.has("harvest_node:order:" + str(row.id)):
+					or game.progression.has("harvest_node:order:" + str(row.id)) \
+					or int(HARVEST.site_stock(game, str(row.id)).get("next_ready_day", 0)) > int(game.get("day")):
 				continue
 			var at := _point(row.position)
 			var separation := Vector2(at.x - player.global_position.x, at.z - player.global_position.z).length_squared()

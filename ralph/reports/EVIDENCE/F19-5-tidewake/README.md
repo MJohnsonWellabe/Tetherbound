@@ -37,3 +37,11 @@ Tovin's Brine Steps victory"), so the runner orders 03_brine, 04_shellwatch.
    `harvest_node:order:<id>`. A registered F32 renewable site records stock/next_ready_day
    instead and never sets that flag, so the helper fails with
    "did not pay its exact production yield/receipt: gained=3".
+
+## Helper receipt change (coordinator APPROVED, 2026-10-11 ~07:14 CT)
+Renewable sites record F32 stock receipts, not world-once flags. water_reedhaven_segment.gd
+now accepts either the legacy `harvest_node:order:<id>` flag or, for an F32-registered
+site, that same site's receipt: stock revision advanced by exactly one and
+next_ready_day > current day (static `harvest_receipt` / `site_stock`). The exact-yield
+check and site-id match are unchanged. water_earned_swimmer_preparation_segment.gd:208
+treats a site as already harvested on the legacy flag or on that site's next_ready_day > day.
