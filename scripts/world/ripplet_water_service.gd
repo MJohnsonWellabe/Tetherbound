@@ -8,6 +8,8 @@ var _answered: Dictionary = {}
 var _pending: Dictionary = {}
 var _diving_until: Dictionary = {}
 var _motion: Dictionary = {}
+var _mount_anchored: Dictionary = {}
+var _reanchor: Dictionary = {}
 
 func _physics_process(_delta: float) -> void:
 	if not get_node("/root/Game").is_host(): return
@@ -25,7 +27,8 @@ func _physics_process(_delta: float) -> void:
 		var sample: Dictionary = _motion.get(peer, {"at":at,"time":now,"valid":true})
 		var seconds := now - float(sample.time)
 		if seconds >= float(RULE.config().validation_window_s):
-			sample.valid = RULE.valid_motion(sample.at,at,seconds,world.current_at(at).length())
+			sample.valid = _reanchor.has(peer) or RULE.valid_motion(sample.at,at,seconds,world.current_at(at).length())
+			_reanchor.erase(peer)
 			sample.at = at
 			sample.time = now
 			if not sample.valid:
@@ -127,6 +130,16 @@ func _handle(peer: int, token: String, action: String, uid: String) -> void:
 			if action == "dive" and float(_diving_until.get(permit, 0.0)) <= Time.get_ticks_msec() / 1000.0:
 				_diving_until[permit] = Time.get_ticks_msec() / 1000.0 + float(RULE.config().dive_seconds)
 			elif action in ["mount", "surface"]: _diving_until.erase(permit)
+			# A connection's FIRST approved mount (a rejoin is a new peer id)
+			# restarts motion checks and lets one window pass unjudged: the
+			# rejoin restores the saved seat while this host's proxy still
+			# trails at the spawn, so that arrival becomes the new anchor. A mount
+			# approval needs a valid sample (traversal action: motion_valid), and
+			# later mounts on the same connection never reset it.
+			if action == "mount" and not _mount_anchored.has(peer):
+				_mount_anchored[peer] = true
+				_motion.erase(peer)
+				_reanchor[peer] = true
 	if peer == multiplayer.get_unique_id():
 		_accept(token, verdict)
 	else:

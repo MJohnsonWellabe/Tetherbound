@@ -3,6 +3,8 @@ extends "res://tests/helpers/fresh_opening_segment.gd"
 ## Finish an actual Meadows wild capture with a full belt, then make the caller's
 ## explicit outgoing-member choice through the production farewell UI.
 ## This neither creates a pending catch nor releases anyone through Party APIs.
+## The caught creature as the capture offer presents it (set once resolved).
+var captured: RefCounted = null
 const CEREMONY_FRAMES := 60 # Same automatic-open bound as smoke_release.
 ## Charged hits stay well clear of the 0.28 catch window (no accidental KO).
 const CHARGED_ABOVE_FRACTION := 0.5
@@ -92,6 +94,7 @@ func replace_existing(tree: SceneTree, world: Node, game: Node,
 	_wild = wild
 	var party: RefCounted = game.get("party")
 	var before := roster_ids(party)
+	var before_uids := roster_uids(party)
 	if before.size() != 5 or outgoing_index < 0 or outgoing_index >= 5 \
 			or game.get("pending_catch") != null or tree.current_scene != world:
 		_fail("earned replacement requires the current five-member belt and no pending catch")
@@ -121,6 +124,13 @@ func replace_existing(tree: SceneTree, world: Node, game: Node,
 		if bool(menu.call("is_open")) and str(tab.get("_release_stage")) == "choose":
 			break
 		await tree.process_frame
+	# foundation_capture.gd _present decodes the caught creature (CODEC.decode): a new object by design.
+	var resolved := captured_newcomer(game.get("pending_catch"), newcomer, party)
+	if resolved == null:
+		_fail("pending catch is not exactly one offer-carried creature matching the engaged wild")
+		return _result()
+	newcomer = resolved
+	captured = resolved
 	if bool(_combat.call("is_fighting")) or str(_combat.call("outcome")) != CAUGHT_OUTCOME \
 			or game.get("pending_catch") != newcomer or roster_ids(party) != before \
 			or not bool(menu.call("is_open")) or str(tab.get("_release_stage")) != "choose":
@@ -156,10 +166,16 @@ func replace_existing(tree: SceneTree, world: Node, game: Node,
 		_fail("ordinary Down did not reach Let them go")
 		return _result()
 	await _ceremony_tap("ui_accept")
+	# The host-settled farewell reinstalls the belt (new member objects), so the
+	# receipt is the stable uid order: the other four kept, the caught uid appended.
+	print("REPLACEMENT RECEIPT before=%s after=%s newcomer=%s" % [before_uids, roster_uids(party), newcomer.get("uid")])
 	if str(tab.get("_release_stage")) != "done" or game.get("pending_catch") != null \
-			or not replacement_receipt(before, roster_ids(party), outgoing_index, newcomer.get_instance_id()):
+			or not replacement_uid_receipt(before_uids, roster_uids(party), outgoing_index, str(newcomer.get("uid"))):
 		_fail("confirmed farewell did not retain the other four and append the actual caught newcomer")
 		return _result()
+	for member: RefCounted in party.call("members"):
+		if str(member.get("uid")) == str(newcomer.get("uid")):
+			captured = member
 	if tree.root.gui_get_focus_owner() != tab.get("_farewell_done"):
 		_fail("farewell goodbye did not focus Back to belt")
 		return _result()
@@ -174,6 +190,48 @@ func replace_existing(tree: SceneTree, world: Node, game: Node,
 	_checkpoint("earned replacement: released identity %d; caught %s identity %d appended; five retained" % [
 		before[outgoing_index], newcomer.get("species_id"), newcomer.get_instance_id()])
 	return _result()
+
+
+## The pending catch must carry this capture's offer meta, equal the engaged
+## wild's species and level, and hold a uid not already in the belt.
+static func captured_newcomer(pending: Variant, engaged: RefCounted, party: RefCounted) -> RefCounted:
+	if not pending is RefCounted or engaged == null:
+		return null
+	if pending == engaged:
+		return engaged  # A path that hands over the wild's own instance keeps exact identity.
+	var creature := pending as RefCounted
+	if not (creature.has_meta("foundation_capture_offer") or creature.has_meta("water_capture_claim")) \
+			or str(creature.get("species_id")) != str(engaged.get("species_id")) \
+			or int(creature.get("level")) != int(engaged.get("level")) or str(creature.get("uid")).is_empty():
+		return null
+	for member: RefCounted in party.call("members"):
+		if str(member.get("uid")) == str(creature.get("uid")):
+			return null
+	return creature
+
+
+static func roster_uids(party: RefCounted) -> Array[String]:
+	var uids: Array[String] = []
+	for member: RefCounted in party.call("members"):
+		uids.append(str(member.get("uid")))
+	return uids
+
+
+## replacement_receipt over stable uids.
+static func replacement_uid_receipt(before: Array[String], after: Array[String],
+		outgoing_index: int, newcomer_uid: String) -> bool:
+	if before.size() != 5 or outgoing_index < 0 or outgoing_index >= 5 \
+			or newcomer_uid.is_empty() or before.has(newcomer_uid):
+		return false
+	var seen: Array[String] = []
+	for uid in before:
+		if uid.is_empty() or seen.has(uid):
+			return false
+		seen.append(uid)
+	var expected := before.duplicate()
+	expected.remove_at(outgoing_index)
+	expected.append(newcomer_uid)
+	return after == expected
 
 
 static func roster_ids(party: RefCounted) -> Array[int]:

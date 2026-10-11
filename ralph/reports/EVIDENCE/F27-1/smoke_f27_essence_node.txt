@@ -1,0 +1,21 @@
+F32 MATERIAL PASS: essence_meadows_ground_01 is a shipped essence node
+F32 MATERIAL PASS: request actual baked realm scene
+F32 MATERIAL PASS: actual realm procedural build completed
+F32 MATERIAL PASS: production player and resource adapter mounted
+F32 MATERIAL PASS: physical controller driver resolves production camera and arbiter
+F32 MATERIAL PASS: essence_meadows_ground_01 production world mount placed the essence node
+F32 MATERIAL PASS: essence_meadows_ground_01 actual gather prompt exists
+F32 MATERIAL PASS: essence_meadows_ground_01 controller approach walked 4.4m
+F32 MATERIAL PASS: essence_meadows_ground_01 the essence prompt wins ordinary interaction
+F32 MATERIAL PASS: essence_meadows_ground_01 pre-gather owner and world saved to isolated disk
+F32 MATERIAL PASS: before_essence_meadows_ground_01 retains exact world bytes
+F32 MATERIAL PASS: before_essence_meadows_ground_01 decodes world save document
+F32 MATERIAL PASS: before_essence_meadows_ground_01 retains exact character bytes
+F32 MATERIAL PASS: before_essence_meadows_ground_01 decodes character save document
+F32 MATERIAL PASS: essence_meadows_ground_01 gather reaches real owner save and ACK
+F32 MATERIAL PASS: after_essence_meadows_ground_01 retains exact world bytes
+F32 MATERIAL PASS: after_essence_meadows_ground_01 decodes world save document
+F32 MATERIAL PASS: after_essence_meadows_ground_01 retains exact character bytes
+F32 MATERIAL PASS: after_essence_meadows_ground_01 decodes character save document
+F32 MATERIAL PASS: essence_meadows_ground_01 disk gained exactly { "essence_ground": 3.0, "attuned_ground": 1.0 } with an accepted journal and receipt (gained { "essence_ground": 3, "attuned_ground": 1 })
+F27_ESSENCE_NODE: PASS essence_meadows_ground_01 paid { "essence_ground": 3, "attuned_ground": 1 } on the production gather path

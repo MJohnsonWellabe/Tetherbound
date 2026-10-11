@@ -45,3 +45,24 @@ The smoke failed on unmodified main before any attack ran ("aggressive engage ro
 ## Not addressed here
 
 The re-proof's "camera too close/occluded" finding needs a rendered capture. No camera change was made; the coordinator's capture decides it.
+
+## Round 2: code-blind judge FAIL fix (2026-10-11, about 11:50 AM CT)
+
+**Judge finding.** The capture was `tb/ev-captures` 53d9616f (`ralph/reports/VISUAL-PROOF/F04-0/`). Earth Fist showed only a small amber ring at the guardian's feet, and the quick showed the same ring in purple.
+
+**Cause (game bug).** `enemy_pattern_telegraph.gd::begin` set `top_level = true` *after* `add_child`. Godot keeps the node's current global transform at that moment, and the cue builds its vertices in world coordinates. Under the translated `BurrowWarrens` parent at (−357, 3.8, 2610), every F22 pattern cone was therefore drawn about 2.6 km from the fight. A headless trace confirmed it: `cue_global` equalled `parent_global`. Only the warning ring (`telegraph_glow.gd`) reached the screen. Any F22 pattern cue whose creature's parent is not at the world origin had the same fault. `lunge_lane.gd` already sets `top_level` before `add_child`, so it was not affected.
+
+**Fix.**
+- `top_level` is set before `add_child`.
+- Each row may now set its own fill:
+  - the guardian quick (`guardian_wall_quick`) is an outline-only violet wedge (`cue_fill_alpha` 0);
+  - Earth Fist is an orange wedge (`cue_fill_alpha` 0.5) that fills in over its 1.1 s tell (`cue_fills`, material alpha 25% → 100%). The wedge uses the move's own `range` and `cone_degrees` and follows the locked heading.
+
+Both wedges really reach about 8.5 m, because contact spacing between the two large bodies floors the reach. The quick's wedge is therefore not drawn smaller than its real hit area.
+
+**Local self-check (not judge evidence).** `local_render/`: xvfb + llvmpipe `opengl3`, 1280×720, `smoke_warrens.gd -- --guardian-attacks --capture-dir` with the den fixture teleport, at Earth Fist fill 0.32 (the final value is 0.5). Frame 01 shows the violet outline wedge with its tip past the Terrapup; frame 02 shows the filled orange 72° wedge.
+
+**Proofs at this commit.**
+- `smoke_warrens --guardian-attacks` PASS: Q, C, Q, C; 1 hit, 2 misses.
+- Units PASS: `test_enemy_pattern_telegraph`, `test_named_fight_tell_timing`, `test_telegraph_glow`, `test_named_fight_profiles`, `test_f22_action_publication` (28 tests, 1513 assertions, 0 failed).
+- `smoke_f22_pattern_contract` and `smoke_f22_live_pattern_mount` PASS.

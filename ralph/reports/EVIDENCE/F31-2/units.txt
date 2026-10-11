@@ -1,0 +1,25 @@
+only test_f24_host_commands.gd,test_f27_essence_rules.gd,test_relic_hang_attachment_blueprints.gd,test_relic_power_selection.gd,test_station_attachment_gates.gd,test_crossing_hall_relic_hang.gd,test_f37_ripplet_traversal.gd,test_f27_guest_release_service.gd,test_f32_type_crops.gd: 9 of 842 test files
+  ok    test_crossing_hall_relic_hang.gd :: test_disabled_portal_runtime_explains_instead_of_sending
+  ok    test_crossing_hall_relic_hang.gd :: test_guest_refreshes_view_before_sending_and_hears_the_host_decision
+  ok    test_crossing_hall_relic_hang.gd :: test_guest_with_no_view_reply_does_not_send_a_stale_request
+  ok    test_crossing_hall_relic_hang.gd :: test_host_sends_directly_and_surfaces_refusal
+  ok    test_relic_hang_attachment_blueprints.gd :: test_each_relic_unlocks_the_next_tier_and_stormwood_the_reserved_fifth
+  ok    test_relic_hang_attachment_blueprints.gd :: test_meadows_relic_grants_the_tidewake_column
+  ok    test_relic_hang_attachment_blueprints.gd :: test_the_grant_is_once_and_keeps_earlier_blueprints
+  ok    test_relic_hang_attachment_blueprints.gd :: test_without_the_relic_nothing_is_granted
+  ok    test_relic_power_selection.gd :: test_a_guest_choice_waits_past_the_host_checkpoint_for_its_saved_decision
+  ok    test_relic_power_selection.gd :: test_a_hung_relic_choice_survives_a_save_and_reload
+  ok    test_relic_power_selection.gd :: test_a_hung_relic_choice_survives_title_load
+  ok    test_relic_power_selection.gd :: test_combat_sees_the_power_only_for_a_receipt_proved_hang
+  ok    test_relic_power_selection.gd :: test_only_a_hung_relic_can_be_made_active_and_one_at_a_time
+  ok    test_relic_power_selection.gd :: test_the_host_action_saves_one_choice_and_refuses_an_unhung_one
+  ok    test_relic_power_selection.gd :: test_the_owner_installs_a_saved_relic_power_choice
+  ok    test_station_attachment_gates.gd :: test_a_fully_paid_attachment_reads_ready
+  ok    test_station_attachment_gates.gd :: test_a_kitchen_recipe_needs_the_kitchen_attachment
+  ok    test_station_attachment_gates.gd :: test_a_new_forge_points_at_the_bellows_and_its_first_missing_cost
+  ok    test_station_attachment_gates.gd :: test_a_tier_two_recipe_needs_the_second_attachment
+  ok    test_station_attachment_gates.gd :: test_after_stormwood_only_the_reserved_slot_remains
+  ok    test_station_attachment_gates.gd :: test_the_workbench_shows_no_attachment_track
+  ok    test_station_attachment_gates.gd :: test_the_wrong_station_never_crafts_it
+  ok    test_station_attachment_gates.gd :: test_tier_two_points_at_the_shrine_until_the_relic_is_hung
+95 tests, 2566 assertions, 0 failed

@@ -207,7 +207,8 @@ func fixture(game: Node, label: String) -> bool:
 		"water:legendary_refused", "cloudreach:legendary_refused", "stormwood:legendary_ceremony_settled",
 		"stormwood:regional_outcome:f20_fixture:refused", "stormwood:legendary_answer:f20_fixture:refused"]:
 		game.local.flags.call("set_flag", flag)
-	for flag: String in [HOME.WORLD_FLAG, "stormwood:long_storm_ended", "water_currents_restored", "old_champion_met"]:
+	# road_gate_open: no post-finale world still has the village fence locked.
+	for flag: String in [HOME.WORLD_FLAG, "stormwood:long_storm_ended", "water_currents_restored", "old_champion_met", "road_gate_open"]:
 		game.progression.call("set_flag", flag)
 	if label == "Peer1":
 		game.local.flags.call("set_flag", "water:legendary_refused", false)

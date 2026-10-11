@@ -157,7 +157,9 @@ func restore_swim_mount(saved: Dictionary) -> bool:
 		riding.dismount()
 	if is_instance_valid(_ally_body) and not dismiss_active_creature():
 		return false
-	if not party.set_active(index):
+	# The saved mount is already the active ally; a rejoin restores it while
+	# owner admission still fences party writes, so switch only when needed.
+	if party.active_index() != index and not party.set_active(index):
 		return false
 	var raw: Array = saved.position
 	_restoring_surface_position = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))

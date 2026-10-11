@@ -1,0 +1,22 @@
+{
+  "continuous_fresh_save": false,
+  "disclosure": "Generated F19#5 Cloudreach boundary after piece 05 (stronghold) at the summit extraction threshold, for pieces 06 (Veyra + relay) and 07 (Stormward). The earned chain's piece 05 lost Officer Voss (L41-42) with the earned L31 five (level gap, coordinator ruling); this input is NOT earned. Five ordered template UIDs/species at a generated L40 (redesign_level_curve upper-Cloudreach band 39-42) with generated caps and full HP. Prior Meadows/Tidewake facts as the cloudreach profile; Cloudreach story flags through cloudreach_upper_route_unlocked mirror the earned 01-04 checkpoints; act-III flags through summit_extraction_engine_reached (including defeated_cloudreach_voss) are generated setup. Template inventory, not the earned carried items; no pickup, harvest, battle-reward or transaction receipts are fabricated. Day 16 at 120 s, pose on the summit deck at the threshold. Claims no prior earned segment PASS.",
+  "kind": "generated_boundary_save",
+  "portal_leg": "",
+  "prior_earned_play": false,
+  "profile": "cloudreach_veyra",
+  "profile_sha256": "17655edacaa101152d1dab314b573bc94f3993845377ed7e33a2c2566f282761",
+  "slot": 0,
+  "slot_info": {
+    "day": 16,
+    "legacy": false,
+    "load_result": {
+      "code": "ok",
+      "message": "",
+      "ok": true
+    },
+    "party_size": 5,
+    "realm": "cloudreach"
+  },
+  "source": "804b03bf31eb1c89414edfc53e22a3d3bc75ecd5"
+}
