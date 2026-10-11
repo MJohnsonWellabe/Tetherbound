@@ -1,5 +1,5 @@
 {
- "generated_at": "11:55 AM CT Sun 11 Oct 2026",
+ "generated_at": "12:12 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -1740,12 +1740,12 @@
    "title": "Type essence and chosen leveling",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 83,
+   "pct": 100,
    "counts": {
-    "met": 5,
+    "met": 6,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -1760,10 +1760,10 @@
     },
     {
      "text": "Sources work: defeating wilds, releasing a caught creature (its type), attuned nodes, essence crops, research tasks and a capped daily care trickle; no creature expeditions or automation.",
-     "status": "not_started",
-     "evidence": "partial units: test_foundation_resources (node), test_research_log, test_den_groom_saved_transaction (care cap), test_bounty_board",
-     "gap": "Unit tests for defeat, release and crop payouts, then one engine smoke per source on the production path.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test of wild-defeat or release essence payouts (stage_defeat and release_payout are unused in tests). Crop essence unknown. No actual-path witness.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F27-1/: engine smokes for all six sources on the production path: wild defeat, attuned node, release, essence crop (53/53), Den groom (5/5: pays once, same creature refused, daily cap refused, next day pays) and research claim through the Journal (+5 essence, receipt, no second payout); units 95/0",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a bfeb15c6, 12:15 PM CT Sun 11 Oct). Two new smokes authorized for the groom and research sources. Disclosed: groom cap reached via a seeded count; research task completion seeded. Game fix b6c266ad: the host's own saved groom was never announced, so a solo/host Den panel stuck on 'Retry original transaction'. Coordinator re-ran groom/essence/master units (54 tests, 0 failed). Open UX nit: the Den panel shows raw refusal codes. Lands with the consolidated PR.",
      "audit_index": 1
     },
     {
