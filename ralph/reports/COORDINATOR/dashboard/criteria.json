@@ -1,5 +1,5 @@
 {
- "generated_at": "1:41 PM CT Sun 11 Oct 2026",
+ "generated_at": "2:06 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -735,10 +735,10 @@
    "id": "F11",
    "title": "Dynamo, Stormheart and Tidewake gate",
    "chapter": "Stormwood",
-   "pct": 0,
+   "pct": 25,
    "counts": {
-    "met": 0,
-    "partial": 2,
+    "met": 1,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -763,10 +763,10 @@
     },
     {
      "text": "Through disconnect/reload without duplicated grants",
-     "status": "partial",
-     "evidence": "ralph/reports/INVITE-COOP/x05-proof-f11-drop-at-ack/PROOF.md; test_stormwood_ending.gd@9d97dc547",
-     "gap": "Re-run x05 f11 drop-at-ack and refuse-drop-at-ack proofs on b4e4897d5 Folds into F19#4, F48#1.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. CI unit covers legacy/reload receipts, not drop-at-ack. Ending/save diff since 9d97dc547: 11 files, +900.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F11-2/ (coop-loop ad7ad2ee on tb/ev-coordinator 19b70236): two-process proof stormwood_f11_disconnect_guest_rejoins_answers_once, verdict PASS, exit 0: the guest drops with the Stormheart offer owed, rejoins and answers once; a second drop and both reloads grant nothing; one Stormheart each, on disk",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (2:05 PM CT Sun 11 Oct). Disclosed: RD-17 guest-first portal fixture (bc150ca5 pattern), slow-host wall-clock scaling (budget_s x3, scratch copy). Lands with the consolidated PR.",
      "audit_index": 2
     },
     {
