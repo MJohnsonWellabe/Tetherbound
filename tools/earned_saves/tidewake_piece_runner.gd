@@ -155,8 +155,11 @@ func _handoff_check() -> void:
 		return
 	swimmer_uid = str(prior.get("swimmer_uid", ""))
 	var expected: Dictionary = prior.after
-	var checks := {"uids": before.uids == expected.uids, "flags": before.flags == expected.flags,
-		"items": before.items == expected.items, "realm": before.realm == expected.realm}
+	# Both sides through the same JSON round trip (the receipt's ints read back as floats).
+	var loaded: Dictionary = JSON.parse_string(JSON.stringify(before))
+	var checks := {}
+	for key: String in ["uids", "flags", "items", "realm"]:
+		checks[key] = loaded[key] == expected[key]
 	print("TIDEWAKE HANDOFF %s" % JSON.stringify(checks))
 	for key: String in checks:
 		if not checks[key]:
