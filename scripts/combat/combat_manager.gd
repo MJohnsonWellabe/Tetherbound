@@ -1027,27 +1027,86 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 				return _reject_arena("authored_pad_capacity", {"centre": centre, "bound": authored_bound, "radius": cfg.radius})
 	if joining_realm:
 		var ally_spot := _realm_owned_ally_spot()
-		var footprint := _admission_render_radius(_ally_body)
-		var offset := Vector2(ally_spot.x - centre.x, ally_spot.z - centre.z).length()
-		if not ally_spot.is_finite() or not is_finite(footprint) \
-			or offset + footprint + float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)) > float(cfg["radius"]):
-			return _reject_arena("host_rendered_radius", {"spot": ally_spot, "offset": offset,
-				"footprint": footprint, "radius": cfg.radius})
-		if not _staged_render_terrain_clear(_ally_body, ally_spot, _wild.global_position): return false
-		if not _realm_ally_clears_host_render(ally_spot):
-			return _reject_arena("host_rendered_gap", {"spot": ally_spot, "foe": _wild.global_position})
+		if not _shared_seat_fit(ally_spot, centre, float(cfg.radius)):
+			ally_spot = _find_clear_shared_seat(ally_spot, centre, float(cfg.radius))
+			if not ally_spot.is_finite(): return false
 		_admitted_spots = [ally_spot, _wild.global_position]
 	# A joining peer never relocates or re-admits the host's live opponent.
 	# Local admission fails before configure's scatter/bystander side effects.
 	if not joining_realm and not _staged_render_fit(_admitted_spots, centre, float(cfg["radius"])):
-		_admitted_spots.clear()
-		return false
+		_admitted_spots = _find_clear_formation(_admitted_spots, centre, float(cfg.radius))
+		if _admitted_spots.is_empty(): return false
 	_arena = ARENA.new()
 	_arena.name = "CombatArena"
 	_player.get_parent().add_child(_arena)
 	_arena_centre = centre
 	_arena.call("configure", centre, cfg)
 	return true
+
+
+## Alternative openings stay inside the already admitted ring. Search only
+## seats: never enlarge the ring, shorten the pair or move a host-owned foe.
+## Keep the original successful seat untouched and prefer small local changes.
+const ADMISSION_TURNS_DEG := [0.0, 30.0, -30.0, 60.0, -60.0, 90.0, -90.0, 120.0, -120.0, 150.0, -150.0, 180.0]
+const ADMISSION_OFFSETS_M := [0.5, 1.0, 2.0, 3.0]
+
+
+func _admission_offsets() -> Array[Vector3]:
+	var offsets: Array[Vector3] = [Vector3.ZERO]
+	for distance: float in ADMISSION_OFFSETS_M:
+		for index in 8:
+			var angle := float(index) * TAU / 8.0
+			offsets.append(Vector3(cos(angle), 0.0, sin(angle)) * distance)
+	return offsets
+
+
+func _find_clear_formation(spots: Array[Vector3], centre: Vector3, radius: float) -> Array[Vector3]:
+	var first_failure := last_admission_context.duplicate()
+	# A deficient measured pair cannot become valid by rotation/translation.
+	if spots.size() != 2 or str(first_failure.get("stage", "")) in ["invalid_formation", "rendered_gap", "rendered_radius"]:
+		return []
+	for offset: Vector3 in _admission_offsets():
+		for degrees: float in ADMISSION_TURNS_DEG:
+			if offset.is_zero_approx() and is_zero_approx(degrees): continue
+			var turn := Basis(Vector3.UP, deg_to_rad(degrees))
+			var candidate: Array[Vector3] = [centre + offset + turn * (spots[0] - centre),
+				centre + offset + turn * (spots[1] - centre)]
+			if _staged_render_fit(candidate, centre, radius):
+				last_admission_context.clear()
+				return candidate
+	last_admission_context = first_failure
+	last_admission_context["clear_seat_search_exhausted"] = true
+	return []
+
+
+func _shared_seat_fit(spot: Vector3, centre: Vector3, radius: float) -> bool:
+	var footprint := _admission_render_radius(_ally_body)
+	var offset := Vector2(spot.x - centre.x, spot.z - centre.z).length()
+	if not spot.is_finite() or not is_finite(footprint) \
+		or offset + footprint + float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)) > radius:
+		return _reject_arena("host_rendered_radius", {"spot": spot, "offset": offset,
+			"footprint": footprint, "radius": radius})
+	if not _staged_render_terrain_clear(_ally_body, spot, _wild.global_position): return false
+	if not _realm_ally_clears_host_render(spot):
+		return _reject_arena("host_rendered_gap", {"spot": spot, "foe": _wild.global_position})
+	return true
+
+
+func _find_clear_shared_seat(spot: Vector3, centre: Vector3, radius: float) -> Vector3:
+	var first_failure := last_admission_context.duplicate()
+	if not spot.is_finite() or not is_finite(_admission_render_radius(_ally_body)): return Vector3.INF
+	var foe_at := _wild.global_position
+	var original_gap := Vector2(spot.x - foe_at.x, spot.z - foe_at.z).length()
+	for offset: Vector3 in _admission_offsets():
+		if offset.is_zero_approx(): continue
+		var candidate := spot + offset
+		if Vector2(candidate.x - foe_at.x, candidate.z - foe_at.z).length() < original_gap: continue
+		if _shared_seat_fit(candidate, centre, radius):
+			last_admission_context.clear()
+			return candidate
+	last_admission_context = first_failure
+	last_admission_context["clear_seat_search_exhausted"] = true
+	return Vector3.INF
 
 
 ## The host enemy keeps its current orientation, even if it is targeting a
@@ -1638,6 +1697,11 @@ func _place_fighters() -> void:
 	var spots := _admitted_spots if _admitted_spots.size() == 2 else _staging_spots(cfg)
 	var ally_spot: Vector3 = spots[0]
 	var wild_spot: Vector3 = spots[1]
+	# An alternate clear formation may have rotated the pair. Placement and
+	# trainer-aside presentation must use that admitted heading, too.
+	forward = wild_spot - ally_spot
+	forward.y = 0.0
+	forward = forward.normalized()
 	# The admitted formation already includes any named trainer lateral seat.
 	_ally_body.visible = true
 	_place(_ally_body, ally_spot)
