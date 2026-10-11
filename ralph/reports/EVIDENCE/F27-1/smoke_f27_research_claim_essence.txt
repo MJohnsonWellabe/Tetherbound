@@ -1,0 +1,31 @@
+F32 MATERIAL PASS: research task terrapup/sight is configured and enabled
+F32 MATERIAL PASS: request actual Meadows scene
+F32 MATERIAL PASS: Meadows procedural build completed
+F32 MATERIAL PASS: production player and controller driver
+F32 MATERIAL PASS: pre-claim owner and world saved to isolated disk
+F32 MATERIAL PASS: before retains exact world bytes
+F32 MATERIAL PASS: before decodes world save document
+F32 MATERIAL PASS: before retains exact character bytes
+F32 MATERIAL PASS: before decodes character save document
+F32 MATERIAL PASS: game_menu opens the Journal
+RESEARCH DIAG tab step 0: backpack
+RESEARCH DIAG tab step 1: creatures
+RESEARCH DIAG tab step 2: map
+RESEARCH DIAG tab step 3: quest_log
+F32 MATERIAL PASS: menu_tab_right reaches the Quests tab
+F32 MATERIAL PASS: ui_up/ui_down reach the Research log button (focus 'Research log · Species and task rewards')
+F32 MATERIAL PASS: ui_accept opens the Research log panel
+F32 MATERIAL PASS: ui_down reaches the claim:terrapup:sight Claim button
+F32 MATERIAL PASS: after retains exact world bytes
+F32 MATERIAL PASS: after decodes world save document
+F32 MATERIAL PASS: after retains exact character bytes
+F32 MATERIAL PASS: after decodes character save document
+F32 MATERIAL PASS: 1 disk gained exactly 5 essence_ground (delta 5)
+F32 MATERIAL PASS: 1 accepted research_claim row and receipt research:terrapup:sight:f27-research-owner on disk
+F32 MATERIAL PASS: 2 the paid task no longer offers Claim
+F32 MATERIAL PASS: again retains exact world bytes
+F32 MATERIAL PASS: again decodes world save document
+F32 MATERIAL PASS: again retains exact character bytes
+F32 MATERIAL PASS: again decodes character save document
+F32 MATERIAL PASS: 2 replayed claim pays no more essence_ground ({"character_revision":8,"durable":true,"journal_revision":1,"ok":true,"owner_acknowledged":true,"owner_saved":true,"receipt":"research:terrapup:sight:f27-resear)
+F27_RESEARCH_CLAIM: PASS terrapup/sight paid [{ "id": "essence_ground", "n": 5 }]
