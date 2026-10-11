@@ -149,7 +149,7 @@
      "text": "WORLD §3.1 route spacing and A7 measured on the same route",
      "status": "failing",
      "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-7.md",
-     "gap": "Re-run the --through-hall --route-ledger run; recompute A7/spacing with strict-recompute.py. Folds into F49.",
+     "gap": "routes-west: the Hall --route-ledger run is in flight; then strict-recompute. Fix the three >250 m §3.1 gaps (252 near Captain Field, 334 after Vess, 252 at the Hall start) with minimal authored points of interest, and re-measure.",
      "note": "Evidence window 1 (6:20 AM CT Sun 11 Oct): lane working. | Batch-3 measurement (lane B, strict): A7 longest 68.2 s / 54.2 s, 0 violations; three §3.1 gaps over 250 m (252 near Captain Field, 334 after Vess, 252 at Hall start) — FAILING until placement fix. | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 7
     }
@@ -181,7 +181,7 @@
      "text": "Each is a distinct optional action",
      "status": "partial",
      "evidence": "MEADOWS-PAYOFFS/six-activities/earned/ (seed4_hall runs, judge D) @≤1ba253eb0",
-     "gap": "Re-run the six activities from the regenerated earned checkpoint; redo the distinctness judge. Folds into F49.",
+     "gap": "Captures lane: the six optional activities from a regenerated earned save (disclosed), one frame each mid-action, then a code-blind distinctness judge.",
      "note": "Evidence window 1 (6:20 AM CT Sun 11 Oct): lane working. | Audit 2026-10-04 on b4e4897d5: STALE. Earned runs from the seed4_hall checkpoint. The save was reset, and F19 must regenerate the earned checkpoints.",
      "audit_index": 1
     },
@@ -312,7 +312,7 @@
      "text": "Varied-size framing and C2/C3 results pass",
      "status": "failing",
      "evidence": "ralph/reports/BALANCE/f04_7/RUN_meadows_after_24seeds.txt @tb/balance (C2 half only)",
-     "gap": "Owner balance call: accept the chapter bar near 0.21-0.23, raise named-fight pressure (costs C3 headroom), or redefine the reader policy in COMBAT.",
+     "gap": "Coordinator decision 4:12 PM CT (owner delegated): the fights lane applies one tuning batch to reach the 0.25 masher-loss bar (bar unchanged) and keep C3 headroom, then re-measures. Size framing passed in F21#4.",
      "note": "PARKED for an owner balance call (fights-c2c3 8511bd40, Sun 11 Oct ~2:00 PM CT). C3's measured half passes; Dell passes on the officer floor bar (the top-trainer bar was misapplied). Still failing C2: (1) chapter masher-loss rate 0.21/0.21/0.23 (Terrapup/Ripplet/Galewisp) against the 0.25 bar; (2) Ripplet vs the Warrens guardian: the reader's lead cost 0.44 against the masher's 0.35. Cues are honest (every hit lands inside the drawn shape); the cause is the reader pilot committing during tells. A smarter pilot regressed fast fights (Nerissa 1.00 to 0.46) and was reverted; Warden power x1.15 barely moved the masher and pushed the worst hit to 0.47-0.48 (C3 ceiling 0.5).",
      "audit_index": 7
     },
@@ -583,7 +583,7 @@
      "text": "Settlements and cliff identity pass C2 visual matrix",
      "status": "failing",
      "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F08-4/VERDICT.md",
-     "gap": "Re-capture the settlement/cliff frame matrix; redo the code-blind judge on Bars A/B. Folds into F40.",
+     "gap": "Captures lane: re-capture the settlement and cliff-identity matrix (Low); code-blind judge on Bars A/B; failures go to Codex cloudreach (F40).",
      "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 4
     },
@@ -717,7 +717,7 @@
      "text": "Audio witness for phases/lightning",
      "status": "not_started",
      "evidence": "smoke_stormwood_surge_audio.gd (CI; wiring/timing only)",
-     "gap": "Author the nine cues with provenance per AUDIO §316–321; run a blinded-listener check in-scene Folds into none named (nearest F41#3).",
+     "gap": "Captures lane: author the nine Stormwood cues procedurally (code synthesis, provenance), wire them, prove played=true in-scene, plus a waveform/spectrogram check.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. All nine assets/audio/stormwood/* cue files are absent at b4e4897d5. The smoke records played=false, so nothing is audible.",
      "audit_index": 5
     },
@@ -1160,7 +1160,7 @@
      "text": "Village and Hall frames pass the new visual bar (ACCEPTANCE §4: Palworld/Animo creatures and world, Valheim lighting and atmosphere) with a code-blind judge.",
      "status": "not_started",
      "evidence": "HUB/f17/preliminary-low-review-r1.md (bars withheld); remote-forward-r1 SIG11",
-     "gap": "Native village/Hall capture matrix (Low, plus Medium when available), then a code-blind full-bar judge.",
+     "gap": "Captures lane: village and Hall matrix at Low (approach, gameplay camera, day/night); code-blind full-bar judge. Codex adds Medium.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No full Bars A/B village/Hall matrix judged. The Low capture failed and the Forward+ pilot crashed before capture.",
      "audit_index": 6
     }
@@ -2910,7 +2910,7 @@
      "text": "An agent-piloted normal route estimates a 15–25 hour clear; the owner's play pass confirms the range.",
      "status": "in_progress",
      "evidence": "ralph/reports/R3-F47/implementation-evidence.json (route command queued, never run)",
-     "gap": "Owner play pass confirms (or refutes) the 15-25 h clear; agent estimate ~3.1-3.4 h critical path.",
+     "gap": "Systems lane: agent route estimate (measured piece times plus the PROGRESSION optional-loop budget). The owner's playtest (F49#1) is the final check.",
      "note": "Agent half, partial (home-key lane 4e2a873a, ralph/reports/EV-HOME-KEY/F47-0-estimate.md): tools/f47_capture_route.gd only records a human playing the real title, so it was estimated from route receipts instead. Cloudreach, fully measured, takes 3,042 s of simulated required-route play; 4 chapters at 46-51 min each is about 3.1-3.4 h of agent critical path. Hitting 15-25 h would need human play to take 4.4-8x the agent's time (exploration, optional activities, fights at human skill). Plausible but unmeasured: the owner's play pass decides.",
      "audit_index": 0
     },
