@@ -185,8 +185,13 @@ func _groom(prompt: Node3D, uid: String, species: String, expect_paid: int, expe
 		_check(row.get("status") == "accepted" and after.character.get("redesign_character", {}).get("transaction_receipts", []).has(receipt),
 			"%s: accepted groom row and care receipt %s on disk" % [label, receipt])
 	else:
+		# A refusal answers synchronously into the panel's status line.
+		var status := ""
+		for panel: Node in root.find_children("*", "", true, false):
+			if panel.get_script() == preload("res://scripts/ui/craft_panel.gd"): status = str(panel.get("_status").text)
 		var code := str(result.get("code", result.get("reason", "")))
-		_check(code == expect_code, "%s: refused %s (got '%s', %s)" % [label, expect_code, code, JSON.stringify(result).left(200)])
+		_check(code == expect_code or status.contains(expect_code),
+			"%s: refused %s (signal '%s', panel '%s')" % [label, expect_code, code, status])
 	# The panel closes itself for a groom; close it if a refusal left it open.
 	for node: Node in root.find_children("*", "Button", true, false):
 		if node.get_meta("station_focus_key", "") == "groom:" + uid and (node as Button).is_visible_in_tree():

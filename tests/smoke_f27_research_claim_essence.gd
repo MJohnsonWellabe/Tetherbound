@@ -114,9 +114,14 @@ func _open_research_log() -> bool:
 	await _driver.call("_tap_action", &"game_menu")
 	var menu: Node = _game.call("menu")
 	if not _check(menu != null and menu.call("is_open") == true, "game_menu opens the Journal"): return false
-	for i in 12:
-		if menu.call("current_tab_id") == "quest_log": break
-		await _driver.call("_tap_action", &"menu_tab_right")
+	# Step tab by tab, judging each only after it settles; step back on an overshoot.
+	for i in 16:
+		await _frames(10)
+		var tab := str(menu.call("current_tab_id"))
+		print("RESEARCH DIAG tab step %d: %s" % [i, tab])
+		if tab == "quest_log": break
+		await _driver.call("_tap_action", &"menu_tab_left" if tab == "build" else &"menu_tab_right")
+	await _frames(10)
 	if not _check(menu.call("current_tab_id") == "quest_log", "menu_tab_right reaches the Quests tab"): return false
 	await _frames(10)
 	var focus := root.gui_get_focus_owner()
