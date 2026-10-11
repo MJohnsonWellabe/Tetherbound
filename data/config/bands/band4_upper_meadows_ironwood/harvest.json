@@ -182,7 +182,7 @@
       "label": "A dropped helm",
       "at": [-358.0, 5058.0],
       "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
-      "model_scale": 0.85,
+      "model_scale": 0.5,
       "_why_t3_pickups": "T3-REWARD found `hide_helm` fully modelled with zero acquisition path anywhere in the game. Beside the tree-line ironwood stand -- gear left where the region's own first-crossing beat already stops the player. stack:1; a respawning crate is harmless."
     },
     {
