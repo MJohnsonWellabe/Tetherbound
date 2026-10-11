@@ -126,19 +126,16 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 	var pivot_path := animation_root.get_path_to(model)
 	var pivot_before := model.transform
 	var box := BOUNDS.measure(model)
+	var to_model := BOUNDS._chain(skeleton, model)
 	var contact_key := "%s:%s:%s:%s" % [recipe.source_sha256, recipe.profile,
-		pivot_before.basis, BOUNDS._chain(skeleton, model)]
+		pivot_before.basis, to_model]
 	var surfaces: Array[Dictionary] = []
 	if not _contact_heights.has(contact_key):
-		for mesh: MeshInstance3D in BOUNDS._mesh_instances(model):
-			if mesh.skin == null or BOUNDS._skeleton_for(mesh) != skeleton:
-				continue
-			for surface in mesh.mesh.get_surface_count():
-				var arrays := mesh.mesh.surface_get_arrays(surface)
-				surfaces.append({"skin": mesh.skin, "vertices": arrays[Mesh.ARRAY_VERTEX],
-					"bones": arrays[Mesh.ARRAY_BONES], "weights": arrays[Mesh.ARRAY_WEIGHTS]})
+		surfaces = _prepare_contact_surfaces(model, skeleton)
 		_contact_heights[contact_key] = {}
 	var contacts: Dictionary = _contact_heights[contact_key]
+	var pose_contacts: Array = contacts.get("_poses", [])
+	contacts["_poses"] = pose_contacts
 	var library := AnimationLibrary.new()
 	var clips := original.duplicate(true)
 	var profiles: Dictionary = _data.get("profiles", {})
@@ -194,10 +191,20 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 				# actual skinned pose instead, without changing mesh or collision.
 				var sample := "%s:%s" % [role, frame.phase]
 				if not contacts.has(sample):
-					var minimum := _posed_minimum_y(skeleton, model, surfaces, frame.bones, rolled,
-						frame.get("bone_positions", {}))
-					contacts[sample] = minimum if is_finite(minimum) else \
-						(Transform3D(rolled, Vector3.ZERO) * box).position.y
+					var offsets: Dictionary = frame.get("bone_positions", {})
+					# Compare complete binary values, not rounded strings or hash-only keys.
+					# Role/time do not affect skinning; identical pose inputs share
+					# the result while every role:phase entry remains available.
+					var inputs := var_to_bytes([frame.bones, offsets, rolled])
+					for previous: Dictionary in pose_contacts:
+						if previous.inputs == inputs:
+							contacts[sample] = previous.minimum
+							break
+					if not contacts.has(sample):
+						var minimum := _posed_minimum_y(skeleton, to_model, surfaces, frame.bones, rolled, offsets)
+						contacts[sample] = minimum if is_finite(minimum) else \
+							(Transform3D(rolled, Vector3.ZERO) * box).position.y
+						pose_contacts.append({"inputs": inputs, "minimum": contacts[sample]})
 				position.y = -float(contacts[sample])
 			var time := float(frame.phase) * animation.length
 			animation.rotation_track_insert_key(rotation_track, time, rolled.get_rotation_quaternion())
@@ -265,10 +272,61 @@ static func _transform_matches(transform: Transform3D, column_major: Array) -> b
 	return true
 
 
+## Resolve the frame-invariant skin inputs once for a cold contact cache.
+## Every vertex and every influence is inspected with the same filters and
+## order as the contact calculation; only retained influences are stored.
+## Float64 storage preserves GDScript's scalar weight/total arithmetic.
+static func _prepare_contact_surfaces(model: Node3D, skeleton: Skeleton3D) -> Array[Dictionary]:
+	var surfaces: Array[Dictionary] = []
+	for mesh: MeshInstance3D in BOUNDS._mesh_instances(model):
+		if mesh.skin == null or BOUNDS._skeleton_for(mesh) != skeleton:
+			continue
+		var skin := mesh.skin
+		var bind_bones := PackedInt32Array()
+		var bind_poses: Array[Transform3D] = []
+		for bind in skin.get_bind_count():
+			var bone := skin.get_bind_bone(bind)
+			if bone < 0:
+				bone = skeleton.find_bone(skin.get_bind_name(bind))
+			var valid := bone >= 0 and bone < skeleton.get_bone_count()
+			bind_bones.append(bone if valid else -1)
+			bind_poses.append(skin.get_bind_pose(bind) if valid else Transform3D.IDENTITY)
+		for surface in mesh.mesh.get_surface_count():
+			var arrays := mesh.mesh.surface_get_arrays(surface)
+			var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+			var bones: Variant = arrays[Mesh.ARRAY_BONES]
+			var weights: Variant = arrays[Mesh.ARRAY_WEIGHTS]
+			if vertices.is_empty() or bones == null or weights == null \
+					or bones.size() != weights.size() or bones.size() % vertices.size() != 0:
+				continue
+			var stride := int(bones.size() / vertices.size())
+			var starts := PackedInt32Array()
+			var influences := PackedInt32Array()
+			var influence_weights := PackedFloat64Array()
+			var totals := PackedFloat64Array()
+			for vertex in vertices.size():
+				starts.append(influences.size())
+				var total := 0.0
+				for influence in stride:
+					var offset := vertex * stride + influence
+					var weight := float(weights[offset])
+					var bind := int(bones[offset])
+					if weight <= 0.0 or bind < 0 or bind >= bind_bones.size() or bind_bones[bind] < 0:
+						continue
+					influences.append(bind)
+					influence_weights.append(weight)
+					total += weight
+				totals.append(total)
+			starts.append(influences.size())
+			surfaces.append({"vertices": vertices, "bind_bones": bind_bones, "bind_poses": bind_poses,
+				"starts": starts, "influences": influences, "weights": influence_weights, "totals": totals})
+	return surfaces
+
+
 ## Bake the collapse's contact once per source/profile/fitted basis. This
 ## follows the renderer's skin transform, including named and eight-weight
 ## binds, while leaving the live skeleton's current animation untouched.
-static func _posed_minimum_y(skeleton: Skeleton3D, model: Node3D,
+static func _posed_minimum_y(skeleton: Skeleton3D, to_model: Transform3D,
 		surfaces: Array[Dictionary], rotations: Dictionary, rolled: Basis, positions: Dictionary = {}) -> float:
 	var poses: Array[Transform3D] = []
 	poses.resize(skeleton.get_bone_count())
@@ -294,37 +352,28 @@ static func _posed_minimum_y(skeleton: Skeleton3D, model: Node3D,
 			pose = poses[parent] * pose
 			parent = skeleton.get_bone_parent(parent)
 		global_poses.append(pose)
-	var to_model := BOUNDS._chain(skeleton, model)
 	var minimum := INF
 	for surface: Dictionary in surfaces:
 		var vertices: PackedVector3Array = surface.vertices
-		var bones: Variant = surface.bones
-		var weights: Variant = surface.weights
-		if vertices.is_empty() or bones == null or weights == null \
-				or bones.size() != weights.size() or bones.size() % vertices.size() != 0:
-			continue
-		var skin := surface.skin as Skin
+		var bind_bones: PackedInt32Array = surface.bind_bones
+		var bind_poses: Array[Transform3D] = surface.bind_poses
 		var binds: Array[Transform3D] = []
-		var valid_binds: Array[bool] = []
-		for bind in skin.get_bind_count():
-			var bone := skin.get_bind_bone(bind)
-			if bone < 0:
-				bone = skeleton.find_bone(skin.get_bind_name(bind))
-			var valid := bone >= 0 and bone < global_poses.size()
-			valid_binds.append(valid)
-			binds.append(to_model * global_poses[bone] * skin.get_bind_pose(bind) if valid else Transform3D.IDENTITY)
-		var stride := int(bones.size() / vertices.size())
+		for bind in bind_bones.size():
+			var bone := bind_bones[bind]
+			binds.append(to_model * global_poses[bone] * bind_poses[bind] if bone >= 0 else Transform3D.IDENTITY)
+		var starts: PackedInt32Array = surface.starts
+		var influences: PackedInt32Array = surface.influences
+		var weights: PackedFloat64Array = surface.weights
+		var totals: PackedFloat64Array = surface.totals
 		for vertex in vertices.size():
 			var point := Vector3.ZERO
-			var total := 0.0
-			for influence in stride:
-				var offset := vertex * stride + influence
-				var weight := float(weights[offset])
-				var bind := int(bones[offset])
-				if weight <= 0.0 or bind < 0 or bind >= binds.size() or not valid_binds[bind]:
-					continue
+			var first := starts[vertex]
+			for influence in starts[vertex + 1] - first:
+				var offset := first + influence
+				var weight := weights[offset]
+				var bind := influences[offset]
 				point += (binds[bind] * vertices[vertex]) * weight
-				total += weight
+			var total := totals[vertex]
 			if total > 0.0:
 				minimum = minf(minimum, (rolled * (point / total)).y)
 	return minimum
