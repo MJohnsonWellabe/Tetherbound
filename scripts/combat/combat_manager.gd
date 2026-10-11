@@ -1321,8 +1321,13 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 	if points.is_empty(): return _reject_arena("rendered_bounds", {"body": body.name})
 	var lo := Vector3(INF, INF, INF)
 	var hi := Vector3(-INF, -INF, -INF)
+	var staged_points := PackedVector3Array()
+	var support_points := PackedVector2Array([Vector2(spot.x, spot.z)])
 	for point: Vector3 in points:
 		var at := basis * point + Vector3(spot.x, level, spot.z)
+		staged_points.append(at)
+		var footprint_at := Vector2(at.x, at.z)
+		if not support_points.has(footprint_at): support_points.append(footprint_at)
 		lo = lo.min(at)
 		hi = hi.max(at)
 	if not surface.is_empty():
@@ -1334,7 +1339,10 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 		for point: Vector3 in points:
 			if not bool(source.call("surface_wild_supports_at", body, basis * point + Vector3(spot.x, level, spot.z))):
 				return _reject_arena("surface_corner", {"body": body.name, "corner": basis * point + Vector3(spot.x, level, spot.z)})
-	for at: Vector2 in [Vector2(spot.x, spot.z), Vector2(lo.x, lo.z), Vector2(lo.x, hi.z), Vector2(hi.x, lo.z), Vector2(hi.x, hi.z)]:
+	# Support the actual projected render corners, not the empty corners of
+	# their world-axis envelope after yaw. All of the rendered footprint stays
+	# subject to the same real floor/normal/step checks.
+	for at: Vector2 in support_points:
 		if not surface.is_empty(): continue
 		var ray := PhysicsRayQueryParameters3D.create(Vector3(at.x, level + REALM_SEAT_MAX_STEP_M, at.y),
 			Vector3(at.x, level - REALM_SEAT_MAX_STEP_M, at.y), 0x7FFFFFFF, exclude)
@@ -1354,23 +1362,50 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 			support_query.exclude = exclude
 			if space.intersect_shape(support_query, 1).is_empty():
 				return _reject_arena("support_missing", {"body": body.name, "at": at, "level": level})
-	# Leave the floor/contact skin out of the solid-obstacle query.
-	# A floating body's submerged bounds remain in the actual solid query.
-	if surface.is_empty(): lo.y = maxf(lo.y, level + 0.25)
-	if hi.y <= lo.y: return _reject_arena("rendered_height", {"body": body.name, "lo": lo, "hi": hi})
-	var shape := BoxShape3D.new()
-	shape.size = hi - lo
+	# Query the oriented measured box itself. A yawed quadruped's world AABB
+	# contains large empty corner wedges; treating those as art rejects real
+	# supported seats when nearby sloped terrain enters only that empty space.
+	# Dry bodies retain the existing 0.25m floor-contact cut. Clip the actual
+	# box edges at that plane rather than extending any oriented corner upward.
+	# Floating bodies retain their complete submerged render box.
+	var solid_points := _admission_solid_points(staged_points, level + 0.25 if surface.is_empty() else -INF)
+	if solid_points.size() < 4:
+		return _reject_arena("rendered_height", {"body": body.name, "lo": lo, "hi": hi})
+	var shape := ConvexPolygonShape3D.new()
+	var origin := Vector3(spot.x, level, spot.z)
+	var local_points := PackedVector3Array()
+	for point: Vector3 in solid_points: local_points.append(point - origin)
+	shape.points = local_points
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = shape
-	query.transform = Transform3D(Basis.IDENTITY, (lo + hi) * 0.5)
+	query.transform = Transform3D(Basis.IDENTITY, origin)
 	query.collision_mask = 0x7FFFFFFF
 	query.exclude = exclude
 	var obstacles := space.intersect_shape(query, 1)
 	if not obstacles.is_empty():
 		var obstacle: Variant = obstacles[0].get("collider")
 		return _reject_arena("solid_overlap", {"body": body.name, "lo": lo, "hi": hi,
+			"shape": "oriented_render_box",
 			"collider": str((obstacle as Node).get_path()) if obstacle is Node else str(obstacle)})
 	return true
+
+
+## The eight source-AABB endpoints keep their bitwise edge adjacency through
+## every affine transform. Their convex hull is the exact oriented render box;
+## clipping its twelve edges preserves the existing dry floor-contact skin.
+func _admission_solid_points(points: PackedVector3Array, floor_y: float) -> PackedVector3Array:
+	var clipped := PackedVector3Array()
+	if points.size() != 8: return clipped
+	for index in 8:
+		var point := points[index]
+		if point.y >= floor_y: clipped.append(point)
+		for bit: int in [1, 2, 4]:
+			var other_index := index ^ bit
+			if other_index <= index: continue
+			var other := points[other_index]
+			if (point.y < floor_y) == (other.y < floor_y): continue
+			clipped.append(point.lerp(other, (floor_y - point.y) / (other.y - point.y)))
+	return clipped
 
 
 func _registered_surface_admission_context(body: Node3D) -> Dictionary:
