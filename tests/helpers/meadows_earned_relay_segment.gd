@@ -410,13 +410,15 @@ func _on_hit(on_enemy: bool, amount: float) -> void:
 	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
 		if not bool(member.get("fainted")):
 			survivors.append(member.get_instance_id())
-	# F19#5 diagnostic: the creature this helper credits with the kill.
-	var survivor_uids: Array = []
-	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
-		if not bool(member.get("fainted")): survivor_uids.append(str(member.get("uid")))
-	print("[helper_kill] active_uid=%s enemy_level=%d survivors=%s" % [str(active.get("uid")), int(_fight_enemy.get("level")), JSON.stringify(survivor_uids)])
+	# A durable trainer round (encounter_director.uses_durable_trainer_rewards)
+	# pays the production hybrid award (combat_round_reward.gd stage()); an
+	# ordinary one pays the ordinary award. Same assertion either way.
+	var encounter_id := str((_director.get("_encounter") as Dictionary).get("encounter_id", "")) \
+		if _director.get("_encounter") is Dictionary else ""
+	var hybrid := _director.has_method("uses_durable_trainer_rewards") \
+		and bool(_director.call("uses_durable_trainer_rewards", encounter_id))
 	accumulate_xp(_expected_xp, active.get_instance_id(), survivors, int(_fight_enemy.get("level")),
-		TRAINERS.reward_xp_bonus(_captain_spec) if _captain_kills.size() == TRAINERS.team_of(_captain_spec).size() else 0, PROGRESSION.config())
+		TRAINERS.reward_xp_bonus(_captain_spec) if _captain_kills.size() == TRAINERS.team_of(_captain_spec).size() else 0, PROGRESSION.config(), hybrid)
 
 
 func _on_exit(outcome: String) -> void:
@@ -453,10 +455,15 @@ static func opponent_matches(creature: RefCounted, row: Dictionary) -> bool:
 		and int(creature.get("level")) == int(row.get("level", -1))
 
 
-static func accumulate_xp(expected: Dictionary, active: int, survivors: Array[int], level: int, bonus: int, cfg: Dictionary) -> void:
+static func accumulate_xp(expected: Dictionary, active: int, survivors: Array[int], level: int, bonus: int, cfg: Dictionary, hybrid: bool = false) -> void:
 	var award := PROGRESSION.xp_award_for(level, cfg)
+	var share := PROGRESSION.party_share(award, cfg)
+	if hybrid:
+		var essence_cfg: Dictionary = preload("res://scripts/creatures/essence.gd").config()
+		award = PROGRESSION.scaled_combat_xp(level, cfg, essence_cfg)
+		share = PROGRESSION.scaled_party_combat_xp(level, cfg, essence_cfg)
 	for id: int in survivors:
-		expected[id] = int(expected.get(id, 0)) + bonus + (award if id == active else PROGRESSION.party_share(award, cfg))
+		expected[id] = int(expected.get(id, 0)) + bonus + (award if id == active else share)
 
 
 static func exact_captain_xp(before: Dictionary, after: Dictionary, expected: Dictionary) -> bool:

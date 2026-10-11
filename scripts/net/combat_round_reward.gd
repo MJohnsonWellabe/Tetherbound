@@ -199,12 +199,6 @@ static func stage(current: Dictionary, intent: Dictionary, context: Dictionary) 
 		if xp.is_empty(): return _deny("invalid_round_XP_or_cap")
 		next.party = xp.party.duplicate(true)
 		awards = xp.awards.duplicate(true)
-		# F19#5 diagnostic: which creature this round credits as active.
-		var given := {}
-		for uid: String in awards: given[uid] = int((awards[uid] as Dictionary).get("authored_award", 0)) if awards[uid] is Dictionary else awards[uid]
-		print("[round_reward] trainer=%s round=%s active_uid=%s enemy_level=%d awards=%s" % [
-			str(intent.get("trainer_id", "")), str(intent.get("round", "")), str(context.binding.active_uid),
-			int(context.enemy_record.level), JSON.stringify(given)])
 	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "trainer_round", str(current.character_id))
 	next.redesign_character.transaction_receipts.append(decision)
 	next = E.refresh_training_moves(next, TEACHING.available_moves, TEACHING.character_loadout_mirror)
