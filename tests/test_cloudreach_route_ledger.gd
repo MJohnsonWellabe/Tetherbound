@@ -240,6 +240,10 @@ func _cfg() -> Dictionary:
 	return PROGRESSION.config()
 
 
+func _essence_cfg() -> Dictionary:
+	return _json("res://data/config/essence.json")
+
+
 func _cloudreach_team_band() -> Array:
 	var biome := ((_json(CURVE_PATH).get("biomes", {}) as Dictionary).get(CLOUDREACH_BIOME, {})) as Dictionary
 	return biome.get("team", []) as Array
@@ -478,9 +482,17 @@ func _feed_candy(member: Dictionary, levels: int) -> void:
 ## other non-fainted member gets party_share of it.
 ## `active` < 0 means the lead; otherwise the member at that index lands the
 ## kill (sensitivity: a bench member landing kills).
-func _defeat(party: Array, enemy_level: int, active: int = -1) -> int:
+## A WILD defeat is the host training transaction's award, not the legacy one:
+## essence.json `wild_victory_xp_mode` "hybrid" pays scaled_combat_xp /
+## scaled_party_combat_xp (PROGRESSION.md §2, auto_xp_scale), the same static
+## functions combat_round_reward.gd stages. Trainer defeats keep the ordinary
+## award (the live Senn/Maela receipts pay bench 0.5 x raw).
+func _defeat(party: Array, enemy_level: int, active: int = -1, wild: bool = false) -> int:
 	var award: int = PROGRESSION.xp_award_for(enemy_level, _cfg())
 	var share: int = PROGRESSION.party_share(award, _cfg())
+	if wild and str(_essence_cfg().get("wild_victory_xp_mode", "")) == "hybrid":
+		award = PROGRESSION.scaled_combat_xp(enemy_level, _cfg(), _essence_cfg())
+		share = PROGRESSION.scaled_party_combat_xp(enemy_level, _cfg(), _essence_cfg())
 	var who := LEAD_INDEX if active < 0 else active
 	for i in party.size():
 		_gain(party[i] as Dictionary, award if i == who else share)
@@ -695,7 +707,7 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 				var active := -1
 				if i < bench_kills:
 					active = party.find(_lowest(party))
-				var award := _defeat(party, int((sites[i] as Dictionary)["level"]), active)
+				var award := _defeat(party, int((sites[i] as Dictionary)["level"]), active, true)
 				if active < 0:
 					wild_xp += award
 			var before := _levels(party)
@@ -739,7 +751,7 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 	var tail_xp := 0
 	for i in tail_fought:
 		fought_ids.append(str((tail_sites[i] as Dictionary)["id"]))
-		tail_xp += _defeat(party, int((tail_sites[i] as Dictionary)["level"]))
+		tail_xp += _defeat(party, int((tail_sites[i] as Dictionary)["level"]), -1, true)
 	# Sensitivity only: the finale's reward candy fed before the overlook
 	# (affects the exit, never a fight band).
 	if bool(options.get("feed_finale_reward", false)):
