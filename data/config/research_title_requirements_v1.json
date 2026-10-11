@@ -1,0 +1,359 @@
+{
+  "schema_version": 1,
+  "catalogue_revision": 1,
+  "biomes": {
+    "tidewake": {
+      "abyssal_guardian": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "aquaryn": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "cannonback": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "cragclaw": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "mangrove_monitor": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "mirejaw": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "riptusk": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "riverdrake": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "sirenseal": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "tidecoil": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "torrentoad": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "water_abyssal_guardian": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "water_aquaryn": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "water_cannonback": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "water_cragclaw": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "water_mangrove_monitor": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "water_mirejaw": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "water_mosshell": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "water_riptusk": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "water_riverdrake": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "water_sirenseal": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "water_tidecoil": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "water_torrentoad": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      }
+    },
+    "meadows": {
+      "ashtusk": {
+        "sight": 1,
+        "signature": 1,
+        "casts": 3
+      },
+      "bramblebun": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "brooktail": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "burrowback": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "duskhush": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "galecrest": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "galewisp": {
+        "sight": 1,
+        "signature": 1,
+        "casts": 3
+      },
+      "meadowhart": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "mosshell": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "mudsnout": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "nightburrow": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "paddlenewt": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "pipwing": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "reedwing": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "riftfrill": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "ripplet": {
+        "sight": 1,
+        "signature": 1,
+        "casts": 3
+      },
+      "stormtrail": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "terrapup": {
+        "sight": 1,
+        "signature": 1,
+        "casts": 3
+      },
+      "trailpup": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "tuskroot": {
+        "sight": 1,
+        "signature": 1,
+        "casts": 3
+      },
+      "veridian": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      }
+    },
+    "stormwood": {
+      "cindercub": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "frostclaw": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "fulgocobra": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "glimmermoth": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "mosshock": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "shadelet": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "sparkit": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "staticub": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "stormbrush": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "stormraven": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "tanglevolt": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "thundertunnel": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "voltarach": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "voltwig": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      }
+    },
+    "cloudreach": {
+      "aeriex": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "breezetail": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "cliffspike": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "cloudfang": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "craghorn": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "pebbik": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "ribbonray": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "skyrill": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "solmane": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      },
+      "stormcapra": {
+        "sight": 1,
+        "signature": 1,
+        "casts": 3
+      },
+      "tempestwing": {
+        "sight": 1,
+        "signature": 1,
+        "defeats": 3
+      }
+    }
+  }
+}
