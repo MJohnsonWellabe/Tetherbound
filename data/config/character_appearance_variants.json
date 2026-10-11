@@ -313,19 +313,59 @@
       "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
       "body_model_override": "res://assets/characters/npc_identity/water_adair/adair_lod0.glb",
       "portrait": "res://assets/ui/portraits/npc_identity_water_adair_v1.png",
-      "review_status": "model_authored_pending_matching_portrait_and_production_visual_review",
+      "review_status": "arm_retargeted_pending_native_review_and_matching_portrait_refresh",
       "authoring_provenance": {
         "source_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
         "source_model_sha256": "5b9164827d099f661de5d1ed6a4420ccd011a90005765977c43f06d1ef5487b3",
         "candidate_model": "res://assets/characters/npc_identity/water_adair/adair_lod0.glb",
-        "candidate_model_sha256": "2774d769ec9f18aa124d0881976b0e4823c62820362369c5de68ee4b80082b4b",
+        "candidate_model_sha256": "c6a36d284250e9c62b379e133cf0873bafe998a9f87f9b5841678cc79c08ac53",
         "reference": "res://docs/art/reference/npc-identity/adair-front-agent-v1.png",
         "reference_sha256": "6d70d5ffa9a43a5e73bdb4936c868da3b3714811b4fb79bfc638493e2a8468de",
         "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
         "producer_sha256": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
         "generation_task_id": "01a12ba9-8dea-7093-a169-b6a195cb1e2c",
         "rig_task_id": "01a12bb2-f69f-75de-94e5-41dd21a2e47b",
-        "producer_hash_encoding": "UTF-8 text with CRLF normalized to LF"
+        "producer_hash_encoding": "UTF-8 text with CRLF normalized to LF",
+        "postprocessing": {
+          "tool": "retarget_adair_arms.py (coordinator-reviewed private CPU postprocessor)",
+          "source_sha256_lf": "b6c1cc6e63958ec57e6de87e14e8e2349616af78a6e514e93862169c16084f46",
+          "recipe_sha256": "6f08ca18d00d30ad7d6464faa1bb3cb63fd35bd2ffc5ad30febdbc0d3cce9490",
+          "upstream_baked_model_sha256": "2774d769ec9f18aa124d0881976b0e4823c62820362369c5de68ee4b80082b4b",
+          "output_model_sha256": "c6a36d284250e9c62b379e133cf0873bafe998a9f87f9b5841678cc79c08ac53",
+          "composition": "Hamilton xyzw: Q_new = R_rest * D_local * inverse(R_rest) * Q_old",
+          "rest_local_bias_xyzw": {
+            "Left": [
+              -0.12309184328881072,
+              2.91029838612202e-07,
+              -0.1389310112475677,
+              0.9826222923025215
+            ],
+            "Right": [
+              -0.12384232480185942,
+              3.6332575116819576e-07,
+              0.15595408656696666,
+              0.9799701014594384
+            ]
+          },
+          "target_upper_arm_degrees_from_down": 10,
+          "bones": [
+            "LeftArm",
+            "RightArm"
+          ],
+          "clips": [
+            "idle",
+            "walk",
+            "sprint",
+            "jump",
+            "throw",
+            "chop",
+            "defeated"
+          ],
+          "changed_rotation_tracks": 14,
+          "interpolation": "LINEAR; original key times preserved",
+          "preserved": "Original BIN prefix, rest transforms, mesh, skin, inverse binds, materials, textures and all non-target channels; target outputs and samplers cloned",
+          "native_review": "PENDING"
+        }
       }
     }
   },
