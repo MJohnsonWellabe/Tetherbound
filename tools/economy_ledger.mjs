@@ -367,9 +367,9 @@ if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.
   const {supplyCensus}=await import('./economy_supply_census.mjs');
   const census=supplyCensus(value('--root')??ROOT,report);
   for(const row of report.materials){const band=census.bands.find(b=>b.band===row.biome);
-    row.reachable_supply=Object.fromEntries(Object.keys(row.four_character_raw).map(id=>[id,band.supply[id]??0]));
-    row.status='CENSUS: upper-bound in-band world-site supply (tools/economy_supply_census.mjs); loss/recovery consumption not measured';}
-  report.supply_census={solvent:census.solvent,bands:census.bands.map(b=>({band:b.band,solvent:b.solvent,solvent_by_upgrade:b.solvent_by_upgrade})),shortfalls:census.shortfalls};
+    row.reachable_supply=Object.fromEntries(Object.keys(row.four_character_raw).map(id=>[id,band.supply[id.startsWith('attuned_')?'attuned_*':id]??0]));
+    row.status='CENSUS: in-band supply incl. Master chests x4, attuned pooled across types (tools/economy_supply_census.mjs); loss/recovery consumption not measured';}
+  report.supply_census={solvent:census.solvent,bands:census.bands.map(b=>({band:b.band,required:b.required.solvent,upgrade_1:b.upgrade_1.solvent,max:b.max.solvent})),shortfalls:census.shortfalls,max_shortfalls:census.max_shortfalls};
   const trace=value('--trace');
   if(trace) {const bytes=fs.readFileSync(trace);report.trace_sha256=digest(bytes);report.observations=analyzeTrace(bytes.toString().split(/\r?\n/).filter(Boolean).map(JSON.parse));}
   const out=value('--out');
