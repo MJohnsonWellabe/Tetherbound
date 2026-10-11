@@ -165,6 +165,9 @@ func _run() -> void:
 ## in-memory row, so `harness_wear` restores that same pre-join gear first;
 ## from there every write and read is the production leave/save/restore path.
 func _rejoin_round_trip(port: int, expected_s: float) -> void:
+	# production_join rebuilds the authored world before dialling (as in
+	# smoke_net_homestead_station_craft and the F27/F28 net smokes).
+	world_build_allowance_floor_s["production_join"] = 150.0
 	var rewear: Dictionary = await _hstep(1, "harness_wear", {"item": ITEM})
 	check(rewear.get("verdict") == "PASS", "rejoin: the guest's own record wears %s again before leaving (fixture, see header)" % ITEM)
 	var held: Dictionary = await _hstep(1, "harness_record", {"item": ITEM})
