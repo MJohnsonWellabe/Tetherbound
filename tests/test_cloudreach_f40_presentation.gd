@@ -30,7 +30,11 @@ func test_crown_and_garden_are_repeatable_without_new_collision() -> void:
 	var crown := CROWN.build(root, spec.crown_arcade, spec.drum, material, material)
 	SANCTUARY.build(root, spec.sanctuary, built.arches, materials)
 	var child_count := root.get_child_count()
-	assert_eq(crown.get_child_count(), 20)
+	assert_eq(crown.get_child_count(), 22)
+	assert_eq(crown.find_children("CrownBay*", "Node3D", false, false).size(), 20)
+	for name_key: String in ["CrownEntablature", "CrownWeatheringCourse"]:
+		var cornice := crown.get_node_or_null(NodePath(name_key)) as MeshInstance3D
+		assert_true(cornice != null and cornice.mesh != null, "the named cornice course exists: " + name_key)
 	assert_eq(root.find_children("SanctuaryPlanter*", "Node3D", true, false).size(), 4)
 	assert_eq(root.find_children("*", "CollisionObject3D", true, false).size(), original_collision)
 	assert_eq(CROWN.build(root, spec.crown_arcade, spec.drum, material, material), crown)

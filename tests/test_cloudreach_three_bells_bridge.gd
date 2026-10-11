@@ -18,7 +18,9 @@ func test_three_bells_portal_is_bridge_aligned_readable_and_visual_only() -> voi
 	assert_almost_eq(rad_to_deg(presentation.rotation.y), 48.4, 0.01)
 	var roles := {}
 	var collision_count := 0
-	for child: Node in presentation.get_children():
+	# The two signal lenses are mounted inside their authored lantern housings.
+	# Inspect the full presentation so role counts and no-collision apply there too.
+	for child: Node in presentation.find_children("*", "", true, false):
 		var role := str(child.get_meta("three_bells_role", ""))
 		if not role.is_empty():
 			roles[role] = int(roles.get(role, 0)) + 1
