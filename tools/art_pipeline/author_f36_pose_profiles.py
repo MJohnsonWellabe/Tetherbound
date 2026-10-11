@@ -241,7 +241,8 @@ def rotation(bone, role, phase, winged, biped, wing_folds=None):
 
 
 ANATOMICAL_SPECIES = {'terrapup', 'brooktail', 'ripplet'}
-WING_ANATOMICAL_SPECIES = {'pipwing', 'galecrest', 'galewisp'}
+WING_ANATOMICAL_SPECIES = {'pipwing', 'galecrest', 'galewisp', 'duskhush', 'reedwing'}
+SPECIAL_ANATOMICAL_SPECIES = {'glimmermoth', 'abyssal_guardian'}
 
 
 def rigid_inverse(matrix):
@@ -349,7 +350,7 @@ def anatomical_poses(name, bones, rig, roles):
 def anatomical_wing_poses(name, bones, roles):
     """Keep each installed feather fan intact through whole-body attitudes.
 
-    Dominant fore/tip skin vertices put Pipwing's fan normal near source X;
+    Dominant fore/tip skin vertices put the small birds' fan normals near X;
     Galecrest and Galewisp have fan normals near source Z. Turning whole fans
     with the model avoids the long blended-skin sheets made by joint folds.
     The hash/rest/bind contract still binds these authored angles to that skin.
@@ -357,7 +358,7 @@ def anatomical_wing_poses(name, bones, roles):
     if name not in WING_ANATOMICAL_SPECIES:
         return roles
     result = copy.deepcopy(roles)
-    pipwing = name == 'pipwing'
+    flank_fans = name in {'pipwing', 'duskhush', 'reedwing'}
     for role in ('faint', 'swim', 'fly_grip'):
         for frame in result[role]['frames']:
             phase = frame['phase']
@@ -367,12 +368,17 @@ def anatomical_wing_poses(name, bones, roles):
             if role == 'faint':
                 # A relaxed flank for the X-normal fan, a prone body for the
                 # Z-normal fans. Do not rotate feather joints into the torso.
-                frame['pivot_rotation_deg'] = ([0, 0, 90 * amount] if pipwing
+                # Their different chest/beak extents need different pitches
+                # to put body mass close to the supporting wing, not above it.
+                flank_pitch = {'duskhush': 55, 'reedwing': 40}.get(name, 0)
+                frame['pivot_rotation_deg'] = ([flank_pitch * amount, 0, 90 * amount] if flank_fans
                                                else [75 * amount, 0, 90 * amount])
-                pose.update(neck=[(5 if pipwing else -15) * amount, 0, 0],
-                            head=[(-5 if pipwing else -20) * amount, 0, 0],
-                            tail_1=[(5 if pipwing else 35) * amount, 0, 0],
-                            tail_2=[(10 if pipwing else 25) * amount, 0, 0])
+                pose.update(neck=[(5 if flank_fans else -15) * amount, 0, 0],
+                            head=[(-5 if flank_fans else -20) * amount, 0, 0],
+                            tail_1=[(5 if flank_fans else 35) * amount, 0, 0],
+                            tail_2=[(10 if flank_fans else 25) * amount, 0, 0])
+                if name == 'reedwing':
+                    pose.update(neck=[-10 * amount, 0, 0], head=[-10 * amount, 0, 0])
                 for side in ('l', 'r'):
                     pose['leg_upper_' + side] = [5 * amount, 0, (5 if side == 'l' else -5) * amount]
                     pose['leg_lower_' + side] = [15 * amount, 0, 0]
@@ -382,8 +388,11 @@ def anatomical_wing_poses(name, bones, roles):
                 # Align the long body with travel and keep the feather plane
                 # near horizontal. Pipwing reaches that attitude via Z/Y;
                 # its skin cannot safely take a 90-degree upper-wing twist.
-                if pipwing:
-                    frame['pivot_rotation_deg'] = [0, 90, 80 if role == 'fly_grip' else 70 + 3 * wave]
+                if flank_fans:
+                    # Reedwing's duck torso already runs along Z. Swimming
+                    # keeps its head above that torso with a shallow pitch.
+                    frame['pivot_rotation_deg'] = ([25, 0, 3 * wave] if name == 'reedwing' and role == 'swim'
+                                                   else [0, 90, 80 if role == 'fly_grip' else 70 + 3 * wave])
                 else:
                     frame['pivot_rotation_deg'] = [70 if role == 'fly_grip' else 60, 0,
                                                    0 if role == 'fly_grip' else 3 * wave]
@@ -403,6 +412,70 @@ def anatomical_wing_poses(name, bones, roles):
                         # Existing foot joints curl the claws downward. The
                         # old negative angle lifted the toes away from a grip.
                         pose['foot_' + side] = [25 if role == 'fly_grip' else 5, 0, 0]
+            frame['bones'] = pose
+    return result
+
+
+def special_anatomical_poses(name, bones, roles):
+    """Pose the installed moth and long sea creature as their own anatomy.
+
+    Glimmermoth's separate neutral root carries abdomen details, not its face;
+    leave it alone. Guardian's long axis is already Z, and its front fins point
+    down at rest. A flank roll turns those fins into supports under the body.
+    """
+    if name not in SPECIAL_ANATOMICAL_SPECIES:
+        return roles
+    result = copy.deepcopy(roles)
+    moth = name == 'glimmermoth'
+    for role in ('hit', 'faint', 'swim', 'fly_grip') if moth else ('faint', 'swim', 'fly_grip'):
+        for frame in result[role]['frames']:
+            phase = frame['phase']
+            wave = math.sin(phase * math.tau)
+            amount = min(1, phase / .7) if role == 'faint' else 1
+            pose = {bone: [0, 0, 0] for bone in bones}
+            if role == 'hit':
+                amount = phase / .125 if phase <= .125 else ((1 - phase) / .875) ** .55
+                # Recoil the intact silhouette; the previous wing bow covered
+                # the face. Its real neck carries the face, not the head joint.
+                frame['pivot_rotation_deg'] = [-12 * amount, 0, -5 * amount]
+                for side in ('l', 'r'):
+                    pose['leg_upper_' + side] = [-8 * amount, 0, 0]
+                    pose['leg_lower_' + side] = [12 * amount, 0, 0]
+            elif role == 'faint' and moth:
+                # Prone abdomen contact, with intact fans resting beside it.
+                frame['pivot_rotation_deg'] = [85 * amount, 0, 15 * amount]
+                pose.update(neck=[-5 * amount, 0, 0], head=[-5 * amount, 0, 0],
+                            tail_1=[5 * amount, 0, 0], tail_2=[10 * amount, 0, 0])
+                for side in ('l', 'r'):
+                    pose['leg_upper_' + side] = [5 * amount, 0, 0]
+                    pose['leg_lower_' + side] = [10 * amount, 0, 0]
+            elif role == 'faint':
+                # Spread the actual downward fin joints into the belly's
+                # support plane. Relax head and tail onto that same plane.
+                frame['pivot_rotation_deg'] = [15 * amount, 0, 0]
+                pose.update(neck=[28 * amount, 0, 0], head=[12 * amount, 0, 0],
+                            tail_1=[-15 * amount, 0, 0], tail_2=[-7.5 * amount, 0, 0])
+                for side in ('l', 'r'):
+                    opposite = 1 if side == 'l' else -1
+                    pose['wing_upper_' + side] = [0, 0, opposite * 35 * amount]
+                    pose['leg_upper_' + side] = [10 * amount, 0, 0]
+                    pose['leg_lower_' + side] = [15 * amount, 0, 0]
+            else:
+                # Moth changes its upright body attitude for buoyant travel;
+                # Guardian already has a horizontal body and sculls its fins.
+                frame['pivot_rotation_deg'] = ([65 if role == 'fly_grip' else 60, 0,
+                                                0 if role == 'fly_grip' else 3 * wave] if moth
+                                               else [-8 if role == 'fly_grip' else 5, 0,
+                                                     0 if role == 'fly_grip' else 2 * wave])
+                pose.update(neck=[-5, 0, 0], head=[5, 0, 0],
+                            tail_1=[0, 5 * wave, 0], tail_2=[0, 8 * wave, 0])
+                for side in ('l', 'r'):
+                    opposite = 1 if side == 'l' else -1
+                    stroke = wave if role == 'fly_grip' else wave * opposite
+                    pose['wing_upper_' + side] = [0, 0, opposite * ((6 * stroke) if moth else (25 + 6 * stroke))]
+                    pose['wing_tip_' + side] = [0, 0, opposite * 3 * stroke]
+                    pose['leg_upper_' + side] = [5 + (6 * wave * opposite if role == 'swim' else 0), 0, 0]
+                    pose['leg_lower_' + side] = [15 - (5 * wave * opposite if role == 'swim' else 0), 0, 0]
             frame['bones'] = pose
     return result
 
@@ -453,7 +526,7 @@ def main():
         biped = 'arm_l' in bones
         family = 'winged' if winged else 'biped' if biped else 'quadruped'
         wing_folds = folded_wings(rig) if winged else {}
-        signature = (name if name in ANATOMICAL_SPECIES | WING_ANATOMICAL_SPECIES else '', tuple(bones),
+        signature = (name if name in ANATOMICAL_SPECIES | WING_ANATOMICAL_SPECIES | SPECIAL_ANATOMICAL_SPECIES else '', tuple(bones),
                      tuple((bone, tuple(round(value, 5) for value in angles))
                            for bone, angles in wing_folds.items()))
         row = {'model': definition['placeholder']['model'], 'source_sha256': hashlib.sha256(raw).hexdigest(),
@@ -476,12 +549,13 @@ def main():
                 roles[role]['start_phase'] = .125
                 roles[role]['release_phase'] = .25
         profile = f'{family}_{len(profiles) + 1}'
-        profiles[profile] = anatomical_wing_poses(name, bones, anatomical_poses(name, bones, rig, roles))
+        profiles[profile] = special_anatomical_poses(name, bones,
+                                                   anatomical_wing_poses(name, bones, anatomical_poses(name, bones, rig, roles)))
         if name in {'terrapup', 'brooktail'}:
             # Ground the stage's carrying attitude on its actual skin, not an
             # invented lift. Real carriers still align their foot to the hand.
             row['grounded_roles'] = ['hit', 'faint', 'ride', 'fly_grip']
-        elif name in WING_ANATOMICAL_SPECIES:
+        elif name in WING_ANATOMICAL_SPECIES | SPECIAL_ANATOMICAL_SPECIES:
             row['grounded_roles'] = ['hit', 'faint', 'ride', 'fly_grip', 'swim']
         rig_profiles[signature] = profile
         row['profile'] = profile
