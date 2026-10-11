@@ -1,11 +1,23 @@
 {
- "updated": "2026-10-09T06:13Z",
+ "updated": "2026-10-11T05:20Z",
  "headline": [
-  "1:13 AM CT Fri 09 Oct: 165 criteria met on main; 2 more evidenced on lane A (F24#3 Tether Snare, F24#0 command meter), both in draft consolidation 19 (#592).",
-  "#592's first full CI (37883884033) failed 9 shards with Tether Commands and actor_vitals ON: co-op engage, catch-to-party, HP scaling, host hit admission. Lane A fixture fixes and lane C's capture fix are added for a second run.",
-  "QUIET PC performance baseline (owner, 8:10 PM CT) still not started by the Codex coordinator; restated again."
+  "12:20 AM CT Sun 11 Oct: 189 of 271 criteria met on main (+20 tonight). PR #676 merged at 8:54 PM CT Sat: all 111 branches consolidated, full CI green.",
+  "Codex final batch #677 (all 45 Codex branches, code for every outstanding criterion) is red: new arena admission refuses ordinary fights, and 5 test doubles still use the old _open_arena signature. Codex is fixing it.",
+  "Next: #677 lands \u2192 final sweep puts every branch on main \u2192 owner deletes all branches except main \u2192 evidence phase runs top to bottom (3\u20134 criteria at a time, 33 play-through segments, Codex captures and Claude judges visuals)."
  ],
  "batches": [
+  {
+   "name": "Codex final batch (PR #677)",
+   "sha": "d2c6bb370",
+   "state": "CI red; Codex fixing (arena admission + _open_arena signature)",
+   "contents": "Phase 1 packages + Phase 1b: code for every outstanding criterion; 45 Codex branches included (superseded ones via merge -s ours). Parked: F19#5 checkpoints, F36#1, F40#5, F41#1."
+  },
+  {
+   "name": "Consolidation (PR #676)",
+   "sha": "96e32f34e",
+   "state": "Merged 8:54 PM CT Sat 10 Oct; full CI green",
+   "contents": "All 111 GitHub branches (lanes A\u2013E, batches #630/#675, Codex native assets), plus fixes: w0 parse, stale lane-start snapshots, shard plan, timber-deck datum, F48 capture, catching step-aside, Warrens walk, texture imports, F28 feast panel."
+  },
   {
    "name": "Batch 1 (PR #230)",
    "sha": "bcf46366",
@@ -531,34 +543,14 @@
  ],
  "lanes": [
   {
-   "lane": "tb/codex-a (Codex A: combat, moves, commands)",
-   "now": "F24#0 + F24#3 evidenced; fixing #592 co-op fixtures, HP harness, hosted hit admission.",
-   "next": "Named-fight C2/C3 cluster."
+   "lane": "Codex central coordinator",
+   "now": "Fixing #677 CI (arena admission refuses fights; test doubles).",
+   "next": "Land #677, post LANDED, FROZEN; then answer Claude's CAPTURE/FIX requests only."
   },
   {
-   "lane": "tb/codex-b (Codex B: earned route, story, ending)",
-   "now": "F02#0/#1 in consolidation 15; Homecoming segment failed initial load.",
-   "next": "READY passed segments with every route criterion they cover."
-  },
-  {
-   "lane": "tb/codex-c (Codex C: power, homestead, economy, co-op)",
-   "now": "F28#1 in consolidation 15; F28#2 challenger UI approved.",
-   "next": "Masters cluster F28#2\u2013#4."
-  },
-  {
-   "lane": "tb/codex-d (Codex D: Meadows, village, Tidewake visuals)",
-   "now": "F42#2 HUD Low capture: blind judge BLOCK (small RB, [jump], roster speck); fixes pushed.",
-   "next": "F42#2 re-capture and judge."
-  },
-  {
-   "lane": "tb/codex-e (Codex E: Cloudreach, Stormwood, art, audio)",
-   "now": "F41#0 in consolidation 15.",
-   "next": "F40 Cloudreach matrix cluster."
-  },
-  {
-   "lane": "tb/ci-speed (Claude)",
-   "now": "PR #573 merged 1:54 PM CT.",
-   "next": "Done; lane closed."
+   "lane": "Claude coordinator",
+   "now": "Watching #677; board updated.",
+   "next": "Final sweep (tb/visual-proof to main) \u2192 owner deletes branches \u2192 evidence phase."
   }
  ],
  "decisions": [
@@ -582,18 +574,24 @@
   "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
  ],
  "owner_needs": [
-  "F26#5: Forward+ test on the ROG Ally once the Medium build is ready.",
-  "F10#5: audio listening pass.",
-  "F47 and F49: owner play pass and 15\u201325 h route measurement after the route lands."
+  "Delete every branch except main once Claude reports the final sweep is clear.",
+  "Later: F41#1 needs new NPC identity assets (Meshy under RD-26) to close.",
+  "ROG Ally tests F26#5/F49#2 and play pass F49#1 remain yours."
  ],
  "four_chapter_run": null,
- "wip": [
-  "Consolidation every 2 hours (next 3:10 PM CT): only work named in a READY reaches main.",
-  "F46#2 bounce: lesson modal classified as cutscene (e9c330d365) did not fix the Home-portal walk in smoke_f18_earned_loop."
- ],
+ "wip": [],
  "last_lane_refresh": "2026-10-04T15:55:27.285131+00:00",
  "lane_activity": [],
- "active_work": [],
+ "active_work": [
+  {
+   "what": "Visual judges, merged catalog fixes",
+   "state": "P2-009 PASS; P2-010, P2-022, P2-039, P2-006 FAIL (to Codex package 10 / evidence phase)"
+  },
+  {
+   "what": "Proofs 10-10/11",
+   "state": "F06#4 PASS, F28#3 PASS, F24#0 PASS (re-confirmed), F44#1 deferred (test walk)"
+  }
+ ],
  "preserved_work": [
   {
    "criterion": "F17#4",
