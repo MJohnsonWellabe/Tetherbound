@@ -241,6 +241,10 @@ static func _feast_press(runner: SceneTree, args: Dictionary, mode: String) -> D
 	service.call("open_kitchen", kitchen)
 	await runner.process_frame
 	var panel: Node = service.get("_panel")
+	# A guest's personal view is an async request: the panel fills on arrival.
+	for f in int(args.get("view_frames", 600)):
+		if panel == null or panel.call("is_open") != true or panel.get("_awaiting_view") != true: break
+		await runner.physics_frame
 	if panel == null or panel.call("is_open") != true:
 		var owner: Variant = preload("res://scripts/ui/input_owner.gd").current(runner)
 		var why := str(session_node.call("_owner_snapshot_block_reason", runner.root.get_node(^"Game").get("local"))) if owner == session_node else ""
@@ -264,6 +268,8 @@ static func _feast_press(runner: SceneTree, args: Dictionary, mode: String) -> D
 	var done := func(action: String, _intent: Dictionary, result: Dictionary) -> void:
 		if action == op: completed.append(result)
 	session.connect("homestead_action_completed", done)
+	# A completed action rebuilds the list and frees this button.
+	var pressed_label := target.text
 	target.emit_signal("pressed")
 	for f in int(args.get("budget_frames", 1800)):
 		await runner.physics_frame
@@ -272,7 +278,7 @@ static func _feast_press(runner: SceneTree, args: Dictionary, mode: String) -> D
 	var message := str(panel.get("_message").text) if is_instance_valid(panel.get("_message")) else ""
 	var pending := str(panel.get("_pending_action"))
 	if panel.call("is_open") == true: panel.call("close")
-	return _ok("pressed '%s'" % target.text, {"pressed": true, "labels": labels, "message": message,
+	return _ok("pressed '%s'" % pressed_label, {"pressed": true, "labels": labels, "message": message,
 		"still_pending": pending, "completed": completed})
 
 

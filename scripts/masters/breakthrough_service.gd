@@ -20,6 +20,8 @@ func bind_actions(submit_action: Callable, personal_view: Callable) -> bool:
 		_producer.disconnect("homestead_action_completed", _action_completed)
 	if is_instance_valid(_producer) and _producer.has_signal("foundation_reply_received") and _producer.is_connected("foundation_reply_received", _foundation_reply):
 		_producer.disconnect("foundation_reply_received", _foundation_reply)
+	if is_instance_valid(_producer) and _producer.has_signal("homestead_personal_view_completed") and _producer.is_connected("homestead_personal_view_completed", _view_completed):
+		_producer.disconnect("homestead_personal_view_completed", _view_completed)
 	_submit = submit_action
 	_view = personal_view
 	var producer: Object = _submit.get_object()
@@ -30,7 +32,16 @@ func bind_actions(submit_action: Callable, personal_view: Callable) -> bool:
 	if producer != null and producer.has_signal("foundation_reply_received") \
 			and not producer.is_connected("foundation_reply_received", _foundation_reply):
 		producer.connect("foundation_reply_received", _foundation_reply)
+	if producer != null and producer.has_signal("homestead_personal_view_completed") \
+			and not producer.is_connected("homestead_personal_view_completed", _view_completed):
+		producer.connect("homestead_personal_view_completed", _view_completed)
 	return true
+
+## A guest's personal view answers asynchronously; an open panel built before
+## it arrived re-reads it now.
+func _view_completed() -> void:
+	if is_instance_valid(_panel):
+		_panel.call("view_arrived")
 
 ## Session already fenced this reply to the exact sent envelope. Admission
 ## failure has no saved reward; it releases the chooser for another attempt.
@@ -220,4 +231,6 @@ func _exit_tree() -> void:
 		_producer.disconnect("homestead_action_completed", _action_completed)
 	if is_instance_valid(_producer) and _producer.has_signal("foundation_reply_received") and _producer.is_connected("foundation_reply_received", _foundation_reply):
 		_producer.disconnect("foundation_reply_received", _foundation_reply)
+	if is_instance_valid(_producer) and _producer.has_signal("homestead_personal_view_completed") and _producer.is_connected("homestead_personal_view_completed", _view_completed):
+		_producer.disconnect("homestead_personal_view_completed", _view_completed)
 	if is_instance_valid(_panel): _panel.queue_free()
