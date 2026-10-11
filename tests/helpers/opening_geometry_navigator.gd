@@ -477,6 +477,10 @@ func push_once(direction: Vector3) -> void:
 
 func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false, provisional_path: Array[Vector2] = []) -> bool:
 	reset()
+	# MAX_REQUESTS bounds one walk to one destination. A caller that reuses this
+	# navigator for a whole training phase (F19#5 r6: 24001 requests over
+	# ~1979 m) stays bounded by MAX_QUERIES_LIFETIME, which survives every walk.
+	_requests = 0
 	_arrival = close_enough
 	if budget <= 0 or budget > 3600 or not point.is_finite() \
 			or not is_finite(close_enough) or close_enough <= 0.0 or close_enough > 1.65:
