@@ -1,5 +1,5 @@
 {
- "updated": "6:23 AM CT Sun 11 Oct",
+ "updated": "7:46 AM CT Sun 11 Oct",
  "headline": [
   "6:23 AM CT Sun 11 Oct: 189 of 271 criteria met on main. All code is on main: #676 (8:54 PM CT Sat), Codex's final batch #677 (3:04 AM CT, full CI green), final sweep #680 (4:32 AM CT). Every branch except main deleted.",
   "Evidence phase started 6:20 AM CT. Window 1: F02#7 route spacing, F03#1 six activities, F04#0-#2 named Meadows fights. F19#5 checkpoints are being built for all four biomes in parallel (33 segments) so the play-through criteria can be proven piece by piece.",
@@ -686,6 +686,57 @@
    "state": "held; checkpoint preserved; unaccepted",
    "approval_policy": "never",
    "sandbox_mode": "danger-full-access"
+  }
+ ],
+ "active_lanes_note": "As of 7:46 AM CT Sun 11 Oct. Owner plan: prove every criterion first, collect it all on tb/ev-coordinator, then one consolidated PR with full CI at the end. Times are estimates.",
+ "active_lanes": [
+  {
+   "lane": "meadows-route",
+   "doing": "Replaying the Meadows story route as separate earned pieces and saving a checkpoint after each one; currently on the three Sigil captains.",
+   "criteria": "F19#5 (Meadows), then F02#7 route spacing and F03#1 six activities",
+   "next": "About 2\u20133 h to finish the 8 Meadows checkpoints"
+  },
+  {
+   "lane": "meadows-fights",
+   "doing": "Fixed the Warrens guardian's two attack warnings (they now pass); now fixing a failing check in Captain Vance's fight.",
+   "criteria": "F04#0 guardian, F04#1 relay officers, F04#2 captains",
+   "next": "About 1\u20132 h to passing smokes, then GPU captures and judge"
+  },
+  {
+   "lane": "tidewake-route",
+   "doing": "Two Tidewake checkpoints done; fixing a game bug where Tovin's fight on the Brine Steps slope never starts.",
+   "criteria": "F19#5 (Tidewake), then F13#0",
+   "next": "About 1\u20132 h for the fix, then 3\u20134 h for segments 03\u201308"
+  },
+  {
+   "lane": "cloudreach-route",
+   "doing": "Cloudreach segments 01\u201302 pass; running segments 03 (flight training) and 04 (aviary).",
+   "criteria": "F19#5 (Cloudreach), then F06#0",
+   "next": "About 2\u20133 h for the remaining 5 segments"
+  },
+  {
+   "lane": "stormwood-route",
+   "doing": "First Stormwood segment now gets past the storm break; diagnosing why the first charged seam never offers its harvest prompt (likely the same duplicate-node bug Tidewake fixed).",
+   "criteria": "F19#5 (Stormwood), then F09#0 and F11#0",
+   "next": "About 1 h for the seam fix, then 3\u20135 h for segments 02\u201308"
+  },
+  {
+   "lane": "home-key",
+   "doing": "Tracking down why the Home Key trip home fails with 'destination could not load' since Codex's final batch; testing whether it's a real hang or this slow test machine.",
+   "criteria": "F44#1 endgame rematch (and the Home Key itself)",
+   "next": "About 1\u20132 h for root cause and fix"
+  },
+  {
+   "lane": "Codex (visual)",
+   "doing": "Fixing failed biome visuals on its GPU; resubmitted the Stormwood forest floor (P2-039), which Claude is judging now.",
+   "criteria": "F38\u2013F41 biome visuals (catalog fixes, frame matrices, defect sweeps)",
+   "next": "READY posts every 2\u20133 h"
+  },
+  {
+   "lane": "Claude coordinator",
+   "doing": "Merging shared fixes onto tb/ev-coordinator (Tidewake harvest fix landed, 105 tests pass), judging visuals, keeping this board current.",
+   "criteria": "All; F44#1 door walk",
+   "next": "Check-ins every 90 min"
   }
  ]
 }

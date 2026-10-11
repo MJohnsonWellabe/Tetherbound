@@ -1,7 +1,7 @@
 {
- "generated_at": "6:23 AM CT Sun 11 Oct 2026",
+ "generated_at": "7:46 AM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
- "batch4_sha": "Evidence phase: 5 lanes on tb/ev-* (window 1: F02#7, F03#1, F04#0-#2; F19#5 all biomes)",
+ "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
   {
    "id": "F01",

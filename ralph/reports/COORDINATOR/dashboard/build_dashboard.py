@@ -218,6 +218,17 @@ lane_activity_section = (
 legend = "".join(f'<span class="leg">{pill(k)} {counts[k]}</span>' for k in ORDER)
 
 # ---- delivery plan (Gantt) -------------------------------------------------
+# Owner request 2026-10-11: one sentence per active lane, the criteria it
+# helps, and how long until its next part (status.json "active_lanes").
+_al = status.get("active_lanes", [])
+active_lanes_html = (
+    '<section class="panel" aria-labelledby="lanes-h"><h2 id="lanes-h">Active lanes</h2>'
+    f'<p class="note">{E(status.get("active_lanes_note", ""))}</p>'
+    '<div class="tbl"><table><thead><tr><th>Lane</th><th>What it is doing</th><th>Criteria it helps</th><th>Next part in</th></tr></thead><tbody>'
+    + "".join(f'<tr><td><b>{E(l.get("lane",""))}</b></td><td>{E(l.get("doing",""))}</td><td>{E(l.get("criteria",""))}</td><td>{E(l.get("next",""))}</td></tr>' for l in _al)
+    + '</tbody></table></div></section>')
+
+
 # Owner request 2026-10-04: a frozen baseline of five lanes x 8-hour sprints,
 # tracked live. plan.json holds the bars; progress is read from criteria.json.
 import datetime as _dt
@@ -443,9 +454,9 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 .tabs{{display:flex;gap:6px;border-bottom:1px solid var(--line)}}
 .tabs label{{font:600 14px Figtree,sans-serif;padding:8px 14px;border-radius:8px 8px 0 0;cursor:pointer;color:var(--muted);border:1px solid transparent;border-bottom:none}}
 .tabsel{{position:absolute;opacity:0;pointer-events:none}}
-#tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
-#tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan]{{outline:2px solid var(--accent)}}
-.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan{{display:grid}}
+#tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan], #tab-lanes:checked ~ .tabs label[for=tab-lanes]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
+#tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan], #tab-lanes:focus-visible ~ .tabs label[for=tab-lanes]{{outline:2px solid var(--accent)}}
+.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan, #tab-lanes:checked ~ .pane-lanes{{display:grid}}
 .gscroll{{overflow-x:auto}} .gantt{{min-width:980px;display:grid;gap:6px}}
 .glane{{display:grid;grid-template-columns:190px minmax(0,1fr);gap:10px;align-items:center}}
 .gname{{font-weight:600;font-size:13px;display:grid}} .gname .meta{{font-weight:400;font-size:11.5px}}
@@ -478,13 +489,15 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 <main class="wrap">
   <input type="radio" name="tab" id="tab-acc" class="tabsel" checked>
   <input type="radio" name="tab" id="tab-plan" class="tabsel">
+  <input type="radio" name="tab" id="tab-lanes" class="tabsel">
   <div class="top">
     <span class="eyebrow">Project update · F01–{E(last_id)} acceptance</span>
     <h1>Tetherbound Acceptance Board</h1>
     <p class="meta">Updated {E(crit.get("generated_at") or status.get("updated", ""))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
   </div>
-  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-plan">Delivery plan</label></nav>
+  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-plan">Delivery plan</label><label for="tab-lanes">Active lanes</label></nav>
   <div class="pane pane-plan">{plan_html}</div>
+  <div class="pane pane-lanes">{active_lanes_html}</div>
   <div class="pane pane-acc">
   <div class="kpis">
     <div class="kpi"><b>{accepted} / {len(crit["rows"])}</b><span>F rows accepted (every criterion met)</span></div>
