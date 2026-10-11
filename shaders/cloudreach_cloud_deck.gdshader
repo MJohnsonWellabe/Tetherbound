@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode cull_disabled, diffuse_burley, specular_disabled;
+render_mode blend_mix, depth_draw_never, cull_disabled, diffuse_burley, specular_disabled;
 
 // Soft cloud body under the plateau. Original procedural material, using the
 // approved Sky Aviary board for broad billows and cool shaded valleys.
@@ -30,8 +30,17 @@ void fragment() {
 	float shoulder = cloud_density(p + vec2(-0.19, 0.16));
 	float shade = clamp(body * 0.80 + (body - shoulder) * 0.75 + 0.12, 0.0, 1.0);
 	ALBEDO = mix(cloud_base.rgb, cloud_lit.rgb, shade);
+	// The height mesh is a density support, not an opaque floor. Fade its
+	// actual grazing silhouette before replacing the lighting normal below:
+	// otherwise terrain clamps expose long, straight triangular cloud walls.
+	float facing = abs(dot(normalize(NORMAL), normalize(VIEW)));
+	float grazing = smoothstep(0.025, 0.24, facing);
+	vec2 edge_distance = min(UV, vec2(1.0) - UV);
+	float perimeter = smoothstep(0.0, 0.055, min(edge_distance.x, edge_distance.y));
+	float density = smoothstep(0.16, 0.68, cloud_density(p + vec2(0.37, -0.23)));
+	ALPHA = perimeter * grazing * mix(0.20, 0.88, density);
 	// Height-grid triangles must not become giant flat-shaded facets. The
-	// physical deck stays below routes; cloud form is the broad density field.
+	// visual deck stays below routes; cloud form is the broad density field.
 	NORMAL = normalize((VIEW_MATRIX * vec4(0.0, 1.0, 0.0, 0.0)).xyz);
 	ROUGHNESS = 1.0;
 }
