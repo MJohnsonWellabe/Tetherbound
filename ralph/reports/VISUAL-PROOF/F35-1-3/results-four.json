@@ -4,31 +4,33 @@
 	"batch": "ultimates",
 	"cases": [
 		{
-			"arrivals": 0,
+			"arrivals": 4,
 			"captures": {
-				"early": {
-					"arrivals": 0,
-					"wall_seconds": 0.568219
+				"contact": {
+					"arrivals": 4,
+					"game_seconds": 0.8
 				},
 				"late": {
-					"arrivals": 0,
-					"wall_seconds": 2.46221
+					"arrivals": 4,
+					"game_seconds": 2.1
 				},
-				"middle": {
+				"peak": {
+					"arrivals": 4,
+					"game_seconds": 1.16666666666667
+				},
+				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 1.527717
+					"game_seconds": 0.366666666666667
 				}
 			},
-			"first_frame_ms": 1155.298,
-			"frame_ms_max": 959.498,
-			"frame_ms_p95": 934.493,
-			"frames": 3,
-			"id": "four_simultaneous",
+			"clock": "game (--fixed-fps)",
+			"frames": 84,
+			"id": "four_simultaneous_game_clock",
 			"moves": [
 				"ultimate_terrapup",
-				"ultimate_ripplet",
-				"ultimate_galewisp",
-				"ultimate_veridian"
+				"ultimate_veridian",
+				"ultimate_fulgocobra",
+				"ultimate_solmane"
 			],
 			"presentation_seconds": 2.4
 		}
@@ -45,9 +47,7 @@
 		"string": "4.7-stable (official)",
 		"timestamp": 0
 	},
-	"failures": [
-		"Four-ultimate arrivals 0"
-	],
+	"failures": [],
 	"light_lifecycle": {},
 	"limits": [
 		"No combat/damage authority exercised",

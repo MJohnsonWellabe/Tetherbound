@@ -32,7 +32,10 @@ func _exercise_simultaneous(cfg: Dictionary) -> void:
 	var camera := get_root().get_viewport().get_camera_3d()
 	if camera != null:
 		var centre := _arena.to_global(Vector3((float(_scenarios.get("stage", {}).get("attacker_x", -3.4)) + _target_x) * 0.5, 1.6, 0.0))
-		camera.global_position = centre + _arena.global_basis * Vector3(-13.0, 8.0, 5.0)
+		# Elevated, from the target's side: the four lanes spread across the
+		# frame and no attacker body (Solmane is 6.7 m) stands between the
+		# lens and the others. The smoke's own view sits behind the attackers.
+		camera.global_position = centre + _arena.global_basis * Vector3(13.0, 13.0, 0.0)
 		camera.look_at(centre, Vector3.UP)
 	var to := _target.global_position + Vector3.UP * float(_target.call("body_height")) * 0.5
 	var duration := 0.0
