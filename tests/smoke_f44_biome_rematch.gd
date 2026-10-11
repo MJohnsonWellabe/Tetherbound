@@ -24,7 +24,10 @@ extends SceneTree
 ## unchanged (no second payout).
 ## DISCLOSED FIXTURES: the generated post-boss save (generate_boundary_save.gd,
 ## profiles f44_<biome>, see their disclosures) and one teleport of the player
-## beside the witness trainer's rematch prompt (non-traversal setup).
+## beside the witness trainer's rematch prompt (non-traversal setup). Optional
+## --fixture-world-flags=a,b / --fixture-personal-flags=c set flags once after
+## the first load, then the game saves and reloads through the title (Stormwood
+## uses it for stormwood:marrow_defeated and regional_credits_seen).
 
 const SAVE := preload("res://scripts/save/save_game.gd")
 const RULES := preload("res://scripts/repeatables/rematch_rules.gd")
@@ -38,6 +41,8 @@ const FIGHT_FRAMES := 36000
 var biome := ""
 var from_save := ""
 var json_out := ""
+var fixture_world: PackedStringArray = []
+var fixture_personal: PackedStringArray = []
 var game: Node
 var world: Node3D
 var failures: Array[String] = []
@@ -62,6 +67,8 @@ func _run() -> void:
 		if arg.begins_with("--biome="): biome = arg.trim_prefix("--biome=")
 		elif arg.begins_with("--from-save="): from_save = arg.trim_prefix("--from-save=").trim_suffix("/")
 		elif arg.begins_with("--json="): json_out = arg.trim_prefix("--json=")
+		elif arg.begins_with("--fixture-world-flags="): fixture_world = arg.trim_prefix("--fixture-world-flags=").split(",", false)
+		elif arg.begins_with("--fixture-personal-flags="): fixture_personal = arg.trim_prefix("--fixture-personal-flags=").split(",", false)
 	if not REALMS.has(biome) or from_save.is_empty():
 		push_error("usage: --biome=<meadows|tidewake|cloudreach|stormwood> --from-save=<dir>")
 		quit(2)
@@ -77,12 +84,23 @@ func _run() -> void:
 	if not await _title_load():
 		await _finish()
 		return
+	if not fixture_world.is_empty() or not fixture_personal.is_empty():
+		# DISCLOSED FIXTURE: flags the generated input could not carry.
+		for flag: String in fixture_world: game.world.flags.set_flag(flag)
+		for flag: String in fixture_personal: game.local.flags.set_flag(flag)
+		receipt["fixture_flags"] = {"world": Array(fixture_world), "personal": Array(fixture_personal)}
+		if not check(game.save_game(0) and game.save_system.finish_fallback(), "the disclosed fixture flags are saved"):
+			await _finish()
+			return
+		if not await _title_load():
+			await _finish()
+			return
 	var witness := str(RULES.config().witnesses[biome])
 	var tier := "endgame" if biome == "stormwood" else "r1"
 	var profile: Dictionary = RULES.profile(witness)
 	var expected_level := int(RULES.config().endgame_levels[profile.kind]) if tier == "endgame" \
 		else int(RULES.config().biomes[biome].r1_levels[profile.kind])
-	receipt = {"biome": biome, "witness": witness, "tier": tier, "expected_level": expected_level}
+	receipt.merge({"biome": biome, "witness": witness, "tier": tier, "expected_level": expected_level}, true)
 	var source := _source(witness)
 	if not check(source != null, "%s stands in the loaded %s world" % [witness, REALMS[biome]]):
 		await _finish()

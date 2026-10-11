@@ -774,8 +774,7 @@
         "water_shellwatch_pump_disabled",
         "water_dock_shellwatch_residents_freed_and_pump_disabled",
         "defeated_cloudreach_voss",
-        "stormwood:trainer:officer_maren_verge_rod:defeated",
-        "stormwood:marrow_defeated"
+        "stormwood:trainer:officer_maren_verge_rod:defeated"
       ],
       "personal_flags": [
         "legendary_refused",
@@ -784,8 +783,7 @@
         "water_swim_lesson_briefed",
         "water_swim_stone_earned",
         "water:legendary_refused",
-        "fly_tutorial_completed",
-        "regional_credits_seen"
+        "fly_tutorial_completed"
       ],
       "inventory_add": {
         "stormwood_portal_key": 1
@@ -807,7 +805,7 @@
         "tidewake",
         "cloudreach"
       ],
-      "disclosure": "F44#0 rematch witness input (Stormwood, post-credits): the 'stormwood' post-Veyra Cloudreach profile, generated with --enter=stormwood:stormwood (the ordinary F49 portal leg into Stormwood), plus Voss's and Maren's original defeats, the Marrow climax flag and this character's regional_credits_seen; five raised to L55 (the generator's maximum) for the L58 endgame leader band. Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
+      "disclosure": "F44#0 rematch witness input (Stormwood): the 'stormwood' post-Veyra Cloudreach profile, generated with --enter=stormwood:stormwood (the ordinary F49 portal leg into Stormwood), plus Voss's and Maren's original defeats; five raised to L55 (the generator's maximum) for the L58 endgame leader band. The smoke adds stormwood:marrow_defeated and regional_credits_seen as a disclosed post-load fixture (with them set here, the portal leg's relic hang opens the relic power panel and the leg fails). Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
     }
   }
 }
