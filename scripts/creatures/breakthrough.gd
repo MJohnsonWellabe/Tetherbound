@@ -27,6 +27,18 @@ static func master(id: String) -> Dictionary:
 			return result
 	return {}
 
+## Advice only (masters.json departure_guidance): the authored row for leaving
+## toward `biome` while no owned creature has reached its `min_cap`, else {}.
+## Never a gate; travel policy does not read it.
+static func departure_guidance(personal: Dictionary, biome: String) -> Dictionary:
+	for row: Dictionary in masters().get("departure_guidance", []):
+		if str(row.get("biome", "")) != biome: continue
+		var best := 0
+		for record: Variant in (personal.get("creatures", {}) as Dictionary).values():
+			if record is Dictionary: best = maxi(best, int(record.get("cap_level", 0)))
+		return {} if best >= int(row.get("min_cap", 0)) else row.duplicate(true)
+	return {}
+
 static func caught_tiers(level: int) -> Array[int]:
 	var result: Array[int] = []
 	for row: Dictionary in masters().get("masters", []):

@@ -2,7 +2,7 @@ extends SceneTree
 
 ## F44#0: after a biome's boss, its named trainers, captains and Master can be
 ## rematched at the next biome's level for better rewards. One headless witness
-## per biome (rematches.json `witnesses`: relay_captain, water_trainer_yara,
+## per biome (rematches.json `witnesses`: captain_riverwatch, water_trainer_yara,
 ## officer_voss_summit_approach, officer_maren_verge_rod).
 ##
 ##   godot --headless --path . --script tests/smoke_f44_biome_rematch.gd -- \
