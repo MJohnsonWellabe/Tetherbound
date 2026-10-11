@@ -410,6 +410,11 @@ func _on_hit(on_enemy: bool, amount: float) -> void:
 	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
 		if not bool(member.get("fainted")):
 			survivors.append(member.get_instance_id())
+	# F19#5 diagnostic: the creature this helper credits with the kill.
+	var survivor_uids: Array = []
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		if not bool(member.get("fainted")): survivor_uids.append(str(member.get("uid")))
+	print("[helper_kill] active_uid=%s enemy_level=%d survivors=%s" % [str(active.get("uid")), int(_fight_enemy.get("level")), JSON.stringify(survivor_uids)])
 	accumulate_xp(_expected_xp, active.get_instance_id(), survivors, int(_fight_enemy.get("level")),
 		TRAINERS.reward_xp_bonus(_captain_spec) if _captain_kills.size() == TRAINERS.team_of(_captain_spec).size() else 0, PROGRESSION.config())
 
