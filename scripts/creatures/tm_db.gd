@@ -11,13 +11,20 @@ const TMS_PATH := "res://data/moves/tms.json"
 var _tms: Dictionary = {}
 
 
-func _init(tms_path: String = TMS_PATH) -> void:
-	_tms = _read(tms_path).get("tms", {})
+func _init(tms_path: String = TMS_PATH, cached_tms: Variant = null) -> void:
+	if cached_tms is Dictionary:
+		_tms = cached_tms
+	else:
+		_tms = _read(tms_path).get("tms", {})
 
 
 ## One parsed table per process, re-read only when the file changes (see
 ## move_db.gd::load_default). Read-only for callers: accessors hand out copies.
-static var _shared: RefCounted = null
+## Keep parsed data alive without retaining an instance of this same script.
+## Live callers still share one facade; a released facade can be recreated
+## from the cached table without reparsing during party/save validation.
+static var _shared: WeakRef = null
+static var _shared_tms: Dictionary = {}
 static var _shared_stamp := ""
 
 
@@ -25,10 +32,17 @@ static func load_default() -> RefCounted:
 	# Modified time and size: a test writing a temporary table within the same
 	# second still reloads.
 	var stamp := "%d:%d" % [FileAccess.get_modified_time(TMS_PATH), FileAccess.get_size(TMS_PATH)]
-	if _shared == null or stamp != _shared_stamp:
-		_shared = (load("res://scripts/creatures/tm_db.gd") as GDScript).new()
+	var shared: RefCounted = _shared.get_ref() if _shared != null else null
+	if shared != null and stamp == _shared_stamp:
+		return shared
+	if stamp != _shared_stamp:
+		shared = (load("res://scripts/creatures/tm_db.gd") as GDScript).new()
+		_shared_tms = shared.get("_tms")
 		_shared_stamp = stamp
-	return _shared
+	else:
+		shared = (load("res://scripts/creatures/tm_db.gd") as GDScript).new(TMS_PATH, _shared_tms)
+	_shared = weakref(shared)
+	return shared
 
 
 func _read(path: String) -> Dictionary:
