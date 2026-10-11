@@ -1191,11 +1191,12 @@ func _find_clear_shared_seat(spot: Vector3, centre: Vector3, radius: float) -> V
 			return candidate
 	var orbit := spot - foe_at
 	var search_gap := original_gap
+	var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
 	var impossible_orbit: bool = centre.is_finite() and foe_at.is_finite() and is_finite(radius) and radius > 0.0 \
-		and original_gap - 0.001 > radius + Vector2(foe_at.x - centre.x, foe_at.z - centre.z).length()
+		and is_finite(clearance) and original_gap + clearance - 0.001 > radius + Vector2(foe_at.x - centre.x, foe_at.z - centre.z).length()
 	if impossible_orbit:
 		# This bound uses the body origin only when it is inside the actual
-		# rendered footprint: a containing circle must then contain it too.
+		# rendered footprint: the circle must contain it with the same clearance.
 		var projected := PackedVector2Array()
 		for point: Vector3 in _admission_render_points(_ally_body):
 			projected.append(Vector2(point.x, point.z))
