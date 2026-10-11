@@ -163,7 +163,8 @@ func test_world_write_refusal_retains_original_guest_win_and_epoch_fences_retry(
 	var terminal_record := _record()
 	terminal_record.phase = "done"
 	terminal_record.participants[7]["actor_vitals"] = {"selected_uid": {
-		"hp": 72.0, "max_hp": 120.0, "fainted": false, "body_generation": 2}}
+		"hp": 72.0, "max_hp": 120.0, "fainted": false, "body_generation": 2,
+		"revision": 1, "settled_revision": 1}}
 	authority.get("encounters")["1:original"] = terminal_record
 	director.set("_encounter_host", authority)
 	var runtime: Node = TerminalRuntimeDouble.new()
