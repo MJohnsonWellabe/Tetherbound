@@ -1036,13 +1036,17 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 	# below), so a client never invents or advances a generation.
 	if not (_is_host() or _is_guest()) or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
 	var game := get_node_or_null("/root/Game")
-	if game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return
+	if game == null or packet.is_empty() \
+		or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet \
+		or packet.captured_from.world_namespace != game.world.reward_delivery_namespace: return
 	var site := preload("res://scripts/repeatables/alpha_respawns.gd").site(site_id)
 	if site.get("biome") != preload("res://scripts/data/biome_order.gd").canonical_id(_encounter_realm()) \
 		or get_script().resource_path not in ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd"]: return
 	for wild: Node3D in _wild_creatures:
 		if is_instance_valid(wild) and wild.get_meta("foundation_alpha_site", "") == site_id \
-			and wild.get_meta("foundation_alpha_generation", 0) == packet.captured_from.spawn_generation: return
+			and wild.get_meta("foundation_alpha_generation", 0) == packet.captured_from.spawn_generation:
+			foundation_register_alpha(wild, site_id, packet)
+			return
 	if has_meta("foundation_alpha_spawning_" + site_id): return
 	# The sliced population build reaches this site's entry later and spawns
 	# its retained generation itself; publishing now would make a second body.
@@ -1502,16 +1506,31 @@ func foundation_register_alpha(wild: Node3D, site_id: String, packet: Dictionary
 	var game := get_node("/root/Game")
 	var cycle := foundation_alpha_cycle(site_id)
 	if cycle.get("status") == "waiting" or (cycle.get("status") == "active" and packet.is_empty()): return false
-	if not packet.is_empty() and preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return false
+	if not packet.is_empty():
+		if preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet \
+			or packet.captured_from.world_namespace != game.world.reward_delivery_namespace: return false
+		# Ownership outlives the engaged flag during shared catch pauses and
+		# realm-owned local presentation. Defer until every real owner releases.
+		if wild.get("engaged") == true: return false
+		if _manager != null and _manager.call("is_fighting") == true \
+			and _manager.call("enemy_body") == wild: return false
+		for runtime: Variant in _shared_host_fights.values():
+			if runtime is Node and is_instance_valid(runtime) and runtime.call("body") == wild: return false
+		var instance := wild.get("instance") as RefCounted
+		if instance == null: return false
+		var changed: bool = not bool(instance.get("traits_initialized")) \
+			or instance.get("rolled_traits") != packet.rolled_traits \
+			or instance.get("taught_traits") != packet.taught_traits
+		if changed:
+			var fraction := float(instance.call("hp_fraction"))
+			if not preload("res://scripts/creatures/traits.gd").project_instance(instance, packet): return false
+			instance.call("recompute_stats_from_base", PROGRESSION.config())
+			instance.set("hp", float(instance.get("max_hp")) * fraction)
 	wild.set_meta("foundation_alpha_site", site_id)
 	wild.set_meta("foundation_alpha_generation", int(packet.captured_from.spawn_generation) if not packet.is_empty() else 1)
 	wild.set_meta("foundation_alpha_world", weakref(game.world))
 	wild.set_meta("foundation_alpha_epoch", _session.call("_altar_current_epoch"))
 	if not packet.is_empty():
-		var instance: RefCounted = wild.get("instance")
-		instance.set("traits_initialized", true)
-		instance.set("rolled_traits", packet.rolled_traits.duplicate())
-		instance.set("taught_traits", packet.taught_traits.duplicate(true))
 		wild.set_meta("foundation_alpha_packet", packet.duplicate(true))
 		if int(packet.captured_from.spawn_generation) > 1: wild.remove_meta("once_completion_reward")
 	return true
