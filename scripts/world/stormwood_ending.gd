@@ -653,13 +653,22 @@ func _begin_local_ceremony() -> void:
 	_local_creature.set_meta(&"foundation_capture_offer", true)
 	var menu: Node = game.get("_menu")
 	var configured := false
+	var ceremony_busy := false
 	if menu != null:
 		for body: Node in menu.get("_bodies"):
 			if body.has_method("configure_release_service"):
 				configured = body.call("configure_release_service", self) == true
+				ceremony_busy = not configured and body.get("_release_stage") == "done" \
+					and body.get("_release_request_id") == ""
 				break
 	if not configured:
-		_cancel_local_claim()
+		if ceremony_busy:
+			# The prior catch has left the seam, but its goodbye still owns
+			# the menu. Retain this consent until that ceremony actually ends.
+			_local_creature = null
+			_ceremony_waiting = true
+		else:
+			_cancel_local_claim()
 		return
 	game.set("pending_catch", _local_creature)
 
