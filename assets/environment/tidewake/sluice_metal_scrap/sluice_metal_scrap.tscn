@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/environment/team_tether/hall/tt_pipe_straight.glb" id="1_pipe"]
+[ext_resource type="PackedScene" path="res://assets/environment/team_tether/hall/tt_pipe_elbow.glb" id="2_elbow"]
+[ext_resource type="PackedScene" path="res://assets/props/quaternius_fantasy/Chain_Coil.gltf" id="3_chain"]
+
+[node name="SluiceMetalScrap" type="Node3D"]
+metadata/presentation_role = "loose_inactive_pump_scrap"
+
+; Imported iron/brass fittings and the installed metal chain retain their
+; materials. Detached pieces have no pump interaction, collider or light.
+; Ground offsets follow their transformed mesh minima, in metres.
+[node name="DiscardedPipeSegment" parent="." instance=ExtResource("1_pipe")]
+position = Vector3(-0.05, 0.1155, -0.18)
+scale = Vector3(0.7, 0.7, 0.7)
+
+[node name="DiscardedElbow" parent="." instance=ExtResource("2_elbow")]
+position = Vector3(0.28, 0.10725, 0.20)
+rotation = Vector3(1.57079632679, 0.4, 0)
+scale = Vector3(0.65, 0.65, 0.65)
+
+[node name="LooseChainCoil" parent="." instance=ExtResource("3_chain")]
+position = Vector3(-0.30, -0.00259620417, 0.18)
+scale = Vector3(0.55, 0.55, 0.55)
