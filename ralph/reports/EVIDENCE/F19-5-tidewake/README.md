@@ -45,3 +45,16 @@ site, that same site's receipt: stock revision advanced by exactly one and
 next_ready_day > current day (static `harvest_receipt` / `site_stock`). The exact-yield
 check and site-id match are unchanged. water_earned_swimmer_preparation_segment.gd:208
 treats a site as already harvested on the legacy flag or on that site's next_ready_day > day.
+
+## Run 2026-10-11 07:15 CT (commit e2785dc7)
+- 02 Reedhaven PASS, 206 s, +2 flags, same five UIDs; checkpoint tidewake_02_reedhaven.
+- 03 Brine FAIL, 170 s: "Tovin challenge never entered its production trainer battle".
+  Combat admission refused at Tovin (393.4, 807.4): stage support_missing, then
+  clear_seat_search_exhausted after 395 attempts (last: oriented_render_box solid_overlap
+  with /root/WaterArchipelago/Terrain). Lead terrapup L20 (belt: terrapup, 3x bramblebun,
+  mudsnout).
+- Reproduced on current main without any checkpoint save by the existing DRY RUN probe
+  `godot --headless --path . --script tests/probe_water_brine_tovin_fight.gd -- --seed=1`:
+  PROBE RESULT FAIL, same exhausted 395-attempt seat search (overlap with
+  WaterNPCs/water_tovin/Body). So Tovin's battle does not admit on main: a main defect,
+  not a save/handoff issue. 04-08 not run (Shellwatch requires Brine's victory).
