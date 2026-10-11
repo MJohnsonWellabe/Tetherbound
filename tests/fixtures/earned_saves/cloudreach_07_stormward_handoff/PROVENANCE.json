@@ -1,0 +1,45 @@
+{
+  "criterion": "F19#5 (Cloudreach part)",
+  "kind": "piece_checkpoint_on_generated_input",
+  "segment": "07_stormward_handoff",
+  "command": "godot --headless --path . --script tools/earned_saves/cloudreach_chain_runner.gd -- --segment=07_stormward_handoff --from=tests/fixtures/earned_saves/cloudreach_06_veyra_relay --out=<dir>",
+  "commit": "92275f911f69142b1f6b5c46ca861e34abb8f516",
+  "start_save": "tests/fixtures/earned_saves/cloudreach_06_veyra_relay",
+  "slot": 0,
+  "realm": "stormwood",
+  "position": [
+    -300.0,
+    32.27,
+    180.0
+  ],
+  "party_uids": [
+    "creature-cf906fd5504c229a431c3b3202c3c2e2",
+    "creature-83d263c517d32cc6cb7beab6925d80c7",
+    "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+    "creature-afbd0d982b14221393f70c29863586a1",
+    "creature-c576f15db4b7f3ecf487a80de0169177"
+  ],
+  "flags_gained": [
+    "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d",
+    "opening:lesson:trigger:home_return"
+  ],
+  "inventory_delta": {
+    "stormwood_portal_key": -1
+  },
+  "handoff_check": {
+    "checked": true,
+    "differs": [],
+    "matches": true
+  },
+  "injections": "none during play (production title Load -> Autosave; ordinary controller input; Game.save_game(0))",
+  "accelerated": false,
+  "prior_earned_play": false,
+  "disclosures": [
+    "Runner Piece overrides the helper's _arrival_gather only to re-read the resource prompt after the walk (cloudreach_resource_patch.gd rebuilds DailyHarvest on each Game.day roll; the helper's pre-walk reference was freed). Input and checks unchanged.",
+    "Piece 07: the relic-power choice panel that opens after the Cloudreach relic is hung was dismissed with the ordinary menu_cancel press; no power was chosen",
+    "Start lineage: the DISCLOSED GENERATED post-05 boundary tests/fixtures/earned_saves/cloudreach_05_generated_veyra_boundary (profile cloudreach_veyra, L40, act-III flags through summit_extraction_engine_reached generated; coordinator ruling 2026-10-11 after the earned 05 lost Voss on the level gap). Not an earned lineage.",
+    "Requires the F19#2 solo boss hand-off fix on this branch (scripts/combat/encounter_director.gd, scripts/net/session.gd).",
+    "New-order handoff: the physical Stormward gate is retired (biome_order.legacy_physical_crossings false, RD-17/F18#2), so piece 07 plays the F49 portal leg (Home Key -> hang Cloudreach relic -> Stormwood arch), as f49_campaign_journey does.",
+    "Flag legendary_resolution:refused:<character> reappears at the Home Key return: the generated L40 template carried the Meadows refusal as a personal record only; not a new offer."
+  ]
+}

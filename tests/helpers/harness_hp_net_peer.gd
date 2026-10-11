@@ -51,6 +51,8 @@ func _harness_dispatch(action: String, args: Dictionary) -> Dictionary:
 	var game: Node = root.get_node_or_null(^"Game")
 	if game == null: return {"verdict": "ERROR", "detail": "no Game"}
 	var local: RefCounted = game.get("local")
+	if action == "harness_record": return _harness_record(game, str(args.get("item", "")))
+	if action == "harness_admitted": return _harness_admitted(game, int(args.get("peer_id", 0)), str(args.get("uid", "")))
 	var members: Array = local.get("party").call("members") if local != null else []
 	if members.is_empty(): return {"verdict": "ERROR", "detail": "no party creature"}
 	match action:
@@ -106,3 +108,60 @@ func _harness_dispatch(action: String, args: Dictionary) -> Dictionary:
 				"fighting": manager != null and bool(manager.call("is_fighting")), "last_incoming": _last_incoming,
 				"incoming_total": _incoming_total}
 	return {"verdict": "ERROR", "detail": "unknown action " + action}
+
+
+## F33#4 rejoin round trip (coordinator ruling 2026-10-11): this peer's first
+## creature's gear and the bag count of `item`, live and in its own
+## `user://characters/<id>` file, side by side and never merged. Read-only.
+func _harness_record(game: Node, item: String) -> Dictionary:
+	var local: RefCounted = game.get("local")
+	if local == null: return {"verdict": "ERROR", "detail": "no Game.local"}
+	var gear_script := preload("res://scripts/creatures/creature_gear.gd")
+	var character_id := str(local.get("character_id"))
+	var members: Array = local.get("party").call("members")
+	var uid := str((members[0] as RefCounted).get("uid")) if not members.is_empty() else ""
+	var live_gear: Dictionary = gear_script.gear_for({"redesign_character": local.get("redesign_character")}, uid) if not uid.is_empty() else {}
+	var live_count := int(game.get("inventory").call("count", item))
+	var file: Dictionary = {}
+	var save: Variant = game.get("save_system")
+	if save != null and not character_id.is_empty():
+		var characters: Variant = (save as RefCounted).call("characters")
+		if characters != null and bool((characters as RefCounted).call("has", character_id)):
+			file = (characters as RefCounted).call("state", character_id) as Dictionary
+	var file_uid := ""
+	for card: Variant in file.get("party", []):
+		if card is Dictionary:
+			file_uid = str(card.get("uid", ""))
+			break
+	var file_gear: Dictionary = gear_script.gear_for(file, file_uid) if not file_uid.is_empty() else {}
+	var file_count := 0
+	for stack: Variant in file.get("inventory", []):
+		if stack is Dictionary and str(stack.get("id", "")) == item: file_count += int(stack.get("n", 0))
+	return {"verdict": "PASS", "detail": "live %s %s bag %d | file %s %s bag %d" % [uid, str(live_gear), live_count,
+		file_uid, str(file_gear), file_count],
+		"character_id": character_id, "uid": uid, "live_harness": str(live_gear.get("harness", "")),
+		"live_count": live_count, "file_exists": not file.is_empty(), "file_uid": file_uid,
+		"file_harness": str(file_gear.get("harness", "")), "file_count": file_count,
+		"party_size": members.size()}
+
+
+## Host side: the gear the host's ADMITTED record of `peer_id` gives creature
+## `uid`, the s the host's director would roll that peer's hits with, and the
+## host's own creatures' gear and s. Read-only.
+func _harness_admitted(game: Node, peer_id: int, uid: String) -> Dictionary:
+	var gear_script := preload("res://scripts/creatures/creature_gear.gd")
+	var session: Node = _session()
+	var director := _encounter_director()
+	if session == null or director == null: return {"verdict": "ERROR", "detail": "no session/director"}
+	var admitted: Dictionary = session.call("admitted_character_state", peer_id)
+	var admitted_harness := str(gear_script.gear_for(admitted, uid).get("harness", ""))
+	var own: Array = []
+	var local: RefCounted = game.get("local")
+	for creature: RefCounted in local.get("party").call("members"):
+		own.append(str(gear_script.gear_for({"redesign_character": local.get("redesign_character")}, str(creature.get("uid"))).get("harness", "")))
+	var guest_s := float(director.call("_host_hp_scale", peer_id))
+	var own_s := float(director.call("_host_hp_scale", int(session.call("local_peer_id"))))
+	return {"verdict": "PASS", "detail": "admitted %s harness '%s' s %.4f | host own harnesses %s s %.4f" % [
+		uid, admitted_harness, guest_s, str(own), own_s],
+		"admitted_harness": admitted_harness, "guest_s": guest_s, "own_harnesses": own, "own_s": own_s,
+		"admitted_empty": admitted.is_empty()}

@@ -77,7 +77,7 @@ func present(snapshot: Dictionary, using_pad: bool) -> void:
 		var row: Dictionary = COMMANDS.config().commands[id]
 		var label: Label = _labels[id]
 		var suffix := ""
-		if id == "item_throw": suffix = " ×%d" % int(snapshot.get("pouch_count", 0))
+		if id == "item_throw": suffix = "  (%d held)" % int(snapshot.get("pouch_count", 0))
 		if id == "tag_combo" and float(snapshot.get("combo_remaining_s", 0)) > 0:
 			suffix = " %.1fs" % float(snapshot.combo_remaining_s)
 		if id == "snare" and snapshot.get("wild_target") != true: suffix = " —"
@@ -87,7 +87,9 @@ func present(snapshot: Dictionary, using_pad: bool) -> void:
 		if id == "tag_combo": available = available and float(snapshot.get("combo_remaining_s", 0)) > 0
 		if id == "snare": available = available and snapshot.get("wild_target") == true
 		if id == "item_throw": available = available and int(snapshot.get("pouch_count", 0)) > 0
-		label.text = "%s\n%s\n%d%s%s" % [button_name, str(row.label), int(row.cost), suffix, "" if available else " ×"]
+		# Unavailable reads by the muted colour below, not a trailing mark
+		# ("25 ×0 ×" read as garbage to the F04#0 code-blind judge).
+		label.text = "%s\n%s\n%d%s" % [button_name, str(row.label), int(row.cost), suffix]
 		label.add_theme_color_override("font_color", TOKENS.TEAL_SOFT if available else TOKENS.TEXT_MUTED)
 
 func refused(reason: String) -> void:

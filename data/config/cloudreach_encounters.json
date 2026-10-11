@@ -80,7 +80,9 @@
       ]
     },
     "grunt": {
+      "_why_xp_bonus": "F47 Cloudreach XP (owner decision 1A, 2026-10-11: the required route carries the level curve; Voss and the stronghold stay L41-42). Cloudreach wilds are non-aggressive and pay hybrid XP (x0.35), so the earned chain (tests/fixtures/earned_saves/cloudreach_01..04) reached the stronghold at L31 with ~600-1500 XP per creature against the ~19-21k that L31->L39-40 costs (40 x L^1.15). Senn (the only grunt) and Maela (the only mentor) are the two required fights before Voss, so their flat per-living-member top-up carries it: 8500 lifts a fresh L31 member to about L35 for Maela's L35-37 trial. Rematches zero xp_bonus (rematch_rules.gd), and the admitted L40 cap stops overflow. Was 0. TUNABLE. Evidence: ralph/reports/EVIDENCE/F47-cloudreach-xp/README.md.",
       "coins": 80,
+      "xp_bonus": 8500,
       "items": [
         {
           "id": "potion_large",
@@ -89,7 +91,9 @@
       ]
     },
     "mentor": {
+      "_why_xp_bonus": "F47 Cloudreach XP (owner decision 1A); see grunt. 10500 takes a member from about L35 after Senn to about L39.5 before Officer Voss (L41-42), the arrival the redesign curve expects at the stronghold. Was 0. TUNABLE.",
       "coins": 75,
+      "xp_bonus": 10500,
       "items": [
         {
           "id": "revive",

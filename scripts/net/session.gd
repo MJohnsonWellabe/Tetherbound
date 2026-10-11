@@ -1397,6 +1397,13 @@ func ordinary_combat_reward_owner(director: Node, encounter_id: String) -> Dicti
 	if not _ordinary_combat_director_live(director) or not _bind_character_authority() \
 		or get_node_or_null(^"LedgerRpc") == null \
 		or not director.has_method("ordinary_combat_vitals_ready"): return unavailable
+	# Per-round ordinary rewards cover only the trainers.json table. Any other
+	# trainer (a chapter boss such as Captain Veyra) is not applicable here: it
+	# keeps its own reward path, rather than "unavailable" aborting the round.
+	var trainer_spec: Dictionary = director.get("_trainer_spec")
+	if not trainer_spec.is_empty() and not trainer_spec.has("master") and not trainer_spec.has("rematch") \
+		and preload("res://scripts/world/trainer_npc.gd").trainer(str(trainer_spec.get("id", ""))).is_empty():
+		return {"enabled": false, "ready": true, "scope": {}}
 	var vitals_ready: Variant = director.call("ordinary_combat_vitals_ready", encounter_id)
 	if not vitals_ready is bool or vitals_ready != true: return unavailable
 	var game: Node = _game()

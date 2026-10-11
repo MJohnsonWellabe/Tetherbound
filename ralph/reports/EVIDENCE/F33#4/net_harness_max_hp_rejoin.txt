@@ -1,0 +1,42 @@
+PASS: tidesteel_harness_plus_1 raises maximum HP (authored s 1.264)
+PASS: peer 0 owns a creature ('terrapup' at level 3 joined the party (1 member(s)))
+PASS: peer 1 owns a creature ('terrapup' at level 3 joined the party (1 member(s)))
+PASS: the guest wears the Harness before joining (creature-d179a2926d76f1a49667fc53fee096b5 wears tidesteel_harness_plus_1)
+PASS: peer 0 hosts (hosting udp/29001 as peer 1)
+PASS: peer 1 joins (joined 127.0.0.1:29001 as peer 213744694 after 31 frames; snapshot applied; 2 peer(s) in registry)
+PASS: the guest's local record no longer carries the Harness
+PASS: the guest has a real peer id (213744694)
+PASS: peer 0 sees both players
+PASS: peer 0 deployed its creature (deployed AllyCreature)
+PASS: peer 1 sees both players
+PASS: peer 1 deployed its creature (deployed AllyCreature)
+PASS: out of a fight the guest's bar is the stored maximum (hp 134.40/134.40 shown 134.40/134.40 saved max 134.40 incoming 0.000000 last -1.000000)
+PASS: the host engages a wild (engaged bramblebun as encounter 1:1 (bound after 0 frame(s)))
+PASS: the fight's position is announced
+PASS: the guest joins the fight (joined 1:1 beside 'bramblebun' at (-12.7, 61.8) after 622 ms)
+PASS: the guest is in the fight
+PASS: pre-strike read proves either bare HP before any hit or exact prior host-hit scale/HP/save arithmetic
+PASS: the host's opponent strikes the guest's creature (host s 1.2640, connected true)
+PASS: the host's s comes from the admitted record (1.2640 vs authored 1.2640)
+PASS: the hit reached the guest's creature (stored -5.58)
+PASS: the guest's bar shows max x the host's s (169.88 = 134.40 x 1.2640)
+PASS: the bar shows the stored HP fraction
+PASS: stored HP fell by the rolled hits / the host's s (5.58 = 7.05 / 1.2640; last hit 7.05)
+PASS: mid-fight the guest's saved party row holds the base maximum (134.40)
+PASS: the guest left the fight (try_flee true ())
+PASS: after the fight the guest's bar is the stored maximum again
+PASS: and the saved row holds it
+PASS: rejoin: the guest's own record wears tidesteel_harness_plus_1 again before leaving (fixture, see header)
+PASS: rejoin: the guest leaves through the production session leave (client left cleanly after 0 frames)
+PASS: rejoin: the host is back to one peer
+PASS: rejoin: the leave wrote tidesteel_harness_plus_1 on creature creature-d179a2926d76f1a49667fc53fee096b5 into the guest's own character file (live creature-d179a2926d76f1a49667fc53fee096b5 { "harness": "tidesteel_harness_plus_1", "charm": "" } bag 0 | file creature-d179a2926d76f1a49667fc53fee096b5 { "charm": "", "harness": "tidesteel_harness_plus_1" } bag 0)
+PASS: rejoin: the guest's in-memory character is blanked (in-memory character blanked (party 1 -> 0), id 'character-58fb7b3e00e9200a11719639194aa195' kept, file untouched)
+PASS: rejoin: memory holds no creature or gear while the file still holds the Harness (live  {  } bag 0 | file creature-d179a2926d76f1a49667fc53fee096b5 { "charm": "", "harness": "tidesteel_harness_plus_1" } bag 0)
+PASS: rejoin: the same saved guest rejoins through production_join (title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:29001 as peer 1517778812 after 275 frames)
+PASS: rejoin: the guest's creature wears tidesteel_harness_plus_1 again, restored from its own file (live creature-d179a2926d76f1a49667fc53fee096b5 { "charm": "", "harness": "tidesteel_harness_plus_1" } bag 0 | file creature-d179a2926d76f1a49667fc53fee096b5 { "charm": "", "harness": "tidesteel_harness_plus_1" } bag 0)
+PASS: rejoin: the Harness is not duplicated into the bag (bag 0, file 0, before 0)
+PASS: rejoin: peer 0 sees both players again
+PASS: rejoin: peer 1 sees both players again
+PASS: rejoin: the guest deploys its creature (deployed AllyCreature)
+PASS: rejoin: the host's admitted record gives the guest's creature tidesteel_harness_plus_1 and the host rolls its hits with s 1.2640 (admitted creature-d179a2926d76f1a49667fc53fee096b5 harness 'tidesteel_harness_plus_1' s 1.2640 | host own harnesses [""] s 1.0000)
+PASS: rejoin: the host's own creature never has the guest's Harness (admitted creature-d179a2926d76f1a49667fc53fee096b5 harness 'tidesteel_harness_plus_1' s 1.2640 | host own harnesses [""] s 1.0000)

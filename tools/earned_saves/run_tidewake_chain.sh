@@ -6,7 +6,9 @@
 set -u
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$REPO"
 GODOT="${GODOT:-godot}"
-SEGS=(01_opening 02_reedhaven 03_brine 04_shellwatch 05_tidal 06_swimmer 07_late 08_ending)
+# Critical path with the same five. 06_swimmer/07_late (optional swim mount)
+# are a recorded GAP: the saddle routes to the homestead Workbench (RD-15).
+SEGS=(01_opening 02_reedhaven 03_brine 04_shellwatch 05_tidal 07_human_late 08_ending)
 FIRST="${1:-01_opening}"; F=tests/fixtures/earned_saves
 START="${2:-$F/tidewake_arrival_generated}"; LOGS="${3:-/tmp/tidewake_chain_logs}"
 mkdir -p "$LOGS"; prev=""; started=0
@@ -31,6 +33,7 @@ json.dump({"kind":"tidewake_checkpoint","criterion":"F19#5","segment":seg,"comma
   "06_swimmer catches a swimmer and releases one of the five (helper design), so UIDs change at 06; the handoff check compares each save with the next segment's Load",
   "07_late remounts the 06 swimmer by the late helper's own input step: a mount is not saved",
   "Water helpers accept the F32 renewable stock receipt in place of the legacy harvest flag (coordinator-approved)",
+  "06_swimmer (optional swim mount + saddle) skipped as a recorded GAP (coordinator-agreed): WORLD §6 owner retained-team override; the saddle routes to the homestead Workbench (RD-15, HOMESTEAD §2) and the helper is stale; the critical path runs 07_human_late with the same five",
   "Start lineage is the generated tidewake arrival, not an earned Meadows end save",
   "03_brine: Tovin fight bound raised 180 s wall to 600 s SIM (coordinator-approved duration budget; victory still required): generated L20 ground belt, terrapup lead 0.8x vs water; actual fight length is the 'Tovin fight length' note in receipt.json helper_receipts",
   "Every Tidewake helper trainer/alpha fight bound (Shellwatch _fight_trainer, Tidal Aquaryn, late fight_bound_ms) is a 600 s SIM duration budget (coordinator-approved); victory still required; each fight's length is a '<id> fight length N s sim' note in receipt.json helper_receipts"]},open(out+"/PROVENANCE.json","w"),indent=2)
