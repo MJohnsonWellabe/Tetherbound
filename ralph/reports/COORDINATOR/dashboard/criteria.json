@@ -1,5 +1,5 @@
 {
- "generated_at": "11:19 AM CT Sun 11 Oct 2026",
+ "generated_at": "11:50 AM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -2342,12 +2342,12 @@
    "title": "Ripplet swim and dive",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 80,
+   "pct": 100,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -2386,10 +2386,10 @@
     },
     {
      "text": "Riding and diving survive save/reload and two-peer rejoin.",
-     "status": "not_started",
-     "evidence": "test_f37_ripplet_traversal.gd JSON round-trip; tools/net/proof_scenarios/f37_ripplet_rejoin.json (unrun)",
-     "gap": "Run f37_ripplet_rejoin as a `# peers: 2` net smoke. Add a disk save/reload smoke while mounted and mid-dive.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Only an in-memory JSON round trip has been tested. The two-peer rejoin scenario is prepared but has never run. There is no disk reload test.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F37-4/: two-peer proof f37_ripplet_rejoin (first run) PASS: mounted mid-dive disk save, link drop, character wiped, returning join restores the same Ripplet ride (swim mode 2, host agrees, nothing stale) and a fresh Jump resumes the saved dive; f12_remote_rider_identity_reconnect (saddled Aquaryn) control also PASS",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a d2044ea2, 12:00 PM CT Sun 11 Oct). Two game fixes: restore_swim_mount no longer re-selects an already-active mount during rejoin admission; the Ripplet motion validator re-anchors on a connection's first host-approved mount (open finding: one 1 s validation window passes unjudged once per connection). Approved test change: the saddle check skips the saddle-less Ripplet ride only. Coordinator re-ran test_f37_ripplet_traversal + water encounter units (22 tests, 0 failed). Lands with the consolidated PR.",
      "audit_index": 4
     }
    ]
