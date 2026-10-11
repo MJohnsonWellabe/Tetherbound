@@ -1826,8 +1826,8 @@
           },
           {
             "sequence": [
-              "venn_charger_rush",
-              "venn_charger_double_rush"
+              "charger_rush",
+              "charger_double_rush"
             ]
           }
         ],
@@ -2171,8 +2171,8 @@
           },
           {
             "sequence": [
-              "charger_rush",
-              "charger_double_rush"
+              "venn_charger_rush",
+              "venn_charger_double_rush"
             ]
           },
           {
