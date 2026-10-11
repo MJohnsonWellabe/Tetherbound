@@ -6107,7 +6107,11 @@ func _build_crown_outcrops(parent: Node3D, size: Vector3, seed_value: int) -> vo
 		var bounds: AABB=BUILDING_PREFABS.new().combined_aabb(rock)
 		rock.scale=Vector3(width,height,width*0.82)/bounds.size
 		rock.rotation.y=angle
-		rock.position=Vector3(cos(angle)*size.x*0.19,size.y*0.5-height*0.7-6.0,sin(angle)*size.z*0.19)-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*rock.scale
+		# Keep the intended floor centre after yaw as well as scale. Imported
+		# rocks have asymmetric bounds, so an unrotated offset moves the seat.
+		var floor_centre := Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z)
+		rock.position = Vector3(cos(angle) * size.x * 0.19,
+			size.y * 0.5 - height * 0.7 - 6.0, sin(angle) * size.z * 0.19) - rock.basis * floor_centre
 		parent.add_child(rock)
 		for mesh: MeshInstance3D in rock.find_children("*","MeshInstance3D",true,false):
 			mesh.material_override=_materials["cliff"]
@@ -6179,7 +6183,12 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 		var bounds: AABB = bounds_tool.combined_aabb(rock)
 		rock.scale = Vector3(width, height, width * 0.70) / bounds.size
 		rock.rotation.y = angle + 0.35
-		rock.position = Vector3(cos(angle) * size.x * 0.40, size.y * 0.5 - depth - height * 0.5, sin(angle) * size.z * 0.40)
+		# This is the buried volume's centre, not the imported mesh origin.
+		# All three installed rocks carry nonzero AABB centres; compensate the
+		# full basis so yaw cannot push an outcrop outside its supporting mass.
+		var seat := Vector3(cos(angle) * size.x * 0.40,
+			size.y * 0.5 - depth - height * 0.5, sin(angle) * size.z * 0.40)
+		rock.position = seat - rock.basis * bounds.get_center()
 		rock.name = "EmbeddedCliffOutcrop%d" % i
 		parent.add_child(rock)
 		for mesh: MeshInstance3D in rock.find_children("*", "MeshInstance3D", true, false):
