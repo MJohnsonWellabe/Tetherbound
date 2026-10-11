@@ -91,3 +91,27 @@ Ruled out:
 - `node_cycles` has no Stormwood site, so stock defaults to ready (day 16 ≥ 1).
 
 Not yet known: why `interaction_offer` returns `{}` here. The candidates are a disabled prompt (Stormwood charged gating), blocked line of sight, or the 2–5 m displacement (lightning knockback or a body push). Finding out needs a live read-only probe at the seam. That would be a third attempt at this step, so it needs the coordinator's go-ahead.
+
+## Round 3 (coordinator-approved diagnosis)
+**The Tidewake duplicate-node lead does not apply here.**
+- `seam_probe.gd` (diagnostic only, not evidence) did a production Load, then counted nodes within 4 m of `stormwood_harvest_cinder_verge_018`.
+- It found one HarvestNode with `_renewable_site_id` set, owned by `RenewableResources.node_for(...)`.
+- Its Interactable is enabled and offers "Gather Stormglass" from 1 m.
+
+**The 2–5 m "push" is input latency from my 64-step cap.**
+- The runner's seam watcher (`attempt_diag_f.log`) shows the player keeps its walk velocity after the walk ends.
+- At 64 physics steps per process frame (~1 s of sim per frame on this host), the stick release lands late.
+- The only body within 3 m sits at 0.00 m, co-located with the player.
+- Fix: the runner's default is now 8 steps per frame, production's granularity (commit `stormwood_chain_runner` 8-step). `attempt_diag_g.log` confirms no overshoot.
+
+**Root cause of the blocker (game integration defect):**
+- At `attempt_diag_g.log`, the first stance press **does gather** the seam: `taken=true`, prompt disabled, sim ~544 s, Fading.
+- The seam is a registered F32 renewable site (`renewable_site_catalog.gd` loads every `stormwood_harvests.json` site). `foundation_resources.gd` mounts `f32_world_mount.gd` per realm, and the mount adopts the HarvestNode.
+- The gather therefore takes `_gather_registered_source()`. That commits only a `renewable_stock_set` op; by design, "no world flag crosses the request boundary".
+- `stormwood_harvest_runtime.gd:62` emits `harvest:verge_stormglass` (→ `stormwood:first_stormglass_gathered`) only when `harvest_node:order:<id>` is set. So the chapter objective never completes.
+- The same mismatch affects `claimed_crown_glass` (line 100, the `crown_glass_gathered` objective) and the Crown build helper's receipt assertions (`harvest_node:order:` at lines 210, 227, 256).
+
+**Options (coordinator decision):**
+- **A.** Stormwood runtime: count a site as gathered if it has the legacy flag OR a recorded world stock harvest (`redesign_world.node_cycles.sites["stormwood:<id>"]`). The Crown helper's receipt check would need the same predicate, which is a test-assertion change.
+- **B.** The host settles a Stormwood site node claim with its legacy `harvest_node:order:<id>` world fact as well, like Water's world-once story seams keep their receipts. Every chapter check and helper assertion stays unchanged, but shared F32 commit code changes.
+- **C.** Exclude Stormwood story seams (Cinder Verge Stormglass, Crown-grade glass) from renewable registration, like Water's `existing_world_pickup_policy`. This changes regrowth, which is an economy/design decision.
