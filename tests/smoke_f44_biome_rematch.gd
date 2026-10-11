@@ -17,7 +17,7 @@ extends SceneTree
 ## tools/f44_rematch_witness.gd; the other three are `r1` at the next band.
 ##
 ## Asserted: ordinary input admits the canonical rematch; every member is at the
-## configured level; the pilot wins; the settled verdict is saved and resolved;
+## configured level; the pilot wins; the win is delivered to this character once;
 ## the rematch receipt is paid exactly once with the configured unique payout,
 ## which the first win's story reward never contained, at a higher level than
 ## the first win; and after a title reload the receipt, payout and cooldown are
@@ -183,13 +183,23 @@ func _run() -> void:
 	if not check(receipt.outcome == "won", "the pilot wins the rematch (%s after %d frames)" % [receipt.outcome, frames]):
 		await _finish()
 		return
-	for _i in 3600:
-		if not settled.is_empty(): break
+	# The production outcome writer (session.foundation_rematch_outcome) journals
+	# a foundation event whose rematch_win duty pays the character; the
+	# rematch_service `settled` signal has no production caller. Poll the
+	# character's own durable win receipt instead.
+	var win_prefix := base_receipt + ":win:"
+	var after: Dictionary = {}
+	for _i in 7200:
+		after = RECORD.portable_projection(game.local.call("save_data")).duplicate(true)
+		if (after.redesign_character.transaction_receipts as Array).any(func(r: Variant) -> bool: return str(r).begins_with(win_prefix)): break
 		await physics_frame
-	check(settled.get("tier") == tier and settled.get("character_id") == character
-		and settled.get("verdict", {}).get("saved") == true and settled.get("verdict", {}).get("resolved") == true,
-		"the rematch win settles saved and resolved for this character (%s)" % str(settled))
-	var after := RECORD.portable_projection(game.local.call("save_data")).duplicate(true)
+	var win_receipts: Array = (after.redesign_character.transaction_receipts as Array).filter(func(r: Variant) -> bool: return str(r).begins_with(win_prefix))
+	var deliveries: Array = []
+	for key: Variant in game.world.reward_deliveries:
+		if str(key).contains("rematch"): deliveries.append({str(key): str(game.world.reward_deliveries[key].get("status", ""))})
+	receipt.diagnostic = {"pending_outcome": str(director.get("_rematch_pending_outcome")),
+		"pending_event": director.get_meta("foundation_rematch_pending", {}).get("source_id", ""), "deliveries": deliveries}
+	check(win_receipts.size() == 1, "the rematch win is delivered to this character once (%s; %s)" % [str(win_receipts), str(receipt.diagnostic)])
 	var receipts: Array = after.redesign_character.transaction_receipts
 	check(receipts.count(base_receipt) == 1, "the unique rematch receipt is paid exactly once")
 	var payout: Dictionary = RULES.config().biomes[profile.biome].unique_materials
