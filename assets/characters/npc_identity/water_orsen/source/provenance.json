@@ -1,7 +1,7 @@
 {
   "actor_id": "water_orsen",
   "default_enabled": false,
-  "status": "PROVISIONAL_OFF_BODY_ONLY_NATIVE_REVIEW_PENDING",
+  "status": "CORRECTED_OFF_BODY_ONLY_NATIVE_REVIEW_PENDING",
   "source_commit": "5d7038d99b8dbb5f8182617e970a09df5da2e86c",
   "installed_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
   "installed_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
@@ -89,16 +89,76 @@
   },
   "native_review": {
     "status": "PENDING",
-    "scope": "Seven clips, four phases, front/side Low/Compatibility views requested; no acceptance yet",
+    "scope": "Corrected seven clips, four phases, front/side Low/Compatibility recapture pending under original assertions",
     "risks": [
-      "Idle arms remain about 29.5-32.4 degrees from down; Orsen-specific stance correction is proposed privately but unapplied",
-      "Rear-torso/backpack-region edges stretch from about 1 cm to 5-10 cm in some action samples, worst in chop; native review must determine visible severity",
-      "Coat split, pouch/hand clearance, backpack/bedroll rigidity and hat/neck behavior remain unproven"
+      "Corrected arm stance and coat/hand/pouch clearance require native recapture",
+      "Uncorrected action CPU samples showed rear-torso/backpack edge stretch; prior native sample review did not establish a blocking defect, but corrected action poses remain pending",
+      "No paired portrait, world or independent Claude acceptance yet"
     ],
     "portrait": "NOT_AUTHORED",
     "world": "PENDING",
-    "claude_judgement": "PENDING"
+    "claude_judgement": "PENDING",
+    "previous_uncorrected_review": {
+      "source_commit": "5b8287a8a1c3d460c75e22fba9da704eb05a4755",
+      "frames": 56,
+      "scale_guards": "PASS",
+      "idle_stance": "FAIL: arms held out around 30 degrees",
+      "action_silhouette": "Hat, coat, pouches and backpack recognizable in all sampled views; CPU stretch disclosed, not a proven native blocker"
+    }
   },
   "rules": "res://assets/characters/npc_identity/water_orsen/source/rules.json",
-  "recipe": "res://assets/characters/npc_identity/water_orsen/source/animation_recipe.json"
+  "recipe": "res://assets/characters/npc_identity/water_orsen/source/animation_recipe.json",
+  "candidate_model": "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb",
+  "candidate_model_sha256": "0f1ffc07edd3e032446ba6ac52e1ba6540abd70adaa33bd022754de4302f7908",
+  "correction": {
+    "source_commit_before_correction": "5b8287a8a1c3d460c75e22fba9da704eb05a4755",
+    "producer": "res://assets/characters/npc_identity/water_orsen/source/retarget_orsen_arms.py",
+    "producer_sha256_lf": "e7b4edd34d7c7a560934cdf15d5337c633e0d64bacd963aa84df075653777469",
+    "recipe": "res://assets/characters/npc_identity/water_orsen/source/arm_retarget_recipe.json",
+    "recipe_sha256": "6d234dbc6ecca80a1a2836bc121153aae3652533c6ac17ea8a2e6064160b12a9",
+    "input_model_sha256": "a3fd8bd4fa66936e2cace642e2ca0370a12353ce8f8eb288a204f6153d61bd91",
+    "output_model_sha256": "0f1ffc07edd3e032446ba6ac52e1ba6540abd70adaa33bd022754de4302f7908",
+    "composition": "Hamilton xyzw; Q_new=R_rest * D_orsen * inverse(R_rest) * Q_old; fresh cloned outputs/samplers across exactly 14 upper-arm rotation tracks, other channels/rest/mesh/skin/UV/textures/times unchanged",
+    "rest_local_bias_xyzw": {
+      "Left": [
+        -0.08864801222504194,
+        6.679065626468872e-07,
+        -0.16635793664757212,
+        0.9820725891188613
+      ],
+      "Right": [
+        -0.09735926940950022,
+        4.5585593727181953e-07,
+        0.17843769734904744,
+        0.9791226489215539
+      ]
+    },
+    "target_upper_arm_degrees_from_down": 10,
+    "changed_rotation_tracks": 14,
+    "cpu_preservation": "PASS: original BIN prefix and all non-target JSON/data preserved; skinned rest positions, weights and UVs exact; other channels/key times unchanged",
+    "finite_skinned_pose_samples": 28,
+    "idle_upper_arm_degrees_from_down": [
+      {
+        "phase": 0.125,
+        "Left": 9.150667646826987,
+        "Right": 8.934033453599165
+      },
+      {
+        "phase": 0.375,
+        "Left": 9.254215111653314,
+        "Right": 8.830609258905298
+      },
+      {
+        "phase": 0.625,
+        "Left": 7.969337228120302,
+        "Right": 7.600952180652726
+      },
+      {
+        "phase": 0.875,
+        "Left": 7.860969397605735,
+        "Right": 7.709247150487857
+      }
+    ],
+    "native_review": "PENDING"
+  }
 }

@@ -1,0 +1,160 @@
+{
+  "status": "ROOT_AUTHORIZED_EXACT_ORSEN_CORRECTION",
+  "actor_id": "water_orsen",
+  "input_model": "assets_raw/water_orsen/local-bake-v1/orsen_animated.glb",
+  "input_sha256": "a3fd8bd4fa66936e2cace642e2ca0370a12353ce8f8eb288a204f6153d61bd91",
+  "target_degrees_outward_from_down": 10,
+  "bias_xyzw": {
+    "Left": [
+      -0.08864801222504194,
+      6.679065626468872e-07,
+      -0.16635793664757212,
+      0.9820725891188613
+    ],
+    "Right": [
+      -0.09735926940950022,
+      4.5585593727181953e-07,
+      0.17843769734904744,
+      0.9791226489215539
+    ]
+  },
+  "composition": "Hamilton xyzw; Q_new=R_rest * D_orsen * inverse(R_rest) * Q_old; fresh cloned outputs/samplers across exactly 14 upper-arm rotation tracks, other channels/rest/mesh/skin/UV/textures/times unchanged",
+  "channels": [
+    {
+      "clip": "idle",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "sampler": 28,
+          "output_accessor": 37,
+          "interpolation": "LINEAR",
+          "output_count": 97
+        },
+        {
+          "bone": "RightArm",
+          "sampler": 40,
+          "output_accessor": 49,
+          "interpolation": "LINEAR",
+          "output_count": 97
+        }
+      ]
+    },
+    {
+      "clip": "walk",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "sampler": 28,
+          "output_accessor": 111,
+          "interpolation": "LINEAR",
+          "output_count": 16
+        },
+        {
+          "bone": "RightArm",
+          "sampler": 40,
+          "output_accessor": 123,
+          "interpolation": "LINEAR",
+          "output_count": 16
+        }
+      ]
+    },
+    {
+      "clip": "sprint",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "sampler": 28,
+          "output_accessor": 185,
+          "interpolation": "LINEAR",
+          "output_count": 12
+        },
+        {
+          "bone": "RightArm",
+          "sampler": 40,
+          "output_accessor": 197,
+          "interpolation": "LINEAR",
+          "output_count": 12
+        }
+      ]
+    },
+    {
+      "clip": "jump",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "sampler": 28,
+          "output_accessor": 259,
+          "interpolation": "LINEAR",
+          "output_count": 29
+        },
+        {
+          "bone": "RightArm",
+          "sampler": 40,
+          "output_accessor": 271,
+          "interpolation": "LINEAR",
+          "output_count": 29
+        }
+      ]
+    },
+    {
+      "clip": "throw",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "sampler": 28,
+          "output_accessor": 333,
+          "interpolation": "LINEAR",
+          "output_count": 25
+        },
+        {
+          "bone": "RightArm",
+          "sampler": 40,
+          "output_accessor": 345,
+          "interpolation": "LINEAR",
+          "output_count": 25
+        }
+      ]
+    },
+    {
+      "clip": "chop",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "sampler": 28,
+          "output_accessor": 405,
+          "interpolation": "LINEAR",
+          "output_count": 16
+        },
+        {
+          "bone": "RightArm",
+          "sampler": 40,
+          "output_accessor": 417,
+          "interpolation": "LINEAR",
+          "output_count": 16
+        }
+      ]
+    },
+    {
+      "clip": "defeated",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "sampler": 28,
+          "output_accessor": 479,
+          "interpolation": "LINEAR",
+          "output_count": 37
+        },
+        {
+          "bone": "RightArm",
+          "sampler": 40,
+          "output_accessor": 491,
+          "interpolation": "LINEAR",
+          "output_count": 37
+        }
+      ]
+    }
+  ],
+  "measured_idle": "Left 29.5-30.9 degrees, right 30.9-32.4 degrees from down before correction",
+  "limitation": "An arm-only stance correction does not fix or certify rear-torso/backpack edge stretch. Root native views must evaluate that separate risk first. 10 degrees is a proposed clearance target, not approval.",
+  "native_before_review": "Root exact source 5b8287a8a1c3d460c75e22fba9da704eb05a4755: 56 sampled Low frames passed scale guards; idle arms visually failed for ~30-degree spread; action silhouette recognizable; native corrected review pending"
+}

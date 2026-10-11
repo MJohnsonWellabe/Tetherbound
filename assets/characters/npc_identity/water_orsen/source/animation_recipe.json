@@ -27,5 +27,5 @@
     "defeated": 36
   },
   "fps": 24,
-  "postprocessing": "NONE; no arm correction applied"
+  "postprocessing": "Orsen-specific authorized 14-track arm stance correction; see arm_retarget_recipe.json and provenance.json. Original full-bake output hash above retained as the correction input."
 }
