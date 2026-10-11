@@ -105,6 +105,8 @@ func _run() -> void:
 	game.save_system = _saver
 	session.call("_owner_passive_service")
 	_check(_saver.save_character_prepared(game, CHARACTER) == true, "the fixture's initial character is BOOL-saved in scratch")
+	# Seed chapter entry only; the real chapter/ledger produces the offer fact.
+	game.world.flags.set_flag("stormwood:act_ii_complete")
 	game.world.flags.set_flag(ENDING.FREED_FLAG)
 	var conversations: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(
 		"res://data/dialogue/stormwood.json")) as Dictionary).conversations
@@ -369,6 +371,7 @@ func _mount(game: Node, world_id: String) -> Dictionary:
 	else:
 		state.world_id = world_id
 		WORLD_IDENTITY.ensure(state)
+		state.flags.set_flag("stormwood:act_ii_complete")
 		state.flags.set_flag(ENDING.FREED_FLAG)
 	game.world = state
 	game.call("_ensure_containers")
@@ -476,6 +479,7 @@ func _reset_character(game: Node) -> void:
 	game.world.reset()
 	game.world.world_id = "stormheart-choice-fixture"
 	WORLD_IDENTITY.ensure(game.world)
+	game.world.flags.set_flag("stormwood:act_ii_complete")
 	game.world.flags.set_flag(ENDING.FREED_FLAG)
 	game.call("_ensure_containers")
 	_check(_saver.save_character_prepared(game, CHARACTER) == true,
