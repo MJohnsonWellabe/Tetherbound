@@ -33,7 +33,8 @@ func _run() -> void:
 			"weather binds the shipping production clock/look node")
 		_check(bindings.get("player_path") == NodePath("../Player") and "Player" in root_nodes,
 			"weather binds the shipping local player for rain following")
-	_check(WEATHER.get_base_script() == SHARED_WEATHER,
+	var weather_script: Script = WEATHER
+	_check(weather_script.get_base_script() == SHARED_WEATHER,
 		"adapter inherits real named-weather and rain implementation")
 	var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
 		"res://data/config/cloudreach_visual.json"))
