@@ -1,0 +1,6 @@
+Item: P2-022 (Cloudreach summit aviary), cloudreach_aviary.json crown_arcade.enabled false -> true.
+Tool: tools/phase2_capture_locations.gd via render.yml, Low preset, gl_compatibility, 1280x720, day+night, approach+close, --subset=summit_eyrie.
+Before: main 078772372c458ea20c286041dbc9edb1699851e5, render run 38092596714 (8/8 frames).
+After:  tb/coordinator-all 36a2c48a24fdf0ffecd4e2b6315da42032cccf64, render run 38094691197 (8/8 frames).
+Note: at these catalog stands the before/after frames are nearly identical; the arcade may sit outside these views.
+Sheet: before-after-low.jpg, left = before (main), right = after. Composited with tools/sheet.py.

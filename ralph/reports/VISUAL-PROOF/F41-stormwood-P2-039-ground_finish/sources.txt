@@ -1,0 +1,6 @@
+Item: P2-039 (Stormwood forest ground and distance layers), stormwood_ground_finish.json enabled false -> true (flowers tiers also enabled).
+Tool: tools/phase2_capture_locations.gd via render.yml, Low preset, gl_compatibility, 1280x720, day, approach+close; subsets the_struck_sentinel, crown_overlook, crown_heartstone.
+Before: main 078772372c458ea20c286041dbc9edb1699851e5, render run 38096532989 (10/10 frames).
+After:  tb/coordinator-all 36a2c48a24fdf0ffecd4e2b6315da42032cccf64, render run 38097693804 (10/10 frames).
+Note: wild creature spawns differ between runs (row 06 before is occluded by a wild creature at the camera); not part of the change.
+Sheet: before-after-low.jpg, left = before (main), right = after. Composited with tools/sheet.py.

@@ -1,0 +1,6 @@
+Item: F38 meadows_catalog_presentation (village dressing: doorstep benches/pots/ferns, Crossing Hall banners/trim, pond and verge cover, road clearances; nearest catalog row P2-006 settlements). meadows_catalog_presentation.json enabled false -> true.
+Tool: tools/phase2_capture_locations.gd via render.yml, Low preset, gl_compatibility, 1280x720, day, approach+close; subsets grandpa, meadows__landmark__village.
+Before: main 078772372c458ea20c286041dbc9edb1699851e5, render run 38098567981 (6/6 frames).
+After:  tb/coordinator-all 36a2c48a24fdf0ffecd4e2b6315da42032cccf64, render run 38100023748 (6/6 frames).
+Note: these catalog stands sit 20-60 m from the houses; doorstep-scale props barely resolve, so the frames differ little.
+Sheet: before-after-low.jpg, left = before (main), right = after. Composited with tools/sheet.py.

@@ -1,0 +1,6 @@
+Items: P2-009 (offshore water depth, water_offshore_visual.json retune) and P2-010 (Veilfall silhouette/falls, water_veilfall_falls_visual.json + water_veilfall_silhouette_visual.json enabled).
+Tool: tools/phase2_capture_locations.gd via render.yml, Low preset, gl_compatibility, 1280x720, day, approach+close views.
+Before: main 078772372c458ea20c286041dbc9edb1699851e5, render run 38090108614.
+After:  tb/coordinator-all 36a2c48a24fdf0ffecd4e2b6315da42032cccf64, render run 38091407228.
+Both runs: 16/18 frames; Veilfall cascade/white_cascade APPROACH views have no production-camera stand on either sha (close views captured).
+Sheet: before-after-low.jpg, left = before (main), right = after. Composited with tools/sheet.py.
