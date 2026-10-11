@@ -619,6 +619,390 @@
         "stormwood"
       ],
       "disclosure": "SCOUTING ONLY (coordinator 2026-10-11): generated mid-Stormwood boundary after Keeper Ondra's arch recipe, at Ondra's stance (-160, 2697.5), Crown arch unbuilt, for scouting Stormwood pieces crown_build -> settlement before the earned chain arrives. NOT earned and not an F19#5 checkpoint. Five ordered template UIDs/species at a generated L48 (redesign_level_curve conductor_run 47-49) with generated caps and full HP; prior facts as the stormwood profile; Stormwood act-I facts, lit ancient pairs a/b, the Verge/Hollows/Varga trainer defeats and arch_recipe_known are generated flags. Template inventory and tools; no placed buildings, harvest, battle-reward or transaction receipts are fabricated; the Crown arch is left for the crown_build piece to build by input. Claims no earned segment PASS."
+    },
+    "f44_meadows": {
+      "boundary": "meadows_settled",
+      "realm": "meadows",
+      "day": 8,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "stronghold_marker": "machine_foot"
+      },
+      "party_levels": [
+        35,
+        35,
+        35,
+        35,
+        35
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d"
+      ],
+      "personal_flags": [
+        "legendary_refused"
+      ],
+      "inventory_add": {
+        "tidewake_portal_key": 1
+      },
+      "character_fields": {
+        "portal_unlocks": [],
+        "relics_held": [
+          "meadows"
+        ],
+        "relics_hung": []
+      },
+      "world_portal_unlocks": [],
+      "disclosure": "F44#0 rematch witness input (Meadows): the 'tidewake' post-Warden Meadows profile with the five raised to L35 for the L33 relay_captain r1 rematch band. Generated setup only: no rematch receipt, cooldown or payout is fabricated."
+    },
+    "f44_tidewake": {
+      "boundary": "tidewake_settled",
+      "realm": "water",
+      "day": 12,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "water_dock": true
+      },
+      "party_levels": [
+        45,
+        45,
+        45,
+        45,
+        45
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "water_aquaryn_resolved",
+        "water_dock_salt_crown_landing_charted",
+        "water_sluice_west_disabled",
+        "water_sluice_east_disabled",
+        "defeated_water_trainer_bex",
+        "defeated_water_trainer_calder",
+        "defeated_water_trainer_venn",
+        "water_dock_sluice_isle_both_controls_disabled",
+        "water_captain_nerissa_defeated",
+        "water_veilfall_intake_stopped",
+        "water_veilfall_return_opened",
+        "water_guardian_freed",
+        "water_tether_disabled",
+        "water_guardian_settled",
+        "water_currents_restored",
+        "realm_relic_water_earned",
+        "water_civilian_departure_complete",
+        "water_dock_reedhaven_repaired",
+        "water_swim_lesson_complete",
+        "defeated_water_trainer_tovin",
+        "water_dock_brine_steps_trial_won",
+        "defeated_water_trainer_solm",
+        "defeated_water_trainer_irva",
+        "water_shellwatch_residents_freed",
+        "water_shellwatch_pump_disabled",
+        "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "defeated_water_trainer_yara"
+      ],
+      "personal_flags": [
+        "legendary_refused",
+        "water_chapter_started",
+        "water_cordage_recipe_gated",
+        "water_swim_lesson_briefed",
+        "water_swim_stone_earned",
+        "water:legendary_refused"
+      ],
+      "inventory_add": {
+        "cloudreach_portal_key": 1
+      },
+      "character_fields": {
+        "portal_unlocks": [
+          "tidewake"
+        ],
+        "relics_held": [
+          "tidewake"
+        ],
+        "relics_hung": [
+          "meadows"
+        ]
+      },
+      "world_portal_unlocks": [
+        "tidewake"
+      ],
+      "disclosure": "F44#0 rematch witness input (Tidewake): the 'cloudreach' post-Nerissa Tidewake profile plus Yara's original defeat flag, five raised to L45 for the L43 water_trainer_yara r1 band. Generated setup only: no rematch receipt, cooldown or payout is fabricated."
+    },
+    "f44_cloudreach": {
+      "boundary": "cloudreach_settled",
+      "realm": "cloudreach",
+      "day": 16,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "cloudreach_reward": true
+      },
+      "party_levels": [
+        55,
+        55,
+        55,
+        55,
+        55
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "water_aquaryn_resolved",
+        "water_dock_salt_crown_landing_charted",
+        "water_sluice_west_disabled",
+        "water_sluice_east_disabled",
+        "defeated_water_trainer_bex",
+        "defeated_water_trainer_calder",
+        "defeated_water_trainer_venn",
+        "water_dock_sluice_isle_both_controls_disabled",
+        "water_captain_nerissa_defeated",
+        "water_veilfall_intake_stopped",
+        "water_veilfall_return_opened",
+        "water_guardian_freed",
+        "water_tether_disabled",
+        "water_guardian_settled",
+        "water_currents_restored",
+        "realm_relic_water_earned",
+        "water_civilian_departure_complete",
+        "cloudreach_chapter_started",
+        "cloudreach_crisis_learned",
+        "cloudreach_lower_anchors_investigated",
+        "causeway_survivors_reconnected",
+        "windscar_aerie_prepared",
+        "cloudreach_act_i_complete",
+        "fly_traversal_unlocked",
+        "sky_shrine_reached",
+        "storm_anchor_engine_truth_learned",
+        "cloudreach_upper_route_unlocked",
+        "cloudreach_act_ii_complete",
+        "cloudreach_upper_anchors_disabled",
+        "summit_extraction_engine_reached",
+        "captain_veyra_defeated",
+        "storm_anchor_network_disabled",
+        "cloudreach_winds_restored",
+        "cloudreach_chapter_complete",
+        "storm_anchor_lower_west_mapped",
+        "storm_anchor_lower_east_mapped",
+        "storm_anchor_upper_west_disabled",
+        "storm_anchor_upper_east_disabled",
+        "cloudreach_summit_relay_west_disabled",
+        "cloudreach_summit_relay_crown_disabled",
+        "cloudreach_summit_relay_east_disabled",
+        "realm_heart_cloudreach_earned",
+        "realm_key_stormwood",
+        "stormward_route_revealed",
+        "water_dock_reedhaven_repaired",
+        "water_swim_lesson_complete",
+        "defeated_water_trainer_tovin",
+        "water_dock_brine_steps_trial_won",
+        "defeated_water_trainer_solm",
+        "defeated_water_trainer_irva",
+        "water_shellwatch_residents_freed",
+        "water_shellwatch_pump_disabled",
+        "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "defeated_cloudreach_voss"
+      ],
+      "personal_flags": [
+        "legendary_refused",
+        "water_chapter_started",
+        "water_cordage_recipe_gated",
+        "water_swim_lesson_briefed",
+        "water_swim_stone_earned",
+        "water:legendary_refused",
+        "fly_tutorial_completed"
+      ],
+      "inventory_add": {
+        "stormwood_portal_key": 1
+      },
+      "character_fields": {
+        "portal_unlocks": [
+          "tidewake",
+          "cloudreach"
+        ],
+        "relics_held": [
+          "cloudreach"
+        ],
+        "relics_hung": [
+          "meadows",
+          "tidewake"
+        ]
+      },
+      "world_portal_unlocks": [
+        "tidewake",
+        "cloudreach"
+      ],
+      "disclosure": "F44#0 rematch witness input (Cloudreach): the 'stormwood' post-Veyra Cloudreach profile plus Voss's original defeat flag, five raised to L55 (the generator's maximum) for the L55 officer_voss_summit_approach r1 band. Generated setup only: no rematch receipt, cooldown or payout is fabricated."
+    },
+    "f44_stormwood": {
+      "boundary": "cloudreach_settled",
+      "realm": "cloudreach",
+      "day": 16,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "cloudreach_reward": true
+      },
+      "party_levels": [
+        55,
+        55,
+        55,
+        55,
+        55
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "water_aquaryn_resolved",
+        "water_dock_salt_crown_landing_charted",
+        "water_sluice_west_disabled",
+        "water_sluice_east_disabled",
+        "defeated_water_trainer_bex",
+        "defeated_water_trainer_calder",
+        "defeated_water_trainer_venn",
+        "water_dock_sluice_isle_both_controls_disabled",
+        "water_captain_nerissa_defeated",
+        "water_veilfall_intake_stopped",
+        "water_veilfall_return_opened",
+        "water_guardian_freed",
+        "water_tether_disabled",
+        "water_guardian_settled",
+        "water_currents_restored",
+        "realm_relic_water_earned",
+        "water_civilian_departure_complete",
+        "cloudreach_chapter_started",
+        "cloudreach_crisis_learned",
+        "cloudreach_lower_anchors_investigated",
+        "causeway_survivors_reconnected",
+        "windscar_aerie_prepared",
+        "cloudreach_act_i_complete",
+        "fly_traversal_unlocked",
+        "sky_shrine_reached",
+        "storm_anchor_engine_truth_learned",
+        "cloudreach_upper_route_unlocked",
+        "cloudreach_act_ii_complete",
+        "cloudreach_upper_anchors_disabled",
+        "summit_extraction_engine_reached",
+        "captain_veyra_defeated",
+        "storm_anchor_network_disabled",
+        "cloudreach_winds_restored",
+        "cloudreach_chapter_complete",
+        "storm_anchor_lower_west_mapped",
+        "storm_anchor_lower_east_mapped",
+        "storm_anchor_upper_west_disabled",
+        "storm_anchor_upper_east_disabled",
+        "cloudreach_summit_relay_west_disabled",
+        "cloudreach_summit_relay_crown_disabled",
+        "cloudreach_summit_relay_east_disabled",
+        "realm_heart_cloudreach_earned",
+        "realm_key_stormwood",
+        "stormward_route_revealed",
+        "water_dock_reedhaven_repaired",
+        "water_swim_lesson_complete",
+        "defeated_water_trainer_tovin",
+        "water_dock_brine_steps_trial_won",
+        "defeated_water_trainer_solm",
+        "defeated_water_trainer_irva",
+        "water_shellwatch_residents_freed",
+        "water_shellwatch_pump_disabled",
+        "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "defeated_cloudreach_voss",
+        "stormwood:trainer:officer_maren_verge_rod:defeated",
+        "stormwood:marrow_defeated"
+      ],
+      "personal_flags": [
+        "legendary_refused",
+        "water_chapter_started",
+        "water_cordage_recipe_gated",
+        "water_swim_lesson_briefed",
+        "water_swim_stone_earned",
+        "water:legendary_refused",
+        "fly_tutorial_completed",
+        "regional_credits_seen"
+      ],
+      "inventory_add": {
+        "stormwood_portal_key": 1
+      },
+      "character_fields": {
+        "portal_unlocks": [
+          "tidewake",
+          "cloudreach"
+        ],
+        "relics_held": [
+          "cloudreach"
+        ],
+        "relics_hung": [
+          "meadows",
+          "tidewake"
+        ]
+      },
+      "world_portal_unlocks": [
+        "tidewake",
+        "cloudreach"
+      ],
+      "disclosure": "F44#0 rematch witness input (Stormwood, post-credits): the 'stormwood' post-Veyra Cloudreach profile, generated with --enter=stormwood:stormwood (the ordinary F49 portal leg into Stormwood), plus Voss's and Maren's original defeats, the Marrow climax flag and this character's regional_credits_seen; five raised to L55 (the generator's maximum) for the L58 endgame leader band. Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
     }
   }
 }

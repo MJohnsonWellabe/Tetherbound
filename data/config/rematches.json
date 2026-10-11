@@ -1009,7 +1009,7 @@
     }
   },
   "witnesses": {
-    "meadows": "relay_captain",
+    "meadows": "captain_riverwatch",
     "tidewake": "water_trainer_yara",
     "cloudreach": "officer_voss_summit_approach",
     "stormwood": "officer_maren_verge_rod"
