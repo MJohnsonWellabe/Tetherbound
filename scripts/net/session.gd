@@ -502,12 +502,26 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 		var service := get_node_or_null(^"FoundationComposition/BreakthroughService")
 		if service == null or service.call("accept_duel_offer", envelope.intent, result) != true:
 			# Admission is already authoritative; inability to present must leave
-			# that same encounter rather than create a second challenge.
-			var world_node := _portal_world_node(str(_game().get("current_realm")))
-			if world_node != null:
+			# that same encounter through its original realm's fenced doorway.
+			var admission: Dictionary = result.get("record", {}) if result.get("record") is Dictionary else {}
+			var encounter_id: String = str(result.get("encounter_id", ""))
+			var realm: String = str(admission.get("realm", ""))
+			var cleanup: Dictionary = {}
+			var world_node := _portal_world_node(realm)
+			if world_node != null and not encounter_id.is_empty() and admission.get("encounter_id") == encounter_id:
 				for candidate: Node in world_node.find_children("*", "Node", true, false):
-					if candidate.get_script() != null and FOUNDATION_DIRECTORS.has(candidate.get_script().resource_path):
-						candidate.call("submit_encounter_intent", {"kind": "disengage", "encounter_id": result.get("encounter_id", "")})
+					if _portal_director_owned_by(world_node, self, candidate) \
+							and candidate.call("_encounter_realm") == realm:
+						cleanup = candidate.call("submit_encounter_intent", {"kind": "disengage", "encounter_id": encounter_id})
+						break
+			# Release only this chooser's exact pending intent. This local failure
+			# is separate from the unchanged host reply below and claims no save.
+			homestead_action_completed.emit("master_duel", envelope.intent.duplicate(true), {
+				"ok": false, "resolved": false, "settled": false, "durable": false,
+				"owner_saved": false, "owner_acknowledged": false, "terminal_refusal": true,
+				"code": "master_duel_presentation_failed", "encounter_id": encounter_id,
+				"reason": "The duel could not be shown here. Try again when this challenge has ended.",
+				"cleanup_pending": cleanup.get("pending") == true, "host_admission": result.duplicate(true)})
 	elif envelope.op == "rematch_start" and result.get("ok") == true:
 		_foundation_requests.erase(correlation)
 	foundation_reply_received.emit(envelope.duplicate(true), result.duplicate(true))
