@@ -2,7 +2,7 @@
   "schema_version": 1,
   "enabled": true,
   "scope": "peer-local presentation; no durable state, RPC, transaction or save schema",
-  "provenance": "Unmodified installed Quaternius Medieval Village/Fantasy Props/Stylized Nature. Duplicated banner tint only. No acquisition/generation.",
+  "provenance": "Installed Quaternius Medieval Village/Fantasy Props/Stylized Nature. Local Bush_Common instances reuse the Meadows vegetation layer leaf texture and tint; duplicated banner tint. No acquisition/generation.",
   "cover_layers": [
     "grass",
     "drygrass",
@@ -121,6 +121,118 @@
         14
       ],
       "radius_m": 3.3
+    },
+    {
+      "id": "home_square_bench",
+      "at": [
+        14.2,
+        8.0
+      ],
+      "radius_m": 1.5
+    },
+    {
+      "id": "home_square_bucket",
+      "at": [
+        16.15,
+        8.0
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "home_square_empty_crate",
+      "at": [
+        16.85,
+        8.15
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "square_water_bucket",
+      "at": [
+        35.5,
+        5.9
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "square_water_barrel",
+      "at": [
+        36.35,
+        5.2
+      ],
+      "radius_m": 0.55
+    },
+    {
+      "id": "shop_produce_barrel",
+      "at": [
+        30.8,
+        9.0
+      ],
+      "radius_m": 0.55
+    },
+    {
+      "id": "workshop_bucket",
+      "at": [
+        30.5,
+        21.0
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "workshop_supply_crate",
+      "at": [
+        31.5,
+        21.15
+      ],
+      "radius_m": 0.75
+    },
+    {
+      "id": "halda_water_bucket",
+      "at": [
+        48.2,
+        20.5
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "research_supply_bag",
+      "at": [
+        60.6,
+        8.45
+      ],
+      "radius_m": 0.55
+    },
+    {
+      "id": "ranger_supply_crate",
+      "at": [
+        66.2,
+        20.5
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "guest_luggage",
+      "at": [
+        78.6,
+        8.5
+      ],
+      "radius_m": 0.55
+    },
+    {
+      "id": "cottage_water_bucket",
+      "at": [
+        84.15,
+        20.4
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "home_square_pot",
+      "at": [
+        12.25,
+        8.0
+      ],
+      "radius_m": 0.45
     }
   ],
   "placements": [
@@ -635,7 +747,13 @@
       ],
       "yaw_deg": 121,
       "scale": 0.8,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "pond_west_3",
@@ -687,7 +805,13 @@
       ],
       "yaw_deg": 121,
       "scale": 0.8,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "pond_east_3",
@@ -739,7 +863,13 @@
       ],
       "yaw_deg": 121,
       "scale": 0.8,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "pond_north_3",
@@ -765,7 +895,13 @@
       ],
       "yaw_deg": 0,
       "scale": 0.65,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "village_verge_west_1",
@@ -804,7 +940,13 @@
       ],
       "yaw_deg": 0,
       "scale": 0.65,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "village_verge_east_1",
@@ -843,7 +985,13 @@
       ],
       "yaw_deg": 0,
       "scale": 0.65,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "hall_verge_north_1",
@@ -882,7 +1030,13 @@
       ],
       "yaw_deg": 0,
       "scale": 0.65,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "hall_verge_south_1",
@@ -908,6 +1062,215 @@
       ],
       "yaw_deg": 94,
       "scale": 0.35,
+      "grounded": true
+    },
+    {
+      "id": "home_square_bench",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bench.gltf",
+      "at": [
+        14.2,
+        0,
+        8.0
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 1.5
+    },
+    {
+      "id": "home_square_bucket",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        16.15,
+        0,
+        8.0
+      ],
+      "yaw_deg": -12,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "home_square_empty_crate",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/FarmCrate_Empty.gltf",
+      "at": [
+        16.85,
+        0,
+        8.15
+      ],
+      "yaw_deg": 14,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "square_water_bucket",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        35.5,
+        0,
+        5.9
+      ],
+      "yaw_deg": -15,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "square_water_barrel",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+      "at": [
+        36.35,
+        0,
+        5.2
+      ],
+      "yaw_deg": 8,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.55
+    },
+    {
+      "id": "shop_produce_barrel",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Barrel_Apples.gltf",
+      "at": [
+        30.8,
+        0,
+        9.0
+      ],
+      "yaw_deg": -8,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.55
+    },
+    {
+      "id": "workshop_bucket",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        30.5,
+        0,
+        21.0
+      ],
+      "yaw_deg": -22,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "workshop_supply_crate",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "at": [
+        31.5,
+        0,
+        21.15
+      ],
+      "yaw_deg": 8,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.75
+    },
+    {
+      "id": "halda_water_bucket",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        48.2,
+        0,
+        20.5
+      ],
+      "yaw_deg": 18,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "research_supply_bag",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bag.gltf",
+      "at": [
+        60.6,
+        0,
+        8.45
+      ],
+      "yaw_deg": -18,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.55
+    },
+    {
+      "id": "ranger_supply_crate",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/FarmCrate_Empty.gltf",
+      "at": [
+        66.2,
+        0,
+        20.5
+      ],
+      "yaw_deg": 12,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "guest_luggage",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bag.gltf",
+      "at": [
+        78.6,
+        0,
+        8.5
+      ],
+      "yaw_deg": -12,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.55
+    },
+    {
+      "id": "cottage_water_bucket",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        84.15,
+        0,
+        20.4
+      ],
+      "yaw_deg": 16,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "home_square_pot",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+      "at": [
+        12.25,
+        0,
+        8.0
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "home_square_fern",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        12.25,
+        0.18,
+        8.0
+      ],
+      "yaw_deg": 0,
+      "scale": 0.65,
       "grounded": true
     }
   ]
