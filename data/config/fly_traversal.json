@@ -20,6 +20,17 @@
   "camera_distance": 7.5,
   "camera_height": 2.0,
   "hang_pose": {"upper_lateral": 0.8, "forearm_lateral": 0.65},
+  "landing_presentation": {
+    "duration_s": 0.85,
+    "settle_fraction": 0.7,
+    "fold_blend_s": 0.18,
+    "side_m": 1.2,
+    "forward_m": 2.4,
+    "probe_up_m": 0.6,
+    "probe_down_m": 1.0,
+    "foot_clearance_m": 0.08,
+    "cancel_distance_m": 8.0
+  },
   "mentor_loaner": {
     "species_id": "galecrest",
     "realm_id": "cloudreach",
