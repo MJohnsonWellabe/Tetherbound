@@ -2900,17 +2900,17 @@
    "counts": {
     "met": 3,
     "partial": 0,
-    "in_progress": 2,
+    "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
-    "failing": 0
+    "failing": 1
    },
    "criteria": [
     {
      "text": "An agent-piloted normal route estimates a 15–25 hour clear; the owner's play pass confirms the range.",
-     "status": "in_progress",
+     "status": "failing",
      "evidence": "ralph/reports/R3-F47/implementation-evidence.json (route command queued, never run)",
-     "gap": "First agent estimate 8-13 h (9e8b12c2f) is incomplete: route runners skip the five Master cycles and the homestead gear loop that PROGRESSION §4 puts on the normal route, only Cloudreach was measured, and optional activities were assumed. Systems lane is re-measuring all chapters, including Masters, feasts and gear. If still short, deepen preparation choices (PROGRESSION §4), not padding. The owner's playtest is the final check.",
+     "gap": "Agent estimate v2 (a5d3ce59e): 8.8-12.5 h raw agent sim (required path 2.5-3.9 h; 5 Master cycles 0.35 h; gear 0.04 h; optional activities 1.9-4.2 h; grind budget 4 h), below 15-25 h. Agent speed is a lower bound. Coordinator decision 5:07 PM: no content change on the agent number alone; the owner's playtest (F49#1) decides, and PROGRESSION §4's 'deepen preparation choices' options are ready if it also runs short. Feast cook/feed time is unmeasured (feast smoke went heartbeat-silent twice).",
      "note": "Agent half, partial (home-key lane 4e2a873a, ralph/reports/EV-HOME-KEY/F47-0-estimate.md): tools/f47_capture_route.gd only records a human playing the real title, so it was estimated from route receipts instead. Cloudreach, fully measured, takes 3,042 s of simulated required-route play; 4 chapters at 46-51 min each is about 3.1-3.4 h of agent critical path. Hitting 15-25 h would need human play to take 4.4-8x the agent's time (exploration, optional activities, fights at human skill). Plausible but unmeasured: the owner's play pass decides.",
      "audit_index": 0
     },
