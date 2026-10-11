@@ -17,6 +17,7 @@ extends SceneTree
 const ENDING := preload("res://scripts/world/stormwood_ending.gd")
 const PANEL := preload("res://scenes/ui/dialogue_panel.tscn")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
+const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 const CHARACTER := "character-choice-a"
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const WORLD_STATE := preload("res://autoload/world_state.gd")
