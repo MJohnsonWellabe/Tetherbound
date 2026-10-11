@@ -1,5 +1,4 @@
 # F47 Cloudreach XP: designed play carries the curve (owner ruling A)
-
 US Central, 2026-10-11. Branch tb/ev-cloudreach-xp. The owner chose (A) at about 12:42 CT, superseding the 1A bonus tune.
 
 - **Finding:** the earned chain (fixtures cloudreach_01..04) reached the stronghold at L31. Arrival→stronghold paid 579–1512 XP per creature, against 18,781 for L31→L39. The chain fights no wilds, spends no Altar essence and feeds no candy.
