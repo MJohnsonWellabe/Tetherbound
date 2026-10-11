@@ -2900,18 +2900,18 @@
    "counts": {
     "met": 3,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 2,
+    "in_progress": 1,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "An agent-piloted normal route estimates a 15–25 hour clear; the owner's play pass confirms the range.",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "ralph/reports/R3-F47/implementation-evidence.json (route command queued, never run)",
-     "gap": "Agent half first: run tools/f47_capture_route.gd on the new-order route. Only the owner play-pass half then waits on the owner.",
-     "note": "Relabelled 2026-10-04: agent work (Codex/lane), not waiting on the owner.",
+     "gap": "Owner play pass confirms (or refutes) the 15-25 h clear; agent estimate ~3.1-3.4 h critical path.",
+     "note": "Agent half, partial (home-key lane 4e2a873a, ralph/reports/EV-HOME-KEY/F47-0-estimate.md): tools/f47_capture_route.gd only records a human playing the real title, so it was estimated from route receipts instead. Cloudreach, fully measured, takes 3,042 s of simulated required-route play; 4 chapters at 46-51 min each is about 3.1-3.4 h of agent critical path. Hitting 15-25 h would need human play to take 4.4-8x the agent's time (exploration, optional activities, fights at human skill). Plausible but unmeasured: the owner's play pass decides.",
      "audit_index": 0
     },
     {
