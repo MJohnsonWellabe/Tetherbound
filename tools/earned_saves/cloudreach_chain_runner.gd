@@ -351,6 +351,7 @@ func _run() -> void:
 		"events": (result.get("events", []) as Array).size(), "static_sidesteps": helper.static_sidesteps}
 	for record: Dictionary in helper.static_sidesteps:
 		disclosures.append("Static-collider stall withdrawn and retried after a disclosed stick sidestep (witness-route recovery): " + JSON.stringify(record))
+	_trainer_stall_diagnostic(helper)
 	for line: Variant in result.get("failures", []):
 		failures.append("%s: %s" % [segment, str(line)])
 	if failures.is_empty() and not bool(result.get("ok", false)):
@@ -373,6 +374,31 @@ func _run() -> void:
 	if failures.is_empty() and str(_party_uids()) != str(before.uids):
 		failures.append("Piece changed the ordered five creature UIDs")
 	_finish(failures.is_empty())
+
+
+## Read-only: a trainer battle still open after the piece names the gate
+## holding its outcome (no call that journals, retries or resolves anything).
+func _trainer_stall_diagnostic(helper: RefCounted) -> void:
+	var director: Node = helper.get("director")
+	if not is_instance_valid(director) or not bool(director.call("trainer_battle_active")): return
+	var manager: Node = helper.get("manager")
+	var encounter: Dictionary = director.get("_encounter")
+	var id := str(encounter.get("encounter_id", ""))
+	var spec: Dictionary = director.get("_trainer_spec")
+	var row := {"trainer": str(spec.get("id", "")), "encounter_id": id,
+		"boss_pending_win": director.get("_boss_pending_win"), "master_pending_win": director.get("_master_pending_win"),
+		"ordinary_round_exit": director.get("_ordinary_combat_round_exit"),
+		"trainer_send_delay": director.get("_trainer_send_delay"), "queue": (director.get("_trainer_queue") as Array).size() if director.get("_trainer_queue") is Array else -1,
+		"battle_sent": director.get("_trainer_battle_sent"),
+		"uses_durable_rewards": director.call("uses_durable_trainer_rewards", id) if not id.is_empty() else null,
+		"retained_boss_participants": director.call("retained_boss_participants"),
+		"manager_outcome": manager.call("outcome") if is_instance_valid(manager) and manager.has_method("outcome") else null,
+		"manager_fighting": manager.call("is_fighting") if is_instance_valid(manager) else null,
+		"input_owner": str(INPUT_OWNER.current(self)),
+		"is_host": game.session.call("is_host") if game.get("session") != null else null,
+		"handoff_enabled": game.session.call("config").get("redesign_boss_handoff_runtime_enabled") if game.get("session") != null else null}
+	disclosures.append("Trainer battle still open after the piece (read-only diagnostic): " + JSON.stringify(row))
+	print("CLOUDREACH TRAINER STALL " + JSON.stringify(row))
 
 
 ## Production title -> controller focus Load Game -> Autosave (slot 0).
