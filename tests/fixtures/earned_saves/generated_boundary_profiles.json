@@ -424,6 +424,59 @@
         "cloudreach"
       ],
       "disclosure": "Generated F19#5 Cloudreach boundary after piece 05 (stronghold) at the summit extraction threshold, for pieces 06 (Veyra + relay) and 07 (Stormward). The earned chain's piece 05 lost Officer Voss (L41-42) with the earned L31 five (level gap, coordinator ruling); this input is NOT earned. Five ordered template UIDs/species at a generated L40 (redesign_level_curve upper-Cloudreach band 39-42) with generated caps and full HP. Prior Meadows/Tidewake facts as the cloudreach profile; Cloudreach story flags through cloudreach_upper_route_unlocked mirror the earned 01-04 checkpoints; act-III flags through summit_extraction_engine_reached (including defeated_cloudreach_voss) are generated setup. Template inventory, not the earned carried items; no pickup, harvest, battle-reward or transaction receipts are fabricated. Day 16 at 120 s, pose on the summit deck at the threshold. Claims no prior earned segment PASS."
+    },
+    "f31_relic_power": {
+      "boundary": "meadows_settled",
+      "realm": "meadows",
+      "day": 8,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "stronghold_marker": "machine_foot"
+      },
+      "party_levels": [
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d"
+      ],
+      "personal_flags": [
+        "legendary_refused"
+      ],
+      "inventory_add": {
+        "tidewake_portal_key": 1
+      },
+      "character_fields": {
+        "portal_unlocks": [],
+        "relics_held": [
+          "meadows",
+          "tidewake"
+        ],
+        "relics_hung": []
+      },
+      "world_portal_unlocks": [],
+      "disclosure": "F31#2 relic power proof input (systems-a, 2026-10-11). Same generated post-machine Meadows finale as the tidewake profile, except the character also holds the Tidewake relic so a second Shrine Room hang can be tested before Tidewake is played. Held/hung relics, levels/caps/full HP, listed prior facts and the next key are generated setup; no hang, power or attachment receipt is fabricated. This input claims no prior earned segment PASS, continuous lineage or Tidewake route."
     }
   }
 }
