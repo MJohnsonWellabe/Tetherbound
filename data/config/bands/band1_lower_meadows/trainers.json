@@ -211,6 +211,7 @@
       "facing_deg": 180.0,
       "challenge": "tournament_quarter",
       "defeated": "tournament_quarter_beaten",
+      "victory_conversation": "tournament_quarter_beaten",
       "team": [
         {
           "species": "bramblebun",
@@ -251,6 +252,7 @@
       "facing_deg": 180.0,
       "challenge": "tournament_semi",
       "defeated": "tournament_semi_beaten",
+      "victory_conversation": "tournament_semi_beaten",
       "team": [
         {
           "species": "pipwing",
@@ -291,6 +293,7 @@
       "facing_deg": 180.0,
       "challenge": "tournament_final",
       "defeated": "tournament_final_beaten",
+      "victory_conversation": "tournament_final_beaten",
       "team": [
         {
           "species": "mudsnout",
