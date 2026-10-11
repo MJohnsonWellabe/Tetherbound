@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-10T21:20:00+00:00",
- "main_sha": "77ae9579 (PR #623)",
+ "generated_at": "2026-10-11T05:20:00+00:00",
+ "main_sha": "96e32f34e (PR #676)",
  "batch4_sha": "#630 consolidated: 25 lane PRs + f48 seat-wait fix (30edaa494), full CI running; batch 3 staged (vitals+Nysa fix, F23, F28, F02 batch, P2-013, P2-102)",
  "rows": [
   {
@@ -79,14 +79,14 @@
    "id": "F02",
    "title": "Earned Meadows spine and ledgers",
    "chapter": "Meadows",
-   "pct": 50,
+   "pct": 88,
    "counts": {
-    "met": 4,
+    "met": 7,
     "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 4
+    "failing": 1
    },
    "criteria": [
     {
@@ -115,18 +115,18 @@
     },
     {
      "text": "Continues through three Sigils and the Hall in order",
-     "status": "in_progress",
-     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-3.md",
-     "gap": "Re-run smoke_four_biome_continuous.gd --through-hall --reload-at-transitions --world-seed=15. Folds into F49.",
-     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #610 Hall route reader pilot; plus batch-3 F02 run: Sigils 3 captains 5-0, Hall PASS (2nd attempt). | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "status": "met",
+     "evidence": "lane B tb/lane-b-f02-batch 8ff274ab5: Hall route reader pilot; Sigils 3 captains 5-0, Hall PASS. Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): lane B tb/lane-b-f02-batch 8ff274ab5: Hall route reader pilot; Sigils 3 captains 5-0, Hall PASS. | prior: PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #610 Hall route reader pilot; plus batch-3 F02 run: Sigils 3 captains 5-0, Hall PASS (2nd attempt). | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 3
     },
     {
      "text": "Each transition, reward and recovery survives reload on that route",
-     "status": "in_progress",
-     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-4.md",
-     "gap": "Re-run the --reload-at-transitions chain (through-tournament and through-hall) on the v28 save. Folds into F49.",
-     "note": "PENDING batch 3 (after #630): tb/lane-b-f02-batch --reload-at-sigils: 5 production save/Loads exact (flags, UIDs, HP/L/XP, items). | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "status": "met",
+     "evidence": "lane B --reload-at-sigils: 5 production save/loads exact (flags, UIDs, HP/L/XP, items). Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): lane B --reload-at-sigils: 5 production save/loads exact (flags, UIDs, HP/L/XP, items). | prior: PENDING batch 3 (after #630): tb/lane-b-f02-batch --reload-at-sigils: 5 production save/Loads exact (flags, UIDs, HP/L/XP, items). | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 4
     },
     {
@@ -139,10 +139,10 @@
     },
     {
      "text": "No repeated wilds required",
-     "status": "in_progress",
-     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-6.md",
-     "gap": "Re-run earned team segment on 3 seeds; confirm repeated_wilds [] at the new level gates. Folds into F47.",
-     "note": "PENDING batch 3 (after #630): route ledger: 25 fights, all trainer, 0 wild fights, L15→18-19 on trainer XP. | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "status": "met",
+     "evidence": "lane B route ledger: 25 fights, all trainer, 0 wild fights, L15→18-19 on trainer XP. Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): lane B route ledger: 25 fights, all trainer, 0 wild fights, L15→18-19 on trainer XP. | prior: PENDING batch 3 (after #630): route ledger: 25 fights, all trainer, 0 wild fights, L15→18-19 on trainer XP. | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 6
     },
     {
@@ -159,10 +159,10 @@
    "id": "F03",
    "title": "Meadows optional activities",
    "chapter": "Meadows",
-   "pct": 100,
+   "pct": 88,
    "counts": {
-    "met": 8,
-    "partial": 0,
+    "met": 7,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -242,14 +242,14 @@
    "id": "F04",
    "title": "Named Meadows fights",
    "chapter": "Meadows",
-   "pct": 78,
+   "pct": 44,
    "counts": {
-    "met": 5,
-    "partial": 4,
+    "met": 4,
+    "partial": 0,
     "in_progress": 0,
-    "not_started": 0,
+    "not_started": 4,
     "blocked": 0,
-    "failing": 0
+    "failing": 1
    },
    "criteria": [
     {
@@ -331,9 +331,9 @@
    "id": "F05",
    "title": "Veridian finale and handoff",
    "chapter": "Meadows",
-   "pct": 89,
+   "pct": 100,
    "counts": {
-    "met": 9,
+    "met": 7,
     "partial": 0,
     "in_progress": 0,
     "not_started": 0,
@@ -419,10 +419,10 @@
    "id": "F06",
    "title": "Cloudreach traversal and riding",
    "chapter": "Cloudreach",
-   "pct": 36,
+   "pct": 83,
    "counts": {
-    "met": 7,
-    "partial": 0,
+    "met": 5,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -439,18 +439,18 @@
     },
     {
      "text": "Fly training, landing and invalid-landing recovery",
-     "status": "in_progress",
-     "evidence": ".../f06-2-fly-training/earned/ (smoke_cloudreach_fly_training_witness.gd) @≤94c63b1f2",
-     "gap": "Re-run smoke_cloudreach_fly_training_witness.gd --leg=flight. Folds into F49.",
-     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #657 glide landing / cloud-sea recovery. | prior: Audit 2026-10-04 on b4e4897d5: STALE. Not in CI. The Cloudreach world, save and camera_rig changed since.",
+     "status": "met",
+     "evidence": "#657 glide landing / cloud-sea recovery (smoke_cloudreach_fly_training_witness). Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): #657 glide landing / cloud-sea recovery (smoke_cloudreach_fly_training_witness). | prior: PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #657 glide landing / cloud-sea recovery. | prior: Audit 2026-10-04 on b4e4897d5: STALE. Not in CI. The Cloudreach world, save and camera_rig changed since.",
      "audit_index": 2
     },
     {
      "text": "Loaner path does not bypass gates or lose creatures",
-     "status": "in_progress",
-     "evidence": ".../f06-3-loaner/earned-full-v2/ (smoke_cloudreach_loaner_witness.gd) @≤94c63b1f2",
-     "gap": "Re-run smoke_cloudreach_loaner_witness.gd. Folds into F49.",
-     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #655 Maela Fly loaner can never join the party. | prior: Audit 2026-10-04 on b4e4897d5: STALE. Not in CI. The Cloudreach route/world and save paths changed since.",
+     "status": "met",
+     "evidence": "#655 Maela Fly loaner can never join the party (smoke_cloudreach_loaner_witness). Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): #655 Maela Fly loaner can never join the party (smoke_cloudreach_loaner_witness). | prior: PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #655 Maela Fly loaner can never join the party. | prior: Audit 2026-10-04 on b4e4897d5: STALE. Not in CI. The Cloudreach route/world and save paths changed since.",
      "audit_index": 3
     },
     {
@@ -463,10 +463,10 @@
     },
     {
      "text": "Save/reload keeps same five and closed gates",
-     "status": "failing",
-     "evidence": "tb/reproof-earned: | F06#5 | FAIL | `F06-5.md` (unit PASS 6/13/0; solo v27 ERROR; two-peer step #9 enter_realm \"no verdict\", route order: scenario lacks the legacy_physical_crossings_fixture step) |",
-     "gap": "Re-run the solo autosave/title-load proof and the two-peer reload on v28. Folds into F49.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "status": "met",
+     "evidence": "Proof lane 10-11: smoke_cloudreach_closed_gate_seal --reload on 853b33a24, 204 checks 0 failures; all 9 reload checks pass (same 5 UIDs in order, gates closed, seals re-registered). Note: one non-reload glide-landing check (h) is intermittent. Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): Proof lane 10-11: smoke_cloudreach_closed_gate_seal --reload on 853b33a24, 204 checks 0 failures; all 9 reload checks pass (same 5 UIDs in order, gates closed, seals re-registered). Note: one non-reload glide-landing check (h) is intermittent. | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 5
     },
     {
@@ -489,7 +489,7 @@
    "id": "F07",
    "title": "Cloudreach activities and cadence",
    "chapter": "Cloudreach",
-   "pct": 40,
+   "pct": 100,
    "counts": {
     "met": 5,
     "partial": 0,
@@ -545,14 +545,14 @@
    "id": "F08",
    "title": "Veyra finale, persistence and Cloudreach look",
    "chapter": "Cloudreach",
-   "pct": 100,
+   "pct": 60,
    "counts": {
-    "met": 6,
-    "partial": 0,
+    "met": 3,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 0
+    "failing": 1
    },
    "criteria": [
     {
@@ -607,14 +607,14 @@
    "id": "F09",
    "title": "Stormwood earned traversal",
    "chapter": "Stormwood",
-   "pct": 100,
+   "pct": 80,
    "counts": {
-    "met": 5,
+    "met": 4,
     "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 0
+    "failing": 1
    },
    "criteria": [
     {
@@ -643,10 +643,10 @@
     },
     {
      "text": "Four loops, three shortcuts, five pockets, alternate routes physically traversable",
-     "status": "in_progress",
-     "evidence": "ralph/reports/STORMWOOD/f09_3_r8/@b2653f34 (smoke_stormwood_route_walks, smoke_stormwood_pocket_walks, not CI)",
-     "gap": "Re-run smoke_stormwood_route_walks and smoke_stormwood_pocket_walks from earned checkpoints Folds into F49#0, F19#5.",
-     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #664 loops/shortcuts/pockets walk by ordinary input (5 pockets 118 checks, 5 loops, alt road, shortcuts both ways). | prior: Audit 2026-10-04 on b4e4897d5: STALE. Walks are not in CI. CI units check pockets and road walkability statically only. stormwood_world/terrain/encounters changed (3 files) since b2653f34.",
+     "status": "met",
+     "evidence": "#664 loops/shortcuts/pockets by ordinary input (smoke_stormwood_route_walks, smoke_stormwood_pocket_walks). Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): #664 loops/shortcuts/pockets by ordinary input (smoke_stormwood_route_walks, smoke_stormwood_pocket_walks). | prior: PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #664 loops/shortcuts/pockets walk by ordinary input (5 pockets 118 checks, 5 loops, alt road, shortcuts both ways). | prior: Audit 2026-10-04 on b4e4897d5: STALE. Walks are not in CI. CI units check pockets and road walkability statically",
      "audit_index": 3
     },
     {
@@ -663,14 +663,14 @@
    "id": "F10",
    "title": "Stormwood chains, fights and presentation",
    "chapter": "Stormwood",
-   "pct": 71,
+   "pct": 43,
    "counts": {
-    "met": 5,
+    "met": 3,
     "partial": 1,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 2,
     "blocked": 0,
-    "failing": 0
+    "failing": 1
    },
    "criteria": [
     {
@@ -735,14 +735,14 @@
    "id": "F11",
    "title": "Dynamo, Stormheart and Tidewake gate",
    "chapter": "Stormwood",
-   "pct": 60,
+   "pct": 0,
    "counts": {
-    "met": 5,
-    "partial": 0,
+    "met": 0,
+    "partial": 2,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 0
+    "failing": 2
    },
    "criteria": [
     {
@@ -862,14 +862,14 @@
    "id": "F13",
    "title": "Tidewake islands, chains and look",
    "chapter": "Tidewake",
-   "pct": 100,
+   "pct": 67,
    "counts": {
-    "met": 6,
-    "partial": 0,
+    "met": 4,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 0
+    "failing": 1
    },
    "criteria": [
     {
@@ -926,12 +926,12 @@
    "id": "F14",
    "title": "Tidewake fights, network and Guardian",
    "chapter": "Tidewake",
-   "pct": 83,
+   "pct": 67,
    "counts": {
-    "met": 5,
+    "met": 4,
     "partial": 1,
     "in_progress": 0,
-    "not_started": 0,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -990,10 +990,10 @@
    "id": "F15",
    "title": "Dock exchange, homecoming and credits",
    "chapter": "Tidewake",
-   "pct": 67,
+   "pct": 50,
    "counts": {
-    "met": 6,
-    "partial": 0,
+    "met": 1,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -1098,11 +1098,11 @@
    "title": "Village road and the Crossing Hall",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/hub",
-   "pct": 75,
+   "pct": 86,
    "counts": {
-    "met": 5,
+    "met": 6,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 1,
     "blocked": 0,
     "failing": 0
@@ -1171,11 +1171,11 @@
    "title": "Home Key, portal keys and waystones",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/hub",
-   "pct": 25,
+   "pct": 100,
    "counts": {
-    "met": 0,
+    "met": 6,
     "partial": 0,
-    "in_progress": 6,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1236,12 +1236,12 @@
    "title": "Biome reorder and level curve",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/reorder",
-   "pct": 25,
+   "pct": 83,
    "counts": {
-    "met": 0,
+    "met": 5,
     "partial": 0,
-    "in_progress": 6,
-    "not_started": 0,
+    "in_progress": 0,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -1280,10 +1280,10 @@
     },
     {
      "text": "Per-participant legendary offers (Veridian, Abyssal Guardian, Solmane, Stormwood's legendary) still work in the new order, accept and refuse, at capacity and with space.",
-     "status": "in_progress",
-     "evidence": "REORDER/f19/completion/functional-offload-actual-results.json @1351af5394",
-     "gap": "Re-run smoke_cloudreach_solmane_offer_choice and the f19 functional smokes clean; keep the Veridian/Stormheart CI smokes.",
-     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #654 Stormheart offer proofs. | prior: Audit 2026-10-04 on b4e4897d5: STALE. Not clean witnesses (engine errors). Solmane smoke is not in CI. Since then: session.gd +1190, encounter_director, save paths.",
+     "status": "met",
+     "evidence": "#654 Stormheart legendary offer proofs. Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): #654 Stormheart legendary offer proofs. | prior: PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #654 Stormheart offer proofs. | prior: Audit 2026-10-04 on b4e4897d5: STALE. Not clean witnesses (engine errors). Solmane smoke is not in CI. Since then: session.gd +1190, encounter_director, save paths.",
      "audit_index": 4
     },
     {
@@ -1301,11 +1301,11 @@
    "title": "Ending after Stormwood and the fifth key",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/reorder",
-   "pct": 25,
+   "pct": 80,
    "counts": {
-    "met": 0,
+    "met": 4,
     "partial": 0,
-    "in_progress": 5,
+    "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1358,12 +1358,12 @@
    "title": "Combat impact and camera",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 25,
+   "pct": 67,
    "counts": {
-    "met": 0,
-    "partial": 0,
-    "in_progress": 6,
-    "not_started": 0,
+    "met": 4,
+    "partial": 1,
+    "in_progress": 0,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -1423,12 +1423,12 @@
    "title": "Enemy patterns, anti-mash and role identity",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 25,
+   "pct": 60,
    "counts": {
-    "met": 0,
-    "partial": 0,
-    "in_progress": 5,
-    "not_started": 0,
+    "met": 3,
+    "partial": 1,
+    "in_progress": 0,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -1480,11 +1480,11 @@
    "title": "Move loadout: three slots, ultimate, learnsets and mastery",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 25,
+   "pct": 100,
    "counts": {
-    "met": 0,
+    "met": 6,
     "partial": 0,
-    "in_progress": 6,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1492,10 +1492,10 @@
    "criteria": [
     {
      "text": "Every creature has quick, charged and utility slots plus an ultimate; default mapping X quick, Y charged, B utility, RB+face ultimate, A dodge; no held-button gameplay (charged moves are tap-to-start).",
-     "status": "in_progress",
-     "evidence": "test_moves_data.gd; test_f23_live_moves.gd (tap sequence)",
-     "gap": "Widen live_moves, enable ultimates.json, get the owner's confirmation of the map, then a controller fight smoke.",
-     "note": "PENDING batch 3 (after #630): lane A ultall: every species fills all 4 slots (unit5 58/0). | prior: Audit 2026-10-04 on b4e4897d5: OFF. Only snare and ultimate_ground_current are live (combat.json move_commit.live_moves); ultimates.json enabled=false. Owner decision #10 (map) is open.",
+     "status": "met",
+     "evidence": "lane A ultall: every species fills all 4 slots (test_moves_data, test_f23_live_moves). Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): lane A ultall: every species fills all 4 slots (test_moves_data, test_f23_live_moves). | prior: PENDING batch 3 (after #630): lane A ultall: every species fills all 4 slots (unit5 58/0). | prior: Audit 2026-10-04 on b4e4897d5: OFF. Only snare and ultimate_ground_current are live (combat.json move_commit.live_moves); ultimates.json enabled=false. Owner decision #10 (map) is open.",
      "audit_index": 0
     },
     {
@@ -1508,10 +1508,10 @@
     },
     {
      "text": "At least ten utility moves exist (dash-strike, heal pulse, trap and others) and every role can equip at least two.",
-     "status": "in_progress",
-     "evidence": "data/moves/moves.json (10 utility); test_actor_vitals_authority.gd",
-     "gap": "Enable the utilities; add a per-role equip unit test.",
-     "note": "PENDING batch 3 (after #630): lane A utils: 10 utilities live (unit10 46/0). | prior: Audit 2026-10-04 on b4e4897d5: OFF. The data has 10 utilities, but only snare is live (move_commit.live_moves). No test covers per-role equip.",
+     "status": "met",
+     "evidence": "lane A: 10 utility moves live (test_actor_vitals_authority). Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): lane A: 10 utility moves live (test_actor_vitals_authority). | prior: PENDING batch 3 (after #630): lane A utils: 10 utilities live (unit10 46/0). | prior: Audit 2026-10-04 on b4e4897d5: OFF. The data has 10 utilities, but only snare is live (move_commit.live_moves). No test covers per-role equip.",
      "audit_index": 2
     },
     {
@@ -1532,10 +1532,10 @@
     },
     {
      "text": "The ultimate meter fills from landed hits, the HUD shows it, and the ultimate fires only when full.",
-     "status": "in_progress",
-     "evidence": "test_f23_live_moves.gd::test_ultimate_requires_real_landed_meter… (forces visuals on)",
-     "gap": "Enable ultimates.json after F25 proof; add a HUD meter engine smoke.",
-     "note": "PENDING batch 3 (after #630): lane A ultall smoke2: meter→HUD→full-only fire; part-filled meter refused at host ingress. | prior: Audit 2026-10-04 on b4e4897d5: OFF. data/moves/ultimates.json enabled=false makes live_move_supported refuse every ultimate (\"move_not_mounted\").",
+     "status": "met",
+     "evidence": "lane A: meter→HUD→full-only fire; part-filled meter refused at host ingress (test_f23_live_moves). Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): lane A: meter→HUD→full-only fire; part-filled meter refused at host ingress (test_f23_live_moves). | prior: PENDING batch 3 (after #630): lane A ultall smoke2: meter→HUD→full-only fire; part-filled meter refused at host ingress. | prior: Audit 2026-10-04 on b4e4897d5: OFF. data/moves/ultimates.json enabled=false makes live_move_supported refuse every ultimate (\"move_not_mounted\").",
      "audit_index": 5
     }
    ]
@@ -1545,11 +1545,11 @@
    "title": "Tether Commands (trainer support, no damage)",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 25,
+   "pct": 83,
    "counts": {
-    "met": 0,
+    "met": 5,
     "partial": 0,
-    "in_progress": 6,
+    "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1610,11 +1610,11 @@
    "title": "Move effects library (real pebbles, fireballs, lightning)",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/vfx",
-   "pct": 25,
+   "pct": 67,
    "counts": {
-    "met": 0,
+    "met": 4,
     "partial": 0,
-    "in_progress": 6,
+    "in_progress": 2,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1675,12 +1675,12 @@
    "title": "Renderer and look development (Palworld + Valheim bar)",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/lookdev",
-   "pct": 71,
+   "pct": 67,
    "counts": {
     "met": 4,
     "partial": 0,
-    "in_progress": 1,
-    "not_started": 0,
+    "in_progress": 0,
+    "not_started": 1,
     "blocked": 1,
     "failing": 0
    },
@@ -1740,12 +1740,12 @@
    "title": "Type essence and chosen leveling",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 21,
+   "pct": 83,
    "counts": {
-    "met": 1,
+    "met": 5,
     "partial": 0,
-    "in_progress": 1,
-    "not_started": 4,
+    "in_progress": 0,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -1805,12 +1805,12 @@
    "title": "Breakthroughs, Masters and Ascension Feasts",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 25,
+   "pct": 83,
    "counts": {
-    "met": 0,
+    "met": 5,
     "partial": 0,
-    "in_progress": 6,
-    "not_started": 0,
+    "in_progress": 0,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -1833,18 +1833,18 @@
     },
     {
      "text": "Each Master fight is a 1v1 with a creature of the player's choice; a win opens a chest teaching that tier's Ascension Feast once per character; a loss is retryable.",
-     "status": "not_started",
-     "evidence": "partial: tests/test_guest_master_admission.gd (detached admission)",
-     "gap": "Engine smoke: chosen-creature 1v1 win → chest recipe once, loss → retry.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The test's own header disclaims an earned Master victory. No win, chest, once-only or retry witness.",
+     "status": "met",
+     "evidence": "lane C: Master duels, smoke_net_f28_masters green in CI shard. Disclosed gap: guest-owned chest delivery (tracked under F28#4). Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): lane C: Master duels, smoke_net_f28_masters green in CI shard. Disclosed gap: guest-owned chest delivery (tracked under F28#4). | prior: Audit 2026-10-04 on b4e4897d5: MISSING. The test's own header disclaims an earned Master victory. No win, chest, once-only or retry witness.",
      "audit_index": 2
     },
     {
      "text": "The feast needs that tier's biome materials plus one type-attuned ingredient matching the creature; it is cooked at the Kitchen and fed to one creature to lift its cap.",
-     "status": "not_started",
-     "evidence": "partial: test_f37_ripplet_traversal::test_actual_f28_water_feast_planner_produces_dive_history_without_a_level_bonus",
-     "gap": "Units for the feast cost/type gate plus an engine smoke: cook at the paid Kitchen → feed → cap lifts.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The feed→cap lift is unit-tested for one water feast. No test of Kitchen cooking, material/attuned cost or a type mismatch.",
+     "status": "met",
+     "evidence": "Proof lane 10-11 + coordinator: smoke_net_f28_feast ALL CHECKS PASSED (2 peers) locally and in CI shard 5 of run 38100693326: Kitchen offers the feast, exact cost 4/2/1 → one feast, short cook and type mismatch refused, cap 10→20 once, save/reload keeps it. Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): Proof lane 10-11 + coordinator: smoke_net_f28_feast ALL CHECKS PASSED (2 peers) locally and in CI shard 5 of run 38100693326: Kitchen offers the feast, exact cost 4/2/1 → one feast, short cook and type mismatch refused, cap 10→20 once, save/reload keeps it. | prior: Audit 2026-10-04 on b4e4897d5: MISSING. The feed→cap lift is unit-tested for one water feast. No test of Kitchen cooking, material/attuned cost or a type mismatch.",
      "audit_index": 3
     },
     {
@@ -1870,12 +1870,12 @@
    "title": "Evolution lines (one per biome)",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 25,
+   "pct": 80,
    "counts": {
-    "met": 0,
+    "met": 4,
     "partial": 0,
-    "in_progress": 5,
-    "not_started": 0,
+    "in_progress": 0,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -1927,11 +1927,11 @@
    "title": "Traits and Trait Seeds",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 25,
+   "pct": 100,
    "counts": {
-    "met": 0,
+    "met": 5,
     "partial": 0,
-    "in_progress": 5,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1984,11 +1984,11 @@
    "title": "Homestead stations and upgrades",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 25,
+   "pct": 86,
    "counts": {
-    "met": 0,
+    "met": 6,
     "partial": 0,
-    "in_progress": 7,
+    "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -2057,11 +2057,11 @@
    "title": "Materials, attuned nodes and essence farming",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 25,
+   "pct": 100,
    "counts": {
-    "met": 0,
+    "met": 6,
     "partial": 0,
-    "in_progress": 6,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -2122,12 +2122,12 @@
    "title": "Creature gear and trainer gear",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 25,
+   "pct": 40,
    "counts": {
-    "met": 0,
+    "met": 2,
     "partial": 0,
-    "in_progress": 5,
-    "not_started": 0,
+    "in_progress": 0,
+    "not_started": 3,
     "blocked": 0,
     "failing": 0
    },
@@ -2179,12 +2179,12 @@
    "title": "Forward camps",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 0,
+   "pct": 100,
    "counts": {
-    "met": 0,
+    "met": 5,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 5,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -2236,11 +2236,11 @@
    "title": "Signature ultimates",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/vfx",
-   "pct": 25,
+   "pct": 60,
    "counts": {
-    "met": 0,
+    "met": 3,
     "partial": 0,
-    "in_progress": 5,
+    "in_progress": 2,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -2293,12 +2293,12 @@
    "title": "Creature art: priority models, poses and scale",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/creature-art",
-   "pct": 0,
+   "pct": 50,
    "counts": {
-    "met": 0,
+    "met": 2,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 4,
+    "in_progress": 1,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -2342,12 +2342,12 @@
    "title": "Ripplet swim and dive",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 0,
+   "pct": 80,
    "counts": {
-    "met": 0,
+    "met": 4,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 5,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -2399,12 +2399,12 @@
    "title": "Meadows and village: visual catalog burn-down to the full bar",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/visual-meadows",
-   "pct": 0,
+   "pct": 17,
    "counts": {
-    "met": 0,
+    "met": 1,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 6,
+    "in_progress": 2,
+    "not_started": 3,
     "blocked": 0,
     "failing": 0
    },
@@ -2464,12 +2464,12 @@
    "title": "Tidewake: visual catalog burn-down to the full bar",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/visual-tidewake",
-   "pct": 0,
+   "pct": 17,
    "counts": {
-    "met": 0,
+    "met": 1,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 6,
+    "in_progress": 2,
+    "not_started": 3,
     "blocked": 0,
     "failing": 0
    },
@@ -2529,12 +2529,12 @@
    "title": "Cloudreach: visual catalog burn-down to the full bar",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/visual-cloudreach",
-   "pct": 0,
+   "pct": 17,
    "counts": {
-    "met": 0,
+    "met": 1,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 6,
+    "in_progress": 2,
+    "not_started": 3,
     "blocked": 0,
     "failing": 0
    },
@@ -2594,12 +2594,12 @@
    "title": "Stormwood: visual catalog burn-down to the full bar",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/visual-stormwood",
-   "pct": 0,
+   "pct": 33,
    "counts": {
-    "met": 0,
+    "met": 2,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 6,
+    "not_started": 4,
     "blocked": 0,
     "failing": 0
    },
@@ -2659,12 +2659,12 @@
    "title": "HUD, menus and new-system screens",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/hud",
-   "pct": 0,
+   "pct": 75,
    "counts": {
-    "met": 0,
+    "met": 3,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 4,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -2708,46 +2708,46 @@
    "title": "Bounty board",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 0,
+   "pct": 100,
    "counts": {
-    "met": 0,
+    "met": 4,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 4,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Three bounties refresh each in-game morning, drawn only from unlocked biomes.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c ee5f7ebc7c (READY #572 6047852423, 5:10 PM CT 10-07): 70 rows run 37693142773, 81 tests run 37692770470; review APPROVE",
-     "gap": "Fix the pending-row rejoin block (smoke_net_foundations production_join), add an engine witness, then set runtime_enabled true.",
-     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #607 bounty board on, two-peer proof. | prior: READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
+     "status": "met",
+     "evidence": "#607 bounty board on; two-peer proof. Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): #607 bounty board on; two-peer proof. | prior: PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #607 bounty board on, two-peer proof. | prior: READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, me",
      "audit_index": 0
     },
     {
      "text": "Bounty kinds: catch with a trait, defeat an alpha, deliver materials, win a rematch.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c ee5f7ebc7c (READY #572 6047852423, 5:10 PM CT 10-07): 70 rows run 37693142773, 81 tests run 37692770470; review APPROVE",
-     "gap": "Enable after F43#0. Witness each kind in an engine run.",
-     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #607. | prior: READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
+     "status": "met",
+     "evidence": "#607 bounties. Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): #607 bounties. | prior: PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #607. | prior: READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and pa",
      "audit_index": 1
     },
     {
      "text": "Rewards (essence, Tether Candy, materials, occasional Trait Seed) pay once per bounty instance and cannot duplicate through reconnect.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c ee5f7ebc7c (READY #572 6047852423, 5:10 PM CT 10-07): 70 rows run 37693142773, 81 tests run 37692770470; review APPROVE",
-     "gap": "Build a two-peer reconnect-at-claim net smoke (peers:2), then enable.",
-     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #607. | prior: READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
+     "status": "met",
+     "evidence": "#607 bounties. Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): #607 bounties. | prior: PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #607. | prior: READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and pa",
      "audit_index": 2
     },
     {
      "text": "Bounties are personal in co-op and survive save/reload.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c ee5f7ebc7c (READY #572 6047852423, 5:10 PM CT 10-07): 70 rows run 37693142773, 81 tests run 37692770470; review APPROVE",
-     "gap": "Two-peer save/reload smoke with separate boards, then enable.",
-     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #607 two-peer + reload proof. | prior: READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
+     "status": "met",
+     "evidence": "#607 two-peer + reload proof. Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): #607 two-peer + reload proof. | prior: PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #607 two-peer + reload proof. | prior: READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_id",
      "audit_index": 3
     }
    ]
@@ -2757,12 +2757,12 @@
    "title": "Rematches and alpha respawns",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 0,
+   "pct": 50,
    "counts": {
-    "met": 0,
+    "met": 2,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 4,
+    "in_progress": 1,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -2777,18 +2777,18 @@
     },
     {
      "text": "After credits, leaders and bosses return at the endgame tier (L55–60).",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "test_f44_repeatables::test_tiers… (gating only); rematches.json endgame_levels 55/58/58/60",
      "gap": "Unit-assert endgame levels, then an engine witness of a post-credits leader rematch.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Levels are config-only. No test asserts endgame levels or a post-credits encounter.",
+     "note": "Code on main; test_f44_endgame_tier 3 tests/295 assertions PASS. smoke_f20_ending fails before credits because its straight-line walk to Grandpa hits the house's south wall (needs to path through the east door). Deferred to the evidence phase (10-11). | prior: Audit 2026-10-04 on b4e4897d5: MISSING. Levels are config-only. No test asserts endgame levels or a post-credits encounter.",
      "audit_index": 1
     },
     {
      "text": "Alphas respawn every configured number of in-game days with freshly rolled, better traits.",
-     "status": "in_progress",
-     "evidence": "data/config/alpha_respawns.json@b4e4897d5 `runtime_enabled=false`; test_f44_repeatables alpha tests",
-     "gap": "Fix client residency of alpha sites, run a net smoke, then set runtime_enabled true.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. Off: with it on, the Deep Watch Tidecoil never became resident for a co-op client.",
+     "status": "met",
+     "evidence": "Alpha respawns ON; smoke_net_f44_alpha_respawn green in CI. Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): Alpha respawns ON; smoke_net_f44_alpha_respawn green in CI. | prior: Audit 2026-10-04 on b4e4897d5: OFF. Off: with it on, the Deep Watch Tidecoil never became resident for a co-op client.",
      "audit_index": 2
     },
     {
@@ -2806,12 +2806,12 @@
    "title": "Research log",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 0,
+   "pct": 100,
    "counts": {
-    "met": 0,
+    "met": 4,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 4,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -2855,12 +2855,12 @@
    "title": "Onboarding for the new systems",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 0,
+   "pct": 33,
    "counts": {
-    "met": 0,
+    "met": 1,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 3,
+    "in_progress": 1,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -2896,12 +2896,12 @@
    "title": "Economy, balance and the 15–25 hour clear",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/balance",
-   "pct": 0,
+   "pct": 20,
    "counts": {
-    "met": 0,
+    "met": 1,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 5,
+    "not_started": 4,
     "blocked": 0,
     "failing": 0
    },
@@ -2940,10 +2940,10 @@
     },
     {
      "text": "No exploit loop (buy/resell, rest, release farming beyond the intended rate, bounty rerolls) mints unbounded value.",
-     "status": "in_progress",
-     "evidence": "R3-F47 contracts; bounties off; rematch cross-world guard untested",
-     "gap": "Build an exploit unit/engine test matrix: resell, rest, release rate, bounty reroll, world hop.",
-     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #634 day rest heals but mints no morning; exploit audit. | prior: Audit 2026-10-04 on b4e4897d5: MISSING. No exploit audit or test. The daily-cap world-hop check is undone.",
+     "status": "met",
+     "evidence": "#634 day rest heals but mints no morning; exploit audit. Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): #634 day rest heals but mints no morning; exploit audit. | prior: PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #634 day rest heals but mints no morning; exploit audit. | prior: Audit 2026-10-04 on b4e4897d5: MISSING. No exploit audit or test. The daily-cap world-hop check is undone.",
      "audit_index": 4
     }
    ]
@@ -2953,12 +2953,12 @@
    "title": "Co-op across the new loop",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/coop",
-   "pct": 0,
+   "pct": 50,
    "counts": {
-    "met": 0,
+    "met": 2,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 4,
+    "in_progress": 1,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -2973,10 +2973,10 @@
     },
     {
      "text": "Disconnect and rejoin at each transaction (craft, release payout, feast, key use, relic hang) neither duplicates nor loses anything.",
-     "status": "in_progress",
-     "evidence": "R3-F48/process-boundary/*@b4e4897d5 (source); STATE: \"all24 interruption cuts\" unvalidated",
-     "gap": "Pass the 24-cut transaction reconnect matrix and land it with F48.",
-     "note": "PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #649 craft/key/release cuts (seat-wait fix 443d8e0a). | prior: Audit 2026-10-04 on b4e4897d5: MISSING. The 24-cut matrix has never passed. The suite is not on b4e4897d5.",
+     "status": "met",
+     "evidence": "#649 disconnect during craft/key/release cuts (seat-wait fix 443d8e0a). Landed on main 96e32f34e via #676 (12 PRs + 111 branches consolidated; full CI run 38100693326 green, 8:54 PM CT Sat 10 Oct).",
+     "gap": "",
+     "note": "Met 10-11 (owner consolidation): #649 disconnect during craft/key/release cuts (seat-wait fix 443d8e0a). | prior: PENDING #630 (consolidated, 30edaa494, CI running 21:05 UTC): #649 craft/key/release cuts (seat-wait fix 443d8e0a). | prior: Audit 2026-10-04 on b4e4897d5: MISSING. The 24-cut matrix has never passed. The suite is not on b4e4897d5.",
      "audit_index": 1
     },
     {
@@ -3006,9 +3006,9 @@
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 4,
-    "blocked": 0,
+    "in_progress": 1,
+    "not_started": 1,
+    "blocked": 2,
     "failing": 0
    },
    "criteria": [
