@@ -1,9 +1,9 @@
 {
  "updated": "1:53 PM CT Sun 11 Oct",
  "headline": [
-  "3:37 PM CT Sun 11 Oct: 213 of 271 met (189 on main, 24 proven on tb/ev-coordinator today). All of it lands in one consolidated PR at the end.",
+  "6:38 PM CT Sun 11 Oct: 216 of 271 met (189 on main, 27 proven on tb/ev-coordinator today). All of it lands in one consolidated PR at the end.",
   "Owner, 4:12 PM CT: only the human playtest and the ROG Ally device runs are left for the owner; the coordinator decides everything else. Order: Meadows, then Cloudreach, then down the board. F38-F41 art is the long pole and runs in parallel.",
-  "Since 2 PM: F04#2, F11#1, F35#1, F35#3 and F06#0 closed. Native Aeriex, Veridian and Voltarach switched on. Co-op travel fix (guest refused after a realm crossing) and reward-queue drain fix merged. Codex art: 2 of 8 sheets passed, 6 returned."
+  "Since 4 PM: F44#0 (rematches, all biomes) and F10#5 (Stormwood audio) closed; Cloudreach route complete; native Meadowhart switched on. Root causes found and fixed: Venn (test pilot could not see named attacks), C2 reader pilot (edge escape, diver landings), co-op guest travel after the Stormwood ending, Warden XP (helper formula). Tuning batch applied (Venn, Nerissa, Riverwatch); all difficulty measurements re-running. Lanes act without permission requests (owner, 5:20 PM)."
  ],
  "batches": [
   {
@@ -681,37 +681,37 @@
  "active_lanes": [
   {
    "lane": "routes-west",
-   "doing": "Meadows first: F02#7 route ledger plus fixes for the >250 m gaps, Warden \u2192 Tidewake handoff, a master_t2 piece; Tidewake 07 after Venn clears.",
+   "doing": "Meadows: sigils (route ledger for F02#7) and hall \u2192 warden \u2192 Tidewake handoff on 7f1b1b0a, then opening \u2192 tournament \u2192 bridge \u2192 Warrens; F04#1 Galecrest disc recapture.",
    "criteria": "F02#7, F19#5 Meadows/Tidewake, F13#0",
    "next": "About 2\u20133 h"
   },
   {
    "lane": "routes-east",
-   "doing": "F33#2 sims, then Cloudreach 05b \u2192 07 (Cloudreach next per owner order), then Stormwood pieces, F09#0, F11#0.",
+   "doing": "Cloudreach route DONE (05\u201307). Now Stormwood named_detour and dynamo pieces, then F09#0/F11#0.",
    "criteria": "F19#5 Cloudreach/Stormwood, then F06#0, F09#0, F11#0",
    "next": "About 3 h"
   },
   {
    "lane": "fights",
-   "doing": "Venn root cause, then ONE applied tuning batch (Venn, Galewisp, Nerissa, Meadows chapter bar) from the 12-seed band sweep; compact fight HUD and captures.",
+   "doing": "Re-measuring every C2 fight on the fixed reader pilot (1032b96d3) and the tuning batch: Meadows chapter, Nerissa/Venn, Cloudreach/Stormwood bands, Marrow/Veyra; Venn L44 route proof.",
    "criteria": "F04#7, F14#0/#1, F33#2, F22#1, F47#3, F22#4, F10#2, F10#6, F42#2, F21#5, F25#0",
    "next": "About 1\u20132 h for F04#1"
   },
   {
    "lane": "systems",
-   "doing": "F44#1 Meadows endgame; owner-list fixes (patrol profiles, master_t2 guidance, home hint, Den text, bounty rotate, Skyplume); F47#0 route estimate.",
+   "doing": "F44#1 Meadows endgame re-run; F47#0 estimate done (8.8\u201312.5 h agent sim, playtest decides; preparation-depth options ready).",
    "criteria": "F44#1, F46#1, F47#0, F47#2",
    "next": "About 1\u20132 h"
   },
   {
    "lane": "co-op",
-   "doing": "Guest travel readiness after the Stormheart ending (F11#3 #30+), then the guest's first press on a Master chest.",
+   "doing": "F11#3: steps #1\u2013#42 pass after the guest-travel fixes; diagnosing #43 (guest portal back to Stormwood). Master-chest first-press fix staged.",
    "criteria": "F11#3",
    "next": "About 2 h"
   },
   {
    "lane": "captures",
-   "doing": "F04#1 recapture, F04#6 aftermaths, F03#1 activities, F17#6 village/Hall, F08#3 Cloudreach matrix, F10#5 Stormwood audio cues.",
+   "doing": "F04#6 distinct aftermath build (banners fall, sigils light, Warden hall banners down), F04#1 recapture, then F03#1, F17#6, F08#3.",
    "criteria": "F04#1, F04#6, F03#1, F17#6, F08#3, F10#5, F36#1",
    "next": "Sheets every ~1 h"
   },
