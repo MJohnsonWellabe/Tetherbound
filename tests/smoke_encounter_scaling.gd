@@ -122,6 +122,7 @@ var _player: CharacterBody3D = null
 var _rig: Node3D = null
 var _manager: Node = null
 var _director: Node = null
+var _trainer: Node3D = null
 var _session: Node = null
 var _spec: Dictionary = {}
 ## species_id -> the authored numbers, rebuilt through the production
@@ -336,6 +337,20 @@ func _collect_nodes() -> bool:
 	if _player == null or _rig == null or _manager == null or _director == null:
 		_fail("the scene is missing the player, camera rig, combat manager or director")
 		return false
+	var trainers := _world.get_node_or_null(^"Trainers")
+	if trainers == null:
+		_fail("the world built no Trainers node; trainers.json is not being placed")
+		return false
+	_trainer = trainers.call("body_for", TRAINER_ID) as Node3D
+	if _trainer == null:
+		_fail("trainer '%s' was never stood up in the world" % TRAINER_ID)
+		return false
+	var at: Array = _spec.get("position", [])
+	var wanted := Vector2(float(at[0]), float(at[1]))
+	var got := Vector2(_trainer.global_position.x, _trainer.global_position.z)
+	if got.distance_to(wanted) > 1.0:
+		_fail("trainer '%s' is not at their authored position" % TRAINER_ID)
+		return false
 	if _director.call("ally_instance") == null:
 		await _director.call("adopt_starter", "terrapup")
 	if _director.call("ally_instance") == null:
@@ -425,11 +440,33 @@ func _open_the_battle() -> bool:
 			% [TRAINER_ID, str(_director.call("no_usable_ally")),
 			   str(TRAINERS.already_beaten(_spec, _progression()))])
 		return false
-	# The production call, and `trainer` is legally null -- `begin_trainer_battle`
-	# says so. The fight forms in front of the player where they are standing,
-	# which is the open meadow: no building claims it, so nothing about the
-	# geometry can colour a measurement about arithmetic.
-	if not bool(_director.call("begin_trainer_battle", _spec, null)):
+	# Use the trainer's ordinary approach, as smoke_trainer_battle does. The
+	# default home spawn is beside Grandpa's house, not an open combat site.
+	var facing := deg_to_rad(float(_spec.get("facing_deg", 0.0)))
+	var spot := _trainer.global_position + Vector3(sin(facing), 0.0, cos(facing)) * 2.6
+	var ground := float(_world.call("ground_height_at", spot.x, spot.z))
+	if not is_finite(ground):
+		_fail("no ground at trainer '%s' approach" % TRAINER_ID)
+		return false
+	spot.y = ground + 1.0
+	var physics_enabled := _player.is_physics_processing()
+	_player.set_physics_process(false)
+	_player.global_position = spot
+	_player.velocity = Vector3.ZERO
+	var to := _trainer.global_position - spot
+	to.y = 0.0
+	_rig.set("yaw", atan2(-to.x, -to.z))
+	_rig.call("set_target", _player)
+	var vegetation := _world.get_node_or_null(^"Vegetation")
+	if vegetation != null:
+		vegetation.call("update_collision_streaming", spot)
+	# The existing Meadows realm-arrival path gives Terrain3D four physics
+	# beats after the camera catches the teleport before resuming gravity.
+	for i in 4:
+		await physics_frame
+	_player.set_physics_process(physics_enabled)
+	_player.reset_physics_interpolation()
+	if not bool(_director.call("begin_trainer_battle", _spec, _trainer)):
 		_fail("begin_trainer_battle('%s') refused" % TRAINER_ID)
 		return false
 	for i in 45:
