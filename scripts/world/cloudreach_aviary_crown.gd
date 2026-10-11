@@ -27,6 +27,20 @@ static func build(parent: Node3D, spec: Dictionary, drum: Dictionary,
 	var inset := float(spec.get("radial_inset_m", 0.0))
 	var rx := float(drum.get("radius_x_m", 27.0)) - inset
 	var rz := float(drum.get("radius_z_m", 27.0)) - inset
+	var cornice: Dictionary = spec.get("cornice", {})
+	if bool(cornice.get("enabled", true)):
+		# A real continuous entablature gives the open bays architectural mass
+		# and joins their extrados to the dome's lower panels. It rests on the
+		# voussoirs, above the original route clear height, without a collider.
+		var seat_y := base_y + clear_height + post
+		var lower_height := float(cornice.get("lower_height_m", 0.35))
+		var upper_height := float(cornice.get("upper_height_m", 0.3))
+		var projection := float(cornice.get("projection_m", 0.3))
+		var segments := int(cornice.get("segments", 64))
+		_ring(root, "CrownEntablature", rx, rz, depth + projection * 2.0,
+			seat_y + lower_height * 0.5, lower_height, segments, stone)
+		_ring(root, "CrownWeatheringCourse", rx, rz, depth + projection,
+			seat_y + lower_height + upper_height * 0.5, upper_height, segments, trim)
 	var angles: Array = drum.get("pier_angles_deg", []).duplicate()
 	var bay_count := int(spec.get("bay_count", 0))
 	if bay_count > 0:
@@ -74,3 +88,28 @@ static func build(parent: Node3D, spec: Dictionary, drum: Dictionary,
 		light.shadow_enabled = false
 		bay.add_child(light)
 	return root
+
+
+static func _ring(root: Node3D, label: String, rx: float, rz: float, depth: float,
+		y: float, height: float, segments: int, material: Material) -> void:
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for index in segments:
+		var a := TAU * float(index) / segments
+		var b := TAU * float(index + 1) / segments
+		var points: Array[Vector3] = []
+		for level: float in [-0.5, 0.5]:
+			for pair: Vector2 in [Vector2(a, -0.5), Vector2(b, -0.5), Vector2(b, 0.5), Vector2(a, 0.5)]:
+				points.append(Vector3(cos(pair.x) * (rx + depth * pair.y),
+					y + height * level, sin(pair.x) * (rz + depth * pair.y)))
+		# Moving the arch helper's XY ring to XZ reverses its handedness;
+		# reverse each triangle to retain Godot's outward clockwise faces.
+		for face: Array in [[0, 3, 2, 1], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]:
+			STONES._triangle(tool, points[face[0]], points[face[2]], points[face[1]])
+			STONES._triangle(tool, points[face[0]], points[face[3]], points[face[2]])
+	tool.generate_normals()
+	var ring := MeshInstance3D.new()
+	ring.name = label
+	ring.mesh = tool.commit()
+	ring.material_override = material
+	root.add_child(ring)

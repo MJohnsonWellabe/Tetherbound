@@ -121,8 +121,8 @@
       "opacity": 0.95,
       "edge_feather": 0.2,
       "min_angular_width": 0.0,
-      "depth_pull_fraction": 0.0,
-      "depth_pull_max_m": 0.0,
+      "depth_pull_fraction": 0.016,
+      "depth_pull_max_m": 70.0,
       "fog_keep": 0.35,
       "detail_fade_start_m": 500.0,
       "detail_fade_end_m": 1600.0,
@@ -194,8 +194,8 @@
       "tone_darken": 0.96,
       "tone_amount": 0.0,
       "tone_lit_keep": 1.0,
-      "depth_pull_fraction": 0.0,
-      "depth_pull_max_m": 0.0
+      "depth_pull_fraction": 0.012,
+      "depth_pull_max_m": 60.0
     }
   },
   "current_flow": {
