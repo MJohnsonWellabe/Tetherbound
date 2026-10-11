@@ -21,6 +21,22 @@ Criterion: Trainer tool pouch tiers extend Tether Commands; all gear persists an
   - The worn item is never duplicated into the bag.
 - Creature gear lives in the portable character record (`redesign_character.creatures[uid].gear`). `test_creature_gear.gd` (F33#0 run) proves the transaction: equip/upgrade refuse a creature that isn't the character's own (`ownership`), refuse replays, and refuse stale revisions.
 
+## 3. Creature gear survives a production leave, wipe and rejoin (coordinator ruling 11:18 AM CT)
+`tests/smoke_net_harness_max_hp.gd` extended at commits 36cfcc1c + 0bd43ae6. No existing check changed; a tail runs after them, with two read-only peer steps (`harness_record`, `harness_admitted`) in tests/helpers/harness_hp_net_peer.gd.
+`GODOT_BIN=… tools/net/run_net_smoke.sh harness_max_hp` → exit 0, **ALL CHECKS PASSED**, 42 PASS / 0 FAIL, Sun 11 Oct 12:09–12:15 PM CT (`net_harness_max_hp_rejoin*.txt/md`). In order:
+- the production leave writes tidesteel_harness_plus_1 on the guest's creature into the guest's own character file;
+- `wipe_character` blanks memory (party 1 → 0, no gear) while the file still holds the Harness;
+- the same saved guest rejoins through `production_join` (returning route);
+- its creature wears the Harness again, restored from its own file;
+- the bag and file count of the item is unchanged (0 → 0, no duplicate);
+- the host's admitted record gives the guest's creature the Harness and the host rolls its hits with s = 1.2640 (authored);
+- the host's own creature has no harness and s = 1.0.
+
+Disclosed:
+- Fixture: the smoke's existing `harness_unwear` isolation step erased the guest's in-memory gear, so `harness_wear` restores that same pre-join gear before the leave. Every write and read after that is production.
+- First attempt (12:03 PM CT) failed only at the rejoin with "peer silent >15 s" while `production_join` rebuilt the world. Fix: the smoke now sets the standard `world_build_allowance_floor_s["production_join"] = 150.0`, as other production_join smokes do.
+- The passing run had uncommitted, print-only `DIAG_TMP` lines in game scripts for the separate F48#3 diagnosis (no logic change), plus the local budget override.
+
 ## Disclosed limits
 - No existing smoke does a single two-peer **Forge craft → creature-gear equip → reload → rejoin**. Persistence and personal ownership are proven by the pieces above: the unit transaction, the host-admitted guest gear in `harness_max_hp`, and trainer equipment restored from disk in `reconnect_keeps_character`. Trainer-equipment persistence is shown with armor (vest/helm), and the command pouch sits in the same `equipment` dictionary (`backpack` slot).
 - `harness_max_hp` uses disclosed peer fixtures (tests/helpers/harness_hp_net_peer.gd): gear is written into the guest's record before it joins.
