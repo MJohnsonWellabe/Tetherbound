@@ -22,7 +22,16 @@ func build(world: Node3D) -> void:
 		add_child(site)
 		site.position = anchor
 		site.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
-		for piece: Dictionary in spec.pieces:
+		var pieces: Array = spec.pieces
+		var terrace_repair := str(spec.id) == "DrownedGardenTerraceCourses" and bool(spec.get("terrace_beds_repair_enabled", false))
+		if terrace_repair:
+			pieces = spec.get("terrace_bed_pieces", [])
+		for piece: Dictionary in pieces:
+			if terrace_repair and str(piece.get("kind", "")) == "terrace_bed":
+				var bed_spec: Dictionary = spec.get("terrace_bed_style", {}).duplicate(true)
+				bed_spec.merge(piece, true)
+				_build_terrace_bed(world, site, bed_spec)
+				continue
 			var prop := _piece(piece)
 			if prop == null:
 				continue
@@ -42,6 +51,90 @@ func build(world: Node3D) -> void:
 			elif bool(piece.get("grounded", true)):
 				var at := prop.global_position
 				prop.position.y += float(world.call("ground_height_at", at.x, at.z)) - site.position.y
+
+## Static farm visual family: closed soil fill, four boards, furrows and plants.
+## Every bed has one level top; no farm interaction, collision or terrain edit.
+static func _build_terrace_bed(world: Node3D, site: Node3D, spec: Dictionary) -> void:
+	var bed := Node3D.new()
+	bed.name = str(spec.id)
+	var at: Array = spec.at
+	bed.position = Vector3(float(at[0]), 0.0, float(at[2]))
+	bed.rotation.y = deg_to_rad(float(spec.yaw_deg))
+	site.add_child(bed)
+	var size := Vector2(float(spec.soil_size_xz[0]), float(spec.soil_size_xz[1]))
+	var edge_t := float(spec.edge_thickness_m)
+	var edge_h := float(spec.edge_height_m)
+	var half := size * 0.5 + Vector2.ONE * edge_t
+	var lowest := INF
+	var highest := -INF
+	for x in 9:
+		for z in 23:
+			var sample_at := bed.to_global(Vector3(lerpf(-half.x, half.x, float(x) / 8.0),
+				0.0, lerpf(-half.y, half.y, float(z) / 22.0)))
+			var ground := float(world.call("ground_height_at", sample_at.x, sample_at.z))
+			if not is_finite(ground):
+				push_error("Terrace bed has nonfinite terrain: " + str(spec.id))
+				bed.free()
+				return
+			lowest = minf(lowest, ground)
+			highest = maxf(highest, ground)
+	var clearance := float(spec.soil_clearance_m)
+	var top := highest + clearance
+	var bottom := lowest - float(spec.fill_sink_m)
+	var depth := top - bottom
+	if not is_finite(depth) or depth <= 0.0 or depth > float(spec.max_fill_depth_m):
+		push_error("Terrace bed exceeds closed-fill depth: " + str(spec.id))
+		bed.free()
+		return
+	# Its parent is the terrain-anchored landmark; only yaw is inherited.
+	bed.position.y = top - site.global_position.y
+	bed.set_meta("level_soil_top_y", top)
+	bed.set_meta("closed_fill_bottom_y", bottom)
+	var soil := StandardMaterial3D.new()
+	soil.albedo_color = Color(str(spec.soil_colour))
+	soil.roughness = float(spec.roughness)
+	var wood := StandardMaterial3D.new()
+	wood.albedo_color = Color(str(spec.edge_colour))
+	wood.roughness = float(spec.roughness)
+	_terrace_box(bed, "Soil", Vector3(size.x, depth, size.y), Vector3(0.0, -depth * 0.5, 0.0), soil)
+	for side: float in [-1.0, 1.0]:
+		_terrace_box(bed, "EndBoard", Vector3(size.x + edge_t * 2.0, edge_h, edge_t),
+			Vector3(0.0, -clearance + edge_h * 0.5, side * (size.y + edge_t) * 0.5), wood)
+		_terrace_box(bed, "SideBoard", Vector3(edge_t, edge_h, size.y),
+			Vector3(side * (size.x + edge_t) * 0.5, -clearance + edge_h * 0.5, 0.0), wood)
+	var furrows := int(spec.furrows)
+	var pitch := size.y / float(furrows + 1)
+	var ridge_h := float(spec.furrow_height_m)
+	for i in furrows:
+		_terrace_box(bed, "Furrow", Vector3(size.x * 0.92, ridge_h, pitch * 0.42),
+			Vector3(0.0, ridge_h * 0.35, -size.y * 0.5 + pitch * float(i + 1)), wood)
+	var plants: Array = spec.plants
+	for i in plants.size():
+		var plant_spec: Dictionary = plants[i].duplicate(true)
+		plant_spec["id"] = "Plant%d" % i
+		plant_spec["at"] = [0.0, 0.0, 0.0]
+		var plant := _piece(plant_spec)
+		if plant == null:
+			push_error("Terrace bed plant failed to load: " + str(plants[i].model))
+			continue
+		# Height-normalized installed models also fit within the narrow bed.
+		var bounds := BOUNDS.measure(plant)
+		var width := maxf(bounds.size.x, bounds.size.z)
+		if width > size.x * 0.8:
+			plant.scale *= size.x * 0.8 / width
+		plant.position = Vector3(0.0, 0.0, -size.y * 0.5 + pitch * float(i + 1))
+		bed.add_child(plant)
+
+static func _terrace_box(parent: Node3D, label: String, size: Vector3,
+		at: Vector3, material: StandardMaterial3D) -> void:
+	var mesh := MeshInstance3D.new()
+	mesh.name = label
+	var box := BoxMesh.new()
+	box.size = size
+	mesh.mesh = box
+	mesh.material_override = material
+	mesh.position = at
+	parent.add_child(mesh)
 
 static func _site_position(world: Node3D, spec: Dictionary) -> Vector3:
 	if not spec.has("landmark_id"):

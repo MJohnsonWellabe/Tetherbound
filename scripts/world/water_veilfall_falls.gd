@@ -72,6 +72,7 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 		puffs.mesh = _spray_mesh(spray)
 		puffs.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		puffs.material_override = _material(SPRAY_SHADER, config.get("spray_shader", {}))
+		(puffs.material_override as ShaderMaterial).set_shader_parameter("centre_xz", centre_xz)
 		materials.append(puffs.material_override)
 		puffs.extra_cull_margin = 400.0
 		add_child(puffs)
