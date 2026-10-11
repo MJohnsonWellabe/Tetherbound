@@ -4,6 +4,7 @@ extends Node
 ## event transport. The catalogue never grants progression merely by loading.
 const EVENTS := preload("res://scripts/world/realm_chapter_events.gd")
 const PEOPLE := preload("res://scripts/world/village_npcs.gd")
+const CHARACTER_PRESENTATION := preload("res://scripts/world/stormwood_character_presentation.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const PIMS_PARCELS := preload("res://scripts/world/stormwood_pims_parcels.gd")
 const GLASS_FOR_BRYN := preload("res://scripts/world/stormwood_glass_for_bryn.gd")
@@ -255,10 +256,10 @@ static func npc_spec(actor: Dictionary) -> Dictionary:
 	# Side-chain branches outrank ordinary and post-storm lines while active.
 	for i in range(chain_branches.size() - 1, -1, -1):
 		branches.push_front(chain_branches[i])
-	return {"name": str(actor.get("name", "")),
+	return CHARACTER_PRESENTATION.decorate({"name": str(actor.get("name", "")),
 		"config_key": str(actor.get("body_profile", "")),
 		"position": (actor.get("position", []) as Array).duplicate(),
-		"greeting": prefix + "arrival", "greeting_when": branches}
+		"greeting": prefix + "arrival", "greeting_when": branches}, actor_id)
 
 
 static func wen_refusal_conversation() -> Dictionary:
