@@ -164,7 +164,9 @@ func _tools() -> Array[SurfaceTool]:
 func _append_courses(tools: Array[SurfaceTool], centre: Vector3, size: Vector3, courses: int) -> void:
 	var height := size.y / float(courses)
 	for row in courses:
-		var splits: Array[float] = [0.0, 0.5, 1.0] if row % 2 == 0 else [0.0, 0.25, 0.75, 1.0]
+		var splits: Array[float] = [0.0, 0.5, 1.0]
+		if row % 2 != 0:
+			splits.assign([0.0, 0.25, 0.75, 1.0])
 		var leaves := 2 if row % 2 == 0 else 1
 		for col in splits.size() - 1:
 			var width := (splits[col + 1] - splits[col]) * size.x
