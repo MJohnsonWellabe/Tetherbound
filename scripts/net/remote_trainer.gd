@@ -145,7 +145,8 @@ var net_creature_saddled: bool = false
 ## read, on every other screen, as a friend who had stepped off a cliff.
 ##
 ## `net_fly_state` is the controller's own state word, not a re-derivation:
-## "glide", "climb", "descent", "exhausted". `net_fly_species` is the carrier,
+## "glide", "climb", "descent", "exhausted", or an explicit brief "touchdown"
+## from its natural landing presentation. `net_fly_species` is the carrier,
 ## so every viewer builds the same bird from the same `fly_capability` block.
 var net_flying: bool = false
 var net_fly_state: String = ""
@@ -432,7 +433,7 @@ func _push_flight(rig: Node3D) -> void:
 		return
 	var controller := fly as Object
 	net_flying = bool(controller.call("is_flying"))
-	net_fly_state = str(controller.get("state")) if net_flying else ""
+	net_fly_state = str(controller.call("presentation_state"))
 	net_fly_species = str(controller.call("carrier_species_id")) if net_flying else ""
 
 
@@ -823,7 +824,7 @@ func _apply_flight_art(art: Node, delta: float) -> void:
 			FLY.align_carrier_grip(_carrier_art, _carrier_rig, art,
 				_fly_capability.get("grip_bones", []))
 		return
-	if _flew_last and not net_flying and not net_carried and not net_riding \
+	if _flew_last and not net_flying and net_fly_state == "touchdown" and not net_carried and not net_riding \
 			and aquatic.mode == SWIM_STATE.Mode.LAND and net_anim_state in ["idle", "walk", "sprint"] \
 			and net_realm == _flight_realm and is_instance_valid(_carrier_art) and _mount_body() == null:
 		_landing_settings = FLY.shared_config().get("landing_presentation", {})
@@ -859,7 +860,7 @@ func _tick_landing_art() -> void:
 		return
 	# A replicated ground follower takes over immediately, regardless of packet
 	# timing. This process never delays its spawn or changes its visibility.
-	if not is_instance_valid(_landing_art) or _owned_here == true or net_flying \
+	if not is_instance_valid(_landing_art) or _owned_here == true or net_flying or net_fly_state != "touchdown" \
 			or net_riding or net_carried or net_realm != _flight_realm \
 			or net_position.distance_to(_landing_origin) > float(_landing_settings.get("cancel_distance_m", 8.0)) \
 			or _mount_body() != null or bool(_landing_art.get("finished")):

@@ -137,6 +137,18 @@ func is_flying() -> bool:
 	return state in ["glide", "climb", "descent", "exhausted"]
 
 
+## Ephemeral art state for the existing remote trainer projection. Only the
+## natural touchdown path creates this helper; nearby recovery/cancellation
+## must never be inferred as a landing from a grounded movement animation.
+func presentation_state() -> String:
+	if is_flying():
+		return state
+	if is_instance_valid(_landing_visual) and not bool(_landing_visual.get("finished")) \
+			and _landing_context_valid():
+		return "touchdown"
+	return ""
+
+
 ## X03 (`input_owner.gd::TRAVERSAL_GROUP`): while flying or carried, LT is
 ## `fly_descend`, not a world verb.
 func owns_traversal_input() -> bool:
