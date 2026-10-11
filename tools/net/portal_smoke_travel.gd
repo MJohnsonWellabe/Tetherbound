@@ -9,8 +9,10 @@ const ROUTES := {"session_host_first_realm": "cloudreach", "water_alpha": "tidew
 	"stormwood_glass_for_bryn": "stormwood", "veridian_same_five": "tidewake", "f15_dock": "tidewake",
 	# Two-peer Stormwood proof scenarios (tools/net/proof_scenarios/), migrated
 	# from a raw Game.enter_realm to the Crossing Hall Stormwood portal.
-	"stormwood_proof": "stormwood"}
-const RETURNS := ["cloudreach_riding", "stormwood_realms", "water_return"]
+	"stormwood_proof": "stormwood",
+	# The same, for a scenario that also goes home (Home Key) and back.
+	"stormwood_proof_return": "stormwood"}
+const RETURNS := ["cloudreach_riding", "stormwood_realms", "water_return", "stormwood_proof_return"]
 const HALL := preload("res://scripts/world/crossing_hall.gd")
 const HOME_KEY := preload("res://scripts/world/home_key.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
