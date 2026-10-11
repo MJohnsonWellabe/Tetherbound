@@ -436,6 +436,14 @@ func _mark_rematch_source(id: String, body: Node3D, prompt: Node3D) -> void:
 	body.add_to_group(&"foundation_trainer_specs")
 
 
+## A rebuilt cast's replaced body stops being a source, so one stays registered.
+func _unmark_rematch_source(body: Variant) -> void:
+	if not is_instance_valid(body) or not (body as Node).has_meta("foundation_rematch_prompt"): return
+	(body as Node).remove_meta("foundation_trainer_spec")
+	(body as Node).remove_meta("foundation_rematch_prompt")
+	(body as Node).remove_from_group(&"foundation_trainer_specs")
+
+
 func _challenge(id: String) -> void:
 	if not trainer_specs.has(id) or not trainer_nodes.has(id):
 		return
