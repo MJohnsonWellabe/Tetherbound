@@ -29,6 +29,6 @@
     "defeated": 36
   },
   "fps": 24,
-  "postprocessing": "NONE",
+  "postprocessing": "Otto-specific authorized14track upper-arm correction follows this original full bake; see arm_retarget_recipe.json and provenance.json. Original output hash above remains the pinned correction input.",
   "export_difference": "Two normal-seam vertex splits and consequent index renumbering; exact ordered corner UVs, positions within2.015micrometres and weights within1.2e-7. Tangents omitted by unchanged exporter; native import ensure_tangents required. No new/deleted triangles or face/UV re-layout."
 }

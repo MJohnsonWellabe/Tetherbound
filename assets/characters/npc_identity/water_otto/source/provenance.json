@@ -1,7 +1,7 @@
 {
   "actor_id": "water_otto",
   "default_enabled": false,
-  "status": "PROVISIONAL_OFF_BODY_ONLY_NATIVE_REVIEW_PENDING",
+  "status": "CORRECTED_OFF_BODY_ONLY_NATIVE_REVIEW_PENDING",
   "source_commit": "10d72eb48aad458c337060bbbbbf15babd670b7e",
   "installed_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
   "installed_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
@@ -37,7 +37,7 @@
     "postprocessing": "NONE"
   },
   "candidate_model": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
-  "candidate_model_sha256": "b804b4b290f15ea25e97b43c66bba5dca99cfe3c970a08c7a77bd9a5332ab47a",
+  "candidate_model_sha256": "545881bda98f542d6fdf1afbc874a6f028c04e2c32e05e20de288d5b2ca134cc",
   "cpu_initial_skin_clip_check": {
     "scope": "CPU source preservation and finite sampled clips only; no native or visual acceptance",
     "joints": 24,
@@ -221,24 +221,83 @@
     }
   },
   "import_sidecar": {
-    "origin": "Source-authored settings copied from existing Orsen import parameters; Otto resource/cache paths derived from its exact resource path; no fabricated UID",
-    "native_import_status": "PENDING_ROOT_IMPORT",
+    "origin": "Root-generated original-body import sidecar preserved after actual native PID52496 terminal0; only UID added, all prior parameters unchanged",
+    "native_import_status": "ORIGINAL_BODY_IMPORTED_CORRECTED_BODY_REIMPORT_PENDING",
     "ensure_tangents": true,
-    "reason": "Unchanged Blender exporter omits TANGENT attribute; native importer must regenerate tangent basis from preserved UVs/normals"
+    "reason": "Unchanged Blender exporter omits TANGENT attribute; native importer must regenerate tangent basis from preserved UVs/normals",
+    "native_uid": "uid://bcfe7n0agooky"
   },
   "native_review": {
     "status": "PENDING",
-    "scope": "Root Low/Compatibility seven clips/four phases/front-side under unchanged 56-frame fixture",
+    "scope": "Corrected seven clips/four phases/front-side Low/Compatibility recapture under unchanged original56frame guards pending",
     "risks": [
-      "Sampled CPU idle upper arms remain28.6-31.84degrees from down; root must inspect natural idle before any correction",
-      "Action CPU skin samples stretch some lower rear-torso edges; worst chop phase0.375 edge5.806mm to112.782mm. Diagnostic only, not proof of a visual blocker; root must inspect coat/pouch/backpack clearance",
-      "Olive differentiation from Orsen remains native PENDING",
-      "Normal seam splits and regenerated tangent basis require native shading inspection"
+      "Corrected sampled CPU idle upper arms7.6-9.31degrees from down; native relaxed stance and coat/hand/pouch/backpack clearance remain pending",
+      "Ten idle edges longer than5mm now stretch above2x; worst rest5.806mm to26.877mm at lower rear torso. Corrected chop reaches122.378mm on same edge. CPU diagnostics are not visual acceptance or proof of a blocking defect",
+      "Olive outfit differentiation from Orsen remains native/world PENDING",
+      "Original two normal-seam splits and regenerated tangent basis retained; corrected native shading review pending"
     ],
     "portrait": "NOT_AUTHORED",
     "world": "PENDING",
-    "claude_judgement": "PENDING"
+    "claude_judgement": "PENDING",
+    "previous_uncorrected_review": {
+      "source_commit": "3715a7a8b67f545cb033ed515dac602d6accb50b",
+      "frames": 56,
+      "actual_process_id": 24136,
+      "exit_code": 0,
+      "scale_raster_clip_checks": "56/56",
+      "idle_stance": "FAIL: hands held away from coat, measured29-32degrees",
+      "action_review": "Root inspected front/side grids; no catastrophic stretching visible in sampled original poses; not continuous-motion acceptance"
+    }
   },
   "rules": "res://assets/characters/npc_identity/water_otto/source/rules.json",
-  "recipe": "res://assets/characters/npc_identity/water_otto/source/animation_recipe.json"
+  "recipe": "res://assets/characters/npc_identity/water_otto/source/animation_recipe.json",
+  "correction": {
+    "source_commit_before_correction": "3715a7a8b67f545cb033ed515dac602d6accb50b",
+    "producer": "res://assets/characters/npc_identity/water_otto/source/retarget_otto_arms.py",
+    "producer_sha256_lf": "acbac5ba4c94012b1d0ec98365144608ae9d7b60d005f6d17152f6dab5b6ec96",
+    "recipe": "res://assets/characters/npc_identity/water_otto/source/arm_retarget_recipe.json",
+    "recipe_sha256": "d5ad4eaab2d0aeb783bf0559bf87e5baf1793dc8a69f50844d4461fc21380318",
+    "input_model_sha256": "b804b4b290f15ea25e97b43c66bba5dca99cfe3c970a08c7a77bd9a5332ab47a",
+    "output_model_sha256": "545881bda98f542d6fdf1afbc874a6f028c04e2c32e05e20de288d5b2ca134cc",
+    "composition": "Hamilton xyzw: Qnew = Rrest * D_otto * inverse(Rrest) * Qold. Left-multiply every bound upper-arm animation quaternion; do not modify node rest transforms.",
+    "rest_local_bias_xyzw": {
+      "Left": [
+        -0.07670645518012105,
+        1.2176704520210494e-06,
+        -0.16290416377074202,
+        0.9836556069877164
+      ],
+      "Right": [
+        -0.08277270955825687,
+        3.1810907114968284e-07,
+        0.18382503089783853,
+        0.9794677312539153
+      ]
+    },
+    "target_upper_arm_degrees_from_down": 10,
+    "changed_rotation_tracks": 14,
+    "original_bin_prefix_bytes_preserved": 12100180,
+    "non_target_json_restored_exactly": true,
+    "rest_positions_weights_uvs_indices_textures_materials_unchanged": true,
+    "finite_skinned_pose_samples": 28,
+    "idle_upper_arm_degrees_from_down": [
+      {
+        "Left": 9.201704407012887,
+        "Right": 8.957665636603894
+      },
+      {
+        "Left": 9.306271409251062,
+        "Right": 8.855245879885235
+      },
+      {
+        "Left": 7.968797327242703,
+        "Right": 7.6006760229761685
+      },
+      {
+        "Left": 7.860627703870476,
+        "Right": 7.709189879119389
+      }
+    ],
+    "native_review": "PENDING; CPU preservation only; disclosed idle/action stretch requires corrected native review"
+  }
 }
