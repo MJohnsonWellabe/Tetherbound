@@ -285,7 +285,9 @@ static func promote_regional_update(data_dir: String, stage_dir: String,
 	var output := FileAccess.open(staged_manifest, FileAccess.WRITE)
 	if output == null:
 		return false
-	output.store_string(JSON.stringify(next, "  "))
+	# Parsed provenance numbers must round-trip exactly, including the 53-bit
+	# original full-bake fingerprint retained by a regional update.
+	output.store_string(JSON.stringify(next, "  ", true, true))
 	output.flush()
 	var write_ok := output.get_error() == OK
 	output.close()
