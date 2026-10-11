@@ -8458,6 +8458,49 @@ func combat_arena_bounds_at(x: float, z: float) -> float:
 	return best
 
 
+## A candidate centre belongs only to the actual room containing the query.
+## It supplies geometry; admission still proves the complete fighter formation.
+func combat_arena_centre_at(x: float, z: float) -> Vector3:
+	if not _arena_definition_ready or not is_inside_tree() or is_queued_for_deletion() \
+			or not is_finite(x) or not is_finite(z): return Vector3.INF
+	var local := to_local(Vector3(x, 0.0, z))
+	if not local.is_finite(): return Vector3.INF
+	var containing: Array = []
+	var count := 0
+	for rect: Array in _footprint:
+		if rect.size() != 4: return Vector3.INF
+		if local.x > float(rect[0]) and local.x < float(rect[2]) \
+				and local.z > float(rect[1]) and local.z < float(rect[3]):
+			containing = rect
+			count += 1
+	if count != 1: return Vector3.INF
+	var room_id := ""
+	var centre := Vector3.INF
+	for id: String in _chambers:
+		var room: Dictionary = _chambers[id]
+		var at := _local_of(room.get("at", []))
+		var size := _size_of(room.get("size", []))
+		if not at.is_finite() or not size.is_finite() or size.x <= 0.0 or size.y <= 0.0:
+			return Vector3.INF
+		var rect := [at.x - size.x * 0.5, at.z - size.y * 0.5,
+			at.x + size.x * 0.5, at.z + size.y * 0.5]
+		if rect != containing: continue
+		if not room_id.is_empty(): return Vector3.INF
+		room_id = id
+		centre = to_global(Vector3(at.x, _floor_y, at.z))
+	if room_id.is_empty() or not centre.is_finite() or _markers.get(room_id) != centre:
+		return Vector3.INF
+	var floor_y := built_floor_height_at(centre.x, centre.z)
+	var query_floor := built_floor_height_at(x, z)
+	var capacity := combat_arena_bounds_at(centre.x, centre.z)
+	var query_capacity := combat_arena_bounds_at(x, z)
+	if not is_finite(floor_y) or not is_finite(query_floor) \
+			or not is_equal_approx(floor_y, centre.y) or not is_equal_approx(query_floor, centre.y) \
+			or not is_finite(capacity) or capacity <= 0.0 \
+			or not is_finite(query_capacity) or query_capacity <= 0.0: return Vector3.INF
+	return centre
+
+
 func _organic_section_clearance(point: Vector2, polygon: PackedVector2Array) -> float:
 	if polygon.size() < 3 or not Geometry2D.is_point_in_polygon(point, polygon): return -1.0
 	var nearest := INF
