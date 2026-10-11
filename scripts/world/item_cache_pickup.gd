@@ -49,6 +49,7 @@ const IDENTITY_STYLES := {
 	"hide_leggings": "leggings_padded", "insulated_leggings": "leggings_insulated",
 	"hide_boots": "boots_padded", "insulated_boots": "boots_insulated",
 	"hide_helm": "padded_helm",
+	"berries": "berry_cluster",
 }
 const IDENTITY_ORB := "res://assets/props/tm_orb/tm_orb.glb"
 const IDENTITY_BOTTLE := "res://assets/props/stat_draughts/bottle_base.glb"
@@ -239,6 +240,8 @@ func _build_visual() -> void:
 static func create_identity_visual(item_id: String, definition: Dictionary) -> Node3D:
 	if item_id == "hide_helm":
 		return _create_padded_helm(definition)
+	if item_id == "berries":
+		return _create_loose_berries(definition)
 	if not IDENTITY_STYLES.has(item_id):
 		return null
 	var style: String = IDENTITY_STYLES[item_id]
@@ -345,6 +348,34 @@ static func create_identity_visual(item_id: String, definition: Dictionary) -> N
 			_identity_box(root, dose, Vector3(0.065, 0.19, 0.04), Vector3(0.0, 0.15, 0.12))
 			_identity_box(root, dose, Vector3(0.19, 0.065, 0.04), Vector3(0.0, 0.15, 0.12))
 	_identity_fit(root, height)
+	return root
+
+
+## Loose fruit uses the same sphere body, colour and roughness as the fruit
+## on the installed meadow berry plants. It is a handful, without the bush.
+## Each call owns its mesh/material; no HarvestNode or claim state is needed.
+static func _create_loose_berries(definition: Dictionary) -> Node3D:
+	var metadata: Dictionary = definition.get("world_identity", {}) as Dictionary
+	var radius := float(metadata.get("berry_radius_m", 0.055))
+	if not is_finite(radius) or radius <= 0.0:
+		return null
+	var root := Node3D.new()
+	root.name = "LooseBerryCluster"
+	var berry := SphereMesh.new()
+	berry.radius = radius
+	berry.height = radius * 2.0
+	berry.radial_segments = 10
+	berry.rings = 6
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color(str(definition.get("colour", "#a33a55")))
+	material.roughness = 0.55
+	# Six fruits rest at Y=0; the seventh nests into the middle of that ring.
+	# The symmetric layout keeps the visual centred on its existing anchor.
+	for index in 6:
+		var angle := TAU * float(index) / 6.0
+		_identity_mesh(root, berry, material,
+			Vector3(cos(angle) * radius * 1.45, radius, sin(angle) * radius * 1.45))
+	_identity_mesh(root, berry, material, Vector3(0.0, radius * 2.35, 0.0))
 	return root
 
 

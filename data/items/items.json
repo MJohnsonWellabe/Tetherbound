@@ -337,7 +337,10 @@
       },
       "icon": "res://assets/ui/icons/items/berries.png",
       "blurb": "A handful off a bush. Food buffs, never starvation.",
-      "description": "A cupped handful picked straight off a meadow bush, still warm from the sun. A quick bite tops up satiety and leaves a little spring in your step for a couple of minutes after."
+      "description": "A cupped handful picked straight off a meadow bush, still warm from the sun. A quick bite tops up satiety and leaves a little spring in your step for a couple of minutes after.",
+      "world_identity": {
+        "berry_radius_m": 0.055
+      }
     },
     "berry_seeds": {
       "name": "Berry Seeds",
