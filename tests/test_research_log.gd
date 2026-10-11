@@ -43,7 +43,7 @@ func test_personal_replay_progress_released_and_never_owned_serialization() -> v
 	var first := ACTIONS.stage(current, 0, "research_event", {}, _context(current, 0, "defeat", "event-1"), RECORD.errors)
 	assert_true(first.get("ok") == true)
 	if first.get("ok") != true: return
-	assert_eq(current.redesign_character.research, LOG.empty_log())
+	assert_true(preload("res://scripts/creatures/essence.gd")._equivalent(current.redesign_character.research, LOG.empty_log()))
 	assert_eq(first.state.party, [])
 	var restored: Dictionary = JSON.parse_string(JSON.stringify(first.state))
 	assert_eq(STATE.validate("character", restored.redesign_character), [])
@@ -143,7 +143,7 @@ func test_character_file_reload_preserves_unowned_history_paid_reward_and_replay
 	assert_false(replay.get("ok") == true, "persisted receipt cannot pay again")
 	assert_eq(restored.inventory.count("essence_ground"), 5)
 	var other := _record("character-f45-b")
-	assert_eq(other.redesign_character.research, LOG.empty_log(), "another character inherits no research")
+	assert_true(preload("res://scripts/creatures/essence.gd")._equivalent(other.redesign_character.research, LOG.empty_log()), "another character inherits no research")
 	assert_true(store.delete(player.character_id))
 
 func test_cast_signature_catch_history_and_unconfirmed_events_refuse() -> void:
