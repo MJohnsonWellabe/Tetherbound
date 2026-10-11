@@ -19,6 +19,14 @@
   ],
   "stormward_needle": { "position": [0.0, 0.16, 4.0] },
   "compass_signal": { "position": [0.0, 7.1, -0.8], "colour": "#72dcdb" },
+  "compass_support": {
+    "pier_height_fraction": 0.78,
+    "pier_front_fraction": 0.09,
+    "arch_rise_m": 4.5,
+    "beam_half_width_m": 0.34,
+    "beam_half_depth_m": 0.34,
+    "arch_segments": 24
+  },
   "banners": [
     { "position": [-9.6, 6.2, -1.35], "size": [2.2, 5.4], "colour": "#315f86" },
     { "position": [9.6, 5.2, -1.2], "size": [2.0, 4.5], "colour": "#d0a94c" }

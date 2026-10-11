@@ -22,11 +22,13 @@ func build(materials: Dictionary) -> void:
 	var masonry := _material(materials, "masonry")
 	var trim := _material(materials, "masonry_trim")
 	var bronze := _material(materials, "bronze")
+	var piers: Array[MeshInstance3D] = []
 	for index in (cfg.get("survey_piers", []) as Array).size():
 		var spec := (cfg.survey_piers as Array)[index] as Dictionary
 		var piece := _scaled_mesh("StormwardSurveyPier%02d" % (index + 1), CASTLE_TOWER,
 			_v3(spec.position), _v3(spec.size), masonry, "survey_pier")
 		piece.rotation.z = deg_to_rad(float(spec.get("lean_deg", 0.0)))
+		piers.append(piece)
 	for index in (cfg.get("ruined_wings", []) as Array).size():
 		var spec := (cfg.ruined_wings as Array)[index] as Dictionary
 		var piece := _scaled_mesh("StormwardRuinedWing%02d" % (index + 1), CASTLE_WALL,
@@ -41,6 +43,7 @@ func build(materials: Dictionary) -> void:
 			deg_to_rad(float(spec.get("yaw_deg", 0.0))), 0.0)
 	_add_needle(cfg.get("stormward_needle", {}) as Dictionary, bronze)
 	_add_compass_signal(cfg.get("compass_signal", {}) as Dictionary, bronze)
+	_add_compass_support(cfg, piers, _material(materials, "weathered_timber"), bronze)
 	_add_banners(cfg.get("banners", []) as Array)
 	_add_beacons(cfg.get("beacons", []) as Array, bronze)
 
@@ -78,6 +81,114 @@ func _add_compass_signal(cfg: Dictionary, bronze: Material) -> void:
 	var core := _box("StormwardCompassCore", at, Vector3(0.42, 2.1, 0.22),
 		glow_material, "compass_signal_core")
 	core.rotation.z = deg_to_rad(-18.0)
+
+
+## The survey instrument hangs from a timber arch seated in the actual
+## imported pier walls. Sample their transformed bounds, including lean and
+## origin compensation, rather than assuming their authored centres survive.
+func _add_compass_support(cfg: Dictionary, piers: Array[MeshInstance3D],
+		timber: Material, bronze: Material) -> void:
+	if piers.size() < 2:
+		return
+	var spec: Dictionary = cfg.get("compass_support", {})
+	var seats: Array[Vector3] = []
+	for pier: MeshInstance3D in [piers[0], piers[1]]:
+		var bounds := pier.mesh.get_aabb()
+		var local := bounds.position + bounds.size * Vector3(0.5,
+			float(spec.get("pier_height_fraction", 0.78)),
+			float(spec.get("pier_front_fraction", 0.09)))
+		seats.append(pier.transform * local)
+	var rise := float(spec.get("arch_rise_m", 4.5))
+	var half_width := float(spec.get("beam_half_width_m", 0.34))
+	var half_depth := float(spec.get("beam_half_depth_m", 0.34))
+	var segments := maxi(8, int(spec.get("arch_segments", 24)))
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	tool.set_material(timber)
+	# A chamfered section gives the lintel lit edges and a substantial curved
+	# silhouette. End faces close inside masonry; no unsupported trim slab.
+	var section := PackedVector2Array([
+		Vector2(-0.72, -1.0), Vector2(0.72, -1.0), Vector2(1.0, -0.72),
+		Vector2(1.0, 0.72), Vector2(0.72, 1.0), Vector2(-0.72, 1.0),
+		Vector2(-1.0, 0.72), Vector2(-1.0, -0.72)])
+	var rings: Array[PackedVector3Array] = []
+	for i in segments + 1:
+		var t := float(i) / float(segments)
+		var centre := _arch_point(seats[0], seats[1], rise, t)
+		var tangent := (seats[1] - seats[0] + Vector3.UP * rise * PI * cos(PI * t)).normalized()
+		var cross_axis := Vector3.FORWARD.cross(tangent).normalized()
+		var ring := PackedVector3Array()
+		for corner: Vector2 in section:
+			ring.append(centre + cross_axis * corner.x * half_width + Vector3.FORWARD * corner.y * half_depth)
+		rings.append(ring)
+	for i in segments:
+		var a_centre := _arch_point(seats[0], seats[1], rise, float(i) / float(segments))
+		var b_centre := _arch_point(seats[0], seats[1], rise, float(i + 1) / float(segments))
+		for side in section.size():
+			var next := (side + 1) % section.size()
+			var outward := ((rings[i][side] + rings[i][next]) * 0.5 - a_centre \
+				+ (rings[i + 1][side] + rings[i + 1][next]) * 0.5 - b_centre).normalized()
+			_arch_triangle(tool, rings[i][side], rings[i + 1][side], rings[i][next], outward)
+			_arch_triangle(tool, rings[i][next], rings[i + 1][side], rings[i + 1][next], outward)
+	var start_normal := (seats[0] - _arch_point(seats[0], seats[1], rise, 0.001)).normalized()
+	var end_normal := (seats[1] - _arch_point(seats[0], seats[1], rise, 0.999)).normalized()
+	for side in section.size():
+		var next := (side + 1) % section.size()
+		_arch_triangle(tool, seats[0], rings[0][side], rings[0][next], start_normal)
+		_arch_triangle(tool, seats[1], rings[segments][next], rings[segments][side], end_normal)
+	var arch := MeshInstance3D.new()
+	arch.name = "StormwardCompassLintel"
+	arch.mesh = tool.commit()
+	arch.set_meta("stormward_role", "compass_support")
+	add_child(arch)
+	var at := _v3(cfg.get("compass_signal", {}).get("position", [0.0, 7.1, -0.8]))
+	var ring_radius := (1.28 + 1.58) * 0.5
+	var hanger_x := 0.75
+	for side: float in [-1.0, 1.0]:
+		var anchor := at + Vector3(side * hanger_x,
+			sqrt(ring_radius * ring_radius - hanger_x * hanger_x), 0.0)
+		var t := clampf((anchor.x - seats[0].x) / (seats[1].x - seats[0].x), 0.0, 1.0)
+		_rod("StormwardCompassHanger", anchor,
+			_arch_point(seats[0], seats[1], rise, t), 0.055, bronze)
+	# The vane sits on an axle through the ring, rather than glowing in air.
+	_rod("StormwardCompassAxle", at + Vector3(-ring_radius, 0.0, 0.06),
+		at + Vector3(ring_radius, 0.0, 0.06), 0.045, bronze)
+
+
+func _arch_point(a: Vector3, b: Vector3, rise: float, t: float) -> Vector3:
+	return a.lerp(b, t) + Vector3.UP * rise * sin(PI * t)
+
+
+func _arch_triangle(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3,
+		outward: Vector3) -> void:
+	# Godot's front face is clockwise. The radial/cap hint makes winding
+	# independent of either pier's lean and gives each chamfer a lit face.
+	var normal := (b - a).cross(c - a).normalized()
+	if normal.dot(outward) > 0.0:
+		var swap := b
+		b = c
+		c = swap
+		normal = -normal
+	tool.set_normal(-normal)
+	for point: Vector3 in [a, b, c]:
+		tool.set_uv(Vector2(point.x, point.y + point.z) * 0.35)
+		tool.add_vertex(point)
+
+
+func _rod(label: String, a: Vector3, b: Vector3, radius: float, material: Material) -> void:
+	var mesh := CylinderMesh.new()
+	mesh.top_radius = radius
+	mesh.bottom_radius = radius
+	mesh.height = a.distance_to(b)
+	mesh.radial_segments = 10
+	var instance := MeshInstance3D.new()
+	instance.name = label
+	instance.mesh = mesh
+	instance.material_override = material
+	instance.position = (a + b) * 0.5
+	instance.quaternion = Quaternion(Vector3.UP, (b - a).normalized())
+	instance.set_meta("stormward_role", "compass_support")
+	add_child(instance)
 
 
 func _add_banners(specs: Array) -> void:
