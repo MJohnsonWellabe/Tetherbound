@@ -456,6 +456,13 @@ static func _authoring_model_candidate_config(spec: Dictionary, record: Dictiona
 		var path := str(provenance.get(field, ""))
 		if not path.begins_with("res://") or not FileAccess.file_exists(path) \
 				or FileAccess.get_sha256(path) != str(provenance.get(field + "_sha256", "")): return {}
+	var producer := str(provenance.get("producer", ""))
+	if producer != "res://tools/art_pipeline/blender/animate_humanoid.py" \
+			or not FileAccess.file_exists(producer): return {}
+	# Git checks this Python source out with CRLF on Windows and LF elsewhere.
+	# Bind the actual producer text without making checkout line endings a failure.
+	var producer_text := FileAccess.get_file_as_string(producer).replace("\r\n", "\n")
+	if producer_text.sha256_text() != str(provenance.get("producer_sha256", "")): return {}
 	if str(provenance.get("generation_task_id", "")) != "01a12ba9-8dea-7093-a169-b6a195cb1e2c" \
 			or str(provenance.get("rig_task_id", "")) != "01a12bb2-f69f-75de-94e5-41dd21a2e47b": return {}
 	cfg["portrait"] = portrait

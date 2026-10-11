@@ -208,10 +208,13 @@ func test_off_model_portrait_authoring_uses_runtime_body_and_checks_provenance()
 	authored.erase("portrait")
 	runtime.erase("portrait")
 	assert_eq(authored, runtime)
-	for field: String in ["source_model_sha256", "candidate_model_sha256", "reference_sha256"]:
+	for field: String in ["source_model_sha256", "candidate_model_sha256", "reference_sha256", "producer_sha256"]:
 		var invalid := settings.duplicate(true)
 		invalid.variants[id].authoring_provenance[field] = "incorrect"
 		assert_eq(PORTRAITS.authoring_portrait_model_config(spec, invalid), {}, field)
+	var wrong_producer := settings.duplicate(true)
+	wrong_producer.variants[id].authoring_provenance.producer = "res://tools/repaint_regional_character_textures.py"
+	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, wrong_producer), {})
 	var duplicate := settings.duplicate(true)
 	duplicate.variants.p2055_water_iona.portrait = duplicate.variants[id].portrait
 	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, duplicate), {})

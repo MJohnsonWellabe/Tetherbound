@@ -13,9 +13,10 @@
     "reference": "res://docs/art/reference/npc-identity/adair-front-agent-v1.png",
     "reference_sha256": "6d70d5ffa9a43a5e73bdb4936c868da3b3714811b4fb79bfc638493e2a8468de",
     "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
-    "producer_sha256": "247a2ade78c51c39011da0ed10afdf421936d95499471dfdfedf50a6deffd15e",
+    "producer_sha256": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
     "generation_task_id": "01a12ba9-8dea-7093-a169-b6a195cb1e2c",
-    "rig_task_id": "01a12bb2-f69f-75de-94e5-41dd21a2e47b"
+    "rig_task_id": "01a12bb2-f69f-75de-94e5-41dd21a2e47b",
+    "producer_hash_encoding": "UTF-8 text with CRLF normalized to LF"
   },
   "generation": {
     "endpoint": "/openapi/v1/image-to-3d",
