@@ -190,13 +190,15 @@ static func velocity_at(seal: Dictionary, rules: Dictionary, position: Vector3, 
 
 ## World-authored flight volumes: the race disc as z-strips whose widths
 ## follow the circle, seabed to above Veilfall. A single square would overhang
-## neighbouring earlier land at its corners; a small shoal needs one box.
+## neighbouring earlier land at its corners. Irregular shoals need finer
+## strips too: their conservative shore bound can be close to an earlier dock.
 static func flight_volumes(seal: Dictionary, rules: Dictionary) -> Array[AABB]:
 	var centre: Vector2 = seal.get("centre", Vector2.ZERO)
 	var outer := outer_radius(seal, rules)
 	var floor_y := float(rules.get("flight_floor_y_m", -100.0))
 	var height := float(rules.get("flight_ceiling_y_m", 1000.0)) - floor_y
-	var strips := 1 if str(seal.get("kind", "")) == "rest_shoal" else maxi(1, int(rules.get("flight_strips", 8)))
+	var strips := maxi(1, int(rules.get("flight_strips", 8)))
+	if str(seal.get("kind", "")) == "rest_shoal": strips *= 4
 	var volumes: Array[AABB] = []
 	for index in strips:
 		var z0 := centre.y - outer + 2.0 * outer * float(index) / float(strips)
