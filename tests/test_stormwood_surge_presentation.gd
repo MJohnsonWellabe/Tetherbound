@@ -1402,3 +1402,27 @@ func test_crawlers_go_out_during_a_ground_warning() -> void:
 	assert_almost_eq(float(surge._ceiling_material.get_shader_parameter("crawlers")), full, 0.0001, "veins back after the warning")
 	surge.free()
 	parts.world.free()
+
+
+func test_steam_keeps_radial_and_lifetime_alpha_with_soft_intersections() -> void:
+	var surge := SURGE.new()
+	surge._build_steam()
+	var steam := surge._steam
+	assert_true(steam != null)
+	var process := steam.process_material as ParticleProcessMaterial
+	assert_true(process.color_ramp != null, "life fade retained")
+	var ramp := (process.color_ramp as GradientTexture1D).gradient
+	assert_almost_eq(ramp.get_color(0).a, 0.0)
+	assert_almost_eq(ramp.get_color(ramp.get_point_count() - 1).a, 0.0)
+	var quad := steam.draw_pass_1 as QuadMesh
+	var material := quad.material as ShaderMaterial
+	assert_true(material != null, "soft-intersection material is production-bound")
+	assert_almost_eq(material.get_shader_parameter("intersection_fade_m"), quad.size.y,
+		0.0001, "fade distance comes from authored puff height")
+	var texture := material.get_shader_parameter("puff_texture") as GradientTexture2D
+	assert_true(texture == SURGE.soft_puff_texture(), "same soft radial texture")
+	assert_almost_eq(texture.gradient.get_color(texture.gradient.get_point_count() - 1).a, 0.0)
+	assert_eq(texture.fill, GradientTexture2D.FILL_RADIAL)
+	assert_almost_eq(process.color.a, float(_config().presentation.phase_readability_candidate.steam.alpha),
+		0.0001, "the active candidate alpha was not silently reduced")
+	surge.free()

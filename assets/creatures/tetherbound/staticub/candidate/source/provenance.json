@@ -1,0 +1,121 @@
+{
+  "subject": "staticub",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Reference-backed reconstruction for disabled native review; installed species unchanged",
+  "reference_provenance": {
+    "subject": "staticub",
+    "reference": "assets/creatures/tetherbound/staticub/reference/native-standing-v1.png",
+    "method": "built_in_imagegen",
+    "identity_reference": [
+      "assets/creatures/tetherbound/staticub/reference/front.png",
+      "assets/creatures/tetherbound/staticub/models/creature_staticub_lod0.glb rendered full identity view"
+    ],
+    "prompt": "Draft an original Tetherbound Staticub modeling reference using the supplied established front reference crop and complete installed-model three-quarter render as species identity. ONE full-body three-quarter studio view of the SAME young brown storm bear cub: rounded ears, large expressive clear blue eyes with dark pupils, short friendly tan muzzle and dark rounded nose, warm brown layered fur with lighter facial brows, stocky rounded cub torso, four substantial short legs and complete broad bear paws with small tan claws. Preserve the established restrained violet/blue lightning markings along the shoulders and flanks as painted fur patterns, never detached electricity strands or floating geometry. It must clearly remain the young rounded Staticub, smaller and less developed than its adult Stormursa evolution; no adult copper armour, glass ridges, giant adult mass, horns or invented equipment. Neutral riggable stance: all FOUR legs and full paws visibly separate beneath the body, front and rear limb roots clear, each sole grounded, natural supported neck and head with both ears and eyes visible, no crouching or tucked limbs. Fur consists of broad connected sculpted masses and shallow directional texture, not a cloud of thin disconnected spikes or wire strands. The short existing bear tail is modest and complete, no new long tail. Keep warm natural brown/tan fur, vivid but restrained blue eyes and a few readable violet-white lightning patterns; large coherent colour groups, soft roughness, no metallic fur or neon body glow. Entire head, ears, body, four paws and tail inside image with generous margin. Detailed stylized game-creature surface, plain light-grey studio background and floor, soft neutral studio light. No text, rulers, reference board, human, saddle, harness, weapons, props, environment or action pose. One established roster creature only, not a new species.",
+    "default_enabled": false,
+    "selected_origin": "exec-03f4688a-46a9-447b-92b8-826925dd9675",
+    "inspection": {
+      "identity": "Brown young bear, blue eyes, tan muzzle, four paws and violet painted lightning retained",
+      "riggability": "Four full separated paws and complete head/ears/body fit in frame; no floating strands",
+      "limits": "Actual fur/marking topology, UV fidelity and motion require inspection; no art approval inferred from reference"
+    }
+  },
+  "generation": {
+    "task_id": "01a126ba-f27d-73a7-a3c8-1182d427197c",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "reference": "assets/creatures/tetherbound/staticub/reference/native-standing-v1.png",
+    "night": "2026-10-09",
+    "status": "SUCCEEDED",
+    "observed_credits": 30,
+    "new_submissions": 1
+  },
+  "rights": {
+    "basis": "Owner-held installed identity and original drafted reference; owner-authorized paid Meshy account. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "approach": "Measured cub head, four paw centers and short bear tail; local surface diffusion and normalized four influences.",
+    "material": "Organic dielectric: metallic and emission disabled, UVs and texture maps retained",
+    "colourway": "Disabled staticub_native_review texture lookup avoids incompatible installed repaints; no roster species added",
+    "export_triangles": 29397,
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "topology_warnings": [
+      "Mesh_0: 13693 non-manifold edges",
+      "Mesh_0: 6122 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 1589 microscopic disconnected components",
+      "Mesh_0: ~3030 inward-facing faces",
+      "Mesh_0: 97 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ],
+    "height_m": 3.25,
+    "bones": 20,
+    "unweighted_vertices": 0,
+    "vertices": 16901,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "before_height_m": 3.25,
+    "candidate_height_m": 3.25,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 whole-body Low role samples and front/reverse native scale. Raw receipts/captures outside Git.",
+    "world": "Matched production stormwood CameraRig stage/seed/five poses per preset; fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "full_rig_and_motion": "OPEN",
+    "terminal_contact": "OPEN",
+    "topology": "OPEN",
+    "colour_variants": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Eleven clip names and still fixtures do not certify motion, ordinary gameplay paths, earned fights, swim/fly-grip or rider contact.",
+    "Retained topology/UV warnings require independent approval.",
+    "Candidate remains OFF until the complete art bar passes."
+  ]
+}

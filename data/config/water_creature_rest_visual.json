@@ -1,4 +1,8 @@
 {
-  "enabled": false,
-  "_comment": "P2-029 unjudged presentation candidate for global and Water Riptusk/Torrentoad only, guarded by their exact installed model paths. Uses the existing authored-rest lifecycle to finish each installed faint clip without the generic model roll. No new clip, bone correction, mesh resize, grounding offset, catalogue/gameplay/rest-resource/collision change. Shared by bed rest and companion settling. Keep false pending native endpoint/contact and resume review; reload the scene after changing this local/static gate."
+  "enabled": true,
+  "_comment": "P2-029 presentation, enabled after a code-blind Low before/after review (F39, 2026-10-10), for global and Water Torrentoad (Riptusk stays on the legacy roll: its faint endpoint stands head-down on straight front legs, judge round 1), guarded by their exact installed model paths. Uses the existing authored-rest lifecycle to finish each installed faint clip without the generic model roll. No new clip, bone correction, mesh resize, grounding offset, catalogue/gameplay/rest-resource/collision change. Shared by bed rest and companion settling.",
+  "species": [
+    "torrentoad",
+    "water_torrentoad"
+  ]
 }

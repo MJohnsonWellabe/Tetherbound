@@ -26,13 +26,17 @@ extends SceneTree
 ##     beat would be a stranger bug than not being able to sleep yet
 ##   * once free to leave (the same beat gate the front door itself uses),
 ##     standing at the loft bed offers "Sleep"
-##   * pressing it passes the night through the one shared `night_rest.gd`
-##     entry point: the day advances and `player_slept_at_home` clears
+##   * F47#4: pressing it by day (three times) rests a while through the one
+##     shared `night_rest.gd` entry point: the rung clears and a bedded
+##     creature wakes healed, but the day stays and no rest XP is paid
+##   * after nightfall it passes the night: the day advances and
+##     `player_slept_at_home` clears
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SEQUENCE_DIRECTOR_SCRIPT := "res://scripts/story/sequence_director.gd"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const STARTER_SPECIES := "terrapup"
+const NIGHT_REST := preload("res://scripts/world/night_rest.gd")
 
 const SETTLE_FRAMES := 240
 ## The prompt's own radius is 2.2m; stood off far enough that the arbiter's
@@ -104,6 +108,45 @@ func _run() -> void:
 	else:
 		print("home bed offers '%s'" % offered)
 
+	# F47#4: by day the bed rests a while -- the rung clears, a bedded
+	# creature wakes healed -- but no morning comes and no night's rest XP is
+	# paid, however often the player lies down again.
+	var look: Node = get_first_node_in_group(&"day_cycle")
+	if look == null or not look.has_method("hour"):
+		_fail("the world has no day_cycle clock to rest against")
+		_finish()
+		return
+	var hour := float(look.call("hour"))
+	if NIGHT_REST.in_night_window(hour):
+		_fail("the world opened inside the night window (hour %.1f); the day-rest half proves nothing" % hour)
+	progression.call("set_flag", "player_slept_at_home", false)
+	var bedded: RefCounted = party.call("at", 0)
+	var xp_before := int(bedded.get("xp"))
+	var day_morning := int(game.get("day"))
+	for press in 3:
+		bedded.set("resting", true)
+		bedded.set("hp", 1.0)
+		await _stand_beside(player, bed)
+		if not bool(arbiter.call("activate")):
+			_fail("pressing interact at the home bed by day activated nothing (press %d)" % press)
+			_finish()
+			return
+		for i in 150:
+			await physics_frame
+	if int(game.get("day")) != day_morning:
+		_fail("sleeping by day advanced the day (%d -> %d)" % [day_morning, int(game.get("day"))])
+	if int(bedded.get("xp")) != xp_before:
+		_fail("three day rests paid rest XP (%d -> %d)" % [xp_before, int(bedded.get("xp"))])
+	if bool(bedded.get("resting")) or float(bedded.get("hp")) < float(bedded.get("max_hp")) - 0.01:
+		_fail("a day rest did not wake the bedded creature healed (resting %s, hp %d/%d)"
+			% [str(bedded.get("resting")), int(float(bedded.get("hp"))), int(float(bedded.get("max_hp")))])
+	if not bool(progression.call("has", "player_slept_at_home")):
+		_fail("a day rest did not clear the objective ladder's rest rung")
+	print("rested by day three times: day stays %d, xp stays %d" % [day_morning, xp_before])
+
+	# After nightfall the same bed passes the night.
+	look.call("apply_time", "night")
+	await _stand_beside(player, bed)
 	progression.call("set_flag", "player_slept_at_home", false)
 	var day_before := int(game.get("day"))
 	if not bool(arbiter.call("activate")):

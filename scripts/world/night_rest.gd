@@ -72,6 +72,7 @@ extends Node
 ## own.
 
 const SESSION := preload("res://scripts/net/session.gd")
+const REST_CONFIG_PATH := "res://data/config/rest.json"
 
 const FADE_SECONDS := 1.2
 
@@ -116,7 +117,7 @@ static func rest(host: Node) -> void:
 
 ## Today's rest, unchanged: the solo path, and the path every peer runs on its
 ## own process once the vote passes.
-static func _rest_alone(host: Node, game: Node, host_day: int = 0) -> void:
+static func _rest_alone(host: Node, game: Node, host_day: int = 0, morning: Variant = null) -> void:
 	var layer := CanvasLayer.new()
 	layer.layer = 15
 	var rect := ColorRect.new()
@@ -128,7 +129,7 @@ static func _rest_alone(host: Node, game: Node, host_day: int = 0) -> void:
 
 	var tween := host.create_tween()
 	tween.tween_property(rect, "color:a", 1.0, FADE_SECONDS * 0.5)
-	tween.tween_callback(func() -> void: pass_the_night(host, game, host_day))
+	tween.tween_callback(func() -> void: pass_the_night(host, game, host_day, morning))
 	tween.tween_interval(0.4)
 	tween.tween_property(rect, "color:a", 0.0, FADE_SECONDS * 0.5)
 	tween.tween_callback(layer.queue_free)
@@ -141,12 +142,21 @@ static func _rest_alone(host: Node, game: Node, host_day: int = 0) -> void:
 ## and the host do (`Game.advance_day()`). A positive number is the day the HOST
 ## arrived at, handed to a client through `_rpc_night_falls`; a client writes it
 ## with `Game.apply_host_clock()` and never derives one itself.
-static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> int:
+##
+## F47#4: `morning` says whether this rest reaches a new morning. Null means
+## "this process decides" from its own live hour (solo; the host deciding a
+## vote passes its decision to every peer). Outside the night window a rest
+## still heals and restores everything below, but the day, the clock and the
+## autosave's day stay where they are: sleeping again by day mints no day.
+static func pass_the_night(host: Node, game: Node = null, host_day: int = 0, morning: Variant = null) -> int:
 	if game == null:
 		game = host.get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; the night cannot pass")
 		return 0
+	if not morning is bool: morning = host_day > 0 or night_now(host)
+	if not morning:
+		return _rest_a_while(host, game)
 	# `host_day > 0` means the day has ALREADY been decided -- by the host, at
 	# the moment the vote passed, so that the number it broadcast and the number
 	# it keeps are the same one. Calling `advance_day()` again here would move
@@ -220,6 +230,76 @@ static func pass_the_night(host: Node, game: Node = null, host_day: int = 0) -> 
 	game.call("autosave_here")
 	print("[rest] rested; day %d" % day)
 	return day
+
+
+## F47#4: a rest by day. Everything a rest restores, nothing a morning brings.
+static func _rest_a_while(host: Node, game: Node) -> int:
+	var sleeper_flags: RefCounted = game.call("player_flags") if game.has_method("player_flags") \
+		else game.get("progression") as RefCounted
+	if sleeper_flags != null:
+		sleeper_flags.call("set_flag", "player_slept_at_home")
+	_heal_bedded_by_day(game)
+	var player := _find_player(host)
+	if player != null:
+		var vitals: RefCounted = player.get("vitals")
+		if vitals != null and vitals.has_method("rest"):
+			vitals.call("rest")
+	if game.has_method("push_world_message"):
+		game.call("push_world_message", str(rest_config().get("day_rest_line", "You rest a while.")))
+	game.call("autosave_here")
+	var day := int(game.get("day"))
+	print("[rest] rested a while by day; day %d stays" % day)
+	return day
+
+
+## A bedded creature wakes healed by a day rest, but a night's rewards (rest
+## XP, the bond milestone's rest night, mood, realm bed bonuses) come only
+## with a morning (game_state.complete_creature_bed_rests), so beds cannot be
+## slept in again and again by day for them. Same owner-transaction hold.
+static func _heal_bedded_by_day(game: Node) -> void:
+	var session: Variant = game.get("session")
+	if session != null and session.has_method("_owner_training_mutation_blocked") \
+		and session.call("_owner_training_mutation_blocked", game.get("local")) == true: return
+	var party: RefCounted = game.get("party")
+	if party == null: return
+	var woke := 0
+	for i in party.call("size"):
+		var creature: RefCounted = party.call("at", i)
+		if creature == null or not bool(creature.get("resting")): continue
+		creature.call("heal_fully")
+		creature.set("resting", false)
+		creature.set("rest_bed_index", -1)
+		woke += 1
+	if woke > 0:
+		party.set("revision", int(party.get("revision")) + 1)
+
+
+static func rest_config() -> Dictionary:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(REST_CONFIG_PATH)) \
+		if FileAccess.file_exists(REST_CONFIG_PATH) else null
+	return raw if raw is Dictionary else {}
+
+
+## True when `hour` (0..24) is in rest.json's night window, which may wrap
+## midnight. A missing window keeps every rest a night (the old behaviour).
+static func in_night_window(hour: float, cfg: Dictionary = {}) -> bool:
+	var window: Variant = (cfg if not cfg.is_empty() else rest_config()).get("night_window")
+	if not window is Dictionary: return true
+	var start := fposmod(float(window.get("start_hour", 0.0)), 24.0)
+	var finish := fposmod(float(window.get("end_hour", 0.0)), 24.0)
+	var at := fposmod(hour, 24.0)
+	if start == finish: return true
+	return (at >= start or at < finish) if start > finish else (at >= start and at < finish)
+
+
+## This process's live hour, from its day_cycle clock. A scene with no clock
+## (a test scene, a capture tool) has no day to protect: its rest is a night.
+static func night_now(host: Node) -> bool:
+	if host == null or not host.is_inside_tree(): return true
+	for look: Node in host.get_tree().get_nodes_in_group("day_cycle"):
+		# A look whose day cycle failed to load reads hour 0: no clock either.
+		if look.has_method("hour") and look.get("_cycle") != null: return in_night_window(float(look.call("hour")))
+	return true
 
 
 ## The trainer, from anywhere in the world's subtree.
@@ -400,16 +480,19 @@ func _evaluate() -> void:
 ## nobody is marked asleep any more and never flashes "waiting for" at a world
 ## that is already morning.
 func _night_falls(game: Node) -> void:
-	var day := int(game.call("advance_day"))
+	# F47#4: the host's hour decides whether this vote reaches a morning; a
+	# vote by day rests everyone a while and the day stays.
+	var morning := night_now(self)
+	var day := int(game.call("advance_day")) if morning else int(game.get("day"))
 	if _can_rpc() and bool(game.call("is_multi_peer")):
-		rpc("_rpc_night_falls", day)
+		rpc("_rpc_night_falls", day, morning)
 	var registry: RefCounted = _registry()
 	if registry != null:
 		for raw: Variant in _rows():
 			var row: Dictionary = raw
 			registry.call("set_flag", int(row["peer_id"]), "sleeping", false)
 		_broadcast_registry()
-	_night_here(day)
+	_night_here(day, morning)
 
 
 ## Write one peer's vote into the registry -- the host's only tally -- and
@@ -452,16 +535,16 @@ func _rpc_sleeping(sleeping: bool) -> void:
 
 ## Host -> everyone. The vote passed; `day` is the number the host arrived at.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
-func _rpc_night_falls(day: int) -> void:
+func _rpc_night_falls(day: int, morning: bool = true) -> void:
 	var game := _game()
 	if game == null or bool(game.call("is_host")):
 		return
-	_night_here(day)
+	_night_here(day, morning)
 
 
 # --- applying the night on this peer -------------------------------------------------
 
-func _night_here(host_day: int) -> void:
+func _night_here(host_day: int, morning: bool = true) -> void:
 	var game := _game()
 	if game == null:
 		return
@@ -474,9 +557,9 @@ func _night_here(host_day: int) -> void:
 		# No live node to hang a fade on (a downed player whose body went away,
 		# a peer mid scene change). The night still has to happen for this peer
 		# or its day would diverge from the host's, so it happens without one.
-		pass_the_night(self, game, host_day)
+		pass_the_night(self, game, host_day, morning)
 		return
-	_rest_alone(bed, game, host_day)
+	_rest_alone(bed, game, host_day, morning)
 
 
 ## A peer that never bedded down (rule 5's downed player) still needs somewhere

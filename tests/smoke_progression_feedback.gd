@@ -435,6 +435,10 @@ func _a_night_in_a_bed_credits_rest(party: RefCounted) -> void:
 	if rest_prompt == null:
 		_fail("placed bedroll has no Rest interaction")
 		return
+	# F47#4: a night's rewards come only with a morning, after nightfall
+	# (rest.json); disclosed: snap the clock to night.
+	for look: Node in get_nodes_in_group("day_cycle"):
+		if look.has_method("apply_time"): look.call("apply_time", "night")
 	await _teleport_near(rest_prompt, Vector3.ZERO)
 	if not await _wait_provider(rest_prompt):
 		_fail("camp Rest prompt never won arbitration")

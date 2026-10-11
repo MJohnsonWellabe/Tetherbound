@@ -1,9 +1,9 @@
 {
-  "_comment": "P2-072 unjudged presentation candidate. Independent of the human swim pose; reads existing local/remote aquatic snapshots only.",
-  "enabled": false,
+  "_comment": "P2-072 swimmer waterline ring and wake (judged pass). Independent of the human swim pose; reads existing local/remote aquatic snapshots only.",
+  "enabled": true,
   "surface_lift_m": 0.045,
-  "ring_diameter_m": 1.35,
-  "opacity": 0.26,
+  "ring_diameter_m": 1.7,
+  "opacity": 0.5,
   "trail_lifetime_s": 1.15,
   "trail_spacing_m": 0.40,
   "trail_interval_s": 0.16,

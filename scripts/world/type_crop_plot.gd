@@ -137,6 +137,12 @@ var _plant: Node3D = null
 var _drawn_state: String = ""
 var _drawn_crop: String = ""
 var _drawn_label: String = ""
+## F26 performance (presentation_lod.json crop_plot): a bed the camera is far
+## from re-reads its plot, seeds and label every refresh_s instead of every
+## frame. Nothing about it can be read or used from there (the prompt radius
+## is 2 m). Open, queued or claimed beds always refresh.
+const PRESENTATION_LOD := preload("res://scripts/world/presentation_lod.gd")
+var _far_refresh_left := 0.0
 var _materials: Dictionary = {}
 
 ## D97. The realm this BED belongs to, stamped on every intent it raises. Set by
@@ -211,7 +217,21 @@ func _process(_delta: float) -> void:
 			_close_seed_picker()
 		elif FARM_LOGIC.state_of(_plot(), _day()) != FARM_LOGIC.TILLED:
 			_close_seed_picker()
+	var lod := PRESENTATION_LOD.block("crop_plot")
+	if not lod.is_empty() and not is_open() and _queued_sow_crop.is_empty() and _claim.is_empty() \
+			and _camera_farther_than(float(lod.get("far_m", 20.0))):
+		_far_refresh_left -= _delta
+		if _far_refresh_left > 0.0:
+			return
+		_far_refresh_left = float(lod.get("refresh_s", 0.5))
+	else:
+		_far_refresh_left = 0.0
 	_refresh()
+
+
+func _camera_farther_than(metres: float) -> bool:
+	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
+	return camera != null and camera.global_position.distance_to(global_position) > metres
 
 
 ## --- state ------------------------------------------------------------------

@@ -573,7 +573,9 @@ func _build_state_bindings(world: Node3D, materials: Dictionary) -> void:
 	for key in ["fly_routes","upper_routes","natural_anchor_wind","anchor_drone","waterward_overlook","returning_travelers","shrine_lights"]:
 		_bindings[key] = []
 	for record in [["fly_routes",Vector3(400,618,3250)],["upper_routes",Vector3(-400,784,3890)]]:
-		var visual := world.call("_cylinder",world,str(record[0])+"Streamer",record[1],0.18,5.0,materials.heart) as Node3D
+		# P2-053: the unlocked-route post is bronze like the realm's other
+		# fittings; in the shared cyan `heart` glow it out-shone the Aerie.
+		var visual := world.call("_cylinder",world,str(record[0])+"Streamer",record[1],0.18,5.0,materials.bronze) as Node3D
 		_bindings[record[0]].append(visual)
 	for model: Node3D in _relays.values():
 		var light := OmniLight3D.new()

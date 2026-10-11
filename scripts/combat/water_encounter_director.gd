@@ -3,6 +3,7 @@ extends "res://scripts/combat/cloudreach_encounter_director.gd"
 ## Water content over the shared production combat pipeline. Residency is the
 ## union of occupied Water peer neighborhoods, including a remote island when
 ## this world's local rig is only a host simulation. Story bosses stay external.
+const WATER_PERF := preload("res://scripts/world/performance_config.gd")
 const REMOTE_CREATURE_BODY := preload("res://scripts/creatures/remote_creature.gd")
 const WATER_DATA := preload("res://scripts/world/water_encounter_runtime_data.gd")
 const RANKS := preload("res://scripts/characters/npc_ranks.gd")
@@ -267,7 +268,15 @@ func _spawn_available_sites() -> void:
 		var authored_members: Array = site.get("member_anchors", [])
 		if plans.size() == 1 and not str(plans[0].id).is_empty():
 			var cycle := foundation_alpha_cycle(str(plans[0].id))
-			if cycle.is_empty() and not _once_cleared(str(plans[0].opts.get("once_id", ""))) \
+			# Alpha cycles are host truth (foundation_alpha_cycle is {} on a
+			# client). A client follows its mirror of the host's cycle, as
+			# encounter_director does: the live generation's packet, nothing
+			# while it waits, and no body before the mirror arrives (retried).
+			if _is_guest() and _session != null and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
+				and not preload("res://scripts/repeatables/alpha_respawns.gd").site(str(plans[0].id)).is_empty():
+				cycle = get_node("/root/Game").world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(str(plans[0].id), {}).duplicate(true)
+				if cycle.is_empty(): continue
+			if cycle.is_empty() and _is_host() and not _once_cleared(str(plans[0].opts.get("once_id", ""))) \
 				and _session != null and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
 				and not preload("res://scripts/repeatables/alpha_respawns.gd").site(str(plans[0].id)).is_empty():
 				var first_packet: Dictionary = _session.call("foundation_alpha_first_spawn", self, str(plans[0].id))
@@ -353,7 +362,9 @@ func _spawn_available_sites() -> void:
 			push_warning("Water site lacks a valid authored encounter or supported creature footing: " + id)
 
 func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
-	if not _is_host() or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
+	# A connected guest publishes only its mirror's retained packet (checked
+	# below), so a client never invents or advances a generation.
+	if not (_is_host() or _is_guest()) or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
 	var game := get_node_or_null("/root/Game")
 	if game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return
 	for wild: Node3D in _wild_creatures:
@@ -490,15 +501,35 @@ func _build_trainers() -> void:
 		prompt.activated.connect(_challenge.bind(id))
 		trainer_prompts[id] = prompt
 
+## F26 performance (`performance.json` water_wild_activity): the full
+## activity pass -- including `_set_wild_active`'s below-ground reground query
+## for every active wild -- runs every `recheck_s`; between passes a wild is
+## only touched when its wanted state and its physics state disagree, so a
+## site entering or leaving range still switches it on the same frame.
+var _wild_activity_left := 0.0
+
+
 func _process(delta: float) -> void:
 	super._process(delta)
+	var activity: Dictionary = WATER_PERF.config().get("water_wild_activity", {})
+	_wild_activity_left -= delta
+	var full_pass := not bool(activity.get("enabled", false)) or _wild_activity_left <= 0.0
+	if full_pass:
+		_wild_activity_left = float(activity.get("recheck_s", 1.0))
 	for wild: Node3D in _wild_creatures:
 		if is_instance_valid(wild) and wild.visible and wild != _engaged_with and not bool(wild.get("engaged")):
 			_set_wild_active(wild, _wanted_sites.has(str(wild.get_meta("water_site_id", ""))))
+	# F26 (`performance.json` water_trainer_prompt_follow): a top-level prompt
+	# write pushes a transform update every frame for every trainer, though
+	# trainers stand still; move it only when its trainer has moved.
+	var follow_only_moved := bool(WATER_PERF.config().get("water_trainer_prompt_follow", {}).get("enabled", false))
+	var simulation_only := bool(realm_world.get("simulation_only"))
 	for id: String in trainer_prompts:
 		var prompt: Node3D = trainer_prompts[id]
-		prompt.global_position = trainer_nodes[id].global_position + Vector3(1.5, 1.05, 0)
-		if bool(realm_world.get("simulation_only")):
+		var at: Vector3 = trainer_nodes[id].global_position + Vector3(1.5, 1.05, 0)
+		if not follow_only_moved or not prompt.global_position.is_equal_approx(at):
+			prompt.global_position = at
+		if simulation_only:
 			prompt.enabled = false
 	_mute_greeting_during_own_fight()
 

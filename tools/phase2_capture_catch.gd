@@ -139,6 +139,9 @@ func _run() -> void:
 		# site is outside the default spawn neighborhood.
 		for i in 300:
 			await physics_frame
+		_stand_beside_streamed_tidewake_wild()
+		for i in 30:
+			await physics_frame
 	_seed_orbs()
 	if not _collect_nodes():
 		_finish()
@@ -418,6 +421,37 @@ func _leave_the_farmhouse() -> void:
 			start = _wild.global_position + Vector3(0.0, 0.0, 5.0)
 	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0
 	player.global_position = start
+	player.velocity = Vector3.ZERO
+
+
+## Tidewake wilds only exist once the director streams the neighborhood around
+## the player, so pick one after that wait: the nearest active, grounded,
+## unengaged wild (as the Cloudreach branch does), and stand 5 m from it. The
+## Meadows "practice" species lookup can name a far or absent body here.
+func _stand_beside_streamed_tidewake_wild() -> void:
+	var player := _world.get_node_or_null(^"Player") as CharacterBody3D
+	var director := _world.get_node_or_null(^"EncounterDirector")
+	if player == null or director == null:
+		return
+	var nearest := INF
+	for candidate: Node3D in (director.call("wild_creatures") as Array[Node3D]):
+		if not is_instance_valid(candidate) or not candidate.visible \
+				or not candidate.is_physics_processing() or bool(candidate.get("engaged")):
+			continue
+		var ground := float(_world.call("ground_height_at", candidate.global_position.x, candidate.global_position.z))
+		if not is_finite(ground) or absf(ground - candidate.global_position.y) > 2.0:
+			continue
+		var distance := candidate.global_position.distance_to(player.global_position)
+		if distance < nearest:
+			nearest = distance
+			_wild = candidate
+	if _wild == null:
+		print("tidewake catch: no active grounded wild streamed near the player")
+		return
+	print("tidewake catch: %s at %.1f m" % [_wild.name, nearest])
+	var at := _wild.global_position + Vector3(0.0, 0.0, 5.0)
+	at.y = float(_world.call("ground_height_at", at.x, at.z)) + 1.0
+	player.global_position = at
 	player.velocity = Vector3.ZERO
 
 

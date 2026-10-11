@@ -479,7 +479,7 @@ func _freeze_bounty_instances(encounter_id: String, peer: int) -> void:
 	participant.foundation_bounty_instances = instances
 
 func _retain_research(encounter_id: String, peer: int, kind: String, species: String, serial: String, move_id: String = "", night: Variant = null, capture_card: Dictionary = {}, capture_offer: Dictionary = {}) -> bool:
-	if _session == null or not _is_host(): return true
+	if _session == null or (not _is_host() and not _owns_canonical_wild(encounter_id)): return true
 	var source := {"encounter_id": encounter_id, "peer": peer, "kind": kind, "species": species,
 		"source_id": JSON.stringify([_encounter_realm(), encounter_id, peer, kind, serial]).sha256_text(), "move_id": move_id, "night": night}
 	source.record = _encounter_host.call("record", encounter_id).duplicate(true)
@@ -497,9 +497,23 @@ func _retain_research(encounter_id: String, peer: int, kind: String, species: St
 	if result.get("durable") == true: _foundation_pending_sources.erase(source)
 	return result.get("durable") == true
 
+## Leaves refused only by a pending actor-vitals save, replayed once it lands.
+var _deferred_disengages: Dictionary = {}
+
+func _retry_deferred_disengages() -> void:
+	if _encounter_host == null: return
+	for encounter_id: String in _deferred_disengages.keys().duplicate():
+		if ordinary_actor_vitals_pending(encounter_id): continue
+		var waiting: Array = _deferred_disengages[encounter_id]
+		_deferred_disengages.erase(encounter_id)
+		for peer_id: int in waiting:
+			if (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id):
+				_host_commit_encounter({"kind": "disengage", "encounter_id": encounter_id}, peer_id)
+
 func _retry_research_sources() -> void:
-	if _session == null or not _is_host(): return
+	if _session == null: return
 	for source: Dictionary in _foundation_pending_sources.duplicate(true):
+		if not _is_host() and not _owns_canonical_wild(str(source.encounter_id)): continue
 		var result: Dictionary = _session.call("foundation_research_source", self, source.encounter_id, source.peer, source.kind, source.source_id, source.species, source.move_id, source.night)
 		if result.get("durable") == true: _foundation_pending_sources.erase(source)
 
@@ -610,10 +624,16 @@ func start_guest_master_duel(site: Node3D, peer: int, character: String, uid: St
 		_encounter_host.call("forget", id)
 		body.queue_free()
 		return {"ok": false, "code": "actual_master_actor_required"}
+	var world: RefCounted = _session.call("_game").get("world")
+	# F28: the guest's creature vitals in this duel are host-owned (saved
+	# actor vitals, wild_actor_scope kind "master"); its win settles them.
+	var live: Dictionary = _encounter_host.call("record", id)
+	live["wild_actor_owner"] = WILD_ACTOR_SCOPE.make(str(world.reward_delivery_namespace),
+		str(_session.call("_altar_current_epoch")), _encounter_realm(), id, "master")
+	rec = live.duplicate(true)
 	var runtime: Node = SHARED_WILD_HOST_FIGHT.new()
 	add_child(runtime)
 	_shared_host_fights[id] = runtime
-	var world: RefCounted = _session.call("_game").get("world")
 	_guest_master_duels[id] = {"peer": peer, "character_id": character, "creature_uid": uid, "master_id": definition.id,
 		"encounter_id": id, "world_namespace": world.reward_delivery_namespace, "session_id": world.world_id,
 		"world": weakref(world), "epoch": _session.call("_altar_current_epoch"), "site": weakref(site),
@@ -670,13 +690,24 @@ func retained_guest_master_win(id: String) -> Dictionary:
 		or float(witness.get("verdict", {}).get("delta", {}).get("hp", 1)) > 0 \
 		or creature == null or float(creature.get("hp")) > 0 \
 		or duel.world.get_ref() != _session.call("_game").get("world") or duel.epoch != _session.call("_altar_current_epoch"): return {}
+	# F28: every hit was owner-saved before the win settles (see
+	# _retry_guest_master_win); these are the host's settled vitals.
+	var member: Dictionary = (_encounter_host.call("record", id) as Dictionary).get("participants", {}).get(duel.peer, {})
+	var settled: Array = WILD_ACTOR_SCOPE.settled_vitals(_session.call("admitted_character_state", duel.peer), member)
+	if settled.is_empty(): return {}
 	return {"character_id": duel.character_id, "creature_uid": duel.creature_uid, "master_id": duel.master_id,
 		"encounter_id": id, "world_namespace": duel.world_namespace, "session_id": duel.session_id,
-		"participants": duel.participants.duplicate(true)}
+		"participants": duel.participants.duplicate(true), "settled_vitals": settled}
 
 func _retry_guest_master_win(id: String) -> void:
 	var duel: Dictionary = _guest_master_duels.get(id, {})
 	if duel.get("won") != true or duel.get("durable") == true: return
+	# As a wild victory settles: the fight is done and every HP receipt of
+	# this guest is owner-ACKed before its win (and award) is journaled.
+	if _encounter_host == null or str(_encounter_host.call("phase", id)) != "done" \
+		or not (_encounter_host.call("pending_actor_vitals", id) as Array).is_empty(): return
+	var waiting: Variant = _session.call("admitted_pending_vitals", int(duel.peer)) if _session.has_method("admitted_pending_vitals") else null
+	if not waiting is Dictionary or not (waiting as Dictionary).is_empty(): return
 	var result: Dictionary = _session.call("foundation_guest_master_outcome", self, retained_guest_master_win(id))
 	if result.get("durable") == true and result.get("ok") == true:
 		duel.durable = true
@@ -998,7 +1029,9 @@ func _spawn_creatures() -> void:
 	await _spawn_authored_creatures(entries)
 
 func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
-	if not _is_host() or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
+	# A connected guest publishes only its mirror's retained packet (checked
+	# below), so a client never invents or advances a generation.
+	if not (_is_host() or _is_guest()) or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
 	var game := get_node_or_null("/root/Game")
 	if game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return
 	var site := preload("res://scripts/repeatables/alpha_respawns.gd").site(site_id)
@@ -1022,6 +1055,18 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 	set_meta("foundation_alpha_spawning_" + site_id, true)
 	await _spawn_authored_creatures([entry], packet)
 	remove_meta("foundation_alpha_spawning_" + site_id)
+
+## F44, guest only: drop this site's alpha bodies that are not the host's
+## live generation (0 while the host's cycle waits), outside a fight. A beaten
+## or superseded alpha must not stand, or respawn, on a client.
+func foundation_retire_stale_alpha(site_id: String, live_generation: int) -> void:
+	if not _is_guest() or (_manager != null and _manager.call("is_fighting") == true): return
+	for wild: Node3D in _wild_creatures.duplicate():
+		if not is_instance_valid(wild) or wild.get_meta("foundation_alpha_site", "") != site_id \
+			or int(wild.get_meta("foundation_alpha_generation", 0)) == live_generation: continue
+		_wild_creatures.erase(wild)
+		_wild_respawn.erase(wild)
+		wild.queue_free()
 
 func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -> void:
 	if entries.is_empty():
@@ -1127,6 +1172,18 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			cycle = foundation_alpha_cycle(alpha_site)
 		if spawn_packet.is_empty() and cycle.get("status") == "active":
 			spawn_packet = preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(get_node("/root/Game").world.redesign_world, alpha_site)
+		# F44: alpha cycles are host truth and foundation_alpha_cycle is {} off
+		# the host. A client follows its mirror of the host's retained cycle:
+		# the live generation's packet, nothing while it waits, and nothing yet
+		# with no mirrored cycle -- never a body with traits of its own roll.
+		# FoundationAlphas publishes the host's packet once the mirror arrives.
+		var client_alpha: bool = _is_guest() \
+			and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
+			and not preload("res://scripts/repeatables/alpha_respawns.gd").site(alpha_site).is_empty()
+		if client_alpha:
+			cycle = get_node("/root/Game").world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(alpha_site, {}).duplicate(true)
+			if cycle.get("status") == "active":
+				spawn_packet = preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(get_node("/root/Game").world.redesign_world, alpha_site)
 		if not spawn_packet.is_empty(): set_meta("foundation_alpha_spawning_" + alpha_site, true)
 
 		for n in count:
@@ -2895,6 +2952,12 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 			and _tether_item_request_retained(encounter_id, peer_id, intent.request)):
 		var refusal := {"ok": false, "pending": false, "kind": kind, "peer": peer_id,
 			"code": "pending_vitals", "reason": "The original health change is still being saved.", "delta": {}, "encounter_id": encounter_id}
+		if kind == "disengage":
+			# A leaver's manager has already ended its fight and dropped the
+			# link, so nobody resends this. Keep the leave until the save lands.
+			var waiting: Array = _deferred_disengages.get(encounter_id, [])
+			if not waiting.has(peer_id): waiting.append(peer_id)
+			_deferred_disengages[encounter_id] = waiting
 		if kind == "tether_command" and intent.get("request") is Dictionary \
 			and preload("res://scripts/combat/tether_commands.gd").valid_intent(intent.request):
 			refusal["command_request"] = intent.request.duplicate(true)
@@ -3177,6 +3240,10 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 		return deny
 	var runtime := _shared_host_fight(id)
 	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+	var hosted := get_parent().get_node_or_null("StormwoodEncounterHub")
+	if hosted != null:
+		var round_body: Node3D = hosted.call("opponent_for_record", id)
+		if round_body != null: wild = round_body
 	if not is_instance_valid(wild): return deny
 	# A tracked trainer/boss actor binds lazily on first publication, which
 	# advances its actor generation. Bind it here, before the start freezes its
@@ -3204,12 +3271,27 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 		_body_radius(body), _body_radius(wild), host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(body, wild), frozen.move)
 	move["mastery_context"] = {"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
 		"session_id": _session.call("_altar_current_epoch")}
-	if uses_durable_trainer_rewards(id) and slot == "utility" \
+	# Heal Pulse is a health change, so it commits through the same saved
+	# vitals producer whether the fight is a trainer round or a wild fight.
+	if uses_saved_actor_vitals(id) and slot == "utility" \
 		and move.get("utility", {}).get("kind") == "heal" and move.get("utility", {}).get("scope") == "self":
 		return _stage_ordinary_self_heal(id, peer, intent, body, move, card)
 	var verdict: Dictionary = _encounter_host.call("authorize_move_start", intent, peer, owned,
 		binding, move, COMBAT_MANAGER.host_wind_profile(card), Time.get_ticks_msec())
-	if verdict.get("ok") == true: _host_after_encounter_change(id, peer)
+	if verdict.get("ok") == true:
+		# A self status utility (Hearten) takes effect when its start is accepted;
+		# the next landed hit reads it through self_utility_power and spends it.
+		if str(move.get("utility", {}).get("scope", "")) == "self":
+			var applied: bool = _encounter_host.call("apply_self_status_utility", id, str(binding.creature_uid), move_id, move,
+				body.global_position, float(card.get("hp", 0.0)), float(card.get("hp_max", card.get("max_hp", 0.0))),
+				"%s:%d:%d:self" % [id, peer, int(intent.get("action", 0))], Time.get_ticks_msec())
+			var effect: Dictionary = move.get("utility", {})
+			if applied and str(effect.get("kind", "")) == "movement_buff" and verdict.get("delta") is Dictionary:
+				# Each player drives their own creature, so the owner's manager
+				# applies the host-accepted Veil to that body's speed.
+				(verdict.delta as Dictionary)["utility_self_movement"] = {
+					"multiplier": float(effect.get("movement_multiplier", 1.0)), "duration_s": float(effect.get("duration", 0.0))}
+		_host_after_encounter_change(id, peer)
 	return verdict
 
 
@@ -3366,6 +3448,8 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		 "travel_seconds": float(launch.travel_seconds), "body_generation": int(launch.body_generation),
 		 "direction": (launch.to as Vector3) - (launch.from as Vector3)})
 	if rolled.is_empty(): return {}
+	if hp_before > float(rolled.get("hp", hp_before)):
+		_encounter_host.call("consume_next_hit", encounter_id, str(current_card.get("creature_uid", "")), Time.get_ticks_msec())
 	var resources: Dictionary = _encounter_host.call("credit_move_hit", encounter_id, peer_id,
 		int(intent.get("action", 0)), maxf(0.0, hp_before - float(rolled.get("hp", hp_before))), str(opponent.get("uid")), hp_before,
 		int(record.get("opponent", {}).get("body_generation", 0)), float(current_card.get("hp", 0.0)))
@@ -4727,7 +4811,7 @@ func uses_wild_actor_vitals(id: String) -> bool:
 	if id.is_empty() or _session == null or not _session.has_method("_game") \
 		or not _session.has_method("_altar_current_epoch"): return false
 	var host := _is_host() or _owns_canonical_wild(id)
-	if host and (_encounter_host == null or not _owns_canonical_wild(id)): return false
+	if host and (_encounter_host == null or not (_owns_canonical_wild(id) or _guest_master_duels.has(id))): return false
 	# A guest reads the same authenticated record that carries the saved hold.
 	# Its scope must still name this actual world and transport lifetime.
 	var record: Dictionary = _encounter_host.call("record", id) if host else _encounter
@@ -5311,10 +5395,27 @@ func deployed_bodies() -> Array:
 ## The deployed body belonging to `peer_id`, or null. The local player's own
 ## body answers for the local peer id; everyone else's is their proxy.
 func deployed_body_for(peer_id: int) -> Node3D:
-	for node in deployed_bodies():
-		if node is Node3D and int((node as Node3D).get("owner_peer_id")) == peer_id:
-			return node as Node3D
-	return null
+	return pick_peer_body(deployed_bodies(), peer_id, _local_peer_id(), _ally_body)
+
+
+## Pure choice behind `deployed_body_for`. A peer can own more than one
+## deployed member for a moment (a hidden mirror, or a replacement body still
+## finding ground). The local peer's own ally body answers for it; otherwise
+## the visible member is the creature that fights, as `_encounter_body_rows()`
+## already assumes. An invisible first match made the host aim wild AI at it
+## and judge that peer's strikes from where it stood.
+static func pick_peer_body(candidates: Array, peer_id: int, local_peer_id: int, local_body: Node3D) -> Node3D:
+	if peer_id == local_peer_id and local_body != null and is_instance_valid(local_body) \
+			and not local_body.is_queued_for_deletion():
+		return local_body
+	var hidden: Node3D = null
+	for node: Variant in candidates:
+		if not node is Node3D or not is_instance_valid(node): continue
+		var body := node as Node3D
+		if int(body.get("owner_peer_id")) != peer_id or body.is_queued_for_deletion(): continue
+		if body.visible: return body
+		if hidden == null: hidden = body
+	return hidden
 
 
 func _follower_config() -> Dictionary:
@@ -6057,6 +6158,7 @@ func _process(delta: float) -> void:
 		_catch_waiting_for_owner = null
 		_resolve_catch(waiting)
 	_retry_ordinary_actor_vitals()
+	_retry_deferred_disengages()
 	_tether_item_retry_left -= delta
 	if _tether_item_retry_left <= 0.0:
 		_tether_item_retry_left = 0.5
@@ -6787,10 +6889,10 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	_retain_research(str(rec["encounter_id"]), _local_peer_id(), "sight", str(opponent.species_id), "engage")
 	if preload("res://scripts/combat/tether_commands.gd").enabled() \
 		and MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true:
-		# Complete existing command admission before the first saved-vitals
-		# original freezes this record. Late admission changes its exact seq.
-		# Without saved vitals there is no original to freeze; commands bind
-		# on the next encounter change as before.
+		# Canonical saved actor vitals need command admission before their
+		# original encounter record freezes; this eager application is ON-only.
+		# OFF still retains ordinary trainer reward originals and owner-save
+		# barriers. Guest pose admission fences both paths independently.
 		_host_after_encounter_change(str(rec["encounter_id"]))
 	if _can_encounter_rpc():
 		for peer_id: int in multiplayer.get_peers():
@@ -7620,6 +7722,20 @@ func _cleanup_shared_guest_proxy() -> void:
 ## on `Game.pending_catch` — exactly one, never saved, not storage — and the
 ## Game autoload's `_watch_pending_catch()` opens the Team screen's release
 ## ceremony on it. Play never resumes with six creatures owned.
+## Before the manager publishes completion, settle this local canonical catch
+## through the existing owner BOOL/ACK. Remote guest and legacy paths retain
+## their existing producer; only this exact host runtime can authorize this.
+func complete_local_catch_before_exploration(id: String, kept: RefCounted) -> bool:
+	if not _owns_canonical_wild(id): return true
+	if kept == null or not kept.has_meta("foundation_capture_traits") or _session == null \
+		or _session.call("is_host") != true: return false
+	var record: Dictionary = _encounter_host.call("record", id)
+	if record.get("phase") != "done" or record.get("opponent", {}).get("card", {}).get("uid") != kept.get("uid"):
+		return false
+	var captures := _session.get_node_or_null(^"FoundationComposition/Captures")
+	return captures != null and captures.call("complete_local_catch", kept) == true
+
+
 func _resolve_catch(kept: RefCounted) -> void:
 	if kept == null:
 		push_error("combat ended as a catch with nothing caught")
@@ -9225,6 +9341,11 @@ func _canonical_wild_start_state(wild: Node3D) -> Dictionary:
 	var disabled := {"enabled": false, "ready": false}
 	if (MATH.config().get("actor_vitals", {}) as Dictionary).get("runtime_enabled") != true:
 		return disabled
+	# A guest's unreplicated local wild has no host-owned runtime to convert.
+	# Keep that existing fight path; host/shared wilds still require canonical
+	# ownership and the prepared writers below, with no refused-host fallback.
+	if _session != null and _session.call("is_active") == true and _session.call("is_host") != true:
+		return disabled
 	var essence: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/essence.json")) \
 		if FileAccess.file_exists("res://data/config/essence.json") else null
 	if not essence is Dictionary or essence.get("wild_victory_runtime_enabled") != true:
@@ -9306,7 +9427,8 @@ func _is_guest() -> bool:
 
 
 func _with_host_xp_owner(encounter_id: String, payload: Dictionary) -> Dictionary:
-	if not canonical_wild_encounter(encounter_id): return payload
+	# F28: a guest Master duel's award is the host's master_win, too.
+	if not (canonical_wild_encounter(encounter_id) or (_is_host() and _guest_master_duels.has(encounter_id))): return payload
 	var stamped := payload.duplicate()
 	stamped["host_owns_xp"] = encounter_id
 	return stamped

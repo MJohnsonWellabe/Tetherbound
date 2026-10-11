@@ -120,7 +120,15 @@
     "mist_radius_max_fraction": 0.46,
     "mist_visible_distance_m": 3600.0,
     "mist_colour": "#e6eef4",
-    "mist_emission": 0.16
+    "mist_emission": 0.16,
+    "_mist_style_note": "P2-106: 'soft_bank' draws the collar with shaders/cloudreach_cloud_bank.gdshader (lit, darker underside, silhouette fades to mist_edge_alpha) on a rounder sphere; 'flat' restores the opaque emissive puffs that read as white decagons beside the arrival terrace.",
+    "mist_style": "soft_bank",
+    "mist_base_colour": "#8095a8",
+    "mist_edge_alpha": 0.0,
+    "mist_core_alpha": 0.62,
+    "mist_fade_end": 0.9,
+    "mist_radial_segments": 20,
+    "mist_rings": 10
   },
   "resource_positions": {
     "cr_node_cloudberry_waycamp": [-175.0, 136.5, 109.0],
@@ -133,8 +141,8 @@
     "description": "The weathered marker overlooks the sheltered road toward Galefoot Waycamp. Cloudberries and wind-bent fiber grow along its planted margins."
   },
   "skyline_profile": {
-    "enabled": false,
-    "_disposition": "P2-021 paired visual FAIL: distant skyline improves but broad grass routes remain unresolved. Retain disabled. Evidence: ralph/reports/VISUAL/phase2/cloudreach/p2-021/paired-visual-judge.md.",
+    "enabled": true,
+    "_disposition": "Owner flip (F40, Lane E 10-10): live. NorthSummitRange is profile_exempt (it read as flat slabs behind Stormward Overlook). Evidence: ralph/reports/VISUAL/cloudreach/lane-e-flips/.",
     "height_fractions": [0.70, 0.88, 1.0, 0.80, 0.94, 0.76, 0.86]
   },
   "horizon_ranges": [
@@ -147,7 +155,7 @@
     {"id": "EastRoostRange", "position": [2090, 570, 3100], "size": [700, 1700, 1050], "seed": 377},
     {"id": "WestUpperRange", "position": [-1730, 580, 4400], "size": [800, 1720, 1300], "seed": 389},
     {"id": "EastUpperPeaks", "position": [1660, 680, 4620], "size": [600, 1920, 950], "seed": 391},
-    {"id": "NorthSummitRange", "position": [220, 720, 6260], "size": [1550, 2040, 650], "seed": 407}
+    {"id": "NorthSummitRange", "position": [220, 720, 6260], "size": [1550, 2040, 650], "seed": 407, "profile_exempt": true}
   ],
   "surface": {
     "cliff": {

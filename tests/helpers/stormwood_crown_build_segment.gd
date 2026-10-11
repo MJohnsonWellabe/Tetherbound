@@ -753,14 +753,50 @@ func _fight_current(label: String) -> bool:
 	var next_quick_ms := 0
 	var tick := 0
 	var release_tick := -1
+	# Consecutive misses mean this spot cannot connect (a ledge, a perch, a
+	# body in the way). Close in and step to one side until a swing lands.
+	var misses_before := 0
+	var hits_before := 0
+	var reposition_ticks := 0
+	var side := 1.0
 	while bool(_manager.call("is_fighting")) and Time.get_ticks_msec() - started < 180000:
 		var enemy := _manager.call("enemy_body") as Node3D
 		var ally := _director.call("ally_body") as Node3D
+		if int(counts.player_hits) > hits_before:
+			hits_before = int(counts.player_hits)
+			misses_before = int(counts.player_misses)
+		elif int(counts.player_misses) - misses_before >= 4 and reposition_ticks <= 0:
+			misses_before = int(counts.player_misses)
+			var e_dbg := _manager.call("enemy_body") as Node3D
+			var a_dbg := _director.call("ally_body") as Node3D
+			if e_dbg != null and a_dbg != null:
+				_note("DIAG miss streak ally=%s enemy=%s enemy_centre=%s floor=%s ai=%s reach=%s" % [a_dbg.global_position,
+					e_dbg.global_position, e_dbg.call("centre") if e_dbg.has_method("centre") else "-",
+					e_dbg.call("is_on_floor") if e_dbg.has_method("is_on_floor") else "-",
+					e_dbg.get("_intent"), _manager.call("combat_move_reach", "quick")])
+				var opp_dbg: Variant = e_dbg.get("_opponent")
+				_note("DIAG enemy_opponent=%s same_as_ally=%s visible=%s" % [(opp_dbg as Node3D).global_position if opp_dbg is Node3D else "none",
+					opp_dbg == a_dbg, (opp_dbg as Node3D).visible if opp_dbg is Node3D else false])
+			reposition_ticks = 45
+			side = -side
+			var hub := _director.get_parent().get_node_or_null(^"StormwoodEncounterHub")
+			if hub != null:
+				for fight: Variant in (hub.get("fights") as Dictionary).values():
+					if is_instance_valid(fight):
+						_note("REPOSITION after misses; host last_strike=%s" % JSON.stringify(fight.get("last_strike")))
 		if enemy != null and ally != null:
 			var offset := enemy.global_position - ally.global_position
 			offset.y = 0.0
 			_drive_stick.call(0.0, 0.0)
-			if offset.length() > float(_manager.call("combat_move_reach", "quick")) * 0.8:
+			var reach := float(_manager.call("combat_move_reach", "quick"))
+			if reposition_ticks > 0:
+				reposition_ticks -= 1
+				var toward := offset.normalized()
+				var around := Vector3(-toward.z, 0.0, toward.x) * side
+				var want := (toward * (1.0 if offset.length() > reach * 0.4 else 0.0) + around).normalized()
+				var local := (_camera.call("planar_basis") as Basis).inverse() * want
+				_drive_stick.call(local.x, local.z)
+			elif offset.length() > reach * 0.8:
 				var local := (_camera.call("planar_basis") as Basis).inverse() * offset.normalized()
 				_drive_stick.call(local.x, local.z)
 			if release_tick >= 0 and tick >= release_tick:
@@ -783,6 +819,12 @@ func _fight_current(label: String) -> bool:
 		label, _last_combat_outcome, Time.get_ticks_msec() - started,
 		_fighter_snapshot(ally_instance), _fighter_snapshot(enemy_instance), counts])
 	if bool(_manager.call("is_fighting")) or _last_combat_outcome.is_empty():
+		# Read-only: the host's own view of the last strike, for a stuck fight.
+		var hub := _director.get_parent().get_node_or_null(^"StormwoodEncounterHub")
+		if hub != null:
+			for fight: Variant in (hub.get("fights") as Dictionary).values():
+				if is_instance_valid(fight):
+					_note("STUCK host last_strike=%s" % JSON.stringify(fight.get("last_strike")))
 		return _fail("combat during %s did not resolve and publish an outcome" % label)
 	_note("RESOLVED live route encounter during %s (outcome=%s)" % [label, _last_combat_outcome])
 	return true

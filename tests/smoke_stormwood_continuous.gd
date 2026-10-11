@@ -152,6 +152,15 @@ func _run() -> void:
 		})
 		_expect(bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)),
 			"chapter-entry fixture accepted completed Cloudreach fact %s" % flag)
+	# Portal order (RD-17): a completed Cloudreach has opened this world's
+	# Stormwood portal; the router refuses Stormwood without that unlock.
+	var route: Dictionary = (game.get("world").get("redesign_world") as Dictionary).duplicate(true)
+	var opened: Array = (route.get("portal_unlocks", []) as Array).duplicate()
+	if not opened.has("stormwood"): opened.append("stormwood")
+	route["portal_unlocks"] = opened
+	_expect(preload("res://scripts/data/redesign_state.gd").validate("world", route).is_empty(),
+		"chapter-entry fixture's opened Stormwood portal is a valid world route")
+	game.get("world").set("redesign_world", route)
 	for species_id: String in ENTRY_PARTY:
 		var creature: RefCounted = SPECIES.spawn(species_id)
 		if creature != null:
@@ -658,10 +667,26 @@ class Segment extends RefCounted:
 		if harvest == null:
 			_fail("the authored first charged Stormglass node is absent")
 			return _result()
-		if not await _activate_node(harvest, harvest.get_node_or_null(^"Interactable") as Node3D,
-				FIRST_GLASS_XZ, "first charged Stormglass node"):
-			return _result()
-		if not await _wait_flag("stormwood:first_stormglass_gathered", 300):
+		# The seam wakes only in the Break and Fading (stormwood_harvest_rules):
+		# the Break witnessed at Ashfoot can pass during the walk, so wait at the
+		# seam for the next one, as a player would, then press.
+		var gathered := false
+		var seam_wait_started := Time.get_ticks_msec()
+		while not gathered and Time.get_ticks_msec() - seam_wait_started < BREAK_WAIT_MS:
+			if not str(surge.get("phase")) in ["break", "fading"]:
+				await tree.physics_frame
+				continue
+			# A wild that wanders up offers its own Engage prompt; let it pass.
+			var arbiter: Node = tree.get_first_node_in_group("interaction_arbiter")
+			var winner: Variant = arbiter.call("winning_provider") if arbiter != null else null
+			if winner is Node and (winner as Node).name == "EncounterDirector":
+				await tree.physics_frame
+				continue
+			if not await _activate_node(harvest, harvest.get_node_or_null(^"Interactable") as Node3D,
+					FIRST_GLASS_XZ, "first charged Stormglass node"):
+				return _result()
+			gathered = await _wait_flag("stormwood:first_stormglass_gathered", 300)
+		if not gathered:
 			_fail("ordinary charged-node interaction did not set first_stormglass_gathered")
 			return _result()
 		if int(game.get("inventory").call("count", "stormglass")) < 3:

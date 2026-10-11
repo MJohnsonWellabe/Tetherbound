@@ -140,6 +140,19 @@ uniform float head = 0.3;
 uniform float tail = 0.25;
 uniform float near_fade_start = 0.0;
 uniform float near_fade_end = 0.0;
+// The Stormheart Tree's hollow trunk (tree-local inner clearance): x, y =
+// inner radius below/above the crown taper, z, w = taper start/end height.
+uniform bool hollow_enabled = false;
+uniform mat4 world_to_hollow;
+uniform vec4 hollow_radius_taper = vec4(46.0, 13.0, 185.0, 250.0);
+uniform vec3 hollow_lean_top = vec3(9.0, 6.0, 250.0);
+bool inside_hollow(vec3 world_at) {
+	vec3 local = (world_to_hollow * vec4(world_at, 1.0)).xyz;
+	if (local.y >= hollow_lean_top.z) { return false; }
+	float crown = smoothstep(hollow_radius_taper.z, hollow_radius_taper.w, local.y);
+	float inner = mix(hollow_radius_taper.x, hollow_radius_taper.y, crown);
+	return distance(local.xz, hollow_lean_top.xy * crown) < inner;
+}
 void fragment() {
 	float t = UV.y;
 	float taper = smoothstep(0.0, head, t) * (1.0 - smoothstep(1.0 - tail, 1.0, t));
@@ -147,6 +160,13 @@ void fragment() {
 	// thick white pole): a streak nearer the camera than near_fade_end fades
 	// out, gone by near_fade_start, so no single drop can fill the frame.
 	float near = near_fade_end > near_fade_start ? smoothstep(near_fade_start, near_fade_end, -VERTEX.z) : 1.0;
+	// No streak falls inside the hollow tree.
+	// From inside the hollow, the rain beyond its open splits read as bright
+	// even streaks in the gap; the camera inside hides every streak.
+	if (hollow_enabled && (inside_hollow(INV_VIEW_MATRIX[3].xyz)
+			|| inside_hollow((INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz))) {
+		discard;
+	}
 	ALBEDO = COLOR.rgb;
 	ALPHA = COLOR.a * taper * near;
 }
@@ -763,6 +783,23 @@ func _style_rain() -> void:
 		_rain_curtain.position = Vector3(0.0, float(curtain.get("centre_offset_m", 0.0)), 0.0)
 		_rain_curtain.visible = true
 		_rain.add_child(_rain_curtain)
+	_bind_hollow_rain_mask()
+
+## Rain is a client presentation layer; the tree's static inner clearance is
+## complete before Surge mounts. No collider, flag or shelter rule changes.
+func _bind_hollow_rain_mask() -> void:
+	var tree := world.get_node_or_null("StormheartTree") as Node3D if world != null else null
+	if tree == null or not tree.has_method("hollow_rain_volume"):
+		return
+	var volume: Dictionary = tree.call("hollow_rain_volume")
+	for emitter: GPUParticles3D in [_rain, _rain_far, _rain_curtain]:
+		if emitter == null:
+			continue
+		var material := (emitter.draw_pass_1 as CylinderMesh).material as ShaderMaterial
+		material.set_shader_parameter("hollow_enabled", true)
+		material.set_shader_parameter("world_to_hollow", tree.global_transform.affine_inverse())
+		material.set_shader_parameter("hollow_radius_taper", volume.radius_taper)
+		material.set_shader_parameter("hollow_lean_top", volume.lean_top)
 
 func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 	var colour := Color(str(cfg.get("colour", "#c0ccd6")))
@@ -1232,20 +1269,54 @@ func _build_steam() -> void:
 	var quad := QuadMesh.new()
 	var size := float(cfg.get("puff_size_m", 2.4))
 	quad.size = Vector2(size, size * float(cfg.get("puff_aspect", 0.6)))
-	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
-	material.billboard_keep_scale = true
-	material.vertex_color_use_as_albedo = true
-	material.albedo_texture = soft_puff_texture()
-	material.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var material := ShaderMaterial.new()
+	var shader := Shader.new()
+	shader.code = STEAM_SHADER
+	material.shader = shader
+	material.set_shader_parameter("puff_texture", soft_puff_texture())
+	# Use the existing puff height for the blend distance; the authored
+	# particle budget, tint, alpha, size and life curves stay unchanged.
+	material.set_shader_parameter("intersection_fade_m", quad.size.y)
 	quad.material = material
 	_steam.draw_pass_1 = quad
 	var reach := process.emission_ring_radius + size + 1.0
 	_steam.visibility_aabb = AABB(Vector3(-reach, -2.0, -reach), Vector3(reach * 2.0, 14.0, reach * 2.0))
 	add_child(_steam)
+
+const STEAM_SHADER := """
+shader_type spatial;
+render_mode unshaded, blend_mix, depth_draw_never, cull_disabled, shadows_disabled;
+uniform sampler2D puff_texture : repeat_disable, filter_linear;
+uniform sampler2D scene_depth : hint_depth_texture, repeat_disable, filter_nearest;
+uniform float intersection_fade_m = 1.0;
+void vertex() {
+	mat4 facing = mat4(INV_VIEW_MATRIX[0], INV_VIEW_MATRIX[1], INV_VIEW_MATRIX[2], MODEL_MATRIX[3]);
+	float angle = INSTANCE_CUSTOM.x;
+	mat4 spin = mat4(vec4(cos(angle), sin(angle), 0.0, 0.0),
+		vec4(-sin(angle), cos(angle), 0.0, 0.0), vec4(0.0, 0.0, 1.0, 0.0), vec4(0.0, 0.0, 0.0, 1.0));
+	mat4 size = mat4(vec4(length(MODEL_MATRIX[0].xyz), 0.0, 0.0, 0.0),
+		vec4(0.0, length(MODEL_MATRIX[1].xyz), 0.0, 0.0),
+		vec4(0.0, 0.0, length(MODEL_MATRIX[2].xyz), 0.0), vec4(0.0, 0.0, 0.0, 1.0));
+	MODELVIEW_MATRIX = VIEW_MATRIX * facing * spin * size;
+}
+void fragment() {
+	float raw_depth = texture(scene_depth, SCREEN_UV).r;
+	#if CURRENT_RENDERER == RENDERER_COMPATIBILITY
+	vec3 ndc = vec3(SCREEN_UV * 2.0 - 1.0, raw_depth * 2.0 - 1.0);
+	#else
+	vec3 ndc = vec3(SCREEN_UV * 2.0 - 1.0, raw_depth);
+	#endif
+	vec4 scene_view = INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+	float soft_edge = 1.0;
+	if (abs(scene_view.w) > 0.00001) {
+		float scene_z = -scene_view.z / scene_view.w;
+		float separation = scene_z + VERTEX.z;
+		soft_edge = smoothstep(0.0, intersection_fade_m, max(separation, 0.0));
+	}
+	ALBEDO = COLOR.rgb;
+	ALPHA = COLOR.a * texture(puff_texture, UV).a * soft_edge;
+}
+"""
 
 static var _puff_texture: GradientTexture2D
 

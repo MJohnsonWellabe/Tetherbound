@@ -22,6 +22,8 @@ extends SceneTree
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const EARNED_SLOT := 1
+## `--from-slot=<n>` loads another slot of --from-save (0 is the title's Autosave).
+var from_slot := EARNED_SLOT
 const SAVE := preload("res://scripts/save/save_game.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -96,6 +98,7 @@ func _run() -> void:
 	live_combat = "--live-combat" in OS.get_cmdline_user_args()
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--from-save="): from_save = arg.trim_prefix("--from-save=").trim_suffix("/")
+		elif arg.begins_with("--from-slot="): from_slot = int(arg.trim_prefix("--from-slot="))
 		elif arg.begins_with("--leg="): leg = arg.trim_prefix("--leg=")
 	output_dir = OUTPUT_ROOT + ("/live" if live_combat else "/mechanics-only") + ("" if from_save.is_empty() else "-from-earned-save")
 	if accelerated:
@@ -433,6 +436,14 @@ func _record_frame() -> void:
 				_log("meaningful_offer", {"path":key,"label":str(offer.label),"distance_m":offer.get("distance",0),"chosen":false})
 
 
+## F47#4: a rest reaches a morning only after nightfall (rest.json's night
+## window); a day rest heals without one. A rest the route expects to pass the
+## night starts from the clock snapped to night (world_look.apply_time).
+func _nightfall() -> void:
+	var look := get_first_node_in_group("day_cycle")
+	if look != null and look.has_method("apply_time"): look.call("apply_time", "night")
+
+
 func _normal_input_clock(reason: String) -> Dictionary:
 	var previous := {"time_scale":Engine.time_scale,"physics_hz":Engine.physics_ticks_per_second}
 	if Engine.time_scale == 1.0 and Engine.physics_ticks_per_second == 60: return previous
@@ -753,6 +764,11 @@ func _arrival_gather(id: String, item: String) -> bool:
 	var prompt: Node3D = resource.find_child("Interactable",true,false)
 	if prompt == null: return _fail("Missing arrival resource " + id)
 	if not await _walk(prompt.global_position + Vector3(0,-0.8,-1.5),0.35): return false
+	# The daily harvest rebuilds its prompt while the player walks up (a
+	# streamed or refreshed node); interact with the live one, not the freed one.
+	var live: Node = world.get_node_or_null("CloudreachResources/" + id)
+	prompt = live.find_child("Interactable",true,false) if live != null else null
+	if prompt == null: return _fail("Arrival resource %s offered no live prompt on arrival" % id)
 	var before: int = game.inventory.count(item)
 	if str(game.items.gathered_with(item)) == "knife" and str(game.equipped_tool) != "knife":
 		await _tap("hotbar_1")
@@ -813,6 +829,7 @@ func _rest(id: String) -> bool:
 	if live_combat:
 		return await _recover_party_through_camp_input(camp, id)
 	var previous_clock := await _normal_input_clock("camp rest and fade")
+	_nightfall()
 	var day_before:int=game.day
 	var team_before := _team_snapshot()
 	if not await _interact(camp.get_node("Interactable")):
@@ -862,6 +879,7 @@ func _recover_party_through_camp_input(camp: Node3D, id: String) -> bool:
 		if not await _walk(rest_prompt.global_position + Vector3(0.0, -0.8, 0.8), 0.8):
 			await _restore_route_clock(previous_clock)
 			return false
+		_nightfall()
 		var day_before := int(game.day)
 		if not await _interact(rest_prompt, "", false):
 			await _restore_route_clock(previous_clock)
@@ -1226,7 +1244,7 @@ func _finish() -> void:
 	quit(1 if failed else 0)
 
 
-## Copy `<from_save>/save/` to a scratch user:// dir and load slot EARNED_SLOT
+## Copy `<from_save>/save/` to a scratch user:// dir and load slot `from_slot` (default EARNED_SLOT)
 ## through the production title's Load list (the fixture test's path). No flag,
 ## party, inventory or position is written here.
 func _load_earned_handoff() -> bool:
@@ -1237,7 +1255,7 @@ func _load_earned_handoff() -> bool:
 	earned_scratch = "user://cloudreach_continuous_from_earned_%d/" % OS.get_process_id()
 	_copy_tree(source, ProjectSettings.globalize_path(earned_scratch))
 	game.save_system = SAVE.new(earned_scratch)
-	var info: Dictionary = game.save_slot_info(EARNED_SLOT)
+	var info: Dictionary = game.save_slot_info(from_slot)
 	if str(info.get("realm", "")) != "cloudreach":
 		print("CLOUDREACH CONTINUOUS earned slot is not a Cloudreach save: " + str(info))
 		return false
@@ -1249,11 +1267,12 @@ func _load_earned_handoff() -> bool:
 	(title.get("_load_button") as Button).pressed.emit()
 	await process_frame
 	var chosen: Button = null
+	var label := "Autosave" if from_slot == 0 else "Save %d" % from_slot
 	for node: Node in (title.get("_load_box") as Node).get_children():
-		if node is Button and (node as Button).text.begins_with("Save %d" % EARNED_SLOT) and not (node as Button).disabled:
+		if node is Button and (node as Button).text.begins_with(label) and not (node as Button).disabled:
 			chosen = node
 	if chosen == null:
-		print("CLOUDREACH CONTINUOUS the title's Load list does not offer Save %d" % EARNED_SLOT)
+		print("CLOUDREACH CONTINUOUS the title's Load list does not offer " + label)
 		return false
 	chosen.pressed.emit()
 	for _frame in 3600:

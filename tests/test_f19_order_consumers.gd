@@ -68,3 +68,21 @@ func test_recommended_levels_never_gate_the_actual_host_portal_policy() -> void:
 		assert_true(result.get("ok", false), "an admitted level-one traveler with an unlock can enter " + row.biome)
 		if result.get("ok", false):
 			assert_eq(policy.consume_permit(result.prepared.travel_permit, 2, "character-a", "world-a", "meadows").get("realm"), ORDER.runtime_id(row.biome))
+
+func test_every_live_arch_board_names_its_recommended_level_and_sealed_ones_none() -> void:
+	var hall := preload("res://scripts/world/crossing_hall.gd")
+	var portals: Dictionary = DATA.json("res://data/config/portals.json")
+	var by_id := {}
+	for row: Dictionary in portals.arches:
+		by_id[str(row.id)] = row
+	var arches: Array = DATA.json("res://data/config/crossing_hall.json").arches
+	assert_eq(arches.size(), portals.arches.size(), "every portal definition has a hall arch")
+	for entry: Dictionary in arches:
+		var row: Dictionary = by_id.get(str(entry.id), {})
+		assert_false(row.is_empty(), "hall arch has a portal definition: " + str(entry.id))
+		var text := hall.sign_text(entry, portals)
+		if str(row.get("kind", "")) == "live":
+			assert_eq(text, "%s · Recommended Lv %d" % [ORDER.display_name(str(entry.biome)), int(row.recommended_level)],
+				"live arch board shows its recommended level: " + str(entry.id))
+		else:
+			assert_false(text.contains("Recommended"), "a sealed arch advertises no level: " + str(entry.id))

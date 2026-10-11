@@ -12,11 +12,14 @@ func _config() -> Dictionary:
 	return config
 
 
-func test_default_off_and_nonwater_beds_add_nothing() -> void:
-	assert_false(bool(PRESENTATION.settings().get("enabled", true)))
+func test_disabled_and_nonwater_beds_add_nothing() -> void:
+	# F39: shipped on; disabled config still adds nothing to an authored bed.
+	assert_true(bool(PRESENTATION.settings().get("enabled", false)))
+	var off := _config()
+	off.enabled = false
 	var bed := Node3D.new()
 	bed.name = "water_camp_first_shore_creature_bed"
-	assert_eq(PRESENTATION.attach(bed), null)
+	assert_eq(PRESENTATION.attach(bed, off), null)
 	assert_eq(bed.get_child_count(), 0)
 	bed.name = "PlayerBuiltCreatureBed"
 	assert_eq(PRESENTATION.attach(bed, _config()), null)

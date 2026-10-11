@@ -1,0 +1,21 @@
+{
+  "source": "young_trainer_lod0.glb",
+  "scope": "Conservative facial skin only; no geometry or source image modification",
+  "bounds_m": {
+    "min_y": 1.19,
+    "max_y": 1.355,
+    "max_abs_x": 0.145,
+    "min_z": 0.025
+  },
+  "selected_face_triangles": 2340,
+  "protected_triangles": 53254,
+  "safe_pixels": 25708,
+  "original_image_size": [
+    2048,
+    2048
+  ],
+  "protected_uv_overlap_excluded": true,
+  "non_skin_pixels_and_boundary_inset_excluded": true,
+  "candidate_enabled": false,
+  "requires_native_identity_and_seam_review": true
+}

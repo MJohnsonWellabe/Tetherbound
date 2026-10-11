@@ -267,7 +267,9 @@ func _build_horizon_ranges() -> void:
 			var angle := float(cluster) * 2.399 + float(range_spec.get("seed", 0))
 			var portion := 0.34 + 0.09 * float(cluster % 3)
 			var height_fraction := 0.34 + 0.11 * float(cluster % 4)
-			if use_profile:
+			# A range near a viewpoint keeps its authored heights: at full
+			# profile height it rose as flat slabs behind Stormward Overlook.
+			if use_profile and not bool(range_spec.get("profile_exempt", false)):
 				# The ranges share a base half their configured height below `at`.
 				# Short peaks disappear beneath the upper crowns. Use the full
 				# authored height envelope for varied, visible distant summits.
@@ -808,9 +810,22 @@ func _build_materials() -> void:
 	cloud_bank.set_shader_parameter("extinction", float(cloud_cfg.get("bank_extinction", 10.0)))
 	_materials["cloud_billow"] = cloud_bank
 	var island_cfg: Dictionary = _visual_config.get("island_roots", {})
-	_materials["island_mist"] = _emissive_material(Color(str(island_cfg.get("mist_colour", "#e6eef4"))),
-		float(island_cfg.get("mist_emission", 0.16)))
-	_materials["island_mist"].roughness = 1.0
+	if str(island_cfg.get("mist_style", "flat")) == "soft_bank":
+		# P2-106: an opaque emissive collar read as flat white decagons cut
+		# out of the sky. The soft bank is lit, darker underneath and fades
+		# to nothing at its silhouette, so the puffs read as cloud.
+		var mist := ShaderMaterial.new()
+		mist.shader = preload("res://shaders/cloudreach_cloud_bank.gdshader")
+		mist.set_shader_parameter("cloud_lit", Color(str(island_cfg.get("mist_colour", "#e6eef4"))))
+		mist.set_shader_parameter("cloud_base", Color(str(island_cfg.get("mist_base_colour", "#8095a8"))))
+		mist.set_shader_parameter("edge_alpha", float(island_cfg.get("mist_edge_alpha", 0.0)))
+		mist.set_shader_parameter("core_alpha", float(island_cfg.get("mist_core_alpha", 0.85)))
+		mist.set_shader_parameter("fade_end", float(island_cfg.get("mist_fade_end", 0.34)))
+		_materials["island_mist"] = mist
+	else:
+		_materials["island_mist"] = _emissive_material(Color(str(island_cfg.get("mist_colour", "#e6eef4"))),
+			float(island_cfg.get("mist_emission", 0.16)))
+		_materials["island_mist"].roughness = 1.0
 	# Far stone uses the geology material below, with two cooler palettes.
 	var relief_cfg: Dictionary = _visual_config.get("distant_relief", {})
 	for material_key: String in ["masonry", "masonry_trim"]:
@@ -3271,9 +3286,12 @@ func _build_bridge_section(bridge: Node3D, spec: Dictionary, a: Vector3, b: Vect
 	# BRIDGE_KIT's thin floor modules) sits only ~0.045 m proud, already
 	# inside tolerance, so it is left on the authored line.
 	var deck_lift := _segment_basis(a, b).y * (0.2 if stone_bridge else 0.0)
-	_segment_box(bridge, "WalkableDeck", a + deck_lift, b + deck_lift, width, 0.42,
+	var deck := _segment_box(bridge, "WalkableDeck", a + deck_lift, b + deck_lift, width, 0.42,
 		_materials["stone"] if stone_bridge else _materials["wood"], true)
 	if not stone_bridge:
+		# The installed floor modules own the timber surface and its UVs. Keep
+		# the continuous walking collider without drawing its box as a slab.
+		(deck.get_child(0) as MeshInstance3D).visible = false
 		BRIDGE_KIT.build_deck(bridge,a,b,width)
 	var plank_mesh := BoxMesh.new()
 	plank_mesh.size = Vector3(width, 0.16, length / float(count) * 0.86)
@@ -5677,8 +5695,8 @@ func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value
 	var sphere := SphereMesh.new()
 	sphere.radius = 1.0
 	sphere.height = 2.0
-	sphere.radial_segments = 10
-	sphere.rings = 5
+	sphere.radial_segments = maxi(6, int(cfg.get("mist_radial_segments", 10)))
+	sphere.rings = maxi(3, int(cfg.get("mist_rings", 5)))
 	sphere.material = _materials["island_mist"]
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D

@@ -480,6 +480,7 @@ func _sheltered_night(index: int) -> Dictionary:
 		return result
 	var rest_xp: int = PROGRESSION.rest_xp(PROGRESSION.config())
 	var before := int(member.get("level")) * 100000 + int(member.get("xp"))
+	_nightfall()
 	var day_before := int(game.day)
 	var pressed := await _act_prompt(prompt)
 	var previous_clock := await _normal_input_clock("camp rest night")

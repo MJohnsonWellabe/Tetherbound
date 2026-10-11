@@ -15,6 +15,41 @@ const LIVE_BATTLE_FRAME_LIMIT := 36000
 class CampaignPilot extends PILOT:
 	var switch_input := false
 	var voluntary_switches := 0
+	## Hall opts into the existing A-button dodge; other callers retain their
+	## current movement decisions. The host still owns Wind and displacement.
+	var burst_input := false
+	var burst_attempts := 0
+	var accepted_bursts := 0
+	var _switch_opponent: RefCounted
+	var _poor_matchups_observed: Dictionary = {}
+
+	func _should_switch() -> bool:
+		var opponent: RefCounted = manager.call("enemy")
+		if opponent != _switch_opponent:
+			_switch_opponent = opponent
+			_poor_matchups_observed.clear()
+		if not super._should_switch():
+			return false
+		# The HUD only rates the currently fielded creature. Remember that
+		# observed arrow: a party with no coverage must fight after one tour,
+		# rather than spending every cooldown cycling equally poor choices.
+		var active: RefCounted = manager.call("active_creature")
+		var uid := str(active.get("uid")) if active != null else ""
+		if uid.is_empty() or _poor_matchups_observed.has(uid):
+			return false
+		return true
+
+	func _observe_switch(before: RefCounted, after: RefCounted) -> bool:
+		# A refused LB press did not test another matchup. Consume this
+		# creature's observed arrow only after production accepts the swap.
+		if before == null or after == null or after == before:
+			return false
+		var uid := str(before.get("uid"))
+		var after_uid := str(after.get("uid"))
+		if uid.is_empty() or after_uid.is_empty() or after_uid == uid:
+			return false
+		_poor_matchups_observed[uid] = true
+		return true
 
 	func _reach(_ally_body: Node3D, _foe_body: Node3D) -> float:
 		var charged := bool(manager.call("charged_ready")) and _charged_is_worth_it()
@@ -54,7 +89,7 @@ class CampaignPilot extends PILOT:
 			event.axis_value = (local.x if action == "move_right" else local.z) * signf(binding.axis_value)
 			Input.parse_input_event(event)
 
-	func press(action: String) -> void:
+	func press(action: String, process_reader: bool = false) -> void:
 		var binding: InputEvent = null
 		for configured: InputEvent in InputMap.action_get_events(action):
 			if configured is InputEventJoypadButton or configured is InputEventJoypadMotion:
@@ -68,6 +103,10 @@ class CampaignPilot extends PILOT:
 		if event is InputEventJoypadButton:
 			(event as InputEventJoypadButton).pressed = true
 		Input.parse_input_event(event)
+		if process_reader:
+			# CombatHud reads LB in _process; let that reader see the held
+			# physical press before the physics-only attack cadence releases it.
+			await tree.process_frame
 		await tree.physics_frame
 		await tree.physics_frame
 		event = event.duplicate()
@@ -81,8 +120,8 @@ class CampaignPilot extends PILOT:
 	func _act(ally_body: Node3D, foe_body: Node3D) -> void:
 		if switch_input and _should_switch():
 			var before: RefCounted = manager.call("active_creature")
-			await press("party_cycle")
-			if manager.call("active_creature") != before:
+			await press("party_cycle", true)
+			if _observe_switch(before, manager.call("active_creature")):
 				voluntary_switches += 1
 			return
 		var toward := foe_body.global_position - ally_body.global_position
@@ -93,6 +132,20 @@ class CampaignPilot extends PILOT:
 		var attack_distance := contact + (_reach(ally_body, foe_body) - contact) * 0.8
 		var retreat := bool(manager.call("enemy_is_winding_up")) \
 			and toward.length() < _enemy_reach(ally_body, foe_body) + 0.8
+		if retreat and burst_input and not bool(manager.call("player_is_committed")) \
+				and float(manager.call("wind_value")) >= float(manager.call("wind_cost", "burst")):
+			# Read the same readiness conditions as the Dodge HUD. A normal
+			# stick + A tap asks the production reader to burst; no direct
+			# request_burst, invulnerability or creature position assignment.
+			var wind_before := float(manager.call("wind_value"))
+			_move_toward(-toward)
+			burst_attempts += 1
+			await press("jump")
+			if float(manager.call("wind_value")) < wind_before \
+					and ally_body.has_method("combat_burst_active") and bool(ally_body.call("combat_burst_active")):
+				accepted_bursts += 1
+			_move_toward(Vector3.ZERO)
+			return
 		if retreat or toward.length() > attack_distance \
 				or not _faces_target(ally_body, foe_body):
 			_move_toward(-toward if retreat else toward)
@@ -872,6 +925,9 @@ func _recover_party_through_camp_input(camp: Node3D, id: String) -> bool:
 		if not await _walk(rest_prompt.global_position + Vector3(0.0, -0.8, 0.8), 0.8):
 			await _restore_route_clock(previous_clock)
 			return false
+		# F47#4: a rest reaches a morning only after nightfall (rest.json); disclosed: snap the clock to night.
+		for _look: Node in (Engine.get_main_loop() as SceneTree).get_nodes_in_group("day_cycle"):
+			if _look.has_method("apply_time"): _look.call("apply_time", "night")
 		var day_before := int(game.day)
 		if not await _interact(rest_prompt, "", false):
 			await _restore_route_clock(previous_clock)

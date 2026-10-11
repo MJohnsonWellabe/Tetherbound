@@ -1,0 +1,122 @@
+{
+  "subject": "fulgocobra",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Reference-backed reconstruction for disabled native review; installed species unchanged",
+  "reference_provenance": {
+    "subject": "fulgocobra",
+    "reference": "assets/creatures/tetherbound/fulgocobra/reference/native-standing-v1.png",
+    "method": "built_in_imagegen",
+    "identity_reference": [
+      "assets/creatures/tetherbound/fulgocobra/reference/front.png",
+      "assets/creatures/tetherbound/fulgocobra/models/creature_fulgocobra_lod0.glb rendered as full identity view"
+    ],
+    "prompt": "Draft an original Tetherbound Fulgocobra 3D modeling reference based on the supplied established cobra reference and full installed-model view. ONE full-body three-quarter studio view of the SAME powerful legendary cobra: massive broad hood and a clear forward-facing snake head, alert expressive amber-gold eyes, charcoal-black overlapping sculpted scales with restrained warm gold lightning-like seams and designed gold patches, pale cream/gold segmented throat and belly, thick continuous legless serpent body and complete tapering tail. Preserve this established black/gold cobra identity and recognizable broad hood; no horns, new limbs, wings, armor, crown, equipment or faction markings. Improve riggable anatomy and face readability: mouth nearly closed with only a small natural part and two short ivory fang tips visible, no enormous deep red mouth cavity or projecting tongue. Head looking straight forward in alignment with the upright neck, supported continuous hood/neck volume. Neutral pose for rigging: front neck raised, lower thick body on the studio floor in ONE open shallow S curve extending backward and to the side; show the entire body and tail clearly separated, without stacked tight coils or hidden body segments. The hood has thickness and a broad connected membrane with rounded scalloped scale edges rather than floating shards or thin spikes. Large coherent black, gold and cream material regions, soft rough scales with no metallic chrome, neon glow or gritty photographic noise. Full head, hood, body and tail inside the image with generous margin. Plain light-grey studio background and soft lighting. One existing-roster cobra only; no environment, human, saddle, text, ruler, reference board, action blur or energy particles. Intended as original reference-backed reconstruction of the same creature for a fitted serpent rig.",
+    "default_enabled": false,
+    "selected_origin": "exec-223100dc-b5e3-4a7f-85be-6741eaad5c99",
+    "inspection": {
+      "identity": "Broad hood and forward-facing gold-eyed black/gold cobra, cream segmented underside and thick legless body retained; mouth closed with two small ivory fang tips",
+      "riggability": "Thick continuous hood/neck, low open body loop with unstacked visible rear tail, no deep mouth cavity or hidden multiple coils",
+      "limits": "Front hood obscures a short part of the basal curve; actual body connectivity, fang topology and segment deformation require inspection. No full art approval from reference."
+    }
+  },
+  "generation": {
+    "task_id": "01a12670-e2e3-73ed-8f5f-a98fe8d3c1a6",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "reference": "assets/creatures/tetherbound/fulgocobra/reference/native-standing-v1.png",
+    "night": "2026-10-09",
+    "status": "SUCCEEDED",
+    "observed_credits": 30,
+    "new_submissions": 1
+  },
+  "rights": {
+    "basis": "Owner-held installed identity and original drafted reference; owner-authorized paid Meshy account. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "approach": "Measured legless serpent centerline with twelve coil segments, two hood controls and fitted head/neck; local surface diffusion, normalized four influences. No quadruped donor.",
+    "material": "Organic dielectric: metallic and emission disabled, UVs and texture maps retained",
+    "colourway": "Disabled fulgocobra_native_review texture lookup avoids incompatible installed repaints; no roster species added",
+    "export_triangles": 24434,
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "topology_warnings": [
+      "Mesh_0: 5968 non-manifold edges",
+      "Mesh_0: 3129 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 160 microscopic disconnected components",
+      "Mesh_0: ~4103 inward-facing faces",
+      "Mesh_0: 26 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ],
+    "height_m": 5.2,
+    "bones": 19,
+    "unweighted_vertices": 0,
+    "vertices": 12226,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "before_height_m": 5.19999980926514,
+    "candidate_height_m": 5.19999980926514,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 whole-body Low role samples and front/reverse native scale. Raw receipts/captures outside Git.",
+    "world": "Matched production stormwood CameraRig stage/seed/five poses per preset; fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "full_rig_and_motion": "OPEN",
+    "terminal_contact": "FAIL",
+    "topology": "OPEN",
+    "colour_variants": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Eleven clip names and still fixtures do not certify motion, ordinary gameplay paths, earned fights, swim/fly-grip or rider contact.",
+    "Retained topology/UV warnings require independent approval.",
+    "Candidate remains OFF until the complete art bar passes.",
+    "Matched faint pose visibly floats above the terrain; terminal ground contact FAIL. No contact approval inferred from standing scale or diagnostic lowest-point grounding."
+  ]
+}

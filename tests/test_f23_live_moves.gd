@@ -6,6 +6,7 @@ const MOVES := preload("res://scripts/creatures/move_db.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
+const MATH := preload("res://scripts/combat/combat_math.gd")
 
 class TapManager extends "res://scripts/combat/combat_manager.gd":
 	var arm_edge := false
@@ -99,8 +100,12 @@ func test_unsupported_utility_and_low_wind_refuse_without_spending() -> void:
 	var move := _frozen("utility", 1)
 	move.move_id = "heal_pulse"
 	var before: Dictionary = host.record(id).duplicate(true)
+	# Every authored utility is live now, so unmount one for this refusal.
+	var live: Array = MATH.config().move_commit.live_moves
+	live.erase("heal_pulse")
 	assert_eq(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "utility"},
 		1, owned, _binding(), move, WIND, 1000).code, "move_not_mounted")
+	live.insert(live.find("dash_strike"), "heal_pulse")
 	assert_eq(host.record(id), before)
 	var short_wind := {"max": 20.0, "regen_per_second": 0.0}
 	assert_eq(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "utility"},
@@ -163,3 +168,156 @@ func test_root_status_uses_body_clock_and_never_cancels_protected_tell() -> void
 	body.hold_ultimate_reaction(2.0)
 	assert_true(body.protected_heavy_committed(), "reaction must preserve the committed heavy")
 	body.free()
+
+func test_every_authored_ultimate_is_mounted_when_visuals_are_on() -> void:
+	# F23#0/#5: every creature's ultimate fires once the visual index is on,
+	# not only the one ultimate the first proof drove.
+	var saved_visual_config := ULTIMATES.config()
+	var enabled_visuals := saved_visual_config.duplicate(true)
+	enabled_visuals.enabled = true
+	ULTIMATES._config = enabled_visuals
+	var moves := MOVES.load_default()
+	var count := 0
+	for move_id: String in moves.move_ids():
+		if moves.slot(move_id) != "ultimate": continue
+		count += 1
+		assert_true(MANAGER.live_move_supported("ultimate", move_id), "%s is mounted on the host" % move_id)
+	assert_true(count >= 31, "every authored ultimate was checked")
+	ULTIMATES._config = saved_visual_config
+
+func test_every_ultimate_presents_for_two_to_three_seconds_of_committed_control() -> void:
+	# F35#3: the presentation lasts 2-3 s and costs no longer loss of control:
+	# the creature is committed only for the move's own wind-up plus recovery.
+	var moves := MOVES.load_default()
+	for move_id: String in moves.move_ids():
+		if moves.slot(move_id) != "ultimate": continue
+		var row: Dictionary = moves.move(move_id)
+		var committed := float(row.get("windup", 0.0)) + float(row.get("recovery", 0.0))
+		assert_between(committed, 2.0, 3.0, "%s commits the creature for %.2fs" % [move_id, committed])
+
+func test_every_species_fills_quick_charged_utility_and_ultimate_by_default() -> void:
+	# F23#0: every creature carries the three slots plus an ultimate. Quick,
+	# charged and ultimate come with the species; the utility is the learnset's
+	# first utility, equipped automatically once it unlocks.
+	var moves := MOVES.load_default()
+	var progression := preload("res://scripts/creatures/progression.gd")
+	var learnsets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/learnsets.json"))
+	var rows: Dictionary = learnsets.get("species", learnsets)
+	var checked := 0
+	for species_id: String in rows:
+		if not rows[species_id] is Dictionary or SPECIES.spawn(species_id) == null: continue
+		var creature: RefCounted = SPECIES.spawn(species_id)
+		creature.set_level(10, progression.config())
+		checked += 1
+		for slot: String in ["quick", "charged", "utility", "ultimate"]:
+			var move_id := str(creature.get("move_" + slot))
+			assert_true(not move_id.is_empty() and moves.slot(move_id) == slot,
+				"%s equips a %s move by default (got '%s')" % [species_id, slot, move_id])
+	assert_true(checked >= 50, "every species with a learnset was checked (%d)" % checked)
+
+func _utility_frozen(move_id: String, action: int) -> Dictionary:
+	var owned := _new_owned()
+	owned.move_utility = move_id
+	owned.known_moves.append(move_id)
+	var frozen := MASTERY.freeze_action(MASTERY.owned_record(owned), "utility",
+		{"character_id": "owner_a", "creature_uid": owned.uid, "encounter_id": id,
+		"generation": 1, "action": action}, [], MOVES.load_default())
+	assert_true(frozen.get("ok") == true, str(frozen))
+	return MANAGER.host_move_profile(MOVES.load_default(), "player_utility", move_id, 0.5, 0.5, 1.0, 0.0, frozen.move)
+
+var _landing_bodies: Array[Node] = []
+
+func after_each() -> void:
+	for body: Node in _landing_bodies:
+		if is_instance_valid(body): body.free()
+	_landing_bodies.clear()
+	super()
+
+func _landing_body() -> Node:
+	var body := WILD.new()
+	body.instance = SPECIES.spawn("bramblebun")
+	body.engaged = true
+	# The unit runner has no live SceneTree, so the body stays out of a tree
+	# at the origin; the burst and statuses are plain state on the body.
+	_landing_bodies.append(body)
+	return body
+
+func _landing_context(move: Dictionary, body: Node, point: Vector3 = Vector3.RIGHT) -> Dictionary:
+	return {"action_id": move.action_id, "encounter_id": id, "generation": 1,
+		"source_uid": "creature_a", "target_uid": body.instance.uid,
+		"source_position": Vector3.ZERO, "target_position": point, "target_point": point,
+		"source_hp": 100.0, "source_max_hp": 100.0, "target_hp": body.instance.hp,
+		"hostile": true, "geometry_connected": true, "target_is_boss": false, "target_is_heavy_boss": false}
+
+func test_every_target_utility_kind_lands_on_the_wild_body() -> void:
+	# Each live target utility reaches its consumer: movement, burst, damage taken, trap.
+	var slow_body := _landing_body()
+	var slow := _utility_frozen("slow_field", 1)
+	assert_true(slow_body.apply_landed_utility(slow, _landing_context(slow, slow_body, Vector3.ZERO)))
+	assert_almost_eq(slow_body.utility_movement_multiplier(), 0.5, 0.001, "Slow Field halves movement inside its radius")
+	var sap_body := _landing_body()
+	var sap := _utility_frozen("sap", 2)
+	assert_eq(sap_body.utility_damage_multiplier("creature_a"), 1.0)
+	assert_true(sap_body.apply_landed_utility(sap, _landing_context(sap, sap_body)))
+	assert_true(sap_body.utility_damage_multiplier("creature_a") > 1.0, "Sap raises the damage this body takes")
+	for push_id: String in ["shove", "quake_ring"]:
+		var push_body := _landing_body()
+		var push := _utility_frozen(push_id, 3)
+		var push_context := _landing_context(push, push_body)
+		# The caster stands off the target, so the push has a direction.
+		push_context.source_position = Vector3(-2.0, 0.0, 0.0)
+		assert_true(push_body.apply_landed_utility(push, push_context), push_id)
+		assert_true(push_body.combat_burst_active(), "%s pushes the body along its collision-aware burst" % push_id)
+	var trap_body := _landing_body()
+	var trap := _utility_frozen("bramble_trap", 4)
+	assert_true(trap_body.apply_landed_utility(trap, _landing_context(trap, trap_body, Vector3.ZERO)))
+	assert_eq(trap_body.utility_movement_multiplier(), 1.0, "an armed trap does nothing before it triggers")
+	trap_body.set("_utility_clock_ms", 1000.0)
+	trap_body.call("_tick_landed_traps")
+	assert_eq(trap_body.utility_movement_multiplier(), 0.0, "entering the armed trap roots the body once")
+
+func test_self_and_caster_utilities_are_not_consumed_by_the_target() -> void:
+	var body := _landing_body()
+	for move_id: String in ["heal_pulse", "veil", "hearten", "dash_strike"]:
+		var move := _utility_frozen(move_id, 10)
+		assert_false(body.apply_landed_utility(move, _landing_context(move, body)), move_id)
+
+func test_every_role_can_equip_at_least_two_live_utilities() -> void:
+	# F23#2: at least ten utility moves exist and each species (so each role
+	# family) can learn at least two utilities the host actually mounts.
+	var moves := MOVES.load_default()
+	var utilities: Array[String] = []
+	for move_id: String in moves.move_ids():
+		if moves.slot(move_id) == "utility": utilities.append(move_id)
+	assert_true(utilities.size() >= 10, "at least ten utility moves exist")
+	for move_id: String in utilities:
+		assert_true(MANAGER.live_move_supported("utility", move_id), "%s is mounted on the host" % move_id)
+	var learnsets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/learnsets.json"))
+	var species: Dictionary = learnsets.get("species", learnsets)
+	var roles := {}
+	for species_id: String in species:
+		var row: Variant = species[species_id]
+		if not row is Dictionary: continue
+		var live := 0
+		for unlock: Variant in row.get("unlocks", []):
+			var move_id := str(unlock.get("move_id", "")) if unlock is Dictionary else str(unlock)
+			if utilities.has(move_id) and MANAGER.live_move_supported("utility", move_id): live += 1
+		assert_true(live >= 2, "%s can equip at least two live utilities" % species_id)
+		roles[str(row.get("role_family", ""))] = true
+	assert_true(roles.size() >= 4, "every role family is represented")
+
+func test_hearten_raises_the_next_landed_hit_once() -> void:
+	var move := _utility_frozen("hearten", 20)
+	assert_eq(host.self_utility_power(id, "creature_a", 1000), 1.0)
+	assert_true(host.apply_self_status_utility(id, "creature_a", "hearten", move, Vector3.ZERO, 100.0, 100.0, "hearten-1", 1000))
+	assert_true(host.self_utility_power(id, "creature_a", 1100) > 1.0, "Hearten raises the caster's next hit")
+	host.consume_next_hit(id, "creature_a", 1200)
+	assert_eq(host.self_utility_power(id, "creature_a", 1300), 1.0, "one landed hit spends Hearten")
+	assert_false(host.apply_self_status_utility(id, "creature_a", "snare", _utility_frozen("snare", 21),
+		Vector3.ZERO, 100.0, 100.0, "snare-1", 1400), "only self status utilities stage here")
+
+func test_veil_is_a_host_staged_self_movement_buff() -> void:
+	var move := _utility_frozen("veil", 30)
+	assert_eq(str(move.utility.kind), "movement_buff")
+	assert_true(host.apply_self_status_utility(id, "creature_a", "veil", move, Vector3.ZERO, 100.0, 100.0, "veil-1", 1000))
+	assert_true(MANAGER.live_move_supported("utility", "veil"), "Veil is mounted")

@@ -442,6 +442,9 @@ func _sleep_once() -> bool:
 	var prompt := _bedroll.get_node_or_null("Interactable") as Node3D
 	if prompt == null or not await _reach_bedroll(prompt):
 		return _fail("Ordinary travel did not reach the paid bedroll: " + str(_driver.failures))
+	# F47#4: a rest reaches a morning only after nightfall (rest.json); disclosed: snap the clock to night.
+	for _look: Node in (Engine.get_main_loop() as SceneTree).get_nodes_in_group("day_cycle"):
+		if _look.has_method("apply_time"): _look.call("apply_time", "night")
 	var day_before := int(_game.get("day"))
 	var children_before := _bedroll.get_children()
 	await _driver._tap(&"interact")

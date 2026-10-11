@@ -39,6 +39,11 @@ func _run_livewire() -> void:
 		if legacy.get("verdict") != "PASS":
 			quit(await finish())
 			return
+	# Seed the chapter-ready creature before guest admission: the hosted
+	# trainer requires the deployed UID in the host's admitted party, and a
+	# local-only party member added after join cannot establish ownership.
+	var party_seeded := await step(1, "party_grant", {"species": "sparkit", "level": 33})
+	check(str(party_seeded.get("verdict", "")) == "PASS", "client owns a chapter-ready creature")
 	var hosted := await step(0, "host")
 	check(str(hosted.get("verdict", "")) == "PASS", "peer 0 started the real listen host")
 	if str(hosted.get("verdict", "")) != "PASS":
@@ -103,8 +108,6 @@ func _run_livewire() -> void:
 	# Sparkit's Arc Lash commits for 0.90 s while the authored charged cooldown
 	# is 1.20 s. That leaves a clean timing window: at 1.00 s Livewire is ready
 	# and the inactive/released baseline is not.
-	var party_seeded := await step(1, "party_grant", {"species": "sparkit", "level": 33})
-	check(str(party_seeded.get("verdict", "")) == "PASS", "client owns a chapter-ready creature")
 	var deployed := await step(1, "deploy_creature", {"species": "sparkit"})
 	check(str(deployed.get("verdict", "")) == "PASS", "client deployed before choosing Livewire")
 	var prepared := await step(1, "stormwood_hosted_start", {
@@ -146,7 +149,7 @@ func _run_livewire() -> void:
 	var started := await step(1, "stormwood_hosted_start", {
 		"trainer": TRAINER, "request_only": true,
 	})
-	check(str(started.get("verdict", "")) == "PASS", "remote client started host-owned Tamsin")
+	check(str(started.get("verdict", "")) == "PASS", "remote client started host-owned Tamsin (%s)" % str(started.get("detail", "")))
 	var host_state := await _await_hosted(0, true)
 	var client_state := await _await_hosted(1, true)
 	var charged := str((client_state.get("local_card", {}) as Dictionary).get("charged", ""))
@@ -393,7 +396,7 @@ func _charged(action: int, move_id: String, state: Dictionary, settle: int) -> D
 		"trainer": TRAINER,
 		"encounter_id": str((state.get("record", {}) as Dictionary).get("id", "")),
 		"slot": "charged", "move_id": move_id, "action": action,
-		"realm": STORMWOOD, "damage": 999999.0, "settle": settle,
+		"realm": STORMWOOD, "damage": 999999.0, "settle": settle, "with_start": true,
 	})
 
 

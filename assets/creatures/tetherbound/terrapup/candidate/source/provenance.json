@@ -1,0 +1,89 @@
+{
+  "subject": "terrapup",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Flag-off native review candidate; current installed Terrapup remains default",
+  "reference": "res://assets/creatures/tetherbound/terrapup/reference/f36-standing-v1.png",
+  "reference_author": "built_in_imagegen",
+  "prompt": "Use case: original stylized creature concept reference for Tetherbound's authorized F36 creature refinement. Image 1 is the established Terrapup identity reference, not an edit target. Generate ONE full-body three-quarter studio view of exactly this same Terrapup in a balanced neutral standing quadruped pose suitable for a skeletal rig. Preserve its rounded brown puppy face, cream central forehead stripe and eyebrows, cream muzzle and chest, large teal-blue eyes, small upright rounded ears, broad nose, chunky paws with natural gold-brown claws, broad moss-green and gray stone shell/back plates, short stony tail. Preserve the installed character's proportions and appealing chunky silhouette; no new species or evolution. All four legs and paws should be separately visible, with modest natural spacing and clear joints, the belly separated from the ground, forelegs separate from torso and hindlegs; mouth closed, no crouch or seated pose. Face and eye area unobstructed. Stylized tactile fur masses and designed readable stone/cream/brown/moss colour blocks, moderate surface detail rather than hair noise. Plain neutral light grey background, even soft studio lighting, whole body and tail inside frame, all paws grounded, no person, ruler, text, props, clothing, mechanical armour, floating rocks, haze, sparks or Team Tether red. Produce a coherent riggable natural body; no fused limbs or exaggerated body redesign. The resulting reference is for an already larger-than-trainer creature; no shrinking design.",
+  "inspection": "Re-inspected 2026-10-10: brown puppy face, cream markings, teal eyes, grey stone back and short stony tail retained; separate grounded legs; one studio image cannot certify reverse anatomy or deformation.",
+  "meshy": {
+    "task_id": "01a116be-dd09-708f-8441-3971076c7c98",
+    "night": "2026-10-07",
+    "settings": {
+      "enable_pbr": true,
+      "target_polycount": 15000,
+      "texture_resolution": "2k",
+      "should_texture": true,
+      "model_type": "smart-topology",
+      "ai_model": "meshy-t2"
+    },
+    "observed_credit_cost": 15,
+    "reused_preserved_output": true,
+    "new_submissions_for_this_revision": 0
+  },
+  "rights": "Original agent-drafted reference; generated through the existing owner-held paid Meshy license under RD-26. Existing paid API generated-output ownership and redistribution terms apply; no purchase or third-party character reference.",
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "input": "Preserved GLB from the recorded Meshy task; original textures retained",
+    "skin": "Rebuilt anatomical bone positions: knee at visible limb height rather than paw centroid; local surface diffusion with four influences; no cross-creature donor or automatic heat retry",
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "material": "Candidate recipe removes inherited field emission to preserve cream/brown color; baseline unchanged",
+    "rest": "Dedicated flank clip with folded limbs and evaluated floor correction; no inherited installed-model translation",
+    "height_m": 3.85,
+    "bones": 15,
+    "unweighted_vertices": 0,
+    "vertices": 8227,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 stable Windows",
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "raster": [
+      1920,
+      1080
+    ],
+    "before_height_m": 3.84999990463257,
+    "candidate_height_m": 3.85000014305115,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "full_pose_stage": "25 native Low samples across hit/faint/swim/fly_grip/ride; separate standing/reverse scale samples",
+    "world": "Production Meadows scene and CameraRig, matched stage/seed/camera/pose sampling; presentation fixtures, no earned fight or traversal claim",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "skin_weights": "No unweighted vertices; not independent deformation approval",
+    "full_rig_animation": "OPEN",
+    "independent_art_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Neutral procedural clips require independent pose/appeal approval; no locomotion foot-lock claim",
+    "Pose fixtures do not prove mount contact, ordinary swim/fly/ride paths or combat",
+    "Candidate remains OFF until the full F36 bar passes"
+  ]
+}

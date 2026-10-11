@@ -357,6 +357,9 @@ func _check_the_first_day_arc(world: Node) -> void:
 	if rest_prompt == null:
 		_fail("the placed bedroll has no Rest interaction")
 		return
+	# F47#4: a rest reaches a morning only after nightfall (rest.json); disclosed: snap the clock to night.
+	for _look: Node in (Engine.get_main_loop() as SceneTree).get_nodes_in_group("day_cycle"):
+		if _look.has_method("apply_time"): _look.call("apply_time", "night")
 	var day_before := int(_game.get("day"))
 	var vitals: RefCounted = player.get("vitals")
 	vitals.set("health", 40.0)

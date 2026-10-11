@@ -68,8 +68,8 @@ static func evaluate(intent: Dictionary, context: Dictionary, flags: RefCounted)
 	if actor <= 0 or str(context.get("character_id", "")).is_empty():
 		return _refuse("unknown_character", "Your character is not connected.")
 	var position: Variant = context.get("position")
-	var field := FIELD.new()
-	var target := action_position(action, FIELD.load_config(), field.height_at)
+	var field: RefCounted = FIELD.shared()
+	var target := action_position(action, field.call("config"), Callable(field, "height_at"))
 	if not position is Vector3 or not position.is_finite() or not target.is_finite() or position.distance_to(target) > float(data.interaction_distance_m):
 		return _refuse("too_far", "Move closer to the dock equipment.")
 	if flags.has(str(action.flag)):

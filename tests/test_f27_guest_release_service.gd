@@ -53,6 +53,9 @@ func _setup(reply: Dictionary) -> Dictionary:
 	for creature: RefCounted in party.call("members"):
 		rows.append({"uid": str(creature.get("uid")), "species_id": "terrapup", "creature_type": "ground", "secondary_type": "", "level": 5})
 	session._foundation_personal_cache = {"party": rows, "registry_revision": 7}
+	var records: Dictionary = {}
+	for row: Dictionary in rows: records[row.uid] = {"uid": row.uid}
+	game.local.redesign_character["creatures"] = records
 	game.pending_catch = SPECIES.spawn("bramblebun")
 	var service: Node = SERVICE.new()
 	service._game = game
@@ -90,6 +93,9 @@ func _assert_released_unpaid(fixture: Dictionary, released: String, label: Strin
 	assert_eq(int(party.call("size")), 5, label + ": still exactly five")
 	assert_false(owned.has(released), label + ": the chosen creature went free")
 	assert_true(game.pending_catch == null, label + ": the newcomer joined")
+	var records: Dictionary = game.local.redesign_character.creatures
+	assert_false(records.has(released), label + ": the released creature's record left with it (or every save refuses)")
+	assert_eq(records.size(), 4, label + ": the other four records stay")
 	assert_eq((fixture.results as Array).size(), 1, label + ": one completion")
 	var result: Dictionary = (fixture.results as Array)[0] if not (fixture.results as Array).is_empty() else {}
 	assert_true(result.get("ok") == true and result.get("resolved") == true and not str(result.get("unpaid_reason", "")).is_empty(),

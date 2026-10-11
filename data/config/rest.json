@@ -1,0 +1,8 @@
+{
+  "_comment": "F47#4 (PROGRESSION: repeated rest cannot mint stock, XP or essence). A rest always heals and restores; it passes to a new morning only when the live hour is in the night window. The window wraps midnight: start_hour 20 to end_hour 4 means 20:00 up to 04:00. Solo rest and the co-op sleep vote read the same window (the host's hour decides a vote).",
+  "night_window": {
+    "start_hour": 20.0,
+    "end_hour": 4.0
+  },
+  "day_rest_line": "You rest a while. Morning only comes after nightfall."
+}

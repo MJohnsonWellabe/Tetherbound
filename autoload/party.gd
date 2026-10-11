@@ -17,6 +17,9 @@ extends RefCounted
 ## deliberately does not know what that ceremony looks like.
 
 const MAX_CREATURES := 5
+## Set on a borrowed creature that is never owned (Maela's Fly loaner,
+## fly_controller.gd): add() refuses it, so it can never become a sixth.
+const LOANER_META := &"mentor_loaner"
 
 ## Polled by the menu instead of pushed on a signal. See autoload/inventory.gd
 ## for why.
@@ -65,7 +68,7 @@ func at(index: int) -> RefCounted:
 ## The only way a creature enters the party.
 func add(creature: RefCounted) -> bool:
 	if _owner_mutation_blocked(): return false
-	if creature == null:
+	if creature == null or creature.has_meta(LOANER_META):
 		return false
 	if is_full():
 		return false

@@ -1,0 +1,128 @@
+{
+  "subject": "voltarach",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Reference-backed reconstruction for disabled native review; installed species unchanged",
+  "reference_provenance": {
+    "subject": "voltarach",
+    "reference": "assets/creatures/tetherbound/voltarach/reference/native-standing-v1.png",
+    "method": "built_in_imagegen",
+    "identity_reference": [
+      "assets/creatures/tetherbound/voltarach/reference/front.png",
+      "assets/creatures/tetherbound/voltarach/reference/side.png",
+      "assets/creatures/tetherbound/voltarach/reference/top.png"
+    ],
+    "prompt": "Draft an original Tetherbound Voltarach modeling reference using the supplied established front, side and top identity references. ONE full-body elevated three-quarter studio view of the SAME formidable dark rock-armoured electric spider. Retain its two connected front cephalothorax and large teardrop rear abdomen, charcoal-black broad faceted carapace plates, restrained amber-gold fissure markings through the plates, large readable cobalt-blue luminous eyes on the front face, two small paired dark fang/pedipalp mouthparts, and EXACTLY EIGHT substantial articulated spider legs arranged as four pairs rooted into the cephalothorax. Keep the recognizable existing black/gold/blue identity, not a new species. Make anatomical rigging possible: broad solid joints linking coxa, femur, knee and tapered lower leg; all eight legs visibly separated with enough spacing to count four on each side and trace them into the front body, all eight complete tips on the floor, no hidden legs or merged leg pairs. Neutral shallow symmetrical spider stance, abdomen supported near the back without an upright fantasy tower. Thick connected dorsal plates and broad leg volumes with few coherent scale facets; simplify thin needle spikes and chaotic shards while preserving its pointed angular silhouette. No extra legs, horns, scorpion tail, wings, human torso, new gear, straps, weapons or equipment. Face directed toward camera with the established expressive blue eyes and restrained mouthparts, no cavernous red maw. Colour regions read clearly: charcoal organic rough rock, warm golden seam accents, vivid blue eyes. No chrome, glossy metal or full-body neon glow, no detached lightning strands or floating geometry. Entire body, abdomen and all eight full legs inside the image with generous margin. Plain light-grey studio floor and background, soft neutral lighting, stylized detailed game creature surface. No text, rulers, reference boards, humans, scenery, action pose, webs or particles.",
+    "default_enabled": false,
+    "initial_draft_origin": "exec-f1cce350-a839-4f0a-bd6d-a41ecae1da94",
+    "initial_draft_inspection": "Same black/gold/blue identity retained, but one far-side leg is obscured: only seven complete leg tips readable. Not submitted to Meshy.",
+    "edit_prompt": "Edit this existing Voltarach spider reference to a much more elevated almost overhead three-quarter view, tilted down approximately 65 degrees so ALL EIGHT complete legs and their eight grounded tips can be counted without any leg hidden behind another. Preserve the same charcoal rock plates, gold seams, blue eye cluster, two connected body sections and small mouthparts. Spread FOUR articulated legs on the LEFT and FOUR on the RIGHT in a clean radial spider arrangement, with four clearly separated roots on each side of the FRONT body, leg tips pointed outward with generous open gaps. Every leg has one substantial thigh, one bent knee and one tapering lower leg: eight complete articulated legs total. The two small mouthparts near the face do NOT count as legs and do not touch the floor. Keep the abdomen low and supported behind the front body, rather than tall upright; show the established eyes at the front in the elevated view. Retain complete broad thick plates without detached shards, eight connected thick joints, soft rough rock, and coherent black/gold/blue areas. No new equipment, appendages, tail or wings. Entire spider with all eight tips and generous margins on plain grey studio floor, soft light. One specimen, no labels, no diagram, no board, no text. Prioritize a clear eight-leg rigging layout over a dramatic low camera angle.",
+    "edit_target": "exec-f1cce350-a839-4f0a-bd6d-a41ecae1da94",
+    "selected_origin": "exec-97c127aa-ea3b-4541-a451-872c8a6aa941",
+    "inspection": {
+      "identity": "Charcoal/gold plated spider with established blue eye cluster retained",
+      "riggability": "Elevated view shows eight separated complete articulated leg tips, four per side; two small mouthparts separate",
+      "limits": "Occluded inner plate joins and actual eight-leg connectivity require model inspection. No full art approval inferred."
+    }
+  },
+  "generation": {
+    "task_id": "01a126c3-13d5-70a4-91c4-e4e797f858b0",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "reference": "assets/creatures/tetherbound/voltarach/reference/native-standing-v1.png",
+    "night": "2026-10-09",
+    "status": "SUCCEEDED",
+    "observed_credits": 30,
+    "new_submissions": 1
+  },
+  "rights": {
+    "basis": "Owner-held installed identity and original drafted reference; owner-authorized paid Meshy account. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "approach": "Eight measured leg chains, three articulated controls each, protected thorax/abdomen/head and local surface diffusion with normalized four influences; no quadruped donor.",
+    "material": "Organic dielectric: metallic and emission disabled, UVs and texture maps retained",
+    "colourway": "Disabled voltarach_native_review texture lookup avoids incompatible installed repaints; no roster species added",
+    "export_triangles": 28740,
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "topology_warnings": [
+      "Mesh_0: 14334 non-manifold edges",
+      "Mesh_0: 7819 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 671 microscopic disconnected components",
+      "Mesh_0: ~3637 inward-facing faces",
+      "Mesh_0: 74 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ],
+    "height_m": 4.25,
+    "bones": 28,
+    "unweighted_vertices": 0,
+    "vertices": 14395,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false,
+    "visual_fit_allowance": "Disabled candidate footprint allowance 5.0 (installed 3.0) accommodates the measured eight-leg spread at unchanged 4.25 m height; radius, colliders and gameplay unchanged."
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "before_height_m": 4.25,
+    "candidate_height_m": 4.25,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 whole-body Low role samples and front/reverse native scale. Raw receipts/captures outside Git.",
+    "world": "Matched production stormwood CameraRig stage/seed/five poses per preset; fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "full_rig_and_motion": "OPEN",
+    "terminal_contact": "FAIL",
+    "topology": "OPEN",
+    "colour_variants": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Eleven clip names and still fixtures do not certify motion, ordinary gameplay paths, earned fights, swim/fly-grip or rider contact.",
+    "Retained topology/UV warnings require independent approval.",
+    "Candidate remains OFF until the complete art bar passes.",
+    "Matched faint pose balances vertically on an appendage instead of settling onto the body/flank; terminal repose/contact FAIL. No contact approval inferred from standing scale or diagnostic lowest-point grounding."
+  ]
+}

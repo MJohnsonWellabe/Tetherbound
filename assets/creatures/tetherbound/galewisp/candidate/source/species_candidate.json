@@ -1,0 +1,28 @@
+{
+  "enabled": false,
+  "species": "galewisp",
+  "placeholder": {
+    "colour": "#dbe8f2",
+    "height": 3.25,
+    "radius": 1.231579,
+    "footprint_allowance": 4.5,
+    "model": "res://assets/creatures/tetherbound/galewisp/candidate/models/creature_galewisp_native.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    },
+    "field_emission": 0.0,
+    "rest_model_position_offset": 0.0
+  }
+}

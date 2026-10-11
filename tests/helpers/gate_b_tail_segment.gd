@@ -497,6 +497,9 @@ func _sleep_the_team_into_condition() -> bool:
 	# again, so that is what this does. Recorded in `docs/CURRENT_STATE.md` as a
 	# chapter finding too: one bad fight costs a night.
 	for night in 3:
+		# F47#4: a rest reaches a morning only after nightfall (rest.json); disclosed: snap the clock to night.
+		for _look: Node in (Engine.get_main_loop() as SceneTree).get_nodes_in_group("day_cycle"):
+			if _look.has_method("apply_time"): _look.call("apply_time", "night")
 		var day_before := int(_game.get("day"))
 		if not await _sleep_at_camp():
 			return false

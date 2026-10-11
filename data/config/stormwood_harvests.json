@@ -4614,5 +4614,39 @@
       "glowmoss",
       "voltcap"
     ]
+  },
+  "material_cues": {
+    "_comment": "P2-046 presentation only: a visual-only cue on each harvest node so its named material reads. Child of the node, so it hides with the node when harvested. No collider, stock, reward or placement change. Only items whose model is not a fight-ring occluder get a cue: the cue is a sibling of the model and would float while a fight hides it.",
+    "stormglass": {
+      "kind": "shards",
+      "count": 6,
+      "radius_m": 0.55,
+      "height_m": 1.15,
+      "lift_m": 0.0,
+      "colour": "#8fd4ff",
+      "emission": 0.55,
+      "albedo_shade": 0.55,
+      "ring_m": 1.55,
+      "width_m": 0.3
+    },
+    "glowmoss": {
+      "kind": "glow_cap",
+      "radius_m": 0.42,
+      "lift_m": 0.32,
+      "colour": "#7dffb8",
+      "emission": 1.2
+    },
+    "stormglass_crown": {
+      "kind": "shards",
+      "count": 7,
+      "radius_m": 0.7,
+      "height_m": 1.45,
+      "lift_m": 0.0,
+      "colour": "#b49cff",
+      "emission": 0.6,
+      "albedo_shade": 0.55,
+      "ring_m": 1.85,
+      "width_m": 0.36
+    }
   }
 }

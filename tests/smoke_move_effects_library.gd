@@ -31,6 +31,7 @@ var _field: RefCounted = null
 var _world: Node = null
 var _relocated: Array = []
 var _ultimate_filter: Array = []
+var _simultaneous: Array = []
 var _breakthrough_filter: Array = []
 ## Diagnostic close-ups: --camera=px,py,pz:lx,ly,lz (arena-local position and
 ## look-at) replaces the stage camera; --no-autoframe keeps it for ultimates.
@@ -60,6 +61,9 @@ func _run() -> void:
 		if arg.begins_with("--camera="): _camera_override = arg.trim_prefix("--camera=")
 		if arg == "--no-autoframe": _no_autoframe = true
 		if arg.begins_with("--ultimates="): _ultimate_filter = Array(arg.trim_prefix("--ultimates=").split(","))
+		# F35#3: --simultaneous=a,b,c,d fires four ultimates on one frame from
+		# four posed attackers, as in a four-player fight, and records frame time.
+		if arg.begins_with("--simultaneous="): _simultaneous = Array(arg.trim_prefix("--simultaneous=").split(","))
 		if arg.begins_with("--breakthroughs="):
 			for count: String in arg.trim_prefix("--breakthroughs=").split(","): _breakthrough_filter.append(int(count))
 		# Affected-subset reruns: --archetypes=a,b narrows the mastery batch,
@@ -835,6 +839,9 @@ func _run_ultimates() -> void:
 	ULTIMATES.config()
 	ULTIMATES._config["enabled"] = true # Process-local diagnostic opt-in only.
 	var cfg: Dictionary = _scenarios.ultimate_capture
+	if not _simultaneous.is_empty():
+		await _exercise_simultaneous(cfg)
+		return
 	var ids: Array = (ULTIMATES._config.visuals as Dictionary).keys()
 	ids.sort()
 	var counts: Array = cfg.breakthroughs if _breakthrough_filter.is_empty() else _breakthrough_filter
@@ -907,6 +914,84 @@ func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary, rank: int 
 		"captures": captured, "arrivals": arrivals[0]})
 	if is_instance_valid(effect): effect.call("cancel_presentation")
 	for i in 3: await process_frame
+
+## Four ultimates on one frame from four posed attackers side by side: the
+## overlap a four-player fight produces. Frame intervals cover the whole
+## presentation; captures at an early, middle and late beat go to the judge.
+func _exercise_simultaneous(cfg: Dictionary) -> void:
+	var lanes := [-4.5, -1.5, 1.5, 4.5]
+	var origins: Array[Vector3] = []
+	var bodies: Array[Node3D] = []
+	for i in _simultaneous.size():
+		var move_id := str(_simultaneous[i])
+		if not _moves.has(move_id): _failures.append("Simultaneous ultimate without move " + move_id); return
+		var case := {"id": move_id}
+		var species := move_id.trim_prefix("ultimate_")
+		if bool(_moves[move_id].get("ultimate", {}).get("unique", false)) and _species_has_model(species):
+			case["attacker_species"] = species
+		var from := _attacker_origin(case, move_id, float(lanes[i % lanes.size()]))
+		if not from.is_finite(): _failures.append("Attacker model missing " + move_id); return
+		origins.append(from)
+		bodies.append(_current_attacker)
+	for body: Node3D in bodies: body.visible = true
+	var camera := get_root().get_viewport().get_camera_3d()
+	if camera != null:
+		var centre := _arena.to_global(Vector3((float(_scenarios.get("stage", {}).get("attacker_x", -3.4)) + _target_x) * 0.5, 1.6, 0.0))
+		# Behind and above the four attackers: their lanes spread across the
+		# frame and every effect travels away from the lens toward the target.
+		camera.global_position = centre + _arena.global_basis * Vector3(-13.0, 8.0, 5.0)
+		camera.look_at(centre, Vector3.UP)
+	var to := _target.global_position + Vector3.UP * float(_target.call("body_height")) * 0.5
+	var duration := 0.0
+	var arrivals := [0]
+	for i in _simultaneous.size():
+		var move_id := str(_simultaneous[i])
+		var move: Dictionary = _moves[move_id]
+		var signature: Dictionary = move.get("ultimate", {})
+		duration = maxf(duration, float(signature.get("presentation_seconds", 2.4)))
+		var binding := {"character_id": "f35-four-%d" % i, "creature_uid": "f35-four-%d-attacker" % i,
+			"encounter_id": "f35-four", "generation": 1, "action": i + 1}
+		var spec := {"slot": "ultimate", "move_id": move_id, "action_id": "f35-four:%d" % (i + 1),
+			"actor_binding": binding, "mastery_rank": 1, "breakthrough_count": 0,
+			"ultimate": signature.duplicate(true), "vfx": move.get("vfx", {}).duplicate(true)}
+		var context := {"current_actor": binding, "travel_seconds": minf(float(cfg.travel_seconds), 1.2),
+			"recipient_character_id": "f35-four-%d" % i, "source_ground": _ground_point(_arena.to_local(origins[i]).x, float(lanes[i % lanes.size()])),
+			"target_ground": _ground_point(_target_x, 0.0)}
+		var effect: Node3D = ULTIMATES.launch(_arena, origins[i], to, spec, context)
+		if effect == null: _failures.append("Simultaneous launch refused " + move_id); continue
+		effect.connect("arrived", func() -> void: arrivals[0] += 1)
+		if bodies[i].has_method("play_attack"): bodies[i].call("play_attack")
+	var beats := {"early": 0.35, "middle": duration * 0.5, "late": duration - 0.3}
+	var captured := {}
+	var intervals: Array[float] = []
+	# The first frame after launch carries shader compilation for all four
+	# effects; it is reported apart and the presentation is timed from it.
+	var launched := Time.get_ticks_usec()
+	await RenderingServer.frame_post_draw
+	var first_frame_ms := float(Time.get_ticks_usec() - launched) / 1000.0
+	var started := Time.get_ticks_usec()
+	var last := started
+	while float(Time.get_ticks_usec() - started) / 1000000.0 < duration + 0.4:
+		await RenderingServer.frame_post_draw
+		var now := Time.get_ticks_usec()
+		intervals.append(float(now - last) / 1000.0)
+		last = now
+		var elapsed := float(now - started) / 1000000.0
+		for beat: String in beats:
+			if captured.has(beat) or elapsed < float(beats[beat]): continue
+			var path := _out.path_join("four-ultimates-%s.png" % beat)
+			if root.get_texture().get_image().save_png(path) != OK: _failures.append("Capture failed " + path)
+			captured[beat] = {"wall_seconds": elapsed, "arrivals": arrivals[0]}
+	intervals.sort()
+	var p95 := intervals[int(floor(float(intervals.size() - 1) * 0.95))] if not intervals.is_empty() else 0.0
+	if captured.size() != beats.size(): _failures.append("Incomplete four-ultimate frames")
+	if int(arrivals[0]) != _simultaneous.size(): _failures.append("Four-ultimate arrivals %d" % arrivals[0])
+	_records.append({"id": "four_simultaneous", "moves": _simultaneous, "presentation_seconds": duration,
+		"captures": captured, "arrivals": arrivals[0], "frames": intervals.size(), "first_frame_ms": first_frame_ms,
+		"frame_ms_p95": p95, "frame_ms_max": intervals.back() if not intervals.is_empty() else 0.0})
+	print("F35 four simultaneous frames=%d first=%.0fms p95=%.2fms max=%.2fms arrivals=%d" % [intervals.size(), first_frame_ms, p95,
+		intervals.back() if not intervals.is_empty() else 0.0, arrivals[0]])
+
 
 func _species_has_model(species: String) -> bool:
 	var probe := CREATURE.instantiate() as CharacterBody3D

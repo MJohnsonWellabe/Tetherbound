@@ -89,7 +89,9 @@
     "near_target_scale": 0.6,
     "_comment_guard": "Seconds of input ignored on entering aim mode, so the press that opens the aim is not also read as the release.",
     "_comment_target_slowdown": "OWNER PLAYTEST 2026-09-02 finding #6: 'aiming at the creature is too hard... they should move a little less or in slow motion once you go into catch mode.' Read by wild_creature.gd, not this file's own camera code — while the player is aiming (throw_aim.gd's AIMING state, wired through combat_manager.gd::_tick_active), the TARGET's own combat movement speed is multiplied by this. Scoped to the one creature being aimed at, not a global time dilation, so the throw/camera/rest of the fight keep their normal pace. 1.0 would be no change; lower is slower. TUNABLE.",
-    "target_slowdown_scale": 0.35
+    "target_slowdown_scale": 0.35,
+    "_comment_companion_aside": "P2-113: while the trainer aims, the abandoned companion walks to this spot beside the trainer, on the side away from the shoulder camera, so it leaves the aim frame instead of filling a third of it. Metres in the aim's own frame: lateral to the trainer's left, back toward the lens. The companion still takes hits there; it only stops crowding the shot.",
+    "companion_aside": {"lateral_m": 3.2, "back_m": 0.0, "arrive_m": 0.35, "hop_seconds": 0.3}
   },
 
   "resolve": {

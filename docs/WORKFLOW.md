@@ -406,6 +406,14 @@ failures, so the nightly count is auditable (F36#3). No purchase or top-up.
 
 # 8. Branches, CI and landing
 
+- **Consolidated landing only (owner, 2026-10-10; supersedes per-lane PRs in step 5
+  below).** Lanes never open their own PR, never run full CI on a single change and
+  never dispatch CI or renders on their own. A lane pushes its finished, reviewed
+  branch and reports the head sha. The coordinator merges the ready lane branches
+  into one consolidated `tb/coordinator` PR and runs one full CI, at most every few
+  hours. A red batch is fixed on the source branch and re-merged, or that branch is
+  pulled from the batch. Per-PR CI on every lane PR starved the runners on 10-10
+  (about 60 queued runs, about 3 criteria landed in a day).
 - **One reused branch per lane (owner, 2026-09-27).** Every branch uses the
   `tb/` prefix.
   - **Lanes land their own work (owner, 2026-09-28).** Each lane works on one

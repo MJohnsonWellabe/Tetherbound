@@ -1018,8 +1018,10 @@ func _build_authored_marker(root: Node3D, kind: String) -> void:
 			_piece(visual, spoke, Vector3(0,1.15,0), brass).rotation.z = angle
 	else:
 		var pennant := PrismMesh.new()
-		pennant.size = Vector3(0.95,0.55,0.04)
-		_piece(visual, pennant, Vector3(0.45,1.6,0), Color(0.82,0.65,0.30))
+		# P2-053: a flat saturated-yellow pointer read as UI pasted on the
+		# launch platform; the marker keeps its post and a smaller brass flag.
+		pennant.size = Vector3(0.7,0.42,0.06)
+		_piece(visual, pennant, Vector3(0.36,1.6,0), brass)
 
 
 func _piece(parent: Node3D, mesh: Mesh, at: Vector3, color: Color) -> MeshInstance3D:

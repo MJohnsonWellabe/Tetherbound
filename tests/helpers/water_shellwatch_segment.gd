@@ -425,6 +425,9 @@ func _recover_at_camp(label: String, camp_id: String = CAMP_ID) -> bool:
 		return _fail("Shellwatch controller input did not assign the active creature to bed " + label)
 	await _tap(&"menu_cancel")
 	await _frames(8)
+	# F47#4: a rest reaches a morning only after nightfall (rest.json); disclosed: snap the clock to night.
+	for _look: Node in (Engine.get_main_loop() as SceneTree).get_nodes_in_group("day_cycle"):
+		if _look.has_method("apply_time"): _look.call("apply_time", "night")
 	var day_before := int(_game.day)
 	if not await _activate(rest_prompt, "Shellwatch overnight rest " + label):
 		return false

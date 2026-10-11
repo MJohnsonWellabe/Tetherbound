@@ -1,0 +1,29 @@
+{
+  "enabled": false,
+  "species": "aeriex",
+  "placeholder": {
+    "colour": "#8899aa",
+    "height": 4.0,
+    "radius": 1.4,
+    "footprint_allowance": 3.0,
+    "model": "res://assets/creatures/tetherbound/aeriex/candidate/models/creature_aeriex_native.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    },
+    "field_emission": 0.0,
+    "rest_model_position_offset": 0.0,
+    "colourway_source_species": "aeriex_native_review"
+  }
+}

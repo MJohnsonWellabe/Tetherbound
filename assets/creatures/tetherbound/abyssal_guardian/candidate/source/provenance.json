@@ -1,0 +1,127 @@
+{
+  "subject": "abyssal_guardian",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Reference-backed reconstruction for disabled native review; installed species unchanged",
+  "reference_provenance": {
+    "subject": "abyssal_guardian",
+    "reference": "assets/creatures/tetherbound/abyssal_guardian/reference/native-standing-v1.png",
+    "method": "built_in_imagegen",
+    "identity_reference": [
+      "assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb rendered complete three-quarter and side views"
+    ],
+    "prompt": "Draft an original Tetherbound Abyssal Guardian modeling reference using the supplied complete installed-model three-quarter and side renders as the established species identity. ONE full-body elevated three-quarter studio view of the SAME immense blue aquatic sea-serpent guardian: small dignified sea-reptile head with a rounded narrow closed muzzle, clear expressive cyan-blue eyes with dark pupils, a long thick naturally supported upward-curving neck, continuous substantial elongated serpentine torso and complete tapering tail, pale ivory segmented throat/underside, deep midnight/navy-blue scales with restrained light cyan spotted markings, and exactly FOUR large rounded paddle-shaped FLIPPERS rooted in the torso as two front and two rear flippers. Preserve the established blue dorsal crest along the neck, back and tail as a connected thick-edged fin/ridge, including the existing small backward head crest, no invented horns. Keep the exact blue/ivory/spotted identity and long guardian silhouette, not an ordinary dragon, whale or new species. Make the anatomy readable and riggable: raised alert head/neck continuous into the torso, body belly settled naturally on the studio floor, all FOUR complete flippers clearly separated and spread enough to see each root and rounded tip, no legs, paws, claws, feet, wings or extra limbs. Show the entire long body and tail extending behind in one low shallow curve without overlapping stacked coils or a hidden curled tail. Dorsal crest is a coherent connected silhouette with broad webbed base and modest thick triangular lobes; simplify disconnected needle spikes and tiny fragments. Flippers have substantial volume at their roots, broad smooth surfaces and thick rounded edges rather than thin shredded ribbons. Large clean navy, cyan and ivory colour groups, shallow sculpted scales and soft organic roughness, no shiny metal, chrome, neon body emission or floating energy. Entire head, neck, four flippers, torso, dorsal crest and complete tail inside frame with generous margin. Detailed stylized game creature on plain light-grey studio floor/background, soft neutral lighting. No water, environment, humans, rider, saddle, harness, ropes, gear, weapons, text, labels, rulers, reference board, action blur or particles. One existing roster legendary only.",
+    "default_enabled": false,
+    "initial_draft_origin": "exec-3bbc82b6-1290-4c16-bec1-a6a7160741f0",
+    "initial_draft_inspection": "Established identity retained, but only three complete flipper tips visible; one rear flipper hidden. Withheld from Meshy.",
+    "edit_prompt": "Edit the supplied existing Abyssal Guardian studio reference into a substantially ELEVATED almost overhead three-quarter view tilted down 60 degrees, with the sea-serpent head and high neck toward the lower/front part of the image and its long torso/tail extending backward toward the upper part. Keep the same existing blue/ivory spotted sea-serpent body, clear blue eye with pupil, dorsal crest, proportions and materials. Show EXACTLY FOUR complete broad paddle FLIPPERS, two on the left side of the torso and two on the right: one front-left and front-right pair rooted just behind the neck, one rear-left and rear-right pair rooted farther behind. Spread all four diagonally outward with large open grey floor gaps so all four roots, whole paddles and rounded tips are visually distinct and countable. The back-left flipper MUST be fully shown rather than hidden behind the torso or neck. No fifth flipper, no legs, feet, paws, claws, wings or new appendages. Belly settles on the floor, neck naturally raised, tail in one gentle extended curve behind with no overlaps. Broaden the camera margin and use a wide image if needed to keep the entire head, complete crest, body, four whole flippers and complete tapering tail inside frame. Keep connected thick flipper roots and solid thick-edged dorsal fin, simplified shallow scale texture, soft organic roughness, navy/cyan/ivory coherent regions. No lighting or palette redesign, no chrome, glow, water, props, human, saddle, gear, labels or reference board. One specimen on plain grey studio floor; prioritize clear four-flipper anatomy over a dramatic side view.",
+    "edit_target": "exec-3bbc82b6-1290-4c16-bec1-a6a7160741f0",
+    "selected_origin": "exec-686d8f7c-b51f-4726-a929-918e5b452351",
+    "inspection": {
+      "identity": "Existing navy/cyan spotted, ivory-bellied sea-serpent with raised neck, connected dorsal crest and complete long tail retained",
+      "riggability": "Elevated view shows four distinct complete rounded flippers; belly settled, no new limbs or overlapping coils",
+      "limits": "Far rear root partly occluded by torso; actual four-flipper connectivity and dorsal topology require model inspection. No art approval inferred."
+    }
+  },
+  "generation": {
+    "task_id": "01a126d7-2fc5-770d-a5b6-59a7a82db380",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "reference": "assets/creatures/tetherbound/abyssal_guardian/reference/native-standing-v1.png",
+    "night": "2026-10-09",
+    "status": "SUCCEEDED",
+    "observed_credits": 30,
+    "new_submissions": 1
+  },
+  "rights": {
+    "basis": "Owner-held installed identity and original drafted reference; owner-authorized paid Meshy account. No purchase or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "approach": "Four measured two-control flippers, two neck segments, fitted head and four tail segments; local surface diffusion with normalized four influences. Belly-down aquatic settling, no invented feet or quadruped roll.",
+    "material": "Organic dielectric: metallic and emission disabled, UVs and texture maps retained",
+    "colourway": "Disabled abyssal_guardian_native_review texture lookup avoids incompatible installed repaints; no roster species added",
+    "export_triangles": 26417,
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "topology_warnings": [
+      "Mesh_0: 7049 non-manifold edges",
+      "Mesh_0: 3723 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 183 microscopic disconnected components",
+      "Mesh_0: ~1105 inward-facing faces",
+      "Mesh_0: 16 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ],
+    "height_m": 7.2,
+    "bones": 18,
+    "unweighted_vertices": 0,
+    "vertices": 13215,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false,
+    "visual_fit_allowance": "Disabled candidate footprint allowance 4.25 (installed 3.7) accommodates the measured long body at required 7.20 m height; radius, colliders and gameplay unchanged."
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "before_height_m": 7.19999980926514,
+    "candidate_height_m": 7.19999980926514,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "diagnostics": "25 whole-body Low role samples and front/reverse native scale. Raw receipts/captures outside Git.",
+    "world": "Matched production water CameraRig stage/seed/five poses per preset; fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "full_rig_and_motion": "OPEN",
+    "terminal_contact": "FAIL",
+    "topology": "OPEN",
+    "colour_variants": "OPEN",
+    "independent_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Eleven clip names and still fixtures do not certify motion, ordinary gameplay paths, earned fights, swim/fly-grip or rider contact.",
+    "Retained topology/UV warnings require independent approval.",
+    "Candidate remains OFF until the complete art bar passes.",
+    "Faint diagnostic visibly hangs above the surface rather than settling the body; terminal repose/contact FAIL. No contact approval inferred from standing scale or diagnostic lowest-point grounding.",
+    "Production CameraRig faint fixture intersects the authored slope; paired views disclose the clipping rather than certify terrain contact."
+  ]
+}

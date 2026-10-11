@@ -1,0 +1,7 @@
+{
+  "_comment": "P2-020: a creature standing still on the floor (horizontal speed < still_speed for settle_s) joins grass_field's grass_clear group with radius body_radius * radius_scale, so runtime grass thins and shortens around its feet instead of burying them. It leaves the group on its first moving frame. Runtime grass only; enabled false restores the old behaviour.",
+  "enabled": true,
+  "still_speed": 0.15,
+  "settle_s": 0.6,
+  "radius_scale": 1.6
+}

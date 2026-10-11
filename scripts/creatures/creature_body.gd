@@ -17,6 +17,8 @@ extends CharacterBody3D
 ## M11 replaces `_build_placeholder` with a rigged model. Nothing else here
 ## changes.
 
+const OWNER_SLIDE_PROBE := preload("res://tools/performance/owner_slide_attribution.gd")
+
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/creatures/creature_animator.gd")
@@ -290,7 +292,22 @@ var _jump_speed: float = 0.0
 ## re-sweeps at least every `refresh_ticks` so floor contact never goes stale.
 const PHYSICS_LOD_PATH := "res://data/config/creature_physics_lod.json"
 static var _physics_lod_cache: Dictionary = {}
+## P2-020: a creature standing still joins grass_field.gd's clearing group
+## (CLEAR_GROUP / CLEAR_RADIUS_META) so the runtime grass thins and shortens
+## around its feet; it leaves the group as soon as it moves.
+const GRASS_CLEAR_PATH := "res://data/config/creature_grass_clear.json"
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+const GRASS_CLEAR_GROUP := "grass_clear"
+const GRASS_CLEAR_RADIUS_META := "grass_clear_radius"
+static var _grass_clear_cache: Dictionary = {}
+var _grass_still_s := 0.0
+var _grass_clearing := false
 var rest_slide_skip_allowed := false
+## Seconds of motion one `move_and_slide` covers, as a multiple of the physics
+## step. A controller that steps this body less often than every tick
+## (`wild_creature.gd`'s far-wild LOD) sets it so the sweep travels the whole
+## elapsed time; 1.0 everywhere else.
+var slide_time_scale := 1.0
 var _rest_slide_at := Vector3.INF
 var _rest_slide_skipped := 0
 
@@ -417,6 +434,14 @@ func _ready() -> void:
 ## playground at 500 m/s, accelerating, on the first frame of every run.
 func _on_visibility_changed() -> void:
 	set_physics_process(visible)
+	if not visible:
+		# Hidden means no physics, so `_update_grass_clear` cannot release the
+		# patch later: drop it now (a stowed companion, a caught or fainted wild).
+		_grass_still_s = 0.0
+		if _grass_clearing:
+			_grass_clearing = false
+			remove_from_group(GRASS_CLEAR_GROUP)
+			GRASS_FIELD.clearings_dirty = true
 	if _collision != null:
 		# Deferred because visibility is usually flipped from inside a physics
 		# callback, and changing a collider's state mid-step is not allowed.
@@ -1884,7 +1909,13 @@ func request_jump(height: float) -> void:
 	_jump_speed = sqrt(2.0 * _gravity * height)
 
 
+static var perf_sections := {}
+static func perf_add(key: String, usec: int) -> void:
+	perf_sections[key] = int(perf_sections.get(key, 0)) + usec
+
+
 func _physics_process(delta: float) -> void:
+	var t0 := Time.get_ticks_usec()
 	_environment_velocity.begin_step(self)
 	if not is_on_floor():
 		velocity.y -= _gravity * delta
@@ -1934,10 +1965,17 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector3.ZERO
 		_rest_slide_skipped += 1
 	else:
+		# One sweep per step; a far-LOD step covers its whole elapsed time.
+		var scale := slide_time_scale
+		if scale != 1.0:
+			velocity *= scale
 		move_and_slide()
+		if scale != 1.0:
+			velocity /= scale
 		_note_rest_slide()
 	_environment_velocity.after_slide(self)
 	_hold_contact_spacing(delta)
+	var t3 := Time.get_ticks_usec()
 
 	if arena != null:
 		var constraint: Variant = arena.call("hold_inside", self)
@@ -1947,9 +1985,38 @@ func _physics_process(delta: float) -> void:
 	if _animator != null:
 		var moving := Vector3(velocity.x, 0.0, velocity.z).length()
 		_animator.call("tick", delta, moving, _speed)
+	_update_grass_clear(delta)
 
 	_requested = Vector3.ZERO
 	_requested_handling = 1.0
+
+
+static func grass_clear_config() -> Dictionary:
+	if _grass_clear_cache.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(GRASS_CLEAR_PATH))
+		_grass_clear_cache = parsed if parsed is Dictionary else {"enabled": false}
+	return _grass_clear_cache
+
+
+## Join the grass clearing once settled on the floor for `settle_s`; leave on
+## the first moving frame. The grass field re-reads the group when its ring
+## steps, so a creature that walks off releases its patch on the next step.
+func _update_grass_clear(delta: float) -> void:
+	var cfg := grass_clear_config()
+	var still := bool(cfg.get("enabled", false)) and is_on_floor() \
+			and Vector2(velocity.x, velocity.z).length() < float(cfg.get("still_speed", 0.15))
+	_grass_still_s = _grass_still_s + delta if still else 0.0
+	var want := still and _grass_still_s >= float(cfg.get("settle_s", 0.6))
+	if want == _grass_clearing:
+		return
+	_grass_clearing = want
+	if want:
+		set_meta(GRASS_CLEAR_RADIUS_META, _radius * float(cfg.get("radius_scale", 1.6)))
+		add_to_group(GRASS_CLEAR_GROUP)
+	else:
+		remove_from_group(GRASS_CLEAR_GROUP)
+	# Tell a settled grass ring to re-read its clearings once (P2-020).
+	GRASS_FIELD.clearings_dirty = true
 
 
 static func physics_lod_config() -> Dictionary:

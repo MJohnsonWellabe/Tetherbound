@@ -1,0 +1,31 @@
+{
+  "enabled": false,
+  "species": "bramblebun",
+  "placeholder": {
+    "colour": "#7a8a3f",
+    "field_rim": 0.0,
+    "field_emission": 0.0,
+    "field_degreen": 0.75,
+    "height": 2.05,
+    "radius": 0.66625,
+    "footprint_allowance": 5.8,
+    "model": "res://assets/creatures/tetherbound/bramblebun/candidate/models/creature_bramblebun_native.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "colourway_source_species": "bramblebun_native_review",
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    },
+    "rest_model_position_offset": 0.0
+  }
+}

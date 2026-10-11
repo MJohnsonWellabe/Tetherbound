@@ -1,0 +1,28 @@
+{
+  "enabled": false,
+  "species": "ripplet",
+  "placeholder": {
+    "colour": "#2f6cb8",
+    "height": 3.6,
+    "radius": 1.365488,
+    "footprint_allowance": 3.6,
+    "model": "res://assets/creatures/tetherbound/ripplet/candidate/models/creature_ripplet_native.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    },
+    "field_emission": 0.0,
+    "rest_model_position_offset": 0.0
+  }
+}

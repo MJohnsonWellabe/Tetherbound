@@ -4,6 +4,7 @@ extends RefCounted
 const INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
+const DOCUMENT := preload("res://scripts/save/save_document.gd")
 const MAX_EVENTS := 1200000
 const MAX_BYTES := 335544320
 const MAX_ANCHORS := 128
@@ -35,6 +36,7 @@ static func start(tree: SceneTree) -> bool:
 		"chain_sha256": "", "game_ref": weakref(game), "world_ref": weakref(game.world), "session_ref": weakref(game.session),
 		"character_id": str(game.local.character_id), "world_namespace": str(game.world.reward_delivery_namespace), "epoch": epoch}
 	file.store_line(JSON.stringify({"source": "Game actual clocks and discovery credits; complete card replay", "condition_config": cfg,
+		"condition_configuration_document":DOCUMENT.stringify(cfg),
 		"configuration_sha256": state.configuration_sha256, "max_events": MAX_EVENTS, "max_bytes": MAX_BYTES,
 		"character_id": state.character_id, "world_namespace": state.world_namespace, "session_epoch": state.epoch}))
 	var observer := func(packet: Dictionary) -> void: _tick(state, packet)

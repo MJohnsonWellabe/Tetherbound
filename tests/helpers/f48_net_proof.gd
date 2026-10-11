@@ -19,6 +19,7 @@ var _profile_errors: Array[String] = []
 var _boundary_pending: Dictionary = {}
 var _boundary_observations: Dictionary = {}
 var _saved_transactions: Dictionary = {}
+var _shipping_capture_source: Dictionary = {}
 var _root_profile: Dictionary = {}
 
 func _process_guard(pid: int, identity: String = "", stop: bool = false) -> Dictionary:
@@ -529,6 +530,20 @@ func _restart_peer(i: int, scene: String) -> Dictionary:
 
 func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 	if entry.get("action") != "f48_boundary_transaction":
+		if entry.get("action") == "f48_fixture_capture" and entry.get("args", {}).has("shipping_capture_mode"):
+			var capture_args: Dictionary = entry.args
+			if typeof(capture_args.shipping_capture_mode) != TYPE_BOOL or capture_args.shipping_capture_mode != true:
+				check(false, "Explicit BOOL shipping capture mode required")
+				return false
+			if capture_args.get("role") == "guest" and peer == 1:
+				if _shipping_capture_source.is_empty():
+					check(false, "Original successful host shipping capture source unavailable")
+					return false
+				entry = entry.duplicate(true)
+				entry.args["shipping_capture_source"] = _shipping_capture_source.duplicate(true)
+			elif capture_args.get("role") != "host" or peer != 0 or not _shipping_capture_source.is_empty():
+				check(false, "Shipping capture requires one original host source then its guest")
+				return false
 		if entry.get("action") == "f48_assert" and entry.get("args", {}).has("match_guest_transaction"):
 			var original: Dictionary = _saved_transactions.get(str(entry.args.match_guest_transaction), {})
 			if original.is_empty():
@@ -547,6 +562,14 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 			entry.args.boundary_delivery_id = observed.delivery_id
 			entry.args.erase("boundary_case")
 		var passed: bool = await super._run_entry(index, peer, entry)
+		if passed and entry.get("action") == "f48_fixture_capture" \
+				and entry.get("args", {}).get("shipping_capture_mode") == true \
+				and entry.args.get("role") == "host":
+			var source: Variant = _peers[peer].get("last_verdict", {}).get("data", {}).get("shipping_capture_source")
+			if not source is Dictionary or source.is_empty():
+				check(false, "Successful host capture omitted its original shipping source certificate")
+				return false
+			_shipping_capture_source = source.duplicate(true)
 		if not passed and entry.get("action") == "f48_fixture_capture":
 			# The original failure is already recorded. Inspect the live host via
 			# the existing control probe before teardown; never rerun the input.

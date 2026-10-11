@@ -91,6 +91,9 @@ func _run() -> void:
 	await _frames(8)
 	if failed: return _finish_recovery()
 
+	# F47#4: a rest reaches a morning only after nightfall (rest.json); disclosed: snap the clock to night.
+	for _look: Node in (Engine.get_main_loop() as SceneTree).get_nodes_in_group("day_cycle"):
+		if _look.has_method("apply_time"): _look.call("apply_time", "night")
 	var day_before := int(game.day)
 	if not await _walk(rest_prompt.global_position + Vector3(0.0, -0.2, 0.8), 1.0): return _finish_recovery()
 	if not await _interact(rest_prompt, "", false): return _finish_recovery()

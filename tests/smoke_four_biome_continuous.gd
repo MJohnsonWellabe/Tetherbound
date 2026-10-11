@@ -4,6 +4,7 @@ extends SceneTree
 ## evidence only. Default success requires every earned segment and ending;
 ## composition itself is not proof that the full runtime path has passed.
 const SAVE := preload("res://scripts/save/save_game.gd")
+const RELOAD_REWARDS := preload("res://tests/helpers/meadows_reload_reward_snapshot.gd")
 const OPENING := preload("res://tests/helpers/fresh_opening_segment.gd")
 const VILLAGE := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const TEAM := preload("res://tests/helpers/meadows_earned_team_segment.gd")
@@ -947,6 +948,10 @@ func _reload_transition(game: Node, label: String) -> bool:
 	if not bool(game.call("save_game", 0)):
 		failures.append("RELOAD %s: save_game(0) refused" % label)
 		return false
+	var rewards_before: Dictionary = RELOAD_REWARDS.capture(game)
+	if rewards_before.is_empty():
+		failures.append("RELOAD %s: serialized reward carriers are missing" % label)
+		return false
 	_write_checkpoint(label, scene_path)
 	var old := current_scene
 	old.queue_free()
@@ -957,6 +962,9 @@ func _reload_transition(game: Node, label: String) -> bool:
 	# F02#4: rewards must come back from the save, not survive in memory.
 	for i in int(inventory.call("slot_count")):
 		inventory.call("set_slot", i, null)
+	if not RELOAD_REWARDS.clear_live_records(game):
+		failures.append("RELOAD %s: cannot clear retained personal reward records" % label)
+		return false
 	if not bool(game.call("load_game", 0)):
 		failures.append("RELOAD %s: load_game(0) failed" % label)
 		return false
@@ -964,6 +972,11 @@ func _reload_transition(game: Node, label: String) -> bool:
 	# so reading after the world rebuild's settle frames drifts by a tick
 	# (0.1 over 240 frames, local 7a0634a3 validation) without any defect.
 	var members_after := _party_condition(party)
+	var rewards_after: Dictionary = RELOAD_REWARDS.capture(game)
+	var rewards_preserved: bool = RELOAD_REWARDS.preserved(rewards_before, rewards_after)
+	print("RELOAD %s: serialized party/inventory/personal rewards preserved %s" % [label, rewards_preserved])
+	if not rewards_preserved:
+		failures.append("RELOAD %s: serialized party/inventory/personal rewards changed across reload" % label)
 	var world: Node = (load(scene_path) as PackedScene).instantiate()
 	root.add_child(world)
 	current_scene = world

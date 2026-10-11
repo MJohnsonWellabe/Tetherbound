@@ -368,7 +368,8 @@ func test_galecrest_zero_roll_keeps_its_existing_faint_only_path() -> void:
 
 func test_water_rest_candidate_gate_preserves_legacy_roll_for_all_four_ids() -> void:
 	var shipped: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(REST_VISUAL.CONFIG_PATH))
-	assert_false(bool(shipped.get("enabled", true)), "the installed candidate gate is off")
+	# F39 P2-029: shipped on; the disabled gate below still restores the legacy roll.
+	assert_true(bool(shipped.get("enabled", false)), "the installed candidate gate ships on")
 	REST_VISUAL._config = {"enabled": false}
 	for id: String in WATER_REST_IDS:
 		var source := SPECIES.placeholder(id).duplicate(true)
@@ -381,6 +382,19 @@ func test_water_rest_candidate_gate_preserves_legacy_roll_for_all_four_ids() -> 
 		assert_eq(SPECIES.placeholder(id), source, "presentation cannot write the catalogue")
 		_body.free()
 		_body = null
+
+
+func test_species_allow_list_keeps_riptusk_on_the_legacy_roll() -> void:
+	# F39 P2-029 judge round 1: Riptusk's faint endpoint stands head-down, so
+	# the shipped allow list covers Torrentoad only.
+	REST_VISUAL._config = {"enabled": true, "species": ["torrentoad", "water_torrentoad"]}
+	for id: String in ["riptusk", "water_riptusk"]:
+		var source := SPECIES.placeholder(id).duplicate(true)
+		assert_eq(REST_VISUAL.resolve(id, source), source, id + " keeps the legacy roll")
+	for id: String in ["torrentoad", "water_torrentoad"]:
+		var resolved := REST_VISUAL.resolve(id, SPECIES.placeholder(id).duplicate(true))
+		assert_eq(str((resolved.get("rest_pose", {}) as Dictionary).get("clip_role", "")), "faint",
+			id + " finishes its installed faint clip")
 
 
 func test_water_rest_candidate_rejects_other_species_models_and_existing_recipes() -> void:

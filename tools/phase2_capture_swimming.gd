@@ -11,6 +11,9 @@ var player: CharacterBody3D
 var rig: Node3D
 var swimming: Node
 var _entry_saved := false
+## trainer|kael|sera|lyra: written to Game.local.chosen_character before the
+## world loads, as the title screen does, so each playable body can be judged.
+var _character := ""
 
 func _init() -> void:
 	_run.call_deferred()
@@ -83,6 +86,8 @@ func _run() -> void:
 			output = arg.trim_prefix("--output=")
 		elif arg.begins_with("--seed="):
 			_seed = int(arg.trim_prefix("--seed="))
+		elif arg.begins_with("--character="):
+			_character = arg.trim_prefix("--character=")
 	if not output.begins_with("res://ralph/reports/VISUAL/phase2/tidewake/"):
 		quit(1)
 		return
@@ -91,6 +96,8 @@ func _run() -> void:
 	root.content_scale_size = Vector2i(1920,1080)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output))
 	var game := root.get_node("Game")
+	if not _character.is_empty():
+		(game.get("local") as Object).set("chosen_character", _character)
 	game.call("reset_for_new_game")
 	game.set("current_realm","water")
 	world = WORLD.instantiate()

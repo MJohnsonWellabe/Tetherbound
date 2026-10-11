@@ -39,7 +39,7 @@ static func evaluate(intent: Dictionary, host_context: Dictionary, world_flags: 
 	if not position is Vector3 or not position.is_finite():
 		return _refuse("missing_position", "Your position is not ready yet.")
 	var at: Array = selected.position
-	var target := Vector3(float(at[0]), FIELD.new().height_at(float(at[0]), float(at[2])), float(at[2]))
+	var target := Vector3(float(at[0]), FIELD.shared().height_at(float(at[0]), float(at[2])), float(at[2]))
 	var trusted_target: Variant = host_context.get("pickup_position")
 	if trusted_target is Vector3 and trusted_target.is_finite() and Vector2(trusted_target.x, trusted_target.z).distance_to(Vector2(target.x, target.z)) < 0.01:
 		target = trusted_target

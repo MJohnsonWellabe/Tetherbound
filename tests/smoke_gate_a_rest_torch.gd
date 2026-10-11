@@ -220,6 +220,7 @@ func _exercise_repeated_torch() -> void:
 func _exercise_player_rest(bedroll: Node3D, bed: Node3D, party: RefCounted) -> void:
 	var creature: RefCounted = party.call("at", 0)
 	var vitals: RefCounted = _player.get("vitals")
+	_nightfall()
 	var day_before := int(_game.get("day"))
 	if vitals == null:
 		_fail("Player has no vitals for rest verification")
@@ -293,6 +294,7 @@ func _exercise_bedroll_without_tent_overhead() -> void:
 		_fail("Player has no vitals for the no-tent rest check")
 		return
 	vitals.set("health", 40.0)
+	_nightfall()
 	var day_before := int(_game.get("day"))
 
 	var prompt := orphan.get_node_or_null(^"Interactable") as Node3D
@@ -359,6 +361,14 @@ func _exercise_bedroll_without_tent_overhead() -> void:
 		_fail("the now-sheltered bedroll advanced the day but did not heal the trainer")
 	else:
 		print("bedroll gained a tent overhead after the fact and rest now succeeds, unchanged")
+
+
+## F47#4: a rest reaches a morning only after nightfall (rest.json's night
+## window); a day rest heals without one. Each night-passing rest here starts
+## from the clock snapped to night.
+func _nightfall() -> void:
+	var look := get_first_node_in_group("day_cycle")
+	if look != null and look.has_method("apply_time"): look.call("apply_time", "night")
 
 
 func _tap(action: String) -> void:
@@ -466,6 +476,7 @@ func _walk_up_the_loft_stair_and_sleep() -> void:
 
 	var progression: RefCounted = _game.get("progression")
 	progression.call("set_flag", "player_slept_at_home", false)
+	_nightfall()
 	var day_before := int(_game.get("day"))
 	await _tap("interact")
 	# night_rest.gd's fade is 1.2s and the night passes at its midpoint.

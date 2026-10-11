@@ -47,51 +47,8 @@ jobs:
           fi
           gh pr merge --repo "$REPO" --auto --merge "$PR_NUMBER"
 
-  # A merge that this workflow's GITHUB_TOKEN auto-merge performs starts no
-  # push run on main (batch 67, 3dbec66b, reached main with no CI). GitHub's
-  # schedule for publish-watch's ci-reconcile fires only every few hours, so
-  # wait here for the merge and dispatch fast CI on main when no push run
-  # appeared. workflow_dispatch from GITHUB_TOKEN does start a run.
-  post-merge-ci:
-    if: >-
-      !github.event.pull_request.draft &&
-      github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
-    timeout-minutes: 50
-    concurrency:
-      group: post-merge-ci-${{ github.event.pull_request.number }}
-      cancel-in-progress: true
-    permissions:
-      actions: write
-      contents: read
-      pull-requests: read
-    steps:
-      - name: Wait for the merge, then make sure main CI runs on it
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPO: ${{ github.repository }}
-        run: |
-          set -uo pipefail
-          sha=""
-          for _ in $(seq 1 90); do
-            state=$(gh api "repos/$REPO/pulls/$PR_NUMBER" --jq '[.state, (.merged|tostring), (.merge_commit_sha // "")] | join(" ")' || echo "")
-            case "$state" in
-              "closed true "*) sha=${state##* }; break ;;
-              "closed false"*) echo "Closed without merging."; exit 0 ;;
-            esac
-            sleep 30
-          done
-          if [ -z "$sha" ]; then
-            echo "Not merged within the wait; publish-watch ci-reconcile covers it later."
-            exit 0
-          fi
-          sleep 90
-          count=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?head_sha=$sha&per_page=30" \
-            --jq '[.workflow_runs[] | select(.event != "pull_request" and .conclusion != "cancelled" and .conclusion != "skipped")] | length')
-          if [ "$count" != "0" ]; then
-            echo "CI already runs on merge $sha"
-            exit 0
-          fi
-          gh workflow run ci.yml --repo "$REPO" --ref main -f tier=fast
-          echo "Dispatched fast CI on main for merge $sha"
+  # No post-merge waiter here: a job that slept up to 45 min per PR for the
+  # merge held a runner each, so with many open PRs the waiters starved the
+  # CI runs the merges were waiting on (10-10: 5 of ~6 running jobs were
+  # waiters, 0 CI runs). publish-watch's ci-reconcile dispatches CI on any
+  # main merge that has none.

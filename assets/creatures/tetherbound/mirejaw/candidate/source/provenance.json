@@ -1,0 +1,122 @@
+{
+  "subject": "mirejaw",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "disposition": "Disabled asset-local candidate; production species selection unchanged",
+  "reference": "assets/creatures/tetherbound/mirejaw/reference/native-standing-v1.png",
+  "reference_author": "Built-in imagegen using owner-held existing species identity",
+  "reference_prompt": "Draft an original Tetherbound Mirejaw creature reference from the supplied established reference crops and the full view of its installed model. ONE clean full-body three-quarter studio view of the same stout aquatic salamander/axolotl beast: very broad rounded head, wide friendly jaw with pale cream lips and small simple ivory teeth, visible expressive dark amber eyes above the mouth, stocky charcoal/olive-grey body with tan reticulated pebble-like mottling, cream-grey throat and belly, four short sturdy amphibian legs with separated broad clawed/webbed toes, and a thick long tapering tail that ends in a compact gill/fin fan. Preserve its recognizable squat silhouette, massive smiling face, dark mottled skin and paired external cheek gills. Make the cheek gills into a few robust broad connected sculpted lobes branching directly from the head, not thin wiry stalks or floating wisps. Use muted natural ochre/amber-brown gill tissue; avoid faction oxblood/red paint, cloth or markings. Neutral grounded quadruped standing pose with distinct shoulders/elbows and hips/knees, four separated grounded feet, body straight, tail clearly separate and entirely in frame. Mouth only slightly open so the face remains solid and riggable, no enormous deep cavity or projecting tongue. Full body, tail and both gill fans inside the image with generous margin. Neutral light-grey studio background, soft lighting and a clean detailed stylized game-creature look, coherent broad materials instead of photorealistic reptile noise. No human, saddle, harness, clothing, equipment, text, ruler, particles, extra limbs, dramatic action, new horns or environment. This is the same current-roster Mirejaw, no new species.",
+  "identity_reference": [
+    "assets/creatures/tetherbound/mirejaw/reference/front.png",
+    "assets/creatures/tetherbound/mirejaw/reference/side.png",
+    "assets/creatures/tetherbound/mirejaw/models/creature_mirejaw_lod0.glb rendered as full identity view"
+  ],
+  "reference_inspection": {
+    "identity": "Broad smiling salamander/axolotl head with visible amber eyes; dark tan-reticulated skin, cream underside, four stout amphibian limbs and full thick tail/gill fan retained",
+    "riggability": "Four separated grounded feet, distinct elbows/knees, connected broad cheek-gill lobes and complete tail; no free-standing thin whisker wires",
+    "palette": "Ochre/amber-brown gill tissue replaces faction-reserved red in legacy references; independent identity/palette approval remains open",
+    "limits": "Open mouth cavity, gill lobes and tail fan require topology/skin/native checks; no full art acceptance from a single reference"
+  },
+  "generation": {
+    "task_id": "01a1262c-a9c4-7350-9e70-012f7e45b0ce",
+    "endpoint": "/openapi/v1/image-to-3d",
+    "settings": {
+      "ai_model": "meshy-6",
+      "model_type": "standard",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 14000,
+      "should_texture": true,
+      "enable_pbr": true,
+      "texture_resolution": "2k",
+      "image_enhancement": false,
+      "pose_mode": ""
+    },
+    "night": "2026-10-09",
+    "night_submission_index": 8,
+    "new_submissions_for_this_revision": 1,
+    "observed_credit_cost": 30
+  },
+  "rights": {
+    "basis": "Owner-authorized original drafted reference and existing paid Meshy account under RD-26. No purchase, third-party character or community publication.",
+    "ownership_source": "https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models",
+    "terms_checked": "2026-10-10"
+  },
+  "preparation": {
+    "scripts": [
+      "source/prepare_native_candidate.py",
+      "source/author_native_clips.py"
+    ],
+    "geometry": "UV-loop-preserving weld; Mirejaw bounded collapse under 30k; generated identity and material maps retained.",
+    "skin": "Measured anatomical regions with local surface diffusion, four normalized influences and zero unweighted vertices. Separate tail segments; Riverdrake four separate foot joints.",
+    "material": "Organic dielectric: metallic and emission disabled; albedo/normal/roughness retained.",
+    "colourway": "Candidate texture namespace mirejaw_native_review avoids old repaints on new UVs; no roster addition. New colour variants remain open.",
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "height_m": 2.8,
+    "bones": 16,
+    "unweighted_vertices": 0,
+    "vertices": 14696,
+    "method": "measured_joint_anatomical_regions_local_surface_diffusion",
+    "candidate_enabled": false,
+    "export_triangles": 29399,
+    "topology_warnings": [
+      "Mesh_0: 12815 non-manifold edges",
+      "Mesh_0: 6969 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 537 microscopic disconnected components",
+      "Mesh_0: ~3163 inward-facing faces",
+      "Mesh_0: 43 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ]
+  },
+  "native_validation": {
+    "engine": "Godot 4.7 stable Windows",
+    "adapter": "GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "before_height_m": 2.79999995231628,
+    "candidate_height_m": 2.79999995231628,
+    "trainer_height_m": 1.79999995231628,
+    "scale_pass": true,
+    "world": "Matched production Tidewake scene / CameraRig / stage / seed / five poses per preset; fixtures only",
+    "presets": {
+      "Low": "gl_compatibility/OpenGL",
+      "Medium": "forward_plus/Vulkan"
+    },
+    "diagnostics": "25 whole-body Low role samples; scale front/reverse before/after retained outside Git",
+    "sheets": [
+      "review/low-before-after.jpg",
+      "review/medium-before-after.jpg"
+    ]
+  },
+  "gates": {
+    "scale": "PASS",
+    "full_rig_animation": "OPEN",
+    "topology": "OPEN: retained warnings require independent inspection",
+    "colour_variants": "OPEN",
+    "ordinary_swimming_and_mount_contact": "OPEN",
+    "independent_art_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Still fixtures do not prove continuous contact, earned fights, ordinary swimming, flight/grip or mounted-rider fit.",
+    "Terminal faint and dedicated folded rest require contact/appeal review.",
+    "Gill/fin deformation and surface finish require independent approval.",
+    "Candidate remains OFF until the full art bar passes."
+  ],
+  "palette_note": "Gill shape retained; requested ochre/amber-brown tissue avoids the faction-reserved oxblood/red in the legacy crops. New candidate remains OFF pending independent identity/palette review.",
+  "scale_recipe": "First native attempt was clamped to 2.546 m by the old art footprint allowance. Disabled candidate increases only footprint_allowance from 4.5 to 5.1 for its longer tail. Height 2.80 m and collider radius .98 m unchanged; v2 confirms full intended height. Superseded captures preserved outside Git."
+}

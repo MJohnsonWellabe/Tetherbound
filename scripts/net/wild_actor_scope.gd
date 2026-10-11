@@ -11,8 +11,11 @@ const E := preload("res://scripts/creatures/essence.gd")
 const FIELDS := ["kind", "world_namespace", "session_id", "realm", "encounter_id"]
 
 
-static func make(namespace_id: String, epoch: String, realm: String, encounter_id: String) -> Dictionary:
-	var scope := {"kind": "wild", "world_namespace": namespace_id, "session_id": epoch,
+## F28: kind "master" is the same host ownership of a guest's creature vitals
+## in one host-arbitrated Master duel (a one-participant "trainer" record whose
+## opponent is that Master). Its win settles through master_win, never rounds.
+static func make(namespace_id: String, epoch: String, realm: String, encounter_id: String, kind: String = "wild") -> Dictionary:
+	var scope := {"kind": kind, "world_namespace": namespace_id, "session_id": epoch,
 		"realm": preload("res://scripts/data/biome_order.gd").canonical_id(realm), "encounter_id": encounter_id}
 	return scope if scope_valid(scope) else {}
 
@@ -21,7 +24,7 @@ static func scope_valid(value: Variant) -> bool:
 	if not value is Dictionary or value.size() != FIELDS.size(): return false
 	for field: String in FIELDS:
 		if not value.has(field): return false
-	if value.kind != "wild": return false
+	if value.kind not in ["wild", "master"]: return false
 	for field: String in ["world_namespace", "session_id", "realm", "encounter_id"]:
 		if not E._opaque_id(value[field]): return false
 	return preload("res://scripts/data/biome_order.gd").ids(false).has(value.realm)
@@ -29,10 +32,14 @@ static func scope_valid(value: Variant) -> bool:
 
 ## The scope belongs to this exact live wild record.
 static func owns(scope: Variant, record: Dictionary, encounter_id: String) -> bool:
-	return scope_valid(scope) and scope.encounter_id == encounter_id \
-		and record.get("encounter_id") == encounter_id and record.get("kind") == "wild" \
-		and str(record.get("opponent", {}).get("owner_npc", "")) == "" \
-		and scope.realm == preload("res://scripts/data/biome_order.gd").canonical_id(str(record.get("realm", "")))
+	if not scope_valid(scope) or scope.encounter_id != encounter_id or record.get("encounter_id") != encounter_id \
+		or scope.realm != preload("res://scripts/data/biome_order.gd").canonical_id(str(record.get("realm", ""))): return false
+	if scope.kind == "master":
+		var master_id := str(record.get("opponent", {}).get("owner_npc", ""))
+		return record.get("kind") == "trainer" and not master_id.is_empty() \
+			and not preload("res://scripts/creatures/breakthrough.gd").master(master_id).is_empty() \
+			and record.get("participants", {}).size() == 1
+	return record.get("kind") == "wild" and str(record.get("opponent", {}).get("owner_npc", "")) == ""
 
 
 ## One settled vitals row per owned card, from the host's live record of this

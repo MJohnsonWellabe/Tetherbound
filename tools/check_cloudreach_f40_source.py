@@ -10,10 +10,13 @@ ROOT = Path(__file__).resolve().parents[1]
 base = json.loads((ROOT / 'data/config/cloudreach_aviary.json').read_text())
 candidate = json.loads((ROOT / 'data/config/cloudreach_f40_visual.json').read_text())
 visual = json.loads((ROOT / 'data/config/cloudreach_visual.json').read_text())
+# Owner flip list (F40): only the skyline profile is live; the rest stay off.
+# Crown arcade and F40 dressing: judge saw no change at the catalogue views; off until an aviary view proves them.
 assert candidate['enabled'] is False
 assert base['crown_arcade']['enabled'] is False
-assert base['towers']['enabled'] is False
-assert visual['skyline_profile']['enabled'] is False
+assert base['towers']['enabled'] is True
+assert visual['skyline_profile']['enabled'] is True
+# The occupied terrace builds colliders: it lands separately with a walk proof.
 assert visual['settlement']['occupied_terrace']['enabled'] is False
 assert candidate['aviary']['towers']['enabled'] is False
 assert candidate['visual']['settlement']['occupied_terrace']['enabled'] is False
@@ -55,7 +58,7 @@ for relative in scripts:
         for forbidden in ['StaticBody3D.new', 'CollisionShape3D.new', 'Area3D.new', 'rpc(', 'set_flag(', 'SaveGame']:
             assert forbidden not in text, (relative, forbidden)
 
-print(f'PASS: production candidates off; {destinations} destinations/{planned} planned frames per preset; '
+print(f'PASS: skyline profile live, other F40 candidates off; {destinations} destinations/{planned} planned frames per preset; '
       'crown clearance/spacing/light budget, middle-ground offset/support budget, resource paths, no new state/collision API.')
 if importlib.util.find_spec('gdtoolkit'):
     from gdtoolkit.parser import parser

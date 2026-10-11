@@ -1,0 +1,29 @@
+{
+  "enabled": false,
+  "species": "tuskroot",
+  "placeholder": {
+    "colour": "#503823",
+    "height": 3.6,
+    "radius": 1.289302,
+    "footprint_allowance": 3.5,
+    "model": "res://assets/creatures/tetherbound/tuskroot/candidate/models/creature_tuskroot_native.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    },
+    "field_emission": 0.0,
+    "rest_model_position_offset": 0.0,
+    "colourway_source_species": "tuskroot_native_review"
+  }
+}
