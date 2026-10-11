@@ -1,5 +1,5 @@
 {
- "generated_at": "1:31 PM CT Sun 11 Oct 2026",
+ "generated_at": "1:37 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -2953,22 +2953,22 @@
    "title": "Co-op across the new loop",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/coop",
-   "pct": 75,
+   "pct": 100,
    "counts": {
-    "met": 3,
+    "met": 4,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "A two-peer session runs hub → homestead crafting → portal → Master → feast → boss → relic hang, with each player's receipts separate.",
-     "status": "not_started",
-     "evidence": "STATE §0 (LoopR20 37128943701 failed); ci.yml:2768 owner F48 hold 2026-10-03",
-     "gap": "Land F18, fix the loop failures, then bring the tb/coop loop net smoke into CI discovery.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The loop smoke lives on tb/coop and is absent from b4e4897d5. The last run failed. It also needs portals, which are off.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F48-0/ (coop-loop 01260f57): new two-peer net smoke tests/smoke_net_f48_coop_loop.gd ALL CHECKS PASSED (500 checks, 0 failures): hub (Home Key) -> homestead crafting at the host Kitchen -> portal (Hall arch to Meadows) -> Master (each wins and opens its own chest) -> feast -> Warden boss (each gets its own key and relic) -> relic hang, with per-leg checks that receipts are separate, single and not duplicated; then a host save/reload and guest rejoin with identical state",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (1:35 PM CT Sun 11 Oct). Registered in CI net shards (SHARD_COUNT 13 to 14; ci.yml matrix; test_ci_net_shards 15/15). Disclosed: setup fixtures and teleports between legs (proof rules v2); slow-host wall-clock budgets raised locally, uncommitted; 977 s here against a 1200 s CI timeout. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
