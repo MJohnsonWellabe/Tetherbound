@@ -127,6 +127,9 @@ func _handle(peer: int, token: String, action: String, uid: String) -> void:
 			if action == "dive" and float(_diving_until.get(permit, 0.0)) <= Time.get_ticks_msec() / 1000.0:
 				_diving_until[permit] = Time.get_ticks_msec() / 1000.0 + float(RULE.config().dive_seconds)
 			elif action in ["mount", "surface"]: _diving_until.erase(permit)
+			# An approved mount is validated where the body stands; motion checks
+			# restart there, so a rejoin's seat is not judged as a teleport.
+			if action == "mount": _motion.erase(peer)
 	if peer == multiplayer.get_unique_id():
 		_accept(token, verdict)
 	else:
