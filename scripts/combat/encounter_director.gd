@@ -7031,21 +7031,9 @@ func registered_wild_arena_actor(body: Node3D, manager: Node) -> bool:
 		and str(body.get("species_id")) == str(creature.get("species_id"))
 
 
-## F19#2: a chapter boss hand-off journals per retained participant from the
-## host's encounter record (session.gd::foundation_boss_outcome). A solo host
-## mints that record too, as masters and rematches do; without it the win
-## stays pending forever (no record, no participants).
-func _solo_boss_handoff_record() -> bool:
-	if _trainer_spec.is_empty() or _session == null or not _is_host() \
-			or _session.call("config").get("redesign_boss_handoff_runtime_enabled") != true:
-		return false
-	return not ENCOUNTER_REWARDS.chapter_hand_off(str(_trainer_spec.get("id", "")), _encounter_realm()).is_empty()
-
-
 func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
-	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") and not _solo_boss_handoff_record() \
-			and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
+	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
 		return
 	_ensure_encounter_arbiters()
 	var instance: Variant = wild.get("instance")
