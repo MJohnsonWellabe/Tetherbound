@@ -29,6 +29,9 @@ var _trainers := false
 ## --named=<trainer id,...> (F22#4): those named trainers only, each with its
 ## authored F22 pattern row, judged on COMBAT §7's top-trainer bar.
 var _named: PackedStringArray = []
+## --policies=MASHER,READER (coordinator ruling 2026-10-11, F22#1/F47#3 sweep):
+## run only these pilots; the default runs all three. Skipped pilots score 0 runs.
+var _policies: PackedStringArray = []
 ## F33#2: --gear-tier / --gear-upgrade (tests/helpers/f33_gear_fixture.gd).
 var _gear: Dictionary = GEAR.from_args()
 
@@ -38,6 +41,7 @@ func _init() -> void:
 		if arg.begins_with("--seeds="): _seeds = int(arg.trim_prefix("--seeds="))
 		elif arg.begins_with("--band="): _selection = arg.trim_prefix("--band=")
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
+		elif arg.begins_with("--policies="): _policies = arg.trim_prefix("--policies=").split(",", false)
 		elif arg == "--trainers": _trainers = true
 		elif arg.begins_with("--named="):
 			_named = arg.trim_prefix("--named=").split(",", false)
@@ -173,6 +177,7 @@ func _run() -> void:
 				for seed_index: int in _seeds:
 					var sid := str(entry.species[seed_index % entry.species.size()])
 					for policy: String in scores:
+						if not _policies.is_empty() and not _policies.has(policy): continue
 						var party := _party(int(entry.level), starter)
 						var foes: Array = []
 						if _trainers:
@@ -212,6 +217,7 @@ func _run() -> void:
 				var switch_reader := _score(scores.SWITCH_READER)
 				var reasons: Array[String] = []
 				for policy: String in scores:
+					if not _policies.is_empty() and not _policies.has(policy): continue
 					var scored := _score(scores[policy])
 					if int(scored.runs) != _seeds or int(scored.errors) > 0:
 						reasons.append(policy + " incomplete or invalid actual fixture")
@@ -229,12 +235,21 @@ func _run() -> void:
 					continue
 				if float(judged.win_rate) < float(proof.get("reader_win_min", 0.9)):
 					reasons.append("reader win rate below .9")
-				if float(masher.lead_faint_rate) - float(judged.lead_faint_rate) < float(proof.get("masher_lead_faint_gap_min", 0.25)):
+				# Coordinator ruling for the owner (2026-10-11, 5:04 PM CT): on
+				# ordinary wild bands "the masher loses its lead materially more
+				# often" (F22#1) is read as COMBAT §7's floor-trainer form, reader
+				# median lead-HP cost <= .55x the masher's plus reader win >= .9:
+				# §7 also says a wild costs a masher 15-30% lead HP and is not a
+				# wall, so a lead-faint gap cannot be the wild bar. The gap stays
+				# a reported column; trainer cohorts keep it as a bar.
+				var lead_faint_gap := float(masher.lead_faint_rate) - float(judged.lead_faint_rate)
+				if _trainers and lead_faint_gap < float(proof.get("masher_lead_faint_gap_min", 0.25)):
 					reasons.append("masher lead losses insufficiently different")
-				if _trainers and float(judged.median_lead_cost) > float(masher.median_lead_cost) * 0.55:
+				if float(judged.median_lead_cost) > float(masher.median_lead_cost) * 0.55:
 					reasons.append("reader median lead cost above .55x masher")
 				rows.append({"band": entry.id, "starter": starter, "masher": masher,
-					"reader": reader, "switch_reader": switch_reader, "pass": reasons.is_empty(), "reasons": reasons})
+					"reader": reader, "switch_reader": switch_reader, "lead_faint_gap": lead_faint_gap,
+					"pass": reasons.is_empty(), "reasons": reasons})
 	if rows.is_empty(): errors.append("no valid band cohort completed")
 	if not gaps.is_empty(): print("F22_PATTERN_BANDS data gaps (no ordinary trainer roster): " + ", ".join(gaps))
 	var passed := errors.is_empty()

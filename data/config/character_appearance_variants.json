@@ -306,7 +306,277 @@
         "cloth_mask_sha256": "83f558a839d9fc66ca72e222af4ae10fc99df1454c39c3980d194159c4a03c9a",
         "derivative_sha256": "b8e18b022c69abb51b3ccfeb99059405be6780b478ca80a12b3c80116680c6f5"
       }
+    },
+    "npc_identity_water_adair_v1": {
+      "enabled": false,
+      "expected_base_profile": "field_researcher",
+      "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+      "body_model_override": "res://assets/characters/npc_identity/water_adair/adair_lod0.glb",
+      "portrait": "res://assets/ui/portraits/npc_identity_water_adair_v1.png",
+      "review_status": "paired_candidate_sampled_native_pose_passed_pending_world_and_claude_judgement",
+      "authoring_provenance": {
+        "source_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+        "source_model_sha256": "5b9164827d099f661de5d1ed6a4420ccd011a90005765977c43f06d1ef5487b3",
+        "candidate_model": "res://assets/characters/npc_identity/water_adair/adair_lod0.glb",
+        "candidate_model_sha256": "c6a36d284250e9c62b379e133cf0873bafe998a9f87f9b5841678cc79c08ac53",
+        "reference": "res://docs/art/reference/npc-identity/adair-front-agent-v1.png",
+        "reference_sha256": "6d70d5ffa9a43a5e73bdb4936c868da3b3714811b4fb79bfc638493e2a8468de",
+        "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+        "producer_sha256": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+        "generation_task_id": "01a12ba9-8dea-7093-a169-b6a195cb1e2c",
+        "rig_task_id": "01a12bb2-f69f-75de-94e5-41dd21a2e47b",
+        "producer_hash_encoding": "UTF-8 text with CRLF normalized to LF",
+        "postprocessing": {
+          "tool": "retarget_adair_arms.py (coordinator-reviewed private CPU postprocessor)",
+          "source_sha256_lf": "b6c1cc6e63958ec57e6de87e14e8e2349616af78a6e514e93862169c16084f46",
+          "recipe_sha256": "6f08ca18d00d30ad7d6464faa1bb3cb63fd35bd2ffc5ad30febdbc0d3cce9490",
+          "upstream_baked_model_sha256": "2774d769ec9f18aa124d0881976b0e4823c62820362369c5de68ee4b80082b4b",
+          "output_model_sha256": "c6a36d284250e9c62b379e133cf0873bafe998a9f87f9b5841678cc79c08ac53",
+          "composition": "Hamilton xyzw: Q_new = R_rest * D_local * inverse(R_rest) * Q_old",
+          "rest_local_bias_xyzw": {
+            "Left": [
+              -0.12309184328881072,
+              2.91029838612202e-07,
+              -0.1389310112475677,
+              0.9826222923025215
+            ],
+            "Right": [
+              -0.12384232480185942,
+              3.6332575116819576e-07,
+              0.15595408656696666,
+              0.9799701014594384
+            ]
+          },
+          "target_upper_arm_degrees_from_down": 10,
+          "bones": [
+            "LeftArm",
+            "RightArm"
+          ],
+          "clips": [
+            "idle",
+            "walk",
+            "sprint",
+            "jump",
+            "throw",
+            "chop",
+            "defeated"
+          ],
+          "changed_rotation_tracks": 14,
+          "interpolation": "LINEAR; original key times preserved",
+          "preserved": "Original BIN prefix, rest transforms, mesh, skin, inverse binds, materials, textures and all non-target channels; target outputs and samplers cloned",
+          "native_review": "Sampled native scale and pose PASS for proceeding; continuous motion, world and Claude judgment PENDING"
+        }
+      }
+    },
+    "npc_identity_water_iona_v1": {
+      "enabled": false,
+      "expected_base_profile": "field_researcher",
+      "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+      "body_model_override": "res://assets/characters/npc_identity/water_iona/iona_lod0.glb",
+      "portrait": "res://assets/ui/portraits/npc_identity_water_iona_v1.png",
+      "review_status": "paired_candidate_sampled_low_pose_passed_pending_low_world_and_claude_judgement",
+      "authoring_provenance": {
+        "source_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+        "source_model_sha256": "5b9164827d099f661de5d1ed6a4420ccd011a90005765977c43f06d1ef5487b3",
+        "candidate_model": "res://assets/characters/npc_identity/water_iona/iona_lod0.glb",
+        "candidate_model_sha256": "1fa712b8c0c061c1c7968b962a529587ceac857fb90a6a5d9e89dcbbbc32bab0",
+        "reference": "res://docs/art/reference/npc-identity/iona-front-agent-v1.png",
+        "reference_sha256": "a1c2b37f0b8eb897a1e81753f8949cb1cb13383097b05a1bb25d40a8b0a722d2",
+        "reference_prompt": "res://docs/art/reference/npc-identity/iona-front-agent-v1.prompt.txt",
+        "reference_prompt_sha256_lf": "1c70713325d9e278f9da8389be7c9e9550f0508218fc19b6360a028529fbdd11",
+        "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+        "producer_sha256": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+        "generation_task_id": "01a12bba-b649-7172-9858-171c04a96539",
+        "rig_task_id": "01a12bc3-18b7-73ae-b59f-7d3669d6c858",
+        "producer_hash_encoding": "UTF-8 text with CRLF normalized to LF",
+        "postprocessing": {
+          "tool": "retarget_iona_arms.py (coordinator-reviewed private CPU postprocessor)",
+          "source_sha256_lf": "4a971f5c0f98dd47d673cf7694ee82d64067d0f2432f81da96f419ea77100770",
+          "recipe_sha256": "0569b648f5670d0107d077d1917a13914e0a26d12fa0b64ef4eb7241e2d53dec",
+          "upstream_baked_model_sha256": "c87e1dd8b8b772e6a5a91687e1655fa39af2e8f7aa66f44d65b2433be65e2d79",
+          "output_model_sha256": "1fa712b8c0c061c1c7968b962a529587ceac857fb90a6a5d9e89dcbbbc32bab0",
+          "composition": "Hamilton xyzw: Q_new = R_rest * D_local * inverse(R_rest) * Q_old",
+          "rest_local_bias_xyzw": {
+            "Left": [
+              -0.09009476965953941,
+              -1.035270212424125e-07,
+              -0.1211835842413148,
+              0.9885329918364023
+            ],
+            "Right": [
+              -0.08204990862400242,
+              2.2682547739691896e-07,
+              0.13452923704801462,
+              0.9875068106956322
+            ]
+          },
+          "target_upper_arm_degrees_from_down": 10,
+          "bones": [
+            "LeftArm",
+            "RightArm"
+          ],
+          "clips": [
+            "idle",
+            "walk",
+            "sprint",
+            "jump",
+            "throw",
+            "chop",
+            "defeated"
+          ],
+          "changed_rotation_tracks": 14,
+          "interpolation": "LINEAR; original key times preserved",
+          "preserved": "Original BIN prefix, rest transforms, mesh, skin, inverse binds, materials, textures and all non-target channels; target outputs and samplers cloned",
+          "native_review": "Low/Compatibility sampled scale and pose PASS for proceeding; independent Claude judgment PENDING"
+        }
+      }
+    },
+    "npc_identity_water_orsen_v1": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_model_override": "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb",
+      "portrait": "res://assets/ui/portraits/npc_identity_water_orsen_v1.png",
+      "review_status": "paired_candidate_sampled_low_body_and_portrait_passed_pending_world_and_claude_judgement",
+      "authoring_provenance": {
+        "source_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+        "source_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+        "candidate_model": "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb",
+        "candidate_model_sha256": "0f1ffc07edd3e032446ba6ac52e1ba6540abd70adaa33bd022754de4302f7908",
+        "reference": "res://docs/art/reference/npc-identity/orsen-front-agent-v1.png",
+        "reference_sha256": "850916609870ec7636998ae5165ead0b3f4e9ea679f8bffa1e5326135e89d462",
+        "reference_prompt": "res://docs/art/reference/npc-identity/orsen-front-agent-v1.prompt.txt",
+        "reference_prompt_sha256_lf": "4305e0f6f2a500597687f6d6ec40ed08292597629f72aba55bd6d66d80cb510d",
+        "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+        "producer_sha256": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+        "generation_task_id": "01a12c31-4e68-7244-8345-7f97ce9f63ab",
+        "rig_task_id": "01a12c39-2461-7719-9915-6be22b5a4518",
+        "producer_hash_encoding": "UTF-8 text with CRLF normalized to LF",
+        "postprocessing": {
+          "source_commit_before_correction": "5b8287a8a1c3d460c75e22fba9da704eb05a4755",
+          "producer": "res://assets/characters/npc_identity/water_orsen/source/retarget_orsen_arms.py",
+          "producer_sha256_lf": "e7b4edd34d7c7a560934cdf15d5337c633e0d64bacd963aa84df075653777469",
+          "recipe": "res://assets/characters/npc_identity/water_orsen/source/arm_retarget_recipe.json",
+          "recipe_sha256": "6d234dbc6ecca80a1a2836bc121153aae3652533c6ac17ea8a2e6064160b12a9",
+          "input_model_sha256": "a3fd8bd4fa66936e2cace642e2ca0370a12353ce8f8eb288a204f6153d61bd91",
+          "output_model_sha256": "0f1ffc07edd3e032446ba6ac52e1ba6540abd70adaa33bd022754de4302f7908",
+          "composition": "Hamilton xyzw; Q_new=R_rest * D_orsen * inverse(R_rest) * Q_old; fresh cloned outputs/samplers across exactly 14 upper-arm rotation tracks, other channels/rest/mesh/skin/UV/textures/times unchanged",
+          "rest_local_bias_xyzw": {
+            "Left": [
+              -0.08864801222504194,
+              6.679065626468872e-07,
+              -0.16635793664757212,
+              0.9820725891188613
+            ],
+            "Right": [
+              -0.09735926940950022,
+              4.5585593727181953e-07,
+              0.17843769734904744,
+              0.9791226489215539
+            ]
+          },
+          "target_upper_arm_degrees_from_down": 10,
+          "changed_rotation_tracks": 14,
+          "cpu_preservation": "PASS: original BIN prefix and all non-target JSON/data preserved; skinned rest positions, weights and UVs exact; other channels/key times unchanged",
+          "finite_skinned_pose_samples": 28,
+          "idle_upper_arm_degrees_from_down": [
+            {
+              "phase": 0.125,
+              "Left": 9.150667646826987,
+              "Right": 8.934033453599165
+            },
+            {
+              "phase": 0.375,
+              "Left": 9.254215111653314,
+              "Right": 8.830609258905298
+            },
+            {
+              "phase": 0.625,
+              "Left": 7.969337228120302,
+              "Right": 7.600952180652726
+            },
+            {
+              "phase": 0.875,
+              "Left": 7.860969397605735,
+              "Right": 7.709247150487857
+            }
+          ],
+          "native_review": "Low/Compatibility sampled body PASS, 56/56 frames; portrait, world and independent Claude judgment PENDING"
+        }
+      }
+    },
+    "npc_identity_water_otto_v1": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_model_override": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
+      "portrait": "res://assets/ui/portraits/npc_identity_water_otto_v1.png",
+      "review_status": "paired_candidate_sampled_low_body_and_portrait_passed_pending_world_and_claude_judgement",
+      "authoring_provenance": {
+        "source_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+        "source_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+        "candidate_model": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
+        "candidate_model_sha256": "545881bda98f542d6fdf1afbc874a6f028c04e2c32e05e20de288d5b2ca134cc",
+        "reference": "res://docs/art/reference/npc-identity/otto-front-agent-v2.png",
+        "reference_sha256": "39b35f8fc037ddc1b583302886c6008812b01a11586123a3d6a3760bb37e6822",
+        "reference_prompt": "res://docs/art/reference/npc-identity/otto-front-agent-v2.prompt.txt",
+        "reference_prompt_sha256_lf": "66052f664690d666ef8464603833c777a002d3293480ceaeeb693185b2259ac5",
+        "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+        "producer_sha256": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+        "generation_task_id": "01a12c89-1a98-73b5-8195-a83273dbf42b",
+        "rig_task_id": "01a12c90-1131-712e-a162-f03509398b01",
+        "producer_hash_encoding": "UTF-8 text with CRLF normalized to LF",
+        "postprocessing": {
+          "source_commit_before_correction": "3715a7a8b67f545cb033ed515dac602d6accb50b",
+          "producer": "res://assets/characters/npc_identity/water_otto/source/retarget_otto_arms.py",
+          "producer_sha256_lf": "acbac5ba4c94012b1d0ec98365144608ae9d7b60d005f6d17152f6dab5b6ec96",
+          "recipe": "res://assets/characters/npc_identity/water_otto/source/arm_retarget_recipe.json",
+          "recipe_sha256": "d5ad4eaab2d0aeb783bf0559bf87e5baf1793dc8a69f50844d4461fc21380318",
+          "input_model_sha256": "b804b4b290f15ea25e97b43c66bba5dca99cfe3c970a08c7a77bd9a5332ab47a",
+          "output_model_sha256": "545881bda98f542d6fdf1afbc874a6f028c04e2c32e05e20de288d5b2ca134cc",
+          "composition": "Hamilton xyzw: Qnew = Rrest * D_otto * inverse(Rrest) * Qold. Left-multiply every bound upper-arm animation quaternion; do not modify node rest transforms.",
+          "rest_local_bias_xyzw": {
+            "Left": [
+              -0.07670645518012105,
+              1.2176704520210494e-06,
+              -0.16290416377074202,
+              0.9836556069877164
+            ],
+            "Right": [
+              -0.08277270955825687,
+              3.1810907114968284e-07,
+              0.18382503089783853,
+              0.9794677312539153
+            ]
+          },
+          "target_upper_arm_degrees_from_down": 10,
+          "changed_rotation_tracks": 14,
+          "original_bin_prefix_bytes_preserved": 12100180,
+          "non_target_json_restored_exactly": true,
+          "rest_positions_weights_uvs_indices_textures_materials_unchanged": true,
+          "finite_skinned_pose_samples": 28,
+          "idle_upper_arm_degrees_from_down": [
+            {
+              "Left": 9.201704407012887,
+              "Right": 8.957665636603894
+            },
+            {
+              "Left": 9.306271409251062,
+              "Right": 8.855245879885235
+            },
+            {
+              "Left": 7.968797327242703,
+              "Right": 7.6006760229761685
+            },
+            {
+              "Left": 7.860627703870476,
+              "Right": 7.709189879119389
+            }
+          ],
+          "native_review": "Low/Compatibility sampled body PASS56/56 under original guards; continuous motion, world, portrait and independent Claude judgment PENDING"
+        }
+      }
     }
   },
-  "_comment": "P2-055 shared presentation pipeline only. Local/static scope; no save, network or gameplay effect. No regional identity mappings or new art are supplied. A named record requires expected_base_profile, expected_model, a dedicated portrait under res://assets/ui/portraits/, and body_albedo_override and/or body_emission_override. Existing model, rank palette, badges, names and gender remain unchanged. Keep disabled until authored derivatives, matching portraits and production visual review pass."
+  "_comment": "P2-055 paired presentation candidates; global and per-record gates remain OFF. Six installed-rig cloth variants are preserved. Adair has one identity-preserving model candidate with a dedicated portrait destination; incomplete pairs retain the installed body and portrait. Names, rank, height, gameplay and the shared base models are unchanged."
 }

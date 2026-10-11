@@ -1,0 +1,15 @@
+water_trainer_evi                  veilfall_trainer terrapup  L32 M win=1.00 lf=1.00 lead=1.00 party=0.59 | R win=1.00 lead=0.00 party=0.02 s=127 hit=0.109 tell=1.10 st=0 PASS
+water_trainer_evi                  veilfall_trainer ripplet   L32 M win=1.00 lf=1.00 lead=1.00 party=0.27 | R win=1.00 lead=0.00 party=0.03 s=124 hit=0.111 tell=1.10 st=0 PASS
+water_trainer_evi                  veilfall_trainer galewisp  L32 M win=1.00 lf=1.00 lead=1.00 party=0.31 | R win=1.00 lead=0.22 party=0.05 s=98 hit=0.063 tell=1.10 st=0 PASS
+water_trainer_fennel               veilfall_trainer terrapup  L32 M win=1.00 lf=1.00 lead=1.00 party=0.36 | R win=1.00 lead=0.00 party=0.01 s=69 hit=0.156 tell=1.10 st=0 PASS
+water_trainer_fennel               veilfall_trainer ripplet   L32 M win=1.00 lf=0.62 lead=1.00 party=0.24 | R win=1.00 lead=0.00 party=0.02 s=64 hit=0.153 tell=1.10 st=0 PASS
+water_trainer_fennel               veilfall_trainer galewisp  L32 M win=1.00 lf=0.21 lead=0.88 party=0.19 | R win=1.00 lead=0.17 party=0.04 s=56 hit=0.097 tell=1.10 st=0 PASS
+water_trainer_morra                veilfall_trainer terrapup  L32 M win=1.00 lf=1.00 lead=1.00 party=0.65 | R win=1.00 lead=0.00 party=0.10 s=152 hit=0.137 tell=1.10 st=0 PASS
+water_trainer_morra                veilfall_trainer ripplet   L32 M win=1.00 lf=1.00 lead=1.00 party=0.58 | R win=1.00 lead=0.00 party=0.11 s=146 hit=0.137 tell=1.10 st=0 PASS
+water_trainer_morra                veilfall_trainer galewisp  L32 M win=1.00 lf=1.00 lead=1.00 party=0.56 | R win=1.00 lead=0.23 party=0.05 s=115 hit=0.119 tell=1.10 st=0 PASS
+water_trainer_nerissa              veilfall_top     terrapup  L32 M win=0.12 lf=1.00 lead=1.00 party=1.00 | R win=1.00 lead=0.75 party=0.35 s=215 hit=0.266 tell=0.90 st=0 PASS
+water_trainer_nerissa              veilfall_top     ripplet   L32 M win=0.21 lf=1.00 lead=1.00 party=1.00 | R win=1.00 lead=0.78 party=0.31 s=215 hit=0.273 tell=0.90 st=0 PASS
+water_trainer_nerissa              veilfall_top     galewisp  L32 M win=0.88 lf=1.00 lead=1.00 party=0.86 | R win=1.00 lead=0.77 party=0.41 s=284 hit=0.275 tell=0.90 st=0 PASS
+water_trainer_venn                 veilfall_top     terrapup  L32 M win=1.00 lf=1.00 lead=1.00 party=0.79 | R win=1.00 lead=0.76 party=0.53 s=193 hit=0.287 tell=0.90 st=0 FAIL party 0.533/0.789
+water_trainer_venn                 veilfall_top     ripplet   L32 M win=1.00 lf=1.00 lead=1.00 party=0.74 | R win=1.00 lead=0.80 party=0.50 s=178 hit=0.288 tell=0.90 st=0 FAIL party 0.505/0.744
+water_trainer_venn                 veilfall_top     galewisp  L32 M win=1.00 lf=1.00 lead=1.00 party=0.67 | R win=1.00 lead=0.78 party=0.55 s=195 hit=0.284 tell=0.90 st=0 FAIL party 0.550/0.672

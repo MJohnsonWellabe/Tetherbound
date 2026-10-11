@@ -11,7 +11,7 @@ const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
 
 func test_guest_start_accepts_only_intent_identity_and_registered_profile_tag() -> void:
 	var uid: String = preload("res://scripts/creatures/creature_instance.gd").mint_uid()
-	var intent := {"trainer_id": "relay_captain", "tier": "r1", "creature_uid": uid, "action_id": "0123456789abcdef0123456789abcdef"}
+	var intent := {"trainer_id": "captain_riverwatch", "tier": "r1", "creature_uid": uid, "action_id": "0123456789abcdef0123456789abcdef"}
 	assert_true(BOSSES.valid_start_intent(intent))
 	for field: String in ["position", "team", "flags", "character_id", "damage"]:
 		var forged := intent.duplicate(true)
@@ -21,7 +21,7 @@ func test_guest_start_accepts_only_intent_identity_and_registered_profile_tag() 
 		var malformed := intent.duplicate(true)
 		malformed[field] = ""
 		assert_false(BOSSES.valid_start_intent(malformed), field)
-	var record := {"kind": "trainer", "opponent": {"owner_npc": "relay_captain", "rematch": {"trainer_id": "relay_captain", "tier": "r1"}}}
+	var record := {"kind": "trainer", "opponent": {"owner_npc": "captain_riverwatch", "rematch": {"trainer_id": "captain_riverwatch", "tier": "r1"}}}
 	assert_true(DIRECTOR._record_is_remote_rematch(record))
 	record.opponent.rematch.trainer_id = "master_t4"
 	assert_false(DIRECTOR._record_is_remote_rematch(record))
@@ -33,7 +33,7 @@ class TrackedHost extends "res://scripts/combat/accepted_action_host.gd":
 func _action_fixture(second_participant: bool = false) -> Dictionary:
 	var host := TrackedHost.new(1)
 	var rec: Dictionary = host.open(2, "meadows", "trainer", {
-		"species_id": "bramblebun", "owner_npc": "relay_captain", "hp": 30.0, "hp_max": 30.0,
+		"species_id": "bramblebun", "owner_npc": "captain_riverwatch", "hp": 30.0, "hp_max": 30.0,
 		"position": Vector3(2, 0, 0), "body_generation": 1, "round": 1, "round_continues": true,
 		"card": {"uid": "opponent-a"}}, "owned-a", "guest-a")
 	var id: String = str(rec.encounter_id)
@@ -78,7 +78,7 @@ func test_terminal_requires_exact_committed_action_actor_and_roster_generation()
 func test_round_advance_preserves_real_record_participants_and_refuses_replay() -> void:
 	var fixture := _action_fixture(true)
 	_record_kill(fixture)
-	var next := {"species_id": "burrowback", "owner_npc": "relay_captain", "hp": 45.0, "hp_max": 45.0,
+	var next := {"species_id": "burrowback", "owner_npc": "captain_riverwatch", "hp": 45.0, "hp_max": 45.0,
 		"position": Vector3(2, 0, 0), "body_generation": 2, "round": 2, "round_continues": false, "card": {"uid": "opponent-b"}}
 	assert_false(RUNTIME.advance_record(fixture.host, fixture.id, "opponent-a", 1, next), "pending body publication fences roster replacement")
 	assert_true(fixture.host.publish_move_action_terminal(fixture.id, 2, fixture.begun.action_id, "done"))
@@ -123,7 +123,7 @@ func test_frozen_obligations_use_each_admitted_owner_and_existing_event_codec() 
 
 func test_unbound_runtime_and_missing_grounded_arena_refuse() -> void:
 	var runtime := RUNTIME.new()
-	assert_false(runtime.start(2, null, "relay_captain", "r1").get("ok") == true)
+	assert_false(runtime.start(2, null, "captain_riverwatch", "r1").get("ok") == true)
 	assert_false(runtime.bind_director(null, Callable()))
 	assert_false(RUNTIME.arena_valid({}))
 	assert_false(RUNTIME.arena_valid({"arena_centre": Vector3.ZERO, "opponent_spot": Vector3(12, 0, 0), "arena_radius_m": 10.0}))

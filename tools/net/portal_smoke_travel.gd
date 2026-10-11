@@ -21,6 +21,8 @@ const STATE := preload("res://scripts/data/redesign_state.gd")
 const META := "portal_smoke_initial_fixture"
 const NOT_READY := "Your authoritative travel state is not ready."
 const RETRY_FRAMES := 60
+## About ten seconds of re-presses (RETRY_FRAMES apart) for the Home Key.
+const HOME_RETRIES := 10
 var reply: Dictionary = {}
 var request_id := ""
 var _home_scope: Dictionary = {}
@@ -219,15 +221,28 @@ func _home(tree: SceneTree, game: Node, started: int, budget: int) -> Dictionary
 		"world_instance_id": str(game.get("world").get("reward_delivery_namespace")),
 		"session_epoch": str(session.call("_altar_current_epoch"))}
 	game.connect("portal_action_result", _home_completed)
-	var used: bool = game.call("use_home_key") == true
-	var key: Node = game.get_node_or_null(^"HomeKey")
-	if used and key != null and key.get_script() == HOME_KEY and key.get_parent() == game:
-		# Public use synchronously stores this begin ID before its deferred host
-		# request/reply. No cleared finish pending ID is guessed or reconstructed.
-		request_id = str(key.get("_pending"))
-		while reply.is_empty() and not request_id.is_empty() and Engine.get_physics_frames() - started < budget:
+	# As travel() does for portal_enter: a guest refused NOT_READY right after
+	# the host's crossing presses again, as a player would, about once a second
+	# for at most HOME_RETRIES presses, inside the same budget. Only that exact
+	# refusal is retried.
+	for press in HOME_RETRIES:
+		reply = {}
+		var used: bool = game.call("use_home_key") == true
+		var key: Node = game.get_node_or_null(^"HomeKey")
+		if used and key != null and key.get_script() == HOME_KEY and key.get_parent() == game:
+			# Public use synchronously stores this begin ID before its deferred host
+			# request/reply. No cleared finish pending ID is guessed or reconstructed.
+			request_id = str(key.get("_pending"))
+			while reply.is_empty() and not request_id.is_empty() and Engine.get_physics_frames() - started < budget:
+				await tree.physics_frame
+				if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game: break
+		if reply.get("ok") != false or str(reply.get("reason", "")) != NOT_READY \
+				or Engine.get_physics_frames() - started + RETRY_FRAMES >= budget:
+			break
+		print("PORTAL_SMOKE_HOME_RETRY press=%d %s" % [press + 1, JSON.stringify(reply)])
+		for frame in RETRY_FRAMES:
 			await tree.physics_frame
-			if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game: break
+		if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game: break
 	if is_instance_valid(game) and game.is_connected("portal_action_result", _home_completed):
 		game.disconnect("portal_action_result", _home_completed)
 	var result: Dictionary = reply.duplicate(true)

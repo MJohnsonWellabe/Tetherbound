@@ -175,7 +175,11 @@ func test_species_leg_clearance_flows_through_local_and_remote_production_riders
 		and trainer.contains("func riding_leg_fit_present()")
 		and trainer.contains("func riding_leg_fit_receipt()")
 		and trainer.contains("var seat := Vector3.ZERO")
-		and trainer.contains("var mesh := PrismMesh.new()"))
+		and trainer.contains("func _aim_riding_bone(")
+		and trainer.contains("get_bone_global_rest")
+		and trainer.contains("ankle.distance_to(target) < 0.02"))
+	assert_false(trainer.contains("PrismMesh.new()") or trainer.contains("CapsuleMesh.new()"),
+		"duplicate procedural riding legs returned")
 	# Hips still land by the live-rig measurement; spread changes only the pose.
 	assert_true(trainer.contains("_seat_drop = _measured_seat_drop(skeleton_node)")
 		and trainer.contains("_seat_drop_target.position.y -= _seat_drop"))
