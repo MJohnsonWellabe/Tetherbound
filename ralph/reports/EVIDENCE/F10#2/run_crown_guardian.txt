@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+STORMWOOD_C2C3 crown_guardian terrapup MASHER L49 runs=24 win=1.00 med_lead=0.403 med_party=0.097 med_s=49.2 max_s=49.2 lead_faint=0.00 wipe=0.00 max_hit=0.040 tell=[0.85,0.85] incoming=264 stalled=0
+STORMWOOD_C2C3 crown_guardian terrapup READER L49 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=47.2 max_s=50.9 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,0.85] incoming=0 stalled=0
+STORMWOOD_C2C3_VERDICT crown_guardian terrapup PASS ratio=0.00 reader_win=1.00 max_hit=0.040 min_tell=0.85 
+STORMWOOD_C2C3 crown_guardian ripplet MASHER L49 runs=24 win=1.00 med_lead=0.759 med_party=0.171 med_s=41.0 max_s=44.1 lead_faint=0.00 wipe=0.00 max_hit=0.072 tell=[0.85,0.85] incoming=277 stalled=0
+STORMWOOD_C2C3 crown_guardian ripplet READER L49 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=45.0 max_s=45.0 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,0.85] incoming=0 stalled=0
+STORMWOOD_C2C3_VERDICT crown_guardian ripplet PASS ratio=0.00 reader_win=1.00 max_hit=0.072 min_tell=0.85 
+STORMWOOD_C2C3 crown_guardian galewisp MASHER L49 runs=24 win=0.71 med_lead=0.975 med_party=0.212 med_s=46.8 max_s=50.3 lead_faint=0.29 wipe=0.00 max_hit=0.077 tell=[0.85,0.85] incoming=327 stalled=0
+STORMWOOD_C2C3 crown_guardian galewisp READER L49 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=42.8 max_s=42.9 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,0.85] incoming=0 stalled=0
+STORMWOOD_C2C3_VERDICT crown_guardian galewisp PASS ratio=0.00 reader_win=1.00 max_hit=0.077 min_tell=0.85 
+STORMWOOD_C2C3 done: 3 rows, 144 runs, 0 failing rows, 0 errors
