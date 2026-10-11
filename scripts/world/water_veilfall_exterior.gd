@@ -66,13 +66,20 @@ func _build_formation(spec: Dictionary) -> void:
 	var top_radius := Vector2(float(raw_top[0]), float(raw_top[1]))
 	var lean := Vector2(float(raw_lean[0]), float(raw_lean[1]))
 	var seed_value := int(spec.get("seed", 1))
+	var follow_ground := bool(spec.get("follow_ground_rings", false)) and str(spec.get("id", "")) in ["west_lower_buttress", "east_lower_buttress"]
 	var holder := Node3D.new()
 	holder.name = str(spec.get("id", "VeilfallFormation")).to_pascal_case()
 	holder.position = Vector3(at.x, base_y, at.y)
 	add_child(holder)
+	var formation := _formation_mesh(base_radius, top_radius, height + sink, lean, seed_value,
+		holder.global_position, sink, follow_ground)
+	if formation == null:
+		push_error("Veilfall final repair has invalid grounded rings: " + str(spec.get("id", "")))
+		holder.free()
+		return
 	var body := MeshInstance3D.new()
 	body.name = "FacetedCragBody"
-	body.mesh = _formation_mesh(base_radius, top_radius, height + sink, lean, seed_value, holder.global_position, sink)
+	body.mesh = formation
 	body.material_override = _rock_material
 	body.visibility_range_end = 1100.0
 	body.visibility_range_end_margin = 120.0
@@ -108,7 +115,8 @@ func _build_formation(spec: Dictionary) -> void:
 
 
 func _formation_mesh(base_radius: Vector2, top_radius: Vector2, height: float,
-		lean: Vector2, seed_value: int, ground_origin: Vector3, sink: float) -> ArrayMesh:
+		lean: Vector2, seed_value: int, ground_origin: Vector3, sink: float,
+		follow_ground_rings: bool = false) -> ArrayMesh:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	var segments := 9
@@ -128,8 +136,14 @@ func _formation_mesh(base_radius: Vector2, top_radius: Vector2, height: float,
 			# face, leaving the downhill half hanging over open sky.
 			if ring_index == 0:
 				var grounded := float(_world.call("ground_height_at", ground_origin.x + point.x, ground_origin.z + point.z))
+				if follow_ground_rings and (not is_finite(grounded) or not is_finite(height) or grounded - ground_origin.y >= height):
+					return null
 				if is_finite(grounded):
 					point.y = grounded - ground_origin.y - sink
+			elif follow_ground_rings:
+				# A steep uphill base must not rise above a flat intermediate ring.
+				var base_point: Vector3 = rings[0][index]
+				point.y = lerpf(base_point.y, height, t)
 			ring.append(point)
 		rings.append(ring)
 	var surface := SurfaceTool.new()

@@ -2467,6 +2467,34 @@
       "width_m": 4.0
     },
     {
+      "_comment": "Bounded Saddle Camp access spur: joins the existing Tidal Cradle exploration spine and grades a 6m-wide, 20m-long final tread through the unchanged authored landmark. Uses existing trail grading/shore preservation. Terrain bake and continuous-body/native-camera proof required; no camp service, asset, flag or objective added.",
+      "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
+      "id": "tidal_cradle_saddle_camp_spur",
+      "island_id": "tidal_cradle",
+      "main_path": false,
+      "maximum_target_grade_deg": 20.0,
+      "polyline": [
+        [
+          775.269996,
+          53.133936,
+          1637.496456
+        ],
+        [
+          851.880944,
+          46.424976,
+          1583.852647
+        ],
+        [
+          838.759764,
+          46.424976,
+          1598.946838
+        ]
+      ],
+      "purpose": "Give the existing Saddle Camp landmark a supported access tread from the exploration spine.",
+      "radial_landing_approaches": false,
+      "width_m": 4.0
+    },
+    {
       "_comment": "Coordinates sample radial base only. Length is planning geometry, not runtime walked length; no traversability or density credit until baked/played. Optional spines return to the same landing by distinct legs.",
       "grading_status": "analytic_trail_modifier_authored_bake_and_walk_required",
       "id": "salt_crown_exploration_spine",
