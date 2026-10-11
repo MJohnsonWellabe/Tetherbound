@@ -1,7 +1,7 @@
 {
  "updated": "1:53 PM CT Sun 11 Oct",
  "headline": [
-  "6:38 PM CT Sun 11 Oct: 216 of 271 met (189 on main, 27 proven on tb/ev-coordinator today). All of it lands in one consolidated PR at the end.",
+  "6:50 PM CT Sun 11 Oct: 216 of 271 met (189 on main, 27 proven on tb/ev-coordinator today). All of it lands in one consolidated PR at the end.",
   "Owner, 4:12 PM CT: only the human playtest and the ROG Ally device runs are left for the owner; the coordinator decides everything else. Order: Meadows, then Cloudreach, then down the board. F38-F41 art is the long pole and runs in parallel.",
   "Since 4 PM: F44#0 (rematches, all biomes) and F10#5 (Stormwood audio) closed; Cloudreach route complete; native Meadowhart switched on. Root causes found and fixed: Venn (test pilot could not see named attacks), C2 reader pilot (edge escape, diver landings), co-op guest travel after the Stormwood ending, Warden XP (helper formula). Tuning batch applied (Venn, Nerissa, Riverwatch); all difficulty measurements re-running. Lanes act without permission requests (owner, 5:20 PM)."
  ],
@@ -681,7 +681,7 @@
  "active_lanes": [
   {
    "lane": "routes-west",
-   "doing": "Meadows: sigils (route ledger for F02#7) and hall \u2192 warden \u2192 Tidewake handoff on 7f1b1b0a, then opening \u2192 tournament \u2192 bridge \u2192 Warrens; F04#1 Galecrest disc recapture.",
+   "doing": "Meadows sigils (route ledger) and hall \u2192 warden \u2192 Tidewake handoff; opening \u2192 tournament \u2192 bridge \u2192 Warrens; Tidewake 07 past Venn now (fix the Veilfall recovery waypoint).",
    "criteria": "F02#7, F19#5 Meadows/Tidewake, F13#0",
    "next": "About 2\u20133 h"
   },
@@ -717,7 +717,7 @@
   },
   {
    "lane": "Codex \u00d75",
-   "doing": "F38-F41 top-20 items (Low sheets) and the High/Medium biome matrices; creatures lane: Solmane, Meadowhart rider, storm bear, NPC faces, giant and Guardian scale.",
+   "doing": "Biome items judged from native Low sheets: Meadows doorway PASS; Cloudreach observatory and pennants PASS, aviary parked; Tidewake Veilfall and terraces parked. Adair identity ON; Iona/Orsen/Otto one more try; giant scale open.",
    "criteria": "F38-F41, F26#3, F36#0, F29#3",
    "next": "READY posts every 2\u20133 h"
   },
