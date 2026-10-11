@@ -357,6 +357,7 @@ func test_orsen_authoring_requires_wandering_trainer_and_exact_retarget_provenan
 	var protected_destination := settings.duplicate(true)
 	# Body profiles have no portrait key; this installed plate is protected by PORTRAITS.
 	protected_destination.variants[id].portrait = "res://assets/ui/portraits/wandering_trainer.png"
+	assert_true(ResourceLoader.exists(protected_destination.variants[id].portrait))
 	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, protected_destination), {})
 	var enabled := settings.duplicate(true)
 	enabled.variants[id].enabled = true
@@ -399,6 +400,7 @@ func test_otto_authoring_requires_wandering_trainer_and_exact_retarget_provenanc
 	var protected_destination := settings.duplicate(true)
 	# Body profiles have no portrait key; this installed plate is protected by PORTRAITS.
 	protected_destination.variants[id].portrait = "res://assets/ui/portraits/wandering_trainer.png"
+	assert_true(ResourceLoader.exists(protected_destination.variants[id].portrait))
 	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, protected_destination), {})
 	var enabled := settings.duplicate(true)
 	enabled.variants[id].enabled = true
