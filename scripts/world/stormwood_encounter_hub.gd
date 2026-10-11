@@ -52,6 +52,23 @@ func challenge_pending() -> bool:
 	return not _pending_challenge.is_empty() or not _pending_state.is_empty()
 
 
+## A done opponent still belongs to an unfinished trainer roster during send-out.
+## Finalized death and withdrawal remove the peer through the same fight.leave.
+func peer_in_owned_trainer_roster(peer: int) -> bool:
+	if peer < 1 or not is_instance_valid(session) or not session.is_host() \
+		or session.realm_of(peer) != "stormwood": return false
+	for candidate: Variant in fights.values():
+		if not candidate is Node or not is_instance_valid(candidate): continue
+		var fight: Node = candidate
+		if fight.is_queued_for_deletion() or not fight.is_inside_tree() \
+			or fight.get_script() != HOSTED or fight.get_parent() != self: continue
+		if fight.get("hub") != self or fight.get("authority") != authority \
+			or fight.get("finished") != false: continue
+		var participants: Variant = fight.get("participants")
+		if participants is Array and participants.has(peer): return true
+	return false
+
+
 func on_finalized_death() -> void:
 	var id := _local_trainer
 	if id.is_empty():
