@@ -528,7 +528,9 @@ func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) 
 			_log("travel_arrived", {"target": str(target)})
 			if not precision_clock.is_empty(): await _restore_route_clock(precision_clock)
 			return true
-		_steer(offset, clampf(Vector2(offset.x,offset.z).length()/2,0.22,1))
+		# Floor 0.35: a diagonal stick splits across two axes, and each must clear
+		# the 0.2 action deadzone (0.22 gave ~0.15 per axis: a dead stick).
+		_steer(offset, clampf(Vector2(offset.x,offset.z).length()/2,0.35,1))
 		await _frames(1)
 		if failed: return false
 		for index in body.get_slide_collision_count():
