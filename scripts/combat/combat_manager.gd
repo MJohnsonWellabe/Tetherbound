@@ -809,6 +809,10 @@ func admitted_spatial_arena_provider(body: Node3D) -> Dictionary:
 ## opponent nobody owns, falls back to the creature's spot as before.
 var aftermath_focus: Node3D = null
 
+## The trainer NPC whose round is being admitted. Set by the director only
+## around that round's `begin()`; excluded from the seat overlap test.
+var admission_trainer: Node3D = null
+
 
 ## Begin a fight. `ally_body` is the player's deployed creature, `camera_rig` is the
 ## exploration camera that will be re-pointed at it. `best_creature` is R4.7's
@@ -1521,6 +1525,11 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 	var exclude: Array[RID] = []
 	for actor: Node3D in [_player, _ally_body, _wild]:
 		if actor is CollisionObject3D: exclude.append((actor as CollisionObject3D).get_rid())
+	# The challenging trainer stands beside their own fight; they are a
+	# participant, not an obstacle to its seats.
+	if is_instance_valid(admission_trainer):
+		for node: Node in [admission_trainer] + admission_trainer.find_children("*", "CollisionObject3D", true, false):
+			if node is CollisionObject3D: exclude.append((node as CollisionObject3D).get_rid())
 	var space := body.get_world_3d().direct_space_state
 	# Predict exactly the seat place_on_ground will use, including the highest
 	# support under the gameplay footprint; a hillside is not a wall.
@@ -1600,8 +1609,25 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 	var solid_points := _admission_solid_points(staged_points, level + 0.25 if surface.is_empty() else -INF)
 	if solid_points.size() < 4:
 		return _reject_arena("rendered_height", {"body": body.name, "lo": lo, "hi": hi})
-	var shape := ConvexPolygonShape3D.new()
 	var origin := Vector3(spot.x, level, spot.z)
+	var obstacle: Variant = _admission_solid_obstacle(solid_points, origin, exclude, space)
+	# A hillside is not a wall: realm terrain rising inside the rendered box
+	# (wider than the gameplay footprint) up to the seat's own step height is
+	# the slope the body stands on. Every other collider keeps the 0.25m cut.
+	if obstacle is Object and (obstacle as Object).is_class("Terrain3D") and surface.is_empty():
+		var hillside := _admission_solid_points(staged_points, level + REALM_SEAT_MAX_STEP_M)
+		obstacle = _admission_solid_obstacle(hillside, origin, exclude, space) if hillside.size() >= 4 else null
+	if obstacle != null:
+		return _reject_arena("solid_overlap", {"body": body.name, "lo": lo, "hi": hi,
+			"shape": "oriented_render_box",
+			"collider": str((obstacle as Node).get_path()) if obstacle is Node else str(obstacle)})
+	return true
+
+
+## A collider overlapping the clipped oriented render box (non-terrain first), or null.
+func _admission_solid_obstacle(solid_points: PackedVector3Array, origin: Vector3,
+		exclude: Array[RID], space: PhysicsDirectSpaceState3D) -> Variant:
+	var shape := ConvexPolygonShape3D.new()
 	var local_points := PackedVector3Array()
 	for point: Vector3 in solid_points: local_points.append(point - origin)
 	shape.points = local_points
@@ -1610,13 +1636,13 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 	query.transform = Transform3D(Basis.IDENTITY, origin)
 	query.collision_mask = 0x7FFFFFFF
 	query.exclude = exclude
-	var obstacles := space.intersect_shape(query, 1)
-	if not obstacles.is_empty():
-		var obstacle: Variant = obstacles[0].get("collider")
-		return _reject_arena("solid_overlap", {"body": body.name, "lo": lo, "hi": hi,
-			"shape": "oriented_render_box",
-			"collider": str((obstacle as Node).get_path()) if obstacle is Node else str(obstacle)})
-	return true
+	# Any non-terrain collider is reported ahead of the terrain heightfield, so
+	# the hillside tolerance never hides a rock or wall in the same box.
+	var obstacles := space.intersect_shape(query, 16)
+	for hit: Dictionary in obstacles:
+		var collider: Variant = hit.get("collider")
+		if not (collider is Object and (collider as Object).is_class("Terrain3D")): return collider
+	return obstacles[0].get("collider") if not obstacles.is_empty() else null
 
 
 ## The eight source-AABB endpoints keep their bitwise edge adjacency through

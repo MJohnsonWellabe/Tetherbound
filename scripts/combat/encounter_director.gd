@@ -8393,7 +8393,9 @@ func _send_out_next_creature() -> bool:
 	# creature falls (combat_manager.gd::aftermath_focus, consumed by _finish).
 	if _manager != null and names_aftermath_focus():
 		_manager.set("aftermath_focus", _trainer_node)
+	_manager.set("admission_trainer", _trainer_node)
 	_start_fight(body, true)
+	_manager.set("admission_trainer", null)
 	if not bool(_manager.call("is_fighting")):
 		# A refused start never reaches `_finish()`; do not leave the focus
 		# for some later opponent-owned fight to consume.
