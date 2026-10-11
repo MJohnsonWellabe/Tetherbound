@@ -1,6 +1,6 @@
 # F04#0 Warrens guardian: witness frames for the code-blind judge
 
-Captured Sun 11 Oct 2026, about 11:20 AM CT, by the captures lane (branch `tb/ev-captures`). This lane captures frames; it does not judge.
+Captured Sun 11 Oct 2026, about 10:20 AM CT, by the captures lane (branch `tb/ev-captures`). This lane captures frames; it does not judge.
 
 - **Source:** commit `70f74007` (tb/ev-captures = origin/tb/ev-coordinator `94368e45` + one capture-tool commit that does not touch this path). It contains the F04#0 fix `ea3a1ebb` and the F04#2 witness change `2304f46c`.
 - **Run:** render.yml run 38152212608 (render mode, `gl_compatibility`, OpenGL on llvmpipe in xvfb, 1280x720, real-time). Exit 0 in 2060 s.

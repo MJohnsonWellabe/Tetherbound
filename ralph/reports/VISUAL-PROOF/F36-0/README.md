@@ -1,6 +1,6 @@
 # F36#0 native creature candidates vs installed models: frames for the code-blind judge
 
-Captured Sun 11 Oct 2026, about 12:35 PM CT, by the captures lane (`tb/ev-captures`). This lane captures; it does not judge. The coordinator's per-species PASS list decides which candidates get switched on.
+Captured Sun 11 Oct 2026, about 11:35 AM CT, by the captures lane (`tb/ev-captures`). This lane captures; it does not judge. The coordinator's per-species PASS list decides which candidates get switched on.
 
 - **Source:** `0d598b9b` (= origin/tb/ev-coordinator `94368e45` plus two capture-tool commits that touch no creature or render code).
 - **Renderer:** local Linux container, Godot 4.7-stable, `gl_compatibility` / OpenGL on Mesa llvmpipe in xvfb, 1280x720.

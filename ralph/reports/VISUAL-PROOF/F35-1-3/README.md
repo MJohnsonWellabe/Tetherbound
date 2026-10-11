@@ -1,6 +1,6 @@
 # F35#1 / F35#3 signature ultimates: frames for the code-blind judge
 
-Captured Sun 11 Oct 2026, about 1:05 PM CT, by the captures lane (`tb/ev-captures`). This lane captures; it does not judge.
+Captured Sun 11 Oct 2026, about 12:05 PM CT, by the captures lane (`tb/ev-captures`). This lane captures; it does not judge.
 
 - **Source:** `8b6452d4` (origin/tb/ev-coordinator `94368e45` plus capture-tool and evidence commits only).
 - **Renderer:** local Linux container, Godot 4.7-stable, `gl_compatibility` / OpenGL on Mesa llvmpipe in xvfb, 1280x720.
