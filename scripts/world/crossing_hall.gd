@@ -629,7 +629,8 @@ func hang_relic(biome: String, game: Node = null) -> void:
 		# A reply that never comes must not lock the shrine for later presses.
 		var tree := Engine.get_main_loop() as SceneTree
 		if tree == null:
-			_clear_relic_request()
+			# Without a tree there is no timeout to schedule. Keep listening for
+			# this original request's decision instead of discarding its reply.
 			return
 		await tree.create_timer(RELIC_REPLY_TIMEOUT_S).timeout
 		if generation == _relic_generation and _relic_pending == biome: _clear_relic_request()

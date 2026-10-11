@@ -137,7 +137,7 @@
     -24.5
    ],
    "_why_f01_berry_field": "F01 (village road settlement): the cottage_b re-pose at (19,-18) left this bush INSIDE the cottage, 2.2m from its centre, and the day-walk judge found Berry Field reading as one bush. Moved into paths.village_topology's berry_field subarea (centre (-8.5,-23), r 6) beside order 1036, 2.9m from the centre and 6.3m from 1036, off the berry lane. Same item, yield, model and order.",
-   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 0.52,
    "_why_village_visual_2026_09_11": "Grandpa's Village ordinary gameplay frame proved the six village berry bushes were each roughly 2.3m wide at the route-wide 1.2 scale and read as saturated purple creature-sized foreground masses. Keep position, interaction, yield and model; 0.52 preserves a readable ~1m berry bush without letting a gatherable outrank the village frontage. Applied consistently to village berries only; corridor and Pond berries retain their established 1.2 route scale.",
    "visual": {"berry_radius_m": 0.055}
@@ -151,7 +151,7 @@
     38.0,
     -36.0
    ],
-   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 0.52,
    "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change.",
    "visual": {"berry_radius_m": 0.055}
@@ -422,7 +422,7 @@
      30,
      8
    ],
-   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 0.52,
    "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15, verbatim: 'There needs to be more berries in the village.' The village authored exactly two berry nodes (orders 10, 11; 3 each = 6), the thinnest of the four village resources against wood's 7 nodes, stone's 3 (raised to 4 each by GAME-F5), and fiber's 8 -- and berries are the one baseline resource with ongoing draws the other three do not carry: player/creature food (items.json), the 3-berries-for-4-seeds recipe and the farm crop itself (data/config/farm.json), and a 5-berry cost in the Band-4 stronghold potion (recipes_ironwood.json). Three new nodes (this one plus 1032, 1033) bring the village to five for +9, proportionate to the raise stone already got and short of flooding the square. Sited in the village's north quarter, inside the fence (data/config/village_boundary.json), >=4m clear of the boundary line and of every existing village node, and outside the practice cluster's 15m disc at (30,-40) -- unused ground: no harvest node previously stood north of z=-8. tests/test_village_boundary.gd's VILLAGE_HARVEST_NODES raised 20 -> 23 in the same commit, per that test's own instruction to confirm and update rather than silently drift.",
    "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change.",
@@ -437,7 +437,7 @@
     0.0,
     18.0
    ],
-   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 0.52,
    "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Second of the three new village berry stops, on the north side near the pond-road gate approach, >=4m clear of the boundary and of every existing node.",
    "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change.",
@@ -452,7 +452,7 @@
     -32.0,
     -1.0
    ],
-   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 0.52,
    "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Third of the three new village berry stops, west of the farmhouse, >=4m clear of the boundary and of every existing node.",
    "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change.",
@@ -493,7 +493,7 @@
     -9.0,
     -19.0
    ],
-   "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 0.48,
    "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note). Berries carry no `gathered_with` tool at all (items.json), so this is the one resource a fresh player gathers at full yield from the very first minute -- CLAUDE.md's light-satiety rule makes that the honest safety net, not a workaround of the knife gate this lane is told to leave alone. Sited on the walk from Grandpa's house toward the square (terrain_playground.json paths.routes 'Grandpa's House': [10,-10]->[-4,-13]->[-18,-15]).",
    "_why_resited_2026_09_01": "LAND-MEGA-0901 fix: the original [-9,-9] was verified clear (>=4m) of the work_area prop cluster and every existing wood/fiber node, but nobody checked it against the village's PEOPLE -- it landed 3.11m from Bram [-5.89,-9] (village_npcs.json), inside Bram's own 3.8m Interactable radius, and 0.42m inside the inn building's own 7.08m circumscribed footprint (tools/_probe_civilian_placement.gd's BUILDINGS.inn). interaction_arbiter.gd has exactly one prompt slot and picks whichever offer is closer at equal priority (prompt_arbiter.gd::choose_index), so standing at Bram's own authored customer spot made the two prompts contest that slot -- reproduced 100% by tests/smoke_post_modal_control.gd's first Bram visit (bisected to this commit, df793bd5). Moved 10m further south along the same north-south line, still off every path (path_factor 0.00) and on flat ground (slope <5deg, tools/_probe_berries_1036_resite.gd): 10.47m from Bram (>=7.2m combined-radius-plus-margin), 5.42m clear of the inn footprint, and 5.10m clear of the nearest other harvest node (order 1026, fiber at [-10,-14]).",
