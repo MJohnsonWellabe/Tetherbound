@@ -61,6 +61,7 @@ var started_ms := 0
 var before := {}
 var helper_result := {}
 var handoff := {}
+var max_steps := 32
 
 
 func _init() -> void:
@@ -73,6 +74,7 @@ func _run() -> void:
 		if arg.begins_with("--segment="): segment = arg.trim_prefix("--segment=")
 		elif arg.begins_with("--from="): from_dir = arg.trim_prefix("--from=")
 		elif arg.begins_with("--out="): out_dir = arg.trim_prefix("--out=")
+		elif arg.begins_with("--max-steps="): max_steps = int(arg.trim_prefix("--max-steps="))
 		else: failures.append("Unknown option: " + arg)
 	from_dir = ProjectSettings.globalize_path(from_dir).simplify_path().trim_suffix("/")
 	out_dir = ProjectSettings.globalize_path(out_dir).simplify_path().trim_suffix("/")
@@ -99,13 +101,14 @@ func _run() -> void:
 	game.set("save_system", SAVE.new(working))
 	Engine.time_scale = 8.0
 	Engine.physics_ticks_per_second = 480
-	Engine.max_physics_steps_per_frame = 32
-	disclosures.append("Simulation clock 8x at 480 Hz (smoke_stormwood_continuous.gd's own clock); helpers switch fights/walks to 1x themselves")
+	Engine.max_physics_steps_per_frame = max_steps
+	disclosures.append("Simulation clock 8x at 480 Hz, %d physics steps per frame (smoke_stormwood_continuous.gd's clock; a higher step cap only lets a slow host reach it); helpers switch fights/walks to 1x themselves" % max_steps)
 	print("STORMWOOD CHAIN segment=%s from=%s out=%s commit=%s" % [segment, from_dir, out_dir, commit])
 	if await _load_previous():
 		before = _state()
 		_handoff_check()
 		if failures.is_empty():
+			_watch_weather.call_deferred()
 			await _play()
 	if failures.is_empty():
 		var after := _state()
@@ -209,6 +212,25 @@ func _play() -> void:
 		failures.append("%s: %s" % [segment, str(line)])
 	if not bool(helper_result.get("passed", false)) and failures.is_empty():
 		failures.append("%s helper returned passed=false" % segment)
+
+
+## Diagnostic only: the host's achieved simulation rate and the Surge phase.
+func _watch_weather() -> void:
+	var last_ms := Time.get_ticks_msec()
+	var last_sim := -1.0
+	while true:
+		while Time.get_ticks_msec() - last_ms < 15000:
+			await process_frame
+		var surge := current_scene.get_node_or_null("StormwoodSurge") if current_scene != null else null
+		var env: Variant = (game.get("realm_environment") as Dictionary).get("stormwood", {})
+		var sim := float((env as Dictionary).get("elapsed", 0.0)) if env is Dictionary else 0.0
+		var player := current_scene.get_node_or_null("Player") as Node3D if current_scene != null else null
+		print("STORMWOOD CHAIN clock sim=%.1f sim/wall=%.2f phase=%s sheltered=%s at=%s" % [sim,
+			(sim - last_sim) / (float(Time.get_ticks_msec() - last_ms) / 1000.0) if last_sim >= 0.0 else 0.0,
+			str(surge.get("phase")) if surge != null else "-", str(surge.get("sheltered")) if surge != null else "-",
+			str(player.global_position) if player != null else "-"])
+		last_sim = sim
+		last_ms = Time.get_ticks_msec()
 
 
 func _state() -> Dictionary:
