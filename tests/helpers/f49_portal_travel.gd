@@ -105,7 +105,10 @@ func enter(arch_id: String, realm: String) -> bool:
 			return _uids() == before or _fail("F49 actual portal travel changed the carried party")
 	return _fail("F49 portal Enter never produced the ready " + realm + " scene")
 
-func hang_relic(biome: String) -> bool:
+## After the hang the Shrine Room offers its one-relic-power chooser
+## (crossing_hall.gd). With no `power` the player defers the choice
+## (menu_cancel); with one, ordinary focus/accept inputs choose that power.
+func hang_relic(biome: String, power: String = "") -> bool:
 	if not _bind(): return false
 	var pedestal: Node3D
 	for candidate: Node in tree.get_nodes_in_group("crossing_hall_pedestals"):
@@ -121,8 +124,45 @@ func hang_relic(biome: String) -> bool:
 		await tree.process_frame
 		var character: Dictionary = game.local.get("redesign_character")
 		if (character.get("relics_hung", []) as Array).has(biome):
-			return _uids() == before or _fail("F49 relic hanging changed the actual party")
+			if _uids() != before: return _fail("F49 relic hanging changed the actual party")
+			return await settle_power_chooser(power)
 	return _fail("F49 relic hanging produced no actual portable relics_hung state")
+
+## Closes the Shrine Room relic power chooser after choosing `power` (ordinary
+## ui_down/ui_accept) or deferring it (menu_cancel). Absent chooser: nothing
+## to close unless a power was asked for.
+func settle_power_chooser(power: String = "") -> bool:
+	var panel: Node
+	for frame in 300:
+		var owner := INPUT_OWNER.current(tree)
+		if owner != null and owner.name == "RelicPowerPanel" and owner.call("is_open") == true:
+			panel = owner
+			break
+		await tree.process_frame
+	if panel == null:
+		return power.is_empty() or _fail("F49 the Shrine Room offered no relic power chooser for " + power)
+	if not power.is_empty():
+		var hung: Array = game.local.get("redesign_character").get("relics_hung", [])
+		var index: int = panel.call("choices", game.get("realm_hearts"), hung).find(power)
+		if index < 0: return _fail("F49 relic power chooser does not offer " + power)
+		var rows: Array = panel.get("_rows")
+		for step in rows.size() + 1:
+			if rows.size() > index and panel.get_viewport().gui_get_focus_owner() == rows[index]: break
+			await tap("ui_down")
+			rows = panel.get("_rows")
+		if rows.size() <= index or panel.get_viewport().gui_get_focus_owner() != rows[index]:
+			return _fail("F49 controller focus could not reach the " + power + " relic power")
+		await tap("ui_accept")
+		for frame in 1800:
+			if str(game.get("realm_hearts").call("active_id")) == power: break
+			await tree.process_frame
+		if str(game.get("realm_hearts").call("active_id")) != power:
+			return _fail("F49 relic power choice was not accepted: " + str(panel.get("_message").text))
+	await tap("menu_cancel")
+	for frame in 300:
+		if INPUT_OWNER.current(tree) == null: return true
+		await tree.process_frame
+	return _fail("F49 relic power chooser did not close")
 
 ## Diagnostic only: which readiness condition a long Home Key wait is on.
 func _print_home_key_wait(frame: int) -> void:
