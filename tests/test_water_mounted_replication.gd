@@ -12,6 +12,11 @@ class HumanState extends Node:
 class Player extends CharacterBody3D:
 	var swim_controller: Node
 
+class Actor extends CharacterBody3D:
+	var traversal_pose := ""
+	func set_traversal_pose(role: String) -> void:
+		traversal_pose = role
+
 class DryWorld extends Node3D:
 	var player: CharacterBody3D
 	func local_rig() -> CharacterBody3D:
@@ -56,7 +61,7 @@ func _setup_fixture() -> void:
 	fixture.add_child(riding)
 	var director := Director.new()
 	fixture.add_child(director)
-	actor = CharacterBody3D.new()
+	actor = Actor.new()
 	fixture.add_child(actor)
 	creature = INSTANCE.new()
 	creature.swim_stamina_fraction = 0.2
