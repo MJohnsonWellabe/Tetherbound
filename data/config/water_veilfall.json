@@ -194,6 +194,8 @@
       "tone_darken": 0.96,
       "tone_amount": 0.0,
       "tone_lit_keep": 1.0,
+      "presentation_pull_start_m": 900.0,
+      "presentation_pull_end_m": 1100.0,
       "depth_pull_fraction": 0.012,
       "depth_pull_max_m": 60.0
     }

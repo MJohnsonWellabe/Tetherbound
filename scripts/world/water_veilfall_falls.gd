@@ -60,6 +60,7 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	ribbon_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	ribbon_mesh.material_override = _material(FALL_SHADER, config.get("column_shader", {}))
 	apply_visual_settings(ribbon_mesh.material_override as ShaderMaterial, visual)
+	(ribbon_mesh.material_override as ShaderMaterial).set_shader_parameter("centre_xz", centre_xz)
 	materials.append(ribbon_mesh.material_override)
 	# The depth pull and minimum width move vertices outside the authored
 	# bounds; a generous AABB margin keeps frustum culling from popping it.
