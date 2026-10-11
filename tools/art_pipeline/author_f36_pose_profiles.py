@@ -241,6 +241,7 @@ def rotation(bone, role, phase, winged, biped, wing_folds=None):
 
 
 ANATOMICAL_SPECIES = {'terrapup', 'brooktail', 'ripplet'}
+WING_ANATOMICAL_SPECIES = {'pipwing', 'galecrest', 'galewisp'}
 
 
 def rigid_inverse(matrix):
@@ -345,6 +346,67 @@ def anatomical_poses(name, bones, rig, roles):
     return result
 
 
+def anatomical_wing_poses(name, bones, roles):
+    """Keep each installed feather fan intact through whole-body attitudes.
+
+    Dominant fore/tip skin vertices put Pipwing's fan normal near source X;
+    Galecrest and Galewisp have fan normals near source Z. Turning whole fans
+    with the model avoids the long blended-skin sheets made by joint folds.
+    The hash/rest/bind contract still binds these authored angles to that skin.
+    """
+    if name not in WING_ANATOMICAL_SPECIES:
+        return roles
+    result = copy.deepcopy(roles)
+    pipwing = name == 'pipwing'
+    for role in ('faint', 'swim', 'fly_grip'):
+        for frame in result[role]['frames']:
+            phase = frame['phase']
+            wave = math.sin(phase * math.tau)
+            amount = min(1, phase / .7) if role == 'faint' else 1
+            pose = {bone: [0, 0, 0] for bone in bones}
+            if role == 'faint':
+                # A relaxed flank for the X-normal fan, a prone body for the
+                # Z-normal fans. Do not rotate feather joints into the torso.
+                frame['pivot_rotation_deg'] = ([0, 0, 90 * amount] if pipwing
+                                               else [75 * amount, 0, 90 * amount])
+                pose.update(neck=[(5 if pipwing else -15) * amount, 0, 0],
+                            head=[(-5 if pipwing else -20) * amount, 0, 0],
+                            tail_1=[(5 if pipwing else 35) * amount, 0, 0],
+                            tail_2=[(10 if pipwing else 25) * amount, 0, 0])
+                for side in ('l', 'r'):
+                    pose['leg_upper_' + side] = [5 * amount, 0, (5 if side == 'l' else -5) * amount]
+                    pose['leg_lower_' + side] = [15 * amount, 0, 0]
+                    if 'foot_' + side in pose:
+                        pose['foot_' + side] = [5 * amount, 0, 0]
+            else:
+                # Align the long body with travel and keep the feather plane
+                # near horizontal. Pipwing reaches that attitude via Z/Y;
+                # its skin cannot safely take a 90-degree upper-wing twist.
+                if pipwing:
+                    frame['pivot_rotation_deg'] = [0, 90, 80 if role == 'fly_grip' else 70 + 3 * wave]
+                else:
+                    frame['pivot_rotation_deg'] = [70 if role == 'fly_grip' else 60, 0,
+                                                   0 if role == 'fly_grip' else 3 * wave]
+                pose.update(neck=[-5, 0, 0], head=[5, 0, 0],
+                            tail_1=[0, 4 * wave, 0], tail_2=[0, 6 * wave, 0])
+                for side in ('l', 'r'):
+                    opposite = 1 if side == 'l' else -1
+                    # Synchronous flight beats; alternating swimming strokes.
+                    stroke = wave if role == 'fly_grip' else wave * opposite
+                    pose['wing_upper_' + side] = [0, 0, opposite * 6 * stroke]
+                    if 'wing_fore_' + side in pose:
+                        pose['wing_fore_' + side] = [0, 0, opposite * 3 * stroke]
+                    pose['wing_tip_' + side] = [0, 0, opposite * 3 * stroke]
+                    pose['leg_upper_' + side] = [5 + (6 * wave * opposite if role == 'swim' else 0), 0, 0]
+                    pose['leg_lower_' + side] = [15 - (5 * wave * opposite if role == 'swim' else 0), 0, 0]
+                    if 'foot_' + side in pose:
+                        # Existing foot joints curl the claws downward. The
+                        # old negative angle lifted the toes away from a grip.
+                        pose['foot_' + side] = [25 if role == 'fly_grip' else 5, 0, 0]
+            frame['bones'] = pose
+    return result
+
+
 def main():
     species = json.loads((ROOT / 'data/creatures/species.json').read_text())['species']
     rows = {}
@@ -368,7 +430,7 @@ def main():
         biped = 'arm_l' in bones
         family = 'winged' if winged else 'biped' if biped else 'quadruped'
         wing_folds = folded_wings(rig) if winged else {}
-        signature = (name if name in ANATOMICAL_SPECIES else '', tuple(bones),
+        signature = (name if name in ANATOMICAL_SPECIES | WING_ANATOMICAL_SPECIES else '', tuple(bones),
                      tuple((bone, tuple(round(value, 5) for value in angles))
                            for bone, angles in wing_folds.items()))
         row = {'model': definition['placeholder']['model'], 'source_sha256': hashlib.sha256(raw).hexdigest(),
@@ -391,11 +453,13 @@ def main():
                 roles[role]['start_phase'] = .125
                 roles[role]['release_phase'] = .25
         profile = f'{family}_{len(profiles) + 1}'
-        profiles[profile] = anatomical_poses(name, bones, rig, roles)
+        profiles[profile] = anatomical_wing_poses(name, bones, anatomical_poses(name, bones, rig, roles))
         if name in {'terrapup', 'brooktail'}:
             # Ground the stage's carrying attitude on its actual skin, not an
             # invented lift. Real carriers still align their foot to the hand.
             row['grounded_roles'] = ['hit', 'faint', 'ride', 'fly_grip']
+        elif name in WING_ANATOMICAL_SPECIES:
+            row['grounded_roles'] = ['hit', 'faint', 'ride', 'fly_grip', 'swim']
         rig_profiles[signature] = profile
         row['profile'] = profile
         rows[name] = row
