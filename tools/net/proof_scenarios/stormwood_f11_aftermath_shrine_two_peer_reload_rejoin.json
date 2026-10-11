@@ -1,6 +1,6 @@
 {
  "name": "F11#3: Long Storm aftermath, the Spark shrine and the Waterward gate persist through a host process restart, a rejoin and a mid-session guest drop",
- "claim": "ACCEPTANCE F11 'Long Storm aftermath, Spark/shrine and the once-opened physical Tidewake gate persist' (S3). Two real peers. The Long Storm ends through the real completion path: the host's Stormwood ending sees Marrow's defeat, records the participants and emits the chapter event dynamo:release, whose objective grants stormwood:long_storm_ended and realm_heart_stormwood_earned on the host ledger (both peers receive them). Both peers' StormwoodSurge then presents the aftermath (aftermath timings, no flashes). The host charts the Waterward view, the guest opens the gate once. In the Meadows the GUEST sets the Spark of the Stormwood into its home-circle socket (a world fact) and the HOST wears its power (a personal choice). Host save (autosave_here), then the host's Godot PROCESS ends and a fresh one boots the title on the same user data and presses Load (title_screen _load_slot, which hosts); the guest rejoins from the title as the same character. World-state hashes agree and equal the pre-restart hash; aftermath, Spark placed/active, gate and receipts match on both. The restart and every check after it happen in Stormwood; afterwards only the GUEST crosses realms (to the Meadows socket), because a HOST realm crossing after any guest reconnect stalls 120 s and fails (realm_transition.gd epoch mismatch, reported separately as a SHARED-FILE REQUEST with its own repro). Then the guest's link dies mid-session and it rejoins: it rebuilds the same state from the host, no conversation replays, and nothing is granted twice. Negative controls: the aftermath assertion on the fresh save, the gate before its press, the hash against the arrival world and the saved-aftermath check on the pre-run world all FAIL as expected. Setup, disclosed: the Dynamo fight fixture (Marrow's defeat committed through the ledger, the fight not played), `teleport` beside the view and gate prompts, and spark_socket's teleport beside the Spark socket (its press is an ordinary interact press). Break strikes: the aftermath still has a 45 s Break per 2550 s cycle by design (stormwood_surge.json aftermath_seconds); this proof reports the strike warnings each peer saw in two 10 s watches, it does not claim strikes can never happen after the Long Storm. RD-17 alignment (2026-10-11): the physical Waterward gate is retired (ACCEPTANCE F11: superseded by RD-17, see F18#2), so the guest's press leaves it sealed and the Water key flag (granted by the waterward view objective, stormwood_chapter.json) stays unspent; realm crossings use the Crossing Hall fixture: Home Key home, the Hall's Stormwood arch back, the guest crossing first.",
+ "claim": "ACCEPTANCE F11 'Long Storm aftermath, Spark/shrine and the once-opened physical Tidewake gate persist' (S3). Two real peers. The Long Storm ends through the real completion path: the host's Stormwood ending sees Marrow's defeat, records the participants and emits the chapter event dynamo:release, whose objective grants stormwood:long_storm_ended and realm_heart_stormwood_earned on the host ledger (both peers receive them). Both peers' StormwoodSurge then presents the aftermath (aftermath timings, no flashes). The host charts the Waterward view, the guest opens the gate once. In the Meadows the GUEST sets the Spark of the Stormwood into its home-circle socket (a world fact) and the HOST wears its power (a personal choice). Host save (autosave_here), then the host's Godot PROCESS ends and a fresh one boots the title on the same user data and presses Load (title_screen _load_slot, which hosts); the guest rejoins from the title as the same character. World-state hashes agree and equal the pre-restart hash; aftermath, Spark placed/active, gate and receipts match on both. The restart and every check after it happen in Stormwood; afterwards only the GUEST crosses realms (to the Meadows socket), because a HOST realm crossing after any guest reconnect stalls 120 s and fails (realm_transition.gd epoch mismatch, reported separately as a SHARED-FILE REQUEST with its own repro). Then the guest's link dies mid-session and it rejoins: it rebuilds the same state from the host, no conversation replays, and nothing is granted twice. Negative controls: the aftermath assertion on the fresh save, the gate before its press, the hash against the arrival world and the saved-aftermath check on the pre-run world all FAIL as expected. Setup, disclosed: the Dynamo fight fixture (Marrow's defeat committed through the ledger, the fight not played), `teleport` beside the view and gate prompts, and spark_socket's teleport beside the Spark socket (its press is an ordinary interact press). Break strikes: the aftermath still has a 45 s Break per 2550 s cycle by design (stormwood_surge.json aftermath_seconds); this proof reports the strike warnings each peer saw in two 10 s watches, it does not claim strikes can never happen after the Long Storm. RD-17 alignment (2026-10-11): the physical Waterward gate is retired (ACCEPTANCE F11: superseded by RD-17, see F18#2), so the guest's press leaves it sealed and the Water key flag (granted by the waterward view objective, stormwood_chapter.json) stays unspent; realm crossings use the Crossing Hall fixture: Home Key home, the Hall's Stormwood arch back, the host crossing first (the real player case).",
  "peers": 2,
  "scene": "title",
  "budget_s": 3600,
@@ -340,18 +340,6 @@
    "label": "RD-17: the retired gate stays sealed and the Water key flag unspent, one resolution per character"
   },
   {
-   "peer": 1,
-   "action": "enter_realm",
-   "args": {
-    "realm": "meadows",
-    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
-    "portal_regression": "stormwood_proof_return",
-    "budget_frames": 10000
-   },
-   "budget_frames": 10000,
-   "label": "guest home to the Meadows (RD-17: Home Key home / Hall Stormwood arch back)"
-  },
-  {
    "peer": 0,
    "action": "enter_realm",
    "args": {
@@ -362,6 +350,18 @@
    },
    "budget_frames": 10000,
    "label": "host home to the Meadows (RD-17: Home Key home / Hall Stormwood arch back)"
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "meadows",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof_return",
+    "budget_frames": 10000
+   },
+   "budget_frames": 10000,
+   "label": "guest home to the Meadows (RD-17: Home Key home / Hall Stormwood arch back)"
   },
   {
    "peer": "all",
@@ -453,18 +453,6 @@
    "label": "SHRINE LIVE (guest): placed, not active for the guest"
   },
   {
-   "peer": 1,
-   "action": "enter_realm",
-   "args": {
-    "realm": "stormwood",
-    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
-    "portal_regression": "stormwood_proof_return",
-    "budget_frames": 10000
-   },
-   "budget_frames": 10000,
-   "label": "guest back to Stormwood (RD-17: Home Key home / Hall Stormwood arch back)"
-  },
-  {
    "peer": 0,
    "action": "enter_realm",
    "args": {
@@ -475,6 +463,18 @@
    },
    "budget_frames": 10000,
    "label": "host back to Stormwood, so the saved world reloads there (the host makes no realm crossing after the guest reconnects: see the finding in the claim) (RD-17: Home Key home / Hall Stormwood arch back)"
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof_return",
+    "budget_frames": 10000
+   },
+   "budget_frames": 10000,
+   "label": "guest back to Stormwood (RD-17: Home Key home / Hall Stormwood arch back)"
   },
   {
    "peer": 0,
