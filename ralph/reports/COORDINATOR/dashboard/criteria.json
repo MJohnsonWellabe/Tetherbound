@@ -1,5 +1,5 @@
 {
- "generated_at": "10:55 AM CT Sun 11 Oct 2026",
+ "generated_at": "11:19 AM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -990,10 +990,10 @@
    "id": "F15",
    "title": "Dock exchange, homecoming and credits",
    "chapter": "Tidewake",
-   "pct": 50,
+   "pct": 100,
    "counts": {
-    "met": 1,
-    "partial": 1,
+    "met": 2,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -1002,10 +1002,10 @@
    "criteria": [
     {
      "text": "Host and guest settle the dock exchange once",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/f15_dock_exchange_once/@14674ed5",
-     "gap": "Re-run f15_dock_exchange_once proof scenario on b4e4897d5 Folds into F20#0, F48#1.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The two-process proof is not in CI. world_ledger.gd (+396) and water_dock_actions.gd changed. CI unit only replicates the guest in one process.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F15-0/: two-process ENet proof f15_dock_exchange_once, exit 0, 43 PASS/0 FAIL: guest pays the Reedhaven repair once (memory and disk), host never charged, stale resends charge nothing, host's saved world holds both actions",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (coop-chapters 810cd705, 11:16 AM CT Sun 11 Oct). Disclosed: declared-start host save and portal fixture from the scenario itself; slow-host wall-clock deadlines scaled in a scratch copy only (pre-approved; no step, expectation or peer-side sim budget changed). Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
