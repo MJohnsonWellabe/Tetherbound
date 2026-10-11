@@ -213,6 +213,44 @@ func _native_case_game_same_stream_fence_reset_replays_exactly() -> void:
 		assert_eq(card.distance_m_together, before.party[0].distance_m_together + 3.0)
 	_native_completed = true
 
+func _native_case_game_fence_without_movement_keeps_the_baseline() -> void:
+	# F11#3 (EVIDENCE/F11-3): the Stormheart answer's owner fence held a guest
+	# that never moved. Game reported an in-place travel_valid=false drop the
+	# host could never prove, and the guest's owner-passive stream failed for
+	# good. A fence that leaves the trainer where it stood keeps the baseline.
+	var before: Dictionary = RECORD.portable_projection(game.local.save_data())
+	game.actor.position = Vector3(0.0, 0.900942385196686, 0.0)
+	game._process(0.5)
+	game._process(0.004022000000004)
+	var count: int = owner_session.packets.size()
+	owner_session.blocked = true
+	game._process(0.75)
+	assert_false(game._travel_pos_valid, "the fence still suspends travel")
+	assert_eq(owner_session.packets.size(), count, "fence emits no input")
+	game.actor.position = Vector3(0.6, 0.900942385196686, -0.4) # settling, inside the endpoint tolerance
+	owner_session.blocked = false
+	game._process(0.5)
+	var resumed: Dictionary = owner_session.packets.back()
+	assert_eq(resumed.op, "discovery")
+	assert_true(resumed.travel_valid, "a fence without movement keeps travel_valid")
+	assert_eq(resumed.from, owner_session.packets[1].to, "from the pre-fence position the host already holds")
+	var context := {"max_elapsed": 2.0, "max_speed": 40.0, "realm": "meadows", "landmarks": {}}
+	var cursor := REPLAY.begin(before, {})
+	for index: int in owner_session.packets.size():
+		var packet: Dictionary = owner_session.packets[index].duplicate(true)
+		packet.version = 1
+		packet.sequence = index + 1
+		var applied := REPLAY.apply(cursor, packet, context)
+		assert_true(applied.ok, "replays with no host reset proof: " + str(applied))
+		if applied.get("ok") != true: return
+		cursor = applied.cursor
+	var live := RECORD.portable_projection(game.local.save_data())
+	assert_eq(var_to_bytes(cursor.state), var_to_bytes(live), "full portable record matches exact Game arithmetic after the fence")
+	_native_completed = true
+
+func test_actual_game_fence_without_movement_keeps_the_baseline() -> void:
+	NATIVE.run_case(self, "res://tests/test_owner_passive_game_hooks.gd", "_native_case_game_fence_without_movement_keeps_the_baseline", 9)
+
 func test_actual_game_input_hooks_replay_identically() -> void:
 	NATIVE.run_case(self, "res://tests/test_owner_passive_game_hooks.gd", "_native_case_game_records_exact_ticks_discoveries_and_replays_live_record", 34)
 
