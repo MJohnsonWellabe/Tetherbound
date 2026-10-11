@@ -57,6 +57,14 @@ func mount(world: Node3D, trainer: CharacterBody3D, service: Node) -> Dictionary
 					legacy_nodes.append(candidate)
 			legacy_walked = true
 		for existing: Node in legacy_nodes:
+			# A chapter node built after its stock was registered (a loaded
+			# save) already owns this site; mount it rather than a duplicate.
+			if not existing.is_queued_for_deletion() and str(existing.get("_renewable_site_id")) == id \
+					and (existing as Node3D).global_position.distance_to(verdict.position) <= 1.0 \
+					and existing.has_method("bind_source_service"):
+				existing.call("bind_source_service", service)
+				adopted = existing as Node3D
+				break
 			if not existing.has_method("adopt_renewable_source") or existing.is_queued_for_deletion() \
 				or not str(existing.get("_renewable_site_id")).is_empty(): continue
 			var flag := "harvest_node:" + str(existing.get("_node_id"))
