@@ -306,7 +306,27 @@
         "cloth_mask_sha256": "83f558a839d9fc66ca72e222af4ae10fc99df1454c39c3980d194159c4a03c9a",
         "derivative_sha256": "b8e18b022c69abb51b3ccfeb99059405be6780b478ca80a12b3c80116680c6f5"
       }
+    },
+    "npc_identity_water_adair_v1": {
+      "enabled": false,
+      "expected_base_profile": "field_researcher",
+      "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+      "body_model_override": "res://assets/characters/npc_identity/water_adair/adair_lod0.glb",
+      "portrait": "res://assets/ui/portraits/npc_identity_water_adair_v1.png",
+      "review_status": "model_authored_pending_matching_portrait_and_production_visual_review",
+      "authoring_provenance": {
+        "source_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+        "source_model_sha256": "5b9164827d099f661de5d1ed6a4420ccd011a90005765977c43f06d1ef5487b3",
+        "candidate_model": "res://assets/characters/npc_identity/water_adair/adair_lod0.glb",
+        "candidate_model_sha256": "2774d769ec9f18aa124d0881976b0e4823c62820362369c5de68ee4b80082b4b",
+        "reference": "res://docs/art/reference/npc-identity/adair-front-agent-v1.png",
+        "reference_sha256": "6d70d5ffa9a43a5e73bdb4936c868da3b3714811b4fb79bfc638493e2a8468de",
+        "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+        "producer_sha256": "247a2ade78c51c39011da0ed10afdf421936d95499471dfdfedf50a6deffd15e",
+        "generation_task_id": "01a12ba9-8dea-7093-a169-b6a195cb1e2c",
+        "rig_task_id": "01a12bb2-f69f-75de-94e5-41dd21a2e47b"
+      }
     }
   },
-  "_comment": "P2-055 shared presentation pipeline only. Local/static scope; no save, network or gameplay effect. No regional identity mappings or new art are supplied. A named record requires expected_base_profile, expected_model, a dedicated portrait under res://assets/ui/portraits/, and body_albedo_override and/or body_emission_override. Existing model, rank palette, badges, names and gender remain unchanged. Keep disabled until authored derivatives, matching portraits and production visual review pass."
+  "_comment": "P2-055 paired presentation candidates; global and per-record gates remain OFF. Six installed-rig cloth variants are preserved. Adair has one identity-preserving model candidate with a dedicated portrait destination; incomplete pairs retain the installed body and portrait. Names, rank, height, gameplay and the shared base models are unchanged."
 }

@@ -24,7 +24,11 @@ func test_default_disabled_and_empty_records_preserve_base() -> void:
 	var records: Dictionary = config.get("variants", {})
 	var staged := ["p2055_water_adair", "p2055_water_iona", "p2055_water_orsen",
 		"p2055_water_otto", "p2055_water_trainer_fen", "p2055_water_trainer_evi"]
-	assert_eq(records.size(), staged.size())
+	assert_eq(records.size(), staged.size() + 1)
+	var model_candidate: Dictionary = records.get("npc_identity_water_adair_v1", {})
+	assert_eq(model_candidate.get("enabled"), false)
+	assert_eq(CHARACTER.config_for("field_researcher", "npc_identity_water_adair_v1"),
+		CHARACTER.config_for("field_researcher"))
 	for id: String in staged:
 		assert_true(records.has(id), id)
 		var record: Dictionary = records.get(id, {})
@@ -137,3 +141,95 @@ func test_ranked_portrait_keeps_the_existing_rank_palette_and_badges() -> void:
 	assert_eq(portrait.accessories, base.accessories)
 	assert_eq(portrait.emission_floor, base.emission_floor)
 	assert_eq(portrait, CHARACTER.with_appearance_variant(base, "officer_b", "fixture", settings))
+
+
+func _model_settings() -> Dictionary:
+	var record: Dictionary = VARIANTS.load_config().variants.npc_identity_water_adair_v1.duplicate(true)
+	record.enabled = true
+	# Test-only existing plate: the real dedicated output is deliberately absent
+	# until root authors it. This never changes the shipped candidate's gates.
+	record.portrait = "res://assets/ui/portraits/mira.png"
+	return {"enabled": true, "variants": {"npc_identity_water_adair_v1": record}}
+
+
+func test_model_pair_preserves_identity_dressing_and_clears_only_old_atlas_overrides() -> void:
+	var base := CHARACTER.config_for("field_researcher")
+	base.palette = {"*": "#ffffff"}
+	base.accessories = [{"name": "rank_badge"}]
+	base.body_albedo_override = "res://assets/characters/field_researcher/field_researcher_lod0_texture_0.png"
+	base.body_emission_override = base.body_albedo_override
+	var before := base.duplicate(true)
+	var settings := _model_settings()
+	var settings_before := settings.duplicate(true)
+	var id := "npc_identity_water_adair_v1"
+	var resolved := VARIANTS.resolve(base, "field_researcher", id, settings)
+	assert_eq(resolved.get("appearance_variant_id"), id)
+	assert_eq(resolved.model, settings.variants[id].body_model_override)
+	assert_eq(resolved.portrait, settings.variants[id].portrait)
+	for key: String in ["height", "clips", "animation_libraries", "palette", "accessories", "body_emission_enabled"]:
+		assert_eq(resolved.get(key), base.get(key), key)
+	assert_false(resolved.has("body_albedo_override"))
+	assert_false(resolved.has("body_emission_override"))
+	resolved.palette["*"] = "#000000"
+	resolved.accessories[0].name = "changed_copy"
+	assert_eq(base, before)
+	assert_eq(settings, settings_before)
+	# Both gates, original profile/model and complete pair remain mandatory.
+	for field: String in ["expected_model", "portrait", "body_model_override"]:
+		var invalid := _model_settings()
+		invalid.variants[id][field] = ""
+		assert_eq(VARIANTS.resolve(base, "field_researcher", id, invalid), base, field)
+	for path: String in ["res://assets/characters/npc_identity/missing.glb",
+			"res://scripts/characters/appearance_variants.gd",
+			"res://assets/characters/npc_identity/../field_researcher/field_researcher_lod0.glb"]:
+		var invalid := _model_settings()
+		invalid.variants[id].body_model_override = path
+		assert_eq(VARIANTS.resolve(base, "field_researcher", id, invalid), base, path)
+	var mixed_atlas := _model_settings()
+	mixed_atlas.variants[id].body_albedo_override = base.body_albedo_override
+	assert_eq(VARIANTS.resolve(base, "field_researcher", id, mixed_atlas), base)
+	assert_eq(VARIANTS.resolve(base, "wandering_trainer", id, _model_settings()), base)
+	var disabled := _model_settings()
+	disabled.variants[id].enabled = false
+	assert_eq(VARIANTS.resolve(base, "field_researcher", id, disabled), base)
+	disabled = _model_settings()
+	disabled.enabled = false
+	assert_eq(VARIANTS.resolve(base, "field_researcher", id, disabled), base)
+
+
+func test_off_model_portrait_authoring_uses_runtime_body_and_checks_provenance() -> void:
+	var id := "npc_identity_water_adair_v1"
+	var spec := {"config_key": "field_researcher", "appearance_variant": id, "author_appearance": true}
+	var settings := VARIANTS.load_config()
+	var authored := PORTRAITS.authoring_portrait_model_config(spec, settings)
+	assert_false(authored.is_empty())
+	var runtime := VARIANTS.resolve(CHARACTER.config_for("field_researcher"), "field_researcher", id, _model_settings())
+	# Only the test's stand-in plate differs; every model/dressing input matches.
+	authored.erase("portrait")
+	runtime.erase("portrait")
+	assert_eq(authored, runtime)
+	for field: String in ["source_model_sha256", "candidate_model_sha256", "reference_sha256"]:
+		var invalid := settings.duplicate(true)
+		invalid.variants[id].authoring_provenance[field] = "incorrect"
+		assert_eq(PORTRAITS.authoring_portrait_model_config(spec, invalid), {}, field)
+	var duplicate := settings.duplicate(true)
+	duplicate.variants.p2055_water_iona.portrait = duplicate.variants[id].portrait
+	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, duplicate), {})
+	var wrong_destination := settings.duplicate(true)
+	wrong_destination.variants[id].portrait = "res://assets/ui/portraits/maren.png"
+	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, wrong_destination), {})
+	settings.enabled = true
+	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, settings), {})
+
+
+func test_only_adair_is_bound_to_new_model_candidate() -> void:
+	var cast: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_characters.json"))
+	var bound: Array[String] = []
+	for actor: Dictionary in cast.npcs + cast.trainers:
+		if str(actor.get("appearance_variant_id", "")) == "npc_identity_water_adair_v1":
+			bound.append(str(actor.id))
+		if str(actor.id) == "water_iona":
+			assert_eq(actor.appearance_variant_id, "p2055_water_iona")
+			assert_eq(actor.body_profile, "field_researcher")
+			assert_eq(actor.model, "res://assets/characters/field_researcher/field_researcher_lod0.glb")
+	assert_eq(bound, ["water_adair"])

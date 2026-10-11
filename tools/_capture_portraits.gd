@@ -382,10 +382,12 @@ static func authoring_portrait_model_config(spec: Dictionary, variant_settings: 
 	var raw: Variant = records[variant_id]
 	if not raw is Dictionary: return {}
 	var record: Dictionary = raw
+	if config.get("enabled", true) != false or record.get("enabled", true) != false: return {}
+	if variant_id == "npc_identity_water_adair_v1":
+		return _authoring_model_candidate_config(spec, record, records)
 	# Only the six installed-rig Tidewake candidates belong to this authoring job.
 	if not variant_id in ["p2055_water_adair", "p2055_water_iona", "p2055_water_orsen",
 			"p2055_water_otto", "p2055_water_trainer_fen", "p2055_water_trainer_evi"]: return {}
-	if config.get("enabled", true) != false or record.get("enabled", true) != false: return {}
 	var profile := str(spec.get("config_key", ""))
 	if not profile in ["field_researcher", "wandering_trainer"] \
 			or profile != str(record.get("expected_base_profile", "")): return {}
@@ -395,16 +397,7 @@ static func authoring_portrait_model_config(spec: Dictionary, variant_settings: 
 			or model != "res://assets/characters/%s/%s_lod0.glb" % [profile, profile] \
 			or not ResourceLoader.exists(model) or not load(model) is PackedScene: return {}
 	var portrait := str(record.get("portrait", ""))
-	if portrait != "%s/%s.png" % [PORTRAIT_DIR, variant_id]: return {}
-	for plate: Dictionary in PORTRAITS:
-		if portrait == "%s/%s.png" % [PORTRAIT_DIR, str(plate.file)]: return {}
-	for painted: String in PAINTED:
-		if portrait == "%s/%s.png" % [PORTRAIT_DIR, painted]: return {}
-	for other_id: Variant in records:
-		var other: Variant = records[other_id]
-		if str(other_id) != variant_id and other is Dictionary and str(other.get("portrait", "")) == portrait: return {}
-	# A destination that exists must itself be an image, never an unrelated file.
-	if FileAccess.file_exists(portrait) and (not ResourceLoader.exists(portrait) or not load(portrait) is Texture2D): return {}
+	if not _authoring_destination_valid(portrait, variant_id, records): return {}
 	var provenance: Variant = record.get("authoring_provenance", {})
 	if not provenance is Dictionary or provenance.is_empty(): return {}
 	if str(provenance.get("source_model", "")) != model \
@@ -428,6 +421,43 @@ static func authoring_portrait_model_config(spec: Dictionary, variant_settings: 
 		if not emission is String or not emission.begins_with("res://") \
 				or not ResourceLoader.exists(emission) or not load(emission) is Texture2D: return {}
 		cfg["body_emission_override"] = emission
+	cfg["portrait"] = portrait
+	cfg["appearance_variant_id"] = variant_id
+	return cfg
+
+
+static func _authoring_destination_valid(portrait: String, variant_id: String, records: Dictionary) -> bool:
+	if portrait != "%s/%s.png" % [PORTRAIT_DIR, variant_id]: return false
+	for plate: Dictionary in PORTRAITS:
+		if portrait == "%s/%s.png" % [PORTRAIT_DIR, str(plate.file)]: return false
+	for painted: String in PAINTED:
+		if portrait == "%s/%s.png" % [PORTRAIT_DIR, painted]: return false
+	for other_id: Variant in records:
+		var other: Variant = records[other_id]
+		if str(other_id) != variant_id and other is Dictionary and str(other.get("portrait", "")) == portrait: return false
+	# A destination that exists must itself be an image, never an unrelated file.
+	return not FileAccess.file_exists(portrait) or (ResourceLoader.exists(portrait) and load(portrait) is Texture2D)
+
+
+static func _authoring_model_candidate_config(spec: Dictionary, record: Dictionary, records: Dictionary) -> Dictionary:
+	var variant_id := str(spec.get("appearance_variant", ""))
+	var profile := str(spec.get("config_key", ""))
+	if variant_id != "npc_identity_water_adair_v1" or profile != "field_researcher": return {}
+	var portrait := str(record.get("portrait", ""))
+	if not _authoring_destination_valid(portrait, variant_id, records): return {}
+	var base: Dictionary = VILLAGE_NPCS.model_config(spec)
+	var cfg := APPEARANCE_VARIANTS.body_model_config(base, profile, record)
+	if cfg.is_empty() or str(cfg.model) != "res://assets/characters/npc_identity/water_adair/adair_lod0.glb": return {}
+	var provenance: Variant = record.get("authoring_provenance", {})
+	if not provenance is Dictionary: return {}
+	if str(provenance.get("source_model", "")) != str(base.get("model", "")) \
+			or str(provenance.get("candidate_model", "")) != str(cfg.model): return {}
+	for field: String in ["source_model", "candidate_model", "reference"]:
+		var path := str(provenance.get(field, ""))
+		if not path.begins_with("res://") or not FileAccess.file_exists(path) \
+				or FileAccess.get_sha256(path) != str(provenance.get(field + "_sha256", "")): return {}
+	if str(provenance.get("generation_task_id", "")) != "01a12ba9-8dea-7093-a169-b6a195cb1e2c" \
+			or str(provenance.get("rig_task_id", "")) != "01a12bb2-f69f-75de-94e5-41dd21a2e47b": return {}
 	cfg["portrait"] = portrait
 	cfg["appearance_variant_id"] = variant_id
 	return cfg

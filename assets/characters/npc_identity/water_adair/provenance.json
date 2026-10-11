@@ -1,0 +1,73 @@
+{
+  "actor_id": "water_adair",
+  "status": "candidate_off_pending_portrait_and_native_judge",
+  "installed_identity": "Surveyor Adair; existing field_researcher body/face family; Brine Steps current surveyor",
+  "authorization": "Owner issue 572 comment 6110631002; RD-26 identity-preserving reference-backed refinement on existing Meshy licence, no purchase",
+  "reference_origin": "Original built-in imagegen full-body reference drafted and visually inspected by coordinator01a123c0; no board pixels traced or shipped",
+  "identity_notes": "Chestnut bob, dark glasses and warm light face retained; teal research coat, cream shirt, brown pouches, olive trousers and brown boots",
+  "provenance": {
+    "source_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+    "source_model_sha256": "5b9164827d099f661de5d1ed6a4420ccd011a90005765977c43f06d1ef5487b3",
+    "candidate_model": "res://assets/characters/npc_identity/water_adair/adair_lod0.glb",
+    "candidate_model_sha256": "2774d769ec9f18aa124d0881976b0e4823c62820362369c5de68ee4b80082b4b",
+    "reference": "res://docs/art/reference/npc-identity/adair-front-agent-v1.png",
+    "reference_sha256": "6d70d5ffa9a43a5e73bdb4936c868da3b3714811b4fb79bfc638493e2a8468de",
+    "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+    "producer_sha256": "247a2ade78c51c39011da0ed10afdf421936d95499471dfdfedf50a6deffd15e",
+    "generation_task_id": "01a12ba9-8dea-7093-a169-b6a195cb1e2c",
+    "rig_task_id": "01a12bb2-f69f-75de-94e5-41dd21a2e47b"
+  },
+  "generation": {
+    "endpoint": "/openapi/v1/image-to-3d",
+    "ai_model": "meshy-7.1",
+    "model_type": "standard",
+    "image_enhancement": false,
+    "pose_mode": "a-pose",
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 18000,
+    "target_formats": [
+      "glb"
+    ],
+    "consumed_credits": 30
+  },
+  "rigging": {
+    "endpoint": "/openapi/v1/rigging",
+    "input_task_id": "01a12ba9-8dea-7093-a169-b6a195cb1e2c",
+    "height_meters": 1.7,
+    "consumed_credits": 5
+  },
+  "preparation": {
+    "tool": "res://tools/art_pipeline/blender/animate_humanoid.py",
+    "blender": "4.2.9",
+    "mode": "unchanged full bake, no --only; applied scale and removed unskinned Icosphere using existing pipeline",
+    "clips": [
+      "idle",
+      "walk",
+      "sprint",
+      "jump",
+      "throw",
+      "chop",
+      "defeated"
+    ]
+  },
+  "cpu_structure": {
+    "triangles": 18658,
+    "joints": 24,
+    "skinned_rest_height_m": 1.6999998087060753,
+    "mesh_world_height_m": 1.7000000080890345,
+    "required_roles_present": true,
+    "invalid_joint_indices": 0,
+    "unweighted_vertices": 0
+  },
+  "open_proofs": [
+    "production portrait from exact candidate",
+    "native import/scale and deformation",
+    "matched in-world before/after code-blind judgement"
+  ],
+  "candidate_enabled": false,
+  "reference_prompt": "docs/art/reference/npc-identity/adair-front-agent-v1.prompt.txt"
+}

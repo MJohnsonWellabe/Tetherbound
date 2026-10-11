@@ -300,7 +300,7 @@
     },
     {
       "id": "water_adair",
-      "appearance_variant_id": "p2055_water_adair",
+      "appearance_variant_id": "npc_identity_water_adair_v1",
       "display_name": "Surveyor Adair",
       "island_id": "brine_steps",
       "role": "current_mapping",
