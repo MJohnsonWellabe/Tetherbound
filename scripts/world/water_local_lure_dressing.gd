@@ -1,6 +1,6 @@
 extends Node3D
 ## Persistent scenery beside the disposable local-chain sites. No gameplay state,
-## collision or interactables. Canonical site coordinates remain owned by the chains.
+## collision or interactables. Anchors come from the chains or named landmarks.
 const CONFIG := "res://data/config/water_local_lure_dressing.json"
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const MATERIALS := preload("res://scripts/world/imported_materials.gd")
@@ -13,14 +13,14 @@ func build(world: Node3D) -> void:
 	_built = true
 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
 	for spec: Dictionary in cfg.sites:
-		var anchor := world.get_node_or_null(NodePath(str(spec.anchor))) as Node3D
-		if anchor == null:
-			push_error("Missing lure anchor: " + str(spec.anchor))
+		var anchor := _site_position(world, spec)
+		if not anchor.is_finite():
+			push_error("Missing or unsupported lure anchor: " + str(spec.id))
 			continue
 		var site := Node3D.new()
 		site.name = str(spec.id)
 		add_child(site)
-		site.position = anchor.position
+		site.position = anchor
 		site.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 		for piece: Dictionary in spec.pieces:
 			var prop := _piece(piece)
@@ -35,9 +35,49 @@ func build(world: Node3D) -> void:
 			if piece.has("support"):
 				var support := site.get_node(NodePath(str(piece.support))) as Node3D
 				prop.position += support.position
+			elif bool(piece.get("footprint_grounding", false)):
+				if not _ground_footprint(world, prop):
+					push_error("Unsupported lure footprint: " + str(piece.id))
+					prop.free()
 			elif bool(piece.get("grounded", true)):
 				var at := prop.global_position
 				prop.position.y += float(world.call("ground_height_at", at.x, at.z)) - site.position.y
+
+static func _site_position(world: Node3D, spec: Dictionary) -> Vector3:
+	if not spec.has("landmark_id"):
+		var anchor := world.get_node_or_null(NodePath(str(spec.get("anchor", "")))) as Node3D
+		return anchor.position if anchor != null else Vector3.INF
+	var config: Dictionary = world.get("config")
+	for landmark: Dictionary in config.get("landmarks", []):
+		if str(landmark.get("id", "")) != str(spec.landmark_id):
+			continue
+		var raw: Array = landmark.get("position", [])
+		if raw.size() != 3:
+			return Vector3.INF
+		var ground := float(world.call("ground_height_at", float(raw[0]), float(raw[2])))
+		if not is_finite(ground) or ground <= 0.0:
+			return Vector3.INF
+		return Vector3(float(raw[0]), ground, float(raw[2]))
+	return Vector3.INF
+
+## Low ruin courses sit beside the trail, with their configured negative Y
+## burying the base. Use the lowest floor across the actual rotated footprint,
+## rather than a centre sample that leaves downhill corners in open air.
+static func _ground_footprint(world: Node3D, prop: Node3D) -> bool:
+	var box := BOUNDS.measure(prop)
+	var lowest := INF
+	for across in 5:
+		for depth in 3:
+			var local := Vector3(lerpf(box.position.x, box.end.x, float(across) / 4.0),
+				0.0, lerpf(box.position.z, box.end.z, float(depth) / 2.0))
+			var at := prop.to_global(local)
+			var ground := float(world.call("ground_height_at", at.x, at.z))
+			if not is_finite(ground) or ground <= 0.0:
+				return false
+			lowest = minf(lowest, ground)
+	# prop.position.y already contains the authored sink relative to its site.
+	prop.position.y += lowest - prop.get_parent_node_3d().global_position.y
+	return true
 
 static func _piece(spec: Dictionary) -> Node3D:
 	if spec.get("kind", "") == "post":
