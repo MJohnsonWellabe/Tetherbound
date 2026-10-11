@@ -41,6 +41,11 @@ func _bind_ending(tree: SceneTree, world: Node3D, game: Node, after: bool) -> bo
 				or not shutter_receipt(_hold, "defeated_warden", false):
 			return _fail("The actual player has not reached the preceding earned Hall arena boundary")
 	_supported_y = (_hold.call("marker", "warden_arena") as Vector3).y
+	# The player is inside the Hall at its Warden arena: restore the Hall
+	# segment's in-Hall state with its supported floor, or preparation routes
+	# a hurt party back down to a road camp and the supported-floor walk
+	# guard fails on the descent (F19#5 warden piece, 2026-10-11).
+	_in_hall = true
 	_input = INPUTS.new()
 	_input._tree = tree
 	_gui = CEREMONY.new()
