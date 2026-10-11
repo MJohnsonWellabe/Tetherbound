@@ -250,9 +250,16 @@ static func promote_regional_update(data_dir: String, stage_dir: String,
 		files: Array[String], patch: Dictionary, fail_after: int = -1) -> bool:
 	if files.is_empty() or data_dir.simplify_path() == stage_dir.simplify_path():
 		return false
-	var prior := read_manifest(data_dir)
-	if prior.is_empty() or not valid_region_selection(patch.get("regions")):
+	var original_text := FileAccess.get_file_as_string(manifest_path(data_dir))
+	var parsed_prior: Variant = JSON.parse_string(original_text)
+	if not parsed_prior is Dictionary or parsed_prior.is_empty() \
+			or not valid_region_selection(patch.get("regions")):
 		return false
+	var prior: Dictionary = parsed_prior
+	var original_fingerprint := _original_manifest_fingerprint(original_text, prior)
+	if original_fingerprint < 0:
+		return false
+	prior["config_fingerprint"] = original_fingerprint
 	var seen := {}
 	var hashes := {}
 	for name: String in files:
@@ -324,3 +331,40 @@ static func promote_regional_update(data_dir: String, stage_dir: String,
 		if DirAccess.rename_absolute(backup_dir.path_join(name), data_dir.path_join(name)) != OK:
 			push_error("Regional bake rollback could not restore previous region: " + name)
 	return false
+
+
+## Recover only the original top-level integral fingerprint: JSON's float
+## parser can round its decimal token before full-precision serialization.
+static func _original_manifest_fingerprint(text: String, prior: Dictionary) -> int:
+	const PROBE_KEY := "__regional_original_fingerprint_probe__"
+	if not prior.has("config_fingerprint") or prior.has(PROBE_KEY):
+		return -1
+	var field := RegEx.new()
+	var integral := RegEx.new()
+	if field.compile('("config_fingerprint")\\s*:\\s*') != OK \
+			or integral.compile('^(0|[1-9][0-9]*)(?:\\.0+)?\\s*(?=[,}])') != OK:
+		return -1
+	var found := false
+	var fingerprint := -1
+	for candidate: RegExMatch in field.search_all(text):
+		# Rename this one matched key only. The existing parser identifies its
+		# depth without treating nested receipt fingerprints as the base field.
+		var probe_text := text.substr(0, candidate.get_start(1)) \
+				+ JSON.stringify(PROBE_KEY) + text.substr(candidate.get_end(1))
+		var probe: Variant = JSON.parse_string(probe_text)
+		if not probe is Dictionary or not probe.has(PROBE_KEY):
+			continue
+		if found:
+			return -1
+		found = true
+		var token := integral.search(text.substr(candidate.get_end()))
+		if token == null:
+			return -1
+		var digits := token.get_string(1)
+		# Sixteen decimal digits fit int64; the bake format permits only 53 bits.
+		if digits.length() > 16:
+			return -1
+		fingerprint = digits.to_int()
+		if fingerprint > 0x1FFFFFFFFFFFFF:
+			return -1
+	return fingerprint
