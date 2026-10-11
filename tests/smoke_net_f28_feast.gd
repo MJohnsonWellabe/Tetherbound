@@ -78,8 +78,14 @@ func _run() -> void:
 	check(cooked.get("pressed") == true, "the Kitchen panel offers %s (%s)" % [RECIPE, str(cooked.get("labels", []))])
 	check(_ints(after_cook.get("items", {})) == {"berries": 0, "rootstone": 0, "attuned_ground": 0, FEAST: 1},
 		"#3 cooking spent exactly berries 4, rootstone 2, attuned_ground 1 and made one %s (%s; %s)" % [FEAST, str(after_cook.get("items")), str(cooked.get("message"))])
-	check((after_cook.get("receipts", []) as Array).filter(func(r: Variant) -> bool: return str(r).begins_with("craft:")).size() == 1,
-		"#3 the cook saved one craft receipt")
+	# Exactly one NEW craft receipt: the guest already holds the opening Home
+	# Key gift's craft:home_key_* receipts (home_key_action.gd) from before the cook.
+	var craft_receipts := func(state: Dictionary) -> Array:
+		return (state.get("receipts", []) as Array).filter(func(r: Variant) -> bool: return str(r).begins_with("craft:"))
+	var new_receipts: Array = (craft_receipts.call(after_cook) as Array).filter(
+		func(r: Variant) -> bool: return not (craft_receipts.call(before) as Array).has(r))
+	check(new_receipts.size() == 1 and (craft_receipts.call(after_cook) as Array).size() == (craft_receipts.call(before) as Array).size() + 1,
+		"#3 the cook saved one craft receipt (%s)" % str(new_receipts))
 
 	# Without its ingredients, the same recipe is refused and nothing moves.
 	await step(1, "f27_dismiss_modals", {})
