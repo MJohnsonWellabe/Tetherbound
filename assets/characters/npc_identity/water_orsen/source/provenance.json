@@ -1,7 +1,7 @@
 {
   "actor_id": "water_orsen",
   "default_enabled": false,
-  "status": "REGISTERED_OFF_SAMPLED_LOW_BODY_AND_PORTRAIT_PASS_WORLD_CLAUDE_PENDING",
+  "status": "OFF_BODY_PORTRAIT_AND_MATCHED_LOW_CAPTURE_CHECKS_PASS_CLAUDE_PENDING",
   "source_commit": "5d7038d99b8dbb5f8182617e970a09df5da2e86c",
   "installed_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
   "installed_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
@@ -220,5 +220,31 @@
     "coordinator_visual_review": "PASS scoped: identity, hat, face, coat and backpack matched corrected body; world and independent Claude judgment PENDING",
     "world": "PENDING",
     "claude_judgement": "PENDING"
+  },
+  "native_world_comparison": {
+    "captured_source": "9d1ccee9bdcf1db49ecbf57a8e668b9708c45fad",
+    "baseline": "9e39d0086ee88998b8295747fc19f6603fe714f7",
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "seed": 2042,
+    "frames_per_source": 1,
+    "stand_xz": [
+      851,
+      2988
+    ],
+    "npc_xz": [
+      850,
+      2983
+    ],
+    "heading_deg": 180,
+    "camera_pitch_deg": -10,
+    "camera_delta_m": 0.0,
+    "body_height_m": 1.78,
+    "sheet": "ralph/reports/VISUAL-PROOF/P2-055/orsen-before-after-Low.png",
+    "capture_guards": "PASS: original production-world floor, settling, visibility, camera, raster and complete body/portrait-pair guards unchanged",
+    "scope": "Process-local candidate preview only; shipping gates OFF. Native frame checks are not Claude visual acceptance or whole roster acceptance."
   }
 }
