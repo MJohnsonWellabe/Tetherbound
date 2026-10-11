@@ -739,6 +739,12 @@
    "next": "Next result in about 1 h"
   },
   {
+   "lane": "captures-art",
+   "doing": "New lane: rendering matched before/after sheets of Codex's four ready art fixes (Stormwood forest floor, Meadows village dressing, Tidewake Veilfall and terraces, Cloudreach summit and bell bridge) for the code-blind judge.",
+   "criteria": "F38\u2013F41 (P2-039, P2-006, P2-010/011, P2-022/053/024)",
+   "next": "First sheet in about 1 h"
+  },
+  {
    "lane": "Codex (visual)",
    "doing": "Biome visual fixes (F38\u2013F41) and the NPC identity Meshy batch; posts READY sheets to #572.",
    "criteria": "F38\u2013F41, P2-055",
