@@ -128,7 +128,7 @@
         14.2,
         8.0
       ],
-      "radius_m": 1.5
+      "radius_m": 2.1
     },
     {
       "id": "home_square_bucket",
@@ -1156,7 +1156,7 @@
       "yaw_deg": 0,
       "scale": 1,
       "grounded": true,
-      "grass_clear_radius_m": 1.5
+      "grass_clear_radius_m": 2.1
     },
     {
       "id": "home_square_bucket",
