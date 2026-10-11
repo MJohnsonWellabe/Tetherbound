@@ -13,7 +13,7 @@ extends SceneTree
 ##   skip occurs. Each piece body is the corresponding slice of
 ##   tests/helpers/cloudreach_live_segment.gd `_run_route()`, verbatim, run on
 ##   the F49 portal-arrival helper (tests/helpers/f49_cloudreach_chapter.gd);
-##   piece 07 continues through tests/helpers/earned_stormward_handoff.gd.
+##   piece 07 plays the F49 portal leg (tests/helpers/f49_portal_travel.gd).
 ##
 ## SEGMENTS (in order)
 ##   01_arrival_gate        arrival road, ruin, gathers, Aila, lower-cliffs candy
@@ -24,7 +24,8 @@ extends SceneTree
 ##   05_stronghold          counterweight route, upper anchors, Voss, summit
 ##                          feed, summit bivouac rest, extraction threshold
 ##   06_veyra_relay         Captain Veyra, creature relay phase, overlook, reward
-##   07_stormward_handoff   Stormward stairs and the physical Stormwood gate
+##   07_stormward_handoff   new-order handoff: Home Key, hang the Cloudreach relic,
+##                          Stormwood arch (the physical Stormward gate is retired)
 ##
 ## USAGE
 ##   godot --headless --path . --script tools/earned_saves/cloudreach_chain_runner.gd -- \
@@ -38,7 +39,6 @@ extends SceneTree
 const SAVE := preload("res://scripts/save/save_game.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const CHAPTER := preload("res://tests/helpers/f49_cloudreach_chapter.gd")
-const STORMWARD := preload("res://tests/helpers/earned_stormward_handoff.gd")
 const PORTAL := preload("res://tests/helpers/f49_portal_travel.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -357,13 +357,18 @@ func _run() -> void:
 	if failures.is_empty() and not bool(result.get("ok", false)):
 		failures.append(segment + ": helper returned ok=false at stage " + str(result.get("stage", "")))
 	if failures.is_empty() and segment == "07_stormward_handoff":
-		var stormward := STORMWARD.new()
-		var travel: Dictionary = await stormward.run(self, helper)
-		helper_summary["stormward"] = {"ok": bool(travel.get("ok", false)), "source": str(travel.get("source", ""))}
-		for line: Variant in travel.get("failures", []):
-			failures.append("stormward: " + str(line))
-		if failures.is_empty() and not bool(travel.get("ok", false)):
-			failures.append("stormward: handoff returned ok=false")
+		# New order (RD-17/F18#2): the physical Stormward gate is a retired
+		# crossing (biome_order.legacy_physical_crossings false) and refuses.
+		# The handoff is the F49 portal leg tests/helpers/f49_campaign_journey.gd
+		# plays: Home Key -> hang the held Cloudreach relic -> Stormwood arch.
+		var travel := PORTAL.new(self, game)
+		var ok: bool = await travel.home_key() and await travel.hang_relic("cloudreach") \
+			and await travel.enter("stormwood", "stormwood")
+		helper_summary["portal_leg"] = {"ok": ok, "failures": travel.failures.duplicate()}
+		for line: Variant in travel.failures:
+			failures.append("portal: " + str(line))
+		if failures.is_empty() and not ok:
+			failures.append("portal: Home Key -> Stormwood leg returned false")
 		if failures.is_empty():
 			for _i in LOAD_SETTLE_FRAMES: await physics_frame
 	if failures.is_empty():
