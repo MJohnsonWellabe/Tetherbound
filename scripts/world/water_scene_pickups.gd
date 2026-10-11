@@ -161,7 +161,9 @@ func refresh() -> void:
 		if not is_instance_valid(_nodes[id]):
 			_nodes.erase(id)
 		elif not wanted.has(id):
-			(_nodes[id] as Node).queue_free()
+			# A reused F32 mount node (see _spawn) belongs to that mount.
+			if (_nodes[id] as Node).get_parent() == self:
+				(_nodes[id] as Node).queue_free()
 			_nodes.erase(id)
 	for id: String in wanted:
 		if not _nodes.has(id) and not _errors.has(id):
@@ -220,6 +222,15 @@ func _spawn(row: Dictionary) -> void:
 		_errors[id] = "ItemDB registration missing"
 		return
 	var node: Node3D
+	if str(row.placement_kind) == "harvest" and str(row.get("claim_policy", "")) != "character_once":
+		# The F32 renewable mount owns the claim for a registered site. When it
+		# already holds this site's node, reuse it rather than spawn a second
+		# prompt at the same spot (a loaded save mounts before residency).
+		var mount := _world.get_node_or_null(^"RenewableResources")
+		var mounted: Node3D = mount.call("node_for", id) if mount != null and mount.has_method("node_for") else null
+		if is_instance_valid(mounted):
+			_nodes[id] = mounted
+			return
 	if str(row.placement_kind) == "harvest":
 		var personal_patch := str(row.get("claim_policy", "")) == "character_once"
 		node = PersonalHarvest.new() if personal_patch else WaterHarvest.new()
@@ -228,7 +239,12 @@ func _spawn(row: Dictionary) -> void:
 		add_child(node)
 		node.global_position = spot
 		var model: Array = RESOURCE_MODELS.get(str(row.item_id), [CRATE, 0.35])
-		if personal_patch or not _setup_ordinary_harvest(node, row, spot, definition, model):
+		var renewable := not personal_patch and _setup_ordinary_harvest(node, row, spot, definition, model)
+		if renewable:
+			var mount := _world.get_node_or_null(^"RenewableResources")
+			if mount != null and mount.has_method("adopt_resident"):
+				mount.call("adopt_resident", id, node)
+		if not renewable:
 			node.call("setup", {"order": id, "realm": "water", "item": row.item_id, "amount": int(row.get("yield", 1)),
 				"at": [spot.x, spot.y, spot.z], "label": "Gather " + str(definition.name), "model": model[0], "model_scale": model[1]})
 	else:

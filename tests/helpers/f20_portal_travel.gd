@@ -58,11 +58,11 @@ func _portal_result(result: Dictionary) -> void:
 		and result.get("world_instance_id") == game.world.reward_delivery_namespace:
 		_home_result = result.duplicate(true)
 
-func activate(prompt: Node3D) -> bool:
+func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 	# A lesson may be due on this character's first walk past its teacher.
 	# Read/continue its real card; retain the original navigation budget and
 	# exact grounded/provider checks after ordinary world input returns.
-	return await _with_navigation_lessons(_activate_world.bind(prompt))
+	return await _with_navigation_lessons(_activate_world.bind(prompt, via))
 
 func _with_navigation_lessons(navigate: Callable) -> bool:
 	if _lesson_active or _lesson_busy: return _fail("F20 navigation re-entered its active lesson reader")
@@ -276,6 +276,37 @@ func _walk_to_grandpa(prompt: Node3D) -> bool:
 func activate_endgame_rematch(prompt: Node3D) -> bool:
 	return await _with_navigation_lessons(_activate_endgame_rematch.bind(prompt))
 
+var _route_error := ""
+
+## Ordinary walk headings from the village (or its tournament lawn) to a
+## target beyond it on the authored Lower Meadows trail. Empty when the target
+## is in the village, where the original direct walk applies.
+func _authored_route_to(target: Vector3) -> Array[Vector3]:
+	_route_error = ""
+	var headings: Array[Vector3] = []
+	var terrain: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+	if not terrain is Dictionary or not terrain.get("paths") is Dictionary or not terrain.get("trail") is Dictionary:
+		_route_error = "F20 rematch travel lacks the authored roads"; return headings
+	var lawn: Array = []
+	for route: Variant in terrain.paths.get("approaches", []):
+		if route is Dictionary and route.get("id") == "village_tournament_lawn": lawn = route.get("points", [])
+	var trail: Array = []
+	for band: Variant in terrain.trail.get("bands", []):
+		if band is Dictionary and band.get("id") == "band1_lower_meadows": trail = band.get("points", [])
+	if lawn.size() != 4 or trail.size() < 2:
+		_route_error = "F20 rematch travel lacks the authored lawn or Lower Meadows trail"; return headings
+	var trail_start := Vector2(float(trail[0][0]), float(trail[0][1]))
+	if target.z <= trail_start.y + 20.0: return headings
+	var y := _player.global_position.y
+	# Off the lawn by its east edge, back to main street (lawn points 2 then 1).
+	if _player.global_position.x >= float(lawn[0][0]) and _player.global_position.z > float(lawn[0][1]) + 2.0:
+		headings.append(Vector3(float(lawn[2][0]), y, float(lawn[2][1])))
+		headings.append(Vector3(float(lawn[1][0]), y, float(lawn[1][1])))
+	for point: Variant in trail:
+		if float(point[1]) >= target.z: break
+		headings.append(Vector3(float(point[0]), y, float(point[1])))
+	return headings
+
 func _activate_endgame_rematch(prompt: Node3D) -> bool:
 	if prompt == null or prompt.get("label") != "Endgame rematch" or not _bind():
 		return _fail("F20 rematch requires its actual enabled world provider")
@@ -284,7 +315,14 @@ func _activate_endgame_rematch(prompt: Node3D) -> bool:
 	var recoveries_before := int(_player.get("_unstick_count"))
 	var distance := _player.global_position.distance_to(prompt.global_position)
 	var nav := NAV.new(tree, _player, _rig, _stick)
-	var reached: bool = await nav.walk_to(prompt.global_position, maxi(1200, int(distance * 65.0)), 0.6)
+	# The nearest leader (the South Bridge grunt) is 1.27 km south of the
+	# board. The straight line from the tournament lawn pins the capsule south
+	# of the board; walk the authored lawn, main street and Lower Meadows trail
+	# as a player does. Headings share the original budget and watchdog.
+	var headings := _authored_route_to(prompt.global_position)
+	if headings.is_empty() and not _route_error.is_empty(): return _fail(_route_error)
+	print("F20 REMATCH authored route headings=", headings.size(), " target=", prompt.global_position)
+	var reached: bool = await nav.walk_to_guided(prompt.global_position, maxi(1200, int(distance * 65.0)), 0.6, headings)
 	_stick(0, 0)
 	if not reached: return _fail("F20 ordinary capsule walk failed to endgame rematch")
 	for frame in 8: await tree.physics_frame
@@ -469,7 +507,7 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 			_lesson_replay_identity = {"character_id": character_id, "party_uids": witness.party_uids.duplicate()}
 	_lesson_busy = false
 
-func _activate_world(prompt: Node3D) -> bool:
+func _activate_world(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 	var bounty: Node = game.session.get_node_or_null("FoundationComposition/BountyInteraction")
 	if bounty != null and bounty.get("_prompt") == prompt:
 		return await _activate_bounty_via_road(prompt)
@@ -486,7 +524,7 @@ func _activate_world(prompt: Node3D) -> bool:
 			_stick(0, 0)
 			if not arrived or int(_player.get("_unstick_count")) != recoveries_before:
 				return _fail("F20 ordinary capsule walk failed to the authored Hall arch approach")
-	var passed := await super.activate(prompt)
+	var passed := await super.activate(prompt, via)
 	if not passed and tree.current_scene != null:
 		var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")
 		var owner := INPUT_OWNER.current(tree)

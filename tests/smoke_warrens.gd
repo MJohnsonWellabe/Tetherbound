@@ -660,6 +660,14 @@ func _run_guardian_attacks() -> void:
 		_fail("guardian attacks: the real director could not adopt the declared Terrapup fixture")
 		_report_guardian_attacks()
 		return
+	# The real starter ceremony also enrols the creature in Game.party;
+	# adopt_starter alone only stands the body up. The canonical wild start
+	# (encounter_director.gd _canonical_wild_start_state) admits only an ally
+	# the host's character state owns, so the fixture enrols it the same way
+	# tools/_capture_vfx_moments.gd does.
+	var fixture_party: RefCounted = game.get("party")
+	if fixture_party != null and (fixture_party.call("members") as Array).is_empty():
+		fixture_party.call("add", starter)
 	starter.call("set_level", 12, _progression_config())
 	starter.set("hp", starter.get("max_hp"))
 	var camera_diagnose := "--guardian-camera-diagnose" in OS.get_cmdline_user_args()
@@ -777,6 +785,16 @@ func _run_guardian_attacks() -> void:
 		if not by_player:
 			observed.enemy_misses = int(observed.enemy_misses) + 1
 	)
+	# A production wild fight's enemy strikes are resolved by the director's
+	# host simulation (shared_wild_host_fight.gd), which reports a miss on its
+	# own node; a hit reaches this manager through apply_host_enemy_hit. Count
+	# the authority's misses too, so the witness observes the real resolver.
+	var authority: Node = director.call("_shared_host_fight", str(director.call("_local_bound_encounter_id")))
+	if authority != null and authority != manager and authority.has_signal("attack_missed"):
+		authority.connect("attack_missed", func(by_player: bool) -> void:
+			if not by_player:
+				observed.enemy_misses = int(observed.enemy_misses) + 1
+		)
 	manager.connect("hit_landed", func(on_enemy: bool, _amount: float) -> void:
 		if not on_enemy:
 			observed.enemy_hits = int(observed.enemy_hits) + 1

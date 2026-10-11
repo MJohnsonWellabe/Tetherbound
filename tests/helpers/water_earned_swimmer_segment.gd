@@ -50,6 +50,7 @@ func replace_swimmer(tree: SceneTree, world: Node, game: Node,
 		return _result()
 	var newcomer: RefCounted = wild.get("instance")
 	var result: Dictionary = await replace_existing(tree, world, game, player, rig, wild, outgoing_index)
+	newcomer = captured
 	if bool(result.get("passed", false)) and _game.pending_catch == null \
 			and _game.party.members().has(newcomer) and _game.party.size() == 5:
 		_caught_swimmer = newcomer
