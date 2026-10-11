@@ -370,7 +370,7 @@ def anatomical_wing_poses(name, bones, roles):
                 # Z-normal fans. Do not rotate feather joints into the torso.
                 # Their different chest/beak extents need different pitches
                 # to put body mass close to the supporting wing, not above it.
-                flank_pitch = {'duskhush': 55, 'reedwing': 40}.get(name, 0)
+                flank_pitch = {'pipwing': 45, 'duskhush': 55, 'reedwing': 40}.get(name, 0)
                 frame['pivot_rotation_deg'] = ([flank_pitch * amount, 0, 90 * amount] if flank_fans
                                                else [75 * amount, 0, 90 * amount])
                 pose.update(neck=[(5 if flank_fans else -15) * amount, 0, 0],
