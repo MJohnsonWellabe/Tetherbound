@@ -33,3 +33,5 @@ Rule (owner 3A): a candidate is switched on only if it is clearly better AND def
 
 PASS list sent to the captures lane for the switch-on commit (enabled=true + placeholder merged into data/creatures/species.json): meadowhart, mirejaw, tuskroot.
 Every candidate creature stands taller than the 1.80 m trainer, with feet on the stage. Stage frames can't settle pose gates (hurt/faint/swim/fly/ride, F36#1).
+
+**Switch-on, 12:30 PM CT (tb/ev-coordinator 4c060802):** Mirejaw and Tuskroot enabled. The Water roster's Mirejaw presentation now points at the same mesh. Meadowhart is held: its native model fails test_meadowhart_riding_visual_repair_0912 (no skinned MeadowhartBareBody for the riding tack fit), so it's back with Codex.
