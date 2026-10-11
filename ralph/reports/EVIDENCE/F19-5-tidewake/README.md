@@ -76,3 +76,20 @@ Verification (commit 51f85d43):
 - smoke_warrens --guardian-attacks: FAIL "the production aggressive engage route did not
   open combat" both with the fix AND on main's combat files (baseline run) - pre-existing,
   not caused by this change; no admission refusal is logged for the guardian.
+
+## Attempt 2 (support stage) and current 03 Brine state
+In the real chain (L20 terrapup lead) attempt 1 still refused Tovin: every candidate failed
+at `support_missing` (render corners overhanging the downhill steps by more than the fixed
++/-1 m probe; including TrainerCreature_water_trainer_tovin_1). Attempt 2: a rendered
+corner may sit up to REALM_SEAT_MAX_STEP_M + its horizontal distance from the seat (45 deg
+walkable slope) above real ground (walkable-normal ray hit, or the existing Terrain3D sphere
+fallback stepped down to that depth). The seat centre keeps the step height alone.
+Verification with attempt 2: probe seeds 1/2/3 PASS; combat/admission unit tests 292 tests,
+1982 assertions, 0 failed; net smoke shared_wild_fight ALL CHECKS PASSED.
+
+03 Brine with attempt 2: admission succeeds, the Tovin battle runs, the first opponent
+(water_cannonback) is defeated, then the helper's 180 s fight bound expires with
+water_riverdrake at 250 HP ("Tovin combat exceeded 180 seconds"). Belt: five L20 ground
+types (terrapup lead, 0.8x vs water). The helper's own note (water_brine_segment.gd:82)
+says a terrapup lead needs ~160-180 s even at L55. This is fight-duration vs. the generated
+belt, not admission. Open; coordinator decision requested.
