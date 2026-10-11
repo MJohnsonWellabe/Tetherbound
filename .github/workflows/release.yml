@@ -1,8 +1,8 @@
 name: Release
 
-# Builds, verifies and publishes the rolling Windows download on every main
-# push after the PR merge gate. Manual dispatch remains a recovery path; there
-# the `publish` input explicitly decides whether to replace the download.
+# Builds and publishes only after CI succeeds on this repository's main.
+# Every checkout, release asset and rolling tag uses that CI run's exact SHA.
+# Re-run CI on main for recovery; there is no direct publishing bypass.
 #
 # The CI workflow already exports an .exe, but it uploads a GitHub *artifact* —
 # which needs a login to download and expires after 14 days. That is fine for
@@ -29,40 +29,27 @@ name: Release
 # should be the real thing.
 
 on:
-  push:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
     branches: [main]
-  workflow_dispatch:
-    inputs:
-      publish:
-        description: Publish the rolling release and Pages site
-        required: false
-        type: boolean
-        default: false
-      ship_steam_runtime:
-        description: Build with the pinned GodotSteam templates and ship steam_api64.dll (needs owner sign-off on Steamworks redistribution)
-        required: false
-        type: boolean
-        default: false
 
 # Needed to create releases and to publish the Pages site.
 permissions:
+  actions: read
   contents: write
   pages: write
   id-token: write
 
 env:
   GODOT_VERSION: 4.7-stable
+  RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
   # Steam invitations need the GodotSteam runtime, and a GodotSteam build does
   # not start without steam_api64.dll beside it. Both therefore switch
   # together, and OFF by default: redistributing the Steamworks library is the
-  # owner's decision. Turn on per run with the `ship_steam_runtime` dispatch
-  # input, or for every main build with the repository variable
-  # TETHERBOUND_SHIP_STEAM_RUNTIME=true. The variable wins: while it is true,
-  # every build ships the runtime even if a dispatch leaves the input off.
-  # Off, the export is exactly the stock path below. No automated check
-  # launches the Steam exe on Windows; that belongs to the owner's sign-off.
-  # Evidence: ralph/reports/INVITE-COOP.
-  SHIP_STEAM_RUNTIME: ${{ (github.event_name == 'workflow_dispatch' && inputs.ship_steam_runtime) || vars.TETHERBOUND_SHIP_STEAM_RUNTIME == 'true' }}
+  # owner's decision, controlled by TETHERBOUND_SHIP_STEAM_RUNTIME=true.
+  # Otherwise the export uses stock templates as before.
+  SHIP_STEAM_RUNTIME: ${{ vars.TETHERBOUND_SHIP_STEAM_RUNTIME == 'true' }}
 
 concurrency:
   # QUEUE, do not cancel. `cancel-in-progress: true` sounds right for "a
@@ -83,10 +70,19 @@ concurrency:
 
 jobs:
   build:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.event != 'pull_request'
+    outputs:
+      publish: ${{ steps.publish-head.outputs.publish }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_SHA }}
 
       - name: Cache Godot editor and export templates
         id: cache-godot
@@ -197,17 +193,34 @@ jobs:
           cd ../..
           unzip -l Tetherbound-windows.zip
 
+      - name: Keep an obsolete CI completion from replacing the download
+        id: publish-head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          current_main=$(gh api "repos/$REPO/commits/main" --jq '.sha')
+          latest_ci=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?head_sha=$RELEASE_SHA&branch=main&per_page=30" \
+            --jq '[.workflow_runs[] | select(.event != "pull_request")] | sort_by(.run_started_at) | last | [.status, .conclusion] | join(":")')
+          if [ "$current_main" = "$RELEASE_SHA" ] && [ "$latest_ci" = "completed:success" ]; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            echo "This CI completion no longer represents green main; keeping the existing download."
+          fi
+
       - name: Publish the rolling latest release
-        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish == true)
+        if: steps.publish-head.outputs.publish == 'true'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
           # Used when the rolling release does not exist yet. Existing releases
           # still need the explicit ref move/read-back step below.
-          target_commitish: ${{ github.sha }}
+          target_commitish: ${{ env.RELEASE_SHA }}
           name: Tetherbound — latest build
           body: |
-            Automatic build of `main`, commit ${{ github.sha }}.
+            Automatic build of passing `main`, commit ${{ env.RELEASE_SHA }}.
 
             **Windows / ROG Ally.** Unzip and run `Tetherbound.exe` — keep the
             `.pck` and every `.dll` (including `steam_api64.dll` when present)
@@ -233,17 +246,19 @@ jobs:
           make_latest: true
 
       - name: Move and verify the rolling latest tag
-        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish == true)
+        if: steps.publish-head.outputs.publish == 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node tools/release_latest_tag.mjs
 
   pages:
     needs: build
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish == true)
+    if: needs.build.outputs.publish == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_SHA }}
 
       - name: Generate the site's patch notes
         # archive/ralph/DONE.md is append-only, newest entry first, one `## <id> —

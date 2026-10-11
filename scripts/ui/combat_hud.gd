@@ -593,11 +593,15 @@ func _process(delta: float) -> void:
 	_draw_enemy()
 	_draw_ally()
 	_draw_grid()
+	_ultimate_readout.show()
+	_ultimate_meter.show()
 	if is_instance_valid(_system_overlay):
 		_system_overlay.hide()
 		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
-		if active != null and _system_overlay.call("refresh", str(active.get("uid")), not Input.get_connected_joypads().is_empty()) == true:
+		if active != null and _system_overlay.call("refresh", str(active.get("uid")), INPUT_GLYPH.using_gamepad()) == true:
 			_grid_panel.hide()
+			_ultimate_readout.hide()
+			_ultimate_meter.hide()
 			if _tether_meter != null: _tether_meter.hide()
 			_layout_system_hints()
 	_update_capture_reticle()

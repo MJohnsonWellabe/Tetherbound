@@ -53,9 +53,9 @@
   "retired_crossing_reason": "This crossing is retired. Use the Crossing Hall portals.",
   "arches": [
     {"id": "home", "biome": "meadows", "key_item": "", "kind": "live", "entry_id": "meadows_entry", "recommended_level": 3},
-    {"id": "tidewake", "biome": "tidewake", "key_item": "tidewake_portal_key", "kind": "live", "entry_id": "water_arrival_from_stormwood", "recommended_level": 20},
-    {"id": "cloudreach", "biome": "cloudreach", "key_item": "cloudreach_portal_key", "kind": "live", "entry_id": "cloudreach_arrival_from_meadows", "recommended_level": 31},
-    {"id": "stormwood", "biome": "stormwood", "key_item": "stormwood_portal_key", "kind": "live", "entry_id": "stormwood_arrival_from_cloudreach", "recommended_level": 42},
+    {"id": "tidewake", "biome": "tidewake", "key_item": "tidewake_portal_key", "kind": "live", "entry_id": "water_arrival_from_stormwood", "recommended_level": 20, "departure_from": "meadows", "key_source_hint": "Defeat Warden Aldis in Meadows Hall."},
+    {"id": "cloudreach", "biome": "cloudreach", "key_item": "cloudreach_portal_key", "kind": "live", "entry_id": "cloudreach_arrival_from_meadows", "recommended_level": 31, "departure_from": "water", "key_source_hint": "Defeat Nerissa at Veilfall, then settle the Guardian's offer."},
+    {"id": "stormwood", "biome": "stormwood", "key_item": "stormwood_portal_key", "kind": "live", "entry_id": "stormwood_arrival_from_cloudreach", "recommended_level": 42, "departure_from": "cloudreach", "key_source_hint": "Defeat Captain Veyra at the Storm Anchor."},
     {"id": "biome5", "biome": "biome5", "key_item": "fifth_portal_key", "kind": "sealed", "entry_id": ""},
     {"id": "biome6", "biome": "biome6", "key_item": "", "kind": "sealed", "entry_id": ""},
     {"id": "biome7", "biome": "biome7", "key_item": "", "kind": "sealed", "entry_id": ""},
