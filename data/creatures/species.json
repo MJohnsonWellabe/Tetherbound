@@ -33,6 +33,11 @@
         "utility": "shove",
         "ultimate": "ultimate_stormursa"
       },
+      "best_creature": {
+        "id": "staticub_edge",
+        "kind": "survivability",
+        "value": 0.12
+      },
       "learnset_id": "stormursa",
       "_comment": "RD-28: Staticub evolves at its L50 feast. Production species uses the consolidated native Stormursa mesh and its unique grounding ultimate.",
       "learnset": "stormursa",
@@ -1822,6 +1827,7 @@
     "staticub": {
       "display_name": "Staticub",
       "type": "electric",
+      "evolves_into": "stormursa",
       "base_hp": 95.0,
       "base_attack": 24.0,
       "base_defence": 18.0,
