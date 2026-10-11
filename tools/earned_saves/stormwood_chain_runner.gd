@@ -109,6 +109,7 @@ func _run() -> void:
 		_handoff_check()
 		if failures.is_empty():
 			_watch_weather.call_deferred()
+			if segment == "arrival_prefix": _watch_seam.call_deferred()
 			await _play()
 	if failures.is_empty():
 		var after := _state()
@@ -231,6 +232,33 @@ func _watch_weather() -> void:
 			str(player.global_position) if player != null else "-"])
 		last_sim = sim
 		last_ms = Time.get_ticks_msec()
+
+
+## Diagnostic only: the first charged seam's prompt and what moves the player
+## near it, a few times a second while within 8 m.
+func _watch_seam() -> void:
+	var last_ms := 0
+	while true:
+		await physics_frame
+		if current_scene == null or Time.get_ticks_msec() - last_ms < 250: continue
+		var seam := current_scene.get_node_or_null("StormwoodHarvests/stormwood_harvest_cinder_verge_018") as Node3D
+		var player := current_scene.get_node_or_null("Player") as CharacterBody3D
+		if player == null: continue
+		var at := Vector3(-762.0, 27.3, 893.0) if seam == null else seam.global_position
+		if player.global_position.distance_to(at) > 8.0: continue
+		last_ms = Time.get_ticks_msec()
+		var prompt := seam.get_node_or_null("Interactable") if seam != null else null
+		var near: Array = []
+		for body: Node3D in current_scene.find_children("*", "CharacterBody3D", true, false):
+			if body != player and body.global_position.distance_to(player.global_position) < 3.0:
+				near.append("%s@%.2f" % [body.get_path(), body.global_position.distance_to(player.global_position)])
+		var surge := current_scene.get_node_or_null("StormwoodSurge")
+		print("STORMWOOD CHAIN seam valid=%s visible=%s taken=%s enabled=%s offer=%s phase=%s player=%s vel=%s floor=%s near=%s fighting=%s" % [
+			seam != null, seam.visible if seam != null else false, str(seam.get("_taken")) if seam != null else "-",
+			str(prompt.get("enabled")) if prompt != null else "-",
+			str(prompt.call("interaction_offer", player.global_position)) if prompt != null else "-",
+			str(surge.get("phase")) if surge != null else "-", str(player.global_position), str(player.velocity),
+			player.is_on_floor(), str(near), str(current_scene.get_node("CombatManager").call("is_fighting")) if current_scene.has_node("CombatManager") else "-"])
 
 
 func _state() -> Dictionary:
