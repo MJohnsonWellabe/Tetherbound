@@ -175,6 +175,14 @@ func _chapter_departure(game: Object, progression: RefCounted) -> Dictionary:
 	if player == null: return {}
 	var inventory: RefCounted = player.get("inventory")
 	var personal: Dictionary = player.get("redesign_character")
+	# Ending acknowledgements belong to this stable character, even in a
+	# different host world. Retained keys are optional travel after credits.
+	var character := str(player.get("character_id"))
+	var receipts: Array = personal.get("transaction_receipts", [])
+	if not character.is_empty() \
+			and receipts.has("craft:regional_ending_homecoming_seen:" + character) \
+			and receipts.has("craft:regional_ending_regional_credits_seen:" + character):
+		return {}
 	var config: Dictionary = preload("res://scripts/data/redesign_data.gd").json_view("res://data/config/portals.json")
 	var arches: Array = config.get("arches", []).duplicate()
 	arches.reverse()
