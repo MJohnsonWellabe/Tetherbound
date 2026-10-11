@@ -170,11 +170,32 @@ func _run() -> void:
 			"expected_spec_empty": expected_spec.is_empty(),
 			"world_message": str(game.get("_pending_world_message")), "prompt_activated": activations[0]}
 		# Diagnostic only (after the failure is recorded): which step refused.
+		for connection: Dictionary in prompt.get_signal_connection_list("activated"):
+			var args: Array = (connection.callable as Callable).get_bound_arguments()
+			if str((connection.callable as Callable).get_method()) == "challenge" and not args.is_empty() and args[0] is Node:
+				var bound_ally: RefCounted = director.get("_ally")
+				receipt.admission.bound_service_challenge = args[0].call("challenge", str(game.local.character_id), witness, tier, source,
+					str(bound_ally.get("uid")) if bound_ally != null else "")
+				receipt.admission.after_bound_call_active = director.call("trainer_battle_active")
 		var rematches: Node = game.get("session").get_node_or_null(^"FoundationComposition/Rematches")
 		if rematches != null:
 			receipt.admission.realm_director_found = rematches.call("_director",
 				game.get("session").call("_portal_world_node", game.current_realm)) != null
+			var hc: Variant = rematches.call("host_context", str(game.local.character_id), witness, source, director)
+			receipt.admission.host_context = {"type": typeof(hc), "in_range": hc.get("in_range") if hc is Dictionary else null,
+				"empty": hc.is_empty() if hc is Dictionary else true}
+			receipt.admission.director_script = str(director.get_script().resource_path)
+			var writer: Variant = director.get("_rematch_outcome_writer")
+			receipt.admission.outcome_writer_valid = writer is Callable and (writer as Callable).is_valid()
+			var se: Variant = rematches.call("start_encounter", str(game.local.character_id), expected_spec, source, "", director)
+			receipt.admission.start_encounter = {"type": typeof(se), "value": se}
+		var bound: Array = []
+		for connection: Dictionary in prompt.get_signal_connection_list("activated"):
+			var callable: Callable = connection.callable
+			bound.append({"method": str(callable.get_method()), "args": str(callable.get_bound_arguments())})
+		receipt.admission.prompt_bindings = bound
 		var services := get_nodes_in_group("f44_rematch_services")
+		receipt.admission.services = services.map(func(n: Node) -> String: return "%s valid=%s" % [str(n.get_path()), str(is_instance_valid(n))])
 		var ally: RefCounted = director.get("_ally")
 		if not services.is_empty():
 			receipt.admission.direct_challenge = services[0].call("challenge", str(game.local.character_id), witness, tier, source,
