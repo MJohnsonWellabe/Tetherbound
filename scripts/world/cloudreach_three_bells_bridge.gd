@@ -37,13 +37,27 @@ func build(materials: Dictionary) -> void:
 	_add_box("ThreeBellCrownBeam", Vector3(0.0, 10.0, 0.0), Vector3(22.0, 1.15, 1.35), wood, "bell_frame")
 	for strap_x: float in [-9.6, -5.4, 0.0, 5.4, 9.6]:
 		_add_box("CrownIronStrap", Vector3(strap_x, 10.0, 0.0), Vector3(0.24, 1.3, 1.48), bronze, "frame_binding")
-	for light_x: float in [-5.4, 5.4]:
+	# Keep two lights, but light the bell exteriors from opposite approaches.
+	# The former z=0.8 positions sat behind the flared lips on both sides.
+	var lamp_cfg := cfg.duplicate()
+	lamp_cfg["signal_colour"] = cfg.get("bell_light_colour", "#ffc56f")
+	for raw: Array in cfg.get("bell_light_positions", [[-2.7, 8.2, 3.2], [2.7, 8.2, -3.2]]):
+		var lamp_at := Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+		var arm_y := float(cfg.get("bell_lantern_arm_height_m", 10.0))
+		var arm_end := Vector3(lamp_at.x, arm_y, lamp_at.z)
+		_add_cylinder_between("BellLanternArm", Vector3(lamp_at.x, arm_y, 0.0), arm_end,
+			float(cfg.get("bell_lantern_arm_radius_m", 0.055)), bronze, "bell_lantern_support")
+		var cap_top := float(cfg.get("signal_lens_height_m", 0.44)) * 0.5 \
+			+ float(cfg.get("signal_housing_height_m", 0.10))
+		_add_cylinder_between("BellLanternHanger", arm_end, lamp_at + Vector3.UP * cap_top,
+			float(cfg.get("bell_lantern_hanger_radius_m", 0.025)), bronze, "bell_lantern_support")
+		_add_beacon("BellLantern", lamp_at, bronze, lamp_cfg, "bell_lantern")
 		var bell_light := OmniLight3D.new()
 		bell_light.name = "BellWarmLight"
-		bell_light.position = Vector3(light_x, 8.2, 0.8)
-		bell_light.light_color = Color("#ffc56f")
-		bell_light.light_energy = 2.8
-		bell_light.omni_range = 14.0
+		bell_light.position = lamp_at
+		bell_light.light_color = Color(str(cfg.get("bell_light_colour", "#ffc56f")))
+		bell_light.light_energy = float(cfg.get("bell_light_energy", 2.8))
+		bell_light.omni_range = float(cfg.get("bell_light_range_m", 14.0))
 		bell_light.shadow_enabled = false
 		bell_light.set_meta("three_bells_role", "bell_light")
 		add_child(bell_light)
@@ -116,7 +130,8 @@ func _add_banner(label: String, at: Vector3, side: float, cfg: Dictionary) -> vo
 	add_child(flag)
 
 
-func _add_beacon(label: String, at: Vector3, bronze: Material, cfg: Dictionary) -> void:
+func _add_beacon(label: String, at: Vector3, bronze: Material, cfg: Dictionary,
+		role: String = "bridge_signal") -> void:
 	# A luminous lens belongs to a crafted lantern, rather than an unsupported
 	# sphere intersecting the beam. All parts are visual and reuse bell bronze.
 	var lantern := Node3D.new()
@@ -151,7 +166,7 @@ func _add_beacon(label: String, at: Vector3, bronze: Material, cfg: Dictionary) 
 	mesh.height = height
 	orb.mesh = mesh
 	orb.material_override = material
-	orb.set_meta("three_bells_role", "bridge_signal")
+	orb.set_meta("three_bells_role", role)
 	lantern.add_child(orb)
 
 
