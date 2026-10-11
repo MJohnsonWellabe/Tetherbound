@@ -3,6 +3,7 @@
   "enabled": true,
   "scope": "peer-local presentation; no durable state, RPC, transaction or save schema",
   "provenance": "Installed Quaternius Medieval Village/Fantasy Props/Stylized Nature. Local Bush_Common instances reuse the Meadows vegetation layer leaf texture and tint; duplicated banner tint. No acquisition/generation.",
+  "_comment_p2_006_grandpa_entry": "GrandpaHouse is centred at XZ(2,14), east wall X=7, door marker XZ(8.3,14), opening Z=13.2..14.8. Two native-scale household groups flank that actual entrance: water barrel/bucket under the window at Z>14, sack/empty harvest tray on the ivy flank at Z<14. Their measured bounds leave Z=12.251..15.801 clear and stay outside the slab's X=7.1 edge. Existing builder grounds each prop, strips physics and clears only decorative cover. Keep the home-square bench/fern group and opening markers untouched.",
   "cover_layers": [
     "grass",
     "drygrass",
@@ -121,6 +122,38 @@
         14
       ],
       "radius_m": 3.3
+    },
+    {
+      "id": "grandpa_entry_barrel",
+      "at": [
+        7.95,
+        16.15
+      ],
+      "radius_m": 0.9
+    },
+    {
+      "id": "grandpa_entry_bucket",
+      "at": [
+        8.65,
+        16.55
+      ],
+      "radius_m": 0.5
+    },
+    {
+      "id": "grandpa_entry_sack",
+      "at": [
+        8.0,
+        11.95
+      ],
+      "radius_m": 0.8
+    },
+    {
+      "id": "grandpa_entry_tray",
+      "at": [
+        8.85,
+        11.6
+      ],
+      "radius_m": 0.65
     },
     {
       "id": "home_square_bench",
@@ -1143,6 +1176,62 @@
       "yaw_deg": 94,
       "scale": 0.35,
       "grounded": true
+    },
+    {
+      "id": "grandpa_entry_barrel",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+      "at": [
+        7.95,
+        0,
+        16.15
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.9
+    },
+    {
+      "id": "grandpa_entry_bucket",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        8.65,
+        0,
+        16.55
+      ],
+      "yaw_deg": 20,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.5
+    },
+    {
+      "id": "grandpa_entry_sack",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bag.gltf",
+      "at": [
+        8.0,
+        0,
+        11.95
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.8
+    },
+    {
+      "id": "grandpa_entry_tray",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/FarmCrate_Empty.gltf",
+      "at": [
+        8.85,
+        0,
+        11.6
+      ],
+      "yaw_deg": -12,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.65
     },
     {
       "id": "home_square_bench",
