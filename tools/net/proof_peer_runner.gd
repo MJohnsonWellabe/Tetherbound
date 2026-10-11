@@ -139,6 +139,7 @@ func _f25_local_identity() -> Dictionary:
 	var state: Dictionary = local.call("save_data")
 	state["character_id"] = str(local.get("character_id"))
 	var identity := f25_identity(state)
+	if identity.is_empty(): return {}
 	var director := _encounter_director()
 	var body := director.call("ally_body") as Node3D if director != null else null
 	var creature := director.call("ally_instance") as RefCounted if director != null else null
@@ -393,16 +394,30 @@ func _f25_frame() -> void:
 		_f25_detach()
 		return
 	var visible_bodies := 0
-	for ref: WeakRef in _f25_bodies.values():
-		if _f25_visible(ref.get_ref() as Node, camera): visible_bodies += 1
+	var current_bindings := {}
+	for character: String in _f25_bodies:
+		var body := director.call("deployed_body_for", int(_f25_peers[character])) as Node3D
+		if not is_instance_valid(body) or body != (_f25_bodies[character] as WeakRef).get_ref():
+			_f25_error = "original deployed body changed during window"
+			_f25_detach()
+			return
+		var binding: Dictionary = director.call("_strike_actor_binding", _f25_encounter, int(_f25_peers[character]), body)
+		if str(binding.get("character_id", "")) != character or str(binding.get("creature_uid", "")) != str(_f25_expected[character].creature_uid):
+			_f25_error = "original deployed owned UID changed during window"
+			_f25_detach()
+			return
+		current_bindings[character] = binding
+		if _f25_visible(body, camera): visible_bodies += 1
 	var visible_authors := {}
 	var visible_actions: Array[String] = []
 	for row: Dictionary in _f25_actions.values():
 		if not bool(row.reviewed_move_matches) or not row.presentation is WeakRef: continue
-		if not _f25_binding_current(row):
+		var effect := (row.presentation as WeakRef).get_ref() as Node
+		if not is_instance_valid(effect) or effect.is_queued_for_deletion(): continue
+		if current_bindings.get(row.character_id, {}) != row.attacker_binding:
 			_f25_error = "frozen launch deployment changed during measured window"
 			continue
-		if _f25_visible((row.presentation as WeakRef).get_ref() as Node, camera):
+		if _f25_visible(effect, camera):
 			visible_authors[row.character_id] = true
 			visible_actions.append(str(row.action_id))
 	if visible_authors.size() == 4 and visible_bodies == 4:
@@ -481,6 +496,7 @@ func _f25_stop() -> Dictionary:
 		"reviewed_profile": _f25_profile, "profile_sha256": JSON.stringify(_f25_profile).sha256_text(), "frames": _f25_rows.size(),
 		"overlap_frames": _f25_overlap, "accepted_characters": accepted.keys(), "actions": actions, "host_verdicts": _f25_verdicts,
 		"same_action_overlap_witnesses": _f25_overlap_actions,
+		"requires_complete_net_run": true,
 		"stats": stats, "peak_particles": _f25_peak_particles, "peak_lights": _f25_peak_lights,
 		"particle_cap": int(limits.get("encounter_particle_cap", 0)), "light_cap": int(limits.get("scene_light_cap", 0)),
 		"scope": "One physical adapter, four same-machine processes; native host viewport with three headless guests. Node/frustum overlap is not a blind visual verdict or Ally hardware proof.",
