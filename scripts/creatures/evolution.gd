@@ -25,7 +25,6 @@ const DATA := preload("res://scripts/data/redesign_data.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 const LINES_PATH := "res://data/config/evolution_lines.json"
-const BEAR_PROVENANCE := "res://assets/creatures/tetherbound/stormursa/source/provenance.json"
 
 
 ## F29/RD-28: a pure component of F28's one feast_feed transaction. The host
@@ -134,33 +133,17 @@ static func _authored_source(species_id: String) -> String:
 	return species_id if board_id.is_empty() else board_id
 
 
-## A config flip alone cannot activate a generated or retargeted candidate.
-## ROOT fills this existing source manifest only after the actual full art bar.
+## Runtime availability follows the installed species and asset. Phase 1b
+## enables the owner-authorized bear; art review remains a separate process.
 static func storm_bear_ready() -> bool:
-	if not FileAccess.file_exists(BEAR_PROVENANCE): return false
-	var raw: Variant = DATA.json(BEAR_PROVENANCE)
-	if not raw is Dictionary: return false
-	for gate: String in ["reference_inspected", "rig_pass", "animation_pass", "scale_pass", "full_art_bar_pass"]:
-		if raw.get(gate) != true: return false
-	if raw.get("generation_provider") != "Meshy" or str(raw.get("meshy_task_id", "")).is_empty(): return false
-	var height: Variant = raw.get("height_m")
-	if not (height is int or height is float) or not is_finite(float(height)): return false
-	var source_height := float(SPECIES.placeholder("staticub").get("height", INF))
-	if float(height) <= maxf(source_height, 1.80): return false
+	if not SPECIES.has("stormursa"): return false
 	var visual := SPECIES.placeholder("stormursa")
-	var model: Variant = raw.get("model")
-	if not model is Dictionary or visual.get("model", "") != model.get("path", "") \
-			or float(visual.get("height", 0.0)) != float(height): return false
-	for slot: String in ["reference", "model", "judge_medium", "judge_high", "before_after"]:
-		var artifact: Variant = raw.get(slot)
-		if not artifact is Dictionary: return false
-		var path := str(artifact.get("path", ""))
-		var sha := str(artifact.get("sha256", ""))
-		if not path.begins_with("res://") or sha.length() != 64 or not FileAccess.file_exists(path): return false
-		if FileAccess.get_sha256(path) != sha: return false
-		if slot in ["judge_medium", "judge_high"] and (artifact.get("verdict") != "PASS" \
-				or str(artifact.get("independent_reviewer", "")).is_empty()): return false
-	return true
+	var height := float(visual.get("height", 0.0))
+	var source_height := float(SPECIES.placeholder("staticub").get("height", INF))
+	return is_finite(height) and height > maxf(source_height, 1.80) \
+		and preload("res://scripts/creatures/creature_pose_candidates.gd").configured_for_species(
+			"stormursa", str(visual.get("model", "")),
+			["idle", "walk", "run", "attack", "charged", "hit", "faint", "rest", "swim", "fly_grip", "ride"])
 
 
 static func _has_ingredient(branches: Array, ingredient: String) -> bool:

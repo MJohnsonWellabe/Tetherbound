@@ -6618,14 +6618,14 @@
       "region_id": "tether_current",
       "table_id": "water_sluice_isle_shallows",
       "island_local_offset": [
-        -88.0,
-        -0.43,
-        -123.0
+        -63.0,
+        5.091353416,
+        -112.0
       ],
       "position": [
-        1262.0,
-        -0.43,
-        3377.0
+        1287.0,
+        5.091353416,
+        3388.0
       ],
       "count": 1,
       "radius_m": 0.7,
@@ -8419,14 +8419,14 @@
       "level": 32,
       "replaces_wild_site_id": "water_deep_watch_wild_008",
       "position": [
-        1262.0,
-        -0.43,
-        3377.0
+        1287.0,
+        5.091353416,
+        3388.0
       ],
       "island_local_offset": [
-        -88.0,
-        -0.43,
-        -123.0
+        -63.0,
+        5.091353416,
+        -112.0
       ],
       "catchable": true,
       "trainer_owned": false,
@@ -8441,10 +8441,10 @@
         }
       },
       "_why_combat_camera_f14_0": "F14#0 C3 r7 (code-blind judge): the tall serpent's head sat under the boss panel in 3 of 25 frames. Aquaryn's authored framing (water_alpha.json combat_camera: fit the body below the top band, then the lens shift) applies to this named body too; combat_manager.gd _opponent_camera reads the body's meta, set by water_encounter_director.gd. Presentation only.",
-      "arena_radius_m": 5.0,
+      "arena_radius_m": 14.0,
       "arena_capture_radius_m": 16.0,
-      "_why_position_f14_0": "F14#0 C3 (Phase 1, tb/tidewake): moved from the reef edge at the foot of Deep Watch's 12 m sea cliff (1483.2, 3427.9), where six capture rounds failed framing: any fight camera behind the landward ally met the cliff, and the seabed fell away with no shallow flat within 40 m. The stand is now the arrival bay's shallows (tools/probe_tidewake_tidecoil_stand.gd: ground 0.43 m under the surface, the 5 m ring between 2.2 m deep and 0.6 m dry, the landward side no higher than 1.3 m for 18 m). The ordinary approach from the sluice_isle_to_deep_watch landing, 26 m away, puts the camera over open beach. Tidecoil is non-aggressive: it fights only when a player engages it. The reserved site water_deep_watch_wild_008 moved with it, since its 100 m activation stands the body up. A loss still returns to the Deep Watch landing.",
-      "_why_arena_radius_0927_visuals": "F14#0 C3 (tb/tidewake-visuals): the shallow_surface mode was data only; the default 11 m ring let the fight drift down the reef slope and Tidecoil fought 5 m under the water surface, hidden, for most of the capture. A 5 m ring keeps it in the reef-edge shallows (water_encounter_director.combat_arena_bounds_at).",
+      "_why_position_f14_0": "F14#0 source repair 2026-10-10: the former stand at (1262,3377) cannot support the full-size fight's required ring; widening it reaches baked ground 5.28 m below sea level. The named body and reserved site now share the existing coastal arrival bank at (1287,3388), 30.68 m from the same sluice_isle_to_deep_watch landing. Stored Terrain3D region terrain3d_02_06.res has centre height 5.091353416 m and 613 integer vertices inside the 14 m disc ranging from 1.77 to 8.72 m above sea level. Both rows retain ordinary ground placement, aquatic metadata, the existing approach, non-aggressive engagement and Deep Watch loss return. Actual floor collision, complete solid clearance, route, movement and camera evidence remain required; these source samples do not establish C2/C3 acceptance.",
+      "_why_arena_radius_0927_visuals": "The earlier 5 m cap prevented the old ring from descending the reef slope, but cannot fit today's full-size Tidecoil: its fitted rendered box is 2.8021 by 5.5 by 9.6431 m, with 5.0210 m horizontal corner radius before the required 0.6 m clearance. A 14 m ring matches the ordinary derived radius for Tidecoil against each current starter; measured midpoint formation requirements are 9.6079 m for Terrapup, 9.3013 m for Ripplet and 8.8595 m for Galewisp. The correlated move to existing above-sea coastal ground makes this an authored location repair. Creature size, capture radius 16 m, combat and fit/support assertions are preserved; native fit and visual proof remain open.",
       "combat_intent": "A late apex sweeps the visible surface of the arrival bay's shallows; prepare on the island and punish recovery between broad lateral attacks.",
       "completion_flag": "water_named_deep_watch_tidecoil_resolved",
       "resolution": "host_confirms_catch_or_defeat_once",

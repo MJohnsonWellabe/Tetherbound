@@ -29,6 +29,9 @@ signal host_creature_hit_accepted(hit: Dictionary)
 ## dropped into the real Meadows scene unchanged.
 
 const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+var _ambient_render_bounds_cache: Dictionary = {}
+var _arena_refusal_last_ms: int = -5000
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const PERF_TRACE := preload("res://scripts/world/perf_trace.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
@@ -1235,6 +1238,9 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			# already the identity this name wanted.
 			wild.name = "Wild_%s_%d_%d" % [species, int(spawn.get("order", index)), n + 1]
 			wild.set_script(WILD_SCRIPT)
+			# A new body is published only after supported spawn admission.
+			# Existing ambient bodies are never hidden to clear an active fight.
+			wild.visible = false
 			get_parent().add_child(wild)
 			var spot := _pick_clear_spot(centre, radius, rng)
 			# F03#0: an alpha whose block sets `stand_at_centre` stands on its
@@ -1400,6 +1406,28 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 				wild_cfg = _apply_elder(wild, elder, wild_cfg)
 				if once_id != "":
 					_once_only[wild] = once_id
+			# The fully scaled art now exists. Retry only within this authored
+			# cluster; if its disc is occupied, defer this unpublished spawn.
+			var render_radius := _ambient_render_radius(wild)
+			while not _active_arena_clear(wild.global_position, render_radius, wild):
+				var admitted := resolve_cluster_spot(spot, centre, radius, render_radius,
+					occupied, _cluster_body_gap(), hash("arena_spawn_%s" % wild.name),
+					Callable(self, "_cluster_spacing_candidate_clear").bind(render_radius))
+				if bool(admitted.feasible):
+					if await _stand_on_ground(wild, admitted.spot as Vector3): break
+				await get_tree().create_timer(0.5).timeout
+				if not is_inside_tree() or not is_instance_valid(wild): return
+				render_radius = _ambient_render_radius(wild)
+				var live_game := get_node_or_null(^"/root/Game")
+				if not member_packet.is_empty() and (live_game == null or live_game.get("world") != repeat_world or _session == null \
+					or _session.call("_altar_current_epoch") != repeat_epoch \
+					or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(
+						repeat_world.redesign_world, alpha_site) != member_packet):
+					_once_only.erase(wild)
+					_ambient_render_bounds_cache.erase(wild.get_instance_id())
+					wild.queue_free()
+					break
+			if wild.is_queued_for_deletion(): continue
 			if n == 0:
 				var registered := foundation_register_alpha(wild, alpha_site, member_packet)
 				if not foundation_alpha_cycle(alpha_site).is_empty() and not registered:
@@ -1420,17 +1448,16 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			# CREATURE-STAGING-0911. Every clustered body keeps the same
 			# radius-aware breathing room while wandering. The existing road
 			# veto remains opt-in exactly where it was before.
-			if body_spacing:
-				wild.call("set_clearance_check", Callable(self, "_cluster_wander_target_clear")
-					.bind(wild, avoid_road))
-			elif avoid_road:
-				# Preserve the pre-spacing road veto for an opted-out cluster.
-				wild.call("set_clearance_check", Callable(self, "_wander_target_clear_of_road"))
+			wild.call("set_clearance_check", Callable(self, "_cluster_wander_target_clear")
+				.bind(wild, avoid_road, body_spacing))
+			wild.call("set_arena_clearance_check", Callable(self, "_arena_wander_guard").bind(wild))
 
 			var gate := _gate_for_spawn(spawn)
 			if not gate.is_empty():
 				_wild_gates[wild] = gate
 				wild.visible = _gate_active(gate)
+			else:
+				wild.visible = true
 			if wild.visible: _initialize_wild_traits(wild, bool(wild.get_meta("ordinary_trait_alpha", false)))
 
 			# T3-CREATURES: the entry's own respawn cooldown, if it named one.
@@ -1661,6 +1688,13 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	if not bool(wild.call("place_on_ground", spot)):
 		wild.global_position = spot
 	wild.set("home", wild.global_position)
+	if not _active_arena_clear(wild.global_position, _ambient_render_radius(wild), wild):
+		# Synchronous placed-spawn callers receive a genuine admission refusal,
+		# before the new body joins ecology or owns any once-only receipt.
+		wild.free()
+		return null
+	wild.call("set_clearance_check", Callable(self, "_placed_wild_target_clear").bind(wild))
+	wild.call("set_arena_clearance_check", Callable(self, "_arena_wander_guard").bind(wild))
 	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
 	if not bool(opts.get("retained_alpha_pending", false)):
 		_initialize_wild_traits(wild, bool(opts.get("ordinary_trait_alpha", false)))
@@ -4617,6 +4651,11 @@ func _refresh_shared_record_presentation(rec: Dictionary) -> void:
 		return
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
 	var payload := _shared_presentation_payload(encounter_id)
+	var arena: Node3D = runtime.call("arena") as Node3D
+	if arena != null and is_instance_valid(arena):
+		var centre := arena.global_position
+		opponent["arena_centre"] = [centre.x, centre.y, centre.z]
+		opponent["arena_radius_m"] = float(arena.get("radius"))
 	for key: String in ["body_generation", "presentation_seq", "foot_position", "facing"]:
 		opponent[key] = payload[key]
 	opponent["cue_serial"] = int(runtime.get("cue_serial"))
@@ -5523,6 +5562,7 @@ static func resolve_cluster_spot(preferred: Vector3, centre: Vector3, cluster_ra
 
 
 func _cluster_spacing_candidate_clear(candidate: Vector3, body_radius: float) -> bool:
+	if not _active_arena_clear(candidate, body_radius): return false
 	if not _clear_of_named_trainer_grounds(candidate):
 		return false
 	return _vegetation == null or not bool(_vegetation.call("has_solid_scatter_near",
@@ -5691,11 +5731,17 @@ func _wander_target_clear_of_road(pos: Vector3) -> bool:
 	return float(_road_field.call("path_factor", pos.x, pos.z)) <= 0.0
 
 
-func _cluster_wander_target_clear(pos: Vector3, wild: Node3D, avoid_road: bool) -> bool:
+func _cluster_wander_target_clear(pos: Vector3, wild: Node3D, avoid_road: bool, body_spacing: bool = true) -> bool:
+	if not _ambient_active_arenas(wild).is_empty():
+		var footprint := _ambient_render_radius(wild)
+		if not _active_arena_clear(pos, footprint, wild): return false
+		var path_guard: Variant = _arena_wander_guard(wild.global_position, pos - wild.global_position, wild)
+		if path_guard is Vector3: return false
 	if not _clear_of_named_trainer_grounds(pos):
 		return false
 	if avoid_road and not _wander_target_clear_of_road(pos):
 		return false
+	if not body_spacing: return true
 	var cluster: Dictionary = _wild_cluster.get(wild, {})
 	if cluster.is_empty():
 		return true
@@ -5707,6 +5753,92 @@ func _cluster_wander_target_clear(pos: Vector3, wild: Node3D, avoid_road: bool) 
 			continue
 		occupied.append({"at": other.global_position, "radius": _body_radius(other)})
 	return cluster_destination_clear(pos, mine, occupied, gap)
+
+
+## Art clearance uses the same skinned render measurement as the camera.
+## Include model offsets; a capsule cannot stand in for an ambient silhouette.
+func _ambient_render_radius(body: Node3D) -> float:
+	var model := body.call("model_pivot") as Node3D if body != null and body.has_method("model_pivot") else null
+	if model == null or not model.is_inside_tree(): return INF
+	var signature := "%s|%s|%s|%d|%d" % [str(body.get("species_id")), str(body.get("_height")),
+		str(body.get("_radius")), model.get_instance_id(), model.get_child_count()]
+	var cached: Dictionary = _ambient_render_bounds_cache.get(body.get_instance_id(), {})
+	var bounds: AABB = cached.get("bounds", AABB()) if cached.get("signature", "") == signature else RENDER_BOUNDS.measure(model)
+	if not bounds.size.is_finite() or bounds.size.is_zero_approx(): return INF
+	_ambient_render_bounds_cache[body.get_instance_id()] = {"signature": signature, "bounds": bounds}
+	var radius := 0.0
+	for index in 8:
+		var point := model.global_transform * bounds.get_endpoint(index) - body.global_position
+		if not point.is_finite(): return INF
+		radius = maxf(radius, Vector2(point.x, point.z).length())
+	return radius
+
+
+func _ambient_active_arenas(wild: Node3D = null) -> Array[Node3D]:
+	var arenas: Array[Node3D] = []
+	for manager: Node in get_tree().get_nodes_in_group(&"foundation_combat_managers"):
+		if not manager.has_method("is_fighting") or not bool(manager.call("is_fighting")) \
+			or (wild != null and (wild == manager.get("_wild") or wild == manager.get("_ally_body"))): continue
+		var arena: Node3D = manager.call("arena") as Node3D
+		if not is_instance_valid(arena) or arena.is_queued_for_deletion(): continue
+		var world_owned := arena.get_parent() == get_parent()
+		# Authoritative runtimes parent their arenas to this director. Only an
+		# actual registered live runtime extends the same-world ownership rule.
+		var runtime_owned := arena.get_parent() == self and manager.get_parent() == self \
+			and manager.get_script() == SHARED_WILD_HOST_FIGHT and _shared_host_fights.values().has(manager)
+		if not world_owned and not runtime_owned: continue
+		var duplicate := false
+		for existing: Node3D in arenas:
+			if existing == arena or (existing.global_position.is_equal_approx(arena.global_position) \
+				and is_equal_approx(float(existing.get("radius")), float(arena.get("radius")))):
+				duplicate = true
+				break
+		if not duplicate: arenas.append(arena)
+	return arenas
+
+
+func _active_arena_clear(pos: Vector3, footprint: float, wild: Node3D = null) -> bool:
+	var arenas := _ambient_active_arenas(wild)
+	if arenas.is_empty(): return pos.is_finite()
+	if not pos.is_finite() or not is_finite(footprint): return false
+	var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
+	for arena: Node3D in arenas:
+		var delta := pos - arena.global_position
+		if Vector2(delta.x, delta.z).length() <= float(arena.get("radius")) + footprint + clearance:
+			return false
+	return true
+
+
+func _placed_wild_target_clear(pos: Vector3, wild: Node3D) -> bool:
+	if _ambient_active_arenas(wild).is_empty(): return pos.is_finite()
+	return _active_arena_clear(pos, _ambient_render_radius(wild), wild) \
+		and _arena_wander_guard(wild.global_position, pos - wild.global_position, wild) == null
+
+
+## Null keeps ordinary movement. A vector overrides only ambient motion:
+## bodies within a new ring walk outward; bodies outside cannot cross it.
+## Swept CharacterBody movement remains responsible for actual terrain.
+func _arena_wander_guard(from: Vector3, step: Vector3, wild: Node3D) -> Variant:
+	var arenas := _ambient_active_arenas(wild)
+	if arenas.is_empty(): return null
+	var footprint := _ambient_render_radius(wild)
+	if not is_finite(footprint): return Vector3.ZERO
+	var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
+	var escape := Vector3.ZERO
+	var inside := false
+	for arena: Node3D in arenas:
+		var offset := from - arena.global_position
+		offset.y = 0.0
+		var reach := float(arena.get("radius")) + footprint + clearance
+		if offset.length() <= reach:
+			inside = true
+			escape += offset.normalized() if offset.length_squared() > 0.000001 else Vector3.FORWARD
+		elif not step.is_zero_approx():
+			var flat_step := Vector3(step.x, 0.0, step.z)
+			var along := clampf(-offset.dot(flat_step) / maxf(flat_step.length_squared(), 0.000001), 0.0, 1.0)
+			if (offset + flat_step * along).length() <= reach: return Vector3.ZERO
+	if inside: return escape.normalized()
+	return null
 
 
 func _pick_clear_spot(centre: Vector3, radius: float, rng: RandomNumberGenerator) -> Vector3:
@@ -6248,6 +6380,9 @@ func _tick_respawn(delta: float) -> void:
 		if left > 0.0:
 			_respawn_timers[wild] = left
 			continue
+		if is_instance_valid(wild) and not _active_arena_clear(wild.get("home") as Vector3, _ambient_render_radius(wild), wild):
+			_respawn_timers[wild] = 0.5
+			continue
 		_respawn_timers.erase(wild)
 		if is_instance_valid(wild):
 			if not _wild_gates.has(wild) or _gate_active(_wild_gates[wild]):
@@ -6743,10 +6878,18 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	var shared_host_wild := not opponent_owned and ((_is_multi_peer() and _is_host()) \
 		or bool(canonical.get("ready", false)))
 	wild.set_meta(&"canonical_wild_runtime", bool(canonical.get("ready", false)))
+	var authored_arena := _local_authored_arena_context() if opponent_owned else {}
+	if not opponent_owned: authored_arena = _local_named_wild_arena_context(wild)
 	if not bool(_manager.call(
 		"begin", _player, wild, _ally_body, _fight_party(), _camera_rig, best,
-		opponent_owned, shared_host_wild, shared_host_wild
+		opponent_owned, shared_host_wild, shared_host_wild, authored_arena
 	)):
+		var reason := str(_manager.get("last_admission_failure"))
+		var game := get_node_or_null(^"/root/Game")
+		if not reason.is_empty() and game != null and game.has_method("push_world_message") \
+			and Time.get_ticks_msec() - _arena_refusal_last_ms >= 5000:
+			_arena_refusal_last_ms = Time.get_ticks_msec()
+			game.call("push_world_message", reason)
 		return
 	_engaged_with = wild
 	_set_exploration_active(false)
@@ -6756,6 +6899,23 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	# which is the scope lane 4.D shipped -- see `_scale_opponent_for_the_session`.
 	if opponent_owned:
 		_scale_opponent_for_the_session(wild.get("instance") as RefCounted)
+
+
+func _local_authored_arena_context() -> Dictionary:
+	if _trainer_spec.has("master") and is_instance_valid(_trainer_node):
+		var site := _trainer_node.get_parent() as Node3D
+		if site != null and site.get_script() == preload("res://scripts/masters/master_site.gd"):
+			var definition := preload("res://scripts/creatures/breakthrough.gd").master(str(site.get("master_id")))
+			if not definition.is_empty() and definition.id == _trainer_spec.get("id"):
+				return {"source": site, "owner_npc": definition.id,
+					"centre": site.global_position, "radius": float(definition.arena_radius_m)}
+	for child: Node in get_parent().get_children():
+		if child.get_script() != preload("res://scripts/world/cloudreach_finale_controller.gd"): continue
+		var definition: Dictionary = child.get("config")
+		if not definition.is_empty() and definition.get("encounter_id") == _trainer_spec.get("id"):
+			return {"source": child, "owner_npc": _trainer_spec.id,
+				"centre": (child as Node3D).global_position, "radius": float(definition.arena_radius_m)}
+	return {}
 
 
 ## Stage B lane 4.C. Stand a host-arbitrated encounter record up behind the
@@ -6775,6 +6935,18 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 ##
 ## Solo is not merely unaffected: `_is_multi_peer()` is false, so not one line
 ## below runs.
+func _local_named_wild_arena_context(wild: Node3D) -> Dictionary:
+	var sources: Array[Node] = [self]
+	sources.append_array(get_parent().get_children())
+	for source: Node in sources:
+		var script := source.get_script() as Script
+		if script == null or script.resource_path not in ["res://scripts/combat/water_encounter_director.gd", "res://scripts/world/burrow_warrens.gd"] \
+			or not source.has_method("authored_named_wild_arena_context"): continue
+		var context: Dictionary = source.call("authored_named_wild_arena_context", wild)
+		if not context.is_empty() and context.get("source") == source and context.get("wild") == wild: return context
+	return {}
+
+
 func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
 	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
@@ -6795,6 +6967,20 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		"owner_npc": str(_trainer_spec.get("id", "")) if opponent_owned else "",
 		"position": [at.x, at.y, at.z],
 	}
+	# Immutable host-selected geometry travels on the admitted reliable record,
+	# not a guest's pose packet or a joining player's recomputed local ring.
+	var arena: Node3D = _manager.call("arena") as Node3D
+	if arena == null or not is_instance_valid(arena): return
+	var arena_at := arena.global_position
+	opponent["arena_centre"] = [arena_at.x, arena_at.y, arena_at.z]
+	opponent["arena_radius_m"] = float(arena.get("radius"))
+	if not opponent_owned:
+		var named := _local_named_wild_arena_context(wild)
+		if not named.is_empty() and named.get("wild") == wild \
+			and named.get("species_id") == opponent.species_id and named.get("centre") == arena_at \
+			and is_equal_approx(float(named.get("radius", -1.0)), float(opponent.arena_radius_m)) \
+			and bool(_manager.call("_valid_named_wild_arena", named)) and bool(_manager.call("canonical_named_host_arena", named)):
+			opponent["named_encounter_id"] = str(named.named_encounter_id)
 	if opponent_owned:
 		# F14#1: a guest who joins a trainer/boss fight mirrors THIS creature
 		# (`_legacy_mirror_body`), so the record carries its card and pose too.
@@ -7197,8 +7383,10 @@ func _begin_shared_host_local(rec: Dictionary) -> bool:
 		return false
 	var party_obj := _party()
 	var best: RefCounted = party_obj.call("best") if party_obj != null else null
+	var host_arena := _shared_arena_context(rec)
+	if host_arena.is_empty(): return false
 	if not bool(_manager.call("begin", _player, wild, _ally_body, _fight_party(),
-			_camera_rig, best, _record_is_remote_rematch(rec), true)):
+			_camera_rig, best, _record_is_remote_rematch(rec), true, false, host_arena)):
 		return false
 	_manager.call("detach_realm_opponent_callbacks", wild)
 	_engaged_with = wild
@@ -7253,11 +7441,38 @@ func _record_is_local_guest_master(rec: Dictionary) -> bool:
 		and rec.get("opponent", {}).get("owner_npc") == _master_duel.get("master_id")
 
 
+## Only an admitted, current-realm reliable record supplies a joiner's arena.
+## Current shared wilds fail closed on absent geometry; legacy mirrors use
+## their separate _begin_legacy_encounter_body path and claim no replication.
+func _shared_arena_context(rec: Dictionary) -> Dictionary:
+	if not _shared_record_is_current_realm(rec) or str(rec.get("phase", "")) != "active" \
+		or not (rec.get("participants", {}) as Dictionary).has(_local_peer_id()): return {}
+	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+	var centre: Variant = _wire_vec3(opponent.get("arena_centre", []))
+	var radius: Variant = opponent.get("arena_radius_m")
+	if centre == null or not (radius is int or radius is float) or not is_finite(float(radius)) \
+		or float(radius) <= 0.0 or int(opponent.get("body_generation", 0)) <= 0 \
+		or str(opponent.get("species_id", "")).is_empty(): return {}
+	var context := {"encounter_id": str(rec.encounter_id), "realm": str(rec.realm), "kind": str(rec.kind),
+		"body_generation": int(opponent.body_generation), "species_id": str(opponent.species_id),
+		"centre": centre as Vector3, "radius": float(radius)}
+	if str(rec.kind) == "wild":
+		if float(radius) > 26.0: return {}
+		var named_id := str(opponent.get("named_encounter_id", ""))
+		if not named_id.is_empty():
+			context["named_encounter_id"] = named_id
+			if _manager == null or not bool(_manager.call("canonical_named_host_arena", context, get_parent())): return {}
+		elif float(radius) < 11.0: return {}
+	return context
+
+
 func _begin_shared_guest_from_record(rec: Dictionary) -> bool:
 	if _manager == null or bool(_manager.call("is_fighting")) \
 			or not _shared_record_is_current_realm(rec):
 		return false
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+	var host_arena := _shared_arena_context(rec)
+	if host_arena.is_empty(): return false
 	var card := WATER_CAPTURE_CODEC.decode(opponent.get("card", {})) as RefCounted
 	var feet: Variant = _wire_vec3(opponent.get("foot_position", []))
 	var facing: Variant = _wire_vec3(opponent.get("facing", []))
@@ -7284,7 +7499,7 @@ func _begin_shared_guest_from_record(rec: Dictionary) -> bool:
 	var party_obj := _party()
 	var best: RefCounted = party_obj.call("best") if party_obj != null else null
 	if not bool(_manager.call("begin", _player, proxy, _ally_body, _fight_party(),
-			_camera_rig, best, _record_is_local_guest_master(rec) or _record_is_remote_rematch(rec), true)):
+			_camera_rig, best, _record_is_local_guest_master(rec) or _record_is_remote_rematch(rec), true, false, host_arena)):
 		proxy.queue_free()
 		return false
 	_shared_opponent_proxy = proxy

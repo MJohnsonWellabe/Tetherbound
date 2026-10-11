@@ -12,6 +12,76 @@ static var _hashes: Dictionary = {}
 static var _contact_heights: Dictionary = {}
 
 
+## Build readiness for an evolution which needs authored runtime poses. This
+## checks installed source/configuration, never a historical acceptance flag.
+## Check the imported scene as well as source data before a durable evolution.
+static func configured_for_species(id: String, model_path: String, required_roles: Array[String]) -> bool:
+	if _data.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
+		if parsed is Dictionary: _data = parsed
+	if id not in _data.get("enabled_species", []) or not ResourceLoader.exists(model_path): return false
+	var recipe: Dictionary = _data.get("species", {}).get(id, {})
+	if recipe.get("model", "") != model_path: return false
+	if FileAccess.file_exists(model_path):
+		if not _hashes.has(model_path): _hashes[model_path] = FileAccess.get_sha256(model_path)
+		if _hashes[model_path] != recipe.get("source_sha256", ""): return false
+	else:
+		var uid := str(recipe.get("resource_uid", ""))
+		if uid.is_empty() or ResourceLoader.get_resource_uid(model_path) != ResourceUID.text_to_id(uid): return false
+	var bones: Array = recipe.get("bones", [])
+	var rig: Dictionary = recipe.get("rig_contract", {})
+	var binds: Dictionary = recipe.get("bind_contract", {})
+	if bones.is_empty() or bones.size() != rig.size() or bones.size() != binds.size(): return false
+	for bone: String in bones:
+		if not rig.has(bone) or not binds.has(bone): return false
+		for matrix: Array in [rig[bone].get("rest", []), binds[bone]]:
+			if matrix.size() != 16: return false
+			for value: Variant in matrix:
+				if not (value is float or value is int) or not is_finite(float(value)): return false
+	var profile: Dictionary = _data.get("profiles", {}).get(str(recipe.get("profile", "")), {})
+	for role: String in required_roles:
+		var spec: Dictionary = profile.get(role, {})
+		var duration := float(spec.get("duration_s", 0.0))
+		var frames: Array = spec.get("frames", [])
+		if not is_finite(duration) or duration <= 0.0 or frames.size() < 2 or not spec.get("loop") is bool: return false
+		if float(frames[0].get("phase", -1)) != 0.0 or float(frames[-1].get("phase", -1)) != 1.0: return false
+		var last_phase := -1.0
+		for frame: Dictionary in frames:
+			var phase := float(frame.get("phase", -1.0))
+			if not is_finite(phase) or phase <= last_phase or phase > 1.0 \
+					or not is_finite(float(frame.get("pivot_roll_deg", INF))): return false
+			last_phase = phase
+			var rotations: Dictionary = frame.get("bones", {})
+			for bone: String in bones:
+				var degrees: Array = rotations.get(bone, [])
+				if degrees.size() != 3: return false
+				for value: Variant in degrees:
+					if not (value is float or value is int) or not is_finite(float(value)): return false
+	return _installed_scene_matches(model_path, recipe)
+
+
+static func _installed_scene_matches(model_path: String, recipe: Dictionary) -> bool:
+	var scene := ResourceLoader.load(model_path) as PackedScene
+	if scene == null: return false
+	# No SceneTree admission: no gameplay nodes, animation clocks or visuals run.
+	# UID alone is insufficient because an asset replacement can retain it.
+	var instance := scene.instantiate()
+	if instance == null: return false
+	var valid := false
+	if instance is Node3D:
+		var skeletons := instance.find_children("*", "Skeleton3D", true, false)
+		var players := instance.find_children("*", "AnimationPlayer", true, false)
+		if skeletons.size() == 1 and players.size() == 1:
+			var skeleton := skeletons[0] as Skeleton3D
+			var player := players[0] as AnimationPlayer
+			var animation_root := player.get_node_or_null(player.root_node)
+			valid = animation_root != null and not player.get_animation_list().is_empty() \
+				and (animation_root == skeleton or animation_root.is_ancestor_of(skeleton)) \
+				and _packaged_rig_matches(instance as Node3D, skeleton, recipe)
+	instance.free()
+	return valid
+
+
 static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		look: Dictionary, original: Dictionary, presentation_species: String = "") -> Dictionary:
 	if _data.is_empty():
@@ -90,11 +160,21 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 			animation.track_set_path(bone_position, bone_path)
 			animation.position_track_insert_key(bone_position, 0.0, rest_transform.origin)
 			animation.position_track_insert_key(bone_position, animation.length, rest_transform.origin)
+			var has_position_offsets := false
+			for frame: Dictionary in spec.frames:
+				if frame.get("bone_positions", {}).has(bone):
+					has_position_offsets = true
+					break
 			var bone_scale := animation.add_track(Animation.TYPE_SCALE_3D)
 			animation.track_set_path(bone_scale, bone_path)
 			animation.scale_track_insert_key(bone_scale, 0.0, rest_transform.basis.get_scale())
 			animation.scale_track_insert_key(bone_scale, animation.length, rest_transform.basis.get_scale())
 			for frame: Dictionary in spec.frames:
+				var offsets: Dictionary = frame.get("bone_positions", {})
+				if has_position_offsets:
+					var offset: Array = offsets.get(bone, [0, 0, 0])
+					animation.position_track_insert_key(bone_position, float(frame.phase) * animation.length,
+						rest_transform.origin + Vector3(float(offset[0]), float(offset[1]), float(offset[2])))
 				var degrees: Array = frame.bones[bone]
 				var delta := Quaternion.from_euler(Vector3(float(degrees[0]), float(degrees[1]), float(degrees[2])) * PI / 180.0)
 				animation.rotation_track_insert_key(track, float(frame.phase) * animation.length, (rest * delta).normalized())
@@ -104,13 +184,18 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		animation.track_set_path(position_track, pivot_path)
 		for frame: Dictionary in spec.frames:
 			var rolled := pivot_before.basis * Basis(Vector3.BACK, deg_to_rad(float(frame.pivot_roll_deg)))
+			if frame.has("pivot_rotation_deg"):
+				var degrees: Array = frame.pivot_rotation_deg
+				rolled = pivot_before.basis * Basis(Quaternion.from_euler(
+					Vector3(float(degrees[0]), float(degrees[1]), float(degrees[2])) * PI / 180.0))
 			var position := pivot_before.origin
-			if role in ["faint", "hit", "ride"]:
+			if role in recipe.get("grounded_roles", ["faint", "hit", "ride"]):
 				# The standing AABB includes unfolded legs/wings. Ground the
 				# actual skinned pose instead, without changing mesh or collision.
 				var sample := "%s:%s" % [role, frame.phase]
 				if not contacts.has(sample):
-					var minimum := _posed_minimum_y(skeleton, model, surfaces, frame.bones, rolled)
+					var minimum := _posed_minimum_y(skeleton, model, surfaces, frame.bones, rolled,
+						frame.get("bone_positions", {}))
 					contacts[sample] = minimum if is_finite(minimum) else \
 						(Transform3D(rolled, Vector3.ZERO) * box).position.y
 				position.y = -float(contacts[sample])
@@ -126,6 +211,7 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		player.remove_animation_library(LIBRARY)
 	player.add_animation_library(LIBRARY, library)
 	body.set_meta("f36_pose_candidate_installed", true)
+	body.set_meta("f36_pose_rest_installed", roles.has("rest"))
 	return clips
 
 
@@ -183,11 +269,13 @@ static func _transform_matches(transform: Transform3D, column_major: Array) -> b
 ## follows the renderer's skin transform, including named and eight-weight
 ## binds, while leaving the live skeleton's current animation untouched.
 static func _posed_minimum_y(skeleton: Skeleton3D, model: Node3D,
-		surfaces: Array[Dictionary], rotations: Dictionary, rolled: Basis) -> float:
+		surfaces: Array[Dictionary], rotations: Dictionary, rolled: Basis, positions: Dictionary = {}) -> float:
 	var poses: Array[Transform3D] = []
 	poses.resize(skeleton.get_bone_count())
 	for bone in skeleton.get_bone_count():
 		var pose := skeleton.get_bone_rest(bone)
+		var offset: Array = positions.get(str(skeleton.get_bone_name(bone)), [0, 0, 0])
+		pose.origin += Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
 		var degrees: Array = rotations.get(str(skeleton.get_bone_name(bone)), [0, 0, 0])
 		var delta := Quaternion.from_euler(Vector3(float(degrees[0]), float(degrees[1]),
 			float(degrees[2])) * PI / 180.0)
