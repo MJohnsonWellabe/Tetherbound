@@ -39,3 +39,14 @@ All times are US Central. Run date: 2026-10-11, 06:50–08:42 CT. Base: main 9e3
 - The helper's camp rest snaps the day cycle to night (F47#4, helper-disclosed).
 - Fly climb uses held jump (owner's Fly exception).
 - Each checkpoint's PROVENANCE.json and receipt.json carry its own command, commit, start save and disclosures.
+
+## Separate finding: cliff-shoulder collider stops the trainer dead on the counterweight pass (world-collision defect)
+
+- **Where:** `AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge003/Collision`, on route `windscar_counterweight_pass` between waypoints (-820, 620, 3480) and (-720, 700, 3680).
+- **Body stopped at:** (-791.83, 641.39, 3536.28). That is on the route centreline: the closest centreline point is about (-791.8, 642.5, 3536.3).
+- **Contact:** a single contact with floor normal (-0.159, 0.934, -0.320).
+- **Body state:** velocity 0, last_motion about 5e-5. Stick input was (0.22, -0.98), wanted direction (0.45, 0, 0.89), walk speed 5.0. The trainer had no modal open, no fight, no hazard and no mobile contact.
+- **Log:** `05_stronghold.attempt1.log.gz` (collision_block row).
+- **Not deterministic:** the 05 re-run walked past the same spot without stalling.
+- **Same family:** the witness route already records this collider type (Windscar Ridge003, lower causeway Ridge000, summit road Ridge001).
+- **Current handling:** recovered by the disclosed stick sidestep. The defect itself is open (coordinator ruling 2026-10-11).
