@@ -517,7 +517,7 @@
     },
     {
       "id": "water_orsen",
-      "appearance_variant_id": "p2055_water_orsen",
+      "appearance_variant_id": "npc_identity_water_orsen_v1",
       "display_name": "Channel Keeper Orsen",
       "island_id": "sluice_isle",
       "role": "sluice_controls",

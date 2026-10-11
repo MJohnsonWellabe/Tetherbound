@@ -1,7 +1,7 @@
 {
   "actor_id": "water_orsen",
   "default_enabled": false,
-  "status": "CORRECTED_OFF_BODY_ONLY_NATIVE_REVIEW_PENDING",
+  "status": "REGISTERED_OFF_SAMPLED_LOW_BODY_PASS_PORTRAIT_WORLD_CLAUDE_PENDING",
   "source_commit": "5d7038d99b8dbb5f8182617e970a09df5da2e86c",
   "installed_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
   "installed_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
@@ -88,12 +88,11 @@
     ]
   },
   "native_review": {
-    "status": "PENDING",
-    "scope": "Corrected seven clips, four phases, front/side Low/Compatibility recapture pending under original assertions",
+    "status": "PASS_SCOPED_SAMPLED_BODY_ONLY",
+    "scope": "Corrected seven clips, four phases, front/side Low/Compatibility; 56/56 frames with all original guards retained",
     "risks": [
-      "Corrected arm stance and coat/hand/pouch clearance require native recapture",
-      "Uncorrected action CPU samples showed rear-torso/backpack edge stretch; prior native sample review did not establish a blocking defect, but corrected action poses remain pending",
-      "No paired portrait, world or independent Claude acceptance yet"
+      "CPU rear-torso/backpack edge stretch remains disclosed; no blocking deformation found in sampled corrected native views",
+      "Sampled body review does not establish continuous motion, paired portrait, world or independent Claude acceptance"
     ],
     "portrait": "NOT_AUTHORED",
     "world": "PENDING",
@@ -104,7 +103,18 @@
       "scale_guards": "PASS",
       "idle_stance": "FAIL: arms held out around 30 degrees",
       "action_silhouette": "Hat, coat, pouches and backpack recognizable in all sampled views; CPU stretch disclosed, not a proven native blocker"
-    }
+    },
+    "source_commit": "ca2fd7f9cda541b8550c4609cd851933d0d12c35",
+    "frames": 56,
+    "import": {
+      "actual_process_id": 7884,
+      "exit_code": 0
+    },
+    "pose_capture": {
+      "actual_process_id": 36700,
+      "exit_code": 0
+    },
+    "coordinator_visual_review": "All front/side clip grids inspected; idle arms relaxed alongside coat; action hat, coat, pouches and backpack recognizable with no sampled blocking deformation"
   },
   "rules": "res://assets/characters/npc_identity/water_orsen/source/rules.json",
   "recipe": "res://assets/characters/npc_identity/water_orsen/source/animation_recipe.json",
@@ -159,6 +169,9 @@
         "Right": 7.709247150487857
       }
     ],
-    "native_review": "PENDING"
-  }
+    "native_review": "Low/Compatibility sampled body PASS, 56/56 frames; portrait, world and independent Claude judgment PENDING"
+  },
+  "appearance_variant_id": "npc_identity_water_orsen_v1",
+  "paired_portrait": "res://assets/ui/portraits/npc_identity_water_orsen_v1.png",
+  "runtime_binding": "Only water_orsen is bound to the candidate; global and record gates OFF retain installed wandering_trainer body and portrait"
 }

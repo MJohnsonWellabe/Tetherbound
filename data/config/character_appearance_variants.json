@@ -430,6 +430,80 @@
           "native_review": "Low/Compatibility sampled scale and pose PASS for proceeding; independent Claude judgment PENDING"
         }
       }
+    },
+    "npc_identity_water_orsen_v1": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_model_override": "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb",
+      "portrait": "res://assets/ui/portraits/npc_identity_water_orsen_v1.png",
+      "review_status": "off_candidate_sampled_low_body_passed_pending_portrait_world_and_claude_judgement",
+      "authoring_provenance": {
+        "source_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+        "source_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+        "candidate_model": "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb",
+        "candidate_model_sha256": "0f1ffc07edd3e032446ba6ac52e1ba6540abd70adaa33bd022754de4302f7908",
+        "reference": "res://docs/art/reference/npc-identity/orsen-front-agent-v1.png",
+        "reference_sha256": "850916609870ec7636998ae5165ead0b3f4e9ea679f8bffa1e5326135e89d462",
+        "reference_prompt": "res://docs/art/reference/npc-identity/orsen-front-agent-v1.prompt.txt",
+        "reference_prompt_sha256_lf": "4305e0f6f2a500597687f6d6ec40ed08292597629f72aba55bd6d66d80cb510d",
+        "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+        "producer_sha256": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+        "generation_task_id": "01a12c31-4e68-7244-8345-7f97ce9f63ab",
+        "rig_task_id": "01a12c39-2461-7719-9915-6be22b5a4518",
+        "producer_hash_encoding": "UTF-8 text with CRLF normalized to LF",
+        "postprocessing": {
+          "source_commit_before_correction": "5b8287a8a1c3d460c75e22fba9da704eb05a4755",
+          "producer": "res://assets/characters/npc_identity/water_orsen/source/retarget_orsen_arms.py",
+          "producer_sha256_lf": "e7b4edd34d7c7a560934cdf15d5337c633e0d64bacd963aa84df075653777469",
+          "recipe": "res://assets/characters/npc_identity/water_orsen/source/arm_retarget_recipe.json",
+          "recipe_sha256": "6d234dbc6ecca80a1a2836bc121153aae3652533c6ac17ea8a2e6064160b12a9",
+          "input_model_sha256": "a3fd8bd4fa66936e2cace642e2ca0370a12353ce8f8eb288a204f6153d61bd91",
+          "output_model_sha256": "0f1ffc07edd3e032446ba6ac52e1ba6540abd70adaa33bd022754de4302f7908",
+          "composition": "Hamilton xyzw; Q_new=R_rest * D_orsen * inverse(R_rest) * Q_old; fresh cloned outputs/samplers across exactly 14 upper-arm rotation tracks, other channels/rest/mesh/skin/UV/textures/times unchanged",
+          "rest_local_bias_xyzw": {
+            "Left": [
+              -0.08864801222504194,
+              6.679065626468872e-07,
+              -0.16635793664757212,
+              0.9820725891188613
+            ],
+            "Right": [
+              -0.09735926940950022,
+              4.5585593727181953e-07,
+              0.17843769734904744,
+              0.9791226489215539
+            ]
+          },
+          "target_upper_arm_degrees_from_down": 10,
+          "changed_rotation_tracks": 14,
+          "cpu_preservation": "PASS: original BIN prefix and all non-target JSON/data preserved; skinned rest positions, weights and UVs exact; other channels/key times unchanged",
+          "finite_skinned_pose_samples": 28,
+          "idle_upper_arm_degrees_from_down": [
+            {
+              "phase": 0.125,
+              "Left": 9.150667646826987,
+              "Right": 8.934033453599165
+            },
+            {
+              "phase": 0.375,
+              "Left": 9.254215111653314,
+              "Right": 8.830609258905298
+            },
+            {
+              "phase": 0.625,
+              "Left": 7.969337228120302,
+              "Right": 7.600952180652726
+            },
+            {
+              "phase": 0.875,
+              "Left": 7.860969397605735,
+              "Right": 7.709247150487857
+            }
+          ],
+          "native_review": "Low/Compatibility sampled body PASS, 56/56 frames; portrait, world and independent Claude judgment PENDING"
+        }
+      }
     }
   },
   "_comment": "P2-055 paired presentation candidates; global and per-record gates remain OFF. Six installed-rig cloth variants are preserved. Adair has one identity-preserving model candidate with a dedicated portrait destination; incomplete pairs retain the installed body and portrait. Names, rank, height, gameplay and the shared base models are unchanged."

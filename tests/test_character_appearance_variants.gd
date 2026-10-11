@@ -24,7 +24,7 @@ func test_default_disabled_and_empty_records_preserve_base() -> void:
 	var records: Dictionary = config.get("variants", {})
 	var staged := ["p2055_water_adair", "p2055_water_iona", "p2055_water_orsen",
 		"p2055_water_otto", "p2055_water_trainer_fen", "p2055_water_trainer_evi"]
-	assert_eq(records.size(), staged.size() + 2)
+	assert_eq(records.size(), staged.size() + 3)
 	var model_candidate: Dictionary = records.get("npc_identity_water_adair_v1", {})
 	assert_eq(model_candidate.get("enabled"), false)
 	assert_eq(CHARACTER.config_for("field_researcher", "npc_identity_water_adair_v1"),
@@ -32,6 +32,9 @@ func test_default_disabled_and_empty_records_preserve_base() -> void:
 	assert_eq(records.get("npc_identity_water_iona_v1", {}).get("enabled"), false)
 	assert_eq(CHARACTER.config_for("field_researcher", "npc_identity_water_iona_v1"),
 		CHARACTER.config_for("field_researcher"))
+	assert_eq(records.get("npc_identity_water_orsen_v1", {}).get("enabled"), false)
+	assert_eq(CHARACTER.config_for("wandering_trainer", "npc_identity_water_orsen_v1"),
+		CHARACTER.config_for("wandering_trainer"))
 	for id: String in staged:
 		assert_true(records.has(id), id)
 		var record: Dictionary = records.get(id, {})
@@ -232,11 +235,18 @@ func test_only_named_actors_are_bound_to_their_model_candidates() -> void:
 	var cast: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_characters.json"))
 	var bound: Array[String] = []
 	var iona_bound: Array[String] = []
+	var orsen_bound: Array[String] = []
 	for actor: Dictionary in cast.npcs + cast.trainers:
 		if str(actor.get("appearance_variant_id", "")) == "npc_identity_water_adair_v1":
 			bound.append(str(actor.id))
 		if str(actor.get("appearance_variant_id", "")) == "npc_identity_water_iona_v1":
 			iona_bound.append(str(actor.id))
+		if str(actor.get("appearance_variant_id", "")) == "npc_identity_water_orsen_v1":
+			orsen_bound.append(str(actor.id))
+		if str(actor.id) == "water_orsen":
+			assert_eq(actor.body_profile, "wandering_trainer")
+			assert_eq(actor.model, "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb")
+			assert_eq(actor.portrait, "res://assets/ui/portraits/wandering_trainer.png")
 		if str(actor.id) == "water_iona":
 			assert_eq(actor.appearance_variant_id, "npc_identity_water_iona_v1")
 			assert_eq(actor.body_profile, "field_researcher")
@@ -244,6 +254,7 @@ func test_only_named_actors_are_bound_to_their_model_candidates() -> void:
 			assert_eq(actor.portrait, "res://assets/ui/portraits/maren.png")
 	assert_eq(bound, ["water_adair"])
 	assert_eq(iona_bound, ["water_iona"])
+	assert_eq(orsen_bound, ["water_orsen"])
 
 
 func test_iona_authoring_is_exact_hash_bound_and_shipping_fallback_remains_installed() -> void:
@@ -280,6 +291,44 @@ func test_iona_authoring_is_exact_hash_bound_and_shipping_fallback_remains_insta
 	var wrong_profile := spec.duplicate(true)
 	wrong_profile.config_key = "wandering_trainer"
 	assert_eq(PORTRAITS.authoring_portrait_model_config(wrong_profile, settings), {})
+	var enabled := settings.duplicate(true)
+	enabled.variants[id].enabled = true
+	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, enabled), {})
+	enabled = settings.duplicate(true)
+	enabled.enabled = true
+	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, enabled), {})
+
+
+func test_orsen_authoring_requires_wandering_trainer_and_exact_retarget_provenance() -> void:
+	var id := "npc_identity_water_orsen_v1"
+	var settings := VARIANTS.load_config()
+	var spec := {"config_key": "wandering_trainer", "appearance_variant": id, "author_appearance": true}
+	var authored := PORTRAITS.authoring_portrait_model_config(spec, settings)
+	assert_false(authored.is_empty())
+	assert_eq(authored.get("model"), "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb")
+	assert_eq(authored.get("portrait"), "res://assets/ui/portraits/npc_identity_water_orsen_v1.png")
+	var base := CHARACTER.config_for("wandering_trainer")
+	assert_eq(VARIANTS.resolve(base, "wandering_trainer", id, settings), base)
+	var wrong_profile := spec.duplicate(true)
+	wrong_profile.config_key = "field_researcher"
+	assert_eq(PORTRAITS.authoring_portrait_model_config(wrong_profile, settings), {})
+	for field: String in ["source_model_sha256", "candidate_model_sha256", "reference_sha256",
+			"producer_sha256", "reference_prompt_sha256_lf", "generation_task_id", "rig_task_id",
+			"reference", "reference_prompt", "producer"]:
+		var invalid := settings.duplicate(true)
+		invalid.variants[id].authoring_provenance[field] = "incorrect"
+		assert_eq(PORTRAITS.authoring_portrait_model_config(spec, invalid), {}, field)
+	for field: String in ["producer", "producer_sha256_lf", "recipe", "recipe_sha256",
+			"input_model_sha256", "output_model_sha256"]:
+		var invalid := settings.duplicate(true)
+		invalid.variants[id].authoring_provenance.postprocessing[field] = "incorrect"
+		assert_eq(PORTRAITS.authoring_portrait_model_config(spec, invalid), {}, field)
+	var duplicate := settings.duplicate(true)
+	duplicate.variants.p2055_water_orsen.portrait = duplicate.variants[id].portrait
+	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, duplicate), {})
+	var protected_destination := settings.duplicate(true)
+	protected_destination.variants[id].portrait = base.portrait
+	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, protected_destination), {})
 	var enabled := settings.duplicate(true)
 	enabled.variants[id].enabled = true
 	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, enabled), {})
