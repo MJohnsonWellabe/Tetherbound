@@ -52,6 +52,61 @@
    "label": "DISCLOSED SETUP: initial Hall arch position and the Stormwood portal open for this world (stands in for the earned Cloudreach-finale unlock), no earned credit"
   },
   {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "bramblebun",
+    "level": 20
+   },
+   "label": "SETUP: guest's belt member 1/5 (bramblebun) through party_seam.add (before host/join, so the host admits this roster)"
+  },
+  {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "terrapup",
+    "level": 20
+   },
+   "label": "SETUP: guest's belt member 2/5 (terrapup) through party_seam.add (before host/join, so the host admits this roster)"
+  },
+  {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "ripplet",
+    "level": 20
+   },
+   "label": "SETUP: guest's belt member 3/5 (ripplet) through party_seam.add (before host/join, so the host admits this roster)"
+  },
+  {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "galewisp",
+    "level": 20
+   },
+   "label": "SETUP: guest's belt member 4/5 (galewisp) through party_seam.add (before host/join, so the host admits this roster)"
+  },
+  {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "mudsnout",
+    "level": 20
+   },
+   "label": "SETUP: guest's belt member 5/5 (mudsnout) through party_seam.add (before host/join, so the host admits this roster)"
+  },
+  {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "trailpup",
+    "level": 20
+   },
+   "expect": "FAIL",
+   "label": "guest's belt is full: a sixth party_seam.add is refused (no sixth slot) (before host/join, so the host admits this roster)"
+  },
+  {
    "peer": 0,
    "action": "host"
   },
@@ -95,61 +150,6 @@
    },
    "budget_frames": 10000,
    "label": "through the Crossing Hall Stormwood portal (RD-17)"
-  },
-  {
-   "peer": 1,
-   "action": "party_grant",
-   "args": {
-    "species": "bramblebun",
-    "level": 20
-   },
-   "label": "SETUP: guest's belt member 1/5 (bramblebun) through party_seam.add"
-  },
-  {
-   "peer": 1,
-   "action": "party_grant",
-   "args": {
-    "species": "terrapup",
-    "level": 20
-   },
-   "label": "SETUP: guest's belt member 2/5 (terrapup) through party_seam.add"
-  },
-  {
-   "peer": 1,
-   "action": "party_grant",
-   "args": {
-    "species": "ripplet",
-    "level": 20
-   },
-   "label": "SETUP: guest's belt member 3/5 (ripplet) through party_seam.add"
-  },
-  {
-   "peer": 1,
-   "action": "party_grant",
-   "args": {
-    "species": "galewisp",
-    "level": 20
-   },
-   "label": "SETUP: guest's belt member 4/5 (galewisp) through party_seam.add"
-  },
-  {
-   "peer": 1,
-   "action": "party_grant",
-   "args": {
-    "species": "mudsnout",
-    "level": 20
-   },
-   "label": "SETUP: guest's belt member 5/5 (mudsnout) through party_seam.add"
-  },
-  {
-   "peer": 1,
-   "action": "party_grant",
-   "args": {
-    "species": "trailpup",
-    "level": 20
-   },
-   "expect": "FAIL",
-   "label": "guest's belt is full: a sixth party_seam.add is refused (no sixth slot)"
   },
   {
    "peer": 0,
