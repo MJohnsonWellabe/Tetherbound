@@ -5,11 +5,14 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## proof: summit flags and a legal five-creature party are seeded in memory.
 
 const FIGHT_ID := "captain_veyra_storm_anchor"
+## Same wall-clock build allowance as the production catalogue capture.
+const PHASE2_BUILD_TIMEOUT_MSEC := 900000
 var _phase2_output := "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main"
 var _phase2_seed := 2042
 var _phase2_frames: Array[Dictionary] = []
 var _phase2_last_sample := -999999
 var _phase2_shot_pending := false
+var _phase2_world_readiness: Dictionary = {}
 
 
 func _run() -> void:
@@ -40,19 +43,36 @@ func _run() -> void:
 	world = SCENE.instantiate()
 	root.add_child(world)
 	current_scene = world
-	player = world.get_node("Player")
-	runtime = world.get_node("CloudreachRuntime")
-	chapter = world.get_node("CloudreachChapter")
-	physical = chapter.get_node("PhysicalRuntime")
-	director = runtime.director
-	manager = runtime.manager
-	fly = player.fly_controller
-	combat_pilot = BALANCE.InputPilot.new(self, manager, director, world.get_node("CameraRig"))
+	if not await _await_phase2_world_ready():
+		_write_manifest()
+		quit(1)
+		return
+	player = world.get_node_or_null("Player") as CharacterBody3D
+	runtime = world.get_node_or_null("CloudreachRuntime")
+	chapter = world.get_node_or_null("CloudreachChapter")
+	if not _require(player != null and runtime != null and chapter != null,
+			"Ready production world contains Player, CloudreachRuntime and CloudreachChapter"):
+		_write_manifest()
+		quit(1)
+		return
+	physical = chapter.get_node_or_null("PhysicalRuntime")
+	director = runtime.get("director") as Node
+	manager = runtime.get("manager") as Node
+	fly = player.get("fly_controller") as Node
+	var rig := world.get_node_or_null("CameraRig") as SpringArm3D
+	var arbiter := world.get_node_or_null("InteractionArbiter")
+	if not _require(physical != null and director != null and manager != null
+			and fly != null and rig != null and arbiter != null
+			and arbiter.has_signal("activated"), "Ready production fight bindings are present"):
+		_write_manifest()
+		quit(1)
+		return
+	combat_pilot = BALANCE.InputPilot.new(self, manager, director, rig)
 	combat_pilot.pilot = PILOT.Pilot.SPACER
 	combat_pilot.switch_input = true
 	combat_pilot.use_switching = false
 	combat_pilot.listen()
-	world.get_node("InteractionArbiter").activated.connect(func(provider: Object) -> void:
+	arbiter.activated.connect(func(provider: Object) -> void:
 		interaction_activations += 1
 		last_activated_path = str(provider.get_path()))
 	director.trainer_started.connect(func(id: String) -> void: battle_starts.append(id))
@@ -77,6 +97,29 @@ func _run() -> void:
 	_write_manifest()
 	print("PHASE2 CLOUDREACH FIGHT won=%s captures=%d" % [str(won), _phase2_frames.size()])
 	quit(0 if won else 1)
+
+
+func _await_phase2_world_ready() -> bool:
+	var began := Time.get_ticks_msec()
+	var deadline := began + PHASE2_BUILD_TIMEOUT_MSEC
+	_phase2_world_readiness = {"complete": false, "timeout_msec": PHASE2_BUILD_TIMEOUT_MSEC}
+	if not is_instance_valid(world) or not world.has_method("shell_build_complete"):
+		_phase2_world_readiness["failure"] = "production shell_build_complete contract missing"
+		return _require(false, str(_phase2_world_readiness["failure"]))
+	print("PHASE2 CLOUDREACH waiting for production shell_build_complete")
+	while not bool(world.call("shell_build_complete")):
+		if Time.get_ticks_msec() > deadline:
+			_phase2_world_readiness["elapsed_msec"] = Time.get_ticks_msec() - began
+			_phase2_world_readiness["failure"] = "production world shell build timed out"
+			return _require(false, str(_phase2_world_readiness["failure"]))
+		await process_frame
+		if not is_instance_valid(world):
+			_phase2_world_readiness["failure"] = "production world disappeared during build"
+			return _require(false, str(_phase2_world_readiness["failure"]))
+	_phase2_world_readiness["complete"] = true
+	_phase2_world_readiness["elapsed_msec"] = Time.get_ticks_msec() - began
+	print("PHASE2 CLOUDREACH production world ready after %dms" % int(_phase2_world_readiness["elapsed_msec"]))
+	return true
 
 
 func _sample_fight() -> void:
@@ -119,6 +162,7 @@ func _write_manifest() -> void:
 		"resolution": [root.size.x, root.size.y],
 		"fixture": "In-memory summit progression flags and five level-25 creatures; production captain challenge and live controller-input combat pilot",
 		"frames": _phase2_frames, "victory": FIGHT_ID in battle_wins,
+		"world_readiness": _phase2_world_readiness,
 		"failure": failed, "complete": FIGHT_ID in battle_wins and not _phase2_frames.is_empty()}
 	var stream := FileAccess.open(output_dir + "/manifest.json", FileAccess.WRITE)
 	if stream != null:
