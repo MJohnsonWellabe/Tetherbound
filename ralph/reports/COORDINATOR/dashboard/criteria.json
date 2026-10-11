@@ -1,5 +1,5 @@
 {
- "generated_at": "12:17 PM CT Sun 11 Oct 2026",
+ "generated_at": "12:38 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -1301,11 +1301,11 @@
    "title": "Ending after Stormwood and the fifth key",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/reorder",
-   "pct": 80,
+   "pct": 100,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1337,10 +1337,10 @@
     },
     {
      "text": "After credits, reload resumes a safe completed world with bounties, rematches and remaining activities available.",
-     "status": "in_progress",
-     "evidence": "smoke_regional_credits_reload.gd (CI, synthetic); F20 solo PASS @b61078613068",
-     "gap": "Enable portals; re-run smoke_f20_ending.gd continuation, including rematch admission.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. Credits are unreachable in play without Home Key travel (portal flag false). The CI smoke uses a synthetic return and doesn't assert rematches.",
+     "status": "met",
+     "evidence": "tests/smoke_f20_ending.gd (home-key lane c4359f23): 68/0, counts_as_f20_3_proof=true: after credits, reload resumes the completed world with bounties, rematch admission and remaining activities available",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (home-key c4359f23, 12:37 PM CT Sun 11 Oct), the same ending smoke run as F44#1, with the same disclosed fixtures. Lands with the consolidated PR.",
      "audit_index": 3
     },
     {
@@ -2757,11 +2757,11 @@
    "title": "Rematches and alpha respawns",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 50,
+   "pct": 75,
    "counts": {
-    "met": 2,
+    "met": 3,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 1,
     "blocked": 0,
     "failing": 0
@@ -2777,10 +2777,10 @@
     },
     {
      "text": "After credits, leaders and bosses return at the endgame tier (L55–60).",
-     "status": "in_progress",
-     "evidence": "test_f44_repeatables::test_tiers… (gating only); rematches.json endgame_levels 55/58/58/60",
-     "gap": "Unit-assert endgame levels, then an engine witness of a post-credits leader rematch.",
-     "note": "Evidence phase: test walk now enters Grandpa's house by the east door (tb/ev-coordinator); smoke_f20_ending re-running. | Code on main; test_f44_endgame_tier 3 tests/295 assertions PASS. smoke_f20_ending fails before credits because its straight-line walk to Grandpa hits the house's south wall (needs to path through the east door). Deferred to the evidence phase (10-11). | prior: Audit 2026-10-04 on b4e4897d5: MISSING. Levels are config-only. No test asserts endgame levels or a post-credits encounter.",
+     "status": "met",
+     "evidence": "tests/smoke_f20_ending.gd (home-key lane c4359f23): 68 checks, 0 failures, exit 0. 'The post-credits leader returns at the endgame leader tier L58 (enemy L58)'; ordinary input admits the canonical endgame rematch",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (home-key c4359f23, 12:37 PM CT Sun 11 Oct). Game fix 547c3170 (realm readiness deadline vs Meadows post-build hold); arena-seat fixes merged. Disclosed (proof rules v2): road_gate_open fixture, authored-route walk proven, then a teleport beside the South Bridge grunt for the rematch. Lands with the consolidated PR.",
      "audit_index": 1
     },
     {
