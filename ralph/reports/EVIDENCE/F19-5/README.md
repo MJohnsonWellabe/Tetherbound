@@ -19,7 +19,7 @@ Helper/harness alignments (coordinator-approved, disclosed):
 
 Open:
 - Intermittent "lost grounded floor" near (28,-11) by village_twins_yard on the opening's third catch (r3, r9). It doesn't reproduce in an empty scene, so some dynamic body is involved. d4/r10 passed the same route.
-- camp_tournament r10 was in flight at handoff; status is in the handoff message. bridge and warrens were not run.
+- camp_tournament r10 @ebe1b2c7 (15:21-15:45) FAIL after materials, camp, rest, Halda registration (boundary fix worked) and `tournament_quarter_won`: standing 1.4 m from Halda/Interactable (1.52 m), her prompt never won (offer '', winner none). Log: r10.camp_tournament.log.filtered.gz. bridge and warrens were not run.
 - The cross-commit resume opt-in (proof rules v2) was denied by this session's permission classifier and reverted. Pieces must share a commit.
 - Infrastructure: do not run unit suites alongside the opening. The navigator's 10 ms dispatch deadline starves on 4 cores (r5).
 Logs from the failed attempts: `*.filtered.gz` here.
