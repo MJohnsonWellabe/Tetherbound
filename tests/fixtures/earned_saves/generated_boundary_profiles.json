@@ -8,7 +8,12 @@
       "realm": "meadows",
       "day": 5,
       "clock_elapsed_seconds": 500.0,
-      "position": "template",
+      "position": {
+        "ground_xz": [
+          -348.5,
+          2601.5
+        ]
+      },
       "party_levels": [
         15,
         15,
