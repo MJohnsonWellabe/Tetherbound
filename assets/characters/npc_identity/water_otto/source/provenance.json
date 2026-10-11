@@ -1,7 +1,7 @@
 {
   "actor_id": "water_otto",
   "default_enabled": false,
-  "status": "CORRECTED_OFF_BODY_ONLY_NATIVE_REVIEW_PENDING",
+  "status": "REGISTERED_OFF_SAMPLED_LOW_BODY_PASS_PORTRAIT_WORLD_CLAUDE_PENDING",
   "source_commit": "10d72eb48aad458c337060bbbbbf15babd670b7e",
   "installed_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
   "installed_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
@@ -222,19 +222,18 @@
   },
   "import_sidecar": {
     "origin": "Root-generated original-body import sidecar preserved after actual native PID52496 terminal0; only UID added, all prior parameters unchanged",
-    "native_import_status": "ORIGINAL_BODY_IMPORTED_CORRECTED_BODY_REIMPORT_PENDING",
+    "native_import_status": "CORRECTED_BODY_IMPORTED_FOR_SCOPED_NATIVE_POSE_REVIEW",
     "ensure_tangents": true,
     "reason": "Unchanged Blender exporter omits TANGENT attribute; native importer must regenerate tangent basis from preserved UVs/normals",
     "native_uid": "uid://bcfe7n0agooky"
   },
   "native_review": {
-    "status": "PENDING",
-    "scope": "Corrected seven clips/four phases/front-side Low/Compatibility recapture under unchanged original56frame guards pending",
+    "status": "PASS_SCOPED_SAMPLED_BODY_ONLY",
+    "scope": "Low/Compatibility, seven clips, four phases, front/side; all56 original scale/raster/clip guards retained",
     "risks": [
-      "Corrected sampled CPU idle upper arms7.6-9.31degrees from down; native relaxed stance and coat/hand/pouch/backpack clearance remain pending",
-      "Ten idle edges longer than5mm now stretch above2x; worst rest5.806mm to26.877mm at lower rear torso. Corrected chop reaches122.378mm on same edge. CPU diagnostics are not visual acceptance or proof of a blocking defect",
-      "Olive outfit differentiation from Orsen remains native/world PENDING",
-      "Original two normal-seam splits and regenerated tangent basis retained; corrected native shading review pending"
+      "CPU ten-idle-edge and chop stretching remains disclosed; no blocking artifact visible in root sampled corrected native views. Continuous motion and contacts are not certified.",
+      "Olive differentiation from Orsen still requires world/portrait review.",
+      "No paired portrait or independent Claude acceptance yet."
     ],
     "portrait": "NOT_AUTHORED",
     "world": "PENDING",
@@ -247,7 +246,14 @@
       "scale_raster_clip_checks": "56/56",
       "idle_stance": "FAIL: hands held away from coat, measured29-32degrees",
       "action_review": "Root inspected front/side grids; no catastrophic stretching visible in sampled original poses; not continuous-motion acceptance"
-    }
+    },
+    "source_commit": "1e77f88c88355895073fe37c39da3102545f3b0a",
+    "frames": 56,
+    "pose_capture": {
+      "actual_process_id": 21352,
+      "exit_code": 0
+    },
+    "coordinator_visual_review": "Both seven-clip/four-phase grids inspected: idle arms relaxed; no blocking coat, hand or backpack artifact visible at shown sample scale. Continuous motion, world, portrait and independent Claude acceptance remain pending."
   },
   "rules": "res://assets/characters/npc_identity/water_otto/source/rules.json",
   "recipe": "res://assets/characters/npc_identity/water_otto/source/animation_recipe.json",
@@ -298,6 +304,9 @@
         "Right": 7.709189879119389
       }
     ],
-    "native_review": "PENDING; CPU preservation only; disclosed idle/action stretch requires corrected native review"
-  }
+    "native_review": "Low/Compatibility sampled body PASS56/56 under original guards; continuous motion, world, portrait and independent Claude judgment PENDING"
+  },
+  "appearance_variant_id": "npc_identity_water_otto_v1",
+  "paired_portrait": "res://assets/ui/portraits/npc_identity_water_otto_v1.png",
+  "runtime_binding": "Only water_otto binds the disabled candidate; global and record gates OFF retain installed wandering_trainer body and portrait. Dedicated portrait is not yet authored."
 }
