@@ -18,17 +18,26 @@ func _settings() -> Dictionary:
 		"palette": {"*": "#ff0000"}, "accessories": []}}}
 
 
-func test_default_disabled_and_empty_records_preserve_base() -> void:
+func test_only_accepted_adair_is_enabled_and_other_records_preserve_base() -> void:
 	var config := VARIANTS.load_config()
-	assert_eq(config.get("enabled"), false)
+	assert_eq(config.get("enabled"), true)
 	var records: Dictionary = config.get("variants", {})
 	var staged := ["p2055_water_adair", "p2055_water_iona", "p2055_water_orsen",
 		"p2055_water_otto", "p2055_water_trainer_fen", "p2055_water_trainer_evi"]
 	assert_eq(records.size(), staged.size() + 4)
 	var model_candidate: Dictionary = records.get("npc_identity_water_adair_v1", {})
-	assert_eq(model_candidate.get("enabled"), false)
-	assert_eq(CHARACTER.config_for("field_researcher", "npc_identity_water_adair_v1"),
-		CHARACTER.config_for("field_researcher"))
+	assert_eq(model_candidate.get("enabled"), true)
+	var accepted_id := "npc_identity_water_adair_v1"
+	var adair := CHARACTER.config_for("field_researcher", accepted_id)
+	var expected_adair := CHARACTER.config_for("field_researcher").duplicate(true)
+	expected_adair.model = "res://assets/characters/npc_identity/water_adair/adair_lod0.glb"
+	expected_adair.portrait = "res://assets/ui/portraits/npc_identity_water_adair_v1.png"
+	expected_adair.appearance_variant_id = accepted_id
+	expected_adair.erase("body_albedo_override")
+	expected_adair.erase("body_emission_override")
+	assert_eq(adair, expected_adair)
+	assert_eq(PORTRAITS.portrait_model_config(
+		{"config_key": "field_researcher", "appearance_variant": accepted_id}), adair)
 	assert_eq(records.get("npc_identity_water_iona_v1", {}).get("enabled"), false)
 	assert_eq(CHARACTER.config_for("field_researcher", "npc_identity_water_iona_v1"),
 		CHARACTER.config_for("field_researcher"))
@@ -155,8 +164,8 @@ func test_ranked_portrait_keeps_the_existing_rank_palette_and_badges() -> void:
 func _model_settings() -> Dictionary:
 	var record: Dictionary = VARIANTS.load_config().variants.npc_identity_water_adair_v1.duplicate(true)
 	record.enabled = true
-	# Test-only existing plate: the real dedicated output is deliberately absent
-	# until root authors it. This never changes the shipped candidate's gates.
+	# Test-only existing plate isolates resolver checks from the accepted plate.
+	# The shipping test above binds Adair's actual model and portrait.
 	record.portrait = "res://assets/ui/portraits/mira.png"
 	return {"enabled": true, "variants": {"npc_identity_water_adair_v1": record}}
 
@@ -209,7 +218,9 @@ func test_model_pair_preserves_identity_dressing_and_clears_only_old_atlas_overr
 func test_off_model_portrait_authoring_uses_runtime_body_and_checks_provenance() -> void:
 	var id := "npc_identity_water_adair_v1"
 	var spec := {"config_key": "field_researcher", "appearance_variant": id, "author_appearance": true}
-	var settings := VARIANTS.load_config()
+	var settings := VARIANTS.load_config().duplicate(true)
+	settings.enabled = false
+	settings.variants[id].enabled = false
 	var authored := PORTRAITS.authoring_portrait_model_config(spec, settings)
 	assert_false(authored.is_empty())
 	var runtime := VARIANTS.resolve(CHARACTER.config_for("field_researcher"), "field_researcher", id, _model_settings())
@@ -270,14 +281,17 @@ func test_only_named_actors_are_bound_to_their_model_candidates() -> void:
 
 func test_iona_authoring_is_exact_hash_bound_and_shipping_fallback_remains_installed() -> void:
 	var id := "npc_identity_water_iona_v1"
-	var settings := VARIANTS.load_config()
+	var shipping_settings := VARIANTS.load_config()
+	var settings := shipping_settings.duplicate(true)
+	# Authoring remains an explicit OFF-only fixture; shipping stays untouched.
+	settings.enabled = false
 	var spec := {"config_key": "field_researcher", "appearance_variant": id, "author_appearance": true}
 	var authored := PORTRAITS.authoring_portrait_model_config(spec, settings)
 	assert_false(authored.is_empty())
 	assert_eq(authored.get("model"), "res://assets/characters/npc_identity/water_iona/iona_lod0.glb")
 	assert_eq(authored.get("portrait"), "res://assets/ui/portraits/npc_identity_water_iona_v1.png")
 	var base := CHARACTER.config_for("field_researcher")
-	assert_eq(VARIANTS.resolve(base, "field_researcher", id, settings), base)
+	assert_eq(VARIANTS.resolve(base, "field_researcher", id, shipping_settings), base)
 	var runtime_settings := settings.duplicate(true)
 	runtime_settings.enabled = true
 	runtime_settings.variants[id].enabled = true
@@ -312,14 +326,17 @@ func test_iona_authoring_is_exact_hash_bound_and_shipping_fallback_remains_insta
 
 func test_orsen_authoring_requires_wandering_trainer_and_exact_retarget_provenance() -> void:
 	var id := "npc_identity_water_orsen_v1"
-	var settings := VARIANTS.load_config()
+	var shipping_settings := VARIANTS.load_config()
+	var settings := shipping_settings.duplicate(true)
+	# Authoring remains an explicit OFF-only fixture; shipping stays untouched.
+	settings.enabled = false
 	var spec := {"config_key": "wandering_trainer", "appearance_variant": id, "author_appearance": true}
 	var authored := PORTRAITS.authoring_portrait_model_config(spec, settings)
 	assert_false(authored.is_empty())
 	assert_eq(authored.get("model"), "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb")
 	assert_eq(authored.get("portrait"), "res://assets/ui/portraits/npc_identity_water_orsen_v1.png")
 	var base := CHARACTER.config_for("wandering_trainer")
-	assert_eq(VARIANTS.resolve(base, "wandering_trainer", id, settings), base)
+	assert_eq(VARIANTS.resolve(base, "wandering_trainer", id, shipping_settings), base)
 	var wrong_profile := spec.duplicate(true)
 	wrong_profile.config_key = "field_researcher"
 	assert_eq(PORTRAITS.authoring_portrait_model_config(wrong_profile, settings), {})
@@ -350,14 +367,17 @@ func test_orsen_authoring_requires_wandering_trainer_and_exact_retarget_provenan
 
 func test_otto_authoring_requires_wandering_trainer_and_exact_retarget_provenance() -> void:
 	var id := "npc_identity_water_otto_v1"
-	var settings := VARIANTS.load_config()
+	var shipping_settings := VARIANTS.load_config()
+	var settings := shipping_settings.duplicate(true)
+	# Authoring remains an explicit OFF-only fixture; shipping stays untouched.
+	settings.enabled = false
 	var spec := {"config_key": "wandering_trainer", "appearance_variant": id, "author_appearance": true}
 	var authored := PORTRAITS.authoring_portrait_model_config(spec, settings)
 	assert_false(authored.is_empty())
 	assert_eq(authored.get("model"), "res://assets/characters/npc_identity/water_otto/otto_lod0.glb")
 	assert_eq(authored.get("portrait"), "res://assets/ui/portraits/npc_identity_water_otto_v1.png")
 	var base := CHARACTER.config_for("wandering_trainer")
-	assert_eq(VARIANTS.resolve(base, "wandering_trainer", id, settings), base)
+	assert_eq(VARIANTS.resolve(base, "wandering_trainer", id, shipping_settings), base)
 	var wrong_profile := spec.duplicate(true)
 	wrong_profile.config_key = "field_researcher"
 	assert_eq(PORTRAITS.authoring_portrait_model_config(wrong_profile, settings), {})
