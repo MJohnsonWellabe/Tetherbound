@@ -20,7 +20,6 @@ extends "res://tools/earned_saves/earned_chain_runner.gd"
 ## Not claimed: earned Meadows campaign, two-peer rejoin, visuals.
 
 const PORTAL := preload("res://tests/helpers/f49_portal_travel.gd")
-const SAVE := preload("res://scripts/save/save_game.gd")
 const TIDEWAKE := ["altar_tidewake", "den_tidewake", "forge_tidewake", "kitchen_tidewake"]
 const CLOUDREACH := ["altar_cloudreach", "den_cloudreach", "forge_cloudreach", "kitchen_cloudreach"]
 
