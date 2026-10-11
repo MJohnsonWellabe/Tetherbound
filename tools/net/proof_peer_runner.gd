@@ -63,6 +63,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 	if action == "f25_frame_start": return _f25_start(msg.get("args", {}))
 	if action == "f25_frame_stop": return _f25_stop()
 	if action == "f25_owned_identity": return {"verdict": "PASS", "data": _f25_local_identity()}
+	if action == "f25_rematch_source": return _f25_rematch_source()
+	if action == "f25_rematch_snapshot": return _f25_rematch_snapshot()
 	if action.begins_with("f48_"):
 		if action == "f48_fixture_trainer_fight":
 			# This dispatch bypasses the base win_trainer_battle branch. Carry its
@@ -89,6 +91,47 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		out = await PROOF_STEPS.run(self, action, args)
 	out["frames_used"] = _physics_count - before
 	return out
+
+
+## Observe the installed, built homestead Board's canonical endgame prompt.
+## Only the ordinary interact press may activate it; this never emits a signal.
+func _f25_rematch_source() -> Dictionary:
+	if current_scene == null: return {"verdict": "FAIL", "detail": "No actual Meadows scene"}
+	for source: Node in get_nodes_in_group("foundation_trainer_specs"):
+		if not current_scene.is_ancestor_of(source) or not source.has_meta("foundation_rematch_prompt"): continue
+		var spec: Dictionary = source.get_meta("foundation_trainer_spec", {})
+		if spec.get("id") != "warden_aldis" or source.name != "Rematch_warden_aldis": continue
+		var board := source.get_parent()
+		var homestead := board.get_parent()
+		if board.name != "Board" or homestead.get_script() != TOURNAMENT or homestead.call("built") != true: continue
+		var prompt := source.get_meta("foundation_rematch_prompt") as Node3D
+		if not is_instance_valid(prompt): continue
+		var selected := false
+		for arbiter: Node in get_nodes_in_group("interaction_arbiter"):
+			if arbiter.call("winning_provider") == prompt: selected = true
+		var player := _probe.call("player") as Node3D
+		var offer: Dictionary = prompt.call("interaction_offer", player.global_position) if player != null else {}
+		return {"verdict": "PASS", "data": {"source_path": str(source.get_path()), "prompt_path": str(prompt.get_path()),
+			"position": [prompt.global_position.x, prompt.global_position.y, prompt.global_position.z], "selected": selected,
+			"offer_available": not offer.is_empty(), "trainer_id": "warden_aldis", "tier": "endgame"}}
+	return {"verdict": "FAIL", "detail": "Actual built homestead canonical Warden endgame source not mounted"}
+
+
+func _f25_rematch_snapshot() -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	var local: Variant = game.get("local") if game != null else null
+	if not local is RefCounted: return {"verdict": "FAIL", "detail": "No original owner"}
+	var personal: Dictionary = local.get("redesign_character")
+	var state: Dictionary = local.call("save_data")
+	var candy := 0
+	for slot: Variant in state.get("inventory", []):
+		if slot is Dictionary and slot.get("id") == "tether_candy": candy += int(slot.get("n", 0))
+	var director := _encounter_director()
+	var trainer: Dictionary = director.get("_trainer_spec") if director != null else {}
+	return {"verdict": "PASS", "data": {"character_id": str(local.get("character_id")), "candy": candy,
+		"transaction_receipts": personal.get("transaction_receipts", []).duplicate(), "rematch": trainer.get("rematch", {}).duplicate(true),
+		"trainer_id": str(trainer.get("id", "")), "world_namespace": str(game.get("world").get("reward_delivery_namespace")),
+		"session_epoch": str(_session().call("_altar_current_epoch"))}}
 
 
 ## Original portable identity/loadout stays exact. Legitimate combat may add
@@ -185,6 +228,10 @@ func _f25_start(args: Dictionary) -> Dictionary:
 	if owned.size() != 4 or manager == null or director == null or not bool(manager.call("is_fighting")):
 		return {"verdict": "FAIL", "detail": "F25 needs a real active admitted four-creature encounter"}
 	var record: Dictionary = director.call("encounter_record")
+	var trainer: Dictionary = director.get("_trainer_spec")
+	if trainer.get("id") != "warden_aldis" or trainer.get("rematch", {}).get("original_id") != "warden_aldis" \
+			or trainer.get("rematch", {}).get("tier") != "endgame":
+		return {"verdict": "FAIL", "detail": "F25 requires the ordinary authored endgame Warden rematch"}
 	var participants: Dictionary = record.get("participants", {})
 	_f25_encounter = str(record.get("encounter_id", ""))
 	if participants.size() != 4 or _f25_encounter.is_empty() or str(record.get("phase", "")) != "active":
@@ -501,7 +548,7 @@ func _f25_stop() -> Dictionary:
 		"particle_cap": int(limits.get("encounter_particle_cap", 0)), "light_cap": int(limits.get("scene_light_cap", 0)),
 		"scope": "One physical adapter, four same-machine processes; native host viewport with three headless guests. Node/frustum overlap is not a blind visual verdict or Ally hardware proof.",
 		"timing": "Godot measured viewport CPU/GPU milliseconds; raw zero/unavailable rows fail. Wall/process/physics/setup are separate, not substituted GPU values.",
-		"fixtures_outside_window": ["existing arena placement and trainer challenge/admission", "original F48 HP ceiling completion only after explicit collector stop"],
+		"fixtures_outside_window": ["ordinary owned recall/walking/built-homestead endgame prompt and production encounter admission", "original F48 HP ceiling completion only after explicit collector stop"],
 		"collector_cost": "Passive signal storage and bounded visible-node traversal in the window; CSV/JSON writing after stop; no screenshot/readback"}
 	var csv := FileAccess.open(_f25_output.path_join("frames.csv"), FileAccess.WRITE)
 	var json := FileAccess.open(_f25_output.path_join("manifest.json"), FileAccess.WRITE)
