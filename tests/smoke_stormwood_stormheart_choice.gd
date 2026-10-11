@@ -10,17 +10,23 @@ extends SceneTree
 ## claim, across two separately mounted worlds with different world ids and
 ## different reserved Stormhearts: an unanswered offer in world B survives a
 ## refusal in world A, and world A's own unacknowledged answer resumes there.
-## Hub/chapter/Dynamo are stubs; the hub stub only records intents, so the
-## host never acknowledges a settle here (the participants smoke covers the
-## host side).
+## Hub/chapter/Dynamo are fixture adapters. Normal answers reach the original
+## mounted host producer and its durable ACK. The cross-world replay cases
+## drop the actual settle at transport, retain its BOOL-saved personal answer,
+## and reload the original reserved world claim and character from scratch disk.
 const ENDING := preload("res://scripts/world/stormwood_ending.gd")
 const PANEL := preload("res://scenes/ui/dialogue_panel.tscn")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
-const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 const CHARACTER := "character-choice-a"
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const WORLD_STATE := preload("res://autoload/world_state.gd")
+const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 
 var failures: Array[String] = []
 var assertions := 0
+var _character_baseline: Dictionary = {}
+var _scratch := ""
+var _saver: RefCounted
 
 
 class FixtureWorld extends Node3D:
@@ -35,20 +41,27 @@ class FixtureWorld extends Node3D:
 
 class HubStub extends Node:
 	var intents: Array = []
+	var sent: Array[Dictionary] = []
+	var ending: Node
+	var actor: Node3D
+	var drop_settles := false
 
-	func send_to(_peer: int, _event: Dictionary) -> void:
-		pass
+	func send_to(_peer: int, event: Dictionary) -> void:
+		sent.append(event.duplicate(true))
+		if ending != null: ending.receive(event)
 
-	## Reached through Session's real offline-host dispatch; recorded only.
-	func dispatch(_peer: int, intent: Dictionary) -> void:
+	## The drop happens at transport, after the original personal BOOL save.
+	func dispatch(peer: int, intent: Dictionary) -> void:
 		intents.append(intent.duplicate(true))
+		if str(intent.get("kind", "")) == "ending_settled" and drop_settles: return
+		if ending != null: ending.dispatch(peer, intent)
 
 	func claims() -> Array:
 		return intents.filter(func(intent: Dictionary) -> bool:
 			return str(intent.get("kind", "")) == "ending_claim")
 
 	func actor_for(_peer: int) -> Node3D:
-		return null
+		return actor
 
 
 class ChapterStub extends Node:
@@ -72,9 +85,24 @@ func _run() -> void:
 	if game == null:
 		_finish()
 		return
+	var original_scene: Node = current_scene
+	var original_saver: RefCounted = game.save_system
+	var original_world: RefCounted = game.world
+	var original_world_data: Dictionary = game.world.save_data().duplicate(true)
+	var original_character: Dictionary = game.local.save_data().duplicate(true)
+	var session: Node = game.session
+	var original_process_mode: int = session.process_mode
+	session.process_mode = Node.PROCESS_MODE_DISABLED
 	game.reset_for_new_game()
 	game.current_realm = "stormwood"
 	game.local.set("character_id", CHARACTER)
+	_character_baseline = game.local.save_data().duplicate(true)
+	_scratch = "user://stormheart-choice-%d/" % Time.get_ticks_usec()
+	_saver = SAVE_GAME.new(_scratch)
+	game.save_system = _saver
+	session.call("_owner_passive_service")
+	_check(_saver.save_character_prepared(game, CHARACTER) == true, "the fixture's initial character is BOOL-saved in scratch")
+	game.world.flags.set_flag(ENDING.FREED_FLAG)
 	var conversations: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(
 		"res://data/dialogue/stormwood.json")) as Dictionary).conversations
 	for id: String in conversations:
@@ -83,6 +111,7 @@ func _run() -> void:
 	var world := FixtureWorld.new()
 	world.name = "StormheartChoiceFixture"
 	root.add_child(world)
+	current_scene = world
 	var panel := PANEL.instantiate()
 	panel.name = "DialoguePanel"
 	world.add_child(panel)
@@ -97,7 +126,13 @@ func _run() -> void:
 	var ending := ENDING.new()
 	ending.name = "StormwoodEnding"
 	world.add_child(ending)
+	hub.ending = ending
+	var actor := Node3D.new()
+	world.add_child(actor)
+	hub.actor = actor
+	(world.get_node("StormwoodDynamo") as DynamoStub).fighter_characters = [CHARACTER]
 	ending.mount(world)
+	actor.global_position = ending.get("_offer_prompt").global_position
 	var declines: Array[String] = []
 	panel.declined.connect(func(id: String) -> void: declines.append(id))
 	await process_frame
@@ -108,6 +143,7 @@ func _run() -> void:
 	await _to_question(panel)
 	panel.runner().advance()
 	await _frames(3)
+	_check_saved_ack(ending, hub, game)
 	_check(_holds_stormheart(game), "Yes with room: the Stormheart joins this character's belt")
 	_check(_receipt(game), "Yes records this character's personal receipt")
 	_check(_accepted(game), "a Yes that joins marks this character's portable acceptance")
@@ -120,6 +156,7 @@ func _run() -> void:
 	await _to_question(panel)
 	await _press_decline()
 	await _frames(3)
+	_check_saved_ack(ending, hub, game)
 	_check(not _holds_stormheart(game), "No: the Stormheart stays free")
 	_check(_receipt(game), "No records this character's personal receipt as an answer")
 	_check(game.pending_catch == null, "No opens no release ceremony")
@@ -161,6 +198,7 @@ func _run() -> void:
 	await _to_question(panel)
 	await _press_decline()
 	await _frames(3)
+	_check_saved_ack(ending, hub, game)
 	_check(_receipt(game) and not _holds_stormheart(game),
 		"an explicit No after an interruption records this character's refusal")
 	_check(panel.drain_effects().is_empty(), "a No queues no accept effect")
@@ -196,6 +234,7 @@ func _run() -> void:
 		menu.call("close")
 	paused = false
 	await _frames(3)
+	_check_saved_ack(ending, hub, game)
 	_check(_holds_stormheart(game) and _receipt(game),
 		"the Stormheart joins as soon as the other ceremony ends")
 	_check(_accepted(game), "the Stormheart kept after a waited ceremony is an acceptance")
@@ -209,7 +248,18 @@ func _run() -> void:
 	panel.close()
 	world.queue_free()
 	await _frames(2)
+	session.call("_teardown")
 	await _two_worlds(game)
+	session.call("_teardown")
+	game.world = original_world
+	game.world.load_data(original_world_data)
+	game.local.load_data(original_character)
+	game.save_system = original_saver
+	game.session = session
+	game.call("_ensure_containers")
+	session.process_mode = original_process_mode
+	current_scene = original_scene
+	_remove_scratch(_scratch)
 	_finish()
 
 
@@ -218,8 +268,8 @@ func _run() -> void:
 ## character. No settle reaches either host (the hub stub records it only).
 func _two_worlds(game: Node) -> void:
 	_reset_character(game)
-	var claim_a := _claim()
-	var claim_b := _claim()
+	var claim_a := await _claim(game, "stormwood-world-a")
+	var claim_b := await _claim(game, "stormwood-world-b")
 	_check(ENDING.claim_id(claim_a) != ENDING.claim_id(claim_b) and not ENDING.claim_id(claim_a).is_empty(),
 		"each world's claim carries its own Stormheart uid")
 	# World B: the offer opens, and this character disconnects unanswered.
@@ -269,8 +319,8 @@ func _two_worlds(game: Node) -> void:
 	# Unanswered in world D, then Yes in world C, then back to world D: D's
 	# resent claim must not become a second Stormheart.
 	_reset_character(game)
-	var claim_c := _claim()
-	var claim_d := _claim()
+	var claim_c := await _claim(game, "stormwood-world-c")
+	var claim_d := await _claim(game, "stormwood-world-d")
 	var d := await _mount(game, "stormwood-world-d")
 	d.ending.receive({"kind": "ending_offer", "claim": claim_d})
 	await _frames(2)
@@ -297,23 +347,35 @@ func _two_worlds(game: Node) -> void:
 	await _unmount(d)
 
 
-func _claim() -> Dictionary:
-	var maker := ENDING.new()
-	var creature: RefCounted = maker.call("_make_legendary")
-	maker.free()
-	return {"recipient_character_id": CHARACTER, "creature": CAPTURE_CODEC.encode(creature),
-		"settled": false, "kept": false}
+func _claim(game: Node, world_id: String) -> Dictionary:
+	var mounted := await _mount(game, world_id)
+	mounted.ending.dispatch(1, {"kind": "ending_claim"})
+	var claim: Dictionary = mounted.ending.call("_saved_state").get("claims", {}).get(CHARACTER, {}).duplicate(true)
+	_check(not claim.is_empty() and claim.has("party_uids"), "the original mounted producer reserves its admitted roster claim")
+	await _unmount(mounted)
+	return claim
 
 
 func _mount(game: Node, world_id: String) -> Dictionary:
-	game.world.set("world_id", world_id)
+	var state := WORLD_STATE.new()
+	var saved: Dictionary = _saver.worlds().state(world_id)
+	if not saved.is_empty():
+		state.load_data(saved)
+	else:
+		state.world_id = world_id
+		WORLD_IDENTITY.ensure(state)
+		state.flags.set_flag(ENDING.FREED_FLAG)
+	game.world = state
+	game.call("_ensure_containers")
 	var world := FixtureWorld.new()
 	world.name = "StormheartWorld_%s" % world_id.replace("-", "_")
 	root.add_child(world)
+	current_scene = world
 	var panel := PANEL.instantiate()
 	panel.name = "DialoguePanel"
 	world.add_child(panel)
 	var hub := HubStub.new()
+	hub.drop_settles = true
 	hub.name = "StormwoodEncounterHub"
 	world.add_child(hub)
 	hub.add_to_group("stormwood_encounter_hub")
@@ -321,10 +383,16 @@ func _mount(game: Node, world_id: String) -> Dictionary:
 		var stub: Node = pair[1].new()
 		stub.name = str(pair[0])
 		world.add_child(stub)
+		if stub is DynamoStub: stub.fighter_characters = [CHARACTER]
 	var ending := ENDING.new()
 	ending.name = "StormwoodEnding"
 	world.add_child(ending)
+	hub.ending = ending
+	var actor := Node3D.new()
+	world.add_child(actor)
+	hub.actor = actor
 	ending.mount(world)
+	actor.global_position = ending.get("_offer_prompt").global_position
 	await _frames(1)
 	return {"world": world, "panel": panel, "hub": hub, "ending": ending}
 
@@ -333,15 +401,36 @@ func _unmount(mounted: Dictionary) -> void:
 	(mounted.panel as Node).call("close")
 	(mounted.world as Node).queue_free()
 	await _frames(2)
+	# A disconnect drops the service's transient freeze, never the saved answer.
+	var game: Node = root.get_node("Game")
+	game.session.call("_teardown")
+	_check(game.session.call("_restore_character_here", CHARACTER) == true,
+		"teardown reloads the original BOOL-saved portable character")
+	game.call("_ensure_containers")
 
 
-func _offer(ending: Node, panel: Node, game: Node) -> void:
-	var creature: RefCounted = ending.call("_make_legendary")
-	ending.receive({"kind": "ending_offer", "claim": {
-		"recipient_character_id": CHARACTER, "creature": CAPTURE_CODEC.encode(creature),
-		"settled": false, "kept": false}})
+func _offer(ending: Node, panel: Node, _game: Node) -> void:
+	ending.dispatch(1, {"kind": "ending_claim"})
 	await _frames(2)
 	_check(panel.is_open(), "the claim opens the Stormheart's offer")
+
+
+func _check_saved_ack(ending: Node, hub: HubStub, game: Node) -> void:
+	var offered: Dictionary = {}
+	var ack: Dictionary = {}
+	for event: Dictionary in hub.sent:
+		if event.get("kind") == "ending_offer": offered = event.get("claim", {})
+		if event.get("kind") == "ending_answer_saved": ack = event
+	var saved: Dictionary = _saver.worlds().state(str(game.world.world_id))
+	var personal: Dictionary = _saver.characters().state(CHARACTER)
+	var passive: RefCounted = game.session.get("_owner_passive")
+	_check(not offered.is_empty() and ack.get("claim_uid") == ENDING.claim_id(offered)
+		and passive != null and passive.get("stormwood_owner").is_empty()
+		and (ending.get("_local_claim") as Dictionary).is_empty()
+		and saved.get("realm_environment", {}).get("stormwood", {}).get("ending", {}).get("claims", {}).get(CHARACTER, {}).get("settled") == true
+		and personal.get("redesign_character", {}).get("transaction_receipts", []).has(
+			"stormheart_answer:%s:%s" % [ENDING.claim_id(offered), CHARACTER]),
+		"the original BOOL-saved owner/world answer and matching durable ACK clean up before assertions")
 
 
 ## The panel's real decline: a menu_cancel press through Input, read by the
@@ -373,13 +462,29 @@ func _to_question(panel: Node) -> void:
 
 
 func _reset_character(game: Node) -> void:
-	var party: RefCounted = game.party
-	for i in range(party.size() - 1, -1, -1):
-		if str(party.at(i).get("species_id")) == ENDING.LEGENDARY_SPECIES:
-			party.remove_at(i)
-	game.player_flags().set_flag(ENDING.PERSONAL_RECEIPT_FLAG, false)
-	game.player_flags().set_flag(ENDING.ACCEPTED_FLAG, false)
-	game.pending_catch = null
+	var passive: RefCounted = game.session.get("_owner_passive")
+	_check(passive == null or passive.get("stormwood_owner").is_empty(),
+		"an independent case begins after original durable ACK cleanup or disconnect teardown")
+	game.session.call("_teardown")
+	game.local.load_data(_character_baseline)
+	game.world.reset()
+	game.world.world_id = "stormheart-choice-fixture"
+	WORLD_IDENTITY.ensure(game.world)
+	game.world.flags.set_flag(ENDING.FREED_FLAG)
+	game.call("_ensure_containers")
+	_check(_saver.save_character_prepared(game, CHARACTER) == true,
+		"an independent case BOOL-saves its original character baseline")
+
+
+func _remove_scratch(path: String) -> void:
+	var resolved := ProjectSettings.globalize_path(path).simplify_path().trim_suffix("/")
+	var base := ProjectSettings.globalize_path(_scratch).simplify_path().trim_suffix("/")
+	if _scratch.is_empty() or (resolved != base and not resolved.begins_with(base + "/")): return
+	var directory := DirAccess.open(path)
+	if directory == null: return
+	for child: String in directory.get_directories(): _remove_scratch(path.path_join(child))
+	for child: String in directory.get_files(): directory.remove(child)
+	DirAccess.remove_absolute(path)
 
 
 func _stormheart_count(game: Node) -> int:
