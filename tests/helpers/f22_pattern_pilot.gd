@@ -199,6 +199,9 @@ func _note_fields(telling: bool) -> void:
 		var after := 0.0
 		if shape == "field": after = float(profile.get("field_duration_s", 3.0))
 		elif shape == "fan": after = float(MATH.config().get("patterns", {}).get("casts", {}).get("fan_travel_s", 0.3)) + 0.05
+		# A diver is still in the air for its leap after the tell ends and
+		# lands on the frozen marker: stay out of it until it has landed.
+		elif shape == "marker": after = float(MATH.config().get("patterns", {}).get("casts", {}).get("leap_travel_s", 0.45)) + 0.05
 		_pending_field = {} if after <= 0.0 else {"profile": profile, "origin": geometry.origin,
 			"heading": geometry.heading, "marker": geometry.marker,
 			"until": _frames + int((float(_wild.get("_beat_left")) + after) * Engine.physics_ticks_per_second)}
@@ -285,13 +288,16 @@ func _escape_from_tell() -> Dictionary:
 	outward = outward.normalized() if outward.length() > 0.05 else Vector3.ZERO
 	var best := {}
 	var best_cost := INF
+	# Already past the edge margin (a held low-wind retreat ends there): only
+	# probes that go further out are refused, so inward exits stay open.
+	var bound := maxf(limit, Vector2(here.x - arena.global_position.x, here.z - arena.global_position.z).length())
 	for index: int in 16:
 		var direction := Vector3.FORWARD.rotated(Vector3.UP, TAU * index / 16.0)
 		var step := 0.25
 		while step <= 6.0:
 			var point := here + direction * step
 			var flat := Vector2(point.x - arena.global_position.x, point.z - arena.global_position.z)
-			if flat.length() > limit: break
+			if flat.length() > bound: break
 			if not AI.pattern_contains(profile, origin, heading, marker, point, radius):
 				# Prefer exits that do not run toward the arena edge, where the
 				# body slides and the next tell has no room.
@@ -302,7 +308,13 @@ func _escape_from_tell() -> Dictionary:
 				break
 			step += 0.25
 	if best.is_empty():
-		best = {"direction": -(_wild.global_position - here).normalized(), "distance": 6.0}
+		# No probe cleared the shape: head back toward open floor, never
+		# straight away from the foe into the wall.
+		var away := -(_wild.global_position - here).normalized()
+		if outward != Vector3.ZERO and away.dot(outward) > 0.0:
+			var tangent := outward.cross(Vector3.UP)
+			away = tangent if away.dot(tangent) >= 0.0 else -tangent
+		best = {"direction": away, "distance": 6.0}
 	if _escape_dir != Vector3.ZERO:
 		var step := 0.25
 		while step <= 6.0:

@@ -235,12 +235,21 @@ func _run() -> void:
 					continue
 				if float(judged.win_rate) < float(proof.get("reader_win_min", 0.9)):
 					reasons.append("reader win rate below .9")
-				if float(masher.lead_faint_rate) - float(judged.lead_faint_rate) < float(proof.get("masher_lead_faint_gap_min", 0.25)):
+				# Coordinator ruling for the owner (2026-10-11, 5:04 PM CT): on
+				# ordinary wild bands "the masher loses its lead materially more
+				# often" (F22#1) is read as COMBAT §7's floor-trainer form, reader
+				# median lead-HP cost <= .55x the masher's plus reader win >= .9:
+				# §7 also says a wild costs a masher 15-30% lead HP and is not a
+				# wall, so a lead-faint gap cannot be the wild bar. The gap stays
+				# a reported column; trainer cohorts keep it as a bar.
+				var lead_faint_gap := float(masher.lead_faint_rate) - float(judged.lead_faint_rate)
+				if _trainers and lead_faint_gap < float(proof.get("masher_lead_faint_gap_min", 0.25)):
 					reasons.append("masher lead losses insufficiently different")
-				if _trainers and float(judged.median_lead_cost) > float(masher.median_lead_cost) * 0.55:
+				if float(judged.median_lead_cost) > float(masher.median_lead_cost) * 0.55:
 					reasons.append("reader median lead cost above .55x masher")
 				rows.append({"band": entry.id, "starter": starter, "masher": masher,
-					"reader": reader, "switch_reader": switch_reader, "pass": reasons.is_empty(), "reasons": reasons})
+					"reader": reader, "switch_reader": switch_reader, "lead_faint_gap": lead_faint_gap,
+					"pass": reasons.is_empty(), "reasons": reasons})
 	if rows.is_empty(): errors.append("no valid band cohort completed")
 	if not gaps.is_empty(): print("F22_PATTERN_BANDS data gaps (no ordinary trainer roster): " + ", ".join(gaps))
 	var passed := errors.is_empty()

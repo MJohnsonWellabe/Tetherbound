@@ -1,0 +1,142 @@
+{
+ "gear": "bare",
+ "pass": false,
+ "errors": [],
+ "rows": [
+  {
+   "band": "cloudreach/summit_final_stronghold",
+   "masher": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.124353717933009,
+    "median_lead_cost": 0.516067929421985,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "pass": false,
+   "reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.0626531712001394,
+    "median_lead_cost": 0.260010660480578,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "reasons": [
+    "top: masher kept its lead in some run"
+   ],
+   "starter": "terrapup",
+   "switch_reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.0626531712001394,
+    "median_lead_cost": 0.260010660480578,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   }
+  },
+  {
+   "band": "cloudreach/summit_final_stronghold",
+   "masher": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.289371949356881,
+    "median_lead_cost": 1.0,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "pass": true,
+   "reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.416666666666667,
+    "median_cost": 0.208938364864323,
+    "median_lead_cost": 0.926926564125362,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "reasons": [],
+   "starter": "ripplet",
+   "switch_reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.0717323241829491,
+    "median_lead_cost": 0.0,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   }
+  },
+  {
+   "band": "cloudreach/summit_final_stronghold",
+   "masher": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.250612059794672,
+    "median_lead_cost": 1.0,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "pass": true,
+   "reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0833333333333333,
+    "median_cost": 0.14171318282016,
+    "median_lead_cost": 0.651880640972734,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "reasons": [],
+   "starter": "galewisp",
+   "switch_reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.0529042956485795,
+    "median_lead_cost": 0.0,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   }
+  }
+ ],
+ "c3": {
+  "acceptance": false,
+  "coverage": true,
+  "errors": [],
+  "gear": "bare",
+  "kind": "actual flat-fixture C2; world/C3/authority proofs separate",
+  "mode": "trainers",
+  "pass": false,
+  "policy_scope": "quick/charged/spatial diagnostic; full F23/F24 policy and actual admission fixture required",
+  "seeds_per_band": 24,
+  "switch_value": {
+   "fixed": {
+    "errors": 0,
+    "lead_faint_rate": 0.166666666666667,
+    "median_cost": 0.138627534162707,
+    "median_lead_cost": 0.637686657148452,
+    "runs": 72,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "pass": true,
+   "status": "partial_no_f24: type matchup and per-identity HP only; F24 tag combo off, F22#2 not fully measured",
+   "switched": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.0626132340425437,
+    "median_lead_cost": 0.0,
+    "runs": 72,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "tag_combo_live": false
+  }
+ }
+}
