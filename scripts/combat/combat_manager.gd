@@ -988,8 +988,8 @@ func _disconnect_opponent_callbacks(body: Node3D) -> void:
 ##
 ## COMBAT §5: gameplay radii size an ordinary ring; measured rendered bodies
 ## independently have to fit. Existing room providers may cap the ring, but
-## a cap cannot authorize clipping. Registered ordinary room pads move only
-## the initial formation, retaining its derived ring and measured art checks.
+## a cap cannot authorize clipping. Registered ordinary rooms centre the
+## initial formation and cap its ring, retaining all measured art checks.
 func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bool:
 	var cfg: Dictionary = (MATH.config().get("arena", {}) as Dictionary).duplicate()
 	# Gameplay radii size the ring; rendered art independently decides fit.
@@ -1012,8 +1012,10 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 		elif not _valid_authored_arena(host_arena): return _reject_arena("authored_context", host_arena)
 		centre = host_arena.centre
 		if not joining_realm and not str(host_arena.get("room_arena_id", "")).is_empty():
-			if float(host_arena.radius) < float(cfg["radius"]):
-				return _reject_arena("authored_room_capacity", {"radius": host_arena.radius, "required": cfg.radius})
+			# A mounted canonical room supplies its actual physical capacity,
+			# as main's room provider did. The unchanged measured formation
+			# checks below still refuse bodies that cannot fit this smaller ring.
+			cfg["radius"] = minf(float(cfg["radius"]), float(host_arena.radius))
 		else:
 			cfg["radius"] = host_arena.radius
 		if not joining_realm:
@@ -1154,6 +1156,8 @@ func _valid_host_arena(context: Dictionary) -> bool:
 	if generation != null and int(generation) != int(context.body_generation): return false
 	if str(context.get("kind", "")) != "wild": return true
 	if float(radius) > 26.0: return false
+	if not str(context.get("room_arena_id", "")).is_empty() \
+		and not str(context.get("named_encounter_id", "")).is_empty(): return false
 	if not str(context.get("room_arena_id", "")).is_empty(): return canonical_room_host_arena(context)
 	if not str(context.get("named_encounter_id", "")).is_empty(): return canonical_named_host_arena(context)
 	return float(radius) >= 11.0
@@ -1229,8 +1233,8 @@ func _valid_authored_arena(context: Dictionary) -> bool:
 	return false
 
 
-## Canonical geometry for ordinary room admissions. The reliable host radius
-## may be smaller than room capacity, but never smaller than the wild minimum.
+## Canonical geometry for ordinary room admissions. Only a real mounted room
+## can authorize a radius below the ordinary outdoor wild minimum.
 func canonical_room_host_arena(context: Dictionary, world: Node = null) -> bool:
 	if world == null and is_instance_valid(_player): world = _player.get_parent()
 	if not is_instance_valid(world) or not world.is_inside_tree(): return false
@@ -1240,17 +1244,20 @@ func canonical_room_host_arena(context: Dictionary, world: Node = null) -> bool:
 	if id.is_empty() or not str(context.get("named_encounter_id", "")).is_empty() \
 		or not centre is Vector3 or not (centre as Vector3).is_finite() \
 		or not (radius is int or radius is float) or not is_finite(float(radius)) \
-		or float(radius) < 11.0 or float(radius) > 26.0: return false
+		or float(radius) <= 0.0 or float(radius) > 26.0: return false
 	for source: Node in world.get_children():
 		var script := source.get_script() as Script
 		if script == null or script.resource_path != "res://scripts/world/burrow_warrens.gd" \
 			or not source.has_method("authored_room_arena_definition"): continue
 		var definition: Dictionary = source.call("authored_room_arena_definition", id)
 		if definition.is_empty(): continue
+		var at: Variant = definition.get("centre")
+		var capacity: Variant = definition.get("radius")
 		return definition.get("source") == source and definition.get("room_arena_id") == id \
 			and definition.get("species_id") == context.get("species_id") \
-			and (definition.centre as Vector3).is_equal_approx(centre as Vector3) \
-			and float(radius) <= float(definition.radius)
+			and at is Vector3 and (at as Vector3).is_finite() and (at as Vector3).is_equal_approx(centre as Vector3) \
+			and (capacity is float or capacity is int) and is_finite(float(capacity)) and float(capacity) > 0.0 \
+			and float(radius) <= float(capacity)
 	return false
 
 

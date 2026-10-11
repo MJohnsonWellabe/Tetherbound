@@ -7029,7 +7029,7 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		var room := _local_room_wild_arena_context(wild)
 		if not room.is_empty() and room.get("centre") == arena_at \
 			and room.get("species_id") == opponent.species_id \
-			and float(opponent.arena_radius_m) >= 11.0 and float(opponent.arena_radius_m) <= float(room.radius) \
+			and float(opponent.arena_radius_m) > 0.0 and float(opponent.arena_radius_m) <= float(room.radius) \
 			and bool(_manager.call("_valid_room_wild_arena", room)):
 			opponent["room_arena_id"] = str(room.room_arena_id)
 	if opponent_owned:
@@ -7514,14 +7514,15 @@ func _shared_arena_context(rec: Dictionary) -> Dictionary:
 	if str(rec.kind) == "wild":
 		if float(radius) > 26.0: return {}
 		var named_id := str(opponent.get("named_encounter_id", ""))
+		var room_id := str(opponent.get("room_arena_id", ""))
+		if not named_id.is_empty() and not room_id.is_empty(): return {}
 		if not named_id.is_empty():
 			context["named_encounter_id"] = named_id
 			if _manager == null or not bool(_manager.call("canonical_named_host_arena", context, get_parent())): return {}
-		elif float(radius) < 11.0: return {}
-		var room_id := str(opponent.get("room_arena_id", ""))
-		if not room_id.is_empty():
+		elif not room_id.is_empty():
 			context["room_arena_id"] = room_id
 			if _manager == null or not bool(_manager.call("canonical_room_host_arena", context, get_parent())): return {}
+		elif float(radius) < 11.0: return {}
 	return context
 
 
