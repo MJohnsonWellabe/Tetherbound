@@ -67,7 +67,7 @@ Both wedges really reach about 8.5 m, because contact spacing between the two la
 - Units PASS: `test_enemy_pattern_telegraph`, `test_named_fight_tell_timing`, `test_telegraph_glow`, `test_named_fight_profiles`, `test_f22_action_publication` (28 tests, 1513 assertions, 0 failed).
 - `smoke_f22_pattern_contract` and `smoke_f22_live_pattern_mount` PASS.
 
-## Round 3: coordinator-approved items (b) and (c) (2026-10-11, about 12:40 PM CT)
+## Round 3: coordinator-approved items (b) and (c) (2026-10-11, about 12:10 PM CT)
 
 **(b) Tether Commands meter.**
 - `combat_hud.gd` now anchors the meter bottom-centre (`PRESET_CENTER_BOTTOM`, growing upward, 24 px margin). It used to sit 160 px above the party strip, over the play space.
