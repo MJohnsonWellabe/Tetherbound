@@ -1062,6 +1062,8 @@
       "defense": 0.12,
       "icon": "res://assets/ui/icons/items/armor_leggings.png",
       "blurb": "Woven fiber padding over the thighs and knees.",
+      "world_identity": {"style": "leggings_padded", "height_m": 0.54, "accent_colour": "#ac9166"},
+      "world_model_reward_scale": 1.0,
       "description": "Fiber padding wraps the thighs and knees, cushioning the joints during a hard landing on uneven ground."
     },
     "hide_boots": {
@@ -1073,6 +1075,8 @@
       "defense": 0.08,
       "icon": "res://assets/ui/icons/items/armor_boots.png",
       "blurb": "Thick-soled woven boots with padding around the ankles.",
+      "world_identity": {"style": "boots_padded", "height_m": 0.42, "accent_colour": "#b49463"},
+      "world_model_reward_scale": 1.0,
       "description": "Woven uppers and fiber padding support the ankle. Thick soles cushion the trainer's steps and rough landings."
     },
     "travel_pack": {
@@ -1271,8 +1275,8 @@
       "storm_strike_reduction": 0.18,
       "static_duration_scale": 0.82,
       "icon": "res://assets/ui/icons/items/armor_leggings.png",
-      "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
-      "world_model_scale": 0.6,
+      "world_identity": {"style": "leggings_insulated", "height_m": 0.56, "accent_colour": "#aac0bd"},
+      "world_model_reward_scale": 1.0,
       "blurb": "Found protection for the Deepwood route.",
       "description": "A found Stormwood layer rather than a crafted duplicate. While worn, it cuts lightning strike damage by 18% and Static duration to 82%; all four insulated pieces turn a strike into stagger only.",
       "acquisition": "found_pickup",
@@ -1288,8 +1292,8 @@
       "storm_strike_reduction": 0.15,
       "static_duration_scale": 0.85,
       "icon": "res://assets/ui/icons/items/armor_boots.png",
-      "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
-      "world_model_scale": 0.5,
+      "world_identity": {"style": "boots_insulated", "height_m": 0.46, "accent_colour": "#a8c6c5"},
+      "world_model_reward_scale": 1.0,
       "blurb": "Found boots for wet, charged ground.",
       "description": "A found pair with dry insulating layers under the leather. While worn, it cuts lightning strike damage by 15% and Static duration to 85%; all four insulated pieces turn a strike into stagger only.",
       "acquisition": "found_pickup",
