@@ -1580,10 +1580,15 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 	# Support the actual projected render corners, not the empty corners of
 	# their world-axis envelope after yaw. All of the rendered footprint stays
 	# subject to the same real floor/normal/step checks.
+	# A rendered corner beyond the gameplay footprint may overhang a downhill
+	# slope: it may sit up to the step height plus its horizontal distance from
+	# the seat (a 45 degree walkable slope) above real ground. The seat centre
+	# keeps the step height alone.
 	for at: Vector2 in support_points:
 		if not surface.is_empty(): continue
+		var drop := REALM_SEAT_MAX_STEP_M + at.distance_to(Vector2(spot.x, spot.z))
 		var ray := PhysicsRayQueryParameters3D.create(Vector3(at.x, level + REALM_SEAT_MAX_STEP_M, at.y),
-			Vector3(at.x, level - REALM_SEAT_MAX_STEP_M, at.y), 0x7FFFFFFF, exclude)
+			Vector3(at.x, level - drop, at.y), 0x7FFFFFFF, exclude)
 		var hit := space.intersect_ray(ray)
 		if not hit.is_empty():
 			if (hit.normal as Vector3).dot(Vector3.UP) <= 0.5:
@@ -1595,10 +1600,15 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 			support.radius = 0.25
 			var support_query := PhysicsShapeQueryParameters3D.new()
 			support_query.shape = support
-			support_query.transform = Transform3D(Basis.IDENTITY, Vector3(at.x, level, at.y))
 			support_query.collision_mask = 0x7FFFFFFF
 			support_query.exclude = exclude
-			if space.intersect_shape(support_query, 1).is_empty():
+			var supported := false
+			var depth := 0.0
+			while not supported and depth <= drop:
+				support_query.transform = Transform3D(Basis.IDENTITY, Vector3(at.x, level - depth, at.y))
+				supported = not space.intersect_shape(support_query, 1).is_empty()
+				depth += 0.4
+			if not supported:
 				return _reject_arena("support_missing", {"body": body.name, "at": at, "level": level})
 	# Query the oriented measured box itself. A yawed quadruped's world AABB
 	# contains large empty corner wedges; treating those as art rejects real
