@@ -13,6 +13,7 @@ extends RefCounted
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SAFETY := preload("res://tests/helpers/stormwood_field_safety.gd")
+const HARVEST_RUNTIME := preload("res://scripts/world/stormwood_harvest_runtime.gd")
 
 const RECIPE_FLAG := "stormwood:arch_recipe_known"
 const BUILT_FLAG := "stormwood:crown_arch_built"
@@ -207,12 +208,18 @@ func _preconditions_hold() -> bool:
 				item, ", ".join(stacks), str(_game.get("local").get("hotbar")), str(_game.get("equipped_tool"))])
 	for site: Dictionary in SITE_PLAN:
 		var id := str(site.id)
-		if bool(progression.call("has", "harvest_node:order:" + id)):
+		if _site_gathered(id):
 			return _fail("Crown segment requires its named production source unclaimed: " + id)
 		var node := _harvests.get_node_or_null(NodePath(id)) as Node3D
 		if node == null or str(node.get_meta("stormwood_item", "")) != str(site.item):
 			return _fail("Crown segment cannot find its exact live production source: " + id)
 	return true
+
+
+## The exact site's receipt: its legacy one-shot flag, or the F32 renewable
+## stock record its gather advanced (the same predicate the chapter uses).
+func _site_gathered(id: String) -> bool:
+	return HARVEST_RUNTIME.site_gathered(id, _game.get("progression"), _game.get("world"))
 
 
 func _gather_site(site: Dictionary) -> bool:
@@ -224,7 +231,6 @@ func _gather_site(site: Dictionary) -> bool:
 		return false
 	var before := _count(str(site.item))
 	var prompt := node.get_node_or_null(^"Interactable") as Node3D
-	var receipt_id := "harvest_node:order:" + id
 	_gather_events.clear()
 	var hold: Node = _player.get("tool_hold") as Node
 	var on_swing := func() -> void:
@@ -237,7 +243,7 @@ func _gather_site(site: Dictionary) -> bool:
 		var player_xz := Vector2(_player.global_position.x, _player.global_position.z)
 		_note("HARVEST NODE %s left the tree during '%s': receipt=%s equipped=%s swinging=%s distance=%.2f recent=[%s]" % [
 			id, str(_safety.get("phase")) if _safety != null else "?",
-			str(_game.get("progression").call("has", receipt_id)), str(_game.get("equipped_tool")),
+			str(_site_gathered(id)), str(_game.get("equipped_tool")),
 			str(hold.call("is_swinging")) if hold != null else "?",
 			player_xz.distance_to(Vector2(node.global_position.x, node.global_position.z)),
 			"; ".join(_gather_events.slice(-6))])
@@ -253,17 +259,16 @@ func _gather_site(site: Dictionary) -> bool:
 		node.tree_exiting.disconnect(on_exit)
 	if not activated:
 		return false
-	var receipt := "harvest_node:order:" + id
 	for _frame in 600:
-		if bool(_game.get("progression").call("has", receipt)) \
+		if _site_gathered(id) \
 				and _count(str(site.item)) > before:
 			break
 		await _tree.physics_frame
 	var gained := _count(str(site.item)) - before
 	if not is_instance_valid(node):
 		_note("%s: node gone after the approach; receipt=%s gained=%d" % [id,
-			str(_game.get("progression").call("has", receipt)), gained])
-	if gained != int(site.amount) or not bool(_game.get("progression").call("has", receipt)):
+			str(_site_gathered(id)), gained])
+	if gained != int(site.amount) or not _site_gathered(id):
 		return _fail("%s did not commit its exact live yield/receipt: gained=%d expected=%d" % [
 			id, gained, int(site.amount)])
 	_note("GATHERED %s +%d %s through its exact live prompt" % [id, gained, str(site.item)])
