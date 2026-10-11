@@ -1232,6 +1232,39 @@
         "cloudreach"
       ],
       "disclosure": "Generated F19#5 Cloudreach summit boundary for the 05b_summit_tail re-proof (bivouac rest -> summit threshold), coordinator ruling 2026-10-11 after piece 05 stalled leaving the bivouac. NOT earned. Same five template UIDs/species at a generated L40 with generated caps and full HP as cloudreach_stronghold (whose piece 05 beat Officer Voss by live piloting); Cloudreach story flags through cloudreach_upper_anchors_disabled (including defeated_cloudreach_voss) mirror that run; summit_extraction_engine_reached is withheld so the tail must earn it. Template inventory; no pickup, harvest, battle-reward or transaction receipts are fabricated. Day 20 at 120 s, pose where piece 05's earned-route body stood after the summit feed (298.07, 5104.18), so the tail walks the same road into the bivouac (a camp-side start made _navigate project onto the overlook loop over the crown rock, attempt 1). Claims no prior earned segment PASS."
+    },
+    "hall": {
+      "boundary": "sigils",
+      "realm": "meadows",
+      "day": 7,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "ground_xz": [
+          58.0,
+          7410.5
+        ]
+      },
+      "party_levels": [
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open"
+      ],
+      "personal_flags": [],
+      "inventory_add": {},
+      "disclosure": "Generated post-Sigils five at L18 (chapter_curve band4 team.exit 18, an earned run reaches after the three captains), healed, just past the opened Sigil Gate with the three Sigils spent (none carried). Relay/Mill and all three captain defeat flags plus hall_approach_open set; ordered UIDs/species and original inventory retained; no captain rewards (Sigil TMs, coin) added. Added under the owner's 2026-10-11 chunked-proof rules after the earned sigils piece failed twice (ralph/reports/EVIDENCE/F19-5/sigils.md). No earned captain, Sigil Gate, feast, XP or recovery witness is claimed."
     }
   }
 }
