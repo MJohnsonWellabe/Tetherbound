@@ -93,3 +93,35 @@ All times are US Central. Run date: 2026-10-11, 06:50–08:42 CT. Base: main 9e3
   No level-ups. Senn and Maela were the only fights; wild fights and optional trainers are not on the required route.
 - **After 05**, which includes the Voss loss and the stronghold walk: terrapup L31/1584, bramblebun L32/155, bramblebun L32/131, mudsnout L31/1196, bramblebun L31/1273.
 - **The gap:** `redesign_level_curve.json` expects team L39–42 by upper Cloudreach. The required route ends 05 at L31–32.
+
+## F19#2 solo boss hand-off fix (coordinator ruling "solo is a session of one"; commit 34df191a, guard included)
+
+- `encounter_director.gd`: a solo host mints the same host encounter record for any trainer in `chapter_rewards.json` boss_handoffs, with the local character as the single participant. This is the path masters and rematches already take.
+- `session.gd::ordinary_combat_reward_owner`: a trainer outside the `trainers.json` per-round table now answers "not applicable" (`enabled: false`). Before, it answered "unavailable", which aborted the round as `fled`; that was attempt 1's failure.
+  - The same "unavailable → fled" applied to every co-op Cloudreach trainer fight by that code.
+  - `_install_ordinary_combat_reward_owner` already accepts "not applicable".
+
+**Proofs:**
+- **Units** (`unit_f19_and_director.fix.log`): 206 tests, 4950 assertions, 0 failed.
+  - Suites: test_f19_boss_handoffs, test_f19_participant_delivery, test_ordinary_actor_vitals_recovery, test_combat_progression, test_f24_host_commands, test_director_join_snapshot, test_cloudreach_director_client_veyra, test_cloudreach_finale, test_trainer*.
+  - One interim failure from an unguarded `_session.config()` on a test stub was fixed, not skipped.
+- **Live solo Veyra (piece 06, 10:10 CT, log `06_veyra_relay.fixed.log.gz`):** won live.
+  - Durable boss defeat receipt `defeat:boss_captain_veyra_storm_anchor_<hash>:character-cb1b…`.
+  - `relics_held: [cloudreach]`, `stormwood_portal_key` ×1, coin +150, rare_candy +1.
+  - Relay phase and chapter complete.
+- **Save/reload, no duplicate:** piece 07 loaded the 06 save. Handoff check matched (UIDs, flags, inventory); `stormwood_portal_key` still 1 and the relic held once. The key was consumed only by entering Stormwood.
+- **Solo Warden:** `tests/smoke_boss.gd` passes with the fix (log `smoke_boss.fix.log.gz`). However, that smoke runs without an active session, so it does not exercise the hand-off journal. An earned solo Warden through the title-loaded session path remains for the Meadows chain, which currently stops at Hall.
+- **Co-op unchanged: NOT PROVEN HERE.** `tools/net/run_net_smoke.sh shared_boss` and `boss_rewards_each_participant` both failed before any gameplay with "not every peer said hello within 180 s". The peers were still building Meadows (peer logs). This happened twice: once alongside a live run, once alone.
+  - The budget is `multiplayer.json` test_budgets `hello_budget_s`, with no env override.
+  - Environment-speed limit of this 4-core container; needs a run on CI or a faster box.
+
+## Pieces 06–07 (disclosed generated L40 input)
+
+| Seg | Result | Checkpoint |
+|---|---|---|
+| 05 generated boundary (input) | generated, unearned | tests/fixtures/earned_saves/cloudreach_05_generated_veyra_boundary |
+| 06 Veyra + relay | PASS (with the F19#2 fix) | tests/fixtures/earned_saves/cloudreach_06_veyra_relay |
+| 07 Stormward handoff | PASS | tests/fixtures/earned_saves/cloudreach_07_stormward_handoff |
+
+- **07 in the new order:** the physical Stormward gate is a retired crossing (`legacy_physical_crossings` false; RD-17/F18#2) and offers nothing. The handoff is therefore the F49 portal leg: Home Key, hang the Cloudreach relic, Stormwood arch, ending at (-300, 32.3, 180) in Stormwood.
+  - The relic-power choice panel that a successful hang opens was dismissed with `menu_cancel`; no power was chosen.
