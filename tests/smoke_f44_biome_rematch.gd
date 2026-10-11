@@ -7,6 +7,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_f44_biome_rematch.gd -- \
 ##     --biome=<meadows|tidewake|cloudreach|stormwood> --from-save=<dir holding save/> [--json=<path>]
+##     [--tier=<r1|endgame>] [--witness=<rematches.json profile id>]
 ##
 ## Modelled on tests/helpers/f20_ending_probe.gd::admit_endgame_rematch. The
 ## save loads through the production title's Load list (Autosave). The fight is
@@ -15,6 +16,7 @@ extends SceneTree
 ## is admitted by the ordinary Interact press on the mounted rematch prompt.
 ## Stormwood's witness is post-credits, so its tier is `endgame` (L58), as in
 ## tools/f44_rematch_witness.gd; the other three are `r1` at the next band.
+## F44#1 witnesses pass --tier=endgame with a post-credits save (f44_<biome>_endgame).
 ##
 ## Asserted: ordinary input admits the canonical rematch; every member is at the
 ## configured level; the pilot wins; the win is delivered to this character once;
@@ -41,6 +43,8 @@ const FIGHT_FRAMES := 36000
 var biome := ""
 var from_save := ""
 var json_out := ""
+var tier_arg := ""
+var witness_arg := ""
 var fixture_world: PackedStringArray = []
 var fixture_personal: PackedStringArray = []
 var game: Node
@@ -67,9 +71,11 @@ func _run() -> void:
 		if arg.begins_with("--biome="): biome = arg.trim_prefix("--biome=")
 		elif arg.begins_with("--from-save="): from_save = arg.trim_prefix("--from-save=").trim_suffix("/")
 		elif arg.begins_with("--json="): json_out = arg.trim_prefix("--json=")
+		elif arg.begins_with("--tier="): tier_arg = arg.trim_prefix("--tier=")
+		elif arg.begins_with("--witness="): witness_arg = arg.trim_prefix("--witness=")
 		elif arg.begins_with("--fixture-world-flags="): fixture_world = arg.trim_prefix("--fixture-world-flags=").split(",", false)
 		elif arg.begins_with("--fixture-personal-flags="): fixture_personal = arg.trim_prefix("--fixture-personal-flags=").split(",", false)
-	if not REALMS.has(biome) or from_save.is_empty():
+	if not REALMS.has(biome) or from_save.is_empty() or tier_arg not in ["", "r1", "endgame"]:
 		push_error("usage: --biome=<meadows|tidewake|cloudreach|stormwood> --from-save=<dir>")
 		quit(2)
 		return
@@ -95,8 +101,8 @@ func _run() -> void:
 		if not await _title_load():
 			await _finish()
 			return
-	var witness := str(RULES.config().witnesses[biome])
-	var tier := "endgame" if biome == "stormwood" else "r1"
+	var witness := witness_arg if not witness_arg.is_empty() else str(RULES.config().witnesses[biome])
+	var tier := tier_arg if not tier_arg.is_empty() else ("endgame" if biome == "stormwood" else "r1")
 	var profile: Dictionary = RULES.profile(witness)
 	var expected_level := int(RULES.config().endgame_levels[profile.kind]) if tier == "endgame" \
 		else int(RULES.config().biomes[biome].r1_levels[profile.kind])
@@ -153,7 +159,15 @@ func _run() -> void:
 	var spec: Variant = director.get("_trainer_spec")
 	var admitted: bool = director.call("trainer_battle_active") == true and str(director.call("trainer_battle_id")) == witness \
 		and spec is Dictionary and spec == expected_spec
-	if not check(admitted, "ordinary input admits the canonical %s %s rematch" % [witness, tier]):
+	if not admitted:
+		receipt.admission = {"trainer_battle_active": director.call("trainer_battle_active"),
+			"trainer_battle_id": str(director.call("trainer_battle_id")),
+			"spec_id": str(spec.get("id", "")) if spec is Dictionary else "",
+			"can_challenge_expected": director.call("can_challenge", expected_spec) if director.has_method("can_challenge") else "n/a",
+			"source_busy": director.call("rematch_source_busy", source),
+			"expected_spec_empty": expected_spec.is_empty(),
+			"world_message": str(game.get("_pending_world_message"))}
+	if not check(admitted, "ordinary input admits the canonical %s %s rematch (%s)" % [witness, tier, str(receipt.get("admission", {}))]):
 		await _finish()
 		return
 	var levels: Array = []
@@ -224,7 +238,9 @@ func _run() -> void:
 	for item: String in payout: gained[item] = int(bag_after.get(item, 0)) - int(bag_before.get(item, 0))
 	receipt.payout = gained
 	receipt.first_reward = first_reward
-	check(gained == payout, "the first rematch win pays the configured unique reward %s (gained %s)" % [str(payout), str(gained)])
+	var expected_payout := {}
+	for item: String in payout: expected_payout[item] = int(payout[item]) # JSON numbers parse as floats.
+	check(gained == expected_payout, "the first rematch win pays the configured unique reward %s (gained %s)" % [str(payout), str(gained)])
 	var first_items: Array = []
 	for row: Variant in first_reward.get("items", []): first_items.append(str(row.get("id", row)) if row is Dictionary else str(row))
 	check(payout.keys().all(func(item: Variant) -> bool: return not first_items.has(str(item))),
@@ -235,9 +251,12 @@ func _run() -> void:
 		await _finish()
 		return
 	var reloaded := RECORD.portable_projection(game.local.call("save_data")).duplicate(true)
-	check((reloaded.redesign_character.transaction_receipts as Array).count(base_receipt) == 1
-		and reloaded.redesign_character.transaction_receipts == receipts,
-		"after a title reload the receipts are unchanged (rematch paid once)")
+	# The fight's other duties (research, mastery) keep draining after the win,
+	# so compare this rematch's receipts, not the whole growing receipt list.
+	var rematch_rows := func(rows: Array) -> Array: return rows.filter(func(r: Variant) -> bool: return str(r).begins_with(base_receipt))
+	var reloaded_rematch: Array = rematch_rows.call(reloaded.redesign_character.transaction_receipts)
+	check(reloaded_rematch.count(base_receipt) == 1 and reloaded_rematch == rematch_rows.call(receipts) and reloaded_rematch.size() == 2,
+		"after a title reload the rematch receipts are unchanged (paid once: %s)" % str(reloaded_rematch))
 	var bag_reloaded := _bag()
 	var same := true
 	for item: String in payout: same = same and int(bag_reloaded.get(item, 0)) == int(bag_after.get(item, 0))

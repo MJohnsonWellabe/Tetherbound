@@ -1,0 +1,15 @@
+# F44#0: after a biome's boss, its named trainers/captains/Master rematch at the next band for better rewards
+- Smoke: `tests/smoke_f44_biome_rematch.gd -- --biome=<b> --from-save=<generated f44_<b> save>`, built here, then aligned with the rematch-wiring lane.
+- **Meadows: PASS, 21/21** at ff5e8752 (Sun 11 Oct, 3:03–3:32 PM CT). Witness `captain_riverwatch` (`meadows_captain_riverwatch.json`):
+  - ordinary Interact admits the canonical r1 rematch;
+  - every member at L33 (first win L15–16);
+  - pilot wins (7921 frames);
+  - the win is delivered once, paying `rootiron_ingot` 2, which the first win's reward never paid;
+  - after a title reload: receipts and payout unchanged, cooldown kept.
+- Disclosed:
+  - generated post-Warden input (profile `f44_meadows`, `meadows_input_PROVENANCE.json`, party L35);
+  - one teleport beside the rematch prompt;
+  - witness changed relay_captain → captain_riverwatch (coordinator ruling, ba5d4f43).
+- Owner finding: 7 Team Tether patrol profiles (relay_picket_hess, relay_picket_orrin, relay_officer_dell, relay_captain, stronghold_patrol/courtyard/elite) are withdrawn by the F05 Meadows healing at the Warden, the same moment their r1 tier opens, so they can never be rematched. Coordinator recommends dropping them from rematches.json.
+- Game fix exercised (92ed032a): the win's payout waited behind ~100 combat_mastery duties, 8308 frames (~138 s game time); it now lands after 1111 frames (~18.5 s). Owner input was blocked for 0 frames.
+- Tidewake and Cloudreach: rematch sources were wired by the rematch-wiring lane (tb/ev-rematch-wiring); its 21/21 PASS evidence is in ralph/reports/EV-REMATCH-WIRING/. Stormwood: see below when run.
