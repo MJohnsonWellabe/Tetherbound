@@ -952,16 +952,18 @@ class Segment extends RefCounted:
 		if not bool(director.call("trainer_battle_active")):
 			_fail("%s challenge dialogue did not start production hosted combat" % id)
 			return false
-		var started := Time.get_ticks_msec()
+		# Game-time budgets: every physics step is 1/60 s of game time at both
+		# the wrapper's 8x/480 Hz clock and the fights' 1x/60 Hz clock.
+		var started_frame := Engine.get_physics_frames()
 		while bool(director.call("trainer_battle_active")) \
-				and Time.get_ticks_msec() - started < 300000:
+				and Engine.get_physics_frames() - started_frame < 300 * 60:
 			if bool(manager.call("is_fighting")):
 				if not await _fight_current_encounter(id):
 					return false
 			else:
 				await tree.physics_frame
 		if bool(director.call("trainer_battle_active")):
-			_fail("%s trainer sequence did not finish within five minutes" % id)
+			_fail("%s trainer sequence did not finish within five game minutes" % id)
 			return false
 		if not _trainer_outcomes.has(id):
 			_fail("%s trainer sequence ended without a production finished outcome" % id)
@@ -1665,7 +1667,8 @@ class Segment extends RefCounted:
 		Engine.time_scale = 1.0
 		Engine.physics_ticks_per_second = 60
 		await tree.process_frame
-		while bool(manager.call("is_fighting")) and Time.get_ticks_msec() - started < 180000:
+		var started_frame := Engine.get_physics_frames()
+		while bool(manager.call("is_fighting")) and Engine.get_physics_frames() - started_frame < 180 * 60:
 			var enemy := manager.call("enemy_body") as Node3D
 			var ally := director.call("ally_body") as Node3D
 			if is_instance_valid(enemy) and is_instance_valid(ally):
@@ -1695,7 +1698,7 @@ class Segment extends RefCounted:
 		Engine.time_scale = previous_scale
 		Engine.physics_ticks_per_second = previous_hz
 		if bool(manager.call("is_fighting")):
-			_fail("production encounter during %s did not resolve through controller combat within 180 seconds" % route_label)
+			_fail("production encounter during %s did not resolve through controller combat within 180 game seconds" % route_label)
 			return false
 		if _last_combat_outcome.is_empty():
 			_fail("production encounter during %s ended without publishing its combat outcome" % route_label)

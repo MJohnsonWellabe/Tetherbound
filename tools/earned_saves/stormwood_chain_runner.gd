@@ -92,7 +92,9 @@ func _run() -> void:
 	if not failures.is_empty():
 		_finish(commit)
 		return
-	var working := out_dir + "_working"
+	# Outside the repository: the game may still write its world file after
+	# the piece ends, and a scratch copy is never a checkpoint.
+	var working := OS.get_user_data_dir().path_join("stormwood_chain/%s_working_%d" % [out_dir.get_file(), Time.get_ticks_usec()])
 	if DirAccess.dir_exists_absolute(working) or not CHECKPOINTS.copy_tree(from_dir.path_join("save"), working):
 		failures.append("Could not stage a fresh writable copy at " + working)
 		_finish(commit)

@@ -778,7 +778,9 @@ func _fight_current(label: String) -> bool:
 	var hits_before := 0
 	var reposition_ticks := 0
 	var side := 1.0
-	while bool(_manager.call("is_fighting")) and Time.get_ticks_msec() - started < 180000:
+	# Game-time budget: one physics step is 1/60 s of game time at this 1x/60 Hz clock.
+	var started_frame := Engine.get_physics_frames()
+	while bool(_manager.call("is_fighting")) and Engine.get_physics_frames() - started_frame < 180 * 60:
 		var enemy := _manager.call("enemy_body") as Node3D
 		var ally := _director.call("ally_body") as Node3D
 		if int(counts.player_hits) > hits_before:
