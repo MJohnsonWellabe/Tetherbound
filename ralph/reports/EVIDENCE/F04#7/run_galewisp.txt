@@ -1,0 +1,56 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+MEADOWS_C2C3 warrens_guardian galewisp MASHER L9 runs=24 win=0.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.241 tell=[0.85,1.10] diver_tell=-1.00 med_s=22.4 stalled=0
+MEADOWS_C2C3_HITS warrens_guardian galewisp MASHER neutral_worst=0.194 by={ "foe": "burrowback", "target": "galewisp", "move": "earth_fist" } | any_matchup_worst=0.241 by={ "foe": "burrowback", "target": "galewisp", "move": "earth_fist", "type_mult": 1.25 }
+MEADOWS_C2C3 warrens_guardian galewisp READER L9 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,1.30] diver_tell=-1.00 med_s=27.2 stalled=0
+MEADOWS_C2C3_HITS warrens_guardian galewisp READER neutral_worst=0.000 by={  } | any_matchup_worst=0.000 by={  }
+MEADOWS_C2C3_VERDICT warrens_guardian galewisp PASS
+MEADOWS_C2C3 relay_officer_dell galewisp MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.146 tell=[0.90,1.40] diver_tell=-1.00 med_s=59.4 stalled=0
+MEADOWS_C2C3_HITS relay_officer_dell galewisp MASHER neutral_worst=0.166 by={ "foe": "galecrest", "target": "bramblebun", "move": "storm_strike" } | any_matchup_worst=0.146 by={ "foe": "burrowback", "target": "bramblebun", "move": "burrow_strike", "type_mult": 1.0 }
+MEADOWS_C2C3 relay_officer_dell galewisp READER L12 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.132 tell=[0.90,1.40] diver_tell=-1.00 med_s=103.5 stalled=0
+MEADOWS_C2C3_HITS relay_officer_dell galewisp READER neutral_worst=0.166 by={ "foe": "galecrest", "target": "bramblebun", "move": "storm_strike" } | any_matchup_worst=0.132 by={ "foe": "galecrest", "target": "bramblebun", "move": "storm_strike", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT relay_officer_dell galewisp PASS
+MEADOWS_C2C3 relay_captain galewisp MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.457 tell=[0.90,1.40] diver_tell=-1.00 med_s=97.8 stalled=0
+MEADOWS_C2C3_HITS relay_captain galewisp MASHER neutral_worst=0.406 by={ "foe": "mosshell", "target": "pipwing", "move": "shell_bash" } | any_matchup_worst=0.457 by={ "foe": "mosshell", "target": "pipwing", "move": "tremor_roll", "type_mult": 1.25 }
+MEADOWS_C2C3 relay_captain galewisp READER L12 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.322 tell=[0.90,1.40] diver_tell=-1.00 med_s=180.9 stalled=0
+MEADOWS_C2C3_HITS relay_captain galewisp READER neutral_worst=0.333 by={ "foe": "duskhush", "target": "bramblebun", "move": "night_swoop" } | any_matchup_worst=0.322 by={ "foe": "duskhush", "target": "bramblebun", "move": "quick_flit", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT relay_captain galewisp PASS
+MEADOWS_C2C3 captain_riverwatch galewisp MASHER L12 runs=24 win=0.96 med_lead=1.000 lead_faint=1.00 wipe=0.04 max_hit=0.471 tell=[0.90,1.30] diver_tell=-1.00 med_s=82.7 stalled=0
+MEADOWS_C2C3_HITS captain_riverwatch galewisp MASHER neutral_worst=0.467 by={ "foe": "duskhush", "target": "pipwing", "move": "night_swoop" } | any_matchup_worst=0.471 by={ "foe": "burrowback", "target": "pipwing", "move": "burrow_strike", "type_mult": 1.25 }
+MEADOWS_C2C3 captain_riverwatch galewisp READER L12 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.249 tell=[0.90,1.30] diver_tell=-1.00 med_s=161.7 stalled=0
+MEADOWS_C2C3_HITS captain_riverwatch galewisp READER neutral_worst=0.313 by={ "foe": "duskhush", "target": "bramblebun", "move": "night_swoop" } | any_matchup_worst=0.249 by={ "foe": "duskhush", "target": "bramblebun", "move": "night_swoop", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT captain_riverwatch galewisp PASS
+MEADOWS_C2C3 captain_field galewisp MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.452 tell=[0.90,1.40] diver_tell=-1.00 med_s=102.3 stalled=0
+MEADOWS_C2C3_HITS captain_field galewisp MASHER neutral_worst=0.382 by={ "foe": "mosshell", "target": "pipwing", "move": "shell_bash" } | any_matchup_worst=0.452 by={ "foe": "meadowhart", "target": "pipwing", "move": "verdant_burst", "type_mult": 1.25 }
+MEADOWS_C2C3 captain_field galewisp READER L15 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.270 tell=[0.90,1.40] diver_tell=-1.00 med_s=201.3 stalled=0
+MEADOWS_C2C3_HITS captain_field galewisp READER neutral_worst=0.322 by={ "foe": "duskhush", "target": "bramblebun", "move": "night_swoop" } | any_matchup_worst=0.270 by={ "foe": "duskhush", "target": "bramblebun", "move": "quick_flit", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT captain_field galewisp PASS
+MEADOWS_C2C3 captain_ridge galewisp MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.427 tell=[0.90,1.20] diver_tell=-1.00 med_s=88.5 stalled=0
+MEADOWS_C2C3_HITS captain_ridge galewisp MASHER neutral_worst=0.342 by={ "foe": "tuskroot", "target": "pipwing", "move": "rootquake" } | any_matchup_worst=0.427 by={ "foe": "tuskroot", "target": "pipwing", "move": "rootquake", "type_mult": 1.25 }
+MEADOWS_C2C3 captain_ridge galewisp READER L15 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.272 tell=[0.90,1.20] diver_tell=-1.00 med_s=128.3 stalled=0
+MEADOWS_C2C3_HITS captain_ridge galewisp READER neutral_worst=0.312 by={ "foe": "duskhush", "target": "bramblebun", "move": "night_swoop" } | any_matchup_worst=0.272 by={ "foe": "duskhush", "target": "bramblebun", "move": "quick_flit", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT captain_ridge galewisp PASS
+MEADOWS_C2C3 stronghold_elite galewisp MASHER L18 runs=24 win=0.92 med_lead=1.000 lead_faint=1.00 wipe=0.08 max_hit=0.446 tell=[0.90,1.40] diver_tell=-1.00 med_s=117.7 stalled=0
+MEADOWS_C2C3_HITS stronghold_elite galewisp MASHER neutral_worst=0.464 by={ "foe": "duskhush", "target": "pipwing", "move": "night_swoop" } | any_matchup_worst=0.446 by={ "foe": "duskhush", "target": "pipwing", "move": "night_swoop", "type_mult": 1.0 }
+ERROR: Can't play finished Tween, use stop() first to reset its state.
+   at: play (scene/animation/tween.cpp:206)
+   GDScript backtrace (most recent call first):
+       [0] set_combat_hitstop (res://scripts/creatures/creature_body.gd:2170)
+       [1] _set_bodies_hitstopped (res://scripts/combat/combat_manager.gd:3729)
+       [2] _end_hitstop (res://scripts/combat/combat_manager.gd:3741)
+       [3] _begin_resolve (res://scripts/combat/combat_manager.gd:6186)
+       [4] _perform_player_strike (res://scripts/combat/combat_manager.gd:4008)
+       [5] _resolve_player_strike (res://scripts/combat/combat_manager.gd:3770)
+       [6] _tick_action (res://scripts/combat/combat_manager.gd:3451)
+       [7] _tick_active (res://scripts/combat/combat_manager.gd:3419)
+       [8] _physics_process (res://scripts/combat/combat_manager.gd:3306)
+MEADOWS_C2C3 stronghold_elite galewisp READER L18 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.286 tell=[0.90,1.40] diver_tell=-1.00 med_s=170.8 stalled=0
+MEADOWS_C2C3_HITS stronghold_elite galewisp READER neutral_worst=0.310 by={ "foe": "duskhush", "target": "bramblebun", "move": "night_swoop" } | any_matchup_worst=0.286 by={ "foe": "duskhush", "target": "bramblebun", "move": "quick_flit", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT stronghold_elite galewisp PASS
+MEADOWS_C2C3 warden_aldis galewisp MASHER L18 runs=24 win=0.88 med_lead=1.000 lead_faint=1.00 wipe=0.12 max_hit=0.505 tell=[0.90,1.40] diver_tell=-1.00 med_s=113.0 stalled=0
+MEADOWS_C2C3_HITS warden_aldis galewisp MASHER neutral_worst=0.409 by={ "foe": "tuskroot", "target": "pipwing", "move": "earth_fist" } | any_matchup_worst=0.505 by={ "foe": "tuskroot", "target": "pipwing", "move": "earth_fist", "type_mult": 1.25 }
+MEADOWS_C2C3 warden_aldis galewisp READER L18 runs=24 win=1.00 med_lead=0.489 lead_faint=0.00 wipe=0.00 max_hit=0.332 tell=[0.90,1.40] diver_tell=-1.00 med_s=179.1 stalled=0
+MEADOWS_C2C3_HITS warden_aldis galewisp READER neutral_worst=0.416 by={ "foe": "brooktail", "target": "pipwing", "move": "aqua_shot" } | any_matchup_worst=0.332 by={ "foe": "brooktail", "target": "pipwing", "move": "aqua_shot", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT warden_aldis galewisp PASS
+MEADOWS_C2C3_CHAPTER galewisp masher_loses_a_named_fight=0.23 FAIL -- < 0.25
+MEADOWS_C2C3 done: 8 rows, 1 failing rows, 384 runs, 0 errors
