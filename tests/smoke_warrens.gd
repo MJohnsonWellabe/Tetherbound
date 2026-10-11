@@ -47,6 +47,7 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 ## copied into this file.
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const BURROW_WARRENS := preload("res://scripts/world/burrow_warrens.gd")
+const PLAYER_CONTROLLER := preload("res://scripts/player/player_controller.gd")
 const SETTLE_FRAMES := 240
 const PUSH_FRAMES := 240
 ## The walked route (`_the_route_can_be_walked`): how close counts as arrived,
@@ -1213,6 +1214,9 @@ func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3,
 	var rig: Node3D = _camera_rig(player)
 	var walked := 0.0
 	var frames := 0
+	var closest := INF
+	var stalled_frames := 0
+	var stall_reported := false
 	Input.action_press("move_forward")
 	while frames < WALK_FRAMES:
 		if stop_when_fighting != null and bool(stop_when_fighting.call("is_fighting")):
@@ -1232,18 +1236,59 @@ func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3,
 		walked += Vector2(player.global_position.x - before.x,
 			player.global_position.z - before.z).length()
 		frames += 1
+		var remaining := Vector2(player.global_position.x - target.x,
+			player.global_position.z - target.z).length()
+		if remaining < closest - 0.01:
+			closest = remaining
+			stalled_frames = 0
+		else:
+			stalled_frames += 1
+		# Observe the first stall before the controller's two-second recovery
+		# moves the body away from the contact that actually stopped it.
+		if stalled_frames == 30 and not stall_reported:
+			stall_reported = true
+			_print_warrens_motion_witness(player, warrens, "walk stall target=%s" % warrens.to_local(target))
 	Input.action_release("move_forward")
 	if Vector2(player.global_position.x - target.x, player.global_position.z - target.z).length() > arrived_m:
 		print("warrens walk stopped: local=%s target=%s velocity=%s floor=%s floor_normal=%s walked=%.2f frames=%d" % [
 			warrens.to_local(player.global_position), warrens.to_local(target), player.velocity,
 			player.is_on_floor(), player.get_floor_normal(), walked, frames])
-		for index in player.get_slide_collision_count():
-			var hit := player.get_slide_collision(index)
-			var collider := hit.get_collider()
-			print("warrens walk collision: %s at=%s normal=%s" % [
-				str((collider as Node).get_path()) if collider is Node else str(collider),
-				warrens.to_local(hit.get_position()), hit.get_normal()])
+		_print_warrens_motion_witness(player, warrens, "walk budget ended")
 	return walked
+
+
+## Read-only contacts from the registered production capsule. A slide may
+## contain several contacts; index zero alone can hide a wall behind its floor.
+func _print_warrens_motion_witness(player: CharacterBody3D, warrens: Node3D,
+		label: String) -> void:
+	print("warrens motion witness %s: local=%s velocity=%s floor=%s" % [
+		label, warrens.to_local(player.global_position), player.velocity, player.is_on_floor()])
+	for slide in player.get_slide_collision_count():
+		var hit := player.get_slide_collision(slide)
+		for contact in hit.get_collision_count():
+			var collider := hit.get_collider(contact)
+			print("warrens slide %d/%d: %s at=%s normal=%s depth=%.6f" % [
+				slide, contact, str((collider as Node).get_path()) if collider is Node else str(collider),
+				warrens.to_local(hit.get_position(contact)), hit.get_normal(contact), hit.get_depth()])
+	# Match the controller's entombment height/probe and report the actual
+	# colliders in all eight sweeps without moving the body or changing input.
+	for direction_index in 8:
+		var angle := TAU * float(direction_index) / 8.0
+		var query := PhysicsTestMotionParameters3D.new()
+		query.from = player.global_transform.translated(Vector3.UP * PLAYER_CONTROLLER.STEP_HEIGHT)
+		query.motion = Vector3(sin(angle), 0.0, cos(angle)) * float(player.get("_unstick_probe_m"))
+		query.margin = player.safe_margin
+		query.max_collisions = 32
+		var result := PhysicsTestMotionResult3D.new()
+		var blocked := PhysicsServer3D.body_test_motion(player.get_rid(), query, result)
+		print("warrens raised sweep %d: blocked=%s travel=%s contacts=%d" % [
+			direction_index, blocked, result.get_travel(), result.get_collision_count()])
+		for contact in result.get_collision_count():
+			var collider := result.get_collider(contact)
+			print("warrens raised sweep %d/%d: %s at=%s normal=%s depth=%.6f" % [
+				direction_index, contact, str((collider as Node).get_path()) if collider is Node else str(collider),
+				warrens.to_local(result.get_collision_point(contact)), result.get_collision_normal(contact),
+				result.get_collision_depth(contact)])
 
 
 ## OWNER-0912 Tier 2 #5, runtime half. The static identity test proves the new
@@ -1662,6 +1707,7 @@ func _the_branch_is_shut_until_the_guardian_falls(player: CharacterBody3D, warre
 	await _push(player, toward_vault)
 	var blocked_at := player.global_position.distance_to(vault)
 	print("pushed at the shut branch door; ended %.1fm from the vault" % blocked_at)
+	_print_warrens_motion_witness(player, warrens, "shut branch endpoint")
 	if blocked_at < 3.0:
 		_fail("the player reached the branch chamber with the door still shut")
 
@@ -1677,6 +1723,7 @@ func _the_branch_is_shut_until_the_guardian_falls(player: CharacterBody3D, warre
 	await _push(player, toward_vault)
 	var open_at := player.global_position.distance_to(vault)
 	print("pushed at the open branch door; ended %.1fm from the vault" % open_at)
+	_print_warrens_motion_witness(player, warrens, "open branch endpoint")
 	if open_at > 4.0:
 		_fail("the branch is still impassable after clearing (%.1fm from the vault)" % open_at)
 
