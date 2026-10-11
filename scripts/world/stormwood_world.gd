@@ -12,6 +12,7 @@ const DROPS := preload("res://scripts/world/dropped_item_spawner.gd")
 const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
 const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
 const STRUCK_SENTINEL := preload("res://scripts/world/stormwood_struck_sentinel.gd")
+const GLASS_SINK := preload("res://scripts/world/stormwood_glass_sink.gd")
 const POCKETS := preload("res://scripts/world/stormwood_pockets.gd")
 const ROAD_CURRENT := preload("res://scripts/world/stormwood_road_current.gd")
 const ROD_LINE := preload("res://scripts/world/stormwood_rod_line.gd")
@@ -420,3 +421,5 @@ func _apply_ground_materials(budget: RefCounted) -> void:
 	var material: Object = _terrain.get("material")
 	material.set("show_checkered",false)
 	material.set("auto_shader",true)
+	if not simulation_only:
+		GLASS_SINK.install(_terrain, _field.config.glass_sink)
