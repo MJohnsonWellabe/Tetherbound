@@ -674,6 +674,7 @@ func _follow(delta: float) -> void:
 		_render_position = net_position
 		_has_render = true
 	if REMOTE_CREATURE.needs_snap(_render_position, global_position, net_position, SNAP_M):
+		_clear_landing_art()
 		# A teleport, not late packets -- or a body this host's own collision
 		# has pinned while `_render_position` went on tracking the owner. See
 		# SNAP_M and `remote_creature.gd::needs_snap()`. The second case matters
