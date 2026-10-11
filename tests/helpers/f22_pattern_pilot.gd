@@ -161,8 +161,23 @@ func _read(_policy: String) -> void:
 		return
 	if distance > reach - 0.25:
 		_walk(_around_fields(toward))
-	elif _manager.quick_ready():
+	elif _manager.quick_ready() and not _tell_imminent("quick"):
 		_press("combat_quick")
+
+
+## COMBAT §7 reader: in neutral, never start an attack that would still be
+## committed (wind-up + recovery) when the opponent's next tell is due and has
+## been observed. The F04#7 diagnostic found the reader committed for ~half of
+## a 0.85 s tell, so it could not leave a shape it had read. Openings
+## (recovery, stagger) are handled above and are not gated.
+func _tell_imminent(kind: String) -> bool:
+	# A ready opponent (cooldown 0) tells as soon as we are in our own reach.
+	var cooldown := float(_wild.get("_cooldown"))
+	var creature: RefCounted = _manager.active_creature()
+	var profile: Dictionary = _manager.call("_move_profile", "player_" + kind, str(creature.get("move_" + kind)))
+	var observed := float(MATH.config().get("patterns", {}).get("reactions", {}).get("observation_s", 0.25))
+	var commit := float(profile.get("windup", 0.3)) + float(profile.get("recovery", 0.3)) + observed
+	return cooldown < commit
 
 
 func _speed() -> float:

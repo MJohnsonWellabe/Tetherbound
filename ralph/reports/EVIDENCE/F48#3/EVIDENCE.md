@@ -1,0 +1,13 @@
+# F48#3 — a behind friend follows the host through an unlocked portal; own progress stays honest
+- Base tb/ev-coordinator 00d4a639 + this fix; Godot 4.7 headless; Sun 11 Oct 2026 CT.
+- Command: `GODOT_BIN=… tools/net/run_net_smoke.sh f48_behind_friend` → **ALL CHECKS PASSED, 34/0** (12:55–1:04 PM CT). The guest follows through the host's open Tidewake arch, gains no key, receipt or unlock (live or on disk), and its personal arch stays shut after leaving.
+- Before the fix: failed 2 of 2 (10:55 AM, 11:16 AM CT). The guest's Home Key stalled at "finishing" and timed out after 12 s.
+- Root cause: on the host, `owner_passive_sync._inputs_host_batch` replayed the guest's travel-reset discovery input (`travel_valid=false`) before the host had minted that travel's proof. The guest's fly-landing claim is refused `too_far` until the host's replica of the guest catches up. Replay → `travel_baseline_mismatch` → permanent stream error → every owner-gated guest action was refused (Home Key `portal_begin`).
+- Fix (coordinator-approved, bounded):
+  - The unproven reset is held, never applied, for at most `multiplayer.json session.owner_passive_travel_reset_wait_s` (60 s). After that the old error applies.
+  - A held input matches only the first proof minted after it was held (a proof `generation`).
+  - Host log: "input 25 waits: travel reset … not yet confirmed", then it proceeds.
+- Unit: `tests/run_tests.gd -- --only=test_owner_passive_sync.gd,test_owner_passive_replay.gd` → 62 tests, 1116 assertions, 0 failed.
+  - Both original `travel_baseline_mismatch` asserts are kept, now after the bound, with held/never-applied checks before.
+  - New case: a held reset without its own proof (another endpoint, then a later same-position proof) errors after the bound and grants nothing.
+- Disclosed: the local slow-host test-budget override (hello 900 s / steps 3600 s) is not committed; smoke fixtures as in its header.

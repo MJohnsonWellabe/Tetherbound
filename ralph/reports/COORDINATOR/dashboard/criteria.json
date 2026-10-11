@@ -1,5 +1,5 @@
 {
- "generated_at": "12:45 PM CT Sun 11 Oct 2026",
+ "generated_at": "1:06 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -2757,11 +2757,11 @@
    "title": "Rematches and alpha respawns",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 75,
+   "pct": 50,
    "counts": {
-    "met": 3,
+    "met": 2,
     "partial": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "not_started": 1,
     "blocked": 0,
     "failing": 0
@@ -2777,10 +2777,10 @@
     },
     {
      "text": "After credits, leaders and bosses return at the endgame tier (L55–60).",
-     "status": "met",
+     "status": "in_progress",
      "evidence": "tests/smoke_f20_ending.gd (home-key lane c4359f23): 68 checks, 0 failures, exit 0. 'The post-credits leader returns at the endgame leader tier L58 (enemy L58)'; ordinary input admits the canonical endgame rematch",
-     "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (home-key c4359f23, 12:37 PM CT Sun 11 Oct). Game fix 547c3170 (realm readiness deadline vs Meadows post-build hold); arena-seat fixes merged. Disclosed (proof rules v2): road_gate_open fixture, authored-route walk proven, then a teleport beside the South Bridge grunt for the rematch. Lands with the consolidated PR.",
+     "gap": "Wire Tidewake and Cloudreach trainers into foundation_rematches (R1 and endgame), then one endgame witness per biome.",
+     "note": "Reopened 1:01 PM CT Sun 11 Oct by the coordinator. smoke_f20_ending (home-key c4359f23, 68/0) proves a Meadows post-credits leader returns at the endgame tier L58. But systems-b found that foundation_rematches mounts rematch sources only on trainer_npc-spawned bodies (Meadows, Stormwood); Tidewake (water_scene_npcs) and Cloudreach trainers get no rematch source, so their leaders can't return. Re-closes when the rematch-wiring lane lands Tidewake/Cloudreach sources and a witness passes.",
      "audit_index": 1
     },
     {
@@ -2896,12 +2896,12 @@
    "title": "Economy, balance and the 15–25 hour clear",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/balance",
-   "pct": 20,
+   "pct": 40,
    "counts": {
-    "met": 1,
+    "met": 2,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 4,
+    "not_started": 3,
     "blocked": 0,
     "failing": 0
    },
@@ -2924,10 +2924,10 @@
     },
     {
      "text": "Four-character contention ledgers are solvent.",
-     "status": "not_started",
-     "evidence": "test_economy_ledger.mjs (not CI); test_tidewake_b_four_character_ledger.gd (old Tidewake only)",
-     "gap": "Measure the four-character ledger per band on the new loop (stations/feasts/gear).",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No new-loop four-character ledger is measured.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F47-2/ (systems-a 4f0c3ce6): tools/economy_supply_census.mjs + tests/test_economy_supply_census.mjs (data-only, coordinator re-ran 0 failed). All four bands are solvent for four characters against required demand (matching gear tier at +0; +1 also solvent), counting site stock and every configured non-site source (Master chests, trainer rewards, Warrens, chains, bounties, vendors, shed)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (12:52 PM CT Sun 11 Oct). Caveats for the owner: solvency depends on each character winning its own Master chest (without them berries, cliffglass_ore, windworn_heartwood, skyplume and sparkfur fall short); the optional +3-everything column is short only Cloudreach skyplume (185 of 200). Lands with the consolidated PR.",
      "audit_index": 2
     },
     {
@@ -2953,11 +2953,11 @@
    "title": "Co-op across the new loop",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/coop",
-   "pct": 50,
+   "pct": 75,
    "counts": {
-    "met": 2,
+    "met": 3,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 1,
     "blocked": 0,
     "failing": 0
@@ -2989,10 +2989,10 @@
     },
     {
      "text": "A behind friend follows a host through an unlocked portal, and their own progress stays honest (no permanent key without the fight).",
-     "status": "in_progress",
-     "evidence": "multiplayer.json `session.redesign_portal_runtime_enabled=false`",
-     "gap": "Land F18 portals, then a two-peer behind-friend portal net smoke in CI.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. Portals ship off. The behind-portal smoke is on tb/coop.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F48#3/ (systems-b 91b4fba3): 2-peer f48_behind_friend ALL CHECKS PASSED 34/0 (0/2 before the fix): the guest follows the host through the unlocked arch honestly; owner_passive_sync + replay units 62 tests/1116 assertions, 0 failed (coordinator re-ran)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (1:06 PM CT Sun 11 Oct). Game fix in owner_passive_sync._inputs_host_batch: a guest's travel-reset input that arrives before the host's proof is held, bounded by multiplayer.json owner_passive_travel_reset_wait_s = 60, and matches only its own travel's proof; past the bound the original travel_baseline_mismatch refusal applies. All original refusal asserts are kept, plus a new no-proof case. Previously this stream error blocked every owner-gated guest action, including the Home Key. Disclosed: slow-host wall-clock budgets raised locally, uncommitted. Lands with the consolidated PR.",
      "audit_index": 3
     }
    ]
