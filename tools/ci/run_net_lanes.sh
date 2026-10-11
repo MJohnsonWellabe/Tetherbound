@@ -17,7 +17,9 @@
 #
 # Per smoke: its own process session (setsid), swept on every exit path, and
 # a NET_SMOKE_TIMEOUT_SECONDS guard so one hung smoke fails on its own rather
-# than holding its lane until the job limit cancels every other lane too.
+# than holding its lane until the job limit cancels every other lane too. A
+# smoke whose header (first 8 lines) declares `# net-timeout-seconds: N` gets
+# N instead, when N is larger (a long multi-leg smoke, e.g. f48_coop_loop).
 # Output goes to a per-smoke log, printed as one ::group:: when the smoke
 # ends (under a lock, so two lanes never interleave lines). RETRIES as
 # before (1: a net smoke that only passes on retry is a finding).
@@ -74,7 +76,10 @@ run_lane() {
 			# lanes' first smokes booted together on a slow runner.
 			exec {boot_fd}>"$boot_lock"
 			flock "$boot_fd"
-			setsid timeout -k 30 "$SMOKE_TIMEOUT" tools/net/run_net_smoke.sh "$name" --out="$OUT" > "$log" 2>&1 &
+			local limit="$SMOKE_TIMEOUT" declared
+			declared="$(head -8 "$f" | sed -nE 's/^#[[:space:]]*net-timeout-seconds:[[:space:]]*([0-9]+)[[:space:]]*$/\1/p' | head -1)"
+			[ -n "$declared" ] && [ "$declared" -gt "$limit" ] && limit="$declared"
+			setsid timeout -k 30 "$limit" tools/net/run_net_smoke.sh "$name" --out="$OUT" > "$log" 2>&1 &
 			active=$!
 			local gate=0
 			while [ "$gate" -lt "$BOOT_GATE_SECONDS" ] && kill -0 "$active" 2>/dev/null \
@@ -89,7 +94,7 @@ run_lane() {
 			wait "$active" 2>/dev/null || true
 			active=""
 			local secs=$(( $(date +%s) - started ))
-			[ "$run_status" -eq 124 ] && echo "TIMED OUT after ${SMOKE_TIMEOUT} s (NET_SMOKE_TIMEOUT_SECONDS)" >> "$log"
+			[ "$run_status" -eq 124 ] && echo "TIMED OUT after ${limit} s (NET_SMOKE_TIMEOUT_SECONDS or its net-timeout-seconds header)" >> "$log"
 			(
 				flock 9
 				echo "::group::smoke_net_${name}.gd attempt ${n}/${RETRIES} (lane ${lane}, exit ${run_status}, ${secs} s)"
