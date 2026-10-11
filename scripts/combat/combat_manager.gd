@@ -629,12 +629,19 @@ func throw_aim() -> Node:
 func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 	# A hosted trainer round reuses this manager, but it is a new encounter with
 	# a new opponent and must be eligible for its one victory award.
-	if _encounter_id != encounter_id:
+	var new_encounter := _encounter_id != encounter_id
+	if new_encounter:
 		_victory_awarded = false
 		_ordinary_reward_owned_id = ""
 	_encounter_link = link
 	_encounter_id = encounter_id
 	_encounter_kind = kind
+	# The host starts every encounter's move meter at 0 (encounter_host
+	# move_resources). A stale local meter from an earlier fight would show a
+	# ready charged attack that the host refuses for insufficient Energy.
+	if new_encounter and _uses_host_move_start():
+		for creature: RefCounted in _party:
+			if creature != null: creature.set("energy", 0.0)
 	if kind in ["trainer", "boss"] and not encounter_id.is_empty() \
 		and is_instance_valid(link) and link.has_method("uses_durable_trainer_rewards"):
 		var owner: Variant = link.call("uses_durable_trainer_rewards", encounter_id)
