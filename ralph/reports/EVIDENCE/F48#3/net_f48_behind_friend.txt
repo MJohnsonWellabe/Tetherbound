@@ -1,0 +1,34 @@
+PASS: peer 0 f18_boot_world: disclosed sequential world fixture boot after lightweight title hello
+PASS: peer 1 f18_boot_world: disclosed sequential world fixture boot after lightweight title hello
+PASS: peer 0 f18_fixture: DISCLOSED setup only: starter/free-play flags and own HomeKey per peer; guest Tidewake key, not earned opening
+PASS: peer 1 f18_fixture: DISCLOSED setup only: starter/free-play flags and own HomeKey per peer; guest Tidewake key, not earned opening
+PASS: peer 0 host: hosting udp/33421 as peer 1
+PASS: peer 1 read-only disk observation
+PASS: the behind guest has a portable identity
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:33421 as peer 361423032 after 129 frames
+PASS: peer 0 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 read-only disk observation
+PASS: the guest starts without a Tidewake key or unlock
+PASS: peer 0 f18_home_key: production Satchel Use requires saved authoritative HomeKey return at actual Hall
+PASS: peer 0 f18_arch: actual prompt unlock requires bound durable reply and exact portable outcome
+PASS: peer 0 read-only disk observation
+PASS: the host's key opens Tidewake for its world, live and on disk
+PASS: the host's unlock is not written into the guest's admitted record
+PASS: peer 1 f18_home_key: production Satchel Use requires saved authoritative HomeKey return at actual Hall
+PASS: peer 1 read-only disk observation
+PASS: the guest sees the arch open through the host's world only ({ "character_open": false, "character_stirred": false, "destination_label": "biome entry", "fifth_arch_stirred": false, "has_key": false, "open": true, "ready": true, "recommended_level": 20.0, "world_open": true })
+PASS: peer 1 f18_arch: actual prompt enter requires bound durable reply and exact portable outcome
+PASS: peer 0 read-only disk observation
+PASS: the behind guest's Tidewake arrival is an accepted host journal
+PASS: peer 1 read-only disk observation
+PASS: following through the arch gives the guest no key or personal unlock
+PASS: peer 1 f18_settled: owner transactions settled before the session ends
+PASS: peer 1 save_character_here: character 'character-b72cb6243b9d8e2ab31e2971bf3f46da' is on disk (wrote_world=false, waited 0 frames for the save fence)
+PASS: peer 1 read-only disk observation
+PASS: the guest's saved character holds no Tidewake unlock
+PASS: peer 1 leave: client left cleanly after 0 frames
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 9 frames (1.1 s)
+PASS: peer 1 read-only disk observation
+PASS: after leaving, the guest's personal Tidewake arch is still locked ({ "character_open": false, "character_stirred": false, "destination_label": "biome entry", "fifth_arch_stirred": false, "has_key": false, "open": true, "ready": true, "recommended_level": 20.0, "world_open": true })
+PASS: F48 behind-friend peer logs have no script errors

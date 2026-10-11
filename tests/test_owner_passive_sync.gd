@@ -1304,8 +1304,59 @@ func test_host_accepted_travel_reset_is_exact_single_use_and_grants_no_distance(
 	service.record_input(_input(0.6))
 	service.record_input({"op": "discovery", "realm": "meadows", "from": target, "to": [0, 0, 0],
 		"travel_valid": false, "new_landmarks": []})
+	var held_at: Variant = stream.cursor.position
+	var held_distance: float = stream.cursor.state.party[0].distance_m_together
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.slice(4).duplicate(true)}))
+	# F48#3: an unproved reset is held until a host proof exists, never applied.
+	assert_true(int(stream.cursor.sequence) < int(service.local.inputs[-1].sequence) and stream.cursor.position == held_at,
+		"live endpoint alone never grants another false reset")
+	assert_true(stream.cursor.travel_valid, "the unproved reset is not applied")
+	assert_eq(stream.cursor.state.party[0].distance_m_together, held_distance, "and earns no walking credit")
+	assert_false(stream.has("travel_reset"), "no proof is minted by the wait")
+	# Past the bounded wait the original refusal applies.
+	stream.travel_reset_hold.since_ms -= service.travel_reset_wait_ms() + 1
 	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.slice(4).duplicate(true)}))
 	assert_eq(stream.error, "travel_baseline_mismatch", "live endpoint alone never grants another false reset")
+
+## F48#3 (coordinator ruling 2026-10-11): a guest's travel-reset input whose
+## host proof has not been minted is held, never applied, for at most
+## owner_passive_travel_reset_wait_s. It matches only the first proof minted
+## after it was held, never a later reset at the same position, and with no
+## proof of its own it fails the stream after the bound, granting nothing.
+func test_held_travel_reset_without_its_own_proof_errors_after_the_bound_and_grants_nothing() -> void:
+	var stream := _host_stream()
+	service.body_position = Vector3(-16, 1.11597406864166, 14)
+	service.record_input(_input(0.6))
+	service.record_input({"op": "discovery", "realm": "meadows", "from": [0, 0, 0], "to": [0, 0.900942, 0],
+		"travel_valid": false, "new_landmarks": []})
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.duplicate(true)}))
+	assert_true(stream.cursor.travel_valid)
+	var previous_distance: float = stream.cursor.state.party[0].distance_m_together
+	var target := [service.body_position.x, service.body_position.y, service.body_position.z]
+	service.record_input(_input(0.504022))
+	service.record_input({"op": "discovery", "realm": "meadows", "from": [0, 0.900942, 0], "to": target,
+		"travel_valid": false, "new_landmarks": []})
+	var packet := _envelope({"op": "inputs", "inputs": service.local.inputs.slice(2).duplicate(true)})
+	var held_sequence := int(service.local.inputs[-1].sequence)
+	service.receive_host(2, packet)
+	assert_eq(stream.error, "", "an unproven reset waits")
+	assert_true(int(stream.cursor.sequence) < held_sequence and stream.cursor.travel_valid, "and is not applied")
+	assert_eq(int(stream.get("travel_reset_hold", {}).get("sequence", -1)), held_sequence, "the host holds that exact input")
+	# A proof for some other travel does not explain it...
+	service.travel_reset_confirmed(2, "meadows", Vector3(-30, service.body_position.y, 14))
+	service.receive_host(2, packet)
+	assert_true(int(stream.cursor.sequence) < held_sequence and stream.error == "", "a proof for another endpoint is not its own")
+	# ...and a LATER reset at the same position is not the one minted for it.
+	service.travel_reset_confirmed(2, "meadows", service.body_position)
+	service.receive_host(2, packet)
+	assert_true(int(stream.cursor.sequence) < held_sequence and stream.cursor.travel_valid,
+		"a later reset at the same position never matches the held input")
+	# Past the bound the original refusal applies, and nothing was granted.
+	stream.travel_reset_hold.since_ms -= service.travel_reset_wait_ms() + 1
+	service.receive_host(2, packet)
+	assert_eq(stream.error, "travel_baseline_mismatch", "a held reset with no proof of its own errors after the bound")
+	assert_true(int(stream.cursor.sequence) < held_sequence and stream.cursor.travel_valid, "it was never applied")
+	assert_eq(stream.cursor.state.party[0].distance_m_together, previous_distance, "and earned no walking credit")
 
 ## F18 #4: an accepted portal/Home Key arrival mints the proof from the
 ## host's view of the guest's body. The guest's own endpoint matches it only
@@ -1353,6 +1404,14 @@ func test_host_minted_arrival_reset_tolerates_its_body_view_once_and_grants_no_d
 	service.record_input(_input(0.6))
 	service.record_input({"op": "discovery", "realm": "meadows", "from": guest_at, "to": guest_at,
 		"travel_valid": false, "new_landmarks": []})
+	var held_replay: Variant = stream.cursor.position
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.slice(4).duplicate(true)}))
+	# F48#3: held until a new host proof, never applied from the consumed one.
+	assert_true(int(stream.cursor.sequence) < int(service.local.inputs[-1].sequence) and stream.cursor.position == held_replay,
+		"a replayed arrival proof is refused")
+	assert_true(stream.cursor.travel_valid, "the replayed reset is not applied")
+	assert_eq(stream.cursor.state.party[0].distance_m_together, previous_distance, "and earns no walking credit")
+	stream.travel_reset_hold.since_ms -= service.travel_reset_wait_ms() + 1
 	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.slice(4).duplicate(true)}))
 	assert_eq(stream.error, "travel_baseline_mismatch", "a replayed arrival proof is refused")
 
