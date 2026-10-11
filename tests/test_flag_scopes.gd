@@ -40,7 +40,7 @@ const FLAG_STRING_KEYS := [
 ## Keys whose ARRAY value is a list of flag ids.
 const FLAG_ARRAY_KEYS := [
 	"flags", "physical_state_flags", "requires_flags", "count_flags",
-	"reward_flags",
+	"reward_flags", "grants_flags",
 ]
 
 ## The writer-site literals that live in GDScript constants rather than in a
@@ -197,6 +197,14 @@ func test_every_flag_id_in_shipped_data_resolves_to_world_or_player() -> void:
 	assert_true(unscoped.is_empty(),
 		"undeclared flag ids -- classify each in data/progression/flag_scopes.json: %s"
 			% ", ".join(unscoped))
+
+
+func test_cloudreach_flight_completion_flags_remain_world_scoped() -> void:
+	# The chapter reconciles this grant from its shared flight-trial completion.
+	# Classify both exact ids; do not turn unrelated Fly tutorial ids into world facts.
+	assert_eq(PROGRESSION_STATE.scope_of("fly_traversal_unlocked"), "world")
+	assert_eq(PROGRESSION_STATE.scope_of("fly_tutorial_completed"), "world")
+	assert_eq(PROGRESSION_STATE.scope_of("fly_tutorial_unregistered"), "")
 
 
 func test_every_writer_site_literal_resolves() -> void:
