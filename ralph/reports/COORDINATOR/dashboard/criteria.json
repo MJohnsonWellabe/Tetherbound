@@ -1290,7 +1290,7 @@
      "text": "Earned checkpoint saves under tests/fixtures/earned_saves/ regenerated for the new boundaries; each portal sign shows its recommended level and no hidden level gate exists.",
      "status": "in_progress",
      "evidence": "test_f19_order_consumers.gd (sign/level only); STATE: F19#5 earned OPEN",
-     "gap": "Earned four-biome run in the new order (needs portals), then commit fixtures with provenance.",
+     "gap": "By chapter, proven in pieces (proof rules v2). Cloudreach COMPLETE: 05 Voss, 05b, 06 Veyra, 07 handoff into Stormwood (8818a47b37, ralph/reports/EVIDENCE/F19-5-cloudreach/routes-east/). Tidewake: 01-05 and 08 PASS; 07 re-running with the fixed pilot (Venn helper bug). Meadows: relay, sigils and hall PASS; Warden XP settle, Halda/camp_tournament, bridge and warrens running (routes-west). Stormwood: named_detour and dynamo pieces next (routes-east).",
      "note": "Evidence phase (6:20 AM CT Sun 11 Oct): four route lanes building checkpoint saves at every segment boundary (Meadows 8, Tidewake 8, Cloudreach 7, Stormwood 7). Codex parked this in #677. | Audit 2026-10-04 on b4e4897d5: MISSING. Earned saves under tests/fixtures/earned_saves were not regenerated for the new boundaries.",
      "audit_index": 5
     }
