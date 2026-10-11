@@ -837,4 +837,7 @@ static func model_config(spec: Dictionary) -> Dictionary:
 		for surface: Variant in (spec["palette"] as Dictionary):
 			merged[surface] = (spec["palette"] as Dictionary)[surface]
 		cfg["palette"] = merged
-	return cfg
+	var profile := str(spec.get("base", "")) if not rank.is_empty() else ""
+	if profile.is_empty():
+		profile = str(spec.get("config_key", ""))
+	return CHARACTER_MODEL.with_appearance_variant(cfg, profile, str(spec.get("appearance_variant_id", "")))

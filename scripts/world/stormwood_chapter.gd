@@ -257,6 +257,7 @@ static func npc_spec(actor: Dictionary) -> Dictionary:
 		branches.push_front(chain_branches[i])
 	return {"name": str(actor.get("name", "")),
 		"config_key": str(actor.get("body_profile", "")),
+		"appearance_variant_id": str(actor.get("appearance_variant_id", "")),
 		"position": (actor.get("position", []) as Array).duplicate(),
 		"greeting": prefix + "arrival", "greeting_when": branches}
 
@@ -275,12 +276,17 @@ static func wen_refusal_conversation() -> Dictionary:
 
 
 static func apply_npc_portraits(conversations: Dictionary, actors: Array, settings: Dictionary) -> void:
-	if not bool(settings.get("enabled", false)):
-		return
-	var profiles: Dictionary = settings.get("plates_by_profile", {})
+	var profiles: Dictionary = settings.get("plates_by_profile", {}) if bool(settings.get("enabled", false)) else {}
 	var speakers := {}
 	for actor: Dictionary in actors:
 		var plate := str(profiles.get(str(actor.get("body_profile", "")), ""))
+		var variant_id := str(actor.get("appearance_variant_id", ""))
+		if not variant_id.is_empty():
+			# Use the exact decorated model inputs passed to the world body.
+			# An incomplete pair keeps the existing profile/authored portrait.
+			var model := PEOPLE.model_config(npc_spec(actor))
+			if str(model.get("appearance_variant_id", "")) == variant_id:
+				plate = str(model.get("portrait", ""))
 		var speaker := str(actor.get("name", ""))
 		if not speaker.is_empty() and not plate.is_empty() and ResourceLoader.exists(plate):
 			speakers[speaker] = plate

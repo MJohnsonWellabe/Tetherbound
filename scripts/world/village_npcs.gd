@@ -193,7 +193,10 @@ static func model_config(spec: Dictionary) -> Dictionary:
 	for key: String in ["hair", "palette", "accessories", "tint", "height"]:
 		if spec.has(key):
 			cfg[key] = spec[key]
-	return cfg
+	var profile := str(spec.get("base", "")) if not rank.is_empty() else ""
+	if profile.is_empty():
+		profile = str(spec.get("config_key", ""))
+	return CHARACTER_MODEL.with_appearance_variant(cfg, profile, str(spec.get("appearance_variant_id", "")))
 
 
 ## Only built support providers in this placement's actual village contribute.
