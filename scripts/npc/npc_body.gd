@@ -15,6 +15,7 @@ extends "res://scripts/characters/character_model.gd"
 ## shoved the way the invisible ally body once shoved the trainer.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const POSTURE := preload("res://scripts/npc/npc_posture.gd")
 
 ## Radians per second. Slow: he is old, and a head that snaps round to track the
 ## player reads as a turret.
@@ -36,6 +37,7 @@ func setup(config_key: String, player: Node3D) -> bool:
 	if not built:
 		push_error("no model for NPC '%s'; there will be nothing standing there" % config_key)
 	else:
+		_install_posture()
 		play(clip_for("idle"))
 	_build_collider()
 	return built
@@ -54,9 +56,19 @@ func setup_from_config(config: Dictionary, player: Node3D) -> bool:
 	if not built:
 		push_error("an NPC config named no usable model; there will be nothing standing there")
 	else:
+		_install_posture()
 		play(clip_for("idle"))
 	_build_collider()
 	return built
+
+
+func _install_posture() -> void:
+	# Per-instance map: the source art config is shared with other NPCs and
+	# the player. Every existing return-to-idle caller now resumes this role.
+	_clips = _clips.duplicate()
+	_clips["idle"] = POSTURE.install(self, config(), clip_for("idle"))
+	# A rebuilt body has a new AnimationPlayer even when the role name matches.
+	_current = ""
 
 
 ## The prompt he offers. Created here rather than by the caller so an NPC always
