@@ -254,6 +254,7 @@
     {
       "order": 13,
       "id": "captain_riverwatch",
+      "_why_f04_7_mosshell_power": "F04#7 (coordinator tuning batch, 11 Oct 2026): mosshell power 18.5 -> 20.5. The chapter masher-loss was 0.21/0.21/0.23 against the 0.25 bar, nearly all from Riverwatch. 20.5 matches the band's relay_captain mosshell (measured neutral worst hit 0.406). Duskhush, the C3-binding body, is untouched. Predicted Riverwatch masher win 0.79 -> ~0.75 (thin margin).",
       "name": "Captain Oreth",
       "_comment": "SF34. The third captain: Water-led but deliberately BALANCED (spec §3 says 'Water/balanced'), so a party built to answer the first two cannot walk this one on type alone -- two Water and one Ground, the only mixed team of the three. Top of the band's tunable 10-16.",
       "rank": "captain",
@@ -285,7 +286,7 @@
             "recovery": 1.1,
             "chase_speed": 3.4,
             "reposition_distance": 2.5,
-            "power": 18.5,
+            "power": 20.5,
             "poise_max": 60.0,
             "stagger_seconds": 0.85,
             "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."

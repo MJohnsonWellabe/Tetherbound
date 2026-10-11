@@ -1,10 +1,12 @@
 """Aeriex neutral cycles and explicit pose roles, with world-axis keys.
 
 Blender --background --python this.py -- rigged.glb output.glb
-All vertices are evaluated for floor correction; this is pose evidence only.
+Root-owned bake only. The source support guard is not native contact acceptance.
 """
-import bpy, math, sys
+import bpy, math, sys, json
+from pathlib import Path
 from mathutils import Vector,Quaternion
+repose=json.loads(Path(__file__).with_name('terminal_repose.json').read_text())
 a=sys.argv[sys.argv.index('--')+1:]
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=a[0])
@@ -27,6 +29,31 @@ def low():
   if o.type!='MESH' or not o.vertex_groups:continue
   e=o.evaluated_get(graph);m=e.to_mesh();result=min(result,min((e.matrix_world@v.co).z for v in m.vertices));e.to_mesh_clear()
  return result
+def verify_repose_support():
+ # A bake-time guard, not a visual/physical acceptance result. A crown, feather
+ # or distal foot touching the floor cannot substitute for both torso regions.
+ gaps={name:math.inf for name in repose['support_bones']}
+ patches={name:0 for name in gaps}
+ graph=bpy.context.evaluated_depsgraph_get()
+ for obj in bpy.data.objects:
+  if obj.type!='MESH' or not obj.vertex_groups:continue
+  evaluated=obj.evaluated_get(graph);mesh=evaluated.to_mesh()
+  try:
+   if len(mesh.vertices)!=len(obj.data.vertices):
+    raise RuntimeError('Repose support requires unchanged skin vertex indexing')
+   for source,posed in zip(obj.data.vertices,mesh.vertices):
+    if not source.groups:continue
+    owner=obj.vertex_groups[max(source.groups,key=lambda group:group.weight).group].name
+    if owner in gaps:
+     height=(evaluated.matrix_world@posed.co).z
+     gaps[owner]=min(gaps[owner],height)
+     if -0.005<=height<=repose['authoring_support_gap_limit_m']:patches[owner]+=1
+  finally:evaluated.to_mesh_clear()
+ for name,gap in gaps.items():
+  if not -0.005<=gap<=repose['authoring_support_gap_limit_m'] or patches[name]<repose['minimum_support_vertices']:
+   raise RuntimeError(f'{name} lacks terminal body support: {gap:.4f} m, {patches[name]} vertices; no export')
+ print('Source repose support (native acceptance still pending):',gaps)
+
 for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('attack',24,False),('charged',42,False),('hit',12,False),('faint',36,False),('rest',36,False),('swim',40,True),('fly_grip',48,True),('ride',72,True)]:
  action=bpy.data.actions.new(role);rig.animation_data.action=action
  for f in sorted(set(range(0,frames+1,2))|{frames}):
@@ -46,23 +73,24 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
    for side,sign in [('l',-1),('r',1)]:rotate('wing_upper_'+side,sign*18*pulse,(0,1,0))
   if role=='hit':
    pulse=math.sin(math.pi*t);rotate('neck',10*pulse);rotate('spine',7*pulse,(0,0,1))
-  if role=='faint':
-   phase=min(1,t/.8);phase=phase*phase*(3-2*phase)
-   rotate('root',90*phase,(0,1,0));rotate('neck',18*phase)
-   for side,sign in [('l',-1),('r',1)]:rotate('wing_upper_'+side,sign*30*phase,(0,0,1))
-  if role=='rest':
-   rotate('neck',16);rotate('head',8);rotate('tail_2',12,(0,0,1))
-   for side,sign in [('l',-1),('r',1)]:
-    rotate('wing_upper_'+side,sign*40,(0,0,1));rotate('wing_lower_'+side,sign*15,(0,0,1))
   if role=='fly_grip':
    for side,sign in [('l',-1),('r',1)]:
     rotate('wing_upper_'+side,sign*20*wave,(0,1,0));rotate('wing_lower_'+side,-sign*8*wave,(0,1,0))
    rotate('tail_1',4*wave,(0,0,1))
   rotate('tail_3',5*wave,(0,0,1))
+  if role in ['faint','rest']:
+   # Replace every inherited control: neither the old roll nor tail oscillation
+   # may survive into the supported terminal hold. Other clips are unchanged.
+   reset()
+   phase=min(1,t/repose['settle_fraction']) if role=='faint' else 1
+   phase=phase*phase*(3-2*phase)
+   for name,degrees,axis in repose['rotations']:
+    rotate(name,degrees*phase,axis)
   bpy.context.view_layer.update()
-  # Ground the lowest evaluated surface, never change the body/world position.
+  # Floor correction follows articulated support; it is not the support test.
   root=rig.pose.bones['root'];root.location=bases['root'].inverted()@Vector((0,0,-low()))
   bpy.context.view_layer.update()
+  if role in ['faint','rest'] and f==frames:verify_repose_support()
   for b in rig.pose.bones:
    b.keyframe_insert('rotation_quaternion',frame=f)
    if b.name=='root':b.keyframe_insert('location',frame=f)

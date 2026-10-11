@@ -1,0 +1,22 @@
+{
+  "continuous_fresh_save": false,
+  "disclosure": "F44#0 rematch witness input (Meadows): the 'tidewake' post-Warden Meadows profile with the five raised to L35 for the L33 relay_captain r1 rematch band. Generated setup only: no rematch receipt, cooldown or payout is fabricated.",
+  "kind": "generated_boundary_save",
+  "portal_leg": "",
+  "prior_earned_play": false,
+  "profile": "f44_meadows",
+  "profile_sha256": "e1dc6c98ca369790649d77f3226f7cfede816abaef9bd52f8ca1e006258fca8f",
+  "slot": 0,
+  "slot_info": {
+    "day": 8,
+    "legacy": false,
+    "load_result": {
+      "code": "ok",
+      "message": "",
+      "ok": true
+    },
+    "party_size": 5,
+    "realm": "meadows"
+  },
+  "source": "a50206989ed4b357e3990ec435997d47a83bdcbc"
+}

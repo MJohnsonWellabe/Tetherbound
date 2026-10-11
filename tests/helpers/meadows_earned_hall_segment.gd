@@ -440,6 +440,7 @@ func _approach_prompt(prompt: Node3D) -> bool:
 const CAMP_BED := preload("res://scripts/build/creature_bed.gd")
 const BED_INPUT := preload("res://tests/helpers/gate_b_tail_segment.gd")
 const CAMP_REACH_M := 1400.0
+const XP_SETTLE_FRAMES := 3600  # 60 s game time at 60 Hz
 const CAMP_BELOW := 0.6  # Party HP fraction under which a captain is not taken on carried care.
 var camp_rests := 0
 var _in_hall := false
@@ -663,7 +664,16 @@ func _fight_named(body: Node3D, id: String) -> bool:
 		"enemy_hp": float(actual_enemy.get("hp")) if actual_enemy != null else -1.0,
 		"items_before": before_items, "items_after": _captain_stock(),
 		"xp_before": before_xp, "xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate(), "xp_cap_totals": xp_caps})
-	if not round_within_deadline(Engine.get_physics_frames() - _round_start) or _fighting() \
+	# Coordinator-approved alignment (F19#5 warden, 2026-10-11): round XP is
+	# delivered through the owner duty queue after the win. Wait up to
+	# XP_SETTLE_FRAMES of game time for the exact expected XP to land; the
+	# assertion below is unchanged.
+	var round_in_time := round_within_deadline(Engine.get_physics_frames() - _round_start)
+	for _settle in XP_SETTLE_FRAMES:
+		if exact_capped_captain_xp(before_xp, _xp_snapshot(), _expected_xp, xp_caps):
+			break
+		await _tree.physics_frame
+	if not round_in_time or _fighting() \
 			or not _failures.is_empty() or _captain_rounds != team_size or _captain_wins != team_size \
 			or _captain_kills.size() != team_size or _captain_hits <= 0 or not _has(flag) \
 			or not retained_five(_initial_ids, _party_ids()) \

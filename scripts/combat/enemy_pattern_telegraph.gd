@@ -78,7 +78,8 @@ func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
 		"ring":
 			_disc(_origin, float(_profile.get("inner_radius_m", 0.0)), float(_profile.get("range", 0.0)), TAU)
 		"marker", "field":
-			_disc(_marker, 0.0, float(_profile.get("marker_radius_m", 0.0)), TAU)
+			# The hit area: marker radius plus the target's own radius (F04#1).
+			_disc(_marker, 0.0, float(_profile.get("marker_radius_m", 0.0)) + float(_profile.get("target_radius_m", 0.0)), TAU)
 		"cone", "fan":
 			_disc(_origin, 0.0, float(_profile.get("range", 0.0)), deg_to_rad(float(_profile.get("cone_degrees", 0.0))))
 		"lane":
@@ -92,6 +93,36 @@ func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
 			_strip(right, right + _heading * length)
 			_strip(left + _heading * length, right + _heading * length)
 	_mesh.surface_end()
+
+
+## The surface actually walked at (x, z): the first static floor a short ray
+## meets from just above the attacker's level, skipping creature and trainer
+## bodies, else the ground query. F04#1 judge (2026-10-11): the Relay fight
+## stands on a flat built platform over sloping terrain, so marks seated on
+## the terrain query ran under the deck (a hairline lane) or through the
+## creatures (a floating marker). Out of the tree (unit fixtures) it is the
+## query unchanged. Shared with lunge_lane.gd.
+static func walked_floor(body: Node3D, x: float, z: float, query: float, above: float) -> float:
+	if body == null or not body.is_inside_tree():
+		return query
+	var space := body.get_world_3d().direct_space_state
+	var top := (maxf(query, above) if is_finite(query) else above) + 1.5
+	var exclude: Array[RID] = []
+	if body is CollisionObject3D:
+		exclude.append((body as CollisionObject3D).get_rid())
+	for _try in 4:
+		var ray := PhysicsRayQueryParameters3D.create(Vector3(x, top, z), Vector3(x, top - 6.0, z))
+		ray.collide_with_areas = false
+		ray.exclude = exclude
+		ray.collision_mask = 0x7FFFFFFF  # not the camera-only occluder layer
+		var hit := space.intersect_ray(ray)
+		if hit.is_empty():
+			return query
+		if hit.collider is CharacterBody3D or hit.collider is RigidBody3D:
+			exclude.append(hit.rid)
+			continue
+		return float((hit.position as Vector3).y)
+	return query
 
 
 func _disc(centre: Vector3, inner: float, outer: float, arc: float) -> void:
@@ -127,7 +158,8 @@ func _quad(a: Vector3, b: Vector3, c: Vector3, d: Vector3, alpha: float) -> void
 			if _ground_seen.has(key):
 				measured = float(_ground_seen[key])
 			else:
-				measured = float(_body.call("_ground_height", point.x, point.z))
+				measured = walked_floor(_body, point.x, point.z,
+					float(_body.call("_ground_height", point.x, point.z)), _origin.y)
 				_ground_seen[key] = measured
 			if is_finite(measured):
 				ground = measured

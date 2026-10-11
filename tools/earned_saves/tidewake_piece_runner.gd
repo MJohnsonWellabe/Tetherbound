@@ -50,6 +50,20 @@ var swimmer_uid := ""
 ## Rules v2 #1: disclosed generated input. Raise the same five to this level
 ## (generator's own level/cap/breakthrough code, full heal) after Load.
 var raise_levels := 0
+## Rules v2 #1 (coordinator, 2026-10-11, F19#5 07 vs Venn): disclosed generated
+## team. `--replace-members=<index>:<species>,...` swaps those party slots for
+## freshly spawned Tidewake-catchable species through the live catch's own
+## record initializer (breakthrough.initialize_owned_catch), before any
+## --raise-levels; then a production save + title reload validates the team.
+var replace_members: Array = []
+## Rules v2 #1/#2: disclosed generated 08 boundary (late-route flags, heal,
+## production save + title reload, teleport into the Veilfall chamber).
+var generate_ending := false
+const ENDING_WORLD_FLAGS := ["water_dock_salt_crown_landing_charted", "water_sluice_west_disabled",
+	"water_sluice_east_disabled", "water_dock_sluice_isle_both_controls_disabled",
+	"defeated_water_trainer_bex", "defeated_water_trainer_calder", "defeated_water_trainer_venn",
+	"water_veilfall_intake_stopped", "water_veilfall_return_opened", "water_captain_nerissa_defeated",
+	"water_tether_disabled", "water_guardian_freed"]
 
 
 func _init() -> void:
@@ -62,7 +76,11 @@ func _run() -> void:
 		if arg.begins_with("--segment="): segment = arg.trim_prefix("--segment=")
 		elif arg.begins_with("--from="): from_dir = arg.trim_prefix("--from=").trim_suffix("/")
 		elif arg.begins_with("--out="): out_dir = arg.trim_prefix("--out=").trim_suffix("/")
+		elif arg == "--generate-ending": generate_ending = true
 		elif arg.begins_with("--raise-levels="): raise_levels = int(arg.trim_prefix("--raise-levels="))
+		elif arg.begins_with("--replace-members="):
+			for pair: String in arg.trim_prefix("--replace-members=").split(",", false):
+				replace_members.append([int(pair.get_slice(":", 0)), pair.get_slice(":", 1)])
 		else: failures.append("Unknown option: " + arg)
 	if not SEGMENTS.has(segment) or from_dir.is_empty() or out_dir.is_empty():
 		failures.append("usage: --segment=<%s> --from=<dir> --out=<dir>" % "|".join(SEGMENTS))
@@ -90,9 +108,16 @@ func _run() -> void:
 		return
 	before = _snapshot()
 	_handoff_check()
+	if failures.is_empty() and not replace_members.is_empty():
+		_replace_members()
 	if failures.is_empty() and raise_levels > 0:
 		_raise_levels()
 		before = _snapshot()
+	if failures.is_empty() and not replace_members.is_empty():
+		await _save_and_reload_generated_team()
+		before = _snapshot()
+	if failures.is_empty() and generate_ending:
+		await _generate_ending_boundary()
 	if failures.is_empty():
 		await _play()
 	if failures.is_empty():
@@ -174,6 +199,90 @@ func _handoff_check() -> void:
 		if not checks[key]:
 			failures.append("Handoff %s differs after production Load: saved=%s loaded=%s" % [
 				key, JSON.stringify(expected[key]), JSON.stringify(before[key])])
+
+
+func _generate_ending_boundary() -> void:
+	if segment != "08_ending":
+		failures.append("--generate-ending is only for 08_ending")
+		return
+	for flag: String in ENDING_WORLD_FLAGS:
+		game.world.flags.set_flag(flag)
+	for creature: RefCounted in game.party.members():
+		creature.heal_fully()
+	if not bool(game.call("save_game", 0)):
+		failures.append("Generated ending boundary: production save refused")
+		return
+	current_scene.queue_free()
+	for _i in 4: await process_frame
+	if not await _load_through_title():
+		return
+	var world := current_scene as Node3D
+	var cave := world.get_node_or_null("WaterVeilfall") as Node3D
+	var player := world.get_node("Player") as CharacterBody3D
+	if cave == null:
+		failures.append("Generated ending boundary: no WaterVeilfall")
+		return
+	var chamber: Vector3 = (cave.get("interior") as Node3D).global_position + Vector3(0, 1.0, 87)
+	player.global_position = chamber
+	player.velocity = Vector3.ZERO
+	for _i in 120: await physics_frame
+	if not bool(cave.call("contains_interior", player.global_position)) or not player.is_on_floor():
+		failures.append("Generated ending boundary: teleport did not settle inside the Veilfall chamber (%s)" % player.global_position)
+		return
+	var ally_director := world.get_node_or_null("EncounterDirector")
+	if ally_director != null and ally_director.call("ally_body") == null:
+		Input.action_press(&"creature_recall")
+		await physics_frame
+		Input.action_release(&"creature_recall")
+		for _i in 60: await physics_frame
+	disclosures.append("GENERATED INPUT (Rules v2 #1/#2): 08 boundary from the 05 checkpoint: world flags %s set, the same five healed, production save + title reload, player teleported into the Veilfall chamber at %s; the late route itself (07) is not credited" % [str(ENDING_WORLD_FLAGS), player.global_position])
+	before = _snapshot()
+
+
+func _replace_members() -> void:
+	var party: RefCounted = game.party
+	var level := int(party.call("members")[0].get("level"))
+	var lines: Array = []
+	# Highest index first, so earlier indices still name their original slot.
+	var ordered := replace_members.duplicate()
+	ordered.sort_custom(func(a: Array, b: Array) -> bool: return int(a[0]) > int(b[0]))
+	for pair: Array in ordered:
+		var index := int(pair[0])
+		var species := str(pair[1])
+		var members: Array = party.call("members")
+		if index < 1 or index >= members.size() or str(members[index].get("uid")) == swimmer_uid:
+			failures.append("--replace-members: slot %d is the lead, out of range or the swimmer" % index)
+			return
+		var old: RefCounted = party.call("remove_at", index)
+		if old == null:
+			failures.append("--replace-members: the party refused to release slot %d" % index)
+			return
+		game.local.redesign_character.creatures.erase(str(old.get("uid")))
+		var fresh: RefCounted = preload("res://scripts/creatures/creature_species.gd").spawn(species)
+		if fresh == null:
+			failures.append("--replace-members: unknown species " + species)
+			return
+		fresh.call("set_level", level, preload("res://scripts/creatures/progression.gd").config())
+		if not bool(party.call("add", fresh)):
+			failures.append("--replace-members: the party refused " + species)
+			return
+		var record := preload("res://scripts/creatures/breakthrough.gd").initialize_owned_catch(party, game.local.redesign_character, fresh)
+		if record.is_empty():
+			failures.append("--replace-members: the live catch initializer refused " + species)
+			return
+		game.local.redesign_character = record
+		fresh.call("heal_fully")
+		lines.append("slot %d %s L%d -> %s L%d (%s)" % [index, str(old.get("species_id")), int(old.get("level")), species, level, str(fresh.get("uid"))])
+	disclosures.append("GENERATED TEAM (Rules v2 #1, coordinator 2026-10-11): " + "; ".join(lines) + " via breakthrough.initialize_owned_catch, then production save + title reload")
+
+
+func _save_and_reload_generated_team() -> void:
+	if not bool(game.call("save_game", 0)):
+		failures.append("Generated team: production save refused")
+		return
+	current_scene.queue_free()
+	for _i in 4: await process_frame
+	await _load_through_title()
 
 
 func _raise_levels() -> void:
@@ -323,7 +432,7 @@ func _finish() -> void:
 	if not before.is_empty() and not after.is_empty():
 		gained = after.flags.filter(func(f: Variant) -> bool: return not before.flags.has(f))
 	var receipt := {"segment": segment, "passed": failures.is_empty(), "failures": failures,
-		"from": from_dir, "out": out_dir, "input_mode": "generated_levels" if raise_levels > 0 else "earned", "commit": CHECKPOINTS.commit_sha(),
+		"from": from_dir, "out": out_dir, "input_mode": "generated_ending" if generate_ending else ("generated_levels" if raise_levels > 0 else "earned"), "commit": CHECKPOINTS.commit_sha(),
 		"wall_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"before": before, "after": after, "flags_gained": gained,
 		"swimmer_uid": swimmer_uid, "disclosures": disclosures, "helper_receipts": helper_receipts}

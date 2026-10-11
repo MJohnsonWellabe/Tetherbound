@@ -805,6 +805,12 @@ func _begin_pattern_cue() -> void:
 	_clear_pattern_cue()
 	_pattern_geometry.clear()
 	if not _selected_attack.has("pattern_attack_id") or _opponent == null: return
+	# F04#1: a marker/field hits when the target's centre is within
+	# marker_radius_m + its own radius (combat_ai.pattern_contains), so the
+	# drawn danger disc carries the target's radius too; at marker_radius_m
+	# alone the target's own body covered the disc it stood on.
+	if _selected_attack.has("marker_radius_m") and _opponent.has_method("body_radius"):
+		_selected_attack["target_radius_m"] = float(_opponent.call("body_radius"))
 	_pattern_geometry = {"profile": _selected_attack.duplicate(true), "origin": global_position,
 		"heading": facing(), "marker": _tracked_pattern_marker(), "body": self}
 	# Travelling charges already own the same swept-width LungeLane cue.

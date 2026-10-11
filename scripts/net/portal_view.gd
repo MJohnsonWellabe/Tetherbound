@@ -24,4 +24,7 @@ static func build(player: RefCounted, world: RefCounted, arch: Dictionary) -> Di
 		"character_open": personal, "world_open": shared,
 		"has_key": not str(arch.key_item).is_empty() and player.inventory.count(arch.key_item) == 1,
 		"character_stirred": stirred, "fifth_arch_stirred": stirred or world.redesign_world.fifth_arch_stirred,
-		"destination_label": label, "recommended_level": arch.get("recommended_level", 0)}
+		"destination_label": label, "recommended_level": arch.get("recommended_level", 0),
+		# Advice only (masters.json departure_guidance), never a travel gate.
+		"cap_advice": str(preload("res://scripts/creatures/breakthrough.gd").departure_guidance(
+			player.redesign_character, biome).get("arch_notice", ""))}

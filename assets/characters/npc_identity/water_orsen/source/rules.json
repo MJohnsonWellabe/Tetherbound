@@ -1,0 +1,28 @@
+{
+  "actor_id": "water_orsen",
+  "default_enabled": false,
+  "scope": "Orsen-only disabled body/portrait candidate registered for root portrait authoring; paired portrait not yet authored; installed fallback retained",
+  "installed_profile": "wandering_trainer",
+  "target_height_m": 1.78,
+  "required_joints": 24,
+  "required_clips": [
+    "idle",
+    "walk",
+    "sprint",
+    "jump",
+    "throw",
+    "chop",
+    "defeated"
+  ],
+  "identity": "Preserve installed hat, moustache/chin beard, dark cloth with ochre trim, scarf, backpack and bedroll; no blue recolor or role change",
+  "native_review": "PASS_SCOPED: 56/56 corrected body frames, seven clips/four phases/front-side, Low/Compatibility only; portrait/world/Claude PENDING",
+  "forbidden_without_further_root_grant": [
+    "Further arm correction",
+    "Skin/weight/material edits",
+    "Further bake/export",
+    "Shipping gate changes",
+    "Additional actor or shared base asset changes"
+  ],
+  "source_ownership": "Adair/Iona and shared animator remain unchanged",
+  "portrait_authoring": "Root sole writer; exact unique candidate destination with existing coverage, clipping, border and protected-destination guards retained"
+}

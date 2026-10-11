@@ -590,13 +590,22 @@ func _release_groom_input() -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		LOCAL_PAUSE.release(get_tree())
 
+## Player text for a host refusal code (craft_presentation.json); a sentence
+## passes through, and an unlisted code never reaches the screen raw.
+static func station_refusal_text(reason: String, presentation: Dictionary) -> String:
+	var text: Variant = presentation.get("station_refusals", {}).get(reason)
+	if text is String: return text
+	var code := RegEx.create_from_string("^[a-z0-9_]+$")
+	if code.search(reason) == null: return reason
+	return str(presentation.get("station_refusal_fallback", "That couldn't be completed. Try again."))
+
 ## Trusted producer callback only. A displayed success needs both saves/ACK;
 ## unknown, contradictory and lost-ACK replies retain the original identity.
 func _station_completed(op: String, original: Dictionary, result: Dictionary) -> void:
 	if _station_intent.is_empty() or op != _station_operation or original != _station_intent: return
 	var reason := str(result.get("reason",result.get("code","Waiting for the original station transaction.")))
 	_status.text=str(_gear_rules.call("refusal_text",reason,_gear_cfg)) if op == "gear" \
-		and _gear_rules != null and _gear_rules.has_method("refusal_text") else reason
+		and _gear_rules != null and _gear_rules.has_method("refusal_text") else station_refusal_text(reason, _presentation)
 	var terminal: bool = result.get("settled") is bool and result.settled == true \
 		and result.get("durable") is bool and result.durable == true
 	if terminal and result.get("ok") is bool and result.ok == true:

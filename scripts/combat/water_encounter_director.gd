@@ -687,6 +687,7 @@ func _build_trainers() -> void:
 		prompt.global_position = body.global_position + Vector3(1.5, 1.05, 0)
 		prompt.activated.connect(_challenge.bind(id))
 		trainer_prompts[id] = prompt
+		_mark_rematch_source(id, body, prompt)
 
 ## F26 performance (`performance.json` water_wild_activity): the full
 ## activity pass -- including `_set_wild_active`'s below-ground reground query

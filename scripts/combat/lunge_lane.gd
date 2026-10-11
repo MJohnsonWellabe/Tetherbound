@@ -19,6 +19,7 @@ extends Node3D
 ## on the real ground height so it lies on slopes instead of cutting through.
 
 const GROUND_LIFT := 0.09
+const PATTERN_CUE := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
 ## Lane is sampled every STEP metres along its length so it follows terrain.
 const STEP := 0.5
 const CHEVRONS := 3
@@ -218,7 +219,12 @@ func _point(along: float, across: float, cache: bool = true) -> Vector3:
 		return offset
 	if is_instance_valid(_body) and _body.has_method("_ground_height"):
 		var height := float(_body.call("_ground_height", _origin.x + offset.x, _origin.z + offset.z))
-		if is_finite(height):
+		# F04#1: the walked floor at this sample (a built deck over sloping
+		# terrain) when a ray finds one; else the query plus the feet bias.
+		var walked := PATTERN_CUE.walked_floor(_body, _origin.x + offset.x, _origin.z + offset.z, height, _origin.y)
+		if is_finite(walked) and not is_equal_approx(walked, height):
+			offset.y = walked + GROUND_LIFT - _origin.y
+		elif is_finite(height):
 			offset.y = height + _surface_bias + GROUND_LIFT - _origin.y
 	if cache:
 		_heights[key] = offset.y

@@ -1,0 +1,82 @@
+{
+  "biome": "meadows",
+  "checks": [
+    "PASS: the title's Load list offers the Autosave",
+    "PASS: the save loads meadows through the title",
+    "PASS: captain_riverwatch stands in the loaded meadows world",
+    "PASS: the r1 rematch prompt is mounted and enabled after the biome's boss",
+    "PASS: no rematch receipt before the fight",
+    "PASS: the realm has its director, combat manager and camera",
+    "PASS: an owned companion is called out ()",
+    "PASS: the ordinary Interact offer is the rematch prompt",
+    "PASS: ordinary input admits the canonical captain_riverwatch r1 rematch ({  })",
+    "PASS: every rematch member is at the configured r1 level L33 ([33, 33, 33, 33, 33])",
+    "PASS: the rematch is fought above the first win's levels ([15, 15, 16, 16, 16])",
+    "PASS: the pilot wins the rematch (won after 7921 frames)",
+    "PASS: the rematch win is delivered to this character once ([\"rematch:captain_riverwatch:r1:character-cb1b88c682cd3219e5c3d8d63558473d:win:d3374d50ed084f0da03f42a78232f36b:3a079fb67a44eb2ea79f1f26efc819fe:d6b5915c46057bcb005f46f6433df65609dd3a7a57af75ac1a5a4a7c299ebffb\"]; { \"pending_outcome\": \"<null>\", \"pending_event\": \"\", \"deliveries\": [{ \"foundation_event:12bdc6d34090b708c53488c\": \"retained\" }] })",
+    "PASS: the unique rematch receipt is paid exactly once",
+    "PASS: the first rematch win pays the configured unique reward { \"rootiron_ingot\": 2.0 } (gained { \"rootiron_ingot\": 2 })",
+    "PASS: better than the first win: its reward { \"coins\": 50.0, \"items\": [{ \"id\": \"river_sigil\", \"count\": 1.0 }, { \"id\": \"orb_greater\", \"count\": 2.0 }, { \"id\": \"elixir_vigour\", \"count\": 1.0 }], \"flags\": [], \"xp_bonus\": 80.0 } never paid [\"rootiron_ingot\"]",
+    "PASS: the title's Load list offers the Autosave",
+    "PASS: the save loads meadows through the title",
+    "PASS: after a title reload the rematch receipts are unchanged (paid once: [\"rematch:captain_riverwatch:r1:character-cb1b88c682cd3219e5c3d8d63558473d\", \"rematch:captain_riverwatch:r1:character-cb1b88c682cd3219e5c3d8d63558473d:win:d3374d50ed084f0da03f42a78232f36b:3a079fb67a44eb2ea79f1f26efc819fe:d6b5915c46057bcb005f46f6433df65609dd3a7a57af75ac1a5a4a7c299ebffb\"])",
+    "PASS: after the reload there is no second payout",
+    "PASS: after the reload the repeat cooldown is retained"
+  ],
+  "diagnostic": {
+    "deliveries": [
+      {
+        "foundation_event:12bdc6d34090b708c53488c": "retained"
+      }
+    ],
+    "pending_event": "",
+    "pending_outcome": "<null>"
+  },
+  "drain": {
+    "frames_until_win_receipt": 1111,
+    "longest_blocked_run": 0,
+    "owner_mutation_blocked_frames": 0
+  },
+  "expected_level": 33,
+  "fight_frames": 7921,
+  "first_levels": [
+    15,
+    15,
+    16,
+    16,
+    16
+  ],
+  "first_reward": {
+    "coins": 50.0,
+    "flags": [],
+    "items": [
+      {
+        "count": 1.0,
+        "id": "river_sigil"
+      },
+      {
+        "count": 2.0,
+        "id": "orb_greater"
+      },
+      {
+        "count": 1.0,
+        "id": "elixir_vigour"
+      }
+    ],
+    "xp_bonus": 80.0
+  },
+  "levels": [
+    33,
+    33,
+    33,
+    33,
+    33
+  ],
+  "outcome": "won",
+  "passed": true,
+  "payout": {
+    "rootiron_ingot": 2
+  },
+  "tier": "r1",
+  "witness": "captain_riverwatch"
+}
