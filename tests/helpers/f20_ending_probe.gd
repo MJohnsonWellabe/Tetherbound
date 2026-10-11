@@ -361,6 +361,15 @@ func approach_grandpa(tree: SceneTree, game: Node) -> bool:
 	if not await travel.approach_grandpa(prompt): failures.append_array(travel.failures); return false
 	return check(not panel.call("is_open"), "ordinary Grandpa walk preserves the closed dialogue until normal X")
 
+## Grandpa is indoors: enter by GrandpaHouse's east door, as a player does
+## (same ordinary waypoint as f49_portal_travel.grandpa_and_credits).
+func grandpa_door(tree: SceneTree) -> Array[Vector3]:
+	var via: Array[Vector3] = []
+	var house: Node = tree.current_scene.find_child("GrandpaHouse", true, false)
+	if house != null and house.has_method("marker"):
+		via.append(house.call("marker", "door") as Vector3)
+	return via
+
 func open_credits(tree: SceneTree, game: Node) -> bool:
 	if not await ready(tree, game): return false
 	var travel := TRAVEL.new(tree, game)
@@ -370,7 +379,7 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 	var panel: Node = tree.current_scene.get_node_or_null("DialoguePanel")
 	if not check(prompt != null and panel != null, "real Grandpa prompt and dialogue panel exist"): return false
 	print("F20 TALK navigation start ticks_ms=", Time.get_ticks_msec(), " process=", Engine.get_process_frames(), " physics=", Engine.get_physics_frames())
-	if not await travel.activate(prompt): failures.append_array(travel.failures); return false
+	if not await travel.activate(prompt, grandpa_door(tree)): failures.append_array(travel.failures); return false
 	print("F20 TALK navigation complete ticks_ms=", Time.get_ticks_msec(), " process=", Engine.get_process_frames(), " physics=", Engine.get_physics_frames())
 	var expected := HOME.context(game)
 	var first: bool = expected.get("homecoming_seen") != true
@@ -477,7 +486,7 @@ func revisit_completed(tree: SceneTree, game: Node) -> bool:
 	var panel: Node = tree.current_scene.get_node_or_null("DialoguePanel")
 	if not check(prompt != null and panel != null, "completed revisit has the actual Grandpa prompt"): return false
 	var travel := TRAVEL.new(tree, game)
-	if not await travel.activate(prompt): failures.append_array(travel.failures); return false
+	if not await travel.activate(prompt, grandpa_door(tree)): failures.append_array(travel.failures); return false
 	if not check(panel.call("is_open") and panel.call("runner").call("conversation_id") == HOME.REPEAT_ID,
 		"ordinary Grandpa input selects the repeat conversation after credits"): return false
 	var deadline := Time.get_ticks_msec() + 30000
