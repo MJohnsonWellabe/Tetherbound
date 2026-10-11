@@ -1040,11 +1040,46 @@ func _the_cave_is_enclosed(world: Node, player: CharacterBody3D, warrens: Node3D
 	var before := player.global_position
 	var out := -warrens.global_basis.z  # local -z is back toward the entrance
 	var into_the_rock := -out
-	await _push(player, into_the_rock)
+	var config := _warrens_config()
+	var den_spec: Dictionary = {}
+	for entry: Dictionary in config.get("chambers", []):
+		if str(entry.get("id", "")) == "den":
+			den_spec = entry
+	var den_size: Array = den_spec.get("size", [])
+	var capsule_node := player.get_node_or_null("Collision") as CollisionShape3D
+	var capsule := capsule_node.shape as CapsuleShape3D if capsule_node != null else null
+	if den_size.size() < 2 or capsule == null:
+		_fail("the den enclosure check lacks authored extents or the production capsule")
+		return
+	var exclude: Array[RID] = []
+	for body: Node in world.find_children("*", "CharacterBody3D", true, false):
+		exclude.append((body as CharacterBody3D).get_rid())
+	var wall_query := PhysicsRayQueryParameters3D.create(capsule_node.global_position,
+		capsule_node.global_position + into_the_rock *
+		(float(den_size[1]) + float(config.site.wall_thickness) * 2.0), 1)
+	wall_query.exclude = exclude
+	var wall_hit := player.get_world_3d().direct_space_state.intersect_ray(wall_query)
+	var wall_body := wall_hit.get("collider", null) as Node
+	if wall_hit.is_empty() or wall_body == null or not warrens.is_ancestor_of(wall_body):
+		_fail("the actual authored den far wall is missing")
+		return
+	var wall_point: Vector3 = wall_hit.position
+	var wall_distance := (wall_point - capsule_node.global_position).dot(into_the_rock)
+	var clear_radius := float(config.get("organic_entry_finish", {}).get(
+		"chamber_shell_profiles", {}).get("den", {}).get("combat_clear_radius_m", 0.0))
+	if wall_distance < clear_radius - 0.1:
+		_fail("the den wall intrudes into its authored combat pad")
+	# A fixed 16m push ends inside the expanded 40m den. Drive the actual
+	# controller past its measured wall, long enough to prove it stops there.
+	await _walk_to(player, warrens, before + into_the_rock * (wall_distance + capsule.radius * 2.0), 0.25)
 	var travelled := before.distance_to(player.global_position)
-	print("pushed %.1fm into the den's far wall" % travelled)
-	if travelled > 12.0:
+	var advance := (player.global_position - before).dot(into_the_rock)
+	var stop_distance := wall_distance - capsule.radius
+	print("walked %.1fm toward the den's measured wall at %.1fm" % [travelled, wall_distance])
+	if advance > stop_distance + 0.15:
 		_fail("the player walked %.1fm through the deepest chamber's far wall; it is not enclosed" % travelled)
+	if advance < stop_distance - 0.5:
+		_fail("the player never reached the actual den far wall (stopped %.2fm short)" % (stop_distance - advance))
 	if player.global_position.y > floor_y + 3.0:
 		_fail("the player climbed out of the cave (y=%.1f vs floor %.1f)" % [
 			player.global_position.y, floor_y])
@@ -1078,15 +1113,16 @@ func _the_cave_is_enclosed(world: Node, player: CharacterBody3D, warrens: Node3D
 ## own skirt. In between is a room with a hillside in it.
 func _no_ground_comes_through_a_floor(world: Node, warrens: Node3D) -> void:
 	var config := _warrens_config()
-	var site: Dictionary = config.get("site", {})
-	var floor_y: float = warrens.global_position.y + float(site.get("floor_clearance", 0.35))
 	var worst := 0.0
 	var worst_id := ""
 	for entry: Variant in config.get("chambers", []):
 		var chamber: Dictionary = entry as Dictionary
 		var centre: Array = chamber.get("at", [0.0, 0.0])
 		var size: Array = chamber.get("size", [4.0, 4.0])
+		var floor_marker: Vector3 = warrens.call("marker", str(chamber.get("id", "")))
+		var floor_y := floor_marker.y
 		var ceiling: float = floor_y + float(chamber.get("height", 4.0))
+		var samples := 0
 		for ix in 5:
 			for iz in 5:
 				var local := Vector3(
@@ -1094,6 +1130,11 @@ func _no_ground_comes_through_a_floor(world: Node, warrens: Node3D) -> void:
 					0.0,
 					float(centre[1]) + float(size[1]) * (float(iz) / 4.0 - 0.5))
 				var at: Vector3 = warrens.to_global(local)
+				# Expanded organic rooms have real polygon floors, not square
+				# support in their outside corners. Probe only the built footprint.
+				if not is_finite(float(warrens.call("built_floor_height_at", at.x, at.z))):
+					continue
+				samples += 1
 				var ground := float(world.call("ground_height_at", at.x, at.z))
 				if is_nan(ground):
 					continue
@@ -1102,6 +1143,8 @@ func _no_ground_comes_through_a_floor(world: Node, warrens: Node3D) -> void:
 				if into > worst:
 					worst = into
 					worst_id = str(chamber.get("id", ""))
+		if samples == 0:
+			_fail("the '%s' chamber exposes no canonical floor samples" % str(chamber.get("id", "")))
 	print("deepest the ground reaches into any chamber: %.2f m%s" % [
 		worst, "" if worst_id == "" else " (%s)" % worst_id])
 	if worst > 0.35:
@@ -1796,7 +1839,8 @@ const INTERIOR_LAYER_BIT := 1 << 11  # `interior_ambient.layer` 12
 
 
 ## Every horizontal ray from every chamber's eye height must end on the cave
-## within 60 m. A ray that reaches the meadow found a missing wall -- which is
+## within its authored extents. A ray that reaches the meadow found a
+## missing wall -- which is
 ## what a frame of daylight at the end of a corridor looks like.
 func _no_daylight_leaks(world: Node, warrens: Node3D) -> void:
 	var space := (world as Node3D).get_world_3d().direct_space_state
@@ -1810,15 +1854,28 @@ func _no_daylight_leaks(world: Node, warrens: Node3D) -> void:
 	# allowed to leave (the spine mouth-hall-den is one straight sightline to
 	# daylight, by design); every other direction must end on the cave.
 	var way_out: Vector3 = (warrens.global_transform.basis * Vector3(0.0, 0.0, -1.0)).normalized()
+	var config := _warrens_config()
+	var wall_margin := float(config.site.wall_thickness)
 	for id: String in warrens.call("chamber_ids"):
 		var eye: Vector3 = warrens.call("marker", id) + Vector3.UP * 1.7
+		# The connected enlarged rooms extend beyond the old 60m ray. Reach
+		# every authored outer wall instead of ending in a valid open passage.
+		var ray_length := 0.0
+		for room: Dictionary in config.get("chambers", []):
+			var at: Array = room.at
+			var size: Array = room.size
+			for sx: float in [-1.0, 1.0]:
+				for sz: float in [-1.0, 1.0]:
+					var corner := warrens.to_global(Vector3(float(at[0]) + sx * (float(size[0]) * 0.5 + wall_margin),
+						0.0, float(at[1]) + sz * (float(size[1]) * 0.5 + wall_margin)))
+					ray_length = maxf(ray_length, Vector2(corner.x - eye.x, corner.z - eye.z).length())
 		for step in 24:
 			var angle := TAU * float(step) / 24.0
 			for pitch: float in [0.0, 0.35]:
 				var dir := Vector3(sin(angle) * cos(pitch), sin(pitch), cos(angle) * cos(pitch))
 				if Vector3(dir.x, 0.0, dir.z).normalized().dot(way_out) > cos(deg_to_rad(45.0)):
 					continue
-				var query := PhysicsRayQueryParameters3D.create(eye, eye + dir * 60.0)
+				var query := PhysicsRayQueryParameters3D.create(eye, eye + dir * ray_length)
 				query.exclude = exclude
 				var hit := space.intersect_ray(query)
 				checked += 1
@@ -1870,7 +1927,19 @@ func _the_mouth_arch_is_open(world: Node, warrens: Node3D) -> void:
 	var mouth: Vector3 = warrens.call("marker", "mouth")
 	var approach: Vector3 = warrens.to_global(Vector3(0.0, 1.6, warrens.to_local(mouth).z - 12.0))
 	var ground := float(world.call("ground_height_at", approach.x, approach.z)) if world.has_method("ground_height_at") else NAN
-	var origin: Vector3 = approach if is_nan(ground) else Vector3(approach.x, ground + 1.6, approach.z)
+	# The raised approach has a physical ramp above terrain. A terrain+1.6
+	# origin can be inside its slab; find the floor from below the cave roof.
+	var ramp_query := PhysicsRayQueryParameters3D.create(
+		Vector3(approach.x, mouth.y + 0.25, approach.z),
+		Vector3(approach.x, ground - 1.0 if is_finite(ground) else mouth.y -
+			float(_warrens_config().site.skirt) - 1.0, approach.z), 1)
+	ramp_query.exclude = exclude
+	var ramp_hit := space.intersect_ray(ramp_query)
+	if ramp_hit.is_empty():
+		_fail("the mouth approach has no physical ramp floor")
+		return
+	var ramp_floor: Vector3 = ramp_hit.position
+	var origin := ramp_floor + Vector3.UP * 1.6
 	var target := mouth + Vector3.UP * 1.0
 	var full := origin.distance_to(target)
 	var query := PhysicsRayQueryParameters3D.create(origin, target)
