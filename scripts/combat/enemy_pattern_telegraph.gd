@@ -19,6 +19,13 @@ var _edge_width := 0.12
 ## sampled the ground ~400 times (PERF, 2026-10-05: ~125 ms a call on a host).
 var _ground_seen: Dictionary = {}
 var _aimed: Array = []
+## The body's feet against the ground query at the origin, as lunge_lane.gd's
+## `_surface_bias`: a fight on a built floor above or below the query (the
+## sunken Relay deck sits 1.1 m under it, F04#1 judge) keeps its marks on the
+## floor the creatures stand on rather than through them.
+const MAX_SURFACE_BIAS := 0.6
+const MAX_SURFACE_SINK := 1.5
+var _surface_bias := 0.0
 
 
 static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
@@ -68,6 +75,14 @@ func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
 		return
 	_aimed = inputs
 	_ground_seen.clear()
+	_surface_bias = 0.0
+	if is_instance_valid(_body) and _body.has_method("_ground_height"):
+		var floor_y := _floor_under(origin)
+		if is_finite(floor_y):
+			var under := float(_body.call("_ground_height", origin.x, origin.z))
+			_ground_seen[Vector2(origin.x, origin.z)] = under  # one sample per point per aim
+			if is_finite(under):
+				_surface_bias = clampf(floor_y - under, -MAX_SURFACE_SINK, MAX_SURFACE_BIAS)
 	_origin = origin
 	_heading = Vector3(heading.x, 0.0, heading.z).normalized()
 	_marker = marker
@@ -92,6 +107,21 @@ func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
 			_strip(right, right + _heading * length)
 			_strip(left + _heading * length, right + _heading * length)
 	_mesh.surface_end()
+
+
+## The walked floor just under the attacker (a short ray, so a roof or arch
+## overhead is not the answer and a hovering flyer's own height is not used).
+func _floor_under(at: Vector3) -> float:
+	if not is_inside_tree() or not is_instance_valid(_body):
+		return NAN
+	var from := at + Vector3.UP * 1.0
+	var query := PhysicsRayQueryParameters3D.create(from, from + Vector3.DOWN * 3.0)
+	query.collide_with_areas = false
+	if _body is CollisionObject3D:
+		query.exclude = [(_body as CollisionObject3D).get_rid()]
+	query.collision_mask = 0x7FFFFFFF
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	return NAN if hit.is_empty() else float((hit.position as Vector3).y)
 
 
 func _disc(centre: Vector3, inner: float, outer: float, arc: float) -> void:
@@ -130,6 +160,6 @@ func _quad(a: Vector3, b: Vector3, c: Vector3, d: Vector3, alpha: float) -> void
 				measured = float(_body.call("_ground_height", point.x, point.z))
 				_ground_seen[key] = measured
 			if is_finite(measured):
-				ground = measured
+				ground = measured + _surface_bias
 		_mesh.surface_set_color(Color(1.0, 1.0, 1.0, alpha))
 		_mesh.surface_add_vertex(Vector3(point.x, ground + _lift, point.z))
