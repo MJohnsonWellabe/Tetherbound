@@ -268,6 +268,8 @@ static func _feast_press(runner: SceneTree, args: Dictionary, mode: String) -> D
 	var done := func(action: String, _intent: Dictionary, result: Dictionary) -> void:
 		if action == op: completed.append(result)
 	session.connect("homestead_action_completed", done)
+	# A completed action rebuilds the list and frees this button.
+	var pressed_label := target.text
 	target.emit_signal("pressed")
 	for f in int(args.get("budget_frames", 1800)):
 		await runner.physics_frame
@@ -276,7 +278,7 @@ static func _feast_press(runner: SceneTree, args: Dictionary, mode: String) -> D
 	var message := str(panel.get("_message").text) if is_instance_valid(panel.get("_message")) else ""
 	var pending := str(panel.get("_pending_action"))
 	if panel.call("is_open") == true: panel.call("close")
-	return _ok("pressed '%s'" % target.text, {"pressed": true, "labels": labels, "message": message,
+	return _ok("pressed '%s'" % pressed_label, {"pressed": true, "labels": labels, "message": message,
 		"still_pending": pending, "completed": completed})
 
 
