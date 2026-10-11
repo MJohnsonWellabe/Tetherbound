@@ -1702,11 +1702,12 @@ func _the_branch_is_shut_until_the_guardian_falls(player: CharacterBody3D, warre
 
 	var den: Vector3 = warrens.call("marker", "den")
 	var vault: Vector3 = warrens.call("marker", "vault")
-	var toward_vault := (vault - den).normalized()
+	# The expanded branch is 46m from the den. Use the existing real-controller
+	# walk so both states reach the gate instead of ending after a 16m push.
 	await _put_down(player, den + Vector3(0.0, 1.2, 0.0))
-	await _push(player, toward_vault)
+	await _walk_to(player, warrens, vault)
 	var blocked_at := player.global_position.distance_to(vault)
-	print("pushed at the shut branch door; ended %.1fm from the vault" % blocked_at)
+	print("walked at the shut branch door; ended %.1fm from the vault" % blocked_at)
 	_print_warrens_motion_witness(player, warrens, "shut branch endpoint")
 	if blocked_at < 3.0:
 		_fail("the player reached the branch chamber with the door still shut")
@@ -1720,9 +1721,9 @@ func _the_branch_is_shut_until_the_guardian_falls(player: CharacterBody3D, warre
 		_fail("the branch door did not lift once the warrens was cleared")
 
 	await _put_down(player, den + Vector3(0.0, 1.2, 0.0))
-	await _push(player, toward_vault)
+	await _walk_to(player, warrens, vault)
 	var open_at := player.global_position.distance_to(vault)
-	print("pushed at the open branch door; ended %.1fm from the vault" % open_at)
+	print("walked at the open branch door; ended %.1fm from the vault" % open_at)
 	_print_warrens_motion_witness(player, warrens, "open branch endpoint")
 	if open_at > 4.0:
 		_fail("the branch is still impassable after clearing (%.1fm from the vault)" % open_at)
