@@ -1143,7 +1143,13 @@ func foundation_boss_outcome(director: Node, spec: Dictionary, record: Dictionar
 				"validated_host_outcome": "win", "encounter_id": record.encounter_id, "participants": participants.duplicate()}})
 	return get_node(^"LedgerRpc").call("journal_foundation_event", "boss:" + str(spec.id) + ":" + str(record.encounter_id), duties)
 
+## True after a scan committed a duty that is still settling (its owner apply
+## is deferred to the next frame): FoundationComposition rescans sooner, so a
+## long fight's mastery queue drains one row at a time in seconds, not minutes.
+var foundation_backlog := false
+
 func _retry_foundation_events() -> void:
+	foundation_backlog = false
 	if not is_host() or _game() == null or _character_authority == null: return
 	_retry_combat_mastery_sources()
 	var world: RefCounted = _game().get("world")
@@ -1249,6 +1255,7 @@ func _retry_foundation_events() -> void:
 		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]:
 			_note_duty_hold(duty, str(result.get("code", "unresolved %s" % JSON.stringify(result).left(160))))
 			handled[duty.character_id] = true
+			if result.get("ok") == true and result.get("durable") == true: foundation_backlog = true
 		elif result.get("resolved") == true:
 			_note_duty_released(duty)
 
