@@ -7,6 +7,13 @@ const MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 
 
+## This detached fixture isolates provider capacity with declared radii. It
+## has no render models; live admission still requires measurable rendered art.
+class ProviderManager extends MANAGER:
+	func _admission_render_radius(body: Node3D) -> float:
+		return float(body.call("body_radius"))
+
+
 class FakeProgression extends RefCounted:
 	var revision := 0
 	var defeated := false
@@ -97,7 +104,7 @@ func test_checkpoint_gate_is_a_fortified_chapter_threshold_at_trainer_scale() ->
 	var ally := CREATURE_BODY.new()
 	world.add_child(ally)
 	ally.set("_radius", footprint)
-	var manager := MANAGER.new()
+	var manager := ProviderManager.new()
 	world.add_child(manager)
 	manager.set("_player", player)
 	manager.set("_wild", foe)
