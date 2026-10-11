@@ -510,7 +510,7 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 			var world_node := _portal_world_node(realm)
 			if world_node != null and not encounter_id.is_empty() and admission.get("encounter_id") == encounter_id:
 				for candidate: Node in world_node.find_children("*", "Node", true, false):
-					if candidate.get_script() != null and FOUNDATION_DIRECTORS.has(candidate.get_script().resource_path) \
+					if _portal_director_owned_by(world_node, self, candidate) \
 							and candidate.call("_encounter_realm") == realm:
 						cleanup = candidate.call("submit_encounter_intent", {"kind": "disengage", "encounter_id": encounter_id})
 						break
