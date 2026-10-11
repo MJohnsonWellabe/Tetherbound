@@ -65,7 +65,7 @@ No game defect was observed: the weather cycle, the shelter detection and the di
 - Pieces 02–08 were not run: each needs its predecessor's earned save.
 
 ## Round 2 (coordinator-approved Surge-time waits)
-Commits: `ea5d3ae4`-era runner, plus helper fixes on this branch (see git log).
+Commits: Surge-time waits `5222de42`; seam fixes `877ec87f`, `9a8b2643`.
 
 **Surge-time waits: fixed.** The Ashfoot Break, first-seam and charged-window waits in the prefix, and the Crown Rodline Refuge wait, now budget one full Surge cycle of the waited region, with a physics-frame cap derived from that budget. Assertions are unchanged.
 
