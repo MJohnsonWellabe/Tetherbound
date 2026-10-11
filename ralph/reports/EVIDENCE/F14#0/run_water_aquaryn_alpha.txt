@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WATER_C2C3 water_aquaryn_alpha terrapup MASHER runs=24 win=1.00 med_lead=0.633 med_party=0.153 med_s=54.8 max_s=58.3 lead_faint=0.00 wipe=0.00 max_hit=0.093 tell=[1.25,1.70] stalled=0
+WATER_C2C3 water_aquaryn_alpha terrapup READER runs=24 win=1.00 med_lead=0.087 med_party=0.021 med_s=81.2 max_s=100.5 lead_faint=0.00 wipe=0.00 max_hit=0.093 tell=[1.25,1.70] stalled=0
+WATER_C2C3_PAIR water_aquaryn_alpha terrapup reader/masher median lead cost = 0.087 / 0.633 (ratio 0.14)
+WATER_C2C3 water_aquaryn_alpha ripplet MASHER runs=24 win=1.00 med_lead=0.351 med_party=0.079 med_s=39.5 max_s=41.2 lead_faint=0.00 wipe=0.00 max_hit=0.085 tell=[1.25,1.70] stalled=0
+WATER_C2C3 water_aquaryn_alpha ripplet READER runs=24 win=1.00 med_lead=0.074 med_party=0.017 med_s=60.5 max_s=75.9 lead_faint=0.00 wipe=0.00 max_hit=0.085 tell=[1.25,1.70] stalled=0
+WATER_C2C3_PAIR water_aquaryn_alpha ripplet reader/masher median lead cost = 0.074 / 0.351 (ratio 0.21)
+WATER_C2C3 water_aquaryn_alpha galewisp MASHER runs=24 win=1.00 med_lead=0.307 med_party=0.067 med_s=35.8 max_s=35.8 lead_faint=0.00 wipe=0.00 max_hit=0.072 tell=[1.25,1.70] stalled=0
+WATER_C2C3 water_aquaryn_alpha galewisp READER runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=43.7 max_s=54.5 lead_faint=0.00 wipe=0.00 max_hit=0.068 tell=[1.25,1.70] stalled=0
+WATER_C2C3_PAIR water_aquaryn_alpha galewisp reader/masher median lead cost = 0.000 / 0.307 (ratio 0.00)
+WATER_C2C3 done: 3 rows, 144 runs, 0 errors
