@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-11T05:20:00+00:00",
+ "generated_at": "12:35 AM CT Sun 11 Oct 2026",
  "main_sha": "96e32f34e (PR #676)",
  "batch4_sha": "#630 consolidated: 25 lane PRs + f48 seat-wait fix (30edaa494), full CI running; batch 3 staged (vitals+Nysa fix, F23, F28, F02 batch, P2-013, P2-102)",
  "rows": [
@@ -1560,7 +1560,7 @@
      "status": "met",
      "evidence": "Evidenced on tb/codex-a ade3c8cfa (READY #572 6074675432, 12:06 AM CT 10-09): shipping host Item/Rally/Tag + Snare, smoke_net_owner_passive_rejoin 37886121443 79 PASS/0 FAIL; original WHOLE F24#0 APPROVE/MET; landing in consolidation 19 (#592) after full CI",
      "gap": "Enable the flags; add unit and engine tests for the meter and all four commands.",
-     "note": "Landed: Evidenced on tb/codex-a ade3c8cfa (READY #572 6074675432, 12:06 AM CT 10-09): shipping host Item/Rally/Tag + Snare, smoke_net_owner_passive_rejoin 37886121443 79 PASS/0 FAIL; original WHOLE F24#0 APPROVE/MET; landing in consolidation 19 (#592) after full CI",
+     "note": "On main via #676 (all branches consolidated, 8:54 PM CT Sat 10 Oct). Evidenced on tb/codex-a ade3c8cfa (READY #572 6074675432, 12:06 AM CT 10-09): shipping host Item/Rally/Tag + Snare, smoke_net_owner_passive_rejoin 37886121443 79 PASS/0 FAIL; original WHOLE F24#0 APPROVE/MET; landing in consolidation 19 (#592) after full CI",
      "audit_index": 0
     },
     {
@@ -1584,7 +1584,7 @@
      "status": "met",
      "evidence": "Evidenced on tb/codex-a 6b2723177 (READY #572 6073281957; PR592 exact-head rerun 37885575165 33 PASS/0 FAIL, shipping Tether flags ON; original WHOLE F24#3 APPROVE/MET); landing in consolidation 19 (#592) after full CI",
      "gap": "Enable it; add a unit test for slow, catch bonus and trainer-owned refusal, plus a catch smoke.",
-     "note": "Landed: Evidenced on tb/codex-a 6b2723177 (READY #572 6073281957; PR592 exact-head rerun 37885575165 33 PASS/0 FAIL, shipping Tether flags ON; original WHOLE F24#3 APPROVE/MET); landing in consolidation 19 (#592) after full CI",
+     "note": "On main via #676 (all branches consolidated, 8:54 PM CT Sat 10 Oct). Evidenced on tb/codex-a 6b2723177 (READY #572 6073281957; PR592 exact-head rerun 37885575165 33 PASS/0 FAIL, shipping Tether flags ON; original WHOLE F24#3 APPROVE/MET); landing in consolidation 19 (#592) after full CI",
      "audit_index": 3
     },
     {
