@@ -16,6 +16,11 @@ extends SceneTree
 ##
 ## NEVER `--headless` together with a rendering driver (it hangs).
 ##
+## Explicit candidate authoring: --author-appearance=p2055_water_adair
+## (repeat for other existing Tidewake IDs). This authors a dedicated missing
+## plate from hash-bound cloth derivatives while shipping gates stay OFF.
+## It never changes default runtime/portrait validation or base portrait files.
+##
 ## Why this exists (owner, 2026-09-04, item 8b): every NPC spoke with the
 ## player's face because `assets/ui/portraits/` held two plates. This writes
 ## the rest -- one plate per installed humanoid body the dialogue actually
@@ -40,6 +45,7 @@ extends SceneTree
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
+const APPEARANCE_VARIANTS := preload("res://scripts/characters/appearance_variants.gd")
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 
@@ -191,8 +197,30 @@ func _run() -> void:
 		return
 
 	var wanted: Array = []
+	var author_specs: Array[Dictionary] = []
 	for arg in OS.get_cmdline_user_args():
-		wanted.append(str(arg))
+		var text := str(arg)
+		if text.begins_with("--author-appearance="):
+			var variant_id := text.trim_prefix("--author-appearance=")
+			var records: Variant = APPEARANCE_VARIANTS.load_config().get("variants", {})
+			var record: Variant = records.get(variant_id, {}) if records is Dictionary else {}
+			if variant_id.is_empty() or not record is Dictionary or record.is_empty():
+				_failures.append("unknown appearance authoring candidate: " + variant_id)
+				continue
+			var profile := str(record.get("expected_base_profile", ""))
+			author_specs.append({"file": variant_id, "config_key": profile, "appearance_variant": variant_id,
+				"author_appearance": true, "exposure": 0.88 if profile == "field_researcher" else 1.0})
+		else:
+			wanted.append(text)
+	if not author_specs.is_empty() and not wanted.is_empty():
+		_failures.append("appearance authoring cannot be combined with base or in-game portrait jobs")
+	for spec: Dictionary in author_specs:
+		if authoring_portrait_model_config(spec).is_empty():
+			_failures.append("invalid source/destination for appearance authoring: " + str(spec.appearance_variant))
+	if not _failures.is_empty():
+		for failure: String in _failures: print("  FAIL " + failure)
+		quit(1)
+		return
 
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(SHEET_PATH.get_base_dir()))
@@ -215,7 +243,9 @@ func _run() -> void:
 		await process_frame
 
 	var specs: Array = []
-	if wanted.is_empty():
+	if not author_specs.is_empty():
+		specs = author_specs
+	elif wanted.is_empty():
 		specs = PORTRAITS
 	else:
 		for spec in PORTRAITS:
@@ -338,9 +368,74 @@ static func portrait_model_config(spec: Dictionary, variant_settings: Dictionary
 	return resolved if str(resolved.get("appearance_variant_id", "")) == variant_id else {}
 
 
+## Explicit offline authoring only: a staged OFF candidate may lack its output
+## portrait. This never changes shipping resolve(), gates or default portrait
+## jobs. Body/source hashes and loadability must already be valid. The existing
+## plate renderer is the sole writer; every shipped base plate stays protected.
+static func authoring_portrait_model_config(spec: Dictionary, variant_settings: Dictionary = {}) -> Dictionary:
+	if not bool(spec.get("author_appearance", false)) or bool(spec.get("scratch_only", false)):
+		return {}
+	var variant_id := str(spec.get("appearance_variant", ""))
+	var config := APPEARANCE_VARIANTS.load_config() if variant_settings.is_empty() else variant_settings
+	var records: Variant = config.get("variants", {})
+	if not records is Dictionary or not records.has(variant_id): return {}
+	var raw: Variant = records[variant_id]
+	if not raw is Dictionary: return {}
+	var record: Dictionary = raw
+	# Only the six installed-rig Tidewake candidates belong to this authoring job.
+	if not variant_id in ["p2055_water_adair", "p2055_water_iona", "p2055_water_orsen",
+			"p2055_water_otto", "p2055_water_trainer_fen", "p2055_water_trainer_evi"]: return {}
+	if config.get("enabled", true) != false or record.get("enabled", true) != false: return {}
+	var profile := str(spec.get("config_key", ""))
+	if not profile in ["field_researcher", "wandering_trainer"] \
+			or profile != str(record.get("expected_base_profile", "")): return {}
+	var cfg: Dictionary = VILLAGE_NPCS.model_config(spec)
+	var model := str(cfg.get("model", ""))
+	if model.is_empty() or model != str(record.get("expected_model", "")) \
+			or model != "res://assets/characters/%s/%s_lod0.glb" % [profile, profile] \
+			or not ResourceLoader.exists(model) or not load(model) is PackedScene: return {}
+	var portrait := str(record.get("portrait", ""))
+	if portrait != "%s/%s.png" % [PORTRAIT_DIR, variant_id]: return {}
+	for plate: Dictionary in PORTRAITS:
+		if portrait == "%s/%s.png" % [PORTRAIT_DIR, str(plate.file)]: return {}
+	for painted: String in PAINTED:
+		if portrait == "%s/%s.png" % [PORTRAIT_DIR, painted]: return {}
+	for other_id: Variant in records:
+		var other: Variant = records[other_id]
+		if str(other_id) != variant_id and other is Dictionary and str(other.get("portrait", "")) == portrait: return {}
+	# A destination that exists must itself be an image, never an unrelated file.
+	if FileAccess.file_exists(portrait) and (not ResourceLoader.exists(portrait) or not load(portrait) is Texture2D): return {}
+	var provenance: Variant = record.get("authoring_provenance", {})
+	if not provenance is Dictionary or provenance.is_empty(): return {}
+	if str(provenance.get("source_model", "")) != model \
+			or FileAccess.get_sha256(model) != str(provenance.get("source_model_sha256", "")): return {}
+	var source := str(provenance.get("source_texture", ""))
+	if source != "res://assets/characters/%s/%s_lod0_texture_0.png" % [profile, profile] \
+			or not ResourceLoader.exists(source) or not load(source) is Texture2D \
+			or FileAccess.get_sha256(source) != str(provenance.get("source_texture_sha256", "")): return {}
+	var albedo := str(record.get("body_albedo_override", ""))
+	if albedo != "res://assets/characters/%s/%s_albedo.png" % [profile, variant_id] \
+			or not ResourceLoader.exists(albedo) or not load(albedo) is Texture2D \
+			or FileAccess.get_sha256(albedo) != str(provenance.get("derivative_sha256", "")): return {}
+	var mask := str(provenance.get("cloth_mask", ""))
+	if mask != "res://assets/characters/%s/p2055_%s_cloth_mask.png" % [profile, profile] \
+			or not ResourceLoader.exists(mask) or not load(mask) is Texture2D \
+			or FileAccess.get_sha256(mask) != str(provenance.get("cloth_mask_sha256", "")): return {}
+	cfg = cfg.duplicate(true)
+	cfg["body_albedo_override"] = albedo
+	if record.has("body_emission_override"):
+		var emission: Variant = record.body_emission_override
+		if not emission is String or not emission.begins_with("res://") \
+				or not ResourceLoader.exists(emission) or not load(emission) is Texture2D: return {}
+		cfg["body_emission_override"] = emission
+	cfg["portrait"] = portrait
+	cfg["appearance_variant_id"] = variant_id
+	return cfg
+
+
 func _render_plate(spec: Dictionary) -> void:
 	var file := str(spec["file"])
-	var cfg := portrait_model_config(spec)
+	var cfg := authoring_portrait_model_config(spec) if bool(spec.get("author_appearance", false)) else portrait_model_config(spec)
 	if cfg.is_empty():
 		_failures.append("%s: no config resolved from %s" % [file, JSON.stringify(spec)])
 		return
