@@ -66,8 +66,10 @@ class HubStub extends Node:
 
 
 class ChapterStub extends Node:
-	func emit_event(_event: String) -> Dictionary:
-		return {"accepted": false}
+	var game: Node
+	var chapter: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_chapter.json"))
+	func emit_event(event: String) -> Dictionary:
+		return preload("res://scripts/world/realm_chapter_progression.gd").dispatch(game.progression, chapter, event)
 
 
 class DynamoStub extends Node:
@@ -123,6 +125,8 @@ func _run() -> void:
 		world.add_child(stub)
 		if stub is HubStub:
 			stub.add_to_group("stormwood_encounter_hub")
+		if stub is ChapterStub:
+			(stub as ChapterStub).game = game
 	var hub: HubStub = world.get_node("StormwoodEncounterHub")
 	var ending := ENDING.new()
 	ending.name = "StormwoodEnding"
@@ -384,7 +388,8 @@ func _mount(game: Node, world_id: String) -> Dictionary:
 		var stub: Node = pair[1].new()
 		stub.name = str(pair[0])
 		world.add_child(stub)
-		if stub is DynamoStub: stub.fighter_characters = [CHARACTER]
+		if stub is DynamoStub: (stub as DynamoStub).fighter_characters.append(CHARACTER)
+		if stub is ChapterStub: (stub as ChapterStub).game = game
 	var ending := ENDING.new()
 	ending.name = "StormwoodEnding"
 	world.add_child(ending)
