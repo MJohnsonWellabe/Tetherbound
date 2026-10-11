@@ -42,8 +42,11 @@ var _f25_battle_id := ""
 ## rematch base receipt must be absent, so the authored unique candy delta is
 ## exact and independent of repeat cooldown clocks. Earlier story rewards stay.
 ## Only press/wait/stick/move_to are admitted; no save/HP/meter mutation steps.
-## min_frames, max_frames, max_seconds, frame_budget_ms and min_overlap_frames
-## are explicit reviewed bounds. Missing inputs fail before any peer launches.
+## min_frames, max_frames, max_seconds, frame_budget_ms, min_overlap_frames
+## (at least 20 qualified frames) and min_sustained_overlap_seconds (at least
+## 0.5 continuous seconds) are explicit reviewed bounds. Qualified four-author
+## wall/GPU P95 AND P99 must hold the declared budget, independently of cheaper
+## whole-window rows. Missing inputs fail before any peer launches.
 func _f25_preflight() -> bool:
 	var profile_path := ""
 	for arg: String in OS.get_cmdline_user_args():
@@ -146,8 +149,11 @@ func _f25_preflight() -> bool:
 	valid = valid and int(_f25.get("min_frames", 0)) >= 120 and int(_f25.get("max_frames", 0)) >= int(_f25.get("min_frames", 0)) \
 		and int(_f25.get("max_frames", 0)) <= 7200 and float(_f25.get("max_seconds", 0.0)) > 0.0 \
 		and float(_f25.get("max_seconds", 0.0)) <= 120.0 and float(_f25.get("frame_budget_ms", 0.0)) > 0.0 \
-		and is_finite(float(_f25.get("frame_budget_ms", 0.0))) and int(_f25.get("min_overlap_frames", 0)) > 0 \
-		and int(_f25.get("min_overlap_frames", 0)) <= int(_f25.get("min_frames", 0))
+		and is_finite(float(_f25.get("frame_budget_ms", 0.0))) and int(_f25.get("min_overlap_frames", 0)) >= 20 \
+		and int(_f25.get("min_overlap_frames", 0)) <= int(_f25.get("min_frames", 0)) \
+		and is_finite(float(_f25.get("min_sustained_overlap_seconds", 0.0))) \
+		and float(_f25.get("min_sustained_overlap_seconds", 0.0)) >= 0.5 \
+		and float(_f25.get("min_sustained_overlap_seconds", 0.0)) <= float(_f25.get("max_seconds", 0.0))
 	check(valid, "F25 reviewed, hash-bound four-save inputs and bounded ordinary input rounds")
 	return valid
 

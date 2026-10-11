@@ -30,7 +30,7 @@ var _f25_verdicts: Array[Dictionary] = []
 var _f25_bodies: Dictionary = {}
 var _f25_expected: Dictionary = {}
 var _f25_peers: Dictionary = {}
-var _f25_overlap_actions: Array[Array] = []
+var _f25_overlap_actions: Array[Dictionary] = []
 var _f25_scope: Dictionary = {}
 var _f25_manager: WeakRef
 var _f25_director: WeakRef
@@ -468,7 +468,7 @@ func _f25_frame() -> void:
 			visible_authors[row.character_id] = true
 			visible_actions.append(str(row.action_id))
 	if visible_authors.size() == 4 and visible_bodies == 4:
-		_f25_overlap_actions.append(visible_actions)
+		_f25_overlap_actions.append({"sample_index": _f25_rows.size(), "render_frame": Engine.get_process_frames(), "action_ids": visible_actions})
 	var particles := F25_BUDGET.used(_f25_encounter)
 	var lights := F25_BUDGET.lights_used()
 	_f25_peak_particles = maxi(_f25_peak_particles, particles)
@@ -499,9 +499,9 @@ func _f25_detach() -> void:
 		if is_instance_valid(director) and director.is_connected("host_strike_finished", _f25_host_verdict): director.disconnect("host_strike_finished", _f25_host_verdict)
 
 
-func _f25_percentiles(column: int) -> Dictionary:
+func _f25_percentiles(column: int, samples: Array) -> Dictionary:
 	var values: Array[float] = []
-	for row: Array in _f25_rows: values.append(float(row[column]))
+	for row: Array in samples: values.append(float(row[column]))
 	values.sort()
 	if values.is_empty(): return {"p95": 0.0, "p99": 0.0, "max": 0.0}
 	return {"p95": values[clampi(int(ceil(values.size() * 0.95)) - 1, 0, values.size() - 1)],
@@ -515,34 +515,76 @@ func _f25_stop() -> Dictionary:
 	if not _f25_owned_still_original(): _f25_error = "original ordered party/catalog/loadout/mastery/BT/gear changed before stop"
 	var accepted := {}
 	var accepted_actions := {}
+	var qualified_samples: Array[Array] = []
+	var qualified_indices: Array[int] = []
+	var consecutive_seconds := 0.0
+	var longest_seconds := 0.0
+	var consecutive_frames := 0
+	var longest_frames := 0
+	var sustained_loaded := false
+	var previous_qualified_index := -2
 	var actions: Array[Dictionary] = []
 	for row: Dictionary in _f25_actions.values():
 		if not _f25_binding_current(row): _f25_error = "original frozen actor/deployment changed before stop"
 		var value := row.duplicate()
 		value.erase("presentation")
+		value["callback_order"] = "incomplete"
+		if int(row.host_finished_usec) >= 0 and int(row.contact_usec) >= 0:
+			value["callback_order"] = "same_microsecond" if int(row.host_finished_usec) == int(row.contact_usec) else \
+				("host_finished_then_impact" if int(row.host_finished_usec) < int(row.contact_usec) else "impact_then_host_finished")
 		actions.append(value)
 		if bool(row.reviewed_move_matches) and bool(row.impact_matches) and bool(row.host_finished_matches) \
-				and int(row.contact_usec) >= 0 and int(row.host_finished_usec) >= int(row.contact_usec) \
+				and int(row.contact_usec) >= int(row.launch_usec) and int(row.host_finished_usec) >= int(row.launch_usec) \
 				and bool(row.get("actual_hp_debit_positive", false)):
 			accepted[row.character_id] = true
 			accepted_actions[row.action_id] = true
-	for ids: Array in _f25_overlap_actions:
+	for witness: Dictionary in _f25_overlap_actions:
 		var same_authors := {}
-		for id: String in ids:
+		for id: String in witness.action_ids:
 			if accepted_actions.has(id): same_authors[_f25_actions[id].character_id] = true
-		if same_authors.size() == 4: _f25_overlap += 1
+		if same_authors.size() != 4: continue
+		var index := int(witness.sample_index)
+		if index < 0 or index >= _f25_rows.size():
+			_f25_error = "four-author witness has no matching raw frame"
+			continue
+		qualified_samples.append(_f25_rows[index])
+		qualified_indices.append(index)
+		if index == previous_qualified_index + 1:
+			consecutive_frames += 1
+			consecutive_seconds += (float(_f25_rows[index][0]) - float(_f25_rows[previous_qualified_index][0])) / 1000.0
+		else:
+			consecutive_frames = 1
+			consecutive_seconds = 0.0
+		longest_seconds = maxf(longest_seconds, consecutive_seconds)
+		longest_frames = maxi(longest_frames, consecutive_frames)
+		if consecutive_frames >= int(_f25_profile.get("min_overlap_frames", 0)) \
+				and consecutive_seconds >= float(_f25_profile.get("min_sustained_overlap_seconds", 0.0)):
+			sustained_loaded = true
+		previous_qualified_index = index
+	_f25_overlap = qualified_samples.size()
 	var limits := F25_LIBRARY.config()
-	var stats := {"wall_ms": _f25_percentiles(1), "process_ms": _f25_percentiles(2), "physics_ms": _f25_percentiles(3),
-		"render_cpu_ms": _f25_percentiles(4), "render_gpu_ms": _f25_percentiles(5), "setup_cpu_ms": _f25_percentiles(6)}
+	var stats := {"wall_ms": _f25_percentiles(1, _f25_rows), "process_ms": _f25_percentiles(2, _f25_rows), "physics_ms": _f25_percentiles(3, _f25_rows),
+		"render_cpu_ms": _f25_percentiles(4, _f25_rows), "render_gpu_ms": _f25_percentiles(5, _f25_rows), "setup_cpu_ms": _f25_percentiles(6, _f25_rows)}
+	var qualified_stats := {"wall_ms": _f25_percentiles(1, qualified_samples), "process_ms": _f25_percentiles(2, qualified_samples),
+		"physics_ms": _f25_percentiles(3, qualified_samples), "render_cpu_ms": _f25_percentiles(4, qualified_samples),
+		"render_gpu_ms": _f25_percentiles(5, qualified_samples), "setup_cpu_ms": _f25_percentiles(6, qualified_samples)}
 	var passed := _f25_error.is_empty() and _f25_rows.size() >= int(_f25_profile.get("min_frames", 0)) \
 		and _f25_overlap >= int(_f25_profile.get("min_overlap_frames", 0)) and accepted.size() == 4 \
+		and sustained_loaded \
 		and _f25_peak_particles <= int(limits.get("encounter_particle_cap", 0)) and _f25_peak_lights <= int(limits.get("scene_light_cap", 0)) \
 		and float(stats.wall_ms.p95) <= float(_f25_profile.get("frame_budget_ms", 0.0)) \
-		and float(stats.render_gpu_ms.p95) <= float(_f25_profile.get("frame_budget_ms", 0.0))
+		and float(stats.render_gpu_ms.p95) <= float(_f25_profile.get("frame_budget_ms", 0.0)) \
+		and float(qualified_stats.wall_ms.p95) <= float(_f25_profile.get("frame_budget_ms", 0.0)) \
+		and float(qualified_stats.wall_ms.p99) <= float(_f25_profile.get("frame_budget_ms", 0.0)) \
+		and float(qualified_stats.render_gpu_ms.p95) <= float(_f25_profile.get("frame_budget_ms", 0.0)) \
+		and float(qualified_stats.render_gpu_ms.p99) <= float(_f25_profile.get("frame_budget_ms", 0.0))
 	var manifest := {"verdict": "PASS" if passed else "FAIL", "error": _f25_error, "metadata": _f25_meta,
 		"reviewed_profile": _f25_profile, "profile_sha256": JSON.stringify(_f25_profile).sha256_text(), "frames": _f25_rows.size(),
 		"overlap_frames": _f25_overlap, "accepted_characters": accepted.keys(), "actions": actions, "host_verdicts": _f25_verdicts,
 		"same_action_overlap_witnesses": _f25_overlap_actions,
+		"qualified_four_author_sample_indices": qualified_indices, "qualified_four_author_stats": qualified_stats,
+		"longest_sustained_four_author_seconds": longest_seconds,
+		"longest_consecutive_four_author_frames": longest_frames, "sustained_four_author_minimum_met": sustained_loaded,
 		"requires_complete_net_run": true,
 		"stats": stats, "peak_particles": _f25_peak_particles, "peak_lights": _f25_peak_lights,
 		"particle_cap": int(limits.get("encounter_particle_cap", 0)), "light_cap": int(limits.get("scene_light_cap", 0)),
@@ -553,9 +595,10 @@ func _f25_stop() -> Dictionary:
 	var csv := FileAccess.open(_f25_output.path_join("frames.csv"), FileAccess.WRITE)
 	var json := FileAccess.open(_f25_output.path_join("manifest.json"), FileAccess.WRITE)
 	if csv == null or json == null: return {"verdict": "FAIL", "detail": "F25 could not retain raw failed/pass artifacts"}
-	csv.store_csv_line(PackedStringArray(["elapsed_ms", "wall_ms", "process_ms", "physics_ms", "render_cpu_ms", "render_gpu_ms", "setup_cpu_ms", "visible_owned_bodies", "visible_move_authors", "particle_leases", "effect_lights"]))
-	for row: Array in _f25_rows:
-		var cells := PackedStringArray()
+	csv.store_csv_line(PackedStringArray(["sample_index", "elapsed_ms", "wall_ms", "process_ms", "physics_ms", "render_cpu_ms", "render_gpu_ms", "setup_cpu_ms", "visible_owned_bodies", "visible_move_authors", "particle_leases", "effect_lights"]))
+	for index: int in _f25_rows.size():
+		var row: Array = _f25_rows[index]
+		var cells := PackedStringArray([str(index)])
 		for value: Variant in row: cells.append(str(value))
 		csv.store_csv_line(cells)
 	json.store_string(JSON.stringify(manifest, "\t"))
