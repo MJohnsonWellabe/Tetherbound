@@ -95,7 +95,7 @@ func _mount_realm(realm_id: String) -> void:
 		var spec: Variant = body.get_meta("foundation_trainer_spec", {})
 		if not spec is Dictionary or spec.is_empty() or RULES.profile(str(spec.get("id", ""))).is_empty(): continue
 		if RULES.profile(spec.id).kind == "boss": continue
-		var old_prompt: Node = body.call("prompt_node") if body.has_method("prompt_node") else null
+		var old_prompt := _source_prompt(body)
 		if old_prompt == null: continue
 		_register_source(director, body, spec.id)
 		for tier: String in ["r1", "endgame"]:
@@ -110,6 +110,13 @@ func _mount_realm(realm_id: String) -> void:
 				_prompts[key] = weakref(prompt)
 			var context := _local_context(spec.id, body, director)
 			prompt.call("set_enabled", not context.is_empty() and RULES.available(spec.id, tier, context.world_flags, context.personal_flags))
+
+## The source's challenge prompt: a declared `foundation_rematch_prompt` (the
+## boss board, Cloudreach/Water trainers) or the trainer body's own prompt.
+func _source_prompt(source: Node) -> Node:
+	var declared: Variant = source.get_meta("foundation_rematch_prompt") if source.has_meta("foundation_rematch_prompt") else null
+	if is_instance_valid(declared) and declared is Node: return declared
+	return source.call("prompt_node") if source.has_method("prompt_node") else null
 
 ## Descendants of `realm` in `group`, in tree order.
 func _under(realm: Node, group: StringName) -> Array[Node]:
@@ -201,7 +208,7 @@ func _local_context(trainer: String, source: Node, director: Node) -> Dictionary
 		or _registered(director, trainer) != source or not director.get_parent().is_ancestor_of(source): return {}
 	var actor := game.call("find_player") as Node3D
 	if actor == null or not director.get_parent().is_ancestor_of(actor): return {}
-	var prompt: Node = source.call("prompt_node") if source.has_method("prompt_node") else source.get_meta("foundation_rematch_prompt", null)
+	var prompt := _source_prompt(source)
 	if prompt == null: return {}
 	var flags: Array = session.call("_foundation_flags", session.call("local_peer_id")).keys()
 	var character: String = game.local.character_id
@@ -228,7 +235,7 @@ func remote_context(peer: int, trainer: String, source: Node3D, director: Node) 
 	if actor == null or safety.is_empty() or safety.get("realm") != director.call("_encounter_realm") \
 		or safety.get("dialogue") != false or safety.get("cutscene") != false or safety.get("downed") != false \
 		or safety.get("swimming") != false or safety.get("flying") != false or not director.get_parent().is_ancestor_of(actor): return {}
-	var prompt: Node = source.call("prompt_node") if source.has_method("prompt_node") else source.get_meta("foundation_rematch_prompt", null)
+	var prompt := _source_prompt(source)
 	if prompt == null or actor.global_position.distance_to(source.global_position) > float(prompt.get("radius")): return {}
 	var profile := RULES.profile(trainer)
 	var spec: Dictionary = source.get_meta("foundation_trainer_spec", {})
