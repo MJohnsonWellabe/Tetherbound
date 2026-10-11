@@ -301,3 +301,136 @@ func _ready() -> void:
 	_listen_for_refusals()
 	if _presentation_anchor != null and not _taken:
 		PICKUP_GLOW.attach(_presentation_anchor, _item_colour())
+
+
+## Padded Helm's icon/canon: a stitched fiber crown, open underneath.
+## Fresh presentation only; dispatch, pickup claims and highlighting belong
+## to the existing factory/caller. All dimensions are local metres.
+static func _create_padded_helm(definition: Dictionary) -> Node3D:
+	var cfg: Dictionary = definition.get("world_identity", {})
+	var rx := clampf(float(cfg.get("radius_x_m", 0.14)), 0.05, 0.5)
+	var rz := clampf(float(cfg.get("radius_z_m", 0.13)), 0.05, 0.5)
+	var height := clampf(float(cfg.get("crown_height_m", 0.145)), 0.05, 0.5)
+	var lining := clampf(float(cfg.get("lining_thickness_m", 0.009)), 0.002, minf(rx, minf(rz, height)) * 0.25)
+	var brim := clampf(float(cfg.get("brim_radius_m", 0.012)), 0.003, 0.04)
+	var drop := clampf(float(cfg.get("strap_drop_m", 0.11)), 0.03, 0.3)
+	var strap_width := clampf(float(cfg.get("strap_width_m", 0.016)), 0.005, 0.04)
+	var strap_thickness := clampf(float(cfg.get("strap_thickness_m", 0.005)), 0.002, 0.015)
+	var seam_radius := clampf(float(cfg.get("seam_radius_m", 0.003)), 0.001, 0.008)
+	var stitch_width := clampf(float(cfg.get("stitch_width_m", 0.012)), 0.004, 0.025)
+	var segments := clampi(int(cfg.get("radial_segments", 32)), 12, 48)
+	var rings := clampi(int(cfg.get("crown_rings", 10)), 4, 16)
+	var stitches := clampi(int(cfg.get("stitch_count", 9)), 3, 16)
+	var cloth := _padded_helm_material(Color(str(definition.get("colour", "#7a5a35"))))
+	var inner := _padded_helm_material(Color(str(cfg.get("lining_colour", "#433425"))))
+	var padding := _padded_helm_material(Color(str(cfg.get("padding_colour", "#a48756"))))
+	var thread := _padded_helm_material(Color(str(cfg.get("stitch_colour", "#d1b982"))))
+	var strap := _padded_helm_material(Color(str(cfg.get("strap_colour", "#634b30"))))
+	var root := Node3D.new()
+	root.name = "PaddedHelmIdentity"
+	# Two ellipsoidal surfaces make a real hollow crown. The rolled edge
+	# joins their lower rims; neither surface fills the opening with a head.
+	_padded_helm_mesh(root, _padded_helm_crown(rx, rz, height, segments, rings, false), cloth, Vector3.UP * drop)
+	_padded_helm_mesh(root, _padded_helm_crown(rx - lining, rz - lining, height - lining, segments, rings, true), inner, Vector3.UP * drop)
+	var rim := TorusMesh.new()
+	rim.inner_radius = 1.0 - brim / rx
+	rim.outer_radius = 1.0 + brim / rx
+	rim.rings = segments
+	rim.ring_segments = 8
+	var rim_node := _padded_helm_mesh(root, rim, padding, Vector3.UP * drop)
+	rim_node.scale = Vector3(rx, rx, rz)
+	# Raised central seam follows the dome from front to back. The short
+	# stitches cross it and remain geometry when the cap is seen obliquely.
+	var seam_points: Array[Vector3] = []
+	for index: int in range(rings * 2 + 1):
+		var angle := PI * float(index) / float(rings * 2)
+		seam_points.append(Vector3(0.0, drop + (height + seam_radius) * sin(angle), (rz + seam_radius) * cos(angle)))
+	for index: int in range(seam_points.size() - 1):
+		_padded_helm_join(root, padding, seam_points[index], seam_points[index + 1], seam_radius)
+	for index: int in range(stitches):
+		var angle := PI * float(index + 1) / float(stitches + 1)
+		var at := Vector3(0.0, drop + (height + seam_radius * 2.0) * sin(angle), (rz + seam_radius * 2.0) * cos(angle))
+		_padded_helm_join(root, thread, at - Vector3.RIGHT * stitch_width * 0.5, at + Vector3.RIGHT * stitch_width * 0.5, seam_radius * 0.5)
+	# A narrow cloth chin strap hangs clear of the opening, rather than a
+	# solid neck/base that would make this read as a mannequin head.
+	var strap_points: Array[Vector3] = [Vector3(-rx * 0.92, drop, 0.0), Vector3(-rx * 0.84, drop * 0.3, 0.0),
+		Vector3(-rx * 0.55, strap_thickness, 0.0), Vector3(rx * 0.55, strap_thickness, 0.0),
+		Vector3(rx * 0.84, drop * 0.3, 0.0), Vector3(rx * 0.92, drop, 0.0)]
+	for index: int in range(strap_points.size() - 1):
+		var from := strap_points[index]
+		var to := strap_points[index + 1]
+		var strip := BoxMesh.new()
+		strip.size = Vector3(strap_thickness, from.distance_to(to) + strap_thickness, strap_width)
+		var part := _padded_helm_mesh(root, strip, strap, (from + to) * 0.5)
+		part.basis = Basis(Quaternion(Vector3.UP, (to - from).normalized()))
+	# Use local bounds: this API also serves callers before tree admission.
+	var bounds := AABB()
+	var first := true
+	for child: MeshInstance3D in root.get_children():
+		var local: AABB = child.transform * child.mesh.get_aabb()
+		bounds = local if first else bounds.merge(local)
+		first = false
+	var shift := Vector3(-bounds.get_center().x, -bounds.position.y, -bounds.get_center().z)
+	for child: Node3D in root.get_children(): child.position += shift
+	return root
+
+
+static func _padded_helm_material(colour: Color) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = colour
+	material.roughness = 0.95
+	material.metallic = 0.0
+	return material
+
+
+static func _padded_helm_mesh(root: Node3D, mesh: Mesh, material: Material, at: Vector3) -> MeshInstance3D:
+	var part := MeshInstance3D.new()
+	part.mesh = mesh
+	part.material_override = material
+	part.position = at
+	root.add_child(part)
+	return part
+
+
+static func _padded_helm_join(root: Node3D, material: Material, from: Vector3, to: Vector3, radius: float) -> void:
+	var cord := CylinderMesh.new()
+	cord.top_radius = radius
+	cord.bottom_radius = radius
+	cord.height = from.distance_to(to) + radius
+	cord.radial_segments = 6
+	cord.rings = 1
+	var part := _padded_helm_mesh(root, cord, material, (from + to) * 0.5)
+	part.basis = Basis(Quaternion(Vector3.UP, (to - from).normalized()))
+
+
+static func _padded_helm_crown(rx: float, rz: float, height: float, segments: int, rings: int, inside: bool) -> ArrayMesh:
+	var vertices := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var uv := PackedVector2Array()
+	var indices := PackedInt32Array()
+	for ring: int in range(rings + 1):
+		var latitude := PI * 0.5 * float(ring) / float(rings)
+		for segment: int in range(segments + 1):
+			var longitude := TAU * float(segment) / float(segments)
+			var vertex := Vector3(rx * sin(latitude) * cos(longitude), height * cos(latitude), rz * sin(latitude) * sin(longitude))
+			vertices.append(vertex)
+			var normal := Vector3(vertex.x / (rx * rx), vertex.y / (height * height), vertex.z / (rz * rz)).normalized()
+			normals.append(-normal if inside else normal)
+			uv.append(Vector2(float(segment) / float(segments), float(ring) / float(rings)))
+	for ring: int in range(rings):
+		for segment: int in range(segments):
+			var a := ring * (segments + 1) + segment
+			var b := a + segments + 1
+			var face := PackedInt32Array([a, b, b + 1])
+			if ring > 0: face.append_array(PackedInt32Array([a, b + 1, a + 1]))
+			if inside: face.reverse()
+			indices.append_array(face)
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_TEX_UV] = uv
+	arrays[Mesh.ARRAY_INDEX] = indices
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return mesh
