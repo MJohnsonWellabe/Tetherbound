@@ -1,5 +1,5 @@
 {
- "generated_at": "1:37 PM CT Sun 11 Oct 2026",
+ "generated_at": "1:41 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -663,14 +663,14 @@
    "id": "F10",
    "title": "Stormwood chains, fights and presentation",
    "chapter": "Stormwood",
-   "pct": 43,
+   "pct": 57,
    "counts": {
-    "met": 3,
+    "met": 4,
     "partial": 1,
     "in_progress": 0,
     "not_started": 2,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
@@ -683,10 +683,10 @@
     },
     {
      "text": "Persistent receipts for each chain",
-     "status": "failing",
-     "evidence": "tb/reproof-retest: | F10#1 | FAIL (v28 save) | F10-1.md |",
-     "gap": "Re-run stormwood_f10_side_chain_receipts proof scenario (now including Rook TM) Folds into F48#1.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F10-1/ (coop-chapters cdba89fb): two-process proof stormwood_f10_side_chain_receipts exit 0: all six Stormwood chains' receipts reach both peers, persist through save/reload in the world and character files, and are never granted twice",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (Sun 11 Oct, ~1:40 PM CT). Test alignments (pre-approved, disclosed): RD-17 guest-first portal migration, _tap process_frame flush, two stale Rook press counts. Slow-host wall-clock scaling disclosed. Lands with the consolidated PR.",
      "audit_index": 1
     },
     {
