@@ -80,7 +80,13 @@ func _run() -> void:
 	_frames = 2
 	_interval = 0.6
 	_after_frames = 10
+	# _run starts from _init, before the autoloads are in the tree.
+	await process_frame
 	_game = root.get_node_or_null(^"/root/Game")
+	if _game == null:
+		push_error("no Game autoload")
+		quit(1)
+		return
 	_game.call("reset_for_new_game")
 	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 	_game.set("save_system", SAVE_GAME.new(SAVE_DIR))
