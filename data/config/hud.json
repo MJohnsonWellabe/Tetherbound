@@ -1,6 +1,6 @@
 {
   "_comment": "Presentation-only tuning for scripts/ui/playground_hud.gd. Nothing here is read by authority, reward, inventory or progression code. A missing or invalid value falls back to the constant named in playground_hud.gd.",
-  "party_vitals_refresh_candidate": false,
+  "party_vitals_refresh_candidate": true,
   "exploration_roster": {
     "scope": "device_local_presentation",
     "show_empty_slots": false,
