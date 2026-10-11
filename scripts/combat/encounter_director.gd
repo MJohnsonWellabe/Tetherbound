@@ -1073,6 +1073,10 @@ func foundation_retire_stale_alpha(site_id: String, live_generation: int) -> voi
 			or int(wild.get_meta("foundation_alpha_generation", 0)) == live_generation: continue
 		_wild_creatures.erase(wild)
 		_wild_respawn.erase(wild)
+		var cluster: Dictionary = _wild_cluster.get(wild, {})
+		if not cluster.is_empty():
+			(cluster["members"] as Array[Node3D]).erase(wild)
+		_wild_cluster.erase(wild)
 		wild.queue_free()
 
 func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -> void:
@@ -6635,10 +6639,14 @@ func _stream_clusters(verify_active_ground: bool = false) -> void:
 		if should_be_active == bool(cluster["active"]):
 			if should_be_active and verify_active_ground:
 				for wild: Node3D in (cluster["members"] as Array[Node3D]):
+					if not is_instance_valid(wild) or wild.is_queued_for_deletion():
+						continue
 					_set_wild_active(wild, true)
 			continue
 		cluster["active"] = should_be_active
 		for wild: Node3D in (cluster["members"] as Array[Node3D]):
+			if not is_instance_valid(wild) or wild.is_queued_for_deletion():
+				continue
 			_set_wild_active(wild, should_be_active)
 
 
