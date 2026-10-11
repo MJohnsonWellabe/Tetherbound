@@ -1,5 +1,5 @@
 {
- "generated_at": "1:18 PM CT Sun 11 Oct 2026",
+ "generated_at": "1:31 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -2896,12 +2896,12 @@
    "title": "Economy, balance and the 15–25 hour clear",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/balance",
-   "pct": 40,
+   "pct": 60,
    "counts": {
-    "met": 2,
+    "met": 3,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 3,
+    "not_started": 2,
     "blocked": 0,
     "failing": 0
    },
@@ -2916,10 +2916,10 @@
     },
     {
      "text": "Essence and material ledgers: the main path reaches each band's entry without mandatory repeat grinding; optional grinding measurably speeds progress.",
-     "status": "not_started",
-     "evidence": "tests/test_economy_ledger.mjs (not in CI); R3-F47/source-ledger.json (unavailable supply null)",
-     "gap": "Feed observed route stock into economy_ledger.mjs, then wire the node tests into CI.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Arithmetic ledger only. Supply was not measured on a real route.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F47-1/ (systems-a 46b83a39 on tb/ev-coordinator bc0f5631): tests/test_f27_route_ledger.mjs 7/7 within 27/27 node tests: the main path reaches each band's entry with no mandatory grinding and no deficits; optional grinding measurably speeds progress in every biome (Stormwood 2.2 lvl/h). Node ledger tests are now wired into CI (ci.yml changes job)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (1:30 PM CT Sun 11 Oct) after owner ruling A: Cloudreach Senn/Maela XP bonus reverted; the Cloudreach ledger reads F27's entry team (essence-led levelling, RD-03); test_cloudreach_route_ledger 10/10; Voss re-won live from a generated L40 boundary. Lands with the consolidated PR.",
      "audit_index": 1
     },
     {
