@@ -452,14 +452,8 @@ func _input(action: String, strength: float) -> void:
 ## east wall) back to the arena threshold: south round the wall's end and in
 ## by the feed road's gap. Witnesses that rest there call this, not
 ## `_navigate`, whose nearest-route snap aims at the loop's east leg.
-## Leave along the authored summit road's end (cloudreach_world.json
-## upper_summit_road/summit_overlook_loop meet at (100,1160,5350), the
-## summit_threshold trigger in cloudreach_physical_runtime.json). The former
-## first waypoint (132,1160,5330) ran straight through the Summit Bivouac
-## waystone shrine (waystones.json camp + offset (0,-7) = (132,5335)) toward the
-## crown rim and stalled there (F19#5 piece 05, 2026-10-11).
 func _leave_summit_bivouac() -> bool:
-	for waypoint: Vector3 in [Vector3(116,1160,5346), Vector3(100,1160,5350)]:
+	for waypoint: Vector3 in [Vector3(132,1160,5330), Vector3(116,1160,5332), Vector3(100,1160,5350)]:
 		if not await _walk(waypoint):
 			return false
 	return true
