@@ -569,7 +569,7 @@
         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
         "model": "res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
         "source_height_m": 2.15,
-        "target_height_m": 7.2,
+        "target_height_m": 8.4,
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {
