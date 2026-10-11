@@ -38,7 +38,8 @@
       "lantern_energy": 1.5,
       "lantern_range_m": 10.0,
       "upper_gallery": {
-        "enabled": true,
+        "_why_off": "P2-022 final attempt judged FAIL (coordinator code-blind, 6:47 PM CT 11 Oct): before/after near-identical at approach, no layered stone mass, night silhouette still dark. Parked for the F40 matrix judge.",
+        "enabled": false,
         "radial_inset_m": 3.6,
         "width_m": 7.2,
         "post_width_m": 0.65,
