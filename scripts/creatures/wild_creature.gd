@@ -847,7 +847,12 @@ func _finish_pattern_leap() -> void:
 	_pattern_leap_active = false
 	if is_instance_valid(_model): _model.position.y = _pattern_leap_model_y
 	var landing: Vector3 = _pattern_geometry.get("marker", global_position)
-	_pattern_geometry["blocked"] = Vector2(landing.x - global_position.x, landing.z - global_position.z).length() > maxf(0.15, body_radius())
+	# Blocked means stopped short of the marked circle (a wall, a rock). The
+	# marker sits on the target, so a target that stays put stops the
+	# collision-aware leap at body contact; a body still overlapping the circle
+	# has arrived (F04#1: Vance's Galecrest never landed on a player who stood).
+	var arrived_within := maxf(0.15, body_radius()) + maxf(0.0, float(_pattern_geometry.get("profile", {}).get("marker_radius_m", 0.0)))
+	_pattern_geometry["blocked"] = Vector2(landing.x - global_position.x, landing.z - global_position.z).length() > arrived_within
 	_clear_pattern_cue()
 	strike_ready.emit()
 
