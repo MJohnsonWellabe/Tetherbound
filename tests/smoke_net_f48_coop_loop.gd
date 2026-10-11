@@ -1,6 +1,7 @@
 extends "res://tests/helpers/net_harness.gd"
 
 # peers: 2
+# net-timeout-seconds: 1620
 ## F48#0: a two-peer session runs hub -> homestead crafting -> portal ->
 ## Master -> feast -> boss -> relic hang, with each player's receipts separate.
 ##
@@ -11,7 +12,7 @@ extends "res://tests/helpers/net_harness.gd"
 ##   hub     each player's Satchel Home Key to the Crossing Hall (f49_portal_travel)
 ##   craft   the host plants a Kitchen + Spice rack by the paid build press; the
 ##           guest crafts a Small Potion there (smoke_net_homestead_station_craft)
-##   portal  each player walks out through the Hall's home arch (its prompt)
+##   portal  host then guest cross the Hall's Meadows biome arch (id home) by its prompt
 ##   Master  each challenges Orin Stonewake with its chosen creature, wins, and
 ##           opens the chest for its own recipe (smoke_net_f28_masters)
 ##   feast   each cooks that recipe at the host's Kitchen and feeds its own
@@ -121,7 +122,14 @@ func _loop() -> void:
 		"craft: the host's own stock is untouched by the guest's craft (%s)" % str(craft[0].items))
 	_leg("craft", hub, craft, "station craft", _station_craft, [1])
 
-	# 3. Portal: each walks out through the Crossing Hall's home arch.
+	# 3. Portal: host first, then guest, each Home Keys to the Crossing Hall and
+	# crosses its Meadows biome arch (portals.json id "home", biome meadows)
+	# into the Master's biome.
+	var arch_biome := ""
+	for row: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json")).arches:
+		if row.id == "home": arch_biome = str(row.biome)
+	check(arch_biome == str(preload("res://scripts/creatures/breakthrough.gd").master(MASTER).biome),
+		"portal: the crossed arch leads to the Master's biome (%s)" % arch_biome)
 	for peer in 2:
 		if not await _pass(peer, "loop_home_key", {}, 12000): return
 		var through := await _data(peer, "loop_arch_enter", {"arch": "home", "realm": "meadows"}, 12000)
@@ -130,6 +138,10 @@ func _loop() -> void:
 			"portal: peer %d's home arch arrival is its own (%s)" % [peer, str(through.reply)])
 	var portal := await _both("portal")
 	_leg("portal", craft, portal)
+	for peer in 2:
+		var arrivals := (portal[peer].receipts as Array).filter(func(r: Variant) -> bool:
+			return str(r).begins_with("craft:portal_arrival_travel:") and not (craft[peer].receipts as Array).has(r))
+		check(arrivals.size() == 2, "portal: peer %d's own two arrivals (Home Key, arch) were journaled once each (%s)" % [peer, str(arrivals)])
 
 	# 4. Master: each wins its own duel and opens the chest for its own recipe.
 	var definition: Dictionary = preload("res://scripts/creatures/breakthrough.gd").master(MASTER)
