@@ -1814,10 +1814,10 @@
    "action": "press",
    "args": {
     "action": "interact",
-    "times": 2,
+    "times": 3,
     "gap_frames": 30
    },
-   "label": "read both lines of 'stormwood_rook_circuit_return' (return to Rook)"
+   "label": "read all three lines of 'stormwood_rook_circuit_return' (return to Rook; the third gives the Thunder Break TM)"
   },
   {
    "peer": 0,
@@ -2532,10 +2532,10 @@
    "action": "press",
    "args": {
     "action": "interact",
-    "times": 3,
+    "times": 2,
     "gap_frames": 30
    },
-   "label": "read the three ordinary lines (finishing it emits that NPC's ordinary main-story line event)"
+   "label": "read Rook's two thank-you lines (stormwood_rook_circuit_thanks; finishing it emits that NPC's ordinary main-story line event)"
   },
   {
    "peer": 0,

@@ -75,6 +75,8 @@ const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "rela
 const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
 const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
 const LOAD_SETTLE_FRAMES := 300
+const SETTLE_ROUNDS := 6
+const SETTLE_FRAMES := 60
 
 var segment := ""
 var save_dir := ""
@@ -252,7 +254,30 @@ func _run() -> void:
 	if failures.is_empty() and legacy_order_diagnostic:
 		if not bool(game.call("save_game", CHAIN_SLOT)):
 			failures.append("Game.save_game(%d) refused the segment save" % CHAIN_SLOT)
+	if failures.is_empty() and not legacy_order_diagnostic and disk != null:
+		await _settle_owner_deliveries()
 	_finish()
+
+
+## F19#5 r8: a combat_mastery duty journaled as pending_owner_save applies on
+## the frames after a production save, so a receipt read on the save frame
+## missed one mastery use that production Load then replayed. Save, let those
+## deliveries apply, and repeat until the observed state is stable (bounded).
+## Nothing is written but ordinary production saves; export then saves again.
+func _settle_owner_deliveries() -> void:
+	var before: Dictionary = disk.call("_state")
+	for round in SETTLE_ROUNDS:
+		if not bool(game.call("save_game", HANDOFF.MEADOWS_SLOT)):
+			failures.append("Settling save refused before export")
+			return
+		for _i in SETTLE_FRAMES:
+			await physics_frame
+		var after: Dictionary = disk.call("_state")
+		if after == before:
+			disclosures.append("Pending owner deliveries settled after %d save(s) before export" % (round + 1))
+			return
+		before = after
+	disclosures.append("Owner deliveries still changing after %d settling saves; exported the last state" % SETTLE_ROUNDS)
 
 
 func _opening_team() -> void:

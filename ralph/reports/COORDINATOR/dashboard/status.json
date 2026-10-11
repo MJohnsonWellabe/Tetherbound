@@ -1,9 +1,9 @@
 {
- "updated": "12:22 PM CT Sun 11 Oct",
+ "updated": "1:53 PM CT Sun 11 Oct",
  "headline": [
-  "12:22 PM CT Sun 11 Oct: 189 of 271 met on main, plus 8 more proven on tb/ev-coordinator today (F24#5, F33#0, F28#4, F15#0, F37#4, F31#2, F27#1, F33#4). Everything lands in one consolidated PR at the end.",
-  "About 15 real game bugs fixed today, the biggest being that every boss attack warning was drawn 2.6 km from its fight. Mirejaw and Tuskroot native models are switched on after passing the blind judge.",
-  "Slowest work: the four earned route chains (Tidewake on 07 of 8, Cloudreach 01\u201304 earned, Meadows restarted on r8, Stormwood still on piece 1) and the visual re-captures."
+  "1:53 PM CT Sun 11 Oct: 189 of 271 met on main, plus 17 proven on tb/ev-coordinator today (206 in total). All of it lands in one consolidated PR at the end.",
+  "Since proof rules v2 (12:25 PM CT): F04#0, F46#0, F46#1, F20#3, F47#1, F47#2, F48#0, F48#3, F10#1 closed. F44#1 reopened: Tidewake/Cloudreach trainers have no rematch source, and a new lane is wiring them.",
+  "Real game fixes since noon: boss attack warnings drawn 2.6 km away, co-op guests unable to follow through portals (owner_passive stream error), Ripplet ride not restored on rejoin, Den panel stuck after a groom, Cloudreach XP reverted per owner ruling A."
  ],
  "batches": [
   {
@@ -672,107 +672,113 @@
    "sandbox_mode": "danger-full-access"
   }
  ],
- "active_lanes_note": "As of 12:22 PM CT Sun 11 Oct. Times are estimates; these hosts run fights at 1\u20132 fps.",
+ "active_lanes_note": "As of 1:53 PM CT Sun 11 Oct. Proof rules v2 in force (routes in chunks, Low-only visuals, pre-approved alignments). These hosts run fights at 1\u20132 fps.",
  "active_lanes": [
   {
    "lane": "meadows-route",
-   "doing": "Full earned Meadows chain, run 8, after fixing the camp walk around the village fence.",
+   "doing": "Re-running Meadows opening \u2192 camp \u2192 bridge \u2192 Warrens (r9) after fixing the save-receipt timing.",
    "criteria": "F19#5 (Meadows), F02#7, F03#1",
-   "next": "About 3 h"
+   "next": "About 2 h"
+  },
+  {
+   "lane": "meadows-fights (route-b)",
+   "doing": "Meadows Sigils piece retry (relay piece passed); then Hall \u2192 Warden \u2192 Tidewake handoff.",
+   "criteria": "F19#5 (Meadows)",
+   "next": "About 1\u20132 h"
   },
   {
    "lane": "tidewake-route",
-   "doing": "Segments 01\u201305 earned; running 07 and the ending with the same five (the optional swimmer path is skipped).",
+   "doing": "Segment 07 lost to Venn at L32; re-running at the band top (L33), then 08.",
    "criteria": "F19#5 (Tidewake), F13#0",
    "next": "About 1\u20132 h"
   },
   {
    "lane": "cloudreach-route",
-   "doing": "01\u201304 earned, 06\u201307 on a generated save; now scouting Stormwood pieces 05\u201308 for bugs.",
-   "criteria": "F19#5 (Cloudreach); de-risks Stormwood",
-   "next": "About 2 h"
+   "doing": "Proving Stormwood pieces named_detour \u2192 home_key from generated saves.",
+   "criteria": "F19#5 (Stormwood, Cloudreach)",
+   "next": "About 2\u20133 h"
   },
   {
    "lane": "cloudreach-xp",
-   "doing": "Re-running Voss after giving the Senn and Maela fights the XP for the level curve.",
-   "criteria": "F47 curve; unblocks Cloudreach 05",
-   "next": "About 1 h"
+   "doing": "Voss done; fixing a summit-bivouac collision stall, then the F33#2 Cloudreach/Stormwood gear sims.",
+   "criteria": "F19#5 Cloudreach 05, F33#2",
+   "next": "About 1\u20132 h"
   },
   {
    "lane": "stormwood-route",
-   "doing": "Piece 1 of 8 is still running (fights at 1\u20132 fps).",
+   "doing": "Stormwood arrival, crown build and rootgate pieces.",
    "criteria": "F19#5 (Stormwood), F09#0, F11#0",
-   "next": "Piece 1 in about 1 h, then 4\u20136 h"
+   "next": "About 2 h"
   },
   {
-   "lane": "home-key",
-   "doing": "Re-running the endgame rematch with the arena seat fixes, now that the walk reaches the fight.",
-   "criteria": "F44#1",
-   "next": "About 1.5 h"
+   "lane": "rematch-wiring",
+   "doing": "Wiring Tidewake and Cloudreach trainers into the rematch system.",
+   "criteria": "F44#0, F44#1",
+   "next": "About 2\u20133 h"
   },
   {
-   "lane": "meadows-fights",
-   "doing": "Done: fixed the attack-warning placement bug, the Earth Fist wedge, the HUD meter position and the den props. Idle until the re-judge.",
-   "criteria": "F04#0\u2013#2",
-   "next": "Waiting on captures"
+   "lane": "systems-a",
+   "doing": "F33#2 gear sims (Warden, Nerissa) and the all-band difficulty sweep.",
+   "criteria": "F33#2, F47#3, F22#1",
+   "next": "About 2 h"
   },
   {
-   "lane": "captures",
-   "doing": "Re-rendering the Warrens guardian, relay officers and captains on the fixed build; then Mirejaw/Tuskroot in-game, F21#4 and F04#6.",
-   "criteria": "F04#0\u2013#2, F36#0, F21#4, F04#6",
-   "next": "First sheet in about 1 h"
+   "lane": "systems-b",
+   "doing": "F44#0 Meadows and Stormwood rematch runs.",
+   "criteria": "F44#0",
+   "next": "About 1 h"
   },
   {
-   "lane": "captures-art",
-   "doing": "F04#7 and F10#2 fight footage, then Codex's remaining art items.",
-   "criteria": "F04#7, F10#2, F38\u2013F41",
+   "lane": "coop-chapters",
+   "doing": "F11#1 Stormwood legendary offers at capacity, retried with the owner_passive fix.",
+   "criteria": "F11#1",
+   "next": "About 1 h"
+  },
+  {
+   "lane": "coop-loop",
+   "doing": "F11#2 reconnect and F11#3 aftermath two-peer proofs.",
+   "criteria": "F11#2, F11#3",
    "next": "About 1\u20132 h"
   },
   {
    "lane": "fights-c2c3",
-   "doing": "Finding why careful play costs more than mashing in the Ripplet guardian fight, then tuning within limits.",
-   "criteria": "F04#7 (F10#2 sim passed)",
+   "doing": "Meadows C2 re-run with the fixed reader pilot, then Tidewake named fights.",
+   "criteria": "F04#7, F14#0/#1, F22#4",
    "next": "About 2 h"
   },
   {
-   "lane": "coop-chapters",
-   "doing": "Stormwood co-op legendary-offer checks; the portal crossings now pass.",
-   "criteria": "F10#1, F11#1\u2013#3",
+   "lane": "captures",
+   "doing": "Re-rendering relay officers/captains (F04#1/#2), ultimates (F35) and the clear-ground size matrix (F21#4).",
+   "criteria": "F04#1/#2, F35#1/#3, F21#4",
+   "next": "Sheets every ~1 h"
+  },
+  {
+   "lane": "captures-art",
+   "doing": "F04#7 and F10#2 fight footage, F36#1 poses, then Codex art.",
+   "criteria": "F04#7, F10#2, F36#1, F38\u2013F41",
    "next": "About 1\u20132 h"
   },
   {
-   "lane": "systems-a",
-   "doing": "Confirming the F28 chest auto-retry fix on two peers; the next criteria come after.",
-   "criteria": "Done: F24#5, F28#4, F37#4, F31#2, F27#1",
-   "next": "About 1 h"
-  },
-  {
-   "lane": "systems-b",
-   "doing": "Diagnosing the guest Home Key timeout (F48#3), then the per-biome rematch test (F44#0).",
-   "criteria": "Done: F33#0, F33#4; next F48#3, F44#0",
+   "lane": "ultimates (visual)",
+   "doing": "HUD, hit-feel and effect-archetype captures.",
+   "criteria": "F42#2, F21#5, F25#0",
    "next": "About 1\u20132 h"
   },
   {
-   "lane": "coop-loop",
-   "doing": "First full run of the new two-player loop test (hub, craft, portal, Master, feast, boss, relic).",
-   "criteria": "F48#0",
+   "lane": "home-key (walkers)",
+   "doing": "Cloudreach six-region walk and Veyra exam witnesses; then the 15\u201325 h estimate.",
+   "criteria": "F06#0, F08#0, F47#0",
    "next": "About 1\u20132 h"
-  },
-  {
-   "lane": "ultimates",
-   "doing": "Making the Veridian and Fulgocobra ultimates visible and scale with breakthroughs; F35#3 timing test.",
-   "criteria": "F35#1, F35#3",
-   "next": "About 2 h"
   },
   {
    "lane": "Codex (visual)",
-   "doing": "NPC face Meshy batch; fixes for 4 native creatures and Meadowhart's riding body; art fixes P2-039 and P2-006 sent back after judging.",
+   "doing": "NPC face batch, native creature fixes, open art notes.",
    "criteria": "F36#0, F38\u2013F41",
    "next": "READY posts every 2\u20133 h"
   },
   {
    "lane": "Claude coordinator",
-   "doing": "Merging lanes, judging captures code-blind, marking criteria.",
+   "doing": "Merging, judging code-blind, marking criteria.",
    "criteria": "All",
    "next": "Check-ins every 90 min"
   }

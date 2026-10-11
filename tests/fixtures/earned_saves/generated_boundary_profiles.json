@@ -8,7 +8,12 @@
       "realm": "meadows",
       "day": 5,
       "clock_elapsed_seconds": 500.0,
-      "position": "template",
+      "position": {
+        "ground_xz": [
+          -339.32,
+          2592.32
+        ]
+      },
       "party_levels": [
         15,
         15,
@@ -882,12 +887,15 @@
       "disclosure": "F44#0 rematch witness input (Cloudreach): the 'stormwood' post-Veyra Cloudreach profile plus Voss's original defeat flag, five raised to L55 (the generator's maximum) for the L55 officer_voss_summit_approach r1 band. Generated setup only: no rematch receipt, cooldown or payout is fabricated."
     },
     "f44_stormwood": {
-      "boundary": "cloudreach_settled",
-      "realm": "cloudreach",
-      "day": 16,
+      "boundary": "stormwood_settled",
+      "realm": "stormwood",
+      "day": 20,
       "clock_elapsed_seconds": 500.0,
       "position": {
-        "cloudreach_reward": true
+        "ground_xz": [
+          -325.0,
+          466.0
+        ]
       },
       "party_levels": [
         55,
@@ -970,7 +978,7 @@
         "water_dock_shellwatch_residents_freed_and_pump_disabled",
         "defeated_cloudreach_voss",
         "stormwood:trainer:officer_maren_verge_rod:defeated",
-        "stormwood:marrow_defeated"
+        "stormwood:chapter_started"
       ],
       "personal_flags": [
         "legendary_refused",
@@ -979,16 +987,14 @@
         "water_swim_lesson_briefed",
         "water_swim_stone_earned",
         "water:legendary_refused",
-        "fly_tutorial_completed",
-        "regional_credits_seen"
+        "fly_tutorial_completed"
       ],
-      "inventory_add": {
-        "stormwood_portal_key": 1
-      },
+      "inventory_add": {},
       "character_fields": {
         "portal_unlocks": [
           "tidewake",
-          "cloudreach"
+          "cloudreach",
+          "stormwood"
         ],
         "relics_held": [
           "cloudreach"
@@ -1000,9 +1006,10 @@
       },
       "world_portal_unlocks": [
         "tidewake",
-        "cloudreach"
+        "cloudreach",
+        "stormwood"
       ],
-      "disclosure": "F44#0 rematch witness input (Stormwood, post-credits): the 'stormwood' post-Veyra Cloudreach profile, generated with --enter=stormwood:stormwood (the ordinary F49 portal leg into Stormwood), plus Voss's and Maren's original defeats, the Marrow climax flag and this character's regional_credits_seen; five raised to L55 (the generator's maximum) for the L58 endgame leader band. Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
+      "disclosure": "F44#0 rematch witness input (Stormwood): the 'stormwood' post-Veyra profile's flags plus Voss's and Maren's original defeats, generated directly in Stormwood at Ashfoot Waycamp ground (-325, 466) with the Stormwood portal unlocked; five raised to L55 (the generator's maximum) for the L58 endgame leader band. The smoke adds stormwood:marrow_defeated and regional_credits_seen as a disclosed post-load fixture. (The ordinary portal leg was tried twice and failed: the relic hang opens the relic power panel.) Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
     },
     "cloudreach_stronghold": {
       "boundary": "cloudreach_settled",

@@ -1,18 +1,22 @@
-# F47#1 — essence/material ledgers: no mandatory grinding; optional grinding measurably speeds progress — FAIL (regression)
+# F47#1 — essence/material ledgers: no mandatory grinding; optional grinding measurably speeds progress — PASS
 
-systems-a, Sun 11 Oct 2026 12:34 PM CT. Commands (Node 22, no Godot):
-`node --test tests/test_f27_route_ledger.mjs tests/test_economy_ledger.mjs tests/test_economy_difficulty.mjs` and `node tools/f27_route_ledger.mjs`.
+systems-a, Sun 11 Oct 2026 1:30 PM CT, on tb/ev-coordinator bc0f5631 (ruling A: Cloudreach Senn/Maela bonus back to 0), Node 22, no Godot.
+`node --test tests/test_f27_route_ledger.mjs tests/test_economy_ledger.mjs tests/test_economy_difficulty.mjs tests/test_economy_supply_census.mjs` → 27 pass, 0 fail. `node tools/f27_route_ledger.mjs [--write]`: the committed report.json is unchanged by --write.
 
-| Commit | Tests | mandatory_repeat_grinding | optional_grind_faster_every_biome | Cloudreach reached | Stormwood grind lvl/h |
-|---|---|---|---|---|---|
-| `c0f02fca` (before the Cloudreach XP change) | 7/7 route-ledger pass | false | **true** | L44.8 | 2.2 |
-| `bd3c20ba` (merged tb/ev-coordinator incl. `0d323864` Senn/Maela XP) | 21/22; FAIL `optional grinding pays in every biome…: stormwood grind rate` | false | **false** | L50 | 0 |
+| Biome | Ordinary path reaches | Best grind loop (lvl/h) | Measurably faster |
+|---|---|---|---|
+| Meadows | L24 (target 20) | wild refights 5.41 | yes |
+| Tidewake | L34 (target 31) | 2.2 | yes |
+| Cloudreach | L44.8 (target 42) | 2.26 | yes |
+| Stormwood | L60 (exit target 55) | 2.2 | yes |
 
-- Half 1 holds: no checkpoint deficit (break-even engagement of wild sites 0.38).
-- Half 2 fails after `0d323864`. The ordinary path now reaches Stormwood entry at L50 (target 42) and hits the L60 pass ceiling before the exit (target 55). Grinding in Stormwood can add no levels, so no Stormwood loop is "measurably faster".
-- The ledger's own findings list the same overshoot: tidewake_entry 24 vs 20, cloudreach_entry 34 vs 31, stormwood_entry 50 vs 42, finale 60 vs 54.
-- Fix belongs to F47 curve tuning or to the Cloudreach XP lane's bonus sizes; it is not an evidence-lane change.
+Verdict fields:
+- `mandatory_repeat_grinding: false`, no deficits; `plausible_team` also has no deficits.
+- break-even wild-site engagement 0.39.
+- `optional_grind_measurably_faster_every_biome: true`.
 
-Disclosed: arithmetic ledger on authored data, `acceptance_verified:false` by design; no real-route stock measured (the gap's "observed route stock" input does not exist yet).
+History: on bd3c20ba (with 0d323864's Cloudreach bonus) the test FAILED "stormwood grind rate": Cloudreach was reached at L50 and Stormwood grinding added 0 lvl/h. Ruling A restored the curve.
 
-Verdict: FAIL
+Disclosed: an arithmetic ledger on authored data (`acceptance_verified:false` by design). Supply is not measured on a played route. The engagement assumption (≥0.39 of main-path wilds) needs F47#0's agent-piloted route to confirm.
+
+Verdict: PASS
