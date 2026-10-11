@@ -86,7 +86,7 @@ class PlacementBody extends Node3D:
 
 
 class AdmissionManagerShell extends "res://scripts/combat/combat_manager.gd":
-	func _staging_spots(_cfg: Dictionary) -> Array[Vector3]:
+	func _staging_spots(_cfg: Dictionary, _authored_pad: bool = false) -> Array[Vector3]:
 		var forward := (Vector3(_wild.position.x, _player.position.y, _wild.position.z)
 			- _player.position).normalized()
 		return [_player.position + forward * 2.6, _player.position + forward * 7.6]
