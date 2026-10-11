@@ -3562,6 +3562,42 @@ func _sync_progression_gates(game: Node) -> void:
 			shape.set_deferred("disabled", not built)
 
 
+## Register only the existing physical crown, in its actual world transform.
+## The former generic 17m rectangle invented floor beyond narrow ledge corners
+## and missed real sloped support. Keep each support separate so preferred-Y
+## queries can still select among stacked crowns. No physics query is needed.
+func _register_landmark_surface(support: Node3D) -> RefCounted:
+	var body := support.get_node_or_null(^"Collision") as StaticBody3D
+	if body == null:
+		return null
+	for child: Node in body.get_children():
+		var collider := child as CollisionShape3D
+		if collider == null or collider.disabled:
+			continue
+		var faces := PackedVector3Array()
+		if collider.shape is ConcavePolygonShape3D:
+			faces = (collider.shape as ConcavePolygonShape3D).get_faces()
+		elif collider.shape is BoxShape3D:
+			# Only the top of the existing box is standing ground. Transforming
+			# its corners preserves the Overlook's authored sloped leaves.
+			var half := (collider.shape as BoxShape3D).size * 0.5
+			var a := Vector3(-half.x, half.y, -half.z)
+			var b := Vector3(half.x, half.y, -half.z)
+			var c := Vector3(half.x, half.y, half.z)
+			var d := Vector3(-half.x, half.y, half.z)
+			faces.append_array(PackedVector3Array([a, b, c, a, c, d]))
+		if faces.is_empty():
+			continue
+		var sampler := preload("res://scripts/world/cloudreach_crown_surface.gd").new()
+		sampler.build(faces, collider.global_transform)
+		var bounds: AABB = sampler.get("bounds")
+		_surfaces.append({"kind": "crown_mesh", "sampler": sampler,
+			"centre": Vector2(bounds.get_center().x, bounds.get_center().z),
+			"half": Vector2(bounds.size.x, bounds.size.z) * 0.5})
+		return sampler
+	return null
+
+
 func _build_landmarks() -> void:
 	var root := Node3D.new()
 	root.name = "Landmarks"
@@ -3634,17 +3670,22 @@ func _build_landmarks() -> void:
 		var ledge:=_mesa(landmark, "LandmarkLedge", Vector3(0.0, -ledge_size.y * 0.5 + ledge_y, ledge_centre_z), ledge_size,
 			_materials["cliff"], _materials["upland_dry"] if at.y>=700.0 else _materials["upland"], ledge_collision,
 			_landmark_count + 31, false, ledge_flat_radius, _landmark_cap_radius(landmark_id))
+		var ledge_surface := _register_landmark_surface(ledge)
 		await _build_breathe()
 		if settlement:
 			(ledge.get_node("StratifiedCliffBody") as MeshInstance3D).visible=false
 			_build_articulated_settlement_skirt(landmark,at.y>=700.0)
 			# The last approach reaches terrace height at z=490. Keep its collision
 			# inside that level approach while the geological skirt extends farther.
-			_box(landmark, "SettlementWalkableTerrace", Vector3(0, -0.22, 0),
-				Vector3(48, 0.44, 48), _materials["upland_dry"], true).visible = false
+			var terrace := _box(landmark, "SettlementWalkableTerrace", Vector3(0, -0.22, 0),
+				Vector3(48, 0.44, 48), _materials["upland_dry"], true)
+			terrace.visible = false
+			_register_landmark_surface(terrace)
 		elif landmark_id == "old_wind_observatory":
-			_box(landmark, "ObservatoryWalkableCrown", Vector3(0, -0.22, 0),
-				Vector3(38, 0.44, 36), _materials["upland_dry"], true).visible = false
+			var observatory_crown := _box(landmark, "ObservatoryWalkableCrown", Vector3(0, -0.22, 0),
+				Vector3(38, 0.44, 36), _materials["upland_dry"], true)
+			observatory_crown.visible = false
+			_register_landmark_surface(observatory_crown)
 		elif landmark_id == "waterward_overlook":
 			# The restored-winds route terminates on this exact crown. Its former
 			# 72m convex ledge met the rising loop well below the top and stopped a
@@ -3669,14 +3710,18 @@ func _build_landmarks() -> void:
 				_materials["upland_dry"], true)
 			west_crown.get_child(0).visible = false
 			east_crown.get_child(0).visible = false
-		_surfaces.append({"kind": "rect", "centre": Vector2(at.x, at.z), "half": Vector2(17.0, 17.0), "height": at.y})
-		_cover_patches.append({"kind": "ellipse", "centre": at, "half": Vector2(25.5,25.5) if settlement else Vector2(16.5, 15.5),
+			_register_landmark_surface(west_crown)
+			_register_landmark_surface(east_crown)
+		var landmark_cover := {"kind": "ellipse", "centre": at, "half": Vector2(25.5,25.5) if settlement else Vector2(16.5, 15.5),
 			# Settlement lanes are protected by their actual building, yard and
 			# path exclusions below. Do not cut one circular lawn out of the middle.
 			"inner_clear_fraction": 0.0 if settlement else 0.42,
 			"height_scale": 0.58 if settlement else 1.0,
 			"seed": _landmark_count * 71 + 809,
-			"dry": at.y >= 790.0})
+			"dry": at.y >= 790.0}
+		if ledge_surface != null:
+			landmark_cover["crown_surface"] = ledge_surface
+		_cover_patches.append(landmark_cover)
 		var identity := (landmark_id + " " + str(spec.get("category", ""))).to_lower()
 		await _build_breathe()
 		if landmark_id == "realm_gate_crag":
