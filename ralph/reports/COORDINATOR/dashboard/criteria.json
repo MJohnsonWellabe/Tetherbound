@@ -1,5 +1,5 @@
 {
- "generated_at": "11:50 AM CT Sun 11 Oct 2026",
+ "generated_at": "11:55 AM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -1984,11 +1984,11 @@
    "title": "Homestead stations and upgrades",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 86,
+   "pct": 100,
    "counts": {
-    "met": 6,
+    "met": 7,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -2012,10 +2012,10 @@
     },
     {
      "text": "Meadows (tier 1) attachments are available from the start; hanging a biome's relic in the Shrine Room unlocks the next tier's attachment recipes (Meadows relic → Tidewake tier, and so on; Stormwood's relic → reserved tier 5); the player then carries one chosen relic power.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c 971615a6c1 (READY #572 6048907058, 6:26 PM CT 10-07): earned Shrine hang/power run 37699612835, 6 tests run 37699273278; review APPROVE",
-     "gap": "Unit and engine smoke: hang each relic → next-biome attachment recipes once; one relic power; save/rejoin.",
-     "note": "READY 6048907058 bounced at consolidation 6 (10-07 7:30 PM CT): its peer_runner placement fence is the code that broke smoke_net_catch_race on #578, and lane C's follow-up fixes (3205439a8, 7d22e88bc, 20f21f896) are outside the scope.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F31-2/: smoke_f31_relic_hang_power 17/17 (real Shrine Room hang grants exactly the 4 Tidewake attachment recipes once with a receipt; one power chosen in the real chooser; re-open and a second hang never stack; save/load keeps relics, 8 recipes and the one power) + Meadows attachment paid-path smoke on a fresh world; units test_relic_hang_attachment_blueprints (each relic unlocks the next tier, Stormwood the reserved fifth, once) and test_relic_power_selection (one at a time, save/reload, guest owner install): 15 tests/0 failed (coordinator re-run)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a ba4c8568, 12:00 PM CT Sun 11 Oct). Two-peer rejoin of a relic hang is already proven under F48#1 (met); the chosen power's own two-peer rejoin isn't separately shown. Lands with the consolidated PR.",
      "audit_index": 2
     },
     {
