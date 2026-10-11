@@ -56,6 +56,7 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 ## tree, same shape as PROGRESSION above.
 const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 const ENEMY_PATTERNS := preload("res://scripts/combat/combat_ai.gd")
 const ENEMY_PATTERN_CAST := preload("res://scripts/combat/enemy_pattern_cast.gd")
@@ -218,6 +219,7 @@ var _ally_clear_for := 0.0
 var _arena_centre: Vector3 = Vector3.ZERO
 var _admitted_spots: Array[Vector3] = []
 var last_admission_failure: String = ""
+var last_admission_context: Dictionary = {}
 
 var _action: Action = Action.READY
 var _action_timer: float = 0.0
@@ -807,6 +809,7 @@ func begin(
 	host_started: bool = false, host_arena: Dictionary = {}
 ) -> bool:
 	last_admission_failure = ""
+	last_admission_context.clear()
 	if is_fighting():
 		return false
 	if _completing_catch: return false
@@ -888,6 +891,7 @@ func begin(
 	var joining_realm := realm_owned_opponent and not host_started
 	if not _open_arena(joining_realm, host_arena):
 		last_admission_failure = "There isn't enough clear ground here for both creatures."
+		push_warning("Combat admission refused: %s" % last_admission_context)
 		return false
 	if joining_realm:
 		# Joining a shared realm encounter must not reposition its enemy or
@@ -992,23 +996,24 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 	var ally_radius := float(_ally_body.call("body_radius"))
 	var foe_radius := float(_wild.call("body_radius"))
 	if not is_finite(ally_radius) or not is_finite(foe_radius) or ally_radius <= 0.0 or foe_radius <= 0.0:
-		return false
+		return _reject_arena("gameplay_radius", {"ally_radius": ally_radius, "foe_radius": foe_radius})
 	cfg["radius"] = clampf(ceilf(2.0 * (ally_radius + foe_radius) + 7.0), 11.0, 26.0)
 	_admitted_spots = _staging_spots(cfg, not joining_realm and not host_arena.is_empty())
 	var centre := (_admitted_spots[0] + _admitted_spots[1]) * 0.5
 	var bound := _arena_bounds(centre)
 	if host_arena.is_empty() and bound >= 0.0 and bound < float(cfg["radius"]):
-		if not _enemy_owned: return false
+		if not _enemy_owned: return _reject_arena("room_capacity", {"centre": centre, "bound": bound, "radius": cfg.radius})
 		# Named rooms retain their authored provider's existing radius. An
 		# ordinary encounter cannot silently shrink below its derived ring.
 		cfg["radius"] = bound
 	if not host_arena.is_empty():
 		if joining_realm:
-			if not _valid_host_arena(host_arena): return false
-		elif not _valid_authored_arena(host_arena): return false
+			if not _valid_host_arena(host_arena): return _reject_arena("host_context", host_arena)
+		elif not _valid_authored_arena(host_arena): return _reject_arena("authored_context", host_arena)
 		centre = host_arena.centre
 		if not joining_realm and not str(host_arena.get("room_arena_id", "")).is_empty():
-			if float(host_arena.radius) < float(cfg["radius"]): return false
+			if float(host_arena.radius) < float(cfg["radius"]):
+				return _reject_arena("authored_room_capacity", {"radius": host_arena.radius, "required": cfg.radius})
 		else:
 			cfg["radius"] = host_arena.radius
 		if not joining_realm:
@@ -1018,22 +1023,24 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 			_admitted_spots[0] += shift
 			_admitted_spots[1] += shift
 			var authored_bound := _arena_bounds(centre)
-			if authored_bound >= 0.0 and authored_bound < float(cfg["radius"]): return false
+			if authored_bound >= 0.0 and authored_bound < float(cfg["radius"]):
+				return _reject_arena("authored_pad_capacity", {"centre": centre, "bound": authored_bound, "radius": cfg.radius})
 	if joining_realm:
 		var ally_spot := _realm_owned_ally_spot()
 		var footprint := _admission_render_radius(_ally_body)
 		var offset := Vector2(ally_spot.x - centre.x, ally_spot.z - centre.z).length()
 		if not ally_spot.is_finite() or not is_finite(footprint) \
 			or offset + footprint + float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)) > float(cfg["radius"]):
-			return false
-		if not _staged_render_terrain_clear(_ally_body, ally_spot, _wild.global_position) \
-			or not _realm_ally_clears_host_render(ally_spot): return false
+			return _reject_arena("host_rendered_radius", {"spot": ally_spot, "offset": offset,
+				"footprint": footprint, "radius": cfg.radius})
+		if not _staged_render_terrain_clear(_ally_body, ally_spot, _wild.global_position): return false
+		if not _realm_ally_clears_host_render(ally_spot):
+			return _reject_arena("host_rendered_gap", {"spot": ally_spot, "foe": _wild.global_position})
 		_admitted_spots = [ally_spot, _wild.global_position]
 	# A joining peer never relocates or re-admits the host's live opponent.
 	# Local admission fails before configure's scatter/bystander side effects.
 	if not joining_realm and not _staged_render_fit(_admitted_spots, centre, float(cfg["radius"])):
 		_admitted_spots.clear()
-		push_warning("This encounter location cannot fit both rendered combatants.")
 		return false
 	_arena = ARENA.new()
 	_arena.name = "CombatArena"
@@ -1254,25 +1261,37 @@ func _admission_front_extent(body: Node3D) -> float:
 func _staged_render_fit(spots: Array[Vector3], centre: Vector3, radius: float) -> bool:
 	var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
 	if spots.size() != 2 or not centre.is_finite() or not is_finite(radius) or radius <= 0.0:
-		return false
+		return _reject_arena("invalid_formation", {"centre": centre, "radius": radius})
 	var gap := Vector2(spots[1].x - spots[0].x, spots[1].z - spots[0].z).length()
 	if gap + 0.001 < _admission_front_extent(_ally_body) + _admission_front_extent(_wild) + clearance:
-		return false
+		return _reject_arena("rendered_gap", {"gap": gap, "required": _admission_front_extent(_ally_body) + _admission_front_extent(_wild) + clearance})
 	for index in 2:
 		var body: Node3D = _ally_body if index == 0 else _wild
 		var footprint := _admission_render_radius(body)
 		var offset := Vector2(spots[index].x - centre.x, spots[index].z - centre.z).length()
 		if not spots[index].is_finite() or not is_finite(footprint) or offset + footprint + clearance > radius:
-			return false
+			return _reject_arena("rendered_radius", {"body": body.name, "spot": spots[index], "offset": offset, "footprint": footprint, "radius": radius})
 		if not _staged_render_terrain_clear(body, spots[index], spots[1 - index]):
 			return false
 	return true
+
+
+## Preserve the actual failed evaluator for host/local admission callers. No
+## state or physics gate is changed by reporting why the opening was refused.
+func _reject_arena(stage: String, context: Dictionary = {}) -> bool:
+	last_admission_context = context.duplicate()
+	last_admission_context["stage"] = stage
+	return false
 
 
 ## Check the proposed rendered box before moving a body. Existing ground and
 ## physics providers must support its footprint; a terrain claim alone cannot
 ## seat a giant beyond a built deck or inside a wall.
 func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector3) -> bool:
+	var exclude: Array[RID] = []
+	for actor: Node3D in [_player, _ally_body, _wild]:
+		if actor is CollisionObject3D: exclude.append((actor as CollisionObject3D).get_rid())
+	var space := body.get_world_3d().direct_space_state
 	# Predict exactly the seat place_on_ground will use, including the highest
 	# support under the gameplay footprint; a hillside is not a wall.
 	var surface := _registered_surface_admission_context(body)
@@ -1281,43 +1300,48 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 		level = float(surface.surface_origin_y)
 	else:
 		# A surface subtype cannot borrow an unregistered dry-ground fallback.
-		if body.has_method("surface_origin_y"): return false
+		if body.has_method("surface_origin_y"): return _reject_arena("unregistered_surface", {"body": body.name})
 		level = float(body.call("_ground_height", spot.x, spot.z))
-		if is_nan(level): level = float(body.call("_ray_ground", spot))
+		if is_nan(level):
+			# The body ray excludes only itself. During formation the other
+			# fighter still occupies its old seat and must not become the floor.
+			var from := spot + Vector3.UP * CREATURE_BODY.GROUND_PROBE_UP
+			var ground_ray := PhysicsRayQueryParameters3D.create(from,
+				from + Vector3.DOWN * CREATURE_BODY.GROUND_PROBE_DOWN, 0x7FFFFFFF, exclude)
+			var ground_hit := space.intersect_ray(ground_ray)
+			if not ground_hit.is_empty(): level = float((ground_hit.position as Vector3).y)
 		if is_finite(level): level = float(body.call("_seat_over_footprint", spot, level))
-	if not is_finite(level): return false
+	if not is_finite(level): return _reject_arena("ground_height", {"body": body.name, "spot": spot})
 	var direction := facing_at - spot
 	direction.y = 0.0
-	if direction.length_squared() <= 0.000001: return false
+	if direction.length_squared() <= 0.000001: return _reject_arena("facing", {"body": body.name, "spot": spot})
 	# CreatureBody faces along local +Z (yaw_in_parent), unlike Camera3D.
 	var basis := Basis.looking_at(-direction.normalized(), Vector3.UP) * Basis.from_scale(body.global_basis.get_scale())
 	var points := _admission_render_points(body)
-	if points.is_empty(): return false
+	if points.is_empty(): return _reject_arena("rendered_bounds", {"body": body.name})
 	var lo := Vector3(INF, INF, INF)
 	var hi := Vector3(-INF, -INF, -INF)
 	for point: Vector3 in points:
 		var at := basis * point + Vector3(spot.x, level, spot.z)
 		lo = lo.min(at)
 		hi = hi.max(at)
-	var exclude: Array[RID] = []
-	for actor: Node3D in [_player, _ally_body, _wild]:
-		if actor is CollisionObject3D: exclude.append((actor as CollisionObject3D).get_rid())
-	var space := body.get_world_3d().direct_space_state
 	if not surface.is_empty():
 		var source: Node = surface.source as Node
 		# Validate the centre and every actual transformed render-footprint
 		# corner through the registered Water domain, including submerged art.
-		if not bool(source.call("surface_wild_supports_at", body, Vector3(spot.x, level, spot.z))): return false
+		if not bool(source.call("surface_wild_supports_at", body, Vector3(spot.x, level, spot.z))):
+			return _reject_arena("surface_centre", {"body": body.name, "spot": spot})
 		for point: Vector3 in points:
 			if not bool(source.call("surface_wild_supports_at", body, basis * point + Vector3(spot.x, level, spot.z))):
-				return false
+				return _reject_arena("surface_corner", {"body": body.name, "corner": basis * point + Vector3(spot.x, level, spot.z)})
 	for at: Vector2 in [Vector2(spot.x, spot.z), Vector2(lo.x, lo.z), Vector2(lo.x, hi.z), Vector2(hi.x, lo.z), Vector2(hi.x, hi.z)]:
 		if not surface.is_empty(): continue
 		var ray := PhysicsRayQueryParameters3D.create(Vector3(at.x, level + REALM_SEAT_MAX_STEP_M, at.y),
 			Vector3(at.x, level - REALM_SEAT_MAX_STEP_M, at.y), 0x7FFFFFFF, exclude)
 		var hit := space.intersect_ray(ray)
 		if not hit.is_empty():
-			if (hit.normal as Vector3).dot(Vector3.UP) <= 0.5: return false
+			if (hit.normal as Vector3).dot(Vector3.UP) <= 0.5:
+				return _reject_arena("support_normal", {"body": body.name, "at": at, "level": level, "normal": hit.normal})
 		else:
 			# Terrain3D rays can miss supported floor; use its actual collision,
 			# as CharacterBody's sweep does, instead of trusting the height claim.
@@ -1328,11 +1352,12 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 			support_query.transform = Transform3D(Basis.IDENTITY, Vector3(at.x, level, at.y))
 			support_query.collision_mask = 0x7FFFFFFF
 			support_query.exclude = exclude
-			if space.intersect_shape(support_query, 1).is_empty(): return false
+			if space.intersect_shape(support_query, 1).is_empty():
+				return _reject_arena("support_missing", {"body": body.name, "at": at, "level": level})
 	# Leave the floor/contact skin out of the solid-obstacle query.
 	# A floating body's submerged bounds remain in the actual solid query.
 	if surface.is_empty(): lo.y = maxf(lo.y, level + 0.25)
-	if hi.y <= lo.y: return false
+	if hi.y <= lo.y: return _reject_arena("rendered_height", {"body": body.name, "lo": lo, "hi": hi})
 	var shape := BoxShape3D.new()
 	shape.size = hi - lo
 	var query := PhysicsShapeQueryParameters3D.new()
@@ -1340,7 +1365,12 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 	query.transform = Transform3D(Basis.IDENTITY, (lo + hi) * 0.5)
 	query.collision_mask = 0x7FFFFFFF
 	query.exclude = exclude
-	return space.intersect_shape(query, 1).is_empty()
+	var obstacles := space.intersect_shape(query, 1)
+	if not obstacles.is_empty():
+		var obstacle: Variant = obstacles[0].get("collider")
+		return _reject_arena("solid_overlap", {"body": body.name, "lo": lo, "hi": hi,
+			"collider": str((obstacle as Node).get_path()) if obstacle is Node else str(obstacle)})
+	return true
 
 
 func _registered_surface_admission_context(body: Node3D) -> Dictionary:
