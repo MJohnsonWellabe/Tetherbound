@@ -320,7 +320,7 @@
         2225.0
       ],
       "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
-      "model_scale": 0.85,
+      "model_scale": 0.5,
       "_why_t3_pickups": "T3-REWARD found `hide_boots` fully modelled with zero acquisition path anywhere in the game. Near the ranger camp spur (-150,2210) -- a ranger's own boots, left at the camp. stack:1 gear; a respawning crate is harmless."
     },
     {

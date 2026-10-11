@@ -194,7 +194,7 @@
       "label": "A dropped pair of leggings",
       "at": [165.0, 4548.0],
       "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
-      "model_scale": 0.85,
+      "model_scale": 0.5,
       "_why_t3_pickups": "T3-REWARD found `hide_leggings` fully modelled with zero acquisition path anywhere in the game. Beside the river fiber cut (order 3015) on the band3/4 seam gap's own fix -- gear left on the same disturbed ground. stack:1; a respawning crate is harmless."
     },
     {
