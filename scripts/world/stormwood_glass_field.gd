@@ -5,6 +5,7 @@ extends Node3D
 ## their existing runtimes. Everything built here is non-colliding dressing.
 
 const CONFIG_PATH := "res://data/config/stormwood_glass_field.json"
+const SCAR_SHADER := preload("res://shaders/stormwood_strike_scar.gdshader")
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const DEAD_TREES := {
 	"dead_1": preload("res://assets/environment/stylized_nature/DeadTree_1.gltf"),
@@ -24,9 +25,9 @@ const SCAR_SEGMENTS := 28
 const SCAR_CORE := Color("#120e18")
 const SCAR_CHAR := Color("#261c24")
 const SCAR_EDGE := Color("#3d2c24")
-const SMOKED_GLASS := Color("#2d4152")
-const FUSED_LUMP := Color("#1b1720")
-const FISSURE_GLOW := Color("#d9c8ff")
+const SMOKED_GLASS := Color("#367f89")
+const FUSED_LUMP := Color("#58706d")
+const FISSURE_GLOW := Color("#57a6ab")
 const SHARD_HEIGHT_SCALE := 0.32
 const LUMP_MODELS: Array[String] = [
 	"res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
@@ -134,29 +135,52 @@ func _add_shard(parent: Node3D, suffix: String, local: Vector2, height: float, a
 
 
 func _add_fissures(parent: Node3D, centre: Vector2, radius: float, seed_value: int) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value + 41
 	for index in 3:
 		var angle := float(seed_value % 31) * 0.09 + TAU * float(index) / 3.0
 		var start := centre + Vector2(cos(angle), sin(angle)) * radius * 0.18
 		var finish := centre + Vector2(cos(angle + 0.18), sin(angle + 0.18)) * radius * 1.15
-		# Short segments track the strike scar instead of bridging a slope
-		# with one floating white rod.
-		var steps := maxi(2, ceili(start.distance_to(finish) / 0.75))
-		var material := _glow_material()
+		var side := (finish - start).normalized().orthogonal()
+		var points: Array[Vector2] = []
+		var steps := maxi(4, ceili(start.distance_to(finish) / 1.1))
+		for step in steps + 1:
+			var t := float(step) / steps
+			points.append(start.lerp(finish, t) + side * rng.randf_range(-0.38, 0.38) * sin(t * PI))
+		_add_crack_ribbon(parent, "GlassFissure%d" % index, points, rng.randf_range(0.035, 0.065))
+		# Small offshoots break the three-spoke symmetry without bright rods
+		# crossing above the cluster. Every ribbon edge samples actual ground.
+		var branch_start := points[steps >> 1]
+		var branch_end := branch_start + side * radius * rng.randf_range(0.2, 0.35)
+		_add_crack_ribbon(parent, "GlassFissureBranch%d" % index,
+			[branch_start, branch_start.lerp(branch_end, 0.45) + (finish - start).normalized() * 0.24, branch_end], 0.025)
+
+
+func _add_crack_ribbon(parent: Node3D, id: String, points: Array[Vector2], half_width: float) -> void:
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for index in points.size() - 1:
+		var start := points[index]
+		var finish := points[index + 1]
+		var side := (finish - start).normalized().orthogonal()
+		var steps := maxi(1, ceili(start.distance_to(finish) / 0.35))
 		for step in steps:
-			var a := _local_grounded(start.lerp(finish, float(step) / steps), 0.06)
-			var b := _local_grounded(start.lerp(finish, float(step + 1) / steps), 0.06)
-			var segment := MeshInstance3D.new()
-			segment.name = "GlassFissure%d_%d" % [index, step]
-			var mesh := CylinderMesh.new()
-			mesh.top_radius = 0.025
-			mesh.bottom_radius = 0.04
-			mesh.height = a.distance_to(b)
-			mesh.radial_segments = 5
-			segment.mesh = mesh
-			segment.position = (a + b) * 0.5
-			segment.quaternion = Quaternion(Vector3.UP, (b - a).normalized())
-			segment.material_override = material
-			parent.add_child(segment)
+			var t0 := float(step) / steps
+			var t1 := float(step + 1) / steps
+			var a := start.lerp(finish, t0)
+			var b := start.lerp(finish, t1)
+			var w0 := half_width * (1.0 - 0.7 * (float(index) + t0) / (points.size() - 1))
+			var w1 := half_width * (1.0 - 0.7 * (float(index) + t1) / (points.size() - 1))
+			for p: Vector2 in [a - side * w0, b + side * w1, b - side * w1,
+					a - side * w0, a + side * w0, b + side * w1]:
+				st.set_normal(Vector3.UP)
+				st.add_vertex(_local_grounded(p, 0.10))
+	var ribbon := MeshInstance3D.new()
+	ribbon.name = id
+	ribbon.mesh = st.commit()
+	ribbon.material_override = _glow_material()
+	ribbon.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	parent.add_child(ribbon)
 
 
 func _build_blasted_tree(spec: Dictionary) -> void:
@@ -203,37 +227,35 @@ func _glass_material() -> StandardMaterial3D:
 	material.metallic = 0.55
 	material.roughness = 0.14
 	material.emission_enabled = true
-	material.emission = GLASS_BLUE.darkened(0.55)
-	material.emission_energy_multiplier = 0.12
+	material.emission = GLASS_BLUE.darkened(0.30)
+	material.emission_energy_multiplier = 0.10
 	return material
 
 
 ## Charcoal glass at the strike point fading through scorched earth to the
 ## untouched ground at the rim (vertex colour and alpha from _scar_patch_mesh).
-func _fused_material() -> StandardMaterial3D:
-	var material := StandardMaterial3D.new()
-	material.vertex_color_use_as_albedo = true
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	material.metallic = 0.42
-	material.roughness = 0.28
+func _fused_material() -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = SCAR_SHADER
 	return material
 
 
-func _lump_material() -> StandardMaterial3D:
-	var material := StandardMaterial3D.new()
+func _lump_material(source: StandardMaterial3D = null) -> StandardMaterial3D:
+	# Keep the installed rock's texture and normal detail beneath fused glass.
+	var material := source.duplicate() as StandardMaterial3D if source != null else StandardMaterial3D.new()
 	material.albedo_color = FUSED_LUMP
-	material.metallic = 0.5
-	material.roughness = 0.22
+	material.metallic = 0.35
+	material.roughness = 0.42
 	return material
 
 
 func _glow_material() -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = FISSURE_GLOW.darkened(0.4)
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.emission_enabled = true
 	material.emission = FISSURE_GLOW
-	material.emission_energy_multiplier = 0.9
+	material.emission_energy_multiplier = 0.20
 	return material
 
 
@@ -295,9 +317,10 @@ func _add_fused_lumps(parent: Node3D, centre: Vector2, radius: float, seed_value
 		lump.position = _local_grounded(local, -0.15 * size)
 		lump.rotation.y = rng.randf() * TAU
 		lump.scale = Vector3(size * 1.3, size * 0.55, size * 1.1)
-		var material := _lump_material()
 		for mesh: Node in lump.find_children("*", "MeshInstance3D", true, false):
-			(mesh as MeshInstance3D).material_override = material
+			var visual := mesh as MeshInstance3D
+			for surface in visual.mesh.get_surface_count():
+				visual.set_surface_override_material(surface, _lump_material(visual.get_active_material(surface) as StandardMaterial3D))
 		for body: Node in lump.find_children("*", "CollisionObject3D", true, false):
 			body.queue_free()
 		parent.add_child(lump)
