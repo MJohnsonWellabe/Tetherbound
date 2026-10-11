@@ -10,12 +10,18 @@ extends SceneTree
 ## a legacy save freed before participants were recorded: the Dynamo's own
 ## record, else only the host, never whoever claims first. It does not play the
 ## fight, the dialogue or the five-slot ceremony UI. The final-act entry is
-## seeded explicitly. An in-memory bool writer records the prepared world;
-## this fixture does not prove an earned chapter or a physical disk save.
+## seeded explicitly. The original SaveGame writes isolated scratch files;
+## an in-file transport queue carries the real owner-passive messages. This
+## fixture does not prove an earned chapter or a physical network connection.
 const ENDING := preload("res://scripts/world/stormwood_ending.gd")
+const PLAYER := preload("res://autoload/player_state.gd")
+const AUTHORITY := preload("res://scripts/net/character_authority.gd")
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 
 var failures: Array[String] = []
 var assertions := 0
+var _wire: Array[Dictionary] = []
+var _scratch := ""
 
 
 class FixtureWorld extends Node3D:
@@ -31,9 +37,15 @@ class FixtureWorld extends Node3D:
 class HubStub extends Node:
 	var sent: Array = []
 	var actors: Dictionary = {}
+	var ending: Node
 
 	func send_to(peer: int, event: Dictionary) -> void:
 		sent.append({"peer": peer, "event": event.duplicate(true)})
+		if peer == 1 and ending != null and event.get("kind") == "ending_answer_saved":
+			ending.receive(event)
+
+	func dispatch(peer: int, intent: Dictionary) -> void:
+		if ending != null: ending.dispatch(peer, intent)
 
 	func actor_for(peer: int) -> Node3D:
 		return actors.get(peer, null)
@@ -57,12 +69,29 @@ class ChapterStub extends Node:
 
 class PreparedWorldWriter extends RefCounted:
 	var writes: Array[Dictionary] = []
-	func finish_fallback() -> bool: return true
-	func fallback_busy() -> bool: return false
+	var character_writes: Array[Dictionary] = []
+	var saver: RefCounted
+	func finish_fallback() -> bool: return saver.finish_fallback()
+	func fallback_busy() -> bool: return saver.fallback_busy()
+	func save_character_prepared(game: Object, character_id: String) -> bool:
+		var saved: bool = saver.save_character_prepared(game, character_id)
+		if saved: character_writes.append(game.local.save_data().duplicate(true))
+		return saved
 	func save_world_prepared(game: Object, world_id: String) -> bool:
 		if world_id != "stormheart-participants-fixture" or game.world.world_id != world_id: return false
-		writes.append(game.world.save_data().duplicate(true))
-		return true
+		var saved: bool = saver.save_world_prepared(game, world_id)
+		if saved: writes.append(game.world.save_data().duplicate(true))
+		return saved
+
+
+## Transport only. All admission, scope, owner-save and settlement code is
+## inherited from the actual Session; packets are never fabricated here.
+class SessionTransport extends "res://scripts/net/session.gd":
+	var wire: Array[Dictionary] = []
+	func _owner_passive_send_host(packet: Dictionary) -> void:
+		wire.append({"to_host": true, "peer": 2, "packet": packet.duplicate(true)})
+	func _owner_passive_send_peer(peer: int, packet: Dictionary) -> void:
+		wire.append({"to_host": false, "peer": peer, "packet": packet.duplicate(true)})
 
 
 class DynamoStub extends Node:
@@ -81,28 +110,61 @@ func _run() -> void:
 	if game == null:
 		_finish()
 		return
+	var original_scene: Node = current_scene
+	var original_session: Node = game.session
+	var original_process_mode: int = original_session.process_mode
+	var original_world: Dictionary = game.world.save_data().duplicate(true)
+	var original_character: Dictionary = game.local.save_data().duplicate(true)
 	game.reset_for_new_game()
 	game.current_realm = "stormwood"
 	var original_saver: RefCounted = game.save_system
 	var prepared_writer := PreparedWorldWriter.new()
+	_scratch = "user://stormheart-participants-%d/" % Time.get_ticks_usec()
+	prepared_writer.saver = SAVE_GAME.new(_scratch)
 	game.save_system = prepared_writer
 	game.world.world_id = "stormheart-participants-fixture"
 	game.progression.set_flag("stormwood:act_ii_complete")
-	var session: Node = game.get_node("Session")
+	original_session.name = "StormheartOriginalSession"
+	original_session.process_mode = Node.PROCESS_MODE_DISABLED
+	var session := SessionTransport.new()
+	session.wire = _wire
+	game.add_child(session)
+	session.process_mode = Node.PROCESS_MODE_DISABLED
+	game.session = session
+	session.call("_owner_passive_service")
+	var guest_session := SessionTransport.new()
+	guest_session.wire = _wire
+	game.add_child(guest_session)
+	guest_session.name = "StormheartGuestSession"
+	guest_session.process_mode = Node.PROCESS_MODE_DISABLED
+	guest_session.set("_mode", "client")
 	var local_peer := int(session.local_peer_id())
 	# A headless new game has no stable character id yet; give the host one.
 	game.local.set("character_id", "character-host-a")
 	var host_character := str(game.local.character_id)
+	var host_player: RefCounted = game.local
 	_check(host_character == "character-host-a", "the host character has a stable id")
 	var registry: RefCounted = session.registry()
 	registry.call("add", 2, "character-fought-b", "B")
 	registry.call("add", 3, "character-watched-c", "C")
 	for peer: int in [2, 3]:
 		registry.call("set_realm", peer, "stormwood")
+	_check(session.call("_bind_character_authority") == true, "the actual Session binds this world")
+	var guest := PLAYER.new()
+	guest.character_id = "character-fought-b"
+	guest.realm = "stormwood"
+	var onlooker := PLAYER.new()
+	onlooker.character_id = "character-watched-c"
+	onlooker.realm = "stormwood"
+	for player: RefCounted in [guest, onlooker]:
+		var admitted: Dictionary = session.get("_character_authority").seed_admitted_character(
+			AUTHORITY.portable_projection(player.save_data()), str(player.character_id))
+		_check(admitted.get("ok") == true, "the registered character has an admitted portable record")
 
 	var world := FixtureWorld.new()
 	world.name = "StormheartFixture"
 	root.add_child(world)
+	current_scene = world
 	var hub := HubStub.new()
 	hub.name = "StormwoodEncounterHub"
 	world.add_child(hub)
@@ -122,6 +184,8 @@ func _run() -> void:
 	ending.name = "StormwoodEnding"
 	world.add_child(ending)
 	ending.mount(world)
+	hub.ending = ending
+	hub.add_to_group("stormwood_encounter_hub")
 	for peer: int in [local_peer, 2, 3]:
 		var actor := Node3D.new()
 		world.add_child(actor)
@@ -155,7 +219,15 @@ func _run() -> void:
 	ending.dispatch(local_peer, ENDING.claim_intent(refused_elsewhere))
 	_check(hub.offers_for(local_peer).size() >= 1,
 		"refused in another world, fought here: the host's participating character receives this world's offer")
-	ending.dispatch(local_peer, {"kind": "ending_settled", "kept": true})
+	var host_offers := hub.offers_for(local_peer)
+	if not host_offers.is_empty(): ending.receive(host_offers.back().event)
+	ending.call("_begin_local_ceremony")
+	var host_acks: Array = hub.sent.filter(func(row: Dictionary) -> bool:
+		return row.peer == local_peer and row.event.get("kind") == "ending_answer_saved")
+	_check(not host_offers.is_empty() and not host_acks.is_empty()
+		and host_acks.back().event.get("claim_uid") == ENDING.claim_id(host_offers.back().event.claim)
+		and session.get("_owner_passive").get("stormwood_owner").is_empty(),
+		"the host's original BOOL-saved answer receives its durable ACK")
 	ending.dispatch(2, {"kind": "ending_claim"})
 	var b_offers := hub.offers_for(2)
 	_check(b_offers.size() >= 1, "the second participant still receives their own offer after the first settles")
@@ -175,7 +247,9 @@ func _run() -> void:
 	ending.dispatch(local_peer, {"kind": "ending_claim"})
 	_check(hub.refusals_for(local_peer).size() == before_refusals + 1,
 		"a character who already answered cannot claim again")
-	ending.dispatch(2, {"kind": "ending_settled", "kept": false})
+	if not b_offers.is_empty():
+		_answer_guest(game, host_player, session, guest, guest_session, ending, hub,
+			b_offers.back().event.claim)
 	state = ENDING.migrate_state(game.realm_environment.stormwood.ending)
 	_check((state.claims as Dictionary).has(host_character) and bool(state.claims[host_character].kept) and not bool(state.claims["character-fought-b"].kept)
 		and bool(state.claims["character-fought-b"].settled),
@@ -273,9 +347,81 @@ func _run() -> void:
 		and (state.claims as Dictionary).keys() == ["character-fought-b"],
 		"the legacy save records only the Dynamo's fighter characters as participants")
 	game.save_system = original_saver
+	current_scene = original_scene
 	world.queue_free()
 	await process_frame
+	guest_session.free()
+	session.free()
+	original_session.name = "Session"
+	original_session.process_mode = original_process_mode
+	game.session = original_session
+	game.local = host_player
+	game.world.load_data(original_world)
+	game.local.load_data(original_character)
+	game.call("_ensure_containers")
+	_remove_scratch(_scratch)
 	_finish()
+
+
+func _select_owner(game: Node, player: RefCounted, session: Node) -> void:
+	game.local = player
+	game.session = session
+	game.call("_ensure_containers")
+
+
+func _answer_guest(game: Node, host: RefCounted, host_session: Node, guest: RefCounted,
+		guest_session: Node, ending: Node, hub: HubStub, claim: Dictionary) -> void:
+	var before := AUTHORITY.portable_projection(guest.save_data())
+	_select_owner(game, guest, guest_session)
+	guest_session.call("_rpc_altar_epoch", host_session.call("_altar_current_epoch"),
+		game.world.reward_delivery_namespace, guest.character_id)
+	var owner: RefCounted = guest_session.call("_owner_passive_service")
+	var declaration: Dictionary = owner.call("arm_owner", before, {})
+	_select_owner(game, host, host_session)
+	var passive: RefCounted = host_session.call("_owner_passive_service")
+	passive.call("admitted", 2, {"portable_authority": before, "discovered_landmarks": {},
+		"owner_passive_stream": declaration})
+	_select_owner(game, guest, guest_session)
+	owner.call("_flush")
+	# Deliver the actual resume and actual host inputs_ack in their own scopes.
+	while not _wire.is_empty():
+		var message: Dictionary = _wire.pop_front()
+		if message.to_host:
+			_select_owner(game, host, host_session)
+			passive.call("receive_host", int(message.peer), message.packet)
+		else:
+			_select_owner(game, guest, guest_session)
+			owner.call("receive_owner", message.packet)
+	_select_owner(game, guest, guest_session)
+	_check(owner.call("delivery_ready") == true, "B receives the original admitted-stream ACK")
+	_check(owner.call("stormwood_begin_owner", claim) == true, "B freezes its original admitted owner state")
+	ENDING.record_answer(game.player_flags(), ENDING.claim_id(claim), false, game.party)
+	var selected := claim.duplicate(true)
+	selected.kept = false
+	var cut: Dictionary = owner.call("stormwood_save_owner", selected, "")
+	_check(cut.size() == 4, "B's original BOOL-saved refusal produces its stream cut")
+	_select_owner(game, host, host_session)
+	var sent_before := hub.sent.size()
+	ending.dispatch(2, {"kind": "ending_settled", "kept": false, "released_uid": "", "stream_cut": cut})
+	var ack: Dictionary = {}
+	for row: Dictionary in hub.sent.slice(sent_before):
+		if row.peer == 2 and row.event.get("kind") == "ending_answer_saved": ack = row.event
+	_select_owner(game, guest, guest_session)
+	_check(not ack.is_empty() and ack.get("claim_uid") == ENDING.claim_id(claim)
+		and owner.call("stormwood_finish_owner", ack.get("stream_cut", {})) == true,
+		"B cleans up only after its original mounted producer's durable ACK")
+	_select_owner(game, host, host_session)
+
+
+func _remove_scratch(path: String) -> void:
+	var resolved := ProjectSettings.globalize_path(path).simplify_path().trim_suffix("/")
+	var base := ProjectSettings.globalize_path(_scratch).simplify_path().trim_suffix("/")
+	if _scratch.is_empty() or (resolved != base and not resolved.begins_with(base + "/")): return
+	var directory := DirAccess.open(path)
+	if directory == null: return
+	for child: String in directory.get_directories(): _remove_scratch(path.path_join(child))
+	for child: String in directory.get_files(): directory.remove(child)
+	DirAccess.remove_absolute(path)
 
 
 func _check(condition: bool, label: String) -> void:
