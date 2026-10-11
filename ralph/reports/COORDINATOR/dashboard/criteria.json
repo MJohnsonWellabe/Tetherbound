@@ -1,5 +1,5 @@
 {
- "generated_at": "9:25 AM CT Sun 11 Oct 2026",
+ "generated_at": "10:49 AM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -246,10 +246,10 @@
    "counts": {
     "met": 4,
     "partial": 0,
-    "in_progress": 2,
+    "in_progress": 3,
     "not_started": 2,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
@@ -1545,11 +1545,11 @@
    "title": "Tether Commands (trainer support, no damage)",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 83,
+   "pct": 100,
    "counts": {
-    "met": 5,
+    "met": 6,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1597,10 +1597,10 @@
     },
     {
      "text": "Co-op: each player's commands affect only their own creature and are host-validated.",
-     "status": "in_progress",
-     "evidence": "tether_commands.gd (host staging)",
-     "gap": "Enable it; build a peers:2 net smoke covering own-only effects and hostile payload refusal.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. network_enabled=false. No net smoke exists.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F24-5/: test_f24_host_commands (forged other-character command refused by host.commit_tether_command; Rally affects only the commander's creature) + 2-peer ENet smoke owner_passive_rejoin ALL CHECKS PASSED (guest Item goes through the host; never buffs the other player's creature)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a 408438850, 10:43 AM CT Sun 11 Oct). Own-creature-only and host validation are both shown on real peers and at unit level. Lands with the consolidated PR.",
      "audit_index": 5
     }
    ]
@@ -2122,22 +2122,22 @@
    "title": "Creature gear and trainer gear",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 40,
+   "pct": 60,
    "counts": {
-    "met": 2,
+    "met": 3,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 3,
+    "not_started": 2,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Creatures have Harness and Charm slots in Rootiron, Tidesteel, Skyglass and Stormglass tiers, each upgradable +1 to +3.",
-     "status": "not_started",
-     "evidence": "gear.json@b4e4897d5; tests/test_recipes.gd::test_legacy_and_homestead_recipes_keep_their_approved_material_limits (partial)",
-     "gap": "Add a unit test for slots, the four tiers and upgrade chains +1..+3 through CreatureGear.stage_core/preflight.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. test_recipes only checks four tiers of recipes and their costs. No CI test loads creature_gear.gd, its slots, or the 24 upgrade links.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F33#0/EVIDENCE.md: tests/test_creature_gear.gd 8 tests/303 assertions/0 failed (four tiers x harness/charm x +0..+3, all 24 upgrade links, den equip + forge upgrade path)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-b deddb6a6d, 10:45 AM CT Sun 11 Oct). Coordinator re-read the test list against the criterion: slots, four tiers and +1..+3 upgrades are each asserted. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
