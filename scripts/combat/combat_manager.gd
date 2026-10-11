@@ -1065,17 +1065,22 @@ func _find_clear_formation(spots: Array[Vector3], centre: Vector3, radius: float
 	# A deficient measured pair cannot become valid by rotation/translation.
 	if spots.size() != 2 or str(first_failure.get("stage", "")) in ["invalid_formation", "rendered_gap", "rendered_radius"]:
 		return []
+	var attempts := 0
 	for offset: Vector3 in _admission_offsets():
 		for degrees: float in ADMISSION_TURNS_DEG:
 			if offset.is_zero_approx() and is_zero_approx(degrees): continue
 			var turn := Basis(Vector3.UP, deg_to_rad(degrees))
 			var candidate: Array[Vector3] = [centre + offset + turn * (spots[0] - centre),
 				centre + offset + turn * (spots[1] - centre)]
+			attempts += 1
 			if _staged_render_fit(candidate, centre, radius):
 				last_admission_context.clear()
 				return candidate
+	var last_failure := last_admission_context.duplicate()
 	last_admission_context = first_failure
 	last_admission_context["clear_seat_search_exhausted"] = true
+	last_admission_context["clear_seat_attempts"] = attempts
+	last_admission_context["last_candidate_failure"] = last_failure
 	return []
 
 
@@ -1097,15 +1102,20 @@ func _find_clear_shared_seat(spot: Vector3, centre: Vector3, radius: float) -> V
 	if not spot.is_finite() or not is_finite(_admission_render_radius(_ally_body)): return Vector3.INF
 	var foe_at := _wild.global_position
 	var original_gap := Vector2(spot.x - foe_at.x, spot.z - foe_at.z).length()
+	var attempts := 0
 	for offset: Vector3 in _admission_offsets():
 		if offset.is_zero_approx(): continue
 		var candidate := spot + offset
 		if Vector2(candidate.x - foe_at.x, candidate.z - foe_at.z).length() < original_gap: continue
+		attempts += 1
 		if _shared_seat_fit(candidate, centre, radius):
 			last_admission_context.clear()
 			return candidate
+	var last_failure := last_admission_context.duplicate()
 	last_admission_context = first_failure
 	last_admission_context["clear_seat_search_exhausted"] = true
+	last_admission_context["clear_seat_attempts"] = attempts
+	last_admission_context["last_candidate_failure"] = last_failure
 	return Vector3.INF
 
 
