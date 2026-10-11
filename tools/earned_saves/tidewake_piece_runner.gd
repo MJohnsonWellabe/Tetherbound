@@ -268,6 +268,11 @@ func _finish() -> void:
 		var arbiter := current_scene.get_node_or_null("InteractionArbiter")
 		var winner: Variant = arbiter.call("winning_provider") if arbiter != null else null
 		print("TIDEWAKE FAIL DIAG player=%s winner=%s" % [at, (winner as Node).get_path() if winner is Node else "none"])
+		var director := current_scene.get_node_or_null("EncounterDirector")
+		if director != null:
+			var ally: Variant = director.call("ally_body") if director.has_method("ally_body") else null
+			print("TIDEWAKE FAIL DIAG ally=%s pos=%s visible=%s" % [ally, (ally as Node3D).global_position if is_instance_valid(ally) else "-",
+				(ally as Node3D).visible if is_instance_valid(ally) else "-"])
 		var alpha := current_scene.get_node_or_null("WaterAlpha")
 		if alpha != null:
 			var abody: Variant = alpha.get("body")
