@@ -6,7 +6,9 @@
   "_comment_resiting": "BAND2-63-WARRENS, 2026-08-22. `site.at` moves to (-357,2610) and `yaw_deg` to 315.0, from OW5D's (-420,2470)/54.5. The reason is not taste: at the OW5D site the cave could not be walked through. `tools/_probe_warrens_run.gd` drove the player in and wedged them solid at local z=27.5 against a collider named `Terrain`, five metres short of the passage to the den -- the guardian, the clear flag and the heartstone were all unreachable on foot, and `tests/smoke_warrens.gd` never saw it because it teleported the player into each chamber rather than walking between them. The cause is the one OW5D's own `_comment_ow5d_relocation` (below, kept) wrote down and left open: it translated a cave whose geometry had been measured against a specific steep flank at (70,-140) onto ground nobody had probed, and kept the bearing derived for the old flank. At (-420,2470) the ground rolls; it does not rise. `tools/_probe_warrens_site.gd` measures that chamber by chamber, and its modes rule out the obvious fixes in turn: another bearing does not clear it (`--scan`), no origin on a 25m grid out to 300m clears it (`--sites`, run from this site AND from the Old Quarry -- the best anywhere is 2.6m short of burying 4-6m ceilings), and making the cave DESCEND (`--plan`) buries the deep rooms but not the entrance, because the ground surface then cuts through the entry corridor and the player walks up it into the ceiling. There is no flank in this part of the Meadows. What works is `--mound`: stand the cave where the terrain never rises above its floor at all, so nothing intrudes anywhere, and let what shows above ground be a rock knoll with a hole in it -- which is what this file's own site comment always said the entrance was, and what `skirt` was built to hide the underside of (see `_comment_mound` for the outcrop that makes it read as stone rather than as a slab). The first such site, (-382,2510), cleared the footprint and failed the OTHER half nobody had checked: the driven run walked 30m from the road and stopped 25m short of the entrance, against a 50-degree bank. `--best` scores both at once -- footprint clear, the 40m in front of the mouth walkable, and the site kept near the spine -- and (-357,2610) at 315 degrees is its answer: clear by 0.43m, approach 6.9 degrees, 34m off the spine, sitting on the `warren_undertrail` loop that terrain_playground.json already runs past the warrens. The whole path now walks: road to entrance to mouth to hall to den to vault, 123m, 26s, measured. Everything sited against the old mouth moved with it: Pell's stand (trainers.json order 2001, 35m out on the approach), the five ironwood nodes (harvest.json), the warrens' own resident Burrowback cluster (spawns.json order 3) and the map region (map_landmarks.json). The chamber layout, sizes, spawns, deposits, dressing and prize are UNCHANGED -- they are authored in the site's own local frame and rotate with it, which is the property `_comment_site` describes. One dependency is NOT this lane's to close: the scatter still has a `CommonTree_3` standing in the new doorway, because a band clearing does not invalidate the bake (GATE_D_LANE_CONTRACT.md sec4). The clearing is authored (bands/band2_stone_and_root/vegetation.json order 2002, radius 30) and the walked evidence above was measured with the 93 scatter colliders inside it dropped, which is what the coordinator's single re-bake will do for real.",
   "site": {
     "_comment_earth_clad_interiors": "WARRENS-EXT-0906 close-out. The lane's round-5/6 blind verdicts both named 'a grey stone doorway with dead-straight jambs and a flat lintel visible through the arch -- built, not dug; it says cellar before the player has stepped in'. The mouth chamber now wears the bank's own earth skin (`_cladding_material()`, the triplanar Ground030 the outer faces, dome and apron already wear) on the room side of its four walls and under its ceiling, 0.15 m thin so the wall colliders are unchanged, and the masonry bay dresser skips it. Every other chamber is untouched: the interior the owner judged good starts at the hall.",
-    "earth_clad_interiors": ["mouth"],
+    "earth_clad_interiors": [
+      "mouth"
+    ],
     "_comment_earth_clad_bays": "WARRENS-ART-0906 (W3, judge: 'interior rooms read as a stone box'). `earth_clad_interiors` above is all-or-nothing per chamber and it also makes `_build_structure()` SKIP the room -- right for the mouth, which is a dug throat, wrong for the hall, whose corbels, bay pilasters and ribs the owner already judged good and which this pass keeps. `earth_clad_bays` is the partial form: the named chamber wears the same earth skin on the wall at one END of it (`from`) and along `depth_m` of both side walls from that end, and nothing else changes -- the masonry dresser still runs over the whole room, so the pilasters (0.32 m projection) and the corner piers (0.46 m) stand proud of the 0.15 m skin exactly as they stand proud of the stone elsewhere. What the player walking in from the mouth sees is the throat's earth carrying a few metres INTO the hall before the cut stone starts. Side-wall runs are clipped short of any doorway on that wall by `_bay_clear_depth()`, so `depth_m` can never paper over an opening: the hall's own warren doorway is centred at z=22 and 2.6 m wide, so a request past ~4.35 m from the z=16 end is clipped to it.",
     "earth_clad_bays": [],
     "_comment_earth_clad_walls": "WARRENS-ART-0906 round 3, on the blind verdict's ranked #3 (`ralph/reports/WARRENS-ART-0906/JUDGE-round1.md`). The handoff's W3 row asked for 'the hall's first bay and the passage walls' and doing exactly that is what produced the defect the judge then named: '04 uses a brown dirt-and-gravel wall while 05/06/07 add a grey speckled granite for the same structural role -- two unrelated rock materials in adjacent rooms with no transition, so the burrow has no material identity.' A bay of earth beside unclad stone is two materials where there was one. The verdict's own instruction is 'pick ONE wall rock material for the burrow', so every chamber wears earth on all four walls and under the ceiling, the passages already do, and the hall's partial bay above is retired to an empty list (the mechanism stays in code; it is the right tool for a site that wants a real material transition somewhere). This is NOT `earth_clad_interiors`: that list also swaps the chamber FLOOR to apron earth and makes the masonry dresser skip the room. These rooms keep their corbels, bay pilasters and ribs, which stand proud of the 0.15 m skin exactly as they stood proud of the stone. The mouth stays in `earth_clad_interiors` because it is a dug throat with no masonry in it at all.",
@@ -164,7 +166,10 @@
       16.0
     ],
     "_comment_cap_ceilings": "Round 5. An earth cap over each chamber's ceiling slab, so the top of the outcrop is earth rather than a grey box lid where the roof boulders do not cover it.",
-    "cap_ceilings": true
+    "cap_ceilings": true,
+    "terrain_floor_clearance_m": 0.65,
+    "_combat_floor": "All combat rooms use their real built collision floor above sampled terrain; the mouth retains its narrow traversal scale. Ordinary fights stage at room centres and retain the pair-derived 11ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“26m ring and rendered fit checks.",
+    "_combat_room_sizes": "Largest installed player gameplay radius2.52 plus the guardian1.068941*1.35 requires15m. Ordinary38m rooms leave18m after wall margin; den40m leaves19m, with14/15m roofs for rendered spread and elevated framing. Ring size is never reduced to these capacities."
   },
   "bank": {
     "_why_restart": "OP-0905-09 CLEAN RESTART, 2026-09-06. Owner: \"Burrow warrens looks awful from the outside\", no qualifier, after ten dressing rounds (EXT-04..EXT-10 above, kept in this file's own history) retuned a boulder GRID that never stopped reading as a rock pile with a small dark metal-framed doorway in a field. This key REPLACES the old `mound` block outright: `burrow_warrens.gd`'s `_build_bank()` now builds ONE procedural earth-bank mesh instead of a scatter of Rock_Medium placements. Every field below is read only by that section of burrow_warrens.gd -- see its own header comment for the shape math.",
@@ -727,52 +732,56 @@
       "id": "hall",
       "at": [
         0.0,
-        22.0
+        36.0
       ],
       "size": [
-        14.0,
-        12.0
+        38.0,
+        38.0
       ],
-      "height": 5.6
+      "height": 14.0,
+      "combat_pad": true
     },
     {
       "id": "warren",
       "at": [
-        -16.0,
-        22.0
+        -44.0,
+        36.0
       ],
       "size": [
-        10.0,
-        9.0
+        38.0,
+        38.0
       ],
-      "height": 4.0
+      "height": 14.0,
+      "combat_pad": true
     },
     {
       "id": "den",
       "at": [
         0.0,
-        40.0
+        81.0
       ],
       "_comment_camera_rear_envelope": "Guardian combat stages its ally near the den entrance, so the rear-facing combat camera needs the den's 7m roof rather than the hall-to-den passage's low 4.4m throat. Extending this centred room to local z29..51 keeps the guardian marker and den-to-vault alignment while covering that rear envelope.",
       "size": [
-        16.0,
-        22.0
+        40.0,
+        40.0
       ],
-      "height": 7.0
+      "height": 15.0,
+      "combat_pad": true
     },
     {
       "id": "vault",
       "at": [
-        15.0,
-        40.0
+        46.0,
+        81.0
       ],
       "_comment_camera_rear_envelope": "The Elder fight and Heartstone pickup keep the companion in this side room. Its retained body and normal rear camera need the den-sized envelope: the centred vault now spans local x8..22 and z33..47 under a 7m roof. The marker, Elder offset, prize offset and den-door alignment stay fixed.",
       "size": [
-        14.0,
-        14.0
+        38.0,
+        38.0
       ],
-      "height": 7.0,
-      "branch": true
+      "height": 14.0,
+      "branch": true,
+      "combat_pad": true
     }
   ],
   "_comment_passages": "`gated: true` is the one door in the cave: a rock slab across the den->vault passage that only lifts once `clear.flag` is set (see `guardian`). Deliberately NOT an item_gate.gd gate -- SB10's mechanism is a carried KEY operating the world, and nothing in the warrens hands out a key; the thing that opens this is having beaten the guardian, which is a fact about the world the flag store already remembers.",
@@ -835,8 +844,8 @@
     },
     {
       "at": [
-        -2.5,
-        20.5
+        -6.786,
+        31.25
       ],
       "y": 4.4,
       "energy": 3.8,
@@ -847,8 +856,8 @@
     },
     {
       "at": [
-        5.5,
-        25.5
+        14.929,
+        47.083
       ],
       "y": 3.0,
       "energy": 0.7,
@@ -858,8 +867,8 @@
     },
     {
       "at": [
-        -16.0,
-        22.0
+        -44.0,
+        36.0
       ],
       "y": 3.2,
       "energy": 1.2,
@@ -870,7 +879,7 @@
     {
       "at": [
         0.0,
-        40.0
+        81.0
       ],
       "y": 5.6,
       "energy": 0.55,
@@ -880,20 +889,20 @@
     },
     {
       "at": [
-        3.0,
-        43.0
+        7.5,
+        86.455
       ],
       "y": 4.6,
       "energy": 5.0,
       "range": 14.0,
       "colour": "#d9a05c",
       "shadow": true,
-      "_why": "den warm key over the guardian's half (T1-LIGHT), lifted; WARRENS-ART-0906's own REPORT.md §5 flags this as the unresolved 07-den-dressing regression (frame median 46.6 -> 32.0) -- this and the two lights below were tuned against the pale stone wall this lane replaced with earth cladding (site.interior_cladding_colour). 3.4 -> 5.0 (x1.46, the measured 46.6/32.0 ratio) to restore the pre-regression brightness against the darker albedo. Re-render/re-judge stand 07-den-dressing before treating this as settled."
+      "_why": "den warm key over the guardian's half (T1-LIGHT), lifted; WARRENS-ART-0906's own REPORT.md ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§5 flags this as the unresolved 07-den-dressing regression (frame median 46.6 -> 32.0) -- this and the two lights below were tuned against the pale stone wall this lane replaced with earth cladding (site.interior_cladding_colour). 3.4 -> 5.0 (x1.46, the measured 46.6/32.0 ratio) to restore the pre-regression brightness against the darker albedo. Re-render/re-judge stand 07-den-dressing before treating this as settled."
     },
     {
       "at": [
-        3.0,
-        46.0
+        7.5,
+        91.909
       ],
       "y": 2.4,
       "energy": 2.0,
@@ -903,8 +912,8 @@
     },
     {
       "at": [
-        3.0,
-        44.0
+        7.5,
+        88.273
       ],
       "y": 1.2,
       "energy": 1.6,
@@ -914,8 +923,8 @@
     },
     {
       "at": [
-        15.0,
-        40.0
+        46.0,
+        81.0
       ],
       "y": 3.6,
       "energy": 1.1,
@@ -925,14 +934,58 @@
     },
     {
       "at": [
-        11.8,
-        40.0
+        37.314,
+        81.0
       ],
       "y": 2.8,
       "energy": 0.3,
       "range": 6.0,
       "colour": "#6f7f92",
       "_why": "vault door-end bounce (CONTENT-0828)"
+    },
+    {
+      "at": [
+        0.0,
+        36.0
+      ],
+      "y": 11.0,
+      "energy": 1.15,
+      "range": 26.0,
+      "colour": "#e8c798",
+      "shadow": true
+    },
+    {
+      "at": [
+        -44.0,
+        36.0
+      ],
+      "y": 11.0,
+      "energy": 1.15,
+      "range": 26.0,
+      "colour": "#e8c798",
+      "shadow": true
+    },
+    {
+      "at": [
+        0.0,
+        81.0
+      ],
+      "y": 11.0,
+      "energy": 1.15,
+      "range": 26.0,
+      "colour": "#e8c798",
+      "shadow": true
+    },
+    {
+      "at": [
+        46.0,
+        81.0
+      ],
+      "y": 11.0,
+      "energy": 1.15,
+      "range": 26.0,
+      "colour": "#e8c798",
+      "shadow": true
     }
   ],
   "_comment_interior_rock": "CONTENT-0828. The owner localised the looks complaint on 2026-08-28 -- 'burrow warrens and the castle are the lame looking locations. basically everywhere we had to build an under ground or build a building' -- and this is the half of the answer that needs no owner art. The terrain, scatter and grass drew no complaint; the two ASSEMBLED spaces did, and this cave's own before-frames say why: archive/reports/docs-evidence-full/content-0828/04-vault-prize-after.png is a perfect rectangular box -- four flat walls meeting at hard 90-degree corners, a flat ceiling, a flat floor, one triplanar texture at one scale over all of it, next door to a meadow with hundreds of pieces of variety per comparable area. It does not read as unfinished because the rock texture is bad. It reads as unfinished because a cave does not have corners. So this breaks the three junctions that say 'box' and nothing else: the wall/floor line (boulders banked along the inside of each wall), the wall/ceiling line (rock in the four ceiling corners only -- the ceiling's MIDDLE stays clear on purpose, because rock over the guardian's head is the frame this pass exists to stop producing) and the flat floor (scree thinning inward from the walls). Everything sits within `edge_band_m` of a wall, so the middle of every room is untouched and a den fight keeps the arena combat_arena_bounds_at() promises it; nothing goes in a doorway; and none of it has colliders, the rule _build_site_skirt()'s own comment states -- this is dressing, and a pebble that stops a player is a bug. Same nature family as the outcrop outside and the same `mound.tint`, per D24: the stone inside the hill and the stone showing above it are the same stone. `enabled: false` turns the whole pass off. ALL TUNABLE.",
@@ -1024,8 +1077,19 @@
   "organic_entry_finish": {
     "enabled": true,
     "hide_legacy_box_visuals": true,
-    "chambers": ["mouth", "hall", "warren", "den", "vault"],
-    "passages": ["mouth>hall", "hall>warren", "hall>den", "den>vault"],
+    "chambers": [
+      "mouth",
+      "hall",
+      "warren",
+      "den",
+      "vault"
+    ],
+    "passages": [
+      "mouth>hall",
+      "hall>warren",
+      "hall>den",
+      "den>vault"
+    ],
     "length_segments": 28,
     "liner_inset_m": 0.05,
     "passage_overlap_m": 0.25,
@@ -1037,20 +1101,34 @@
     "chamber_ceiling_rings": 9,
     "chamber_shell_profiles": {
       "den": {
-        "wall_height_fraction": 0.9,
+        "wall_height_fraction": 0.94,
         "crown_height_fraction": 1.0,
-        "upper_radius_scale": 0.96
+        "upper_radius_scale": 1.0,
+        "combat_clear_radius_m": 19.5
       },
       "vault": {
-        "wall_height_fraction": 0.9,
+        "wall_height_fraction": 0.94,
         "crown_height_fraction": 1.0,
-        "upper_radius_scale": 0.96
+        "upper_radius_scale": 1.0,
+        "combat_clear_radius_m": 18.5
+      },
+      "hall": {
+        "wall_height_fraction": 0.94,
+        "crown_height_fraction": 1.0,
+        "upper_radius_scale": 1.0,
+        "combat_clear_radius_m": 18.5
+      },
+      "warren": {
+        "wall_height_fraction": 0.94,
+        "crown_height_fraction": 1.0,
+        "upper_radius_scale": 1.0,
+        "combat_clear_radius_m": 18.5
       }
     },
     "passage_crown_scale": 1.1,
     "mouth_passage_crown_scale": 1.25,
-    "mouth_front_open_depth_frac": 0.10,
-    "mouth_front_open_width_scale": 0.90,
+    "mouth_front_open_depth_frac": 0.1,
+    "mouth_front_open_width_scale": 0.9,
     "mouth_front_open_height_scale": 1.24,
     "normal_scale": 2.0,
     "tint": "#705a43",
@@ -1064,14 +1142,15 @@
   "spawns": [
     {
       "species": "mudsnout",
-      "chamber": "mouth",
+      "chamber": "hall",
       "count": 1,
       "level": 9,
       "aggressive": true,
       "offset": [
-        1.8,
-        -1.5
-      ]
+        -6.0,
+        -5.0
+      ],
+      "wander_radius": 2.0
     },
     {
       "species": "burrowback",
@@ -1080,9 +1159,10 @@
       "level": 10,
       "aggressive": true,
       "offset": [
-        -5.0,
-        4.0
-      ]
+        5.0,
+        5.0
+      ],
+      "wander_radius": 2.0
     },
     {
       "species": "mudsnout",
@@ -1094,7 +1174,8 @@
         0.0,
         0.0
       ],
-      "spread": 3.0
+      "spread": 3.0,
+      "wander_radius": 2.0
     },
     {
       "species": "trailpup",
@@ -1113,7 +1194,10 @@
         "title": "Elder Trailpup",
         "acknowledgement": "The Elder Trailpup yields two large potions for the road ahead.",
         "items": [
-          {"id": "potion_large", "count": 2}
+          {
+            "id": "potion_large",
+            "count": 2
+          }
         ]
       },
       "alpha": {
@@ -1186,7 +1270,8 @@
       "range": 8.0,
       "y": 2.2,
       "colour": "#ffd479"
-    }
+    },
+    "arena_radius_m": 16.0
   },
   "_comment_clear": "SB9's flat flag store (autoload/progression_state.gd), the same one trainer defeats, the road gate and the TM pickups already write to. `flag` is set the moment the guardian goes down; `reward` pays exactly once against it, so re-entering a cleared warrens is a walk through an empty cave, not a payout faucet. Reward shape is SC15's (`coins`/`items`/`xp_bonus`), on purpose -- the trainer payout is the same idea and a second reward format would drift from it.",
   "_comment_clear_payout": "CONTENT-0828 / FIRST-HOUR-FUN-REBUILD. The old payout was 45 coins, 4 rootstone and 60 xp, and chapter_rewards.json's own audit table is the argument against it: the chapter's ONE REQUIRED DUNGEON -- five resident fights, four deposits and a level-14 alpha, measured at 5-9 minutes -- paid less than Pell, the optional picket standing 35m outside its door (40 coins, 2 potions, 3 orbs), and a third of what relay_captain Vance pays one band later. A boss that pays picket money is a boss with no point, which is the owner's report in economic terms. This is the same reward SHAPE (SC15's coins/items/xp_bonus, no second system -- chapter_rewards.json's `_comment_no_new_systems` forbids one), at boss scale. The two Greater Orbs are deliberate: Pell pays BASIC orbs because the reward for clearing the door is the means to catch what is behind it. The guardian pays GREATER orbs because the door it opens leads to the level-13 Elder Trailpup beside the heartstone; the player can choose to catch it with a stronger tool, not a duplicate starter or second guardian. Beat the alpha, get the orbs, watch the door go down, and the optional encounter is standing next to the prize. ALL TUNABLE.",
@@ -1216,14 +1301,14 @@
       "message": "The guardian goes down and the warren goes quiet. The slab across the deep branch grinds into the floor -- something is lit back there."
     }
   },
-  "_why_t3_reward": "T3-REWARD, owner-direction \u00a714 ('Warrens Guardian: Rootstone progression + useful TM/equipment/recipe'). CONTENT-0828 already fixed the payout's SIZE (this row used to pay less than the optional picket standing outside the door); what it still lacked was the literal 'TM/equipment/recipe' item this row of the ladder asks for. Every Ground TM already has an acquisition path (world pickup or Mira's shop, and Field's own Sigil reward now adds a third), so a TM here would be one more copy of something obtainable elsewhere rather than a new reason to clear the dungeon. hide_vest is the largest of the five armor pieces in items.json (0.14 defence, GAME_DESIGN.md 18's trainer-armor slots) and, like the elixirs the three captains now hand out, had no acquisition path anywhere in the game before this -- the chapter's one required dungeon is exactly where 'found in the depths, past what was guarding it' reads as earned rather than bought.",
+  "_why_t3_reward": "T3-REWARD, owner-direction Ãƒâ€šÃ‚Â§14 ('Warrens Guardian: Rootstone progression + useful TM/equipment/recipe'). CONTENT-0828 already fixed the payout's SIZE (this row used to pay less than the optional picket standing outside the door); what it still lacked was the literal 'TM/equipment/recipe' item this row of the ladder asks for. Every Ground TM already has an acquisition path (world pickup or Mira's shop, and Field's own Sigil reward now adds a third), so a TM here would be one more copy of something obtainable elsewhere rather than a new reason to clear the dungeon. hide_vest is the largest of the five armor pieces in items.json (0.14 defence, GAME_DESIGN.md 18's trainer-armor slots) and, like the elixirs the three captains now hand out, had no acquisition path anywhere in the game before this -- the chapter's one required dungeon is exactly where 'found in the depths, past what was guarding it' reads as earned rather than bought.",
   "_comment_deposits": "Rootstone in the walls -- Sec3 Band 2's own material, the first tier above wood/stone/fiber/berries. These are harvest_node.gd nodes with their specs written HERE rather than in data/config/harvest.json: that file is the first day's tutorial gathering out in the meadow (and the Old Quarry lane owns its own additions to it), and a deposit inside a dungeon has no business being in the same list. `at` is chamber-local [x, z] like everything above.",
   "_comment_deposit_models": "BAND2-63-WARRENS round 2. These carried no `model`, and `harvest_node.gd` falls back to `_box_visual()` when a spec has none -- so every rootstone deposit in the cave rendered as an untextured pale placeholder cube. The blind critic found it twice without being told what it was looking at ('a bare placeholder box ... a placeholder block in a frame offered for judgement is a defect, twice'). Rocks from the same nature family the outcrop outside uses, at deposit scale: the seam the player breaks is now made of the stone the hill is made of.",
   "deposits": [
     {
       "at": [
-        -5.0,
-        20.0
+        -16.527,
+        29.389
       ],
       "item": "rootstone",
       "amount": 3,
@@ -1233,8 +1318,8 @@
     },
     {
       "at": [
-        5.5,
-        25.0
+        15.627,
+        44.524
       ],
       "item": "rootstone",
       "amount": 3,
@@ -1244,8 +1329,8 @@
     },
     {
       "at": [
-        -17.5,
-        20.0
+        -54.68,
+        21.76
       ],
       "item": "rootstone",
       "amount": 4,
@@ -1255,8 +1340,8 @@
     },
     {
       "at": [
-        -6.0,
-        43.0
+        -16.815,
+        89.408
       ],
       "item": "rootstone",
       "amount": 4,
@@ -1266,8 +1351,8 @@
     },
     {
       "at": [
-        -13.0,
-        24.5
+        -30.326,
+        47.395
       ],
       "item": "stone",
       "amount": 4,
@@ -1278,8 +1363,37 @@
   ],
   "_comment_dressing": "BAND2-63-WARRENS. Prompt 63's required-dungeon list names `evidence of Team Tether activity` as part of the Burrow Warrens itself, and the band had none INSIDE the cave -- the only Team Tether trace in the region was the `quarry_supply_cache` prop cluster out at the ranger camp spur, which a player who walks the road to the warrens mouth and goes straight down never sees. This is that evidence, and it is deliberately EVIDENCE AND NOT EXPLANATION: the same rule `old_quarry.json`'s own `_comment_evidence` states for the quarry (Sec32's reveal ladder), so there is no note to read, no interactable, and nobody down here who knows what the seam is for. What the player is shown is a working face somebody was cutting rootstone out of and left mid-load, deeper in a cave than anyone local has a reason to be. Every model is from the ONE prop family the settlement already uses (`assets/props/quaternius_fantasy`, D24) and is the same crate/barrel/pickaxe vocabulary `quarry_station` puts on the quarry floor, so the player reads the two sites as one operation. Placed by `scripts/world/props.gd::place()` -- the same placer, collider and sink behaviour as every authored prop above ground -- through a `top_level` child so the cave's own `ground_height_at()` puts them on the CAVE FLOOR rather than on the hillside now several metres overhead. `chamber` + `offset` are chamber-local metres, the same authoring shape `spawns` above already uses, so the whole set rotates and translates with `site.at`/`site.yaw_deg` if this cave is ever relocated again. `yaw_deg` is likewise cave-local. NO ROPE: `Rope_1` is illegible at normal camera distance, a limitation the shipped `ranger_camp` cluster's own rope already has and this pass did not repeat.",
   "dressing": [
-    {"model": "Bonfire_Fire", "dir": "res://assets/props/quaternius_survival", "chamber": "den", "offset": [6.8, -1.8], "yaw_deg": 20.0, "scale": 0.24, "sink_m": 0.03, "glow": "campfire", "smoke_top_m": 2.2, "smoke_alpha": 0.25, "_why": "F03#0 lure judge E (2026-09-27): from the den threshold the shut vault door read as 'an unlit dark slab in a recess' beyond the guardian. Two small fire-pots flank it on the den side -- the chapter's own lit-doorway recipe (band1 props.json grandpa door fire-pot: Bonfire_Fire + glow campfire at ~0.22 scale), no new asset -- so a player entering the den sees a lit, tended door across the room while the guardian still stands. Den-local: the door is on the den's +x wall at [8,0]; these stand 1.2 m in from it and 1.8 m either side of its 2.4 m opening, clear of the guardian at [3,4] and the crate at [5.4,-4.2]. The door's own light dies with the slab; these stay as the tended threshold of the vault passage."},
-    {"model": "Bonfire_Fire", "dir": "res://assets/props/quaternius_survival", "chamber": "den", "offset": [6.8, 1.8], "yaw_deg": 70.0, "scale": 0.24, "sink_m": 0.03, "glow": "campfire", "smoke_top_m": 2.2, "smoke_alpha": 0.25},
+    {
+      "model": "Bonfire_Fire",
+      "dir": "res://assets/props/quaternius_survival",
+      "chamber": "den",
+      "offset": [
+        18.461,
+        -3.554
+      ],
+      "yaw_deg": 20.0,
+      "scale": 0.24,
+      "sink_m": 0.03,
+      "glow": "campfire",
+      "smoke_top_m": 2.2,
+      "smoke_alpha": 0.25,
+      "_why": "F03#0 lure judge E (2026-09-27): from the den threshold the shut vault door read as 'an unlit dark slab in a recess' beyond the guardian. Two small fire-pots flank it on the den side -- the chapter's own lit-doorway recipe (band1 props.json grandpa door fire-pot: Bonfire_Fire + glow campfire at ~0.22 scale), no new asset -- so a player entering the den sees a lit, tended door across the room while the guardian still stands. Den-local: the door is on the den's +x wall at [8,0]; these stand 1.2 m in from it and 1.8 m either side of its 2.4 m opening, clear of the guardian at [3,4] and the crate at [5.4,-4.2]. The door's own light dies with the slab; these stay as the tended threshold of the vault passage."
+    },
+    {
+      "model": "Bonfire_Fire",
+      "dir": "res://assets/props/quaternius_survival",
+      "chamber": "den",
+      "offset": [
+        18.461,
+        3.554
+      ],
+      "yaw_deg": 70.0,
+      "scale": 0.24,
+      "sink_m": 0.03,
+      "glow": "campfire",
+      "smoke_top_m": 2.2,
+      "smoke_alpha": 0.25
+    },
     {
       "model": "FarmCrate_Empty",
       "chamber": "mouth",
@@ -1295,8 +1409,8 @@
       "model": "Crate_Wooden",
       "chamber": "hall",
       "offset": [
-        5.2,
-        -3.6
+        13.847,
+        -11.185
       ],
       "yaw_deg": 15.0,
       "sink_m": 0.06,
@@ -1306,8 +1420,8 @@
       "model": "FarmCrate_Empty",
       "chamber": "hall",
       "offset": [
-        6.0,
-        -2.6
+        15.886,
+        -8.031
       ],
       "yaw_deg": -40.0,
       "sink_m": 0.05,
@@ -1317,8 +1431,8 @@
       "model": "Barrel",
       "chamber": "hall",
       "offset": [
-        4.3,
-        -2.4
+        14.916,
+        -9.713
       ],
       "yaw_deg": 0.0,
       "sink_m": 0.05,
@@ -1328,8 +1442,8 @@
       "model": "Pickaxe_Bronze",
       "chamber": "hall",
       "offset": [
-        6.3,
-        -4.6
+        13.55,
+        -11.543
       ],
       "yaw_deg": 62.0,
       "pitch_deg": -74.0,
@@ -1340,8 +1454,8 @@
       "model": "Bag",
       "chamber": "hall",
       "offset": [
-        4.5,
-        -4.7
+        11.292,
+        -13.76
       ],
       "yaw_deg": 130.0,
       "sink_m": 0.06,
@@ -1351,8 +1465,8 @@
       "model": "Crate_Wooden",
       "chamber": "den",
       "offset": [
-        -5.6,
-        1.2
+        -18.576,
+        2.895
       ],
       "yaw_deg": -70.0,
       "sink_m": 0.06,
@@ -1362,8 +1476,8 @@
       "model": "Bucket_Wooden_1",
       "chamber": "den",
       "offset": [
-        -4.3,
-        0.2
+        -18.789,
+        0.636
       ],
       "yaw_deg": -15.0,
       "roll_deg": 90.0,
@@ -1374,8 +1488,8 @@
       "model": "Barrel",
       "chamber": "den",
       "offset": [
-        -6.6,
-        2.4
+        -18.175,
+        4.807
       ],
       "yaw_deg": 0.0,
       "sink_m": 0.05,
@@ -1385,8 +1499,8 @@
       "model": "Crate_Wooden",
       "chamber": "den",
       "offset": [
-        5.4,
-        -4.2
+        16.364,
+        -9.256
       ],
       "yaw_deg": 25.0,
       "pitch_deg": 12.0,
@@ -1397,8 +1511,8 @@
       "model": "Bucket_Wooden_1",
       "chamber": "den",
       "offset": [
-        2.6,
-        -5.4
+        10.378,
+        -15.676
       ],
       "yaw_deg": 70.0,
       "roll_deg": 74.0,
@@ -1409,8 +1523,8 @@
       "model": "Bag",
       "chamber": "den",
       "offset": [
-        -2.2,
-        5.6
+        -8.935,
+        16.541
       ],
       "yaw_deg": -110.0,
       "sink_m": 0.06,
@@ -1420,8 +1534,8 @@
       "model": "Grass_Wide_Tall",
       "chamber": "den",
       "offset": [
-        5.6,
-        5.0
+        15.767,
+        10.239
       ],
       "yaw_deg": 15.0,
       "scale": 1.8,
@@ -1433,8 +1547,8 @@
       "model": "Fern_1",
       "chamber": "den",
       "offset": [
-        6.6,
-        5.9
+        15.762,
+        10.247
       ],
       "yaw_deg": -50.0,
       "scale": 1.6,
@@ -1447,12 +1561,16 @@
   "_comment_prize": "R4.6 built the evolution item gate as real, unit-tested infrastructure and then left it switched OFF, because nothing in the world could source the item (see data/config/progression.json's own note). THIS is the source: the Heartstone, sitting in the one chamber that is off the critical path, behind the guardian. Taking it flips nothing by itself -- progression.json's `evolution.mudsnout.item_id` is what turns the gate on, and it is now `heartstone`. `flag` makes the pickup one-time across saves, the same rule tm_pickup.gd already keeps for a disc.",
   "prize": {
     "_why_colours": "F03 discovery judge (six-activities/discovery/REPORT.md): the heartstone's red gem and glow read as Team Tether's colour, which ART_DIRECTION reserves (oxblood appears in the Meadows only with Team Tether). Warm amber keeps 'warm, and beating slowly' without borrowing the faction colour. TUNABLE.",
-    "colours": {"emission": "#d8923a", "albedo": "#b0701e", "light": "#f0b468"},
+    "colours": {
+      "emission": "#d8923a",
+      "albedo": "#b0701e",
+      "light": "#f0b468"
+    },
     "item": "heartstone",
     "chamber": "vault",
     "offset": [
       0.0,
-      1.0
+      2.714
     ],
     "label": "Take the heartstone",
     "flag": "warrens_heartstone_taken",
@@ -1483,8 +1601,8 @@
       {
         "chamber": "hall",
         "offset": [
-          -5.5,
-          -4.0
+          -14.929,
+          -12.667
         ],
         "model": 2,
         "scale": 0.24,
@@ -1498,8 +1616,8 @@
       {
         "chamber": "hall",
         "offset": [
-          5.8,
-          3.5
+          15.743,
+          11.083
         ],
         "model": 0,
         "scale": 0.32,
@@ -1514,8 +1632,8 @@
       {
         "chamber": "hall",
         "offset": [
-          0.5,
-          5.2
+          1.357,
+          16.467
         ],
         "model": 1,
         "scale": 0.27,
@@ -1529,8 +1647,8 @@
       {
         "chamber": "hall",
         "offset": [
-          -5.6,
-          2.0
+          -15.2,
+          6.333
         ],
         "model": 0,
         "scale": 0.28,
@@ -1545,8 +1663,8 @@
       {
         "chamber": "warren",
         "offset": [
-          3.0,
-          -2.5
+          11.4,
+          -10.556
         ],
         "model": 2,
         "scale": 0.24,
@@ -1587,7 +1705,7 @@
           1.6
         ],
         "model": 0,
-        "scale": 0.30,
+        "scale": 0.3,
         "dir": [
           -1.0,
           -0.3,
@@ -1600,8 +1718,8 @@
       {
         "chamber": "den",
         "offset": [
-          -5.5,
-          -5.5
+          -13.75,
+          -10.0
         ],
         "model": 1,
         "scale": 0.27,
@@ -1615,8 +1733,8 @@
       {
         "chamber": "den",
         "offset": [
-          6.5,
-          -4.5
+          16.25,
+          -8.182
         ],
         "model": 0,
         "scale": 0.32,
@@ -1631,8 +1749,8 @@
       {
         "chamber": "den",
         "offset": [
-          -6.5,
-          4.5
+          -16.25,
+          8.182
         ],
         "model": 2,
         "scale": 0.25,
@@ -1646,8 +1764,8 @@
       {
         "chamber": "den",
         "offset": [
-          -2.0,
-          5.7
+          -5.0,
+          10.364
         ],
         "model": 0,
         "scale": 0.28,
@@ -1662,8 +1780,8 @@
       {
         "chamber": "vault",
         "offset": [
-          -2.5,
-          -2.5
+          -6.786,
+          -6.786
         ],
         "model": 1,
         "scale": 0.24,
@@ -1758,8 +1876,8 @@
       {
         "chamber": "hall",
         "offset": [
-          -6.0,
-          -3.5
+          -16.286,
+          -11.083
         ],
         "count": 5,
         "spread": 0.9,
@@ -1774,8 +1892,8 @@
       {
         "chamber": "hall",
         "offset": [
-          6.2,
-          4.5
+          16.829,
+          14.25
         ],
         "count": 3,
         "spread": 0.6
@@ -1783,8 +1901,8 @@
       {
         "chamber": "warren",
         "offset": [
-          -3.5,
-          -3.0
+          -13.3,
+          -12.667
         ],
         "count": 4,
         "spread": 0.8
@@ -1808,8 +1926,8 @@
       {
         "chamber": "den",
         "offset": [
-          -6.5,
-          -4.0
+          -16.25,
+          -7.273
         ],
         "count": 5,
         "spread": 1.0,
@@ -1824,8 +1942,8 @@
       {
         "chamber": "den",
         "offset": [
-          -7.0,
-          5.5
+          -17.5,
+          10.0
         ],
         "count": 3,
         "spread": 0.7
@@ -1833,8 +1951,8 @@
       {
         "chamber": "vault",
         "offset": [
-          -3.0,
-          2.5
+          -8.143,
+          6.786
         ],
         "count": 4,
         "spread": 0.7
@@ -1873,8 +1991,8 @@
         "kind": "pool",
         "chamber": "hall",
         "offset": [
-          -2.5,
-          -1.5
+          -6.786,
+          -4.75
         ],
         "y": 3.1,
         "size": [
@@ -1888,8 +2006,8 @@
         "kind": "pool",
         "chamber": "den",
         "offset": [
-          3.0,
-          3.0
+          7.5,
+          5.455
         ],
         "y": 2.9,
         "size": [

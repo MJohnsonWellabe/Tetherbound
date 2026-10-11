@@ -6880,6 +6880,7 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	wild.set_meta(&"canonical_wild_runtime", bool(canonical.get("ready", false)))
 	var authored_arena := _local_authored_arena_context() if opponent_owned else {}
 	if not opponent_owned: authored_arena = _local_named_wild_arena_context(wild)
+	if not opponent_owned and authored_arena.is_empty(): authored_arena = _local_room_wild_arena_context(wild)
 	if not bool(_manager.call(
 		"begin", _player, wild, _ally_body, _fight_party(), _camera_rig, best,
 		opponent_owned, shared_host_wild, shared_host_wild, authored_arena
@@ -6947,6 +6948,16 @@ func _local_named_wild_arena_context(wild: Node3D) -> Dictionary:
 	return {}
 
 
+func _local_room_wild_arena_context(wild: Node3D) -> Dictionary:
+	for source: Node in get_parent().get_children():
+		var script := source.get_script() as Script
+		if script == null or script.resource_path != "res://scripts/world/burrow_warrens.gd" \
+			or not source.has_method("authored_room_arena_context"): continue
+		var context: Dictionary = source.call("authored_room_arena_context", wild)
+		if not context.is_empty() and context.get("source") == source and context.get("wild") == wild: return context
+	return {}
+
+
 func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
 	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
@@ -6981,6 +6992,12 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 			and is_equal_approx(float(named.get("radius", -1.0)), float(opponent.arena_radius_m)) \
 			and bool(_manager.call("_valid_named_wild_arena", named)) and bool(_manager.call("canonical_named_host_arena", named)):
 			opponent["named_encounter_id"] = str(named.named_encounter_id)
+		var room := _local_room_wild_arena_context(wild)
+		if not room.is_empty() and room.get("centre") == arena_at \
+			and room.get("species_id") == opponent.species_id \
+			and float(opponent.arena_radius_m) >= 11.0 and float(opponent.arena_radius_m) <= float(room.radius) \
+			and bool(_manager.call("_valid_room_wild_arena", room)):
+			opponent["room_arena_id"] = str(room.room_arena_id)
 	if opponent_owned:
 		# F14#1: a guest who joins a trainer/boss fight mirrors THIS creature
 		# (`_legacy_mirror_body`), so the record carries its card and pose too.
@@ -7463,6 +7480,10 @@ func _shared_arena_context(rec: Dictionary) -> Dictionary:
 			context["named_encounter_id"] = named_id
 			if _manager == null or not bool(_manager.call("canonical_named_host_arena", context, get_parent())): return {}
 		elif float(radius) < 11.0: return {}
+		var room_id := str(opponent.get("room_arena_id", ""))
+		if not room_id.is_empty():
+			context["room_arena_id"] = room_id
+			if _manager == null or not bool(_manager.call("canonical_room_host_arena", context, get_parent())): return {}
 	return context
 
 

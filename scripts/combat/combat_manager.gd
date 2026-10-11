@@ -984,8 +984,8 @@ func _disconnect_opponent_callbacks(body: Node3D) -> void:
 ##
 ## COMBAT §5: gameplay radii size an ordinary ring; measured rendered bodies
 ## independently have to fit. Existing room providers may cap the ring, but
-## a cap cannot authorize clipping. No alternate ordinary pad producer exists:
-## an unsuitable location refuses admission before any fight side effects.
+## a cap cannot authorize clipping. Registered ordinary room pads move only
+## the initial formation, retaining its derived ring and measured art checks.
 func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bool:
 	var cfg: Dictionary = (MATH.config().get("arena", {}) as Dictionary).duplicate()
 	# Gameplay radii size the ring; rendered art independently decides fit.
@@ -994,7 +994,7 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 	if not is_finite(ally_radius) or not is_finite(foe_radius) or ally_radius <= 0.0 or foe_radius <= 0.0:
 		return false
 	cfg["radius"] = clampf(ceilf(2.0 * (ally_radius + foe_radius) + 7.0), 11.0, 26.0)
-	_admitted_spots = _staging_spots(cfg)
+	_admitted_spots = _staging_spots(cfg, not joining_realm and not host_arena.is_empty())
 	var centre := (_admitted_spots[0] + _admitted_spots[1]) * 0.5
 	var bound := _arena_bounds(centre)
 	if host_arena.is_empty() and bound >= 0.0 and bound < float(cfg["radius"]):
@@ -1007,7 +1007,10 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 			if not _valid_host_arena(host_arena): return false
 		elif not _valid_authored_arena(host_arena): return false
 		centre = host_arena.centre
-		cfg["radius"] = host_arena.radius
+		if not joining_realm and not str(host_arena.get("room_arena_id", "")).is_empty():
+			if float(host_arena.radius) < float(cfg["radius"]): return false
+		else:
+			cfg["radius"] = host_arena.radius
 		if not joining_realm:
 			# Seat the formation on this actual authored pad before fighting,
 			# retaining its measured gap and any lateral trainer treatment.
@@ -1075,6 +1078,7 @@ func _valid_host_arena(context: Dictionary) -> bool:
 	if generation != null and int(generation) != int(context.body_generation): return false
 	if str(context.get("kind", "")) != "wild": return true
 	if float(radius) > 26.0: return false
+	if not str(context.get("room_arena_id", "")).is_empty(): return canonical_room_host_arena(context)
 	if not str(context.get("named_encounter_id", "")).is_empty(): return canonical_named_host_arena(context)
 	return float(radius) >= 11.0
 
@@ -1127,6 +1131,8 @@ func canonical_named_host_arena(context: Dictionary, world: Node = null) -> bool
 ## canonical geometry. This context never crosses a client input channel.
 func _valid_authored_arena(context: Dictionary) -> bool:
 	var source: Variant = context.get("source")
+	if not _enemy_owned and not str(context.get("room_arena_id", "")).is_empty():
+		return _valid_room_wild_arena(context)
 	if not _enemy_owned: return _valid_named_wild_arena(context)
 	if not source is Node3D or not is_instance_valid(source) \
 		or not _player.get_parent().is_ancestor_of(source as Node): return false
@@ -1145,6 +1151,44 @@ func _valid_authored_arena(context: Dictionary) -> bool:
 			and context.get("owner_npc") == definition.encounter_id and centre == source.global_position \
 			and is_equal_approx(float(radius), float(definition.arena_radius_m))
 	return false
+
+
+## Canonical geometry for ordinary room admissions. The reliable host radius
+## may be smaller than room capacity, but never smaller than the wild minimum.
+func canonical_room_host_arena(context: Dictionary, world: Node = null) -> bool:
+	if world == null and is_instance_valid(_player): world = _player.get_parent()
+	if not is_instance_valid(world) or not world.is_inside_tree(): return false
+	var id := str(context.get("room_arena_id", ""))
+	var centre: Variant = context.get("centre")
+	var radius: Variant = context.get("radius")
+	if id.is_empty() or not str(context.get("named_encounter_id", "")).is_empty() \
+		or not centre is Vector3 or not (centre as Vector3).is_finite() \
+		or not (radius is int or radius is float) or not is_finite(float(radius)) \
+		or float(radius) < 11.0 or float(radius) > 26.0: return false
+	for source: Node in world.get_children():
+		var script := source.get_script() as Script
+		if script == null or script.resource_path != "res://scripts/world/burrow_warrens.gd" \
+			or not source.has_method("authored_room_arena_definition"): continue
+		var definition: Dictionary = source.call("authored_room_arena_definition", id)
+		if definition.is_empty(): continue
+		return definition.get("source") == source and definition.get("room_arena_id") == id \
+			and definition.get("species_id") == context.get("species_id") \
+			and (definition.centre as Vector3).is_equal_approx(centre as Vector3) \
+			and float(radius) <= float(definition.radius)
+	return false
+
+
+func _valid_room_wild_arena(context: Dictionary) -> bool:
+	var source: Variant = context.get("source")
+	if not source is Node or not is_instance_valid(source) or not (source as Node).is_inside_tree() \
+		or not _player.get_parent().is_ancestor_of(source as Node) or context.get("wild") != _wild:
+		return false
+	var script := (source as Node).get_script() as Script
+	if script == null or script.resource_path != "res://scripts/world/burrow_warrens.gd" \
+		or not source.has_method("authored_room_arena_context"): return false
+	var canonical: Dictionary = source.call("authored_room_arena_context", _wild)
+	return not canonical.is_empty() and context == canonical \
+		and canonical.get("species_id") == _enemy.get("species_id") and canonical_room_host_arena(canonical)
 
 
 ## A named wild remains wild. Only its actual mounted canonical producer can
@@ -1375,13 +1419,13 @@ const CONTAIN_STEP_M := 0.5
 ## engaged down: their creature at `deploy_offset`, the opponent `separation`
 ## past it. Taken as ONE piece so `_open_arena()` and `_place_fighters()` cannot
 ## disagree about where the fight is.
-func _staging_spots(cfg: Dictionary) -> Array[Vector3]:
+func _staging_spots(cfg: Dictionary, authored_pad: bool = false) -> Array[Vector3]:
 	var deploy := float(cfg.get("deploy_offset", 2.6))
 	var separation := _open_separation(cfg)
 	var full := deploy + separation
 	var forward := _staging_axis(full)
 	var scale := 1.0
-	if full > 0.01:
+	if full > 0.01 and not authored_pad:
 		scale = _staging_reach(_player.global_position, forward, full) / full
 	var spots: Array[Vector3] = [
 		_player.global_position + forward * (deploy * scale),

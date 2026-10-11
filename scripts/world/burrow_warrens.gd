@@ -210,6 +210,7 @@ var _camera_rig: Node = null
 var _player: Node3D = null
 
 var _floor_y: float = 0.0
+var _room_residents: Dictionary = {}
 var _wall_t: float = 1.2
 var _skirt: float = 10.0
 var _chambers: Dictionary = {}          # id -> chamber dict
@@ -287,6 +288,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	# Local Y of the cave floor. The node itself sits on the terrain at the
 	# mouth, so this is just the clearance step up over the doorway sill.
 	_floor_y = float(site.get("floor_clearance", 0.35))
+	_raise_floor_over_terrain()
 
 	for entry: Variant in _config.get("chambers", []):
 		var chamber: Dictionary = entry as Dictionary
@@ -397,6 +399,59 @@ func _load_config() -> Dictionary:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+## The expanded rooms must have real floor collision above the landscape,
+## not merely a ground-height claim while terrain protrudes through them.
+## Sample terrain-grid vertices in the world-aligned bounds of every room;
+## passages between the rooms are covered by the same enclosing rectangle.
+func _raise_floor_over_terrain() -> void:
+	if _world == null or not _world.has_method("ground_height_at"): return
+	var low := Vector2(INF, INF)
+	var high := Vector2(-INF, -INF)
+	var floors: Array[Rect2] = []
+	var rooms: Dictionary = {}
+	for room: Dictionary in _config.get("chambers", []):
+		var centre := _local_of(room.at)
+		var half := _size_of(room.size) * 0.5 + Vector2.ONE * _wall_t
+		rooms[str(room.id)] = room
+		floors.append(Rect2(Vector2(centre.x, centre.z) - half, half * 2.0))
+		for sx: float in [-1.0, 1.0]:
+			for sz: float in [-1.0, 1.0]:
+				var point := to_global(centre + Vector3(sx * half.x, 0.0, sz * half.y))
+				low = low.min(Vector2(point.x, point.z))
+				high = high.max(Vector2(point.x, point.z))
+	for passage: Dictionary in _config.get("passages", []):
+		var a := _local_of(rooms[str(passage.from)].at)
+		var b := _local_of(rooms[str(passage.to)].at)
+		var margin := Vector2.ONE * (float(passage.width) * 0.5 + _wall_t)
+		var start := Vector2(a.x, a.z).min(Vector2(b.x, b.z)) - margin
+		var end := Vector2(a.x, a.z).max(Vector2(b.x, b.z)) + margin
+		floors.append(Rect2(start, end - start))
+	if not low.is_finite() or not high.is_finite(): return
+	var highest := global_position.y
+	var lowest := global_position.y
+	for x in range(floori(low.x), ceili(high.x) + 1):
+		for z in range(floori(low.y), ceili(high.y) + 1):
+			var local := to_local(Vector3(float(x), global_position.y, float(z)))
+			var supported := false
+			for floor_rect: Rect2 in floors:
+				if floor_rect.grow(1.5).has_point(Vector2(local.x, local.z)):
+					supported = true
+					break
+			if not supported: continue
+			var y := float(_world.call("ground_height_at", float(x), float(z)))
+			if not is_finite(y): continue
+			highest = maxf(highest, y)
+			lowest = minf(lowest, y)
+	_floor_y = maxf(_floor_y, highest - global_position.y + float(_config.site.get("terrain_floor_clearance_m", 0.65)))
+	_skirt = maxf(_skirt, global_position.y + _floor_y - lowest + 1.0)
+
+
+func _apron_run_m() -> float:
+	# Keep the raised shared floor reachable by a walkable approach. All bank
+	# clearance and ramp builders consume this same run, including its collar.
+	return maxf(float(_config.site.get("apron_run_m", 6.0)), _floor_y * 3.0 + 6.0)
 
 
 func _local_of(raw: Variant) -> Vector3:
@@ -1603,7 +1658,7 @@ func _build_approach_apron() -> void:
 	# whose own radius formula already scales off `run`. Same mechanism, same
 	# log line ("planted N pieces of ground cover"), just told to cover more
 	# ground -- not a second, competing suppression system.
-	var run := float(site.get("apron_run_m", 6.0))
+	var run := _apron_run_m()
 	var steps := 10
 	var end_local := _floor_y - 0.6
 	if _world != null and _world.has_method("ground_height_at"):
@@ -1617,6 +1672,7 @@ func _build_approach_apron() -> void:
 			# at the throat's outer end), so the last metres of ramp were
 			# coplanar with it and z-fought. The end now sits a step above.
 			end_local = height - global_position.y + 0.15
+	steps = maxi(steps, ceili(absf(_floor_y - end_local) / 0.16))
 	# WARRENS-ART-0906, the leftover named in `archive/docs/handoffs/HANDOFF_2026-09-06.md` §5.2
 	# and `ralph/reports/WARRENS-EXT-0906/REPORT.md` ("a thin pale sliver
 	# remains at the tube's right foot", `_sheet_final.png` frame 03).
@@ -2083,10 +2139,12 @@ func _build_interior_area() -> void:
 	area.name = "Interior"
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = Vector3(max_x - min_x, 8.0, max_z - min_z)
+	var top := 8.0
+	for room: Dictionary in _chambers.values(): top = maxf(top, float(room.height) + 1.0)
+	box.size = Vector3(max_x - min_x, top, max_z - min_z)
 	shape.shape = box
 	area.add_child(shape)
-	area.position = Vector3((min_x + max_x) * 0.5, _floor_y + 4.0, (min_z + max_z) * 0.5)
+	area.position = Vector3((min_x + max_x) * 0.5, _floor_y + top * 0.5, (min_z + max_z) * 0.5)
 	area.body_entered.connect(_on_body_entered)
 	area.body_exited.connect(_on_body_exited)
 	add_child(area)
@@ -2537,7 +2595,7 @@ func _bank_walk_clear_factor(x: float, z: float) -> float:
 	var site: Dictionary = _config.get("site", {})
 	var half_w := maxf(float(site.get("apron_mouth_width_m", 8.0)),
 		float(site.get("apron_far_width_m", 4.6))) * 0.5 + 1.5
-	var run := float(site.get("apron_run_m", 6.0))
+	var run := _apron_run_m()
 	var z0 := _mouth_outer_z()
 	var outer := z0 - run - 2.0
 	# The inner edge stops at the doorway's own wall face (not a few metres
@@ -6065,7 +6123,7 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 		height, cfg, shell_material)
 	shell.name = "ExcavatedCavernTerrain_%s" % id
 	holder.add_child(shell)
-	if id == "den" or id == "vault":
+	if bool(chamber.get("combat_pad", false)):
 		# The organic den and vault bow inside their structural boxes. Their
 		# visible surfaces must stop the camera too, including casts from inside
 		# the cave, without adding traversal collision to the decorative skin.
@@ -6276,6 +6334,12 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 			if not profile.is_empty():
 				y = minf(y, _floor_y + height)
 			var point := Vector3(x, y, z)
+			var clear_radius := float(profile.get("combat_clear_radius_m", 0.0))
+			if clear_radius > 0.0:
+				var radial := Vector2(point.x - centre.x, point.z - centre.z)
+				radial = radial.normalized() * clampf(radial.length(), clear_radius, minf(size.x, size.y) * 0.5 + 0.15)
+				point.x = centre.x + radial.x
+				point.z = centre.z + radial.y
 			wall_vertices.append(point)
 			if id == "mouth":
 				st.set_color(Color(y_t, lerpf(0.72, 0.34, y_t),
@@ -6368,9 +6432,16 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 		var angle := TAU * float(perimeter_index) / float(perimeter_segments)
 		var radial_noise := 1.0 + 0.075 * sin(angle * 3.0 + seed) \
 			+ 0.045 * sin(angle * 7.0 - seed * 0.31)
-		st.add_vertex(Vector3(centre.x + cos(angle) * size.x * 0.53 * radial_noise,
+		var floor_point := Vector3(centre.x + cos(angle) * size.x * 0.53 * radial_noise,
 			_floor_y + 0.055 + 0.018 * sin(angle * 3.0 + seed),
-			centre.z + sin(angle) * size.y * 0.53 * radial_noise))
+			centre.z + sin(angle) * size.y * 0.53 * radial_noise)
+		var clear_radius := float(profile.get("combat_clear_radius_m", 0.0))
+		if clear_radius > 0.0:
+			var radial := Vector2(floor_point.x - centre.x, floor_point.z - centre.z)
+			radial = radial.normalized() * maxf(radial.length(), minf(size.x, size.y) * 0.5 + 0.2)
+			floor_point.x = centre.x + radial.x
+			floor_point.z = centre.z + radial.y
+		st.add_vertex(floor_point)
 	for perimeter_index in perimeter_segments:
 		var next := (perimeter_index + 1) % perimeter_segments
 		st.add_index(floor_centre); st.add_index(floor_ring + perimeter_index)
@@ -7612,6 +7683,7 @@ func _spawn_population(director: Node) -> void:
 				if alpha_spec is Dictionary and not (alpha_spec as Dictionary).is_empty():
 					_dress_alpha(body, alpha_spec as Dictionary, label)
 				_population.append(body)
+				_room_residents[body] = "warrens:%s:%s" % [chamber, str(spec.get("species", ""))]
 
 	var guardian: Dictionary = _config.get("guardian", {})
 	var g_chamber := str(guardian.get("chamber", ""))
@@ -8259,6 +8331,53 @@ func guardian() -> Node3D:
 	return _guardian
 
 
+## Ordinary room pads are separate from named encounter identity. A room
+## capacity never overrides the ordinary pair-derived ring or art fit.
+func authored_room_arena_definition(room_id: String) -> Dictionary:
+	if not _arena_definition_ready or not is_inside_tree() or is_queued_for_deletion(): return {}
+	var parts := room_id.split(":")
+	if parts.size() != 3 or parts[0] != "warrens": return {}
+	var canonical := _load_config()
+	var chamber_id := str(parts[1])
+	var species_id := str(parts[2])
+	var registered := false
+	for spawn: Dictionary in canonical.get("spawns", []):
+		if str(spawn.get("chamber", "")) == chamber_id and str(spawn.get("species", "")) == species_id:
+			registered = true
+	if not registered or canonical.get("spawns", []) != _config.get("spawns", []): return {}
+	var room: Dictionary = {}
+	for entry: Dictionary in canonical.get("chambers", []):
+		if str(entry.get("id", "")) == chamber_id: room = entry
+	if room.is_empty() or not bool(room.get("combat_pad", false)) or _chambers.get(chamber_id, {}) != room: return {}
+	var at := _local_of(room.at)
+	var size := _size_of(room.size)
+	var rect := [at.x - size.x * 0.5, at.z - size.y * 0.5, at.x + size.x * 0.5, at.z + size.y * 0.5]
+	var centre := to_global(Vector3(at.x, _floor_y, at.z))
+	if not _footprint.has(rect) or not centre.is_finite() or _markers.get(chamber_id) != centre: return {}
+	var radius := combat_arena_bounds_at(centre.x, centre.z)
+	if radius < 11.0 or not is_equal_approx(built_floor_height_at(centre.x, centre.z), centre.y): return {}
+	return {"source": self, "room_arena_id": room_id, "species_id": species_id, "centre": centre, "radius": radius}
+
+
+func authored_room_arena_context(wild: Node3D) -> Dictionary:
+	if not is_instance_valid(wild) or not _room_residents.has(wild) or wild.get_parent() != self \
+		or not wild.is_inside_tree() or wild.is_queued_for_deletion() or not wild.is_visible_in_tree() \
+		or bool(wild.get("trainer_owned")) or not wild.has_method("is_alive") or not bool(wild.call("is_alive")):
+		return {}
+	var definition := authored_room_arena_definition(str(_room_residents[wild]))
+	var instance: RefCounted = wild.get("instance")
+	if definition.is_empty() or instance == null or str(instance.get("species_id")) != definition.species_id: return {}
+	# A registered resident must still be in its own room; no distant actor can
+	# borrow this pad through a nickname, parent change, or copied metadata.
+	var room: Dictionary = _chambers[str(definition.room_arena_id).split(":")[1]]
+	var local := to_local(wild.global_position)
+	var centre := _local_of(room.at)
+	var half := _size_of(room.size) * 0.5
+	if not local.is_finite() or absf(local.x - centre.x) >= half.x or absf(local.z - centre.z) >= half.y: return {}
+	definition["wild"] = wild
+	return definition
+
+
 ## The shared guest can rederive the built guardian room without a resident
 ## guardian mirror. This supplies geometry only; it does not admit a wild.
 func authored_named_wild_arena_definition(named_id: String) -> Dictionary:
@@ -8306,9 +8425,9 @@ func authored_named_wild_arena_definition(named_id: String) -> Dictionary:
 			or not (centre as Vector3).is_equal_approx(expected):
 		return {}
 	var floor_height := built_floor_height_at(expected.x, expected.z)
-	var radius := combat_arena_bounds_at(expected.x, expected.z)
+	var radius := float(spec.get("arena_radius_m", 16.0))
 	if not is_finite(floor_height) or not is_equal_approx(floor_height, expected.y) \
-			or not is_finite(radius) or radius <= 0.0:
+			or not is_finite(radius) or radius <= 0.0 or radius > combat_arena_bounds_at(expected.x, expected.z):
 		return {}
 	return {"source": self, "named_encounter_id": GUARDIAN_ENCOUNTER_ID,
 		"species_id": species_id, "centre": expected, "radius": radius}
