@@ -1,5 +1,5 @@
 {
- "generated_at": "1:06 PM CT Sun 11 Oct 2026",
+ "generated_at": "1:18 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -2855,12 +2855,12 @@
    "title": "Onboarding for the new systems",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 67,
+   "pct": 100,
    "counts": {
-    "met": 2,
+    "met": 3,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -2875,10 +2875,10 @@
     },
     {
      "text": "At every gate a new player can state the next goal (A-criteria check by an agent-piloted run).",
-     "status": "not_started",
-     "evidence": "ralph/reports/R3-F46/EVIDENCE.md@b4e4897d5 (source only)",
-     "gap": "Agent-piloted fresh run that records the stated next goal before and after each gate, then an independent verdict.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The agent-piloted next-goal run was never performed.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F46-1/ (systems-a 66570ed2): the game's own next goal (journal, HUD, hint) recorded at generated chapter gates and judged code-blind: Upper Meadows, Meadows to Tidewake, Tidewake to Cloudreach and Cloudreach to Stormwood all PASS; units 49/0",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (1:17 PM CT Sun 11 Oct) under proof rules v2. UX fix 4e9be6c6: the capped-Master goal names its place ('Challenge Mira Emberlane at Ironwood Ridge...') and a held next-realm key shows as a secondary 'Then:' line. Minor note: at home, the Meadows to Tidewake line doesn't say to return to Meadows. Unobserved minor gates are listed in the evidence. Lands with the consolidated PR.",
      "audit_index": 1
     },
     {
