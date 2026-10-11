@@ -171,6 +171,7 @@ var _wild: Node3D = null
 var _ally_body: Node3D = null
 var _camera_rig: Node = null
 var _arena: Node3D = null
+var _admitted_spatial_provider: Dictionary = {}
 
 ## OP-0905-17: the smoothed extra-distance `_update_combat_camera_framing()`
 ## adds on top of `camera.distance` this physics tick. Persisted across frames
@@ -783,6 +784,15 @@ func arena() -> Node3D:
 	return _arena
 
 
+## Only the accepted local fight can publish its mounted provider geometry.
+func admitted_spatial_arena_provider(body: Node3D) -> Dictionary:
+	if body != _wild or _enemy_owned or not is_fighting() or not is_instance_valid(_arena) \
+		or _admitted_spatial_provider.is_empty() or not _registered_spatial_wild(): return {}
+	var context := {"centre": _arena.global_position, "radius": _arena.get("radius"),
+		"arena_provider": _admitted_spatial_provider}
+	return _admitted_spatial_provider.duplicate(true) if valid_spatial_host_arena(context) else {}
+
+
 ## F04#6: who a fight's aftermath is about. A trainer battle names its trainer
 ## here before each round's `begin()` (`encounter_director.gd`), and the
 ## released camera looks past the player at them -- the defeated person and
@@ -991,6 +1001,8 @@ func _disconnect_opponent_callbacks(body: Node3D) -> void:
 ## a cap cannot authorize clipping. Registered ordinary rooms centre the
 ## initial formation and cap its ring, retaining all measured art checks.
 func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bool:
+	_admitted_spatial_provider.clear()
+	var spatial_provider: Dictionary = {}
 	var cfg: Dictionary = (MATH.config().get("arena", {}) as Dictionary).duplicate()
 	# Gameplay radii size the ring; rendered art independently decides fit.
 	var ally_radius := float(_ally_body.call("body_radius"))
@@ -1002,9 +1014,12 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 	var centre := (_admitted_spots[0] + _admitted_spots[1]) * 0.5
 	var bound := _arena_bounds(centre)
 	if host_arena.is_empty() and bound >= 0.0 and bound < float(cfg["radius"]):
-		if not _enemy_owned: return _reject_arena("room_capacity", {"centre": centre, "bound": bound, "radius": cfg.radius})
-		# Named rooms retain their authored provider's existing radius. An
-		# ordinary encounter cannot silently shrink below its derived ring.
+		if not _enemy_owned:
+			spatial_provider = _local_spatial_provider(centre)
+			if spatial_provider.is_empty():
+				return _reject_arena("room_capacity", {"centre": centre, "bound": bound, "radius": cfg.radius})
+		# Actual shipping room/bank geometry caps this accepted formation.
+		# It cannot waive any rendered-body or physical fit check below.
 		cfg["radius"] = bound
 	if not host_arena.is_empty():
 		if joining_realm:
@@ -1043,6 +1058,7 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 	_player.get_parent().add_child(_arena)
 	_arena_centre = centre
 	_arena.call("configure", centre, cfg)
+	_admitted_spatial_provider = spatial_provider
 	return true
 
 
@@ -1156,8 +1172,10 @@ func _valid_host_arena(context: Dictionary) -> bool:
 	if generation != null and int(generation) != int(context.body_generation): return false
 	if str(context.get("kind", "")) != "wild": return true
 	if float(radius) > 26.0: return false
-	if not str(context.get("room_arena_id", "")).is_empty() \
-		and not str(context.get("named_encounter_id", "")).is_empty(): return false
+	var identities := int(not str(context.get("room_arena_id", "")).is_empty()) \
+		+ int(not str(context.get("named_encounter_id", "")).is_empty()) + int(context.has("arena_provider"))
+	if identities > 1: return false
+	if context.has("arena_provider"): return valid_spatial_host_arena(context)
 	if not str(context.get("room_arena_id", "")).is_empty(): return canonical_room_host_arena(context)
 	if not str(context.get("named_encounter_id", "")).is_empty(): return canonical_named_host_arena(context)
 	return float(radius) >= 11.0
@@ -1528,10 +1546,20 @@ func _arena_bounds(centre: Vector3) -> float:
 	var host: Node = _player.get_parent() if _player != null else get_parent()
 	if host == null:
 		return -1.0
+	var claim := _arena_capacity_at(host, centre, _fighter_render_footprint())
+	return float(claim.get("capacity", -1.0))
+
+
+func _fighter_render_footprint() -> float:
 	var footprint := 0.0
 	for fighter: Variant in [_ally_body, _wild]:
 		if fighter != null and is_instance_valid(fighter):
 			footprint = maxf(footprint, _admission_render_radius(fighter))
+	return footprint
+
+
+## Preserve the original first-claim ordering and evaluator for every caller.
+func _arena_capacity_at(host: Node, centre: Vector3, footprint: float) -> Dictionary:
 	for child in host.get_children():
 		if child == _arena or not (child is Node):
 			continue
@@ -1541,8 +1569,70 @@ func _arena_bounds(centre: Vector3) -> float:
 		elif child.has_method("combat_arena_bounds_at"):
 			bound = float(child.call("combat_arena_bounds_at", centre.x, centre.z))
 		if bound >= 0.0:
-			return bound
-	return -1.0
+			return {"source": child, "capacity": bound}
+	return {}
+
+
+const SPATIAL_ARENA_SCRIPTS := ["res://scripts/world/burrow_warrens.gd",
+	"res://scripts/world/stronghold.gd", "res://scripts/world/south_bridge.gd",
+	"res://scripts/world/water_veilfall.gd"]
+
+
+func _registered_spatial_wild() -> bool:
+	if not is_instance_valid(_player) or not is_instance_valid(_wild): return false
+	var world := _player.get_parent()
+	if not is_instance_valid(world) or not world.is_inside_tree(): return false
+	for director: Node in world.get_children():
+		var script := director.get_script() as Script
+		if script == null or script.resource_path not in ["res://scripts/combat/encounter_director.gd",
+			"res://scripts/combat/water_encounter_director.gd"]: continue
+		if director.has_method("registered_wild_arena_actor") \
+			and director.call("registered_wild_arena_actor", _wild, self) == true: return true
+	return false
+
+
+func _local_spatial_provider(centre: Vector3) -> Dictionary:
+	if not _registered_spatial_wild(): return {}
+	var footprint := _fighter_render_footprint()
+	if not is_finite(footprint) or footprint <= 0.0: return {}
+	var host := _player.get_parent()
+	var claim := _arena_capacity_at(host, centre, footprint)
+	var source := claim.get("source") as Node
+	var capacity := float(claim.get("capacity", -1.0))
+	if not is_instance_valid(source) or not source.is_inside_tree() or source.is_queued_for_deletion() \
+		or not is_finite(capacity) or capacity <= 0.0: return {}
+	var script := source.get_script() as Script
+	if script == null or script.resource_path not in SPATIAL_ARENA_SCRIPTS: return {}
+	return {"provider_path": str(host.get_path_to(source)), "provider_script": script.resource_path,
+		"footprint_m": footprint, "capacity_m": capacity}
+
+
+## Reliable host geometry, never a client intent or the joining ally's radius.
+func valid_spatial_host_arena(context: Dictionary, world: Node = null) -> bool:
+	if world == null and is_instance_valid(_player): world = _player.get_parent()
+	if not is_instance_valid(world) or not world.is_inside_tree(): return false
+	var centre: Variant = context.get("centre")
+	var radius: Variant = context.get("radius")
+	var descriptor: Variant = context.get("arena_provider")
+	if not centre is Vector3 or not (centre as Vector3).is_finite() \
+		or not (radius is float or radius is int) or not is_finite(float(radius)) \
+		or float(radius) <= 0.0 or float(radius) > 26.0 or not descriptor is Dictionary: return false
+	var footprint: Variant = descriptor.get("footprint_m")
+	var capacity: Variant = descriptor.get("capacity_m")
+	if not (footprint is float or footprint is int) or not is_finite(float(footprint)) or float(footprint) <= 0.0 \
+		or not (capacity is float or capacity is int) or not is_finite(float(capacity)) or float(capacity) <= 0.0: return false
+	var path := str(descriptor.get("provider_path", ""))
+	var script_path := str(descriptor.get("provider_script", ""))
+	if path.is_empty() or script_path not in SPATIAL_ARENA_SCRIPTS: return false
+	var source := world.get_node_or_null(NodePath(path))
+	if source == null or source.get_parent() != world or str(world.get_path_to(source)) != path \
+		or not source.is_inside_tree() or source.is_queued_for_deletion(): return false
+	var script := source.get_script() as Script
+	if script == null or script.resource_path != script_path: return false
+	var claim := _arena_capacity_at(world, centre as Vector3, float(footprint))
+	var actual := float(claim.get("capacity", -1.0))
+	return claim.get("source") == source and is_finite(actual) and actual > 0.0 \
+		and is_equal_approx(actual, float(capacity)) and float(radius) <= actual
 
 
 func _midpoint(cfg: Dictionary) -> Vector3:

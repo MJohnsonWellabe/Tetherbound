@@ -6992,6 +6992,18 @@ func _local_room_wild_arena_context(wild: Node3D) -> Dictionary:
 	return {}
 
 
+## Original registered instance identity survives walking between real rooms.
+func registered_wild_arena_actor(body: Node3D, manager: Node) -> bool:
+	if manager != _manager or not is_instance_valid(body) or not is_inside_tree() \
+		or not body.is_inside_tree() or body.is_queued_for_deletion() \
+		or not get_parent().is_ancestor_of(body) or not _wild_creatures.has(body) \
+		or bool(body.get("trainer_owned")) or not body.has_method("is_alive") \
+		or body.call("is_alive") != true: return false
+	var creature := body.get("instance") as RefCounted
+	return creature != null and not str(creature.get("uid")).is_empty() \
+		and str(body.get("species_id")) == str(creature.get("species_id"))
+
+
 func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
 	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
@@ -7032,6 +7044,10 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 			and float(opponent.arena_radius_m) > 0.0 and float(opponent.arena_radius_m) <= float(room.radius) \
 			and bool(_manager.call("_valid_room_wild_arena", room)):
 			opponent["room_arena_id"] = str(room.room_arena_id)
+		if not opponent.has("named_encounter_id") and not opponent.has("room_arena_id") \
+			and registered_wild_arena_actor(wild, _manager):
+			var provider: Dictionary = _manager.call("admitted_spatial_arena_provider", wild)
+			if not provider.is_empty(): opponent["arena_provider"] = provider
 	if opponent_owned:
 		# F14#1: a guest who joins a trainer/boss fight mirrors THIS creature
 		# (`_legacy_mirror_body`), so the record carries its card and pose too.
@@ -7515,13 +7531,17 @@ func _shared_arena_context(rec: Dictionary) -> Dictionary:
 		if float(radius) > 26.0: return {}
 		var named_id := str(opponent.get("named_encounter_id", ""))
 		var room_id := str(opponent.get("room_arena_id", ""))
-		if not named_id.is_empty() and not room_id.is_empty(): return {}
+		var identities := int(not named_id.is_empty()) + int(not room_id.is_empty()) + int(opponent.has("arena_provider"))
+		if identities > 1: return {}
 		if not named_id.is_empty():
 			context["named_encounter_id"] = named_id
 			if _manager == null or not bool(_manager.call("canonical_named_host_arena", context, get_parent())): return {}
 		elif not room_id.is_empty():
 			context["room_arena_id"] = room_id
 			if _manager == null or not bool(_manager.call("canonical_room_host_arena", context, get_parent())): return {}
+		elif opponent.has("arena_provider"):
+			context["arena_provider"] = opponent.arena_provider
+			if _manager == null or not bool(_manager.call("valid_spatial_host_arena", context, get_parent())): return {}
 		elif float(radius) < 11.0: return {}
 	return context
 
