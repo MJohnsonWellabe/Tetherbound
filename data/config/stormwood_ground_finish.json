@@ -1,17 +1,17 @@
 {
   "enabled": true,
   "scope": "client_presentation",
-  "_comment": "P2-039 default-on forest floor through the existing realm-local grass_field profile. Decorative flower tiers are excluded. Low uneven moss-height cover, sparse shrub masses and warm leaf litter replace the meadow carpet; installed forest-floor and wet-earth texture pairs occupy the existing terrain slots. Counts, terrain/control maps, harvestable plants, collision and durable state are unchanged.",
+  "_comment": "P2-039 forest floor uses Stormwood-only moss cushions, curled leaves and fallen root fragments through the existing terrain-bound grass field. Decorative flower tiers remain excluded. Independent seeded patches break up the meadow sprig rows; installed forest-floor and wet-earth materials remain visible between patches. Instance budgets, terrain/control maps, harvestable plants, collision and durable state are unchanged. Visual acceptance pending native matched captures.",
   "grass": {
-    "height_near": 0.065,
-    "height_far": 0.095,
+    "height_near": 0.14,
+    "height_far": 0.20,
     "height_jitter": 0.7,
     "lattice_jitter": 1.4,
     "tint_base": "#25392c",
     "tint_tip": "#496344",
     "density_gain": 0.3,
     "clump_contrast": 0.95,
-    "clump_scale": 0.016,
+    "clump_scale": 0.075,
     "ground_blend": 0.8,
     "translucency": 0.04
   },
@@ -24,13 +24,20 @@
     },
     "bushes": {
       "enabled": true,
-      "item_size": 0.32,
+      "mesh": "stormwood_moss",
+      "item_size": 0.8,
       "size_jitter": 0.7,
-      "density_gain": 0.24,
-      "drift_scale": 0.018,
+      "placement_seed": 392741,
+      "drift_offset": [23.6, -17.3],
+      "leaf_cut": 0.0,
+      "sway": 0.0,
+      "sink": 0.0,
+      "normal_soften": 0.25,
+      "density_gain": 0.65,
+      "drift_scale": 0.12,
       "drift_contrast": 1.0,
       "drift_gate": 2.0,
-      "patch_start": 0.58,
+      "patch_start": 0.38,
       "patch_full": 0.78,
       "tint_base": "#273d32",
       "tint_tip": "#57765b",
@@ -46,9 +53,14 @@
     },
     "litter": {
       "enabled": true,
+      "mesh": "stormwood_litter",
       "item_size": 0.65,
       "size_jitter": 0.75,
-      "sink": 0.015,
+      "placement_seed": 391827,
+      "drift_offset": [-31.8, 11.7],
+      "leaf_cut": 0.0,
+      "sink": 0.0,
+      "normal_soften": 0.25,
       "density_gain": 1.0,
       "drift_scale": 0.085,
       "drift_contrast": 0.95,
@@ -57,6 +69,7 @@
       "patch_full": 0.68,
       "tint_base": "#574c38",
       "tint_tip": "#80704f",
+      "tint_wood": "#413a2b",
       "ground_blend": 0.32,
       "ground": [
         "grass",
@@ -112,7 +125,7 @@
   "understory_readability": {
     "enabled": true,
     "scope": "client_presentation",
-    "bush_item_size": 0.32,
-    "_comment": "Cap the decorative shrub layer below trainer knees; harvestable plants and their identities remain on the existing scatter path."
+    "bush_item_size": 0.8,
+    "_comment": "Stormwood moss mesh has a maximum local height of 0.125m (0.17m at maximum configured scale); this is a cushion layer, not a scaled-down shrub. Harvestable plants retain the existing scatter path."
   }
 }
