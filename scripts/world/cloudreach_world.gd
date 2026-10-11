@@ -4435,8 +4435,20 @@ func _build_sky_shrine(root: Node3D) -> void:
 	_cover_exclusions.append({"centre": root.global_position + Vector3(0, 0, -10), "half": Vector2(4.5, 9), "rotation": 0.0})
 	for step in 3:
 		var height := 0.34 * (step + 1)
-		_box(root, "ShrineApproachStep", Vector3(0, height * 0.5, -12.4 + step * 0.8), Vector3(7.0, height, 1.0), _materials["masonry_trim"], true)
-	_box(root, "Dais", Vector3(0.0, 0.65, 0.0), Vector3(26.0, 1.3, 20.0), _materials["masonry_trim"], true)
+		var step_size := Vector3(7.0, height, 1.0)
+		var stair := _box(root, "ShrineApproachStep", Vector3(0, height * 0.5, -12.4 + step * 0.8), step_size, _materials["masonry_trim"], true)
+		var step_top := stair.to_global(Vector3.UP * step_size.y * 0.5)
+		register_runtime_surface({"kind": "rect", "centre": Vector2(step_top.x, step_top.z),
+			"half": Vector2(step_size.x, step_size.z) * 0.5, "height": step_top.y})
+	var dais_size := Vector3(26.0, 1.3, 20.0)
+	var dais := _box(root, "Dais", Vector3(0.0, 0.65, 0.0), dais_size, _materials["masonry_trim"], true)
+	var dais_top := dais.to_global(Vector3.UP * dais_size.y * 0.5)
+	# The shrine root is the existing unrotated landmark. Register its actual
+	# paved collider tops, rather than the lower generic landmark datum.
+	register_runtime_surface({"kind": "rect", "centre": Vector2(dais_top.x, dais_top.z),
+		"half": Vector2(dais_size.x, dais_size.z) * 0.5, "height": dais_top.y})
+	_cover_exclusions.append({"centre": dais_top, "half": Vector2(dais_size.x, dais_size.z) * 0.5,
+		"rotation": root.global_rotation.y})
 	for x in [-9.5, 9.5]:
 		# Route stall (#340, Cloudreach-B): a 2.2 m BOX collider here trapped a
 		# trainer on the dais at (1099.003, 1051.301, 2941.399) -- every move
