@@ -325,7 +325,8 @@ static func _moss_ground_point(node: Node3D, point: Vector2, lift: float,
 static func _moss_face(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, shade: float) -> void:
 	surface.set_color(Color(shade, shade, shade))
 	# Godot front faces are clockwise; retain upward-facing normals on slopes.
-	var points: Array[Vector3] = [a, c, b] if (c - a).cross(b - a).y < 0.0 else [a, b, c]
+	var points: Array[Vector3] = []
+	points.assign([a, c, b] if (c - a).cross(b - a).y < 0.0 else [a, b, c])
 	for point: Vector3 in points:
 		surface.add_vertex(point)
 
