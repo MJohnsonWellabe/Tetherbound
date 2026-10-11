@@ -1,0 +1,292 @@
+{
+  "evidence_kind": "source_asset_and_baked_height_measurement",
+  "runtime_pass": false,
+  "c2_pass": false,
+  "c3_pass": false,
+  "candidate_status": "proposed_pending_review_and_native_validation",
+  "source_contract": {
+    "creature_body": "scripts/creatures/creature_body.gd::_fit",
+    "bounds": "scripts/characters/render_bounds.gd",
+    "admission": "Package2 3518e924cff combat_manager.gd::_staged_render_fit",
+    "default_footprint_allowance": 2.4,
+    "visible_clearance_m": 0.6,
+    "ground_support_ray_half_span_m": 1.0,
+    "body_scale": 1.0
+  },
+  "bodies": {
+    "tidecoil": {
+      "model": "res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb",
+      "model_sha256": "e87c92d5a12d402a9eb4f8b856ac2d429531f809261e54c318a14800b27d587f",
+      "skin_rest_inverse_bind_max_identity_error": 1.4704350600600788e-07,
+      "height_m": 5.5,
+      "capsule_radius_m": 1.925,
+      "footprint_allowance": 3.0,
+      "model_scale": 1.0,
+      "model_yaw_deg": 0.0,
+      "bind_bounds_min": [
+        -0.2742364704608917,
+        7.827713233155009e-08,
+        -0.943763792514801
+      ],
+      "bind_bounds_max": [
+        0.27423644065856934,
+        1.0765589475631714,
+        0.9437639713287354
+      ],
+      "fit_scale": 5.108870640439323,
+      "fitted_dimensions_m": [
+        2.802077152694501,
+        5.5,
+        9.643135175714331
+      ],
+      "render_corner_radius_m": 5.020998217156415,
+      "render_front_extent_m": 4.8215675878571655
+    },
+    "terrapup": {
+      "model": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
+      "model_sha256": "dfaf9519476da87d485e5ed8ee435989135810bc3b06e05a901d084143f52a21",
+      "skin_rest_inverse_bind_max_identity_error": 2.0458305904913487e-07,
+      "height_m": 3.85,
+      "capsule_radius_m": 1.464004,
+      "footprint_allowance": 2.4,
+      "model_scale": 1.0,
+      "model_yaw_deg": 0.0,
+      "bind_bounds_min": [
+        -0.627712070941925,
+        1.9655528831208358e-06,
+        -0.9979425072669983
+      ],
+      "bind_bounds_max": [
+        0.6277120113372803,
+        1.5054261684417725,
+        0.9979420900344849
+      ],
+      "fit_scale": 2.5574186947518847,
+      "fitted_dimensions_m": [
+        3.210645017862568,
+        3.8499999999999996,
+        5.10431258170615
+      ],
+      "render_corner_radius_m": 3.0150559017408547,
+      "render_front_extent_m": 2.552156290853075
+    },
+    "ripplet": {
+      "model": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0.glb",
+      "model_sha256": "2af2f490297c19406a27365077bdd6f45d84c49ccf846a05b46d1e57f2f4b4fc",
+      "skin_rest_inverse_bind_max_identity_error": 3.304510189122377e-07,
+      "height_m": 3.6,
+      "capsule_radius_m": 1.365488,
+      "footprint_allowance": 3.6,
+      "model_scale": 1.0,
+      "model_yaw_deg": 0.0,
+      "bind_bounds_min": [
+        -0.5905041694641113,
+        -7.057828099732433e-08,
+        -1.0237358808517456
+      ],
+      "bind_bounds_max": [
+        0.5905043482780457,
+        1.9006373882293701,
+        1.0237356424331665
+      ],
+      "fit_scale": 1.8941013623178982,
+      "fitted_dimensions_m": [
+        2.236949842364461,
+        3.6,
+        3.878118601561054
+      ],
+      "render_corner_radius_m": 2.2385122562222133,
+      "render_front_extent_m": 1.939059300780527
+    },
+    "galewisp": {
+      "model": "res://assets/creatures/tetherbound/galewisp/models/creature_galewisp_lod0.glb",
+      "model_sha256": "70bbd671016f6f66652e09c22d36610f0f82b3dce7464fd61d105551a456bf00",
+      "skin_rest_inverse_bind_max_identity_error": 5.01193578639203e-07,
+      "height_m": 3.25,
+      "capsule_radius_m": 1.231579,
+      "footprint_allowance": 4.5,
+      "model_scale": 1.0,
+      "model_yaw_deg": 0.0,
+      "bind_bounds_min": [
+        -1.0377106666564941,
+        -1.4634198919338814e-07,
+        -0.7317630648612976
+      ],
+      "bind_bounds_max": [
+        1.0377103090286255,
+        2.0772464275360107,
+        0.6173176169395447
+      ],
+      "fit_scale": 1.564571120669894,
+      "fitted_dimensions_m": [
+        3.2471437217894725,
+        3.25,
+        2.1107326741992485
+      ],
+      "render_corner_radius_m": 1.9364358220638955,
+      "render_front_extent_m": 1.0553663370996242
+    }
+  },
+  "required_native_checks": [
+    "actual imported/rendered bounds",
+    "ordinary approach and resulting staging axis",
+    "Terrain3D collision rays and complete solid box",
+    "normal trainer seat support ray and actual capsule sweep",
+    "all three starter C2 seed sets",
+    "ordinary route Medium and Low GPU frames",
+    "required blind visual judges"
+  ],
+  "baked_ground": {
+    "region": "data/terrain/water/terrain3d_02_06.res",
+    "sha256": "d6f8545aa122ba9c903f6287afc35c14b3a139ed6c8af5871b9be46ed01f11e9",
+    "decoded_bytes": 3496295,
+    "RF_image_payload_offset": 604,
+    "RF_image_dimensions": [
+      512,
+      512
+    ],
+    "region_world_origin_xz": [
+      1024,
+      3072
+    ],
+    "vertex_spacing_m": 1.0,
+    "original_site_integer_height_m": -0.4333779513835907,
+    "arrival_bilinear_height_m": 1.9285227208099178,
+    "candidate_integer_height_m": 5.091353416442871,
+    "candidate_ring_radius_m": 14,
+    "integer_vertices_inside_disc": 613,
+    "disc_min_vertex": [
+      1273,
+      3388,
+      1.7673234939575195
+    ],
+    "disc_max_vertex": [
+      1292,
+      3401,
+      8.723308563232422
+    ],
+    "sampling_limit": "Stored terrain samples and bilinear source estimates only; no collision, obstacle or runtime terrain-query verification."
+  },
+  "candidate": {
+    "named_id": "water_deep_watch_tidecoil",
+    "reserved_site_id": "water_deep_watch_wild_008",
+    "position": [
+      1287,
+      5.091353416442871,
+      3388
+    ],
+    "island_local_offset": [
+      -63,
+      5.091353416442871,
+      -112
+    ],
+    "arena_radius_m": 14,
+    "unchanged_arena_capture_radius_m": 16,
+    "same_arrival_anchor": "sluice_isle_to_deep_watch_arrival",
+    "arrival_distance_m": 30.68012157733398,
+    "pairs": {
+      "terrapup": {
+        "measured_gap_m": 7.97372387871024,
+        "minimum_measured_ring_radius_m": 9.607860156511535,
+        "ordinary_derived_radius_m": 14,
+        "predicted_ground_seats": [
+          {
+            "species": "tidecoil",
+            "xz": [
+              1290.4673086284138,
+              3386.0320470028973
+            ],
+            "seat_height_m": 5.29045383124501,
+            "corner_height_min_m": 4.913175837489472,
+            "corner_height_max_m": 5.272333174875728,
+            "max_abs_corner_seat_difference_m": 0.3772779937555377
+          },
+          {
+            "species": "terrapup",
+            "xz": [
+              1283.5326913715862,
+              3389.9679529971027
+            ],
+            "seat_height_m": 5.252659937452954,
+            "corner_height_min_m": 4.90742994019348,
+            "corner_height_max_m": 5.303901096256781,
+            "max_abs_corner_seat_difference_m": 0.3452299972594739
+          }
+        ],
+        "trainer_seat_source_offsets_m": {
+          "side": 2.4,
+          "forward": -1.2,
+          "note": "Actual trainer anchor and side selected by production manager; native support/sweep required."
+        }
+      },
+      "ripplet": {
+        "measured_gap_m": 7.360626888637692,
+        "minimum_measured_ring_radius_m": 9.30131166147526,
+        "ordinary_derived_radius_m": 14,
+        "predicted_ground_seats": [
+          {
+            "species": "tidecoil",
+            "xz": [
+              1290.200708415506,
+              3386.1833622575364
+            ],
+            "seat_height_m": 5.2933306276602945,
+            "corner_height_min_m": 4.919038460062186,
+            "corner_height_max_m": 5.272753804322832,
+            "max_abs_corner_seat_difference_m": 0.37429216759810835
+          },
+          {
+            "species": "ripplet",
+            "xz": [
+              1283.799291584494,
+              3389.8166377424636
+            ],
+            "seat_height_m": 5.239441087720424,
+            "corner_height_min_m": 4.992347381207754,
+            "corner_height_max_m": 5.231317044886495,
+            "max_abs_corner_seat_difference_m": 0.24709370651267015
+          }
+        ],
+        "trainer_seat_source_offsets_m": {
+          "side": 2.4,
+          "forward": -1.2,
+          "note": "Actual trainer anchor and side selected by production manager; native support/sweep required."
+        }
+      },
+      "galewisp": {
+        "measured_gap_m": 6.476933924956789,
+        "minimum_measured_ring_radius_m": 8.859465179634809,
+        "ordinary_derived_radius_m": 14,
+        "predicted_ground_seats": [
+          {
+            "species": "tidecoil",
+            "xz": [
+              1289.8164417561072,
+              3386.4014618861224
+            ],
+            "seat_height_m": 5.2981272792384955,
+            "corner_height_min_m": 4.936787835455034,
+            "corner_height_max_m": 5.271334154921911,
+            "max_abs_corner_seat_difference_m": 0.3613394437834616
+          },
+          {
+            "species": "galewisp",
+            "xz": [
+              1284.1835582438928,
+              3389.5985381138776
+            ],
+            "seat_height_m": 5.223726757617786,
+            "corner_height_min_m": 4.928866444688104,
+            "corner_height_max_m": 5.309485837272496,
+            "max_abs_corner_seat_difference_m": 0.29486031292968207
+          }
+        ],
+        "trainer_seat_source_offsets_m": {
+          "side": 2.4,
+          "forward": -1.2,
+          "note": "Actual trainer anchor and side selected by production manager; native support/sweep required."
+        }
+      }
+    }
+  }
+}
