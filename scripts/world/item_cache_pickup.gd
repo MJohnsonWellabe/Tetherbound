@@ -48,6 +48,7 @@ const IDENTITY_STYLES := {
 	"potion_large": "bottle_large", "revive": "bottle_revive",
 	"hide_leggings": "leggings_padded", "insulated_leggings": "leggings_insulated",
 	"hide_boots": "boots_padded", "insulated_boots": "boots_insulated",
+	"hide_helm": "padded_helm",
 }
 const IDENTITY_ORB := "res://assets/props/tm_orb/tm_orb.glb"
 const IDENTITY_BOTTLE := "res://assets/props/stat_draughts/bottle_base.glb"
@@ -236,6 +237,8 @@ func _build_visual() -> void:
 ## metres. No Game lookup, claim, restore, highlight or harvest dependency.
 ## Missing installed art and unsupported records return null to the caller.
 static func create_identity_visual(item_id: String, definition: Dictionary) -> Node3D:
+	if item_id == "hide_helm":
+		return _create_padded_helm(definition)
 	if not IDENTITY_STYLES.has(item_id):
 		return null
 	var style: String = IDENTITY_STYLES[item_id]
