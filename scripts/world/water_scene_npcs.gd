@@ -55,6 +55,7 @@ func build(world: Node3D) -> Dictionary:
 				line.erase("effect")
 				line.erase("effects")
 		table[id] = entry
+	_apply_trainer_portraits(cast, table)
 	if not _panel.finished.is_connected(_on_finished):
 		_panel.finished.connect(_on_finished)
 	if not _panel.line_presented.is_connected(_on_line_presented):
@@ -105,6 +106,28 @@ func build(world: Node3D) -> Dictionary:
 		_specs[id] = presentation_spec
 		_bodies[id] = body
 	return _bodies.duplicate()
+
+## Trainers have their own bodies and named battle conversations. Resolve the
+## same complete pair as WaterEncounterDirector; a disabled/missing pair leaves
+## each authored conversation's existing portrait untouched.
+func _apply_trainer_portraits(cast: Dictionary, table: Dictionary) -> void:
+	for spec: Dictionary in cast.get("trainers", []):
+		var variant_id := str(spec.get("appearance_variant_id", ""))
+		if variant_id.is_empty():
+			continue
+		var profile := str(spec.get("body_profile", ""))
+		var rank := str(spec.get("rank", "local"))
+		var base := RANKS.config_for(rank, profile) if rank in ["grunt", "officer", "captain"] else CHARACTER.config_for(profile)
+		var model := APPEARANCE.resolve(base, profile, variant_id)
+		if str(model.get("appearance_variant_id", "")) != variant_id:
+			continue
+		for key: String in ["intro_conversation", "win_conversation", "lose_conversation"]:
+			var conversation := str(spec.get(key, ""))
+			if not table.get(conversation) is Dictionary:
+				continue
+			var entry: Dictionary = table[conversation]
+			entry["portrait"] = model["portrait"]
+
 
 func _on_line_presented(conversation: String, is_last: bool) -> void:
 	if not _active_conversation.is_empty() and conversation == _active_conversation:
