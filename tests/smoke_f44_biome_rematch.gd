@@ -159,7 +159,15 @@ func _run() -> void:
 	var spec: Variant = director.get("_trainer_spec")
 	var admitted: bool = director.call("trainer_battle_active") == true and str(director.call("trainer_battle_id")) == witness \
 		and spec is Dictionary and spec == expected_spec
-	if not check(admitted, "ordinary input admits the canonical %s %s rematch" % [witness, tier]):
+	if not admitted:
+		receipt.admission = {"trainer_battle_active": director.call("trainer_battle_active"),
+			"trainer_battle_id": str(director.call("trainer_battle_id")),
+			"spec_id": str(spec.get("id", "")) if spec is Dictionary else "",
+			"can_challenge_expected": director.call("can_challenge", expected_spec) if director.has_method("can_challenge") else "n/a",
+			"source_busy": director.call("rematch_source_busy", source),
+			"expected_spec_empty": expected_spec.is_empty(),
+			"world_message": str(game.get("_pending_world_message"))}
+	if not check(admitted, "ordinary input admits the canonical %s %s rematch (%s)" % [witness, tier, str(receipt.get("admission", {}))]):
 		await _finish()
 		return
 	var levels: Array = []
