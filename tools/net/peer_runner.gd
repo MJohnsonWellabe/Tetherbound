@@ -5152,8 +5152,19 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 			opponent.set("max_hp", maxf(float(opponent.get("max_hp")), 100000.0))
 			opponent.set("hp", float(opponent.get("max_hp")))
 		(director.get("_encounter_host") as RefCounted).call("set_opponent_hp", encounter_id, 100000.0, 100000.0)
+	var committed := {}
+	if args.has("commit_peer") and args.has("commit_action"):
+		var commit_peer := int(args.commit_peer)
+		var original: Dictionary = (director.get("_encounter_host") as RefCounted).call(
+			"move_commit", encounter_id, commit_peer, int(args.commit_action))
+		if not original.is_empty():
+			committed = {"peer": commit_peer}
+			for key: String in ["action", "creature_uid", "move_id", "slot", "started_at_ms",
+				"strike_at_ms", "resolved", "binding"]:
+				committed[key] = original.get(key)
 	return {"verdict": "PASS", "detail": "tell pinned" if not bool(args.get("read_only", false)) else "tell state",
 		"data": {"host_now_ms": Time.get_ticks_msec(), "since_ms": int(body.call("tell_visible_since_ms")),
+			"move_commit": committed,
 			"winding_up": bool(body.call("is_winding_up")), "staggered": bool(body.get("_staggered")),
 			"host_breaks": _f22_host_breaks, "host_hits": _f22_host_hits,
 			"poise": float(body.get("_poise")),
