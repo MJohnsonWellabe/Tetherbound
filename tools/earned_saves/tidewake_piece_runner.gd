@@ -268,6 +268,13 @@ func _finish() -> void:
 		var arbiter := current_scene.get_node_or_null("InteractionArbiter")
 		var winner: Variant = arbiter.call("winning_provider") if arbiter != null else null
 		print("TIDEWAKE FAIL DIAG player=%s winner=%s" % [at, (winner as Node).get_path() if winner is Node else "none"])
+		var alpha := current_scene.get_node_or_null("WaterAlpha")
+		if alpha != null:
+			var abody: Variant = alpha.get("body")
+			print("TIDEWAKE FAIL DIAG alpha ready=%s body_valid=%s species=%s level=%s pos=%s" % [alpha.get("ready_for_intents"),
+				is_instance_valid(abody), abody.instance.species_id if is_instance_valid(abody) and abody.get("instance") != null else "-",
+				abody.instance.level if is_instance_valid(abody) and abody.get("instance") != null else "-",
+				(abody as Node3D).global_position if is_instance_valid(abody) else "-"])
 		for n: Node in current_scene.find_children("*", "Node3D", true, false):
 			if n.name.begins_with("Interactable") and (n as Node3D).global_position.distance_to(at) < 8.0:
 				print("TIDEWAKE FAIL DIAG near %s d=%.2f parent_pos=%s" % [n.get_path(), (n as Node3D).global_position.distance_to(at), (n.get_parent() as Node3D).global_position if n.get_parent() is Node3D else "-"])
