@@ -12,4 +12,11 @@
   - witness changed relay_captain → captain_riverwatch (coordinator ruling, ba5d4f43).
 - Owner finding: 7 Team Tether patrol profiles (relay_picket_hess, relay_picket_orrin, relay_officer_dell, relay_captain, stronghold_patrol/courtyard/elite) are withdrawn by the F05 Meadows healing at the Warden, the same moment their r1 tier opens, so they can never be rematched. Coordinator recommends dropping them from rematches.json.
 - Game fix exercised (92ed032a): the win's payout waited behind ~100 combat_mastery duties, 8308 frames (~138 s game time); it now lands after 1111 frames (~18.5 s). Owner input was blocked for 0 frames.
-- Tidewake and Cloudreach: rematch sources were wired by the rematch-wiring lane (tb/ev-rematch-wiring); its 21/21 PASS evidence is in ralph/reports/EV-REMATCH-WIRING/. Stormwood: see below when run.
+- Tidewake and Cloudreach: rematch sources were wired by the rematch-wiring lane (tb/ev-rematch-wiring); its 21/21 PASS evidence is in ralph/reports/EV-REMATCH-WIRING/. Stormwood: PASS below.
+- **Stormwood: PASS, 24/24** at 57ac1753 (Sun 11 Oct, 3:50–4:01 PM CT). Witness `officer_maren_verge_rod`, endgame tier (Stormwood's post-credits witness, also F44#1) (`stormwood_officer_maren_endgame.json`):
+  - ordinary Interact admits it at L58 (first win L42–44);
+  - pilot wins (4682 frames);
+  - delivered once (711 frames after the win), paying `stormglass_plate` 2;
+  - title reload: receipts and payout unchanged, cooldown kept.
+  - Disclosed: generated input `f44_stormwood` at Ashfoot Waycamp (the portal leg was tried twice and is blocked by the relic power panel); post-load fixture flags `stormwood:marrow_defeated` and `regional_credits_seen`; one teleport.
+- Game fix found by this witness (57ac1753): `stormwood_encounter_director.begin_trainer_battle` sent every non-Master spec to StormwoodEncounterHub.request_start, which restarts the chapter's canonical trainer, so every Stormwood rematch was dropped while the call reported success. Rematch specs now take the inherited path, as Masters do.
