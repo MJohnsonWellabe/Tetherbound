@@ -1775,6 +1775,59 @@
         "cloudreach"
       ],
       "disclosure": "F44#1 endgame rematch witness input (Cloudreach): the f44_cloudreach profile plus this character's regional_credits_seen personal flag, so the post-credits Endgame tier is open while standing in Cloudreach. Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
+    },
+    "f44_meadows_endgame": {
+      "boundary": "meadows_settled",
+      "realm": "meadows",
+      "day": 8,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "stronghold_marker": "machine_foot"
+      },
+      "party_levels": [
+        55,
+        55,
+        55,
+        55,
+        55
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d"
+      ],
+      "personal_flags": [
+        "legendary_refused",
+        "regional_credits_seen"
+      ],
+      "inventory_add": {
+        "tidewake_portal_key": 1
+      },
+      "character_fields": {
+        "portal_unlocks": [],
+        "relics_held": [
+          "meadows"
+        ],
+        "relics_hung": []
+      },
+      "world_portal_unlocks": [],
+      "disclosure": "F44#1 endgame rematch witness input (Meadows): the f44_meadows profile plus this character's regional_credits_seen personal flag and the five raised to L55 (the generator's maximum) for the L58 endgame trainer band, matching f44_tidewake_endgame/f44_cloudreach_endgame. Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
     }
   }
 }
