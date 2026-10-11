@@ -647,6 +647,18 @@ static func _build_membrane(root: Node3D, spec: Dictionary, dome: Dictionary,
 	# Fractions along the rib from the rim (0.0) to the oculus (1.0).
 	var from_frac := clampf(float(membrane_spec.get("from_rib_fraction", 0.0)), 0.0, 1.0)
 	var to_frac := clampf(float(membrane_spec.get("to_rib_fraction", 0.62)), 0.0, 1.0)
+	var crown: Dictionary = spec.get("crown_arcade", {})
+	var gallery: Dictionary = crown.get("upper_gallery", {})
+	if bool(crown.get("enabled", false)) and bool(gallery.get("enabled", false)):
+		# Expose the new stone arcade below the blue dome, as on the board.
+		# Otherwise the existing glazing hides most of the new second level.
+		var cornice: Dictionary = crown.get("cornice", {})
+		var gallery_top := float(gallery.get("floor_top_m", 15.45)) \
+			+ float(gallery.get("clear_height_m", 3.7)) + float(gallery.get("post_width_m", 0.65)) \
+			+ float(cornice.get("lower_height_m", 0.35)) + float(cornice.get("upper_height_m", 0.3))
+		var gallery_fraction := asin(clampf((gallery_top - centre_y) / radius, 0.0, 1.0)) \
+			/ (PI * 0.5 - alpha_top)
+		from_frac = maxf(from_frac, gallery_fraction)
 	if to_frac <= from_frac:
 		return []
 	var skip_every := maxi(int(membrane_spec.get("skip_every_nth_gap", 4)), 0)

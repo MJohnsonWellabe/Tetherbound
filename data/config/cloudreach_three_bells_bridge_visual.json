@@ -23,6 +23,14 @@
   "bell_lantern_arm_height_m": 10.0,
   "bell_lantern_arm_radius_m": 0.055,
   "bell_lantern_hanger_radius_m": 0.025,
+  "cloth_pennants": {
+    "enabled": true,
+    "width_m": 1.4,
+    "height_m": 2.4,
+    "outset_m": 2.15,
+    "colour": "#526574",
+    "selvage_colour": "#b4a078"
+  },
   "banner_blue": "#315f9a",
   "banner_gold": "#d6ad52"
 }

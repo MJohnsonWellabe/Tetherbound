@@ -4,6 +4,7 @@ extends Node3D
 ## and ledge retain all traversal collision; every child built here is art only.
 
 const CONFIG_PATH := "res://data/config/cloudreach_three_bells_bridge_visual.json"
+const CLOTH_SHADER := preload("res://assets/environment/team_tether/hall/banner_cloth.gdshader")
 
 var _built := false
 
@@ -33,7 +34,11 @@ func build(materials: Dictionary) -> void:
 		_add_cylinder_between("BellKneeBrace%02d" % (index + 1), Vector3(x, 8.8, 0.0), Vector3(x - side * 3.2, 10.1, 0.0), 0.22, wood, "bell_frame")
 		_add_beacon("BridgeSignal%02d" % (index + 1),
 			Vector3(x, 10.45 + float(cfg.get("signal_mount_offset_m", 0.445)), 0.0), bronze, cfg)
-		_add_banner("BridgePennant%02d" % (index + 1), Vector3(x + side * 2.15, 7.8, 0.16), side, cfg)
+		if bool((cfg.get("cloth_pennants", {}) as Dictionary).get("enabled", false)):
+			_add_cloth_banner("BridgePennant%02d" % (index + 1),
+				Vector3(x, 7.8, 0.16), side, cfg, wood, bronze)
+		else:
+			_add_banner("BridgePennant%02d" % (index + 1), Vector3(x + side * 2.15, 7.8, 0.16), side, cfg)
 	_add_box("ThreeBellCrownBeam", Vector3(0.0, 10.0, 0.0), Vector3(22.0, 1.15, 1.35), wood, "bell_frame")
 	for strap_x: float in [-9.6, -5.4, 0.0, 5.4, 9.6]:
 		_add_box("CrownIronStrap", Vector3(strap_x, 10.0, 0.0), Vector3(0.24, 1.3, 1.48), bronze, "frame_binding")
@@ -108,6 +113,41 @@ func _add_bell(label: String, at: Vector3, scale_value: float, material: Materia
 	bell_root.add_child(lip)
 	_add_cylinder_to(bell_root, "ClapperStem", Vector3(0.0, -1.35, 0.0) * scale_value, 0.11 * scale_value, 1.75 * scale_value, material, "bell_clapper")
 	_add_cylinder_to(bell_root, "ClapperHead", Vector3(0.0, -2.12, 0.0) * scale_value, 0.28 * scale_value, 0.34 * scale_value, material, "bell_clapper")
+
+
+func _add_cloth_banner(label: String, at: Vector3, side: float, cfg: Dictionary,
+		wood: Material, bronze: Material) -> void:
+	var cloth_cfg: Dictionary = cfg["cloth_pennants"]
+	var width := float(cloth_cfg.get("width_m", 1.4))
+	var height := float(cloth_cfg.get("height_m", 2.4))
+	var centre := at + Vector3(side * float(cloth_cfg.get("outset_m", 2.15)), 0.0, 0.0)
+	var arm_tip := centre + Vector3(side * (width * 0.5 + 0.12), 0.0, 0.0)
+	_add_cylinder_between(label + "Crossbar", at, arm_tip, 0.055, wood, "pennant_support")
+	_add_cylinder_between(label + "Brace", at - Vector3.UP * 0.65,
+		centre - Vector3(side * width * 0.35, 0.0, 0.0), 0.035, bronze, "pennant_support")
+	var cloth := PlaneMesh.new()
+	cloth.orientation = PlaneMesh.FACE_Z
+	cloth.size = Vector2(width, height)
+	cloth.subdivide_width = 6
+	cloth.subdivide_depth = 12
+	var material := ShaderMaterial.new()
+	material.shader = CLOTH_SHADER
+	material.set_shader_parameter("colour", Color(str(cloth_cfg.get("colour", "#526574"))))
+	material.set_shader_parameter("selvage_colour", Color(str(cloth_cfg.get("selvage_colour", "#b4a078"))))
+	material.set_shader_parameter("use_device", 0.0)
+	material.set_shader_parameter("size", Vector2(width, height))
+	material.set_shader_parameter("tails", 2.0)
+	material.set_shader_parameter("notch_depth", 0.12)
+	material.set_shader_parameter("sway", 0.16)
+	material.set_shader_parameter("speed", 0.8)
+	material.set_shader_parameter("phase", 1.7 if side < 0.0 else 3.1)
+	var flag := MeshInstance3D.new()
+	flag.name = label
+	flag.mesh = cloth
+	flag.material_override = material
+	flag.position = centre - Vector3.UP * height * 0.5
+	flag.set_meta("three_bells_role", "route_pennant")
+	add_child(flag)
 
 
 func _add_banner(label: String, at: Vector3, side: float, cfg: Dictionary) -> void:

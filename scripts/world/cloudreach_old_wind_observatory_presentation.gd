@@ -104,6 +104,10 @@ func _build_tower_ribs(cfg: Dictionary, trim: Material, bronze: Material) -> voi
 
 func _build_armillary(cfg: Dictionary, bronze: Material, glow: Material) -> void:
 	var centre := _v3(cfg.get("armillary_position", [0.0, 10.5, -10.4]))
+	var side_mount: Dictionary = cfg.get("armillary_side_mount", {})
+	var side_mount_enabled := bool(side_mount.get("enabled", false))
+	if side_mount_enabled:
+		centre = _v3(side_mount["position"])
 	var radii := cfg.armillary_radii_m as Array
 	var horizontal := _add_ring("ArmillaryHorizon", float(radii[0]), float(radii[1]), centre,
 		bronze, "armillary")
@@ -138,6 +142,8 @@ func _build_armillary(cfg: Dictionary, bronze: Material, glow: Material) -> void
 		var mount := Vector3(side * float(cfg.get("armillary_wall_mount_x_m", 3.8)),
 			float(mount_heights[1 if upper else 0]),
 			float(cfg.get("armillary_wall_mount_z_m", -5.35)))
+		if side_mount_enabled:
+			mount = _v3((side_mount["wall_mount_positions"] as Array)[index])
 		var finish := centre + Vector3(side * diagonal, diagonal if upper else -diagonal, 0.0)
 		_add_cylinder_between("ArmillaryBrace%02d" % index, mount, finish,
 			float(cfg.get("armillary_brace_radius_m", 0.12)), bronze, "armillary")
