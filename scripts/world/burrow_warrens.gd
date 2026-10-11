@@ -221,6 +221,9 @@ var _interior_skins: int = 0
 
 var _materials: Dictionary = {}
 var _footprint: Array = []              # local AABB rectangles [minx, minz, maxx, maxz]
+var _organic_floor_perimeters: Dictionary = {}
+var _organic_wall_sections: Dictionary = {}
+var _passage_floor_rects: Array = []
 ## CONTENT-0828. `[centre, radius]` per passage, in local metres. Filled by
 ## `_build_passages()` and read by `_build_interior_rock()`.
 var _doorways: Array = []
@@ -266,6 +269,9 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 		director: Node = null, build_budget: RefCounted = null) -> bool:
 	_world = world
 	_arena_definition_ready = false
+	_organic_floor_perimeters.clear()
+	_organic_wall_sections.clear()
+	_passage_floor_rects.clear()
 	_camera_rig = camera_rig
 	_player = player
 	_config = _load_config()
@@ -307,6 +313,9 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	# WARRENS-ART-0906 (W3): after the passages, because a bay's own side-wall
 	# skins are clipped against the doorways `_build_passages()` records.
 	_build_earth_clad_bays()
+	await _build_breathe(build_budget)
+	# Register real room support before props query this building's floor.
+	_build_organic_entry_finish()
 	await _build_breathe(build_budget)
 	if _interior_skins > 0:
 		print("[warrens] %d interior earth skins across %d walls-clad chamber(s) and the passages"
@@ -359,8 +368,6 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	_build_interior_rock()
 	await _build_breathe(build_budget)
 	_build_structure()
-	await _build_breathe(build_budget)
-	_build_organic_entry_finish()
 	await _build_breathe(build_budget)
 	_build_prize()
 	await _build_breathe(build_budget)
@@ -671,7 +678,7 @@ func _floor_material(exterior := false) -> StandardMaterial3D:
 ## A box whose material is supplied rather than derived from a colour -- the
 ## floor is the one surface in this cave that is not made of the wall's stone.
 func _floor_box(size: Vector3, at: Vector3, exterior := false,
-		hide_visual := false, hidden_name := "") -> void:
+		hide_visual := false, hidden_name := "", solid := true) -> void:
 	var mesh := MeshInstance3D.new()
 	var box := BoxMesh.new()
 	box.size = size
@@ -683,6 +690,8 @@ func _floor_box(size: Vector3, at: Vector3, exterior := false,
 		mesh.name = hidden_name if not hidden_name.is_empty() else "OrganicFloorHiddenVisual"
 		mesh.visible = false
 		mesh.set_meta("warrens_hidden_floor_visual", true)
+	if not solid:
+		return
 	var body := StaticBody3D.new()
 	var shape := CollisionShape3D.new()
 	var box_shape := BoxShape3D.new()
@@ -714,9 +723,9 @@ func _build_chambers() -> void:
 		# approach sees through the arch.
 		_floor_box(Vector3(outer.x, _skirt, outer.y),
 			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _is_earth_clad(id),
-			hide_organic_box_visuals, "OrganicFloorHidden_%s" % id)
+			hide_organic_box_visuals, "OrganicFloorHidden_%s" % id, not _solid_organic_chamber(id))
 		var ceiling := _box(Vector3(outer.x, 0.8, outer.y),
-			Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
+			Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), not _solid_organic_chamber(id), true)
 		if hide_organic_box_visuals:
 			_mark_hidden_collision_visual(ceiling,
 				"OrganicChamberCollisionCarrier_Ceiling_%s" % id)
@@ -936,7 +945,7 @@ func _build_wall(_id: String, centre: Vector3, size: Vector2, height: float,
 
 	if opening.is_empty():
 		_wall_piece(along_x, wall_centre, span, wall_h, 0.0, exterior, inward,
-			hide_chamber_visual)
+			hide_chamber_visual, not _solid_organic_chamber(_id))
 		return
 	# R11: R10's end skin existed behind these original grey wall boxes, so the
 	# den view still showed a perfect stone rectangle. `_box()` creates render
@@ -952,12 +961,12 @@ func _build_wall(_id: String, centre: Vector3, size: Vector2, height: float,
 	var flank := (span - gap) * 0.5
 	if flank > 0.05:
 		_wall_piece(along_x, _shift(wall_centre, along_x, -(gap * 0.5 + flank * 0.5)),
-			flank, wall_h, 0.0, exterior, inward, hide_box_visual)
+			flank, wall_h, 0.0, exterior, inward, hide_box_visual, not _solid_organic_chamber(_id))
 		_wall_piece(along_x, _shift(wall_centre, along_x, gap * 0.5 + flank * 0.5),
-			flank, wall_h, 0.0, exterior, inward, hide_box_visual)
+			flank, wall_h, 0.0, exterior, inward, hide_box_visual, not _solid_organic_chamber(_id))
 	# The lintel: from the top of the opening to the top of the wall.
 	_wall_piece(along_x, wall_centre, gap, wall_h - gap_h, gap_h,
-		exterior, inward, hide_box_visual)
+		exterior, inward, hide_box_visual, not _solid_organic_chamber(_id))
 
 
 ## WARRENS-EXT-0906 close-out. Which chambers wear earth on the inside.
@@ -1188,7 +1197,7 @@ func _shift(at: Vector3, along_x: bool, by: float) -> Vector3:
 
 
 func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: float,
-		exterior := false, inward := Vector3.ZERO, hide_visual := false) -> void:
+		exterior := false, inward := Vector3.ZERO, hide_visual := false, solid := true) -> void:
 	if span <= 0.01 or height <= 0.01:
 		return
 	var size := Vector3(span, height, _wall_t) if along_x else Vector3(_wall_t, height, span)
@@ -1197,7 +1206,7 @@ func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: f
 	var extra := 0.0 if base > 0.0 else _skirt
 	size.y += extra
 	var piece_at := Vector3(at.x, _floor_y + base + (height + extra) * 0.5 - extra, at.z)
-	var box := _box(size, piece_at, _rock(), true, true)
+	var box := _box(size, piece_at, _rock(), solid, true)
 	if hide_visual:
 		_mark_hidden_collision_visual(box, "OrganicWallCollisionCarrier_%d" % box.get_instance_id())
 		return
@@ -1356,6 +1365,10 @@ func _build_passages() -> void:
 		var height := float(passage.get("height", 2.6))
 		var lateral := a.z if along_x else a.x
 		var centre := Vector3(mid, 0.0, lateral) if along_x else Vector3(lateral, 0.0, mid)
+		_passage_floor_rects.append([centre.x - (length if along_x else width) * 0.5,
+			centre.z - (width if along_x else length) * 0.5,
+			centre.x + (length if along_x else width) * 0.5,
+			centre.z + (width if along_x else length) * 0.5])
 		# CONTENT-0828. Kept so the interior rock pass can stay out of the
 		# doorways -- a boulder in a passage mouth is a wall the player has to
 		# walk round in the one place a cave gives them no room to.
@@ -6062,11 +6075,9 @@ func _build_structure() -> void:
 		print("[warrens] %d structural members across %d chambers" % [placed, _chambers.size()])
 
 
-## R15: retained collision carriers stay authoritative but never render. Low
-## irregular gallery cuts overlap broad radial cavern masses, all in one material.
-## The visible route has no repeated cross-section, framed portal, planar room
-## wall, square recess or detached floor band. No collider, encounter or light is
-## created or moved.
+## Irregular gallery cuts connect broad radial cavern masses. Combat rooms
+## share one visible and physical shell; the narrow mouth and passages keep
+## their original structural collision.
 func _build_organic_entry_finish() -> void:
 	var cfg: Dictionary = _config.get("organic_entry_finish", {})
 	if not bool(cfg.get("enabled", false)):
@@ -6089,7 +6100,7 @@ func _build_organic_entry_finish() -> void:
 		if _build_organic_passage_liner(holder, key, passage, cfg):
 			placed += 1
 	if placed > 0:
-		print("[warrens] %d connected excavated terrain masses preserve the original collision route" % placed)
+		print("[warrens] %d connected excavated terrain masses enclose the authored route" % placed)
 
 
 func _passage_for_key(key: String) -> Dictionary:
@@ -6100,6 +6111,12 @@ func _passage_for_key(key: String) -> Dictionary:
 		if "%s>%s" % [str(passage.get("from", "")), str(passage.get("to", ""))] == key:
 			return passage
 	return {}
+
+
+func _solid_organic_chamber(id: String) -> bool:
+	var cfg: Dictionary = _config.get("organic_entry_finish", {})
+	return bool(cfg.get("enabled", false)) and (cfg.get("chambers", []) as Array).has(id) \
+		and bool(_chambers.get(id, {}).get("combat_pad", false))
 
 
 func _build_organic_chamber_canopy(holder: Node3D, id: String,
@@ -6124,12 +6141,11 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 	shell.name = "ExcavatedCavernTerrain_%s" % id
 	holder.add_child(shell)
 	if bool(chamber.get("combat_pad", false)):
-		# The organic den and vault bow inside their structural boxes. Their
-		# visible surfaces must stop the camera too, including casts from inside
-		# the cave, without adding traversal collision to the decorative skin.
+		# One shell supplies the visible and physical floor, wall and roof.
+		# Cameras already query world collision, including casts from inside.
 		var boundary := StaticBody3D.new()
 		boundary.name = "Visible%sBoundary" % id.capitalize()
-		boundary.collision_layer = CAMERA_RIG.OCCLUSION_ONLY_LAYER
+		boundary.collision_layer = 1
 		boundary.collision_mask = 0
 		var shape_node := CollisionShape3D.new()
 		var surface := shell.mesh.create_trimesh_shape()
@@ -6279,9 +6295,7 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 			var floor_reach := 1.34 if bank_finish else 1.10
 			var across := lerpf(-half_width * floor_reach,
 				half_width * floor_reach, across_t) + drift
-			var floor_lift := 0.105 if bank_finish else 0.055
-			var y := _floor_y + floor_lift + 0.025 * sin(t * TAU * 2.2 \
-				+ across_t * 2.7 + seed)
+			var y := _floor_y
 			if bank_finish:
 				st.set_color(Color(0.0, lerpf(0.78, 0.48, t), 1.0, 1.0))
 			st.add_vertex(_organic_shell_point(along_x, along, lateral, across, y))
@@ -6307,22 +6321,47 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 	var ceiling_rings: int = maxi(int(cfg.get("chamber_ceiling_rings", 6)), 4)
 	var profiles: Dictionary = cfg.get("chamber_shell_profiles", {}) as Dictionary
 	var profile: Dictionary = profiles.get(id, {}) as Dictionary
-	# Defaults are the accepted shell. Individual chambers may spend more of
-	# their authored structural height without changing any collision carrier.
+	# Each authored profile sets the actual visible wall and crown. Solid rooms
+	# use those same triangles for collision and the same floor ring for bounds.
 	var wall_height_fraction := float(profile.get("wall_height_fraction", 0.72))
 	var crown_height_fraction := float(profile.get("crown_height_fraction", 0.80))
 	var upper_radius_scale := float(profile.get("upper_radius_scale", 0.73))
+	var solid_shell := _solid_organic_chamber(id)
+	var angles: Array[float] = []
+	var wall_levels: Array[float] = []
+	for index in perimeter_segments: angles.append(TAU * float(index) / float(perimeter_segments))
+	for index in vertical_segments + 1: wall_levels.append(float(index) / float(vertical_segments))
+	if solid_shell:
+		# Put exact vertices on every canonical portal edge. Whole-quad cuts
+		# must not leave a wider hole around the guardian-controlled vault gate.
+		for side: String in ["+x", "+z", "-x", "-z"]:
+			var opening := _opening_on(id, side)
+			if opening.is_empty(): continue
+			var along_x := side.ends_with("x")
+			var across_radius := (size.y if along_x else size.x) * 0.5
+			var middle := 0.0 if side == "+x" else PI * 0.5 if side == "+z" else PI if side == "-x" else PI * 1.5
+			var edge := asin(float(opening.width) * 0.5 / across_radius)
+			for angle: float in [fposmod(middle - edge, TAU), fposmod(middle + edge, TAU)]:
+				if not angles.has(angle): angles.append(angle)
+			var level := minf(float(opening.height), height * wall_height_fraction) / (height * wall_height_fraction)
+			if not wall_levels.has(level): wall_levels.append(level)
+		angles.sort()
+		wall_levels.sort()
+		perimeter_segments = angles.size()
+		vertical_segments = wall_levels.size() - 1
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var seed := float(id.length() * 17)
 	var wall_vertices: Array[Vector3] = []
+	var floor_perimeter := PackedVector2Array()
+	var wall_sections: Array = []
 	# A continuous irregular perimeter replaces the four planar facade fins.
 	# It slopes inward into the ceiling rather than meeting it at a right angle.
 	for vertical_index in vertical_segments + 1:
-		var y_t := float(vertical_index) / float(vertical_segments)
+		var y_t := wall_levels[vertical_index]
 		var contraction := lerpf(1.04, upper_radius_scale, pow(y_t, 1.45))
 		for perimeter_index in perimeter_segments:
-			var angle := TAU * float(perimeter_index) / float(perimeter_segments)
+			var angle := angles[perimeter_index]
 			var radial_noise := 1.0 + 0.075 * sin(angle * 3.0 + seed) \
 				+ 0.045 * sin(angle * 7.0 - seed * 0.31)
 			var x := centre.x + cos(angle) * size.x * 0.5 * radial_noise * contraction \
@@ -6336,15 +6375,28 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 			var point := Vector3(x, y, z)
 			var clear_radius := float(profile.get("combat_clear_radius_m", 0.0))
 			if clear_radius > 0.0:
-				var radial := Vector2(point.x - centre.x, point.z - centre.z)
-				radial = radial.normalized() * clampf(radial.length(), clear_radius, minf(size.x, size.y) * 0.5 + 0.15)
-				point.x = centre.x + radial.x
-				point.z = centre.z + radial.y
+				var radial_offset := Vector2(point.x - centre.x, point.z - centre.z)
+				radial_offset = radial_offset.normalized() * clampf(radial_offset.length(), clear_radius, minf(size.x, size.y) * 0.5 + 0.15)
+				point.x = centre.x + radial_offset.x
+				point.z = centre.z + radial_offset.y
+			if solid_shell:
+				point = _anchor_organic_portal_vertex(id, point, centre, size, angle, y_t * height * wall_height_fraction)
+				if vertical_index == 0: point.y = _floor_y
+			if vertical_index == 0: floor_perimeter.append(Vector2(point.x, point.z))
 			wall_vertices.append(point)
 			if id == "mouth":
 				st.set_color(Color(y_t, lerpf(0.72, 0.34, y_t),
 					lerpf(0.92, 0.38, y_t), lerpf(0.76, 0.96, y_t)))
 			st.add_vertex(point)
+	if solid_shell:
+		_organic_floor_perimeters[id] = floor_perimeter
+		for level in vertical_segments + 1:
+			var section := PackedVector2Array()
+			for index in perimeter_segments:
+				var point := wall_vertices[level * perimeter_segments + index]
+				section.append(Vector2(point.x, point.z))
+			wall_sections.append(section)
+		_organic_wall_sections[id] = wall_sections
 	for vertical_index in vertical_segments:
 		for perimeter_index in perimeter_segments:
 			var next := (perimeter_index + 1) % perimeter_segments
@@ -6365,7 +6417,7 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 		var ring_t := float(ring_index) / float(ceiling_rings)
 		var radial := lerpf(upper_radius_scale, 0.10, ring_t)
 		for perimeter_index in perimeter_segments:
-			var angle := TAU * float(perimeter_index) / float(perimeter_segments)
+			var angle := angles[perimeter_index]
 			var radial_noise := 1.0 + 0.075 * sin(angle * 3.0 + seed) \
 				+ 0.045 * sin(angle * 7.0 - seed * 0.31)
 			var x := centre.x + cos(angle) * size.x * 0.5 * radial_noise * radial \
@@ -6426,25 +6478,24 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 	# One radial floor disc belongs to the same mesh and overlaps the gallery
 	# floors, removing the detached black bands visible in R14.
 	var floor_centre := ceiling_centre + 1
-	st.add_vertex(Vector3(centre.x, _floor_y + 0.055, centre.z))
+	var floor_lift := 0.0 if solid_shell else 0.055
+	st.add_vertex(Vector3(centre.x, _floor_y + floor_lift, centre.z))
 	var floor_ring := floor_centre + 1
 	for perimeter_index in perimeter_segments:
-		var angle := TAU * float(perimeter_index) / float(perimeter_segments)
+		var angle := angles[perimeter_index]
 		var radial_noise := 1.0 + 0.075 * sin(angle * 3.0 + seed) \
 			+ 0.045 * sin(angle * 7.0 - seed * 0.31)
 		var floor_point := Vector3(centre.x + cos(angle) * size.x * 0.53 * radial_noise,
-			_floor_y + 0.055 + 0.018 * sin(angle * 3.0 + seed),
+			_floor_y + floor_lift + (0.0 if solid_shell else 0.018 * sin(angle * 3.0 + seed)),
 			centre.z + sin(angle) * size.y * 0.53 * radial_noise)
-		var clear_radius := float(profile.get("combat_clear_radius_m", 0.0))
-		if clear_radius > 0.0:
-			var radial := Vector2(floor_point.x - centre.x, floor_point.z - centre.z)
-			radial = radial.normalized() * maxf(radial.length(), minf(size.x, size.y) * 0.5 + 0.2)
-			floor_point.x = centre.x + radial.x
-			floor_point.z = centre.z + radial.y
+		if solid_shell:
+			# Close on the exact bottom wall ring, at the canonical flat floor.
+			floor_point = wall_vertices[perimeter_index]
 		st.add_vertex(floor_point)
 	for perimeter_index in perimeter_segments:
 		var next := (perimeter_index + 1) % perimeter_segments
-		st.add_index(floor_centre); st.add_index(floor_ring + perimeter_index)
+		st.add_index(floor_centre)
+		st.add_index(floor_ring + perimeter_index)
 		st.add_index(floor_ring + next)
 	st.generate_normals()
 	var shell := MeshInstance3D.new()
@@ -6455,6 +6506,21 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 
 func _inside_chamber_cut(id: String, point: Vector3) -> bool:
 	var local_y := point.y - _floor_y
+	if _solid_organic_chamber(id):
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.at)
+		var size := _size_of(chamber.size)
+		for side: String in ["-x", "+x", "-z", "+z"]:
+			var opening := _opening_on(id, side)
+			if opening.is_empty(): continue
+			var along_x := side.ends_with("x")
+			var sign_ := -1.0 if side.begins_with("-") else 1.0
+			var edge := (centre.x + sign_ * size.x * 0.5) if along_x else (centre.z + sign_ * size.y * 0.5)
+			var across := point.z - centre.z if along_x else point.x - centre.x
+			var along := point.x if along_x else point.z
+			if absf(along - edge) <= _wall_t and absf(across) < float(opening.width) * 0.5 \
+					and local_y < float(opening.height): return true
+		return false
 	for opening_v: Variant in _openings:
 		var opening := opening_v as Dictionary
 		var at: Vector3 = opening.get("centre", Vector3.ZERO)
@@ -6487,6 +6553,29 @@ func _inside_chamber_cut(id: String, point: Vector3) -> bool:
 				+ 0.18 * sin(point.x * 1.7):
 			return true
 	return false
+
+
+func _anchor_organic_portal_vertex(id: String, point: Vector3, centre: Vector3,
+		size: Vector2, angle: float, local_y: float) -> Vector3:
+	for side: String in ["-x", "+x", "-z", "+z"]:
+		var opening := _opening_on(id, side)
+		if opening.is_empty(): continue
+		var along_x := side.ends_with("x")
+		var sign_ := -1.0 if side.begins_with("-") else 1.0
+		var along := cos(angle) if along_x else sin(angle)
+		if sign_ * along <= 0.0: continue
+		var across := sin(angle) * size.y * 0.5 if along_x else cos(angle) * size.x * 0.5
+		var half_width := float(opening.width) * 0.5
+		var blend := 1.0 - smoothstep(half_width, half_width + _wall_t, absf(across))
+		if blend <= 0.0: continue
+		if along_x:
+			point.x = lerpf(point.x, centre.x + sign_ * size.x * 0.5, blend)
+			point.z = lerpf(point.z, centre.z + across, blend)
+		else:
+			point.z = lerpf(point.z, centre.z + sign_ * size.y * 0.5, blend)
+			point.x = lerpf(point.x, centre.x + across, blend)
+		point.y = lerpf(point.y, _floor_y + local_y, blend)
+	return point
 
 
 static func _organic_shell_point(along_x: bool, along: float, lateral: float,
@@ -8279,32 +8368,52 @@ func ground_height_at(x: float, z: float) -> float:
 ## and becoming effectively impossible". `scripts/world/built_floor.gd` reads it.
 func built_floor_height_at(x: float, z: float) -> float:
 	var local := to_local(Vector3(x, 0.0, z))
-	for rect: Array in _footprint:
+	var point := Vector2(local.x, local.z)
+	for id: String in _organic_floor_perimeters:
+		if _organic_section_clearance(point, _organic_floor_perimeters[id]) >= 0.0:
+			return global_position.y + _floor_y
+	for id: String in _chambers:
+		if _solid_organic_chamber(id): continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.at)
+		var size := _size_of(chamber.size)
+		var rect := [centre.x - size.x * 0.5, centre.z - size.y * 0.5,
+			centre.x + size.x * 0.5, centre.z + size.y * 0.5]
 		if local.x >= float(rect[0]) - _wall_t and local.x <= float(rect[2]) + _wall_t \
 				and local.z >= float(rect[1]) - _wall_t and local.z <= float(rect[3]) + _wall_t:
+			return global_position.y + _floor_y
+	for rect: Array in _passage_floor_rects:
+		if point.x >= float(rect[0]) and point.x <= float(rect[2]) \
+				and point.y >= float(rect[1]) and point.y <= float(rect[3]):
 			return global_position.y + _floor_y
 	return NAN
 
 
-## OP21-25: the largest radius `combat_arena.gd` can draw around `(x, z)`
-## without its boundary reaching a real cave wall -- the containment fix.
-## `combat_arena.hold_inside()` corrects a fighter with a raw position write,
-## not a physics move, so it has no collision to stop it: a boundary that
-## reaches past a chamber's walls does not clip a knocked-back fighter against
-## them, it teleports the fighter straight through to the far side. Every
-## chamber here is smaller than `combat.json`'s flat 11m default radius in at
-## least one dimension -- even "den", the biggest, is 16x14 -- so every fight
-## in the warrens was asking for a boundary wider than the room. Sized off the
-## same `_footprint` rects `ground_height_at()` above already tests against.
-##
-## Returns -1.0 -- "no opinion, keep the caller's own default" -- when `(x, z)`
-## is not inside any chamber this building knows about (a passage, a bare test
-## scene with no footprint yet). CombatManager falls back to `combat.json`'s
-## flat radius in that case, same as it always did.
+## Physical room capacity comes from the actual shell sections, with portals
+## closed for this calculation so a ring cannot borrow the narrow corridor.
+## Pair-derived ring size remains the manager's independent admission check.
 func combat_arena_bounds_at(x: float, z: float) -> float:
 	var local := to_local(Vector3(x, 0.0, z))
+	var point := Vector2(local.x, local.z)
 	var best := -1.0
-	for rect: Array in _footprint:
+	# Every physical wall section limits capacity, including its polygon
+	# chords. The manager retains the pair-derived ring and art/roof fit.
+	for id: String in _organic_floor_perimeters:
+		var clearance := _organic_section_clearance(point, _organic_floor_perimeters[id])
+		if clearance < 0.0: continue
+		for section: PackedVector2Array in _organic_wall_sections.get(id, []):
+			clearance = minf(clearance, _organic_section_clearance(point, section))
+		var usable := maxf(0.0, clearance - ARENA_WALL_MARGIN)
+		best = usable if best < 0.0 else minf(best, usable)
+	var rects: Array = _passage_floor_rects.duplicate()
+	for id: String in _chambers:
+		if _solid_organic_chamber(id): continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.at)
+		var size := _size_of(chamber.size)
+		rects.append([centre.x - size.x * 0.5, centre.z - size.y * 0.5,
+			centre.x + size.x * 0.5, centre.z + size.y * 0.5])
+	for rect: Array in rects:
 		if local.x < float(rect[0]) or local.x > float(rect[2]) \
 				or local.z < float(rect[1]) or local.z > float(rect[3]):
 			continue
@@ -8314,6 +8423,18 @@ func combat_arena_bounds_at(x: float, z: float) -> float:
 		var usable := maxf(0.5, clearance - ARENA_WALL_MARGIN)
 		best = usable if best < 0.0 else minf(best, usable)
 	return best
+
+
+func _organic_section_clearance(point: Vector2, polygon: PackedVector2Array) -> float:
+	if polygon.size() < 3 or not Geometry2D.is_point_in_polygon(point, polygon): return -1.0
+	var nearest := INF
+	for index in polygon.size():
+		var a := polygon[index]
+		var b := polygon[(index + 1) % polygon.size()]
+		var delta := b - a
+		var t := clampf((point - a).dot(delta) / delta.length_squared(), 0.0, 1.0) if delta.length_squared() > 0.0 else 0.0
+		nearest = minf(nearest, point.distance_to(a + delta * t))
+	return nearest
 
 
 ## Global position of a named place: any chamber id, plus "entrance" and
