@@ -1358,10 +1358,10 @@
    "title": "Combat impact and camera",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 67,
+   "pct": 83,
    "counts": {
-    "met": 4,
-    "partial": 1,
+    "met": 5,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 1,
     "blocked": 0,
@@ -1402,10 +1402,10 @@
     },
     {
      "text": "Fight camera keeps both actors framed without overlap for small, normal and giant bodies (catalog P2-062/P2-092 class); code-blind judge PASS on a size matrix.",
-     "status": "partial",
-     "evidence": "COMBAT/f21/camera-native-r2 narrow PASS @367e3b1b; camera-readability-r2 strict FAIL @8cff5ee2",
-     "gap": "Re-capture the size matrix (smoke_combat_camera.gd); get a fresh code-blind judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The later strict reviews FAIL. Since then: fight_camera.gd (+215), combat_manager.gd and camera.json. test_fight_camera.gd is unit-only.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F21-4/JUDGE.md; ralph/reports/VISUAL-PROOF/F21-4/ (matrix.json 9/9, overlap 0)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator. Size matrix on clear ground, code-blind PASS 3:39 PM CT. Disclosed shared staging offset. Live matrix and Medium not producible on llvmpipe.",
      "audit_index": 4
     },
     {
