@@ -108,6 +108,17 @@ const CARE_HOME_VISITS_PER_HOUR := 2
 const CLOUDREACH_TIME_BUDGET_LOW_HOURS := 3.5
 const RESEARCH_ORDINARY_TASK_KINDS := ["sight", "defeat"]
 const ESSENCE_PATH := "res://data/config/essence.json"
+## Entry team (coordinator ruling, 2026-10-11, on owner ruling A): the party
+## enters Cloudreach at the F27 route ledger's own `cloudreach_entry`
+## (ordinary_types_match), the state its RD-03 lowest-first Altar spending
+## produces through Meadows and Tidewake. Two ledgers must not model one route
+## with different starting teams; the earlier "Tidewake exit lead, others -3"
+## entry predates RD-03 spending. Read from the committed F27 output (one
+## source of truth); regenerate it with `node tools/f27_route_ledger.mjs
+## --write` when F27's inputs change.
+const F27_REPORT_PATH := "res://ralph/reports/TRAINING/f27/route-ledger/report.json"
+const F27_ENTRY_SCENARIO := "ordinary_types_match"
+const F27_ENTRY_CHECKPOINT := "cloudreach_entry"
 const RESEARCH_PATH := "res://data/config/research.json"
 const MASTERS_PATH := "res://data/config/masters.json"
 
@@ -272,6 +283,15 @@ func _essence_cfg() -> Dictionary:
 ## each table's bodies, in wild_sites order, take the next species of a
 ## proportional deterministic cycle over its entry weights. The ledger credits
 ## one defeat per site, its first body.
+func _f27_entry_levels() -> Array:
+	var report := _json(F27_REPORT_PATH)
+	var scenario: Dictionary = (report.get("scenarios", {}) as Dictionary).get(F27_ENTRY_SCENARIO, {}) as Dictionary
+	for raw: Variant in (scenario.get("checkpoints", []) as Array):
+		if str((raw as Dictionary).get("checkpoint", "")) == F27_ENTRY_CHECKPOINT:
+			return (raw as Dictionary).get("levels", []) as Array
+	return []
+
+
 func _site_species() -> Dictionary:
 	var key := "__site_species"
 	if _cache.has(key):
@@ -742,10 +762,9 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 	var ignore_gates := bool(options.get("ignore_gates", false))
 	var fraction := float(options.get("wild_fraction", WILD_FRACTION))
 	var on_route := float(options.get("on_route_m", ON_ROUTE_M))
-	var lead := _cloudreach_entry_lead()
 	var party: Array = []
-	for i in TEAM_SIZE:
-		party.append({"level": lead if i == LEAD_INDEX else lead - RETAINED_SPREAD, "xp": 0})
+	for level: Variant in _f27_entry_levels():
+		party.append({"level": int(level), "xp": 0})
 	var entry := _levels(party)
 	var tables := _tables()
 	var items := _items()
@@ -1223,6 +1242,20 @@ func test_the_ledger_band_is_the_chapter_curves_cloudreach_band() -> void:
 		"the Tidewake handoff L%d must fall inside Cloudreach's band %s" % [entry, str(band)])
 	assert_eq(CLOUDREACH_EXIT_TARGET, int(band[1]),
 		"the ledger's exit target must be chapter_curve.json's Cloudreach exit (RD-10)")
+
+
+func test_the_entry_team_is_the_f27_ledgers_cloudreach_entry() -> void:
+	var levels := _f27_entry_levels()
+	assert_eq(levels.size(), TEAM_SIZE, "%s has no %s/%s five (missing from this checkout, or regenerate with node tools/f27_route_ledger.mjs --write)"
+		% [F27_REPORT_PATH, F27_ENTRY_SCENARIO, F27_ENTRY_CHECKPOINT])
+	var band := _cloudreach_team_band()
+	for level: Variant in levels:
+		assert_true(int(level) >= int(band[0]) and int(level) <= int(band[1]),
+			"F27's Cloudreach entry L%d must fall inside Cloudreach's band %s" % [int(level), str(band)])
+	var expected: Array = []
+	for level: Variant in levels:
+		expected.append(int(level))
+	assert_eq(ledger()["entry"], expected, "the ledger starts from F27's entry")
 
 
 func test_negative_controls_fail_the_same_assertion() -> void:
