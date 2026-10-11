@@ -104,3 +104,15 @@ belt, not admission. Open; coordinator decision requested.
 - Stale-data finding (left unchanged, per coordinator): data/config/water_encounters.json
   scripted_encounter_references[0] (water_aquaryn_alpha) still lists level 49 vs the
   authored spawn level 26.
+
+## 05 Tidal: wedged follower (game defect, FIXED)
+Aquaryn's challenge was refused ("Bring your creature closer to Aquaryn.", engage radius
+32 m) in 3 of 4 clean runs. Trace: the deployed ally wedged on the Tidal spine leg from
+point 2 toward Aquaryn at (576.5, 35.4, 1427.9), `closing=true`, velocity 0, 42.7 m from
+the player for 30+ s. Inside follower_creature.gd's 45 m LEASH it never snapped back, so
+the encounter could never be engaged. Fix (scripts/creatures/follower_creature.gd): a
+follower still closing that moves < 0.5 m for 3 s while > 12 m from the trainer takes the
+existing leash snap. Verification: 05 Tidal 2/2 PASS (Aquaryn 45.5 s / 31.8 s sim); unit
+tests test_companion_presence, test_companion_terrapup_capture_0912,
+test_follower_floor_station, test_lost_companion_escort, test_remote_creature_follow:
+63 tests, 404 assertions, 0 failed.

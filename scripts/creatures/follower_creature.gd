@@ -25,6 +25,14 @@ extends "res://scripts/creatures/creature_body.gd"
 ## across the biome.
 const LEASH := 45.0
 
+## A follower still closing on the trainer but wedged against terrain (no
+## progress for this long while farther than STUCK_MIN_GAP_M from the trainer)
+## takes the leash snap too. Inside LEASH it would otherwise wait forever, out
+## of reach of an encounter's engage radius.
+const STUCK_SNAP_S := 3.0
+const STUCK_MIN_GAP_M := 12.0
+const STUCK_PROGRESS_M := 0.5
+
 ## CP-1b. The player body does not yaw with the visible trainer model, so its basis
 ## cannot identify the flank. Horizontal travel is the one authoritative facing the
 ## follower can read without coupling itself to the trainer's presentation children.
@@ -118,6 +126,8 @@ var _last_leader_facing: Vector3 = DEFAULT_LEADER_FACING
 ## True while it is closing the gap. Hysteresis: without it the creature oscillates
 ## between "close enough" and "too far" on the boundary and jitters in place.
 var _closing: bool = false
+var _stuck_s := 0.0
+var _stuck_anchor := Vector3.INF
 
 ## `func(body: Node3D, trainer: Node3D, requested: Vector3, snap: bool) -> Vector3`:
 ## a verified spot for this body near `requested` on the trainer's floor, or
@@ -217,6 +227,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if _following:
 		_tick_follow()
+		_tick_stuck(delta)
 	# The presence layer ticks after the follow logic and before integration:
 	# its one gameplay request (the short walk up to the trainer) has to be the
 	# last `request_move` of the frame to be the one honoured, and it must see
@@ -289,6 +300,28 @@ func _tick_follow() -> void:
 	if _presence != null:
 		speed *= float(_presence.call("gait_scale"))
 	request_move(to / maxf(distance, 0.001), speed)
+
+
+## Counts time spent closing without moving STUCK_PROGRESS_M; past
+## STUCK_SNAP_S while far from the trainer, the ordinary leash snap applies.
+func _tick_stuck(delta: float) -> void:
+	if leader == null or not is_instance_valid(leader) or not _closing:
+		_stuck_s = 0.0
+		_stuck_anchor = Vector3.INF
+		return
+	var here := _world_position(self)
+	if not _stuck_anchor.is_finite() or here.distance_to(_stuck_anchor) > STUCK_PROGRESS_M:
+		_stuck_anchor = here
+		_stuck_s = 0.0
+		return
+	_stuck_s += delta
+	var gap := _world_position(leader) - here
+	gap.y = 0.0
+	if _stuck_s >= STUCK_SNAP_S and gap.length() > STUCK_MIN_GAP_M:
+		_snap_near_leader(_follow_target(), _world_position(leader))
+		_closing = false
+		_stuck_s = 0.0
+		_stuck_anchor = Vector3.INF
 
 
 ## The leash teleport. With a realm validator: its verified spot (the trainer's
