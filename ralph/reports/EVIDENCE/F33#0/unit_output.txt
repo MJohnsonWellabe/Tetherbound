@@ -1,0 +1,10 @@
+only test_creature_gear.gd: 1 of 842 test files
+  ok    test_creature_gear.gd :: test_bonus_rises_with_tier_and_with_each_upgrade
+  ok    test_creature_gear.gd :: test_charm_reaches_strike_power_through_the_real_freeze_and_host_profile
+  ok    test_creature_gear.gd :: test_equip_at_the_den_then_upgrade_at_the_forge_to_plus_3
+  ok    test_creature_gear.gd :: test_four_live_tiers_each_have_harness_and_charm_from_plus_0_to_plus_3
+  ok    test_creature_gear.gd :: test_gear_refusals
+  ok    test_creature_gear.gd :: test_harness_max_hp_scale_comes_from_the_admitted_record_on_the_host
+  ok    test_creature_gear.gd :: test_harness_raises_the_defence_the_host_rolls_a_guest_hit_against
+  ok    test_creature_gear.gd :: test_host_prepare_applies_equipped_gear_once_and_keeps_portable_hp_intrinsic
+8 tests, 303 assertions, 0 failed
