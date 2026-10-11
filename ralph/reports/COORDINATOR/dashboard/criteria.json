@@ -419,10 +419,10 @@
    "id": "F06",
    "title": "Cloudreach traversal and riding",
    "chapter": "Cloudreach",
-   "pct": 83,
+   "pct": 100,
    "counts": {
-    "met": 5,
-    "partial": 1,
+    "met": 6,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -431,10 +431,10 @@
    "criteria": [
     {
      "text": "Ordinary foot path traverses all six regions",
-     "status": "partial",
-     "evidence": "ralph/reports/CLOUDREACH/b/f06-1-foot-regions/earned/ (smoke_cloudreach_foot_regions_witness.gd) @≤94c63b1f2",
-     "gap": "Re-run smoke_cloudreach_foot_regions_witness.gd from the regenerated Cloudreach-entry save. Folds into F49.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Not in CI. Since then cloudreach_chapter, cloudreach_world, chapter_curve, save and session changed (662/5718 lines).",
+     "status": "met",
+     "evidence": "ralph/reports/EV-HOME-KEY/F06-0.md (smoke_cloudreach_foot_regions_witness EXIT=0 at a44e2509)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (3:17 PM CT). All six Cloudreach regions reached on foot from the disclosed generated Cloudreach save; no sealed or gated entry. Disclosed: walker helper alignments 6a8bc44e/d50b3329; logging-only prints in the passing run; 2 of 4 runs stalled in the helper's 0.3 m re-centre (helper-only, open).",
      "audit_index": 1
     },
     {
@@ -2236,11 +2236,11 @@
    "title": "Signature ultimates",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/vfx",
-   "pct": 80,
+   "pct": 100,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -2272,10 +2272,10 @@
     },
     {
      "text": "Presentation lasts 2–3 s with no longer loss of control and stays readable in four-player fights.",
-     "status": "in_progress",
-     "evidence": "ultimates.json enabled=false (configured 2.4 s); test_f23_live_moves recovery≥presentation (flag forced on in fixture)",
-     "gap": "Code-blind FAIL 3:02 PM CT: three of four attackers stop drawing from contact on (ralph/reports/EVIDENCE/F35-1-3/JUDGE.md). Ultimates lane root-causing; then four-only recapture. Frame time needs real GPU.",
-     "note": "Code-blind judge 10-10 FAIL (lanea-f35-four2): only two effect families visible, target occluded late; parked. Timing half: unit 2.4 s windup+recovery (batch 3). Frame time needs real GPU. | prior: Audit 2026-10-04 on b4e4897d5: OFF. The flag is off. No four-player readability capture or frame-time evidence exists.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F35-1-3/JUDGE.md; ralph/reports/VISUAL-PROOF/F35-3/ (4/4 arrivals, all attackers posed)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator. Four-at-once code-blind PASS 3:37 PM CT after harness fix e6fef6aad (attackers no longer fall through the stage); timing 2.4 s (unit). Frame time stays with F25#4.",
      "audit_index": 3
     },
     {

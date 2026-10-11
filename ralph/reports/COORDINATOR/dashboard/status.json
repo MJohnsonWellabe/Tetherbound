@@ -1,9 +1,9 @@
 {
  "updated": "1:53 PM CT Sun 11 Oct",
  "headline": [
-  "3:32 PM CT Sun 11 Oct: 211 of 271 met (189 on main, 22 proven on tb/ev-coordinator today). All of it lands in one consolidated PR at the end.",
+  "3:37 PM CT Sun 11 Oct: 213 of 271 met (189 on main, 24 proven on tb/ev-coordinator today). All of it lands in one consolidated PR at the end.",
   "Lanes cut to 6 Claude / 5 Codex at 3:30 PM CT (owner). Ten Claude lanes are finishing their current run and handing off.",
-  "Since 2 PM: F04#2, F11#1 and F35#1 closed. Native Aeriex, Veridian and Voltarach switched on. F04#1 and F35#3 returned with judge findings. A co-op host-first travel bug is being fixed."
+  "Since 2 PM: F04#2, F11#1, F35#1, F35#3 and F06#0 closed. Native Aeriex, Veridian and Voltarach switched on. Co-op travel fix (guest refused after a realm crossing) and reward-queue drain fix merged. Codex art: 2 of 8 sheets passed, 6 returned."
  ],
  "batches": [
   {
