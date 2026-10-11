@@ -51,6 +51,18 @@ const LOAD_SETTLE_FRAMES := 300
 ## (pilot, guards, observers, movement) is the unchanged parent.
 class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 	var piece := ""
+	## Each piece's terminal results. A script error aborts the coroutine without
+	## setting `failed`, so completion is proven by these flags, never assumed.
+	const PIECE_RESULTS := {
+		"01_arrival_gate": ["cloudreach_crisis_learned"],
+		"02_broken_causeways": ["cloudreach_lower_anchors_investigated", "causeway_survivors_reconnected"],
+		"03_flight_training": ["windscar_aerie_prepared", "cloudreach_act_i_complete", "fly_traversal_unlocked"],
+		"04_high_roost": ["sky_shrine_reached", "storm_anchor_engine_truth_learned", "cloudreach_upper_route_unlocked"],
+		"05_stronghold": ["cloudreach_act_ii_complete", "cloudreach_upper_anchors_disabled", "summit_extraction_engine_reached"],
+		"06_veyra_relay": ["captain_veyra_defeated", "storm_anchor_network_disabled", "cloudreach_chapter_complete"],
+		"07_stormward_handoff": ["cloudreach_chapter_complete", "realm_key_stormwood"],
+	}
+	var body_finished := false
 
 	func _run_route() -> void:
 		match piece:
@@ -61,8 +73,13 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 			"05_stronghold": await _stronghold()
 			"06_veyra_relay": await _veyra_relay()
 			"07_stormward_handoff": _chapter_earned()
-		if not failed and piece != "07_stormward_handoff":
-			completed_route = true
+		if failed or not body_finished:
+			_fail("Piece body did not reach its end (stage %s)" % stage)
+			return
+		for flag: String in PIECE_RESULTS[piece]:
+			if not _require(_has(flag), "Piece result " + flag): return
+		if piece == "04_high_roost" and not _require(not fly.is_flying() and player.is_on_floor(), "Landed at the aerie"): return
+		completed_route = true
 
 	func _arrival_gate() -> void:
 		_purpose("Orient in Cloudreach and learn why the routes are broken", "Take the authored arrival road, inspect its landmark, and gather useful preparation instead of beelining")
@@ -79,6 +96,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		if not await _walk(Vector3(-280,180,508)): return
 		if not await _talk("warden_aila", "cloudreach_crisis_learned"): return
 		if not await _pickup("cr_pickup_lower_good_candy"): return
+		body_finished = true
 
 	func _broken_causeways() -> void:
 		stage = "lower_west_anchor"
@@ -93,6 +111,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		if not await _interact(chapter.get_node("lower_east/Interactable"), "cloudreach_lower_anchors_investigated"): return
 		if not await _battle("tether_lieutenant_senn"): return
 		if not await _physical_action("causeway_signal", "causeway_survivors_reconnected"): return
+		body_finished = true
 
 	func _flight_training() -> void:
 		stage = "gale_fiber_preparation"
@@ -113,6 +132,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		if not await _rest("windscar_flight_aerie_camp"): return
 		_purpose("Repair the aerie and earn Fly without displacing the permanent five", "Use the eligible carried creature or Maela's temporary carrier for the marked ring trial")
 		if not await _trial(): return
+		body_finished = true
 
 	func _high_roost() -> void:
 		stage = "mandatory_high_roost_flight"
@@ -129,6 +149,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		stage = "return_glide_to_grounded_counterweight"
 		_purpose("Turn the Fly-only shrine discovery into a grounded road for the upper chapter", "Return by controlled flight, then take the newly unlocked counterweight route")
 		if not await _return_to_aerie(): return
+		body_finished = true
 
 	func _stronghold() -> void:
 		stage = "return_glide_to_grounded_counterweight"
@@ -142,6 +163,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		if not await _rest("summit_bivouac"): return
 		if not await _leave_summit_bivouac(): return
 		if not _require(_has("summit_extraction_engine_reached"), "Real summit threshold"): return
+		body_finished = true
 
 	func _veyra_relay() -> void:
 		stage = "captain_veyra"
@@ -169,6 +191,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		for flag: String in ["realm_heart_cloudreach_earned", "realm_key_stormwood", "stormward_route_revealed", "captain_veyra_defeated", "cloudreach_chapter_complete"]:
 			if not _require(_has(flag), "Earned chapter result " + flag): return
 		stage = "complete"
+		body_finished = true
 
 	## Piece 07 starts from the saved, completed chapter. The Stormward helper
 	## requires the route's completion marker; it is set only when the loaded
@@ -176,7 +199,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 	func _chapter_earned() -> void:
 		for flag: String in ["realm_heart_cloudreach_earned", "realm_key_stormwood", "stormward_route_revealed", "captain_veyra_defeated", "cloudreach_chapter_complete"]:
 			if not _require(_has(flag), "Loaded save carries earned chapter result " + flag): return
-		completed_route = true
+		body_finished = true
 		stage = "complete"
 
 
