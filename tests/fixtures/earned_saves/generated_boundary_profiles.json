@@ -426,7 +426,7 @@
       "disclosure": "Generated F19#5 Cloudreach boundary after piece 05 (stronghold) at the summit extraction threshold, for pieces 06 (Veyra + relay) and 07 (Stormward). The earned chain's piece 05 lost Officer Voss (L41-42) with the earned L31 five (level gap, coordinator ruling); this input is NOT earned. Five ordered template UIDs/species at a generated L40 (redesign_level_curve upper-Cloudreach band 39-42) with generated caps and full HP. Prior Meadows/Tidewake facts as the cloudreach profile; Cloudreach story flags through cloudreach_upper_route_unlocked mirror the earned 01-04 checkpoints; act-III flags through summit_extraction_engine_reached (including defeated_cloudreach_voss) are generated setup. Template inventory, not the earned carried items; no pickup, harvest, battle-reward or transaction receipts are fabricated. Day 16 at 120 s, pose on the summit deck at the threshold. Claims no prior earned segment PASS."
     },
     "f44_meadows": {
-      "boundary": "f44_meadows_post_warden",
+      "boundary": "meadows_settled",
       "realm": "meadows",
       "day": 8,
       "clock_elapsed_seconds": 500.0,
@@ -478,7 +478,7 @@
       "disclosure": "F44#0 rematch witness input (Meadows): the 'tidewake' post-Warden Meadows profile with the five raised to L35 for the L33 relay_captain r1 rematch band. Generated setup only: no rematch receipt, cooldown or payout is fabricated."
     },
     "f44_tidewake": {
-      "boundary": "f44_tidewake_post_nerissa",
+      "boundary": "tidewake_settled",
       "realm": "water",
       "day": 12,
       "clock_elapsed_seconds": 500.0,
@@ -567,7 +567,7 @@
       "disclosure": "F44#0 rematch witness input (Tidewake): the 'cloudreach' post-Nerissa Tidewake profile plus Yara's original defeat flag, five raised to L45 for the L43 water_trainer_yara r1 band. Generated setup only: no rematch receipt, cooldown or payout is fabricated."
     },
     "f44_cloudreach": {
-      "boundary": "f44_cloudreach_post_veyra",
+      "boundary": "cloudreach_settled",
       "realm": "cloudreach",
       "day": 16,
       "clock_elapsed_seconds": 500.0,
@@ -687,7 +687,7 @@
       "disclosure": "F44#0 rematch witness input (Cloudreach): the 'stormwood' post-Veyra Cloudreach profile plus Voss's original defeat flag, five raised to L55 (the generator's maximum) for the L55 officer_voss_summit_approach r1 band. Generated setup only: no rematch receipt, cooldown or payout is fabricated."
     },
     "f44_stormwood": {
-      "boundary": "f44_stormwood_post_credits",
+      "boundary": "stormwood_settled",
       "realm": "stormwood",
       "day": 20,
       "clock_elapsed_seconds": 500.0,
