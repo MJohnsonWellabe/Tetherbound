@@ -62,6 +62,13 @@ var _only_selectors: Array = []
 ## invalid-flag run and the "hard error" documented above silently isn't one.
 var _aborted := false
 
+var total := 0
+var failed := 0
+var assertions := 0
+var failure_lines: Array[String] = []
+## Files run on the first frame instead of in `_init()`; see `_init`.
+var _deferred: Array[String] = []
+
 
 func _init() -> void:
 	var files := _find_tests(TESTS_DIR)
@@ -76,11 +83,38 @@ func _init() -> void:
 	if _aborted:
 		return
 
-	var total := 0
-	var failed := 0
-	var assertions := 0
-	var failure_lines: Array[String] = []
+	# A file declaring `const RUNS_IN_INITIALIZED_TREE := true` mounts real
+	# nodes under the root, which only enters the tree after `_init()`.
+	for path in files:
+		if _needs_initialized_tree(path):
+			_deferred.append(path)
+	for path in _deferred:
+		files.erase(path)
+	_run_files(files)
+	if _deferred.is_empty():
+		_finish()
 
+
+## The root enters the tree only after `_initialize()` returns, so deferred
+## files run on the first frame.
+func _process(_delta: float) -> bool:
+	if _aborted or _deferred.is_empty():
+		return false
+	var deferred := _deferred.duplicate()
+	_deferred.clear()
+	_run_files(deferred)
+	_finish()
+	return false
+
+
+func _needs_initialized_tree(path: String) -> bool:
+	var script: GDScript = load(path)
+	if script == null or not script.can_instantiate():
+		return false
+	return script.get_script_constant_map().get("RUNS_IN_INITIALIZED_TREE", false) == true
+
+
+func _run_files(files: Array[String]) -> void:
 	for path in files:
 		# A script with a parse error still loads as a GDScript object; it just
 		# cannot be instantiated. Checking for null alone let a broken test file
@@ -131,6 +165,9 @@ func _init() -> void:
 					print("          %s" % message)
 					failure_lines.append("%s :: %s — %s" % [file_name, method, message])
 
+
+
+func _finish() -> void:
 	print("")
 	print("%d tests, %d assertions, %d failed" % [total, assertions, failed])
 	if failed > 0:

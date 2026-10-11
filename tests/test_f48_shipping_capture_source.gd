@@ -3,6 +3,8 @@ extends "res://tests/test_case.gd"
 ## Component controls use real world/creature/body/director/session scripts.
 ## They never mount a replacement /root/Game or grant public freeze success,
 ## real capture, ownership, a BOOL/ACK, ENet, gameplay or READY acceptance.
+## The fixture mounts real nodes under the root; run after it enters the tree.
+const RUNS_IN_INITIALIZED_TREE := true
 const SOURCE := preload("res://tools/net/f48_shipping_capture_source.gd")
 const WORLD := preload("res://autoload/world_state.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")

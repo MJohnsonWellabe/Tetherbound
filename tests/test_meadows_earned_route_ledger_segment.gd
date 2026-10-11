@@ -89,3 +89,40 @@ func test_strict_beats_drop_harvest_flags_and_resource_verbs() -> void:
 		{"kind": "flag_set", "detail": "warrens_cleared"}])
 	assert_eq(strict.size(), 1)
 	assert_eq(str(strict[0]["detail"]), "warrens_cleared")
+
+
+func test_strict_route_includes_travel_before_first_and_after_last_beat() -> void:
+	var first := _beat("reveal", 300.0)
+	first["active_s"] = 121.0
+	var last := _beat("fight_started", 400.0)
+	last["active_s"] = 150.0
+	var meaningful := [first, last]
+	var bounded: Array = LEDGER.bounded_route_beats(meaningful, 700.0, 271.0, "hall", [1, 2, 3])
+	var gaps: Array = LEDGER.spacing_gaps(bounded)
+	var a7: Dictionary = LEDGER.strict_a7(bounded, 120.0)
+	assert_eq(meaningful.size(), 2, "delimiters do not mutate or add meaningful beats")
+	assert_eq(bounded.size(), 4)
+	assert_eq(gaps.size(), 3)
+	assert_almost_eq(float(gaps[0]["metres"]), 300.0)
+	assert_almost_eq(float(gaps[2]["metres"]), 300.0)
+	assert_eq((a7["violations"] as Array).size(), 2, "both omitted boundary stretches violate A7")
+	assert_almost_eq(float(a7["longest"]["seconds"]), 121.0)
+	assert_eq(str(a7["violations"][1]["stage"]), "hall")
+
+
+func test_strict_route_without_a_beat_still_measures_entire_travel() -> void:
+	var bounded: Array = LEDGER.bounded_route_beats([], 251.0, 121.0)
+	var gaps: Array = LEDGER.spacing_gaps(bounded)
+	var a7: Dictionary = LEDGER.strict_a7(bounded, 120.0)
+	assert_eq(gaps.size(), 1)
+	assert_almost_eq(float(gaps[0]["metres"]), 251.0)
+	assert_eq((a7["violations"] as Array).size(), 1)
+	assert_almost_eq(float(a7["longest"]["seconds"]), 121.0)
+
+
+func test_strict_route_boundaries_keep_a7_threshold_and_zero_travel() -> void:
+	var exact: Dictionary = LEDGER.strict_a7(LEDGER.bounded_route_beats([], 250.0, 120.0), 120.0)
+	assert_eq((exact["violations"] as Array).size(), 0, "exact120s is allowed")
+	var still: Dictionary = LEDGER.strict_a7(LEDGER.bounded_route_beats([], 0.0, 0.0), 120.0)
+	assert_eq((still["violations"] as Array).size(), 0)
+	assert_almost_eq(float(still["longest"]["seconds"]), 0.0)

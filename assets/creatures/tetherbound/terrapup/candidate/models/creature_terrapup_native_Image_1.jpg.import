@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dxxgmo50f6b5f"
-path="res://.godot/imported/creature_terrapup_native_Image_1.jpg-6a66212d6b3ad8f676a83466e3948354.ctex"
+path.s3tc="res://.godot/imported/creature_terrapup_native_Image_1.jpg-6a66212d6b3ad8f676a83466e3948354.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "b2ab681c7c6daa34c1f39fcdd631f919"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/terrapup/candidate/models/creature_terrapup_native_Image_1.jpg"
-dest_files=["res://.godot/imported/creature_terrapup_native_Image_1.jpg-6a66212d6b3ad8f676a83466e3948354.ctex"]
+dest_files=["res://.godot/imported/creature_terrapup_native_Image_1.jpg-6a66212d6b3ad8f676a83466e3948354.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

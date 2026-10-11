@@ -222,6 +222,19 @@ static func strict_a7(strict: Array, limit_s: float) -> Dictionary:
 	return {"longest": worst, "violations": violations}
 
 
+## Boundaries delimit the measured route; they are not discoveries or beats.
+## Include its leading/trailing travel, and the whole route if it has no beat.
+static func bounded_route_beats(meaningful: Array, end_path_m: float,
+		end_active_s: float, end_stage: String = "", end_pos: Array = []) -> Array:
+	var bounded: Array = [{"kind": "route_boundary", "detail": "route start",
+		"path_m": 0.0, "active_s": 0.0, "stage": "", "pos": []}]
+	bounded.append_array(meaningful)
+	bounded.append({"kind": "route_boundary", "detail": "route end",
+		"path_m": end_path_m, "active_s": end_active_s,
+		"stage": end_stage, "pos": end_pos})
+	return bounded
+
+
 func summary() -> Dictionary:
 	var gaps := spacing_gaps(beats)
 	var over: Array = []
@@ -242,7 +255,9 @@ func summary() -> Dictionary:
 
 func _strict_summary() -> Dictionary:
 	var strict := strict_beats(beats)
-	var gaps := spacing_gaps(strict)
+	var bounded := bounded_route_beats(strict, _path_m, _active_total_s, _stage,
+		_v(_last_pos) if _last_pos != Vector3.INF else [])
+	var gaps := spacing_gaps(bounded)
 	var over: Array = []
 	var lengths: Array = []
 	for gap: Dictionary in gaps:
@@ -252,7 +267,7 @@ func _strict_summary() -> Dictionary:
 	lengths.sort()
 	return {"beats": strict.size(),
 		"spacing_median_m": snappedf(float(lengths[lengths.size() / 2]), 0.1) if not lengths.is_empty() else -1.0,
-		"spacing_over_window": over, "a7": strict_a7(strict, A7_LIMIT_S)}
+		"spacing_over_window": over, "a7": strict_a7(bounded, A7_LIMIT_S)}
 
 
 static func _price(item_id: String) -> int:

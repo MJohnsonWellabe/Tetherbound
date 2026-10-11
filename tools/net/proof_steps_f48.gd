@@ -16,6 +16,7 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
 const CHARACTER_SAVE := preload("res://scripts/save/character_save.gd")
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
+const PASSIVE_PREPARATION := preload("res://scripts/net/owner_passive_preparation.gd")
 
 class ButtonActivationObservation extends RefCounted:
 	var count: int = 0
@@ -38,7 +39,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_measure_layout": return _measure_layout(tree, args)
 		"f48_fixture_trainer_fight": return await _fixture_trainer_fight(tree, args)
 		"f48_fixture_approach": return await _fixture_approach(tree, args)
-		"f48_deploy_owned": return await _deploy_owned(tree)
+		"f48_deploy_owned": return await _sealed_reply(tree, action, args, await _deploy_owned(tree))
 		"f48_dialogue": return await _dialogue(tree, args)
 		"f48_fixture_join_boss": return await _fixture_join_boss(tree, args)
 		"f48_fixture_capture":
@@ -132,6 +133,7 @@ static func _owner_transport_matches(game: Node, writer: Node, bound: Dictionary
 static func _watch_owner_saves(tree: SceneTree) -> bool:
 	_watch_fallback_completions(tree)
 	_watch_fallback_requests(tree)
+	_watch_prepared_character_saves(tree)
 	if tree.has_meta("f48_owner_save_watch"): return true
 	var game := tree.root.get_node_or_null(^"Game")
 	var writer := tree.root.get_node_or_null(^"Game/Session/LedgerRpc")
@@ -182,7 +184,9 @@ static func _watch_owner_saves(tree: SceneTree) -> bool:
 		if not _owner_transport_matches(game, writer, authority):
 			COMMIT_TRACE.end("proof.owner.callback", callback_started, "transport_changed")
 			return
-		var disk := {"packet": packet, "row": row, "files": data, "session_epoch": epoch, "journal_epoch": journal_epoch, "passive": PASSIVE.evidence(tree, anchor), "observer_pid": OS.get_process_id()}
+		var disk := {"packet": packet, "row": row, "files": data, "session_epoch": epoch, "journal_epoch": journal_epoch, "passive": PASSIVE.evidence(tree, anchor), "observer_pid": OS.get_process_id(),
+			"row_document":SAVE_DOCUMENT.stringify(row),"disk_document":SAVE_DOCUMENT.stringify(data.disk),
+			"passive_document":SAVE_DOCUMENT.stringify(PASSIVE.evidence(tree,anchor))}
 		var dir := OS.get_environment("TB_PROOF_OUT").path_join("f48-owner-saves").path_join(str(game.local.character_id))
 		DirAccess.make_dir_recursive_absolute(dir)
 		var path := dir.path_join(anchor + ".json")
@@ -272,8 +276,9 @@ static func _fallback_submitted(bound: Dictionary, id: String, request: Dictiona
 
 ## Validate every frozen payload key plus the store's explicit envelope. Raw
 ## complete envelopes/bytes remain in the certificate, including timestamps.
-static func _fallback_receipt_files(request: Dictionary, receipt: Dictionary, paths: Dictionary, writer_id: int) -> Dictionary:
-	if receipt.size() != 6 or receipt.get("version") != 1 or receipt.get("source") != "SaveGame_locked_fallback_write_TRUE_BOOL" \
+static func _fallback_receipt_files(request: Dictionary, receipt: Dictionary, paths: Dictionary, writer_id: int,
+		receipt_source: String = "SaveGame_locked_fallback_write_TRUE_BOOL") -> Dictionary:
+	if receipt.size() != 6 or receipt.get("version") != 1 or receipt.get("source") != receipt_source \
 		or receipt.get("writer_instance_id") != writer_id or receipt.get("writer_script") != "res://scripts/save/save_game.gd" \
 		or receipt.get("request_sha256") != SAVE_DOCUMENT.stringify(request).sha256_text() \
 		or not receipt.get("files") is Dictionary or receipt.files.size() != paths.size(): return {}
@@ -343,6 +348,10 @@ static func _fallback_request_completed(bound: Dictionary, id: String, request: 
 	if decoded.is_empty(): return
 	var certificate := {"source":"actual_request_bound_natural_fallback_TRUE_BOOL_descendant","job_id":id,
 		"submitted_ms":job.submitted_ms,"completed_ms":Time.get_ticks_msec(),"request":request,"receipt":receipt,
+		"actual_writer_success":success,"request_document":SAVE_DOCUMENT.stringify(request),
+		"receipt_document":SAVE_DOCUMENT.stringify(receipt),
+		"accepted_parent_document":SAVE_DOCUMENT.stringify(game.get("world").get("reward_deliveries").get(edge.get("identity"))),
+		"submission_passive_document":SAVE_DOCUMENT.stringify(job.passive),
 		"original_edge_path":edge.path,"original_edge_sha256":edge.sha256,"original_ledger_row":edge.row,
 		"session_epoch":job.authority.epoch,"submission_passive":job.passive}
 	var dir: String = OS.get_environment("TB_PROOF_OUT").path_join("f48-fallback-requests").path_join(str(request.character_id))
@@ -361,6 +370,143 @@ static func _fallback_descendant_matches(tree: SceneTree, now: Dictionary, edge:
 		or saver == null or saver != descendant.job.saver_ref.get_ref() \
 		or saver.get("_fallback_writer") != descendant.job.writer_ref.get_ref() or saver.get("_fallback") != descendant.job.worker_ref.get_ref() \
 		or not _owner_transport_matches(game,session.get_node_or_null(^"LedgerRpc"),descendant.job.authority) \
+		or _digest(str(descendant.path)) != descendant.sha256: return false
+	return now.get("character_path") == descendant.receipt.files.character.path \
+		and now.get("character_sha256") == descendant.receipt.files.character.sha256 \
+		and _json_equal(now.get("disk"),descendant.files.character)
+
+## Prepared owner-passive checkpoints use a synchronous character-only writer,
+## not the fallback worker. Observe that real source separately; never infer a
+## write from care-looking fields or promote it into a replacement ledger row.
+static func _watch_prepared_character_saves(tree: SceneTree) -> void:
+	if tree.has_meta("f48_prepared_character_watch"): return
+	var game: Node = tree.root.get_node_or_null(^"Game")
+	var saver: RefCounted = game.get("save_system") as RefCounted if game != null else null
+	if saver == null or saver.get_script() == null or saver.get_script().resource_path != "res://scripts/save/save_game.gd" \
+		or not saver.has_signal("prepared_character_submitted") or not saver.has_signal("prepared_character_completed"): return
+	var bound := {"tree":weakref(tree),"game":weakref(game),"saver":weakref(saver),"jobs":{}}
+	var submitted := func(id: String, request: Dictionary) -> void: _prepared_character_submitted(bound,id,request)
+	var completed := func(id: String, request: Dictionary, success: bool, receipt: Dictionary) -> void: _prepared_character_completed(bound,id,request,success,receipt)
+	saver.connect("prepared_character_submitted",submitted)
+	saver.connect("prepared_character_completed",completed)
+	tree.set_meta("f48_prepared_character_watch",[submitted,completed])
+
+static func _prepared_character_context(game: Node, request: Dictionary) -> Dictionary:
+	var session: Node = game.get("session") as Node
+	if not is_instance_valid(session) or not session.is_inside_tree() or session.is_queued_for_deletion(): return {}
+	# Do not instantiate a service from an observer; bind the existing caller.
+	var service: RefCounted = session.get("_owner_passive") as RefCounted
+	if service == null or service.get_script() == null \
+		or service.get_script().resource_path != "res://scripts/net/owner_passive_sync.gd" \
+		or service.call("owner") != session or service.get("saving") != true: return {}
+	var pending: Dictionary = service.get("pending")
+	var local: Dictionary = service.get("local")
+	if pending.get("phase") != "save" or not pending.get("prepared") is Dictionary \
+		or not _json_equal(pending.get("scope"),service.call("_scope")) \
+		or not str(local.get("error","")).is_empty() or request.get("character_only") != true \
+		or request.get("write_split") != false or request.get("character_id") != local.get("character") \
+		or not request.get("character_data") is Dictionary: return {}
+	var personal: Dictionary = request.character_data.duplicate(true)
+	personal.character_id=request.character_id
+	var projected: Dictionary = RECORD_RULES.portable_projection(personal)
+	var plan: Dictionary = PASSIVE_PREPARATION.owner_plan(projected,pending.prepared,pending.get("retained",{}),service.call("_discoveries"))
+	if plan.get("ok") != true or not _json_equal(projected,pending.prepared.get("after")): return {}
+	return {"service_ref":weakref(service),"pending":pending.duplicate(true),"scope":service.call("_scope"),"prepared":pending.prepared.duplicate(true)}
+
+static func _prepared_character_call_matches(saver: RefCounted, id: String, request: Dictionary,
+		phase: String, original: Dictionary = {}, receipt: Dictionary = {}) -> Dictionary:
+	if saver == null or id.is_empty() or not saver.has_method("prepared_character_call"): return {}
+	var actual: Dictionary = saver.call("prepared_character_call",id)
+	if actual.is_empty() or actual.get("phase") != phase or not actual.get("call") is Dictionary \
+		or not actual.call.is_read_only() or actual.call.get("id") != id \
+		or actual.call.get("writer_instance_id") != saver.get_instance_id() \
+		or not is_same(actual.call.get("request"),request): return {}
+	if phase == "completed" and (not is_same(actual.call,original) or actual.get("success") != true \
+		or not is_same(actual.get("receipt"),receipt)): return {}
+	return actual
+
+static func _prepared_character_submitted(bound: Dictionary, id: String, request: Dictionary) -> void:
+	var tree: SceneTree = bound.tree.get_ref() as SceneTree
+	var game: Node = bound.game.get_ref() as Node
+	var saver: RefCounted = bound.saver.get_ref() as RefCounted
+	if saver == null or not is_instance_valid(tree) or not is_instance_valid(game) or not game.is_inside_tree() \
+		or game.is_queued_for_deletion() or tree.root.get_node_or_null(^"Game") != game or game.get("save_system") != saver \
+		or not request.is_read_only() or bound.jobs.has(id): return
+	var actual := _prepared_character_call_matches(saver,id,request,"submitted")
+	if actual.is_empty(): return
+	var context := _prepared_character_context(game,request)
+	if context.is_empty(): return
+	var ledger: Node = game.get("session").get_node_or_null(^"LedgerRpc")
+	var authority := _owner_transport(game,ledger)
+	var edge: Dictionary = tree.get_meta("f48_latest_owner_save",{})
+	if authority.is_empty() or edge.is_empty() or not _owner_transport_matches(game,ledger,edge.get("authority",{})) \
+		or request.get("character_id") != game.get("local").get("character_id") \
+		or request.get("world_id") != game.get("world").get("world_id") \
+		or request.get("world_instance_id") != game.get("world").get("reward_delivery_namespace") \
+		or request.get("host") != (game.call("world_save_owned") == true) \
+		or not _fallback_parent_matches(edge,game.get("world").get("reward_deliveries").get(edge.get("identity"))) \
+		or not _fallback_parent_matches(edge,request.get("data",{}).get("reward_deliveries",{}).get(edge.get("identity"))) \
+		or _digest(str(edge.get("path",""))) != edge.get("sha256") \
+		or not _fallback_request_carrier_matches(edge,request,request.character_data.get("party")) \
+		or not _json_equal(request.character_data.get("flags"),edge.files.disk.get("flags")) \
+		or not PASSIVE.matches(tree,str(edge.get("anchor","")),request.character_data.get("party")): return
+	bound.jobs[id]={"id":id,"call":actual.call,"request":request,"edge":edge,"authority":authority,"context":context,
+		"submitted_ms":Time.get_ticks_msec(),"passive":PASSIVE.evidence(tree,str(edge.anchor))}
+
+static func _prepared_character_completed(bound: Dictionary, id: String, request: Dictionary, success: bool, receipt: Dictionary) -> void:
+	var job: Dictionary = bound.jobs.get(id,{})
+	bound.jobs.erase(id)
+	print("[f48-prepared-write] character=%s saved=%s sha256=%s bound_checkpoint=%s" % [
+		str(request.get("character_id","")),str(success),str(receipt.get("files",{}).get("character",{}).get("sha256","")),str(not job.is_empty())])
+	if not success or job.is_empty() or not is_same(job.request,request): return
+	var tree: SceneTree = bound.tree.get_ref() as SceneTree
+	var game: Node = bound.game.get_ref() as Node
+	var saver: RefCounted = bound.saver.get_ref() as RefCounted
+	if saver == null or not is_instance_valid(tree) or not is_instance_valid(game) or not game.is_inside_tree() \
+		or game.is_queued_for_deletion() or tree.root.get_node_or_null(^"Game") != game or game.get("save_system") != saver: return
+	if _prepared_character_call_matches(saver,id,request,"completed",job.call,receipt).is_empty(): return
+	var context := _prepared_character_context(game,request)
+	if context.is_empty() or context.service_ref.get_ref() != job.context.service_ref.get_ref() \
+		or not _json_equal(context.pending,job.context.pending) or not _json_equal(context.scope,job.context.scope): return
+	var edge: Dictionary = tree.get_meta("f48_latest_owner_save",{})
+	if not is_same(edge,job.edge) or not _owner_transport_matches(game,game.get("session").get_node_or_null(^"LedgerRpc"),job.authority) \
+		or _digest(str(edge.get("path",""))) != edge.get("sha256") \
+		or not _fallback_parent_matches(edge,game.get("world").get("reward_deliveries").get(edge.get("identity"))): return
+	var characters: RefCounted = saver.get("_characters")
+	if characters == null: return
+	var paths := {"character":characters.call("path_for",str(request.character_id))}
+	var files := _fallback_receipt_files(request,receipt,paths,saver.get_instance_id(),"SaveGame_locked_prepared_character_write_TRUE_BOOL")
+	if files.is_empty(): return
+	var output := OS.get_environment("TB_PROOF_OUT")
+	if output.is_empty(): return
+	var dir := output.path_join("f48-prepared-character-saves").path_join(str(request.character_id))
+	DirAccess.make_dir_recursive_absolute(dir)
+	var path := dir.path_join("%s-%d.json" % [str(job.context.prepared.get("hash","")),Time.get_ticks_usec()])
+	var certificate := {"source":"actual_request_bound_prepared_owner_passive_TRUE_BOOL_descendant",
+		"call_id":id,"actual_writer_success":success,
+		"submitted_ms":job.submitted_ms,"completed_ms":Time.get_ticks_msec(),"request":request,"receipt":receipt,
+		"prepared":job.context.prepared,"scope":job.context.scope,"submission_passive":job.passive,
+		# The detached outer JSON is readable but rounds floating-point values.
+		# Preserve the exact source documents for independent request-hash and
+		# full-payload comparisons against the existing locked byte receipt.
+		"request_document":SAVE_DOCUMENT.stringify(request),
+		"receipt_document":SAVE_DOCUMENT.stringify(receipt),
+		"scope_document":SAVE_DOCUMENT.stringify(job.context.scope),
+		"submission_passive_document":SAVE_DOCUMENT.stringify(job.passive),
+		"prepared_document":SAVE_DOCUMENT.stringify(job.context.prepared),
+		"accepted_parent_document":SAVE_DOCUMENT.stringify(game.get("world").get("reward_deliveries").get(edge.get("identity"))),
+		"original_edge_path":edge.path,"original_edge_sha256":edge.sha256,"original_ledger_row":edge.row}
+	if not DETACHED.publish(path,certificate): return
+	tree.set_meta("f48_latest_prepared_descendant",{"job":job,"saver_ref":bound.saver,"receipt":receipt,
+		"files":files,"path":path,"sha256":_digest(path)})
+
+static func _prepared_descendant_matches(tree: SceneTree, now: Dictionary, edge: Dictionary) -> bool:
+	var descendant: Dictionary = tree.get_meta("f48_latest_prepared_descendant",{})
+	var game: Node = tree.root.get_node_or_null(^"Game")
+	if descendant.is_empty() or game == null or game.get("session") == null or not is_same(descendant.job.edge,edge) \
+		or game.get("save_system") != descendant.saver_ref.get_ref() \
+		or game.get("session").get("_owner_passive") != descendant.job.context.service_ref.get_ref() \
+		or not _owner_transport_matches(game,game.get("session").get_node_or_null(^"LedgerRpc"),descendant.job.authority) \
 		or _digest(str(descendant.path)) != descendant.sha256: return false
 	return now.get("character_path") == descendant.receipt.files.character.path \
 		and now.get("character_sha256") == descendant.receipt.files.character.sha256 \
@@ -527,7 +673,7 @@ static func _snapshot_errors(tree: SceneTree, now: Dictionary) -> Array[String]:
 		or now.world_namespace != edge.files.world_namespace or _digest(str(edge.path)) != edge.sha256:
 		errors.append("Actual saved owner/world/session/immutable edge changed")
 	if (now.character_sha256 != edge.files.character_sha256 or not _json_equal(now.disk, edge.files.disk)) \
-		and (original_source or not _fallback_descendant_matches(tree,now,edge)):
+		and (original_source or (not _fallback_descendant_matches(tree,now,edge) and not _prepared_descendant_matches(tree,now,edge))):
 		errors.append("Actual complete owner file changed after the latest observed edge")
 	for field: String in ["inventory", "redesign_character", "satchel_escrow"]:
 		if not _json_equal(now.memory.get(field), now.disk.get(field)):
@@ -570,7 +716,15 @@ static func _snapshot_anchor(tree: SceneTree) -> String:
 static func _assert_snapshot(tree: SceneTree) -> Dictionary:
 	var now := _observe(tree)
 	var errors := _snapshot_errors(tree, now)
+	var selected_edge: Dictionary = tree.get_meta("f48_latest_owner_save",tree.get_meta("f48_admitted_source",{}))
+	now.selected_edge = {"path":selected_edge.get("path",""),"sha256":selected_edge.get("sha256",""),
+		"identity":selected_edge.get("identity",""),"anchor":selected_edge.get("anchor",""),"observed_ms":Time.get_ticks_msec()}
 	now.passive_evidence = PASSIVE.evidence(tree, _snapshot_anchor(tree))
+	now.passive_evidence_document = SAVE_DOCUMENT.stringify(now.passive_evidence)
+	now.prepared_descendant={}
+	if errors.is_empty() and _prepared_descendant_matches(tree,now,selected_edge):
+		var prepared: Dictionary = tree.get_meta("f48_latest_prepared_descendant")
+		now.prepared_descendant={"path":prepared.path,"sha256":prepared.sha256,"request_bound":true}
 	if not errors.is_empty() or not _fallback_descendant_matches(tree,now,tree.get_meta("f48_latest_owner_save",{})):
 		now.fallback_descendant = {}
 	else:
@@ -579,6 +733,7 @@ static func _assert_snapshot(tree: SceneTree) -> Dictionary:
 	var original_source: bool = not tree.has_meta("f48_latest_owner_save")
 	now.snapshot_source = "unchanged_original_admitted_disk_no_initial_memory_disk_convergence_or_saved_live_care_bond_claim" if original_source else "actual_owner_BOOL_edge_full_canonical_after_and_accepted_ACK"
 	if not now.fallback_descendant.is_empty(): now.snapshot_source += "_and_separate_request_bound_natural_fallback_descendant"
+	if not now.prepared_descendant.is_empty(): now.snapshot_source += "_and_separate_request_bound_prepared_checkpoint_descendant"
 	return _result(errors.is_empty(), "Read-only explicit input source " + str(now.snapshot_source) + ": " + "; ".join(errors), now)
 
 static func _capture_durable(tree: SceneTree, args: Dictionary) -> Dictionary:
@@ -650,6 +805,19 @@ static func _measure_layout(tree: SceneTree, args: Dictionary) -> Dictionary:
 		return _result(false, "Could not retain detached actual layout measurement", data)
 	return _result(errors.is_empty(), "Read-only initialized native terrain layout. " + "; ".join(errors), data)
 
+static func _fixture_fight_cadence(trainer: String, args: Dictionary) -> Dictionary:
+	# Old retained profiles keep their original schedule. New Warden profiles
+	# explicitly select the existing readiness-gated physical input path;
+	# no other trainer or unbounded schedule can acquire this fixture option.
+	if not args.has("input_cadence"):
+		return {"stride_frames": 20, "stage_when_ready": false}
+	var cadence: Variant = args.input_cadence
+	if trainer != "warden_aldis" or not cadence is Dictionary or cadence.size() != 2 \
+		or not cadence.get("stage_when_ready") is bool or cadence.stage_when_ready != true \
+		or not _json_equal(cadence, {"stride_frames": 4, "stage_when_ready": true}):
+		return {}
+	return {"stride_frames": 4, "stage_when_ready": true}
+
 static func _fixture_trainer_fight(tree: SceneTree, args: Dictionary) -> Dictionary:
 	# Existing harness-driven fight, explicitly authorized for named mechanics.
 	# Never an ordinary survival/balance/earned campaign witness. Every kill,
@@ -661,6 +829,8 @@ static func _fixture_trainer_fight(tree: SceneTree, args: Dictionary) -> Diction
 	var master_definition := preload("res://scripts/creatures/breakthrough.gd").master(trainer)
 	if (master_definition.is_empty() and trainer != "warden_aldis") or not _json_equal(disclosure, required):
 		return _result(false, "Exact named mechanics fight disclosure required; opponent HP ceiling is disabled")
+	var cadence: Dictionary = _fixture_fight_cadence(trainer, args)
+	if cadence.is_empty(): return _result(false, "Exact disclosed Warden input cadence required")
 	var director := tree.current_scene.get_node_or_null(^"EncounterDirector") if tree.current_scene != null else null
 	var manager := tree.current_scene.get_node_or_null(^"CombatManager") if tree.current_scene != null else null
 	if director == null or manager == null: return _result(false, "Actual production director/manager missing")
@@ -682,11 +852,12 @@ static func _fixture_trainer_fight(tree: SceneTree, args: Dictionary) -> Diction
 		if topup == null: return _result(false, "The disclosed canonical Warden aid requires the actual host PeerRunner")
 	var result: Dictionary = await tree.call("_step_win_trainer_battle", {"budget_frames": budget,
 		"fixture_guest_master": guest, "retain_fixture_actions": true, "enemy_hp_ceiling": 0,
-		"fixture_topup_provider": topup})
+		"fixture_topup_provider": topup, "stride": cadence.stride_frames, "stage_when_ready": cadence.stage_when_ready})
 	var retained: Variant = tree.get("_trainer_fight_progress")
 	var data := {"trainer_id": trainer, "fixture_disclosure": required, "result": result.duplicate(true),
 		"actions": retained.get("fixture_actions", []) if retained is Dictionary else [], "acceptance_credit": false}
 	data["driver_budget_frames"] = budget
+	data["input_cadence"] = cadence.duplicate(true)
 	if topup != null: data["typed_self_topups"] = topup.call("observations")
 	data["final_manager"] = {"state": manager.get("state"), "outcome": manager.get("_outcome"),
 		"resolve_timer": manager.get("_resolve_timer"), "waiting_shared_trainer_round": manager.get("_waiting_shared_trainer_round")}
@@ -740,15 +911,40 @@ static func _deploy_owned(tree: SceneTree) -> Dictionary:
 	var local: RefCounted = game.get("local")
 	var original: Array = UIDS.uids(local.call("save_data").get("party", []))
 	if original.is_empty(): return _result(false, "Original owned party required; cannot adopt a substitute")
+	# Retain the actual input and pending source on both sides of the original
+	# press. Observation never releases a fence, retries a save or extends the
+	# existing thirty-frame deployment check.
+	var data := {"original_party_uids": original.duplicate(),
+		"before": _owned_deployment_observation(tree, director)}
 	if director.call("ally_body") == null:
 		var pressed: Dictionary = await tree.call("_step_press", {"action": "creature_recall"})
-		if pressed.get("verdict") != "PASS": return pressed
+		data["ordinary_press"] = pressed.duplicate(true)
+		if pressed.get("verdict") != "PASS":
+			data["after"] = _owned_deployment_observation(tree, director)
+			return _result(false, str(pressed.get("detail", "Ordinary recall press failed")), data)
 		for _frame: int in 30: await tree.physics_frame
 	var creature: Variant = director.call("ally_instance")
 	var unchanged := original == UIDS.uids(local.call("save_data").get("party", []))
 	var owned := creature != null and original.has(str(creature.get("uid")))
+	data["after"] = _owned_deployment_observation(tree, director)
+	data["party_uids_unchanged"] = unchanged
+	data["deployed_uid_originally_owned"] = owned
 	return _result(unchanged and owned and director.call("ally_body") != null,
-		"Ordinary recall input must deploy an original owned companion without changing party UIDs")
+		"Ordinary recall input must deploy an original owned companion without changing party UIDs", data)
+
+static func _owned_deployment_observation(tree: SceneTree, director: Node) -> Dictionary:
+	var data := {"input": _capture_input_state(tree),
+		"pending_diagnostic": _capture_pending_diagnostic(tree.root.get_node_or_null(^"Game")),
+		"ally_body": _capture_pending_object(director.call("ally_body")),
+		"ally_instance": _capture_pending_object(director.call("ally_instance"))}
+	var game := tree.root.get_node_or_null(^"Game")
+	if game != null and game.get("session") != null:
+		var session: Node = game.get("session")
+		data["owner_block_reason"] = session.call("_owner_snapshot_block_reason", game.get("local"))
+		var service: Variant = session.get("_owner_passive")
+		if is_instance_valid(service) and service is RefCounted:
+			data["owner_passive_local"] = _capture_pending_source(service.get("local"))
+	return data
 
 static func _capture_input_state(tree: SceneTree) -> Dictionary:
 	var owner := INPUT_OWNER.current(tree)

@@ -3892,18 +3892,27 @@ func _award_victory() -> void:
 	# concrete starting line as every creature caught before or after it.
 
 
+var _companion_aside_locked := false
+var _companion_aside_spot := Vector3.ZERO
+
+
 ## P2-113: the abandoned companion walks out of the aim frame, to the trainer's
 ## left (the side away from the shoulder camera), rather than standing beside
 ## the lens and filling a third of the shot. It still takes hits there.
+## The spot is fixed once, when the aim opens, and never follows the trainer
+## afterwards: the stick moves the trainer while aiming, and a spot recomputed
+## from the trainer every frame would let that same stick tow the companion.
 func _step_companion_aside() -> void:
 	var aside: Dictionary = CATCH.config().get("aim", {}).get("companion_aside", {})
 	if aside.is_empty() or _player == null or _camera_rig == null: return
-	var yaw := float(_camera_rig.get("yaw"))
-	var forward := Vector3(-sin(yaw), 0.0, -cos(yaw))
-	var left := Vector3(forward.z, 0.0, -forward.x)
-	var spot: Vector3 = _player.global_position + left * float(aside.get("lateral_m", 0.0)) \
-		- forward * float(aside.get("back_m", 0.0))
-	var to_spot := spot - _ally_body.global_position
+	if not _companion_aside_locked:
+		var yaw := float(_camera_rig.get("yaw"))
+		var forward := Vector3(-sin(yaw), 0.0, -cos(yaw))
+		var left := Vector3(forward.z, 0.0, -forward.x)
+		_companion_aside_spot = _player.global_position + left * float(aside.get("lateral_m", 0.0)) \
+			- forward * float(aside.get("back_m", 0.0))
+		_companion_aside_locked = true
+	var to_spot := _companion_aside_spot - _ally_body.global_position
 	to_spot.y = 0.0
 	# The dodge hop clears the frame inside the aim camera's own glide.
 	if to_spot.length() > float(aside.get("arrive_m", 0.35)) and _ally_body.has_method("begin_combat_burst"):
@@ -3913,6 +3922,9 @@ func _step_companion_aside() -> void:
 ## Movement is the dodge. The creature is driven straight from the stick, in camera
 ## space, exactly like the trainer — and is rooted while attacking.
 func _drive_player_creature() -> void:
+	# A new aim picks a new step-aside spot (see `_step_companion_aside`).
+	if _throw == null or not bool(_throw.call("is_aiming")):
+		_companion_aside_locked = false
 	if _ally_body == null or not combat_input_available():
 		return
 	if _action != Action.READY or _burst_awaiting_host or _move_awaiting_host:

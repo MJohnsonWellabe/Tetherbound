@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools/net"))
 import f48_behind_profile as behind
 import f48_profile_fixture as fixture
 import f48_produce_actual as producer
+import f48_configuration as configuration
 import save_document
 
 
@@ -65,8 +66,56 @@ class BehindProfileTests(unittest.TestCase):
                 "world_sha256": fixture.digest(self.world_path),
                 "snapshot_source": "actual_owner_BOOL_edge_full_canonical_after_and_accepted_ACK"}}})
 
-    def generate(self, guest_peer=2):
-        return behind.generate(self.loop, self.profile_path, self.profile_hash, self.output, guest_peer)
+    def generate(self, guest_peer=2, shipping_config=False):
+        return behind.generate(self.loop, self.profile_path, self.profile_hash, self.output, guest_peer,
+                               shipping_config=shipping_config)
+
+    def shipping_loop(self):
+        producer.pin_shipping_profile(self.profile, behind.ROOT)
+        fixture.write(self.profile_path, self.profile)
+        self.profile_hash = fixture.digest(self.profile_path)
+        invocation = fixture.read(self.loop / "invocation.json")
+        invocation.update(profile_sha256=self.profile_hash, shipping_configuration=True,
+                          effective_configuration=self.profile["production_configuration_pins"])
+        fixture.write(self.loop / "invocation.json", invocation)
+
+    def test_shipping_behind_inherits_all_seven_pins_without_overlay_or_source_mutation(self):
+        self.shipping_loop()
+        original = {path: path.read_bytes() for path in self.loop.rglob("*") if path.is_file()}
+        profile = fixture.read(self.generate(shipping_config=True))
+        self.assertEqual(profile["production_configuration_pins"], self.profile["production_configuration_pins"])
+        self.assertEqual(profile["test_configuration"], self.profile["test_configuration"])
+        self.assertFalse((self.output / "mechanics-start/test-configuration").exists())
+        configuration.shipping_files(behind.ROOT, profile)
+        manifest = fixture.read(self.output / "producer-profile/source.json")
+        sources = {row["path"]: row["sha256"] for row in manifest["sources"]}
+        for row in profile["production_configuration_pins"]:
+            self.assertEqual(sources[str(behind.ROOT / row["file"].removeprefix("res://"))], row["sha256"])
+        for path, raw in original.items(): self.assertEqual(path.read_bytes(), raw)
+
+    def test_shipping_mode_cannot_relabel_overlay_loop_or_silently_apply_overlay_to_shipping_loop(self):
+        with self.assertRaisesRegex(ValueError, "mode must match"): self.generate(shipping_config=True)
+        self.assertFalse(self.output.exists())
+        self.shipping_loop()
+        with self.assertRaisesRegex(ValueError, "mode must match"): self.generate()
+        self.assertFalse(self.output.exists())
+
+    def test_shipping_behind_refuses_changed_combat_without_writing_output(self):
+        self.shipping_loop()
+        self.profile["production_configuration_pins"] = [dict(row, sha256="0" * 64)
+            if row["file"].endswith("/combat.json") else row for row in self.profile["production_configuration_pins"]]
+        fixture.write(self.profile_path, self.profile)
+        self.profile_hash = fixture.digest(self.profile_path)
+        with self.assertRaisesRegex(ValueError, "differs from original"): self.generate(shipping_config=True)
+        self.assertFalse(self.output.exists())
+
+    def test_shipping_behind_declared_invocation_must_match_actual_shipping_pins(self):
+        self.shipping_loop()
+        invocation = fixture.read(self.loop / "invocation.json")
+        invocation["shipping_configuration"] = False
+        fixture.write(self.loop / "invocation.json", invocation)
+        with self.assertRaisesRegex(ValueError, "declaration differs"): self.generate(shipping_config=True)
+        self.assertFalse(self.output.exists())
 
     def test_original_bytes_real_input_routes_and_standard_layout(self):
         original = {path: path.read_bytes() for path in self.loop.rglob("*") if path.is_file()}
