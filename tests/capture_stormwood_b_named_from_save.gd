@@ -29,6 +29,7 @@ const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SETTLE_FRAMES := 300
 
 var _failures: Array[String] = []
+var _selected_slot: int = CHECKPOINTS.CHECKPOINT_SLOT
 
 
 func _init() -> void:
@@ -54,8 +55,11 @@ func _run() -> void:
 	if source.is_empty() or label.is_empty() or receipt.is_empty():
 		_done("no save/receipt at %s for %s" % [source, label])
 		return
-	print("NAMED_FROM_SAVE receipt commit=%s resumed_from=%s statement=%s" % [receipt.get("commit", ""),
-		JSON.stringify(receipt.get("resumed_from", {})), str(receipt.get("no_fixture_statement", ""))])
+	if not _select_slot(receipt):
+		_done("")
+		return
+	print("NAMED_FROM_SAVE receipt commit=%s slot=%d resumed_from=%s statement=%s" % [receipt.get("commit", ""),
+		_selected_slot, JSON.stringify(receipt.get("resumed_from", {})), str(receipt.get("no_fixture_statement", ""))])
 	var scratch := "user://sw_b_named_from_save_%d_%d" % [OS.get_process_id(), Time.get_ticks_msec()]
 	if not CHECKPOINTS.copy_tree(source.path_join("save"), scratch):
 		_done("could not stage %s/save" % source)
@@ -105,9 +109,31 @@ func _run() -> void:
 	_done("")
 
 
+## Earned suffixes retain their actual production autosave slot. A legacy
+## receipt keeps the old default or an explicit --slot; no save is substituted.
+func _select_slot(receipt: Dictionary) -> bool:
+	var explicit := _arg("slot")
+	if not explicit.is_empty() and (not explicit.is_valid_int() or int(explicit) < 0):
+		_failures.append("--slot must name a nonnegative integer save slot")
+		return false
+	if not str(receipt.get("journey_id", "")).is_empty():
+		var recorded: Variant = receipt.get("slot")
+		if not (recorded is int or recorded is float) or not is_finite(float(recorded)) \
+				or float(recorded) < 0.0 or float(recorded) != floorf(float(recorded)):
+			_failures.append("earned receipt has no valid selected save slot")
+			return false
+		_selected_slot = int(recorded)
+		if not explicit.is_empty() and int(explicit) != _selected_slot:
+			_failures.append("--slot disagrees with the earned receipt's actual selected slot")
+			return false
+	else:
+		_selected_slot = int(explicit) if not explicit.is_empty() else CHECKPOINTS.CHECKPOINT_SLOT
+	return true
+
+
 func _load_through_title(game: Node) -> Node3D:
-	if not bool(game.call("has_save", CHECKPOINTS.CHECKPOINT_SLOT)):
-		_failures.append("staged save has no slot %d" % CHECKPOINTS.CHECKPOINT_SLOT)
+	if not bool(game.call("has_save", _selected_slot)):
+		_failures.append("staged save has no slot %d" % _selected_slot)
 		return null
 	var title := (load(TITLE_SCENE) as PackedScene).instantiate()
 	root.add_child(title)
@@ -122,11 +148,11 @@ func _load_through_title(game: Node) -> Node3D:
 	await process_frame
 	var chosen: Button = null
 	for node: Node in (title.get("_load_box") as Node).get_children():
-		if node is Button and (node as Button).text.begins_with("Save %d" % CHECKPOINTS.CHECKPOINT_SLOT) \
+		if node is Button and (node as Button).text.begins_with("Save %d" % _selected_slot) \
 				and not (node as Button).disabled:
 			chosen = node
 	if chosen == null:
-		_failures.append("the title's Load list does not offer Save %d" % CHECKPOINTS.CHECKPOINT_SLOT)
+		_failures.append("the title's Load list does not offer Save %d" % _selected_slot)
 		return null
 	chosen.pressed.emit()
 	for _frame in 7200:
