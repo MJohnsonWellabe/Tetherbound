@@ -18,3 +18,5 @@ Vess was not reached in either attempt.
 The Satchel refusal fits the same pattern, so an ambush or other input holder during care is likely.
 
 Separately, attempt 2 logged 112 `[session] combat_mastery duty … held: unresolved {"durable":true,"ok":true,…}` from t=720 s onward, with **0 releases**. The relay piece logged none. An ok, durable mastery duty that never resolves may block training or deployment mutations. This needs a session/training owner.
+
+**Update (3:40 PM CT).** systems-b measured a Meadows long-fight drain of about 100 mastery duties. `_owner_training_mutation_blocked` was true for 0 frames, so the duty queue does **not** block the Satchel or party-cycle. The "held … 0 released" lines were a logging artifact, fixed in `tb/ev-systems-b` `0d677b6a`. The refusal cause is still open; the next suspect is a modal or input owner (for example a RelicPowerPanel or a dialogue).

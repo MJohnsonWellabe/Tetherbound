@@ -468,6 +468,10 @@ var _foundation_pending_sources: Array[Dictionary] = []
 var _trainer_character_participants: Array[String] = []
 var _trainer_foundation_admissions: Dictionary = {}
 var _boss_pending_win := false
+## Physics frame a won trainer battle first waited on its durable outcome
+## (-1 when not waiting). Logged on release so the post-win world lock is
+## measurable (F19#5: helpers timed out while it lasted).
+var _pending_win_since_frame := -1
 
 func _freeze_bounty_instances(encounter_id: String, peer: int) -> void:
 	if _session == null or not _is_host(): return
@@ -8685,6 +8689,8 @@ func _tick_trainer_battle(delta: float) -> void:
 ## so no exit from a trainer battle can leave the player unable to walk.
 func _finish_trainer_battle(won: bool) -> void:
 	var spec := _trainer_spec
+	if won and _pending_win_since_frame < 0:
+		_pending_win_since_frame = Engine.get_physics_frames()
 	var ordinary_id: String = str(_encounter.get("encounter_id", ""))
 	if won and uses_durable_trainer_rewards(ordinary_id) and _is_host() \
 		and not _resolve_ordinary_combat_completion(ordinary_id):
@@ -8725,6 +8731,12 @@ func _finish_trainer_battle(won: bool) -> void:
 		_release_tournament_roster(tournament_encounter_id)
 	if _manager != null and _manager.has_method("end_round_hold"):
 		_manager.call("end_round_hold")
+	if _pending_win_since_frame >= 0:
+		var held := Engine.get_physics_frames() - _pending_win_since_frame
+		if held > 0:
+			print("[trainer] '%s' win recorded after %d physics frames (%.2f s) of durable hold" % [
+				str(spec.get("id", "")), held, float(held) / float(Engine.physics_ticks_per_second)])
+		_pending_win_since_frame = -1
 	_trainer_spec = {}
 	_trainer_battle_sent = 0
 	# F04#3: kept for the victory lines' camera, which opens a frame later.

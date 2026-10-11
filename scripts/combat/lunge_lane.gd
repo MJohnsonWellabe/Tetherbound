@@ -19,6 +19,7 @@ extends Node3D
 ## on the real ground height so it lies on slopes instead of cutting through.
 
 const GROUND_LIFT := 0.09
+const PATTERN_CUE := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
 ## Lane is sampled every STEP metres along its length so it follows terrain.
 const STEP := 0.5
 const CHEVRONS := 3
@@ -26,11 +27,6 @@ const CHEVRON_PERIOD := 0.6
 ## A body standing on a built deck far above the terrain query is not a
 ## rendering offset to copy along the lane; cap what is carried.
 const MAX_SURFACE_BIAS := 0.6
-## And a body standing on a floor BELOW the ground query (the sunken Relay
-## deck: deck 3.65 m under a 4.78 m terrain answer, F04#1 judge, 2026-10-11)
-## carries that offset down, or the lane is drawn above the deck through the
-## creatures and shows only as a hairline.
-const MAX_SURFACE_SINK := 1.5
 ## Once the body is open (its `is_rooted()`, the HUD's opening predicate), the
 ## released lane clears within this many seconds: a lingering danger slab under
 ## an "it's open" prompt gave both signals at once (P2-093).
@@ -153,7 +149,7 @@ func aim(origin: Vector3, heading: Vector3) -> void:
 		if is_instance_valid(_body) and _body.has_method("_ground_height"):
 			var under := float(_body.call("_ground_height", origin.x, origin.z))
 			if is_finite(under):
-				_surface_bias = clampf(origin.y - under, -MAX_SURFACE_SINK, MAX_SURFACE_BIAS)
+				_surface_bias = clampf(origin.y - under, 0.0, MAX_SURFACE_BIAS)
 	_origin = origin
 	_heading = heading_now
 	if is_inside_tree():
@@ -223,7 +219,12 @@ func _point(along: float, across: float, cache: bool = true) -> Vector3:
 		return offset
 	if is_instance_valid(_body) and _body.has_method("_ground_height"):
 		var height := float(_body.call("_ground_height", _origin.x + offset.x, _origin.z + offset.z))
-		if is_finite(height):
+		# F04#1: the walked floor at this sample (a built deck over sloping
+		# terrain) when a ray finds one; else the query plus the feet bias.
+		var walked := PATTERN_CUE.walked_floor(_body, _origin.x + offset.x, _origin.z + offset.z, height, _origin.y)
+		if is_finite(walked) and not is_equal_approx(walked, height):
+			offset.y = walked + GROUND_LIFT - _origin.y
+		elif is_finite(height):
 			offset.y = height + _surface_bias + GROUND_LIFT - _origin.y
 	if cache:
 		_heights[key] = offset.y
