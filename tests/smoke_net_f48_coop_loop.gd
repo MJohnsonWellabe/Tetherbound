@@ -29,9 +29,9 @@ extends "res://tests/helpers/net_harness.gd"
 ## Lv 10 Terrapup (the feast target at cap 10) and a Lv 40 Bramblebun (the
 ## Master duellist); seed_opening_complete marks the opening played;
 ## f28_feast_seed gives each one cook's ingredients (berries 4, rootstone 2,
-## attuned_ground 1) and the guest the potion's (berries 4, fiber 1), no
-## recipe; craft_home_key_trip installs one Home Key. During the run: Kitchen
-## and Master stances (craft_place_kitchen, f28_stand) and the Warden arena
+## attuned_ground 1), the guest the potion's (berries 4, fiber 1) and each
+## one Home Key, no recipe (craft_home_key_trip then sets home_key_given). During the run: Kitchen
+## Master and feast stances (craft_place_kitchen, f28_stand) and the Warden arena
 ## (explore_at) are fixture teleports, as in the leg smokes; the Warden fight
 ## uses win_trainer_battle's enemy_hp_ceiling as smoke_net_veridian_relic_key.
 ## Peer: tests/helpers/f48_coop_loop_net_peer.gd.
@@ -75,8 +75,8 @@ func _setup() -> bool:
 		if not await _pass(peer, "party_grant", {"species": "terrapup", "level": 10, "nickname": "Pup"}): return false
 		if not await _pass(peer, "party_grant", {"species": DUELLIST, "level": 40}): return false
 		if not await _pass(peer, "seed_opening_complete", {}): return false
-		var items := {"berries": 4, "rootstone": 2, "attuned_ground": 1}
-		if peer == 1: items = {"berries": 8, "fiber": 1, "rootstone": 2, "attuned_ground": 1}
+		var items := {"home_key": 1, "berries": 4, "rootstone": 2, "attuned_ground": 1}
+		if peer == 1: items = {"home_key": 1, "berries": 8, "fiber": 1, "rootstone": 2, "attuned_ground": 1}
 		if not await _pass(peer, "f28_feast_seed", {"recipes": [], "items": items}): return false
 		var saved: Dictionary = await step(peer, "save_character_here", {})
 		if not _ok(saved, "peer %d saved its seeded character" % peer): return false
@@ -96,7 +96,7 @@ func _setup() -> bool:
 func _loop() -> void:
 	var start := await _both("start")
 	for peer in 2:
-		check(start[peer].feast_recipes.is_empty() and start[peer].relics_held.is_empty() and start[peer].relics_hung.is_empty()
+		check(int(start[peer].items.home_key) == 1 and start[peer].feast_recipes.is_empty() and start[peer].relics_held.is_empty() and start[peer].relics_hung.is_empty()
 			and int(start[peer].items.tidewake_portal_key) == 0, "peer %d starts with no recipe, relic or key" % peer)
 
 	# 1. Hub: each player's own Home Key trip to the Crossing Hall.
@@ -105,7 +105,7 @@ func _loop() -> void:
 		if trip.is_empty() or bool(trip.get("skipped", false)): return
 		check(str(trip.get("realm", "")) == "meadows", "hub: peer %d arrived at the Crossing Hall" % peer)
 	var hub := await _both("hub")
-	_leg("hub", start, hub, "")
+	_leg("hub", start, hub)
 
 	# 2. Homestead crafting: the guest crafts at the host's Kitchen and keeps it.
 	var placed := await _data(0, "craft_place_kitchen", {}, 3000)
@@ -119,7 +119,7 @@ func _loop() -> void:
 		"craft: the guest paid berries 4 + fiber 1 and keeps one Small Potion (%s)" % str(craft[1].items))
 	check(int(craft[0].items.potion_small) == int(hub[0].items.potion_small) and craft[0].items.berries == hub[0].items.berries,
 		"craft: the host's own stock is untouched by the guest's craft (%s)" % str(craft[0].items))
-	_leg("craft", hub, craft, "craft:", [1])
+	_leg("craft", hub, craft, "station craft", _station_craft, [1])
 
 	# 3. Portal: each walks out through the Crossing Hall's home arch.
 	for peer in 2:
@@ -129,7 +129,7 @@ func _loop() -> void:
 		check(str(through.reply.get("character_id", _ids[peer])) == _ids[peer],
 			"portal: peer %d's home arch arrival is its own (%s)" % [peer, str(through.reply)])
 	var portal := await _both("portal")
-	_leg("portal", craft, portal, "")
+	_leg("portal", craft, portal)
 
 	# 4. Master: each wins its own duel and opens the chest for its own recipe.
 	var definition: Dictionary = preload("res://scripts/creatures/breakthrough.gd").master(MASTER)
@@ -171,30 +171,35 @@ func _loop() -> void:
 	for peer in 2:
 		check(master[peer].master_wins.count(MASTER) == 1 and master[peer].feast_recipes.count("feast_t1") == 1,
 			"Master: peer %d holds one %s win and the feast_t1 recipe once (%s, %s)" % [peer, MASTER, str(master[peer].master_wins), str(master[peer].feast_recipes)])
-	_leg("master", portal, master, "master_recipe:")
+	_leg("master", portal, master, "Master win", func(r: String, id: String) -> bool: return r.begins_with("master_recipe:%s:%s:win" % [MASTER, id]))
+	_leg("master", portal, master, "Master recipe", func(r: String, id: String) -> bool: return r == "master_recipe:%s:%s" % [MASTER, id])
 
 	# 5. Feast: each cooks at the host's Kitchen and feeds its own Terrapup.
 	var station := await _data(1, "f28_station_at", {"kitchen_uid": kitchen}, 1200)
 	if station.is_empty(): return
 	for peer in 2:
 		if not await _pass(peer, "f27_dismiss_modals", {}): return
-		if not await _pass(peer, "f28_stand", {"at": [float(station.at[0]) + 5.0, float(station.at[2]) + 5.0], "settle": 90}): return
-		if not await _pass(peer, "move_to", {"x": float(station.at[0]) + 1.6, "z": float(station.at[2]) + 1.6,
-				"close_enough": 1.5, "budget_frames": 2400}, 2800): return
-		var cooked := await _data(peer, "f28_cook", {"kitchen_uid": kitchen, "button": RECIPE}, 2400)
+		# The Kitchen stance craft_at_host_kitchen uses (a disclosed fixture
+		# teleport): an ordinary walk from the Master stalls against the
+		# Spice rack outside the station's interaction radius.
+		if not await _pass(peer, "f28_stand", {"at": [float(station.at[0]) + 1.6, float(station.at[2]) + 1.6], "settle": 120}): return
+		var cooked := await _feast_press(peer, "f28_cook", kitchen, RECIPE)
 		check(cooked.get("pressed") == true, "feast: peer %d's Kitchen panel offers %s (%s)" % [peer, RECIPE, str(cooked.get("labels", []))])
 		await step(peer, "f27_dismiss_modals", {})
-		var fed := await _data(peer, "f28_feed", {"kitchen_uid": kitchen, "button": "Pup · "}, 2400)
+		var fed := await _feast_press(peer, "f28_feed", kitchen, "Pup · ")
 		check(fed.get("pressed") == true, "feast: peer %d fed its own Pup (%s)" % [peer, str(fed.get("message", ""))])
 		await step(peer, "wait", {"frames": SETTLE})
 	var feast := await _both("feast")
 	for peer in 2:
 		var pup := await _data(peer, "f28_feast_view", {})
-		check(int(feast[peer].items.feast_t1_ground) == 0 and int(feast[peer].items.attuned_ground) == 0
-			and int(feast[peer].items.rootstone) == 0 and int(pup.get("party", {}).get("terrapup", {}).get("cap_level", -1)) == 20,
-			"feast: peer %d cooked and fed one feast; its Pup's cap is 20 (%s; %s)" % [peer, str(feast[peer].items), str(pup.get("party", {}).get("terrapup"))])
-	_leg("feast cook", master, feast, "craft:")
-	_leg("feast feed", master, feast, "feast_feed:")
+		var spent := {}
+		for id: String in ["berries", "rootstone", "attuned_ground", "feast_t1_ground"]:
+			spent[id] = int(master[peer].items[id]) - int(feast[peer].items[id])
+		check(spent == {"berries": 4, "rootstone": 2, "attuned_ground": 1, "feast_t1_ground": 0}
+			and int(pup.get("party", {}).get("terrapup", {}).get("cap_level", -1)) == 20,
+			"feast: peer %d spent one cook's cost, fed the feast, and its Pup's cap is 20 (spent %s; %s)" % [peer, str(spent), str(pup.get("party", {}).get("terrapup"))])
+	_leg("feast", master, feast, "feast cook", _station_craft)
+	_leg("feast", master, feast, "feast feed", func(r: String, _id: String) -> bool: return r.begins_with("feast_feed:"))
 
 	# 6. Boss: both fight the Warden; each participant gets its own key and relic.
 	for peer in 2:
@@ -225,7 +230,7 @@ func _loop() -> void:
 	for peer in 2:
 		check(int(boss[peer].items.tidewake_portal_key) == 1 and boss[peer].relics_held.count("meadows") == 1,
 			"boss: peer %d holds its own Tidewake key (x%d) and Meadows relic once (%s)" % [peer, int(boss[peer].items.tidewake_portal_key), str(boss[peer].relics_held)])
-	_leg("boss", feast, boss, "")
+	_leg("boss", feast, boss)
 
 	# 7. Relic hang: each Home Keys to the Hall and hangs its own relic.
 	for peer in 2:
@@ -239,7 +244,7 @@ func _loop() -> void:
 			"hang: peer %d hung its own Meadows relic once (%s)" % [peer, str(hung[peer].relics_hung)])
 		check(not hung[peer].receipts.has("relic_hang:meadows:" + _ids[1 - peer]),
 			"hang: peer %d's record holds no receipt of the other player's hang" % peer)
-	_leg("hang", boss, hung, "relic_hang:")
+	_leg("hang", boss, hung, "relic hang", func(r: String, id: String) -> bool: return r == "relic_hang:meadows:" + id)
 
 	# 8. One save and reload: the host saves and reloads its world; the guest
 	# leaves and rejoins as its saved character. Nothing duplicates or vanishes.
@@ -286,22 +291,51 @@ func _both(label: String) -> Array:
 	return [host, guest]
 
 
-## A leg's new receipts: never shared between the players; with `prefix`,
-## exactly one new receipt of that kind for each player in `payers`.
-func _leg(label: String, before: Array, after: Array, prefix: String, payers: Array = [0, 1]) -> void:
+## A leg's new receipts: each names its own player (its character, or one of
+## its own creatures) and never the other player or theirs, and
+## is in that player's record only; with `matches`, exactly one new receipt of
+## that kind for each player in `payers` (none for the others).
+func _leg(label: String, before: Array, after: Array, kind: String = "", matches: Callable = Callable(), payers: Array = [0, 1]) -> void:
 	var fresh: Array = []
 	for peer in 2:
 		var added: Array = (after[peer].receipts as Array).filter(func(r: Variant) -> bool: return not (before[peer].receipts as Array).has(r))
 		fresh.append(added)
 		print("F48 LOOP %s: peer %d new receipts %s" % [label, peer, str(added)])
-		if not prefix.is_empty():
-			var kind := added.filter(func(r: Variant) -> bool: return str(r).begins_with(prefix))
+		var own: Array = [_ids[peer]] + (after[peer].caps as Dictionary).keys()
+		var theirs: Array = [_ids[1 - peer]] + (after[1 - peer].caps as Dictionary).keys()
+		for r: Variant in added:
+			check(own.any(func(id: Variant) -> bool: return str(r).contains(str(id)))
+				and not theirs.any(func(id: Variant) -> bool: return str(r).contains(str(id))),
+				"%s: peer %d's new receipt names its own character or creature only (%s)" % [label, peer, str(r)])
+		if matches.is_valid():
+			var hits := added.filter(func(r: Variant) -> bool: return matches.call(str(r), _ids[peer]))
 			var want := 1 if payers.has(peer) else 0
-			check(kind.size() == want, "%s: peer %d gained %d new %s receipt(s), wanted %d (%s)" % [label, peer, kind.size(), prefix, want, str(kind)])
+			check(hits.size() == want, "%s: peer %d gained %d new %s receipt(s), wanted %d (%s)" % [label, peer, hits.size(), kind, want, str(hits)])
 	for r: Variant in fresh[0]:
 		check(not (after[1].receipts as Array).has(r), "%s: the host's new receipt %s is not in the guest's record" % [label, str(r)])
 	for r: Variant in fresh[1]:
 		check(not (after[0].receipts as Array).has(r), "%s: the guest's new receipt %s is not in the host's record" % [label, str(r)])
+
+
+## A station craft's receipt (the Kitchen's potion or feast): craft:<crafter>:<craft id>,
+## not the host's paid build placements (craft:<owner>:homestead_build:...).
+func _station_craft(r: String, id: String) -> bool:
+	return r.begins_with("craft:%s:" % id) and r.trim_prefix("craft:%s:" % id).is_valid_hex_number()
+
+
+## One feast panel press, pressed again (as a player would, twice at most)
+## when the host refused it because the record moved under the open panel.
+func _feast_press(peer: int, action: String, kitchen: String, button: String) -> Dictionary:
+	var out := {}
+	for attempt in 3:
+		out = await _data(peer, action, {"kitchen_uid": kitchen, "button": button}, 2400)
+		print("F48 LOOP %s peer %d attempt %d: %s" % [action, peer, attempt, JSON.stringify(out)])
+		var moved := false
+		for answer: Variant in out.get("completed", []):
+			if answer is Dictionary and answer.get("code") == "source_or_revision_changed": moved = true
+		if not moved: break
+		await step(peer, "wait", {"frames": 120})
+	return out
 
 
 func _view(peer: int) -> Dictionary:
