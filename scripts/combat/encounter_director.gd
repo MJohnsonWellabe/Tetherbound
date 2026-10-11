@@ -5818,7 +5818,7 @@ func _ambient_active_arenas(wild: Node3D = null) -> Array[Node3D]:
 		var world_owned := arena.get_parent() == get_parent()
 		# Authoritative runtimes parent their arenas to this director. Only an
 		# actual registered live runtime extends the same-world ownership rule.
-		var runtime_owned := arena.get_parent() == self and manager.get_parent() == self \
+		var runtime_owned: bool = arena.get_parent() == self and manager.get_parent() == self \
 			and manager.get_script() == SHARED_WILD_HOST_FIGHT and _shared_host_fights.values().has(manager)
 		if not world_owned and not runtime_owned: continue
 		var duplicate := false
