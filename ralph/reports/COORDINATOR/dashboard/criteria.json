@@ -717,7 +717,7 @@
      "text": "Audio witness for phases/lightning",
      "status": "not_started",
      "evidence": "smoke_stormwood_surge_audio.gd (CI; wiring/timing only)",
-     "gap": "Captures lane: author the nine Stormwood cues procedurally (code synthesis, provenance), wire them, prove played=true in-scene, plus a waveform/spectrogram check.",
+     "gap": "The nine cues exist (assets/audio/stormwood/*.wav, #540; spectral/loop checks in ralph/reports/AUDIO/stormwood-nine/). Missing: only the in-scene witness that each cue plays (played=true). Captures lane.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. All nine assets/audio/stormwood/* cue files are absent at b4e4897d5. The smoke records played=false, so nothing is audible.",
      "audit_index": 5
     },
