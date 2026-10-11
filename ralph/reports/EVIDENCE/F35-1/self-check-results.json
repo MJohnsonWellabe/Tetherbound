@@ -1,0 +1,254 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"archetype_filter": [],
+	"batch": "ultimates",
+	"cases": [
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "fulgocobra",
+				"id": "ultimate_fulgocobra"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 15.408434
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 37.273157
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 22.258097
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 10.627043
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.835183
+				}
+			},
+			"id": "ultimate_fulgocobra",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "fulgocobra",
+				"id": "ultimate_fulgocobra"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 13.62135
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 34.668056
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 20.305036
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 9.69333
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.189295
+				}
+			},
+			"id": "ultimate_fulgocobra",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "solmane",
+				"id": "ultimate_solmane"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 12.698698
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 32.196378
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 18.889942
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.862631
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.719437
+				}
+			},
+			"id": "ultimate_solmane",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "solmane",
+				"id": "ultimate_solmane"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 12.864116
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 32.866014
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 19.394504
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.93389
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.681949
+				}
+			},
+			"id": "ultimate_solmane",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "veridian",
+				"id": "ultimate_veridian"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 14.80483
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 38.484176
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 21.96048
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 10.275255
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.469016
+				}
+			},
+			"id": "ultimate_veridian",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "veridian",
+				"id": "ultimate_veridian"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 14.992782
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 37.926743
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 22.151102
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 10.589406
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.593302
+				}
+			},
+			"id": "ultimate_veridian",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		}
+	],
+	"display": "X11",
+	"engine": {
+		"build": "official",
+		"hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+		"hex": 263936,
+		"major": 4,
+		"minor": 7,
+		"patch": 0,
+		"status": "stable",
+		"string": "4.7-stable (official)",
+		"timestamp": 0
+	},
+	"failures": [],
+	"light_lifecycle": {},
+	"limits": [
+		"No combat/damage authority exercised",
+		"Wall-frame intervals include CPU/GPU/present/OS scheduling",
+		"No Ally or four-creature-fight acceptance claim",
+		"Identity duration slowed for readable frames; host timing requires separate player witness"
+	],
+	"medium_features": false,
+	"rank_filter": [],
+	"relocated_world_characters": [],
+	"renderer": "gl_compatibility",
+	"resolution": [
+		1280,
+		720
+	],
+	"scope": "production_effect_nodes_synthetic_arena",
+	"selected_identity": "",
+	"stage": "meadows",
+	"target": {
+		"production_model": true,
+		"scope": "posed production body; no encounter or HP authority",
+		"species": "mudsnout"
+	},
+	"ultimate_override_assertions": 361
+}

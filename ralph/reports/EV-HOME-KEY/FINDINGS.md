@@ -60,3 +60,11 @@ trainer_active=true with fighting=false and no enemy, so F44#1 fails
 "endgame leader tier L58 (enemy L-1)". This may be related to batch #677's
 fight-placement changes (for example 6ddb3724, which added clearance to the shared orbit
 containment bound). Not bisected.
+
+## 5. F44#1 PASS (12:37 PM CT)
+
+Branch merged with tb/ev-coordinator b75875f4 (arena-seat fixes 51f85d43, a255ca25),
+plus the disclosed teleport beside south_bridge_grunt (3cd3728f, proof rules v2).
+`smoke_f20_ending.gd`: 68 checks, 0 failures, EXIT=0;
+"F44#1: the post-credits leader returns at the endgame leader tier L58 (enemy L58)" PASS;
+endpoint counts_as_f20_3_proof=true. Section 4's seat refusal did not recur.

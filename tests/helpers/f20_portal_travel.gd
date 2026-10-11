@@ -276,37 +276,6 @@ func _walk_to_grandpa(prompt: Node3D) -> bool:
 func activate_endgame_rematch(prompt: Node3D) -> bool:
 	return await _with_navigation_lessons(_activate_endgame_rematch.bind(prompt))
 
-var _route_error := ""
-
-## Ordinary walk headings from the village (or its tournament lawn) to a
-## target beyond it on the authored Lower Meadows trail. Empty when the target
-## is in the village, where the original direct walk applies.
-func _authored_route_to(target: Vector3) -> Array[Vector3]:
-	_route_error = ""
-	var headings: Array[Vector3] = []
-	var terrain: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
-	if not terrain is Dictionary or not terrain.get("paths") is Dictionary or not terrain.get("trail") is Dictionary:
-		_route_error = "F20 rematch travel lacks the authored roads"; return headings
-	var lawn: Array = []
-	for route: Variant in terrain.paths.get("approaches", []):
-		if route is Dictionary and route.get("id") == "village_tournament_lawn": lawn = route.get("points", [])
-	var trail: Array = []
-	for band: Variant in terrain.trail.get("bands", []):
-		if band is Dictionary and band.get("id") == "band1_lower_meadows": trail = band.get("points", [])
-	if lawn.size() != 4 or trail.size() < 2:
-		_route_error = "F20 rematch travel lacks the authored lawn or Lower Meadows trail"; return headings
-	var trail_start := Vector2(float(trail[0][0]), float(trail[0][1]))
-	if target.z <= trail_start.y + 20.0: return headings
-	var y := _player.global_position.y
-	# Off the lawn by its east edge, back to main street (lawn points 2 then 1).
-	if _player.global_position.x >= float(lawn[0][0]) and _player.global_position.z > float(lawn[0][1]) + 2.0:
-		headings.append(Vector3(float(lawn[2][0]), y, float(lawn[2][1])))
-		headings.append(Vector3(float(lawn[1][0]), y, float(lawn[1][1])))
-	for point: Variant in trail:
-		if float(point[1]) >= target.z: break
-		headings.append(Vector3(float(point[0]), y, float(point[1])))
-	return headings
-
 func _activate_endgame_rematch(prompt: Node3D) -> bool:
 	if prompt == null or prompt.get("label") != "Endgame rematch" or not _bind():
 		return _fail("F20 rematch requires its actual enabled world provider")
@@ -315,14 +284,24 @@ func _activate_endgame_rematch(prompt: Node3D) -> bool:
 	var recoveries_before := int(_player.get("_unstick_count"))
 	var distance := _player.global_position.distance_to(prompt.global_position)
 	var nav := NAV.new(tree, _player, _rig, _stick)
-	# The nearest leader (the South Bridge grunt) is 1.27 km south of the
-	# board. The straight line from the tournament lawn pins the capsule south
-	# of the board; walk the authored lawn, main street and Lower Meadows trail
-	# as a player does. Headings share the original budget and watchdog.
-	var headings := _authored_route_to(prompt.global_position)
-	if headings.is_empty() and not _route_error.is_empty(): return _fail(_route_error)
-	print("F20 REMATCH authored route headings=", headings.size(), " target=", prompt.global_position)
-	var reached: bool = await nav.walk_to_guided(prompt.global_position, maxi(1200, int(distance * 65.0)), 0.6, headings)
+	# DISCLOSED TELEPORT (proof rules v2, owner 2026-10-11): F44#1 is about the
+	# endgame tier, not the 1.27 km authored walk to the South Bridge grunt,
+	# which 1f4961a2 proved walkable (~63 min headless). Drop the player 1 m
+	# above ground at the spot that walk reached beside the prompt; the
+	# follower leash brings the ally. Ordinary walk and input from there.
+	var beside := prompt.global_position + Vector3(-0.1, 0.0, 1.07)
+	var ground := float(tree.current_scene.call("ground_height_at", beside.x, beside.z))
+	if not is_finite(ground): return _fail("F20 rematch teleport has no ground beside the grunt")
+	_player.global_position = Vector3(beside.x, ground + 1.0, beside.z)
+	_player.velocity = Vector3.ZERO
+	print("F20 REMATCH disclosed teleport to=", _player.global_position, " target=", prompt.global_position)
+	for frame in 180:
+		await tree.physics_frame
+		if _player.is_on_floor(): break
+	for frame in 120: await tree.physics_frame
+	recoveries_before = int(_player.get("_unstick_count"))
+	distance = _player.global_position.distance_to(prompt.global_position)
+	var reached: bool = await nav.walk_to(prompt.global_position, maxi(1200, int(distance * 65.0)), 0.6)
 	_stick(0, 0)
 	if not reached: return _fail("F20 ordinary capsule walk failed to endgame rematch")
 	for frame in 8: await tree.physics_frame
