@@ -153,7 +153,6 @@
   },
   "runtime_binding": "water_iona binds npc_identity_water_iona_v1 with global and record gates OFF; installed field_researcher model/profile and maren portrait remain fallback; original disabled p2055_water_iona record preserved",
   "open_proofs": [
-    "Low/Compatibility world capture with identity clearly visible and no blocking defect",
     "independent Claude judgement"
   ],
   "native_sampled_review": {
@@ -182,5 +181,29 @@
     "coordinator_findings": "Relaxed arms and no obvious sampled coat breakage",
     "limitations": "Sampled pose evidence only; continuous motion and independent Claude acceptance not established"
   },
-  "proof_rules": "Owner proof rules v2, issue 572 comment 6111674339; Low/Compatibility only; earlier High/Medium requirement withdrawn"
+  "proof_rules": "Owner proof rules v2, issue 572 comment 6111674339; Low/Compatibility only; earlier High/Medium requirement withdrawn",
+  "native_world_review": {
+    "scope": "Root native Low production paired-body preview only; Claude acceptance pending",
+    "captured_source": "7b639b01accb6d900489e1a56d5b4471f52b817b",
+    "baseline_source": "9e39d0086ee88998b8295747fc19f6603fe714f7",
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "player_stand_xz": [
+      712.504028320313,
+      1552.0
+    ],
+    "heading_deg": 180,
+    "pitch_deg": -10,
+    "frames_before_after": [
+      1,
+      1
+    ],
+    "camera_delta_m": 0.0,
+    "sheet": "ralph/reports/VISUAL-PROOF/P2-055/iona-before-after-Low.png",
+    "candidate_preview": "Explicit process-local Appearance.resolve and production setup_from_config; shipping gates remain OFF",
+    "limitations": "Background creatures vary across independent boots; still frames do not prove continuous motion or whole acceptance"
+  }
 }
