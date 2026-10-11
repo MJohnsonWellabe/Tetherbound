@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://brifen8gikvbg"
-path="res://.godot/imported/creature_cloudfang_native_Image_0.jpg-805ab947deb690745e5ba4e5b2120e84.ctex"
+path.s3tc="res://.godot/imported/creature_cloudfang_native_Image_0.jpg-805ab947deb690745e5ba4e5b2120e84.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "baf9426e7e55f59d9487e2131bf3f783"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/cloudfang/candidate/models/creature_cloudfang_native_Image_0.jpg"
-dest_files=["res://.godot/imported/creature_cloudfang_native_Image_0.jpg-805ab947deb690745e5ba4e5b2120e84.ctex"]
+dest_files=["res://.godot/imported/creature_cloudfang_native_Image_0.jpg-805ab947deb690745e5ba4e5b2120e84.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
