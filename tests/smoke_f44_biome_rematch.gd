@@ -152,6 +152,8 @@ func _run() -> void:
 	if not check(arbiter != null and arbiter.call("winning_provider") == prompt, "the ordinary Interact offer is the rematch prompt"):
 		await _finish()
 		return
+	var activations := [0]
+	prompt.connect("activated", func() -> void: activations[0] += 1)
 	await _tap("interact")
 	for _i in 1800:
 		if manager.call("is_fighting") == true and director.call("trainer_battle_active") == true: break
@@ -166,7 +168,17 @@ func _run() -> void:
 			"can_challenge_expected": director.call("can_challenge", expected_spec) if director.has_method("can_challenge") else "n/a",
 			"source_busy": director.call("rematch_source_busy", source),
 			"expected_spec_empty": expected_spec.is_empty(),
-			"world_message": str(game.get("_pending_world_message"))}
+			"world_message": str(game.get("_pending_world_message")), "prompt_activated": activations[0]}
+		# Diagnostic only (after the failure is recorded): which step refused.
+		var rematches: Node = game.get("session").get_node_or_null(^"FoundationComposition/Rematches")
+		if rematches != null:
+			receipt.admission.realm_director_found = rematches.call("_director",
+				game.get("session").call("_portal_world_node", game.current_realm)) != null
+		var services := get_nodes_in_group("f44_rematch_services")
+		var ally: RefCounted = director.get("_ally")
+		if not services.is_empty():
+			receipt.admission.direct_challenge = services[0].call("challenge", str(game.local.character_id), witness, tier, source,
+				str(ally.get("uid")) if ally != null else "")
 	if not check(admitted, "ordinary input admits the canonical %s %s rematch (%s)" % [witness, tier, str(receipt.get("admission", {}))]):
 		await _finish()
 		return
