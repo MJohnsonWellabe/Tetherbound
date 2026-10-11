@@ -61,7 +61,7 @@ var started_ms := 0
 var before := {}
 var helper_result := {}
 var handoff := {}
-var max_steps := 32
+var max_steps := 8
 
 
 func _init() -> void:
@@ -102,7 +102,7 @@ func _run() -> void:
 	Engine.time_scale = 8.0
 	Engine.physics_ticks_per_second = 480
 	Engine.max_physics_steps_per_frame = max_steps
-	disclosures.append("Simulation clock 8x at 480 Hz, %d physics steps per frame (smoke_stormwood_continuous.gd's clock; a higher step cap only lets a slow host reach it); helpers switch fights/walks to 1x themselves" % max_steps)
+	disclosures.append("Simulation clock 8x at 480 Hz, %d physics steps per frame (smoke_stormwood_continuous.gd's scale; the 8-step cap keeps production's per-frame granularity, <= 0.13 s of sim between process frames, so input releases and claim settlement are not starved on a slow host); helpers switch fights/walks to 1x themselves" % max_steps)
 	print("STORMWOOD CHAIN segment=%s from=%s out=%s commit=%s" % [segment, from_dir, out_dir, commit])
 	if await _load_previous():
 		before = _state()
