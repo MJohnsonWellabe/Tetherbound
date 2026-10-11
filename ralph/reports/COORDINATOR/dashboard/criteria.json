@@ -876,7 +876,7 @@
      "text": "Earned route reaches all six island groups",
      "status": "partial",
      "evidence": "ralph/reports/TIDEWAKE/f13_0_six_groups/@ddaf7a7bd",
-     "gap": "Re-run the six-group route from the regenerated F19 Tidewake checkpoint; disclose shortcuts Folds into F49#0, F19#5.",
+     "gap": "Tidewake pieces 01-05 and 08 PASS with production Load between pieces (35e10fe8); 07 fails at Officer Venn at every level tried (L20/L32/L33/L44), which points to a pilot or fight defect, not level. Fights lane is root-causing; then re-run 07 (routes-west).",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Earned evidence. water_world/encounters/save diff since ddaf7a7bd: 12 files, +1501/−767 (F19 re-derivation).",
      "audit_index": 0
     },
