@@ -720,13 +720,13 @@
       "id": "mouth",
       "at": [
         0.0,
-        6.0
+        8.0
       ],
       "size": [
-        7.0,
-        10.0
+        14.0,
+        14.0
       ],
-      "height": 3.6
+      "height": 4.5
     },
     {
       "id": "hall",
@@ -1095,7 +1095,6 @@
     "passage_overlap_m": 0.25,
     "mouth_passage_front_overlap_m": 0.12,
     "mouth_passage_half_width_extra_m": 0.62,
-    "mouth_passage_start_inset_m": 3.0,
     "chamber_perimeter_segments": 64,
     "chamber_vertical_segments": 12,
     "chamber_ceiling_rings": 9,

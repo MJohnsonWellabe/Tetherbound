@@ -6223,20 +6223,25 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 		# Preserve the accepted low crowns throughout the deeper cavern route.
 		shell_cfg["passage_crown_scale"] = float(cfg.get(
 			"mouth_passage_crown_scale", cfg.get("passage_crown_scale", 1.1)))
-		# Do not push a second complete gallery shell three metres into the mouth
-		# chamber. That overlap was the nested rib/trapezoid visible from the road.
-		# The small remaining seam allowance still crosses the hidden doorway wall;
-		# the far end keeps the full sealed overlap into the hall.
+		# The existing gallery is also the mouth's visible vestibule. Join the
+		# unchanged throat rear, then derive its broad central span from the SAME
+		# chamber bounds as the structural walls, roof and floor below the finish.
+		# No second canopy or independent enlarged arena volume is introduced.
 		front_overlap = clampf(float(cfg.get("mouth_passage_front_overlap_m", 0.12)),
 			0.05, 0.35)
-		# Begin on the bank face, not several metres inside the exposed mouth.
-		# This makes one sealed landscape-to-hall gallery and removes the open
-		# grassy roof gap that a separate canopy could only cover as a floating
-		# sheet. Widen it to the bank's five-metre cut instead of leaving a narrow
-		# repeated tunnel inside a seven-metre chamber.
-		var start_inset := float(cfg.get("mouth_passage_start_inset_m", 3.0))
-		start = (a.x - a_size.x * 0.5 + start_inset) if along_x \
-			else (a.z - a_size.y * 0.5 + start_inset)
+		var mouth_front := (a.x - a_size.x * 0.5) if along_x \
+			else (a.z - a_size.y * 0.5)
+		var mouth_back := (a.x + a_size.x * 0.5) if along_x \
+			else (a.z + a_size.y * 0.5)
+		start = mouth_front + float(_bank_cfg().get("throat_overlap_m", 0.4))
+		shell_cfg["mouth_vestibule"] = {
+			"front": start,
+			"full_start": start + _wall_t,
+			"full_finish": mouth_back - _wall_t,
+			"back": mouth_back,
+			"half_width": (a_size.y if along_x else a_size.x) * 0.5 - inset,
+			"height": float((_chambers[from_id] as Dictionary).get("height", 0.0)) - inset,
+		}
 		half_width += float(cfg.get("mouth_passage_half_width_extra_m", 0.90))
 	var shell: MeshInstance3D = _excavated_passage_shell(along_x, start - front_overlap,
 		finish + overlap, lateral, half_width + 0.24, height - inset, shell_cfg,
@@ -6269,10 +6274,33 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 		section_height = PackedFloat32Array([0.0, 0.31, 0.58, 0.75,
 			0.82, 0.84, 0.82, 0.75, 0.59, 0.33, 0.0])
 	var columns := section_across.size()
+	var vestibule: Dictionary = cfg.get("mouth_vestibule", {}) as Dictionary
+	var along_samples: Array[float] = []
+	for index in length_segments + 1:
+		along_samples.append(float(index) / float(length_segments))
+	var section_reach := 1.0
+	var section_peak := 1.0
+	if not vestibule.is_empty():
+		# Exact shoulder/end rings prevent a coarse longitudinal triangle from
+		# carrying the low entry profile into the central room's standing space.
+		for boundary: String in ["front", "full_start", "full_finish", "back"]:
+			var sample := clampf((float(vestibule[boundary]) - start) / (finish - start),
+				0.0, 1.0)
+			if not along_samples.has(sample):
+				along_samples.append(sample)
+		along_samples.sort()
+		length_segments = along_samples.size() - 1
+		section_reach = 0.0
+		section_peak = 0.0
+		for value: float in section_across:
+			section_reach = maxf(section_reach, absf(value))
+		for value: float in section_height:
+			section_peak = maxf(section_peak, value)
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for along_index in length_segments + 1:
-		var t := float(along_index) / float(length_segments)
+		var t: float = along_samples[along_index]
+		var vestibule_weight := _mouth_vestibule_weight(lerpf(start, finish, t), vestibule)
 		var width_wave := 1.0 + 0.10 * sin(t * TAU * 1.35 + seed * 0.13) \
 			+ 0.045 * sin(t * TAU * 2.7 + seed * 0.31)
 		if bank_finish:
@@ -6289,8 +6317,17 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 			var front_rag := 0.38 * sin(section_t * PI * 1.7 + seed * 0.11)
 			var back_rag := 0.32 * sin(section_t * PI * 2.1 + seed * 0.23)
 			var along := lerpf(start + front_rag, finish + back_rag, t)
+			if not vestibule.is_empty():
+				# Keep erosion at the existing gallery ends; the full room span has
+				# exact longitudinal boundaries shared with its continuous floor.
+				along = lerpf(along, lerpf(start, finish, t), vestibule_weight)
 			var across := section_across[section_index] * half_width * width_wave \
 				+ lateral_drift
+			if not vestibule.is_empty():
+				var room_half_width := (float(vestibule.half_width) - absf(lateral_drift)) \
+					/ section_reach
+				across = lerpf(across, section_across[section_index] * room_half_width \
+					+ lateral_drift, vestibule_weight)
 			var crown_weight := sin(section_t * PI)
 			# R32: the low 0.77 crown left the lit rear cavern shell visible as a
 			# pale rectangular cap above the mouth-to-hall transition. Carry this
@@ -6301,6 +6338,13 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 				+ roof_wave * crown_weight \
 				+ height * 0.025 * crown_weight \
 				* sin(section_t * TAU * 2.0 + t * 3.0 + seed)
+			if not vestibule.is_empty():
+				var room_height := float(vestibule.height)
+				var room_y := section_height[section_index] / section_peak * room_height \
+					+ roof_wave * crown_weight + height * 0.025 * crown_weight \
+					* sin(section_t * TAU * 2.0 + t * 3.0 + seed)
+				# Roughness can lower the crown, never put it through the actual roof.
+				y = lerpf(y, _floor_y + clampf(room_y, 0.0, room_height), vestibule_weight)
 			if bank_finish:
 				var frac := clampf((y - _floor_y) / maxf(height, 0.1), 0.0, 1.0)
 				st.set_color(Color(frac, lerpf(0.70, 0.35, t),
@@ -6319,8 +6363,9 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 	var floor_columns := 7
 	var floor_base := (length_segments + 1) * columns
 	for along_index in length_segments + 1:
-		var t := float(along_index) / float(length_segments)
+		var t: float = along_samples[along_index]
 		var along := lerpf(start, finish, t)
+		var vestibule_weight := _mouth_vestibule_weight(along, vestibule)
 		var drift := half_width * (0.13 * sin(t * PI * 1.55 + seed * 0.07) \
 			+ 0.035 * sin(t * TAU * 3.2 + seed))
 		for floor_index in floor_columns:
@@ -6328,6 +6373,10 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 			var floor_reach := 1.34 if bank_finish else 1.10
 			var across := lerpf(-half_width * floor_reach,
 				half_width * floor_reach, across_t) + drift
+			if not vestibule.is_empty():
+				var room_half_width := float(vestibule.half_width)
+				across = lerpf(across, lerpf(-room_half_width, room_half_width, across_t),
+					vestibule_weight)
 			var y := _floor_y
 			if bank_finish:
 				st.set_color(Color(0.0, lerpf(0.78, 0.48, t), 1.0, 1.0))
@@ -6345,6 +6394,13 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 	shell.mesh = st.commit()
 	shell.material_override = material
 	return shell
+
+
+func _mouth_vestibule_weight(along: float, profile: Dictionary) -> float:
+	if profile.is_empty():
+		return 0.0
+	return smoothstep(float(profile.front), float(profile.full_start), along) \
+		* (1.0 - smoothstep(float(profile.full_finish), float(profile.back), along))
 
 
 func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
