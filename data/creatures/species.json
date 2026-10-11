@@ -529,19 +529,26 @@
         "radius": 1.245366,
         "_comment_footprint": "Long-legged deer/mount body -- more footprint than a compact biped, less than Trailpup's low lean canine body.",
         "footprint_allowance": 2.8,
-        "model": "res://assets/creatures/tetherbound/meadowhart_bare/models/creature_meadowhart_bare_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/meadowhart/candidate/models/creature_meadowhart_native.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "colourway_source_species": "meadowhart_bare",
+        "colourway_source_species": "meadowhart_native_review",
         "_comment_art": "X04/V4: complete bare Meadowhart skin from an inspected agent-drafted derivative of the established Meadowhart reference. Replaces centroid-based tack removal, which also removed the front legs and torso. Crafted RideSaddle remains the only tack. Provenance and native visual evidence: ralph/reports/VISUAL/MEADOWHART-ANATOMY.md. Height, collider and physical riding seat are unchanged.",
         "animations": {
           "idle": "idle",
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
-        }
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        },
+        "field_emission": 0.0,
+        "rest_model_position_offset": 0.0
       },
       "learnset": "meadowhart"
     },
