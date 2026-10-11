@@ -1353,16 +1353,32 @@
         "safe_escape": "side",
         "first_attack_delay": 2.5
       },
+      "guardian_wall_quick": {
+        "_comment": "F04#0 re-proof (smoke_warrens: the guardian fought F22's generic wall_check at the pre-bridge 1.00/0.90 floor, and the code-blind judge saw both attacks share one magenta tell). BOSSES §4.1: 'Ordinary pressure follows WALL: .85 s tell and 1.1 s recovery' and 'Quick retains WALL power/timing and ordinary geometry'. So this row authors only the BOSSES timing (`bosses_timing` keeps it exact, combat_ai.gd select_pattern) and takes range/cone/lunge/power from the guardian's own merged combat config. Its tell is a VIOLET cone (hue 249): the 'stay out of reach, punish after' check, distinct from Earth Fist's orange. Neither colour is Team Tether's reserved red/oxblood nor the shared magenta.",
+        "role": "WALL",
+        "slot": "quick",
+        "telegraph_shape": "cone",
+        "telegraph": 0.85,
+        "recovery": 1.1,
+        "heavy": false,
+        "bosses_timing": true,
+        "telegraph_colour": "#8f7dff",
+        "safe_escape": "outside"
+      },
       "guardian_earth_fist": {
+        "_comment_f04_0": "F04#0 re-proof: BOSSES §4.1 'Earth Fist uses a 6.5 m lunge and 72° cone'; `move_geometry` overlays range/cone_degrees/lunge from MoveDB's earth_fist at selection (wild_creature.gd _select_attack), so the numbers below are only its transcription. ORANGE cone (hue 35), the heavy's own colour: step out of the arc sideways.",
         "role": "WALL",
         "slot": "charged",
         "telegraph_shape": "cone",
         "telegraph": 1.1,
         "recovery": 1.2,
         "heavy": true,
-        "range": 5,
-        "cone_degrees": 85,
-        "lunge": 0,
+        "bosses_timing": true,
+        "move_geometry": true,
+        "telegraph_colour": "#ff9e1f",
+        "range": 3.8,
+        "cone_degrees": 72,
+        "lunge": 6.5,
         "face_lock_fraction": 0.5,
         "attack_cooldown": 1.2,
         "reposition_time": 0.8,
@@ -1714,7 +1730,7 @@
         "sendouts": [
           {
             "sequence": [
-              "wall_check",
+              "guardian_wall_quick",
               "guardian_earth_fist"
             ]
           }

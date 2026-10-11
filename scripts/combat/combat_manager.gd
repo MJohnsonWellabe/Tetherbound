@@ -5398,7 +5398,7 @@ func _on_enemy_telegraph(seconds: float) -> void:
 	var glow := TELEGRAPH_GLOW.begin(
 		host,
 		_wild.global_position,
-		Color(str(cfg.get("colour", "#ff5a3c"))),
+		_wild.call("tell_colour") if _wild.has_method("tell_colour") else Color(str(cfg.get("colour", "#ff5a3c"))),
 		float(cfg.get("radius", 1.1)),
 		seconds
 	)
