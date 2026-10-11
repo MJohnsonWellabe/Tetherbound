@@ -1,0 +1,6 @@
+# F04#7 varied-size framing: capture notes (Low/Compatibility, gl_compatibility 1920x1080, tb/ev-coordinator a88992570cb4c8ef7794610b76a0f21edc2df89e)
+
+- guardian-low-compat.jpg: `tests/smoke_warrens.gd -- --guardian-attacks --capture-dir=res://shots/f04_7/guardian`, run 38166998951 (exit 0). Ally fixed by the smoke (Terrapup Lv12); one size row only.
+- Trainers: `tools/art_pipeline/capture_named_fight.gd -- --trainer=relay_officer_dell,relay_captain,captain_riverwatch,captain_field,captain_ridge,stronghold_elite,warden_aldis --ally=<terrapup|ripplet|galewisp> --frames=8 --interval=0.5 --tell-frames --keep-alive --resolve=won --after-frames=2`. Fixtures disclosed by the tool: keep-alive top-up, resolve-as-won after the in-fight frames.
+- Discarded first pass (runs 38158969791 terrapup, 38159073771 ripplet, 38163471372 galewisp cancelled): without `--resolve=won` a fight never ends, so later trainers' frames show the previous opponent (Vance's frames show Dell's Mosshell; Hald's and the Warden's show Vess's Trailpup). Not evidence.
+- captain_riverwatch (Oreth): "FIGHT DID NOT START" in both first-pass runs (dialogue closes after 3 presses, fighting=false for 840 frames). Two failures, so not retried.
