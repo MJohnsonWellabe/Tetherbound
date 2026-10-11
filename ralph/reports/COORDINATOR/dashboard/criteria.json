@@ -2757,11 +2757,11 @@
    "title": "Rematches and alpha respawns",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 75,
+   "pct": 50,
    "counts": {
-    "met": 3,
+    "met": 2,
     "partial": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "not_started": 1,
     "blocked": 0,
     "failing": 0
@@ -2777,10 +2777,10 @@
     },
     {
      "text": "After credits, leaders and bosses return at the endgame tier (L55–60).",
-     "status": "met",
+     "status": "in_progress",
      "evidence": "tests/smoke_f20_ending.gd (home-key lane c4359f23): 68 checks, 0 failures, exit 0. 'The post-credits leader returns at the endgame leader tier L58 (enemy L58)'; ordinary input admits the canonical endgame rematch",
-     "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (home-key c4359f23, 12:37 PM CT Sun 11 Oct). Game fix 547c3170 (realm readiness deadline vs Meadows post-build hold); arena-seat fixes merged. Disclosed (proof rules v2): road_gate_open fixture, authored-route walk proven, then a teleport beside the South Bridge grunt for the rematch. Lands with the consolidated PR.",
+     "gap": "Wire Tidewake and Cloudreach trainers into foundation_rematches (R1 and endgame), then one endgame witness per biome.",
+     "note": "Reopened 1:01 PM CT Sun 11 Oct by the coordinator. smoke_f20_ending (home-key c4359f23, 68/0) proves a Meadows post-credits leader returns at the endgame tier L58. But systems-b found that foundation_rematches mounts rematch sources only on trainer_npc-spawned bodies (Meadows, Stormwood); Tidewake (water_scene_npcs) and Cloudreach trainers get no rematch source, so their leaders can't return. Re-closes when the rematch-wiring lane lands Tidewake/Cloudreach sources and a witness passes.",
      "audit_index": 1
     },
     {
