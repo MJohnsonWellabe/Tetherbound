@@ -663,12 +663,12 @@
    "id": "F10",
    "title": "Stormwood chains, fights and presentation",
    "chapter": "Stormwood",
-   "pct": 57,
+   "pct": 71,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 1,
     "in_progress": 0,
-    "not_started": 2,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -715,10 +715,10 @@
     },
     {
      "text": "Audio witness for phases/lightning",
-     "status": "not_started",
-     "evidence": "smoke_stormwood_surge_audio.gd (CI; wiring/timing only)",
-     "gap": "The nine cues exist (assets/audio/stormwood/*.wav, #540; spectral/loop checks in ralph/reports/AUDIO/stormwood-nine/). Missing: only the in-scene witness that each cue plays (played=true). Captures lane.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. All nine assets/audio/stormwood/* cue files are absent at b4e4897d5. The smoke records played=false, so nothing is audible.",
+     "status": "met",
+     "evidence": "ralph/reports/VISUAL-PROOF/F10-5/ (smoke_stormwood_surge_audio 20/0, 89/89 cues played=true); ralph/reports/AUDIO/stormwood-nine/ (spectral and loop checks)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (4:46 PM CT). All nine cues fire in the production Stormwood scene at the right phase and strike timing; sound quality is checked offline per owner decision #5 (no owner listen). Disclosed: the smoke's own fixtures (pinned trainer, Surge clock set near each boundary).",
      "audit_index": 5
     },
     {
