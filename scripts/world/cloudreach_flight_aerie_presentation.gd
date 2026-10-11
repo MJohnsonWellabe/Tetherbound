@@ -17,19 +17,22 @@ func build(materials: Dictionary) -> void:
 		push_error("Flight Aerie visual config is invalid")
 		return
 	var cfg := parsed as Dictionary
-	var blue := _colour_material(Color(str(cfg.get("banner_blue", "#315f9a"))), false)
-	var gold := _colour_material(Color(str(cfg.get("banner_gold", "#d6ad52"))), false)
-	_add_ring("AerieOuterCompass", cfg.get("outer_ring_m", [10.3, 10.8]) as Array, blue)
-	_add_ring("AerieInnerCompass", cfg.get("inner_ring_m", [5.7, 6.1]) as Array, gold)
+	# The launch compass is worn floor inlay, not another painted banner.
+	# Keep its footprint and directions while lowering its raised tube profile.
+	var slate := _colour_material(Color(str(cfg.get("compass_slate", "#596d78"))), false)
+	var brass := _colour_material(Color(str(cfg.get("compass_brass", "#a18b59"))), false)
+	var profile_height := float(cfg.get("compass_profile_height_m", 0.04))
+	_add_ring("AerieOuterCompass", cfg.get("outer_ring_m", [10.44, 10.66]) as Array, slate, profile_height)
+	_add_ring("AerieInnerCompass", cfg.get("inner_ring_m", [5.8, 6.0]) as Array, brass, profile_height)
 	for index in 8:
 		var angle := TAU * float(index) / 8.0
 		var radial := MeshInstance3D.new()
 		radial.name = "LaunchCompassRay%02d" % (index + 1)
 		var mesh := BoxMesh.new()
-		mesh.size = Vector3(0.20, 0.055, 4.2)
+		mesh.size = Vector3(0.14, 0.025, 4.2)
 		radial.mesh = mesh
-		radial.material_override = gold if index % 2 == 0 else blue
-		radial.position = Vector3(sin(angle) * 8.1, 0.14, cos(angle) * 8.1)
+		radial.material_override = brass if index % 2 == 0 else slate
+		radial.position = Vector3(sin(angle) * 8.1, 0.135, cos(angle) * 8.1)
 		radial.rotation.y = angle
 		radial.set_meta("flight_aerie_role", "launch_compass")
 		add_child(radial)
@@ -37,7 +40,7 @@ func build(materials: Dictionary) -> void:
 	_add_signals(cfg)
 
 
-func _add_ring(label: String, radii: Array, material: Material) -> void:
+func _add_ring(label: String, radii: Array, material: Material, profile_height: float) -> void:
 	var ring := MeshInstance3D.new()
 	ring.name = label
 	var mesh := TorusMesh.new()
@@ -47,6 +50,7 @@ func _add_ring(label: String, radii: Array, material: Material) -> void:
 	mesh.ring_segments = 8
 	ring.mesh = mesh
 	ring.material_override = material
+	ring.scale.y = profile_height / maxf(mesh.outer_radius - mesh.inner_radius, 0.001)
 	ring.position.y = 0.14
 	# TorusMesh's axle is local Y, so its unrotated plane is already the X/Z
 	# launch floor. Rotating it around X would stand the compass upright like a
