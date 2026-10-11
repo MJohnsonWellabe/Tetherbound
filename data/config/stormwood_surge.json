@@ -38,6 +38,7 @@
     "storm_base": {"pin_time_of_day": true, "reference_time": "day",
       "overrides": {
         "sun": {"pitch_deg": -44.0, "yaw_deg": 140.0, "energy": 1.4, "colour": "#e8e0f4"},
+        "environment": {"player_character_rim_scale": 1.0},
         "sky": {"cloud_lit": "#b8b2cc", "cloud_shade": "#7e7896", "cloud_base": "#6c6686", "horizon_haze_colour": "#8c86a6", "sun_colour": "#d8d0ec"}
       }},
     "_why_f10_3_building_fading": "F10#3 (coordinator/owner direction 2026-09-27 13:05, #356): Building and Fading carry distinct presentation, not only more or less of the same. Building's in-cloud sheet flicker rises 0.15 -> 0.22 (the storm gathering). Fading opens gaps where the cloud body is thin (ceiling_breakup 0.38, the shader's existing clearing parameter; the same at every hour), so the sky visibly clears; the ceiling stays opaque elsewhere, so no ghost sun disc shows. Existing shader parameters only.",

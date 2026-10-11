@@ -1,0 +1,34 @@
+{
+  "uniform": {
+    "emission_floor": 0.18,
+    "night_rim": {"strength": 0.28, "tint": 0.12}
+  },
+  "civilian": {
+    "emission_floor": 0.12,
+    "night_rim": {"strength": 0.20, "tint": 0.12}
+  },
+  "rank_uniforms": {"grunt": "grunt", "officer": "officer", "lieutenant": "officer", "captain": "captain"},
+  "lieutenant_rim_scale": 1.28,
+  "identities": {
+    "dace": {"rank": "lieutenant", "rim_color": "#d1a267"},
+    "varga": {"rank": "lieutenant", "rim_color": "#d8cba0"},
+    "maren": {"rank": "officer", "rim_color": "#bf956f"},
+    "nysa": {"rank": "officer", "rim_color": "#b4bfc6"},
+    "sera": {"rank": "lieutenant", "rim_color": "#bfac87"},
+    "kestrel": {"rank": "officer", "rim_color": "#9dc9c5"},
+    "marrow": {"rank": "captain", "rim_color": "#e0bd6e"}
+  },
+  "aliases": {
+    "grunt_lieutenant_dace": "dace",
+    "lieutenant_dace_hollows_rod": "dace",
+    "tether_lieutenant_varga": "varga",
+    "lieutenant_varga_rodline_bridge": "varga",
+    "officer_maren_verge_rod": "maren",
+    "officer_nysa_deepwood_rod": "nysa",
+    "outerworks_lieutenant_sera": "sera",
+    "officer_kestrel": "kestrel",
+    "officer_kestrel_outer_works": "kestrel",
+    "captain_marrow": "marrow",
+    "captain_marrow_dynamo_core": "marrow"
+  }
+}
