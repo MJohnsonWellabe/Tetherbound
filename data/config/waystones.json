@@ -384,13 +384,14 @@
         "id_field": "id",
         "coordinate_field": "position"
       },
+      "_why_offset": "F19#5 Cloudreach piece 05 (2026-10-11): at (0,-7) the shrine stood in the bivouac terrace's only exit band (z 5330-5332, cloudreach_chapter.json lip_rail _why) and stopped the trainer dead; it now stands behind the camp, arriving on the band side. +5, not +7: at +7 its collider cut into SummitOverlookLoopCliffShoulders/Ridge000; at +5 it touches only the terrace floor (ground 1160 across its footprint).",
       "offset_xz": [
         0.0,
-        -7.0
+        5.0
       ],
       "arrival_offset_xz": [
         0.0,
-        3.0
+        -3.0
       ]
     },
     {
