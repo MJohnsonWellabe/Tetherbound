@@ -8,6 +8,7 @@ var _answered: Dictionary = {}
 var _pending: Dictionary = {}
 var _diving_until: Dictionary = {}
 var _motion: Dictionary = {}
+var _mount_anchored: Dictionary = {}
 
 func _physics_process(_delta: float) -> void:
 	if not get_node("/root/Game").is_host(): return
@@ -127,9 +128,14 @@ func _handle(peer: int, token: String, action: String, uid: String) -> void:
 			if action == "dive" and float(_diving_until.get(permit, 0.0)) <= Time.get_ticks_msec() / 1000.0:
 				_diving_until[permit] = Time.get_ticks_msec() / 1000.0 + float(RULE.config().dive_seconds)
 			elif action in ["mount", "surface"]: _diving_until.erase(permit)
-			# An approved mount is validated where the body stands; motion checks
-			# restart there, so a rejoin's seat is not judged as a teleport.
-			if action == "mount": _motion.erase(peer)
+			# A connection's FIRST approved mount (a rejoin is a new peer id) is
+			# validated where its body stands, so motion checks restart there and
+			# the rejoin seat is not judged a teleport. A mount approval needs a
+			# valid sample (traversal action: motion_valid), and later mounts on
+			# the same connection never reset it, so a re-mount cannot hide one.
+			if action == "mount" and not _mount_anchored.has(peer):
+				_mount_anchored[peer] = true
+				_motion.erase(peer)
 	if peer == multiplayer.get_unique_id():
 		_accept(token, verdict)
 	else:
