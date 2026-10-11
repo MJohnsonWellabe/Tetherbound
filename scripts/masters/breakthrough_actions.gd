@@ -12,7 +12,8 @@ const FIELDS := {
 }
 
 static func stage(current: Dictionary, revision: int, op: String, intent: Dictionary,
-		context: Dictionary, species_types: Callable, evolve: Callable, refresh_moves: Callable) -> Dictionary:
+		context: Dictionary, species_types: Callable, evolve: Callable, refresh_moves: Callable,
+		legacy_chest_replay: bool = false) -> Dictionary:
 	if not FIELDS.has(op) or intent.size() != FIELDS[op].size(): return _deny("invalid_intent")
 	for key: String in FIELDS[op]:
 		if not intent.get(key) is String: return _deny("invalid_intent")
@@ -32,7 +33,7 @@ static func stage(current: Dictionary, revision: int, op: String, intent: Dictio
 				result = RULES.prepare_win(current, intent.master_id, str(current.character_id))
 		"master_chest":
 			if context.get("master_id") != intent.master_id: return _deny("wrong_chest")
-			result = RULES.prepare_chest(current, intent.master_id, str(current.character_id))
+			result = RULES.prepare_chest(current, intent.master_id, str(current.character_id), not legacy_chest_replay)
 		"feast_cook": result = RULES.prepare_cook(current, intent.recipe_id, intent.craft_id, context)
 		"feast_feed": result = RULES.prepare_feed(current, intent.creature_uid, intent.feast_item,
 			intent.choice, context, species_types, evolve, refresh_moves)

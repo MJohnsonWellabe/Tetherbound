@@ -44,10 +44,10 @@ func _foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 func _action_completed(action: String, original: Dictionary, result: Dictionary) -> void:
 	if action == "master_chest":
 		if result.get("settled") == true or result.get("owner_saved") == true:
-			_message("Ascension Feast recipe learned. Your Master reward is saved.")
+			_message("Ascension Feast recipe learned. Your Master rewards are saved. Cook your feast at home.")
 			view()
 		elif result.get("terminal_refusal") == true:
-			_message(str(result.get("reason", result.get("code", "Chest reward is still pending."))))
+			_message(_chest_message(result))
 	if is_instance_valid(_panel):
 		_panel.call("accept_completion", action, original, result)
 
@@ -177,7 +177,12 @@ func _challenge(site: Node3D) -> void:
 
 func _chest(site: Node3D) -> void:
 	var verdict := submit("master_chest", {"master_id": str(site.get("master_id"))}, site)
-	_message(str(verdict.get("reason", verdict.get("code", ""))))
+	_message(_chest_message(verdict))
+
+func _chest_message(result: Dictionary) -> String:
+	if result.get("code") == "chest_pending_make_satchel_room":
+		return "Your Master reward is waiting. Use your Home Key, store items at home, then return to this chest with room in your satchel."
+	return str(result.get("reason", result.get("code", "")))
 
 func open_kitchen(station: Node3D) -> void:
 	_open("cook", station, "")
