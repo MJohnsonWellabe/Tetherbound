@@ -1869,8 +1869,12 @@ func _build_warrens_landmark_motif() -> void:
 	var den_centre := _local_of(den.get("at", [0.0, 40.0]))
 	var cairn := Node3D.new()
 	cairn.name = "DenRootstoneCairn"
-	cairn.position = Vector3(den_centre.x + 5.2, _floor_y + 0.35,
-		den_centre.z + 4.4)
+	# burrow_warrens.json `landmark.den_cairn_offset`, from the den centre.
+	# F04#0 judge: at (5.2, 4.4) the cairn stood beside the guardian inside its
+	# 16 m fight arena and covered its forelegs and tell.
+	var cairn_offset := _local_of((_config.get("landmark", {}) as Dictionary).get("den_cairn_offset", [5.2, 4.4]))
+	cairn.position = Vector3(den_centre.x + cairn_offset.x, _floor_y + 0.35,
+		den_centre.z + cairn_offset.z)
 	holder.add_child(cairn)
 	# An asymmetric crystal seam, not a ring of identical cones. A low dark
 	# root-rock base makes the amber forms read as mineral growth rather than a
