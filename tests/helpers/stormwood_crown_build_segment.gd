@@ -27,7 +27,10 @@ const FOOTING_SOUTH_ENTRY := Vector2(-161.0, 2741.0)
 ## Half the footing slab's 9 m side (`stormwood_arch_runtime.gd`).
 const FOOTING_HALF_M := 4.5
 const POSITION_EPSILON := 0.75
-const CHARGED_WAIT_MS := 9 * 60 * 1000
+## The Rodline Refuge wait is budgeted in Surge time: one full cycle at the
+## Crown seams plus the open seconds the route needs, with a physics-frame cap
+## derived from that budget, so a slow host reaches the same window.
+const SURGE_FRAME_MARGIN := 1.5
 
 # Authored nodes are all-or-nothing. Thunderwood sites yield four apiece, so
 # the honest route gathers eight, spends six on two frames, and carries two on.
@@ -462,15 +465,25 @@ func _wait_for_charged_window() -> bool:
 	if surge == null:
 		return _fail("StormwoodSurge is absent before Crown glass gathering")
 	var at: Vector2 = SITE_PLAN[4].at
-	var started := Time.get_ticks_msec()
-	while Time.get_ticks_msec() - started < CHARGED_WAIT_MS:
+	var start_state := _charged_window_snapshot(surge, at)
+	var budget := float(start_state.get("cycle_seconds", 510.0)) + CROWN_ROUTE_SECONDS
+	var until := _surge_clock() + budget
+	var frames_left := ceili(budget / (Engine.time_scale / float(Engine.physics_ticks_per_second)) * SURGE_FRAME_MARGIN)
+	while _surge_clock() < until and frames_left >= 0:
+		frames_left -= 1
 		var state := _charged_window_snapshot(surge, at)
 		if float(state.get("open_seconds", 0.0)) >= CROWN_ROUTE_SECONDS and bool(surge.get("sheltered")):
 			_note("WAITED at Rodline Refuge for a live Crown-gather window %s" % str(state))
 			return true
 		await _tree.physics_frame
-	return _fail("Rodline Refuge did not reach a sheltered window with %.0f open seconds at the Crown seams within nine minutes (last=%s)" % [
+	return _fail("Rodline Refuge did not reach a sheltered window with %.0f open seconds at the Crown seams within one Surge cycle (last=%s)" % [
 		CROWN_ROUTE_SECONDS, str(_charged_window_snapshot(surge, at))])
+
+
+func _surge_clock() -> float:
+	var saved: Variant = (_game.get("realm_environment") as Dictionary).get("stormwood", {})
+	var raw: Variant = (saved as Dictionary).get("elapsed", 0.0) if saved is Dictionary else 0.0
+	return float(raw) if raw is float or raw is int else 0.0
 
 
 ## The runtime's own Surge phase at `at` and how long the charged window
@@ -498,7 +511,8 @@ func _charged_window_snapshot(surge: Node, at: Vector2) -> Dictionary:
 		var next: Dictionary = rules.call("phase_at", elapsed + open + 0.001, region, rod_disabled, aftermath)
 		if str(next.get("phase", "")) == "fading":
 			open += float(next.get("remaining", 0.0))
-	return {"phase": phase, "open_seconds": snappedf(open, 0.1), "elapsed": snappedf(elapsed, 0.1), "region": region}
+	return {"phase": phase, "open_seconds": snappedf(open, 0.1), "elapsed": snappedf(elapsed, 0.1), "region": region,
+		"cycle_seconds": float(current.get("cycle_seconds", 510.0))}
 
 
 func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,

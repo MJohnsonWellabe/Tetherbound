@@ -569,7 +569,11 @@ class Segment extends RefCounted:
 		"stormwood_harvest_glowmoss_hollows_036",
 		"stormwood_harvest_glowmoss_hollows_037",
 	]
-	const BREAK_WAIT_MS := 120000
+	## Weather waits are budgeted in Surge time (`realm_environment.stormwood.
+	## elapsed`), one full cycle of the waited region, so a slow host reaches the
+	## same Break as a fast one. A physics-frame cap derived from that budget at
+	## the current clock still bounds every wait.
+	const SURGE_FRAME_MARGIN := 1.5
 	# Measured on the failed 2026-09-08 run: from Lantern Pools camp to both
 	# charged nodes plus their impact settles consumed about 45.7 simulation
 	# seconds. Require 55 contiguous seconds of the runtime's own open window;
@@ -646,9 +650,9 @@ class Segment extends RefCounted:
 		if surge == null:
 			_fail("StormwoodSurge is absent from the production world")
 			return _result()
-		var wait_started := Time.get_ticks_msec()
+		var shelter_wait := _surge_wait(ASHFOOT_SHELTER_XZ)
 		var sheltered_break_witnessed := false
-		while Time.get_ticks_msec() - wait_started < BREAK_WAIT_MS:
+		while _surge_wait_open(shelter_wait):
 			if str(surge.get("phase")) == "break" and bool(surge.get("sheltered")) \
 					and game.get("progression").call("has", "stormwood:first_break_witnessed"):
 				sheltered_break_witnessed = true
@@ -671,8 +675,8 @@ class Segment extends RefCounted:
 		# the Break witnessed at Ashfoot can pass during the walk, so wait at the
 		# seam for the next one, as a player would, then press.
 		var gathered := false
-		var seam_wait_started := Time.get_ticks_msec()
-		while not gathered and Time.get_ticks_msec() - seam_wait_started < BREAK_WAIT_MS:
+		var seam_wait := _surge_wait(FIRST_GLASS_XZ)
+		while not gathered and _surge_wait_open(seam_wait):
 			if not str(surge.get("phase")) in ["break", "fading"]:
 				await tree.physics_frame
 				continue
@@ -1048,9 +1052,10 @@ class Segment extends RefCounted:
 	func _wait_for_charged_window(at: Vector2, label: String) -> bool:
 		var surge := world.get_node_or_null(^"StormwoodSurge")
 		var started := Time.get_ticks_msec()
+		var window_wait := _surge_wait(at, MIN_CHARGED_ROUTE_SECONDS)
 		_begin_phase("%s charged-window wait" % label, at)
 		print("STORMWOOD CONTINUOUS — DIAGNOSTIC: START %s" % _active_phase)
-		while surge != null and Time.get_ticks_msec() - started < BREAK_WAIT_MS:
+		while surge != null and _surge_wait_open(window_wait):
 			var state := _charged_window_snapshot(at)
 			if float(state.get("open_seconds", 0.0)) >= MIN_CHARGED_ROUTE_SECONDS:
 				print("STORMWOOD CONTINUOUS — DIAGNOSTIC: END %s elapsed_ms=%d state=%s" % [
@@ -1061,6 +1066,29 @@ class Segment extends RefCounted:
 		_fail("%s did not reach a Break/Fading window with %.1f simulation seconds remaining (last=%s)" % [
 			label, MIN_CHARGED_ROUTE_SECONDS, str(_charged_window_snapshot(at))])
 		return false
+
+
+	func _surge_clock() -> float:
+		var saved: Variant = (game.get("realm_environment") as Dictionary).get("stormwood", {})
+		var raw: Variant = (saved as Dictionary).get("elapsed", 0.0) if saved is Dictionary else 0.0
+		return float(raw) if raw is float or raw is int else 0.0
+
+
+	## One full Surge cycle at `at` (plus `extra` Surge seconds) from now, and
+	## the physics-frame cap that budget implies at the current clock.
+	func _surge_wait(at: Vector2, extra: float = 0.0) -> Dictionary:
+		var surge := world.get_node_or_null(^"StormwoodSurge")
+		var point := Vector3(at.x, float(world.call("ground_height_at", at.x, at.y)), at.y)
+		var cycle := float((surge.call("phase_info_at", point) as Dictionary).get("cycle_seconds", 510.0)) \
+			if surge != null else 510.0
+		var budget := cycle + extra
+		var per_frame := Engine.time_scale / float(Engine.physics_ticks_per_second)
+		return {"until": _surge_clock() + budget, "frames_left": ceili(budget / per_frame * SURGE_FRAME_MARGIN)}
+
+
+	func _surge_wait_open(wait: Dictionary) -> bool:
+		wait.frames_left = int(wait.frames_left) - 1
+		return _surge_clock() < float(wait.until) and int(wait.frames_left) >= 0
 
 
 	func _charged_window_snapshot(at: Vector2) -> Dictionary:
