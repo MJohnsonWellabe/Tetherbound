@@ -23,16 +23,18 @@ const CONFIG_PATH := "res://data/config/terrain_playground.json"
 
 # Approved F17 village-only authoring snapshot, independently reviewed before
 # any regional writer runs. Other config authoring needs a new scoped review.
+# Includes the reviewed Berry Field decoration correction over the original
+# 8ee152 village snapshot; all other generator input hashes remain unchanged.
 const VILLAGE_INPUT_SHA256 := {
  "res://data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
  "res://data/config/vegetation.json": "4e3331edea4ceb764bf57bb422dc7db676a3e0acad412dd23d42939cd55593df",
- "res://data/config/bands/band1_lower_meadows/vegetation.json": "497894d689b20a4539b9be0497b4b1f8851b95386c4608c9543b95a17fc44788",
+ "res://data/config/bands/band1_lower_meadows/vegetation.json": "ca69f88bff234b00e92529e01c4e0125166d11e0ab9b077e894d262d3b06db05",
  "res://data/config/bands/band2_stone_and_root/vegetation.json": "2695ecadd6458d3aa1e6fe520c8637adfe2e652f1a73dbee5cce00cab9a28a58",
  "res://data/config/bands/band3_the_river_lock/vegetation.json": "0493ecf1641a1c901b9eb6d4544709c558bbf172b72b5c6579333384f4b8ef6b",
  "res://data/config/bands/band4_upper_meadows_ironwood/vegetation.json": "f451051c1520ce5fac9f0e92ecb5415f2459d8a0c62b3eb16d04e3009a325906",
  "res://data/config/bands/band5_stronghold_approach/vegetation.json": "e705c91104d1b0b1892d0da89dbfc432277a4008160c38825b6e1d64cbfc0877"
 }
-const VILLAGE_SOURCE := "8ee152a47ee90f430a3e8aafb13d2b0d9c9ad1ea"
+const VILLAGE_SOURCE := "d5ab7d73b31cdd5a24cd45501c980bd4aa553687"
 const VILLAGE_BASE := "b2ea1455abdda7f2a7078ed1f148d5c40952c9fc"
 const VILLAGE_REGIONS := [[-1,-1],[-1,0],[0,-1],[0,0]]
 
