@@ -1,0 +1,31 @@
+only test_f24_host_commands.gd,test_f27_essence_rules.gd,test_relic_hang_attachment_blueprints.gd,test_relic_power_selection.gd,test_station_attachment_gates.gd,test_crossing_hall_relic_hang.gd,test_f37_ripplet_traversal.gd,test_f27_guest_release_service.gd,test_f32_type_crops.gd: 9 of 842 test files
+  ok    test_f27_essence_rules.gd :: test_altar_spend_id_replays_as_duplicate_and_conflicts_cannot_mint
+  ok    test_f27_essence_rules.gd :: test_altar_spend_stops_at_cap_and_refuses_without_payment
+  ok    test_f27_essence_rules.gd :: test_automatic_combat_xp_is_reduced_but_never_zero
+  ok    test_f27_essence_rules.gd :: test_care_trickle_is_capped_per_character_per_host_day
+  ok    test_f27_essence_rules.gd :: test_ceremony_release_action_pays_type_essence_and_removes_one
+  ok    test_f27_essence_rules.gd :: test_ceremony_release_requires_the_ceremony_and_a_full_belt
+  ok    test_f27_essence_rules.gd :: test_defeat_payout_is_typed_level_scaled_and_dual_split
+  ok    test_f27_essence_rules.gd :: test_dual_type_may_pay_with_either_essence_or_candy
+  ok    test_f27_essence_rules.gd :: test_eight_type_essences_and_tether_candy_are_stackable_items
+  ok    test_f27_essence_rules.gd :: test_every_type_crop_harvest_pays_its_configured_essence
+  ok    test_f27_essence_rules.gd :: test_no_creature_expedition_or_automation_source_exists
+  ok    test_f27_essence_rules.gd :: test_owner_passive_merge_keeps_a_rows_own_rest
+  ok    test_f27_essence_rules.gd :: test_owner_passive_merge_keeps_the_rows_change_and_the_owners_drift
+  ok    test_f27_essence_rules.gd :: test_passive_care_fields_mirror_the_owner_passive_replay_list
+  ok    test_f27_essence_rules.gd :: test_pending_spend_delivers_once_despite_passive_drift_before_rejoin
+  ok    test_f27_essence_rules.gd :: test_real_conflicts_are_still_refused
+  ok    test_f27_essence_rules.gd :: test_release_pays_the_released_creatures_type_once
+  ok    test_f27_essence_rules.gd :: test_starters_level_through_their_own_type_essence
+  ok    test_f27_essence_rules.gd :: test_wild_defeat_stages_essence_and_reduced_xp_once
+  ok    test_f27_guest_release_service.gd :: test_a_refusal_while_the_owner_guard_is_closed_retries_until_it_opens
+  ok    test_f27_guest_release_service.gd :: test_a_saved_host_row_finishes_paid_and_is_never_also_released_unpaid
+  ok    test_f27_guest_release_service.gd :: test_a_terminal_ceremony_refusal_releases_unpaid
+  ok    test_f27_guest_release_service.gd :: test_an_unchanging_stale_refusal_releases_unpaid_after_the_bound
+  ok    test_f32_type_crops.gd :: test_all_eight_type_crops_are_defined_with_registered_seeds_and_outputs
+  ok    test_f32_type_crops.gd :: test_each_type_crop_grows_through_the_host_transaction_on_the_authored_plot
+  ok    test_f32_type_crops.gd :: test_each_type_crop_ripens_only_on_its_host_day
+  ok    test_f32_type_crops.gd :: test_greenhouse_is_a_farm_buildable_in_the_real_catalogue_not_an_attachment
+  ok    test_f32_type_crops.gd :: test_harvest_is_manual_and_days_never_move_produce_into_inventory
+  ok    test_f32_type_crops.gd :: test_native_types_grow_outdoors_and_off_biome_types_need_the_greenhouse
+95 tests, 2566 assertions, 0 failed
