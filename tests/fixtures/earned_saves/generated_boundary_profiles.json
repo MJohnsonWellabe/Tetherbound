@@ -624,6 +624,39 @@
         "stormwood"
       ],
       "disclosure": "SCOUTING ONLY (coordinator 2026-10-11): generated mid-Stormwood boundary after Keeper Ondra's arch recipe, at Ondra's stance (-160, 2697.5), Crown arch unbuilt, for scouting Stormwood pieces crown_build -> settlement before the earned chain arrives. NOT earned and not an F19#5 checkpoint. Five ordered template UIDs/species at a generated L48 (redesign_level_curve conductor_run 47-49) with generated caps and full HP; prior facts as the stormwood profile; Stormwood act-I facts, lit ancient pairs a/b, the Verge/Hollows/Varga trainer defeats and arch_recipe_known are generated flags. Template inventory and tools; no placed buildings, harvest, battle-reward or transaction receipts are fabricated; the Crown arch is left for the crown_build piece to build by input. Claims no earned segment PASS."
+    },
+    "hall": {
+      "boundary": "sigils",
+      "realm": "meadows",
+      "day": 7,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "ground_xz": [
+          58.0,
+          7410.5
+        ]
+      },
+      "party_levels": [
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open"
+      ],
+      "personal_flags": [],
+      "inventory_add": {},
+      "disclosure": "Generated post-Sigils five at L18 (chapter_curve band4 team.exit 18, an earned run reaches after the three captains), healed, just past the opened Sigil Gate with the three Sigils spent (none carried). Relay/Mill and all three captain defeat flags plus hall_approach_open set; ordered UIDs/species and original inventory retained; no captain rewards (Sigil TMs, coin) added. Added under the owner's 2026-10-11 chunked-proof rules after the earned sigils piece failed twice (ralph/reports/EVIDENCE/F19-5/sigils.md). No earned captain, Sigil Gate, feast, XP or recovery witness is claimed."
     }
   }
 }

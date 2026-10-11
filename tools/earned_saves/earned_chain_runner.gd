@@ -153,11 +153,13 @@ func _run() -> void:
 	if not failures.is_empty():
 		_finish()
 		return
-	# A generated lineage starts only at Relay or Sigils; a later piece may
-	# continue it from its predecessor's own saved handoff, never start one.
+	# A generated lineage starts only at Relay, Sigils or Hall (Hall added under
+	# the owner's chunked-proof rules, 2026-10-11: a piece may start from a
+	# disclosed generated boundary); a later piece may continue it from its
+	# predecessor's own saved handoff, never start one.
 	if generated_fixture and (legacy_order_diagnostic or not compatibility_paths.is_empty() \
-			or (segment not in ["relay", "sigils"] and handoff_from.is_empty())):
-		failures.append("Generated fixtures are explicit Relay/Sigils inputs, never legacy or reviewed earned imports")
+			or (segment not in ["relay", "sigils", "hall"] and handoff_from.is_empty())):
+		failures.append("Generated fixtures are explicit Relay/Sigils/Hall inputs, never legacy or reviewed earned imports")
 		_finish()
 		return
 	if legacy_order_diagnostic and not handoff_from.is_empty():
