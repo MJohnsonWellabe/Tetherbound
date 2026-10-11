@@ -313,7 +313,7 @@
       "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
       "body_model_override": "res://assets/characters/npc_identity/water_adair/adair_lod0.glb",
       "portrait": "res://assets/ui/portraits/npc_identity_water_adair_v1.png",
-      "review_status": "arm_retargeted_pending_native_review_and_matching_portrait_refresh",
+      "review_status": "paired_candidate_sampled_native_pose_passed_pending_world_and_claude_judgement",
       "authoring_provenance": {
         "source_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
         "source_model_sha256": "5b9164827d099f661de5d1ed6a4420ccd011a90005765977c43f06d1ef5487b3",
@@ -364,7 +364,7 @@
           "changed_rotation_tracks": 14,
           "interpolation": "LINEAR; original key times preserved",
           "preserved": "Original BIN prefix, rest transforms, mesh, skin, inverse binds, materials, textures and all non-target channels; target outputs and samplers cloned",
-          "native_review": "PENDING"
+          "native_review": "Sampled native scale and pose PASS for proceeding; continuous motion, world and Claude judgment PENDING"
         }
       }
     }

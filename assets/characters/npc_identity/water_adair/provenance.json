@@ -1,6 +1,6 @@
 {
   "actor_id": "water_adair",
-  "status": "arm_retargeted_candidate_off_pending_native_review_portrait_refresh_and_claude_judgement",
+  "status": "paired_candidate_off_sampled_native_pose_passed_pending_world_and_claude_judgement",
   "installed_identity": "Surveyor Adair; existing field_researcher body/face family; Brine Steps current surveyor",
   "authorization": "Owner issue 572 comment 6110631002; RD-26 identity-preserving reference-backed refinement on existing Meshy licence, no purchase",
   "reference_origin": "Original built-in imagegen full-body reference drafted and visually inspected by coordinator01a123c0; no board pixels traced or shipped",
@@ -55,7 +55,7 @@
       "changed_rotation_tracks": 14,
       "interpolation": "LINEAR; original key times preserved",
       "preserved": "Original BIN prefix, rest transforms, mesh, skin, inverse binds, materials, textures and all non-target channels; target outputs and samplers cloned",
-      "native_review": "PENDING"
+      "native_review": "Sampled native scale and pose PASS for proceeding; continuous motion, world and Claude judgment PENDING"
     }
   },
   "generation": {
@@ -106,21 +106,45 @@
   },
   "portrait": {
     "path": "res://assets/ui/portraits/npc_identity_water_adair_v1.png",
-    "authoring_source_commit": "78c8fb4001bbb9733a4afd7bac7cffbfe648e4eb",
-    "method": "Coordinator-owned native production portrait authoring from the previous candidate before arm retargeting",
-    "result": "One plate rendered successfully; coordinator visually confirmed bob, glasses, teal coat and cream shirt",
-    "coverage_percent": 52,
+    "authoring_source_commit": "6a074f955ecaefc17678e8e3e6c5d83ff52da195",
+    "method": "Coordinator-owned native production portrait authoring from the exact corrected candidate body; strict authoring guards unchanged",
+    "result": "One plate rendered successfully; coordinator visually inspected actual identity",
+    "coverage_percent": 47,
     "white_clip_percent": 0,
     "border_clear": true,
-    "status": "preserved_previous_candidate_portrait_pending_corrected_candidate_refresh",
-    "candidate_model_sha256": "2774d769ec9f18aa124d0881976b0e4823c62820362369c5de68ee4b80082b4b"
+    "status": "matching_corrected_candidate_portrait_authored",
+    "candidate_model_sha256": "c6a36d284250e9c62b379e133cf0873bafe998a9f87f9b5841678cc79c08ac53",
+    "sha256": "d2142494d914c7ab014ac72ede5d6a57603d91cca49156037d517b952171a5a4"
   },
   "open_proofs": [
-    "corrected candidate native import/scale, arm stance, coat clearance and all-clip deformation",
-    "production portrait refresh from exact corrected candidate",
+    "continuous-motion review beyond sampled native poses",
     "matched High/Medium in-world before/after captures",
     "Claude code-blind judgement"
   ],
   "candidate_enabled": false,
-  "reference_prompt": "docs/art/reference/npc-identity/adair-front-agent-v1.prompt.txt"
+  "reference_prompt": "docs/art/reference/npc-identity/adair-front-agent-v1.prompt.txt",
+  "native_sampled_review": {
+    "source_commit": "6a074f955ecaefc17678e8e3e6c5d83ff52da195",
+    "candidate_model_sha256": "c6a36d284250e9c62b379e133cf0873bafe998a9f87f9b5841678cc79c08ac53",
+    "status": "PASS_FOR_PROCEEDING_TO_WORLD_CAPTURES",
+    "actual_frames": 56,
+    "clips": [
+      "idle",
+      "walk",
+      "sprint",
+      "jump",
+      "throw",
+      "chop",
+      "defeated"
+    ],
+    "phases_per_clip": 4,
+    "views": [
+      "front",
+      "side"
+    ],
+    "candidate_height_m": 1.7,
+    "trainer_height_m": 1.8,
+    "coordinator_findings": "Idle A-pose failure fixed; sampled arm/coat deformation acceptable for proceeding",
+    "limitations": "Sampled pose and scale evidence only; continuous-motion and independent Claude acceptance not established"
+  }
 }
