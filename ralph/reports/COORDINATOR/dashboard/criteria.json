@@ -246,8 +246,8 @@
    "counts": {
     "met": 6,
     "partial": 0,
-    "in_progress": 1,
-    "not_started": 1,
+    "in_progress": 2,
+    "not_started": 0,
     "blocked": 0,
     "failing": 1
    },
@@ -302,9 +302,9 @@
     },
     {
      "text": "Distinct aftermath per fight",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "test_named_fight_profiles.gd::test_every_profiled_meadows_fight_changes_something_afterwards (flag only)",
-     "gap": "Capture each fight's aftermath; code-blind distinctness judge. Folds into F22#4.",
+     "gap": "Code-blind FAIL 4:22 PM CT (captures ea62fd76): the four captains share one gallows frame with a translucent red slab and a floating sigil token, Dell has no visible change, the Hald console screen is untextured white, and the Warden win is dialogue only (camera clipped in one view). Captures lane is building a distinct physical aftermath per fight, then recapturing.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Only a flag is asserted; the visible, distinct aftermath was never judged. CODEX §7.5 folds this into F22#4.",
      "audit_index": 6
     },
