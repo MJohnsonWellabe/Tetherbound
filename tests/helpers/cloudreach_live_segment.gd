@@ -452,8 +452,12 @@ func _input(action: String, strength: float) -> void:
 ## east wall) back to the arena threshold: south round the wall's end and in
 ## by the feed road's gap. Witnesses that rest there call this, not
 ## `_navigate`, whose nearest-route snap aims at the loop's east leg.
+## The first waypoint sits inside the exit band's open west end (x < 131),
+## north of the camp lip rail. Disclosed helper alignment (coordinator ruling,
+## F19#5 Cloudreach 05, 2026-10-11): the former (132,1160,5330) lay just south
+## of RailCollider0's first leg, beyond the fence.
 func _leave_summit_bivouac() -> bool:
-	for waypoint: Vector3 in [Vector3(132,1160,5330), Vector3(116,1160,5332), Vector3(100,1160,5350)]:
+	for waypoint: Vector3 in [Vector3(130.5,1160,5331.5), Vector3(116,1160,5332), Vector3(100,1160,5350)]:
 		if not await _walk(waypoint):
 			return false
 	return true
