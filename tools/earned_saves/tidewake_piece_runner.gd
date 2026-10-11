@@ -20,6 +20,8 @@ extends SceneTree
 ##                   paid saddle, mounted)
 ##   07_late         water_earned_late_segment.run_from_mount (Salt Crown ->
 ##                   Sluice -> Veilfall -> Nerissa -> tether)
+##   07_human_late   water_human_late_segment.run_human: the same late route by the
+##                   player's own swimming with the same five (no swimmer/saddle)
 ##   08_ending       water_earned_ending_segment.run_earned (Guardian invite)
 ##
 ## USAGE
@@ -32,7 +34,7 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "05_tidal",
-	"06_swimmer", "07_late", "08_ending"]
+	"06_swimmer", "07_late", "07_human_late", "08_ending"]
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
@@ -212,6 +214,14 @@ func _play() -> void:
 			var ok: bool = await late.run_from_mount(swimmer, func(reason: String) -> void: failures.append("late abort: " + reason))
 			_take(late.result(), "passed", "late")
 			if not ok and failures.is_empty(): failures.append("late returned false")
+		"07_human_late":
+			# Critical path with the same five (WORLD §6 retained-team override):
+			# the player's own swimming over the sheltered late crossings.
+			var human: RefCounted = load("res://tests/helpers/water_human_late_segment.gd").new()
+			human.setup(self, world, player, rig)
+			var ok: bool = await human.run_human()
+			_take(human.result(), "passed", "human_late")
+			if not ok and failures.is_empty(): failures.append("human late returned false")
 		"08_ending":
 			_take(await load("res://tests/helpers/water_earned_ending_segment.gd").new().run_earned(self, world, game), "ok", "ending")
 
