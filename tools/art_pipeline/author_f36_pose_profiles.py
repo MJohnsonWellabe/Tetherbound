@@ -679,6 +679,7 @@ def serpent_poses(name, bones, roles):
                     pose['rear_lower_' + side] = [0, rear * .5, 0]
                 pose['tail_1'] = [0, (6 * wave if role == 'swim' else 5 if role == 'fly_grip' else 2 * wave), 0]
                 pose['tail_2'] = [0, (10 * rear_wave if role == 'swim' else 10 if role == 'fly_grip' else 3 * rear_wave), 0]
+            frame['bones'] = pose
     # The installed skin still assigns most coil mass to the head. This recipe
     # removes impossible quadruped motions; it cannot create independent head,
     # eyelid or coil articulation missing from that skin.
