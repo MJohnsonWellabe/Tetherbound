@@ -4633,7 +4633,9 @@
       "kind": "moss",
       "replace_model": true,
       "radius_m": 0.55,
-      "lift_m": 0.10,
+      "ground_embed_m": 0.025,
+      "height_ratio": 0.42,
+      "roughness": 0.85,
       "colour": "#7dffb8",
       "emission": 0.3
     },
