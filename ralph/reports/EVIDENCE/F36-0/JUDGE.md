@@ -35,3 +35,6 @@ PASS list sent to the captures lane for the switch-on commit (enabled=true + pla
 Every candidate creature stands taller than the 1.80 m trainer, with feet on the stage. Stage frames can't settle pose gates (hurt/faint/swim/fly/ride, F36#1).
 
 **Switch-on, 12:08 PM CT (tb/ev-coordinator 4c060802):** Mirejaw and Tuskroot enabled. The Water roster's Mirejaw presentation now points at the same mesh. Meadowhart is held: its native model fails test_meadowhart_riding_visual_repair_0912 (no skinned MeadowhartBareBody for the riding tack fit), so it's back with Codex.
+
+**Terminal-contact repairs, 3:31 PM CT (Codex 16f273ed / d1a46699, faint before/after Low sheets):** code-blind PASS on floor contact for Aeriex, Veridian, Voltarach and Solmane, each clearly better than before. Switched on (coordinator branch): Aeriex, Veridian and Voltarach, which have no remaining FAIL gate. Solmane stays held on its own topology FAIL (holes near the wing root). Meadowhart riding (b5c6d6be) FAIL: the rider's near leg renders as an untextured tube with a box foot; Meadowhart stays off.
+Checks after switch-on: scale ladder, F36 pose candidates, four-biome roster population, water catalogue and colourways, Cloudreach/Stormwood/Voltarach colourways, rideable roster, evolution, shiny, plus foundation retry/settlement and F19 boss delivery: 109 tests, 2121 assertions, 0 failed.

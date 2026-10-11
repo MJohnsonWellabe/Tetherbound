@@ -54,3 +54,22 @@ func test_lessons_unlocking_together_are_offered_in_authored_order() -> void:
 		assert_eq(str(RULES.due(player).get("id", "")), id)
 		player.flags.set_flag(RULES.PREFIX + id)
 	assert_true(RULES.due(player).is_empty())
+
+
+## F46#1: a capped team's Master line says where, and a held next-realm key
+## stays visible as the secondary line (journal how and HUD hint).
+func test_capped_master_names_its_place_and_keeps_the_held_key_visible() -> void:
+	var player := _player()
+	player.flags.set_flag("tournament_entered")
+	_unlock(player, "masters")
+	_unlock(player, "portals")
+	var master := RULES.capped_master(player)
+	var row := RULES.guidance(player)
+	var place := str(master.author_reference).replace("_", " ").capitalize()
+	assert_eq(str(row.get("id", "")), "masters", "the capped Master keeps priority")
+	assert_true(str(row.goal).contains(str(master.name) + " at " + place), "goal names the place: " + str(row.goal))
+	assert_eq(str(row.get("hint", "")), "Then: Use your Tidewake key at its signed arch in the Crossing Hall.")
+	var keyless := _player()
+	keyless.flags.set_flag("tournament_entered")
+	_unlock(keyless, "masters")
+	assert_false(RULES.guidance(keyless).has("hint"), "no key, no secondary line")

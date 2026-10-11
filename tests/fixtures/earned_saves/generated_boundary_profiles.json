@@ -8,7 +8,12 @@
       "realm": "meadows",
       "day": 5,
       "clock_elapsed_seconds": 500.0,
-      "position": "template",
+      "position": {
+        "ground_xz": [
+          -339.32,
+          2592.32
+        ]
+      },
       "party_levels": [
         15,
         15,
@@ -425,6 +430,201 @@
       ],
       "disclosure": "Generated F19#5 Cloudreach boundary after piece 05 (stronghold) at the summit extraction threshold, for pieces 06 (Veyra + relay) and 07 (Stormward). The earned chain's piece 05 lost Officer Voss (L41-42) with the earned L31 five (level gap, coordinator ruling); this input is NOT earned. Five ordered template UIDs/species at a generated L40 (redesign_level_curve upper-Cloudreach band 39-42) with generated caps and full HP. Prior Meadows/Tidewake facts as the cloudreach profile; Cloudreach story flags through cloudreach_upper_route_unlocked mirror the earned 01-04 checkpoints; act-III flags through summit_extraction_engine_reached (including defeated_cloudreach_voss) are generated setup. Template inventory, not the earned carried items; no pickup, harvest, battle-reward or transaction receipts are fabricated. Day 16 at 120 s, pose on the summit deck at the threshold. Claims no prior earned segment PASS."
     },
+    "f31_relic_power": {
+      "boundary": "meadows_settled",
+      "realm": "meadows",
+      "day": 8,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "stronghold_marker": "machine_foot"
+      },
+      "party_levels": [
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d"
+      ],
+      "personal_flags": [
+        "legendary_refused"
+      ],
+      "inventory_add": {
+        "tidewake_portal_key": 1
+      },
+      "character_fields": {
+        "portal_unlocks": [],
+        "relics_held": [
+          "meadows",
+          "tidewake"
+        ],
+        "relics_hung": []
+      },
+      "world_portal_unlocks": [],
+      "disclosure": "F31#2 relic power proof input (systems-a, 2026-10-11). Same generated post-machine Meadows finale as the tidewake profile, except the character also holds the Tidewake relic so a second Shrine Room hang can be tested before Tidewake is played. Held/hung relics, levels/caps/full HP, listed prior facts and the next key are generated setup; no hang, power or attachment receipt is fabricated. This input claims no prior earned segment PASS, continuous lineage or Tidewake route."
+    },
+    "stormwood_crown_build": {
+      "boundary": "stormwood_settled",
+      "realm": "stormwood",
+      "day": 20,
+      "clock_elapsed_seconds": 120.0,
+      "position": {
+        "ground_xz": [
+          -160.0,
+          2697.5
+        ]
+      },
+      "party_levels": [
+        48,
+        48,
+        48,
+        48,
+        48
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "water_aquaryn_resolved",
+        "water_dock_salt_crown_landing_charted",
+        "water_sluice_west_disabled",
+        "water_sluice_east_disabled",
+        "defeated_water_trainer_bex",
+        "defeated_water_trainer_calder",
+        "defeated_water_trainer_venn",
+        "water_dock_sluice_isle_both_controls_disabled",
+        "water_captain_nerissa_defeated",
+        "water_veilfall_intake_stopped",
+        "water_veilfall_return_opened",
+        "water_guardian_freed",
+        "water_tether_disabled",
+        "water_guardian_settled",
+        "water_currents_restored",
+        "realm_relic_water_earned",
+        "water_civilian_departure_complete",
+        "cloudreach_chapter_started",
+        "cloudreach_crisis_learned",
+        "cloudreach_lower_anchors_investigated",
+        "causeway_survivors_reconnected",
+        "windscar_aerie_prepared",
+        "cloudreach_act_i_complete",
+        "fly_traversal_unlocked",
+        "sky_shrine_reached",
+        "storm_anchor_engine_truth_learned",
+        "cloudreach_upper_route_unlocked",
+        "cloudreach_act_ii_complete",
+        "cloudreach_upper_anchors_disabled",
+        "summit_extraction_engine_reached",
+        "captain_veyra_defeated",
+        "storm_anchor_network_disabled",
+        "cloudreach_winds_restored",
+        "cloudreach_chapter_complete",
+        "storm_anchor_lower_west_mapped",
+        "storm_anchor_lower_east_mapped",
+        "storm_anchor_upper_west_disabled",
+        "storm_anchor_upper_east_disabled",
+        "cloudreach_summit_relay_west_disabled",
+        "cloudreach_summit_relay_crown_disabled",
+        "cloudreach_summit_relay_east_disabled",
+        "realm_heart_cloudreach_earned",
+        "realm_key_stormwood",
+        "stormward_route_revealed",
+        "water_dock_reedhaven_repaired",
+        "water_swim_lesson_complete",
+        "defeated_water_trainer_tovin",
+        "water_dock_brine_steps_trial_won",
+        "defeated_water_trainer_solm",
+        "defeated_water_trainer_irva",
+        "water_shellwatch_residents_freed",
+        "water_shellwatch_pump_disabled",
+        "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "stormwood:chapter_started",
+        "stormwood:crisis_learned",
+        "stormwood:first_break_witnessed",
+        "stormwood:first_stormglass_gathered",
+        "stormwood:arch:a_ashfoot:lit",
+        "stormwood:ashfoot_arch_relit",
+        "stormwood:arch:a_pools:lit",
+        "stormwood:lantern_pools_linked",
+        "stormwood:trainer:officer_maren_verge_rod:defeated",
+        "stormwood:rod_verge_disabled",
+        "stormwood:trainer:lieutenant_dace_hollows_rod:defeated",
+        "stormwood:rod_hollows_disabled",
+        "stormwood:lower_rods_disabled",
+        "stormwood:arch:b_pools:lit",
+        "stormwood:arch:b_rodline:lit",
+        "stormwood:rodline_linked",
+        "stormwood:bryn_met",
+        "stormwood:act_i_complete",
+        "stormwood:trainer:lieutenant_varga_rodline_bridge:defeated",
+        "stormwood:varga_defeated",
+        "stormwood:arch_recipe_known"
+      ],
+      "personal_flags": [
+        "legendary_refused",
+        "water_chapter_started",
+        "water_cordage_recipe_gated",
+        "water_swim_lesson_briefed",
+        "water_swim_stone_earned",
+        "water:legendary_refused",
+        "fly_tutorial_completed"
+      ],
+      "inventory_add": {},
+      "character_fields": {
+        "portal_unlocks": [
+          "tidewake",
+          "cloudreach",
+          "stormwood"
+        ],
+        "relics_held": [],
+        "relics_hung": [
+          "meadows",
+          "tidewake",
+          "cloudreach"
+        ]
+      },
+      "world_portal_unlocks": [
+        "tidewake",
+        "cloudreach",
+        "stormwood"
+      ],
+      "disclosure": "SCOUTING ONLY (coordinator 2026-10-11): generated mid-Stormwood boundary after Keeper Ondra's arch recipe, at Ondra's stance (-160, 2697.5), Crown arch unbuilt, for scouting Stormwood pieces crown_build -> settlement before the earned chain arrives. NOT earned and not an F19#5 checkpoint. Five ordered template UIDs/species at a generated L48 (redesign_level_curve conductor_run 47-49) with generated caps and full HP; prior facts as the stormwood profile; Stormwood act-I facts, lit ancient pairs a/b, the Verge/Hollows/Varga trainer defeats and arch_recipe_known are generated flags. Template inventory and tools; no placed buildings, harvest, battle-reward or transaction receipts are fabricated; the Crown arch is left for the crown_build piece to build by input. Claims no earned segment PASS."
+    },
     "f44_meadows": {
       "boundary": "meadows_settled",
       "realm": "meadows",
@@ -811,20 +1011,23 @@
       ],
       "disclosure": "F44#0 rematch witness input (Stormwood): the 'stormwood' post-Veyra profile's flags plus Voss's and Maren's original defeats, generated directly in Stormwood at Ashfoot Waycamp ground (-325, 466) with the Stormwood portal unlocked; five raised to L55 (the generator's maximum) for the L58 endgame leader band. The smoke adds stormwood:marrow_defeated and regional_credits_seen as a disclosed post-load fixture. (The ordinary portal leg was tried twice and failed: the relic hang opens the relic power panel.) Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
     },
-    "f31_relic_power": {
-      "boundary": "meadows_settled",
-      "realm": "meadows",
-      "day": 8,
-      "clock_elapsed_seconds": 500.0,
+    "cloudreach_stronghold": {
+      "boundary": "cloudreach_settled",
+      "realm": "cloudreach",
+      "day": 18,
+      "clock_elapsed_seconds": 219.0,
       "position": {
-        "stronghold_marker": "machine_foot"
+        "ground_xz": [
+          400.9,
+          3249.96
+        ]
       },
       "party_levels": [
-        20,
-        20,
-        20,
-        20,
-        20
+        40,
+        40,
+        40,
+        40,
+        40
       ],
       "heal_party": true,
       "world_flags": [
@@ -845,42 +1048,241 @@
         "legendary_settled",
         "realm_key_cloudreach",
         "realm_heart_meadows_earned",
-        "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d"
+        "water_aquaryn_resolved",
+        "water_dock_salt_crown_landing_charted",
+        "water_sluice_west_disabled",
+        "water_sluice_east_disabled",
+        "defeated_water_trainer_bex",
+        "defeated_water_trainer_calder",
+        "defeated_water_trainer_venn",
+        "water_dock_sluice_isle_both_controls_disabled",
+        "water_captain_nerissa_defeated",
+        "water_veilfall_intake_stopped",
+        "water_veilfall_return_opened",
+        "water_guardian_freed",
+        "water_tether_disabled",
+        "water_guardian_settled",
+        "water_currents_restored",
+        "realm_relic_water_earned",
+        "water_civilian_departure_complete",
+        "water_dock_reedhaven_repaired",
+        "water_swim_lesson_complete",
+        "defeated_water_trainer_tovin",
+        "water_dock_brine_steps_trial_won",
+        "defeated_water_trainer_solm",
+        "defeated_water_trainer_irva",
+        "water_shellwatch_residents_freed",
+        "water_shellwatch_pump_disabled",
+        "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "cloudreach_chapter_started",
+        "cloudreach_crisis_learned",
+        "storm_anchor_lower_west_mapped",
+        "storm_anchor_lower_east_mapped",
+        "cloudreach_lower_anchors_investigated",
+        "defeated_cloudreach_senn",
+        "causeway_survivors_reconnected",
+        "completed_cloudreach_maela_trial_battle",
+        "windscar_aerie_prepared",
+        "cloudreach_act_i_complete",
+        "fly_traversal_unlocked",
+        "fly_tutorial_completed",
+        "sky_shrine_reached",
+        "cloudreach_shrine_vane_west_aligned",
+        "cloudreach_shrine_vane_east_aligned",
+        "cloudreach_shrine_vane_crown_aligned",
+        "storm_anchor_engine_truth_learned",
+        "cloudreach_upper_route_unlocked"
       ],
       "personal_flags": [
-        "legendary_refused"
+        "legendary_refused",
+        "water_chapter_started",
+        "water_cordage_recipe_gated",
+        "water_swim_lesson_briefed",
+        "water_swim_stone_earned",
+        "water:legendary_refused"
       ],
-      "inventory_add": {
-        "tidewake_portal_key": 1
-      },
+      "inventory_add": {},
       "character_fields": {
-        "portal_unlocks": [],
-        "relics_held": [
+        "portal_unlocks": [
+          "tidewake",
+          "cloudreach"
+        ],
+        "relics_held": [],
+        "relics_hung": [
           "meadows",
           "tidewake"
-        ],
-        "relics_hung": []
+        ]
       },
-      "world_portal_unlocks": [],
-      "disclosure": "F31#2 relic power proof input (systems-a, 2026-10-11). Same generated post-machine Meadows finale as the tidewake profile, except the character also holds the Tidewake relic so a second Shrine Room hang can be tested before Tidewake is played. Held/hung relics, levels/caps/full HP, listed prior facts and the next key are generated setup; no hang, power or attachment receipt is fabricated. This input claims no prior earned segment PASS, continuous lineage or Tidewake route."
+      "world_portal_unlocks": [
+        "tidewake",
+        "cloudreach"
+      ],
+      "disclosure": "Generated F19#5 Cloudreach boundary after piece 04 (High Roost, landed back at the Windscar aerie), for piece 05 (stronghold, Officer Voss L41-42), F47 owner ruling (A) 2026-10-11. NOT earned. Five ordered template UIDs/species at a generated L40: the arrival level the F27 route ledger's ordinary path (Altar essence, found candy, half the wilds; tools/f27_route_ledger.mjs) gives before the summit (L41-42 types-match, L41 plausible team), taken at its conservative L40, with generated caps and full HP. Prior Meadows/Tidewake facts as the cloudreach profile; Cloudreach story flags through cloudreach_upper_route_unlocked mirror the earned 01-04 checkpoints (tests/fixtures/earned_saves/cloudreach_04_high_roost). Template inventory, not the earned carried items; no pickup, harvest, battle-reward or transaction receipts are fabricated. Day 18 at 219 s, pose at the earned 04 landing (400.9, 3249.96). Claims no prior earned segment PASS."
     },
-    "stormwood_crown_build": {
-      "boundary": "stormwood_settled",
-      "realm": "stormwood",
+    "cloudreach_summit_bivouac": {
+      "boundary": "cloudreach_settled",
+      "realm": "cloudreach",
       "day": 20,
       "clock_elapsed_seconds": 120.0,
       "position": {
         "ground_xz": [
-          -160.0,
-          2697.5
+          298.07,
+          5104.18
         ]
       },
       "party_levels": [
-        48,
-        48,
-        48,
-        48,
-        48
+        40,
+        40,
+        40,
+        40,
+        40
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "water_aquaryn_resolved",
+        "water_dock_salt_crown_landing_charted",
+        "water_sluice_west_disabled",
+        "water_sluice_east_disabled",
+        "defeated_water_trainer_bex",
+        "defeated_water_trainer_calder",
+        "defeated_water_trainer_venn",
+        "water_dock_sluice_isle_both_controls_disabled",
+        "water_captain_nerissa_defeated",
+        "water_veilfall_intake_stopped",
+        "water_veilfall_return_opened",
+        "water_guardian_freed",
+        "water_tether_disabled",
+        "water_guardian_settled",
+        "water_currents_restored",
+        "realm_relic_water_earned",
+        "water_civilian_departure_complete",
+        "water_dock_reedhaven_repaired",
+        "water_swim_lesson_complete",
+        "defeated_water_trainer_tovin",
+        "water_dock_brine_steps_trial_won",
+        "defeated_water_trainer_solm",
+        "defeated_water_trainer_irva",
+        "water_shellwatch_residents_freed",
+        "water_shellwatch_pump_disabled",
+        "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "cloudreach_chapter_started",
+        "cloudreach_crisis_learned",
+        "storm_anchor_lower_west_mapped",
+        "storm_anchor_lower_east_mapped",
+        "cloudreach_lower_anchors_investigated",
+        "defeated_cloudreach_senn",
+        "causeway_survivors_reconnected",
+        "completed_cloudreach_maela_trial_battle",
+        "windscar_aerie_prepared",
+        "cloudreach_act_i_complete",
+        "fly_traversal_unlocked",
+        "fly_tutorial_completed",
+        "sky_shrine_reached",
+        "cloudreach_shrine_vane_west_aligned",
+        "cloudreach_shrine_vane_east_aligned",
+        "cloudreach_shrine_vane_crown_aligned",
+        "storm_anchor_engine_truth_learned",
+        "cloudreach_upper_route_unlocked",
+        "cloudreach_act_ii_complete",
+        "storm_anchor_upper_west_disabled",
+        "storm_anchor_upper_east_disabled",
+        "storm_anchor_summit_feed_disabled",
+        "defeated_cloudreach_voss",
+        "cloudreach_upper_anchors_disabled"
+      ],
+      "personal_flags": [
+        "legendary_refused",
+        "water_chapter_started",
+        "water_cordage_recipe_gated",
+        "water_swim_lesson_briefed",
+        "water_swim_stone_earned",
+        "water:legendary_refused"
+      ],
+      "inventory_add": {},
+      "character_fields": {
+        "portal_unlocks": [
+          "tidewake",
+          "cloudreach"
+        ],
+        "relics_held": [],
+        "relics_hung": [
+          "meadows",
+          "tidewake"
+        ]
+      },
+      "world_portal_unlocks": [
+        "tidewake",
+        "cloudreach"
+      ],
+      "disclosure": "Generated F19#5 Cloudreach summit boundary for the 05b_summit_tail re-proof (bivouac rest -> summit threshold), coordinator ruling 2026-10-11 after piece 05 stalled leaving the bivouac. NOT earned. Same five template UIDs/species at a generated L40 with generated caps and full HP as cloudreach_stronghold (whose piece 05 beat Officer Voss by live piloting); Cloudreach story flags through cloudreach_upper_anchors_disabled (including defeated_cloudreach_voss) mirror that run; summit_extraction_engine_reached is withheld so the tail must earn it. Template inventory; no pickup, harvest, battle-reward or transaction receipts are fabricated. Day 20 at 120 s, pose where piece 05's earned-route body stood after the summit feed (298.07, 5104.18), so the tail walks the same road into the bivouac (a camp-side start made _navigate project onto the overlook loop over the crown rock, attempt 1). Claims no prior earned segment PASS."
+    },
+    "hall": {
+      "boundary": "sigils",
+      "realm": "meadows",
+      "day": 7,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "ground_xz": [
+          58.0,
+          7410.5
+        ]
+      },
+      "party_levels": [
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open"
+      ],
+      "personal_flags": [],
+      "inventory_add": {},
+      "disclosure": "Generated post-Sigils five at L18 (chapter_curve band4 team.exit 18, an earned run reaches after the three captains), healed, just past the opened Sigil Gate with the three Sigils spent (none carried). Relay/Mill and all three captain defeat flags plus hall_approach_open set; ordered UIDs/species and original inventory retained; no captain rewards (Sigil TMs, coin) added. Added under the owner's 2026-10-11 chunked-proof rules after the earned sigils piece failed twice (ralph/reports/EVIDENCE/F19-5/sigils.md). No earned captain, Sigil Gate, feast, XP or recovery witness is claimed."
+    },
+    "stormwood_rootgate_mainland": {
+      "boundary": "stormwood_settled",
+      "realm": "stormwood",
+      "day": 22,
+      "clock_elapsed_seconds": 120.0,
+      "position": {
+        "ground_xz": [
+          -650.0,
+          3550.0
+        ]
+      },
+      "party_levels": [
+        50,
+        50,
+        50,
+        50,
+        50
       ],
       "heal_party": true,
       "world_flags": [
@@ -974,7 +1376,14 @@
         "stormwood:act_i_complete",
         "stormwood:trainer:lieutenant_varga_rodline_bridge:defeated",
         "stormwood:varga_defeated",
-        "stormwood:arch_recipe_known"
+        "stormwood:arch_recipe_known",
+        "stormwood:crown_glass_gathered",
+        "stormwood:crown_arch_built",
+        "stormwood:crown_reached",
+        "stormwood:named:crown_guardian:cleared",
+        "stormwood:engine_truth_learned",
+        "stormwood:rootgate_released",
+        "stormwood:act_ii_complete"
       ],
       "personal_flags": [
         "legendary_refused",
@@ -1004,7 +1413,157 @@
         "cloudreach",
         "stormwood"
       ],
-      "disclosure": "SCOUTING ONLY (coordinator 2026-10-11): generated mid-Stormwood boundary after Keeper Ondra's arch recipe, at Ondra's stance (-160, 2697.5), Crown arch unbuilt, for scouting Stormwood pieces crown_build -> settlement before the earned chain arrives. NOT earned and not an F19#5 checkpoint. Five ordered template UIDs/species at a generated L48 (redesign_level_curve conductor_run 47-49) with generated caps and full HP; prior facts as the stormwood profile; Stormwood act-I facts, lit ancient pairs a/b, the Verge/Hollows/Varga trainer defeats and arch_recipe_known are generated flags. Template inventory and tools; no placed buildings, harvest, battle-reward or transaction receipts are fabricated; the Crown arch is left for the crown_build piece to build by input. Claims no earned segment PASS."
+      "disclosure": "Generated mid-Stormwood boundary after the Crown heartstone released the Rootgate (act II complete), standing on the mainland Rootgate road at (-650, 3550), for Stormwood piece named_detour (proof rules v2, coordinator 2026-10-11). NOT earned. Five ordered template UIDs/species at a generated L50 (redesign_level_curve hollow_crown 49-50 / deepwood 50-52) with generated caps and full HP; prior facts as the stormwood_crown_build profile plus generated act-II flags (crown glass, crown_arch_built, crown reached, Crown guardian cleared, engine truth, rootgate released). crown_arch_built is a flag only: NO placed Crown-arch building is fabricated, so this input cannot use the paid Crown passage. Template inventory; no harvest, battle-reward or transaction receipts. Claims no earned segment PASS."
+    },
+    "stormwood_rootgate_crown": {
+      "boundary": "stormwood_settled",
+      "realm": "stormwood",
+      "day": 22,
+      "clock_elapsed_seconds": 120.0,
+      "position": {
+        "ground_xz": [
+          805.0,
+          2545.0
+        ]
+      },
+      "party_levels": [
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "water_aquaryn_resolved",
+        "water_dock_salt_crown_landing_charted",
+        "water_sluice_west_disabled",
+        "water_sluice_east_disabled",
+        "defeated_water_trainer_bex",
+        "defeated_water_trainer_calder",
+        "defeated_water_trainer_venn",
+        "water_dock_sluice_isle_both_controls_disabled",
+        "water_captain_nerissa_defeated",
+        "water_veilfall_intake_stopped",
+        "water_veilfall_return_opened",
+        "water_guardian_freed",
+        "water_tether_disabled",
+        "water_guardian_settled",
+        "water_currents_restored",
+        "realm_relic_water_earned",
+        "water_civilian_departure_complete",
+        "cloudreach_chapter_started",
+        "cloudreach_crisis_learned",
+        "cloudreach_lower_anchors_investigated",
+        "causeway_survivors_reconnected",
+        "windscar_aerie_prepared",
+        "cloudreach_act_i_complete",
+        "fly_traversal_unlocked",
+        "sky_shrine_reached",
+        "storm_anchor_engine_truth_learned",
+        "cloudreach_upper_route_unlocked",
+        "cloudreach_act_ii_complete",
+        "cloudreach_upper_anchors_disabled",
+        "summit_extraction_engine_reached",
+        "captain_veyra_defeated",
+        "storm_anchor_network_disabled",
+        "cloudreach_winds_restored",
+        "cloudreach_chapter_complete",
+        "storm_anchor_lower_west_mapped",
+        "storm_anchor_lower_east_mapped",
+        "storm_anchor_upper_west_disabled",
+        "storm_anchor_upper_east_disabled",
+        "cloudreach_summit_relay_west_disabled",
+        "cloudreach_summit_relay_crown_disabled",
+        "cloudreach_summit_relay_east_disabled",
+        "realm_heart_cloudreach_earned",
+        "realm_key_stormwood",
+        "stormward_route_revealed",
+        "water_dock_reedhaven_repaired",
+        "water_swim_lesson_complete",
+        "defeated_water_trainer_tovin",
+        "water_dock_brine_steps_trial_won",
+        "defeated_water_trainer_solm",
+        "defeated_water_trainer_irva",
+        "water_shellwatch_residents_freed",
+        "water_shellwatch_pump_disabled",
+        "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "stormwood:chapter_started",
+        "stormwood:crisis_learned",
+        "stormwood:first_break_witnessed",
+        "stormwood:first_stormglass_gathered",
+        "stormwood:arch:a_ashfoot:lit",
+        "stormwood:ashfoot_arch_relit",
+        "stormwood:arch:a_pools:lit",
+        "stormwood:lantern_pools_linked",
+        "stormwood:trainer:officer_maren_verge_rod:defeated",
+        "stormwood:rod_verge_disabled",
+        "stormwood:trainer:lieutenant_dace_hollows_rod:defeated",
+        "stormwood:rod_hollows_disabled",
+        "stormwood:lower_rods_disabled",
+        "stormwood:arch:b_pools:lit",
+        "stormwood:arch:b_rodline:lit",
+        "stormwood:rodline_linked",
+        "stormwood:bryn_met",
+        "stormwood:act_i_complete",
+        "stormwood:trainer:lieutenant_varga_rodline_bridge:defeated",
+        "stormwood:varga_defeated",
+        "stormwood:arch_recipe_known",
+        "stormwood:crown_glass_gathered",
+        "stormwood:crown_arch_built",
+        "stormwood:crown_reached",
+        "stormwood:named:crown_guardian:cleared",
+        "stormwood:engine_truth_learned",
+        "stormwood:rootgate_released",
+        "stormwood:act_ii_complete"
+      ],
+      "personal_flags": [
+        "legendary_refused",
+        "water_chapter_started",
+        "water_cordage_recipe_gated",
+        "water_swim_lesson_briefed",
+        "water_swim_stone_earned",
+        "water:legendary_refused",
+        "fly_tutorial_completed"
+      ],
+      "inventory_add": {},
+      "character_fields": {
+        "portal_unlocks": [
+          "tidewake",
+          "cloudreach",
+          "stormwood"
+        ],
+        "relics_held": [],
+        "relics_hung": [
+          "meadows",
+          "tidewake",
+          "cloudreach"
+        ]
+      },
+      "world_portal_unlocks": [
+        "tidewake",
+        "cloudreach",
+        "stormwood"
+      ],
+      "disclosure": "Generated mid-Stormwood boundary after the Crown heartstone released the Rootgate (act II complete), standing on the Hollow Crown return ring at (805, 2545), for Stormwood pieces dynamo -> settlement (proof rules v2; coordinator approved the paid-arch opt-in 2026-10-11). NOT earned. Five ordered template UIDs/species at a generated L50 with generated caps and full HP; prior facts as stormwood_crown_build plus generated act-II flags. One paid stormglass_arch placed_buildings record on the Still Grove footing (twin e_crown) is generated setup via the real register_building + arch-link shape; no materials were spent and no build/harvest/battle-reward/transaction receipts are fabricated. Claims no earned segment PASS.",
+      "stormwood_paid_crown_arch": true
     },
     "f44_tidewake_endgame": {
       "boundary": "tidewake_settled",

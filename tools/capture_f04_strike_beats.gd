@@ -49,6 +49,15 @@ func _run() -> void:
 	await super._run()
 
 
+## Same fixture adoption as the base, with a player-like nickname: the base's
+## "Camera" nickname shows on the HUD plate and reads as a harness artifact.
+func _ensure_ally() -> void:
+	var director := _world.get_node_or_null(^"EncounterDirector")
+	if director == null or director.call("ally_instance") != null:
+		return
+	await director.call("adopt_starter", _ally_species, _ally_species.capitalize())
+
+
 func _on_witness_tell(seconds: float) -> void:
 	super._on_witness_tell(seconds)
 	var s: Dictionary = _strikes.back()

@@ -1,0 +1,146 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 43931,
+			"exited": true,
+			"hashes": [
+				830380561,
+				830380561,
+				830380561
+			],
+			"hello": {
+				"enet_port": 30661.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "6caa680b78a0",
+				"peer": 0.0,
+				"pid": 7233.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "/tmp/claude-0/-home-user-Tetherbound/6363066d-9ebc-5645-8000-19dadf1d76a6/scratchpad/caph/net/net-proof_two_peer-20261011T191834Z/home-0/godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 6701.0,
+				"last_panel_press": {
+					"action": "ui_accept",
+					"after": {
+						"focus_path": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@6/@HBoxContainer@111742/@PanelContainer@111909/@VBoxContainer@111908/@Button@111904",
+						"owner_path": "/root/Game/GameMenu",
+						"owner_script": "res://scripts/ui/game_menu.gd",
+						"tree_paused": false
+					},
+					"before": {
+						"focus_path": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@6/@HBoxContainer@111742/@PanelContainer@111909/@VBoxContainer@111908/@Button@111903",
+						"owner_block_reason": "owner passive pending phase=<null>",
+						"owner_path": "/root/Game/Session",
+						"owner_script": "res://scripts/net/session.gd",
+						"tree_paused": false
+					},
+					"binding_button": 0.0,
+					"binding_class": "InputEventJoypadButton",
+					"binding_menu_cancel": false,
+					"sampled_ms": 450621.0
+				},
+				"physics_frame": 15027.0,
+				"pos": [
+					-103.0,
+					262.06005859375,
+					5477.5
+				],
+				"session_peers": [
+					1.0,
+					1748396678.0
+				],
+				"state_hash": 830380561.0,
+				"t": 480.214,
+				"type": "heartbeat"
+			},
+			"pid": 7233,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 37125,
+			"exited": true,
+			"hashes": [
+				830380561,
+				830380561,
+				830380561
+			],
+			"hello": {
+				"enet_port": 30662.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "6caa680b78a0",
+				"peer": 1.0,
+				"pid": 7234.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "/tmp/claude-0/-home-user-Tetherbound/6363066d-9ebc-5645-8000-19dadf1d76a6/scratchpad/caph/net/net-proof_two_peer-20261011T191834Z/home-1/godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 25106.0,
+				"physics_frame": 15600.0,
+				"pos": [
+					-98.0,
+					262.06005859375,
+					5480.5
+				],
+				"session_peers": [
+					1.0,
+					1748396678.0
+				],
+				"state_hash": 830380561.0,
+				"t": 479.899,
+				"type": "heartbeat"
+			},
+			"pid": 7234,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "net-20261011T191834Z-7157",
+	"scene": "title",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

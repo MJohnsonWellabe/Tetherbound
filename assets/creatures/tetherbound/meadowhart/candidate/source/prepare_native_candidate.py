@@ -10,6 +10,9 @@ args=sys.argv[sys.argv.index('--')+1:]
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=args[0])
 body=max((o for o in bpy.data.objects if o.type=='MESH'),key=lambda o:len(o.data.vertices))
+# Name the actual complete skin for the production riding/tack contract.
+# Keep this on the body itself, never on an extra marker or filler mesh.
+body.name='MeadowhartBareBody'
 old=[o for o in bpy.data.objects if o.type=='ARMATURE']
 for mod in list(body.modifiers): body.modifiers.remove(mod)
 body.parent=None

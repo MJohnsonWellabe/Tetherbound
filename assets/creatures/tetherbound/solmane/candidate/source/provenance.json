@@ -68,11 +68,11 @@
     ],
     "topology_warnings": [
       "Mesh_0: 15220 non-manifold edges",
-      "Mesh_0: 7541 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 7541 duplicate vertices — will split under deformation",
       "Mesh_0: 1214 microscopic disconnected components",
       "Mesh_0: ~4383 inward-facing faces",
       "Mesh_0: 117 faces with texel density 4.0x off the median",
-      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+      "Mesh_0: 0% quads — generator triangle soup, poor for deformation"
     ],
     "height_m": 6.7,
     "bones": 26,
@@ -101,7 +101,9 @@
     "sheets": [
       "review/low-before-after.jpg",
       "review/medium-before-after.jpg"
-    ]
+    ],
+    "scope": "Historical pre-repair captures of the input candidate; not validation of this new bake.",
+    "input_model_sha256": "1b9c746929d6cb6e438ebda636ce607c0c65c02d7ee946b98eae5a77ffa2d3b3"
   },
   "gates": {
     "scale": "PASS",
@@ -118,5 +120,157 @@
     "Candidate remains OFF until the complete art bar passes.",
     "Faint diagnostic retains a raised body supported on folded paws rather than a settled terminal repose; terminal repose/contact FAIL. No contact approval inferred from standing scale or diagnostic lowest-point grounding.",
     "Visible holes/fragmentation near a forward wing root in raw and native diagnostics; topology FAIL. No art or motion approval inferred from eleven clip names."
-  ]
+  ],
+  "source_repair": {
+    "status": "NATIVE_BAKED_CONTACT_REVIEW_PENDING",
+    "baseline_model_sha256": "1b9c746929d6cb6e438ebda636ce607c0c65c02d7ee946b98eae5a77ffa2d3b3",
+    "recipe": "source/terminal_repose.json",
+    "scope": "Only faint/rest authoring; all other clips, standing scale, mesh, UV, skin, materials and default-off registration unchanged by this pose repair.",
+    "support": "Sternal repose with folded paws and swept wings; chest and pelvis share support.",
+    "required_jobs": [
+      "root-owned native clip bake and import",
+      "Low/Compatibility terminal-faint three-quarter side shot with unobscured torso/floor contact",
+      "Low standing scale and hurt context in the existing capture path; no broad recapture suite",
+      "independent code-blind judgment and Claude disposition; retain original assertions and shipping gates",
+      "Low forward wing-root detail after actual topology repair; topology FAIL remains"
+    ],
+    "acceptance": "Root Blender bake and CPU preservation checks passed. Original contact FAIL/open gates retained until Low engine capture and independent Claude judgment.",
+    "topology": "UNRESOLVED: current candidate has 2702 geometric boundary edges and 107 edges with more than two incident faces. The bounded forward-root census found 26 branching/large contours, 12 UV-seam contours and 22 contours with UV fold or surface-orientation ambiguity. No geometry or UV change applied. Needs localized retopology and texture/skin transfer under root native ownership, followed by Low front/reverse wing-root detail.",
+    "cpu_preparation": {
+      "method": "Read-only glTF skin evaluation of source rotations, all vertices; 61 transition samples. Nine unaffected clips match baseline source controls at five phases each. No native engine or bake.",
+      "support_regions": {
+        "spine": {
+          "minimum_m": 0.0,
+          "vertices_within_8cm": 10
+        },
+        "pelvis": {
+          "minimum_m": 0.01805,
+          "vertices_within_8cm": 9
+        }
+      },
+      "limits": "Not a native posed-contact or topology/UV/self-intersection judgment. The source gap/vertex guard prevents gross suspension; original native assertions remain unchanged."
+    },
+    "low_capture_request": {
+      "stand": "Existing F36 flat bare-floor stage, candidate fixture only; preserve full standing scale.",
+      "clip": "faint",
+      "time_seconds": 1.5,
+      "frame_at_24fps": 36,
+      "preset": "Low / Compatibility only",
+      "shot": "Three-quarter left side of the 12-degree relaxed lean; chest/pelvis floor line and swept wings visible.",
+      "judge": "Minimum decisive terminal body-contact frame; original assertions and Claude judgment still required."
+    },
+    "native_contact_status": "NATIVE PENDING",
+    "bake": {
+      "source_commit": "81c6e804215d89814fe98e80779f5536b21b7843",
+      "engine": "Blender 4.2.9 LTS",
+      "producer_build": "a10f621e649a",
+      "producer_script": "source/author_native_clips.py",
+      "producer_sha256": "3e3907fb797bd6dc813b313d89f92bbf14171339bdd284b8fe1d21e371719776",
+      "recipe": "source/terminal_repose.json",
+      "recipe_sha256": "40aafefa0fdbf8bb5e5337b0e4bf1474ed324f37dd53cf4dfecbbdbc0a045ec9",
+      "input_sha256": "1b9c746929d6cb6e438ebda636ce607c0c65c02d7ee946b98eae5a77ffa2d3b3",
+      "input_preserved_at_commit": "81c6e804215d89814fe98e80779f5536b21b7843",
+      "input_repository_path": "assets/creatures/tetherbound/solmane/candidate/models/creature_solmane_native.glb",
+      "output_sha256": "1a8a5389a1936e98b65f75a5a066ea6841ee6f34f0ef1a9f84352b809332064d",
+      "actual_exit_code": 0,
+      "actual_blender_pid": 25832,
+      "completed_utc": "2026-10-11T17:52:49.055937+00:00",
+      "private_launch_receipt": "C:\\CodexTemp\\native-service-artifacts\\f36-contact-fixes-81c6\\solmane-bake-v1\\launch-receipt.json",
+      "private_result_receipt": "C:\\CodexTemp\\native-service-artifacts\\f36-contact-fixes-81c6\\solmane-bake-v1\\result.json",
+      "private_output": "C:\\CodexTemp\\native-service-artifacts\\f36-contact-fixes-81c6\\solmane-bake-v1\\solmane-supported-repose.glb",
+      "support_guard_readings": [
+        {
+          "spine": 0.0,
+          "pelvis": 0.018054306507110596
+        },
+        {
+          "spine": 0.0,
+          "pelvis": 0.018054306507110596
+        }
+      ],
+      "warning": "Multiple shader image nodes: exporter chose first sampler. CPU comparison verifies materials, sampler settings, texture bindings and embedded image bytes exactly unchanged.",
+      "preservation": {
+        "status": "PASS_CPU_PRESERVATION",
+        "method": "Ordered triangle-corner correspondence; full unaffected track keys/times/interpolation plus five posed samples per clip; read-only glTF skin evaluation. No engine run by repair lane.",
+        "triangles": 29398,
+        "vertex_count_before": 23478,
+        "vertex_count_after": 23482,
+        "extra_vertices": "Exporter seam splits; corner topology/UV/joint identity preserved.",
+        "corner_attribute_max_absolute_delta": {
+          "POSITION": 2.2649765014648438e-06,
+          "NORMAL": 0.0005988776683807373,
+          "TEXCOORD_0": 0.0,
+          "JOINTS_0": 0.0,
+          "WEIGHTS_0": 1.1920928955078125e-07
+        },
+        "normal_max_angle_degrees": 0.04010550375734972,
+        "rest_surface_max_distance_m": 2.5861030299490606e-06,
+        "standing_height_m_before": 6.700000359725196,
+        "standing_height_m_after": 6.700000912363745,
+        "rig_local_matrix_max_delta": 1.007205324365934e-06,
+        "inverse_bind_matrix_max_delta": 3.6954879760742188e-06,
+        "rig_names_hierarchy_joint_order": "unchanged",
+        "materials_textures_samplers_embedded_images": "exactly unchanged",
+        "configured_height_m": 6.7,
+        "configured_model_scale": 1.0,
+        "unaffected_clip_max_posed_distance_m": {
+          "idle": 3.1049949328198675e-06,
+          "walk": 3.1605795207844627e-06,
+          "run": 3.1571541515483135e-06,
+          "attack": 2.8384545472951465e-06,
+          "charged": 2.718823626547365e-06,
+          "hit": 2.5496600534630024e-06,
+          "swim": 2.9538401940491045e-06,
+          "fly_grip": 3.51461086296289e-06,
+          "ride": 3.1049949328198675e-06
+        },
+        "terminal_skin_evaluation": {
+          "faint": {
+            "duration_seconds": 1.5416666269302368,
+            "minimum_y_m": 2.081746670618695e-07,
+            "support": {
+              "spine": {
+                "minimum_y_m": 2.081746670618695e-07,
+                "vertices_within_8cm": 10
+              },
+              "pelvis": {
+                "minimum_y_m": 0.018053903820197274,
+                "vertices_within_8cm": 9
+              }
+            }
+          },
+          "rest": {
+            "duration_seconds": 1.5416666269302368,
+            "minimum_y_m": 2.081746670618695e-07,
+            "support": {
+              "spine": {
+                "minimum_y_m": 2.081746670618695e-07,
+                "vertices_within_8cm": 10
+              },
+              "pelvis": {
+                "minimum_y_m": 0.018053903820197274,
+                "vertices_within_8cm": 9
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "supported_repose_low_capture": {
+    "before_source": "81c6e804215d89814fe98e80779f5536b21b7843",
+    "after_source": "16f273ed6546ba0d42897b1b34df5bf56f941e9e",
+    "renderer": "gl_compatibility",
+    "capture_tool": "tools/art_pipeline/capture_f36_poses.gd; original 25-pose assertions unchanged",
+    "selection": "Process-local OFF candidate placeholder selection only; shipping configuration unchanged",
+    "proof_scope": "Native bare-floor stage, faint terminal body contact; no fight or full animation acceptance claim",
+    "frames_captured_per_source": 25,
+    "sheet": "ralph/reports/VISUAL-PROOF/F36-solmane/faint-before-after-Low.png",
+    "standing_height_m": 6.69999980926514,
+    "standing_height_delta_m": 0.0,
+    "camera_delta_m": 0.0,
+    "contact_review": "Improved body-supported repose visible; independent verdict pending",
+    "remaining_gap": "Wing-root topology FAIL retained; not a full candidate PASS",
+    "shipping_enabled": false
+  }
 }

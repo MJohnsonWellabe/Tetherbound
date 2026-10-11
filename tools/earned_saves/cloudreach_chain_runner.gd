@@ -26,6 +26,9 @@ extends SceneTree
 ##   06_veyra_relay         Captain Veyra, creature relay phase, overlook, reward
 ##   07_stormward_handoff   new-order handoff: Home Key, hang the Cloudreach relic,
 ##                          Stormwood arch (the physical Stormward gate is retired)
+##   05b_summit_tail        re-proof piece only (not in run_cloudreach_chain.sh):
+##                          05's tail from a generated summit-bivouac boundary,
+##                          the bivouac rest and the walk to the summit threshold
 ##
 ## USAGE
 ##   godot --headless --path . --script tools/earned_saves/cloudreach_chain_runner.gd -- \
@@ -43,7 +46,7 @@ const PORTAL := preload("res://tests/helpers/f49_portal_travel.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_arrival_gate", "02_broken_causeways", "03_flight_training", "04_high_roost",
-	"05_stronghold", "06_veyra_relay", "07_stormward_handoff"]
+	"05_stronghold", "05b_summit_tail", "06_veyra_relay", "07_stormward_handoff"]
 const SLOT := 0
 const LOAD_SETTLE_FRAMES := 300
 
@@ -59,6 +62,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		"03_flight_training": ["windscar_aerie_prepared", "cloudreach_act_i_complete", "fly_traversal_unlocked"],
 		"04_high_roost": ["sky_shrine_reached", "storm_anchor_engine_truth_learned", "cloudreach_upper_route_unlocked"],
 		"05_stronghold": ["cloudreach_act_ii_complete", "cloudreach_upper_anchors_disabled", "summit_extraction_engine_reached"],
+		"05b_summit_tail": ["summit_extraction_engine_reached"],
 		"06_veyra_relay": ["captain_veyra_defeated", "storm_anchor_network_disabled", "cloudreach_chapter_complete"],
 		"07_stormward_handoff": ["cloudreach_chapter_complete", "realm_key_stormwood"],
 	}
@@ -71,6 +75,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 			"03_flight_training": await _flight_training()
 			"04_high_roost": await _high_roost()
 			"05_stronghold": await _stronghold()
+			"05b_summit_tail": await _summit_tail()
 			"06_veyra_relay": await _veyra_relay()
 			"07_stormward_handoff": _chapter_earned()
 		if failed or not body_finished:
@@ -236,6 +241,17 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		if not await _physical_action("upper_anchor_east", "storm_anchor_upper_east_disabled"): return
 		if not await _battle("officer_voss_summit_approach"): return
 		if not await _physical_action("summit_feed", "cloudreach_upper_anchors_disabled"): return
+		_purpose("Prepare the injured team at the last safe bivouac before the captain", "Use authored creature-bed assignment and trainer sleep; spend no direct healing seam")
+		if not await _rest("summit_bivouac"): return
+		if not await _leave_summit_bivouac(): return
+		if not _require(_has("summit_extraction_engine_reached"), "Real summit threshold"): return
+		body_finished = true
+
+	## The tail of _stronghold, verbatim, after summit_feed.
+	func _summit_tail() -> void:
+		stage = "summit_tail"
+		if not _require(_has("cloudreach_upper_anchors_disabled") and not _has("summit_extraction_engine_reached"),
+				"Summit boundary before the threshold"): return
 		_purpose("Prepare the injured team at the last safe bivouac before the captain", "Use authored creature-bed assignment and trainer sleep; spend no direct healing seam")
 		if not await _rest("summit_bivouac"): return
 		if not await _leave_summit_bivouac(): return

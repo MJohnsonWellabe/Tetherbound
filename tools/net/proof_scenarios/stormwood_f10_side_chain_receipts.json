@@ -28,6 +28,30 @@
   },
   {
    "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof",
+    "portal_prepare_only": true
+   },
+   "budget_frames": 3000,
+   "label": "DISCLOSED SETUP: initial Hall arch position and the Stormwood portal open for this world (stands in for the earned Cloudreach-finale unlock), no earned credit"
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof",
+    "portal_prepare_only": true
+   },
+   "budget_frames": 3000,
+   "label": "DISCLOSED SETUP: initial Hall arch position and the Stormwood portal open for this world (stands in for the earned Cloudreach-finale unlock), no earned credit"
+  },
+  {
+   "peer": 0,
    "action": "host"
   },
   {
@@ -50,20 +74,26 @@
    "label": "the route comes from the host's save"
   },
   {
-   "peer": 0,
-   "action": "enter_realm",
-   "args": {
-    "realm": "stormwood"
-   },
-   "budget_frames": 10000
-  },
-  {
    "peer": 1,
    "action": "enter_realm",
    "args": {
-    "realm": "stormwood"
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof"
    },
-   "budget_frames": 10000
+   "budget_frames": 10000,
+   "label": "through the Crossing Hall Stormwood portal (RD-17)"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof"
+   },
+   "budget_frames": 10000,
+   "label": "through the Crossing Hall Stormwood portal (RD-17)"
   },
   {
    "peer": 0,
@@ -1784,10 +1814,10 @@
    "action": "press",
    "args": {
     "action": "interact",
-    "times": 2,
+    "times": 3,
     "gap_frames": 30
    },
-   "label": "read both lines of 'stormwood_rook_circuit_return' (return to Rook)"
+   "label": "read all three lines of 'stormwood_rook_circuit_return' (return to Rook; the third gives the Thunder Break TM)"
   },
   {
    "peer": 0,
@@ -2502,10 +2532,10 @@
    "action": "press",
    "args": {
     "action": "interact",
-    "times": 3,
+    "times": 2,
     "gap_frames": 30
    },
-   "label": "read the three ordinary lines (finishing it emits that NPC's ordinary main-story line event)"
+   "label": "read Rook's two thank-you lines (stormwood_rook_circuit_thanks; finishing it emits that NPC's ordinary main-story line event)"
   },
   {
    "peer": 0,
