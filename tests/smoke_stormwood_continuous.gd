@@ -687,7 +687,11 @@ class Segment extends RefCounted:
 			# time is not passing: answer it as a player would, then go on.
 			var arbiter: Node = tree.get_first_node_in_group("interaction_arbiter")
 			var winner: Variant = arbiter.call("winning_provider") if arbiter != null else null
-			if winner is Node and (winner as Node).name == "EncounterDirector":
+			# Only an actionable Engage offer is a wild in the way; the director's
+			# non-actionable "Call out <creature>" hint never blocks the seam.
+			var offer: Variant = arbiter.call("winner") if arbiter != null else {}
+			if winner is Node and (winner as Node).name == "EncounterDirector" \
+					and offer is Dictionary and bool((offer as Dictionary).get("actionable", false)):
 				engage_held += 1
 				if float(engage_held) * Engine.time_scale / float(Engine.physics_ticks_per_second) < ENGAGE_PASS_SECONDS:
 					await tree.physics_frame
