@@ -138,7 +138,13 @@ func _f25_local_identity() -> Dictionary:
 	if not local is RefCounted: return {}
 	var state: Dictionary = local.call("save_data")
 	state["character_id"] = str(local.get("character_id"))
-	return f25_identity(state)
+	var identity := f25_identity(state)
+	var director := _encounter_director()
+	var body := director.call("ally_body") as Node3D if director != null else null
+	var creature := director.call("ally_instance") as RefCounted if director != null else null
+	identity["deployed_uid"] = str(creature.get("uid")) if creature != null else ""
+	identity["deployed_body_id"] = body.get_instance_id() if is_instance_valid(body) else 0
+	return identity
 
 
 func _f25_current_scope() -> Dictionary:

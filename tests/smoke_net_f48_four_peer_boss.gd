@@ -292,11 +292,31 @@ func _f25_rounds(rounds: Array) -> bool:
 
 func _f25_window() -> bool:
 	if not await _f25_rounds(_f25.get("warmup_rounds", [])): return false
+	var local_bodies: Array = []
+	for peer in PEERS:
+		var snapshot := await step(peer, "f25_owned_identity", {})
+		var local: Dictionary = snapshot.get("data", {})
+		if not _pass(snapshot, "F25 pre-window actual owner snapshot") \
+				or not F25_PEER.f25_identity_preserved(_f25.owned[peer].original_identity, local) \
+				or str(local.get("deployed_uid", "")) != str(_f25.owned[peer].creature_uid) or int(local.get("deployed_body_id", 0)) <= 0:
+			check(false, "F25 peer %d pre-window original owned deployment mismatch" % peer)
+			return false
+		local_bodies.append(local.deployed_body_id)
 	if not _pass(await step(0, "f25_frame_start", {"profile": _f25}), "F25 native Medium collector started"): return false
 	var inputs_ok := await _f25_rounds(_f25.measured_rounds)
 	# Always stop/retain failed rows too; no file I/O or PNG readback in window.
 	var result := await step(0, "f25_frame_stop", {})
-	return _pass(result, "F25 real four-producer GPU frame window") and inputs_ok
+	var same_owners := true
+	for peer in PEERS:
+		var snapshot := await step(peer, "f25_owned_identity", {})
+		var local: Dictionary = snapshot.get("data", {})
+		var matches := _pass(snapshot, "F25 post-window actual owner snapshot") \
+			and F25_PEER.f25_identity_preserved(_f25.owned[peer].original_identity, local) \
+			and str(local.get("deployed_uid", "")) == str(_f25.owned[peer].creature_uid) \
+			and int(local.get("deployed_body_id", 0)) == int(local_bodies[peer])
+		check(matches, "F25 peer %d retained exact original owned deployment through window" % peer)
+		same_owners = same_owners and matches
+	return _pass(result, "F25 real four-producer GPU frame window") and inputs_ok and same_owners
 
 
 func _want_paid(peer: int, label: String) -> void:
