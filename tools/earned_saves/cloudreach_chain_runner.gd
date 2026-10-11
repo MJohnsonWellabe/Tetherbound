@@ -81,6 +81,31 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		if piece == "04_high_roost" and not _require(not fly.is_flying() and player.is_on_floor(), "Landed at the aerie"): return
 		completed_route = true
 
+	## The helper's _arrival_gather, except the prompt is re-read from the same
+	## resource after the walk: cloudreach_resource_patch.gd rebuilds its
+	## DailyHarvest child on every Game.day roll, and the helper's pre-walk
+	## reference is then freed (SCRIPT ERROR in _interact). Same input, same checks.
+	func _arrival_gather(id: String, item: String) -> bool:
+		var resource: Node3D = world.get_node("CloudreachResources/" + id)
+		var prompt: Node3D = resource.find_child("Interactable",true,false)
+		if prompt == null: return _fail("Missing arrival resource " + id)
+		var day_before := int(game.day)
+		if not await _walk(prompt.global_position + Vector3(0,-0.8,-1.5),0.35): return false
+		prompt = resource.find_child("Interactable",true,false)
+		if int(game.day) != day_before:
+			_log("resource_prompt_rebuilt", {"id":id,"day_before":day_before,"day_after":int(game.day),"prompt":str(prompt.get_path()) if prompt != null else ""})
+		if prompt == null: return _fail("Arrival resource offers no prompt after the day roll " + id)
+		var before: int = game.inventory.count(item)
+		if str(game.items.gathered_with(item)) == "knife" and str(game.equipped_tool) != "knife":
+			var knife_slot: int = game.call("hotbar_slot_of", "knife")
+			if knife_slot < 0: return _fail("Earned knife is not assigned to a hotbar slot")
+			await _tap("hotbar_%d" % (knife_slot + 1))
+			if not _require(str(game.equipped_tool)=="knife","Real hotbar input equipped gathering knife"): return false
+		if not await _interact(prompt,"",false): return false
+		await _frames(100)
+		_log("optional_gather", {"id":id,"item":item,"gained":game.inventory.count(item)-before})
+		return _require(game.inventory.count(item)>before,"Optional arrival gather produced " + item)
+
 	func _arrival_gate() -> void:
 		_purpose("Orient in Cloudreach and learn why the routes are broken", "Take the authored arrival road, inspect its landmark, and gather useful preparation instead of beelining")
 		stage = "arrival_to_aila"
@@ -262,6 +287,7 @@ func _run() -> void:
 		return
 	before = _state()
 	_handoff_check()
+	disclosures.append("Runner Piece overrides the helper's _arrival_gather only to re-read the resource prompt after the walk (cloudreach_resource_patch.gd rebuilds DailyHarvest on each Game.day roll; the helper's pre-walk reference was freed). Input and checks unchanged.")
 	var helper := Piece.new()
 	helper.piece = segment
 	var result: Dictionary = await helper.run(self, current_scene as Node3D, game)
