@@ -1,0 +1,20 @@
+{
+  "kind": "tidewake_checkpoint",
+  "criterion": "F19#5",
+  "segment": "03_brine",
+  "command": "godot --headless --path . --script tools/earned_saves/tidewake_piece_runner.gd -- --segment=03_brine --from=/home/user/Tetherbound/tests/fixtures/earned_saves/tidewake_02_reedhaven --out=/home/user/Tetherbound/tests/fixtures/earned_saves/tidewake_03_brine",
+  "commit": "0c43813bd5261fd563219808a26291adf2393848",
+  "start_save": "tests/fixtures/earned_saves/tidewake_02_reedhaven",
+  "lineage_root": "tests/fixtures/earned_saves/tidewake_arrival_generated (generated arrival, prior_earned_play=false)",
+  "injections": [],
+  "shortcuts": [],
+  "passed": true,
+  "chain_disclosures": [
+    "Order 03_brine then 04_shellwatch: the Shellwatch helper continues from Tovin's Brine victory",
+    "06_swimmer catches a swimmer and releases one of the five (helper design), so UIDs change at 06; the handoff check compares each save with the next segment's Load",
+    "07_late remounts the 06 swimmer by the late helper's own input step: a mount is not saved",
+    "Water helpers accept the F32 renewable stock receipt in place of the legacy harvest flag (coordinator-approved)",
+    "Start lineage is the generated tidewake arrival, not an earned Meadows end save",
+    "03_brine: Tovin fight bound raised 180 s wall to 600 s SIM (coordinator-approved duration budget; victory still required): generated L20 ground belt, terrapup lead 0.8x vs water; actual fight length is the 'Tovin fight length' note in receipt.json helper_receipts"
+  ]
+}

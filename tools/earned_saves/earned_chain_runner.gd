@@ -1,7 +1,8 @@
 extends SceneTree
 
-## Earned Meadows pieces, one ordinary-input segment per process. The default
-## stops before Warden; obsolete physical Rift routes are explicit diagnostics.
+## Earned Meadows pieces, one ordinary-input segment per process, through the
+## Warden finale and the portal handoff to Tidewake. Obsolete physical Rift
+## routes are explicit legacy diagnostics.
 ##
 ## WHAT IT IS
 ##   The same earned helpers the continuous driver
@@ -24,8 +25,12 @@ extends SceneTree
 ##   relay            Tether relay disabled, Mill crossed
 ##   sigils           three Sigil captains, Sigil Gate crossed
 ##   hall             Hall gauntlet from the sigils save, Warden arena boundary
-##   warden           Warden, Veridian offer ACCEPTED (see warden_accept.gd),
-##                    acknowledgement, physical Rift crossing -> Cloudreach
+##   warden           new order: the Warden finale with no Rift
+##                    (tests/helpers/f49_warden_finale.gd), declining the freed
+##                    legendary so the earned five are retained.
+##                    Legacy: Veridian ACCEPTED (warden_accept.gd), Rift -> Cloudreach
+##   tidewake_handoff Home Key home, hang the Meadows relic, enter the Tidewake
+##                    portal (tests/helpers/f49_portal_travel.gd); saved in Tidewake
 ##   kell_rift        (resume only) from the warden segment's village_pre_kell
 ##                    checkpoint: Kell, storm road, Rift -> Cloudreach
 ##
@@ -56,6 +61,7 @@ const BRIDGE := preload("res://tests/helpers/meadows_earned_bridge_segment.gd")
 const WARRENS := preload("res://tests/helpers/meadows_earned_warrens_segment.gd")
 const RELAY := preload("res://tests/helpers/meadows_earned_relay_segment.gd")
 const HALL := preload("res://tests/helpers/meadows_earned_hall_segment.gd")
+const WARDEN_FINALE := preload("res://tests/helpers/f49_warden_finale.gd")
 const HANDOFF := preload("res://tests/helpers/f49_disk_handoff.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const OFFLOAD := preload("res://tests/helpers/f19_functional_offload.gd")
@@ -65,7 +71,7 @@ const GENERATED_PROFILES := "res://tests/fixtures/earned_saves/generated_boundar
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CHAIN_SLOT := 1  # Historical copied-save slot; legacy-order diagnostics only.
-const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall", "warden", "kell_rift"]
+const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff", "kell_rift"]
 const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
 const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
 const LOAD_SETTLE_FRAMES := 300
@@ -177,7 +183,7 @@ func _run() -> void:
 		game.set("save_system", SAVE.new(save_dir))
 	else:
 		if not MEADOWS_PIECES.has(segment) or OS.has_environment("TB_WORLD_SEED"):
-			failures.append("New-order pieces stop at Hall and retain the actual saved population; old Warden/Rift routes require --legacy-order-diagnostic")
+			failures.append("New-order pieces end at the Tidewake handoff and retain the actual saved population; old Rift routes require --legacy-order-diagnostic")
 			_finish()
 			return
 		var config: Dictionary = game.session.call("config")
@@ -241,8 +247,8 @@ func _run() -> void:
 			distinct[member.uid] = true
 		if actual_uids.size() != 5 or distinct.size() != 5 or actual_uids.has("") \
 			or (not retained_uids.is_empty() and actual_uids != retained_uids) \
-			or str(game.current_realm) != "meadows" or bool(game.free_build):
-			failures.append("Piece must retain its original five distinct UIDs in earned Meadows without free build")
+			or str(game.current_realm) != MEADOWS_REALMS[MEADOWS_PIECES.find(segment)] or bool(game.free_build):
+			failures.append("Piece must retain its original five distinct UIDs in its authored realm without free build")
 	if failures.is_empty() and legacy_order_diagnostic:
 		if not bool(game.call("save_game", CHAIN_SLOT)):
 			failures.append("Game.save_game(%d) refused the segment save" % CHAIN_SLOT)
@@ -397,10 +403,22 @@ func _resumed_segment() -> void:
 			for _i in 120:
 				await physics_frame
 		"warden":
+			if not legacy_order_diagnostic:
+				_take(await WARDEN_FINALE.new().run_finale(self, world, game), "passed", "warden_finale")
+				return
 			_take(await (load(WARDEN_ACCEPT_PATH) as GDScript).new().run(self, world, game), "passed", "warden_accept")
 			# The helper follows the production Rift callback into Cloudreach.
 			for _i in 120:
 				await physics_frame
+		"tidewake_handoff":
+			var travel := TRAVEL.new(self, game)
+			if await travel.home_key() and await travel.hang_relic("meadows") and await travel.enter("tidewake", "water"):
+				helper_receipts.append({"segment": "tidewake_handoff", "passed": true})
+				for _i in LOAD_SETTLE_FRAMES:
+					await physics_frame
+			else:
+				failures.append_array(travel.failures)
+				if travel.failures.is_empty(): failures.append("tidewake_handoff: portal travel failed without a receipt")
 
 
 func _stage_hooks(helper: RefCounted) -> void:

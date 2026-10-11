@@ -1,0 +1,47 @@
+{
+  "criterion": "F19#5 (Cloudreach part)",
+  "kind": "earned_piece_checkpoint",
+  "chapter_order": "Meadows -> Tidewake -> Cloudreach -> Stormwood -> Home Key",
+  "segment": "04_high_roost",
+  "command": "godot --headless --path . --script tools/earned_saves/cloudreach_chain_runner.gd -- --segment=04_high_roost --from=tests/fixtures/earned_saves/cloudreach_03_flight_training --out=<dir>",
+  "chain_command": "GODOT=godot tools/earned_saves/run_cloudreach_chain.sh tests/fixtures/earned_saves/cloudreach_arrival_generated <root>",
+  "commit": "2c1d38f092c9fa5c4d8739bdff3704e24d9d2db9",
+  "start_save": "tests/fixtures/earned_saves/cloudreach_03_flight_training",
+  "slot": 0,
+  "realm": "cloudreach",
+  "position": [
+    400.9,
+    610.13,
+    3249.96
+  ],
+  "party_uids": [
+    "creature-cf906fd5504c229a431c3b3202c3c2e2",
+    "creature-83d263c517d32cc6cb7beab6925d80c7",
+    "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+    "creature-afbd0d982b14221393f70c29863586a1",
+    "creature-c576f15db4b7f3ecf487a80de0169177"
+  ],
+  "flags_gained": [
+    "cloudreach_shrine_vane_crown_aligned",
+    "cloudreach_shrine_vane_east_aligned",
+    "cloudreach_shrine_vane_west_aligned",
+    "cloudreach_upper_route_unlocked",
+    "sky_shrine_reached",
+    "storm_anchor_engine_truth_learned"
+  ],
+  "inventory_delta": {},
+  "handoff_check": {
+    "checked": true,
+    "differs": [],
+    "matches": true
+  },
+  "injections": "none (production title Load -> Autosave; ordinary controller input; Game.save_game(0))",
+  "accelerated": false,
+  "disclosures": [
+    "Runner Piece overrides the helper's _arrival_gather only to re-read the resource prompt after the walk (cloudreach_resource_patch.gd rebuilds DailyHarvest on each Game.day roll; the helper's pre-walk reference was freed). Input and checks unchanged.",
+    "Start lineage is the disclosed generated arrival tests/fixtures/earned_saves/cloudreach_arrival_generated (prior_earned_play false): L31 generated five, generated prior Meadows/Tidewake facts. These checkpoints are earned Cloudreach play on that generated input, not a continuous fresh-save lineage.",
+    "Piece body is the matching slice of tests/helpers/cloudreach_live_segment.gd _run_route() run on tests/helpers/f49_cloudreach_chapter.gd; no state writes.",
+    "Fly traversal uses the production held-jump climb (owner's Fly held-input exception)."
+  ],
+  "prior_earned_play": "generated arrival input; Cloudreach pieces earned"
+}
