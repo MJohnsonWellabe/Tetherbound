@@ -5862,8 +5862,9 @@ func _emit_mesa_skirt(tool: SurfaceTool, sides: int, top_ring: Array[Vector3], d
 ## The carved crown's raised bank already ends at the lifted natural rim.
 ## Close only the remaining gap to the wall below it. Where a carve drops
 ## below the wall top, the wall already overlaps the rim: add nothing there.
-## Split at both clamp thresholds so a triangle never crosses above a
-## lowered crown or duplicates the existing raised-bank face.
+## A raised-B bank triangle can reach below the natural rim when A is
+## lowered. Its lower diagonal owns that area; cap the gasket there before
+## splitting at both clamp thresholds to avoid coplanar overlapping faces.
 func _emit_carved_mesa_seam(tool: SurfaceTool, rim: PackedVector3Array,
 		natural_rim: PackedVector3Array) -> void:
 	for i in range(0, rim.size() - 1, 2):
@@ -5871,6 +5872,13 @@ func _emit_carved_mesa_seam(tool: SurfaceTool, rim: PackedVector3Array,
 		var base_b := natural_rim[i + 1] - Vector3.UP * 0.03
 		var height_a := rim[i].y - base_a.y
 		var height_b := rim[i + 1].y - base_b.y
+		# Match _carve_mesa_top's first bank-triangle condition exactly. That
+		# triangle spans from the carved rim down to (rim A -> natural B).
+		# Its upper edge is the gasket's original height limit, so subtracting
+		# it leaves only the area below this diagonal. The second bank triangle
+		# (raised A -> natural B -> natural A) stays at/above the natural rim.
+		if rim[i + 1].y > natural_rim[i + 1].y + 0.01:
+			height_b = 0.03
 		var cuts: Array[float] = [0.0, 1.0]
 		if absf(height_b - height_a) > 0.000001:
 			for threshold: float in [0.0, 0.03]:
