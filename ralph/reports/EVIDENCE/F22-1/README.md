@@ -1,0 +1,29 @@
+# F22#1 / F47#3: band-order anti-mash sweep (tb/ev-systems-a)
+Command, one process per band, 3 detached workers, 15:37–16:57 CT Sun 11 Oct 2026, Godot 4.7 headless:
+`godot --headless --path . --fixed-fps 60 --script tests/smoke_f22_pattern_bands.gd -- --seeds=12 --band=<band> --policies=MASHER,READER --json=<out>`
+Commits: bands 1–3 on caadfd7cf, the other 20 on 9c7379e08. The diff between them is evidence only.
+Disclosed (coordinator ruling c): 12 seeds; MASHER and READER only (no SWITCH_READER); bare gear; flat-collider fixture.
+Rows: `sweep12_rows.json` (23 bands × 3 starters = 69). `lead_cost_reading.txt` is the alternative reading below.
+
+## Result under the harness rule: all 69 rows FAIL
+- The harness fails a row when masher lead-faint minus reader lead-faint is below 0.25 (`masher_lead_faint_gap_min`).
+- Against ordinary wilds the masher almost never loses its lead: masher median lead-HP cost is 0.105 / 0.330 / 0.649 (min / median / max).
+- Reader win is ≥0.9 in 63 of 69 rows. The exceptions are all Ripplet in Cloudreach: broken_causeways 0.67, high_roost 0.75, summit 0.67, upper 0.75; and Galewisp at 0.92 in two bands.
+- There are 3 reader fixture errors, in Cloudreach high_roost (2) and summit (1).
+
+## Spec conflict (decision held by the coordinator)
+- COMBAT §7 (COMBAT.md:143) says an ordinary wild costs a masher 15–30% lead HP with ≥90% wins and "is not an early progression wall".
+- A lead-faint gap of ≥0.25 would need wilds that knock out the masher's lead in a quarter of fights, which contradicts that.
+- Alternative reading for wild bands: reader win ≥0.9 and reader median lead-HP cost ≤0.55× the masher's (the floor-trainer form, COMBAT.md:141). Under it, 40 of 69 rows pass:
+
+| Chapter | Rows passing |
+|---|---|
+| Meadows | 14/15 |
+| Tidewake | 15/18 |
+| Cloudreach | 6/18 |
+| Stormwood | 5/18 |
+
+- Under that reading, the Cloudreach and Stormwood readers pay close to the masher's lead cost. This points at the reader pilot or the pattern geometry in those bands, not at power.
+
+EV F22#1 FAIL 9c7379e08 12-seed MASHER/READER sweep, 69/69 rows fail the lead-faint gap (masher rarely loses its lead vs wilds per COMBAT §7); 40/69 pass the lead-cost reading; decision pending
+EV F47#3 FAIL 9c7379e08 same sweep data as F22#1; Cloudreach/Stormwood reader ≈ masher lead cost; decision pending
