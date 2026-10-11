@@ -7,6 +7,7 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SERVICE := preload("res://scripts/masters/breakthrough_service.gd")
 const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
 const REMOTE := preload("res://scripts/creatures/remote_creature.gd")
+const ACTION_HOST := preload("res://scripts/combat/accepted_action_host.gd")
 
 class OfferDirector extends "res://scripts/combat/encounter_director.gd":
 	var presented: Array[RefCounted] = []
@@ -31,6 +32,9 @@ class MasterSessionDouble extends Node:
 	var allow_save: bool = false
 	func _game() -> Node: return game
 	func _altar_current_epoch() -> String: return "current_epoch"
+	func admitted_character_state(peer: int) -> Dictionary:
+		return {"party": [{"uid": "selected_uid", "hp": 90.0, "max_hp": 120.0,
+			"fainted": false}]} if peer == 7 else {}
 	func foundation_guest_master_outcome(director: Node, source: Dictionary) -> Dictionary:
 		if source != director.call("retained_guest_master_win", source.get("encounter_id", "")): return {}
 		saves += 1
@@ -153,6 +157,15 @@ func test_world_write_refusal_retains_original_guest_win_and_epoch_fences_retry(
 	var director: Node = OfferDirector.new()
 	var session: Node = MasterSessionDouble.new()
 	director.set("_session", session)
+	# The retained win now freezes host-resolved vitals from the original
+	# encounter and admitted character, even while the owner's ACK is pending.
+	var authority: RefCounted = ACTION_HOST.new()
+	var terminal_record := _record()
+	terminal_record.phase = "done"
+	terminal_record.participants[7]["actor_vitals"] = {"selected_uid": {
+		"hp": 72.0, "max_hp": 120.0, "fainted": false, "body_generation": 2}}
+	authority.get("encounters")["1:original"] = terminal_record
+	director.set("_encounter_host", authority)
 	var runtime: Node = TerminalRuntimeDouble.new()
 	var opponent: Node3D = OpponentBodyDouble.new()
 	runtime.set("opponent", opponent)
@@ -171,6 +184,9 @@ func test_world_write_refusal_retains_original_guest_win_and_epoch_fences_retry(
 	director.get("_shared_host_fights")["1:original"] = runtime
 	var original: Dictionary = director.call("retained_guest_master_win", "1:original")
 	assert_eq(original.encounter_id, "1:original")
+	assert_eq(original.settled_vitals, [{"uid": "selected_uid", "hp": 72.0,
+		"max_hp": 120.0, "fainted": false, "actor_generation": 2}],
+		"the retained win freezes original host-saved vitals, not the admission baseline")
 	retained.terminal_witness.verdict.delta.killed = false
 	assert_true(director.call("retained_guest_master_win", "1:original").is_empty(), "a won Boolean cannot substitute for accepted killing verdict")
 	retained.terminal_witness.verdict.delta.killed = true
