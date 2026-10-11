@@ -35,3 +35,28 @@ Even if real hardware is several times faster, a synchronous build this size
 freezes the game where players can see it (behind the loading overlay, which
 cannot animate during the call). The readiness deadline cannot interrupt it,
 so a slow host's crossing time is dominated by this single frame.
+
+## 3. Endgame rematch walk: 110 min stall was a fenced-in straight line (fixed in the proof helpers)
+
+Per-second navigator heartbeat (diagnostic only, not committed): frame cost flat
+0.8–1.0 s per process frame (~8 physics frames/s) and ~184.7k nodes for the whole
+run, before and after the rematch setup, so it is not a performance collapse. The
+nearest Meadows endgame leader is `south_bridge_grunt` at (14, 1314), 1,269 m from
+the bounty board. The straight walk pinned the capsule in a 6×4 m pocket
+(x 79–86, z 47–51) against the village boundary fence; the confined watchdog
+fired but could not escape, and the 82,491-frame budget is about 2.9 h here.
+The disclosed post-finale fixture also lacked `road_gate_open`, so the TrailGate
+at (13.8, 22.4) was locked. Fix: walk the authored lawn → main street → Lower
+Meadows trail (26 headings, same budget and watchdog) and set `road_gate_open` in
+the fixture. Result: the capsule reached (15.4, −2.9, 1315.1) and ordinary input
+activated the rematch, about 63 min of walking at this host speed (11:49 AM CT run end).
+
+## 4. Open: combat admission refuses the south_bridge_grunt rematch fight
+
+At the grunt, `combat_manager.gd:904 begin` refused: AllyCreature seat at
+(18.08, −2.81, 1314.36), rendered radius 5.41 m, clearance 0.6,
+`clear_seat_search_exhausted` after 395 attempts. The director reports
+trainer_active=true with fighting=false and no enemy, so F44#1 fails
+"endgame leader tier L58 (enemy L-1)". This may be related to batch #677's
+fight-placement changes (for example 6ddb3724, which added clearance to the shared orbit
+containment bound). Not bisected.
