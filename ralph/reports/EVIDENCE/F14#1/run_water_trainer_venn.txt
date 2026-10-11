@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WATER_C2C3 water_trainer_venn terrapup MASHER runs=24 win=1.00 med_lead=1.000 med_party=0.789 med_s=116.6 max_s=124.8 lead_faint=1.00 wipe=0.00 max_hit=0.287 tell=[0.90,1.20] stalled=0
+WATER_C2C3 water_trainer_venn terrapup READER runs=24 win=1.00 med_lead=0.757 med_party=0.533 med_s=193.2 max_s=212.0 lead_faint=0.00 wipe=0.00 max_hit=0.286 tell=[0.90,1.20] stalled=0
+WATER_C2C3_PAIR water_trainer_venn terrapup reader/masher median lead cost = 0.757 / 1.000 (ratio 0.76)
+WATER_C2C3 water_trainer_venn ripplet MASHER runs=24 win=1.00 med_lead=1.000 med_party=0.744 med_s=111.2 max_s=115.5 lead_faint=1.00 wipe=0.00 max_hit=0.238 tell=[0.90,1.20] stalled=0
+WATER_C2C3 water_trainer_venn ripplet READER runs=24 win=1.00 med_lead=0.796 med_party=0.505 med_s=177.6 max_s=209.3 lead_faint=0.00 wipe=0.00 max_hit=0.288 tell=[0.90,1.20] stalled=0
+WATER_C2C3_PAIR water_trainer_venn ripplet reader/masher median lead cost = 0.796 / 1.000 (ratio 0.80)
+WATER_C2C3 water_trainer_venn galewisp MASHER runs=24 win=1.00 med_lead=1.000 med_party=0.672 med_s=110.7 max_s=119.4 lead_faint=1.00 wipe=0.00 max_hit=0.221 tell=[0.90,1.20] stalled=0
+WATER_C2C3 water_trainer_venn galewisp READER runs=24 win=1.00 med_lead=0.776 med_party=0.550 med_s=194.6 max_s=234.4 lead_faint=0.00 wipe=0.00 max_hit=0.284 tell=[0.90,1.20] stalled=0
+WATER_C2C3_PAIR water_trainer_venn galewisp reader/masher median lead cost = 0.776 / 1.000 (ratio 0.78)
+WATER_C2C3 done: 3 rows, 144 runs, 0 errors
