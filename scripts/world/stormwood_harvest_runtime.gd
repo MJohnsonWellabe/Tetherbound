@@ -291,22 +291,26 @@ static func _moss_cushion_mesh(node: Node3D, centre: Vector2, radius: float,
 		height: float, seed_value: int, embed: float, ground_height: Callable) -> ArrayMesh:
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var rim: Array[Vector3] = []
-	var shoulder: Array[Vector3] = []
-	for index in 7:
-		var angle := TAU * float(index) / 7.0
-		var extent := radius * (0.88 + 0.12 * sin(float(seed_value + index * 7)))
-		var offset := Vector2(cos(angle), sin(angle)) * extent
-		rim.append(_moss_ground_point(node, centre + offset, -embed, ground_height))
-		shoulder.append(_moss_ground_point(node, centre + offset * 0.58,
-			height * (0.55 + 0.10 * sin(float(seed_value + index * 3))) - embed, ground_height))
-	var crown := _moss_ground_point(node, centre + Vector2(radius * 0.08, -radius * 0.05),
-		height - embed, ground_height)
-	for index in 7:
-		var next := (index + 1) % 7
-		_moss_face(surface, rim[index], shoulder[index], shoulder[next], 0.65)
-		_moss_face(surface, rim[index], shoulder[next], rim[next], 0.55)
-		_moss_face(surface, shoulder[index], crown, shoulder[next], 0.86 + 0.02 * float(index % 3))
+	# Shared smoothing group joins the curved rings into a soft continuous cap.
+	surface.set_smooth_group(0)
+	var rings: Array[PackedVector3Array] = []
+	for band in 6:
+		var ring := PackedVector3Array()
+		var polar := float(band) * PI / 10.0
+		for index in 16:
+			var angle := TAU * float(index) / 16.0
+			var outline := 1.0 + 0.055 * sin(angle * 3.0 + float(seed_value))
+			var offset := Vector2(cos(angle), sin(angle) * 0.87) * radius * cos(polar) * outline
+			ring.append(_moss_ground_point(node, centre + offset,
+				height * sin(polar) - embed, ground_height))
+		rings.append(ring)
+	for band in 5:
+		for index in 16:
+			var next := (index + 1) % 16
+			_moss_face(surface, rings[band][index], rings[band + 1][index],
+				rings[band][next] if band == 4 else rings[band + 1][next], 0.85)
+			if band < 4:
+				_moss_face(surface, rings[band][index], rings[band + 1][next], rings[band][next], 0.85)
 	surface.generate_normals()
 	return surface.commit()
 

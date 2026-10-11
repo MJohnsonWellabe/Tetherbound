@@ -4636,8 +4636,8 @@
       "ground_embed_m": 0.025,
       "height_ratio": 0.42,
       "roughness": 0.85,
-      "colour": "#7dffb8",
-      "emission": 0.3
+      "colour": "#668742",
+      "emission": 0.07
     },
     "conductor_vine": {
       "kind": "veins", "radius_m": 0.65, "height_m": 1.8,

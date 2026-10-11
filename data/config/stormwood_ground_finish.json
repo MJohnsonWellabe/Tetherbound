@@ -1,19 +1,42 @@
 {
   "enabled": true,
   "scope": "client_presentation",
-  "_comment": "P2-039 forest floor uses Stormwood-only moss cushions, curled leaves and fallen root fragments through the existing terrain-bound grass field. Decorative flower tiers remain excluded. Independent seeded patches break up the meadow sprig rows; installed forest-floor and wet-earth materials remain visible between patches. Instance budgets, terrain/control maps, harvestable plants, collision and durable state are unchanged. Visual acceptance pending native matched captures.",
+  "_comment": "P2-039 final source repair: rounded moss, three wet curled-leaf shapes, terrain-conforming wet soil and roots anchored to existing baked trees. Living canopy positions define cover islands and open clearings. Shared field shaders, terrain/control data, harvest identity, collision and actor scale are unchanged. Native matched evidence and Claude judgment remain pending.",
   "grass": {
     "height_near": 0.14,
-    "height_far": 0.20,
+    "height_far": 0.2,
     "height_jitter": 0.7,
     "lattice_jitter": 1.4,
     "tint_base": "#25392c",
     "tint_tip": "#496344",
-    "density_gain": 0.3,
+    "density_gain": 0.16,
     "clump_contrast": 0.95,
     "clump_scale": 0.075,
     "ground_blend": 0.8,
-    "translucency": 0.04
+    "translucency": 0.04,
+    "far_cover": {
+      "enabled": true,
+      "far_cell": 6.0,
+      "far_radius": 640.0,
+      "fade_in_start": 52.0,
+      "fade_in_end": 84.0,
+      "fade_out_start": 320.0,
+      "lift": 0.35,
+      "dilate_lift": 1.5,
+      "strength": 0.24,
+      "tint_base": "#35412d",
+      "tint_tip": "#4d5e3e",
+      "ground_blend": 0.55,
+      "mottle_scale": 0.34,
+      "mottle_strength": 0.8,
+      "mottle_value": 0.3,
+      "mottle_detail": 0.75,
+      "mottle_detail_range": 260.0,
+      "forbidden_ground": [
+        "rock",
+        "path"
+      ]
+    }
   },
   "tiers": {
     "flowers": {
@@ -28,55 +51,64 @@
       "item_size": 0.8,
       "size_jitter": 0.7,
       "placement_seed": 392741,
-      "drift_offset": [23.6, -17.3],
+      "drift_offset": [
+        23.6,
+        -17.3
+      ],
       "leaf_cut": 0.0,
       "sway": 0.0,
       "sink": 0.0,
-      "normal_soften": 0.25,
-      "density_gain": 0.65,
-      "drift_scale": 0.12,
+      "normal_soften": 0.18,
+      "density_gain": 0.85,
+      "drift_scale": 0.085,
       "drift_contrast": 1.0,
       "drift_gate": 2.0,
-      "patch_start": 0.38,
-      "patch_full": 0.78,
-      "tint_base": "#273d32",
-      "tint_tip": "#57765b",
+      "patch_start": 0.25,
+      "patch_full": 0.62,
+      "tint_base": "#2b3820",
+      "tint_tip": "#566537",
       "tint_wood": "#454337",
-      "ground_blend": 0.45,
+      "ground_blend": 0.18,
       "contact_darken": 0.3,
       "ground": [
         "grass",
         "soil",
         "damp",
         "forest_floor"
-      ]
+      ],
+      "count": 4200
     },
     "litter": {
       "enabled": true,
       "mesh": "stormwood_litter",
-      "item_size": 0.65,
+      "item_size": 0.95,
       "size_jitter": 0.75,
       "placement_seed": 391827,
-      "drift_offset": [-31.8, 11.7],
+      "drift_offset": [
+        -31.8,
+        11.7
+      ],
       "leaf_cut": 0.0,
       "sink": 0.0,
-      "normal_soften": 0.25,
+      "normal_soften": 0.15,
       "density_gain": 1.0,
       "drift_scale": 0.085,
-      "drift_contrast": 0.95,
+      "drift_contrast": 1.0,
       "drift_gate": 1.5,
-      "patch_start": 0.22,
-      "patch_full": 0.68,
+      "patch_start": 0.25,
+      "patch_full": 0.6,
       "tint_base": "#574c38",
       "tint_tip": "#80704f",
       "tint_wood": "#413a2b",
-      "ground_blend": 0.32,
+      "ground_blend": 0.16,
       "ground": [
         "grass",
         "soil",
         "damp",
         "forest_floor"
-      ]
+      ],
+      "count": 9000,
+      "reach_m": 56.0
     }
   },
   "terrain_materials": {
@@ -89,14 +121,14 @@
         "normal": "res://assets/environment/terrain/stylised/forest_floor_NormalGL.png",
         "uv_scale": 0.5,
         "normal_depth": 0.34,
-        "tint": "#99a77f"
+        "tint": "#809165"
       },
       "soil": {
-        "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
-        "normal": "res://assets/environment/terrain/stylised/forest_floor_NormalGL.png",
+        "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+        "normal": "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png",
         "uv_scale": 0.45,
         "normal_depth": 0.22,
-        "tint": "#b4b497"
+        "tint": "#625d48"
       },
       "rock": {
         "uv_scale": 0.24,
@@ -113,12 +145,14 @@
       "damp": {
         "uv_scale": 0.5,
         "normal_depth": 0.18,
-        "tint": "#a6aaa0"
+        "tint": "#535447",
+        "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+        "normal": "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png"
       },
       "forest_floor": {
         "uv_scale": 0.5,
         "normal_depth": 0.3,
-        "tint": "#b1b4a2"
+        "tint": "#747863"
       }
     }
   },
@@ -126,6 +160,71 @@
     "enabled": true,
     "scope": "client_presentation",
     "bush_item_size": 0.8,
-    "_comment": "Stormwood moss mesh has a maximum local height of 0.125m (0.17m at maximum configured scale); this is a cushion layer, not a scaled-down shrub. Harvestable plants retain the existing scatter path."
-  }
+    "_comment": "The three rounded moss lobes reach 0.104m local height; canopy understory remains a separate full-height shrub tier. Harvested plants and all gameplay actors retain their own transforms."
+  },
+  "forest_layers": [
+    {
+      "name": "wet_soil",
+      "mesh": "stormwood_wet_soil",
+      "enabled": true,
+      "count": 1400,
+      "placement_seed": 392891,
+      "centre_bias": 0.55,
+      "item_size": 2.8,
+      "size_jitter": 0.55,
+      "sink": 0.0,
+      "slope_lie": 0.0,
+      "density_gain": 0.75,
+      "drift_scale": 0.045,
+      "drift_contrast": 1.0,
+      "drift_gate": 1.0,
+      "patch_start": 0.35,
+      "patch_full": 0.68,
+      "tint_base": "#302d21",
+      "tint_tip": "#403b2b",
+      "ground_blend": 0.12,
+      "contact_darken": 0.08,
+      "sway": 0.0,
+      "leaf_cut": 0.0,
+      "normal_soften": 0.0,
+      "ground": [
+        "grass",
+        "soil",
+        "damp",
+        "forest_floor"
+      ]
+    },
+    {
+      "name": "canopy_understory",
+      "mesh": "bush",
+      "enabled": true,
+      "count": 1400,
+      "placement_seed": 394183,
+      "centre_bias": 0.5,
+      "item_size": 1.15,
+      "size_jitter": 0.45,
+      "sink": 0.02,
+      "slope_lie": 0.0,
+      "density_gain": 0.72,
+      "drift_scale": 0.075,
+      "drift_contrast": 1.0,
+      "drift_gate": 2.0,
+      "patch_start": 0.46,
+      "patch_full": 0.74,
+      "tint_base": "#263723",
+      "tint_tip": "#4c6237",
+      "tint_wood": "#453c29",
+      "ground_blend": 0.32,
+      "contact_darken": 0.3,
+      "sway": 0.03,
+      "leaf_cut": 0.9,
+      "normal_soften": 0.65,
+      "ground": [
+        "grass",
+        "soil",
+        "damp",
+        "forest_floor"
+      ]
+    }
+  ]
 }
