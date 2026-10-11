@@ -1,5 +1,5 @@
 {
- "generated_at": "10:49 AM CT Sun 11 Oct 2026",
+ "generated_at": "10:55 AM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -1805,12 +1805,12 @@
    "title": "Breakthroughs, Masters and Ascension Feasts",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 83,
+   "pct": 100,
    "counts": {
-    "met": 5,
+    "met": 6,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -1849,10 +1849,10 @@
     },
     {
      "text": "Each co-op participant earns their own recipe; nobody receives it twice.",
-     "status": "not_started",
-     "evidence": "none",
-     "gap": "Peers:2 net smoke: both win, each gets the recipe once, and rejoin does not regrant.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No two-peer recipe receipt test.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F28-4/: 2-peer ENet smoke f28_masters ALL CHECKS PASSED (88 PASS): host and guest each win master_t1 and hold feast_t1 exactly once, unchanged across a second chest, reconnect, save/reload and chest replay",
+     "gap": "Follow-up (not this criterion): the guest's first chest press right after the duel is refused while its checkpoints settle, with no auto-retry; the recipe lands on the second press.",
+     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a d40a5aba, 10:54 AM CT Sun 11 Oct). Coordinator read the check list: per-participant grant and no regrant are each asserted on real peers. Lands with the consolidated PR.",
      "audit_index": 4
     },
     {
