@@ -47,6 +47,18 @@ const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const APPEARANCE_VARIANTS := preload("res://scripts/characters/appearance_variants.gd")
 
+## Explicit actor allowlist for disabled model/portrait authoring.
+const MODEL_AUTHORING_CANDIDATES := {
+	"npc_identity_water_adair_v1": {
+		"model": "res://assets/characters/npc_identity/water_adair/adair_lod0.glb",
+		"generation_task_id": "01a12ba9-8dea-7093-a169-b6a195cb1e2c",
+		"rig_task_id": "01a12bb2-f69f-75de-94e5-41dd21a2e47b"},
+	"npc_identity_water_iona_v1": {
+		"model": "res://assets/characters/npc_identity/water_iona/iona_lod0.glb",
+		"generation_task_id": "01a12bba-b649-7172-9858-171c04a96539",
+		"rig_task_id": "01a12bc3-18b7-73ae-b59f-7d3669d6c858"}
+}
+
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 
 const PORTRAIT_DIR := "res://assets/ui/portraits"
@@ -383,7 +395,7 @@ static func authoring_portrait_model_config(spec: Dictionary, variant_settings: 
 	if not raw is Dictionary: return {}
 	var record: Dictionary = raw
 	if config.get("enabled", true) != false or record.get("enabled", true) != false: return {}
-	if variant_id == "npc_identity_water_adair_v1":
+	if MODEL_AUTHORING_CANDIDATES.has(variant_id):
 		return _authoring_model_candidate_config(spec, record, records)
 	# Only the six installed-rig Tidewake candidates belong to this authoring job.
 	if not variant_id in ["p2055_water_adair", "p2055_water_iona", "p2055_water_orsen",
@@ -442,12 +454,13 @@ static func _authoring_destination_valid(portrait: String, variant_id: String, r
 static func _authoring_model_candidate_config(spec: Dictionary, record: Dictionary, records: Dictionary) -> Dictionary:
 	var variant_id := str(spec.get("appearance_variant", ""))
 	var profile := str(spec.get("config_key", ""))
-	if variant_id != "npc_identity_water_adair_v1" or profile != "field_researcher": return {}
+	if not MODEL_AUTHORING_CANDIDATES.has(variant_id) or profile != "field_researcher": return {}
+	var expected: Dictionary = MODEL_AUTHORING_CANDIDATES[variant_id]
 	var portrait := str(record.get("portrait", ""))
 	if not _authoring_destination_valid(portrait, variant_id, records): return {}
 	var base: Dictionary = VILLAGE_NPCS.model_config(spec)
 	var cfg := APPEARANCE_VARIANTS.body_model_config(base, profile, record)
-	if cfg.is_empty() or str(cfg.model) != "res://assets/characters/npc_identity/water_adair/adair_lod0.glb": return {}
+	if cfg.is_empty() or str(cfg.model) != str(expected.model): return {}
 	var provenance: Variant = record.get("authoring_provenance", {})
 	if not provenance is Dictionary: return {}
 	if str(provenance.get("source_model", "")) != str(base.get("model", "")) \
@@ -463,8 +476,15 @@ static func _authoring_model_candidate_config(spec: Dictionary, record: Dictiona
 	# Bind the actual producer text without making checkout line endings a failure.
 	var producer_text := FileAccess.get_file_as_string(producer).replace("\r\n", "\n")
 	if producer_text.sha256_text() != str(provenance.get("producer_sha256", "")): return {}
-	if str(provenance.get("generation_task_id", "")) != "01a12ba9-8dea-7093-a169-b6a195cb1e2c" \
-			or str(provenance.get("rig_task_id", "")) != "01a12bb2-f69f-75de-94e5-41dd21a2e47b": return {}
+	if str(provenance.get("generation_task_id", "")) != str(expected.generation_task_id) \
+			or str(provenance.get("rig_task_id", "")) != str(expected.rig_task_id): return {}
+	if variant_id == "npc_identity_water_iona_v1":
+		if str(provenance.get("reference", "")) != "res://docs/art/reference/npc-identity/iona-front-agent-v1.png": return {}
+		var prompt := str(provenance.get("reference_prompt", ""))
+		if prompt != "res://docs/art/reference/npc-identity/iona-front-agent-v1.prompt.txt" \
+				or not FileAccess.file_exists(prompt): return {}
+		if FileAccess.get_file_as_string(prompt).replace("\r\n", "\n").sha256_text() \
+				!= str(provenance.get("reference_prompt_sha256_lf", "")): return {}
 	cfg["portrait"] = portrait
 	cfg["appearance_variant_id"] = variant_id
 	return cfg

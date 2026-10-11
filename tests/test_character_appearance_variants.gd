@@ -24,10 +24,13 @@ func test_default_disabled_and_empty_records_preserve_base() -> void:
 	var records: Dictionary = config.get("variants", {})
 	var staged := ["p2055_water_adair", "p2055_water_iona", "p2055_water_orsen",
 		"p2055_water_otto", "p2055_water_trainer_fen", "p2055_water_trainer_evi"]
-	assert_eq(records.size(), staged.size() + 1)
+	assert_eq(records.size(), staged.size() + 2)
 	var model_candidate: Dictionary = records.get("npc_identity_water_adair_v1", {})
 	assert_eq(model_candidate.get("enabled"), false)
 	assert_eq(CHARACTER.config_for("field_researcher", "npc_identity_water_adair_v1"),
+		CHARACTER.config_for("field_researcher"))
+	assert_eq(records.get("npc_identity_water_iona_v1", {}).get("enabled"), false)
+	assert_eq(CHARACTER.config_for("field_researcher", "npc_identity_water_iona_v1"),
 		CHARACTER.config_for("field_researcher"))
 	for id: String in staged:
 		assert_true(records.has(id), id)
@@ -236,3 +239,45 @@ func test_only_adair_is_bound_to_new_model_candidate() -> void:
 			assert_eq(actor.body_profile, "field_researcher")
 			assert_eq(actor.model, "res://assets/characters/field_researcher/field_researcher_lod0.glb")
 	assert_eq(bound, ["water_adair"])
+
+
+func test_iona_authoring_is_exact_hash_bound_and_shipping_fallback_remains_installed() -> void:
+	var id := "npc_identity_water_iona_v1"
+	var settings := VARIANTS.load_config()
+	var spec := {"config_key": "field_researcher", "appearance_variant": id, "author_appearance": true}
+	var authored := PORTRAITS.authoring_portrait_model_config(spec, settings)
+	assert_false(authored.is_empty())
+	assert_eq(authored.get("model"), "res://assets/characters/npc_identity/water_iona/iona_lod0.glb")
+	assert_eq(authored.get("portrait"), "res://assets/ui/portraits/npc_identity_water_iona_v1.png")
+	var base := CHARACTER.config_for("field_researcher")
+	assert_eq(VARIANTS.resolve(base, "field_researcher", id, settings), base)
+	var runtime_settings := settings.duplicate(true)
+	runtime_settings.enabled = true
+	runtime_settings.variants[id].enabled = true
+	# A test-only stand-in verifies the complete runtime pair before production authoring.
+	runtime_settings.variants[id].portrait = "res://assets/ui/portraits/mira.png"
+	var runtime := VARIANTS.resolve(base, "field_researcher", id, runtime_settings)
+	authored.erase("portrait")
+	runtime.erase("portrait")
+	assert_eq(authored, runtime)
+	for field: String in ["source_model_sha256", "candidate_model_sha256", "reference_sha256",
+			"producer_sha256", "reference_prompt_sha256_lf", "generation_task_id", "rig_task_id"]:
+		var invalid := settings.duplicate(true)
+		invalid.variants[id].authoring_provenance[field] = "incorrect"
+		assert_eq(PORTRAITS.authoring_portrait_model_config(spec, invalid), {}, field)
+	var cross_actor := settings.duplicate(true)
+	cross_actor.variants[id].body_model_override = cross_actor.variants.npc_identity_water_adair_v1.body_model_override
+	cross_actor.variants[id].authoring_provenance = cross_actor.variants.npc_identity_water_adair_v1.authoring_provenance.duplicate(true)
+	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, cross_actor), {})
+	var wrong_destination := settings.duplicate(true)
+	wrong_destination.variants[id].portrait = "res://assets/ui/portraits/maren.png"
+	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, wrong_destination), {})
+	var wrong_profile := spec.duplicate(true)
+	wrong_profile.config_key = "wandering_trainer"
+	assert_eq(PORTRAITS.authoring_portrait_model_config(wrong_profile, settings), {})
+	var enabled := settings.duplicate(true)
+	enabled.variants[id].enabled = true
+	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, enabled), {})
+	enabled = settings.duplicate(true)
+	enabled.enabled = true
+	assert_eq(PORTRAITS.authoring_portrait_model_config(spec, enabled), {})

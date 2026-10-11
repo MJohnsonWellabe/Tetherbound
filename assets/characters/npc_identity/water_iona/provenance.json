@@ -1,0 +1,153 @@
+{
+  "actor_id": "water_iona",
+  "status": "candidate_off_pending_native_pose_portrait_world_and_claude_judgement",
+  "candidate_enabled": false,
+  "installed_identity": "Researcher Iona; existing field_researcher body/face family; Aquaryn and swimming-saddle researcher on Tidal Cradle",
+  "authorization": "Owner issue 572 comment 6110631002; RD-26 identity-preserving reference-backed refinement on existing Meshy licence, no purchase",
+  "reference_origin": "Original built-in imagegen full-body reference drafted and visually inspected by coordinator01a123c0; no board pixels traced or shipped",
+  "identity_notes": "Chestnut bob, dark rectangular glasses, warm light complexion; muted leaf-green field coat, cream shirt, brown field pouches, olive-gray trousers and dark brown boots",
+  "provenance": {
+    "source_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+    "source_model_sha256": "5b9164827d099f661de5d1ed6a4420ccd011a90005765977c43f06d1ef5487b3",
+    "candidate_model": "res://assets/characters/npc_identity/water_iona/iona_lod0.glb",
+    "candidate_model_sha256": "1fa712b8c0c061c1c7968b962a529587ceac857fb90a6a5d9e89dcbbbc32bab0",
+    "reference": "res://docs/art/reference/npc-identity/iona-front-agent-v1.png",
+    "reference_sha256": "a1c2b37f0b8eb897a1e81753f8949cb1cb13383097b05a1bb25d40a8b0a722d2",
+    "reference_prompt": "res://docs/art/reference/npc-identity/iona-front-agent-v1.prompt.txt",
+    "reference_prompt_sha256_lf": "1c70713325d9e278f9da8389be7c9e9550f0508218fc19b6360a028529fbdd11",
+    "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+    "producer_sha256": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+    "generation_task_id": "01a12bba-b649-7172-9858-171c04a96539",
+    "rig_task_id": "01a12bc3-18b7-73ae-b59f-7d3669d6c858",
+    "producer_hash_encoding": "UTF-8 text with CRLF normalized to LF",
+    "postprocessing": {
+      "tool": "retarget_iona_arms.py (coordinator-reviewed private CPU postprocessor)",
+      "source_sha256_lf": "4a971f5c0f98dd47d673cf7694ee82d64067d0f2432f81da96f419ea77100770",
+      "recipe_sha256": "0569b648f5670d0107d077d1917a13914e0a26d12fa0b64ef4eb7241e2d53dec",
+      "upstream_baked_model_sha256": "c87e1dd8b8b772e6a5a91687e1655fa39af2e8f7aa66f44d65b2433be65e2d79",
+      "output_model_sha256": "1fa712b8c0c061c1c7968b962a529587ceac857fb90a6a5d9e89dcbbbc32bab0",
+      "composition": "Hamilton xyzw: Q_new = R_rest * D_local * inverse(R_rest) * Q_old",
+      "rest_local_bias_xyzw": {
+        "Left": [
+          -0.09009476965953941,
+          -1.035270212424125e-07,
+          -0.1211835842413148,
+          0.9885329918364023
+        ],
+        "Right": [
+          -0.08204990862400242,
+          2.2682547739691896e-07,
+          0.13452923704801462,
+          0.9875068106956322
+        ]
+      },
+      "target_upper_arm_degrees_from_down": 10,
+      "bones": [
+        "LeftArm",
+        "RightArm"
+      ],
+      "clips": [
+        "idle",
+        "walk",
+        "sprint",
+        "jump",
+        "throw",
+        "chop",
+        "defeated"
+      ],
+      "changed_rotation_tracks": 14,
+      "interpolation": "LINEAR; original key times preserved",
+      "preserved": "Original BIN prefix, rest transforms, mesh, skin, inverse binds, materials, textures and all non-target channels; target outputs and samplers cloned",
+      "native_review": "PENDING"
+    }
+  },
+  "generation": {
+    "endpoint": "/openapi/v1/image-to-3d",
+    "ai_model": "meshy-7.1",
+    "task_id": "01a12bba-b649-7172-9858-171c04a96539",
+    "consumed_credits": 30,
+    "source_body_sha256": "0524203d6aa11e66250f85e3a60c35a08d036584d32d67e7d34675b84b50d26e"
+  },
+  "rigging": {
+    "endpoint": "/openapi/v1/rigging",
+    "input_task_id": "01a12bba-b649-7172-9858-171c04a96539",
+    "task_id": "01a12bc3-18b7-73ae-b59f-7d3669d6c858",
+    "height_meters": 1.7,
+    "consumed_credits": 5,
+    "rigged_model_sha256": "bc2ea93c83ae02a6f9cbe19b0d3e0765c33801cdc9d066ee2f93bf87a2abb095"
+  },
+  "preparation": {
+    "tool": "res://tools/art_pipeline/blender/animate_humanoid.py",
+    "blender": "4.2.9",
+    "mode": "unchanged full bake, no --only; normalized scale and removed unskinned object using existing pipeline, followed by Iona-specific reviewed CPU arm-track correction",
+    "clips": [
+      "idle",
+      "walk",
+      "sprint",
+      "jump",
+      "throw",
+      "chop",
+      "defeated"
+    ]
+  },
+  "cpu_structure": {
+    "joint_count": 24,
+    "skin_rest_height_m": 1.7000002386134472,
+    "mesh_world_height_m": 1.6999996862382067,
+    "raw_root_scale": "unit (no scale property)",
+    "invalid_joint_indices": 0,
+    "unweighted_vertices": 0,
+    "maximum_weight_sum_error": 9.499490261077881e-08,
+    "moving_clips": [
+      {
+        "name": "idle",
+        "duration_s": 3.999999839812517,
+        "moving_channels": 8
+      },
+      {
+        "name": "walk",
+        "duration_s": 0.6250000186264515,
+        "moving_channels": 14
+      },
+      {
+        "name": "sprint",
+        "duration_s": 0.4583333320915699,
+        "moving_channels": 14
+      },
+      {
+        "name": "jump",
+        "duration_s": 1.166666705161333,
+        "moving_channels": 14
+      },
+      {
+        "name": "throw",
+        "duration_s": 0.9999999590218067,
+        "moving_channels": 8
+      },
+      {
+        "name": "chop",
+        "duration_s": 0.6250000186264515,
+        "moving_channels": 15
+      },
+      {
+        "name": "defeated",
+        "duration_s": 1.4999999590218067,
+        "moving_channels": 12
+      }
+    ],
+    "arm_retargeting": "Applied once privately with exact reviewed recipe; rest/skin/mesh unchanged; native review PENDING"
+  },
+  "portrait": {
+    "path": "res://assets/ui/portraits/npc_identity_water_iona_v1.png",
+    "status": "NOT_YET_AUTHORED",
+    "candidate_model_sha256": "1fa712b8c0c061c1c7968b962a529587ceac857fb90a6a5d9e89dcbbbc32bab0"
+  },
+  "runtime_binding": "Original p2055_water_iona binding, installed field_researcher model/profile and maren portrait retained; new candidate is explicit authoring only at this stage",
+  "open_proofs": [
+    "native import, scale, Iona-specific arm stance and coat/pouch clearance",
+    "all-clip native deformation and continuous-motion review",
+    "production portrait from exact candidate",
+    "matched High/Medium world captures",
+    "independent Claude judgement"
+  ]
+}
