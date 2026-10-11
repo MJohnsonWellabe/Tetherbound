@@ -189,7 +189,7 @@ func _chapter_departure(game: Object, progression: RefCounted) -> Dictionary:
 	for arch: Dictionary in arches:
 		var origin := str(arch.get("departure_from", ""))
 		if origin.is_empty() or (_realm_id != "meadows" and origin != _realm_id): continue
-		var owns_key := inventory != null and inventory.call("count", str(arch.key_item)) > 0
+		var owns_key: bool = inventory != null and inventory.call("count", str(arch.key_item)) > 0
 		if not owns_key and not personal.get("portal_unlocks", []).has(str(arch.biome)): continue
 		var destination := preload("res://scripts/data/biome_order.gd").display_name(str(arch.biome))
 		var row := {"id": "chapter_departure:" + str(arch.id), "scope": "player",
