@@ -1,0 +1,27 @@
+{
+  "actor_id": "water_otto",
+  "default_enabled": false,
+  "scope": "Provisional body-only native review input; no runtime appearance registration or paired portrait",
+  "installed_profile": "wandering_trainer",
+  "target_height_m": 1.78,
+  "required_joints": 24,
+  "required_clips": [
+    "idle",
+    "walk",
+    "sprint",
+    "jump",
+    "throw",
+    "chop",
+    "defeated"
+  ],
+  "identity": "Preserve installed face/hat/beard/scarf/coat/pouches/backpack/bedroll; Otto olive coat direction from existing reserved hue96 palette; no new biography, body swap, role or location change",
+  "native_review": "PENDING; Low/Compatibility only",
+  "forbidden_without_further_root_grant": [
+    "Arm correction",
+    "Skin/weight/material edits",
+    "Further bake/export",
+    "Runtime candidate/portrait registration",
+    "Shipping gate changes"
+  ],
+  "source_ownership": "Prior actors, shared base assets, shared animator and all runtime records remain unchanged"
+}

@@ -1,0 +1,244 @@
+{
+  "actor_id": "water_otto",
+  "default_enabled": false,
+  "status": "PROVISIONAL_OFF_BODY_ONLY_NATIVE_REVIEW_PENDING",
+  "source_commit": "10d72eb48aad458c337060bbbbbf15babd670b7e",
+  "installed_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+  "installed_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+  "installed_profile": "wandering_trainer",
+  "target_height_m": 1.78,
+  "reference": "res://docs/art/reference/npc-identity/otto-front-agent-v2.png",
+  "reference_sha256": "39b35f8fc037ddc1b583302886c6008812b01a11586123a3d6a3760bb37e6822",
+  "reference_prompt": "res://docs/art/reference/npc-identity/otto-front-agent-v2.prompt.txt",
+  "reference_prompt_sha256_lf": "66052f664690d666ef8464603833c777a002d3293480ceaeeb693185b2259ac5",
+  "reference_origin": "Original built-in imagegen v2 inspected by root; dominant olive coat follows existing disabled p2055_water_otto hue96 cloth direction; v1 duplicate reference held and never submitted",
+  "generation": {
+    "task_id": "01a12c89-1a98-73b5-8195-a83273dbf42b",
+    "model": "meshy-7.1",
+    "raw_model_sha256": "8851d7a39bd373bdc529839d8c24f0f697d64eecab084ac244e621f1d97d0016",
+    "consumed_credits": 30
+  },
+  "rigging": {
+    "task_id": "01a12c90-1131-712e-a162-f03509398b01",
+    "parent_task_id": "01a12c89-1a98-73b5-8195-a83273dbf42b",
+    "height_meters": 1.78,
+    "rigged_model_sha256": "383ea144deb202a602267d410820cd10e8836e78f59f8ac13313abca17e04d4f",
+    "consumed_credits": 5
+  },
+  "bake": {
+    "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+    "archived_identical_producer": "res://assets/characters/npc_identity/water_otto/source/author_native_clips.py",
+    "producer_sha256_lf": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+    "blender_version": "4.2.9",
+    "actual_process_id": 53512,
+    "exit_code": 0,
+    "model": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
+    "model_sha256": "b804b4b290f15ea25e97b43c66bba5dca99cfe3c970a08c7a77bd9a5332ab47a",
+    "postprocessing": "NONE"
+  },
+  "candidate_model": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
+  "candidate_model_sha256": "b804b4b290f15ea25e97b43c66bba5dca99cfe3c970a08c7a77bd9a5332ab47a",
+  "cpu_initial_skin_clip_check": {
+    "scope": "CPU source preservation and finite sampled clips only; no native or visual acceptance",
+    "joints": 24,
+    "missing_authoring_bones": [],
+    "skin_weights": [
+      {
+        "vertices": 21487,
+        "weight_min": 0.0,
+        "weight_max": 1.0,
+        "sum_min": 0.9999998966231942,
+        "sum_max": 1.0000000894069672,
+        "max_sum_error": 1.0337680578231812e-07,
+        "zero_weight_vertices": 0,
+        "nonfinite_weights": 0,
+        "invalid_joint_indices": 0,
+        "influence_max": 4,
+        "inverse_bind_matrices_finite": true
+      }
+    ],
+    "skinned_height_m": 1.7800008803385077,
+    "root_scale": "unit",
+    "finite_skinned_pose_samples": 28,
+    "clips": [
+      {
+        "name": "idle",
+        "duration_s": 3.999999839812517,
+        "moving_channels": 8
+      },
+      {
+        "name": "walk",
+        "duration_s": 0.6250000186264515,
+        "moving_channels": 14
+      },
+      {
+        "name": "sprint",
+        "duration_s": 0.4583333320915699,
+        "moving_channels": 14
+      },
+      {
+        "name": "jump",
+        "duration_s": 1.166666705161333,
+        "moving_channels": 14
+      },
+      {
+        "name": "throw",
+        "duration_s": 0.9999999590218067,
+        "moving_channels": 8
+      },
+      {
+        "name": "chop",
+        "duration_s": 0.6250000186264515,
+        "moving_channels": 15
+      },
+      {
+        "name": "defeated",
+        "duration_s": 1.4999999590218067,
+        "moving_channels": 12
+      }
+    ],
+    "preservation": {
+      "original_vertices": 21485,
+      "baked_vertices": 21487,
+      "triangle_count": 18611,
+      "joint_names_identical": true,
+      "max_triangle_corner_skinned_rest_position_error_m": 2.014696085378409e-06,
+      "max_triangle_corner_named_joint_weight_error": 1.1920928955078125e-07,
+      "max_triangle_corner_uv_error": 0.0,
+      "triangle_indices_identical": false,
+      "ordered_triangle_corner_correspondence_preserved": true,
+      "split_vertices": [
+        {
+          "original": 3191,
+          "baked": [
+            3191,
+            3192
+          ]
+        },
+        {
+          "original": 3193,
+          "baked": [
+            3194,
+            3195
+          ]
+        }
+      ],
+      "max_triangle_corner_normal_channel_error": 0.0005855560302734375,
+      "original_attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0",
+        "TANGENT",
+        "JOINTS_0",
+        "WEIGHTS_0"
+      ],
+      "baked_attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0",
+        "JOINTS_0",
+        "WEIGHTS_0"
+      ],
+      "export_difference": "Two normal-seam vertex splits and consequent index renumbering; exact ordered corner UVs, positions within2.015micrometres and weights within1.2e-7. Tangents omitted by unchanged exporter; native import ensure_tangents required. No new/deleted triangles or face/UV re-layout.",
+      "original_mesh_count": 1,
+      "baked_mesh_count": 1,
+      "baked_height_m": 1.7800008803385077,
+      "baked_scene_roots": [
+        {
+          "children": [
+            24,
+            23
+          ],
+          "name": "Armature"
+        }
+      ],
+      "material_factors_before": {
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 1,
+        "roughnessFactor": 1,
+        "doubleSided": true,
+        "alphaMode": "OPAQUE",
+        "emissiveFactor": [
+          0,
+          0,
+          0
+        ]
+      },
+      "material_factors_after": {
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 1,
+        "roughnessFactor": 1,
+        "doubleSided": true,
+        "alphaMode": "OPAQUE",
+        "emissiveFactor": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "textures": {
+      "base_color": {
+        "size": [
+          2048,
+          2048
+        ],
+        "encoded_bytes_identical": true,
+        "decoded_pixels_identical": true,
+        "max_channel_difference_255": 0.0,
+        "mean_channel_difference_255": 0.0
+      },
+      "metallic_roughness": {
+        "size": [
+          2048,
+          2048
+        ],
+        "encoded_bytes_identical": true,
+        "decoded_pixels_identical": true,
+        "max_channel_difference_255": 0.0,
+        "mean_channel_difference_255": 0.0
+      },
+      "normal": {
+        "size": [
+          2048,
+          2048
+        ],
+        "encoded_bytes_identical": true,
+        "decoded_pixels_identical": true,
+        "max_channel_difference_255": 0.0,
+        "mean_channel_difference_255": 0.0
+      }
+    }
+  },
+  "import_sidecar": {
+    "origin": "Source-authored settings copied from existing Orsen import parameters; Otto resource/cache paths derived from its exact resource path; no fabricated UID",
+    "native_import_status": "PENDING_ROOT_IMPORT",
+    "ensure_tangents": true,
+    "reason": "Unchanged Blender exporter omits TANGENT attribute; native importer must regenerate tangent basis from preserved UVs/normals"
+  },
+  "native_review": {
+    "status": "PENDING",
+    "scope": "Root Low/Compatibility seven clips/four phases/front-side under unchanged 56-frame fixture",
+    "risks": [
+      "Sampled CPU idle upper arms remain28.6-31.84degrees from down; root must inspect natural idle before any correction",
+      "Action CPU skin samples stretch some lower rear-torso edges; worst chop phase0.375 edge5.806mm to112.782mm. Diagnostic only, not proof of a visual blocker; root must inspect coat/pouch/backpack clearance",
+      "Olive differentiation from Orsen remains native PENDING",
+      "Normal seam splits and regenerated tangent basis require native shading inspection"
+    ],
+    "portrait": "NOT_AUTHORED",
+    "world": "PENDING",
+    "claude_judgement": "PENDING"
+  },
+  "rules": "res://assets/characters/npc_identity/water_otto/source/rules.json",
+  "recipe": "res://assets/characters/npc_identity/water_otto/source/animation_recipe.json"
+}

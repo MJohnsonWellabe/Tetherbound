@@ -1,0 +1,34 @@
+{
+  "actor_id": "water_otto",
+  "mode": "Unchanged full seven-clip humanoid bake; no --only",
+  "blender_version": "4.2.9",
+  "actual_producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+  "archived_identical_producer": "res://assets/characters/npc_identity/water_otto/source/author_native_clips.py",
+  "producer_sha256_lf": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+  "input_rig_sha256": "383ea144deb202a602267d410820cd10e8836e78f59f8ac13313abca17e04d4f",
+  "output_model": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
+  "output_sha256": "b804b4b290f15ea25e97b43c66bba5dca99cfe3c970a08c7a77bd9a5332ab47a",
+  "argv_after_blender": [
+    "--background",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "tools/art_pipeline/blender/animate_humanoid.py",
+    "--",
+    "assets_raw/water_otto/01a12c90-1131-712e-a162-f03509398b01/rigged_character_glb.glb",
+    "--out",
+    "assets_raw/water_otto/local-bake-v1/otto_animated.glb"
+  ],
+  "clip_frames": {
+    "idle": 96,
+    "walk": 15,
+    "sprint": 11,
+    "jump": 28,
+    "throw": 24,
+    "chop": 15,
+    "defeated": 36
+  },
+  "fps": 24,
+  "postprocessing": "NONE",
+  "export_difference": "Two normal-seam vertex splits and consequent index renumbering; exact ordered corner UVs, positions within2.015micrometres and weights within1.2e-7. Tangents omitted by unchanged exporter; native import ensure_tangents required. No new/deleted triangles or face/UV re-layout."
+}
