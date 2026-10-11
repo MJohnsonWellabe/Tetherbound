@@ -1,5 +1,5 @@
 {
- "generated_at": "12:45 PM CT Sun 11 Oct 2026",
+ "generated_at": "12:52 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -2896,12 +2896,12 @@
    "title": "Economy, balance and the 15–25 hour clear",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/balance",
-   "pct": 20,
+   "pct": 40,
    "counts": {
-    "met": 1,
+    "met": 2,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 4,
+    "not_started": 3,
     "blocked": 0,
     "failing": 0
    },
@@ -2924,10 +2924,10 @@
     },
     {
      "text": "Four-character contention ledgers are solvent.",
-     "status": "not_started",
-     "evidence": "test_economy_ledger.mjs (not CI); test_tidewake_b_four_character_ledger.gd (old Tidewake only)",
-     "gap": "Measure the four-character ledger per band on the new loop (stations/feasts/gear).",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No new-loop four-character ledger is measured.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F47-2/ (systems-a 4f0c3ce6): tools/economy_supply_census.mjs + tests/test_economy_supply_census.mjs (data-only, coordinator re-ran 0 failed). All four bands are solvent for four characters against required demand (matching gear tier at +0; +1 also solvent), counting site stock and every configured non-site source (Master chests, trainer rewards, Warrens, chains, bounties, vendors, shed)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (12:52 PM CT Sun 11 Oct). Caveats for the owner: solvency depends on each character winning its own Master chest (without them berries, cliffglass_ore, windworn_heartwood, skyplume and sparkfur fall short); the optional +3-everything column is short only Cloudreach skyplume (185 of 200). Lands with the consolidated PR.",
      "audit_index": 2
     },
     {
