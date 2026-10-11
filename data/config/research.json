@@ -1,5 +1,6 @@
 {
   "schema_version": 1,
+  "catalogue_revision": 2,
   "runtime_enabled": true,
   "maximum_event_receipts": 4096,
   "maximum_transaction_receipts": 4096,
@@ -18,6 +19,34 @@
     }
   },
   "species": {
+    "stormursa": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet Stormursa in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "arc_lash",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Use Arc Lash with Stormursa",
+          "required": 1
+        },
+        {
+          "move": "ultimate_stormursa",
+          "id": "ultimate",
+          "kind": "cast",
+          "reward_count": 15,
+          "label": "Use Thunder Roar with Stormursa",
+          "required": 1
+        }
+      ]
+    },
     "abyssal_guardian": {
       "biome": "tidewake",
       "tasks": [

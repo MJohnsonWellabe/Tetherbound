@@ -184,16 +184,19 @@ func _placement_holds(spec: Dictionary, progression: RefCounted) -> bool:
 ## than a villager's. An entry naming neither gets an empty config, same as
 ## before this existed.
 static func model_config(spec: Dictionary) -> Dictionary:
-	var rank := str(spec.get("rank", ""))
+	var rank := str(spec.get("presentation_rank", spec.get("rank", "")))
 	var cfg := NPC_RANKS.config_for(rank, str(spec.get("base", ""))) if rank != "" \
 		else CHARACTER_MODEL.config_for(str(spec.get("config_key", "")))
 	if cfg.is_empty():
 		return cfg
 	cfg = cfg.duplicate(true)
-	for key: String in ["hair", "palette", "accessories", "tint", "height"]:
+	for key: String in ["hair", "palette", "accessories", "tint", "height", "emission_floor", "night_rim"]:
 		if spec.has(key):
 			cfg[key] = spec[key]
-	return cfg
+	var profile := str(spec.get("base", "")) if not rank.is_empty() else ""
+	if profile.is_empty():
+		profile = str(spec.get("config_key", ""))
+	return CHARACTER_MODEL.with_appearance_variant(cfg, profile, str(spec.get("appearance_variant_id", "")))
 
 
 ## Only built support providers in this placement's actual village contribute.

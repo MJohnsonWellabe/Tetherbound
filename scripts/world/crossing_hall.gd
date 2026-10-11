@@ -8,6 +8,7 @@ const ARCH_MODEL := "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf"
 const STAND_MODEL := "res://assets/props/quaternius_fantasy/BookStand.gltf"
 const OPEN_MEMBRANE_EMISSION := .25
 const RELIC_POWER_PANEL := preload("res://scripts/ui/relic_power_panel.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
@@ -105,16 +106,43 @@ func _build_arch(entry: Dictionary) -> void:
 	slot.add_child(arrival)
 	var membrane := MeshInstance3D.new()
 	membrane.name = "PortalSurface"
-	var mesh := QuadMesh.new()
-	mesh.size = Vector2(1.45, 2.4)
-	membrane.mesh = mesh
-	membrane.position = Vector3(0, 1.28, -.08)
+	membrane.mesh = _arch_membrane_mesh()
+	membrane.position = Vector3(0, .08, -.08)
 	var material := StandardMaterial3D.new()
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.roughness = .75
+	material.vertex_color_use_as_albedo = true
 	membrane.material_override = material
+	membrane.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	slot.add_child(membrane)
 	_arches[str(entry.id)] = slot
+
+
+## The installed arch has a rounded opening, not a rectangular door panel.
+## A shallow recessed fan leaves the stone reveal visible and carries the
+## open portal's light at its rim instead of filling the nave with a card.
+func _arch_membrane_mesh() -> ArrayMesh:
+	var settings: Dictionary = _config.get("membrane", {})
+	var radius := float(settings.get("half_width_m", .725))
+	var height := float(settings.get("height_m", 2.4))
+	var spring := height - radius
+	var outline := PackedVector3Array([Vector3(-radius, 0, 0), Vector3(radius, 0, 0)])
+	for step in range(25):
+		var angle := float(step) * PI / 24.0
+		outline.append(Vector3(cos(angle) * radius, spring + sin(angle) * radius, 0))
+	var centre := Vector3(0, height * .5, -float(settings.get("recess_m", .22)))
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for index in outline.size():
+		for vertex in [centre, outline[index], outline[(index + 1) % outline.size()]]:
+			var middle: bool = vertex == centre
+			var value := .38 if middle else .9
+			surface.set_color(Color(value, value, value,
+				float(settings.get("centre_opacity", .12)) if middle else float(settings.get("rim_opacity", .62))))
+			surface.set_uv(Vector2((vertex.x / radius + 1.0) * .5, vertex.y / height))
+			surface.add_vertex(vertex)
+	surface.generate_normals()
+	return surface.commit()
 
 
 func _build_pedestal(entry: Dictionary) -> void:
@@ -295,6 +323,8 @@ func _is_shell_module(mesh: Node, building: Node) -> bool:
 
 
 func _process(delta: float) -> void:
+	if not _relic_pending.is_empty() and not _relic_context_matches(): _clear_relic_request()
+	_present_queued_power()
 	_elapsed += delta
 	if _elapsed < float(_config.get("refresh_seconds", .2)):
 		return
@@ -438,6 +468,7 @@ func apply_display(display: Dictionary) -> void:
 		arch.set_meta("arch_state", state)
 		var material := (arch.get_node("PortalSurface") as MeshInstance3D).material_override as StandardMaterial3D
 		material.albedo_color = Color(str(colors.get(state, "#303947")))
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA if state == "open" or state == "stirred" else BaseMaterial3D.TRANSPARENCY_DISABLED
 		material.emission_enabled = state == "open" or state == "stirred"
 		material.emission = material.albedo_color
 		material.emission_energy_multiplier = OPEN_MEMBRANE_EMISSION if state == "open" else .1
@@ -550,6 +581,10 @@ const RELIC_VIEW_TIMEOUT_S := 3.0
 const RELIC_REPLY_TIMEOUT_S := 10.0
 var _relic_pending := ""
 var _relic_game: Node
+var _relic_session: Node
+var _relic_character := ""
+var _relic_epoch := ""
+var _relic_generation := 0
 
 
 func hang_relic(biome: String, game: Node = null) -> void:
@@ -568,31 +603,46 @@ func hang_relic(biome: String, game: Node = null) -> void:
 		return
 	_relic_pending = biome
 	_relic_game = game
+	_relic_session = session
+	_relic_character = _power_character_id(game)
+	_relic_epoch = _power_session_epoch(session)
+	_relic_generation += 1
+	var generation := _relic_generation
 	if not bool(session.call("is_host")):
-		if not await _relic_view_refreshed(session):
-			_relic_pending = ""
+		var refreshed := await _relic_view_refreshed(session)
+		if generation != _relic_generation or not _relic_context_matches():
+			if generation == _relic_generation: _clear_relic_request()
+			return
+		if not refreshed:
+			_clear_relic_request()
 			game.call("push_world_message", "The shrine is waiting for the host. Try again.")
 			return
-		if not session.is_connected("homestead_action_completed", _relic_reply):
-			session.connect("homestead_action_completed", _relic_reply)
+	# The host's own saved ACK is asynchronous too. Listen before submitting,
+	# including a completion delivered synchronously inside the request.
+	if not session.is_connected("homestead_action_completed", _relic_reply):
+		session.connect("homestead_action_completed", _relic_reply)
 	var verdict: Dictionary = session.call("request_relic_hang", biome)
+	if generation != _relic_generation or _relic_pending != biome:
+		return # The final callback already presented this original decision.
 	if verdict.get("code") == "awaiting_saved_decision":
-		# Guest: the host's saved decision arrives on homestead_action_completed.
+		# The saved decision arrives on homestead_action_completed for either peer.
 		# A reply that never comes must not lock the shrine for later presses.
 		var tree := Engine.get_main_loop() as SceneTree
 		if tree == null:
+			# Without a tree there is no timeout to schedule. Keep listening for
+			# this original request's decision instead of discarding its reply.
 			return
 		await tree.create_timer(RELIC_REPLY_TIMEOUT_S).timeout
-		if _relic_pending == biome:
-			_relic_pending = ""
-			if session.is_connected("homestead_action_completed", _relic_reply):
-				session.disconnect("homestead_action_completed", _relic_reply)
+		if generation == _relic_generation and _relic_pending == biome: _clear_relic_request()
 		return
-	_relic_pending = ""
+	if not _relic_context_matches():
+		_clear_relic_request()
+		return
+	_clear_relic_request()
 	if verdict.get("ok") != true:
 		game.call("push_world_message", _relic_refusal_text(verdict))
 	else:
-		open_relic_power(game, "Relic hung. Choose the power you carry.")
+		open_relic_power(game, "Relic hung. Choose the power you carry.", biome)
 
 
 func _relic_view_refreshed(session: Node) -> bool:
@@ -617,17 +667,49 @@ func _relic_view_refreshed(session: Node) -> bool:
 func _relic_reply(op: String, intent: Dictionary, result: Dictionary) -> void:
 	if op != "relic_hang" or str(intent.get("biome", "")) != _relic_pending:
 		return
+	if not _relic_context_matches():
+		_clear_relic_request()
+		return
 	if not preload("res://scripts/ui/relic_power_panel.gd").reply_final(result):
 		return # A guest's first reply is the host's checkpoint; the saved decision follows.
-	_relic_pending = ""
-	var game := _relic_game if is_instance_valid(_relic_game) else get_node_or_null(^"/root/Game")
-	var session: Node = game.get("session") if game != null else null
-	if session != null and session.is_connected("homestead_action_completed", _relic_reply):
-		session.disconnect("homestead_action_completed", _relic_reply)
+	var game := _relic_game
+	var biome := _relic_pending
+	_clear_relic_request()
 	if result.get("ok") != true and game != null:
 		game.call("push_world_message", _relic_refusal_text(result))
 	elif game != null:
-		open_relic_power(game, "Relic hung. Choose the power you carry.")
+		open_relic_power(game, "Relic hung. Choose the power you carry.", biome)
+
+
+func _relic_context_matches() -> bool:
+	return is_instance_valid(_relic_game) and is_instance_valid(_relic_session) \
+		and _relic_game.get("session") == _relic_session \
+		and _power_character_id(_relic_game) == _relic_character \
+		and _power_session_epoch(_relic_session) == _relic_epoch
+
+
+func _clear_relic_request() -> void:
+	if is_instance_valid(_relic_session) and _relic_session.is_connected("homestead_action_completed", _relic_reply):
+		_relic_session.disconnect("homestead_action_completed", _relic_reply)
+	_relic_pending = ""
+	_relic_game = null
+	_relic_session = null
+	_relic_character = ""
+	_relic_epoch = ""
+
+
+static func _power_character_id(game: Node) -> String:
+	var local: RefCounted = game.get("local")
+	return str(local.get("character_id")) if local != null else ""
+
+
+static func _power_session_epoch(session: Node) -> String:
+	return str(session.call("_altar_current_epoch")) if session != null and session.has_method("_altar_current_epoch") else ""
+
+
+func _exit_tree() -> void:
+	_clear_relic_request()
+	_queued_power.clear()
 
 
 static func _personal_list(game: Node, field: String) -> Array:
@@ -637,16 +719,46 @@ static func _personal_list(game: Node, field: String) -> Array:
 
 
 var _power_panel: CanvasLayer
+var _queued_power: Dictionary = {}
 
 
-func open_relic_power(game: Node, message: String = "") -> void:
-	if not is_inside_tree():
+func open_relic_power(game: Node, message: String = "", hung_biome: String = "") -> void:
+	if not is_inside_tree() or game == null:
 		return
+	var local: RefCounted = game.get("local")
+	if local == null: return
+	# A saved hang can finish after the player opens another screen. Preserve
+	# its presentation for this character instead of stacking a second modal.
+	_queued_power = {"game": game, "character": str(local.get("character_id")),
+		"session": game.get("session"), "epoch": _power_session_epoch(game.get("session")),
+		"biome": hung_biome, "message": message}
+	_present_queued_power()
+
+
+func _present_queued_power() -> void:
+	if _queued_power.is_empty() or not is_inside_tree(): return
+	var game: Node = _queued_power.game
+	if not is_instance_valid(game):
+		_queued_power.clear()
+		return
+	var local: RefCounted = game.get("local")
+	if local == null or str(local.get("character_id")) != _queued_power.character \
+			or game.get("session") != _queued_power.session \
+			or _power_session_epoch(game.get("session")) != _queued_power.epoch \
+			or (not str(_queued_power.biome).is_empty() and not _personal_list(game, "relics_hung").has(_queued_power.biome)):
+		_queued_power.clear()
+		return
+	var owner := INPUT_OWNER.current(get_tree())
+	if owner != null and owner != _power_panel: return
+	var scene := get_tree().current_scene
+	var combat := scene.get_node_or_null("CombatManager") if scene != null else null
+	if combat != null and combat.has_method("is_fighting") and combat.call("is_fighting") == true: return
 	if _power_panel == null or not is_instance_valid(_power_panel):
 		_power_panel = RELIC_POWER_PANEL.new()
 		_power_panel.name = "RelicPowerPanel"
 		add_child(_power_panel)
-	_power_panel.call("open", message)
+	_power_panel.call("open", str(_queued_power.message))
+	if _power_panel.call("is_open") == true: _queued_power.clear()
 
 
 static func _relic_refusal_text(verdict: Dictionary) -> String:
@@ -671,4 +783,3 @@ func _declare_interior_volumes() -> void:
 		return
 	set_meta(OBJECTIVE_BEACON.INTERIOR_BOXES_META, boxes)
 	add_to_group(OBJECTIVE_BEACON.INTERIOR_GROUP)
-

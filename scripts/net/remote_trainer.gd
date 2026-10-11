@@ -58,6 +58,7 @@ const PRESENTATION := preload("res://scripts/net/remote_presentation.gd")
 ## the landing rule through the arbiter. Nothing here re-implements any of them.
 const RIDING := preload("res://scripts/world/riding_controller.gd")
 const FLY := preload("res://scripts/player/fly_controller.gd")
+const FLY_LANDING := preload("res://scripts/player/fly_landing_presentation.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const ANCHOR_ARBITER := preload("res://scripts/net/fly_anchor_arbiter.gd")
 const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
@@ -144,7 +145,8 @@ var net_creature_saddled: bool = false
 ## read, on every other screen, as a friend who had stepped off a cliff.
 ##
 ## `net_fly_state` is the controller's own state word, not a re-derivation:
-## "glide", "climb", "descent", "exhausted". `net_fly_species` is the carrier,
+## "glide", "climb", "descent", "exhausted", or an explicit brief "touchdown"
+## from its natural landing presentation. `net_fly_species` is the carrier,
 ## so every viewer builds the same bird from the same `fly_capability` block.
 var net_flying: bool = false
 var net_fly_state: String = ""
@@ -179,6 +181,11 @@ var _fly_seconds: float = 0.0
 var _fly_capability: Dictionary = {}
 var _carrier_art: Node3D = null
 var _carrier_rig: Skeleton3D = null
+var _landing_art: Node3D
+var _landing_settings: Dictionary = {}
+var _landing_origin := Vector3.ZERO
+var _flight_realm := ""
+var _last_flight_position := Vector3.ZERO
 var _mount: Node3D = null
 ## Whether this process is this body's authority. Re-read every physics frame
 ## rather than cached once in `_ready()`, and that is deliberate. Authority is
@@ -309,6 +316,7 @@ func _physics_process(delta: float) -> void:
 
 
 func _exit_tree() -> void:
+	_clear_landing_art()
 	# PhysicsServer also clears exception relationships while bodies leave the
 	# tree. Release ours first so it never tries to disconnect the reciprocal
 	# body after that teardown has already happened.
@@ -425,7 +433,7 @@ func _push_flight(rig: Node3D) -> void:
 		return
 	var controller := fly as Object
 	net_flying = bool(controller.call("is_flying"))
-	net_fly_state = str(controller.get("state")) if net_flying else ""
+	net_fly_state = str(controller.call("presentation_state"))
 	net_fly_species = str(controller.call("carrier_species_id")) if net_flying else ""
 
 
@@ -667,6 +675,7 @@ func _follow(delta: float) -> void:
 		_render_position = net_position
 		_has_render = true
 	if REMOTE_CREATURE.needs_snap(_render_position, global_position, net_position, SNAP_M):
+		_clear_landing_art()
 		# A teleport, not late packets -- or a body this host's own collision
 		# has pinned while `_render_position` went on tracking the owner. See
 		# SNAP_M and `remote_creature.gd::needs_snap()`. The second case matters
@@ -742,6 +751,7 @@ func _follow(delta: float) -> void:
 ## is applied; deleting this function costs a frame of smoothness rather than
 ## the feature.
 func _process(_delta: float) -> void:
+	_tick_landing_art()
 	if _owned_here == true or not net_riding:
 		return
 	var mount := _mount_body()
@@ -801,21 +811,32 @@ func _apply_ride_and_flight(delta: float) -> void:
 ##
 ## Built through `fly_controller.gd`'s own static builder, so a friend's
 ## carrier is the same model, the same height and the same wingbeat as the one
-## its owner is looking up at. Rebuilt when the species changes and freed the
-## moment the flight ends -- a bird left behind on a landed trainer is a bird
-## that follows them around the meadow.
+## its owner is looking up at. A witnessed nearby touchdown can retain the
+## same art briefly; rejoin, teleport and cancellation never replay a landing.
 func _apply_flight_art(art: Node, delta: float) -> void:
+	_tick_landing_art()
 	if net_flying:
 		_fly_seconds += delta
+		_last_flight_position = net_position
 	if net_flying == _flew_last and net_fly_species == _flew_species:
 		if net_flying:
 			FLY.pose_carrier_wings(_carrier_rig, _fly_capability, _fly_seconds)
 			FLY.align_carrier_grip(_carrier_art, _carrier_rig, art,
 				_fly_capability.get("grip_bones", []))
 		return
+	if _flew_last and not net_flying and net_fly_state == "touchdown" and not net_carried and not net_riding \
+			and aquatic.mode == SWIM_STATE.Mode.LAND and net_anim_state in ["idle", "walk", "sprint"] \
+			and net_realm == _flight_realm and is_instance_valid(_carrier_art) and _mount_body() == null:
+		_landing_settings = FLY.shared_config().get("landing_presentation", {})
+		if net_position.distance_to(_last_flight_position) <= float(_landing_settings.get("cancel_distance_m", 8.0)):
+			_landing_art = FLY_LANDING.begin(self, _carrier_art, _fly_capability, _landing_settings, net_position)
+			if _landing_art != null:
+				_landing_origin = net_position
+				_carrier_art = null
 	_flew_last = net_flying
 	_flew_species = net_fly_species
 	if is_instance_valid(_carrier_art):
+		_carrier_art.hide()
 		_carrier_art.queue_free()
 	_carrier_art = null
 	_carrier_rig = null
@@ -825,12 +846,31 @@ func _apply_flight_art(art: Node, delta: float) -> void:
 	if not net_flying:
 		_fly_seconds = 0.0
 		return
+	_flight_realm = net_realm
 	_fly_capability = SPECIES.fly_capability(net_fly_species)
 	_carrier_art = FLY.make_carrier_art(_fly_capability)
 	if _carrier_art == null:
 		return
 	add_child(_carrier_art)
 	_carrier_rig = FLY.carrier_skeleton(_carrier_art)
+
+
+func _tick_landing_art() -> void:
+	if _landing_art == null:
+		return
+	# A replicated ground follower takes over immediately, regardless of packet
+	# timing. This process never delays its spawn or changes its visibility.
+	if not is_instance_valid(_landing_art) or _owned_here == true or net_flying or net_fly_state != "touchdown" \
+			or net_riding or net_carried or net_realm != _flight_realm \
+			or net_position.distance_to(_landing_origin) > float(_landing_settings.get("cancel_distance_m", 8.0)) \
+			or _mount_body() != null or bool(_landing_art.get("finished")):
+		_clear_landing_art()
+
+
+func _clear_landing_art() -> void:
+	if is_instance_valid(_landing_art):
+		_landing_art.call("cancel")
+	_landing_art = null
 
 
 ## The creature body this trainer is sitting on: the deployed proxy belonging

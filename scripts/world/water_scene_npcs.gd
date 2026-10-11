@@ -8,6 +8,7 @@ signal guarded_event_requested(event_id: String, npc_id: String, peer_id: int)
 signal authored_conversation_finished(conversation_id: String, npc_id: String, peer_id: int)
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const CHARACTER := preload("res://scripts/characters/character_model.gd")
+const APPEARANCE := preload("res://scripts/characters/appearance_variants.gd")
 const RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const GREETINGS := preload("res://scripts/world/village_npcs.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
@@ -54,6 +55,7 @@ func build(world: Node3D) -> Dictionary:
 				line.erase("effect")
 				line.erase("effects")
 		table[id] = entry
+	_apply_trainer_portraits(cast, table)
 	if not _panel.finished.is_connected(_on_finished):
 		_panel.finished.connect(_on_finished)
 	if not _panel.line_presented.is_connected(_on_line_presented):
@@ -83,6 +85,13 @@ func build(world: Node3D) -> Dictionary:
 		if model.is_empty() or str(model.get("model", "")) != str(spec.model):
 			push_error("Water NPC installed profile/model mismatch: " + id)
 			continue
+		model = APPEARANCE.resolve(model, profile, str(spec.get("appearance_variant_id", "")))
+		# The resolver admits appearance and portrait together. A disabled or
+		# mismatched candidate keeps this named NPC's installed portrait too.
+		var presentation_spec := spec.duplicate(true)
+		var variant_id := str(spec.get("appearance_variant_id", ""))
+		if not variant_id.is_empty() and str(model.get("appearance_variant_id", "")) == variant_id:
+			presentation_spec["portrait"] = model.get("portrait", spec.get("portrait", ""))
 		var body: Node3D = NPC.new()
 		body.name = id
 		body.set_meta("water_npc_id", id)
@@ -96,9 +105,31 @@ func build(world: Node3D) -> Dictionary:
 		preload("res://scripts/world/water_named_grass_clearance.gd").apply(body, _world)
 		var prompt: Node3D = body.call("add_prompt", "Greet " + str(spec.display_name))
 		prompt.activated.connect(_on_greeted.bind(id))
-		_specs[id] = spec
+		_specs[id] = presentation_spec
 		_bodies[id] = body
 	return _bodies.duplicate()
+
+## Trainers have their own bodies and named battle conversations. Resolve the
+## same complete pair as WaterEncounterDirector; a disabled/missing pair leaves
+## each authored conversation's existing portrait untouched.
+func _apply_trainer_portraits(cast: Dictionary, table: Dictionary) -> void:
+	for spec: Dictionary in cast.get("trainers", []):
+		var variant_id := str(spec.get("appearance_variant_id", ""))
+		if variant_id.is_empty():
+			continue
+		var profile := str(spec.get("body_profile", ""))
+		var rank := str(spec.get("rank", "local"))
+		var base := RANKS.config_for(rank, profile) if rank in ["grunt", "officer", "captain"] else CHARACTER.config_for(profile)
+		var model := APPEARANCE.resolve(base, profile, variant_id)
+		if str(model.get("appearance_variant_id", "")) != variant_id:
+			continue
+		for key: String in ["intro_conversation", "win_conversation", "lose_conversation"]:
+			var conversation := str(spec.get(key, ""))
+			if not table.get(conversation) is Dictionary:
+				continue
+			var entry: Dictionary = table[conversation]
+			entry["portrait"] = model["portrait"]
+
 
 func _on_line_presented(conversation: String, is_last: bool) -> void:
 	if not _active_conversation.is_empty() and conversation == _active_conversation:

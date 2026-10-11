@@ -158,9 +158,16 @@ func _run() -> void:
 	var rock_step := float(colour_cfg.get("slope_sample_step_rock", texture_step))
 
 	var terrain: Node = ClassDB.instantiate("Terrain3D")
+	# Generated headless assets have no resource path for Terrain3D to reload.
+	terrain.set("free_editor_textures", false)
 	terrain.set("region_size", region_size)
 	terrain.set("vertex_spacing", spacing)
 	terrain.set("data_directory", output_dir)
+	# Terrain3D still needs a camera when this offline producer runs headlessly.
+	var bake_camera := Camera3D.new()
+	root.add_child(bake_camera)
+	bake_camera.current = true
+	terrain.call("set_camera", bake_camera)
 	root.add_child(terrain)
 	await process_frame
 

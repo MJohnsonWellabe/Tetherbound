@@ -5,12 +5,52 @@
     {
       "approved_source": "8ee152a47ee90f430a3e8aafb13d2b0d9c9ad1ea",
       "baseline": "b2ea1455abdda7f2a7078ed1f148d5c40952c9fc",
-      "config_fingerprint": 2494404415,
+      "config_fingerprint": 2494404415.0,
       "files": {
         "terrain3d-01-01.res": "3875d818d8577bbee236bd8f300d0e72dd03bbd8d274f07c8e2c01736e41d07c",
         "terrain3d-01_00.res": "d5db9f3ebccfb26bcf419eb5ff3cb7affcd148af9c84eac321feccfa04a6825d",
         "terrain3d_00-01.res": "6cdcfc2c64d27d4f3b5024a5252ba01c4d7e600a5b5aa0f46cf9a0ba225bbe3d",
         "terrain3d_00_00.res": "cf49af09dd99063f095005957800b8abea3261e51d2a06b535c4cf4f4bb94aa2"
+      },
+      "regions": [
+        [
+          -1.0,
+          -1.0
+        ],
+        [
+          -1.0,
+          0.0
+        ],
+        [
+          0.0,
+          -1.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "scope": "explicit regional terrain update; untouched full-bake provenance retained",
+      "scope_sha256": "48fb781721eba781a49e637e9c216f12d31b83edb060c14cb026cd846ccdc412",
+      "source_inputs": {
+        "res://data/config/bands/band1_lower_meadows/vegetation.json": "497894d689b20a4539b9be0497b4b1f8851b95386c4608c9543b95a17fc44788",
+        "res://data/config/bands/band2_stone_and_root/vegetation.json": "2695ecadd6458d3aa1e6fe520c8637adfe2e652f1a73dbee5cce00cab9a28a58",
+        "res://data/config/bands/band3_the_river_lock/vegetation.json": "0493ecf1641a1c901b9eb6d4544709c558bbf172b72b5c6579333384f4b8ef6b",
+        "res://data/config/bands/band4_upper_meadows_ironwood/vegetation.json": "f451051c1520ce5fac9f0e92ecb5415f2459d8a0c62b3eb16d04e3009a325906",
+        "res://data/config/bands/band5_stronghold_approach/vegetation.json": "e705c91104d1b0b1892d0da89dbfc432277a4008160c38825b6e1d64cbfc0877",
+        "res://data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+        "res://data/config/vegetation.json": "4e3331edea4ceb764bf57bb422dc7db676a3e0acad412dd23d42939cd55593df"
+      }
+    },
+    {
+      "approved_source": "d5ab7d73b31cdd5a24cd45501c980bd4aa553687",
+      "baseline": "b2ea1455abdda7f2a7078ed1f148d5c40952c9fc",
+      "config_fingerprint": 2494404415,
+      "files": {
+        "terrain3d-01-01.res": "c6de13d4c0e674f09cd1145e7bfb24937ce23393d7725db71dd7d40ffec7ec57",
+        "terrain3d-01_00.res": "8669a48b159663e4571840f9cca6794adcda88ee720847395dccc6ce12ad5b61",
+        "terrain3d_00-01.res": "3b95b2dea86403bf25fefa67e820cab6f3ac48e9023c053eb9ba476484131146",
+        "terrain3d_00_00.res": "ed997320684a8be79feee14258a2ff47eb35de07aab7a26dbed3288e66837dd8"
       },
       "regions": [
         [
@@ -31,9 +71,9 @@
         ]
       ],
       "scope": "explicit regional terrain update; untouched full-bake provenance retained",
-      "scope_sha256": "48fb781721eba781a49e637e9c216f12d31b83edb060c14cb026cd846ccdc412",
+      "scope_sha256": "fe9dd8034ac02350376d759b01a233ebd9a441dfdacb2c65e7da67b92bd25b2c",
       "source_inputs": {
-        "res://data/config/bands/band1_lower_meadows/vegetation.json": "497894d689b20a4539b9be0497b4b1f8851b95386c4608c9543b95a17fc44788",
+        "res://data/config/bands/band1_lower_meadows/vegetation.json": "ca69f88bff234b00e92529e01c4e0125166d11e0ab9b077e894d262d3b06db05",
         "res://data/config/bands/band2_stone_and_root/vegetation.json": "2695ecadd6458d3aa1e6fe520c8637adfe2e652f1a73dbee5cce00cab9a28a58",
         "res://data/config/bands/band3_the_river_lock/vegetation.json": "0493ecf1641a1c901b9eb6d4544709c558bbf172b72b5c6579333384f4b8ef6b",
         "res://data/config/bands/band4_upper_meadows_ironwood/vegetation.json": "f451051c1520ce5fac9f0e92ecb5415f2459d8a0c62b3eb16d04e3009a325906",

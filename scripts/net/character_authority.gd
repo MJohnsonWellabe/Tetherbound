@@ -622,6 +622,62 @@ func confirm_folds(character: String, rows: Array) -> void:
 	for row: Variant in rows:
 		if row is Dictionary: (_records[character].unconfirmed_folds as Dictionary).erase(str(row.get("delivery_id", "")))
 
+## The saved Stormwood claim is the only newcomer source. The owner supplies
+## a choice and, at five, one existing UID; never a replacement roster/card.
+static func stormwood_answer_proposal(before: Dictionary, claim: Dictionary, released_uid: String) -> Dictionary:
+	var card: Variant = claim.get("creature")
+	if before.is_empty() or not card is Dictionary or not claim.get("kept") is bool \
+		or load("res://scripts/save/water_capture_codec.gd").call("decode", card) == null \
+		or card.get("species_id") != "fulgocobra": return {"ok": false, "code": "invalid_stormwood_claim"}
+	var uid: String = card.uid
+	var receipt := "stormheart_answer:%s:%s" % [uid, before.character_id]
+	if before.redesign_character.transaction_receipts.has(receipt):
+		return {"ok": true, "duplicate": true, "state": before.duplicate(true), "receipt": receipt}
+	var next := before.duplicate(true)
+	if claim.kept:
+		var original: Variant = claim.get("party_uids")
+		if not original is Array or original != REDESIGN.uids(before.party): return {"ok": false, "code": "stormwood_roster_changed"}
+		var already_kept := false
+		for existing: Dictionary in before.party:
+			if existing.uid == uid and existing.species_id == "fulgocobra": already_kept = true
+			elif existing.species_id == "fulgocobra": return {"ok": false, "code": "stormwood_already_owned"}
+		if already_kept:
+			# An older owner save already holds this original UID. Seal its receipt
+			# without replacing its progressed card or creating another creature.
+			if not released_uid.is_empty(): return {"ok": false, "code": "unexpected_stormwood_release"}
+		else:
+			if before.party.size() == preload("res://autoload/party.gd").MAX_CREATURES:
+				var index: int = original.find(released_uid)
+				if released_uid.is_empty() or index < 0: return {"ok": false, "code": "stormwood_release_required"}
+				var release := ESSENCE.stage_release(before, str(before.character_id), released_uid, 0, ESSENCE.config())
+				if release.get("ok") != true or release.get("duplicate") == true: return {"ok": false, "code": release.get("code", "stormwood_release_conflict")}
+				next = release.state
+			elif not released_uid.is_empty(): return {"ok": false, "code": "unexpected_stormwood_release"}
+			next.party.append(RECORD_RULES.portable_card(card))
+			next.redesign_character = TEACHING.character_loadout_mirror(next.party, next.redesign_character)
+	elif not released_uid.is_empty(): return {"ok": false, "code": "unexpected_stormwood_release"}
+	if next.redesign_character.transaction_receipts.size() >= int(ESSENCE.config().maximum_transaction_receipts): return {"ok": false, "code": "receipt_budget"}
+	next.redesign_character.transaction_receipts.append(receipt)
+	var failures := errors(next, str(before.character_id))
+	if not failures.is_empty(): return {"ok": false, "code": "invalid_stormwood_roster", "errors": failures}
+	return {"ok": true, "state": next, "receipt": receipt}
+
+
+## Session validates the exact persisted original claim and its owner's saved
+## replay cut before calling. Passive fields come from the host replay cursor.
+func commit_stormwood_answer(character: String, before: Dictionary, claim: Dictionary, released_uid: String) -> Dictionary:
+	if not _records.has(character) or before.get("character_id") != character \
+		or _portal_mutation_pending(character) or _training_locked(character) \
+		or _portal_stages.has(character) or _loadout_pending.has(character) or _vitals_pending.has(character) or _vitals_stages.has(character): return {"ok": false, "code": "character_busy"}
+	var core := preload("res://scripts/net/owner_passive_replay.gd")
+	if not equivalent(core._core(before), core._core(state(character))): return {"ok": false, "code": "stormwood_authority_changed"}
+	var result := stormwood_answer_proposal(before, claim, released_uid)
+	if result.get("ok") != true: return result
+	if not equivalent(state(character), result.state): _replace_record(character, revision(character) + 1, result.state.duplicate(true))
+	result["revision"] = revision(character)
+	return result
+
+
 func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}
 

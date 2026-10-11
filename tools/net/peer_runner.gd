@@ -603,6 +603,10 @@ func _panel_input_observation() -> Dictionary:
 		"owner_script": script.resource_path if script != null else "",
 		"focus_path": str(focus.get_path()).substr(0, 512) if is_instance_valid(focus) else "",
 		"tree_paused": paused}
+	if is_instance_valid(owner) and owner.has_method("_owner_snapshot_block_reason"):
+		var game := get_root().get_node_or_null(^"Game")
+		if game != null and game.get("local") is RefCounted:
+			result["owner_block_reason"] = str(owner.call("_owner_snapshot_block_reason", game.get("local"))).substr(0, 512)
 	if script != null and script.resource_path == "res://scripts/ui/craft_panel.gd":
 		var pending: Variant = owner.get("_station_intent")
 		var status: Label = owner.get("_status") as Label
@@ -2979,8 +2983,25 @@ func _step_place_stand_in(args: Dictionary) -> Dictionary:
 	# repositions around it.
 	if node.get("home") != null:
 		node.set("home", node.global_position)
+	var encounter_id: String = str(manager.call("encounter_id"))
+	var instance: Variant = node.get("instance")
+	var generation: Variant = node.get("body_generation")
+	if generation == null and node.has_meta(&"tether_body_generation"):
+		generation = node.get_meta(&"tether_body_generation")
 	for i in maxi(0, int(args.get("settle", 20))):
 		await physics_frame
+	# A round retry can retire this opponent during the ordinary settle frame.
+	# Refuse the changed witness instead of reading a freed or replacement body.
+	if not is_instance_valid(manager) or _combat_manager() != manager:
+		return {"verdict": "FAIL", "detail": "the combat manager changed while the stand-in was settling"}
+	if not is_instance_valid(node) or node.is_queued_for_deletion():
+		return {"verdict": "FAIL", "detail": "the opponent was retired while the stand-in was settling"}
+	var current_generation: Variant = node.get("body_generation")
+	if current_generation == null and node.has_meta(&"tether_body_generation"):
+		current_generation = node.get_meta(&"tether_body_generation")
+	if manager.call("enemy_body") != node or str(manager.call("encounter_id")) != encounter_id \
+			or node.get("instance") != instance or current_generation != generation:
+		return {"verdict": "FAIL", "detail": "the encounter, opponent or body generation changed while the stand-in was settling"}
 	var p: Vector3 = node.global_position
 	return {"verdict": "PASS", "detail": "local stand-in '%s' stands at (%.2f, %.2f, %.2f)"
 		% [str(node.name), p.x, p.y, p.z]}
@@ -3481,6 +3502,7 @@ func _step_stormwood_hosted_quick(args: Dictionary) -> Dictionary:
 					"burst_awaiting_host": manager.get("_burst_awaiting_host"), "action": manager.get("_action"),
 					"encounter_id": manager.get("_encounter_id"), "fighting": manager.call("is_fighting"),
 					"input_available": manager.call("combat_input_available"),
+					"input_owner": _panel_input_observation(),
 					"local_record": hub.get("_local_record") if hub != null else null})
 			return {"verdict": "PASS" if action_observed > action_before else "FAIL",
 				"detail": "real hosted combat_quick input; observed action %d -> %d; retained refusal (may predate input)=%s%s"
@@ -5130,8 +5152,19 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 			opponent.set("max_hp", maxf(float(opponent.get("max_hp")), 100000.0))
 			opponent.set("hp", float(opponent.get("max_hp")))
 		(director.get("_encounter_host") as RefCounted).call("set_opponent_hp", encounter_id, 100000.0, 100000.0)
+	var committed := {}
+	if args.has("commit_peer") and args.has("commit_action"):
+		var commit_peer := int(args.commit_peer)
+		var original: Dictionary = (director.get("_encounter_host") as RefCounted).call(
+			"move_commit", encounter_id, commit_peer, int(args.commit_action))
+		if not original.is_empty():
+			committed = {"peer": commit_peer}
+			for key: String in ["action", "creature_uid", "move_id", "slot", "started_at_ms",
+				"strike_at_ms", "resolved", "binding"]:
+				committed[key] = original.get(key)
 	return {"verdict": "PASS", "detail": "tell pinned" if not bool(args.get("read_only", false)) else "tell state",
 		"data": {"host_now_ms": Time.get_ticks_msec(), "since_ms": int(body.call("tell_visible_since_ms")),
+			"move_commit": committed,
 			"winding_up": bool(body.call("is_winding_up")), "staggered": bool(body.get("_staggered")),
 			"host_breaks": _f22_host_breaks, "host_hits": _f22_host_hits,
 			"poise": float(body.get("_poise")),

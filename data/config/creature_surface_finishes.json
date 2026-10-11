@@ -1,0 +1,29 @@
+{
+  "enabled": true,
+  "species": {
+    "cloudfang": {
+      "shiny": {"body_hue": 0.095, "body_saturation": 0.43, "body_value_floor": 0.43, "body_value_scale": 1.0, "repaint_strength": 1.0, "accent_hue": 0.73, "accent_saturation": 0.40, "accent_value": 0.38, "accent_source_hue": [0.68, 0.80], "accent_source_value": 0.15, "accent_source_saturation": 0.22, "accent_energy": 0.0}
+    },
+    "galecrest": {
+      "shiny": {"body_source_hue": [0.56, 0.72], "body_source_saturation": 0.14, "body_hue": 0.065, "body_saturation": 0.55, "body_value_floor": 0.32, "body_value_scale": 1.6, "repaint_strength": 1.0, "accent_hue": 0.50, "accent_saturation": 0.56, "accent_value": 0.70, "accent_source_hue": [0.46, 0.55], "accent_source_value": 0.19, "accent_source_saturation": 0.40, "accent_energy": 0.12}
+    },
+    "sparkit": {
+      "shiny": {"body_hue": 0.51, "body_saturation": 0.48, "body_value_floor": 0.48, "body_value_scale": 1.1, "repaint_strength": 1.0, "accent_hue": 0.76, "accent_saturation": 0.48, "accent_value": 0.72, "accent_source_hue": [0.08, 0.20], "accent_source_value": 0.66, "accent_source_saturation": 0.32, "accent_energy": 0.12}
+    },
+    "stormtrail": {
+      "shiny": {"body_hue": 0.105, "body_saturation": 0.23, "body_value_floor": 0.52, "body_value_scale": 1.65, "repaint_strength": 1.0, "accent_hue": 0.51, "accent_saturation": 0.65, "accent_value": 0.85, "accent_source_hue": [0.48, 0.72], "accent_source_value": 0.26, "accent_source_saturation": 0.25, "accent_energy": 0.3}
+    },
+    "nightburrow": {
+      "shiny": {"body_hue": 0.12, "body_saturation": 0.2, "body_value_floor": 0.43, "body_value_scale": 1.4, "repaint_strength": 1.0, "accent_hue": 0.56, "accent_saturation": 0.46, "accent_value": 0.7, "accent_source_hue": [0.65, 0.88], "accent_source_value": 0.22, "accent_source_saturation": 0.2, "accent_energy": 0.16}
+    },
+    "riftfrill": {
+      "shiny": {"body_hue": 0.46, "body_saturation": 0.38, "body_value_floor": 0.38, "body_value_scale": 1.2, "repaint_strength": 1.0, "accent_hue": 0.10, "accent_saturation": 0.52, "accent_value": 0.86, "accent_source_hue": [0.67, 0.98], "accent_source_value": 0.4, "accent_source_saturation": 0.25, "accent_energy": 0.12}
+    },
+    "fulgocobra": {
+      "ordinary": {"repaint_strength": 0.0, "base_value_scale": 0.85, "accent_hue": 0.115, "accent_saturation": 0.62, "accent_value": 0.9, "accent_source_hue": [0.04, 0.19], "accent_source_value": 0.44, "accent_source_saturation": 0.27, "accent_energy": 0.42}
+    },
+    "stormraven": {
+      "ordinary": {"repaint_strength": 0.0, "base_value_scale": 0.72, "accent_hue": 0.52, "accent_saturation": 0.52, "accent_value": 0.82, "accent_source_hue": [0.49, 0.70], "accent_source_value": 0.52, "accent_source_saturation": 0.3, "accent_energy": 0.36}
+    }
+  }
+}

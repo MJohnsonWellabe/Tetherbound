@@ -17,7 +17,8 @@ const ACTIONS := ["master_win", "master_chest", "feast_cook", "feast_feed", "can
 
 
 static func stage(current: Dictionary, revision: int, action: String,
-		intent: Dictionary, context: Dictionary, schema_check: Callable) -> Dictionary:
+		intent: Dictionary, context: Dictionary, schema_check: Callable,
+		legacy_chest_replay: bool = false, legacy_research_replay: bool = false) -> Dictionary:
 	if action not in ACTIONS or not schema_check.is_valid() or current.size() != RECORD_FIELDS.size(): return deny("action_unavailable")
 	for field: String in RECORD_FIELDS:
 		if not current.has(field): return deny("incomplete_admitted_character")
@@ -32,7 +33,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 	if action == "candy_feed":
 		proposal = CANDY.stage(current, revision, intent, context)
 	elif action in RESEARCH.ACTIONS:
-		proposal = RESEARCH.stage(current, revision, action, intent, context)
+		proposal = RESEARCH.stage(current, revision, action, intent, context, legacy_research_replay)
 	elif action in BOUNTIES.ACTIONS:
 		proposal = BOUNTIES.stage(current, revision, action, intent, context)
 	elif action == "rematch_win":
@@ -68,7 +69,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 		# F32 replaced the provisional personal garden producer. It is omitted
 		# here; harvesting needs its actual world-stock reservation transaction.
 		proposal = BREAKTHROUGH.stage(current, revision, action, intent, context,
-			_owned_species_types.bind(current, str(intent.get("creature_uid", ""))), _prepare_feast_choice.bind(current.redesign_character.creatures), FEASTS.refresh_feast_moves)
+			_owned_species_types.bind(current, str(intent.get("creature_uid", ""))), _prepare_feast_choice.bind(current.redesign_character.creatures), FEASTS.refresh_feast_moves, legacy_chest_replay)
 	if proposal.get("ok") != true: return proposal.duplicate(true)
 	if proposal.get("duplicate") == true: return deny("reconcile_original_decision")
 	if not proposal.get("state") is Dictionary or not proposal.get("receipt") is String or proposal.receipt.is_empty(): return deny("invalid_action_proposal")

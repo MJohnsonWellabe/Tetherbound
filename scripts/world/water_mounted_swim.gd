@@ -29,6 +29,7 @@ func _physics_process(_delta: float) -> void:
 	if is_instance_valid(body):
 		body.clear_environment_velocity_modifier(&"water_buoyancy")
 		body.remove_meta("water_aquatic")
+		body.set_traversal_pose("")
 	body = current
 	state = STATE.new()
 	if body == null:
@@ -51,6 +52,7 @@ func _apply_buoyancy(actor: CharacterBody3D, delta: float) -> void:
 	var human: Node = player.swim_controller
 	var fighting: bool = world.get_node("CombatManager").is_fighting() or director.trainer_battle_active()
 	if depth <= float(_rules.human.exit_depth_m):
+		actor.set_traversal_pose("ride" if mounted else "")
 		if state.mode != STATE.Mode.LAND:
 			state.leave_water()
 		if mounted and human.state.mode != STATE.Mode.LAND:
@@ -72,6 +74,7 @@ func _apply_buoyancy(actor: CharacterBody3D, delta: float) -> void:
 		state.enter_water(mounted, world.field.water_level())
 	if fighting:
 		state.pause_for_combat()
+	actor.set_traversal_pose("" if fighting else "swim")
 	var flow: Vector3 = Vector3.ZERO if fighting else world.current_at(actor.global_position)
 	if mounted and str(actor.species_id) == "ripplet":
 		var game := get_node("/root/Game")

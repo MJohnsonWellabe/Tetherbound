@@ -2,22 +2,94 @@ extends RefCounted
 
 ## F36 review candidates. This creates instance-local clips from measured rig
 ## names without changing installed GLBs or durable character/world state.
-## Only a code-blind PASS may add a species to enabled_species. Capture tools
-## can preview an explicitly named body; ordinary gameplay cannot opt itself in.
+## The owner enabled the installed-roster poses for Phase 1 (2026-10-10).
+## Visual acceptance is separate; recipes still refuse a mismatched model/rig.
 const PATH := "res://data/creatures/f36_pose_candidates.json"
 const LIBRARY := &"f36_candidate"
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 static var _data: Dictionary = {}
 static var _hashes: Dictionary = {}
+static var _contact_heights: Dictionary = {}
+
+
+## Build readiness for an evolution which needs authored runtime poses. This
+## checks installed source/configuration, never a historical acceptance flag.
+## Check the imported scene as well as source data before a durable evolution.
+static func configured_for_species(id: String, model_path: String, required_roles: Array[String]) -> bool:
+	if _data.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
+		if parsed is Dictionary: _data = parsed
+	if id not in _data.get("enabled_species", []) or not ResourceLoader.exists(model_path): return false
+	var recipe: Dictionary = _data.get("species", {}).get(id, {})
+	if recipe.get("model", "") != model_path: return false
+	if FileAccess.file_exists(model_path):
+		if not _hashes.has(model_path): _hashes[model_path] = FileAccess.get_sha256(model_path)
+		if _hashes[model_path] != recipe.get("source_sha256", ""): return false
+	else:
+		var uid := str(recipe.get("resource_uid", ""))
+		if uid.is_empty() or ResourceLoader.get_resource_uid(model_path) != ResourceUID.text_to_id(uid): return false
+	var bones: Array = recipe.get("bones", [])
+	var rig: Dictionary = recipe.get("rig_contract", {})
+	var binds: Dictionary = recipe.get("bind_contract", {})
+	if bones.is_empty() or bones.size() != rig.size() or bones.size() != binds.size(): return false
+	for bone: String in bones:
+		if not rig.has(bone) or not binds.has(bone): return false
+		for matrix: Array in [rig[bone].get("rest", []), binds[bone]]:
+			if matrix.size() != 16: return false
+			for value: Variant in matrix:
+				if not (value is float or value is int) or not is_finite(float(value)): return false
+	var profile: Dictionary = _data.get("profiles", {}).get(str(recipe.get("profile", "")), {})
+	for role: String in required_roles:
+		var spec: Dictionary = profile.get(role, {})
+		var duration := float(spec.get("duration_s", 0.0))
+		var frames: Array = spec.get("frames", [])
+		if not is_finite(duration) or duration <= 0.0 or frames.size() < 2 or not spec.get("loop") is bool: return false
+		if float(frames[0].get("phase", -1)) != 0.0 or float(frames[-1].get("phase", -1)) != 1.0: return false
+		var last_phase := -1.0
+		for frame: Dictionary in frames:
+			var phase := float(frame.get("phase", -1.0))
+			if not is_finite(phase) or phase <= last_phase or phase > 1.0 \
+					or not is_finite(float(frame.get("pivot_roll_deg", INF))): return false
+			last_phase = phase
+			var rotations: Dictionary = frame.get("bones", {})
+			for bone: String in bones:
+				var degrees: Array = rotations.get(bone, [])
+				if degrees.size() != 3: return false
+				for value: Variant in degrees:
+					if not (value is float or value is int) or not is_finite(float(value)): return false
+	return _installed_scene_matches(model_path, recipe)
+
+
+static func _installed_scene_matches(model_path: String, recipe: Dictionary) -> bool:
+	var scene := ResourceLoader.load(model_path) as PackedScene
+	if scene == null: return false
+	# No SceneTree admission: no gameplay nodes, animation clocks or visuals run.
+	# UID alone is insufficient because an asset replacement can retain it.
+	var instance := scene.instantiate()
+	if instance == null: return false
+	var valid := false
+	if instance is Node3D:
+		var skeletons := instance.find_children("*", "Skeleton3D", true, false)
+		var players := instance.find_children("*", "AnimationPlayer", true, false)
+		if skeletons.size() == 1 and players.size() == 1:
+			var skeleton := skeletons[0] as Skeleton3D
+			var player := players[0] as AnimationPlayer
+			var animation_root := player.get_node_or_null(player.root_node)
+			valid = animation_root != null and not player.get_animation_list().is_empty() \
+				and (animation_root == skeleton or animation_root.is_ancestor_of(skeleton)) \
+				and _packaged_rig_matches(instance as Node3D, skeleton, recipe)
+	instance.free()
+	return valid
 
 
 static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
-		look: Dictionary, original: Dictionary) -> Dictionary:
+		look: Dictionary, original: Dictionary, presentation_species: String = "") -> Dictionary:
 	if _data.is_empty():
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 		if parsed is Dictionary:
 			_data = parsed
-	var id := str(body.get("species_id")).trim_prefix("water_")
+	var id := presentation_species if not presentation_species.is_empty() else str(body.get("species_id"))
+	id = id.trim_prefix("water_")
 	if id not in _data.get("enabled_species", []) and not bool(body.get_meta("f36_pose_preview", false)):
 		return original
 	var rows: Dictionary = _data.get("species", {})
@@ -25,10 +97,16 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 	var model_path := str(look.get("model", ""))
 	if recipe.is_empty() or model_path != str(recipe.get("model", "")):
 		return original
-	if not _hashes.has(model_path):
-		_hashes[model_path] = FileAccess.get_sha256(model_path)
-	if str(_hashes[model_path]) != str(recipe.get("source_sha256", "")):
-		push_warning("F36 pose recipe stale for %s; preserving installed clips" % id)
+	# Exported GLBs are imported PackedScenes, and their raw source bytes need
+	# not exist in the PCK. Keep the source hash check where bytes are present;
+	# packaged scenes retain the same model-path and skeleton validation below.
+	if FileAccess.file_exists(model_path):
+		if not _hashes.has(model_path):
+			_hashes[model_path] = FileAccess.get_sha256(model_path)
+		if str(_hashes[model_path]) != str(recipe.get("source_sha256", "")):
+			push_warning("F36 pose recipe stale for %s; preserving installed clips" % id)
+			return original
+	elif not ResourceLoader.exists(model_path):
 		return original
 	var skeletons := model.find_children("*", "Skeleton3D", true, false)
 	if skeletons.size() != 1:
@@ -38,6 +116,9 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		if skeleton.find_bone(bone) < 0:
 			push_warning("F36 pose recipe missing bone %s for %s" % [bone, id])
 			return original
+	if not FileAccess.file_exists(model_path) and not _packaged_rig_matches(model, skeleton, recipe):
+		push_warning("F36 packaged rig contract stale for %s; preserving installed clips" % id)
+		return original
 	var animation_root := player.get_node_or_null(player.root_node)
 	if animation_root == null:
 		return original
@@ -45,6 +126,16 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 	var pivot_path := animation_root.get_path_to(model)
 	var pivot_before := model.transform
 	var box := BOUNDS.measure(model)
+	var to_model := BOUNDS._chain(skeleton, model)
+	var contact_key := "%s:%s:%s:%s" % [recipe.source_sha256, recipe.profile,
+		pivot_before.basis, to_model]
+	var surfaces: Array[Dictionary] = []
+	if not _contact_heights.has(contact_key):
+		surfaces = _prepare_contact_surfaces(model, skeleton)
+		_contact_heights[contact_key] = {}
+	var contacts: Dictionary = _contact_heights[contact_key]
+	var pose_contacts: Array = contacts.get("_poses", [])
+	contacts["_poses"] = pose_contacts
 	var library := AnimationLibrary.new()
 	var clips := original.duplicate(true)
 	var profiles: Dictionary = _data.get("profiles", {})
@@ -56,9 +147,31 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		animation.loop_mode = Animation.LOOP_LINEAR if bool(spec.loop) else Animation.LOOP_NONE
 		for bone: String in recipe.bones:
 			var track := animation.add_track(Animation.TYPE_ROTATION_3D)
-			animation.track_set_path(track, NodePath("%s:%s" % [skeleton_path, bone]))
-			var rest := skeleton.get_bone_rest(skeleton.find_bone(bone)).basis.get_rotation_quaternion()
+			var bone_path := NodePath("%s:%s" % [skeleton_path, bone])
+			animation.track_set_path(track, bone_path)
+			var rest_transform := skeleton.get_bone_rest(skeleton.find_bone(bone))
+			var rest := rest_transform.basis.get_rotation_quaternion()
+			# Installed locomotion can animate root translation/scale. Pin the
+			# recipe to its measured rest hierarchy rather than inherit a bob.
+			var bone_position := animation.add_track(Animation.TYPE_POSITION_3D)
+			animation.track_set_path(bone_position, bone_path)
+			animation.position_track_insert_key(bone_position, 0.0, rest_transform.origin)
+			animation.position_track_insert_key(bone_position, animation.length, rest_transform.origin)
+			var has_position_offsets := false
 			for frame: Dictionary in spec.frames:
+				if frame.get("bone_positions", {}).has(bone):
+					has_position_offsets = true
+					break
+			var bone_scale := animation.add_track(Animation.TYPE_SCALE_3D)
+			animation.track_set_path(bone_scale, bone_path)
+			animation.scale_track_insert_key(bone_scale, 0.0, rest_transform.basis.get_scale())
+			animation.scale_track_insert_key(bone_scale, animation.length, rest_transform.basis.get_scale())
+			for frame: Dictionary in spec.frames:
+				var offsets: Dictionary = frame.get("bone_positions", {})
+				if has_position_offsets:
+					var offset: Array = offsets.get(bone, [0, 0, 0])
+					animation.position_track_insert_key(bone_position, float(frame.phase) * animation.length,
+						rest_transform.origin + Vector3(float(offset[0]), float(offset[1]), float(offset[2])))
 				var degrees: Array = frame.bones[bone]
 				var delta := Quaternion.from_euler(Vector3(float(degrees[0]), float(degrees[1]), float(degrees[2])) * PI / 180.0)
 				animation.rotation_track_insert_key(track, float(frame.phase) * animation.length, (rest * delta).normalized())
@@ -68,20 +181,199 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		animation.track_set_path(position_track, pivot_path)
 		for frame: Dictionary in spec.frames:
 			var rolled := pivot_before.basis * Basis(Vector3.BACK, deg_to_rad(float(frame.pivot_roll_deg)))
+			if frame.has("pivot_rotation_deg"):
+				var degrees: Array = frame.pivot_rotation_deg
+				rolled = pivot_before.basis * Basis(Quaternion.from_euler(
+					Vector3(float(degrees[0]), float(degrees[1]), float(degrees[2])) * PI / 180.0))
 			var position := pivot_before.origin
-			if role == "faint":
-				# Ground the rolled fitted envelope, rather than lifting by the
-				# gameplay radius (which ignores long/wide imported silhouettes).
-				# Native posed-vertex/slope contact remains a required visual proof.
-				var rolled_box := Transform3D(rolled, Vector3.ZERO) * box
-				position.y = -rolled_box.position.y
+			if role in recipe.get("grounded_roles", ["faint", "hit", "ride"]):
+				# The standing AABB includes unfolded legs/wings. Ground the
+				# actual skinned pose instead, without changing mesh or collision.
+				var sample := "%s:%s" % [role, frame.phase]
+				if not contacts.has(sample):
+					var offsets: Dictionary = frame.get("bone_positions", {})
+					# Compare complete binary values, not rounded strings or hash-only keys.
+					# Role/time do not affect skinning; identical pose inputs share
+					# the result while every role:phase entry remains available.
+					var inputs := var_to_bytes([frame.bones, offsets, rolled])
+					for previous: Dictionary in pose_contacts:
+						if previous.inputs == inputs:
+							contacts[sample] = previous.minimum
+							break
+					if not contacts.has(sample):
+						var minimum := _posed_minimum_y(skeleton, to_model, surfaces, frame.bones, rolled, offsets)
+						contacts[sample] = minimum if is_finite(minimum) else \
+							(Transform3D(rolled, Vector3.ZERO) * box).position.y
+						pose_contacts.append({"inputs": inputs, "minimum": contacts[sample]})
+				position.y = -float(contacts[sample])
 			var time := float(frame.phase) * animation.length
 			animation.rotation_track_insert_key(rotation_track, time, rolled.get_rotation_quaternion())
 			animation.position_track_insert_key(position_track, time, position)
 		library.add_animation(StringName(role), animation)
 		clips[role] = "%s/%s" % [LIBRARY, role]
+		if role == "hit":
+			clips["hit_start_phase"] = float(spec.get("start_phase", 0.0))
+			clips["hit_release_phase"] = float(spec.get("release_phase", spec.get("start_phase", 0.0)))
 	if player.has_animation_library(LIBRARY):
 		player.remove_animation_library(LIBRARY)
 	player.add_animation_library(LIBRARY, library)
 	body.set_meta("f36_pose_candidate_installed", true)
+	body.set_meta("f36_pose_rest_installed", roles.has("rest"))
 	return clips
+
+
+## Imported resources have a stable UID and preserve the measured skeleton
+## rest hierarchy and skin binds even when the exporter omits raw GLB bytes.
+static func _packaged_rig_matches(model: Node3D, skeleton: Skeleton3D, recipe: Dictionary) -> bool:
+	var uid := str(recipe.get("resource_uid", ""))
+	if uid.is_empty() or ResourceLoader.get_resource_uid(str(recipe.model)) != ResourceUID.text_to_id(uid):
+		return false
+	var bones: Dictionary = recipe.get("rig_contract", {})
+	var binds: Dictionary = recipe.get("bind_contract", {})
+	if bones.size() != skeleton.get_bone_count() or binds.is_empty():
+		return false
+	for name: String in bones:
+		var bone := skeleton.find_bone(name)
+		if bone < 0:
+			return false
+		var parent := skeleton.get_bone_parent(bone)
+		var parent_name := str(skeleton.get_bone_name(parent)) if parent >= 0 else ""
+		var contract: Dictionary = bones[name]
+		if parent_name != str(contract.parent) or not _transform_matches(skeleton.get_bone_rest(bone), contract.rest):
+			return false
+	var seen := {}
+	for mesh: MeshInstance3D in BOUNDS._mesh_instances(model):
+		if mesh.skin == null or BOUNDS._skeleton_for(mesh) != skeleton:
+			continue
+		var skin := mesh.skin
+		if skin.get_bind_count() != binds.size():
+			return false
+		for bind in skin.get_bind_count():
+			var bone := skin.get_bind_bone(bind)
+			if bone >= skeleton.get_bone_count():
+				return false
+			var name := str(skin.get_bind_name(bind)) if bone < 0 else str(skeleton.get_bone_name(bone))
+			if not binds.has(name) or not _transform_matches(skin.get_bind_pose(bind), binds[name]):
+				return false
+			seen[name] = true
+	return seen.size() == binds.size()
+
+
+static func _transform_matches(transform: Transform3D, column_major: Array) -> bool:
+	if column_major.size() != 16:
+		return false
+	var columns := [transform.basis.x, transform.basis.y, transform.basis.z, transform.origin]
+	var tolerance := float(_data.get("rig_tolerance", 0.0001))
+	for column in 4:
+		var actual: Vector3 = columns[column]
+		for row in 3:
+			if absf(actual[row] - float(column_major[column * 4 + row])) > tolerance:
+				return false
+	return true
+
+
+## Resolve the frame-invariant skin inputs once for a cold contact cache.
+## Every vertex and every influence is inspected with the same filters and
+## order as the contact calculation; only retained influences are stored.
+## Float64 storage preserves GDScript's scalar weight/total arithmetic.
+static func _prepare_contact_surfaces(model: Node3D, skeleton: Skeleton3D) -> Array[Dictionary]:
+	var surfaces: Array[Dictionary] = []
+	for mesh: MeshInstance3D in BOUNDS._mesh_instances(model):
+		if mesh.skin == null or BOUNDS._skeleton_for(mesh) != skeleton:
+			continue
+		var skin := mesh.skin
+		var bind_bones := PackedInt32Array()
+		var bind_poses: Array[Transform3D] = []
+		for bind in skin.get_bind_count():
+			var bone := skin.get_bind_bone(bind)
+			if bone < 0:
+				bone = skeleton.find_bone(skin.get_bind_name(bind))
+			var valid := bone >= 0 and bone < skeleton.get_bone_count()
+			bind_bones.append(bone if valid else -1)
+			bind_poses.append(skin.get_bind_pose(bind) if valid else Transform3D.IDENTITY)
+		for surface in mesh.mesh.get_surface_count():
+			var arrays := mesh.mesh.surface_get_arrays(surface)
+			var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+			var bones: Variant = arrays[Mesh.ARRAY_BONES]
+			var weights: Variant = arrays[Mesh.ARRAY_WEIGHTS]
+			if vertices.is_empty() or bones == null or weights == null \
+					or bones.size() != weights.size() or bones.size() % vertices.size() != 0:
+				continue
+			var stride := int(bones.size() / vertices.size())
+			var starts := PackedInt32Array()
+			var influences := PackedInt32Array()
+			var influence_weights := PackedFloat64Array()
+			var totals := PackedFloat64Array()
+			for vertex in vertices.size():
+				starts.append(influences.size())
+				var total := 0.0
+				for influence in stride:
+					var offset := vertex * stride + influence
+					var weight := float(weights[offset])
+					var bind := int(bones[offset])
+					if weight <= 0.0 or bind < 0 or bind >= bind_bones.size() or bind_bones[bind] < 0:
+						continue
+					influences.append(bind)
+					influence_weights.append(weight)
+					total += weight
+				totals.append(total)
+			starts.append(influences.size())
+			surfaces.append({"vertices": vertices, "bind_bones": bind_bones, "bind_poses": bind_poses,
+				"starts": starts, "influences": influences, "weights": influence_weights, "totals": totals})
+	return surfaces
+
+
+## Bake the collapse's contact once per source/profile/fitted basis. This
+## follows the renderer's skin transform, including named and eight-weight
+## binds, while leaving the live skeleton's current animation untouched.
+static func _posed_minimum_y(skeleton: Skeleton3D, to_model: Transform3D,
+		surfaces: Array[Dictionary], rotations: Dictionary, rolled: Basis, positions: Dictionary = {}) -> float:
+	var poses: Array[Transform3D] = []
+	poses.resize(skeleton.get_bone_count())
+	for bone in skeleton.get_bone_count():
+		var pose := skeleton.get_bone_rest(bone)
+		var offset: Array = positions.get(str(skeleton.get_bone_name(bone)), [0, 0, 0])
+		pose.origin += Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
+		var degrees: Array = rotations.get(str(skeleton.get_bone_name(bone)), [0, 0, 0])
+		var delta := Quaternion.from_euler(Vector3(float(degrees[0]), float(degrees[1]),
+			float(degrees[2])) * PI / 180.0)
+		var scale := pose.basis.get_scale()
+		pose.basis = Basis(pose.basis.get_rotation_quaternion() * delta)
+		pose.basis.x *= scale.x
+		pose.basis.y *= scale.y
+		pose.basis.z *= scale.z
+		poses[bone] = pose
+	# Skeleton indices need not be parent-first. Compose each parent chain.
+	var global_poses: Array[Transform3D] = []
+	for bone in skeleton.get_bone_count():
+		var pose := poses[bone]
+		var parent := skeleton.get_bone_parent(bone)
+		while parent >= 0:
+			pose = poses[parent] * pose
+			parent = skeleton.get_bone_parent(parent)
+		global_poses.append(pose)
+	var minimum := INF
+	for surface: Dictionary in surfaces:
+		var vertices: PackedVector3Array = surface.vertices
+		var bind_bones: PackedInt32Array = surface.bind_bones
+		var bind_poses: Array[Transform3D] = surface.bind_poses
+		var binds: Array[Transform3D] = []
+		for bind in bind_bones.size():
+			var bone := bind_bones[bind]
+			binds.append(to_model * global_poses[bone] * bind_poses[bind] if bone >= 0 else Transform3D.IDENTITY)
+		var starts: PackedInt32Array = surface.starts
+		var influences: PackedInt32Array = surface.influences
+		var weights: PackedFloat64Array = surface.weights
+		var totals: PackedFloat64Array = surface.totals
+		for vertex in vertices.size():
+			var point := Vector3.ZERO
+			var first := starts[vertex]
+			for influence in starts[vertex + 1] - first:
+				var offset := first + influence
+				var weight := weights[offset]
+				var bind := influences[offset]
+				point += (binds[bind] * vertices[vertex]) * weight
+			var total := totals[vertex]
+			if total > 0.0:
+				minimum = minf(minimum, (rolled * (point / total)).y)
+	return minimum

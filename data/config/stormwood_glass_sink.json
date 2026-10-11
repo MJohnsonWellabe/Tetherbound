@@ -1,0 +1,11 @@
+{
+  "scope": "client_presentation",
+  "edge_feather_m": 12.0,
+  "glass_colour": "#243c40",
+  "facet_colour": "#466266",
+  "seam_colour": "#739080",
+  "fracture_scale": 0.085,
+  "seam_width": 0.022,
+  "roughness": 0.31,
+  "metallic": 0.18
+}

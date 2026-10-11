@@ -27,6 +27,8 @@ uniform vec3 coast_moss_colour : source_color = vec3(0.32, 0.42, 0.24);
 uniform float coast_moss_amount = 0.65;
 uniform vec3 coast_sediment_colour : source_color = vec3(0.71, 0.61, 0.45);
 uniform float coast_sediment_height_m = 4.8;
+uniform float coast_sediment_texture_scale = 0.30;
+uniform float coast_sediment_texture_strength = 1.20;
 uniform vec3 coast_wet_colour : source_color = vec3(0.22, 0.29, 0.27);
 uniform float coast_wet_height_m = 1.6;
 uniform float coast_rock_detail = 0.45;
@@ -103,7 +105,9 @@ const MATERIAL := """
 			// slope transition; the real surface and its silhouette stay intact.
 			float patch = coast_noise(v_vertex.xz * coast_weathering_scale);
 			float grain = coast_noise(v_vertex.xz * coast_weathering_scale * 3.7);
-			rock = mix(coast_tint * 0.42, rock, coast_rock_detail);
+			// Weather the installed mineral texture without replacing its
+			// small relief with a flat tint at the ordinary camera distance.
+			rock *= mix(0.82, 1.0, coast_rock_detail);
 			rock *= mix(0.78, 1.15, patch);
 			float moss = smoothstep(0.48, 0.91, abs(coast_face.y) + (patch - 0.5) * 0.32);
 			moss *= smoothstep(1.8, 5.0, v_vertex.y) * coast_moss_amount;
@@ -122,17 +126,30 @@ const MATERIAL := """
 		mat.normal_map_depth = mix(mat.normal_map_depth, coast_normal_depth, coast_weight);
 	}
 	if (coast_weathering_enabled) {
-		// Sand and wet mineral stains soften the waterline without painting
-		// new walkable terrain or touching Veilfall's separate treatment.
+		// Texture-backed mineral sand and wet stains retain the actual shore
+		// relief. Smooth height normals keep masks from exposing raster faces.
 		float patch = coast_noise(v_vertex.xz * coast_weathering_scale);
 		float grain = coast_noise(v_vertex.xz * coast_weathering_scale * 3.7);
+		vec3 shore_normal = normalize(w_normal);
+		vec3 shore_weights = abs(shore_normal);
+		shore_weights /= max(dot(shore_weights, vec3(1.0)), 0.001);
+		float shore_scale = coast_sediment_texture_scale;
+		vec3 shore_tex = textureGrad(coast_dune_albedo, v_vertex.zy * shore_scale,
+			coast_dx.zy * shore_scale, coast_dy.zy * shore_scale).rgb * shore_weights.x
+			+ textureGrad(coast_dune_albedo, v_vertex.xz * shore_scale,
+				coast_dx.xz * shore_scale, coast_dy.xz * shore_scale).rgb * shore_weights.y
+			+ textureGrad(coast_dune_albedo, v_vertex.xy * shore_scale,
+				coast_dx.xy * shore_scale, coast_dy.xy * shore_scale).rgb * shore_weights.z;
+		float shore_grain = dot(shore_tex, vec3(0.299, 0.587, 0.114));
 		float outside = smoothstep(coast_exclude_radius, coast_exclude_radius + 30.0, length(v_vertex.xz - coast_exclude_centre));
 		float strand = 1.0 - smoothstep(coast_sediment_height_m * 0.35, coast_sediment_height_m, v_vertex.y + (patch - 0.5) * 2.8);
-		strand *= smoothstep(0.25, 0.85, abs(coast_face.y)) * outside;
+		strand *= smoothstep(0.25, 0.85, abs(shore_normal.y)) * outside;
 		vec3 sediment = coast_sediment_colour * mix(0.70, 0.96, grain);
+		sediment *= clamp(1.0 + (shore_grain - 0.70) * coast_sediment_texture_strength, 0.68, 1.22);
 		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, sediment, strand * 0.8);
 		float wet = (1.0 - smoothstep(0.05, coast_wet_height_m, v_vertex.y + (patch - 0.5) * 0.6)) * outside;
-		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, coast_wet_colour * mix(0.65, 1.0, grain), wet * 0.65);
+		vec3 wet_surface = mat.albedo_height.rgb * coast_wet_colour / max(coast_sediment_colour, vec3(0.05));
+		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, wet_surface, wet * 0.65);
 		mat.normal_rough.a = mix(mat.normal_rough.a, 0.55, wet);
 	}
 	if (coast_dunes_enabled) {

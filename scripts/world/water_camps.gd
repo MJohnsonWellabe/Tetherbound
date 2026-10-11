@@ -44,6 +44,8 @@ func build(owner_world: Node3D) -> void:
 		add_child(bench)
 		bench.global_position = _grounded(craft)
 		bench.build_real(WORKBENCH, {}, Vector3.ONE * float(tuning.workbench_scale))
+		if not world.simulation_only:
+			preload("res://scripts/world/water_camp_workbench_presentation.gd").attach(bench)
 		rest.get_node("CraftInteractable").global_position = bench.global_position + Vector3.UP * 0.6
 		var fire := FIRE.new()
 		fire.name = str(row.id) + "_fire"

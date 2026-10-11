@@ -8,6 +8,7 @@ extends Control
 const TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 const COMMAND_METER := preload("res://scripts/ui/tether_command_meter.gd")
 const SCREEN := preload("res://scripts/ui/system_screen.gd")
+const GLYPH := preload("res://scripts/ui/input_glyph.gd")
 var _read := Callable()
 var _commands: Control
 var _moves: VBoxContainer
@@ -15,6 +16,8 @@ var _ring: Control
 var _cells: Dictionary = {}
 var _uid := ""
 var _meter_caption: Label
+var _command_box: VBoxContainer
+var _ultimate_glyph: Label
 
 class UltimateRing extends Control:
 	var fraction := 0.0
@@ -40,8 +43,7 @@ func _ready() -> void:
 	visible = false
 	var cfg: Dictionary = SCREEN.config().get("combat", {})
 	var left := VBoxContainer.new()
-	left.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	left.position = Vector2(float(cfg.get("inset", 56)), -float(cfg.get("command_bottom", 500)))
+	_command_box = left
 	add_child(left)
 	_commands = COMMAND_METER.new()
 	left.add_child(_commands)
@@ -56,6 +58,7 @@ func _ready() -> void:
 	_ring.custom_minimum_size = Vector2(80, 80)
 	ultimate.add_child(_ring)
 	var rb := Label.new()
+	_ultimate_glyph = rb
 	rb.text = "RB"
 	rb.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	rb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -63,23 +66,42 @@ func _ready() -> void:
 	rb.add_theme_font_size_override("font_size", TOKENS.FONT_HEADING)
 	_ring.add_child(rb)
 	_meter_caption = _label(ultimate, "Ultimate")
-	var grid := GridContainer.new()
-	grid.columns = 2
-	grid.add_theme_constant_override("h_separation", 12)
-	grid.add_theme_constant_override("v_separation", 8)
+	var grid := Control.new()
+	var width := float(cfg.get("move_width", 420))
+	var row_height := float(cfg.get("move_row_height", 68))
+	grid.custom_minimum_size = Vector2(width, row_height * 3.0)
 	_moves.add_child(grid)
-	# Y above X/B; A is explicit dodge rather than a hidden fourth attack.
+	var positions := {"charged": Vector2(width * 0.25, 0),
+		"quick": Vector2(0, row_height), "utility": Vector2(width * 0.5, row_height),
+		"dodge": Vector2(width * 0.25, row_height * 2.0)}
 	for slot: String in ["charged", "quick", "utility", "dodge"]:
 		var cell := VBoxContainer.new()
-		cell.custom_minimum_size.x = float(cfg.get("move_width", 420)) * 0.5 - 6
+		cell.custom_minimum_size.x = width * 0.5 - 6
+		cell.position = positions[slot]
 		grid.add_child(cell)
 		var title := _label(cell, "")
+		title.autowrap_mode = TextServer.AUTOWRAP_OFF
+		title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		cell.size.x = cell.custom_minimum_size.x
 		var cooldown := ProgressBar.new()
 		cooldown.show_percentage = false
 		cooldown.custom_minimum_size.y = 8
 		cell.add_child(cooldown)
 		_cells[slot] = {"title": title, "cooldown": cooldown}
 	TOKENS.make_text_legible(self)
+
+func occupied_controls() -> Array[Control]:
+	return [_command_box, _moves]
+
+func command_rect() -> Rect2:
+	return _command_box.get_global_rect() if is_instance_valid(_command_box) else Rect2()
+
+func _layout_commands() -> void:
+	var cfg: Dictionary = SCREEN.config().get("combat", {})
+	var extent := _command_box.get_combined_minimum_size()
+	_command_box.size = extent
+	_command_box.position = Vector2((size.x - extent.x) * 0.5,
+		size.y - float(cfg.get("command_inset_bottom", 56)) - extent.y)
 
 func _label(parent: Node, text: String) -> Label:
 	var label := Label.new()
@@ -110,14 +132,21 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 	_ring.set("armed", raw.get("ultimate_armed") == true)
 	_ring.set("arm_fraction", clampf(float(raw.get("arm_fraction", 0)), 0, 1))
 	_ring.queue_redraw()
+	var arm_glyph := GLYPH.pad_button_name_for_action("combat_ultimate_arm") if using_pad else GLYPH.key_name_for_action("combat_ultimate_arm")
+	_ultimate_glyph.text = arm_glyph
+	var choices := " / ".join([str(raw.slots.quick.glyph), str(raw.slots.charged.glyph), str(raw.slots.utility.glyph)])
 	_meter_caption.text = "Ultimate · %d%%\n%s" % [int(clampf(meter / maximum, 0, 1) * 100),
 		"Ultimate unavailable" if raw.get("ultimate_available", true) != true else \
-		"Choose X / Y / B" if raw.get("ultimate_armed") == true else "Ready · Tap RB" if meter >= maximum else "Build with landed hits"]
+		"Choose " + choices if raw.get("ultimate_armed") == true else "Ready · Tap " + arm_glyph if meter >= maximum else ""]
 	_commands.call("present", raw.commands, using_pad)
+	_layout_commands()
 	for slot: String in _cells:
 		var row: Dictionary = raw.slots[slot]
 		var label: Label = _cells[slot].title
-		label.text = "%s %s%s" % [row.glyph, row.name, "" if row.ready else " · Unavailable"]
+		label.text = "%s %s%s" % [row.glyph, row.name, "" if row.ready else " ×"]
+		# The armed move choice reads by an outline as well as colour.
+		label.add_theme_color_override("font_outline_color", TOKENS.TEAL_SOFT if raw.get("ultimate_armed") == true and slot != "dodge" else Color("#17262d"))
+		label.add_theme_constant_override("outline_size", 3 if raw.get("ultimate_armed") == true and slot != "dodge" else 2)
 		label.add_theme_color_override("font_color", TOKENS.TEAL_SOFT if row.ready else TOKENS.TEXT_SECONDARY)
 		var cooldown: ProgressBar = _cells[slot].cooldown
 		var total := float(row.get("cooldown_total_s", 0))

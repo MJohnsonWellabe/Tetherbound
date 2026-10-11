@@ -31,6 +31,25 @@ static func valid(raw: Variant, schema_check: Callable,
 	# cannot turn a saved row or packet into a different accepted operation.
 	var proposal := ACTIONS.stage(raw.before, int(raw.character_revision) - 1,
 		raw.action, raw.intent, raw.host_context, schema_check)
+	if raw.action == "master_chest" and (proposal.get("ok") != true \
+			or not ESSENCE._equivalent(proposal.get("state"), raw.after)):
+		# Pre-supplies saves retain their exact candy/recipe-only decision. This
+		# read-only replay still runs every source, identity and schema check;
+		# it cannot retrofit supplies, alter a receipt or commit an inventory.
+		# Production stages never receive this internal compatibility argument.
+		proposal = ACTIONS.stage(raw.before, int(raw.character_revision) - 1,
+			raw.action, raw.intent, raw.host_context, schema_check, true)
+	if raw.action in ["research_event", "research_claim"] and (proposal.get("ok") != true \
+			or not ESSENCE._equivalent(proposal.get("state"), raw.after)):
+		var before_log: Variant = raw.before.get("redesign_character", {}).get("research")
+		var after_log: Variant = raw.after.get("redesign_character", {}).get("research")
+		if (before_log == null or (before_log is Dictionary and before_log.size() == 3)) \
+			and after_log is Dictionary and after_log.size() == 3:
+			# Preserve an already-decided revision1 research row exactly. This
+			# runs the same authority/schema/receipt checks with frozen catalogue
+			# membership and title requirements, without upgrading either snapshot.
+			proposal = ACTIONS.stage(raw.before, int(raw.character_revision) - 1,
+				raw.action, raw.intent, raw.host_context, schema_check, false, true)
 	return proposal.get("ok") == true and proposal.receipt == raw.receipt \
 		and ESSENCE._equivalent(proposal.state, raw.after) \
 		and not raw.before.redesign_character.transaction_receipts.has(raw.receipt) \

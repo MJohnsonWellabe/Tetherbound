@@ -1,10 +1,20 @@
 {
-  "_comment": "F39/P2-010 local presentation candidate: preserve production fall ribbons, installed rock masses, plunge spray and all terrain/traversal geometry. A continuous distant water core bridges sub-pixel noise breaks while retaining near flowing strands. Default-off until matched native High/Medium and Low readability review. No persistent state, new asset or renderer default.",
+  "_comment": "P2-010 default-on continuous falling water. Each cross-strand follows the actual terrain with a small standoff; flow colours the connected core and each strand fades into its own plunge distance. Projection pull and minimum angular widening operate only at the far terrain handoff, leaving plateau/near stands grounded. Physical terrain, traversal, offshore water and installed rock masses are unchanged.",
   "enabled": true,
+  "geometry": {
+    "sample_step_m": 3.0,
+    "standoff_m": 0.8
+  },
   "shader": {
-    "visual_far_core_floor": 0.64,
+    "continuous_core_floor": 0.72,
+    "presentation_pull_start_m": 900.0,
+    "presentation_pull_end_m": 1100.0,
+    "min_angular_width": 0.004,
+    "lip_feather_m": 2.0,
+    "foot_feather_m": 10.0,
+    "visual_far_core_floor": 0.82,
     "visual_far_edge_floor": 0.82,
-    "visual_far_start_m": 850.0,
-    "visual_far_end_m": 2100.0
+    "visual_far_start_m": 400.0,
+    "visual_far_end_m": 1100.0
   }
 }

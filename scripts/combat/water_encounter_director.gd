@@ -7,12 +7,18 @@ const WATER_PERF := preload("res://scripts/world/performance_config.gd")
 const REMOTE_CREATURE_BODY := preload("res://scripts/creatures/remote_creature.gd")
 const WATER_DATA := preload("res://scripts/world/water_encounter_runtime_data.gd")
 const RANKS := preload("res://scripts/characters/npc_ranks.gd")
+const TRAINER_APPEARANCE := preload("res://scripts/characters/appearance_variants.gd")
 const INTERACTION := preload("res://scripts/world/interactable.gd")
 var _wanted_sites: Dictionary = {}
 var _restoring_surface_position := Vector3.INF
 ## Reused NPC bodies whose Greet prompt this director switched off for their
 ## own trainer fight, so only those are switched back on afterwards.
 var _muted_greetings: Dictionary = {}
+## New surface bodies wait unpublished with the same card while a ring occupies
+## their authored site. This is transient residency, never a durable generation.
+var _water_surface_pending: Dictionary = {}
+var _water_site_arena_retry_ms: Dictionary = {}
+var _water_arena_admission_wild: Node3D = null
 
 func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 	var service := get_parent().get_node_or_null("RippletWaterService")
@@ -24,7 +30,10 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	var riding := get_parent().get_node_or_null("RidingController")
 	if riding != null and bool(riding.diving): return
+	var previous := _water_arena_admission_wild
+	_water_arena_admission_wild = wild
 	super._start_fight(wild, opponent_owned)
+	_water_arena_admission_wild = previous
 
 func can_challenge(spec: Dictionary) -> bool:
 	var riding := get_parent().get_node_or_null("RidingController")
@@ -200,14 +209,87 @@ func setup(world: Node, bodies: Dictionary = {}, data: Dictionary = {}) -> void:
 ## of the player for `combat_arena_bounds_at`, as the Warrens and stronghold
 ## answer for their rooms; -1 means no opinion.
 func combat_arena_bounds_at(x: float, z: float) -> float:
-	for named: Dictionary in encounter_config.get("named_encounters", []):
-		if str(named.get("arena_mode", "")) != "shallow_surface" or not named.has("arena_radius_m"):
-			continue
-		var at: Variant = named.get("position")
-		var centre := Vector2(float(at[0]), float(at[2])) if at is Array else (Vector2(at.x, at.z) if at is Vector3 else Vector2.INF)
-		if Vector2(x, z).distance_to(centre) <= float(named.get("arena_capture_radius_m", 16.0)):
-			return float(named.arena_radius_m)
+	var actor := _water_arena_admission_wild if is_instance_valid(_water_arena_admission_wild) else _engaged_with
+	var context := authored_named_wild_arena_context(actor)
+	if context.is_empty(): return -1.0
+	var centre: Vector3 = context.centre
+	if Vector2(x, z).distance_to(Vector2(centre.x, centre.z)) <= float(context.capture_radius_m):
+		return float(context.radius)
 	return -1.0
+
+
+## Only the actual resident named actor can supply its authored arena. A nearby
+## ordinary wild never borrows the named bay's cap. The manager independently
+## validates this mounted producer and both rendered footprints before seating.
+func authored_named_wild_arena_context(wild: Node3D) -> Dictionary:
+	if not is_instance_valid(wild) or not wild.is_inside_tree() or not wild.visible \
+			or wild.is_queued_for_deletion() or bool(wild.get("trainer_owned")) \
+			or not _wild_creatures.has(wild) or wild.get_parent() != get_parent(): return {}
+	var id := str(wild.get_meta(&"water_named_encounter", ""))
+	var named := find_id(encounter_config.get("named_encounters", []), id)
+	if named.is_empty() or not named.has("arena_radius_m") or bool(named.get("trainer_owned", true)): return {}
+	var site := find_id(encounter_config.get("wild_sites", []), str(named.get("replaces_wild_site_id", "")))
+	if site.is_empty() or str(site.get("named_replacement_id", "")) != id \
+			or not (_site_members.get(str(site.id), []) as Array).has(wild): return {}
+	var plan := named_spawn_plan(site, encounter_config.get("named_encounters", []))
+	var instance: RefCounted = wild.get("instance")
+	if plan.is_empty() or instance == null or str(instance.get("species_id")) != str(plan.species): return {}
+	var centre := _vector3_of(named.position)
+	var radius := float(named.arena_radius_m)
+	var capture := float(named.get("arena_capture_radius_m", 16.0))
+	if not centre.is_finite() or not is_finite(radius) or radius <= 0.0 \
+			or not is_finite(capture) or capture <= 0.0: return {}
+	var support := str(site.get("placement_mode", "ground"))
+	if (support == "water_surface") != (wild is SurfaceWild): return {}
+	var context := {"source": self, "wild": wild, "named_encounter_id": id,
+		"species_id": str(plan.species), "centre": centre, "radius": radius,
+		"capture_radius_m": capture, "arena_mode": str(named.get("arena_mode", "")), "support_mode": support}
+	if wild is SurfaceWild: context["surface_origin_y"] = (wild as SurfaceWild).surface_origin_y()
+	return context
+
+
+## Existing floating-seat policy, read only by the local admission consumer.
+## A registered surface wild is supported by the actual Water column; it does
+## not stand on a fabricated collider or on the seabed. The manager still tests
+## its full measured rendered box against real solids, including submerged art.
+func surface_wild_admission_context(wild: Node3D) -> Dictionary:
+	if not wild is SurfaceWild or not is_instance_valid(wild) or not wild.is_inside_tree() \
+			or not wild.visible or wild.is_queued_for_deletion() or bool(wild.get("trainer_owned")) \
+			or realm_world != get_parent() or wild.get_parent() != realm_world \
+			or not _wild_creatures.has(wild): return {}
+	var site_id := str(wild.get_meta(&"water_site_id", ""))
+	var site := find_id(encounter_config.get("wild_sites", []), site_id)
+	if site.is_empty() or str(site.get("placement_mode", "ground")) != "water_surface" \
+			or str(wild.get_meta(&"water_placement_mode", "")) != "water_surface" \
+			or not (_site_members.get(site_id, []) as Array).has(wild): return {}
+	var index := int(wild.get_meta(&"water_member_index", -1))
+	var table := find_id(chapter.get("encounter_tables", []), str(site.get("table_id", "")))
+	var expected_species := ""
+	for plan: Dictionary in site_spawn_plans(site, table, encounter_config.get("named_encounters", []), world_seed()):
+		if int(plan.member_index) == index: expected_species = str(plan.species)
+	var instance: RefCounted = wild.get("instance")
+	if instance == null or expected_species.is_empty() or str(instance.get("species_id")) != expected_species: return {}
+	var field: RefCounted = realm_world.get("field")
+	if field == null or not field.has_method("water_level"): return {}
+	var sea := float(field.call("water_level"))
+	var surface := float(site.get("surface_y_m", NAN))
+	var submerge := float(site.get("surface_submerge_fraction", NAN))
+	if not is_finite(sea) or not is_finite(surface) or absf(surface - sea) > 0.01 \
+			or not is_finite(submerge) or submerge < 0.0 or submerge > 0.5 \
+			or not is_equal_approx(float((wild as SurfaceWild).water_surface_y), surface) \
+			or not is_equal_approx(float((wild as SurfaceWild).surface_submerge_fraction), submerge): return {}
+	var origin := (wild as SurfaceWild).surface_origin_y()
+	if not is_finite(origin): return {}
+	return {"source": self, "wild": wild, "site_id": site_id, "species_id": expected_species,
+		"water_level_y": sea, "surface_origin_y": origin,
+		"surface_y": surface, "surface_submerge_fraction": submerge}
+
+
+func surface_wild_supports_at(wild: Node3D, point: Vector3) -> bool:
+	var context := surface_wild_admission_context(wild)
+	if context.is_empty() or not point.is_finite() or not realm_world.has_method("ground_height_at"): return false
+	var ground := float(realm_world.call("ground_height_at", point.x, point.z))
+	return is_finite(ground) and ground < float(context.water_level_y)
 
 
 func occupied_positions() -> Array[Vector3]:
@@ -244,6 +326,7 @@ static func select_sites(sites: Array, positions: Array[Vector3], radius: float,
 	return result
 
 func _spawn_available_sites() -> void:
+	_clear_stale_surface_spawns()
 	var eligible: Array = []
 	for site: Dictionary in encounter_config.get("wild_sites", []):
 		var table := find_id(chapter.get("encounter_tables", []), str(site.table_id))
@@ -259,10 +342,14 @@ func _spawn_available_sites() -> void:
 	for id: String in _wanted_sites:
 		if _site_spawned.has(id) or _site_failures.has(id):
 			continue
+		if Time.get_ticks_msec() < int(_water_site_arena_retry_ms.get(id, 0)): continue
 		var site: Dictionary = _wanted_sites[id]
 		var table := find_id(chapter.get("encounter_tables", []), str(site.table_id))
 		var centre := _vector3_of(site.position)
 		var members: Array = []
+		for resident: Variant in _site_members.get(id, []):
+			if is_instance_valid(resident) and not (resident as Node).is_queued_for_deletion(): members.append(resident)
+		var arena_deferred := false
 		var plans := site_spawn_plans(site, table,
 			encounter_config.get("named_encounters", []), world_seed())
 		var authored_members: Array = site.get("member_anchors", [])
@@ -303,7 +390,12 @@ func _spawn_available_sites() -> void:
 			continue
 		for plan: Dictionary in plans:
 			var index := int(plan.member_index)
+			var already_admitted := false
+			for resident: Node3D in members:
+				if int(resident.get_meta(&"water_member_index", -1)) == index: already_admitted = true
+			if already_admitted: continue
 			var opts: Dictionary = plan.opts.duplicate(true)
+			opts["water_pending_site"] = id
 			opts.ordinary_trait_alpha = not str(plan.id).is_empty()
 			var spawn_at := _vector3_of(plan.position)
 			if not authored_members.is_empty():
@@ -320,6 +412,7 @@ func _spawn_available_sites() -> void:
 					float(site.get("surface_submerge_fraction", 0.28)))
 			else:
 				wild = spawn_wild(str(plan.species), spawn_at, opts)
+			if wild == null and _wild_spawn_arena_blocked: arena_deferred = true
 			if wild != null:
 				settle_spawn_transform(wild)
 				var initial_yaw := float(opts.get("initial_yaw_deg", NAN))
@@ -327,6 +420,7 @@ func _spawn_available_sites() -> void:
 					wild.rotation.y = deg_to_rad(initial_yaw)
 					wild.set_meta("water_authored_rest_yaw_deg", initial_yaw)
 				wild.set_meta("water_site_id", id)
+				wild.set_meta(&"water_member_index", index)
 				wild.set_meta("water_placement_mode", str(site.get("placement_mode", "ground")))
 				# ROAD pairs are authored sightline ecology, not combat gates. Water
 				# owns this admission loop instead of Cloudreach's, so carry over the
@@ -357,9 +451,12 @@ func _spawn_available_sites() -> void:
 		_site_members[id] = members
 		if plans.size() == int(site.get("count", 1)) and members.size() == plans.size():
 			_site_spawned[id] = true
-		else:
+			_water_site_arena_retry_ms.erase(id)
+		elif not arena_deferred:
 			_site_failures[id] = true
 			push_warning("Water site lacks a valid authored encounter or supported creature footing: " + id)
+		else:
+			_water_site_arena_retry_ms[id] = Time.get_ticks_msec() + 500
 
 func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 	# A connected guest publishes only its mirror's retained packet (checked
@@ -377,6 +474,8 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 		var original_once := str(plan.opts.get("once_id", ""))
 		var opts: Dictionary = plan.opts.duplicate(true)
 		opts.retained_alpha_pending = true
+		opts["water_pending_site"] = str(site.id)
+		opts["water_retained_packet"] = packet.duplicate(true)
 		# The original once flag continues to suppress first rewards. The new
 		# durable generation admits only this fresh authored body and UID.
 		if int(packet.captured_from.spawn_generation) > 1: opts.once_id = ""
@@ -398,6 +497,7 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 		wild.set_meta("water_named_encounter", site_id)
 		if int(packet.captured_from.spawn_generation) == 1: wild.set_meta("water_reward_role", str(plan.reward_role))
 		wild.set_meta("water_site_id", str(site.id))
+		wild.set_meta(&"water_member_index", int(plan.get("member_index", 0)))
 		wild.set_meta("water_placement_mode", str(site.get("placement_mode", "ground")))
 		if plan.get("combat_camera") is Dictionary and not plan.combat_camera.is_empty(): wild.set_meta("combat_camera", plan.combat_camera.duplicate(true))
 		_once_only[wild] = original_once
@@ -430,46 +530,130 @@ static func _surface_member_position(centre: Vector3, count: int, index: int, ra
 
 func _spawn_surface_wild(species: String, spot: Vector3, opts: Dictionary,
 		surface_y: float, submerge_fraction: float) -> Node3D:
+	_wild_spawn_arena_blocked = false
 	if not SPECIES.has(species):
 		push_error("spawn_surface_wild('%s') names a species that is not in species.json" % species)
 		return null
 	var once_id := str(opts.get("once_id", ""))
+	var key := str(opts.get("name", "SurfaceWild_%s_%d" % [species, _wild_creatures.size() + 1]))
 	if _once_cleared(once_id):
+		_discard_pending_surface(key)
 		return null
-	var wild: Node3D = CREATURE_SCENE.instantiate()
-	wild.set_script(SurfaceWild)
-	wild.name = str(opts.get("name", "SurfaceWild_%s_%d" % [species, _wild_creatures.size() + 1]))
-	var parent: Node = opts.get("parent", null) as Node
-	if not is_instance_valid(parent):
-		parent = get_parent()
-	parent.add_child(wild)
-	wild.call("populate", species, _player)
-	var opt_combat: Variant = opts.get("combat", {})
-	if opt_combat is Dictionary and not opt_combat.is_empty():
-		wild.set("combat_override", opt_combat.duplicate(true))
-	var level := int(opts.get("level", 0))
-	if level > 0:
-		_set_fixed_level(wild, species, level)
-	if opts.has("aggressive"):
-		wild.set("aggressive", bool(opts.aggressive))
-	var wild_cfg: Dictionary = MATH.config().get("wild", {}).duplicate()
-	if opts.has("wander_radius"):
-		wild_cfg["wander_radius"] = opts.wander_radius
-	wild.call("configure", wild_cfg)
-	wild.call("configure_water_surface", surface_y, submerge_fraction)
-	if not bool(wild.call("place_on_ground", spot)):
-		wild.free()
+	var pending: Dictionary = _water_surface_pending.get(key, {})
+	if not pending.is_empty() and (not _pending_surface_current(pending) \
+			or pending.get("species") != species or pending.get("spot") != spot \
+			or pending.get("opts") != opts or pending.get("surface_y") != surface_y \
+			or pending.get("submerge") != submerge_fraction):
+		_discard_pending_surface(key)
+		_wild_spawn_arena_blocked = true
+		return null # Retire stale unpublished context; the next poll uses its new source.
+	var wild: Node3D = pending.get("body")
+	if not is_instance_valid(wild):
+		wild = CREATURE_SCENE.instantiate()
+		wild.set_script(SurfaceWild)
+		wild.name = key
+		wild.visible = false
+		wild.process_mode = Node.PROCESS_MODE_DISABLED
+		var parent: Node = opts.get("parent", null) as Node
+		if not is_instance_valid(parent): parent = get_parent()
+		parent.add_child(wild)
+		if not bool(wild.call("populate", species, _player)):
+			wild.free()
+			return null
+		var opt_combat: Variant = opts.get("combat", {})
+		if opt_combat is Dictionary and not opt_combat.is_empty():
+			wild.set("combat_override", opt_combat.duplicate(true))
+		var level := int(opts.get("level", 0))
+		if level > 0: _set_fixed_level(wild, species, level)
+		if opts.has("aggressive"): wild.set("aggressive", bool(opts.aggressive))
+		var wild_cfg: Dictionary = MATH.config().get("wild", {}).duplicate()
+		if opts.has("wander_radius"): wild_cfg["wander_radius"] = opts.wander_radius
+		wild.call("configure", wild_cfg)
+		wild.call("configure_water_surface", surface_y, submerge_fraction)
+		if not bool(wild.call("place_on_ground", spot)):
+			wild.free()
+			return null
+		wild.set("home", wild.global_position)
+		wild.set("_target", wild.global_position)
+		var game := get_node_or_null("/root/Game")
+		var site := find_id(encounter_config.get("wild_sites", []), str(opts.get("water_pending_site", "")))
+		pending = {"body": wild, "once_id": once_id,
+			"world": weakref(game.world) if game != null else null,
+			"realm": weakref(realm_world),
+			"epoch": str(_session.call("_altar_current_epoch")) if _session != null else "",
+			"generation": _population_generation, "species": species, "spot": spot,
+			"opts": opts.duplicate(true), "surface_y": surface_y, "submerge": submerge_fraction,
+			"site": str(opts.get("water_pending_site", "")),
+			"site_definition": site.duplicate(true),
+			"named_definition": find_id(encounter_config.get("named_encounters", []),
+				str(site.get("named_replacement_id", ""))).duplicate(true),
+			"packet": opts.get("water_retained_packet", {}).duplicate(true)}
+		_water_surface_pending[key] = pending
+	# The same unpublished body/card waits at the same authored placement.
+	# No traits/once receipt/ecology publication happens on an occupied ring.
+	if not _active_arena_clear(wild.global_position, _ambient_render_radius(wild), wild):
+		_wild_spawn_arena_blocked = true
 		return null
-	wild.set("home", wild.global_position)
-	wild.set("_target", wild.global_position)
+	_water_surface_pending.erase(key)
 	_wild_homes[wild] = wild.global_position
+	wild.call("set_clearance_check", Callable(self, "_placed_wild_target_clear").bind(wild))
+	wild.call("set_arena_clearance_check", Callable(self, "_arena_wander_guard").bind(wild))
 	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
 	if not bool(opts.get("retained_alpha_pending", false)):
 		_initialize_wild_traits(wild, bool(opts.get("ordinary_trait_alpha", false)))
 	_wild_creatures.append(wild)
 	if not once_id.is_empty():
 		_once_only[wild] = once_id
+	wild.process_mode = Node.PROCESS_MODE_INHERIT
+	wild.visible = not bool(opts.get("retained_alpha_pending", false))
 	return wild
+
+
+func _pending_surface_current(pending: Dictionary) -> bool:
+	var body: Node3D = pending.get("body")
+	if not is_instance_valid(body) or body.is_queued_for_deletion(): return false
+	var realm: WeakRef = pending.get("realm")
+	if realm == null or realm.get_ref() != realm_world or realm_world != get_parent() \
+		or body.get_parent() != realm_world: return false
+	if pending.get("generation") != _population_generation: return false
+	var site_id := str(pending.get("site", ""))
+	var packet: Dictionary = pending.packet
+	if _site_failures.has(site_id) or (packet.is_empty() and _site_spawned.has(site_id)) \
+		or not _wanted_sites.has(site_id): return false
+	var site := find_id(encounter_config.get("wild_sites", []), site_id)
+	if site.is_empty() or site != pending.get("site_definition") \
+		or str(site.get("placement_mode", "ground")) != "water_surface": return false
+	if find_id(encounter_config.get("named_encounters", []), str(site.get("named_replacement_id", ""))) \
+		!= pending.get("named_definition"): return false
+	var game := get_node_or_null("/root/Game")
+	var owner: WeakRef = pending.get("world")
+	if owner != null and (game == null or owner.get_ref() != game.world): return false
+	if str(pending.epoch) != (str(_session.call("_altar_current_epoch")) if _session != null else ""): return false
+	if _once_cleared(str(pending.once_id)): return false
+	if not packet.is_empty() and (game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(
+			game.world.redesign_world, str(packet.get("captured_from", {}).get("spawn_id", ""))) != packet): return false
+	return true
+
+
+func _discard_pending_surface(key: String) -> void:
+	var pending: Dictionary = _water_surface_pending.get(key, {})
+	var body: Node3D = pending.get("body")
+	if is_instance_valid(body) and not body in _wild_creatures:
+		_ambient_render_bounds_cache.erase(body.get_instance_id())
+		body.queue_free()
+	_water_surface_pending.erase(key)
+
+
+func _clear_stale_surface_spawns() -> void:
+	for key: String in _water_surface_pending.keys():
+		if not _pending_surface_current(_water_surface_pending[key]): _discard_pending_surface(key)
+
+
+func _exit_tree() -> void:
+	# Pending bodies are parented to the realm for valid render measurements,
+	# but this producer owns their lifetime if it leaves before the realm does.
+	for key: String in _water_surface_pending.keys(): _discard_pending_surface(key)
+	super._exit_tree()
 
 func _build_trainers() -> void:
 	for placement: Dictionary in encounter_config.get("trainers", []):
@@ -482,6 +666,7 @@ func _build_trainers() -> void:
 			get_parent().add_child(body)
 			var rank := str(spec.rank)
 			var model := RANKS.config_for(rank, str(spec.config_key)) if rank in ["grunt", "officer", "captain"] else NPC_MODEL.config_for(str(spec.config_key))
+			model = TRAINER_APPEARANCE.resolve(model, str(spec.config_key), str(spec.get("appearance_variant_id", "")))
 			if not body.call("setup_from_config", model, _player):
 				body.queue_free()
 				continue
@@ -510,6 +695,7 @@ var _wild_activity_left := 0.0
 
 
 func _process(delta: float) -> void:
+	_clear_stale_surface_spawns()
 	super._process(delta)
 	var activity: Dictionary = WATER_PERF.config().get("water_wild_activity", {})
 	_wild_activity_left -= delta

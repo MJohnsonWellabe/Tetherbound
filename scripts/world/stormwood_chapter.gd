@@ -4,6 +4,7 @@ extends Node
 ## event transport. The catalogue never grants progression merely by loading.
 const EVENTS := preload("res://scripts/world/realm_chapter_events.gd")
 const PEOPLE := preload("res://scripts/world/village_npcs.gd")
+const CHARACTER_PRESENTATION := preload("res://scripts/world/stormwood_character_presentation.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const PIMS_PARCELS := preload("res://scripts/world/stormwood_pims_parcels.gd")
 const GLASS_FOR_BRYN := preload("res://scripts/world/stormwood_glass_for_bryn.gd")
@@ -255,10 +256,11 @@ static func npc_spec(actor: Dictionary) -> Dictionary:
 	# Side-chain branches outrank ordinary and post-storm lines while active.
 	for i in range(chain_branches.size() - 1, -1, -1):
 		branches.push_front(chain_branches[i])
-	return {"name": str(actor.get("name", "")),
+	return CHARACTER_PRESENTATION.decorate({"name": str(actor.get("name", "")),
 		"config_key": str(actor.get("body_profile", "")),
+		"appearance_variant_id": str(actor.get("appearance_variant_id", "")),
 		"position": (actor.get("position", []) as Array).duplicate(),
-		"greeting": prefix + "arrival", "greeting_when": branches}
+		"greeting": prefix + "arrival", "greeting_when": branches}, actor_id)
 
 
 static func wen_refusal_conversation() -> Dictionary:
@@ -275,12 +277,17 @@ static func wen_refusal_conversation() -> Dictionary:
 
 
 static func apply_npc_portraits(conversations: Dictionary, actors: Array, settings: Dictionary) -> void:
-	if not bool(settings.get("enabled", false)):
-		return
-	var profiles: Dictionary = settings.get("plates_by_profile", {})
+	var profiles: Dictionary = settings.get("plates_by_profile", {}) if bool(settings.get("enabled", false)) else {}
 	var speakers := {}
 	for actor: Dictionary in actors:
 		var plate := str(profiles.get(str(actor.get("body_profile", "")), ""))
+		var variant_id := str(actor.get("appearance_variant_id", ""))
+		if not variant_id.is_empty():
+			# Use the exact decorated model inputs passed to the world body.
+			# An incomplete pair keeps the existing profile/authored portrait.
+			var model := PEOPLE.model_config(npc_spec(actor))
+			if str(model.get("appearance_variant_id", "")) == variant_id:
+				plate = str(model.get("portrait", ""))
 		var speaker := str(actor.get("name", ""))
 		if not speaker.is_empty() and not plate.is_empty() and ResourceLoader.exists(plate):
 			speakers[speaker] = plate

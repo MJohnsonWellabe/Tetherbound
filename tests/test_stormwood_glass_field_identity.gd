@@ -23,7 +23,9 @@ func test_glass_field_builds_a_readable_non_colliding_strike_corridor() -> void:
 		"the field no longer reads as a stormglass event rather than ordinary grass")
 	assert_eq(field.find_children("FusedStrikeScar", "MeshInstance3D", true, false).size(), 8,
 		"each shard family needs a fused impact seat")
-	assert_eq(field.find_children("GlassFissure*", "MeshInstance3D", true, false).size(), 24,
+	assert_eq(field.find_children("GlassFissure?", "MeshInstance3D", true, false).size(), 24,
+		"each impact needs its three main lightning fissures")
+	assert_eq(field.find_children("GlassFissureBranch?", "MeshInstance3D", true, false).size(), 24,
 		"the fused ground lost its branching lightning language")
 	assert_eq(field.find_children("BlastedTree_*", "Node3D", true, false).size(), 4,
 		"blasted trees no longer frame the route at human scale")

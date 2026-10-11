@@ -22,8 +22,8 @@
     },
     "sluice_metal": {
       "label": "Salvage Sluice Metal",
-      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
-      "model_scale": 0.35
+      "model": "res://assets/environment/tidewake/sluice_metal_scrap/sluice_metal_scrap.tscn",
+      "model_scale": 1.0
     },
     "tide_pearl": {
       "label": "Gather Tide Pearl",

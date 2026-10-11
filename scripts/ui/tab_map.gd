@@ -915,7 +915,10 @@ func _draw_overview_callouts(canvas: Control, map_rect: Rect2, map_state: RefCou
 		if not bool(region.get("discovered", false)):
 			continue
 		var point := _world_to_canvas(region.get("centre", Vector2.ZERO), map_rect)
-		regions.append({"text": str(region.get("display_name", "")), "point": point, "desired_y": point.y})
+		var text := str(region.get("display_name", ""))
+		var lines := _region_callout_lines(text, _region_callout_width(map_rect))
+		regions.append({"text": text, "point": point, "desired_y": point.y,
+			"lines": lines, "height": _region_callout_height(lines.size())})
 
 	var destinations: Array[Dictionary] = []
 	for entry: Dictionary in (map_state.call("landmarks") as Array):
@@ -968,6 +971,21 @@ func _spread_callouts(entries: Array[Dictionary], top: float, bottom: float) -> 
 	if entries.is_empty():
 		return
 	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.desired_y) < float(b.desired_y))
+	# Region callouts occupy their complete wrapped glyph/outline bounds.
+	# Keep the existing destination layout and geographical ordering.
+	if entries[0].has("height"):
+		var region_cursor := top
+		for region_entry in entries:
+			var half_height := float(region_entry.height) * 0.5
+			region_entry["label_y"] = maxf(float(region_entry.desired_y), region_cursor + half_height)
+			region_cursor = float(region_entry.label_y) + half_height + HEADING_CLEARANCE
+		region_cursor = bottom
+		for offset in entries.size():
+			var region_entry := entries[entries.size() - 1 - offset]
+			var half_height := float(region_entry.height) * 0.5
+			region_entry["label_y"] = minf(float(region_entry.label_y), region_cursor - half_height)
+			region_cursor = float(region_entry.label_y) - half_height - HEADING_CLEARANCE
+		return
 	const GAP := 38.0 # >= CANVAS_LABEL_FONT_SIZE's own line height, so bumped labels never touch
 	var cursor := top
 	for index in entries.size():
@@ -982,6 +1000,41 @@ func _spread_callouts(entries: Array[Dictionary], top: float, bottom: float) -> 
 		entry["label_y"] = minf(float(entry.label_y), cursor)
 		entries[index] = entry
 		cursor = float(entry.label_y) - GAP
+
+
+func _region_callout_width(map_rect: Rect2) -> float:
+	return maxf(map_rect.position.x - 48.0 - CANVAS_OUTLINE_SIZE * 2.0, 20.0)
+
+
+func _region_callout_height(line_count: int) -> float:
+	return _region_font.get_height(CANVAS_LABEL_FONT_SIZE) * maxi(line_count, 1) \
+		+ CANVAS_OUTLINE_SIZE * 2.0
+
+
+## Preserve the full name at the live gutter width, including a word wider
+## than the gutter. Font metrics include the actual shaping/kerning.
+func _region_callout_lines(text: String, width: float) -> PackedStringArray:
+	var lines := PackedStringArray()
+	var line := ""
+	for word in text.split(" ", false):
+		var candidate := word if line.is_empty() else line + " " + word
+		if not line.is_empty() and _region_font.get_string_size(candidate,
+				HORIZONTAL_ALIGNMENT_LEFT, -1.0, CANVAS_LABEL_FONT_SIZE).x > width:
+			lines.append(line)
+			line = ""
+		if not line.is_empty():
+			line += " "
+		for letter_index in word.length():
+			var letter := word[letter_index]
+			candidate = line + letter
+			if not line.is_empty() and _region_font.get_string_size(candidate,
+					HORIZONTAL_ALIGNMENT_LEFT, -1.0, CANVAS_LABEL_FONT_SIZE).x > width:
+				lines.append(line)
+				line = ""
+			line += letter
+	if not line.is_empty() or lines.is_empty():
+		lines.append(line)
+	return lines
 
 
 ## Every canvas-drawn label on this tab goes through here rather than a bare
@@ -1010,9 +1063,15 @@ func _draw_region_callout(canvas: Control, map_rect: Rect2, callout: Dictionary)
 	line_colour.a = 0.45
 	canvas.draw_polyline(PackedVector2Array([point, Vector2(map_rect.position.x - 8.0, point.y), line_end]), line_colour, 1.5, true)
 	canvas.draw_circle(point, 3.0, UITokens.TEAL)
-	var label_rect := Rect2(18.0, y - 12.0, maxf(map_rect.position.x - 48.0, 20.0), 24.0)
-	var baseline := label_rect.position + Vector2(0.0, label_rect.size.y - _region_font.get_descent(CANVAS_LABEL_FONT_SIZE))
-	_draw_string_legible(canvas, _region_font, baseline, str(callout.text), HORIZONTAL_ALIGNMENT_RIGHT, label_rect.size.x, CANVAS_LABEL_FONT_SIZE, UITokens.TEXT_SECONDARY)
+	var width := _region_callout_width(map_rect)
+	var lines: PackedStringArray = callout.get("lines", _region_callout_lines(str(callout.text), width))
+	var height := _region_callout_height(lines.size())
+	var baseline := Vector2(18.0 + CANVAS_OUTLINE_SIZE,
+		y - height * 0.5 + CANVAS_OUTLINE_SIZE + _region_font.get_ascent(CANVAS_LABEL_FONT_SIZE))
+	for line in lines:
+		_draw_string_legible(canvas, _region_font, baseline, line, HORIZONTAL_ALIGNMENT_RIGHT,
+			width, CANVAS_LABEL_FONT_SIZE, UITokens.TEXT_SECONDARY)
+		baseline.y += _region_font.get_height(CANVAS_LABEL_FONT_SIZE)
 
 
 func _draw_destination_callout(canvas: Control, map_rect: Rect2, callout: Dictionary) -> void:

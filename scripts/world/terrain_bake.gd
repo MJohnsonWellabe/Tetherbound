@@ -23,16 +23,18 @@ const CONFIG_PATH := "res://data/config/terrain_playground.json"
 
 # Approved F17 village-only authoring snapshot, independently reviewed before
 # any regional writer runs. Other config authoring needs a new scoped review.
+# Includes the reviewed Berry Field decoration correction over the original
+# 8ee152 village snapshot; all other generator input hashes remain unchanged.
 const VILLAGE_INPUT_SHA256 := {
  "res://data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
  "res://data/config/vegetation.json": "4e3331edea4ceb764bf57bb422dc7db676a3e0acad412dd23d42939cd55593df",
- "res://data/config/bands/band1_lower_meadows/vegetation.json": "497894d689b20a4539b9be0497b4b1f8851b95386c4608c9543b95a17fc44788",
+ "res://data/config/bands/band1_lower_meadows/vegetation.json": "ca69f88bff234b00e92529e01c4e0125166d11e0ab9b077e894d262d3b06db05",
  "res://data/config/bands/band2_stone_and_root/vegetation.json": "2695ecadd6458d3aa1e6fe520c8637adfe2e652f1a73dbee5cce00cab9a28a58",
  "res://data/config/bands/band3_the_river_lock/vegetation.json": "0493ecf1641a1c901b9eb6d4544709c558bbf172b72b5c6579333384f4b8ef6b",
  "res://data/config/bands/band4_upper_meadows_ironwood/vegetation.json": "f451051c1520ce5fac9f0e92ecb5415f2459d8a0c62b3eb16d04e3009a325906",
  "res://data/config/bands/band5_stronghold_approach/vegetation.json": "e705c91104d1b0b1892d0da89dbfc432277a4008160c38825b6e1d64cbfc0877"
 }
-const VILLAGE_SOURCE := "8ee152a47ee90f430a3e8aafb13d2b0d9c9ad1ea"
+const VILLAGE_SOURCE := "d5ab7d73b31cdd5a24cd45501c980bd4aa553687"
 const VILLAGE_BASE := "b2ea1455abdda7f2a7078ed1f148d5c40952c9fc"
 const VILLAGE_REGIONS := [[-1,-1],[-1,0],[0,-1],[0,0]]
 
@@ -248,9 +250,16 @@ static func promote_regional_update(data_dir: String, stage_dir: String,
 		files: Array[String], patch: Dictionary, fail_after: int = -1) -> bool:
 	if files.is_empty() or data_dir.simplify_path() == stage_dir.simplify_path():
 		return false
-	var prior := read_manifest(data_dir)
-	if prior.is_empty() or not valid_region_selection(patch.get("regions")):
+	var original_text := FileAccess.get_file_as_string(manifest_path(data_dir))
+	var parsed_prior: Variant = JSON.parse_string(original_text)
+	if not parsed_prior is Dictionary or parsed_prior.is_empty() \
+			or not valid_region_selection(patch.get("regions")):
 		return false
+	var prior: Dictionary = parsed_prior
+	var original_fingerprint := _original_manifest_fingerprint(original_text, prior)
+	if original_fingerprint < 0:
+		return false
+	prior["config_fingerprint"] = original_fingerprint
 	var seen := {}
 	var hashes := {}
 	for name: String in files:
@@ -283,7 +292,9 @@ static func promote_regional_update(data_dir: String, stage_dir: String,
 	var output := FileAccess.open(staged_manifest, FileAccess.WRITE)
 	if output == null:
 		return false
-	output.store_string(JSON.stringify(next, "  "))
+	# Parsed provenance numbers must round-trip exactly, including the 53-bit
+	# original full-bake fingerprint retained by a regional update.
+	output.store_string(JSON.stringify(next, "  ", true, true))
 	output.flush()
 	var write_ok := output.get_error() == OK
 	output.close()
@@ -320,3 +331,40 @@ static func promote_regional_update(data_dir: String, stage_dir: String,
 		if DirAccess.rename_absolute(backup_dir.path_join(name), data_dir.path_join(name)) != OK:
 			push_error("Regional bake rollback could not restore previous region: " + name)
 	return false
+
+
+## Recover only the original top-level integral fingerprint: JSON's float
+## parser can round its decimal token before full-precision serialization.
+static func _original_manifest_fingerprint(text: String, prior: Dictionary) -> int:
+	const PROBE_KEY := "__regional_original_fingerprint_probe__"
+	if not prior.has("config_fingerprint") or prior.has(PROBE_KEY):
+		return -1
+	var field := RegEx.new()
+	var integral := RegEx.new()
+	if field.compile('("config_fingerprint")\\s*:\\s*') != OK \
+			or integral.compile('^(0|[1-9][0-9]*)(?:\\.0+)?\\s*(?=[,}])') != OK:
+		return -1
+	var found := false
+	var fingerprint := -1
+	for candidate: RegExMatch in field.search_all(text):
+		# Rename this one matched key only. The existing parser identifies its
+		# depth without treating nested receipt fingerprints as the base field.
+		var probe_text := text.substr(0, candidate.get_start(1)) \
+				+ JSON.stringify(PROBE_KEY) + text.substr(candidate.get_end(1))
+		var probe: Variant = JSON.parse_string(probe_text)
+		if not probe is Dictionary or not probe.has(PROBE_KEY):
+			continue
+		if found:
+			return -1
+		found = true
+		var token := integral.search(text.substr(candidate.get_end()))
+		if token == null:
+			return -1
+		var digits := token.get_string(1)
+		# Sixteen decimal digits fit int64; the bake format permits only 53 bits.
+		if digits.length() > 16:
+			return -1
+		fingerprint = digits.to_int()
+		if fingerprint > 0x1FFFFFFFFFFFFF:
+			return -1
+	return fingerprint

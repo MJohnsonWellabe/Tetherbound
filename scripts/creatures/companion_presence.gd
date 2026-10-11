@@ -303,6 +303,11 @@ func tick(delta: float) -> void:
 			if name == CARE:
 				_pending_care.clear()
 
+	# Health is a body fact, even while another layer owns its presentation.
+	# In particular, healing during an installed flinch must not leave the
+	# follower using the hurt gait until that animation releases its hold.
+	var creature := _creature()
+	_update_hurt(creature)
 	var reason := blocked_reason()
 	if reason != "":
 		var victory_ok: bool = reason == "resolving_won" \
@@ -321,11 +326,9 @@ func tick(delta: float) -> void:
 		return
 
 	var leader := _leader()
-	var creature := _creature()
 	_track_stillness(delta, leader)
 	_poll_bond(creature)
 	_update_camp(delta, leader)
-	_update_hurt(creature)
 	_update_look(leader)
 
 	if _state != "":
@@ -377,6 +380,10 @@ func blocked_reason() -> String:
 		return "no_body"
 	if not _body.visible:
 		return "hidden"
+	# Terminal/traversal animation owns the pivot and the complete rig even on
+	# a remote body. A camp rest started by this layer remains its own state.
+	if _authored_pose_owned():
+		return "authored_pose"
 	if _leader() == null:
 		return "no_leader"
 	if remote:
@@ -410,6 +417,14 @@ func blocked_reason() -> String:
 	if _game != null and is_instance_valid(_game) and not str(_game.get("pending_build")).is_empty():
 		return "build"
 	return ""
+
+
+func _authored_pose_owned() -> bool:
+	if _body == null or not is_instance_valid(_body) or _body_rest_held:
+		return false
+	var animator: Variant = _body.get("_animator")
+	return animator != null and animator.has_method("owns_pose") \
+		and bool(animator.call("owns_pose"))
 
 
 func _resolve_context() -> void:
@@ -917,6 +932,10 @@ func _drive_continuous(delta: float) -> void:
 			_flinch_timer -= delta
 			if _flinch_timer <= 0.0:
 				_flinch_timer = _next_flinch()
+				# Hand the full rig to the flinch before its first impact sample.
+				_release_pivot()
+				_set_look(false)
+				_set_anim_speed(1.0)
 				_play_clip(str(cfg.get("flinch_clip", "hit")))
 		return
 	_leave_continuous()
@@ -979,7 +998,9 @@ func _release_pivot() -> void:
 	if not _pivot_held:
 		return
 	var pivot := _pivot()
-	if pivot != null:
+	# A combat/traversal clip may have taken ownership since we last wrote
+	# this procedural pose. Forget our hold without overwriting its sample.
+	if pivot != null and not _authored_pose_owned():
 		pivot.transform = _pivot_rest
 	_pivot_held = false
 
@@ -1075,6 +1096,10 @@ func _resolve_model() -> void:
 
 func _set_anim_speed(scale_value: float) -> void:
 	if _anim_player == null or not is_instance_valid(_anim_player):
+		return
+	if _authored_pose_owned():
+		# Its playback rate (including hitstop) belongs to the body animator.
+		_anim_speed_held = false
 		return
 	if is_equal_approx(scale_value, 1.0):
 		if _anim_speed_held:

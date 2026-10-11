@@ -435,7 +435,7 @@ func _foundation_send(op: String, key: String, intent: Dictionary, revision: int
 	_foundation_requests[correlation] = envelope.duplicate(true)
 	if is_host(): return _foundation_handle(local_peer_id(), envelope)
 	if not is_active(): return FOUNDATION_ACTIONS.deny("authority_missing")
-	if op in ["regional_ack", "refine_start", "master_duel", "resource", "groom", "rematch_start"]:
+	if op in ["regional_ack", "refine_start", "master_duel", "master_chest", "resource", "groom", "rematch_start"]:
 		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
 		if lifecycle == null or lifecycle.call("publish_now") != true: return FOUNDATION_ACTIONS.deny("ending_context_changed")
 	rpc_id(HOST_PEER_ID, "_rpc_foundation_action", envelope)
@@ -502,12 +502,26 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 		var service := get_node_or_null(^"FoundationComposition/BreakthroughService")
 		if service == null or service.call("accept_duel_offer", envelope.intent, result) != true:
 			# Admission is already authoritative; inability to present must leave
-			# that same encounter rather than create a second challenge.
-			var world_node := _portal_world_node(str(_game().get("current_realm")))
-			if world_node != null:
+			# that same encounter through its original realm's fenced doorway.
+			var admission: Dictionary = result.get("record", {}) if result.get("record") is Dictionary else {}
+			var encounter_id: String = str(result.get("encounter_id", ""))
+			var realm: String = str(admission.get("realm", ""))
+			var cleanup: Dictionary = {}
+			var world_node := _portal_world_node(realm)
+			if world_node != null and not encounter_id.is_empty() and admission.get("encounter_id") == encounter_id:
 				for candidate: Node in world_node.find_children("*", "Node", true, false):
-					if candidate.get_script() != null and FOUNDATION_DIRECTORS.has(candidate.get_script().resource_path):
-						candidate.call("submit_encounter_intent", {"kind": "disengage", "encounter_id": result.get("encounter_id", "")})
+					if _portal_director_owned_by(world_node, self, candidate) \
+							and candidate.call("_encounter_realm") == realm:
+						cleanup = candidate.call("submit_encounter_intent", {"kind": "disengage", "encounter_id": encounter_id})
+						break
+			# Release only this chooser's exact pending intent. This local failure
+			# is separate from the unchanged host reply below and claims no save.
+			homestead_action_completed.emit("master_duel", envelope.intent.duplicate(true), {
+				"ok": false, "resolved": false, "settled": false, "durable": false,
+				"owner_saved": false, "owner_acknowledged": false, "terminal_refusal": true,
+				"code": "master_duel_presentation_failed", "encounter_id": encounter_id,
+				"reason": "The duel could not be shown here. Try again when this challenge has ended.",
+				"cleanup_pending": cleanup.get("pending") == true, "host_admission": result.duplicate(true)})
 	elif envelope.op == "rematch_start" and result.get("ok") == true:
 		_foundation_requests.erase(correlation)
 	foundation_reply_received.emit(envelope.duplicate(true), result.duplicate(true))
@@ -756,17 +770,62 @@ func foundation_record_personal_flags(delta: Dictionary) -> void:
 
 ## The actual host ending calls this only after its original claim saves.
 ## Guests cannot replace a flag dictionary or choose another claim/character.
-func foundation_stormwood_answer(source: Node, peer: int, claim: Dictionary) -> bool:
+func foundation_stormwood_answer(source: Node, peer: int, claim: Dictionary, cut: Dictionary = {}, phase: String = "commit") -> bool:
 	if not is_host() or not is_instance_valid(source) or source.get_script() != preload("res://scripts/world/stormwood_ending.gd") \
 		or _game() == null or _game().session != self or source.get("session") != self \
 		or source.get("world") != _portal_world_node("stormwood") or source.get("_foundation_world_binding") == null \
 		or source.get("_foundation_world_binding").get_ref() != _game().world: return false
+	var stages: Dictionary = source.get_meta("stormwood_authority_stages", {})
+	var passive: RefCounted = _owner_passive_service()
+	if phase == "rollback":
+		var stage: Dictionary = stages.get(peer, {})
+		if not stage.is_empty() and stage.world == _game().world and stage.epoch == _altar_current_epoch():
+			_character_authority.call("restore_record", stage.character, stage.record)
+			if not stage.stream.is_empty(): (passive.get("hosts") as Dictionary)[stage.character] = stage.stream
+		stages.erase(peer)
+		source.set_meta("stormwood_authority_stages", stages)
+		return true
+	if phase not in ["check", "stage", "commit"]: return false
 	var character := _authority_character(peer)
 	if character.is_empty() or admitted_character_state(peer).is_empty() or claim.get("settled") != true \
-		or not claim.get("kept") is bool or source.call("_saved_state").get("claims", {}).get(character, {}) != claim: return false
+		or not claim.get("kept") is bool or not claim.get("released_uid", "") is String: return false
+	var original: Dictionary = source.call("_saved_state").get("claims", {}).get(character, {})
+	if phase == "check":
+		if original.is_empty() or original.get("settled") == true: return false
+		var expected := original.duplicate(true)
+		expected.kept = claim.kept
+		expected.settled = true
+		expected.released_uid = claim.get("released_uid", "")
+		if expected != claim: return false
+	elif original != claim: return false
 	var id := preload("res://scripts/world/stormwood_ending.gd").claim_id(claim)
 	var kept: bool = claim.kept
-	if id.is_empty() or not _game().world.flags.call("has", preload("res://scripts/world/stormwood_ending.gd").resolution_flag(kept, character)): return false
+	if id.is_empty() or (phase != "check" and not _game().world.flags.call("has", preload("res://scripts/world/stormwood_ending.gd").resolution_flag(kept, character))): return false
+	if peer == local_peer_id():
+		# The actual host owner already BOOL-saved its live party. Never replace
+		# it with the old claim card or undo its newer levels, moves or gear.
+		var current: Dictionary = _character_authority.call("state", character)
+		if not current.redesign_character.transaction_receipts.has("stormheart_answer:%s:%s" % [id, character]): return false
+	else:
+		var before: Dictionary = passive.call("stormwood_host_before", peer, cut)
+		if before.is_empty(): return false
+		var proposal := CHARACTER_AUTHORITY.stormwood_answer_proposal(before, claim, claim.get("released_uid", ""))
+		if proposal.get("ok") != true or preload("res://scripts/net/research_passive_preparation.gd").fingerprint(proposal.state) != cut.get("after_hash"): return false
+		if phase != "check":
+			var snapshot: Dictionary = _character_authority.call("snapshot_record", character)
+			var prior_stream: Dictionary = (passive.get("hosts") as Dictionary).get(character, {}).duplicate(true)
+			var result: Dictionary = _character_authority.call("commit_stormwood_answer", character, before, claim, claim.get("released_uid", ""))
+			if result.get("ok") != true: return false
+			if passive.call("stormwood_promote_host", peer, cut, result.state, result.revision) != true:
+				_character_authority.call("restore_record", character, snapshot)
+				return false
+			if phase == "stage":
+				stages[peer] = {"character": character, "record": snapshot, "stream": prior_stream,
+					"world": _game().world, "epoch": _altar_current_epoch()}
+				source.set_meta("stormwood_authority_stages", stages)
+	if phase != "commit": return true
+	stages.erase(peer)
+	source.set_meta("stormwood_authority_stages", stages)
 	var flags: Dictionary = _character_authority.call("personal_flags", character)
 	var marker := "stormwood:regional_outcome:%s:%s" % [id, "accepted" if kept else "refused"]
 	var has_original := false
@@ -5561,6 +5620,14 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 func _altar_peer_in_combat(peer: int) -> bool:
 	var roots := _foundation_realm_roots()
 	if roots.is_empty(): return true
+	# Stormwood's host-owned roster survives its done round and send-out gap.
+	# Keep passive checkpoints outside that whole battle, as ordinary trainers do.
+	if is_host():
+		for hub: Node in _foundation_group_under(&"stormwood_encounter_hub", roots,
+			["res://scripts/world/stormwood_encounter_hub.gd"]):
+			if hub.is_queued_for_deletion() or hub.get("session") != self: continue
+			if hub.has_method("peer_in_owned_trainer_roster") \
+				and hub.call("peer_in_owned_trainer_roster", peer) == true: return true
 	var found_host := false
 	for node: Node in _foundation_directors_under(roots):
 		if node.has_method("pending_remote_rematch_settlement") and node.call("pending_remote_rematch_settlement") == true: return true

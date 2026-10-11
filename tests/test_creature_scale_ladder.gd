@@ -12,7 +12,7 @@ const WATER_MOUNTS_PATH := "res://data/config/water_mounts.json"
 
 func test_every_global_creature_clears_the_trainer_and_keeps_physical_proportions() -> void:
 	var species: Dictionary = _json(SPECIES_PATH).get("species", {})
-	assert_eq(species.size(), 57, "the scale gate must cover the complete installed roster")
+	assert_eq(species.size(), 58, "the scale gate must cover the complete installed roster")
 	var heights: Array[float] = []
 	for id: String in species:
 		var look: Dictionary = species[id].get("placeholder", {})

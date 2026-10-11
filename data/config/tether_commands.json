@@ -15,7 +15,7 @@
   },
   "tiers": {
     "0": {"meter_rate": 1.0, "pouch_size": 1, "movement_multiplier": 0.6, "catch_bonus": 0.10},
-    "1": {"meter_rate": 1.0, "pouch_size": 1, "movement_multiplier": 0.6, "catch_bonus": 0.10},
+    "1": {"meter_rate": 1.10, "pouch_size": 1, "movement_multiplier": 0.6, "catch_bonus": 0.10},
     "2": {"meter_rate": 1.15, "pouch_size": 2, "movement_multiplier": 0.55, "catch_bonus": 0.12},
     "3": {"meter_rate": 1.3, "pouch_size": 3, "movement_multiplier": 0.5, "catch_bonus": 0.14},
     "4": {"meter_rate": 1.45, "pouch_size": 3, "movement_multiplier": 0.45, "catch_bonus": 0.16}

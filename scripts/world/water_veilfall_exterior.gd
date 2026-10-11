@@ -72,7 +72,7 @@ func _build_formation(spec: Dictionary) -> void:
 	add_child(holder)
 	var body := MeshInstance3D.new()
 	body.name = "FacetedCragBody"
-	body.mesh = _formation_mesh(base_radius, top_radius, height + sink, lean, seed_value)
+	body.mesh = _formation_mesh(base_radius, top_radius, height + sink, lean, seed_value, holder.global_position, sink)
 	body.material_override = _rock_material
 	body.visibility_range_end = 1100.0
 	body.visibility_range_end_margin = 120.0
@@ -108,7 +108,7 @@ func _build_formation(spec: Dictionary) -> void:
 
 
 func _formation_mesh(base_radius: Vector2, top_radius: Vector2, height: float,
-		lean: Vector2, seed_value: int) -> ArrayMesh:
+		lean: Vector2, seed_value: int, ground_origin: Vector3, sink: float) -> ArrayMesh:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	var segments := 9
@@ -122,8 +122,15 @@ func _formation_mesh(base_radius: Vector2, top_radius: Vector2, height: float,
 		for index in segments:
 			var angle := TAU * float(index) / float(segments)
 			var jitter := rng.randf_range(0.88, 1.12)
-			ring.append(Vector3(centre.x + cos(angle) * radius.x * jitter,
-				height * t, centre.y + sin(angle) * radius.y * jitter))
+			var point := Vector3(centre.x + cos(angle) * radius.x * jitter,
+				height * t, centre.y + sin(angle) * radius.y * jitter)
+			# The old flat base intersected only the centre of a steep mountain
+			# face, leaving the downhill half hanging over open sky.
+			if ring_index == 0:
+				var grounded := float(_world.call("ground_height_at", ground_origin.x + point.x, ground_origin.z + point.z))
+				if is_finite(grounded):
+					point.y = grounded - ground_origin.y - sink
+			ring.append(point)
 		rings.append(ring)
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)

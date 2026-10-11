@@ -47,6 +47,7 @@ const CONFIG_PATH := "res://data/config/tournament.json"
 ## Foundation pollers find the board by group instead of walking every node.
 const FOUNDATION_GROUP := &"foundation_tournaments"
 const GROUND_PRESENTATION := preload("res://scripts/world/tournament_ground_presentation.gd")
+const DIALOGUE_PRESENTATION := preload("res://scripts/world/tournament_dialogue_presentation.gd")
 
 ## The statement prompt bolted to the board. Same node every berry bush and
 ## signpost uses; nothing about a bracket board justifies a second one.
@@ -177,6 +178,10 @@ func build(world: Node) -> void:
 	presentation.name = "GroundPresentation"
 	add_child(presentation)
 	presentation.call("build", world)
+	var speakers: Node = DIALOGUE_PRESENTATION.new()
+	speakers.name = "DialoguePresentation"
+	add_child(speakers)
+	speakers.call("build", world, rounds())
 	_built = true
 	set_process(true)
 	_refresh(true)

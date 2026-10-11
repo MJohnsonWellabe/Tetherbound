@@ -18,8 +18,11 @@ const UNKNOWN_POWER := 1.0
 var _moves: Dictionary = {}
 
 
-func _init(moves_path: String = MOVES_PATH) -> void:
-	_moves = _read(moves_path).get("moves", {})
+func _init(moves_path: String = MOVES_PATH, cached_moves: Variant = null) -> void:
+	if cached_moves is Dictionary:
+		_moves = cached_moves
+	else:
+		_moves = _read(moves_path).get("moves", {})
 
 
 ## Convenience accessor for a caller that does not want to hold an instance
@@ -28,7 +31,11 @@ func _init(moves_path: String = MOVES_PATH) -> void:
 ## character check, and re-parsing moves.json each time held a co-op host's
 ## frame for seconds after world facts landed (PERF, 2026-10-05). Read-only
 ## for callers: `move()` hands out copies.
-static var _shared: RefCounted = null
+## Keep parsed data alive without retaining an instance of this same script.
+## Live callers still share one facade; a released facade can be recreated
+## from the cached table without reparsing during party/save validation.
+static var _shared: WeakRef = null
+static var _shared_moves: Dictionary = {}
 static var _shared_stamp := ""
 
 
@@ -36,10 +43,17 @@ static func load_default() -> RefCounted:
 	# Modified time and size: a test writing a temporary table within the same
 	# second still reloads.
 	var stamp := "%d:%d" % [FileAccess.get_modified_time(MOVES_PATH), FileAccess.get_size(MOVES_PATH)]
-	if _shared == null or stamp != _shared_stamp:
-		_shared = (load("res://scripts/creatures/move_db.gd") as GDScript).new()
+	var shared: RefCounted = _shared.get_ref() if _shared != null else null
+	if shared != null and stamp == _shared_stamp:
+		return shared
+	if stamp != _shared_stamp:
+		shared = (load("res://scripts/creatures/move_db.gd") as GDScript).new()
+		_shared_moves = shared.get("_moves")
 		_shared_stamp = stamp
-	return _shared
+	else:
+		shared = (load("res://scripts/creatures/move_db.gd") as GDScript).new(MOVES_PATH, _shared_moves)
+	_shared = weakref(shared)
+	return shared
 
 
 func _read(path: String) -> Dictionary:

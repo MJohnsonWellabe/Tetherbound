@@ -3,15 +3,17 @@ extends Node3D
 ## Local rendering of a host-scheduled action. No collision objects, timers
 ## driving damage, durable fields or RPCs are owned by this node.
 const GEOMETRY := preload("res://scripts/vfx/move_effect_geometry.gd")
+const SIGNATURE_GEOMETRY := preload("res://scripts/vfx/ultimates/ultimate_geometry.gd")
 const BUDGET := preload("res://scripts/vfx/move_effect_budget.gd")
 const AUDIO := preload("res://scripts/audio/audio_manager.gd")
 const CONTRACT := preload("res://scripts/vfx/move_presentation_contract.gd")
 const FLASH_SHADER := preload("res://assets/vfx/shaders/impact_flash.gdshader")
 const GROUND_MARK_SHADER := preload("res://assets/vfx/shaders/impact_ground_mark.gdshader")
-## Launch/contact/aftermath stage meshes are a fixed small set per effect
-## (flash, ground kick, contact flash, shockwave, ground mark). They are not
-## particles and never draw from the particle lease.
+## Launch/contact/aftermath and species-identity meshes share this fixed total
+## per effect. Each extra identity mesh also consumes one actual slot from
+## the existing decorative budget; generic stage meshes retain their contract.
 const MAX_STAGE_MESHES := 6
+const MAX_SIGNATURE_MESHES := 4
 const SPARK_SHADER := preload("res://assets/vfx/shaders/spark_streak.gdshader")
 const SPARK_GLOW_SHADER := preload("res://assets/vfx/shaders/spark_streak_glow.gdshader")
 
@@ -51,6 +53,17 @@ var _light_profile: Dictionary = {}
 ## presentation clock as the bodies; owns no gameplay timing.
 var _stages: Array[Dictionary] = []
 var _mote_linger := 0.0
+var _peer_opacity := 1.0
+var _peer_aftermath := -1.0
+var _signature_end := -1.0
+var _contact_retired := false
+var _signature_nodes: Array[MeshInstance3D] = []
+var _signature_profile: Dictionary = {}
+var _signature_lease := 0
+var _signature_basis := Basis.IDENTITY
+var _signature_source_offsets: Array[float] = []
+var _signature_target_offsets: Array[float] = []
+var _signature_ground_lifts: Array[float] = []
 
 func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 		travel: float, config: Dictionary) -> void:
@@ -58,11 +71,36 @@ func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 	_to = to
 	_row = row.duplicate(true)
 	_context = context
-	_config = config.duplicate(true)
+	# The resolved row already owns this effect's authored content. Snapshot
+	# only the scalar limits used here instead of cloning all 24 archetypes
+	# (and their variants/mastery rows) on every landed attack.
+	_config = {}
+	for key: String in ["ordinary_particle_limit", "ultimate_particle_limit", "encounter_particle_cap", "scene_light_cap"]:
+		if config.has(key): _config[key] = config[key]
 	_params = _row.parameters
 	_travel = travel
 	_colour = Color(str(_params.get("colour", "#e4c67d")))
 	_rng.seed = int(context.get("seed", 0))
+	# The signature facade freezes local/peer presentation settings alongside
+	# the accepted action. Ordinary effects retain their existing presentation.
+	if bool(context.get("ultimate", false)):
+		var launch: Dictionary = _row.get("launch", {}).duplicate(true)
+		for key: String in context.get("ultimate_launch", {}):
+			launch[key] = context.ultimate_launch[key].duplicate(true)
+		_row["launch"] = launch
+		# Keep the signature's visible set piece for its accepted duration.
+		# Stretch only the existing ground aftermath, not the contact burst
+		# around the target; ordinary move timing and arrival remain unchanged.
+		var signature_seconds := float(context.get("duration_seconds", 0.0))
+		var stages: Dictionary = (_row.impact as Dictionary).get("stages", {})
+		if signature_seconds >= 2.0 and signature_seconds <= 3.0:
+			_signature_end = signature_seconds
+			if stages.get("mark") is Dictionary:
+				stages.mark["duration"] = maxf(0.05, signature_seconds - _travel)
+		if bool(context.get("peer_view", false)):
+			var peer: Dictionary = context.get("peer_presentation", {})
+			_peer_opacity = clampf(float(peer.get("opacity", 1.0)), 0.0, 1.0)
+			_peer_aftermath = maxf(0.0, float(peer.get("aftermath_seconds", 0.65)))
 
 func _ready() -> void:
 	add_to_group("move_effect_presentation")
@@ -70,6 +108,9 @@ func _ready() -> void:
 	global_transform = Transform3D.IDENTITY
 	var budget: Dictionary = _row.get("budget", {})
 	var limit := int(_config.get("ultimate_particle_limit", 160)) if bool(_context.get("ultimate", false)) else int(_config.get("ordinary_particle_limit", 48))
+	# Reserve the species body before decorative trails, using the same actual
+	# encounter pool. Its admitted slots are part of this effect's existing cap.
+	limit = maxi(0, limit - _build_signature_shapes(limit))
 	var requested_impact := mini(int(budget.get("impact", 24)), limit)
 	var requested_trail := mini(int(budget.get("trail", 12)), maxi(0, limit - requested_impact))
 	_lease = BUDGET.reserve(str(_context.get("encounter_id", "global")), requested_impact,
@@ -82,15 +123,15 @@ func _ready() -> void:
 		var body := _mesh_node(GEOMETRY.shape(str(profile.shape), body_size, profile),
 			_colour, float(profile.get("opacity", 1.0)), bool(profile.get("lit", false)))
 		if str(profile.shape) in ["stone", "flame_orb", "burning_core", "water_stream", "rolling_wave", "ice_crystal", "flame_volume", "mist_cone", "bubble"]:
-			body.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
+			body.material_override = _presentation_material(GEOMETRY.authored_material(str(profile.shape), profile, _colour))
 			body.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if str(profile.shape) == "stone" else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		if str(profile.get("motion", "")) == "sky": body.material_override = GEOMETRY.authored_material("ion_filament", profile, _colour)
-		if bool(profile.get("air_surface", false)): body.material_override = GEOMETRY.authored_material("wind_surface", profile, _colour)
-		if bool(profile.get("shadow_surface", false)): body.material_override = GEOMETRY.authored_material("shadow_surface", profile, _colour)
-		if bool(profile.get("root_stone_surface", false)): body.material_override = GEOMETRY.authored_material("root_stone_surface", profile, _colour)
+		if str(profile.get("motion", "")) == "sky": body.material_override = _presentation_material(GEOMETRY.authored_material("ion_filament", profile, _colour))
+		if bool(profile.get("air_surface", false)): body.material_override = _presentation_material(GEOMETRY.authored_material("wind_surface", profile, _colour))
+		if bool(profile.get("shadow_surface", false)): body.material_override = _presentation_material(GEOMETRY.authored_material("shadow_surface", profile, _colour))
+		if bool(profile.get("root_stone_surface", false)): body.material_override = _presentation_material(GEOMETRY.authored_material("root_stone_surface", profile, _colour))
 		# Any body may take another authored surface (a water ball is a sphere
 		# drawn with the flowing-water material).
-		if profile.has("surface_material"): body.material_override = GEOMETRY.authored_material(str(profile.surface_material), profile, _colour)
+		if profile.has("surface_material"): body.material_override = _presentation_material(GEOMETRY.authored_material(str(profile.surface_material), profile, _colour))
 		_bodies.append(body)
 		var history: Array[Vector3] = []
 		_histories.append(history)
@@ -111,7 +152,7 @@ func _ready() -> void:
 				Color(str(layer.get("colour", _params.colour))), float(layer.get("opacity", 0.8)))
 			component.reparent(body, false)
 			if str(layer.get("shape", "")) in ["flame_orb", "fire_bloom", "flame_tongue", "soft_foam", "soft_dust"]:
-				component.material_override = GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour))))
+				component.material_override = _presentation_material(GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour)))))
 			var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
 			component.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2])) * float(_params.size)
 			component.set_meta("spin_rate", float(layer.get("spin_rate", 0.0)))
@@ -129,13 +170,14 @@ func _ready() -> void:
 			var trail := _mesh_node(ImmediateMesh.new(), Color.WHITE, float((_row.trail as Dictionary).get("opacity", 0.78)))
 			var trail_profile: Dictionary = _row.trail.duplicate(true)
 			trail_profile["dust"] = str(trail_profile.get("style", "air")) not in ["flame", "ember", "ion"]
-			trail.material_override = GEOMETRY.authored_material("soft_trail", trail_profile, Color(str(trail_profile.get("colour", _params.colour))))
+			trail.material_override = _presentation_material(GEOMETRY.authored_material("soft_trail", trail_profile, Color(str(trail_profile.get("colour", _params.colour)))))
 			trail.set_meta("body_index", i)
 			trail.set_meta("layer", layer)
 			_trails.append(trail)
 	_build_light()
 	_build_launch_stages()
 	_update_bodies(0.0)
+	_update_signature_shapes()
 	_play_launch()
 	if _travel <= 0.0:
 		# Contact geometry exists when launch returns. Emit only after callers
@@ -154,7 +196,7 @@ func _ready() -> void:
 func _mesh_node(mesh: Mesh, colour: Color, opacity: float = 1.0, lit: bool = false) -> MeshInstance3D:
 	var node := MeshInstance3D.new()
 	node.mesh = mesh
-	node.material_override = GEOMETRY.material(colour, opacity, lit)
+	node.material_override = _presentation_material(GEOMETRY.material(colour, opacity, lit))
 	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(node)
 	return node
@@ -167,7 +209,7 @@ func _build_light() -> void:
 	_light.light_color = Color(str(_light_profile.get("colour", _params.colour)))
 	_light.shadow_enabled = false
 	_light.omni_range = maxf(0.01, float(_light_profile.get("body_range_m", 2.8)))
-	_light.light_energy = maxf(0.0, float(_light_profile.get("body_energy", 1.0)))
+	_light.light_energy = maxf(0.0, float(_light_profile.get("body_energy", 1.0))) * _peer_opacity
 	add_child(_light)
 
 func _process(delta: float) -> void:
@@ -175,6 +217,12 @@ func _process(delta: float) -> void:
 		_elapsed = maxf(0.0, _travel - _presentation_clock.time_left)
 	else:
 		_elapsed += delta
+	if _signature_end >= 0.0 and _elapsed >= _signature_end:
+		cancel_presentation()
+		return
+	if _arrived and _peer_aftermath >= 0.0 and _elapsed >= _travel + _peer_aftermath:
+		cancel_presentation()
+		return
 	var t := clampf(_elapsed / maxf(_travel, 0.00001), 0.0, 1.0)
 	if not _arrived:
 		_update_bodies(t)
@@ -182,26 +230,30 @@ func _process(delta: float) -> void:
 		if _presentation_clock == null and _elapsed >= _travel:
 			_finish_presentation()
 	else:
-		_update_trail()
-		var duration := float((_row.impact as Dictionary).get("duration", 0.45))
-		var u := clampf((_elapsed - _travel) / maxf(duration, 0.001), 0.0, 1.0)
-		_update_impact(u, delta)
 		var contact_age := _elapsed - _travel
-		var body_profile: Dictionary = _row.body
-		var contact_fade := 1.0
-		if str(body_profile.get("motion", "")) == "sky" and body_profile.has("contact_fade_power"):
-			var hold := maxf(0.001, float(body_profile.get("contact_hold_seconds", 0.0)))
-			contact_fade = pow(maxf(0.0, 1.0 - contact_age / hold), maxf(0.1, float(body_profile.contact_fade_power)))
-		for body: MeshInstance3D in _bodies:
-			# Retain the completed vertical strike through contact and early
-			# impact, so the visual actually joins sky, target and ground.
-			body.visible = str(_row.body.get("motion", "")) == "sky" and contact_age < float(_row.body.get("contact_hold_seconds", 0.0))
-			if body_profile.has("contact_fade_power"):
-				_set_opacity(body.material_override, contact_fade * float(body_profile.get("opacity", 1.0)))
-		for trail: MeshInstance3D in _trails:
-			_set_opacity(trail.material_override, contact_fade * (1.0 - u) * float((_row.trail as Dictionary).get("opacity", 0.78)))
+		if contact_age >= _lifetime_after_contact():
+			_retire_contact_drawing()
+		else:
+			_update_trail()
+			var duration := float((_row.impact as Dictionary).get("duration", 0.45))
+			var u := clampf(contact_age / maxf(duration, 0.001), 0.0, 1.0)
+			_update_impact(u, delta)
+			var body_profile: Dictionary = _row.body
+			var contact_fade := 1.0
+			if str(body_profile.get("motion", "")) == "sky" and body_profile.has("contact_fade_power"):
+				var hold := maxf(0.001, float(body_profile.get("contact_hold_seconds", 0.0)))
+				contact_fade = pow(maxf(0.0, 1.0 - contact_age / hold), maxf(0.1, float(body_profile.contact_fade_power)))
+			for body: MeshInstance3D in _bodies:
+				# Retain the completed vertical strike through contact and early
+				# impact, so the visual actually joins sky, target and ground.
+				body.visible = str(_row.body.get("motion", "")) == "sky" and contact_age < float(_row.body.get("contact_hold_seconds", 0.0))
+				if body_profile.has("contact_fade_power"):
+					_set_opacity(body.material_override, contact_fade * float(body_profile.get("opacity", 1.0)))
+			for trail: MeshInstance3D in _trails:
+				_set_opacity(trail.material_override, contact_fade * (1.0 - u) * float((_row.trail as Dictionary).get("opacity", 0.78)))
 	_update_stages()
-	if _arrived and _elapsed - _travel >= _lifetime_after_contact() and _stages_finished(): queue_free()
+	_update_signature_shapes()
+	if _arrived and _elapsed - _travel >= _lifetime_after_contact() and _stages_finished() and _signature_nodes.is_empty(): queue_free()
 
 func _finish_presentation() -> void:
 	if _arrived or is_queued_for_deletion(): return
@@ -209,11 +261,115 @@ func _finish_presentation() -> void:
 	_update_bodies(1.0)
 	_arrived = true
 	if _impact == null: _build_impact()
+	_update_signature_shapes()
 	_play_impact()
 	# Contact geometry exists before the later host timer can resolve HP.
 	# No observer of this informational signal can authorize a gameplay hit.
 	arrived.emit()
 	presentation_arrived.emit(_context)
+
+func _build_signature_shapes(limit: int) -> int:
+	if not bool(_context.get("ultimate", false)) or _signature_end < 2.0: return 0
+	_signature_profile = (_row.body as Dictionary).get("signature", {}).duplicate(true)
+	var kind := str(_signature_profile.get("shape", ""))
+	if kind not in ["capra_horn", "thunder_paw"]: return 0
+	var requested := mini(MAX_STAGE_MESHES, mini(MAX_SIGNATURE_MESHES, mini(limit, maxi(0, int(_signature_profile.get("count", 0))))))
+	if requested <= 0: return 0
+	var geometry: Dictionary = _signature_profile.get("geometry", {}).duplicate(true)
+	geometry["vertex_cap"] = clampi(int(geometry.get("vertex_cap", 12000)), 96, 12000)
+	var size := float(_params.size) * clampf(float(_signature_profile.get("size_scale", 0.75)), 0.1, 1.5)
+	var mesh := SIGNATURE_GEOMETRY.shape(kind, size, geometry)
+	if mesh == null or bool(mesh.get_meta("ultimate_budget_clipped", false)): return 0
+	_signature_lease = BUDGET.reserve(str(_context.get("encounter_id", "global")), requested, 0,
+		int(_config.get("encounter_particle_cap", 384)))
+	var admitted := mini(requested, int(BUDGET.allocation(_signature_lease).get("impact", 0)))
+	if admitted <= 0:
+		_retire_signature_shapes()
+		return 0
+	var forward := Vector3(_to.x - _from.x, 0.0, _to.z - _from.z).normalized()
+	if forward.is_zero_approx(): forward = Vector3.FORWARD
+	_signature_basis = Basis(Quaternion(Vector3.FORWARD, forward))
+	var right := forward.cross(Vector3.UP).normalized()
+	var bounds := mesh.get_aabb()
+	var mesh_min := INF
+	var mesh_max := -INF
+	var mesh_low := INF
+	for x in 2:
+		for y in 2:
+			for z in 2:
+				var point := _signature_basis * (bounds.position + Vector3(bounds.size.x * x, bounds.size.y * y, bounds.size.z * z))
+				mesh_min = minf(mesh_min, point.dot(right))
+				mesh_max = maxf(mesh_max, point.dot(right))
+				mesh_low = minf(mesh_low, point.y)
+	var target: Vector3 = _context.get("target_ground", _to)
+	var target_min := -maxf(0.0, float(_signature_profile.get("fallback_target_radius_m", 1.5)))
+	var target_max := -target_min
+	var target_bounds: Dictionary = _context.get("target_visual_bounds", {})
+	if target_bounds.get("position") is Vector3 and target_bounds.get("size") is Vector3:
+		target_min = INF
+		target_max = -INF
+		var position: Vector3 = target_bounds.position
+		var extent: Vector3 = target_bounds.size
+		for x in 2:
+			for y in 2:
+				for z in 2:
+					var point := position + Vector3(extent.x * x, extent.y * y, extent.z * z)
+					var lateral := (point - target).dot(right)
+					target_min = minf(target_min, lateral)
+					target_max = maxf(target_max, lateral)
+	var gap := maxf(0.25, float(_signature_profile.get("clearance_m", 0.4)))
+	var opacity := clampf(float(_signature_profile.get("opacity", 0.85)), 0.0, 1.0)
+	var colour := Color(str(_signature_profile.get("colour", _params.colour)))
+	for i in admitted:
+		var node := _mesh_node(mesh, colour, opacity, true)
+		node.material_override = _presentation_material(SIGNATURE_GEOMETRY.material(colour, opacity, true))
+		_signature_nodes.append(node)
+		# Both actual rotated mesh and full measured target bounds determine the
+		# open lateral lane. No center-only/radius guess can shrink that clearance.
+		var left := i % 2 == 0
+		_signature_source_offsets.append(-gap - mesh_max if left else gap - mesh_min)
+		_signature_target_offsets.append(target_min - gap - mesh_max if left else target_max + gap - mesh_min)
+		_signature_ground_lifts.append(maxf(0.0, -mesh_low))
+	return admitted
+
+func _update_signature_shapes() -> void:
+	if _signature_nodes.is_empty(): return
+	var admitted := int(BUDGET.allocation(_signature_lease).get("impact", 0))
+	var from: Vector3 = _context.get("source_ground", _from)
+	var to: Vector3 = _context.get("target_ground", _to)
+	var forward := Vector3(_to.x - _from.x, 0.0, _to.z - _from.z).normalized()
+	if forward.is_zero_approx(): forward = Vector3.FORWARD
+	var right := forward.cross(Vector3.UP).normalized()
+	from -= forward * maxf(0.0, float(_signature_profile.get("behind_m", 0.5)))
+	var t := 1.0 if _arrived else clampf(_elapsed / maxf(_travel, 0.00001), 0.0, 1.0)
+	var fade_seconds := clampf(float(_signature_profile.get("fade_seconds", 0.25)), 0.05, 0.5)
+	var opacity := float(_signature_profile.get("opacity", 0.85)) * (1.0 - smoothstep(_signature_end - fade_seconds, _signature_end, _elapsed))
+	for i in _signature_nodes.size():
+		var node := _signature_nodes[i]
+		var pair := floorf(float(i) / 2.0) - float(maxi(1, int(ceil(_signature_nodes.size() / 2.0))) - 1) * 0.5
+		var lateral := lerpf(_signature_source_offsets[i], _signature_target_offsets[i], smoothstep(0.0, 1.0, t))
+		var rise := sin(t * PI) * float(_params.size) * maxf(0.0, float(_signature_profile.get("rise_scale", 1.0)))
+		node.transform = Transform3D(_signature_basis, from.lerp(to, t) + right * lateral
+			+ forward * pair * float(_signature_profile.get("pair_spacing_m", 1.0))
+			+ Vector3.UP * (_signature_ground_lifts[i] + rise))
+		node.visible = i < admitted and _elapsed < _signature_end and opacity > 0.0
+		_set_opacity(node.material_override, opacity)
+
+func _retire_signature_shapes() -> void:
+	for node: MeshInstance3D in _signature_nodes:
+		if is_instance_valid(node):
+			node.visible = false
+			if not node.is_queued_for_deletion(): node.queue_free()
+	_signature_nodes.clear()
+	_signature_source_offsets.clear()
+	_signature_target_offsets.clear()
+	_signature_ground_lifts.clear()
+	if _signature_lease != 0:
+		BUDGET.release(_signature_lease)
+		_signature_lease = 0
+
+func _stage_mesh_slots_used() -> int:
+	return _stages.size() + _signature_nodes.size()
 
 func _update_bodies(t: float) -> void:
 	var mode := str((_row.body as Dictionary).get("motion", "projectile"))
@@ -327,7 +483,7 @@ func _update_bodies(t: float) -> void:
 		if mode == "sky" and not (_histories[0] as Array).is_empty():
 			_light.position = (_histories[0] as Array).back()
 		var flicker := clampf(float(_light_profile.get("flicker", 0.12)), 0.0, 0.3)
-		_light.light_energy = maxf(0.0, float(_light_profile.get("body_energy", 1.0))) * (1.0 - flicker * (0.5 + 0.5 * sin(_elapsed * 19.0)))
+		_light.light_energy = maxf(0.0, float(_light_profile.get("body_energy", 1.0))) * _peer_opacity * (1.0 - flicker * (0.5 + 0.5 * sin(_elapsed * 19.0)))
 
 func _projectile_position(t: float, index: int) -> Vector3:
 	var direction := (_to - _from).normalized()
@@ -438,13 +594,13 @@ func _build_impact() -> void:
 		_light.visible = true
 		_light.position = _impact.position + surface_offset
 		_light.omni_range = maxf(0.01, float(_light_profile.get("impact_range_m", 4.0)))
-		_light.light_energy = maxf(0.0, float(_light_profile.get("impact_energy", 1.6)))
+		_light.light_energy = maxf(0.0, float(_light_profile.get("impact_energy", 1.6))) * _peer_opacity
 	var core := _mesh_node(GEOMETRY.shape(str(profile.get("shape", "ring")), scale_factor, profile),
 		_colour.lerp(Color.WHITE, float(profile.get("heat", 0.45))), float(profile.get("opacity", 0.82)))
-	if str(profile.get("shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash", "splash_crown"]: core.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
-	if bool(profile.get("air_surface", false)): core.material_override = GEOMETRY.authored_material("wind_surface", profile, _colour)
-	if bool(profile.get("shadow_surface", false)): core.material_override = GEOMETRY.authored_material("shadow_surface", profile, _colour)
-	if bool(profile.get("root_stone_surface", false)): core.material_override = GEOMETRY.authored_material("root_stone_surface", profile, _colour)
+	if str(profile.get("shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash", "splash_crown"]: core.material_override = _presentation_material(GEOMETRY.authored_material(str(profile.shape), profile, _colour))
+	if bool(profile.get("air_surface", false)): core.material_override = _presentation_material(GEOMETRY.authored_material("wind_surface", profile, _colour))
+	if bool(profile.get("shadow_surface", false)): core.material_override = _presentation_material(GEOMETRY.authored_material("shadow_surface", profile, _colour))
+	if bool(profile.get("root_stone_surface", false)): core.material_override = _presentation_material(GEOMETRY.authored_material("root_stone_surface", profile, _colour))
 	if bool(profile.get("thermal_aftermath", false)) and str(profile.get("shape", "")) == "fire_explosion": core.set_meta("thermal_aftermath", true)
 	core.set_meta("base_opacity", float(profile.get("opacity", 0.82)))
 	core.reparent(_impact, false)
@@ -453,7 +609,7 @@ func _build_impact() -> void:
 		var scale := float(layer.get("size_scale", 1.0))
 		var part := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), scale_factor * scale, layer),
 			Color(str(layer.get("colour", _params.colour))), float(layer.get("opacity", 0.6)), bool(layer.get("lit", false)))
-		if str(layer.get("shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash", "splash_crown"]: part.material_override = GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour))))
+		if str(layer.get("shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash", "splash_crown"]: part.material_override = _presentation_material(GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour)))))
 		if bool(layer.get("thermal_aftermath", false)) and str(layer.get("shape", "")) == "fire_explosion": part.set_meta("thermal_aftermath", true)
 		part.set_meta("base_opacity", float(layer.get("opacity", 0.6)))
 		part.reparent(_impact, false)
@@ -465,7 +621,7 @@ func _build_impact() -> void:
 	if bool(_row.impact_layer):
 		var secondary_opacity := float(profile.get("secondary_opacity", 0.65))
 		var secondary := _mesh_node(GEOMETRY.shape(str(profile.get("secondary_shape", "ring")), scale_factor * 1.35, profile), _colour, secondary_opacity)
-		if str(profile.get("secondary_shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: secondary.material_override = GEOMETRY.authored_material(str(profile.secondary_shape), profile, _colour)
+		if str(profile.get("secondary_shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: secondary.material_override = _presentation_material(GEOMETRY.authored_material(str(profile.secondary_shape), profile, _colour))
 		if bool(profile.get("thermal_aftermath", false)) and str(profile.get("secondary_shape", "")) == "fire_explosion": secondary.set_meta("thermal_aftermath", true)
 		secondary.set_meta("base_opacity", secondary_opacity)
 		secondary.reparent(_impact, false)
@@ -495,17 +651,18 @@ func _build_impact() -> void:
 		# Moved every frame: detail_cull.gd must not range it by its spawn spread.
 		_motes.set_meta(&"detail_cull_skip", true)
 		_motes.multimesh = multimesh
-		_motes.material_override = GEOMETRY.material(Color(str(profile.get("mote_colour", _params.colour))), 0.86, str(profile.get("mote_shape", "orb")) == "stone")
+		_motes.material_override = _presentation_material(GEOMETRY.material(Color(str(profile.get("mote_colour", _params.colour))), 0.86, str(profile.get("mote_shape", "orb")) == "stone"))
 		if str(profile.get("mote_shape", "")) in ["soft_ember", "stone", "ice_crystal", "bubble"]:
 			var mote_material := "root_stone_surface" if bool(profile.get("root_stone_surface", false)) else str(profile.mote_shape)
-			_motes.material_override = GEOMETRY.authored_material(mote_material, profile, Color(str(profile.get("mote_colour", _params.colour))))
+			_motes.material_override = _presentation_material(GEOMETRY.authored_material(mote_material, profile, Color(str(profile.get("mote_colour", _params.colour)))))
 		if str(profile.get("mote_shape", "")) == "spark":
 			var spark_material := ShaderMaterial.new()
 			spark_material.shader = SPARK_GLOW_SHADER if bool(profile.get("spark_glow", false)) else SPARK_SHADER
 			spark_material.set_shader_parameter("core_colour", Color(str(profile.get("spark_core_colour", "#fffbe8"))))
 			spark_material.set_shader_parameter("rim_colour", Color(str(profile.get("mote_colour", _params.colour))))
 			spark_material.set_shader_parameter("intensity", float(profile.get("spark_intensity", 1.8)))
-			_motes.material_override = spark_material
+			spark_material.set_shader_parameter("opacity", 1.0)
+			_motes.material_override = _presentation_material(spark_material)
 		_motes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_impact.add_child(_motes)
 	for i in count:
@@ -573,7 +730,7 @@ func _build_puffs(count: int, profile: Dictionary, scale_factor: float) -> void:
 	var puff_profile: Dictionary = profile.duplicate(true)
 	puff_profile["opacity"] = float(profile.get("puff_opacity", 0.72))
 	puff_profile["brightness"] = float(profile.get("puff_brightness", profile.get("brightness", 1.0)))
-	_puffs.material_override = GEOMETRY.authored_material(str(profile.get("puff_shape", "fire_bloom")), puff_profile, Color(str(profile.get("puff_colour", _params.colour))))
+	_puffs.material_override = _presentation_material(GEOMETRY.authored_material(str(profile.get("puff_shape", "fire_bloom")), puff_profile, Color(str(profile.get("puff_colour", _params.colour)))))
 	_puffs.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_impact.add_child(_puffs)
 	if bool(profile.get("puff_at_ground", false)):
@@ -613,7 +770,7 @@ func _update_puffs(u: float) -> void:
 func _update_impact(u: float, delta: float) -> void:
 	if _impact == null: return
 	if _light != null:
-		_light.light_energy = maxf(0.0, float(_light_profile.get("impact_energy", 1.6))) * pow(1.0 - u, 2.0)
+		_light.light_energy = maxf(0.0, float(_light_profile.get("impact_energy", 1.6))) * _peer_opacity * pow(1.0 - u, 2.0)
 	var profile: Dictionary = _row.impact
 	_update_puffs(u)
 	for child: Node in _impact.get_children():
@@ -668,14 +825,38 @@ func _update_impact(u: float, delta: float) -> void:
 		_motes.multimesh.set_instance_transform(i, Transform3D(mote_basis, _mote_positions[i]))
 
 func _set_opacity(material: Material, alpha: float) -> void:
+	alpha *= _peer_opacity
 	if material is ShaderMaterial:
 		(material as ShaderMaterial).set_shader_parameter("opacity", alpha)
 	elif material is StandardMaterial3D:
 		(material as StandardMaterial3D).transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		(material as StandardMaterial3D).albedo_color.a = alpha
 
+func _presentation_material(material: Material) -> Material:
+	if _peer_opacity == 1.0: return material
+	if material is ShaderMaterial:
+		var alpha: Variant = (material as ShaderMaterial).get_shader_parameter("opacity")
+		if alpha is float or alpha is int: _set_opacity(material, float(alpha))
+	elif material is StandardMaterial3D:
+		_set_opacity(material, (material as StandardMaterial3D).albedo_color.a)
+	return material
+
 func _lifetime_after_contact() -> float:
-	return float((_row.impact as Dictionary).get("duration", 0.45)) + _mote_linger
+	return maxf(float((_row.impact as Dictionary).get("duration", 0.45)) + _mote_linger,
+		float((_row.body as Dictionary).get("contact_hold_seconds", 0.0)))
+
+func _retire_contact_drawing() -> void:
+	if _contact_retired: return
+	_contact_retired = true
+	# Ground aftermath is a separate bounded mesh stage. Once the particles,
+	# strike and trail finish, stop their drawing and return their reservations
+	# instead of rebuilding invisible ribbons for the rest of the ground mark.
+	if _impact != null: _impact.visible = false
+	for body: MeshInstance3D in _bodies: body.visible = false
+	for trail: MeshInstance3D in _trails: trail.visible = false
+	if _light != null: _light.visible = false
+	BUDGET.release(_lease)
+	_lease = 0
 
 func _stages_finished() -> bool:
 	for stage: Dictionary in _stages:
@@ -697,10 +878,29 @@ func _build_launch_stages() -> void:
 		_add_flash(launch.flash, _from + toward * scale * float((launch.flash as Dictionary).get("forward_scale", 0.4)), scale, 0.0)
 	if launch.get("sky_call") is Dictionary:
 		_add_sky_call(launch.sky_call, scale)
+	if launch.get("source_body") is Dictionary:
+		_add_source_body(launch.source_body, scale)
 	if launch.get("ground") is Dictionary:
 		var fallback := Vector3(_from.x, _ground_height(), _from.z)
 		var source: Vector3 = _context.get("source_ground", fallback)
 		_add_ground_mark(launch.ground, source, scale, 0.0)
+
+func _add_source_body(profile: Dictionary, scale: float) -> void:
+	if _stage_mesh_slots_used() >= MAX_STAGE_MESHES: return
+	var body_profile: Dictionary = _row.body.duplicate(true)
+	var size := scale * maxf(0.01, float(profile.get("size_scale", 0.6)))
+	var node := _mesh_node(GEOMETRY.shape(str(body_profile.shape), size, body_profile),
+		_colour, float(profile.get("opacity", 0.9)), bool(body_profile.get("lit", false)))
+	body_profile["opacity"] = float(profile.get("opacity", 0.9))
+	if bool(body_profile.get("root_stone_surface", false)):
+		node.material_override = _presentation_material(GEOMETRY.authored_material("root_stone_surface", body_profile, _colour))
+	var source: Vector3 = _context.get("source_ground", _from)
+	var backward := Vector3(_from.x - _to.x, 0.0, _from.z - _to.z).normalized()
+	node.position = source + backward * float(profile.get("behind_m", 0.6))
+	node.position.y += size * float(body_profile.get("height_ratio", 3.0)) * 0.5
+	_stages.append({"node": node, "born": 0.0,
+		"duration": maxf(0.05, float(profile.get("duration", 0.6))), "kind": "source", "profile": profile})
+	_update_stage(_stages.back())
 
 ## Contact reads as its own moment (flash + ground shockwave) and leaves an
 ## aftermath (ground mark, lingering settled chips) after the burst has gone.
@@ -729,7 +929,7 @@ func _build_impact_stages(profile: Dictionary, scale_factor: float, origin: Vect
 ## Lightning-style launch: a short jagged bolt rising from the attacker into
 ## the sky, so the later strike from above reads as called by this creature.
 func _add_sky_call(profile: Dictionary, scale: float) -> void:
-	if _stages.size() >= MAX_STAGE_MESHES: return
+	if _stage_mesh_slots_used() >= MAX_STAGE_MESHES: return
 	var height := float(profile.get("height_m", 3.5))
 	var points: Array[Vector3] = []
 	var across := (_to - _from).normalized().cross(Vector3.UP).normalized()
@@ -742,7 +942,7 @@ func _add_sky_call(profile: Dictionary, scale: float) -> void:
 	bolt_profile["branch_length_m"] = float(profile.get("branch_length_m", 0.5))
 	var node := MeshInstance3D.new()
 	node.mesh = GEOMETRY.bolt(points, maxf(0.03, scale * float(profile.get("stroke_width_scale", 1.6))), _colour, bolt_profile)
-	node.material_override = GEOMETRY.authored_material("ion_filament", profile, Color(str(profile.get("colour", _params.get("colour", "#f5d24a")))))
+	node.material_override = _presentation_material(GEOMETRY.authored_material("ion_filament", profile, Color(str(profile.get("colour", _params.get("colour", "#f5d24a"))))))
 	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(node)
 	_stages.append({"node": node, "born": 0.0, "duration": maxf(0.05, float(profile.get("duration", 0.3))),
@@ -750,7 +950,7 @@ func _add_sky_call(profile: Dictionary, scale: float) -> void:
 	_update_stage(_stages.back())
 
 func _add_flash(profile: Dictionary, position: Vector3, scale: float, born: float) -> void:
-	if _stages.size() >= MAX_STAGE_MESHES: return
+	if _stage_mesh_slots_used() >= MAX_STAGE_MESHES: return
 	var quad := QuadMesh.new()
 	# One archetype spans pebbles to rank-5 boulders; authored metre caps keep
 	# the flash readable without swallowing the target.
@@ -760,7 +960,7 @@ func _add_flash(profile: Dictionary, position: Vector3, scale: float, born: floa
 	material.shader = FLASH_SHADER
 	material.set_shader_parameter("core_colour", Color(str(profile.get("core_colour", "#fff6dc"))))
 	material.set_shader_parameter("edge_colour", Color(str(profile.get("edge_colour", _params.get("colour", "#ffb347")))))
-	material.set_shader_parameter("opacity", float(profile.get("opacity", 1.0)))
+	_set_opacity(material, float(profile.get("opacity", 1.0)))
 	material.set_shader_parameter("streaks", int(profile.get("streaks", 7)))
 	material.set_shader_parameter("streak_strength", float(profile.get("streak_strength", 0.55)))
 	material.set_shader_parameter("seed", float(_rng.randi() % 997))
@@ -775,7 +975,7 @@ func _add_flash(profile: Dictionary, position: Vector3, scale: float, born: floa
 	_update_stage(_stages.back())
 
 func _add_ground_mark(profile: Dictionary, centre: Vector3, scale: float, born: float) -> void:
-	if _stages.size() >= MAX_STAGE_MESHES: return
+	if _stage_mesh_slots_used() >= MAX_STAGE_MESHES: return
 	var plane := PlaneMesh.new()
 	var radius := clampf(scale * float(profile.get("radius_scale", 2.0)), float(profile.get("min_m", 0.3)), float(profile.get("max_m", 3.0)))
 	plane.size = Vector2.ONE * radius * 2.0
@@ -812,10 +1012,13 @@ func _update_stage(stage: Dictionary) -> void:
 	if not is_instance_valid(node): return
 	var age := clampf((_elapsed - float(stage.born)) / float(stage.duration), 0.0, 1.0)
 	node.visible = _elapsed >= float(stage.born) and age < 1.0
+	if str(stage.kind) == "source":
+		_set_opacity(node.material_override, float((stage.profile as Dictionary).get("opacity", 0.9)) * (1.0 - age))
+		return
 	var material := node.material_override as ShaderMaterial
 	material.set_shader_parameter("age", age)
 	if str(stage.kind) == "call":
-		material.set_shader_parameter("opacity", float((stage.profile as Dictionary).get("opacity", 1.0)) * pow(1.0 - age, 1.4))
+		_set_opacity(material, float((stage.profile as Dictionary).get("opacity", 1.0)) * pow(1.0 - age, 1.4))
 		return
 	if str(stage.kind) != "ground": return
 	var profile: Dictionary = stage.profile
@@ -823,7 +1026,7 @@ func _update_stage(stage: Dictionary) -> void:
 	var fade_in := clampf(age / maxf(0.001, float(profile.get("fade_in", 0.06))), 0.0, 1.0)
 	var hold := clampf(float(profile.get("hold", 0.6)), 0.0, 0.98)
 	var fade_out := 1.0 - smoothstep(hold, 1.0, age)
-	material.set_shader_parameter("opacity", float(profile.get("opacity", 0.8)) * fade_in * fade_out)
+	_set_opacity(material, float(profile.get("opacity", 0.8)) * fade_in * fade_out)
 	var spread := lerpf(float(profile.get("initial_scale", 0.6)), 1.0, clampf(age / maxf(0.001, float(profile.get("spread_time", 0.18))), 0.0, 1.0))
 	node.scale = Vector3(spread, 1.0, spread)
 
@@ -841,13 +1044,17 @@ func _contact_position() -> Vector3:
 		return _context.get("target_ground", _to)
 	return _to
 
+func _peer_launch_gain() -> float:
+	if not bool(_context.get("peer_view", false)): return 0.0
+	return float((_context.get("peer_presentation", {}) as Dictionary).get("launch_gain_db", 0.0))
+
 func _play_launch() -> void:
 	var minimum := float((_row.sound as Dictionary).get("travel_min_seconds", 0.18))
 	var name := "launch_travel" if _travel >= minimum else "launch"
 	if int(_row.mastery_rank) >= 5: name += "_mastery"
 	var path := _cue(name)
 	if path.is_empty(): return
-	AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _from, "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)))
+	AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _from, "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)) + _peer_launch_gain())
 
 func _play_impact() -> void:
 	# An accepted combat receipt can own the one classified contact cue. This
@@ -859,6 +1066,7 @@ func _play_impact() -> void:
 	AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _contact_position(), "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)))
 
 func _exit_tree() -> void:
+	_retire_signature_shapes()
 	BUDGET.release(_lease)
 	# AudioManager owns its pooled players; do not stop a recycled voice here.
 
@@ -889,6 +1097,7 @@ func cancel_presentation() -> void:
 	# This cannot cancel an earned action or an authoritative pending hit.
 	# Stop local processing now; deferred deletion still releases the lease.
 	set_process(false)
+	_retire_signature_shapes()
 	if _light != null: _light.visible = false
 	_arrived = true
 	queue_free()

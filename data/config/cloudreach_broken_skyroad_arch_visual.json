@@ -1,8 +1,19 @@
 {
   "schema_version": 1,
   "landmark_id": "broken_skyroad_arch",
-  "design_intent": "A weathered installed-stone gateway whose fallen crown, asymmetric buttresses, and wind-lit fracture turn the isolated ledge into a recognizable skyroad ruin.",
+  "design_intent": "A course-built skyroad gateway with bevelled installed stones, bonded piers, radial voussoirs and a missing outer shoulder above fallen crown stones. One warm stone family continues through the arch and its asymmetric buttresses.",
   "gateway_size_m": [26.0, 19.0, 5.5],
   "gateway_yaw_deg": -24.0,
+  "spring_height_m": 8.0,
+  "inner_radius_fraction": 0.6384615385,
+  "pier_courses": 8,
+  "voussoirs_per_course": 17,
+  "radial_courses": 2,
+  "broken_outer_voussoirs": [12, 13],
+  "mortar_gap_m": 0.04,
+  "fallen_stone_max_width_m": 2.6,
+  "fallen_ground_clearance_m": 0.02,
+  "stone_tints": ["#c3b296", "#b7a88e", "#cdbc9f"],
+  "stone_roughness": 0.92,
   "fracture_colour": "#70e0d6"
 }

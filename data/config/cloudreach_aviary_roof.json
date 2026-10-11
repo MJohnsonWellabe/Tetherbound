@@ -1,0 +1,23 @@
+{
+  "scope": "client_presentation",
+  "angular_segments": 144,
+  "course_rows": 8,
+  "surface_offset_m": 0.16,
+  "thickness_m": 0.32,
+  "slate_tint": "#66747c",
+  "texture_scale": 0.48,
+  "courses": [
+    {"id": "LowerEaves", "from_polar_deg": 73.0, "to_polar_deg": 89.0},
+    {"id": "UpperClerestory", "from_polar_deg": 48.0, "to_polar_deg": 57.0}
+  ],
+  "lamps": {
+    "angles_deg": [0.0, 180.0],
+    "roof_polar_deg": 52.0,
+    "drop_m": 4.2,
+    "height_m": 1.4,
+    "colour": "#ffd2a0",
+    "energy": 1.6,
+    "range_m": 16.0,
+    "chain_radius_m": 0.04
+  }
+}

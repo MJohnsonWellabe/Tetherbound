@@ -375,6 +375,14 @@ func _home_bed() -> Node:
 	return current_scene.get_node_or_null("GrandpaHouse/HomeCreatureBed") if current_scene != null else null
 
 func _home_bed_rest(args: Dictionary) -> Dictionary:
+	# Production join applies the snapshot before the receiver handshake and
+	# Hall display necessarily settle. Wait for the same strict guard, not a
+	# synthetic admission, within this action's existing 1800-frame budget.
+	var readiness_deadline := Time.get_ticks_msec() + 5000
+	for _frame in 300:
+		if not _hall_guard(2).is_empty() or Time.get_ticks_msec() >= readiness_deadline:
+			break
+		await physics_frame
 	if _hall_guard(2).is_empty():
 		return {"verdict": "FAIL", "detail": "home bed rest requires the admitted two-peer meadows session"}
 	var game := root.get_node_or_null("Game")

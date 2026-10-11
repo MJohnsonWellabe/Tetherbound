@@ -1,0 +1,50 @@
+{
+  "_comment": "P2-050: role-specific standing poses, applied to a private copy of each NPC's installed idle. Values are extra bone-local XYZ degrees over the breathing clip. Negative forearm X flexes the elbow, following tools/art_pipeline/blender/animate_humanoid.py's anatomical axes. No hips, legs, feet or translations change. Keep hands below the face and away from each other; these are social postures, not attacks or guards in a human combat system.",
+  "by_name": {
+    "Mira": "grower",
+    "Tam": "artisan",
+    "Oskar": "keeper",
+    "Halda": "marshal",
+    "Callum": "artisan",
+    "Lark": "courier",
+    "Ren": "reserved",
+    "Rae": "watcher"
+  },
+  "by_model": {
+    "villager_male_lod0": "keeper",
+    "villager_female_lod0": "grower",
+    "grunt_lod0": "watcher",
+    "grunt_a_lod0": "watcher",
+    "grunt_b_lod0": "marshal",
+    "grunt_c_lod0": "reserved",
+    "officer_a_lod0": "marshal",
+    "officer_b_lod0": "officer",
+    "captain_a_lod0": "officer",
+    "captain_b_lod0": "marshal",
+    "innkeeper_lod0": "keeper",
+    "inn_helper_lod0": "grower",
+    "trader_lod0": "keeper",
+    "craftsperson_lod0": "artisan",
+    "creature_caretaker_lod0": "keeper",
+    "farmer_lod0": "grower",
+    "local_historian_lod0": "reserved",
+    "young_trainer_lod0": "courier",
+    "rival_trainer_lod0": "marshal",
+    "field_researcher_lod0": "reserved",
+    "wandering_trainer_lod0": "watcher",
+    "lost_traveler_lod0": "reserved",
+    "alpha_tracker_lod0": "watcher",
+    "courier_lod0": "courier",
+    "former_tether_member_lod0": "reserved"
+  },
+  "profiles": {
+    "grower": {"LeftArm": [-7, 0, -4], "LeftForeArm": [-20, 0, 0], "RightForeArm": [-8, 0, 0], "Head": [0, -3, 0]},
+    "artisan": {"RightArm": [4, 0, 8], "RightForeArm": [-38, 0, 0], "LeftForeArm": [-12, 0, 0], "Spine02": [0, -3, 0]},
+    "keeper": {"LeftArm": [-10, 0, -3], "LeftForeArm": [-38, 0, 0], "RightForeArm": [-12, 0, 0], "Head": [0, 4, 0]},
+    "marshal": {"LeftArm": [8, 0, -4], "RightArm": [8, 0, 4], "LeftForeArm": [-28, 0, 0], "RightForeArm": [-28, 0, 0], "Spine02": [-2, 0, 0]},
+    "courier": {"RightArm": [-8, 0, 3], "RightForeArm": [-66, 0, 0], "LeftForeArm": [-10, 0, 0], "Head": [0, -5, 0]},
+    "reserved": {"LeftArm": [-5, 0, -4], "LeftForeArm": [-48, 0, 0], "RightArm": [5, 0, 3], "Spine02": [2, -3, 0], "Head": [1, 3, 0]},
+    "watcher": {"LeftArm": [-5, 0, -4], "RightArm": [-5, 0, 4], "LeftForeArm": [-20, 0, 0], "RightForeArm": [-20, 0, 0], "Head": [0, 5, 0]},
+    "officer": {"LeftArm": [15, 0, -4], "RightArm": [15, 0, 4], "LeftForeArm": [-26, 0, 0], "RightForeArm": [-26, 0, 0], "Spine02": [-3, 0, 0], "Head": [-1, 0, 0]}
+  }
+}

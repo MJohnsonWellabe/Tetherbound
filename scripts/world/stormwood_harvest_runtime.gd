@@ -158,7 +158,7 @@ func _mount_site(spec: Dictionary) -> void:
 		"order": str(spec.get("id", "")),
 		"realm": REALM_ID,
 	})
-	add_material_cue(node, str(spec.get("item", "")), _catalogue.get("material_cues", {}))
+	add_material_cue(node, str(spec.get("item", "")), _catalogue.get("material_cues", {}), _ground_height)
 	_placements[str(spec.get("id", ""))] = node
 
 
@@ -171,7 +171,8 @@ func _ground_height(x: float, z: float) -> float:
 ## P2-046: a visual-only cue so a node reads as its named material (a plain
 ## rock read as stone, not Stormglass). A child of the node, so it hides with
 ## it once harvested. No collider, stock, reward or placement change.
-static func add_material_cue(node: Node3D, item: String, cues: Dictionary) -> Node3D:
+static func add_material_cue(node: Node3D, item: String, cues: Dictionary,
+		ground_height: Callable = Callable()) -> Node3D:
 	var cue: Variant = cues.get(item, null)
 	if not cue is Dictionary or node.get_node_or_null(^"MaterialCue") != null:
 		return null
@@ -197,18 +198,20 @@ static func add_material_cue(node: Node3D, item: String, cues: Dictionary) -> No
 			for index in count:
 				var shard := MeshInstance3D.new()
 				shard.name = "Shard%d" % index
-				var prism := PrismMesh.new()
 				# Deterministic per-index variation; every peer builds the same cue.
 				var factor := 0.65 + 0.35 * float((index * 7) % 5) / 4.0
 				var width := float(spec.get("width_m", radius * 0.32))
-				prism.size = Vector3(width, height * factor, width)
-				shard.mesh = prism
+				shard.mesh = _crystal_mesh(width, height * factor)
 				shard.material_override = glow
 				var angle := TAU * float(index) / float(count)
 				# A ring around the model's base: placed near the centre, shards
 				# sat inside the Stormglass rock and never showed.
 				var ring := float(spec.get("ring_m", radius * 0.45))
-				shard.position = Vector3(cos(angle) * ring, lift + prism.size.y * 0.5, sin(angle) * ring)
+				var at := Vector3(cos(angle) * ring, lift - .06, sin(angle) * ring)
+				if ground_height.is_valid():
+					var world_at := node.to_global(at)
+					at.y = node.to_local(Vector3(world_at.x, float(ground_height.call(world_at.x, world_at.z)), world_at.z)).y + lift - .06
+				shard.position = at
 				shard.rotation = Vector3(sin(angle) * 0.35, angle, cos(angle) * 0.35)
 				shard.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 				root.add_child(shard)
@@ -226,4 +229,69 @@ static func add_material_cue(node: Node3D, item: String, cues: Dictionary) -> No
 			cap.position = Vector3(0.0, lift, 0.0)
 			cap.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			root.add_child(cap)
+		"moss":
+			# Low overlapping cushions read as ground growth, not mushrooms.
+			for index in 9:
+				var pad := MeshInstance3D.new()
+				var dome := SphereMesh.new()
+				dome.radius = radius * (0.6 + 0.08 * (index % 4))
+				dome.height = dome.radius * 0.42
+				pad.mesh = dome
+				pad.material_override = glow
+				var angle := TAU * float(index) / 9.0
+				pad.position = Vector3(cos(angle) * radius, lift, sin(angle) * radius)
+				root.add_child(pad)
+		"veins":
+			# Broken copper/blue seams follow the node's trunk or vine body.
+			var height := float(spec.get("height_m", 2.0))
+			for strand in 3:
+				for step in 12:
+					var t := float(step) / 12.0
+					var next_t := float(step + 1) / 12.0
+					var angle := TAU * (float(strand) / 3.0 + t * 0.55)
+					var next_angle := TAU * (float(strand) / 3.0 + next_t * 0.55)
+					var a := Vector3(cos(angle) * radius, lift + t * height, sin(angle) * radius)
+					var b := Vector3(cos(next_angle) * radius, lift + next_t * height, sin(next_angle) * radius)
+					var seam := MeshInstance3D.new()
+					var tube := CylinderMesh.new()
+					tube.top_radius = float(spec.get("width_m", 0.035))
+					tube.bottom_radius = tube.top_radius
+					tube.height = a.distance_to(b)
+					tube.radial_segments = 5
+					seam.mesh = tube
+					seam.material_override = glow
+					seam.position = (a + b) * 0.5
+					seam.quaternion = Quaternion(Vector3.UP, (b - a).normalized())
+					root.add_child(seam)
+	# Keep new cues on the same visibility lifecycle as the harvest model.
+	# In particular, hiding a bush in a fight must also hide its copper seams.
+	if item in ["glowmoss", "conductor_vine", "thunderwood", "stormglass", "stormglass_crown"]:
+		var visual := node.get("_visual") as Node3D
+		if visual != null:
+			if bool(spec.get("replace_model", false)):
+				visual.queue_free()
+				node.set("_visual", root)
+			else:
+				node.remove_child(root)
+				visual.add_child(root)
+				root.transform = visual.transform.affine_inverse()
 	return root
+
+
+## An offset broken tip and six flat side faces distinguish fused crystals
+## from both the base rock and the former roof-shaped primitive.
+static func _crystal_mesh(width: float, height: float) -> ArrayMesh:
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for index in 6:
+		var angle := TAU * float(index) / 6.0
+		var next_angle := TAU * float(index + 1) / 6.0
+		var a := Vector3(cos(angle) * width, 0, sin(angle) * width)
+		var b := Vector3(cos(next_angle) * width, 0, sin(next_angle) * width)
+		var c := b * .66 + Vector3.UP * height * .77
+		var d := a * .66 + Vector3.UP * height * .77
+		var tip := Vector3(width * .18, height, -width * .12)
+		for point: Vector3 in [a, b, c, a, c, d, d, c, tip]:
+			surface.add_vertex(point)
+	surface.generate_normals()
+	return surface.commit()

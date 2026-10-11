@@ -203,6 +203,7 @@ static func trainer_specs() -> Array[Dictionary]:
 			"id": str(authored.get("id", "")),
 			"name": str(authored.get("display_name", "")),
 			"config_key": str(authored.get("humanoid_key", "")),
+			"appearance_variant_id": str(authored.get("appearance_variant_id", "")),
 			"position": [float(source_position[0]), float(source_position[2])],
 			"source_position3D": Vector3(float(source_position[0]), float(source_position[1]), float(source_position[2])),
 			"surface_id": str(authored.get("surface_id", "")),

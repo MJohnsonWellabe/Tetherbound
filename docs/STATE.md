@@ -2,7 +2,9 @@
 
 Read first; update in place, under 25KB. No dated status/goal/handoff documents. Evidence: `ralph/reports/<LANE>/`; history: Git, `archive/`.
 
-## 0. Current integration (coordinator: Claude)
+## 0. Current integration (coordinators: Claude and Codex)
+
+**Codex coordinator (owner #572 comment 6102658883):** ten visible local package tasks have full access with approvals disabled. Phase 1 completes and lands all game code with shipping flags ON; Phase 2 then runs the existing named proofs and native GPU judges. Codex uses one consolidated `tb/codex-batch` PR; Claude owns #676 and its separate proof lanes. This supersedes Codex's former native-service role and disk block. No criterion is newly MET yet.
 
 **Claude lanes (10-10 5:45 AM CT):** coordinator runs lanes A (combat), B (routes), C (co-op/economy), D (Meadows/Tidewake visuals, performance) and E (Cloudreach/Stormwood) on `tb/lane-a`…`tb/lane-e`; Codex is a native service (captures, Meshy, GPU perf), blocked on disk until the owner authorizes cleanup. Board 168 met (F02#2 via #594). #604 actor_vitals broke main (Nysa press, hosted-trainer strike geometry, F20 friendly pending_vitals, F18 replay); #613 reverted it and set Tether back to snare_only, so F24#0 (#608) is not counted until #621 re-lands vitals and a separate rollout PR follows. Delivery plan rebaselined to the five Claude lanes at ~9 criteria/day; projected lane finish Wed 21 Oct.
 

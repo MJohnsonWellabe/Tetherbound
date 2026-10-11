@@ -1,33 +1,37 @@
 {
   "enabled": true,
   "scope": "client_presentation",
-  "_comment": "F41/P2-039 realm-local profile through existing grass_field.configure_profile. Short dark ground cover, low clustered shrubs and wet litter on grass/soil/damp/forest_floor add understory layers without admitting path or rock. Uses the existing generated grass/shrub/litter families and retains the grass ring count; disables flower tiers and tunes cover size/density. No scatter bake, terrain, collision, authority or save edits. Candidate requires native before/after visual proof before landing; revert enabled on failure.",
+  "_comment": "P2-039 default-on forest floor through the existing realm-local grass_field profile. Decorative flower tiers are excluded. Low uneven moss-height cover, sparse shrub masses and warm leaf litter replace the meadow carpet; installed forest-floor and wet-earth texture pairs occupy the existing terrain slots. Counts, terrain/control maps, harvestable plants, collision and durable state are unchanged.",
   "grass": {
-    "height_near": 0.1,
-    "height_far": 0.18,
+    "height_near": 0.065,
+    "height_far": 0.095,
+    "height_jitter": 0.7,
+    "lattice_jitter": 1.4,
     "tint_base": "#25392c",
     "tint_tip": "#496344",
-    "density_gain": 0.42,
+    "density_gain": 0.3,
     "clump_contrast": 0.95,
-    "clump_scale": 0.028,
+    "clump_scale": 0.016,
     "ground_blend": 0.8,
     "translucency": 0.04
   },
   "tiers": {
     "flowers": {
-      "enabled": true
+      "enabled": false
     },
     "flowers_gold": {
-      "enabled": true
+      "enabled": false
     },
     "bushes": {
       "enabled": true,
-      "item_size": 0.52,
-      "size_jitter": 0.45,
-      "density_gain": 0.36,
-      "drift_scale": 0.035,
+      "item_size": 0.32,
+      "size_jitter": 0.7,
+      "density_gain": 0.24,
+      "drift_scale": 0.018,
       "drift_contrast": 1.0,
       "drift_gate": 2.0,
+      "patch_start": 0.58,
+      "patch_full": 0.78,
       "tint_base": "#273d32",
       "tint_tip": "#57765b",
       "tint_wood": "#454337",
@@ -42,15 +46,18 @@
     },
     "litter": {
       "enabled": true,
-      "item_size": 0.4,
-      "sink": 0.025,
-      "density_gain": 0.75,
-      "drift_scale": 0.045,
+      "item_size": 0.65,
+      "size_jitter": 0.75,
+      "sink": 0.015,
+      "density_gain": 1.0,
+      "drift_scale": 0.085,
       "drift_contrast": 0.95,
       "drift_gate": 1.5,
-      "tint_base": "#353e30",
-      "tint_tip": "#58624a",
-      "ground_blend": 0.55,
+      "patch_start": 0.22,
+      "patch_full": 0.68,
+      "tint_base": "#574c38",
+      "tint_tip": "#80704f",
+      "ground_blend": 0.32,
       "ground": [
         "grass",
         "soil",
@@ -62,14 +69,18 @@
   "terrain_materials": {
     "enabled": true,
     "scope": "client_presentation",
-    "_comment": "F41 ground clarity candidate: reuse installed stylised terrain albedo/normal slots and unchanged terrain/control maps. Distinct earth/moss/path tints, about2m tiling and per-surface normal relief replace the old common dim purple multiplier. Failed ground-cover profile above stays OFF. Native actualbinding/before-after judge required; turn this block OFF if it fails.",
+    "_comment": "Bind installed forest-floor grain to living ground and wet earth to the muddy path, using the existing six slot IDs. Texture replacement changes presentation only; the original painted path/control maps and terrain remain authoritative.",
     "textures": {
       "grass": {
+        "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+        "normal": "res://assets/environment/terrain/stylised/forest_floor_NormalGL.png",
         "uv_scale": 0.5,
         "normal_depth": 0.34,
         "tint": "#99a77f"
       },
       "soil": {
+        "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+        "normal": "res://assets/environment/terrain/stylised/forest_floor_NormalGL.png",
         "uv_scale": 0.45,
         "normal_depth": 0.22,
         "tint": "#b4b497"
@@ -80,9 +91,11 @@
         "tint": "#aaaab3"
       },
       "path": {
+        "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+        "normal": "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png",
         "uv_scale": 0.5,
         "normal_depth": 0.25,
-        "tint": "#bfb49c"
+        "tint": "#aaa28c"
       },
       "damp": {
         "uv_scale": 0.5,
@@ -99,7 +112,7 @@
   "understory_readability": {
     "enabled": true,
     "scope": "client_presentation",
-    "bush_item_size": 0.42,
-    "_comment": "F10#4 Low normal-camera fix: cap decorative shrub height below trainer knees across Stormwood. Reuse existing bush mesh, density, lattice, seed and tier jitter; no harvestable plants, collision, terrain or durable state changes. Failed full ground-cover profile stays OFF; installed-leaf experiment remains OFF."
+    "bush_item_size": 0.32,
+    "_comment": "Cap the decorative shrub layer below trainer knees; harvestable plants and their identities remain on the existing scatter path."
   }
 }

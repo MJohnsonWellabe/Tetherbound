@@ -1,10 +1,10 @@
 {
-  "enabled": false,
+  "enabled": true,
   "revision": "f40-sanctuary-and-route-masses-r1",
-  "_disposition": "Unjudged F40 candidate. Enable only after independent matched High/Medium full-bar PASS. Previous skyline/crown FAILs remain evidence; towers and occupied terrace remain off. Local presentation only, no save or gameplay flag.",
+  "_disposition": "Owner Phase 1 default-on production presentation: sanctuary, crown arcade, route verges and occupied upper street. The overlay preserves the accepted base towers. Phase 2 visual acceptance remains required. No durable flag or transaction.",
   "visual": {
     "skyline_profile": {"enabled": true},
-    "settlement": {"occupied_terrace": {"enabled": false}}
+    "settlement": {"occupied_terrace": {"enabled": true}}
   },
   "look": {
     "route_verges": {
@@ -36,9 +36,16 @@
       "lantern_every": 4,
       "lantern_height_m": 1.1,
       "lantern_energy": 1.5,
-      "lantern_range_m": 10.0
+      "lantern_range_m": 10.0,
+      "cornice": {
+        "enabled": true,
+        "lower_height_m": 0.35,
+        "upper_height_m": 0.3,
+        "projection_m": 0.3,
+        "segments": 64
+      }
     },
-    "towers": {"enabled": false},
+    "towers": {"enabled": true},
     "sanctuary": {
       "enabled": true,
       "entry_light_height_m": 5.8,

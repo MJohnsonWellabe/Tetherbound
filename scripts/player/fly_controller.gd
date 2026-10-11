@@ -8,6 +8,7 @@ const PARTY := preload("res://autoload/party.gd")
 const ANCHOR_ARBITER := preload("res://scripts/net/fly_anchor_arbiter.gd")
 const CONFIG_PATH := "res://data/config/fly_traversal.json"
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const LANDING_PRESENTATION := preload("res://scripts/player/fly_landing_presentation.gd")
 const SESSION_PATH := ^"/root/Game/Session"
 
 signal state_changed(state: String)
@@ -104,6 +105,13 @@ var _touched_down := false
 ## The owned carrier's ground follower was recalled at launch; summon it back
 ## out on touchdown (`_recall_carrier_follower`).
 var _recalled_follower := false
+var _landing_visual: Node3D
+var _landing_creature: RefCounted
+var _landing_selection: RefCounted
+var _landing_restore := false
+var _landing_realm := ""
+var _landing_origin := Vector3.ZERO
+var _landing_world: WeakRef
 
 
 func setup(player: CharacterBody3D, rig: Node3D, model: Node3D) -> void:
@@ -129,6 +137,18 @@ func is_flying() -> bool:
 	return state in ["glide", "climb", "descent", "exhausted"]
 
 
+## Ephemeral art state for the existing remote trainer projection. Only the
+## natural touchdown path creates this helper; nearby recovery/cancellation
+## must never be inferred as a landing from a grounded movement animation.
+func presentation_state() -> String:
+	if is_flying():
+		return state
+	if is_instance_valid(_landing_visual) and not bool(_landing_visual.get("finished")) \
+			and _landing_context_valid():
+		return "touchdown"
+	return ""
+
+
 ## X03 (`input_owner.gd::TRAVERSAL_GROUP`): while flying or carried, LT is
 ## `fly_descend`, not a world verb.
 func owns_traversal_input() -> bool:
@@ -144,6 +164,7 @@ static func _new_anchor_request_id() -> int:
 ## grant an anchor at the requested destination: observe_ground must still
 ## verify real ground (and clients still use the host's normal approval path).
 func clear_recovery_anchor() -> void:
+	_cancel_landing(false)
 	_anchor_request_id = _new_anchor_request_id()
 	safe_anchor = Vector3.INF
 	safe_realm = ""
@@ -445,7 +466,7 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 		_align_grip()
 	if _player.is_on_floor():
 		var species_id := str(_creature.get("species_id")) if _creature != null else ""
-		_finish("grounded")
+		_finish("grounded", true)
 		# Lane 6.C: the ONE call to `observe_ground()` that is a landing rather
 		# than a step. On a client the anchor it proposes is the one the host
 		# can pull back from.
@@ -793,9 +814,13 @@ func _recall_carrier_follower() -> void:
 
 
 func _launch() -> void:
+	var carry_restore := _landing_restore and _landing_context_valid(false)
+	var previous_carrier := _landing_creature
+	_cancel_landing(false)
 	_creature = eligible_creature()
 	_last_flight_used_loaner = _creature != null and _creature == _mentor_loaner
 	_recall_carrier_follower()
+	_recalled_follower = _recalled_follower or (carry_restore and previous_carrier == _creature)
 	last_denial = ""
 	flight_seconds = 0.0
 	_saved_snap = _player.floor_snap_length
@@ -818,14 +843,30 @@ func _launch() -> void:
 		_rig.call("set_target", _player, {"distance": config.get("camera_distance", 7.5), "height": config.get("camera_height", 2.0)})
 
 
-func _finish(next: String) -> void:
+func _finish(next: String, touchdown := false) -> void:
+	var carrier := _creature if _creature != null else _landing_creature
+	var restore := _recalled_follower or (_landing_restore and _landing_context_valid(false))
+	_cancel_landing(false)
+	_recalled_follower = false
 	_player.floor_snap_length = _saved_snap
 	var collider := _player.get_node_or_null(^"Collision") as CollisionShape3D
 	if collider != null and _saved_shape != null:
 		collider.shape = _saved_shape
 		collider.position = _saved_shape_position
 		_saved_shape = null
-	if is_instance_valid(_visual):
+	if touchdown and is_instance_valid(_visual):
+		_landing_visual = LANDING_PRESENTATION.begin(_player, _visual, _presentation,
+			config.get("landing_presentation", {}))
+		if _landing_visual != null:
+			_landing_creature = carrier
+			_landing_restore = restore
+			_landing_realm = _realm()
+			_landing_origin = _player.global_position
+			_landing_world = weakref(_player.get_parent())
+			var party: Variant = _game.get("party") if is_instance_valid(_game) else null
+			_landing_selection = party.call("active") if party != null else null
+	if _landing_visual == null and is_instance_valid(_visual):
+		_visual.hide()
 		_visual.queue_free()
 	_visual = null
 	_bird_skeleton = null
@@ -834,17 +875,76 @@ func _finish(next: String) -> void:
 	if _rig != null and _rig.has_method("set_target"):
 		_rig.call("set_target", _player, _saved_camera)
 	_creature = null
-	if _recalled_follower:
-		_recalled_follower = false
-		var director := _director()
-		if director != null and director.is_inside_tree():
-			director.call("summon_active_creature")
+	if restore and _landing_visual == null:
+		_restore_landed_follower(carrier)
 	_set_state(next)
+
+
+func _process(_delta: float) -> void:
+	if _landing_visual == null:
+		return
+	if not _landing_context_valid(false):
+		_cancel_landing(false)
+		return
+	var director := _director()
+	# Explicit recall/selection wins over our pending cosmetic handoff. The
+	# normal director handles that input immediately, without a second follower.
+	if (INPUT_OWNER.current(get_tree()) == null and
+			(Input.is_action_just_pressed("creature_recall") or Input.is_action_just_pressed("party_cycle"))) \
+			or (director != null and director.call("ally_instance") != null):
+		_cancel_landing(false)
+		return
+	if not _landing_context_valid():
+		# Walking away cancels only the stationary picture, not the follower
+		# which this flight put away. Explicit travel uses clear_recovery_anchor.
+		_cancel_landing(true)
+		return
+	if not is_instance_valid(_landing_visual) or bool(_landing_visual.get("finished")):
+		_cancel_landing(true)
+
+
+func _landing_context_valid(check_position := true) -> bool:
+	if not is_instance_valid(_player) or _landing_world == null \
+			or _landing_world.get_ref() != _player.get_parent() or _realm() != _landing_realm:
+		return false
+	if check_position and _player.global_position.distance_to(_landing_origin) > float(config.get("landing_presentation", {}).get("cancel_distance_m", 8.0)):
+		return false
+	var party: Variant = _game.get("party") if is_instance_valid(_game) else null
+	return party != null and party.call("active") == _landing_selection
+
+
+func _cancel_landing(restore: bool) -> void:
+	var carrier := _landing_creature
+	var should_restore := restore and _landing_restore and _landing_context_valid(false)
+	if is_instance_valid(_landing_visual):
+		_landing_visual.call("cancel")
+	_landing_visual = null
+	_landing_creature = null
+	_landing_selection = null
+	_landing_restore = false
+	_landing_world = null
+	if should_restore:
+		_restore_landed_follower(carrier)
+
+
+func _restore_landed_follower(carrier: RefCounted) -> void:
+	var party: Variant = _game.get("party") if is_instance_valid(_game) else null
+	var director := _director()
+	if carrier == null or carrier == _mentor_loaner or party == null or director == null \
+			or not director.is_inside_tree() or party.call("active") != carrier \
+			or not (party.call("members") as Array).has(carrier):
+		return
+	director.call("summon_active_creature")
+
+
+func _exit_tree() -> void:
+	_cancel_landing(false)
 
 
 ## Riding owns the next camera/collision transition. End Fly before the
 ## carrier saves the ground collision state, so dismount cannot retain it.
 func end_for_carrier() -> void:
+	_cancel_landing(false)
 	if is_flying():
 		_finish("grounded")
 
@@ -896,6 +996,7 @@ func apply_pending_load() -> void:
 	if str(payload.get("realm", "")) != _realm():
 		return
 	_game.remove_meta("pending_fly_load")
+	_cancel_landing(false)
 	if is_flying():
 		_finish("recovery")
 	var raw: Array = payload.get("safe_anchor", [])
@@ -978,6 +1079,34 @@ static func make_carrier_art(capability: Dictionary) -> Node3D:
 	visual.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
 	for animation: Node in art.find_children("*", "AnimationPlayer", true, false):
 		var player := animation as AnimationPlayer
+		# This shared builder draws both the local and remote carrier. Install
+		# the same measured grip clip used by ordinary creature presentation.
+		var clips: Dictionary = {}
+		for species_id: String in SPECIES.table():
+			var look := SPECIES.placeholder(species_id)
+			if str(look.get("model", "")) == path:
+				clips = preload("res://scripts/creatures/creature_pose_candidates.gd").install(
+					visual, visual, player, look, look.get("animations", {}), species_id)
+				break
+		var grip := str(clips.get("fly_grip", ""))
+		if not grip.is_empty() and player.has_animation(grip):
+			var grip_animation := player.get_animation(grip)
+			# Wrist/foot alignment owns the carrier's position. Bone animation
+			# must not reset that alignment to the configured launch offset.
+			var animation_root := player.get_node_or_null(player.root_node)
+			if animation_root != null:
+				var pivot_path := animation_root.get_path_to(visual)
+				for track in range(grip_animation.get_track_count() - 1, -1, -1):
+					if grip_animation.track_get_path(track) == pivot_path \
+							and grip_animation.track_get_type(track) == Animation.TYPE_POSITION_3D:
+						grip_animation.remove_track(track)
+			grip_animation.loop_mode = Animation.LOOP_LINEAR
+			player.play(grip)
+			player.advance(0.0)
+			# Physics samples the clip before wrist alignment. An independently
+			# advancing render animation would move the feet after that alignment.
+			player.pause()
+			continue
 		if bool(capability.get("procedural_wing_pose", false)):
 			player.stop()
 			continue
@@ -1067,6 +1196,20 @@ func _pose_bird() -> void:
 static func pose_carrier_wings(rig: Skeleton3D, capability: Dictionary, seconds: float) -> void:
 	if rig == null or not is_instance_valid(rig) or not bool(capability.get("procedural_wing_pose", false)):
 		return
+	# Sample the authored grip on the existing flight clock before its caller
+	# aligns feet with wrists. The same path runs for local and remote carriers.
+	var ancestor: Node = rig
+	while ancestor != null:
+		if bool(ancestor.get_meta("f36_pose_candidate_installed", false)):
+			for animation: Node in ancestor.find_children("*", "AnimationPlayer", true, false):
+				var player := animation as AnimationPlayer
+				var clip := str(player.assigned_animation)
+				if clip == "f36_candidate/fly_grip" and player.has_animation(clip):
+					var length := player.get_animation(clip).length
+					if length > 0.0:
+						player.seek(fposmod(seconds, length), true)
+			return
+		ancestor = ancestor.get_parent()
 	var flap := sin(seconds * float(capability.get("wing_flap_frequency", 2.2)) * TAU) * float(capability.get("wing_flap_amplitude", 0.16))
 	for side: String in ["l", "r"]:
 		for section: String in ["upper", "fore"]:

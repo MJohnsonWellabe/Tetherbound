@@ -656,6 +656,7 @@
       "voltwig": "DIVER",
       "mosshock": "DIVER",
       "staticub": "WALL",
+      "stormursa": "WALL",
       "voltarach": "WALL",
       "fulgocobra": "CURRENT",
       "stormraven": "DIVER",
@@ -700,6 +701,427 @@
       ]
     },
     "attacks": {
+      "hollows_alpha_charger_rush": {
+        "role": "CHARGER",
+        "slot": "quick",
+        "telegraph_shape": "lane",
+        "telegraph": 0.8,
+        "recovery": 0.9,
+        "heavy": false,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7.0,
+        "face_lock_fraction": 0.25,
+        "attack_cooldown": 1.6,
+        "reposition_time": 0.65,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "power": 10.4
+      },
+      "hollows_alpha_charger_double_rush": {
+        "role": "CHARGER",
+        "slot": "charged",
+        "telegraph_shape": "lane",
+        "telegraph": 1.1,
+        "recovery": 0.9,
+        "heavy": true,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7.0,
+        "face_lock_fraction": 0.25,
+        "attack_cooldown": 1.6,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "repeat_count": 2,
+        "repeat_reaim_s": 0.3,
+        "repeat_telegraph_s": 1.1,
+        "repeat_recovery_s": 0.6,
+        "power": 10.4
+      },
+      "capacitor_alpha_charger_rush": {
+        "role": "DIVER",
+        "slot": "quick",
+        "telegraph_shape": "lane",
+        "telegraph": 0.8,
+        "recovery": 0.6,
+        "heavy": false,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 5.5,
+        "face_lock_fraction": 0.25,
+        "attack_cooldown": 0.9,
+        "reposition_time": 1.6,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "route_cue_seconds": 1.1,
+        "reposition_distance": 7.0,
+        "power": 7.2
+      },
+      "capacitor_alpha_diver_leap": {
+        "role": "DIVER",
+        "slot": "charged",
+        "telegraph_shape": "marker",
+        "telegraph": 1.1,
+        "recovery": 0.6,
+        "heavy": true,
+        "range": 6,
+        "cone_degrees": 80,
+        "lunge": 5.5,
+        "face_lock_fraction": 0.25,
+        "attack_cooldown": 0.9,
+        "reposition_time": 1.6,
+        "reposition_speed": 7,
+        "preferred_range": 5.5,
+        "safe_escape": "outside",
+        "marker_radius_m": 2,
+        "marker_tracks_fraction": 0.3,
+        "reposition_distance": 7.0,
+        "route_cue_seconds": 1.1,
+        "lunge_travels": true,
+        "power": 7.2
+      },
+      "crown_guardian_wall_check": {
+        "role": "WALL",
+        "slot": "quick",
+        "telegraph_shape": "cone",
+        "telegraph": 0.85,
+        "recovery": 1.1,
+        "heavy": false,
+        "range": 3,
+        "cone_degrees": 70,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.6,
+        "reposition_time": 0.8,
+        "reposition_speed": 2.5,
+        "preferred_range": 2.5,
+        "safe_escape": "side",
+        "chase_speed": 3.4,
+        "guard_stance": true,
+        "reposition_distance": 2.5,
+        "power": 12.0
+      },
+      "crown_guardian_wall_slam": {
+        "role": "WALL",
+        "slot": "charged",
+        "telegraph_shape": "cone",
+        "telegraph": 1.1,
+        "recovery": 1.1,
+        "heavy": true,
+        "range": 5,
+        "cone_degrees": 85,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.6,
+        "reposition_time": 0.8,
+        "reposition_speed": 2.5,
+        "preferred_range": 4,
+        "safe_escape": "side",
+        "chase_speed": 3.4,
+        "guard_stance": true,
+        "reposition_distance": 2.5,
+        "power": 12.0
+      },
+      "old_rodfolk_hall_guardian_ace_lane": {
+        "role": "ACE",
+        "slot": "charged",
+        "telegraph_shape": "lane",
+        "telegraph": 1.1,
+        "recovery": 1.2,
+        "heavy": true,
+        "range": 6,
+        "cone_degrees": 80,
+        "lunge": 6.0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.8,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.3,
+        "first_attack_delay": 2.5,
+        "power": 14.4
+      },
+      "old_rodfolk_hall_guardian_ace_exam": {
+        "role": "ACE",
+        "slot": "charged",
+        "telegraph_shape": "cone",
+        "telegraph": 1.1,
+        "recovery": 1.2,
+        "heavy": true,
+        "range": 6,
+        "cone_degrees": 90,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.8,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "first_attack_delay": 2.5,
+        "power": 14.4
+      },
+      "blackwater_elder_current_volley": {
+        "role": "CURRENT",
+        "slot": "quick",
+        "telegraph_shape": "fan",
+        "telegraph": 0.8,
+        "recovery": 0.6,
+        "heavy": false,
+        "range": 8,
+        "cone_degrees": 60,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 0.7,
+        "reposition_time": 0.5,
+        "reposition_speed": 4,
+        "preferred_range": 6,
+        "safe_escape": "lateral",
+        "projectile_count": 3,
+        "projectile_spacing_degrees": 20,
+        "reposition_distance": 2.0,
+        "power": 6.4
+      },
+      "blackwater_elder_current_zone": {
+        "role": "CURRENT",
+        "slot": "charged",
+        "telegraph_shape": "field",
+        "telegraph": 1.1,
+        "recovery": 0.6,
+        "heavy": true,
+        "range": 8,
+        "cone_degrees": 80,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 0.7,
+        "reposition_time": 0.5,
+        "reposition_speed": 3.8,
+        "preferred_range": 6,
+        "safe_escape": "outside",
+        "marker_radius_m": 2.5,
+        "marker_tracks_fraction": 0.3,
+        "field_duration_s": 3,
+        "field_hits_per_cast": 1,
+        "reposition_distance": 2.0,
+        "power": 6.4
+      },
+      "glass_field_alpha_charger_rush": {
+        "role": "CHARGER",
+        "slot": "quick",
+        "telegraph_shape": "lane",
+        "telegraph": 0.8,
+        "recovery": 0.9,
+        "heavy": false,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7.0,
+        "face_lock_fraction": 0.25,
+        "attack_cooldown": 1.6,
+        "reposition_time": 0.65,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "power": 10.4
+      },
+      "glass_field_alpha_charger_double_rush": {
+        "role": "CHARGER",
+        "slot": "charged",
+        "telegraph_shape": "lane",
+        "telegraph": 1.1,
+        "recovery": 0.9,
+        "heavy": true,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7.0,
+        "face_lock_fraction": 0.25,
+        "attack_cooldown": 1.6,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "repeat_count": 2,
+        "repeat_reaim_s": 0.3,
+        "repeat_telegraph_s": 1.1,
+        "repeat_recovery_s": 0.6,
+        "power": 10.4
+      },
+      "water_lantern_shell_sentinel_wall_check": {
+        "role": "WALL",
+        "slot": "quick",
+        "telegraph_shape": "cone",
+        "telegraph": 0.85,
+        "recovery": 1.1,
+        "heavy": false,
+        "range": 3,
+        "cone_degrees": 70,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.6,
+        "reposition_time": 0.8,
+        "reposition_speed": 2.5,
+        "preferred_range": 2.5,
+        "safe_escape": "side",
+        "chase_speed": 3.4,
+        "reposition_distance": 2.5,
+        "power": 12.0
+      },
+      "water_lantern_shell_sentinel_wall_slam": {
+        "role": "WALL",
+        "slot": "charged",
+        "telegraph_shape": "cone",
+        "telegraph": 1.1,
+        "recovery": 1.1,
+        "heavy": true,
+        "range": 5,
+        "cone_degrees": 70,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.6,
+        "reposition_time": 0.8,
+        "reposition_speed": 2.5,
+        "preferred_range": 4,
+        "safe_escape": "side",
+        "chase_speed": 3.4,
+        "reposition_distance": 2.5,
+        "power": 12.0
+      },
+      "water_gull_basalt_claw_wall_check": {
+        "role": "WALL",
+        "slot": "quick",
+        "telegraph_shape": "cone",
+        "telegraph": 0.85,
+        "recovery": 1.1,
+        "heavy": false,
+        "range": 3,
+        "cone_degrees": 70,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.6,
+        "reposition_time": 0.8,
+        "reposition_speed": 2.5,
+        "preferred_range": 2.5,
+        "safe_escape": "side",
+        "chase_speed": 3.4,
+        "reposition_distance": 2.5,
+        "power": 12.0
+      },
+      "water_gull_basalt_claw_wall_slam": {
+        "role": "WALL",
+        "slot": "charged",
+        "telegraph_shape": "cone",
+        "telegraph": 1.1,
+        "recovery": 1.1,
+        "heavy": true,
+        "range": 5,
+        "cone_degrees": 70,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.6,
+        "reposition_time": 0.8,
+        "reposition_speed": 2.5,
+        "preferred_range": 4,
+        "safe_escape": "side",
+        "chase_speed": 3.4,
+        "reposition_distance": 2.5,
+        "power": 12.0
+      },
+      "water_brine_root_watcher_charger_rush": {
+        "role": "CHARGER",
+        "slot": "quick",
+        "telegraph_shape": "lane",
+        "telegraph": 0.8,
+        "recovery": 0.9,
+        "heavy": false,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7.0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.6,
+        "reposition_time": 0.65,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "power": 10.4
+      },
+      "water_brine_root_watcher_charger_check": {
+        "role": "CHARGER",
+        "slot": "quick",
+        "telegraph_shape": "cone",
+        "telegraph": 0.8,
+        "recovery": 0.9,
+        "heavy": false,
+        "range": 3.5,
+        "cone_degrees": 70,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.6,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 2.5,
+        "safe_escape": "side",
+        "power": 10.4
+      },
+      "water_drowned_garden_songweaver_current_volley": {
+        "role": "CURRENT",
+        "slot": "quick",
+        "telegraph_shape": "fan",
+        "telegraph": 0.8,
+        "recovery": 0.6,
+        "heavy": false,
+        "range": 8,
+        "cone_degrees": 60,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 0.7,
+        "reposition_time": 0.5,
+        "reposition_speed": 4,
+        "preferred_range": 6,
+        "safe_escape": "lateral",
+        "projectile_count": 3,
+        "projectile_spacing_degrees": 20,
+        "reposition_distance": 2.0,
+        "power": 6.4
+      },
+      "water_drowned_garden_songweaver_current_zone": {
+        "role": "CURRENT",
+        "slot": "charged",
+        "telegraph_shape": "field",
+        "telegraph": 1.1,
+        "recovery": 0.6,
+        "heavy": true,
+        "range": 8,
+        "cone_degrees": 80,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 0.7,
+        "reposition_time": 0.5,
+        "reposition_speed": 3.8,
+        "preferred_range": 6,
+        "safe_escape": "outside",
+        "marker_radius_m": 2.5,
+        "marker_tracks_fraction": 0.3,
+        "field_duration_s": 3,
+        "field_hits_per_cast": 1,
+        "reposition_distance": 2.0,
+        "power": 6.4
+      },
       "wall_slam": {
         "role": "WALL",
         "slot": "charged",
@@ -1124,6 +1546,166 @@
       }
     },
     "named": {
+      "named_hollows_alpha": {
+        "encounter_id": "hollows_alpha",
+        "pattern_id": "named_hollows_alpha",
+        "chapter": "stormwood",
+        "kernel": "Hollows Alpha",
+        "sendouts": [
+          {
+            "role": "CHARGER",
+            "sequence": [
+              "hollows_alpha_charger_rush",
+              "hollows_alpha_charger_double_rush"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_capacitor_alpha": {
+        "encounter_id": "capacitor_alpha",
+        "pattern_id": "named_capacitor_alpha",
+        "chapter": "stormwood",
+        "kernel": "Capacitor Alpha",
+        "sendouts": [
+          {
+            "role": "DIVER",
+            "sequence": [
+              "capacitor_alpha_charger_rush",
+              "capacitor_alpha_diver_leap"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_crown_guardian": {
+        "encounter_id": "crown_guardian",
+        "pattern_id": "named_crown_guardian",
+        "chapter": "stormwood",
+        "kernel": "Crown Guardian",
+        "sendouts": [
+          {
+            "role": "WALL",
+            "sequence": [
+              "crown_guardian_wall_check",
+              "crown_guardian_wall_slam"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_old_rodfolk_hall_guardian": {
+        "encounter_id": "old_rodfolk_hall_guardian",
+        "pattern_id": "named_old_rodfolk_hall_guardian",
+        "chapter": "stormwood",
+        "kernel": "Old Rodfolk Hall Guardian",
+        "sendouts": [
+          {
+            "role": "ACE",
+            "sequence": [
+              "old_rodfolk_hall_guardian_ace_lane",
+              "old_rodfolk_hall_guardian_ace_exam"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_blackwater_elder": {
+        "encounter_id": "blackwater_elder",
+        "pattern_id": "named_blackwater_elder",
+        "chapter": "stormwood",
+        "kernel": "Blackwater Elder",
+        "sendouts": [
+          {
+            "role": "CURRENT",
+            "sequence": [
+              "blackwater_elder_current_volley",
+              "blackwater_elder_current_zone"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_glass_field_alpha": {
+        "encounter_id": "glass_field_alpha",
+        "pattern_id": "named_glass_field_alpha",
+        "chapter": "stormwood",
+        "kernel": "Glass Field Alpha",
+        "sendouts": [
+          {
+            "role": "CHARGER",
+            "sequence": [
+              "glass_field_alpha_charger_rush",
+              "glass_field_alpha_charger_double_rush"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_water_lantern_shell_sentinel": {
+        "encounter_id": "water_lantern_shell_sentinel",
+        "pattern_id": "named_water_lantern_shell_sentinel",
+        "chapter": "water",
+        "kernel": "Rock-arch guard with a readable flank",
+        "sendouts": [
+          {
+            "role": "WALL",
+            "sequence": [
+              "water_lantern_shell_sentinel_wall_check",
+              "water_lantern_shell_sentinel_wall_slam"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_water_gull_basalt_claw": {
+        "encounter_id": "water_gull_basalt_claw",
+        "pattern_id": "named_water_gull_basalt_claw",
+        "chapter": "water",
+        "kernel": "Basalt frontal counter with a side exit",
+        "sendouts": [
+          {
+            "role": "WALL",
+            "sequence": [
+              "water_gull_basalt_claw_wall_check",
+              "water_gull_basalt_claw_wall_slam"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_water_brine_root_watcher": {
+        "encounter_id": "water_brine_root_watcher",
+        "pattern_id": "named_water_brine_root_watcher",
+        "chapter": "water",
+        "kernel": "Marked gully rush and dry-footing punish",
+        "sendouts": [
+          {
+            "role": "CHARGER",
+            "sequence": [
+              "water_brine_root_watcher_charger_rush",
+              "water_brine_root_watcher_charger_check"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_water_drowned_garden_songweaver": {
+        "encounter_id": "water_drowned_garden_songweaver",
+        "pattern_id": "named_water_drowned_garden_songweaver",
+        "chapter": "water",
+        "kernel": "Shallow-fringe volley and dry-approach field",
+        "sendouts": [
+          {
+            "role": "CURRENT",
+            "sequence": [
+              "water_drowned_garden_songweaver_current_volley",
+              "water_drowned_garden_songweaver_current_zone"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
       "named_warrens_guardian": {
         "encounter_id": "warrens_guardian",
         "pattern_id": "named_warrens_guardian",
@@ -1288,20 +1870,20 @@
           },
           {
             "sequence": [
-              "oreth_pressure",
-              "current_zone"
+              "charger_check",
+              "charger_rush"
+            ]
+          },
+          {
+            "sequence": [
+              "wall_check",
+              "wall_slam"
             ]
           },
           {
             "sequence": [
               "diver_retreat",
               "diver_leap"
-            ]
-          },
-          {
-            "sequence": [
-              "wall_check",
-              "wall_quake"
             ]
           },
           {
@@ -1339,14 +1921,14 @@
           },
           {
             "sequence": [
-              "diver_retreat",
-              "diver_leap"
+              "wall_check",
+              "wall_slam"
             ]
           },
           {
             "sequence": [
-              "charger_check",
-              "halder_range"
+              "current_volley",
+              "current_zone"
             ]
           }
         ],
@@ -1914,7 +2496,8 @@
     "low_hp_fraction": 0.3,
     "low_hp_tradeoffs": {
       "WALL": {
-        "telegraph_add_s": 0.2
+        "telegraph_add_s": 0.2,
+        "power_multiplier": 1.15
       },
       "DIVER": {
         "reposition_add_s": 0.4

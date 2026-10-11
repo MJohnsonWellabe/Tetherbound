@@ -1,5 +1,312 @@
 {
   "enabled": false,
-  "variants": {},
+  "variants": {
+    "p2055_water_adair": {
+      "enabled": false,
+      "expected_base_profile": "field_researcher",
+      "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+      "body_albedo_override": "res://assets/characters/field_researcher/p2055_water_adair_albedo.png",
+      "portrait": "res://assets/ui/portraits/p2055_water_adair.png",
+      "review_status": "cloth_derivative_authored_pending_matching_portrait_and_production_visual_review",
+      "authoring_palette": {
+        "hue_degrees": 182.0,
+        "saturation_scale": 0.9,
+        "value_gain": 1.22
+      },
+      "authoring_provenance": {
+        "producer": "res://tools/repaint_regional_character_textures.py",
+        "source_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+        "source_model_sha256": "5b9164827d099f661de5d1ed6a4420ccd011a90005765977c43f06d1ef5487b3",
+        "source_texture": "res://assets/characters/field_researcher/field_researcher_lod0_texture_0.png",
+        "source_texture_sha256": "3d8f74bd6a1747ac206044be3394ee6326c4a92f594536e55fbf46e5bc66bfbe",
+        "cloth_mask": "res://assets/characters/field_researcher/p2055_field_researcher_cloth_mask.png",
+        "selector_hue_degrees": [
+          44.0,
+          66.0
+        ],
+        "selector_minimum_saturation": 0.18,
+        "selector_median_window_texels": 9,
+        "selector_value_range": [
+          0.06,
+          0.55
+        ],
+        "protected_bones": [
+          "head",
+          "head_end",
+          "headfront",
+          "leftfoot",
+          "lefthand",
+          "lefttoebase",
+          "neck",
+          "rightfoot",
+          "righthand",
+          "righttoebase"
+        ],
+        "protected_weight_threshold": 0.03,
+        "protected_uv_guard_texels": 2,
+        "unused_gutter_texels": 8,
+        "selected_surface_texels": 246296,
+        "selected_total_texels": 332614,
+        "mask_status": "source_derived_candidate_pending_production_visual_review",
+        "cloth_mask_sha256": "f0770b3234806e073da0a7a8b787c673223d27a74e2df6fd96340622e12af671",
+        "derivative_sha256": "b4f083470d77a573cf768c425b3df5a17a31596f24311d120e8218a515fa975b"
+      }
+    },
+    "p2055_water_iona": {
+      "enabled": false,
+      "expected_base_profile": "field_researcher",
+      "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+      "body_albedo_override": "res://assets/characters/field_researcher/p2055_water_iona_albedo.png",
+      "portrait": "res://assets/ui/portraits/p2055_water_iona.png",
+      "review_status": "cloth_derivative_authored_pending_matching_portrait_and_production_visual_review",
+      "authoring_palette": {
+        "hue_degrees": 110.0,
+        "saturation_scale": 0.72,
+        "value_gain": 1.32
+      },
+      "authoring_provenance": {
+        "producer": "res://tools/repaint_regional_character_textures.py",
+        "source_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+        "source_model_sha256": "5b9164827d099f661de5d1ed6a4420ccd011a90005765977c43f06d1ef5487b3",
+        "source_texture": "res://assets/characters/field_researcher/field_researcher_lod0_texture_0.png",
+        "source_texture_sha256": "3d8f74bd6a1747ac206044be3394ee6326c4a92f594536e55fbf46e5bc66bfbe",
+        "cloth_mask": "res://assets/characters/field_researcher/p2055_field_researcher_cloth_mask.png",
+        "selector_hue_degrees": [
+          44.0,
+          66.0
+        ],
+        "selector_minimum_saturation": 0.18,
+        "selector_median_window_texels": 9,
+        "selector_value_range": [
+          0.06,
+          0.55
+        ],
+        "protected_bones": [
+          "head",
+          "head_end",
+          "headfront",
+          "leftfoot",
+          "lefthand",
+          "lefttoebase",
+          "neck",
+          "rightfoot",
+          "righthand",
+          "righttoebase"
+        ],
+        "protected_weight_threshold": 0.03,
+        "protected_uv_guard_texels": 2,
+        "unused_gutter_texels": 8,
+        "selected_surface_texels": 246296,
+        "selected_total_texels": 332614,
+        "mask_status": "source_derived_candidate_pending_production_visual_review",
+        "cloth_mask_sha256": "f0770b3234806e073da0a7a8b787c673223d27a74e2df6fd96340622e12af671",
+        "derivative_sha256": "5c6b7af0438004c6398de02b582e43b3b1510ee59001752d50608514b0730a7d"
+      }
+    },
+    "p2055_water_orsen": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_albedo_override": "res://assets/characters/wandering_trainer/p2055_water_orsen_albedo.png",
+      "portrait": "res://assets/ui/portraits/p2055_water_orsen.png",
+      "review_status": "cloth_derivative_authored_pending_matching_portrait_and_production_visual_review",
+      "authoring_palette": {
+        "hue_degrees": 214.0,
+        "saturation_scale": 2.1,
+        "value_gain": 1.55
+      },
+      "authoring_provenance": {
+        "producer": "res://tools/repaint_regional_character_textures.py",
+        "source_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+        "source_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+        "source_texture": "res://assets/characters/wandering_trainer/wandering_trainer_lod0_texture_0.png",
+        "source_texture_sha256": "fa6988e74d6c369c287285effd2ed8d216eb806bfe3004f07ff8be4f82c3eefd",
+        "cloth_mask": "res://assets/characters/wandering_trainer/p2055_wandering_trainer_cloth_mask.png",
+        "selector_hue_degrees": [
+          175.0,
+          225.0
+        ],
+        "selector_minimum_saturation": 0.12,
+        "selector_median_window_texels": 9,
+        "selector_value_range": [
+          0.06,
+          0.5
+        ],
+        "protected_bones": [
+          "head",
+          "head_end",
+          "headfront",
+          "leftfoot",
+          "lefthand",
+          "lefttoebase",
+          "neck",
+          "rightfoot",
+          "righthand",
+          "righttoebase"
+        ],
+        "protected_weight_threshold": 0.03,
+        "protected_uv_guard_texels": 2,
+        "unused_gutter_texels": 8,
+        "selected_surface_texels": 165407,
+        "selected_total_texels": 213571,
+        "mask_status": "source_derived_candidate_pending_production_visual_review",
+        "cloth_mask_sha256": "83f558a839d9fc66ca72e222af4ae10fc99df1454c39c3980d194159c4a03c9a",
+        "derivative_sha256": "0eac46809182b61e04d36ffdb80b3c5aa2717f2b643fa239199ac9b173695726"
+      }
+    },
+    "p2055_water_otto": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_albedo_override": "res://assets/characters/wandering_trainer/p2055_water_otto_albedo.png",
+      "portrait": "res://assets/ui/portraits/p2055_water_otto.png",
+      "review_status": "cloth_derivative_authored_pending_matching_portrait_and_production_visual_review",
+      "authoring_palette": {
+        "hue_degrees": 96.0,
+        "saturation_scale": 2.1,
+        "value_gain": 1.5
+      },
+      "authoring_provenance": {
+        "producer": "res://tools/repaint_regional_character_textures.py",
+        "source_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+        "source_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+        "source_texture": "res://assets/characters/wandering_trainer/wandering_trainer_lod0_texture_0.png",
+        "source_texture_sha256": "fa6988e74d6c369c287285effd2ed8d216eb806bfe3004f07ff8be4f82c3eefd",
+        "cloth_mask": "res://assets/characters/wandering_trainer/p2055_wandering_trainer_cloth_mask.png",
+        "selector_hue_degrees": [
+          175.0,
+          225.0
+        ],
+        "selector_minimum_saturation": 0.12,
+        "selector_median_window_texels": 9,
+        "selector_value_range": [
+          0.06,
+          0.5
+        ],
+        "protected_bones": [
+          "head",
+          "head_end",
+          "headfront",
+          "leftfoot",
+          "lefthand",
+          "lefttoebase",
+          "neck",
+          "rightfoot",
+          "righthand",
+          "righttoebase"
+        ],
+        "protected_weight_threshold": 0.03,
+        "protected_uv_guard_texels": 2,
+        "unused_gutter_texels": 8,
+        "selected_surface_texels": 165407,
+        "selected_total_texels": 213571,
+        "mask_status": "source_derived_candidate_pending_production_visual_review",
+        "cloth_mask_sha256": "83f558a839d9fc66ca72e222af4ae10fc99df1454c39c3980d194159c4a03c9a",
+        "derivative_sha256": "d8b52cb7686e63745c1f11f1a8ca44c60f675dc07ab94518b2326a197c3339a5"
+      }
+    },
+    "p2055_water_trainer_fen": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_albedo_override": "res://assets/characters/wandering_trainer/p2055_water_trainer_fen_albedo.png",
+      "portrait": "res://assets/ui/portraits/p2055_water_trainer_fen.png",
+      "review_status": "cloth_derivative_authored_pending_matching_portrait_and_production_visual_review",
+      "authoring_palette": {
+        "hue_degrees": 44.0,
+        "saturation_scale": 2.25,
+        "value_gain": 1.45
+      },
+      "authoring_provenance": {
+        "producer": "res://tools/repaint_regional_character_textures.py",
+        "source_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+        "source_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+        "source_texture": "res://assets/characters/wandering_trainer/wandering_trainer_lod0_texture_0.png",
+        "source_texture_sha256": "fa6988e74d6c369c287285effd2ed8d216eb806bfe3004f07ff8be4f82c3eefd",
+        "cloth_mask": "res://assets/characters/wandering_trainer/p2055_wandering_trainer_cloth_mask.png",
+        "selector_hue_degrees": [
+          175.0,
+          225.0
+        ],
+        "selector_minimum_saturation": 0.12,
+        "selector_median_window_texels": 9,
+        "selector_value_range": [
+          0.06,
+          0.5
+        ],
+        "protected_bones": [
+          "head",
+          "head_end",
+          "headfront",
+          "leftfoot",
+          "lefthand",
+          "lefttoebase",
+          "neck",
+          "rightfoot",
+          "righthand",
+          "righttoebase"
+        ],
+        "protected_weight_threshold": 0.03,
+        "protected_uv_guard_texels": 2,
+        "unused_gutter_texels": 8,
+        "selected_surface_texels": 165407,
+        "selected_total_texels": 213571,
+        "mask_status": "source_derived_candidate_pending_production_visual_review",
+        "cloth_mask_sha256": "83f558a839d9fc66ca72e222af4ae10fc99df1454c39c3980d194159c4a03c9a",
+        "derivative_sha256": "49a4dcf21ad9cf99f7242fa97b02c25d36a2c7564b0e87cfb32219fe0289dfe4"
+      }
+    },
+    "p2055_water_trainer_evi": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_albedo_override": "res://assets/characters/wandering_trainer/p2055_water_trainer_evi_albedo.png",
+      "portrait": "res://assets/ui/portraits/p2055_water_trainer_evi.png",
+      "review_status": "cloth_derivative_authored_pending_matching_portrait_and_production_visual_review",
+      "authoring_palette": {
+        "hue_degrees": 155.0,
+        "saturation_scale": 2.1,
+        "value_gain": 1.65
+      },
+      "authoring_provenance": {
+        "producer": "res://tools/repaint_regional_character_textures.py",
+        "source_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+        "source_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+        "source_texture": "res://assets/characters/wandering_trainer/wandering_trainer_lod0_texture_0.png",
+        "source_texture_sha256": "fa6988e74d6c369c287285effd2ed8d216eb806bfe3004f07ff8be4f82c3eefd",
+        "cloth_mask": "res://assets/characters/wandering_trainer/p2055_wandering_trainer_cloth_mask.png",
+        "selector_hue_degrees": [
+          175.0,
+          225.0
+        ],
+        "selector_minimum_saturation": 0.12,
+        "selector_median_window_texels": 9,
+        "selector_value_range": [
+          0.06,
+          0.5
+        ],
+        "protected_bones": [
+          "head",
+          "head_end",
+          "headfront",
+          "leftfoot",
+          "lefthand",
+          "lefttoebase",
+          "neck",
+          "rightfoot",
+          "righthand",
+          "righttoebase"
+        ],
+        "protected_weight_threshold": 0.03,
+        "protected_uv_guard_texels": 2,
+        "unused_gutter_texels": 8,
+        "selected_surface_texels": 165407,
+        "selected_total_texels": 213571,
+        "mask_status": "source_derived_candidate_pending_production_visual_review",
+        "cloth_mask_sha256": "83f558a839d9fc66ca72e222af4ae10fc99df1454c39c3980d194159c4a03c9a",
+        "derivative_sha256": "b8e18b022c69abb51b3ccfeb99059405be6780b478ca80a12b3c80116680c6f5"
+      }
+    }
+  },
   "_comment": "P2-055 shared presentation pipeline only. Local/static scope; no save, network or gameplay effect. No regional identity mappings or new art are supplied. A named record requires expected_base_profile, expected_model, a dedicated portrait under res://assets/ui/portraits/, and body_albedo_override and/or body_emission_override. Existing model, rank palette, badges, names and gender remain unchanged. Keep disabled until authored derivatives, matching portraits and production visual review pass."
 }

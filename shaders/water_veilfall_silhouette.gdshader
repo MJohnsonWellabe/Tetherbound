@@ -31,6 +31,7 @@ uniform float tone_amount = 0.72;
 uniform float tone_lit_keep = 0.5;
 uniform float depth_pull_fraction = 0.012;
 uniform float depth_pull_max_m = 60.0;
+uniform bool shelf_cap = false;
 varying vec3 v_world;
 varying vec3 v_normal;
 varying float v_distance;
@@ -62,7 +63,7 @@ void fragment() {
 	float wx = facing.y / (facing.x + facing.y);
 	float n = mix(noise(vec2(v_world.z / streak_width_m, v_world.y / streak_length_m + 17.0)),
 		noise(vec2(v_world.x / streak_width_m, v_world.y / streak_length_m)), wx);
-	float rock = 1.0 - smoothstep(slope_lo, slope_hi, v_normal.y);
+	float rock = shelf_cap ? 0.0 : 1.0 - smoothstep(slope_lo, slope_hi, v_normal.y);
 	float n2 = mix(noise(vec2(v_world.z / (streak_width_m * 0.4), v_world.y / (streak_length_m * 0.5))),
 		noise(vec2(v_world.x / (streak_width_m * 0.4), v_world.y / (streak_length_m * 0.5) + 5.0)), wx);
 	vec3 wet = mix(rock_colour, streak_colour, smoothstep(0.35, 0.75, n * 0.65 + n2 * 0.35));

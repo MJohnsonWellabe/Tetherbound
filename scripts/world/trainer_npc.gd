@@ -810,13 +810,13 @@ static func creature_for(entry: Dictionary) -> RefCounted:
 ## already exists, and no trainer in this table is a reason to generate a new
 ## human.
 static func model_config(spec: Dictionary) -> Dictionary:
-	var rank := str(spec.get("rank", ""))
+	var rank := str(spec.get("presentation_rank", spec.get("rank", "")))
 	var cfg := NPC_RANKS.config_for(rank, str(spec.get("base", ""))) if rank != "" \
 		else CHARACTER_MODEL.config_for(str(spec.get("config_key", "")))
 	if cfg.is_empty():
 		return cfg
 	cfg = cfg.duplicate(true)
-	for key: String in ["hair", "accessories", "tint", "height"]:
+	for key: String in ["hair", "accessories", "tint", "height", "emission_floor", "night_rim"]:
 		if spec.has(key):
 			cfg[key] = spec[key]
 	# `palette` LAYERS; everything above still replaces. A site entry that names
@@ -837,4 +837,7 @@ static func model_config(spec: Dictionary) -> Dictionary:
 		for surface: Variant in (spec["palette"] as Dictionary):
 			merged[surface] = (spec["palette"] as Dictionary)[surface]
 		cfg["palette"] = merged
-	return cfg
+	var profile := str(spec.get("base", "")) if not rank.is_empty() else ""
+	if profile.is_empty():
+		profile = str(spec.get("config_key", ""))
+	return CHARACTER_MODEL.with_appearance_variant(cfg, profile, str(spec.get("appearance_variant_id", "")))

@@ -3,6 +3,16 @@
   "relight_cost": 3,
   "player_pair_limit": 3,
   "recipe_flag": "stormwood:arch_recipe_known",
+  "presentation": {
+    "scope": "client_presentation",
+    "masonry_tint": "#a5a49a",
+    "paving_tint": "#8d9486",
+    "masonry_uv_scale": 0.4,
+    "paving_uv_scale": 0.52,
+    "normal_depth": 0.35,
+    "roughness": 0.86,
+    "paving_clear_radius_m": 6.4
+  },
   "arches": [
     {"id":"a_ashfoot","pair":"a","name":"Ashfoot Arch","at":[-350,500],"yaw_deg":0},
     {"id":"a_pools","pair":"a","name":"Lantern Pools South Arch","at":[-350,1440],"yaw_deg":180},

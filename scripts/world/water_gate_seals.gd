@@ -14,6 +14,7 @@ extends RefCounted
 ## flight restrictions and tests all compile the same seal list from config.
 
 const SWIMMING_PATH := "res://data/config/water_swimming.json"
+const HEIGHTFIELD := preload("res://scripts/world/water_heightfield.gd")
 
 
 static func load_rules(path: String = SWIMMING_PATH) -> Dictionary:
@@ -82,7 +83,7 @@ static func compile(config: Dictionary) -> Array[Dictionary]:
 			var docks := _extend(dock_path[from], str(dock.get("id", "")) if not str(dock.get("unlock_flag", "")).is_empty() else "")
 			seals.append(_seal(str(shoal.get("id", "")), "rest_shoal", str(shoal.get("parent_island_id", "")),
 					str(names.get(to, to)), "the tide race on the %s crossing" % str(names.get(to, to)),
-					shoal.get("center_xz_m", []), float(shoal.get("shore_radius_m", 0.0)), flags, docks))
+					shoal.get("center_xz_m", []), HEIGHTFIELD.rest_shoal_max_radius(shoal), flags, docks))
 			break
 	# A landform opens with its own final fact or any later fact on a chain
 	# through it: a world holding a later fact has already come past it.
@@ -189,13 +190,15 @@ static func velocity_at(seal: Dictionary, rules: Dictionary, position: Vector3, 
 
 ## World-authored flight volumes: the race disc as z-strips whose widths
 ## follow the circle, seabed to above Veilfall. A single square would overhang
-## neighbouring earlier land at its corners; a small shoal needs one box.
+## neighbouring earlier land at its corners. Irregular shoals need finer
+## strips too: their conservative shore bound can be close to an earlier dock.
 static func flight_volumes(seal: Dictionary, rules: Dictionary) -> Array[AABB]:
 	var centre: Vector2 = seal.get("centre", Vector2.ZERO)
 	var outer := outer_radius(seal, rules)
 	var floor_y := float(rules.get("flight_floor_y_m", -100.0))
 	var height := float(rules.get("flight_ceiling_y_m", 1000.0)) - floor_y
-	var strips := 1 if str(seal.get("kind", "")) == "rest_shoal" else maxi(1, int(rules.get("flight_strips", 8)))
+	var strips := maxi(1, int(rules.get("flight_strips", 8)))
+	if str(seal.get("kind", "")) == "rest_shoal": strips *= 4
 	var volumes: Array[AABB] = []
 	for index in strips:
 		var z0 := centre.y - outer + 2.0 * outer * float(index) / float(strips)

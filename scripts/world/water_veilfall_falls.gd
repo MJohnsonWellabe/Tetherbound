@@ -11,7 +11,9 @@ const FALL_SHADER := preload("res://shaders/water_veilfall_fall.gdshader")
 const SPRAY_SHADER := preload("res://shaders/water_veilfall_spray.gdshader")
 const VISUAL_CONFIG := "res://data/config/water_veilfall_falls_visual.json"
 const VISUAL_UNIFORMS := ["visual_far_core_floor", "visual_far_edge_floor",
-	"visual_far_start_m", "visual_far_end_m"]
+	"visual_far_start_m", "visual_far_end_m", "continuous_core_floor",
+	"presentation_pull_start_m", "presentation_pull_end_m", "min_angular_width",
+	"lip_feather_m", "foot_feather_m"]
 
 var column_receipt: Array[Dictionary] = []
 var materials: Array[ShaderMaterial] = []
@@ -20,8 +22,11 @@ var _world: Node3D
 
 func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	_world = world
-	var step := maxf(1.0, float(config.get("sample_step_m", 6.0)))
-	var standoff := float(config.get("standoff_m", 2.5))
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG))
+	var visual: Dictionary = parsed if parsed is Dictionary else {}
+	var geometry: Dictionary = visual.get("geometry", {}) if bool(visual.get("enabled", false)) else {}
+	var step := maxf(1.0, float(geometry.get("sample_step_m", config.get("sample_step_m", 6.0))))
+	var standoff := float(geometry.get("standoff_m", config.get("standoff_m", 2.5)))
 	var ribbons := SurfaceTool.new()
 	ribbons.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var spray: Array[Dictionary] = []
@@ -52,9 +57,7 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	ribbon_mesh.mesh = ribbons.commit()
 	ribbon_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	ribbon_mesh.material_override = _material(FALL_SHADER, config.get("column_shader", {}))
-	var candidate: Variant = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG))
-	if candidate is Dictionary:
-		apply_visual_settings(ribbon_mesh.material_override as ShaderMaterial, candidate)
+	apply_visual_settings(ribbon_mesh.material_override as ShaderMaterial, visual)
 	materials.append(ribbon_mesh.material_override)
 	# The depth pull and minimum width move vertices outside the authored
 	# bounds; a generous AABB margin keeps frustum culling from popping it.
@@ -113,7 +116,6 @@ func _ribbon(surface: SurfaceTool, path: Array[Vector3], width: float, standoff:
 	var lateral := Vector3(-lateral_xz.y, 0.0, lateral_xz.x)
 	var outward := Vector3(lateral_xz.x, 0.0, lateral_xz.y)
 	var colour := Color(lateral.x * 0.5 + 0.5, clampf(opacity, 0.0, 1.0) * 0.5, lateral.z * 0.5 + 0.5, width / 100.0)
-	var travelled := 0.0
 	var rows: Array = []
 	# A 96 m cascade cannot conform to a carved face with only its two edges.
 	# Sample across it as well as down it; otherwise each pair of rows bridges
@@ -121,8 +123,6 @@ func _ribbon(surface: SurfaceTool, path: Array[Vector3], width: float, standoff:
 	var cross_segments := clampi(ceili(width / 6.0), 2, 32)
 	for index in path.size():
 		var centre: Vector3 = path[index]
-		if index > 0:
-			travelled += centre.distance_to(path[index - 1])
 		var t := float(index) / float(path.size() - 1)
 		# Falls widen as they drop: narrow lip, full width at the foot.
 		var half := width * 0.5 * lerpf(taper, 1.0, t)
@@ -132,10 +132,21 @@ func _ribbon(surface: SurfaceTool, path: Array[Vector3], width: float, standoff:
 			var side := u * 2.0 - 1.0
 			var at := centre + lateral * side * half + outward * standoff
 			var ground := float(_world.call("ground_height_at", at.x, at.z))
-			var y := maxf(centre.y, ground if is_finite(ground) else centre.y) + standoff
+			# Reuse the grounded cross-strand repair from the 1b visual lane:
+			# the outer water follows its own face, not the centre's higher row.
+			var y := (ground if is_finite(ground) else centre.y) + standoff
 			row.append({"at": Vector3(at.x, y, at.z),
-				"uv": Vector2(u, travelled)})
+				"uv": Vector2(u, 0.0)})
 		rows.append(row)
+	# Flow and plunge fading use each strand's actual length. A common centre
+	# distance gave the sloping outer strands an artificial horizontal cutoff.
+	for across in cross_segments + 1:
+		var travelled := 0.0
+		for index in rows.size():
+			if index > 0:
+				var previous: Vector3 = rows[index - 1][across].at
+				travelled += previous.distance_to(rows[index][across].at)
+			rows[index][across]["uv"] = Vector2(float(across) / cross_segments, travelled)
 	# Shared vertex normals keep changes of slope continuous instead of
 	# switching the lighting abruptly at every terrain sampling row.
 	for index in rows.size():
@@ -149,15 +160,15 @@ func _ribbon(surface: SurfaceTool, path: Array[Vector3], width: float, standoff:
 				normal = -normal
 			rows[index][across]["normal"] = normal
 	for index in range(1, rows.size()):
-		var a: Array = rows[index - 1]
-		var b: Array = rows[index]
 		for across in cross_segments:
-			for corner: Dictionary in [a[across], a[across + 1], b[across + 1],
-					a[across], b[across + 1], b[across]]:
+			for key: Vector2i in [Vector2i(index - 1, across), Vector2i(index - 1, across + 1), Vector2i(index, across + 1),
+					Vector2i(index - 1, across), Vector2i(index, across + 1), Vector2i(index, across)]:
+				var corner: Dictionary = rows[key.x][key.y]
+				var strand_end: Vector2 = rows[rows.size() - 1][key.y].uv
 				surface.set_color(colour)
 				surface.set_normal(corner.normal)
 				surface.set_uv(corner.uv)
-				surface.set_uv2(Vector2(0.0, travelled - corner.uv.y))
+				surface.set_uv2(Vector2(0.0, strand_end.y - float(corner.uv.y)))
 				surface.add_vertex(corner.at)
 
 

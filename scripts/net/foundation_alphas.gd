@@ -8,6 +8,26 @@ var _settled: Dictionary = {}
 var _first_pending: Dictionary = {}
 var _left := 0.0
 var _service: Node
+var _snapshot_session: WeakRef
+
+func _enter_tree() -> void:
+	var owner := session()
+	if owner != null and owner.has_signal("snapshot_applied"):
+		_snapshot_session = weakref(owner)
+		if not owner.is_connected("snapshot_applied", _snapshot_applied):
+			owner.connect("snapshot_applied", _snapshot_applied)
+
+func _exit_tree() -> void:
+	if _snapshot_session == null: return
+	var owner := _snapshot_session.get_ref() as Node
+	if is_instance_valid(owner) and owner.is_connected("snapshot_applied", _snapshot_applied):
+		owner.disconnect("snapshot_applied", _snapshot_applied)
+	_snapshot_session = null
+
+func _snapshot_applied() -> void:
+	var owner := session()
+	if owner != null and owner.call("is_host") != true and RULES.config().get("runtime_enabled") == true:
+		_publish_mirrored(owner)
 
 func _ready() -> void:
 	_service = preload("res://scripts/repeatables/alpha_respawn_service.gd").new()
@@ -213,6 +233,11 @@ func _host_context(id: String) -> Dictionary:
 func _publish(id: String, packet: Dictionary) -> bool:
 	var owner := session()
 	var site := RULES.site(id)
+	var game: Node = owner.call("_game")
+	if game == null or game.get("world") == null or packet.is_empty() \
+		or RULES.retained_spawn(game.world.redesign_world, id) != packet \
+		or packet.captured_from.world_namespace != game.world.reward_delivery_namespace:
+		return false
 	var realm_id := "water" if site.get("biome") == "tidewake" else str(site.get("biome", ""))
 	var realm: Node3D = owner.call("_portal_world_node", realm_id)
 	if realm == null: return false
@@ -222,7 +247,10 @@ func _publish(id: String, packet: Dictionary) -> bool:
 		if node == realm or node.get_script().resource_path not in ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/water_encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd"]: continue
 		for wild: Node3D in node.get("_wild_creatures"):
 			if is_instance_valid(wild) and wild.get_meta("foundation_alpha_site", "") == id \
-				and wild.get_meta("foundation_alpha_generation", 0) == packet.captured_from.spawn_generation: return true
+				and wild.get_meta("foundation_alpha_generation", 0) == packet.captured_from.spawn_generation:
+				# A pre-join resident can have this generation with another roll.
+				node.call("foundation_publish_alpha", id, packet)
+				return wild.get_meta("foundation_alpha_packet", {}) == packet
 		node.call("foundation_publish_alpha", id, packet)
 		return false
 	return false
@@ -276,7 +304,8 @@ func _publish_mirrored(owner: Node) -> void:
 	if owner.call("is_active") != true: return
 	var game: Node = owner.call("_game")
 	if game == null or game.get("world") == null: return
-	for id: String in game.world.redesign_world.get("alpha_cycles", {}).get("sites", {}).keys():
+	# An absent host cycle also supersedes the guest's pre-join local alpha.
+	for id: String in RULES.config().get("sites", {}).keys():
 		if RULES.site(id).is_empty(): continue
 		var packet := RULES.retained_spawn(game.world.redesign_world, id)
 		var live := int(packet.captured_from.spawn_generation) if not packet.is_empty() else 0

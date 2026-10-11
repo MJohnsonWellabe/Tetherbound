@@ -6618,14 +6618,14 @@
       "region_id": "tether_current",
       "table_id": "water_sluice_isle_shallows",
       "island_local_offset": [
-        -88.0,
-        -0.43,
-        -123.0
+        -63.0,
+        5.091353416,
+        -112.0
       ],
       "position": [
-        1262.0,
-        -0.43,
-        3377.0
+        1287.0,
+        5.091353416,
+        3388.0
       ],
       "count": 1,
       "radius_m": 0.7,
@@ -7200,14 +7200,14 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        138.991,
-        139.396,
-        -249.844
+        130.0,
+        139.794,
+        -252.35
       ],
       "position": [
-        307.209,
-        141.538,
-        3896.134
+        330.0,
+        139.794,
+        3887.65
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7218,7 +7218,7 @@
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre.",
-      "_why_trainer_ring_0927": "Moved 27.5 m back along the spine when Venn moved onto veilfall_venn_fight_pad (B4); the old spot was 13.4 m from his ring (needs 16)."
+      "_why_trainer_ring_0927": "Pair remains on the final spine segment and about 99.9 m from Venn's current ring centre, preserving the 16 m trainer clearance while covering the final forward sightline."
     },
     {
       "id": "road_visibility_veilfall_exploration_spine_02",
@@ -7803,14 +7803,14 @@
       "route_edge_id": "shellwatch_to_tidal_cradle",
       "table_id": "water_shellwatch_shallows",
       "island_local_offset": [
-        185.05,
+        191.839,
         0.0,
-        202.65
+        206.094
       ],
       "position": [
-        505.05,
+        511.839,
         0.0,
-        1322.65
+        1326.094
       ],
       "count": 2,
       "radius_m": 6.0,
@@ -7861,14 +7861,14 @@
       "route_edge_id": "tidal_cradle_to_salt_crown",
       "table_id": "water_tidal_cradle_shallows",
       "island_local_offset": [
-        -271.168,
+        -264.704,
         0.0,
-        304.202
+        301.124
       ],
       "position": [
-        428.832,
+        435.296,
         0.0,
-        1834.202
+        1831.124
       ],
       "count": 2,
       "radius_m": 6.0,
@@ -7919,14 +7919,14 @@
       "route_edge_id": "tidal_cradle_to_salt_crown",
       "table_id": "water_tidal_cradle_shallows",
       "island_local_offset": [
-        -355.138,
+        -355.755,
         0.0,
-        424.637
+        430.095
       ],
       "position": [
-        344.862,
+        344.245,
         0.0,
-        1954.637
+        1960.095
       ],
       "count": 2,
       "radius_m": 6.0,
@@ -7948,14 +7948,14 @@
       "route_edge_id": "tidal_cradle_to_salt_crown",
       "table_id": "water_tidal_cradle_shallows",
       "island_local_offset": [
-        -386.974,
+        -395.133,
         0.0,
-        498.849
+        513.539
       ],
       "position": [
-        313.026,
+        304.867,
         0.0,
-        2028.849
+        2043.539
       ],
       "count": 2,
       "radius_m": 6.0,
@@ -8006,14 +8006,14 @@
       "route_edge_id": "salt_crown_to_sluice_isle",
       "table_id": "water_salt_crown_shallows",
       "island_local_offset": [
-        241.637,
+        243.175,
         0.0,
-        287.831
+        292.402
       ],
       "position": [
-        391.637,
+        393.175,
         0.0,
-        2597.831
+        2602.402
       ],
       "count": 2,
       "radius_m": 6.0,
@@ -8035,14 +8035,14 @@
       "route_edge_id": "salt_crown_to_sluice_isle",
       "table_id": "water_salt_crown_shallows",
       "island_local_offset": [
-        297.25,
+        299.0,
         0.0,
-        379.45
+        410.0
       ],
       "position": [
-        447.25,
+        449.0,
         0.0,
-        2689.45
+        2720.0
       ],
       "count": 2,
       "radius_m": 6.0,
@@ -8064,14 +8064,14 @@
       "route_edge_id": "salt_crown_to_sluice_isle",
       "table_id": "water_salt_crown_shallows",
       "island_local_offset": [
-        431.324,
+        442.478,
         0.0,
-        434.714
+        442.356
       ],
       "position": [
-        581.324,
+        592.478,
         0.0,
-        2744.714
+        2752.356
       ],
       "count": 2,
       "radius_m": 6.0,
@@ -8093,14 +8093,14 @@
       "route_edge_id": "sluice_isle_to_veilfall",
       "table_id": "water_sluice_isle_shallows",
       "island_local_offset": [
-        -245.7,
+        -252.972,
         0.0,
-        329.4
+        331.629
       ],
       "position": [
-        604.3,
+        597.028,
         0.0,
-        3289.4
+        3291.629
       ],
       "count": 2,
       "radius_m": 6.0,
@@ -8122,14 +8122,14 @@
       "route_edge_id": "sluice_isle_to_veilfall",
       "table_id": "water_sluice_isle_shallows",
       "island_local_offset": [
-        -310.439,
+        -315.602,
         0.0,
-        411.423
+        417.793
       ],
       "position": [
-        539.561,
+        534.398,
         0.0,
-        3371.423
+        3377.793
       ],
       "count": 2,
       "radius_m": 6.0,
@@ -8180,14 +8180,14 @@
       "route_edge_id": "sluice_isle_to_veilfall",
       "table_id": "water_sluice_isle_shallows",
       "island_local_offset": [
-        -415.953,
+        -411.436,
         0.0,
-        606.853
+        594.837
       ],
       "position": [
-        434.047,
+        438.564,
         0.0,
-        3566.853
+        3554.837
       ],
       "count": 2,
       "radius_m": 6.0,
@@ -8209,14 +8209,14 @@
       "route_edge_id": "sluice_isle_to_veilfall",
       "table_id": "water_sluice_isle_shallows",
       "island_local_offset": [
-        -430.0,
+        -427.878,
         0.0,
-        700.0
+        694.167
       ],
       "position": [
-        420.0,
+        422.122,
         0.0,
-        3660.0
+        3654.167
       ],
       "count": 2,
       "radius_m": 6.0,
@@ -8238,14 +8238,14 @@
       "route_edge_id": "sluice_isle_to_veilfall",
       "table_id": "water_sluice_isle_shallows",
       "island_local_offset": [
-        -451.888,
+        -420.0,
         0.0,
-        832.479
+        836.0
       ],
       "position": [
-        398.112,
+        430.0,
         0.0,
-        3792.479
+        3796.0
       ],
       "count": 2,
       "radius_m": 6.0,
@@ -8419,14 +8419,14 @@
       "level": 32,
       "replaces_wild_site_id": "water_deep_watch_wild_008",
       "position": [
-        1262.0,
-        -0.43,
-        3377.0
+        1287.0,
+        5.091353416,
+        3388.0
       ],
       "island_local_offset": [
-        -88.0,
-        -0.43,
-        -123.0
+        -63.0,
+        5.091353416,
+        -112.0
       ],
       "catchable": true,
       "trainer_owned": false,
@@ -8441,10 +8441,10 @@
         }
       },
       "_why_combat_camera_f14_0": "F14#0 C3 r7 (code-blind judge): the tall serpent's head sat under the boss panel in 3 of 25 frames. Aquaryn's authored framing (water_alpha.json combat_camera: fit the body below the top band, then the lens shift) applies to this named body too; combat_manager.gd _opponent_camera reads the body's meta, set by water_encounter_director.gd. Presentation only.",
-      "arena_radius_m": 5.0,
+      "arena_radius_m": 14.0,
       "arena_capture_radius_m": 16.0,
-      "_why_position_f14_0": "F14#0 C3 (Phase 1, tb/tidewake): moved from the reef edge at the foot of Deep Watch's 12 m sea cliff (1483.2, 3427.9), where six capture rounds failed framing: any fight camera behind the landward ally met the cliff, and the seabed fell away with no shallow flat within 40 m. The stand is now the arrival bay's shallows (tools/probe_tidewake_tidecoil_stand.gd: ground 0.43 m under the surface, the 5 m ring between 2.2 m deep and 0.6 m dry, the landward side no higher than 1.3 m for 18 m). The ordinary approach from the sluice_isle_to_deep_watch landing, 26 m away, puts the camera over open beach. Tidecoil is non-aggressive: it fights only when a player engages it. The reserved site water_deep_watch_wild_008 moved with it, since its 100 m activation stands the body up. A loss still returns to the Deep Watch landing.",
-      "_why_arena_radius_0927_visuals": "F14#0 C3 (tb/tidewake-visuals): the shallow_surface mode was data only; the default 11 m ring let the fight drift down the reef slope and Tidecoil fought 5 m under the water surface, hidden, for most of the capture. A 5 m ring keeps it in the reef-edge shallows (water_encounter_director.combat_arena_bounds_at).",
+      "_why_position_f14_0": "F14#0 source repair 2026-10-10: the former stand at (1262,3377) cannot support the full-size fight's required ring; widening it reaches baked ground 5.28 m below sea level. The named body and reserved site now share the existing coastal arrival bank at (1287,3388), 30.68 m from the same sluice_isle_to_deep_watch landing. Stored Terrain3D region terrain3d_02_06.res has centre height 5.091353416 m and 613 integer vertices inside the 14 m disc ranging from 1.77 to 8.72 m above sea level. Both rows retain ordinary ground placement, aquatic metadata, the existing approach, non-aggressive engagement and Deep Watch loss return. Actual floor collision, complete solid clearance, route, movement and camera evidence remain required; these source samples do not establish C2/C3 acceptance.",
+      "_why_arena_radius_0927_visuals": "The earlier 5 m cap prevented the old ring from descending the reef slope, but cannot fit today's full-size Tidecoil: its fitted rendered box is 2.8021 by 5.5 by 9.6431 m, with 5.0210 m horizontal corner radius before the required 0.6 m clearance. A 14 m ring matches the ordinary derived radius for Tidecoil against each current starter; measured midpoint formation requirements are 9.6079 m for Terrapup, 9.3013 m for Ripplet and 8.8595 m for Galewisp. The correlated move to existing above-sea coastal ground makes this an authored location repair. Creature size, capture radius 16 m, combat and fit/support assertions are preserved; native fit and visual proof remain open.",
       "combat_intent": "A late apex sweeps the visible surface of the arrival bay's shallows; prepare on the island and punish recovery between broad lateral attacks.",
       "completion_flag": "water_named_deep_watch_tidecoil_resolved",
       "resolution": "host_confirms_catch_or_defeat_once",

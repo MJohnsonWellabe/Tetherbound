@@ -170,20 +170,43 @@ func _charge_case(tell_first: bool) -> Dictionary:
 		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "charged",
 			"action": _action, "settle": 15})
 	else:
+		var session_view: Dictionary = await probe(1, "session")
+		var guest_peer := int(session_view.get("peer_id", 0))
+		var owned: Dictionary = await probe(1, "original_starter_ownership")
+		if guest_peer <= 1 or str(owned.get("body_uid", "")).is_empty() \
+			or str(owned.get("character_id", "")).is_empty() \
+			or not (owned.get("party_uids", []) as Array).has(owned.get("body_uid")):
+			check(false, "(b) the committing guest has its own deployed creature")
+			return out
 		_action += 1
 		var action := _action
-		var begun: Dictionary = await step(1, "strike", {"target": [centre.x, centre.y, centre.z],
-			"slot": "charged", "action": action, "start_only": true})
+		# Keep the original command allowance across the entire split charge;
+		# polling must not restart its deadline or the smoke's step-phase budget.
+		var deadline := mini(int(_step_phase_deadline_ms), Time.get_ticks_msec() \
+			+ int(float(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES)) \
+			* NOMINAL_MS_PER_PHYSICS_FRAME + WALL_SLACK_MS))
+		var begun := await _charge_step(1, "strike", {"target": [centre.x, centre.y, centre.z],
+			"slot": "charged", "action": action, "start_only": true}, deadline)
 		out["start"] = "%s %s" % [str(begun.get("detail", "")), str(begun.get("data", {}))]
-		await step(1, "wait", {"frames": EARLY_START_FRAMES})
-		var pinned := await _pin(false)
+		if begun.get("verdict") != "PASS": return out
+		var observed := await _charge_commit(guest_peer, action, owned, deadline)
+		out["commit"] = observed
+		if observed.is_empty(): return out
+		var original: Dictionary = observed.move_commit
+		var early := await _charge_step(1, "wait", {"frames": EARLY_START_FRAMES}, deadline)
+		if early.get("verdict") != "PASS": return out
+		var pinned := await _charge_step(0, "f22_pin_tell", {"encounter_id": _encounter_id}, deadline)
 		pin = pinned.get("data", {})
 		if pin.is_empty(): out["pin"] = "%s: %s" % [str(pinned.get("verdict", "")), str(pinned.get("detail", ""))]
+		if pinned.get("verdict") != "PASS" or pin.is_empty(): return out
 		out.since_ms = int(pin.get("since_ms", -1))
 		out.poise_before = float(pin.get("poise", 0.0))
 		hp_before = float(pin.get("hp", -1.0))
-		var struck: Dictionary = await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "charged",
-			"action": action, "move_start": false, "windup_wait": true, "settle": 15})
+		var ready := await _charge_commit(guest_peer, action, owned, deadline, original)
+		out["ready"] = ready
+		if ready.is_empty(): return out
+		var struck := await _charge_step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "charged",
+			"action": action, "move_start": false, "windup_wait": false, "settle": 15}, deadline)
 		out["strike"] = "%s %s" % [str(struck.get("detail", "")), str(struck.get("data", {}))]
 	var state: Dictionary = {}
 	for _poll in STAGGER_POLLS:
@@ -210,6 +233,61 @@ func _charge_case(tell_first: bool) -> Dictionary:
 		guest_after = int(((await step(1, "f22_enemy_staggers", {})).get("data", {}) as Dictionary).get("count", 0))
 	out.guest_staggers = guest_after - guest_before
 	return out
+
+
+## Every split-charge command consumes the same original wall-clock allowance.
+func _charge_step(peer: int, command: String, args: Dictionary, deadline: int) -> Dictionary:
+	var remaining := deadline - Time.get_ticks_msec() - int(WALL_SLACK_MS)
+	if remaining <= 0:
+		check(false, "(b) the original charge deadline expired before %s" % command)
+		return {}
+	var budget := mini(int(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES)),
+		floori(float(remaining) / NOMINAL_MS_PER_PHYSICS_FRAME))
+	return await step(peer, command, args, budget)
+
+
+## Read the exact retained host start, never treat the guest's pending reply as
+## acceptance. On a later observation its identity and frozen timing must match.
+func _charge_commit(peer: int, action: int, owned: Dictionary, deadline: int,
+		original: Dictionary = {}) -> Dictionary:
+	while Time.get_ticks_msec() < deadline - int(WALL_SLACK_MS):
+		var response := await _charge_step(0, "f22_pin_tell", {"encounter_id": _encounter_id,
+			"read_only": true, "commit_peer": peer, "commit_action": action}, deadline)
+		if response.get("verdict") != "PASS": return {}
+		var observed: Dictionary = response.get("data", {})
+		var committed: Dictionary = observed.get("move_commit", {})
+		if not committed.is_empty():
+			var binding: Dictionary = committed.get("binding", {})
+			var matched: bool = int(committed.get("action", 0)) == action \
+				and int(committed.get("peer", 0)) == peer and committed.get("slot") == "charged" \
+				and committed.get("creature_uid") == owned.get("body_uid") \
+				and binding.get("creature_uid") == owned.get("body_uid") \
+				and binding.get("character_id") == owned.get("character_id") \
+				and not str(committed.get("move_id", "")).is_empty() \
+				and committed.get("resolved") == false \
+				and int(committed.get("started_at_ms", -1)) >= 0 \
+				and int(committed.get("strike_at_ms", -1)) >= int(committed.get("started_at_ms", 0)) \
+				and int(observed.get("host_now_ms", -1)) >= int(committed.get("started_at_ms", 0))
+			if not original.is_empty():
+				for key: String in ["action", "peer", "creature_uid", "move_id", "slot", "binding", "started_at_ms", "strike_at_ms"]:
+					matched = matched and committed.get(key) == original.get(key)
+			if not matched:
+				check(false, "(b) the original host charge commitment changed or is not current (%s)" % str(observed))
+				return {}
+			var remaining := int(committed.strike_at_ms) - int(observed.host_now_ms)
+			if original.is_empty() or remaining <= 0: return observed
+			# Frame waits merely yield; the next host tick proves readiness.
+			var waited := await _charge_step(0, "wait", {"frames": mini(12,
+				maxi(1, ceili(float(remaining) / NOMINAL_MS_PER_PHYSICS_FRAME)))}, deadline)
+			if waited.get("verdict") != "PASS": return {}
+		else:
+			if not original.is_empty():
+				check(false, "(b) the original host charge commitment disappeared (%s)" % str(observed))
+				return {}
+			var waited := await _charge_step(0, "wait", {"frames": 1}, deadline)
+			if waited.get("verdict") != "PASS": return {}
+	check(false, "(b) the original charge deadline expired awaiting host commitment/readiness")
+	return {}
 
 
 ## The host's live opponent HP, read from its real shared wild body.

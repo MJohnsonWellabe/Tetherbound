@@ -20,8 +20,8 @@ func _materials() -> Dictionary:
 
 func test_broken_arch_uses_installed_gateway_asymmetry_and_no_collision() -> void:
 	var cfg := _config()
-	assert_true(ResourceLoader.exists("res://assets/buildings/quaternius_castle/WallEntranceBricks.obj"),
-		"the gateway uses the installed castle kit")
+	assert_true(ResourceLoader.exists("res://assets/buildings/quaternius_medieval/Prop_Brick1.gltf"),
+		"the gateway uses the installed bevelled stone kit")
 	assert_eq(cfg.get("gateway_size_m", []), [26.0, 19.0, 5.5],
 		"the gateway retains its measured landmark-scale silhouette")
 	assert_true(absf(float(cfg.get("gateway_yaw_deg", 0.0))) >= 20.0,

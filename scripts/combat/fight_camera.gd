@@ -240,16 +240,38 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 
 
 ## Project the convex oriented envelope, preserving actual perspective/depth.
-## A near-plane crossing is unavailable rather than silently a clear view.
+## Clip the same oriented box at the near plane. A foreground body crossing
+## the lens plane must not block an unrelated actor on the other side of frame.
 static func _bounds_hull(points: PackedVector3Array, lens: Transform3D,
-		fov: float, aspect: float, near_plane: float) -> PackedVector2Array:
+		fov: float, aspect: float, near_plane: float, clip_near: bool = false) -> PackedVector2Array:
 	var inverse: Transform3D = lens.affine_inverse()
 	var tangent: float = tan(deg_to_rad(fov)*0.5)
-	var projected := PackedVector2Array()
+	var local_points := PackedVector3Array()
+	var clipped := PackedVector3Array()
+	var clip_depth := maxf(near_plane,0.000001)
 	for point: Vector3 in points:
 		var local: Vector3 = inverse*point
+		if not clip_near and -local.z<=near_plane: return PackedVector2Array()
+		local_points.append(local)
+		if -local.z>=clip_depth: clipped.append(local)
+	# AABB.get_endpoint() uses one bit per axis. Flipping each axis bit
+	# visits all twelve edges once and retains the cut face's vertices.
+	if local_points.size()==8 and not clipped.is_empty() and clipped.size()<8:
+		for index: int in 8:
+			for axis_bit: int in [1,2,4]:
+				var other := index ^ axis_bit
+				if other<=index: continue
+				var a := local_points[index]
+				var b := local_points[other]
+				var a_depth := -a.z
+				var b_depth := -b.z
+				if (a_depth<clip_depth)==(b_depth<clip_depth): continue
+				var cut := a.lerp(b,(clip_depth-a_depth)/(b_depth-a_depth))
+				cut.z = -clip_depth
+				clipped.append(cut)
+	var projected := PackedVector2Array()
+	for local: Vector3 in clipped:
 		var depth: float = -local.z
-		if depth<=near_plane: return PackedVector2Array()
 		projected.append(Vector2(0.5+local.x/(2.0*depth*tangent*aspect),
 			0.5-local.y/(2.0*depth*tangent)))
 	return Geometry2D.convex_hull(projected)
@@ -265,13 +287,13 @@ static func bounds_occlude(lens: Transform3D, actor: Dictionary, other: Dictiona
 		or not lens.basis.y.is_finite() or not lens.basis.z.is_finite() \
 		or absf(lens.basis.determinant())<=0.000001: return true
 	var actor_hull: PackedVector2Array = _bounds_hull(actor.points,lens,fov,aspect,near_plane)
-	var other_hull: PackedVector2Array = _bounds_hull(other.points,lens,fov,aspect,near_plane)
+	var other_hull: PackedVector2Array = _bounds_hull(other.points,lens,fov,aspect,near_plane,true)
 	if actor_hull.size()<3: return true
 	if other_hull.size()<3:
 		var furthest_depth: float = -INF
 		var lens_inverse: Transform3D = lens.affine_inverse()
 		for point: Vector3 in other.points: furthest_depth=maxf(furthest_depth,-(lens_inverse*point).z)
-		return furthest_depth>near_plane # Entirely behind is harmless; straddling is unavailable.
+		return furthest_depth>near_plane # Entirely behind is harmless; a degenerate visible hull is unavailable.
 	var intersections: Array[PackedVector2Array] = Geometry2D.intersect_polygons(actor_hull,other_hull)
 	var tangent: float = tan(deg_to_rad(fov)*0.5)
 	var reach: float = 1.0
