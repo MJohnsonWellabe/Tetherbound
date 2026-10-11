@@ -146,6 +146,7 @@ func shape_guard_cone() -> MeshInstance3D:
 ## shape (an older host, or an ordinary strike) leaves nothing stale behind.
 ## A lane already drawn for this tell's route cue is kept, not redrawn.
 func _present_shape(shape: Dictionary) -> void:
+	_shape_tell_colour = str(shape.get("tell_colour", ""))
 	apply_pattern_shape(last_cue_serial, shape)
 	var length := _shape_number(shape, "lane_length")
 	var half := _shape_number(shape, "lane_half_width")
@@ -268,7 +269,8 @@ func apply_pattern_shape(serial: int, shape: Dictionary) -> void:
 			and str(raw.profile.get("pattern_attack_id", "")) == "sheltered_eddy"
 		_pattern_cue = PATTERN_CUE.begin(self, raw.profile, origin, heading, marker,
 			MATH.config().get("patterns", {}).get("presentation", {}),
-			Color("#65e8df") if eddy else Color(str(MATH.config().get("telegraph", {}).get("colour", "#ff5a3c"))))
+			Color("#65e8df") if eddy else Color(str(raw.profile.get("telegraph_colour",
+				MATH.config().get("telegraph", {}).get("colour", "#ff5a3c")))))
 	else:
 		_pattern_cue.call("aim", origin, heading, marker)
 	if raw.has("remaining_s"):
