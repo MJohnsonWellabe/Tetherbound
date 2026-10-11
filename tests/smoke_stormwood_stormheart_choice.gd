@@ -66,8 +66,10 @@ class HubStub extends Node:
 
 
 class ChapterStub extends Node:
-	func emit_event(_event: String) -> Dictionary:
-		return {"accepted": false}
+	var game: Node
+	var chapter: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_chapter.json"))
+	func emit_event(event: String) -> Dictionary:
+		return preload("res://scripts/world/realm_chapter_progression.gd").dispatch(game.progression, chapter, event)
 
 
 class DynamoStub extends Node:
@@ -103,6 +105,8 @@ func _run() -> void:
 	game.save_system = _saver
 	session.call("_owner_passive_service")
 	_check(_saver.save_character_prepared(game, CHARACTER) == true, "the fixture's initial character is BOOL-saved in scratch")
+	# Seed chapter entry only; the real chapter/ledger produces the offer fact.
+	game.world.flags.set_flag("stormwood:act_ii_complete")
 	game.world.flags.set_flag(ENDING.FREED_FLAG)
 	var conversations: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(
 		"res://data/dialogue/stormwood.json")) as Dictionary).conversations
@@ -123,6 +127,8 @@ func _run() -> void:
 		world.add_child(stub)
 		if stub is HubStub:
 			stub.add_to_group("stormwood_encounter_hub")
+		if stub is ChapterStub:
+			(stub as ChapterStub).game = game
 	var hub: HubStub = world.get_node("StormwoodEncounterHub")
 	var ending := ENDING.new()
 	ending.name = "StormwoodEnding"
@@ -365,6 +371,7 @@ func _mount(game: Node, world_id: String) -> Dictionary:
 	else:
 		state.world_id = world_id
 		WORLD_IDENTITY.ensure(state)
+		state.flags.set_flag("stormwood:act_ii_complete")
 		state.flags.set_flag(ENDING.FREED_FLAG)
 	game.world = state
 	game.call("_ensure_containers")
@@ -384,7 +391,8 @@ func _mount(game: Node, world_id: String) -> Dictionary:
 		var stub: Node = pair[1].new()
 		stub.name = str(pair[0])
 		world.add_child(stub)
-		if stub is DynamoStub: stub.fighter_characters = [CHARACTER]
+		if stub is DynamoStub: (stub as DynamoStub).fighter_characters.append(CHARACTER)
+		if stub is ChapterStub: (stub as ChapterStub).game = game
 	var ending := ENDING.new()
 	ending.name = "StormwoodEnding"
 	world.add_child(ending)
@@ -471,6 +479,7 @@ func _reset_character(game: Node) -> void:
 	game.world.reset()
 	game.world.world_id = "stormheart-choice-fixture"
 	WORLD_IDENTITY.ensure(game.world)
+	game.world.flags.set_flag("stormwood:act_ii_complete")
 	game.world.flags.set_flag(ENDING.FREED_FLAG)
 	game.call("_ensure_containers")
 	_check(_saver.save_character_prepared(game, CHARACTER) == true,
