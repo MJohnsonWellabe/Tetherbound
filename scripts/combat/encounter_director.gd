@@ -645,6 +645,7 @@ func start_guest_master_duel(site: Node3D, peer: int, character: String, uid: St
 	runtime.connect("telegraph", _on_shared_host_telegraph.bind(id))
 	runtime.connect("swung", _on_shared_host_strike.bind(id))
 	if body.has_signal("route_cue_started"): body.connect("route_cue_started", _on_shared_host_route.bind(id))
+	if body.has_signal("sheltered_eddy_changed"): body.connect("sheltered_eddy_changed", _on_shared_host_recovery.bind(id))
 	body.set_meta(&"f22_master_role", str(definition.get("profile", "")))
 	_configure_f22_patterns(body, true)
 	runtime.call("start_shared", body, selected, site.global_position, float(definition.arena_radius_m), self, id, 1, "trainer")
@@ -2913,7 +2914,9 @@ func _apply_shared_cue(payload: Dictionary) -> void:
 			_shared_opponent_proxy.call("present_route", serial, route_s, shape)
 	elif kind == "strike":
 		_shared_opponent_proxy.call("present_strike", serial,
-			int(payload.get("strike_count", 0)))
+			int(payload.get("strike_count", 0)), shape, float(payload.get("remaining_s", 0.0)))
+	elif kind == "recovery":
+		_shared_opponent_proxy.call("present_recovery", serial, float(payload.get("remaining_s", 0.0)), shape)
 
 
 ## Host -> the one peer whose creature the opponent hit (§5's other half).
@@ -4661,7 +4664,16 @@ func _refresh_shared_record_presentation(rec: Dictionary) -> void:
 	opponent["cue_serial"] = int(runtime.get("cue_serial"))
 	opponent["telegraph_count"] = int(runtime.get("telegraph_count"))
 	opponent["strike_count"] = int(runtime.get("strike_count"))
-	if Time.get_ticks_msec() < int(runtime.get("telegraph_until_ms")):
+	var wild: Node3D = runtime.call("body") as Node3D
+	var eddy_left := float(wild.call("sheltered_eddy_seconds_left")) \
+		if is_instance_valid(wild) and wild.has_method("sheltered_eddy_seconds_left") else 0.0
+	var active_left := float(wild.call("tidecoil_active_seconds_left")) \
+		if is_instance_valid(wild) and wild.has_method("tidecoil_active_seconds_left") else 0.0
+	if eddy_left > 0.0:
+		opponent["cue"] = _shared_cue_payload(encounter_id, "recovery", eddy_left)
+	elif active_left > 0.0:
+		opponent["cue"] = _shared_cue_payload(encounter_id, "strike", active_left)
+	elif Time.get_ticks_msec() < int(runtime.get("telegraph_until_ms")):
 		opponent["cue"] = _shared_cue_payload(encounter_id, "telegraph",
 			float(int(runtime.get("telegraph_until_ms")) - Time.get_ticks_msec()) / 1000.0)
 	else:
@@ -4677,6 +4689,8 @@ func _connect_shared_host_cues(wild: Node3D) -> void:
 		wild.telegraph_started.connect(_on_shared_host_telegraph)
 	if not wild.strike_ready.is_connected(_on_shared_host_strike):
 		wild.strike_ready.connect(_on_shared_host_strike)
+	if wild.has_signal("sheltered_eddy_changed") and not wild.is_connected("sheltered_eddy_changed", _on_shared_host_recovery):
+		wild.connect("sheltered_eddy_changed", _on_shared_host_recovery)
 
 
 func _disconnect_shared_host_cues() -> void:
@@ -4686,6 +4700,8 @@ func _disconnect_shared_host_cues() -> void:
 		_engaged_with.telegraph_started.disconnect(_on_shared_host_telegraph)
 	if _engaged_with.strike_ready.is_connected(_on_shared_host_strike):
 		_engaged_with.strike_ready.disconnect(_on_shared_host_strike)
+	if _engaged_with.has_signal("sheltered_eddy_changed") and _engaged_with.is_connected("sheltered_eddy_changed", _on_shared_host_recovery):
+		_engaged_with.disconnect("sheltered_eddy_changed", _on_shared_host_recovery)
 
 
 func _on_shared_host_telegraph(seconds: float, encounter_id: String = "") -> void:
@@ -4732,7 +4748,21 @@ func _on_shared_host_strike(encounter_id: String = "") -> void:
 	var wild: Variant = runtime.call("body")
 	if wild != null and is_instance_valid(wild) and wild.has_method("play_attack"):
 		wild.call("play_attack")
-	_broadcast_shared_cue(_shared_cue_payload(encounter_id, "strike", 0.0))
+	var active_left := float(wild.call("tidecoil_active_seconds_left")) \
+		if is_instance_valid(wild) and wild.has_method("tidecoil_active_seconds_left") else 0.0
+	_broadcast_shared_cue(_shared_cue_payload(encounter_id, "strike", active_left))
+
+
+## Same authenticated host/body-generation/serial channel as tells and strikes.
+## The named eddy is presentation only here; the host body owns its poise reward.
+func _on_shared_host_recovery(seconds: float, encounter_id: String = "") -> void:
+	if not (_is_host() or _owns_canonical_wild(encounter_id)) or not is_finite(seconds) or seconds < 0.0:
+		return
+	if encounter_id.is_empty(): encounter_id = _local_bound_encounter_id()
+	var runtime := _shared_host_fight(encounter_id)
+	if runtime == null: return
+	runtime.set("cue_serial", int(runtime.get("cue_serial")) + 1)
+	_broadcast_shared_cue(_shared_cue_payload(encounter_id, "recovery", seconds))
 
 
 func _shared_cue_payload(encounter_id: String, kind: String, remaining_s: float) -> Dictionary:
@@ -4747,7 +4777,7 @@ func _shared_cue_payload(encounter_id: String, kind: String, remaining_s: float)
 		"telegraph_count": int(runtime.get("telegraph_count")) if runtime != null else 0,
 		"strike_count": int(runtime.get("strike_count")) if runtime != null else 0,
 	})
-	if runtime != null and (kind == "telegraph" or kind == "route"):
+	if runtime != null and (kind in ["telegraph", "route", "recovery"] or kind == "strike" and remaining_s > 0.0):
 		var wild: Variant = runtime.call("body")
 		if wild != null and is_instance_valid(wild) and (wild as Node).has_method("presentation_shape"):
 			var shape: Dictionary = (wild as Node).call("presentation_shape")
@@ -5160,6 +5190,10 @@ func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> 
 		var route_cue := _on_shared_host_route.bind(encounter_id)
 		if wild.route_cue_started.is_connected(route_cue):
 			wild.route_cue_started.disconnect(route_cue)
+	if is_instance_valid(wild) and wild.has_signal("sheltered_eddy_changed"):
+		var recovery_cue := _on_shared_host_recovery.bind(encounter_id)
+		if wild.is_connected("sheltered_eddy_changed", recovery_cue):
+			wild.disconnect("sheltered_eddy_changed", recovery_cue)
 	if terminal.is_empty():
 		runtime.call("stop_opponent")
 		if restore_ambient and wild != null and is_instance_valid(wild):
@@ -7102,6 +7136,10 @@ func _start_shared_host_runtime(encounter_id: String, wild: Node3D, generation: 
 		var route_cue := _on_shared_host_route.bind(encounter_id)
 		if not wild.route_cue_started.is_connected(route_cue):
 			wild.route_cue_started.connect(route_cue)
+	if wild.has_signal("sheltered_eddy_changed"):
+		var recovery_cue := _on_shared_host_recovery.bind(encounter_id)
+		if not wild.is_connected("sheltered_eddy_changed", recovery_cue):
+			wild.connect("sheltered_eddy_changed", recovery_cue)
 	runtime.call("start_shared", wild, _ally_body, centre, radius, self, encounter_id, generation)
 	_manager.call("detach_realm_opponent_callbacks", wild)
 

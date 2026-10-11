@@ -40,6 +40,8 @@ signal route_cue_started(seconds: float)
 ## F22#0: an observed player commitment caused a dodge or a punish tell.
 ## Presentation/proof only; it decides nothing.
 signal pattern_reacted(kind: String)
+## Host-only state change; guests draw the same finite sheltered recovery mark.
+signal sheltered_eddy_changed(seconds: float)
 
 ## Live state. The combat manager reads this off the node by name; it is the one
 ## piece of a creature that has to survive being knocked out.
@@ -102,6 +104,12 @@ var _pattern_observer: Callable
 var _pattern_cursor := 0
 var _pattern_geometry: Dictionary = {}
 var _pattern_cue: Node3D
+var _tidecoil_sweep_serial := 0
+var _tidecoil_active_left := -1.0
+var _tidecoil_completed_sweeps := 0
+var _tidecoil_eddy_left := 0.0
+var _tidecoil_eddy_geometry: Dictionary = {}
+var _tidecoil_eddy_cue: Node3D
 var _pattern_observed := ""
 var _pattern_observed_s := 0.0
 var _pattern_dodge_left := 0.0
@@ -648,6 +656,8 @@ func refresh_combat_profile() -> void:
 ## The director supplies authored identity and measured visible actions. The
 ## body owns selection, clocks and frozen geometry; it never decides damage.
 func configure_patterns(patterns: Dictionary, context: Dictionary, observe: Callable) -> void:
+	_cancel_tidecoil_cycle()
+	_tidecoil_completed_sweeps = 0
 	_patterns = patterns.duplicate(true) if patterns.get("runtime_enabled") == true else {}
 	_pattern_context = context.duplicate(true)
 	_pattern_observer = observe
@@ -687,7 +697,95 @@ func _clear_pattern_cue() -> void:
 
 
 func _exit_tree() -> void:
+	_cancel_tidecoil_cycle()
 	_clear_pattern_cue()
+
+
+## The cast reads THIS admitted body's clock, so a combat pause cannot let a
+## child cast land early. A monotonic receipt rejects a cancelled/restarted tell.
+func tidecoil_sweep_seconds_left(serial: int) -> float:
+	if serial != _tidecoil_sweep_serial or _tidecoil_active_left < 0.0 \
+			or not engaged or not is_alive() or not is_inside_tree() or is_queued_for_deletion() \
+			or not AI.is_tidecoil_sweep(_selected_attack):
+		return -1.0
+	return _tidecoil_active_left
+
+
+func complete_tidecoil_sweep(serial: int) -> void:
+	if tidecoil_sweep_seconds_left(serial) != 0.0: return
+	_tidecoil_active_left = -1.0
+	_clear_pattern_cue()
+	# Misses are completed sweeps too; interrupted tells/casts never get here.
+	_tidecoil_completed_sweeps += 1
+	_beat_left = float(_selected_attack.get("recovery", 1.2))
+	_cooldown = 0.0
+	if _tidecoil_completed_sweeps % maxi(1, int(_selected_attack.get("eddy_every", 3))) == 0:
+		_open_tidecoil_eddy()
+
+
+func cancel_tidecoil_sweep(serial: int) -> void:
+	if serial != _tidecoil_sweep_serial or _tidecoil_active_left < 0.0: return
+	_cancel_tidecoil_cycle()
+	_clear_pattern_cue()
+	_beat_left = float(_selected_attack.get("recovery", 1.2))
+
+
+func sheltered_eddy_seconds_left() -> float:
+	return _tidecoil_eddy_left if engaged and is_alive() else 0.0
+
+
+func tidecoil_active_seconds_left() -> float:
+	return maxf(0.0, _tidecoil_active_left) if engaged and is_alive() else 0.0
+
+
+func _clear_tidecoil_eddy() -> void:
+	var was_open := _tidecoil_eddy_left > 0.0
+	_tidecoil_eddy_left = 0.0
+	_tidecoil_eddy_geometry.clear()
+	if is_instance_valid(_tidecoil_eddy_cue): _tidecoil_eddy_cue.queue_free()
+	_tidecoil_eddy_cue = null
+	if was_open: sheltered_eddy_changed.emit(0.0)
+
+
+func _cancel_tidecoil_cycle() -> void:
+	_tidecoil_sweep_serial += 1
+	_tidecoil_active_left = -1.0
+	_clear_tidecoil_eddy()
+
+
+func _open_tidecoil_eddy() -> void:
+	_clear_tidecoil_eddy()
+	var origin: Vector3 = _pattern_geometry.get("origin", global_position)
+	var heading: Vector3 = _pattern_geometry.get("heading", facing())
+	var side := heading.cross(Vector3.UP).normalized()
+	# Reward the actual lateral escape side, measured after the committed sweep.
+	if is_instance_valid(_opponent) and (_opponent.global_position - origin).dot(side) < 0.0:
+		side = -side
+	var radius := body_radius() * 2.0
+	var marker := origin + side * float(_selected_attack.get("preferred_range", 7.0))
+	if is_instance_valid(arena):
+		var offset := Vector3(marker.x - arena.global_position.x, 0.0, marker.z - arena.global_position.z)
+		var limit := maxf(0.0, float(arena.get("radius")) - radius)
+		if offset.length() > limit: offset = offset.normalized() * limit
+		marker = Vector3(arena.global_position.x + offset.x, origin.y, arena.global_position.z + offset.z)
+	var profile := {"pattern_id": "named_water_deep_watch_tidecoil",
+		"pattern_attack_id": "sheltered_eddy", "telegraph_shape": "field", "marker_radius_m": radius}
+	_tidecoil_eddy_geometry = {"profile": profile, "origin": origin, "heading": heading, "marker": marker}
+	_tidecoil_eddy_left = maxf(0.0, float(_selected_attack.get("eddy_duration_s", 2.0)))
+	if _tidecoil_eddy_left <= 0.0: return
+	if is_inside_tree():
+		_tidecoil_eddy_cue = PATTERN_CUE.begin(self, profile, origin, heading, marker,
+			_patterns.get("presentation", {}), Color("#65e8df"))
+	sheltered_eddy_changed.emit(_tidecoil_eddy_left)
+
+
+func _tidecoil_eddy_contains(striker: Node3D) -> bool:
+	if sheltered_eddy_seconds_left() <= 0.0 or not is_instance_valid(striker) \
+			or not striker.is_inside_tree() or _tidecoil_eddy_geometry.is_empty(): return false
+	var marker: Vector3 = _tidecoil_eddy_geometry.marker
+	var feet := striker.global_position
+	return Vector2(feet.x - marker.x, feet.z - marker.z).length() \
+		<= float(_tidecoil_eddy_geometry.profile.marker_radius_m)
 
 
 func _update_pattern_geometry() -> void:
@@ -755,6 +853,9 @@ func _finish_pattern_leap() -> void:
 
 func _observe_pattern_reaction(delta: float) -> bool:
 	_pattern_dodge_left = maxf(0.0, _pattern_dodge_left - delta)
+	# This named reposition IS its sequential cooldown. A generic dodge's .2 s
+	# beat must not replace the authored 1.0/.8 s or permit a sweep in the eddy.
+	if _intent == AI.Intent.REPOSITION and AI.is_tidecoil_sweep(_selected_attack): return false
 	if _patterns.is_empty() or not _pattern_observer.is_valid(): return false
 	var raw: Variant = _pattern_observer.call()
 	if not raw is Dictionary: return false
@@ -787,6 +888,8 @@ func _observe_pattern_reaction(delta: float) -> bool:
 
 ## Called by the combat manager when a fight opens and closes.
 func set_engaged(value: bool, opponent: Node3D = null) -> void:
+	_cancel_tidecoil_cycle()
+	_tidecoil_completed_sweeps = 0
 	if not value:
 		_landed_utility_state.clear()
 		_utility_clock_ms = 0.0
@@ -857,10 +960,21 @@ func _tick_combat(delta: float) -> void:
 	_cooldown = maxf(0.0, _cooldown - delta)
 	# F04: the recovery beat starts when the charge stops, not when it starts,
 	# so the punish window after a travelling lunge is the profile's full one.
-	if not _lunge_active and not _pattern_leap_active:
+	if not _lunge_active and not _pattern_leap_active and _tidecoil_active_left < 0.0:
 		_beat_left = maxf(0.0, _beat_left - delta)
 	_advance_route_cue(delta)
 	_tick_poise(delta)
+	if _tidecoil_eddy_left > 0.0:
+		if delta >= _tidecoil_eddy_left:
+			_clear_tidecoil_eddy()
+		else:
+			_tidecoil_eddy_left -= delta
+	if _tidecoil_active_left >= 0.0:
+		_tidecoil_active_left = maxf(0.0, _tidecoil_active_left - delta)
+		request_move(Vector3.ZERO)
+		_stuck_frames = 0
+		_stuck_check_pos = global_position
+		return
 	if _pattern_leap_active: return
 	if _staggered:
 		if _beat_left <= 0.0:
@@ -1148,7 +1262,8 @@ func _enter(intent: int) -> void:
 		_route_cue_left = 0.0
 		_hide_guard_cone()
 		if not (previous == AI.Intent.TELEGRAPH and intent == AI.Intent.RECOVER \
-			and str(_selected_attack.get("telegraph_shape", "")) == "marker"):
+			and (str(_selected_attack.get("telegraph_shape", "")) == "marker" \
+			or AI.is_tidecoil_sweep(_selected_attack))):
 			_clear_pattern_cue()
 	var named_enabled := (not _patterns.is_empty() or int(_combat_cfg.get("charged_every", 0)) > 0) and instance != null
 	if intent == AI.Intent.TELEGRAPH and _pattern_repeating:
@@ -1200,6 +1315,15 @@ func _enter(intent: int) -> void:
 			_announce_tell()
 		else:
 			route_cue_started.emit(cue)
+	elif previous == AI.Intent.TELEGRAPH and intent == AI.Intent.RECOVER and AI.is_tidecoil_sweep(_selected_attack):
+		_tidecoil_sweep_serial += 1
+		_tidecoil_active_left = maxf(0.0, float(_selected_attack.get("active_s", 0.8)))
+		_selected_attack["_tidecoil_sweep_serial"] = _tidecoil_sweep_serial
+		_pattern_geometry["profile"] = _selected_attack.duplicate(true)
+		# RECOVER is rooted, but its 1.2-second clock starts only after the
+		# single host cast resolves the full .8-second sweep (hit or miss).
+		_cooldown = 0.0
+		strike_ready.emit()
 	elif previous == AI.Intent.TELEGRAPH and intent == AI.Intent.RECOVER \
 			and str(_selected_attack.get("telegraph_shape", "")) == "marker":
 		_cooldown = float(_selected_attack.get("attack_cooldown", _combat_cfg.get("attack_cooldown", 1.1)))
@@ -1284,7 +1408,16 @@ func guard_stance() -> bool:
 ## Empty outside a tell, or for a tell that draws nothing.
 func presentation_shape() -> Dictionary:
 	var shape := {}
-	if _intent != AI.Intent.TELEGRAPH and not _pattern_leap_active:
+	if sheltered_eddy_seconds_left() > 0.0 and not _tidecoil_eddy_geometry.is_empty():
+		var eddy_origin: Vector3 = _tidecoil_eddy_geometry.origin
+		var eddy_heading: Vector3 = _tidecoil_eddy_geometry.heading
+		var eddy_marker: Vector3 = _tidecoil_eddy_geometry.marker
+		return {"pattern": {"profile": _tidecoil_eddy_geometry.profile.duplicate(true),
+			"remaining_s": _tidecoil_eddy_left,
+			"origin": [eddy_origin.x, eddy_origin.y, eddy_origin.z],
+			"heading": [eddy_heading.x, eddy_heading.y, eddy_heading.z],
+			"marker": [eddy_marker.x, eddy_marker.y, eddy_marker.z]}}
+	if _intent != AI.Intent.TELEGRAPH and not _pattern_leap_active and _tidecoil_active_left < 0.0:
 		return shape
 	if not _pattern_geometry.is_empty():
 		var origin: Vector3 = _pattern_geometry.origin
@@ -1293,6 +1426,7 @@ func presentation_shape() -> Dictionary:
 		shape["pattern"] = {"profile": _pattern_geometry.profile.duplicate(true),
 			"origin": [origin.x, origin.y, origin.z], "heading": [heading.x, heading.y, heading.z],
 			"marker": [marker.x, marker.y, marker.z]}
+		if _tidecoil_active_left >= 0.0: shape.pattern["remaining_s"] = _tidecoil_active_left
 	var cue := route_cue_seconds()
 	if lunge_travels() or cue > 0.0:
 		var half := _lunge_lane_half_width()
@@ -1540,6 +1674,7 @@ func _finish_lunge(contact: bool, stopped_by: String) -> void:
 
 ## Stops a charge (and its lane) without a strike: stagger, faint, disengage.
 func _cancel_lunge() -> void:
+	_cancel_tidecoil_cycle()
 	# F10#2: every path that abandons a tell (stagger, faint, disengage) comes
 	# through here, so a route cue or guard cone never outlives its tell.
 	_route_cue_left = 0.0
@@ -1649,7 +1784,7 @@ func _tick_poise(delta: float) -> void:
 
 ## Drain this body's break meter after a landed blow. Returns true only when
 ## this call starts a stagger, so presentation can announce the transition once.
-func apply_poise_damage(amount: float, force_stagger: bool = false) -> bool:
+func apply_poise_damage(amount: float, force_stagger: bool = false, striker: Node3D = null) -> bool:
 	_poise_quiet_left = float(_poise_config().get("regen_delay", 2.0))
 	# F10#2 (coordinator interim ruling 5860078626, option (a)): a body showing
 	# its route cue cannot be staggered, and hits during the cue do not drain
@@ -1664,6 +1799,9 @@ func apply_poise_damage(amount: float, force_stagger: bool = false) -> bool:
 	if _poise_resist_left > 0.0:
 		return false
 	if not force_stagger:
+		# Only the actual accepted attacker's feet earn the eddy's break reward.
+		# Reuse the authored punish scale; HP damage/power never changes here.
+		if _tidecoil_eddy_contains(striker): amount *= maxf(1.0, float(_poise_config().get("crit_scale", 1.5)))
 		_poise = maxf(0.0, _poise - maxf(0.0, amount))
 	if _staggered or (not force_stagger and _poise > 0.0):
 		return false
@@ -1729,7 +1867,7 @@ func is_rooted() -> bool:
 	# A charging body is committed, not open: the HUD's "it's open" waits for
 	# the charge to stop. Nor is a body showing its route cue (F10#2): the drawn
 	# lane is the cue there, so the HUD says nothing until the tell.
-	return engaged and AI.is_rooted(_intent) and not _lunge_active \
+	return engaged and AI.is_rooted(_intent) and not _lunge_active and _tidecoil_active_left < 0.0 \
 		and not (_intent == AI.Intent.TELEGRAPH and _route_cue_left > 0.0)
 
 

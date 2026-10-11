@@ -3488,7 +3488,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		var force_interrupt := not is_quick and enemy_is_winding_up() \
 			and bool(_poise_config().get("interrupt_on_charged_into_telegraph", true)) \
 			and charge_read_the_tell(float(_pending_move.get("windup", 0.55)))
-		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
+		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt, _ally_body))
 	# W09-VFX: damage over the bar, so the spark can be sized to the blow.
 	var hit_fraction: float = damage / maxf(1.0, float(_enemy.max_hp))
 	if not local_impact.is_empty():
@@ -3883,7 +3883,8 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		var force_interrupt := charged and enemy_is_winding_up() \
 			and bool(_poise_config().get("interrupt_on_charged_into_telegraph", true)) \
 			and charge_read_the_tell(_host_charged_windup(impact_context, move_id), int(frozen.get("started_at_ms", -1)))
-		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
+		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt,
+			impact_context.get("striker_body") as Node3D))
 	if (hp_before > float(_enemy.hp) or effect_only) and not killed and is_instance_valid(_wild):
 		if slot == "utility" and _wild.has_method("apply_landed_utility"):
 			var source := impact_context.get("striker_body") as Node3D

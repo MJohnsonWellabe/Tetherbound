@@ -5,6 +5,7 @@ extends Node3D
 ## target positions and accepted actor identity at contact. No local reward.
 const PROJECTILE := preload("res://scripts/combat/move_projectile.gd")
 const CUE := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
+const AI := preload("res://scripts/combat/combat_ai.gd")
 var _owner: Node
 var _profile: Dictionary
 var _geometry: Dictionary
@@ -15,6 +16,8 @@ var _field := false
 var _finished := false
 var _connected := false
 var _cue: Node3D
+var _tidecoil_body: Node3D
+var _tidecoil_serial := 0
 
 
 static func begin(owner: Node, profile: Dictionary, geometry: Dictionary,
@@ -30,6 +33,14 @@ static func begin(owner: Node, profile: Dictionary, geometry: Dictionary,
 	cast._resolve = resolve
 	cast._field = str(profile.get("telegraph_shape", "")) == "field"
 	cast._left = float(profile.get("field_duration_s", 0.0)) if cast._field else float(cfg.get("casts", {}).get("fan_travel_s", 0.3))
+	if AI.is_tidecoil_sweep(profile):
+		cast._tidecoil_body = geometry.get("body") as Node3D
+		cast._tidecoil_serial = int(profile.get("_tidecoil_sweep_serial", 0))
+		if not is_instance_valid(cast._tidecoil_body) or cast._tidecoil_serial <= 0 \
+				or not cast._tidecoil_body.has_method("tidecoil_sweep_seconds_left"):
+			cast.free()
+			return null
+		cast._left = maxf(0.0, float(profile.get("active_s", 0.8)))
 	cast._flight_left = 0.0 if cast._field else cast._left
 	owner.add_child(cast)
 	if cast._field:
@@ -58,8 +69,18 @@ func _physics_process(delta: float) -> void:
 	if _finished or not is_instance_valid(_owner) or not _resolve.is_valid():
 		queue_free()
 		return
-	_left -= delta
-	_flight_left = maxf(0.0, _flight_left - delta)
+	if _tidecoil_serial > 0:
+		if not is_instance_valid(_tidecoil_body):
+			queue_free()
+			return
+		_left = float(_tidecoil_body.call("tidecoil_sweep_seconds_left", _tidecoil_serial))
+		if _left < 0.0:
+			queue_free()
+			return
+		_flight_left = _left
+	else:
+		_left -= delta
+		_flight_left = maxf(0.0, _flight_left - delta)
 	if _flight_left > 0.0:
 		return
 	# Resolver returns true only for an accepted actual contact. The existing
@@ -71,9 +92,13 @@ func _physics_process(delta: float) -> void:
 	if not _field or _left <= 0.0:
 		_finished = true
 	if _finished:
+		if _tidecoil_serial > 0 and is_instance_valid(_tidecoil_body):
+			_tidecoil_body.call("complete_tidecoil_sweep", _tidecoil_serial)
 		queue_free()
 
 
 func _exit_tree() -> void:
+	if not _finished and _tidecoil_serial > 0 and is_instance_valid(_tidecoil_body):
+		_tidecoil_body.call("cancel_tidecoil_sweep", _tidecoil_serial)
 	if is_instance_valid(_cue):
 		_cue.queue_free()

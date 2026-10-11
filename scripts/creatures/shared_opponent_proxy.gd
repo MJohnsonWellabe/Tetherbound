@@ -25,6 +25,7 @@ var _shape_lane_lock_left := -1.0
 ## tell: only then is the drawn lane carried over instead of redrawn.
 var _shape_route_pending := false
 var _pattern_fields: Array[Dictionary] = []
+var _tidecoil_cue_left := 0.0
 
 
 func configure_presentation(card: RefCounted, generation: int, feet: Vector3, facing_now: Vector3,
@@ -101,14 +102,35 @@ func present_route(serial: int, seconds: float, shape: Dictionary = {}) -> bool:
 	return true
 
 
-func present_strike(serial: int, total: int) -> bool:
+func present_strike(serial: int, total: int, shape: Dictionary = {}, remaining_s: float = 0.0) -> bool:
 	if serial <= last_cue_serial:
 		return false
 	last_cue_serial = serial
 	strike_count = maxi(strike_count, total)
-	_release_shape()
+	if remaining_s > 0.0 and is_finite(remaining_s) \
+			and AI.is_tidecoil_sweep(shape.get("pattern", {}).get("profile", {})):
+		_clear_shape()
+		_present_shape(shape)
+		_tidecoil_cue_left = remaining_s
+	else:
+		_release_shape()
 	# Visual only. Never emit strike_ready: the host sends damage separately.
 	play_attack()
+	return true
+
+
+## The host's exact named recovery mark, never an attack or a local benefit.
+## Zero closes it on cancellation/end; serial ordering rejects old receipts.
+func present_recovery(serial: int, seconds: float, shape: Dictionary = {}) -> bool:
+	if serial <= last_cue_serial or not is_finite(seconds) or seconds < 0.0: return false
+	var profile: Dictionary = shape.get("pattern", {}).get("profile", {})
+	if seconds > 0.0 and (str(profile.get("pattern_id", "")) != "named_water_deep_watch_tidecoil" \
+			or str(profile.get("pattern_attack_id", "")) != "sheltered_eddy"): return false
+	last_cue_serial = serial
+	_clear_shape()
+	if seconds > 0.0:
+		_present_shape(shape)
+		_tidecoil_cue_left = seconds
 	return true
 
 
@@ -154,6 +176,7 @@ func play_absorb(world_point: Vector3, seconds: float) -> void:
 
 
 func _clear_shape(clear_fields: bool = false) -> void:
+	_tidecoil_cue_left = 0.0
 	_free_shape_lane()
 	_hide_guard_cone()
 	_clear_pattern_cue()
@@ -168,6 +191,7 @@ func _clear_shape(clear_fields: bool = false) -> void:
 ## The strike: a travelling lane stays where it was drawn and fades under the
 ## running body, as the host's does; a route line ends with its tell.
 func _release_shape() -> void:
+	_tidecoil_cue_left = 0.0
 	if is_instance_valid(_pattern_cue) and str(_pattern_geometry.get("profile", {}).get("telegraph_shape", "")) == "field":
 		_pattern_fields.append({"node": _pattern_cue,
 			"left": float(_pattern_geometry.profile.get("field_duration_s", 0.0))})
@@ -240,11 +264,15 @@ func apply_pattern_shape(serial: int, shape: Dictionary) -> void:
 		_clear_pattern_cue()
 		return
 	if not is_instance_valid(_pattern_cue):
+		var eddy := str(raw.profile.get("pattern_id", "")) == "named_water_deep_watch_tidecoil" \
+			and str(raw.profile.get("pattern_attack_id", "")) == "sheltered_eddy"
 		_pattern_cue = PATTERN_CUE.begin(self, raw.profile, origin, heading, marker,
 			MATH.config().get("patterns", {}).get("presentation", {}),
-			Color(str(MATH.config().get("telegraph", {}).get("colour", "#ff5a3c"))))
+			Color("#65e8df") if eddy else Color(str(MATH.config().get("telegraph", {}).get("colour", "#ff5a3c"))))
 	else:
 		_pattern_cue.call("aim", origin, heading, marker)
+	if raw.has("remaining_s"):
+		_tidecoil_cue_left = maxf(0.0, _shape_number(raw, "remaining_s"))
 
 
 static func _pattern_vector(raw: Variant) -> Variant:
@@ -255,6 +283,9 @@ static func _pattern_vector(raw: Variant) -> Variant:
 
 
 func _physics_process(delta: float) -> void:
+	if _tidecoil_cue_left > 0.0:
+		_tidecoil_cue_left = maxf(0.0, _tidecoil_cue_left - delta)
+		if _tidecoil_cue_left <= 0.0: _clear_pattern_cue()
 	for index: int in range(_pattern_fields.size() - 1, -1, -1):
 		_pattern_fields[index].left -= delta
 		if _pattern_fields[index].left <= 0.0:

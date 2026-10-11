@@ -238,6 +238,18 @@ static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dict
 	out["move_id"] = str(out.get("move_override", context.get("move_" + slot, "")))
 	if out.move_id.is_empty():
 		return {}
+	# BOSSES 4.9: this named CURRENT has its own 50% intensity bands. The
+	# selected row stays frozen through sweep/recovery; generic 30% pressure
+	# must never shorten its tell, raise power, or alter its recovery cadence.
+	if is_tidecoil_sweep(out):
+		var low_hp: Dictionary = row.get("low_hp", {})
+		if float(context.get("hp_fraction", 1.0)) < float(low_hp.get("threshold", 0.5)):
+			out["attack_cooldown"] = float(low_hp.get("attack_cooldown", out.attack_cooldown))
+			out["eddy_every"] = int(low_hp.get("eddy_every", out.eddy_every))
+		# The body runs this cooldown AFTER the complete active/recovery beats,
+		# using its existing REPOSITION state rather than a concurrent clock.
+		out["reposition_time"] = float(out.attack_cooldown)
+		return out
 	# Low-health pressure keeps its visible timing tradeoff, confined to the role.
 	if float(context.get("hp_fraction", 1.0)) <= float(patterns.get("low_hp_fraction", 0.3)):
 		var tradeoff: Dictionary = (patterns.get("low_hp_tradeoffs", {}) as Dictionary).get(role, {})
@@ -249,6 +261,11 @@ static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dict
 		if posmod(int(context.get("pattern_cursor", cursor)) + 1, 3) == 0:
 			out["recovery"] = float(out.recovery) + float(tradeoff.get("third_recovery_add_s", 0.0))
 	return out
+
+
+static func is_tidecoil_sweep(profile: Dictionary) -> bool:
+	return str(profile.get("pattern_id", "")) == "named_water_deep_watch_tidecoil" \
+		and str(profile.get("pattern_attack_id", "")) == "tidecoil_sweep"
 
 
 ## Observation time is accumulated by the node only while the SAME visible
