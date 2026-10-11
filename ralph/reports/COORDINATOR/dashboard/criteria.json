@@ -1,5 +1,5 @@
 {
- "generated_at": "12:38 PM CT Sun 11 Oct 2026",
+ "generated_at": "12:45 PM CT Sun 11 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -242,11 +242,11 @@
    "id": "F04",
    "title": "Named Meadows fights",
    "chapter": "Meadows",
-   "pct": 44,
+   "pct": 56,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
-    "in_progress": 3,
+    "in_progress": 2,
     "not_started": 2,
     "blocked": 0,
     "failing": 0
@@ -254,10 +254,10 @@
    "criteria": [
     {
      "text": "Warrens guardian: named tactical question visible at normal distance",
-     "status": "in_progress",
-     "evidence": "tb/reproof-captures: | F04#0 Warrens guardian | FAIL | F04-0/ | Smoke FAIL (tell/recovery 1.00/0.90 vs expected 0.85/1.10; Earth Fist cone/lunge not from MoveDB); both attacks share one magenta-ring tell, question only in HUD text, camera too close/occluded in ",
-     "gap": "Wedge telegraph for Earth Fist from its config; distinct quick-strike shape; re-capture at the normal camera; code-blind judge.",
-     "note": "Code-blind judge 11:26 AM CT Sun 11 Oct on tb/ev-captures 53d9616f (render.yml Compatibility): FAIL. The Earth Fist tell is a small round ring at the guardian's feet, not the 6.5 m / 72° cone, so the sidestep answer isn't visible; the quick strike is the same ring in another colour. Also noted: a camera flip at the dodge, command labels over the creatures, props hiding the forelegs, guardian barely larger than the Terrapup. Fix sent to meadows-fights (wedge telegraph from config); then re-capture and re-judge.",
+     "status": "met",
+     "evidence": "ralph/reports/VISUAL-PROOF/F04-0/ (tb/ev-captures 7ef5e574, render on tb/ev-coordinator a8899257): smoke_warrens --guardian-attacks --guardian-settled-approach PASS (Q,C,Q,C; 1 hit, 2 misses) + code-blind judge PASS: the Earth Fist reads as a filled orange 72-degree wedge you can step out of sideways; the quick strike is a distinct violet outline; a hit and a dodge are visible",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (code-blind PASS 12:46 PM CT Sun 11 Oct). Real game fix behind it: F22 pattern cues were drawn about 2.6 km from fights whose parent is translated (enemy_pattern_telegraph top_level order), plus the Earth Fist fill, Commands meter at bottom-centre and den cairn moved off the arena. Disclosed: the dodge is the smoke's 4 m fixture step. Polish notes (not blocking): faint quick-strike outline on brown floor; wedge runs under the HUD bar. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
@@ -2855,11 +2855,11 @@
    "title": "Onboarding for the new systems",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 33,
+   "pct": 67,
    "counts": {
-    "met": 1,
+    "met": 2,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 1,
     "blocked": 0,
     "failing": 0
@@ -2867,10 +2867,10 @@
    "criteria": [
     {
      "text": "Grandpa or a village NPC introduces the Home Key, homestead, Altar and essence, breakthroughs and Masters, portals and shrines as each unlocks; each lesson can be skipped.",
-     "status": "in_progress",
-     "evidence": "multiplayer.json@b4e4897d5 `session.redesign_portal_runtime_enabled=false`; onboarding.json `enabled=true`",
-     "gap": "Land F18 portals (flag true), then a controller witness of all eight lessons with per-line skip.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. Home Key/portal/shrine lessons need F18's portal runtime. smoke_opening returns early while it is off.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F46-0/ (systems-a c9707f79): new test_onboarding_lesson_triggers (each of the 8 lessons becomes due only on its own unlock, in authored order, once; 2 tests/150 assertions, coordinator re-ran 0 failed) + smoke_modal_stacking (all 8 lessons skip at every line) + smoke_opening (Grandpa's real Home Key lesson read with the pad)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (12:45 PM CT Sun 11 Oct) under proof rules v2: unlock triggers and per-line skip are proven for all eight, and in-world delivery shown for the Home Key lesson; the other seven's in-world delivery rides the route chunks. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
