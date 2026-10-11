@@ -887,14 +887,19 @@ static func _character_id(game: Node) -> String:
 
 
 ## Stand where `prompt` offers itself to this player, trying a ring around `centre`.
-static func _walk_up(tree: SceneTree, prompt: Node3D, centre: Vector3, settle: int) -> String:
+static func _walk_up(tree: SceneTree, prompt: Node3D, centre: Vector3, settle: int, context_valid: Callable = Callable()) -> String:
 	var player := (tree.get("_probe") as Object).call("player") as Node3D
-	if player == null or prompt == null:
+	if not is_instance_valid(player) or not is_instance_valid(prompt):
 		return ""
 	for offset: Vector3 in [Vector3(1.4, 0.3, 0), Vector3(-1.4, 0.3, 0), Vector3(0, 0.3, 1.4),
 			Vector3(0, 0.3, -1.4), Vector3(2.2, 0.6, 1.0), Vector3(-2.2, 0.6, -1.0), Vector3(1.0, 1.0, 2.2)]:
 		var at := centre + offset
+		if context_valid.is_valid() and not bool(context_valid.call()):
+			return ""
 		await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": settle})
+		if not is_instance_valid(player) or not is_instance_valid(prompt) \
+				or (context_valid.is_valid() and not bool(context_valid.call())):
+			return ""
 		if not (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty():
 			return str(offset)
 	return ""
@@ -1192,8 +1197,24 @@ static func _water_dock_act(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var flag := str(action.flag)
 	var cost: Array = (action.cost as Dictionary).keys()
 	var prompt := (docks.get("_prompts") as Dictionary).get(flag) as Node3D
-	if prompt == null:
+	if not is_instance_valid(prompt):
 		return {"verdict": "ERROR", "detail": "the dock has no prompt for '%s'" % flag}
+	var scene := tree.current_scene
+	var character_id := _character_id(game)
+	var actor := (tree.get("_probe") as Object).call("player") as Node3D
+	var context_valid := func() -> bool:
+		return is_instance_valid(scene) and tree.current_scene == scene \
+			and is_instance_valid(game) and str(game.get("current_realm")) == "water" \
+			and not character_id.is_empty() and _character_id(game) == character_id \
+			and is_instance_valid(docks) and _docks(tree) == docks \
+			and is_instance_valid(actor) and not actor.is_queued_for_deletion() \
+			and (tree.get("_probe") as Object).call("player") == actor
+	var prompt_valid := func() -> bool:
+		return bool(context_valid.call()) and is_instance_valid(prompt) \
+			and not prompt.is_queued_for_deletion() \
+			and (docks.get("_prompts") as Dictionary).get(flag) == prompt
+	if not bool(prompt_valid.call()):
+		return {"verdict": "ERROR", "detail": "dock action needs the original live Water scene, character, actor and prompt"}
 	var drop := str(args.get("drop", "none"))
 	var host_owned := _is_host_owned(game)
 	var local_peer := tree.root.multiplayer.get_unique_id()
@@ -1210,27 +1231,73 @@ static func _water_dock_act(tree: SceneTree, args: Dictionary) -> Dictionary:
 			refusals.append(code)
 	ledger.connect("delta_applied", on_delta)
 	ledger.connect("intent_refused", on_refused)
+	var disconnect := func() -> void:
+		if is_instance_valid(ledger):
+			if ledger.is_connected("delta_applied", on_delta):
+				ledger.disconnect("delta_applied", on_delta)
+			if ledger.is_connected("intent_refused", on_refused):
+				ledger.disconnect("intent_refused", on_refused)
 	var bag_before := _bag(game, cost)
 	var disk_before := _bag_on_disk(game, cost)
 	var flag_before := bool(game.get("world").get("flags").call("has", flag))
-	var standing := await _walk_up(tree, prompt, prompt.global_position - Vector3(0, 1.0, 0), int(args.get("walk_settle", 60)))
+	# The existing lost-delta scenario explicitly arms a host-side cable pull
+	# and remembers that host on this guest. Consume that intent once; an
+	# ordinary dock step must still reject an unexpected scene/disconnect.
+	var expected_host_cut := bool(tree.get_meta(&"f15_expected_dock_cut", false)) and not flag_before
+	if tree.has_meta(&"f15_expected_dock_cut"):
+		tree.remove_meta(&"f15_expected_dock_cut")
+	var original_session: Node = game.get("session")
+	var expected_disconnect := func() -> bool:
+		if not expected_host_cut or not is_instance_valid(game) or _character_id(game) != character_id \
+				or not is_instance_valid(original_session) or bool(original_session.call("is_active")) \
+				or str((original_session.get("_box") as Dictionary).get("ended", "")) != "host_gone":
+			return false
+		var current := tree.current_scene
+		return current == null or (is_instance_valid(current) and (
+			current.is_in_group(&"title_screen") or (current == scene and current.is_queued_for_deletion())))
+	var completed_force := flag_before and bool(args.get("force", false))
+	var standing := ""
+	# A finished prompt is intentionally dark. Searching seven offered spots
+	# cannot succeed and repeatedly waits for owner-passive teleport catch-up.
+	# This explicit local repeat exercises the existing completed-action guard;
+	# the separate resend step exercises the actual network duplicate.
+	if not completed_force:
+		standing = await _walk_up(tree, prompt, prompt.global_position - Vector3(0, 1.0, 0), int(args.get("walk_settle", 60)), prompt_valid)
+	if not bool(prompt_valid.call()):
+		disconnect.call()
+		return {"verdict": "ERROR", "detail": "dock scene, character, actor or prompt changed during approach"}
 	var offered := not standing.is_empty()
 	var shot := {}
 	if args.has("screenshot"):
 		shot = await _screenshot(tree, {"name": str(args.screenshot)})
+		if not bool(prompt_valid.call()):
+			disconnect.call()
+			return {"verdict": "ERROR", "detail": "dock context changed during screenshot"}
 	var pressed := ""
 	if offered and drop == "none":
+		# A committed delta legitimately rebuilds dock children through
+		# progression_restore. Retire the approached prompt before the tap's
+		# await; subsequent checks follow the scene/character/actor, not a
+		# disposable child that the successful action replaces.
+		prompt = null
+		prompt_valid = Callable()
 		if not await _tap(tree, "interact"):
+			disconnect.call()
 			return {"verdict": "ERROR", "detail": "the interact press did not reach this peer"}
+		if not bool(context_valid.call()) and not bool(expected_disconnect.call()):
+			disconnect.call()
+			return {"verdict": "ERROR", "detail": "dock context changed during interact press"}
 		pressed = "interact on the offered prompt"
 	elif offered or bool(args.get("force", false)):
 		# Same signal the arbiter fires on an interact press, emitted in THIS
 		# frame so the cable can be pulled right behind the intent.
 		prompt.emit_signal("activated")
-		pressed = "prompt activated (%s)" % ("offered" if offered else "FORCED: prompt dark, stale-client resend")
+		prompt = null
+		prompt_valid = Callable()
+		pressed = "prompt activated (%s)" % ("offered" if offered else (
+			"FORCED: completed prompt local guard" if completed_force else "FORCED: prompt dark"))
 	else:
-		ledger.disconnect("delta_applied", on_delta)
-		ledger.disconnect("intent_refused", on_refused)
+		disconnect.call()
 		return {"verdict": "FAIL", "detail": "the '%s' prompt is not offering itself (enabled=%s, flag already set=%s)"
 			% [str(action.label), str(prompt.get("enabled")), str(flag_before)],
 			"data": {"offered": false, "prompt_enabled": bool(prompt.get("enabled")), "flag_before": flag_before,
@@ -1259,22 +1326,23 @@ static func _water_dock_act(tree: SceneTree, args: Dictionary) -> Dictionary:
 		if not crash.is_empty() and waited >= 120:
 			break
 		await tree.physics_frame
+		if crash.is_empty() and not bool(context_valid.call()) and not bool(expected_disconnect.call()):
+			disconnect.call()
+			return {"verdict": "ERROR", "detail": "dock context changed while waiting for the action"}
 		waited += 1
 	if drop == "after_delta" and not host_owned and crash.is_empty():
 		(tree.root.multiplayer.multiplayer_peer as MultiplayerPeer).close()
 		crash = _crash_reload(game)
 		for f in 120:
 			await tree.physics_frame
-	if ledger.is_connected("delta_applied", on_delta):
-		ledger.disconnect("delta_applied", on_delta)
-	if ledger.is_connected("intent_refused", on_refused):
-		ledger.disconnect("intent_refused", on_refused)
+	disconnect.call()
 	var bag_after := _bag(game, cost)
 	var disk_after := _bag_on_disk(game, cost)
 	var taken := {}
 	for item: String in bag_before:
 		taken[item] = int(bag_before[item]) - int(bag_after[item])
 	var data := {"action_id": action_id, "offered": offered, "pressed": pressed, "drop": drop,
+		"expected_host_cut": expected_host_cut, "host_cut_observed": bool(expected_disconnect.call()),
 		"flag_before": flag_before, "flag_after": bool(game.get("world").get("flags").call("has", flag)),
 		"bag_before": bag_before, "bag_after": bag_after, "taken": taken,
 		"disk_before": disk_before, "disk_after": disk_after,
@@ -2196,6 +2264,7 @@ static func _water_dock_cut(tree: SceneTree, args: Dictionary) -> Dictionary:
 		if server == null:
 			return {"verdict": "ERROR", "detail": "not connected to a host"}
 		tree.set_meta(&"f15_host_address", [server.get_remote_address(), server.get_remote_port()])
+		tree.set_meta(&"f15_expected_dock_cut", true)
 		return {"verdict": "PASS", "detail": "remembered host %s:%d" % [server.get_remote_address(), server.get_remote_port()]}
 	if game == null or not bool(game.call("is_host")):
 		return {"verdict": "ERROR", "detail": "water_dock_cut runs on the host"}
