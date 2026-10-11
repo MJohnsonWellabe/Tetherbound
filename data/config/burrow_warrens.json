@@ -192,9 +192,9 @@
     "crown_erosion_frequency": 0.34,
     "_why_mounds": "ROUND-4-0906, JUDGE-round3.md finding 1 ('no landmark silhouette: one smooth ridge'). Secondary dig-mounds / spoil heaps, read by burrow_warrens.gd::_bank_mounds_from_config() -- see _bank_mound_term()'s own header for the shape (asymmetric dome, elongated along `yaw_deg`, longer `throw_radius_m` on the throw side than `back_radius_m` on the hole side, `across_radius_m` sideways, `bare_throw` how strongly its throw lobe reads as raw spoil). ADDITIVE ONLY on top of the chamber cones; folded in BEFORE the face carve so a heap at the face is cut to the same plane. Positions are LOCAL (x, z), z0 = 1 is the dome-face doorway, -z is the way out. The two brow heaps flank the mouth (their throw lobes point out and down toward the threshold, the direction a digger throws), the warren and vault heaps sit over those chambers' own bulges where their warren holes are, the back heap closes the far side. TUNABLE: the fixture asserts >=3 skyline maxima with >=1m prominence.",
     "mounds": [
-      {"offset": [-21.0, 25.0], "height_m": 6.5, "yaw_deg": -105.0, "throw_radius_m": 10.0, "back_radius_m": 6.0, "across_radius_m": 7.5, "bare_throw": 0.7, "_why": "over the warren chamber's bulge, thrown outward off the left flank -- the tallest secondary peak"},
-      {"offset": [19.0, 40.0], "height_m": 5.4, "yaw_deg": 95.0, "throw_radius_m": 9.0, "back_radius_m": 6.0, "across_radius_m": 6.5, "bare_throw": 0.7, "_why": "over the vault's bulge, thrown outward off the right flank"},
-      {"offset": [-3.0, 53.0], "height_m": 6.0, "yaw_deg": 165.0, "throw_radius_m": 11.0, "back_radius_m": 6.5, "across_radius_m": 8.0, "bare_throw": 0.6, "_why": "the back heap beyond the den, thrown away from the site"}
+      {"offset": [-45.0, 63.0], "height_m": 6.5, "yaw_deg": -105.0, "throw_radius_m": 10.0, "back_radius_m": 6.0, "across_radius_m": 7.5, "bare_throw": 0.7, "_why": "over the warren chamber's bulge, thrown outward off the left flank -- the tallest secondary peak"},
+      {"offset": [30.0, 90.0], "height_m": 5.4, "yaw_deg": 95.0, "throw_radius_m": 9.0, "back_radius_m": 6.0, "across_radius_m": 6.5, "bare_throw": 0.7, "_why": "over the vault's bulge, thrown outward off the right flank"},
+      {"offset": [-3.0, 103.0], "height_m": 6.0, "yaw_deg": 165.0, "throw_radius_m": 11.0, "back_radius_m": 6.5, "across_radius_m": 8.0, "bare_throw": 0.6, "_why": "the back heap beyond the den, thrown away from the site"}
     ],
     "_why_spoil": "ROUND-4-0906, JUDGE-round3.md findings 2/4 ('nothing shows directional throw of earth', 'no spoil fan'). `spoil_mouth_fan_m` is how far the raw-earth fan spills out past the throat's outer end over the threshold (widening to `spoil_mouth_fan_half_width_m`); `spoil_hole_fan_m` the fan below every warren hole. Both write the COLOR.b mask _bank_spoil_at() feeds shaders/earth_bank.gdshader (`spoil_tint`/`spoil_darken`: darker, un-grassed) and keep the growth scatter off it. `height_blend_on` 0 turns the shader's crest-fraction earth band off: it painted the whole grade-level skirt of the grid as pale earth (the 'flagstone patio' / 'washed-out ground plane' of rounds 2-3); earth now comes from slope, moisture and spoil only.",
     "_why_spoil_r8": "R15 keeps spoil inside the continuous bank shader rather than reviving an applied apron. The broadened feathered wear field now meets the low excavated cut without becoming a facade plate.",
@@ -583,7 +583,7 @@
         "model": "CommonTree_1",
         "offset": [
           3.5,
-          9.0
+          22.0
         ],
         "scale": 1.7,
         "lean_deg": 2.0,
@@ -595,7 +595,7 @@
         "model": "CommonTree_3",
         "offset": [
           -5.5,
-          8.0
+          21.0
         ],
         "scale": 1.55,
         "lean_deg": -3.0,
@@ -607,7 +607,7 @@
         "model": "DeadTree_1",
         "offset": [
           4.0,
-          25.0
+          63.0
         ],
         "scale": 1.25,
         "lean_deg": 9.0,
@@ -618,7 +618,7 @@
         "model": "DeadTree_2",
         "offset": [
           -6.0,
-          35.0
+          85.0
         ],
         "scale": 1.1,
         "lean_deg": -6.0,
@@ -715,43 +715,43 @@
       "id": "mouth",
       "at": [
         0.0,
-        6.0
+        19.0
       ],
       "size": [
-        7.0,
-        10.0
+        36.0,
+        36.0
       ],
-      "height": 3.6
+      "height": 5.6
     },
     {
       "id": "hall",
       "at": [
         0.0,
-        22.0
+        60.0
       ],
       "size": [
-        14.0,
-        12.0
+        36.0,
+        36.0
       ],
       "height": 5.6
     },
     {
       "id": "warren",
       "at": [
-        -16.0,
-        22.0
+        -40.0,
+        60.0
       ],
       "size": [
-        10.0,
-        9.0
+        36.0,
+        36.0
       ],
-      "height": 4.0
+      "height": 5.6
     },
     {
       "id": "den",
       "at": [
         0.0,
-        40.0
+        90.0
       ],
       "_comment_camera_rear_envelope": "Guardian combat stages its ally near the den entrance, so the rear-facing combat camera needs the den's 7m roof rather than the hall-to-den passage's low 4.4m throat. Extending this centred room to local z29..51 keeps the guardian marker and den-to-vault alignment while covering that rear envelope.",
       "size": [
@@ -763,13 +763,13 @@
     {
       "id": "vault",
       "at": [
-        15.0,
-        40.0
+        26.0,
+        90.0
       ],
       "_comment_camera_rear_envelope": "The Elder fight and Heartstone pickup keep the companion in this side room. Its retained body and normal rear camera need the den-sized envelope: the centred vault now spans local x8..22 and z33..47 under a 7m roof. The marker, Elder offset, prize offset and den-door alignment stay fixed.",
       "size": [
-        14.0,
-        14.0
+        36.0,
+        36.0
       ],
       "height": 7.0,
       "branch": true
@@ -825,7 +825,7 @@
     {
       "at": [
         1.5,
-        8.5
+        21.5
       ],
       "y": 2.6,
       "energy": 0.8,
@@ -836,7 +836,7 @@
     {
       "at": [
         -2.5,
-        20.5
+        58.5
       ],
       "y": 4.4,
       "energy": 3.8,
@@ -848,7 +848,7 @@
     {
       "at": [
         5.5,
-        25.5
+        63.5
       ],
       "y": 3.0,
       "energy": 0.7,
@@ -858,8 +858,8 @@
     },
     {
       "at": [
-        -16.0,
-        22.0
+        -40.0,
+        60.0
       ],
       "y": 3.2,
       "energy": 1.2,
@@ -870,7 +870,7 @@
     {
       "at": [
         0.0,
-        40.0
+        90.0
       ],
       "y": 5.6,
       "energy": 0.55,
@@ -881,19 +881,19 @@
     {
       "at": [
         3.0,
-        43.0
+        93.0
       ],
       "y": 4.6,
       "energy": 5.0,
       "range": 14.0,
       "colour": "#d9a05c",
       "shadow": true,
-      "_why": "den warm key over the guardian's half (T1-LIGHT), lifted; WARRENS-ART-0906's own REPORT.md §5 flags this as the unresolved 07-den-dressing regression (frame median 46.6 -> 32.0) -- this and the two lights below were tuned against the pale stone wall this lane replaced with earth cladding (site.interior_cladding_colour). 3.4 -> 5.0 (x1.46, the measured 46.6/32.0 ratio) to restore the pre-regression brightness against the darker albedo. Re-render/re-judge stand 07-den-dressing before treating this as settled."
+      "_why": "den warm key over the guardian's half (T1-LIGHT), lifted; WARRENS-ART-0906's own REPORT.md Â§5 flags this as the unresolved 07-den-dressing regression (frame median 46.6 -> 32.0) -- this and the two lights below were tuned against the pale stone wall this lane replaced with earth cladding (site.interior_cladding_colour). 3.4 -> 5.0 (x1.46, the measured 46.6/32.0 ratio) to restore the pre-regression brightness against the darker albedo. Re-render/re-judge stand 07-den-dressing before treating this as settled."
     },
     {
       "at": [
         3.0,
-        46.0
+        96.0
       ],
       "y": 2.4,
       "energy": 2.0,
@@ -904,7 +904,7 @@
     {
       "at": [
         3.0,
-        44.0
+        94.0
       ],
       "y": 1.2,
       "energy": 1.6,
@@ -914,8 +914,8 @@
     },
     {
       "at": [
-        15.0,
-        40.0
+        26.0,
+        90.0
       ],
       "y": 3.6,
       "energy": 1.1,
@@ -925,8 +925,8 @@
     },
     {
       "at": [
-        11.8,
-        40.0
+        22.8,
+        90.0
       ],
       "y": 2.8,
       "energy": 0.3,
@@ -1024,8 +1024,19 @@
   "organic_entry_finish": {
     "enabled": true,
     "hide_legacy_box_visuals": true,
-    "chambers": ["mouth", "hall", "warren", "den", "vault"],
-    "passages": ["mouth>hall", "hall>warren", "hall>den", "den>vault"],
+    "chambers": [
+      "mouth",
+      "hall",
+      "warren",
+      "den",
+      "vault"
+    ],
+    "passages": [
+      "mouth>hall",
+      "hall>warren",
+      "hall>den",
+      "den>vault"
+    ],
     "length_segments": 28,
     "liner_inset_m": 0.05,
     "passage_overlap_m": 0.25,
@@ -1045,16 +1056,37 @@
         "wall_height_fraction": 0.9,
         "crown_height_fraction": 1.0,
         "upper_radius_scale": 0.96
+      },
+      "mouth": {
+        "wall_height_fraction": 0.9,
+        "crown_height_fraction": 1.0,
+        "upper_radius_scale": 0.96
+      },
+      "hall": {
+        "wall_height_fraction": 0.9,
+        "crown_height_fraction": 1.0,
+        "upper_radius_scale": 0.96
+      },
+      "warren": {
+        "wall_height_fraction": 0.9,
+        "crown_height_fraction": 1.0,
+        "upper_radius_scale": 0.96
       }
     },
     "passage_crown_scale": 1.1,
     "mouth_passage_crown_scale": 1.25,
-    "mouth_front_open_depth_frac": 0.10,
-    "mouth_front_open_width_scale": 0.90,
+    "mouth_front_open_depth_frac": 0.1,
+    "mouth_front_open_width_scale": 0.9,
     "mouth_front_open_height_scale": 1.24,
     "normal_scale": 2.0,
     "tint": "#705a43",
-    "mouth_tint": "#967c60"
+    "mouth_tint": "#967c60",
+    "collision_chambers": [
+      "mouth",
+      "hall",
+      "warren",
+      "vault"
+    ]
   },
   "_comment_spawns": "The warrens' own population, spawned through encounter_director.gd's `spawn_wild()` so these are ORDINARY wild creatures -- same engage prompt, same fight, same catching, same respawn. No second combat mode exists and none is wanted. `aggressive: true` overrides the species' own temperament for THESE bodies only (species.json still has Burrowback and Mudsnout as non-aggressive animals out in the meadow): a creature defending the tunnel it lives in comes at you, the same one grazing a field does not. `level` overrides the wild band roll (progression.json) -- the warrens is Band 2 content and its residents are above the field's. Ground species only, from the existing roster; no new species and no new meshes (Sec20, D23). Tuskroot is deliberately absent for the same reason spawns.json leaves it out: D20 makes it the EVOLVED form, obtainable only by evolving a caught Mudsnout.",
   "_comment_spawns_sh47": "SH47/D42 LEVELS LOWERED: mouth 10->9, hall 12->10, warren 11->10, den 13->11, and the guardian 18->14 below. Still TUNABLE, and the shape is unchanged -- the residents still climb as you go deeper and the guardian is still well above them. What moved is the STEP UP FROM BAND 1. Band 1's gate trainer (Oskar) fields levels 6 and 7 and spec Sec3 recommends a team of 5-8 at the bridge; arriving here at 7 to meet a 13 in the den and an 18 at the bottom was an eleven-level gulf, and tools/_probe_pacing.py measured what a player actually did about it: 25 wild fights against level-2-to-6 field creatures before daring to go in, 19 minutes of Sec11's `bad grind` bolted onto the front of the chapter's best dungeon. Clearing the warrens is on Sec11's GOOD list and nothing about it is cut -- the fights are the same fights, the deposits the same deposits, the heartstone still behind the guardian. They now sit where a player who played Band 1 actually is.",
@@ -1069,9 +1101,10 @@
       "level": 9,
       "aggressive": true,
       "offset": [
-        1.8,
-        -1.5
-      ]
+        0.0,
+        0.0
+      ],
+      "wander_radius": 1.5
     },
     {
       "species": "burrowback",
@@ -1080,9 +1113,10 @@
       "level": 10,
       "aggressive": true,
       "offset": [
-        -5.0,
-        4.0
-      ]
+        0.0,
+        0.0
+      ],
+      "wander_radius": 1.5
     },
     {
       "species": "mudsnout",
@@ -1094,7 +1128,8 @@
         0.0,
         0.0
       ],
-      "spread": 3.0
+      "spread": 0.0,
+      "wander_radius": 1.5
     },
     {
       "species": "trailpup",
@@ -1104,7 +1139,7 @@
       "_comment_admission": "The optional Elder is deliberately manual: the global aggressive notice radius reaches through the den-to-vault doorway, which begins a fight in the throat before the player and retained companion enter this room. The normal E prompt lets the player step into the vault and choose the encounter without adding a chamber-specific aggression system.",
       "aggressive": false,
       "offset": [
-        1.5,
+        0.0,
         0.0
       ],
       "wander_radius": 1.2,
@@ -1223,7 +1258,7 @@
     {
       "at": [
         -5.0,
-        20.0
+        58.0
       ],
       "item": "rootstone",
       "amount": 3,
@@ -1234,7 +1269,7 @@
     {
       "at": [
         5.5,
-        25.0
+        63.0
       ],
       "item": "rootstone",
       "amount": 3,
@@ -1244,8 +1279,8 @@
     },
     {
       "at": [
-        -17.5,
-        20.0
+        -41.5,
+        58.0
       ],
       "item": "rootstone",
       "amount": 4,
@@ -1256,7 +1291,7 @@
     {
       "at": [
         -6.0,
-        43.0
+        93.0
       ],
       "item": "rootstone",
       "amount": 4,
@@ -1266,8 +1301,8 @@
     },
     {
       "at": [
-        -13.0,
-        24.5
+        -37.0,
+        62.5
       ],
       "item": "stone",
       "amount": 4,
