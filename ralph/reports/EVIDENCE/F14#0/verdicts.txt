@@ -1,0 +1,42 @@
+water_aquaryn_alpha                alpha            terrapup  L26 M win=1.00 lf=0.00 lead=0.63 party=0.15 | R win=1.00 lead=0.09 party=0.02 s=81 hit=0.093 tell=1.25 st=0 PASS
+water_aquaryn_alpha                alpha            ripplet   L26 M win=1.00 lf=0.00 lead=0.35 party=0.08 | R win=1.00 lead=0.07 party=0.02 s=61 hit=0.085 tell=1.25 st=0 PASS
+water_aquaryn_alpha                alpha            galewisp  L26 M win=1.00 lf=0.00 lead=0.31 party=0.07 | R win=1.00 lead=0.00 party=0.00 s=44 hit=0.072 tell=1.25 st=0 PASS
+water_brine_root_watcher           named_wild       terrapup  L23 M win=0.00 lf=1.00 lead=1.00 party=0.24 | R win=1.00 lead=0.00 party=0.07 s=34 hit=0.120 tell=0.85 st=0 PASS
+water_brine_root_watcher           named_wild       ripplet   L23 M win=0.96 lf=0.04 lead=0.82 party=0.19 | R win=1.00 lead=0.00 party=0.07 s=34 hit=0.120 tell=0.85 st=0 PASS
+water_brine_root_watcher           named_wild       galewisp  L23 M win=1.00 lf=0.00 lead=0.41 party=0.09 | R win=1.00 lead=0.42 party=0.09 s=39 hit=0.075 tell=0.85 st=0 FAIL lead 0.417/0.413
+water_deep_watch_tidecoil          named_wild       terrapup  L30 M win=1.00 lf=0.00 lead=0.55 party=0.13 | R win=1.00 lead=0.00 party=0.08 s=49 hit=0.082 tell=1.10 st=0 PASS
+water_deep_watch_tidecoil          named_wild       ripplet   L30 M win=1.00 lf=0.00 lead=0.34 party=0.08 | R win=1.00 lead=0.00 party=0.08 s=50 hit=0.082 tell=1.10 st=0 PASS
+water_deep_watch_tidecoil          named_wild       galewisp  L30 M win=1.00 lf=0.00 lead=0.34 party=0.07 | R win=1.00 lead=0.29 party=0.06 s=48 hit=0.052 tell=1.10 st=0 FAIL lead 0.285/0.337
+water_drowned_garden_songweaver    named_wild       terrapup  L28 M win=0.83 lf=0.17 lead=0.92 party=0.22 | R win=1.00 lead=0.00 party=0.02 s=53 hit=0.070 tell=0.85 st=0 PASS
+water_drowned_garden_songweaver    named_wild       ripplet   L28 M win=1.00 lf=0.00 lead=0.30 party=0.07 | R win=1.00 lead=0.00 party=0.03 s=58 hit=0.070 tell=0.85 st=0 PASS
+water_drowned_garden_songweaver    named_wild       galewisp  L28 M win=1.00 lf=0.00 lead=0.33 party=0.07 | R win=1.00 lead=0.34 party=0.07 s=74 hit=0.043 tell=0.85 st=0 FAIL lead 0.344/0.334
+water_gull_basalt_claw             named_wild       terrapup  L23 M win=0.00 lf=1.00 lead=1.00 party=0.24 | R win=1.00 lead=0.00 party=0.00 s=42 hit=0.124 tell=0.85 st=0 PASS
+water_gull_basalt_claw             named_wild       ripplet   L23 M win=0.79 lf=0.21 lead=0.76 party=0.17 | R win=1.00 lead=0.00 party=0.00 s=41 hit=0.113 tell=0.85 st=0 PASS
+water_gull_basalt_claw             named_wild       galewisp  L23 M win=1.00 lf=0.00 lead=0.76 party=0.16 | R win=1.00 lead=0.31 party=0.07 s=78 hit=0.139 tell=0.85 st=0 PASS
+water_lantern_shell_sentinel       named_wild       terrapup  L20 M win=0.00 lf=1.00 lead=1.00 party=0.24 | R win=1.00 lead=0.00 party=0.00 s=45 hit=0.133 tell=0.85 st=0 PASS
+water_lantern_shell_sentinel       named_wild       ripplet   L20 M win=0.50 lf=0.50 lead=1.00 party=0.23 | R win=1.00 lead=0.00 party=0.00 s=40 hit=0.137 tell=0.85 st=0 PASS
+water_lantern_shell_sentinel       named_wild       galewisp  L20 M win=1.00 lf=0.00 lead=0.65 party=0.14 | R win=1.00 lead=0.25 party=0.05 s=73 hit=0.121 tell=0.85 st=0 PASS
+water_trainer_bex                  named_trainer    terrapup  L30 M win=1.00 lf=1.00 lead=1.00 party=0.53 | R win=1.00 lead=0.00 party=0.08 s=104 hit=0.143 tell=1.10 st=0 PASS
+water_trainer_bex                  named_trainer    ripplet   L30 M win=1.00 lf=1.00 lead=1.00 party=0.36 | R win=1.00 lead=0.00 party=0.07 s=101 hit=0.143 tell=1.10 st=0 PASS
+water_trainer_bex                  named_trainer    galewisp  L30 M win=1.00 lf=0.96 lead=1.00 party=0.34 | R win=1.00 lead=0.12 party=0.03 s=79 hit=0.123 tell=1.10 st=0 PASS
+water_trainer_calder               top_critical     terrapup  L30 M win=1.00 lf=1.00 lead=1.00 party=0.79 | R win=1.00 lead=0.00 party=0.06 s=107 hit=0.246 tell=1.10 st=0 PASS
+water_trainer_calder               top_critical     ripplet   L30 M win=1.00 lf=1.00 lead=1.00 party=0.72 | R win=1.00 lead=0.00 party=0.03 s=115 hit=0.243 tell=1.10 st=0 PASS
+water_trainer_calder               top_critical     galewisp  L30 M win=1.00 lf=1.00 lead=1.00 party=0.69 | R win=1.00 lead=0.44 party=0.10 s=89 hit=0.237 tell=1.10 st=0 PASS
+water_trainer_irva                 named_trainer    terrapup  L23 M win=1.00 lf=1.00 lead=1.00 party=0.60 | R win=1.00 lead=0.00 party=0.11 s=92 hit=0.151 tell=1.10 st=0 PASS
+water_trainer_irva                 named_trainer    ripplet   L23 M win=1.00 lf=1.00 lead=1.00 party=0.42 | R win=1.00 lead=0.00 party=0.10 s=97 hit=0.151 tell=1.10 st=0 PASS
+water_trainer_irva                 named_trainer    galewisp  L23 M win=1.00 lf=0.79 lead=1.00 party=0.27 | R win=1.00 lead=0.16 party=0.03 s=71 hit=0.149 tell=1.10 st=0 PASS
+water_trainer_pell_trial           floor            terrapup  L20 M win=1.00 lf=1.00 lead=1.00 party=0.40 | R win=1.00 lead=0.00 party=0.04 s=66 hit=0.150 tell=1.10 st=0 PASS
+water_trainer_pell_trial           floor            ripplet   L20 M win=1.00 lf=0.12 lead=0.83 party=0.19 | R win=1.00 lead=0.00 party=0.02 s=66 hit=0.151 tell=1.10 st=0 PASS
+water_trainer_pell_trial           floor            galewisp  L20 M win=1.00 lf=0.25 lead=0.94 party=0.20 | R win=1.00 lead=0.23 party=0.05 s=52 hit=0.086 tell=1.10 st=0 PASS
+water_trainer_solm                 named_trainer    terrapup  L23 M win=1.00 lf=1.00 lead=1.00 party=0.38 | R win=1.00 lead=0.00 party=0.02 s=60 hit=0.194 tell=1.10 st=0 PASS
+water_trainer_solm                 named_trainer    ripplet   L23 M win=1.00 lf=0.71 lead=1.00 party=0.26 | R win=1.00 lead=0.00 party=0.02 s=60 hit=0.196 tell=1.10 st=0 PASS
+water_trainer_solm                 named_trainer    galewisp  L23 M win=1.00 lf=0.71 lead=1.00 party=0.22 | R win=1.00 lead=0.20 party=0.04 s=50 hit=0.123 tell=1.10 st=0 PASS
+water_trainer_tess                 top              terrapup  L30 M win=0.33 lf=1.00 lead=1.00 party=1.00 | R win=1.00 lead=0.00 party=0.05 s=112 hit=0.258 tell=1.10 st=0 PASS
+water_trainer_tess                 top              ripplet   L30 M win=0.96 lf=1.00 lead=1.00 party=0.78 | R win=1.00 lead=0.00 party=0.04 s=109 hit=0.257 tell=1.10 st=0 PASS
+water_trainer_tess                 top              galewisp  L30 M win=1.00 lf=1.00 lead=1.00 party=0.76 | R win=1.00 lead=0.76 party=0.16 s=93 hit=0.257 tell=1.10 st=0 PASS
+water_trainer_tovin                named_trainer    terrapup  L23 M win=1.00 lf=1.00 lead=1.00 party=0.43 | R win=1.00 lead=0.00 party=0.08 s=77 hit=0.146 tell=1.10 st=0 PASS
+water_trainer_tovin                named_trainer    ripplet   L23 M win=1.00 lf=1.00 lead=1.00 party=0.41 | R win=1.00 lead=0.00 party=0.07 s=75 hit=0.143 tell=1.10 st=0 PASS
+water_trainer_tovin                named_trainer    galewisp  L23 M win=1.00 lf=0.42 lead=0.97 party=0.21 | R win=1.00 lead=0.22 party=0.05 s=59 hit=0.132 tell=1.10 st=0 PASS
+CHAPTER terrapup trainers 12 masher_loss=0.96
+CHAPTER ripplet trainers 12 masher_loss=0.80
+CHAPTER galewisp trainers 12 masher_loss=0.12
