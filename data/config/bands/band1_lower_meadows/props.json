@@ -671,11 +671,11 @@
     {
       "order": 1032,
       "name": "cottage_b_backyard",
-      "_why": "VP5 (visual-parity village lane), 2026-09-02. The practice-meadow fence runs at [14,-20] and [19.5,-25.5] (village.json) read as 'a fence that starts and stops enclosing nothing' (2026-08-30 judge). With village.json's new cart parked behind cottage_b at [21.8,-20] the line now fences that cottage's back yard; this woodpile against the cottage's south wall is what a back yard holds. 1.8m clear of the cottage's south collider extent (z -16.84), 1.4m from the cart's north face, 4m from the practice path's shoulder.",
+      "_why": "VP5 (visual-parity village lane), 2026-09-02. The practice-meadow fence runs at [14,-20] and [19.5,-25.5] (village.json) read as 'a fence that starts and stops enclosing nothing' (2026-08-30 judge). With village.json's new cart parked behind cottage_b at [21.8,-20] the line now fences that cottage's back yard; this woodpile against the cottage's south wall is what a back yard holds. 1.8m clear of the cottage's south collider extent (z -16.84), 1.4m from the cart's north face, 4m from the practice path's shoulder. F19#5 earned-route fix, 2026-10-11: the village move left this pile at [60,22.6], between doorstep_26 and cottage_b_8's front door (south wall, z 24). Its log box stood 0.32m above the doorstep, inside the trainer's 0.35m step-up, so walking past the door climbed the log's edge and fell off it. Moved to the cottage's actual back wall (north wall outer face z 28.2): flat terrain (y 0.90) with no collider inside a 2.6x1.6m probe box.",
       "props": [
         {
           "model": "log_large",
-          "at": [60.0, 22.6],
+          "at": [61.0, 29.1],
           "yaw_deg": 15.0,
           "scale": 1.0,
           "dir": "res://assets/environment/nature",
@@ -683,7 +683,7 @@
         },
         {
           "model": "tree-log-small",
-          "at": [60.9, 22.6],
+          "at": [61.9, 29.1],
           "yaw_deg": 100.0,
           "scale": 1.0,
           "dir": "res://assets/props/kenney_survival",
