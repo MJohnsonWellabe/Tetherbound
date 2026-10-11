@@ -1,4 +1,4 @@
-# F04#1 / F04#2 code-blind verdicts (coordinator, 2026-10-11, 2:40 PM CT)
+# F04#1 / F04#2 code-blind verdicts (coordinator, 2026-10-11, 2:36 PM CT)
 
 Frames: tb/ev-captures 238af69455b3ed843abf15de647485d2685b1cf8, ralph/reports/VISUAL-PROOF/F04-1/ and F04-2/
 (build a8899257). Neutral frame names were used and the key was withheld; the judges read no code. Rule: proof v2 (the point is clearly visible, nothing blocks it; Low renderer).

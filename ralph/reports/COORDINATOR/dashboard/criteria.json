@@ -735,14 +735,14 @@
    "id": "F11",
    "title": "Dynamo, Stormheart and Tidewake gate",
    "chapter": "Stormwood",
-   "pct": 25,
+   "pct": 50,
    "counts": {
-    "met": 1,
+    "met": 2,
     "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 2
+    "failing": 1
    },
    "criteria": [
     {
@@ -755,10 +755,10 @@
     },
     {
      "text": "Eligible peers accept/refuse independently at space and capacity",
-     "status": "failing",
-     "evidence": "tb/reproof-retest: | F11#1 | FAIL (v28 save; 3 of 4 scenarios pass) | F11-1.md |",
-     "gap": "Re-run mirror and both capacity proof scenarios; finish and gate smoke_net_stormwood_stormheart_offers Folds into F19#4, F48#2.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F11-1/ (three two-process PASS runs: mirror, guest-at-five releases a belt, host-at-five lets it go)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (f8a9848c0, 2:25 PM CT). Disclosed: fixtures, guest-first setup crossing, _tap process_frame flush, party_grant before join. Open finding routed: host-first portal crossing leaves the guest uncorrelated.",
      "audit_index": 1
     },
     {
@@ -2236,11 +2236,11 @@
    "title": "Signature ultimates",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/vfx",
-   "pct": 60,
+   "pct": 80,
    "counts": {
-    "met": 3,
+    "met": 4,
     "partial": 0,
-    "in_progress": 2,
+    "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -2256,10 +2256,10 @@
     },
     {
      "text": "Unique ultimates exist for Terrapup, Ripplet, Galewisp, Veridian, Abyssal Guardian, Solmane, Fulgocobra (the Stormwood legendary), Tuskroot, Ashtusk, Cannonback, Stormcapra and the storm bear.",
-     "status": "in_progress",
-     "evidence": "ultimates.json enabled=false; 12 unique visual rows incl. ultimate_stormursa@b4e4897d5",
-     "gap": "Land the storm bear species (Codex Meshy, RD-28). Turn on ultimates.json enabled, then add per-unique execution smokes.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The rows are authored, but presentation is off and ultimates cannot fire (test_f23_live_moves disabled-refusal). No storm bear species exists in species.json.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F35-1-3/JUDGE.md; ralph/reports/VISUAL-PROOF/F35-1-3/ (smoke 24 cases 0 fail)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator. All 12 uniques incl. stormursa fire and arrive with ultimates enabled; reworked Veridian/Fulgocobra/Solmane code-blind PASS 3:02 PM CT.",
      "audit_index": 1
     },
     {
@@ -2274,7 +2274,7 @@
      "text": "Presentation lasts 2–3 s with no longer loss of control and stays readable in four-player fights.",
      "status": "in_progress",
      "evidence": "ultimates.json enabled=false (configured 2.4 s); test_f23_live_moves recovery≥presentation (flag forced on in fixture)",
-     "gap": "Turn on. Add a control-restore timing test and a four-player capture with a code-blind judge and frame-time capture.",
+     "gap": "Code-blind FAIL 3:02 PM CT: three of four attackers stop drawing from contact on (ralph/reports/EVIDENCE/F35-1-3/JUDGE.md). Ultimates lane root-causing; then four-only recapture. Frame time needs real GPU.",
      "note": "Code-blind judge 10-10 FAIL (lanea-f35-four2): only two effect families visible, target occluded late; parked. Timing half: unit 2.4 s windup+recovery (batch 3). Frame time needs real GPU. | prior: Audit 2026-10-04 on b4e4897d5: OFF. The flag is off. No four-player readability capture or frame-time evidence exists.",
      "audit_index": 3
     },
@@ -2307,7 +2307,7 @@
      "text": "About 25–30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.",
      "status": "in_progress",
      "evidence": "ralph/reports/EVIDENCE/F36-0/JUDGE.md: 23 native candidates judged code-blind (shuffled A/B, two judges) on tb/ev-captures 8b6452d4",
-     "gap": "Switch-on commit for the 3 PASS species (captures lane); Codex fixes terminal contact on veridian/voltarach/solmane/aeriex and re-posts; the six most-repeated NPC faces (npc-identity Meshy batch) still to be judged.",
+     "gap": "Switched on natively: Mirejaw, Tuskroot, Aeriex, Veridian, Voltarach (3:31 PM CT). Held: Meadowhart (rider leg placeholder in riding), Solmane (wing-root topology). Remaining batch: NPC faces, other candidates (Codex creatures lane).",
      "note": "12:02 PM CT Sun 11 Oct: PASS meadowhart, mirejaw, tuskroot (switch on; Meadowhart later held for its riding body). Held for Codex contact fix: veridian (installed judged defective), voltarach, solmane, aeriex. All others stay flagged off (installed better, or candidate defect). Criterion closes when every priority asset is judged and each either passes or stays off, NPC faces included.",
      "audit_index": 0
     },
