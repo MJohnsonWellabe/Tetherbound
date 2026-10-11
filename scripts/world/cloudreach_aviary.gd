@@ -107,6 +107,8 @@ static func build(root: Node3D, materials: Dictionary, spec: Dictionary) -> Dict
 	# and (b) a translucent membrane skins a band of the meridian gaps.
 	var membrane := _build_membrane(root, spec, dome, materials)
 	var interior := _build_interior(root, spec, dome, materials, rx, rz, drum_height)
+	preload("res://scripts/world/cloudreach_aviary_roof.gd").build(
+		root, float(dome["sphere_radius"]), drum_height, iron, lantern_glow)
 
 	var pylon_spec: Dictionary = spec.get("pylon_anchor", {})
 	var pylon_height := drum_height + float(dome["sphere_radius"]) * cos(float(dome["apex_alpha"])) \
