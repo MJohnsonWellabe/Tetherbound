@@ -1,0 +1,2 @@
+release paid [{ "id": "essence_ground", "n": 3 }] with its receipt
+release ceremony smoke test passed
