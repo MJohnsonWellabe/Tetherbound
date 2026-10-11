@@ -242,11 +242,11 @@
    "id": "F04",
    "title": "Named Meadows fights",
    "chapter": "Meadows",
-   "pct": 56,
+   "pct": 67,
    "counts": {
-    "met": 5,
+    "met": 6,
     "partial": 0,
-    "in_progress": 2,
+    "in_progress": 1,
     "not_started": 1,
     "blocked": 0,
     "failing": 1
@@ -264,16 +264,16 @@
      "text": "Relay officers: readable tell and distinct tactical question at normal camera",
      "status": "in_progress",
      "evidence": "named-fights REPORT @fe07d0d2 (blind verdict partly/partly)",
-     "gap": "Build a visible lunge/telegraph; capture at normal camera; code-blind judge. Folds into F22#4.",
+     "gap": "Code-blind FAIL 2:36 PM CT (ralph/reports/EVIDENCE/F04-1-2/JUDGE.md): Vance's Galecrest and Tuskroot both telegraph with a ring around the attacker, not the threatened ground, so there are no distinct questions. Fix with meadows-fights.",
      "note": "Evidence 11 Oct: fight tests PASS on tb/ev-meadows-fights (merged to tb/ev-coordinator); awaiting Codex GPU capture + code-blind judge. | Audit 2026-10-04 on b4e4897d5: MISSING. The board shows partial: there is no visible lunge travel or path telegraph, and no passing verdict ever existed. CODEX §7.5 folds this into F22#4.",
      "audit_index": 1
     },
     {
      "text": "Three captains: named tactical question visible at normal distance",
-     "status": "in_progress",
-     "evidence": "test_named_fight_profiles.gd (data only); no normal-camera witness",
-     "gap": "Capture each captain at normal camera; code-blind judge per captain. Folds into F22#4.",
-     "note": "Evidence 11 Oct: fight tests PASS on tb/ev-meadows-fights (merged to tb/ev-coordinator); awaiting Codex GPU capture + code-blind judge. | Audit 2026-10-04 on b4e4897d5: MISSING. There is no capture or blind verdict per captain. CODEX §7.5 folds this into F22#4.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F04-1-2/JUDGE.md; ralph/reports/VISUAL-PROOF/F04-2/",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator. Code-blind PASS 2:36 PM CT: Halder lane, Vess field, Oreth cone each readable at the normal camera, with hit and miss outcomes. Non-blocking: small landing disc, banner occlusion.",
      "audit_index": 2
     },
     {
