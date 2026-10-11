@@ -125,3 +125,23 @@ All times are US Central. Run date: 2026-10-11, 06:50–08:42 CT. Base: main 9e3
 
 - **07 in the new order:** the physical Stormward gate is a retired crossing (`legacy_physical_crossings` false; RD-17/F18#2) and offers nothing. The handoff is therefore the F49 portal leg: Home Key, hang the Cloudreach relic, Stormwood arch, ending at (-300, 32.3, 180) in Stormwood.
   - The relic-power choice panel that a successful hang opens was dismissed with `menu_cancel`; no power was chosen.
+
+## Co-op regression for the F19#2 fix (coordinator ruling 11:11 CT)
+
+- **Disclosed budget change:** a LOCAL, UNCOMMITTED edit to `data/config/multiplayer.json` test_budgets, reverted after the runs. `hello_budget_s` 180→900, `smoke_step_budget_s_2peer` 300→3600, `smoke_step_budget_s_wide` 1500→7200. No assertion or gameplay bound touched.
+- **Protocol:** each smoke ran alone, with the box otherwise idle.
+
+| Smoke | Code | Result |
+|---|---|---|
+| `tools/net/run_net_smoke.sh shared_boss` | fix (3ffeb9fc) | **PASS** ("ALL CHECKS PASSED", exit 0) |
+| `tools/net/run_net_smoke.sh boss_rewards_each_participant` | fix (3ffeb9fc) | FAIL |
+| `tools/net/run_net_smoke.sh boss_rewards_each_participant` | main (9e39d0086's two files) | FAIL, identically |
+
+- **shared_boss (fix):** co-op Warden world facts were committed once with no per-participant receipt, retained across reload on both peers, and the state hash agreed. Log `net_shared_boss.fix.budgets.log.gz`.
+- **boss_rewards_each_participant (fix):** join, 2 participants and phase checks passed. It then failed "peer 0 beat Bryn's whole team (no verdict)". Log `….fix.budgets.log.gz`.
+- **boss_rewards_each_participant (main):** the same checks passed and it failed at the same step with "(no verdict)". Log `….main.budgets.log.gz`.
+  - So this failure is pre-existing, not caused by the fix.
+  - Neither changed branch applies to Bryn: `practice_trainer` is in the `trainers.json` table and is not a chapter boss.
+  - It remains an open defect outside this criterion.
+- **Plain 2-peer Cloudreach trainer fight:** no such smoke exists. `smoke_net_cloudreach_veyra_reconnect` uses a disclosed fixture victory hook (`_record_trainer_defeat`), which bypasses fight start where the `fled` abort happened.
+  - The claim that pre-fix co-op Cloudreach trainer fights abort as `fled` is INFERRED from code: the same `ordinary_combat_reward_owner` "unavailable" answer for non-trainers.json trainers. It is not observed in a co-op run.
