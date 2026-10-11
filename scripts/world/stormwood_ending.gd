@@ -1052,7 +1052,11 @@ func _make_legendary() -> RefCounted:
 	})
 	if creature != null:
 		creature.set("nickname", LEGENDARY_NAME)
-		creature.set("caught_on_day", maxi(1, int(get_node("/root/Game").get("day"))))
+		# Card construction also runs before this controller is mounted. The
+		# active game's clock belongs to the tree, not this factory's lifetime.
+		var tree := Engine.get_main_loop() as SceneTree
+		var game: Node = tree.root.get_node_or_null(^"Game") if tree != null else null
+		creature.set("caught_on_day", maxi(1, int(game.get("day"))) if game != null else 1)
 	return creature
 
 
