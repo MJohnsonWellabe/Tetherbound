@@ -124,11 +124,12 @@
         "tint": "#809165"
       },
       "soil": {
-        "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+        "_comment": "Slot 1 is Terrain3D's default auto-overlay and dominates near-flat Stormwood ground. Restore the baseline forest-floor albedo/tint here; dark wet earth remains in the path, damp and canopy wet-soil layers. Normal binding stays unchanged for the isolated albedo comparison.",
+        "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
         "normal": "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png",
         "uv_scale": 0.45,
         "normal_depth": 0.22,
-        "tint": "#625d48"
+        "tint": "#b4b497"
       },
       "rock": {
         "uv_scale": 0.24,
