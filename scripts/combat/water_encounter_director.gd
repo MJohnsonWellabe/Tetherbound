@@ -7,6 +7,7 @@ const WATER_PERF := preload("res://scripts/world/performance_config.gd")
 const REMOTE_CREATURE_BODY := preload("res://scripts/creatures/remote_creature.gd")
 const WATER_DATA := preload("res://scripts/world/water_encounter_runtime_data.gd")
 const RANKS := preload("res://scripts/characters/npc_ranks.gd")
+const TRAINER_APPEARANCE := preload("res://scripts/characters/appearance_variants.gd")
 const INTERACTION := preload("res://scripts/world/interactable.gd")
 var _wanted_sites: Dictionary = {}
 var _restoring_surface_position := Vector3.INF
@@ -665,6 +666,7 @@ func _build_trainers() -> void:
 			get_parent().add_child(body)
 			var rank := str(spec.rank)
 			var model := RANKS.config_for(rank, str(spec.config_key)) if rank in ["grunt", "officer", "captain"] else NPC_MODEL.config_for(str(spec.config_key))
+			model = TRAINER_APPEARANCE.resolve(model, str(spec.config_key), str(spec.get("appearance_variant_id", "")))
 			if not body.call("setup_from_config", model, _player):
 				body.queue_free()
 				continue
