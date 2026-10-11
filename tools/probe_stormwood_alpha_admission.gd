@@ -84,6 +84,15 @@ func _case(resting: bool) -> void:
 	var world := Ground.new()
 	world.name = "SyntheticAdmission"
 	root.add_child(world)
+	var floor := StaticBody3D.new()
+	floor.name = "SyntheticFloor"
+	floor.position.y = -0.5
+	var floor_shape := CollisionShape3D.new()
+	var floor_box := BoxShape3D.new()
+	floor_box.size = Vector3(64.0, 1.0, 64.0)
+	floor_shape.shape = floor_box
+	floor.add_child(floor_shape)
+	world.add_child(floor)
 	var player := CharacterBody3D.new()
 	player.name = "Player"
 	world.add_child(player)
