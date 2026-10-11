@@ -48,6 +48,15 @@ static func build(parent: Node3D, spec: Dictionary, drum: Dictionary,
 		for index in bay_count:
 			angles.append(float(index) * 360.0 / float(bay_count))
 	var bay_index := 0
+	# The installed lantern is metal-only. Give its housing a small visible
+	# flame, as the existing entry lanterns do, rather than making the stone
+	# or the dome emissive. The five production lights keep their old budgets.
+	var flame := StandardMaterial3D.new()
+	flame.albedo_color = Color(str(spec.get("lantern_colour", "#ffbe7b")))
+	flame.emission_enabled = true
+	flame.emission = flame.albedo_color
+	flame.emission_energy_multiplier = float(spec.get("lantern_core_emission", 2.0))
+	var core_offset: Array = spec.get("lantern_core_offset", [0.0, 0.27, 0.2])
 	for raw: Variant in angles:
 		var angle := deg_to_rad(float(raw))
 		var bay := Node3D.new()
@@ -76,9 +85,15 @@ static func build(parent: Node3D, spec: Dictionary, drum: Dictionary,
 		bay_index += 1
 		if (bay_index - 1) % maxi(1, int(spec.get("lantern_every", 1))) != 0:
 			continue
+		var lamp_at := Vector3(-(width - post) * 0.5, 0.65, depth * 0.5 + 0.02)
+		var lamp_height := float(spec.get("lantern_height_m", 1.4))
 		PARTS._install_prop(bay, PARTS.WALL_LANTERN, "CrownLantern",
-			Vector3(-(width - post) * 0.5, 0.65, depth * 0.5 + 0.02),
-			float(spec.get("lantern_height_m", 1.4)), 0.0, false)
+			lamp_at, lamp_height, 0.0, false)
+		var core_at := lamp_at + Vector3(float(core_offset[0]),
+			float(core_offset[1]), float(core_offset[2])) * lamp_height
+		PARTS._cylinder(bay, "CrownLanternFlame", core_at,
+			float(spec.get("lantern_core_radius_m", 0.065)),
+			float(spec.get("lantern_core_height_m", 0.2)), flame)
 		var light := OmniLight3D.new()
 		light.name = "CrownLanternLight"
 		light.position = Vector3(-(width - post) * 0.5, 1.4, depth * 0.5 + 0.8)
