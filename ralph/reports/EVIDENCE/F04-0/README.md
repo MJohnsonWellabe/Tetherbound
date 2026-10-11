@@ -39,6 +39,7 @@ Neither tell colour is red, oxblood or magenta.
 
 The smoke failed on unmodified main before any attack ran ("aggressive engage route did not open combat"). Two later systems had made its fixture stale:
 1. **Party enrolment.** The fixture adopts a Terrapup but never puts it in `Game.party`, so `_canonical_wild_start_state` refused the fight. It now enrols the creature, as `tools/_capture_vfx_moments.gd` does.
+   Coordinator approved this change (2026-10-11). Checked against production: the real starter choice, `scripts/story/sequence_director.gd::_adopt`, calls `adopt_starter` and then puts the creature in `Game.party`. The typed path does it through `autoload/game_state.gd::commit_original_starter`, which calls `party.add(instance)` at line 3211; the legacy path does it through `_give_to_party`, which calls `party.add`. `adopt_starter` alone never touches the party, so the fixture reproduces the production state and hides no game bug.
 2. **Where misses are reported.** Production wild strikes are resolved by the director's host simulation (`shared_wild_host_fight.gd`), which reports misses on its own node. The witness now also counts that node's `attack_missed`. Hits already reach CombatManager through `apply_host_enemy_hit`.
 
 ## Not addressed here
