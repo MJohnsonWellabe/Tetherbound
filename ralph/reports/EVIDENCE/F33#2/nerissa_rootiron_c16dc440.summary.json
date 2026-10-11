@@ -1,0 +1,96 @@
+{
+ "gear": "rootiron",
+ "seeds_per_band": 12,
+ "errors": [],
+ "rows": [
+  {
+   "starter": "terrapup",
+   "pass": true,
+   "reasons": [],
+   "switch_reader": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.03,
+    "median_lead_cost": 0.0,
+    "runs": 12,
+    "errors": 0
+   },
+   "reader": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.29,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "errors": 0
+   },
+   "masher": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.432,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "errors": 0
+   }
+  },
+  {
+   "starter": "ripplet",
+   "pass": true,
+   "reasons": [],
+   "switch_reader": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.041,
+    "median_lead_cost": 0.0,
+    "runs": 12,
+    "errors": 0
+   },
+   "reader": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 0.917,
+    "median_cost": 0.249,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "errors": 0
+   },
+   "masher": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.256,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "errors": 0
+   }
+  },
+  {
+   "starter": "galewisp",
+   "pass": false,
+   "reasons": [
+    "top: masher kept its lead in some run"
+   ],
+   "switch_reader": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.091,
+    "median_lead_cost": 0.419,
+    "runs": 12,
+    "errors": 0
+   },
+   "reader": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.091,
+    "median_lead_cost": 0.419,
+    "runs": 12,
+    "errors": 0
+   },
+   "masher": {
+    "win_rate": 1.0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.174,
+    "median_lead_cost": 0.801,
+    "runs": 12,
+    "errors": 0
+   }
+  }
+ ]
+}

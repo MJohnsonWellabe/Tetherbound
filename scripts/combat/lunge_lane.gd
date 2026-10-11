@@ -26,6 +26,11 @@ const CHEVRON_PERIOD := 0.6
 ## A body standing on a built deck far above the terrain query is not a
 ## rendering offset to copy along the lane; cap what is carried.
 const MAX_SURFACE_BIAS := 0.6
+## And a body standing on a floor BELOW the ground query (the sunken Relay
+## deck: deck 3.65 m under a 4.78 m terrain answer, F04#1 judge, 2026-10-11)
+## carries that offset down, or the lane is drawn above the deck through the
+## creatures and shows only as a hairline.
+const MAX_SURFACE_SINK := 1.5
 ## Once the body is open (its `is_rooted()`, the HUD's opening predicate), the
 ## released lane clears within this many seconds: a lingering danger slab under
 ## an "it's open" prompt gave both signals at once (P2-093).
@@ -148,7 +153,7 @@ func aim(origin: Vector3, heading: Vector3) -> void:
 		if is_instance_valid(_body) and _body.has_method("_ground_height"):
 			var under := float(_body.call("_ground_height", origin.x, origin.z))
 			if is_finite(under):
-				_surface_bias = clampf(origin.y - under, 0.0, MAX_SURFACE_BIAS)
+				_surface_bias = clampf(origin.y - under, -MAX_SURFACE_SINK, MAX_SURFACE_BIAS)
 	_origin = origin
 	_heading = heading_now
 	if is_inside_tree():

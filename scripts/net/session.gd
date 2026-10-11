@@ -1143,7 +1143,13 @@ func foundation_boss_outcome(director: Node, spec: Dictionary, record: Dictionar
 				"validated_host_outcome": "win", "encounter_id": record.encounter_id, "participants": participants.duplicate()}})
 	return get_node(^"LedgerRpc").call("journal_foundation_event", "boss:" + str(spec.id) + ":" + str(record.encounter_id), duties)
 
+## True after a scan committed a duty that is still settling (its owner apply
+## is deferred to the next frame): FoundationComposition rescans sooner, so a
+## long fight's mastery queue drains one row at a time in seconds, not minutes.
+var foundation_backlog := false
+
 func _retry_foundation_events() -> void:
+	foundation_backlog = false
 	if not is_host() or _game() == null or _character_authority == null: return
 	_retry_combat_mastery_sources()
 	var world: RefCounted = _game().get("world")
@@ -1173,7 +1179,9 @@ func _retry_foundation_events() -> void:
 		var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
 		var receipt := _foundation_duty_receipt(duty, world.reward_delivery_namespace)
 		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
-			and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
+			and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt):
+			_note_duty_released(duty) # Its committed row was accepted: the hold logged at commit has ended.
+			continue
 		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
 			and latest.status == "pending" and latest.after.redesign_character.transaction_receipts.has(receipt):
 			get_node(^"LedgerRpc").call("_process_creature_training", latest)
@@ -1247,6 +1255,7 @@ func _retry_foundation_events() -> void:
 		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]:
 			_note_duty_hold(duty, str(result.get("code", "unresolved %s" % JSON.stringify(result).left(160))))
 			handled[duty.character_id] = true
+			if result.get("ok") == true and result.get("durable") == true: foundation_backlog = true
 		elif result.get("resolved") == true:
 			_note_duty_released(duty)
 
@@ -1397,6 +1406,13 @@ func ordinary_combat_reward_owner(director: Node, encounter_id: String) -> Dicti
 	if not _ordinary_combat_director_live(director) or not _bind_character_authority() \
 		or get_node_or_null(^"LedgerRpc") == null \
 		or not director.has_method("ordinary_combat_vitals_ready"): return unavailable
+	# Per-round ordinary rewards cover only the trainers.json table. Any other
+	# trainer (a chapter boss such as Captain Veyra) is not applicable here: it
+	# keeps its own reward path, rather than "unavailable" aborting the round.
+	var trainer_spec: Dictionary = director.get("_trainer_spec")
+	if not trainer_spec.is_empty() and not trainer_spec.has("master") and not trainer_spec.has("rematch") \
+		and preload("res://scripts/world/trainer_npc.gd").trainer(str(trainer_spec.get("id", ""))).is_empty():
+		return {"enabled": false, "ready": true, "scope": {}}
 	var vitals_ready: Variant = director.call("ordinary_combat_vitals_ready", encounter_id)
 	if not vitals_ready is bool or vitals_ready != true: return unavailable
 	var game: Node = _game()
@@ -5058,6 +5074,9 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 	if row.get("status")!="accepted" or not ESSENCE._equivalent(world.reward_deliveries.get(row.get("delivery_id")),row): return false
 	var character := _authority_character(peer)
 	if character.is_empty() or character != row.get("character_id"): return false
+	# After a title Load the host's own record is seeded lazily; seed it before
+	# acknowledging the save's accepted row instead of refusing that ack.
+	if peer == local_peer_id() and int(_character_authority.call("revision", character)) < 0: admitted_character_state(peer)
 	if not _tether_item_live_consumer_ready(row): return false
 	var pending: bool = _character_authority.call("creature_training_is_pending", character) == true
 	if not pending and (row.get("action") != "tether_item" or not _tether_item_original_pending(row)):
@@ -5359,9 +5378,11 @@ func _deliver_training_decision(peer: int, row: Dictionary) -> void:
 		# A host's own homestead action (solo too) is answered "awaiting" by
 		# _foundation_send and settles here; nothing else announced it, so a
 		# station panel stayed on "awaiting_saved_decision" with its buttons off.
-		# Guests hear theirs through _rpc_foundation_reply; groom has its own.
+		# Guests hear theirs through _rpc_foundation_reply; a guest's groom has
+		# its own (groom_passive_sync), but the host's own groom never enters
+		# that service (homestead_submit_action), so it is announced here too.
 		var action := str(row.get("action", ""))
-		if settled and (action in FOUNDATION_ACTIONS.ACTIONS or action in CHARACTER_ACTIONS.ACTIONS) and action != "groom" and _homestead_completion_once(row):
+		if settled and (action in FOUNDATION_ACTIONS.ACTIONS or action in CHARACTER_ACTIONS.ACTIONS) and _homestead_completion_once(row):
 			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true), _foundation_decision(peer, row))
 	elif bool(_registry.call("has", peer)):
 		rpc_id(peer, "_rpc_training_decision", _altar_epoch, row.delivery_id, int(row.journal_revision), row.receipt)

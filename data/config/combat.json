@@ -1363,6 +1363,8 @@
         "heavy": false,
         "bosses_timing": true,
         "telegraph_colour": "#8f7dff",
+        "_comment_cue_f04_0": "Code-blind judge (F04#0): the quick and Earth Fist read as one shape. Both really reach ~8.5 m (contact spacing of two large bodies), so the quick's wedge is not drawn smaller than its hit; it is an OUTLINE only (no fill), where Earth Fist is a solid orange wedge that fills in over its 1.1 s tell.",
+        "cue_fill_alpha": 0.0,
         "safe_escape": "outside"
       },
       "guardian_earth_fist": {
@@ -1376,6 +1378,8 @@
         "bosses_timing": true,
         "move_geometry": true,
         "telegraph_colour": "#ff9e1f",
+        "cue_fill_alpha": 0.5,
+        "cue_fills": true,
         "range": 3.8,
         "cone_degrees": 72,
         "lunge": 6.5,

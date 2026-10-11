@@ -1,0 +1,18 @@
+only test_foundation_retry_order.gd,test_foundation_retry_admission.gd,test_retained_settlement.gd,test_f19_boss_delivery.gd,test_owner_passive_sync.gd,test_owner_passive_replay.gd,test_combat_mastery_delivery.gd,test_foundation_mastery_drain.gd: 8 of 843 test files
+  ok    test_owner_passive_replay.gd :: test_only_trusted_long_discontinuity_bypasses_speed_without_walking_credit
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_capture_choice_checkpoint_keeps_original_and_only_saved_ack_reenters_handler
+  ok    test_owner_passive_sync.gd :: test_cloud_portal_navigation_bind_rebases_only_host_proved_discoveries_before_next_portal
+  ok    test_owner_passive_sync.gd :: test_owner_sends_each_input_once_and_the_window_again_only_when_acks_stall
+  ok    test_owner_passive_sync.gd :: test_portal_refusal_owner_fence_releases_only_after_exact_no_effect_rebase
+  ok    test_owner_passive_sync.gd :: test_portal_repeated_recovery_bool_ack_loss_keeps_only_exact_latest_candidates
+  ok    test_owner_passive_sync.gd :: test_portal_unsaved_origin_rejoin_cancels_original_only_after_fresh_bool
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_terminal_request_refusal_rebases_only_the_exact_saved_checkpoint
+  ok    test_owner_passive_sync.gd :: test_the_pose_ring_keeps_only_the_lag_window_and_its_cap
+  ok    test_retained_settlement.gd :: test_only_high_frequency_kinds_settle_or_retire
+92 tests, 2142 assertions, 0 failed
+32 tests, 434 assertions, 0 failed

@@ -74,11 +74,11 @@
     ],
     "topology_warnings": [
       "Mesh_0: 14334 non-manifold edges",
-      "Mesh_0: 7819 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 7819 duplicate vertices — will split under deformation",
       "Mesh_0: 671 microscopic disconnected components",
       "Mesh_0: ~3637 inward-facing faces",
       "Mesh_0: 74 faces with texel density 4.0x off the median",
-      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+      "Mesh_0: 0% quads — generator triangle soup, poor for deformation"
     ],
     "height_m": 4.25,
     "bones": 28,
@@ -108,7 +108,9 @@
     "sheets": [
       "review/low-before-after.jpg",
       "review/medium-before-after.jpg"
-    ]
+    ],
+    "scope": "Historical pre-repair captures of the input candidate; not validation of this new bake.",
+    "input_model_sha256": "57a1456311cadb4ed2a7391a9404f7a12cc78207bc8a877b4a2cae45de595f4b"
   },
   "gates": {
     "scale": "PASS",
@@ -124,5 +126,155 @@
     "Retained topology/UV warnings require independent approval.",
     "Candidate remains OFF until the complete art bar passes.",
     "Matched faint pose balances vertically on an appendage instead of settling onto the body/flank; terminal repose/contact FAIL. No contact approval inferred from standing scale or diagnostic lowest-point grounding."
-  ]
+  ],
+  "source_repair": {
+    "status": "NATIVE_BAKED_CONTACT_REVIEW_PENDING",
+    "baseline_model_sha256": "57a1456311cadb4ed2a7391a9404f7a12cc78207bc8a877b4a2cae45de595f4b",
+    "recipe": "source/terminal_repose.json",
+    "scope": "Only faint/rest authoring; all other clips, standing scale, mesh, UV, skin, materials and default-off registration unchanged by this pose repair.",
+    "support": "Ventral carapace repose with eight articulated legs; no whole-body roll onto a leg tip.",
+    "required_jobs": [
+      "root-owned native clip bake and import",
+      "Low/Compatibility terminal-faint three-quarter side shot with unobscured torso/floor contact",
+      "Low standing scale and hurt context in the existing capture path; no broad recapture suite",
+      "independent code-blind judgment and Claude disposition; retain original assertions and shipping gates"
+    ],
+    "acceptance": "Root Blender bake and CPU preservation checks passed. Original contact FAIL/open gates retained until Low engine capture and independent Claude judgment.",
+    "cpu_preparation": {
+      "method": "Read-only glTF skin evaluation of source rotations, all vertices; 61 transition samples. Nine unaffected clips match baseline source controls at five phases each. No native engine or bake.",
+      "support_regions": {
+        "thorax": {
+          "minimum_m": 0.00586,
+          "vertices_within_8cm": 11
+        },
+        "abdomen": {
+          "minimum_m": 0.0,
+          "vertices_within_8cm": 18
+        }
+      },
+      "limits": "Not a native posed-contact or topology/UV/self-intersection judgment. The source gap/vertex guard prevents gross suspension; original native assertions remain unchanged."
+    },
+    "low_capture_request": {
+      "stand": "Existing F36 flat bare-floor stage, candidate fixture only; preserve full standing scale.",
+      "clip": "faint",
+      "time_seconds": 1.5,
+      "frame_at_24fps": 36,
+      "preset": "Low / Compatibility only",
+      "shot": "Three-quarter front side, abdomen and thorax floor line visible between all eight folded legs.",
+      "judge": "Minimum decisive terminal body-contact frame; original assertions and Claude judgment still required."
+    },
+    "native_contact_status": "NATIVE PENDING",
+    "bake": {
+      "source_commit": "81c6e804215d89814fe98e80779f5536b21b7843",
+      "engine": "Blender 4.2.9 LTS",
+      "producer_build": "a10f621e649a",
+      "producer_script": "source/author_native_clips.py",
+      "producer_sha256": "d2bb8de7e67965f29727d37013cbc9bdd0c07886e487591926fce7491bf65c6c",
+      "recipe": "source/terminal_repose.json",
+      "recipe_sha256": "682d94d30e4275104bff569b1218e6a7c10e37af07e019d11c6dd21c24cb1a49",
+      "input_sha256": "57a1456311cadb4ed2a7391a9404f7a12cc78207bc8a877b4a2cae45de595f4b",
+      "input_preserved_at_commit": "81c6e804215d89814fe98e80779f5536b21b7843",
+      "input_repository_path": "assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native.glb",
+      "output_sha256": "c4e90946cc9884e6779283c40716e4c350e375f5a343b9ef4e71876ae70352d7",
+      "actual_exit_code": 0,
+      "actual_blender_pid": 15952,
+      "completed_utc": "2026-10-11T17:52:42.482469+00:00",
+      "private_launch_receipt": "C:\\CodexTemp\\native-service-artifacts\\f36-contact-fixes-81c6\\voltarach-bake-v1\\launch-receipt.json",
+      "private_result_receipt": "C:\\CodexTemp\\native-service-artifacts\\f36-contact-fixes-81c6\\voltarach-bake-v1\\result.json",
+      "private_output": "C:\\CodexTemp\\native-service-artifacts\\f36-contact-fixes-81c6\\voltarach-bake-v1\\voltarach-supported-repose.glb",
+      "support_guard_readings": [
+        {
+          "thorax": 0.00586467981338501,
+          "abdomen": -2.9802322387695312e-08
+        },
+        {
+          "thorax": 0.00586467981338501,
+          "abdomen": -2.9802322387695312e-08
+        }
+      ],
+      "warning": "Multiple shader image nodes: exporter chose first sampler. CPU comparison verifies materials, sampler settings, texture bindings and embedded image bytes exactly unchanged.",
+      "preservation": {
+        "status": "PASS_CPU_PRESERVATION",
+        "method": "Ordered triangle-corner correspondence; full unaffected track keys/times/interpolation plus five posed samples per clip; read-only glTF skin evaluation. No engine run by repair lane.",
+        "triangles": 28740,
+        "vertex_count_before": 22214,
+        "vertex_count_after": 22216,
+        "extra_vertices": "Exporter seam splits; corner topology/UV/joint identity preserved.",
+        "corner_attribute_max_absolute_delta": {
+          "POSITION": 2.86102294921875e-06,
+          "NORMAL": 0.0004159659147262573,
+          "TEXCOORD_0": 0.0,
+          "JOINTS_0": 0.0,
+          "WEIGHTS_0": 1.1920928955078125e-07
+        },
+        "normal_max_angle_degrees": 0.026835927902744652,
+        "rest_surface_max_distance_m": 3.0492560280577112e-06,
+        "standing_height_m_before": 4.249998880656968,
+        "standing_height_m_after": 4.249999018996051,
+        "rig_local_matrix_max_delta": 1.6676314656746796e-06,
+        "inverse_bind_matrix_max_delta": 4.291534423828125e-06,
+        "rig_names_hierarchy_joint_order": "unchanged",
+        "materials_textures_samplers_embedded_images": "exactly unchanged",
+        "configured_height_m": 4.25,
+        "configured_model_scale": 1.0,
+        "unaffected_clip_max_posed_distance_m": {
+          "idle": 3.7461318917396467e-06,
+          "walk": 5.9400337662461086e-06,
+          "run": 5.475878900499739e-06,
+          "attack": 3.7461318917396467e-06,
+          "charged": 3.7461318917396467e-06,
+          "hit": 4.362579808437966e-06,
+          "swim": 4.7940181467461705e-06,
+          "fly_grip": 3.977234540550217e-06,
+          "ride": 3.7461318917396467e-06
+        },
+        "terminal_skin_evaluation": {
+          "faint": {
+            "duration_seconds": 1.5416666269302368,
+            "minimum_y_m": -8.498522873379589e-08,
+            "support": {
+              "thorax": {
+                "minimum_y_m": 0.005864524660364931,
+                "vertices_within_8cm": 11
+              },
+              "abdomen": {
+                "minimum_y_m": -8.498522873379589e-08,
+                "vertices_within_8cm": 18
+              }
+            }
+          },
+          "rest": {
+            "duration_seconds": 1.5416666269302368,
+            "minimum_y_m": -8.498522873379589e-08,
+            "support": {
+              "thorax": {
+                "minimum_y_m": 0.005864524660364931,
+                "vertices_within_8cm": 11
+              },
+              "abdomen": {
+                "minimum_y_m": -8.498522873379589e-08,
+                "vertices_within_8cm": 18
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "supported_repose_low_capture": {
+    "before_source": "81c6e804215d89814fe98e80779f5536b21b7843",
+    "after_source": "16f273ed6546ba0d42897b1b34df5bf56f941e9e",
+    "renderer": "gl_compatibility",
+    "capture_tool": "tools/art_pipeline/capture_f36_poses.gd; original 25-pose assertions unchanged",
+    "selection": "Process-local OFF candidate placeholder selection only; shipping configuration unchanged",
+    "proof_scope": "Native bare-floor stage, faint terminal body contact; no fight or full animation acceptance claim",
+    "frames_captured_per_source": 25,
+    "sheet": "ralph/reports/VISUAL-PROOF/F36-voltarach/faint-before-after-Low.png",
+    "standing_height_m": 4.25,
+    "standing_height_delta_m": 0.0,
+    "camera_delta_m": 3.814697301152137e-06,
+    "contact_review": "Improved body-supported repose visible; independent verdict pending",
+    "remaining_gap": "Claude code-blind acceptance pending",
+    "shipping_enabled": false
+  }
 }

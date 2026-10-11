@@ -1,56 +1,25 @@
-# F19#5 (Meadows part): earned checkpoint chain, FAIL (blocked at `opening_team`)
+# F19#5 (Meadows part): lane meadows-route, handed off to routes-west (CT, Sun 11 Oct 2026)
 
-Lane `meadows-route`, branch `tb/ev-meadows-route`. Times are US Central.
+Command per piece: `godot --headless --path . --audio-driver Dummy --script tools/earned_saves/earned_chain_runner.gd -- --segment=<id> --save-dir=<root>/<id>/<id>/save --receipt=<root>/<id>/<id>/receipt.json [--handoff-from=<prev-root>/<prev>/<prev>] [--route-ledger]`. No TB_WORLD_SEED. Injections: 0.
 
-## Command (per piece, from `tools/earned_saves/earned_chain_runner.gd`'s header)
+Proven: `opening_team` PASS r10 @ebe1b2c7 (14:23-15:21), fixture `tests/fixtures/earned_saves/meadows_01_opening_team`.
+Handoff verified: camp_tournament loaded it through the production title with an equal F49 state (5 UIDs, flags, items, mastery).
+Earlier opening passes: r7 @49ad747b and r8 @275e1063 (r8's receipt missed a pending delivery; see fix 5).
 
-    godot --headless --path . --audio-driver Dummy \
-      --script tools/earned_saves/earned_chain_runner.gd -- \
-      --segment=opening_team --save-dir=<root>/opening_team/opening_team/save \
-      --receipt=<root>/opening_team/opening_team/receipt.json
+Game fixes (each with focused unit tests passing):
+1. d05ce689 combat_manager: reset client Energy when a host encounter binds. Before it, every wild training fight was lost with 0 hits (315 insufficient_energy refusals).
+2. 67bb3047 props.json: moved cottage_b's woodpile off cottage_b_8's door approach. The trainer stepped up 0.32 m onto a log box from doorstep_26 and fell off it (4 airborne frames in a replay; 0 after).
 
-No `TB_WORLD_SEED` (the runner refuses it in new-order mode). Godot 4.7-stable headless. Injections: 0.
+Helper/harness alignments (coordinator-approved, disclosed):
+3. ca277f4d navigator: deep-overlap bound is 2 x safe_margin (depth 0.000275, recovery 0.00151, skin 0.001). Total contact count is an observation (9 Terrain points vs CONTACTS 8). Lost-floor failures now print colliders.
+4. 49ad747b navigator: MAX_REQUESTS per walk_to. r6 used 24001 over ~1979 m; MAX_QUERIES_LIFETIME (250000) stays the guard.
+5. ebbcb528 runner: save, settle and compare (6 rounds x 60 frames) before export. A combat_mastery pending_owner_save delivery applied after the export save (+1 use on Load). r10 disclosed "still changing after 6 settling saves", yet the Load comparison was equal.
+6. 8ba3e4cd runner and handoff: new-order `warden` (f49_warden_finale, no Rift, declines the legendary so the same five survive) and `tidewake_handoff` (Home Key, hang the Meadows relic, Tidewake portal; realm water).
+7. 898be2ba rest helper: walk to Halda via the team segment's boundary_approach gate route. The camp was outside the village fence; r7 slid along FencePanelCollision_6..8 and ended 60.6 m short.
 
-## Runs
-
-| run | commit | world seed | result |
-|---|---|---|---|
-| attempt 1 | 9e39d0086 (main) | 1928975930 | FAIL `team`: wild training lost 4/4, **0 hits dealt** each |
-| attempt 2 | 9e39d0086 (main) | 1408236928 | FAIL `team`: same, 0 hits dealt each |
-| r2 | d05ce689 (fix below) | 1612717125 | FAIL `team`: "Native opening refused: actual production walk lost grounded floor" at (28.05, 1.07, -11.11) |
-| r3 | d05ce689 | 150570182 | FAIL `team`: same refusal at (28.07, 1.08, -11.05) |
-
-Filtered logs (per-frame navigator observations and duty spam removed) are the `*.filtered.gz` files here.
-
-## Defect 1, fixed: stale client Energy vs host-owned move meter
-
-- Symptom: the pilot pressed charged 65-113 times per fight; every press drew
-  `[encounter] move_start refused: insufficient_energy (Land quick hits to build Energy.)` (315 refusals in one diagnostic run).
-- Cause: `move_commit.runtime_enabled` routes solo wild moves through the encounter host, which starts each encounter's
-  Energy at 0 (`encounter_host.gd` `move_resources`). The client creature kept Energy from an earlier fight
-  (the solo tutorial filled it), so `combat_manager.charged_ready()` read true and the HUD/pilot offered a charged
-  attack the host always refused. The pilot never fell back to quick hits, so it never built host Energy.
-- Fix (d05ce689): `combat_manager.gd::bind_encounter` resets the party's client Energy to 0 when a new
-  host-arbitrated encounter binds. This mirrors the host's starting row.
-- Checks: `tests/run_tests.gd --only=` combat_progression (27/0 failed), director_join_snapshot (6/0),
-  gate_f_charged_hit (4/0), move_commit_runtime (12/0), shared_boss_authored_pipeline (3/0),
-  stormwood_hosted_combat (8/0).
-
-## Defect 2, open: the team helper's walk refuses a terrain crest
-
-- After the fix, catches and training proceed. The third catch (`Wild_bramblebun_1922_3`) is approached from the
-  inn departure's field road (ending at (30,-40)) on a straight leg to the TrailGate (14,19).
-- At about (28,-11) the player climbs from y 0.63 to 1.08 and is airborne for one frame (no contacts, falling).
-  `tests/helpers/opening_geometry_navigator.gd:1994` then stops the walk with "actual production walk lost grounded floor".
-- This reproduced at the same point in r2 and r3. Attempt 1 crossed the same area to the same gate on a slightly
-  different line, about 1.5 m apart, and passed.
-- Not patched. The fix belongs either to the terrain crest (Meadows geometry) or to the navigator's single-frame
-  floor rule (a test helper's assertion). Changing either is outside "smallest fix without weakening a check" and
-  needs a coordinator ruling.
-
-## Not reached
-
-- No piece after `opening_team` ran, so no fixtures are committed under `tests/fixtures/earned_saves/meadows_*`.
-- Tidewake handoff gap: `earned_chain_runner.gd` new-order mode stops at `hall` (`HANDOFF.MEADOWS_PIECES` ends at hall).
-  The `warden` piece is legacy-only and follows the obsolete Rift -> Cloudreach crossing. No new-order Meadows -> Tidewake
-  handoff piece exists, so the last Meadows segment cannot end at the Tidewake handoff yet. This is a gap.
+Open:
+- Intermittent "lost grounded floor" near (28,-11) by village_twins_yard on the opening's third catch (r3, r9). It doesn't reproduce in an empty scene, so some dynamic body is involved. d4/r10 passed the same route.
+- camp_tournament r10 @ebe1b2c7 (15:21-15:45) FAIL after materials, camp, rest, Halda registration (boundary fix worked) and `tournament_quarter_won`: standing 1.4 m from Halda/Interactable (1.52 m), her prompt never won (offer '', winner none). Log: r10.camp_tournament.log.filtered.gz. bridge and warrens were not run.
+- The cross-commit resume opt-in (proof rules v2) was denied by this session's permission classifier and reverted. Pieces must share a commit.
+- Infrastructure: do not run unit suites alongside the opening. The navigator's 10 ms dispatch deadline starves on 4 cores (r5).
+Logs from the failed attempts: `*.filtered.gz` here.

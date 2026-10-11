@@ -21,6 +21,7 @@ var _care: RefCounted
 var _activated: Object
 var swimmer: RefCounted
 var before_ids: Array[int] = []
+var before_uids: Array[String] = []
 var paid_saddle_receipt: Dictionary = {}
 var _completed := false
 
@@ -62,6 +63,7 @@ func run(tree: SceneTree, actual_world: Node3D, actual_game: Node) -> Dictionary
 	riding = world.get_node_or_null("RidingController")
 	_arbiter = world.get_node_or_null("InteractionArbiter")
 	before_ids = _ids()
+	before_uids = SWIMMER.roster_uids(game.party)
 	if player == null or camera == null or director == null or manager == null or riding == null \
 			or _arbiter == null or before_ids.size() != 5 or _unique_count(before_ids) != 5 \
 			or INPUT_OWNER.current(tree) != null or manager.is_fighting() or riding.is_mounted():
@@ -157,6 +159,7 @@ func _run_live(outgoing: int) -> void:
 	if not bool(caught.get("passed", false)):
 		_fail("Actual swimmer catch/farewell failed: %s" % str(caught.get("failures", [])))
 		return
+	swimmer = _capture.get("captured")
 	var costs_before := {}
 	for cost: Dictionary in game.recipe_cost_for(SWIMMER.SADDLE_RECIPE):
 		costs_before[str(cost.id)] = game.inventory.count(str(cost.id))
@@ -173,7 +176,7 @@ func _run_live(outgoing: int) -> void:
 		"saddles_after": game.inventory.count("swim_saddle"), "verified": true}
 	if not await _mount_caught():
 		return
-	if not SWIMMER.replacement_receipt(before_ids, _ids(), outgoing, swimmer.get_instance_id()) \
+	if not SWIMMER.replacement_uid_receipt(before_uids, SWIMMER.roster_uids(game.party), outgoing, str(swimmer.get("uid"))) \
 			or _tree.current_scene != world or game.pending_catch != null:
 		_fail("Mounted endpoint lost the exact ordinary farewell receipt or retained world")
 		return

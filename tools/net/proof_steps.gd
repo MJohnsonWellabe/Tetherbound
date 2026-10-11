@@ -1621,10 +1621,12 @@ static func _rider_identity(tree: SceneTree, args: Dictionary) -> Dictionary:
 		"mount_swim_mode": int(aquatic.get("mode", -1)),
 		"mount_swim_owner": int(aquatic.get("owner_peer_id", 0)),
 	}
+	# The Ripplet surface ride is saddle-less (SYSTEMS §171, WORLD §459); f37_ripplet_rejoin asserts saddle_count 0.
 	var agree: bool = pid > 0 and matching_rows.size() == 1 and bodies.size() == 1 and mounts.size() == 1 \
 		and stale_bodies == 0 and stale_mounts == 0 and data.body_peer_id == pid \
 		and data.mount_owner_peer_id == pid and data.mount_authority == pid and data.mount_swim_owner == pid \
-		and str(data.nameplate) == row_name and bool(data.riding) and bool(data.mount_saddle_worn)
+		and str(data.nameplate) == row_name and bool(data.riding) \
+		and (bool(data.mount_saddle_worn) or data.mount_species == "ripplet")
 	data["agree"] = agree
 	return {"verdict": "PASS" if agree else "FAIL",
 		"detail": "character %s: %s" % [cid.left(18), JSON.stringify(data)], "data": data}

@@ -9,6 +9,7 @@ const HARVEST := preload("res://scripts/world/harvest_node.gd")
 const FARM := preload("res://scripts/world/type_crop_plot.gd")
 var _mounted: Dictionary = {}
 var _refusals: Dictionary = {}
+var _service: Node
 
 func mount(world: Node3D, trainer: CharacterBody3D, service: Node) -> Dictionary:
 	var runtime := _read("res://data/config/f32_runtime.json")
@@ -18,6 +19,7 @@ func mount(world: Node3D, trainer: CharacterBody3D, service: Node) -> Dictionary
 			or not world.has_method("world_realm") or world.get_world_3d() != trainer.get_world_3d():
 		return {"mounted_ids": [], "code": "actual_world_residency_required"}
 	var realm := str(world.call("world_realm"))
+	_service = service
 	var essence := _read("res://data/config/essence_nodes.json")
 	var tuning: Dictionary = essence.get("placement_validation", {})
 	var missing: Array[Dictionary] = []
@@ -36,6 +38,24 @@ func mount(world: Node3D, trainer: CharacterBody3D, service: Node) -> Dictionary
 		if stock.is_empty():
 			_refusals[id] = "Host has no registered live stock for this placement."
 			continue
+		if not legacy_walked:
+			# Only nodes that can adopt a renewable source are candidates. The
+			# world holds ~180k nodes; scanning all of them again for every
+			# missing site held the mount for ~5 s per call (PERF, 2026-10-05).
+			for candidate: Node in world.find_children("*", "Node3D", true, false):
+				if candidate.has_method("adopt_renewable_source"):
+					legacy_nodes.append(candidate)
+			legacy_walked = true
+		# A chapter node built after its stock was registered (a loaded save)
+		# already owns this site at its authored spot. Mount it, before this
+		# mount's own placement checks (they gate nodes it builds itself);
+		# a refused site must not leave the chapter's node unbound.
+		var resident := _resident_for(legacy_nodes, id, spec)
+		if resident != null:
+			resident.call("bind_source_service", service)
+			_mounted[id] = resident
+			_refusals.erase(id)
+			continue
 		var verdict := VALIDATOR.placement_verdict(world, spec, trainer, tuning)
 		if verdict.get("ok") != true:
 			_refusals[id] = verdict.get("reason", "Placement unavailable.")
@@ -48,23 +68,7 @@ func mount(world: Node3D, trainer: CharacterBody3D, service: Node) -> Dictionary
 			_refusals[id] = "Installed model unavailable."
 			continue
 		var adopted: Node3D
-		if not legacy_walked:
-			# Only nodes that can adopt a renewable source are candidates. The
-			# world holds ~180k nodes; scanning all of them again for every
-			# missing site held the mount for ~5 s per call (PERF, 2026-10-05).
-			for candidate: Node in world.find_children("*", "Node3D", true, false):
-				if candidate.has_method("adopt_renewable_source"):
-					legacy_nodes.append(candidate)
-			legacy_walked = true
 		for existing: Node in legacy_nodes:
-			# A chapter node built after its stock was registered (a loaded
-			# save) already owns this site; mount it rather than a duplicate.
-			if not existing.is_queued_for_deletion() and str(existing.get("_renewable_site_id")) == id \
-					and (existing as Node3D).global_position.distance_to(verdict.position) <= 1.0 \
-					and existing.has_method("bind_source_service"):
-				existing.call("bind_source_service", service)
-				adopted = existing as Node3D
-				break
 			if not existing.has_method("adopt_renewable_source") or existing.is_queued_for_deletion() \
 				or not str(existing.get("_renewable_site_id")).is_empty(): continue
 			var flag := "harvest_node:" + str(existing.get("_node_id"))
@@ -124,6 +128,30 @@ func mount_authored_farm(world: Node3D, trainer: CharacterBody3D, service: Node)
 		_mounted[id] = node
 		_refusals.erase(id)
 	return census()
+
+static func _resident_for(nodes: Array[Node], id: String, spec: Dictionary) -> Node3D:
+	var at: Array = spec.get("at", [])
+	if at.size() != 2: return null
+	for existing: Node in nodes:
+		if not is_instance_valid(existing) or existing.is_queued_for_deletion() \
+				or str(existing.get("_renewable_site_id")) != id or not existing.has_method("bind_source_service"):
+			continue
+		var p := (existing as Node3D).global_position
+		if Vector2(p.x, p.z).distance_to(Vector2(float(at[0]), float(at[1]))) <= 1.0:
+			return existing as Node3D
+	return null
+
+## A chapter node streamed in after a mount pass, already bound to its
+## canonical site, joins the mount at once instead of waiting for the next
+## pass (until then its gather press could only say "not ready").
+func adopt_resident(id: String, node: Node3D) -> bool:
+	if not is_instance_valid(_service) or not is_instance_valid(node) or node_for(id) != null \
+			or str(node.get("_renewable_site_id")) != id or not node.has_method("bind_source_service"):
+		return false
+	node.call("bind_source_service", _service)
+	_mounted[id] = node
+	_refusals.erase(id)
+	return true
 
 func node_for(id: String) -> Node3D:
 	# An adopted legacy node can be destroyed while a save reload rebuilds its
