@@ -1128,7 +1128,7 @@ func _room_centred_formation(derived_radius: float) -> Dictionary:
 
 
 ## Alternative openings stay inside the already admitted ring. Search only
-## seats: never enlarge the ring, shorten the pair or move a host-owned foe.
+## seats: never enlarge the ring, shorten the full configured opening or move a host-owned foe.
 ## Keep the original successful seat untouched and prefer small local changes.
 const ADMISSION_TURNS_DEG := [0.0, 30.0, -30.0, 60.0, -60.0, 90.0, -90.0, 120.0, -120.0, 150.0, -150.0, 180.0]
 const ADMISSION_OFFSETS_M := [0.5, 1.0, 2.0, 3.0]
@@ -1190,36 +1190,6 @@ func _find_clear_shared_seat(spot: Vector3, centre: Vector3, radius: float) -> V
 			last_admission_context.clear()
 			return candidate
 	var orbit := spot - foe_at
-	var search_gap := original_gap
-	var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
-	var impossible_orbit: bool = centre.is_finite() and foe_at.is_finite() and is_finite(radius) and radius > 0.0 \
-		and is_finite(clearance) and original_gap + clearance - 0.001 > radius + Vector2(foe_at.x - centre.x, foe_at.z - centre.z).length()
-	if impossible_orbit:
-		# This bound uses the body origin only when it is inside the actual
-		# rendered footprint: the circle must contain it with the same clearance.
-		var projected := PackedVector2Array()
-		for point: Vector3 in _admission_render_points(_ally_body):
-			projected.append(Vector2(point.x, point.z))
-		var hull := Geometry2D.convex_hull(projected)
-		var twice_area := 0.0
-		for index in hull.size():
-			twice_area += hull[index].cross(hull[(index + 1) % hull.size()])
-		var origin_contained: bool = hull.size() >= 3 and absf(twice_area) > 0.000001 \
-			and Geometry2D.is_point_in_polygon(Vector2.ZERO, hull)
-		var cfg: Dictionary = MATH.config().get("arena", {})
-		var intended_gap := _open_separation(cfg)
-		var valid_gap: bool = is_finite(intended_gap) and intended_gap > 0.0 and intended_gap < original_gap
-		if origin_contained and valid_gap:
-			# An approach after another fight is not the opening separation.
-			# Reconstitute the full measured/configured formation in this ring.
-			var inward := centre - foe_at
-			inward.y = 0.0
-			if inward.length_squared() <= 0.000001:
-				inward = Vector3(orbit.x, 0.0, orbit.z)
-			if inward.length_squared() > 0.000001:
-				orbit = inward.normalized() * intended_gap
-				orbit.y = spot.y - foe_at.y
-				search_gap = intended_gap
 	# Preserve every existing translation-only success before trying another
 	# side of the live opponent. Only the ally's proposed seat turns.
 	for degrees: float in ADMISSION_TURNS_DEG:
@@ -1230,11 +1200,36 @@ func _find_clear_shared_seat(spot: Vector3, centre: Vector3, radius: float) -> V
 		for offset: Vector3 in _admission_offsets():
 			var candidate := turned + offset
 			var roundoff := 0.001 if offset.is_zero_approx() else 0.0
-			if Vector2(candidate.x - foe_at.x, candidate.z - foe_at.z).length() + roundoff < search_gap: continue
+			if Vector2(candidate.x - foe_at.x, candidate.z - foe_at.z).length() + roundoff < original_gap: continue
 			attempts += 1
 			if _shared_seat_fit(candidate, centre, radius):
 				last_admission_context.clear()
 				return candidate
+	# Only after every approach-gap candidate fails, reconstruct the existing
+	# full measured/configured opening. The distant trainer approach is not a
+	# requested fighter gap; every rendered corner and physical gate still passes
+	# through the same admission checks.
+	var cfg: Dictionary = MATH.config().get("arena", {})
+	var intended_gap := _open_separation(cfg)
+	if centre.is_finite() and foe_at.is_finite() and is_finite(radius) and radius > 0.0 \
+		and is_finite(intended_gap) and intended_gap > 0.0 and intended_gap < original_gap:
+		var inward := centre - foe_at
+		inward.y = 0.0
+		if inward.length_squared() <= 0.000001:
+			inward = Vector3(orbit.x, 0.0, orbit.z)
+		if inward.length_squared() > 0.000001:
+			var opening := inward.normalized() * intended_gap
+			for degrees: float in ADMISSION_TURNS_DEG:
+				var turned := foe_at + Basis(Vector3.UP, deg_to_rad(degrees)) * opening
+				turned.y = spot.y
+				for offset: Vector3 in _admission_offsets():
+					var candidate := turned + offset
+					var roundoff := 0.001 if offset.is_zero_approx() else 0.0
+					if Vector2(candidate.x - foe_at.x, candidate.z - foe_at.z).length() + roundoff < intended_gap: continue
+					attempts += 1
+					if _shared_seat_fit(candidate, centre, radius):
+						last_admission_context.clear()
+						return candidate
 	var last_failure := last_admission_context.duplicate()
 	last_admission_context = first_failure
 	last_admission_context["clear_seat_search_exhausted"] = true
