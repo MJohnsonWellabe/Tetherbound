@@ -7,6 +7,16 @@ const SCOPE := preload("res://scripts/net/realm_replication_scope.gd")
 const HISTORY := preload("res://scripts/net/realm_receiver_history.gd")
 const ORIGINS := preload("res://scripts/net/realm_spawn_origins.gd")
 const TIMEOUT_MS := 120000
+## A receiver still building its destination keeps its transaction alive:
+## it pings every LOADING_PING_MS while its local phase is "loading", and each
+## ping moves the host's deadline to TIMEOUT_MS from now, never past
+## LOADING_MAX_MS after loading began. A silent (hung or gone) receiver still
+## times out TIMEOUT_MS after its last ping. F11#3: a guest whose Meadows build
+## took longer than 120 s on a slow machine had its crossing failed mid-load
+## and rolled back ("The destination could not load.").
+const LOADING_PING_MS := 5000
+const LOADING_MAX_MS := 600000
+var _last_loading_ping_msec := -LOADING_PING_MS
 var scopes: Array[Node] = []
 var transactions: Dictionary = {}
 var history := HISTORY.new()
@@ -530,10 +540,38 @@ func _drained(token: String) -> void:
 	history.retire(int(tx.mover), str(tx.from), token)
 	tx.phase = "loading"
 	tx.deadline = Time.get_ticks_msec() + TIMEOUT_MS
+	tx.loading_started = Time.get_ticks_msec()
 	for director: Node in _directors(str(tx.from)):
 		director.call("realm_transition_committed", int(tx.mover))
 	session().call("_apply_realm_change", int(tx.mover), str(tx.from), str(tx.to))
 	_broadcast(tx)
+
+## Receiver keep-alive while it builds its destination (see LOADING_PING_MS).
+@rpc("any_peer", "call_remote", "reliable", 0)
+func _still_loading(token: String) -> void:
+	if _mover_message(token):
+		extend_loading_deadline(transactions[token], Time.get_ticks_msec())
+
+## Pure host rule: only a loading transaction moves, only forward, and never
+## past LOADING_MAX_MS after its loading began.
+static func extend_loading_deadline(tx: Dictionary, now: int) -> bool:
+	if str(tx.get("phase", "")) != "loading" or bool(tx.get("failure_reported", false)):
+		return false
+	var started := int(tx.get("loading_started", now))
+	tx.loading_started = started
+	var extended := mini(now + TIMEOUT_MS, started + LOADING_MAX_MS)
+	if extended <= int(tx.get("deadline", 0)):
+		return false
+	tx.deadline = extended
+	return true
+
+func _ping_loading(now: int) -> void:
+	var token := str(_local.get("token", ""))
+	if token.is_empty() or str(_local.get("phase", "")) != "loading" \
+			or now - _last_loading_ping_msec < LOADING_PING_MS:
+		return
+	_last_loading_ping_msec = now
+	_still_loading.rpc_id(1, token)
 
 func _mover_message(token: String) -> bool:
 	return host() and transactions.has(token) \
@@ -573,6 +611,7 @@ func _prepare_retarget(token: String, realm: String) -> bool:
 	tx.erase("receiver_ready")
 	tx.erase("failure_reported")
 	tx.deadline = Time.get_ticks_msec() + TIMEOUT_MS
+	tx.loading_started = Time.get_ticks_msec()
 	return true
 
 func outgoing_allowed(owner: int, realm: String, observer: int, origin: String = "") -> bool:
@@ -845,6 +884,7 @@ func _process(_delta: float) -> void:
 		return
 	_check_local_drain()
 	if not host():
+		_ping_loading(Time.get_ticks_msec())
 		_flush_installed()
 		_poll_joined_receiver()
 		return
