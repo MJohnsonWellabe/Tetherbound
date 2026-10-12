@@ -1,30 +1,29 @@
-# F04#6 r8: one story-tied aftermath per fight, same camera before and after
+# F04#6: one story-tied aftermath per fight, same camera before and after
 
-Captures lane, Low/Compatibility (llvmpipe), 1280x720. This lane captures; it does not judge.
+Captures lane, Low/Compatibility (llvmpipe), 1280x720. This lane captures; it does not judge. Sheet built about 5:25 PM CT Mon 12 Oct (owner wind-down).
 
-- **New approach (after two FAILs on the shared banner template):**
-  - **Config:** each fight has its own `site_object` in `data/config/trainer_aftermath.json`. It is a BEFORE set and an AFTER set of installed props and lights.
-  - **Placement:** `scripts/world/trainer_aftermath.gd` plants both sets at the trainer's post and switches them with the trainer's persisted defeat flag, so a reload or a rematch shows the after state.
-  - **Removed:** the flat red cloth scraps and Halder's olive pack. The standard still sinks away.
-  - **Sigil stones:** brighter, with a bigger emblem.
-- **`sheet.jpg`, 4 of 6 fights**, one row each (before | after):
-  - **Vance (captive):** the captive's cage stands chained beside a lit Tether lamp. After the win the cage is knocked over, the chain thrown off and the lamp out.
-  - **Oreth (river path):** a Tether checkpoint barrier crosses the path. Afterwards the barrier is dismantled flat at the verge and the barrel rolled aside.
-  - **Halder (field):** a Tether watch-fire burns in a ring of rocks with two torches up. Afterwards the fire is cold (charred logs) and the torches lie lowered.
-  - **Vess (Ridgeline Watch):** the lookout's rope line is strung between two posts with a lit lantern. Afterwards the line is cut down, a post toppled and the lantern out.
-- **Still rendering:**
-  - **Dell:** his Tether pylon is lit with a cyan spill before, and dead and leaning with rubble after.
-  - **Warden Aldis:** his banners come down.
-- **Tool:** `tools/capture_f04_6_aftermaths.gd --trainers=<id> --no-guardian --no-reload`. It wins each fight through the production trainer battle.
-  - Each site is framed by ONE capture camera per trainer, before the fight and after it.
-  - **Staging, disclosed:**
-    - The tree is paused for the frame itself, so the post-fight talk camera cannot take the view.
-    - UI layers and the player are hidden for the pair.
-    - The follower is put away with the director's own dismiss.
-    - Before the before-frame the player stands at the site, so nearby ground detail streams in, then returns to the fight's stand.
-  - **Not a capture difference:** the after frames show bare ground where the fight arena cleared grass.
-- **Source:** `tb/ev-captures` at `1b901332` (site objects `960932b7` and `73811180`). Finished between 8:25 AM and 10:24 AM CT Mon 12 Oct.
-- **Check:** `tests/test_trainer_aftermath_world_change.gd` passes: 5 tests, 55 assertions, 0 failed.
-  - Every fight's site object is its own and changes.
-  - `settle` swaps before for after.
-  - A beaten trainer re-attaches straight into the after state (reload and rematch).
+- **Mechanism:**
+  - Each fight has its own `site_object` in `data/config/trainer_aftermath.json`: a BEFORE set and an AFTER set of installed props, lights, an installed NPC body or a smoke wisp.
+  - `scripts/world/trainer_aftermath.gd` plants both sets and switches them with the trainer's persisted defeat flag, so a reload or a rematch shows the after state.
+  - The cloth scraps are removed.
+  - **Test:** `tests/test_trainer_aftermath_world_change.gd` passes: 5 tests, 55 assertions, 0 failed.
+- **`sheet.jpg`:** 5 of 6 fights, one row each (before | after), same capture camera per pair.
+  - **Vance (r9, `2d7243ad`):** the chained cage and the lit Tether lamp. After the win the cage is tipped, the chain off, the lamp out, and the captive Sela stands free beside it.
+    - Sela inside the cage is not readable in the before frame. The fix (larger cage, a light on her, `cb39f21f`) is committed but not rendered.
+  - **Oreth (r8, `1b901332`):** the checkpoint barrier, then dismantled with the barrel rolled aside.
+    - The r9 fix (the barrier across the road, `f8f4053f`) is committed. Its render ran out of the time limit while the fight was still going.
+  - **Halder (r9):** the watch-fire in a rock ring with the torches up. After the win: charred logs, a smoke wisp, and the torches lying apart.
+  - **Vess (r8):** the rope line and lantern, then the line cut, a post toppled and the lantern out.
+    - The r9 fixes are committed but not rendered (render timed out): a horizontal line instead of the wreath read, and the lantern moved off the stone (the clipping bar).
+  - **Warden Aldis:** his arena banners hang, then come down.
+- **Open:**
+  - **Dell has no pair.** His fight was refused, the ally's seat search boxed in by the relay yard stair and the station props.
+    - Cause: the tool's before-frame step moved the player and the ally there.
+    - Fix, committed and not rendered: the step now applies only when the site is more than 40 m away (`acbed939`).
+    - His site object, committed: the Tether pylon lit with a cyan spill, then dead and leaning with rubble.
+  - The r9 renders of Vance, Oreth and Vess.
+- **Staging (disclosed):**
+  - The day clock is frozen; the tree is paused for the frame; UI layers and the player are hidden for the pair.
+  - The follower is put away with the director's own dismiss.
+  - For far sites, the player stands at the site before the before-frame so ground detail streams in, then returns.
+  - The after frames show bare ground where the fight arena cleared grass (game state).
