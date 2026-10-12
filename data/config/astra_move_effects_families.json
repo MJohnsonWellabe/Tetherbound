@@ -1,0 +1,73 @@
+{
+  "enabled": false,
+  "include_slash_refinement": false,
+  "scope": "Partial GO 6118590129: ten remaining projectile/volley/crescent/ground-burst examples; optional slash revision needs fresh judge",
+  "held": ["flame_cone", "frost_breath", "sky_lightning", "chain_lightning", "heal_pulse", "guard_flash"],
+  "trail_radius_scale": 0.3,
+  "trail_opacity": 0.86,
+  "crescent_radius_scale": 0.25,
+  "profiles": {
+    "stone_throw": {
+      "family": "volley_debris", "tint": "9d8965", "tint_mix": 0.25,
+      "body": {"stone_smoothing": 0.3, "surface_roughness": 0.72, "segments": 24, "rings": 14},
+      "impact": {"shape": "stone", "opacity": 0.95, "impact_size_boost": 1.3, "mote_size": 0.16, "puff_count": 3, "puff_opacity": 0.28, "initial_grow": 0.3, "grow": 1.1},
+      "trail_radius_scale": 0.38
+    },
+    "ember_burst": {
+      "family": "radial_orbs",
+      "body": {"segments": 24, "rings": 12, "min_body_size_m": 0.14, "opacity": 0.96, "deformation": 0.1, "surface_scale": 3.8},
+      "impact": {"puff_count": 3, "puff_shape": "soft_ember", "puff_size_scale": 0.65, "puff_opacity": 0.75, "mote_shape": "soft_ember", "mote_size": 0.16, "opacity": 0.86},
+      "trail_radius_scale": 0.42
+    },
+    "tidal_wave": {
+      "family": "wave_projectile",
+      "body": {"opacity": 0.95, "flow_segments": 18, "foam_colour": "e5fcff", "layers": [
+        {"shape": "bubble", "size_scale": 0.27, "colour": "b9edff", "opacity": 0.9, "offset": [-0.8, 0.5, 0.0]},
+        {"shape": "bubble", "size_scale": 0.32, "colour": "d5f7ff", "opacity": 0.9, "offset": [0.0, 0.7, 0.0]},
+        {"shape": "bubble", "size_scale": 0.27, "colour": "b9edff", "opacity": 0.9, "offset": [0.8, 0.5, 0.0]}
+      ]},
+      "impact": {"shape": "splash_crown", "crown_petals": 12, "crown_taper": 0.65, "crown_height_ratio": 1.5, "opacity": 0.93, "mote_shape": "bubble", "mote_size": 0.16, "center_opacity": 0.15, "rim_power": 0.5, "puff_count": 3, "puff_opacity": 0.3}
+    },
+    "wind_blade": {
+      "family": "crescent", "tint": "79b8ac", "tint_mix": 0.55,
+      "body": {"air_surface": false, "layers": []},
+      "impact": {"air_surface": false, "mote_shape": "spark", "mote_size": 0.24, "spark_stretch": 0.13, "spark_glow": false, "spark_width_ratio": 0.12, "mote_colour": "b9fff0", "opacity": 0.95, "puff_count": 0}
+    },
+    "tornado": {
+      "family": "wind_orb", "tint": "729cab", "tint_mix": 0.6,
+      "body": {"shape": "orb", "air_surface": true, "segments": 28, "rings": 16, "opacity": 0.96, "breakup": 0.12, "strand_frequency": 8.0, "flow_speed": 4.0, "crest_colour": "d2f4ea", "layers": []},
+      "impact": {"shape": "orb", "air_surface": true, "breakup": 0.2, "strand_frequency": 8.0, "opacity": 0.9, "initial_grow": 0.4, "grow": 1.5, "mote_size": 0.16, "mote_colour": "9bc5b5", "puff_count": 0}
+    },
+    "ice_shard_volley": {
+      "family": "crystal_volley",
+      "body": {"min_body_size_m": 0.25, "segments": 7, "edge_width": 0.1, "surface_roughness": 0.15, "specular_strength": 0.8, "layers": []},
+      "impact": {"opacity": 0.45, "mote_size": 0.13, "mote_end_scale": 0.65, "puff_count": 2, "puff_opacity": 0.2},
+      "trail_radius_scale": 0.24
+    },
+    "psychic_pulse": {
+      "family": "psychic_orb", "tint": "aa58c5", "tint_mix": 0.5,
+      "body": {"shape": "orb", "motion": "projectile", "segments": 28, "rings": 16, "shadow_surface": true, "shadow_colour": "723b99", "wisp_colour": "e5a3f7", "porosity": 0.05, "opacity": 0.95, "emission_strength": 0.12, "layers": []},
+      "impact": {"shape": "orb", "shadow_surface": true, "shadow_colour": "884aab", "wisp_colour": "f5d3ff", "porosity": 0.08, "opacity": 0.92, "mote_shape": "orb", "mote_size": 0.16, "grow": 1.35, "puff_count": 0}
+    },
+    "root_stone_spikes": {
+      "family": "ground_debris",
+      "body": {"height_ratio": 3.5, "segments": 7, "surface_roughness": 0.75},
+      "impact": {"shape": "stone", "mote_size": 0.14, "mote_end_scale": 0.55, "puff_count": 2, "puff_shape": "soft_dust", "puff_opacity": 0.25, "puff_at_ground": true, "puff_size_scale": 0.5}
+    },
+    "quake_ring": {
+      "family": "ground_wave", "tint": "8d7754", "tint_mix": 0.55,
+      "body": {"width": 0.18, "rib_lobes": 12, "lit": true, "surface_material": "stone", "stone_colour": "87734e", "mineral_colour": "c5ae7d", "surface_roughness": 0.8},
+      "impact": {"mote_size": 0.17, "mote_colour": "968064", "settle_on_ground": true, "mote_end_scale": 0.6, "puff_count": 2, "puff_shape": "soft_dust", "puff_opacity": 0.3, "puff_at_ground": true, "puff_size_scale": 0.7}
+    },
+    "debuff_hex": {
+      "family": "target_orb", "tint": "6e4199", "tint_mix": 0.65,
+      "body": {"shape": "orb", "segments": 24, "rings": 14, "shadow_surface": true, "shadow_colour": "342248", "wisp_colour": "b87af2", "porosity": 0.08, "opacity": 0.96},
+      "impact": {"shape": "orb", "secondary_shape": "orb", "shadow_surface": true, "shadow_colour": "4d2866", "wisp_colour": "c688f4", "porosity": 0.18, "opacity": 0.94, "visual_anchor": "contact_surface", "mote_size": 0.17, "mote_colour": "a266da", "grow": 1.4, "puff_count": 0}
+    },
+    "slash_trail": {
+      "family": "crescent", "tint": "acbbab", "tint_mix": 0.2,
+      "body": {"layers": []},
+      "impact": {"mote_shape": "spark", "mote_size": 0.27, "spark_stretch": 0.14, "spark_width_ratio": 0.12, "spark_glow": false, "mote_colour": "fff0c9", "opacity": 0.95, "puff_count": 0}
+    }
+  }
+}
