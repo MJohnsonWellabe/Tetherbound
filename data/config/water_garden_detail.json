@@ -57,5 +57,18 @@
     "wave_speed": 0.012,
     "fresnel_strength": 0.3,
     "roughness_value": 0.13
-  }
+  },
+  "infill_spacing_m": 1.65,
+  "infill_runout_m": 3.0,
+  "infill_path_clearance_m": 2.8,
+  "infill_angle_step_deg": 0.9,
+  "joint_width_m": 0.18,
+  "joint_height_m": 0.12,
+  "infill_radial_insets_m": [
+    0.9,
+    2.3,
+    4.0,
+    5.7,
+    7.1
+  ]
 }

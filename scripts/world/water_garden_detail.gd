@@ -61,6 +61,8 @@ static func apply(garden: Node3D, support: Dictionary) -> void:
 							plant_angle += float(cfg.plant_spacing_deg)
 				angle = end + float(cfg.bed_gap_deg)
 		garden.call("_mesh", detail, str(row.id) + "PlantedBeds", beds, soil)
+	_infill(garden, detail, support, cfg, soil)
+	_connector_joints(garden, detail, support, cfg, coping)
 	var pool := PackedVector3Array()
 	_sector(garden, support, float(cfg.pool_radius_inner_m), float(cfg.pool_radius_outer_m), float(cfg.pool_angle_start_deg), float(cfg.pool_angle_end_deg), float(support.floors[0].top_y) + float(cfg.pool_depth_m), pool)
 	# This decorative pool is independent of support arrays. The installed
@@ -78,6 +80,78 @@ static func apply(garden: Node3D, support: Dictionary) -> void:
 	water.mesh = surface.commit()
 	water.material_override = _water_material(cfg, support, pool)
 	detail.add_child(water)
+
+
+## Small supported patches survive where rejecting a whole5m bed left the
+## near terrace empty. Keep actual connector and landing runouts clear.
+static func _infill(garden: Node3D, detail: Node3D, support: Dictionary, cfg: Dictionary, soil: Material) -> void:
+	var occupied: Array[Vector3] = []
+	for child: Node in detail.get_children():
+		if child is Node3D and not child is MeshInstance3D:
+			occupied.append((child as Node3D).position)
+	for row: Dictionary in support.floors:
+		if str(row.id) == "LowerDrownedLevel": continue
+		var faces := PackedVector3Array()
+		for inset: float in cfg.infill_radial_insets_m:
+			var radius := float(row.radius_inner_m) + inset
+			var angle := float(row.angle_start_deg) + 0.6
+			while angle < float(row.angle_end_deg) - 0.6:
+				var at: Vector2 = garden.call("_polar", support, radius, angle)
+				var point := Vector3(at.x, float(row.top_y), at.y)
+				var clear := true
+				for existing: Vector3 in occupied:
+					if existing.distance_to(point) < float(cfg.infill_spacing_m): clear = false
+				for ramp: Dictionary in support.ramps:
+					var a := Vector2(float(ramp.a[0]), float(ramp.a[2]))
+					var b := Vector2(float(ramp.b[0]), float(ramp.b[2]))
+					var direction := (b - a).normalized()
+					if at.distance_to(Geometry2D.get_closest_point_to_segment(at, a - direction * float(cfg.infill_runout_m), b + direction * float(cfg.infill_runout_m))) < float(cfg.infill_path_clearance_m): clear = false
+				# All four patch corners must lie on this exact flat support.
+				for offset: Vector2 in [Vector2(-0.55, -0.55), Vector2(-0.55, 0.55), Vector2(0.55, 0.55), Vector2(0.55, -0.55)]:
+					var y := float(garden.call("built_floor_height_at", at.x + offset.x, at.y + offset.y))
+					if not is_finite(y) or absf(y - point.y) > 0.001: clear = false
+				if clear:
+					var plant := ASSETS.piece(str(cfg.fern_model), Vector3(float(cfg.fern_size_m[0]), float(cfg.fern_size_m[1]), float(cfg.fern_size_m[2])))
+					if plant != null:
+						plant.name = str(row.id) + "Infill"
+						plant.set_meta("garden_infill", true)
+						detail.add_child(plant)
+						plant.position = point
+						plant.rotation.y = deg_to_rad(angle * 7.0)
+						occupied.append(point)
+						var patch := PackedVector2Array([at + Vector2(-0.55, -0.55), at + Vector2(0.55, -0.55), at + Vector2(0.55, 0.55), at + Vector2(-0.55, 0.55)])
+						garden.call("_append_flat", patch, point.y + float(cfg.bed_offset_m), faces)
+				angle += float(cfg.infill_angle_step_deg)
+		garden.call("_mesh", detail, str(row.id) + "InfillBeds", faces, soil)
+
+
+## A narrow bevel at the real wall/connector junction explains the contact
+## between the sloped path and vertical retaining face. It adds no support,
+## removes no wall, and leaves at least2.64m of the3m connector clear.
+static func _connector_joints(garden: Node3D, detail: Node3D, support: Dictionary, cfg: Dictionary, stone: Material) -> void:
+	var faces := PackedVector3Array()
+	for ramp: Dictionary in support.ramps:
+		var a := Vector3(float(ramp.a[0]), float(ramp.a[1]), float(ramp.a[2]))
+		var b := Vector3(float(ramp.b[0]), float(ramp.b[1]), float(ramp.b[2]))
+		var direction := Vector2(b.x - a.x, b.z - a.z).normalized()
+		var side := Vector3(-direction.y, 0.0, direction.x)
+		var steps := int(ceil(a.distance_to(b) / 0.4))
+		for sign_value: float in [-1.0, 1.0]:
+			for i in steps:
+				var p := a.lerp(b, float(i) / steps) + side * sign_value * float(ramp.width_m) * 0.5
+				var q := a.lerp(b, float(i + 1) / steps) + side * sign_value * float(ramp.width_m) * 0.5
+				var probe_p := p + side * sign_value * 0.03
+				var probe_q := q + side * sign_value * 0.03
+				var floor_p := float(garden.call("built_floor_height_at", probe_p.x, probe_p.z))
+				var floor_q := float(garden.call("built_floor_height_at", probe_q.x, probe_q.z))
+				if not is_finite(floor_p) or not is_finite(floor_q) or minf(floor_p - p.y, floor_q - q.y) < float(cfg.joint_height_m): continue
+				var inner_p := p - side * sign_value * float(cfg.joint_width_m) + Vector3.UP * 0.008
+				var inner_q := q - side * sign_value * float(cfg.joint_width_m) + Vector3.UP * 0.008
+				var wall_p := p + Vector3.UP * float(cfg.joint_height_m)
+				var wall_q := q + Vector3.UP * float(cfg.joint_height_m)
+				garden.call("_append_triangle", faces, inner_p, inner_q, wall_q)
+				garden.call("_append_triangle", faces, inner_p, wall_q, wall_p)
+	garden.call("_mesh", detail, "ConnectorWallStoneJoints", faces, stone)
 
 
 static func _masonry(cfg: Dictionary, support: Dictionary, connector: bool) -> ShaderMaterial:
