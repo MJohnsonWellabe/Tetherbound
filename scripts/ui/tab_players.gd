@@ -170,17 +170,25 @@ func _add_open_seats() -> void:
 		mark.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		mark.text = "+"
 		mark.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
-		mark.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+		mark.add_theme_color_override("font_color", UITokens.TEAL)
 		line.add_child(mark)
 		var label := Label.new()
-		label.text = "%s  ·  %s" % [str(cfg.get("label", "Open seat")), str(cfg.get("note", ""))]
-		label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
-		label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+		# Round 3: a short label per card; the explanation is said once below.
+		label.text = str(cfg.get("label", "Open seat"))
+		label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+		label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		line.add_child(label)
 		var card := _panel(line, int(cfg.get("card_margin", 6)))
-		card.modulate = Color(1.0, 1.0, 1.0, float(cfg.get("card_alpha", 0.6)))
+		card.modulate = Color(1.0, 1.0, 1.0, float(cfg.get("card_alpha", 0.85)))
 		_list.add_child(card)
+	var note := str(cfg.get("note", ""))
+	if open > 0 and not note.is_empty():
+		var explain := Label.new()
+		explain.text = note
+		explain.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+		explain.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+		_list.add_child(explain)
 
 
 func _add_local_card() -> void:

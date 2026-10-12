@@ -559,7 +559,8 @@ func select(index: int) -> void:
 	_title.text = str((_tabs[_index] as Dictionary).get("label", "Paused"))
 	if _shell_board_banner():
 		# P2-001: the rail already names the tab; the title names the journey.
-		_title.text = _chapter_banner()
+		# Round 3: keep the tab's own name beside the chapter.
+		_title.text = "%s  ·  %s" % [str((_tabs[_index] as Dictionary).get("label", "")), _chapter_banner()]
 	_last_revision = -1
 	_refresh()
 
