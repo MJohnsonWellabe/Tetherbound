@@ -10,6 +10,7 @@ const WATER_KEY := "realm_key_water"
 const WATER_UNLOCK := "realm_gate_water_unlocked"
 const ENTRY_WAIT_FRAMES := 7200
 const CEREMONY_FRAMES := 60
+const ENDING_RUNTIME := preload("res://scripts/world/stormwood_ending.gd")
 var _finished_dialogues: Array[String] = []
 var _arrived_world: Node3D
 var _water_population_seen := false
@@ -80,15 +81,37 @@ func _continue_waterward() -> void:
 	if not await _receipt(OFFERED) or not bool(_game.call("player_flags").call("has", SETTLED)):
 		_fail("actual Stormheart farewell lacks its saved personal/world settlement")
 		return
-	var view := ending.get_node_or_null("WaterwardView") as Node3D
-	if view == null or not await _core_south_ring() or not await _activate_exact(ending, view,
-			Vector2(view.global_position.x, view.global_position.z + 2), "Waterward view") \
-			or not await _drain_exact("stormwood_waterward_aftermath"):
+	if not await _view_waterward(ending):
 		return
 	for flag in ["stormwood:waterward_revealed", WATER_KEY, "waterward_route_revealed", "stormwood:chapter_complete"]:
 		if not await _receipt(flag):
 			return
 	await _cross_water_gate()
+
+## The Waterward view after this character's settled answer. With the shipping
+## ending runtime on (multiplayer.json redesign_ending_runtime_enabled), the
+## ending hands its aftermath to the regional homecoming conversation once
+## (StormwoodEnding._queue_homecoming_handoff): it opens as soon as the answer
+## is saved and input is free, so before or at the view. The legacy Waterward
+## line plays only with that runtime off. The view itself is still activated.
+## The caller still requires every Waterward receipt.
+const HOMECOMING_OPEN_FRAMES := 240
+
+func _view_waterward(ending: Node3D) -> bool:
+	var homecoming := ENDING_RUNTIME.homecoming_runtime_enabled(_game.session.call("config"))
+	var aftermath := "stormwood_homecoming_aftermath" if homecoming else "stormwood_waterward_aftermath"
+	if homecoming:
+		for _frame in HOMECOMING_OPEN_FRAMES:
+			if _panel.is_open() or _finished_dialogues.has(aftermath):
+				break
+			await _tree.process_frame
+		if _panel.is_open() and not await _drain_exact(aftermath):
+			return false
+	var view := ending.get_node_or_null("WaterwardView") as Node3D
+	if view == null or not await _core_south_ring() or not await _activate_exact(ending, view,
+			Vector2(view.global_position.x, view.global_position.z + 2), "Waterward view"):
+		return false
+	return await _drain_exact(aftermath)
 
 func _dialogue_finished(id: String) -> void:
 	_finished_dialogues.append(id)
@@ -101,7 +124,8 @@ func _drain_exact(id: String) -> bool:
 	if _finished_dialogues.has(id):
 		return true
 	if not _panel.is_open() or str(_panel.get("_runner").call("conversation_id")) != id:
-		return _fail("expected actual dialogue did not open: " + id)
+		return _fail("expected actual dialogue did not open: %s (open=%s, finished=%s)" % [id,
+			str(_panel.get("_runner").call("conversation_id")) if _panel.is_open() else "none", str(_finished_dialogues)])
 	for _line in 64:
 		if _finished_dialogues.has(id):
 			return true
