@@ -34,9 +34,14 @@ class BedInput extends TAIL:
 		# corner. Their direct chord cuts the jamb, then the local navigator
 		# follows the outside fence. Follow the authored roads both ways;
 		# all headings spend super's original single-leg budget and watchdog.
-		if headings.is_empty() and Geometry2D.is_point_in_polygon(from, polygon) \
+		# From the built camp to Halda a player also takes the road: the tent,
+		# fire, bedroll and creature beds stand between the westernmost bed
+		# stance and the lawn, and the direct chord detoured into the bank ditch
+		# (F19#5 camp_tournament, df9ec22e: 70 m in 6700 frames).
+		if headings.is_empty() and (purpose.ends_with("tournament marshal") \
+				or (Geometry2D.is_point_in_polygon(from, polygon) \
 				and Geometry2D.is_point_in_polygon(to, polygon) \
-				and CARE.crosses_boundary(from, to, polygon):
+				and CARE.crosses_boundary(from, to, polygon))):
 			var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
 			var paths: Dictionary = terrain.get("paths", {})
 			var road: Array[Vector2] = []
