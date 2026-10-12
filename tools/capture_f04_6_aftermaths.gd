@@ -463,13 +463,23 @@ func _frame_site_object(tag: String) -> void:
 	root.add_child(cam)
 	cam.global_transform = _site_cams[_tid]
 	var previous := root.get_viewport().get_camera_3d()
-	for i in 20:
+	# Staging, disclosed: the player is hidden for the site pair (r8 render:
+	# the trainer walked into Vance's after frame), and the first frame of a
+	# pair waits for terrain textures to stream in, so the before frame is not
+	# a blurred low-detail ground under the same camera.
+	var player_was_visible := _player != null and _player.visible
+	if _player != null:
+		_player.visible = false
+	var settle := 240 if tag.ends_with("before") else 30
+	for i in settle:
 		cam.current = true
 		await process_frame
 	cam.current = true
 	print("site %s %s: camera=%s current=%s" % [_tid, tag, str(cam.global_position),
 		str(root.get_viewport().get_camera_3d() == cam)])
 	await _save(tag)
+	if _player != null and player_was_visible:
+		_player.visible = true
 	for layer: CanvasLayer in layers:
 		if is_instance_valid(layer):
 			layer.visible = true
