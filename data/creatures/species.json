@@ -1168,7 +1168,10 @@
           "run": "run",
           "attack": "attack",
           "hit": "hit",
-          "faint": "faint"
+          "faint": "faint",
+          "swim": "swim",
+          "ride": "ride",
+          "fly_grip": "fly_grip"
         }
       },
       "learnset": "ashtusk"
