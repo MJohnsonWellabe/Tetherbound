@@ -1,3 +1,14 @@
+# F19#5 Meadows piece `sigils`: PASS, hosted on 90927824 (routes-west)
+
+**Run:** 2026-10-12, hosted on a fallback port. Generated relay input. `passed: true`, no failures, wall time 11629 s.
+- Riverwatch, Field and Ridge were each beaten 5/5, with exact XP and exact item rewards.
+- **Interim disclosure (coordinator-approved).** Before each captain, the route frees one Satchel slot per reward item that needs a new slot. It uses the real Drop: controller focus, Drop, confirm, with a `satchel_room_dropped` receipt. Here it dropped 2 berries once.
+- That drop exists because unfit trainer rewards are lost today: the ledger item_grant carries no leftover. In run `7dbcc236`, Ridge's elixir_guard was lost at 23/24 slots. systems-b owns that bug. This evidence does not claim the full-bag case works.
+- **Care during a wild fight:** a wild that engaged during between-fight care was fought, then care was retried whole (`77045956`).
+- **Ledger:** `route_ledger/sigils_90927824.jsonl.txt`, 4807 m, A7 clean. Strict 250 m found 1 window: 271 m from "Greet Captain Vess" (path 3594) to the first new find on the gate road (3866), with only repeat species and Chop prompts between.
+- **Content fix:** `b4_candy_ridge_descent_wayside` (band 4 pickups.json, a side-tier good_candy about 10 m off the walked line at path ~3730). Re-walk queued.
+
+## Earlier attempts
 # F19#5 Meadows piece `sigils`: FAIL, two attempts, stopped (meadows-route-b)
 
 - **Command:** `earned_chain_runner.gd -- --segment=sigils --generated-fixture --save-dir=<root>/sigils/save --receipt=<root>/sigils/receipt.json`. Generated 'sigils' profile (disclosed fixture input).
