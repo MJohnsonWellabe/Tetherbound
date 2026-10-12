@@ -97,6 +97,7 @@ func _ready() -> void:
 		vegetation.name = "WaterVegetation"
 		add_child(vegetation)
 		vegetation.build(config, field)
+		garden_claude.clear_scatter(vegetation)
 		_stand_up_ground_cover()
 		var twin_pumps := preload("res://scripts/world/water_sluice_twin_pumps.gd").new()
 		twin_pumps.name = "WaterSluiceTwinPumps"
@@ -448,4 +449,8 @@ func _ground_cover_clearances(profile: Dictionary = {}) -> PackedVector3Array:
 			for index in maxi(0, ceili((to_m - from_m) / step_m) + 1):
 				var point := centre + axis * minf(to_m, from_m + float(index) * step_m)
 				out.append(Vector3(point.x, point.y, clear_radius))
+	# P2-011 claude-r1 terraces (OFF by default) keep grass off their levels.
+	var garden_claude := get_node_or_null("WaterGardenTerracesClaude")
+	if garden_claude != null:
+		out.append_array(garden_claude.call("clearance_circles"))
 	return out

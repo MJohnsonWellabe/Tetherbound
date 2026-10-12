@@ -38,7 +38,7 @@ func _layout(world: Node3D) -> Dictionary:
 	var cfg := {
 		"origin_xz": _k.origin_xz, "maximum_cell_m": _k.maximum_cell_m,
 		"footing_depth_m": _k.footing_depth_m, "external_dressing": true,
-		"soil_texture": _k.bed_texture, "soil_tint": _k.level_tint, "soil_texture_scale": _k.level_texture_scale,
+		"soil_texture": _k.level_texture, "soil_tint": _k.level_tint, "soil_texture_scale": _k.level_texture_scale,
 		"stone_texture": _k.wall_texture, "stone_tint": _k.wall_tint, "stone_texture_scale": _k.wall_texture_scale,
 		"floors": [], "ramps": [],
 	}
@@ -325,6 +325,48 @@ func _pool(cfg: Dictionary, row: Dictionary, parent: Node3D) -> void:
 					reed.position = Vector3(at.x, float(row.top_y), at.y)
 					reed.rotation.y = rng.randf() * TAU
 		angle += float(reeds.spacing_deg)
+
+
+## Grass-cover clearance circles (x, z, radius) over the levels and ramps.
+func clearance_circles() -> PackedVector3Array:
+	# Few, large circles: the grass field keeps only its nearest 24.
+	var out := PackedVector3Array()
+	if not _enabled or _k.is_empty():
+		return out
+	var cfg := {"origin_xz": _k.origin_xz}
+	var clear: Dictionary = _k.grass_clear
+	var count := int(clear.count)
+	for i in count:
+		var angle := lerpf(float(_k.angle_start_deg), float(_k.angle_end_deg), (float(i) + 0.5) / count)
+		var at := _polar(cfg, float(clear.radius_from_origin_m), angle)
+		out.append(Vector3(at.x, at.y, float(clear.radius_m)))
+	for ramp: Dictionary in _ramps:
+		if str(ramp.id) == str(_k.entry_ramp.id):
+			var a: Vector3 = ramp.a
+			var b: Vector3 = ramp.b
+			var mid := a.lerp(b, 0.35)
+			out.append(Vector3(mid.x, mid.z, float(clear.ramp_radius_m)))
+	return out
+
+
+## Collapse static island scatter that would grow up through the levels.
+func clear_scatter(root: Node) -> void:
+	if not _enabled or root == null:
+		return
+	var circles := clearance_circles()
+	for node: Node in root.find_children("*", "MultiMeshInstance3D", true, false):
+		var instance := node as MultiMeshInstance3D
+		var multimesh := instance.multimesh
+		if multimesh == null:
+			continue
+		var to_world := instance.global_transform
+		for index in multimesh.instance_count:
+			var local := multimesh.get_instance_transform(index)
+			var at := to_world * local.origin
+			for circle: Vector3 in circles:
+				if Vector2(at.x, at.z).distance_to(Vector2(circle.x, circle.y)) < circle.z:
+					multimesh.set_instance_transform(index, Transform3D(Basis.from_scale(Vector3.ZERO), local.origin))
+					break
 
 
 func _near_ramp(at: Vector2, clearance: float) -> bool:
