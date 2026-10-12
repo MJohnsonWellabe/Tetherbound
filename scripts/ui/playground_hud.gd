@@ -1040,7 +1040,7 @@ var _clarity: Dictionary = {}
 var _hotbar_glyph_px := HOTBAR_GLYPH_PX
 ## Merged vitals: the HP cluster's offset from the vitals cluster, so the HP
 ## bar (local y HEALTH_BAR_ROW_Y) sits just above the Food bar.
-const MERGED_HP_OFFSET := -10.0
+const MERGED_HP_OFFSET := -30.0
 
 ## --- persistent exploration legend (RG3) ---------------------------------------
 
