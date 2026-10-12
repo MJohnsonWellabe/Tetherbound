@@ -158,7 +158,8 @@ func _add_open_seats() -> void:
 	var cfg := _open_seats_cfg()
 	if cfg.is_empty():
 		return
-	var open := int(cfg.get("seats", 4)) - _list.get_child_count()
+	# Capped (`max_cards`) so no seat card is cut by the scroll edge.
+	var open := mini(int(cfg.get("seats", 4)) - _list.get_child_count(), int(cfg.get("max_cards", 3)))
 	for index in maxi(0, open):
 		var line := HBoxContainer.new()
 		line.add_theme_constant_override("separation", 16)

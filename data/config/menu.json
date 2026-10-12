@@ -7,13 +7,16 @@
     "label": "Open seat",
     "note": "Up to four trainers can share one expedition.",
     "card_alpha": 0.6,
+    "max_cards": 2,
     "status_near_top": true
   },
   "controls_scan": {
     "_scope": "device_local_presentation",
     "_why": "P2-031 (coordinator code-blind re-score): binding cells were literal names only (slot 1's bare 'B' read like Back), the instructions were a two-line paragraph, and the column headers sat about 150px above the first rows. With this enabled, tab_settings.gd shows each bound button's prompt glyph or keycap beside its name, turns the instructions into one glyph line, and repeats the column headers directly under each group heading. Stays OFF until a code-blind PASS.",
     "enabled": false,
-    "glyph_px": 34
+    "glyph_px": 34,
+    "legend_glyph_px": 48,
+    "legend_device": "gamepad"
   },
   "shell_board": {
     "_scope": "device_local_presentation",
