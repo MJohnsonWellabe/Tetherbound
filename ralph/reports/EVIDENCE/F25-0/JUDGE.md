@@ -79,3 +79,7 @@ Two independent code-blind judges per round, each seeing every changed clip, wit
   - 23 generic guard glow;
   - 05/06/11/14/15/18/21 from r2.
 - Flag kit_move_effects.enabled turned ON by the coordinator at 10:06 AM CT. Move-effect, VFX, trainer-battle and solo-duel tests with the flag on: 29 tests, 0 failed.
+
+## F25#2 and F25#5 regression checks under the kit (10:2x-10:37 AM CT Mon 12 Oct)
+- c3424109 rank pairs: the code-blind judge picked the mastered row in 3/3 (pebble and fireball PASS, ice WEAK). The judge saw a single stone in flight: the volley fanned along the camera's depth axis.
+- 2f624913 (merged 11:3x AM): clip-P1 pebble toss shows 3 separate stones in flight (F25#2 PASS). Pair-01 mastered row identified, with about 6–7 larger stones against 3, visible without zoom (F25#5 PASS). The min-size floor fix (it had clamped rank growth) is also merged.
