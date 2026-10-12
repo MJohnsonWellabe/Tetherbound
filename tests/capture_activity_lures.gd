@@ -1012,6 +1012,13 @@ func _perform_action() -> void:
 			if not _prompt_offered():
 				break
 			await _face_lure()
+		if _activity == "cart" and round > 0:
+			# r11 frame list, cart 2: the repair prompt at the cart, before the
+			# press, with its hand-in text on screen.
+			for i in 30:
+				await physics_frame
+			await _capture("act-%d0-repair-prompt" % round)
+			await _capture_wide("act-%d0-repair-prompt" % round, _cart_shot())
 		await _press("interact")
 		for i in 30:
 			await physics_frame
@@ -1278,16 +1285,20 @@ func _juno_ask_first() -> Dictionary:
 	for i in 30:
 		await physics_frame
 	var lines := 0
-	while bool(panel.call("is_open")) and lines < 6:
-		lines += 1
-		if lines <= 3:
-			await _capture("act-a%d-juno-ask" % lines)
-			await _capture_wide("act-a%d-juno-ask" % lines, [_player.global_position, juno.global_position])
-		await _press("interact")
+	# Her ask is her first line; her last ("Beat mine first") is the bout
+	# offer that interact accepts. Read the ask, then decline with cancel, as
+	# the escort leg already does after the reunion.
+	if bool(panel.call("is_open")):
+		lines = 1
+		await _capture("act-a1-juno-ask")
+		await _capture_wide("act-a1-juno-ask", [_player.global_position, juno.global_position])
+	for tries in 6:
+		if not bool(panel.call("is_open")):
+			break
+		await _press("menu_cancel")
 		for i in 20:
 			await physics_frame
-	if bool(panel.call("is_open")):
-		await _press("menu_cancel")
+	out["fight_started"] = _manager != null and bool(_manager.call("is_fighting"))
 	out["asked"] = lines > 0
 	out["lines"] = lines
 	_player.global_position = home
@@ -1295,6 +1306,18 @@ func _juno_ask_first() -> Dictionary:
 	for i in 90:
 		await physics_frame
 	return out
+
+
+## The cart, Coll and the player, for the cart's two-shots.
+func _cart_shot() -> Array:
+	var shot: Array = [_player.global_position]
+	var cart := _world.get_node_or_null(^"BrokenCart") as Node3D
+	if cart != null:
+		shot.append(cart.global_position)
+		var coll := cart.get_node_or_null(^"Coll") as Node3D
+		if coll != null:
+			shot.append(coll.global_position)
+	return shot
 
 
 ## Who a dialogue frame is about: the player and the activity's speaker,
@@ -1309,6 +1332,8 @@ func _speaker_shot() -> Array:
 			body = juno
 	if body != null and is_instance_valid(body):
 		shot.append(body.global_position)
+	if _activity == "cart":
+		return _cart_shot()
 	var reunion := _world.get_node_or_null(^"LostCompanionReunion") if _activity == "juno" else null
 	var rescued: Node3D = reunion.get("_body") as Node3D if reunion != null else null
 	if rescued != null and is_instance_valid(rescued) and body != null \
