@@ -718,7 +718,7 @@ func _build_controls(list: VBoxContainer, section: Dictionary, controls: Diction
 		# read as keyboard-first and were too small to read).
 		var glyph := int(_controls_scan.get("legend_glyph_px", 48))
 		var pad := str(_controls_scan.get("legend_device", "gamepad"))
-		line.text = "%s Change   %s Leave it   Hold %s + %s or F10: reset every control" % [
+		line.text = "%s Change     |     %s Leave it     |     Hold %s + %s (or F10) for a second and a half: reset every control" % [
 			INPUT_GLYPH.icon("confirm", glyph, Color.WHITE, pad), INPUT_GLYPH.icon("cancel", glyph, Color.WHITE, pad),
 			INPUT_GLYPH.icon("game_menu", glyph, Color.WHITE, pad), INPUT_GLYPH.icon("map", glyph, Color.WHITE, pad)]
 		list.add_child(line)
@@ -1154,10 +1154,8 @@ func poll() -> void:
 			cell.text = str(bindings.call("describe", event))
 			if not _controls_scan.is_empty():
 				cell.icon = _glyph_texture(event)
-				# Glyph-primary: where art exists it replaces the name rather
-				# than repeating it beside a tiny icon (round 2 judge).
-				if cell.icon != null:
-					cell.text = ""
+				# Round 4 (coordinator): the name stays beside a large glyph;
+				# glyph-only cells regressed quick bindings to tiny icons.
 			cell.add_theme_color_override(
 				"font_color",
 				COLOUR_CHANGED if bool(bindings.call("is_overridden", action, slot)) else COLOUR_DEFAULT
