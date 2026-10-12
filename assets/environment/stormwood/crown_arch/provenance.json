@@ -1,0 +1,125 @@
+{
+  "asset": "P2-041 Crown-only frame and paving candidate",
+  "status": "OFF_NATIVE_AND_BLIND_REVIEW_PENDING",
+  "date": "2026-10-12",
+  "source_baseline": "8181ab0802a9d961ef31738e3f58c430ce8dd09a",
+  "verified_main": "9e39d0086ee88998b8295747fc19f6603fe714f7",
+  "upstream_creator": "Quaternius",
+  "derivative_author": "Codex for Tetherbound",
+  "upstream_path": "assets/buildings/quaternius_castle/WallEntranceBricks.obj",
+  "upstream_sha256": "8de6b7005d2d740d6942cc5e485614ffb50272c13c3d48806351eb7eb3e809f5",
+  "original_install_commit": "87be93f202e72a1f2b48c03e80469bd55e564217",
+  "installed_by": "2026-08-13",
+  "original_topology_repair_commit": "f9816f40fca0c485d689ea226301b4af16e535ad",
+  "license": {
+    "basis": "Installed Modular Medieval Building Pack acquired under CC0 1.0; historical asset ledger and August13 installation establish provenance.",
+    "ledger_path": "archive/docs/specs-2026-09-19/ASSET_LEDGER.md",
+    "ledger_sha256": "edff98c22639d78f27dd084de36f457ed876b6c7eb1b2ab053bbb2da39d6c8af",
+    "upstream_url": "https://quaternius.com/packs/modularmedievalbuildings.html",
+    "redistribution": "Historical CC0 asset; credit retained voluntarily. No claim of authorship of the upstream model.",
+    "current_site_note": "License page now describes QAL v1.0 updated August28,2026 and states changes are not retroactive. This derivative uses the already-installed earlier CC0 asset, not a fresh acquisition.",
+    "current_site_url": "https://quaternius.com/license.html",
+    "consulted": "2026-10-12",
+    "textures": "Existing runtime materials only; no texture copied. Installed Medieval Village MegaKit CC0 license remains assets_raw/vendor/quaternius_medieval-village-megakit/License_Standard.txt."
+  },
+  "reference_inspection": {
+    "draft": "reference/reference-draft.png",
+    "sha256": "385ba8b69ee7b9e6620d1f33c6ae4e4c73113862428b480917ba6a6c22116aed",
+    "method": "CPU source-derived orthographic projection inspected before implementation",
+    "native_render": false,
+    "historical_images": [
+      {
+        "path": "D:\\tetherbound\\codex-e\\.tmp\\e-crown-blind\\A\\stormwood__landmark__crown_arch__day__close.jpg",
+        "sha256": "9385503f6e8cb57756a3e599b348e488c27c349f920f0acc08c3619be8e742c3",
+        "role": "historical defect reference; not current-main or detail support proof"
+      },
+      {
+        "path": "D:\\tetherbound\\codex-e\\.tmp\\e-crown-blind\\A\\stormwood__landmark__crown_arch__day__approach.jpg",
+        "sha256": "55052c4275ea2aebc3dac4ce53665694c3254e2d01d2efeb7c71864c6aad07ee",
+        "role": "historical defect reference; not current-main or detail support proof"
+      },
+      {
+        "path": "D:\\tetherbound\\codex-e\\.tmp\\e-crown-blind\\A\\stormwood__hollow_crown__07__the_crown_arch__day__close.jpg",
+        "sha256": "5712f6d0683d02051d043721ce92f89017e5038959cedb35051b8911eee2d173",
+        "role": "historical defect reference; not current-main or detail support proof"
+      }
+    ]
+  },
+  "scale": {
+    "baseline": "8181ab0802a9d961ef31738e3f58c430ce8dd09a",
+    "source": "assets/buildings/quaternius_castle/WallEntranceBricks.obj",
+    "source_sha256": "8de6b7005d2d740d6942cc5e485614ffb50272c13c3d48806351eb7eb3e809f5",
+    "normalization_factor": 2.581559533021696,
+    "source_centre": [
+      0.0015100000000000113,
+      -0.001898,
+      -0.11659250000000002
+    ],
+    "lower_surface_max_shift_m": 0.0,
+    "split_plane_m": 2.65,
+    "target_upper_height_m": 5.0,
+    "target_upper_width_m": 4.6,
+    "target_upper_depth_m": 1.9,
+    "frame_triangles": {
+      "LightRock": 244,
+      "DarkRock": 52
+    },
+    "paving_triangles": {
+      "PavingA": 14,
+      "PavingB": 24,
+      "PavingC": 12,
+      "Mortar": 38
+    },
+    "emitted_frame_triangles": 288,
+    "emitted_paving_triangles": 88,
+    "clip_zero_area_triangles_omitted": 8,
+    "paving_support_top_y": 0.2,
+    "paving_bounds_m": [
+      9,
+      0.4,
+      9
+    ],
+    "limits": "CPU authoring receipt, not import, parser, unit or native validation.",
+    "measured_effective_bounds_min_m": [
+      -2.29955978568685,
+      0.0,
+      -0.8826021512645538
+    ],
+    "measured_effective_bounds_max_m": [
+      2.2890275833783615,
+      4.999999999999999,
+      0.9499999999999996
+    ],
+    "measured_effective_size_m": [
+      4.588587369065212,
+      4.999999999999999,
+      1.8326021512645534
+    ],
+    "outputs": {
+      "crown_arch_frame.obj": "ec164b3065a4c5c7dd7da02b452caeb9e042c37099d30d85c182159a4757eeb2",
+      "crown_arch_paving.obj": "192a96270932e44c14f3a32f7048c4c0c1cf1f7a5dba6dbb19f0d901029c8864",
+      "crown_arch.mtl": "edd0cf6d67506925f29950513ffd41d2f3867a4963f4ab4f48137ed91d039439"
+    }
+  },
+  "material_contract": "LightRock then DarkRock; existing live piece material references and mirrored detail transform retained. Paving surfaces A/B/C/Mortar get current installed paving material at configured tone multipliers.",
+  "preserved": [
+    "lower surface through2.65m",
+    "2.2x2.5m declared passage",
+    "9x0.4x9m footing collider and full visible top",
+    "runtime/save/progression/paired-lit owner",
+    "NPC selectors and source",
+    "all support assertions"
+  ],
+  "native_pending": [
+    "OBJ import/surface order",
+    "normal maps and contact",
+    "flank/front visual improvement",
+    "slab integration",
+    "true5m support/camera/Senn occupancy",
+    "linked-arch arrival/return and lit state"
+  ],
+  "generation_service": null,
+  "model_task_id": null,
+  "asset_downloads": false,
+  "engine_parser_tests_ci": false
+}

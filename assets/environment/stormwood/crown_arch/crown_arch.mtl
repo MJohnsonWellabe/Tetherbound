@@ -1,0 +1,17 @@
+newmtl LightRock
+Kd 0.5 0.5 0.5
+
+newmtl DarkRock
+Kd 0.5 0.5 0.5
+
+newmtl PavingA
+Kd 0.5 0.5 0.5
+
+newmtl PavingB
+Kd 0.5 0.5 0.5
+
+newmtl PavingC
+Kd 0.5 0.5 0.5
+
+newmtl Mortar
+Kd 0.5 0.5 0.5

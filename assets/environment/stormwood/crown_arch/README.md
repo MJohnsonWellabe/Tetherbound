@@ -1,0 +1,15 @@
+# Crown Arch candidate — OFF
+
+P2-041/F41#2, ancient Stormwood `e_crown` only. This is one unverified source candidate, not accepted art.
+
+`candidate.json::enabled` is false. For root's opt-in native preview, change only that boolean to true on an exact candidate checkout. There is no environment-variable, save-state or hidden per-user activation. A clean ON comparison differs by that single config line; no other NPC/feature selectors change. Restore false after preview unless the independent native/code-blind verdict authorizes integration.
+
+The two-line dispatch in `stormwood_arch_runtime.gd` invokes the helper only for the ancient Crown. Constructed arches and simulation-only paths return before it. When OFF, it returns before loading either candidate mesh. When ON and both imported surface contracts are available, it substitutes frame/paving meshes and retains the existing piece, normalization, rear-detail transform, material references and `set_lit` owner. Missing imports or wrong surface counts retain the original presentation.
+
+Frame: installed castle derivative, unchanged geometry below2.65m, upper crown5m. Paving: same9×0.4×9m visible support box, staggered top courses. No colliders, triggers, arrival coordinates, pairing, saved flags, progression or assertions are added/changed. Shared arch-piece source and original assets are untouched. OBJ imports are intentionally left for root's serialized native service; no engine/parser/test/CI was run here.
+
+Authoring and exact output hashes are in `source/prepare_candidate.py` and `source/geometry-receipt.json`. CPU reference and scale contract are in `reference/`. `provenance.json` records upstream/license evidence and its limits.
+
+Native views: retain historical landmark close standXZ(483.963074,2704.891357), flank approach(478.363678,2731.304199) and frontal approach(543,2700). The old frontal labelled-close stand(516,2700) is31m from the arch and is only context. Propose actual5m frontal(490,2700) facing west and reverse(480,2700) facing east. Both lie on source islandY74; current native support, Senn occupancy and camera exposure remain unverified. Never reuse the steep west-wall stand(459,2700).
+
+Root must retain all support/capsule/on-floor/drift/postdraw/production-camera guards and use matching before/after High/Medium1080p full rasters with actual weather/phase metadata. Recheck the last judge's slab, front silhouette, dark flank, material, ground contact and grass notes before READY. Preserve real linked-arch arrival/return and lit-state behavior; no crop, distant relabel or fixture pad can substitute. The candidate remains OFF on any failure.
