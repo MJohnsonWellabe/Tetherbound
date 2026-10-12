@@ -1,0 +1,11 @@
+{
+ "A": "before: impact.feedback neutralised (make_feedback_off.py, same commit)",
+ "B": "after: shipped feedback",
+ "commit": "b782788bf",
+ "phases": [
+  "start",
+  "mid",
+  "strike",
+  "out-hit"
+ ]
+}

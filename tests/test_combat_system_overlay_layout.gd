@@ -100,3 +100,62 @@ func test_inactive_lane_hides_unless_the_overlay_keeps_it() -> void:
 	lane.call("present", {"active": false, "meter": 0}, true, true)
 	assert_true(lane.visible, "the overlay keeps it up, muted")
 	lane.queue_free()
+
+
+## F42#2 reopened: an offline trainer duel has no tether deployment, so the
+## real snapshot and the pre-sync stand-in were both hidden and the legacy grid
+## drew, with a literal "[jump] Dodge". Every fight now keeps the F42 overlay.
+func _offline_duel_manager() -> Node:
+	var manager: Node = preload("res://scripts/combat/combat_manager.gd").new()
+	manager.name = "OfflineDuelManager"
+	manager._moves = preload("res://scripts/creatures/move_db.gd").load_default()
+	var first: RefCounted = preload("res://scripts/creatures/creature_species.gd").spawn("terrapup")
+	manager._party.assign([first])
+	manager._active_index = 0
+	manager._encounter_kind = "trainer"
+	manager.state = manager.State.ACTIVE
+	manager._initialize_wind()
+	return manager
+
+
+func test_no_deployment_stand_in_uses_local_truth_and_offers_no_command() -> void:
+	var manager := _offline_duel_manager()
+	var uid := str(manager.active_creature().uid)
+	var local: Dictionary = manager.new_system_combat_placeholder()
+	assert_true(local.get("active") == true and local.get("placeholder") == true, "an offline duel keeps the F42 layout")
+	assert_eq(local.slots.quick.ready, manager.quick_ready(), "offline readiness is the manager's own")
+	assert_eq(float(local.ultimate_meter), 0.0, "begin() cleared the meter; nothing local refills it")
+	assert_false(local.commands.active, "no command offered without a deployment")
+	assert_eq(int(local.commands.meter), 0)
+	# A link that never admitted this creature: still no pool value.
+	manager._party_ultimate[uid] = 64.0
+	var director := preload("res://scripts/combat/encounter_director.gd").new()
+	manager._encounter_link = director
+	var linked: Dictionary = manager.new_system_combat_placeholder()
+	assert_true(linked.get("active") == true, "an unadmitted link keeps the layout too")
+	assert_eq(float(linked.ultimate_meter), 0.0, "no host pool value without an admitted deployment")
+	assert_eq(manager.new_system_combat_snapshot(), {"active":false}, "the real snapshot's contract is unchanged")
+	director.free()
+	manager.free()
+
+
+func test_offline_trainer_duel_draws_the_overlay_not_the_legacy_grid() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var holder := Node.new()
+	tree.root.add_child(holder)
+	var manager := _offline_duel_manager()
+	holder.add_child(manager)
+	var hud: Node = preload("res://scenes/combat/combat_hud.tscn").instantiate()
+	hud.set("manager_path", NodePath("../OfflineDuelManager"))
+	holder.add_child(hud)
+	for _i in 3: hud._process(1.0 / 60.0)
+	var overlay: Control = hud.get("_system_overlay")
+	assert_true(is_instance_valid(overlay) and overlay.visible, "the F42 overlay draws in an offline duel")
+	assert_false((hud.get("_grid_panel") as Control).visible, "the legacy grid stays hidden")
+	for node: Node in hud.find_children("*", "", true, false):
+		var text := ""
+		if node is Label: text = (node as Label).text
+		elif node is RichTextLabel: text = (node as RichTextLabel).text
+		if node is CanvasItem and (node as CanvasItem).is_visible_in_tree():
+			assert_false(text.contains("[jump]"), "no raw jump token: %s" % text)
+	holder.queue_free()

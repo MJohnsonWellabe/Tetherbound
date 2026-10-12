@@ -97,6 +97,10 @@ const GLYPHS := {
 	"quick": {"keyboard": "mouse_left.png", "gamepad": "xbox_button_x.png"},
 	"charged": {"keyboard": "mouse_right.png", "gamepad": "xbox_button_y.png"},
 	"combat_utility": {"keyboard": "keyboard_q.png", "gamepad": "xbox_button_b.png"},
+	# Dodge/burst (the combat HUD's fourth cell). Without an entry the cell
+	# printed the raw token "[jump]" (F42#2 judge). No Space keycap PNG is
+	# vendored, so the keyboard falls back to the bound key name.
+	"jump": {"gamepad": "xbox_button_a.png"},
 	"combat_ultimate_arm": {"keyboard": "keyboard_r.png", "gamepad": "xbox_rb.png"},
 	"combat_orb_release": {"keyboard": "keyboard_f.png", "gamepad": "xbox_button_x.png"},
 	"combat_item_1": {},
