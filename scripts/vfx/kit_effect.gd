@@ -765,7 +765,7 @@ func _travel_frame(t: float, step: float) -> void:
 				var opts := _dust_opts(_rng.randf_range(0.5, 1.3))
 				_trail_pool.call("emit", at - _direction * _rng.randf_range(0.0, 0.6) + _jitter(0.35) * Vector3(1, 0, 1) + Vector3.UP * 0.1, Vector3.UP * _rng.randf_range(0.2, 0.6) + _jitter(0.4) * Vector3(1, 0.2, 1), opts)
 			if _motes != null:
-				for k in _rate_emit(14.0, step, "chips"):
+				for k in _rate_emit(float((_kit.get("extras", {}) as Dictionary).get("ground_chip_rate", 14.0)), step, "chips"):
 					_motes.call("emit", at + Vector3.UP * 0.15 + _jitter(0.2) * Vector3(1, 0, 1),
 						Vector3.UP * _rng.randf_range(2.0, 3.2) + _jitter(0.8), _debris_opts(0.6))
 		"bolt":
