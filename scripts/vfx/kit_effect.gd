@@ -706,6 +706,9 @@ func _travel_frame(t: float, step: float) -> void:
 			# Mouth-to-surface flow: the stream front reaches the surface at contact.
 			var distance := _from.distance_to(_surface)
 			var speed := distance / maxf(_travel * 0.75, 0.05)
+			# Never emit faster than the pool can hold for a full flight, or the
+			# ring buffer recycles the far puffs and the stream stops short.
+			if _trail_pool != null: rate = minf(rate, float(_trail_pool.call("capacity")) * speed / maxf(distance, 0.1) * 0.95)
 			for k in _rate_emit(rate, step):
 				if _trail_pool == null: break
 				var spread := float(_kit.get("cone_spread", 0.18))
@@ -1060,6 +1063,16 @@ func _build_impact() -> void:
 		# Dust rolls out low along the ground, kept at ankle height.
 		_dust_pool.call("emit", _surface_ground() - _direction * 0.3 + dir * Vector3(1, 0, 1) * 0.3, dir * Vector3(1, 0, 1) * _rng.randf_range(1.0, 2.2) + Vector3.UP * 0.15, opts)
 	if _family == "ground": _raise_spikes()
+	if _family == "beam":
+		# A crisp splash ring in the plane facing the caster, plus droplet spray.
+		var side := _direction.cross(Vector3.UP).normalized()
+		var up := side.cross(_direction).normalized()
+		var ring_n := int(_spark_pool.call("capacity"))
+		for i in ring_n:
+			var a := TAU * float(i) / float(maxi(1, ring_n))
+			var dir := (side * cos(a) + up * sin(a) - _direction * 0.35).normalized()
+			_spark_pool.call("emit", flash_at, dir * 6.0, {"life": 0.3, "size0": 0.12, "size1": 0.05,
+				"colour": flash_colour, "drag": 4.0, "stretch": 0.08, "fade_in": 0.0})
 	if _family == "slash" and _trail_pool != null: _claw_marks(at - _direction * 0.12)
 	if _family == "bolt":
 		if str(_kit.get("bolt", "chain")) == "sky":
@@ -1140,12 +1153,13 @@ func _raise_spikes() -> void:
 		# viewer-facing and caster-facing sides of the body unblocked.
 		var away := Vector3(_direction.x, 0, _direction.z).normalized()
 		var base := atan2(away.z, away.x)
+		if bool(cfg.get("in_front", false)): base += PI
 		var angle := base + lerpf(-1.25, 1.25, (float(i) + 0.5) / float(count)) + _rng.randf_range(-0.1, 0.1)
 		var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
 		if camera != null:
 			var toward := (camera.global_position - centre) * Vector3(1, 0, 1)
 			var candidate := Vector3(cos(angle), 0, sin(angle))
-			if candidate.dot(toward.normalized()) > 0.35: angle = base + (PI - (angle - base)) * 0.15
+			if not bool(cfg.get("in_front", false)) and candidate.dot(toward.normalized()) > 0.35: angle = base + (PI - (angle - base)) * 0.15
 		var ring := float(cfg.get("ring_scale", 0.95))
 		var at := centre + Vector3(cos(angle) * reach.x, 0, sin(angle) * reach.y) * ring * _rng.randf_range(1.0, 1.12)
 		if false:

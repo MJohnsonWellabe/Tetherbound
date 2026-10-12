@@ -99,15 +99,15 @@
    "min_radius_m": 0.35,
    "cone_spread": 0.2,
    "budget": {
-    "impact": 20,
-    "trail": 28
+    "impact": 16,
+    "trail": 32
    },
    "trail": {
     "kind": "puff",
     "colour": "#ff7a1a",
-    "size": 0.4,
-    "end_size": 1.3,
-    "rate": 180,
+    "size": 0.7,
+    "end_size": 1.8,
+    "rate": 60,
     "colour2": "#ffc23a"
    },
    "impact": {
@@ -132,7 +132,8 @@
     "remnant_size": 0.3
    },
    "extras": {
-    "carry_debris": 14
+    "carry_debris": 10,
+    "ember_rate": 0
    }
   },
   "ember_burst": {
@@ -250,13 +251,13 @@
     "trail": 32
    },
    "bolt_style": {
-    "core": "#ffffff",
-    "glow": "#ffd83a",
-    "width": 0.07,
+    "core": "#fffbe8",
+    "glow": "#ffe14d",
+    "width": 0.13,
     "segments": 9,
     "jag": 0.09,
     "forks": 3,
-    "glow_scale": 2.6
+    "glow_scale": 3.2
    },
    "trail": {
     "kind": "glow",
@@ -310,21 +311,22 @@
    },
    "impact": {
     "scale": 1.2,
-    "flash_colour": "#4aa8e6",
+    "flash_colour": "#d8f4ff",
     "spark_colour": "#cdeeff",
-    "sparks": 6,
+    "sparks": 12,
     "debris": {
      "kind": "droplet",
-     "count": 8,
+     "count": 12,
      "colour": "#3f9fe0",
-     "size": 0.208,
+     "size": 0.16,
      "gravity": 8.0
     },
     "dust_colour": "#e6f6ff",
-    "dust_on_ground": false
+    "dust_on_ground": false,
+    "flash_m": 1.3
    },
    "after": {
-    "beam_hold_s": 0.35,
+    "beam_hold_s": 0.12,
     "remnant_rate": 20,
     "remnant_colour": "#bfe9ff",
     "remnant_size": 0.25
@@ -813,15 +815,16 @@
     "rate": 40
    },
    "spikes": {
-    "count": 7,
-    "height": 1.5,
+    "count": 5,
+    "height": 1.0,
     "width": 0.6,
     "colour": "#a08a6c",
-    "ring_scale": 1.0,
+    "ring_scale": 1.05,
     "lean_deg": 16,
     "rise_s": 0.12,
     "hold_s": 0.3,
-    "clearance_m": 0.3
+    "clearance_m": 0.3,
+    "in_front": true
    },
    "impact": {
     "scale": 1.3,
@@ -857,16 +860,17 @@
     "rate": 50
    },
    "spikes": {
-    "count": 8,
-    "height": 1.1,
-    "width": 0.7,
+    "count": 5,
+    "height": 1.0,
+    "width": 0.6,
     "colour": "#a08a6c",
-    "ring_scale": 1.0,
+    "ring_scale": 1.05,
     "lean_deg": 20,
     "rise_s": 0.1,
     "hold_s": 0.3,
     "front_first": false,
-    "clearance_m": 0.3
+    "clearance_m": 0.3,
+    "in_front": true
    },
    "impact": {
     "scale": 1.3,
