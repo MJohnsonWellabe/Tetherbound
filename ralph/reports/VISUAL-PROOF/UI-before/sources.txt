@@ -1,0 +1,5 @@
+UI before-set for the coordinator to re-score P2-001 / P2-004 / P2-007 / P2-031 / P2-088 / P2-095 / P2-096 against today's build.
+Tool: tools/phase2_capture_ui.gd --biome=meadows (default seed), Low/Compatibility (llvmpipe, xvfb), 1920x1080, production HUD and menus. The fixtures are the tool's own disclosed party/satchel stock.
+Build: tb/ev-visual-claude at 06:30-08:28 AM CT, based on tb/ev-coordinator c6ea1dd2 plus this lane's flag-off commits (no UI flag enabled).
+Caveat: menu_map.jpg may have been captured while map.json fog_veil was flipped on locally for a parallel P2-002 capture, so do not use it as a P2-002 before frame (use VISUAL-PROOF/P2-002 instead).
+Not covered by this tool: the in-fight roster (P2-088), the craft panel (P2-095/096), the Hollows loss and victory screens (P2-110/111), and the settings accessibility block (the dense look_note paragraph in menu.json).
