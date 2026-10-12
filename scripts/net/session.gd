@@ -1253,7 +1253,12 @@ func _retry_foundation_events() -> void:
 			combat_held[duty.character_id] = true
 			continue
 		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]:
-			_note_duty_hold(duty, str(result.get("code", "unresolved %s" % JSON.stringify(result).left(160))))
+			# A saved, not-yet-published commit carries no code. Its receipt
+			# differs per source, so the JSON default re-logged every landed
+			# hit's mastery as a fresh "held" line; it is one waiting state.
+			var held_code := "journaled; awaiting publish" if result.get("ok") == true and result.get("durable") == true \
+				else "unresolved %s" % JSON.stringify(result).left(160)
+			_note_duty_hold(duty, str(result.get("code", held_code)))
 			handled[duty.character_id] = true
 			if result.get("ok") == true and result.get("durable") == true: foundation_backlog = true
 		elif result.get("resolved") == true:
