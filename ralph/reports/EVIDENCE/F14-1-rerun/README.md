@@ -28,3 +28,11 @@ Command: `godot --headless --path . --fixed-fps 60 --script tests/smoke_water_na
 - The Abyssal Guardian has no fight. BOSSES §4.12 says it is not a combat boss, and water_veilfall.gd builds it as a captive with no collision. The 08 ending piece covers its ceremony.
 
 EV F14#1 PASS d83f2d3b7 every Veilfall fight passes C2 on all three starters at L32 on the current reader (Venn/Nerissa top bar 0.12–0.43; Fennel/Morra/Evi reader ≤0.30 vs masher ≥0.92)
+
+## Adopted reader, attempt 2 (904c3c537): all 18 water cases × 3 starters on one commit
+- Run 04:57–06:43 CT Mon 12 Oct. Scored by `../F14-0-rerun/score_water2.py`; output in `../F14-0-rerun/verdicts_904c3c537.txt`.
+- 51 of 54 rows PASS. Every Veilfall row passes.
+- The only FAILs are the three Galewisp named-wild rows: brine 0.425/0.413, tidecoil 0.322/0.337, songweaver 0.281/0.334.
+- Chapter masher-loss 1.00 / 0.92 / 0.50. C3: worst hit 0.311; tells ≥0.85 s; 0 stalls.
+
+EV F14#1 PASS 904c3c537 adopted reader: every Veilfall fight (Venn, Nerissa, Fennel, Morra, Evi) passes C2 on all three starters at L32; worst hit 0.311
