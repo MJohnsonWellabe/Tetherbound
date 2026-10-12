@@ -24,6 +24,9 @@ const PORTAL_ACTION := preload("res://scripts/world/portal_arch.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const PORTALS_PATH := "res://data/config/portals.json"
 const CLAUDE_INTERIORS := preload("res://scripts/world/crossing_hall_claude.gd")
+const FOLLOWER := preload("res://scripts/creatures/follower_creature.gd")
+const CREATURE_AMBIENT := preload("res://scripts/world/interior_creature_ambient.gd")
+const DEPLOYED_GROUP := &"deployed_creature"
 
 var _config: Dictionary = {}
 var _arches: Dictionary = {}
@@ -243,6 +246,7 @@ func _build_pedestal(entry: Dictionary) -> void:
 	shape.position.y = box.size.y * .5
 	body.add_child(shape)
 	slot.add_child(body)
+	_declare_keep_clear(slot, Vector2(maxf(plinth_size.x, box.size.x), maxf(plinth_size.z, box.size.z)))
 	# Free-standing: readable from every side of the stand, never mirrored.
 	if plinth_size.y > 0.0:
 		# Carved into the plinth's front, facing the approach (F17#6 r2: the
@@ -470,6 +474,7 @@ func _process(delta: float) -> void:
 	_elapsed = 0
 	refresh_from_game()
 	_refresh_interior_ambient()
+	_refresh_creature_ambient()
 	_refresh_home_membrane()
 
 
@@ -995,3 +1000,44 @@ func _declare_interior_volumes() -> void:
 		return
 	set_meta(OBJECTIVE_BEACON.INTERIOR_BOXES_META, boxes)
 	add_to_group(OBJECTIVE_BEACON.INTERIOR_GROUP)
+
+
+## F17#6 claude-r1 judge: the companion's body passed through the Shrine Room
+## lecterns. The collider is the lectern's measured box, narrower than the
+## plinth, and a large creature's body is wider than its capsule. Behind
+## companion_pedestal_clearance.enabled (default OFF) each pedestal declares a
+## keep-clear circle -- its widest footprint's half-diagonal plus margin_m --
+## which follower_creature.gd keeps a companion's whole footprint out of while
+## the trainer is indoors. Presentation/placement only: no collider changes.
+func _declare_keep_clear(slot: Node3D, footprint: Vector2) -> void:
+	var cfg: Dictionary = _config.get("companion_pedestal_clearance", {})
+	if cfg.get("enabled") != true:
+		return
+	slot.set_meta(FOLLOWER.KEEP_CLEAR_RADIUS_META, pedestal_keep_clear_radius(footprint, float(cfg.get("margin_m", .25))))
+	slot.add_to_group(FOLLOWER.KEEP_CLEAR_GROUP)
+
+
+static func pedestal_keep_clear_radius(footprint: Vector2, margin: float) -> float:
+	return footprint.length() * .5 + maxf(0.0, margin)
+
+
+## F17#6 claude-r1 judge: at 23:00 the companion turned blue-violet indoors
+## (interior_creature_ambient.gd). Behind
+## interior_ambient.creature_night_ambient_enabled (default OFF).
+var _creature_occlusion: Texture2D = null
+
+
+func _refresh_creature_ambient() -> void:
+	var cfg: Dictionary = _config.get("interior_ambient", {})
+	if cfg.get("creature_night_ambient_enabled") != true or not is_inside_tree():
+		return
+	if _creature_occlusion == null:
+		_creature_occlusion = CREATURE_AMBIENT.occlusion_texture(float(cfg.get("creature_night_ambient",
+			cfg.get("night_ambient", .25))))
+	for node: Node in get_tree().get_nodes_in_group(DEPLOYED_GROUP):
+		var creature := node as Node3D
+		if creature == null or not creature.is_inside_tree():
+			continue
+		var indoors := _night_ambient_on and OBJECTIVE_BEACON.point_indoors(get_tree(), creature.global_position)
+		if indoors or CREATURE_AMBIENT.is_applied(creature):
+			CREATURE_AMBIENT.set_indoors_night(creature, indoors, _creature_occlusion)
