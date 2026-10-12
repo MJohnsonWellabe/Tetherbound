@@ -71,6 +71,8 @@ var _source_box := AABB()
 var _ground_source := Vector3.ZERO
 var _ground_target := Vector3.ZERO
 var _sky_point := Vector3.ZERO
+var _size_growth := 1.0
+var _trail_growth := 1.0
 
 func bind_source(source: Node3D) -> bool:
 	if source == null or not source.has_method("model_pivot"): return false
@@ -97,7 +99,15 @@ func _ready() -> void:
 	_ground_source = _context.get("source_ground", Vector3(_from.x, _from.y - 1.0, _from.z))
 	_ground_target = _context.get("target_ground", Vector3(_to.x, _to.y - 1.0, _to.z))
 	_direction = (_to - _from).normalized() if not _from.is_equal_approx(_to) else Vector3.FORWARD
-	_radius = clampf(float(_params.size), float(_kit.get("min_radius_m", 0.18)), float(_kit.get("max_radius_m", 2.0))) * float(_kit.get("body_scale", 1.0))
+	# The readability floor/ceiling applies to the rank-1 size; the frozen
+	# mastery tier's growth then multiplies on top, so higher ranks stay visibly larger.
+	var tiers: Array = _row.get("mastery", [])
+	var rank := clampi(int(_row.get("mastery_rank", 1)), 1, 5)
+	var tier: Dictionary = tiers[rank - 1] if tiers.size() == 5 else {}
+	_size_growth = maxf(0.01, float(tier.get("size_scale", 1.0)))
+	_trail_growth = maxf(0.01, float(tier.get("trail_scale", 1.0)))
+	_radius = clampf(float(_params.size) / _size_growth, float(_kit.get("min_radius_m", 0.18)), float(_kit.get("max_radius_m", 2.0))) \
+		* _size_growth * float(_kit.get("body_scale", 1.0))
 	_surface = surface_point(_from, _to, _target_box(), 0.0)
 	_build_pools(int(allocation.get("impact", 0)), int(allocation.get("trail", 0)))
 	_build_bodies()
@@ -667,7 +677,7 @@ func _rate_emit(rate: float, step: float, key: String = "main") -> int:
 
 func _trail_opts(scale: float) -> Dictionary:
 	var cfg: Dictionary = _kit.get("trail", {})
-	var gain := float(tuning.get("trail_scale", 1.8))
+	var gain := float(tuning.get("trail_scale", 1.8)) * _trail_growth
 	return {"life": float(cfg.get("life", 0.28)), "size0": _radius * float(cfg.get("size", 1.6)) * scale * gain,
 		"size1": _radius * float(cfg.get("end_size", 0.5)) * scale * gain,
 		"colour": _hex(cfg.get("colour"), _colour).lerp(_hex(cfg.get("colour2"), _hex(cfg.get("colour"), _colour)), _rng.randf()),
