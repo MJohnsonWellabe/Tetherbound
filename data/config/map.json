@@ -1,4 +1,9 @@
 {
+  "fog_veil": {
+    "_comment": "P2-002 (visual-claude lane, 2026-10-12). The catalogue found that a freshly entered realm's map was an empty dark canvas: undiscovered fog is opaque, so at 0% surveyed there are no terrain or road relationships between the named destinations. With this enabled, undiscovered cells in the full map (tab_map.gd) are a dark veil at undiscovered_alpha, so the baked terrain and roads show dimly beneath it and surveyed ground still reads as revealed. Landmarks, labels, discovery, saves and the minimap are unchanged. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+    "enabled": false,
+    "undiscovered_alpha": 0.78
+  },
   "_comment": "Map behaviour tunables that are NOT authored places. data/config/map_landmarks.json stays the place table (landmarks, regions, starting reveal); this file holds the rules the map applies to the world it is drawing. ALL TUNABLE.",
 
   "initial_zoom": 32.0,

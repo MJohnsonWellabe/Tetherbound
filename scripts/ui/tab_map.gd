@@ -273,6 +273,10 @@ func build() -> void:
 	_manual_pan = false
 	_terrain_cache.clear()
 	_fog_tex = null
+	_fog_undiscovered = FOG_UNDISCOVERED
+	var veil: Variant = map_config.get("fog_veil", {}) if map_config is Dictionary else {}
+	if veil is Dictionary and veil.get("enabled") == true:
+		_fog_undiscovered.a = clampf(float(veil.get("undiscovered_alpha", 0.78)), 0.0, 1.0)
 	_fog_tex_revision = -1
 	_icon_cache.clear()
 	_last_map_revision = -1
@@ -1529,6 +1533,11 @@ static func bounds_for_map(map_state: RefCounted) -> Dictionary:
 ## implies they should.
 const FOG_UNDISCOVERED := Color(0.02, 0.02, 0.03, 1.0)
 const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
+## P2-002: map.json `fog_veil`. When enabled, undiscovered cells are a dark
+## veil at `undiscovered_alpha` rather than opaque, so a 0%-surveyed realm
+## shows its terrain and road shapes dimly instead of an empty black canvas.
+## Landmarks, region names, discovery and the minimap are unchanged.
+var _fog_undiscovered := FOG_UNDISCOVERED
 
 
 ## One `ImageTexture` baked from the fog grid rather than ~16k individual
@@ -1580,7 +1589,7 @@ func _fog_texture(map_state: RefCounted) -> ImageTexture:
 	for iz in grid_z:
 		var row := iz * grid_x
 		for ix in grid_x:
-			image.set_pixel(ix, iz, FOG_DISCOVERED if visited[row + ix] == 1 else FOG_UNDISCOVERED)
+			image.set_pixel(ix, iz, FOG_DISCOVERED if visited[row + ix] == 1 else _fog_undiscovered)
 	_fog_tex = ImageTexture.create_from_image(image)
 	_fog_tex_revision = revision
 	return _fog_tex

@@ -1,0 +1,7 @@
+Item: P2-063 (shared fight tell and hit effects): combat.json telegraph.soft_style.enabled false -> true. Round 3: the build-up ramp, and no closed rectangle or end line on the lunge lane.
+Tool: tools/capture_named_fights_f10_6.gd --ids=hollows_alpha (Voltarach) --seconds=8 --interval=2.0, --fixed-fps 20, Low/Compatibility (llvmpipe, xvfb), 1280x720, ordinary HUD. Rows are tell1: start, mid, late, strike, impact, recovery (HUD "it's open").
+Left (A) = before: tb/ev-visual-claude with soft_style.enabled=false (the existing slab draw path).
+Right (B) = after: tb/ev-visual-claude c682b071 with soft_style.enabled=true (local flip for the capture only; committed value stays false).
+Both runs logged the same tell timing (start t=0.87, lunge_started t=1.67). A background wild creature at the right frame edge sits in a different place between runs; its off-screen indicator is not part of this change.
+Lane self-check code-blind verdicts: round 1 FAIL (still read as a slab); round 2 WEAK (occlusion fixed, too faint, reticle-like, no build); round 3 (this sheet) WEAK. B is better: poses far more legible and edges brightest at the strike. Remaining: row 1 is too faint before the HUD text, the thin outline plus halo still partly read as UI, and a faint outline remains at impact (row 5). Submitted per coordinator instruction for their decision.
+Crop sheet: same frames, cropped to x300-940, y180-480.
