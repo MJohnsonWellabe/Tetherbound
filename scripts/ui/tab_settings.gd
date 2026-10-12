@@ -825,7 +825,7 @@ func _build_row(action: String, label_text: String) -> Control:
 		cell.clip_text = true
 		if not _controls_scan.is_empty():
 			cell.add_theme_constant_override("icon_max_width", int(_controls_scan.get("glyph_px", 40)))
-			cell.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			cell.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
 			cell.expand_icon = false
 		cell.focus_mode = Control.FOCUS_ALL
 		var captured_slot := str(slot)
