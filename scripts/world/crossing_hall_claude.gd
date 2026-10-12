@@ -222,14 +222,17 @@ static func _sealed_reveal(slot: Node3D, cfg: Dictionary, membrane: Dictionary) 
 	var ring := SurfaceTool.new()
 	ring.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var outer := half + float(cfg.ring_width_m)
+	# Set just behind the timber frame's face: where the frame covers the
+	# ring, the frame wins; no pale wedge outside the posts.
+	var ring_z := float(cfg.ring_z_m)
 	var pad := 0.012
 	for i in steps:
 		var a2 := PI * float(i) / steps + pad
 		var b2 := PI * float(i + 1) / steps - pad
-		var ia := Vector3(cos(a2) * half, spring + sin(a2) * half, face + 0.03)
-		var ib := Vector3(cos(b2) * half, spring + sin(b2) * half, face + 0.03)
-		var oa := Vector3(cos(a2) * outer, spring + sin(a2) * outer, face + 0.03)
-		var ob := Vector3(cos(b2) * outer, spring + sin(b2) * outer, face + 0.03)
+		var ia := Vector3(cos(a2) * half, spring + sin(a2) * half, face + ring_z)
+		var ib := Vector3(cos(b2) * half, spring + sin(b2) * half, face + ring_z)
+		var oa := Vector3(cos(a2) * outer, spring + sin(a2) * outer, face + ring_z)
+		var ob := Vector3(cos(b2) * outer, spring + sin(b2) * outer, face + ring_z)
 		for v: Vector3 in [ia, oa, ob, ia, ob, ib]:
 			ring.set_normal(Vector3.BACK)
 			ring.add_vertex(v)
