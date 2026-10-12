@@ -108,6 +108,7 @@ func arm_owner(before: Dictionary, discoveries: Dictionary) -> Dictionary:
 	var game := _game()
 	if game != null:
 		game.set("_travel_pos_valid", false)
+		game.set("_fence_travel_realm", "") # A new stream has no baseline a fence could keep.
 		game.set("_discovery_elapsed", 0.0)
 	return {"id": local.id, "baseline_hash": local.base_hash}
 
@@ -1540,6 +1541,7 @@ func _readmit_owner(packet: Dictionary) -> void:
 	# exactly as arm_owner does; a discovery input timed on the old clock fails
 	# the host's replay as discovery_cadence (re-proof run 2026-10-04T22:09:55Z).
 	game.set("_travel_pos_valid", false)
+	game.set("_fence_travel_realm", "")
 	game.set("_discovery_elapsed", 0.0)
 	_send_host({"op": "readmitted", "baseline_hash": packet.baseline_hash})
 

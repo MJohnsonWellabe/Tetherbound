@@ -13,9 +13,14 @@ var _accept_refusals: Dictionary = {}
 ## of that request on the same ordered reliable channel; on a slow host the
 ## two can still land a frame apart, so the request is judged at its sample.
 var _paired_at: Dictionary = {}
-## Host only: the realm each peer's last host-completed crossing reached, until
-## that peer's first sample there is accepted (see accept()).
+## Host only: the realm each peer's last host-completed crossing reached and
+## when, until the one damage_revision rollback it explains is used or it
+## expires (see accept()).
 var _host_crossings: Dictionary = {}
+## How long a host-completed crossing may explain its rebuilt trainer's
+## damage_revision restart. The guest's first samples there can still carry
+## its old vitals, so the restart shows up a few samples after arrival.
+const CROSSING_ROLLBACK_WINDOW_MS := 30000
 const SAMPLE_FIELDS := ["character_id", "world_instance_id", "session_epoch", "realm", "damage_revision", "dialogue", "cutscene", "swimming", "flying", "downed", "station_ack_only", "ending_owner", "party_revision", "party_signature", "sequence"]
 const OPTIONAL_SAMPLE_FIELDS := ["equipped_tool", "passive_clock_active", "party_identity"]
 
@@ -180,15 +185,21 @@ func accept(peer: int, sample: Dictionary) -> void:
 	# is allowed only into the realm the host itself completed this peer's
 	# crossing to (host_crossing_confirmed); a fake realm earns nothing.
 	# (A frozen portal action already lapses on any realm change.)
-	var crossed: bool = not prior.is_empty() and sample.realm != prior.sample.realm \
-		and _host_crossings.get(peer, "") == sample.realm
+	var crossing: Dictionary = _host_crossings.get(peer, {})
+	if not crossing.is_empty() and Time.get_ticks_msec() - int(crossing.at) > CROSSING_ROLLBACK_WINDOW_MS:
+		_host_crossings.erase(peer)
+		crossing = {}
+	var rollback: bool = not prior.is_empty() and sample.damage_revision < prior.sample.damage_revision
+	# The guest's first samples in the new realm may still carry its old
+	# vitals, so the restart is judged by realm and window, not by being the
+	# first sample there; it is used once.
+	var crossed: bool = rollback and not crossing.is_empty() and sample.realm == crossing.realm
 	if not prior.is_empty() and prior.sample.session_epoch == sample.session_epoch \
-		and (sample.sequence <= prior.sample.sequence \
-			or (sample.damage_revision < prior.sample.damage_revision and not crossed)):
+		and (sample.sequence <= prior.sample.sequence or (rollback and not crossed)):
 		_accept_refusals[peer] = "sequence %s<=%s or damage %s<%s" % [str(sample.sequence), str(prior.sample.sequence), str(sample.damage_revision), str(prior.sample.damage_revision)]
 		_paired_at.erase(peer)
 		return
-	if crossed: _host_crossings.erase(peer) # One host-observed crossing, one realm change.
+	if crossed: _host_crossings.erase(peer) # One host-observed crossing, one damage restart.
 	_observations[peer] = {"sample": sample.duplicate(true), "seen_at": Time.get_ticks_msec()}
 	_paired_at[peer] = _observations[peer].seen_at
 
@@ -198,7 +209,7 @@ func accept(peer: int, sample: Dictionary) -> void:
 func host_crossing_confirmed(peer: int, realm: String) -> void:
 	var owner: Node = session()
 	if owner == null or owner.call("is_host") != true or peer == owner.call("local_peer_id") or realm.is_empty(): return
-	_host_crossings[peer] = realm
+	_host_crossings[peer] = {"realm": realm, "at": Time.get_ticks_msec()}
 
 ## The time a guest request is judged at: its paired sample's arrival when the
 ## last sample received was accepted, else `fallback` (now). One use only.
