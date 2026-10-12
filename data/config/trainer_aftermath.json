@@ -34,7 +34,7 @@
         "turn_deg": 150.0
       },
       "site_object": {
-        "_why": "WORLD River Lock: 'Victory frees the captive'. A Tether holding cage, chained shut beside Vance; beaten, the cage lies tipped open on its side and its chain is thrown off on the ground.",
+        "_why": "WORLD River Lock: 'Victory frees the captive'. r8 judge: no captive showed and the edge-balanced cage read unstable. Sela, the relay's captive (relay_site.json, villager_ranger), stands inside the chained cage with a lit Tether lamp; after the win the cage lies on its side, stable and open, the chain thrown off, the lamp out, and Sela stands free beside it.",
         "pieces": [
           {
             "model": "Cage_Small",
@@ -43,17 +43,46 @@
               -3.8,
               0.6
             ],
-            "scale": 3.0,
+            "scale": 3.4,
             "after": {
               "offset": [
-                -4.6,
-                1.4
+                -4.2,
+                0.9
               ],
-              "pitch_deg": 55.0,
-              "yaw_deg": 30.0,
-              "sink_m": -0.35
+              "roll_deg": 90.0,
+              "sink_m": -1.47,
+              "yaw_deg": 20.0
+            }
+          },
+          {
+            "npc": {
+              "name": "Sela",
+              "config_key": "villager_ranger",
+              "palette": {
+                "*": "#8d8778"
+              }
             },
-            "_why": "Probes pa3/pa4: the kit cage is near-cubic, so a 90-degree roll does not read. Before: the captive's cage standing, chained, with a lit Tether lamp. After: knocked half over onto one edge, the lamp out, the chain thrown aside."
+            "offset": [
+              -3.8,
+              1.6
+            ],
+            "yaw_deg": 0.0,
+            "state": "before"
+          },
+          {
+            "npc": {
+              "name": "Sela",
+              "config_key": "villager_ranger",
+              "palette": {
+                "*": "#8d8778"
+              }
+            },
+            "offset": [
+              -3.0,
+              2.9
+            ],
+            "yaw_deg": 10.0,
+            "state": "after"
           },
           {
             "model": "Chain_Coil",
@@ -62,18 +91,18 @@
               -3.8,
               0.6
             ],
-            "scale": 2.0,
-            "sink_m": -2.25,
+            "scale": 2.2,
+            "sink_m": -2.6,
             "state": "before"
           },
           {
             "model": "Chain_Coil",
             "dir": "res://assets/props/quaternius_fantasy",
             "offset": [
-              -2.4,
-              1.9
+              -2.8,
+              2.6
             ],
-            "scale": 2.0,
+            "scale": 2.2,
             "yaw_deg": 70.0,
             "state": "after"
           },
@@ -81,26 +110,19 @@
             "model": "Lantern_Wall",
             "dir": "res://assets/props/quaternius_fantasy",
             "offset": [
-              -2.6,
-              0.3
+              -2.2,
+              0.2
             ],
             "scale": 1.5,
             "sink_m": -0.6,
-            "after": {
-              "pitch_deg": 90.0,
-              "sink_m": 0.0,
-              "offset": [
-                -2.2,
-                0.9
-              ]
-            }
+            "state": "before"
           }
         ],
         "lights": [
           {
             "offset": [
-              -2.6,
-              0.3
+              -2.2,
+              0.2
             ],
             "height": 2.4,
             "colour": "#ffcf7a",
@@ -155,20 +177,20 @@
         "seconds": 9.0
       },
       "site_object": {
-        "_why": "Oreth (patience, the river path): a Tether checkpoint barrier of two fence sections across the path with a barrel; beaten, the barrier is dismantled, the sections stacked flat at the verge and the barrel rolled aside, the path open.",
+        "_why": "Oreth (patience, the river path). r8 judge: the barrier lay beside the path, not across it. Before: two fence sections and a barrel stand across the road in front of him; after: the sections lie flat off the road and the barrel is rolled aside, the road open.",
         "pieces": [
           {
             "model": "Prop_WoodenFence_Single",
             "dir": "res://assets/buildings/quaternius_medieval",
             "offset": [
-              -3.2,
-              0.6
+              -1.3,
+              2.2
             ],
             "scale": 1.4,
             "after": {
               "offset": [
-                -4.2,
-                -1.0
+                -4.0,
+                0.2
               ],
               "pitch_deg": -88.0,
               "yaw_deg": 10.0,
@@ -179,14 +201,14 @@
             "model": "Prop_WoodenFence_Single",
             "dir": "res://assets/buildings/quaternius_medieval",
             "offset": [
-              -6.0,
-              0.6
+              1.4,
+              2.2
             ],
             "scale": 1.4,
             "after": {
               "offset": [
-                -4.3,
-                -1.5
+                -4.2,
+                -0.4
               ],
               "pitch_deg": -88.0,
               "yaw_deg": 16.0,
@@ -197,14 +219,14 @@
             "model": "Barrel",
             "dir": "res://assets/props/quaternius_fantasy",
             "offset": [
-              -4.6,
-              0.6
+              0.0,
+              2.0
             ],
             "scale": 1.2,
             "after": {
               "offset": [
-                -6.2,
-                1.4
+                -5.4,
+                1.2
               ],
               "roll_deg": 90.0,
               "sink_m": -0.35
@@ -257,7 +279,7 @@
         "seconds": 9.0
       },
       "site_object": {
-        "_why": "Halder (range control, the field): a Tether watch-fire with two signal torches; beaten, the fire is cold logs (the same bonfire without its flames) and the torches lie lowered on the ground.",
+        "_why": "Halder (range control, the field): a Tether watch-fire ringed by rocks with two signal torches. After: the same rock ring, charred logs, a thin grey smoke wisp from the doused fire, and the torches lying apart from the pit (r8 judge: they merged with the logs).",
         "pieces": [
           {
             "model": "Rock_Medium_2",
@@ -349,6 +371,20 @@
             "state": "before"
           },
           {
+            "smoke_wisp": {
+              "top_m": 4.0,
+              "alpha": 0.5,
+              "top_size_m": 1.4,
+              "colour": "#bdb7ad",
+              "base_size_m": 0.5
+            },
+            "offset": [
+              -3.8,
+              0.6
+            ],
+            "state": "after"
+          },
+          {
             "model": "Torch_Metal",
             "dir": "res://assets/props/quaternius_fantasy",
             "offset": [
@@ -360,7 +396,11 @@
             "after": {
               "pitch_deg": 90.0,
               "sink_m": -0.15,
-              "yaw_deg": 30.0
+              "yaw_deg": 30.0,
+              "offset": [
+                -1.4,
+                2.0
+              ]
             }
           },
           {
@@ -375,7 +415,11 @@
             "after": {
               "pitch_deg": 90.0,
               "sink_m": -0.15,
-              "yaw_deg": -20.0
+              "yaw_deg": -20.0,
+              "offset": [
+                -6.2,
+                -0.4
+              ]
             }
           }
         ],
@@ -438,7 +482,7 @@
         "seconds": 9.0
       },
       "site_object": {
-        "_why": "Vess (endurance, Ridgeline Watch): the lookout's Tether rope line strung between two posts with a lit lantern; beaten, the line is cut down, the ropes lie on the ground, one post is toppled and the lantern is out.",
+        "_why": "Vess (endurance, Ridgeline Watch). r8 judge: the coiled rope read as a wreath. Before: a Tether rope line strung horizontally between two posts (the installed rope loop stretched along the span) with a lit lantern on one post; after: the line lies cut on the ground, one post toppled, the lantern down away from the stone.",
         "pieces": [
           {
             "model": "Prop_WoodenFence_Single",
@@ -464,29 +508,10 @@
             "after": {
               "roll_deg": 4.0,
               "offset": [
-                -5.2,
-                1.6
+                -5.4,
+                1.8
               ],
               "yaw_deg": 60.0
-            }
-          },
-          {
-            "model": "Rope_3",
-            "dir": "res://assets/props/quaternius_fantasy",
-            "offset": [
-              -4.2,
-              0.6
-            ],
-            "scale": 2.6,
-            "pitch_deg": 90.0,
-            "sink_m": -1.7,
-            "after": {
-              "pitch_deg": 0.0,
-              "sink_m": 0.0,
-              "offset": [
-                -4.0,
-                1.4
-              ]
             }
           },
           {
@@ -496,16 +521,45 @@
               -4.2,
               0.6
             ],
-            "scale": 2.4,
+            "scale_xyz": [
+              5.0,
+              1.0,
+              1.2
+            ],
             "pitch_deg": 90.0,
-            "sink_m": -1.0,
+            "sink_m": -1.9,
             "after": {
               "pitch_deg": 0.0,
               "sink_m": 0.0,
               "offset": [
-                -3.2,
-                1.9
-              ]
+                -4.4,
+                1.6
+              ],
+              "yaw_deg": 12.0
+            }
+          },
+          {
+            "model": "Rope_1",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -4.2,
+              0.6
+            ],
+            "scale_xyz": [
+              5.0,
+              1.0,
+              1.2
+            ],
+            "pitch_deg": 90.0,
+            "sink_m": -1.2,
+            "after": {
+              "pitch_deg": 0.0,
+              "sink_m": 0.0,
+              "offset": [
+                -3.6,
+                2.3
+              ],
+              "yaw_deg": -8.0
             }
           },
           {
@@ -521,8 +575,8 @@
               "pitch_deg": 90.0,
               "sink_m": 0.0,
               "offset": [
-                -2.4,
-                2.2
+                -6.6,
+                2.6
               ]
             }
           }
