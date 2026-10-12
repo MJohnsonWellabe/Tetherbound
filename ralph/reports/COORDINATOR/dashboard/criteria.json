@@ -1,5 +1,5 @@
 {
- "generated_at": "5:14 AM CT Mon 12 Oct 2026",
+ "generated_at": "6:21 AM CT Mon 12 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -1624,7 +1624,7 @@
      "text": "About 24 effect archetypes exist, each with a real mesh or particle body, trail, impact and sound, configured in data.",
      "status": "failing",
      "evidence": "Code-blind r2 FAIL 9:14 PM CT 11 Oct (339b0ea37): 4 PASS / 7 WEAK / 13 FAIL; ralph/reports/EVIDENCE/F25-0/JUDGE.md",
-     "gap": "Codex/Astra rebuild. PASS so far: shadow_bolt, charge_dash, water_jet, fireball (original), bubble volley, slash, ice shards, psychic orb (8 of ~20 needed). Batch e45c1a61: 2 PASS / 4 WEAK / 4 FAIL. Systematic fixes requested: particle trails, contact starburst + debris impacts, detonate at the target surface, spawn-to-target travel, solid ground bursts. Beam and aura failed a third time (766e6e0d); one last round with the systematic fixes, then they're parked for the owner end-list.",
+     "gap": "Astra (Codex) stood down after four rounds (b8d2874a, 5:51 AM CT Mon: PASS 07/08, FAIL 02/03/06, WEAK the rest; beam and aura failed 3 times). 6:20 AM CT Mon: fresh start on Claude lane tb/ev-effects-claude (owner 5:54 AM: non-Meshy visual work to Claude), with a shared particle trail, contact starburst, debris and surface-stop toolkit applied to all ~24 archetypes; beam from the original water_jet donor; whole-body additive aura. Progress due 9 AM CT.",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. vfx.json `move_library.enabled=false`. move_projectile.gd and move_effect_library.gd launch nothing when it is false. Craft is judged FAIL in every group (R27/R28).",
      "audit_index": 0
     },
