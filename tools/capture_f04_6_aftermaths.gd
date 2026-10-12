@@ -93,6 +93,14 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 	_game.set("save_system", SAVE_GAME.new(SAVE_DIR))
 	await _boot_world()
+	# r8 judge: Halder's and Vess's before/after differed in light and colour
+	# as the day ran on between the two frames. Staging, disclosed: the day
+	# clock is set to morning and frozen for the whole run.
+	var look := get_first_node_in_group(&"day_cycle")
+	if look != null and look.has_method("reset_to_morning"):
+		look.call("reset_to_morning")
+		look.call("set_clock_frozen", true)
+		print("clock frozen at morning for the run")
 	await _ensure_ally()
 	_enrol_ally()
 	_set_out("live")
