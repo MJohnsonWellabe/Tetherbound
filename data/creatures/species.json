@@ -529,19 +529,26 @@
         "radius": 1.245366,
         "_comment_footprint": "Long-legged deer/mount body -- more footprint than a compact biped, less than Trailpup's low lean canine body.",
         "footprint_allowance": 2.8,
-        "model": "res://assets/creatures/tetherbound/meadowhart_bare/models/creature_meadowhart_bare_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/meadowhart/candidate/models/creature_meadowhart_native.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "colourway_source_species": "meadowhart_bare",
+        "colourway_source_species": "meadowhart_native_review",
         "_comment_art": "X04/V4: complete bare Meadowhart skin from an inspected agent-drafted derivative of the established Meadowhart reference. Replaces centroid-based tack removal, which also removed the front legs and torso. Crafted RideSaddle remains the only tack. Provenance and native visual evidence: ralph/reports/VISUAL/MEADOWHART-ANATOMY.md. Height, collider and physical riding seat are unchanged.",
         "animations": {
           "idle": "idle",
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
-        }
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        },
+        "field_emission": 0.0,
+        "rest_model_position_offset": 0.0
       },
       "learnset": "meadowhart"
     },
@@ -940,23 +947,23 @@
         "requires_item": "",
         "mount_offset": [
           0.0,
-          2.771111,
-          -0.322222
+          3.344444,
+          -0.388889
         ],
         "ride_speed_multiplier": 2.8,
-        "dismount_distance": 3.222222,
+        "dismount_distance": 3.888889,
         "climb_max_slope_deg": 60.0
       },
       "placeholder": {
         "colour": "#46a050",
-        "height": 5.8,
-        "radius": 2.126667,
+        "height": 7.0,
+        "radius": 2.566667,
         "_comment_size": "Above every other creature in the biome, which D12 asked for explicitly: after D19's size pass the range runs 1.50m for the practice creature to 2.15m for the evolved Tuskroot, 'and the legendary above all of them'. Raised 2.6m -> 3.6m (radius scaled by the same ratio, 0.95m -> 1.32m, per D12's radii-scale-with-height rule) under OD-0901-1: the owner's correction that creatures looming over the 1.80m trainer is the intended read, not a defect, and that any alpha-vs-legendary ceiling should be solved by raising the legendary rather than shrinking the alpha (archive/owner/OWNER_DIRECTIVES_2026-09-01.md). This undoes D69's 'legendary's headroom stays 0.45m' constraint by design: the same 0.45m absolute lead is now kept over the tallest thing in the biome, which after this change is band5's restored alpha Galecrest (3.15m) rather than ordinary Tuskroot (2.15m). Still sized as a rideable mount (GAME_DESIGN.md/MEADOWS_PROGRESSION_SPEC.md), not a building.",
         "_comment_rest_sink": "OWNER-0901-CREATURE-BED-POSE: this legendary's idle holds its head up alert, well clear of its rest pose, so the radius-based grounding creature_body.gd's play_rest() uses for the rest of the roster left it floating well above the bed. Measured against a render, not guessed. NOTE (BACKLOG-VISUAL-BED-ROSTER-FIT, 2026-09-01): now unused in practice -- `rest_roll_deg: 0` below routes through play_faint() instead, which never reads rest_sink_extra. Left in place rather than deleted in case a future pass re-enables a rolled pose for this species.",
         "rest_sink_extra": 1.5,
         "_comment_rest_roll": "BACKLOG-VISUAL-BED-ROSTER-FIT (2026-09-01), owner directive: 'galecrest goes way out of the bed' plus 'grow the ceiling, don't shrink toward it' (archive/owner/OWNER_DIRECTIVES_2026-09-01.md) prompted a full-roster bed-fit measurement, and this 3.6m legendary was the single worst offender measured (1.66x the OLD rim radius even in its default rolled pose, worse than Galecrest). Its idle plants all four legs near the body centreline like a real standing stag (unlike terrapup/trailpup's lifted-paw idle), so rolling it -- at 90, -30, or -45, all measured -- swings the LEGS outward and makes the horizontal footprint WORSE than standing still (measured: roll 0 = 2.95m x 3.04m footprint; roll -45 = 4.63m x 4.63m). `rest_roll_deg: 0` (play_faint(), the same crouch escape hatch as terrapup/galecrest) is the smallest-footprint option found and is what keeps this creature inside a bed of any sane size -- it reads as standing/settled rather than lying flat, a real remaining pose-quality gap for this species that a bed-fit pass is not the place to chase further (this creature towers over any bed regardless of pose; the bed rim was grown -- see creature_bed.gd's RIM_RADIUS_X/Z -- specifically to still contain this footprint).",
         "rest_roll_deg": 0.0,
-        "model": "res://assets/creatures/tetherbound/veridian/models/creature_veridian_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/veridian/candidate/models/creature_veridian_native.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Board 06's Veridian Stag, owner-approved as the legendary's direct source. Antler rack thickened and bent forward per the blind critique \u2014 the generated rack swept backward only, 'which turns a crown into a windblown crest'.",
@@ -965,9 +972,17 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
-        }
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        },
+        "field_emission": 0.0,
+        "rest_model_position_offset": 0.0,
+        "colourway_source_species": "veridian_native_review"
       },
       "learnset": "veridian"
     },
@@ -1738,8 +1753,8 @@
       },
       "placeholder": {
         "colour": "#8899aa",
-        "height": 7.2,
-        "radius": 2.52,
+        "height": 8.4,
+        "radius": 2.94,
         "footprint_allowance": 3.7,
         "model": "res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
         "model_scale": 1.0,
@@ -1898,8 +1913,8 @@
         "colour": "#8899aa",
         "height": 4.25,
         "radius": 1.4875,
-        "footprint_allowance": 3.0,
-        "model": "res://assets/creatures/tetherbound/voltarach/models/creature_voltarach_lod0.glb",
+        "footprint_allowance": 5.0,
+        "model": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {
@@ -1907,10 +1922,18 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
         },
-        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md.",
+        "field_emission": 0.0,
+        "rest_model_position_offset": 0.0,
+        "colourway_source_species": "voltarach_native_review"
       },
       "best_creature": {
         "id": "alpha_dominance",
@@ -2339,7 +2362,7 @@
         "height": 4.0,
         "radius": 1.4,
         "footprint_allowance": 3.0,
-        "model": "res://assets/creatures/tetherbound/aeriex/models/creature_aeriex_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/aeriex/candidate/models/creature_aeriex_native.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {
@@ -2347,10 +2370,18 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
         },
-        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md.",
+        "field_emission": 0.0,
+        "rest_model_position_offset": 0.0,
+        "colourway_source_species": "aeriex_native_review"
       },
       "learnset": "aeriex"
     },

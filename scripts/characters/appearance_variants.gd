@@ -1,9 +1,11 @@
 extends RefCounted
 
 ## P2-055 presentation records. Regional identity mappings are deliberately
-## separate; this resolver never changes a model, name, rank, or gameplay fact.
+## separate; a model candidate refines one named identity, never its shared base.
+## Names, rank, height and gameplay facts remain owned by the caller.
 const CONFIG_PATH := "res://data/config/character_appearance_variants.json"
 const PORTRAIT_ROOT := "res://assets/ui/portraits/"
+const MODEL_ROOT := "res://assets/characters/npc_identity/"
 
 
 static func load_config() -> Dictionary:
@@ -52,6 +54,12 @@ static func resolve(base: Dictionary, base_profile: String, variant_id: String,
 			return result
 	if not ResourceLoader.exists(portrait) or not load(portrait) is Texture2D:
 		return result
+	var replaces_model := record.has("body_model_override")
+	if replaces_model:
+		var candidate := body_model_config(base, base_profile, record)
+		if candidate.is_empty():
+			return result
+		result = candidate
 	var overrides := {}
 	for key: String in ["body_albedo_override", "body_emission_override"]:
 		if record.has(key):
@@ -61,10 +69,33 @@ static func resolve(base: Dictionary, base_profile: String, variant_id: String,
 			if not ResourceLoader.exists(path) or not load(path) is Texture2D:
 				return result
 			overrides[key] = path
-	if overrides.is_empty():
+	if overrides.is_empty() and not replaces_model:
 		return result
 	for key: String in overrides:
 		result[key] = overrides[key]
 	result["portrait"] = portrait
 	result["appearance_variant_id"] = variant_id
+	return result
+
+
+## Body-only validation shared with explicit OFF-candidate portrait authoring.
+## Shipping resolve() still requires both gates and a loadable paired portrait.
+static func body_model_config(base: Dictionary, base_profile: String, record: Dictionary) -> Dictionary:
+	if base.is_empty() or base_profile.is_empty() or str(base.get("model", "")).is_empty() \
+			or str(record.get("expected_base_profile", "")) != base_profile \
+			or str(record.get("expected_model", "")) != str(base.get("model", "")):
+		return {}
+	var path: Variant = record.get("body_model_override")
+	if not path is String or not path.begins_with(MODEL_ROOT) \
+			or path.simplify_path() != path or path.get_extension() != "glb" \
+			or not ResourceLoader.exists(path) or not load(path) is PackedScene:
+		return {}
+	# A replacement owns its embedded atlas. Old cloth derivatives cannot be
+	# carried across incompatible UVs, including inherited base-profile overrides.
+	if record.has("body_albedo_override") or record.has("body_emission_override"):
+		return {}
+	var result := base.duplicate(true)
+	result["model"] = path
+	result.erase("body_albedo_override")
+	result.erase("body_emission_override")
 	return result

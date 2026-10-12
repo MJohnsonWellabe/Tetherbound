@@ -1,0 +1,250 @@
+{
+  "actor_id": "water_orsen",
+  "default_enabled": false,
+  "status": "OFF_BODY_PORTRAIT_AND_MATCHED_LOW_CAPTURE_CHECKS_PASS_CLAUDE_PENDING",
+  "source_commit": "5d7038d99b8dbb5f8182617e970a09df5da2e86c",
+  "installed_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+  "installed_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+  "installed_profile": "wandering_trainer",
+  "target_height_m": 1.78,
+  "reference": "res://docs/art/reference/npc-identity/orsen-front-agent-v1.png",
+  "reference_sha256": "850916609870ec7636998ae5165ead0b3f4e9ea679f8bffa1e5326135e89d462",
+  "reference_prompt": "res://docs/art/reference/npc-identity/orsen-front-agent-v1.prompt.txt",
+  "reference_prompt_sha256_lf": "4305e0f6f2a500597687f6d6ec40ed08292597629f72aba55bd6d66d80cb510d",
+  "reference_origin": "Original built-in imagegen reference, coordinator inspected against installed portrait and before-body evidence",
+  "generation": {
+    "task_id": "01a12c31-4e68-7244-8345-7f97ce9f63ab",
+    "model": "meshy-7.1",
+    "raw_model_sha256": "9372779daa51339c3844f45bc5f0be4726227e22f1d1d7510e90dc2a604cba84",
+    "consumed_credits": 30
+  },
+  "rigging": {
+    "task_id": "01a12c39-2461-7719-9915-6be22b5a4518",
+    "parent_task_id": "01a12c31-4e68-7244-8345-7f97ce9f63ab",
+    "height_meters": 1.78,
+    "rigged_model_sha256": "72d7eab110763b70c9869dba732b1ff0a61f3173d5a31db61b305d958db5f6d4",
+    "consumed_credits": 5
+  },
+  "bake": {
+    "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+    "archived_identical_producer": "res://assets/characters/npc_identity/water_orsen/source/author_native_clips.py",
+    "producer_sha256_lf": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+    "blender_version": "4.2.9",
+    "actual_process_id": 29336,
+    "exit_code": 0,
+    "model": "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb",
+    "model_sha256": "a3fd8bd4fa66936e2cace642e2ca0370a12353ce8f8eb288a204f6153d61bd91",
+    "postprocessing": "NONE"
+  },
+  "cpu_initial_skin_clip_check": {
+    "status": "PASS_BOUNDED_PRESERVATION_AND_FINITE_CLIPS_ONLY",
+    "joints": 24,
+    "vertices": 26295,
+    "skinned_height_m": 1.7799999567288818,
+    "root_scale": "unit",
+    "max_rest_position_error_m": 1.2385680693317858e-06,
+    "max_named_weight_error": 1.7881393432617188e-07,
+    "uvs_exact": true,
+    "triangle_indices_exact": true,
+    "texture_bytes_exact": true,
+    "material_factors_unchanged": true,
+    "finite_skinned_pose_samples": 28,
+    "clips": [
+      {
+        "name": "idle",
+        "duration_s": 3.999999839812517,
+        "moving_channels": 8
+      },
+      {
+        "name": "walk",
+        "duration_s": 0.6250000186264515,
+        "moving_channels": 14
+      },
+      {
+        "name": "sprint",
+        "duration_s": 0.4583333320915699,
+        "moving_channels": 14
+      },
+      {
+        "name": "jump",
+        "duration_s": 1.166666705161333,
+        "moving_channels": 14
+      },
+      {
+        "name": "throw",
+        "duration_s": 0.9999999590218067,
+        "moving_channels": 8
+      },
+      {
+        "name": "chop",
+        "duration_s": 0.6250000186264515,
+        "moving_channels": 15
+      },
+      {
+        "name": "defeated",
+        "duration_s": 1.4999999590218067,
+        "moving_channels": 12
+      }
+    ]
+  },
+  "native_review": {
+    "status": "PASS_SCOPED_SAMPLED_BODY_ONLY",
+    "scope": "Corrected seven clips, four phases, front/side Low/Compatibility; 56/56 frames with all original guards retained",
+    "risks": [
+      "CPU rear-torso/backpack edge stretch remains disclosed; no blocking deformation found in sampled corrected native views",
+      "Sampled body and portrait review does not establish continuous motion, world or independent Claude acceptance"
+    ],
+    "portrait": "PASS_SCOPED_NATIVE_PAIRED_PORTRAIT",
+    "world": "PENDING",
+    "claude_judgement": "PENDING",
+    "previous_uncorrected_review": {
+      "source_commit": "5b8287a8a1c3d460c75e22fba9da704eb05a4755",
+      "frames": 56,
+      "scale_guards": "PASS",
+      "idle_stance": "FAIL: arms held out around 30 degrees",
+      "action_silhouette": "Hat, coat, pouches and backpack recognizable in all sampled views; CPU stretch disclosed, not a proven native blocker"
+    },
+    "source_commit": "ca2fd7f9cda541b8550c4609cd851933d0d12c35",
+    "frames": 56,
+    "import": {
+      "actual_process_id": 7884,
+      "exit_code": 0
+    },
+    "pose_capture": {
+      "actual_process_id": 36700,
+      "exit_code": 0
+    },
+    "coordinator_visual_review": "All front/side clip grids inspected; idle arms relaxed alongside coat; action hat, coat, pouches and backpack recognizable with no sampled blocking deformation"
+  },
+  "rules": "res://assets/characters/npc_identity/water_orsen/source/rules.json",
+  "recipe": "res://assets/characters/npc_identity/water_orsen/source/animation_recipe.json",
+  "candidate_model": "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb",
+  "candidate_model_sha256": "0f1ffc07edd3e032446ba6ac52e1ba6540abd70adaa33bd022754de4302f7908",
+  "correction": {
+    "source_commit_before_correction": "5b8287a8a1c3d460c75e22fba9da704eb05a4755",
+    "producer": "res://assets/characters/npc_identity/water_orsen/source/retarget_orsen_arms.py",
+    "producer_sha256_lf": "e7b4edd34d7c7a560934cdf15d5337c633e0d64bacd963aa84df075653777469",
+    "recipe": "res://assets/characters/npc_identity/water_orsen/source/arm_retarget_recipe.json",
+    "recipe_sha256": "6d234dbc6ecca80a1a2836bc121153aae3652533c6ac17ea8a2e6064160b12a9",
+    "input_model_sha256": "a3fd8bd4fa66936e2cace642e2ca0370a12353ce8f8eb288a204f6153d61bd91",
+    "output_model_sha256": "0f1ffc07edd3e032446ba6ac52e1ba6540abd70adaa33bd022754de4302f7908",
+    "composition": "Hamilton xyzw; Q_new=R_rest * D_orsen * inverse(R_rest) * Q_old; fresh cloned outputs/samplers across exactly 14 upper-arm rotation tracks, other channels/rest/mesh/skin/UV/textures/times unchanged",
+    "rest_local_bias_xyzw": {
+      "Left": [
+        -0.08864801222504194,
+        6.679065626468872e-07,
+        -0.16635793664757212,
+        0.9820725891188613
+      ],
+      "Right": [
+        -0.09735926940950022,
+        4.5585593727181953e-07,
+        0.17843769734904744,
+        0.9791226489215539
+      ]
+    },
+    "target_upper_arm_degrees_from_down": 10,
+    "changed_rotation_tracks": 14,
+    "cpu_preservation": "PASS: original BIN prefix and all non-target JSON/data preserved; skinned rest positions, weights and UVs exact; other channels/key times unchanged",
+    "finite_skinned_pose_samples": 28,
+    "idle_upper_arm_degrees_from_down": [
+      {
+        "phase": 0.125,
+        "Left": 9.150667646826987,
+        "Right": 8.934033453599165
+      },
+      {
+        "phase": 0.375,
+        "Left": 9.254215111653314,
+        "Right": 8.830609258905298
+      },
+      {
+        "phase": 0.625,
+        "Left": 7.969337228120302,
+        "Right": 7.600952180652726
+      },
+      {
+        "phase": 0.875,
+        "Left": 7.860969397605735,
+        "Right": 7.709247150487857
+      }
+    ],
+    "native_review": "Low/Compatibility sampled body PASS, 56/56 frames; portrait, world and independent Claude judgment PENDING"
+  },
+  "appearance_variant_id": "npc_identity_water_orsen_v1",
+  "paired_portrait": "res://assets/ui/portraits/npc_identity_water_orsen_v1.png",
+  "runtime_binding": "Only water_orsen is bound to the candidate; global and record gates OFF retain installed wandering_trainer body and portrait",
+  "portrait_authoring": {
+    "status": "PASS_SCOPED_NATIVE_PAIRED_PORTRAIT",
+    "source_commit": "201d0d05231434ecb1c7914712e9ca788d35bce3",
+    "portrait": "res://assets/ui/portraits/npc_identity_water_orsen_v1.png",
+    "portrait_sha256": "c34136bf88ed5b5d989080cd71a169ba781a9ca1a7c0327ae6a859b8222a34e0",
+    "import_sidecar_sha256": "709df6d18131beaa0e64da2fddfa9bcf16026fc1f5a43d9ed7687c14c4b727b9",
+    "candidate_model": "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb",
+    "candidate_model_sha256": "0f1ffc07edd3e032446ba6ac52e1ba6540abd70adaa33bd022754de4302f7908",
+    "appearance_variant_id": "npc_identity_water_orsen_v1",
+    "renderer": "Low/Compatibility",
+    "authoring_script": "res://tools/_capture_portraits.gd",
+    "source_script_sha256": "1d6a44a95ff9748869f6b73a98273542e66482d36cddc490b8e35d6b6a341fb5",
+    "private_fixture": "orsen_portrait_201_private_v3.gd",
+    "private_fixture_sha256": "0d128e0c26b026b2ea5d1bbf6ee49c2e349e900651b47dc4bdf00b8689cf6617",
+    "fixture_change": "Only HEADROOM 0.045 to 0.10 for Orsen hat clearance and fresh private SHEET_PATH; all source/hash/destination/coverage/clipping/border guards unchanged",
+    "parameters": {
+      "headroom_m": 0.1,
+      "fov_degrees": 28.0,
+      "window_height_m": 0.66,
+      "max_fit_attempts": 5,
+      "exposure": 1.0,
+      "render_size_px": 512,
+      "plate_size_px": 256
+    },
+    "actual_process_id": 23872,
+    "exit_code": 0,
+    "completed_utc": "2026-10-11T19:08:17.484240+00:00",
+    "completed_import": {
+      "exit_code": 0,
+      "actual_engine_pid": 29488,
+      "completed_utc": "2026-10-11T19:09:41.004221+00:00"
+    },
+    "render_checks": {
+      "coverage_percent_reported": 49,
+      "clipped_white_percent_reported": 0.1,
+      "border": "clear",
+      "failures": 0,
+      "coverage_allowed_percent": [
+        38,
+        68
+      ],
+      "clipped_white_limit_percent": 1.5
+    },
+    "coordinator_visual_review": "PASS scoped: identity, hat, face, coat and backpack matched corrected body; world and independent Claude judgment PENDING",
+    "world": "PENDING",
+    "claude_judgement": "PENDING"
+  },
+  "native_world_comparison": {
+    "captured_source": "9d1ccee9bdcf1db49ecbf57a8e668b9708c45fad",
+    "baseline": "9e39d0086ee88998b8295747fc19f6603fe714f7",
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "seed": 2042,
+    "frames_per_source": 1,
+    "stand_xz": [
+      851,
+      2988
+    ],
+    "npc_xz": [
+      850,
+      2983
+    ],
+    "heading_deg": 180,
+    "camera_pitch_deg": -10,
+    "camera_delta_m": 0.0,
+    "body_height_m": 1.78,
+    "sheet": "ralph/reports/VISUAL-PROOF/P2-055/orsen-before-after-Low.png",
+    "capture_guards": "PASS: original production-world floor, settling, visibility, camera, raster and complete body/portrait-pair guards unchanged",
+    "scope": "Process-local candidate preview only; shipping gates OFF. Native frame checks are not Claude visual acceptance or whole roster acceptance."
+  }
+}

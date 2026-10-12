@@ -1,0 +1,23 @@
+{
+  "kind": "tidewake_checkpoint",
+  "criterion": "F19#5",
+  "segment": "08_ending",
+  "command": "godot --headless --path . --script tools/earned_saves/tidewake_piece_runner.gd -- --segment=08_ending --from=<repo>/tests/fixtures/earned_saves/tidewake_05_tidal --out=<repo>/tests/fixtures/earned_saves/tidewake_08_ending --generate-ending",
+  "commit": "3a99af5debdad8b9be3b515f2410bb532a0f0104 (+ uncommitted runner --generate-ending, committed next)",
+  "start_save": "tests/fixtures/earned_saves/tidewake_05_tidal",
+  "input_mode": "generated_ending",
+  "injections": [
+    "world flags: Salt Crown chart, Sluice controls, Bex/Calder/Venn/Nerissa defeated, Veilfall intake/return, tether disabled, Guardian freed",
+    "party healed",
+    "teleport into the Veilfall chamber"
+  ],
+  "shortcuts": [
+    "GENERATED INPUT (Rules v2 #1/#2): 08 boundary from the 05 checkpoint: world flags [\"water_dock_salt_crown_landing_charted\", \"water_sluice_west_disabled\", \"water_sluice_east_disabled\", \"water_dock_sluice_isle_both_controls_disabled\", \"defeated_water_trainer_bex\", \"defeated_water_trainer_calder\", \"defeated_water_trainer_venn\", \"water_veilfall_intake_stopped\", \"water_veilfall_return_opened\", \"water_captain_nerissa_defeated\", \"water_tether_disabled\", \"water_guardian_freed\"] set, the same five healed, production save + title reload, player teleported into the Veilfall chamber at (1800.0, 40.00094, 4227.0); the late route itself (07) is not credited"
+  ],
+  "passed": true,
+  "chain_disclosures": [
+    "07_human_late not credited: Officer Venn defeats the generated all-ground team at L20/L32/L33 (balance finding to F14#0)",
+    "06 swimmer+saddle is an optional GAP (RD-15)",
+    "Cloudreach handoff (Home Key, hang the Water relic, Cloudreach portal) is not exercised by any Tidewake helper"
+  ]
+}

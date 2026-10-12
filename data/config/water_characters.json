@@ -300,7 +300,7 @@
     },
     {
       "id": "water_adair",
-      "appearance_variant_id": "p2055_water_adair",
+      "appearance_variant_id": "npc_identity_water_adair_v1",
       "display_name": "Surveyor Adair",
       "island_id": "brine_steps",
       "role": "current_mapping",
@@ -386,7 +386,7 @@
     },
     {
       "id": "water_iona",
-      "appearance_variant_id": "p2055_water_iona",
+      "appearance_variant_id": "npc_identity_water_iona_v1",
       "display_name": "Researcher Iona",
       "island_id": "tidal_cradle",
       "role": "alpha_and_saddle",
@@ -410,7 +410,7 @@
     },
     {
       "id": "water_otto",
-      "appearance_variant_id": "p2055_water_otto",
+      "appearance_variant_id": "npc_identity_water_otto_v1",
       "display_name": "Tracker Otto",
       "island_id": "tidal_cradle",
       "role": "alternate_mount_route",
@@ -517,7 +517,7 @@
     },
     {
       "id": "water_orsen",
-      "appearance_variant_id": "p2055_water_orsen",
+      "appearance_variant_id": "npc_identity_water_orsen_v1",
       "display_name": "Channel Keeper Orsen",
       "island_id": "sluice_isle",
       "role": "sluice_controls",
@@ -1504,7 +1504,7 @@
       "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
-      "id": "water_trainer_nerissa", "foe_power_multiplier": 1.8,
+      "id": "water_trainer_nerissa", "foe_power_multiplier": 2.0, "_why_foe_power_multiplier": "F14#0/F33#2 (coordinator tuning batch, 11 Oct 2026): 1.8 -> 2.0. At the matching tidesteel tier a masher kept its lead (Ripplet lead-faint 0.75, Galewisp 0), and Galewisp chapter masher-loss was 0.12 against the 0.25 bar, from Nerissa's 0.88 masher win. Predicted: Galewisp masher win <= 0.75; bare worst hit ~0.31 against the 0.50 ceiling; reader party ~0.35-0.48.",
       "display_name": "Captain Nerissa",
       "npc_entity_id": "water_nerissa",
       "island_id": "veilfall",

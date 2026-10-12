@@ -1,0 +1,408 @@
+{
+  "status": "ROOT_AUTHORIZED_PRIVATE_14_TRACK_CORRECTION_ONLY",
+  "actor_id": "water_otto",
+  "source_commit": "3715a7a8b67f545cb033ed515dac602d6accb50b",
+  "input_model": "assets_raw/water_otto/local-bake-v1/otto_animated.glb",
+  "input_sha256": "b804b4b290f15ea25e97b43c66bba5dca99cfe3c970a08c7a77bd9a5332ab47a",
+  "target_degrees_outward_from_down": 10,
+  "derivation": "Measured exclusively from exact baked Otto world/rest joints; shortest world rotation from each observed upper-arm direction to same-side10degree outward/down target, transformed by that Otto bone own rest basis. No axes, quaternion deltas or rest values borrowed from another actor.",
+  "composition": "Hamilton xyzw: Qnew = Rrest * D_otto * inverse(Rrest) * Qold. Left-multiply every bound upper-arm animation quaternion; do not modify node rest transforms.",
+  "bias_xyzw": {
+    "Left": [
+      -0.07670645518012105,
+      1.2176704520210494e-06,
+      -0.16290416377074202,
+      0.9836556069877164
+    ],
+    "Right": [
+      -0.08277270955825687,
+      3.1810907114968284e-07,
+      0.18382503089783853,
+      0.9794677312539153
+    ]
+  },
+  "measurements": {
+    "Left": {
+      "upper_arm_node": 6,
+      "forearm_node": 5,
+      "rest_direction": [
+        0.5094754893775,
+        -0.8597487287825226,
+        -0.035592823439468874
+      ],
+      "rest_degrees_from_down": 30.71161812895123,
+      "rest_rotation_xyzw": [
+        -0.3979266952852216,
+        0.47419000516929877,
+        -0.29609481027854245,
+        0.7274105082434792
+      ],
+      "rest_world_basis_columns": [
+        [
+          -0.7311746857920232,
+          -0.45436391348839344,
+          0.5088585392586509
+        ],
+        [
+          0.5094830928236733,
+          -0.8597439068064782,
+          -0.03560046117620048
+        ],
+        [
+          0.4536636636288575,
+          0.23322462723630394,
+          0.8601136864120521
+        ]
+      ],
+      "target_world_direction": [
+        0.17364817766693033,
+        -0.984807753012208,
+        0.0
+      ],
+      "derived_local_axis": [
+        -0.42600467976186507,
+        6.762577018461224e-06,
+        -0.9047209384929871
+      ],
+      "correction_degrees": 20.746523664240176,
+      "derived_delta_xyzw": [
+        -0.07670645518012105,
+        1.2176704520210494e-06,
+        -0.16290416377074202,
+        0.9836556069877164
+      ],
+      "left_multiplier_xyzw": [
+        -0.17952988908599743,
+        0.013428980730451042,
+        -0.003213758382021176,
+        0.9836556069877164
+      ]
+    },
+    "Right": {
+      "upper_arm_node": 10,
+      "forearm_node": 9,
+      "rest_direction": [
+        -0.5474374752953376,
+        -0.8363587111580946,
+        -0.02857126024937475
+      ],
+      "rest_degrees_from_down": 33.242417318938635,
+      "rest_rotation_xyzw": [
+        -0.37051498752786716,
+        -0.49426394518065225,
+        0.30161610134069383,
+        0.7262572023214103
+      ],
+      "rest_world_basis_columns": [
+        [
+          -0.7310397885489369,
+          0.4945512524836261,
+          -0.470106249932079
+        ],
+        [
+          -0.5474308872982813,
+          -0.8363630952913659,
+          -0.028569152358136014
+        ],
+        [
+          -0.40730853261591093,
+          0.23646561437207875,
+          0.8821472510176
+        ]
+      ],
+      "target_world_direction": [
+        -0.17364817766693033,
+        -0.984807753012208,
+        0.0
+      ],
+      "derived_local_axis": [
+        -0.41057685206927136,
+        1.5779140461191776e-06,
+        0.911825925723151
+      ],
+      "correction_degrees": 23.26119510787231,
+      "derived_delta_xyzw": [
+        -0.08277270955825687,
+        3.1810907114968284e-07,
+        0.18382503089783853,
+        0.9794677312539153
+      ],
+      "left_multiplier_xyzw": [
+        -0.2003292451539587,
+        -0.022457260963127834,
+        0.0026131204310481104,
+        0.9794677312539153
+      ]
+    }
+  },
+  "channels": [
+    {
+      "clip": "idle",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "animation_index": 0,
+          "channel_index": 28,
+          "node_index": 6,
+          "sampler": 28,
+          "input_accessor": 9,
+          "output_accessor": 37,
+          "output_count": 97,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "25705b24580b2311ef37c24953b40f7e44c2a83f70d3392c4586ea8486679d54",
+          "output_values_logical_float32_sha256": "976bc6067a87d0db6d6422d71a8eeaaaab01a7ebda531b301f414ec340332167",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        },
+        {
+          "bone": "RightArm",
+          "animation_index": 0,
+          "channel_index": 40,
+          "node_index": 10,
+          "sampler": 40,
+          "input_accessor": 9,
+          "output_accessor": 49,
+          "output_count": 97,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "25705b24580b2311ef37c24953b40f7e44c2a83f70d3392c4586ea8486679d54",
+          "output_values_logical_float32_sha256": "c3bc1336c56be0d24106b07d0a3d4928b403a2ac48548c8691b36bc57e1a249a",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        }
+      ]
+    },
+    {
+      "clip": "walk",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "animation_index": 1,
+          "channel_index": 28,
+          "node_index": 6,
+          "sampler": 28,
+          "input_accessor": 81,
+          "output_accessor": 111,
+          "output_count": 16,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "916d9312a6475d4382120ba78f81ccfa9e918c5b2fc7b89b304c9d0a49d3e75a",
+          "output_values_logical_float32_sha256": "be8339ab229bf909670f8bb911c488aca229be0be1fe60194b8db39c16eeaa17",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        },
+        {
+          "bone": "RightArm",
+          "animation_index": 1,
+          "channel_index": 40,
+          "node_index": 10,
+          "sampler": 40,
+          "input_accessor": 81,
+          "output_accessor": 123,
+          "output_count": 16,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "916d9312a6475d4382120ba78f81ccfa9e918c5b2fc7b89b304c9d0a49d3e75a",
+          "output_values_logical_float32_sha256": "12cf59edacbb624f222b3bffab1818bce3ffc5d90be9b762116d9ac2812bdc6a",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        }
+      ]
+    },
+    {
+      "clip": "sprint",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "animation_index": 2,
+          "channel_index": 28,
+          "node_index": 6,
+          "sampler": 28,
+          "input_accessor": 155,
+          "output_accessor": 185,
+          "output_count": 12,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "454c261711f707ad044ceba9ff651fc285b828f7922f11ab3d437d5f88921d0e",
+          "output_values_logical_float32_sha256": "ddfbc8e7a86594b4a144dc3126d645784d29bdf6b2bfbf74d6a7be296a7488a3",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        },
+        {
+          "bone": "RightArm",
+          "animation_index": 2,
+          "channel_index": 40,
+          "node_index": 10,
+          "sampler": 40,
+          "input_accessor": 155,
+          "output_accessor": 197,
+          "output_count": 12,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "454c261711f707ad044ceba9ff651fc285b828f7922f11ab3d437d5f88921d0e",
+          "output_values_logical_float32_sha256": "7dea93b5d92e63ae544a05e7c4cc9339b44ca6c5e0bae154be84a957a285c7a4",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        }
+      ]
+    },
+    {
+      "clip": "jump",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "animation_index": 3,
+          "channel_index": 28,
+          "node_index": 6,
+          "sampler": 28,
+          "input_accessor": 229,
+          "output_accessor": 259,
+          "output_count": 29,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "a1ced821836c02a9d823f3ca1b664a8a1e1ce250adbd2e5b7b6efca088e62dfb",
+          "output_values_logical_float32_sha256": "7da2d89383d373b751af334585b8660fdae0adb98fb1f670c31f93d183923c33",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        },
+        {
+          "bone": "RightArm",
+          "animation_index": 3,
+          "channel_index": 40,
+          "node_index": 10,
+          "sampler": 40,
+          "input_accessor": 229,
+          "output_accessor": 271,
+          "output_count": 29,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "a1ced821836c02a9d823f3ca1b664a8a1e1ce250adbd2e5b7b6efca088e62dfb",
+          "output_values_logical_float32_sha256": "b031ce3210791a22db6d1febcf01d6c961547701de4c91152b5d72a8413c5414",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        }
+      ]
+    },
+    {
+      "clip": "throw",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "animation_index": 4,
+          "channel_index": 28,
+          "node_index": 6,
+          "sampler": 28,
+          "input_accessor": 305,
+          "output_accessor": 333,
+          "output_count": 25,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "9e7ace7f25486bf23cefd74b87c143a2b6772de957db478bb2d53d53720546bf",
+          "output_values_logical_float32_sha256": "6426c8ef00501b8ac9d8c54f7ad51caafe9124cd390a3f1fdf2b1ab3f44b7bf3",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        },
+        {
+          "bone": "RightArm",
+          "animation_index": 4,
+          "channel_index": 40,
+          "node_index": 10,
+          "sampler": 40,
+          "input_accessor": 305,
+          "output_accessor": 345,
+          "output_count": 25,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "9e7ace7f25486bf23cefd74b87c143a2b6772de957db478bb2d53d53720546bf",
+          "output_values_logical_float32_sha256": "43ed244a0e515866926bcef1faad94bbe2ad08ca9a8909966adbb6396cb0db9a",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        }
+      ]
+    },
+    {
+      "clip": "chop",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "animation_index": 5,
+          "channel_index": 28,
+          "node_index": 6,
+          "sampler": 28,
+          "input_accessor": 81,
+          "output_accessor": 405,
+          "output_count": 16,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "916d9312a6475d4382120ba78f81ccfa9e918c5b2fc7b89b304c9d0a49d3e75a",
+          "output_values_logical_float32_sha256": "c9daff60021c69cf88fb4ff2b34ad5856a8df7b5b63c41ff24960457eed64cde",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        },
+        {
+          "bone": "RightArm",
+          "animation_index": 5,
+          "channel_index": 40,
+          "node_index": 10,
+          "sampler": 40,
+          "input_accessor": 81,
+          "output_accessor": 417,
+          "output_count": 16,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "916d9312a6475d4382120ba78f81ccfa9e918c5b2fc7b89b304c9d0a49d3e75a",
+          "output_values_logical_float32_sha256": "5f7ea37eb742b36220099d16bc4a210b281cb218f31cba4c71e9480598547148",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        }
+      ]
+    },
+    {
+      "clip": "defeated",
+      "channels": [
+        {
+          "bone": "LeftArm",
+          "animation_index": 6,
+          "channel_index": 28,
+          "node_index": 6,
+          "sampler": 28,
+          "input_accessor": 451,
+          "output_accessor": 479,
+          "output_count": 37,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "927ba08e78eab9ef8841c13caa9c68c307013f1f2e14459a9f6cef1837fe1f8a",
+          "output_values_logical_float32_sha256": "6c0a03e3d81d6f913091172ebfa2d1ca15d641f02332fb2b65f49a1b30687881",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        },
+        {
+          "bone": "RightArm",
+          "animation_index": 6,
+          "channel_index": 40,
+          "node_index": 10,
+          "sampler": 40,
+          "input_accessor": 451,
+          "output_accessor": 491,
+          "output_count": 37,
+          "interpolation": "LINEAR",
+          "input_times_logical_float32_sha256": "927ba08e78eab9ef8841c13caa9c68c307013f1f2e14459a9f6cef1837fe1f8a",
+          "output_values_logical_float32_sha256": "9b20f03f95f593c90e201d145cab2db8b55049e7b2248089002462e8c5c71612",
+          "sampler_channel_users": 1,
+          "output_accessor_sampler_users_all_clips": 1
+        }
+      ]
+    }
+  ],
+  "track_count": 14,
+  "reserved_native_uid": "uid://bcfe7n0agooky",
+  "native_uid_note": "Root reported actual native import PID52496 terminal0, sole sidecar change UID; reserve for later explicitly authorized source integration. Current source unchanged.",
+  "preservation_contract": [
+    "Verify source commit, exact input bytes, recipe hash, clip order, two unique bound rotation channels per clip, node/sampler/accessor IDs, LINEAR interpolation, float32times/value hashes and counts before any mutation",
+    "Clone each of14 output accessors, bufferViews and samplers into fresh append-only storage. Preserve original BIN prefix byte-for-byte, including padding; shared original outputs/samplers must remain untouched",
+    "Modify only target channel sampler references and buffer byteLength plus append-only metadata; restoring these permitted changes and trimming appends must reproduce original JSON exactly",
+    "Preserve all rest transforms, hierarchy,24joints,inversebinds,21487vertices,18611triangles,existing seam splits,normals,UVs,weights,materials,three textures and all non-target animation channels",
+    "Retain all original key times, duration, clip names, interpolation and non-target sampler/accessor metadata; normalize output quaternions with finite/unit checks",
+    "If later authorized, write fresh private GLB and receipt only, never overwrite input. Root reviews exact output hash before source integration. Keep all gates OFF; no runtime/portrait edits",
+    "Independent CPU check must verify unchanged rest-skinned positions, namedweights, UVs, indices, textures and original binary/JSON preservation plus28finite samples; then root must recapture original56native poses under unchanged guards"
+  ],
+  "simulation_scope": "Read-only in-memory hypothetical quaternion/skin evaluation only. No corrected GLB serialized, no transform applied to source, no exporter/engine executed.10degree rest target may yield approximately8degree sampled idle due existing authored offsets; hand/coat clearance is not established.",
+  "root_decision": "Private correction authorized after native idle failure; source integration/portrait/runtime remain unallocated. Root must inspect corrected native56frames.",
+  "root_native_input_review": {
+    "source_commit": "3715a7a8b67f545cb033ed515dac602d6accb50b",
+    "actual_process_id": 24136,
+    "exit_code": 0,
+    "frames": 56,
+    "scale_raster_clip_checks": "56/56",
+    "idle_stance": "FAIL hands held away from coat",
+    "action_review": "No catastrophic stretching visible in sampled original poses; not continuous motion acceptance"
+  }
+}

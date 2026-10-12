@@ -7,6 +7,8 @@
   "speaker": "Halda",
   "introduction": "Three notices, just for you. I change them each morning. Bring deliveries here when you're ready; the rewards are yours once the job is done.",
   "host_poll_seconds": 1.0,
+  "_why_rotate_after_action_grace_s": "Coordinator 2026-10-11 (F27#1 finding): the morning rotation shares the character's one training-delivery slot. A rotation landing just after another action's row was accepted replaced it before that action's requester retried and read its own decision, so a paid harvest reported a refusal. The clock rotation waits this long after a newly seen non-bounty row; it is host-local, never durable, and only delays the rotation.",
+  "rotate_after_action_grace_s": 10.0,
   "interaction_radius_m": 3.6,
   "maximum_receipts": 4096,
   "morning_policy": "host_day_rollover",

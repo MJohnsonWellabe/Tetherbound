@@ -28,3 +28,8 @@ Demand:
 Caveat for the owner: the solvency depends on the Master chests. Without them, required demand is short for Meadows berries (161/200), Cloudreach cliffglass_ore (198/248), windworn_heartwood (99/140) and skyplume (5/80), and Stormwood sparkfur (38/80). It assumes every character wins its own Master. Route hours are the f27 lower bounds and a day is 600 s (art.json). No numbers were changed.
 
 Verdict: PASS (required demand solvent in all four bands; the only max-column shortfall is Cloudreach skyplume, 15 short)
+
+## Skyplume max-column source (systems-b, Sun 11 Oct 2026, coordinator order 4:14 PM CT)
+One bounded source: `cloudreach_encounters.json` reward_tiers.mentor (Keeper Maela, one trainer) skyplume 2 → 18, with `_why_skyplume`.
+`node tools/economy_ledger.mjs` supply_census: solvent true, shortfalls [], max_shortfalls [] (Cloudreach skyplume was 200/185).
+`node --test tests/test_economy_*.mjs` → 20 pass, 0 fail. Cloudreach reward units: 76 tests, 2 failed — both in `test_cloudreach_route_ledger.gd` (entry team / negative controls), failing identically on the base without this change (pre-existing, not this lane's).

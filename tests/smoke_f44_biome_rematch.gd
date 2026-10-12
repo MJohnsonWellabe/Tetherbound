@@ -2,11 +2,12 @@ extends SceneTree
 
 ## F44#0: after a biome's boss, its named trainers, captains and Master can be
 ## rematched at the next biome's level for better rewards. One headless witness
-## per biome (rematches.json `witnesses`: relay_captain, water_trainer_yara,
+## per biome (rematches.json `witnesses`: captain_riverwatch, water_trainer_yara,
 ## officer_voss_summit_approach, officer_maren_verge_rod).
 ##
 ##   godot --headless --path . --script tests/smoke_f44_biome_rematch.gd -- \
 ##     --biome=<meadows|tidewake|cloudreach|stormwood> --from-save=<dir holding save/> [--json=<path>]
+##     [--tier=<r1|endgame>] [--witness=<rematches.json profile id>]
 ##
 ## Modelled on tests/helpers/f20_ending_probe.gd::admit_endgame_rematch. The
 ## save loads through the production title's Load list (Autosave). The fight is
@@ -15,6 +16,7 @@ extends SceneTree
 ## is admitted by the ordinary Interact press on the mounted rematch prompt.
 ## Stormwood's witness is post-credits, so its tier is `endgame` (L58), as in
 ## tools/f44_rematch_witness.gd; the other three are `r1` at the next band.
+## F44#1 witnesses pass --tier=endgame with a post-credits save (f44_<biome>_endgame).
 ##
 ## Asserted: ordinary input admits the canonical rematch; every member is at the
 ## configured level; the pilot wins; the win is delivered to this character once;
@@ -41,6 +43,8 @@ const FIGHT_FRAMES := 36000
 var biome := ""
 var from_save := ""
 var json_out := ""
+var tier_arg := ""
+var witness_arg := ""
 var fixture_world: PackedStringArray = []
 var fixture_personal: PackedStringArray = []
 var game: Node
@@ -67,9 +71,11 @@ func _run() -> void:
 		if arg.begins_with("--biome="): biome = arg.trim_prefix("--biome=")
 		elif arg.begins_with("--from-save="): from_save = arg.trim_prefix("--from-save=").trim_suffix("/")
 		elif arg.begins_with("--json="): json_out = arg.trim_prefix("--json=")
+		elif arg.begins_with("--tier="): tier_arg = arg.trim_prefix("--tier=")
+		elif arg.begins_with("--witness="): witness_arg = arg.trim_prefix("--witness=")
 		elif arg.begins_with("--fixture-world-flags="): fixture_world = arg.trim_prefix("--fixture-world-flags=").split(",", false)
 		elif arg.begins_with("--fixture-personal-flags="): fixture_personal = arg.trim_prefix("--fixture-personal-flags=").split(",", false)
-	if not REALMS.has(biome) or from_save.is_empty():
+	if not REALMS.has(biome) or from_save.is_empty() or tier_arg not in ["", "r1", "endgame"]:
 		push_error("usage: --biome=<meadows|tidewake|cloudreach|stormwood> --from-save=<dir>")
 		quit(2)
 		return
@@ -95,8 +101,8 @@ func _run() -> void:
 		if not await _title_load():
 			await _finish()
 			return
-	var witness := str(RULES.config().witnesses[biome])
-	var tier := "endgame" if biome == "stormwood" else "r1"
+	var witness := witness_arg if not witness_arg.is_empty() else str(RULES.config().witnesses[biome])
+	var tier := tier_arg if not tier_arg.is_empty() else ("endgame" if biome == "stormwood" else "r1")
 	var profile: Dictionary = RULES.profile(witness)
 	var expected_level := int(RULES.config().endgame_levels[profile.kind]) if tier == "endgame" \
 		else int(RULES.config().biomes[biome].r1_levels[profile.kind])
@@ -146,6 +152,8 @@ func _run() -> void:
 	if not check(arbiter != null and arbiter.call("winning_provider") == prompt, "the ordinary Interact offer is the rematch prompt"):
 		await _finish()
 		return
+	var activations := [0]
+	prompt.connect("activated", func() -> void: activations[0] += 1)
 	await _tap("interact")
 	for _i in 1800:
 		if manager.call("is_fighting") == true and director.call("trainer_battle_active") == true: break
@@ -153,7 +161,46 @@ func _run() -> void:
 	var spec: Variant = director.get("_trainer_spec")
 	var admitted: bool = director.call("trainer_battle_active") == true and str(director.call("trainer_battle_id")) == witness \
 		and spec is Dictionary and spec == expected_spec
-	if not check(admitted, "ordinary input admits the canonical %s %s rematch" % [witness, tier]):
+	if not admitted:
+		receipt.admission = {"trainer_battle_active": director.call("trainer_battle_active"),
+			"trainer_battle_id": str(director.call("trainer_battle_id")),
+			"spec_id": str(spec.get("id", "")) if spec is Dictionary else "",
+			"can_challenge_expected": director.call("can_challenge", expected_spec) if director.has_method("can_challenge") else "n/a",
+			"source_busy": director.call("rematch_source_busy", source),
+			"expected_spec_empty": expected_spec.is_empty(),
+			"world_message": str(game.get("_pending_world_message")), "prompt_activated": activations[0]}
+		# Diagnostic only (after the failure is recorded): which step refused.
+		for connection: Dictionary in prompt.get_signal_connection_list("activated"):
+			var args: Array = (connection.callable as Callable).get_bound_arguments()
+			if str((connection.callable as Callable).get_method()) == "challenge" and not args.is_empty() and args[0] is Node:
+				var bound_ally: RefCounted = director.get("_ally")
+				receipt.admission.bound_service_challenge = args[0].call("challenge", str(game.local.character_id), witness, tier, source,
+					str(bound_ally.get("uid")) if bound_ally != null else "")
+				receipt.admission.after_bound_call_active = director.call("trainer_battle_active")
+		var rematches: Node = game.get("session").get_node_or_null(^"FoundationComposition/Rematches")
+		if rematches != null:
+			receipt.admission.realm_director_found = rematches.call("_director",
+				game.get("session").call("_portal_world_node", game.current_realm)) != null
+			var hc: Variant = rematches.call("host_context", str(game.local.character_id), witness, source, director)
+			receipt.admission.host_context = {"type": typeof(hc), "in_range": hc.get("in_range") if hc is Dictionary else null,
+				"empty": hc.is_empty() if hc is Dictionary else true}
+			receipt.admission.director_script = str(director.get_script().resource_path)
+			var writer: Variant = director.get("_rematch_outcome_writer")
+			receipt.admission.outcome_writer_valid = writer is Callable and (writer as Callable).is_valid()
+			var se: Variant = rematches.call("start_encounter", str(game.local.character_id), expected_spec, source, "", director)
+			receipt.admission.start_encounter = {"type": typeof(se), "value": se}
+		var bound: Array = []
+		for connection: Dictionary in prompt.get_signal_connection_list("activated"):
+			var callable: Callable = connection.callable
+			bound.append({"method": str(callable.get_method()), "args": str(callable.get_bound_arguments())})
+		receipt.admission.prompt_bindings = bound
+		var services := get_nodes_in_group("f44_rematch_services")
+		receipt.admission.services = services.map(func(n: Node) -> String: return "%s valid=%s" % [str(n.get_path()), str(is_instance_valid(n))])
+		var ally: RefCounted = director.get("_ally")
+		if not services.is_empty():
+			receipt.admission.direct_challenge = services[0].call("challenge", str(game.local.character_id), witness, tier, source,
+				str(ally.get("uid")) if ally != null else "")
+	if not check(admitted, "ordinary input admits the canonical %s %s rematch (%s)" % [witness, tier, str(receipt.get("admission", {}))]):
 		await _finish()
 		return
 	var levels: Array = []
@@ -189,14 +236,30 @@ func _run() -> void:
 	# character's own durable win receipt instead.
 	var win_prefix := base_receipt + ":win:"
 	var after: Dictionary = {}
-	for _i in 7200:
+	# Diagnostic (coordinator, 2026-10-11): how much of the post-fight duty
+	# drain keeps the owner's inventory/party mutations blocked.
+	var session_node: Node = game.get("session")
+	var blocked_frames := 0
+	var longest_block := 0
+	var run_block := 0
+	var drain_frames := 0
+	for _i in 36000:
 		after = RECORD.portable_projection(game.local.call("save_data")).duplicate(true)
 		if (after.redesign_character.transaction_receipts as Array).any(func(r: Variant) -> bool: return str(r).begins_with(win_prefix)): break
+		drain_frames += 1
+		if session_node != null and session_node.call("_owner_training_mutation_blocked", game.local) == true:
+			blocked_frames += 1
+			run_block += 1
+			longest_block = maxi(longest_block, run_block)
+		else: run_block = 0
 		await physics_frame
+	receipt.drain = {"frames_until_win_receipt": drain_frames, "owner_mutation_blocked_frames": blocked_frames, "longest_blocked_run": longest_block}
 	var win_receipts: Array = (after.redesign_character.transaction_receipts as Array).filter(func(r: Variant) -> bool: return str(r).begins_with(win_prefix))
 	var deliveries: Array = []
 	for key: Variant in game.world.reward_deliveries:
-		if str(key).contains("rematch"): deliveries.append({str(key): str(game.world.reward_deliveries[key].get("status", ""))})
+		var row: Variant = game.world.reward_deliveries[key]
+		if row is Dictionary and (row.get("duties", []) as Array).any(func(d: Variant) -> bool: return d is Dictionary and d.get("action") == "rematch_win"):
+			deliveries.append({str(key).left(40): str(row.get("status", "event"))})
 	receipt.diagnostic = {"pending_outcome": str(director.get("_rematch_pending_outcome")),
 		"pending_event": director.get_meta("foundation_rematch_pending", {}).get("source_id", ""), "deliveries": deliveries}
 	check(win_receipts.size() == 1, "the rematch win is delivered to this character once (%s; %s)" % [str(win_receipts), str(receipt.diagnostic)])
@@ -208,7 +271,9 @@ func _run() -> void:
 	for item: String in payout: gained[item] = int(bag_after.get(item, 0)) - int(bag_before.get(item, 0))
 	receipt.payout = gained
 	receipt.first_reward = first_reward
-	check(gained == payout, "the first rematch win pays the configured unique reward %s (gained %s)" % [str(payout), str(gained)])
+	var expected_payout := {}
+	for item: String in payout: expected_payout[item] = int(payout[item]) # JSON numbers parse as floats.
+	check(gained == expected_payout, "the first rematch win pays the configured unique reward %s (gained %s)" % [str(payout), str(gained)])
 	var first_items: Array = []
 	for row: Variant in first_reward.get("items", []): first_items.append(str(row.get("id", row)) if row is Dictionary else str(row))
 	check(payout.keys().all(func(item: Variant) -> bool: return not first_items.has(str(item))),
@@ -219,9 +284,12 @@ func _run() -> void:
 		await _finish()
 		return
 	var reloaded := RECORD.portable_projection(game.local.call("save_data")).duplicate(true)
-	check((reloaded.redesign_character.transaction_receipts as Array).count(base_receipt) == 1
-		and reloaded.redesign_character.transaction_receipts == receipts,
-		"after a title reload the receipts are unchanged (rematch paid once)")
+	# The fight's other duties (research, mastery) keep draining after the win,
+	# so compare this rematch's receipts, not the whole growing receipt list.
+	var rematch_rows := func(rows: Array) -> Array: return rows.filter(func(r: Variant) -> bool: return str(r).begins_with(base_receipt))
+	var reloaded_rematch: Array = rematch_rows.call(reloaded.redesign_character.transaction_receipts)
+	check(reloaded_rematch.count(base_receipt) == 1 and reloaded_rematch == rematch_rows.call(receipts) and reloaded_rematch.size() == 2,
+		"after a title reload the rematch receipts are unchanged (paid once: %s)" % str(reloaded_rematch))
 	var bag_reloaded := _bag()
 	var same := true
 	for item: String in payout: same = same and int(bag_reloaded.get(item, 0)) == int(bag_after.get(item, 0))

@@ -6,5 +6,27 @@
   "list_width": 480,
   "row_height": 208,
   "visible_rows": 3,
-  "panel_width": 1080
+  "panel_width": 1080,
+  "_why_station_refusals": "Coordinator 2026-10-11: the Den panel showed raw host refusal codes (already_groomed, daily_care_cap). Player text for the station refusals a player can actually reach; any other code reads as the generic line, never the raw code. Presentation only.",
+  "station_refusals": {
+    "already_groomed": "This creature has already been groomed today.",
+    "daily_care_cap": "Your team has had all the grooming it can use today. Come back tomorrow.",
+    "receipt_budget": "Your character's care record is full for now. Try again after resting.",
+    "not_owned": "That creature isn't on your team.",
+    "fainted": "That creature needs to recover first.",
+    "hp_max": "That creature is already at full health.",
+    "insufficient_items": "You don't have the materials for that.",
+    "inventory_full": "Your bag is full. Make room and try again.",
+    "crop_not_ripe": "That crop isn't ripe yet.",
+    "regrowing": "That plant is still regrowing.",
+    "plot_not_fallow": "That plot is already planted.",
+    "crop_locked_or_plot_busy": "That plot is busy right now.",
+    "working_tool_required": "You need the right tool for that.",
+    "equipped_tool_required": "Equip the right tool first.",
+    "stale_revision": "Things changed while you were choosing. Try again.",
+    "stale_level": "Things changed while you were choosing. Try again.",
+    "stale_plot": "Things changed while you were choosing. Try again.",
+    "stale_stock": "Things changed while you were choosing. Try again."
+  },
+  "station_refusal_fallback": "The host couldn't complete that. Try again."
 }

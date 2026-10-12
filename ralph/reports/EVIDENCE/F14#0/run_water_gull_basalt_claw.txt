@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WATER_C2C3 water_gull_basalt_claw terrapup MASHER runs=24 win=0.00 med_lead=1.000 med_party=0.241 med_s=44.9 max_s=51.1 lead_faint=1.00 wipe=0.00 max_hit=0.124 tell=[0.85,1.30] stalled=0
+WATER_C2C3 water_gull_basalt_claw terrapup READER runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=41.8 max_s=48.1 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,1.30] stalled=0
+WATER_C2C3_PAIR water_gull_basalt_claw terrapup reader/masher median lead cost = 0.000 / 1.000 (ratio 0.00)
+WATER_C2C3 water_gull_basalt_claw ripplet MASHER runs=24 win=0.79 med_lead=0.764 med_party=0.172 med_s=37.5 max_s=43.3 lead_faint=0.21 wipe=0.00 max_hit=0.113 tell=[0.85,1.30] stalled=0
+WATER_C2C3 water_gull_basalt_claw ripplet READER runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=41.2 max_s=48.7 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,1.30] stalled=0
+WATER_C2C3_PAIR water_gull_basalt_claw ripplet reader/masher median lead cost = 0.000 / 0.764 (ratio 0.00)
+WATER_C2C3 water_gull_basalt_claw galewisp MASHER runs=24 win=1.00 med_lead=0.757 med_party=0.164 med_s=33.7 max_s=38.8 lead_faint=0.00 wipe=0.00 max_hit=0.139 tell=[0.85,1.30] stalled=0
+WATER_C2C3 water_gull_basalt_claw galewisp READER runs=24 win=1.00 med_lead=0.312 med_party=0.068 med_s=78.0 max_s=88.5 lead_faint=0.00 wipe=0.00 max_hit=0.121 tell=[0.85,1.30] stalled=0
+WATER_C2C3_PAIR water_gull_basalt_claw galewisp reader/masher median lead cost = 0.312 / 0.757 (ratio 0.41)
+WATER_C2C3 done: 3 rows, 144 runs, 0 errors

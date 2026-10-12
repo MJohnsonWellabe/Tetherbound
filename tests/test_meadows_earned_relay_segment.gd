@@ -118,3 +118,19 @@ func test_xp_receipt_accumulates_per_kill_survivors_then_final_bonus_by_identity
 	assert_false(SEGMENT.exact_captain_xp(before, after, expected), "no bonus to a fainted member")
 	after.erase(15)
 	assert_false(SEGMENT.exact_captain_xp(before, after, expected))
+
+
+## F19#5: a durable trainer round pays the production hybrid award
+## (combat_round_reward.gd stage(): scaled full to the active, scaled share to
+## the other living members), not the ordinary award.
+func test_durable_trainer_rounds_expect_the_hybrid_award() -> void:
+	var cfg := SEGMENT.PROGRESSION.config()
+	var essence_cfg: Dictionary = preload("res://scripts/creatures/essence.gd").config()
+	var expected := {11: 0, 12: 0, 13: 0}
+	SEGMENT.accumulate_xp(expected, 11, [11, 12, 13], 21, 0, cfg, true)
+	var full := SEGMENT.PROGRESSION.scaled_combat_xp(21, cfg, essence_cfg)
+	var share := SEGMENT.PROGRESSION.scaled_party_combat_xp(21, cfg, essence_cfg)
+	assert_true(full > 0 and share > 0)
+	assert_eq(expected[11], full, "the active creature gets the scaled full award")
+	assert_eq(expected[12], share, "a living bench member gets the scaled share")
+	assert_ne(full, SEGMENT.PROGRESSION.xp_award_for(21, cfg), "hybrid differs from the ordinary award")

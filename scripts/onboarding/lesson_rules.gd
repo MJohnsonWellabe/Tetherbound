@@ -74,6 +74,11 @@ static func lesson(authored: Dictionary, player: RefCounted) -> Dictionary:
 	row["goal"] = ("Challenge %s at %s for the L%d feast recipe." % [str(master.name), place, int(master.cap_level)]) \
 		if not place.is_empty() else "Challenge %s for the L%d feast recipe." % [str(master.name), int(master.cap_level)]
 	if state.get("master_wins", []).has(master.id): row["goal"] = "Open %s's recipe chest." % str(master.name)
+	# From home after the chapter (a next-realm key held) or from another realm,
+	# the Master's site is a trip back out: say which region to return to.
+	if str(player.get("realm")) != row.goal_realm or not _unused_key_biome(player).is_empty():
+		row["goal"] = "Return to %s: %s%s" % [preload("res://scripts/data/biome_order.gd").display_name(str(master.biome)),
+			str(row.goal).left(1).to_lower(), str(row.goal).substr(1)]
 	if state.get("feast_recipes", []).has(master.feast_id):
 		row["goal"] = "Cook the L%d feast at home, then feed your capped creature." % int(master.cap_level)
 		row["goal_realm"] = "meadows"
@@ -86,12 +91,10 @@ static func guidance(player: RefCounted) -> Dictionary:
 	# naming, real catch, Mira's kit or the tournament readiness chain.
 	if player.get("flags").call("has", "tournament_entered") != true: return {}
 	var state: Dictionary = player.get("redesign_character")
-	var inventory: RefCounted = player.get("inventory")
 	var key_goal := ""
-	for biome: String in ["tidewake", "cloudreach", "stormwood"]:
-		if inventory.call("count", biome + "_portal_key") > 0 and not state.get("portal_unlocks", []).has(biome):
-			key_goal = "Use your %s key at its signed arch in the Crossing Hall." % biome.capitalize()
-			break
+	var key_biome := _unused_key_biome(player)
+	if not key_biome.is_empty():
+		key_goal = "Use your %s key at its signed arch in the Crossing Hall." % key_biome.capitalize()
 	if not capped_master(player).is_empty():
 		var master_row := lesson(_row("masters"), player)
 		# A held next-realm key stays visible as the secondary line.
@@ -104,6 +107,13 @@ static func guidance(player: RefCounted) -> Dictionary:
 	for relic: String in state.get("relics_held", []):
 		if not state.get("relics_hung", []).has(relic): return _row("shrines")
 	return {}
+
+static func _unused_key_biome(player: RefCounted) -> String:
+	var state: Dictionary = player.get("redesign_character")
+	for biome: String in ["tidewake", "cloudreach", "stormwood"]:
+		if player.get("inventory").call("count", biome + "_portal_key") > 0 and not state.get("portal_unlocks", []).has(biome):
+			return biome
+	return ""
 
 static func _row(id: String) -> Dictionary:
 	for row: Dictionary in _config_view().get("lessons", []):

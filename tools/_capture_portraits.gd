@@ -47,6 +47,26 @@ const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const APPEARANCE_VARIANTS := preload("res://scripts/characters/appearance_variants.gd")
 
+## Explicit actor allowlist for disabled model/portrait authoring.
+const MODEL_AUTHORING_CANDIDATES := {
+	"npc_identity_water_adair_v1": {
+		"model": "res://assets/characters/npc_identity/water_adair/adair_lod0.glb",
+		"generation_task_id": "01a12ba9-8dea-7093-a169-b6a195cb1e2c",
+		"rig_task_id": "01a12bb2-f69f-75de-94e5-41dd21a2e47b"},
+	"npc_identity_water_iona_v1": {
+		"model": "res://assets/characters/npc_identity/water_iona/iona_lod0.glb",
+		"generation_task_id": "01a12bba-b649-7172-9858-171c04a96539",
+		"rig_task_id": "01a12bc3-18b7-73ae-b59f-7d3669d6c858"},
+	"npc_identity_water_orsen_v1": {
+		"model": "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb",
+		"generation_task_id": "01a12c31-4e68-7244-8345-7f97ce9f63ab",
+		"rig_task_id": "01a12c39-2461-7719-9915-6be22b5a4518"},
+	"npc_identity_water_otto_v1": {
+		"model": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
+		"generation_task_id": "01a12c89-1a98-73b5-8195-a83273dbf42b",
+		"rig_task_id": "01a12c90-1131-712e-a162-f03509398b01"}
+}
+
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 
 const PORTRAIT_DIR := "res://assets/ui/portraits"
@@ -208,8 +228,11 @@ func _run() -> void:
 				_failures.append("unknown appearance authoring candidate: " + variant_id)
 				continue
 			var profile := str(record.get("expected_base_profile", ""))
+			var exposure := 0.88 if profile == "field_researcher" else 1.0
+			if variant_id == "npc_identity_water_iona_v1":
+				exposure = 0.70
 			author_specs.append({"file": variant_id, "config_key": profile, "appearance_variant": variant_id,
-				"author_appearance": true, "exposure": 0.88 if profile == "field_researcher" else 1.0})
+				"author_appearance": true, "exposure": exposure})
 		else:
 			wanted.append(text)
 	if not author_specs.is_empty() and not wanted.is_empty():
@@ -382,10 +405,12 @@ static func authoring_portrait_model_config(spec: Dictionary, variant_settings: 
 	var raw: Variant = records[variant_id]
 	if not raw is Dictionary: return {}
 	var record: Dictionary = raw
+	if config.get("enabled", true) != false or record.get("enabled", true) != false: return {}
+	if MODEL_AUTHORING_CANDIDATES.has(variant_id):
+		return _authoring_model_candidate_config(spec, record, records)
 	# Only the six installed-rig Tidewake candidates belong to this authoring job.
 	if not variant_id in ["p2055_water_adair", "p2055_water_iona", "p2055_water_orsen",
 			"p2055_water_otto", "p2055_water_trainer_fen", "p2055_water_trainer_evi"]: return {}
-	if config.get("enabled", true) != false or record.get("enabled", true) != false: return {}
 	var profile := str(spec.get("config_key", ""))
 	if not profile in ["field_researcher", "wandering_trainer"] \
 			or profile != str(record.get("expected_base_profile", "")): return {}
@@ -395,16 +420,7 @@ static func authoring_portrait_model_config(spec: Dictionary, variant_settings: 
 			or model != "res://assets/characters/%s/%s_lod0.glb" % [profile, profile] \
 			or not ResourceLoader.exists(model) or not load(model) is PackedScene: return {}
 	var portrait := str(record.get("portrait", ""))
-	if portrait != "%s/%s.png" % [PORTRAIT_DIR, variant_id]: return {}
-	for plate: Dictionary in PORTRAITS:
-		if portrait == "%s/%s.png" % [PORTRAIT_DIR, str(plate.file)]: return {}
-	for painted: String in PAINTED:
-		if portrait == "%s/%s.png" % [PORTRAIT_DIR, painted]: return {}
-	for other_id: Variant in records:
-		var other: Variant = records[other_id]
-		if str(other_id) != variant_id and other is Dictionary and str(other.get("portrait", "")) == portrait: return {}
-	# A destination that exists must itself be an image, never an unrelated file.
-	if FileAccess.file_exists(portrait) and (not ResourceLoader.exists(portrait) or not load(portrait) is Texture2D): return {}
+	if not _authoring_destination_valid(portrait, variant_id, records): return {}
 	var provenance: Variant = record.get("authoring_provenance", {})
 	if not provenance is Dictionary or provenance.is_empty(): return {}
 	if str(provenance.get("source_model", "")) != model \
@@ -428,6 +444,104 @@ static func authoring_portrait_model_config(spec: Dictionary, variant_settings: 
 		if not emission is String or not emission.begins_with("res://") \
 				or not ResourceLoader.exists(emission) or not load(emission) is Texture2D: return {}
 		cfg["body_emission_override"] = emission
+	cfg["portrait"] = portrait
+	cfg["appearance_variant_id"] = variant_id
+	return cfg
+
+
+static func _authoring_destination_valid(portrait: String, variant_id: String, records: Dictionary) -> bool:
+	if portrait != "%s/%s.png" % [PORTRAIT_DIR, variant_id]: return false
+	for plate: Dictionary in PORTRAITS:
+		if portrait == "%s/%s.png" % [PORTRAIT_DIR, str(plate.file)]: return false
+	for painted: String in PAINTED:
+		if portrait == "%s/%s.png" % [PORTRAIT_DIR, painted]: return false
+	for other_id: Variant in records:
+		var other: Variant = records[other_id]
+		if str(other_id) != variant_id and other is Dictionary and str(other.get("portrait", "")) == portrait: return false
+	# A destination that exists must itself be an image, never an unrelated file.
+	return not FileAccess.file_exists(portrait) or (ResourceLoader.exists(portrait) and load(portrait) is Texture2D)
+
+
+static func _authoring_model_candidate_config(spec: Dictionary, record: Dictionary, records: Dictionary) -> Dictionary:
+	var variant_id := str(spec.get("appearance_variant", ""))
+	var profile := str(spec.get("config_key", ""))
+	if not MODEL_AUTHORING_CANDIDATES.has(variant_id): return {}
+	var expected_profile := "wandering_trainer" if variant_id in ["npc_identity_water_orsen_v1", "npc_identity_water_otto_v1"] else "field_researcher"
+	if profile != expected_profile: return {}
+	var expected: Dictionary = MODEL_AUTHORING_CANDIDATES[variant_id]
+	var portrait := str(record.get("portrait", ""))
+	if not _authoring_destination_valid(portrait, variant_id, records): return {}
+	var base: Dictionary = VILLAGE_NPCS.model_config(spec)
+	var cfg := APPEARANCE_VARIANTS.body_model_config(base, profile, record)
+	if cfg.is_empty() or str(cfg.model) != str(expected.model): return {}
+	var provenance: Variant = record.get("authoring_provenance", {})
+	if not provenance is Dictionary: return {}
+	if str(provenance.get("source_model", "")) != str(base.get("model", "")) \
+			or str(provenance.get("candidate_model", "")) != str(cfg.model): return {}
+	for field: String in ["source_model", "candidate_model", "reference"]:
+		var path := str(provenance.get(field, ""))
+		if not path.begins_with("res://") or not FileAccess.file_exists(path) \
+				or FileAccess.get_sha256(path) != str(provenance.get(field + "_sha256", "")): return {}
+	var producer := str(provenance.get("producer", ""))
+	if producer != "res://tools/art_pipeline/blender/animate_humanoid.py" \
+			or not FileAccess.file_exists(producer): return {}
+	# Git checks this Python source out with CRLF on Windows and LF elsewhere.
+	# Bind the actual producer text without making checkout line endings a failure.
+	var producer_text := FileAccess.get_file_as_string(producer).replace("\r\n", "\n")
+	if producer_text.sha256_text() != str(provenance.get("producer_sha256", "")): return {}
+	if str(provenance.get("generation_task_id", "")) != str(expected.generation_task_id) \
+			or str(provenance.get("rig_task_id", "")) != str(expected.rig_task_id): return {}
+	if variant_id == "npc_identity_water_iona_v1":
+		if str(provenance.get("reference", "")) != "res://docs/art/reference/npc-identity/iona-front-agent-v1.png": return {}
+		var prompt := str(provenance.get("reference_prompt", ""))
+		if prompt != "res://docs/art/reference/npc-identity/iona-front-agent-v1.prompt.txt" \
+				or not FileAccess.file_exists(prompt): return {}
+		if FileAccess.get_file_as_string(prompt).replace("\r\n", "\n").sha256_text() \
+				!= str(provenance.get("reference_prompt_sha256_lf", "")): return {}
+	if variant_id == "npc_identity_water_orsen_v1":
+		if str(provenance.get("reference", "")) != "res://docs/art/reference/npc-identity/orsen-front-agent-v1.png": return {}
+		var prompt := str(provenance.get("reference_prompt", ""))
+		if prompt != "res://docs/art/reference/npc-identity/orsen-front-agent-v1.prompt.txt" \
+				or not FileAccess.file_exists(prompt): return {}
+		if FileAccess.get_file_as_string(prompt).replace("\r\n", "\n").sha256_text() \
+				!= str(provenance.get("reference_prompt_sha256_lf", "")): return {}
+		var correction: Variant = provenance.get("postprocessing", {})
+		if not correction is Dictionary: return {}
+		var retarget := str(correction.get("producer", ""))
+		if retarget != "res://assets/characters/npc_identity/water_orsen/source/retarget_orsen_arms.py" \
+				or not FileAccess.file_exists(retarget): return {}
+		if FileAccess.get_file_as_string(retarget).replace("\r\n", "\n").sha256_text() \
+				!= str(correction.get("producer_sha256_lf", "")): return {}
+		var recipe := str(correction.get("recipe", ""))
+		if recipe != "res://assets/characters/npc_identity/water_orsen/source/arm_retarget_recipe.json" \
+				or not FileAccess.file_exists(recipe) \
+				or FileAccess.get_sha256(recipe) != str(correction.get("recipe_sha256", "")): return {}
+		var recipe_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(recipe))
+		if not recipe_data is Dictionary \
+				or str(recipe_data.get("input_sha256", "")) != str(correction.get("input_model_sha256", "")) \
+				or str(correction.get("output_model_sha256", "")) != str(provenance.get("candidate_model_sha256", "")): return {}
+	if variant_id == "npc_identity_water_otto_v1":
+		if str(provenance.get("reference", "")) != "res://docs/art/reference/npc-identity/otto-front-agent-v2.png": return {}
+		var prompt := str(provenance.get("reference_prompt", ""))
+		if prompt != "res://docs/art/reference/npc-identity/otto-front-agent-v2.prompt.txt" \
+				or not FileAccess.file_exists(prompt): return {}
+		if FileAccess.get_file_as_string(prompt).replace("\r\n", "\n").sha256_text() \
+				!= str(provenance.get("reference_prompt_sha256_lf", "")): return {}
+		var correction: Variant = provenance.get("postprocessing", {})
+		if not correction is Dictionary: return {}
+		var retarget := str(correction.get("producer", ""))
+		if retarget != "res://assets/characters/npc_identity/water_otto/source/retarget_otto_arms.py" \
+				or not FileAccess.file_exists(retarget): return {}
+		if FileAccess.get_file_as_string(retarget).replace("\r\n", "\n").sha256_text() \
+				!= str(correction.get("producer_sha256_lf", "")): return {}
+		var recipe := str(correction.get("recipe", ""))
+		if recipe != "res://assets/characters/npc_identity/water_otto/source/arm_retarget_recipe.json" \
+				or not FileAccess.file_exists(recipe) \
+				or FileAccess.get_sha256(recipe) != str(correction.get("recipe_sha256", "")): return {}
+		var recipe_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(recipe))
+		if not recipe_data is Dictionary \
+				or str(recipe_data.get("input_sha256", "")) != str(correction.get("input_model_sha256", "")) \
+				or str(correction.get("output_model_sha256", "")) != str(provenance.get("candidate_model_sha256", "")): return {}
 	cfg["portrait"] = portrait
 	cfg["appearance_variant_id"] = variant_id
 	return cfg

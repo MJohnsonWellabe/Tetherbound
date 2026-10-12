@@ -1143,7 +1143,13 @@ func foundation_boss_outcome(director: Node, spec: Dictionary, record: Dictionar
 				"validated_host_outcome": "win", "encounter_id": record.encounter_id, "participants": participants.duplicate()}})
 	return get_node(^"LedgerRpc").call("journal_foundation_event", "boss:" + str(spec.id) + ":" + str(record.encounter_id), duties)
 
+## True after a scan committed a duty that is still settling (its owner apply
+## is deferred to the next frame): FoundationComposition rescans sooner, so a
+## long fight's mastery queue drains one row at a time in seconds, not minutes.
+var foundation_backlog := false
+
 func _retry_foundation_events() -> void:
+	foundation_backlog = false
 	if not is_host() or _game() == null or _character_authority == null: return
 	_retry_combat_mastery_sources()
 	var world: RefCounted = _game().get("world")
@@ -1173,7 +1179,9 @@ func _retry_foundation_events() -> void:
 		var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
 		var receipt := _foundation_duty_receipt(duty, world.reward_delivery_namespace)
 		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
-			and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
+			and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt):
+			_note_duty_released(duty) # Its committed row was accepted: the hold logged at commit has ended.
+			continue
 		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
 			and latest.status == "pending" and latest.after.redesign_character.transaction_receipts.has(receipt):
 			get_node(^"LedgerRpc").call("_process_creature_training", latest)
@@ -1247,6 +1255,7 @@ func _retry_foundation_events() -> void:
 		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]:
 			_note_duty_hold(duty, str(result.get("code", "unresolved %s" % JSON.stringify(result).left(160))))
 			handled[duty.character_id] = true
+			if result.get("ok") == true and result.get("durable") == true: foundation_backlog = true
 		elif result.get("resolved") == true:
 			_note_duty_released(duty)
 
@@ -2820,6 +2829,18 @@ func host(port: int = -1, peers: int = -1) -> bool:
 	# against a full registry reaches admission and receives `session_full`; the
 	# registry remains hard-capped at `cap`, so this never creates a fifth player.
 	var err := p.create_server(use_port, maxi(1, cap), int(_cfg("channel_count", 2)))
+	# The default port can be taken (a second game instance, another app).
+	# Offline-solo is not a full solo game: host-authored durable rewards,
+	# among them the Warden's portal key and relic (F19#5), need an active
+	# session. So with no port asked for, try the next few before giving up.
+	if err != OK and port <= 0:
+		for step in range(1, int(_cfg("port_fallback_span", 0)) + 1):
+			p = ENetMultiplayerPeer.new()
+			err = p.create_server(use_port + step, maxi(1, cap), int(_cfg("channel_count", 2)))
+			if err == OK:
+				push_warning("Session.host: udp/%d was taken; hosting on udp/%d" % [use_port, use_port + step])
+				use_port += step
+				break
 	if err != OK:
 		push_warning("Session.host: could not bind udp/%d (err %d); staying offline-solo" % [use_port, err])
 		return false
@@ -5065,6 +5086,9 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 	if row.get("status")!="accepted" or not ESSENCE._equivalent(world.reward_deliveries.get(row.get("delivery_id")),row): return false
 	var character := _authority_character(peer)
 	if character.is_empty() or character != row.get("character_id"): return false
+	# After a title Load the host's own record is seeded lazily; seed it before
+	# acknowledging the save's accepted row instead of refusing that ack.
+	if peer == local_peer_id() and int(_character_authority.call("revision", character)) < 0: admitted_character_state(peer)
 	if not _tether_item_live_consumer_ready(row): return false
 	var pending: bool = _character_authority.call("creature_training_is_pending", character) == true
 	if not pending and (row.get("action") != "tether_item" or not _tether_item_original_pending(row)):
