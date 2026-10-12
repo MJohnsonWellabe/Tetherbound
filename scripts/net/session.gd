@@ -6579,9 +6579,17 @@ func _portal_envelope_valid(peer: int, envelope: Dictionary) -> bool:
 
 
 func _host_portal_action(peer: int, envelope: Dictionary) -> void:
-	if not _portal_envelope_valid(peer, envelope): return
+	if not _portal_envelope_valid(peer, envelope):
+		# Diagnostic: a dropped request gets no reply, so say why in the log.
+		var game := _game()
+		print("[portal] dropped request %s from peer %d (runtime_ready=%s world=%s epoch_match=%s character_match=%s)" % [
+			str(envelope.get("request_id", "")), peer, str(portal_runtime_ready()), str(game != null and game.get("world") != null),
+			str(envelope.get("session_epoch") == _altar_epoch), str(envelope.get("character_id") == _authority_character(peer))])
+		return
 	var arrival := get_node_or_null(^"FoundationComposition/PortalArrival")
-	if arrival != null and arrival.call("original_pending", peer, envelope) == true: return # Existing exact permit/checkpoint owns retries.
+	if arrival != null and arrival.call("original_pending", peer, envelope) == true:
+		print("[portal] request %s from peer %d held by an existing pending permit" % [str(envelope.get("request_id", "")), peer])
+		return # Existing exact permit/checkpoint owns retries.
 	var context := _host_portal_context(peer)
 	if context.is_empty():
 		_portal_reply(peer, envelope, {"ok": false, "reason": "Your authoritative travel state is not ready."})
