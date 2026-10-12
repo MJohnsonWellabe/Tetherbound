@@ -1196,7 +1196,7 @@ func _ready() -> void:
 func _style_hotbar() -> void:
 	var box := UITokens.panel_deep_box()
 	box.bg_color.a = _hotbar_panel_alpha
-	if _victory_hierarchy_candidate and _clarity.get("hide_quick_items_heading") != true:
+	if _victory_hierarchy_candidate:
 		var layout := $Root/BottomDock/HotbarPanel/Margin/Layout as VBoxContainer
 		var margin := $Root/BottomDock/HotbarPanel/Margin as MarginContainer
 		_quick_items_heading = Label.new()
@@ -3466,6 +3466,11 @@ func _position_moment_banner() -> void:
 func _update_moment_banner() -> void:
 	if _moment_banner == null:
 		return
+	if _quick_items_heading != null and _clarity.get("hide_quick_items_heading") == true:
+		# P2-004 x P2-103/P2-111: the caption exists to keep a victory receipt
+		# from reading as part of the quickbar, so it shows only while a
+		# moment card is up; in plain exploration it is clutter.
+		_quick_items_heading.visible = _moment_banner.visible
 	if _moment_feed_epoch != PROGRESSION_FEED.epoch():
 		_moment_feed_epoch = PROGRESSION_FEED.epoch()
 		_moment_feed_seq = 0
