@@ -1,0 +1,18 @@
+{
+ "enabled": false,
+ "_comment": "P2-063 (effects-claude, 2026-10-12). Presentation only, shipping OFF until a code-blind PASS: scripts/vfx/tell_timing_cue.gd draws (a) a 'landing now' front that runs from the attacker to the edge of its target's footprint during the wind-up and arrives on the strike, and (b) an 'opening' rim pulse around the whole foe while it is staggered or recovering after its swing. Reads combat state only; no timing, AI, damage or transaction is changed.",
+ "front_colour": "#ff66ee",
+ "front_width_m": 1.1,
+ "front_rate": 220,
+ "front_mote_m": 0.38,
+ "front_motes": 60,
+ "lift_m": 0.12,
+ "stop_clearance_m": 0.7,
+ "arrival_motes": 14,
+ "rim_colour": "#70ddff",
+ "rim_rate": 200,
+ "rim_mote_m": 0.34,
+ "rim_motes": 60,
+ "rim_pulse_hz": 3.0,
+ "opening_hold_s": 1.2
+}

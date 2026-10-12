@@ -37,6 +37,8 @@ const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 ## level-up flourish. One door; see scripts/vfx/combat_vfx.gd.
 const VFX := preload("res://scripts/vfx/combat_vfx.gd")
 const TELEGRAPH_GLOW := preload("res://scripts/combat/telegraph_glow.gd")
+const TELL_TIMING_CUE := preload("res://scripts/vfx/tell_timing_cue.gd")
+const CATCH_KIT := preload("res://scripts/vfx/catch_kit.gd")
 const TARGET_MARKER := preload("res://scripts/combat/target_marker.gd")
 ## A ranged move's visible travel. Presentation only -- the hit is still
 ## decided instantly by the cone test (see its own header).
@@ -975,6 +977,9 @@ func begin(
 		_wild.connect("strike_ready", _on_enemy_strike)
 	if not _wild.is_connected("telegraph_started", _on_enemy_telegraph):
 		_wild.connect("telegraph_started", _on_enemy_telegraph)
+	# P2-063: presentation-only timing cue; OFF unless tell_timing_cue.json enables it.
+	if TELL_TIMING_CUE.enabled():
+		TELL_TIMING_CUE.attach(_arena if _arena != null else _player.get_parent(), self, _wild)
 	if not realm_owned_opponent:
 		_wild.call("set_engaged", true, _ally_body)
 		_wild.set("arena", _arena)
@@ -6220,6 +6225,9 @@ func _catch_flash(key: String, at: Vector3) -> void:
 		# every attack has always drawn -- see impact_flash.gd's `_spike_softness`.
 		float(spec.get("spike_softness", 0.0))
 	)
+	# P2-060: presentation-only catch beats; OFF unless catch_kit.json enables it.
+	if CATCH_KIT.enabled():
+		CATCH_KIT.play(host, key, at, _wild)
 
 
 ## The instance the player just caught, for the director to keep. Valid only
