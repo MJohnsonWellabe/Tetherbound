@@ -17,4 +17,9 @@ Captured Sun 11 Oct 2026, finished about 6:44 PM CT, by the captures lane. Sourc
   - Doss: gathered wood and fiber, the repair, then the reward;
   - Juno: two patrol fights won, the escort reunited.
 - **`sheet.jpg`:** one frame per activity. Full action sequences are in the per-activity frames at the source run; the six chosen frames are in `frames/`.
+- **Recapture of Doss and Juno (judge r1 FAIL on those two), finished about 8:10 PM CT.** Source \`d43cf52a\`, same sigils save, \`--act --recall-before-act\`. Both PASS again.
+  - Doss: frame 05 is the handover line itself, with Doss in clear view.
+  - Juno: frame 06 is her reunion line beside the returned Meadowhart.
+  - The recall input did not put the follower away (receipt \`recalled_before_act: false\`). In Doss's frame the antlered creature is now only a sliver at the left edge.
+- **The tall black sky column (judge r1)** is the authored F03 lure: Doss's river-nest signal-fire smoke (band3 props.json, a 42 m column, also used for Bram and the Warrens). Its unshaded \`#948f87\` discs at alpha 0.6 compounded to near-black against the day sky. All three columns are now \`#bdb6ab\` at alpha 0.55 (\`d43cf52a\`, \`_why_f03_1_smoke_r8\`) and read as grey smoke.
 - **Not included:** the Hall activity needs all three captains beaten, which neither profile has.
