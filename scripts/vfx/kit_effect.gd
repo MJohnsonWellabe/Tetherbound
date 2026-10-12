@@ -789,8 +789,8 @@ func _raise_spikes() -> void:
 		# Ellipse just outside the measured footprint: spikes ring the body, never pierce it.
 		reach = Vector2(box.size.x, box.size.z) * 0.5 + Vector2.ONE * float(cfg.get("clearance_m", 0.3))
 	var material := _rock_material(_hex(cfg.get("colour"), Color("#8b7a62")))
-	material.emission_enabled = false
-	material.disable_receive_shadows = false
+	material.emission_energy_multiplier = 0.25
+	material.uv1_scale = Vector3.ONE * 1.4
 	for i in count:
 		var spike := MeshInstance3D.new()
 		spike.mesh = spike_mesh(int(_context.get("seed", 0)) * 31 + i)
@@ -798,10 +798,19 @@ func _raise_spikes() -> void:
 		spike.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 		add_child(spike)
 		spike.top_level = true
-		var angle := TAU * float(i) / float(count) + _rng.randf_range(-0.25, 0.25)
+		# Spikes erupt along the target's flanks and far side, leaving the
+		# viewer-facing and caster-facing sides of the body unblocked.
+		var away := Vector3(_direction.x, 0, _direction.z).normalized()
+		var base := atan2(away.z, away.x)
+		var angle := base + lerpf(-1.9, 1.9, (float(i) + 0.5) / float(count)) + _rng.randf_range(-0.12, 0.12)
+		var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
+		if camera != null:
+			var toward := (camera.global_position - centre) * Vector3(1, 0, 1)
+			var candidate := Vector3(cos(angle), 0, sin(angle))
+			if candidate.dot(toward.normalized()) > 0.55: angle += PI * 0.5
 		var ring := float(cfg.get("ring_scale", 0.95))
 		var at := centre + Vector3(cos(angle) * reach.x, 0, sin(angle) * reach.y) * ring * _rng.randf_range(1.0, 1.12)
-		if bool(cfg.get("front_first", true)) and i == 0:
+		if false:
 			var front := -Vector3(_direction.x, 0, _direction.z).normalized()
 			at = centre + Vector3(front.x * reach.x, 0, front.z * reach.y) * ring
 		spike.global_position = at - Vector3.UP * 0.05

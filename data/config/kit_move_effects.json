@@ -174,13 +174,13 @@
     "width": 0.16
    },
    "trail": {
-    "kind": "glow",
-    "colour": "#ffe875",
-    "size": 1.8,
+    "kind": "puff",
+    "colour": "#e8d36a",
+    "size": 1.4,
     "end_size": 0.5,
     "life": 0.3,
     "rate": 60,
-    "cloud_colour": "#5d6888"
+    "cloud_colour": "#59627a"
    },
    "impact": {
     "scale": 1.0,
@@ -202,6 +202,10 @@
     "remnant_rate": 20,
     "remnant_colour": "#ffe875",
     "remnant_size": 0.2
+   },
+   "launch": {
+    "colour": "#fff3a0",
+    "size": 1.2
    }
   },
   "chain_lightning": {
@@ -643,9 +647,9 @@
    },
    "spikes": {
     "count": 6,
-    "height": 1.9500000000000002,
-    "width": 0.8,
-    "colour": "#6e5a44",
+    "height": 3.0,
+    "width": 0.9,
+    "colour": "#a08a6c",
     "ring_scale": 1.0,
     "lean_deg": 16,
     "rise_s": 0.12,
@@ -679,9 +683,9 @@
    },
    "spikes": {
     "count": 8,
-    "height": 1.1700000000000002,
-    "width": 0.9,
-    "colour": "#6e5a44",
+    "height": 2.1,
+    "width": 1.0,
+    "colour": "#a08a6c",
     "ring_scale": 1.0,
     "lean_deg": 20,
     "rise_s": 0.1,
