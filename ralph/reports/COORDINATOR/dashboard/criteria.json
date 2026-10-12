@@ -180,8 +180,8 @@
     {
      "text": "Each is a distinct optional action",
      "status": "partial",
-     "evidence": "Code-blind r10 10:46 PM CT 11 Oct (0db14e48): Doss, Bram, herd and Vault each read as their own activity. Debris-clear smokes PASS on 2c8d88a3f.",
-     "gap": "r11 with an exact frame list: Coll's request/delivery/repaired cart (not a generic Mine prompt); Juno's ask/lead/reunion. Real fixes: the Vault den renders as a dark void with stray lines; Doss's log renders as an untextured peach cylinder; a follower stands in the campfire. Systems lane checking a catch prompt shown in a trainer duel.",
+     "evidence": "Code-blind r11 12:07 AM CT 12 Oct (b9c8c035): Doss, herd, Juno, Bram and Vault read as five distinct actions. Debris-clear smokes PASS on 2c8d88a3f.",
+     "gap": "Coll's cart only: no repair-prompt frame (the capture fired after the dialogue), and the broken and repaired cart look the same (needs a visibly broken wheel); Coll has no body. Also check the black sky spike in Juno's escort frame and the Juno line that opened a challenge bout. Captures lane recapturing the cart.",
      "note": "Evidence window 1 (6:20 AM CT Sun 11 Oct): lane working. | Audit 2026-10-04 on b4e4897d5: STALE. Earned runs from the seed4_hall checkpoint. The save was reset, and F19 must regenerate the earned checkpoints.",
      "audit_index": 1
     },
