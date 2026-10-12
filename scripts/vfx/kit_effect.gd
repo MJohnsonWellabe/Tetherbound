@@ -156,6 +156,19 @@ func _rock_material(tint: Color) -> StandardMaterial3D:
 func _solid_material(kind: String, tint: Color) -> Material:
 	match kind:
 		"rock": return _rock_material(tint)
+		"droplet":
+			var water := StandardMaterial3D.new()
+			water.albedo_color = tint
+			water.vertex_color_use_as_albedo = true
+			water.metallic = 0.1
+			water.roughness = 0.05
+			water.emission_enabled = true
+			water.emission = tint.lerp(Color.WHITE, 0.2)
+			water.emission_energy_multiplier = 0.6
+			water.rim_enabled = true
+			water.rim = 1.0
+			water.disable_receive_shadows = true
+			return water
 		"ice":
 			var ice := StandardMaterial3D.new()
 			ice.albedo_color = tint
@@ -259,6 +272,16 @@ static func spike_mesh(seed: int) -> ArrayMesh:
 	for s in sides: _tri(tool, top[s], tip, top[(s + 1) % sides], Vector3(0, 0.6, 0))
 	return tool.commit()
 
+func _debris_mesh(kind: String) -> Mesh:
+	if kind == "droplet":
+		var drop := SphereMesh.new()
+		drop.radius = 0.5
+		drop.height = 1.0
+		drop.radial_segments = 10
+		drop.rings = 6
+		return drop
+	return chunk_mesh(kind, int(_context.get("seed", 0)) + 7)
+
 func _quad() -> QuadMesh:
 	var quad := QuadMesh.new()
 	quad.size = Vector2.ONE
@@ -281,17 +304,19 @@ func _build_pools(impact: int, trail: int) -> void:
 		var bolt_cap := mini(16, trail)
 		trail -= bolt_cap
 		_bolt = _pool(bolt_cap, _quad(), _streak_material(0.0), PARTICLES.Mode.STREAK)
-	if _family == "slash":
-		# Claw rakes draw from this effect's own trail lease.
-		var claw_cap := mini(12, trail)
-		trail -= claw_cap
-		_bolt = _pool(claw_cap, _quad(), _streak_material(0.0), PARTICLES.Mode.STREAK)
 	if trail > 0:
-		_trail_pool = _pool(trail, _quad(), _puff_material() if trail_kind == "puff" else _glow_material(), PARTICLES.Mode.BILLBOARD)
+		if trail_kind == "streak":
+			# Velocity-aligned soft streaks: each ember/claw draws its own trail.
+			_trail_pool = _pool(trail, _quad(), _streak_material(), PARTICLES.Mode.STREAK)
+		else:
+			_trail_pool = _pool(trail, _quad(), _puff_material() if trail_kind == "puff" else _glow_material(), PARTICLES.Mode.BILLBOARD)
 	# Impact slots: flash cores, starburst sparks, solid debris, dust puffs.
 	var flashes := mini(4, impact)
 	var sparks := mini(int(impact_cfg.get("sparks", 8)), maxi(0, impact - flashes))
 	var debris := mini(int((impact_cfg.get("debris", {}) as Dictionary).get("count", 6)), maxi(0, impact - flashes - sparks))
+	# Only earth/air moves raise a dust cloud; every other element spends
+	# those slots on its own debris (droplets, shards, embers, leaves).
+	if not bool(impact_cfg.get("dust", false)): debris = maxi(0, impact - flashes - sparks)
 	var dust := maxi(0, impact - flashes - sparks - debris)
 	_flash_pool = _pool(flashes, _quad(), _glow_material(), PARTICLES.Mode.BILLBOARD)
 	_spark_pool = _pool(sparks, _quad(), _streak_material(), PARTICLES.Mode.STREAK)
@@ -299,7 +324,7 @@ func _build_pools(impact: int, trail: int) -> void:
 	var debris_kind := str(debris_cfg.get("kind", "rock"))
 	# The debris pool is the inherited `_motes`: ground-settling assertions
 	# inspect exactly these instances against the frozen ground height.
-	_motes = _pool(debris, chunk_mesh(debris_kind, int(_context.get("seed", 0)) + 7),
+	_motes = _pool(debris, _debris_mesh(debris_kind),
 		_solid_material(debris_kind, _hex(debris_cfg.get("colour"), _colour)), PARTICLES.Mode.SOLID, true) as MultiMeshInstance3D
 	_dust_pool = _pool(dust, _quad(), _puff_material(), PARTICLES.Mode.BILLBOARD, true)
 
@@ -471,8 +496,8 @@ func _trail_opts(scale: float) -> Dictionary:
 	var gain := float(tuning.get("trail_scale", 1.8))
 	return {"life": float(cfg.get("life", 0.28)), "size0": _radius * float(cfg.get("size", 1.6)) * scale * gain,
 		"size1": _radius * float(cfg.get("end_size", 0.5)) * scale * gain,
-		"colour": _hex(cfg.get("colour"), _colour), "gravity": float(cfg.get("gravity", 0.0)),
-		"drag": 2.0, "fade_in": 0.02}
+		"colour": _hex(cfg.get("colour"), _colour).lerp(_hex(cfg.get("colour2"), _hex(cfg.get("colour"), _colour)), _rng.randf()),
+		"gravity": float(cfg.get("gravity", 0.0)), "drag": 2.0, "fade_in": 0.02, "stretch": float(cfg.get("stretch", 0.06))}
 
 func _jitter(amount: float) -> Vector3:
 	return Vector3(_rng.randf_range(-1, 1), _rng.randf_range(-1, 1), _rng.randf_range(-1, 1)) * amount
@@ -480,6 +505,7 @@ func _jitter(amount: float) -> Vector3:
 func _travel_frame(t: float, step: float) -> void:
 	var cfg: Dictionary = _kit.get("trail", {})
 	var rate := float(cfg.get("rate", 60.0))
+	_travel_extras(t, step)
 	match _family:
 		"projectile", "ground_body":
 			var n := _rate_emit(rate * maxi(1, _bodies.size()), step)
@@ -497,6 +523,12 @@ func _travel_frame(t: float, step: float) -> void:
 					var at := _ground_source.lerp(_ground_target, t)
 					_dust_pool.call("emit", at + _jitter(0.2) * Vector3(1, 0, 1), Vector3.UP * 0.6 + _jitter(0.4), _dust_opts(0.6))
 		"stream":
+			var stream_extra: Dictionary = _kit.get("extras", {})
+			if stream_extra.has("carry_debris") and _motes != null:
+				var reach := _from.distance_to(_surface)
+				for k in _rate_emit(float(stream_extra.carry_debris), step, "carry"):
+					_motes.call("emit", _from + _direction * 0.2 + _jitter(0.1), (_direction + _jitter(0.15)).normalized() * reach / maxf(_travel * 0.75, 0.05),
+						_debris_opts(0.7).merged({"gravity": 0.5, "life": reach / (reach / maxf(_travel * 0.75, 0.05))}, true))
 			# Mouth-to-surface flow: the stream front reaches the surface at contact.
 			var distance := _from.distance_to(_surface)
 			var speed := distance / maxf(_travel * 0.75, 0.05)
@@ -553,18 +585,58 @@ func _travel_frame(t: float, step: float) -> void:
 				_draw_bolt(_from, front, step)
 				for k in _rate_emit(rate, step):
 					if _trail_pool == null: break
-					_trail_pool.call("emit", front + _jitter(0.08), _jitter(0.8), _trail_opts(1.0))
+					# Sparkles shed along the whole arc, not only its tip.
+					_trail_pool.call("emit", _from.lerp(front, _rng.randf()) + _jitter(0.12), _jitter(0.8), _trail_opts(0.7))
 		"self":
 			_aura_frame(step, 1.0)
 		"beam":
 			# The stream front reaches the surface at 60% of travel, then holds.
 			_beam_frame(_from.lerp(_surface, minf(1.0, t / 0.6)), step)
 		"slash":
-			# Claw streaks fly from the caster's forelimbs to the target.
-			for k in _rate_emit(rate, step):
-				if _trail_pool == null: break
-				var head := _from.lerp(_surface, t)
-				_trail_pool.call("emit", head + _jitter(0.18), -_direction * 0.4 + _jitter(0.2), _trail_opts(1.0))
+			# Three parallel claw streaks fly from the caster to the target.
+			if _spark_pool != null:
+				var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
+				var across := camera.global_basis.y if camera != null else Vector3.UP
+				var speed := _from.distance_to(_surface) / maxf(_travel, 0.05)
+				for k in _rate_emit(rate, step):
+					var lane := float(_rng.randi() % 3 - 1) * 0.18
+					_spark_pool.call("emit", _from.lerp(_surface, t) + across * lane, _direction * speed,
+						{"life": 0.12, "size0": 0.1, "size1": 0.06, "colour": _hex(cfg.get("colour"), Color.WHITE), "stretch": 0.08, "fade_in": 0.0})
+
+## Shared flight dressing: a visible wind-up gather at the mouth, a rising
+## ember trail, motes orbiting an orb, and element debris carried in flight.
+func _travel_extras(t: float, step: float) -> void:
+	var extra: Dictionary = _kit.get("extras", {})
+	if _trail_pool != null and t < float(extra.get("gather_until", 0.22)) and _family not in ["self"]:
+		var gather := _hex(extra.get("gather_colour"), _hex((_kit.get("trail", {}) as Dictionary).get("colour"), _colour))
+		for k in _rate_emit(float(extra.get("gather_rate", 90.0)), step, "gather"):
+			var dir := _jitter(1.0).normalized()
+			var reach := float(extra.get("gather_radius_m", 0.7))
+			_trail_pool.call("emit", _from + dir * reach, -dir * reach / 0.16, {"life": 0.16, "size0": 0.22, "size1": 0.5,
+				"colour": gather, "fade_in": 0.02, "stretch": 0.05})
+	if _bodies.is_empty() or _trail_pool == null: return
+	if extra.has("ember_rate"):
+		for k in _rate_emit(float(extra.ember_rate), step, "embers"):
+			var body := _bodies[_rng.randi() % _bodies.size()]
+			_trail_pool.call("emit", body.global_position - _direction * _radius * 1.2 + _jitter(_radius * 0.5),
+				-_direction * 1.5 + Vector3.UP * 1.2 + _jitter(0.5), {"life": 0.35, "size0": 0.16, "size1": 0.06,
+				"colour": _hex(extra.get("ember_colour"), Color("#ffd04a")), "fade_in": 0.01, "stretch": 0.08})
+	if extra.has("orbit"):
+		var orbit: Dictionary = extra.orbit
+		var n := int(orbit.get("count", 5))
+		for body: MeshInstance3D in _bodies:
+			for k in _rate_emit(float(n) * 30.0, step, "orbit"):
+				var a := _elapsed * float(orbit.get("speed", 9.0)) + float(_rng.randi() % n) * TAU / float(n)
+				var r := _radius * float(orbit.get("radius", 1.8))
+				var side := _direction.cross(Vector3.UP).normalized()
+				var offset := (Vector3.UP * cos(a) + side * sin(a)) if str(orbit.get("plane", "ring")) == "vertical" else (_direction * cos(a) + side * sin(a) + Vector3.UP * sin(a * 2.0) * 0.3)
+				_trail_pool.call("emit", body.global_position + offset * r, Vector3.ZERO, {"life": 0.1,
+					"size0": float(orbit.get("size", 0.28)), "size1": float(orbit.get("size", 0.28)) * 0.7,
+					"colour": _hex(orbit.get("colour"), _colour), "fade_in": 0.0})
+	if extra.has("carry_debris") and _motes != null:
+		for k in _rate_emit(float(extra.carry_debris), step, "carry"):
+			var body := _bodies[_rng.randi() % _bodies.size()]
+			_motes.call("emit", body.global_position + _jitter(_radius * 0.8), -_direction * 0.8 + _jitter(1.0), _debris_opts(0.8))
 
 ## Bodies drawn wholly from soft particles (no card/ribbon mesh): a crescent
 ## of glowing motes, a rotating dust funnel, or a foaming wave wall.
@@ -573,6 +645,13 @@ func _particle_body(t: float, step: float) -> void:
 	if kind not in ["mote_crescent", "funnel", "wave_wall"] or _trail_pool == null: return
 	var cfg: Dictionary = _kit.get("body", {})
 	var head := _path(t, 0)
+	var extra: Dictionary = _kit.get("extras", {})
+	if extra.has("carry_debris") and _motes != null:
+		for k in _rate_emit(float(extra.carry_debris), step, "carry"):
+			var lift := Vector3.UP * _rng.randf_range(0.3, float(cfg.get("height_m", 1.2)))
+			var a := _rng.randf() * TAU
+			_motes.call("emit", Vector3(head.x, _ground_target.y, head.z) + lift + Vector3(cos(a), 0, sin(a)) * 0.5,
+				Vector3(-sin(a), 0.8, cos(a)) * 2.5, _debris_opts(0.8))
 	var side := _direction.cross(Vector3.UP).normalized()
 	if side.is_zero_approx(): side = Vector3.RIGHT
 	var colour := _hex(cfg.get("colour"), _colour)
@@ -695,6 +774,15 @@ func _aura_frame(step: float, intensity: float) -> void:
 	var cfg: Dictionary = _kit.get("trail", {})
 	var box := _source_volume()
 	var centre := box.get_center()
+	if _source_pivot != null and _source_pivot.get_ref() != null:
+		# Centre on the body's own pivot so the wrap is even front-to-back.
+		var pivot := (_source_pivot.get_ref() as Node3D).global_position
+		centre = Vector3(lerpf(centre.x, pivot.x, 0.6), centre.y, lerpf(centre.z, pivot.z, 0.6))
+	var extra: Dictionary = _kit.get("extras", {})
+	if extra.has("carry_debris") and _motes != null:
+		for k in _rate_emit(float(extra.carry_debris) * intensity, step, "carry"):
+			var at := centre + Vector3(_rng.randf_range(-0.5, 0.5) * box.size.x, _rng.randf_range(-0.3, 0.45) * box.size.y, _rng.randf_range(-0.5, 0.5) * box.size.z)
+			_motes.call("emit", at, Vector3.UP * 0.9 + _jitter(0.4), _debris_opts(0.7).merged({"gravity": 0.6, "life": 0.7}, true))
 	for k in _rate_emit(float(cfg.get("rate", 40.0)) * intensity, step):
 		# Whole-body volume (feet to crown, snout to tail), centred on its midpoint.
 		var at := centre + Vector3(_rng.randf_range(-0.5, 0.5) * box.size.x, _rng.randf_range(-0.5, 0.3) * box.size.y,
@@ -729,8 +817,9 @@ func _build_impact() -> void:
 	var scale := float(cfg.get("scale", 1.0)) * float(tuning.get("impact_scale", 1.6)) * maxf(1.0, float(_params.get("impact_scale", 1.0)) * 0.8)
 	var flash_colour := _hex(cfg.get("flash_colour"), _colour.lerp(Color.WHITE, 0.5))
 	# Starburst: a bright core plus a wider soft bloom, then radial spark streaks.
-	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.22, "size0": 0.45 * scale, "size1": 0.8 * scale, "colour": Color(1, 1, 1, 0.85), "fade_in": 0.01})
-	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.5, "size0": 1.3 * scale, "size1": 2.2 * scale, "colour": Color(flash_colour, 0.9), "fade_in": 0.01})
+	# A small, hot core (not a dome) and a tight element-coloured bloom.
+	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.24, "size0": 0.35 * scale, "size1": 0.6 * scale, "colour": Color(Color.WHITE.lerp(flash_colour, 0.25), 1.0), "fade_in": 0.0})
+	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.4, "size0": 0.7 * scale, "size1": 1.2 * scale, "colour": Color(flash_colour, 0.85), "fade_in": 0.0})
 	var back := -_direction if _family not in ["self"] else Vector3.UP
 	if _family == "self":
 		# Self effects burst soft glowing motes outward from the whole body.
@@ -742,22 +831,23 @@ func _build_impact() -> void:
 	for i in int(_spark_pool.call("capacity")) if _family != "self" else 0:
 		var dir := (_jitter(1.0).normalized() + back * float(cfg.get("backscatter", 0.45)) + Vector3.UP * 0.25).normalized()
 		_spark_pool.call("emit", at, dir * _rng.randf_range(5.0, 9.0) * scale * float(cfg.get("spark_speed", 1.0)),
-			{"life": _rng.randf_range(0.3, 0.5), "size0": 0.13 * scale, "size1": 0.05 * scale,
+			{"life": _rng.randf_range(0.3, 0.5), "size0": 0.09 * scale, "size1": 0.04 * scale,
 			"colour": _hex(cfg.get("spark_colour"), flash_colour), "drag": 3.0, "gravity": float(cfg.get("spark_gravity", 4.0)),
-			"stretch": 0.11, "fade_in": 0.01})
+			"stretch": 0.07, "fade_in": 0.0})
 	var debris_cfg: Dictionary = cfg.get("debris", {})
 	var debris_from := at
 	if bool(debris_cfg.get("from_ground", false)): debris_from = _surface_ground() + Vector3.UP * 0.2
 	for i in int(_motes.multimesh.instance_count) if _motes != null else 0:
 		var dir := (_jitter(1.0).normalized() * Vector3(1, 0, 1) + Vector3.UP * _rng.randf_range(0.8, 1.6) + back * 0.6).normalized()
-		_motes.call("emit", debris_from + _jitter(0.15), dir * _rng.randf_range(2.5, 4.5) * float(debris_cfg.get("speed", 1.0)), _debris_opts(scale))
+		# Start already flung out, so element debris reads in the contact frame.
+		_motes.call("emit", debris_from + dir * _rng.randf_range(0.15, 0.5) * scale * 0.5, dir * _rng.randf_range(2.5, 4.5) * float(debris_cfg.get("speed", 1.0)), _debris_opts(scale))
 	var dust_at := _surface_ground() if bool(cfg.get("dust_on_ground", true)) and _family != "self" else at
 	for i in int(_dust_pool.call("capacity")):
 		var dir := (_jitter(1.0) * Vector3(1, 0.3, 1)).normalized()
 		var opts := _dust_opts(scale)
 		_dust_pool.call("emit", dust_at.lerp(at, _rng.randf() * 0.6) + dir * 0.25, dir * _rng.randf_range(1.0, 2.2) + Vector3.UP * 0.5, opts)
 	if _family == "ground": _raise_spikes()
-	if _family == "slash" and _bolt != null: _claw_marks(at - _direction * 0.12)
+	if _family == "slash" and _trail_pool != null: _claw_marks(at - _direction * 0.12)
 	if _family == "bolt":
 		if str(_kit.get("bolt", "chain")) == "sky":
 			_bolt_points.clear()
@@ -788,14 +878,14 @@ func _after_frame(age: float, step: float) -> void:
 			opts.life = 0.6
 			opts.size0 = float(cfg.get("remnant_size", 0.25))
 			opts.size1 = opts.size0 * 0.4
-			_trail_pool.call("emit", _contact_position() + _jitter(0.45), Vector3.UP * 0.6 + _jitter(0.25), opts)
+			_trail_pool.call("emit", _contact_position() - _direction * 0.45 + _jitter(0.35), -_direction * 0.7 + Vector3.UP * 0.4 + _jitter(0.25), opts)
 
 ## Parallel curved claw rakes across the struck surface, drawn as dense soft
 ## additive motes (no flat card), so they read as glowing cuts over the coat.
 func _claw_marks(at: Vector3) -> void:
 	var cfg: Dictionary = _kit.get("claws", {})
 	var claws := int(cfg.get("count", 3))
-	var per := maxi(2, int(_bolt.call("capacity")) / maxi(1, claws))
+	var per := maxi(3, int(_trail_pool.call("capacity")) / maxi(1, claws))
 	var side := _direction.cross(Vector3.UP).normalized()
 	if side.is_zero_approx(): side = Vector3.RIGHT
 	# Rakes are drawn across the struck surface as the local viewer sees it.
@@ -805,17 +895,13 @@ func _claw_marks(at: Vector3) -> void:
 	var colour := _hex(cfg.get("colour"), Color.WHITE)
 	for c in claws:
 		var offset := (float(c) - float(claws - 1) * 0.5) * float(cfg.get("gap_m", 0.26))
-		var points: Array[Vector3] = []
-		for k in per + 1:
-			var u := float(k) / float(per) - 0.5
-			# Diagonal sweep across the struck surface, bowed toward the caster.
-			points.append(at + side * (u * length * 0.75 + offset) + Vector3.UP * (-u * length * 0.85 + offset * 0.3) - _direction * (0.2 * (1.0 - 4.0 * u * u)))
 		for k in per:
-			var w := float(cfg.get("width_m", 0.14)) * (1.0 - absf(float(k) + 0.5 - float(per) * 0.5) / float(per))
-			_bolt.call("emit_fixed", (points[k] + points[k + 1]) * 0.5, (points[k + 1] - points[k]) * 1.15, w, colour, float(cfg.get("life", 0.6)))
-			if _trail_pool != null:
-				_trail_pool.call("emit", points[k], -_direction * 0.3, {"life": 0.55, "size0": w * 3.5, "size1": w * 1.5,
-					"colour": colour, "fade_in": 0.01, "drag": 2.0})
+			var u := float(k) / float(per - 1) - 0.5
+			# Overlapping soft motes along a curved diagonal rake, thickest mid-stroke.
+			var point := at + side * (u * length * 0.75 + offset) + Vector3.UP * (-u * length * 0.85 + offset * 0.3) - _direction * (0.2 * (1.0 - 4.0 * u * u))
+			var w := float(cfg.get("width_m", 0.2)) * (1.0 - absf(u) * 1.2)
+			_trail_pool.call("emit", point, -_direction * 0.15, {"life": float(cfg.get("life", 0.9)), "size0": w * 2.6, "size1": w * 1.6,
+				"colour": colour, "fade_in": 0.0, "drag": 3.0})
 
 func _raise_spikes() -> void:
 	var cfg: Dictionary = _kit.get("spikes", {})
@@ -857,7 +943,7 @@ func _raise_spikes() -> void:
 		spike.global_basis = Basis(outward.cross(Vector3.UP).normalized() if not outward.cross(Vector3.UP).is_zero_approx() else Vector3.RIGHT, deg_to_rad(float(cfg.get("lean_deg", 16.0))))
 		spike.set_meta("width", float(cfg.get("width", 0.42)) * _rng.randf_range(0.8, 1.2))
 		_spikes.append(spike)
-		_spike_heights.append(float(cfg.get("height", 1.4)) * _rng.randf_range(0.7, 1.15))
+		_spike_heights.append(float(cfg.get("height", 1.4)) * _rng.randf_range(0.5, 1.2))
 
 func _update_spikes() -> void:
 	if _spikes.is_empty() or _contact_time < 0.0: return
