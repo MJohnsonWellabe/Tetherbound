@@ -44,16 +44,18 @@
               0.6
             ],
             "scale": 2.6,
+            "roll_deg": 90.0,
+            "sink_m": -1.1,
             "after": {
               "offset": [
                 -4.4,
                 1.2
               ],
-              "roll_deg": 90.0,
+              "roll_deg": 0.0,
               "yaw_deg": 25.0,
-              "sink_m": -1.1
+              "sink_m": 0.0
             },
-            "_why": "Probes pa1/pa2: the kit cage stands upright at roll 0 (the captive's cage); rolled 90 and lifted it lies tipped on its side, open, after the win."
+            "_why": "Probe pa3: at roll 90 (lifted 1.1 m) the kit cage stands as a tall barred box, the captive's cage; at roll 0 it lies low and flat, tipped open, after the win."
           },
           {
             "model": "Chain_Coil",
@@ -228,14 +230,49 @@
         "_why": "Halder (range control, the field): a Tether watch-fire with two signal torches; beaten, the fire is cold logs (the same bonfire without its flames) and the torches lie lowered on the ground.",
         "pieces": [
           {
-            "model": "campfire-pit",
-            "dir": "res://assets/props/kenney_survival",
+            "model": "Rock_Medium_2",
+            "dir": "res://assets/environment/stylized_nature",
             "offset": [
-              -3.8,
+              -3.0,
               0.6
             ],
-            "scale": 4.0,
-            "_why": "probe pa2: at 2.2 the kenney stone ring was too flat to read; 4.0 is a 2 m ring that stays as the cold pit."
+            "scale": 0.38,
+            "yaw_deg": 0.0,
+            "sink_m": 0.05,
+            "_why": "probe pa3: the kenney campfire-pit is too flat to read under Low; four installed rocks ring the fire and stay as the cold pit."
+          },
+          {
+            "model": "Rock_Medium_2",
+            "dir": "res://assets/environment/stylized_nature",
+            "offset": [
+              -4.6,
+              0.6
+            ],
+            "scale": 0.38,
+            "yaw_deg": 37.0,
+            "sink_m": 0.05
+          },
+          {
+            "model": "Rock_Medium_2",
+            "dir": "res://assets/environment/stylized_nature",
+            "offset": [
+              -3.8,
+              1.4
+            ],
+            "scale": 0.38,
+            "yaw_deg": 74.0,
+            "sink_m": 0.05
+          },
+          {
+            "model": "Rock_Medium_2",
+            "dir": "res://assets/environment/stylized_nature",
+            "offset": [
+              -3.8,
+              -0.2
+            ],
+            "scale": 0.38,
+            "yaw_deg": 111.0,
+            "sink_m": 0.05
           },
           {
             "model": "tree-log-small",
@@ -244,7 +281,7 @@
               -3.6,
               0.5
             ],
-            "scale": 2.4,
+            "scale": 3.4,
             "yaw_deg": 35.0,
             "bark": {
               "albedo": "res://assets/environment/stylized_nature/Bark_DeadTree.png",
@@ -260,7 +297,7 @@
               -4.0,
               0.8
             ],
-            "scale": 2.4,
+            "scale": 3.4,
             "yaw_deg": -40.0,
             "bark": {
               "albedo": "res://assets/environment/stylized_nature/Bark_DeadTree.png",
