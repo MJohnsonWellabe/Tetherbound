@@ -862,10 +862,10 @@
    "id": "F13",
    "title": "Tidewake islands, chains and look",
    "chapter": "Tidewake",
-   "pct": 67,
+   "pct": 83,
    "counts": {
-    "met": 4,
-    "partial": 1,
+    "met": 5,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -874,10 +874,10 @@
    "criteria": [
     {
      "text": "Earned route reaches all six island groups",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/f13_0_six_groups/@ddaf7a7bd",
-     "gap": "Tidewake pieces 01-05 and 08 PASS; 07's Venn loss was a helper bug (water_combat_pilot could not see named F22 shapes; fixed in 17f33eec9). 07 is being re-proved at L44, then L20.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Earned evidence. water_world/encounters/save diff since ddaf7a7bd: 12 files, +1501/−767 (F19 re-derivation).",
+     "status": "met",
+     "evidence": "Tidewake earned route by controller input with the same five, no mount, production Load per piece: 01 opening, 02 Reedhaven, 03 Brine, 04 Shellwatch, 05 Tidal, then 07_human_late (Salt Crown, Sluice, Veilfall; the WORLD 6 retained-team path) beating Bex, Calder, Venn and Nerissa (44bbda40, hosted), 08 ending (59d2963b) and 09 Cloudreach handoff (45a1dd6a). ralph/reports/EVIDENCE/F13-0/README.md (tb/ev-meadows-fights).",
+     "gap": "",
+     "note": "07 at L44 is disclosed generated input (proof rules v2 #1); the L20 earned-team cap is the separate Tidewake L20-cap gap.",
      "audit_index": 0
     },
     {
