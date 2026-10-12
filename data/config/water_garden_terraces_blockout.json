@@ -1,0 +1,151 @@
+{
+  "_comment": "Owner6115421105 fresh P2-011 rough layout only. Three contour-oriented, level stone-edged planted terraces off the existing walkline. No collision/route/terrain/interaction/spawn changes. Prior terrace_beds_repair remains OFF and untouched.",
+  "planted_terraces_blockout_enabled": true,
+  "landmark_id": "drowned_garden_terraces",
+  "landmark_xz": [
+    1105.458,
+    2223.33
+  ],
+  "outline_xz": [
+    [
+      -1.6,
+      -4.0
+    ],
+    [
+      -1.9,
+      -2.5
+    ],
+    [
+      -1.7,
+      3.8
+    ],
+    [
+      -1.1,
+      4.3
+    ],
+    [
+      1.5,
+      4.0
+    ],
+    [
+      1.8,
+      2.0
+    ],
+    [
+      1.6,
+      -3.7
+    ],
+    [
+      0.8,
+      -4.4
+    ]
+  ],
+  "soil_texture": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+  "soil_tint": "#84765c",
+  "soil_texture_scale": 0.65,
+  "soil_clearance_m": 0.12,
+  "fill_sink_m": 0.15,
+  "maximum_fill_depth_m": 5.0,
+  "edge_model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+  "edge_depth_m": 0.7,
+  "plants": [
+    {
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "size_m": [
+        1.3,
+        0.8,
+        1.25
+      ],
+      "at_xz": [
+        -0.3,
+        -2.9
+      ]
+    },
+    {
+      "model": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+      "size_m": [
+        1.3,
+        0.65,
+        1.25
+      ],
+      "at_xz": [
+        0.35,
+        -1.8
+      ]
+    },
+    {
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "size_m": [
+        1.3,
+        0.8,
+        1.25
+      ],
+      "at_xz": [
+        -0.3,
+        -0.7
+      ]
+    },
+    {
+      "model": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+      "size_m": [
+        1.3,
+        0.65,
+        1.25
+      ],
+      "at_xz": [
+        0.35,
+        0.4
+      ]
+    },
+    {
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "size_m": [
+        1.3,
+        0.8,
+        1.25
+      ],
+      "at_xz": [
+        -0.3,
+        1.5
+      ]
+    },
+    {
+      "model": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+      "size_m": [
+        1.3,
+        0.65,
+        1.25
+      ],
+      "at_xz": [
+        0.35,
+        2.7
+      ]
+    }
+  ],
+  "terraces": [
+    {
+      "id": "LowerPlantedTerrace",
+      "at_xz": [
+        1120.0,
+        2207.0
+      ],
+      "yaw_deg": -26.0
+    },
+    {
+      "id": "MiddlePlantedTerrace",
+      "at_xz": [
+        1126.0,
+        2204.0
+      ],
+      "yaw_deg": -26.0
+    },
+    {
+      "id": "UpperPlantedTerrace",
+      "at_xz": [
+        1132.0,
+        2201.0
+      ],
+      "yaw_deg": -26.0
+    }
+  ]
+}

@@ -118,6 +118,10 @@ func build(realm: Node3D) -> void:
 	exterior.add_child(exterior_presentation)
 	exterior_presentation.call("build", world, rules.get("exterior_composition", {}))
 	_build_distance_presentation()
+	var ridge_blockout := preload("res://scripts/world/water_veilfall_ridge_blockout.gd").new()
+	ridge_blockout.name = "VeilfallRidgeBlockout"
+	add_child(ridge_blockout)
+	ridge_blockout.build(world, self)
 	_entry_prompt = _prompt(exterior, "Enter behind the waterfall", Vector3(0, 1.4, 0), _enter)
 	interior = Node3D.new()
 	interior.name = "VeilfallInterior"
