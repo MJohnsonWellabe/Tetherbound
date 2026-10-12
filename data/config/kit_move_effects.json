@@ -14,11 +14,11 @@
    },
    "trail": {
     "kind": "puff",
-    "colour": "#cdbb9c",
-    "size": 1.5,
-    "end_size": 0.6,
-    "life": 0.3,
-    "rate": 50,
+    "colour": "#cdbb9c88",
+    "size": 0.75,
+    "end_size": 0.35,
+    "life": 0.22,
+    "rate": 18,
     "speed": 0.4
    },
    "impact": {
