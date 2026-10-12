@@ -118,6 +118,8 @@ static func build(root: Node3D, spec: Dictionary, materials: Dictionary, drum: D
 	fill.position = Vector3.UP * float(lights.interior_height_m)
 	site.add_child(fill)
 	_colonnade(site, spec.get("court_colonnade", {}), stone, trim, glow, lights)
+	_ground_storey(site, spec.get("ground_storey", {}), stone, trim, base_top)
+	_night_pools(site, spec.get("night_pools", {}), spec, driver)
 
 
 ## Open colonnade along both edges of the existing paved approach to the
@@ -157,6 +159,80 @@ static func _colonnade(site: Node3D, spec: Dictionary, stone: Material, trim: Ma
 	site.add_child(walk)
 
 
+## r2 (coordinator judge): the clerestory overhung a recessed ground storey,
+## reading as a dark undercroft. A render-only masonry facing brings the
+## ground storey flush under the string course, leaving the drum's arch
+## openings clear, and a broad low step runs round its foot.
+static func _ground_storey(site: Node3D, spec: Dictionary, stone: Material, trim: Material, base_top: float) -> void:
+	if spec.is_empty():
+		return
+	var gaps: Array = spec.openings_deg
+	var segments := int(spec.segment_count)
+	var inner := float(spec.inner_radius_m)
+	var outer := float(spec.outer_radius_m)
+	_ring(site, "GroundStoreyFacing", inner, outer, 0.0, base_top - 0.1, stone, segments, gaps)
+	_ring(site, "GroundStoreyPlinthStep", outer - 0.1, outer + float(spec.step_width_m), 0.0, float(spec.step_height_m), trim, segments, gaps)
+	_ring(site, "GroundStoreyBaseCourse", outer - 0.05, outer + 0.18, float(spec.step_height_m), float(spec.base_course_height_m), trim, segments, gaps)
+
+
+## Night pools: additive unshaded floor glows under the entry lanterns, inside
+## the drum and along the colonnade, faded out by day with the window glow.
+## Compatibility's per-object light cap leaves the omni lights barely pooling
+## on terrain and paving; these read from the approach.
+static func _night_pools(site: Node3D, spec: Dictionary, root_spec: Dictionary, driver: WindowGlowDriver) -> void:
+	if spec.is_empty():
+		return
+	driver.pool_strength = float(spec.strength)
+	var colour := Color(str(spec.colour))
+	var spots: Array = []
+	for entry: Dictionary in root_spec.lights.entries:
+		var angle := deg_to_rad(float(entry.angle_deg))
+		var outward := Vector3(cos(angle), 0.0, sin(angle))
+		spots.append([outward * (float(entry.radius_m) + float(spec.entry_out_m)), float(spec.entry_radius_m)])
+		spots.append([outward * float(spec.inner_from_centre_m), float(spec.inner_radius_m)])
+	var colonnade: Dictionary = root_spec.get("court_colonnade", {})
+	if not colonnade.is_empty():
+		var bays := int(colonnade.bays)
+		for side: float in [-1.0, 1.0]:
+			for i in bays:
+				if i % 2 == 0:
+					var z := lerpf(float(colonnade.from_z_m), float(colonnade.to_z_m), (float(i) + 0.5) / bays)
+					spots.append([Vector3(side * (float(colonnade.half_spacing_m) - float(spec.colonnade_in_m)), 0.0, z), float(spec.colonnade_radius_m)])
+	for spot: Array in spots:
+		var material := _glow_material(colour)
+		driver.pools.append(material)
+		var quad := MeshInstance3D.new()
+		quad.name = "SanctuaryNightPool"
+		var plane := QuadMesh.new()
+		plane.size = Vector2.ONE * float(spot[1]) * 2.0
+		quad.mesh = plane
+		quad.material_override = material
+		quad.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		quad.rotation.x = -PI * 0.5
+		quad.position = (spot[0] as Vector3) + Vector3.UP * float(spec.floor_y)
+		site.add_child(quad)
+	driver.call_deferred("_update")
+
+
+static func _glow_material(colour: Color) -> ShaderMaterial:
+	var shader := Shader.new()
+	shader.code = """shader_type spatial;
+render_mode unshaded, blend_add, depth_draw_never, cull_disabled;
+uniform vec4 glow : source_color;
+uniform float strength = 0.0;
+void fragment() {
+	float r = length(UV * 2.0 - 1.0);
+	float a = pow(clamp(1.0 - r, 0.0, 1.0), 2.0) * strength;
+	ALBEDO = glow.rgb * a;
+	ALPHA = a;
+}
+"""
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	material.set_shader_parameter("glow", colour)
+	return material
+
+
 ## Window centre angle for this segment, or -1 when the segment is solid.
 static func _window_at(mid: float, windows: int, piers: Array, pier_clear_deg: float) -> float:
 	var step := TAU / windows
@@ -169,12 +245,21 @@ static func _window_at(mid: float, windows: int, piers: Array, pier_clear_deg: f
 	return nearest
 
 
-static func _ring(parent: Node3D, label: String, inner: float, outer: float, y: float, height: float, material: Material, segments: int) -> void:
+static func _ring(parent: Node3D, label: String, inner: float, outer: float, y: float, height: float, material: Material, segments: int, gaps: Array = []) -> void:
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for i in segments:
 		var a := TAU * float(i) / segments
 		var b := TAU * float(i + 1) / segments
+		var open := false
+		for gap: Array in gaps:
+			# A segment is left out when any part of it falls in the opening.
+			var centre := deg_to_rad(float(gap[0]))
+			var half := deg_to_rad(float(gap[1]))
+			if absf(angle_difference(a, centre)) < half or absf(angle_difference(b, centre)) < half:
+				open = true
+		if open:
+			continue
 		var ia := Vector3(cos(a) * inner, 0.0, sin(a) * inner)
 		var ib := Vector3(cos(b) * inner, 0.0, sin(b) * inner)
 		var oa := Vector3(cos(a) * outer, 0.0, sin(a) * outer)
@@ -201,6 +286,8 @@ class WindowGlowDriver extends Node:
 	var night_energy := 4.0
 	var sun_full_day := 1.0
 	var sun_night := 0.55
+	var pools: Array[ShaderMaterial] = []
+	var pool_strength := 1.0
 	var _poll := 0.0
 
 	func _ready() -> void:
@@ -223,4 +310,6 @@ class WindowGlowDriver extends Node:
 			return
 		var daylight := smoothstep(sun_night, sun_full_day, sun.light_energy) if sun.visible else 0.0
 		material.emission_energy_multiplier = lerpf(night_energy, day_energy, daylight)
+		for pool: ShaderMaterial in pools:
+			pool.set_shader_parameter("strength", pool_strength * (1.0 - daylight))
 

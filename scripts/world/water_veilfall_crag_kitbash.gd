@@ -70,11 +70,13 @@ func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
 	if passage != null:
 		for child: Node in passage.get_children():
 			if child is MeshInstance3D:
+				_ranged[child] = [(child as MeshInstance3D).visibility_range_end, float(_k.curtain_visible_to_m)]
 				(child as MeshInstance3D).visibility_range_end = float(_k.curtain_visible_to_m)
 	for path: String in _k.get("near_only_nodes", []):
 		var near := veilfall.get_node_or_null(path) as Node3D
 		if near != null:
 			for child: Node in near.find_children("*", "GeometryInstance3D", true, false):
+				_ranged[child] = [(child as GeometryInstance3D).visibility_range_end, float(_k.near_only_range_m)]
 				(child as GeometryInstance3D).visibility_range_end = float(_k.near_only_range_m)
 	for path: String in _k.hide_nodes:
 		var previous := veilfall.get_node_or_null(path) as Node3D
@@ -93,6 +95,53 @@ func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
 	if far != null:
 		for fogged: ShaderMaterial in [water, mist, material, core]:
 			far.call("register_fogged", fogged)
+	_near_restore_setup(veilfall)
+
+
+## Net-improvement guard: near the entrance the kitbash gave the close
+## cascade view a dark slab and closed the lit passage. Inside
+## `near_restore_m` of the entrance everything this pass changed is undone
+## (own geometry hidden, hidden nodes shown, draw ranges restored), so the
+## close view renders exactly as with the flag off.
+var _restore_anchor: Node3D
+var _restored := false
+var _hidden_previous: Array[Node3D] = []
+var _ranged: Dictionary = {}
+
+
+func _near_restore_setup(veilfall: Node3D) -> void:
+	_restore_anchor = veilfall.get_node_or_null("WaterfallPassage") as Node3D
+	if _restore_anchor == null or float(_k.get("near_restore_m", 0.0)) <= 0.0:
+		return
+	for path: String in _k.hide_nodes:
+		var previous := veilfall.get_node_or_null(path) as Node3D
+		if previous != null:
+			_hidden_previous.append(previous)
+	set_process(true)
+
+
+func _process(_delta: float) -> void:
+	if _restore_anchor == null:
+		return
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		return
+	var offset := camera.global_position - _restore_anchor.global_position
+	var distance := Vector2(offset.x, offset.z).length()
+	var radius := float(_k.near_restore_m)
+	var near := distance < radius if not _restored else distance < radius + float(_k.near_restore_hysteresis_m)
+	if near == _restored:
+		return
+	_restored = near
+	for child: Node in get_children():
+		if child is Node3D:
+			(child as Node3D).visible = not near
+	for previous: Node3D in _hidden_previous:
+		previous.visible = near
+	for instance: GeometryInstance3D in _ranged:
+		if is_instance_valid(instance):
+			var ranges: Array = _ranged[instance]
+			instance.visibility_range_end = float(ranges[0]) if near else float(ranges[1])
 
 
 ## The r2 water as only its viewer-facing half-sheet (outward on drops, up on
@@ -343,7 +392,9 @@ func _column(world: Node3D, rng: RandomNumberGenerator, u: float, w: float, g: f
 		var width := minf(g * rng.randf_range(1.15, 1.75), radius * 2.2)
 		var height := width * rng.randf_range(1.2, 2.4)
 		var piece := "spire_%d" % rng.randi_range(1, 3)
-		if rng.randf() < float(_k.boulder_column_share):
+		# Near the foot a lone pointed spire read as a regular saw-tooth row
+		# along the island base: only boulders there.
+		if rng.randf() < float(_k.boulder_column_share) or y - height < ground + float(_k.spire_min_above_ground_m):
 			# Rounded installed boulders stood tall break the boxy column read.
 			piece = "boulder_%d" % rng.randi_range(1, 3)
 			height = width * rng.randf_range(0.9, 1.6)

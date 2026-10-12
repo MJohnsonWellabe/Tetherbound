@@ -1,7 +1,7 @@
 {
-  "_comment": "P2-022 claude-r1. Default OFF; coordinator enables after a code-blind PASS. Layered stone sanctuary over the existing drum: solid clerestory storey (above the 9 m drum top, outside the dome), warm arched windows, cornice, balustraded parapet terrace; dome becomes the crown. Night: entry lanterns (installed quaternius_fantasy Lantern_Wall), unshadowed entry pools and an interior fill. Render-only: no collision, floor, route, spawn or persistent state. Earlier Aviary candidates untouched.",
+  "_comment": "P2-022 claude-r1. Default OFF; coordinator enables after a code-blind PASS. Layered stone sanctuary over the existing drum: solid clerestory storey (above the 9 m drum top, outside the dome), warm arched windows, cornice, balustraded parapet terrace; dome becomes the crown. Night: entry lanterns (installed quaternius_fantasy Lantern_Wall), unshadowed entry pools and an interior fill. r2: flush ground-storey facing and step plinth (render-only; drum arch openings left clear), deeper amber windows, additive night pools at the entries, inside the drum and under the colonnade lanterns, faded out by day. Render-only: no collision, floor, route, spawn or persistent state. Earlier Aviary candidates untouched.",
   "aviary_claude_enabled": false,
-  "window_colour": "#ff8226",
+  "window_colour": "#ff6e14",
   "storey": {
     "radius_m": 28.2,
     "thickness_m": 2.2,
@@ -85,7 +85,45 @@
   },
   "window_glass_colour": "#2f2820",
   "window_energy_day": 0.25,
-  "window_energy_night": 2.3,
+  "window_energy_night": 1.25,
   "sun_energy_full_day": 1.25,
-  "sun_energy_night": 0.6
+  "sun_energy_night": 0.6,
+  "ground_storey": {
+    "_why": "r2: render-only facing flush under the clerestory (inner 27.6 overlaps the drum wall, outer 28.9 vs the old 28.15 plinth); openings follow the drum's arches (throats 0/180 at 32+6 deg, sides 90/270 at 16+6 deg).",
+    "segment_count": 96,
+    "inner_radius_m": 27.6,
+    "outer_radius_m": 28.9,
+    "openings_deg": [
+      [
+        0,
+        38
+      ],
+      [
+        180,
+        38
+      ],
+      [
+        90,
+        22
+      ],
+      [
+        270,
+        22
+      ]
+    ],
+    "step_width_m": 1.1,
+    "step_height_m": 0.35,
+    "base_course_height_m": 0.6
+  },
+  "night_pools": {
+    "colour": "#ff9a45",
+    "strength": 0.9,
+    "floor_y": 0.14,
+    "entry_out_m": 3.0,
+    "entry_radius_m": 6.5,
+    "inner_from_centre_m": 18.0,
+    "inner_radius_m": 8.0,
+    "colonnade_in_m": 1.4,
+    "colonnade_radius_m": 3.6
+  }
 }
