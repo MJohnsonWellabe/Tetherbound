@@ -6,6 +6,32 @@ const EFFECT := preload("res://scripts/vfx/move_effect.gd")
 const CONTRACT := preload("res://scripts/vfx/move_presentation_contract.gd")
 
 static var _config: Dictionary = {}
+static var _astra_config: Dictionary = {}
+
+## Independent, shipping-OFF four-example selector. Preview writes are
+## process-local; the existing library config, resolved rows and timing stay intact.
+static func astra_config() -> Dictionary:
+	if _astra_config.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/astra_move_effects.json"))
+		if raw is Dictionary: _astra_config = raw
+	return _astra_config
+
+static func _ordinary_effect(row: Dictionary, context: Dictionary) -> Node3D:
+	var candidate := astra_config()
+	if bool(candidate.get("enabled", false)) and str(row.archetype) in candidate.get("archetypes", []) \
+			and str(row.archetype) in ["slash_trail", "buff_aura", "catch_tether_beam", "bubble_volley"]:
+		var script := load("res://scripts/vfx/astra_move_effect.gd") as Script
+		var effect := script.new() as Node3D
+		effect.set("tuning", candidate.duplicate(true))
+		if str(row.archetype) == "buff_aura":
+			var source_id := int(context.get("local_visual_source_id", 0))
+			var source := instance_from_id(source_id) as Node3D if source_id > 0 and is_instance_id_valid(source_id) else null
+			if not effect.call("bind_source", source):
+				effect.free()
+				# No guessed body at a muzzle: older callers retain the fallback.
+				return EFFECT.new()
+		return effect
+	return EFFECT.new()
 
 static func config() -> Dictionary:
 	if _config.is_empty():
@@ -90,8 +116,8 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 	for node: Node in parent.get_tree().get_nodes_in_group("move_effect_presentation"):
 		if is_instance_valid(node) and not node.is_queued_for_deletion() and node.has_method("action_id") \
 				and str(node.call("action_id")) == str(frozen.action_id): return null
-	var effect := EFFECT.new()
-	effect.configure(from, to, row, frozen_copy(frozen), float(frozen.travel_seconds), config())
+	var effect := _ordinary_effect(row, context)
+	effect.call("configure", from, to, row, frozen_copy(frozen), float(frozen.travel_seconds), config())
 	parent.add_child(effect)
 	return effect
 

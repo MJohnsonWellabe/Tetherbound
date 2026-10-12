@@ -1,0 +1,15 @@
+{
+  "enabled": false,
+  "scope": "F25 four-example presentation gate only; no gameplay or ultimate changes",
+  "archetypes": ["slash_trail", "buff_aura", "catch_tether_beam", "bubble_volley"],
+  "tube_sides": 8,
+  "body_steps": 24,
+  "slash_radius_scale": 0.19,
+  "trail_radius_scale": 0.15,
+  "beam_radius_scale": 1.15,
+  "aura_padding": 1.1,
+  "aura_tube_radius_scale": 0.12,
+  "bubble_rim_power": 0.65,
+  "impact_radius_scale": 1.65,
+  "tether_impact_radius_scale": 4.0
+}

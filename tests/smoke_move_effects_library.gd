@@ -52,6 +52,9 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	# Explicit in-memory preview only. Shipping selector remains false on disk.
+	if OS.get_cmdline_user_args().has("--astra-four-preview"):
+		LIBRARY.astra_config()["enabled"] = true
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--batch="): _batch = arg.trim_prefix("--batch=")
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
@@ -405,6 +408,7 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 			if not from.is_finite():
 				_failures.append("Attacker model missing " + encounter); return
 			context["source_ground"] = _ground_point(_arena.to_local(from).x, z)
+			context["local_visual_source_id"] = _current_attacker.get_instance_id()
 		if capture:
 			transit = _transit_shutter(row, from, to, target_bounds)
 			if transit.has("error"):
