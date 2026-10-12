@@ -1038,6 +1038,9 @@ var _daytime_label: Label = null
 ## without the dark chip, and a soft plate behind the day/time line.
 var _clarity: Dictionary = {}
 var _hotbar_glyph_px := HOTBAR_GLYPH_PX
+## Merged vitals: the HP cluster's offset from the vitals cluster, so the HP
+## bar (local y HEALTH_BAR_ROW_Y) sits just above the Food bar.
+const MERGED_HP_OFFSET := -10.0
 
 ## --- persistent exploration legend (RG3) ---------------------------------------
 
@@ -2065,6 +2068,8 @@ func _reflow_left_stack() -> void:
 
 	if _health_bar_cluster != null:
 		_health_bar_cluster.position = player_health_bar_position(canvas_h)
+		if _merge_vitals():
+			_health_bar_cluster.position = vitals_position(canvas_h) + Vector2(0.0, MERGED_HP_OFFSET)
 
 	if _creature_block != null:
 		_creature_block.position = creature_block_position(canvas_h, creature_h)
@@ -2292,6 +2297,9 @@ func _build_vitals_cluster() -> void:
 	vitals_plate.size = Vector2(VITALS_WIDTH + 48.0, VITALS_HEIGHT_WITHOUT_HP + VITALS_PLATE_OVERHANG * 2.0)
 	vitals_plate.add_theme_stylebox_override("panel", UITokens.panel_box())
 	_vitals_cluster.add_child(vitals_plate)
+	# P2-004 round 3: HP and Food share ONE plate (the health plate grows
+	# down over the Food row), so this one is not drawn.
+	vitals_plate.visible = not _merge_vitals()
 
 	_build_buff_row(_vitals_cluster)
 
@@ -2372,6 +2380,10 @@ func _build_player_health_bar() -> void:
 	health_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	health_plate.position = Vector2(-40.0, -VITALS_PLATE_OVERHANG)
 	health_plate.size = Vector2(VITALS_WIDTH + 48.0, HEALTH_BAR_CONTENT_HEIGHT + VITALS_PLATE_OVERHANG * 2.0)
+	if _merge_vitals():
+		# Down to the Food row's bottom: the HP cluster sits MERGED_HP_OFFSET
+		# above the vitals cluster, whose Food bar is at VITALS_FOOD_ONLY_ROW_Y.
+		health_plate.size.y = -MERGED_HP_OFFSET + VITALS_FOOD_ONLY_ROW_Y + VITALS_BAR_HEIGHT + 14.0 + VITALS_PLATE_OVERHANG
 	health_plate.add_theme_stylebox_override("panel", UITokens.panel_box())
 	_health_bar_cluster.add_child(health_plate)
 
@@ -2449,7 +2461,9 @@ func _load_buff_config() -> void:
 
 
 func _build_buff_row(parent: Control) -> void:
-	var x := 0.0
+	# Merged vitals: the HP row sits where the buff row was, so buffs move
+	# to the right of the strip.
+	var x := VITALS_WIDTH + 16.0 if _merge_vitals() else 0.0
 	for i in _max_buff_chips:
 		var chip := Panel.new()
 		chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -2642,6 +2656,10 @@ func _load_hud_config() -> void:
 
 ## P2-004 round 2: without the chip, the meter value carries a heavy outline
 ## so it holds contrast on the amber and green fills.
+func _merge_vitals() -> bool:
+	return _clarity.get("merge_vitals") == true
+
+
 func _clarity_value_outline(label: Label) -> void:
 	label.add_theme_color_override("font_outline_color", UITokens.OUTLINE)
 	label.add_theme_constant_override("outline_size", int(_clarity.get("value_outline_px", 10)))
@@ -3747,6 +3765,13 @@ func _build_daytime_readout() -> void:
 	_daytime_label.add_theme_constant_override("outline_size", UITokens.OUTLINE_SIZE)
 	_daytime_label.text = daytime_readout_text(1, 0.0)
 	_root.add_child(_daytime_label)
+	if _clarity.get("daytime_shadow") == true:
+		# P2-004 round 3: a text shadow, not another box.
+		_daytime_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		_daytime_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
+		_daytime_label.add_theme_constant_override("shadow_offset_x", 2)
+		_daytime_label.add_theme_constant_override("shadow_offset_y", 3)
+		_daytime_label.add_theme_constant_override("shadow_outline_size", 8)
 	if _clarity.get("daytime_plate") == true:
 		# P2-004: the unbacked line read ~2.5:1 over bright sky. A soft plate
 		# hugging the text, not a full panel.
