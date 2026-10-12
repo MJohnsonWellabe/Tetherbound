@@ -109,6 +109,11 @@ var _chocks: Node3D = null
 var _wagon_meshes: Array[MeshInstance3D] = []
 var _wheel_clip_shader: Shader = null
 var _loose_wheel: Node3D = null
+## Per wagon mesh: [original surface override per surface, clip material per
+## surface]. Cached once at build, so repeated pose calls never read back a
+## clip material as the "original" (r12 render: the cart went white) and
+## repair restores the prefab's own (possibly tinted) overrides exactly.
+var _wagon_surfaces: Dictionary = {}
 var _broken_roll_deg := DEFAULT_BROKEN_ROLL_DEG
 var _broken_lift_m := DEFAULT_BROKEN_LIFT_M
 var _repaired_local_offset := DEFAULT_REPAIRED_LOCAL_OFFSET
@@ -425,6 +430,13 @@ func _build_broken_wheel() -> void:
 			_wagon_meshes.append(mi)
 	if _wagon_meshes.is_empty():
 		return
+	for mi: MeshInstance3D in _wagon_meshes:
+		var originals: Array = []
+		var clips: Array = []
+		for surface in mi.mesh.get_surface_count():
+			originals.append(mi.get_surface_override_material(surface))
+			clips.append(_clip_material(mi, surface, false))
+		_wagon_surfaces[mi] = [originals, clips]
 	var source := _wagon_meshes[0]
 	_loose_wheel = Node3D.new()
 	_loose_wheel.name = "LooseWheel"
@@ -457,10 +469,12 @@ func _clip_material(source: MeshInstance3D, surface: int, keep_wheel: bool) -> S
 
 func _set_wheel_off(off: bool) -> void:
 	for mi: MeshInstance3D in _wagon_meshes:
-		if not is_instance_valid(mi):
+		if not is_instance_valid(mi) or not _wagon_surfaces.has(mi):
 			continue
+		var originals: Array = _wagon_surfaces[mi][0]
+		var clips: Array = _wagon_surfaces[mi][1]
 		for surface in mi.mesh.get_surface_count():
-			mi.set_surface_override_material(surface, _clip_material(mi, surface, false) if off else null)
+			mi.set_surface_override_material(surface, clips[surface] if off else originals[surface])
 	if _loose_wheel != null and is_instance_valid(_loose_wheel):
 		_loose_wheel.visible = off
 
