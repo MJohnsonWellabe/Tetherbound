@@ -527,6 +527,20 @@ func _frame_site_object(tag: String) -> void:
 	cam.queue_free()
 	if _director != null and _director.has_method("summon_active_creature") and _director.call("ally_body") == null:
 		await _director.call("summon_active_creature")
+	# Dell (visual-claude, f8f4053f): the re-summoned ally came back at the
+	# site, beside the relay yard stair, and the fight's seat search could not
+	# clear it ("clear_seat_search_exhausted"). Fixture, disclosed: put the
+	# ally beside the player at the fight's stand before the fight begins.
+	var ally := _director.call("ally_body") as Node3D if _director != null else null
+	if ally != null and is_instance_valid(ally) and _player != null:
+		var back := -_player.global_basis.z.slide(Vector3.UP).normalized()
+		if back.length() < 0.1:
+			back = Vector3.BACK
+		ally.global_position = _player.global_position - back * 2.5 + Vector3.UP * 0.3
+		if ally is CharacterBody3D:
+			(ally as CharacterBody3D).velocity = Vector3.ZERO
+		for i in 30:
+			await physics_frame
 
 
 ## The Warden arena's banner wall (gone once he is beaten), framed from the

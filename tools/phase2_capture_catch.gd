@@ -155,16 +155,17 @@ func _run() -> void:
 		_finish()
 		return
 
-	var debug_hud: CanvasLayer = _world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
-	if debug_hud != null:
-		debug_hud.visible = false
-
 	await _walk_to_the_wild_creature()
 	await _engage()
 	if not bool(_manager.call("is_fighting")):
 		_failures.append("could not enter combat; nothing captured")
 		_finish()
 		return
+	# P2-113: hidden before the Engage press, the HUD swallowed it (the world
+	# interact routes through it); hide it only once the fight is live.
+	var debug_hud: CanvasLayer = _world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	if debug_hud != null:
+		debug_hud.visible = false
 	_ally = _director.call("ally_body") as Node3D
 	_log("fighting")
 
