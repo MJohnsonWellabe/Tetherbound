@@ -857,3 +857,30 @@ func test_coop_peers_receive_the_jobs_deltas_only_after_the_flush() -> void:
 	assert_eq((f.rpc.sent as Array).size(), held, "every held delta is sent, in order, after the flush")
 	assert_eq(f.writer.order, ["owner", "world"])
 	_close_owed(f)
+
+func test_idle_never_flushes_a_running_job_once_per_hit() -> void:
+	var f := _owed_fixture(0)
+	f.session.flush_idle_s = 0.0 # Idle is due on every frame.
+	var job_owed_before: int = int(f.writer.owner_writes)
+	# Re-run with a fresh queue, ticking between every protocol step.
+	var game: Node = f.game
+	var before := RECORD.portable_projection(game.local.save_data())
+	for i in 10:
+		var duty := _duty(before)
+		var action_id := "mastery-idle-%d" % i
+		duty.intent.action_id = action_id
+		duty.context.source_key = "combat_mastery:" + action_id
+		duty.context.outcome.action_id = action_id
+		f.rpc.journal_foundation_event("mastery:" + action_id, [duty])
+	f.writer.owner_writes = 0
+	f.writer.world_writes = 0
+	f.writer.order.clear()
+	f.session._retry_foundation_events()
+	for step in 1000:
+		if (f.session.get("_mastery_job") as Dictionary).is_empty(): break
+		f.session._advance_mastery_job(0)
+		f.session._tick_mastery_owed()
+	assert_eq(int(f.writer.owner_writes), 0, "no idle flush while the job runs")
+	f.session._tick_mastery_owed()
+	assert_eq(f.writer.order, ["owner", "world"], "one idle flush once the job has finished")
+	_close_owed(f)

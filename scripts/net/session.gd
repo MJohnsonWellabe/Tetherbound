@@ -1366,7 +1366,9 @@ func _mastery_flush_reason() -> String:
 	if resolved: return "resolve"
 	if is_inside_tree() and preload("res://scripts/ui/input_owner.gd").current(get_tree()) != null: return "menu"
 	if game != null and str(game.get("current_realm")) != str(_mastery_owed.realm): return "transition"
-	if now - _mastery_last_combat_ms >= int(float(_cfg("foundation_mastery_flush_idle_s", MASTERY_FLUSH_IDLE_S)) * 1000.0): return "idle"
+	# Idle lands a finished job's writes; a running job flushes only at a real
+	# pause or the cap, never once per hit.
+	if _mastery_job.is_empty() and now - _mastery_last_combat_ms >= int(float(_cfg("foundation_mastery_flush_idle_s", MASTERY_FLUSH_IDLE_S)) * 1000.0): return "idle"
 	if int(_mastery_owed.hits) >= int(_cfg("foundation_mastery_flush_cap_hits", MASTERY_FLUSH_CAP_HITS)) \
 			or now - int(_mastery_owed.since_ms) >= int(float(_cfg("foundation_mastery_flush_cap_s", MASTERY_FLUSH_CAP_S)) * 1000.0): return "cap"
 	return ""
