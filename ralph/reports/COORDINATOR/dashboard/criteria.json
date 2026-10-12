@@ -1,5 +1,5 @@
 {
- "generated_at": "12:52 PM CT Mon 12 Oct",
+ "generated_at": "4:55 PM CT Mon 12 Oct",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -926,21 +926,21 @@
    "id": "F14",
    "title": "Tidewake fights, network and Guardian",
    "chapter": "Tidewake",
-   "pct": 83,
+   "pct": 100,
    "counts": {
-    "met": 5,
+    "met": 6,
     "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
-     "status": "failing",
-     "evidence": "Full Tidewake table on the adopted reader (1032b96d3; non-Veilfall rows on 5b18ea665): 42 of 45 rows PASS; chapter masher-loss Terrapup 1.00 / Ripplet 0.92 / Galewisp 0.50 (bar 0.25); C3 worst hit 0.306, tells >= 0.85 s, 0 stalls. ralph/reports/EVIDENCE/F14-0-rerun/ (8792cbd3a).",
-     "gap": "Under COMBAT §7 (12 Oct) the three Galewisp named-wild rows are type-advantaged; party cost ~1.0x masher, so (c) data tune needed; heavy power already failed, the fights lane probes HP/poise.",
+     "status": "met",
+     "evidence": "ev-systems-a 342f72897 / 6f1160e5f (ralph/reports/EVIDENCE/F14-0-rerun/), 24 seeds, adopted reader, COMBAT §7 trivial-fight floor (coordinator, owner-delegated 12 Oct): Galewisp x Tidecoil 0.0701/0.0734 and Songweaver 0.0610/0.0727 pass at baseline; Brine Root passes with its two charger rows' recovery 0.9 -> 1.2 s (0.077/0.104); Terrapup and Ripplet pass all rows on the ratio rule.",
+     "gap": "",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/encounters diff since 1e0ddd39: 33 files, +8435. Tidewake levels re-banded (RD-10); smoke_water_named_c2c3 is not in CI.",
      "audit_index": 0
     },
