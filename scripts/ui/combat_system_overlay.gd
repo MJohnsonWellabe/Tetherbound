@@ -32,9 +32,12 @@ class UltimateRing extends Control:
 		if armed and arm_fraction > 0:
 			draw_arc(center, radius - 9, -PI * 0.5, -PI * 0.5 + TAU * arm_fraction, 48, Color("#73E6DD"), 3, true)
 
-func configure(read_local_snapshot: Callable) -> bool:
+var _placeholder := Callable()
+
+func configure(read_local_snapshot: Callable, read_placeholder: Callable = Callable()) -> bool:
 	if not read_local_snapshot.is_valid(): return false
 	_read = read_local_snapshot
+	_placeholder = read_placeholder
 	return true
 
 func _ready() -> void:
@@ -126,6 +129,10 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 	visible = false
 	if SCREEN.config().get("enabled") != true or not _read.is_valid(): return false
 	var raw: Variant = _read.call()
+	# Before the first acknowledged sync, a zero-valued stand-in keeps this
+	# the only combat HUD (never a pool value; see new_system_combat_placeholder).
+	if (not raw is Dictionary or raw.get("active") != true) and _placeholder.is_valid():
+		raw = _placeholder.call()
 	if not raw is Dictionary or raw.get("active") != true or raw.get("input_context") != "combat" or expected_uid.is_empty() \
 			or raw.get("creature_uid") != expected_uid or not raw.get("slots") is Dictionary \
 			or not raw.get("commands") is Dictionary: return false
@@ -154,7 +161,9 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 	for slot: String in _cells:
 		var row: Dictionary = raw.slots[slot]
 		var label: Label = _cells[slot].title
-		label.text = "%s %s%s" % [row.glyph, row.name, "" if row.ready else " ×"]
+		# Not-ready reads by the muted colour and cooldown bar; a trailing "×"
+		# read as the X button (F42#2 judge).
+		label.text = "%s %s" % [row.glyph, row.name]
 		# The armed move choice reads by an outline as well as colour.
 		label.add_theme_color_override("font_outline_color", TOKENS.TEAL_SOFT if raw.get("ultimate_armed") == true and slot != "dodge" else Color("#17262d"))
 		label.add_theme_constant_override("outline_size", 3 if raw.get("ultimate_armed") == true and slot != "dodge" else 2)

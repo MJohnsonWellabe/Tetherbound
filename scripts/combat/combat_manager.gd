@@ -475,6 +475,36 @@ func new_system_combat_snapshot() -> Dictionary:
 
 
 
+## Presentation-only stand-in for new_system_combat_snapshot() before this
+## encounter's first acknowledged command/ultimate sync: the same admitted
+## deployment gates, but zero meters and every command muted, so the HUD keeps
+## its one F42 layout. It never carries a pool value, a prior encounter's view
+## or another creature's meter.
+func new_system_combat_placeholder() -> Dictionary:
+	var hidden := {"active":false}
+	if not preload("res://scripts/combat/tether_commands.gd").enabled("ui_enabled") \
+		or state != State.ACTIVE or not combat_input_available() or is_aiming() or is_resolving_catch(): return hidden
+	var creature := active_creature()
+	if creature == null or _moves == null or not is_instance_valid(_encounter_link) \
+		or not _encounter_link.has_method("tether_command_deployment"): return hidden
+	var uid := str(creature.uid)
+	var deployment: Dictionary = _encounter_link.call("tether_command_deployment")
+	if deployment.get("creature_uid") != uid or int(deployment.get("generation", 0)) < 1: return hidden
+	var glyphs := preload("res://scripts/ui/input_glyph.gd")
+	var slots := {}
+	for slot: String in ["quick", "charged", "utility"]:
+		var move_id := str(creature.get("move_" + slot))
+		slots[slot] = {"glyph":glyphs.action_name("combat_" + slot),
+			"name":_moves.display_name(move_id) if _moves.has(move_id) else "No " + slot,
+			"ready":false, "cooldown_remaining_s":0.0, "cooldown_total_s":0.0}
+	slots["dodge"] = {"glyph":glyphs.action_name("jump"), "name":"Dodge", "ready":false}
+	return {"active":true, "placeholder":true, "input_context":"combat", "creature_uid":uid,
+		"ultimate_meter":0.0, "ultimate_maximum":float(MATH.config().ultimate.maximum),
+		"ultimate_available":false, "ultimate_armed":false, "arm_fraction":0.0,
+		"commands":{"active":false, "meter":0, "pouch_count":0, "encounter_id":_encounter_id,
+			"wild_target":_encounter_kind == "wild", "unlocked_commands":[]}, "slots":slots}
+
+
 func submit_tether_command(request: Dictionary) -> bool:
 	if not preload("res://scripts/combat/tether_commands.gd").enabled() or not is_instance_valid(_encounter_link): return false
 	if request.get("command_id") in ["item_throw", "tag_combo"]:
