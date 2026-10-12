@@ -4753,6 +4753,8 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	summit_pylon.position = anchor.origin - Vector3(pylon_bounds.get_center().x, pylon_bounds.position.y, pylon_bounds.get_center().z) * pylon_scale
 	root.add_child(summit_pylon)
 	_develop_stronghold_spaces(root)
+	preload("res://scripts/world/cloudreach_aviary_astra_blockout.gd").build(root,
+		_read_json("res://data/config/cloudreach_aviary_astra_blockout.json"), aviary_materials, self)
 
 
 func _tether_pylon() -> Node3D:
