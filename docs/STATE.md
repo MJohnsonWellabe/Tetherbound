@@ -141,6 +141,7 @@ ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests 
   - X05 may use `teleport_to` in test harnesses only.
   - Only the coordinator edits `.github/workflows/ci.yml`.
   - Criteria are numbered from zero within each F row.
+  - **Type matchups (12 Oct, owner delegated the call):** type advantage is meant to matter. Disadvantaged-lead rows are judged with the switching reader; advantaged-lead rows are exempt from masher-lead-faint only while reader party cost stays ≤55% of the masher's; a row that still fails, or fails on timeouts, is tuned in data. COMBAT §7, ACCEPTANCE C2. Applies to F04#7, F14#0, F22#1, F47#3, F22#4.
 
 ## 2. Product decisions
 
