@@ -311,8 +311,8 @@
     {
      "text": "Varied-size framing and C2/C3 results pass",
      "status": "failing",
-     "evidence": "ralph/reports/BALANCE/f04_7/RUN_meadows_after_24seeds.txt @tb/balance (C2 half only)",
-     "gap": "Coordinator decision 4:12 PM CT (owner delegated): the fights lane applies one tuning batch to reach the 0.25 masher-loss bar (bar unchanged) and keep C3 headroom, then re-measures. Size framing passed in F21#4.",
+     "evidence": "Full Meadows table on cf5137cb5 (guardian face-lock 35e0a9c58), 24 seeds; ralph/reports/EVIDENCE/F04-7-rerun/ at d1f3efc0b: chapter masher-loss bar PASS (Terrapup 0.38, Ripplet 0.44, Galewisp 0.27); 23 of 24 rows PASS; every C3 verdict passes.",
+     "gap": "One row: Ripplet x Warrens guardian, reader/masher 0.268/0.350 (bar 0.55 ratio). Parked under the two-attempt rule; re-scope is a punish-window reader mode, validated on every row first. If it still fails, it goes to the owner end-list as a matchup-balance question.",
      "note": "PARKED for an owner balance call (fights-c2c3 8511bd40, Sun 11 Oct ~2:00 PM CT). C3's measured half passes; Dell passes on the officer floor bar (the top-trainer bar was misapplied). Still failing C2: (1) chapter masher-loss rate 0.21/0.21/0.23 (Terrapup/Ripplet/Galewisp) against the 0.25 bar; (2) Ripplet vs the Warrens guardian: the reader's lead cost 0.44 against the masher's 0.35. Cues are honest (every hit lands inside the drawn shape); the cause is the reader pilot committing during tells. A smarter pilot regressed fast fights (Nerissa 1.00 to 0.46) and was reverted; Warden power x1.15 barely moved the masher and pushed the worst hit to 0.47-0.48 (C3 ceiling 0.5).",
      "audit_index": 7
     },
