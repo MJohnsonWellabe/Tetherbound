@@ -361,14 +361,15 @@ func _restore_invite_button_focus() -> void:
 ## which and printing one would be the wrong one about half the time.
 func _invite_address(session: Node) -> String:
 	# The port actually being hosted, not merely the configured default: a host
-	# launched with `--mp-host 27100` is on 27100, and reading the config here
-	# would hand their friend a number nothing is listening on. `Session` does
-	# not expose its bound port; the LAN beacon does, because the title screen
-	# gave it that port on the way into the world (`lan_beacon.gd::served_port`).
+	# launched with `--mp-host 27100` is on 27100, and one whose default was
+	# taken fell back to another (F19#5). `Session.bound_port()` is the bound
+	# port; the LAN beacon's `served_port` remains the fallback.
 	var port := int(session.call("default_port"))
 	var game := state()
 	var beacon := game.get_node_or_null(^"LanBeacon") if game != null else null
-	if beacon != null and int(beacon.call("served_port")) > 0:
+	if session.has_method("bound_port") and int(session.call("bound_port")) > 0:
+		port = int(session.call("bound_port"))
+	elif beacon != null and int(beacon.call("served_port")) > 0:
 		port = int(beacon.call("served_port"))
 	var found: Array[String] = []
 	for address: String in IP.get_local_addresses():
