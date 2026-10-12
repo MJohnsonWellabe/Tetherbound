@@ -298,7 +298,7 @@ func _draw_soft(base: Color, fade: float) -> void:
 	var core := Color(STYLE.core_colour(base, _soft), float(_soft.get("core_alpha", 0.95)) * fade)
 	var glow := Color(base, glow_alpha)
 	var clear := Color(base, 0.0)
-	var feather := minf(float(_soft.get("feather_m", 0.55)), _half_width * 0.8)
+	var feather := minf(float(_soft.get("feather_m", 0.3)), _half_width * float(_soft.get("feather_max_fraction", 0.35)))
 	var half_core := float(_soft.get("core_width_m", 0.07)) * 0.5
 	var rim := float(_soft.get("outer_feather_m", 0.1))
 	_strip(-_half_width, _half_width, Color(base, wash * fade))

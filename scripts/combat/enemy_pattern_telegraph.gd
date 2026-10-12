@@ -219,7 +219,7 @@ func _aim_soft(shape: String) -> void:
 			var right := _origin + side * half_width
 			var far_left := left + _heading * length
 			var far_right := right + _heading * length
-			var feather := minf(float(_soft.get("feather_m", 0.55)), half_width * 0.8)
+			var feather := minf(float(_soft.get("feather_m", 0.3)), half_width * float(_soft.get("feather_max_fraction", 0.35)))
 			_soft_fill([left, right, far_right, far_left])
 			_soft_edge(left, far_left, side, feather)
 			_soft_edge(right, far_right, -side, feather)
@@ -228,7 +228,7 @@ func _aim_soft(shape: String) -> void:
 
 func _soft_disc(centre: Vector3, inner: float, outer: float, arc: float) -> void:
 	var count := maxi(2, int(ceil(float(_segments) * arc / TAU)))
-	var feather := minf(float(_soft.get("feather_m", 0.55)), (outer - inner) * 0.6)
+	var feather := minf(float(_soft.get("feather_m", 0.3)), (outer - inner) * float(_soft.get("feather_max_fraction", 0.35)))
 	for index: int in count:
 		var a := -arc * 0.5 + arc * float(index) / float(count)
 		var b := -arc * 0.5 + arc * float(index + 1) / float(count)
