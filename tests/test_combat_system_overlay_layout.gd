@@ -159,3 +159,18 @@ func test_offline_trainer_duel_draws_the_overlay_not_the_legacy_grid() -> void:
 		if node is CanvasItem and (node as CanvasItem).is_visible_in_tree():
 			assert_false(text.contains("[jump]"), "no raw jump token: %s" % text)
 	holder.queue_free()
+
+
+## F42#2 r3 judge: unaffordable command labels at ~55 % brightness read
+## ~1.3:1 over a sunlit path. They stay >= 80 % bright and read by hue.
+func test_unaffordable_command_labels_stay_bright() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var lane: Control = preload("res://scripts/ui/tether_command_meter.gd").new()
+	tree.root.add_child(lane)
+	lane.call("present", {"active": true, "meter": 0, "unlocked_commands": ["rally", "snare"]}, true, true)
+	for id: String in lane.get("_labels"):
+		var label: RichTextLabel = lane.get("_labels")[id]
+		var colour: Color = label.get_theme_color("default_color")
+		assert_true(colour.get_luminance() >= 0.8, "%s dim label luminance %.2f" % [id, colour.get_luminance()])
+		assert_false(label.text.ends_with(" —[/center]"), "no bare trailing dash: " + label.text)
+	lane.queue_free()

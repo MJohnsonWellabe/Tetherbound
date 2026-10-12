@@ -25,3 +25,12 @@ Recaptured at 189f4cdb9 (1920×1080) and 209748abd (1280×800; that change touch
 - hud-04: a later CHARGE.
 - hud-05: after the fight (exploration HUD, no command lane).
 Not observed: a frame where a command is affordable. Rally needs 50 and the meter peaked at 32–40; item throw needs a held item (0 held); tag-switch needs a combo window. Unavailable commands are shown muted.
+
+## r3: offline trainer duel (reopened 4:34 AM CT 12 Oct) — CAPTURE-READY
+Gap: in a trainer duel with no tether deployment (an offline duel), both the F42 snapshot and the pre-sync stand-in were hidden. The legacy grid drew, including a literal "[jump] Dodge".
+Fixes:
+- e2e397d88: `input_glyph` gains a `jump` entry (pad A; keyboard has no Space keycap PNG, so it falls back to the bound key name). Regression test `test_the_combat_dodge_cell_never_prints_the_jump_id`.
+- fb140af94: `new_system_combat_placeholder()` also covers fights with no deployment. With no link it uses the manager's own readiness and cooldowns, and this fight's local ultimate meter (`begin()` clears it and only a host payload refills it). With a link that never admitted the creature, it shows readiness but no pool value. Commands stay muted, and the real snapshot's security contract is unchanged. Tests `test_offline_trainer_duel_draws_the_overlay_not_the_legacy_grid` (real `combat_hud.tscn` with a real CombatManager: overlay visible, legacy grid hidden, no `[jump]` text) and `test_no_deployment_stand_in_uses_local_truth_and_offers_no_command`. Both fail before the fix and pass after. Related suites: 123 tests, 2161 assertions, 0 failed.
+
+Capture at fb140af94: `tools/capture_f04_strike_beats.gd --trainer=captain_riverwatch --policies=stand,dodge`, `--fixed-fps 20` (the accepted r1/r2 captures also used 20). Production Meadows scene, HUD and camera, offline (no session). The tool header lists the disclosed harness help. The run was stopped once both sizes had frames, and no assertion was involved.
+Judge inputs: `offline_duel/1920x1080/duel-s01-{start,mid,strike,out-hit}.jpg` and `offline_duel/1280x800/duel-s01-{start,mid,strike,out-hit}.jpg`. Both sizes show the same strike (Captain Oreth's Mosshell, shell_bash): tell start, mid-tell, strike and the hit outcome.
