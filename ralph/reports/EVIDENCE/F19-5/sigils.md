@@ -1,4 +1,11 @@
-# F19#5 Meadows piece `sigils`: PASS, hosted on 90927824 (routes-west)
+# F19#5 Meadows piece `sigils`: PASS, hosted on 1c9d3566; F02#7 PASS (routes-west)
+
+**Re-walk on 1c9d3566 (2026-10-12, hosted, 12674 s, fail-fast watchdog attached, never fired):** `passed: true`, no failures; the interim satchel-room path dropped 2 berries once.
+- **Ledger:** `route_ledger/sigils_1c9d3566.jsonl.txt`, 4822 m, A7 clean.
+- **Strict 250 m: 0 windows over.** The new `b4_candy_ridge_descent_wayside` registered at path 3709 m, splitting the former 271 m stretch from Vess to the gate road.
+- **F02#7 verdict: PASS.** The sigils and hall (`route_ledger/hall_45a1dd6a.jsonl.txt`) ledgers together show no §3.1 window over 250 m, and A7 is clean.
+
+## Previous run on 90927824
 
 **Run:** 2026-10-12, hosted on a fallback port. Generated relay input. `passed: true`, no failures, wall time 11629 s.
 - Riverwatch, Field and Ridge were each beaten 5/5, with exact XP and exact item rewards.
