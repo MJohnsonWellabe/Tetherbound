@@ -20,3 +20,9 @@
   - title reload: receipts and payout unchanged, cooldown kept.
   - Disclosed: generated input `f44_stormwood` at Ashfoot Waycamp (the portal leg was tried twice and is blocked by the relic power panel); post-load fixture flags `stormwood:marrow_defeated` and `regional_credits_seen`; one teleport.
 - Game fix found by this witness (57ac1753): `stormwood_encounter_director.begin_trainer_battle` sent every non-Master spec to StormwoodEncounterHub.request_start, which restarts the chapter's canonical trainer, so every Stormwood rematch was dropped while the call reported success. Rematch specs now take the inherited path, as Masters do.
+
+## F44#1 Meadows endgame (systems-b, Sun 11 Oct 2026, 6:46–7:39 PM CT) — PASS 21/21
+`tests/smoke_f44_biome_rematch.gd -- --biome=meadows --tier=endgame` at 59460943e on the generated `f44_meadows_endgame` save (`meadows_endgame_input_PROVENANCE.json`). Captain Riverwatch, five L58, won after 13,752 frames. Unique reward rootiron_ingot ×2 paid once, and better than the first win. After a title reload: receipts unchanged, no second payout, cooldown retained. Result: `meadows_captain_riverwatch_endgame.json`.
+Disclosed: a generated post-credits profile (regional_credits_seen) with the five at L58. The generator now lets post-credits profiles reach the Masters' cap ceiling of 60; four-chapter profiles keep L55.
+Balance finding (not changed): an L55 team, about where the four-chapter clear ends, lost this five-creature L58 fight twice (14,607 and 17,792 frames). The Tidewake, Cloudreach and Stormwood endgame witnesses (smaller teams) were won at L55. Endgame rematches need post-credits leveling toward L58–60, consistent with PROGRESSION §6's L55–60.
+An earlier run was lost to a deleted scratch worktree, so it is not counted.
