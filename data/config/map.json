@@ -7,7 +7,7 @@
     "roads_above_fog": true,
     "road_colour": "#dbb87a",
     "road_alpha": 0.85,
-    "road_width_px": 4.0
+    "road_width_px": 7.0
   },
   "_comment": "Map behaviour tunables that are NOT authored places. data/config/map_landmarks.json stays the place table (landmarks, regions, starting reveal); this file holds the rules the map applies to the world it is drawing. ALL TUNABLE.",
 

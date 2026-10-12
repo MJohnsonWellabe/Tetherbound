@@ -4,3 +4,8 @@ Sheet after-before-low.jpg: TOP (A) = AFTER, with fog_veil enabled locally for t
 A first after-capture at undiscovered_alpha 0.78 showed only a faint tint, so the default was lowered to 0.5 before this capture (not judged at 0.78).
 Lane self-check code-blind verdict: A better; WEAK. Terrain context now shows outside the explored circle and explored ground stays distinct. Remaining: unexplored terrain reads blurry/muddy at 32x local view; no roads are visible outside the circle in this framing; the explored/unexplored edge contrast is moderate.
 P2-032 (wrong active region tab) is not reproduced in this state: the heading and the active tab both read THE MEADOWS.
+
+ROUND 2 (before-after-stormwood-r2.jpg; the round-1 sheet moved to round1/). A = before, B = after, LEFT/RIGHT.
+Change: fog_veil keeps the fog opaque (undiscovered_alpha 1.0) and draws the realm's authored road network above it as crisp vector polylines (#dbb87a, dark casing), per UX.md: "The map begins with Grandpa's Village and roads revealed." Covers Meadows, Stormwood (spurs to hidden pockets excluded) and Cloudreach (ground routes). Tidewake has no route polylines the tab can read.
+Tool: tools/phase2_capture_ui.gd --biome=stormwood --tabs=map, 1920x1080 Low, Surveyed 0%, 32x local view. Code tb/ev-visual-claude 9040983a2 with fog_veil.enabled flipped on locally for the capture.
+Lane self-check code-blind verdict: B better, WEAK. A route now leads out of the explored area, and explored/unexplored stays distinct with no terrain reveal. Remaining: at the 32x local view only one road segment is in frame; the 4px stroke reads thin; no destinations are in frame. Default road_width_px raised to 7 after this capture (not re-rendered).
