@@ -1102,8 +1102,8 @@
    "counts": {
     "met": 6,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 1,
+    "in_progress": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -1158,9 +1158,9 @@
     },
     {
      "text": "Village and Hall frames pass the new visual bar (ACCEPTANCE §4: Palworld/Animo creatures and world, Valheim lighting and atmosphere) with a code-blind judge.",
-     "status": "not_started",
-     "evidence": "HUB/f17/preliminary-low-review-r1.md (bars withheld); remote-forward-r1 SIG11",
-     "gap": "Captures lane: village and Hall matrix at Low (approach, gameplay camera, day/night); code-blind full-bar judge. Codex adds Medium.",
+     "status": "in_progress",
+     "evidence": "Code-blind r1 1:17 AM CT 12 Oct on 18 Low frames (tb/ev-captures 26dce966): the exterior village and Hall destination PASS in day, golden hour and night.",
+     "gap": "Low blockers: red/oxblood Hall banners (red is reserved for Team Tether); a cyan debug-looking beam from the companion; rain doesn't read; placeholder navy arch planes and Hall entrance plane; unfinished interiors (raw window holes, wall gap, tiling cobbles, no night change); bench clipping. The co-op lane does the scene fixes, then a Low recapture; Medium/High full-bar items are listed for Codex.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No full Bars A/B village/Hall matrix judged. The Low capture failed and the Forward+ pilot crashed before capture.",
      "audit_index": 6
     }
