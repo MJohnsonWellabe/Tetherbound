@@ -48,7 +48,7 @@ Two independent code-blind judges, 11 clips each. Clips 08 and 19 (water_jet and
   - generic self-buffs.
 - The lane's self-judge reported 20/24 under a looser prompt. It was given the coordinator's exact bar for its next self-check.
 
-## effects-claude kit r2 (9:50 AM CT Mon 12 Oct; tb/ev-effects-claude 59d57018): 12 PASS / 10 WEAK / 2 FAIL of 24
+## effects-claude kit r2 (9:44 AM CT Mon 12 Oct; tb/ev-effects-claude 59d57018): 12 PASS / 10 WEAK / 2 FAIL of 24
 Revised bar (a brief contact flash may overlap the face; the after phase must not leave a lingering dome or cloud). Two independent code-blind judges, 12 clips each.
 - PASS: 02, 04, 07, 09, 10, 13, 16, 17, 19, 20, 22, 24.
 - WEAK: 01, 05, 06, 08, 11, 12, 14, 15, 18, 21.
