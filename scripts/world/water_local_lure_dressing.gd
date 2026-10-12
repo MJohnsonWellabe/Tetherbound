@@ -51,6 +51,10 @@ func build(world: Node3D) -> void:
 			elif bool(piece.get("grounded", true)):
 				var at := prop.global_position
 				prop.position.y += float(world.call("ground_height_at", at.x, at.z)) - site.position.y
+	var terrace_blockout := preload("res://scripts/world/water_garden_terraces_blockout.gd").new()
+	terrace_blockout.name = "GardenTerracesBlockout"
+	add_child(terrace_blockout)
+	terrace_blockout.build(world, self)
 
 ## Static farm visual family: closed soil fill, four boards, furrows and plants.
 ## Every bed has one level top; no farm interaction, collision or terrain edit.

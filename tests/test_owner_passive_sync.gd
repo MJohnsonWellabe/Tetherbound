@@ -46,6 +46,7 @@ class GameFixture extends Node:
 	var world: RefCounted
 	var save_system: RefCounted
 	var _travel_pos_valid := true
+	var _fence_travel_realm := ""
 	var _discovery_elapsed := 10.0
 
 class Discoveries extends RefCounted:
@@ -279,6 +280,16 @@ func _prepared_owner() -> Dictionary:
 	service.receive_owner(_envelope({"op": "freeze", "id": prepared.preparation_id,
 		"retained_event": event.delivery_id, "duty_hash": prepared.duty_hash}))
 	return prepared
+
+## F11#3 (EVIDENCE/F11-3): a fence that never moved the trainer keeps its
+## travel baseline (game_state.gd), but a stream re-armed during that fence has
+## no baseline to keep: the host's new cursor waits for a dropped baseline.
+func test_a_rearmed_stream_forgets_a_fence_kept_travel_baseline() -> void:
+	game._travel_pos_valid = true
+	game._fence_travel_realm = "meadows"
+	service.arm_owner(before, {})
+	assert_false(game._travel_pos_valid)
+	assert_eq(game._fence_travel_realm, "", "the fence's kept baseline belongs to the old stream")
 
 func test_recording_reset_and_authenticated_ordered_ack() -> void:
 	assert_false(game._travel_pos_valid)

@@ -225,8 +225,26 @@ func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 	var offer: Dictionary = arbiter.call("winner")
 	if offer.get("actionable") != true: return _fail("F49 actual provider refused its action")
 	_activated = null
+	# What the first press met (coordinator, 2026-10-11): a re-press below is
+	# a helper timing alignment only if the prompt was not yet up and focused.
+	var at_press := {"winner": str(arbiter.call("winning_provider")), "offer": prompt.call("interaction_offer", _player.global_position),
+		"owner": str(INPUT_OWNER.current(tree)) if INPUT_OWNER.current(tree) != null else "none",
+		"distance_m": _player.global_position.distance_to(prompt.global_position), "enabled": arbiter.call("enabled")}
 	arbiter.connect("activated", _activation)
-	await tap("interact")
+	# The exact prompt may activate a few frames after the tap returns (the
+	# relay helper's press_late_activation); a press that activated nothing
+	# while the same prompt still offers its action is pressed again once, as
+	# a player would (F19#5 tidewake_handoff, the arch's Enter after Use).
+	for press in 2:
+		await tap("interact")
+		for frame in 30:
+			if _activated != null: break
+			await tree.physics_frame
+		if _activated != null or not is_instance_valid(prompt) or arbiter.call("winning_provider") != prompt \
+				or (prompt.call("interaction_offer", _player.global_position) as Dictionary).get("actionable") != true:
+			break
+		print("F49 press activated nothing; pressing the same actionable prompt again: ", prompt.get_path(),
+			" first_press=", JSON.stringify(at_press), " now_distance_m=", _player.global_position.distance_to(prompt.global_position))
 	if is_instance_valid(arbiter) and arbiter.is_connected("activated", _activation):
 		arbiter.disconnect("activated", _activation)
 	return _activated == prompt or _fail("F49 input activated another provider")

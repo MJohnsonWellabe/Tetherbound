@@ -1,9 +1,9 @@
 {
  "updated": "1:53 PM CT Sun 11 Oct",
  "headline": [
-  "6:50 PM CT Sun 11 Oct: 216 of 271 met (189 on main, 27 proven on tb/ev-coordinator today). All of it lands in one consolidated PR at the end.",
+  "10:48 PM CT Sun 11 Oct: 218 of 271 met (189 on main, 29 proven on tb/ev-coordinator today). All of it lands in one consolidated PR at the end.",
   "Owner, 4:12 PM CT: only the human playtest and the ROG Ally device runs are left for the owner; the coordinator decides everything else. Order: Meadows, then Cloudreach, then down the board. F38-F41 art is the long pole and runs in parallel.",
-  "Since 4 PM: F44#0 (rematches, all biomes) and F10#5 (Stormwood audio) closed; Cloudreach route complete; native Meadowhart switched on. Root causes found and fixed: Venn (test pilot could not see named attacks), C2 reader pilot (edge escape, diver landings), co-op guest travel after the Stormwood ending, Warden XP (helper formula). Tuning batch applied (Venn, Nerissa, Riverwatch); all difficulty measurements re-running. Lanes act without permission requests (owner, 5:20 PM)."
+  "Since 8 PM: a real bug fixed. With the network port taken, a solo game silently skipped boss rewards (Warden key and relic); the host now falls back to nearby ports, joiners get the real port, and solo keeps the reward. Live HUD fix (fight meters and move slots were invisible). Guardian sidestep fix (Meadows now down to Ripplet vs guardian). Nerissa and Venn pass the re-measure. Full local suite run on the combined branch: 6,613 tests, 9 failures, all triaged and being fixed. F25#0 move effects failed twice; it goes to a Codex fresh rebuild."
  ],
  "batches": [
   {
@@ -593,7 +593,9 @@
   "Coordinator 11 Oct 5:02 PM CT (owner-delegated): F22#1/F47#3 reading for ordinary wild bands. 'Masher loses the lead creature materially more often' is measured as the reader's median lead-HP cost <= 0.55x the masher's plus reader win >= 0.9 (COMBAT \u00a77 floor-trainer form). COMBAT \u00a77 sets wilds at a 15-30% masher lead cost with >= 90% wins (not walls), so a lead-faint gap cannot be met without turning wilds into walls. The lead-faint gap stays reported.",
   "Coordinator 11 Oct 5:03 PM CT (owner-delegated): F47#0. The agent estimate v2 (a5d3ce59e) is 8.8-12.5 h raw agent sim time, against the 15-25 h target. It is an agent-speed lower bound: no dialogue reading, no exploration, no getting lost, derived approach legs. No content is added on that number alone: PROGRESSION \u00a74's remedy for a short clear (deepen preparation choices, never padding) waits on the owner's playtest, which the criterion names as the confirming measure. A ready list of preparation-depth options goes to the owner end-list so it can be applied quickly if the playtest also runs short.",
   "Owner 11 Oct 5:20 PM CT: lanes need no permission. Every Claude and Codex lane decides and acts within its criteria and reports afterwards; the coordinator reviews at merge. Limits: the CLAUDE.md hard rules, never deleting, skipping, disabling or loosening a criterion's assertion, and no PRs, CI dispatch or purchases. The code-blind judge stays the visual acceptance gate.",
-  "Owner 11 Oct 7:07 PM CT (supersedes the coordinator's 7:05 PM plan): the three twice-failed visual items (P2-010 Veilfall, P2-011 Drowned Garden, P2-022 summit aviary) go to Codex's senior tier (Astra) and start fresh, not building on the failed attempts. Each is a new candidate behind its own new flag (failed attempts stay OFF), keeping the gameplay contract (position, routes, gates, collision, existing tests). A blockout frame is judged before detailing; installed asset families, terrain and lighting, with Meshy only within RD-26."
+  "Owner 11 Oct 7:07 PM CT (supersedes the coordinator's 7:05 PM plan): the three twice-failed visual items (P2-010 Veilfall, P2-011 Drowned Garden, P2-022 summit aviary) go to Codex's senior tier (Astra) and start fresh, not building on the failed attempts. Each is a new candidate behind its own new flag (failed attempts stay OFF), keeping the gameplay contract (position, routes, gates, collision, existing tests). A blockout frame is judged before detailing; installed asset families, terrain and lighting, with Meshy only within RD-26.",
+  "Coordinator 11 Oct 8:16 PM CT: Astra P2-022 Cloudreach sanctuary blockout: GO to detail (clear the facade, add a night outline frame, flag stays OFF until judged). Tidewake Astra blockouts shipped OFF until their blockout frames pass. Affected tests 143/143 pass after the 8:11 merges.",
+  "Coordinator 11 Oct 10:45 PM CT: Ashtusk recolour GO via the existing deterministic CPU native-atlas pipeline (texture only, under the owner's 4:12 PM delegation). F25#0 Astra four-effect gate HOLD (1 PASS/1 WEAK/2 FAIL). F04#1 met (9:49 PM). The Tidewake Guardian is not a combat boss (BOSSES 4.12): its F14#1 C2/C3 is the Nerissa freeing fight."
  ],
  "owner_needs": [
   "ROG Ally device tests (F26#5, F49#2), play pass (F49#1) and the 15\u201325 h clear confirmation (F47#0). Recommended early (they answer the combat frame-rate and build-freeze questions); owner schedules."
@@ -682,51 +684,51 @@
  "active_lanes": [
   {
    "lane": "routes-west",
-   "doing": "Meadows sigils (route ledger) and hall \u2192 warden \u2192 Tidewake handoff; opening \u2192 tournament \u2192 bridge \u2192 Warrens; Tidewake 07 past Venn now (fix the Veilfall recovery waypoint).",
-   "criteria": "F02#7, F19#5 Meadows/Tidewake, F13#0",
-   "next": "About 2\u20133 h"
-  },
-  {
-   "lane": "routes-east",
-   "doing": "Cloudreach route DONE (05\u201307). Now Stormwood named_detour and dynamo pieces, then F09#0/F11#0.",
-   "criteria": "F19#5 Cloudreach/Stormwood, then F06#0, F09#0, F11#0",
-   "next": "About 3 h"
-  },
-  {
-   "lane": "fights",
-   "doing": "Re-measuring every C2 fight on the fixed reader pilot (1032b96d3) and the tuning batch: Meadows chapter, Nerissa/Venn, Cloudreach/Stormwood bands, Marrow/Veyra; Venn L44 route proof.",
-   "criteria": "F04#7, F14#0/#1, F33#2, F22#1, F47#3, F22#4, F10#2, F10#6, F42#2, F21#5, F25#0",
-   "next": "About 1\u20132 h for F04#1"
-  },
-  {
-   "lane": "systems",
-   "doing": "F44#1 Meadows endgame re-run; F47#0 estimate done (8.8\u201312.5 h agent sim, playtest decides; preparation-depth options ready).",
-   "criteria": "F44#1, F46#1, F47#0, F47#2",
+   "doing": "Live offline-Warden proof for the port fix; hall \u2192 warden \u2192 Tidewake handoff and Tidewake 07 (L44) on 44bbda40; sigils ledger rerun.",
+   "criteria": "F19#5 Meadows/Tidewake, F02#7",
    "next": "About 1\u20132 h"
   },
   {
-   "lane": "co-op",
-   "doing": "F11#3: steps #1\u2013#42 pass after the guest-travel fixes; diagnosing #43 (guest portal back to Stormwood). Master-chest first-press fix staged.",
-   "criteria": "F11#3",
+   "lane": "routes-east",
+   "doing": "Stormwood chains (named_detour; crown_build \u2192 rootgate; dynamo \u2192 marrow \u2192 aftermath); fixing three Stormwood unit tests the full suite found.",
+   "criteria": "F19#5 Stormwood, then F09#0, F11#0",
    "next": "About 2 h"
   },
   {
+   "lane": "fights",
+   "doing": "Full F04#7 table on the guardian fix; Venn L32 route; Galewisp F14#0 rows; then Cloudreach/Stormwood bands, F22#4, F33#2.",
+   "criteria": "F04#7, F14#0/#1, F33#2, F22#1/#4, F47#3",
+   "next": "About 1 h for F04#7"
+  },
+  {
+   "lane": "systems",
+   "doing": "F42#2 HUD recapture (the overlay fix), then remaining systems criteria. F25#0 handed to Codex.",
+   "criteria": "F42#2, F44#1, F47#0",
+   "next": "About 1 h"
+  },
+  {
+   "lane": "co-op",
+   "doing": "F11#3: steps #1\u2013#69 pass; instrumented run on #70 (rejoined guest's Home Key).",
+   "criteria": "F11#3",
+   "next": "About 1 h per run"
+  },
+  {
    "lane": "captures",
-   "doing": "F04#6 distinct aftermath build (banners fall, sigils light, Warden hall banners down), F04#1 recapture, then F03#1, F17#6, F08#3.",
-   "criteria": "F04#1, F04#6, F03#1, F17#6, F08#3, F10#5, F36#1",
+   "doing": "F03#1 recapture (context frames for Vault and Bram, cart delivery, Doss debris readability); F04#6 aftermath; F04#1.",
+   "criteria": "F03#1, F04#1, F04#6, F17#6, F08#3",
    "next": "Sheets every ~1 h"
   },
   {
    "lane": "Codex \u00d75",
-   "doing": "Biome items judged from native Low sheets: Meadows doorway PASS; Cloudreach observatory and pennants PASS, aviary parked; Tidewake Veilfall and terraces parked. Adair identity ON; Iona/Orsen/Otto one more try; giant scale open.",
-   "criteria": "F38-F41, F26#3, F36#0, F29#3",
+   "doing": "Astra fresh starts: Cloudreach sanctuary GO to detail; Tidewake Veilfall and terraces HOLD (revise the blockouts). F40 High/Medium matrices delivered, Captain Medium pending. New: F25#0 effect rebuild (4-effect gate first), Ashtusk recolour for the native Tuskroot.",
+   "criteria": "F38-F41, F25#0, F26#3, F36#0",
    "next": "READY posts every 2\u20133 h"
   },
   {
    "lane": "Claude coordinator",
-   "doing": "Merging, judging code-blind, marking criteria.",
+   "doing": "Merging, judging code-blind, marking criteria, full-suite runs.",
    "criteria": "All",
-   "next": "Check-ins every 90 min"
+   "next": "Check-ins every 60 min"
   }
  ]
 }

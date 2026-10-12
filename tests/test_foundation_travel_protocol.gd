@@ -297,6 +297,32 @@ func test_a_realm_crossing_restarts_the_damage_revision_without_staling_the_gues
 	owner.free()
 
 
+## F11#3 run (EVIDENCE/F11-3): the guest's first samples after a crossing
+## still carry its old vitals (damage 1) in the new realm; the rebuilt
+## trainer's restart to 0 comes a few samples later. The host-completed
+## crossing explains that one restart, not a second rollback.
+func test_a_crossing_explains_the_restart_even_after_the_first_new_realm_sample() -> void:
+	var owner := PairingSession.new()
+	var composition := Node.new()
+	var lifecycle: Node = LIFECYCLE.new()
+	owner.add_child(composition)
+	composition.add_child(lifecycle)
+	lifecycle.accept(2, _pairing_sample(1, 1))
+	lifecycle.host_crossing_confirmed(2, "stormwood")
+	lifecycle.accept(2, _pairing_sample(2, 1, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 2, "the old vitals arrive first in the new realm")
+	lifecycle.accept(2, _pairing_sample(3, 0, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 3, "the rebuilt trainer's restart is still explained")
+	lifecycle.accept(2, _pairing_sample(4, 2, "stormwood"))
+	lifecycle.accept(2, _pairing_sample(5, 0, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 4, "one crossing explains one restart only")
+	lifecycle.host_crossing_confirmed(2, "meadows")
+	lifecycle._host_crossings[2].at -= lifecycle.CROSSING_ROLLBACK_WINDOW_MS + 1
+	lifecycle.accept(2, _pairing_sample(6, 0, "meadows"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 4, "an expired crossing explains nothing")
+	owner.free()
+
+
 ## The sample's realm is guest-reported. A modified client that names a fake
 ## realm (and then its real one) must not roll its damage_revision back: only
 ## the realm the host itself completed this peer's crossing to may, once.

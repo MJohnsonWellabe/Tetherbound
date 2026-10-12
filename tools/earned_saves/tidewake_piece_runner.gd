@@ -23,6 +23,8 @@ extends SceneTree
 ##   07_human_late   water_human_late_segment.run_human: the same late route by the
 ##                   player's own swimming with the same five (no swimmer/saddle)
 ##   08_ending       water_earned_ending_segment.run_earned (Guardian invite)
+##   09_cloudreach_handoff  Home Key home, hang the Tidewake relic, enter the
+##                   Cloudreach arch (f20_portal_travel, as tidewake_handoff)
 ##
 ## USAGE
 ##   godot --headless --path . --script tools/earned_saves/tidewake_piece_runner.gd -- \
@@ -34,7 +36,7 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "05_tidal",
-	"06_swimmer", "07_late", "07_human_late", "08_ending"]
+	"06_swimmer", "07_late", "07_human_late", "08_ending", "09_cloudreach_handoff"]
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
@@ -122,8 +124,9 @@ func _run() -> void:
 		await _play()
 	if failures.is_empty():
 		var after_uids: Array = _snapshot().uids
-		if after_uids.size() != 5 or str(game.current_realm) != "water" or bool(game.get("free_build")):
-			failures.append("Piece must end with five companions in Water without free build")
+		var end_realm := "cloudreach" if segment == "09_cloudreach_handoff" else "water"
+		if after_uids.size() != 5 or str(game.current_realm) != end_realm or bool(game.get("free_build")):
+			failures.append("Piece must end with five companions in %s without free build" % end_realm)
 	if failures.is_empty() and not bool(game.call("save_game", 0)):
 		failures.append("Game.save_game(0) refused the checkpoint save")
 	_finish()
@@ -358,6 +361,19 @@ func _play() -> void:
 			if not ok and failures.is_empty(): failures.append("human late returned false")
 		"08_ending":
 			_take(await load("res://tests/helpers/water_earned_ending_segment.gd").new().run_earned(self, world, game), "ok", "ending")
+		"09_cloudreach_handoff":
+			# As earned_chain_runner's tidewake_handoff, one chapter on: Home Key
+			# home, hang the earned Tidewake relic, Use/Enter the Cloudreach arch.
+			var travel: RefCounted = load("res://tests/helpers/f20_portal_travel.gd").new(self, game)
+			var passed: bool = await travel.home_key() and await travel.hang_relic("tidewake") \
+				and await travel.enter("cloudreach", "cloudreach")
+			if passed:
+				for _i in 300:
+					await physics_frame
+			helper_receipts.append({"segment": "cloudreach_handoff", "passed": passed})
+			if not passed:
+				failures.append_array(travel.failures)
+				if travel.failures.is_empty(): failures.append("cloudreach_handoff: portal travel failed without a receipt")
 
 
 func _setup_run(helper: RefCounted, world: Node3D, player: CharacterBody3D, rig: Node3D, label: String) -> void:

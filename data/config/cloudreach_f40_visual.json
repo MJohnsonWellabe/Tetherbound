@@ -38,8 +38,9 @@
       "lantern_energy": 1.5,
       "lantern_range_m": 10.0,
       "upper_gallery": {
-        "_why_off": "P2-022 final attempt judged FAIL (coordinator code-blind, 6:47 PM CT 11 Oct): before/after near-identical at approach, no layered stone mass, night silhouette still dark. Parked for the F40 matrix judge.",
         "enabled": false,
+        "_why": "P2-022 code-blind FAIL/PARKED, issue572 comment6115283656. This gate also owns the taller membrane and crown lantern cores; OFF restores their baseline presentation. A replacement requires a separate candidate flag.",
+        "membrane_to_rib_fraction": 0.78,
         "radial_inset_m": 3.6,
         "width_m": 7.2,
         "post_width_m": 0.65,

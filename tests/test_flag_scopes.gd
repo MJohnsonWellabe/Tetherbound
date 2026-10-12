@@ -55,6 +55,7 @@ const WRITER_SITE_LITERALS := [
 	"broken_cart_met", "band1_broken_cart_repaired",
 	# scripts/world/river_nest_clear.gd
 	"river_nest_doss_met", "river_nest_doss_cleared",
+	"river_nest_debris_log", "river_nest_debris_rock", "river_nest_debris_branch",
 	# scripts/world/road_gate.gd
 	"road_gate_open",
 	# scripts/world/gated_crossing.gd / south_bridge.gd / mill_crossing.gd

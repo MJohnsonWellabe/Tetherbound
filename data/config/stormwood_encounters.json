@@ -5796,11 +5796,8 @@
     {
       "id": "glass_field_alpha",
       "region_id": "dynamo",
-      "position": [
-        -250,
-        100,
-        5080
-      ],
+      "_why_position_f19": "F19#5 Stormwood (routes-east, 2026-10-11): moved 4 m directly away from deepwood_road. The grown voltarach mesh (mesh_radius 9.6 m) put the old spot (-250, 5080) 0.85 m inside the route camera envelope (road 31.95 m < required 32.80 m).",
+      "position": [-247, 100, 5078],
       "level": 54,
       "behavior_profile": "CHARGER",
       "placeholder_species": "voltarach",

@@ -21,6 +21,11 @@ Symptom (routes-west, F13#0/F19#5 07_human_late): Officer Venn beats all five at
   - Bex won in 173.2 s sim and Calder in 248.5 s sim.
   - **Venn won in 193.9 s sim, all three opponents.**
   - The piece then FAILs at a later step: "Veilfall recovery waypoint 3 walk failed at (331.2,6.1,3798.4) toward (-14.8,166.2,4016.0) resets=2". This is route traversal, which no run had reached before.
-- L20 (the earned five, no raise) on 1032b96d3: started 18:40 CT.
+- L20 (the earned five, no raise) on d83f2d3b7, 19:58–20:55 CT: Venn wins at 159.1 s sim. This is the separate 'Tidewake L20 cap, no breakthrough on route' gap: L20 is 10 levels under the Veilfall entry [32,33], so it is not a balance failure (coordinator).
+- **L32 (chapter_curve Veilfall entry, disclosed raise) on f0f5897a8, 21:00–22:02 CT, hosting on udp/27015:**
+  - Bex won in 172.5 s sim and Calder in 263.0 s sim.
+  - **Venn won in 204.4 s sim, all three opponents.**
+  - The run then stops at the same Veilfall walk-back step, which routes-west fixed on tb/ev-meadows-fights.
 
 EV F14#1-route PASS 1a4c69a0b Venn defeated on the Tidewake route at L44 (193.9 s sim) after the route pilot reads F22 shapes; 07 next fails at the Veilfall recovery walk (routes-west)
+EV F14#1-route PASS f0f5897a8 Venn defeated on the route at the Veilfall curve entry L32 (204.4 s sim, disclosed raise); L44 also passed; the walk-back after Venn is routes-west's fix

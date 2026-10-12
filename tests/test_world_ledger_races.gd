@@ -101,15 +101,18 @@ func test_two_gathers_of_one_harvest_node_yield_one_lot_of_wood() -> void:
 		"the refused gather mints nothing -- this is the duplication the whole lane exists to stop")
 
 
-func test_two_doss_claimants_charge_and_reward_only_the_first_commit() -> void:
+func test_two_doss_claimants_reward_only_the_first_commit_and_charge_nothing() -> void:
+	# F03#1 round-8: the perch is cleared, not paid for. Peer B clears the
+	# debris through the ordinary world-flag commit; the rebuild is a race.
+	_clear_doss_debris(PEER_B)
 	var first: Dictionary = ledger.call("commit", _doss_intent(PEER_A, "char-a"), PEER_A)
 	var second: Dictionary = ledger.call("commit", _doss_intent(PEER_B, "char-b"), PEER_B)
 	assert_true(bool(first.get("ok")))
 	assert_false(bool(second.get("ok")))
 	assert_eq(str(second.get("code", "")), "already_taken")
 	assert_true(world.flags.has("river_nest_doss_cleared"))
-	assert_eq(_taken(first.delta, PEER_A, "wood"), 1)
-	assert_eq(_taken(first.delta, PEER_A, "fiber"), 1)
+	assert_eq(_taken(first.delta, PEER_A, "wood"), 0, "the rebuild spends no materials")
+	assert_eq(_taken(first.delta, PEER_A, "fiber"), 0, "the rebuild spends no materials")
 	assert_eq(_taken(first.delta, PEER_B, "wood"), 0)
 	assert_eq(_reward_granted(first.delta, PEER_A, "coin"), 45)
 	assert_eq(_reward_granted(first.delta, PEER_A, "potion_large"), 1)
@@ -126,21 +129,24 @@ func test_the_ledgers_doss_stands_where_the_world_builds_him() -> void:
 		"world_ledger.gd::DOSS_AT drifted from playground_world.gd::RIVER_NEST_AT")
 
 
-func test_doss_refuses_missing_materials_or_reward_room_without_any_ops() -> void:
-	var missing := _doss_intent(PEER_A, "char-a")
-	missing._doss_actor.inventory_slots = [{"id": "wood", "n": 1}]
-	var no_materials: Dictionary = ledger.call("commit", missing, PEER_A)
-	assert_false(bool(no_materials.get("ok")))
-	assert_eq(str(no_materials.get("code", "")), "materials")
-	assert_true((no_materials.delta.ops as Array).is_empty())
+func test_doss_refuses_uncleared_debris_or_reward_room_without_any_ops() -> void:
+	var blocked: Dictionary = ledger.call("commit", _doss_intent(PEER_A, "char-a"), PEER_A)
+	assert_false(bool(blocked.get("ok")))
+	assert_eq(str(blocked.get("code", "")), "debris")
+	assert_true((blocked.delta.ops as Array).is_empty())
+	# Two of three pieces cleared is still blocked.
+	for id: String in WORLD_LEDGER.DOSS_DEBRIS_FLAGS.slice(0, 2):
+		ledger.call("commit", {"kind": "set_world_flag", "realm": "meadows", "id": id, "value": true}, PEER_A)
+	var partial: Dictionary = ledger.call("commit", _doss_intent(PEER_A, "char-a"), PEER_A)
+	assert_eq(str(partial.get("code", "")), "debris")
+	assert_true((partial.delta.ops as Array).is_empty())
+	_clear_doss_debris(PEER_A)
 	var full := _doss_intent(PEER_A, "char-a")
 	var slots: Array = []
 	for index in 24:
 		slots.append({"id": "stone", "n": 1})
-	# Costs leave no slot: both materials remain stacked after one is removed.
-	# The coin and potion therefore cannot both fit.
-	slots[0] = {"id": "wood", "n": 2}
-	slots[1] = {"id": "fiber", "n": 2}
+	# Every slot is taken and neither coin nor potion is already stacked, so
+	# the complete reward cannot fit.
 	full._doss_actor.inventory_slots = slots
 	var no_room: Dictionary = ledger.call("commit", full, PEER_A)
 	assert_false(bool(no_room.get("ok")))
@@ -375,6 +381,13 @@ func test_an_unknown_intent_is_refused_with_a_reason() -> void:
 
 
 # --- helpers -----------------------------------------------------------------------
+
+func _clear_doss_debris(peer: int) -> void:
+	for id: String in WORLD_LEDGER.DOSS_DEBRIS_FLAGS:
+		var cleared: Dictionary = ledger.call("commit",
+			{"kind": "set_world_flag", "realm": "meadows", "id": id, "value": true}, peer)
+		assert_true(bool(cleared.get("ok")), "debris flag %s commits" % id)
+
 
 func _doss_intent(peer: int, character_id: String) -> Dictionary:
 	return {"kind": "river_nest_clear", "realm": "meadows", "_doss_actor": {

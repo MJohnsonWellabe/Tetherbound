@@ -393,8 +393,15 @@ func _frame_site(tag: String) -> void:
 	var yaw := home.basis.get_euler().y
 	var from := centre + Vector3(sin(yaw), 0.0, cos(yaw)) * 7.5
 	print("site %s: %d aftermath pieces around %s" % [_tid, points.size(), str(centre)])
+	# The player's own creature follows into the shot; put it away first with
+	# the ordinary recall input so the site itself is in frame.
+	await _press("creature_recall")
+	for i in 30:
+		await physics_frame
 	if await _stand_facing(centre, from):
 		await _save(tag)
+	if _director != null and _director.has_method("summon_active_creature") and _director.call("ally_body") == null:
+		await _director.call("summon_active_creature")
 
 
 ## The Warden arena's banner wall (gone once he is beaten), framed from the

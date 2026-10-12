@@ -64,7 +64,7 @@ func test_glass_field_dressing_keeps_the_authored_route_and_encounter_clear() ->
 		"critical Dynamo route moved during visual recovery")
 	var encounters: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ENCOUNTER_CONFIG))
 	var alpha := _entry(encounters.named_encounters, "glass_field_alpha")
-	assert_eq(alpha.position, [-250.0, 100.0, 5080.0], "named alpha moved during location dressing")
+	assert_eq(alpha.position, [-247.0, 100.0, 5078.0], "named alpha moved during location dressing")
 	assert_eq(alpha.placeholder_species, "voltarach")
 	assert_eq(alpha.level, 54, "F19 / RD-10 authored final-biome alpha")
 	assert_true(alpha.catchable and alpha.once_only)
