@@ -142,6 +142,16 @@
       "why": "35m from the ridge patrol camp (props.json order 4000), on the Ridgeline Watch's east slope: the camp's own supply spill, Good, outside the rest pad."
     },
     {
+      "id": "b4_candy_ridge_descent_wayside",
+      "item": "good_candy",
+      "pos": [
+        -212.0,
+        6590.0
+      ],
+      "tier": "side",
+      "why": "F02#7 strict spacing (2026-10-12 CT, route ledger 30422_200254): the walk from Captain Vess to the first new find on the gate road ran 271 m with only repeat species and Chop prompts. A wayside find on the ridge descent, ~10 m off the walked line at path ~3730 m, splits it at the band's ordinary side rate."
+    },
+    {
       "id": "b4_candy_runout_trailpup_meadow",
       "item": "good_candy",
       "pos": [

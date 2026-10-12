@@ -68,6 +68,9 @@ func owns_input() -> bool:
 ## assigned Home Key press without dispatching travel or consuming the
 ## modal's own input. Ordinary successful use still belongs to the HUD.
 func _input(event: InputEvent) -> void:
+	# Only a press can be a hotbar Home Key use; skip every lookup otherwise
+	# (stick motion arrives many times a frame).
+	if not event.is_pressed() or event.is_echo(): return
 	if _remote_only or _phase != "idle" or _game == null or not is_inside_tree(): return
 	var actor: Node3D = _game.call("find_player")
 	var scene := get_tree().current_scene

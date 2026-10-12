@@ -16,12 +16,16 @@ func configure(read_local_snapshot: Callable, send_intent: Callable) -> void:
 	_send = send_intent
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not COMMANDS.enabled() or not _read.is_valid() or not _send.is_valid() \
-		or OWNER.current(get_tree()) != null or event.is_echo(): return
+	# Match the event FIRST. OWNER.current() walks the input-owner group, and
+	# this ran it for every event -- each stick axis motion included -- which
+	# measured ~0.5 ms per event during wild training (F19#5 opening: 14 ms of
+	# input flush per frame; this node alone, by elimination).
+	if event.is_echo() or not event.is_pressed() or not COMMANDS.enabled(): return
 	for id: String in COMMANDS.COMMAND_IDS:
 		if not COMMANDS.command_enabled(id): continue
 		var action := COMMANDS.input_action(id)
 		if InputMap.has_action(action) and event.is_action_pressed(action):
+			if not _read.is_valid() or not _send.is_valid() or OWNER.current(get_tree()) != null: return
 			if request(id): get_viewport().set_input_as_handled()
 			return
 
