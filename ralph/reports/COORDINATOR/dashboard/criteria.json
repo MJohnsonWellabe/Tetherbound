@@ -930,10 +930,10 @@
    "counts": {
     "met": 4,
     "partial": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
-    "failing": 2
+    "failing": 1
    },
    "criteria": [
     {
@@ -946,9 +946,9 @@
     },
     {
      "text": "Veilfall and Guardian pass C2/C3",
-     "status": "failing",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_1/VERDICTS.md (partial; C3 framing 98%/83% failed)",
-     "gap": "Venn on the Tidewake route PASS at L44 with the fixed route pilot (F14-1-venn-route, 1a4c69a0b); L20 earned-team run in progress. The C2 top bar is being re-measured on the fixed reader pilot (1032b96d3) with the tuning batch (Venn charger rows 0.25 lock, 9f4140536).",
+     "status": "in_progress",
+     "evidence": "Venn route PASS at the Veilfall curve entry L32 (f0f5897a8, 204.4 s sim, disclosed raise; ralph/reports/EVIDENCE/F14-1-venn-route/ at 0b7f3755b) and at L44 (193.9 s). C2 top bar on 1032b96d3 plus the tuning batch: Venn PASS on Terrapup (0.092/0.789) and Ripplet (0.249/0.743).",
+     "gap": "Venn x Galewisp C2 row running (fights lane). The L20 earned-team loss is the separate Tidewake L20-cap gap, not a balance failure.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No passing C3 exists. CSH §7.5 and F22#4 fold it in, to be re-judged at Nerissa's new level.",
      "audit_index": 1
     },
