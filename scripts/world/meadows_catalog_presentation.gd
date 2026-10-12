@@ -8,6 +8,7 @@ const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+const POTION_PRESENTATION := preload("res://scripts/world/meadows_potion_presentation.gd")
 static var _settings: Dictionary = {}
 static var _active := -1
 
@@ -31,6 +32,8 @@ static func enabled() -> bool:
 ## Filter only decorative draw instances AFTER harvest identity assignment.
 ## The stored bake, layer arrays, collision streams and harvest ledger survive.
 static func suppress_cover(layer: String, placement: Dictionary) -> bool:
+	if POTION_PRESENTATION.suppress_cover(layer, placement):
+		return true
 	if not enabled() or not settings().get("cover_layers", []).has(layer):
 		return false
 	if placement.has("harvest_item") or bool(placement.get("collide", false)):
