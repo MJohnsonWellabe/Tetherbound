@@ -1444,8 +1444,8 @@
     {
      "text": "Across 12+ seeds per biome band, a reader pilot beats a masher pilot (reader win ≥0.9; masher loses the lead creature materially more often).",
      "status": "in_progress",
-     "evidence": "smoke_f22_pattern_bands.gd + helpers/f22_pattern_pilot.gd (no recorded run)",
-     "gap": "Sweep done (12 seeds, 23 bands x 3 starters, 9c7379e08). Under the 5:02 PM ruling (lead-HP cost <= 0.55x masher, reader win >= 0.9): 40/69 pass (Meadows 14/15, Tidewake 15/18, Cloudreach 6/18, Stormwood 5/18). The Cloudreach and Stormwood failures look like reader-pilot or fixture issues (same class as the Venn helper bug); fights lane is root-causing, then re-runs those bands.",
+     "evidence": "Band sweep on the adopted reader (5b18ea665): 60/69 rows pass. Meadows 15/15, Tidewake 18/18, Cloudreach 10/18, Stormwood 17/18. ralph/reports/EVIDENCE/F22-1/ (aa5ae644d, f034cdf93).",
+     "gap": "9 rows: high_roost x3, summit x3, broken_causeways Ripplet/Galewisp, dynamo Ripplet. The reader takes CURRENT fields and craghorn lanes while low on wind. Next: field-aware reader movement (a new approach), then an arena field-coverage check and band tune if needed. Ripplet x tempestwing is a class-C overmatch only if the existing verdict rules classify it.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No seed distribution recorded for any band.",
      "audit_index": 1
     },
@@ -2933,8 +2933,8 @@
     {
      "text": "C2 difficulty holds for every biome band in the new order.",
      "status": "in_progress",
-     "evidence": "test_economy_difficulty.mjs (not CI); F22 diagnostic reports acceptance=false",
-     "gap": "Same sweep and ruling as F22#1: 40/69 band x starter rows pass; Cloudreach and Stormwood are being root-caused (pilot vs geometry) before any tuning.",
+     "evidence": "Same sweep as F22#1: 60/69 on 5b18ea665.",
+     "gap": "Follows F22#1's 9 residual rows (Cloudreach high_roost, summit, broken_causeways; Stormwood dynamo).",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No paired 24-seed C2 per band in the new order.",
      "audit_index": 3
     },
