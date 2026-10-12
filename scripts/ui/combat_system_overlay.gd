@@ -73,6 +73,10 @@ func _ready() -> void:
 	rb.add_theme_font_size_override("font_size", TOKENS.FONT_HEADING)
 	_ring.add_child(rb)
 	_meter_caption = _label(ultimate, "Ultimate")
+	# An autowrapping label in an HBox has no width of its own and wrapped one
+	# letter per line, pushing the move diamond below the screen.
+	_meter_caption.custom_minimum_size.x = float(cfg.get("move_width", 420)) - 96.0
+	_meter_caption.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var grid := Control.new()
 	var width := float(cfg.get("move_width", 420))
 	var row_height := float(cfg.get("move_row_height", 68))
