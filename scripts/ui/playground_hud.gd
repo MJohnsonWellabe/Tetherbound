@@ -2297,9 +2297,13 @@ func _build_vitals_cluster() -> void:
 	vitals_plate.size = Vector2(VITALS_WIDTH + 48.0, VITALS_HEIGHT_WITHOUT_HP + VITALS_PLATE_OVERHANG * 2.0)
 	vitals_plate.add_theme_stylebox_override("panel", UITokens.panel_box())
 	_vitals_cluster.add_child(vitals_plate)
-	# P2-004 round 3: HP and Food share ONE plate (the health plate grows
-	# down over the Food row), so this one is not drawn.
-	vitals_plate.visible = not _merge_vitals()
+	# P2-004 round 3: HP and Food share ONE plate. This one (drawn BEHIND the
+	# later health cluster) grows up over the HP row; the health plate is
+	# hidden, since drawn on top it veiled the Food row.
+	if _merge_vitals():
+		var bottom := vitals_plate.position.y + vitals_plate.size.y
+		vitals_plate.position.y = MERGED_HP_OFFSET - VITALS_PLATE_OVERHANG
+		vitals_plate.size.y = bottom - vitals_plate.position.y
 
 	_build_buff_row(_vitals_cluster)
 
@@ -2380,10 +2384,8 @@ func _build_player_health_bar() -> void:
 	health_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	health_plate.position = Vector2(-40.0, -VITALS_PLATE_OVERHANG)
 	health_plate.size = Vector2(VITALS_WIDTH + 48.0, HEALTH_BAR_CONTENT_HEIGHT + VITALS_PLATE_OVERHANG * 2.0)
-	if _merge_vitals():
-		# Down to the Food row's bottom: the HP cluster sits MERGED_HP_OFFSET
-		# above the vitals cluster, whose Food bar is at VITALS_FOOD_ONLY_ROW_Y.
-		health_plate.size.y = -MERGED_HP_OFFSET + VITALS_FOOD_ONLY_ROW_Y + VITALS_BAR_HEIGHT + 14.0 + VITALS_PLATE_OVERHANG
+	# Merged vitals: the vitals cluster's plate covers both rows.
+	health_plate.visible = not _merge_vitals()
 	health_plate.add_theme_stylebox_override("panel", UITokens.panel_box())
 	_health_bar_cluster.add_child(health_plate)
 
