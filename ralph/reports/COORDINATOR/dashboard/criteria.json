@@ -181,7 +181,7 @@
      "text": "Each is a distinct optional action",
      "status": "partial",
      "evidence": "MEADOWS-PAYOFFS/six-activities/earned/ (seed4_hall runs, judge D) @≤1ba253eb0",
-     "gap": "Capture c2ef7e78 (six activities from generated relay and sigils saves, ordinary input): code-blind 4/6 clear (herd discovery, Bram fight, cart repair, Vault elder fight). Juno escort frame shows no escort, and has a black sky column to identify; Doss frame shows only the reward, with a creature mesh clipping the camera. Captures lane recapturing those two.",
+     "gap": "Re-judge 1643f899: 5/6 distinct. Doss's bank repair and Coll's cart repair are both 'bring wood/fiber, fix a structure'. Per WORLD (band3_river_nest: 'clearing/rebuilding a bank perch'), the captures lane is rebuilding Doss as a debris-clearing activity (no material payment, same once-only reward), then recapturing. The Doss signal-fire smoke column is fixed (d43cf52a).",
      "note": "Evidence window 1 (6:20 AM CT Sun 11 Oct): lane working. | Audit 2026-10-04 on b4e4897d5: STALE. Earned runs from the seed4_hall checkpoint. The save was reset, and F19 must regenerate the earned checkpoints.",
      "audit_index": 1
     },
