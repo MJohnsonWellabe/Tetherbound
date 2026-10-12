@@ -11,7 +11,7 @@
 | Warden (rootiron / bare) | warden_bare_bd3c20ba + MEADOWS_ROOTIRON (systems-b), PASS | harder | PASS |
 | Nerissa (tidesteel / rootiron), f3a6f6fac | terrapup 0.567/0.085/0.789; ripplet 0.502/0.194/0.748; galewisp 0.306/0.215/0.658; all PASS | 0.958 / 0.871 / 0.799 | PASS |
 | Veyra (skyglass / tidesteel), b2f0aa32c | ripplet 0.057/0.034/0.361 PASS; galewisp 0.034/0.040/0.315 PASS; terrapup 0.039/0.039/0.176, Terrapup type-advantaged vs air: (b) party 0.22 ≤ 0.55, PASS | 0.232 / 0.418 / 0.367 | PASS |
-| Marrow (stormglass / skyglass), 904c3c537 | ripplet 0.105/0.043/0.243 PASS; galewisp 0.104/0.034/0.247 PASS; terrapup 0.073/0.073/0.171, advantaged vs electric: (b) 0.43, PASS | 0.293 / 0.299 / 0.207 | PASS |
+| Marrow (stormglass / skyglass), 904c3c537 | ripplet 0.105/0.043/0.243 PASS; galewisp 0.104/0.034/0.247 PASS; terrapup 0.073/0.073/0.171, advantaged vs electric: (b) 0.43, PASS | 0.207 / 0.293 / 0.299 | PASS |
 
 Rows: `nerissa_veyra_fidelity_rows.json`. Marrow's are in ../TYPE-CLASS. The matchup class is tagged per row above.
 
