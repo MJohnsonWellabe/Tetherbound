@@ -187,6 +187,20 @@ func _pin_calm() -> void:
 
 
 func _named_body(id: String) -> Node3D:
+	if id == "ordinary":
+		# The nearest ordinary (non-named) wild to the hollows_alpha area.
+		var anchor := _named_body("hollows_alpha")
+		var at := anchor.global_position if anchor != null else _player.global_position
+		var best: Node3D = null
+		var best_d := INF
+		for body: Node3D in (_director.call("wild_creatures") as Array):
+			if not is_instance_valid(body) or str(body.get_meta("stormwood_named_encounter", "")) != "":
+				continue
+			var d := body.global_position.distance_to(at)
+			if d < best_d and d > 6.0:
+				best_d = d
+				best = body
+		return best
 	for body: Node3D in (_director.call("wild_creatures") as Array):
 		if is_instance_valid(body) and str(body.get_meta("stormwood_named_encounter", "")) == id:
 			return body
@@ -436,16 +450,33 @@ func _capture(id: String) -> Dictionary:
 	await _save("c00-fight")
 	# Two throws: full health (expect a breakout), then after a disclosed fixture
 	# sets the foe to 3% HP (a likely catch). Each gets its own frame series.
-	for attempt in 2:
+	var foe_instance: Variant = _manager.get("_enemy")
+	if _id == "ordinary" and foe_instance != null:
+		_note("ORDINARY target species=%s level=%s" % [str(foe_instance.get("species_id")), str(foe_instance.get("level"))])
+		# Weaken it with real quick attacks (production combat), no HP writes.
+		var ticks0 := Engine.physics_ticks_per_second
+		var next_quick := 0
+		while bool(_manager.call("is_fighting")) and float(foe_instance.call("hp_fraction")) > 0.3 and _t() < 60.0:
+			_pin_calm()
+			var ally := _director.call("ally_body") as Node3D
+			var foe := _manager.call("enemy_body") as Node3D
+			if ally != null and foe != null:
+				var offset := foe.global_position - ally.global_position
+				offset.y = 0.0
+				if offset.length() > float(_manager.call("combat_move_reach", "quick")) * 0.8:
+					_stick(offset)
+				else:
+					_stick(Vector3.ZERO)
+					if _phys >= next_quick and bool(_manager.call("quick_ready")):
+						await _tap(&"combat_quick")
+						next_quick = _phys + int(0.6 * ticks0)
+			await physics_frame
+		_stick(Vector3.ZERO)
+		_note("ORDINARY weakened hp_fraction=%.2f t=%.1f" % [float(foe_instance.call("hp_fraction")), _t()])
+	var attempts := 6 if _id == "ordinary" else 2
+	for attempt in attempts:
 		if not bool(_manager.call("is_fighting")):
 			break
-		if attempt == 1:
-			var foe_instance: Variant = _manager.get("_enemy")
-			if foe_instance != null:
-				foe_instance.set("hp", maxf(1.0, float(foe_instance.get("hp")) * 0.03))
-			for i in 30:
-				_pin_calm()
-				await physics_frame
 		await _tap(&"combat_throw")
 		for i in 12:
 			_pin_calm()
@@ -466,6 +497,8 @@ func _capture(id: String) -> Dictionary:
 				continue
 			await physics_frame
 		_note("THROW %d done fighting=%s outcome=%s" % [attempt, str(_manager.call("is_fighting")), str(_manager.get("_outcome"))])
+		if str(_manager.get("_outcome")) == "caught":
+			break
 	_stick(Vector3.ZERO)
 	Input.action_release(&"combat_quick")
 	row.tells = _tells.duplicate(true)

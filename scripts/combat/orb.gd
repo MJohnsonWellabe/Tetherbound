@@ -519,6 +519,9 @@ func _tick_rest(delta: float) -> void:
 func shake(_index: int) -> void:
 	_shake_left = SHAKE_SECONDS
 	FLASH.burst(get_parent(), global_position, Color("#ffd27a"), 0.55, 0.28, 0.8)
+	# P2-060: presentation-only shake beat; OFF unless catch_kit.json enables it.
+	if CATCH_KIT.enabled():
+		CATCH_KIT.play(get_parent(), "shake", global_position, self)
 
 
 ## The horizontal direction across the current camera's view, for shake travel

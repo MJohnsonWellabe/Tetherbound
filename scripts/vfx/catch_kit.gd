@@ -45,7 +45,7 @@ static func orb_material() -> ShaderMaterial:
 	return material
 
 static func play(host: Node, key: String, at: Vector3, source: Node3D = null) -> Node3D:
-	if host == null or not enabled() or key not in ["strike", "caught", "breakout"]: return null
+	if host == null or not enabled() or key not in ["strike", "shake", "caught", "breakout"]: return null
 	var node := (load("res://scripts/vfx/catch_kit.gd") as Script).new() as Node3D
 	node.set("_key", key)
 	node.set("_at", at)
@@ -74,6 +74,10 @@ func _ready() -> void:
 		"strike":
 			_life = 0.75
 			_ring(float(_cfg.get("ring_radius_m", 0.9)), 0.7)
+		"shake":
+			# Each wobble: a tight violet ring pulse and the orb's own rim flaring.
+			_life = 0.45
+			_ring(float(_cfg.get("ring_radius_m", 0.9)) * 0.55, 0.4)
 		"caught":
 			_life = 1.1
 			_success()
@@ -85,10 +89,13 @@ func _process(delta: float) -> void:
 	var step := minf(delta, 0.1)
 	_age += step
 	if _key == "strike" and _age < 0.45: _draw_in(step)
+	if _key == "shake": _flare_orb(1.0 + float(_cfg.get("shake_flare", 2.2)) * (1.0 - _age / _life))
 	_glow.call("step", step)
 	_streaks.call("step", step)
 	if _shards != null: _shards.call("step", step)
-	if _age >= _life: queue_free()
+	if _age >= _life:
+		if _key == "shake": _flare_orb(1.0)
+		queue_free()
 
 func _rate(rate: float, step: float, key: String) -> int:
 	var carry := float(_carry.get(key, 0.0)) + rate * step
@@ -113,6 +120,13 @@ func _ring(radius: float, life: float) -> void:
 		var tint := core if i % 3 == 0 else colour
 		_glow.call("emit", _at + dir * radius * 0.6, dir * radius * 1.1, {"life": life, "size0": 0.22, "size1": 0.12,
 			"colour": tint, "fade_in": 0.05, "drag": 3.5})
+
+## The resting orb (passed as source for "shake") flares its rim, then settles.
+func _flare_orb(glow: float) -> void:
+	if _source == null or not is_instance_valid(_source): return
+	var mesh: Variant = _source.get("_mesh")
+	if mesh is MeshInstance3D and (mesh as MeshInstance3D).material_override is ShaderMaterial:
+		((mesh as MeshInstance3D).material_override as ShaderMaterial).set_shader_parameter("glow", maxf(1.0, glow))
 
 ## Capture motes spiral in from the creature's whole body into the orb.
 func _draw_in(step: float) -> void:
