@@ -18,6 +18,9 @@ var _edge_width := 0.12
 ## creature re-aims every physics tick of its telegraph, and each rebuild
 ## sampled the ground ~400 times (PERF, 2026-10-05: ~125 ms a call on a host).
 var _ground_seen: Dictionary = {}
+## Marker/field discs: the target's foot height carried in the marker's Y
+## (F04#1). Ground sampling ran under the raised Relay deck twice. NAN: sample.
+var _seat_y := NAN
 var _aimed: Array = []
 
 
@@ -44,7 +47,9 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.vertex_color_use_as_albedo = true
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	material.no_depth_test = false
+	# A deck or crate must never hide a tell (F04#1): drawn over the floor.
+	material.no_depth_test = true
+	material.render_priority = 1
 	material.albedo_color = colour
 	cue._mesh = ImmediateMesh.new()
 	var visual := MeshInstance3D.new()
@@ -74,10 +79,12 @@ func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
 	_mesh.clear_surfaces()
 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	var shape := str(_profile.get("telegraph_shape", "cone"))
+	_seat_y = NAN
 	match shape:
 		"ring":
 			_disc(_origin, float(_profile.get("inner_radius_m", 0.0)), float(_profile.get("range", 0.0)), TAU)
 		"marker", "field":
+			_seat_y = _marker.y
 			# The hit area: marker radius plus the target's own radius (F04#1).
 			_disc(_marker, 0.0, float(_profile.get("marker_radius_m", 0.0)) + float(_profile.get("target_radius_m", 0.0)), TAU)
 		"cone", "fan":
@@ -156,7 +163,9 @@ func _strip(start: Vector3, finish: Vector3) -> void:
 func _quad(a: Vector3, b: Vector3, c: Vector3, d: Vector3, alpha: float) -> void:
 	for point: Vector3 in [a, b, c, a, c, d]:
 		var ground := point.y
-		if is_instance_valid(_body) and _body.has_method("_ground_height"):
+		if is_finite(_seat_y):
+			ground = _seat_y
+		elif is_instance_valid(_body) and _body.has_method("_ground_height"):
 			var key := Vector2(point.x, point.z)
 			var measured: float
 			if _ground_seen.has(key):
