@@ -1,4 +1,4 @@
-# F03#1 code-blind verdict, round 12 (coordinator, Mon 12 Oct 2026, 1:31 AM CT): PASS (marginal)
+# F03#1 code-blind verdict, round 12 (coordinator, Mon 12 Oct 2026, 1:27 AM CT): PASS (marginal)
 
 Frames: tb/ev-captures 888ec397, `ralph/reports/VISUAL-PROOF/F03-1/frames/`. 19 frames under neutral activity letters; key withheld; the judge read no code or README.
 Activities: Coll's cart repair (materials hand-in), the Vault elder (wild elite fight at the cave shrine), Doss's debris clear and perch rebuild, Juno's stolen Meadowhart (find and return), the Meadowhart herd (discovery), and Old Bram (trainer duel).

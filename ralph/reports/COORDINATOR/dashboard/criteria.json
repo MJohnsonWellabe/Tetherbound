@@ -180,7 +180,7 @@
     {
      "text": "Each is a distinct optional action",
      "status": "met",
-     "evidence": "Code-blind PASS 1:31 AM CT 12 Oct (r12, tb/ev-captures 888ec397): cart repair, Vault elder, Doss debris clear and rebuild, Juno find-and-return, herd discovery and Bram duel read as six distinct optional actions; debris-clear smokes PASS on 2c8d88a3f. ralph/reports/EVIDENCE/F03-1/JUDGE.md",
+     "evidence": "Code-blind PASS 1:27 AM CT 12 Oct (r12, tb/ev-captures 888ec397): cart repair, Vault elder, Doss debris clear and rebuild, Juno find-and-return, herd discovery and Bram duel read as six distinct optional actions; debris-clear smokes PASS on 2c8d88a3f. ralph/reports/EVIDENCE/F03-1/JUDGE.md",
      "gap": "",
      "note": "Non-blocking follow-ups recorded in JUDGE.md (a lying companion in Juno's escort frame, clipping, NPC face tones, the cyan crescent).",
      "audit_index": 1
