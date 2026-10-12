@@ -179,7 +179,8 @@
   "arch_materials": {
     "open": "#f2cf83",
     "locked": "#6a7f8c",
-    "sealed": "#303947",
+    "sealed": "#5b6068",
+    "_why_sealed": "F17#6 r1 judge: sealed arches read as flat navy placeholder planes. Sealed now multiplies this cool stone grey over the kit's brick texture inside the recessed fan (dark centre, lighter rim: still dark but visible, F17#2); locked arches show the kit's ornamented door. TUNABLE.",
     "stirred": "#a89ec7"
   },
   "light": {

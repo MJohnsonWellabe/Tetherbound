@@ -602,6 +602,15 @@ static var _aerial_material: Object = null
 ## build's shader has no such uniform installed -- `_apply_ground_shader`'s
 ## own shader-override install already warns by name if that ever happens,
 ## so this stays silent rather than doubling that warning on every clock tick.
+## F17#6: how wet the ground reads (0 dry .. 1 soaked), from the weather.
+static func set_rain_wetness(amount: float) -> void:
+	if _aerial_material == null or not is_instance_valid(_aerial_material):
+		return
+	if not _aerial_material.has_method("set_shader_param"):
+		return
+	_aerial_material.call("set_shader_param", "rain_wetness", clampf(amount, 0.0, 1.0))
+
+
 static func set_aerial_fade_colour(colour: Color) -> void:
 	if _aerial_material == null or not is_instance_valid(_aerial_material):
 		return
