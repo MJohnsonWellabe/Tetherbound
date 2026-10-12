@@ -1,0 +1,76 @@
+F38 matrix (Low) partial capture - visual-claude lane
+Tool: tools/capture_f38_matrix.gd --f38-preset=Low, 1280x720, seed 2042, built at tb/ev-coordinator c88f6192.
+Subset: 6 sites (band1_lower_meadows_1, farm_to_hall, village_road, hall_front, band2_stone_and_root_1, band3_the_river_lock_0)
+  x day/night x clear/rain x 4 views (approach/gameplay/reverse/detail) = 96 planned.
+Captured: 60 of 96. village_road and hall_front were not reached; farm_to_hall is partial (no approach view).
+capture_f38_fight was not reached. The run was stopped for the owner wind-down.
+Sheets are 16 tiles or fewer, 4 columns. Tile key below.
+
+KEY
+sheet-01 tile 01 (row 1 col 1): site=band1_lower_meadows_1 view=approach time=day weather=clear
+sheet-01 tile 02 (row 1 col 2): site=band1_lower_meadows_1 view=gameplay time=day weather=clear
+sheet-01 tile 03 (row 1 col 3): site=band1_lower_meadows_1 view=reverse time=day weather=clear
+sheet-01 tile 04 (row 1 col 4): site=band1_lower_meadows_1 view=detail time=day weather=clear
+sheet-01 tile 05 (row 2 col 1): site=band1_lower_meadows_1 view=approach time=day weather=rain
+sheet-01 tile 06 (row 2 col 2): site=band1_lower_meadows_1 view=gameplay time=day weather=rain
+sheet-01 tile 07 (row 2 col 3): site=band1_lower_meadows_1 view=reverse time=day weather=rain
+sheet-01 tile 08 (row 2 col 4): site=band1_lower_meadows_1 view=detail time=day weather=rain
+sheet-01 tile 09 (row 3 col 1): site=band1_lower_meadows_1 view=approach time=night weather=clear
+sheet-01 tile 10 (row 3 col 2): site=band1_lower_meadows_1 view=gameplay time=night weather=clear
+sheet-01 tile 11 (row 3 col 3): site=band1_lower_meadows_1 view=reverse time=night weather=clear
+sheet-01 tile 12 (row 3 col 4): site=band1_lower_meadows_1 view=detail time=night weather=clear
+sheet-01 tile 13 (row 4 col 1): site=band1_lower_meadows_1 view=approach time=night weather=rain
+sheet-01 tile 14 (row 4 col 2): site=band1_lower_meadows_1 view=gameplay time=night weather=rain
+sheet-01 tile 15 (row 4 col 3): site=band1_lower_meadows_1 view=reverse time=night weather=rain
+sheet-01 tile 16 (row 4 col 4): site=band1_lower_meadows_1 view=detail time=night weather=rain
+sheet-02 tile 01 (row 1 col 1): site=band2_stone_and_root_1 view=approach time=day weather=clear
+sheet-02 tile 02 (row 1 col 2): site=band2_stone_and_root_1 view=gameplay time=day weather=clear
+sheet-02 tile 03 (row 1 col 3): site=band2_stone_and_root_1 view=reverse time=day weather=clear
+sheet-02 tile 04 (row 1 col 4): site=band2_stone_and_root_1 view=detail time=day weather=clear
+sheet-02 tile 05 (row 2 col 1): site=band2_stone_and_root_1 view=approach time=day weather=rain
+sheet-02 tile 06 (row 2 col 2): site=band2_stone_and_root_1 view=gameplay time=day weather=rain
+sheet-02 tile 07 (row 2 col 3): site=band2_stone_and_root_1 view=reverse time=day weather=rain
+sheet-02 tile 08 (row 2 col 4): site=band2_stone_and_root_1 view=detail time=day weather=rain
+sheet-02 tile 09 (row 3 col 1): site=band2_stone_and_root_1 view=approach time=night weather=clear
+sheet-02 tile 10 (row 3 col 2): site=band2_stone_and_root_1 view=gameplay time=night weather=clear
+sheet-02 tile 11 (row 3 col 3): site=band2_stone_and_root_1 view=reverse time=night weather=clear
+sheet-02 tile 12 (row 3 col 4): site=band2_stone_and_root_1 view=detail time=night weather=clear
+sheet-02 tile 13 (row 4 col 1): site=band2_stone_and_root_1 view=approach time=night weather=rain
+sheet-02 tile 14 (row 4 col 2): site=band2_stone_and_root_1 view=gameplay time=night weather=rain
+sheet-02 tile 15 (row 4 col 3): site=band2_stone_and_root_1 view=reverse time=night weather=rain
+sheet-02 tile 16 (row 4 col 4): site=band2_stone_and_root_1 view=detail time=night weather=rain
+sheet-03 tile 01 (row 1 col 1): site=band3_the_river_lock_0 view=approach time=day weather=clear
+sheet-03 tile 02 (row 1 col 2): site=band3_the_river_lock_0 view=gameplay time=day weather=clear
+sheet-03 tile 03 (row 1 col 3): site=band3_the_river_lock_0 view=reverse time=day weather=clear
+sheet-03 tile 04 (row 1 col 4): site=band3_the_river_lock_0 view=detail time=day weather=clear
+sheet-03 tile 05 (row 2 col 1): site=band3_the_river_lock_0 view=approach time=day weather=rain
+sheet-03 tile 06 (row 2 col 2): site=band3_the_river_lock_0 view=gameplay time=day weather=rain
+sheet-03 tile 07 (row 2 col 3): site=band3_the_river_lock_0 view=reverse time=day weather=rain
+sheet-03 tile 08 (row 2 col 4): site=band3_the_river_lock_0 view=detail time=day weather=rain
+sheet-03 tile 09 (row 3 col 1): site=band3_the_river_lock_0 view=approach time=night weather=clear
+sheet-03 tile 10 (row 3 col 2): site=band3_the_river_lock_0 view=gameplay time=night weather=clear
+sheet-03 tile 11 (row 3 col 3): site=band3_the_river_lock_0 view=reverse time=night weather=clear
+sheet-03 tile 12 (row 3 col 4): site=band3_the_river_lock_0 view=detail time=night weather=clear
+sheet-03 tile 13 (row 4 col 1): site=band3_the_river_lock_0 view=approach time=night weather=rain
+sheet-03 tile 14 (row 4 col 2): site=band3_the_river_lock_0 view=gameplay time=night weather=rain
+sheet-03 tile 15 (row 4 col 3): site=band3_the_river_lock_0 view=reverse time=night weather=rain
+sheet-03 tile 16 (row 4 col 4): site=band3_the_river_lock_0 view=detail time=night weather=rain
+sheet-04 tile 01 (row 1 col 1): site=farm_to_hall view=gameplay time=day weather=clear
+sheet-04 tile 02 (row 1 col 2): site=farm_to_hall view=reverse time=day weather=clear
+sheet-04 tile 03 (row 1 col 3): site=farm_to_hall view=detail time=day weather=clear
+sheet-04 tile 04 (row 1 col 4): site=farm_to_hall view=gameplay time=day weather=rain
+sheet-04 tile 05 (row 2 col 1): site=farm_to_hall view=reverse time=day weather=rain
+sheet-04 tile 06 (row 2 col 2): site=farm_to_hall view=detail time=day weather=rain
+sheet-04 tile 07 (row 2 col 3): site=farm_to_hall view=gameplay time=night weather=clear
+sheet-04 tile 08 (row 2 col 4): site=farm_to_hall view=reverse time=night weather=clear
+sheet-04 tile 09 (row 3 col 1): site=farm_to_hall view=detail time=night weather=clear
+sheet-04 tile 10 (row 3 col 2): site=farm_to_hall view=gameplay time=night weather=rain
+sheet-04 tile 11 (row 3 col 3): site=farm_to_hall view=reverse time=night weather=rain
+sheet-04 tile 12 (row 3 col 4): site=farm_to_hall view=detail time=night weather=rain
+
+F38#5 DEFECTS OBSERVED (self-check; none fixed - out of lane scope or not trivial)
+- sheet-03 River Lock: flat yellow hexagon ground decals; white untextured crates/frame/barrel (placeholder materials);
+  red banners (red is reserved for Team Tether); reverse view camera clipped into the arch wall.
+- sheet-04 farm_to_hall: several stands sit inside Grandpa's house (camera under the ceiling); white benches/props read
+  as placeholder; "South Bridge" sign cut at the frame edge; dark night interior.
+- sheet-02 Warrens (band2_stone_and_root_1): tall white vertical shaft/beam beside the cliff (possibly an effect); red bush.
