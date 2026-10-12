@@ -14,8 +14,10 @@ extends "res://tools/earned_saves/earned_chain_runner.gd"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const PILOT := preload("res://tests/helpers/water_combat_pilot.gd")
 const FIGHT_SIM_S := 40.0
+const VICTORY_SIM_S := 900.0
 
 var _trainer_id := ""
+var _to_victory := false
 
 
 func _run() -> void:
@@ -24,6 +26,7 @@ func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--profile="): segment = arg.trim_prefix("--profile=")
 		elif arg.begins_with("--trainer="): _trainer_id = arg.trim_prefix("--trainer=")
+		elif arg == "--to-victory": _to_victory = true
 	game = root.get_node("Game")
 	var scratch := OS.get_user_data_dir().path_join("solo_duel_meter_%d_%d" % [OS.get_process_id(), Time.get_ticks_msec()])
 	save_dir = scratch.path_join(segment + "/save")
@@ -89,10 +92,17 @@ func _run() -> void:
 	var pilot: RefCounted = PILOT.new()
 	var hit_count: Array[int] = [0] # lambdas capture locals by value
 	manager.hit_landed.connect(func(on_enemy: bool, _amount: float) -> void: if on_enemy: hit_count[0] += 1)
+	var xp_before := _party_xp()
+	var coins_before := int(game.local.inventory.count("coin"))
+	var command_input: Node = null
+	for child: Node in manager.get_children():
+		if child.has_method("request") and str(child.get_script().resource_path).ends_with("tether_command_input.gd"): command_input = child
+	var spent := {"tried": false, "before": 0.0, "after": -1.0}
 	var sim := 0.0
 	var meter := 0.0
 	var ultimate := 0.0
-	while sim < FIGHT_SIM_S and bool(director.call("trainer_battle_active")):
+	var limit := VICTORY_SIM_S if _to_victory else FIGHT_SIM_S
+	while sim < limit and bool(director.call("trainer_battle_active")):
 		var enemy: Node3D = manager.call("enemy_body")
 		var ally: Node3D = director.call("ally_body")
 		if is_instance_valid(enemy) and is_instance_valid(ally):
@@ -102,10 +112,26 @@ func _run() -> void:
 		var snapshot: Dictionary = manager.call("tether_command_snapshot")
 		meter = maxf(meter, float(snapshot.get("meter", 0.0)))
 		ultimate = maxf(ultimate, float(manager.call("ultimate_fraction")))
+		# A command is spendable: Rally through the same request path the
+		# controller binding uses, once the meter holds a full tier.
+		if not spent.tried and command_input != null and float(snapshot.get("meter", 0.0)) >= 50.0 \
+				and snapshot.get("active") == true:
+			spent.tried = true
+			spent.before = float(snapshot.get("meter", 0.0))
+			spent["requested"] = bool(command_input.call("request", "rally"))
+			for frame in 30: await physics_frame
+			sim += 30.0 / float(Engine.physics_ticks_per_second)
+			spent.after = float((manager.call("tether_command_snapshot") as Dictionary).get("meter", 0.0))
 	pilot.call("release")
 	var hits := hit_count[0]
+	for frame in 240: await physics_frame
 	print("SOLO_DUEL_METER " + JSON.stringify({"trainer": picked.id, "encounter": encounter, "hits": hits,
-		"command_meter_max": meter, "ultimate_fraction_max": ultimate, "sim_s": snappedf(sim, 0.1)}))
+		"command_meter_max": meter, "ultimate_fraction_max": ultimate, "sim_s": snappedf(sim, 0.1),
+		"command_spend": spent, "battle_active": bool(director.call("trainer_battle_active")),
+		"xp_gained": _party_xp() - xp_before, "coins_gained": int(game.local.inventory.count("coin")) - coins_before,
+		"defeated_flag": game.world.flags.has("defeated_" + str(picked.id)) or game.local.flags.has("defeated_" + str(picked.id))}))
+	if spent.tried and float(spent.after) >= float(spent.before): failures.append("Rally did not spend the command meter")
+	if not spent.tried: failures.append("the meter never offered a spendable command")
 	if encounter.is_empty(): failures.append("solo ordinary duel bound no host encounter record")
 	if hits < 3: failures.append("fewer than 3 landed creature hits (%d)" % hits)
 	if meter <= 0.0: failures.append("landed hits did not fill the Tether Command meter")
@@ -126,3 +152,11 @@ func _pick_trainer(world: Node, director: Node) -> Dictionary:
 		if ok and found.is_empty(): found = {"id": id, "spec": spec, "body": node}
 	print("SOLO_DUEL candidates " + ", ".join(seen))
 	return found
+
+
+func _party_xp() -> int:
+	var total := 0
+	for creature: RefCounted in game.local.party.members():
+		total += int(creature.level) * 1000000 + int(creature.xp)
+	return total
+
