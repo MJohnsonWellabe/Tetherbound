@@ -1,6 +1,6 @@
 {
   "_comment": "Owner6115421105 fresh P2-010 blockout only. Independent new flag; installed Quaternius rock masses. Original candidate data/code/physical supports unchanged; no terrain, collision, route, gate or spawn changes. Stop at approach-frame gate before detailing.",
-  "ridge_blockout_enabled": true,
+  "ridge_blockout_enabled": false,
   "reference": "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png",
   "centre_xz": [
     200.0,
