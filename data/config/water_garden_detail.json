@@ -1,5 +1,5 @@
 {
-  "_comment": "P2-011 Claude6118578343 detail candidate. OFF; presentation only, requires the separately OFF contour_terraces_r2_enabled support candidate. Installed Quaternius medieval stone and stylized-nature plants. No support, collision, route, camera, lighting or durable-state changes.",
+  "_comment": "P2-011 repair for Claude6121258832. OFF. All accepted support meshes, collider arrays and floor index remain unchanged. Distinct paved connectors; installed masonry clips only buried retaining fragments beneath adjacent solid tops; dense installed planting; installed water.gdshader with material-only bank mask over the6cm lowest-level pool.",
   "garden_detail_enabled": false,
   "stone_texture": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png",
   "stone_roughness": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png",
@@ -9,25 +9,66 @@
   "coping_width_m": 0.55,
   "coping_offset_m": 0.012,
   "bed_texture": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
-  "bed_tint": "#766a48",
-  "bed_width_m": 1.3,
+  "bed_tint": "#a19371",
+  "bed_width_m": 2.2,
   "bed_inset_m": 1.9,
   "bed_offset_m": 0.018,
   "bed_span_deg": 2.65,
   "bed_gap_deg": 0.65,
   "ramp_clearance_m": 3.0,
-  "plant_spacing_deg": 0.85,
+  "plant_spacing_deg": 0.48,
   "flower_model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
   "fern_model": "res://assets/environment/stylized_nature/Fern_1.gltf",
   "water_plant_model": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
-  "flower_size_m": [1.15, 0.7, 0.95],
-  "fern_size_m": [1.3, 0.8, 1.1],
-  "water_plant_size_m": [1.0, 1.05, 0.8],
+  "flower_size_m": [
+    1.1,
+    0.68,
+    1.0
+  ],
+  "fern_size_m": [
+    1.45,
+    0.95,
+    1.25
+  ],
+  "water_plant_size_m": [
+    1.1,
+    1.0,
+    0.9
+  ],
   "pool_radius_inner_m": 115.0,
   "pool_radius_outer_m": 121.0,
   "pool_angle_start_deg": -121.0,
   "pool_angle_end_deg": -104.0,
   "pool_depth_m": 0.06,
-  "pool_tint": "#659b9e",
-  "pool_roughness": 0.2
+  "paving_tint": "#c7b99b",
+  "pool_bank_width_m": 0.65,
+  "water_surface": {
+    "deep_colour": "#316d73",
+    "shallow_colour": "#203e35",
+    "fresnel_colour": "#719499",
+    "foam_colour": "#859d86",
+    "depth_falloff": 0.05,
+    "alpha_deep": 0.9,
+    "alpha_shallow": 0.82,
+    "edge_feather": 0.009,
+    "foam_depth": 0.012,
+    "wave_uv_scale": 0.24,
+    "wave_strength": 0.22,
+    "wave_speed": 0.012,
+    "fresnel_strength": 0.3,
+    "roughness_value": 0.13
+  },
+  "infill_spacing_m": 1.65,
+  "infill_runout_m": 3.0,
+  "infill_path_clearance_m": 2.8,
+  "infill_angle_step_deg": 0.9,
+  "joint_width_m": 0.18,
+  "joint_height_m": 0.12,
+  "infill_radial_insets_m": [
+    0.9,
+    2.3,
+    4.0,
+    5.7,
+    7.1
+  ]
 }
