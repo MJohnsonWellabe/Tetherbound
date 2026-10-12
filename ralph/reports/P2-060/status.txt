@@ -7,3 +7,9 @@ Findings:
 - Orb body: the lit shader orb shows as a pale disc with a gold centre. It does not yet clearly read as a 3D lit object at this distance.
 - Success beat: the nearest ordinary wilds are level-45 mosshock against the level-42 party. Real quick hits do about 11 damage each and the harness runs about 57 s wall per game second, so the 30% weakening did not finish within a 45-minute run. tools/capture_catch_kit.gd now picks the lowest-level wild within 80 m, but there the lowest is also level 45.
 Next: fix the ring placement, enlarge the breakout shards and orb rim, and get the success beat from a lower-level region (or a longer, unattended capture).
+
+FINAL (coordinator code-blind judge on catch-sheets at a24b151b): FAIL. P2-060 is PARKED for good and catch_kit stays OFF.
+- Named breakout (sheet 3): a white torus floats near the bottom of the frame, detached from the creature, and reads as a debug marker.
+- Both breakouts: the main ring and shards land beside the creature instead of bursting from it.
+- Strike frame: the orb still reads as a flat pale disc.
+- Only the success burst read clearly.

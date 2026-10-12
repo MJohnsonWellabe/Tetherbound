@@ -1,0 +1,11 @@
+P2-060 catch presentation sheets. Captured with tools/capture_catch_kit.gd at 3ab95fec (catch_kit.gd as of c89c22fa). Godot 4.7, opengl3/Compatibility under xvfb, 1280x720, fixed 20 fps.
+The catch_kit flag is OFF on disk. The kit-on runs enable it process-locally with --catch-kit. Row key: ../catch-sheets-key.json (keep it away from judges).
+Build under test: normal depth test kept, no front-drawn glow. Effects play at the struck creature's camera-facing surface, with the offset capped at the body's half-size.
+Fixtures (disclosed):
+- 5 orb_basic added to the inventory.
+- Ordinary foe (sheets 1-2): mosshock L45, the lowest-level non-named wild within 80 m of hollows_alpha. Its HP is set to 5% of max right after engage and before each throw, written to both the encounter host's opponent record and the local instance. The catch roll and verdict run on the real catch path. Coordinator-approved under proof rules v2.
+- Named foe (sheet 3): hollows_alpha at full HP, with no HP fixture.
+Seed and throws: the catch RNG is unseeded (combat_manager randomizes it). Kit-on ordinary run: throws 1-2 broke out and throw 3 caught (sheet 1). Sheet 2 is throw 1 from the kit-on and flag-off runs.
+The flag-off run had not caught by the time this sheet was cut, so there is no flag-off success row.
+Not covered: none of these clips shows a separate rest-then-shake beat. Breakouts resolve about 0.5 s after the strike and the catch had sealed by 0.50 s, so "rest vs shake" cannot be judged from them.
+Two different camera paths appear in each clip: aim and 0.15-0.30 s are the throw view, and 0.50 s onward is the resolution close-up.
