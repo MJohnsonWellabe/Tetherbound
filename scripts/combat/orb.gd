@@ -23,6 +23,7 @@ extends Node3D
 ## the PHYSICS clock (impact_flash.gd's lesson): presentation that only moves
 ## on render frames is invisible to the survey harness and unreviewable.
 
+const CATCH_KIT := preload("res://scripts/vfx/catch_kit.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
 
@@ -171,6 +172,11 @@ func _build_placeholder() -> void:
 	_mesh.mesh = sphere
 	_mesh.material_override = material
 	_orb_material = material
+	# P2-060: presentation-only lit, rim-lit, swirling body; OFF unless catch_kit.json enables it.
+	if CATCH_KIT.enabled():
+		sphere.radial_segments = 32
+		sphere.rings = 16
+		_mesh.material_override = CATCH_KIT.orb_material()
 
 	# A dark equator band, child of the sphere so it tilts with it. A uniform
 	# glowing sphere shows NO rotation: the first captured shake frame was

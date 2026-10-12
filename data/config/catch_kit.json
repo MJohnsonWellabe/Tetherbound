@@ -1,0 +1,14 @@
+{
+ "enabled": false,
+ "_comment": "P2-060 (effects-claude, 2026-10-12). Presentation only, shipping OFF until a code-blind PASS: scripts/vfx/catch_kit.gd gives the orb a lit, rim-lit body with a turning inner swirl, replaces the catch flashes' flat look with a soft edge-lit tether-hue (blue-violet, never red) ring, draws capture motes from the creature into the orb, and plays a clear success or breakout burst. Catch timing, chance, verdict and every catching.json value are untouched.",
+ "ring_colour": "#7a64ff",
+ "ring_core": "#d8d0ff",
+ "ring_radius_m": 0.9,
+ "ring_motes": 44,
+ "draw_motes": 36,
+ "draw_colour": "#a898ff",
+ "success_colour": "#ffd76a",
+ "success_accent": "#b9a8ff",
+ "breakout_colour": "#e8e4ff",
+ "breakout_shards": 12
+}

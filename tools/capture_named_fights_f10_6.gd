@@ -106,6 +106,9 @@ func _run() -> void:
 			_seconds = float(arg.trim_prefix("--seconds="))
 		elif arg.begins_with("--interval="):
 			_interval = float(arg.trim_prefix("--interval="))
+	# P2-063 before/after: process-local opt-in only; the shipping flag stays OFF on disk.
+	if OS.get_cmdline_user_args().has("--tell-cue"):
+		(load("res://scripts/vfx/tell_timing_cue.gd") as Script).call("config")["enabled"] = true
 	if _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --out= and a rendering display")
 		quit(1)
