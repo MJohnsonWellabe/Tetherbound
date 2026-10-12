@@ -1,0 +1,9 @@
+UI batch round 3: P2-001, P2-004, P2-007, P2-031. Full 1920x1080 per half; each sheet is 3840x1080, LEFT = before, RIGHT = after.
+Tool: tools/phase2_capture_ui.gd --biome=meadows, Low/Compatibility (llvmpipe, xvfb), --hud-settle-frames=240.
+After: tb/ev-visual-claude round-3 code (commit before 1b059238 plus the MERGED_HP_OFFSET follow-up) with hud.json clarity_pass and menu.json players_open_seats / quest_empty_inline / controls_scan / shell_board flipped on locally for the capture; committed values stay false.
+Before: VISUAL-PROOF/UI-before frames (flags off); the HUD before is a post-fade, flags-off run.
+Lane self-check code-blind verdicts (after better on every screen):
+- P2-007 Players PASS: you plus 3 "Open seat" cards with a + icon; the explanation shown once; the network line under the status. Minor: thin + icon, small footnote.
+- P2-001 PASS (minor): warm board with gold frame and a "Creatures · Chapter 1 · The Meadows" title plate; "Terrapup Lv 1" fully visible (round-2 clip fixed); no red. Minor: the inner tiles stay cool teal-charcoal.
+- P2-031 WEAK: quick bindings glyph-only at ~30px with headers on the columns; Controls › Moving stick rows stay text (no stick-direction prompt art is installed); the legend text is ~14px; rows are still cut at the scroll view's bottom edge.
+- P2-004: see the HUD sheet (re-rendered after the merged-vitals overlap fix).
