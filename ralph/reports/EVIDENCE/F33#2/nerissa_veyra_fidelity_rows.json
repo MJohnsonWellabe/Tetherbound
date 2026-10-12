@@ -1,0 +1,414 @@
+[
+ {
+  "band": "tidewake/veilfall",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.626616126861627,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.170735253475158,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.957559369066596,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 0.583333333333333
+  },
+  "gear": "rootiron"
+ },
+ {
+  "band": "tidewake/veilfall",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.620164640026537,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.226063575470917,
+   "median_lead_cost": 0.765647795443808,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.870893752487815,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "gear": "rootiron"
+ },
+ {
+  "band": "tidewake/veilfall",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.41407867494824,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.251882559852055,
+   "median_lead_cost": 0.769503645581225,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.799113841559483,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "gear": "rootiron"
+ },
+ {
+  "band": "tidewake/veilfall",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.56734494934138,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.085050095826372,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.789156626506024,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "gear": "tidesteel"
+ },
+ {
+  "band": "tidewake/veilfall",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.501503970159905,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.194403801767826,
+   "median_lead_cost": 0.759258234775724,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.747512251749965,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "gear": "tidesteel"
+ },
+ {
+  "band": "tidewake/veilfall",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.305580310328322,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.214848130736925,
+   "median_lead_cost": 0.761134327949534,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.657916763338946,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "gear": "tidesteel"
+ },
+ {
+  "band": "cloudreach/summit_final_stronghold",
+  "starter": "terrapup",
+  "pass": false,
+  "reasons": [
+   "top: masher kept its lead in some run"
+  ],
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0391353771612183,
+   "median_lead_cost": 0.162411815219056,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0391353771612183,
+   "median_lead_cost": 0.162411815219056,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.176373715130756,
+   "median_lead_cost": 0.731950917792638,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "gear": "skyglass"
+ },
+ {
+  "band": "cloudreach/summit_final_stronghold",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0570693836115956,
+   "median_lead_cost": 0.25318053820417,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0342555613099327,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.360798715960303,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "gear": "skyglass"
+ },
+ {
+  "band": "cloudreach/summit_final_stronghold",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0343016722952826,
+   "median_lead_cost": 0.157787692558299,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0395493152508315,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.31466225230876,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "gear": "skyglass"
+ },
+ {
+  "band": "cloudreach/summit_final_stronghold",
+  "starter": "terrapup",
+  "pass": false,
+  "reasons": [
+   "top: masher kept its lead in some run"
+  ],
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0448209724529406,
+   "median_lead_cost": 0.186007035679703,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0448209724529406,
+   "median_lead_cost": 0.186007035679703,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.333333333333333,
+   "median_cost": 0.232394007031902,
+   "median_lead_cost": 0.964435129182391,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "gear": "tidesteel"
+ },
+ {
+  "band": "cloudreach/summit_final_stronghold",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0871585574665453,
+   "median_lead_cost": 0.386667054942492,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0464484771718846,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.418456421405713,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "gear": "tidesteel"
+ },
+ {
+  "band": "cloudreach/summit_final_stronghold",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0503069458114802,
+   "median_lead_cost": 0.231411950732809,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0323194939908323,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.367368615928746,
+   "median_lead_cost": 1.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "gear": "tidesteel"
+ }
+]
