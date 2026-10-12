@@ -926,11 +926,11 @@
    "id": "F14",
    "title": "Tidewake fights, network and Guardian",
    "chapter": "Tidewake",
-   "pct": 67,
+   "pct": 83,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 1
@@ -939,17 +939,17 @@
     {
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
      "status": "failing",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md@1e0ddd39; CLOSER/f14_0_tess/r1",
-     "gap": "Re-measuring on the fixed reader pilot (1032b96d3) with the tuning batch: Nerissa foe power 2.0 targets Galewisp's chapter masher-loss (was 0.12 vs 0.25).",
+     "evidence": "Chapter masher-loss passes for every starter (>=0.50, from Nerissa); ralph/reports/EVIDENCE/F14-0-rerun/ at eda3c0095.",
+     "gap": "Three Galewisp named-wild rows: brine_root 0.425/0.413, songweaver 0.337/0.334, tidecoil 0.322/0.337. Same class as Ripplet x guardian: the type-advantaged masher wins the damage race. Parked with the punish-window reader re-scope; if that fails, the owner matchup-balance question.",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/encounters diff since 1e0ddd39: 33 files, +8435. Tidewake levels re-banded (RD-10); smoke_water_named_c2c3 is not in CI.",
      "audit_index": 0
     },
     {
      "text": "Veilfall and Guardian pass C2/C3",
-     "status": "in_progress",
-     "evidence": "C2 top bar at L32, 24 seeds (d83f2d3b7; ralph/reports/EVIDENCE/F14-1-rerun/ at b241114c5): Venn PASS on all three starters (reader/masher 0.12/0.34/0.38), Nerissa PASS (0.37/0.36/0.43). Venn route PASS at L32 (f0f5897a8) and L44.",
-     "gap": "Only the Fennel/Morra/Evi re-measure on the current reader remains (queued in the fights lane). The Guardian is not a combat boss (BOSSES 4.12). Its C2/C3 is the Nerissa fight that frees it, which passes on all three starters; the freeing ceremony is covered by tidewake_08_ending.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No passing C3 exists. CSH §7.5 and F22#4 fold it in, to be re-judged at Nerissa's new level.",
+     "status": "met",
+     "evidence": "Every Veilfall fight passes C2 on all three starters at L32 on the current reader (d83f2d3b7; ralph/reports/EVIDENCE/F14-1-rerun/ at eda3c0095): Venn/Nerissa party ratios 0.12-0.43; Fennel/Morra/Evi reader lead 0.00-0.30 vs masher 0.92-1.00; worst hit 0.306. Route proofs: Venn at L32 (f0f5897a8) and the L44 07 chain (44bbda40). The Guardian is ceremony-only (BOSSES 4.12), covered by tidewake_08_ending (59d2963b).",
+     "gap": "",
+     "note": "The L20 earned-team loss is the separate Tidewake L20-cap gap.",
      "audit_index": 1
     },
     {
