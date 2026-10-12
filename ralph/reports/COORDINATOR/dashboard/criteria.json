@@ -312,7 +312,7 @@
      "text": "Varied-size framing and C2/C3 results pass",
      "status": "failing",
      "evidence": "Full Meadows table on cf5137cb5 (guardian face-lock 35e0a9c58), 24 seeds; ralph/reports/EVIDENCE/F04-7-rerun/ at d1f3efc0b: chapter masher-loss bar PASS (Terrapup 0.38, Ripplet 0.44, Galewisp 0.27); 23 of 24 rows PASS; every C3 verdict passes.",
-     "gap": "One row: Ripplet x Warrens guardian, reader/masher 0.268/0.350 (bar 0.55 ratio). Parked under the two-attempt rule; re-scope is a punish-window reader mode, validated on every row first. If it still fails, it goes to the owner end-list as a matchup-balance question.",
+     "gap": "One row: Ripplet x Warrens guardian (0.268/0.350). The punish-window reader, the reader hold fix and heavy x2.0 all failed (x2.0 raises both pilots: 0.537/0.476). OWNER END-LIST: a type-advantage exemption from the C2 skill bar (recommended) or an encounter redesign.",
      "note": "PARKED for an owner balance call (fights-c2c3 8511bd40, Sun 11 Oct ~2:00 PM CT). C3's measured half passes; Dell passes on the officer floor bar (the top-trainer bar was misapplied). Still failing C2: (1) chapter masher-loss rate 0.21/0.21/0.23 (Terrapup/Ripplet/Galewisp) against the 0.25 bar; (2) Ripplet vs the Warrens guardian: the reader's lead cost 0.44 against the masher's 0.35. Cues are honest (every hit lands inside the drawn shape); the cause is the reader pilot committing during tells. A smarter pilot regressed fast fights (Nerissa 1.00 to 0.46) and was reverted; Warden power x1.15 barely moved the masher and pushed the worst hit to 0.47-0.48 (C3 ceiling 0.5).",
      "audit_index": 7
     },
@@ -940,7 +940,7 @@
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
      "status": "failing",
      "evidence": "Chapter masher-loss passes for every starter (>=0.50, from Nerissa); ralph/reports/EVIDENCE/F14-0-rerun/ at eda3c0095.",
-     "gap": "Three Galewisp named-wild rows: brine_root 0.425/0.413, songweaver 0.337/0.334, tidecoil 0.322/0.337. Same class as Ripplet x guardian: the type-advantaged masher wins the damage race. Parked with the punish-window reader re-scope; if that fails, the owner matchup-balance question.",
+     "gap": "Three Galewisp wild rows (brine_root, songweaver, tidecoil): the same type-advantage class; tuning and reader fixes can't separate reader from masher. OWNER END-LIST with F04#7: a type-advantage exemption (recommended) or an encounter redesign.",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/encounters diff since 1e0ddd39: 33 files, +8435. Tidewake levels re-banded (RD-10); smoke_water_named_c2c3 is not in CI.",
      "audit_index": 0
     },
