@@ -605,7 +605,13 @@ func _path(t: float, index: int) -> Vector3:
 	var lane := float(index) - float(count - 1) * 0.5
 	var fan := sin(t * PI)
 	var spread := float(_kit.get("volley_spread_m", 0.45))
-	var point := _from.lerp(end, t) + side * lane * spread * fan + Vector3.UP * (float(_kit.get("arc_m", 0.35)) * fan + absf(lane) * 0.12 * fan * float(index % 2 * 2 - 1))
+	# Fan the volley across the viewer's screen (up and sideways in view), not
+	# along the camera's depth axis, so several bodies read together in flight.
+	var camera := get_viewport().get_camera_3d() if is_inside_tree() and get_viewport() != null else null
+	var across := side
+	if camera != null:
+		across = (camera.global_basis.y * 0.85 + camera.global_basis.x.slide(_direction).normalized() * 0.15).normalized()
+	var point := _from.lerp(end, t) + across * lane * spread * fan + Vector3.UP * float(_kit.get("arc_m", 0.35)) * fan
 	if _family == "ground_body":
 		point.y = lerpf(_ground_source.y, _ground_target.y, t) + _radius * 0.55
 		point.y = lerpf(_from.y, point.y, smoothstep(0.0, 0.2, t))
@@ -615,7 +621,9 @@ func _update_bodies(t: float) -> void:
 	var grow := lerpf(float(_kit.get("launch_scale", 0.45)), 1.0, smoothstep(0.0, 0.18, t))
 	for i in _bodies.size():
 		var body := _bodies[i]
-		var stagger := clampf(t * (1.0 + 0.08 * float(i)) - 0.08 * float(i), 0.0, 1.0)
+		# A short stagger strings the volley along its path; all bodies still arrive at contact.
+		var lag := float(_kit.get("volley_stagger", 0.08))
+		var stagger := clampf(t * (1.0 + lag * float(i)) - lag * float(i), 0.0, 1.0)
 		body.global_position = _path(stagger, i)
 		var diameter := float(body.get_meta("diameter", 2.0))
 		body.scale = Vector3.ONE * _radius * diameter * grow * float((_kit.get("body", {}) as Dictionary).get("core_scale", 1.0))
