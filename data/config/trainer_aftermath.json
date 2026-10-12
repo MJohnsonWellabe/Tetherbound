@@ -43,28 +43,27 @@
               -3.8,
               0.6
             ],
-            "scale": 2.6,
-            "roll_deg": 90.0,
-            "sink_m": -1.1,
+            "scale": 3.0,
             "after": {
               "offset": [
-                -4.4,
-                1.2
+                -4.6,
+                1.4
               ],
-              "roll_deg": 0.0,
-              "yaw_deg": 25.0,
-              "sink_m": 0.0
+              "pitch_deg": 55.0,
+              "yaw_deg": 30.0,
+              "sink_m": -0.35
             },
-            "_why": "Probe pa3: at roll 90 (lifted 1.1 m) the kit cage stands as a tall barred box, the captive's cage; at roll 0 it lies low and flat, tipped open, after the win."
+            "_why": "Probes pa3/pa4: the kit cage is near-cubic, so a 90-degree roll does not read. Before: the captive's cage standing, chained, with a lit Tether lamp. After: knocked half over onto one edge, the lamp out, the chain thrown aside."
           },
           {
             "model": "Chain_Coil",
             "dir": "res://assets/props/quaternius_fantasy",
             "offset": [
-              -3.0,
-              0.9
+              -3.8,
+              0.6
             ],
-            "scale": 1.8,
+            "scale": 2.0,
+            "sink_m": -2.25,
             "state": "before"
           },
           {
@@ -72,11 +71,42 @@
             "dir": "res://assets/props/quaternius_fantasy",
             "offset": [
               -2.4,
-              1.8
+              1.9
             ],
-            "scale": 1.8,
+            "scale": 2.0,
             "yaw_deg": 70.0,
             "state": "after"
+          },
+          {
+            "model": "Lantern_Wall",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -2.6,
+              0.3
+            ],
+            "scale": 1.5,
+            "sink_m": -0.6,
+            "after": {
+              "pitch_deg": 90.0,
+              "sink_m": 0.0,
+              "offset": [
+                -2.2,
+                0.9
+              ]
+            }
+          }
+        ],
+        "lights": [
+          {
+            "offset": [
+              -2.6,
+              0.3
+            ],
+            "height": 2.4,
+            "colour": "#ffcf7a",
+            "energy": 4.0,
+            "range": 6.0,
+            "state": "before"
           }
         ]
       }
