@@ -5,7 +5,7 @@ extends RefCounted
 ## The shared fact the ending actually writes when Marrow falls and the Stormheart
 ## goes free (StormwoodEnding.FREED_FLAG). "stormwood:stormheart_freed" had no
 ## producer, so no earned world ever reached the homecoming (F19#5, 12 Oct).
-const WORLD_FLAG := "stormwood:legendary_freed"
+const WORLD_FLAG := preload("res://scripts/world/stormwood_ending.gd").FREED_FLAG
 const SEEN_FLAG := "homecoming_seen"
 const CREDITS_SEEN_FLAG := "regional_credits_seen"
 const INITIAL_PREFIX := "regional_homecoming_"
