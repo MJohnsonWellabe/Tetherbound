@@ -176,6 +176,12 @@
     0.2,
     0
   ],
+  "stand_presentation": {
+    "_why": "F17#6 r1 judge: the Shrine Room lecterns were too small for the room. Each stands on a low stone plinth (the installed Stairs_Exterior_Platform, 2 x 1 x 2 m native, scaled to plinth_size_m) at this scale; the collider scales and rises with it. Presentation only. TUNABLE.",
+    "scale": 1.3,
+    "plinth_model": "res://assets/buildings/quaternius_medieval/Stairs_Exterior_Platform.gltf",
+    "plinth_size_m": [0.9, 0.3, 0.9]
+  },
   "arch_materials": {
     "open": "#f2cf83",
     "locked": "#6a7f8c",
@@ -229,7 +235,8 @@
   ],
   "interior_ambient": {
     "_why": "F17#6 judges: the night sky ambient flooded the nave and Shrine Room flat blue. While WorldLook is dark, Hall materials carry a uniform ambient-only occlusion of this strength, so the lanterns shape the room (ReflectionProbe ambient has no effect under Compatibility). TUNABLE.",
-    "night_ambient": 0.25
+    "night_ambient": 0.12,
+    "_why_r2": "F17#6 r2: with the nave glazed the room still read evenly lit at night; a lower ambient lets the wall lanterns make pools."
   },
   "_why_interior_lights": "F17#6 r1 judge: the nave had no warm interior light at night. Six wall lanterns between the aisle arches (with the two original lamps, eight interior lights, inside the reviewed Hall interior set) give the nave warm pools between the aisle arches (the east middle lamp hangs over the Shrine Room doorway). Lanterns show an emissive flame so the light has a visible source.",
   "interior_lights": [
@@ -241,6 +248,7 @@
     {"at": [6.4, 3.4, 6], "yaw_deg": -90},
     {"at": [12, 3.0, -6.8], "yaw_deg": 0, "_why": "F17#6 r4: the Shrine Room had no warm light at night"},
     {"at": [12, 3.0, 6.8], "yaw_deg": 180},
+    {"at": [0, 3.4, 14.4], "yaw_deg": 180, "_why": "F17#6 r1 judge: the nave end wall needed a focal point; this lantern sits between the two end banners (meadows_catalog_presentation.json hall_nave_end_banner_*)"},
     {"at": [16.8, 3.0, 0], "yaw_deg": -90}
   ],
   "frontage": {
