@@ -480,6 +480,7 @@ func _load_performance_overrides() -> void:
 		COLLISION_STREAM_RADIUS = maxf(1.0, float(cfg["collision_stream_radius_m"]))
 	if cfg.has("collision_stream_cell_m"):
 		COLLISION_STREAM_CELL = maxf(1.0, float(cfg["collision_stream_cell_m"]))
+	HARVEST_STREAM_RADIUS = maxf(0.0, float(cfg.get("harvest_point_stream_radius_m", 0.0)))
 
 
 ## `slicer` is `scripts/world/shell_build_budget.gd`, handed down by
@@ -522,6 +523,7 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_harvest_layer_counts.clear()
 	_stable_harvest_layers.clear()
 	_harvest_lookup.clear()
+	_harvest_specs.clear()
 	_harvest_cells.clear()
 	_harvest_indexed = 0
 	_harvest_nodes.clear()
@@ -1582,10 +1584,7 @@ func _submit_render_transforms(mesh_id: int, transforms: Array[Transform3D],
 ## sink into the bank wherever the ground falls away over that metre and a
 ## third, which on a meadow of rolling hills is most of them.
 func _spawn_harvest_point(placement: Dictionary) -> void:
-	var point := HARVEST_POINT.new()
 	var spot: Vector3 = placement["position"]
-	point.position = spot
-	add_child(point)
 	var bearing := float(hash(spot) & 0xFFFFFF) / float(0xFFFFFF) * TAU
 	var away := Vector2(sin(bearing), cos(bearing)) * _prop_offset_for(placement)
 	var drop := 0.0
@@ -1593,7 +1592,7 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 		drop = float(_field.call("height_at", spot.x + away.x, spot.z + away.y)) - spot.y
 	var layer_name := str(placement.get("harvest_layer", ""))
 	var index := int(placement.get("harvest_index", -1))
-	point.call("setup", {
+	var setup := {
 		"item": placement["harvest_item"],
 		"amount": placement["harvest_amount"],
 		# Keep every standing harvest prompt at human height. Scaling its Y with
@@ -1609,7 +1608,7 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 		# D97: the placement's own realm, for the `deplete_vegetation` intent
 		# this point submits. Never `Game.current_realm`.
 		"realm": realm,
-	})
+	}
 	# HARVEST-ALL: `harvest_permanently()`'s only way to find this instance's
 	# render mesh id/position and this node again, without scanning every
 	# child every time a resource is chopped.
@@ -1632,8 +1631,71 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 		"amount": int(placement["harvest_amount"]),
 		"prop_offset": Vector3(away.x, drop - SINK, away.y),
 	}
-	_harvest_nodes[key] = point
+	if harvest_streaming_enabled():
+		_harvest_specs[key] = {"position": spot, "setup": setup}
+	else:
+		_harvest_nodes[key] = _make_harvest_node(spot, setup)
 	_harvest_points += 1
+
+
+## The one way a standing harvest point node is made, at boot or streamed in:
+## the same node, position and setup either way.
+func _make_harvest_node(spot: Vector3, setup: Dictionary) -> Node:
+	var point := HARVEST_POINT.new()
+	point.position = spot
+	add_child(point)
+	point.call("setup", setup.duplicate(true))
+	return point
+
+
+## Realm-load candidate (2026-10-12), OFF by default
+## (performance.json harvest_point_stream_radius_m = 0): creating all ~56k
+## Meadows harvest-point nodes at boot costs ~6 s of every build. With a radius,
+## registration keeps each point's exact spec and update_harvest_streaming()
+## makes the nodes within that radius of the player, freeing them past
+## HARVEST_STREAM_RELEASE x radius (never one mid-claim). Lookups, cells,
+## counts and the host's ledger path are unchanged.
+var HARVEST_STREAM_RADIUS := 0.0
+const HARVEST_STREAM_RELEASE := 1.25
+var _harvest_specs: Dictionary = {}
+
+
+## clear_area's removal of one gather point: its node if standing, or its
+## streamed-out spec, counted once either way.
+func _drop_harvest_point(key: String) -> void:
+	var counted := _harvest_nodes.has(key) or _harvest_specs.has(key)
+	if _harvest_nodes.has(key):
+		(_harvest_nodes[key] as Node).queue_free()
+		_harvest_nodes.erase(key)
+	_harvest_specs.erase(key)
+	if counted:
+		_harvest_points = maxi(0, _harvest_points - 1)
+
+
+func harvest_streaming_enabled() -> bool:
+	return HARVEST_STREAM_RADIUS > 0.0 and not simulation_only
+
+
+func update_harvest_streaming(center: Vector3) -> void:
+	if not harvest_streaming_enabled():
+		return
+	for key: String in _harvest_keys_near(center, HARVEST_STREAM_RADIUS):
+		if _harvest_nodes.has(key) or not _harvest_specs.has(key) or not _harvest_lookup.has(key):
+			continue
+		var spec: Dictionary = _harvest_specs[key]
+		var spot: Vector3 = spec["position"]
+		if Vector2(spot.x - center.x, spot.z - center.z).length() <= HARVEST_STREAM_RADIUS:
+			_harvest_nodes[key] = _make_harvest_node(spot, spec["setup"])
+	var release := HARVEST_STREAM_RADIUS * HARVEST_STREAM_RELEASE
+	for key: Variant in _harvest_nodes.keys():
+		if not _harvest_specs.has(key):
+			continue
+		var node := _harvest_nodes[key] as Node3D
+		if node == null or not is_instance_valid(node) or node.get("_claiming") == true:
+			continue
+		if Vector2(node.position.x - center.x, node.position.z - center.z).length() > release:
+			node.queue_free()
+			_harvest_nodes.erase(key)
 
 
 ## N02/W18. Records the non-colliding-but-visually-solid half of this model's
@@ -1828,6 +1890,7 @@ func _add_collision(model_path: String, placements: Array) -> void:
 ## when the bubble only has to be right within a fraction of a second of the
 ## player actually approaching).
 func update_collision_streaming(center: Vector3) -> void:
+	update_harvest_streaming(center)
 	if not PERF_TRACE.enabled:
 		for batch: Dictionary in _collision_batches:
 			_stream_batch(batch, center)
@@ -2362,6 +2425,7 @@ func harvest_permanently(layer_name: String, index: int) -> void:
 	if _harvest_nodes.has(key):
 		(_harvest_nodes[key] as Node).queue_free()
 		_harvest_nodes.erase(key)
+	_harvest_specs.erase(key)
 
 	_placed = maxi(0, _placed - 1)
 	_harvest_points = maxi(0, _harvest_points - 1)
@@ -2860,10 +2924,7 @@ func clear_area(centre: Vector3, radius: float) -> int:
 			# point standing in the air where its tree used to be.
 			var key := "%s#%d" % [str(placement.get("harvest_layer", "")),
 				int(placement.get("harvest_index", -1))]
-			if _harvest_nodes.has(key):
-				(_harvest_nodes[key] as Node).queue_free()
-				_harvest_nodes.erase(key)
-				_harvest_points = maxi(0, _harvest_points - 1)
+			_drop_harvest_point(key)
 			_harvest_collision_lookup.erase(key)
 			_solid = maxi(0, _solid - 1)
 			dropped += 1
@@ -2883,10 +2944,7 @@ func clear_area(centre: Vector3, radius: float) -> int:
 			continue
 		_harvest_lookup.erase(key)
 		_harvest_collision_lookup.erase(key)
-		if _harvest_nodes.has(key):
-			(_harvest_nodes[key] as Node).queue_free()
-			_harvest_nodes.erase(key)
-			_harvest_points = maxi(0, _harvest_points - 1)
+		_drop_harvest_point(key)
 	_placed = maxi(0, _placed - removed)
 	return removed
 
