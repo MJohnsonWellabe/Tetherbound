@@ -1319,6 +1319,11 @@ func _retry_foundation_events_scan() -> void:
 ## durable, then one character write followed by one world write. A refusal
 ## stops the batch: every hit is either fully applied or untouched.
 const MASTERY_BATCH_DEFAULT := 64
+## Each hit still costs ~0.3-0.4 s of record validation on the host (measured
+## 12 Oct, tidewake_07 save), so an unbounded batch froze one frame for ~30 s.
+## A batch stops starting new hits once this much time has passed; the next
+## scan (0.1 s later while a backlog remains) continues.
+const MASTERY_BATCH_BUDGET_MS := 500
 
 func _drain_local_mastery_batch(peer: int, ordered_work: Array, from_index: int, world: RefCounted, settle: Array) -> Dictionary:
 	var limit := int(_cfg("foundation_mastery_batch_max", MASTERY_BATCH_DEFAULT))
@@ -1341,7 +1346,10 @@ func _drain_local_mastery_batch(peer: int, ordered_work: Array, from_index: int,
 	rpc.call("begin_deferred_publication")
 	var id := ESSENCE.training_delivery_id(world.reward_delivery_namespace, character)
 	var processed := 0
+	var started_ms := Time.get_ticks_msec()
+	var budget_ms := int(_cfg("foundation_mastery_batch_budget_ms", MASTERY_BATCH_BUDGET_MS))
 	for candidate: Dictionary in works:
+		if processed > 0 and Time.get_ticks_msec() - started_ms >= budget_ms: break
 		var duty: Dictionary = candidate.duty
 		var context: Dictionary = duty.context.duplicate(true)
 		context.character_id = character
