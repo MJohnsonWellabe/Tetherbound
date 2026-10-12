@@ -16,6 +16,15 @@ Command: `godot --headless --path . --fixed-fps 60 --script tests/smoke_water_na
 - Before: Venn's ratios were 0.68–0.73, a FAIL (F14#1 evidence), because the generic charger rows overrode riptusk's 0.25 face lock.
 - C3 measured half: worst hit 0.306 (Nerissa against the Galewisp masher); tells 0.90–1.20 s.
 - Masher win against Nerissa is 0.00 / 0.08 / 0.50, so each starter's Tidewake chapter masher-loss is ≥0.50 from Nerissa alone. Before, Galewisp's was 0.12.
-- Fennel, Morra and Evi (veilfall_trainer) passed on the earlier reader and are queued for re-measure on the current reader.
+- Fennel, Morra and Evi (veilfall_trainer bar: reader lead ≤.55× masher's, reader win ≥.9) on b241114c5, 22:38–23:22 CT. That commit's game code is the same as d83f2d3b7's apart from the guardian-only face lock. All PASS:
 
-EV F14#1 PASS d83f2d3b7 Venn and Nerissa pass the top-trainer bar on all three starters at L32 (ratios 0.12–0.43); Fennel/Morra/Evi re-measure queued
+| Fight | Reader / masher lead cost (terrapup, ripplet, galewisp) |
+|---|---|
+| Fennel | 0.000/1.000, 0.000/1.000, 0.291/0.919 |
+| Morra | 0.000/1.000, 0.000/1.000, 0.265/1.000 |
+| Evi | 0.000/1.000, 0.000/1.000, 0.300/1.000 |
+
+  Reader win 1.00 everywhere; worst hit 0.156.
+- The Abyssal Guardian has no fight. BOSSES §4.12 says it is not a combat boss, and water_veilfall.gd builds it as a captive with no collision. The 08 ending piece covers its ceremony.
+
+EV F14#1 PASS d83f2d3b7 every Veilfall fight passes C2 on all three starters at L32 on the current reader (Venn/Nerissa top bar 0.12–0.43; Fennel/Morra/Evi reader ≤0.30 vs masher ≥0.92)
