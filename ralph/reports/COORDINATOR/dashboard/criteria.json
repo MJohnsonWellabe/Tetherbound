@@ -1624,7 +1624,7 @@
      "text": "About 24 effect archetypes exist, each with a real mesh or particle body, trail, impact and sound, configured in data.",
      "status": "in_progress",
      "evidence": "tests/test_move_effects.gd (data only); ralph/reports/VFX/f25/PROOF.md@e85b0c745",
-     "gap": "Pass #2/#4 (judge PASS and Medium four-creature frame time), then flip move_library.enabled.",
+     "gap": "Code-blind FAIL (20d194139, 24 sequences): 12/24 meet body+trail+impact (needs >=20). Blocking: flat ribbon slabs through the caster (2), no projectile (2), effects that never reach the target (2), a flat outline with no travel (1); weak: 5 more; cartoon speed-line impacts on 4. move_library is ON, so these are live defects. Systems lane is fixing (vfx.json first), then recaptures all 24. Frame time (F25#4) needs a real GPU.",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. vfx.json `move_library.enabled=false`. move_projectile.gd and move_effect_library.gd launch nothing when it is false. Craft is judged FAIL in every group (R27/R28).",
      "audit_index": 0
     },
