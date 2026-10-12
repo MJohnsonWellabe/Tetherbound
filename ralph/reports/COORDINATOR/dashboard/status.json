@@ -1,7 +1,7 @@
 {
  "updated": "1:53 PM CT Sun 11 Oct",
  "headline": [
-  "2:03 AM CT Mon 12 Oct: 223 of 271 met (189 on main, 34 proven on tb/ev-coordinator since Sun). All of it lands in one consolidated PR at the end.",
+  "3:08 AM CT Mon 12 Oct: 223 of 271 met (189 on main, 34 proven on tb/ev-coordinator since Sun). All of it lands in one consolidated PR at the end.",
   "Owner, 4:12 PM CT: only the human playtest and the ROG Ally device runs are left for the owner; the coordinator decides everything else. Order: Meadows, then Cloudreach, then down the board. F38-F41 art is the long pole and runs in parallel.",
   "Since 9 PM Sun: F04#1, F14#1, F13#0, F03#1, F42#2 and F10#6 met; F11#3 met then reopened when a validation rerun found a rejoin bug (fixed, rerunning). Real bugs fixed: boss rewards lost when the port was taken; a co-op travel permit id collision; the fight HUD invisible and then switching layout; the catch prompt in trainer duels; trainer rewards, pickups and harvests silently lost to a full satchel; a guest rejoining in the wrong realm. Owner end-list: four type-advantage C2 rows (exemption recommended). Full local suite: 6,619 tests, only the 4 known failures (3 sparse-checkout artefacts; Ashtusk is with Codex)."
  ],
@@ -691,13 +691,13 @@
   },
   {
    "lane": "routes-east",
-   "doing": "Stormwood chains (named_detour; crown_build \u2192 rootgate; dynamo \u2192 marrow \u2192 aftermath); fixing three Stormwood unit tests the full suite found.",
-   "criteria": "F19#5 Stormwood, then F09#0, F11#0",
+   "doing": "Stormwood dynamo PASS; marrow from that checkpoint; named_detour and arrival_prefix running.",
+   "criteria": "F19#5 Stormwood, F11#0",
    "next": "About 2 h"
   },
   {
    "lane": "fights",
-   "doing": "Re-measuring Meadows and Tidewake bands and the F14#0 non-Veilfall rows on reader 1032b96d3; then F22#4 Veyra and F33#2 Marrow.",
+   "doing": "Field-aware reader candidate 904c3c537 (10/12 failing band rows now pass): full re-measure on one commit (23-band sweep, F04#7, F14, F22#4 Veyra/Marrow, F33#2); adopt only if nothing regresses.",
    "criteria": "F22#1/#4, F33#2, F47#3, F10#2",
    "next": "About 1 h for F04#7"
   },
@@ -709,7 +709,7 @@
   },
   {
    "lane": "co-op",
-   "doing": "F11#3 validation rerun after the rejoin fix; then F17#6 village and Hall Low blockers (red banners first).",
+   "doing": "F17#6 village and Hall fixes in (teal banners, beacon glow, visible rain, bricked or doored arches, window glass); Low recapture running. F11#3 #70 (guest input held after rejoin, intermittent) rerun queued.",
    "criteria": "F11#3, F17#6",
    "next": "About 1 h per run"
   },
