@@ -348,3 +348,19 @@ func test_lifecycle_publish_skips_a_host_link_that_is_disconnecting() -> void:
 	client.close()
 	assert_false(LIFECYCLE.host_link_open(client), "a closed transport does not")
 	server.close()
+
+
+## F19#5: permit ids are unique across sessions. Each Session owns a fresh
+## policy whose serial restarts, while arrival receipts persist on the
+## character; a repeated first id would be refused as already decided.
+func test_permit_ids_do_not_repeat_across_sessions() -> void:
+	var first: RefCounted = POLICY.new()
+	var second: RefCounted = POLICY.new()
+	first.call("bind_world", "world-a")
+	second.call("bind_world", "world-a")
+	var a := str(first.call("_mint", "character-x"))
+	var b := str(second.call("_mint", "character-x"))
+	assert_true(a.begins_with("travel:world-a:character-x:"), a)
+	assert_true(a != b, "two sessions' first permits differ: %s vs %s" % [a, b])
+	assert_true(a.length() <= 160, "permit id stays an opaque id")
+	assert_true(str(first.call("_mint", "character-x")) != a, "and a session's own serial still advances")
