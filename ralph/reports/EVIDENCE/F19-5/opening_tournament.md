@@ -6,8 +6,8 @@ All pieces are hosted (live session; Session.host falls back from a taken udp/27
 |---|---|---|
 | opening_team (fresh) | **PASS**, 5515 s | `1f78dc45` |
 | camp_tournament | **PASS**, 4349 s | `1f78dc45` |
-| bridge | see the bottom of this file | `1f78dc45`, from the camp_tournament out-save |
-| warrens | see the bottom of this file | `1f78dc45`, from the bridge out-save |
+| bridge | **PASS**, 4423 s. South Bridge guardian 2/2 wins, 35 hits; key rewarded then spent; crossed (depth -11.6 → +9.4); same five; flags `defeated_south_bridge_grunt`, `south_bridge_open` | `1f78dc45`, from the camp_tournament out-save |
+| warrens | **NOT PROVEN.** Stopped at the owner wind-down (6:00 PM CT, Oct 12) while still running: station bypass, then 7 quarry rootstone pickups (14 carried); no new receipt after about 5:38 PM | `1f78dc45`, from the bridge out-save |
 
 **camp_tournament beats**
 - Rounds: Mira won (26 landed hits), then Tam (42), then a camp recovery (Bud revived, creature-bed night), then Oskar won the final (65).
