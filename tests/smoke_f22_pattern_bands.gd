@@ -128,7 +128,14 @@ func _trainer_rosters(patterns: Dictionary) -> Dictionary:
 			island_band[table.trim_prefix("water_").trim_suffix("_land").trim_suffix("_shallows")] = "tidewake/" + str(region.region_id)
 	for row: Dictionary in _read("data/config/water_characters.json").get("trainers", []):
 		if island_band.has(str(row.get("island_id", ""))):
-			add.call(str(island_band[row.island_id]), str(row.id), str(row.get("rank", "")), row.get("team", []))
+			# Production translation (water_encounter_runtime_data.team_member):
+			# a trainer's foe_power_multiplier reaches each member's combat
+			# power exactly as the live Tidewake fight builds it.
+			var water_team: Array = []
+			var water_errors: Array[String] = []
+			for member: Dictionary in row.get("team", []):
+				water_team.append(preload("res://scripts/world/water_encounter_runtime_data.gd").team_member(row, member, water_errors))
+			add.call(str(island_band[row.island_id]), str(row.id), str(row.get("rank", "")), water_team)
 	for row: Dictionary in _read("data/config/cloudreach_chapter.json").get("trainer_ladder", []):
 		var team: Array = []
 		for slot: Dictionary in (row.get("team_contract", {}) as Dictionary).get("slots", []):
