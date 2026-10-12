@@ -1,0 +1,20 @@
+WALK LEG 1 -> (1132.9, 2145.8): reached=true at y=12.63 floor=12.63
+WALK LEG 2 -> (1161.2, 2127.6): reached=true at y=12.63 floor=12.63
+WALK LEG 3 -> (1148.8, 2145.4): reached=true at y=16.72 floor=16.71
+WALK LEG 4 -> (1139.3, 2148.4): reached=true at y=16.72 floor=16.71
+WALK LEG 5 -> (1160.7, 2149.6): reached=true at y=21.31 floor=21.31
+WALK LEG 6 -> (1167.2, 2144.5): reached=true at y=21.31 floor=21.31
+WALK LEG 7 -> (1156.5, 2161.7): reached=true at y=25.74 floor=25.74
+WALK TOP: body y 25.74 vs upper level 25.74
+WALK CONTROL open dune: reached=true built_floor=nan
+WALK LEVEL (info; ramps cross some lines by design) DrownedPoolLevel r=114.2 end-to-end: reached=true stopped_at_deg=-104.8 near_ramp=false y=12.63
+WALK LEVEL (info; ramps cross some lines by design) DrownedPoolLevel r=120.8 end-to-end: reached=false stopped_at_deg=-125.0 near_ramp=true y=11.91
+WALK LEVEL (info; ramps cross some lines by design) LowerGardenLevel r=105.2 end-to-end: reached=false stopped_at_deg=-124.7 near_ramp=false y=16.72
+WALK LEVEL (info; ramps cross some lines by design) LowerGardenLevel r=111.8 end-to-end: reached=false stopped_at_deg=-112.1 near_ramp=true y=14.02
+WALK LEVEL (info; ramps cross some lines by design) MiddleGardenLevel r=96.2 end-to-end: reached=true stopped_at_deg=-104.8 near_ramp=false y=21.31
+WALK LEVEL (info; ramps cross some lines by design) MiddleGardenLevel r=102.8 end-to-end: reached=true stopped_at_deg=-104.8 near_ramp=false y=21.31
+WALK LEVEL (info; ramps cross some lines by design) UpperGardenLevel r=87.2 end-to-end: reached=false stopped_at_deg=-108.3 near_ramp=false y=25.32
+WALK LEVEL (info; ramps cross some lines by design) UpperGardenLevel r=93.8 end-to-end: reached=false stopped_at_deg=-104.8 near_ramp=false y=21.30
+WALK POOL EDGE: reached=true y=12.63
+CONTOUR CHECK bodies=6 floor_samples_equal=1200 identical=true
+WALK PROBE PASS
