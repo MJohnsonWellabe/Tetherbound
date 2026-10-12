@@ -84,9 +84,14 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 
 
 func _travel_and_cross(route: Array[Vector2], crossing: Dictionary) -> bool:
-	for point: Vector2 in route:
-		if not await _walk(point):
+	for index in route.size():
+		if not await _walk(route[index]):
 			return false
+		# Progress receipts: the fail-fast watchdog aborts on 45 min without
+		# one, and the long road to the bridge otherwise printed nothing.
+		_receipt("road_waypoint", {"index": index, "of": route.size(),
+			"pos": [snappedf(_player.global_position.x, 0.1), snappedf(_player.global_position.z, 0.1)],
+			"frame": Engine.get_physics_frames()})
 	if not await _prepare_ally():
 		return false
 	var prompt := _bridge.get_node_or_null("Interactable") as Node3D
@@ -374,6 +379,7 @@ func _win_fight() -> bool:
 	pilot._move_toward(Vector3.ZERO)
 	if bool(observed.get("timed_out", true)) or str(observed.get("outcome", "")) != "won":
 		return _fail("Earned road combat did not win: " + str(observed))
+	_receipt("road_wild_won", {"frame": Engine.get_physics_frames(), "outcome": observed.get("outcome", "")})
 	return true
 
 

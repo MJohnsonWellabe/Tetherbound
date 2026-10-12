@@ -135,6 +135,7 @@ func _run() -> void:
 		if failures.is_empty():
 			_watch_weather.call_deferred()
 			_watchdog.call_deferred()
+			_record_frames.call_deferred()
 			if segment == "arrival_prefix": _watch_seam.call_deferred()
 			await _play()
 	if failures.is_empty():
@@ -286,6 +287,7 @@ func _watchdog() -> void:
 	var deaths_by_step := {}
 	var satchel_deaths := 0
 	var recent: Array = []
+	var seen_flags := {}
 	var last_fight_hp := -1.0
 	while true:
 		var wait_until := Time.get_ticks_msec() + 15000
@@ -299,7 +301,12 @@ func _watchdog() -> void:
 			flags.append_array(personal.call("all_set") as Array)
 		if flags.size() != receipt_count:
 			if receipt_count >= 0:
-				recent = flags.slice(maxi(0, flags.size() - 8))
+				# Newest receipts by set difference: all_set() is not in grant order.
+				for flag: Variant in flags:
+					if not seen_flags.has(flag): recent.append(flag)
+				recent = recent.slice(maxi(0, recent.size() - 8))
+			seen_flags.clear()
+			for flag: Variant in flags: seen_flags[flag] = true
 			receipt_count = flags.size()
 			last_receipt_ms = Time.get_ticks_msec()
 		# A live fight whose HP totals still move is progress, not idling: on
@@ -329,6 +336,28 @@ func _watchdog() -> void:
 			_watchdog_abort("no new receipt for %d min" % (WATCHDOG_NO_RECEIPT_MS / 60000), step, recent)
 			return
 
+
+## Wall time of every process frame during play (coordinator, 12 Oct: report
+## median/p95/max frame with the piece result).
+var _frame_usec := PackedInt32Array()
+
+func _record_frames() -> void:
+	var last := Time.get_ticks_usec()
+	while true:
+		await process_frame
+		var now := Time.get_ticks_usec()
+		_frame_usec.append(mini(now - last, 2147483647))
+		last = now
+
+func _frame_stats() -> Dictionary:
+	if _frame_usec.is_empty(): return {}
+	var sorted := _frame_usec.duplicate()
+	sorted.sort()
+	var n := sorted.size()
+	return {"frames": n, "median_ms": snappedf(sorted[n / 2] / 1000.0, 0.1),
+		"p95_ms": snappedf(sorted[mini(n - 1, int(n * 0.95))] / 1000.0, 0.1),
+		"p99_ms": snappedf(sorted[mini(n - 1, int(n * 0.99))] / 1000.0, 0.1),
+		"max_ms": snappedf(sorted[n - 1] / 1000.0, 0.1)}
 
 ## Sum of the live fight's two combatants' HP, or -1 outside a fight.
 func _fight_hp_total() -> float:
@@ -474,7 +503,7 @@ func _finish(commit: String) -> void:
 		"flags_gained": gained, "failures": failures, "disclosures": disclosures,
 		"helper": PIECES.get(segment, ""), "helper_outcomes": helper_result.get("outcomes", {}),
 		"wall_seconds": snappedf(float(Time.get_ticks_msec() - started_ms) / 1000.0, 0.1),
-		"transcript": transcript}
+		"frame_wall": _frame_stats(), "transcript": transcript}
 	if passed:
 		var source: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("PROVENANCE.json")))
 		var injections: Array = []
@@ -493,5 +522,5 @@ func _finish(commit: String) -> void:
 		CHECKPOINTS.write_json(out_dir.path_join("PROVENANCE.json"), provenance)
 	print("STORMWOOD CHAIN RESULT " + JSON.stringify({"segment": segment, "passed": passed,
 		"failures": failures, "handoff": handoff, "flags_gained": gained,
-		"wall_seconds": receipt.wall_seconds}))
+		"wall_seconds": receipt.wall_seconds, "frame_wall": receipt.frame_wall}))
 	quit(0 if passed else 1)

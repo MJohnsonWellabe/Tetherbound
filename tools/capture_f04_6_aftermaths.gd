@@ -456,7 +456,12 @@ func _frame_site_object(tag: String) -> void:
 	# grass. Stand the player at the site first (hidden for the frame itself).
 	var return_to := Transform3D()
 	var restore_player := false
-	if tag.ends_with("before") and _site_centres.has(_tid) and _player != null:
+	# Only when the site is far from the player: Dell's yard is near the start,
+	# and moving the player/ally there left the fight's seat search boxed in
+	# by the yard stair and the station props (r9, twice).
+	var far := _player != null and _site_centres.has(_tid) \
+		and _player.global_position.distance_to(_site_centres[_tid]) > 40.0
+	if tag.ends_with("before") and far:
 		# Remember where the fight flow put the player: Dell's run stood at the
 		# site and the arena then refused for lack of clear ground (r8).
 		return_to = _player.global_transform
@@ -532,7 +537,7 @@ func _frame_site_object(tag: String) -> void:
 	# clear it ("clear_seat_search_exhausted"). Fixture, disclosed: put the
 	# ally beside the player at the fight's stand before the fight begins.
 	var ally := _director.call("ally_body") as Node3D if _director != null else null
-	if ally != null and is_instance_valid(ally) and _player != null:
+	if restore_player and ally != null and is_instance_valid(ally) and _player != null:
 		var back := -_player.global_basis.z.slide(Vector3.UP).normalized()
 		if back.length() < 0.1:
 			back = Vector3.BACK

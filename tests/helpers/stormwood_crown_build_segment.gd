@@ -571,6 +571,15 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 		return true
 	var own_offer: Variant = prompt.call("interaction_offer", _player.global_position) \
 		if prompt.has_method("interaction_offer") else "n/a"
+	var input_owner := preload("res://scripts/ui/input_owner.gd").current(_tree)
+	var session: Node = _game.get("session") as Node
+	var block := str(session.call("_owner_snapshot_block_reason", _game.get("local"))) \
+		if session != null and session.has_method("_owner_snapshot_block_reason") else "n/a"
+	var job: Variant = session.get("_mastery_job") if session != null else null
+	_note("%s press gates: input_owner=%s session_block=%s mastery_job=%s arbiter_enabled=%s fight_owns_world=%s" % [label,
+		str(input_owner.get_path()) if input_owner != null else "<none>", block,
+		JSON.stringify(job).left(200) if job != null else "<none>", str(_arbiter.get("_enabled")),
+		str(_arbiter.call("_fight_owns_the_world")) if _arbiter.has_method("_fight_owns_the_world") else "n/a"])
 	return _fail("%s never won the InteractionArbiter (winner=%s offer=%s; target enabled=%s visible=%s in_tree=%s own_offer=%s player=%s prompt_at=%s distance=%.2f equipped=%s)" % [label,
 		str(winner.get_path()) if winner != null else "<none>", str(_arbiter.call("winner")),
 		str(prompt.get("enabled")), str(body.is_visible_in_tree()), str(body.is_inside_tree()), str(own_offer),

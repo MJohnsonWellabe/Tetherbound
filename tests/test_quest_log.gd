@@ -36,7 +36,7 @@ func test_regional_return_feed_follows_personal_entitlements_in_every_realm() ->
 		var owner := CanonicalEndingFixture.new()
 		progression = owner.local.flags
 		owner.local.realm = realm_id
-		owner.world.flags.set_flag("stormwood:stormheart_freed")
+		owner.world.flags.set_flag(preload("res://scripts/story/regional_homecoming.gd").WORLD_FLAG)
 		owner.durable_home_return = false
 		owner.home_return_receipt = ""
 		log_reader = QUEST_LOG.new(owner)
