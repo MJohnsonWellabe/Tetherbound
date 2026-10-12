@@ -460,6 +460,9 @@ var _trainer_spec: Dictionary = {}
 ## at its start: its rewards and the creature's vitals stay on the existing
 ## solo path (Session.ordinary_combat_reward_owner answers "not applicable"),
 ## and a guest joining mid-battle cannot switch it to durable round rewards.
+## Requires the one-peer hosted session every solo world runs in (title
+## screen: "solo is a one-peer session"); the offline fallback after a failed
+## port bind keeps the unbound duel, since its strikes have no host to commit.
 var _solo_duel_record := false
 ## F44 narrow composition hook. Host owner journals the actual final outcome
 ## before this director discards its encounter/participant evidence.
@@ -8306,8 +8309,7 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 	_trainer_spec = spec
 	_trainer_battle_sent = 0
 	_solo_duel_record = not spec.has("master") and not spec.has("rematch") and not tournament_round \
-		and _session != null and _session.call("is_host") == true and not _is_multi_peer() \
-		and preload("res://scripts/combat/tether_commands.gd").enabled() \
+		and _is_host() and not _is_multi_peer() and preload("res://scripts/combat/tether_commands.gd").enabled() \
 		and MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true
 	_tournament_members.clear()
 	_tournament_entry_condition.clear()

@@ -59,6 +59,11 @@ func _run() -> void:
 	player.global_position = body.global_position + (player.global_position - body.global_position).normalized() * 3.0
 	for frame in 10: await physics_frame
 	var session: Node = game.get("session")
+	# Solo is a one-peer hosted session: the title screen hosts on Start/Load
+	# (title_screen.gd); the generated-fixture loader does not, so host here.
+	if session != null and session.call("is_active") != true:
+		session.call("host", 27015)
+		disclosures.append("Hosted the one-peer solo session as the title screen does on Load.")
 	var solo: bool = session == null or session.call("is_multi_peer") != true
 	print("SOLO_DUEL trainer=%s solo=%s session_host=%s" % [picked.id, solo,
 		session != null and session.call("is_host") == true])
