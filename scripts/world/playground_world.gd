@@ -869,7 +869,12 @@ func _ready() -> void:
 	if not simulation_only:
 		_build_water()
 		BOOT_LOG.phase("playground: water built (pond, stream, reeds — counts above)")
+	var bulk_vegetation := get_node_or_null(^"Vegetation")
+	if bulk_vegetation != null and bulk_vegetation.has_method("begin_bulk_clear"):
+		bulk_vegetation.call("begin_bulk_clear")
 	await _build_settlement()
+	if is_instance_valid(bulk_vegetation) and bulk_vegetation.has_method("end_bulk_clear"):
+		bulk_vegetation.call("end_bulk_clear")
 	BOOT_LOG.phase("playground: settlement (house, village, signpost, landmark, perimeter, harvest nodes) built")
 	await _shell_build.call("step", "settlement")
 	# CL-W1. The whole hook: `alpha_pins.gd` self-ticks and shares no state with
