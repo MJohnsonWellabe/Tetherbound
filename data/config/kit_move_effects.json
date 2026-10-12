@@ -830,9 +830,9 @@
     "sparks": 8,
     "debris": {
      "kind": "rock",
-     "count": 10,
+     "count": 14,
      "colour": "#9a8a74",
-     "size": 0.562,
+     "size": 0.13,
      "from_ground": true,
      "backscatter": 1.4,
      "gravity": 22.0,
@@ -843,7 +843,7 @@
     "dust": true,
     "flash_m": 1.4,
     "dust_life": 0.4,
-    "flash_lift_m": 1.1
+    "flash_lift_m": 0.8
    },
    "after": {},
    "linger_s": 0.9
@@ -875,9 +875,9 @@
     "sparks": 8,
     "debris": {
      "kind": "rock",
-     "count": 10,
+     "count": 14,
      "colour": "#9a8a74",
-     "size": 0.562,
+     "size": 0.13,
      "from_ground": true,
      "backscatter": 1.4,
      "gravity": 22.0,
@@ -888,7 +888,7 @@
     "dust": true,
     "flash_m": 1.4,
     "dust_life": 0.4,
-    "flash_lift_m": 1.1
+    "flash_lift_m": 0.8
    },
    "after": {},
    "linger_s": 0.9
