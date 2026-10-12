@@ -1,6 +1,6 @@
 {
   "_comment": "Owner6115421105 fresh P2-011 rough layout only. Three contour-oriented, level stone-edged planted terraces off the existing walkline. No collision/route/terrain/interaction/spawn changes. Prior terrace_beds_repair remains OFF and untouched.",
-  "planted_terraces_blockout_enabled": true,
+  "planted_terraces_blockout_enabled": false,
   "landmark_id": "drowned_garden_terraces",
   "landmark_xz": [
     1105.458,
