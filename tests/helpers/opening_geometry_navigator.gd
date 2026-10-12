@@ -29,6 +29,11 @@ const LOW_PROP_RISE := 0.05
 ## frames still spend the caller's unchanged walk budget. Identity, count and
 ## contact-saturation guards stay hard refusals.
 const MAX_DEFERRAL_FRAMES := 30
+## Pre-approved slow-host budget scaling (Proof Rules v2, F19#5 2026-10-12): a
+## loaded headless runner exceeded 30 consecutive frames twice at the same
+## production dispatch deadline. TB_HOST_BUDGET_SCALE (integer >= 1, default
+## 1) multiplies the frame cap only; every deferral still prints the cap in
+## force and spends the caller's unchanged walk budget.
 
 ## A physics_frame signal resumes BEFORE NativeTick and the controller. A
 ## submitted attempt is finished only by its corresponding actual callback epoch.
@@ -114,6 +119,8 @@ class DeadlineDeferral extends RefCounted:
 	var consecutive := 0
 	var this_frame := false
 	var last_where := ""
+	var cap := MAX_DEFERRAL_FRAMES * clampi(int(OS.get_environment("TB_HOST_BUDGET_SCALE")) \
+		if OS.get_environment("TB_HOST_BUDGET_SCALE").is_valid_int() else 1, 1, 10)
 	## Call once at the start of every physics frame.
 	func new_frame() -> void:
 		if not this_frame:
@@ -127,8 +134,8 @@ class DeadlineDeferral extends RefCounted:
 			total += 1
 			consecutive += 1
 			print("OPENING_NAV_DEFERRAL " + JSON.stringify({"where": where, "total": total,
-				"consecutive": consecutive, "cap_frames": MAX_DEFERRAL_FRAMES}))
-		return consecutive <= MAX_DEFERRAL_FRAMES
+				"consecutive": consecutive, "cap_frames": cap}))
+		return consecutive <= cap
 
 class NativeTick extends Node:
 	var navigator: WeakRef

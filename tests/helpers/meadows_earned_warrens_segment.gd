@@ -474,6 +474,18 @@ func _prepare_for_trainer() -> bool:
 			if not await care._use_remedy("potion_small", index):
 				return _fail("Pre-trainer Satchel top-up failed: " + str(care.result().failures))
 	_receipt("trainer_top_up", {"party": _party_hp(), "potions_left": int(inventory.call("count", "potion_small"))})
+	var spec: Variant = get("_captain_spec")
+	if spec is Dictionary and not (spec as Dictionary).is_empty():
+		var room := CARE.new()
+		room._tree = _tree
+		room._world = _world
+		room._game = _game
+		room._menu = _game.call("menu")
+		if not await room.free_slots_for(((spec as Dictionary).get("reward", {}) as Dictionary).get("items", [])):
+			return _fail("Pre-captain Satchel room failed: " + str(room.result().failures))
+		for row: Variant in (room.result().get("receipts", []) as Array):
+			if row is Dictionary and str((row as Dictionary).get("beat", "")) == "satchel_room_dropped":
+				_receipt("satchel_room_dropped", row)
 	return true
 
 
