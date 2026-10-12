@@ -520,7 +520,7 @@
     "radius": 1.1,
     "soft_style": {
       "_comment": "P2-093/P2-063 (visual-claude lane, 2026-10-12). The catalogue found that the flat magenta danger slab read as paint over the fight: it hid creature poses and stayed bright while the HUD announced an opening. With this enabled, scripts/combat/tell_style.gd has the feet ring, pattern shapes, lunge lane and guard cone draw as a feathered, edge-lit outline: a faint wash (fill_alpha, or locked_fill_alpha on a committed lane), a glow band feathering feather_m inward from each edge at edge_alpha (locked_edge_alpha when committed), and a core_width_m rim lifted core_whiten toward white at core_alpha. Hue, shapes, sizes, timings, depth rules and the open-fade are unchanged. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
-      "enabled": false,
+      "enabled": true,
       "fill_alpha": 0.025,
       "locked_fill_alpha": 0.045,
       "edge_alpha": 0.5,
