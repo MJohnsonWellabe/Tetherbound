@@ -562,6 +562,29 @@ func test_settles_beside_a_lit_campfire_and_stands_up_to_move() -> void:
 		"real movement returns to locomotion without a held rest clip")
 
 
+## Captures F03#1 (Juno's escort): a companion lay down beside the Tether
+## holding fire. A lure/landmark signal fire (configure_smoke) or a Tether
+## occupation fire is never a rest source; an ordinary camp fire still is.
+func test_a_hostile_or_signal_fire_is_never_a_place_to_rest() -> void:
+	var signal_fire: Node3D = CAMPFIRE_GLOW.new(true)
+	signal_fire.call("configure_smoke", 42.0, 1.0, 14.0, Color("#2e2a27"), 0.2, 2.5)
+	_root.add_child(signal_fire)
+	_extras.append(signal_fire)
+	signal_fire.position = _body.position + Vector3(2.5, 0.0, 0.0)
+	_tick_seconds(float(_cfg()["camp"]["settle_seconds"]) + 0.5)
+	assert_false(bool(_presence.call("is_camp_near")), "a signal/lure fire is not a camp")
+	assert_false(bool(_presence.call("is_camped")), "no rest reaction beside it")
+	var tether_fire: Node3D = CAMPFIRE_GLOW.new()
+	tether_fire.call("set_rest_source", false)
+	_root.add_child(tether_fire)
+	_extras.append(tether_fire)
+	tether_fire.position = _body.position + Vector3(-2.5, 0.0, 0.0)
+	_tick_seconds(float(_cfg()["camp"]["settle_seconds"]) + 0.5)
+	assert_false(bool(_presence.call("is_camped")), "nor beside a Tether occupation fire")
+	assert_true(CAMPFIRE_GLOW.new(true).call("is_rest_source"), "an ordinary camp fire stays a rest source " +
+		"(rest beside it: test_settles_beside_a_lit_campfire_and_stands_up_to_move)")
+
+
 func test_the_camp_group_is_an_opt_in_camp_source() -> void:
 	var bed := Node3D.new()
 	bed.add_to_group(PRESENCE.CAMP_GROUP)

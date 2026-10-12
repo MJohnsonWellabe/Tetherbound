@@ -489,8 +489,23 @@ func _build_embers() -> void:
 ## continuous rather than a string of separate puffs. `fade` is how much of the
 ## opacity the top loses (a signal column that must read against the sky from a
 ## road keeps more); `base_size_m` widens the column's foot.
+## Whether a resting companion treats this fire as a camp. Only friendly rest
+## fires (the player's camps, the homestead, village hearths) are; a Tether
+## camp, a lure or a landmark signal fire is not (companion_presence.gd).
+func set_rest_source(on: bool) -> void:
+	if on: add_to_group(&"companion_camp_sources")
+	elif is_in_group(&"companion_camp_sources"): remove_from_group(&"companion_camp_sources")
+
+
+func is_rest_source() -> bool:
+	return is_in_group(&"companion_camp_sources")
+
+
+## A signal column marks a lure or landmark (F03 lure cue; the Tether holding
+## camps), never a place to rest.
 func configure_smoke(top_m: float, alpha: float, top_size_m: float = -1.0, rgb: Color = Color(0, 0, 0, 0),
 		fade: float = 0.85, base_size_m: float = -1.0) -> void:
+	set_rest_source(false)
 	_smoke_top = maxf(top_m, SMOKE_BASE_HEIGHT + 0.5)
 	_smoke_alpha = clampf(alpha, 0.0, 1.0)
 	_smoke_top_size = top_size_m if top_size_m > 0.0 else SMOKE_TOP_SIZE * _smoke_top / SMOKE_TOP_HEIGHT

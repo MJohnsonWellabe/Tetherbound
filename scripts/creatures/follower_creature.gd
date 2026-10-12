@@ -89,6 +89,11 @@ const DEFAULT_SNAP_MAX_DROP_M := 6.0
 ## With no verified station the companion closes on the trainer and stops this
 ## far beyond its own radius, on the ground the trainer is standing on.
 const TRAINER_FALLBACK_CLEARANCE_M := 1.0
+## The trainer's capsule radius (scenes/player/player.tscn) and the extra gap a
+## companion keeps from it. A large creature must never stand inside the
+## trainer, e.g. stopping beside them when a dialogue opens (captures F03#1).
+const TRAINER_RADIUS_M := 0.4
+const TRAINER_SPACING_MARGIN_M := 0.3
 
 
 ## The trainer THIS creature follows. Stage B lane 4.B: it is the body of the
@@ -283,6 +288,14 @@ func _tick_follow() -> void:
 
 	_closing = station_should_close(_closing, distance, leader_speed,
 		stop_distance, resume_distance, moving_stop_distance)
+	# Stopping "near enough" to the station must never leave the body inside the
+	# trainer: keep walking to the (clear) station while too close.
+	# (Not when the target is the trainer itself: that fallback already stops a
+	# body radius + TRAINER_FALLBACK_CLEARANCE_M short of the capsule.)
+	var gap := _world_position(self) - leader_position
+	gap.y = 0.0
+	if not _closing and not target.is_equal_approx(leader_position) and gap.length() < trainer_clearance():
+		_closing = true
 
 	if not _closing:
 		# Standing with you rather than staring past you.
@@ -568,7 +581,25 @@ func formation_target() -> Vector3:
 ## radius: changing a creature's gameplay scale must widen its camera-safe station,
 ## never shrink that creature to fit an offset authored for a smaller roster.
 func resolved_side_offset() -> float:
-	return _side_offset + visual_flank_extent()
+	return maxf(_side_offset + visual_flank_extent(), trainer_clearance())
+
+
+## The widest horizontal reach of this body's footprint (collider or rendered
+## half-extent, whichever is larger), so size scales the gap by species.
+func footprint_radius() -> float:
+	var half: Variant = get("_render_half_extents")
+	var reach := body_radius()
+	if half is Vector2: reach = maxf(reach, maxf((half as Vector2).x, (half as Vector2).y))
+	return reach
+
+
+## The nearest this companion's centre may stand to the trainer's.
+func trainer_clearance() -> float:
+	return trainer_clearance_for(footprint_radius())
+
+
+static func trainer_clearance_for(footprint: float) -> float:
+	return TRAINER_RADIUS_M + maxf(0.0, footprint) + TRAINER_SPACING_MARGIN_M
 
 
 func visual_flank_extent() -> float:

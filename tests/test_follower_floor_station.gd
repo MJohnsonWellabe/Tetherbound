@@ -141,3 +141,31 @@ func test_stopping_following_releases_the_footprint_exception() -> void:
 	assert_eq(_body.get("_footprint_exception"), null, "combat takes the body with no footprint exception left")
 	assert_false(_body.get_collision_exceptions().has(trainer),
 		"the companion collides with its trainer again")
+
+
+## Captures F03#1 (Doss frames): a large companion stopped inside the trainer.
+## The largest current companions (Veridian, Solmane) keep their centre at
+## least trainer radius + their own footprint + a margin from the trainer's:
+## the station itself is that far out, and a body found closer keeps walking.
+func test_the_largest_companions_never_stand_inside_the_trainer() -> void:
+	for species: String in ["veridian", "solmane"]:
+		var body: CharacterBody3D = CREATURE_SCENE.instantiate()
+		body.set_script(FOLLOWER)
+		_root.add_child(body)
+		for field: String in ["_collision:Collision", "_model:Model", "_body:Body", "_head:Head"]:
+			var pair: PackedStringArray = field.split(":")
+			body.set(pair[0], body.get_node(NodePath(pair[1])))
+		body.set("species_id", species)
+		body.call("_ready")
+		body.set("leader", _leader)
+		body.call("set_following", true)
+		var footprint := float(body.call("footprint_radius"))
+		var clearance := float(body.call("trainer_clearance"))
+		assert_true(footprint >= float(body.call("body_radius")), species + " footprint covers its collider")
+		assert_almost_eq(clearance, FOLLOWER.TRAINER_RADIUS_M + footprint + FOLLOWER.TRAINER_SPACING_MARGIN_M, 0.0001)
+		assert_true(float(body.call("resolved_side_offset")) >= clearance, species + "'s station is clear of the trainer")
+		# Standing still, right beside the trainer, inside the clearance.
+		body.position = LEADER_AT + Vector3(0.5, 0.0, 0.0)
+		body.call("_tick_follow")
+		assert_true(bool(body.get("_closing")), "%s found %.2f m from the trainer keeps moving (needs %.2f)" % [species, 0.5, clearance])
+		body.free()
