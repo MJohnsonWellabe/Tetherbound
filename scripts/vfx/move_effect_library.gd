@@ -10,6 +10,47 @@ static var _astra_config: Dictionary = {}
 static var _astra_r2_config: Dictionary = {}
 static var _astra_r3_config: Dictionary = {}
 static var _astra_family_config: Dictionary = {}
+static var _astra_r4_config: Dictionary = {}
+
+static func astra_r4_config() -> Dictionary:
+	if _astra_r4_config.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/astra_move_effects_r4.json"))
+		if raw is Dictionary: _astra_r4_config = raw
+	return _astra_r4_config
+
+## Only presentation profiles. Original water-jet shape/material/emission and
+## stage lifetime are retained; no r3 core, width, trail or hold-time overrides.
+static func _final_drawing(row: Dictionary) -> void:
+	var final := astra_r4_config()
+	if not bool(final.get("enabled", false)): return
+	if (final.get("profiles", {}) as Dictionary).has(str(row.archetype)):
+		# The smoke path sees the same drawing metadata as the renderer, so its
+		# existing projectile/ground/lifetime assertions cover the actual candidate.
+		var profile: Dictionary = final.profiles[str(row.archetype)]
+		for part: String in ["body", "impact"]:
+			for key: String in profile.get(part, {}):
+				var value: Variant = profile[part][key]
+				row[part][key] = value.duplicate(true) if value is Dictionary or value is Array else value
+		return
+	if str(row.archetype) != "catch_tether_beam": return
+	var donor: Dictionary = config().archetypes.water_jet
+	for key: String in ["body", "trail", "impact", "launch", "light"]:
+		if donor.has(key): row[key] = donor[key].duplicate(true)
+		else: row.erase(key)
+	_recolour_water(row.body)
+	_recolour_water(row.trail)
+	_recolour_water(row.impact)
+
+static func _recolour_water(value: Variant) -> void:
+	if value is Array:
+		for child: Variant in value: _recolour_water(child)
+	elif value is Dictionary:
+		for key: Variant in value:
+			if value[key] is Dictionary or value[key] is Array: _recolour_water(value[key])
+			elif str(key).ends_with("colour"):
+				var old := Color(str(value[key]))
+				# Preserve saturation/value/alpha, including white foam and dark mark.
+				value[key] = "#" + Color.from_hsv(0.705, old.s, old.v, old.a).to_html(true)
 
 ## Independent, shipping-OFF four-example selector. Preview writes are
 ## process-local; the existing library config, resolved rows and timing stay intact.
@@ -38,6 +79,21 @@ static func astra_family_config() -> Dictionary:
 	return _astra_family_config
 
 static func _ordinary_effect(row: Dictionary, context: Dictionary) -> Node3D:
+	var final := astra_r4_config()
+	if bool(final.get("enabled", false)) and str(row.archetype) in final.get("archetypes", []):
+		var path := "res://scripts/vfx/astra_family_effect_r4.gd"
+		if str(row.archetype) == "catch_tether_beam": path = "res://scripts/vfx/astra_tether_r4.gd"
+		elif str(row.archetype) == "buff_aura": path = "res://scripts/vfx/astra_aura_r4.gd"
+		var script := load(path) as Script
+		var effect := script.new() as Node3D
+		if str(row.archetype) != "catch_tether_beam": effect.set("tuning", final.duplicate(true))
+		if str(row.archetype) == "buff_aura":
+			var source_id := int(context.get("local_visual_source_id", 0))
+			var source := instance_from_id(source_id) as Node3D if source_id > 0 and is_instance_id_valid(source_id) else null
+			if not effect.call("bind_source", source):
+				effect.free()
+				return EFFECT.new()
+		return effect
 	var families := astra_family_config()
 	var admitted := str(row.archetype) in ["stone_throw", "ember_burst", "tidal_wave", "wind_blade", "tornado",
 		"ice_shard_volley", "psychic_pulse", "root_stone_spikes", "quake_ring", "debuff_hex"]
@@ -127,6 +183,7 @@ static func resolve(spec: Dictionary, mastery_rank: int = 1) -> Dictionary:
 	resolved["secondary_trail"] = bool(tier.get("secondary_trail", false))
 	resolved["impact_layer"] = bool(tier.get("impact_layer", false))
 	resolved["archetype"] = id
+	_final_drawing(resolved)
 	return resolved
 
 ## No gameplay geometry/timing/cost can be changed by mastery. Combat supplies
