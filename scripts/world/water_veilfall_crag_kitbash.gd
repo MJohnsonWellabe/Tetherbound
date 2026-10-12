@@ -57,6 +57,13 @@ func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
 	var core := material.duplicate() as ShaderMaterial
 	core.set_shader_parameter("crevice_darken", float(_k.core_darken))
 	_core(world, core)
+	# The entrance curtain stays for the player near it, but from a distance
+	# it read as a flat white card on the crag face: limit its draw range.
+	var passage := veilfall.get_node_or_null("WaterfallPassage")
+	if passage != null:
+		for child: Node in passage.get_children():
+			if child is MeshInstance3D:
+				(child as MeshInstance3D).visibility_range_end = float(_k.curtain_visible_to_m)
 	for path: String in _k.hide_nodes:
 		var previous := veilfall.get_node_or_null(path) as Node3D
 		if previous != null:
@@ -168,11 +175,13 @@ func _target(u: float, w: float) -> float:
 			ridge = pow(ridge, float(_k.ridge_sharpness))
 			var band := smoothstep(float(_k.ridge_inner_m), float(_k.ridge_inner_m) + 60.0, r) * (1.0 - smoothstep(float(_k.ridge_outer_m) - 50.0, float(_k.ridge_outer_m), r))
 			relief += ridge * band * float(_k.ridge_height_m)
-			height = maxf(height, ground + relief * smoothstep(float(_k.mantle_min_ground_y), float(_k.mantle_min_ground_y) + 40.0, ground))
+			height = maxf(height, ground + relief * smoothstep(float(_k.mantle_min_ground_y), float(_k.mantle_full_ground_y), ground))
 		var step := float(_k.ledge_step_m)
 		if step > 0.0 and height > ground + 4.0:
 			var stepped := floorf(height / step) * step + step * pow(fposmod(height, step) / step, 5.0)
-			var cover := float(_k.mantle_min_cover_m) if ground > float(_k.mantle_min_ground_y) else 3.0
+			# Cover tapers toward the shore so the base flares into a skirt
+			# instead of standing as vertical walls on the beach.
+			var cover := minf(float(_k.mantle_min_cover_m), ground * float(_k.mantle_cover_per_m)) if ground > float(_k.mantle_min_ground_y) else 3.0
 			height = maxf(ground + cover, lerpf(height, stepped, float(_k.ledge_blend)))
 	var from_falls := absf(u - float(_cfg.water_path[0].at[0]))
 	var half := _water_half_width(w) + float(_k.notch_half_width_m)
@@ -274,7 +283,7 @@ func _column(world: Node3D, rng: RandomNumberGenerator, u: float, w: float, g: f
 	var cap_height := 0.0
 	if slope < float(_k.ledge_slope_max):
 		# Shelf or crown: a broad boulder cap, sometimes a pinnacle.
-		var cap_width := minf(g * rng.randf_range(1.1, 1.6), radius * 2.2)
+		var cap_width := minf(g * rng.randf_range(0.95, 1.3), radius * 2.0)
 		cap_height = cap_width * rng.randf_range(0.35, 0.6)
 		var piece := "boulder_%d" % rng.randi_range(1, 3)
 		if top > float(_k.pinnacle_min_y) and rng.randf() < float(_k.pinnacle_chance):
@@ -284,7 +293,7 @@ func _column(world: Node3D, rng: RandomNumberGenerator, u: float, w: float, g: f
 	var y := top - cap_height * 0.6
 	var guard := 0
 	while y > bottom and guard < 16:
-		var width := minf(g * rng.randf_range(0.95, 1.5), radius * 2.0)
+		var width := minf(g * rng.randf_range(1.15, 1.75), radius * 2.2)
 		var height := width * rng.randf_range(1.2, 2.4)
 		_add("spire_%d" % rng.randi_range(1, 3), u + rng.randf_range(-0.15, 0.15) * g, w + rng.randf_range(-0.15, 0.15) * g, y - height, width, height, rng)
 		y -= height * 0.82
@@ -364,11 +373,13 @@ func _core(world: Node3D, material: Material) -> void:
 	for i in columns - 1:
 		for j in rows - 1:
 			var corners: Array[Vector3] = []
-			var raised := false
+			var raised := true
 			for c: Vector2i in [Vector2i(i, j), Vector2i(i + 1, j), Vector2i(i + 1, j + 1), Vector2i(i, j + 1)]:
 				var xz := _world(float(extent[0]) + g * c.x, float(extent[2]) + g * c.y)
 				var y: float = heights[c.x][c.y]
-				raised = raised or y > _ground(world, float(extent[0]) + g * c.x, float(extent[2]) + g * c.y)
+				# Only cells raised at every corner: a partly raised cell at a
+				# cleared edge would draw a straight-edged dark slab.
+				raised = raised and y > _ground(world, float(extent[0]) + g * c.x, float(extent[2]) + g * c.y)
 				corners.append(Vector3(xz.x, y, xz.y))
 			if not raised:
 				continue

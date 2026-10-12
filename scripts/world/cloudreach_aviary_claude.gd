@@ -28,11 +28,19 @@ static func build(root: Node3D, spec: Dictionary, materials: Dictionary, drum: D
 	var stone: Material = materials["stone"]
 	var trim: Material = materials["masonry"]
 	var glow := StandardMaterial3D.new()
-	glow.albedo_color = Color(str(spec.window_colour))
+	glow.albedo_color = Color(str(spec.window_glass_colour))
 	glow.emission_enabled = true
 	glow.emission = Color(str(spec.window_colour))
-	glow.emission_energy_multiplier = float(spec.window_energy)
-	glow.roughness = 0.6
+	glow.emission_energy_multiplier = float(spec.window_energy_day)
+	glow.roughness = 0.35
+	var driver := WindowGlowDriver.new()
+	driver.name = "SanctuaryWindowGlowDriver"
+	driver.material = glow
+	driver.day_energy = float(spec.window_energy_day)
+	driver.night_energy = float(spec.window_energy_night)
+	driver.sun_full_day = float(spec.sun_energy_full_day)
+	driver.sun_night = float(spec.sun_energy_night)
+	site.add_child(driver)
 	var piers: Array = drum.get("pier_angles_deg", [])
 	var windows := int(storey.window_count)
 	var window_half := float(storey.window_width_m) * 0.5
@@ -109,10 +117,44 @@ static func build(root: Node3D, spec: Dictionary, materials: Dictionary, drum: D
 	fill.shadow_enabled = false
 	fill.position = Vector3.UP * float(lights.interior_height_m)
 	site.add_child(fill)
-	for link: Dictionary in spec.get("court_link", []):
-		var size := Vector3(float(link.size[0]), float(link.size[1]), float(link.size[2]))
-		var at := Vector3(float(link.at[0]), float(link.at[1]), float(link.at[2]))
-		PARTS._box(site, str(link.id), at + Vector3.UP * size.y * 0.5, size, trim if bool(link.get("trim", false)) else stone, false, Basis(Vector3.UP, deg_to_rad(float(link.get("yaw_deg", 0.0)))))
+	_colonnade(site, spec.get("court_colonnade", {}), stone, trim, glow, lights)
+
+
+## Open colonnade along both edges of the existing paved approach to the
+## arena court, so drum and court read as one site. Pillars stand off the
+## paving; gaps between them stay open. Lanterns light the walk at night.
+static func _colonnade(site: Node3D, spec: Dictionary, stone: Material, trim: Material, glow: Material, lights: Dictionary) -> void:
+	if spec.is_empty():
+		return
+	var z0 := float(spec.from_z_m)
+	var z1 := float(spec.to_z_m)
+	var bays := int(spec.bays)
+	var height := float(spec.pillar_height_m)
+	var pillar := float(spec.pillar_width_m)
+	for side: float in [-1.0, 1.0]:
+		var x := side * float(spec.half_spacing_m)
+		for i in bays + 1:
+			var z := lerpf(z0, z1, float(i) / bays)
+			PARTS._box(site, "ColonnadePlinth", Vector3(x, 0.3, z), Vector3(pillar + 0.5, 0.6, pillar + 0.5), trim, false)
+			PARTS._box(site, "ColonnadePillar", Vector3(x, height * 0.5, z), Vector3(pillar, height, pillar), stone, false)
+			PARTS._box(site, "ColonnadeCapital", Vector3(x, height + 0.2, z), Vector3(pillar + 0.4, 0.4, pillar + 0.4), trim, false)
+			if i < bays and i % 2 == 0:
+				var lamp := LANTERN.instantiate() as Node3D
+				lamp.name = "ColonnadeLantern"
+				site.add_child(lamp)
+				lamp.position = Vector3(x - side * 0.6, height - 0.9, lerpf(z0, z1, (float(i) + 0.5) / bays))
+				lamp.rotation.y = -side * PI * 0.5
+				lamp.scale = Vector3.ONE * float(spec.lantern_scale)
+		PARTS._box(site, "ColonnadeLintel", Vector3(x, height + 0.75, (z0 + z1) * 0.5), Vector3(pillar + 0.2, 0.7, z1 - z0 + pillar), trim, false)
+		PARTS._box(site, "ColonnadeCoping", Vector3(x, height + 1.25, (z0 + z1) * 0.5), Vector3(pillar + 0.6, 0.3, z1 - z0 + pillar + 0.4), stone, false)
+	var walk := OmniLight3D.new()
+	walk.name = "ColonnadeWalkLight"
+	walk.light_color = Color(str(lights.colour))
+	walk.light_energy = float(spec.light_energy)
+	walk.omni_range = (z1 - z0) * 0.6
+	walk.shadow_enabled = false
+	walk.position = Vector3(0.0, height - 0.5, (z0 + z1) * 0.5)
+	site.add_child(walk)
 
 
 ## Window centre angle for this segment, or -1 when the segment is solid.
@@ -149,3 +191,36 @@ static func _ring(parent: Node3D, label: String, inner: float, outer: float, y: 
 	mesh.material_override = material
 	mesh.position = Vector3.UP * y
 	parent.add_child(mesh)
+
+
+## Window glass reads as dark warm glass by day and glows at dusk/night: the
+## emission follows the live Sun's energy (presentation only, polled).
+class WindowGlowDriver extends Node:
+	var material: StandardMaterial3D
+	var day_energy := 0.3
+	var night_energy := 4.0
+	var sun_full_day := 1.0
+	var sun_night := 0.55
+	var _poll := 0.0
+
+	func _ready() -> void:
+		process_mode = Node.PROCESS_MODE_ALWAYS
+		_update()
+
+	func _process(delta: float) -> void:
+		_poll -= delta
+		if _poll <= 0.0:
+			_poll = 0.5
+			_update()
+
+	func _update() -> void:
+		var sun: DirectionalLight3D = null
+		var node: Node = get_parent()
+		while node != null and sun == null:
+			sun = node.get_node_or_null("Sun") as DirectionalLight3D
+			node = node.get_parent()
+		if sun == null or material == null:
+			return
+		var daylight := smoothstep(sun_night, sun_full_day, sun.light_energy) if sun.visible else 0.0
+		material.emission_energy_multiplier = lerpf(night_energy, day_energy, daylight)
+

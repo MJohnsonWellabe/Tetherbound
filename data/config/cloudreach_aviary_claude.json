@@ -1,31 +1,69 @@
 {
   "_comment": "P2-022 claude-r1. Default OFF; coordinator enables after a code-blind PASS. Layered stone sanctuary over the existing drum: solid clerestory storey (above the 9 m drum top, outside the dome), warm arched windows, cornice, balustraded parapet terrace; dome becomes the crown. Night: entry lanterns (installed quaternius_fantasy Lantern_Wall), unshadowed entry pools and an interior fill. Render-only: no collision, floor, route, spawn or persistent state. Earlier Aviary candidates untouched.",
   "aviary_claude_enabled": false,
-  "window_colour": "#ffb766",
-  "window_energy": 2.4,
+  "window_colour": "#ff9a3c",
   "storey": {
-    "radius_m": 27.9,
-    "thickness_m": 1.8,
-    "height_m": 7.5,
+    "radius_m": 28.2,
+    "thickness_m": 2.2,
+    "height_m": 13.0,
     "segment_count": 64,
-    "window_count": 16,
+    "window_count": 20,
     "pier_clear_deg": 9.0,
-    "window_width_m": 2.6,
-    "window_height_m": 3.6,
-    "window_arch_rise_m": 1.1,
-    "sill_m": 1.6,
-    "cornice_projection_m": 0.55
+    "window_width_m": 2.4,
+    "window_height_m": 5.4,
+    "window_arch_rise_m": 1.2,
+    "sill_m": 2.6,
+    "cornice_projection_m": 0.8
   },
-  "parapet": {"walk_inset_m": 0.4, "height_m": 1.05, "post_count": 72},
+  "parapet": {
+    "walk_inset_m": 0.4,
+    "height_m": 1.05,
+    "post_count": 72
+  },
   "lights": {
     "colour": "#ffb36b",
-    "interior_energy": 2.2,
+    "interior_energy": 3.2,
     "interior_range_m": 30.0,
     "interior_height_m": 7.0,
     "entries": [
-      {"id": "approach_arch", "angle_deg": 270.0, "radius_m": 28.8, "lantern_spread_m": 4.6, "lantern_height_m": 5.2, "lantern_scale": 2.2, "light_height_m": 4.5, "energy": 2.6, "range_m": 14.0},
-      {"id": "court_arch", "angle_deg": 90.0, "radius_m": 28.8, "lantern_spread_m": 4.6, "lantern_height_m": 5.2, "lantern_scale": 2.2, "light_height_m": 4.5, "energy": 2.0, "range_m": 12.0}
+      {
+        "id": "approach_arch",
+        "angle_deg": 270.0,
+        "radius_m": 28.8,
+        "lantern_spread_m": 4.6,
+        "lantern_height_m": 5.2,
+        "lantern_scale": 2.2,
+        "light_height_m": 4.5,
+        "energy": 3.4,
+        "range_m": 14.0
+      },
+      {
+        "id": "court_arch",
+        "angle_deg": 90.0,
+        "radius_m": 28.8,
+        "lantern_spread_m": 4.6,
+        "lantern_height_m": 5.2,
+        "lantern_scale": 2.2,
+        "light_height_m": 4.5,
+        "energy": 3.4,
+        "range_m": 12.0
+      }
     ]
   },
-  "court_link": []
+  "court_colonnade": {
+    "_why": "Local to the summit root (aviary at origin). Existing SummitArenaApproach paving spans x -6..6, z 19..81; the arena rim is at z 64. Pillars stand at x +-8.2, off the paving.",
+    "from_z_m": 31.0,
+    "to_z_m": 62.0,
+    "bays": 6,
+    "half_spacing_m": 8.2,
+    "pillar_height_m": 5.2,
+    "pillar_width_m": 1.0,
+    "lantern_scale": 1.8,
+    "light_energy": 2.4
+  },
+  "window_glass_colour": "#2f2820",
+  "window_energy_day": 0.25,
+  "window_energy_night": 5.0,
+  "sun_energy_full_day": 1.25,
+  "sun_energy_night": 0.6
 }
