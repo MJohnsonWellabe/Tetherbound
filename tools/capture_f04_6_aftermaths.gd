@@ -445,27 +445,37 @@ func _frame_site_object(tag: String) -> void:
 		_director.call("dismiss_active_creature")
 		for i in 30:
 			await physics_frame
-	var hud := _world.get_node_or_null(^"PlaygroundHUD") as CanvasItem
-	var hud_layer := _world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	# r8 render: the gameplay rig re-took the camera, so the pair was framed
+	# from two different places with the HUD prompt in one. The rig is paused,
+	# the site camera re-asserted every frame, and every UI layer hidden.
+	var layers: Array[CanvasLayer] = []
+	for node: Node in root.find_children("*", "CanvasLayer", true, false):
+		var layer := node as CanvasLayer
+		if layer.visible:
+			layers.append(layer)
+			layer.visible = false
+	var rig_mode := _rig.process_mode if _rig != null else Node.PROCESS_MODE_INHERIT
+	if _rig != null:
+		_rig.process_mode = Node.PROCESS_MODE_DISABLED
 	var cam := Camera3D.new()
 	cam.name = "SiteCaptureCamera"
 	cam.fov = 60.0
 	root.add_child(cam)
 	cam.global_transform = _site_cams[_tid]
 	var previous := root.get_viewport().get_camera_3d()
-	cam.current = true
-	if hud != null:
-		hud.visible = false
-	if hud_layer != null:
-		hud_layer.visible = false
 	for i in 20:
+		cam.current = true
 		await process_frame
+	cam.current = true
+	print("site %s %s: camera=%s current=%s" % [_tid, tag, str(cam.global_position),
+		str(root.get_viewport().get_camera_3d() == cam)])
 	await _save(tag)
-	if hud != null:
-		hud.visible = true
-	if hud_layer != null:
-		hud_layer.visible = true
-	if previous != null:
+	for layer: CanvasLayer in layers:
+		if is_instance_valid(layer):
+			layer.visible = true
+	if _rig != null:
+		_rig.process_mode = rig_mode
+	if previous != null and is_instance_valid(previous):
 		previous.current = true
 	cam.queue_free()
 	if _director != null and _director.has_method("summon_active_creature") and _director.call("ally_body") == null:
