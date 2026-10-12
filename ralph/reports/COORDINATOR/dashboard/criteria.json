@@ -180,8 +180,8 @@
     {
      "text": "Each is a distinct optional action",
      "status": "partial",
-     "evidence": "MEADOWS-PAYOFFS/six-activities/earned/ (seed4_hall runs, judge D) @≤1ba253eb0",
-     "gap": "Re-judge 1643f899: 5/6 distinct. Doss's bank repair and Coll's cart repair are both 'bring wood/fiber, fix a structure'. Per WORLD (band3_river_nest: 'clearing/rebuilding a bank perch'), the captures lane is rebuilding Doss as a debris-clearing activity (no material payment, same once-only reward), then recapturing. The Doss signal-fire smoke column is fixed (d43cf52a).",
+     "evidence": "Code-blind r9 9:27 PM CT 11 Oct (e0241df1): the Doss debris-clear reads distinct from the cart repair; still FAIL overall.",
+     "gap": "Vault elder and Old Bram read as the same fight (no context frames); Bram white box (b6046ff7 fix not recaptured); Doss log/branch readability and an ambiguous 'those three' line; Vault trainer white blotches. smoke_local_requests and smoke_net_gate_opens_for_both not yet run. Captures lane recapturing.",
      "note": "Evidence window 1 (6:20 AM CT Sun 11 Oct): lane working. | Audit 2026-10-04 on b4e4897d5: STALE. Earned runs from the seed4_hall checkpoint. The save was reset, and F19 must regenerate the earned checkpoints.",
      "audit_index": 1
     },
