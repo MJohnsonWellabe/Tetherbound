@@ -33,6 +33,11 @@ func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
 	_realm = world
 	# The accepted r2 water geometry and frame come from its own config.
 	_cfg = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
+	# Same r2 water material and builder; the path may be smoothed into one
+	# continuous cascade (no flat runs that read as horizontal seams).
+	if _k.has("water_path_override"):
+		_cfg.water_path = _k.water_path_override
+		_cfg.spray = _k.get("spray_override", _cfg.spray)
 	for row: Dictionary in _cfg.water_path:
 		_water_w.append(float(row.at[2]))
 		_water_y.append(float(row.at[1]))
@@ -81,6 +86,36 @@ func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
 	if far != null:
 		for fogged: ShaderMaterial in [water, mist, material, core]:
 			far.call("register_fogged", fogged)
+
+
+## The r2 water as only its viewer-facing half-sheet (outward on drops, up on
+## shelves). The full translucent tube showed its back faces through the
+## front at every bend as bright horizontal rings.
+func _stream(material: ShaderMaterial) -> void:
+	var path: Array = _cfg.water_path
+	var lengths: Array[float] = [0.0]
+	for i in range(1, path.size()):
+		lengths.append(lengths[-1] + _point(path[i].at).distance_to(_point(path[i - 1].at)))
+	var across := Vector3(float(_cfg.across_xz[0]), 0.0, float(_cfg.across_xz[1]))
+	var sides := int(_k.get("water_sheet_sides", 6))
+	var rings: Array = []
+	for i in path.size():
+		var centre := _point(path[i].at)
+		var tangent := (_point(path[mini(i + 1, path.size() - 1)].at) - _point(path[maxi(0, i - 1)].at)).normalized()
+		var depth := across.cross(tangent).normalized()
+		var ring: Array = []
+		for j in sides + 1:
+			var angle := PI * float(j) / float(sides)
+			var side := cos(angle)
+			ring.append({"at": centre + across * side * float(path[i].width_m) * 0.5 + depth * sin(angle) * float(_cfg.water_thickness_m) * 0.5, "uv": Vector2((side + 1.0) * 0.5, lengths[i]), "remaining": lengths[-1] - lengths[i]})
+		rings.append(ring)
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in range(1, rings.size()):
+		for j in sides:
+			_water_triangle(surface, rings[i - 1][j], rings[i][j], rings[i][j + 1], across, float(path[i].width_m))
+			_water_triangle(surface, rings[i - 1][j], rings[i][j + 1], rings[i - 1][j + 1], across, float(path[i].width_m))
+	_mesh("ConnectedLipLedgePlunge", surface, material)
 
 
 func piece_count() -> int:
@@ -278,7 +313,8 @@ func _column(world: Node3D, rng: RandomNumberGenerator, u: float, w: float, g: f
 	var lowest := top
 	for offset: Vector2 in [Vector2(g, 0), Vector2(-g, 0), Vector2(0, g), Vector2(0, -g), Vector2(g, g) * 0.7, Vector2(-g, g) * 0.7, Vector2(g, -g) * 0.7, Vector2(-g, -g) * 0.7]:
 		lowest = minf(lowest, maxf(_target(u + offset.x, w + offset.y), _ground(world, u + offset.x, w + offset.y)))
-	var bottom := maxf(ground - float(_k.footing_sink_m), lowest - g * 0.9)
+	# Every column is rooted in the ground: no piece overhangs empty air.
+	var bottom := ground - float(_k.footing_sink_m) if bool(_k.root_columns) else maxf(ground - float(_k.footing_sink_m), lowest - g * 0.9)
 	var slope := (top - lowest) / g
 	var cap_height := 0.0
 	if slope < float(_k.ledge_slope_max):
@@ -292,11 +328,16 @@ func _column(world: Node3D, rng: RandomNumberGenerator, u: float, w: float, g: f
 	# Fluted columns stacked from the cap down to the exposed bottom.
 	var y := top - cap_height * 0.6
 	var guard := 0
-	while y > bottom and guard < 16:
+	while y > bottom and guard < 40:
 		var width := minf(g * rng.randf_range(1.15, 1.75), radius * 2.2)
 		var height := width * rng.randf_range(1.2, 2.4)
-		_add("spire_%d" % rng.randi_range(1, 3), u + rng.randf_range(-0.15, 0.15) * g, w + rng.randf_range(-0.15, 0.15) * g, y - height, width, height, rng)
-		y -= height * 0.82
+		var piece := "spire_%d" % rng.randi_range(1, 3)
+		if rng.randf() < float(_k.boulder_column_share):
+			# Rounded installed boulders stood tall break the boxy column read.
+			piece = "boulder_%d" % rng.randi_range(1, 3)
+			height = width * rng.randf_range(0.9, 1.6)
+		_add(piece, u + rng.randf_range(-0.15, 0.15) * g, w + rng.randf_range(-0.15, 0.15) * g, y - height, width, height, rng)
+		y -= height * float(_k.stack_step)
 		guard += 1
 
 
@@ -320,7 +361,7 @@ func _talus(rng: RandomNumberGenerator, u: float, w: float, ground: float, g: fl
 ## and `width` across, randomly turned and leaned.
 func _add(id: String, u: float, w: float, bottom: float, width: float, height: float, rng: RandomNumberGenerator) -> void:
 	var aabb: AABB = _pieces[id].aabb
-	var scale := Vector3(width / maxf(0.01, aabb.size.x), height / maxf(0.01, aabb.size.y), width * rng.randf_range(0.8, 1.2) / maxf(0.01, aabb.size.z))
+	var scale := Vector3(width * rng.randf_range(0.8, 1.25) / maxf(0.01, aabb.size.x), height / maxf(0.01, aabb.size.y), width * rng.randf_range(0.7, 1.3) / maxf(0.01, aabb.size.z))
 	var lean := deg_to_rad(float(_k.lean_deg))
 	var basis := Basis.from_euler(Vector3(rng.randf_range(-lean, lean), rng.randf() * TAU, rng.randf_range(-lean, lean))) * Basis.from_scale(scale)
 	var xz := _world(u, w)
@@ -366,7 +407,13 @@ func _core(world: Node3D, material: Material) -> void:
 			for offset: Vector2 in [Vector2(reach, 0), Vector2(-reach, 0), Vector2(0, reach), Vector2(0, -reach)]:
 				top = minf(top, _target(u + offset.x, w + offset.y))
 			top -= float(_k.core_inset_m)
-			line.append(top if top > ground + 1.0 else ground - 4.0)
+			if top <= ground + 1.0:
+				# Drape: steep bare cone outside the walk corridor wears the
+				# same dark rock skin, so no smooth cone face reads between
+				# pieces. Walkable low ground and the corridor stay terrain.
+				var drape := ground > float(_k.drape_min_ground_y) and _corridor_distance(u, w) > 2.0 and Vector2(u, w).length() < float(_k.max_radius_m)
+				top = ground + float(_k.drape_offset_m) if drape else ground - 4.0
+			line.append(top)
 		heights.append(line)
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
