@@ -10,6 +10,7 @@ extends "res://scripts/world/water_veilfall_tiered_r2.gd"
 ## Independent OFF flag; the r2 water (inherited _stream/_spray) is reused.
 const KITBASH_CONFIG := "res://data/config/water_veilfall_crag_kitbash.json"
 const CRAG_SHADER := preload("res://shaders/water_veilfall_crag.gdshader")
+const TERRAIN_HEIGHT := preload("res://scripts/world/terrain_height.gd")
 
 var _k: Dictionary
 var _noise := FastNoiseLite.new()
@@ -61,6 +62,7 @@ func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
 		_multimesh(id, material)
 	var core := material.duplicate() as ShaderMaterial
 	core.set_shader_parameter("crevice_darken", float(_k.core_darken))
+	core.set_shader_parameter("far_lift_m", float(_k.core_far_lift_m))
 	_core(world, core)
 	# The entrance curtain stays for the player near it, but from a distance
 	# it read as a flat white card on the crag face: limit its draw range.
@@ -68,7 +70,14 @@ func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
 	if passage != null:
 		for child: Node in passage.get_children():
 			if child is MeshInstance3D:
+				_ranged[child] = [(child as MeshInstance3D).visibility_range_end, float(_k.curtain_visible_to_m)]
 				(child as MeshInstance3D).visibility_range_end = float(_k.curtain_visible_to_m)
+	for path: String in _k.get("near_only_nodes", []):
+		var near := veilfall.get_node_or_null(path) as Node3D
+		if near != null:
+			for child: Node in near.find_children("*", "GeometryInstance3D", true, false):
+				_ranged[child] = [(child as GeometryInstance3D).visibility_range_end, float(_k.near_only_range_m)]
+				(child as GeometryInstance3D).visibility_range_end = float(_k.near_only_range_m)
 	for path: String in _k.hide_nodes:
 		var previous := veilfall.get_node_or_null(path) as Node3D
 		if previous != null:
@@ -86,6 +95,53 @@ func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
 	if far != null:
 		for fogged: ShaderMaterial in [water, mist, material, core]:
 			far.call("register_fogged", fogged)
+	_near_restore_setup(veilfall)
+
+
+## Net-improvement guard: near the entrance the kitbash gave the close
+## cascade view a dark slab and closed the lit passage. Inside
+## `near_restore_m` of the entrance everything this pass changed is undone
+## (own geometry hidden, hidden nodes shown, draw ranges restored), so the
+## close view renders exactly as with the flag off.
+var _restore_anchor: Node3D
+var _restored := false
+var _hidden_previous: Array[Node3D] = []
+var _ranged: Dictionary = {}
+
+
+func _near_restore_setup(veilfall: Node3D) -> void:
+	_restore_anchor = veilfall.get_node_or_null("WaterfallPassage") as Node3D
+	if _restore_anchor == null or float(_k.get("near_restore_m", 0.0)) <= 0.0:
+		return
+	for path: String in _k.hide_nodes:
+		var previous := veilfall.get_node_or_null(path) as Node3D
+		if previous != null:
+			_hidden_previous.append(previous)
+	set_process(true)
+
+
+func _process(_delta: float) -> void:
+	if _restore_anchor == null:
+		return
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		return
+	var offset := camera.global_position - _restore_anchor.global_position
+	var distance := Vector2(offset.x, offset.z).length()
+	var radius := float(_k.near_restore_m)
+	var near := distance < radius if not _restored else distance < radius + float(_k.near_restore_hysteresis_m)
+	if near == _restored:
+		return
+	_restored = near
+	for child: Node in get_children():
+		if child is Node3D:
+			(child as Node3D).visible = not near
+	for previous: Node3D in _hidden_previous:
+		previous.visible = near
+	for instance: GeometryInstance3D in _ranged:
+		if is_instance_valid(instance):
+			var ranges: Array = _ranged[instance]
+			instance.visibility_range_end = float(ranges[0]) if near else float(ranges[1])
 
 
 ## The r2 water as only its viewer-facing half-sheet (outward on drops, up on
@@ -246,7 +302,11 @@ func _world(u: float, w: float) -> Vector2:
 
 func _ground(world: Node3D, u: float, w: float) -> float:
 	var xz := _world(u, w)
-	var y := float(world.call("ground_height_at", xz.x, xz.y))
+	# Raw terrain: world.ground_height_at answers with the Veilfall interior's
+	# built floors under the mountain first, which sank the skin below the
+	# visible slope along those footprints.
+	var terrain: Variant = world.get("terrain")
+	var y := float(TERRAIN_HEIGHT.height_at(terrain, xz.x, xz.y)) if terrain != null else float(world.call("ground_height_at", xz.x, xz.y))
 	return y if is_finite(y) else -8.0
 
 
@@ -332,7 +392,9 @@ func _column(world: Node3D, rng: RandomNumberGenerator, u: float, w: float, g: f
 		var width := minf(g * rng.randf_range(1.15, 1.75), radius * 2.2)
 		var height := width * rng.randf_range(1.2, 2.4)
 		var piece := "spire_%d" % rng.randi_range(1, 3)
-		if rng.randf() < float(_k.boulder_column_share):
+		# Near the foot a lone pointed spire read as a regular saw-tooth row
+		# along the island base: only boulders there.
+		if rng.randf() < float(_k.boulder_column_share) or y - height < ground + float(_k.spire_min_above_ground_m):
 			# Rounded installed boulders stood tall break the boxy column read.
 			piece = "boulder_%d" % rng.randi_range(1, 3)
 			height = width * rng.randf_range(0.9, 1.6)
@@ -363,6 +425,9 @@ func _add(id: String, u: float, w: float, bottom: float, width: float, height: f
 	var aabb: AABB = _pieces[id].aabb
 	var scale := Vector3(width * rng.randf_range(0.8, 1.25) / maxf(0.01, aabb.size.x), height / maxf(0.01, aabb.size.y), width * rng.randf_range(0.7, 1.3) / maxf(0.01, aabb.size.z))
 	var lean := deg_to_rad(float(_k.lean_deg))
+	if id.begins_with("boulder"):
+		# Blobby boulders read best tumbled freely; no repeated facing.
+		lean = deg_to_rad(float(_k.boulder_tumble_deg))
 	var basis := Basis.from_euler(Vector3(rng.randf_range(-lean, lean), rng.randf() * TAU, rng.randf_range(-lean, lean))) * Basis.from_scale(scale)
 	var xz := _world(u, w)
 	var centre := aabb.get_center()
@@ -394,8 +459,14 @@ func _core(world: Node3D, material: Material) -> void:
 	var columns := int((float(extent[1]) - float(extent[0])) / g) + 1
 	var rows := int((float(extent[3]) - float(extent[2])) / g) + 1
 	var heights: Array = []
+	var far_only: Array = []
+	var soft: Array = []
+	var lifts: Array = []
 	for i in columns:
 		var line: Array[float] = []
+		var far_line: Array[bool] = []
+		var soft_line: Array[bool] = []
+		var lift_line: Array[float] = []
 		for j in rows:
 			var u := float(extent[0]) + g * i
 			var w := float(extent[2]) + g * j
@@ -411,29 +482,121 @@ func _core(world: Node3D, material: Material) -> void:
 				# Drape: steep bare cone outside the walk corridor wears the
 				# same dark rock skin, so no smooth cone face reads between
 				# pieces. Walkable low ground and the corridor stay terrain.
-				var drape := ground > float(_k.drape_min_ground_y) and _corridor_distance(u, w) > 2.0 and Vector2(u, w).length() < float(_k.max_radius_m)
-				top = ground + float(_k.drape_offset_m) if drape else ground - 4.0
+				var inside := Vector2(u, w).length() < float(_k.max_radius_m)
+				var walk := _corridor_distance(u, w) <= 2.0
+				var drape := ground > float(_k.drape_min_ground_y) and not walk and inside
+				# The walk corridor gets a thin rock-path skin (a hand's depth),
+				# so it reads as a worn ledge path, not a pale cone strip.
+				var path := walk and ground > float(_k.path_skin_min_ground_y) and inside and w > float(_k.path_skin_from_outward_m)
+				# Entrance stand and passage gorge: natural terrain up close,
+				# a rock skin only from distance (separate far-only mesh).
+				var gorge := walk and inside and not path and ground > float(_k.path_skin_min_ground_y)
+				# Low open ground next to the drape: the drape's foot dips into
+				# it, so its lower edge follows the terrain, not grid teeth.
+				var fringe := not walk and inside and not drape and ground > float(_k.drape_fringe_min_ground_y)
+				if drape:
+					top = ground + float(_k.drape_offset_m)
+				elif path or gorge:
+					top = ground + float(_k.path_skin_offset_m)
+				elif fringe:
+					top = ground - float(_k.drape_fringe_sink_m)
+				else:
+					top = ground - 4.0
+				far_line.append(gorge)
+				soft_line.append(drape or fringe)
+				lift_line.append(0.0 if fringe else 1.0)
+			else:
+				far_line.append(false)
+				soft_line.append(true)
+				lift_line.append(1.0)
 			line.append(top)
 		heights.append(line)
+		far_only.append(far_line)
+		soft.append(soft_line)
+		lifts.append(lift_line)
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var far_surface := SurfaceTool.new()
+	far_surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var far_count := 0
 	for i in columns - 1:
 		for j in rows - 1:
 			var corners: Array[Vector3] = []
+			var weights: Array[float] = []
 			var raised := true
+			var far := false
+			var softened := true
+			var any_up := false
 			for c: Vector2i in [Vector2i(i, j), Vector2i(i + 1, j), Vector2i(i + 1, j + 1), Vector2i(i, j + 1)]:
 				var xz := _world(float(extent[0]) + g * c.x, float(extent[2]) + g * c.y)
 				var y: float = heights[c.x][c.y]
+				far = far or bool(far_only[c.x][c.y])
 				# Only cells raised at every corner: a partly raised cell at a
 				# cleared edge would draw a straight-edged dark slab.
-				raised = raised and y > _ground(world, float(extent[0]) + g * c.x, float(extent[2]) + g * c.y)
+				var up := y > _ground(world, float(extent[0]) + g * c.x, float(extent[2]) + g * c.y)
+				raised = raised and up
+				any_up = any_up or up
+				softened = softened and bool(soft[c.x][c.y])
 				corners.append(Vector3(xz.x, y, xz.y))
-			if not raised:
+				weights.append(float(lifts[c.x][c.y]))
+			# A partly raised cell is drawn only where drape meets open low
+			# ground (it dips under the terrain there); never at a corridor.
+			if not raised and not (softened and any_up):
 				continue
-			_triangle(surface, corners[0], corners[1], corners[2], Vector3.UP)
-			_triangle(surface, corners[0], corners[2], corners[3], Vector3.UP)
+			var target_surface := far_surface if far else surface
+			far_count += 1 if far else 0
+			_lift_triangle(target_surface, [corners[0], corners[1], corners[2]], [weights[0], weights[1], weights[2]])
+			_lift_triangle(target_surface, [corners[0], corners[2], corners[3]], [weights[0], weights[2], weights[3]])
 	var mesh := MeshInstance3D.new()
 	mesh.name = "CragCore"
 	mesh.mesh = surface.commit()
 	mesh.material_override = material
 	add_child(mesh)
+	if far_count > 0:
+		var far_mesh := MeshInstance3D.new()
+		far_mesh.name = "CragGorgeFarSkin"
+		# Visibility range is measured from the node, so place the node at the
+		# skin's own centre and express its vertices relative to it.
+		var arrays := far_surface.commit_to_arrays()
+		var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var centre := Vector3.ZERO
+		for v: Vector3 in vertices:
+			centre += v
+		centre /= float(maxi(1, vertices.size()))
+		for k in vertices.size():
+			vertices[k] -= centre
+		arrays[Mesh.ARRAY_VERTEX] = vertices
+		var far_array_mesh := ArrayMesh.new()
+		far_array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+		far_mesh.mesh = far_array_mesh
+		far_mesh.position = centre
+		far_mesh.material_override = material
+		far_mesh.visibility_range_begin = float(_k.gorge_skin_visible_from_m)
+		add_child(far_mesh)
+
+
+## Core triangle facing up; vertex colour red carries the far-lift weight
+## (0 on the fringe that dips under open ground, so the distance lift that
+## keeps the skin above Terrain3D's distant LOD does not raise its foot back
+## out of the terrain as a stepped edge).
+static func _lift_triangle(surface: SurfaceTool, points: Array, weights: Array) -> void:
+	var a: Vector3 = points[0]
+	var b: Vector3 = points[1]
+	var c: Vector3 = points[2]
+	var wb: float = weights[1]
+	var wc: float = weights[2]
+	var normal := (b - a).cross(c - a)
+	if normal.y < 0.0:
+		var swap := b
+		b = c
+		c = swap
+		wb = weights[2]
+		wc = weights[1]
+		normal = -normal
+	var order := [[a, float(weights[0])], [b, wb], [c, wc]]
+	for row: Array in order:
+		var point: Vector3 = row[0]
+		surface.set_normal(normal.normalized())
+		surface.set_color(Color(float(row[1]), 1.0, 1.0, 1.0))
+		surface.set_uv(Vector2(point.x, point.z))
+		surface.add_vertex(point)

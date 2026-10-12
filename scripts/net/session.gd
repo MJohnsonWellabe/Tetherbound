@@ -1319,6 +1319,16 @@ func _retry_foundation_events_scan() -> void:
 ## durable, then one character write followed by one world write. A refusal
 ## stops the batch: every hit is either fully applied or untouched.
 const MASTERY_BATCH_DEFAULT := 64
+## Each hit still costs ~0.3-0.4 s of record validation on the host (measured
+## 12 Oct, tidewake_07 save), so an unbounded batch froze one frame for ~30 s.
+## A batch stops starting new hits once this much time has passed; the next
+## scan (0.1 s later while a backlog remains) continues.
+const MASTERY_BATCH_BUDGET_MS := 500
+## One flush (a character write and a world write, ~1 s on a long campaign's
+## save) is paid per batch, so a batch takes at least this many hits before
+## the time budget can stop it (routes-east r13: one hit alone exceeded the
+## budget, so every batch paid a full flush for a single hit).
+const MASTERY_BATCH_MIN_HITS := 8
 
 func _drain_local_mastery_batch(peer: int, ordered_work: Array, from_index: int, world: RefCounted, settle: Array) -> Dictionary:
 	var limit := int(_cfg("foundation_mastery_batch_max", MASTERY_BATCH_DEFAULT))
@@ -1341,7 +1351,11 @@ func _drain_local_mastery_batch(peer: int, ordered_work: Array, from_index: int,
 	rpc.call("begin_deferred_publication")
 	var id := ESSENCE.training_delivery_id(world.reward_delivery_namespace, character)
 	var processed := 0
+	var started_ms := Time.get_ticks_msec()
+	var budget_ms := int(_cfg("foundation_mastery_batch_budget_ms", MASTERY_BATCH_BUDGET_MS))
 	for candidate: Dictionary in works:
+		if processed >= int(_cfg("foundation_mastery_batch_min_hits", MASTERY_BATCH_MIN_HITS)) \
+				and Time.get_ticks_msec() - started_ms >= budget_ms: break
 		var duty: Dictionary = candidate.duty
 		var context: Dictionary = duty.context.duplicate(true)
 		context.character_id = character
@@ -5602,13 +5616,22 @@ func _owner_training_row() -> Dictionary:
 	if game == null or not game.get("local") is RefCounted or not game.get("world") is RefCounted: return {}
 	var world: RefCounted = game.get("world")
 	var character := str(game.get("local").character_id)
-	var key := [world.get_instance_id(), world.reward_delivery_namespace, world.world_id, character,
-		world.reward_deliveries.size(), world.reward_deliveries.hash()]
-	# The hash only finds the entry; the content itself must match too.
-	if key != _owner_training_row_key or world.reward_deliveries != _owner_training_row_deliveries:
-		_owner_training_row_value = TRAINING_WORLD.training_owner_row(world.reward_deliveries, world.reward_delivery_namespace, world.world_id, character)
+	# The owner row depends only on this character's training/building rows.
+	# Keying on the whole of reward_deliveries (hash, deep compare and a full
+	# deep copy on every change) cost O(every retained row) on each of the
+	# ~20 calls per landed mastery hit (P0, 12 Oct); the subset is compared
+	# exactly, so the answer is the same training_owner_row() verdict.
+	var relevant := {}
+	for id: Variant in world.reward_deliveries:
+		var raw: Variant = world.reward_deliveries[id]
+		if raw is Dictionary and raw.get("character_id") == character \
+				and raw.get("kind") in ["creature_training", "altar_building"]:
+			relevant[id] = raw
+	var key := [world.get_instance_id(), world.reward_delivery_namespace, world.world_id, character, relevant.size()]
+	if key != _owner_training_row_key or relevant != _owner_training_row_deliveries:
+		_owner_training_row_value = TRAINING_WORLD.training_owner_row(relevant, world.reward_delivery_namespace, world.world_id, character)
 		_owner_training_row_key = key
-		_owner_training_row_deliveries = world.reward_deliveries.duplicate(true)
+		_owner_training_row_deliveries = relevant.duplicate(true)
 	return _owner_training_row_value.duplicate(true)
 
 
@@ -6561,22 +6584,70 @@ func _rpc_portal_owner_notice(envelope: Dictionary, permit_id: String, refused: 
 
 
 func _portal_envelope_valid(peer: int, envelope: Dictionary) -> bool:
+	return _portal_request_disposition(peer, envelope) == PORTAL_REQUEST_VALID
+
+
+const PORTAL_REQUEST_VALID := "valid"
+const PORTAL_REQUEST_NOT_READY := "not_ready"
+const PORTAL_REQUEST_INVALID := "invalid"
+## The exact refusal the arch and Home Key hold and resend (portal_arch.gd and
+## home_key.gd NOT_READY).
+const PORTAL_NOT_READY_REASON := "Your authoritative travel state is not ready."
+
+
+func _portal_request_disposition(peer: int, envelope: Dictionary) -> String:
+	if not is_host() or not portal_runtime_ready(): return PORTAL_REQUEST_INVALID
 	var game := _game()
-	return (is_host() and portal_runtime_ready() and game != null and game.get("world") != null and
-		envelope.size() == 5 and envelope.get("request_id") is String and envelope.request_id.length() <= 192 and
-		envelope.request_id.begins_with(_altar_epoch + ":") and envelope.get("session_epoch") == _altar_epoch and
-		envelope.get("character_id") == _authority_character(peer) and not str(envelope.character_id).is_empty() and
-		envelope.get("world_instance_id") == game.get("world").reward_delivery_namespace and
-		envelope.get("payload") is Dictionary and PORTAL_POLICY.valid_payload(envelope.payload))
+	var world: Variant = game.get("world") if game != null else null
+	return portal_request_disposition(envelope, _altar_epoch,
+		world.reward_delivery_namespace if world != null else null, _authority_character(peer))
+
+
+## F11#3 #43 (2026-10-12): a well-formed request from this session that
+## arrives while the host is transiently unready -- no host world (a realm
+## swap) or the sender's character not bound yet (a rejoin) -- is NOT_READY,
+## answered so the requester's hold-and-resend retries it. It used to be
+## dropped without a reply and the guest waited out its whole budget. A
+## malformed, foreign-session or mismatched request is still INVALID and
+## dropped. `world_namespace` is null when the host has no world.
+static func portal_request_disposition(envelope: Dictionary, host_epoch: String,
+		world_namespace: Variant, bound_character: String) -> String:
+	if envelope.size() != 5 or not envelope.get("request_id") is String or envelope.request_id.length() > 192 \
+		or not envelope.request_id.begins_with(host_epoch + ":") or envelope.get("session_epoch") != host_epoch \
+		or not envelope.get("payload") is Dictionary or not PORTAL_POLICY.valid_payload(envelope.payload):
+		return PORTAL_REQUEST_INVALID
+	if world_namespace == null or bound_character.is_empty():
+		return PORTAL_REQUEST_NOT_READY if envelope.get("character_id") is String \
+			and not envelope.character_id.is_empty() and envelope.get("world_instance_id") is String \
+			and not envelope.world_instance_id.is_empty() else PORTAL_REQUEST_INVALID
+	if envelope.get("character_id") != bound_character or str(envelope.character_id).is_empty() \
+		or envelope.get("world_instance_id") != world_namespace:
+		return PORTAL_REQUEST_INVALID
+	return PORTAL_REQUEST_VALID
 
 
 func _host_portal_action(peer: int, envelope: Dictionary) -> void:
-	if not _portal_envelope_valid(peer, envelope): return
+	var disposition := _portal_request_disposition(peer, envelope)
+	if disposition == PORTAL_REQUEST_NOT_READY:
+		print("[portal] request %s from peer %d arrived while the host is not ready; answered NOT_READY" % [
+			str(envelope.request_id), peer])
+		_deliver_portal_reply(peer, {"ok": false, "reason": PORTAL_NOT_READY_REASON, "code": PORTAL_REQUEST_NOT_READY,
+			"request_id": envelope.request_id, "kind": envelope.payload.kind, "character_id": envelope.character_id,
+			"world_instance_id": envelope.world_instance_id, "session_epoch": envelope.session_epoch})
+		return
+	if disposition != PORTAL_REQUEST_VALID:
+		var game := _game()
+		print("[portal] dropped invalid request %s from peer %d (runtime_ready=%s world=%s epoch_match=%s character_match=%s)" % [
+			str(envelope.get("request_id", "")), peer, str(portal_runtime_ready()), str(game != null and game.get("world") != null),
+			str(envelope.get("session_epoch") == _altar_epoch), str(envelope.get("character_id") == _authority_character(peer))])
+		return
 	var arrival := get_node_or_null(^"FoundationComposition/PortalArrival")
-	if arrival != null and arrival.call("original_pending", peer, envelope) == true: return # Existing exact permit/checkpoint owns retries.
+	if arrival != null and arrival.call("original_pending", peer, envelope) == true:
+		print("[portal] request %s from peer %d held by an existing pending permit" % [str(envelope.get("request_id", "")), peer])
+		return # Existing exact permit/checkpoint owns retries.
 	var context := _host_portal_context(peer)
 	if context.is_empty():
-		_portal_reply(peer, envelope, {"ok": false, "reason": "Your authoritative travel state is not ready."})
+		_portal_reply(peer, envelope, {"ok": false, "reason": PORTAL_NOT_READY_REASON})
 		return
 	var cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json"))
 	var stones: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/waystones.json"))
@@ -6758,6 +6829,10 @@ func _portal_reply(peer: int, envelope: Dictionary, result: Dictionary) -> void:
 	reply.merge({"request_id": envelope.request_id, "kind": envelope.payload.kind,
 		"character_id": envelope.character_id, "world_instance_id": envelope.world_instance_id,
 		"session_epoch": envelope.session_epoch}, true)
+	_deliver_portal_reply(peer, reply)
+
+
+func _deliver_portal_reply(peer: int, reply: Dictionary) -> void:
 	if peer == local_peer_id(): _receive_portal_reply.call_deferred(reply)
 	else: rpc_id(peer, "_rpc_portal_result", reply)
 

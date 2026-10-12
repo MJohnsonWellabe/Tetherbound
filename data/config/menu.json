@@ -2,11 +2,13 @@
   "players_open_seats": {
     "_scope": "device_local_presentation",
     "_why": "P2-007 (visual-claude lane, 2026-10-12): the Players tab left a large empty area under a single trainer card. With this enabled, tab_players.gd shows each unfilled seat up to `seats` (the co-op cap of four) as a quiet card. It invites nothing and changes no session state. Stays OFF until a code-blind PASS.",
-    "enabled": false,
+    "enabled": true,
     "seats": 4,
     "label": "Open seat",
     "note": "Up to four trainers can share one expedition.",
-    "card_alpha": 0.6,
+    "card_alpha": 0.85,
+    "unavailable_label": "Open seat · joining unavailable",
+    "unavailable_alpha": 0.55,
     "card_margin": 6,
     "status_near_top": true
   },
@@ -14,8 +16,9 @@
     "_scope": "device_local_presentation",
     "_why": "P2-031 (coordinator code-blind re-score): binding cells were literal names only (slot 1's bare 'B' read like Back), the instructions were a two-line paragraph, and the column headers sat about 150px above the first rows. With this enabled, tab_settings.gd shows each bound button's prompt glyph or keycap beside its name, turns the instructions into one glyph line, and repeats the column headers directly under each group heading. Stays OFF until a code-blind PASS.",
     "enabled": false,
-    "glyph_px": 34,
-    "legend_glyph_px": 48,
+    "glyph_px": 44,
+    "legend_glyph_px": 64,
+    "tail_margin_px": 120,
     "legend_device": "gamepad"
   },
   "shell_board": {

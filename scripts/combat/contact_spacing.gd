@@ -48,6 +48,35 @@ static func config() -> Dictionary:
 	return cfg if cfg is Dictionary else {}
 
 
+## Named presentation fixes retain global defaults for every other pair.
+## Only footprint support and correction speed are overridable here.
+static func config_for_pair(a: Node, b: Node, cfg: Dictionary = config()) -> Dictionary:
+	var overrides: Dictionary = cfg.get("named_overrides", {})
+	for actor: Node in [a, b]:
+		if not is_instance_valid(actor): continue
+		var id := str(actor.get_meta("stormwood_named_encounter", ""))
+		var profile: Dictionary = overrides.get(id, {})
+		if not bool(profile.get("enabled", false)): continue
+		var resolved := cfg.duplicate()
+		for key: String in ["footprint_shape", "push_speed_mps"]:
+			if profile.has(key): resolved[key] = profile[key]
+		return resolved
+	return cfg
+
+
+static func _extent_towards(body: Node, other: Node3D, cfg: Dictionary) -> float:
+	var method := "contact_box_extent_towards" if cfg.get("footprint_shape", "ellipse") == "render_box" else "contact_extent_towards"
+	if body.has_method(method) and (body as Node3D).is_inside_tree():
+		return float(body.call(method, other.global_position))
+	return float(body.call("contact_extent_towards", other.global_position)) if body.has_method("contact_extent_towards") and (body as Node3D).is_inside_tree() else _radius(body)
+
+
+static func _maximum_extent(body: Node, cfg: Dictionary) -> float:
+	if cfg.get("footprint_shape", "ellipse") == "render_box" and body.has_method("contact_box_half_diagonal"):
+		return float(body.call("contact_box_half_diagonal"))
+	return float(body.call("contact_half_length")) if body.has_method("contact_half_length") else _radius(body)
+
+
 static func enabled(cfg: Dictionary = config()) -> bool:
 	return bool(cfg.get("enabled", true))
 
@@ -90,10 +119,9 @@ static func pair_need(a: Node, b: Node, cfg: Dictionary = config()) -> float:
 	if not enabled(cfg) or a == null or b == null or not is_instance_valid(a) or not is_instance_valid(b) \
 			or not a is Node3D or not b is Node3D:
 		return 0.0
-	var ea := float(a.call("contact_extent_towards", (b as Node3D).global_position)) \
-		if a.has_method("contact_extent_towards") and (a as Node3D).is_inside_tree() else _radius(a)
-	var eb := float(b.call("contact_extent_towards", (a as Node3D).global_position)) \
-		if b.has_method("contact_extent_towards") and (b as Node3D).is_inside_tree() else _radius(b)
+	cfg = config_for_pair(a, b, cfg)
+	var ea := _extent_towards(a, b as Node3D, cfg)
+	var eb := _extent_towards(b, a as Node3D, cfg)
 	return min_separation(ea, eb, _radius(a), _radius(b), cfg)
 
 
@@ -103,8 +131,9 @@ static func pair_need(a: Node, b: Node, cfg: Dictionary = config()) -> float:
 static func pair_reach_need(a: Node, b: Node, cfg: Dictionary = config()) -> float:
 	if not enabled(cfg) or a == null or b == null or not is_instance_valid(a) or not is_instance_valid(b):
 		return 0.0
-	var ea := float(a.call("contact_half_length")) if a.has_method("contact_half_length") else _radius(a)
-	var eb := float(b.call("contact_half_length")) if b.has_method("contact_half_length") else _radius(b)
+	cfg = config_for_pair(a, b, cfg)
+	var ea := _maximum_extent(a, cfg)
+	var eb := _maximum_extent(b, cfg)
 	return min_separation(ea, eb, _radius(a), _radius(b), cfg)
 
 

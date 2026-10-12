@@ -230,6 +230,31 @@ func test_joined_receiver_timeout_ends_existing_session_path_and_cleans_pending_
 	assert_eq(transition.get_parent().kicked.size(), 1, "timeout cleanup is idempotent")
 	transition.get_parent().free()
 
+## F11#3: a guest's destination build longer than TIMEOUT_MS on a slow machine
+## failed its crossing mid-load. A loading receiver's keep-alive moves the
+## deadline forward, capped at LOADING_MAX_MS; nothing else moves it.
+func test_a_loading_receiver_keeps_its_transaction_alive_up_to_the_cap() -> void:
+	var tx := _transaction("loading")
+	tx["loading_started"] = 1000
+	tx["deadline"] = 1000 + TRANSITION.TIMEOUT_MS
+	assert_true(TRANSITION.extend_loading_deadline(tx, 100000), "a ping while loading extends")
+	assert_eq(int(tx.deadline), 100000 + TRANSITION.TIMEOUT_MS)
+	assert_false(TRANSITION.extend_loading_deadline(tx, 50000), "never moves the deadline backwards")
+	assert_eq(int(tx.deadline), 100000 + TRANSITION.TIMEOUT_MS)
+	assert_true(TRANSITION.extend_loading_deadline(tx, 1000 + TRANSITION.LOADING_MAX_MS))
+	assert_eq(int(tx.deadline), 1000 + TRANSITION.LOADING_MAX_MS, "capped at the loading maximum")
+	assert_false(TRANSITION.extend_loading_deadline(tx, 1000 + TRANSITION.LOADING_MAX_MS * 2), "no extension past the cap")
+	for phase: String in ["requests_closed", "draining", "admitted"]:
+		var other := _transaction(phase)
+		other["deadline"] = 5000
+		assert_false(TRANSITION.extend_loading_deadline(other, 4000), "%s is not extended" % phase)
+		assert_eq(int(other.deadline), 5000)
+	var failed := _transaction("loading")
+	failed["deadline"] = 5000
+	failed["failure_reported"] = true
+	assert_false(TRANSITION.extend_loading_deadline(failed, 4000), "a reported failure stays failed")
+
+
 func _transaction(phase: String) -> Dictionary:
 	return {"mover": 20, "from": "meadows", "to": "water", "phase": phase}
 

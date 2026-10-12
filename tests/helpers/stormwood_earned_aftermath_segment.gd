@@ -29,10 +29,7 @@ func _continue_waterward() -> void:
 		return
 	_note("ACCEPTED the Stormheart at five: kept %s, released belt row %d; world offer fact and personal receipt saved"
 		% [_stormheart_uid, RELEASED_ROW])
-	var view := ending.get_node_or_null("WaterwardView") as Node3D
-	if view == null or not await _core_south_ring() or not await _activate_exact(ending, view,
-			Vector2(view.global_position.x, view.global_position.z + 2), "Waterward view") \
-			or not await _drain_exact("stormwood_waterward_aftermath"):
+	if not await _view_waterward(ending):
 		return
 	for flag in ["stormwood:waterward_revealed", WATER_KEY, "waterward_route_revealed", "stormwood:chapter_complete"]:
 		if not await _receipt(flag):

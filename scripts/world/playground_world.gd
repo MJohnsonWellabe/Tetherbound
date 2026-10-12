@@ -869,7 +869,12 @@ func _ready() -> void:
 	if not simulation_only:
 		_build_water()
 		BOOT_LOG.phase("playground: water built (pond, stream, reeds — counts above)")
+	var bulk_vegetation := get_node_or_null(^"Vegetation")
+	if bulk_vegetation != null and bulk_vegetation.has_method("begin_bulk_clear"):
+		bulk_vegetation.call("begin_bulk_clear")
 	await _build_settlement()
+	if is_instance_valid(bulk_vegetation) and bulk_vegetation.has_method("end_bulk_clear"):
+		bulk_vegetation.call("end_bulk_clear")
 	BOOT_LOG.phase("playground: settlement (house, village, signpost, landmark, perimeter, harvest nodes) built")
 	await _shell_build.call("step", "settlement")
 	# CL-W1. The whole hook: `alpha_pins.gd` self-ticks and shares no state with
@@ -1585,6 +1590,7 @@ func _build_settlement() -> void:
 	add_child(relay_npcs)
 	relay_npcs.call("build", _player, VILLAGE_NPCS.RELAY_CONFIG_PATH)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: relay_npcs")
 
 	# WORLD-CONTENT: the Pond fisher (docs/specs/BAND1_ROUTE_CONTRACT.md place
 	# 3), a third list for the same placer -- see PondNPCs config's own header
@@ -1594,18 +1600,21 @@ func _build_settlement() -> void:
 	add_child(pond_npcs)
 	pond_npcs.call("build", _player, VILLAGE_NPCS.POND_CONFIG_PATH)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: pond_npcs")
 
 	var trainers: Node3D = TRAINER_NPCS.new()
 	trainers.name = "Trainers"
 	add_child(trainers)
 	trainers.call("build", _player)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: trainers")
 
 	var lost_companion_reunion: Node3D = LOST_COMPANION_REUNION.new()
 	lost_companion_reunion.name = "LostCompanionReunion"
 	add_child(lost_companion_reunion)
 	lost_companion_reunion.call("build", self, trainers)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: lost_companion_reunion")
 
 	# TOURNAMENT-1: the bracket board, in the north field behind the square.
 	# After the trainers so it stands in a settlement that is already built --
@@ -1617,21 +1626,25 @@ func _build_settlement() -> void:
 	add_child(tournament)
 	tournament.call("build", self)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: tournament")
 
 	var signpost: Node3D = SIGNPOST.new()
 	signpost.name = "Signpost"
 	add_child(signpost)
 	signpost.call("build", self, SIGNPOST_AT)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: signpost")
 
 	# Cloudreach Phase 1: the reusable Heart socket in the village and the
 	# permanent keyed realm arch at Storm Road. Both read/write central durable
 	# state; rebuilding this scene cannot duplicate either reward.
 	_build_realm_handoff()
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: _build_realm_handoff")
 
 	_build_trailhead_signposts()
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: _build_trailhead_signposts")
 
 	# T1-HALL (2026-08-30): the detached castle silhouette this call built at
 	# `landmark.gd`'s own `SITE` (150,7595) retired. The owner's directive is
@@ -1645,20 +1658,26 @@ func _build_settlement() -> void:
 
 	_build_road_gate()
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: _build_road_gate")
 	_build_sigil_gate()
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: _build_sigil_gate")
 	_build_broken_cart()
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: _build_broken_cart")
 	_build_meadowhart_herd_visit()
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: _build_meadowhart_herd_visit")
 	_build_river_nest_clear()
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: _build_river_nest_clear")
 
 	var watchtower: Node3D = WATCHTOWER_LANDMARK.new()
 	watchtower.name = "RuinedWatchtower"
 	add_child(watchtower)
 	watchtower.call("build", self, WATCHTOWER_AT, WATCHTOWER_FACING_DEG)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: watchtower")
 
 	# The map's Ridgeline Watch is the patrol posting around (-250,6490), not
 	# the Broken Tower ruin above. Give that named place its own elevated read.
@@ -1668,6 +1687,7 @@ func _build_settlement() -> void:
 	if not bool(ridgeline_watch.call("build", self)):
 		push_error("Ridgeline Watch failed to build")
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: ridgeline_watch")
 
 	# SC14: the South Bridge over the south gully, and the leaf across it.
 	# After the road gate so the two gates build in the order the player meets
@@ -1678,6 +1698,7 @@ func _build_settlement() -> void:
 	add_child(south_bridge)
 	south_bridge.call("build", self)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: south_bridge")
 
 	# SD16: the Old Quarry past it — foundations and the Tether conduit run.
 	# Its Rootstone deposits are ordinary `harvest.json` nodes and stand up in
@@ -1688,6 +1709,7 @@ func _build_settlement() -> void:
 	add_child(quarry)
 	quarry.call("build", self)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: quarry")
 
 	# SE23: the Tether Relay Station further along the same bearing the
 	# quarry's conduit run leaves on. After the quarry because that is the
@@ -1700,6 +1722,7 @@ func _build_settlement() -> void:
 	add_child(relay)
 	relay.call("build", self)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: relay")
 	# SE21: the river that divides the deeper Meadows. Only its recovery
 	# volumes are built here -- the channel is terrain (the bake cut it) and
 	# the water is the water layer's.
@@ -1708,6 +1731,7 @@ func _build_settlement() -> void:
 	add_child(river)
 	river.call("build", self)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: river")
 
 	# SE22: the Old Mill Crossing, the one authored way over that river.
 	var mill_crossing: Node3D = MILL_CROSSING.new()
@@ -1715,6 +1739,7 @@ func _build_settlement() -> void:
 	add_child(mill_crossing)
 	mill_crossing.call("build", self)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: mill_crossing")
 	STRUCTURE_VISIBILITY_RANGE.apply(mill_crossing, "mill_crossing")
 
 	# SA4: the severed outward roads. Before the boundary ring because they
@@ -1725,6 +1750,7 @@ func _build_settlement() -> void:
 	add_child(spokes)
 	spokes.call("build", self)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: spokes")
 	STRUCTURE_VISIBILITY_RANGE.apply(spokes, "severed_spokes")
 	print("[playground] severed spokes standing: %s" % ", ".join(spokes.call("built")))
 
@@ -1733,6 +1759,7 @@ func _build_settlement() -> void:
 	add_child(perimeter)
 	perimeter.call("build", self, _player, _spawn_position)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: perimeter")
 
 	_place_harvest_nodes()
 	# The harvest nodes remain the grove's functional trees. This collisionless
@@ -1746,6 +1773,7 @@ func _build_settlement() -> void:
 		if not bool(ironwood_grove.call("build", self)):
 			push_error("Ironwood Grove presentation failed to build")
 		await _shell_build.call("breathe")
+		BOOT_LOG.phase("settlement: ironwood_grove")
 	_place_farm_plots()
 	_place_tms()
 	_place_item_caches()
@@ -1753,10 +1781,13 @@ func _build_settlement() -> void:
 	_place_sunstone()
 	await _build_burrow_warrens()
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: _build_burrow_warrens")
 	await _build_stronghold()
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: _build_stronghold")
 	_build_stronghold_climax()
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: _build_stronghold_climax")
 
 	# SG44: the first Tether Rift collapses. Sky only -- a distant,
 	# non-enterable view past the storm road's seam, built last because it
@@ -1767,6 +1798,7 @@ func _build_settlement() -> void:
 	add_child(rift)
 	rift.call("build", self)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: rift")
 
 	# OP-0905-15/D110: the ground half of the same seam. No arch, no key
 	# prompt -- once the flag above lands, this rebuilds the storm road's own
@@ -1794,6 +1826,7 @@ func _build_settlement() -> void:
 	add_child(healing)
 	healing.call("build", self)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: healing")
 
 	var placer := BUILD_PLACER.new()
 	placer.name = "BuildPlacer"
@@ -1807,6 +1840,7 @@ func _build_settlement() -> void:
 	add_child(death)
 	death.call("build", self, _player, _spawn_position)
 	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: death")
 
 
 ## OF10-remainder: one small fingerpost per entry in `paths.trailheads`,
@@ -2251,6 +2285,15 @@ func _place_farm_plots() -> void:
 ## body, just an encounter that could not happen.
 func ground_height_at(x: float, z: float) -> float:
 	return TERRAIN_HEIGHT.height_at(_terrain, x, z)
+
+
+## [Terrain3DData, vertex_spacing] for a bulk sampler (map_baker.gd) that
+## would otherwise pay a dynamic call per sample; [] before the data exists.
+## height_from() over these is exactly ground_height_at().
+func terrain_height_source() -> Array:
+	if _terrain == null or not is_instance_valid(_terrain) or _terrain.get("data") == null:
+		return []
+	return [_terrain.get("data"), float(_terrain.get("vertex_spacing"))]
 
 
 func _load_terrain_config() -> Dictionary:

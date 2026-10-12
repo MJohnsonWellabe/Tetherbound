@@ -1,0 +1,10 @@
+P2-110 (loss result) and P2-111 (victory reward tiles). Each sheet is 1920x540: LEFT = before, RIGHT = after, each 960x540, Low/Compatibility (llvmpipe, xvfb).
+Tool: tools/phase2_capture_stormwood_fights.gd --ids=hollows_alpha (Voltarach) --seconds=2 --interval=5 --party-level=80 --input-policy=pilot --end-as=lost|won; frame hollows_alpha-99-after.png.
+DISCLOSED FIXTURE (proof rules v2, non-traversal criterion): the fight is ended at 2 s through combat_manager's own _begin_resolve("lost"/"won") (tests/capture_stormwood_b_named_fights.gd --end-as, 431e3dd4). Every run's log prints the disclosure. Because the loss is forced, the party HP bars stay full in both builds.
+After flags (local only): loss = hud.json loss_card + clarity_pass; win = clarity_pass.
+P2-110 lane self-check code-blind: after better, WEAK (close to PASS). A framed amber-edged "BATTLE LOST / Your creature is down and needs recovery." card reads as the fight's result; no red. At 960x540 the card's left edge clips the party list's right side (narrowed after this capture, not re-rendered).
+P2-111: NOT CAPTURED. The 99-after frame fires as the fight resolves, before the victory reward/moment card appears ("The wild creature is beaten." only). It needs a frame a few seconds later.
+
+ROUND 2 (before-after-loss-result-r2.jpg): the after side is 82c5357a + 0161942f, with hud.json loss_card and clarity_pass flipped on locally; same fixture (--end-as=lost, disclosed). The card now narrows the outcome band to +/-280 and uses three short lines.
+Lane self-check code-blind: after better, PASS. A bordered "BATTLE LOST / Your creature is down. / It needs recovery." panel reads as the fight result, with no overlap with the TEAM list, minimap, quest card or bottom bar; no red.
+P2-111 hold frame (before-after-win-hold.jpg, --after-hold=80, ~4 s after a forced _begin_resolve("won")): no reward or victory-acknowledgement card appears for hollows_alpha with this fixture, so P2-111 is still NOT captured. Re-scope needed (director reward path, a trainer win, or park).

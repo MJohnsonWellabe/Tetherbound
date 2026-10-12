@@ -34,6 +34,7 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 var _out_dir := "res://ralph/reports/VISUAL/phase2/meadows/catch_raw_main"
 var _seed := 2042
 var _biome := "meadows"
@@ -88,6 +89,13 @@ func _run() -> void:
 			_biome = arg.trim_prefix("--biome=")
 		elif arg == "--breakout-handback-only":
 			_breakout_handback_only = true
+		elif arg.begins_with("--framed="):
+			# P2-113 before/after: the same seed with catching.json's
+			# framed_camera flag forced off or on in this process only.
+			var framed: Dictionary = CATCH.config().get("framed_camera", {})
+			framed["enabled"] = arg.trim_prefix("--framed=") == "on"
+			CATCH.config()["framed_camera"] = framed
+			print("[catch] framed_camera.enabled=%s" % str(framed["enabled"]))
 	if _biome == "tidewake":
 		_scene = TIDEWAKE_SCENE
 	elif _biome == "stormwood":
@@ -147,16 +155,17 @@ func _run() -> void:
 		_finish()
 		return
 
-	var debug_hud: CanvasLayer = _world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
-	if debug_hud != null:
-		debug_hud.visible = false
-
 	await _walk_to_the_wild_creature()
 	await _engage()
 	if not bool(_manager.call("is_fighting")):
 		_failures.append("could not enter combat; nothing captured")
 		_finish()
 		return
+	# P2-113: hidden before the Engage press, the HUD swallowed it (the world
+	# interact routes through it); hide it only once the fight is live.
+	var debug_hud: CanvasLayer = _world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	if debug_hud != null:
+		debug_hud.visible = false
 	_ally = _director.call("ally_body") as Node3D
 	_log("fighting")
 
@@ -513,47 +522,101 @@ func _resting_orb() -> Node3D:
 	return throw.call("resting_orb") as Node3D
 
 
+## P2-113: the walk-up and single interact tap never admitted a fight in
+## Meadows or Stormwood ("could not enter combat"). This is
+## capture_named_fights_f10_6.gd's proven path instead: stand 4.5 m from the
+## wild (debug placement, disclosed), hide other wilds within 25 m so the
+## Engage offer's nearest-body rule names this one (disclosed), call the ally
+## out, and press interact only when the director's Engage offer is the
+## arbiter's actionable winner.
+var _hidden_wilds: Array[Node3D] = []
+
 func _walk_to_the_wild_creature() -> void:
-	var engage_range := float(MATH.config().get("flow", {}).get("engage_range", 6.0))
-	for i in 1800:
-		var to := _wild.global_position - _player.global_position
-		to.y = 0.0
-		if to.length() <= engage_range * 0.6:
-			break
-		_rig.set("yaw", atan2(-to.x, -to.z))
-		Input.action_press("move_forward")
-		await physics_frame
-	Input.action_release("move_forward")
-	for i in 10:
+	var at := _wild.global_position
+	for body: Node3D in (_director.call("wild_creatures") as Array):
+		if is_instance_valid(body) and body != _wild and body.global_position.distance_to(at) < 25.0:
+			body.visible = false
+			body.process_mode = Node.PROCESS_MODE_DISABLED
+			_hidden_wilds.append(body)
+	await _stand_beside_wild(4.5)
+	if _director.call("ally_body") == null:
+		await _tap(&"creature_recall")
+		for i in 90:
+			if _director.call("ally_body") != null:
+				break
+			await physics_frame
+	_log("stood beside the wild; hid %d neighbours" % _hidden_wilds.size())
+
+
+func _stand_beside_wild(distance: float) -> void:
+	var at := _wild.global_position
+	var away := _player.global_position - at
+	away.y = 0.0
+	away = away.normalized() if away.length() > 0.1 else Vector3(0, 0, 1)
+	var xz := Vector2(at.x + away.x * distance, at.z + away.z * distance)
+	var space := _player.get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(Vector3(xz.x, at.y + 60.0, xz.y), Vector3(xz.x, at.y - 60.0, xz.y))
+	query.exclude = [_player.get_rid()]
+	var hit := space.intersect_ray(query)
+	var ground: Vector3 = hit.position if not hit.is_empty() else Vector3(xz.x, at.y, xz.y)
+	_player.global_position = ground + Vector3.UP * 0.2
+	_player.velocity = Vector3.ZERO
+	var to := at - _player.global_position
+	_rig.set("yaw", atan2(-to.x, -to.z))
+	for i in 45:
 		await physics_frame
 
 
 func _engage() -> void:
-	# Engage is event-driven: `Input.action_press` sends no InputEvent, so the
-	# offer never saw it ("could not enter combat", 2026-10-12 visual-claude).
-	# Same physical joypad edge capture_named_fights_f10_6.gd::_tap sends.
-	var binding: InputEventJoypadButton = null
-	for event: InputEvent in InputMap.action_get_events("interact"):
+	var arbiter := get_first_node_in_group(&"interaction_arbiter")
+	for attempt in 900:
+		if bool(_manager.call("is_fighting")):
+			return
+		var candidate := _director.call("_engageable") as Node3D
+		var winner := arbiter.call("winning_provider") as Node if arbiter != null else null
+		var offer: Dictionary = arbiter.call("winner") if arbiter != null else {}
+		# The director names the nearest wild; follow it (the off run waited 40
+		# min on a different Bramblebun than the one first picked).
+		if candidate != null and candidate != _wild and winner == _director:
+			_wild = candidate
+		if candidate == _wild and winner == _director and bool(offer.get("actionable", false)) \
+				and INPUT_OWNER.current(self) == null and not paused:
+			_log("Engage offer '%s' -> pressing interact" % str(offer.get("label", "")))
+			await _tap(&"interact")
+			for i in 30:
+				if bool(_manager.call("is_fighting")):
+					return
+				await physics_frame
+		if attempt % 120 == 0:
+			_log("engage waiting: candidate=%s winner=%s offer=%s" % [str(candidate), str(winner), str(offer)])
+			if is_instance_valid(_wild) and _player.global_position.distance_to(_wild.global_position) > 5.5:
+				await _stand_beside_wild(4.0)
+		await physics_frame
+
+
+func _tap(action: StringName) -> void:
+	var binding: InputEvent = null
+	for event: InputEvent in InputMap.action_get_events(action):
 		if event is InputEventJoypadButton:
 			binding = event
 			break
 	if binding == null:
-		Input.action_press("interact")
-		await physics_frame
-		await physics_frame
-		Input.action_release("interact")
-	else:
-		var press := InputEventJoypadButton.new()
-		press.button_index = binding.button_index
-		press.pressed = true
-		Input.parse_input_event(press)
-		for i in 2:
+		Input.action_press(action)
+		for i in 3:
 			await physics_frame
-			await process_frame
-		var release := press.duplicate() as InputEventJoypadButton
-		release.pressed = false
-		Input.parse_input_event(release)
-	for i in 30:
+		Input.action_release(action)
+		return
+	var press := InputEventJoypadButton.new()
+	press.button_index = (binding as InputEventJoypadButton).button_index
+	press.pressed = true
+	Input.parse_input_event(press)
+	for i in 2:
+		await physics_frame
+		await process_frame
+	var release := press.duplicate() as InputEventJoypadButton
+	release.pressed = false
+	Input.parse_input_event(release)
+	for i in 2:
 		await physics_frame
 
 

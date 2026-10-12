@@ -23,6 +23,9 @@ const TOUCH_META := "aftermath_touch"
 const SITE_BEFORE_META := "aftermath_site_before"
 const SITE_AFTER_META := "aftermath_site_after"
 const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
+const NPC_BODY := preload("res://scripts/npc/npc_body.gd")
+const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
+const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
 
 static var _config: Dictionary = {}
 
@@ -180,6 +183,8 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 		var when := str(piece.get("state", "both"))
 		if when != "both" and when != state:
 			continue
+		if piece.has("npc") or piece.has("smoke_wisp"):
+			continue
 		if state == "after" and piece.get("after") is Dictionary:
 			for key: String in (piece["after"] as Dictionary):
 				piece[key] = (piece["after"] as Dictionary)[key]
@@ -200,6 +205,40 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 		var node := holder.get_node_or_null(NodePath(name))
 		if node != null:
 			PYLON_MATERIALS.apply(node, finishes[name] == "pylon_live")
+	# Non-prop pieces: an installed villager body (`npc`, presence only, e.g.
+	# the relay's captive Sela) and a doused fire's thin smoke wisp
+	# (`smoke_wisp`: campfire_glow's column with its light and embers off).
+	for raw_piece: Variant in pieces:
+		var extra: Dictionary = (raw_piece as Dictionary).duplicate(true)
+		var extra_when := str(extra.get("state", "both"))
+		if extra_when != "both" and extra_when != state:
+			continue
+		if state == "after" and extra.get("after") is Dictionary:
+			for key: String in (extra["after"] as Dictionary):
+				extra[key] = (extra["after"] as Dictionary)[key]
+		var extra_at := local_offset(body.global_position, yaw, extra.get("offset", [-3.8, 0.4]) as Array)
+		if extra.get("npc") is Dictionary:
+			var npc: Node3D = NPC_BODY.new()
+			npc.name = "SiteNpc_%s" % str((extra["npc"] as Dictionary).get("name", "npc"))
+			holder.add_child(npc)
+			if not bool(npc.call("setup_from_config", VILLAGE_NPCS.model_config(extra["npc"] as Dictionary), null)) \
+					or not bool(npc.call("stand_at", extra_at.x, extra_at.z)):
+				npc.queue_free()
+				continue
+			npc.global_rotation.y = yaw + deg_to_rad(float(extra.get("yaw_deg", 0.0)))
+		elif extra.get("smoke_wisp") is Dictionary:
+			var wisp_cfg: Dictionary = extra["smoke_wisp"]
+			var wisp: Node3D = CAMPFIRE_GLOW.new(false, 1.0, 0.6)
+			wisp.remove_from_group(&"companion_camp_sources")
+			wisp.call("configure_smoke", float(wisp_cfg.get("top_m", 3.5)), float(wisp_cfg.get("alpha", 0.45)),
+				float(wisp_cfg.get("top_size_m", 1.2)), Color(str(wisp_cfg.get("colour", "#b9b4ab"))),
+				float(wisp_cfg.get("fade", 0.85)), float(wisp_cfg.get("base_size_m", 0.4)))
+			holder.add_child(wisp)
+			wisp.global_position = Vector3(extra_at.x, _ground_at(body, extra_at) + 0.1, extra_at.z)
+			for node: Node in wisp.find_children("*", "", true, false):
+				if node is Light3D or node is GPUParticles3D or node is CPUParticles3D:
+					(node as Node3D).visible = false
+					node.process_mode = Node.PROCESS_MODE_DISABLED
 	for raw: Variant in cfg.get("lights", []) as Array:
 		var light_cfg: Dictionary = raw as Dictionary
 		if str(light_cfg.get("state", "before")) != state:

@@ -712,13 +712,13 @@ func _build_controls(list: VBoxContainer, section: Dictionary, controls: Diction
 		line.scroll_active = false
 		line.autowrap_mode = TextServer.AUTOWRAP_OFF
 		line.custom_minimum_size = Vector2(1100, 0)
-		line.add_theme_font_size_override("normal_font_size", 22)
+		line.add_theme_font_size_override("normal_font_size", int(_controls_scan.get("legend_font_px", 30)))
 		line.add_theme_color_override("default_color", UITokens.TEXT_PRIMARY)
 		# Pad glyphs, controller first (round 1 judge: keycaps in the legend
 		# read as keyboard-first and were too small to read).
 		var glyph := int(_controls_scan.get("legend_glyph_px", 48))
 		var pad := str(_controls_scan.get("legend_device", "gamepad"))
-		line.text = "%s Change   %s Leave it   Hold %s + %s or F10: reset every control" % [
+		line.text = "%s Change     |     %s Leave it     |     Hold %s + %s (or F10) for a second and a half: reset every control" % [
 			INPUT_GLYPH.icon("confirm", glyph, Color.WHITE, pad), INPUT_GLYPH.icon("cancel", glyph, Color.WHITE, pad),
 			INPUT_GLYPH.icon("game_menu", glyph, Color.WHITE, pad), INPUT_GLYPH.icon("map", glyph, Color.WHITE, pad)]
 		list.add_child(line)
@@ -742,6 +742,11 @@ func _build_controls(list: VBoxContainer, section: Dictionary, controls: Diction
 		if typeof(entry) != TYPE_DICTIONARY:
 			continue
 		_build_group(list, entry as Dictionary, labels)
+	if not _controls_scan.is_empty():
+		# Scroll margin, so the last group's rows are never cut at the edge.
+		var tail := Control.new()
+		tail.custom_minimum_size = Vector2(0, float(_controls_scan.get("tail_margin_px", 120)))
+		list.add_child(tail)
 
 
 ## CLAUDE.md's hard rules: "Controller first." Gamepad reads left of
@@ -768,9 +773,7 @@ func _build_group(list: VBoxContainer, group: Dictionary, labels: Dictionary) ->
 	list.add_child(heading)
 
 	if not _controls_scan.is_empty():
-		# The headers sit right over the cells they name (P2-031).
 		heading.text = str(group.get("name", ""))
-		list.add_child(_column_header())
 
 	var note := str(group.get("note", ""))
 	if not note.is_empty():
@@ -781,6 +784,10 @@ func _build_group(list: VBoxContainer, group: Dictionary, labels: Dictionary) ->
 		note_label.custom_minimum_size = Vector2(1100, 0)
 		note_label.text = note
 		list.add_child(note_label)
+	if not _controls_scan.is_empty():
+		# The headers sit right over the cells they name, below any group
+		# note (P2-031 round 3: the note split them from their columns).
+		list.add_child(_column_header())
 
 	var actions: Variant = group.get("actions", [])
 	if typeof(actions) != TYPE_ARRAY:
@@ -817,7 +824,9 @@ func _build_row(action: String, label_text: String) -> Control:
 		cell.custom_minimum_size = Vector2(CELL_WIDTH, 52)
 		cell.clip_text = true
 		if not _controls_scan.is_empty():
-			cell.add_theme_constant_override("icon_max_width", int(_controls_scan.get("glyph_px", 34)))
+			cell.add_theme_constant_override("icon_max_width", int(_controls_scan.get("glyph_px", 40)))
+			cell.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+			cell.expand_icon = false
 		cell.focus_mode = Control.FOCUS_ALL
 		var captured_slot := str(slot)
 		cell.pressed.connect(func() -> void: _start_capture(action, captured_slot))
@@ -1145,6 +1154,8 @@ func poll() -> void:
 			cell.text = str(bindings.call("describe", event))
 			if not _controls_scan.is_empty():
 				cell.icon = _glyph_texture(event)
+				# Round 4 (coordinator): the name stays beside a large glyph;
+				# glyph-only cells regressed quick bindings to tiny icons.
 			cell.add_theme_color_override(
 				"font_color",
 				COLOUR_CHANGED if bool(bindings.call("is_overridden", action, slot)) else COLOUR_DEFAULT

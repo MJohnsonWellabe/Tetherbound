@@ -93,6 +93,14 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 	_game.set("save_system", SAVE_GAME.new(SAVE_DIR))
 	await _boot_world()
+	# r8 judge: Halder's and Vess's before/after differed in light and colour
+	# as the day ran on between the two frames. Staging, disclosed: the day
+	# clock is set to morning and frozen for the whole run.
+	var look := get_first_node_in_group(&"day_cycle")
+	if look != null and look.has_method("reset_to_morning"):
+		look.call("reset_to_morning")
+		look.call("set_clock_frozen", true)
+		print("clock frozen at morning for the run")
 	await _ensure_ally()
 	_enrol_ally()
 	_set_out("live")
@@ -446,7 +454,13 @@ func _frame_site_object(tag: String) -> void:
 	# r8 render: nearby ground detail streams around the PLAYER, so a before
 	# frame taken with the player elsewhere showed Vance's paved yard as blurred
 	# grass. Stand the player at the site first (hidden for the frame itself).
-	if tag.ends_with("before") and _site_centres.has(_tid):
+	var return_to := Transform3D()
+	var restore_player := false
+	if tag.ends_with("before") and _site_centres.has(_tid) and _player != null:
+		# Remember where the fight flow put the player: Dell's run stood at the
+		# site and the arena then refused for lack of clear ground (r8).
+		return_to = _player.global_transform
+		restore_player = true
 		var at: Vector3 = _site_centres[_tid]
 		await _stand_facing(at, at + Vector3(1.5, 0.0, 1.5))
 		for i in 60:
@@ -498,6 +512,11 @@ func _frame_site_object(tag: String) -> void:
 	paused = false
 	if _player != null and player_was_visible:
 		_player.visible = true
+	if restore_player and _player != null:
+		_player.global_transform = return_to
+		_player.velocity = Vector3.ZERO
+		for i in 30:
+			await physics_frame
 	for layer: CanvasLayer in layers:
 		if is_instance_valid(layer):
 			layer.visible = true
@@ -508,6 +527,20 @@ func _frame_site_object(tag: String) -> void:
 	cam.queue_free()
 	if _director != null and _director.has_method("summon_active_creature") and _director.call("ally_body") == null:
 		await _director.call("summon_active_creature")
+	# Dell (visual-claude, f8f4053f): the re-summoned ally came back at the
+	# site, beside the relay yard stair, and the fight's seat search could not
+	# clear it ("clear_seat_search_exhausted"). Fixture, disclosed: put the
+	# ally beside the player at the fight's stand before the fight begins.
+	var ally := _director.call("ally_body") as Node3D if _director != null else null
+	if ally != null and is_instance_valid(ally) and _player != null:
+		var back := -_player.global_basis.z.slide(Vector3.UP).normalized()
+		if back.length() < 0.1:
+			back = Vector3.BACK
+		ally.global_position = _player.global_position - back * 2.5 + Vector3.UP * 0.3
+		if ally is CharacterBody3D:
+			(ally as CharacterBody3D).velocity = Vector3.ZERO
+		for i in 30:
+			await physics_frame
 
 
 ## The Warden arena's banner wall (gone once he is beaten), framed from the

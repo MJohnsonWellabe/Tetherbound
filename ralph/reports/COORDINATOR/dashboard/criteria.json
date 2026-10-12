@@ -1,5 +1,5 @@
 {
- "generated_at": "10:07 AM CT Mon 12 Oct 2026",
+ "generated_at": "12:52 PM CT Mon 12 Oct",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -312,7 +312,7 @@
      "text": "Varied-size framing and C2/C3 results pass",
      "status": "failing",
      "evidence": "Full Meadows table on cf5137cb5 (guardian face-lock 35e0a9c58), 24 seeds; ralph/reports/EVIDENCE/F04-7-rerun/ at d1f3efc0b: chapter masher-loss bar PASS (Terrapup 0.38, Ripplet 0.44, Galewisp 0.27); 23 of 24 rows PASS; every C3 verdict passes.",
-     "gap": "One row: Ripplet x Warrens guardian (0.268/0.350). The punish-window reader, the reader hold fix and heavy x2.0 all failed (x2.0 raises both pilots: 0.537/0.476). OWNER END-LIST: a type-advantage exemption from the C2 skill bar (recommended) or an encounter redesign.",
+     "gap": "Under COMBAT §7 (12 Oct) Ripplet x Warrens guardian is a type-advantaged row: party cost 0.060/0.079 = 0.77 > 0.55, so it fails (c) and needs a data tune; heavy x2.0 already failed, the fights lane probes HP/poise levers.",
      "note": "PARKED for an owner balance call (fights-c2c3 8511bd40, Sun 11 Oct ~2:00 PM CT). C3's measured half passes; Dell passes on the officer floor bar (the top-trainer bar was misapplied). Still failing C2: (1) chapter masher-loss rate 0.21/0.21/0.23 (Terrapup/Ripplet/Galewisp) against the 0.25 bar; (2) Ripplet vs the Warrens guardian: the reader's lead cost 0.44 against the masher's 0.35. Cues are honest (every hit lands inside the drawn shape); the cause is the reader pilot committing during tells. A smarter pilot regressed fast fights (Nerissa 1.00 to 0.46) and was reverted; Warden power x1.15 barely moved the masher and pushed the worst hit to 0.47-0.48 (C3 ceiling 0.5).",
      "audit_index": 7
     },
@@ -940,7 +940,7 @@
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
      "status": "failing",
      "evidence": "Full Tidewake table on the adopted reader (1032b96d3; non-Veilfall rows on 5b18ea665): 42 of 45 rows PASS; chapter masher-loss Terrapup 1.00 / Ripplet 0.92 / Galewisp 0.50 (bar 0.25); C3 worst hit 0.306, tells >= 0.85 s, 0 stalls. ralph/reports/EVIDENCE/F14-0-rerun/ (8792cbd3a).",
-     "gap": "Only the three Galewisp type-advantage wild rows fail (brine_root 0.425/0.413, tidecoil 0.322/0.337, songweaver 0.337/0.334). OWNER END-LIST with F04#7: a type-advantage exemption from the C2 skill bar (recommended) or an encounter redesign.",
+     "gap": "Under COMBAT §7 (12 Oct) the three Galewisp named-wild rows are type-advantaged; party cost ~1.0x masher, so (c) data tune needed; heavy power already failed, the fights lane probes HP/poise.",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/encounters diff since 1e0ddd39: 33 files, +8435. Tidewake levels re-banded (RD-10); smoke_water_named_c2c3 is not in CI.",
      "audit_index": 0
     },
@@ -1423,14 +1423,14 @@
    "title": "Enemy patterns, anti-mash and role identity",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 60,
+   "pct": 80,
    "counts": {
-    "met": 3,
+    "met": 4,
     "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
@@ -1443,9 +1443,9 @@
     },
     {
      "text": "Across 12+ seeds per biome band, a reader pilot beats a masher pilot (reader win ≥0.9; masher loses the lead creature materially more often).",
-     "status": "failing",
-     "evidence": "Band sweep on the adopted reader (5b18ea665): 60/69 rows pass. Meadows 15/15, Tidewake 18/18, Cloudreach 10/18, Stormwood 17/18. ralph/reports/EVIDENCE/F22-1/ (aa5ae644d, f034cdf93).",
-     "gap": "Adopted reader 904c3c537 (8:14 AM CT Mon): 67/69 band rows pass (Meadows 15/15, Tidewake 18/18, Cloudreach 16/18, Stormwood 18/18), no regressions. The 2 fails are Ripplet x tempestwing at high_roost and summit (reader win 0.67 from 240 s timeouts; the masher's lead faints there too), class C under the existing rules. OWNER END-LIST with F04#7/F14#0: a type-advantage exemption (recommended) or a matchup rebalance. Evidence F22-1/ (790039c2a).",
+     "status": "met",
+     "evidence": "ev-systems-a 1b3bacbc8 / 0e47be5b3 (ralph/reports/EVIDENCE/TYPE-CLASS): 69/69 band rows pass under the COMBAT §7 type-matchup rule (coordinator, owner delegation 12 Oct). Ripplet x tempestwing (disadvantaged) at high_roost and summit, switching reader: win 1.00, lead cost 0.000 vs masher 0.558/0.548, no timeouts, 24 seeds.",
+     "gap": "",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No seed distribution recorded for any band.",
      "audit_index": 1
     },
@@ -1469,7 +1469,7 @@
      "text": "Named fights (Warden, captains, relay officers, Nerissa, Veyra, Stormwood finale) each present a distinct pattern and pass C2/C3 on the new timings; this closes or supersedes F04#1, F04#2, F04#6, F04#7, F10#6 and F14#1.",
      "status": "partial",
      "evidence": "smoke_meadows_named_c2c3 / smoke_water_named_c2c3 / smoke_stormwood_b_named_c2c3 (pre-pattern)",
-     "gap": "Re-run the three named C2/C3 smokes at b4e4897d5; get C3 code-blind judges per named fight.",
+     "gap": "Under COMBAT §7: Veyra x Terrapup now passes (b) (party 0.028/0.132). Remaining: Marrow x Ripplet/Galewisp 2/24 switching-reader timeouts each (c), pacing probe running; C3 code-blind judges per named fight.",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Prior C2/C3 runs predate live pattern activation (b1522e17b). Map: pre-448/450 timings stale. None of these smokes is in CI.",
      "audit_index": 4
     }
@@ -2896,14 +2896,14 @@
    "title": "Economy, balance and the 15–25 hour clear",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/balance",
-   "pct": 60,
+   "pct": 80,
    "counts": {
-    "met": 3,
+    "met": 4,
     "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 2
+    "failing": 1
    },
    "criteria": [
     {
@@ -2932,9 +2932,9 @@
     },
     {
      "text": "C2 difficulty holds for every biome band in the new order.",
-     "status": "failing",
-     "evidence": "Same sweep as F22#1: 60/69 on 5b18ea665.",
-     "gap": "Adopted reader 904c3c537 (8:14 AM CT Mon): 67/69 band rows pass (Meadows 15/15, Tidewake 18/18, Cloudreach 16/18, Stormwood 18/18), no regressions. The 2 fails are Ripplet x tempestwing at high_roost and summit (reader win 0.67 from 240 s timeouts; the masher's lead faints there too), class C under the existing rules. OWNER END-LIST with F04#7/F14#0: a type-advantage exemption (recommended) or a matchup rebalance. Evidence F22-1/ (790039c2a).",
+     "status": "met",
+     "evidence": "Same sweep as F22#1 (ev-systems-a 1b3bacbc8 / 0e47be5b3): 69/69 rows across Meadows, Tidewake, Cloudreach and Stormwood bands under COMBAT §7.",
+     "gap": "",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No paired 24-seed C2 per band in the new order.",
      "audit_index": 3
     },

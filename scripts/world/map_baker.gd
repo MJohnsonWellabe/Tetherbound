@@ -32,6 +32,7 @@ extends RefCounted
 ## `terrain_playground.json`'s own `_comment_water`); a multi-body map would
 ## need this to become a per-region lookup.
 
+const TERRAIN_HEIGHT := preload("res://scripts/world/terrain_height.gd")
 const TERRAIN_CONFIG_PATH := "res://data/config/terrain_playground.json"
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const WORLD_EXTENT := preload("res://scripts/world/world_extent.gd")
@@ -127,11 +128,19 @@ static func bake(world: Object, resolution: int = 0, bounds: Dictionary = {}) ->
 	# Two-pass: sample every height first (and remember it) so the slope
 	# shading pass below can read already-sampled neighbours instead of
 	# calling back into `world` a second time per pixel.
+	# Realm-load profile (2026-10-12): 262k dynamic world.call() round trips
+	# made a cold bake ~77 s of a first Meadows boot. A world that can hand
+	# over its Terrain3D data is sampled through the same height_from()
+	# ground_height_at() itself uses, so every value is identical.
+	var source: Array = world.call("terrain_height_source") if world.has_method("terrain_height_source") else []
+	var data: Object = source[0] if source.size() == 2 and source[0] is Object else null
+	var spacing := float(source[1]) if data != null else 0.0
 	for iz in resolution_z:
 		var z := min_z + (float(iz) + 0.5) * step_z
 		for ix in resolution_x:
 			var x := min_x + (float(ix) + 0.5) * step_x
-			var h: float = world.call("ground_height_at", x, z)
+			var h: float = TERRAIN_HEIGHT.height_from(data, spacing, x, z) if data != null \
+				else float(world.call("ground_height_at", x, z))
 			if is_nan(h):
 				h = 0.0
 			heights[iz * resolution_x + ix] = h
@@ -151,6 +160,15 @@ static func bake(world: Object, resolution: int = 0, bounds: Dictionary = {}) ->
 
 	var image := Image.create(resolution_x, resolution_z, false, Image.FORMAT_RGB8)
 	var heightfield: RefCounted = HEIGHTFIELD.new()
+	# Realm-load profile (2026-10-12): path_factor() walks every road band's
+	# every segment per pixel (~50 s of a cold bake). A band farther from a
+	# pixel than its whole reach (half + wobble + shoulder, the wobble taken at
+	# twice its noise amplitude) contributes exactly 0 to that maximum, so each
+	# pixel asks path_factor_over() about only the bands whose reach box holds
+	# it. Same values as path_factor(); same for the building aprons.
+	var bands: Array = heightfield.call("road_bands") if heightfield.has_method("road_bands") else []
+	var band_boxes := _band_reach_boxes(heightfield, bands)
+	var apron_box := _apron_reach_box(heightfield)
 
 	for iz in resolution_z:
 		var z := min_z + (float(iz) + 0.5) * step_z
@@ -176,10 +194,16 @@ static func bake(world: Object, resolution: int = 0, bounds: Dictionary = {}) ->
 			# over building aprons where both overlap, same rule the
 			# terrain shader itself already follows.
 			if is_nan(water_level) or h >= water_level:
-				var apron_t: float = heightfield.call("building_apron_factor", x, z)
+				var apron_t: float = 0.0
+				if apron_box.has_point(Vector2(x, z)):
+					apron_t = heightfield.call("building_apron_factor", x, z)
 				if apron_t > 0.0:
 					colour = colour.lerp(BUILDING_APRON_COLOUR, apron_t)
-				var path_t: float = heightfield.call("path_factor", x, z)
+				var near_bands: Array = []
+				for b in bands.size():
+					if (band_boxes[b] as Rect2).has_point(Vector2(x, z)):
+						near_bands.append(bands[b])
+				var path_t: float = heightfield.call("path_factor_over", x, z, near_bands) if not near_bands.is_empty() else 0.0
 				if path_t > 0.0:
 					colour = colour.lerp(PATH_COLOUR, path_t)
 
@@ -199,6 +223,43 @@ static func bake(world: Object, resolution: int = 0, bounds: Dictionary = {}) ->
 	_overlay_authored_routes(image, heightfield, extent)
 
 	return ImageTexture.create_from_image(image)
+
+
+## Each road band's line bounds grown by its whole reach (see bake()).
+static func _band_reach_boxes(heightfield: RefCounted, bands: Array) -> Array:
+	var boxes: Array = []
+	var default_wobble := float(heightfield.get("_path_wobble_metres"))
+	for entry: Variant in bands:
+		var band: Dictionary = entry
+		var line: PackedVector2Array = band["line"]
+		var shoulder := float(band["shoulder"])
+		var wobble := float(band.get("wobble", -1.0))
+		if wobble < 0.0:
+			wobble = default_wobble if default_wobble >= 0.0 else shoulder * 0.5
+		var reach := float(band["half"]) + absf(wobble) * 2.0 + shoulder + 0.01
+		var box := Rect2(line[0], Vector2.ZERO) if line.size() > 0 else Rect2()
+		for point: Vector2 in line:
+			box = box.expand(point)
+		boxes.append(box.grow(reach))
+	return boxes
+
+
+## Every apron footprint centre grown by building_apron_factor()'s own reject
+## distance (12 + margin + feather); outside it the factor is exactly 0.
+static func _apron_reach_box(heightfield: RefCounted) -> Rect2:
+	var config: Dictionary = heightfield.get("_config")
+	var apron: Dictionary = config.get("building_aprons", {})
+	var reach := 12.0 + float(apron.get("margin", 0.55)) + maxf(float(apron.get("feather", 2.4)), 0.001) + 0.01
+	var box := Rect2()
+	var first := true
+	for entry: Variant in apron.get("footprints", []):
+		if not entry is Dictionary:
+			continue
+		var centre_spec: Array = (entry as Dictionary).get("centre", [0.0, 0.0])
+		var centre := Vector2(float(centre_spec[0]), float(centre_spec[1]))
+		box = Rect2(centre, Vector2.ZERO) if first else box.expand(centre)
+		first = false
+	return box.grow(reach) if not first else Rect2()
 
 
 static func _overlay_authored_routes(image: Image, heightfield: RefCounted, extent: Dictionary) -> void:

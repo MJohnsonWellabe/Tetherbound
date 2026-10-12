@@ -8,6 +8,12 @@ var _game: Node
 
 func _run() -> void:
 	_game = root.get_node("Game")
+	# The inherited _mount() reads world state from the parent's scratch saver
+	# (e0c75adcd); this override must create it as the parent's _run() does.
+	var original_saver: RefCounted = _game.save_system
+	_scratch = "user://f19-stormheart-capacity-%d/" % Time.get_ticks_usec()
+	_saver = SAVE_GAME.new(_scratch)
+	_game.save_system = _saver
 	var conversations: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/dialogue/stormwood.json")).conversations
 	for id: String in conversations: RUNNER.table()[id] = conversations[id].duplicate(true)
 	for choice: String in ["refuse-at-prompt", "accept-let-newcomer-go", "accept-release-owned-holder"]:
@@ -19,8 +25,17 @@ func _run() -> void:
 			var keeper: RefCounted = _game.make_creature("terrapup", "Keeper %d" % (index + 1))
 			_game.party.add(keeper)
 		var original := _uids()
+		_check(_saver.save_character_prepared(_game, CHARACTER) == true, "the declared five-holder character is BOOL-saved in scratch")
 		_check(original.size() == 5, "declared fixture starts with exactly five owned holders")
 		var mounted := await _mount(_game, "f19-stormheart-" + choice)
+		# The inherited _mount() queues offers and drops settles for the parent's
+		# reconnect cases; this single-world smoke uses direct transport.
+		mounted.hub.queue_offers = false
+		mounted.hub.drop_settles = false
+		# _mount() swaps Game.world for a fresh WorldState; production keeps one
+		# identity and loads into it. Rebind the ledger transport now, as its own
+		# 0.5 s poll would, or the ending refuses the host settle as a stale world.
+		_game.ledger.call("_ensure_ledger")
 		await _offer(mounted.ending, mounted.panel, _game)
 		await _to_question(mounted.panel)
 		if choice == "refuse-at-prompt":
@@ -67,6 +82,8 @@ func _run() -> void:
 		_check(settled.size() == 1 and settled[0].kept == (choice == "accept-release-owned-holder"), "character sends exactly its original decision to host stub")
 		print("F19 STORMHEART CAPACITY CASE " + JSON.stringify({"case": choice, "party": _uids(), "pending": _game.pending_catch != null, "failures": failures.duplicate()}))
 		await _unmount(mounted)
+	_game.save_system = original_saver
+	_remove_scratch(_scratch)
 	_finish()
 
 func _tap(action: String) -> void:

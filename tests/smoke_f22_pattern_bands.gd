@@ -128,11 +128,27 @@ func _trainer_rosters(patterns: Dictionary) -> Dictionary:
 			island_band[table.trim_prefix("water_").trim_suffix("_land").trim_suffix("_shallows")] = "tidewake/" + str(region.region_id)
 	for row: Dictionary in _read("data/config/water_characters.json").get("trainers", []):
 		if island_band.has(str(row.get("island_id", ""))):
-			add.call(str(island_band[row.island_id]), str(row.id), str(row.get("rank", "")), row.get("team", []))
+			# Production translation (water_encounter_runtime_data.team_member):
+			# a trainer's foe_power_multiplier reaches each member's combat
+			# power exactly as the live Tidewake fight builds it.
+			var water_team: Array = []
+			var water_errors: Array[String] = []
+			for member: Dictionary in row.get("team", []):
+				water_team.append(preload("res://scripts/world/water_encounter_runtime_data.gd").team_member(row, member, water_errors))
+			add.call(str(island_band[row.island_id]), str(row.id), str(row.get("rank", "")), water_team)
+	# Production pairing (cloudreach_encounter_director.setup/trainer_spec):
+	# each ladder row takes its placement's behaviour profiles, which carry
+	# the authored combat power and timing the live fight uses.
+	var cloud_config := _read("data/config/cloudreach_encounters.json")
+	var CLOUD := preload("res://scripts/combat/cloudreach_encounter_director.gd")
 	for row: Dictionary in _read("data/config/cloudreach_chapter.json").get("trainer_ladder", []):
+		var placement: Dictionary = CLOUD.find_id(cloud_config.get("trainers", []), str(row.id))
 		var team: Array = []
-		for slot: Dictionary in (row.get("team_contract", {}) as Dictionary).get("slots", []):
-			team.append({"species": slot.get("placeholder_species", ""), "level": slot.get("level", 1)})
+		if not placement.is_empty():
+			team = CLOUD.trainer_spec(row, placement, cloud_config).get("team", [])
+		else:
+			for slot: Dictionary in (row.get("team_contract", {}) as Dictionary).get("slots", []):
+				team.append({"species": slot.get("placeholder_species", ""), "level": slot.get("level", 1)})
 		add.call("cloudreach/" + str(row.region_id), str(row.id), str(row.get("rank", "")), team)
 	for row: Dictionary in _read("data/config/stormwood_trainers.json").get("trainers", []):
 		var team: Array = []
@@ -223,7 +239,10 @@ func _run() -> void:
 						reasons.append(policy + " incomplete or invalid actual fixture")
 				# Trainer mode applies the coordinator's three-part F22#1 bar to
 				# the COMBAT §7 reader, which switches on a real mismatch.
-				var judged: Dictionary = switch_reader if _trainers else reader
+				# Wild bands judge the switching reader when it was run (coordinator
+				# ruling 2026-10-12, COMBAT §7 type matchups: a type-disadvantaged
+				# lead is judged with the reader that switches on a real mismatch).
+				var judged: Dictionary = switch_reader if _trainers or int(switch_reader.get("runs", 0)) > 0 else reader
 				if not _named.is_empty():
 					# COMBAT §7 top trainer: reader win >= .75, masher loses its lead
 					# every run, reader median party cost <= .55x masher's.
