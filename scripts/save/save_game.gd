@@ -1090,6 +1090,10 @@ func begin_deferred_writes() -> bool:
 func end_deferred_scope() -> void:
 	_deferring = false
 
+## True only inside a step: a prepared write is then owed and cannot refuse.
+func in_deferred_scope() -> bool:
+	return _deferring
+
 func deferring_writes() -> bool:
 	return _deferring or not _owed_world.is_empty() or not _owed_characters.is_empty()
 
