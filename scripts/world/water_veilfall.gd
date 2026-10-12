@@ -122,6 +122,10 @@ func build(realm: Node3D) -> void:
 	ridge_blockout.name = "VeilfallRidgeBlockout"
 	add_child(ridge_blockout)
 	ridge_blockout.build(world, self)
+	var tiered_r2 := preload("res://scripts/world/water_veilfall_tiered_r2.gd").new()
+	tiered_r2.name = "VeilfallTieredR2"
+	add_child(tiered_r2)
+	tiered_r2.build(world, self)
 	_entry_prompt = _prompt(exterior, "Enter behind the waterfall", Vector3(0, 1.4, 0), _enter)
 	interior = Node3D.new()
 	interior.name = "VeilfallInterior"
