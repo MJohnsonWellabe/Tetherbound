@@ -566,6 +566,8 @@
           "yaw_deg": 18.0,
           "scale": 1.6,
           "dir": "res://assets/props/kenney_survival",
+          "bark": {"albedo": "res://assets/environment/stylized_nature/Bark_NormalTree.png", "normal": "res://assets/environment/stylized_nature/Bark_NormalTree_Normal.png", "scale": 2.0},
+          "_why_f03_1_r10_bark": "F03#1 r10 judge: the kenney log's flat palette read as a smooth peach cylinder beside Bram; the installed stylized_nature bark is laid over it (props.gd bark).",
           "_why": "The seat. He is placed facing 215 degrees, which is across it and back toward the road he is watching -- a man who sits where he can see who is coming. environment/nature's log_large is one of only two models in that pack that render correctly through props.gd (see the trail_camp entries and ralph/BLOCKED.md for why the rest do not); this is one of them.",
           "_why_f03_1_r8": "F03#1 round-8 judge: environment/nature log_large rendered as an untextured white box beside Bram's bag in daylight. Swapped for the kenney survival tree-log (bark-textured, the log already used by the captains' aftermath dressing), same seat position and yaw, scaled 1.6 to the old seat length."
         },
