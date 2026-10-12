@@ -33,3 +33,14 @@ EV F14#0 FAIL 5b18ea665 42/45 Tidewake rows and the chapter bar (1.00/0.92/0.50)
 - Chapter masher-loss 1.00 / 0.92 / 0.50. C3: worst hit 0.311; tells ≥0.85 s; 0 stalls.
 
 EV F14#0 FAIL 904c3c537 adopted reader: 51/54 Tidewake rows and the chapter bar (1.00/0.92/0.50) PASS; only the three Galewisp named-wild rows fail (brine 0.425/0.413, tidecoil 0.322/0.337, songweaver 0.281/0.334), the owner matchup-balance item
+
+## COMBAT §7 trivial-fight floor (coordinator, owner-delegated, f1c669ac4)
+- Galewisp rows re-run at baseline (no lever), 24 seeds, 6f1160e5f, adopted reader. Scored by `score_water2.py`, floor branch 342f72897; output in `verdicts_floor_baseline.txt`.
+- Rows that used the floor (Galewisp, type-advantaged, masher party ≤15%), party reader/masher, both pilots winning 1.00:
+  - tidecoil 0.0701/0.0734: PASS
+  - songweaver 0.0610/0.0727: PASS
+  - brine_root 0.0925/0.0897: FAIL by 0.003
+- Brine Lever A (rush/check recovery 0.9 → 1.2 s), sent to the coordinator as a patch: Galewisp 0.077/0.104, so it passes the floor; Terrapup 0.060/0.241 and Ripplet lead 0.000/0.568 pass the ratio rule.
+- With that patch applied, all 45 Tidewake rows pass. A confirming brine run on the patched commit is still owed.
+
+EV F14#0 FAIL 6f1160e5f under the §7 floor, tidecoil and songweaver x Galewisp pass; brine x Galewisp misses by 0.003 at baseline, and its Lever A patch (measured PASS) is with the coordinator
