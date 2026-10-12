@@ -500,7 +500,8 @@ func new_system_combat_placeholder() -> Dictionary:
 	slots["dodge"] = {"glyph":glyphs.action_name("jump"), "name":"Dodge", "ready":false}
 	return {"active":true, "placeholder":true, "input_context":"combat", "creature_uid":uid,
 		"ultimate_meter":0.0, "ultimate_maximum":float(MATH.config().ultimate.maximum),
-		"ultimate_available":false, "ultimate_armed":false, "arm_fraction":0.0,
+		"ultimate_available":live_move_supported("ultimate", str(creature.get("move_ultimate"))),
+		"ultimate_armed":false, "arm_fraction":0.0,
 		"commands":{"active":false, "meter":0, "pouch_count":0, "encounter_id":_encounter_id,
 			"wild_target":_encounter_kind == "wild", "unlocked_commands":[]}, "slots":slots}
 

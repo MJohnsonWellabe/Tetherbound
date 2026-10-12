@@ -86,3 +86,17 @@ func test_presync_placeholder_carries_no_pool_value() -> void:
 	commands._config = previous
 	director.free()
 	manager.free()
+
+
+## The legacy caller (exploration and non-overlay HUD) still hides an inactive
+## lane; only the F42 overlay keeps it visible (r2 capture: the lane lingered
+## into exploration after the fight).
+func test_inactive_lane_hides_unless_the_overlay_keeps_it() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var lane: Control = preload("res://scripts/ui/tether_command_meter.gd").new()
+	tree.root.add_child(lane)
+	lane.call("present", {"active": false, "meter": 0}, true)
+	assert_false(lane.visible, "inactive snapshot outside the overlay: hidden")
+	lane.call("present", {"active": false, "meter": 0}, true, true)
+	assert_true(lane.visible, "the overlay keeps it up, muted")
+	lane.queue_free()
